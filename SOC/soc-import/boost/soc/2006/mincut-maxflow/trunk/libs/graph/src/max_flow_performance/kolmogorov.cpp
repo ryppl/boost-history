@@ -24,11 +24,11 @@ float timer ()
 
 struct edge_vals{
   edge_vals():cap(0),rev_cap(0){}
-  long cap;
-  long rev_cap;
+  Graph::captype cap;
+  Graph::captype rev_cap;
 };
   
-int read_dimacs_max_flow(Graph& g, Graph::captype& flow_correction)
+int read_dimacs_max_flow_kolmogorov(Graph& g, Graph::captype& flow_correction)
 {
   const int ARC_FIELDS = 3;     /* no of fields in arc line  */
   const int NODE_FIELDS = 2;    /* no of fields in node line  */
@@ -209,7 +209,7 @@ int read_dimacs_max_flow(Graph& g, Graph::captype& flow_correction)
       
                   if (
                       /* reading an arc description */
-                      sscanf ( in_line.c_str(),"%*c %ld %ld %ld",
+                      sscanf ( in_line.c_str(),"%*c %ld %ld %i",
                                &head, &tail, &cap )
                       != ARC_FIELDS
                      ) 
@@ -310,14 +310,14 @@ int read_dimacs_max_flow(Graph& g, Graph::captype& flow_correction)
 int main()
 {
   Graph g;
-  Graph::captype flow_correction;
-  read_dimacs_max_flow(g,flow_correction);
+  Graph::captype flow_correction = 0;
+  read_dimacs_max_flow_kolmogorov(g, flow_correction);
   
   float time = timer();
   Graph::captype flow = g.maxflow();
-  float elapsed = timer()-time;
+  float elapsed = timer() - time;
   
-  std::cout << "flow: " << flow+flow_correction << std::endl;
+  std::cout << "flow: " << flow + flow_correction << std::endl;
   std::cout << "time: " << elapsed << std::endl;
   
   return EXIT_SUCCESS;
