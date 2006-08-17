@@ -1,3 +1,7 @@
+Implement associative containers and priority_queue specialization using searcher
+
+Should inorder etc. be freestanding functions? Hierarchy shouldn't really require them, right?
+
 Short-term TODO:
 
 -implement sibling_iter::insert, some c/dtors and what else is required for a minimum test of forest's basic 
@@ -8,8 +12,6 @@ functionality (dysfunctional as of yet...),
 .
 .
 .
--directory reorg-
--get doxygen to work with boostbook/quickbook
 
 One of the next things to do is implement a prototypical "sequential preorder"
 memory represented tree (cf. TAOCP1). This requires a special kind of node;
@@ -19,10 +21,3 @@ The tricky part is if we can get this done by just designing a neat kind
 of allocator, how exactly tree::root must look like in order for this and 
 other representations to work and what components must know about what other
 ones (especally concerning insertion operations -- node_type, alloc_type etc.)
-
-Doc: 
-One of the main issues that arises from the concept of position-indicating
-objects is that like iterators, they serve orthogonal purposes:
--if we even view them as iterators, there is the position-indicating/
-value-returning duality
--but a node can also be seen as the container of its children...

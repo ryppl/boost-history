@@ -1,0 +1,35 @@
+# Copyright (c) 2006 Bernhard Reiter.
+#
+# Distributed under the Boost Software License, Version 1.0. 
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+using testing ;
+
+if ! $(BOOST_ROOT)
+{
+	BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+project :
+	:	requirements
+		<include>$(BOOST_ROOT)
+		<include>../../../
+	;
+	
+test-suite tree :
+	[ run range_helpers_test.cpp ]
+	[ run plain_binary_tree_test.cpp ]
+	[ run key_search_binary_tree_test.cpp ]
+#	[ run string_search_binary_tree_test.cpp ]
+#	[ compile search_ordered_vector_test.cpp  ]
+	[ run search_ordered_vector_test.cpp
+#		:
+#		:
+#		: <library>$(BOOST_ROOT)//unit_test_framework
+	]
+
+
+#	[ run red_black_tree_test.cpp ]
+	
+	;
