@@ -50,8 +50,6 @@ consideration to decide the best way to solve them.
 * Fix links to inherited methods.  Don't know which is the best approach
   to address this.
 
-* Fix ['Last revised] entry in main page.
-
 * Add some diagrams to illustrate interprocess communication.
 
 [endsect]
