@@ -1,0 +1,73 @@
+[/
+ / Boost.Tree
+ / Main documentation file.
+ /
+ / Copyright 2006 Bernhard Reiter.
+ / Distributed under the Boost Software License, Version 1.0. 
+ / (See accompanying file LICENSE_1_0.txt or copy at
+ / http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[library Boost.Tree
+    [quickbook 1.3]
+    [authors [Reiter, Bernhard]]
+    [copyright 2006 Bernhard Reiter]
+    [purpose Generic tree framework]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+
+[section Introduction]
+
+["Trees a pervasive in Computer Science and there are few programs that do not use a tree data-structure 
+in some form or another. The C++ standard library, however, does not provide a low-level tree-container.]
+--[@http://www.crystalclearsoftware.com/cgi-bin/boost_wiki/wiki.pl?Google_Summer_Of_Code_2006#TREE]
+
+[section Abstract]
+
+A well-known STL example, practically all known associative container ([multi_]{map|set}) implementations
+use a [@http://en.wikipedia.org/wiki/Red-black_tree red-black tree] as underlying structure to take care
+of the required sorting and searching. But binary search trees like red-black ones, however important, 
+are not the only genre of tree one is likely to encounter: apart from B-trees, tries or ternary search 
+tree that usually have similar purposes (i.e. to provide a structure for quick -- normally O(log n) -- 
+data retrieval and storage), trees might just map a given external structure most naturally (e.g. file 
+hierarchies or xml files).
+
+[endsect] [/Abstract]
+
+[section Acknowledgements]
+
+This library originated in [@http://code.google.com/soc/boost/appinfo.html?csaid=E17EA7C7C537C131 one]
+out of [@http://code.google.com/soc/boost/about.html ten] [@http://www.boost.org/ Boost] projects 
+sponsored by [@http://www.google.com Google] during their [@http://code.google.com/soc Summer of Code 2006]. 
+It was mentored by [@http://www.boost.org/people/rene_rivera.htm René Rivera]. \n
+Kudos to DHL for forwarding my second check from rainy Vienna airport, Austria (30 minutes ride from 
+my place) on to Dubai, UAE, so it could catch some sun first.
+
+[endsect] [/Acknowledgements]
+
+[section References]
+
+* [#austern] Austern, Matthew H.; Stroustrup, Bjarne; Thorup, Mikkel; Wilikinson, John. Untangling the Balancing and 
+Searching of Balanced Binary Search Trees, Software: Practice and Experience 33(13): 1273-1298 (2003)
+* Knuth, Donald E. The Art of Computer Programming
+	* [#taocp1] Volume 1: Fundamental Algorithms. Third Edition (Reading, Massachusetts: Addison-Wesley, 1997)
+	* [#taocp3] Volume 3: Sorting and Searching. Second Edition (Reading, Massachusetts: Addison-Wesley, 1998)
+* [#clrs] Cormen, Thomas H.; Leiserson, Charles E.; Rivest, Ronald L.; Stein, Clifford. Algorithmen - Eine
+Einführung (Oldenbourg, 2004) (German translation of Introduction to Algorithms. Second Edition 
+(MIT Press, 2001)
+
+[endsect] [/References]
+
+[endsect] [/Introduction]
+
+[include tutorial.qbk]
+[include overview.qbk]
+[include concepts.qbk]
+[include glossary.qbk]
+[xinclude autodoc.boostbook]
+
