@@ -87,7 +87,7 @@ namespace boost { namespace coroutines { namespace detail {
     }
 
     // return true if there are operations pending.
-    std::size_t pending() const {
+    int pending() const {
       return m_operation_counter;
     }
 
@@ -380,8 +380,8 @@ namespace boost { namespace coroutines { namespace detail {
     context_state m_state;
     context_exit_state m_exit_state;
     context_exit_status m_exit_status;
-    std::size_t m_wait_counter;   
-    std::size_t m_operation_counter;    
+    int m_wait_counter;   
+    int m_operation_counter;    
 
     // This is used to generate a meaningful exception trace.
     std::type_info const* m_type_info;

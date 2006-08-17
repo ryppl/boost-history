@@ -13,6 +13,12 @@
 namespace boost { namespace coroutines { namespace detail {
 
 #if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400))
+#define BOOST_DEDUCED_TYPENAME_DEFAULT
+#else
+#define BOOST_COROUTINE_DEDUCED_TYPENAME_DEFAULT BOOST_DEDUCED_TYPENAME
+#endif
+
+#if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400))
 #define BOOST_COROUTINE_VCPP80_WORKAROUND 
 #else
 //for now, define this unconditionally for testing.
@@ -144,7 +150,7 @@ namespace boost { namespace coroutines { namespace detail {
     (BOOST_PP_ENUM(BOOST_COROUTINE_ARG_MAX,
 		   BOOST_COROUTINE_param_with_default,
 		   (yield_call_arg ,
-		    /*BOOST_DEDUCED_TYPENAME*/ 
+		    BOOST_COROUTINE_DEDUCED_TYPENAME_DEFAULT 
 		    coroutine_type::yield_traits::arg))) 
     {
       return yield_impl
@@ -159,7 +165,7 @@ namespace boost { namespace coroutines { namespace detail {
      (BOOST_COROUTINE_ARG_MAX,
       BOOST_COROUTINE_param_with_default,
       (BOOST_DEDUCED_TYPENAME Target::self::call_arg, 
-       /*BOOST_DEDUCED_TYPENAME*/ Target::arg)))
+       BOOST_COROUTINE_DEDUCED_TYPENAME_DEFAULT Target::arg)))
     {
       typedef typename Target::arg_slot_type type;
       return yield_to_impl
@@ -171,18 +177,16 @@ namespace boost { namespace coroutines { namespace detail {
 
 #undef  BOOST_COROUTINE_param_with_default
 
-#if 1
     BOOST_COROUTINE_NORETURN(void exit()) {
       m_pimpl -> exit_self();
       abort();
     }
-#else 
-    __declspec(noreturn)
-    void exit()   {
-      m_pimpl -> exit_self();
-      abort();
+
+    yield_result_type result() {
+      return detail::fix_result<
+	BOOST_DEDUCED_TYPENAME
+	coroutine_type::arg_slot_traits>(*m_pimpl->args());
     }
-#endif
 
   private:
     coroutine_self(impl_type * pimpl, detail::init_from_impl_tag) :

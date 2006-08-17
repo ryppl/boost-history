@@ -13,7 +13,7 @@
  */
 #include <boost/config.hpp>
 
-#if defined(_GCC_)
+#if defined(__GNUC__)
 
 #define BOOST_COROUTINE_NORETURN(function) \
     function __attribute__((__noreturn__)) \
@@ -26,7 +26,8 @@
 /**/
 
 #else
-
+//just for testing, remove the following error.
+#error no default
 #define BOOST_COROUTINE_NORETURN(function) \
     function
 /**/

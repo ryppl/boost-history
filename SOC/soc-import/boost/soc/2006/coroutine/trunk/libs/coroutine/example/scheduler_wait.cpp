@@ -3,52 +3,60 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <iostream>
 #include <string>
-#include <boost/coroutine/generator.hpp>
+#include <boost/coroutine/shared_coroutine.hpp>
 #include <boost/bind.hpp>
 #include <boost/lexical_cast.hpp>
 #include <queue>
 #include <list>
 
 namespace coro = boost::coroutines;
-using coro::generator;
+using coro::shared_coroutine;
 
-typedef generator<void> job_type;
+typedef shared_coroutine<void()> job_type;
 
 class scheduler {
 public:
   void add(job_type job) {
+    BOOST_ASSERT(job);
     m_queue.push(job);
   }
   
   void reschedule(job_type::self& self) {
+    BOOST_ASSERT(current());
     add(current());
     self.yield();
   }
 
   job_type& current() {
-    return m_queue.front();
+    BOOST_ASSERT(m_current);
+    return m_current;
   }
 
   void run () {
     while(!m_queue.empty()) {
-      if(current()) {
-	current()();
-      }
-      m_queue.pop();
+      pop();    
+      current()(std::nothrow);	
     }
+
   }
 private:
+  void pop() {
+    m_current = m_queue.front();
+    m_queue.pop();
+  }
 
-  std::queue<job_type, std::list<job_type> > m_queue;
+  std::queue<job_type> m_queue;
+  job_type m_current;
 };
 
 class message_queue {
 public:
   std::string pop(job_type::self& self) {
-    if(m_queue.empty()) {
+    while(m_queue.empty()) {
       m_waiters.push(m_scheduler.current());
       self.yield();      
     }
+    BOOST_ASSERT(!m_queue.empty());
     std::string res = m_queue.front();
     m_queue.pop();
     return res;
@@ -56,7 +64,7 @@ public:
 
   void push(const std::string& val) {
     m_queue.push(val);
-    if(!m_waiters.empty()) {
+    while(!m_waiters.empty()) {
       m_scheduler.add(m_waiters.front());
       m_waiters.pop();
     }
@@ -75,8 +83,8 @@ scheduler global_scheduler;
 message_queue mqueue(global_scheduler);
 
 void producer(job_type::self& self, int id, int count) {
-  while(count--) {
-    std::cout << "In producer: "<<id<<"\n";
+  while(--count) {
+    std::cout << "In producer: "<<id<<", left: "<<count <<"\n";
     mqueue.push("message from " + boost::lexical_cast<std::string>(id));
     std::cout << "\tmessage sent\n";
     global_scheduler.reschedule(self);
@@ -88,14 +96,13 @@ void consumer(job_type::self& self, int id) {
     std::string result = mqueue.pop(self);
     std::cout <<"In consumer: "<<id<<"\n";
     std::cout <<"\tReceived: "<<result<<"\n";
-    global_scheduler.reschedule(self);
   }
 }
 
 int main() {
-  global_scheduler.add(boost::bind(producer, _1, 0, 10));
-  global_scheduler.add(boost::bind(producer, _1, 1, 5));
-  global_scheduler.add(boost::bind(producer, _1, 2, 3));
+  global_scheduler.add(boost::bind(producer, _1, 0, 4));
+  global_scheduler.add(boost::bind(producer, _1, 1, 3));
+  global_scheduler.add(boost::bind(producer, _1, 2, 2));
   global_scheduler.add(boost::bind(consumer, _1, 3));
   global_scheduler.add(boost::bind(consumer, _1, 4));
   global_scheduler.run();

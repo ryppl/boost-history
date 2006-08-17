@@ -44,6 +44,8 @@ exited]]
 waiting]]
 [def __pending__     [link boost::coroutines::coroutine::pending
 pending]]
+[def __result__     [link boost::coroutines::coroutine::::self::result
+result]] 
 [def __swap__     [link boost::coroutines::swap
 swap]]
 [def __mfswap__     [link boost::coroutines::coroutine::swap
@@ -90,7 +92,7 @@ function call.
 
 [endsect]
 
-[section:background Tutorial]
+[section:tutorial Tutorial]
 
 While all subroutines have state, this is usually lost when the
 subroutine returns; on the other hand coroutines keep their state
@@ -423,10 +425,12 @@ if a generator ever gets a copy of its associated __generator__
 iterator, a cycle is formed and it could cause memory not to be
 reclaimed.]
 
-[#producer_consumer1]
-[h3 Example: producer/consumer]
 
-Generators can be used to straightforwardly model the ['consumer/producer] pattern. In
+[endsect]
+
+[section:producer_consumer1 Example: the producer/consumer pattern]
+
+Generators can be used to straightforwardly model the ['producer/consumer] pattern. In
 this scenario one function generates values and another consumes
 them. The solution presented here is consumer driven, that is, the
 consumer dictates the speed at witch the producer generates
@@ -440,7 +444,7 @@ given string, while the consumer simply print the output:
     do {
       self.__yield__(base);
     } while (std::next_permutation(base.begin(), base.end()));
-    self.__exit_self__();
+    self.__self_exit__();
   }
   
   template<typename Producer> 
@@ -457,8 +461,8 @@ given string, while the consumer simply print the output:
      (producer, _1, std::string("hello"))));
   ...
 
-[blurb __alert__ __generator__ correctly handle reference
-and const references. You can even return a reference to a local
+[blurb __alert__ __generator__ correctly handle
+ const and non-const references. You can even return a reference to a local
 object, but you must make sure that the object doesn't go out of scope
 while it is in use. This is why this example uses `operator*` and
 `operator++` instead of the simpler `operator()`. In fact this last member
@@ -470,6 +474,8 @@ value), then increment it, restarting the generator body that would call
 reference; finally it would 
 return the dangling reference. Splitting the calls to the two member
 functions gives us a window where the reference is live.]
+
+[h3 Filters]
 
 This pattern is very useful and can be extended to insert another
 filter function between the producer and the consumer. This filter is
@@ -507,6 +513,7 @@ problem.]
 You can obviously have as many filters functions as you want.
 
 [endsect]
+
 [section:stackful Stackful generators: Same fringe problem]
 
 [h3 Stackfulness]
@@ -532,7 +539,7 @@ coroutines and generators.
 describe asymmetric coroutines, while symmetric coroutines are simply
 called coroutines. We will explain the difference between symmetric
 coroutines and asymmetric coroutines only in the [link
-advanced.symmetric_coroutines advanced section]]
+coroutine.symmetric_coroutines advanced section]]
 
 [h3 Same Fringe: the problem]
 
@@ -615,7 +622,7 @@ leaves.
 can be recursive, a generator 
 is *never* recursive: a generator cannot call itself directly nor
 indirectly: a generator can freely call other functions, even other
-generators, but these cannot call the generator. This make sense
+generators, but these cannot call back to the calling generator. This make sense
 because a generator can only be reentered after it has yielded
 control, and it is resumed at the exact point where it had yielded. An
 hypothetical recursive generator wouldn't know were to resume if it
@@ -653,317 +660,20 @@ to `yield` from anywhere in the call stack.
 For example, notice how the `same_fringe` function cannot be easily
 ported to *Python* generators.
 
+[/
 Next section will show a simple non recursive program that benefit from the
 stackfulness property of coroutines. It will also show how to use
 coroutines for multitasking.
-
-[endsect]
-[section:multitasking Multitasking]
-
-Coroutines can be used to implement multitasking in a very simple and
-efficient way. Each coroutine represent a *job* and a scheduler is
-responsible of executing each job serially. Every job is responsible
-of yielding control to the scheduler once in a while.
-We use a `__generator__<void>` to represent a job:
-
-  typedef generator<void> job_type;
-
-[blurb __note__ A `__generator__<void>` can be legally instantiated. Of
-course the input iterator interface of such an iterator is not very
-useful (`operator*` returns void); on the other hand the
-__Generator__ interface fits perfectly our goal here.]
-
-[#generator_scheduler]
-The scheduler is just a simple wrapper around a `std::queue`:
-
-  #include<queue>
-
-  class scheduler {
-  public:
-    void add(job_type job) {
-      m_queue.push(job);
-    }
-  
-    job_type& current() {
-      return m_queue.front();
-    }
-
-    void run () {
-      while(!m_queue.empty()) {
-        if(current()) {
-	  current()();
-	  add(current());
-	}
-	m_queue.pop();
-      }
-    }
-  private:
-    std::queue<job_type> m_queue;
-  };
-
-For simplicity we declare a global scheduler object:
-
-  scheduler global_scheduler;
-
-Here is a generic job body:
-
-  void printer(job_type::__self__& self, std::string name, int iterations) {
-    while(iterations --) {
-      std::cout<<name <<" is running, "<<iterations<<" iterations left\n";
-      self.__yield__();
-    }
-    self.__self_exit__();
-  }
-
-When a job yields, it is rescheduled again. If it had exited instead,
-next time it is removed from the queue it will be dropped.
-Notice that `__self_exit__()` is in this case superfluous. When void a
-function returns it is as it had exited. 
-Let's give some job to the scheduler:
-
-  ...
-  global_scheduler.add(boost::bind(printer, _1, "first", 10));
-  global_scheduler.add(boost::bind(printer, _1, "second", 5));
-  global_scheduler.add(boost::bind(printer, _1, "third", 3));
-  ...
-
-Calling  `global_scheduler.run();` will print:
-
-[pre
-first is running, 9 iterations left
-second is running, 4 iterations left
-third is running, 2 iterations left
-first is running, 8 iterations left
-second is running, 3 iterations left
-third is running, 1 iterations left
-first is running, 7 iterations left
-second is running, 2 iterations left
-third is running, 0 iterations left
-first is running, 6 iterations left
-second is running, 1 iterations left
-first is running, 5 iterations left
-second is running, 0 iterations left
-first is running, 4 iterations left
-first is running, 3 iterations left
-first is running, 2 iterations left
-first is running, 1 iterations left
-first is running, 0 iterations left
 ]
-
-[blurb __alert__ This example has a little quirk:
- the generator body is executed for the first time when the __generator__
-is constructed (that is, in the call to `scheduler::add()`). An user
-might rightfully expect that tasks are executed only on in the call to
-`scheduler::run()`. While our solution is not necessarily wrong it
-should be prominently documented. This quirk could be solved by using
-true coroutines instead of generators.]
-	
-[h3 Multitasking versus multithreading]
-
-What we have seen so far is a cooperative implementation of
-multitasking, that is, each task must explicitly yield control to
-the central scheduler to allow the next task to run. This means that a
-misbehaving task that never yields control, can starve all other
-tasks. 
-
-Multithreading on the other hand, at least on most implementations,
-implies preemptive multitasking; each task is allowed to run for a
-certain amount of time, called /time-slice/. When the time-slice is
-over the task is forcibly interrupted and the scheduler select the next
-task. If the interrupted task was manipulating some shared resource,
-this can be left in an undefined state. A task cannot control when is
-preempted, so it must be pessimistic and lock all shared resources
-that it uses. As any programmer that had to work with heavily threaded
-applications knows, dealing with complex locking is not a trivial
-task. In addition locking imposes some overhead.
-
-Cooperative multitasking has not such problems as long as a
-task never yield while manipulating shared state. 
-
-This does not means that multithreading has not its place, there are
-at least two scenarios where true concurrency and preemption are
-pretty much required:
-
-* *Real time applications*. Preemption is required in practice in real-time
-applications. Almost all real-time scheduling algorithms need
-preemption to guarantee that tasks always meet their deadline.
-
-* *Multiprocessing*. To take advantage of hardware parallelism tasks
-must be run in parallel. With the current trend of multicore
-architectures this will be more and more necessary. While shared
-memory threads are not the only abstraction that take advantage of
-hardware parallelism (multiple processes, message passing and
-__OpenMP__ are other examples), they are certainly the most popular.
-
-Unfortunately threads are often abused for general
-multitasking, where preemption is a burden instead of a benefit.
-
-Cooperative multitasking implemented with coroutines is often a better
-choice.
-
-The simple solution presented [link generator_scheduler above] has a
-fundamental problem: if a task blocks waiting for I/O, all tasks are
-blocked. This is can be easily solved with asynchronous functions, but
-this will be explained in an [link advanced.events advanced
-section]. For now we will show a simplified example.
-
-[h3 Waiting for events]
-
-In the first [link generator_scheduler scheduling example], when a
-task is suspended, it is always added to the back task queue. We will
-now let a task decide whether be automatically rescheduled or
-not. This way a task can wait to be rescheduled at a latter time, when
-an event arrives.
-
-We slightly modify `scheduler::run()`:
-
-  ...
-  void run () {
-    while(!m_queue.empty()) {
-      if(current()) {
-        current()();	
-      }	
-    m_queue.pop();
-  }
-  ...
-  
-`add(current())` has been removed. This method:
-
-  ...
-  void reschedule(job_type::__self__& self) {
-    add(current());
-    self.__yield__();
-  }
-  ...
-
-is added to `scheduler`. It is used by a task to 
-reschedule itself. We will define a message queue class now:
-
-  class message_queue {
-  public:
-    std::string pop(job_type::__self__& self) {
-      while(m_queue.empty()) {
-        m_waiters.push(m_scheduler.current());
-        self.__yield__();      
-      }
-      std::string res = m_queue.front();
-      m_queue.pop();
-      return res;
-    }
-
-    void push(const std::string& val) {
-      m_queue.push(val);
-      if(!m_waiters.empty()) {
-        m_scheduler.add(m_waiters.front());
-        m_waiters.pop();
-      }
-    }
-
-    message_queue(scheduler& s) :
-      m_scheduler(s) {}
-
-  private:
-    std::queue<std::string> m_queue;
-    std::queue<job_type> m_waiters;
-    scheduler & m_scheduler;
-  };
-
-A task can wait for a message to arrive by calling
-`message_queue::pop()`. This function returns the first element in the
-internal queue; if the queue is empty adds the current task to an internal wait
-queue and yields control to the scheduler. When `message_queue::pop()`
-is called, if the wait queue is not empty, its top element is removed
-and rescheduled.
-
-  message_queue mqueue(global_scheduler);
-
-This is our message queue object. Again a global for simplicity.
-
-Now we will create some jobs: 
-
-  void producer(job_type::__self__& self, int id, int count) {
-    while(count--) {
-      std::cout << "In producer: "<<id<<"\n";
-      mqueue.push("message from " + boost::lexical_cast<std::string>(id));
-      std::cout << "\tmessage sent\n";
-      global_scheduler.reschedule(self);
-    } 
-  }
-
-  void consumer(job_type::self& self, int id) {
-    while(true) {
-      std::string result = mqueue.pop(self);
-      std::cout <<"In consumer: "<<id<<"\n";
-      std::cout <<"\tReceived: "<<result<<"\n";
-      global_scheduler.reschedule(self);
-    }
-  }
-
-And add some instances of them to the scheduler:
-
-  global_scheduler.add(boost::bind(producer, _1, 0, 3));
-  global_scheduler.add(boost::bind(producer, _1, 1, 3));
-  global_scheduler.add(boost::bind(producer, _1, 2, 3));
-  global_scheduler.add(boost::bind(consumer, _1, 3));
-  global_scheduler.add(boost::bind(consumer, _1, 4));
-
-calling `global_scheduler.run()` generates the following output:
-
-[pre
-In producer: 0
-        message sent
-In producer: 1
-        message sent
-In producer: 2
-        message sent
-In consumer: 3
-        Received: message from 0
-In consumer: 4
-        Received: message from 1
-In producer: 0
-        message sent
-In producer: 1
-        message sent
-In producer: 2
-        message sent
-In consumer: 3
-        Received: message from 2
-In consumer: 4
-        Received: message from 0
-In producer: 0
-        message sent
-In producer: 1
-        message sent
-In producer: 2
-        message sent
-In consumer: 3
-        Received: message from 1
-In consumer: 4
-        Received: message from 2
-In consumer: 3
-        Received: message from 0
-In consumer: 4
-        Received: message from 1
-In consumer: 3
-        Received: message from 2
-]
-
-[h3 Conclusions]
-
-While this example is very simple and can't be easily extended to
-support system-generated events, it shows how a more complex event framework
-can be implemented. In the advanced session we will see how
-__BoostAsio__ can be used as a scheduler and how coroutines can be
-adapted as callbacks to asynchronous functions.
 
 [endsect]
 
-[section:coroutines Full coroutines]
+[section:coroutines Coroutines]
 
 [h3 From generators to coroutines]
 
 So far we have learned to use generators, a special kind of
-subroutines. We have seen that generators are function objects with no
+coroutines. We have seen that generators are function objects with no
 parameters and that return a sequence of values. 
 We can generalize this concept to function objects that have zero, one or
 more parameters and return zero, one or more values.
@@ -984,7 +694,7 @@ As usual, we start by declaring its type:
 
   typedef coro::__coroutine__<int(int)> coroutine_type;
 
-The syntax is deliberately similar to that used in __BoostFunction__.
+The syntax is deliberately similar to the one used in __BoostFunction__.
 This is the coroutine body:
 
   int accumulator_body(coroutine_type::__self__& self, int val) {
@@ -1012,13 +722,13 @@ This will print all values in the mathematical series `a[i] = a[i-1]
 + i`.
 Let's see how the flow control evolves. 
 
-[blurb __note__ A coroutine, unlike generators, will enter its body only  when the
+[blurb __note__ A __coroutine__, unlike a __generator__, will enter its body only  when the
 `__coroutine__::operator()` is invoked for the first time. This is
-because, in general, a coroutine requires parameters to be passed. In
-our case the parameter is the value to accumulate. 
+because, generally, a coroutine requires parameters to be passed. In
+our example the parameter is the value to accumulate. 
 __generator__ and __coroutine__ are intended for different use cases
-(generator functions and iterators the first, generalized control
-inversion the second) and their semantics try to be the best for each case.]
+:generator functions and iterators the first, generalized control
+inversion the second. Their semantics are intended to be the most useful for each case.]
 
 * The `for` loop starts, `accumulator(0)` is called.
 * The coroutine body is entered for the first time.
@@ -1051,11 +761,11 @@ never be recursive.]
  
 While you can freely copy a generator, you can't do the same with
 coroutines: during the development of Boost.Coroutine it has been
-deemed that giving refference counted shallow copying to coroutines
+deemed that giving reference counted shallow copying to coroutines
 was too risky. Coroutines usually have a longer lifetime and are more
 complex. Different coroutines can interact in dynamic ways, especially
 with the ability to yield to another coroutine (`__yield_to__()` will
-be introduced in an [link advanced.symmetric_coroutines advanced
+be introduced in an [link coroutine.symmetric_coroutines advanced
 section]). 
 
 The possibility of creating a cycle was very high and very
@@ -1119,13 +829,17 @@ these are `__exited__()`, `__empty__()`, `__waiting__()` and
 throwing an exception, by calling `__self_exit__()` or by a plain
 return), `__empty__()` returns true if a coroutine has not been
 assigned. `__waiting__()` and `__pending__()` are related to the event
-waiting mechanics and will be explained [link advanced.events later].
+waiting mechanics and will be explained [link coroutine.events later].
 
 Both `__coroutine__::__mfswap__()` and a friend `__swap__()` are
 provided with the usual semantics.
 
-The `__yield_to__()` member function will be explained in an advanced
-section about [link advanced.symmetric_coroutines symmetric coroutines].
+`__coroutine__::__self__` provides a `__result__()` member function
+that returns the value returned by the last `__yield__()` (or as a
+parameter to the body if `__yield__()` has not been called yet).
+
+The `__coroutine__::__self__::__yield_to__()` member function will be explained in an advanced
+section about [link coroutine.symmetric_coroutines symmetric coroutines].
 
 [h3 Multiple arguments and return values]
 
@@ -1364,9 +1078,10 @@ Will be invoked like this:
   boost::optional<int> res = my_coro(std::nothrow, 10000L, 10.7, 'a');
 
 [#producer_consumer2]
+
 [h3 Example: producer/consumer revisited]
 
-A [link producer_consumer1 previous example] presented a consumer
+A [link coroutine.producer_consumer1 previous example] presented a consumer
 driven version of the ['producer/consumer] pattern. We will now
 implement a producer driven example of the same scenario:
 
@@ -1389,7 +1104,7 @@ implement a producer driven example of the same scenario:
 
 [blurb __note__ __coroutine__ too correctly handles reference
 types. This specific example doesn't have the reference lifetimes
-issues the [link producer_consumer1 previous] had, but coroutines
+issues the [link coroutine.producer_consumer1 previous] had, but coroutines
 aren't in general immune to them.]
 
 Here we take advantage of the capability to pass arguments in a
@@ -1405,6 +1120,323 @@ describe more advanced features, including symmetric coroutines and
 event handling.
 
 [endsect]
+
+[section:multitasking Multitasking]
+
+Coroutines can be used to implement multitasking in a very simple and
+efficient way. Each coroutine represent a *job*; a scheduler is
+responsible of executing each job serially in *FIFO* order. Every job is responsible
+of yielding control to the scheduler once in a while.
+We use a `__coroutine__<void()>` to represent a job:
+
+  typedef coro::__coroutine__<void()> job_type;
+
+[#coroutine_scheduler]
+The scheduler is just a simple wrapper around a `std::queue`:
+
+  #include<queue>
+
+  class scheduler {
+  public:
+    void add(job_type job) {
+      m_queue.push(job);
+    }
+  
+    job_type& current() {
+      return m_queue.front();
+    }
+
+    void run () {
+      while(!m_queue.empty()) {
+        current()(std::nothrow);
+        if(current()) 
+          add(current());
+	m_queue.pop();
+      }
+    }
+  private:
+    std::queue<job_type> m_queue;
+  };
+
+When a job yields, it is rescheduled again unless it has
+exited. Notice the use of `std::nothrow` to correctly handle
+exiting tasks.
+For simplicity we declare a global scheduler object:
+
+  scheduler global_scheduler;
+
+Here is a generic job body:
+
+  void printer(job_type::__self__& self, std::string name, int iterations) {
+    while(iterations --) {
+      std::cout<<name <<" is running, "<<iterations<<" iterations left\n";
+      self.__yield__();
+    }
+    self.__self_exit__();
+  }
+
+
+Notice that `__self_exit__()` is in this case superfluous. When void a
+function returns it is as it had exited (that is, if std::nothrow is
+used, or else `operator()` would throw an exception). 
+Let's give some job to the scheduler:
+
+  ...
+  global_scheduler.add(boost::bind(printer, _1, "first", 10));
+  global_scheduler.add(boost::bind(printer, _1, "second", 5));
+  global_scheduler.add(boost::bind(printer, _1, "third", 3));
+  ...
+
+Calling  `global_scheduler.run();` will print:
+
+[pre
+first is running, 9 iterations left
+second is running, 4 iterations left
+third is running, 2 iterations left
+first is running, 8 iterations left
+second is running, 3 iterations left
+third is running, 1 iterations left
+first is running, 7 iterations left
+second is running, 2 iterations left
+third is running, 0 iterations left
+first is running, 6 iterations left
+second is running, 1 iterations left
+first is running, 5 iterations left
+second is running, 0 iterations left
+first is running, 4 iterations left
+first is running, 3 iterations left
+first is running, 2 iterations left
+first is running, 1 iterations left
+first is running, 0 iterations left
+]
+	
+[h3 Multitasking versus multithreading]
+
+What we have seen so far is a cooperative implementation of
+multitasking, that is, each task must explicitly yield control to
+the central scheduler to allow the next task to run. This means that a
+misbehaving task that never yields control, can starve all other
+tasks. 
+
+Multithreading on the other hand, at least on most implementations,
+implies preemptive multitasking; each task is allowed to run for a
+certain amount of time, called /time-slice/. When the time-slice is
+over the task is forcibly interrupted and the scheduler select the next
+task. If the interrupted task was manipulating some shared resource,
+this can be left in an undefined state. A task cannot control when is
+preempted, so it must be pessimistic and lock all shared resources
+that it uses. As any programmer that had to work with heavily threaded
+applications knows, dealing with complex locking is not a trivial
+task. In addition both locking and thread switching imposes some overhead.
+
+Cooperative multitasking has not such problems as long as a
+task never yields while manipulating shared state. 
+
+This does not means that multithreading has not its place, there are
+at least two scenarios where true concurrency and preemption are
+required:
+
+* *Real time applications*. Preemption is required in practice in real-time
+applications. Almost all real-time scheduling algorithms need
+preemption to guarantee that tasks always meet their deadline.
+
+* *Multiprocessing*. To take advantage of hardware parallelism tasks
+must be run in parallel. With the current trend of multi-core
+architectures this will be more and more necessary. While shared
+memory threads are not the only abstraction that take advantage of
+hardware parallelism (multiple processes, message passing and
+__OpenMP__ are other examples), they are certainly the most popular.
+
+Unfortunately threads are often abused for general
+multitasking, where preemption is a burden instead of a benefit.
+
+Cooperative multitasking implemented with coroutines is often a better
+choice.
+
+[h3 conclusions]
+
+Coroutines can act as an extremely lightweight multitasking
+abstraction. Not only they scale much better than threads, but also
+much simpler to use because they require no locking.
+
+The simple solution presented [link coroutine_scheduler above] has a
+fundamental problem: if a task blocks waiting for I/O, all tasks are
+blocked. This is can be easily solved with asynchronous functions, but
+this will be explained in an [link coroutine.events advanced
+section]. Next section will show a simplified solution.
+
+[endsect]
+
+[section:events_simple Waiting for events]
+
+In the first [link coroutine.multitasking scheduling example], when a
+task is suspended, it is always added to the back task queue. We will
+now let a task decide whether be automatically rescheduled or
+not. This way a task can wait to be rescheduled at a latter time, when
+an event arrives.
+
+We slightly modify `scheduler::run()`:
+
+  ...
+  void run () {
+    while(!m_queue.empty()) {
+      if(current()) {
+        current()();	
+      }	
+    m_queue.pop();
+  }
+  ...
+  
+The line `add(current()):` has been removed.\n The `reschedule()` member function:
+
+  ...
+  void reschedule(job_type::__self__& self) {
+    add(current());
+    self.__yield__();
+  }
+  ...
+
+is added to `scheduler`. It is used by a task to 
+reschedule itself. We will define a message queue class now:
+
+  class message_queue {
+  public:
+    std::string pop(job_type::__self__& self) {
+      while(m_queue.empty()) {
+        m_waiters.push(m_scheduler.current());
+        self.__yield__();      
+      }
+      std::string res = m_queue.front();
+      m_queue.pop();
+      return res;
+    }
+
+    void push(const std::string& val) {
+      m_queue.push(val);
+      while(!m_waiters.empty()) {
+        m_scheduler.add(m_waiters.front());
+        m_waiters.pop();
+      }
+    }
+
+    message_queue(scheduler& s) :
+      m_scheduler(s) {}
+
+  private:
+    std::queue<std::string> m_queue;
+    std::queue<job_type> m_waiters;
+    scheduler & m_scheduler;
+  };
+
+A task can wait for a message to arrive by calling
+`message_queue::pop()`. This function returns the first element in the
+internal queue; if the queue is empty adds the current task to an internal wait
+queue and yields control to the scheduler. When `message_queue::pop()`
+is called, if the wait queue is not empty, its top element is removed
+and rescheduled. Note that we use a `while` loop instead of a simple
+`if` to check for the emptiness of the message queue. This is to
+correctly handle spurious wakeups. Consider this scenario:
+
+* /Consumer 1/ calls `pop()`. Message queue is empty, so it sleeps waiting for
+data.
+* /Consumer 2/ calls `pop()`. Message queue is empty, so it sleeps waiting for data.
+* /Producer 1/ insert data and signals 1.
+* /Producer 2/ insert data and signals 2.
+* /Consumer 1/ wakes up, consumes data produced by /Consumer 1/, then
+recall `pop()`
+without yielding control. Message queue is not empty, so it consumes
+data produced by /Consumer 2/. It calls `pop()` again. This time the message queue
+is empty and goes to sleep.
+* /Consumer 2/ wakes up, re-test the condition variable, see that the
+message queue is empty and goes to sleep. If an `if` where used
+instead, the test wouldn't be performed, and /Consumer 2/ would try to
+extract an non-existent element from the queue.
+
+This means that this implementation of the message queue could starve the second consumer
+if the first can always extract an element from the queue. A possible
+solution to the problem would be to to insert an explicit call to
+`reschedule()` in `pop()` that would give another consume a chance to
+run. This would require extra context switches though. This is a
+matter of preferring fairness or performance.
+
+[blurb __note__ The "wait while message queue is empty" and "signal
+message queue not empty" pattern is reminiscent of condition
+variables used in threaded programming. In fact the idea is the same,
+except we need not to associate a lock with the condition variable
+because of the cooperative behavior of the scheduler. The pattern
+is so common that could be refactored in a reusable `coroutine_condition` class.] 
+
+This is our message queue object. Again a global for simplicity:
+
+  message_queue mqueue(global_scheduler);
+
+Now we will create some jobs: 
+
+  void producer(job_type::__self__& self, int id, int count) {
+    while(--count) {
+      std::cout << "In producer: "<<id<<", left: "<<count <<"\n";	
+      mqueue.push("message from " + boost::lexical_cast<std::string>(id));
+      std::cout << "\tmessage sent\n";
+      global_scheduler.reschedule(self);
+    } 
+  }
+
+  void consumer(job_type::self& self, int id) {
+    while(true) {
+      std::string result = mqueue.pop(self);
+      std::cout <<"In consumer: "<<id<<"\n";
+      std::cout <<"\tReceived: "<<result<<"\n";
+    }
+  }
+
+And add some instances of them to the scheduler:
+
+  global_scheduler.add(boost::bind(producer, _1, 0, 3));
+  global_scheduler.add(boost::bind(producer, _1, 1, 3));
+  global_scheduler.add(boost::bind(producer, _1, 2, 3));
+  global_scheduler.add(boost::bind(consumer, _1, 3));
+  global_scheduler.add(boost::bind(consumer, _1, 4));
+
+calling `global_scheduler.run()` generates the following output:
+
+[pre
+In producer: 0, left: 3
+        message sent
+In producer: 1, left: 2
+        message sent
+In producer: 2, left: 1
+        message sent
+In consumer: 3
+        Received: message from 0
+In consumer: 3
+        Received: message from 1
+In consumer: 3
+        Received: message from 2
+In producer: 0, left: 2
+        message sent
+In producer: 1, left: 1
+        message sent
+In consumer: 3
+        Received: message from 0
+In consumer: 3
+        Received: message from 1
+In producer: 0, left: 1
+        message sent
+In consumer: 3
+        Received: message from 0
+]
+
+[h3 Conclusions]
+
+While this example is very simple and can't be easily extended to
+support system events (i.e. I/O, alarms and much more), it shows how a
+more complex event framework 
+can be implemented. In the advanced session we will see how
+__BoostAsio__ can be used as a scheduler and how coroutines can be
+adapted as callbacks to asynchronous functions.
+
+[endsect]
+
 [endsect][/tutorial]
 
 [section:advanced Advanced concepts]
@@ -1415,10 +1447,10 @@ So far we have only seen some arguably simple uses of coroutines,
 mostly as generators and iterators. We have only scratched the surface
 of more advanced usage when we used generators to implement cooperative
 multitasking. In this section will now explore some more advanced
-usages, including as [link advanced.actors actors in the actor model]
-and as [link advanced.state_machines state machines]. Finally we will
-learn to use Boost.Coroutine support for [link advanced.events events] and its integration
-with [link advanced.asio __BoostAsio__].
+usages, including [/as [link coroutine.actors actors in the actor model]
+and] as [link coroutine.state_machines state machines]. Finally we will
+learn to use Boost.Coroutine support for [link coroutine.events events] and its integration
+with [link coroutine.asio __BoostAsio__].
 
 [endsect]
 
@@ -1511,7 +1543,7 @@ discipline can easily lead to spaghetti code.]
 
 [h3 Producer/consumer revisited (again)]
 
-We have explored the [link producer_consumer1 consumer] and
+We have explored the [link coroutine.producer_consumer1 consumer] and
 [link producer_consumer2 producer] driven versions of this path
 before. In this third installment we will implement the pattern with
 the producer and the consumer as peers, implementing them as symmetric
@@ -1596,7 +1628,7 @@ implemented in terms of this function.
 
 Implementing `__yield_to__` with only asymmetric coroutines is a bit
 more involved, but still straight forward. In fact we already did
-implement a form of it in our [link generator_scheduler scheduler
+implement a form of it in our [link coroutine_scheduler scheduler
 example]. A dispatch loop invokes the first coroutine. This
 coroutine then chooses the next coroutine to run by returning to the
 dispatcher the address of the target coroutine. The dispatch loop then
@@ -1621,7 +1653,7 @@ convenience.
 [h3 Introduction]
 
 Finite state machines are a model of computation that consist in a set of
-states, the set of input symbols, a function that maps every tuple
+states, a set of input symbols, a function that maps every tuple
 `(input, state)` to new state  and the actions performed at each
 state. A complete exposition of the concept is beyond the scope of this
 documentation. Here we will show how coroutines are a straightforward
@@ -1662,6 +1694,8 @@ The output will be:
 This state machine can be implemented in `C++` directly from it
 definition, using a `switch` statement inside a stateful function
 object:
+
+[#fsm1]
 
   struct fsm {
     void operator() (char input_) {
@@ -1705,7 +1739,7 @@ With coroutines the straight forward transformation is:
   typedef coro::__coroutine__<void(char)> coroutine_type;
 
   enum state { A, B, C};	
-  void fsm(coroutine_type::self& self, char input_) {
+  void fsm(coroutine_type::__self__& self, char input_) {
     state m_state = A;
     while(true) {
       bool input = input_ != '0';
@@ -1723,7 +1757,7 @@ With coroutines the straight forward transformation is:
         m_state = input? C : A;
         break;
       }
-      input_ = self.yield();
+      input_ = self.__yield__();
     }
   }
 
@@ -1735,36 +1769,36 @@ Let's examine the code more carefully and see if we can do better. The
 `m_state` variable and its assignments are just carefully concealed
 `goto` statements: 
 
-  void fsm_goto(coroutine_type::self& self, char input) {
+  void fsm_goto(coroutine_type::__self__& self, char input) {
     while(true) {
     A:
       if(input != '0') {
         std::cout << '0';
-        input = self.yield();
+        input = self.__yield__();
         goto B;
       } else {
         std::cout << '0';
-        input = self.yield();
+        input = self.__yield__();
         goto A;
       }
     B:
       if(input != '0') {
         std::cout << '0';
-        input = self.yield();
+        input = self.__yield__();
         goto C;
       } else {
         std::cout << '0';
-        input = self.yield();
+        input = self.__yield__();
         goto A;
       }
     C:
       if(input != '0') {
         std::cout << '0';
-        input = self.yield();
+        input = self.__yield__();
         goto C;
       } else {
         std::cout << '1';
-        input = self.yield();
+        input = self.__yield__();
         goto A;
       }
     }
@@ -1774,53 +1808,124 @@ Let's examine the code more carefully and see if we can do better. The
 the *FSM* is stored in the instruction pointer and need not to be
 managed explicitly. On the other hand the control flow of the code has
 become explicit and arguably more readable. Then again, calling
-readable a code
-full of `goto`s might be a stretch. Let's complete the opera
+readable a code full of `goto`s might be a stretch. Let's complete the opera
 and do the final transformation:
 
-  void fsm_structured(coroutine_type::self& self, char) {
-    while(true) {
-      if(self.yield() == '1') {
+[#fsm_structured]
+
+ void fsm_structured(coroutine_type::__self__& self, char) {
+  while(true) {
+    if(self.__result__() != '0') {
+      std::cout << '0';
+      self.__yield__();
+      if(self.__result__() != '0') {
         std::cout << '0';
-        if(self.yield() == '1') {
+        self.__yield__();
+        if(self.__result__() == '0') {
+          std::cout << '1';
+          self.__yield__();
+        } else {
           std::cout << '0';
-          if(self.yield() == '0') 
-            std::cout << '1';
-          else std::cout <<'0';
-        } else std::cout <<'0';
-      } else std::cout <<'0';
+          self.__yield__();
+        }
+      } else {
+        std::cout << '0';
+        self.__yield__();
+      }
+    } else { 
+      std::cout << '0';
+      self.__yield__();
+    }
+  }
+ }
+
+We used `__result__()`. The sequence of `if`s represent
+exactly the informal requirement of matching the sequence `110`. 
+
+It is arguable if the above *FSM* implementation is more readable of
+the [link fsm1 first implementation]. But it is easier to generalize
+it. The repetition of `if` statements is a strong hint that the code
+should be refactored:
+
+  typedef boost::function<void(coroutine_type2::self&)> action_type;
+
+  typedef coroutine<char(char)> coroutine_type2;
+  
+  void terminator(coroutine_type2::self&) {}
+
+  void match(coroutine_type2::self& self, char match, char out1, char out2 , action_type act, action_type act2) {
+    if(self.result() == match) {
+      self.yield(out1);
+      act(self);
+    } else {
+      self.yield(out2);
+      act2(self);
     }
   }
 
-Now the code is much more readable. Also for simplicity we discard the
-first input: you should give a dummy char to the coroutine before
-feeding it with the input to be matched. The sequence of `if`s represent
-exactly the informal requirement of matching the sequence `110`. Note
-that this transformation can be easily extended to include regular
+  char fsm_match(coroutine_type2::self& self, char) {
+    action_type s3 (boost::bind(match, _1, '0', '1', '0', terminator, terminator));
+    action_type s2 (boost::bind(match, _1, '1', '0', '0', s3, terminator));
+    action_type s1 (boost::bind(match, _1, '1', '0', '0', s2, terminator));
+    while(true) {
+      s1(self);
+    } 
+  }
+
+[blurb __note__
+We use `boost::function` because if `match` where templated on the
+action type, the compiler wouldn't know which `match` to pass to
+`boost::bind`. There are more efficient solutions, but this is the
+most compact and simple.]
+
+`match` chooses what character to yield and what action to follow
+according 
+The [link fsm_structured structured *FSM*] can be extended to match regular
 expressions. For example a matcher for the regular expression `(01+010)`
 can be written as:
 
   void fsm_regexp(coroutine_type::self& self, char) {
     while(true) {
-      if(self.yield() == '0') {
+      if(self.result() == '0') {
         std::cout << '0';
-        if(self.yield() == '1') {
-          std::cout << '0';
-          while(self.yield() == '1') 
-            std::cout << '0';
-          std::cout <<'0';
-          if(self.yield() == '1') {
-            std::cout << '0';
-            if(self.yield() == '0') {
-              std::cout << '1';
-            } else std::cout <<'0';
-          } else std::cout <<'0';
-        } else std::cout << '0';
-      } else std::cout <<'0';
+        self.yield();
+        if(self.result() == '1') {
+	  std::cout << '0';
+	  self.yield();
+	  while(self.result() == '1') {
+	    std::cout << '0';
+	    self.yield();
+   	  }
+	  std::cout <<'0';
+	  self.yield();
+	  if(self.result() == '1') {
+	    std::cout << '0';
+	    self.yield();
+	    if(self.result() == '0') {
+	      std::cout << '1';
+	      self.yield();
+	    } else {
+	      std::cout <<'0';
+	      self.yield();
+	    } 
+	  } else {
+	    std::cout <<'0';
+	    self.yield();
+	  }
+        } else {
+	  std::cout << '0';
+	  self.yield();
+        }
+      } else {
+        std::cout <<'0';
+        self.yield();
+      }
     } 
   }
+ 
+Generalizing this example is left as an exercise for the reader.
 
-Notice that the above coroutine will fail to match the last six digits
+Notice that the above *FSM* will fail to match the last six digits
 of this pattern:
 
   011011010
@@ -1836,6 +1941,10 @@ document. See the example [^__complex_matcher_cpp__] for more details.
 [endsect]
 
 [section:events Events: introducing futures]
+
+[link coroutine.events_simple Previously] we have seen a simple way to deal
+with blocking the blocking behavior of coroutines when used as  
+
 [endsect]
 
 [section:asio Events: Boost.Asio]
@@ -1883,7 +1992,7 @@ document. See the example [^__complex_matcher_cpp__] for more details.
 
 [endsect]
 
-[section:acknowledgments Acknowledgements]
+[section:acknowledgments Acknowledgments]
 [endsect]
 
 [section:bibliography Bibliography]

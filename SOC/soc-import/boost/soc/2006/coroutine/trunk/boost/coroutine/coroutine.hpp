@@ -98,7 +98,6 @@ namespace boost { namespace coroutines {
     coroutine() : m_pimpl(0) {}
 
     template<typename Functor>
-    explicit 
     coroutine (Functor f, 
 	       std::ptrdiff_t stack_size = detail::default_stack_size,
 	       BOOST_DEDUCED_TYPENAME boost::enable_if<

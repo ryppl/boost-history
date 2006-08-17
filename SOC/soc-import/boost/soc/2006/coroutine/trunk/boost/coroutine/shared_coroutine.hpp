@@ -21,7 +21,6 @@ namespace boost { namespace coroutines {
     shared_coroutine() {}
 
     template<typename Functor>
-    explicit 
     shared_coroutine(Functor f, 
 		     std::ptrdiff_t stack_size = 
 		     detail::default_stack_size) :

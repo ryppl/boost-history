@@ -3,14 +3,14 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <iostream>
 #include <string>
-#include <boost/coroutine/generator.hpp>
+#include <boost/coroutine/shared_coroutine.hpp>
 #include <boost/bind.hpp>
 #include<queue>
 
 namespace coro = boost::coroutines;
-using coro::generator;
+using coro::shared_coroutine;
 
-typedef generator<void> job_type;
+typedef shared_coroutine<void()> job_type;
 
 class scheduler {
 public:
@@ -18,20 +18,15 @@ public:
     m_queue.push(job);
   }
   
-  void reschedule() {
-    add(current());
-  }
-
   job_type& current() {
     return m_queue.front();
   }
 
   void run () {
     while(!m_queue.empty()) {
-      if(current()) {
-	current()();
-	reschedule();
-      }
+      current()(std::nothrow);
+      if(current()) 
+	add(current());
       m_queue.pop();
     }
   }
