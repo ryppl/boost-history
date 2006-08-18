@@ -293,7 +293,7 @@ namespace boost {
             //now we push the found flow through the path
             //for each edge we saturate we have to look for the verts that belong to that edge, one of them becomes an orphans
             //now process the connecting edge
-            m_res_cap_map[e]-= bottleneck;
+            m_res_cap_map[e] -= bottleneck;
             assert(m_res_cap_map[e] >= 0);
             m_res_cap_map[m_rev_edge_map[e]] += bottleneck;
 
@@ -301,7 +301,7 @@ namespace boost {
             tVertex current_node = source(e, m_g);
             while(current_node != m_source){
               tEdge pred = get_edge_to_parent(current_node);
-              m_res_cap_map[pred]-= bottleneck;
+              m_res_cap_map[pred] -= bottleneck;
               assert(m_res_cap_map[pred] >= 0);
               m_res_cap_map[m_rev_edge_map[pred]] += bottleneck;
               if(m_res_cap_map[pred] == 0){
@@ -314,7 +314,7 @@ namespace boost {
             current_node = target(e, m_g);
             while(current_node != m_sink){
               tEdge pred = get_edge_to_parent(current_node);
-              m_res_cap_map[pred]-= bottleneck;
+              m_res_cap_map[pred] -= bottleneck;
               assert(m_res_cap_map[pred] >= 0);
               m_res_cap_map[m_rev_edge_map[pred]] += bottleneck;
               if(m_res_cap_map[pred] == 0){
