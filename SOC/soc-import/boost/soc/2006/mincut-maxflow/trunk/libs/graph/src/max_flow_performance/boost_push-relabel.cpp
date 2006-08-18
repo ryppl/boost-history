@@ -47,6 +47,7 @@ main()
   float time=timer();
   long flow = push_relabel_max_flow(g, s, t);
   double elapsed= timer()-time;
+  std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
   std::cout << "flow: " << flow <<std::endl;
   std::cout << "time: " << elapsed <<std::endl;
   

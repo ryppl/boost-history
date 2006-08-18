@@ -838,7 +838,7 @@ int main (argc, argv)
 
   t = timer() - t;
 
-  printf ("time: %.2f\n", t);
+  printf ("time: %.3f\n", t);
 
 #endif
 

@@ -11,7 +11,6 @@
 #include <string>
 #include <boost/graph/kolmogorov_max_flow.hpp>
 #include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/compressed_sparse_row_graph.hpp>
 #include <boost/graph/read_dimacs.hpp>
 
 //use DIMACS max-flow file as stdin
@@ -98,7 +97,7 @@ main()
   tReverseEdgeMap rev_edge_map = get(&tEdge::edge_reverse, g);
   
   Traits::vertex_descriptor s, t;
-  read_dimacs_max_flow(g, cap_map, rev_edge_map, s, t);
+  read_dimacs_max_flow(g, cap_map, rev_edge_map, s, t, std::cin);
 
 //   duplicate_reverse_edge_cleaner<Graph, tCapacityMap, tReverseEdgeMap> filter(g, cap_map, rev_edge_map);
 //   cap_map[*edges(g).first] = 0;
@@ -107,13 +106,13 @@ main()
 //   remove_edge_if(filter, g);
 //   std::cout << "Before: " << num_edges(g) << std::endl;
 
-  CALLGRIND_START_INSTRUMENTATION();
+//   CALLGRIND_START_INSTRUMENTATION();
   float time = timer();
   long flow = kolmogorov_max_flow(g, get(&tEdge::capacity, g), get(&tEdge::residual_capacity, g), get(&tEdge::edge_reverse, g) ,
                                   get(&tVertex::predecessor, g), get(&tVertex::color, g), get(&tVertex::distance, g), get(vertex_index, g), s, t);
   double elapsed = timer() - time;
-  CALLGRIND_STOP_INSTRUMENTATION();
-  
+//   CALLGRIND_STOP_INSTRUMENTATION();
+  std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
   std::cout << "flow: " << flow << std::endl;
   std::cout << "time: " << elapsed << std::endl;
   return EXIT_SUCCESS;
