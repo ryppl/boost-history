@@ -188,6 +188,10 @@ namespace boost { namespace coroutines { namespace detail {
 	coroutine_type::arg_slot_traits>(*m_pimpl->args());
     }
 
+    bool pending() const {
+      BOOST_ASSERT(m_pimpl);
+      return m_pimpl->pending();
+    }
   private:
     coroutine_self(impl_type * pimpl, detail::init_from_impl_tag) :
       m_pimpl(pimpl) {}
