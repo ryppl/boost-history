@@ -316,7 +316,7 @@ int main()
   float time = timer();
   Graph::captype flow = g.maxflow();
   float elapsed = timer() - time;
-  
+  std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
   std::cout << "flow: " << flow + flow_correction << std::endl;
   std::cout << "time: " << elapsed << std::endl;
   
