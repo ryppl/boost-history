@@ -1,72 +1,73 @@
-// Boost.bimap
+// Boost.Bimap
 //
-// Copyright 2006 Matias Capeletto
+// Copyright (c) 2006 Matias Capeletto
+//
+// This code may be used under either of the following two licences:
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE. OF SUCH DAMAGE.
+//
+// Or:
+//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-//
-// See http://www.boost.org/libs/bimap for library home page.
 
-/// \file container_adaptor/detail/functor_bag.hpp
-/// \brief Defines a EBO optimizacion helper for functors.
+/// \file container_adaptor/detail/value_comparison_adaptor.hpp
+/// \brief Value comparison adaptor.
 
-#ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
-#define BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
+#ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_VALUE_COMPARISON_ADAPTOR_HPP
+#define BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_VALUE_COMPARISON_ADAPTOR_HPP
 
-#include <boost/mpl/placeholders.hpp>
-
-#include <boost/type_traits/add_reference.hpp>
-#include <boost/type_traits/is_base_of.hpp>
-
-#include <boost/mpl/inherit_linearly.hpp>
-#include <boost/mpl/inherit.hpp>
+#include <boost/call_traits.hpp>
+#include <functional>
 
 namespace boost {
 namespace bimap {
 namespace container_adaptor {
 namespace detail {
 
-/// \brief EBO optimizacion helper for functors
+/// \brief Value comparison adaptor
 /**
 
-This class is a generalization of a helper class explained in an article by
-Nathan C. Myers.\n
-See it at \link http://www.cantrip.org/emptyopt.html
+A simple adaptor.
                                                                                     **/
 
-template < class Data, class FunctorList >
-struct DataWithFunctorBag :
+// TODO
+// * The value comparison adaptor can be optimized for NewValue equal to ValueCompare::argument_type
+// * Use ConceptCheck to ensure the validity of ValueCompare
 
-    public mpl::inherit_linearly<
-
-        FunctorList,
-        mpl::if_< is_base_of< mpl::_2, mpl::_1 >,
-        //   {
-                 mpl::_1,
-        //   }
-        //   else
-        //   {
-                 mpl::inherit< mpl::_1, mpl::_2 >
-        //   }
-        >
-
-    >::type
+template < class ValueCompare, class NewValue >
+struct value_comparison_adaptor : std::binary_function<NewValue,NewValue,bool>
 {
-    Data data;
-    DataWithFunctorBag() {}
-    DataWithFunctorBag(typename add_reference<Data const>::type d) : data(d) {}
+    value_comparison_adaptor( ValueCompare c ) : comp(c) {}
 
-    template< class Functor >
-    Functor& functor()
+    bool operator()( typename call_traits<NewValue>::param_type x,
+                     typename call_traits<NewValue>::param_type y)
     {
-        return *(static_cast<Functor*>(this));
+        return comp(
+            typename ValueCompare::first_argument_type(x),
+            typename ValueCompare::first_argument_type(y)
+        );
     }
 
-    template< class Functor >
-    const Functor& functor() const
-    {
-        return *(static_cast<Functor const *>(this));
-    }
+    private:
+    ValueCompare comp;
 };
 
 } // namespace detail
@@ -75,6 +76,6 @@ struct DataWithFunctorBag :
 } // namespace boost
 
 
-#endif // BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
+#endif // BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_VALUE_COMPARISON_ADAPTOR_HPP
 
 

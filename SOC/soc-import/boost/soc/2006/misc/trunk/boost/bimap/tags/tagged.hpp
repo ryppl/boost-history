@@ -1,11 +1,32 @@
-// Boost.bimap
+// Boost.Bimap
 //
-// Copyright 2006 Matias Capeletto
+// Copyright (c) 2006 Matias Capeletto
+//
+// This code may be used under either of the following two licences:
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE. OF SUCH DAMAGE.
+//
+// Or:
+//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-//
-// See http://www.boost.org/libs/bimap for library home page.
 
 /// \file tags/tagged.hpp
 /// \brief Defines the tagged class
@@ -16,29 +37,29 @@
 namespace boost {
 namespace bimap {
 
-/// \brief A ligth non invasive idiom to tag a type.
+/// \brief A light non-invasive idiom to tag a type.
 /**
 
 There are a lot of ways of tagging a type. The standard library for example
 defines tags (empty structs) that are then inherited by the tagged class. To
-support built in types and other types that simple can not inherited from the
-tag, the standard builds another level of indirection, an example of this is
-the type_traits metafunction. This approach is useful if the tags are intend
-to be used in the library internals, and if the user do not have to create
+support built-in types and other types that simple cannot inherit from the
+tag, the standard builds another level of indirection. An example of this is
+the type_traits metafunction. This approach is useful if the tags are intended
+to be used in the library internals, and if the user does not have to create
 new tagged types often.
 
 Boost.MultiIndex is an example of a library that defines a tagged idiom that
-is better suitted to the user. As an optional, in the indexed by declaration
-of a multi index container a user can \b attach a tag to each index, so it
-can be refered by it instead of by the index number. It is a very user
-friendly way of specifying a tag but is very invasive from the library writer
+is better suited to the user. As an option, in the indexed by declaration
+of a multi-index container a user can \b attach a tag to each index, so it
+can be referred by it instead of by the index number. It is a very user
+friendly way of specifying a tag but is very invasive from the library writer's
 point of view. Each index must now support this additional parameter. Maybe
-not in the case of the multi index container, but in more simpler classes
+not in the case of the multi-index container, but in simpler classes
 the information of the tags is used by the father class rather than by the
 tagged types.
 
-\b tagged is a light non invasive idiom to tag a type. It is very intuitive
-and user friendly. With the use of the defined metafunctions the library
+\b tagged is a light non-invasive idiom to tag a type. It is very intuitive
+and user-friendly. With the use of the defined metafunctions the library
 writer can enjoy the coding too.
 
                                                                             **/

@@ -1,11 +1,32 @@
-// MISC Multi Index Specialized Containers
+// Boost.Bimap
 //
-// Copyright 2006 Matias Capeletto
+// Copyright (c) 2006 Matias Capeletto
+//
+// This code may be used under either of the following two licences:
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE. OF SUCH DAMAGE.
+//
+// Or:
+//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-//
-// See http://www.boost.org/libs/misc for library home page.
 
 /// \file detail/bimap_core.hpp
 /// \brief Bimap base definition.
@@ -17,6 +38,9 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/mpl/list.hpp>
 
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -38,6 +62,7 @@
 #include <boost/bimap/detail/map_view_iterator.hpp>
 
 #include <boost/bimap/set_of.hpp>
+#include <boost/bimap/unconstrained_set_of.hpp>
 
 namespace boost {
 namespace bimap {
@@ -48,8 +73,6 @@ namespace detail {
 
 // In detail, we are free to import same namespaces to augment the
 // readability of the code. No one is supposed to use this namespace.
-
-using namespace mpl::placeholders;
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
@@ -104,14 +127,14 @@ struct bimap_core
     <
         typename ::boost::bimap::tags::support::apply_to_value_type
         <
-            get_value_type<_>,
+            get_value_type< mpl::_>,
             left_tagged_set_type
 
         >::type,
 
         typename ::boost::bimap::tags::support::apply_to_value_type
         <
-            get_value_type<_>,
+            get_value_type< mpl::_ >,
             right_tagged_set_type
 
         >::type
@@ -179,34 +202,60 @@ struct bimap_core
 
     > right_member_extractor;
 
-    // Use type hiding to get better symbol names
+    // The core indices are somewhat complicated to calculate, because they
+    // can be zero, one, two or three indices, depending on the use of
+    // {side}_based set type of relations and unconstrained_set_of and
+    // unconstrained_set_of_relation specifications.
 
-    typedef multi_index::indexed_by
-    <
+    typedef typename mpl::if_< ::boost::bimap::detail::is_unconstrained_set_of< left_set_type >,
+    // {
+            mpl::list<>,
+    // }
+    // else
+    // {
+            mpl::list
+            <
+                typename left_set_type::template index_bind
+                <
+                    left_member_extractor,
+                    left_tag
 
-        typename left_set_type::template index_bind
-        <
-            left_member_extractor,
-            left_tag
+                >::type
+            >
+    // }
+    >::type left_core_indices;
 
-        >::type,
+    typedef typename mpl::if_< ::boost::bimap::detail::is_unconstrained_set_of< right_set_type >,
+    // {
+            left_core_indices,
+    // }
+    // else
+    // {
+            typename mpl::push_front
+            <
+                left_core_indices,
 
-        typename right_set_type::template index_bind
-        <
-            right_member_extractor,
-            right_tag
+                typename right_set_type::template index_bind
+                <
+                    right_member_extractor,
+                    right_tag
 
-        >::type
+                >::type
 
-    > basic_core_indices;
+            >::type
+    // }
+    >::type basic_core_indices;
 
-    // The multi index core can have two or three indices depending on the set
-    // type of the relation. If it is based either on the left or on the right,
-    // then only two indices are needed. But the set type of the relation
-    // can be completely diferent from the onew used for the sides in wich case
-    // we have to add yet another index to the core.
+    // If it is based either on the left or on the right, then only the side indices
+    // are needed. But the set type of the relation can be completely diferent from
+    // the onew used for the sides in wich case we have to add yet another index to
+    // the core.
+
+    // TODO
+    // If all the set types are unsconstrained there must be readable compile time error.
 
     typedef typename mpl::if_<
+
         is_same< typename parameters::set_type_of_relation, left_based >,
     // {
             left_tagged_set_type,
@@ -228,8 +277,7 @@ struct bimap_core
                 independent_index_tag
             >
     // }
-        >::type
-
+    >::type
     >::type tagged_set_of_relation_type;
 
     protected:
@@ -237,11 +285,46 @@ struct bimap_core
     typedef typename tagged_set_of_relation_type::tag           relation_set_tag;
     typedef typename tagged_set_of_relation_type::value_type    relation_set_type_of;
 
+    // Logic tags
+    // This is a necesary extra level of indirection to allow unconstrained sets to
+    // be plug in the design. The bimap constructors use this logic tags.
+
+    typedef typename mpl::if_< ::boost::bimap::detail::is_unconstrained_set_of< left_set_type >,
+        typename mpl::if_< ::boost::bimap::detail::is_unconstrained_set_of< right_set_type >,
+            independent_index_tag,
+            right_tag
+        >::type,
+        left_tag
+
+    >::type logic_left_tag;
+
+    typedef typename mpl::if_< ::boost::bimap::detail::is_unconstrained_set_of< right_set_type >,
+        typename mpl::if_< ::boost::bimap::detail::is_unconstrained_set_of< left_set_type >,
+            independent_index_tag,
+            left_tag
+        >::type,
+        right_tag
+
+    >::type logic_right_tag;
+
+    typedef typename mpl::if_< is_same< relation_set_tag, independent_index_tag >,
+        typename mpl::if_< ::boost::bimap::detail::is_unconstrained_set_of< relation_set_type_of >,
+            logic_left_tag,
+            independent_index_tag
+        >::type,
+        typename mpl::if_< is_same< typename parameters::set_type_of_relation, left_based >,
+            logic_left_tag,
+            logic_right_tag
+        >::type
+
+    >::type logic_relation_set_tag;
+
     private:
 
     typedef typename mpl::if_<
-
-        is_same< relation_set_tag, independent_index_tag >,
+        mpl::and_< is_same< relation_set_tag, independent_index_tag >,
+                   mpl::not_< ::boost::bimap::detail::is_unconstrained_set_of< relation_set_type_of > >
+        >,
     // {
             typename mpl::push_front
             <
@@ -266,7 +349,7 @@ struct bimap_core
     struct core_indices : public complete_core_indices {};
 
     // Define the core using compute_index_type to translate the
-    // set type to an multi index specification
+    // set type to an multi-index specification
     // --------------------------------------------------------------------
     public:
 
@@ -282,8 +365,8 @@ struct bimap_core
     // --------------------------------------------------------------------
     public:
 
-    typedef typename ::boost::multi_index::index<core_type, left_tag>::type  left_index;
-    typedef typename ::boost::multi_index::index<core_type,right_tag>::type right_index;
+    typedef typename ::boost::multi_index::index<core_type, logic_left_tag>::type  left_index;
+    typedef typename ::boost::multi_index::index<core_type,logic_right_tag>::type right_index;
 
     typedef typename left_index::iterator       left_core_iterator;
     typedef typename left_index::const_iterator left_core_const_iterator;
@@ -347,7 +430,7 @@ struct bimap_core
 
     typedef typename relation_set_type_of::template set_view_bind
     <
-        typename ::boost::multi_index::index<core_type, relation_set_tag >::type
+        typename ::boost::multi_index::index<core_type, logic_relation_set_tag >::type
 
     >::type relation_set;
 
