@@ -65,7 +65,7 @@ explains this problem and how to create new types of bidirectional maps.
 
 # The extended mapping framework allows to disable a view of a bimap, including the standard
 mapping containers as a particular case. The section
-[link boost_bimap.unconstrained_sets Unconstrained Sets] explain how they work.
+[link boost_bimap.the_tutorial.unconstrained_sets Unconstrained Sets] explain how they work.
 
 # The final section
 ([link boost_bimap.the_tutorial.complete_instantiation_scheme Complete Instantiation Scheme])
