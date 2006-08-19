@@ -1,0 +1,84 @@
+[/
+(C) Copyright Xiaogang Zhang 2006.
+Use, modification and distribution are subject to the
+Boost Software License, Version 1.0. (See accompanying file
+LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[#bessel_fractional]
+
+[section Bessel Functions of Fractional Order]
+
+[caution _caution]
+
+[heading Synopsis]
+
+``
+  #include <boost/math/special_functions/bessel_jv.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  inline T bessel_jv(T v, T x)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/bessel_yv.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  inline T bessel_yv(T v, T x)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/bessel_jy.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  int bessel_jy(T v, T x, T* J, T* Y)
+
+  }} // namespaces
+``
+
+[heading Description and Implementation]
+
+Bessel functions of fractional order (i.e. order _nu is any real
+number) are much harder to compute than
+[link tr1_math.bessel_functions.bessel_functions_of_integer_order
+Bessel functions of integer order]. Though [link bessel_recur
+recurrence relations] are the same, the difficulty lies in the
+initial values.
+
+The function domains are ['_Jv(x)]: ([^0, _inf]), ['_Yv(x)]: ([^0, _inf]).
+
+[$plots/bessel_v.png]
+
+The algorithms consist of minimax rational approximations on
+root-bracketing intervals for small ['|x|] and Hankel asymptotic
+expansion for large ['|x|]. The coefficients of them are from
+[[link 9]] and [[link 11]] respectively.
+
+[heading Testing]
+
+The test driver calculates relative errors and the following table
+lists some typical values.
+
+[table
+[[Function] [float] [double] [long double]]
+[[`bessel_j0(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -20], [pow 10 -19]]]
+[[`bessel_y0(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16]] [~ [pow 10 -17]]]
+]
+
+When ['|x|] becomes large ( > [pow 10 4] ), the relative error
+grows rapidly. ['|x|] = [pow 10 5] can have relative error 4 or 5
+magnitudes higher than that of ['|x|] = 10. Fortunately, this is
+where the function value approaches zero, so the absolute error
+is actually quite small.
+
+[endsect]
