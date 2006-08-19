@@ -1,16 +1,35 @@
-// Copyright (c) 2006 Bernhard Reiter.
+//  Copyright (c) 2006, Bernhard Reiter
 //
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+//  This code may be used under either of the following two licences:
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy 
+//  of this software and associated documentation files (the "Software"), to deal 
+//  in the Software without restriction, including without limitation the rights 
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+//  copies of the Software, and to permit persons to whom the Software is 
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in 
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+//  THE SOFTWARE. OF SUCH DAMAGE.
+//
+//  Or:
+//
+//  Distributed under the Boost Software License, Version 1.0.
+//  (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
 
 //#include <boost/test/unit_test.hpp>
 #include <boost/test/minimal.hpp>
 
-
 #include <boost/tree/binary_tree.hpp>
-//#include <boost/tree/augmentors/trivial.hpp>
-#include <boost/tree/balancers/trivial.hpp>
 
 #include <boost/tree/searcher.hpp>
 #include <boost/tree/algorithm.hpp>
@@ -32,7 +51,7 @@ void test_key_search_binary_tree()
 
 	c = my_tree.end();
 	BOOST_CHECK(c == my_tree.end());
-	BOOST_CHECK(c == my_tree.begin()); // current FIXME
+	BOOST_CHECK(c == my_tree.begin());
 	
 	searcher_t::cursor cur = searcher_t::cursor(c);
 	BOOST_CHECK(!cur.has_child());
@@ -48,10 +67,10 @@ void test_key_search_binary_tree()
 	
 	cur = searcher_t::cursor(c1);
 	BOOST_CHECK(!(++cur).has_child());
-	BOOST_CHECK(cur.parity());	//FIXME.
+	BOOST_CHECK(cur.parity());
 	
 	cur = cur.parent(); //header-cursor(,1) (root)
-	BOOST_CHECK(cur.parity());
+	BOOST_CHECK(!cur.parity());
 	BOOST_CHECK(cur.m_parent->child[1] == searcher_t::cursor(c1).m_parent);
 	BOOST_CHECK(cur.m_parent->child[0] == searcher_t::cursor(c1).m_parent);
 	
@@ -78,7 +97,7 @@ void test_key_search_binary_tree()
 	BOOST_CHECK(*cur == 8);
 	
 	BOOST_CHECK(!(++cur).has_child());
-	//BOOST_CHECK((--cur).parent().parity()); // hmmm... TODO? root's parity...
+	BOOST_CHECK(!(--cur).parent().parity()); // root's parity...
 
 	BOOST_CHECK(*(searcher_t::cursor(c).begin()) == 8);
 	
@@ -118,7 +137,6 @@ void test_key_search_binary_tree()
 	
 	c = my_tree.begin();
 	BOOST_CHECK(searcher_t::cursor(c).parity() == 0);
-	//BOOST_CHECK(c.parity() == 0);
 	BOOST_CHECK(*(searcher_t::cursor(c).parent()) != 412);
 	BOOST_CHECK(*c < 413);
 	
@@ -137,25 +155,15 @@ void test_key_search_binary_tree()
 	BOOST_CHECK(*tree_cur == 7);
 	
 	
-	if ((++tree_cur).has_child()) {
-		while (tree_cur.begin().has_child())
-			tree_cur = tree_cur.begin();
-		tree_cur = tree_cur.begin();
-		//return;
-	}
-	else {
-	while (tree_cur == tree_cur.parent().begin())
-		tree_cur = tree_cur.parent();
-	tree_cur = tree_cur.parent() /*.begin()*/;
-	}
-	
-	BOOST_CHECK(*tree_cur == 8);
-	
-	
-	//c = my_tree.begin();
-	//BOOST_CHECK(*(c++) == 7);
-	//BOOST_CHECK(*(c++) == 8); //FIXME.
-	
+	c = my_tree.begin();
+	BOOST_CHECK(*(c++) == 7);
+	BOOST_CHECK(*(c++) == 8);
+	BOOST_CHECK(*(c++) == 18);
+	BOOST_CHECK(*(c++) == 31);
+	BOOST_CHECK(*(c++) == 39);
+	BOOST_CHECK(*(c++) == 412);
+	BOOST_CHECK(c == my_tree.end());
+
 }
 
 //boost::unit_test::test_suite*
