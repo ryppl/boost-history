@@ -19,196 +19,115 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="tr1_math.bessel_functions.introduction"></a><a href="introduction.html" title="Introduction">Introduction</a></h3></div></div></div>
-<div class="caution"><table border="0" summary="Caution">
+<div class="note"><table border="0" summary="Note">
 <tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../images/caution.png"></td>
-<th align="left">Caution</th>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-          This is not an official Boost library, it is a library under construction,
-          the code is fully functional and robust, but interfaces, library structure,
-          and function names may be changed without notice.
+          The main reference is [<a href="../references.html#1">1</a>].
         </p></td></tr>
 </table></div>
-<a name="tr1_math.bessel_functions.introduction.synopsis"></a><h5>
-<a name="id4844994"></a>
-        <a href="introduction.html#tr1_math.bessel_functions.introduction.synopsis">Synopsis</a>
+<a name="tr1_math.bessel_functions.introduction.notation"></a><h5>
+<a name="id4844960"></a>
+        <a href="introduction.html#tr1_math.bessel_functions.introduction.notation">Notation</a>
       </h5>
 <p>
-        
-</p>
-<pre class="programlisting">
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">special_functions</span><span class="special">/</span><span class="identifier">gamma</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="identifier">ct</span></pre>
-<p>
+        <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span> : real number
       </p>
-<pre class="programlisting">
-<span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">math</span><span class="special">{</span>
-
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="identifier">T</span> <span class="identifier">tgamma</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">z</span><span class="special">);</span>
-
-<span class="special">}}</span> <span class="comment">// namespaces
-</span>####</pre>
-<a name="tr1_math.bessel_functions.introduction.description"></a><h5>
-<a name="id4845191"></a>
-        <a href="introduction.html#tr1_math.bessel_functions.introduction.description">Description</a>
+<p>
+        <span class="emphasis"><em>n</em></span> : nonnegative integer
+      </p>
+<p>
+        <span class="emphasis"><em>z</em></span>, <span class="emphasis"><em>&#957;</em></span>, <span class="emphasis"><em>&#956;</em></span> : complex
+        number
+      </p>
+<a name="tr1_math.bessel_functions.introduction.definition"></a><h5>
+<a name="id4845013"></a>
+        <a href="introduction.html#tr1_math.bessel_functions.introduction.definition">Definition</a>
       </h5>
 <p>
-        <a href="http://www.vni.com/products/imsl/" target="_top">IMSL</a> Returns the "true
-        gamma" of value z:
+        Bessel functions are defined as the solutions to the ordinary differential
+        equation
       </p>
 <p>
-        <span class="inlinemediaobject"><img src="../../equations/kd.png" alt="kd"></span>
+        <span class="inlinemediaobject"><img src="../../equations/bessel1.png" alt="bessel1"></span>
       </p>
 <p>
-        <span class="inlinemediaobject"><img src="../../../graphs/gamma.png" alt="gamma"></span>
+        The following equivalent definitions are also widely used
       </p>
 <p>
-        There are effectively two versions of this function internally: a fully generic
-        version that is slow, but reasonably accurate, and a much more efficient
-        approximation that is used where the number of digits in the mantissa of
-        T correspond to a certain __lanczos. In practice any built in floating point
-        type you will encounter has an appropriate __lanczos defined for it. It is
-        also possible, given enough machine time, to generate further __lanczos's
-        using the program libs/math/tools/lanczos_generator.cpp
+        <span class="inlinemediaobject"><img src="../../equations/bessel2.png" alt="bessel2"></span>
       </p>
-<a name="tr1_math.bessel_functions.introduction.accuracy"></a><h5>
-<a name="id4845271"></a>
-        <a href="introduction.html#tr1_math.bessel_functions.introduction.accuracy">Accuracy</a>
-      </h5>
 <p>
-        The following table shows the peek errors (in units of epsilon) found on
-        various platforms with various floating point types. Unless otherwise specified
-        any floating point type that is narrower than the one shown will have __zero_error.
+        <span class="inlinemediaobject"><img src="../../equations/bessel3.png" alt="bessel3"></span>
       </p>
-<div class="informaltable">
-<h5>
-<a name="id4845296"></a>
-        </h5>
-<table class="table">
-<colgroup>
-<col>
-<col>
-<col>
-<col>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>Mantissa Size</th>
-<th>Platform and Compiler</th>
-<th>Factorials
-              and Half factorials</th>
-<th>Values Near Zero</th>
-<th>Values
-              Near 1 or 2</th>
-<th>Values Near a Negative Pole</th>
-</tr></thead>
-<tbody>
+<p>
+        where <span class="emphasis"><em>J<sub>&#957;</sub>(z)</em></span> is called Bessel function of the first kind
+        and <span class="emphasis"><em>Y<sub>&#957;</sub>(z)</em></span> is called Bessel function of the second kind.
+      </p>
+<div class="note"><table border="0" summary="Note">
 <tr>
-<td>53</td>
-<td>Win32 Visual C++ 8</td>
-<td>Peek=1.9 Mean=0.7
-              <br> <br> (GSL=3.9) <br> (Cephes=3.0)</td>
-<td>Peek=2.0
-              Mean=1.1 <br> <br> (GSL=4.5) (Cephes=1)</td>
-<td>Peek=2.0
-              Mean=1.1 <br> <br> (GSL=7.9) (Cephes=1.0)</td>
-<td>Peek=2.6
-              Mean=1.3 <br> <br> (GSL=2.5) (Cephes=2.7)</td>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
 </tr>
-<tr>
-<td>64</td>
-<td>Linux IA32 / GCC</td>
-<td>Peek=300 Mean=49.5
-              <br> <br> (Native Peek=395 Mean=89)</td>
-<td>Peek=3.0 Mean=1.4
-              <br> <br> (Native Peek=11 Mean=3.3)</td>
-<td>Peek=5.0 Mean=1.8
-              <br> <br> (Native Peek=0.92 Mean=0.2)</td>
-<td>Peek=157 Mean=65
-              <br> <br> (Native Peek=205 Mean=108)</td>
-</tr>
-<tr>
-<td>64</td>
-<td>Linux IA64 / GCC</td>
-<td>Peek=2.8 Mean=0.9
-              <br> (Native=0.7)</td>
-<td>Peek=4.8 Mean=1.5 <br> (Native=0)</td>
-<td>Peek=4.8
-              Mean=1.5 <br> (Native=0)</td>
-<td>Peek=5.0 Mean=1.7 <br> (Native
-              0)</td>
-</tr>
-<tr>
-<td>113</td>
-<td>HPUX IA64, aCC A.06.06</td>
-<td>Peek=2.5
-              Mean=1.1 <br> (Native=0)</td>
-<td>Peek=3.5 Mean=1.7 <br> (Native=0)</td>
-<td>Peek=3.5
-              Mean=1.6 <br> (Native=0)</td>
-<td>Peek=5.2 Mean=1.92 <br>
-              (Native=0)</td>
-</tr>
-</tbody>
-</table>
-</div>
-<a name="tr1_math.bessel_functions.introduction.testing"></a><h5>
-<a name="id4845483"></a>
-        <a href="introduction.html#tr1_math.bessel_functions.introduction.testing">Testing</a>
+<tr><td align="left" valign="top"><p>
+          <span class="emphasis"><em>Y<sub>&#957;</sub>(z)</em></span> is also known as the Neumann function.
+        </p></td></tr>
+</table></div>
+<a name="bessel_recur"></a><p>
+      </p>
+<a name="tr1_math.bessel_functions.introduction.recurrence_relations"></a><h5>
+<a name="id4845140"></a>
+        <a href="introduction.html#tr1_math.bessel_functions.introduction.recurrence_relations">Recurrence
+        Relations</a>
       </h5>
 <p>
-        The gamma is relatively easy to test: factorials and half integer factorials
-        can be calculated exactly by other means and compared with the gamma function.
-        In addition some accuracy tests in known tricky areas were computed at high
-        precision using the generic version of this function.
+        <span class="inlinemediaobject"><img src="../../equations/bessel4.png" alt="bessel4"></span>
       </p>
-<a name="tr1_math.bessel_functions.introduction.implementation"></a><h5>
-<a name="id4845513"></a>
-        <a href="introduction.html#tr1_math.bessel_functions.introduction.implementation">Implementation</a>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/bessel5.png" alt="bessel5"></span>
+      </p>
+<a name="tr1_math.bessel_functions.introduction.derivatives"></a><h5>
+<a name="id4845198"></a>
+        <a href="introduction.html#tr1_math.bessel_functions.introduction.derivatives">Derivatives</a>
       </h5>
 <p>
-        The generic version of this function is implemented by combining the series
-        and continued fraction representations for the incomplete gamma function:
+        <span class="inlinemediaobject"><img src="../../equations/bessel6.png" alt="bessel6"></span>
       </p>
 <p>
-        <span class="inlinemediaobject"><img src="../../../equations/gamm2.png" alt="gamm2"></span>
+        <span class="inlinemediaobject"><img src="../../equations/bessel7.png" alt="bessel7"></span>
+      </p>
+<a name="tr1_math.bessel_functions.introduction.wronskians"></a><h5>
+<a name="id4845254"></a>
+        <a href="introduction.html#tr1_math.bessel_functions.introduction.wronskians">Wronskians</a>
+      </h5>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/bessel8.png" alt="bessel8"></span>
+      </p>
+<a name="bessel_reflect"></a><p>
+      </p>
+<a name="tr1_math.bessel_functions.introduction.reflection_formulas"></a><h5>
+<a name="id4845302"></a>
+        <a href="introduction.html#tr1_math.bessel_functions.introduction.reflection_formulas">Reflection
+        Formulas</a>
+      </h5>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/bessel9.png" alt="bessel9"></span>
       </p>
 <p>
-        where <span class="emphasis"><em>l</em></span> is an arbitrary integration limit: choosing
-        <code class="literal">l = max(10, a)</code> seems to work fairly well.
+        <span class="inlinemediaobject"><img src="../../equations/bessel10.png" alt="bessel10"></span>
       </p>
+<a name="tr1_math.bessel_functions.introduction.numerical_algorithms"></a><h5>
+<a name="id4845360"></a>
+        <a href="introduction.html#tr1_math.bessel_functions.introduction.numerical_algorithms">Numerical
+        Algorithms</a>
+      </h5>
 <p>
-        For types of known precision the __lanczos is used, a traits class <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span><span class="special">::</span><span class="identifier">lanczos</span><span class="special">::</span><span class="identifier">lanczos_traits</span></code> maps type T to an appropriate
-        approximation.
-      </p>
-<p>
-        For z in the range -20 &lt; z &lt; 1 then recursion is used to shift to z
-        &gt; 1 via:
-      </p>
-<p>
-        <span class="inlinemediaobject"><img src="../../../equations/gamm3.png" alt="gamm3"></span>
-      </p>
-<p>
-        For very small z, this helps to preserve the identity:
-      </p>
-<p>
-        <span class="inlinemediaobject"><img src="../../../equations/gamm4.png" alt="gamm4"></span>
-      </p>
-<p>
-        For z &lt; -20 the reflection formula:
-      </p>
-<p>
-        <span class="inlinemediaobject"><img src="../../../equations/gamm5.png" alt="gamm5"></span>
-      </p>
-<p>
-        is used. Particular care has to be taken to evaluate the <code class="computeroutput"><span class="identifier">z</span> <span class="special">*</span> <span class="identifier">sin</span><span class="special">(</span><span class="identifier">PI</span> <span class="special">*</span> <span class="identifier">z</span><span class="special">)</span></code> part: a special routine is used to reduce
-        z prior to multiplying by PI to ensure that the result in is the range [0,
-        PI/2]. Without this an excessive amount of error occurs in this region: which
-        is hard enough already as the rate of change near a negative pole is <span class="emphasis"><em>exceptionally</em></span>
-        high.
+        All computations of Bessel functions are based on <a href="introduction.html#bessel_recur">recurrence
+        relations</a>. To use the recursion, initial values must first be calculated.
+        The methods differ for <span class="emphasis"><em>&#957;= n</em></span> is integer and <span class="emphasis"><em>&#957;</em></span>
+        is any real number. We will discuss the two situations separately.
       </p>
 </div>
 <table width="100%"><tr>
