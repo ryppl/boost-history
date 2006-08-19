@@ -5,8 +5,6 @@ Boost Software License, Version 1.0. (See accompanying file
 LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[#bessel_integer]
-
 [section Bessel Functions of Integer Order]
 
 [#bessel_0]
@@ -47,7 +45,8 @@ implemented separately at their own right. Most numerical libraries
 include them as independent functions.
 
 The function domains are ['_J0(x)]: ([^-_inf, _inf]), ['_Y0(x)]: ([^0, _inf]).
-Note ['_J0(x)] is even function.
+
+[note ['_J0(x)] is even function.]
 
 [$plots/bessel_0.png]
 
@@ -113,7 +112,8 @@ implemented separately at their own right. Most numerical libraries
 include them as independent functions.
 
 The function domains are ['_J1(x)]: ([^-_inf, _inf]), ['_Y1(x)]: ([^0, _inf]).
-Note ['_J1(x)] is even function.
+
+[note ['_J1(x)] is odd function.]
 
 [$plots/bessel_1.png]
 
@@ -179,8 +179,9 @@ of order 1], with the help of [link bessel_recur recurrence
 relations].
 
 The function domains are ['_Jn(x)]: ([^-_inf, _inf]), ['_Yn(x)]: ([^0, _inf]).
-Note ['_Jn(x)] is even function when ['n] is even and odd function
-when ['n] is odd.
+
+[note ['_Jn(x)] is even function when ['n] is even and odd function
+when ['n] is odd.]
 
 [$plots/bessel_n.png]
 
