@@ -85,34 +85,33 @@ DefaultConstructible]]
 [def __HP_coroutines__ [link ref-itanium-corotines \[HP\]]]
 
 [/ external links]
-[def __OpenMP__ [@ link-to-openmp-webpage OpenMP]]
-[def __Itanium_ABI__ [@ link-to-itanium-abi OpenMP]]
-[def __LLVM__ [@ link-to-itanium-abi OpenMP]]
-[def __XXX__ [@ link-to-duff-device-coroutines XXX]]
-[def __OpenMP__ [@ link-to-openmp-webpage OpenMP]]
-[def __Pth__ [@ link-to-pth-webpage Pth]]
-[def __BoostAsio__ [link to-boost-asio Boost.Asio]]
-[def __BoostFunction__ [link to-boost-asio Boost.Function]]
-[def __complex_matcher_cpp__ [link to-complex_matcher.cpp complex_matcher.cpp]]
+[def __OpenMP__ [@link-to-openmp-webpage OpenMP]]
+[def __Itanium_ABI__ [@link-to-itanium-abi OpenMP]]
+[def __LLVM__ [@link-to-itanium-abi __LLVM__]]
+[def __XXX__ [@link-to-duff-device-coroutines XXX]]
+[def __Pth__ [@link-to-pth-webpage Pth]]
+[def __BoostAsio__ [@link-to-boost-asio Boost.Asio]]
+[def __BoostFunction__ [@link-to-boost-asio Boost.Function]]
+[def __complex_matcher_cpp__ [@link-to-complex_matcher.cpp complex_matcher.cpp]]
 
 [section:intro Introduction]
 
 The Boost.Coroutine library contains a family of class templates that
-transform function objects in coroutines. Coroutines are a
+wrap function objects in coroutines. Coroutines are a
 generalization of subroutines that can return and be reentered more
 than once without causing the destruction of automatic objects.
 
 Coroutines are useful whenever it is necessary to keep state across a
-function call.
+function call, a job usually reserved to stateful function objects.
 
 [endsect]
 
 [section:tutorial Tutorial]
 
-While all subroutines have state, this is usually lost when the
+While all subroutines have state, this is usually lost when a
 subroutine returns; on the other hand coroutines keep their state
 across calls. Function 
-objects familiar to all C++ programmers are similar to coroutines in
+objects, familiar to most C++ programmers, are similar to coroutines in
 the fact as they may have state that is preserved across calls; but
 while function objects store their state on class members variables, coroutines
 store the state in the stack as automatic objects. 
@@ -126,24 +125,23 @@ only to carry on were it left off when control re-enters the coroutine
 at some later stage".
 
 The second point is a fundamental difference between a coroutine and
-a generic function objects. While the latter can also store local state
-in the form of member variables, it does not automatically preserve
+a generic function objects. While the latter can also preserve local
+data in the form of member variables, it does not automatically preserve
 the point of suspension when it is exited; it must be manually saved
-in an extra state member variable. Coroutines automatically remember
+as an extra state member variable. Coroutines automatically remember
 where they left off.
 
 Coroutines can be used in all places where function objects are used;
-this includes: as callback to standard algorithms, as generator
+this includes: as parameters to standard algorithms, as generator
 functions, as callback to asynchronous functions and much more.
 
 In this section, we will first present the __generator__ class
 template (a simplified form of coroutines). Only [link coroutine.coroutines
-later] the full
-__coroutine__ class template is described.
+later] the full __coroutine__ class template is described.
 
 [h3 Stylistic Notes]
 
-For brevity all code in this and other sections will assume that
+For brevity all code in this and most other sections will assume that
 the following using declaration is in effect:
 
     using namespace coro = boost::coroutines;
@@ -1166,7 +1164,7 @@ The scheduler is just a simple wrapper around a `std::queue`:
         current()(std::nothrow);
         if(current()) 
           add(current());
-	m_queue.pop();
+        m_queue.pop();
       }
     }
   private:
@@ -1295,10 +1293,9 @@ We slightly modify `scheduler::run()`:
   ...
   void run () {
     while(!m_queue.empty()) {
-      if(current()) {
-        current()();	
-      }	
-    m_queue.pop();
+      current()(std::nothrow);	
+      m_queue.pop();
+    }
   }
   ...
   
@@ -1377,9 +1374,8 @@ matter of preferring fairness or performance.
 [blurb __note__ The "wait while message queue is empty" and "signal
 message queue not empty" pattern is reminiscent of condition
 variables used in threaded programming. In fact the idea is the same,
-except we need not to associate a lock with the condition variable
-because of the cooperative behavior of the scheduler. The pattern
-is so common that could be refactored in a reusable `coroutine_condition` class.] 
+except that we need not to associate a lock with the condition variable
+given the cooperative behavior of the scheduler.] 
 
 This is our message queue object. Again a global for simplicity:
 
@@ -1504,20 +1500,20 @@ previous] control flow is possible.
 While /asymmetric/ coroutines are the main abstraction provided by
 Boost.Coroutine, a /symmetric/ coroutine facility is also provided.
 
-The __coroutine__ class template has an the `__yield_to__()` member
-function that can be used to stop the current coroutine and yield
+The __coroutine__ class template has a `__yield_to__()` member
+function that stops the current coroutine and yields
 control to a different __coroutine__. It works exactly like
 `__yield__()`, except that the control is not returned to the caller
-but to another coroutine, specified as the first argument of
-`__yield_to__`. The target coroutine can be any other coroutine for
-witch one of these is true:
+but is given to another coroutine, specified as the first
+argument. The target coroutine can be any other coroutine as long as
+one of these conditions is true:
 
 * Has not been started yet.
 * Is stopped in a call to `__yield__`.
 * Is stopped in a call to `__yield_to__`.
 
 From the above conditions it follows that a __coroutine__ can yield to
-itself (in this case `__yield_to__` act as a null operation).
+itself (in this case `__yield_to__` is as if had returned immediately).
 
 If  coroutine  [*A]  yields to coroutine [*B], the caller
 of *A* becomes the caller of [*B]. If [*B] ever does a normal yield, the
@@ -1561,13 +1557,13 @@ discipline can easily lead to spaghetti code.]
 We have explored the [link coroutine.producer_consumer1 consumer] and
 [link producer_consumer2 producer] driven versions of this path
 before. In this third installment we will implement the pattern with
-the producer and the consumer as peers, implementing them as symmetric
+the producer and the consumer as peer symmetric
 coroutines. The implementation is straight forward. These the our
 consumer and the producer bodies: 
 
   void producer_body(producer_type::self& self, 
-	  	     std::string base, 
-		     consumer_type& consumer) {
+                     std::string base, 
+                     consumer_type& consumer) {
     std::sort(base.begin(), base.end());
     do {
       self.yield_to(consumer, base);
@@ -1575,8 +1571,8 @@ consumer and the producer bodies:
   }
 
   void consumer_body(consumer_type::self& self, 
-	  	     const std::string& value,
-		     producer_type& producer) {
+                     const std::string& value,
+                     producer_type& producer) {
     std::cout << value << "\n";
     while(true) {
       std::cout << self.yield_to(producer)<< "\n";
@@ -1629,7 +1625,7 @@ consumer accept `boost::optional<const std::string&>`.
 
 [h3 Symmetric and asymmetric coroutine transformation]
 
-It can be demonstrated__moura04b__ that both symmetric and
+It can be demonstrated __moura04b__ that both symmetric and
 asymmetric coroutines have the same expressive power, that is each
 type can be expressed in term of the other. We now will show how.
 
@@ -1910,31 +1906,31 @@ can be written as:
         std::cout << '0';
         self.yield();
         if(self.result() == '1') {
-	  std::cout << '0';
-	  self.yield();
-	  while(self.result() == '1') {
-	    std::cout << '0';
-	    self.yield();
-   	  }
-	  std::cout <<'0';
-	  self.yield();
-	  if(self.result() == '1') {
-	    std::cout << '0';
-	    self.yield();
-	    if(self.result() == '0') {
-	      std::cout << '1';
-	      self.yield();
-	    } else {
-	      std::cout <<'0';
-	      self.yield();
-	    } 
-	  } else {
-	    std::cout <<'0';
-	    self.yield();
-	  }
+          std::cout << '0';
+          self.yield();
+          while(self.result() == '1') {
+            std::cout << '0';
+            self.yield();
+          }
+          std::cout <<'0';
+          self.yield();
+          if(self.result() == '1') {
+            std::cout << '0';
+            self.yield();
+            if(self.result() == '0') {
+              std::cout << '1';
+              self.yield();
+            } else {
+              std::cout <<'0';
+              self.yield();
+            } 
+          } else {
+            std::cout <<'0';
+            self.yield();
+          }
         } else {
-	  std::cout << '0';
-	  self.yield();
+          std::cout << '0';
+          self.yield();
         }
       } else {
         std::cout <<'0';
@@ -2318,7 +2314,7 @@ should probably refactored in multiple coroutines.
 
 [endsect]
 
-[section:todo The future]
+[section:todo Further Development]
 [h3 Introduction]
 
 The main reason behind the development of Boost.Coroutine has been to
@@ -2373,7 +2369,7 @@ context and stack caching system should be devised.
 
 [h3 Future allocator]
 
-The Future internal implementation is heap allocated. Futures should
+A __future__ internal implementation is heap allocated. Futures should
 be considered cheap object to create, so it makes sense to provide the
 ability to specify an allocator if allocation becomes a bottleneck. An
 allocator that uses memory from the coroutine stack would be useful,
@@ -2381,6 +2377,19 @@ and may be even the default. This would match well the future usage
 that requires a future not to outlive the owning coroutine.
 
 [endsect]
+
+[section:details Details]
+
+[h3 Introduction]
+
+Coroutines cannot be implemented within the rule of the
+`C++` language. This is also true for threads. But while threads are
+likely to be incorporated into the next release of the `C++` standard,
+with coroutines we are mostly on our own.
+
+This section will describe the general internal design of
+Boost.Coroutine and describe the implementation in two different
+platforms.
 
 [section:supported Supported platforms]
 
@@ -2399,13 +2408,15 @@ provided, but it is [link coroutine.fibers not guaranteed to work on
 all systems]. It may also not be 64 bit clean (this should be trivial
 to fix).
 
+[endsect] 
+
 [section:performance Performance]
 
 Ideally the cost of a coroutine call should be comparable to the cost
 of an indirect function call. Currently Boost.Coroutine, at least on
 Linux-x86-GCC come close to 150% of the speed of Boost.Function,
 itself comparable to the cost of an indirect function call. The Win32
-implementation has not be tested, but it might be slightly slower
+implementation has not been benchmarked, but it might be slightly slower
 because of the need to switch exception contexts and some missed
 optimization opportunities. The `makecontext` based implementation is
 at least three orders of magnitude slower than the others due to the
@@ -2418,24 +2429,6 @@ potentially make context switches extremely expensive.
 
 [endsect]
 
-
-
-
-[h3 Notes on the Win32 implementation]
-
-[endsect]
-
-[section:internals Internals]
-
-[h3 Introduction]
-
-Coroutines cannot be implemented within the rule of the
-`C++` language. This is also true for threads. But while threads are
-likely to be incorporated into the next release of the `C++` standard,
-with coroutines we are mostly on our own.
-
-This section will describe the general internal design of
-Boost.Coroutine and describe the implementation in two different platforms.
 
 [section:implementation Implementation]
 
@@ -2547,11 +2540,11 @@ oblivious of the system it runs on, thus it might as well be system
 specific. Similar platforms common code may still be shared.
 
 Currently the library uses `fibers` on `Win32` systems, custom
-assembler code on the very specific "GCC on linux x86 using fame unwind
-tables based exception handling" and a generic
-`makecontext/setcontext` based code on `POSIX 2001"
+assembler code on the very specific "GCC-linux-x86 using
+frame-unwind-tables based exception handling and a generic 
+`makecontext/setcontext` based implementation on `POSIX 2001`
 compliant systems. Note that, as the `POSIX` standard
-knows nothing about `C++` and is `C` specific, this is not guaranteed
+knows nothing about `C++`, this is not guaranteed
 to work on all platforms. Also the interaction between threads and
 user contexts is not specified by the standard.
 
@@ -2566,11 +2559,11 @@ different context implementations in the same library.
 
 The context switching support is very simple and tightly contained. It
 only requires a context structure and two function for context setup
-and context swap (the interface is modeled around the `POSIX`
-`makecontext API`). At this time the actual extension interface is not
+and context swap (the interface is modeled around the `POSIX
+ makecontext API`). At this time the actual extension interface is not
 documented and a private detail, because it is likely to be further
 simplified (the current requirements of the `Context` concept have
-been complicated explore potential performance optimizations).
+been complicated to explore potential performance optimizations).
 
 [h3 A wild dream: Compiler support for coroutines]
 
@@ -2600,8 +2593,8 @@ the code in *CPS* form, potentially inlining some continuation
 calls. Thus potentially coroutines are optimized too. 
 
 Unfortunately the *CPS* form is not suitable for `C` and `C++` because
-it is very alien to these languages and even if possible it would
-incur some performance penalty. 
+it does not match well the execution model of these languages and even if possible it could
+impose some overhead. 
 
 The `C# 2.0` language requires compilers to be capable of transforming
 /semi/-coroutine based code to callback based code. 
@@ -2624,9 +2617,9 @@ and finally show how Boost.Coroutine can be implemented in term of
 fibers.
 
 [blurb __alert__ `POSIX` compliance does not guarantee the presence of
-the `context API`, as this is an optional feature. It is required by
-the `Single Unix Specification v2`, also known as "X/Open System
-Interface.]
+the context [^API], as this is an optional feature. It is required by
+the `Single Unix Specification v2`, also known as [^X/Open System
+Interface].]
 
 [h3 The APIs]
 
@@ -2635,7 +2628,7 @@ argument passing from coroutine to coroutine is not explicitly
 supported, it can be implemented easily on top of the existing
 facilities.
 
- The `makecontext/swapcontext API` is extremely similar as it supports
+The `makecontext/swapcontext API` is extremely similar as it supports
 argument-less symmetric coroutine switching.
 
 The `SwitchToFiber` function is used to yield from the current fiber
@@ -2646,17 +2639,18 @@ running. The current context is saved in the current fiber.
 optionally save the floating point context. The Microsoft
 documentation warns that if the appropriate flag is not set the
 floating point context may not be saved and restored correctly. In
-practice this seems not to be needed because the calling convection
-requires all floating point registers to be empty before calling any
-function, `SwitchToFiber` included. If the floating point control word
-is modified, other fibers will see the new floating point status. This
-should be expected thought, because the floating point status should
-be treated as any other shared state. Currently Boost.Coroutine does
-not set the "save floating point" flag, and seems to work correctly
-anyway. Saving the floating point control word is an extremely
-expensive operation. Newer `API` documentation reveal that the
-FIBER_FLAG_FLOAT_SWITCH flag is no longer supported since Windows XP
-and Windows 2000 SP4.] 
+practice this seems not to be needed because the calling conventions
+on this platform requires the floating point register stack to be empty before calling any
+function, `SwitchToFiber` included. The exception is that if the
+floating point control word is modified, other fibers will see the new
+floating point status. This should be expected thought, because the
+the control word should be treated as any other shared
+state. Currently Boost.Coroutine does 
+not set the "save floating point" flag (saving the floating
+point control word is a very expensive operation), but seems to work
+fine anyway. To complicate the matter more, recent `Win32`
+documentation reveal that the  `FIBER_FLAG_FLOAT_SWITCH` flag is no
+longer supported since Windows XP and Windows 2000 SP4.] 
 
 The corresponding function in the `POSIX` standard is `swapcontext` that
 saves the current context in a memory area pointed by the first
