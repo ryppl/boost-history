@@ -37,7 +37,7 @@ void print_max_format (FILE * out, network * n
 	for( i = 0; i < dim; i++)
 	  fprintf( out, "c %s\n", comm[i]);
 	
-	fprintf( out, "p max %7d %10d\n", vnum, e_num);
+	fprintf( out, "p max %d %d\n", vnum, e_num);
 	fprintf( out, "n %7d s\n", n->source);
 	fprintf( out, "n %7d t\n", n->sink);
 
