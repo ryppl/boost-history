@@ -79,10 +79,11 @@ DefaultConstructible]]
 
 [/ bibliography links]
 [def __marlin80__ [link to-marlin-doctoral-thesis-here \[Marlin80\]]]
-[def __moura04a__ [link to-moura-04-04 \[Moura04a\]]]
-[def __moura04b__ [link to-moura-04-15 \[Moura04b\]]]
+[def __moura04a__ [link to-moura-04-04 \[Moura04\]]]
 [def __ActorModel__ [link ref-to-actor-model-biblio \[ActorModel\]]]
 [def __HP_coroutines__ [link ref-itanium-corotines \[HP\]]]
+[def __Fog06__ [link agner-fog-documentation \[Fog06\]]]
+[def __Intel06__ [link intel-optimization-guide \[Intel06\]]]
 
 [/ external links]
 [def __OpenMP__ [@link-to-openmp-webpage OpenMP]]
@@ -103,6 +104,11 @@ than once without causing the destruction of automatic objects.
 
 Coroutines are useful whenever it is necessary to keep state across a
 function call, a job usually reserved to stateful function objects.
+
+[blurb __alert__ This library has been developed as part of the Google
+Summer of Code 2006, with Boost as the Mentoring association. It has
+not been subject to a formal review, and thus is not part of the Boost
+library collection. Boost.Coroutine is only the tentative name]
 
 [endsect]
 
@@ -2168,6 +2174,71 @@ blocks until all future arguments have been signaled.
 [endsect]
 
 [section:threads Coroutines and thread safety]
+
+Boost.Coroutine provides a restricted version of the distinct objects
+thread safety guarantee. The library is thread safe as long as these
+preconditions are valid:
+
+# All member functions of a coroutine can only be called from the owning
+thread (the thread where a coroutine has been created is said to be the
+owning thread; creating a coroutine means invoking any constructor).
+
+# Distinct coroutine instances can be freely called from different
+threads.
+
+It follows from 1 that:
+
+* A coroutine instance cannot be called from any thread other than the one
+where it has been created. 
+
+* A coroutine instance cannot yield to any other coroutine instance
+  unless the latter has been created in the same thread of the former.
+
+[h3 What does this means in practice]
+
+In practice a coroutine cannot migrate from one thread to another. For
+its whole lifetime it is bound to one specific thread. Other threads
+cannot safely access any coroutine member functions. 
+
+[blurb __alert__ Not even locking can be safely used to protect
+concurrent accesses to a coroutine. That is two treads cannot invoke
+the same coroutine even if the serialize access through a mutex.]
+
+If coroutines are, for example, used to implement a M on N threading
+models (M coroutines on N threads with `N < M`), coroutines cannot be
+dynamically migrated from a more loaded thread to a less loaded
+threads.
+
+[h3 Threads and Boost.Asio]
+
+From the threads guarantees of Boost.Coroutine, it follows that, if
+coroutines are ever inserted in an `asio::io_service`, no more than
+one thread can call `io_service::run()`. This thread must be the one
+that created all coroutines inserted in the `io_service`.
+
+This means that the "one `io_service` per thread" scheme must be used.
+
+[blurb __note__ This means that on Windows platforms an application
+cannot take advantage of the ability of a `Win32` completion port to
+balance the load across all threads bound to it. This might incur, in
+some applications, in a performance penalty. On the other hand the
+thread affinity of coroutines might result in better CPU affinity
+and thus a better cache utilization and memory usage especially on
+`NUMA SMP` systems.]
+
+[h3 Relaxing requirements]
+
+In the future, as more experience with the library is gained, the
+thread safety restrictions could be slightly relaxed. It is likely
+that the owning thread will become the first one to invoke
+`operator()` for that coroutine or `yield_to` that coroutine.
+
+It is unlikely that thread migration will ever be possible (nor is
+believed to be required).
+
+For a rationale for the current requirements see
+[link coroutine.coroutine_thread "Interaction between coroutines and threads"].
+
 [endsect]
 
 [endsect][/advanced]
@@ -2422,8 +2493,10 @@ optimization opportunities. The `makecontext` based implementation is
 at least three orders of magnitude slower than the others due to the
 need to perform a system call per context switch.
 
-To get good performance on `Win32` systems, the `Win32 API` call
-`ConvertThreadToFiber` should be [link convert_thread_to_fiber_optimization performed] on each thread that will
+To get good performance on `Win32` systems, a call to
+`ConvertThreadToFiber` should be [link
+convert_thread_to_fiber_optimization performed] on each thread that
+will 
 invoke coroutines. Else a much slower code path will be used that may
 potentially make context switches extremely expensive.
 
@@ -2448,6 +2521,8 @@ functions.
 * Local variables are static. This means that they are not destroyed
 when exceptions are thrown. In general the use of statics as locals is
 questionable.
+
+[#task_switching_model]
 
 [h3 The stack switching model]
 
@@ -2618,7 +2693,7 @@ fibers.
 
 [blurb __alert__ `POSIX` compliance does not guarantee the presence of
 the context [^API], as this is an optional feature. It is required by
-the `Single Unix Specification v2`, also known as [^X/Open System
+the `Single Unix Specification`, also known as [^X/Open System
 Interface].]
 
 [h3 The APIs]
@@ -2644,7 +2719,7 @@ on this platform requires the floating point register stack to be empty before c
 function, `SwitchToFiber` included. The exception is that if the
 floating point control word is modified, other fibers will see the new
 floating point status. This should be expected thought, because the
-the control word should be treated as any other shared
+control word should be treated as any other shared
 state. Currently Boost.Coroutine does 
 not set the "save floating point" flag (saving the floating
 point control word is a very expensive operation), but seems to work
@@ -2771,7 +2846,7 @@ called immediately after the coroutine yields to the main
 context. This implies a huge performance penalty, but correctness has
 been preferred above performance. If the thread has been already
 converted by the user, the calls to the two functions above are
-skipped and there is no performance penalty. Thus performance
+skipped and there is no penalty. Thus performance
 sensitive programs should always call `ConvertThreadToFiber`
 explicitly for every thread that may use coroutines.
 
@@ -2797,9 +2872,261 @@ of it.
 
 [section:linuxasm Case study 2: Linux-x86-GCC]
 
+[h3 Introduction]
+
+In this section we will show an example of an assembly
+implementation of Boost.Coroutine low level context switching. While
+the example is x86 and Linux specific, it can easily generalized to
+other operating systems and CPUs. It is believed that the same code
+should work unmodified on BSDs derived systems.
+
+Notice that the examples here will use the [^AT&T] assembler syntax
+instead of the more common [^Intel] syntax. There aren't many
+differences except that the order of source and destination operands
+are reversed and the opcode name encodes the length of the operands.
+
+[h3 Initial code, [^libc swapcontext] implementation]
+
+The exploration of a possible stack switching implementation has
+started from an analysis of the [^GNU glibc swapcontext]
+implementation. We do not include the actual code here because of
+license issues, but will comment it. The actual code can be found in
+the file __swapcontext_S__ of the [^glibc] source archive.
+
+# `swapcontext` first load the address of the buffer where the context
+will be saved from the stack, where it has been pushed as part of the
+call setup. This buffer will be called the /destination buffer/.
+
+# Then `movl` is used to copy all general purpose register content to
+the destination buffer. For `EAX` a dummy value is saved because it
+will be clobbered by `swapcontext`.
+
+# The value of the instruction pointer a the time of the call
+to `makecontext` is saved in the destination buffer. The value of this register is
+retrieved from the stack, where it had been pushed by the `call
+makecontext` instruction.
+
+# The `ESP` stack pointer is saved in the destination buffer.
+
+# Then the `FS` segment register is saved in the destination
+buffer. Originally `swapcontext` 
+also saved the `GS` register, but it has been found that this
+conflicted with threading`.
+
+# The floating point environment is saved with a call to `fnstenv` in
+the destination buffer. This includes the control word, status word,
+tag word, instruction pointer, data pointer and last opcode, but
+excludes the floating point register stack. This is about 28 bytes of data.
+
+# The address of the structure that will be restore is loaded from the
+stack. This will be called the /source buffer/. All above operations
+are reversed in `LIFO` order.
+
+# The current signal mask is saved in the destination buffer. The
+signal mask to be restored is loaded from the source buffer.
+
+# The `sigprocmask` system call is invoked to restore the signal mask. 
+
+# The floating point environment is restored from the source buffer.
+
+# The `GS` register is restored from the source buffer.
+
+# The stack pointer is restored from the source buffer. This in
+practice switches stacks.
+
+# The return address (`EIP`) is restored from the source buffer and
+pushed in the stack.
+
+# All general purpose registers are restored from the source buffer.
+
+# `ret` is used to pop the instruction pointer and jump to it.
+
+[h3 Optimizing `makecontext`]
+
+The above implementation suffer from various inefficiencies. The most
+glaring one is the call to `sigprocmask` that alone wastes thousands of
+cycles. Unfortunately the `POSIX` standard requires
+it. Boost.Coroutine does not deal with the signal mask and consider it
+as any shared resource. It is the responsibility of the user to guard
+against unsafe access to it. 
+By simply removing the call the function
+can be sped up by three order of magnitude. 
+
+We can do
+better. Saving and restoring a segment register is an expensive
+operation, because requires not only the register content to be
+reloaded but also the segment descriptor entry from the segment
+table. The Linux operating system prohibits the user to change the
+`FS` register, thus we should be able to safely omit saving and
+restoring it.
+
+We also do not need save the floating point environment. This should
+be considered shared state. This saves lots of cycles as it is an
+expensive operation too.
+
+finally we do not need to save all general purpose registers. The
+Linux calling conventions state that [^EAX, ECX] and [^ECX] are callee
+clobbered and the caller should not expect these to be preserved. This
+is also true of the floating point stack that is required to be empty
+when calling a function (and in fact `makecontext` acknowledges this
+by not saving the floating pointer register stack).
+
+[h3 `swapcontext_stack`]
+
+Here we will present the `swapcontext` implementation used by
+Boost.Coroutine on Linux x86 systems. Note that this implementation is
+*not* derived from `glibc` and has been independently developed. Also
+note that this is not a drop-in replacement for `swapcontext`.
+
+The `C++` prototype for this function is:
+
+  extern "C" void swapcontext_stack (void***, void**) throw()
+  __attribute((regparm(2))); 
+
+Where `__attribute((regparm(2)))` is a `GCC` extension to require pass
+by register parameters. The first parameter is a pointer to a pointer
+to the destination stack (here identified as an array of void pointers for
+simplicity), while the second is a pointer to the source stack. In
+practice the first is a pointer to the memory area where the
+destination stack pointer is stored and the second is the stack
+pointer that will be restored.
+
+This is the body of `swapcontext_stack`
+
+[pre
+        pushl %ebp      
+        pushl %ebx      
+        pushl %esi      
+        pushl %edi      
+        movl  %esp, (%eax)
+        movl  %edx, %esp
+        popl  %edi      
+        popl  %esi      
+        popl  %ebx              
+        popl  %ebp
+        ret
+]
+
+This function requires `EAX` to point to the destination stack
+pointer, while `EDX` is the new stack pointer. `swapcontext_stack`
+first saves all caller save registers on the old stack, then saves the
+stack pointer in the location pointed by `EAX`, then load `EDX` as the
+new stack pointer and restore the caller save registers from the new
+stack. The final `ret` will pop the return address and jump to it.
+
+The amount of instructions in this implementation is close to optimal,
+also there are no register dependencies between them (all `popl`
+instructions depend on the `ESP` load, but substituting them with `movl
+offset(%ecx)` didn't increase performance).
+
+Still this function is not optimal. The last `ret` will be always
+mispredicted by most CPUs. On `NetBurst` architectures (i.e. Pentimu 4
+and derived) this implies an overhead of at least 25 cycles (but very
+often more than 50) to flush the pipeline. 
+Considering an unrealistic worst case of one instruction
+per cycle for the previous function, the misprediction alone is more
+than two times the cycle count of `swapcontext_stack` itself.
+
+[h3 Jump prediction]
+
+Before showing how `swapcontext_stack` can be further optimized we
+need to understand a little how branch prediction work on modern
+architectures.
+
+Most CPUs have special circuitry to predict complex patterns of
+conditional jumps, but usually can only predict indirect jumps
+(i.e. jumps trough a pointer) to go to the location the same
+instruction jumped the last time (the CPU keeps a table that
+associates the address of a jump instructions with the addresses it
+jumped to the last time). Thus a jump that always go to the same place
+is always predicted, while a jump that alternates between two
+different targets is always mispredicted.
+
+For example `swapcontext_stack` is used both to call a coroutine and
+to return from it. Consider a loop that repeatedly invokes a coroutine
+and return from it (for example a generator invoked by
+`std::generate`): the indirect call will be always mispredicted.
+
+`ret` instructions are usually treated specially by CPUs, and instead
+of being predicted to jump where they jumped the last time, a return
+stack buffer is used to try to predict where the jump will
+return. When a call is made, the caller address is pushed in the
+return stack buffer and when a `ret` is performed, the address in the
+top of the stack is used to predict where the `ret` will go. This
+means that the `ret` in `swapcontext_stack` will be always
+mispredicted, because it will never jump to the caller of
+`swapcontext_stack`. 
+
+Finally, it seems that new generations of processors could have more
+advanced indirect branch prediction functionality. At least the
+`Pentium M` seems to be able to predict simple patterns of indirect
+jumps.
+
+For reference see  __Intel06__ and __Fog06__.
+
+[h3 Optimizing the `ret`]
+
+We have seen that the first step to optimize `swapcontext_stack` is to
+substitute `ret` with a `popl %ecx; jmp *%ecx` pair. This gives the
+CPU a chance to predict the jump but is not enough. As a CPU will
+predict the jump to go where it did the last time, we need to have
+different jumps for each target. This is not obviously possible for
+dynamic code where at any point any coroutine could be invoked or a
+coroutine could yield to any other. But when the same coroutine is
+always called in a loop, the pattern is static and could be
+optimized. If we used two different jumps to invoke and yield from the
+coroutine, it will always be predicted. The simplest way to do that is
+to duplicate the code for `swapcontest_stack` in `swapcontext_swap_up`
+and swapcontext_swap_down`. The first is used for the invocation, the
+second for the yield. Other than that, the code is exactly the
+same. Measurements show a performance increase of at least 50% in the
+previous scenario. 
+
+In a dispatcher based scenario, the jump in `swapcontext_stack_up` will
+always be mispredicted, while the one in `swapcontext_stack_down` will
+always be predicted correctly to return to the dispatcher; thus, while
+the win is smaller, is sill better than mispredicting every time. This
+is why an "invoke + yield + invoke + yield" is not necessarily slower
+than "invoke + yield_to + yield".
+
+[h3 Inlining `swapcontext`] 
+
+If the compiler could inline `swapcontext`, we would have many more
+jumps and a much bigger chance of being predicted. Boost.Coroutine
+contains experimental code to do that, but is currently disabled
+because the inline assembler code used is not yet believed to be
+completely safe.
+
+[h3 Handling exceptions]
+
+The code is believed to work correctly with exceptions on systems that
+use the zero overhead exception handling model (as do most GCC targets
+today). In this model there are no pointers to exception chains to be manipulated
+and restored on context switch.
+
+[h3 Conclusions]
+
+We have seen one possible assembler implementation of
+`swapcontext`. While the code is very system specific, it could easily
+be ported on many more systems following a similar model. Also the
+analysis of the branch prediction functionality is by no mean limited
+to `IA32` CPUs.
+
 [endsect]
 
-[section:coroutine_thread Interaction between coroutines and thread]
+[section:coroutine_thread Interaction between coroutines and threads]
+
+[Introduction]
+
+On the planning stage of the library, it was believed that being able
+to migrate a coroutine from one thread to another was a desirable
+property, and even a necessary one to take full advantage of the
+completion port abstraction provided by the `Win32 API`. During
+the implementation stage it became apparent that guaranteeing this
+property was going to be a considerable challenge. 
+
+In the end 
+
 [endsect]
 
 [endsect]

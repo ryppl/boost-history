@@ -37,7 +37,7 @@ extern "C" void swapcontext_stack2 (void***, void**) throw()  __attribute((regpa
 extern "C" void swapcontext_stack3 (void***, void**) throw()  __attribute((regparm(2)));
 #else
 
-#if 1
+#  if 1
 void 
 inline
 swapcontext_stack(void***from_sp, void**to_sp) throw() {
@@ -74,7 +74,7 @@ swapcontext_stack(void***from_sp, void**to_sp) throw() {
    );
   
 }
-#else
+#  else
 typedef   void (*fun_type)(void***from_sp, void**to_sp) 
   __attribute((regparm(2)));
 
@@ -107,22 +107,23 @@ fun_type get_swapper(){
   return ptr;
 };
 
-
 void 
 inline
 swapcontext_stack(void***from_sp, void**to_sp) throw() {
   fun_type ptr = get_swapper();
   ptr(from_sp, to_sp);
 }
-#endif
+
+#  endif
+
 void 
 inline
 swapcontext_stack2(void***from_sp, void**to_sp) throw() {
   swapcontext_stack(from_sp, to_sp);
 }
 
-
 #endif
+
 namespace boost { namespace coroutines { namespace detail {
   namespace oslinux {
     template<typename T>

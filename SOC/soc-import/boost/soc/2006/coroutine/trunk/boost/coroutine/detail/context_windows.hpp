@@ -98,9 +98,9 @@ namespace boost {namespace coroutines {namespace detail{
 
     template<typename T>
     inline
-    void
-    trampoline() {
-      T* fun = static_cast<T*>(GetFiberData());
+    VOID CALLBACK
+    trampoline(VOIDP pv) {
+      T* fun = static_cast<T*>(pv);
       BOOST_ASSERT(fun);
       (*fun)();
     }
