@@ -99,8 +99,9 @@ void fsm_structured(coroutine_type::self& self, char) {
   }
 }
 
-typedef boost::function<void(coroutine_type2::self&)> action_type;
 typedef coroutine<char(char)> coroutine_type2;
+typedef boost::function<void(coroutine_type2::self&)> action_type;
+
 void terminator(coroutine_type2::self&) {}
 
 void match(coroutine_type2::self& self, char match, char out1, char out2 , action_type act, action_type act2) {

@@ -65,7 +65,7 @@ namespace boost { namespace coroutines {
     typedef coroutine<Signature, ContextImpl> type;
     typedef ContextImpl context_impl;
     typedef Signature signature_type;
-    friend class detail::coroutine_accessor;
+    friend struct detail::coroutine_accessor;
 
     typedef BOOST_DEDUCED_TYPENAME 
     detail::coroutine_traits<signature_type>

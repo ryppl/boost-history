@@ -56,7 +56,7 @@ namespace boost { namespace coroutines { namespace detail {
     }
 
     bool pending() {
-      return m_coro_impl.get();
+      return 0 != m_coro_impl.get();
     }
     
     template<typename T>

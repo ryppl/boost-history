@@ -39,7 +39,7 @@ namespace boost { namespace coroutines {
   <future<BOOST_PP_ENUM_PARAMS(BOOST_COROUTINE_ARG_MAX, T)> > 
   {
 
-    friend class detail::wait_gateway;
+    friend struct detail::wait_gateway;
     typedef void (future::*safe_bool)();           
     void safe_bool_true() {}                       
 

@@ -30,7 +30,7 @@ namespace boost { namespace coroutines { namespace detail {
   public:
     typedef Coroutine coroutine_type;
     typedef coroutine_self<coroutine_type> type;
-    friend class detail::coroutine_accessor;
+    friend struct detail::coroutine_accessor;
 
     typedef BOOST_DEDUCED_TYPENAME coroutine_type
     ::impl_type impl_type;

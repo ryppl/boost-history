@@ -73,7 +73,7 @@ namespace boost {namespace coroutines {namespace detail{
 	  
 	  SwitchToFiber(to.m_ctx); 
 	  
-	  bool result = ConvertFiberToThread();
+	  BOOL result = ConvertFiberToThread();
 	  BOOST_ASSERT(result);
 	  (void)result;
 	  from.m_ctx = 0;
@@ -99,7 +99,7 @@ namespace boost {namespace coroutines {namespace detail{
     template<typename T>
     inline
     VOID CALLBACK
-    trampoline(VOIDP pv) {
+    trampoline(LPVOID pv) {
       T* fun = static_cast<T*>(pv);
       BOOST_ASSERT(fun);
       (*fun)();
@@ -122,7 +122,7 @@ namespace boost {namespace coroutines {namespace detail{
       fibers_context_impl(Functor& cb, std::ptrdiff_t stack_size) :
 	fibers_context_impl_base
       (CreateFiber(stack_size== -1? 0 : stack_size,
-		   reinterpret_cast<LPFIBER_START_ROUTINE>(&trampoline<Functor>),
+		   static_cast<LPFIBER_START_ROUTINE>(&trampoline<Functor>),
 		   static_cast<LPVOID>(&cb)))
       {
 	BOOST_ASSERT(m_ctx);
