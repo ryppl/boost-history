@@ -125,8 +125,7 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
 	
     bool equal(const_tree_cursor const& other) const
     {
-        //return (m_parent->child[m_pos] == other.m_parent->child[other.m_pos]);
-        return (this->m_parent == other.m_parent) && (this->m_pos == other.m_pos);
+		return (this->m_parent == other.m_parent) && (this->m_pos == other.m_pos);
     }
     
     void increment()

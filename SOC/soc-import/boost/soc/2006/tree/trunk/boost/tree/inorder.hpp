@@ -31,6 +31,10 @@
  * Inorder traversal algorithms for cursors
  */
 
+//TODO:
+// Concept checks: MultiwayTree, parent?
+// Optimise for trees such as binary_tree with their own inorder begin() members!
+
 #ifndef BOOST_TREE_INORDER_HPP
 #define BOOST_TREE_INORDER_HPP
 
@@ -42,7 +46,7 @@ namespace inorder {
 
 /**
  * @brief	Inorder successor
- * @param c	MultiwayCursor that to be set to its inorder successor
+ * @param c	MultiwayCursor to be set to its inorder successor
  */
 template <class MultiwayCursor>
 inline void forward(MultiwayCursor& c) // ++ (go right, then left)
@@ -62,8 +66,19 @@ inline void forward(MultiwayCursor& c) // ++ (go right, then left)
 }
 
 /**
+ * @brief	Inorder successor
+ * @param c	A cursor
+ * @return	Inorder successor of @a c
+ */
+template <class MultiwayCursor>
+inline MultiwayCursor next(MultiwayCursor c)
+{
+	return forward(c);
+}
+
+/**
  * @brief	Inorder predecessor
- * @param c	MultiwayCursor that to be set to its inorder predecessor
+ * @param c	MultiwayCursor to be set to its inorder predecessor
  */
 template <class MultiwayCursor>
 inline void back(MultiwayCursor& c) // -- (go left, then right)
@@ -80,8 +95,94 @@ inline void back(MultiwayCursor& c) // -- (go left, then right)
 	return;
 }
 
-// TODO: begin, end (of MultiwayTree)
-// Concept checks: MultiwayTree, parent?
+/**
+ * @brief	Inorder predecessor
+ * @param c	MultiwayCursor
+ * @return	Inorder predecessor of @a c
+ */
+template <class MultiwayCursor>
+inline MultiwayCursor prior(MultiwayCursor c)
+{
+	return back(c);
+}
+
+/**
+ * @brief	cursor to the first element of a MultiwayTree in inorder traversal
+ * @param t	A MultiwayTree
+ * @return	Inorder begin of @a t
+ */
+template <class MultiwayTree>
+typename MultiwayTree::cursor begin(MultiwayTree& t)
+{
+	typename MultiwayTree::cursor c = t.root();
+	while (c.has_child())
+		return c.begin();
+}
+
+/**
+ * @brief	const_cursor to the first element of a MultiwayTree in inorder 
+ * 			traversal (Alias of cbegin())
+ * @param t	A MultiwayTree
+ * @return	Inorder begin of @a t
+ */
+template <class MultiwayTree>
+typename MultiwayTree::const_cursor begin(MultiwayTree const& t)
+{
+	typename MultiwayTree::const_cursor c = t.root();
+	while (c.has_child())
+		return c.begin();
+}
+
+/**
+ * @brief	const_cursor to the first element of a MultiwayTree in inorder 
+ * 			traversal
+ * @param t	A MultiwayTree
+ * @return	Inorder begin of @a t
+ */
+template <class MultiwayTree>
+typename MultiwayTree::const_cursor cbegin(MultiwayTree const& t)
+{
+	typename MultiwayTree::const_cursor c = t.root();
+	while (c.has_child())
+		return c.begin();
+}
+
+/**
+ * @brief	cursor to one position past the last element of a MultiwayTree in 
+ * 			inorder traversal
+ * @param t	A MultiwayTree
+ * @return	Inorder end of @a t
+ */
+template <class MultiwayTree>
+typename MultiwayTree::cursor end(MultiwayTree& t)
+{
+	return t.shoot();
+}
+
+/**
+ * @brief	const_cursor to one position past the last element of a MultiwayTree 
+ * 			in inorder traversal (Alias of cend())
+ * @param t	A MultiwayTree
+ * @return	Inorder begin of @a t
+ */
+template <class MultiwayTree>
+typename MultiwayTree::const_cursor end(MultiwayTree const& t)
+{
+	return t.cshoot();
+}
+
+/**
+ * @brief	const_cursor to one position past the last element of a MultiwayTree
+ * 			in inorder traversal
+ * @param t	A tree
+ * @return	Inorder begin of @a t
+ */
+template <class MultiwayTree>
+typename MultiwayTree::const_cursor cend(MultiwayTree const& t)
+{
+	return t.cshoot();
+}
+
 
 } // namespace inorder
 

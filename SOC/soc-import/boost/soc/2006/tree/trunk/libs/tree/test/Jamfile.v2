@@ -42,8 +42,11 @@ project :
 test-suite tree :
 	[ run range_helpers_test.cpp ]
 	[ run plain_binary_tree_test.cpp ]
-	[ run key_search_binary_tree_test.cpp ]
-#	[ run string_search_binary_tree_test.cpp ]
+	[ run key_search_binary_tree_test.cpp ]	
+	[ run traverse_search_binary_tree_test.cpp ]
+	
+	[ run string_search_binary_tree_test.cpp ]
+#	[ run interval_search_binary_tree_test.cpp ]
 #	[ compile search_ordered_vector_test.cpp  ]
 	[ run search_ordered_vector_test.cpp
 #		:

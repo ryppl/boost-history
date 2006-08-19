@@ -108,7 +108,6 @@ class binary_tree {
 		  		 node_allocator_type const& node_alloc = node_allocator_type())
 	: m_header(), m_value_alloc(value_alloc), m_node_alloc(node_alloc)
 	{
-		//m_header.child[0] = &m_header;
 		m_header.child[1] = &m_header;
 	}
 
@@ -140,6 +139,14 @@ class binary_tree {
 	}
 	
 	/**
+	 * Returns a read-only const_cursor to the %binary_tree's root.
+	 */ 	
+	const_cursor croot() const
+	{
+		return const_cursor(&m_header, 0);
+	}
+	
+	/**
 	 * Returns a read/write ("mutable") cursor to the %binary_tree's shoot, i.e.
 	 * one position past the last (inorder) value.
 	 */ 	
@@ -154,6 +161,16 @@ class binary_tree {
 	 * position past the last (inorder) value.
 	 */ 	
 	const_cursor shoot() const
+	{
+		return const_cursor(m_header.m_parent, 
+							m_header.m_parent == &m_header ? 0 : 1);
+	}
+	
+	/**
+	 * Returns a read-only const_cursor to the %binary_tree's shoot, i.e. one
+	 * position past the last (inorder) value.
+	 */ 	
+	const_cursor cshoot() const
 	{
 		return const_cursor(m_header.m_parent, 
 							m_header.m_parent == &m_header ? 0 : 1);
@@ -177,6 +194,14 @@ class binary_tree {
 	{
 		return const_iterator(const_cursor(m_header.child[1], 0));
 	}
+	
+	/**
+	 * Returns a read-only const_iterator to the first (inorder) value.
+	 */ 	 
+	const_iterator cbegin() const
+	{
+		return const_iterator(const_cursor(m_header.child[1], 0));
+	}
 
 	/**
 	 * Returns a read/write ("mutable") inorder iterator to the position one 
@@ -192,6 +217,15 @@ class binary_tree {
 	 * last (inorder) value in the %binary_tree. 
 	 */	
 	const_iterator end() const
+	{
+		return const_iterator(shoot());
+	}
+	
+	/**
+	 * Returns a read-only inorder const_iterator to the position one past the 
+	 * last (inorder) value in the %binary_tree. 
+	 */	
+	const_iterator cend() const
 	{
 		return const_iterator(shoot());
 	}
@@ -224,7 +258,7 @@ class binary_tree {
 		if ((iterator(pos) == this->begin()))
 			m_header.child[1] = p_node; 
 		
-		// Readjust shoot()
+		// Readjust shoot
 		if (pos == this->shoot())
 			m_header.m_parent = p_node;
 

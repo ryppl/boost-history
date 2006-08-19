@@ -155,6 +155,7 @@ ones in the latter two columns as introduced by the respective Iterator Traversa
 		[Parent cursor]
 		[`parent(a)`]
 		[`X`]
+	]
 	[
 		[Vertical bidrectional traversal tag]
 		[`cursor_vertical_traversal<X>::type`]

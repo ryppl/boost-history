@@ -373,9 +373,19 @@ public:
 	 */ 	 
 	const_iterator begin() const
 	{
-		return c.begin();
+		return c.cbegin();
 	}
- 	   	 
+ 	 
+ 	/**
+	 * Returns a read-only const_iterator to the first value in the %searcher. 
+	 * Iteration is done in ascending order as dictated by comparing the keys 
+	 * (extracted from the values via %extract) using %cmp.
+	 */ 	 
+	const_iterator cbegin() const
+	{
+		return c.cbegin();
+	}  	
+	 
 	/**
 	 * Returns a read/write ("mutable") iterator to the position one past the 
 	 * last value in the %searcher. Iteration is done in ascending order as 
@@ -395,7 +405,18 @@ public:
 	 */
 	const_iterator end() const
 	{
-		return c.end();
+		return c.cend();
+	}
+	
+	/**
+	 * Returns a read-only const_iterator to the position one past the last 
+	 * value in the %searcher. Iteration is done in ascending order as dictated 
+	 * by comparing the keys (extracted from the values via 
+	 * %extract) using %cmp.
+	 */
+	const_iterator cend() const
+	{
+		return c.cend();
 	}
 	
 	// include search algorithms or not?
