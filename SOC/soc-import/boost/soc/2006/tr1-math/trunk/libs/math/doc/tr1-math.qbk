@@ -1,3 +1,10 @@
+[/
+(C) Copyright Xiaogang Zhang 2006.
+Use, modification and distribution are subject to the
+Boost Software License, Version 1.0. (See accompanying file
+LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
 [article TR1-Math
     [quickbook 1.4]
     [version 1.0]
@@ -24,10 +31,24 @@
 [def _IMSL [@http://www.vni.com/products/imsl/ IMSL]]
 [def _NAG [@http://www.nag.co.uk/ NAG]]
 
+[def _mu '''&mu;''']
+[def _nu '''&nu;''']
+[def _inf '''&infin;''']
+[def _J0 '''J<subscript>0</subscript>''']
+[def _J1 '''J<subscript>1</subscript>''']
+[def _Jn '''J<subscript>n</subscript>''']
+[def _Jv '''J<subscript>&nu;</subscript>''']
+[def _Y0 '''Y<subscript>0</subscript>''']
+[def _Y1 '''Y<subscript>1</subscript>''']
+[def _Yn '''Y<subscript>n</subscript>''']
+[def _Yv '''Y<subscript>&nu;</subscript>''']
+
 [def _caution This is not an official Boost library, it is a library under
               construction, the code is fully functional and robust, but
               interfaces, library structure, and function names may be
               changed without notice.]
+
+[template pow[x y] [x]'''<superscript>'''[y]'''</superscript>&nbsp;''']
 
 [section Introduction]
 
@@ -46,130 +67,134 @@ extended libraries, ten of which are already accepted in _TR1 by C++
 standard committee.] C++ library and is a project for Google Summer of
 Code 2006.
 
-``
-namespace std {
-namespace tr1 {
+[important Although some special functions can be defined on and take
+values of complex numbers, in _TR1 specification and in our library only
+real numbers are supported as far as users are concerned. Complex numbers
+may be used in internal subroutines, but not in APIs. This also affects
+the domain and range of some functions in the implementation.]
 
-// [5.2.1.1] associated Laguerre polynomials:
-double assoc_laguerre(unsigned n, unsigned m, double x);
-float assoc_laguerref(unsigned n, unsigned m, float x);
-long double assoc_laguerrel(unsigned n, unsigned m, long double x);
+  namespace std {
+  namespace tr1 {
 
-// [5.2.1.2] associated Legendre functions:
-double assoc_legendre(unsigned l, unsigned m, double x);
-float assoc_legendref(unsigned l, unsigned m, float x);
-long double assoc_legendrel(unsigned l, unsigned m, long double x);
+  // [5.2.1.1] associated Laguerre polynomials:
+  double assoc_laguerre(unsigned n, unsigned m, double x);
+  float assoc_laguerref(unsigned n, unsigned m, float x);
+  long double assoc_laguerrel(unsigned n, unsigned m, long double x);
 
-// [5.2.1.3] beta function:
-double beta(double x, double y);
-float betaf(float x, float y);
-long double betal(long double x, long double y);
+  // [5.2.1.2] associated Legendre functions:
+  double assoc_legendre(unsigned l, unsigned m, double x);
+  float assoc_legendref(unsigned l, unsigned m, float x);
+  long double assoc_legendrel(unsigned l, unsigned m, long double x);
 
-// [5.2.1.4] (complete) elliptic integral of the first kind:
-double comp_ellint_1(double k);
-float comp_ellint_1f(float k);
-long double comp_ellint_1l(long double k);
+  // [5.2.1.3] beta function:
+  double beta(double x, double y);
+  float betaf(float x, float y);
+  long double betal(long double x, long double y);
 
-// [5.2.1.5] (complete) elliptic integral of the second kind:
-double comp_ellint_2(double k);
-float comp_ellint_2f(float k);
-long double comp_ellint_2l(long double k);
+  // [5.2.1.4] (complete) elliptic integral of the first kind:
+  double comp_ellint_1(double k);
+  float comp_ellint_1f(float k);
+  long double comp_ellint_1l(long double k);
 
-// [5.2.1.6] (complete) elliptic integral of the third kind:
-double comp_ellint_3(double k, double nu);
-float comp_ellint_3f(float k, float nu);
-long double comp_ellint_3l(long double k, long double nu);
+  // [5.2.1.5] (complete) elliptic integral of the second kind:
+  double comp_ellint_2(double k);
+  float comp_ellint_2f(float k);
+  long double comp_ellint_2l(long double k);
 
-// [5.2.1.7] confluent hypergeometric functions:
-double conf_hyperg(double a, double c, double x);
-float conf_hypergf(float a, float c, float x);
-long double conf_hypergl(long double a, long double c, long double x);
+  // [5.2.1.6] (complete) elliptic integral of the third kind:
+  double comp_ellint_3(double k, double nu);
+  float comp_ellint_3f(float k, float nu);
+  long double comp_ellint_3l(long double k, long double nu);
 
-// [5.2.1.8] regular modified cylindrical Bessel functions:
-double cyl_bessel_i(double nu, double x);
-float cyl_bessel_if(float nu, float x);
-long double cyl_bessel_il(long double nu, long double x);
+  // [5.2.1.7] confluent hypergeometric functions:
+  double conf_hyperg(double a, double c, double x);
+  float conf_hypergf(float a, float c, float x);
+  long double conf_hypergl(long double a, long double c, long double x);
 
-// [5.2.1.9] cylindrical Bessel functions (of the first kind):
-double cyl_bessel_j(double nu, double x);
-float cyl_bessel_jf(float nu, float x);
-long double cyl_bessel_jl(long double nu, long double x);
+  // [5.2.1.8] regular modified cylindrical Bessel functions:
+  double cyl_bessel_i(double nu, double x);
+  float cyl_bessel_if(float nu, float x);
+  long double cyl_bessel_il(long double nu, long double x);
 
-// [5.2.1.10] irregular modified cylindrical Bessel functions:
-double cyl_bessel_k(double nu, double x);
-float cyl_bessel_kf(float nu, float x);
-long double cyl_bessel_kl(long double nu, long double x);
+  // [5.2.1.9] cylindrical Bessel functions (of the first kind):
+  double cyl_bessel_j(double nu, double x);
+  float cyl_bessel_jf(float nu, float x);
+  long double cyl_bessel_jl(long double nu, long double x);
 
-// [5.2.1.11] cylindrical Neumann functions;
-// cylindrical Bessel functions (of the second kind):
-double cyl_neumann(double nu, double x);
-float cyl_neumannf(float nu, float x);
-long double cyl_neumannl(long double nu, long double x);
+  // [5.2.1.10] irregular modified cylindrical Bessel functions:
+  double cyl_bessel_k(double nu, double x);
+  float cyl_bessel_kf(float nu, float x);
+  long double cyl_bessel_kl(long double nu, long double x);
 
-// [5.2.1.12] (incomplete) elliptic integral of the first kind:
-double ellint_1(double k, double phi);
-float ellint_1f(float k, float phi);
-long double ellint_1l(long double k, long double phi);
+  // [5.2.1.11] cylindrical Neumann functions;
+  // cylindrical Bessel functions (of the second kind):
+  double cyl_neumann(double nu, double x);
+  float cyl_neumannf(float nu, float x);
+  long double cyl_neumannl(long double nu, long double x);
 
-// [5.2.1.13] (incomplete) elliptic integral of the second kind:
-double ellint_2(double k, double phi);
-float ellint_2f(float k, float phi);
-long double ellint_2l(long double k, long double phi);
+  // [5.2.1.12] (incomplete) elliptic integral of the first kind:
+  double ellint_1(double k, double phi);
+  float ellint_1f(float k, float phi);
+  long double ellint_1l(long double k, long double phi);
 
-// [5.2.1.14] (incomplete) elliptic integral of the third kind:
-double ellint_3(double k, double nu, double phi);
-float ellint_3f(float k, float nu, float phi);
-long double ellint_3l(long double k, long double nu, long double phi);
+  // [5.2.1.13] (incomplete) elliptic integral of the second kind:
+  double ellint_2(double k, double phi);
+  float ellint_2f(float k, float phi);
+  long double ellint_2l(long double k, long double phi);
 
-// [5.2.1.15] exponential integral:
-double expint(double x);
-float expintf(float x);
-long double expintl(long double x);
+  // [5.2.1.14] (incomplete) elliptic integral of the third kind:
+  double ellint_3(double k, double nu, double phi);
+  float ellint_3f(float k, float nu, float phi);
+  long double ellint_3l(long double k, long double nu, long double phi);
 
-// [5.2.1.16] Hermite polynomials:
-double hermite(unsigned n, double x);
-float hermitef(unsigned n, float x);
-long double hermitel(unsigned n, long double x);
+  // [5.2.1.15] exponential integral:
+  double expint(double x);
+  float expintf(float x);
+  long double expintl(long double x);
 
-// [5.2.1.17] hypergeometric functions:
-double hyperg(double a, double b, double c, double x);
-float hypergf(float a, float b, float c, float x);
-long double hypergl(long double a, long double b, long double c, long double x);
+  // [5.2.1.16] Hermite polynomials:
+  double hermite(unsigned n, double x);
+  float hermitef(unsigned n, float x);
+  long double hermitel(unsigned n, long double x);
 
-// [5.2.1.18] Laguerre polynomials:
-double laguerre(unsigned n, double x);
-float laguerref(unsigned n, float x);
-long double laguerrel(unsigned n, long double x);
+  // [5.2.1.17] hypergeometric functions:
+  double hyperg(double a, double b, double c, double x);
+  float hypergf(float a, float b, float c, float x);
+  long double hypergl(long double a, long double b, long double c, long double x);
 
-// [5.2.1.19] Legendre polynomials:
-double legendre(unsigned l, double x);
-float legendref(unsigned l, float x);
-long double legendrel(unsigned l, long double x);
+  // [5.2.1.18] Laguerre polynomials:
+  double laguerre(unsigned n, double x);
+  float laguerref(unsigned n, float x);
+  long double laguerrel(unsigned n, long double x);
 
-// [5.2.1.20] Riemann zeta function:
-double riemann_zeta(double);
-float riemann_zetaf(float);
-long double riemann_zetal(long double);
+  // [5.2.1.19] Legendre polynomials:
+  double legendre(unsigned l, double x);
+  float legendref(unsigned l, float x);
+  long double legendrel(unsigned l, long double x);
 
-// [5.2.1.21] spherical Bessel functions (of the first kind):
-double sph_bessel(unsigned n, double x);
-float sph_besself(unsigned n, float x);
-long double sph_bessell(unsigned n, long double x);
+  // [5.2.1.20] Riemann zeta function:
+  double riemann_zeta(double);
+  float riemann_zetaf(float);
+  long double riemann_zetal(long double);
 
-// [5.2.1.22] spherical associated Legendre functions:
-double sph_legendre(unsigned l, unsigned m, double theta);
-float sph_legendref(unsigned l, unsigned m, float theta);
-long double sph_legendrel(unsigned l, unsigned m, long double theta);
+  // [5.2.1.21] spherical Bessel functions (of the first kind):
+  double sph_bessel(unsigned n, double x);
+  float sph_besself(unsigned n, float x);
+  long double sph_bessell(unsigned n, long double x);
 
-// [5.2.1.23] spherical Neumann functions;
-// spherical Bessel functions (of the second kind):
-double sph_neumann(unsigned n, double x);
-float sph_neumannf(unsigned n, float x);
-long double sph_neumannl(unsigned n, long double x);
+  // [5.2.1.22] spherical associated Legendre functions:
+  double sph_legendre(unsigned l, unsigned m, double theta);
+  float sph_legendref(unsigned l, unsigned m, float theta);
+  long double sph_legendrel(unsigned l, unsigned m, long double theta);
 
-} // namespace tr1
-} // namespace std
-``
+  // [5.2.1.23] spherical Neumann functions;
+  // spherical Bessel functions (of the second kind):
+  double sph_neumann(unsigned n, double x);
+  float sph_neumannf(unsigned n, float x);
+  long double sph_neumannl(unsigned n, long double x);
+
+  } // namespace tr1
+  } // namespace std
 
 Some may ask why another numerical library when there are many available.
 It's true that there are already a number of implementations of the _TR1
@@ -183,6 +208,16 @@ with certain data type, for example, _GSL uses `double` type almost
 exclusively. Our library, in contrast, is based on STL and can handle
 any existing floating-point types - `float`, `double`, `long double` -
 as well as their future extensions.
+
+[note The testing of our implementations are currently spot checks
+against values obtained from [@http://functions.wolfram.com/]. Ideally
+arbitrary precision calculations should be carried out for testing.
+This is a TODO part of the project and will be completed sometime later.
+\n\n
+The main testing platform is x86 + CYGWIN 1.5.19 + gcc 3.4.1. The codes
+are also tested on Win32 using VC++ 7.1. However, VC++ 7.1 does not
+support type `long double`, so from here all test results come from
+x86 CYGWIN gcc unless otherwise noted.]
 
 [endsect]
 
