@@ -1,78 +1,105 @@
 [/license
 
-    Boost.Bimap
-    Matias Capeletto 2006
-    Distributed under the Boost Software License, Version 1.0.
-    (See accompanying file LICENSE_1_0.txt or copy at
-    http://www.boost.org/LICENSE_1_0.txt)
+Boost.Bimap
+
+Copyright (c) 2006 Matias Capeletto
+
+This code may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+
 ]
 
 [/ QuickBook Document version 1.3 ]
 
 [section Introduction]
 
-With Boost.Bimap you can create associative containers where both types
-can be used as key. You can think a `bimap<X,Y>` as a merge of
-a `std::map<X,Y>` and a `std::map<Y,X>`.
-The learning curve of bimap is almost zero if you know how to use standard containers.
-A big effort was put in mapping the naming scheme of the STL in Boost.Bimap.
-The library is designed to match the STL common containers.
+With Boost.Bimap you can create associative containers in which both
+types can be used as key. A `bimap<X,Y>` can be thought of as a
+combination of a `std::map<X,Y>` and a `std::map<Y,X>`. The learning curve
+of bimap is almost flat if you know how to use standard containers. A
+great deal of effort has been put into mapping the naming scheme of the
+STL in Boost.Bimap. The library is designed to match the common STL
+containers.
 
 [h2 How to use this document]
 
-There is a lot of information in Boost.Bimap documentation. Although it may be
-a very good idea to read it all, this documentation is intended for different
-type of programmers.
+This documentation contains a large amount of information. Whereas it
+may be worth reading it all, this documentation is intended for
+programmers with various motives:
 
 [variablelist
 [[I have to finished this today, I just want a bidirectional map!][
-If your boss is going to kill you if the project is not finished by the end of the day, just
-read the [link boost_bimap.one_minute_tutorial one minute tutorial]. If you
-have an STL background I swear that you will be testing a bimap in less than
-ten minutes.
+If your boss will kill you if the project is not finished by the end of
+the day, just read the [link boost_bimap.one_minute_tutorial One-minute tutorial].
+If you have a background in STL, you can be testing a bimap within ten minutes.
 ]]
 [[I am a serious programmer and want to learn Boost.Bimap][
-Boost.Bimap has a lot to offer if you can spend some time reading this docs.
-You have to read [link boost_bimap.the_tutorial The tutorial] and skim some
-of the [link boost_bimap.examples Examples]. The best way to read this docs is in
-order. Just press the ['next] arrow at the right bottom corner when you
-finished each page. Stop when you reach the reference section, you may want
-to read some specific part of it later to see a function signature or to look
-for a specific metafunction.
+Boost.Bimap has a lot to offer if you are prepared to spend some time
+reading this documentation. You will need to read [link boost_bimap.the_tutorial The tutorial]
+and skim through some of the [link boost_bimap.examples Examples].
+The best way to read this documentation is in the order given here.
+Just click on the arrow at the right bottom corner as you finish each page.
+You may skip the reference section, and return to it later to look up a function
+signature or to find a specific metafunction.
 ]]
-[[I just love C++, I want to see Boost.Bimap guts...][
-If you are a library developer, these documents are the best place to learn
-how Boost.Bimap is implemented. It is very recommendable that you first learn
-to use the library as if you were the second type of programmer.
-This library was developed in the Google SoC 2006, and the mentor and the
- student generate a lot of documents in the building process. The rationale
-section is huge and you will find there a lot of information. There is a history
-section for people that find it useful. Finally, in the reference, every entity of
-the library is documented and you can even browse the source code from it.
+[[I just love C++, I want to see the inner workings of Boost.Bimap.][
+If you are a library developer, this documentation is the best place to
+learn how Boost.Bimap is implemented. It is strongly recommended that
+you first learn to use the library as if you were the second type of
+programmer above. This library was developed in the Google SoC 2006, and
+the mentor and student generated a great deal of documentation in the
+building process. The rationale section is very large and contains a lot
+of information. There is a history section for those who might find it
+useful. Finally, in the reference section, each entity of the library is
+documented and its source code is presented.
 ]]
 ]
 
 [note
-If while reading the docs you get obfuscated at some point, please send me an email
-to ['matias {dot} capeletto {at} gmail {dot} com] telling me which type of programmer
-you are and the section that needs to be better. Please use the following notation
-for the title: ['\[boost\]\[bimap\] Your problem], it will help me to spot it easily.
-I will try to use your advice to make this docs better. Thanks and Enjoy!
+If anything in the documentation is unclear, please email me at ['matias
+{dot} capeletto {at} gmail {dot} com], telling me which of the three
+types of programmer above you are and which section needs improvement.
+Please use the following notation for the subject: ['\[boost\]\[bimap\] Your
+problem] as this will help me to identify it more easily. If appropriate,
+I will act on your advice to improve the documentation. Thanks and enjoy!
 ]
 
 [important
-If you find a bug or if you would like to see an additional feature to
-the library please use boost standard ways to deal with this kind of issues and do
-not e-mail me directly. Boost has a very good system to
-[@http://www.boost.org/more/bugs.htm track bugs] and
-[@http://www.boost.org/more/requesting_new_features.htm features requests].
-Using it is the best way of getting this kind of thing done as soon as possible.
+If you should find a bug or would like to see an additional feature in
+the library, please use the standard Boost methods of dealing with this
+kind of issue rather than emailing me directly. Boost has a very good
+system to [@http://www.boost.org/more/bugs.htm track bugs] and
+[@http://www.boost.org/more/requesting_new_features.htm features requests],
+and using it is the best way of dealing with them as soon as possible.
 ]
 
 [h2 Navigation]
 
-In combination with the configured browser key (in general, alt) the following keys
-acts as handy shortcuts for common navigation tasks.
+Used in combination with the configured browser key (usually Alt), the
+following keys act as handy shortcuts for common navigation tasks.
 
 [variablelist Shortcuts
 [

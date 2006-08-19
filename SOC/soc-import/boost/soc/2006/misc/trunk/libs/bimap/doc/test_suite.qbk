@@ -1,524 +1,106 @@
 [/license
 
-    Boost.Bimap
-    Matias Capeletto 2006
-    Distributed under the Boost Software License, Version 1.0.
-    (See accompanying file LICENSE_1_0.txt or copy at
-    http://www.boost.org/LICENSE_1_0.txt)
+Boost.Bimap
+
+Copyright (c) 2006 Matias Capeletto
+
+This code may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+
 ]
 
 [/ QuickBook Document version 1.3 ]
 
-[section Examples]
+[section Test suite]
 
-[section Roadmap]
+The Boost.Bimap test suite exercises the whole spectrum of functionalities provided by the library.
+Although the tests are not meant to serve as a learning guide, the interested reader may find it
+useful to inspect the source code to gain familiarity with some of the least common features
+offered by Boost.Bimap.
 
-__UNDER_CONSTRUCTION__
-
-[endsect]
-
-[section MultiIndex to Bimap Path]
-
-
-[section Basic Usage]
-
-This is a simplified version of example 1 in Boost.MultiIndex documentation.
-
-[blurb
-Basic program showing the multi-indexing capabilities of Boost.MultiIndex with
-an admittedly boring set of employee records.
+[table
+[[Program                                                                                 ]
+ [Description                                                                             ]
 ]
+[[[@../../test/test_tagged.cpp test_tagged.cpp                                           ]]
+    [Tagged idiom checks                                                                 ]]
 
-[h2 Boost.MultiIndex]
+[[[@../../test/test_structured_pair.cpp test_structured_pair.cpp                         ]]
+    [Test structured pair class                                                          ]]
 
-``
-// An employee record holds its ID and name
+[[[@../../test/test_relation.cpp test_relation.cpp                                       ]]
+    [Test the relation class                                                             ]]
 
-struct employee
-{
-    int         id;
-    std::string name;
+[[[@../../test/test_bimap_set_of.cpp test_bimap_set_of.cpp                               ]]
+    [Library interface check                                                             ]]
 
-    employee(int id_,std::string name_) : id(id_), name(name_) {}
-};
+[[[@../../test/test_bimap_multiset_of.cpp test_bimap_multiset_of.cpp                     ]]
+    [Library interface check                                                             ]]
 
-struct id   {};
-struct name {};
+[[[@../../test/test_bimap_unordered_set_of.cpp test_bimap_unordered_set_of.cpp           ]]
+    [Library interface check                                                             ]]
 
-// Define a multi_index_container of employees with following indices:
-// - a unique index sorted by employee::int,
-// - a non-unique index sorted by employee::name,
+[[[@../../test/test_bimap_unordered_multiset_of.cpp test_bimap_unordered_multiset_of.cpp ]]
+    [Library interface check                                                             ]]
 
-typedef multi_index_container
-<
-    employee,
-    indexed_by
-    <
-        ordered_unique
-        <
-            tag<id>,
-            BOOST_MULTI_INDEX_MEMBER(employee,int,id)
-        >,
-        ordered_non_unique
-        <
-            tag<name>,
-            BOOST_MULTI_INDEX_MEMBER(employee,std::string,name)
-        >
-    >
+[[[@../../test/test_bimap_list_of.cpp test_bimap_list_of.cpp                             ]]
+    [Library interface check                                                             ]]
 
-> employee_set;
+[[[@../../test/test_bimap_vector_of.cpp test_bimap_vector_of.cpp                         ]]
+    [Library interface check                                                             ]]
 
-int main()
-{
-    employee_set es;
+[[[@../../test/test_bimap_ordered.cpp test_bimap_ordered.cpp                             ]]
+    [Test set and multiset based bimaps                                                  ]]
 
-    es.insert(employee(0,"Joe"));
-    es.insert(employee(1,"Robert"));
-    es.insert(employee(2,"John"));
-    es.insert(employee(3,"Albert"));
-    es.insert(employee(4,"John"));
+[[[@../../test/test_bimap_unordered.cpp test_bimap_unordered.cpp                         ]]
+    [Test unordered_set and unordered_multiset based bimaps                              ]]
 
-    // list the employees names sorted by ID
+[[[@../../test/test_bimap_sequenced.cpp test_bimap_sequenced.cpp                         ]]
+    [Test list and vector based bimaps                                                   ]]
 
-    const index<employee_set,id>::type& index = get<id>(es);
+[[[@../../test/test_bimap_unconstrained.cpp test_bimap_unconstrained.cpp                 ]]
+    [Test bimaps with unconstrained views                                                ]]
 
-    for( index::const_iterator i = index.begin(), e = index.end() ; i != e ; ++i )
-    {
-        std::cout << i->name << " has id " << i->id << std::endl;
-    }
+[[[@../../test/test_bimap_serialization.cpp test_bimap_serialization.cpp                 ]]
+    [Serialization support checks                                                        ]]
 
-    return 0;
-}
-``
+[[[@../../test/test_bimap_property_map.cpp test_bimap_property_map.cpp                   ]]
+    [Property map concepts for the set and unordered set views                           ]]
 
-The output of this program will be:
+[[[@../../test/test_bimap_modify.cpp test_bimap_modify.cpp                               ]]
+    [`replace`, `modify` and `operator[]`                                                ]]
 
-[blurb
-[^
-Joe has id 1\n
-Robert has id 2\n
-John has id 3\n
-Albert has id 4\n
-John has id 5\n
+[[[@../../test/test_bimap_lambda.cpp test_bimap_lambda.cpp                               ]]
+    [Test lambda modified idom support                                                   ]]
+
+[[[@../../test/test_bimap_assign.cpp test_bimap_assign.cpp                               ]]
+    [Test Boost.Assign support                                                           ]]
+
+[[[@../../test/test_bimap_extra.cpp test_bimap_extra.cpp                                 ]]
+    [Additional checks                                                                   ]]
 ]
-]
-
-
-[h2 Boost.Bimap]
-
-``
-
-struct id   {};
-struct name {};
-
-// Define a bimap of id-name relations.
-// - The ids are unique.
-// - The names are nonunique.
-
-typedef bimap
-<
-    tagged< int, id >, tagged< multi_set_of< std::string >, name >
-
-> employee_set;
-
-typedef employee_set::relation employee;
-
-int main()
-{
-    employee_set es;
-
-    es.insert(employee(0,"Joe"));
-    es.insert(employee(1,"Robert"));
-    es.insert(employee(2,"John"));
-    es.insert(employee(3,"Albert"));
-    es.insert(employee(4,"John"));
-
-    // list the employees names sorted by ID
-
-    for( const_iterator_type_by<id,employee_set>::type i = map_by<id>(es).begin(),
-                                                       e = map_by<id>(es).end();
-         i != e ; ++i )
-    {
-        std::cout << get<name>(*i) << " has id " << get<id>(*i) << std::endl;
-    }
-
-
-  return 0;
-}
-``
-
-[endsect]
-
-[section Bidirectional Map]
-
-This is example 4 in Boost.MultiIndex documentation.
-
-[blurb
-This example shows how to construct a bidirectional map with multi_index_container.
-By a bidirectional map we mean a container of elements of
-`std::pair<const FromType,const ToType>` such that no two elements exists with the
-same first or second value (`std::map` only guarantees uniqueness of the first member).
-Fast lookup is provided for both keys. The program features a tiny Spanish-English
-dictionary with online query of words in both languages.
-]
-
-[h2 Boost.MultiIndex]
-
-``
-// tags for accessing both sides of a bidirectional map
-
-struct from {};
-struct to   {};
-
-// The class template bidirectional_map wraps the specification
-// of a bidirectional map based on multi_index_container.
-
-template<typename FromType,typename ToType>
-struct bidirectional_map
-{
-    typedef std::pair<FromType,ToType> value_type;
-
-    typedef multi_index_container<
-        value_type,
-        indexed_by
-        <
-            ordered_unique
-            <
-                tag<from>, member<value_type,FromType,&value_type::first>
-            >,
-            ordered_unique
-            <
-                tag<to>, member<value_type,ToType,&value_type::second>
-            >
-        >
-
-  > type;
-
-};
-
-// A dictionary is a bidirectional map from strings to strings
-
-typedef bidirectional_map<std::string,std::string>::type dictionary;
-
-int main()
-{
-    dictionary d;
-
-    // Fill up our microdictionary. first members Spanish, second members English.
-
-    d.insert(dictionary::value_type("hola","hello"));
-    d.insert(dictionary::value_type("adios","goodbye"));
-    d.insert(dictionary::value_type("rosa","rose"));
-    d.insert(dictionary::value_type("mesa","table"));
-
-    std::cout << "enter a word" << std::endl;
-    std::string word;
-    std::getline(std::cin,word);
-
-    // search the queried word on the from index (Spanish) */
-
-    dictionary::iterator it = d.get<from>().find(word);
-
-    if( it != d.end() )
-    {
-        // the second part of the element is the equivalent in English
-
-        std::cout << word << " is said " << it->second << " in English" << std::endl;
-    }
-    else
-    {
-        // word not found in Spanish, try our luck in English
-
-        dictionary::index_iterator<to>::type it2 = d.get<to>().find(word);
-        if( it2 != d.get<to>().end() )
-        {
-            std::cout << word << " is said " << it2->first << " in Spanish" << std::endl;
-        }
-        else
-        {
-            std::cout << "No such word in the dictionary" << std::endl;
-        }
-    }
-
-    return 0;
-}
-``
-
-
-[h2 Boost.Bimap]
-
-
-``
-
-// A dictionary is a bidirectional map from strings to strings
-
-typedef bimap<std::string,std::string> dictionary;
-typedef dictionary::relation translation;
-
-int main()
-{
-    dictionary d;
-
-    // Fill up our microdictionary. first members Spanish, second members English.
-
-    d.insert(translation("hola","hello"));
-    d.insert(translation("adios","goodbye"));
-    d.insert(translation("rosa","rose"));
-    d.insert(translation("mesa","table"));
-
-    std::cout << "enter a word" << std::endl;
-    std::string word;
-    std::getline(std::cin,word);
-
-    // search the queried word on the from index (Spanish) */
-
-    iterator_type_by<member_at::left,dictionary>::type it = map_by<member_at::left>(d).find(word);
-
-    if( it != map_by<member_at::left>(d).end() )
-    {
-        // the second part of the element is the equivalent in English
-
-        std::cout << word << " is said " << it->second << " in English" << std::endl;
-    }
-    else
-    {
-        // word not found in Spanish, try our luck in English
-
-        iterator_type_by<member_at::right,dictionary>::type it2 = map_by<member_at::right>(d).find(word);
-        if( it2 != map_by<member_at::right>(d).end() )
-        {
-            std::cout << word << " is said " << it2->first << " in Spanish" << std::endl;
-        }
-        else
-        {
-            std::cout << "No such word in the dictionary" << std::endl;
-        }
-    }
-
-    return 0;
-}
-``
-
-Or better, using tags...
-
-
-``
-
-// tags
-
-struct spanish {};
-struct english {};
-
-// A dictionary is a bidirectional map from strings to strings
-
-typedef bimap
-<
-    tagged< std::string,spanish >, tagged< std::string,english >
-
-> dictionary;
-
-typedef dictionary::relation translation;
-
-int main()
-{
-    dictionary d;
-
-    // Fill up our microdictionary. first members Spanish, second members English.
-
-    d.insert(translation("hola","hello"));
-    d.insert(translation("adios","goodbye"));
-    d.insert(translation("rosa","rose"));
-    d.insert(translation("mesa","table"));
-
-    std::cout << "enter a word" << std::endl;
-    std::string word;
-    std::getline(std::cin,word);
-
-    // search the queried word on the from index (Spanish) */
-
-    iterator_type_by<spanish,dictionary>::type it = map_by<spanish>(d).find(word);
-
-    if( it != map_by<spanish>(d).end() )
-    {
-        std::cout << word << " is said " << get<english>(*it) << " in English" << std::endl;
-    }
-    else
-    {
-        // word not found in Spanish, try our luck in English
-
-        iterator_type_by<english,dictionary>::type it2 = map_by<english>(d).find(word);
-        if( it2 != map_by<english>(d).end() )
-        {
-            std::cout << word << " is said " << get<spanish>(it2) << " in Spanish" << std::endl;
-        }
-        else
-        {
-            std::cout << "No such word in the dictionary" << std::endl;
-        }
-    }
-
-    return 0;
-}
-``
-
-[endsect]
-
-[section Hashed indices]
-
-This is example 8 of Boost.MultiIndex.
-
-[blurb
-Hashed indices can be used as an alternative to ordered indices when fast lookup is needed and sorting
-information is of no interest. The example features a word counter where duplicate entries are checked by
-means of a hashed index.
-]
-
-[h2 Boost.MuliIndex]
-
-``
-
-// word_counter keeps the ocurrences of words inserted. A hashed
-// index allows for fast checking of preexisting entries.
-
-struct word_counter_entry
-{
-    std::string  word;
-    unsigned int occurrences;
-
-    word_counter_entry( std::string word_ ) : word(word_), occurrences(0) {}
-};
-
-typedef multi_index_container
-<
-    word_counter_entry,
-    indexed_by
-    <
-        ordered_non_unique
-        <
-            BOOST_MULTI_INDEX_MEMBER(word_counter_entry,unsigned int,occurrences),
-            std::greater<unsigned int>
-        >,
-        hashed_unique
-        <
-            BOOST_MULTI_INDEX_MEMBER(word_counter_entry,std::string,word)
-        >
-  >
-
-> word_counter;
-
-typedef boost::tokenizer<boost::char_separator<char> > text_tokenizer;
-
-int main()
-{
-
-    std::string text=
-        "En un lugar de la Mancha, de cuyo nombre no quiero acordarme... "
-        "...snip..."
-        "...no se salga un punto de la verdad.";
-
-    // feed the text into the container
-
-    word_counter   wc;
-    text_tokenizer tok(text,boost::char_separator<char>(" \t\n.,;:!?'\"-"));
-    unsigned int   total_occurrences = 0;
-
-    for( text_tokenizer::iterator it = tok.begin(), it_end = tok.end();
-         it != it_end ; ++it )
-    {
-        ++total_occurrences;
-        word_counter::iterator wit = wc.insert(*it).first;
-        wc.modify_key(wit,++_1);
-    }
-
-    // list words by frequency of appearance
-
-    std::cout << std::fixed << std::setprecision(2);
-
-    for( word_counter::iterator wit = wc.begin(), wit_end=wc.end();
-         wit != wit_end; ++wit )
-    {
-        std::cout << std::setw(11) << wit->word << ": "
-                  << std::setw(5)
-                  << 100.0 * wit->occurrences / total_occurrences << "%"
-                  << std::endl;
-    }
-
-    return 0;
-}
-
-``
-
-[h2 Boost.Bimap]
-
-
-``
-
-typedef bimap
-<
-    tagged< std::string, word >,
-    tagged
-    <
-        multi_set_of
-        <
-            unsigned int,
-            std::greater<unsigned int>
-        >,
-        occurrences
-    >
-
-> word_counter;
-
-typedef boost::tokenizer<boost::char_separator<char> > text_tokenizer;
-
-int main()
-{
-
-    std::string text=
-        "Relations between data in the stl are represented with maps."
-        "A map is a directed relation, by using it you are representing"
-        "a mapping. In this directed relation, the first type is related to"
-        "the second type but it is not true that the inverse relationship"
-        "holds. This is useful in a lot of situations, but there are some"
-        "relationships that are bidirectional by nature.";
-
-    // feed the text into the container
-
-    word_counter   wc;
-    text_tokenizer tok(text,boost::char_separator<char>(" \t\n.,;:!?'\"-"));
-    unsigned int   total_occurrences = 0;
-
-    for( text_tokenizer::iterator it = tok.begin(), it_end = tok.end();
-         it != it_end ; ++it )
-    {
-        ++total_occurrences;
-        ++map_by<word>(wc)[*it];
-    }
-
-    // list words by frequency of appearance
-
-    std::cout << std::fixed << std::setprecision(2);
-
-    typedef iterator_type_by<occurrences,word_counter>::type iterator;
-
-    for( iterator wit     = map_by<occurrences>(wc).begin(),
-                  wit_end = map_by<occurrences>(wc).end();
-
-         wit != wit_end; ++wit )
-    {
-        std::cout << std::setw(11) << get<word>(*wit) << ": "
-                  << std::setw(5)
-                  << 100.0 * get<occurrences>(*wit) / total_occurrences << "%"
-                  << std::endl;
-    }
-
-    return 0;
-}
-
-``
-
-
-[endsect]
-
-[endsect]
 
 [endsect]

@@ -1,10 +1,35 @@
 [/license
 
-    Boost.Bimap
-    Matias Capeletto 2006
-    Distributed under the Boost Software License, Version 1.0.
-    (See accompanying file LICENSE_1_0.txt or copy at
-    http://www.boost.org/LICENSE_1_0.txt)
+Boost.Bimap
+
+Copyright (c) 2006 Matias Capeletto
+
+This code may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+
 ]
 
 [/ QuickBook Document version 1.3 ]
@@ -13,39 +38,38 @@
 
 [section Roadmap]
 
-# Boost.Bimap is intuitive because it is based on the standard template library. However new
-concepts are presented to extend the mapping framework to bidirectional maps. The first step
-is to firmly grasp the new framework. The first section:
-[link boost_bimap.the_tutorial.discovering_the_new_framework Discovering the new framework]
-aims to explain it.
+# Boost.Bimap is intuitive because it is based on the standard
+template library. New concepts are however presented to extend the
+mapping framework to bidirectional maps. The first step is to gain a
+firm grasp of the new framework. The first section
+([link boost_bimap.the_tutorial.discovering_the_new_framework Discovering the new framework])
+aims to explain this.
 
-# Boost.Bimap offers a lot more than just a one to one ordered unique bidirectional map.
-We will be able to control the set type of each side of the relationship that bimap is
-representing leading to one to many containers, hashed bidirectional containers and others
-useful containers that may fit better in the problem you are confronting. The second section:
-[link boost_bimap.the_tutorial.controlling_the_set_types Controlling the set types] explains
-how to instantiate a bimap to have different collection constraints.
+# Boost.Bimap offers much more than just a one-to-one ordered unique
+bidirectional map. It is possible to control the set type of each side
+of the relationship that the bimap represents, giving one-to-many
+containers, hashed bidirectional containers and others that may be more
+suitable to the the task at hand. The second section
+([link boost_bimap.the_tutorial.controlling_set_types Controlling set types])
+explains how to instantiate a bimap with different collection constraints.
 
-# The types of a bimap can be tagged so then each side can be accessed through using something
-more close to the problem than `left` and `right`. This will lead to more readable code
-and self documenting code. The fourth section:
-[link boost_bimap.the_tutorial.tagging Tagging] shows how to use this feature.
+# The types of a bimap can be tagged so that each side is accessible
+by something closer to the problem than left and right. This leads to
+more readable, self-documenting code. The fourth section
+([link boost_bimap.the_tutorial.tagging Tagging]) shows how to use this feature.
 
-[/
-# The are a lot of problems were each related pair have other attributes. Imagine a bimap that
-tie an employee name with his id. You may want to store his age, family members and other stuff.
-Boost.Bimap let you hook a data structure to each relation making unnecessary the creation of
-another container to hold this not indexed attributes. The section:
-link boost_bimap.the_tutorial.hooking_data Hooking Data explains this feature.
-]
-
-# Maybe the hardest issue to understand is the subtle problem of the set type of relations.
-The section: [link boost_bimap.the_tutorial.the_set_of_relations_type The set of relations type]
+# What is perhaps the hardest issue to understand is the subtle
+problem of the set type of relations. The section
+([link boost_bimap.the_tutorial.the_set_of_relations_type The "set of relations" type])
 explains this problem and how to create new types of bidirectional maps.
 
-# The last section:
-[link boost_bimap.the_tutorial.complete_instantiation_scheme Complete Instantiation Scheme]
-summarizes the bimap instantiation and introduces the way to change the allocator type to use.
+# The extended mapping framework allows to disable a view of a bimap, including the standard
+mapping containers as a particular case. The section
+[link boost_bimap.unconstrained_sets Unconstrained Sets] explain how they work.
+
+# The final section
+([link boost_bimap.the_tutorial.complete_instantiation_scheme Complete Instantiation Scheme])
+summarizes bimap instantiation and explains how change the allocator type to be used.
 
 [endsect]
 
@@ -150,7 +174,7 @@ The code now looks like
 
 [endsect]
 
-[section Controlling the set types]
+[section Controlling set types]
 
 As we said before, in the STL maps you can only control the constraints from
 one of the collections, the one that you are viewing.
@@ -175,10 +199,13 @@ The following is the list of all supported set types.
 [[`unordered_multiset_of`][['hashed         ]][`unordered_multimap`     ]]
 [[`list_of`              ][['sequenced      ]][`list_map`               ]]
 [[`vector_of`            ][['random access  ]][`vector_map`             ]]
+[[`unconstrained_set_of` ][['unconstrained  ]]['can not be viewed       ]]
 ]
 
-The last two map views are not associated to any existing STL associative containers.
-They are two examples of unsorted associative containers.
+`list_of` and `vector_of` map views are not associated to any existing STL
+associative containers. They are two examples of unsorted associative containers.
+`unconstrained_set_of` allow the user to ignore a view. It will be explained
+later.
 
 __BIMAP_STRUCTURES__
 
@@ -216,6 +243,7 @@ The following table enumerates the parameters meaning for each set type.
  [*EqualKey ] is a Functor that compare for equality two types. By default it is `std::equal_to<T>`. ]]
 [[`list_of<T>`              ][No additional parameters.]]
 [[`vector_of<T>`            ][No additional parameters.]]
+[[`unconstrained_set_of<T>` ][No additional parameters.]]
 ]
 
 [endsect]
@@ -439,11 +467,13 @@ but the user is allowed to choose between:
 * multiset_of_relation<>
 * unordered_set_of_relation<>
 * unordered_multiset_of_relation<>
-* list_of_relation<>
-* vector_of_relation<>
+* list_of_relation
+* vector_of_relation
+* unconstrained_set_of_relation
 
 [tip
-The first two options produce faster bimaps, so prefer these ones when possible.
+The first two options and the last one produce faster bimaps, so prefer these
+ones when possible.
 ]
 
 The set type of relation can be used to create powerful containers. For example, if
@@ -536,8 +566,8 @@ The following table enumerates the parameters meaning for each set type.
 [table
 [[name                     ][Additional Parameters]]
 
-[[`left_based`             ][Not a template.]]
-[[`right_based`            ][Not a template.]]
+[[`left_based`                        ][Not a template.]]
+[[`right_based`                       ][Not a template.]]
 [[`set_of_relation<KeyComp>`\n
   `multiset_of_relation<KeyComp>` ]
 [[*KeyComp ] is a Functor that compares for less two types. By default it is `std::less<_relation>`. ]]
@@ -546,12 +576,40 @@ The following table enumerates the parameters meaning for each set type.
   `unordered_multiset_of_relation<HashFunctor,EqualKey>`]
 [[*HashFunctor ] converts the `relation` into an integer value. By default it is `boost::hash<_relation>`.\n
  [*EqualKey ] is a Functor that compare for equality two relations. By default it is `std::equal_to<_relation>`. ]]
-[[`list_of_relation`       ][Not a template.]]
-[[`vector_of_relation`     ][Not a template.]]
+[[`list_of_relation`                  ][Not a template.]]
+[[`vector_of_relation`                ][Not a template.]]
+[[`unconstrained_set_of_relation`     ][Not a template.]]
+
 ]
 
 [endsect]
 
+[section Unconstrained Sets]
+
+Unconstrained sets allow the user to disable one of the views in a bimap. By doing
+so, the bimap operations can be executed faster and the memory consumption is reduced.
+This complete the bidirectional mapping framework by including unidirectional
+mappings as a particular case of it.
+
+For example, the following code creates a type that is similar to a regular
+`std::map`.
+
+    typedef bimap< int, unconstrained_set_of< string > > bm_type;
+
+    bm_type b;
+    b.left[1] = "one";
+    b.left[2] = "two";
+
+Unconstrained sets are usefull for the following reasons.
+* A bimap type has stronger guarantees than it standard equivalent, and include
+some useful function (replace, modify) that are no founded in it.
+* You can look the mapping from above as a set of relations.
+* By using this kind of map, the code is very extensible. If in any moment
+during the development came up the need to perform searches from the right side
+of the mapping, then the only necessary thing to do is to change the `typedef`
+and the code will continue to work.
+
+[endsect]
 
 [section Complete instantiation scheme]
 

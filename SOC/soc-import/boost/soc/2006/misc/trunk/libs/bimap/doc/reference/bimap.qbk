@@ -48,6 +48,8 @@ mutation of elements in a controlled fashion.
 
 [endsect]
 
+[#complexity_signature_explanation] 
+
 [section Complexity signature]
 
 Some member functions of a view interface are implemented by global primitives
