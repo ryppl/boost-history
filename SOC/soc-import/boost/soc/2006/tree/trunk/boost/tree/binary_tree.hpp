@@ -1,8 +1,30 @@
-// Copyright (c) 2006 Bernhard Reiter.
-
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+//  Copyright (c) 2006, Bernhard Reiter
+//
+//  This code may be used under either of the following two licences:
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy 
+//  of this software and associated documentation files (the "Software"), to deal 
+//  in the Software without restriction, including without limitation the rights 
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+//  copies of the Software, and to permit persons to whom the Software is 
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in 
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+//  THE SOFTWARE. OF SUCH DAMAGE.
+//
+//  Or:
+//
+//  Distributed under the Boost Software License, Version 1.0.
+//  (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
  * @file binary_tree.hpp
@@ -86,8 +108,8 @@ class binary_tree {
 		  		 node_allocator_type const& node_alloc = node_allocator_type())
 	: m_header(), m_value_alloc(value_alloc), m_node_alloc(node_alloc)
 	{
-		m_header.child[0] = &m_header;
-		//m_header.child[1] = &m_header;
+		//m_header.child[0] = &m_header;
+		m_header.child[1] = &m_header;
 	}
 
 	binary_tree (self_type const& other)
@@ -106,7 +128,7 @@ class binary_tree {
 	 */ 	
 	cursor root()
 	{
-		return cursor(&m_header, 1);
+		return cursor(&m_header, 0);
 	}
 
 	/**
@@ -114,8 +136,7 @@ class binary_tree {
 	 */ 	
 	const_cursor root() const
 	{
-		//return const_cursor(m_header.m_parent);
-		return const_cursor(&m_header, 1);
+		return const_cursor(&m_header, 0);
 	}
 	
 	/**
@@ -124,8 +145,8 @@ class binary_tree {
 	 */ 	
 	cursor shoot()
 	{
-		//return cursor(&m_header, 1);
-		return cursor(m_header.m_parent, 1);
+		return cursor(m_header.m_parent, 
+					  m_header.m_parent == &m_header ? 0 : 1);
 	}
 	
 	/**
@@ -134,26 +155,19 @@ class binary_tree {
 	 */ 	
 	const_cursor shoot() const
 	{
-		//return const_cursor(&m_header, 1);
-		return const_cursor(m_header.m_parent, 1);
+		return const_cursor(m_header.m_parent, 
+							m_header.m_parent == &m_header ? 0 : 1);
 	}
 	
 	/// Functions returning (inorder) iterators (as required by the Sequence
 	/// concept)
 	
-	// FIXME: begin() is dysfunctional as of yet.
-	// probably requires switching root/shoot and modification of
-	// cursor::parent() to get it to work
 	/**
 	 * Returns a read/write ("mutable") iterator to the first (inorder) value.
 	 */ 	 
 	iterator begin()
 	{
-		if (root().has_child())
-		//if (m_header.child[0] != m_header.m_parent)
-			return iterator(cursor(m_header.child[0], 0));
-		return iterator(cursor(&m_header, 1)); //iterator(shoot());
-		
+		return iterator(cursor(m_header.child[1], 0));
 	}
 	
 	/**
@@ -161,12 +175,7 @@ class binary_tree {
 	 */ 	 
 	const_iterator begin() const
 	{
-		if (root().has_child())
-		//if (m_header.child[0] != m_header.m_parent)
-			return const_iterator(const_cursor(m_header.child[0], 0));
-		//return const_iterator(const_cursor(&m_header, 1));
-		return iterator(cursor(&m_header, 1)); //iterator(shoot());
-
+		return const_iterator(const_cursor(m_header.child[1], 0));
 	}
 
 	/**
@@ -176,7 +185,6 @@ class binary_tree {
 	iterator end()
 	{
 		return iterator(shoot());
-		//return iterator(cursor(m_header.m_parent, 1));
 	}
 
 	 /**
@@ -186,7 +194,6 @@ class binary_tree {
 	const_iterator end() const
 	{
 		return const_iterator(shoot());
-		//return const_iterator(const_cursor(m_header.m_parent, 1));
 	}
 	
 	// Hierarchy-specific
@@ -212,26 +219,17 @@ class binary_tree {
 		m_node_alloc.construct(p_node, p_val);
 		
 		pos.add_node(p_node);
-		// call balancer.
 
-		// TODO: The following is really cumbersome. Find a better way.
-		//if ((pos.m_parent == m_header.child[0]) && !pos.parity())
-		//if ((iterator(pos.parent()) == this->begin()) && !pos.parity()) // && pos.parent() != root())
-		//if ((iterator(pos) == this->begin()))
-		if ((pos.m_parent == m_header.child[0]) && ((m_header.child[0] == &m_header) || !pos.parity()))
+		// Readjust begin
+		if ((iterator(pos) == this->begin()))
+			m_header.child[1] = p_node; 
 		
-			m_header.child[0] = p_node; //pos.m_parent;	
-		
+		// Readjust shoot()
 		if (pos == this->shoot())
 			m_header.m_parent = p_node;
 
-//		if (iterator(pos) == this->begin())
-//			m_header.child[0] = p_node;
-	
-
-
-		
 		balancer::add(pos, this->root());
+		
 		return pos.begin(); 
 	}
 

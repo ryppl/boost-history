@@ -1,8 +1,30 @@
-// Copyright (c) 2006 Bernhard Reiter.
+//  Copyright (c) 2006, Bernhard Reiter
 //
-// Distributed under the Boost Software License, Version 1.0. (See
-// accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+//  This code may be used under either of the following two licences:
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy 
+//  of this software and associated documentation files (the "Software"), to deal 
+//  in the Software without restriction, including without limitation the rights 
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+//  copies of the Software, and to permit persons to whom the Software is 
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in 
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL 
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+//  THE SOFTWARE. OF SUCH DAMAGE.
+//
+//  Or:
+//
+//  Distributed under the Boost Software License, Version 1.0.
+//  (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
  * @file binary.hpp
@@ -156,16 +178,10 @@ public:
 	
 	// Cursor stuff. 
 	
-	// TODO: parent()'s a dirty hack right now. Fix that.
-	// (also in (mutable) tree_cursor's members)
 	const_tree_cursor<binary_node<T, Augment, Balance> const> parent() const
 	{
-		int par = 1;
-		if ((m_parent->parent()->child[0] == m_parent) && 
-			(m_parent->parent()->child[1] != m_parent)) 
-			par = 0;
-		return const_tree_cursor(m_parent->parent(), par);
-//			(((m_parent->parent()->child[0] == m_parent ? 0 : 1));
+		return const_tree_cursor(m_parent->parent(), 
+			m_parent->parent()->child[0] == m_parent ? 0 : 1);
 	}
 	
 	node_pointer node() // really? certainly not public
@@ -180,7 +196,8 @@ public:
 		
 	bool const has_child() const
 	{
-		return (m_parent->child[m_pos] != binary_node_base::nil);
+		return ((m_parent->child[m_pos] != binary_node_base::nil) && 
+				(m_parent->child[m_pos] != m_parent));
 	}
 	
 };
@@ -305,22 +322,14 @@ public:
 	// Cursor stuff
 	tree_cursor<binary_node<T, Augment, Balance> > parent()
 	{
-		int par = 1;
-		if ((m_parent->parent()->child[0] == m_parent) && 
-			(m_parent->parent()->child[1] != m_parent)) 
-			par = 0;
-		return tree_cursor(m_parent->parent(), par);
-//			(((m_parent->parent()->child[0] == m_parent ? 0 : 1));
+		return tree_cursor(m_parent->parent(), 
+			m_parent->parent()->child[0] == m_parent ? 0 : 1);
 	}
 	
 	const_tree_cursor<binary_node<T, Augment, Balance> > parent() const
 	{
-		int par = 1;
-		if ((m_parent->parent()->child[0] == m_parent) && 
-			(m_parent->parent()->child[1] != m_parent)) 
-			par = 0;
-		return tree_cursor(m_parent->parent(), par);
-//			(((m_parent->parent()->child[0] == m_parent ? 0 : 1));
+		return tree_cursor(m_parent->parent(), 
+			m_parent->parent()->child[0] == m_parent ? 0 : 1);
 	}
 	
 	node_pointer node() 
@@ -341,7 +350,8 @@ public:
 	
 	bool has_child()
 	{
-		return (m_parent->child[m_pos] != binary_node_base::nil);
+		return ((m_parent->child[m_pos] != binary_node_base::nil) && 
+				(m_parent->child[m_pos] != m_parent));
 	}
 	
 };
