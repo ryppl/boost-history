@@ -34,59 +34,89 @@
         </p></td></tr>
 </table></div>
 <a name="tr1_math.bessel_functions.bessel_functions_of_fractional_order.synopsis"></a><h5>
-<a name="id4846574"></a>
+<a name="id4847708"></a>
         <a href="bessel_functions_of_fractional_order.html#tr1_math.bessel_functions.bessel_functions_of_fractional_order.synopsis">Synopsis</a>
       </h5>
 <p>
         
 </p>
 <pre class="programlisting">
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">special_functions</span><span class="special">/</span><span class="identifier">gamma</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-##</pre>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">special_functions</span><span class="special">/</span><span class="identifier">bessel_jv</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">math</span> <span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">bessel_jv</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">x</span><span class="special">)</span>
+
+<span class="special">}}</span> <span class="comment">// namespaces
+</span><span class="identifier">nal_ord</span></pre>
 <p>
       </p>
+<p>
+        
+</p>
 <pre class="programlisting">
-<span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">math</span><span class="special">{</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">special_functions</span><span class="special">/</span><span class="identifier">bessel_yv</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
-<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
-<span class="identifier">T</span> <span class="identifier">tgamma</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">z</span><span class="special">);</span>
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">math</span> <span class="special">{</span>
 
-<span class="special">}}</span> <span class="comment">// namespaces
-</span>####</pre>
-<a name="tr1_math.bessel_functions.bessel_functions_of_fractional_order.description"></a><h5>
-<a name="id4846768"></a>
-        <a href="bessel_functions_of_fractional_order.html#tr1_math.bessel_functions.bessel_functions_of_fractional_order.description">Description</a>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">bessel_yv</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">x</span><span class="special">)</span>
+
+<span class="special">}}</span> <span class="comment">// namespaces
+</span>#<span class="identifier">d</span>#<span class="identifier">d</span>#<span class="identifier">d</span>#</pre>
+<p>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">math</span><span class="special">/</span><span class="identifier">special_functions</span><span class="special">/</span><span class="identifier">bessel_jy</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">math</span> <span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">int</span> <span class="identifier">bessel_jy</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">x</span><span class="special">,</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">J</span><span class="special">,</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">Y</span><span class="special">)</span>
+
+<span class="special">}}</span> <span class="comment">// namespaces
+</span>#<span class="identifier">r</span><span class="special">.</span><span class="identifier">syno</span></pre>
+<p>
+      </p>
+<a name="tr1_math.bessel_functions.bessel_functions_of_fractional_order.description_and_implementation"></a><h5>
+<a name="id4848376"></a>
+        <a href="bessel_functions_of_fractional_order.html#tr1_math.bessel_functions.bessel_functions_of_fractional_order.description_and_implementation">Description
+        and Implementation</a>
       </h5>
 <p>
-        Returns the "true gamma" of value z:
+        Bessel functions of fractional order (i.e. order &#957;is any real number) are
+        much harder to compute than <a href="bessel_functions_of_integer_order.html" title="Bessel
+      Functions of Integer Order">Bessel
+        functions of integer order</a>. Though <a href="introduction.html#bessel_recur">recurrence
+        relations</a> are the same, the difficulty lies in the initial values.
       </p>
 <p>
-        <span class="inlinemediaobject"><img src="../../../equations/gamm1.png" alt="gamm1"></span>
+        The function domains are <span class="emphasis"><em>J<sub>&#957;</sub>(x)</em></span>: (<code class="literal">0, &#8734;</code>),
+        <span class="emphasis"><em>Y<sub>&#957;</sub>(x)</em></span>: (<code class="literal">0, &#8734;</code>).
       </p>
 <p>
-        <span class="inlinemediaobject"><img src="../../../graphs/gamma.png" alt="gamma"></span>
+        <span class="inlinemediaobject"><img src="../../plots/bessel_v.png" alt="bessel_v"></span>
       </p>
 <p>
-        There are effectively two versions of this function internally: a fully generic
-        version that is slow, but reasonably accurate, and a much more efficient
-        approximation that is used where the number of digits in the mantissa of
-        T correspond to a certain __lanczos. In practice any built in floating point
-        type you will encounter has an appropriate __lanczos defined for it. It is
-        also possible, given enough machine time, to generate further __lanczos's
-        using the program libs/math/tools/lanczos_generator.cpp
+        The algorithms consist of minimax rational approximations on root-bracketing
+        intervals for small <span class="emphasis"><em>|x|</em></span> and Hankel asymptotic expansion
+        for large <span class="emphasis"><em>|x|</em></span>. The coefficients of them are from [<a href="../references.html#9">9</a>] and [<a href="../references.html#11">11</a>] respectively.
       </p>
-<a name="tr1_math.bessel_functions.bessel_functions_of_fractional_order.accuracy"></a><h5>
-<a name="id4846843"></a>
-        <a href="bessel_functions_of_fractional_order.html#tr1_math.bessel_functions.bessel_functions_of_fractional_order.accuracy">Accuracy</a>
+<a name="tr1_math.bessel_functions.bessel_functions_of_fractional_order.testing"></a><h5>
+<a name="id4848499"></a>
+        <a href="bessel_functions_of_fractional_order.html#tr1_math.bessel_functions.bessel_functions_of_fractional_order.testing">Testing</a>
       </h5>
 <p>
-        The following table shows the peek errors (in units of epsilon) found on
-        various platforms with various floating point types. Unless otherwise specified
-        any floating point type that is narrower than the one shown will have __zero_error.
+        The test driver calculates relative errors and the following table lists
+        some typical values.
       </p>
 <div class="informaltable">
 <h5>
-<a name="id4846870"></a>
+<a name="id4848522"></a>
         </h5>
 <table class="table">
 <colgroup>
@@ -94,123 +124,38 @@
 <col>
 <col>
 <col>
-<col>
-<col>
 </colgroup>
 <thead><tr>
-<th>Mantissa Size</th>
-<th>Platform and Compiler</th>
-<th>Factorials
-              and Half factorials</th>
-<th>Values Near Zero</th>
-<th>Values
-              Near 1 or 2</th>
-<th>Values Near a Negative Pole</th>
+<th>Function</th>
+<th>float</th>
+<th>double</th>
+<th>long
+              double</th>
 </tr></thead>
 <tbody>
 <tr>
-<td>53</td>
-<td>Win32 Visual C++ 8</td>
-<td>Peek=1.9 Mean=0.7
-              <br> <br> (GSL=3.9) <br> (Cephes=3.0)</td>
-<td>Peek=2.0
-              Mean=1.1 <br> <br> (GSL=4.5) (Cephes=1)</td>
-<td>Peek=2.0
-              Mean=1.1 <br> <br> (GSL=7.9) (Cephes=1.0)</td>
-<td>Peek=2.6
-              Mean=1.3 <br> <br> (GSL=2.5) (Cephes=2.7)</td>
+<td><code class="computeroutput"><span class="identifier">bessel_j0</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span></code></td>
+<td>~
+              10<sup>-8</sup> , 10<sup>-7</sup> </td>
+<td>~ 10<sup>-16</sup> , 10<sup>-15</sup> </td>
+<td>~ 10<sup>-20</sup> , 10<sup>-19</sup> </td>
 </tr>
 <tr>
-<td>64</td>
-<td>Linux IA32 / GCC</td>
-<td>Peek=300 Mean=49.5
-              <br> <br> (Native Peek=395 Mean=89)</td>
-<td>Peek=3.0 Mean=1.4
-              <br> <br> (Native Peek=11 Mean=3.3)</td>
-<td>Peek=5.0 Mean=1.8
-              <br> <br> (Native Peek=0.92 Mean=0.2)</td>
-<td>Peek=157 Mean=65
-              <br> <br> (Native Peek=205 Mean=108)</td>
-</tr>
-<tr>
-<td>64</td>
-<td>Linux IA64 / GCC</td>
-<td>Peek=2.8 Mean=0.9
-              <br> (Native=0.7)</td>
-<td>Peek=4.8 Mean=1.5 <br> (Native=0)</td>
-<td>Peek=4.8
-              Mean=1.5 <br> (Native=0)</td>
-<td>Peek=5.0 Mean=1.7 <br> (Native
-              0)</td>
-</tr>
-<tr>
-<td>113</td>
-<td>HPUX IA64, aCC A.06.06</td>
-<td>Peek=2.5
-              Mean=1.1 <br> (Native=0)</td>
-<td>Peek=3.5 Mean=1.7 <br> (Native=0)</td>
-<td>Peek=3.5
-              Mean=1.6 <br> (Native=0)</td>
-<td>Peek=5.2 Mean=1.92 <br>
-              (Native=0)</td>
+<td><code class="computeroutput"><span class="identifier">bessel_y0</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span></code></td>
+<td>~
+              10<sup>-8</sup> , 10<sup>-7</sup> </td>
+<td>~ 10<sup>-16</sup> </td>
+<td>~ 10<sup>-17</sup> </td>
 </tr>
 </tbody>
 </table>
 </div>
-<a name="tr1_math.bessel_functions.bessel_functions_of_fractional_order.testing"></a><h5>
-<a name="id4847056"></a>
-        <a href="bessel_functions_of_fractional_order.html#tr1_math.bessel_functions.bessel_functions_of_fractional_order.testing">Testing</a>
-      </h5>
 <p>
-        The gamma is relatively easy to test: factorials and half integer factorials
-        can be calculated exactly by other means and compared with the gamma function.
-        In addition some accuracy tests in known tricky areas were computed at high
-        precision using the generic version of this function.
-      </p>
-<a name="tr1_math.bessel_functions.bessel_functions_of_fractional_order.implementation"></a><h5>
-<a name="id4847088"></a>
-        <a href="bessel_functions_of_fractional_order.html#tr1_math.bessel_functions.bessel_functions_of_fractional_order.implementation">Implementation</a>
-      </h5>
-<p>
-        The generic version of this function is implemented by combining the series
-        and continued fraction representations for the incomplete gamma function:
-      </p>
-<p>
-        <span class="inlinemediaobject"><img src="../../../equations/gamm2.png" alt="gamm2"></span>
-      </p>
-<p>
-        where <span class="emphasis"><em>l</em></span> is an arbitrary integration limit: choosing
-        <code class="literal">l = max(10, a)</code> seems to work fairly well.
-      </p>
-<p>
-        For types of known precision the __lanczos is used, a traits class <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">math</span><span class="special">::</span><span class="identifier">lanczos</span><span class="special">::</span><span class="identifier">lanczos_traits</span></code> maps type T to an appropriate
-        approximation.
-      </p>
-<p>
-        For z in the range -20 &lt; z &lt; 1 then recursion is used to shift to z
-        &gt; 1 via:
-      </p>
-<p>
-        <span class="inlinemediaobject"><img src="../../../equations/gamm3.png" alt="gamm3"></span>
-      </p>
-<p>
-        For very small z, this helps to preserve the identity:
-      </p>
-<p>
-        <span class="inlinemediaobject"><img src="../../../equations/gamm4.png" alt="gamm4"></span>
-      </p>
-<p>
-        For z &lt; -20 the reflection formula:
-      </p>
-<p>
-        <span class="inlinemediaobject"><img src="../../../equations/gamm5.png" alt="gamm5"></span>
-      </p>
-<p>
-        is used. Particular care has to be taken to evaluate the <code class="computeroutput"><span class="identifier">z</span> <span class="special">*</span> <span class="identifier">sin</span><span class="special">(</span><span class="identifier">PI</span> <span class="special">*</span> <span class="identifier">z</span><span class="special">)</span></code> part: a special routine is used to reduce
-        z prior to multiplying by PI to ensure that the result in is the range [0,
-        PI/2]. Without this an excessive amount of error occurs in this region: which
-        is hard enough already as the rate of change near a negative pole is <span class="emphasis"><em>exceptionally</em></span>
-        high.
+        When <span class="emphasis"><em>|x|</em></span> becomes large ( &gt; 10<sup>4</sup> ), the relative error
+        grows rapidly. <span class="emphasis"><em>|x|</em></span> = 10<sup>5</sup> can have relative error 4 or
+        5 magnitudes higher than that of <span class="emphasis"><em>|x|</em></span> = 10. Fortunately,
+        this is where the function value approaches zero, so the absolute error is
+        actually quite small.
       </p>
 </div>
 <table width="100%"><tr>
