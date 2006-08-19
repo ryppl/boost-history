@@ -111,7 +111,7 @@ namespace boost {
               set_tree(*vi, tColorTraits::gray());
             }
             // Initialize flow to zero which means initializing
-            // the residual capacity equal to the capacity.            
+            // the residual capacity equal to the capacity
             tEdgeIterator ei, e_end;
             for(tie(ei, e_end) = edges(m_g); ei != e_end; ++ei) {
               m_res_cap_map[*ei] = m_cap_map[*ei];
@@ -159,7 +159,6 @@ namespace boost {
               if(current_node == m_sink){
                 tEdgeVal cap = m_res_cap_map[from_source];
                 m_res_cap_map[from_source] = 0;
-                m_res_cap_map[m_rev_edge_map[from_source]] += cap;
                 m_flow += cap;
                 continue;
               }
@@ -175,9 +174,8 @@ namespace boost {
                   set_edge_to_parent(current_node, from_source);
                   m_dist_map[current_node] = 1;
                   //add stuff to flow and update residuals
-                  m_res_cap_map[m_rev_edge_map[to_sink]] += cap_to_sink;
+                  //we dont need to update reverse_edges, as incoming/outgoing edges to/from source/sink don't count for max-flow
                   m_res_cap_map[from_source]-= cap_to_sink;
-                  m_res_cap_map[m_rev_edge_map[from_source]] += cap_to_sink;
                   m_res_cap_map[to_sink] = 0;
                   m_flow += cap_to_sink;
                 } else if(cap_to_sink > 0){
@@ -187,9 +185,8 @@ namespace boost {
                   set_edge_to_parent(current_node, to_sink);
                   m_dist_map[current_node] = 1;
                   //add stuff to flow and update residuals
+                  //we dont need to update reverse_edges, as incoming/outgoing edges to/from source/sink don't count for max-flow
                   m_res_cap_map[to_sink]-= cap_from_source;
-                  m_res_cap_map[m_rev_edge_map[to_sink]] += cap_from_source;
-                  m_res_cap_map[m_rev_edge_map[from_source]] += cap_from_source;
                   m_res_cap_map[from_source] = 0;
                   m_flow += cap_from_source;
                 }
@@ -480,7 +477,7 @@ namespace boost {
               return;
             } else{
               m_in_active_list_map[v] = true;
-              m_active_nodes.push(v);  
+              m_active_nodes.push(v);
             }
           }
 
@@ -565,8 +562,7 @@ namespace boost {
               }
               if(has_parent(current_vertex)){
                 //it has a parent, so get it
-                const tEdge e = get_edge_to_parent(current_vertex);
-                current_vertex = target(e, m_g);
+                current_vertex = target(get_edge_to_parent(current_vertex), m_g);
                 ++current_distance;
               } else{
                 //no path found
@@ -602,9 +598,8 @@ namespace boost {
               }
 
               if(has_parent(current_vertex)){
-                const tEdge e = get_edge_to_parent(current_vertex);
                 //it has a parent, so get it
-                current_vertex = source(e, m_g);
+                current_vertex = source(get_edge_to_parent(current_vertex), m_g);
                 ++current_distance;
               } else{
                 //no path found
