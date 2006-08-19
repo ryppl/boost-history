@@ -8,6 +8,6 @@ boostbook standalone
     : tr1-math
     : <xsl:param>nav.layout=none
       <xsl:param>navig.graphics=1
-      <xsl:param>chunk.section.depth=5
+      <xsl:param>chunk.section.depth=2
       <xsl:param>chunk.first.sections=1
     ;
