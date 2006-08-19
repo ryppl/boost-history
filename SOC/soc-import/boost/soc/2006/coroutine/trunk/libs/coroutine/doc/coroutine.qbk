@@ -2226,7 +2226,7 @@ solutions. The `Win32 fiber API` provides a symmetric coroutine
 interface with such a global object. Coding around the interface
 mismatch between the Boost.Coroutine `API` and the `fiber API` has 
 been difficult and a potential source of
-[link supported.convert_thread_to_fiber inefficiency].
+[link convert_thread_to_fiber inefficiency].
 
 The last reason for not providing a `current_coroutine` is that this
 could be used to `yield`. Suppose a coroutine that is manipulating
@@ -2384,7 +2384,42 @@ that requires a future not to outlive the owning coroutine.
 
 [section:supported Supported platforms]
 
-[#convert_thread_to_fiber]
+Boost.Coroutine is known to compile on both GCC 3.4.6 and Visual C++
+8.0. 
+
+It should work on all windows variants that support the fiber API
+(that is, all NTs and all windows 9x derivatives since windows 98). 
+
+It has specific support for Linux x86 based systems using GCC and 
+zero overhead exception handling (the default). The same
+implementation should be trivially portable to most BSD derivatives.
+
+For generic Unix systems a makecontext based implementation is
+provided, but it is [link coroutine.fibers not guaranteed to work on
+all systems]. It may also not be 64 bit clean (this should be trivial
+to fix).
+
+[section:performance Performance]
+
+Ideally the cost of a coroutine call should be comparable to the cost
+of an indirect function call. Currently Boost.Coroutine, at least on
+Linux-x86-GCC come close to 150% of the speed of Boost.Function,
+itself comparable to the cost of an indirect function call. The Win32
+implementation has not be tested, but it might be slightly slower
+because of the need to switch exception contexts and some missed
+optimization opportunities. The `makecontext` based implementation is
+at least three orders of magnitude slower than the others due to the
+need to perform a system call per context switch.
+
+To get good performance on `Win32` systems, the `Win32 API` call
+`ConvertThreadToFiber` should be [link convert_thread_to_fiber_optimization performed] on each thread that will
+invoke coroutines. Else a much slower code path will be used that may
+potentially make context switches extremely expensive.
+
+[endsect]
+
+
+
 
 [h3 Notes on the Win32 implementation]
 
@@ -2512,10 +2547,10 @@ oblivious of the system it runs on, thus it might as well be system
 specific. Similar platforms common code may still be shared.
 
 Currently the library uses `fibers` on `Win32` systems, custom
-assembler code on the very specific "GCC on linux x86 using unwind
-table based exception handling" and a generic
-`makecontext/setcontext` based code on `Single Unix Specification 2"
-(a superset of `POSIX`)compliant systems. Note that, as the `SUS` standard
+assembler code on the very specific "GCC on linux x86 using fame unwind
+tables based exception handling" and a generic
+`makecontext/setcontext` based code on `POSIX 2001"
+compliant systems. Note that, as the `POSIX` standard
 knows nothing about `C++` and is `C` specific, this is not guaranteed
 to work on all platforms. Also the interaction between threads and
 user contexts is not specified by the standard.
@@ -2531,7 +2566,7 @@ different context implementations in the same library.
 
 The context switching support is very simple and tightly contained. It
 only requires a context structure and two function for context setup
-and context swap (the interface is modeled around the `SUS`
+and context swap (the interface is modeled around the `POSIX`
 `makecontext API`). At this time the actual extension interface is not
 documented and a private detail, because it is likely to be further
 simplified (the current requirements of the `Context` concept have
@@ -2584,19 +2619,26 @@ compiler could fall back on stack switching if it cannot inline a
 [h3 Introduction]
 
 This section will shortly describe the `Win32 fibers` facility, compare
-them to the `Single Unix Specification` `makecontext/swapcontext API`
+them to the `POSIX makecontext/swapcontext API`
 and finally show how Boost.Coroutine can be implemented in term of
 fibers.
 
+[blurb __alert__ `POSIX` compliance does not guarantee the presence of
+the `context API`, as this is an optional feature. It is required by
+the `Single Unix Specification v2`, also known as "X/Open System
+Interface.]
+
 [h3 The APIs]
 
-The `fiber API` in practice implements symmetric coroutines. While
+The `fiber API` in practice implements pure symmetric coroutines. While
 argument passing from coroutine to coroutine is not explicitly
 supported, it can be implemented easily on top of the existing
-facilities. The `makecontext/swapcontext API` is extremely similar in
-this respect.
+facilities.
 
-The `SwitchToFiber` function is used to switch from the current fiber
+ The `makecontext/swapcontext API` is extremely similar as it supports
+argument-less symmetric coroutine switching.
+
+The `SwitchToFiber` function is used to yield from the current fiber
 to a new one. Notice that it requires that a fiber is already
 running. The current context is saved in the current fiber. 
 
@@ -2612,9 +2654,11 @@ should be expected thought, because the floating point status should
 be treated as any other shared state. Currently Boost.Coroutine does
 not set the "save floating point" flag, and seems to work correctly
 anyway. Saving the floating point control word is an extremely
-expensive operation.]
+expensive operation. Newer `API` documentation reveal that the
+FIBER_FLAG_FLOAT_SWITCH flag is no longer supported since Windows XP
+and Windows 2000 SP4.] 
 
-The corresponding function in the `SUS` standard is `swapcontext` that
+The corresponding function in the `POSIX` standard is `swapcontext` that
 saves the current context in a memory area pointed by the first
 argument and restores the context pointed by the second argument. This
 function is more flexible than `SwitchToFiber` because it has no
@@ -2634,7 +2678,7 @@ to use but the user cannot provide its own stack pointer (useful if a
 custom allocator is used). The function will return a pointer to the
 initialized fiber.
 
-`SUS`has `makecontext`, that takes as parameter a context previously
+`POSIX` has `makecontext`, that takes as parameter a context previously
 initialized, a function pointer to bind to the context and a void
 pointer to be passed to the function. The function is a bit more
 awkward to use because the context to be initialized by a call to
@@ -2643,12 +2687,14 @@ size) to be manually initialized. On the other hand the user can
 specify the area that will be used as a stack.
 
 The `fiber API` provides a `DeleteFiber` function that must be called
-to delete a fiber. `SUS` has no such facility, because contexts are
+to delete a fiber. `POSIX` has no such facility, because contexts are
 not internally heap allocated and require no special cleanup. The user
 is responsible of freeing the stack area when no longer necessary.
 
+[#convert_thread_to_fiber]
+
 A quirk of the `fiber API` is the requirement that the current thread
-be converted to fiber before calling `SwitchToFiber`. (`SUS` doesn't
+be converted to fiber before calling `SwitchToFiber`. (`POSIX` doesn't
 require this because `swapcontext` will initialize automatically the
 context that it is saving to). A thread is converted with a call to
 `ConvertThreadToFiber`. When the fiber is not longer needed a call to
@@ -2688,11 +2734,13 @@ system, and in practice most programming language on this environment
 use *SEH* for exception handling. Fibers guarantee that exceptions
 will work correctly. 
 
-The `SUS API` has no concept of exceptions, thus there is no guarantee
+The `POSIX API` has no concept of exceptions, thus there is no guarantee
 that they are automatically handled by `makecontext/swapcontext ` (and
 in fact on many systems they not work correctly). In practice systems
-that use unwind tables for exception handling should be safe, while
-systems that use a `setjmp/longjmp` based system will not without some help.
+that use fame unwind tables for exception handling (the so-called no
+overhead exception handling) should be safe, while
+systems that use a `setjmp/longjmp` based system will not without
+some compiler specific help.
 
 `Win32` guarantees that a `fiber` can be saved in one thread and
 restored on another, as long as fiber local storage is used instead of
@@ -2700,7 +2748,7 @@ thread local storage. Unfortunately most third party libraries use
 only thread local storage. The standard C library should be safe
 though.
 
-`SUS` does not specify the behavior of contexts in conjunction with
+`POSIX` does not specify the behavior of contexts in conjunction with
 threads, and in practice complier optimizations often prevent contexts
 to be migrated between threads.
 
@@ -2719,6 +2767,8 @@ When a coroutine is created a new `fiber` is associated with it. This
 fiber is deleted when the coroutine is destroyed. Yielding form
 coroutine to coroutine is done straight forwardly using `SwitchToFiber`.
 
+[#convert_thread_to_fiber_optimization]
+
 Switching from the main context to a coroutine is a bit more
 involved. Boost.Coroutine does not require the main context to be a
 coroutine, thus `ConvertThreadToFiber`is only called lazily when a
@@ -2731,11 +2781,9 @@ skipped and there is no performance penalty. Thus performance
 sensitive programs should always call `ConvertThreadToFiber`
 explicitly for every thread that may use coroutines.
 
-
-
 [h3 Conclusions]
 
-Of the two `APIs`, the `SUS` one is simpler to use and more flexible
+Of the two `APIs`, the `POSIX` one is simpler to use and more flexible
 from a programmer point of view, but in practice it is not very useful
 because it is often very slow and there are no guarantees that it will
 work correctly on all circumstances.
@@ -2747,7 +2795,7 @@ the support for migration, make it the most solid implementation of
 coroutines available.
 
 Finally, while `makecontext` and family are considered obsolescent
-since the last `SUS` edition, the `fiber API` is here to stay,
+since the last `POSIX` edition, the `fiber API` is here to stay,
 especially because it seems that the new `.NET` environment makes use
 of it.
 
