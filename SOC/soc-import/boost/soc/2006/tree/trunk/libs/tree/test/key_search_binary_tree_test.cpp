@@ -32,7 +32,7 @@ void test_key_search_binary_tree()
 
 	c = my_tree.end();
 	BOOST_CHECK(c == my_tree.end());
-	//BOOST_CHECK(c == my_tree.begin()); // current FIXME
+	BOOST_CHECK(c == my_tree.begin()); // current FIXME
 	
 	searcher_t::cursor cur = searcher_t::cursor(c);
 	BOOST_CHECK(!cur.has_child());
@@ -46,24 +46,43 @@ void test_key_search_binary_tree()
 	BOOST_CHECK(c != my_tree.end());
 	BOOST_CHECK(c1 != my_tree.end());
 	
-	BOOST_CHECK(++c1 == my_tree.end());
+	cur = searcher_t::cursor(c1);
+	BOOST_CHECK(!(++cur).has_child());
+	BOOST_CHECK(cur.parity());	//FIXME.
 	
+	cur = cur.parent(); //header-cursor(,1) (root)
+	BOOST_CHECK(cur.parity());
+	BOOST_CHECK(cur.m_parent->child[1] == searcher_t::cursor(c1).m_parent);
+	BOOST_CHECK(cur.m_parent->child[0] == searcher_t::cursor(c1).m_parent);
+	
+	cur = cur.parent(); //header-parent, should be: ,1: shoot!
+	BOOST_CHECK(cur.parity());
+
+	BOOST_CHECK(cur.m_parent == searcher_t::cursor(c1).m_parent);
+
+	BOOST_CHECK(searcher_t::iterator(cur) == my_tree.end());	
+	BOOST_CHECK(*c1 = 8);
+
+	BOOST_CHECK(++c1 == my_tree.end());
+
+
 	--c1;
+	BOOST_CHECK(*c1 == 8);
+	
 	BOOST_CHECK(searcher_t::cursor(my_tree.end()).parity() == 1);
 
 	BOOST_CHECK(cur.end().parity() == 1);
-	BOOST_CHECK(cur.end() == searcher_t::cursor(my_tree.end()));
-	
-	BOOST_CHECK(cur.begin() == searcher_t::cursor(c1));
-	BOOST_CHECK(cur.end() == ++searcher_t::cursor(c1));
 	
 	cur = searcher_t::cursor(c1);
 	
+	BOOST_CHECK(*cur == 8);
+	
 	BOOST_CHECK(!(++cur).has_child());
-	BOOST_CHECK((--cur).parent().parity());
+	//BOOST_CHECK((--cur).parent().parity()); // hmmm... TODO? root's parity...
 
 	BOOST_CHECK(*(searcher_t::cursor(c).begin()) == 8);
 	
+	BOOST_CHECK(*c1 == 8);
 	BOOST_CHECK(++c1 == my_tree.end());
 	
 	// root (e.g. c) instead of c1 would crash this. but should that be really 
@@ -97,19 +116,45 @@ void test_key_search_binary_tree()
 	--c;
 	BOOST_CHECK(*c == 39);
 	
+	c = my_tree.begin();
+	BOOST_CHECK(searcher_t::cursor(c).parity() == 0);
+	//BOOST_CHECK(c.parity() == 0);
+	BOOST_CHECK(*(searcher_t::cursor(c).parent()) != 412);
+	BOOST_CHECK(*c < 413);
+	
 	searcher_t::container_type the_tree = my_tree.get_container();
-	searcher_t::cursor it = boost::tree::lower_bound(the_tree.root(), 
+	searcher_t::cursor tree_cur = boost::tree::lower_bound(the_tree.root(), 
 		the_tree.shoot(), 39, std::less<int>());
 
-	BOOST_CHECK(*it == 39);
-	it = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 18);	
-	BOOST_CHECK(*it == 18);
+	BOOST_CHECK(*tree_cur == 39);
+	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 18);	
+	BOOST_CHECK(*tree_cur == 18);
 	
-	it = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 30);	
-	BOOST_CHECK(*it == 31);
+	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 30);	
+	BOOST_CHECK(*tree_cur == 31);
 	
-	it = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 3);	
-	BOOST_CHECK(*it == 7);
+	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 3);	
+	BOOST_CHECK(*tree_cur == 7);
+	
+	
+	if ((++tree_cur).has_child()) {
+		while (tree_cur.begin().has_child())
+			tree_cur = tree_cur.begin();
+		tree_cur = tree_cur.begin();
+		//return;
+	}
+	else {
+	while (tree_cur == tree_cur.parent().begin())
+		tree_cur = tree_cur.parent();
+	tree_cur = tree_cur.parent() /*.begin()*/;
+	}
+	
+	BOOST_CHECK(*tree_cur == 8);
+	
+	
+	//c = my_tree.begin();
+	//BOOST_CHECK(*(c++) == 7);
+	//BOOST_CHECK(*(c++) == 8); //FIXME.
 	
 }
 

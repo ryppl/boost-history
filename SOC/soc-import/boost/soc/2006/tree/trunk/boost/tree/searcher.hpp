@@ -421,13 +421,10 @@ public:
 	iterator insert (iterator pos, value_type const& val)
  	{
  		key_type key = ext(val);
-		// FIXME: hint check isn't quite correct yet.
-		if ((pos != iterator(c.end())) && comp(key, *pos)) {
-			iterator pre = pos;
-			--pre;
-			if (comp(*pre, key))
- 				return c.insert(pos, val);
- 		} 
+ 		
+		if ((pos != iterator(c.end())) && comp(key, *pos))
+			if (comp(*--pos, key))
+ 				return iterator(c.insert(++cursor(pos), val));
  		
  		// the pos hint was not useful
  		std::pair<cursor, std::pair<bool, bool> > ret = 

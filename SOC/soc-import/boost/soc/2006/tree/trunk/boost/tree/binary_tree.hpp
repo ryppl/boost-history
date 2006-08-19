@@ -86,7 +86,8 @@ class binary_tree {
 		  		 node_allocator_type const& node_alloc = node_allocator_type())
 	: m_header(), m_value_alloc(value_alloc), m_node_alloc(node_alloc)
 	{
-		std::cout << "c--" << this->m_header.m_parent << "--" << &(this->m_header) << std::endl << std::flush;
+		m_header.child[0] = &m_header;
+		//m_header.child[1] = &m_header;
 	}
 
 	binary_tree (self_type const& other)
@@ -105,7 +106,7 @@ class binary_tree {
 	 */ 	
 	cursor root()
 	{
-		return cursor(&m_header);
+		return cursor(&m_header, 1);
 	}
 
 	/**
@@ -113,7 +114,8 @@ class binary_tree {
 	 */ 	
 	const_cursor root() const
 	{
-		return const_cursor(&m_header);
+		//return const_cursor(m_header.m_parent);
+		return const_cursor(&m_header, 1);
 	}
 	
 	/**
@@ -122,7 +124,8 @@ class binary_tree {
 	 */ 	
 	cursor shoot()
 	{
-		return cursor(m_header.m_parent);
+		//return cursor(&m_header, 1);
+		return cursor(m_header.m_parent, 1);
 	}
 	
 	/**
@@ -131,7 +134,8 @@ class binary_tree {
 	 */ 	
 	const_cursor shoot() const
 	{
-		return const_cursor(m_header.m_parent);
+		//return const_cursor(&m_header, 1);
+		return const_cursor(m_header.m_parent, 1);
 	}
 	
 	/// Functions returning (inorder) iterators (as required by the Sequence
@@ -145,9 +149,11 @@ class binary_tree {
 	 */ 	 
 	iterator begin()
 	{
-		if (const_cursor(&m_header, 0).has_child())
-			return iterator(cursor(&m_header, 0));
-		return iterator(cursor(&m_header, 1));
+		if (root().has_child())
+		//if (m_header.child[0] != m_header.m_parent)
+			return iterator(cursor(m_header.child[0], 0));
+		return iterator(cursor(&m_header, 1)); //iterator(shoot());
+		
 	}
 	
 	/**
@@ -155,9 +161,12 @@ class binary_tree {
 	 */ 	 
 	const_iterator begin() const
 	{
-		if (const_cursor(&m_header, 0).has_child())
-			return const_iterator(const_cursor(&m_header, 0));
-		return const_iterator(const_cursor(&m_header, 1));
+		if (root().has_child())
+		//if (m_header.child[0] != m_header.m_parent)
+			return const_iterator(const_cursor(m_header.child[0], 0));
+		//return const_iterator(const_cursor(&m_header, 1));
+		return iterator(cursor(&m_header, 1)); //iterator(shoot());
+
 	}
 
 	/**
@@ -166,7 +175,8 @@ class binary_tree {
 	 */
 	iterator end()
 	{
-		return iterator(cursor(m_header.m_parent, 1));
+		return iterator(shoot());
+		//return iterator(cursor(m_header.m_parent, 1));
 	}
 
 	 /**
@@ -175,7 +185,8 @@ class binary_tree {
 	 */	
 	const_iterator end() const
 	{
-		return const_iterator(const_cursor(m_header.m_parent, 1));
+		return const_iterator(shoot());
+		//return const_iterator(const_cursor(m_header.m_parent, 1));
 	}
 	
 	// Hierarchy-specific
@@ -202,12 +213,23 @@ class binary_tree {
 		
 		pos.add_node(p_node);
 		// call balancer.
+
+		// TODO: The following is really cumbersome. Find a better way.
+		//if ((pos.m_parent == m_header.child[0]) && !pos.parity())
+		//if ((iterator(pos.parent()) == this->begin()) && !pos.parity()) // && pos.parent() != root())
+		//if ((iterator(pos) == this->begin()))
+		if ((pos.m_parent == m_header.child[0]) && ((m_header.child[0] == &m_header) || !pos.parity()))
+		
+			m_header.child[0] = p_node; //pos.m_parent;	
 		
 		if (pos == this->shoot())
 			m_header.m_parent = p_node;
 
 //		if (iterator(pos) == this->begin())
 //			m_header.child[0] = p_node;
+	
+
+
 		
 		balancer::add(pos, this->root());
 		return pos.begin(); 

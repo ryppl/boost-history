@@ -6,6 +6,7 @@
 #ifndef BOOST_TREE_AUGMENTORS_INTERVAL_HPP
 #define SBOOST_TREE_AUGMENTORS_INTERVAL_HPP
 
+//#include <boost/numeric/interval.hpp> //useful ?
 
 #include "boost/multi_index/composite_key.hpp"
 #include "boost/multi_index/member.hpp"

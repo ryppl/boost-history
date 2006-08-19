@@ -34,6 +34,8 @@ void test_plain_binary_tree()
 	c1 = mytree.insert(c, 1);
 	BOOST_CHECK(*c1 == 1);
 	BOOST_CHECK(c.has_child());
+	//BOOST_CHECK(c1.parent() == c); //FIXME.
+
 	c2 = mytree.insert(c1, 2);
 	BOOST_CHECK(c.has_child());
 	BOOST_CHECK(!c2.has_child());

@@ -75,7 +75,7 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
 
     explicit const_tree_cursor(
 		typename binary_node<T, Augment, Balance>::base_pointer p, 
-		size_type pos = 1)
+		size_type pos /*= 1*/)
      : m_parent(p), m_pos(pos) {}
       
     template <class OtherNode>
@@ -90,10 +90,10 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
       : m_parent(other.m_parent), m_pos(other.m_pos) {}
 
 	
- private:
+// private:
 	const_base_pointer m_parent;
  	size_type m_pos;
-
+ private:
     friend class boost::iterator_core_access;
     
     T const& dereference() const
@@ -154,19 +154,26 @@ public:
 		return const_tree_cursor(m_parent->child[m_pos], 1);
 	}
 	
-	// Cursor stuff. Optimise parent() ?
+	// Cursor stuff. 
+	
+	// TODO: parent()'s a dirty hack right now. Fix that.
+	// (also in (mutable) tree_cursor's members)
 	const_tree_cursor<binary_node<T, Augment, Balance> const> parent() const
 	{
-		return const_tree_cursor(m_parent->parent(), 
-			(m_parent->parent()->child[0] == m_parent ? 0 : 1));
+		int par = 1;
+		if ((m_parent->parent()->child[0] == m_parent) && 
+			(m_parent->parent()->child[1] != m_parent)) 
+			par = 0;
+		return const_tree_cursor(m_parent->parent(), par);
+//			(((m_parent->parent()->child[0] == m_parent ? 0 : 1));
 	}
 	
-	node_pointer node() // really?
+	node_pointer node() // really? certainly not public
 	{
 		return static_cast<node_pointer>(m_parent->child[m_pos]);
 	}
 	
-	size_type const parity() const // this is useful.
+	size_type const parity() const
 	{
 		return m_pos;
 	}
@@ -209,7 +216,7 @@ class tree_cursor<binary_node<T, Augment, Balance> >
     tree_cursor()
       : m_parent(0), m_pos(0) {}
 
-    explicit tree_cursor(base_pointer p, size_type pos = 1)
+    explicit tree_cursor(base_pointer p, size_type pos /*= 1*/)
       : m_parent(p), m_pos(pos) {}
 
     template <class OtherNode> //revisit
@@ -222,10 +229,10 @@ class tree_cursor<binary_node<T, Augment, Balance> >
     )
       : m_parent(other.m_parent), m_pos(other.m_pos) {}
 
- private: 
+// private: 
  	base_pointer m_parent;
  	size_type m_pos;
- 	
+private: 	
  	friend class boost::iterator_core_access;
  	
     T& dereference() const
@@ -298,14 +305,22 @@ public:
 	// Cursor stuff
 	tree_cursor<binary_node<T, Augment, Balance> > parent()
 	{
-		return tree_cursor(m_parent->parent(), 
-			(m_parent->parent()->child[0] == m_parent ? 0 : 1));
+		int par = 1;
+		if ((m_parent->parent()->child[0] == m_parent) && 
+			(m_parent->parent()->child[1] != m_parent)) 
+			par = 0;
+		return tree_cursor(m_parent->parent(), par);
+//			(((m_parent->parent()->child[0] == m_parent ? 0 : 1));
 	}
 	
 	const_tree_cursor<binary_node<T, Augment, Balance> > parent() const
 	{
-		return const_tree_cursor<binary_node<T, Augment, Balance> >(m_parent->parent(), 
-			(m_parent->parent()->child[0] == m_parent ? 0 : 1));
+		int par = 1;
+		if ((m_parent->parent()->child[0] == m_parent) && 
+			(m_parent->parent()->child[1] != m_parent)) 
+			par = 0;
+		return tree_cursor(m_parent->parent(), par);
+//			(((m_parent->parent()->child[0] == m_parent ? 0 : 1));
 	}
 	
 	node_pointer node() 

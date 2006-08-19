@@ -32,10 +32,15 @@ inline void forward(MultiwayCursor& c) // ++ (go right, then left)
 		return;
 	}
 	
-	c = c.parent();
-	while (c == c.parent().end())
+// TODO: unfortunately, this isn't the same as
+// while (c.parity()) 
+// atm due to some dirty hacking required
+// so root(), shoot() and (inorder) begin() work at the same time
+// Need to change that; see binary_tree and (const_)tree_cursor::parent()
+	while (c.parent().begin() == c) 
 		c = c.parent();
-	c = c.parent();
+	if (c.parent().end() != c)
+		c = c.parent();
 	return;
 }
 
@@ -54,7 +59,7 @@ inline void back(MultiwayCursor& c) // -- (go left, then right)
 		c = c.begin();
 		return;
 	}
-	while (!c.parity() && (c != c.parent()))
+	while (!c.parity()) // && (c != c.parent()))
 		c = c.parent();
 	c = c.parent().begin();
 	return;
