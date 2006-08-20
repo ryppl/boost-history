@@ -29,35 +29,19 @@
 class GraphBoostKolmogorov: public GraphBase
 {
   typedef adjacency_list_traits < vecS, vecS, directedS > tListTraits;
-  typedef adjacency_list< vecS, vecS, directedS,
-	property < vertex_index_t, long,
-   property < vertex_predecessor_t, tListTraits::edge_descriptor,
-   property < vertex_color_t, boost::default_color_type,
-   property < vertex_distance_t, long> > > >,
-	property < edge_capacity_t, GraphBase::tPrecision,
-	property < edge_residual_capacity_t, GraphBase::tPrecision,
-   property < edge_reverse_t, tListTraits::edge_descriptor > > > > tMyListGraph;
-   
-   typedef adjacency_matrix_traits< directedS > tMatrixTraits;
-   typedef adjacency_matrix< directedS,
-   property < vertex_index_t, long,
-   property < vertex_predecessor_t, tMatrixTraits::edge_descriptor,
-   property < vertex_color_t, boost::default_color_type,
-   property < vertex_distance_t, long> > > >,
-   property < edge_capacity_t, GraphBase::tPrecision,
-   property < edge_residual_capacity_t, GraphBase::tPrecision,
-   property < edge_reverse_t, tMatrixTraits::edge_descriptor > > > > tMyMatrixGraph;
+  typedef adjacency_list< vecS, vecS, directedS, no_property,
+    property < edge_capacity_t, GraphBase::tPrecision,
+	 property < edge_residual_capacity_t, GraphBase::tPrecision,
+    property < edge_reverse_t, tListTraits::edge_descriptor > > > > tMyListGraph;
    
    typedef std::vector<boost::default_color_type> tColorMap;
-   typedef std::vector<long> tDistanceMap;
 	
 public:
 	GraphBoostKolmogorov(unsigned int f_numberOfPixels)
       :m_graph(f_numberOfPixels+2),//add source and terminal as last 2 verts
    m_source_vertex(vertex(f_numberOfPixels,m_graph)),
    m_sink_vertex(vertex(f_numberOfPixels+1,m_graph)),
-   m_segment(f_numberOfPixels+2),
-   m_distance(f_numberOfPixels+2){}
+   m_segment(f_numberOfPixels+2){}
 
 		~GraphBoostKolmogorov(){
 		};
@@ -74,8 +58,14 @@ public:
 		}
 			
 		virtual tPrecision maxflow(){  
-        GraphBase::tPrecision flow = kolmogorov_max_flow(m_graph,m_source_vertex, m_sink_vertex,color_map(&m_segment[0]));
-        //, .distance_map(&m_distance[0]))));
+            GraphBase::tPrecision flow = kolmogorov_max_flow(m_graph,
+              get(edge_capacity, m_graph), 
+              get(edge_residual_capacity, m_graph), 
+              get(edge_reverse, m_graph),
+              &m_segment[0], 
+              get(vertex_index, m_graph),
+              m_source_vertex, 
+              m_sink_vertex);
 			return flow;
 		}
 		
@@ -92,6 +82,5 @@ public:
       graph_traits<tMyGraph>::vertex_descriptor m_sink_vertex;
 		//a vector to hold the segment of each vertex
 		tColorMap m_segment;		
-      tDistanceMap m_distance;
 };
 #endif
