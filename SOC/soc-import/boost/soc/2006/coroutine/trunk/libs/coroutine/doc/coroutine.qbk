@@ -78,16 +78,16 @@ DefaultConstructible]]
  
 
 [/ bibliography links]
- [def __marlin80__ [link marlin-doctoral-thesis \[Marlin80\]]]
- [def __moura04a__ [link moura-04-04 \[Moura04\]]]
- [def __HP_coroutines__ [link itanium-coroutines \[Saboff03\]]]
- [def __Fog06__ [link agner-fog-documentation \[Fog06\]]]
- [def __Intel06__ [link intel-optimization-guide \[Intel06\]]]
- [def __Adya02__ [link cooperative-task-management \[Adya02\]]]
- [def __VonBehren02__ [link why-events-are-a-bad-idea \[VonBehren03\]]]
- [def __Ousterhout95__ [link why-threads-are-a-bad-idea
-\[Ousterhout95\]]]
- [def __Kegel99__ [link the-10k-problem \[Kegel99\]]]
+
+[def __marlin80__ [link marlin-doctoral-thesis \[Marlin80\]]]
+[def __moura04__ [link moura-04-04 \[Moura04\]]]
+[def __HP_coroutines__ [link itanium-coroutines \[Saboff03\]]]
+[def __Fog06__ [link agner-fog-documentation \[Fog06\]]]
+[def __Intel06__ [link intel-optimization-guide \[Intel06\]]]
+[def __Adya02__ [link cooperative-task-management \[Adya02\]]]
+[def __VonBehren03__ [link why-events-are-a-bad-idea \[VonBehren03\]]]
+[def __Ousterhout95__ [link why-threads-are-a-bad-idea \[Ousterhout95\]]]
+[def __Kegel99__ [link the-10k-problem \[Kegel99\]]]
 
 
 [/ external links]
@@ -96,7 +96,7 @@ DefaultConstructible]]
 [def __LLVM__ [@http:/www.llvm.org __LLVM__]]
 [def __XXX__ [@http://www.chiark.greenend.org.uk/~sgtatham/coroutines.html
 Coroutines in C]]
-[def __Pth__ [@link-to-pth-webpage Pth]]
+[def __Pth__ [@http://www.gnu.org/software/pth/pth-manual.html Pth]]
 [def __BoostAsio__ [@link-to-boost-asio Boost.Asio]]
 [def __BoostFunction__ [@link-to-boost-asio Boost.Function]]
 [def __complex_matcher_cpp__ [@../../../libs/coroutine/example/complex_matcher.cpp complex_matcher.cpp]]
@@ -553,7 +553,7 @@ call other functions (including other generators), they must all
 return before the generator can yield to the
 caller. That is, the generator's call stack must be empty when it
 yields. This type of coroutines is sometime called /semi/-coroutine
-(__moura04b__) or simply generators. 
+(__moura04__) or simply generators. 
 
 Boost.Coroutine provides stackful coroutines and generators that
 can yield from deep inside nested functions. This makes them much more
@@ -1639,7 +1639,7 @@ consumer accept `boost::optional<const std::string&>`.
 
 [h3 Symmetric and asymmetric coroutine transformation]
 
-It can be demonstrated __moura04b__ that both symmetric and
+It can be demonstrated __moura04__ that both symmetric and
 asymmetric coroutines have the same expressive power, that is each
 type can be expressed in term of the other. We now will show how.
 
@@ -2349,8 +2349,8 @@ thread safety restrictions could be slightly relaxed. It is likely
 that the owning thread will become the first one to invoke
 `operator()` for that coroutine or `yield_to` that coroutine.
 
-It is unlikely that thread migration will ever be possible (nor is
-believed to be required).
+It is unlikely that thread migration will ever be possible (nor it is
+believed to be a necessary feature).
 
 For a rationale for the current requirements see
 [link coroutine.coroutine_thread "Interaction between coroutines and threads"].
@@ -2431,7 +2431,7 @@ the main context.
 Treating `main()` as a coroutine also opens many problems: 
 
 * It has no signature; It could be treated as a
-`__coroutine__<void()>`, but it seems arbitrary. 
+`__coroutine__<void()>`, but this seems too arbitrary. 
 * The main context cannot get a reference to `self`. A default
 constructed `self` is not a solution, because it breaks the invariant
 that two `self` objects always refer to two different objects. We have
@@ -2445,7 +2445,7 @@ initialize the current context.
 
 [h3 Symmetric and asymmetric coroutines]
 
-It has been argued __moura04b__ that asymmetric coroutines are the
+It has been argued __moura04__ that asymmetric coroutines are the
 best coroutine abstraction, because are simpler and safer than
 symmetric coroutines, while having the same expressiveness. We agree
 with that and the library has been developed around an asymmetric
@@ -2624,9 +2624,9 @@ potentially make context switches extremely expensive.
 
 It is possible to implement a very restricted set of coroutine
 functionality entirely within the language rules, using a variation of
-the duff device. See for example the __XXX__ library. While this
-is a cunning design, it has some severe limitations that makes it
-unsuitable for our library:
+the duff device. See for example__XXX__. While this
+is a cunning hack, it has some severe limitations that makes it
+unsuitable for a general purpose library like Boost.Coroutine:
 
 * Does only support /semi/-coroutines: cannot yield form inside nested
 functions. 
@@ -3376,63 +3376,48 @@ not thread safe (it doesn't necessarily use atomic operations).
 
 [section:bibliography Bibliography]
 
-[#marlin-doctoral-thesis]
 
-# [^Marlin, C. D. 1980]. ['Coroutines: A Programming Methodology, a Language Design
-  and an Implementation].\n LNCS 95, Springer-Verlag.
 
-[#why-threads-are-a-bad-idea]
+# [#marlin-doctoral-thesis] [^Marlin, C. D. 1980]. ['Coroutines: A Programming Methodology, a Language Design
+  and an Implementation].\n LNCS 95, Springer-Verlag.\n\n
 
-# [^Ousterhout, J. K. 1996]. ['Why Threads Are A Bad Idea (for most
+# [#why-threads-are-a-bad-idea] [^Ousterhout, J. K. 1996]. ['Why Threads Are A Bad Idea (for most
    purposes)].\n Presentation given at the 1996 Usenix Annual
-   Technical Conference, January 1996.\n
+   Technical Conference, January 1996.\n\n
 
-[#the-10k-problem]
-
-# [^Kegel, D 1999-2006]. ['The C10K problem]. High quality web resource about
+# [#the-10k-problem] [^Kegel, D 1999-2006]. ['The C10K problem]. \n\n High quality web resource about
 scalability of highly concurrent Internet services. Provides a
-detailed analysis of both threaded and event drive design, plus
+detailed analysis benefits and caveats of both threaded and event driven designs, plus
 pointers to many other web resources and
-papers. [@http://www.kegel.com/c10k.html]. 
+papers. [@http://www.kegel.com/c10k.html]. \n\n
 
-[#cooperative-task-management]
-
-#[^Adya, A., Howell, J., Theimer, M., Bolosky, W. J., and Doucer, J. R. 2002].
+#[#cooperative-task-management] [^Adya, A., Howell, J., Theimer, M., Bolosky, W. J., and Doucer, J. R. 2002].
   ['Cooperative Task Management without Manual Stack Management]. \nIn Proceedings
-  of USENIX Annual Technical Conference. USENIX, Monterey, CA.
+  of USENIX Annual Technical Conference. USENIX, Monterey, CA.\n\n
 
-[#why-events-are-a-bad-idea]
-
-#[^Behren, R., Condit, J., and Brewer, E. 2003]. ['Why Events are a Bad Idea (for high-
+#[#why-events-are-a-bad-idea] [^Behren, R., Condit, J., and Brewer, E. 2003]. ['Why Events are a Bad Idea (for high-
   concurrency servers)]. \nIn Proceedings of the 9th Workshop on Hot Topics in Operating
-  Systems (HotOS IX). Lihue, HI.
+  Systems (HotOS IX). Lihue, HI.\n\n
 
-[#moura-04-04]
-
-#[^Moura, A. L., Ierusalimschy R. 2004]. ['Revisiting Coroutines].\nIn
+#[#moura-04-04] [^Moura, A. L., Ierusalimschy R. 2004]. ['Revisiting
+Coroutines].\n\n In
 32 pages describes coroutines, demonstrates their equivalence to
 continuation, shows the /Lua/ coroutine interface and gives high
 quality examples of coroutine usage. Highly recommended
-read. Available at [@www.inf.puc-rio.br/~roberto/docs/MCC15-04.pdf].
+read. Available at [@www.inf.puc-rio.br/~roberto/docs/MCC15-04.pdf].\n\n
 
-[#itanium-coroutines]
-
-#[^Saboff, M 2003]. ['Implementing User Level Threading on the Intel
-Itanium Architecture].\n Explains why `setjmp/longjmp` cannot be used
+#[#itanium-coroutines] [^Saboff, M 2003]. ['Implementing User Level Threading on the Intel
+Itanium Architecture].\n\n Explains why `setjmp/longjmp` cannot be used
 to implement coroutines on the Itanium architecture and then describe
-an alternative implementation.
+an alternative implementation.\n\n
 
-[#agner-fog-documentation]
-
-#[^Fog, A 2006]. ['Microarchitecture of Intel and AMD CPU's. An
+#[#agner-fog-documentation] [^Fog, A 2006]. ['Microarchitecture of Intel and AMD CPU's. An
 optimization guide for assembly programmers and compiler
-makers].\nProbably the best in-depth guide about optimizing for the
-IA-32 and IA-32E architecture.
+makers].\n\n Probably the best in-depth guide about optimizing for the
+IA-32 and IA-32E architecture. Available at [@http://www.agner.org/optimize/]\n\n
 
-[#intel-optimization-guide]
-
-#[^Intel, 2006]. ['IA-32 Intel Architecture Optimization Reference
-Manual]. Order number: 248066-013US.
+#[#intel-optimization-guide] [^Intel, 2006]. ['IA-32 Intel Architecture Optimization Reference
+Manual]. Order number: 248066-013US.\n\n
 
 [endsect]
   
