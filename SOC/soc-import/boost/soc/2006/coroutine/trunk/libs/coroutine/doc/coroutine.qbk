@@ -84,6 +84,12 @@ DefaultConstructible]]
 [def __HP_coroutines__ [link ref-itanium-corotines \[HP\]]]
 [def __Fog06__ [link agner-fog-documentation \[Fog06\]]]
 [def __Intel06__ [link intel-optimization-guide \[Intel06\]]]
+[def __Adya02__ [link cooperative-task-management \[Adya02\]]]
+[def __VonBehren02__ [link why-events-are-a-bad-idea \[VonBehren03\]]]
+[def __Ousterhout95__ [link why-threads-are-a-bad-idea
+\[Ousterhout95\]]]
+[def __Kegel99__ [link the-10k-problem \[Kegel99\]]]
+
 
 [/ external links]
 [def __OpenMP__ [@link-to-openmp-webpage OpenMP]]
@@ -93,7 +99,9 @@ DefaultConstructible]]
 [def __Pth__ [@link-to-pth-webpage Pth]]
 [def __BoostAsio__ [@link-to-boost-asio Boost.Asio]]
 [def __BoostFunction__ [@link-to-boost-asio Boost.Function]]
-[def __complex_matcher_cpp__ [@link-to-complex_matcher.cpp complex_matcher.cpp]]
+[def __complex_matcher_cpp__ [@../../../libs/coroutine/example/complex_matcher.cpp complex_matcher.cpp]]
+[def __token_passing_cpp__ [@../../../libs/coroutine/example/token_passing.cpp token_passing.cpp]]
+
 
 [section:intro Introduction]
 
@@ -2156,6 +2164,30 @@ be reseted and return to the non-signaled state. Such a future can be rebound to
 another asynchronous operation. Resetting a `pending()` future is
 undefined behavior.
 
+[h3 Multiple parameter futures]
+
+It is possible to have futures that represent a tuple of values
+instead of a single value. For example:
+
+  coro::__future__<int, void*> my_future;
+
+In this `operator*` will return a tuple of type `boost::tuple<int,
+void*>`:
+
+  int a;
+  void * b;
+
+  boost::tie(a, b) = *my_future;
+
+If `my_future` is passed as parameter to `make_callback()` the
+equivalent signature of the function object returned by this function
+will be:
+
+  void(int, void*)
+
+This is useful whenever a an asynchronous function may return more
+than one parameter.
+
 [h3 Waiting for multiple futures]
 
 Boost.Coroutine allows multiple futures to be waited at the same
@@ -2171,6 +2203,83 @@ blocks until all future arguments have been signaled.
 [endsect]
 
 [section:asio Events: Boost.Asio]
+
+[h3 Introduction]
+
+While Boost.Coroutine has grown up as general coroutine implementation,
+its original design goal was to help write asynchronous applications
+based on Boost.Asio. 
+
+For a long time, threads have been considered a bad choice for
+building high concurrency servers capable of handling an high number
+of clients at the same time. Thread switching overhead, lock
+contention, system limits on the amount of threads, and the inherent
+difficulty of writing scalable highly threaded applications have been
+cited as the reasons to prefer event driven dispatch loop based
+model. This has been the main reason Boost.Asio has been written. See
+__Ousterhout95__ and __Kegel99__ for reference.
+
+Many researchers believe today (see __Adya02__ and __VonBehren03__ for
+the most known examples) that the best way to write high
+concurrency servers is to use a cooperative task model with an
+underlying scheduler that used asynchronous dispatching. This gives
+the performance of event driven designs without the need to divide the
+processing of a job in a myriad of related callbacks.
+
+Boost.Coroutine fits perfectly the role of the cooperative task model,
+while Boost.Asio can be used seamlessly as a coroutine scheduler.
+
+[h3 Usage]
+
+A __coroutine__ cannot currently be used as an `asio::io_service` callback, because
+Asio requires all callback objects to be copyable. In the future Asio
+might relax this requirement and require only copyability. In the mean
+time `__shared_coroutine__` can be used as a workaround. 
+
+Asynchronous operations can be waited using a __future__ object. For
+example:
+
+  void foo(coro::coroutine<void()>::self& self) {
+    typedef boost::asio::ip::tcp::socket socket_type;
+    typedef boost::asio::error error_type;
+    char token[1024];
+
+    socket_type source;
+    coro::future<error_type, std::size_t> read_result(self);
+    boost::asio::async_read(source, 
+                            boost::asio::buffer(token, 1024),
+                            coro::__make_callback__(read_error));
+    ...
+    coro::__wait__(source);
+    if(source->get<0>()) {
+      std::cout <<"Error\n!";
+    } else {
+      std::cout <<"Written "<<source->get<1>()<<" bytes";
+    }
+
+`__wait__` will appropriately cause the coroutine to be rescheduled in the
+`asio::io_service` when the read will be completed.
+
+There is no function to simply yield the CPU and be executed at a
+latter time, but the following code may be equivalent. Let `demux` be
+an instance of an `asio::io_service`:
+
+  coro::__future__<> dummy(self);
+  demux.post(coro::__make_callback__(dummy));
+  coro::wait(dummy);
+
+Will cause the current coroutine to be rescheduled by the
+`io_service`.
+
+For a more complex example see __token_passing_cpp__.
+
+[/should provide some examples here]
+
+[h3 Conclusions]
+
+Boost.Coroutine can potentially greatly simplify the design of event
+driven network applications. 
+
 [endsect]
 
 [section:threads Coroutines and thread safety]
@@ -3113,7 +3222,7 @@ to `IA32` CPUs.
 
 [section:coroutine_thread Interaction between coroutines and threads]
 
-[Introduction]
+[h3 Introduction]
 
 On the planning stage of the library, it was believed that being able
 to migrate a coroutine from one thread to another was a desirable
@@ -3122,7 +3231,128 @@ completion port abstraction provided by the `Win32 API`. During
 the implementation stage it became apparent that guaranteeing this
 property was going to be a considerable challenge. 
 
-In the end 
+In the end the decision to prohibit migration as been taken. 
+This section shows why it is unfeasible with current
+compilers/standard libraries to allow coroutine migration.
+
+[h3 The problems]
+
+One of the problems with migrating coroutines is the handling of thread local
+storage. Most compilers offer extensions to declare global object as
+being thread local. If such an object is accessed, the thread specific
+copy is acceded instead. Consider the following `POSIX` specific code
+(it is plain `C` to simplify the generated assembler output, but is by
+no mean restricted to it):
+
+  __thread int some_val;
+
+  void bar();
+
+  int foo () {
+    while(1) {
+      bar();
+      printf("%p", &test);
+    }
+  }
+
+Let suppose that every time `bar()` is invoked, `foo()` is suspended
+and then resumed in another thread. We would expect that at every
+iteration `printf()` will print a different address for `test`, as
+every thread has its own specific instance. For this function GCC
+generates the current assembler output (non relevant parts have been
+omitted): 
+
+[pre
+  .L2
+        call    bar
+        movl    %gs:0, %eax
+        leal    test@NTPOFF(%eax), %eax
+        pushl   %eax
+        pushl   $.LC0
+        call    printf
+        popl    %eax
+        popl    %edx
+        jmp     .L2
+]
+
+This is extremely straight forward. The first line calls bar, the
+second line loads from the thread register (GCC uses the `GS` segment
+register as a thread register) the address of the *TLS* area, then
+the third line load the address of the current thread instance of
+`test` in `EAX`. The fourth and fifth line push on the stack the
+parameters for printf (`$.LCO` is the symbol that contains the string
+`"%p"`). The sixth line calls it. The seventh and eight line pop the
+argument from the stack and finally the last line returns to the
+first.
+
+This code does the right thing at every iteration print the a new
+value for the address of `test`. If we compile at an higher
+optimization level things are no longer fine:
+
+[pre
+        movl    %gs:0, %eax
+        leal    test@NTPOFF(%eax), %ebx
+.L2:
+        call    bar
+        pushl   %ebx
+        pushl   $.LC0
+        call    printf
+	popl    %ebx
+        popl    %edx
+        jmp     .L2
+]
+
+At optimization level [^-O1] (usually considered safe), the compiler
+hoists the load of the address of `test` outside the loop. Now the
+loop will always print the same value.
+
+Unfortunately this compiler provides no switch to disable this
+specific optimization. Other compilers might do the same thing. The
+only compiler we know that provides a switch to explicitly disable
+this optimization is Visual C++, as this is often used with code that
+uses fibers. It might be argued that `__thread` is not part of the
+`C++` standard, so its handling is undefined any way. Putting aside
+the fact that something similar to `__thread` is likely to be part of
+the next release of the standard, abstaining from using it is not a
+solution. For example on many systems `errno` macro expands to a
+symbol declared the equivalent of `__thread`. Also thread local
+variables might be used in standard library facilities (memory
+allocation is a very likely candidate), and an optimizer capable of
+inlining library functions might hoist loads of those variables
+outside loops or at least move them across yield points.
+
+Fixing compilers is unfortunately not enough. Operating systems might
+need to be fixed too: consider the following code:
+
+  mutex mtx;
+
+  void bar();
+
+  void foo() {
+    lock(mtx);
+    bar();
+    unlock(mtx);
+  }
+
+`bar()` may migrate the current coroutine to another thread. Aside of
+the fact that is bad practice to hold a lock across a yield point,
+many operating systems require a mutex to be unlocked by the same
+thread that locked it, horribly breaking the code above.
+
+[h3 Conclusion]
+
+The above scenarios are just two examples. There are many possible
+ways that coroutine migration could break otherwise perfectly fine
+code. For reference see
+[@http://blogs.msdn.com/cbrumme/archive/2004/02/21/77595.aspx this
+blog about using fibers in .NET code] and
+[@http://msdn.microsoft.com/library/default.asp?url=/library/en-us/dnsqldev/html/sqldev_02152005.asp
+MSDN article about the perils of fiber mode in SQL Server].
+
+In the end Boost.Coroutine provides the only thread safety guarantees
+that are believed to be safe. Note that, as coroutines are not to be
+shared between threads, internal reference counting is not thread safe
+(it doesn't necessarily use atomic operations).
 
 [endsect]
 
