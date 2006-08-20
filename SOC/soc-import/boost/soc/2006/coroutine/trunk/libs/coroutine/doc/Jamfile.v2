@@ -3,6 +3,22 @@
 import doxygen ;
 import quickbook ;
 
+doxygen autodoc
+    :
+	[ glob ../../../boost/coroutine/*.hpp ]
+    :
+ 	<doxygen:param>EXTRACT_ALL=YES	
+        <doxygen:param>"PREDEFINED=\"BOOST_COROUTINE_DEDUCED_TYPENAME_DEFAULT=typename\" \\
+                                   \"BOOST_DEDUCED_TYPENAME=typename\""
+        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+    ;
+
 xml coroutine
     :
         coroutine.qbk

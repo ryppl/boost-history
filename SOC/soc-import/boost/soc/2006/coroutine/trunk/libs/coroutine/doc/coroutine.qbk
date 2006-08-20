@@ -2243,9 +2243,6 @@ For a rationale for the current requirements see
 
 [endsect][/advanced]
 
-[section:reference Reference]
-[endsect]
-
 [section:design Design Rationale]
 [h3 Reference counting and movability]
 
@@ -3137,6 +3134,7 @@ In the end
 [section:bibliography Bibliography]
 [endsect]
   
+[xinclude autodoc.boostbook]
 
  
 
