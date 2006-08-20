@@ -78,24 +78,24 @@ DefaultConstructible]]
  
 
 [/ bibliography links]
-[def __marlin80__ [link to-marlin-doctoral-thesis-here \[Marlin80\]]]
-[def __moura04a__ [link to-moura-04-04 \[Moura04\]]]
-[def __ActorModel__ [link ref-to-actor-model-biblio \[ActorModel\]]]
-[def __HP_coroutines__ [link ref-itanium-corotines \[HP\]]]
-[def __Fog06__ [link agner-fog-documentation \[Fog06\]]]
-[def __Intel06__ [link intel-optimization-guide \[Intel06\]]]
-[def __Adya02__ [link cooperative-task-management \[Adya02\]]]
-[def __VonBehren02__ [link why-events-are-a-bad-idea \[VonBehren03\]]]
-[def __Ousterhout95__ [link why-threads-are-a-bad-idea
+ [def __marlin80__ [link marlin-doctoral-thesis \[Marlin80\]]]
+ [def __moura04a__ [link moura-04-04 \[Moura04\]]]
+ [def __HP_coroutines__ [link itanium-coroutines \[Saboff03\]]]
+ [def __Fog06__ [link agner-fog-documentation \[Fog06\]]]
+ [def __Intel06__ [link intel-optimization-guide \[Intel06\]]]
+ [def __Adya02__ [link cooperative-task-management \[Adya02\]]]
+ [def __VonBehren02__ [link why-events-are-a-bad-idea \[VonBehren03\]]]
+ [def __Ousterhout95__ [link why-threads-are-a-bad-idea
 \[Ousterhout95\]]]
-[def __Kegel99__ [link the-10k-problem \[Kegel99\]]]
+ [def __Kegel99__ [link the-10k-problem \[Kegel99\]]]
 
 
 [/ external links]
-[def __OpenMP__ [@link-to-openmp-webpage OpenMP]]
-[def __Itanium_ABI__ [@link-to-itanium-abi OpenMP]]
-[def __LLVM__ [@link-to-itanium-abi __LLVM__]]
-[def __XXX__ [@link-to-duff-device-coroutines XXX]]
+[def __OpenMP__ [@http://www.openmp.org OpenMP]]
+[def __Itanium_ABI__ [@http://www.codesourcery.com/cxx-abi/abi.html OpenMP]]
+[def __LLVM__ [@http:/www.llvm.org __LLVM__]]
+[def __XXX__ [@http://www.chiark.greenend.org.uk/~sgtatham/coroutines.html
+Coroutines in C]]
 [def __Pth__ [@link-to-pth-webpage Pth]]
 [def __BoostAsio__ [@link-to-boost-asio Boost.Asio]]
 [def __BoostFunction__ [@link-to-boost-asio Boost.Function]]
@@ -2242,10 +2242,11 @@ example:
   void foo(coro::coroutine<void()>::self& self) {
     typedef boost::asio::ip::tcp::socket socket_type;
     typedef boost::asio::error error_type;
-    char token[1024];
 
+    char token[1024];
     socket_type source;
     coro::future<error_type, std::size_t> read_result(self);
+    ...
     boost::asio::async_read(source, 
                             boost::asio::buffer(token, 1024),
                             coro::__make_callback__(read_error));
@@ -2256,6 +2257,7 @@ example:
     } else {
       std::cout <<"Written "<<source->get<1>()<<" bytes";
     }
+  }
 
 `__wait__` will appropriately cause the coroutine to be rescheduled in the
 `asio::io_service` when the read will be completed.
@@ -2266,10 +2268,13 @@ an instance of an `asio::io_service`:
 
   coro::__future__<> dummy(self);
   demux.post(coro::__make_callback__(dummy));
-  coro::wait(dummy);
+  coro::wait(dummy); // the current coroutine is rescheduled
+  ...
 
 Will cause the current coroutine to be rescheduled by the
-`io_service`.
+`io_service`. Notice that simply invoking `self.yield` will not work,
+as `io_service` will not automatically reschedule the coroutine. Also,
+it is not possible to yield if there are any pending operations.
 
 For a more complex example see __token_passing_cpp__.
 
@@ -2278,7 +2283,9 @@ For a more complex example see __token_passing_cpp__.
 [h3 Conclusions]
 
 Boost.Coroutine can potentially greatly simplify the design of event
-driven network applications. 
+driven network applications when used in conjunction with
+Boost.Asio. If you plan to use multiple threads, be sure to read the
+about the [link coroutine.threads thread safety guarantees] of Boost.Coroutine.
 
 [endsect]
 
@@ -3238,9 +3245,8 @@ compilers/standard libraries to allow coroutine migration.
 [h3 The problems]
 
 One of the problems with migrating coroutines is the handling of thread local
-storage. Most compilers offer extensions to declare global object as
-being thread local. If such an object is accessed, the thread specific
-copy is acceded instead. Consider the following `POSIX` specific code
+storage. If such an object is accessed, the thread specific
+copy is acceded instead. Consider the following code
 (it is plain `C` to simplify the generated assembler output, but is by
 no mean restricted to it):
 
@@ -3255,6 +3261,10 @@ no mean restricted to it):
     }
   }
 
+The `__thread` storage class is a `GCC` extension to mark a global
+object as having thread specific storage. Most compilers that support
+threaded applications have similar facilities albeit with slightly
+different syntaxes.
 Let suppose that every time `bar()` is invoked, `foo()` is suspended
 and then resumed in another thread. We would expect that at every
 iteration `printf()` will print a different address for `test`, as
@@ -3275,7 +3285,7 @@ omitted):
         jmp     .L2
 ]
 
-This is extremely straight forward. The first line calls bar, the
+This is straightforward. The first line calls bar, the
 second line loads from the thread register (GCC uses the `GS` segment
 register as a thread register) the address of the *TLS* area, then
 the third line load the address of the current thread instance of
@@ -3302,19 +3312,21 @@ optimization level things are no longer fine:
         jmp     .L2
 ]
 
-At optimization level [^-O1] (usually considered safe), the compiler
-hoists the load of the address of `test` outside the loop. Now the
-loop will always print the same value.
+Even on an optimization level as low as [^-O1] (usually considered
+safe), the compiler hoists the load of the address of `test` outside
+the loop. Now the loop will always print the same value.
 
-Unfortunately this compiler provides no switch to disable this
+Unfortunately this specific compiler provides no switch to disable this
 specific optimization. Other compilers might do the same thing. The
 only compiler we know that provides a switch to explicitly disable
 this optimization is Visual C++, as this is often used with code that
-uses fibers. It might be argued that `__thread` is not part of the
-`C++` standard, so its handling is undefined any way. Putting aside
+uses fibers.
+
+ It might be argued that `__thread` is not part of the
+`C++` standard, so its handling is undefined anyway. Putting aside
 the fact that something similar to `__thread` is likely to be part of
 the next release of the standard, abstaining from using it is not a
-solution. For example on many systems `errno` macro expands to a
+solution. For example on many systems the `errno` macro expands to a
 symbol declared the equivalent of `__thread`. Also thread local
 variables might be used in standard library facilities (memory
 allocation is a very likely candidate), and an optimizer capable of
@@ -3322,7 +3334,7 @@ inlining library functions might hoist loads of those variables
 outside loops or at least move them across yield points.
 
 Fixing compilers is unfortunately not enough. Operating systems might
-need to be fixed too: consider the following code:
+need to be fixed too; consider the following code:
 
   mutex mtx;
 
@@ -3334,10 +3346,11 @@ need to be fixed too: consider the following code:
     unlock(mtx);
   }
 
-`bar()` may migrate the current coroutine to another thread. Aside of
+Where `mutex` is some synchronization primitive, and `bar()` a
+function may migrate the current coroutine to another thread. Aside of 
 the fact that is bad practice to hold a lock across a yield point,
 many operating systems require a mutex to be unlocked by the same
-thread that locked it, horribly breaking the code above.
+thread that locked it, breaking the code above.
 
 [h3 Conclusion]
 
@@ -3350,9 +3363,9 @@ blog about using fibers in .NET code] and
 MSDN article about the perils of fiber mode in SQL Server].
 
 In the end Boost.Coroutine provides the only thread safety guarantees
-that are believed to be safe. Note that, as coroutines are not to be
-shared between threads, internal reference counting is not thread safe
-(it doesn't necessarily use atomic operations).
+that are believed to be safe on all systems. Note that, as coroutines
+are not to be shared between threads, internal reference counting is
+not thread safe (it doesn't necessarily use atomic operations).
 
 [endsect]
 
@@ -3362,6 +3375,65 @@ shared between threads, internal reference counting is not thread safe
 [endsect]
 
 [section:bibliography Bibliography]
+
+[#marlin-doctoral-thesis]
+
+# [^Marlin, C. D. 1980]. ['Coroutines: A Programming Methodology, a Language Design
+  and an Implementation].\n LNCS 95, Springer-Verlag.
+
+[#why-threads-are-a-bad-idea]
+
+# [^Ousterhout, J. K. 1996]. ['Why Threads Are A Bad Idea (for most
+   purposes)].\n Presentation given at the 1996 Usenix Annual
+   Technical Conference, January 1996.\n
+
+[#the-10k-problem]
+
+# [^Kegel, D 1999-2006]. ['The C10K problem]. High quality web resource about
+scalability of highly concurrent Internet services. Provides a
+detailed analysis of both threaded and event drive design, plus
+pointers to many other web resources and
+papers. [@http://www.kegel.com/c10k.html]. 
+
+[#cooperative-task-management]
+
+#[^Adya, A., Howell, J., Theimer, M., Bolosky, W. J., and Doucer, J. R. 2002].
+  ['Cooperative Task Management without Manual Stack Management]. \nIn Proceedings
+  of USENIX Annual Technical Conference. USENIX, Monterey, CA.
+
+[#why-events-are-a-bad-idea]
+
+#[^Behren, R., Condit, J., and Brewer, E. 2003]. ['Why Events are a Bad Idea (for high-
+  concurrency servers)]. \nIn Proceedings of the 9th Workshop on Hot Topics in Operating
+  Systems (HotOS IX). Lihue, HI.
+
+[#moura-04-04]
+
+#[^Moura, A. L., Ierusalimschy R. 2004]. ['Revisiting Coroutines].\nIn
+32 pages describes coroutines, demonstrates their equivalence to
+continuation, shows the /Lua/ coroutine interface and gives high
+quality examples of coroutine usage. Highly recommended
+read. Available at [@www.inf.puc-rio.br/~roberto/docs/MCC15-04.pdf].
+
+[#itanium-coroutines]
+
+#[^Saboff, M 2003]. ['Implementing User Level Threading on the Intel
+Itanium Architecture].\n Explains why `setjmp/longjmp` cannot be used
+to implement coroutines on the Itanium architecture and then describe
+an alternative implementation.
+
+[#agner-fog-documentation]
+
+#[^Fog, A 2006]. ['Microarchitecture of Intel and AMD CPU's. An
+optimization guide for assembly programmers and compiler
+makers].\nProbably the best in-depth guide about optimizing for the
+IA-32 and IA-32E architecture.
+
+[#intel-optimization-guide]
+
+#[^Intel, 2006]. ['IA-32 Intel Architecture Optimization Reference
+Manual]. Order number: 248066-013US.
+
 [endsect]
   
 [xinclude autodoc.boostbook]
