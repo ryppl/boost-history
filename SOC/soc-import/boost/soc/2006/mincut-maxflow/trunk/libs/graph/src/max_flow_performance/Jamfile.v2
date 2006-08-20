@@ -1,5 +1,14 @@
 exe boost_kolmo
-	: boost_kolmo.cpp
+  : boost_kolmo.cpp
+;
+
+exe boost_kolmo_optimized
+  : boost_kolmo_optimized.cpp
+  : <cflags>-DUSE_OPTIMIZED_GRAPH
+;
+
+exe boost_kolmo_sparse
+  : boost_kolmo_sparse.cpp
 ;
 
 exe boost_push-relabel
@@ -9,10 +18,6 @@ exe boost_push-relabel
 exe kolmogorov
   : kolmogorov.cpp external/kolmogorov/graph.cpp external/kolmogorov/maxflow.cpp
 ;
-
-#exe h_prf
-#  : external/h_prf/hi_pr.c external/h_prf/parser.c external/h_prf/types.h external/h_prf/timer.c
-#;
 
 exe maxflow_preprocess
   : maxflow_preprocess.cpp
