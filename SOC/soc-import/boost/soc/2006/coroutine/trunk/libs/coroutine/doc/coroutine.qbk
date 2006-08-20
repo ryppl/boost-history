@@ -17,12 +17,12 @@
 [/ Aug 10, 2006]
 
 [/ blurb icons]
-[def __alert__ [$alert.png]]
-[def __note__ [$note.png]]
+[def __alert__ [$images/caution.png]]
+[def __note__ [$images/note.png]]
 
 [/ pics]
 
-[def __MeleyFSM__ [$more.png]]
+[def __MeleyFSM__ [$images/meley.png]]
 
 [/ reference: classes and types]
 [def __coroutine__ [link boost::coroutines::coroutine coroutine]]
@@ -99,8 +99,8 @@ Coroutines in C]]
 [def __Pth__ [@http://www.gnu.org/software/pth/pth-manual.html Pth]]
 [def __BoostAsio__ [@link-to-boost-asio Boost.Asio]]
 [def __BoostFunction__ [@link-to-boost-asio Boost.Function]]
-[def __complex_matcher_cpp__ [@../../../libs/coroutine/example/complex_matcher.cpp complex_matcher.cpp]]
-[def __token_passing_cpp__ [@../../../libs/coroutine/example/token_passing.cpp token_passing.cpp]]
+[def __complex_matcher_cpp__ [@../../../coroutine/example/complex_matcher.cpp complex_matcher.cpp]]
+[def __token_passing_cpp__ [@../../../lcoroutine/example/token_passing.cpp token_passing.cpp]]
 
 
 [section:intro Introduction]
@@ -3421,7 +3421,9 @@ Manual]. Order number: 248066-013US.\n\n
 
 [endsect]
   
+[/temporary removed for upload
 [xinclude autodoc.boostbook]
+]
 
  
 
