@@ -104,7 +104,8 @@ namespace boost {
           m_time_vec(num_vertices(g), 0),
           m_time_map(make_iterator_property_map(m_time_vec.begin(), m_index_map)),
           m_flow(0),
-          m_time(1){
+          m_time(1),
+          m_last_grow_vertex(graph_traits<Graph>::null_vertex()){
             // initialize the color-map with gray-values
             tVertexIterator vi, v_end;
             for(tie(vi, v_end) = vertices(m_g); vi != v_end; ++vi){
@@ -115,11 +116,11 @@ namespace boost {
             tEdgeIterator ei, e_end;
             for(tie(ei, e_end) = edges(m_g); ei != e_end; ++ei) {
               m_res_cap_map[*ei] = m_cap_map[*ei];
+              assert(m_rev_edge_map[m_rev_edge_map[*ei]] == *ei); //check if the reverse edge map is build up properly
             }
             //init the search trees with the two terminals
             set_tree(m_source, tColorTraits::white());
             set_tree(m_sink, tColorTraits::black());
-            //populate the active_nodes queue with the two terminals
             m_time_map[m_source] = 1;
             m_time_map[m_sink] = 1;
           }
@@ -127,8 +128,8 @@ namespace boost {
           ~kolmogorov(){}
       
           tEdgeVal max_flow(){
-            //as we dont add nodes that have only a sink and no source connect in augment_direct_paths(), we have to add the sink to the active nodes
             add_active_node(m_sink);
+            //augment direct paths from SOURCE->SINK and SOURCE->VERTEX->SINK
             augment_direct_paths();
             //start the main-loop
             while(true){
@@ -152,6 +153,7 @@ namespace boost {
             //in a first step, we augment all direct paths from source->NODE->sink
             //and additionally paths from source->sink
             //this improves especially graphcuts for segmentation, as most of the nodes have source/sink connects
+            //but shouldn't have an impact on other maxflow problems (this is done in grow() anyway)
             tOutEdgeIterator ei, e_end;
             for(tie(ei, e_end) = out_edges(m_source, m_g); ei != e_end; ++ei){
               tEdge from_source = *ei;
@@ -173,20 +175,21 @@ namespace boost {
                   add_active_node(current_node);
                   set_edge_to_parent(current_node, from_source);
                   m_dist_map[current_node] = 1;
+                  m_time_map[current_node] = 1;
                   //add stuff to flow and update residuals
                   //we dont need to update reverse_edges, as incoming/outgoing edges to/from source/sink don't count for max-flow
-                  m_res_cap_map[from_source]-= cap_to_sink;
+                  m_res_cap_map[from_source] -= cap_to_sink;
                   m_res_cap_map[to_sink] = 0;
                   m_flow += cap_to_sink;
                 } else if(cap_to_sink > 0){
-                  //nothing to augment
                   set_tree(current_node, tColorTraits::black());
                   add_active_node(current_node);
                   set_edge_to_parent(current_node, to_sink);
                   m_dist_map[current_node] = 1;
+                  m_time_map[current_node] = 1;
                   //add stuff to flow and update residuals
                   //we dont need to update reverse_edges, as incoming/outgoing edges to/from source/sink don't count for max-flow
-                  m_res_cap_map[to_sink]-= cap_from_source;
+                  m_res_cap_map[to_sink] -= cap_from_source;
                   m_res_cap_map[from_source] = 0;
                   m_flow += cap_from_source;
                 }
@@ -196,11 +199,12 @@ namespace boost {
                 set_tree(current_node, tColorTraits::white());
                 set_edge_to_parent(current_node, from_source);
                 m_dist_map[current_node] = 1;
+                m_time_map[current_node] = 1;
                 add_active_node(current_node);
               }
-            }            
+            }
           }
-          
+
           /**
           * returns a pair of an edge and a boolean. if the bool is true, the edge is a connection of a found path from s->t , read "the link" and 
           *   source(returnVal, m_g) is the end of the path found in the source-tree
@@ -214,8 +218,12 @@ namespace boost {
               if(get_tree(current_node) == tColorTraits::white()){ 
                 //source tree growing
                 tOutEdgeIterator ei, e_end;
-                for(tie(ei, e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
-                  tEdge out_edge = *ei;
+                if(current_node != m_last_grow_vertex){
+                  m_last_grow_vertex = current_node;
+                  tie(m_last_grow_edge_it, m_last_grow_edge_end) = out_edges(current_node, m_g);
+                } 
+                for(; m_last_grow_edge_it != m_last_grow_edge_end; ++m_last_grow_edge_it){
+                  tEdge out_edge = *m_last_grow_edge_it;
                   if(m_res_cap_map[out_edge] > 0){ //check if we have capacity left on this edge
                     tVertex other_node = target(out_edge, m_g);
                     if(get_tree(other_node) == tColorTraits::gray()){ //it's a free node
@@ -239,11 +247,15 @@ namespace boost {
                 } //for all out-edges
               } //source-tree-growing
               else{
-                tOutEdgeIterator ei, e_end;
                 assert(get_tree(current_node) == tColorTraits::black());
-                for(tie(ei, e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
-                  tEdge in_edge = m_rev_edge_map[*ei];
-                  if(m_res_cap_map[in_edge] > 0){ //check if theres capacity left
+                tOutEdgeIterator ei, e_end;
+                if(current_node != m_last_grow_vertex){
+                  m_last_grow_vertex = current_node;
+                  tie(m_last_grow_edge_it, m_last_grow_edge_end) = out_edges(current_node, m_g);
+                }
+                for(; m_last_grow_edge_it != m_last_grow_edge_end; ++m_last_grow_edge_it){
+                  tEdge in_edge = m_rev_edge_map[*m_last_grow_edge_it];
+                  if(m_res_cap_map[in_edge] > 0){ //check if there is capacity left
                     tVertex other_node = source(in_edge, m_g);
                     if(get_tree(other_node) == tColorTraits::gray()){ //it's a free node
                       set_tree(other_node, tColorTraits::black());      //aquire that node to our search tree
@@ -488,6 +500,7 @@ namespace boost {
             assert(m_active_nodes.front() == v);
             m_active_nodes.pop();
             m_in_active_list_map[v] = false;
+            m_last_grow_vertex = graph_traits<Graph>::null_vertex();
           }
 
           /**
@@ -651,6 +664,9 @@ namespace boost {
           iterator_property_map<std::vector<long>::iterator, IndexMap> m_time_map;
           tEdgeVal m_flow;
           long m_time;
+          tVertex m_last_grow_vertex;
+          tOutEdgeIterator m_last_grow_edge_it;
+          tOutEdgeIterator m_last_grow_edge_end;
     };
   } //namespace detail
   
@@ -693,8 +709,11 @@ namespace boost {
         return algo.max_flow();
   }
 
+namespace detail{
+  
+}
   /**
-   * non-named-parameter version, given: capacity, residucal_capacity, reverse_edges, and an index map. Use this if you are only interested in the flow-value
+   * non-named-parameter version, given: capacity, residucal_capacity, reverse_edges, and an index map.
    */
   template <class Graph, class CapacityEdgeMap, class ResidualCapacityEdgeMap, class ReverseEdgeMap, class IndexMap>
   typename property_traits<CapacityEdgeMap>::value_type
