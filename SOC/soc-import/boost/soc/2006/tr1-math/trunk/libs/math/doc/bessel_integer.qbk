@@ -67,9 +67,9 @@ of integer order. Moreover, they are commonly used and deserve to be
 implemented separately at their own right. Most numerical libraries
 include them as independent functions.
 
-The function domains are ['_J0(x)]: ([^-_inf, _inf]), ['_Y0(x)]: ([^0, _inf]).
+The function domains are ['[J 0](x)]: ([^-_inf, _inf]), ['[Y 0](x)]: ([^0, _inf]).
 
-[note ['_J0(x)] is even function.]
+[note ['[J 0](x)] is even function.]
 
 [$plots/bessel_0.png]
 
@@ -134,9 +134,9 @@ of integer order. Moreover, they are commonly used and deserve to be
 implemented separately at their own right. Most numerical libraries
 include them as independent functions.
 
-The function domains are ['_J1(x)]: ([^-_inf, _inf]), ['_Y1(x)]: ([^0, _inf]).
+The function domains are ['[J 1](x)]: ([^-_inf, _inf]), ['[Y 1](x)]: ([^0, _inf]).
 
-[note ['_J1(x)] is odd function.]
+[note ['[J 1](x)] is odd function.]
 
 [$plots/bessel_1.png]
 
@@ -201,19 +201,19 @@ Bessel functions of order 0] and [link bessel_1 Bessel functions
 of order 1], with the help of [link bessel_recur recurrence
 relations].
 
-The function domains are ['_Jn(x)]: ([^-_inf, _inf]), ['_Yn(x)]: ([^0, _inf]).
+The function domains are ['[J n](x)]: ([^-_inf, _inf]), ['[Y n](x)]: ([^0, _inf]).
 
-[note ['_Jn(x)] is even function when ['n] is even and odd function
+[note ['[J n](x)] is even function when ['n] is even and odd function
 when ['n] is odd.]
 
 [$plots/bessel_n.png]
 
 The forward recursion itself is stable for ['n < |x|] and unstable
-for ['n >= |x|]. ['_Yn(x)] is the dominant solution of the
+for ['n >= |x|]. ['[Y n](x)] is the dominant solution of the
 [link bessel_recur recurrence relation], thus the forward recursion
-is always OK for it. However, ['_Jn(x)] is the minimal solution,
+is always OK for it. However, ['[J n](x)] is the minimal solution,
 so in unstable regions, Miller's algorithm [[link 1]] [[link 2]]
-has to be used.
+and backward recursion must be used.
 
 [heading Testing]
 

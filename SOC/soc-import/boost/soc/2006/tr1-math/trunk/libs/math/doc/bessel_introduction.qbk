@@ -53,10 +53,10 @@ The following equivalent definitions are also widely used
 
 [$equations/bessel3.png]
 
-where ['_Jv(z)] is called Bessel function of the first kind and
-['_Yv(z)] is called Bessel function of the second kind.
+where ['[J _nu](z)] is called Bessel function of the first kind and
+['[Y _nu](z)] is called Bessel function of the second kind.
 
-[note ['_Yv(z)] is also known as the Neumann function.]
+[note ['[Y _nu](z)] is also known as the Neumann function.]
 
 [#bessel_recur]
 
@@ -72,7 +72,9 @@ where ['_Jv(z)] is called Bessel function of the first kind and
 
 [$equations/bessel7.png]
 
-[heading Wronskians]
+[#bessel_wronskian]
+
+[heading Wronskian]
 
 [$equations/bessel8.png]
 
@@ -88,7 +90,7 @@ where ['_Jv(z)] is called Bessel function of the first kind and
 
 All computations of Bessel functions are based on [link bessel_recur
 recurrence relations]. To use the recursion, initial values must first
-be calculated. The methods differ for ['_nu = n] is integer and ['_nu]
+be calculated. The methods differ for ['_nu] = ['n] is integer and ['_nu]
 is any real number. We will discuss the two situations separately.
 
 [endsect]

@@ -79,20 +79,14 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 [def _mu '''&mu;''']
 [def _nu '''&nu;''']
 [def _inf '''&infin;''']
-[def _J0 '''J<subscript>0</subscript>''']
-[def _J1 '''J<subscript>1</subscript>''']
-[def _Jn '''J<subscript>n</subscript>''']
-[def _Jv '''J<subscript>&nu;</subscript>''']
-[def _Y0 '''Y<subscript>0</subscript>''']
-[def _Y1 '''Y<subscript>1</subscript>''']
-[def _Yn '''Y<subscript>n</subscript>''']
-[def _Yv '''Y<subscript>&nu;</subscript>''']
 
 [def _caution This is not an official Boost library, it is a library under
               construction, the code is fully functional and robust, but
               interfaces, library structure, and function names may be
               changed without notice.]
 
+[template J[x] '''J<subscript>'''[x]'''</subscript>''']
+[template Y[x] '''Y<subscript>'''[x]'''</subscript>''']
 [template pow[x y] [x]'''<superscript>'''[y]'''</superscript>&nbsp;''']
 
 [section Introduction]

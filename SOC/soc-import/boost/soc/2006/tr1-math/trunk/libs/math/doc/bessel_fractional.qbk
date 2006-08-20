@@ -78,14 +78,39 @@ Bessel functions of integer order]. Though [link bessel_recur
 recurrence relations] are the same, the difficulty lies in the
 initial values.
 
-The function domains are ['_Jv(x)]: ([^0, _inf]), ['_Yv(x)]: ([^0, _inf]).
+The function domains are ['[J _nu](x)]: ([^0, _inf]), ['[Y _nu](x)]: ([^0, _inf]).
 
 [$plots/bessel_v.png]
 
-The algorithms consist of minimax rational approximations on
-root-bracketing intervals for small ['|x|] and Hankel asymptotic
-expansion for large ['|x|]. The coefficients of them are from
-[[link 9]] and [[link 11]] respectively.
+To get the initial values, we first normalize ['_nu] to [[^0, _inf])
+with the help of [link bessel_reflect reflection formulas]. Let
+['_mu] = ['_nu] [^-] \[['_nu] + 1/2\] where \[['x]\] is the floor
+function, then ['_mu] is the fractional part of ['_nu] such that
+|['_mu]| <= 1/2 (we need this for convergence later). The idea is to
+calculate ['[J _mu](x)], ['[J _mu+1](x)], ['[Y _mu](x)], ['[Y _mu+1](x)]
+and use them to obtain ['[J _nu](x)], ['[Y _nu](x)].
+
+The algorithm is called Steed's method [[link 3]], which needs two
+continued fractions as well as the [link bessel_wronskian Wronskian].
+
+[$equations/bessel11.png]
+
+[$equations/bessel12.png]
+
+The continued fractions are computed using the modified Lentz's method
+[[link 13]]. Their convergence rates depend on ['x], therefore we need
+different strategies for large ['x] and small ['x].
+
+['x > v], CF1 needs O(['x]) iterations to converge, CF2 converges rapidly
+
+['x <= v], CF1 converges rapidly, CF2 fails to converge when ['x] [^->] 0
+
+When ['x] is large (['x] > 2), both continued fractions converge (CF1
+may be slow for really large ['x]). ['[J _mu]], ['[J _mu+1]],
+['[Y _mu]], ['[Y _mu+1]] can be calculated by
+
+
+where
 
 [heading Testing]
 
