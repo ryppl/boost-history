@@ -41,12 +41,15 @@
 namespace boost {
 namespace tree {
 
-
 namespace inorder {
+
+/** \addtogroup traversal */
+/*\@{*/
 
 /**
  * @brief	Inorder successor
  * @param c	MultiwayCursor to be set to its inorder successor
+ * @ingroup	traversal
  */
 template <class MultiwayCursor>
 inline void forward(MultiwayCursor& c) // ++ (go right, then left)
@@ -69,11 +72,13 @@ inline void forward(MultiwayCursor& c) // ++ (go right, then left)
  * @brief	Inorder successor
  * @param c	A cursor
  * @return	Inorder successor of @a c
+ * @ingroup	traversal
  */
 template <class MultiwayCursor>
 inline MultiwayCursor next(MultiwayCursor c)
 {
-	return forward(c);
+	forward(c);
+	return c;
 }
 
 /**
@@ -103,11 +108,13 @@ inline void back(MultiwayCursor& c) // -- (go left, then right)
 template <class MultiwayCursor>
 inline MultiwayCursor prior(MultiwayCursor c)
 {
-	return back(c);
+	back(c);
+	return c;
 }
 
 /**
  * @brief	cursor to the first element of a MultiwayTree in inorder traversal
+ * 			(equivalent to postorder::begin())
  * @param t	A MultiwayTree
  * @return	Inorder begin of @a t
  */
@@ -116,12 +123,13 @@ typename MultiwayTree::cursor begin(MultiwayTree& t)
 {
 	typename MultiwayTree::cursor c = t.root();
 	while (c.has_child())
-		return c.begin();
+		c = c.begin();
+	return c;
 }
 
 /**
  * @brief	const_cursor to the first element of a MultiwayTree in inorder 
- * 			traversal (Alias of cbegin())
+ * 			traversal (Alias of cbegin(); equivalent to postorder::begin())
  * @param t	A MultiwayTree
  * @return	Inorder begin of @a t
  */
@@ -130,12 +138,13 @@ typename MultiwayTree::const_cursor begin(MultiwayTree const& t)
 {
 	typename MultiwayTree::const_cursor c = t.root();
 	while (c.has_child())
-		return c.begin();
+		c = c.begin();
+	return c;
 }
 
 /**
  * @brief	const_cursor to the first element of a MultiwayTree in inorder 
- * 			traversal
+ * 			traversal (equivalent to postorder::cbegin())
  * @param t	A MultiwayTree
  * @return	Inorder begin of @a t
  */
@@ -144,7 +153,8 @@ typename MultiwayTree::const_cursor cbegin(MultiwayTree const& t)
 {
 	typename MultiwayTree::const_cursor c = t.root();
 	while (c.has_child())
-		return c.begin();
+		c = c.begin();
+	return c;
 }
 
 /**
@@ -163,7 +173,7 @@ typename MultiwayTree::cursor end(MultiwayTree& t)
  * @brief	const_cursor to one position past the last element of a MultiwayTree 
  * 			in inorder traversal (Alias of cend())
  * @param t	A MultiwayTree
- * @return	Inorder begin of @a t
+ * @return	Inorder end of @a t
  */
 template <class MultiwayTree>
 typename MultiwayTree::const_cursor end(MultiwayTree const& t)
@@ -175,7 +185,7 @@ typename MultiwayTree::const_cursor end(MultiwayTree const& t)
  * @brief	const_cursor to one position past the last element of a MultiwayTree
  * 			in inorder traversal
  * @param t	A tree
- * @return	Inorder begin of @a t
+ * @return	Inorder end of @a t
  */
 template <class MultiwayTree>
 typename MultiwayTree::const_cursor cend(MultiwayTree const& t)
@@ -183,6 +193,7 @@ typename MultiwayTree::const_cursor cend(MultiwayTree const& t)
 	return t.cshoot();
 }
 
+/*\@}*/
 
 } // namespace inorder
 

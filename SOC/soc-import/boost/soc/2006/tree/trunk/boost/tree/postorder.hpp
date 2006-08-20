@@ -27,61 +27,54 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /**
- * @file preorder.hpp
- * Preorder traversal algorithms for cursors
+ * @file postorder.hpp
+ * Postorder traversal algorithms for cursors
  */
-
-#ifndef BOOST_TREE_PREORDER_HPP
-#define BOOST_TREE_PREORDER_HPP
-
 // TODO: Concept checks: Non-MultiwayTree or forest, parent?
+
+#ifndef BOOST_TREE_POSTORDER_HPP
+#define BOOST_TREE_POSTORDER_HPP
 
 namespace boost {
 namespace tree {
 
-namespace preorder {
-	
+namespace postorder {
+
 /** \addtogroup traversal */
 /*\@{*/
 
 /**
- * @brief	Preorder successor
- * @param c	Cursor to be set to its preorder successor
+ * @brief	Postorder successor
+ * @param c	Cursor to be set to its postorder successor
  */
 template <class Cursor>
 inline void forward(Cursor& c)
 {
-	if (c.has_child()) { // Left.
-		c = c.begin();
+	c = c.parent();
+	if (!c.parity() && (c.parent().begin() != c)) // Root?
 		return;
-	}
-	if ((++c).has_child()) { // Right.
-		c = c.begin();
-		return;
-	}
 
-	while (c.parity())
-		c = c.parent();
-	if ((++c).has_child()) {
-		c = c.begin();
+	if (c.parity()) { // Right child? Return parent.
+		--c;
 		return;
 	}
 	
-	--c;
+	// Left child.
+	++c;
 	while (c.has_child()) {
-		c = c.end();
+		c = c.begin();
 		if (!c.has_child())
-			--c;
+			++c;
 	}
-	if (!c.parity()) 
-		++c;
+	if (c.parity())
+		--c;
 	return;
 }
 
 /**
- * @brief	Preorder successor
+ * @brief	Postorder successor
  * @param c	A cursor
- * @return	Preorder successor of @a c
+ * @return	Postorder successor of @a c
  */
 template <class Cursor>
 inline Cursor next(Cursor c)
@@ -91,26 +84,41 @@ inline Cursor next(Cursor c)
 }
 
 /**
- * @brief	Preorder predecessor
- * @param c	Cursor to be set to its preorder predecessor
+ * @brief	Postorder predecessor
+ * @param c	Cursor to be set to its postorder predecessor
  */
 template <class Cursor>
 inline void back(Cursor& c)
 {
-	c = c.parent();
-	if (c.parity()) {
-		--c;
-		while (c.has_child())
-			c = c.end();
+	if (!c.parity() && (c.parent().begin() != c)) { // Root?
+		c = c.begin();
 		return;
 	}
+	if ((++c).has_child()) { // Right
+		c = c.begin();
+		return;
+	}
+	if ((--c).has_child()) { // Left
+		c = c.begin();
+		return;
+	}
+	
+	while (true) { // revisit
+	c = c.parent();
+	if (c.parity())
+		if ((--c).has_child()) {
+			c = c.begin();
+			return;
+		}
+	}
 	return;
+	
 }
 
 /**
- * @brief	Preorder predecessor
+ * @brief	Postorder predecessor
  * @param c	A cursor
- * @return	Preorder predecessor of @a c
+ * @return	Postorder predecessor of @a c
  */
 template <class Cursor>
 inline Cursor prior(Cursor c)
@@ -120,101 +128,91 @@ inline Cursor prior(Cursor c)
 }
 
 /**
- * @brief	cursor to the first element of a tree in preorder traversal
+ * @brief	cursor to the first element of a tree in postorder traversal
+ * 			(equivalent to inorder::begin)
  * @param t	A tree
- * @return	Preorder begin of @a t
+ * @return	Postorder begin of @a t
  */
 template <class Tree>
 typename Tree::cursor begin(Tree& t)
 {
-	return t.root().begin();
+	typename Tree::cursor c = t.root();
+	while (c.has_child())
+		c = c.begin();
+	return c;
 }
 
 /**
- * @brief	const_cursor to the first element of a tree in preorder traversal
- * 			(Alias of cbegin())
+ * @brief	const_cursor to the first element of a tree in postorder traversal
+ * 			(Alias of cbegin(); equivalent to inorder::begin())
  * @param t	A tree
- * @return	Preorder begin of @a t
+ * @return	Postorder begin of @a t
  */
 template <class Tree>
 typename Tree::const_cursor begin(Tree const& t)
 {
-	return t.croot().cbegin();
+	typename Tree::const_cursor c = t.root();
+	while (c.has_child())
+		c = c.begin();
+	return c;
 }
 
 /**
- * @brief	const_cursor to the first element of a tree in preorder traversal
+ * @brief	const_cursor to the first element of a tree in postorder traversal
+ * 			(equivalent to inorder::cbegin())
  * @param t	A tree
- * @return	Preorder begin of @a t
+ * @return	Postorder begin of @a t
  */
 template <class Tree>
 typename Tree::const_cursor cbegin(Tree const& t)
 {
-	return t.croot().cbegin();
+	typename Tree::const_cursor c = t.root();
+	while (c.has_child())
+		c = c.begin();
+	return c;
 }
 
 /**
- * @brief	cursor to one position past the last element of a tree in preorder 
+ * @brief	cursor to one position past the last element of a tree in postorder 
  * 			traversal
  * @param t	A tree
- * @return	Preorder end of @a t
+ * @return	Postorder end of @a t
  */
 template <class Tree>
 typename Tree::cursor end(Tree& t)
 {
-	typename Tree::cursor c = t.shoot();
-	--c;	
-	while (c.has_child()) {
-		c = c.end();
-		if (!c.has_child())
-			--c;
-	}
-	return ++c;
+	return t.root();
 }
 
 /**
  * @brief	const_cursor to one position past the last element of a tree in 
- * 			preorder traversal (Alias of cend())
+ * 			postorder traversal (Alias of cend())
  * @param t	A tree
- * @return	Preorder end of @a t
+ * @return	Postorder end of @a t
  */
 template <class Tree>
 typename Tree::const_cursor end(Tree const& t)
 {
-	typename Tree::const_cursor c = t.cshoot();
-	--c;	
-	while (c.has_child()) {
-		c = c.end();
-		if (!c.has_child())
-			--c;
-	}
-	return ++c;
+	return t.croot();
 }
 
 /**
  * @brief	const_cursor to one position past the last element of a tree in 
- * 			preorder traversal
+ * 			postorder traversal
  * @param t	A tree
- * @return	Preorder end of @a t
+ * @return	Postorder end of @a t
  */
 template <class Tree>
 typename Tree::const_cursor cend(Tree const& t)
 {
-	typename Tree::const_cursor c = t.cshoot();
-	--c;	
-	while (c.has_child()) {
-		c = c.end();
-		if (!c.has_child())
-			--c;
-	}
-	return ++c;
+	return t.croot();
 }
 
 /*\@}*/
 
-} // namespace preorder
+} // namespace postorder
 
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_PREORDER_HPP
+#endif // BOOST_TREE_POSTORDER_HPP
