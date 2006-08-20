@@ -42,7 +42,7 @@ The following are the interface headers of Boost.Bimap:
 
 [*Container]
 
-* "boost/bimap/bimap.hpp" ['(includes "boost/bimap/set_of.hpp")]
+* "boost/bimap/bimap.hpp" ['(includes "boost/bimap/set_of.hpp" and "boost/bimap/unconstrained_set_of.hpp")]
 
 [*Set Types]
 
@@ -50,8 +50,9 @@ The following are the interface headers of Boost.Bimap:
 * "boost/bimap/multiset_of.hpp"
 * "boost/bimap/unordered_set_of.hpp"
 * "boost/bimap/unordered_multiset_of.hpp"
-* "boost/bimap/list_set_of.hpp"
-* "boost/bimap/vector_set_of.hpp"
+* "boost/bimap/list_of.hpp"
+* "boost/bimap/vector_of.hpp"
+* "boost/bimap/unconstrained_set_of.hpp"
 
 [*Boost Integration]
 
@@ -74,5 +75,6 @@ is a header-only library, requiring no additional object modules.
 [include reference/unordered_set_of.qbk]
 [include reference/list_of.qbk]
 [include reference/vector_of.qbk]
+[include reference/unconstrained_set_of.qbk]
 
 [endsect]

@@ -65,7 +65,7 @@ explains this problem and how to create new types of bidirectional maps.
 
 # The extended mapping framework allows to disable a view of a bimap, including the standard
 mapping containers as a particular case. The section
-[link boost_bimap.the_tutorial.unconstrained_sets Unconstrained Sets] explain how they work.
+[link boost_bimap.the_tutorial.unconstrained_sets Unconstrained Sets] explains how they work.
 
 # The final section
 ([link boost_bimap.the_tutorial.complete_instantiation_scheme Complete Instantiation Scheme])
@@ -588,7 +588,7 @@ The following table enumerates the parameters meaning for each set type.
 
 Unconstrained sets allow the user to disable one of the views in a bimap. By doing
 so, the bimap operations can be executed faster and the memory consumption is reduced.
-This complete the bidirectional mapping framework by including unidirectional
+This completes the bidirectional mapping framework by including unidirectional
 mappings as a particular case of it.
 
 For example, the following code creates a type that is similar to a regular
@@ -600,14 +600,14 @@ For example, the following code creates a type that is similar to a regular
     b.left[1] = "one";
     b.left[2] = "two";
 
-Unconstrained sets are usefull for the following reasons.
-* A bimap type has stronger guarantees than it standard equivalent, and include
-some useful function (replace, modify) that are no founded in it.
+Unconstrained sets are useful for the following reasons:
+
+* A bimap type has stronger guarantees than its standard equivalent, and includes
+some useful functions (replace, modify) that doesn't exist in it.
 * You can look the mapping from above as a set of relations.
 * By using this kind of map, the code is very extensible. If in any moment
-during the development came up the need to perform searches from the right side
-of the mapping, then the only necessary thing to do is to change the `typedef`
-and the code will continue to work.
+of the development the need to perform searches from the right side
+of the mapping came up, the only necessary thing to do would be to change the `typedef`.
 
 [endsect]
 
