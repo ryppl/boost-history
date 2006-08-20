@@ -2,6 +2,7 @@
 import modules ;
 
 test-suite graph_test :
+#    [ run csr_graph_test.cpp ]
     [ run max_flow_test.cpp ]
     [ run kolmogorov_max_flow_test.cpp ]
     ;
