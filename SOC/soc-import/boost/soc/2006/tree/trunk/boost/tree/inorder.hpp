@@ -54,8 +54,8 @@ namespace inorder {
 template <class MultiwayCursor>
 inline void forward(MultiwayCursor& c) // ++ (go right, then left)
 {
-	if ((++c).has_child()) {
-		while (c.begin().has_child())
+	if ((++c).empty()) {
+		while (c.begin().empty())
 			c = c.begin();
 		c = c.begin();
 		return;
@@ -88,8 +88,8 @@ inline MultiwayCursor next(MultiwayCursor c)
 template <class MultiwayCursor>
 inline void back(MultiwayCursor& c) // -- (go left, then right)
 {
-    	if (c.has_child()) {
-		while (c.end().has_child())
+    	if (c.empty()) {
+		while (c.end().empty())
 			c = c.end();
 		c = c.begin();
 		return;
@@ -122,7 +122,7 @@ template <class MultiwayTree>
 typename MultiwayTree::cursor begin(MultiwayTree& t)
 {
 	typename MultiwayTree::cursor c = t.root();
-	while (c.has_child())
+	while (c.empty())
 		c = c.begin();
 	return c;
 }
@@ -137,7 +137,7 @@ template <class MultiwayTree>
 typename MultiwayTree::const_cursor begin(MultiwayTree const& t)
 {
 	typename MultiwayTree::const_cursor c = t.root();
-	while (c.has_child())
+	while (c.empty())
 		c = c.begin();
 	return c;
 }
@@ -152,7 +152,7 @@ template <class MultiwayTree>
 typename MultiwayTree::const_cursor cbegin(MultiwayTree const& t)
 {
 	typename MultiwayTree::const_cursor c = t.root();
-	while (c.has_child())
+	while (c.empty())
 		c = c.begin();
 	return c;
 }

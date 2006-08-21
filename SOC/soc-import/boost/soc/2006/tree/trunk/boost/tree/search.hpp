@@ -65,7 +65,7 @@ namespace tree {
 template <class MultiwayCursor, class T>
 MultiwayCursor lower_bound(MultiwayCursor x, MultiwayCursor y, T const& val)
 {
-	while (x.has_child()) {
+	while (x.empty()) {
 		x = std::lower_bound(x.begin(), x.end(), val);
 		if (x.parity() == 0)
 			y = x;
@@ -89,7 +89,7 @@ template <class MultiwayCursor, class T, class Cmp>
 MultiwayCursor lower_bound(MultiwayCursor x, MultiwayCursor y, T const& val, 
 						   Cmp cmp)
 {
-	while (x.has_child()) {
+	while (x.empty()) {
 		x = std::lower_bound(x.begin(), x.end(), val, cmp);
 		if (x.parity() == 0)
 			y = x;

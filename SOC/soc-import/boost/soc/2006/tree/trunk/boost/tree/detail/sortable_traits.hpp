@@ -54,21 +54,21 @@ struct sortable_traits
 //};
 
 template <class Range>
-bool has_child(Range)
+bool empty(Range)
 {
 	return true;
 }
 
 
 template <class Range>
-bool has_child(typename Range::iterator)
+bool empty(typename Range::iterator)
 {
 	return false;
 }
 
 
 template <class Range>
-bool has_child(typename Range::const_iterator)
+bool empty(typename Range::const_iterator)
 {
 	return false;
 }

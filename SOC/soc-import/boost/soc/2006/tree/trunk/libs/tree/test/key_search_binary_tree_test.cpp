@@ -54,7 +54,7 @@ void test_key_search_binary_tree()
 	BOOST_CHECK(c == my_tree.begin());
 	
 	searcher_t::cursor cur = searcher_t::cursor(c);
-	BOOST_CHECK(!cur.has_child());
+	BOOST_CHECK(!cur.empty());
 	BOOST_CHECK(cur == searcher_t::cursor(my_tree.end()));
 	
 	
@@ -66,7 +66,7 @@ void test_key_search_binary_tree()
 	BOOST_CHECK(c1 != my_tree.end());
 	
 	cur = searcher_t::cursor(c1);
-	BOOST_CHECK(!(++cur).has_child());
+	BOOST_CHECK(!(++cur).empty());
 	BOOST_CHECK(cur.parity());
 	
 	cur = cur.parent(); //header-cursor(,1) (root)
@@ -92,7 +92,7 @@ void test_key_search_binary_tree()
 	
 	BOOST_CHECK(*cur == 8);
 	
-	BOOST_CHECK(!(++cur).has_child());
+	BOOST_CHECK(!(++cur).empty());
 	BOOST_CHECK(!(--cur).parent().parity()); // root's parity...
 
 	BOOST_CHECK(*(searcher_t::cursor(c).begin()) == 8);

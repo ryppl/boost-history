@@ -32,7 +32,7 @@
  */
  
 //TODO: use Boost(TR1).Array (?)
-//		and maybe Boost.Optional (for the "has_child" stuff?)
+//		and maybe Boost.Optional (for the "empty" stuff?)
 //Templatize with arity (so we can use this for multiway trees, too?)
 
 #ifndef BOOST_TREE_DETAIL_NODE_BINARY_HPP
@@ -61,15 +61,25 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 	
 	binary_node_base()
 	{
-		child[0] = nil;
-		child[1] = nil;
 		m_parent = this;
+	}
+	
+	// this has to be outsourced from the ctor - otherwise we'd be stuck in 
+	// a recursion.
+	void init()
+	{
+		child[0] = nil();
+		child[1] = nil();
 	}
 	
 	//TODO: copy ctor. this is not trivial - what about self referrring pointers,eg?
 
-	static binary_node_base nil_obj;
-	static binary_node_base* nil;
+	static binary_node_base* nil()
+	{
+		static binary_node_base m_nil_obj;
+		static binary_node_base* m_nil = &m_nil_obj;
+		return m_nil;
+	}
 	
 	base_pointer begin()
 	{
@@ -90,6 +100,12 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 	{
 		return m_parent;
 	}
+	
+	bool const empty() const
+	{
+		return ((this != nil()) && (this != this->m_parent));
+	}
+	
 	
 	// The following adapted from the Austern et al. paper. Needs revisit bad
 	// This should be wrapped by cursor!
@@ -120,7 +136,7 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 	base_pointer splice_out(size_type parity)
 	{
 		//Node::pre_splice(q);
-		base_pointer x = child[child[0] == binary_node_base::nil];
+		base_pointer x = child[child[0] == binary_node_base::nil()];
 		x->m_parent = m_parent;
 		m_parent->child[parity] = x;
 		return x;
@@ -130,7 +146,7 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 	{
 		//Node::pre_splice(q, r);
 		// splice out q
-		base_pointer x = child[child[0] == binary_node_base::nil];
+		base_pointer x = child[child[0] == binary_node_base::nil()];
 		x->m_parent = m_parent;
 		m_parent->child[parity] = x;
 
@@ -146,9 +162,6 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 	}
 	
 };
-
-binary_node_base binary_node_base::nil_obj;
-binary_node_base* binary_node_base::nil = &binary_node_base::nil_obj;
 
 
 template <typename T, class Augment = trivial_augment, class BalanceData = trivial_metadata>

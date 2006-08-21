@@ -61,9 +61,9 @@ inline void forward(Cursor& c)
 	
 	// Left child.
 	++c;
-	while (c.has_child()) {
+	while (c.empty()) {
 		c = c.begin();
-		if (!c.has_child())
+		if (!c.empty())
 			++c;
 	}
 	if (c.parity())
@@ -94,11 +94,11 @@ inline void back(Cursor& c)
 		c = c.begin();
 		return;
 	}
-	if ((++c).has_child()) { // Right
+	if ((++c).empty()) { // Right
 		c = c.begin();
 		return;
 	}
-	if ((--c).has_child()) { // Left
+	if ((--c).empty()) { // Left
 		c = c.begin();
 		return;
 	}
@@ -106,7 +106,7 @@ inline void back(Cursor& c)
 	while (true) { // revisit
 	c = c.parent();
 	if (c.parity())
-		if ((--c).has_child()) {
+		if ((--c).empty()) {
 			c = c.begin();
 			return;
 		}
@@ -137,7 +137,7 @@ template <class Tree>
 typename Tree::cursor begin(Tree& t)
 {
 	typename Tree::cursor c = t.root();
-	while (c.has_child())
+	while (c.empty())
 		c = c.begin();
 	return c;
 }
@@ -152,7 +152,7 @@ template <class Tree>
 typename Tree::const_cursor begin(Tree const& t)
 {
 	typename Tree::const_cursor c = t.root();
-	while (c.has_child())
+	while (c.empty())
 		c = c.begin();
 	return c;
 }
@@ -167,7 +167,7 @@ template <class Tree>
 typename Tree::const_cursor cbegin(Tree const& t)
 {
 	typename Tree::const_cursor c = t.root();
-	while (c.has_child())
+	while (c.empty())
 		c = c.begin();
 	return c;
 }

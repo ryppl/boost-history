@@ -105,6 +105,7 @@ class binary_tree {
 		  		 node_allocator_type const& node_alloc = node_allocator_type())
 	: m_header(), m_value_alloc(value_alloc), m_node_alloc(node_alloc)
 	{
+		m_header.child[0] = node_base_type::nil();
 		m_header.child[1] = &m_header;
 	}
 
@@ -247,6 +248,7 @@ class binary_tree {
 		
 		node_pointer p_node = m_node_alloc.allocate(1, node_hint);
 		m_node_alloc.construct(p_node, p_val);
+		p_node->init();
 		
 		pos.add_node(p_node);
 
@@ -320,7 +322,7 @@ private:
  	 */
  	void clear(cursor c) 
  	{
- 		if (has_child(c)) {
+ 		if (empty(c)) {
  		
 	 		// delete the value this c points to	
 	 		m_value_alloc.destroy(c.node()->data());
@@ -349,9 +351,9 @@ struct sortable_traits <class binary_tree<Node, Balance, ValAlloc, NodeAlloc> >
 };
 
 template <class Node>
-bool has_child(tree_cursor<Node> cur)
+bool empty(tree_cursor<Node> cur)
 {
-	return cur.has_child();
+	return cur.empty();
 }
 
 template <class Node, class Balance, class ValAlloc, class NodeAlloc>

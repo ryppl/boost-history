@@ -51,26 +51,26 @@ namespace preorder {
 template <class Cursor>
 inline void forward(Cursor& c)
 {
-	if (c.has_child()) { // Left.
+	if (c.empty()) { // Left.
 		c = c.begin();
 		return;
 	}
-	if ((++c).has_child()) { // Right.
+	if ((++c).empty()) { // Right.
 		c = c.begin();
 		return;
 	}
 
 	while (c.parity())
 		c = c.parent();
-	if ((++c).has_child()) {
+	if ((++c).empty()) {
 		c = c.begin();
 		return;
 	}
 	
 	--c;
-	while (c.has_child()) {
+	while (c.empty()) {
 		c = c.end();
-		if (!c.has_child())
+		if (!c.empty())
 			--c;
 	}
 	if (!c.parity()) 
@@ -100,7 +100,7 @@ inline void back(Cursor& c)
 	c = c.parent();
 	if (c.parity()) {
 		--c;
-		while (c.has_child())
+		while (c.empty())
 			c = c.end();
 		return;
 	}
@@ -164,9 +164,9 @@ typename Tree::cursor end(Tree& t)
 {
 	typename Tree::cursor c = t.shoot();
 	--c;	
-	while (c.has_child()) {
+	while (c.empty()) {
 		c = c.end();
-		if (!c.has_child())
+		if (!c.empty())
 			--c;
 	}
 	return ++c;
@@ -183,9 +183,9 @@ typename Tree::const_cursor end(Tree const& t)
 {
 	typename Tree::const_cursor c = t.cshoot();
 	--c;	
-	while (c.has_child()) {
+	while (c.empty()) {
 		c = c.end();
-		if (!c.has_child())
+		if (!c.empty())
 			--c;
 	}
 	return ++c;
@@ -202,9 +202,9 @@ typename Tree::const_cursor cend(Tree const& t)
 {
 	typename Tree::const_cursor c = t.cshoot();
 	--c;	
-	while (c.has_child()) {
+	while (c.empty()) {
 		c = c.end();
-		if (!c.has_child())
+		if (!c.empty())
 			--c;
 	}
 	return ++c;

@@ -195,10 +195,9 @@ public:
 		return m_pos;
 	}
 		
-	bool const has_child() const
+	bool const empty() const
 	{
-		return ((m_parent->child[m_pos] != binary_node_base::nil) && 
-				(m_parent->child[m_pos] != m_parent));
+		return m_parent->child[m_pos]->empty();
 	}
 	
 };
@@ -348,10 +347,9 @@ public:
 		m_parent->child[m_pos] = p_node;
 	}
 	
-	bool has_child()
+	bool const empty() const
 	{
-		return ((m_parent->child[m_pos] != binary_node_base::nil) && 
-				(m_parent->child[m_pos] != m_parent));
+		return m_parent->child[m_pos]->empty();
 	}
 	
 };

@@ -169,7 +169,7 @@ key_lower_bound(tree_cursor<Node> c, typename Extract::result_type key,
 {
 	       bool end_flag = false;
 	       typedef tree_cursor<Node> cursor;
-	       while (has_child(c))
+	       while (empty(c))
 	        {
 	                Compare cmp = compare;
 	                cursor p = c;
