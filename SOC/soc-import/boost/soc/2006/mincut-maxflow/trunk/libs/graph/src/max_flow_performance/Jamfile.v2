@@ -7,6 +7,10 @@ exe boost_kolmo_optimized
   : <cflags>-DUSE_OPTIMIZED_GRAPH
 ;
 
+exe boost_kolmo_no_terminals
+  : boost_kolmo_no_terminals.cpp
+;
+
 exe boost_kolmo_sparse
   : boost_kolmo_sparse.cpp
 ;
@@ -17,8 +21,4 @@ exe boost_push-relabel
 
 exe kolmogorov
   : kolmogorov.cpp external/kolmogorov/graph.cpp external/kolmogorov/maxflow.cpp
-;
-
-exe maxflow_preprocess
-  : maxflow_preprocess.cpp
 ;
