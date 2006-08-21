@@ -82,6 +82,10 @@ consideration to decide the best way to solve them.
 * Separate the executable from the `command_line` class into its own
   object.
 
+* Allow to retrieve a handle for the current process.  Need to reintroduce
+  the `process` class being a parent of `child` and correct the use of
+  Win32 `HANDLE`s in the former: they really should be identifiers.
+
 [endsect]
 
 [section Documentation]
@@ -97,6 +101,9 @@ consideration to decide the best way to solve them.
 
 * `command_line`'s constructor: rename `firstarg` parameter to avoid
   confusion with subsequent parameters.
+
+* When process identifiers are fixed under Win32, document that process
+  identifiers are integral types.
 
 [endsect]
 
