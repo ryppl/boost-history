@@ -48,6 +48,12 @@
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">bessel_jv</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">x</span><span class="special">)</span>
 
+<span class="keyword">inline</span> <span class="keyword">float</span> <span class="identifier">cyl_bessel_jf</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">nu</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">x</span><span class="special">)</span>
+
+<span class="keyword">inline</span> <span class="keyword">double</span> <span class="identifier">cyl_bessel_j</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">nu</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span>
+
+<span class="keyword">inline</span> <span class="keyword">long</span> <span class="keyword">double</span> <span class="identifier">cyl_bessel_jl</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">double</span> <span class="identifier">nu</span><span class="special">,</span> <span class="keyword">long</span> <span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span>
+
 <span class="special">}}</span> <span class="comment">// namespaces
 </span></pre>
 <p>
@@ -62,6 +68,12 @@
 
 <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
 <span class="keyword">inline</span> <span class="identifier">T</span> <span class="identifier">bessel_yv</span><span class="special">(</span><span class="identifier">T</span> <span class="identifier">v</span><span class="special">,</span> <span class="identifier">T</span> <span class="identifier">x</span><span class="special">)</span>
+
+<span class="keyword">inline</span> <span class="keyword">float</span> <span class="identifier">cyl_neumannf</span><span class="special">(</span><span class="keyword">float</span> <span class="identifier">nu</span><span class="special">,</span> <span class="keyword">float</span> <span class="identifier">x</span><span class="special">)</span>
+
+<span class="keyword">inline</span> <span class="keyword">double</span> <span class="identifier">cyl_neumann</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">nu</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span>
+
+<span class="keyword">inline</span> <span class="keyword">long</span> <span class="keyword">double</span> <span class="identifier">cyl_neumannl</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">double</span> <span class="identifier">nu</span><span class="special">,</span> <span class="keyword">long</span> <span class="keyword">double</span> <span class="identifier">x</span><span class="special">)</span>
 
 <span class="special">}}</span> <span class="comment">// namespaces
 </span></pre>
@@ -83,7 +95,7 @@
 <p>
       </p>
 <a name="tr1_math.bessel_functions.bessel_functions_of_fractional_order.description_and_implementation"></a><h5>
-<a name="id4848364"></a>
+<a name="id4848719"></a>
         <a href="bessel_functions_of_fractional_order.html#tr1_math.bessel_functions.bessel_functions_of_fractional_order.description_and_implementation">Description
         and Implementation</a>
       </h5>
@@ -136,10 +148,73 @@
         when <span class="emphasis"><em>x</em></span> <code class="literal">-&gt;</code> 0
       </p>
 <p>
-        When <span class="emphasis"><em>x</em></span> is large (<span class="emphasis"><em>x</em></span> &gt; 2) kd
+        When <span class="emphasis"><em>x</em></span> is large (<span class="emphasis"><em>x</em></span> &gt; 2), both
+        continued fractions converge (CF1 may be slow for really large <span class="emphasis"><em>x</em></span>).
+        <span class="emphasis"><em> J<sub>&#956;</sub></em></span>, <span class="emphasis"><em> J<sub>&#956;+1</sub></em></span>, <span class="emphasis"><em> Y<sub>&#956;</sub></em></span>,
+        <span class="emphasis"><em> Y<sub>&#956;+1</sub></em></span> can be calculated by
       </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/bessel13.png" alt="bessel13"></span>
+      </p>
+<p>
+        where
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/bessel14.png" alt="bessel14"></span>
+      </p>
+<p>
+        <span class="emphasis"><em> J<sub>&#957;</sub>(x)</em></span> and <span class="emphasis"><em> Y<sub>&#957;</sub>(x)</em></span> are then
+        calculated using backward (Miller's algorithm) and forward <a href="introduction.html#bessel_recur">recurrence</a>
+        respectively.
+      </p>
+<p>
+        When <span class="emphasis"><em>x</em></span> is small (<span class="emphasis"><em>x</em></span> &lt;= 2), CF2
+        convergence may fail (but CF1 works very well). The solution here is Temme's
+        series:
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/bessel15.png" alt="bessel15"></span>
+      </p>
+<p>
+        where
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/bessel16.png" alt="bessel16"></span>
+      </p>
+<p>
+        <span class="emphasis"><em>g<sub>k</sub></em></span> and <span class="emphasis"><em>h<sub>k</sub></em></span> are also computed by recursions
+        (involving gamma functions), but the formulas are a little complicated, readers
+        are refered to [<a href="../references.html#17">17</a>].
+      </p>
+<p>
+        As the previous case, <span class="emphasis"><em> Y<sub>&#957;</sub>(x)</em></span> is calculated from the
+        forward <a href="introduction.html#bessel_recur">recurrence</a>, so is <span class="emphasis"><em> Y<sub>&#957;+1</sub>(x)</em></span>.
+        With these two values and <span class="emphasis"><em>f<sub>&#957;</sub></em></span>, <a href="introduction.html#bessel_wronskian">Wronskian</a>
+        yields <span class="emphasis"><em> J<sub>&#957;</sub>(x)</em></span> directly without backward <a href="introduction.html#bessel_recur">recurrence</a>.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Our algorithm calculates <span class="emphasis"><em> J<sub>&#956;</sub></em></span>, <span class="emphasis"><em> J<sub>&#956;+1</sub></em></span>
+          for large <span class="emphasis"><em>x</em></span> and <span class="emphasis"><em> Y<sub>&#956;</sub></em></span>, <span class="emphasis"><em> Y<sub>&#956;+1</sub></em></span>
+          for small <span class="emphasis"><em>x</em></span> at the first step, hence the best practice
+          is to compute <span class="emphasis"><em> J<sub>&#957;</sub></em></span> and <span class="emphasis"><em> Y<sub>&#957;</sub></em></span>
+          simultaneously, which is what <code class="computeroutput"><span class="identifier">bessel_jy</span><span class="special">(</span><span class="identifier">v</span><span class="special">,</span> <span class="identifier">x</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">J</span><span class="special">,</span> <span class="special">&amp;</span><span class="identifier">Y</span><span class="special">)</span></code> does
+          exactly. <br> <br> In the case of small <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em> J<sub>&#957;</sub>(x)</em></span>
+          can be calculated directly from the <a href="introduction.html#bessel_wronskian">Wronskian</a>
+          without backward <a href="introduction.html#bessel_recur">recurrence</a>. Some may
+          think symmetrically <span class="emphasis"><em> Y<sub>&#957;</sub>(x)</em></span> can be calculated directly
+          from the <a href="introduction.html#bessel_wronskian">Wronskian</a> without forward
+          <a href="introduction.html#bessel_recur">recurrence</a> for large <span class="emphasis"><em>x</em></span>.
+          But this is not true because we do not have <span class="emphasis"><em> Y<sub>&#957;+1</sub>(x)</em></span>
+          / <span class="emphasis"><em> Y<sub>&#957;</sub>(x)</em></span> available.
+        </p></td></tr>
+</table></div>
 <a name="tr1_math.bessel_functions.bessel_functions_of_fractional_order.testing"></a><h5>
-<a name="id4848680"></a>
+<a name="id4849452"></a>
         <a href="bessel_functions_of_fractional_order.html#tr1_math.bessel_functions.bessel_functions_of_fractional_order.testing">Testing</a>
       </h5>
 <p>
@@ -148,7 +223,7 @@
       </p>
 <div class="informaltable">
 <h5>
-<a name="id4848704"></a>
+<a name="id4849476"></a>
         </h5>
 <table class="table">
 <colgroup>
@@ -166,28 +241,28 @@
 </tr></thead>
 <tbody>
 <tr>
-<td><code class="computeroutput"><span class="identifier">bessel_j0</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span></code></td>
+<td><code class="computeroutput"><span class="identifier">bessel_jv</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span></code></td>
 <td>~
               10<sup>-8</sup> , 10<sup>-7</sup> </td>
 <td>~ 10<sup>-16</sup> , 10<sup>-15</sup> </td>
-<td>~ 10<sup>-20</sup> , 10<sup>-19</sup> </td>
+<td>~ 10<sup>-19</sup> , 10<sup>-18</sup> </td>
 </tr>
 <tr>
-<td><code class="computeroutput"><span class="identifier">bessel_y0</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span></code></td>
+<td><code class="computeroutput"><span class="identifier">bessel_yv</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span></code></td>
 <td>~
               10<sup>-8</sup> , 10<sup>-7</sup> </td>
-<td>~ 10<sup>-16</sup> </td>
-<td>~ 10<sup>-17</sup> </td>
+<td>~ 10<sup>-16</sup> , 10<sup>-15</sup> </td>
+<td>~ 10<sup>-19</sup> , 10<sup>-18</sup> </td>
 </tr>
 </tbody>
 </table>
 </div>
 <p>
-        When <span class="emphasis"><em>|x|</em></span> becomes large ( &gt; 10<sup>4</sup> ), the relative error
-        grows rapidly. <span class="emphasis"><em>|x|</em></span> = 10<sup>5</sup> can have relative error 4 or
-        5 magnitudes higher than that of <span class="emphasis"><em>|x|</em></span> = 10. Fortunately,
-        this is where the function value approaches zero, so the absolute error is
-        actually quite small.
+        When the function value approaches infinity (this happens when <span class="emphasis"><em>x</em></span>
+        is small and <span class="emphasis"><em>|&#957;|</em></span> is large, <span class="emphasis"><em>|&#957;|</em></span> &gt;&gt;
+        <span class="emphasis"><em>x</em></span>), the relative error grows rapidly. <span class="emphasis"><em>| J<sub>&#957;</sub>|</em></span>
+        ~ 10<sup>25</sup> can have relative error 3 or 4 magnitudes higher than that of <span class="emphasis"><em>|
+        J<sub>&#957;</sub>|</em></span> ~ 1.
       </p>
 </div>
 <table width="100%"><tr>
