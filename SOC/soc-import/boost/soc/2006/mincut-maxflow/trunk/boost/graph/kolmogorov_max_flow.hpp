@@ -271,13 +271,13 @@ namespace boost {
                       m_dist_map[other_node] = m_dist_map[current_node] + 1; //set its distance
                       m_time_map[other_node] = m_time_map[current_node];     //and time
                     } else if(get_tree(other_node) == tColorTraits::black()){
-                      if(is_closer_to_terminal(current_node, other_node)){ 
+                      if(is_closer_to_terminal(current_node, other_node)){
                         //we are closer to the sink than its parent is, so we "adopt" him
                         set_edge_to_parent(other_node, in_edge);
                         m_dist_map[other_node] = m_dist_map[current_node] + 1;
                         m_time_map[other_node] = m_time_map[current_node];
                       }
-                    } else{ 
+                    } else{
                       assert(get_tree(other_node)==tColorTraits::white());
                       //kewl, found a path from one to the other search tree, return the connecting edge in src->sink dir
                       return std::make_pair(in_edge, true);
@@ -395,8 +395,6 @@ namespace boost {
                       if(m_dist_map[other_node] < min_distance){
                         min_distance = m_dist_map[other_node];
                         new_parent_edge = in_edge;
-                        if(min_distance == 1)//it can't get shorter
-                          break;
                       }
                     }
                   }
@@ -406,14 +404,15 @@ namespace boost {
                   m_dist_map[current_node] = min_distance + 1;
                   m_time_map[current_node] = m_time;
                 } else{
+                  m_time_map[current_node] = 0;
                   for(tie(ei, e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
                     edge_descriptor in_edge = m_rev_edge_map[*ei];
                     vertex_descriptor other_node = source(in_edge, m_g);
-                    if(get_tree(other_node) == tColorTraits::white()){
-                      if (m_res_cap_map[in_edge] > 0){
+                    if(get_tree(other_node) == tColorTraits::white() && has_parent(other_node)){
+                      if(m_res_cap_map[in_edge] > 0){
                         add_active_node(other_node);
                       }
-                      if(has_parent(other_node) && source(get_edge_to_parent(other_node), m_g) == current_node){ 
+                      if(source(get_edge_to_parent(other_node), m_g) == current_node){
                         //we are the parent of that node
                         //it has to find a new parent, too
                         set_no_parent(other_node);
@@ -422,7 +421,6 @@ namespace boost {
                     }
                   }
                   set_tree(current_node, tColorTraits::gray());
-                  remove_active_node(current_node);
                 } //no parent found
               } //source-tree-adoption
               else{
@@ -433,7 +431,6 @@ namespace boost {
                 tDistanceVal min_distance = (std::numeric_limits<tDistanceVal>::max)();
                 for(tie(ei, e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
                   const edge_descriptor out_edge = *ei;
-
                   if(m_res_cap_map[out_edge] > 0){
                     const vertex_descriptor other_node = target(out_edge, m_g);
                     if(get_tree(other_node) == tColorTraits::black() && has_sink_connect(other_node))
@@ -448,14 +445,15 @@ namespace boost {
                   m_dist_map[current_node] = min_distance + 1;
                   m_time_map[current_node] = m_time;
                 } else{
+                  m_time_map[current_node] = 0;
                   for(tie(ei, e_end) = out_edges(current_node, m_g); ei != e_end; ++ei){
                     const edge_descriptor out_edge = *ei;
                     const vertex_descriptor other_node = target(out_edge, m_g);
-                    if(get_tree(other_node) == tColorTraits::black()){ 
+                    if(get_tree(other_node) == tColorTraits::black() && has_parent(other_node)){ 
                       if(m_res_cap_map[out_edge] > 0){
                         add_active_node(other_node);
                       }
-                      if(has_parent(other_node) && target(get_edge_to_parent(other_node), m_g) == current_node){
+                      if(target(get_edge_to_parent(other_node), m_g) == current_node){
                         //we were it's parent, so it has to find a new one, too
                         set_no_parent(other_node);
                         m_child_orphans.push(other_node);
@@ -463,7 +461,6 @@ namespace boost {
                     }
                   }
                   set_tree(current_node, tColorTraits::gray());
-                  remove_active_node(current_node);
                 } //no parent found
               } //sink-tree adoption
             } //while !orphans.empty()
@@ -579,7 +576,6 @@ namespace boost {
               }
               if(current_vertex == m_sink){
                 m_time_map[m_sink] = m_time;
-                m_dist_map[current_vertex] = 1;
                 break; 
               }
               if(has_parent(current_vertex)){
@@ -616,10 +612,8 @@ namespace boost {
               }
               if(current_vertex == m_source){
                 m_time_map[m_source] = m_time;
-                m_dist_map[current_vertex] = 1;
                 break;
               }
-
               if(has_parent(current_vertex)){
                 //it has a parent, so get it
                 current_vertex = source(get_edge_to_parent(current_vertex), m_g);
