@@ -40,7 +40,7 @@
 
 The [link boost_process.usage usage chapter] has discussed all the portable
 features provided by Boost.Process and the [link
-boost_process.platform_specific_features platform-specific features
+boost_process.platform_specific_usage platform-specific features
 chapter] has detailed all those that are restricted to concrete platforms.
 Unfortunately, there are several details you have to take into account if
 you want to write programs that are really portable even if you only use
@@ -61,7 +61,7 @@ not available.
 As an example consider an application that wants to control a process' main
 window position.  Under the Win32 platform this is achieved by tweaking the
 [link
-boost_process.platform_specific_details.the_win32_platform.startup_information
+boost_process.platform_specific_usage.the_win32_platform.startup_information
 startup information], something that is supported only through a
 platform-specific class.  However, this same thing is typically achieved
 under Unix by passing the program a `-geometry` flag:
