@@ -1,0 +1,436 @@
+Index: tools/quickbook/block.hpp
+===================================================================
+RCS file: /cvsroot/boost/boost/tools/quickbook/block.hpp,v
+retrieving revision 1.15
+diff -u -p -r1.15 block.hpp
+--- tools/quickbook/block.hpp	7 Jun 2006 04:20:13 -0000	1.15
++++ tools/quickbook/block.hpp	9 Aug 2006 11:33:13 -0000
+@@ -322,8 +322,21 @@ namespace quickbook
+                         >> (*((alnum_p | '_') - space_p))[assign_a(actions.include_doc_id)]
+                         >> space
+                     )
+-                    >> (*(anychar_p -
+-                            close_bracket))             [actions.include]
++                    >>
++                    (
++                        (*(anychar_p - (close_bracket | space_p))) [assign_a(actions.include_filein)]
++                        >> space
++                        >>
++                        (
++                            (*(anychar_p - (close_bracket | space_p))) [assign_a(actions.include_format)]
++                            >> space
++                            >> (*(anychar_p - (close_bracket | space_p))) [assign_a(actions.include_section)]
++                        |
++                            (*(anychar_p - close_bracket)) [assign_a(actions.include_format)]
++                        )
++                    |
++                        (*(anychar_p - close_bracket)) [assign_a(actions.include_filein)]
++                    )                                   [actions.include]
+                     ;
+                 
+                 code =
+Index: tools/quickbook/detail/actions.cpp
+===================================================================
+RCS file: /cvsroot/boost/boost/tools/quickbook/detail/actions.cpp,v
+retrieving revision 1.40
+diff -u -p -r1.40 actions.cpp
+--- tools/quickbook/detail/actions.cpp	9 Jun 2006 03:16:04 -0000	1.40
++++ tools/quickbook/detail/actions.cpp	9 Aug 2006 11:33:13 -0000
+@@ -10,6 +10,7 @@
+ =============================================================================*/
+ #include <numeric>
+ #include <functional>
++#include <stdexcept>
+ #include <boost/bind.hpp>
+ #include <boost/filesystem/convenience.hpp>
+ #include "./actions.hpp"
+@@ -451,7 +452,7 @@ namespace quickbook
+                 tinfo.push_back(*arg);
+                 template_symbol template_(tinfo, pos);
+ 
+-                if (template_symbol* p = actions.templates.find_top_scope(*tpl))
++                if (actions.templates.find_top_scope(*tpl))
+                 {
+                     detail::outerr(pos.file,pos.line)
+                         << "Duplicate Symbol Found" << std::endl;
+@@ -786,7 +787,7 @@ namespace quickbook
+ 
+     void include_action::operator()(iterator first, iterator last) const
+     {
+-        fs::path filein(std::string(first, last), fs::native);
++        fs::path filein(actions.include_filein, fs::native);
+         std::string doc_type, doc_id, doc_dirname, doc_last_revision;
+ 
+         // check to see if the path is complete and if not, make it relative to the current path
+@@ -796,46 +797,98 @@ namespace quickbook
+             filein.normalize();
+         }
+ 
+-        // swap the filenames
+-        std::swap(actions.filename, filein);
++        if (actions.include_format == "" || actions.include_format == "quickbook") {
++            if (actions.include_section != "")
++                throw std::runtime_error("A section cannot be specified when including a "
++                                         "Quickbook file (" + filein.string() + ")");
++
++            // swap the filenames
++            std::swap(actions.filename, filein);
++
++            // save the doc info strings
++            actions.doc_type.swap(doc_type);
++            actions.doc_id.swap(doc_id);
++            actions.doc_dirname.swap(doc_dirname);
++            actions.doc_last_revision.swap(doc_last_revision);
++
++            // scope the macros
++            string_symbols macro = actions.macro;
++            // scope the templates
++            //~ template_symbols templates = actions.templates; $$$ fixme $$$
++
++            // if an id is specified in this include (as in [include:id foo.qbk])
++            // then use it as the doc_id.
++            if (!actions.include_doc_id.empty())
++            {
++                actions.doc_id = actions.include_doc_id;
++                actions.include_doc_id.clear();
++            }
++
++            // update the __FILENAME__ macro
++            *boost::spirit::find(actions.macro, "__FILENAME__") = actions.filename.native_file_string();
++
++            // parse the file
++            quickbook::parse(actions.filename.native_file_string().c_str(), actions, true);
++
++            // restore the values
++            std::swap(actions.filename, filein);
+ 
+-        // save the doc info strings
+-        actions.doc_type.swap(doc_type);
+-        actions.doc_id.swap(doc_id);
+-        actions.doc_dirname.swap(doc_dirname);
+-        actions.doc_last_revision.swap(doc_last_revision);
+-
+-        // scope the macros
+-        string_symbols macro = actions.macro;
+-        // scope the templates
+-        //~ template_symbols templates = actions.templates; $$$ fixme $$$
+-
+-        // if an id is specified in this include (as in [include:id foo.qbk])
+-        // then use it as the doc_id.
+-        if (!actions.include_doc_id.empty())
+-        {
+-            actions.doc_id = actions.include_doc_id;
+-            actions.include_doc_id.clear();
+-        }
+-
+-        // update the __FILENAME__ macro
+-        *boost::spirit::find(actions.macro, "__FILENAME__") = actions.filename.native_file_string();
+-
+-        // parse the file
+-        quickbook::parse(actions.filename.native_file_string().c_str(), actions, true);
+-
+-        // restore the values
+-        std::swap(actions.filename, filein);
+-
+-        actions.doc_type.swap(doc_type);
+-        actions.doc_id.swap(doc_id);
+-        actions.doc_dirname.swap(doc_dirname);
+-        actions.doc_last_revision.swap(doc_last_revision);
+-
+-        // restore the macros
+-        actions.macro = macro;
+-        // restore the templates
+-        //~ actions.templates = templates; $$$ fixme $$$
++            actions.doc_type.swap(doc_type);
++            actions.doc_id.swap(doc_id);
++            actions.doc_dirname.swap(doc_dirname);
++            actions.doc_last_revision.swap(doc_last_revision);
++
++            // restore the macros
++            actions.macro = macro;
++            // restore the templates
++            //~ actions.templates = templates; $$$ fixme $$$
++        } else if (actions.include_format == "xml") {
++            if (actions.include_doc_id != "")
++                throw std::runtime_error("An indentifier cannot be specified when including a "
++                                         "XML file (" + filein.string() + ")");
++            if (actions.include_section != "")
++                throw std::runtime_error("A section cannot be specified when including a "
++                                         "XML file (" + filein.string() + ")");
++
++            out << "\n<xi:include href=\"";
++            detail::print_string(detail::escape_uri(filein.string()), out.get());
++            out << "\" />\n";
++        } else if (actions.include_format == "c++" || actions.include_format == "python") {
++            if (actions.include_doc_id != "")
++                throw std::runtime_error("An indentifier cannot be specified when including a "
++                                         "source file (" + filein.string() + ")");
++
++            // load the file into temporary storage
++            std::string program;
++            detail::load_file(filein.string(), program, actions.include_section);
++
++            iterator first_(program.begin(), program.end());
++            iterator last_(program.end(), program.end());
++            first_.set_position(first.get_position());
++
++            // print the code with syntax coloring
++            std::string save;
++            phrase.swap(save);
++            if (actions.include_format == "c++")
++            {
++                parse(first_, last_, cpp_p);
++            }
++            else if (actions.include_format == "python")
++            {
++                parse(first_, last_, python_p);
++            }
++            std::string str;
++            temp.swap(str);
++            phrase.swap(save);
++
++            out << "\n<programlisting>" << str << "</programlisting>\n";
++        } else
++            throw std::runtime_error("Unsupported file format " + actions.include_format);
++
++        actions.include_filein.clear();
++        actions.include_doc_id.clear();
++        actions.include_format.clear();
++        actions.include_section.clear();
+     }
+ 
+     void xml_author::operator()(std::pair<std::string, std::string> const& author) const
+Index: tools/quickbook/detail/actions.hpp
+===================================================================
+RCS file: /cvsroot/boost/boost/tools/quickbook/detail/actions.hpp,v
+retrieving revision 1.34
+diff -u -p -r1.34 actions.hpp
+--- tools/quickbook/detail/actions.hpp	9 Jun 2006 03:16:04 -0000	1.34
++++ tools/quickbook/detail/actions.hpp	9 Aug 2006 11:33:13 -0000
+@@ -615,12 +615,30 @@ namespace quickbook
+     {
+         // Handles QBK includes
+ 
+-        include_action(quickbook::actions& actions_)
+-            : actions(actions_) {}
++        include_action(
++            collector& out_
++          , collector& phrase_
++          , collector& temp_
++          , string_symbols const& macro
++          , quickbook::actions& actions_)
++        : out(out_)
++        , phrase(phrase_)
++        , temp(temp_)
++        , actions(actions_)
++        , cpp_p(temp, macro, do_macro_action(temp), actions)
++        , python_p(temp, macro, do_macro_action(temp), actions)
++        {
++        }
+ 
+         void operator()(iterator first, iterator last) const;
+ 
++        collector& out;
++        collector& phrase;
++        collector& temp;
+         quickbook::actions& actions;
++
++        cpp_p_type cpp_p;
++        python_p_type python_p;
+     };
+ 
+     struct xml_author
+Index: tools/quickbook/detail/actions_class.cpp
+===================================================================
+RCS file: /cvsroot/boost/boost/tools/quickbook/detail/actions_class.cpp,v
+retrieving revision 1.4
+diff -u -p -r1.4 actions_class.cpp
+--- tools/quickbook/detail/actions_class.cpp	9 Jun 2006 03:16:04 -0000	1.4
++++ tools/quickbook/detail/actions_class.cpp	9 Aug 2006 11:33:13 -0000
+@@ -32,6 +32,9 @@ namespace quickbook
+         , doc_license()
+         , doc_last_revision()
+         , include_doc_id()
++        , include_filein()
++        , include_format()
++        , include_section()
+         , doc_license_1_1()
+         , doc_purpose_1_1()
+ 
+@@ -158,7 +161,7 @@ namespace quickbook
+         , begin_section(out, phrase, doc_id, section_id, section_level, qualified_section_id)
+         , end_section(out, section_level, qualified_section_id)
+         , xinclude(out, *this)
+-        , include(*this)
++        , include(out, phrase, temp, macro, *this)
+ 
+         , escape_pre(phrase, escape_pre_)
+         , escape_post(phrase, escape_post_)
+Index: tools/quickbook/detail/actions_class.hpp
+===================================================================
+RCS file: /cvsroot/boost/boost/tools/quickbook/detail/actions_class.hpp,v
+retrieving revision 1.4
+diff -u -p -r1.4 actions_class.hpp
+--- tools/quickbook/detail/actions_class.hpp	9 Jun 2006 03:16:04 -0000	1.4
++++ tools/quickbook/detail/actions_class.hpp	9 Aug 2006 11:33:14 -0000
+@@ -45,6 +45,9 @@ namespace quickbook 
+         std::string             doc_license;
+         std::string             doc_last_revision;
+         std::string             include_doc_id;
++        std::string             include_filein;
++        std::string             include_format;
++        std::string             include_section;
+         std::string             doc_license_1_1;
+         std::string             doc_purpose_1_1;
+ 
+Index: tools/quickbook/detail/utils.cpp
+===================================================================
+RCS file: /cvsroot/boost/boost/tools/quickbook/detail/utils.cpp,v
+retrieving revision 1.10
+diff -u -p -r1.10 utils.cpp
+--- tools/quickbook/detail/utils.cpp	7 Jun 2006 04:20:13 -0000	1.10
++++ tools/quickbook/detail/utils.cpp	9 Aug 2006 11:33:14 -0000
+@@ -9,6 +9,9 @@
+ =============================================================================*/
+ #include "./utils.hpp"
+ #include <cctype>
++#include <fstream>
++#include <stdexcept>
++#include <string>
+ #include <boost/spirit/core.hpp>
+ 
+ namespace quickbook {
+@@ -160,6 +163,39 @@ namespace quickbook { namespace detail
+         else
+             return std::clog << file << ":" << line << ": warning: ";
+     }
+-}}
+ 
++    void
++    load_file(const std::string & file, std::string & storage,
++              const std::string & section)
++    {
++        std::ifstream is(file.c_str(), std::ios_base::in);
++        if (!is)
++            throw std::runtime_error
++                (std::string("Could not open input file ") + file);
++        is.unsetf(std::ios::skipws);
++
++        storage = "";
++
++        bool found = false;
++        bool skip = section != "";
++        std::string line;
++        while (std::getline(is, line)) {
++            if (section != "") {
++                if (line.find("quickbook:begin(" + section + ")") != std::string::npos) {
++                    skip = false;
++                    found = true;
++                    continue;
++                } else if (line.find("quickbook:end(" + section + ")") != std::string::npos) {
++                    skip = true;
++                    continue;
++                }
++            }
+ 
++            if (!skip)
++                storage += line + "\n";
++        }
++
++        if (section != "" && !found)
++            throw std::runtime_error("Unknown section " + section + " in file " + file);
++    }
++}}
+Index: tools/quickbook/detail/utils.hpp
+===================================================================
+RCS file: /cvsroot/boost/boost/tools/quickbook/detail/utils.hpp,v
+retrieving revision 1.7
+diff -u -p -r1.7 utils.hpp
+--- tools/quickbook/detail/utils.hpp	7 Jun 2006 04:20:13 -0000	1.7
++++ tools/quickbook/detail/utils.hpp	9 Aug 2006 11:33:14 -0000
+@@ -76,6 +76,10 @@ namespace quickbook { namespace detail
+     // error message.
+     std::ostream & outerr(const std::string & file, int line);
+     std::ostream & outwarn(const std::string & file, int line);
++
++    // load part of a file into memory
++    void load_file(const std::string & file, std::string & storage,
++                   const std::string & section = "");
+ }}
+ 
+ #endif // BOOST_SPIRIT_QUICKBOOK_UTILS_HPP
+Index: tools/quickbook/doc/quickbook.qbk
+===================================================================
+RCS file: /cvsroot/boost/boost/tools/quickbook/doc/quickbook.qbk,v
+retrieving revision 1.44
+diff -u -p -r1.44 quickbook.qbk
+--- tools/quickbook/doc/quickbook.qbk	20 Jul 2006 13:13:15 -0000	1.44
++++ tools/quickbook/doc/quickbook.qbk	9 Aug 2006 11:33:14 -0000
+@@ -108,6 +108,11 @@ Features include:
+ 
+ [section:change_log Change Log]
+ 
++[h3 Version 1.4]
++
++* Quickbook, XML and source file inclusion through an improved \[include\].
++* \[xinclude\] is now deprecated.
++
+ [h3 Version 1.3]
+ 
+ * Quickbook file inclusion \[include\].
+@@ -1447,14 +1452,18 @@ will recognize this as a "definition lis
+ [endsect]
+ [section Include]
+ 
+-You can include one QuickBook file from another. The syntax is simply:
++The \[include\] tag is provided to allow the inclusion of external files
++into the current document.  It supports multiple formats and its general
++syntax is:
+ 
+ [pre'''
+-[include someother.qbk]
++[include(:id) file (format) (section)]
+ ''']
+ 
+-The included file will be processed as if it had been cut and pasted
+-into the current document, with the following exceptions:
++If the file to be included is a Quickbook document, the format parameter
++can be omitted, but might be optionally set to quickbook.  The included
++file will be processed as if it had been cut and pasted into the current
++document, with the following exceptions:
+ 
+ * The '''__FILENAME__''' predefined macro will reflect the name of the
+   file currently being processed.
+@@ -1474,6 +1483,32 @@ for instance, if there is a top section 
+ named anchor for that section will be "someid.intro", and you can link to 
+ it with [^\[link someid.intro The Intro\]].
+ 
++The section parameter may not be used when including Quickbook files.
++
++If the file to be included is a XML document, the format parameter must
++be set to xml.  In such case, the id and section parameters are
++meaningless and therefore not allowed.  For example:
++
++[pre'''
++[include autodoc.boostbook xml]
++''']
++
++If the file to be included is a source file in C++ or Python, the format
++parameter shall be set to cpp and python respectively.  The id parameter
++is not allowed.  When including source files, one may choose to only
++include part of them in the current document through the section parameter.
++For example, if one says:
++
++[pre'''
++[include file.cpp cpp example-section]
++''']
++
++All the code from file.cpp that is placed in between the
++"quickbook:begin(example-section)" and "quickbook:end(example-section)"
++markers will be inserted into the document.  These markes may appear
++anywhere on a line.  The text outside these placeholders will not be
++copied.
++
+ [endsect]
+ [endsect]
+ [endsect]
