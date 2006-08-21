@@ -44,6 +44,12 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
   template <typename T>
   inline T bessel_jv(T v, T x)
 
+  inline float cyl_bessel_jf(float nu, float x)
+
+  inline double cyl_bessel_j(double nu, double x)
+
+  inline long double cyl_bessel_jl(long double nu, long double x)
+
   }} // namespaces
 ``
 
@@ -54,6 +60,12 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
   template <typename T>
   inline T bessel_yv(T v, T x)
+
+  inline float cyl_neumannf(float nu, float x)
+
+  inline double cyl_neumann(double nu, double x)
+
+  inline long double cyl_neumannl(long double nu, long double x)
 
   }} // namespaces
 ``
@@ -109,8 +121,46 @@ When ['x] is large (['x] > 2), both continued fractions converge (CF1
 may be slow for really large ['x]). ['[J _mu]], ['[J _mu+1]],
 ['[Y _mu]], ['[Y _mu+1]] can be calculated by
 
+[$equations/bessel13.png]
 
 where
+
+[$equations/bessel14.png]
+
+['[J _nu](x)] and ['[Y _nu](x)] are then calculated using backward
+(Miller's algorithm) and forward [link bessel_recur recurrence]
+respectively.
+
+When ['x] is small (['x] <= 2), CF2 convergence may fail (but CF1
+works very well). The solution here is Temme's series:
+
+[$equations/bessel15.png]
+
+where
+
+[$equations/bessel16.png]
+
+[''''g<subscript>k</subscript>'''] and [''''h<subscript>k</subscript>''']
+are also computed by recursions (involving gamma functions), but the
+formulas are a little complicated, readers are refered to [[link 17]].
+
+As the previous case, ['[Y _nu](x)] is calculated from the forward
+[link bessel_recur recurrence], so is ['[Y _nu+1](x)]. With these two
+values and [''''f<subscript>&nu;</subscript>'''], [link bessel_wronskian
+Wronskian] yields ['[J _nu](x)] directly without backward
+[link bessel_recur recurrence].
+
+[note Our algorithm calculates ['[J _mu]], ['[J _mu+1]] for large ['x]
+and ['[Y _mu]], ['[Y _mu+1]] for small ['x] at the first step, hence
+the best practice is to compute ['[J _nu]] and ['[Y _nu]] simultaneously,
+which is what `bessel_jy(v, x, &J, &Y)` does exactly.
+\n\n
+In the case of small ['x], ['[J _nu](x)] can be calculated directly from
+the [link bessel_wronskian Wronskian] without backward [link bessel_recur
+recurrence]. Some may think symmetrically ['[Y _nu](x)] can be calculated
+directly from the [link bessel_wronskian Wronskian] without forward
+[link bessel_recur recurrence] for large ['x]. But this is not true
+because we do not have ['[Y _nu+1](x)] / ['[Y _nu](x)] available.]
 
 [heading Testing]
 
@@ -119,14 +169,13 @@ lists some typical values.
 
 [table
 [[Function] [float] [double] [long double]]
-[[`bessel_j0(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -20], [pow 10 -19]]]
-[[`bessel_y0(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16]] [~ [pow 10 -17]]]
+[[`bessel_jv(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -19], [pow 10 -18]]]
+[[`bessel_yv(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -19], [pow 10 -18]]]
 ]
 
-When ['|x|] becomes large ( > [pow 10 4] ), the relative error
-grows rapidly. ['|x|] = [pow 10 5] can have relative error 4 or 5
-magnitudes higher than that of ['|x|] = 10. Fortunately, this is
-where the function value approaches zero, so the absolute error
-is actually quite small.
+When the function value approaches infinity (this happens when
+['x] is small and ['|_nu|] is large, ['|_nu|] >> ['x]), the relative
+error grows rapidly. ['|[J _nu]|] ~ [pow 10 25] can have relative
+error 3 or 4 magnitudes higher than that of ['|[J _nu]|] ~ 1.
 
 [endsect]
