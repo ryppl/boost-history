@@ -66,6 +66,22 @@ consideration to decide the best way to solve them.
 * Replace custom `system_error` with Boost.System's homologous when it is
   available.
 
+* Abstract `cstdlib`'s `EXIT_SUCCESS` and `EXIT_FAILURE`.
+
+* Rename `command_line::argument` method; and add `operator<<`?
+
+* Make `launcher::start` a free function.  Need to rename `launcher` to
+  `context`.
+
+* Make `child::wait` return a constant object.
+
+* Make `status`' constructor private.
+
+* Remove `command_line::get_arguments`.
+
+* Separate the executable from the `command_line` class into its own
+  object.
+
 [endsect]
 
 [section Documentation]
@@ -76,6 +92,11 @@ consideration to decide the best way to solve them.
   to address this.
 
 * Add some diagrams to illustrate interprocess communication.
+
+* Shorten "Motivation" section?
+
+* `command_line`'s constructor: rename `firstarg` parameter to avoid
+  confusion with subsequent parameters.
 
 [endsect]
 
