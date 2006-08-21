@@ -283,11 +283,11 @@ main()
   vector<edge_descriptor> predecessor(num_vertices(g));
   
   float time = timer();
-  CALLGRIND_START_INSTRUMENTATION();
+//   CALLGRIND_START_INSTRUMENTATION();
 
   long flow = kolmogorov_max_flow(g, s, t, predecessor_map(&predecessor[0]).color_map(&color[0]).distance_map(&distance[0]));
 
-  CALLGRIND_STOP_INSTRUMENTATION();
+//   CALLGRIND_STOP_INSTRUMENTATION();
   double elapsed = timer() - time;
   std::cout.setf(std::ios_base::fixed, std::ios_base::floatfield);
   std::cout << "flow: " << flow << std::endl;
