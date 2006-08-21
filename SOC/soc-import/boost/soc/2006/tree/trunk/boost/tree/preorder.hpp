@@ -139,7 +139,7 @@ typename Tree::cursor begin(Tree& t)
 template <class Tree>
 typename Tree::const_cursor begin(Tree const& t)
 {
-	return t.croot().cbegin();
+	return t.croot().begin();
 }
 
 /**
@@ -150,7 +150,7 @@ typename Tree::const_cursor begin(Tree const& t)
 template <class Tree>
 typename Tree::const_cursor cbegin(Tree const& t)
 {
-	return t.croot().cbegin();
+	return t.croot().begin();
 }
 
 /**

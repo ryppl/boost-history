@@ -31,7 +31,7 @@
  * Binary node implementation
  */
  
-//TODO: use Boost(TR1).Array 
+//TODO: use Boost(TR1).Array (?)
 //		and maybe Boost.Optional (for the "has_child" stuff?)
 //Templatize with arity (so we can use this for multiway trees, too?)
 
@@ -48,6 +48,7 @@
 namespace boost {
 namespace tree {
 namespace detail {
+
 
 struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 {
@@ -81,6 +82,11 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 	}
 	
 	base_pointer& parent()
+	{
+		return m_parent;
+	}
+	
+	base_pointer const & parent() const
 	{
 		return m_parent;
 	}

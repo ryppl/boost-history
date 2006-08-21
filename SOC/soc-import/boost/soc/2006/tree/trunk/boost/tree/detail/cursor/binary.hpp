@@ -74,7 +74,9 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
  	 	
  	typedef binary_node<T, Augment, Balance> const node_type;
 	typedef node_type* node_pointer;
-	
+
+	typedef typename binary_node<T, Augment, Balance>::base_pointer 
+		base_pointer;	
 	typedef typename binary_node<T, Augment, Balance>::const_base_pointer 
 		const_base_pointer;
 	
@@ -96,7 +98,7 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
      : m_parent(0), m_pos(0) {}
 
     explicit const_tree_cursor(
-		typename binary_node<T, Augment, Balance>::base_pointer p, 
+		const_base_pointer p, 
 		size_type pos /*= 1*/)
      : m_parent(p), m_pos(pos) {}
       
@@ -112,10 +114,10 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
       : m_parent(other.m_parent), m_pos(other.m_pos) {}
 
 	
-// private:
+ private:
 	const_base_pointer m_parent;
  	size_type m_pos;
- private:
+
     friend class boost::iterator_core_access;
     
     T const& dereference() const
@@ -165,19 +167,19 @@ public:
 	}
 	
 	// TODO (following couple of functions): wrap around node member fn
-	const_tree_cursor<binary_node<T, Augment, Balance> const> begin() const
+	const_tree_cursor begin() const
 	{
 		return const_tree_cursor(m_parent->child[m_pos], 0); 
 	}
 		
-	const_tree_cursor<binary_node<T, Augment, Balance> const> end() const
+	const_tree_cursor end() const
 	{
 		return const_tree_cursor(m_parent->child[m_pos], 1);
 	}
 	
 	// Cursor stuff. 
 	
-	const_tree_cursor<binary_node<T, Augment, Balance> const> parent() const
+	const_tree_cursor parent() const
 	{
 		return const_tree_cursor(m_parent->parent(), 
 			m_parent->parent()->child[0] == m_parent ? 0 : 1);
@@ -245,10 +247,10 @@ class tree_cursor<binary_node<T, Augment, Balance> >
     )
       : m_parent(other.m_parent), m_pos(other.m_pos) {}
 
-// private: 
+ private: 
  	base_pointer m_parent;
  	size_type m_pos;
-private: 	
+
  	friend class boost::iterator_core_access;
  	
     T& dereference() const
@@ -258,7 +260,6 @@ private:
 	
     bool equal(cursor const& other) const
     {
-		//return (m_parent->child[m_pos] == other.m_parent->child[other.m_pos]);
         return (this->m_parent == other.m_parent) && (this->m_pos == other.m_pos);
     }
     

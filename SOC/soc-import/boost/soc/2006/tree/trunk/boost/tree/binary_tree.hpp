@@ -67,10 +67,7 @@ using detail::tree_cursor;
 template <class T, class Balance = trivial_balance,
 		  class Augment = trivial_augment,
 		  class ValAlloc = std::allocator<T>, 
-		  class NodeAlloc = // this exposes the node class...
-		  	typename ValAlloc::template rebind<
-			  	binary_node<T, Augment, typename Balance::metadata_type>
-		  	>::other
+		  class NodeAlloc = ValAlloc // will be rebound.
 		 >
 class binary_tree {
 	typedef binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc> self_type;
@@ -135,7 +132,7 @@ class binary_tree {
 	 */ 	
 	const_cursor root() const
 	{
-		return const_cursor(&m_header, 0);
+		return croot();
 	}
 	
 	/**
@@ -162,8 +159,7 @@ class binary_tree {
 	 */ 	
 	const_cursor shoot() const
 	{
-		return const_cursor(m_header.m_parent, 
-							m_header.m_parent == &m_header ? 0 : 1);
+		return cshoot;
 	}
 	
 	/**
@@ -192,7 +188,7 @@ class binary_tree {
 	 */ 	 
 	const_iterator begin() const
 	{
-		return const_iterator(const_cursor(m_header.child[1], 0));
+		return cbegin();
 	}
 	
 	/**
@@ -218,7 +214,7 @@ class binary_tree {
 	 */	
 	const_iterator end() const
 	{
-		return const_iterator(shoot());
+		return cend();
 	}
 	
 	/**
@@ -227,7 +223,7 @@ class binary_tree {
 	 */	
 	const_iterator cend() const
 	{
-		return const_iterator(shoot());
+		return const_iterator(cshoot());
 	}
 	
 	// Hierarchy-specific
