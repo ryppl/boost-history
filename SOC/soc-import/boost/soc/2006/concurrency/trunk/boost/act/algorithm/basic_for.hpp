@@ -1,7 +1,33 @@
 //  Copyright (c) 2006, Matthew Calabrese
-//  All rights reserved.
-//  Distributed under the New BSD License
-//  (See accompanying file ACT_BSD_LICENSE.txt)
+//
+//  This code may be used under either of the following two licences:
+//
+//    Permission is hereby granted, free of charge, to any person
+//    obtaining a copy of this software and associated documentation
+//    files (the "Software"), to deal in the Software without
+//    restriction, including without limitation the rights to use,
+//    copy, modify, merge, publish, distribute, sublicense, and/or
+//    sell copies of the Software, and to permit persons to whom the
+//    Software is furnished to do so, subject to the following
+//    conditions:
+//
+//    The above copyright notice and this permission notice shall be
+//    included in all copies or substantial portions of the Software.
+//
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+//    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//    OTHER DEALINGS IN THE SOFTWARE. OF SUCH DAMAGE.
+//
+//  Or:
+//
+//    Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//    http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_ACT_ALGORITHM_BASIC_FOR_HPP
 #define BOOST_ACT_ALGORITHM_BASIC_FOR_HPP
@@ -17,16 +43,145 @@
 
 #include "../type_traits/is_algo_model.hpp"
 #include "../type_traits/is_parallel_safe.hpp"
+#include "detail/make_algo.hpp"
 
 #include "basic_for/detail/expressions.hpp"
 
+#include "basic_for/basic_for_fwd.hpp"
+
+// ToDo: Account for parallel safety
+
+namespace boost
+{
+namespace act
+{
+BOOST_ACT_DETAIL_PREPARE_ALGO_IMPLEMENTATION( basic_for
+                                            , 2
+                                            , ( ( ((typename),AssignType)
+                                                  ((typename),ComparisonType)
+                                                  ((typename),OperationType)
+                                                  ((typename),FunctionType)
+                                                , ( ::boost::enable_if
+                                                    <
+                                                      ::boost::act::detail
+                                                        ::for_params_are_valid
+                                                      < AssignType
+                                                      , ComparisonType
+                                                      , OperationType
+                                                      >
+                                                    , FunctionType
+                                                    >
+                                                  )
+                                                , ((AssignType),assign)
+                                                  ((ComparisonType),condition)
+                                                  ((OperationType),step)
+                                                  ((FunctionType),body)
+                                                )
+                                              , ( ((typename),AssignType)
+                                                  ((typename),ComparisonType)
+                                                  ((typename),OperationType)
+                                                , ( ::boost::enable_if
+                                                    <
+                                                      ::boost::act::detail
+                                                        ::for_params_are_valid
+                                                      < AssignType
+                                                      , ComparisonType
+                                                      , OperationType
+                                                      >
+                                                    , ::boost::act::detail
+                                                          ::bound_basic_for
+                                                          < ExtendedParamsType
+                                                          , AssignType
+                                                          , ComparisonType
+                                                          , OperationType
+                                                          >
+                                                    >
+                                                  )
+                                                , ((AssignType),assign)
+                                                  ((ComparisonType),condition)
+                                                  ((OperationType),step)
+                                                )
+                                              )
+                                            )
+
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO_OVER( ((typename),AssignType)
+                                      ((typename),ComparisonType)
+                                      ((typename),OperationType)
+                                      ((typename),FunctionType)
+                                    , ( ::boost::enable_if
+                                        <
+                                          ::boost::act::detail::for_params_are_valid
+                                          < AssignType
+                                          , ComparisonType
+                                          , OperationType
+                                          >
+                                        , FunctionType
+                                        >
+                                      )
+                                    , basic_for
+                                    , ((AssignType),assign)
+                                      ((ComparisonType),condition)
+                                      ((OperationType),step)
+                                      ((FunctionType),body)
+                                    )
+{
+  typedef typename AssignType::value_type for_var_type;
+
+  for( for_var_type var = assign()
+     ; condition( var )
+     ; step( var )
+     )
+  {
+    for_var_type const& const_var = var;
+
+    body( const_var );
+  }
+
+  return body;
+}
+
+
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO_OVER( ((typename),AssignType)
+                                      ((typename),ComparisonType)
+                                      ((typename),OperationType)
+                                    , ( ::boost::enable_if
+                                        <
+                                          ::boost::act::detail
+                                            ::for_params_are_valid
+                                          < AssignType
+                                          , ComparisonType
+                                          , OperationType
+                                          >
+                                        , ::boost::act::detail
+                                              ::bound_basic_for
+                                              < ExtendedParamsType
+                                              , AssignType
+                                              , ComparisonType
+                                              , OperationType
+                                              >
+                                        >
+                                      )
+                                    , basic_for
+                                    , ((AssignType),assign)
+                                      ((ComparisonType),condition)
+                                      ((OperationType),step)
+                                    )
+{
+  return detail::make_bound_basic_for
+           ( extended_params, assign, condition, step );
+}
+
+}
+}
+
+
+/*
 namespace boost
 {
 namespace act
 {
 namespace detail
 {
-
 template< typename AlgoModel
         , typename AssignType
         , typename ComparisonType
@@ -231,6 +386,7 @@ detail::basic_for_type const basic_for = detail::basic_for_type();
 
 }
 }
+*/
 
 #include "../config/default_algo_model.hpp"
 

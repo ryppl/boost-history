@@ -1,7 +1,33 @@
 //  Copyright (c) 2006, Matthew Calabrese
-//  All rights reserved.
-//  Distributed under the New BSD License
-//  (See accompanying file ACT_BSD_LICENSE.txt)
+//
+//  This code may be used under either of the following two licences:
+//
+//    Permission is hereby granted, free of charge, to any person
+//    obtaining a copy of this software and associated documentation
+//    files (the "Software"), to deal in the Software without
+//    restriction, including without limitation the rights to use,
+//    copy, modify, merge, publish, distribute, sublicense, and/or
+//    sell copies of the Software, and to permit persons to whom the
+//    Software is furnished to do so, subject to the following
+//    conditions:
+//
+//    The above copyright notice and this permission notice shall be
+//    included in all copies or substantial portions of the Software.
+//
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+//    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//    OTHER DEALINGS IN THE SOFTWARE. OF SUCH DAMAGE.
+//
+//  Or:
+//
+//    Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//    http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_ACT_ALGORITHM_EQUAL_HPP
 #define BOOST_ACT_ALGORITHM_EQUAL_HPP
@@ -29,188 +55,6 @@ namespace boost
 {
 namespace act
 {
-namespace detail
-{
-
-template< typename IteratorType, typename FunctionType, typename ActModel >
-struct equal_logarithmic;
-
-template< typename IteratorType, typename FunctionType, typename ActModel >
-struct equal_linear;
-
-}
-/*
-template< typename ActModel, typename IteratorType, typename FunctionType >
-typename ::boost::enable_if
-<
-  ::boost::mpl::and_
-  <
-    is_asynchronous_act_model< ActModel >
-  , is_actable_function< FunctionType >
-  , detail::is_of_iterator_category< IteratorType
-                                   , ::std::random_access_iterator_tag
-                                   >
-  >
-, action< void, ActModel >
->
-::type
-for_each( IteratorType const& curr, IteratorType IteratorType const& end
-        , FunctionType IteratorType const& function
-        )
-{
-  return active_call< ActModel >( detail::for_each_logarithmic
-                                  <
-                                    IteratorType
-                                  , FunctionType
-                                  , ActModel
-                                  >
-                                  ()
-                                , curr, end, function
-                                );
-}
-
-template< typename ActModel, typename IteratorType, typename FunctionType >
-typename ::boost::enable_if
-<
-  ::boost::mpl::and_
-  <
-    is_act_model< ActModel >
-  , is_actable_function< FunctionType >
-  , ::boost::mpl::or_
-    <
-      is_synchronous_act_model< ActModel >
-    , ::boost::mpl::not_
-      <
-        detail::is_of_iterator_category< IteratorType
-                                       , ::std::random_access_iterator_tag
-                                       >
-      >
-    >
-  >
-, action< void, ActModel >
->
-::type
-for_each( IteratorType const& curr, IteratorType IteratorType const& end
-        , FunctionType IteratorType const& function
-        )
-{
-  return active_call< ActModel >( detail::for_each_linear
-                                  <
-                                    IteratorType
-                                  , FunctionType
-                                  , ActModel
-                                  >
-                                  ()
-                                , curr, end, function
-                                );
-}
-
-// ToDo: Put remove_cv into a metafunction call
-template< typename IteratorType, typename FunctionType >
-typename ::boost::enable_if
-<
-  ::boost::mpl::and_
-  <
-    ::boost::mpl::not_< is_act_model< IteratorType > >
-  , is_actable_function< FunctionType >
-  , detail::is_of_iterator_category< IteratorType
-                                   , ::std::random_access_iterator_tag
-                                   >
-  >
-, action< void >
->
-::type
-for_each( IteratorType const& curr, IteratorType IteratorType const& end
-        , FunctionType IteratorType const& function
-        )
-{
-  return for_each< default_act_model >( curr, end, function );
-}
-*/
-namespace detail
-{
-
-// ToDo: Internally use an atomic state object for all branches
-//       if an atomic type can be made portable
-template< typename LeftIteratorType, typename RightIteratorType
-        , typename FunctionType, typename ActModel
-        >
-struct equal_logarithmic
-    <
-      bool ( LeftIteratorType, LeftIteratorType
-           , RightIteratorType, FunctionType
-           )
-    >
-{
-  template< typename PassedLeftIteratorType, typename PassedRightIteratorType
-          , typename PassedFunctionType
-          >
-  bool operator ()( PassedLeftIteratorType const& left_curr
-                  , PassedLeftIteratorType const& left_end
-                  , PassedRightIteratorType const& right_curr
-                  , PassedFunctionType const& function
-                  )
-                  const
-  {
-    if( curr != end )
-    {
-      typedef typename ::boost::iterator_difference< IteratorType >
-                ::type difference_type;
-
-      difference_type const range_size = end - curr;
-
-      if( range_size == 1 )
-      {
-        FunctionType function_copy = function;
-
-        // ToDo: Possibly unwrap if is an active function
-        return function_copy( *left_curr, *right_curr );
-      }
-      else
-      {
-        difference_type const half_range = range_size / 2;
-
-        PassedLeftIteratorType const left_middle = left_curr + half_range;
-
-        action< bool, ActModel > const left_action
-          = active_call( equal_logarithmic()
-                       , left_curr, left_middle, right_curr, function
-                       );
-
-        PassedRightIteratorType const right_middle = right_curr + half_range;
-
-        return    (*this)( left_curr, left_middle, right_curr, function )
-               || left_action->inactive_copy();
-      }
-    }
-  }
-};
-
-template< typename LeftIteratorType, typename RightIteratorType
-        , typename FunctionType, typename ActModel
-        >
-struct equal_linear
-  : actable_function
-    <
-      bool ( LeftIteratorType, LeftIteratorType
-           , RightIteratorType, FunctionType
-           )
-    >
-{
-  template< typename PassedLeftIteratorType, typename PassedRightIteratorType
-          , typename PassedFunctionType
-          >
-  bool operator ()( PassedLeftIteratorType const& left_curr
-                  , PassedLeftIteratorType const& left_end
-                  , PassedRightIteratorType const& right_curr
-                  , PassedFunctionType const& function
-                  )
-                  const
-  {
-    // ToDo: Convert function to active function
-    return ::std::equal( left_curr, left_end, right_curr, function );
-  }
-};
 
 }
 }

@@ -1,3 +1,34 @@
+//  Copyright (c) 2006, Matthew Calabrese
+//
+//  This code may be used under either of the following two licences:
+//
+//    Permission is hereby granted, free of charge, to any person
+//    obtaining a copy of this software and associated documentation
+//    files (the "Software"), to deal in the Software without
+//    restriction, including without limitation the rights to use,
+//    copy, modify, merge, publish, distribute, sublicense, and/or
+//    sell copies of the Software, and to permit persons to whom the
+//    Software is furnished to do so, subject to the following
+//    conditions:
+//
+//    The above copyright notice and this permission notice shall be
+//    included in all copies or substantial portions of the Software.
+//
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+//    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//    OTHER DEALINGS IN THE SOFTWARE. OF SUCH DAMAGE.
+//
+//  Or:
+//
+//    Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//    http://www.boost.org/LICENSE_1_0.txt)
+
 #include "boost/act/action.hpp"
 #include "boost/act/action/as_target.hpp"
 #include "boost/act/action/as_function.hpp"
@@ -5,6 +36,7 @@
 #include "boost/act/algorithm/copy.hpp"
 #include "boost/act/algorithm/find.hpp"
 #include "boost/act/algorithm/fill.hpp"
+#include "boost/act/algorithm/count.hpp"
 #include "boost/act/active.hpp"
 #include "boost/act/active/queue_function.hpp"
 #include "boost/act/active/utility.hpp"
@@ -17,6 +49,8 @@
 #include "boost/act/active/queue_function.hpp"
 
 #include <iostream>
+
+#include "boost/act/atomic.hpp"
 
 struct a
 {
@@ -59,7 +93,7 @@ namespace act
 BOOST_ACT_ACTIVE_INTERFACE_SPEC( ::a )
 {
 public:
-  BOOST_ACT_MEM_FUN( (int), mem_test, ((int),left) ((int),right) )
+  BOOST_ACT_ACTIVE_MEM_FUN( (int), mem_test, ((int),left) ((int),right) )
   {
     inactive_this->value *= left + right;
 
@@ -68,7 +102,7 @@ public:
     return inactive_this->value;
   }
 
-  BOOST_ACT_CONST_MEM_FUN( (int), mem_test2, ((),()) )
+  BOOST_ACT_ACTIVE_CONST_MEM_FUN( (int), mem_test2, ((),()) )
   {
     ::std::cout << "mem_test2 Called: " << inactive_this->value << ::std::endl;
 
@@ -104,12 +138,24 @@ int main()
 {
   using namespace ::boost::act;
 
+  BOOST_ATOMIC((::boost::iterator_difference< int* >::type)) atomic_int_test = 0;
+  atomic_int_test += 10;
+
+  ::std::cout << "Atomic value: " << value_of( atomic_int_test ) << ::std::endl;
+
   int array_test[10] = { 0 };
 
   // Loop splits up execution over several threads at runtime, then joins
   for_each[ parallel_algo_model() ]( array_test + 0, array_test + 10
                                    , complex_function()
                                    );
+
+  int const calculated_count
+    = count[ parallel_algo_model() ]( array_test + 0, array_test + 10
+                                    , 15
+                                    );
+
+  ::std::cout << "Count: " << calculated_count << ::std::endl;
 
   int const val = 20;
 

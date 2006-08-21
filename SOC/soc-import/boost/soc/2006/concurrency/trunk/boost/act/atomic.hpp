@@ -1,84 +1,62 @@
 //  Copyright (c) 2006, Matthew Calabrese
-//  All rights reserved.
-//  Distributed under the New BSD License
-//  (See accompanying file ACT_BSD_LICENSE.txt)
+//
+//  This code may be used under either of the following two licences:
+//
+//    Permission is hereby granted, free of charge, to any person
+//    obtaining a copy of this software and associated documentation
+//    files (the "Software"), to deal in the Software without
+//    restriction, including without limitation the rights to use,
+//    copy, modify, merge, publish, distribute, sublicense, and/or
+//    sell copies of the Software, and to permit persons to whom the
+//    Software is furnished to do so, subject to the following
+//    conditions:
+//
+//    The above copyright notice and this permission notice shall be
+//    included in all copies or substantial portions of the Software.
+//
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+//    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+//    OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+//    HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+//    WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+//    OTHER DEALINGS IN THE SOFTWARE. OF SUCH DAMAGE.
+//
+//  Or:
+//
+//    Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//    http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_ACT_ATOMIC_HPP
 #define BOOST_ACT_ATOMIC_HPP
 
-#include <boost/operators.hpp>
+#include "atomic/detail/atomic_type.hpp"
+#include "atomic/detail/native_atomic_types.hpp"
 
-namespace boost
-{
-namespace act
-{
+#include "type_traits/add_atomic.hpp"
+#include "detail/type_from_function_params.hpp"
 
-// ToDo: Encapsulate an active object if no direct atomic support
-// ToDo: Make act like a qualifier
-template< typename Type
+#define BOOST_ATOMIC( source_type )                                            \
+BOOST_ATOMIC_BASE( source_type )
 
-// ToDo: Consider using acquire and release form (figure out wtf they are)
-// ToDo: Make version for 64-bit integers
-// ToDo: Make swap functionality
-template< typename ArithmeticType >
-class atomic_type
-      <
-        IntegralType
-      , typename ::boost::enable_if
-        <
-          ::boost::is_integral< ArithmeticType >
-        >
-        ::type
-      >
-  : ::boost::operators< atomic_type< ArithmeticType > >
-{
-public:
-  atomic_type()
-  {
-  }
+#define BOOST_ATOMIC_T( source_type )                                          \
+typename BOOST_ATOMIC_T_BASE( source_type )
 
-  // ToDo: Use call_traits
-  atomic_type( ArithmeticType source )
-    : value_m( source )
-  {
-  }
-public:
-  friend atomic_type& operator ++( atomic_type& target )
-  {
-    InterlockedIncrement( &target.value_m );
-    return *this;
-  }
+#define BOOST_ATOMIC_BASE( source_type )                                       \
+::boost::act::add_atomic                                                       \
+<                                                                              \
+  ::boost::act::detail::type_from_function_params< void source_type >::type    \
+>                                                                              \
+::type
 
-  friend atomic_type& operator --( atomic_type& target )
-  {
-    InterlockedDecrement( &target.value_m );
-    return *this;
-  }
-public:
-  // ToDo: Make forms of the following which work with other atomic types
-
-  // ToDo: Adjust param type
-  friend atomic_type& operator +=( atomic_type& target, ArithmeticType operand )
-  {
-    InterlockedExchangeAdd( &target.value_m, static_cast< long >( operand ) );
-    return *this;
-  }
-
-  // ToDo: Adjust param type
-  friend atomic_type& operator -=( atomic_type& target, ArithmeticType operand )
-  {
-    return target += -operand;
-  }
-public:
-  friend bool operator ==( atomic_type const& left, atomic_type const& right )
-  {
-    return value_m == right.value_m;
-  }
-private:
-  volatile long value_m;
-};
-
-}
-}
+#define BOOST_ATOMIC_T_BASE( source_type )                                     \
+::boost::act::add_atomic                                                       \
+<                                                                              \
+  typename ::boost::act::detail::type_from_function_params                     \
+    < void source_type >::type                                                 \
+>                                                                              \
+::type
 
 #endif
