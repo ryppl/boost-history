@@ -87,6 +87,8 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 [template J[x] '''J<subscript>'''[x]'''</subscript>''']
 [template Y[x] '''Y<subscript>'''[x]'''</subscript>''']
+[template I[x] '''I<subscript>'''[x]'''</subscript>''']
+[template K[x] '''K<subscript>'''[x]'''</subscript>''']
 [template pow[x y] [x]'''<superscript>'''[y]'''</superscript>&nbsp;''']
 
 [section Introduction]

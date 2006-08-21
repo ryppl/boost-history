@@ -28,12 +28,71 @@ Boost Software License, Version 1.0. (See accompanying file
 LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ]
 
-[#bessel_modified_introduction]
-
 [section Introduction]
 
-[caution _caution]
+[note The main reference is \[[link 1]\].]
 
-TODO
+[heading Notation]
+
+['x], ['y] : real number
+
+['n] : nonnegative integer
+
+['z], ['_nu], ['_mu] : complex number
+
+[heading Definition]
+
+Modified Bessel functions are defined as the solutions to the ordinary
+differential equation
+
+[$equations/mbessel1.png]
+
+The following equivalent definitions are also widely used
+
+[$equations/mbessel2.png]
+
+[$equations/mbessel3.png]
+
+where ['[I _nu](z)] is called Modified Bessel function of the first kind
+and ['[K _nu](z)] is called Modified Bessel function of the second kind.
+
+[note The right hand side of ['[K _nu](z)] equation is replaced by its
+limiting value if ['_nu] is an integer.]
+
+[#mbessel_recur]
+
+[heading Recurrence Relations]
+
+[$equations/mbessel4.png]
+
+[$equations/mbessel5.png]
+
+[heading Derivatives]
+
+[$equations/mbessel6.png]
+
+[$equations/mbessel7.png]
+
+[#mbessel_wronskian]
+
+[heading Wronskian]
+
+[$equations/mbessel8.png]
+
+[#mbessel_reflect]
+
+[heading Reflection Formulas]
+
+[$equations/mbessel9.png]
+
+[$equations/mbessel10.png]
+
+[heading Numerical Algorithms]
+
+All computations of modified Bessel functions are based on [link
+mbessel_recur recurrence relations]. To use the recursion, initial
+values must first be calculated. The methods differ for ['_nu] = ['n]
+is integer and ['_nu] is any real number. We will discuss the two
+situations separately.
 
 [endsect]

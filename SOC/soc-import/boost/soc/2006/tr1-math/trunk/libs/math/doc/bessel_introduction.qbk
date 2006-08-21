@@ -56,7 +56,10 @@ The following equivalent definitions are also widely used
 where ['[J _nu](z)] is called Bessel function of the first kind and
 ['[Y _nu](z)] is called Bessel function of the second kind.
 
-[note ['[Y _nu](z)] is also known as the Neumann function.]
+[note ['[Y _nu](z)] is also known as the Neumann function.
+\n\n
+The right hand side of ['[Y _nu](z)] equation is replaced by its
+limiting value if ['_nu] is an integer.]
 
 [#bessel_recur]
 
