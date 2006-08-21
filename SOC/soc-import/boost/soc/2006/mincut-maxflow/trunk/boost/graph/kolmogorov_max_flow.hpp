@@ -122,9 +122,8 @@ namespace boost {
           }
           
           ~kolmogorov(){}
-      
+
           tEdgeVal max_flow(){
-//             add_active_node(m_sink);
             //augment direct paths from SOURCE->SINK and SOURCE->VERTEX->SINK
             augment_direct_paths();
             //start the main-loop
@@ -713,9 +712,6 @@ namespace boost {
         return algo.max_flow();
   }
 
-namespace detail{
-  
-}
   /**
    * non-named-parameter version, given: capacity, residucal_capacity, reverse_edges, and an index map.
    */
