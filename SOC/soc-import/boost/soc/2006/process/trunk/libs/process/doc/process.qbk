@@ -68,5 +68,5 @@
 [include nonportable_usage.qbk]
 [include portability.qbk]
 [xinclude autodoc.boostbook]
-[include pending.qbk]
+[include position.qbk]
 [include acknowledgements.qbk]
