@@ -320,8 +320,9 @@ x86 CYGWIN gcc unless otherwise noted.]
     of the second kind], Journal of Computational Physics, vol 21, 343 (1976). \n\n
 # [#18] N.M. Temme, ['On the numerical evaluation of the modified bessel function
     of the third kind], Journal of Computational Physics, vol 19, 324 (1975). \n\n
-# [#19] I.J. Thompson and A.R. Barnett, ['Coulomb and Bessel functions of complex
-    arguments and order], Journal of Computational Physics, vol 64, 490 (1986). \n\n
+# [#19] I.J. Thompson and A.R. Barnett, ['Modified bessel functions I_v and K_v
+    of real order and complex argument to selected accuracy], Computer Physics
+    Communications, vol 47, 245 (1987). \n\n
 # [#20] W.H. Vandevender and K.H. Haskell, ['The SLATEC mathematical subroutine
     library], ACM SIGNUM Newsletter, vol 17, 16 (1982). \n\n
 

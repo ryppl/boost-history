@@ -143,6 +143,7 @@ where
 [''''g<subscript>k</subscript>'''] and [''''h<subscript>k</subscript>''']
 are also computed by recursions (involving gamma functions), but the
 formulas are a little complicated, readers are refered to [[link 17]].
+Note Temme's series converge only for |['_mu]| <= 1/2.
 
 As the previous case, ['[Y _nu](x)] is calculated from the forward
 [link bessel_recur recurrence], so is ['[Y _nu+1](x)]. With these two
