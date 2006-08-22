@@ -192,10 +192,12 @@ relative error is 2 or 3 magnitudes higher than the minimum.
 
 [heading Description and Implementation]
 
-Modified Bessel functions of order n are calculated from [link mbessel_0
+Modified Bessel functions of order ['n] are calculated from [link mbessel_0
 modified Bessel functions of order 0] and [link mbessel_1 modified Bessel
 functions of order 1], with the help of [link mbessel_recur recurrence
-relations].
+relations]. Although ['n] is nonnegative, our discussions here can be
+easily extended to modified Bessel functions of negative integer order
+using [link mbessel_reflect reflection formulas].
 
 The function domains are ['[I n](x)]: ([^-_inf, _inf]), ['[K n](x)]: ([^0, _inf]).
 

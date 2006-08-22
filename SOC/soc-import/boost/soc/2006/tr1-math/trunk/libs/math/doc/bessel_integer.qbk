@@ -196,10 +196,12 @@ is actually quite small.
 
 [heading Description and Implementation]
 
-Bessel functions of order n are calculated from [link bessel_0
+Bessel functions of order ['n] are calculated from [link bessel_0
 Bessel functions of order 0] and [link bessel_1 Bessel functions
 of order 1], with the help of [link bessel_recur recurrence
-relations].
+relations]. Although ['n] is nonnegative, our discussions here
+can be easily extended to Bessel functions of negative integer
+order using [link bessel_reflect reflection formulas].
 
 The function domains are ['[J n](x)]: ([^-_inf, _inf]), ['[Y n](x)]: ([^0, _inf]).
 
