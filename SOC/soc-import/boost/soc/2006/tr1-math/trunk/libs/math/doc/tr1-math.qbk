@@ -30,7 +30,7 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 [article TR1-Math
     [quickbook 1.4]
-    [version 1.0]
+    [version 0.9]
     [authors [Zhang, Xiaogang]]
     [copyright 2006 Xiaogang Zhang]
     [purpose C++ TR1 Mathematical Special Functions]
@@ -62,7 +62,7 @@ Boost Software License, Version 1.0. (See accompanying file
 LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
     ]
     [category math]
-    [last-revision $Date: 2006/08/10 16:14:40$]
+    [last-revision $Date: 2006/08/20 10:24:57 $]
 ]
 
 [def _Boost [@http://www.boost.org/ Boost]]
@@ -92,6 +92,12 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 [template pow[x y] [x]'''<superscript>'''[y]'''</superscript>&nbsp;''']
 
 [section Introduction]
+
+[important This library is work in progress. It uses
+[@http://www.johnmaddock.co.uk/toolkit/ Boost Math Toolkit] developed
+by [@http://www.boost.org/people/john_maddock.htm John Maddock] and
+Paul Bristow, including function calls to mathematical subroutines
+and utility tools.]
 
 Ever since the introduction of C standard library about three decades
 ago, the support for mathematical functions hasn't changed much. This
