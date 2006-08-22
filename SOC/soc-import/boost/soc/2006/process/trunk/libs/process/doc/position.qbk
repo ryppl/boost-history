@@ -15,6 +15,15 @@
 
 [section History of changes]
 
+[section Version 0.2 (STILL UNDER DEVELOPMENT)]
+
+* Relicensed the code under the [@http://www.boost.org/LICENSE_1_0.txt
+  Boost Software License 1.0] ['only].  The first version was available
+  under both this license and the MIT one only to comply with Summer of
+  Code guidelines.
+
+[endsect]
+
 [section Version 0.1 (August 21st, 2006)]
 
 * Initial public release.  This is what was presented at the end of the
