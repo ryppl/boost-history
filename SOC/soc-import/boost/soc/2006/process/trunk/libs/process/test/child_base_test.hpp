@@ -1,6 +1,6 @@
 //
 // Boost.Process
-// Regression tests for the child class.
+// Regression tests for Child implementations.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
