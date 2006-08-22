@@ -201,6 +201,26 @@ method.
 
 [/ ---------------------------------------------------------------------- ]
 
+[section Process termination]
+
+The POSIX's `wait(2)` family of system calls returns a lot of information
+about the status of a finalized process, not only the exit status code
+provided on a normal exit.  This information includes additional
+termination reasons such as if the process dumped a core file, if it
+exited due an external signal, etc.
+
+The information described above can be queried through the [classref
+boost::process::posix_status posix_status] class.  This is built on top of
+the regular status class and includes additional methods to query all
+additional details.  It can be used anywhere a `status` object is created
+thanks to its conversion constructor.  For example:
+
+[include ../example/posix_status.cpp c++ code]
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [endsect]
 
 [/ ---------------------------------------------------------------------- ]

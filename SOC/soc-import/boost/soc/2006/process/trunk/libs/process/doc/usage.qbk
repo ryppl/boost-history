@@ -575,6 +575,10 @@ table:
      [`EXIT_FAILURE`] [Not 0]]
 ]
 
+Aside regular exit, some platforms allow retrieving more fine-grained
+information on the termination cause.  This information is available though
+non-portable classes, as is described later on.
+
 The following complete code example illustrates how to start and stop
 multiple processes:
 

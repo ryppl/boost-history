@@ -41,46 +41,18 @@ namespace process {
 //! \brief Status returned by a finalized child process.
 //!
 //! This class represents the %status returned by a child process after it
-//! has terminated.  It contains many methods that may make no sense in
-//! some platforms, but this is done for simplicity.  These methods are
-//! supported everywhere, although they may simply return fake values.
+//! has terminated.  It only provides that information available under all
+//! supported platforms.
+//!
+//! \see posix_status
 //!
 class status
 {
+protected:
     //!
-    //! \brief Indicates whether the process has exited on purpose.
+    //! \brief OS-specific codification of exit status.
     //!
-    bool m_exited;
-
-    //!
-    //! \brief If exited, indicates the exit code.
-    //!
-    int m_exit_status;
-
-    //!
-    //! \brief Indicates whether the process was signaled.
-    //!
-    bool m_signaled;
-
-    //!
-    //! \brief If signaled, indicates the termination signal.
-    //!
-    int m_term_signal;
-
-    //!
-    //! \brief If signaled, indicates whether the process dumped core.
-    //!
-    bool m_dumped_core;
-
-    //!
-    //! \brief Indicates whether the process was stopped.
-    //!
-    bool m_stopped;
-
-    //!
-    //! \brief If stopped, indicates the stop signal.
-    //!
-    int m_stop_signal;
+    int m_flags;
 
 public:
     //!
@@ -110,81 +82,13 @@ public:
     //! \pre exited() is true.
     //!
     int exit_status(void) const;
-
-    //!
-    //! \brief Returns whether the process exited due to an external
-    //!        signal.
-    //!
-    //! Returns whether the process exited due to an external signal.
-    //! The result is always false in Win32 systems.
-    //!
-    bool signaled(void) const;
-
-    //!
-    //! \brief If signaled, returns the terminating signal code.
-    //!
-    //! If the process was signaled, returns the terminating signal code.
-    //! Cannnot be called under Win32 because the preconditions will not
-    //! ever be met.
-    //!
-    //! \pre signaled() is true.
-    //!
-    int term_signal(void) const;
-
-    //!
-    //! \brief If signaled, returns whether the process dumped core.
-    //!
-    //! If the process was signaled, returns whether the process
-    //! produced a core dump.
-    //! Cannnot be called under Win32 because the preconditions will not
-    //! ever be met.
-    //!
-    //! \pre signaled() is true.
-    //!
-    bool dumped_core(void) const;
-
-    //!
-    //! \brief Returns whether the process was stopped by an external
-    //!        signal.
-    //!
-    //! Returns whether the process was stopped by an external signal.
-    //! The result is always false in Win32 systems.
-    //!
-    bool stopped(void) const;
-
-    //!
-    //! \brief If stpped, returns the stop signal code.
-    //!
-    //! If the process was stopped, returns the stop signal code.
-    //! Cannnot be called under Win32 because the preconditions will not
-    //! ever be met.
-    //!
-    //! \pre signaled() is true.
-    //!
-    int stop_signal(void) const;
 };
 
 // ------------------------------------------------------------------------
 
 inline
 status::status(int flags) :
-#if defined(BOOST_PROCESS_POSIX_API)
-    m_exited(WIFEXITED(flags)),
-    m_exit_status(WEXITSTATUS(flags)),
-    m_signaled(WIFSIGNALED(flags)),
-    m_term_signal(WTERMSIG(flags)),
-    m_dumped_core(WCOREDUMP(flags)),
-    m_stopped(WIFSTOPPED(flags)),
-    m_stop_signal(WSTOPSIG(flags))
-#elif defined(BOOST_PROCESS_WIN32_API)
-    m_exited(true),
-    m_exit_status(flags),
-    m_signaled(false),
-    m_term_signal(0),
-    m_dumped_core(false),
-    m_stopped(false),
-    m_stop_signal(0)
-#endif
+    m_flags(flags)
 {
 }
 
@@ -195,7 +99,11 @@ bool
 status::exited(void)
     const
 {
-    return m_exited;
+#if defined(BOOST_PROCESS_POSIX_API)
+    return WIFEXITED(m_flags);
+#elif defined(BOOST_PROCESS_WIN32_API)
+    return true;
+#endif
 }
 
 // ------------------------------------------------------------------------
@@ -206,60 +114,11 @@ status::exit_status(void)
     const
 {
     BOOST_ASSERT(exited());
-    return m_exit_status;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-bool
-status::signaled(void)
-    const
-{
-    return m_signaled;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-int
-status::term_signal(void)
-    const
-{
-    BOOST_ASSERT(signaled());
-    return m_term_signal;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-bool
-status::dumped_core(void)
-    const
-{
-    BOOST_ASSERT(signaled());
-    return m_dumped_core;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-bool
-status::stopped(void)
-    const
-{
-    return m_stopped;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-int
-status::stop_signal(void)
-    const
-{
-    BOOST_ASSERT(stopped());
-    return m_stop_signal;
+#if defined(BOOST_PROCESS_POSIX_API)
+    return WEXITSTATUS(m_flags);
+#elif defined(BOOST_PROCESS_WIN32_API)
+    return m_flags;
+#endif
 }
 
 // ------------------------------------------------------------------------

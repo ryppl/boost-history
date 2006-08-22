@@ -1,6 +1,6 @@
 //
 // Boost.Process
-// Regression tests for the status class.
+// Regression tests for the posix_status class.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -10,7 +10,7 @@
 //
 
 #include <boost/filesystem/operations.hpp>
-#include <boost/process/status.hpp>
+#include <boost/process/posix_status.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "status_base_test.hpp"
@@ -26,9 +26,9 @@ init_unit_test_suite(int argc, char* argv[])
 {
     bfs::initial_path();
 
-    but::test_suite* test = BOOST_TEST_SUITE("status test suite");
+    but::test_suite* test = BOOST_TEST_SUITE("posix_status test suite");
 
-    add_tests_status_base< bp::status >(test);
+    add_tests_status_base< bp::posix_status >(test);
 
     return test;
 }

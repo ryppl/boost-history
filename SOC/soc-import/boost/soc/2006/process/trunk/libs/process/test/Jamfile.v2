@@ -51,6 +51,7 @@ test-suite process :
     [ compile include_pistream_test.cpp : : ]
     [ compile include_posix_child_test.cpp : : ]
     [ compile include_posix_launcher_test.cpp : : ]
+    [ compile include_posix_status_test.cpp : : ]
     [ compile include_postream_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
@@ -147,6 +148,13 @@ test-suite process :
           <library>$(BOOST_ROOT)//filesystem
         ]
 
+    [ run posix_status_test.cpp
+        : helpers
+        :
+        : <library>$(BOOST_ROOT)//unit_test_framework
+          <library>$(BOOST_ROOT)//filesystem
+        ]
+
     [ run win32_child_test.cpp
         :
         :
@@ -166,6 +174,7 @@ test-suite process :
     [ compile ../example/pipeline_tutorial.cpp : : ]
     [ compile ../example/single_process_tutorial.cpp : : ]
     [ compile ../example/posix_communication.cpp : : ]
+    [ compile ../example/posix_status.cpp : : ]
     [ compile ../example/win32_child.cpp : : ]
     [ compile ../example/win32_startup.cpp : : ]
 

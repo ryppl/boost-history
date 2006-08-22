@@ -88,9 +88,6 @@ main(int argc, char* argv[])
 
     //
     // Waits until the process exits and parses its termination status.
-    // Note that we can check for non-regular exit termination because
-    // POSIX systems can report it; under Windows, the second branch
-    // would never execute.
     //
     bp::status s = c.wait();
     if (s.exited()) {

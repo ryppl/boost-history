@@ -22,6 +22,9 @@
   under both this license and the MIT one only to comply with Summer of
   Code guidelines.
 
+* The POSIX-specific bits of a child's exit status were split from the
+  `status` class into a new `posix_status` class.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]
@@ -53,10 +56,6 @@ consideration to decide the best way to solve them.
   to terminate.
 
 * Parametrize classes that use strings to support wide characters.
-
-* Parametrize `wait` methods to return a custom [link
-  boost_process.concepts.exit_status Status] implementation?  If doing
-  this add a `posix_status` class and simplify the existing `status` one.
 
 * Make the `detail::launcher_base` a public class?  It can be useful to
   end users if they decide to implement a custom launcher.

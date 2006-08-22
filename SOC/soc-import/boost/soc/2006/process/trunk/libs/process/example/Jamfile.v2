@@ -46,6 +46,11 @@ exe posix_communication
         posix_communication.cpp
     ;
 
+exe posix_status
+    :
+        posix_status.cpp
+    ;
+
 exe single_process_tutorial
     :
         single_process_tutorial.cpp

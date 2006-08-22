@@ -53,6 +53,8 @@ typedef basic_pipeline< command_line > pipeline;
 class posix_child;
 
 class posix_launcher;
+
+class posix_status;
 #elif defined(BOOST_PROCESS_WIN32_API)
 class win32_child;
 
