@@ -64,7 +64,7 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 Modified Bessel functions of order 0 are building blocks of modified
 Bessel functions of integer order. Moreover, they are commonly used
-and deserve to be implemented separately at their own right. Most
+and deserve to be implemented separately in their own right. Most
 numerical libraries include them as independent functions.
 
 The function domains are ['[I 0](x)]: ([^-_inf, _inf]), ['[K 0](x)]: ([^0, _inf]).
@@ -129,7 +129,7 @@ relative error is 2 or 3 magnitudes higher than the minimum.
 
 Modified Bessel functions of order 1 are building blocks of modified
 Bessel functions of integer order. Moreover, they are commonly used
-and deserve to be implemented separately at their own right. Most
+and deserve to be implemented separately in their own right. Most
 numerical libraries include them as independent functions.
 
 The function domains are ['[I 1](x)]: ([^-_inf, _inf]), ['[K 1](x)]: ([^0, _inf]).

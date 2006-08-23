@@ -89,6 +89,10 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 [template Y[x] '''Y<subscript>'''[x]'''</subscript>''']
 [template I[x] '''I<subscript>'''[x]'''</subscript>''']
 [template K[x] '''K<subscript>'''[x]'''</subscript>''']
+[template j[x] '''j<subscript>'''[x]'''</subscript>''']
+[template y[x] '''y<subscript>'''[x]'''</subscript>''']
+[template i[x] '''i<subscript>'''[x]'''</subscript>''']
+[template k[x] '''k<subscript>'''[x]'''</subscript>''']
 [template pow[x y] [x]'''<superscript>'''[y]'''</superscript>&nbsp;''']
 
 [section Introduction]
@@ -281,6 +285,14 @@ x86 CYGWIN gcc unless otherwise noted.]
 [include bessel_modified_introduction.qbk]
 [include bessel_modified_integer.qbk]
 [include bessel_modified_fractional.qbk]
+
+[endsect]
+
+[section Spherical Bessel Functions]
+
+[include bessel_spherical_introduction.qbk]
+[include bessel_spherical.qbk]
+[include bessel_spherical_modified.qbk]
 
 [endsect]
 
