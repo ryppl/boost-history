@@ -18,5 +18,5 @@ namespace bp = ::boost::process;
 void*
 test_it(void)
 {
-    return new bp::status(0);
+    return new bp::status(bp::create_status(0));
 }

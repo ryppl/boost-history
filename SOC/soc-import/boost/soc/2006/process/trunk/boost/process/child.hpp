@@ -256,7 +256,7 @@ child::wait(void)
         boost::throw_exception
             (system_error("boost::process::child::wait",
                           "waitpid(2) failed", errno));
-    return status(s);
+    return create_status(s);
 #elif defined(BOOST_PROCESS_WIN32_API)
     DWORD code;
     // XXX This loop should go away in favour of a passive wait.
@@ -265,7 +265,7 @@ child::wait(void)
         ::Sleep(500);
     } while (code == STILL_ACTIVE);
     ::WaitForSingleObject(m_handle, 0);
-    return status(code);
+    return create_status(code);
 #endif
 }
 
