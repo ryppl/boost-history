@@ -1,0 +1,130 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Introduction</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../../index.html" title="TR1-Math 0.9">
+<link rel="up" href="../spherical_bessel_functions.html" title="Spherical Bessel Functions">
+<link rel="prev" href="../spherical_bessel_functions.html" title="Spherical Bessel Functions">
+<link rel="next" href="spherical_bessel_functions.html" title="Spherical
+      Bessel Functions">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../spherical_bessel_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../spherical_bessel_functions.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="spherical_bessel_functions.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="tr1_math.spherical_bessel_functions.introduction"></a><a href="introduction.html" title="Introduction">Introduction</a></h3></div></div></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The main reference is [<a href="../references.html#1">1</a>].
+        </p></td></tr>
+</table></div>
+<a name="tr1_math.spherical_bessel_functions.introduction.notation"></a><h5>
+<a name="id4854520"></a>
+        <a href="introduction.html#tr1_math.spherical_bessel_functions.introduction.notation">Notation</a>
+      </h5>
+<p>
+        <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span> : real number
+      </p>
+<p>
+        <span class="emphasis"><em>n</em></span> : integer
+      </p>
+<p>
+        <span class="emphasis"><em>z</em></span>, <span class="emphasis"><em>&#957;</em></span>, <span class="emphasis"><em>&#956;</em></span> : complex
+        number
+      </p>
+<a name="sbessel_def"></a><p>
+      </p>
+<a name="tr1_math.spherical_bessel_functions.introduction.definition"></a><h5>
+<a name="id4854582"></a>
+        <a href="introduction.html#tr1_math.spherical_bessel_functions.introduction.definition">Definition</a>
+      </h5>
+<p>
+        Spherical Bessel functions are defined as the solutions to the ordinary differential
+        equation
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/sbessel1.png" alt="sbessel1"></span>
+      </p>
+<p>
+        The following equivalent definitions are more popular
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/sbessel2.png" alt="sbessel2"></span>
+      </p>
+<p>
+        where <span class="emphasis"><em> j<sub>n</sub>(z)</em></span> is called Spherical Bessel function
+        of the first kind and <span class="emphasis"><em> y<sub>n</sub>(z)</em></span> is called Spherical
+        Bessel function of the second kind.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          <span class="emphasis"><em> y<sub>n</sub>(z)</em></span> is also known as the Spherical Neumann
+          function.
+        </p></td></tr>
+</table></div>
+<p>
+        Modified Spherical Bessel functions are defined as the solutions to the ordinary
+        differential equation
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/sbessel3.png" alt="sbessel3"></span>
+      </p>
+<p>
+        The following equivalent definitions are more popular
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/sbessel4.png" alt="sbessel4"></span>
+      </p>
+<p>
+        where <span class="emphasis"><em> i<sub>n</sub>(z)</em></span> is called Modified Spherical Bessel
+        function of the first kind and <span class="emphasis"><em> k<sub>n</sub>(z)</em></span> is called
+        Modified Spherical Bessel function of the second kind.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The definition of Modified Spherical Bessel function of the second kind
+          is slightly different from [<a href="../references.html#1">1</a>], where <span class="emphasis"><em> k<sub>n</sub>(z)</em></span>
+          is called Modified Spherical Bessel function of the third kind.
+        </p></td></tr>
+</table></div>
+<a name="tr1_math.spherical_bessel_functions.introduction.equations_and_formulas"></a><h5>
+<a name="id4854771"></a>
+        <a href="introduction.html#tr1_math.spherical_bessel_functions.introduction.equations_and_formulas">Equations
+        and Formulas</a>
+      </h5>
+<p>
+        There are corresponding recurrence relations, reflection formulas, and Wronskians
+        for all four spherical Bessel functions. They can be derived easily from
+        the <a href="introduction.html#sbessel_def">function definitions</a> and their counterparts
+        for <a href="../bessel_functions/introduction.html#bessel_recur">Bessel functions</a> and <a href="../modified_bessel_functions/introduction.html#mbessel_recur">modified
+        Bessel functions</a>.
+      </p>
+</div>
+<table width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006 Xiaogang Zhang</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../spherical_bessel_functions.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../spherical_bessel_functions.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="spherical_bessel_functions.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
