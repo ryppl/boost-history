@@ -64,6 +64,13 @@ std::string configure_getsuffix () {
 	return s_suffix;
 }
 
+static ostream& operator<< (ostream& o, const vector<string>& v) {
+	for (vector<string>::const_iterator it = v.begin (); it != v.end (); ++it) {
+		o << *it << "\n";
+	}
+	return o;
+}
+
 void configure_context (context_t& context){
 	using namespace boost;
 	using namespace boost::wave;
@@ -82,6 +89,10 @@ void configure_context (context_t& context){
 		context.set_language (
 		    static_cast<language_support>(context.get_language () 
 		        | support_c99));
+
+	// this one isn't optional.
+	context.set_language (language_support (~support_option_emit_line_directives
+				                            & context.get_language()));
 
 	for (vector<string>::const_iterator it = s_sys_inc_paths.begin ();
 	     it != s_sys_inc_paths.end ();
@@ -115,7 +126,6 @@ void configure_context (context_t& context){
 	     ++it) {
 		context.remove_macro_definition (it->c_str());
 	}
-
 }
 
 
@@ -254,19 +264,20 @@ vector<string> configure (int args, const char **argv) {
 	            .extra_parser(at_option_parser)
 	            .run (),
 	            vm);
-	if (vm.count("response-file")) {
-		ifstream ifs (vm["response-file"].as<string>().c_str());
+	if (vm.count("config-file")) {
+		ifstream ifs (vm["config-file"].as<string>().c_str());
 		if (!ifs) {
-			cout << "Could not open the response file\n";
+			cout << "Could not open the config file\n";
 		} else {
 			// Read the whole file into a string
 			stringstream ss;
 			ss << ifs.rdbuf();
 			// Split the file content
-			char_separator<char> sep(" \n\r");
+			char_separator<char> sep("\n\r");
 			tokenizer<char_separator<char> > tok(ss.str(), sep);
 			vector<string> args;
 			copy(tok.begin(), tok.end(), back_inserter(args));
+//			cout << "Input file { \n" << args << "}" << endl;
 			// Parse the file and store the options
 			opt::store(opt::command_line_parser(args)
 			     .options(desc_generic)
@@ -284,20 +295,19 @@ vector<string> configure (int args, const char **argv) {
 		paths = vm["sysinclude"].as<vector<string> >();
 		copy (paths.begin (), paths.end (), back_inserter(s_sys_inc_paths));
 	}
+	
 	if (vm.count ("define"))
 		s_macros = vm["define"].as<vector<string> >();
+		
 	if (vm.count ("predefine")) {
 		paths = vm["predefine"].as<vector<string> >();
 		copy (paths.begin (), paths.end (), back_inserter(s_macros));
 	}
 	if (vm.count ("undefine"))
 		s_undef = vm["undefine"].as<vector<string> >();
-	if (vm.count ("long_long"))
-		s_longlong = vm["long_long"].as<bool>();
-	if (vm.count ("c99"))
-		s_c99 = vm["c99"].as<bool>();
-	if (vm.count ("variadics"))
-		s_variadics = vm["variadics"].as<bool>() || s_c99;
+	s_longlong = vm.count ("long_long") > 0;
+	s_c99 = vm.count ("c99") > 0;
+	s_variadics = (vm.count ("variadics") > 0) || s_c99;
 	return vm["input-file"].as<vector<string> >();
 }
 

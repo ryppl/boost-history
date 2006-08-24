@@ -2,6 +2,7 @@
 #include <boost/filesystem/operations.hpp>
 #include <boost/wave/cpp_exceptions.hpp>
 #include <boost/wave/cpplexer/cpplexer_exceptions.hpp>
+#include <boost/algorithm/string.hpp>
 #include "parser/generator.h"
 #include "config.h"
 #include "output.h"
@@ -20,6 +21,16 @@ static string replace_suffix (string src, const char * suffix) {
 		src.append(suffix);
 	return src;
 }
+
+static bool validate_filename (string s) {
+	if (! iends_with(s, ".cpp")) {
+		cout << "Ignoring " << s << ": not a .cpp" << endl;
+		return false;
+	} else {
+		return true;
+	}
+}
+
 /*
 static char * strip (char * src) {
 	char * p = src;
@@ -47,6 +58,7 @@ ostream& operator<<(ostream& o, const vector<string>& v) {
 	return o;
 }
 */
+
 int
 Driver::
 execute (int args, const char ** argv) {
@@ -107,6 +119,9 @@ execute (int args, const char ** argv) {
 		// upon successful generation, put them the .map file.
 
 		try {
+			if (!validate_filename(*file))
+				continue;
+			
 			string header_n = replace_suffix(*file, "_gen.h");
 			string source_n = replace_suffix(*file, "_gen.cpp");
 			
@@ -115,10 +130,10 @@ execute (int args, const char ** argv) {
 			OutputDelegate del (header, source, maps);
 			header << "// " << header_n << endl;
 			source << "// " << source_n << endl;
-			cout << "Processing file " << *file << "...";
+			cerr << "Processing file " << *file << "...";
 			SourceGenerator g(ctx,del);
 			vector<string> namespaces = g.execute ();
-			del.emit ();
+
 			for (vec_iter_t map = namespaces.begin ();
 			     map != namespaces.end ();
 			     ++map) {
@@ -133,13 +148,13 @@ execute (int args, const char ** argv) {
 			source << endl;
 		} 
 		catch (wave::cpplexer::lexing_exception& e) {
-			cout << *file 
+			cerr << *file 
 			     << ": " << e.description ()
 			     << endl;
 			return 1;
 		}
 		catch (wave::macro_handling_exception& e) {
-			cout << *file 
+			cerr << *file 
 			     << "(" << e.file_name() << " " 
 			     << e.line_no() <<":" << e.column_no() << ")"
 			     << ": macro expansion failed: "
@@ -148,7 +163,7 @@ execute (int args, const char ** argv) {
 			return 1;
 		}
 		catch (wave::preprocess_exception& e) {
-			cout << *file 
+			cerr << *file 
 			     << "(" << e.file_name() << " " 
 			     << e.line_no() <<":" << e.column_no() << ")"			
 			     << ": " << e.description ()
@@ -156,7 +171,7 @@ execute (int args, const char ** argv) {
 			 return 1;
 		}
 		catch (std::exception& e) {
-			cout << *file << ": " << e.what () << endl;
+			cerr << *file << ": " << e.what () << endl;
 			return 1;
 		}
 		

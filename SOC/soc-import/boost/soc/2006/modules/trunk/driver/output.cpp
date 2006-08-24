@@ -18,7 +18,7 @@ using namespace boost::filesystem;
 //  _List is designed to be callable from gdb.  Only reason check() calls
 // it is to make sure the linker doesn't kill it off.
 static std::set<OutputDelegate *> s_delegates;
-
+//OutputDelegate* OutputDelegate::s_current;
 
 static bool _Find (OutputDelegate *d) {
 	return s_delegates.count (d) > 0;
@@ -65,12 +65,15 @@ check () {
 OutputDelegate::
 OutputDelegate (std::ostream& h, std::ostream& s, MapManager& m)
 : m_impl (new Context (h, s, m)) {
+	//s_current = this;
 	_Add (this);
 	m_impl->m_mode.push(Context::out_external);
  }
 
 OutputDelegate::
 ~OutputDelegate () {
+// 	assert (s_current == this);
+// 	s_current = 0;
 	_Remove (this);
 	delete m_impl;
 }
@@ -108,6 +111,7 @@ OutputDelegate::
 	}
 	
 */
+/*
 void 
 OutputDelegate::
 import_module (std::string & name) {
@@ -238,4 +242,13 @@ emit () {
 // 	          bind<void>(Emitter::operator(), _1, m_source));
 
 	m_impl->m_emitted = true;
+}
+
+#pragma mark -
+*/
+void
+OutputDelegate::
+out (token_t single) {
+	token_t::string_type t = single.get_value();
+	m_impl->source << std::string(t.begin (), t.end ()) << " ";	
 }

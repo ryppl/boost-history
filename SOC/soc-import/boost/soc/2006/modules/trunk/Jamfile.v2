@@ -8,6 +8,7 @@ exe mfront_bin :
 	map/map.cpp
 	parser/actions.cpp
 	parser/generator.cpp
+	parser/xformctx.cpp
 	$(BOOST_ROOT)//filesystem
 	$(BOOST_ROOT)//wave
 	$(BOOST_ROOT)//regex

@@ -1,3 +1,5 @@
+--long_long
+--c99
 -S/usr/include
 -S/usr/include/c++/4.0.0
 -S/usr/include/c++/4.0.0/powerpc-apple-darwin8

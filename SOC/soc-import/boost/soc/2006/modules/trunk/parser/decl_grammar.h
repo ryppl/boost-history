@@ -16,27 +16,25 @@
 
 #include "actions.h"
 #include "lexpolicies.h"
+#include "xformctx.h"
 
-/*
-This grammar's a minimalistic brace-counter, with traps for
-modular c++ constructs.
-*/
 
 struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
 	mutable std::vector<std::string> m_ids;
-	// m_del handles all the actual translation.
-	mutable OutputDelegate* m_del;
+
+	mutable TransformContext* m_del;
 	
-	decl_grammar (OutputDelegate& del) : m_del(&del) {}
+	decl_grammar (TransformContext& del) : m_del(&del) {}
 	
 	template<typename ScannerT>
 	struct definition {
         typedef boost::spirit::rule<ScannerT> rule_type;
 
-		rule_type translation_unit, declaration, inner_decl,
-		          access_specifier, export_stmt, import_stmt;
+// 		rule_type translation_unit, declaration, inner_decl,
+// 		          access_specifier, export_stmt, import_stmt;
 		
-
+		rule_type mod_export_decl, mod_import_decl, mod_access_specifier,
+		          mod_decl, mod_name;
 
         rule_type constant_expression;
         rule_type logical_or_exp, logical_and_exp;
@@ -125,7 +123,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
         // 
         // grammar definition. 
         //
-        definition(translation_unit_grammar const& self)
+        definition(decl_grammar const& self)
         {
             using namespace boost::spirit;
             using namespace boost::wave;
@@ -275,6 +273,8 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 |	  namespace_definition
                 |	  block_declaration
                 |	  function_definition
+                |     mod_export_decl
+                |     mod_import_decl
                 ;
 
             block_declaration
@@ -876,6 +876,42 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 |   ch_p(T_MSEXT_INT16)
                 |   ch_p(T_MSEXT_INT32)
                 ;
+             
+             mod_access_specifier
+                =   (ch_p(T_PUBLIC) >> ch_p(T_COLON))
+                |   (ch_p(T_PRIVATE) >> ch_p(T_COLON))
+                ;
+             
+             mod_name
+                = (ch_p(T_IDENTIFIER) % ch_p(T_COLON_COLON))
+                  >> !(ch_p(T_LEFTBRACKET) >> ch_p(T_STRINGLIT) >> ch_p(T_RIGHTBRACKET))
+                ;
+             
+             mod_decl
+                =	  template_declaration
+                |	  explicit_instantiation
+                |	  explicit_specialization
+                |	  linkage_specification
+                |	  namespace_definition
+                |	  block_declaration
+                |	  function_definition                
+                |     mod_access_specifier
+				|     mod_import_decl
+                ;
+                
+             mod_export_decl 
+                =     ch_p(T_EXPORT) >> ch_p(T_NAMESPACE) 
+                    >> mod_name >> ch_p(T_LEFTBRACE)
+                    >> +mod_decl
+                    >> ch_p(T_RIGHTBRACE) >> ch_p(T_SEMICOLON)
+                ;
+             
+             mod_import_decl
+                =     ch_p(T_IMPORT) >> ch_p(T_NAMESPACE) >> mod_name
+                    >> ch_p(T_SEMICOLON)
+                ;
+             
+             
 //        }
 
 //         rule_type const& start() const { return translation_unit; }

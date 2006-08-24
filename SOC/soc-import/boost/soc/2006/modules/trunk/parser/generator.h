@@ -11,7 +11,7 @@ class SourceGenerator {
 public:
 	SourceGenerator (context_t& ctx, OutputDelegate& del) : c(ctx), d(del) {}
 
-	// returns a list of the modules defined (in part or whole) int
+	// returns a list of the modules defined (in part or whole) in
 	// this file.
 	std::vector<std::string>  execute ();
 };

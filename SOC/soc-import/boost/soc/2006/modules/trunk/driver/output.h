@@ -24,38 +24,8 @@ class OutputDelegate {
 	struct Context;
 
 	Context * m_impl;
-
-// 	enum Context {
-// 		out_header,
-// 		out_source,
-// 		out_none
-// 	};
-	
-// 	std::ostream&  m_header;
-// 	std::ostream&  m_source;
-
-// 	MapManager & m_map;
-
-// 	struct Emitter {
-// 		virtual ~Emitter () {}
-// 		virtual void operator()(std::ostream& o) = 0;
-// 	};
-// 	
-// 	struct RangeEmitter;
-// 	struct StringEmitter;
-// 	
-// 	// we share these between the header and source texts.
-// 	std::set<std::string> m_includes;
-// 	
-// 	// we don't emit the actual text until after we have a final
-// 	// set of #include directives to emit.
-// 	std::vector< boost::shared_ptr<Emitter> >  m_header_text, 
-// 	                                           m_source_text;
-	
-//	std::stack<Context> m_dest;
-	
-// 	bool m_emitted;
 	void check ();
+	
 	
 	// not implemented.
 	OutputDelegate ();
@@ -65,11 +35,17 @@ public:
 
 	~OutputDelegate ();
 
+	//
+	// These interpret the token ranges given to them
+	void module_export (const context_iter_t& start, const context_iter_t& end);
+	void module_import (const context_iter_t& start, const context_iter_t& end);
+	void go_public ();
+	void go_private ();
+
 	// Note: For export namespace {} statements, don't tell OutputDelegate to emit
 	// the braces.  We'll take care of that here.  It needs a bit of special handling.
-
+/*	
 	void import_module (std::string & name);
-	
 	void begin_module (std::string & name);
 	void end_module ();
 	
@@ -85,39 +61,10 @@ public:
 	
 	/// emit () causes the files to be written.
 	void emit ();
+*/
 
-	//
-	// Older API
-	/*
-	void push_source () {
-		check ();
-		m_dest.push (out_source);
-	}
-	
-	void push_header () {
-		check ();
-		m_dest.push (out_header);
-	}
-	
-	void pop () {
-		check ();
-		m_dest.pop ();
-	}
-
-	//
-	// the next two replace the topmost element with either header or source.
-	void swap_header () {
-		check ();
-		pop ();
-		push_header ();
-	}
-	
-	void swap_source () {
-		check ();
-		pop ();
-		push_source ();
-	}*/
-	
+	void out (token_t single);
+	void emit ();
 };
 
 

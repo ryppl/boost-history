@@ -18,6 +18,12 @@ break_here (context_iter_t ,context_iter_t ) {
 	std::cout << "internal break" << std::endl;
 }
 
+ref_actor<TransformContext, export_stmt_action>
+export_stmt (TransformContext* ctx) {
+	return ref_actor<TransformContext, export_stmt_action>(*ctx);
+}
+
+/*
 ref_value_actor<OutputDelegate,decl_module_action>
 decl_module( OutputDelegate* del ) {
 	return ref_value_actor<OutputDelegate,decl_module_action>(*del);
@@ -52,3 +58,4 @@ ref_actor<OutputDelegate, go_private_action>
 go_private (OutputDelegate* del) {
 	return ref_actor<OutputDelegate, go_private_action>(*del);
 }
+*/

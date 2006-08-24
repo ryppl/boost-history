@@ -1,6 +1,7 @@
 #include "setup.h"
 #include "generator.h"
 #include "decl_grammar.h"
+#include "xformctx.h"
 
 #include <iostream>
 #include <fstream>
@@ -34,14 +35,26 @@ static
 std::vector<std::string>
 execute (context_t& ctx, OutputDelegate& del) {
 	std::vector<std::string> retval;
-	decl_grammar g (del);
+	TransformContext xform (&del);
+	decl_grammar g (xform);
 	skip_parser s;
+	
+	context_iter_t start, end;
+	start = ctx.begin ();
+	end = ctx.end ();
 	// default to emit in the source code.
 //	del.push_source ();
-	if (parse (ctx.begin (), ctx.end (), g, s).hit) {
-		cout << "parsed" << endl;
+
+	if (parse (start, end, g, s).hit) {
+		// it parsed, now we begin the output process.
+		context_iter_t it;
+		for (it = start; it != end; ++it) {
+			xform.set_position (it);
+			del.out (*it);
+		}
+		cerr << "parsed" << endl;
 	} else {
-		cout << "not parsed." << endl;
+		cerr << "not parsed." << endl;
 	}
 	return g.m_ids;
 }

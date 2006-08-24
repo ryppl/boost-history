@@ -3,6 +3,8 @@
 
 #include "lexpolicies.h"
 #include "driver/output.h"
+#include "xformctx.h"
+
 #include <boost/format.hpp>
 
 #include <boost/spirit.hpp>
@@ -27,6 +29,7 @@
 #include <iterator>
 #include <algorithm>
 #include <vector>
+#include <assert.h>
 
 using namespace std;
 using namespace boost;
@@ -40,6 +43,67 @@ void print (const context_t::iterator_type  & start,
 // just a little debugging support for decl_grammar
 void break_here (context_iter_t ,context_iter_t );
 
+struct go_public_action {
+	template<typename T, typename ValueT>
+	void act (T& ref, ValueT const& value) const {}
+	
+	template<typename T, typename IterT>
+	void act (T& ref, IterT const& start, IterT const& end) const {}
+};
+
+ref_actor<TransformContext, go_public_action>
+go_public (TransformContext* ctx);
+
+
+struct go_private_action {
+	template<typename T, typename ValueT>
+	void act (T& ref, ValueT const& value) const {}
+	
+	template<typename T, typename IterT>
+	void act (T& ref, IterT const& start, IterT const& end) const {}
+};
+
+ref_actor<TransformContext, go_private_action>
+go_private (TransformContext* ctx);
+
+struct method_body_action {
+	template<typename T, typename ValueT>
+	void act (T& ref, ValueT const& value) const {}
+	
+	template<typename T, typename IterT>
+	void act (T& ref, IterT const& start, IterT const& end) const {}
+};
+
+ref_actor<TransformContext, method_body_action>
+method_body (TransformContext* ctx);
+
+struct import_stmt_action {
+	template<typename T, typename ValueT>
+	void act (T& ref, ValueT const& value) const {}
+	
+	template<typename T, typename IterT>
+	void act (T& ref, IterT const& start, IterT const& end) const {}
+};
+
+ref_actor<TransformContext, import_stmt_action>
+import_stmt (TransformContext* ctx);
+
+struct export_stmt_action {
+	template<typename T, typename ValueT>
+	void act (T& ref, ValueT const& value) const {
+		assert(0 && "export_stmt: act without iters called");
+	}
+	
+	template<typename T, typename IterT>
+	void act (T& ref, IterT const& start, IterT const& end) const {
+		ref.module_export(start,end);
+	}
+};
+
+ref_actor<TransformContext, export_stmt_action>
+export_stmt (TransformContext* ctx);
+
+/*
 
 struct decl_module_action {
 	template<typename T, typename ValueT>
@@ -105,19 +169,19 @@ struct emit_action {
 	}	
 };
 
-struct go_public_action {
-	template< typename T>
-	void act (T& ref) const {
-		ref.go_public ();
-	}	
-};
+// struct go_public_action {
+// 	template< typename T>
+// 	void act (T& ref) const {
+// 		ref.go_public ();
+// 	}	
+// };
 
-struct go_private_action {
-	template< typename T>
-	void act (T& ref) const {
-		ref.go_private ();
-	}	
-};
+// struct go_private_action {
+// 	template< typename T>
+// 	void act (T& ref) const {
+// 		ref.go_private ();
+// 	}	
+// };
 
 
 struct import_module_action {
@@ -170,6 +234,6 @@ finish_decl( OutputDelegate* del );
 ref_value_actor<OutputDelegate,decl_module_action>
 decl_module( OutputDelegate* del );
 
-
+*/
 
 #endif

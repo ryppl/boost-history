@@ -1,1 +1,1 @@
-module example: simple.h simple.cpp ;
+module example: simple.cpp simple.h ;
