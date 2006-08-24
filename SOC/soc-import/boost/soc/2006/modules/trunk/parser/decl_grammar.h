@@ -18,7 +18,10 @@
 #include "lexpolicies.h"
 #include "xformctx.h"
 
-
+//
+// A slightly adapted version of Danny Havenith's Hannibal parser.
+//  All credit goes to him, this thing is amazing.
+///
 struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
 	mutable std::vector<std::string> m_ids;
 
@@ -120,6 +123,42 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
         rule_type odd_language_extension, mem_initializer_id;
         rule_type mem_initializer, mem_initializer_list;
 
+
+        rule_type ta_expression_operator;
+        rule_type ta_logical_or_expression;
+        rule_type ta_expression;
+        rule_type ta_conditional_expression;
+        rule_type ta_throw_expression;
+        rule_type ta_assignment_expression;
+        rule_type postfix_expression_helper;
+        rule_type simple_postfix_expression;
+        rule_type pseudo_destructor_name;
+        rule_type direct_new_declarator;
+        rule_type new_declarator;
+        rule_type new_initializer;
+        rule_type new_type_id;
+        rule_type new_placement;
+        rule_type delete_expression;
+        rule_type new_expression;
+        rule_type unary_operator;
+        rule_type postfix_expression;
+        rule_type unary_expression;
+        rule_type expression_operator;
+        rule_type cast_expression;
+        rule_type throw_expression;
+        rule_type assignment_operator;
+        rule_type logical_or_expression;
+        rule_type conditional_expression;
+        rule_type boolean_literal;
+        rule_type string_literal;
+        rule_type floating_literal;
+        rule_type character_literal;
+        rule_type integer_literal;
+        rule_type expression;
+        rule_type literal;
+        rule_type primary_expression;
+
+
         // 
         // grammar definition. 
         //
@@ -130,109 +169,252 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
             using boost::wave::util::pattern_p;
 			using namespace boost::phoenix;
 
-            // constant_expression was copied from Wave
+            primary_expression
+              =	    literal
+                |	ch_p(T_THIS)
+                |	ch_p(T_COLON_COLON) >> ch_p(T_IDENTIFIER)
+                |	ch_p(T_COLON_COLON) >> operator_function_id
+                |	ch_p(T_COLON_COLON) >> qualified_id
+                |	ch_p(T_LEFTPAREN) >> expression >> ch_p(T_RIGHTPAREN)
+                |	id_expression
+                ;
+            
+            literal
+              =	    integer_literal
+                |	character_literal
+                |	floating_literal
+                |	string_literal
+                |	boolean_literal
+                ;
+            
+            integer_literal
+                =       pattern_p( IntegerLiteralTokenType, TokenTypeMask);
+            
+            character_literal
+                =       pattern_p( CharacterLiteralTokenType, TokenTypeMask);
+            
+            floating_literal
+                =       pattern_p( FloatingLiteralTokenType, TokenTypeMask);
+            
+            string_literal
+                =       pattern_p( StringLiteralTokenType, TokenTypeMask);
+            
+            boolean_literal
+                =       pattern_p( BoolLiteralTokenType, TokenTypeMask);
+
+            //
+            // TODO: separate assignment expression into a grammar of it's own
+            //          
+            assignment_expression
+        =	    conditional_expression
+          |	logical_or_expression >> assignment_operator >> assignment_expression
+          |	throw_expression
+                ;
+
+            ta_assignment_expression
+        =	    ta_conditional_expression
+          |	ta_logical_or_expression >> assignment_operator >> ta_assignment_expression
+          |	ta_throw_expression
+                ;
+                        
+            throw_expression
+                =       ch_p(T_THROW) >> !assignment_expression
+                ;
+
+            ta_throw_expression
+                =       ch_p(T_THROW) >> !ta_assignment_expression
+                ;
+
+            conditional_expression
+        =	    logical_or_expression 
+                    >>  !(   
+                                ch_p(T_QUESTION_MARK) 
+                            >>  expression 
+                            >>  ch_p(T_COLON) 
+                            >>  assignment_expression
+                        )
+                ;
+
+            ta_conditional_expression
+        =	    ta_logical_or_expression 
+                    >>  !(   
+                                ch_p(T_QUESTION_MARK) 
+                            >>  ta_expression 
+                            >>  ch_p(T_COLON) 
+                            >>  ta_assignment_expression
+                        )
+                ;
+            
+            expression
+                =       assignment_expression % ch_p(T_COMMA);
+                                
+            ta_expression
+                =       ta_assignment_expression % ch_p(T_COMMA);
+
+            assignment_operator
+                =   pp(T_ASSIGN)         
+                |   pp(T_ANDASSIGN)
+                |   pp(T_ORASSIGN)         
+                |   pp(T_XORASSIGN) 
+                |   pp(T_DIVIDEASSIGN)     
+                |   pp(T_MINUSASSIGN) 
+                |   pp(T_PERCENTASSIGN)    
+                |   pp(T_PLUSASSIGN)
+                |   pp(T_SHIFTLEFTASSIGN)  
+                |   pp(T_SHIFTRIGHTASSIGN) 
+                |   pp(T_STARASSIGN)
+                ;
+
+
+            // we skip quite a few rules here, since we're not interested in operator precedence 
+            // just now.            
+            logical_or_expression
+                =   cast_expression % expression_operator
+                ;
+
+            ta_logical_or_expression
+                =   cast_expression % ta_expression_operator
+                ;
+            
+            expression_operator 
+                =   ta_expression_operator | pp(T_GREATER)
+                ;
+            
+            ta_expression_operator 
+                =   pp(T_OROR) 
+                |   pp(T_ANDAND) 
+                |   pp(T_OR) 
+                |   pp(T_XOR) 
+                |   pp(T_AND)
+                |   pp(T_NOTEQUAL) 
+                |   pp(T_EQUAL) 
+                |   pp(T_GREATEREQUAL) 
+                |   pp(T_LESSEQUAL)
+                |   pp(T_LESS) 
+                |   pp(T_SHIFTLEFT) 
+                |   pp(T_SHIFTRIGHT)
+                |   pp(T_PLUS) 
+                |   pp(T_MINUS) 
+                |   pp(T_PERCENT) 
+                |   pp(T_DIVIDE) 
+                |   pp(T_STAR)
+                |   pp(T_ARROWSTAR) 
+                |   pp(T_DOTSTAR) 
+                ;
+
+            cast_expression
+                =	  ch_p(T_LEFTPAREN) >> type_id >> ch_p(T_RIGHTPAREN) 
+                    >>  cast_expression
+                |   unary_expression
+                ;
+            
+            unary_expression
+                =	    postfix_expression
+                |	  ch_p(T_PLUSPLUS) >> cast_expression
+                |	  ch_p(T_MINUSMINUS) >> cast_expression
+                |	  unary_operator >> cast_expression
+                |	  ch_p(T_SIZEOF) >> unary_expression
+                |	  ch_p(T_SIZEOF) 
+                    >> ch_p(T_LEFTPAREN) >> type_id >> ch_p(T_RIGHTPAREN)
+                |	  new_expression
+                |	  delete_expression
+                ;
+            
+            unary_operator 
+                =   ch_p(T_STAR) 
+                |   pp(T_AND) 
+                |   pp(T_PLUS) 
+                |   ch_p(T_MINUS) 
+                |   ch_p(T_NOT) 
+                |   pp(T_COMPL)
+                ;
+
+            new_expression
+                =	 !ch_p(T_COLON_COLON) >> ch_p(T_NEW) >> !new_placement
+                    >>  ( 
+                            new_type_id >> !new_initializer
+                        |   ch_p(T_LEFTPAREN) >> type_id >> ch_p(T_RIGHTPAREN) >> !new_initializer
+                        )
+                ;
+            
+            new_placement
+                =   ch_p(T_LEFTPAREN) >> expression_list >> ch_p(T_RIGHTPAREN)
+                ;
+            
+            new_type_id
+                =	  type_specifier_seq >> !new_declarator
+                ;
+            
+            new_declarator
+                =	  ptr_operator >> !new_declarator
+                |	  direct_new_declarator
+                ;
+            
+            direct_new_declarator
+                =  *(   pp(T_LEFTBRACKET) >> expression >> pp(T_RIGHTBRACKET) ) 
+                    >>  pp(T_LEFTBRACKET) >> constant_expression >> pp(T_RIGHTBRACKET)
+                ;
+            
+            new_initializer
+                =   ch_p(T_LEFTPAREN) >> !expression_list >> ch_p(T_RIGHTPAREN)
+                ;
+            
+            delete_expression
+                =	 !ch_p(T_COLON_COLON) >> ch_p(T_DELETE) >> cast_expression
+                |	 !ch_p(T_COLON_COLON) >> ch_p(T_DELETE) 
+                    >>  pp(T_LEFTBRACKET) >> pp(T_RIGHTBRACKET) 
+                    >>  cast_expression
+                ;
+            
+            postfix_expression
+                =   simple_postfix_expression >> *postfix_expression_helper
+                ;
+            
+            simple_postfix_expression
+                =   primary_expression
+                |	  simple_type_specifier 
+                    >>  ch_p(T_LEFTPAREN) >> !expression_list >> ch_p(T_RIGHTPAREN)
+                |	  ch_p(T_DYNAMICCAST) 
+                    >>  ch_p(T_LESS) >> type_id >> ch_p(T_GREATER) 
+                    >>  ch_p(T_LEFTPAREN) >> expression >> ch_p(T_RIGHTPAREN)
+                |	  ch_p(T_STATICCAST) 
+                    >>  ch_p(T_LESS) >> type_id >> ch_p(T_GREATER) 
+                    >>  ch_p(T_LEFTPAREN) >> expression >> ch_p(T_RIGHTPAREN)
+                |	  ch_p(T_REINTERPRETCAST) 
+                    >>  ch_p(T_LESS) >> type_id >> ch_p(T_GREATER) 
+                    >>  ch_p(T_LEFTPAREN) >> expression >> ch_p(T_RIGHTPAREN)
+                |	  ch_p(T_CONSTCAST) 
+                    >>  ch_p(T_LESS) >> type_id >> ch_p(T_GREATER) 
+                    >>  ch_p(T_LEFTPAREN) >> expression >> ch_p(T_RIGHTPAREN)
+                |	  ch_p(T_TYPEID) 
+                    >>  ch_p(T_LEFTPAREN) >> expression >> ch_p(T_RIGHTPAREN)
+                |	  ch_p(T_TYPEID)
+                    >> ch_p(T_LEFTPAREN) >> type_id >> ch_p(T_RIGHTPAREN)
+                ;
+            
+            postfix_expression_helper 
+                =   pp(T_LEFTBRACKET) >> expression >> pp(T_RIGHTBRACKET)
+                |	  ch_p(T_LEFTPAREN) >> !expression_list >> ch_p(T_RIGHTPAREN)
+                |	  ch_p(T_DOT) >> !ch_p(T_TEMPLATE) >> !ch_p(T_COLON_COLON) >> id_expression
+                |	  ch_p(T_ARROW) >> !ch_p(T_TEMPLATE) >> !ch_p(T_COLON_COLON) >> id_expression
+                |	  ch_p(T_DOT) >> pseudo_destructor_name
+                |	  ch_p(T_ARROW) >> pseudo_destructor_name
+                |	  ch_p(T_PLUSPLUS)
+                |	  ch_p(T_MINUSMINUS)
+                ;
+            
+            pseudo_destructor_name
+                =	 !ch_p(T_COLON_COLON) >> !nested_name_specifier 
+                    >>  (   
+                            type_name >> ch_p(T_COLON_COLON) >> ch_p(T_COMPL) >> type_name
+                        |   ch_p(T_COMPL) >> type_name
+                        )
+                ;
+
+
             constant_expression
-                =   logical_or_exp
-                >> !(const_exp_subrule =
-                        ch_p(T_QUESTION_MARK)
-                        >>  logical_or_exp >> ch_p(T_COLON) >> logical_or_exp
-                     )
+                =   conditional_expression
                 ;
-
-            logical_or_exp 
-                =   logical_and_exp
-                >> *(   pattern_p(T_OROR, MainTokenMask) 
-                    >>  logical_and_exp 
-                    )
-                ;
-
-            logical_and_exp
-                =   inclusive_or_exp
-                >> *(   pattern_p(T_ANDAND, MainTokenMask)
-                    >>  inclusive_or_exp
-                    )
-                ;
-
-            inclusive_or_exp
-                =   exclusive_or_exp
-                >> *(   pattern_p(T_OR, MainTokenMask)
-                    >>  exclusive_or_exp
-                    )
-                ;
-
-            exclusive_or_exp
-                =   and_exp
-                >> *(   pattern_p(T_XOR, MainTokenMask)
-                    >>  and_exp
-                    )
-                ;
-
-            and_exp
-                =   cmp_equality
-                >> *(   pattern_p(T_AND, MainTokenMask)
-                    >>  cmp_equality
-                    )
-                ;
-
-            cmp_equality
-                =   cmp_relational
-                >> *(   ch_p(T_EQUAL) >>  cmp_relational
-                    |   pattern_p(T_NOTEQUAL, MainTokenMask) >> cmp_relational
-                    )
-                ;
-
-            cmp_relational
-                =   shift_exp
-                >> *(   ch_p(T_LESSEQUAL) >> shift_exp 
-                    |   ch_p(T_GREATEREQUAL) >> shift_exp 
-                    |   ch_p(T_LESS) >> shift_exp 
-                    |   ch_p(T_GREATER) >> shift_exp
-                    )
-                ;
-
-            shift_exp
-                =   add_exp
-                >> *(shift_exp_clos =
-                        ch_p(T_SHIFTLEFT) >> add_exp
-                    |   ch_p(T_SHIFTRIGHT) >> add_exp
-                    )
-                ;
-
-            add_exp
-                =   multiply_exp
-                >> *(   ch_p(T_PLUS) >> multiply_exp
-                    |   ch_p(T_MINUS) >> multiply_exp
-                    )
-                ;
-
-            multiply_exp
-                =   unary_exp
-                >> *(   ch_p(T_STAR) >> unary_exp
-                    |   ch_p(T_DIVIDE) >> unary_exp
-                    |   ch_p(T_PERCENT) >> unary_exp
-                    )
-                ;
-
-            unary_exp
-                =   primary_exp
-                |   ch_p(T_PLUS) >> unary_exp
-                |   ch_p(T_MINUS) >> unary_exp
-                |   pattern_p(T_COMPL, MainTokenMask) >> unary_exp
-                |   pattern_p(T_NOT, MainTokenMask) >> unary_exp
-                ;
-
-            primary_exp
-                =   constant
-                |   ch_p(T_LEFTPAREN) >> constant_expression 
-                    >>  ch_p(T_RIGHTPAREN)
-                ;
-
-            constant
-                =   ch_p(T_PP_NUMBER) 
-                |   ch_p(T_INTLIT) 
-                |   ch_p(T_CHARLIT) 
-                ;
-            // end of Wave rules
 
             ctor_initializer
                 =   ch_p(T_COLON) >> mem_initializer_list
@@ -244,7 +426,9 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
 
             mem_initializer
                 =	  mem_initializer_id 
-                >>  ch_p(T_LEFTPAREN) >> !expression_list >> ch_p(T_RIGHTPAREN)
+                >>  comment_nest_p(ch_p(T_LEFTPAREN), ch_p(T_RIGHTPAREN))
+                // TODO: restore after assignment expression has been implemented
+                //ch_p(T_LEFTPAREN) >> !expression_list >> ch_p(T_RIGHTPAREN)
                 ;
 
             mem_initializer_id
@@ -252,8 +436,12 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 |	  ch_p(T_IDENTIFIER)
                 ;
 
+            //
+            // the eps_p is added to allow skipping of trailing whitespace 
+            // (post-skip)
+            //
             translation_unit
-                =	 !declaration_seq
+                =	 !declaration_seq >> eps_p; 
                 ;
 
             odd_language_extension    // read: microsoft extensions
@@ -262,7 +450,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 ;
 
             declaration_seq
-                =	 +declaration
+                =	 +declaration 
                 ;
 
             declaration
@@ -273,8 +461,8 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 |	  namespace_definition
                 |	  block_declaration
                 |	  function_definition
-                |     mod_export_decl
                 |     mod_import_decl
+                |     mod_export_decl
                 ;
 
             block_declaration
@@ -436,7 +624,8 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 ;
 
             function_definition_helper
-                =	 !decl_specifier_seq >> declarator
+                =	  decl_specifier_seq >> declarator
+                |  +no_type_decl_specifier >> declarator
                 |	  declarator
                 ;
 
@@ -472,7 +661,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
             parameters_or_array_spec
                 =	  ch_p(T_LEFTPAREN) >> parameter_declaration_clause >> ch_p(T_RIGHTPAREN)
                     >> !cv_qualifier_seq >> !exception_specification
-                |	  ch_p(T_LEFTBRACKET) >> !constant_expression >> ch_p(T_RIGHTBRACKET)
+                |	  pp(T_LEFTBRACKET) >> !constant_expression >> pp(T_RIGHTBRACKET)
                 ;
 
             exception_specification     // TODO
@@ -496,7 +685,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
             direct_abstract_declarator_helper
                 =	  ch_p(T_LEFTPAREN) >> parameter_declaration_clause >> ch_p(T_RIGHTPAREN)
                     >> !cv_qualifier_seq >> !exception_specification
-                |	  ch_p(T_LEFTBRACKET) >> !constant_expression >> ch_p(T_RIGHTBRACKET)
+                |	  pp(T_LEFTBRACKET) >> !constant_expression >> pp(T_RIGHTBRACKET)
                 ;
 
             parameter_declaration_clause
@@ -516,11 +705,6 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                     >> !(ch_p(T_ASSIGN) >> assignment_expression)
                 ;
 
-            assignment_expression
-                =	  constant_expression     // TODO later assignment expressions
-                |	  ch_p(T_IDENTIFIER)
-                ;
-
             declarator_id
                 =	 !ch_p(T_COLON_COLON)
                     >>	(   id_expression
@@ -529,8 +713,8 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 ;
 
             id_expression
-                =	  unqualified_id
-                |   qualified_id
+                =	  qualified_id
+                |   unqualified_id
                 ;
 
             qualified_id
@@ -546,13 +730,13 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 ;
 
             operator_function_id
-                =	  ch_p(T_OPERATOR) >> operator_sym    // this is called 'operator' in the std grammar
+                =	  ch_p(T_OPERATOR) >> operator_sym // this is called 'operator' in the std grammar
                 ;
                 
             operator_sym 
-                =	  ch_p(T_DELETE) >> ch_p(T_LEFTBRACKET) >> ch_p(T_RIGHTBRACKET)
-                |	  ch_p(T_NEW) >> ch_p(T_LEFTBRACKET) >> ch_p(T_RIGHTBRACKET)
-                |	  ch_p(T_LEFTBRACKET) >> ch_p(T_RIGHTBRACKET)
+                =	  ch_p(T_DELETE) >> !(pp(T_LEFTBRACKET) >> pp(T_RIGHTBRACKET))
+                |	  ch_p(T_NEW) >> !(pp(T_LEFTBRACKET) >> pp(T_RIGHTBRACKET))
+                |	  pp(T_LEFTBRACKET) >> pp(T_RIGHTBRACKET)
                 |	  ch_p(T_LEFTPAREN) >> ch_p(T_RIGHTPAREN)
                 |	  pattern_p(OperatorTokenType, TokenTypeMask)
                 ;
@@ -614,6 +798,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 |	  class_specifier
                 |	  elaborated_type_specifier
                 |	  simple_type_specifier
+                |   cv_qualifier
                 ;
 
             cv_qualifier_seq
@@ -658,11 +843,13 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 |	 !ch_p(T_COLON_COLON) >> !nested_name_specifier >> type_name
                 ;
 
-            class_head 
+            class_head // DH changed the order because otherwise it would always parse the (!IDENTIFIER) part.
                 =	 !access_specifier >> *odd_language_extension 
                     >>  class_key >> *odd_language_extension 
-                    >>  (  !ch_p(T_IDENTIFIER) 
-                        |   nested_name_specifier >> !ch_p(T_TEMPLATE) >> ch_p(T_IDENTIFIER)
+                    >>  (   
+                            !nested_name_specifier >> template_id
+                        |   nested_name_specifier >> ch_p(T_IDENTIFIER)
+                        |   !ch_p(T_IDENTIFIER)
                         )
                     >> !base_clause
                 ;
@@ -679,15 +866,23 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 ;
 
             elaborated_type_specifier
-                =	  class_key >> *odd_language_extension >> !ch_p(T_COLON_COLON) 
-                    >>  !nested_name_specifier >> ch_p(T_IDENTIFIER)
-                |	  ch_p(T_ENUM) >> !ch_p(T_COLON_COLON) 
-                    >> !nested_name_specifier >> ch_p(T_IDENTIFIER)
-                |	  ch_p(T_TYPENAME) >> !ch_p(T_COLON_COLON) 
-                    >>  nested_name_specifier >> ch_p(T_IDENTIFIER) 
-                    >> ch_p(T_LESS) >> template_argument_list >> ch_p(T_GREATER)
-                |	  ch_p(T_TYPENAME) >> !ch_p(T_COLON_COLON) 
-                    >> !nested_name_specifier >> ch_p(T_IDENTIFIER)
+                =   class_key >> *odd_language_extension 
+                    >>  !ch_p(T_COLON_COLON) 
+                    >>  !nested_name_specifier 
+                    >>  ( 
+                            !ch_p(T_TEMPLATE) >> template_id 
+                        |   ch_p(T_IDENTIFIER)
+                        )
+                |	  ch_p(T_ENUM) >> !ch_p(T_COLON_COLON)
+                    >> !nested_name_specifier 
+                    >>  ch_p(T_IDENTIFIER)
+                |	  ch_p(T_TYPENAME) 
+                    >> !ch_p(T_COLON_COLON) 
+                    >>  nested_name_specifier 
+                    >>  (
+                            !ch_p(T_TEMPLATE) >> template_id 
+                        |   ch_p(T_IDENTIFIER)
+                        )
                 ;
 
             template_argument_list 
@@ -698,7 +893,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 =	  longest_d
                     [
                         type_id
-                    |   assignment_expression
+                    |   ta_assignment_expression
                     |   template_name
                     ]
                 ;
@@ -749,7 +944,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
 
             //
             //  This is kind of a HACK. We want to prevent the decl_specifier_seq 
-            //  from eating the whole declaration, including the identifier. 
+            //  from eating the whole declaration, including the ch_p(T_IDENTIFIER). 
             //  Therefore in the sequence, we only allow one 'unknown' word 
             //  (the type_specifier), the rest of the decl_specifier sequence 
             //  must consist of known keywords or constructs (the 
@@ -843,7 +1038,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
 
             base_specifier_list
                 =	  base_specifier % ch_p(T_COMMA)
-                ;
+                ; 
 
             base_specifier
                 =	  ch_p(T_VIRTUAL) >> !access_specifier >> !ch_p(T_COLON_COLON) 
@@ -861,13 +1056,15 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 |   ch_p(T_MSEXT_INLINE)
                 ;
 
+            // DH added 'long long' and 'long double'
             simple_type_name
                 =	  ch_p(T_CHAR)
                 |   ch_p(T_WCHART)
                 |   ch_p(T_BOOL)
                 |   ch_p(T_SHORT)
                 |   ch_p(T_INT)
-                |   ch_p(T_LONG)
+                |   ch_p(T_LONG) 
+                    >> !( ch_p(T_DOUBLE) | ch_p(T_LONG) )  
                 |   ch_p(T_FLOAT)
                 |   ch_p(T_DOUBLE)
                 |   ch_p(T_VOID)
@@ -876,6 +1073,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 |   ch_p(T_MSEXT_INT16)
                 |   ch_p(T_MSEXT_INT32)
                 ;
+             //-------------------------------------------------------------
              
              mod_access_specifier
                 =   (ch_p(T_PUBLIC) >> ch_p(T_COLON))
@@ -910,83 +1108,17 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 =     ch_p(T_IMPORT) >> ch_p(T_NAMESPACE) >> mod_name
                     >> ch_p(T_SEMICOLON)
                 ;
-             
-             
-//        }
-
-//         rule_type const& start() const { return translation_unit; }
-//     };
-// - 
-//             translation_unit
-//                 =	 *declaration
-//                       >> ch_p(T_EOF)
-//                 ;
-//                 
-//             declaration
-// 			    =   +(   ~ch_p(T_IMPORT) & ~ch_p(T_EXPORT) 
-// 			           & ~ch_p(T_EOF)    & ~ch_p(T_RIGHTBRACE) 
-// 			           & ~ch_p(T_LEFTBRACE) ) 
-// 			         [ emit (self.m_del) ]
-// 			         
-// 			    |   ( ch_p(T_IMPORT) 
-// 			          >> import_stmt )
-// 			          
-// 			    |   ( ch_p(T_EXPORT) 
-// 			          >> ch_p(T_NAMESPACE) 
-// 			          >> export_stmt )
-// 			          
-// 			    |   ( ch_p(T_EXPORT) 
-// 			          >> ch_p(T_TEMPLATE) ) 
-// 			         [ emit (self.m_del) ]
-// 			         
-// 			    |   ( ch_p(T_LEFTBRACE) [ emit (self.m_del) ]
-// 			          >> *inner_decl 
-// 			          >> ch_p(T_RIGHTBRACE) [ emit (self.m_del) ]
-// 			          )
-// 			    ;
-// 			    
-//             inner_decl
-// 			   = declaration 
-// 			       | ( ~ch_p(T_RIGHTBRACE) && anychar_p) [ emit (self.m_del) ]
-// 			   ;
-// 
-//             access_specifier
-// 			    = ( ch_p(T_PUBLIC)    [go_public (self.m_del)] 
-// 					| ch_p(T_PRIVATE) [go_private (self.m_del)]
-// 				  )
-// 			        >> ch_p(T_COLON)
-// 				;
-// 
-// 			skip_block
-// 			    = ch_p(T_LEFTBRACE) 
-// 			      >> *(access_specifier | inner_decl)
-// 			      >> ch_p(T_RIGHTBRACE)
-			    ;
-
-//             export_stmt 
-// 			    = ch_p(T_IDENTIFIER) [ save_as(self.m_ids) ]
-// 			                         [ decl_module(self.m_del) ]
-// 			      >> ch_p(T_LEFTBRACE)
-// 			      >> *(access_specifier | inner_decl)
-// 			      >> ch_p(T_RIGHTBRACE) [ finish_decl(self.m_del) ]
-// 			    ; 
-// 
-//             import_stmt
-// 			    = ch_p(T_NAMESPACE)
-// 			      >> ch_p(T_IDENTIFIER) [ import_module(self.m_del) ]
-// 			      >> ch_p(T_SEMICOLON)
-// 			    ;
-
-// 			BOOST_SPIRIT_DEBUG_RULE(translation_unit);
-// 			BOOST_SPIRIT_DEBUG_RULE(declaration);
-// 			BOOST_SPIRIT_DEBUG_RULE(inner_decl);
-// 			BOOST_SPIRIT_DEBUG_RULE(access_specifier);
-// // 			BOOST_SPIRIT_DEBUG_RULE(skip_block);
-// 			BOOST_SPIRIT_DEBUG_RULE(export_stmt);
-// 			BOOST_SPIRIT_DEBUG_RULE(import_stmt);
-		}
+   		}
 		
 		rule_type const& start () { return translation_unit; }
+		
+		//  Helper function wrapping pattern_p
+        static inline boost::wave::util::pattern_and< boost::wave::token_id>  
+        pp (boost::wave::token_id id)
+        {
+            using namespace boost::wave;
+            return util::pattern_p(id, MainTokenMask);
+        }
 	};
 };
 
