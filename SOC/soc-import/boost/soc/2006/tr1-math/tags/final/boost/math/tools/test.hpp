@@ -1,0 +1,186 @@
+//  (C) Copyright John Maddock 2006.
+//
+//  This code may be used under either of the following two licences:
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+//  THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE. OF SUCH DAMAGE.
+//
+//  Or:
+//
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef BOOST_MATH_TOOLS_TEST_HPP
+#define BOOST_MATH_TOOLS_TEST_HPP
+
+#include <boost/math/tools/stats.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
+
+#if defined(__CYGWIN__)
+#define BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
+#endif
+
+namespace boost{ namespace math{ namespace tools{
+
+template <class T>
+struct test_result
+{
+   boost::math::tools::stats<T> stat;   // statistics for the test
+   unsigned worst_case;                 // index of the worst case test
+
+   test_result& operator+=(const test_result& t)
+   {
+      if((t.stat.max)() > (stat.max)())
+         worst_case = t.worst_case;
+      stat += t.stat;
+      return *this;
+   }
+};
+
+template <class T>
+struct calculate_result_type
+{
+   typedef typename T::value_type row_type;
+   typedef typename row_type::value_type value_type;
+};
+
+template <class T>
+T relative_error(T a, T b)
+{
+   using namespace std;
+#ifdef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
+   //
+   // If math.h has no long double support we can't rely 
+   // on the math functions generating exponents outside 
+   // the range of a double:
+   //
+   T min_val = (std::max)(
+      tools::min_value<T>(), 
+      static_cast<T>((std::numeric_limits<double>::min)()));
+   T max_val = (std::min)(
+      tools::max_value<T>(), 
+      static_cast<T>((std::numeric_limits<double>::max)()));
+#else
+   T min_val = tools::min_value<T>();
+   T max_val = tools::max_value<T>();
+#endif
+
+   if((a != 0) && (b != 0))
+   {
+      // TODO: use isfinite:
+      if(b > max_val)
+      {
+         if(a > max_val)
+            return 0;  // one infinity is as good as another!
+      }
+      // if the result is denormalised, treat all denorms as equivalent:
+      if((a < min_val) && (a > 0))
+         a = min_val;
+      else if((a > -min_val) && (a < 0))
+         a = -min_val;
+      if((b < min_val) && (b > 0))
+         b = min_val;
+      else if((b > -min_val) && (b < 0))
+         b = -min_val;
+      return (std::max)(fabs((a-b)/a), fabs((a-b)/b));
+   }
+
+   // handle special case where one or both are zero:
+   if(min_val == 0)
+      return fabs(a-b);
+   if(fabs(a) < min_val)
+      a = min_val;
+   if(fabs(b) < min_val)
+      b = min_val;
+   return (std::max)(fabs((a-b)/a), fabs((a-b)/b));
+}
+
+template <class Seq>
+void print_row(const Seq& row)
+{
+   for(unsigned i = 0; i < row.size(); ++i)
+   {
+      if(i)
+         std::cout << ", ";
+      std::cout << row[i];
+   }
+   std::cout << std::endl;
+}
+
+//
+// Function test accepts an matrix of input values (probably a 2D boost::array)
+// and calls two functors for each row in the array - one calculates a value
+// to test, and one extracts the expected value from the array (or possibly
+// calculates it at high precision).  The two functors are usually simple lambda
+// expressions.
+//
+template <class A, class F1, class F2>
+test_result<typename calculate_result_type<A>::value_type> test(const A& a, F1 test_func, F2 expect_func)
+{
+   typedef typename A::value_type         row_type;
+   typedef typename row_type::value_type  value_type;
+
+   test_result<value_type> result;
+   result.worst_case = 0;
+
+   for(unsigned i = 0; i < a.size(); ++i)
+   {
+      const row_type& row = a[i];
+      value_type point = test_func(row);
+      value_type expected = expect_func(row);
+      value_type err = relative_error(point, expected);
+
+std::cout.flags(std::ios::scientific);
+std::cout << std::setw(34) << std::setprecision(24) << point;
+std::cout << std::setw(34) << std::setprecision(24) << expected;
+std::cout << std::setw(14) << std::setprecision(4) << (expected - point) / expected << std::endl;
+
+#ifdef BOOST_INSTRUMENT
+      if(err != 0) 
+      {
+         std::cout << row[0] << " " << err;  
+         if(std::numeric_limits<value_type>::is_specialized)
+         {
+            std::cout << " (" << err / std::numeric_limits<value_type>::epsilon() << "eps)";
+         }
+         std::cout << std::endl;
+      }
+#endif
+      if(!boost::math::isfinite(point) && boost::math::isfinite(expected))
+      {
+         std::cout << "CAUTION: Found non-finite result, when a finite value was expected at entry " << i << "\n";
+         std::cout << "Found: " << point << " Expected " << expected << " Error: " << err << std::endl;
+         print_row(row);
+      }
+      if(err > 0.5)
+      {
+         std::cout << "CAUTION: Gross error found at entry " << i << ".\n";
+         std::cout << "Found: " << point << " Expected " << expected << " Error: " << err << std::endl;
+         print_row(row);
+      }
+      result.stat.add(err);
+      if((result.stat.max)() == err)
+         result.worst_case = i;
+   }
+   return result;
+}
+
+} } } // namespaces
+
+#endif

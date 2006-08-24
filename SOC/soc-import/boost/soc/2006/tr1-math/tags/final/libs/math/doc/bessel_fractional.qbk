@@ -1,0 +1,182 @@
+[/
+Copyright (c) 2006 Xiaogang Zhang
+
+This work may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Use, modification and distribution are subject to the
+Boost Software License, Version 1.0. (See accompanying file
+LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[#bessel_fractional]
+
+[section Bessel Functions of Fractional Order]
+
+[caution _caution]
+
+[heading Synopsis]
+
+``
+  #include <boost/math/special_functions/bessel_jv.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  inline T bessel_jv(T v, T x)
+
+  inline float cyl_bessel_jf(float nu, float x)
+
+  inline double cyl_bessel_j(double nu, double x)
+
+  inline long double cyl_bessel_jl(long double nu, long double x)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/bessel_yv.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  inline T bessel_yv(T v, T x)
+
+  inline float cyl_neumannf(float nu, float x)
+
+  inline double cyl_neumann(double nu, double x)
+
+  inline long double cyl_neumannl(long double nu, long double x)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/bessel_jy.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  int bessel_jy(T v, T x, T* J, T* Y)
+
+  }} // namespaces
+``
+
+[heading Description and Implementation]
+
+Bessel functions of fractional order (i.e. order _nu is any real
+number) are much harder to compute than
+[link tr1_math.bessel_functions.bessel_functions_of_integer_order
+Bessel functions of integer order]. Though [link bessel_recur
+recurrence relations] are the same, the difficulty lies in the
+initial values.
+
+The function domains are ['[J _nu](x)]: ([^0, _inf]), ['[Y _nu](x)]: ([^0, _inf]).
+
+[$plots/bessel_v.png]
+
+To get the initial values, we first normalize ['_nu] to [[^0, _inf])
+with the help of [link bessel_reflect reflection formulas]. Let
+['_mu] = ['_nu] [^-] \[['_nu] + 1/2\] where \[['x]\] is the floor
+function, then ['_mu] is the fractional part of ['_nu] such that
+|['_mu]| <= 1/2 (we need this for convergence later). The idea is to
+calculate ['[J _mu](x)], ['[J _mu+1](x)], ['[Y _mu](x)], ['[Y _mu+1](x)]
+and use them to obtain ['[J _nu](x)], ['[Y _nu](x)].
+
+The algorithm is called Steed's method [[link 3]], which needs two
+continued fractions as well as the [link bessel_wronskian Wronskian].
+
+[$equations/bessel11.png]
+
+[$equations/bessel12.png]
+
+The continued fractions are computed using the modified Lentz's method
+[[link 13]]. Their convergence rates depend on ['x], therefore we need
+different strategies for large ['x] and small ['x].
+
+['x > v], CF1 needs O(['x]) iterations to converge, CF2 converges rapidly
+
+['x <= v], CF1 converges rapidly, CF2 fails to converge when ['x] [^->] 0
+
+When ['x] is large (['x] > 2), both continued fractions converge (CF1
+may be slow for really large ['x]). ['[J _mu]], ['[J _mu+1]],
+['[Y _mu]], ['[Y _mu+1]] can be calculated by
+
+[$equations/bessel13.png]
+
+where
+
+[$equations/bessel14.png]
+
+['[J _nu](x)] and ['[Y _nu](x)] are then calculated using backward
+(Miller's algorithm) and forward [link bessel_recur recurrence]
+respectively.
+
+When ['x] is small (['x] <= 2), CF2 convergence may fail (but CF1
+works very well). The solution here is Temme's series:
+
+[$equations/bessel15.png]
+
+where
+
+[$equations/bessel16.png]
+
+[''''g<subscript>k</subscript>'''] and [''''h<subscript>k</subscript>''']
+are also computed by recursions (involving gamma functions), but the
+formulas are a little complicated, readers are refered to [[link 17]].
+Note Temme's series converge only for |['_mu]| <= 1/2.
+
+As the previous case, ['[Y _nu](x)] is calculated from the forward
+[link bessel_recur recurrence], so is ['[Y _nu+1](x)]. With these two
+values and [''''f<subscript>&nu;</subscript>'''], [link bessel_wronskian
+Wronskian] yields ['[J _nu](x)] directly without backward
+[link bessel_recur recurrence].
+
+[note Our algorithm calculates ['[J _mu]], ['[J _mu+1]] for large ['x]
+and ['[Y _mu]], ['[Y _mu+1]] for small ['x] at the first step, hence
+the best practice is to compute ['[J _nu]] and ['[Y _nu]] simultaneously,
+which is what `bessel_jy(v, x, &J, &Y)` does exactly.
+\n\n
+In the case of small ['x], ['[J _nu](x)] can be calculated directly from
+the [link bessel_wronskian Wronskian] without backward [link bessel_recur
+recurrence]. Some may think symmetrically ['[Y _nu](x)] can be calculated
+directly from the [link bessel_wronskian Wronskian] without forward
+[link bessel_recur recurrence] for large ['x]. But this is not true
+because we do not have ['[Y _nu+1](x)] / ['[Y _nu](x)] available.]
+
+[heading Testing]
+
+The test driver calculates relative errors and the following table
+lists some typical values.
+
+[table
+[[Function] [float] [double] [long double]]
+[[`bessel_jv(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -19], [pow 10 -18]]]
+[[`bessel_yv(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -19], [pow 10 -18]]]
+]
+
+When the function value approaches infinity (this happens when
+['x] is small and ['|_nu|] is large, ['|_nu|] >> ['x]), the relative
+error grows rapidly. ['|[J _nu]|] ~ [pow 10 25] can have relative
+error 3 or 4 magnitudes higher than that of ['|[J _nu]|] ~ 1.
+
+[endsect]

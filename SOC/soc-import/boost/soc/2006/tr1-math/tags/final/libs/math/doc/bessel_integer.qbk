@@ -1,0 +1,240 @@
+[/
+Copyright (c) 2006 Xiaogang Zhang
+
+This work may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Use, modification and distribution are subject to the
+Boost Software License, Version 1.0. (See accompanying file
+LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section Bessel Functions of Integer Order]
+
+[#bessel_0]
+
+[section Bessel Functions of Order 0]
+
+[caution _caution]
+
+[heading Synopsis]
+
+``
+  #include <boost/math/special_functions/bessel_j0.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T bessel_j0(T x)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/bessel_y0.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T bessel_y0(T x)
+
+  }} // namespaces
+``
+
+[heading Description and Implementation]
+
+Bessel functions of order 0 are building blocks of Bessel functions
+of integer order. Moreover, they are commonly used and deserve to be
+implemented separately at their own right. Most numerical libraries
+include them as independent functions.
+
+The function domains are ['[J 0](x)]: ([^-_inf, _inf]), ['[Y 0](x)]: ([^0, _inf]).
+
+[note ['[J 0](x)] is even function.]
+
+[$plots/bessel_0.png]
+
+The algorithms consist of minimax rational approximations on
+root-bracketing intervals for small ['|x|] and Hankel asymptotic
+expansion for large ['|x|]. The coefficients of them are from
+[[link 9]] and [[link 11]] respectively.
+
+[heading Testing]
+
+The test driver calculates relative errors and the following table
+lists some typical values.
+
+[table
+[[Function] [float] [double] [long double]]
+[[`bessel_j0(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -20], [pow 10 -19]]]
+[[`bessel_y0(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16]] [~ [pow 10 -17]]]
+]
+
+When ['|x|] becomes large ( > [pow 10 4] ), the relative error
+grows rapidly. ['|x|] = [pow 10 5] can have relative error 4 or 5
+magnitudes higher than that of ['|x|] = 10. Fortunately, this is
+where the function value approaches zero, so the absolute error
+is actually quite small.
+
+[endsect]
+
+[#bessel_1]
+
+[section Bessel Functions of Order 1]
+
+[caution _caution]
+
+[heading Synopsis]
+
+``
+  #include <boost/math/special_functions/bessel_j1.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T bessel_j1(T x)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/bessel_y1.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T bessel_y1(T x)
+
+  }} // namespaces
+``
+
+[heading Description and Implementation]
+
+Bessel functions of order 1 are building blocks of Bessel functions
+of integer order. Moreover, they are commonly used and deserve to be
+implemented separately at their own right. Most numerical libraries
+include them as independent functions.
+
+The function domains are ['[J 1](x)]: ([^-_inf, _inf]), ['[Y 1](x)]: ([^0, _inf]).
+
+[note ['[J 1](x)] is odd function.]
+
+[$plots/bessel_1.png]
+
+The algorithms consist of minimax rational approximations on
+root-bracketing intervals for small ['|x|] and Hankel asymptotic
+expansion for large ['|x|]. The coefficients of them are from
+[[link 9]] and [[link 11]] respectively.
+
+[heading Testing]
+
+The test driver calculates relative errors and the following table
+lists some typical values.
+
+[table
+[[Function] [float] [double] [long double]]
+[[`bessel_j1(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -20], [pow 10 -19]]]
+[[`bessel_y1(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -18], [pow 10 -17]]]
+]
+
+When ['|x|] becomes large ( > [pow 10 4] ), the relative error
+grows rapidly. ['|x|] = [pow 10 5] can have relative error 4 or 5
+magnitudes higher than that of ['|x|] = 10. Fortunately, this is
+where the function value approaches zero, so the absolute error
+is actually quite small.
+
+[endsect]
+
+[#bessel_n]
+
+[section Bessel Functions of Order n]
+
+[caution _caution]
+
+[heading Synopsis]
+
+``
+  #include <boost/math/special_functions/bessel_jn.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T bessel_jn(T x)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/bessel_yn.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T bessel_yn(T x)
+
+  }} // namespaces
+``
+
+[heading Description and Implementation]
+
+Bessel functions of order ['n] are calculated from [link bessel_0
+Bessel functions of order 0] and [link bessel_1 Bessel functions
+of order 1], with the help of [link bessel_recur recurrence
+relations]. Although ['n] is nonnegative, our discussions here
+can be easily extended to Bessel functions of negative integer
+order using [link bessel_reflect reflection formulas].
+
+The function domains are ['[J n](x)]: ([^-_inf, _inf]), ['[Y n](x)]: ([^0, _inf]).
+
+[note ['[J n](x)] is even function when ['n] is even and odd function
+when ['n] is odd.]
+
+[$plots/bessel_n.png]
+
+The forward recursion itself is stable for ['n < |x|] and unstable
+for ['n >= |x|]. ['[Y n](x)] is the dominant solution of the
+[link bessel_recur recurrence relation], thus the forward recursion
+is always OK for it. However, ['[J n](x)] is the minimal solution,
+so in unstable regions, Miller's algorithm [[link 1]] [[link 2]]
+and backward recursion must be used.
+
+[heading Testing]
+
+The test driver calculates relative errors and the following table
+lists some typical values.
+
+[table
+[[Function] [float] [double] [long double]]
+[[`bessel_jn(x)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -20], [pow 10 -19]]]
+[[`bessel_yn(x)`] [~ [pow 10 -7]] [~ [pow 10 -16], [pow 10 -15]] [~ [pow 10 -19], [pow 10 -17]]]
+]
+
+When ['|x|] becomes large ( > [pow 10 4] ), the relative error
+grows rapidly. ['|x|] = [pow 10 5] can have relative error 4
+magnitudes higher than that of ['|x|] = 10. Fortunately, this is
+where the function value approaches zero, so the absolute error
+is actually quite small. ['n] does not seem to have a large
+impact on accuracy as ['|x|] does.
+
+[endsect]
+
+[endsect]

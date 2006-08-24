@@ -1,0 +1,98 @@
+[/
+Copyright (c) 2006 Xiaogang Zhang
+
+This work may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Use, modification and distribution are subject to the
+Boost Software License, Version 1.0. (See accompanying file
+LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section Introduction]
+
+[note The main reference is \[[link 1]\].]
+
+[heading Notation]
+
+['x], ['y] : real number
+
+['n] : nonnegative integer
+
+['z], ['_nu], ['_mu] : complex number
+
+[heading Definition]
+
+Modified Bessel functions are defined as the solutions to the ordinary
+differential equation
+
+[$equations/mbessel1.png]
+
+The following equivalent definitions are also widely used
+
+[$equations/mbessel2.png]
+
+[$equations/mbessel3.png]
+
+where ['[I _nu](z)] is called Modified Bessel function of the first kind
+and ['[K _nu](z)] is called Modified Bessel function of the second kind.
+
+[note The right hand side of ['[K _nu](z)] equation is replaced by its
+limiting value if ['_nu] is an integer.]
+
+[#mbessel_recur]
+
+[heading Recurrence Relations]
+
+[$equations/mbessel4.png]
+
+[$equations/mbessel5.png]
+
+[heading Derivatives]
+
+[$equations/mbessel6.png]
+
+[$equations/mbessel7.png]
+
+[#mbessel_wronskian]
+
+[heading Wronskian]
+
+[$equations/mbessel8.png]
+
+[#mbessel_reflect]
+
+[heading Reflection Formulas]
+
+[$equations/mbessel9.png]
+
+[$equations/mbessel10.png]
+
+[heading Numerical Algorithms]
+
+All computations of modified Bessel functions are based on [link
+mbessel_recur recurrence relations]. To use the recursion, initial
+values must first be calculated. The methods differ for ['_nu] = ['n]
+is integer and ['_nu] is any real number. We will discuss the two
+situations separately.
+
+[endsect]
