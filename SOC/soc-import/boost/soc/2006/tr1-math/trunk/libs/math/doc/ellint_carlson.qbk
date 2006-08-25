@@ -1,0 +1,104 @@
+[/
+Copyright (c) 2006 Xiaogang Zhang
+
+This work may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Use, modification and distribution are subject to the
+Boost Software License, Version 1.0. (See accompanying file
+LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[#ellint_carlson]
+
+[section Elliptic Integrals - Carlson Form]
+
+[caution _caution]
+
+[heading Synopsis]
+
+``
+  #include <boost/math/special_functions/ellint_rf.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T ellint_rf(T x, T y, T z)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/ellint_rd.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T ellint_rd(T x, T y, T z)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/ellint_rj.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T ellint_rj(T x, T y, T z, T p)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/ellint_rc.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T ellint_rc(T x, T y)
+
+  }} // namespaces
+``
+
+[heading Description and Implementation]
+
+The key of Carlson's algorithm [[link 5]] is the [link ellint_theorem
+duplication theorem]. By applying it repeatedly, ['x], ['y], ['z] get
+closer and closer. When they are nearly equal, the special case equation
+
+[$equations/ellint16.png]
+
+is used. More specifically, ['[R F]] is evaluated from a Taylor series
+expansion to the fifth order. The calculations of the rest three integrals
+are analogous.
+
+[note For ['p < 0] in ['[R J](x, y, z, p)] and ['y < 0] in ['[R C](x, y)],
+the integrals are singular and their Cauchy principal values are returned.]
+
+[$plots/ellint_c.png]
+
+[heading Testing]
+
+TODO
+
+[endsect]

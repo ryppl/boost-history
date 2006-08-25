@@ -1,0 +1,159 @@
+[/
+Copyright (c) 2006 Xiaogang Zhang
+
+This work may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Use, modification and distribution are subject to the
+Boost Software License, Version 1.0. (See accompanying file
+LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[#ellint_legendre]
+
+[section Elliptic Integrals - Legendre Form]
+
+[caution _caution]
+
+[heading Synopsis]
+
+``
+  #include <boost/math/special_functions/ellint_1.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T ellint_f(T phi, T k)
+
+  template <typename T>
+  T ellint_k(T k)
+
+  inline float ellint_1f(float k, float phi)
+
+  inline double ellint_1(double k, double phi)
+
+  inline long double ellint_1l(long double k, long double phi)
+
+  inline float comp_ellint_1f(float k)
+
+  inline double comp_ellint_1(double k)
+
+  inline long double comp_ellint_1l(long double k)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/ellint_2.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T ellint_e(T phi, T k)
+
+  template <typename T>
+  T ellint_e(T k)
+
+  inline float ellint_2f(float k, float phi)
+
+  inline double ellint_2(double k, double phi)
+
+  inline long double ellint_2l(long double k, long double phi)
+
+  inline float comp_ellint_2f(float k)
+
+  inline double comp_ellint_2(double k)
+
+  inline long double comp_ellint_2l(long double k)
+
+  }} // namespaces
+``
+
+``
+  #include <boost/math/special_functions/ellint_3.hpp>
+
+  namespace boost { namespace math {
+
+  template <typename T>
+  T ellint_pi(T v, T phi, T k)
+
+  template <typename T>
+  T ellint_pi(T v, T k)
+
+  inline float ellint_3f(float k, float nu, float phi)
+
+  inline double ellint_3(double k, double nu, double phi)
+
+  inline long double ellint_3l(long double k, long double nu, long double phi)
+
+  inline float comp_ellint_3f(float k, float nu)
+
+  inline double comp_ellint_3(double k, double nu)
+
+  inline long double comp_ellint_3l(long double k, long double nu)
+
+  }} // namespaces
+``
+
+[note In `ellint_3.hpp`, arguments `v` and `nu` are used in lieu of `n`.]
+
+[heading Description and Implementation]
+
+The computations of elliptic integrals in Legendre form are very
+straightforward once Carlson's elliptic integrals are in place.
+It's just direct evaluations from [link ellint_formula Carlson's
+formulas].
+
+Notice that the integrands are periodic can help to speed up the
+calculation and increase the precision.
+
+[note ['_Pi(n, _phi, k)] is singular when ['n > 1], the integral's
+Cauchy principal value is returned.]
+
+[$plots/ellint_l.png]
+
+[heading Testing]
+
+The test driver calculates relative errors and the following table
+lists some typical values.
+
+[table
+[[Function] [float] [double] [long double]]
+[[`ellint_f(phi, k)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16]] [~ [pow 10 -18], [pow 10 -17]]]
+[[`ellint_k(k)`] [~ [pow 10 -8]] [~ [pow 10 -16]] [~ [pow 10 -20], [pow 10 -19]]]
+[[`ellint_e(phi, k)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16]] [~ [pow 10 -18], [pow 10 -17]]]
+[[`ellint_e(k)`] [~ [pow 10 -8], [pow 10 -7]] [~ [pow 10 -16]] [~ [pow 10 -20], [pow 10 -19]]]
+[[`ellint_pi(v, phi, k)`] [~ [pow 10 -6]] [~ [pow 10 -16], [pow 10 -14]] [~ [pow 10 -18], [pow 10 -17]]]
+[[`ellint_pi(v, k)`] [~ [pow 10 -8]] [~ [pow 10 -16], [pow 10 -14]] [~ [pow 10 -20], [pow 10 -19]]]
+]
+
+The results are quite robust for elliptic integrals of the first and
+second kinds in the sense that the relative error stays at close to
+to minimum level and does not fluctuate much. The elliptic integral
+of the third kind losts significant digits (5 to 6 for `float`,
+4 to 5 for `double`, 3 to 4 for `long double`) when ['|n|] is very
+large ( > [pow 10 5] ), otherwise the precision is good and stable.
+Also we can see that the complete elliptic integrals are more
+accurately computed than their incomplete counterparts by 1 or 2
+magnitudes.
+
+[endsect]
