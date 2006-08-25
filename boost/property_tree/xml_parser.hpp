@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -31,7 +31,7 @@ namespace boost { namespace property_tree { namespace xml_parser
 
     // Read XML from stream
     template<class Ptree>
-    void read_xml(std::basic_istream<typename Ptree::char_type> &stream,
+    void read_xml(std::basic_istream<typename Ptree::key_type::value_type> &stream,
                   Ptree &pt,
                   int flags = 0)
     {
@@ -46,7 +46,7 @@ namespace boost { namespace property_tree { namespace xml_parser
                   const std::locale &loc = std::locale())
     {
         BOOST_ASSERT(validate_flags(flags));
-        std::basic_ifstream<typename Ptree::char_type> stream(filename.c_str());
+        std::basic_ifstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
             throw xml_parser_error("cannot open file", filename, 0);
         stream.imbue(loc);
@@ -55,7 +55,7 @@ namespace boost { namespace property_tree { namespace xml_parser
 
     // Write XML to stream
     template<class Ptree>
-    void write_xml(std::basic_ostream<typename Ptree::char_type> &stream, 
+    void write_xml(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                    const Ptree &pt)
     {
         write_xml_internal(stream, pt, std::string());
@@ -67,7 +67,7 @@ namespace boost { namespace property_tree { namespace xml_parser
                    const Ptree &pt,
                    const std::locale &loc = std::locale())
     {
-        std::basic_ofstream<typename Ptree::char_type> stream(filename.c_str());
+        std::basic_ofstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
             throw xml_parser_error("cannot open file", filename, 0);
         stream.imbue(loc);

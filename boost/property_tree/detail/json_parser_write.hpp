@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -58,12 +58,12 @@ namespace boost { namespace property_tree { namespace json_parser
     }
 
     template<class Ptree>
-    void write_json_helper(std::basic_ostream<typename Ptree::char_type> &stream, 
+    void write_json_helper(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                            const Ptree &pt, 
                            int indent)
     {
 
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         typedef typename std::basic_string<Ch> Str;
         
         // Value or object or array
@@ -122,7 +122,7 @@ namespace boost { namespace property_tree { namespace json_parser
     bool verify_json(const Ptree &pt, int depth)
     {
 
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         typedef typename std::basic_string<Ch> Str;
 
         // Root ptree cannot have data
@@ -146,7 +146,7 @@ namespace boost { namespace property_tree { namespace json_parser
     
     // Write ptree to json stream
     template<class Ptree>
-    void write_json_internal(std::basic_ostream<typename Ptree::char_type> &stream, 
+    void write_json_internal(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                              const Ptree &pt,
                              const std::string &filename)
     {

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -169,14 +169,14 @@ namespace boost { namespace property_tree { namespace info_parser
 
     // Build ptree from info stream
     template<class Ptree>
-    void read_info_internal(std::basic_istream<typename Ptree::char_type> &stream, 
+    void read_info_internal(std::basic_istream<typename Ptree::key_type::value_type> &stream, 
                             Ptree &pt, 
                             const std::string &filename,
                             int include_depth)
     {
         
         // Character type
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         
         // Possible parser states
         enum state_t { 

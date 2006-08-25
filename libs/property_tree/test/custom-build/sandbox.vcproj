@@ -215,7 +215,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_fwd.hpp"
+				RelativePath="..\..\..\..\boost\property_tree\detail\path_implementation.hpp"
 				>
 			</File>
 			<File
@@ -224,6 +224,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\property_tree\detail\ptree_utils.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\translator_implementation.hpp"
 				>
 			</File>
 			<File

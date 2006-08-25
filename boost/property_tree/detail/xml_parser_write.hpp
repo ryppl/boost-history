@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -46,13 +46,13 @@ namespace boost { namespace property_tree { namespace xml_parser
     }
 
     template<class Ptree>
-    void write_xml_element(std::basic_ostream<typename Ptree::char_type> &stream, 
-                           const std::basic_string<typename Ptree::char_type> &key,
+    void write_xml_element(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
+                           const std::basic_string<typename Ptree::key_type::value_type> &key,
                            const Ptree &pt, 
                            int indent)
     {
 
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         typedef typename std::basic_string<Ch> Str;
         typedef typename Ptree::const_iterator It;
 
@@ -128,11 +128,11 @@ namespace boost { namespace property_tree { namespace xml_parser
     }
 
     template<class Ptree>
-    void write_xml_internal(std::basic_ostream<typename Ptree::char_type> &stream, 
+    void write_xml_internal(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                             const Ptree &pt,
                             const std::string &filename)
     {
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         typedef typename std::basic_string<Ch> Str;
         stream << detail::widen<Ch>("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         write_xml_element(stream, Str(), pt, -1);

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ****----****
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -10,7 +10,7 @@
 
 // Intentionally no include guards (to be included more than once)
 
-#if !defined(CHTYPE) || !defined(T) || !defined(PTREE)
+#if !defined(CHTYPE) || !defined(T) || !defined(PTREE) || !defined(NOCASE)
 #   error No character type specified
 #endif
 
@@ -434,46 +434,40 @@ void test_case(PTREE *)
     pt.put(T("KEY1.key4"), T("data4"));
 
     // Check findings depending on traits type
-    if (typeid(PTREE::traits_type) == typeid(boost::property_tree::ptree_traits<CHTYPE>))
-    {
-        BOOST_CHECK(PTREE::debug_get_instances_count() == 7);
-        BOOST_CHECK(pt.get(T("key1"), T("")) == T("data1"));
-        BOOST_CHECK(pt.get(T("key2"), T("")) == T(""));
-        BOOST_CHECK(pt.get(T("key1.key3"), T("")) == T(""));
-        BOOST_CHECK(pt.get(T("KEY1.key4"), T("")) == T("data4"));
-    }
-    else
-    {
-        BOOST_CHECK(PTREE::debug_get_instances_count() == 5);
-        BOOST_CHECK(pt.get(T("key1"), T("1")) == pt.get(T("KEY1"), T("2")));
-        BOOST_CHECK(pt.get(T("key2"), T("1")) == pt.get(T("KEY2"), T("2")));
-        BOOST_CHECK(pt.get(T("key1.key3"), T("1")) == pt.get(T("KEY1.KEY3"), T("2")));
-        BOOST_CHECK(pt.get(T("key1.key4"), T("1")) == pt.get(T("KEY1.KEY4"), T("2")));
-    }
+#if (NOCASE == 0)
+    BOOST_CHECK(PTREE::debug_get_instances_count() == 7);
+    BOOST_CHECK(pt.get(T("key1"), T("")) == T("data1"));
+    BOOST_CHECK(pt.get(T("key2"), T("")) == T(""));
+    BOOST_CHECK(pt.get(T("key1.key3"), T("")) == T(""));
+    BOOST_CHECK(pt.get(T("KEY1.key4"), T("")) == T("data4"));
+#else
+    BOOST_CHECK(PTREE::debug_get_instances_count() == 5);
+    BOOST_CHECK(pt.get(T("key1"), T("1")) == pt.get(T("KEY1"), T("2")));
+    BOOST_CHECK(pt.get(T("key2"), T("1")) == pt.get(T("KEY2"), T("2")));
+    BOOST_CHECK(pt.get(T("key1.key3"), T("1")) == pt.get(T("KEY1.KEY3"), T("2")));
+    BOOST_CHECK(pt.get(T("key1.key4"), T("1")) == pt.get(T("KEY1.KEY4"), T("2")));
+#endif
 
     // Do more insertions
     pt.push_back(PTREE::value_type(T("key1"), PTREE()));
     pt.push_back(PTREE::value_type(T("key1"), PTREE()));
 
     // Test counts
-    if (typeid(PTREE::traits_type) == typeid(boost::property_tree::ptree_traits<CHTYPE>))
-    {
-        BOOST_CHECK(pt.count(T("key1")) == 3);
-        BOOST_CHECK(pt.count(T("KEY1")) == 1);
-        BOOST_CHECK(pt.count(T("key2")) == 0);
-        BOOST_CHECK(pt.count(T("KEY2")) == 1);
-        BOOST_CHECK(pt.count(T("key3")) == 0);
-        BOOST_CHECK(pt.count(T("KEY3")) == 0);
-    }
-    else
-    {
-        BOOST_CHECK(pt.count(T("key1")) == 3);
-        BOOST_CHECK(pt.count(T("KEY1")) == 3);
-        BOOST_CHECK(pt.count(T("key2")) == 1);
-        BOOST_CHECK(pt.count(T("KEY2")) == 1);
-        BOOST_CHECK(pt.count(T("key3")) == 0);
-        BOOST_CHECK(pt.count(T("KEY3")) == 0);
-    }
+#if (NOCASE == 0)
+    BOOST_CHECK(pt.count(T("key1")) == 3);
+    BOOST_CHECK(pt.count(T("KEY1")) == 1);
+    BOOST_CHECK(pt.count(T("key2")) == 0);
+    BOOST_CHECK(pt.count(T("KEY2")) == 1);
+    BOOST_CHECK(pt.count(T("key3")) == 0);
+    BOOST_CHECK(pt.count(T("KEY3")) == 0);
+#else
+    BOOST_CHECK(pt.count(T("key1")) == 3);
+    BOOST_CHECK(pt.count(T("KEY1")) == 3);
+    BOOST_CHECK(pt.count(T("key2")) == 1);
+    BOOST_CHECK(pt.count(T("KEY2")) == 1);
+    BOOST_CHECK(pt.count(T("key3")) == 0);
+    BOOST_CHECK(pt.count(T("KEY3")) == 0);
+#endif
 
 }
 
@@ -498,7 +492,7 @@ void test_comparison(PTREE *)
     }
 
     // Test originals with modified case
-    if (typeid(PTREE::traits_type) == typeid(boost::property_tree::iptree_traits<CHTYPE>))
+#if (NOCASE != 0)
     {
         PTREE pt1(pt_orig);
         PTREE pt2(pt_orig);
@@ -509,6 +503,7 @@ void test_comparison(PTREE *)
         BOOST_CHECK(!(pt1 != pt2));
         BOOST_CHECK(!(pt2 != pt1));
     }
+#endif
 
     // Test modified copies (both modified the same way)
     {
@@ -771,6 +766,18 @@ void test_get_put(PTREE *)
         BOOST_CHECK(child.count(T("key")) == 2);
     }
 
+    // Test that put does not destroy children
+    {
+        PTREE pt;
+        pt.put(T("key1"), 1);
+        pt.put(T("key1.key2"), 2);
+        BOOST_CHECK(pt.get<int>(T("key1"), 0) == 1);
+        BOOST_CHECK(pt.get<int>(T("key1.key2"), 0) == 2);
+        pt.put(T("key1"), 2);
+        BOOST_CHECK(pt.get<int>(T("key1"), 0) == 2);
+        BOOST_CHECK(pt.get<int>(T("key1.key2"), 0) == 2);
+    }
+
 }
 
 void test_get_child_put_child(PTREE *)
@@ -886,6 +893,8 @@ void test_get_child_put_child(PTREE *)
 void test_path_separator(PTREE *)
 {
     
+    typedef PTREE::path_type path;
+    
     // Check instances count
     BOOST_CHECK(PTREE::debug_get_instances_count() == 0);
 
@@ -894,9 +903,9 @@ void test_path_separator(PTREE *)
     pt.put(T("key1"), T("1"));
     pt.put(T("key2.key"), T("2"));
     pt.put(T("key3.key.key"), T("3"));
-    pt.put(CHTYPE('/'), T("key4"), T("4"));
-    pt.put(CHTYPE('/'), T("key5/key"), T("5"));
-    pt.put(CHTYPE('/'), T("key6/key/key"), T("6"));
+    pt.put(path(T("key4"), CHTYPE('/')), T("4"));
+    pt.put(path(T("key5/key"), CHTYPE('/')), T("5"));
+    pt.put(path(T("key6/key/key"), CHTYPE('/')), T("6"));
 
     // Check instances count
     BOOST_CHECK(PTREE::debug_get_instances_count() == 13);
@@ -905,15 +914,47 @@ void test_path_separator(PTREE *)
     BOOST_CHECK(pt.get(T("key1"), 0) == 1);
     BOOST_CHECK(pt.get(T("key2.key"), 0) == 2);
     BOOST_CHECK(pt.get(T("key3.key.key"), 0) == 3);
-    BOOST_CHECK(pt.get(CHTYPE('/'), T("key4"), 0) == 4);
-    BOOST_CHECK(pt.get(CHTYPE('/'), T("key5/key"), 0) == 5);
-    BOOST_CHECK(pt.get(CHTYPE('/'), T("key6/key/key"), 0) == 6);
+    BOOST_CHECK(pt.get(path(T("key4"), CHTYPE('/')), 0) == 4);
+    BOOST_CHECK(pt.get(path(T("key5/key"), CHTYPE('/')), 0) == 5);
+    BOOST_CHECK(pt.get(path(T("key6/key/key"), CHTYPE('/')), 0) == 6);
 
     // Do incorrect extractions
     BOOST_CHECK(pt.get(T("key2/key"), 0) == 0);
     BOOST_CHECK(pt.get(T("key3/key/key"), 0) == 0);
-    BOOST_CHECK(pt.get(CHTYPE('/'), T("key5.key"), 0) == 0);
-    BOOST_CHECK(pt.get(CHTYPE('/'), T("key6.key.key"), 0) == 0);
+    BOOST_CHECK(pt.get(path(T("key5.key"), CHTYPE('/')), 0) == 0);
+    BOOST_CHECK(pt.get(path(T("key6.key.key"), CHTYPE('/')), 0) == 0);
+
+}
+
+void test_path(PTREE *)
+{
+    
+    typedef PTREE::path_type path;
+    
+    // Insert
+    PTREE pt;
+    pt.put(T("key1.key2.key3"), 1);
+    
+    {
+        path p;
+        p /= T("key1"); p /= T("key2"); p /= T("key3");
+        BOOST_CHECK(pt.get<int>(p, 0) == 1);
+    }
+
+    {
+        path p(T("key1"));
+        p /= T("key2.key3");
+        BOOST_CHECK(pt.get<int>(p, 0) == 1);
+    }
+    
+    {
+        path p;
+        path p1(T("key1.key2"));
+        path p2(T("key3"));
+        p /= p1;
+        p /= p2;
+        BOOST_CHECK(pt.get<int>(p, 0) == 1);
+    }
 
 }
 
@@ -968,18 +1009,22 @@ void test_locale(PTREE *)
     }
     catch (std::runtime_error &e)
     {
-        std::cerr << "\"en_GB\" and/or \"fr_FR\" locale not supported by the platform. "
+        std::cerr << "Required locale not supported by the platform. "
                      "Skipping locale tests (caught std::runtime_error with message " << 
                      e.what() << ").\n";
     }
 
 }
 
-void test_custom_traits(PTREE *)
+void test_custom_data_type(PTREE *)
 {
 
+    typedef std::basic_string<CHTYPE> Str;
+    typedef PTREE::key_compare Comp;
+    typedef PTREE::path_type Path;
+
     // Property_tree with boost::any as data type
-    typedef boost::property_tree::basic_ptree<MyTraits<CHTYPE> > my_ptree;
+    typedef boost::property_tree::basic_ptree<Comp, Str, Path, boost::any, MyTranslator> my_ptree;
     my_ptree pt;
 
     // Put/get int value

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ****----****
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -49,7 +49,7 @@ void test_registry_parser()
 {
 
     using namespace boost::property_tree;
-    typedef typename Ptree::char_type Ch;
+    typedef typename Ptree::key_type::value_type Ch;
     typedef std::basic_string<Ch> Str;
 
     // Delete test registry key

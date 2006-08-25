@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -389,11 +389,11 @@ namespace boost { namespace property_tree { namespace registry_parser
     //! Read registry
     template<class Ptree>
     void read_registry(HKEY root, 
-                       const std::basic_string<typename Ptree::char_type> &key, 
+                       const std::basic_string<typename Ptree::key_type::value_type> &key, 
                        Ptree &pt)
     {
 
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         typedef std::basic_string<Ch> Str;
         typedef std::basic_stringstream<Ch> Stream;
         
@@ -469,11 +469,11 @@ namespace boost { namespace property_tree { namespace registry_parser
     //! Write registry
     template<class Ptree>
     void write_registry(HKEY root, 
-                        const std::basic_string<typename Ptree::char_type> &key, 
+                        const std::basic_string<typename Ptree::key_type::value_type> &key, 
                         const Ptree &pt)
     {
 
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         typedef std::basic_string<Ch> Str;
         typedef std::basic_stringstream<Ch> Stream;
         

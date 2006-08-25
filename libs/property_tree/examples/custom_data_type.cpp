@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ****----****
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -7,6 +7,11 @@
 //
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
+
+// This example shows what need to be done to customize data_type of ptree.
+//
+// It creates my_ptree type, which is a basic_ptree having boost::any as its data
+// container (instead of std::string that standard ptree has).
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/info_parser.hpp>
@@ -18,59 +23,24 @@
 #include <string>
 #include <iostream>
 
-// Custom extractor - converts data from boost::any to Type
-template<class Type>
-struct my_extractor
+// Custom translator that works with boost::any instead of std::string
+struct my_translator
 {
-    inline bool operator()(const boost::any &data, 
-                           Type &extracted,
-                           const std::locale &loc) const
+
+    // Custom extractor - converts data from boost::any to T
+    template<class Ptree, class T> 
+    bool get_value(const Ptree &pt, T &value) const
     {
-        extracted = boost::any_cast<Type>(data);
+        value = boost::any_cast<T>(pt.data());
         return true;    // Success
     }
-};
 
-// Custom inserter - converts data from Type to boost::any
-template<class Type>
-struct my_inserter
-{
-    inline bool operator()(boost::any &data, 
-                           const Type &to_insert,
-                           const std::locale &loc) const
+    // Custom inserter - converts data from T to boost::any
+    template<class Ptree, class T> 
+    bool put_value(Ptree &pt, const T &value) const
     {
-        data = to_insert;
-        return true;    // Success
-    }
-};
-
-// Custom property_tree traits - using custom extractor and inserter
-template<class Ch>
-struct my_traits
-{
-
-    // Character type to be used by ptree keys
-    typedef Ch char_type;
-
-    // Key type to be used by ptree
-    typedef std::basic_string<Ch> key_type;
-    
-    // Data type to be used by ptree
-    typedef boost::any data_type;
-    
-    // Extractor to be used by ptree
-    template<class Type>
-    struct extractor: public my_extractor<Type> { }; 
-
-    // Inserter to be used by ptree
-    template<class Type>
-    struct inserter: public my_inserter<Type> { };
-
-    // Key comparison function
-    inline bool operator()(const key_type &key1, 
-                           const key_type &key2) const
-    {
-        return key1 < key2;
+        pt.data() = value;
+        return true;
     }
 
 };
@@ -78,8 +48,15 @@ struct my_traits
 int main()
 {
     
+    using namespace boost::property_tree;
+    
     // Property_tree with boost::any as data type
-    typedef boost::property_tree::basic_ptree<my_traits<char> > my_ptree;
+    // Key comparison:  std::less<std::string>
+    // Key type:        std::string
+    // Path type:       path
+    // Data type:       boost::any
+    // Translator type: my_translator
+    typedef basic_ptree<std::less<std::string>, std::string, path, boost::any, my_translator> my_ptree;
     my_ptree pt;
 
     // Put/get int value
@@ -104,20 +81,20 @@ int main()
     // Note: parsers will work with my_ptree type, but only if 
     // type contained in boost::any is string. Otherwise,
     // they will throw bad_any_cast, as will be the case here.
-    // The reason is that obviously parsers only work with string data. 
-    // You will need to provide extractor/inserter that can always 
-    // succesfully convert from/to basic_string
+    // The reason is that obviously parsers only work with string data: 
+    // they need a translator that can always succesfully convert from/to 
+    // string
     
     // This section tests if parsers compile and throw only expected exceptions
     std::istringstream istr;
     std::ostringstream ostr;
-    try { boost::property_tree::write_info(ostr, pt); } catch (boost::bad_any_cast &) { }
-    try { boost::property_tree::read_info(istr, pt); } catch (...) { }
-    try { boost::property_tree::write_ini(ostr, pt); } catch (boost::bad_any_cast &) { }
-    try { boost::property_tree::read_ini(istr, pt); } catch (...) { }
-    try { boost::property_tree::write_json(ostr, pt); } catch (boost::bad_any_cast &) { }
-    try { boost::property_tree::read_json(istr, pt); } catch (...) { }
-    try { boost::property_tree::write_xml(ostr, pt); } catch (boost::bad_any_cast &) { }
-    try { boost::property_tree::read_xml(istr, pt); } catch (...) { }
+    try { write_info(ostr, pt); } catch (boost::bad_any_cast &) { }
+    try { read_info(istr, pt); } catch (...) { }
+    try { write_ini(ostr, pt); } catch (boost::bad_any_cast &) { }
+    try { read_ini(istr, pt); } catch (...) { }
+    try { write_json(ostr, pt); } catch (boost::bad_any_cast &) { }
+    try { read_json(istr, pt); } catch (...) { }
+    try { write_xml(ostr, pt); } catch (boost::bad_any_cast &) { }
+    try { read_xml(istr, pt); } catch (...) { }
 
 }

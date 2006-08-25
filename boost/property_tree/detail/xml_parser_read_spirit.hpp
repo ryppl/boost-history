@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -34,8 +34,9 @@ namespace boost { namespace property_tree { namespace xml_parser
     struct context
     {
         
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         typedef std::basic_string<Ch> Str;
+        typedef typename Ptree::path_type Path;
         typedef boost::spirit::position_iterator<typename std::vector<Ch>::const_iterator> It;
 
         int flags;
@@ -97,7 +98,9 @@ namespace boost { namespace property_tree { namespace xml_parser
             a_attr_key(context &c): c(c) { }
             void operator()(It b, It e) const
             {
-                c.stack.back()->put_child(Ch('/'), xmlattr<Ch>() + Ch('/') + Str(b, e), empty_ptree<Ptree>());
+                Path p(xmlattr<Ch>());
+                p /= Str(b, e);
+                c.stack.back()->put_child(p, empty_ptree<Ptree>());
             }
         };
 
@@ -685,13 +688,13 @@ namespace boost { namespace property_tree { namespace xml_parser
     };
 
     template<class Ptree>
-    void read_xml_internal(std::basic_istream<typename Ptree::char_type> &stream,
+    void read_xml_internal(std::basic_istream<typename Ptree::key_type::value_type> &stream,
                            Ptree &pt,
                            int flags,
                            const std::string &filename)
     {
 
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         typedef boost::spirit::position_iterator<typename std::vector<Ch>::const_iterator> It;
 
         BOOST_ASSERT(validate_flags(flags));

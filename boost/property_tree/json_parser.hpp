@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -24,7 +24,7 @@ namespace boost { namespace property_tree { namespace json_parser
 
     // Read json from stream
     template<class Ptree>
-    void read_json(std::basic_istream<typename Ptree::char_type> &stream,
+    void read_json(std::basic_istream<typename Ptree::key_type::value_type> &stream,
                    Ptree &pt)
     {
         read_json_internal(stream, pt, std::string());
@@ -36,7 +36,7 @@ namespace boost { namespace property_tree { namespace json_parser
                    Ptree &pt,
                    const std::locale &loc = std::locale())
     {
-        std::basic_ifstream<typename Ptree::char_type> stream(filename.c_str());
+        std::basic_ifstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
             throw json_parser_error("cannot open file", filename, 0);
         stream.imbue(loc);
@@ -45,7 +45,7 @@ namespace boost { namespace property_tree { namespace json_parser
 
     // Write json to stream
     template<class Ptree>
-    void write_json(std::basic_ostream<typename Ptree::char_type> &stream, 
+    void write_json(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                     const Ptree &pt)
     {
         write_json_internal(stream, pt, std::string());
@@ -57,7 +57,7 @@ namespace boost { namespace property_tree { namespace json_parser
                     const Ptree &pt,
                     const std::locale &loc = std::locale())
     {
-        std::basic_ofstream<typename Ptree::char_type> stream(filename.c_str());
+        std::basic_ofstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
             throw json_parser_error("cannot open file", filename, 0);
         stream.imbue(loc);

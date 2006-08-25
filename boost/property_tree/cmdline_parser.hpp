@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -18,12 +18,12 @@ namespace boost { namespace property_tree { namespace cmdline_parser
 
     template<class Ptree>
     void read_cmdline(int argc, 
-                      typename Ptree::char_type *argv[], 
-                      const std::basic_string<typename Ptree::char_type> &metachars,
+                      typename Ptree::key_type::value_type *argv[], 
+                      const typename Ptree::key_type &metachars,
                       Ptree &pt)
     {
 
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         typedef std::basic_string<Ch> Str;
 
         Ptree local;
@@ -40,7 +40,7 @@ namespace boost { namespace property_tree { namespace cmdline_parser
                         Ptree &child = local.put(text, Str());
                         Str key; 
                         if (child.size() < 10) 
-                            key.push_back(typename Ptree::char_type('0' + child.size()));
+                            key.push_back(Ch('0' + child.size()));
                         child.push_back(std::make_pair(key, Ptree(child.data())));
                     }
                     else if (text.size() == 2)
@@ -48,7 +48,7 @@ namespace boost { namespace property_tree { namespace cmdline_parser
                         Ptree &child = local.put(text.substr(1, 1), Str());
                         Str key; 
                         if (child.size() < 10) 
-                            key.push_back(typename Ptree::char_type('0' + child.size()));
+                            key.push_back(Ch('0' + child.size()));
                         child.push_back(std::make_pair(key, Ptree(child.data())));
                     }
                     else
@@ -56,7 +56,7 @@ namespace boost { namespace property_tree { namespace cmdline_parser
                         Ptree &child = local.put(text.substr(1, 1), detail::trim<Ch>(text.substr(2, Str::npos)));
                         Str key; 
                         if (child.size() < 10) 
-                            key.push_back(typename Ptree::char_type('0' + child.size()));
+                            key.push_back(Ch('0' + child.size()));
                         child.push_back(std::make_pair(key, Ptree(child.data())));
                     }
                 }
@@ -65,7 +65,7 @@ namespace boost { namespace property_tree { namespace cmdline_parser
                     Ptree &child = local.put(Str(), detail::trim<Ch>(text));
                     Str key; 
                     if (child.size() < 10) 
-                        key.push_back(typename Ptree::char_type('0' + child.size()));
+                        key.push_back(Ch('0' + child.size()));
                     child.push_back(std::make_pair(key, Ptree(child.data())));
                 }
         }

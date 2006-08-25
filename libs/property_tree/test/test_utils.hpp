@@ -83,7 +83,7 @@ template<class Ptree>
 Ptree get_test_ptree()
 {
     using namespace boost::property_tree;
-    typedef typename Ptree::char_type Ch;
+    typedef typename Ptree::key_type::value_type Ch;
     Ptree pt;
     pt.put_value(detail::widen<Ch>("data0"));
     pt.put(detail::widen<Ch>("key1"), detail::widen<Ch>("data1"));
@@ -106,7 +106,7 @@ void generic_parser_test(Ptree &pt,
 {
 
     using namespace boost::property_tree;
-    typedef typename Ptree::char_type Ch;
+    typedef typename Ptree::key_type::value_type Ch;
 
     // Create test files
     test_file<Ch> file_1(test_data_1, filename_1);

@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ****----****
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -12,6 +12,7 @@
 #include <list>
 #include <cmath>
 
+// Predicate for sorting keys
 template<class Ptree>
 struct SortPred
 {
@@ -22,6 +23,7 @@ struct SortPred
     }
 };
 
+// Predicate for sorting keys in reverse
 template<class Ptree>
 struct SortPredRev
 {
@@ -32,56 +34,24 @@ struct SortPredRev
     }
 };
 
-template<class Type>
-struct MyExtractor
+// Custom translator that works with boost::any instead of std::string
+struct MyTranslator
 {
-    inline bool operator()(const boost::any &data, 
-                           Type &extracted,
-                           const std::locale &loc) const
+
+    // Custom extractor - converts data from boost::any to T
+    template<class Ptree, class T> 
+    bool get_value(const Ptree &pt, T &value) const
     {
-        extracted = boost::any_cast<Type>(data);
+        value = boost::any_cast<T>(pt.data());
         return true;    // Success
     }
-};
 
-template<class Type>
-struct MyInserter
-{
-    inline bool operator()(boost::any &data, 
-                           const Type &to_insert,
-                           const std::locale &loc) const
+    // Custom inserter - converts data from T to boost::any
+    template<class Ptree, class T> 
+    bool put_value(Ptree &pt, const T &value) const
     {
-        data = to_insert;
-        return true;    // Success
-    }
-};
-
-template<class Ch>
-struct MyTraits
-{
-
-    // Character type to be used by ptree keys
-    typedef Ch char_type;
-
-    // Key type to be used by ptree
-    typedef std::basic_string<Ch> key_type;
-    
-    // Data type to be used by ptree
-    typedef boost::any data_type;
-
-    // Extractor to be used by ptree
-    template<class Type>
-    struct extractor: public MyExtractor<Type> { }; 
-
-    // Inserter to be used by ptree
-    template<class Type>
-    struct inserter: public MyInserter<Type> { };
-
-    // Key comparison function
-    inline bool operator()(const std::basic_string<Ch> &key1, 
-                           const std::basic_string<Ch> &key2) const
-    {
-        return key1 < key2;
+        pt.data() = value;
+        return true;
     }
 
 };
@@ -90,40 +60,48 @@ struct MyTraits
 #define CHTYPE char
 #define T(s) s
 #define PTREE boost::property_tree::ptree
+#define NOCASE 0
 #   include "test_property_tree.hpp"
 #undef CHTYPE
 #undef T
 #undef PTREE
+#undef NOCASE
 
 // Include wchar_t tests, case sensitive
 #ifndef BOOST_NO_CWCHAR
 #   define CHTYPE wchar_t
 #   define T(s) L ## s
 #   define PTREE boost::property_tree::wptree
+#   define NOCASE 0
 #       include "test_property_tree.hpp"
 #   undef CHTYPE
 #   undef T
 #   undef PTREE
+#   undef NOCASE
 #endif
 
 // Include char tests, case insensitive
 #define CHTYPE char
 #define T(s) s
 #define PTREE boost::property_tree::iptree
+#define NOCASE 1
 #   include "test_property_tree.hpp"
 #undef CHTYPE
 #undef T
 #undef PTREE
+#undef NOCASE
 
 // Include wchar_t tests, case insensitive
 #ifndef BOOST_NO_CWCHAR
 #   define CHTYPE wchar_t
 #   define T(s) L ## s
 #   define PTREE boost::property_tree::wiptree
+#   define NOCASE 1
 #       include "test_property_tree.hpp"
 #   undef CHTYPE
 #   undef T
 #   undef PTREE
+#   undef NOCASE
 #endif
 
 int test_main(int, char *[])
@@ -149,9 +127,10 @@ int test_main(int, char *[])
         test_get_put(pt);
         test_get_child_put_child(pt);
         test_path_separator(pt);
+        test_path(pt);
         test_precision(pt);
         test_locale(pt);
-        test_custom_traits(pt);
+        test_custom_data_type(pt);
         test_empty_size_max_size(pt);
         test_leaks(pt);                  // must be a final test
     }
@@ -175,9 +154,10 @@ int test_main(int, char *[])
         test_get_put(pt);
         test_get_child_put_child(pt);
         test_path_separator(pt);
+        test_path(pt);
         test_precision(pt);
         test_locale(pt);
-        test_custom_traits(pt);
+        test_custom_data_type(pt);
         test_empty_size_max_size(pt);
         test_leaks(pt);                  // must be a final test
     }
@@ -201,9 +181,10 @@ int test_main(int, char *[])
         test_get_put(pt);
         test_get_child_put_child(pt);
         test_path_separator(pt);
+        test_path(pt);
         test_precision(pt);
         test_locale(pt);
-        //test_custom_traits(pt);        // test identical to ptree version, no need to execute
+        test_custom_data_type(pt);
         test_empty_size_max_size(pt);
         test_leaks(pt);                  // must be a final test
     }
@@ -227,9 +208,10 @@ int test_main(int, char *[])
         test_get_put(pt);
         test_get_child_put_child(pt);
         test_path_separator(pt);
+        test_path(pt);
         test_precision(pt);
         test_locale(pt);
-        //test_custom_traits(pt);        // test identical to wptree version, no need to execute
+        test_custom_data_type(pt);
         test_empty_size_max_size(pt);
         test_leaks(pt);                  // must be a final test
     }

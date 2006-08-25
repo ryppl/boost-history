@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -57,13 +57,13 @@ namespace boost { namespace property_tree { namespace info_parser
     }
 
     template<class Ptree>
-    void write_info_helper(std::basic_ostream<typename Ptree::char_type> &stream, 
+    void write_info_helper(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                            const Ptree &pt, 
                            int indent)
     {
 
         // Character type
-        typedef typename Ptree::char_type Ch;
+        typedef typename Ptree::key_type::value_type Ch;
         
         // Write data
         if (indent >= 0)
@@ -117,7 +117,7 @@ namespace boost { namespace property_tree { namespace info_parser
 
     // Write ptree to info stream
     template<class Ptree>
-    void write_info_internal(std::basic_ostream<typename Ptree::char_type> &stream, 
+    void write_info_internal(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                              const Ptree &pt,
                              const std::string &filename)
     {

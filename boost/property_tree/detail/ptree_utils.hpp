@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// Copyright (C) 2002-2005 Marcin Kalicinski
+// ******
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -10,12 +10,28 @@
 #ifndef BOOST_PROPERTY_TREE_DETAIL_PTREE_UTILS_HPP_INCLUDED
 #define BOOST_PROPERTY_TREE_DETAIL_PTREE_UTILS_HPP_INCLUDED
 
-#include <boost/property_tree/ptree.hpp>
 #include <string>
+#include <algorithm>
 #include <locale>
 
 namespace boost { namespace property_tree { namespace detail
 {
+
+    template<class T>
+    struct less_nocase
+    {
+        typedef typename T::value_type Ch;
+        std::locale m_locale;
+        inline bool operator()(Ch c1, Ch c2) const
+        {
+            return std::toupper(c1, m_locale) < std::toupper(c2, m_locale);
+        }
+        inline bool operator()(const T &t1, const T &t2) const
+        {
+            return std::lexicographical_compare(t1.begin(), t1.end(), t2.begin(), t2.end(), *this);
+        }
+    };
+
 
     // Naively convert narrow string to another character type
     template<class Ch>
