@@ -1,0 +1,224 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Introduction</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../../index.html" title="TR1-Math 0.9">
+<link rel="up" href="../elliptic_integrals.html" title="Elliptic Integrals">
+<link rel="prev" href="../elliptic_integrals.html" title="Elliptic Integrals">
+<link rel="next" href="elliptic_integrals___carlson_form.html" title="Elliptic
+      Integrals - Carlson Form">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../elliptic_integrals.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../elliptic_integrals.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="elliptic_integrals___carlson_form.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="tr1_math.elliptic_integrals.introduction"></a><a href="introduction.html" title="Introduction">Introduction</a></h3></div></div></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The main reference is [<a href="../references.html#1">1</a>].
+        </p></td></tr>
+</table></div>
+<a name="tr1_math.elliptic_integrals.introduction.notation"></a><h5>
+<a name="id4856397"></a>
+        <a href="introduction.html#tr1_math.elliptic_integrals.introduction.notation">Notation</a>
+      </h5>
+<p>
+        All variables are real numbers unless otherwise noted.
+      </p>
+<a name="ellint_def"></a><p>
+      </p>
+<a name="tr1_math.elliptic_integrals.introduction.definition"></a><h5>
+<a name="id4856431"></a>
+        <a href="introduction.html#tr1_math.elliptic_integrals.introduction.definition">Definition</a>
+      </h5>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint1.png" alt="ellint1"></span>
+      </p>
+<p>
+        is called elliptic integral if <span class="emphasis"><em>R(t, s)</em></span> is a rational
+        function of <span class="emphasis"><em>t</em></span> and <span class="emphasis"><em>s</em></span>, and <span class="emphasis"><em>
+        s<sup>2</sup> </em></span> is a cubic or quartic polynomial in <span class="emphasis"><em>t</em></span>.
+      </p>
+<p>
+        Elliptic integrals generally can not be expressed in terms of elementary
+        functions. However, Legendre showed that all elliptic integrals can be reduced
+        to the following three canonical forms:
+      </p>
+<p>
+        Elliptic Integral of the First Kind (Legendre form)
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint2.png" alt="ellint2"></span>
+      </p>
+<p>
+        Elliptic Integral of the Second Kind (Legendre form)
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint3.png" alt="ellint3"></span>
+      </p>
+<p>
+        Elliptic Integral of the Third Kind (Legendre form)
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint4.png" alt="ellint4"></span>
+      </p>
+<p>
+        where
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint5.png" alt="ellint5"></span>
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          <span class="emphasis"><em>&#966;</em></span> is called the amplitude. <br> <span class="emphasis"><em>k</em></span>
+          is called the modulus. <br> <span class="emphasis"><em>&#945;</em></span> is called the modular
+          angle. <br> <span class="emphasis"><em>n</em></span> is called the characteristic.
+        </p></td></tr>
+</table></div>
+<p>
+        When <span class="emphasis"><em>&#966;</em></span> = <span class="emphasis"><em>&#960;</em></span> / 2, the elliptic integrals
+        are called <span class="emphasis"><em>complete</em></span>.
+      </p>
+<p>
+        Complete Elliptic Integral of the First Kind (Legendre form)
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint6.png" alt="ellint6"></span>
+      </p>
+<p>
+        Complete Elliptic Integral of the Second Kind (Legendre form)
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint7.png" alt="ellint7"></span>
+      </p>
+<p>
+        Complete Elliptic Integral of the Third Kind (Legendre form)
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint8.png" alt="ellint8"></span>
+      </p>
+<p>
+        Carlson [<a href="../references.html#6">6</a>] [<a href="../references.html#7">7</a>] gives an
+        alternative definition of elliptic integral's canonical forms:
+      </p>
+<p>
+        Carlson's Elliptic Integral of the First Kind
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint9.png" alt="ellint9"></span>
+      </p>
+<p>
+        where <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span>, <span class="emphasis"><em>z</em></span>
+        are nonnegative and at most one of them may be zero.
+      </p>
+<p>
+        Carlson's Elliptic Integral of the Second Kind
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint10.png" alt="ellint10"></span>
+      </p>
+<p>
+        where <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span> are nonnegative, at
+        most one of them may be zero, and <span class="emphasis"><em>z</em></span> must be positive.
+      </p>
+<p>
+        Carlson's Elliptic Integral of the Third Kind
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint11.png" alt="ellint11"></span>
+      </p>
+<p>
+        where <span class="emphasis"><em>x</em></span>, <span class="emphasis"><em>y</em></span>, <span class="emphasis"><em>z</em></span>
+        are nonnegative, at most one of them may be zero, and <span class="emphasis"><em>p</em></span>
+        must be nonzero.
+      </p>
+<p>
+        Carlson's Degenerate Elliptic Integral
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint12.png" alt="ellint12"></span>
+      </p>
+<p>
+        where <span class="emphasis"><em>x</em></span> is nonnegative and <span class="emphasis"><em>y</em></span> is
+        nonzero.
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          <span class="emphasis"><em> R<sub>C</sub>(x, y) = R<sub>F</sub>(x, y, y)</em></span> <br> <span class="emphasis"><em> R<sub>D</sub>(x,
+          y, z) = R<sub>J</sub>(x, y, z, z)</em></span>
+        </p></td></tr>
+</table></div>
+<a name="ellint_theorem"></a><p>
+      </p>
+<a name="tr1_math.elliptic_integrals.introduction.duplication_theorem"></a><h5>
+<a name="id4856909"></a>
+        <a href="introduction.html#tr1_math.elliptic_integrals.introduction.duplication_theorem">Duplication
+        Theorem</a>
+      </h5>
+<p>
+        Carlson proved in [<a href="../references.html#7">7</a>] that
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint13.png" alt="ellint13"></span>
+      </p>
+<a name="ellint_formula"></a><p>
+      </p>
+<a name="tr1_math.elliptic_integrals.introduction.carlson_s_formulas"></a><h5>
+<a name="id4856969"></a>
+        <a href="introduction.html#tr1_math.elliptic_integrals.introduction.carlson_s_formulas">Carlson's
+        Formulas</a>
+      </h5>
+<p>
+        The Legendre form and Carlson form of elliptic integrals are related by equations:
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint14.png" alt="ellint14"></span>
+      </p>
+<p>
+        In particular,
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../equations/ellint15.png" alt="ellint15"></span>
+      </p>
+<a name="tr1_math.elliptic_integrals.introduction.numerical_algorithms"></a><h5>
+<a name="id4857037"></a>
+        <a href="introduction.html#tr1_math.elliptic_integrals.introduction.numerical_algorithms">Numerical
+        Algorithms</a>
+      </h5>
+<p>
+        The conventional methods for computing elliptic integrals are Gauss and Landen
+        transformations, which converge quadratically and work well for elliptic
+        integrals of the first and second kinds. Unfortunately they suffer from loss
+        of significant digits for the third kind. Carlson's algorithm [<a href="../references.html#5">5</a>]
+        [<a href="../references.html#8">8</a>], by contrast, provides a unified method for
+        all three kinds of elliptic integrals with satisfactory precisions.
+      </p>
+</div>
+<table width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006 Xiaogang Zhang</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../elliptic_integrals.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../elliptic_integrals.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="elliptic_integrals___carlson_form.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
