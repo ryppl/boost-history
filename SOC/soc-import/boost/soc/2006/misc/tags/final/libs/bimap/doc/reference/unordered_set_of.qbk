@@ -1,0 +1,634 @@
+[/license
+
+Boost.Bimap
+
+Copyright (c) 2006 Matias Capeletto
+
+This code may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+
+]
+
+[/ QuickBook Document version 1.3 ]
+
+[section unordered_set_of Reference]
+
+[section Header "boost/bimap/unordered_set_of.hpp" synopsis]
+
+    namespace boost {
+    namespace bimap {
+
+
+    template
+    <
+        class KeyType,
+        class HashFunctor   = hash< KeyType >,
+        class EqualKey      = std::equal_to< KeyType >
+    >
+    struct unordered_set_of;
+
+
+    template
+    <
+        class HashFunctor   = hash< _relation >,
+        class EqualKey      = std::equal_to< _relation >
+    >
+    struct unordered_set_of_relation;
+
+
+    } // namespace bimap
+    } // namespace boost
+
+
+[endsect]
+
+[section Header "boost/bimap/unordered_multiset_of.hpp" synopsis]
+
+    namespace boost {
+    namespace bimap {
+
+
+    template
+    <
+        class KeyType,
+        class HashFunctor   = hash< KeyType >,
+        class EqualKey      = std::equal_to< KeyType >
+    >
+    struct unordered_multiset_of;
+
+
+    template
+    <
+        class HashFunctor   = hash< _relation >,
+        class EqualKey      = std::equal_to< _relation >
+    >
+    struct unordered_multiset_of_relation;
+
+
+    } // namespace bimap
+    } // namespace boost
+
+
+[endsect]
+
+[section Set type specifiers unordered_set_of and unordered_multiset_of]
+
+These set types specifiers allow for set views without and
+with allowance of duplicate elements, respectively. The syntax of
+`set_of` and `multiset_of` coincide, thus we describe them
+in a grouped manner.
+
+[endsect]
+
+[section unordered_\[multi\]set_of Views]
+
+An unordered_\[multi\]set_of set view is a tr1::unordered\[multi\]set signature compatible
+interface to the underlying heap of elements contained in a `bimap`.
+
+The interface and semantics of `unordered_[multi]set_of` views are
+modeled according to the proposal for unordered associative containers given
+in the __CPP_STANDARD_LIBRARY_TECHNICAL_REPORT__, also known as TR1.
+An `unordered_[multi]set_of` view is particularized according to a given
+`Hash` function object which returns hash values for the keys and a
+binary predicate `Pred` acting as an equivalence relation on values of Key.
+
+There are two variants: unordered_set_of, which do not allow duplicate elements
+(with respect to its associated comparison predicate) and unordered_multiset_of,
+which accept those duplicates. The interface of these two variants is the same
+to a great extent, so they are documented together with their differences
+explicitly noted when they exist.
+
+If you look the bimap by a side, you will use a map view and if you looked
+it as a whole you will be using a set view.
+
+Except where noted, `unordered_[multi]set_of` views (both unique and non-unique) are models
+of [^Unordered Associative Container].
+Validity of iterators and references to elements is preserved in all cases.
+Occasionally, the exception safety guarantees provided are actually stronger
+than required by the extension draft. We only provide descriptions of those
+types and operations that are either not present in the concepts modeled or
+do not exactly conform to the requirements for unordered associative containers.
+
+
+    namespace boost {
+    namespace bimap {
+    namespace views {
+
+    template< ``['-implementation defined parameter list-]`` >
+    class ``['-implementation defined view name-]``
+    {
+        public:
+
+        // types
+
+        typedef ``['-unspecified-]`` key_type;
+        typedef ``['-unspecified-]`` value_type;
+        typedef ``['-unspecified-]`` key_compare;
+        typedef ``['-unspecified-]`` value_compare;
+        typedef ``['-unspecified-]`` hasher;
+        typedef ``['-unspecified-]`` key_equal;
+        typedef ``['-unspecified-]`` allocator_type;
+        typedef ``['-unspecified-]`` reference;
+        typedef ``['-unspecified-]`` const_reference;
+        typedef ``['-unspecified-]`` iterator;
+        typedef ``['-unspecified-]`` const_iterator;
+        typedef ``['-unspecified-]`` size_type;
+        typedef ``['-unspecified-]`` difference_type;
+        typedef ``['-unspecified-]`` pointer;
+        typedef ``['-unspecified-]`` const_pointer;
+        typedef ``['-unspecified-]`` local_iterator;
+        typedef ``['-unspecified-]`` const_local_iterator;
+
+        // construct/destroy/copy:
+
+        this_type & operator=(const this_type & x);
+
+        allocator_type get_allocator() const;
+
+        // size and capacity
+
+        bool      empty() const;
+        size_type size() const;
+        size_type max_size() const;
+
+        // iterators
+
+        iterator       begin();
+        const_iterator begin() const;
+        iterator       end();
+        const_iterator end() const;
+
+        // modifiers
+
+        std::pair< iterator, bool > insert(const value_type & x);
+        iterator insert(iterator position, const value_type & x);
+        template<typename InputIterator>
+        void insert(InputIterator first, InputIterator last);
+
+        iterator  erase(iterator position);
+        size_type erase(const key_type & x);
+        iterator  erase(iterator first, iterator last);
+
+        bool replace(iterator position, const value_type & x);
+        template<typename Modifier> bool modify(iterator position, Modifier mod);
+        template<typename Modifier> bool modify_key(iterator position, Modifier mod);
+
+        void clear();
+
+        // observers
+
+        key_from_value key_extractor() const;
+        hasher         hash_function() const;
+        key_equal      key_eq() const;
+
+        // lookup
+
+        iterator find(const key_type & x) const;
+        size_type count(const key_type & x) const;
+        std::pair<iterator,iterator> equal_range(const key_type & x) const;
+
+        // bucket interface
+
+        size_type bucket_count() const;
+        size_type max_bucket_count() const;
+        size_type bucket_size(size_type n) const;
+        size_type bucket(const key_type & k) const;
+
+        local_iterator       begin(size_type n);
+        const_local_iterator begin(size_type n) const;
+        local_iterator       end(size_type n);
+        const_local_iterator end(size_type n) const;
+
+        // hash policy
+
+        float load_factor() const;
+        float max_load_factor() const;
+        void  max_load_factor(float z);
+        void  rehash(size_type n);
+
+        // Only in a map view
+        // {
+
+        typedef ``['-unspecified-]`` data_type;
+
+        const data_type & operator[](const typename key_type & k) const;
+        ``['-unspecified data_type proxy-]`` operator[](const typename key_type & k);
+
+        // }
+    };
+
+    } // namespace views
+    } // namespace bimap
+    } // namespace boost
+
+
+
+If the key types of a bimap are Left and Right and Relation is the
+type that bound them together then:
+
+In the set view:
+
+    typedef Relation   key_type;
+    typedef Relation value_type;
+
+In the left map view:
+
+    typedef  Left  key_type;
+    typedef Right data_type;
+
+    typedef {compatible with std::pair}<Left,Right> value_type;
+
+In the right map view:
+
+    typedef Right  key_type;
+    typedef  Left data_type;
+
+    typedef {compatible with std::pair}<Right,Left> value_type;
+
+
+[section Complexity signature]
+
+Here and in the descriptions of operations of `unordered_[multi]set_of` views,
+we adopt the scheme outlined in the
+[link complexity_signature_explanation complexity signature section].
+The complexity signature of `unordered_[multi]set_of` view is:
+
+* copying: `c(n) = n * log(n)`,
+* insertion: average case `i(n) = 1` (constant), worst case `i(n) = n`,
+* hinted insertion: average case `h(n) = 1` (constant), worst case `h(n) = n`,
+* deletion: average case `d(n) = 1` (constant), worst case `d(n) = n`,
+* replacement: 
+    * if the new element key is equivalent to the original, `r(n) = 1` (constant),
+    * otherwise, average case `r(n) = 1` (constant), worst case `r(n) = n`,
+* modifying: average case `m(n) = 1` (constant), worst case `m(n) = n`.
+
+[endsect]
+
+
+[section Instantiation types]
+
+`unordered_[multi]set_of` views are instantiated internally to `bimap`
+specified by means of the set type specifiers and the `bimap` itself.
+Instantiations are dependent on the following types:
+
+* `Value` from `bimap`,
+* `Allocator` from `bimap`,
+* `Hash` from the set type specifier,
+* `Pred` from the set type specifier.
+
+`Hash` is a __SGI_UNARY_FUNCTION__ taking a single argument of type
+`key_type` and returning a value of type `std::size_t` in the range
+`[0, std::numeric_limits<std::size_t>::max())`.
+Pred is a __SGI_BINARY_PREDICATE__ inducing an equivalence relation on elements of
+`key_type`. It is required that the `Hash` object return the same value for
+keys equivalent under `Pred`.
+
+[endsect]
+
+[section Nested types]
+
+    iterator
+    const_iterator
+    local_iterator
+    const_local_iterator
+
+[:  These types are models of __SGI_FORWARD_ITERATOR__.
+]
+\n
+
+[endsect]
+
+[section Constructors, copy and assignment]
+
+As explained in the concepts section,
+views do not have public constructors or destructors. Assignment, on the other
+hand, is provided.
+Upon construction, `max_load_factor()` is 1.0.
+
+    this_type & operator=(const this_type & x);
+
+[:  [*Effects:] `a = b`; \n
+    where a and b are the `bimap` objects to which `*this`
+    and x belong, respectively.\n
+    [*Returns:] `*this.`
+]
+\n
+
+[endsect]
+
+[section Modifiers]
+
+    std::pair<iterator,bool> insert(const value_type & x);
+
+[:  [*Effects:] Inserts `x` into the `bimap` to which the view belongs if\n
+    * the view is non-unique OR no other element exists with equivalent key,\n
+    * AND insertion is allowed by all other views of the `bimap`.\n
+    [*Returns:] The return value is a pair `p`. `p.second` is `true` if and only if
+    insertion took place. On successful insertion, `p.first` points to the element
+    inserted; otherwise, `p.first` points to an element that caused the insertion to
+    be banned. Note that more than one element can be causing insertion not to be
+    allowed.\n
+    [*Complexity:] O(I(n)).\n
+    [*Exception safety:] Strong.
+]
+\n
+
+    iterator insert(iterator position, const value_type & x);
+
+[:  [*Requires:] `position` is a valid iterator of the view.\n
+    [*Effects:] Inserts `x` into the `bimap` to which the view belongs if\n
+    * the view is non-unique OR no other element exists with equivalent key,\n
+    * AND insertion is allowed by all other views of the `bimap`.
+    `position` is used as a hint to improve the efficiency of the operation.\n
+    [*Returns:] On successful insertion, an iterator to the newly inserted element.
+    Otherwise, an iterator to an element that caused the insertion to be banned.
+    Note that more than one element can be causing insertion not to be allowed.\n
+    [*Complexity:] O(H(n)).\n
+    [*Exception safety:] Strong.
+]
+\n
+
+    template<typename InputIterator>
+    void insert(InputIterator first, InputIterator last);
+
+[:  [*Requires:] `InputIterator` is a model of __SGI_INPUT_ITERATOR__ over elements of type
+    `value_type`. `first` and `last` are not iterators into any views of the
+    `bimap` to which this view belongs. `last` is reachable from first.\n
+    [*Effects:]\n
+    `iterator hint = end();`\n
+    `while(first != last) hint = insert(hint, *first++);`\n
+    [*Complexity:] O(m*H(n+m)), where m is the number of elements in `[first, last)`.\n
+    [*Exception safety:] Basic.
+]
+\n
+
+    iterator erase(iterator position);
+
+[:  [*Requires:] `position` is a valid dereferenceable `iterator` of the view.\n
+    [*Effects:] Deletes the element pointed to by `position`.\n
+    [*Returns:] An `iterator` pointing to the element immediately following the one
+    that was deleted, or `end()` if no such element exists.\n
+    [*Complexity:] O(D(n)).\n
+    [*Exception safety:] nothrow.
+]
+\n
+
+    size_type erase(const key_type & x);
+
+[:  [*Effects:] Deletes the elements with key equivalent to `x`.\n
+    [*Returns:] Number of elements deleted.\n
+    [*Complexity:] Average case, O(1 + m*D(n)), worst case O(n + m*D(n)),
+    where m is the number of elements deleted.\n
+    [*Exception safety:] Basic.
+]
+\n
+
+    iterator erase(iterator first, iterator last);
+
+[:  [*Requires:] `[first,last)` is a valid range of the view.\n
+    [*Effects:] Deletes the elements in `[first,last)`.\n
+    [*Returns:] `last`.\n
+    [*Complexity:] O(m*D(n)), where m is the number of elements in `[first,last)`.\n
+    [*Exception safety:] nothrow.
+]
+\n
+
+
+    bool replace(iterator position, const value_type & x);
+
+[:  [*Requires:] `position` is a valid dereferenceable `iterator` of the view.\n
+    [*Effects:] Assigns the value `x` to the element pointed to by `position` into
+    the `bimap` to which the view belongs if, for the value `x`\n
+    * the view is non-unique OR no other element exists (except possibly `*position`)
+    with equivalent key,\n
+    * AND replacing is allowed by all other views of the `bimap`.\n
+    [*Postconditions:] Validity of position is preserved in all cases.\n
+    [*Returns:] `true` if the replacement took place, `false` otherwise.\n
+    [*Complexity:] O(R(n)).\n
+    [*Exception safety:] Strong. If an exception is thrown by some user-provided
+    operation the `bimap` to which the view belongs remains in its original state.
+]
+\n
+
+    template<typename Modifier> bool modify(iterator position,Modifier mod);
+
+[:  [*Requires:] `Modifier` is a model of __SGI_BINARY_FUNCTION__ accepting arguments of
+    type:\n
+    ['Map View:] `first_type&` and `second_type&`\n
+    ['Set View:] `left_type&` and `right_type&`\n
+    `position` is a valid dereferenceable iterator of the view.\n
+    [*Effects:]\n
+    ['Map View:] Calls `mod(e.first,e.second)`\n
+    ['Set View:] Calls `mod(e.left,e.right)`\n
+    where `e` is the element pointed to by `position` and
+    rearranges `*position` into all the views of the `bimap`.
+    Rearrangement is successful if\n
+    * the view is non-unique OR no other element exists with equivalent key,\n
+    * AND rearrangement is allowed by all other views of the `bimap`.\n
+    If the rearrangement fails, the element is erased.\n
+    [*Postconditions:] Validity of position is preserved if the operation succeeds.\n
+    [*Returns:] `true` if the operation succeeded, `false` otherwise.\n
+    [*Complexity:] O(M(n)).\n
+    [*Exception safety:] Basic. If an exception is thrown by some user-provided
+    operation (except possibly `mod`), then the element pointed to by `position` is erased.
+]
+\n
+
+
+[endsect]
+
+[section Lookup]
+
+`unordered_[multi]set_of` views provide the full lookup functionality required by unordered
+associative containers, namely `find`, `count`, and `equal_range`. Additionally,
+these member functions are templatized to allow for non-standard arguments,
+so extending the types of search operations allowed. The kind of arguments
+permissible when invoking the lookup member functions is defined by the
+following concept.
+
+Consider a pair `(Hash, Pred)` where `Hash` is a hash functor over values of type
+`Key` and `Pred` is a __SGI_BINARY_PREDICATE__ inducing an equivalence relation on `Key`,
+with the additional constraint that equivalent keys have the same hash value.
+A triplet of types `(CompatibleKey, CompatibleHash, CompatiblePred)` is said to
+be a ['compatible extension] of `(Hash, Pred)` if
+
+* `CompatibleHash` is a hash functor on values of type `CompatibleKey`,
+* `CompatiblePred` is a __SGI_BINARY_PREDICATE__ over `(Key, CompatibleKey)`,
+* `CompatiblePred` is a __SGI_BINARY_PREDICATE__ over `(CompatibleKey, Key)`,
+* if `c_eq(ck,k1)` then `c_eq(k1,ck)`,
+* if `c_eq(ck,k1)` and `eq(k1,k2)` then `c_eq(ck,k2)`,
+* if `c_eq(ck,k1)` and `c_eq(ck,k2)` then `eq(k1,k2)`,
+* if `c_eq(ck,k1)` then `c_hash(ck)==hash(k1)`,
+
+for every `c_hash` of type `CompatibleHash`, `c_eq` of type `CompatiblePred`, hash of
+type `Hash`, `eq` of type `Pred`, `ck` of type `CompatibleKey` and `k1`, `k2` of type `Key`.
+
+Additionally, a type `CompatibleKey` is said to be a ['compatible key] of `(Hash, Pred)`
+if `(CompatibleKey, Hash, Pred)` is a compatible extension of `(Hash, Pred)`. This
+implies that `Hash` and `Pred` accept arguments of type `CompatibleKey`, which usually
+means they have several overloads of their corresponding `operator()` member
+functions.
+
+In the context of a compatible extension or a compatible key, the expression
+"equivalent key" takes on its obvious interpretation.
+
+    iterator find(const key_type & x)const;
+
+[:  [*Effects:] Returns a pointer to an element whose key is equivalent to `x`,
+    or `end()` if such an element does not exist.\n
+    [*Complexity:] Average case O(1) (constant), worst case O(n).
+]
+\n
+
+    size_type count(const key_type & x) const;
+
+[:  [*Effects:] Returns the number of elements with key equivalent to `x`.\n
+    [*Complexity:] Average case O(count(x)), worst case O(n).
+]
+\n
+
+    std::pair<iterator,iterator> equal_range(const key_type & x) const;
+
+[:  [*Effects:] Returns a range containing all elements with keys equivalent
+    to `x` (and only those).\n
+    [*Complexity:] Average case O(count(x)), worst case O(n).
+]
+
+\n
+
+[endsect]
+
+[section operator\[\] - unordered_set_of only]
+
+The symmetry of bimap imposes some constraints to the `operator[]` that are not
+found in `std::maps`.
+If other views are unique, `bimap::duplicate_value` is thrown whenever an assignment is
+attempted to a value that is already a key in this views.
+As for bimap::value_not_found, this exception is thrown while trying to access
+a non-existent key: this behavior differs from that of std::map, which automatically
+assigns a default value to non-existent keys referred to by `operator[]`.
+
+    const data_type & operator[](const typename key_type & k) const;
+
+[:  [*Effects:] Returns the `data_type` reference that is associated with `k`, or
+    throws `bimap::value_not_found` if such an element does not exist.\n
+    [*Complexity:] O(log(n)).
+]
+\n
+
+    ``['-unspecified data_type proxy-]`` operator[](const typename key_type & k);
+
+[:  [*Effects:] Returns a proxy to a `data_type` associated with `k` and the
+    bimap. The proxy behaves as a reference to the `data_type` object. If this
+    proxy is read and `k` was not in the bimap, the bimap::value_not_found is
+    thrown. If it is written then `bimap::duplicate_value` is thrown if the
+    assignment is not allowed by one of the other views of the `bimap`.\n
+    [*Complexity:] If the assignment operator of the proxy is not used, then
+    the order is O(log(n)). If it is used, the order is O(I(n)) if `k` was not
+    in the bimap and O(R(n)) if it existed in the bimap.
+]
+
+[endsect]
+
+[section Hash policy]
+
+    void rehash(size_type n);
+
+[:  [*Effects:] Increases if necessary the number of internal buckets so that
+    `size()/bucket_count()` does not exceed the maximum load factor, and
+    `bucket_count()>=n`.\n
+    [*Postconditions:] Validity of iterators and references to the elements
+    contained is preserved.\n
+    [*Complexity:] Average case O(size()), worst case O(size(n)2).\n
+    [*Exception safety:] Strong.
+]
+\n
+
+[endsect]
+
+[section Serialization]
+
+Views cannot be serialized on their own, but only as part of the
+`bimap` into which they are embedded. In describing the
+additional preconditions and guarantees associated to `unordered_[multi]set_of` views
+with respect to serialization of their embedding containers, we use
+the concepts defined in the `bimap` serialization section.
+
+[blurb [*Operation:] saving of a `bimap` b to an output archive
+(XML archive) ar.]
+[:  [*Requires:] No additional requirements to those imposed by the container.
+]
+\n
+
+[blurb [*Operation:] loading of a `bimap` b' from an input
+archive (XML archive) ar.]
+[:  [*Requires:] Additionally to the general requirements, `key_eq()` must
+    be serialization-compatible with `m.get<i>().key_eq()`, where i is the
+    position of the `unordered_[multi]set_of` view in the container.\n
+    [*Postconditions:] On successful loading, the range `[begin(), end())`
+    contains restored copies of every element in
+    `[m.get<i>().begin(), m.get<i>().end())`, though not necessarily in
+    the same order.
+]
+\n
+
+[blurb  [*Operation:] saving of an `iterator` or `const_iterator` `it` to an output
+archive (XML archive) ar.]
+[:  [*Requires:] `it` is a valid `iterator` of the view. The associated
+    `bimap` has been previously saved.
+]
+\n
+
+[blurb [*Operation:] loading of an iterator or `const_iterator it`' from an
+input archive (XML archive) ar.]
+[:  [*Postconditions:] On successful loading, if `it` was dereferenceable then
+    `*it`' is the restored copy of `*it`, otherwise `it`'` == end()`.\n
+    [*Note:] It is allowed that `it` be a `const_iterator` and the restored
+    `it`' an `iterator`, or viceversa.
+]
+\n
+
+[blurb [*Operation:] saving of a local_iterator or const_local_iterator it
+to an output archive (XML archive) ar.]
+[:  [*Requires:] `it` is a valid local iterator of the view. The associated
+    `bimap` has been previously saved.
+]
+\n
+
+[blurb [*Operation:] loading of a `local_iterator` or `const_local_iterator`
+`it`' from an input archive (XML archive) ar.]
+[:  [*Postconditions:] On successful loading, if `it` was dereferenceable then
+    `*it`' is the restored copy of `*it`; if `it` was `m.get<i>().end(n)` for some n,
+    then `it`'` == m`'`.get<i>().end(n)` (where `b` is the original `bimap`,
+    `b`' its restored copy and `i` is the ordinal of the index.)\n
+    [*Note:] It is allowed that `it` be a `const_local_iterator` and the restored
+    `it`' a `local_iterator`, or viceversa.
+]
+
+[endsect]
+[endsect]
+
+[endsect]

@@ -1,0 +1,149 @@
+[/license
+
+Boost.Bimap
+
+Copyright (c) 2006 Matias Capeletto
+
+This code may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+
+]
+
+[/ QuickBook Document version 1.3 ]
+
+[section One minute tutorial]
+
+[h2 What is a bimap?]
+
+The following code creates an empty bimap container:
+
+    typedef bimap<A,B> bm_type;
+    bm_type bm;
+
+Given this code, the following is the complete description of the resulting bimap.
+[footnote A type is ['signature-compatible] with other type if it has the same
+signature for functions and metadata. Preconditions, postconditions and the order
+of operations need not be the same.
+]
+
+* `bm.left` is signature-compatible with `std::map<A,B>`
+* `bm.right` is signature-compatible with `std::map<B,A>`
+* `bm` is signature-compatible with `std::set< relation<A,B> >`
+
+__SIMPLE_BIMAP__
+
+The `relation` class is a generalization of `std::pair`. The two values are
+named left and right to express the symmetry of this type.
+
+That is more or less all that is needed to start using the bidirectional
+map. The following two lines must also be added:
+
+    #include <boost/bimap/bimap.hpp>
+    using namespace bimap;
+
+[h2 A simple example]
+
+Here is a simple example of how to build and use a bimap. A description
+follows of how to enhance bidirectional maps to generate more powerful,
+scalable and readable code.
+
+    #include <iostream>
+
+    #include <boost/bimap/bimap.hpp>
+
+    int main()
+    {
+        using namespace bimap;
+
+        // Soccer World cup. (The results are not real)
+
+        typedef bimap<std::string,int> results_bimap;
+        typedef results_bimap::relation position;
+
+        results_bimap results;
+        results.insert( position("Argentina"    ,1) );
+        results.insert( position("Spain"        ,2) );
+        results.insert( position("Germany"      ,3) );
+        results.insert( position("France"       ,4) );
+
+        std::cout << "Countries names ordered by their final position:"
+                  << std::endl;
+
+        for( results_bimap::right_iterator i    = results.right.begin(),
+                                           iend = results.right.end() ;
+             i != iend; ++i )
+        {
+            std::cout << i->first << ") " << i->second << std::endl;
+        }
+
+        std::cout << std::endl
+                  << "Countries names ordered alphabetically along with"
+                     "their final position:"
+                  << std::endl;
+
+        for( results_bimap::left_iterator  i    = results.left.begin(),
+                                           iend = results.left.end() ;
+             i != iend; ++i )
+        {
+            std::cout << i->first << " ends in position " << i->second << std::endl;
+        }
+
+    }
+
+The output of this program will be the following:
+[blurb
+[^
+Countries names ordered by their final position:\n
+1) Argentina\n
+2) Spain\n
+3) Germany\n
+4) France\n
+\n
+Countries names ordered alphabetically along with their final position:\n
+Argentina ends in position 1\n
+France ends in position 4\n
+Germany ends in position 3\n
+Spain ends in position 2\n
+]
+]
+
+[h2 Continuing the journey]
+
+For information on function signatures, see any standard library
+documentation or read the [link boost_bimap.reference reference] section of
+this documentation.
+
+[caution
+Be aware that a bidirectional map is only signature-compatible with standard
+containers. Some functions may give different results, such as in the case of
+inserting a pair into the left map where the second value conflicts with a
+stored relation in the container. The functions may be slower in a bimap
+because of the duplicated constraints. It is strongly recommended that
+you read [link boost_bimap.the_tutorial The full tutorial] if you intend to
+use a bimap in a serious project.
+]
+
+[endsect]

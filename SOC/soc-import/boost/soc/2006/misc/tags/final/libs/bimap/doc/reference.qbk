@@ -1,0 +1,80 @@
+[/license
+
+Boost.Bimap
+
+Copyright (c) 2006 Matias Capeletto
+
+This code may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+
+]
+
+[/ QuickBook Document version 1.3 ]
+
+[section Reference]
+
+[section Headers]
+
+The following are the interface headers of Boost.Bimap:
+
+[*Container]
+
+* "boost/bimap/bimap.hpp" ['(includes "boost/bimap/set_of.hpp" and "boost/bimap/unconstrained_set_of.hpp")]
+
+[*Set Types]
+
+* "boost/bimap/set_of.hpp"
+* "boost/bimap/multiset_of.hpp"
+* "boost/bimap/unordered_set_of.hpp"
+* "boost/bimap/unordered_multiset_of.hpp"
+* "boost/bimap/list_of.hpp"
+* "boost/bimap/vector_of.hpp"
+* "boost/bimap/unconstrained_set_of.hpp"
+
+[*Boost Integration]
+
+* "boost/bimap/support/lambda.hpp"
+* "boost/bimap/property_map/set_support.hpp"
+* "boost/bimap/property_map/unordered_set_support.hpp"
+
+So, a program using Boost.Bimap must include  "boost/bimap/bimap.hpp" and
+the headers defining the set types to be used.\n
+Additional headers allow the integration of Boost.Bimap with other boost libraries,
+like Boost.Lambda and Boost.Property_map.\n
+In order to use the serialization capabilities of Boost.Bimap, the appropriate
+Boost.Serialization library module must be linked. Other than that, Boost.Bimap
+is a header-only library, requiring no additional object modules.
+
+[endsect]
+
+[include reference/bimap.qbk]
+[include reference/set_of.qbk]
+[include reference/unordered_set_of.qbk]
+[include reference/list_of.qbk]
+[include reference/vector_of.qbk]
+[include reference/unconstrained_set_of.qbk]
+
+[endsect]

@@ -1,0 +1,489 @@
+[/license
+
+Boost.Bimap
+
+Copyright (c) 2006 Matias Capeletto
+
+This code may be used under either of the following two licences:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. OF SUCH DAMAGE.
+
+Or:
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+
+]
+
+[/ QuickBook Document version 1.3 ]
+
+[section Bimap and Boost]
+
+[section Bimap and MultiIndex]
+
+['MISC] - [*M]ulti [*I]ndex [*S]pecialized [*C]ontainers
+
+[:[' Lets be generic, construct frameworks, describe the world
+     in an unified way...] \n
+  [' No!, it is better to be specialized, designed easy to use
+     components, offer plug an play objects...] \n
+  [*Why not grab the best of both worlds?]]
+
+__MI_FRAMEWORK__
+
+With Boost.Bimap you can build associative containers where both types can be used as key.
+There is a library in Boost that already allows the creation of this kind
+of container: Boost.MultiIndex. It offers great flexibility and lets you
+construct almost any container that you may dream about. The framework is
+very clean. You may want to read the tutorial of this library to learn the
+power that has been achieved.
+
+But generality comes with a price, the interface that results may not be
+the best for each specialization. People may end up wrapping a B.MI container
+in his own class, every time they want to use it as a bidirectional map.
+Boost.Bimap takes advantage of the narrower scope to produce a better interface
+to bidirectional maps
+[footnote In the same fashion, Boost.MRU will allow the creation of ['most recent updated]
+aware containers, hiding the complexity of Boost.MultiIndex.].
+The learning curve is zero if you know how to use standard
+containers. A big effort was put in mapping the naming scheme of the STL in Boost.Bimap.
+The library is designed to match the STL common containers.
+
+Boost.MultiIndex is, in fact, the core of the bimap container.
+
+However, Boost.Bimap do not aims to tackle every problem with two indexed types.
+There exist some problems that are better modelled with Boost.MultiIndex.
+\n
+
+[variablelist
+[[Problem I  - An employee register]
+[
+['Store an ID and a name for an employee, with quick search in both members.]
+\n\n
+This type of problem is better modeled after a database table, and [*Boost.MultiIndex]
+is the prefer choice. It is possible that other data will be needed to get
+indexed later.
+]]
+[[Problem II - A partners container]
+[
+['Store couples of people and be able to get the partner name of a person.]
+\n\n
+This problem is better modeled as a set of relations, and [*Boost.Bimap] is
+fits nicely here.
+]]
+]
+
+[endsect]
+
+[section Boost Libraries that plays well with Boost.Bimap]
+
+[section Introduction]
+
+[table
+[[Name][Description][author][Purpose]]
+
+[[ __BOOST_SERIALIZATION__ ][
+Serialization for persistence and marshalling]
+[Robert Ramey]
+[Serialization support for bimap containers and iterators]]
+
+[[ __BOOST_ASSIGN__ ][
+Filling containers with constant or generated data has never been easier]
+[Thorsten Ottosen]
+[Help to fill a bimap or views of it]]
+
+[[ __BOOST_HASH__ ][
+A TR1 hash function object that can be extended to hash user defined types]
+[Daniel James]
+[Default hashing function]]
+
+[[ __BOOST_LAMBDA__ ][
+Define small unnamed function objects at the actual call site, and more]
+[from Jaakko Järvi, Gary Powell]
+[Functors for modify, range, lower_bound and upper_bound]]
+
+[[ __BOOST_RANGE__ ][
+A new infrastructure for generic algorithms that builds on top of the new
+iterator concepts]
+[Thorsten Ottosen]
+[Range based algorithms]]
+
+[[ __BOOST_PROPERTY_MAP__ ][
+Concepts defining interfaces which map key objects to value objects]
+[Jeremy Siek]
+[Integration with BGL]]
+]
+
+[endsect]
+
+[section Boost.Serialization]
+
+A bimap can be archived and retrieved by means of the Boost.Serialization Library.
+Both regular and XML archives are supported. The usage is straightforward and does
+not differ from that of any other serializable type. For instance:
+
+
+    #include <boost/archive/text_oarchive.hpp>
+    #include <boost/archive/text_iarchive.hpp>
+    #include <fstream>
+
+    ...
+
+    void save(const bimap_type & b)
+    {
+        std::ofstream ofs("data");
+        boost::archive::text_oarchive oa(ofs);
+        oa << b;
+    }
+
+    void load(bimap_type & b)
+    {
+        std::ifstream ifs("data");
+        boost::archive::text_iarchive ia(ifs);
+        ia >> b;
+    }
+
+    ...
+
+    bimap_type b;
+
+    ... // fill it with data
+
+    save(b);
+
+    ...
+
+    bimap_type restored_b;
+    load(restored_b);
+
+
+Serialization capabilities are automatically provided by just linking with the
+appropriate Boost.Serialization library module: it is not necessary to explicitly
+include any header from Boost.Serialization, apart from those declaring the type
+of archive used in the process. If not used, however, serialization support can
+be disabled by globally defining the macro BOOST_BIMAP_DISABLE_SERIALIZATION.
+Disabling serialization for Boost.MultiIndex can yield a small improvement in
+build times, and may be necessary in those defective compilers that fail to
+correctly process Boost.Serialization headers.
+
+[warning Boost.Bimap and Boost.MultiIndex share a lot of serialization code.
+The macro `BOOST_BIMAP_DISABLE_SERIALIZATION` disables serialization in *both*
+libraries. The same happens when `BOOST_MULTI_INDEX_DISABLE_SERIALIZATION` is
+defined.
+]
+
+Retrieving an archived bimap restores not only the elements, but also the order
+they were arranged in the views of the container. There is an exception to this rule,
+though: for unordered sets, no guarantee is made about the order in which elements
+will be iterated in the restored container; in general, it is unwise to rely on
+the ordering of elements of a hashed view, since it can change in arbitrary ways
+during insertion or rehashing --this is precisely the reason why hashed indices
+and TR1 unordered associative containers do not define an equality operator.
+
+Iterators of a bimap can also be serialized. Serialization of iterators must be
+done only after serializing its corresponding container.
+
+[endsect]
+
+[section Boost.Assign]
+
+The purpose of this library is to make it easy to fill containers with data by
+overloading operator,() and operator()(). These two operators make it possible
+to construct lists of values that are then copied into a container.
+
+These lists are particularly useful in learning, testing, and prototyping
+situations, but can also be handy otherwise. The library comes with predefined
+operators for the containers of the standard library, but most functionality will
+work with any standard compliant container. The library also makes it possible
+to extend user defined types so for example a member function can be called for
+a list of values instead of its normal arguments.\n
+
+Boost.Assign can be used with bimap containers.
+For example, `list_of` can be used to initialize a bimap in the following way:
+
+    typedef bimap<int,std::string> bm;
+
+    bm b = list_of< bm::relation > (1,"one") (2,"two") (3,"three");
+
+The views of a bimap are signature compatible with their standard counterparts, so
+we can use other Boost.Assign utilities with them. For example:
+
+    bimap< multiset_of<int>, list_of<double> > b;
+
+    // Since it is left_based the main view is a multiset, so we use insert
+
+    insert( b ) (1,0.1) (2,0.2) (3,0.3);
+
+    // The left map view is a multiset, again we use insert
+
+    insert( b.left ) (4,0.4) (5,0.5) (6,0.6) (7,0.7);
+
+    // The right map view is a list so we use push_back here
+    // Note the order of the elements in the list!
+
+    push_back( b.right ) (0.8,8) (0.9,9);
+
+[endsect]
+
+[section Boost.Hash]
+
+The hash function is the very core of the fast lookup capabilities of the
+unordered sets: a hasher is just a Unary Function returning an std::size_t value
+for any given key. In general, it is impossible that every key map to a different
+hash value, for the space of keys can be greater than the number of permissible
+hash codes: what makes for a good hasher is that the probability of a collision
+(two different keys with the same hash value) is as close to zero as possible.
+
+This is a statistical property depending on the typical distribution of keys in a
+given application, so it is not feasible to have a general-purpose hash function
+with excellent results in every possible scenario; the default value for this
+parameter uses Boost.Hash, which often provides good enough results.
+
+Boost.Hash can be
+[@http://www.boost.org/regression-logs/cs-win32_metacomm/doc/html/hash/custom.html
+extended for custom data types],
+enabling to use the default parameter of the unordered set types with any user types.
+
+[endsect]
+
+[section Boost.Lambda]
+
+The Boost Lambda Library (BLL in the sequel) is a C++ template library, which implements
+form of lambda abstractions for C++. The term originates from functional programming and
+lambda calculus, where a lambda abstraction defines an unnamed function.
+Lambda expressions are very useful to construct the function objects required by some of
+the functions in a bimap view.
+
+Boost.Bimap defines new placeholders to allow a more sound solution. For pairs two new
+placeholders are instantiated: [^_first] and [^_second] and for a relation two more complete
+the set: [^_left] and [^_right]. A last placeholder serves to uniformly refer to the keys in
+an associative container: [^_key].
+The following example shows how to use them:
+
+    #include <boost/bimap/support/lambda.hpp>
+    #include <boost/bimap/bimap.hpp>
+
+    int main()
+    {
+        using namespace boost::bimap;
+
+        typedef bimap<int,double> bm;
+
+        bm b;
+        b.insert( bm::relation(1,0.1) );
+
+        b.left .modify( b.left.begin() , _first = 2 );
+        b.left .modify( b.left.begin() , _second = 0.1 );
+        b.right.modify( b.right.begin(), ( _first = 0.1, _second = 1 ) );
+
+        BOOST_CHECK( b.left[1] == 0.1 );
+
+        BOOST_CHECK( b.size() == 1 );
+
+        b.modify( b.begin(), ( _left = 2, _right = 0.2 ) );
+
+        BOOST_CHECK( b.left.range( 1 <= _key , _key < 3 ).first == b.left.begin() );
+    }
+
+[endsect]
+
+[section Boost.Range]
+
+Boost.Range is a collection of concepts and utilities that are particularly useful
+for specifying and implementing generic algorithms.
+Generic algorithms have so far been specified in terms of two or more iterators.
+Two iterators would together form a range of values that the algorithm could
+work on. This leads to a very general interface, but also to a somewhat clumsy
+use of the algorithms with redundant specification of container names. Therefore
+we would like to raise the abstraction level for algorithms so they specify their
+interface in terms of Ranges as much as possible.
+
+As Boost.Bimap views are signature compatible with their standard container
+counterparts, they are compatible with the concept of a range.
+As an additional feature, ordered bimap views offers a function named [^range]
+that allows to obtain a range of values. Range searching, i.e. the lookup of all
+elements in a given interval, is a very frequent operation for which standard
+lower_bound and upper_bound can be resorted to, though in a cumbersome manner.
+Here is an example of how the code will like. Boost.Lambda helps a lot in the
+construction of the Lower and Upper bounders.
+
+
+    bimap<int,double> b;
+
+    ...
+
+    foo( b. left.range(   1 <= _key, _key <   3 ) );
+    foo( b.right.range( 0.3 <= _key, _key < 1.2 ) );
+
+
+[endsect]
+
+[section Boost.Property_map]
+
+The Boost Property Map Library consists mainly of interface specifications in the form of
+concepts (similar to the iterator concepts in the STL). These interface specifications
+are intended for use by implementers of generic libraries in communicating requirements on
+template parameters to their users. In particular, the Boost Property Map concepts define a
+general purpose interface for mapping key objects to corresponding value objects, thereby
+hiding the details of how the mapping is implemented from algorithms.
+
+The need for the property map interface came from the Boost Graph Library (BGL), which
+contains many examples of algorithms that use the property map concepts to specify their
+interface. For an example, note the ColorMap template parameter of the  breadth_first_search.
+In addition, the BGL contains many examples of concrete types that implement the property map
+interface. The  adjacency_list class implements property maps for accessing objects
+(properties) that are attached to vertices and edges of the graph.
+
+Two of Boost.Bimap map views, the set and unordered_set counterpat are read/write property
+maps. In order to use it you have to include one of the headers:
+
+    #include <boost/bimap/property_map/set_support.hpp>
+    #include <boost/bimap/property_map/unordered_set_support.hpp>
+
+The next is an adaptation of the example in the Boost.PropertyMap documentation
+
+    #include <iostream>
+    #include <string>
+    #include <boost/bimap/bimap.hpp>
+    #include <boost/bimap/multiset_of.hpp>
+    #include <boost/bimap/property_map/set_of.hpp>
+
+    template <typename AddressMap>
+    void foo(AddressMap & address)
+    {
+        typedef typename boost::property_traits<AddressMap>::value_type value_type;
+        typedef typename boost::property_traits<AddressMap>::key_type key_type;
+
+        value_type old_address, new_address;
+        key_type fred = "Fred";
+        old_address = get(address, fred);
+        new_address = "384 Fitzpatrick Street";
+        put(address, fred, new_address);
+    }
+
+    int main()
+    {
+        typedef boost::bimap::bimap<std::string, multiset_of<std::string> > Name2Address;
+        typedef Name2Address::relation location;
+
+        Name2Address name2address;
+
+        name2address.insert(location("Fred", "710 West 13th Street"));
+        name2address.insert(location( "Joe", "710 West 13th Street"));
+
+        foo(name2address);
+
+        return 0;
+    }
+
+[endsect]
+
+[endsect]
+
+[section Dependencies]
+
+Boost.Bimap is built on top of several Boost libraries. The rationale behind
+this decision is to maintain the boost code base small reusing existent code.
+The libraries used are very mature and has been tested extensively. This makes
+this library easy to port since all the hard work has been done. The glue
+that orchestrates everything is Boost.MPL and obviously Boost.MultiIndex has been
+abused by this library.
+
+
+[table Boost Libraries needed by Boost.Bimap
+[[Name][Description][author]]
+
+[[ __BOOST_MULTI_INDEX__ ][
+Containers with multiple STL-compatible access interfaces]
+[Joaquín M López Muñoz]]
+
+[[ __BOOST_MPL__ ][
+Template metaprogramming framework of compile-time algorithms, sequences and metafunction classes]
+[Aleksey Gurtovoy]]
+
+[[ __BOOST_TYPE_TRAITS__ ][
+Templates for fundamental properties of types.]
+[John Maddock, Steve Cleary]]
+
+[[ __BOOST_ENABLE_IF__ ][
+Selective inclusion of function template overloads]
+[Jaakko Järvi, Jeremiah Willcock, Andrew Lumsdaine]]
+
+[[ __BOOST_ITERATORS__ ][
+Iterator construction framework, adaptors, concepts, and more.]
+[Dave Abrahams, Jeremy Siek, Thomas Witt]]
+
+[[ __BOOST_CALL_TRAITS__ ][
+Defines types for passing parameters.]
+[John Maddock, Howard Hinnant]]
+
+[[ __BOOST_STATIC_ASSERT__ ][
+Static assertions (compile time assertions).]
+[John Maddock]]
+
+]
+
+[table Optional Boost Libraries
+[[Name][Description][author][Purpose]]
+
+[[ __BOOST_SERIALIZATION__ ][
+Serialization for persistence and marshalling]
+[Robert Ramey]
+[Serialization support for bimap containers and iterators]]
+
+[[ __BOOST_ASSIGN__ ][
+Filling containers with constant or generated data has never been easier]
+[Thorsten Ottosen]
+[Help to fill a bimap or views of it]]
+
+[[ __BOOST_HASH__ ][
+A TR1 hash function object that can be extended to hash user defined types]
+[Daniel James]
+[Default hashing function]]
+
+[[ __BOOST_LAMBDA__ ][
+Define small unnamed function objects at the actual call site, and more]
+[from Jaakko Järvi, Gary Powell]
+[Functors for modify, range, lower_bound and upper_bound]]
+
+[[ __BOOST_RANGE__ ][
+A new infrastructure for generic algorithms that builds on top of the new
+iterator concepts]
+[Thorsten Ottosen]
+[Range based algorithms]]
+
+[[ __BOOST_PROPERTY_MAP__ ][
+Concepts defining interfaces which map key objects to value objects]
+[Jeremy Siek]
+[Integration with BGL]]
+]
+
+[table Additional Boost Libraries needed to run the test-suite
+[[Name][Description][author]]
+
+[[ __BOOST_TEST__ ][
+Support for simple program testing, full unit testing, and for program execution monitoring.]
+[Gennadiy Rozental]
+]
+]
+
+[endsect]
+
+[endsect]
