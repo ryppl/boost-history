@@ -56,7 +56,7 @@ T ellint_f(T phi, T k)
             "domain error, |k| > 1, function requires |k| <= 1");
     }
 
-    // Carlson's algorithm works only for |phi| <= 1/2,
+    // Carlson's algorithm works only for |phi| <= pi/2,
     // use the integrand's periodicity to normalize phi
     aphi = abs(phi);
     w = 2.0L * aphi / pi<T>();
