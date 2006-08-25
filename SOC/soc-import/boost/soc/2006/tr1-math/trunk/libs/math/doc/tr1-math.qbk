@@ -78,7 +78,11 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 [def _mu '''&mu;''']
 [def _nu '''&nu;''']
+[def _pi '''&pi;''']
+[def _Pi '''&Pi;''']
+[def _phi '''&#966;''']
 [def _inf '''&infin;''']
+[def _alpha '''&alpha;''']
 
 [def _caution This is not an official Boost library, it is a library under
               construction, the code is fully functional and robust, but
@@ -93,6 +97,7 @@ LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 [template y[x] '''y<subscript>'''[x]'''</subscript>''']
 [template i[x] '''i<subscript>'''[x]'''</subscript>''']
 [template k[x] '''k<subscript>'''[x]'''</subscript>''']
+[template R[x] '''R<subscript>'''[x]'''</subscript>''']
 [template pow[x y] [x]'''<superscript>'''[y]'''</superscript>&nbsp;''']
 
 [section Introduction]
@@ -293,6 +298,14 @@ x86 CYGWIN gcc unless otherwise noted.]
 [include bessel_spherical_introduction.qbk]
 [include bessel_spherical.qbk]
 [include bessel_spherical_modified.qbk]
+
+[endsect]
+
+[section Elliptic Integrals]
+
+[include ellint_introduction.qbk]
+[include ellint_carlson.qbk]
+[include ellint_legendre.qbk]
 
 [endsect]
 
