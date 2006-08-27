@@ -1,0 +1,9 @@
+
+exe kolmogorov-eg
+  : kolmogorov-eg.cpp
+;
+
+exe read_write_dimacs-eg
+  : read_write_dimacs-eg.cpp
+; 
+

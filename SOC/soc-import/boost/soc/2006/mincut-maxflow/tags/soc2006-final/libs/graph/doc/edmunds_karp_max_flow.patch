@@ -1,0 +1,26 @@
+Index: doc/edmunds_karp_max_flow.html
+===================================================================
+RCS file: /cvsroot/boost/boost/libs/graph/doc/edmunds_karp_max_flow.html,v
+retrieving revision 1.12
+diff -u -r1.12 edmunds_karp_max_flow.html
+--- doc/edmunds_karp_max_flow.html	15 Sep 2005 15:38:21 -0000	1.12
++++ doc/edmunds_karp_max_flow.html	15 Aug 2006 13:27:38 -0000
+@@ -79,6 +79,8 @@
+ the maximum flow problem. However, there are several reasons why this
+ algorithm is not as good as the <a
+ href="./push_relabel_max_flow.html"><tt>push_relabel_max_flow()</tt></a>
++or the <a
++href="./kolmogorov_max_flow.html"><tt>kolmogorov_max_flow()</tt></a>
+ algorithm.
+ 
+ <ul>
+@@ -218,7 +220,8 @@
+ 
+ <h3>See Also</h3>
+ 
+-<a href="./push_relabel_max_flow.html"><tt>push_relabel_max_flow()</tt></a>.
++<a href="./push_relabel_max_flow.html"><tt>push_relabel_max_flow()</tt></a><br>
++<a href="./kolmogorov_max_flow.html"><tt>kolmogorov_max_flow()</tt></a>.
+ 
+ <br>
+ <HR>

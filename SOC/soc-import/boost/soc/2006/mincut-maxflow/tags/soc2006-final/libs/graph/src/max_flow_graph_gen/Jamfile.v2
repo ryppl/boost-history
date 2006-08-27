@@ -1,0 +1,19 @@
+project max_flow_graph_gen
+	:
+	:
+;
+
+exe ac
+	: ac.c
+;
+exe ak
+	: ak.c
+;
+
+exe washington
+	: washington.c
+;	
+
+exe genrmf
+	: genrmf/genio.c genrmf/genrmf.c genrmf/genmain.c
+;

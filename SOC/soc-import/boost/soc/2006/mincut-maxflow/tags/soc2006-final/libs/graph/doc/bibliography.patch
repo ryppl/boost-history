@@ -1,0 +1,19 @@
+Index: bibliography.html
+===================================================================
+RCS file: /cvsroot/boost/boost/libs/graph/doc/bibliography.html,v
+retrieving revision 1.21
+diff -u -r1.21 bibliography.html
+--- bibliography.html	20 Dec 2005 16:55:10 -0000	1.21
++++ bibliography.html	15 Aug 2006 14:56:30 -0000
+@@ -405,6 +405,11 @@
+ <em>Modern Compiler Implementation in JAVA</em><br>
+ Cambridge University Press, 1998.
+ 
++<p></p><dt><a name="kolmogorov03">68</a>
++<dd>Vladimir Kolmogorov<br>
++<em>Graph Based Algorithms for Scene Reconstruction from Two or More Views</em><br>
++PhD thesis, Cornell University, September 2003.
++
+ </dl>
+   
+ <br>

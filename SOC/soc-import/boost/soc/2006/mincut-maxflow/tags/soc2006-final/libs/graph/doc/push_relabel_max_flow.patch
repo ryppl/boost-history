@@ -1,0 +1,17 @@
+Index: doc/push_relabel_max_flow.html
+===================================================================
+RCS file: /cvsroot/boost/boost/libs/graph/doc/push_relabel_max_flow.html,v
+retrieving revision 1.12
+diff -u -r1.12 push_relabel_max_flow.html
+--- doc/push_relabel_max_flow.html	9 Mar 2006 22:15:41 -0000	1.12
++++ doc/push_relabel_max_flow.html	15 Aug 2006 13:24:05 -0000
+@@ -229,7 +229,8 @@
+ 
+ <h3>See Also</h3>
+ 
+-<a href="./edmunds_karp_max_flow.html"><tt>edmunds_karp_max_flow()</tt></a>.
++<a href="./edmunds_karp_max_flow.html"><tt>edmunds_karp_max_flow()</tt></a><br>
++<a href="./kolmogorov_max_flow.html"><tt>kolmogorov_max_flow()</tt></a>.
+ 
+ <br>
+ <HR>
