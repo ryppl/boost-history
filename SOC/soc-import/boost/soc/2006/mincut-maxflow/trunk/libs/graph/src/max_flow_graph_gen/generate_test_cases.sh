@@ -17,8 +17,6 @@ GENRMF_NODES="050 100 200 500"
 GENRMF_CAP_RANGE1=1
 GENRMF_CAP_RANGE2=100
 
-GEN_WASHINGTON=$BINDIR/washington
-
 generate_ac_graphs ()
 {
 	if [ ! -e $GEN_AC ] 
