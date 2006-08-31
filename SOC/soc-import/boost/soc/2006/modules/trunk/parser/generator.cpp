@@ -23,19 +23,19 @@ struct skip_parser : public grammar <skip_parser> {
 
 };
 
-static vector<string> execute (context_t&, OutputDelegate&);
+static vector<string> execute (context_t&, OutputDelegate*, OutputDelegate*);
 
 vector<string>
 SourceGenerator::
-execute() {
-	return ::execute(c,d);
+execute(OutputDelegate *header, OutputDelegate *source) {
+	return ::execute(c, header, source);
 }
 
 static
 std::vector<std::string>
-execute (context_t& ctx, OutputDelegate& del) {
+execute (context_t& ctx, OutputDelegate *header, OutputDelegate *source) {
 	std::vector<std::string> retval;
-	TransformContext xform (&del);
+	TransformContext xform;
 	decl_grammar g (xform);
 	skip_parser s;
 	
@@ -45,13 +45,15 @@ execute (context_t& ctx, OutputDelegate& del) {
 	// default to emit in the source code.
 //	del.push_source ();
 
+	// this'll mark up the text, stored in the transformcontext
 	if (parse (start, end, g, s).hit) {
 		// it parsed, now we begin the output process.
-		context_iter_t it;
-		for (it = start; it != end; ++it) {
-			xform.set_position (it);
-			del.out (*it);
-		}
+		xform.output(start, end, header, source);
+// 		context_iter_t it;
+// 		for (it = start; it != end; ++it) {
+// 			xform.set_position (it);
+// 			del.out (*it);
+// 		}
 		cerr << "parsed" << endl;
 	} else {
 		cerr << "not parsed." << endl;

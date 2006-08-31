@@ -4,7 +4,7 @@
 using namespace std;
 
 bool 
-operator< (const Markup& left, const Markup& right) {
+operator< (const ContextEntry& left, const ContextEntry& right) {
 	return left.start < right.start;
 }
 
@@ -23,34 +23,32 @@ operator > (const context_iter_t& a, const context_iter_t& b) {
 	return (b < a);
 }
 
+// the default definition works as a nice null operation.
+Operation_p Operation::null_op = boost::shared_ptr<Operation>(new Operation);
 
 TransformContext::
-TransformContext (OutputDelegate *del) : m_moving (false), m_outdel(del) {}
+TransformContext () : m_moving (false) {}
 
 TransformContext::
 ~TransformContext () {}
 
 void
 TransformContext::
-add (const Markup& m) {
+add (const ContextEntry_p m) {
 	assert (!m_moving);
 	// do our own sorted insert.
 	if (m_annotations.empty ()) {
 		m_annotations.push_back (m);
 	} else {
-		list<Markup>::iterator it = m_annotations.begin ();
+		list<ContextEntry_p>::iterator it = m_annotations.begin ();
 		while (   (it != m_annotations.end ()) 
-		       && (*it < m)) {
+		       && (*it->get() < *m.get())) {
 		     ++it;
 		}		
-		// TODO: lookup semantics of insert (end(),m), I
-		// can probably take this if() out altogether.
-// 		if (it == m_annotations.end ())
-// 			m_annotations.push_back (m);
-// 		else
-			m_annotations.insert (it, m);
+		m_annotations.insert (it, m);
 	}
 }
+
 
 void
 TransformContext::
@@ -64,20 +62,60 @@ set_position (const context_iter_t& pos) {
 	
 //	assert (pos >= m_ann_pos->start);
 	
-	// first, scan the current state for any Markups we
+	// first, scan the current state for any ContextEntrys we
 	// have to leave.  Remove them in stack order, and
 	// call their at_end()s.
-	while (m_curstate.size () && m_curstate.top()->end <= pos) {
-		(*m_curstate.top()->at_end)(m_outdel);
-		m_curstate.pop ();
+	while (m_curstate.size () && m_curstate.back()->end <= pos) {
+		m_curstate.back()->at_end();
+		m_curstate.pop_back ();
 	}
 	
 	// next, add any new items to the stack, and invoke
 	// their at_begin()s.
 	while (   (m_ann_pos != m_annotations.end ())
-	       && (m_ann_pos->start <= pos)) {
-		m_curstate.push (&*m_ann_pos);
-		(*m_ann_pos->at_start)(m_outdel);
+	       && ((*m_ann_pos)->start <= pos)) {
+		m_curstate.push_back (*m_ann_pos);
+		(*m_ann_pos)->at_start();
 		m_ann_pos++;
+	}
+}
+
+void
+TransformContext::
+output (const context_iter_t& start,
+        const context_iter_t& end,
+        OutputDelegate* header,
+        OutputDelegate* source) {
+	vector<Operation_p> for_header, for_source;
+	
+	// go through the text again, setting up the stack for
+	// each token, and process the token through the entire
+	// stack, until we append the properly transformed Operation_s
+	// to the proper vectors for final emission.
+	for (context_iter_t it = start;
+	     it != end;
+	     ++it) {
+		set_position(it);
+		
+		list<ContextEntry_p>::reverse_iterator ct = m_curstate.rbegin ();
+		OperationPair result = (*ct)->process_token (*it);
+		while (++ct != m_curstate.rend ()) {
+			result = (*ct)->process_upstream(result);
+		}
+		for_header.push_back(result.header);
+		for_source.push_back(result.source);
+	}
+	
+	// now execute the Operations on the source and header.
+	vector<Operation_p>::iterator it;
+	for (it = for_header.begin ();
+	     it != for_header.end ();
+	     ++it) {
+		(*(it->get()))(header);
+	}
+	for (it = for_source.begin ();
+	     it != for_source.end ();
+	     ++it) {
+		(*(it->get()))(source);
 	}
 }

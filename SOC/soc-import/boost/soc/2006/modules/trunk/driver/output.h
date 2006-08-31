@@ -1,3 +1,9 @@
+/** @file output.h
+	\brief OutputDelegate, for managing a single output stream
+	
+	The OutputDelegate manages the final emission of text to an output stream.
+*/
+
 #ifndef INCLUDE_OUTPUT_H
 #define INCLUDE_OUTPUT_H
 
@@ -15,55 +21,22 @@
 
 #include "../map/map.h"
 
-//
-// Two functions:
-// 1. Keeps the output streams open for the generated text
-// 2. Keeps track of where each source segment goes.
-// pushing everything into a pimpl to keep the change sensitivity on generate.cpp small.
 class OutputDelegate {
-	struct Context;
-
-	Context * m_impl;
+	std::ostream&  m_stream;
+	MapManager   * m_mmgr;
+	bool           m_emitted;
+	std::vector<std::string>  m_includes;
+	std::vector<std::string>  m_text;
+	
 	void check ();
 	
-	
-	// not implemented.
-	OutputDelegate ();
-	OutputDelegate (const OutputDelegate& other);
 public:
-	OutputDelegate (std::ostream& h, std::ostream& s, MapManager& m);
-
+	OutputDelegate (std::ostream& s, MapManager *m);
 	~OutputDelegate ();
-
-	//
-	// These interpret the token ranges given to them
-	void module_export (const context_iter_t& start, const context_iter_t& end);
-	void module_import (const context_iter_t& start, const context_iter_t& end);
-	void go_public ();
-	void go_private ();
-
-	// Note: For export namespace {} statements, don't tell OutputDelegate to emit
-	// the braces.  We'll take care of that here.  It needs a bit of special handling.
-/*	
-	void import_module (std::string & name);
-	void begin_module (std::string & name);
-	void end_module ();
 	
-	void go_public ();
-	void go_private ();
-
-	/// we'll do the module name lookup.
-	void include_module (std::string module); 
-
-	void out (context_iter_t start, context_iter_t end);
-	void out (std::string text);
-	void out (token_t single);
+	void text (const std::string& s);
+	void include (const std::string& module_name);
 	
-	/// emit () causes the files to be written.
-	void emit ();
-*/
-
-	void out (token_t single);
 	void emit ();
 };
 

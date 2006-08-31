@@ -1,5 +1,5 @@
 #include "output.h"
-#include "output_priv.h"
+//#include "output_priv.h"
 #include <set>
 #include <boost/format.hpp>
 #include <boost/bind.hpp>
@@ -57,25 +57,60 @@ check () {
 	if (!_Find(this)) {
 		_List ();
 		throw "Invalid instance!";
-	} else if (m_impl->m_emitted) {
+	} else if (m_emitted) {
 		throw "Already emitted!";
 	}
 }
 
 OutputDelegate::
-OutputDelegate (std::ostream& h, std::ostream& s, MapManager& m)
-: m_impl (new Context (h, s, m)) {
-	//s_current = this;
+OutputDelegate (ostream& s, MapManager *m) 
+ : m_stream(s), m_mmgr(m), m_emitted(false) {
 	_Add (this);
-	m_impl->m_mode.push(Context::out_external);
  }
 
 OutputDelegate::
 ~OutputDelegate () {
-// 	assert (s_current == this);
-// 	s_current = 0;
 	_Remove (this);
-	delete m_impl;
+}
+
+
+void 
+OutputDelegate::
+text (const string& s) {
+	m_text.push_back(s);
+}
+
+
+void 
+OutputDelegate::
+include (const string& module_name) {
+	m_includes.push_back(module_name);
+}
+
+void 
+OutputDelegate::
+emit () {
+	vector<string>::iterator it;
+	m_emitted = true;
+	for (it = m_includes.begin ();
+	     it != m_includes.end ();
+	     ++it) {
+		set<path>  names = m_mmgr->lookup(*it);
+		for (set<path>::iterator n = names.begin ();
+		     n != names.end ();
+		     ++n) {
+			if (ends_with(n->leaf(), ".h"))
+				m_stream << "#include \"" << n->leaf () << "\"\n";
+		}
+	}
+	
+	
+	m_stream << endl;
+	for (it = m_text.begin ();
+	     it != m_text.end ();
+	     ++it) {
+		m_stream << *it;
+	}
 }
 
 /*
@@ -246,9 +281,11 @@ emit () {
 
 #pragma mark -
 */
-void
-OutputDelegate::
-out (token_t single) {
-	token_t::string_type t = single.get_value();
-	m_impl->source << std::string(t.begin (), t.end ()) << " ";	
-}
+// void
+// OutputDelegate::
+// out (token_t single) {
+// 	token_t::string_type t = single.get_value();
+// 	m_impl->source << std::string(t.begin (), t.end ()) << " ";	
+// }
+
+

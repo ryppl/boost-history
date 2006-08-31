@@ -127,13 +127,17 @@ execute (int args, const char ** argv) {
 			
 			ofstream header(header_n.c_str());
 			ofstream source(source_n.c_str());
-			OutputDelegate del (header, source, maps);
+//			OutputDelegate del (header, source, maps);
+			OutputDelegate header_del (header, &maps);
+			OutputDelegate source_del (source, &maps);
 			header << "// " << header_n << endl;
 			source << "// " << source_n << endl;
 			cerr << "Processing file " << *file << "...";
-			SourceGenerator g(ctx,del);
-			vector<string> namespaces = g.execute ();
-
+			SourceGenerator g(ctx);
+			vector<string> namespaces = g.execute (&header_del, &source_del);
+			header_del.emit ();
+			source_del.emit ();
+			
 			for (vec_iter_t map = namespaces.begin ();
 			     map != namespaces.end ();
 			     ++map) {
@@ -142,8 +146,8 @@ execute (int args, const char ** argv) {
 			}
 			
 			// compilers seem happier with a newline as the last char.
-			// well, at least some sort of whitespace as the last line (off by 1 bugs in
-			// lexers aren't as infrequent as they should be).
+			// well, at least some sort of whitespace as the last line (off by 
+			// 1 bugs in lexers aren't as infrequent as they should be).
 			header << endl;
 			source << endl;
 		} 
