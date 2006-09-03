@@ -33,7 +33,6 @@
 #include <boost/assert.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/detail/command_line_ops.hpp>
-#include <boost/process/detail/factories.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/launcher_base.hpp>
 #include <boost/process/exceptions.hpp>
@@ -134,7 +133,7 @@ launcher::start(const Command_Line& cl)
     ph = pi.hProcess;
 #endif
 
-    return detail::factories::create_child(ph, fhstdin, fhstdout, fhstderr);
+    return child(ph, fhstdin, fhstdout, fhstderr);
 }
 
 // ------------------------------------------------------------------------

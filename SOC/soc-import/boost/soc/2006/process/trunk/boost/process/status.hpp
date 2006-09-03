@@ -35,6 +35,9 @@ extern "C" {
 namespace boost {
 namespace process {
 
+class child;
+class children;
+
 // ------------------------------------------------------------------------
 
 //!
@@ -65,7 +68,8 @@ protected:
     //!              Win32 system it contains the exit code only.
     //!
     status(int flags);
-    friend status create_status(int flags);
+    friend class child;
+    friend class children;
 
 public:
     //!
@@ -84,26 +88,6 @@ public:
     //!
     int exit_status(void) const;
 };
-
-// ------------------------------------------------------------------------
-
-//!
-//! \brief Creates a new status object.
-//!
-//! Creates a new status object; see the class' constructor for more
-//! details on the required parameters.
-//!
-//! This free function is provided to allow the user to construct new
-//! status objects when implementing new Child classes while still keeping
-//! the class' constructor private to avoid the accidental creation of
-//! these objects.
-//!
-inline
-status
-create_status(int flags)
-{
-    return status(flags);
-}
 
 // ------------------------------------------------------------------------
 

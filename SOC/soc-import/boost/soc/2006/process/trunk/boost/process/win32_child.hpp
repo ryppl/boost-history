@@ -34,9 +34,7 @@ extern "C" {
 namespace boost {
 namespace process {
 
-namespace detail {
-struct factories;
-}
+class win32_launcher;
 
 // ------------------------------------------------------------------------
 
@@ -88,7 +86,7 @@ protected:
                 detail::file_handle fhstdin,
                 detail::file_handle fhstdout,
                 detail::file_handle fhstderr);
-    friend struct detail::factories;
+    friend class win32_launcher;
 
 public:
     //!

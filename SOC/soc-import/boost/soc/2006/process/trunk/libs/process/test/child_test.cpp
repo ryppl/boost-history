@@ -10,7 +10,6 @@
 //
 
 #include <boost/process/child.hpp>
-#include <boost/process/detail/factories.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "child_base_test.hpp"
@@ -21,15 +20,22 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-struct factory
+namespace boost {
+namespace process {
+
+class launcher
 {
+public:
     bp::child
     operator()(bp::child::handle_type h, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
     {
-        return bpd::factories::create_child(h, fhstdin, fhstdout, fhstderr);
+        return child(h, fhstdin, fhstdout, fhstderr);
     }
 };
+
+} // namespace process
+} // namespace boost
 
 // ------------------------------------------------------------------------
 
@@ -38,7 +44,7 @@ init_unit_test_suite(int argc, char* argv[])
 {
     but::test_suite* test = BOOST_TEST_SUITE("child test suite");
 
-    add_tests_child_base< bp::child, factory >(test);
+    add_tests_child_base< bp::child, bp::launcher >(test);
 
     return test;
 }

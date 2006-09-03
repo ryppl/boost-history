@@ -402,8 +402,7 @@ posix_launcher::start(const Command_Line& cl)
                                     m_input_info, m_output_info,
                                     m_merge_set, s);
 
-    return detail::factories::create_posix_child(pid, m_input_info,
-                                                 m_output_info);
+    return posix_child(pid, m_input_info, m_output_info);
 }
 
 // ------------------------------------------------------------------------

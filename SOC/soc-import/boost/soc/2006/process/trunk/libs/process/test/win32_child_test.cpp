@@ -16,7 +16,6 @@ extern "C" {
 #   include <windows.h>
 }
 
-#   include <boost/process/detail/factories.hpp>
 #   include <boost/process/win32_child.hpp>
 
 #   include "child_base_test.hpp"
@@ -32,18 +31,24 @@ namespace but = ::boost::unit_test;
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
-struct factory
+namespace boost {
+namespace process {
+
+class win32_launcher
 {
+public:
     bp::win32_child
     operator()(bp::win32_child::handle_type h, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
     {
         PROCESS_INFORMATION pi;
         pi.hProcess = h;
-        return bpd::factories::create_win32_child(pi, fhstdin, fhstdout,
-                                                  fhstderr);
+        return bp::win32_child(pi, fhstdin, fhstdout, fhstderr);
     }
 };
+
+// namespace process
+// namespace boost
 #endif
 
 // ------------------------------------------------------------------------
@@ -61,7 +66,7 @@ test_getters(void)
 
     bpd::file_handle fh;
 
-    bp::win32_child c = bpd::factories::create_win32_child(pi, fh, fh, fh);
+    bp::win32_child c = bp::win32_launcher()(pi, fh, fh, fh);
 
     BOOST_CHECK_EQUAL(c.get_handle(), pi.hProcess);
     BOOST_CHECK_EQUAL(c.get_id(), pi.dwProcessId);

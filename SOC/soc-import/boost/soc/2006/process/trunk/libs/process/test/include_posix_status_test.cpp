@@ -15,8 +15,27 @@ namespace bp = ::boost::process;
 
 // ------------------------------------------------------------------------
 
+namespace boost {
+namespace process {
+
+class child
+{
+public:
+    static
+    void*
+    test_it(void)
+    {
+        return new bp::posix_status(bp::status(0));
+    }
+};
+
+} // namespace process
+} // namespace boost
+
+// ------------------------------------------------------------------------
+
 void*
 test_it(void)
 {
-    return new bp::posix_status(bp::create_status(0));
+    return bp::child::test_it();
 }

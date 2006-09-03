@@ -40,7 +40,6 @@ test-suite process :
     [ compile include_command_line_test.cpp : : ]
     [ compile include_detail_command_line_ops_test.cpp : : ]
     [ compile include_detail_environment_test.cpp : : ]
-    [ compile include_detail_factories_test.cpp : : ]
     [ compile include_detail_file_handle_test.cpp : : ]
     [ compile include_detail_pipe_test.cpp : : ]
     [ compile include_detail_systembuf_test.cpp : : ]

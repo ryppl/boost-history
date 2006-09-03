@@ -15,8 +15,28 @@ namespace bp = ::boost::process;
 
 // ------------------------------------------------------------------------
 
+namespace boost {
+namespace process {
+
+template< class Command_Line >
+class basic_pipeline
+{
+public:
+    static
+    void*
+    test_it(void)
+    {
+        return new bp::children();
+    }
+};
+
+} // namespace process
+} // namespace boost
+
+// ------------------------------------------------------------------------
+
 void*
 test_it(void)
 {
-    return new bp::children();
+    return bp::basic_pipeline< char >::test_it();
 }

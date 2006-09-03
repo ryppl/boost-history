@@ -30,7 +30,6 @@ extern "C" {
 }
 
 #include <boost/assert.hpp>
-#include <boost/process/detail/factories.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/launcher.hpp>
 #include <boost/process/win32_child.hpp>
@@ -133,8 +132,7 @@ win32_launcher::start(const Command_Line& cl)
                                                  behin, behout, beherr,
                                                  get_merge_out_err(), s);
 
-    return detail::factories::create_win32_child(pi, fhstdin, fhstdout,
-                                                 fhstderr);
+    return win32_child(pi, fhstdin, fhstdout, fhstderr);
 }
 
 // ------------------------------------------------------------------------

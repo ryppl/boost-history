@@ -30,6 +30,8 @@
 namespace boost {
 namespace process {
 
+template< class Command_Line > class basic_pipeline;
+
 // ------------------------------------------------------------------------
 
 //!
@@ -42,6 +44,10 @@ namespace process {
 class children :
     public std::vector< child >
 {
+protected:
+    children(void);
+    template< class Command_Line > friend class basic_pipeline;
+
 public:
     //!
     //! \brief Returns the pipeline's input stream.
@@ -94,6 +100,12 @@ public:
 
 // ------------------------------------------------------------------------
 
+children::children(void)
+{
+}
+
+// ------------------------------------------------------------------------
+
 postream&
 children::get_stdin(void)
     const
@@ -132,8 +144,7 @@ children::wait(void)
 {
     BOOST_ASSERT(size() >= 2);
 
-    status s = create_status(0);
-    status s2 = create_status(0);
+    status s(0), s2(0);
     bool update = true;
 
     for (iterator iter = begin(); iter != end(); iter++) {

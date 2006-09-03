@@ -30,7 +30,6 @@
 #endif
 
 #include <boost/process/children.hpp>
-#include <boost/process/detail/factories.hpp>
 #include <boost/process/detail/launcher_base.hpp>
 #include <boost/scoped_array.hpp>
 
@@ -176,8 +175,7 @@ basic_pipeline< Command_Line >::start(void)
             BOOST_ASSERT(fhstdin.is_valid());
         }
 
-        cs.push_back(detail::factories::create_child(ph, fhstdin,
-                                                     fhinvalid, fhinvalid));
+        cs.push_back(child(ph, fhstdin, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's internal processes.
@@ -206,8 +204,7 @@ basic_pipeline< Command_Line >::start(void)
         pid_t ph = detail::posix_start(m_entries[i].m_cl, get_environment(),
                                        infoin, infoout, merges, s);
 
-        cs.push_back(detail::factories::create_child(ph, fhinvalid,
-                                                     fhinvalid, fhinvalid));
+        cs.push_back(child(ph, fhinvalid, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's last process.
@@ -245,8 +242,7 @@ basic_pipeline< Command_Line >::start(void)
             BOOST_ASSERT(fhstderr.is_valid());
         }
 
-        cs.push_back(detail::factories::create_child(ph, fhinvalid,
-                                                     fhstdout, fhstderr));
+        cs.push_back(child(ph, fhinvalid, fhstdout, fhstderr));
     }
 #elif defined(BOOST_PROCESS_WIN32_API)
     // Process context configuration.
@@ -278,8 +274,7 @@ basic_pipeline< Command_Line >::start(void)
             (m_entries[i].m_cl, get_environment(), sii, sio, sie,
              m_entries[i].m_merge_out_err, s);
 
-        cs.push_back(detail::factories::create_child(pi.hProcess, fhstdin,
-                                                     fhinvalid, fhinvalid));
+        cs.push_back(child(pi.hProcess, fhstdin, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's internal processes.
@@ -305,8 +300,7 @@ basic_pipeline< Command_Line >::start(void)
             (m_entries[i].m_cl, get_environment(), sii, sio, sie,
              m_entries[i].m_merge_out_err, s);
 
-        cs.push_back(detail::factories::create_child(pi.hProcess, fhinvalid,
-                                                     fhinvalid, fhinvalid));
+        cs.push_back(child(pi.hProcess, fhinvalid, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's last process.
@@ -333,8 +327,7 @@ basic_pipeline< Command_Line >::start(void)
             (m_entries[i].m_cl, get_environment(), sii, sio, sie,
              m_entries[i].m_merge_out_err || get_merge_out_err(), s);
 
-        cs.push_back(detail::factories::create_child(pi.hProcess, fhinvalid,
-                                                     fhstdout, fhstderr));
+        cs.push_back(child(pi.hProcess, fhinvalid, fhstdout, fhstderr));
     }
 #endif
 

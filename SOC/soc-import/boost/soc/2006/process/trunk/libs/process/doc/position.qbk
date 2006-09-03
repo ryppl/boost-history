@@ -25,9 +25,8 @@
 * The POSIX-specific bits of a child's exit status were split from the
   `status` class into a new `posix_status` class.
 
-* The `status` constructor was made private to prevent accidental
-  construction by the user and the `create_status` function was added to
-  aid in the creation of such objects from custom Child implementations.
+* The `status` and `children` constructors were made private to prevent
+  accidental construction by the user.
 
 [endsect]
 

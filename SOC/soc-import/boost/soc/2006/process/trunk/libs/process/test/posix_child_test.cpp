@@ -10,7 +10,6 @@
 //
 
 #if defined(BOOST_PROCESS_POSIX_API)
-#   include <boost/process/detail/factories.hpp>
 #   include <boost/process/posix_child.hpp>
 
 #   include "child_base_test.hpp"
@@ -26,8 +25,12 @@ namespace but = ::boost::unit_test;
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-struct factory
+namespace boost {
+namespace process {
+
+class posix_launcher
 {
+public:
     bp::posix_child
     operator()(bp::posix_child::handle_type h, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
@@ -61,9 +64,12 @@ struct factory
             infoout.insert(bpd::info_map::value_type(STDERR_FILENO, si));
         }
 
-        return bpd::factories::create_posix_child(h, infoin, infoout);
+        return bp::posix_child(h, infoin, infoout);
     }
 };
+
+} // namespace process
+} // namespace boost
 #endif
 
 // ------------------------------------------------------------------------
@@ -84,7 +90,7 @@ init_unit_test_suite(int argc, char* argv[])
     but::test_suite* test = BOOST_TEST_SUITE("posix_child test suite");
 
 #if defined(BOOST_PROCESS_POSIX_API)
-    add_tests_child_base< bp::posix_child, factory >(test);
+    add_tests_child_base< bp::posix_child, bp::posix_launcher >(test);
 #else
     test->add(BOOST_TEST_CASE(&test_dummy));
 #endif

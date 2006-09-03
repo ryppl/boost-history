@@ -38,9 +38,7 @@
 namespace boost {
 namespace process {
 
-namespace detail {
-struct factories;
-}
+class posix_launcher;
 
 // ------------------------------------------------------------------------
 
@@ -141,7 +139,7 @@ protected:
     posix_child(handle_type h,
                 detail::info_map& infoin,
                 detail::info_map& infoout);
-    friend struct detail::factories;
+    friend class posix_launcher;
 };
 
 // ------------------------------------------------------------------------

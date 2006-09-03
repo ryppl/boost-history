@@ -47,9 +47,8 @@ extern "C" {
 namespace boost {
 namespace process {
 
-namespace detail {
-struct factories;
-}
+template< class Command_Line > class basic_pipeline;
+class launcher;
 
 // ------------------------------------------------------------------------
 
@@ -181,7 +180,8 @@ protected:
           detail::file_handle fhstdin,
           detail::file_handle fhstdout,
           detail::file_handle fhstderr);
-    friend struct detail::factories;
+    template< class Command_Line > friend class basic_pipeline;
+    friend class launcher;
 };
 
 // ------------------------------------------------------------------------
@@ -256,7 +256,7 @@ child::wait(void)
         boost::throw_exception
             (system_error("boost::process::child::wait",
                           "waitpid(2) failed", errno));
-    return create_status(s);
+    return status(s);
 #elif defined(BOOST_PROCESS_WIN32_API)
     DWORD code;
     // XXX This loop should go away in favour of a passive wait.
@@ -265,7 +265,7 @@ child::wait(void)
         ::Sleep(500);
     } while (code == STILL_ACTIVE);
     ::WaitForSingleObject(m_handle, 0);
-    return create_status(code);
+    return status(code);
 #endif
 }
 
