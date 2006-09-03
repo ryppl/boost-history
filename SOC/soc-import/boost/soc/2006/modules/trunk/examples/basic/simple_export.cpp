@@ -1,6 +1,6 @@
-#include <stdio.h>
+//#include <stdio.h>
 
-import namespace example;
+// import namespace example;
 export namespace Foo {
 public:
 
@@ -16,5 +16,5 @@ void foo () {
 	return;
 }
 
-}
+};
 

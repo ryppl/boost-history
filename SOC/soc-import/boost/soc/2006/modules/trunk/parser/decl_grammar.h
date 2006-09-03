@@ -441,7 +441,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
             // (post-skip)
             //
             translation_unit
-                =	 !declaration_seq >> eps_p; 
+                =	 !declaration_seq >> ch_p(T_EOF); 
                 ;
 
             odd_language_extension    // read: microsoft extensions
@@ -617,10 +617,12 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 ;
 
             function_definition
-                =	  function_definition_helper 
-                    >> !ctor_initializer >> !function_body  // removed semicolons
-                |	  decl_specifier_seq >> declarator >> function_try_block
-                |	  declarator >> function_try_block
+                =	  
+                (   function_definition_helper 
+						>> !ctor_initializer >> !function_body  // removed semicolons
+					|	  decl_specifier_seq >> declarator >> function_try_block
+					|	  declarator >> function_try_block
+				) [ method_body (self.m_del) ]
                 ;
 
             function_definition_helper
@@ -1098,10 +1100,12 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 ;
                 
              mod_export_decl 
-                =     ch_p(T_EXPORT) >> ch_p(T_NAMESPACE) 
+                =   (
+                    ch_p(T_EXPORT) >> ch_p(T_NAMESPACE) 
                     >> mod_name >> ch_p(T_LEFTBRACE)
                     >> +mod_decl
                     >> ch_p(T_RIGHTBRACE) >> ch_p(T_SEMICOLON)
+                    ) [ export_stmt(self.m_del) ];
                 ;
              
              mod_import_decl

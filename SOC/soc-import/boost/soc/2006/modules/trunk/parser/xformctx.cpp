@@ -1,12 +1,19 @@
 // xformctx.cpp
 #include "xformctx.h"
+#include "base_operations.h"
 #include <assert.h>
 using namespace std;
 
 bool 
-operator< (const ContextEntry& left, const ContextEntry& right) {
+operator< (const TransformStage& left, const TransformStage& right) {
 	return left.start < right.start;
 }
+
+bool 
+operator< (const TransformStage_p left, const TransformStage_p right) {
+	return *(left.get()) < *(right.get());
+}
+
 
 bool 
 operator == (const context_iter_t& a, const context_iter_t& b) {
@@ -27,20 +34,20 @@ operator > (const context_iter_t& a, const context_iter_t& b) {
 Operation_p Operation::null_op = boost::shared_ptr<Operation>(new Operation);
 
 TransformContext::
-TransformContext () : m_moving (false) {}
+TransformContext () : m_moving (false), m_header_emit(false) {}
 
 TransformContext::
 ~TransformContext () {}
 
 void
 TransformContext::
-add (const ContextEntry_p m) {
+add (const TransformStage_p m) {
 	assert (!m_moving);
 	// do our own sorted insert.
 	if (m_annotations.empty ()) {
 		m_annotations.push_back (m);
 	} else {
-		list<ContextEntry_p>::iterator it = m_annotations.begin ();
+		list<TransformStage_p>::iterator it = m_annotations.begin ();
 		while (   (it != m_annotations.end ()) 
 		       && (*it->get() < *m.get())) {
 		     ++it;
@@ -62,11 +69,11 @@ set_position (const context_iter_t& pos) {
 	
 //	assert (pos >= m_ann_pos->start);
 	
-	// first, scan the current state for any ContextEntrys we
+	// first, scan the current state for any TransformStages we
 	// have to leave.  Remove them in stack order, and
 	// call their at_end()s.
 	while (m_curstate.size () && m_curstate.back()->end <= pos) {
-		m_curstate.back()->at_end();
+		m_curstate.back()->at_end(this);
 		m_curstate.pop_back ();
 	}
 	
@@ -75,11 +82,15 @@ set_position (const context_iter_t& pos) {
 	while (   (m_ann_pos != m_annotations.end ())
 	       && ((*m_ann_pos)->start <= pos)) {
 		m_curstate.push_back (*m_ann_pos);
-		(*m_ann_pos)->at_start();
+		(*m_ann_pos)->at_start(this);
 		m_ann_pos++;
 	}
 }
 
+/// TODO: this single-token iteration results in several
+/// mallocs per character.  UGLY.  Well, that's straightforward
+/// enough to solve (in a bit) with some forward-scanning of the
+/// context stack.
 void
 TransformContext::
 output (const context_iter_t& start,
@@ -97,13 +108,21 @@ output (const context_iter_t& start,
 	     ++it) {
 		set_position(it);
 		
-		list<ContextEntry_p>::reverse_iterator ct = m_curstate.rbegin ();
-		OperationPair result = (*ct)->process_token (*it);
-		while (++ct != m_curstate.rend ()) {
-			result = (*ct)->process_upstream(result);
+		list<TransformStage_p>::reverse_iterator ct = m_curstate.rbegin ();
+		if (ct != m_curstate.rend ()) {
+			OperationPair result = (*ct)->process_token (*it,this);
+			while (++ct != m_curstate.rend ()) {
+				result = (*ct)->process_upstream(result,this);
+			}
+			if (m_header_emit) {
+				for_header.push_back(result.header);
+			}
+			for_source.push_back(result.source);
+		} else {
+			// no active transforms on this at all.
+			// push it to the source, no modification.
+			for_source.push_back(Operation_p(new TokenOp(*it)));
 		}
-		for_header.push_back(result.header);
-		for_source.push_back(result.source);
 	}
 	
 	// now execute the Operations on the source and header.
