@@ -1,0 +1,8 @@
+This package should be built together with Boost source.
+Copy the files under boost and libs directories to the
+corresponding boost and libs under Boost root directory.
+Some files may already exist, such as Jamfile.v2. In that
+case, resolve the conflicts, if any, and merge the contents.
+
+Xiaogang Zhang
+August 24, 2006
