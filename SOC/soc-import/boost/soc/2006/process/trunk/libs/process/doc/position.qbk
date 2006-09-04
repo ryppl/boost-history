@@ -31,6 +31,9 @@
 * Fixed duplicate symbols when linking multiple compilation units that use
   the library.
 
+* Fixed build with Visual C++ compilers older than 8.0 that do not provide
+  the `strcpy_s` and similar safe functions.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]

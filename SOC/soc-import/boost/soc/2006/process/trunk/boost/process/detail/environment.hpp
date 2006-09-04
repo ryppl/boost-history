@@ -231,7 +231,11 @@ environment::envp(void)
 #if defined(BOOST_PROCESS_POSIX_API)
         std::strncpy(cstr, tmp.c_str(), tmp.length());
 #elif defined(BOOST_PROCESS_WIN32_API)
+#   if defined(BOOST_PROCESS_WIN32_SAFE_FUNCTIONS)
         ::strcpy_s(cstr, tmp.length() + 1, tmp.c_str());
+#   else
+        ::strcpy(cstr, tmp.c_str());
+#   endif
 #endif
         cstr[tmp.length()] = '\0';
 

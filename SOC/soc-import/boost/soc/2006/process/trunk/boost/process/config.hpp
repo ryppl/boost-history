@@ -51,4 +51,6 @@
 #   define BOOST_PROCESS_POSIX_API
 #endif
 
+#include <boost/process/detail/config.hpp>
+
 #endif // !defined(BOOST_PROCESS_CONFIG_HPP)
