@@ -57,6 +57,12 @@ test-suite process :
     [ compile include_win32_child_test.cpp : : ]
     [ compile include_win32_launcher_test.cpp : : ]
 
+    [ run include_top_test_and_main.cpp include_top_test.cpp
+        :
+        :
+        :
+        ]
+
     [ run command_line_test.cpp
         :
         :

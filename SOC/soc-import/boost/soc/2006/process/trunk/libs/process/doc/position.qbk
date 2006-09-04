@@ -28,6 +28,9 @@
 * The `status` and `children` constructors were made private to prevent
   accidental construction by the user.
 
+* Fixed duplicate symbols when linking multiple compilation units that use
+  the library.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]

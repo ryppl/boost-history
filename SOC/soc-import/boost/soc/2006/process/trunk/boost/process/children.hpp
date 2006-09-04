@@ -100,12 +100,14 @@ public:
 
 // ------------------------------------------------------------------------
 
+inline
 children::children(void)
 {
 }
 
 // ------------------------------------------------------------------------
 
+inline
 postream&
 children::get_stdin(void)
     const
@@ -117,6 +119,7 @@ children::get_stdin(void)
 
 // ------------------------------------------------------------------------
 
+inline
 pistream&
 children::get_stdout(void)
     const
@@ -128,6 +131,7 @@ children::get_stdout(void)
 
 // ------------------------------------------------------------------------
 
+inline
 pistream&
 children::get_stderr(void)
     const
@@ -139,6 +143,7 @@ children::get_stderr(void)
 
 // ------------------------------------------------------------------------
 
+inline
 status
 children::wait(void)
 {
