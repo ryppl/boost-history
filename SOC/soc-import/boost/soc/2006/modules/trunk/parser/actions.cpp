@@ -28,8 +28,28 @@ method_body( TransformContext * ctx ) {
 
 ref_value_actor<TransformContext,register_actor<ExportStmtXForm> >
 export_stmt ( TransformContext * ctx ) {
-	std::cerr <<"[export_stmt]" << std::endl;
-	
 	return ref_value_actor<TransformContext,
 	                       register_actor<ExportStmtXForm> >(*ctx);
 }
+
+ref_value_actor<TransformContext,register_actor<AccessCtlXForm> >
+access_spec ( TransformContext * ctx ) {
+// 	cerr << "[access_spec()]";
+	return ref_value_actor<TransformContext,
+	                       register_actor<AccessCtlXForm> >(*ctx);
+
+}
+
+ref_value_actor<TransformContext,register_actor<AccessCtlXForm> >
+access_default ( TransformContext * ctx ) {
+// 	cerr << "[access_default()]";
+	return ref_value_actor<TransformContext,
+	                       register_actor<AccessCtlXForm> >(*ctx);
+}
+
+ref_value_actor<TransformContext,register_actor<ImportStmtXForm> >
+import_stmt ( TransformContext * ctx ) {
+	return ref_value_actor<TransformContext,
+	                       register_actor<ImportStmtXForm> >(*ctx);
+}
+

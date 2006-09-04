@@ -32,6 +32,9 @@ class TransformContext {
 	std::list<TransformStage_p>::iterator m_ann_pos;
 	std::vector<std::string>       m_modules;
 	
+	std::vector<Operation_p> 	   m_for_header, 
+	                               m_for_source;
+
 	/** @name StateVars
 	 * State Variables during transform
 	 */
@@ -40,8 +43,6 @@ class TransformContext {
 	/// should we emit tokens the header?
 	bool   m_header_emit;
 	//@}
-
-
 
 
 	/**
@@ -106,6 +107,10 @@ public:
 		
 		/// returns all the modules registered.
 		std::vector<std::string> all_modules() { return m_modules; }
+
+		/// called by a transformer, during at_start or at_end.
+		void add_header (Operation_p p) { m_for_header.push_back(p); }
+		void add_source (Operation_p p) { m_for_source.push_back(p); }
 
 	//@}
 };

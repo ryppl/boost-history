@@ -23,6 +23,7 @@ class MapManager;
 
 void configure_context (context_t& context);
 void configure_mapmanager (MapManager& map);
+bool configure_procfiles ();
 std::string configure_getsuffix ();
 std::vector<std::string> configure (int args, const char **argv);
 

@@ -25,4 +25,6 @@ struct StringOp : public Operation {
 	virtual ~StringOp () {}
 };
 
+bool whitespace (const token_t& tok);
+
 #endif

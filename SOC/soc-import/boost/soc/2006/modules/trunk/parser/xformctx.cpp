@@ -97,7 +97,6 @@ output (const context_iter_t& start,
         const context_iter_t& end,
         OutputDelegate* header,
         OutputDelegate* source) {
-	vector<Operation_p> for_header, for_source;
 	
 	// go through the text again, setting up the stack for
 	// each token, and process the token through the entire
@@ -115,25 +114,25 @@ output (const context_iter_t& start,
 				result = (*ct)->process_upstream(result,this);
 			}
 			if (m_header_emit) {
-				for_header.push_back(result.header);
+				add_header(result.header);
 			}
-			for_source.push_back(result.source);
+			add_source(result.source);
 		} else {
 			// no active transforms on this at all.
 			// push it to the source, no modification.
-			for_source.push_back(Operation_p(new TokenOp(*it)));
+			add_source(Operation_p(new TokenOp(*it)));
 		}
 	}
 	
 	// now execute the Operations on the source and header.
 	vector<Operation_p>::iterator it;
-	for (it = for_header.begin ();
-	     it != for_header.end ();
+	for (it = m_for_header.begin ();
+	     it != m_for_header.end ();
 	     ++it) {
 		(*(it->get()))(header);
 	}
-	for (it = for_source.begin ();
-	     it != for_source.end ();
+	for (it = m_for_source.begin ();
+	     it != m_for_source.end ();
 	     ++it) {
 		(*(it->get()))(source);
 	}

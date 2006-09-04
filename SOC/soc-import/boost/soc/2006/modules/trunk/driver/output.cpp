@@ -5,6 +5,7 @@
 #include <boost/bind.hpp>
 #include <boost/algorithm/string.hpp>
 #include <stdio.h>
+#include <iostream>
 
 using namespace std;
 using namespace boost;
@@ -96,6 +97,9 @@ emit () {
 	     it != m_includes.end ();
 	     ++it) {
 		set<path>  names = m_mmgr->lookup(*it);
+		if (names.empty()) {
+			cerr << "failed to find module '" << *it << "'" << endl;
+		}
 		for (set<path>::iterator n = names.begin ();
 		     n != names.end ();
 		     ++n) {

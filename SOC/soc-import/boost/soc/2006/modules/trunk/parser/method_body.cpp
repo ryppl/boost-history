@@ -12,7 +12,6 @@ MethodBodyXForm::
 MethodBodyXForm (const context_iter_t& s,
 				 const context_iter_t& e) 
  : TransformStage(s,e),m_depth(0), m_started(false) {
-	cerr << "[method_body(ctor)]" << endl;
 }
 
 OperationPair

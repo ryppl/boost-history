@@ -97,6 +97,10 @@ execute (int args, const char ** argv) {
 	     ++file) {
 
 		MapManager maps(path(file->c_str()));
+		::configure_mapmanager(maps);
+	    
+		if (!configure_procfiles())
+			continue;
 		
 		ifstream f(file->c_str());
 		string instring;
@@ -108,8 +112,7 @@ execute (int args, const char ** argv) {
 		context_t ctx (instring.begin (), instring.end (), file->c_str());
 
 		::configure_context(ctx);
-		::configure_mapmanager(maps);
-	     
+		 
 // 		for (vec_iter_t it= local_includes.begin ();
 // 		     it != local_includes.end ();
 // 		     ++it)
@@ -132,6 +135,7 @@ execute (int args, const char ** argv) {
 			OutputDelegate source_del (source, &maps);
 			header << "// " << header_n << endl;
 			source << "// " << source_n << endl;
+			source << "#include \"" << header_n << "\"" << endl;
 			cerr << "Processing file " << *file << "...";
 			SourceGenerator g(ctx);
 			vector<string> namespaces = g.execute (&header_del, &source_del);

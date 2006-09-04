@@ -8,6 +8,8 @@
 
 #include "method_body.h"
 #include "export_stmt.h"
+#include "access_ctl.h"
+#include "import_stmt.h"
 
 #include <boost/format.hpp>
 
@@ -81,5 +83,14 @@ method_body ( TransformContext * ctx );
 
 ref_value_actor<TransformContext,register_actor<ExportStmtXForm> >
 export_stmt ( TransformContext * ctx );
+
+ref_value_actor<TransformContext,register_actor<AccessCtlXForm> >
+access_spec ( TransformContext * ctx );
+
+ref_value_actor<TransformContext,register_actor<AccessCtlXForm> >
+access_default ( TransformContext * ctx );
+
+ref_value_actor<TransformContext,register_actor<ImportStmtXForm> >
+import_stmt ( TransformContext * ctx );
 
 #endif

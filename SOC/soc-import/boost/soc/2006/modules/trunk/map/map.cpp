@@ -119,6 +119,7 @@ add (const path& path) {
 	for (; it != end; ++it) {
 		if (ends_with(it->leaf(),".map") > 0) {
 			try {
+// 				cerr << "===== Loading " << *it << " =====" << endl;
 				m_maps.push_back(shared_ptr<Map>(new Map(*it)));
 			} catch (std::exception & e) {
 				cout << "failed to load mapfile " << *it << ":" 
@@ -182,7 +183,7 @@ struct mapfile_grammar : public grammar<mapfile_grammar> {
 			  =  lexeme_d
 			     [ 
 			        ch_p('"')
-			        >> (~ch_p('"'))
+			        >> *(~ch_p('"'))
 			        >> ch_p('"') 
 			     ]
 			  ;
@@ -201,10 +202,8 @@ struct mapfile_grammar : public grammar<mapfile_grammar> {
 			  ;
 			  
 			module_name 
-			  = name_element 
-			    >> *( str_p("::") 
-			          >> name_element)
-//			    >> !partition_name
+			  = ( name_element % str_p("::") )
+			    >> !partition_name
 			  ;
 			            
 			filename 
@@ -235,16 +234,15 @@ struct mapfile_grammar : public grammar<mapfile_grammar> {
 
 Map::
 Map (const path & mapfile, bool create)	
-  :m_path (mapfile),  m_file (mapfile) {
+  :m_path (mapfile),  m_file (mapfile, ios_base::in), m_save(create) {
+  
+// 	cout << "Map::Map(" << mapfile <<", " << (create? "true)":"false)") <<  endl;
 	
 	if (!exists(mapfile) && !create) {
 		cout << "[map] file doesn't exist: "<< mapfile << endl;
 		return;
 		// I should probably throw something here. Eh.
 	}
-	
-	if (create)
-		m_save = true;
 	
 	m_file.unsetf(ios::skipws);
 	string instring ((istreambuf_iterator<char>(m_file.rdbuf ())),
@@ -254,17 +252,17 @@ Map (const path & mapfile, bool create)
 	if (parse(instring.begin (), instring.end (), g, space_p).full) {
 // 		cout << "[map] done parsing " << mapfile << endl;
 		// if it's really done, let's see what's inside.
-/*		for (vecmap_t::iterator it = m_map.begin ();
-		     it != m_map.end ();
-		     ++it) {
-			cout << " " << it->first << ": ";
-			for (set<path>::iterator i = it->second.begin ();
-			     i != it->second.end ();
-			     ++i) {
-				cout << *i << " ";    
-			}
-			cout << endl;
-		} */
+// 		for (vecmap_t::iterator it = m_map.begin ();
+// 		     it != m_map.end ();
+// 		     ++it) {
+// 			cout << " " << it->first << ": ";
+// 			for (set<path>::iterator i = it->second.begin ();
+// 			     i != it->second.end ();
+// 			     ++i) {
+// 				cout << *i << " ";    
+// 			}
+// 			cout << endl;
+// 		}
 	} else {
 		cout << "! [map] failed parsing " << mapfile << endl;
 	}
@@ -274,6 +272,7 @@ Map (const path & mapfile, bool create)
 Map::
 ~Map () {
 	if (m_save) {
+// 		cerr << "[Map::saving " << m_path << "]";
 		// we rewrite the local map every time.
 		// eh, not good, but enough for now
 		// reopen the file in truncate mode.

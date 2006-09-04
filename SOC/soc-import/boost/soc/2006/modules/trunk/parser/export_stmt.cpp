@@ -20,20 +20,20 @@ ExportStmtXForm::
 ExportStmtXForm( const context_iter_t& start,
                  const context_iter_t& end )
  : TransformStage(start,end), m_mode (mExport) {
-	cerr << "[export_stmt(ctor)]" << endl; 
+//	cerr << "[export_stmt(ctor)]" << endl; 
 }
 
 void 
 ExportStmtXForm::
 at_start (TransformContext *ctx) {
-	cerr << "[export_stmt: at_start]";
+// 	cerr << "[export_stmt: at_start]";
 	ctx->start_hdr_emit ();
 }
 
 void 
 ExportStmtXForm::
 at_end (TransformContext * ctx) {
-	cerr << "[export_stmt: at_end]";
+// 	cerr << "[export_stmt: at_end]";
 	ctx->stop_hdr_emit ();
 }
 
@@ -48,7 +48,7 @@ _Match (const token_t& tok, token_id id) {
 OperationPair 
 ExportStmtXForm::
 process_token (const token_t& tok, TransformContext *ctx) {
-	cerr << "[tok]";
+// 	cerr << "[tok]";
 	OperationPair result;
 	result.header = Operation::null_op;
 	result.source = Operation::null_op;
@@ -114,7 +114,7 @@ process_token (const token_t& tok, TransformContext *ctx) {
 OperationPair 
 ExportStmtXForm::
 process_upstream (OperationPair p, TransformContext *) {
-	cerr << endl << "[export_stmt: proc_upstream]" << endl;
+// 	cerr << endl << "[export_stmt: proc_upstream]" << endl;
 	return p;
 }
 

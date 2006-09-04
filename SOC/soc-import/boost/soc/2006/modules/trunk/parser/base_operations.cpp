@@ -42,3 +42,13 @@ void
 StringOp::operator () (OutputDelegate *del) {
 	del->text(m_str);
 }
+
+bool
+whitespace (const token_t& tok) {
+	return    (tok == T_SPACE) || (tok == T_SPACE2)
+	       || (tok == T_CCOMMENT) || (tok == T_CPPCOMMENT)
+	       || (tok == T_NEWLINE);
+	
+// 	return (ID_FROM_TOKEN(tok) == EOLTokenType)
+// 	    || (ID_FROM_TOKEN(tok) == WhiteSpaceTokenType);
+}

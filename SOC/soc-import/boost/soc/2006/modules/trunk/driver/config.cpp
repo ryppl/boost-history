@@ -64,6 +64,11 @@ std::string configure_getsuffix () {
 	return s_suffix;
 }
 
+static bool s_maps_only = false;
+bool configure_procfiles () {
+	return !s_maps_only;
+}
+
 static ostream& operator<< (ostream& o, const vector<string>& v) {
 	for (vector<string>::const_iterator it = v.begin (); it != v.end (); ++it) {
 		o << *it << "\n";
@@ -248,6 +253,7 @@ vector<string> configure (int args, const char **argv) {
 		("help,h", "print out program usage (this message)")
 		("version,v", "print the version number")
 		("copyright,c", "print out the copyright statement")
+		("map-only", "only process .map files, do not process files")
 		("config-file", opt::value<string>(), 
 			"specify a config file (alternatively: @filepath)")
 		("input-file", opt::value<vector<string> >(),
@@ -288,6 +294,9 @@ vector<string> configure (int args, const char **argv) {
 	opt::notify (vm);
 	
 	// now extract the relevant data, and configure
+	if (vm.count ("map-only"))
+	    s_maps_only = true;
+	 
 	if (vm.count ("forceinclude"))
 		s_force_paths = vm["forceinclude"].as<vector<string> >();
 	vector<string> paths;		

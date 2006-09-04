@@ -58,5 +58,5 @@ execute (context_t& ctx, OutputDelegate *header, OutputDelegate *source) {
 	} else {
 		cerr << "not parsed." << endl;
 	}
-	return g.m_ids;
+	return xform.all_modules();
 }

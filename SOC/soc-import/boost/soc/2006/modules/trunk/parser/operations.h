@@ -30,6 +30,9 @@ typedef boost::shared_ptr<Operation> Operation_p;
 
 /// Individual outputters.  These are run against either the header or 
 /// source, causing text to be added (possibly out of order).
+/// TODO: we should add a combining API to let these get aggregated
+/// when they're enqueued for the OutputDelegate.  That'll keep the
+/// memory hit less ridiculous.
 struct Operation {
 	/// Can call out () to output strings as needed,
 	/// and add any #include paths needed.
@@ -44,6 +47,8 @@ struct Operation {
 struct OperationPair {
 	Operation_p  header;
 	Operation_p  source;
+	OperationPair () : header(Operation::null_op), 
+	                   source (Operation::null_op) {}
 };
 
 class TransformContext;

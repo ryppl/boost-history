@@ -23,8 +23,6 @@
 //  All credit goes to him, this thing is amazing.
 ///
 struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
-	mutable std::vector<std::string> m_ids;
-
 	mutable TransformContext* m_del;
 	
 	decl_grammar (TransformContext& del) : m_del(&del) {}
@@ -37,7 +35,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
 // 		          access_specifier, export_stmt, import_stmt;
 		
 		rule_type mod_export_decl, mod_import_decl, mod_access_specifier,
-		          mod_decl, mod_name;
+		          mod_decl, mod_name, mod_decl_group, mod_default_group;
 
         rule_type constant_expression;
         rule_type logical_or_exp, logical_and_exp;
@@ -1086,7 +1084,15 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 = (ch_p(T_IDENTIFIER) % ch_p(T_COLON_COLON))
                   >> !(ch_p(T_LEFTBRACKET) >> ch_p(T_STRINGLIT) >> ch_p(T_RIGHTBRACKET))
                 ;
-             
+
+			 mod_default_group
+			    = (+mod_decl) [ access_default(self.m_del) ]
+			    ;
+			    
+			 mod_decl_group
+			    = (mod_access_specifier >> +mod_decl) [ access_spec(self.m_del) ]
+                ;
+                
              mod_decl
                 =	  template_declaration
                 |	  explicit_instantiation
@@ -1095,7 +1101,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 |	  namespace_definition
                 |	  block_declaration
                 |	  function_definition                
-                |     mod_access_specifier
+//                |     mod_access_specifier
 				|     mod_import_decl
                 ;
                 
@@ -1103,14 +1109,15 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 =   (
                     ch_p(T_EXPORT) >> ch_p(T_NAMESPACE) 
                     >> mod_name >> ch_p(T_LEFTBRACE)
-                    >> +mod_decl
+                    >> !mod_default_group >> *mod_decl_group
                     >> ch_p(T_RIGHTBRACE) >> ch_p(T_SEMICOLON)
-                    ) [ export_stmt(self.m_del) ];
+                    ) [ export_stmt(self.m_del) ]
                 ;
              
              mod_import_decl
-                =     ch_p(T_IMPORT) >> ch_p(T_NAMESPACE) >> mod_name
-                    >> ch_p(T_SEMICOLON)
+                =    ( ch_p(T_IMPORT) >> ch_p(T_NAMESPACE) >> mod_name
+                       >> ch_p(T_SEMICOLON)
+                     ) [ import_stmt(self.m_del) ]
                 ;
    		}
 		
