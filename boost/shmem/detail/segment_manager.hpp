@@ -146,7 +146,7 @@ struct alloc_info_t
    std::size_t          m_allocation_type;
 
    static std::size_t get_offset()
-   {  return ct_rounded_size<sizeof(alloc_info_t<T>), sizeof(T)>::value;  }
+   {  return ct_rounded_size<sizeof(alloc_info_t<T>), boost::alignment_of<T>::value>::value;  }
 
    static T *get_data_from_info(const void *info)
    {  
