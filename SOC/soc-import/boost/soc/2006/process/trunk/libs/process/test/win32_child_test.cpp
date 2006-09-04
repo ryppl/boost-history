@@ -45,10 +45,17 @@ public:
         pi.hProcess = h;
         return bp::win32_child(pi, fhstdin, fhstdout, fhstderr);
     }
+
+    bp::win32_child
+    operator()(PROCESS_INFORMATION& pi, bpd::file_handle fhstdin,
+               bpd::file_handle fhstdout, bpd::file_handle fhstderr)
+    {
+        return bp::win32_child(pi, fhstdin, fhstdout, fhstderr);
+    }
 };
 
-// namespace process
-// namespace boost
+} // namespace process
+} // namespace boost
 #endif
 
 // ------------------------------------------------------------------------
@@ -93,7 +100,7 @@ init_unit_test_suite(int argc, char* argv[])
     but::test_suite* test = BOOST_TEST_SUITE("win32_child test suite");
 
 #if defined(BOOST_PROCESS_WIN32_API)
-    add_tests_child_base< bp::win32_child, factory >(test);
+    add_tests_child_base< bp::win32_child, bp::win32_launcher >(test);
     test->add(BOOST_TEST_CASE(&test_getters));
 #else
     test->add(BOOST_TEST_CASE(&test_dummy));

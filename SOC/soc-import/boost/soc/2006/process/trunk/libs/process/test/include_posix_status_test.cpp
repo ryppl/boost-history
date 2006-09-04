@@ -9,7 +9,11 @@
 // http://www.boost.org/LICENSE_1_0.txt.)
 //
 
-#include <boost/process/posix_status.hpp>
+#include <boost/process/config.hpp>
+
+#if defined(BOOST_PROCESS_POSIX_API)
+
+#   include <boost/process/posix_status.hpp>
 
 namespace bp = ::boost::process;
 
@@ -39,3 +43,7 @@ test_it(void)
 {
     return bp::child::test_it();
 }
+
+// ------------------------------------------------------------------------
+
+#endif
