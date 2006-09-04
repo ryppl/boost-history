@@ -54,30 +54,6 @@ namespace boost { namespace property_tree
     };
 
     ///////////////////////////////////////////////////////////////////////////
-    // Exceptions
-
-    class ptree_error: public std::runtime_error
-    {
-    public:
-        ptree_error(const std::string &what): std::runtime_error(what) { }
-        ~ptree_error() throw() { }
-    };
-
-    class ptree_bad_data: public ptree_error
-    {
-    public:
-        ptree_bad_data(const std::string &what): ptree_error(what) { }
-        ~ptree_bad_data() throw() { }
-    };
-    
-    class ptree_bad_path: public ptree_error
-    {
-    public:
-        ptree_bad_path(const std::string &what): ptree_error(what) { }
-        ~ptree_bad_path() throw() { }
-    };
-
-    ///////////////////////////////////////////////////////////////////////////
     // Construction & destruction
 
     template<class C, class K, class P, class D, class X>
@@ -421,7 +397,9 @@ namespace boost { namespace property_tree
     template<class C, class K, class P, class D, class X>
     void basic_ptree<C, K, P, D, X>::pop_back()
     {
-        erase(boost::prior(end()));
+        iterator last = end();
+        --last;
+        erase(last);
     }
         
     template<class C, class K, class P, class D, class X>
@@ -455,8 +433,7 @@ namespace boost { namespace property_tree
         if (child)
             return *child;
         else
-            /* throw ptree_bad_path("key \"" + detail::narrow(path.c_str()) + "\" does not exist"); */
-            throw ptree_bad_path("");
+            throw ptree_bad_path("path does not exist", path);
     }
 
     // Get child ptree
@@ -529,7 +506,7 @@ namespace boost { namespace property_tree
         if (child)
             return *child;
         else
-            throw ptree_bad_path("");
+            throw ptree_bad_path("path does not exist", path);
     }
 
     // Get value from data of ptree
@@ -543,7 +520,7 @@ namespace boost { namespace property_tree
             return value;
         else
             throw ptree_bad_data(std::string("conversion of data into type \"") + 
-                                 typeid(Type).name() + "\" failed");
+                                 typeid(Type).name() + "\" failed", data());
     }
 
     // Get value from data of ptree
@@ -558,7 +535,7 @@ namespace boost { namespace property_tree
             return value;
         else
             throw ptree_bad_data(std::string("conversion of data into type \"") + 
-                                 typeid(Type).name() + "\" failed");
+                                 typeid(Type).name() + "\" failed", data());
     }
 
     // Get value from data of ptree
@@ -638,7 +615,7 @@ namespace boost { namespace property_tree
     {
         if (!x.put_value(*this, value))
             throw ptree_bad_data(std::string("conversion of type \"") + typeid(Type).name() + 
-                                 "\" into data failed");
+                                 "\" into data failed", boost::any());
     }
 
     // Put value in data of child ptree

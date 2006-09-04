@@ -13,6 +13,31 @@
 namespace boost { namespace property_tree
 {
 
+    namespace detail
+    {
+
+        // Path-to-string converter for basic_path
+        template<class Key>
+        std::string path_to_string(const basic_path<Key> &path)
+        {
+            return path.to_string();
+        }
+
+    }
+
+    ///////////////////////////////////////////////////////////////////////
+    // Free functions
+
+    path operator /(const path &p1, const path &p2)
+    {
+        return path(p1) /= p2;
+    }
+
+    wpath operator /(const wpath &p1, const wpath &p2)
+    {
+        return wpath(p1) /= p2;
+    }
+
     ///////////////////////////////////////////////////////////////////////
     // Construction & destruction
 
@@ -42,6 +67,20 @@ namespace boost { namespace property_tree
         for (typename std::vector<Key>::const_iterator it = rhs.m_path.begin(); it != rhs.m_path.end(); ++it)
             m_path.push_back(*it);
         return *this;
+    }
+
+    template<class Key>
+    std::string basic_path<Key>::to_string() const
+    {
+        std::string s;
+        for (typename std::vector<Key>::const_iterator it = m_path.begin(); it != m_path.end(); ++it)
+        {
+            if (it == m_path.begin())
+                s += detail::narrow(it->c_str());
+            else
+                s += '.', s += detail::narrow(it->c_str());
+        }
+        return s;
     }
 
     ///////////////////////////////////////////////////////////////////////

@@ -132,6 +132,8 @@ int test_main(int, char *[])
         test_locale(pt);
         test_custom_data_type(pt);
         test_empty_size_max_size(pt);
+        test_ptree_bad_path(pt);
+        test_ptree_bad_data(pt);
         test_leaks(pt);                  // must be a final test
     }
 
@@ -159,6 +161,8 @@ int test_main(int, char *[])
         test_locale(pt);
         test_custom_data_type(pt);
         test_empty_size_max_size(pt);
+        test_ptree_bad_path(pt);
+        test_ptree_bad_data(pt);
         test_leaks(pt);                  // must be a final test
     }
 #endif
@@ -186,6 +190,8 @@ int test_main(int, char *[])
         test_locale(pt);
         test_custom_data_type(pt);
         test_empty_size_max_size(pt);
+        test_ptree_bad_path(pt);
+        test_ptree_bad_data(pt);
         test_leaks(pt);                  // must be a final test
     }
 
@@ -213,6 +219,8 @@ int test_main(int, char *[])
         test_locale(pt);
         test_custom_data_type(pt);
         test_empty_size_max_size(pt);
+        test_ptree_bad_path(pt);
+        test_ptree_bad_data(pt);
         test_leaks(pt);                  // must be a final test
     }
 #endif

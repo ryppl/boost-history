@@ -778,6 +778,14 @@ void test_get_put(PTREE *)
         BOOST_CHECK(pt.get<int>(T("key1.key2"), 0) == 2);
     }
 
+    // Test that get of single character that is whitespace works
+    {
+        PTREE pt;
+        pt.put_value(T(' '));
+        CHTYPE ch = pt.get_value<CHTYPE>();
+        BOOST_CHECK(ch == T(' '));
+    }
+
 }
 
 void test_get_child_put_child(PTREE *)
@@ -935,24 +943,39 @@ void test_path(PTREE *)
     PTREE pt;
     pt.put(T("key1.key2.key3"), 1);
     
+    // Test operator /=
     {
         path p;
         p /= T("key1"); p /= T("key2"); p /= T("key3");
         BOOST_CHECK(pt.get<int>(p, 0) == 1);
     }
 
+    // Test operator /=
     {
         path p(T("key1"));
         p /= T("key2.key3");
         BOOST_CHECK(pt.get<int>(p, 0) == 1);
     }
     
+    // Test operator /=
     {
         path p;
         path p1(T("key1.key2"));
         path p2(T("key3"));
         p /= p1;
         p /= p2;
+        BOOST_CHECK(pt.get<int>(p, 0) == 1);
+    }
+
+    // Test operator /
+    {
+        path p = path(T("key1")) / T("key2.key3");
+        BOOST_CHECK(pt.get<int>(p, 0) == 1);
+    }
+
+    // Test operator /
+    {
+        path p = T("key1.key2") / path(T("key3"));
         BOOST_CHECK(pt.get<int>(p, 0) == 1);
     }
 
@@ -974,8 +997,8 @@ void test_precision(PTREE *)
     // Test if precision is "good enough", i.e. if stream precision increase worked
     using namespace std;
     real error = abs(pi - pi2) *
-        std::pow(real(std::numeric_limits<real>::radix), 
-                 real(std::numeric_limits<real>::digits));
+        pow(real(numeric_limits<real>::radix), 
+            real(numeric_limits<real>::digits));
     BOOST_CHECK(error < 100);
 
 }
@@ -1065,6 +1088,48 @@ void test_empty_size_max_size(PTREE *)
     BOOST_CHECK(!pt.empty());
     BOOST_CHECK(pt.size() == 2);
 
+}
+
+void test_ptree_bad_path(PTREE *)
+{
+    
+    PTREE pt;
+    
+    try
+    {
+        pt.get<int>(T("non.existent.path"));
+    }
+    catch (boost::property_tree::ptree_bad_path &e)
+    {
+        PTREE::path_type path = e.path<PTREE::path_type>();
+        std::string what = e.what();
+        BOOST_CHECK(what.find("non.existent.path") != std::string::npos);
+        return;
+    }
+    
+    BOOST_ERROR("No required exception thrown");
+
+}
+
+void test_ptree_bad_data(PTREE *)
+{
+
+    PTREE pt;
+    pt.put_value("non convertible to int");
+
+    try
+    {
+        pt.get_value<int>();
+    }
+    catch (boost::property_tree::ptree_bad_data &e)
+    {
+        PTREE::data_type data = e.data<PTREE::data_type>();
+        std::string what = e.what();
+        BOOST_CHECK(what.find("non convertible to int") != std::string::npos);
+        return;
+    }
+    
+    BOOST_ERROR("No required exception thrown");
 }
 
 void test_leaks(PTREE *)

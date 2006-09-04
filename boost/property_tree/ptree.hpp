@@ -17,7 +17,7 @@
 #include <boost/optional.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/utility.hpp>        // for boost::prior
+#include <boost/any.hpp>
 
 #ifdef BOOST_PROPERTY_TREE_DEBUG
 #   include <boost/detail/lightweight_mutex.hpp>   // For syncing debug instances counter
@@ -221,6 +221,7 @@ namespace boost { namespace property_tree
         // Path manipulation
 
         basic_path<Key> &operator /=(const basic_path<Key> &rhs);
+        std::string to_string() const;
 
         ///////////////////////////////////////////////////////////////////////
         // Operations
@@ -267,10 +268,57 @@ namespace boost { namespace property_tree
 
     };
 
+    ///////////////////////////////////////////////////////////////////////////
+    // exceptions
+
+    // Base error class
+    class ptree_error: public std::runtime_error
+    {
+    
+    public:
+    
+        ptree_error(const std::string &what);
+        ~ptree_error() throw();
+
+    };
+
+    // Bad data
+    class ptree_bad_data: public ptree_error
+    {
+    
+    public:
+    
+        template<class T> ptree_bad_data(const std::string &what, const T &data);
+        ~ptree_bad_data() throw();
+        template<class T> T data();
+    
+    private:
+
+        boost::any m_data;
+
+    };
+    
+    // Bad path
+    class ptree_bad_path: public ptree_error
+    {
+    
+    public:
+    
+        template<class T> ptree_bad_path(const std::string &what, const T &path);
+        ~ptree_bad_path() throw();
+        template<class T> T path();
+
+    private:
+
+        boost::any m_path;
+
+    };
+
 } }
 
 // Include implementations
 #include <boost/property_tree/detail/ptree_implementation.hpp>
+#include <boost/property_tree/detail/exceptions_implementation.hpp>
 #include <boost/property_tree/detail/path_implementation.hpp>
 #include <boost/property_tree/detail/translator_implementation.hpp>
 

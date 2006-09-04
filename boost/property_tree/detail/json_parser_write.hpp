@@ -11,6 +11,7 @@
 #define BOOST_PROPERTY_TREE_DETAIL_JSON_PARSER_WRITE_HPP_INCLUDED
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/next_prior.hpp>
 #include <string>
 #include <ostream>
 #include <iomanip>

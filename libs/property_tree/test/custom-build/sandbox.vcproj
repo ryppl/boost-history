@@ -183,6 +183,10 @@
 			Name="detail"
 			>
 			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\exceptions_implementation.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\property_tree\detail\file_parser_error.hpp"
 				>
 			</File>

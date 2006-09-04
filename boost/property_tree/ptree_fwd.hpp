@@ -46,6 +46,8 @@ namespace boost { namespace property_tree
 
     template<class C, class K, class P, class D, class X> void swap(basic_ptree<C, K, P, D, X> &pt1, basic_ptree<C, K, P, D, X> &pt2);
     template<class Ptree> const Ptree &empty_ptree();
+    path operator /(const path &p1, const path &p2);
+    wpath operator /(const wpath &p1, const wpath &p2);
 
 } }
 

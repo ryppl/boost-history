@@ -16,6 +16,19 @@ namespace boost { namespace property_tree
     namespace detail
     {
         
+        // Data-to-string converter for std::string
+        std::string data_to_string(const std::string &data)
+        {
+            return data;
+        }
+
+        // Data-to-string converter for std::basic_string<Ch>
+        template<class Ch>
+        std::string data_to_string(const std::basic_string<Ch> &data)
+        {
+            return narrow(data.c_str());
+        }
+
         ////////////////////////////////////////////////////////////////////////////
         // Helpers
 
@@ -43,6 +56,7 @@ namespace boost { namespace property_tree
             {
                 std::basic_istringstream<Ch> stream(data);
                 stream.imbue(loc);
+                stream.unsetf(std::ios::skipws);
                 stream >> extracted >> std::ws;
                 return stream.eof() && !stream.fail() && !stream.bad();
             }
