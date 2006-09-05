@@ -180,12 +180,13 @@ environment::environment(void)
                           "GetEnvironmentStrings failed", ::GetLastError()));
 
     try {
-        while (*es != '\0') {
-            std::string str = es;
+        TCHAR* escp = es;
+        while (*escp != '\0') {
+            std::string str = escp;
             std::string::size_type pos = str.find('=');
             insert(value_type(str.substr(0, pos),
                               str.substr(pos + 1, str.length())));
-            es += str.length() + 1;
+            escp += str.length() + 1;
         }
     } catch (...) {
         ::FreeEnvironmentStrings(es);
