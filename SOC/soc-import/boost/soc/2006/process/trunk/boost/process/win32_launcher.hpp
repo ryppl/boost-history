@@ -74,19 +74,20 @@ public:
     //!
     //! \brief Starts a new child process.
     //!
-    //! Given a command line \a cl, starts a new process with all the
+    //! Given an executable and the set of arguments passed to it, starts
+    //! a new process with all the
     //! parameters configured in the launcher.  The launcher can be
-    //! reused afterwards to launch other different command lines.
+    //! reused afterwards to launch other different processes.
     //!
     //! \remark <b>Blocking remarks</b>: This function may block if the
-    //!         device holding the command line's executable blocks when
+    //!         device holding the executable blocks when
     //!         loading the image.  This might happen if, e.g., the binary
     //!         is being loaded from a network share.
     //!
     //! \return A handle to the new child process.
     //!
-    template< class Command_Line >
-    win32_child start(const Command_Line& cl);
+    template< class Executable, class Arguments >
+    win32_child start(const Executable& exe, const Arguments& args);
 };
 
 // ------------------------------------------------------------------------
@@ -110,10 +111,10 @@ win32_launcher::win32_launcher(const STARTUPINFO* si)
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line >
+template< class Executable, class Arguments >
 inline
 win32_child
-win32_launcher::start(const Command_Line& cl)
+win32_launcher::start(const Executable& exe, const Arguments& args)
 {
     detail::file_handle fhstdin, fhstdout, fhstderr;
 
@@ -128,7 +129,8 @@ win32_launcher::start(const Command_Line& cl)
     s.m_work_directory = get_work_directory();
     s.m_startupinfo = m_startupinfo.get();
 
-    PROCESS_INFORMATION pi = detail::win32_start(cl, get_environment(),
+    PROCESS_INFORMATION pi = detail::win32_start(exe, args,
+                                                 get_environment(),
                                                  behin, behout, beherr,
                                                  get_merge_out_err(), s);
 

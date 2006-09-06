@@ -32,7 +32,6 @@
 
 #include <boost/assert.hpp>
 #include <boost/process/child.hpp>
-#include <boost/process/detail/command_line_ops.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/launcher_base.hpp>
 #include <boost/process/exceptions.hpp>
@@ -57,30 +56,33 @@ public:
     //!
     //! \brief Starts a new child process.
     //!
-    //! Given a command line \a cl, starts a new process with all the
-    //! parameters configured in the launcher.  The launcher can be
-    //! reused afterwards to launch other different command lines.
+    //! Given an executable and the set of arguments passed to it,
+    //! starts a new process with all the parameters configured in the
+    //! launcher.  The launcher can be reused afterwards to launch other
+    //! different processes.
     //!
     //! \remark <b>Blocking remarks</b>: This function may block if the
-    //!         device holding the command line's executable blocks when
+    //!         device holding the executable blocks when
     //!         loading the image.  This might happen if, e.g., the binary
     //!         is being loaded from a network share.
     //!
     //! \return A handle to the new child process.
     //!
-    template< class Command_Line >
-    child start(const Command_Line& cl);
+    template< class Executable, class Arguments >
+    child start(const Executable& exe, const Arguments& args);
 };
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line >
+template< class Executable, class Arguments >
 inline
 child
-launcher::start(const Command_Line& cl)
+launcher::start(const Executable& exe, const Arguments& args)
 {
     child::handle_type ph;
     detail::file_handle fhstdin, fhstdout, fhstderr;
+
+    BOOST_ASSERT(!args.empty());
 
 #if defined(BOOST_PROCESS_POSIX_API)
     detail::info_map infoin, infoout;
@@ -99,7 +101,7 @@ launcher::start(const Command_Line& cl)
     detail::posix_setup s;
     s.m_work_directory = get_work_directory();
 
-    ph = detail::posix_start(cl, get_environment(), infoin, infoout,
+    ph = detail::posix_start(exe, args, get_environment(), infoin, infoout,
                              merges, s);
 
     if (get_stdin_behavior() == redirect_stream)
@@ -126,7 +128,8 @@ launcher::start(const Command_Line& cl)
     s.m_work_directory = get_work_directory();
     s.m_startupinfo = &si;
 
-    PROCESS_INFORMATION pi = detail::win32_start(cl, get_environment(),
+    PROCESS_INFORMATION pi = detail::win32_start(exe, args,
+                                                 get_environment(),
                                                  behin, behout, beherr,
                                                  get_merge_out_err(), s);
 

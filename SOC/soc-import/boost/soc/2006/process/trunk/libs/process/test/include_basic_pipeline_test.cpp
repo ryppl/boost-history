@@ -10,7 +10,9 @@
 //
 
 #include <boost/process/basic_pipeline.hpp>
-#include <boost/process/command_line.hpp>
+
+#include <string>
+#include <vector>
 
 namespace bp = ::boost::process;
 namespace bpd = ::boost::process::detail;
@@ -20,5 +22,5 @@ namespace bpd = ::boost::process::detail;
 void*
 test_it(void)
 {
-    return new bp::basic_pipeline< bp::command_line >();
+    return new bp::basic_pipeline< std::string, std::vector< std::string > >();
 }

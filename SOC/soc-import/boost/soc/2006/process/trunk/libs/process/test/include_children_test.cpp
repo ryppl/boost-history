@@ -18,7 +18,7 @@ namespace bp = ::boost::process;
 namespace boost {
 namespace process {
 
-template< class Command_Line >
+template< class Executable, class Arguments >
 class basic_pipeline
 {
 public:
@@ -38,5 +38,5 @@ public:
 void*
 test_it(void)
 {
-    return bp::basic_pipeline< char >::test_it();
+    return bp::basic_pipeline< char, char >::test_it();
 }

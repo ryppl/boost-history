@@ -227,14 +227,15 @@ public:
     //!
     //! \brief Starts a new child process.
     //!
-    //! Given a command line \a cl, starts a new process with all the
+    //! Given an executable and the set of arguments passed to it, starts
+    //! a new process with all the
     //! parameters configured in the launcher.  The launcher can be
-    //! reused afterwards to launch other different command lines.
+    //! reused afterwards to launch other different processes.
     //!
     //! \return A handle to the new child process.
     //!
-    template< class Command_Line >
-    posix_child start(const Command_Line& cl);
+    template< class Executable, class Arguments >
+    posix_child start(const Executable& exe, const Arguments& args);
 };
 
 // ------------------------------------------------------------------------
@@ -380,10 +381,10 @@ posix_launcher::set_chroot(const std::string& dir)
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line >
+template< class Executable, class Arguments >
 inline
 posix_child
-posix_launcher::start(const Command_Line& cl)
+posix_launcher::start(const Executable& exe, const Arguments& args)
 {
     detail::posix_behavior_to_info(get_stdin_behavior(), STDIN_FILENO,
                                    false, m_input_info);
@@ -398,7 +399,8 @@ posix_launcher::start(const Command_Line& cl)
     detail::posix_setup s = m_setup;
     s.m_work_directory = get_work_directory();
 
-    pid_t pid = detail::posix_start(cl, posix_launcher::get_environment(),
+    pid_t pid = detail::posix_start(exe, args,
+                                    posix_launcher::get_environment(),
                                     m_input_info, m_output_info,
                                     m_merge_set, s);
 

@@ -12,7 +12,6 @@
 #include <string>
 #include <utility>
 
-#include <boost/process/command_line.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
 #include <boost/process/status.hpp>
@@ -26,25 +25,6 @@ namespace bp = ::boost::process;
 // ------------------------------------------------------------------------
 
 namespace launcher_base_test {
-
-// ------------------------------------------------------------------------
-
-// A predicate for BOOST_CHECK_EXCEPTION that always fails.
-struct check_name
-{
-    std::string m_name;
-
-    check_name(const std::string& name) :
-        m_name(name)
-    {
-    }
-
-    bool
-    operator()(const bp::not_found_error< std::string >& e)
-    {
-        return e.get_value() == m_name;
-    }
-};
 
 // ------------------------------------------------------------------------
 
@@ -78,17 +58,18 @@ static
 void
 test_close_stdin(void)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("is-closed-stdin");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("is-closed-stdin");
 
     Launcher l1;
-    bp::status s1 = Start()(l1, cl, true).wait();
+    bp::status s1 = Start()(l1, args, true).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
     Launcher l2;
     l2.set_stdin_behavior(bp::redirect_stream);
-    Child c2 = Start()(l2, cl, true);
+    Child c2 = Start()(l2, args, true);
     c2.get_stdin() << "foo" << std::endl;
     c2.get_stdin().close();
     bp::status s2 = c2.wait();
@@ -103,17 +84,18 @@ static
 void
 test_close_stdout(void)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("is-closed-stdout");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("is-closed-stdout");
 
     Launcher l1;
-    bp::status s1 = Start()(l1, cl).wait();
+    bp::status s1 = Start()(l1, args).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
     Launcher l2;
     l2.set_stdout_behavior(bp::redirect_stream);
-    bp::status s2 = Start()(l2, cl).wait();
+    bp::status s2 = Start()(l2, args).wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
 }
@@ -125,17 +107,18 @@ static
 void
 test_close_stderr(void)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("is-closed-stderr");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("is-closed-stderr");
 
     Launcher l1;
-    bp::status s1 = Start()(l1, cl).wait();
+    bp::status s1 = Start()(l1, args).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
     Launcher l2;
     l2.set_stderr_behavior(bp::redirect_stream);
-    bp::status s2 = Start()(l2, cl).wait();
+    bp::status s2 = Start()(l2, args).wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
 }
@@ -147,13 +130,14 @@ static
 void
 test_input(void)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("stdin-to-stdout");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("stdin-to-stdout");
 
     Launcher l;
     l.set_stdin_behavior(bp::redirect_stream);
     l.set_stdout_behavior(bp::redirect_stream);
-    Child c = Start()(l, cl);
+    Child c = Start()(l, args);
 
     bp::postream& os = c.get_stdin();
     bp::pistream& is = c.get_stdout();
@@ -177,15 +161,17 @@ static
 void
 test_output(bool out, const std::string& msg)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument(out ? "echo-stdout" : "echo-stderr").argument(msg);
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back(out ? "echo-stdout" : "echo-stderr");
+    args.push_back(msg);
 
     Launcher l;
     if (out)
        l.set_stdout_behavior(bp::redirect_stream);
     else
        l.set_stderr_behavior(bp::redirect_stream);
-    Child c = Start()(l, cl);
+    Child c = Start()(l, args);
 
     std::string word;
     if (out) {
@@ -231,13 +217,15 @@ static
 void
 test_merge_out_err(void)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("echo-stdout-stderr").argument("message-to-two-streams");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("echo-stdout-stderr");
+    args.push_back("message-to-two-streams");
 
     Launcher l;
     l.set_stdout_behavior(bp::redirect_stream);
     l.set_merge_out_err(true);
-    Child c = Start()(l, cl);
+    Child c = Start()(l, args);
 
     bp::pistream& is = c.get_stdout();
     std::string word;
@@ -262,8 +250,9 @@ static
 void
 check_work_directory(const std::string& wdir)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("pwd");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("pwd");
 
     Launcher l;
     l.set_stdout_behavior(bp::redirect_stream);
@@ -272,7 +261,7 @@ check_work_directory(const std::string& wdir)
                                     bfs::current_path().string()));
     else
         l.set_work_directory(wdir);
-    Child c = Start()(l, cl);
+    Child c = Start()(l, args);
 
     bp::pistream& is = c.get_stdout();
     std::string dir;
@@ -312,11 +301,13 @@ static
 std::pair< bool, std::string >
 get_var_value(Launcher& l, const std::string& var)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("query-env").argument("TO_BE_SET");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("query-env");
+    args.push_back("TO_BE_SET");
 
     l.set_stdout_behavior(bp::redirect_stream);
-    Child c = Start()(l, cl);
+    Child c = Start()(l, args);
 
     bp::pistream& is = c.get_stdout();
     std::string status;
@@ -371,8 +362,10 @@ static
 void
 test_unset_environment(void)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("query-env").argument("TO_BE_UNSET");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("query-env");
+    args.push_back("TO_BE_UNSET");
 
 #if defined(BOOST_PROCESS_POSIX_API)
     BOOST_REQUIRE(::setenv("TO_BE_UNSET", "test", 1) != -1);
@@ -397,8 +390,10 @@ static
 void
 test_set_environment_var(const std::string& value)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("query-env").argument("TO_BE_SET");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("query-env");
+    args.push_back("TO_BE_SET");
 
 #if defined(BOOST_PROCESS_POSIX_API)
     ::unsetenv("TO_BE_SET");
@@ -429,66 +424,6 @@ test_set_environment(void)
         test_set_environment_var< Launcher, Child, Start >("");
     test_set_environment_var< Launcher, Child, Start >("some-value-1");
     test_set_environment_var< Launcher, Child, Start >("some-value-2");
-}
-
-// ------------------------------------------------------------------------
-
-template< class Launcher, class Child, class Start >
-static
-void
-test_path(void)
-{
-    std::string helpersdir =
-        bfs::path(get_helpers_path()).branch_path().string();
-    std::string helpersname = bfs::path(get_helpers_path()).leaf();
-
-    // The helpers binary should not be located with the default PATH.
-    BOOST_CHECK_EXCEPTION(bp::command_line cl1(helpersname),
-                          bp::not_found_error< std::string >,
-                          check_name(helpersname));
-
-    // Modifying the parent's PATH setting should make the launcher locate
-    // the binary correctly.
-#if defined(BOOST_PROCESS_POSIX_API)
-    std::string oldpath = ::getenv("PATH");
-    try {
-        ::setenv("PATH", helpersdir.c_str(), 1);
-        bp::command_line cl2(helpersname);
-        cl2.argument("pwd");
-        Launcher l2;
-        bp::status s2 = Start()(l2, cl2).wait();
-        BOOST_CHECK(s2.exited());
-        BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_SUCCESS);
-        ::setenv("PATH", oldpath.c_str(), 1);
-    } catch (...) {
-        ::setenv("PATH", oldpath.c_str(), 1);
-    }
-#elif defined(BOOST_PROCESS_WIN32_API)
-    TCHAR oldpath[MAX_PATH];
-    BOOST_REQUIRE(::GetEnvironmentVariable("PATH", oldpath, MAX_PATH) != 0);
-    try {
-        BOOST_REQUIRE(::SetEnvironmentVariable("PATH",
-                                               TEXT(helpersdir.c_str())) != 0);
-        bp::command_line cl2(helpersname);
-        cl2.argument("pwd");
-        Launcher l2;
-        bp::status s2 = Start()(l2, cl2).wait();
-        BOOST_CHECK(s2.exited());
-        BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_SUCCESS);
-        BOOST_REQUIRE(::SetEnvironmentVariable("PATH", oldpath) != 0);
-    } catch (...) {
-        BOOST_REQUIRE(::SetEnvironmentVariable("PATH", oldpath) != 0);
-    }
-#endif
-
-    // The helpers binary should be located with a custom PATH in the
-    // command line initialization.
-    bp::command_line cl3(helpersname, "helpers", helpersdir);
-    cl3.argument("pwd");
-    Launcher l3;
-    bp::status s3 = Start()(l3, cl3).wait();
-    BOOST_CHECK(s3.exited());
-    BOOST_CHECK_EQUAL(s3.exit_status(), EXIT_SUCCESS);
 }
 
 // ------------------------------------------------------------------------
@@ -525,6 +460,4 @@ add_tests_launcher_base(boost::unit_test::test_suite* ts)
             (&(test_unset_environment< Launcher, Child, Start >)), 0, 10);
     ts->add(BOOST_TEST_CASE
             (&(test_set_environment< Launcher, Child, Start >)), 0, 10);
-    ts->add(BOOST_TEST_CASE
-            (&(test_path< Launcher, Child, Start >)), 0, 10);
 }

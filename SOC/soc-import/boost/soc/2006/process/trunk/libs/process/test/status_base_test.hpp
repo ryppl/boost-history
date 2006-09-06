@@ -10,9 +10,9 @@
 //
 
 #include <string>
+#include <vector>
 
 #include <boost/process/child.hpp>
-#include <boost/process/command_line.hpp>
 #include <boost/process/launcher.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -30,9 +30,10 @@ static
 bp::child
 launch_helper(const std::string& name)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument(name);
-    return bp::launcher().start(cl);
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back(name);
+    return bp::launcher().start(get_helpers_path(), args);
 }
 
 // ------------------------------------------------------------------------

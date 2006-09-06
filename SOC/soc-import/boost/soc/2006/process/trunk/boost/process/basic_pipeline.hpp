@@ -47,7 +47,7 @@ namespace process {
 //! for the construction of process pipelines.  This class is operating
 //! system independent.
 //!
-template< class Command_Line >
+template< class Executable, class Arguments >
 class basic_pipeline :
     public detail::launcher_base
 {
@@ -59,11 +59,13 @@ class basic_pipeline :
     //!
     struct entry
     {
-        Command_Line m_cl;
+        Executable m_exe;
+        Arguments m_args;
         bool m_merge_out_err;
 
-        entry(Command_Line cl, bool merge_out_err) :
-            m_cl(cl),
+        entry(Executable exe, Arguments args, bool merge_out_err) :
+            m_exe(exe),
+            m_args(args),
             m_merge_out_err(merge_out_err)
         {
         }
@@ -79,11 +81,13 @@ public:
     //! \brief Adds a new stage to the pipeline.
     //!
     //! Prepares a new process that will be part of the pipeline.
-    //! This new process is described by its command line and a flag that
-    //! indicates whether its stderr should be merged on its stdout.
+    //! This new process is described by its executable, its set of
+    //! arguments and a flag that indicates whether its stderr should be
+    //! merged on its stdout.
     //!
-    basic_pipeline< Command_Line >& add(const Command_Line& cl,
-                                        bool merge_out_err = false);
+    basic_pipeline< Executable, Arguments >& add(const Executable& exe,
+                                                 const Arguments& args,
+                                                 bool merge_out_err = false);
 
     //!
     //! \brief Starts the pipeline.
@@ -92,7 +96,7 @@ public:
     //! appropriately to share the data flows.
     //!
     //! \remark <b>Blocking remarks</b>: This function may block if the
-    //!         device holding the executable of one of the command lines
+    //!         device holding the executable of one of the entries
     //!         blocks when loading the image.  This might happen if, e.g.,
     //!         the binary is being loaded from a network share.
     //!
@@ -104,22 +108,23 @@ public:
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line >
+template< class Executable, class Arguments >
 inline
-basic_pipeline< Command_Line >&
-basic_pipeline< Command_Line >::add(const Command_Line& cl,
-                                    bool merge_out_err)
+basic_pipeline< Executable, Arguments >&
+basic_pipeline< Executable, Arguments >::add(const Executable& exe,
+                                             const Arguments& args,
+                                             bool merge_out_err)
 {
-    m_entries.push_back(entry(cl, merge_out_err));
+    m_entries.push_back(entry(exe, args, merge_out_err));
     return *this;
 }
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line >
+template< class Executable, class Arguments >
 inline
 children
-basic_pipeline< Command_Line >::start(void)
+basic_pipeline< Executable, Arguments >::start(void)
 {
     BOOST_ASSERT(m_entries.size() >= 2);
 
@@ -128,11 +133,11 @@ basic_pipeline< Command_Line >::start(void)
 
     // Convenience variables to avoid clutter below.
     const stream_behavior bin =
-        basic_pipeline< Command_Line >::get_stdin_behavior();
+        basic_pipeline< Executable, Arguments >::get_stdin_behavior();
     const stream_behavior bout =
-        basic_pipeline< Command_Line >::get_stdout_behavior();
+        basic_pipeline< Executable, Arguments >::get_stdout_behavior();
     const stream_behavior berr =
-        basic_pipeline< Command_Line >::get_stderr_behavior();
+        basic_pipeline< Executable, Arguments >::get_stderr_behavior();
     detail::file_handle fhinvalid;
 
     // The pipes used to connect the pipeline's internal process.
@@ -146,7 +151,7 @@ basic_pipeline< Command_Line >::start(void)
 
     // Configure and spawn the pipeline's first process.
     {
-        typename std::vector< Command_Line >::size_type i = 0;
+        typename std::vector< entry >::size_type i = 0;
 
         detail::info_map infoin, infoout;
         detail::merge_set merges;
@@ -165,7 +170,9 @@ basic_pipeline< Command_Line >::start(void)
             posix_behavior_to_info(silent_stream, STDERR_FILENO, true,
                                    infoout);
 
-        pid_t ph = detail::posix_start(m_entries[i].m_cl, get_environment(),
+        pid_t ph = detail::posix_start(m_entries[i].m_exe,
+                                       m_entries[i].m_args,
+                                       get_environment(),
                                        infoin, infoout, merges, s);
 
         detail::file_handle fhstdin;
@@ -179,7 +186,7 @@ basic_pipeline< Command_Line >::start(void)
     }
 
     // Configure and spawn the pipeline's internal processes.
-    for (typename std::vector< Command_Line >::size_type i = 1;
+    for (typename std::vector< entry >::size_type i = 1;
          i < m_entries.size() - 1; i++) {
         detail::info_map infoin, infoout;
         detail::merge_set merges;
@@ -201,7 +208,9 @@ basic_pipeline< Command_Line >::start(void)
             posix_behavior_to_info(silent_stream, STDERR_FILENO, true,
                                    infoout);
 
-        pid_t ph = detail::posix_start(m_entries[i].m_cl, get_environment(),
+        pid_t ph = detail::posix_start(m_entries[i].m_exe,
+                                       m_entries[i].m_args,
+                                       get_environment(),
                                        infoin, infoout, merges, s);
 
         cs.push_back(child(ph, fhinvalid, fhinvalid, fhinvalid));
@@ -209,8 +218,7 @@ basic_pipeline< Command_Line >::start(void)
 
     // Configure and spawn the pipeline's last process.
     {
-        typename std::vector< Command_Line >::size_type i =
-            m_entries.size() - 1;
+        typename std::vector< entry >::size_type i = m_entries.size() - 1;
 
         detail::info_map infoin, infoout;
         detail::merge_set merges;
@@ -227,7 +235,9 @@ basic_pipeline< Command_Line >::start(void)
             merges.insert(std::pair< int, int >(STDERR_FILENO,
                                                 STDOUT_FILENO));
 
-        pid_t ph = detail::posix_start(m_entries[i].m_cl, get_environment(),
+        pid_t ph = detail::posix_start(m_entries[i].m_exe,
+                                       m_entries[i].m_args,
+                                       get_environment(),
                                        infoin, infoout, merges, s);
 
         detail::file_handle fhstdout, fhstderr;
@@ -253,7 +263,7 @@ basic_pipeline< Command_Line >::start(void)
 
     // Configure and spawn the pipeline's first process.
     {
-        typename std::vector< Command_Line >::size_type i = 0;
+        typename std::vector< entry >::size_type i = 0;
 
         detail::file_handle fhstdin;
         detail::stream_info sii = detail::win32_behavior_to_info
@@ -271,14 +281,15 @@ basic_pipeline< Command_Line >::start(void)
         ::ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
         PROCESS_INFORMATION pi = detail::win32_start
-            (m_entries[i].m_cl, get_environment(), sii, sio, sie,
+            (m_entries[i].m_exe, m_entries[i].m_args, get_environment(),
+             sii, sio, sie,
              m_entries[i].m_merge_out_err, s);
 
         cs.push_back(child(pi.hProcess, fhstdin, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's internal processes.
-    for (typename std::vector< Command_Line >::size_type i = 1;
+    for (typename std::vector< entry >::size_type i = 1;
          i < m_entries.size() - 1; i++) {
 
         detail::stream_info sii;
@@ -297,7 +308,8 @@ basic_pipeline< Command_Line >::start(void)
         ::ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
         PROCESS_INFORMATION pi = detail::win32_start
-            (m_entries[i].m_cl, get_environment(), sii, sio, sie,
+            (m_entries[i].m_exe, m_entries[i].m_args, get_environment(),
+             sii, sio, sie,
              m_entries[i].m_merge_out_err, s);
 
         cs.push_back(child(pi.hProcess, fhinvalid, fhinvalid, fhinvalid));
@@ -305,8 +317,7 @@ basic_pipeline< Command_Line >::start(void)
 
     // Configure and spawn the pipeline's last process.
     {
-        typename std::vector< Command_Line >::size_type i =
-            m_entries.size() - 1;
+        typename std::vector< entry >::size_type i = m_entries.size() - 1;
 
         detail::stream_info sii;
         sii.m_type = detail::stream_info::usehandle;
@@ -324,7 +335,8 @@ basic_pipeline< Command_Line >::start(void)
         ::ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
         PROCESS_INFORMATION pi = detail::win32_start
-            (m_entries[i].m_cl, get_environment(), sii, sio, sie,
+            (m_entries[i].m_exe, m_entries[i].m_args, get_environment(),
+             sii, sio, sie,
              m_entries[i].m_merge_out_err || get_merge_out_err(), s);
 
         cs.push_back(child(pi.hProcess, fhinvalid, fhstdout, fhstderr));

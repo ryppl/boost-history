@@ -30,7 +30,7 @@
 namespace boost {
 namespace process {
 
-template< class Command_Line > class basic_pipeline;
+template< class Executable, class Arguments > class basic_pipeline;
 
 // ------------------------------------------------------------------------
 
@@ -46,7 +46,7 @@ class children :
 {
 protected:
     children(void);
-    template< class Command_Line > friend class basic_pipeline;
+    template< class Executable, class Arguments > friend class basic_pipeline;
 
 public:
     //!

@@ -26,11 +26,11 @@ class start
 {
 public:
     bp::child
-    operator()(bp::launcher& l, const bp::command_line& cl,
+    operator()(bp::launcher& l, const std::vector< std::string > args,
                bool usein = false)
         const
     {
-        return l.start(cl);
+        return l.start(get_helpers_path(), args);
     }
 };
 

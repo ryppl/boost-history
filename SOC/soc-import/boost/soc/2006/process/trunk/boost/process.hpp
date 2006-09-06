@@ -27,9 +27,9 @@
 #include <boost/process/basic_pipeline.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/children.hpp>
-#include <boost/process/command_line.hpp>
 #include <boost/process/forward_decls.hpp>
 #include <boost/process/launcher.hpp>
+#include <boost/process/operations.hpp>
 #include <boost/process/pipeline.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>

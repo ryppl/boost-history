@@ -33,11 +33,12 @@ extern "C" {
 
 #include <cerrno>
 #include <cstdlib>
+#include <cstring>
 #include <map>
 #include <set>
+#include <utility>
 
 #include <boost/optional.hpp>
-#include <boost/process/detail/command_line_ops.hpp>
 #include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/pipe.hpp>
@@ -49,6 +50,42 @@ extern "C" {
 namespace boost {
 namespace process {
 namespace detail {
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Converts the command line to an array of C strings.
+//!
+//! Converts the command line's list of arguments to the format expected
+//! by the \a argv parameter in the POSIX execve() system call.
+//!
+//! This operation is only available in POSIX systems.
+//!
+//! \return The first argument of the pair is an integer that indicates
+//!         how many strings are stored in the second argument.  The
+//!         second argument is a NULL-terminated, dynamically allocated
+//!         vector of dynamically allocated strings holding the arguments
+//!         to the executable.  The caller is responsible of freeing them.
+//!
+template< class Arguments >
+inline
+std::pair< std::size_t, char** >
+collection_to_posix_argv(const Arguments& args)
+{
+    std::size_t nargs = args.size();
+    BOOST_ASSERT(nargs > 0);
+
+    char** argv = new char*[nargs + 1];
+    typename Arguments::size_type i = 0;
+    for (typename Arguments::const_iterator iter = args.begin();
+         iter != args.end(); iter++) {
+        argv[i] = ::strdup((*iter).c_str());
+        i++;
+    }
+    argv[nargs] = NULL;
+
+    return std::pair< std::size_t, char ** >(nargs, argv);
+}
 
 // ------------------------------------------------------------------------
 
@@ -342,10 +379,11 @@ setup_output(info_map& info, merge_set& merges, bool closeflags[],
 //! \return The new process' PID.  The caller is responsible of creating
 //!         an appropriate Child representation for it.
 //!
-template< class Command_Line >
+template< class Executable, class Arguments >
 inline
 pid_t
-posix_start(const Command_Line& cl,
+posix_start(const Executable& exe,
+            const Arguments& args,
             const environment& env,
             info_map& infoin,
             info_map& infoout,
@@ -382,16 +420,15 @@ posix_start(const Command_Line& cl,
             ::exit(EXIT_FAILURE);
         }
 
-        std::pair< std::size_t, char** > args = command_line_to_posix_argv(cl);
+        std::pair< std::size_t, char** > argcv = collection_to_posix_argv(args);
         char** envp = env.envp();
-
-        ::execve(cl.get_executable().c_str(), args.second, envp);
+        ::execve(exe.c_str(), argcv.second, envp);
         system_error e("boost::process::detail::posix_start",
                        "execve(2) failed", errno);
 
-        for (std::size_t i = 0; i < args.first; i++)
-            delete [] args.second[i];
-        delete [] args.second;
+        for (std::size_t i = 0; i < argcv.first; i++)
+            delete [] argcv.second[i];
+        delete [] argcv.second;
 
         for (std::size_t i = 0; i < env.size(); i++)
             delete [] envp[i];

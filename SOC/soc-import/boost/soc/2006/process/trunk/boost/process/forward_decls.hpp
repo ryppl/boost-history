@@ -24,20 +24,21 @@
 
 #include <boost/process/config.hpp>
 
+#include <string>
+#include <vector>
+
 /** \cond */
 namespace boost {
 namespace process {
 
 // ------------------------------------------------------------------------
 
-template< class Command_Line >
+template< class Executable, class Arguments >
 class basic_pipeline;
 
 class child;
 
 class children;
-
-class command_line;
 
 class launcher;
 
@@ -47,7 +48,7 @@ class postream;
 
 class status;
 
-typedef basic_pipeline< command_line > pipeline;
+typedef basic_pipeline< std::string, std::vector< std::string > > pipeline;
 
 #if defined(BOOST_PROCESS_POSIX_API)
 class posix_child;

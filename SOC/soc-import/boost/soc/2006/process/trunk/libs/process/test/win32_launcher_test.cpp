@@ -42,11 +42,12 @@ class start
 {
 public:
     bp::win32_child
-    operator()(bp::win32_launcher& l, const bp::command_line& cl,
+    operator()(bp::win32_launcher& l,
+               const std::vector< std::string > args,
                bool usein = false)
         const
     {
-        return l.start(cl);
+        return l.start(args);
     }
 };
 #endif
@@ -59,8 +60,9 @@ static
 void
 test_startupinfo(void)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("win32-print-startupinfo");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("win32-print-startupinfo");
 
     std::string line;
     std::ostringstream flags;
@@ -68,7 +70,7 @@ test_startupinfo(void)
     bp::win32_launcher l1;
     l1.set_stdout_behavior(bp::redirect_stream);
     flags << STARTF_USESTDHANDLES;
-    Child c1 = l1.start(cl);
+    Child c1 = l1.start(get_helpers_path(), args);
     portable_getline(c1.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwFlags = " + flags.str());
     flags.str("");
@@ -95,7 +97,7 @@ test_startupinfo(void)
     bp::win32_launcher l2(&si);
     l2.set_stdout_behavior(bp::redirect_stream);
     flags << (STARTF_USESTDHANDLES | STARTF_USEPOSITION | STARTF_USESIZE);
-    Child c2 = l2.start(cl);
+    Child c2 = l2.start(get_helpers_path(), args);
     portable_getline(c2.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwFlags = " + flags.str());
     flags.str("");

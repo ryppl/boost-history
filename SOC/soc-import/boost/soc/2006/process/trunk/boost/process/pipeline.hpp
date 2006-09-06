@@ -20,7 +20,6 @@
 /** \endcond */
 
 #include <boost/process/basic_pipeline.hpp>
-#include <boost/process/command_line.hpp>
 
 namespace boost {
 namespace process {
@@ -30,11 +29,12 @@ namespace process {
 //!
 //! \brief Generic instantiation of the basic_pipeline template.
 //!
-//! Generic instantiation of the basic_pipeline template.  This relies on
-//! the command_line implementation of the Command_Line concept provided
-//! by the library.
+//! Generic instantiation of the basic_pipeline template.  This uses common
+//! classes as the parameters.
 //!
-typedef basic_pipeline< command_line > pipeline;
+//! XXX This class should most probably go away.
+//!
+typedef basic_pipeline< std::string, std::vector< std::string > > pipeline;
 
 // ------------------------------------------------------------------------
 

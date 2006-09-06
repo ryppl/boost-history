@@ -32,7 +32,6 @@ extern "C" {
 }
 
 #include <boost/optional.hpp>
-#include <boost/process/detail/command_line_ops.hpp>
 #include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/pipe.hpp>
@@ -45,6 +44,61 @@ extern "C" {
 namespace boost {
 namespace process {
 namespace detail {
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Converts the command line to a plain string.
+//!
+//! Converts the command line's list of arguments to the format
+//! expected by the \a lpCommandLine parameter in the CreateProcess()
+//! system call.
+//!
+//! This operation is only available in Win32 systems.
+//!
+//! \return A dynamically allocated string holding the command line
+//!         to be passed to the executable.  It is returned in a
+//!         shared_array object to ensure its release at some point.
+//!
+template< class Arguments >
+inline
+boost::shared_array< TCHAR >
+collection_to_win32_cmdline(const Arguments& args)
+{
+    typedef std::vector< std::string > arguments_vector;
+    arguments_vector args;
+
+    typename Arguments::size_type i = 0;
+    std::size_t length = 0;
+    for (typename Arguments::const_iterator iter = args.begin();
+         iter != args.end(); iter++) {
+        std::string arg = (*iter);
+
+        std::string::size_type pos = 0;
+        while ((pos = arg.find('"', pos)) != std::string::npos) {
+            arg.replace(pos, 1, "\\\"");
+            pos += 2;
+        }
+
+        if (arg.find(' ') != std::string::npos)
+            arg = '\"' + arg + '\"';
+
+        if (i != args.size() - 1)
+            arg += ' ';
+
+        args.push_back(arg);
+        length += arg.size() + 1;
+
+        i++;
+    }
+
+    boost::shared_array< TCHAR > cmdline(new TCHAR[length]);
+    ::_tcscpy_s(cmdline.get(), length, TEXT(""));
+    for (arguments_vector::size_type i = 0; i < args.size(); i++)
+        ::_tcscat_s(cmdline.get(), length, TEXT(args[i].c_str()));
+
+    return cmdline;
+}
 
 // ------------------------------------------------------------------------
 
@@ -100,10 +154,11 @@ struct win32_setup
 //! \pre \a setup.m_startupinfo cannot have the \a STARTF_USESTDHANDLES set
 //!      in the \a dwFlags field.
 //!
-template< class Command_Line >
+template< class Executable, class Arguments >
 inline
 PROCESS_INFORMATION
-win32_start(const Command_Line& cl,
+win32_start(const Executable& exe,
+            const Arguments& args,
             const environment& env,
             stream_info& infoin,
             stream_info& infoout,
@@ -194,10 +249,8 @@ win32_start(const Command_Line& cl,
     PROCESS_INFORMATION pi;
     ::ZeroMemory(&pi, sizeof(pi));
 
-    boost::shared_array< TCHAR > cmdline =
-        command_line_to_win32_cmdline(cl);
-    boost::scoped_array< TCHAR > executable
-        (::_tcsdup(TEXT(cl.get_executable().c_str())));
+    boost::shared_array< TCHAR > cmdline = collection_to_win32_cmdline(args);
+    boost::scoped_array< TCHAR > executable(::_tcsdup(TEXT(exe.c_str())));
     boost::scoped_array< TCHAR > workdir
         (::_tcsdup(TEXT(setup.m_work_directory.c_str())));
     boost::shared_array< TCHAR > envstrs = env.win32_strings();

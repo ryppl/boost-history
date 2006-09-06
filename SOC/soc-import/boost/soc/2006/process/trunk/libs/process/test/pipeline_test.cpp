@@ -28,17 +28,19 @@ class start
 {
 public:
     bp::children
-    operator()(bp::pipeline& p, const bp::command_line& cl,
+    operator()(bp::pipeline& p, const std::vector< std::string >& args,
                bool usein = false)
         const
     {
+        std::vector< std::string > dummy;
+        dummy.push_back("helpers");
+        dummy.push_back("stdin-to-stdout");
+
         bp::pipeline p2 = p;
-        bp::command_line dummy(get_helpers_path());
-        dummy.argument("stdin-to-stdout");
         if (usein)
-            p2.add(cl).add(dummy);
+            p2.add(get_helpers_path(), args).add(get_helpers_path(), dummy);
         else
-            p2.add(dummy).add(cl);
+            p2.add(get_helpers_path(), dummy).add(get_helpers_path(), args);
         return p2.start();
     }
 };
@@ -49,17 +51,22 @@ static
 void
 test_exit(const std::string& middle, int value)
 {
-    bp::command_line cl1(get_helpers_path());
-    cl1.argument("exit-success");
+    std::vector< std::string > args1;
+    args1.push_back("helpers");
+    args1.push_back("exit-success");
 
-    bp::command_line cl2(get_helpers_path());
-    cl2.argument(middle);
+    std::vector< std::string > args2;
+    args2.push_back("helpers");
+    args2.push_back(middle);
 
-    bp::command_line cl3(get_helpers_path());
-    cl3.argument("exit-success");
+    std::vector< std::string > args3;
+    args3.push_back("helpers");
+    args3.push_back("exit-success");
 
     bp::pipeline p;
-    p.add(cl1).add(cl2).add(cl3);
+    p.add(get_helpers_path(), args1);
+    p.add(get_helpers_path(), args2);
+    p.add(get_helpers_path(), args3);
     bp::children cs = p.start();
 
     BOOST_REQUIRE(cs.size() == 3);
@@ -93,16 +100,21 @@ static
 void
 test_simple(void)
 {
-    bp::command_line cl1(get_helpers_path());
-    cl1.argument("prefix").argument("proc1-");
+    std::vector< std::string > args1;
+    args1.push_back("helpers");
+    args1.push_back("prefix");
+    args1.push_back("proc1-");
 
-    bp::command_line cl2(get_helpers_path());
-    cl2.argument("prefix").argument("proc2-");
+    std::vector< std::string > args2;
+    args2.push_back("helpers");
+    args2.push_back("prefix");
+    args2.push_back("proc2-");
 
     bp::pipeline p;
     p.set_stdin_behavior(bp::redirect_stream);
     p.set_stdout_behavior(bp::redirect_stream);
-    p.add(cl1).add(cl2);
+    p.add(get_helpers_path(), args1);
+    p.add(get_helpers_path(), args2);
     bp::children cs = p.start();
 
     BOOST_REQUIRE(cs.size() == 2);
@@ -125,15 +137,20 @@ static
 void
 test_merge_first(void)
 {
-    bp::command_line cl1(get_helpers_path());
-    cl1.argument("echo-stdout-stderr").argument("message");
+    std::vector< std::string > args1;
+    args1.push_back("helpers");
+    args1.push_back("echo-stdout-stderr");
+    args1.push_back("message");
 
-    bp::command_line cl2(get_helpers_path());
-    cl2.argument("prefix").argument("second:");
+    std::vector< std::string > args2;
+    args2.push_back("helpers");
+    args2.push_back("prefix");
+    args2.push_back("second:");
 
     bp::pipeline p;
     p.set_stdout_behavior(bp::redirect_stream);
-    p.add(cl1, true).add(cl2);
+    p.add(get_helpers_path(), args1, true);
+    p.add(get_helpers_path(), args2);
     bp::children cs = p.start();
 
     BOOST_REQUIRE(cs.size() == 2);

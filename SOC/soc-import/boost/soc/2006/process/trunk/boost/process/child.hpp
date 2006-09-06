@@ -47,7 +47,7 @@ extern "C" {
 namespace boost {
 namespace process {
 
-template< class Command_Line > class basic_pipeline;
+template< class Executable, class Arguments > class basic_pipeline;
 class launcher;
 
 // ------------------------------------------------------------------------
@@ -180,7 +180,7 @@ protected:
           detail::file_handle fhstdin,
           detail::file_handle fhstdout,
           detail::file_handle fhstderr);
-    template< class Command_Line > friend class basic_pipeline;
+    template< class Executable, class Arguments > friend class basic_pipeline;
     friend class launcher;
 };
 

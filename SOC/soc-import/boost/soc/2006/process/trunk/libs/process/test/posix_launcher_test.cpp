@@ -16,7 +16,7 @@
 #   include <cstring>
 #   include <string>
 
-#   include <boost/process/command_line.hpp>
+#   include <boost/format.hpp>
 #   include <boost/process/posix_child.hpp>
 #   include <boost/process/posix_launcher.hpp>
 
@@ -38,11 +38,12 @@ class start
 {
 public:
     bp::posix_child
-    operator()(bp::posix_launcher& l, const bp::command_line& cl,
+    operator()(bp::posix_launcher& l,
+               const std::vector< std::string > args,
                bool usein = false)
         const
     {
-        return l.start(cl);
+        return l.start(get_helpers_path(), args);
     }
 };
 #endif
@@ -53,13 +54,14 @@ public:
 void
 test_input(void)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("stdin-to-stdout");
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("stdin-to-stdout");
 
     bp::posix_launcher l;
     l.set_input_behavior(STDIN_FILENO, bp::redirect_stream);
     l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
-    bp::posix_child c = l.start(cl);
+    bp::posix_child c = l.start(get_helpers_path(), args);
 
     bp::postream& os = c.get_input(STDIN_FILENO);
     bp::pistream& is = c.get_output(STDOUT_FILENO);
@@ -83,12 +85,15 @@ test_input(void)
 void
 check_output(int desc, const std::string& msg)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("posix-echo-one").argument(desc).argument(msg);
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("posix-echo-one");
+    args.push_back(boost::str(boost::format("%1%") % desc));
+    args.push_back(msg);
 
     bp::posix_launcher l;
     l.set_output_behavior(desc, bp::redirect_stream);
-    bp::posix_child c = l.start(cl);
+    bp::posix_child c = l.start(get_helpers_path(), args);
 
     bp::pistream& is = c.get_output(desc);
     std::string word;
@@ -123,14 +128,17 @@ test_output(void)
 void
 check_merge(int desc1, int desc2, const std::string& msg)
 {
-    bp::command_line cl(get_helpers_path());
-    cl.argument("posix-echo-two").argument(desc1).argument(desc2);
-    cl.argument(msg);
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("posix-echo-two");
+    args.push_back(boost::str(boost::format("%1%") % desc1));
+    args.push_back(boost::str(boost::format("%1%") % desc2));
+    args.push_back(msg);
 
     bp::posix_launcher l;
     l.set_output_behavior(desc1, bp::redirect_stream);
     l.merge_outputs(desc2, desc1);
-    bp::posix_child c = l.start(cl);
+    bp::posix_child c = l.start(get_helpers_path(), args);
 
     bp::pistream& is = c.get_output(desc1);
     int dtmp;

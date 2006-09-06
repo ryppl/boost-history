@@ -34,6 +34,11 @@
 * Fixed build with Visual C++ compilers older than 8.0 that do not provide
   the `strcpy_s` and similar safe functions.
 
+* Removed the `command_line` class.  The user now specifies the executable
+  path and its arguments separately, using any classes he wants (such as
+  a standard string and a STL container).  This removes some black-box
+  magic.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]
@@ -74,19 +79,12 @@ consideration to decide the best way to solve them.
 
 * Abstract `cstdlib`'s `EXIT_SUCCESS` and `EXIT_FAILURE`.
 
-* Rename `command_line::argument` method; and add `operator<<`?
-
 * Make `launcher::start` a free function.  Need to rename `launcher` to
   `context`.
 
 * Make `child::wait` return a constant object.
 
 * Make `status`' constructor private.
-
-* Remove `command_line::get_arguments`.
-
-* Separate the executable from the `command_line` class into its own
-  object.
 
 * Allow to retrieve a handle for the current process.  Need to reintroduce
   the `process` class being a parent of `child` and correct the use of
@@ -104,9 +102,6 @@ consideration to decide the best way to solve them.
 * Add some diagrams to illustrate interprocess communication.
 
 * Shorten "Motivation" section?
-
-* `command_line`'s constructor: rename `firstarg` parameter to avoid
-  confusion with subsequent parameters.
 
 * When process identifiers are fixed under Win32, document that process
   identifiers are integral types.
