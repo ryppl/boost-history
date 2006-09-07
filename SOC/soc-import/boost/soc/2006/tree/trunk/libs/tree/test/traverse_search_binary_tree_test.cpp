@@ -43,7 +43,7 @@
 
 #include <boost/test/minimal.hpp>
 
-#include "test_data.hpp"
+#include "helpers.hpp"
 
 using boost::tree::binary_tree;
 using boost::tree::searcher;

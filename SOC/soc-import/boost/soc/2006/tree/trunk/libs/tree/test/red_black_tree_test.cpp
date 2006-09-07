@@ -32,7 +32,7 @@
 
 #include <boost/tree/searcher.hpp>
 
-#include "test_data.hpp"
+#include "helpers.hpp"
 
 #include <boost/test/minimal.hpp>
 
