@@ -52,16 +52,21 @@ void test_plain_binary_tree()
 	
 	c = mytree.root();
 
-	BOOST_CHECK(!c.empty());
+	BOOST_CHECK(c.empty());
+	BOOST_CHECK(c.is_root());
 	
 	c1 = mytree.insert(c, 1);
 	BOOST_CHECK(*c1 == 1);
-	BOOST_CHECK(c.empty());
-	//BOOST_CHECK(c1.parent() == c); //FIXME.
-
+	BOOST_CHECK(!c1.is_root());
+	
+	BOOST_CHECK(!c.empty());
+	BOOST_CHECK(c.is_root());
+	
+	BOOST_CHECK(c1.parent() == c);
+	
 	c2 = mytree.insert(c1, 2);
-	BOOST_CHECK(c.empty());
-	BOOST_CHECK(!c2.empty());
+	BOOST_CHECK(!c.empty());
+	BOOST_CHECK(c2.empty());
 	BOOST_CHECK(*c1 == 1);
 	BOOST_CHECK(*c2 == 2);
 	*c1 = 14;
@@ -87,10 +92,9 @@ void test_plain_binary_tree()
 	BOOST_CHECK(c4.parent() == c1);
 	c = boost::tree::lower_bound(mytree.root(), mytree.shoot(), 2, std::less<int>());
 	BOOST_CHECK(*c == 2);
-	BOOST_CHECK(!c4.empty());
+	BOOST_CHECK(c4.empty());
 
-	mytree.clear();
-		
+	mytree.clear();	
 }
 
 

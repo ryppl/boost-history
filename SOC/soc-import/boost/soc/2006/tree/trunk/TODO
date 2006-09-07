@@ -1,23 +1,2 @@
 Implement associative containers and priority_queue specialization using searcher
-
-Should inorder etc. be freestanding functions? Hierarchy shouldn't really require them, right?
-
-Short-term TODO:
-
--implement sibling_iter::insert, some c/dtors and what else is required for a minimum test of forest's basic 
-functionality (dysfunctional as of yet...),
--add other iterator types plus specialization for forest
--add node implementation that uses (std-)container for children
--add binary positional objects...
-.
-.
-.
-
-One of the next things to do is implement a prototypical "sequential preorder"
-memory represented tree (cf. TAOCP1). This requires a special kind of node;
-and a "sequential memory representation", of course, which means an array or
-vector saving some memory otherwise required for e.g. next_sibling links.
-The tricky part is if we can get this done by just designing a neat kind 
-of allocator, how exactly tree::root must look like in order for this and 
-other representations to work and what components must know about what other
-ones (especally concerning insertion operations -- node_type, alloc_type etc.)
+Implement (binary) heap

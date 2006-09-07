@@ -50,6 +50,7 @@ namespace tree {
 namespace detail {
 
 
+
 struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 {
 	typedef binary_node_base* base_pointer;
@@ -91,45 +92,45 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 		return child[1];
 	}
 	
-	base_pointer& parent()
+	base_pointer parent()
 	{
 		return m_parent;
 	}
 	
-	base_pointer const & parent() const
+	base_pointer const parent() const
 	{
 		return m_parent;
 	}
 	
 	bool const empty() const
 	{
-		return ((this != nil()) && (this != this->m_parent));
+		return ((this == nil())); // && (this != this->m_parent));
+		//return ((this != nil()) && (this != this->m_parent));
 	}
 	
 	
 	// The following adapted from the Austern et al. paper. Needs revisit bad
 	// This should be wrapped by cursor!
-	void rotate() // TODO: get parity parameter
+	size_type rotate(size_type const& c)
 	{
 		//TODO: Optimise.
 		//split up into even more atomic parts? probably not
-		size_type c = (m_parent->child[0] == this ? 0 : 1);
-		base_pointer p = m_parent;
+		base_pointer q = this->child[c];
 		
-		base_pointer B = child[c ? 0 : 1];
-		
-		//pre_rotate;
+		base_pointer B = this->child[c]->child[c ? 0 : 1];
+		//pre_rotate();
 		
 		//B swaps places with its m_parent:
-		p->child[c] = B;
-		B->m_parent = p;
-		//B->parity = m_pos;
-		this->m_parent = p->m_parent;
-		size_type qp = (this->m_parent->child[0] == this ? 0 : 1);
-		
-		this->m_parent->child[qp] = this;
-		p->m_parent = this;
-		this->child[c ? 0 : 1] = p;
+
+		this->child[c] = B;
+		B->m_parent = this;
+		q->m_parent = this->m_parent;
+
+		size_type qp = get_parity();
+		q->m_parent->child[qp] = q;
+		this->m_parent = q;
+		q->child[c ? 0 : 1] = this;
+		return qp;
 	}
 	
 	
@@ -161,12 +162,16 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 		return x;
 	}
 	
+	size_type const get_parity() const
+	{
+		return (this->m_parent->child[0] == this ? 0 : 1);
+	}
 };
 
 
 template <typename T, class Augment = trivial_augment, class BalanceData = trivial_metadata>
 class binary_node
-: public binary_node_base, public Augment, public BalanceData {
+: public binary_node_base /*, public Augment, public BalanceData */ {
  public:
  	typedef T value_type;
 	typedef Augment augmentor;
@@ -186,28 +191,30 @@ class binary_node
 	 //enum size_t { first = 0, second = 1 };
 	typedef std::size_t size_type;
 	
+	struct metadata_type : public augmentor, public balancer_data {};
+	
 	// TODO: add observers.
 
 	pointer&		value() { return m_data; }
 	reference	operator*() { return *m_data; } 
 	
-	binary_node(pointer data) : binary_node_base(), m_data(data), m_size(1)  {}
+	binary_node(pointer data) : binary_node_base(), m_data(data)/*, m_size(1)*/  {}
 		
 	//move the following to node_base, then wrap around them?
-	size_type size()
-	{
-		return m_size;
-	}
+//	size_type size()
+//	{
+//		return m_size;
+//	}
 	
 	size_type max_size()
 	{
 		return 1;
 	}
 
-	bool empty()
-	{
-		return m_size;
-	}
+//	bool empty()
+//	{
+//		return m_size;
+//	}
 
 	//bool full?
 
@@ -215,12 +222,18 @@ class binary_node
 	{
 		return m_data;
 	}
-		
+	
+	metadata_type& metadata()
+	{
+		return m_meta;
+	}
+	
 	//call "do"rotate, splice (and pre_rotate, pre_splice) from rotate, splice.
 
  private:
 	pointer m_data;
-	size_type m_size;
+	metadata_type m_meta;
+	//size_type m_size;
 };
 
 } // namespace detail

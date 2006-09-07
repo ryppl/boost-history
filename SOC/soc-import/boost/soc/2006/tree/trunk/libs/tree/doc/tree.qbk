@@ -93,10 +93,13 @@ hierarchies or xml files).
 
 [section Download]
 
-Currently, this library is only available via [@http://subversion.tigris.org/ svn] from 
+This library's current state is only available via [@http://subversion.tigris.org/ svn] from 
 Boost's Google Summer of Code 2006 repository at
 [@https://www.boost-consulting.com:8443/svn/main/boost/soc/2006]. The source code can be 
-browsed online at [@https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree].
+browsed online at [@https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree]. \n
+A [@http://boost-consulting.com/vault/index.php?action=downloadfile&filename=tree-soc2006.zip&directory=Containers& snapshot]
+ of the final GSoC 2006 state (kindly provided by René Rivera) can be found at the 
+[@http://boost-consulting.com/vault/ Boost Vault].
 
 [endsect] [/Download]
 

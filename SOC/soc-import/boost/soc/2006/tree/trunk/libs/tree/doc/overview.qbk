@@ -62,16 +62,19 @@ values.)
 
 [section Scope]
 Due to the nature of the fields of interest concerning trees (as opposed to their graph superset) in 
-computer science as well as the underlying technique, we implicitly mean ['acyclic...] when we're
+computer science as well as the underlying technique, we implicitly mean a ['rooted ordered connected 
+acyclic graph] when we're
 talking about trees in the following.
 
 This includes, but is not limited to
+
 * Binary search trees; most notably, self-balancing ones, such as
 	* Red-black trees
 * B-trees
 * Ternary search trees
 * Forests, i.e. trees that aren't primarily used for searching but for mapping a hierarchical strucutre.
 ...
+
 [endsect] [/ Scope]
 
 

@@ -44,6 +44,7 @@ test-suite tree :
 	[ run plain_binary_tree_test.cpp ]
 	[ run key_search_binary_tree_test.cpp ]	
 	[ run traverse_search_binary_tree_test.cpp ]
+	[ run rotate_binary_tree_test.cpp ]
 	
 	[ run string_search_binary_tree_test.cpp ]
 #	[ run interval_search_binary_tree_test.cpp ]
@@ -55,6 +56,7 @@ test-suite tree :
 	]
 
 
-#	[ run red_black_tree_test.cpp ]
+	[ run red_black_tree_test.cpp ]
+	[ run treap_test.cpp ]
 	
 	;

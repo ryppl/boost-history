@@ -37,8 +37,11 @@ if ! $(BOOST_ROOT)
 doxygen autodoc
 	:
 		[ glob ../../../boost/tree/*.hpp ]
+		[ glob ../../../boost/tree/augmentors/*.hpp ]
 		[ glob ../../../boost/tree/balancers/*.hpp ]
-		[ glob ../../../boost/tree/searchers/*.hpp ]
+		[ glob ../../../boost/tree/comparators/*.hpp ]
+		[ glob ../../../boost/tree/detail/cursor/*.hpp ]
+		[ glob ../../../boost/tree/detail/node/*.hpp ]
 	:
 		<doxygen:param>"PREDEFINED=\"BOOST_PROCESS_DOXYGEN\""
 		<xsl:param>boost.doxygen.detailns=documenteverything
@@ -56,7 +59,7 @@ boostbook standalone
 		<dependency>autodoc
 		<xsl:param>boost.libraries=$(BOOST_ROOT)/libs/libraries.htm
 		<xsl:param>boost.root=../../../../
-		<xsl:param>doc.standalone=2
+		<xsl:param>doc.standalone=1
 		<xsl:param>nav.layout=none
 		<xsl:param>toc.section.depth=2
 		<xsl:param>section.autolabel=1

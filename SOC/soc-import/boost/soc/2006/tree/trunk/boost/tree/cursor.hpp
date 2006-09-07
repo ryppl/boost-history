@@ -75,6 +75,11 @@ struct cursor_arity {
 	typedef typename Cursor::arity type;
 };
 
+template <class Cursor>
+struct cursor_vertical_traversal {
+	typedef typename Cursor::vertical_traversal_type type;
+};
+
 //define freestanding begin, end, size, empty using node's member fns?
 
 } // namespace tree

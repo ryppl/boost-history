@@ -31,7 +31,6 @@
  * Binary tree implementation
  */
 
-// TODO: Switch root/shoot (so begin() and inorder work properly?)
 
 #ifndef BOOST_TREE_BINARY_TREE_HPP
 #define BOOST_TREE_BINARY_TREE_HPP
@@ -173,6 +172,22 @@ class binary_tree {
 							m_header.m_parent == &m_header ? 0 : 1);
 	}
 	
+	/**
+	 * Returns a read/write ("mutable") cursor to the first (inorder) value.
+	 */ 	 
+	cursor inorder_first()
+	{
+		return cursor(m_header.child[1], 0);
+	}
+	
+	/**
+	 * Returns a read-only const_cursor to the first (inorder) value.
+	 */ 	 
+	const_cursor inorder_first() const
+	{
+		return const_cursor(m_header.child[1], 0);
+	}
+	
 	/// Functions returning (inorder) iterators (as required by the Sequence
 	/// concept)
 	
@@ -181,7 +196,7 @@ class binary_tree {
 	 */ 	 
 	iterator begin()
 	{
-		return iterator(cursor(m_header.child[1], 0));
+		return iterator(inorder_first());
 	}
 	
 	/**
@@ -197,7 +212,7 @@ class binary_tree {
 	 */ 	 
 	const_iterator cbegin() const
 	{
-		return const_iterator(const_cursor(m_header.child[1], 0));
+		return const_iterator(inorder_first());
 	}
 
 	/**
@@ -353,7 +368,7 @@ struct sortable_traits <class binary_tree<Node, Balance, ValAlloc, NodeAlloc> >
 template <class Node>
 bool empty(tree_cursor<Node> cur)
 {
-	return cur.empty();
+	return !cur.empty();
 }
 
 template <class Node, class Balance, class ValAlloc, class NodeAlloc>
@@ -363,6 +378,49 @@ typename sortable_traits<binary_tree<Node, Balance, ValAlloc, NodeAlloc> >::cont
 	return t.root();
 }
 
+namespace inorder {
+
+/**
+ * @brief	First element of a MultiwayTree in inorder traversal
+ * 			(equivalent to postorder::first()) - O(1) overload for binary_tree
+ * @param t	A binary_tree
+ * @return	Mutable cursor to the first element of @a t in inorder traversal
+ */
+template <class T, class Balance, class Augment, class ValAlloc, class NodeAlloc>
+typename binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc>::cursor 
+first(binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc>& t)
+{
+	return t.inorder_first();
+}
+
+/**
+ * @brief	First element of a MultiwayTree in inorder traversal
+ * 			(Alias of cfirst(); equivalent to postorder::first()) -
+ * 			O(1) overload for binary_tree
+ * @param t	A binary_tree
+ * @return	Read-only cursor to the first element of @a t in inorder traversal
+ */
+template <class T, class Balance, class Augment, class ValAlloc, class NodeAlloc>
+typename binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc>::const_cursor 
+first(binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc>& t)
+{
+	return t.inorder_first();
+}
+
+/**
+ * @brief	First element of a MultiwayTree in inorder traversal
+ * 			(equivalent to postorder::first()) - O(1) overload for binary_tree
+ * @param t	A binary_tree
+ * @return	Read-only cursor to the first element of @a t in inorder traversal
+ */
+template <class T, class Balance, class Augment, class ValAlloc, class NodeAlloc>
+typename binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc>::const_cursor 
+cfirst(binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc>& t)
+{
+	return t.inorder_first();
+}
+
+} // namespace inorder
 
 } // namespace tree
 } // namespace boost

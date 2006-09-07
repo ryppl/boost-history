@@ -49,7 +49,6 @@
 #include <boost/tree/detail/range_helpers.hpp>
 
 #include <boost/bind.hpp>
-#include <boost/function.hpp>
 #include <boost/type_traits.hpp>
 
 #include <boost/multi_index/identity.hpp> //remove
@@ -57,8 +56,6 @@
 #include <algorithm>	
 #include <functional>
 
-
-using boost::function;
 using boost::multi_index::identity; //remove
 
 namespace boost {
@@ -169,8 +166,8 @@ key_lower_bound(tree_cursor<Node> c, typename Extract::result_type key,
 {
 	       bool end_flag = false;
 	       typedef tree_cursor<Node> cursor;
-	       while (empty(c))
-	        {
+	       while (!c.empty())
+	       {
 	                Compare cmp = compare;
 	                cursor p = c;
 					c = binary_lower_bound(p.begin(), p.end(), key, //FIXME: use node_search instead.
@@ -315,7 +312,8 @@ class searcher {};
 //derive both specializations from common base modelling only 
 //SortedAssociativeContainer
 
-/** @brief Unique %searcher specialization
+/** 
+ * @brief Unique %searcher specialization
  * 
  * This class models the 
  * \link http://www.sgi.com/tech/stl/UniqueSortedAssociativeContainer.html

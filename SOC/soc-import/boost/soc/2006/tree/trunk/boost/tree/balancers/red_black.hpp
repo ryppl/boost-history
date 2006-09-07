@@ -81,26 +81,26 @@ public:
 	template <class Cursor>
 	static void add(Cursor x, Cursor header) 
 	{
-		x.node()->set_color(red);
-		while (x.parent().node()->get_color() == red) {
+		x.metadata().set_color(red);
+		while (x.parent().metadata().get_color() == red) {
 			Cursor y = x.parent();
 			y = (y == y.parent().begin() ? y.parent().end() : y.parent().begin());
-			if (y.node()->get_color() == red) {
-				x.parent().node()->set_color(black);
-				x.parent().parent().node()->set_color(red);
-				y.node()->set_color(black);
+			if (y.metadata().get_color() == red) {
+				x.parent().metadata().set_color(black);
+				x.parent().parent().metadata().set_color(red);
+				y.metadata().set_color(black);
 				x = x.parent().parent();
 			} else {
 				if (x.parity() != x.parent().parity()) {
-					x.node()->rotate();
+					x.rotate();
 					x = (x.parity() ? x.end() : x.begin());
 				}
-			x.parent().node()->set_color(black);
-			x.parent().parent().node()->set_color(red);
-			x.parent().node()->rotate();
+			x.parent().metadata().set_color(black);
+			x.parent().parent().metadata().set_color(red);
+			x.parent().rotate();
 			}
 		if (x.parent() == header)
-			x.node()->set_color(black);
+			x.metadata().set_color(black);
 		}
 	}
 	  

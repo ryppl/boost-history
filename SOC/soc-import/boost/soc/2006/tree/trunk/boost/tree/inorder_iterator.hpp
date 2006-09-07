@@ -38,43 +38,54 @@
 
 
 #include <boost/tree/inorder.hpp>
+#include <boost/tree/cursor.hpp>
 
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
+#include <stack>
+
+
+using std::stack;
 
 namespace boost {
 namespace tree {
 	
 namespace inorder {
 
+template <class Cursor, class Tag = typename cursor_vertical_traversal<Cursor>::type>
+class iterator {};
+
 template <class Cursor>
-class iterator
- : public boost::iterator_adaptor<iterator<Cursor>
-      , Cursor
-      , boost::use_default
-      , boost::bidirectional_traversal_tag
+class iterator<Cursor, forward_traversal_tag>
+ : public boost::iterator_facade<iterator<Cursor, forward_traversal_tag>
+      , typename Cursor::value_type
+      , bidirectional_traversal_tag
     > {
- private:
-    struct enabler {};
+// private:
+//    struct enabler {};
 
  public:
-    iterator()
-      : iterator::iterator_adaptor_() {}
+    iterator() {}
+//      : iterator::iterator_adaptor_() {}
 
-    explicit iterator(Cursor p)
-      : iterator::iterator_adaptor_(p) {}
+    explicit iterator(stack<Cursor> s) //, bool right = s.size()) // = s.size() 
+    		: m_s(s), m_right() {}
+//      : iterator::iterator_adaptor_(p) {}
 
-    template <class OtherCursor>
-    iterator(
-        iterator<OtherCursor> const& other
-      , typename boost::enable_if<
-            boost::is_convertible<OtherCursor,Cursor >
-          , enabler
-        >::type = enabler()
-    )
-      : iterator::iterator_adaptor_(other.base()) {}
+    explicit iterator(stack<Cursor> s, bool right)
+    		: m_s(s), m_right(right) {}
+
+//    template <class OtherCursor>
+//    iterator(
+//        iterator<OtherCursor> const& other
+//      , typename boost::enable_if<
+//            boost::is_convertible<OtherCursor,Cursor >
+//          , enabler
+//        >::type = enabler()
+//    )
+//      : iterator::iterator_adaptor_(other.base()) {}
 
 	operator Cursor()
 	{
@@ -82,17 +93,165 @@ class iterator
 	}
  private:
     friend class boost::iterator_core_access;
+
+ 	stack<Cursor> m_s;
+ 	typename Cursor::size_type m_right;
+    
+    typename Cursor::value_type& dereference() const
+    {
+    		return *m_s.top();
+    	}
     
     void increment()
     {
-		inorder::forward(this->base_reference());
+		//forward(this->base_reference());
+		if (!(++m_s.top()).empty()) {
+			while (!m_s.top().begin().empty()) {
+				m_s.push(m_s.top().begin());
+			}
+			m_s.push(m_s.top().begin());
+			return;
+		}
+		
+		while (m_s.top().parity()) 
+			m_s.pop(); 
+
+	// ...
+		return;
     }
     
     void decrement()
     {
-    		inorder::back(this->base_reference());
+    		back(this->base_reference());
     }
 };
+
+#include <boost/tree/detail/iterator/bidirectional.hpp>
+
+template <class MultiwayTree>
+iterator<typename MultiwayTree::cursor, forward_traversal_tag> 
+begin(MultiwayTree& t, forward_traversal_tag)
+{
+	typedef typename MultiwayTree::cursor cursor;
+	std::stack<cursor> s;
+	cursor c = t.root();
+	s.push(c);
+	while (!c.empty()) {
+		c = c.begin();
+		s.push(c);
+	}
+	return iterator<cursor, forward_traversal_tag>(s);
+}
+
+template <class MultiwayTree>
+iterator<typename MultiwayTree::cursor> 
+begin(MultiwayTree& t, bidirectional_traversal_tag)
+{
+	return iterator<typename MultiwayTree::cursor>(first(t));
+}
+
+/**
+ * @brief	First element of a MultiwayTree in inorder traversal
+ * 			(equivalent to postorder::begin())
+ * @param t	A MultiwayTree
+ * @return	Mutable inorder iterator to the first element of @a t
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::cursor> begin(MultiwayTree& t)
+{
+	typedef typename cursor_vertical_traversal<typename MultiwayTree::cursor>::type
+		traversal;
+	return begin(t, traversal());
+}
+
+/**
+ * @brief	First element of a MultiwayTree in inorder traversal
+ * 			(Alias of cbegin(); equivalent to postorder::begin())
+ * @param t	A MultiwayTree
+ * @return	Read-only inorder iterator to the first element of @a t
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor> begin(MultiwayTree const& t)
+{
+	return cbegin(t);
+}
+
+
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor>
+cbegin(MultiwayTree const& t, bidirectional_traversal_tag)
+{
+	return iterator<typename MultiwayTree::const_cursor>(cfirst(t));
+}
+
+/**
+ * @brief	First element of a MultiwayTree in inorder traversal
+ * 			(equivalent to postorder::begin())
+ * @param t	A MultiwayTree
+ * @return	Read-only inorder iterator to the first element of @a t
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor> cbegin(MultiwayTree const& t)
+{
+	typedef typename cursor_vertical_traversal<
+		typename MultiwayTree::const_cursor>::type traversal;
+	return cbegin(t, traversal());
+}
+
+
+template <class MultiwayTree>
+iterator<typename MultiwayTree::cursor>
+end(MultiwayTree const& t, bidirectional_traversal_tag)
+{
+	return iterator<typename MultiwayTree::cursor>(last(t));
+}
+
+/**
+ * @brief	One position past the last element of a MultiwayTree 
+ * 			in inorder traversal (Alias of cend())
+ * @param t	A MultiwayTree
+ * @return	Mutable inorder iterator one position past the last element of @a t 
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::cursor> end(MultiwayTree& t)
+{
+	typedef typename cursor_vertical_traversal<typename MultiwayTree::cursor>::type
+		traversal;
+	return end(t, traversal());
+}
+
+/**
+ * @brief	One position past the last element of a MultiwayTree 
+ * 			in inorder traversal (Alias of cend())
+ * @param t	A MultiwayTree
+ * @return	Read-only inorder iterator one position past the last element of @a t 
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor> end(MultiwayTree const& t)
+{
+	return cend(t);
+}
+
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor>
+cend(MultiwayTree const& t, bidirectional_traversal_tag)
+{
+	return iterator<typename MultiwayTree::const_cursor>(clast(t));
+}
+
+/**
+ * @brief	One position past the last element of a MultiwayTree 
+ * 			in inorder traversal
+ * @param t	A MultiwayTree
+ * @return	Read-only inorder iterator one position past the last element of @a t 
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor> cend(MultiwayTree const& t)
+{
+	typedef typename cursor_vertical_traversal<
+		typename MultiwayTree::const_cursor>::type traversal;
+	return cend(t, traversal());
+}
 
 } // namespace inorder
 

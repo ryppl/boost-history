@@ -64,7 +64,7 @@ template<class T, class Augment, class Balance>
 class const_tree_cursor<binary_node<T, Augment, Balance> > 
  : public boost::iterator_facade<const_tree_cursor<binary_node<T, Augment, Balance> >
       , T const //const is a hint for iterator_facade!
-      , boost::random_access_traversal_tag
+      , random_access_traversal_tag
     > {
  private:
     struct enabler {};
@@ -89,10 +89,14 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
  	typedef tree_cursor<binary_node<T, Augment, Balance> > cursor;
  	typedef const_tree_cursor<binary_node<T, Augment, Balance> > const_cursor;
 
+	typedef bidirectional_traversal_tag vertical_traversal_type;
+	
+	typedef typename node_type::metadata_type metadata_type;
+	
 	// Container-specific:
 	typedef cursor iterator;  // For (range) concepts' sake, mainly
 	typedef const_cursor const_iterator;
- 
+	
  	// Common iterator facade stuff
     const_tree_cursor()
      : m_parent(0), m_pos(0) {}
@@ -141,14 +145,14 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
     }
     
     void advance(typename iterator_facade<const_tree_cursor, const T, 
-					boost::random_access_traversal_tag, const T&, 
+					random_access_traversal_tag, const T&, 
 					int>::difference_type n)
     {
     		m_pos += n;
     }
     
     typename iterator_facade<const_tree_cursor, const T, 
-    	boost::random_access_traversal_tag, const T&, int>::difference_type
+    	random_access_traversal_tag, const T&, int>::difference_type
     distance_to(const_tree_cursor z) const //TODO: convertible to instead of const_tree_cursor (?)
     {
     		return (z.m_pos - this->m_pos);
@@ -167,29 +171,23 @@ public:
 	}
 	
 	// TODO (following couple of functions): wrap around node member fn
-	const_tree_cursor begin() const
+	const_cursor begin() const
 	{
-		return const_tree_cursor(m_parent->child[m_pos], 0); 
+		return const_cursor(m_parent->child[m_pos], 0); 
 	}
 		
-	const_tree_cursor end() const
+	const_cursor end() const
 	{
-		return const_tree_cursor(m_parent->child[m_pos], 1);
+		return const_cursor(m_parent->child[m_pos], 1);
 	}
 	
 	// Cursor stuff. 
 	
-	const_tree_cursor parent() const
+	const_cursor parent() const
 	{
-		return const_tree_cursor(m_parent->parent(), 
-			m_parent->parent()->child[0] == m_parent ? 0 : 1);
+		return const_cursor(m_parent->parent(), m_parent->get_parity());
 	}
-	
-	node_pointer node() // really? certainly not public
-	{
-		return static_cast<node_pointer>(m_parent->child[m_pos]);
-	}
-	
+		
 	size_type const parity() const
 	{
 		return m_pos;
@@ -200,13 +198,22 @@ public:
 		return m_parent->child[m_pos]->empty();
 	}
 	
+//	node_pointer node() // really? certainly not public
+//	{
+//		return static_cast<node_pointer>(m_parent->child[m_pos]);
+//	}
+	
+	metadata_type const& metadata() const
+	{
+		return static_cast<node_pointer>(m_parent->child[m_pos])->metadata();
+	}
 };
 
 template<class T, class Augment, class Balance> 
 class tree_cursor<binary_node<T, Augment, Balance> > 
  : public boost::iterator_facade<tree_cursor<binary_node<T, Augment, Balance> >
       , T
-      , boost::random_access_traversal_tag
+      , random_access_traversal_tag
     > {
  private:
   	typedef typename binary_node<T, Augment, Balance>::base_pointer base_pointer;
@@ -225,11 +232,15 @@ class tree_cursor<binary_node<T, Augment, Balance> >
  	typedef tree_cursor<binary_node<T, Augment, Balance> > cursor;
  	typedef const_tree_cursor<binary_node<T, Augment, Balance> > const_cursor;
 
+	typedef bidirectional_traversal_tag vertical_traversal_type;
+ 
+ 	typedef typename node_type::metadata_type metadata_type;
+ 	
 	// Container-specific:
 	typedef cursor iterator;
 	typedef const_cursor const_iterator;
 
- 
+
     tree_cursor()
       : m_parent(0), m_pos(0) {}
 
@@ -273,14 +284,14 @@ class tree_cursor<binary_node<T, Augment, Balance> >
     }    
     
 	void advance(typename iterator_facade<tree_cursor, const T, 
-					boost::random_access_traversal_tag, const T&, 
+					random_access_traversal_tag, const T&, 
 					int>::difference_type n)
     {
     		m_pos += n;
     }
     
     typename iterator_facade<tree_cursor, const T, 
-    		boost::random_access_traversal_tag, const T&, int>::difference_type
+    		random_access_traversal_tag, const T&, int>::difference_type
     distance_to(tree_cursor z) const //FIXME: convertible to instead of const_tree_cursor
     {
     		return (z.m_pos - this->m_pos);
@@ -298,37 +309,35 @@ public:
 		return 1;
 	}
 	
-	tree_cursor<binary_node<T, Augment, Balance> > begin()
+	cursor begin()
 	{
-		return tree_cursor(m_parent->child[m_pos], 0);
+		return cursor(m_parent->child[m_pos], 0);
 	}
 	
-	const_tree_cursor<binary_node<T, Augment, Balance> > begin() const
+	const_cursor begin() const
 	{
-		return const_tree_cursor<binary_node<T, Augment, Balance> >(m_parent->child[m_pos], 0); //make a node.begin()
+		return const_cursor(m_parent->child[m_pos], 0); //make a node.begin()
 	}
 		
-	tree_cursor<binary_node<T, Augment, Balance> > end()
+	cursor end()
 	{
-		return tree_cursor(m_parent->child[m_pos], 1);
+		return cursor(m_parent->child[m_pos], 1);
 	}
 
-	const_tree_cursor<binary_node<T, Augment, Balance> > end() const
+	const_cursor end() const
 	{
-		return const_tree_cursor<binary_node<T, Augment, Balance> >(m_parent->child[m_pos], 1);
+		return const_cursor(m_parent->child[m_pos], 1);
 	}
 	
 	// Cursor stuff
-	tree_cursor<binary_node<T, Augment, Balance> > parent()
+	cursor parent()
 	{
-		return tree_cursor(m_parent->parent(), 
-			m_parent->parent()->child[0] == m_parent ? 0 : 1);
+		return cursor(m_parent->parent(), m_parent->get_parity());
 	}
 	
-	const_tree_cursor<binary_node<T, Augment, Balance> > parent() const
+	const_cursor parent() const
 	{
-		return tree_cursor(m_parent->parent(), 
-			m_parent->parent()->child[0] == m_parent ? 0 : 1);
+		return const_cursor(m_parent->parent(), m_parent->get_parity());
 	}
 	
 	node_pointer node() 
@@ -340,18 +349,41 @@ public:
 	{
 		return m_pos;
 	}
-	
-	void add_node(node_pointer p_node)
-	{
-		p_node->parent() = m_parent;
-		m_parent->child[m_pos] = p_node;
-	}
-	
+		
 	bool const empty() const
 	{
 		return m_parent->child[m_pos]->empty();
 	}
 	
+	bool const is_root() const
+	{
+		return ((m_parent->m_parent->child[0] != m_parent) 
+			 && (m_parent->m_parent->child[1] != m_parent))
+			 ||  m_parent->m_parent == m_parent->child[1]; // empty root
+	}
+	
+	void rotate()
+	{
+		m_pos = m_parent->rotate(m_pos);
+		m_parent = m_parent->m_parent->m_parent;
+	}
+	
+	void add_node(node_pointer p_node)
+	{
+		p_node->m_parent = m_parent;
+		m_parent->child[m_pos] = p_node;
+	}
+	
+	metadata_type const& metadata() const
+	{
+		return static_cast<node_pointer>(m_parent->child[m_pos])->metadata();
+	}
+	
+	metadata_type& metadata()
+	{
+		return const_cast<metadata_type&>
+			  (static_cast<cursor const*>(this)->metadata());
+	}
 };
 
 } // namespace detail

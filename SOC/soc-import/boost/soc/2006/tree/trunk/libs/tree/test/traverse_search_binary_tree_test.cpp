@@ -26,6 +26,13 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
+//TODO: Make this a test suite.
+//		Add iterator traversal tests - check if proper overloads (if present)
+//		are used.
+
+// TODO: get timings. that makes that no testcase anymore, right?
+//does boost have timers? what does the austern et al one look like?
+
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/searcher.hpp>
 
@@ -36,72 +43,11 @@
 
 #include <boost/test/minimal.hpp>
 
-//TODO: Make this a test suite.
+#include "test_data.hpp"
 
-//does boost have timers? what does the austern et al one look like?
-// TODO: get timings. that makes that no testcase anymore, right?
-
-// Test data from http://en.wikipedia.org/wiki/Image:Binary_search_tree.svg
-// (with root modified to carry 8 instead of 7, and with two additional nodes:
-// 11 inserted left of 13; 12 right of 11)
-// and in combination with http://en.wikipedia.org/wiki/Tree_traversal#Examples
-// (as tree shapes are equal [apart from the extra nodes])
-
-using boost::tree::searcher;
 using boost::tree::binary_tree;
-typedef searcher<false, binary_tree<int> > searcher_t;
-
-
-binary_tree<int> test_data_tree()
-{
-	binary_tree<int> ret;
-	binary_tree<int>::cursor cur = ret.insert(ret.shoot(), 8);
-	cur = ret.insert(cur, 3);
-	ret.insert(cur, 1);
-	cur = ret.insert(++cur, 6);
-	ret.insert(cur, 4);
-	ret.insert(++cur, 7);	
-	cur = ret.insert(ret.root().end(), 10);
-	cur = ret.insert(ret.root().end().end(), 14);	
-	cur = ret.insert(cur, 13);
-	cur = ret.insert(cur, 11);
-	cur = ret.insert(++cur, 12);
-
-	BOOST_CHECK(*(ret.root().begin()) == 8);
-	BOOST_CHECK(*(ret.root().begin().begin()) == 3);
-	BOOST_CHECK(*(ret.root().begin().begin().begin()) == 1);
-	BOOST_CHECK(*(ret.root().begin().end().begin()) == 6);		
-	BOOST_CHECK(*(ret.root().begin().end().begin().begin()) == 4);	
-	BOOST_CHECK(*(ret.root().begin().end().end().begin()) == 7);	
-
-	BOOST_CHECK(*(ret.root().end().begin()) == 10);
-	BOOST_CHECK(*(ret.root().end().end().begin()) == 14);
-	BOOST_CHECK(*(ret.root().end().end().begin().begin()) == 13);
-	BOOST_CHECK(*(ret.root().end().end().begin().begin().begin()) == 11);
-	BOOST_CHECK(*(ret.root().end().end().begin().begin().end().begin()) == 12);
-	
-	return ret;
-}
-
-searcher_t test_data_searcher()
-{
-	searcher_t my_tree;
-	
-	my_tree.insert(8);
-	my_tree.insert(10);
-	my_tree.insert(14);
-	my_tree.insert(13);
-	my_tree.insert(11);
-	my_tree.insert(12);
-
-	my_tree.insert(3);
-	my_tree.insert(1);
-	my_tree.insert(6);
-	my_tree.insert(4);
-	my_tree.insert(7);
-	
-	return my_tree;
-}
+using boost::tree::searcher;
+typedef test_searcher<false, binary_tree<int> > searcher_t;
 
 //std::vector<int> preorder_data()
 //{
@@ -120,7 +66,7 @@ searcher_t test_data_searcher()
 void test_inorder_traversal(binary_tree<int> const& the_tree)
 {	
 	using namespace boost::tree::inorder;
-	binary_tree<int>::const_cursor c = begin(the_tree);
+	binary_tree<int>::const_cursor c = first(the_tree);
 
 	BOOST_CHECK(*c == 1);
 	forward(c);
@@ -144,48 +90,14 @@ void test_inorder_traversal(binary_tree<int> const& the_tree)
 	forward(c);
 	BOOST_CHECK(*c == 14);
 	forward(c);
-	BOOST_CHECK(c == end(the_tree));
-}
-
-void test_inorder_iterator_traversal(searcher_t const& my_tree)
-{		
-	searcher_t::const_iterator ci = my_tree.begin(); 
-	BOOST_CHECK(*ci++ == 1);
-	BOOST_CHECK(*ci++ == 3);
-	BOOST_CHECK(*ci++ == 4);
-	BOOST_CHECK(*ci++ == 6);
-	BOOST_CHECK(*ci++ == 7);
-	BOOST_CHECK(*ci++ == 8);
-	BOOST_CHECK(*ci++ == 10);
-	BOOST_CHECK(*ci++ == 11);
-	BOOST_CHECK(*ci++ == 12);
-	BOOST_CHECK(*ci++ == 13);
-	BOOST_CHECK(*ci++ == 14);
-	BOOST_CHECK(ci == my_tree.end());
-}
-
-void test_reverse_inorder_iterator_traversal(searcher_t const& my_tree)
-{	
-	searcher_t::const_iterator ci = my_tree.end(); 
-	BOOST_CHECK(*--ci == 14);
-	BOOST_CHECK(*--ci == 13);
-	BOOST_CHECK(*--ci == 12);
-	BOOST_CHECK(*--ci == 11);
-	BOOST_CHECK(*--ci == 10);
-	BOOST_CHECK(*--ci == 8);
-	BOOST_CHECK(*--ci == 7);
-	BOOST_CHECK(*--ci == 6);
-	BOOST_CHECK(*--ci == 4);
-	BOOST_CHECK(*--ci == 3);
-	BOOST_CHECK(*--ci == 1);
-	BOOST_CHECK(ci == my_tree.begin());
+	BOOST_CHECK(c == last(the_tree));
 }
 
 void test_preorder_traversal(binary_tree<int> const& the_tree)
 {	
 	using namespace boost::tree::preorder;
 
-	binary_tree<int>::const_cursor ci = begin(the_tree); 
+	binary_tree<int>::const_cursor ci = first(the_tree); 
 	BOOST_CHECK(*ci == 8);
 	forward(ci);
 	BOOST_CHECK(*ci == 3);
@@ -208,14 +120,14 @@ void test_preorder_traversal(binary_tree<int> const& the_tree)
 	forward(ci);
 	BOOST_CHECK(*ci == 12);
 	forward(ci);
-	BOOST_CHECK(ci == end(the_tree));
+	BOOST_CHECK(ci == last(the_tree));
 }
 
 void test_reverse_preorder_traversal(binary_tree<int> const& the_tree)
 {	
 	using namespace boost::tree::preorder;
 
-	binary_tree<int>::const_cursor ci = end(the_tree); 
+	binary_tree<int>::const_cursor ci = last(the_tree); 
 	BOOST_CHECK(*ci == 12);
 	back(ci);
 	BOOST_CHECK(*ci == 11);
@@ -237,14 +149,14 @@ void test_reverse_preorder_traversal(binary_tree<int> const& the_tree)
 	BOOST_CHECK(*ci == 3);
 	back(ci);
 	BOOST_CHECK(*ci == 8);
-	BOOST_CHECK(ci == begin(the_tree));
+	BOOST_CHECK(ci == first(the_tree));
 }
 
 void test_postorder_traversal(binary_tree<int> const& the_tree)
 {	
 	using namespace boost::tree::postorder;
 
-	binary_tree<int>::const_cursor ci = begin(the_tree); 
+	binary_tree<int>::const_cursor ci = first(the_tree); 
 	BOOST_CHECK(*ci == 1);	
 	forward(ci);
 	BOOST_CHECK(*ci == 4);
@@ -267,14 +179,14 @@ void test_postorder_traversal(binary_tree<int> const& the_tree)
 	forward(ci);
 	BOOST_CHECK(*ci == 8);
 	forward(ci);
-	BOOST_CHECK(ci == end(the_tree));
+	BOOST_CHECK(ci == last(the_tree));
 }
 
 void test_reverse_postorder_traversal(binary_tree<int> const& the_tree)
 {	
 	using namespace boost::tree::postorder;
 
-	binary_tree<int>::const_cursor ci = end(the_tree); 
+	binary_tree<int>::const_cursor ci = last(the_tree); 
 	back(ci);
 	BOOST_CHECK(*ci == 8);	
 	back(ci);
@@ -297,13 +209,46 @@ void test_reverse_postorder_traversal(binary_tree<int> const& the_tree)
 	BOOST_CHECK(*ci == 4);
 	back(ci);
 	BOOST_CHECK(*ci == 1);
-	BOOST_CHECK(ci == begin(the_tree));
+	BOOST_CHECK(ci == first(the_tree));
+}
+
+// orphaned == no parent() links...
+// TODO: const parameter
+void test_orphaned_inorder_traversal(binary_tree<int>& the_tree)
+{	
+	boost::tree::inorder::iterator<binary_tree<int>::cursor, boost::forward_traversal_tag>
+		ci = boost::tree::inorder::begin(the_tree, boost::forward_traversal_tag());
+	BOOST_CHECK(*ci == 1);
+	++ci;
+	BOOST_CHECK(*ci == 3);
+	++ci;
+	BOOST_CHECK(*ci == 4);	
+	++ci;
+	BOOST_CHECK(*ci == 6);
+	++ci;
+	BOOST_CHECK(*ci == 7);
+	++ci;
+	BOOST_CHECK(*ci == 8);
+	++ci;
+	BOOST_CHECK(*ci == 10);
+	++ci;
+	BOOST_CHECK(*ci == 11);
+	++ci;
+	BOOST_CHECK(*ci == 12);
+	++ci;
+	BOOST_CHECK(*ci == 13);
+	++ci;
+	BOOST_CHECK(*ci == 14);
+	//++ci;
+	//BOOST_CHECK(ci == boost::tree::inorder::end(the_tree, boost::forward_traversal_tag()));
 }
 
 int test_main(int, char* [])
 {
-	searcher_t test_searcher = test_data_searcher();
-	binary_tree<int> test_tree = test_data_tree();
+	searcher_t test_searcher;
+	test_data_searcher(test_searcher);
+	binary_tree<int>& test_tree = test_searcher.container();
+	//test_data_tree(test_tree);
 	
 	test_inorder_traversal(test_tree);
 	
@@ -315,6 +260,9 @@ int test_main(int, char* [])
 	
 	test_postorder_traversal(test_tree);
 	test_reverse_postorder_traversal(test_tree);
+	
+	test_orphaned_inorder_traversal(test_tree);
+	
 	return 0;
 }
 

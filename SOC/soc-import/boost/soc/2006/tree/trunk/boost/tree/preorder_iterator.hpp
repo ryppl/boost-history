@@ -49,32 +49,34 @@ namespace tree {
 	
 namespace preorder {
 
+template <class Cursor, class Tag = typename cursor_vertical_traversal<Cursor>::type>
+class iterator {};
+
 template <class Cursor>
-class iterator
- : public boost::iterator_adaptor<iterator<Cursor>
-      , Cursor
-      , boost::use_default
-      , boost::bidirectional_traversal_tag
+class iterator<Cursor, forward_traversal_tag>
+ : public boost::iterator_facade<iterator<Cursor, forward_traversal_tag>
+      , typename Cursor::value_type
+      , bidirectional_traversal_tag
     > {
  private:
     struct enabler {};
 
  public:
-    iterator()
-      : iterator::iterator_adaptor_() {}
+    iterator() {}
+//      : iterator::iterator_adaptor_() {}
 
-    explicit iterator(Cursor p)
-      : iterator::iterator_adaptor_(p) {}
+    explicit iterator(Cursor p) {}
+//      : iterator::iterator_adaptor_(p) {}
 
-    template <class OtherCursor>
-    iterator(
-        iterator<OtherCursor> const& other
-      , typename boost::enable_if<
-            boost::is_convertible<OtherCursor,Cursor >
-          , enabler
-        >::type = enabler()
-    )
-      : iterator::iterator_adaptor_(other.base()) {}
+//    template <class OtherCursor>
+//    iterator(
+//        iterator<OtherCursor> const& other
+//      , typename boost::enable_if<
+//            boost::is_convertible<OtherCursor,Cursor >
+//          , enabler
+//        >::type = enabler()
+//    )
+//      : iterator::iterator_adaptor_(other.base()) {}
 
 	operator Cursor()
 	{
@@ -85,14 +87,87 @@ class iterator
     
     void increment()
     {
-		preorder::forward(this->base_reference());
+		forward(this->base_reference());
     }
     
     void decrement()
     {
-    		preorder::back(this->base_reference());
+    		back(this->base_reference());
     }
 };
+
+#include <boost/tree/detail/iterator/bidirectional.hpp>
+
+
+/**
+ * @brief	First element of a MultiwayTree in preorder traversal
+ * @param t	A MultiwayTree
+ * @return	Mutable preorder iterator to the first element of @a t
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::cursor> begin(MultiwayTree& t)
+{
+	return iterator<typename MultiwayTree::cursor>(first(t));
+}
+
+/**
+ * @brief	First element of a MultiwayTree in preorder traversal
+ * 			(Alias of cbegin())
+ * @param t	A MultiwayTree
+ * @return	Read-only preorder iterator to the first element of @a t
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor> begin(MultiwayTree const& t)
+{
+	return cbegin(t);
+}
+
+/**
+ * @brief	First element of a MultiwayTree in preorder traversal
+ * @param t	A MultiwayTree
+ * @return	Read-only preorder iterator to the first element of @a t
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor> cbegin(MultiwayTree const& t)
+{
+	return iterator<typename MultiwayTree::const_cursor>(cfirst(t));
+}
+
+/**
+ * @brief	One position past the last element of a MultiwayTree 
+ * 			in preorder traversal (Alias of cend())
+ * @param t	A MultiwayTree
+ * @return	Mutable preorder iterator one position past the last element of @a t 
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::cursor> end(MultiwayTree const& t)
+{
+	return iterator<typename MultiwayTree::cursor>(last(t));
+}
+
+/**
+ * @brief	One position past the last element of a MultiwayTree 
+ * 			in preorder traversal (Alias of cend())
+ * @param t	A MultiwayTree
+ * @return	Read-only preorder iterator one position past the last element of @a t 
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor> end(MultiwayTree const& t)
+{
+	return cend(t);
+}
+
+/**
+ * @brief	One position past the last element of a MultiwayTree 
+ * 			in preorder traversal
+ * @param t	A MultiwayTree
+ * @return	Read-only preorder iterator one position past the last element of @a t 
+ */
+template <class MultiwayTree>
+iterator<typename MultiwayTree::const_cursor> cend(MultiwayTree const& t)
+{
+	return iterator<typename MultiwayTree::const_cursor>(clast(t));
+}
 
 } // namespace preorder
 

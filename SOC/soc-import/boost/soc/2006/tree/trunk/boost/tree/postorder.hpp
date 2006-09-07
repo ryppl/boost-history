@@ -35,6 +35,10 @@
 #ifndef BOOST_TREE_POSTORDER_HPP
 #define BOOST_TREE_POSTORDER_HPP
 
+#include <boost/tree/cursor.hpp>
+
+#include <boost/iterator/iterator_categories.hpp>
+
 namespace boost {
 namespace tree {
 
@@ -51,19 +55,20 @@ template <class Cursor>
 inline void forward(Cursor& c)
 {
 	c = c.parent();
-	if (!c.parity() && (c.parent().begin() != c)) // Root?
-		return;
 
 	if (c.parity()) { // Right child? Return parent.
 		--c;
 		return;
 	}
 	
+	if (/*!c.parity() &&*/ (c.parent().begin() != c)) // Root?
+		return;
+	
 	// Left child.
 	++c;
-	while (c.empty()) {
+	while (!c.empty()) {
 		c = c.begin();
-		if (!c.empty())
+		if (c.empty())
 			++c;
 	}
 	if (c.parity())
@@ -94,11 +99,11 @@ inline void back(Cursor& c)
 		c = c.begin();
 		return;
 	}
-	if ((++c).empty()) { // Right
+	if (!(++c).empty()) { // Right
 		c = c.begin();
 		return;
 	}
-	if ((--c).empty()) { // Left
+	if (!(--c).empty()) { // Left
 		c = c.begin();
 		return;
 	}
@@ -106,7 +111,7 @@ inline void back(Cursor& c)
 	while (true) { // revisit
 	c = c.parent();
 	if (c.parity())
-		if ((--c).empty()) {
+		if (!(--c).empty()) {
 			c = c.begin();
 			return;
 		}
@@ -128,82 +133,85 @@ inline Cursor prior(Cursor c)
 }
 
 /**
- * @brief	cursor to the first element of a tree in postorder traversal
- * 			(equivalent to inorder::begin)
+ * @brief	First element of a tree in postorder traversal
+ * 			(equivalent to inorder::first())
  * @param t	A tree
- * @return	Postorder begin of @a t
+ * @return	Mutable cursor to the first element of @a t in postorder traversal
  */
 template <class Tree>
-typename Tree::cursor begin(Tree& t)
+typename Tree::cursor first(Tree& t)
 {
 	typename Tree::cursor c = t.root();
-	while (c.empty())
+	while (!c.empty())
 		c = c.begin();
 	return c;
 }
 
 /**
- * @brief	const_cursor to the first element of a tree in postorder traversal
- * 			(Alias of cbegin(); equivalent to inorder::begin())
+ * @brief	First element of a tree in postorder traversal
+ * 			(Alias of cfirst(); equivalent to inorder::first())
  * @param t	A tree
- * @return	Postorder begin of @a t
+ * @return	Read-only cursor to the first element of @a t in postorder traversal
  */
 template <class Tree>
-typename Tree::const_cursor begin(Tree const& t)
+typename Tree::const_cursor first(Tree const& t)
 {
 	typename Tree::const_cursor c = t.root();
-	while (c.empty())
+	while (!c.empty())
 		c = c.begin();
 	return c;
 }
 
 /**
- * @brief	const_cursor to the first element of a tree in postorder traversal
- * 			(equivalent to inorder::cbegin())
+ * @brief	First element of a tree in postorder traversal
+ * 			(equivalent to inorder::cfirst())
  * @param t	A tree
- * @return	Postorder begin of @a t
+ * @return	Read-only cursor to the first element of @a t in postorder traversal
  */
 template <class Tree>
-typename Tree::const_cursor cbegin(Tree const& t)
+typename Tree::const_cursor cfirst(Tree const& t)
 {
 	typename Tree::const_cursor c = t.root();
-	while (c.empty())
+	while (!c.empty())
 		c = c.begin();
 	return c;
 }
 
 /**
- * @brief	cursor to one position past the last element of a tree in postorder 
+ * @brief	One position past the last element of a tree in postorder 
  * 			traversal
  * @param t	A tree
- * @return	Postorder end of @a t
+ * @return	Mutable cursor one position past the last element of @a t in 
+ * 			postorder traversal
  */
 template <class Tree>
-typename Tree::cursor end(Tree& t)
+typename Tree::cursor last(Tree& t)
 {
 	return t.root();
 }
 
 /**
- * @brief	const_cursor to one position past the last element of a tree in 
- * 			postorder traversal (Alias of cend())
+ * @brief	One position past the last element of a tree in 
+ * 			postorder traversal (Alias of clast())
  * @param t	A tree
- * @return	Postorder end of @a t
+ * @return	Read-only cursor one position past the last element of @a t in 
+ * 			postorder traversal
  */
 template <class Tree>
-typename Tree::const_cursor end(Tree const& t)
+typename Tree::const_cursor last(Tree const& t)
 {
 	return t.croot();
 }
 
 /**
- * @brief	const_cursor to one position past the last element of a tree in 
+ * @brief	One position past the last element of a tree in 
  * 			postorder traversal
  * @param t	A tree
- * @return	Postorder end of @a t
+ * @return	Read-only cursor one position past the last element of @a t in 
+ * 			postorder traversal
  */
 template <class Tree>
-typename Tree::const_cursor cend(Tree const& t)
+typename Tree::const_cursor clast(Tree const& t)
 {
 	return t.croot();
 }
