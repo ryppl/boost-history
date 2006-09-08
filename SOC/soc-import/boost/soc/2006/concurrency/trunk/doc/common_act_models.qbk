@@ -1,0 +1,56 @@
+[part Boost.Act
+    [quickbook 1.4]
+    [version 0.4b]
+    [id act]
+    [dirname act]
+    [copyright 2006 Matthew Calabrese]
+    [category C++ Concurrency Library]
+    [authors [Calabrese, Matthew]]
+    [source-mode c++]
+]
+
+[def __alert__           [$images/alert.png]]
+[def __note__            [$images/note.png]]
+[def __OpenMP__          [@http://www.OpenMP.org OpenMP]]
+
+[section Common Act Models]
+
+[*Header:] `#include <boost/act/common_act_models.hpp>`
+
+The =act models= documented in this section are included with =Boost.Act=.
+In order to gain access to these =algorithm models= you may either include the
+header mentioned above, or you may include act models on an individual basis
+through the headers mentioned in their corresponding section.
+
+[section Concurrent Act Model]
+
+[*Header:] `#include <boost/act/common_act_models/concurrent_act_model.hpp>`
+
+
+
+[endsect]
+
+[section Immediate Act Model]
+
+[*Header:] `#include <boost/act/common_act_models/immediate_act_model.hpp>`
+
+[endsect]
+
+[section Lazy Act Model]
+
+[important The lazy act model has been delayed until after everything else has
+been completed.
+]
+
+[endsect]
+
+[section Concurrent Lazy Act Model]
+
+[important The concurrent lazy act model has been delayed until after everything
+else has been completed.
+]
+
+[endsect]
+
+
+[endsect]

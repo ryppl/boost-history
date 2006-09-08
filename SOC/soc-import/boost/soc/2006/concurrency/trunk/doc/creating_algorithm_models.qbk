@@ -1,0 +1,19 @@
+[part Boost.Act
+    [quickbook 1.4]
+    [version 0.4b]
+    [id act]
+    [dirname act]
+    [copyright 2006 Matthew Calabrese]
+    [category C++ Concurrency Library]
+    [authors [Calabrese, Matthew]]
+    [source-mode c++]
+]
+
+[section Creating Algorithm Models]
+
+While Boost.Act includes a serial algorithm model and a parallel algorithm
+model, you may find it beneficial to provide your own, such as one which
+uniquely manages the threads used in the implementation of an algorithm or which
+allows for more low-level model arguments.
+
+[endsect]

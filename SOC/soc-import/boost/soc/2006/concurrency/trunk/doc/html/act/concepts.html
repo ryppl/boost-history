@@ -1,0 +1,484 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Concepts</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../index.html" title="Boost.Act 0.4b">
+<link rel="up" href="../index.html" title="Boost.Act 0.4b">
+<link rel="prev" href="advanced_usage.html" title="Advanced Usage">
+<link rel="next" href="parallel_safety.html" title="Parallel Safety">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="advanced_usage.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="parallel_safety.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="act.concepts"></a><a href="concepts.html" title="Concepts">Concepts</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#act.concepts.act_model">Act Model</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.active_interface">Active Interface</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.active_type">Active Type</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.algorithm_model">Algorithm Model</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.atomic_type">Atomic Type</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.concurrent_active_main">Concurrent Active
+      Main</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.polymorphic_algorithm">Polymorphic Algorithm</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.parallel_safe_assignable">Parallel-Safe
+      Assignable</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.parallel_safe_operation">Parallel-Safe Operation</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.worker_allocator">Worker Allocator</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.worker">Worker</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.act_model"></a><a href="concepts.html#act.concepts.act_model" title="Act Model">Act Model</a></h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#act.concepts.act_model.active_implementation">Active
+        Implementation</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.act_model.action_implementation">Action
+        Implementation</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.act_model.function_package">Function Package</a></span></dt>
+</dl></div>
+<div class="informaltable">
+<h5>
+<a name="id508037"></a>
+          <span class="table-title">Act Model Requirements</span>
+        </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Expression</th>
+<th>Return Type</th>
+<th>Pre/Post-Condition</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>M::param&lt; P &gt;::type</td>
+<td>Converted parameter
+              type. </td>
+<td>The converted type of given parameter type which
+              is used to store arguments which are passed when a function is signalled
+              using M as an <code class="literal">act model</code>. </td>
+</tr>
+<tr>
+<td>M::active_impl&lt; T &gt;</td>
+<td>A type which is a model
+              of <code class="literal">active impl</code>. </td>
+<td>Pre: T is a <span class="emphasis"><em>cv-unqualified</em></span>
+              type. Post: M::active_impl&lt; T &gt;::represented_type is T. </td>
+</tr>
+<tr>
+<td>M::action_impl&lt; T &gt;</td>
+<td>A type which is a model
+              of <code class="literal">action impl</code>. </td>
+<td>Pre: T is a <span class="emphasis"><em>cv-unqualified</em></span>
+              type. Post: M::action_impl&lt; T &gt;::represented_type is T. </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="act.concepts.act_model.active_implementation"></a><a href="concepts.html#act.concepts.act_model.active_implementation" title="Active
+        Implementation">Active
+        Implementation</a></h4></div></div></div>
+<div class="informaltable">
+<h5>
+<a name="id508181"></a>
+            <span class="table-title">Active Implementation Requirements</span>
+          </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td>Expression</td>
+<td>Return Type</td>
+<td>Pre/Post-Condition</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="act.concepts.act_model.action_implementation"></a><a href="concepts.html#act.concepts.act_model.action_implementation" title="Action
+        Implementation">Action
+        Implementation</a></h4></div></div></div>
+<div class="informaltable">
+<h5>
+<a name="id508244"></a>
+            <span class="table-title">Action Implementation Requirements</span>
+          </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<tbody><tr>
+<td>Expression</td>
+<td>Return Type</td>
+<td>Pre/Post-Condition</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="act.concepts.act_model.function_package"></a><a href="concepts.html#act.concepts.act_model.function_package" title="Function Package">Function Package</a></h4></div></div></div>
+<div class="informaltable">
+<h5>
+<a name="id508306"></a>
+            <span class="table-title">Function Package Requirements</span>
+          </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Expression</th>
+<th>Return Type</th>
+<th>Pre/Post-Condition</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>M::stored_type</td>
+<td>A nullary function object type.
+                </td>
+<td> </td>
+</tr>
+<tr>
+<td>m.store()</td>
+<td>M::stored_type</td>
+<td> </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.active_interface"></a><a href="concepts.html#act.concepts.active_interface" title="Active Interface">Active Interface</a></h3></div></div></div>
+<p>
+        <code class="literal">Active interfaces</code>
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.active_type"></a><a href="concepts.html#act.concepts.active_type" title="Active Type">Active Type</a></h3></div></div></div>
+<p>
+        <code class="literal">Active types</code> are a actually a family of concepts as opposed
+        to a single concept on their own. More precisely, an <code class="literal">active type</code>
+        is a type which has been qualified using one of the forms of <code class="code"><span class="identifier">BOOST_ACTIVE</span></code> or the corresponding <code class="code"><span class="identifier">add_active</span></code> metafunctions described in the
+        Type Traits section of this documentation.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.algorithm_model"></a><a href="concepts.html#act.concepts.algorithm_model" title="Algorithm Model">Algorithm Model</a></h3></div></div></div>
+<div class="informaltable">
+<h5>
+<a name="id508474"></a>
+          <span class="table-title">Algorithm Model Concept</span>
+        </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Expression</th>
+<th>Return Type</th>
+<th>Pre/Post
+              Condition</th>
+</tr></thead>
+<tbody><tr>
+<td>M::algo_model_tag</td>
+<td>implementation-defined tag type</td>
+<td>M::algo_model_tag
+              is unique to that of all other algorithm models </td>
+</tr></tbody>
+</table>
+</div>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.atomic_type"></a><a href="concepts.html#act.concepts.atomic_type" title="Atomic Type">Atomic Type</a></h3></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.concurrent_active_main"></a><a href="concepts.html#act.concepts.concurrent_active_main" title="Concurrent Active
+      Main">Concurrent Active
+      Main</a></h3></div></div></div>
+<p>
+        <code class="literal">Concurrent Active Main</code> types are used when overriding
+        the main function of the thread that is used by an instantiation of a concurrent
+        active type.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.polymorphic_algorithm"></a><a href="concepts.html#act.concepts.polymorphic_algorithm" title="Polymorphic Algorithm">Polymorphic Algorithm</a></h3></div></div></div>
+<p>
+        A <code class="literal">polymorphic algorithm</code> is an algorithm whose model of
+        execution is able to be toggled on a
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.parallel_safe_assignable"></a><a href="concepts.html#act.concepts.parallel_safe_assignable" title="Parallel-Safe
+      Assignable">Parallel-Safe
+      Assignable</a></h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#act.concepts.parallel_safe_assignable.basic_parallel_safe_assignable">Basic
+        Parallel-Safe Assignable</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.parallel_safe_assignable.strong_parallel_safe_assignable">Strong
+        Parallel-Safe Assignable</a></span></dt>
+</dl></div>
+<p>
+        There are two concepts used to describe the safety of copy-assignment operations
+        of a given type in <code class="literal">Boost.Act</code> ; the <code class="literal">basic parallel-safe
+        assignable</code> concept, and the <code class="literal">strong parallel-safe assignable
+        concept</code>. When using certain algorithms in <code class="literal">Boost.Act</code>,
+        labeled models of these concepts may perform better than is otherwise possible
+        due to optimizations which rely on behavior as defined by these associated
+        concepts.
+      </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="act.concepts.parallel_safe_assignable.basic_parallel_safe_assignable"></a><a href="concepts.html#act.concepts.parallel_safe_assignable.basic_parallel_safe_assignable" title="Basic
+        Parallel-Safe Assignable">Basic
+        Parallel-Safe Assignable</a></h4></div></div></div>
+<p>
+          A type is considered <code class="literal">basic parallel-safe assignable</code>
+          if its copy-assignment operation is a <code class="literal">parallel-safe operation</code>
+          in cases where each thread is guaranteed to be performing an assignment
+          to a different instance of that type.
+        </p>
+<p>
+          Types which are <code class="literal">basic parallel-safe assignable</code> may allow
+          for certain optimizations when working with <code class="literal">polymorphic algorithms</code>.
+          For instance, calling <code class="code"><span class="identifier">copy</span><span class="special">[</span> <span class="identifier">parallel_algo_model</span><span class="special">()</span> <span class="special">](</span> <span class="identifier">first1</span><span class="special">,</span> <span class="identifier">last1</span><span class="special">,</span> <span class="identifier">first2</span> <span class="special">)</span></code>
+          where <code class="code"><span class="identifier">iterator_value_type</span><span class="special">&lt;</span> <span class="identifier">first1</span> <span class="special">&gt;::</span><span class="identifier">type</span></code>
+          and <code class="code"><span class="identifier">iterator_value_type</span><span class="special">&lt;</span> <span class="identifier">first2</span> <span class="special">&gt;::</span><span class="identifier">type</span></code>
+          are the same <code class="code"><span class="identifier">basic</span> <span class="identifier">parallel</span><span class="special">-</span><span class="identifier">safe</span> <span class="identifier">assignable</span></code>
+          type will allow the execution to be split up into multiple threads, whereas
+          if the type is not <code class="literal">basic parallel-safe assignable</code>, the
+          algorithm will be run serially.
+        </p>
+<p>
+          Users may identify their types as being <code class="literal">basic parallel-safe assignable</code>
+          by publically inheritting from <code class="code"><span class="identifier">basic_parallel_safe_assignable</span></code>
+          or by specializing the <code class="code"><span class="identifier">is_basic_parallel_safe_assignable</span></code>
+          template describe in the <code class="literal">Type Traits</code> section of this
+          documentation.
+        </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            By this definition, most types are <code class="literal">basic parallel-safe assignable</code>,
+            particularly any types which have trivial copy-assignment operations,
+            however, without the necessary compiler intrinsics this is impossible
+            to detect automatically. Examples of types which would not be considered
+            <code class="literal">basic parallel-safe assignable</code> include a hypothetical
+            smart-pointer type which does not perform thread-safe reference counting.
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="act.concepts.parallel_safe_assignable.strong_parallel_safe_assignable"></a><a href="concepts.html#act.concepts.parallel_safe_assignable.strong_parallel_safe_assignable" title="Strong
+        Parallel-Safe Assignable">Strong
+        Parallel-Safe Assignable</a></h4></div></div></div>
+<p>
+          <span class="bold"><strong>Refinement of:</strong></span> <code class="literal">basic parallel-safe
+          assignable</code>
+        </p>
+<p>
+          A type is considered <code class="literal">strong parallel-safe assignable</code>
+          if its copy-assignment operation is a <code class="literal">parallel-safe operation</code>
+          regardless of the operand. Types which fall into this category include
+          atomic types and types whose copy-assignment operation is entirely thread-safe
+          (for instance, if it is performed while under a lock).
+        </p>
+<p>
+          Users may identify their types as being <code class="literal">strong parallel-safe assignable</code>
+          by publically inheritting from <code class="code"><span class="identifier">strong_parallel_safe_assignable</span></code>
+          or by specializing the <code class="code"><span class="identifier">is_strong_parallel_safe_assignable</span></code>
+          template describe in the <code class="literal">Type Traits</code> section of this
+          documentation. Note that if a type is labeled as being <code class="literal">strong
+          parallel-safe assignable</code> through either of these techniques,
+          applications of the <code class="code"><span class="identifier">is_basic_parallel_sage_assignable</span></code>
+          metafunction will also automatically yield <code class="code"><span class="keyword">true</span></code>.
+        </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.parallel_safe_operation"></a><a href="concepts.html#act.concepts.parallel_safe_operation" title="Parallel-Safe Operation">Parallel-Safe Operation</a></h3></div></div></div>
+<p>
+        A function is considered to be a <code class="literal">parallel-safe operation</code>
+        if it may be safely executed by <code class="code"><span class="identifier">N</span></code>
+        threads in parallel and have the same desired effect as if it were run in
+        one thread <code class="code"><span class="identifier">N</span></code> times with the
+        respective parameters.
+      </p>
+<p>
+        A function object is considered to be a <code class="literal">parallel-safe operation</code>
+        if <code class="code"><span class="identifier">N</span></code> copies of it may be
+        safely executed executed by <code class="code"><span class="identifier">N</span></code>
+        threads in parallel and have the same desired effect as if the original function
+        object were executed in one thread <code class="code"><span class="identifier">N</span></code>
+        times with the respective parameters.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.worker_allocator"></a><a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator">Worker Allocator</a></h3></div></div></div>
+<p>
+        <code class="literal">Worker allocators</code> are used to spawn off additional threads
+        of execution. In Boost.Act, <code class="literal">worker allocators</code> are used
+        when instantiating the <code class="literal">basic_concurrent_act_model</code> template.
+      </p>
+<p>
+        In order to be considered a valid <code class="literal">worker allocator</code>, the
+        following expressions must be well-formed and have the indicated effects
+        (where <code class="code"><span class="identifier">TA</span></code> is the type in
+        question and <code class="code"><span class="identifier">ta</span></code> is an instance
+        of that type).
+      </p>
+<div class="informaltable">
+<h5>
+<a name="id509296"></a>
+          <span class="table-title">Worker Allocator Requirements</span>
+        </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Expression</th>
+<th>Return Type</th>
+<th>Pre/Post-Condition</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>X::worker</td>
+<td> </td>
+<td>The corresponding worker
+              type.</td>
+</tr>
+<tr>
+<td>a.allocate(f)</td>
+<td>X::worker</td>
+<td>A thread
+              is allocated with <code class="code"><span class="identifier">f</span></code>
+              executing as its main function. </td>
+</tr>
+<tr>
+<td>X()</td>
+<td> </td>
+<td>Creates a default instance.
+              Note: a destructor is assumed. </td>
+</tr>
+<tr>
+<td>X a(b);</td>
+<td> </td>
+<td>Post: <code class="code"><span class="identifier">X</span><span class="special">(</span><span class="identifier">a</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">b</span></code>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.worker"></a><a href="concepts.html#act.concepts.worker" title="Worker">Worker</a></h3></div></div></div>
+<p>
+        <code class="literal">Worker allocators</code> are used to spawn off additional threads
+        of execution. In Boost.Act, <code class="literal">worker allocators</code> are used
+        when instantiating the <code class="literal">basic_concurrent_act_model</code> template.
+      </p>
+<p>
+        In order to be considered a valid <code class="literal">worker allocator</code>, the
+        following expressions must be well-formed and have the indicated effects
+        (where <code class="code"><span class="identifier">TA</span></code> is the type in
+        question and <code class="code"><span class="identifier">ta</span></code> is an instance
+        of that type).
+      </p>
+<div class="informaltable">
+<h5>
+<a name="id509513"></a>
+          <span class="table-title">Worker Requirements</span>
+        </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Expression</th>
+<th>Return Type</th>
+<th>Pre/Post-Condition</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>W::allocator</td>
+<td> </td>
+<td>The worker's allocator
+              type.</td>
+</tr>
+<tr>
+<td>W w(a,f)</td>
+<td> </td>
+<td>A worker is constructed
+              with <code class="code"><span class="identifier">f</span></code> as its main
+              function. </td>
+</tr>
+<tr>
+<td>w.join()</td>
+<td>Not used</td>
+<td>The current thread
+              waits for <code class="code"><span class="identifier">w</span></code> to complete
+              execution. </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006 Matthew Calabrese</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="advanced_usage.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="parallel_safety.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

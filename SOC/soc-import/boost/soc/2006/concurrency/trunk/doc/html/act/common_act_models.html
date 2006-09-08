@@ -1,0 +1,105 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Common Act Models</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../index.html" title="Boost.Act 0.4b">
+<link rel="up" href="../index.html" title="Boost.Act 0.4b">
+<link rel="prev" href="parallel_safety.html" title="Parallel Safety">
+<link rel="next" href="common_algorithm_models.html" title="Common Algorithm Models">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="parallel_safety.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="common_algorithm_models.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="act.common_act_models"></a><a href="common_act_models.html" title="Common Act Models">Common Act Models</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="common_act_models.html#act.common_act_models.concurrent_act_model">Concurrent
+      Act Model</a></span></dt>
+<dt><span class="section"><a href="common_act_models.html#act.common_act_models.immediate_act_model">Immediate
+      Act Model</a></span></dt>
+<dt><span class="section"><a href="common_act_models.html#act.common_act_models.lazy_act_model">Lazy Act Model</a></span></dt>
+<dt><span class="section"><a href="common_act_models.html#act.common_act_models.concurrent_lazy_act_model">Concurrent
+      Lazy Act Model</a></span></dt>
+</dl></div>
+<p>
+      <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">common_act_models</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+    </p>
+<p>
+      The <code class="literal">act models</code> documented in this section are included with
+      <code class="literal">Boost.Act</code>. In order to gain access to these <code class="literal">algorithm
+      models</code> you may either include the header mentioned above, or you
+      may include act models on an individual basis through the headers mentioned
+      in their corresponding section.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.common_act_models.concurrent_act_model"></a><a href="common_act_models.html#act.common_act_models.concurrent_act_model" title="Concurrent
+      Act Model">Concurrent
+      Act Model</a></h3></div></div></div>
+<p>
+        <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">common_act_models</span><span class="special">/</span><span class="identifier">concurrent_act_model</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.common_act_models.immediate_act_model"></a><a href="common_act_models.html#act.common_act_models.immediate_act_model" title="Immediate
+      Act Model">Immediate
+      Act Model</a></h3></div></div></div>
+<p>
+        <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">common_act_models</span><span class="special">/</span><span class="identifier">immediate_act_model</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.common_act_models.lazy_act_model"></a><a href="common_act_models.html#act.common_act_models.lazy_act_model" title="Lazy Act Model">Lazy Act Model</a></h3></div></div></div>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The lazy act model has been delayed until after everything else has been
+          completed.
+        </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.common_act_models.concurrent_lazy_act_model"></a><a href="common_act_models.html#act.common_act_models.concurrent_lazy_act_model" title="Concurrent
+      Lazy Act Model">Concurrent
+      Lazy Act Model</a></h3></div></div></div>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The concurrent lazy act model has been delayed until after everything else
+          has been completed.
+        </p></td></tr>
+</table></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006 Matthew Calabrese</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="parallel_safety.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="common_algorithm_models.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Common Algorithm Models</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../index.html" title="Boost.Act 0.4b">
+<link rel="up" href="../index.html" title="Boost.Act 0.4b">
+<link rel="prev" href="common_act_models.html" title="Common Act Models">
+<link rel="next" href="type_traits.html" title="Type Traits">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="common_act_models.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="type_traits.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="act.common_algorithm_models"></a><a href="common_algorithm_models.html" title="Common Algorithm Models">Common Algorithm Models</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="common_algorithm_models.html#act.common_algorithm_models.parallel_algorithm_model">Parallel
+      Algorithm Model</a></span></dt>
+<dt><span class="section"><a href="common_algorithm_models.html#act.common_algorithm_models.serial_algorithm_model">Serial
+      Algorithm Model</a></span></dt>
+</dl></div>
+<p>
+      <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">common_algo_models</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+    </p>
+<p>
+      The <code class="literal">act models</code> documented in this section are included with
+      <code class="literal">Boost.Act</code>. In order to gain access to these <code class="literal">algorithm
+      models</code> you may either include the header mentioned above, or you
+      may include algorithms models on an individual basis through the headers mentioned
+      in their corresponding section.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.common_algorithm_models.parallel_algorithm_model"></a><a href="common_algorithm_models.html#act.common_algorithm_models.parallel_algorithm_model" title="Parallel
+      Algorithm Model">Parallel
+      Algorithm Model</a></h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="common_algorithm_models.html#act.common_algorithm_models.parallel_algorithm_model.extended_parameters">Extended
+        Parameters</a></span></dt></dl></div>
+<p>
+        <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">common_algo_models</span><span class="special">/</span><span class="identifier">parallel_algo_model</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      </p>
+<p>
+        The <code class="literal">parallel algorithm model</code> is an <code class="literal">algorithm
+        model</code> which attempts to execute <code class="literal">polymorphic algorithms</code>
+        in parallel when it can be determined that it is safe to do so, otherwise,
+        they will execute serially.
+      </p>
+<p>
+        Identifying types as being safe for parallel execution is done through the
+        use of type traits. In particular, often times a function object or other
+        type must be identified as <code class="literal">parallel safe</code> in order for
+        it to be used safely by an algorithm which splits execution up into multiple
+        threads.
+      </p>
+<p>
+        The following is a list of algorithms whose operands must support expressions
+        that are identifiable as being <code class="literal">parallel safe</code> if they are
+        to be executed in parallel. Keep in mind that it is safe to call such algorithms
+        without parallel safe arguments, however execution will be performed serially.
+      </p>
+<div class="informaltable">
+<h5>
+<a name="id510335"></a>
+          <span class="table-title">Parallel Execution Requirements</span>
+        </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Algorithm</th>
+<th>Requirements for Parallel Execution</th>
+</tr></thead>
+<tbody><tr>
+<td> for_each , for_each_if </td>
+<td>
+<code class="code"><span class="identifier">f</span><span class="special">(*</span><span class="identifier">i</span><span class="special">)</span></code> must be parallel-safe (where <code class="code"><span class="identifier">i</span></code> is an iterator in the range [<code class="code"><span class="identifier">first</span></code>, <code class="code"><span class="identifier">last</span></code>)).
+              </td>
+</tr></tbody>
+</table>
+</div>
+<div class="important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The <code class="literal">parallel algorithm</code> model is currently implemented
+          using <a href="http://www.OpenMP.org" target="_top">OpenMP</a>. To check if your
+          compiler supports OpenMP and to see which flags are needed during compilation
+          to enable it, refer to the compiler setup section of documentation. If
+          you do not enable OpenMP for your compiler, all <code class="literal">polymorphic algorithms</code>
+          executed with the <code class="literal">parallel algorithm model</code> will always
+          run serially.
+        </p></td></tr>
+</table></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="act.common_algorithm_models.parallel_algorithm_model.extended_parameters"></a><a href="common_algorithm_models.html#act.common_algorithm_models.parallel_algorithm_model.extended_parameters" title="Extended
+        Parameters">Extended
+        Parameters</a></h4></div></div></div></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.common_algorithm_models.serial_algorithm_model"></a><a href="common_algorithm_models.html#act.common_algorithm_models.serial_algorithm_model" title="Serial
+      Algorithm Model">Serial
+      Algorithm Model</a></h3></div></div></div>
+<p>
+        <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">common_algo_models</span><span class="special">/</span><span class="identifier">serial_algo_model</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006 Matthew Calabrese</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="common_act_models.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="type_traits.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
