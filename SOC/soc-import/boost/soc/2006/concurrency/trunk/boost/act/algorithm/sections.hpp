@@ -32,9 +32,11 @@
 #ifndef BOOST_ACT_ALGORITHM_SECTIONS_HPP
 #define BOOST_ACT_ALGORITHM_SECTIONS_HPP
 
-#include "../detail/make_algo.hpp"
+#include "detail/make_algo.hpp"
 
 #include "sections/sections_fwd.hpp"
+
+#include "../config/max_sections.hpp"
 
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
@@ -42,33 +44,27 @@
 #include <boost/preprocessor/arithmetic/inc.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_ACT_DETAIL_SECTIONS_IMPL_DESCIPTION_Z( z, index )                \
-( BOOST_PP_CAT( BOOST_PP_ENUM_, z )( index                                     \
-                                   , BOOST_ACT_DETAIL_SECTIONS_T_PARAM         \
-                                   , BOOST_PP_NIL                              \
-                                   )                                           \
-, (void)                                                                       \
-, sections                                                                     \
-, BOOST_PP_CAT( BOOST_PP_ENUM_, z )( index                                     \
-                                   , BOOST_ACT_DETAIL_SECTIONS_PARAM           \
-                                   , BOOST_PP_NIL                              \
-                                   )                                           \
-)
+#define BOOST_ACT_DETAIL_SECTIONS_IMPL_DESCIPTION_Z( z, index, dummy )         \
 
 #define BOOST_ACT_DETAIL_EXECUTE_SECTION_FUN( z, index, dummy )                \
 BOOST_PP_CAT( fun, index )();
 
-#define BOOST_ACT_DETAIL_SECTIONS_IMPL_Z( z, index )                           \
-BOOST_ACT_DETAIL_IMPLEMENT_ALGO                                                \
+#define BOOST_ACT_DETAIL_SECTIONS_IMPL_Z( z, index, dummy )                    \
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO_OVER                                           \
 (                                                                              \
-  BOOST_PP_CAT( BOOST_PP_REPEAT_FROM_TO_, z )                                  \
-  ( 1, BOOST_PP_INC( BOOST_ACT_MAX_SECTIONS )                                  \
-  , BOOST_ACT_DETAIL_SECTIONS_IMPL_DESCIPTION_Z                                \
-  , BOOST_PP_NIL                                                               \
-  )                                                                            \
+  BOOST_PP_CAT( BOOST_PP_REPEAT_, z )( BOOST_PP_INC( index )                   \
+                                     , BOOST_ACT_DETAIL_SECTIONS_T_PARAM       \
+                                     , BOOST_PP_NIL                            \
+                                     )                                         \
+  , (void)                                                                     \
+  , sections                                                                   \
+  , BOOST_PP_CAT( BOOST_PP_REPEAT_, z )( BOOST_PP_INC( index )                 \
+                                       , BOOST_ACT_DETAIL_SECTIONS_PARAM       \
+                                       , BOOST_PP_NIL                          \
+                                       )                                       \
 )                                                                              \
 {                                                                              \
-  BOOST_PP_CAT( BOOST_PP_REPEAT_, z )( index                                   \
+  BOOST_PP_CAT( BOOST_PP_REPEAT_, z )( BOOST_PP_INC( index )                   \
                                      , BOOST_ACT_DETAIL_EXECUTE_SECTION_FUN    \
                                      , BOOST_PP_NIL                            \
                                      )                                         \
@@ -78,6 +74,17 @@ namespace boost
 {
 namespace act
 {
+
+BOOST_ACT_DETAIL_PREPARE_ALGO_IMPLEMENTATION
+(
+  sections
+, BOOST_ACT_MAX_SECTIONS
+, ( BOOST_PP_ENUM( BOOST_ACT_MAX_SECTIONS
+                 , BOOST_ACT_DETAIL_SECTIONS_DESCRIPTION_Z
+                 , BOOST_PP_NIL
+                 )
+  )
+)
 
 BOOST_PP_REPEAT( BOOST_ACT_MAX_SECTIONS
                , BOOST_ACT_DETAIL_SECTIONS_IMPL_Z
