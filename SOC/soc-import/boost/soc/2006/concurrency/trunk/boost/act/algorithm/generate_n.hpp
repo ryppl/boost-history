@@ -29,3 +29,42 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //    http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_ACT_ALGORITHM_ALGORITHM_GENERATE_N_HPP
+#define BOOST_ACT_ALGORITHM_ALGORITHM_GENERATE_N_HPP
+
+#include "detail/make_algo.hpp"
+
+#include "generate_n/generate_n_fwd.hpp"
+
+#include "basic_for.hpp"
+
+namespace boost
+{
+namespace act
+{
+
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),OutputIterator)
+                                 ((typename),Size)
+                                 ((typename),Generator)
+                               , (void)
+                               , generate_n
+                               , ((OutputIterator),first)
+                                 ((Size),n)
+                                 ((Generator),gen)
+                               )
+{
+  typedef typename iterator_difference< OutputIterator >::type difference_type;
+
+  basic_for[ extended_params ]( for_var = static_cast< difference_type >( 0 )
+                              , for_var < n
+                              , ++for_var
+                              )
+  [
+    detail::make_safe_generator( gen )
+  ];
+}
+
+}
+}
+
+#endif

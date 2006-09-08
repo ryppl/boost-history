@@ -36,46 +36,16 @@
 
 #include "algorithm_fwd.hpp"
 
-#include "../parallel_safe.hpp"
-
 #include "for_each.hpp"
 
 #include "generate/generate_fwd.hpp"
+
+#include "generate/detail/safe_generator.hpp"
 
 namespace boost
 {
 namespace act
 {
-namespace detail
-{
-
-template< typename FunctionType >
-class safe_generator
-  : public parallel_safe_if< is_parallel_safe< FunctionType > >
-{
-public:
-  safe_generator( FunctionType function_init )
-    : function_m( function_init )
-  {
-  }
-public:
-  template< typename TargetType >
-  void operator ()( TargetType& target ) const
-  {
-    target = function_m();
-  }
-private:
-  mutable FunctionType function_m;
-};
-
-template< typename FunctionType >
-safe_generator< FunctionType >
-make_safe_generator( FunctionType function_init )
-{
-  return safe_generator< FunctionType >( function_init );
-}
-
-}
 
 BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),IteratorType)
                                  ((typename),FunctionType)
@@ -86,9 +56,9 @@ BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),IteratorType)
                                  ((FunctionType),function)
                                )
 {
-  for_each[ AlgoModel() ]( begin, end
-                         , detail::make_safe_generator( function )
-                         );
+  for_each[ extended_params ]( begin, end
+                             , detail::make_safe_generator( function )
+                             );
 }
 
 }

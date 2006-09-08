@@ -34,6 +34,6 @@
 
 #include "../act_fwd.hpp"
 
-#include "../common_act_models/concurrent_act_model.hpp"
+#include <boost/act/common_act_models/concurrent_act_model.hpp>
 
 #endif

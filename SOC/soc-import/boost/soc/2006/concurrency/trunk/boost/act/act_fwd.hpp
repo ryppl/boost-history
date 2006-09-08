@@ -46,8 +46,6 @@
 
 #include "detail/enabler_dummy.hpp"
 
-#include "algorithm/algorithm_fwd.hpp"
-
 #include "default_algo_model/default_algo_model_fwd.hpp"
 
 namespace boost
@@ -65,8 +63,8 @@ typedef concurrent_act_model default_act_model;
 
 struct parallel_safe;
 
-struct parallel_algo_model;
-struct serial_algo_model;
+struct parallel_algo_model_type;
+struct serial_algo_model_type;
 
 template< typename RepresentedType = void
         , typename ActModel = default_act_model
@@ -124,5 +122,7 @@ BOOST_PP_REPEAT( BOOST_PP_DEC( BOOST_ACT_MAX_ACTIVE_CALL_PARAMS )
                )
 }
 }
+
+#include "algorithm/algorithm_fwd.hpp"
 
 #endif

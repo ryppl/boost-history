@@ -29,3 +29,88 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //    http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_ACT_ALGORITHM_SORT_HPP
+#define BOOST_ACT_ALGORITHM_SORT_HPP
+
+#include "../detail/make_algo.hpp"
+
+#include "sort/sort_fwd.hpp"
+
+#include <algorithm>
+#include <functional>
+
+#include <boost/iterator/iterator_traits.hpp>
+
+namespace boost
+{
+namespace act
+{
+
+BOOST_ACT_DETAIL_PREPARE_ALGO_IMPLEMENTATION
+(
+  sort
+, 2
+, ( ( ((typename),RandomAccessIterator)
+    , (void)
+    , ((RandomAccessIterator),first)((RandomAccessIterator),last)
+    )
+  , ( ((typename),RandomAccessIterator)((typename),Compare)
+    , (void)
+    , ((RandomAccessIterator),first)((RandomAccessIterator),last)
+      ((Compare),comp)
+    )
+  )
+)
+
+template< typename AlgoModel >
+struct sort_base_impl
+{
+  template< typename ExtendedParamsType
+          , typename RandomAccessIterator, typename Compare
+          >
+  static
+  void execute( ExtendedParamsType const& extended_params
+              , RandomAccessIterator first, RandomAccessIterator last
+              , Compare comp
+              )
+  {
+    ::std::sort( first, last, comp );
+  }
+};
+
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO_OVER
+(
+  ((typename),RandomAccessIterator)
+, (void)
+, sort
+, ((RandomAccessIterator),first)((RandomAccessIterator),last)
+)
+{
+  typedef typename iterator_value< RandomAccessIterator >::type value_type;
+
+  sort_base_impl< AlgoModel >
+  ::execute( extended_params
+           , first, last
+           , ::std::less< value_type >()
+           );
+}
+
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO_OVER
+(
+  ((typename),RandomAccessIterator)((typename),Compare)
+, (void)
+, sort
+, ((RandomAccessIterator),first)((RandomAccessIterator),last)
+  ((Compare),comp)
+)
+{
+  sort_base_impl< AlgoModel >::execute( extended_params
+                                      , first, last
+                                      , comp
+                                      );
+}
+
+}
+}
+
+#endif

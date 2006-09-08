@@ -52,6 +52,10 @@
 
 #include "boost/act/atomic.hpp"
 
+#include <boost/act/algorithm/sections.hpp>
+#include <boost/act/algorithm/parallel.hpp>
+#include <boost/act/algorithm/equal.hpp>
+
 struct a
 {
   int value;
@@ -134,6 +138,42 @@ struct complex_function
   }
 };
 
+struct parallel_test
+{
+  template< typename Type >
+  void operator ()( Type, Type ) const
+  {
+  }
+};
+
+struct sections_test1
+{
+  void operator ()() const
+  {
+  }
+};
+
+struct sections_test2
+{
+  void operator ()() const
+  {
+  }
+};
+
+struct sections_test3
+{
+  void operator ()() const
+  {
+  }
+};
+
+struct sections_test4
+{
+  void operator ()() const
+  {
+  }
+};
+
 int main()
 {
   using namespace ::boost::act;
@@ -146,23 +186,35 @@ int main()
   int array_test[10] = { 0 };
 
   // Loop splits up execution over several threads at runtime, then joins
-  for_each[ parallel_algo_model() ]( array_test + 0, array_test + 10
-                                   , complex_function()
-                                   );
+  for_each[ parallel_algo_model ]( array_test + 0, array_test + 10
+                                 , complex_function()
+                                 );
+
+  sections[ parallel_algo_model ]( sections_test1()
+                                 , sections_test2()
+                                 , sections_test3()
+                                 , sections_test4()
+                                 );
+
+  parallel[ parallel_algo_model ]( parallel_test() );
+
+  equal[ parallel_algo_model ]( array_test + 0, array_test + 10
+                              , array_test + 0
+                              );
 
   int const calculated_count
-    = count[ parallel_algo_model() ]( array_test + 0, array_test + 10
-                                    , 15
-                                    );
+    = count[ parallel_algo_model ]( array_test + 0, array_test + 10
+                                  , 15
+                                  );
 
   ::std::cout << "Count: " << calculated_count << ::std::endl;
 
   int const val = 20;
 
   // Loop splits up execution over several threads at runtime, then joins
-  fill[ parallel_algo_model() ]( array_test + 0, array_test + 10
-                               , val
-                               );
+  fill[ parallel_algo_model ]( array_test + 0, array_test + 10
+                             , val
+                             );
 
   // Runs for_each either serially or in parallel dependent on the default model
   action<> default_for_call( as_function( for_each() )
@@ -188,14 +240,14 @@ int main()
               << array_test[9] << ::std::endl;
 
   // Loop splits up execution over several threads at runtime, then joins
-  copy[ parallel_algo_model() ]( array_test + 0, array_test + 10
-                               , array_test + 0
-                               );
+  copy[ parallel_algo_model ]( array_test + 0, array_test + 10
+                             , array_test + 0
+                             );
 
   // Loop splits up execution over several threads at runtime, then joins
-  find[ parallel_algo_model() ]( array_test + 0, array_test + 10
-                               , val
-                               );
+  find[ parallel_algo_model ]( array_test + 0, array_test + 10
+                             , val
+                             );
 
   // Create an active qualified instance of a
   BOOST_ACTIVE((a)) active_test;
@@ -205,7 +257,6 @@ int main()
                 , a_function()
                 );
 
-  
   // Copy active_test asynchronously
   action< a > const test3 = active_test;
 

@@ -29,3 +29,37 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //    http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_ACT_ALGORITHM_ALGORITHM_FILL_N_HPP
+#define BOOST_ACT_ALGORITHM_ALGORITHM_FILL_N_HPP
+
+#include "detail/make_algo.hpp"
+
+#include "fill_n/fill_n_fwd.hpp"
+
+#include "generate_n.hpp"
+
+// ToDo: Include safe filler
+
+namespace boost
+{
+namespace act
+{
+
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),OutputIterator)
+                                 ((typename),Size)((typename),T)
+                               , (void)
+                               , fill_n
+                               , ((OutputIterator),first)
+                                 ((Size),n)
+                                 ((T const&),value)
+                               )
+{
+  generate_n[ extended_params ]( first, n
+                               , detail::make_safe_filler( value )
+                               );
+}
+
+}
+}
+
+#endif

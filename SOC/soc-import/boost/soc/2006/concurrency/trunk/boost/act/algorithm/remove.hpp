@@ -29,3 +29,21 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //    http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_ACT_ALGORITHM_REMOVE_HPP
+#define BOOST_ACT_ALGORITHM_REMOVE_HPP
+
+#include "detail/make_algo.hpp"
+
+#include "remove/remove_fwd.hpp"
+
+namespace boost
+{
+namespace act
+{
+
+
+
+}
+}
+
+#endif

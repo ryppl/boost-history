@@ -29,3 +29,68 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //    http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef BOOST_ACT_ALGORITHM_ALGORITHM_TRANSFORM_TRANSFORM_FWD_HPP
+#define BOOST_ACT_ALGORITHM_ALGORITHM_TRANSFORM_TRANSFORM_FWD_HPP
+
+#include "detail/make_algo.hpp"
+
+#include "transform/transform_fwd.hpp"
+
+#include <algorithm>
+
+namespace boost
+{
+namespace act
+{
+
+BOOST_ACT_DETAIL_PREPARE_ALGO_IMPLEMENTATION
+(
+  transform
+, 2
+, ( ( ((typename),InputIterator)((typename),OutputIterator)
+      ((typename),UnaryOperation)
+    , (OutputIterator)
+    , ((InputIterator),first1)((InputIterator),last1)
+      ((OutputIterator),result)((UnaryOperation),op)
+    )
+  , ( ((typename),InputIterator1)((typename),InputIterator2)
+      ((typename),OutputIterator)((typename),BinaryOperation)
+    , (OutputIterator)
+    , ((InputIterator1),first1)((InputIterator1),last1)
+      ((InputIterator2),first2)((OutputIterator),result)
+      ((BinaryOperation),binary_op)
+    )
+  )
+)
+
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO_OVER
+(
+  ((typename),InputIterator)((typename),OutputIterator)
+  ((typename),UnaryOperation)
+, (OutputIterator)
+, transform
+, ((InputIterator),first1)((InputIterator),last1)
+  ((OutputIterator),result)((UnaryOperation),op)
+)
+{
+  return ::std::transform( first1, last1, result, op );
+}
+
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO_OVER
+(
+  ((typename),InputIterator1)((typename),InputIterator2)
+  ((typename),OutputIterator)((typename),BinaryOperation)
+, (OutputIterator)
+, ((InputIterator1),first1)((InputIterator1),last1)
+  ((InputIterator2),first2)((OutputIterator),result)
+  ((BinaryOperation),binary_op)
+)
+{
+  return ::std::transform( first1, last1, first2, result, binary_op );
+}
+
+
+}
+}
+
+#endif

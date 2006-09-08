@@ -32,6 +32,6 @@
 #ifndef BOOST_ACT_CONFIG_DEFAULT_ALGO_MODEL_HPP
 #define BOOST_ACT_CONFIG_DEFAULT_ALGO_MODEL_HPP
 
-#include "../common_algo_models/serial_algo_model.hpp"
+#include <boost/act/common_algo_models/serial_algo_model.hpp>
 
 #endif

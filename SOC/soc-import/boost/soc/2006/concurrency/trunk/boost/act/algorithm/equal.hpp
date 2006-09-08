@@ -32,31 +32,91 @@
 #ifndef BOOST_ACT_ALGORITHM_EQUAL_HPP
 #define BOOST_ACT_ALGORITHM_EQUAL_HPP
 
-#include <boost/utility/enable_if.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
+#include <algorithm>
+#include <functional>
 
-#include <iterator>
+#include "equal/equal_fwd.hpp"
 
-#include "../actable_function.hpp"
-#include "../type_traits/is_act_model.hpp"
-#include "../type_traits/is_actable_function.hpp"
-#include "../type_traits/add_action.hpp"
-#include "../active.hpp"
-#include "../action.hpp"
-
-#include "../detail/is_of_iterator_category.hpp"
-
-#include "algorithm_fwd.hpp"
-
-// ToDo: Rewrite to minimize iterator and function copies
+#include "detail/make_algo.hpp"
 
 namespace boost
 {
 namespace act
 {
 
+BOOST_ACT_DETAIL_PREPARE_ALGO_IMPLEMENTATION
+(
+  equal
+, 2
+, ( ( ((typename),InputIterator1)((typename),InputIterator2)
+    , (bool)
+    , ((InputIterator1),first1)((InputIterator1),last1)
+      ((InputIterator2),first2)
+    )
+  , ( ((typename),InputIterator1)((typename),InputIterator2)
+      ((typename),BinaryPredicate)
+    , (bool)
+    , ((InputIterator1),first1)((InputIterator1),last1)
+      ((InputIterator2),first2)
+      ((BinaryPredicate),pred)
+    )
+  )
+)
+
+template< typename AlgoModel >
+struct equal_base_impl
+{
+  template< typename ExtendedParamsType
+          , typename InputIterator1, typename InputIterator2
+          , typename BinaryPredicate
+          >
+  static
+  bool execute( ExtendedParamsType const& extended_params
+              , InputIterator1 first1, InputIterator1 last1
+              , InputIterator2 first2, BinaryPredicate pred
+              )
+  {
+    return ::std::equal( first1, last1, first2, pred );
+  }
+};
+
+// ToDo: Change definition to rely on other overload
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO_OVER
+(
+  ((typename),InputIterator1)((typename),InputIterator2)
+, (bool)
+, equal
+, ((InputIterator1),first1)((InputIterator1),last1)
+  ((InputIterator2),first2)
+)
+{
+  // ToDo: Change to use a better ::std::less
+
+  typedef typename iterator_value< InputIterator1 >::type value_type;
+
+  return equal_base_impl< AlgoModel >::execute( extended_params
+                                              , first1, last1, first2
+                                              , ::std::equal_to< value_type >()
+                                              );
 }
+
+BOOST_ACT_DETAIL_IMPLEMENT_ALGO_OVER
+(
+  ((typename),InputIterator1)((typename),InputIterator2)
+  ((typename),BinaryPredicate)
+, (bool)
+, equal
+, ((InputIterator1),first1)((InputIterator1),last1)
+  ((InputIterator2),first2)
+  ((BinaryPredicate),pred)
+)
+{
+  return equal_base_impl< AlgoModel >::execute( extended_params
+                                              , first1, last1, first2
+                                              , pred
+                                              );
+}
+
 }
 }
 

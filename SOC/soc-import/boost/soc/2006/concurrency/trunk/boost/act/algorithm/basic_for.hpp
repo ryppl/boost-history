@@ -55,6 +55,7 @@ namespace boost
 {
 namespace act
 {
+
 BOOST_ACT_DETAIL_PREPARE_ALGO_IMPLEMENTATION( basic_for
                                             , 2
                                             , ( ( ((typename),AssignType)

@@ -51,16 +51,16 @@ namespace detail
 struct parallel_algo_model_tag;
 }
 
-struct parallel_algo_model
+struct parallel_algo_model_type
   : algo_model< detail::parallel_algo_model_tag >
 {
-};
+} const parallel_algo_model;
 
 template< typename AlgoModel >
 struct basic_for_impl;
 
 template<>
-struct basic_for_impl< parallel_algo_model >
+struct basic_for_impl< parallel_algo_model_type >
   : basic_for_base
 {
   using basic_for_base::execute;
@@ -117,5 +117,11 @@ struct basic_for_impl< parallel_algo_model >
 
 }
 }
+
+#include "../config/openmp_parallel_algo_model.hpp"
+
+#if BOOST_ACT_OPENMP_PARALLEL_ALGO_MODEL
+#include "parallel_algo_model/detail/openmp_algorithms.hpp"
+#endif
 
 #endif

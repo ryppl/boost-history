@@ -49,16 +49,16 @@ namespace detail
   struct serial_algo_model_tag;
 }
 
-struct serial_algo_model
+struct serial_algo_model_type
   : algo_model< detail::serial_algo_model_tag >
 {
-};
+} const serial_algo_model;
 
 template< typename AlgoModel >
 struct basic_for_impl;
 
 template<>
-struct basic_for_impl< serial_algo_model >
+struct basic_for_impl< serial_algo_model_type >
   : basic_for_base
 {
   using basic_for_base::execute;
@@ -82,7 +82,7 @@ struct basic_for_impl< serial_algo_model >
 
 // ToDo: Move to another file
 template<>
-struct for_each_impl< serial_algo_model >
+struct for_each_impl< serial_algo_model_type >
 {
   template< typename ExtendedParams
           , typename IteratorType

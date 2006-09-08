@@ -83,9 +83,9 @@ BOOST_ACT_DETAIL_IMPLEMENT_ALGO( ((typename),IteratorType)
                                  ((ValueType const&),value)
                                )
 {
-  generate[ AlgoModel() ]( begin, end
-                         , detail::make_safe_filler( value )
-                         );
+  generate[ extended_params ]( begin, end
+                             , detail::make_safe_filler( value )
+                             );
 }
 
 }
