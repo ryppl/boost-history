@@ -70,12 +70,12 @@ class iterator<Cursor, forward_traversal_tag>
     iterator() {}
 //      : iterator::iterator_adaptor_() {}
 
-    explicit iterator(stack<Cursor> s) //, bool right = s.size()) // = s.size() 
-    		: m_s(s), m_right() {}
+    explicit iterator(stack<Cursor> s) //, bool branch = s.size()) // = s.size() 
+    		: m_s(s), m_branch() {}
 //      : iterator::iterator_adaptor_(p) {}
 
-    explicit iterator(stack<Cursor> s, bool right)
-    		: m_s(s), m_right(right) {}
+    explicit iterator(stack<Cursor> s, typename cursor_size<Cursor>::type branch)
+    		: m_s(s), m_branch(branch) {}
 
 //    template <class OtherCursor>
 //    iterator(
@@ -89,40 +89,61 @@ class iterator<Cursor, forward_traversal_tag>
 
 	operator Cursor()
 	{
-		return this->base();
+		return m_s.top();
 	}
- private:
+// private: //FIXME
     friend class boost::iterator_core_access;
 
  	stack<Cursor> m_s;
- 	typename Cursor::size_type m_right;
+ 	typename cursor_size<Cursor>::type m_branch;
     
+ private:
     typename Cursor::value_type& dereference() const
     {
     		return *m_s.top();
     	}
     
+    bool equal(iterator<Cursor, forward_traversal_tag> const& other) const
+    {
+    		return (this->m_s == other.m_s) && (this->m_branch == other.m_branch);
+    }
+    
     void increment()
     {
-		//forward(this->base_reference());
 		if (!(++m_s.top()).empty()) {
-			while (!m_s.top().begin().empty()) {
+			while (!m_s.top().begin().empty() && !m_s.top().end().empty())
 				m_s.push(m_s.top().begin());
-			}
+			if (!m_s.top().begin().empty() && m_s.top().end().empty())
+				m_branch = m_s.size();
+			while (!m_s.top().begin().empty())
+				m_s.push(m_s.top().begin());	
 			m_s.push(m_s.top().begin());
 			return;
 		}
 		
-		while (m_s.top().parity()) 
-			m_s.pop(); 
-
-	// ...
+		if (++m_branch == m_s.size())
+			return;
+			
+		while (m_s.top().parity())
+			m_s.pop();
+		if (--m_branch > m_s.size()) 
+			m_branch = m_s.size();
 		return;
     }
     
     void decrement()
     {
-    		back(this->base_reference());
+    		//back(this->base_reference());
+	    	if (!m_s.top().empty()) {
+			while (!m_s.top().end().empty())
+				m_s.push(m_s.top().end());
+			m_s.push(m_s.top().begin());
+			return;
+		}
+		while (!m_s.top().parity())
+			m_s.pop();
+		//m_s.top() = m_s.top().parent().begin();
+		return;
     }
 };
 
@@ -134,13 +155,16 @@ begin(MultiwayTree& t, forward_traversal_tag)
 {
 	typedef typename MultiwayTree::cursor cursor;
 	std::stack<cursor> s;
-	cursor c = t.root();
-	s.push(c);
-	while (!c.empty()) {
-		c = c.begin();
-		s.push(c);
+ 	typename cursor_size<cursor>::type branch = 0;
+ 	typename cursor_size<cursor>::type i = 0;
+	s.push(t.root());
+	while (!s.top().empty()) {
+		++i;
+		if (!branch && !s.top().end().empty())
+			branch = i;
+		s.push(s.top().begin());
 	}
-	return iterator<cursor, forward_traversal_tag>(s);
+	return iterator<cursor, forward_traversal_tag>(s, branch);
 }
 
 template <class MultiwayTree>
@@ -198,6 +222,17 @@ iterator<typename MultiwayTree::const_cursor> cbegin(MultiwayTree const& t)
 	return cbegin(t, traversal());
 }
 
+template <class MultiwayTree>
+iterator<typename MultiwayTree::cursor, forward_traversal_tag> 
+end(MultiwayTree& t, forward_traversal_tag)
+{
+	typedef typename MultiwayTree::cursor cursor;
+	std::stack<cursor> s;
+	s.push(t.root());
+	while (!s.top().empty())
+		s.push(s.top().end());
+	return iterator<cursor, forward_traversal_tag>(s, s.size());
+}
 
 template <class MultiwayTree>
 iterator<typename MultiwayTree::cursor>

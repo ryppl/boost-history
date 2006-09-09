@@ -237,10 +237,39 @@ void test_orphaned_inorder_traversal(binary_tree<int>& the_tree)
 	BOOST_CHECK(*ci == 12);
 	++ci;
 	BOOST_CHECK(*ci == 13);
-	++ci;
+	++ci;	
 	BOOST_CHECK(*ci == 14);
-	//++ci;
-	//BOOST_CHECK(ci == boost::tree::inorder::end(the_tree, boost::forward_traversal_tag()));
+	++ci;
+	BOOST_CHECK(ci == boost::tree::inorder::end(the_tree, boost::forward_traversal_tag()));
+}
+
+void test_orphaned_reverse_inorder_traversal(binary_tree<int>& the_tree)
+{	
+	boost::tree::inorder::iterator<binary_tree<int>::cursor, boost::forward_traversal_tag>
+		ci = boost::tree::inorder::end(the_tree, boost::forward_traversal_tag());
+	--ci;
+	BOOST_CHECK(*ci == 14);
+	--ci;
+	BOOST_CHECK(*ci == 13);
+	--ci;
+	BOOST_CHECK(*ci == 12);	
+	--ci;
+	BOOST_CHECK(*ci == 11);
+	--ci;
+	BOOST_CHECK(*ci == 10);
+	--ci;
+	BOOST_CHECK(*ci == 8);
+	--ci;
+	BOOST_CHECK(*ci == 7);
+	--ci;
+	BOOST_CHECK(*ci == 6);
+	--ci;
+	BOOST_CHECK(*ci == 4);
+	--ci;
+	BOOST_CHECK(*ci == 3);
+	--ci;	
+	BOOST_CHECK(*ci == 1);
+	BOOST_CHECK(ci == boost::tree::inorder::begin(the_tree, boost::forward_traversal_tag()));
 }
 
 int test_main(int, char* [])
@@ -262,6 +291,7 @@ int test_main(int, char* [])
 	test_reverse_postorder_traversal(test_tree);
 	
 	test_orphaned_inorder_traversal(test_tree);
+	//test_orphaned_reverse_inorder_traversal(test_tree);
 	
 	return 0;
 }

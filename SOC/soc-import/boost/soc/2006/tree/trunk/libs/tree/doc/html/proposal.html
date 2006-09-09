@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Tree Structures and Related Concepts for the C++ Standard Library (TR2)</title>
+</head>
+
+<body>
+<h1>Tree Structures and Related Concepts for the C++ Standard Library (TR2)</h1>
+<h2>Introduction</h2>
+<h3>What alternatives?</h3>
+
+<dl>
+<dt>Trees of trees</dt><dd>Duplicates allocators etc. ...</dd>
+</dl>
+
+<h2>Proposed Text for Technical Report 2</h2>
+
+<h3>23.1.X Hierarchies</h3>
+
+<ol>
+<li>
+A hierarchy is an object that stores a finite set of objects, all of the same type, in a
+hierarchical manner. They fulfill many, but not all of the containers requirements; unlike 
+containers, hierarchies introduce a cursor concept for navigation as opposed to iterators as 
+used by containers. The library provides ... kinds of hierarchies: ...
+</li>
+<li>
+Non-constant complexity requirements in this clause are stated in one out of two different ways: 
+unless specified otherwise, they are expressed in terms of the number of operations <tt>n</tt>, 
+which stands for the total number of elements in the hierarchy; or in terms of the number 
+of operations <tt>c</tt>, which stands for the number of child elements of a given element. 
+</li>
+<li>
+The type of objects stored in these components must meet the requirements of <tt>CopyConstructible</tt>
+types (20.1.3), and the additional requirements of <tt>Assignable</tt> types.
+</li>
+<li>
+In Table Y, <tt>X</tt> denotes a hierarchy class containing objects of type <tt>T</tt>, 
+<tt>a</tt> denotes a value of type X, <tt>u</tt> denotes an identifier and <tt>r</tt> denotes 
+a value of <tt>X&amp;</tt>.
+
+<table>
+<caption>
+Table Y - Hierarchy requirements
+</caption>
+<tr>
+<th>
+expression
+</th>
+<th>
+return type
+</th>
+<th>
+assertion note<br />pre/post-condition
+</th>
+<th>
+complexity
+</th>
+</tr>
+
+<tr>
+<td>
+<tt>X::value_type</tt>
+</td>
+<td>
+<tt>T</tt>
+</td>
+<td>
+<tt>T</tt> is <tt>Assignable</tt>
+</td>
+<td>
+compile time
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X::reference</tt>
+</td>
+<td>
+lvalue of <tt>T</tt>
+</td>
+<td>
+
+</td>
+<td>
+compile time
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X::const_reference</tt>
+</td>
+<td>
+const lvalue of <tt>T</tt>
+</td>
+<td>
+
+</td>
+<td>
+compile time
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X::cursor</tt>
+</td>
+<td>
+cursor type pointing to <tt>T</tt>
+</td>
+<td>
+any cursor category
+</td>
+<td>
+compile time
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X::const_cursor</tt>
+</td>
+<td>
+cursor type pointing to <tt>const T</tt>
+</td>
+<td>
+any cursor category
+</td>
+<td>
+compile time
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X::difference_type</tt>
+</td>
+<td>
+signed integral type
+</td>
+<td>
+is identical to the distance type of <tt>X::iterator</tt> and <tt>X::const_iterator</tt>
+</td>
+<td>
+compile time
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X::size_type</tt>
+</td>
+<td>
+unsigned integral type
+</td>
+<td>
+<tt>size_type</tt> can represent any non-negative value of <tt>difference_type</tt>
+</td>
+<td>
+compile time
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X u;</tt>
+</td>
+<td>
+
+</td>
+<td>
+post: <tt>u.size() == 0</tt>
+</td>
+<td>
+constant
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X()</tt>
+</td>
+<td>
+
+</td>
+<td>
+<tt>X().size() == 0</tt>
+</td>
+<td>
+constant
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X(a);</tt>
+</td>
+<td>
+
+</td>
+<td>
+<tt>a == X(a)</tt>
+</td>
+<td>
+linear
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>X u(a);</tt><br /><tt>X u = a;</tt>
+</td>
+<td>
+
+</td>
+<td>
+post: <tt>u == a</tt><br />Equivalent to: X u; u = a;
+</td>
+<td>
+linear
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>(&amp;a)->~X();</tt>
+</td>
+<td>
+<tt>void</tt>
+</td>
+<td>
+note: the destructor is applied to every element of <tt>a</tt>; all the memory is returned
+</td>
+<td>
+linear
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>a.root()</tt>
+</td>
+<td>
+<tt>iterator</tt> for mutable <tt>a</tt>; <br /><tt>const_iterator</tt> for constant <tt>a</tt>
+</td>
+<td>
+
+</td>
+<td>
+constant
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>a.shoot()</tt>
+</td>
+<td>
+<tt>iterator</tt> for mutable <tt>a</tt>; <br /><tt>const_iterator</tt> for constant <tt>a</tt>
+</td>
+<td>
+
+</td>
+<td>
+logarithmic [... or constant?]
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>a == b</tt>
+</td>
+<td>
+convertible to <tt>bool</tt>
+</td>
+<td>
+<tt>==</tt> is an equivalence relation. <br />
+<tt>a.size() == b.size() &amp;&amp; ... [equality of elements]</tt>
+</td>
+<td>
+linear
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>a != b</tt>
+</td>
+<td>
+convertible to <tt>bool</tt>
+</td>
+<td>
+Equivalent to: <tt>a != b</tt>
+</td>
+<td>
+linear
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>a.swap(b)</tt>
+</td>
+<td>
+<tt>void</tt>
+</td>
+<td>
+<tt>swap(a,b)</tt>
+</td>
+<td>
+(Note A)
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>r = a</tt>
+</td>
+<td>
+<tt>X&amp;</tt>
+</td>
+<td>
+post: <tt>r == a</tt>
+</td>
+<td>
+linear
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>a.size()</tt>
+</td>
+<td>
+<tt>size_type</tt>
+</td>
+<td>
+
+</td>
+<td>
+(Note A)
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>a.max_size()</tt>
+</td>
+<td>
+<tt>size_type</tt>
+</td>
+<td>
+Operational semantics: <tt>size()</tt> of the largest possible hierarchy
+</td>
+<td>
+(Note A)
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>a.empty()</tt>
+</td>
+<td>
+convertible to <tt>bool</tt>
+</td>
+<td>
+Operational semantics: <tt>a.size() == 0</tt>
+</td>
+<td>
+(Note A)
+</td>
+</tr>
+
+<tr>
+<td>
+<tt>...</tt>
+</td>
+<td>
+[Comparison functions?]
+</td>
+<td>
+</td>
+<td>
+</td>
+</tr>
+
+</table>
+
+<p>
+Notes: the algorithms <tt>swap()</tt> and <tt>equal()</tt> <!--and lexicographical_compare()-->
+are defined in Clause 25. Those entries marked "(Note A)" should have constant complexity.
+</p>
+
+</li>
+<li>
+The member function <tt>size()</tt> returns the number of elements in the hierarchy. 
+Its semantics is defined by the rules of constructors, inserts, and erases.
+</li>
+<li>
+<tt>root()</tt> returns a cursor referring to the uppermost element in the hierarchy. 
+<tt>shoot()</tt> returns a cursor which is the past-the-end value that is found one past
+the hierarchy's rightmost element. 
+If the container is empty, then <tt>root() == shoot()</tt>;
+</li>
+<li>
+Copy constructors for all hierarchy types defined in this clause copy the allocator argument 
+from their respective first parameters. All other constructors for these container types take an 
+<tt>Allocator&amp;</tt> argument (20.1.5). A copy of this argument is used for any memory 
+allocation performed, by these constructors and by all member functions, during the lifetime of 
+each hierarchy object. In all hierarchy types defined in this clause, the member 
+<tt>get_allocator()</tt> returns a copy of the Allocator object used to construct the
+hierarchy.
+</li>
+<li>[... Reverse hierarchies?]</li>
+</ol>
+
+<h3>24.X Cursors</h3>
+<p>
+Cursors provide a uniform way of applying algorithms to hierarchical data structures.
+In order to also allow for algorithms relevant when dealing with linear data structures, any 
+cursor class is actually a refinement of a corresponding iterator class.
+</p>
+</body>
+</html>
