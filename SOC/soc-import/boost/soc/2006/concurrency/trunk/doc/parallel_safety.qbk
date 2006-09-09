@@ -11,9 +11,27 @@
 
 [section Parallel Safety]
 
+[section Defaults]
+
 [table Default Parallel Safety Assumptions
-[[Operation]                         [Safety]              ]
-[[Non-Modifying Overloaded Operators][Strong Parallel-Safe]]
+[[Operation]                         [Safety]                                  ]
+[[Non-Modifying Overloaded Operators][Strong Parallel-Safe]                    ]
+[[Modifying Overloaded Operators]    [No Safety]                               ]
+[[Trivial Assignment Operator]       [Basic Parallel-Safe with respect to the
+                                      left hand operand when detectable
+                                     ]                                         ]
+[[Trivial Destructor]                [Strong Parallel-Safe when detectable]    ]
+[[All Other Function Objects]        [No Safety]                               ]
 ]
+
+The default parallel-safety assumptions described above carry over for standard
+library function objects where applicable. For instance, `::std::less< int >`
+has a strong parallel-safe `bool operator ()( int const&, int const& ) const`.
+
+[endsect]
+
+[section Overriding Defaults]
+
+[endsect]
 
 [endsect]

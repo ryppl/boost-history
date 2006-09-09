@@ -25,11 +25,18 @@
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="act.parallel_safety"></a><a href="parallel_safety.html" title="Parallel Safety">Parallel Safety</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="parallel_safety.html#act.parallel_safety.defaults">Defaults</a></span></dt>
+<dt><span class="section"><a href="parallel_safety.html#act.parallel_safety.overriding_defaults">Overriding Defaults</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.parallel_safety.defaults"></a><a href="parallel_safety.html#act.parallel_safety.defaults" title="Defaults">Defaults</a></h3></div></div></div>
 <div class="informaltable">
 <h5>
-<a name="id509637"></a>
-        <span class="table-title">Default Parallel Safety Assumptions</span>
-      </h5>
+<a name="id509636"></a>
+          <span class="table-title">Default Parallel Safety Assumptions</span>
+        </h5>
 <table class="table">
 <colgroup>
 <col>
@@ -39,12 +46,38 @@
 <th>Operation</th>
 <th>Safety</th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>Non-Modifying Overloaded Operators</td>
 <td>Strong Parallel-Safe</td>
-</tr></tbody>
+</tr>
+<tr>
+<td>Modifying Overloaded Operators</td>
+<td>No Safety</td>
+</tr>
+<tr>
+<td>Trivial Assignment Operator</td>
+<td>Basic Parallel-Safe
+              with respect to the left hand operand when detectable </td>
+</tr>
+<tr>
+<td>Trivial Destructor</td>
+<td>Strong Parallel-Safe when detectable</td>
+</tr>
+<tr>
+<td>All Other Function Objects</td>
+<td>No Safety</td>
+</tr>
+</tbody>
 </table>
 </div>
+<p>
+        The default parallel-safety assumptions described above carry over for standard
+        library function objects where applicable. For instance, <code class="code"><span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span></code> has a strong parallel-safe <code class="code"><span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">()(</span> <span class="keyword">int</span> <span class="keyword">const</span><span class="special">&amp;,</span> <span class="keyword">int</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="special">)</span> <span class="keyword">const</span></code>.
+      </p>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title">
+<a name="act.parallel_safety.overriding_defaults"></a><a href="parallel_safety.html#act.parallel_safety.overriding_defaults" title="Overriding Defaults">Overriding Defaults</a></h3></div></div></div></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
