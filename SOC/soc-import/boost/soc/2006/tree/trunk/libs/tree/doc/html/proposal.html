@@ -408,11 +408,11 @@ Its semantics is defined by the rules of constructors, inserts, and erases.
 <tt>root()</tt> returns a cursor referring to the uppermost element in the hierarchy. 
 <tt>shoot()</tt> returns a cursor which is the past-the-end value that is found one past
 the hierarchy's rightmost element. 
-If the container is empty, then <tt>root() == shoot()</tt>;
+If the hierarchy is empty, then <tt>root() == shoot()</tt>;
 </li>
 <li>
 Copy constructors for all hierarchy types defined in this clause copy the allocator argument 
-from their respective first parameters. All other constructors for these container types take an 
+from their respective first parameters. All other constructors for these hierarchy types take an 
 <tt>Allocator&amp;</tt> argument (20.1.5). A copy of this argument is used for any memory 
 allocation performed, by these constructors and by all member functions, during the lifetime of 
 each hierarchy object. In all hierarchy types defined in this clause, the member 

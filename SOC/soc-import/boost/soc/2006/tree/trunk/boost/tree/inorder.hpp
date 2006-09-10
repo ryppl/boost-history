@@ -100,7 +100,7 @@ inline void back(MultiwayCursor& c)
 	}
 	while (!c.parity())
 		c = c.parent();
-	c = c.parent().begin();
+	--c;
 	return;
 }
 

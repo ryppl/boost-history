@@ -91,13 +91,12 @@ class iterator<Cursor, forward_traversal_tag>
 	{
 		return m_s.top();
 	}
-// private: //FIXME
+ private:
     friend class boost::iterator_core_access;
 
  	stack<Cursor> m_s;
  	typename cursor_size<Cursor>::type m_branch;
     
- private:
     typename Cursor::value_type& dereference() const
     {
     		return *m_s.top();
@@ -133,8 +132,7 @@ class iterator<Cursor, forward_traversal_tag>
     
     void decrement()
     {
-    		//back(this->base_reference());
-	    	if (!m_s.top().empty()) {
+	    	if (!m_s.top().empty()) {	    		
 			while (!m_s.top().end().empty())
 				m_s.push(m_s.top().end());
 			m_s.push(m_s.top().begin());
@@ -142,7 +140,10 @@ class iterator<Cursor, forward_traversal_tag>
 		}
 		while (!m_s.top().parity())
 			m_s.pop();
-		//m_s.top() = m_s.top().parent().begin();
+	    	if (++m_branch > m_s.size()) 
+			m_branch = m_s.size();
+		--m_branch;
+		--m_s.top();
 		return;
     }
 };

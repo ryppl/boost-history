@@ -291,7 +291,7 @@ int test_main(int, char* [])
 	test_reverse_postorder_traversal(test_tree);
 	
 	test_orphaned_inorder_traversal(test_tree);
-	//test_orphaned_reverse_inorder_traversal(test_tree);
+	test_orphaned_reverse_inorder_traversal(test_tree);
 	
 	return 0;
 }
