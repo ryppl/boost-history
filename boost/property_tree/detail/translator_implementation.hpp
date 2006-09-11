@@ -17,7 +17,7 @@ namespace boost { namespace property_tree
     {
         
         // Data-to-string converter for std::string
-        std::string data_to_string(const std::string &data)
+        inline std::string data_to_string(const std::string &data)
         {
             return data;
         }
@@ -106,11 +106,11 @@ namespace boost { namespace property_tree
 
     }
 
-    translator::translator()
+    inline translator::translator()
     {
     }
 
-    translator::translator(const std::locale &loc):
+    inline translator::translator(const std::locale &loc):
         m_locale(loc)
     {
     }

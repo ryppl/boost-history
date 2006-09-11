@@ -28,12 +28,12 @@ namespace boost { namespace property_tree
     ///////////////////////////////////////////////////////////////////////
     // Free functions
 
-    path operator /(const path &p1, const path &p2)
+    inline path operator /(const path &p1, const path &p2)
     {
         return path(p1) /= p2;
     }
 
-    wpath operator /(const wpath &p1, const wpath &p2)
+    inline wpath operator /(const wpath &p1, const wpath &p2)
     {
         return wpath(p1) /= p2;
     }
