@@ -27,8 +27,6 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/tree/binary_tree.hpp>
-#include <boost/tree/augmentors/trivial.hpp>
-#include <boost/tree/balancers/trivial.hpp>
 
 #include <boost/tree/searcher.hpp>
 #include <boost/tree/algorithm.hpp>
