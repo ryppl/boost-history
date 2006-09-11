@@ -8,47 +8,47 @@ using namespace boost::wave;
 /// right braces '}' and semicolons ';'.
 void 
 TokenStreamOp::operator () (OutputDelegate *out) {
-	typedef std::vector<token_t>::iterator iter_t;
-	std::string result;
-	for (iter_t it = m_tokens.begin ();
-	     it != m_tokens.end ();
-	     ++it) {
-		result.append (it->get_value().begin (),
-		               it->get_value().end ());
-		if (   (*it == T_RIGHTBRACE)
-		    || (*it == T_SEMICOLON))
-		    result.append ("\n");
-		else
-			result.append (" ");
-	}
-	out->text(result);
+    typedef std::vector<token_t>::iterator iter_t;
+    std::string result;
+    for (iter_t it = m_tokens.begin ();
+         it != m_tokens.end ();
+         ++it) {
+        result.append (it->get_value().begin (),
+                       it->get_value().end ());
+        if (   (*it == T_RIGHTBRACE)
+            || (*it == T_SEMICOLON))
+            result.append ("\n");
+        else
+            result.append (" ");
+    }
+    out->text(result);
 }
 
 void
 TokenOp::operator() (OutputDelegate *del) {
-	std::string result;
-	result.append (m_tok.get_value().begin (),
-	               m_tok.get_value().end ());
-	if (   (m_tok == T_RIGHTBRACE)
-		|| (m_tok == T_SEMICOLON))
-		result.append ("\n");
-	else
-		result.append (" ");
-	
-	del->text(result);
+    std::string result;
+    result.append (m_tok.get_value().begin (),
+                   m_tok.get_value().end ());
+    if (   (m_tok == T_RIGHTBRACE)
+        || (m_tok == T_SEMICOLON))
+        result.append ("\n");
+    else
+        result.append (" ");
+    
+    del->text(result);
 }
 
 void
 StringOp::operator () (OutputDelegate *del) {
-	del->text(m_str);
+    del->text(m_str);
 }
 
 bool
 whitespace (const token_t& tok) {
-	return    (tok == T_SPACE) || (tok == T_SPACE2)
-	       || (tok == T_CCOMMENT) || (tok == T_CPPCOMMENT)
-	       || (tok == T_NEWLINE);
-	
-// 	return (ID_FROM_TOKEN(tok) == EOLTokenType)
-// 	    || (ID_FROM_TOKEN(tok) == WhiteSpaceTokenType);
+    return    (tok == T_SPACE) || (tok == T_SPACE2)
+           || (tok == T_CCOMMENT) || (tok == T_CPPCOMMENT)
+           || (tok == T_NEWLINE);
+    
+//  return (ID_FROM_TOKEN(tok) == EOLTokenType)
+//      || (ID_FROM_TOKEN(tok) == WhiteSpaceTokenType);
 }

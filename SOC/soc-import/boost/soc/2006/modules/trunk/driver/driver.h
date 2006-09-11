@@ -17,17 +17,17 @@
 
 
 class Driver {
-	// copy-pasted from wave/examples/quick_start.cpp
-	typedef boost::wave::cpplexer::lex_token<> token_t;
-	typedef boost::wave::cpplexer::lex_iterator<token_t> lex_iter_t;
-	typedef boost::wave::context<std::string::iterator, lex_iter_t>
-	   context_t;
-	
-	// (temporary) local storehouse for all the .mapfiles.
-	
-	
+    // copy-pasted from wave/examples/quick_start.cpp
+    typedef boost::wave::cpplexer::lex_token<> token_t;
+    typedef boost::wave::cpplexer::lex_iterator<token_t> lex_iter_t;
+    typedef boost::wave::context<std::string::iterator, lex_iter_t>
+       context_t;
+    
+    // (temporary) local storehouse for all the .mapfiles.
+    
+    
 public:
-	static int execute (int args, const char ** argv);
+    static int execute (int args, const char ** argv);
 };
 
 

@@ -10,6 +10,7 @@
 #include "export_stmt.h"
 #include "access_ctl.h"
 #include "import_stmt.h"
+#include "template_stmt.h"
 
 #include <boost/format.hpp>
 
@@ -52,30 +53,30 @@ void break_here (context_iter_t ,context_iter_t );
 
 
 // struct register_actor {
-// 	virtual ~register_actor () {}
-// 	virtual const Markup& createMarkup (const context_iter_t&  start,
-// 	                                    const context_iter_t&  end) = 0;
-// 	template<typename T, typename ValueT>
-// 	void act (T& ref, ValueT const& value) const {
-// 		throw "register_actor: wrong act() getting called!";
-// 	}
-// 	
-// 	template<typename T, typename IterT>
-// 	void act (T& ref, IterT const& start, IterT const& end) const {
-// 		ref.add (createMarkup(start,end));
-// 	}
+//  virtual ~register_actor () {}
+//  virtual const Markup& createMarkup (const context_iter_t&  start,
+//                                      const context_iter_t&  end) = 0;
+//  template<typename T, typename ValueT>
+//  void act (T& ref, ValueT const& value) const {
+//      throw "register_actor: wrong act() getting called!";
+//  }
+//  
+//  template<typename T, typename IterT>
+//  void act (T& ref, IterT const& start, IterT const& end) const {
+//      ref.add (createMarkup(start,end));
+//  }
 // };
 template<class Transform>
 struct register_actor {
-	template<typename T, typename ValueT>
-	void act (T& ref, ValueT const& value) const {
-		throw "register_actor: wrong act() getting called!";
-	}
-	
-	template<typename T, typename IterT>
-	void act (T& ref, IterT const& start, IterT const& end) const {
-		ref.add (new Transform(start,end));
-	}
+    template<typename T, typename ValueT>
+    void act (T& ref, ValueT const& value) const {
+        throw "register_actor: wrong act() getting called!";
+    }
+    
+    template<typename T, typename IterT>
+    void act (T& ref, IterT const& start, IterT const& end) const {
+        ref.add (new Transform(start,end));
+    }
 };
 
 ref_value_actor<TransformContext,register_actor<MethodBodyXForm> >
@@ -93,4 +94,6 @@ access_default ( TransformContext * ctx );
 ref_value_actor<TransformContext,register_actor<ImportStmtXForm> >
 import_stmt ( TransformContext * ctx );
 
+ref_value_actor<TransformContext,register_actor<TemplateStmtXForm> >
+template_stmt ( TransformContext * ctx );
 #endif

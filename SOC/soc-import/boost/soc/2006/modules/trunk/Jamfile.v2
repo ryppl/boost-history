@@ -12,6 +12,7 @@ exe mfront_bin :
 	parser/xformctx.cpp
 	parser/method_body.cpp
 	parser/export_stmt.cpp
+	parser/template_stmt.cpp
 	parser/import_stmt.cpp
 	parser/access_ctl.cpp
 	$(BOOST_ROOT)//filesystem

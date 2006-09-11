@@ -1,7 +1,7 @@
 /** @file output.h
-	\brief OutputDelegate, for managing a single output stream
-	
-	The OutputDelegate manages the final emission of text to an output stream.
+    \brief OutputDelegate, for managing a single output stream
+    
+    The OutputDelegate manages the final emission of text to an output stream.
 */
 
 #ifndef INCLUDE_OUTPUT_H
@@ -22,22 +22,22 @@
 #include "../map/map.h"
 
 class OutputDelegate {
-	std::ostream&  m_stream;
-	MapManager   * m_mmgr;
-	bool           m_emitted;
-	std::vector<std::string>  m_includes;
-	std::vector<std::string>  m_text;
-	
-	void check ();
-	
+    std::ostream&  m_stream;
+    MapManager   * m_mmgr;
+    bool           m_emitted;
+    std::vector<std::string>  m_includes;
+    std::vector<std::string>  m_text;
+    
+    void check ();
+    
 public:
-	OutputDelegate (std::ostream& s, MapManager *m);
-	~OutputDelegate ();
-	
-	void text (const std::string& s);
-	void include (const std::string& module_name);
-	
-	void emit ();
+    OutputDelegate (std::ostream& s, MapManager *m);
+    ~OutputDelegate ();
+    
+    void text (const std::string& s);
+    void include (const std::string& module_name);
+    
+    void emit ();
 };
 
 
