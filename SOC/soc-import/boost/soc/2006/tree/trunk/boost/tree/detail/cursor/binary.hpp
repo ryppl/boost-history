@@ -28,7 +28,7 @@
 
 /** 
  * @file binary.hpp
- * Binary cursor template specialization
+ * Binary cursor template
  */
 
 // TODO: Use TR1 type_traits (integral_constant)
@@ -39,11 +39,6 @@
 #define BOOST_TREE_DETAIL_CURSOR_BINARY_HPP
 
 #include <boost/tree/detail/node/binary.hpp>
-#include <boost/tree/detail/cursor/general.hpp>
-
-//#include <boost/tree/augmentors/trivial.hpp>
-//#include <boost/tree/balancers/trivial.hpp>
-//#include <boost/tree/binary_tree.hpp>
 
 #include <boost/type_traits/integral_constant.hpp>
 
@@ -51,6 +46,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/iterator/iterator_facade.hpp>
+
 
 #include <iterator>
 #include <utility>
@@ -69,11 +65,13 @@ class access_rotate {
       }
 };
 
+template <class Node>
+class tree_cursor;
 
-template<class T, class Augment, class Balance> 
-class const_tree_cursor<binary_node<T, Augment, Balance> > 
- : public boost::iterator_facade<const_tree_cursor<binary_node<T, Augment, Balance> >
-      , T const //const is a hint for iterator_facade!
+template<class Node>
+class const_tree_cursor
+ : public boost::iterator_facade<const_tree_cursor<Node>
+      , typename Node::value_type const //const is a hint for iterator_facade!
       , random_access_traversal_tag
     > {
  private:
@@ -82,26 +80,24 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
  public:
  	//TODO: Tidy up typedefs
  	 	
- 	typedef binary_node<T, Augment, Balance> const node_type;
+ 	typedef Node const node_type;
 	typedef node_type* node_pointer;
 
-	typedef typename binary_node<T, Augment, Balance>::base_pointer 
-		base_pointer;	
-	typedef typename binary_node<T, Augment, Balance>::const_base_pointer 
-		const_base_pointer;
+	typedef typename Node::base_pointer base_pointer;	
+	typedef typename Node::const_base_pointer const_base_pointer;
 	
 	// Container-specific:
-	typedef typename node_type::size_type size_type;
+	typedef typename Node::size_type size_type;
 
 	// Cursor-specific
 	typedef integral_constant<size_type, 2> arity; // binary cursor
 	
- 	typedef tree_cursor<binary_node<T, Augment, Balance> > cursor;
- 	typedef const_tree_cursor<binary_node<T, Augment, Balance> > const_cursor;
+ 	typedef tree_cursor<Node> cursor;
+ 	typedef const_tree_cursor<Node> const_cursor;
 
 	typedef bidirectional_traversal_tag vertical_traversal_type;
 	
-	typedef typename node_type::metadata_type metadata_type;
+	typedef typename Node::metadata_type metadata_type;
 	
 	// Container-specific:
 	typedef cursor iterator;  // For (range) concepts' sake, mainly
@@ -121,7 +117,7 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
         const_tree_cursor<OtherNode> const& other
       , typename boost::enable_if<
             boost::is_convertible<OtherNode*, 
-           	typename binary_node<T, Augment, Balance>::base_pointer>  // is that correct?
+           	typename Node::base_pointer>  // is that correct?
           , enabler
         >::type = enabler()
     )
@@ -134,7 +130,7 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
 
     friend class boost::iterator_core_access;
     
-    T const& dereference() const
+    typename Node::value_type const& dereference() const
 	{
 		return **static_cast<node_pointer>(m_parent);
 	}
@@ -154,15 +150,12 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
 		--m_pos;
     }
     
-    void advance(typename iterator_facade<const_tree_cursor, const T, 
-					random_access_traversal_tag, const T&, 
-					int>::difference_type n)
+    void advance(typename const_tree_cursor::iterator_facade_::difference_type n)
     {
     		m_pos += n;
     }
     
-    typename iterator_facade<const_tree_cursor, const T, 
-    	random_access_traversal_tag, const T&, int>::difference_type
+    typename const_tree_cursor::iterator_facade_::difference_type
     distance_to(const_tree_cursor z) const //TODO: convertible to instead of const_tree_cursor (?)
     {
     		return (z.m_pos - this->m_pos);
@@ -219,18 +212,19 @@ public:
 	}
 };
 
-template<class T, class Augment, class Balance> 
-class tree_cursor<binary_node<T, Augment, Balance> > 
- : public boost::iterator_facade<tree_cursor<binary_node<T, Augment, Balance> >
-      , T
+template <class Node> 
+class tree_cursor//
+ : public boost::iterator_facade<tree_cursor<Node>
+      , typename Node::value_type
       , random_access_traversal_tag
+      //, bidirectional_traversal_tag
     > {
  private:
-  	typedef typename binary_node<T, Augment, Balance>::base_pointer base_pointer;
+  	typedef typename Node::base_pointer base_pointer;
     struct enabler {};
 
  public:
- 	typedef binary_node<T, Augment, Balance> node_type;
+ 	typedef Node node_type;
 	typedef node_type* node_pointer;
 
 	// Container-specific:
@@ -239,8 +233,8 @@ class tree_cursor<binary_node<T, Augment, Balance> >
 	// Cursor-specific
 	typedef integral_constant<size_type, 2> arity; // binary cursor
 		
- 	typedef tree_cursor<binary_node<T, Augment, Balance> > cursor;
- 	typedef const_tree_cursor<binary_node<T, Augment, Balance> > const_cursor;
+ 	typedef tree_cursor<node_type > cursor;
+ 	typedef const_tree_cursor<node_type> const_cursor;
 
 	typedef bidirectional_traversal_tag vertical_traversal_type;
  
@@ -249,8 +243,12 @@ class tree_cursor<binary_node<T, Augment, Balance> >
 	// Container-specific:
 	typedef cursor iterator;
 	typedef const_cursor const_iterator;
-
-
+	
+	template <class OtherValue>
+	struct rebind {
+		typedef tree_cursor<OtherValue> other;
+	};
+	
     tree_cursor()
       : m_parent(0), m_pos(0) {}
 
@@ -274,7 +272,7 @@ class tree_cursor<binary_node<T, Augment, Balance> >
  	friend class boost::iterator_core_access;
  	friend class access_rotate;
  	
-    T& dereference() const
+    typename node_type::reference dereference() const
 	{
 		return **static_cast<node_pointer>(m_parent);
 	}
@@ -294,15 +292,12 @@ class tree_cursor<binary_node<T, Augment, Balance> >
 		--m_pos;
     }    
     
-	void advance(typename iterator_facade<tree_cursor, const T, 
-					random_access_traversal_tag, const T&, 
-					int>::difference_type n)
+	void advance(typename tree_cursor::iterator_facade_::difference_type n)
     {
     		m_pos += n;
     }
     
-    typename iterator_facade<tree_cursor, const T, 
-    		random_access_traversal_tag, const T&, int>::difference_type
+    typename tree_cursor::iterator_facade_::difference_type
     distance_to(tree_cursor z) const //FIXME: convertible to instead of const_tree_cursor
     {
     		return (z.m_pos - this->m_pos);
