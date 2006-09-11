@@ -39,6 +39,7 @@ using boost::multi_index::identity;
 /**
  * @brief	test_searcher (exposes underlying container for test purposes)
  */
+ // TODO: Ctors, dtor!
 template <bool Multi, class Sortable, class Extract = 
 		  boost::multi_index::identity<typename Sortable::value_type>,
 		  class Compare = std::less<typename Extract::result_type> >

@@ -55,7 +55,7 @@ void test_rotate()
 	
 	BOOST_CHECK(*c.begin() == 6);
 	
-	c.rotate(); // Left rotate
+	mytree.rotate(c); // Left rotate
 
 	BOOST_CHECK(*c.begin() == 6);
 	BOOST_CHECK(*c.parent().begin() == 8);
@@ -69,7 +69,7 @@ void test_rotate()
 	c = c.begin();
 	BOOST_CHECK(*c.begin() == 3);
 	
-	c.rotate(); // Right rotate
+	mytree.rotate(c); // Right rotate
 	
 	BOOST_CHECK(*c.begin() == 3);
 	c = c.end();

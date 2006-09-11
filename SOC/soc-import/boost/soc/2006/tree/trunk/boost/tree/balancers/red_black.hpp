@@ -33,6 +33,10 @@
 //TODO: lots.
 //templatize with bool add_data?
 
+#include <boost/tree/detail/cursor/binary.hpp>
+
+using boost::tree::detail::access_rotate;
+
 namespace boost {
 namespace tree {
 
@@ -59,7 +63,7 @@ private:
 
 //make the following part of tree? that is, derive tree from this (as templ. arg)?
 //template <class Node> //tentative approach using CRTP.
-class red_black_balance {
+class red_black_balance : public access_rotate {
 public:
 	typedef red_black_metadata metadata_type;
 //	metadata_type metadata;
@@ -79,7 +83,7 @@ public:
 	
 	
 	template <class Cursor>
-	static void add(Cursor x, Cursor header) 
+	void add(Cursor x, Cursor header) 
 	{
 		x.metadata().set_color(red);
 		while (x.parent().metadata().get_color() == red) {
@@ -92,12 +96,13 @@ public:
 				x = x.parent().parent();
 			} else {
 				if (x.parity() != x.parent().parity()) {
-					x.rotate();
+					access_rotate::rotate(x);
 					x = (x.parity() ? x.end() : x.begin());
 				}
 			x.parent().metadata().set_color(black);
 			x.parent().parent().metadata().set_color(red);
-			x.parent().rotate();
+			x = x.parent(); //FIXME: was x.parent.rotate();
+			access_rotate::rotate(x); 
 			}
 		if (x.parent() == header)
 			x.metadata().set_color(black);
@@ -105,10 +110,13 @@ public:
 	}
 	  
 	template <class Cursor>
-	static void remove(Cursor) { }
+	Cursor remove(Cursor) // or other signature?
+	{
+	}
 	
 	template <class Cursor>
-	static void read(Cursor) { }
+	void read(Cursor)
+	{ }
   
 };
 

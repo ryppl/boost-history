@@ -39,8 +39,8 @@
 #define BOOST_TREE_DETAIL_NODE_BINARY_HPP
 
 
-#include <boost/tree/augmentors/trivial.hpp>
-#include <boost/tree/balancers/trivial.hpp>
+//#include <boost/tree/augmentors/trivial.hpp>
+//#include <boost/tree/balancers/trivial.hpp>
 
 #include <iterator>
 #include <utility>
@@ -169,7 +169,7 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 };
 
 
-template <typename T, class Augment = trivial_augment, class BalanceData = trivial_metadata>
+template <typename T, class Augment, class BalanceData>
 class binary_node
 : public binary_node_base /*, public Augment, public BalanceData */ {
  public:

@@ -41,9 +41,9 @@
 #include <boost/tree/detail/node/binary.hpp>
 #include <boost/tree/detail/cursor/general.hpp>
 
-#include <boost/tree/augmentors/trivial.hpp>
-#include <boost/tree/balancers/trivial.hpp>
-#include <boost/tree/binary_tree.hpp>
+//#include <boost/tree/augmentors/trivial.hpp>
+//#include <boost/tree/balancers/trivial.hpp>
+//#include <boost/tree/binary_tree.hpp>
 
 #include <boost/type_traits/integral_constant.hpp>
 
@@ -58,6 +58,16 @@
 namespace boost {
 namespace tree {
 namespace detail {
+
+
+class access_rotate {
+ public:
+      template <class Cursor>
+      static void rotate(Cursor& c)
+      {
+          c.rotate();
+      }
+};
 
 
 template<class T, class Augment, class Balance> 
@@ -85,7 +95,7 @@ class const_tree_cursor<binary_node<T, Augment, Balance> >
 
 	// Cursor-specific
 	typedef integral_constant<size_type, 2> arity; // binary cursor
-		
+	
  	typedef tree_cursor<binary_node<T, Augment, Balance> > cursor;
  	typedef const_tree_cursor<binary_node<T, Augment, Balance> > const_cursor;
 
@@ -262,6 +272,7 @@ class tree_cursor<binary_node<T, Augment, Balance> >
  	size_type m_pos;
 
  	friend class boost::iterator_core_access;
+ 	friend class access_rotate;
  	
     T& dereference() const
 	{
@@ -361,13 +372,14 @@ public:
 			 && (m_parent->m_parent->child[1] != m_parent))
 			 ||  m_parent->m_parent == m_parent->child[1]; // empty root
 	}
-	
+
+protected:	
 	void rotate()
 	{
 		m_pos = m_parent->rotate(m_pos);
 		m_parent = m_parent->m_parent->m_parent;
 	}
-	
+public:	
 	void add_node(node_pointer p_node)
 	{
 		p_node->m_parent = m_parent;

@@ -35,9 +35,12 @@
 #ifndef BOOST_TREE_BALANCERS_TREAP_HPP
 #define BOOST_TREE_BALANCERS_TREAP_HPP
 
+#include <boost/tree/detail/cursor/binary.hpp>
+
 #include <limits.h>
 #include <stdlib.h>
 
+using boost::tree::detail::access_rotate;
 
 namespace boost {
 namespace tree {
@@ -62,7 +65,7 @@ private:
 
 //make the following part of tree? that is, derive tree from this (as templ. arg)?
 //template <class Tree> //tentative approach using CRTP.
-class treap_balance {
+class treap_balance : public access_rotate {
 public:
 	typedef treap_metadata metadata_type;
 	
@@ -71,7 +74,7 @@ public:
 	{
 		x.metadata().set_priority((lrand48() >> 1) + 1);
 		while (!x.is_root() && (x.metadata().get_priority() > x.parent().metadata().get_priority()))
-			x.rotate();
+			access_rotate::rotate(x);
 	}
 	  
 	template <class Cursor>
@@ -81,7 +84,7 @@ public:
 		while (empty(q = p.begin() + 
 			   (p.begin().metadata().get_priority() > 
 				p.end().metadata().get_priority())))
-			q.metadata().rotate();
+			access_rotate::rotate(q.metadata()); //.rotate();
 		p.metadata().splice_out(p.parity());
 	}
 	

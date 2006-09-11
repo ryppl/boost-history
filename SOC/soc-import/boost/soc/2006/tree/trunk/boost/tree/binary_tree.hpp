@@ -43,7 +43,7 @@
 #include <boost/tree/detail/sortable_traits.hpp>
 
 #include <boost/tree/augmentors/trivial.hpp>
-#include <boost/tree/balancers/trivial.hpp>
+#include <boost/tree/balancers/unbalanced.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -56,19 +56,18 @@ using detail::binary_node;
 using detail::const_tree_cursor;
 using detail::tree_cursor;
 
-
 /** 
  * @brief A %binary_tree.
  * This class models the hierarchy concept, the container concept and the
  * sequence concept. TODO: complete this...
  *
 */
-template <class T, class Balance = trivial_balance,
+template <class T, class Balance = unbalance,
 		  class Augment = trivial_augment,
 		  class ValAlloc = std::allocator<T>, 
 		  class NodeAlloc = ValAlloc // will be rebound.
 		 >
-class binary_tree {
+class binary_tree : public Balance {
 	typedef binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc> self_type;
  public:
 	typedef T value_type;
