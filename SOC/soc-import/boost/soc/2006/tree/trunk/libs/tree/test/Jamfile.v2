@@ -41,7 +41,7 @@ project :
 	
 test-suite tree :
 	[ run range_helpers_test.cpp ]
-	[ run plain_binary_tree_test.cpp ]
+	[ run unbalanced_binary_tree_test.cpp ]
 	[ run key_search_binary_tree_test.cpp ]	
 	[ run traverse_search_binary_tree_test.cpp ]
 	[ run rotate_binary_tree_test.cpp ]
