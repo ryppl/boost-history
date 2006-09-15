@@ -40,8 +40,6 @@ using boost::tree::binary_tree;
 
 //TODO: Make this a test suite.
 
-
-
 void test_treap()
 {
 	using namespace boost::tree;
@@ -60,7 +58,32 @@ void test_treap()
 	
 	for (tree_t::const_iterator ci = my_tree.cbegin(); ci != my_tree.cend(); ++ci)
 		BOOST_CHECK(tree_t::const_cursor(ci).metadata().get_priority() 
-				  < tree_t::const_cursor(ci).parent().metadata().get_priority());	
+				  < tree_t::const_cursor(ci).parent().metadata().get_priority());
+	
+	searcher_t::iterator c = my_searcher.begin();
+	BOOST_CHECK(*c++ == 1);
+	BOOST_CHECK(*c++ == 3);
+	BOOST_CHECK(*c++ == 4);
+	BOOST_CHECK(*c == 6);
+
+	my_searcher.erase(c);
+	
+	for (tree_t::const_iterator ci = my_tree.cbegin(); ci != my_tree.cend(); ++ci)
+		BOOST_CHECK(tree_t::const_cursor(ci).metadata().get_priority() 
+				  < tree_t::const_cursor(ci).parent().metadata().get_priority());
+	
+	c = my_searcher.begin();
+	BOOST_CHECK(*c++ == 1);
+	BOOST_CHECK(*c++ == 3);
+	BOOST_CHECK(*c++ == 4);
+//	BOOST_CHECK(*c++ == 7); //FIXME
+//	BOOST_CHECK(*c++ == 8);
+//	BOOST_CHECK(*c++ == 10);
+//	BOOST_CHECK(*c++ == 11);
+//	BOOST_CHECK(*c++ == 12);
+//	BOOST_CHECK(*c++ == 13);
+//	BOOST_CHECK(*c++ == 14);
+//	BOOST_CHECK(c == my_searcher.end());
 }
 
 

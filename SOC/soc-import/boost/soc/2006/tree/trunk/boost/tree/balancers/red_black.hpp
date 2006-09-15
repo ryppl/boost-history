@@ -83,7 +83,7 @@ public:
 	
 	
 	template <class Cursor>
-	void add(Cursor x, Cursor header) 
+	void add(Cursor& x, Cursor const& header) 
 	{
 		x.metadata().set_color(red);
 		while (x.parent().metadata().get_color() == red) {
@@ -108,14 +108,17 @@ public:
 			x.metadata().set_color(black);
 		}
 	}
-	  
+	
+	// second argument also used to pass second parameter for detach,
+	// if required.
 	template <class Cursor>
-	Cursor remove(Cursor) // or other signature?
+	void remove(Cursor& x, Cursor& header) // or other signature?
 	{
+		
 	}
 	
 	template <class Cursor>
-	void read(Cursor)
+	void touch(Cursor& x, Cursor& header)
 	{ }
   
 };

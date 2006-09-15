@@ -489,6 +489,7 @@ public:
 	 */
  	void erase (iterator pos)
  	{
+ 		c.erase(pos);
  	}
  	
  	size_type erase (key_type const& k)

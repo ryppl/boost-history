@@ -63,33 +63,34 @@ private:
 	int m_priority;
 };
 
-//make the following part of tree? that is, derive tree from this (as templ. arg)?
-//template <class Tree> //tentative approach using CRTP.
+
 class treap_balance : public access_rotate {
 public:
 	typedef treap_metadata metadata_type;
 	
+	// TODO: do we ever want to modify the second par directly?
 	template <class Cursor>
-	static void add(Cursor x, Cursor header)
+	void add(Cursor& x, Cursor const& header) 
 	{
 		x.metadata().set_priority((lrand48() >> 1) + 1);
-		while (!x.is_root() && (x.metadata().get_priority() > x.parent().metadata().get_priority()))
+		while ((x != header) && 
+			   (x.metadata().get_priority() > 
+			   	x.parent().metadata().get_priority()))
 			access_rotate::rotate(x);
 	}
 	  
 	template <class Cursor>
-	static void remove(Cursor p) //why not tree instead of header?
+	void remove(Cursor& p, Cursor& q)
 	{
-		Cursor q;
-		while (empty(q = p.begin() + 
-			   (p.begin().metadata().get_priority() > 
-				p.end().metadata().get_priority())))
-			access_rotate::rotate(q.metadata()); //.rotate();
-		p.metadata().splice_out(p.parity());
+		while((q = ((p.begin().metadata().get_priority()
+					 > p.end().metadata().get_priority())
+					 ? p.begin() : p.end())).empty())
+			access_rotate::rotate(q);
+		q = p;
 	}
 	
 	template <class Cursor>
-	static void read(Cursor)
+	void touch(Cursor)
 	{ }
   
 };

@@ -39,16 +39,12 @@
 #define BOOST_TREE_DETAIL_NODE_BINARY_HPP
 
 
-//#include <boost/tree/augmentors/trivial.hpp>
-//#include <boost/tree/balancers/trivial.hpp>
-
 #include <iterator>
 #include <utility>
 
 namespace boost {
 namespace tree {
 namespace detail {
-
 
 
 struct binary_node_base //TODO: make this a class (friend of binary_tree?)
@@ -104,7 +100,7 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 	
 	bool const empty() const
 	{
-		return ((this == nil())); // && (this != this->m_parent));
+		return (this == nil()); // && (this != this->m_parent));
 		//return ((this != nil()) && (this != this->m_parent));
 	}
 	
@@ -133,23 +129,21 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 		return qp;
 	}
 	
-	
-	base_pointer splice_out(size_type parity)
+	base_pointer detach(size_type m_pos)
 	{
-		//Node::pre_splice(q);
-		base_pointer x = child[child[0] == binary_node_base::nil()];
-		x->m_parent = m_parent;
-		m_parent->child[parity] = x;
-		return x;
+		base_pointer q = child[m_pos];
+		child[m_pos] = child[m_pos]->child[child[m_pos]->child[0] == 
+										   binary_node_base::nil() ? 1 : 0];
+		child[m_pos]->m_parent = this;
+		return q;
 	}
 	
-	base_pointer splice_out(size_type parity, size_type other_parity, base_pointer other)
+	// TODO: actually implement this.
+	base_pointer detach(size_type parity, size_type other_parity, base_pointer other)
 	{
 		//Node::pre_splice(q, r);
 		// splice out q
-		base_pointer x = child[child[0] == binary_node_base::nil()];
-		x->m_parent = m_parent;
-		m_parent->child[parity] = x;
+		base_pointer x = detach(parity);
 
 		// q has been spliced out, now relink it in place of r.				
 		other->m_parent->child[other_parity] = this;
@@ -170,8 +164,7 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 
 
 template <typename T, class Augment, class BalanceData>
-class binary_node
-: public binary_node_base /*, public Augment, public BalanceData */ {
+class binary_node : public binary_node_base {
  public:
  	typedef T value_type;
 	typedef Augment augmentor;

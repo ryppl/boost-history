@@ -98,7 +98,8 @@ class binary_tree : public Balance {
 	typedef typename NodeAlloc::template rebind<node_type>::other 
 		node_allocator_type;
 
-	
+
+ public:
 	binary_tree (value_allocator_type const& value_alloc = value_allocator_type(),
 		  		 node_allocator_type const& node_alloc = node_allocator_type())
 	: m_header(), m_value_alloc(value_alloc), m_node_alloc(node_alloc)
@@ -264,7 +265,7 @@ class binary_tree : public Balance {
 		m_node_alloc.construct(p_node, p_val);
 		p_node->init();
 		
-		pos.add_node(p_node);
+		pos.attach(p_node);
 
 		// Readjust begin
 		if ((iterator(pos) == this->begin()))
@@ -274,6 +275,7 @@ class binary_tree : public Balance {
 		if (pos == this->shoot())
 			m_header.m_parent = p_node;
 
+		//cursor c = this->root(); //TODO: revisit (add's type sig.)
 		balancer::add(pos, this->root());
 		
 		return pos.begin(); 
@@ -295,18 +297,30 @@ class binary_tree : public Balance {
 	}
 	
 	//erase operations must rebalance; clear doesn't need to.	
+	//TODO: Can/Should remove (and erase) return the next cursor's position ?
+	//(There may be some DR concerning this for associative containers)
  	void erase (cursor pos)
- 	{		
- 		//what if there are children?
- 		//...splice out!
- 		// if it's end(): delete value; 
- 		//check if node is empty
- 		// delete node.
- 	}
+ 	{
+ 		cursor root = this->root();
+ 		pos = pos.parent();
+
+ 		balancer::remove(pos, root);
+ 		node_pointer p_node;
+ 		if (pos == root)
+ 			p_node = pos.detach();
+		else
+ 			p_node = pos.detach(root);
+
+		m_value_alloc.destroy(p_node->data());
+		m_value_alloc.deallocate(p_node->data(), 1);
+		
+		m_node_alloc.destroy(p_node);
+		m_node_alloc.deallocate(p_node, 1);
+	}
  	
 	void erase (iterator pos)
  	{		
-		erase(cursor(pos));
+ 		erase(cursor(pos));
  	}
  	
  	void erase (iterator a, iterator b)
@@ -319,8 +333,15 @@ class binary_tree : public Balance {
  	void clear()
  	{
  		clear(this->root());
+ 		m_header.m_parent = &m_header;
+ 		m_header.child[0] = node_base_type::nil();
+		m_header.child[1] = &m_header;
  	}
 
+	bool empty() const
+	{
+		return m_header.m_parent == &m_header;
+	}
 
 private:
 
@@ -336,7 +357,7 @@ private:
  	 */
  	void clear(cursor c) 
  	{
- 		if (empty(c)) {
+ 		if (!c.empty()) {
  		
 	 		// delete the value this c points to	
 	 		m_value_alloc.destroy(c.node()->data());

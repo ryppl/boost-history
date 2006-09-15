@@ -3,7 +3,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
-
+<!-- boostinspect:nolink -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <title>Tree Structures and Related Concepts for the C++ Standard Library (TR2)</title>
@@ -12,11 +12,60 @@
 <body>
 <h1>Tree Structures and Related Concepts for the C++ Standard Library (TR2)</h1>
 <h2>Introduction</h2>
-<h3>What alternatives?</h3>
+<p>
+This paper proposes addition of library components covering tree structures and related concepts
+to the C++ Standard Library Technical Report 2. The proposal is based on work towards a Boost 
+tree component library (see <a href="https://boost-consulting.com:8443/trac/soc/wiki/tree">
+https://boost-consulting.com:8443/trac/soc/wiki/tree</a>)<!-- that was started in the course of 
+Boost's participation as a mentoring organization in 
+<a href="http://code.google.com/soc/boost/appinfo.html?csaid=E17EA7C7C537C131">
+Google Summer of Code 2006</a>&#8482;-->.
+</p>
+<p>
+The library strives to cover many of the relevant aspects within the vast field linked to the 
+notion of trees in computer science<!--; among other things, it aims to cater for binary search trees,
+[...]-->.
+</p>
+
+<h2>Motivation and Scope</h2>
+<h3>What does it depend on, and what depends on it?</h3>
+<p>
+It depends on some standard library components, [...]
+</p>
+<h3>Is it a pure extension, or does it require changes to standard components?</h3>
+<p>
+Most of the proposed library is a pure extension. [...]
+</p>
+<h3>Can it be implemented using today's compilers, or does it require language 
+features that will only be available as part of C++0x?</h3>
+<p>
+It can be (and has been) implemented with today's compilers. [...]
+<br />
+[... We'd profit from template typedefs to say e.g. 
+</p>
+<pre>
+template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree = binary_tree&lt;T, rank_balance, rank_augment, Alloc&gt;;
+</pre>
+
+
+<h2>Impact on the Standard</h2>
+
+<h2>Important Design Decisions</h2>
+<h3>Why did you choose the specific design that you did?</h3>
+
+
+<h3>What alternatives did you consider, and what are the tradeoffs?</h3>
 
 <dl>
 <dt>Trees of trees</dt><dd>Duplicates allocators etc. ...</dd>
 </dl>
+
+<h3>What are the consequences of your choices, for users and implementors?</h3>
+<h3>What decisions are left up to implementors?</h3>
+<h3>If there are any similar libraries in use, how do their design decisions compare to yours?</h3>
+<p>
+<a href="https://boost-consulting.com:8443/trac/soc/wiki/tree/resources/trees">Online resources</a>
+</p>
 
 <h2>Proposed Text for Technical Report 2</h2>
 
@@ -46,7 +95,7 @@ a value of <tt>X&amp;</tt>.
 
 <table>
 <caption>
-Table Y - Hierarchy requirements
+Table Y &#8212; Hierarchy requirements
 </caption>
 <tr>
 <th>
@@ -394,10 +443,8 @@ Operational semantics: <tt>a.size() == 0</tt>
 
 </table>
 
-<p>
 Notes: the algorithms <tt>swap()</tt> and <tt>equal()</tt> <!--and lexicographical_compare()-->
 are defined in Clause 25. Those entries marked "(Note A)" should have constant complexity.
-</p>
 
 </li>
 <li>
@@ -422,11 +469,50 @@ hierarchy.
 <li>[... Reverse hierarchies?]</li>
 </ol>
 
+<h3>23.1.X.X Modifiable Hierarchies [... better name?]</h3>
+<ol>
+<li>
+Modifiable hierarchies allow modification of their contents by insertion and/or deletion of 
+elements.
+</li>
+</ol>
+
 <h3>24.X Cursors</h3>
-<p>
+<ol>
+<li>
 Cursors provide a uniform way of applying algorithms to hierarchical data structures.
 In order to also allow for algorithms relevant when dealing with linear data structures, any 
-cursor class is actually a refinement of a corresponding iterator class.
-</p>
+cursor class is actually a refinement of a corresponding iterator class whose traversal related
+capabilities map to horizontal traversal among a given cursor's immediate descendants or 
+"child cursors" (or just "children").
+Furthermore, as a cursor is meant to provide a means of descending within a hierarchy, it refines
+parts of a Container corresponding to the kind of Iterator it models which have been formalized
+as the 
+<a href="file:///home/bernie/projects/boost/libs/range/doc/range.html">Range concept</a>
+externally to the Standard.
+</li>
+<li>
+In additon to a cursor's horizontal (iterator) traversal tags, two of them are reused to indicate
+a cursor's vertical traversal abilities, namely <em>forward</em> and <em>bidirectional</em>
+traversal in order to indicate whether a given cursor provides a method that returns its 
+immediate ancestor or "parent" cursor.
+</li>
+<li>
+The iterator related notion of reachability must be modified as follows in order to be sensibly 
+applicable to cursors: a cursor <tt>j</tt> is reachable from another cursor <tt>i</tt> if there
+is a finite sequential combination of applications of either of the expressions <tt>++i</tt> and
+<tt>i = i.begin()</tt> that makes <tt>i == j</tt>. If <tt>j</tt> is reachable from <tt>i</tt>, 
+they refer to the same container.
+</li>
+<li>
+Apart from cursors that are <em>past-the-end</em> (like their iterator counterparts can be),
+the notion of a cursor <em>on-top</em> is introduced, denoting a cursor that is ancestor to all
+other cursors possibly reachable within a hierarchy is introduced; and just as for past-the-end
+ones, the library never assumes on-top cursors be dereferenceable; nor that they be incrementable
+or decrementable. In other words, as opposed to non-on-top cursurs, on-top cursors fulfill only 
+the Range concept requirements, but not any Iterator concept requirements.
+</li>
+
+</ol>
 </body>
 </html>

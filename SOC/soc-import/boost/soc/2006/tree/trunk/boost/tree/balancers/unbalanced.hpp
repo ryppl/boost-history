@@ -26,38 +26,55 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TREE_BALANCERS_TRIVIAL_HPP
-#define BOOST_TREE_BALANCERS_TRIVIAL_HPP
+#ifndef BOOST_TREE_BALANCERS_UNBALANCED_HPP
+#define BOOST_TREE_BALANCERS_UNBALANCED_HPP
+
+#include <boost/tree/detail/cursor/binary.hpp>
+#include <boost/tree/inorder.hpp>
+
+using boost::tree::detail::access_rotate;
 
 namespace boost {
 namespace tree {
 
-struct trivial_metadata {};
+//struct unbalance_metadata {};
 
-struct trivial_balance {
+struct unbalance : public access_rotate {
 
-	trivial_balance() {}
+	unbalance() {}
 
 	struct metadata_type {};
 	metadata_type metadata;
 	
 	template <class Cursor>
-	static void add(Cursor, Cursor)
+	void add(Cursor&, Cursor const&)
 	{ }
 	  
 	template <class Cursor>
-	static void remove(Cursor)
-	{ }
+	void remove(Cursor& x, Cursor& y)
+	{
+		y = x;
+		if (x.begin().empty() || x.end().empty())
+ 			return;
+ 		inorder::forward(x);
+ 		return;
+	}
 	
 	template <class Cursor>
-	static void read(Cursor)
-{ }
+	void touch(Cursor)
+	{ }
+		
+	template <class Cursor>
+	void rotate(Cursor& c)
+	{
+		access_rotate::rotate(c);
+	}
 
 };
 
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_BALANCERS_TRIVIAL_HPP
+#endif // BOOST_TREE_BALANCERS_UNBALANCED_HPP
 
 

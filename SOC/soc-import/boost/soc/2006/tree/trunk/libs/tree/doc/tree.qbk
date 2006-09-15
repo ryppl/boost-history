@@ -69,6 +69,7 @@
     ]
 ]
 
+[def (tm) '''&#8482;''']
 
 [section Introduction]
 
@@ -93,8 +94,8 @@ hierarchies or xml files).
 
 [section Download]
 
-This library's current state is only available via [@http://subversion.tigris.org/ svn] from 
-Boost's Google Summer of Code 2006 repository at
+This library's current state is only available via [@http://subversion.tigris.org/ svn] from the
+Boost repository for Google Summer of Code 2006(tm) at
 [@https://www.boost-consulting.com:8443/svn/main/boost/soc/2006]. The source code can be 
 browsed online at [@https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree]. \n
 A [@http://boost-consulting.com/vault/index.php?action=downloadfile&filename=tree-soc2006.zip&directory=Containers& snapshot]

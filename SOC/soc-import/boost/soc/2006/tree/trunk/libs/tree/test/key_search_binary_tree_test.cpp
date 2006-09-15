@@ -140,24 +140,57 @@ void test_key_search_binary_tree()
 	searcher_t::cursor tree_cur = boost::tree::lower_bound(the_tree.root(), 
 		the_tree.shoot(), 39, std::less<int>());
 
+	BOOST_CHECK(tree_cur.empty());
+	BOOST_CHECK((++tree_cur).empty());
+	--tree_cur;
 	BOOST_CHECK(*tree_cur == 39);
+	//BOOST_CHECK(*tree_cur.begin() > 412);
+	
 	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 18);	
 	BOOST_CHECK(*tree_cur == 18);
 	
 	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 30);	
+	BOOST_CHECK(tree_cur.empty());
+	BOOST_CHECK(!(++tree_cur).empty());
+	--tree_cur;
 	BOOST_CHECK(*tree_cur == 31);
 	
 	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 3);	
 	BOOST_CHECK(*tree_cur == 7);
 	
+	c = my_tree.begin();
+	BOOST_CHECK(*c++ == 7);
+	BOOST_CHECK(*c++ == 8);
+	BOOST_CHECK(*c++ == 18);
+	BOOST_CHECK(*c++ == 31);
+	BOOST_CHECK(*c++ == 39);
+	BOOST_CHECK(*c++ == 412);
+	BOOST_CHECK(c == my_tree.end());
+	BOOST_CHECK(*--c == 412);
+	BOOST_CHECK(*--c == 39);
+	BOOST_CHECK(*--c == 31);
+	BOOST_CHECK(*--c == 18);
+	BOOST_CHECK(*--c == 8);
+	BOOST_CHECK(*--c == 7);
+	BOOST_CHECK(c == my_tree.begin());
+	
+	while (c != my_tree.end())
+		++c;
+	
+	------c;
+	BOOST_CHECK(*c == 31);
+	my_tree.erase(c);
+
+	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 412);	
+	BOOST_CHECK(*tree_cur == 412);
+	BOOST_CHECK(*tree_cur.parent() == 18);
 	
 	c = my_tree.begin();
-	BOOST_CHECK(*(c++) == 7);
-	BOOST_CHECK(*(c++) == 8);
-	BOOST_CHECK(*(c++) == 18);
-	BOOST_CHECK(*(c++) == 31);
-	BOOST_CHECK(*(c++) == 39);
-	BOOST_CHECK(*(c++) == 412);
+	BOOST_CHECK(*c++ == 7);
+	BOOST_CHECK(*c++ == 8);
+	BOOST_CHECK(*c++ == 18);
+	BOOST_CHECK(*c++ == 39);
+	BOOST_CHECK(*c++ == 412);
 	BOOST_CHECK(c == my_tree.end());
 
 }

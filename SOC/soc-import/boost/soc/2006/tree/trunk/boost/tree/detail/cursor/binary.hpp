@@ -65,6 +65,7 @@ class access_rotate {
       }
 };
 
+
 template <class Node>
 class tree_cursor;
 
@@ -201,11 +202,6 @@ public:
 		return m_parent->child[m_pos]->empty();
 	}
 	
-//	node_pointer node() // really? certainly not public
-//	{
-//		return static_cast<node_pointer>(m_parent->child[m_pos]);
-//	}
-	
 	metadata_type const& metadata() const
 	{
 		return static_cast<node_pointer>(m_parent->child[m_pos])->metadata();
@@ -271,6 +267,7 @@ class tree_cursor//
 
  	friend class boost::iterator_core_access;
  	friend class access_rotate;
+ 	friend class access_detach;
  	
     typename node_type::reference dereference() const
 	{
@@ -374,13 +371,30 @@ protected:
 		m_pos = m_parent->rotate(m_pos);
 		m_parent = m_parent->m_parent->m_parent;
 	}
+	
+
 public:	
-	void add_node(node_pointer p_node)
+	// TODO: protect?
+	void attach(node_pointer p_node)
 	{
 		p_node->m_parent = m_parent;
 		m_parent->child[m_pos] = p_node;
 	}
+
+	/** 
+	 * Detaches the node this cursor points to and returns a pointer to it;
+	 * this cursor will be set to its inorder successor afterwards (?)
+	 */
+	node_pointer detach()
+	{
+		return static_cast<node_pointer>(m_parent->detach(m_pos));
+	}
 	
+	node_pointer detach(cursor y)
+	{
+		return static_cast<node_pointer>(m_parent->detach(m_pos, y.m_pos, y.m_parent));
+	}
+		
 	metadata_type const& metadata() const
 	{
 		return static_cast<node_pointer>(m_parent->child[m_pos])->metadata();
