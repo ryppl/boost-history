@@ -44,7 +44,7 @@ void test_treap()
 {
 	using namespace boost::tree;
 	
-	typedef binary_tree<int, treap_balance> tree_t;
+	typedef binary_tree<int, balancers::treap> tree_t;
 	typedef test_searcher<false, tree_t> searcher_t;
 	searcher_t my_searcher;
 	

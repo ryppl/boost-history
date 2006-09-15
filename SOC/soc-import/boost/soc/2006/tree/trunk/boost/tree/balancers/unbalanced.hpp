@@ -36,12 +36,13 @@ using boost::tree::detail::access_rotate;
 
 namespace boost {
 namespace tree {
+namespace balancers {
 
 //struct unbalance_metadata {};
 
-struct unbalance : public access_rotate {
+struct unbalanced : public access_rotate {
 
-	unbalance() {}
+	unbalanced() {}
 
 	struct metadata_type {};
 	metadata_type metadata;
@@ -72,6 +73,7 @@ struct unbalance : public access_rotate {
 
 };
 
+} // namespace balancers
 } // namespace tree
 } // namespace boost
 

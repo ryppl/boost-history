@@ -39,31 +39,32 @@ using boost::tree::detail::access_rotate;
 
 namespace boost {
 namespace tree {
-
-enum red_black { black, red };
+namespace balancers {
+	
+enum red_black_color { black, red };
 
 class red_black_metadata {
 public:	
 	red_black_metadata()
 	: m_color(black) {}
 	
-	red_black get_color()
+	red_black_color get_color()
 	{
 		return m_color;
 	}
 	
-	void set_color(red_black col)
+	void set_color(red_black_color col)
 	{
 		m_color = col;
 	}
 private:
-	red_black m_color;
+	red_black_color m_color;
 
 };
 
 //make the following part of tree? that is, derive tree from this (as templ. arg)?
 //template <class Node> //tentative approach using CRTP.
-class red_black_balance : public access_rotate {
+class red_black : public access_rotate {
 public:
 	typedef red_black_metadata metadata_type;
 //	metadata_type metadata;
@@ -123,6 +124,7 @@ public:
   
 };
 
+} // namespace balancers
 } // namespace tree
 } // namespace boost
 

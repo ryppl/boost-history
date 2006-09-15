@@ -44,6 +44,7 @@ using boost::tree::detail::access_rotate;
 
 namespace boost {
 namespace tree {
+namespace balancers {
 
 class treap_metadata {
 public:	
@@ -64,7 +65,7 @@ private:
 };
 
 
-class treap_balance : public access_rotate {
+class treap : public access_rotate {
 public:
 	typedef treap_metadata metadata_type;
 	
@@ -95,6 +96,7 @@ public:
   
 };
 
+} // namespace balancers
 } // namespace tree
 } // namespace boost
 

@@ -62,7 +62,7 @@ using detail::tree_cursor;
  * sequence concept. TODO: complete this...
  *
 */
-template <class T, class Balance = unbalance,
+template <class T, class Balance = balancers::unbalanced,
 		  class Augment = trivial_augment,
 		  class ValAlloc = std::allocator<T>, 
 		  class NodeAlloc = ValAlloc // will be rebound.

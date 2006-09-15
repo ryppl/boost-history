@@ -44,7 +44,7 @@ void test_red_black_tree()
 {
 	using namespace boost::tree;
 	
-	typedef binary_tree<int, red_black_balance> tree_t;
+	typedef binary_tree<int, balancers::red_black> tree_t;
 	typedef searcher<false, tree_t> searcher_t;
 	searcher_t my_searcher;
 	
