@@ -66,9 +66,10 @@ private:
 
 
 class treap : public access_rotate {
-public:
+ public:
 	typedef treap_metadata metadata_type;
 	
+ protected:
 	// TODO: do we ever want to modify the second par directly?
 	template <class Cursor>
 	void add(Cursor& x, Cursor const& header) 
@@ -91,9 +92,8 @@ public:
 	}
 	
 	template <class Cursor>
-	void touch(Cursor)
+	void touch(Cursor&, Cursor const&)
 	{ }
-  
 };
 
 } // namespace balancers

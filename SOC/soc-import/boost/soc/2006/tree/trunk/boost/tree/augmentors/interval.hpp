@@ -34,6 +34,9 @@
 #include "boost/multi_index/composite_key.hpp"
 #include "boost/multi_index/member.hpp"
 
+namespace boost {
+namespace tree {
+namespace augmentors {
 
 #include <utility> //std::pair
 
@@ -67,6 +70,10 @@ bool overlaps(Cursor c, typename Cursor::value_type val)
 	//FIXME: implement.
 	return true;
 }
+
+} // namespace augmentors
+} // namespace tree
+} // namespace boost
 
 #endif // BOOST_TREE_AUGMENTORS_INTERVAL_HPP
 

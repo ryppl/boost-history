@@ -40,13 +40,20 @@ namespace balancers {
 
 //struct unbalance_metadata {};
 
-struct unbalanced : public access_rotate {
-
+class unbalanced : public access_rotate {
+ public:
 	unbalanced() {}
 
 	struct metadata_type {};
 	metadata_type metadata;
-	
+
+	template <class Cursor>
+	void rotate(Cursor& c)
+	{
+		access_rotate::rotate(c);
+	}
+
+ protected:	
 	template <class Cursor>
 	void add(Cursor&, Cursor const&)
 	{ }
@@ -62,15 +69,8 @@ struct unbalanced : public access_rotate {
 	}
 	
 	template <class Cursor>
-	void touch(Cursor)
+	void touch(Cursor&, Cursor const&)
 	{ }
-		
-	template <class Cursor>
-	void rotate(Cursor& c)
-	{
-		access_rotate::rotate(c);
-	}
-
 };
 
 } // namespace balancers

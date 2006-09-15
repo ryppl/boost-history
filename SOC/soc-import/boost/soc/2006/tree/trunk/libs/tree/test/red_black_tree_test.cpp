@@ -28,7 +28,7 @@
 
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/balancers/red_black.hpp>
-#include <boost/tree/augmentors/trivial.hpp>
+#include <boost/tree/augmentors/unaugmented.hpp>
 
 #include <boost/tree/searcher.hpp>
 

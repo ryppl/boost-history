@@ -42,7 +42,7 @@
 #include <boost/tree/detail/cursor/binary.hpp>
 #include <boost/tree/detail/sortable_traits.hpp>
 
-#include <boost/tree/augmentors/trivial.hpp>
+#include <boost/tree/augmentors/unaugmented.hpp>
 #include <boost/tree/balancers/unbalanced.hpp>
 
 #include <boost/test/minimal.hpp>
@@ -63,7 +63,7 @@ using detail::tree_cursor;
  *
 */
 template <class T, class Balance = balancers::unbalanced,
-		  class Augment = trivial_augment,
+		  class Augment = augmentors::unaugmented,
 		  class ValAlloc = std::allocator<T>, 
 		  class NodeAlloc = ValAlloc // will be rebound.
 		 >

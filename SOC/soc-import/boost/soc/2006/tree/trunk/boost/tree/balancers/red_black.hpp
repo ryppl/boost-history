@@ -67,22 +67,8 @@ private:
 class red_black : public access_rotate {
 public:
 	typedef red_black_metadata metadata_type;
-//	metadata_type metadata;
 	
-	//red_black_balance() : red_black_metadata {}
-	
-//	typedef Tree tree_type;
-//	typedef typename tree_type::cursor cursor;
-	
-	//make this x's member, so we have a node and a cursor part. (??)
-	
-	/* well, we don't want to expose add. (Red-black info can be best be exposed 
-	 * protected, just like rank? -- as a cursor-protected member probably, 
-	 * that is.)
-	 */
-	
-	
-	
+protected:
 	template <class Cursor>
 	void add(Cursor& x, Cursor const& header) 
 	{
