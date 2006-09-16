@@ -592,7 +592,8 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
 
             linkage_specification
                 =     ch_p(T_EXTERN) >> ch_p(T_STRINGLIT) 
-                    >>  (   ch_p(T_LEFTBRACE) >> !declaration_seq >> ch_p(T_RIGHTBRACE)
+                    >>  (   // ch_p(T_LEFTBRACE) >> !declaration_seq >> ch_p(T_RIGHTBRACE)
+                              compound_statement // LSMOD
                         |     declaration
                         )
                 ;

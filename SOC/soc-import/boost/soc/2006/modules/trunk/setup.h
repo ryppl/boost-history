@@ -4,6 +4,6 @@
   Just some configuration #defines, etc.
 */
 
-#define BOOST_SPIRIT_DEBUG
+#undef BOOST_SPIRIT_DEBUG
 
 #endif
