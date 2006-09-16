@@ -1,0 +1,27 @@
+/** @file modulename.h
+	\brief ModuleName handles assembly, comparison, etc of module names.
+	
+	
+*/
+
+#ifndef INCLUDE_MODULENAME_H
+#define INCLUDE_MODULENAME_H
+
+#include <vector>
+#include <string>
+
+class ModuleName {
+	std::vector<std::string> m_name_segments;
+	std::string m_partition;
+public:
+	ModuleName (std::string to_parse);
+	ModuleName ();
+	
+	void add_segment (const std::string& s) { m_name_segments.push_back(s); }
+	void set_parititon (const std::string& s) { m_partition = s; }
+	
+	bool same_module (const ModuleName& other);
+	std::string normalized ();
+};
+
+#endif
