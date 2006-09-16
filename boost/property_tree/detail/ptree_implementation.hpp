@@ -534,8 +534,7 @@ namespace boost { namespace property_tree
         if (x.get_value(*this, value))
             return value;
         else
-            throw ptree_bad_data(std::string("conversion of data into type \"") + 
-                                 typeid(Type).name() + "\" failed", data());
+            return default_value;
     }
 
     // Get value from data of ptree

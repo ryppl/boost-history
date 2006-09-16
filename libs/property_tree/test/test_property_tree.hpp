@@ -786,8 +786,15 @@ void test_get_put(PTREE *)
         BOOST_CHECK(ch == T(' '));
     }
 
-}
+    // Test that get of non-char value with trailing and leading whitespace works
+    {
+        PTREE pt;
+        pt.put_value(T(" \t\n99 \t\n"));
+        BOOST_CHECK(pt.get_value<int>(0) == 99);
+    }
 
+}
+                                    
 void test_get_child_put_child(PTREE *)
 {
     

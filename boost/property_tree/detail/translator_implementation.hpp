@@ -56,7 +56,6 @@ namespace boost { namespace property_tree
             {
                 std::basic_istringstream<Ch> stream(data);
                 stream.imbue(loc);
-                stream.unsetf(std::ios::skipws);
                 stream >> extracted >> std::ws;
                 return stream.eof() && !stream.fail() && !stream.bad();
             }
@@ -71,6 +70,23 @@ namespace boost { namespace property_tree
             {
                 extracted = data;
                 return true;
+            }
+        };
+
+        template<class Ch>
+        struct extractor<Ch, Ch>
+        {
+            inline bool operator()(const std::basic_string<Ch> &data, 
+                                   Ch &extracted,
+                                   const std::locale &loc) const
+            {
+                if (data.size() == 1)
+                {
+                    extracted = data[0];
+                    return true;
+                }
+                else
+                    return false;
             }
         };
 
