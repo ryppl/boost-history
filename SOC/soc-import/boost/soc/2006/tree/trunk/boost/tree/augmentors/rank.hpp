@@ -33,55 +33,141 @@ namespace boost {
 namespace tree {
 namespace augmentors {
 	
-//how do we know what size_type to use?
-//1. from base_type
-//2. from "instantiate node type with trivial augmentor" - size_type. cool.
+//TODO: lots. current implementation is dysfunctional.
 
-template <typename SizeType = std::size_t>
-class rank_search {
+template <typename SizeType>
+class rank_data {
  public:
 	typedef SizeType size_type;
 	//get_rank - just show rank info	
 	
-	size_type const get_rank() const
+//	size_type const get_rank() const
+//	{
+//		return m_rank;
+//	}
+//	
+//	void set_rank(size_type priority)
+//	{
+//		m_rank = rank;
+//	}
+	
+	rank_data(size_type r = 1)
+	: m_rank(r) {}
+	
+	size_type& rank()
 	{
 		return m_rank;
 	}
-	
-	void set_rank(size_type priority)
-	{
-		m_rank = rank;
-	}
-	
-	//operator[] ? rather not...
 
+	size_type const& rank() const
+	{
+		return m_rank;
+	}
+		
+	//operator[] ? rather not...
+	
+	
 private:
 	size_type m_rank;
 };
 
+template <typename SizeType = std::size_t>
 class rank {
+ public:
+ 	typedef SizeType size_type;
+ 	typedef rank_data<size_type> metadata_type;
+ 	
  protected:
 	//or metadata as param-type?
 	template <class Cursor>
- 	void pre_rotate(Cursor& c)
+ 	void pre_rotate(Cursor& q)
  	{
+ 		Cursor p = q->parent();
+		if (!q.parity())
+			p.metadata().rank() -= q.metadata().rank();
+		else
+			q.metadata().rank() += p.metadata().rank();
  	}
  	
  	template <class Cursor>
- 	void pre_detach(Cursor& c)
+ 	void pre_detach(Cursor& y, Cursor const& header)
  	{
+ 		Cursor p = y;
+ 		while (p.parent() != header) {
+ 			if (!p.parity())
+ 				--p.parent().metadata().rank();
+ 			p = p.parent();
+ 		}
  	}
  	
  	template <class Cursor>
- 	void pre_detach(Cursor& c, Cursor& c)
+ 	void pre_detach(Cursor& y, Cursor& z, Cursor const& header)
  	{
+ 		Cursor p = y;
+ 		while (p.parent() != header) {
+ 			if (!p.parity())
+ 				--p.parent().metadata().rank();
+ 			p = p.parent();
+ 		}
+ 		if (z == header)
+ 			y.metadata().rank() = z.metadata().rank();
  	}
+
+ 	template <class Cursor>
+ 	void descend(Cursor& p)
+ 	{
+ 		if (p.parity() == 0) {
+ 			++p.metadata().rank();
+ 		}
+ 	}
+ 	
 };
-//cursor part: what is my rank?
-//tree part: go to rank...
-//pre_rotate, pre_detach.
 
 } // namespace augmentors
+
+// This is actually some kind of algorithm...
+template <class Tree>
+typename Tree::const_cursor select_rank(Tree const& tree, typename Tree::augmentor::size_type i)
+{
+	typename Tree::const_cursor p = tree.root().begin();
+	if (p.metadata().rank() < i) {
+		return p;
+	}
+	++i;
+	p = p.begin();
+	for (;;) {
+		if (i < p.metadata().rank())
+			p = p.begin();
+		else {
+			i -= p.metadata().rank();
+			if (i == 0)
+				return p;
+			p = p.end();
+		}
+	}
+}
+
+template <class Tree>
+typename Tree::cursor select_rank(Tree& tree, typename Tree::augmentor::size_type i)
+{
+	typename Tree::cursor p = tree.root().begin();
+	if (p.metadata().rank() < i) {
+		return p;
+	}
+	++i;
+	p = p.begin();
+	for (;;) {
+		if (i < p.metadata().rank())
+			p = p.begin();
+		else {
+			i -= p.metadata().rank();
+			if (i == 0)
+				return p;
+			p = p.end();
+		}
+	}
+}
+
 } // namespace tree
 } // namespace boost
 

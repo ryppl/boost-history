@@ -158,10 +158,11 @@ class upper_bound_default
  * 
  * @ingroup searchers
 */
-template</* class NodeSearch, */class Extract, class Compare, class Node>
+template</* class NodeSearch, */class Extract, class Compare, class Node, class Descend>
 std::pair<tree_cursor<Node>, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
 key_lower_bound(tree_cursor<Node> c, typename Extract::result_type key, 
 //				NodeSearch node_search, 
+				Descend descend,
 				Extract extract = Extract(), Compare compare = Compare())
 {
 	       bool end_flag = false;
@@ -171,7 +172,8 @@ key_lower_bound(tree_cursor<Node> c, typename Extract::result_type key,
 	                Compare cmp = compare;
 	                cursor p = c;
 					c = binary_lower_bound(p.begin(), p.end(), key, //FIXME: use node_search instead.
-	                		bind<bool>(cmp, bind<typename Extract::result_type>(extract, _1), _2)); 
+	                		bind<bool>(cmp, bind<typename Extract::result_type>(extract, _1), _2));
+	                //	descend(c); 
 	                if ((end_flag = (c != p.end())) && (!cmp(key, extract(*c)))) // success!
 	                        return std::make_pair(c, std::make_pair(false, end_flag));
 	        }
@@ -197,13 +199,19 @@ key_lower_bound(Range& r, typename Extract::result_type key,
 
 //TODO: don't use binary_tree explicitly.
 
-template</* class NodeSearch, */class Extract, class Compare, class Node, class Balance, class ValAlloc, class NodeAlloc>
-std::pair<typename sortable_traits<binary_tree<Node, Balance, ValAlloc, NodeAlloc> >::cursor, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
-key_lower_bound(binary_tree<Node, Balance, ValAlloc, NodeAlloc>& t, typename Extract::result_type key, 
+template</* class NodeSearch, */class Extract, class Compare, class T, class Balance, class Augment, class ValAlloc, class NodeAlloc>
+std::pair<typename sortable_traits<binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc> >::cursor, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
+key_lower_bound(binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc>& t, typename Extract::result_type key, 
 //				NodeSearch node_search, 
 				Extract extract = Extract(), Compare compare = Compare())
-{        
-	        return key_lower_bound(head(t), key, /*node_search,*/ extract, compare); // not found.
+{
+			//binary_tree<Node, Balance, ValAlloc, NodeAlloc>::descend 
+			typedef binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc> Tree;
+			typedef typename Tree::cursor cur;
+			typedef void(Tree::*efct)(cur &);
+			//efct e = &Augment::descend;
+			//void (*efct)(cur&) = t.descend; // = std::mem_fun_ref(&Tree::descend);//Augment::descend;
+	        return key_lower_bound(head(t), key, /*(t.*e)*/ 3 /*std::ptr_fun<cur,void>(t.Augment::descend)*/, /*efct,*/ /*node_search,*/ extract, compare); // not found.
 }
 
 /******************************************************************************/

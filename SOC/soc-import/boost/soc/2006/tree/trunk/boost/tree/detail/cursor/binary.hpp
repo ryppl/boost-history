@@ -166,23 +166,23 @@ public:
 	// Container-specific
 	size_type const size() const
 	{
-		return 1;
+		return m_parent->size();
 	}
 	
 	size_type const max_size() const
 	{
-		return 1;
+		return m_parent->max_size();
 	}
 	
 	// TODO (following couple of functions): wrap around node member fn
 	const_cursor begin() const
 	{
-		return const_cursor(m_parent->child[m_pos], 0); 
+		return const_cursor(m_parent->operator[](m_pos), 0); 
 	}
 		
 	const_cursor end() const
 	{
-		return const_cursor(m_parent->child[m_pos], 1);
+		return const_cursor(m_parent->operator[](m_pos), m_parent->size()-1);
 	}
 	
 	// Cursor stuff. 
@@ -199,12 +199,12 @@ public:
 		
 	bool const empty() const
 	{
-		return m_parent->child[m_pos]->empty();
+		return m_parent->operator[](m_pos)->empty();
 	}
 	
 	metadata_type const& metadata() const
 	{
-		return static_cast<node_pointer>(m_parent->child[m_pos])->metadata();
+		return static_cast<node_pointer>(m_parent->operator[](m_pos))->metadata();
 	}
 };
 
@@ -304,32 +304,32 @@ public:
 	// Container specific
 	size_type size()
 	{
-		return 1;
+		return m_parent->size();
 	}
 	
 	size_type max_size()
 	{
-		return 1;
+		return m_parent->max_size();
 	}
 	
 	cursor begin()
 	{
-		return cursor(m_parent->child[m_pos], 0);
+		return cursor(m_parent->operator[](m_pos), 0);
 	}
 	
 	const_cursor begin() const
 	{
-		return const_cursor(m_parent->child[m_pos], 0); //make a node.begin()
+		return const_cursor(m_parent->operator[](m_pos), 0);
 	}
 		
 	cursor end()
 	{
-		return cursor(m_parent->child[m_pos], 1);
+		return cursor(m_parent->operator[](m_pos), m_parent->size()-1);
 	}
 
 	const_cursor end() const
 	{
-		return const_cursor(m_parent->child[m_pos], 1);
+		return const_cursor(m_parent->operator[](m_pos), m_parent->size()-1);
 	}
 	
 	// Cursor stuff
@@ -345,7 +345,7 @@ public:
 	
 	node_pointer node() 
 	{
-		return static_cast<node_pointer>(m_parent->child[m_pos]);
+		return static_cast<node_pointer>(m_parent->operator[](m_pos));
 	}
 	
 	size_type const parity() const
@@ -355,15 +355,15 @@ public:
 		
 	bool const empty() const
 	{
-		return m_parent->child[m_pos]->empty();
+		return m_parent->operator[](m_pos)->empty();
 	}
 	
-	bool const is_root() const
-	{
-		return ((m_parent->m_parent->child[0] != m_parent) 
-			 && (m_parent->m_parent->child[1] != m_parent))
-			 ||  m_parent->m_parent == m_parent->child[1]; // empty root
-	}
+//	bool const is_root() const
+//	{
+//		return ((m_parent->m_parent->operator[](0) != m_parent) 
+//			 && (m_parent->m_parent->operator[](1) != m_parent))
+//			 ||  m_parent->m_parent == m_parent->operator[](1); // empty root
+//	}
 
 protected:	
 	void rotate()
@@ -378,7 +378,12 @@ public:
 	void attach(node_pointer p_node)
 	{
 		p_node->m_parent = m_parent;
-		m_parent->child[m_pos] = p_node;
+		
+		// Only forest-relevant:
+		p_node->operator[](1) = m_parent->operator[](m_pos);
+		m_parent->operator[](m_pos)->m_parent = p_node;
+		
+		m_parent->operator[](m_pos) = p_node;
 	}
 
 	/** 
@@ -397,7 +402,7 @@ public:
 		
 	metadata_type const& metadata() const
 	{
-		return static_cast<node_pointer>(m_parent->child[m_pos])->metadata();
+		return static_cast<node_pointer>(m_parent->operator[](m_pos))->metadata();
 	}
 	
 	metadata_type& metadata()

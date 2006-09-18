@@ -67,14 +67,14 @@ template <class T, class Balance = balancers::unbalanced,
 		  class ValAlloc = std::allocator<T>, 
 		  class NodeAlloc = ValAlloc // will be rebound.
 		 >
-class binary_tree : public Balance {
+class binary_tree : public Balance, public Augment {
 	typedef binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc> self_type;
  public:
 	typedef T value_type;
 	typedef Balance balancer;
 	typedef Augment augmentor;
 	
-	typedef binary_node<T, augmentor, typename balancer::metadata_type> node_type;
+	typedef binary_node<T, typename augmentor::metadata_type, typename balancer::metadata_type> node_type;
 	
 	typedef tree_cursor<node_type> cursor;
 	typedef const_tree_cursor<node_type> const_cursor;
@@ -104,8 +104,8 @@ class binary_tree : public Balance {
 		  		 node_allocator_type const& node_alloc = node_allocator_type())
 	: m_header(), m_value_alloc(value_alloc), m_node_alloc(node_alloc)
 	{
-		m_header.child[0] = node_base_type::nil();
-		m_header.child[1] = &m_header;
+		m_header[0] = node_base_type::nil();
+		m_header[1] = &m_header;
 	}
 
 	binary_tree (self_type const& other)
@@ -177,7 +177,7 @@ class binary_tree : public Balance {
 	 */ 	 
 	cursor inorder_first()
 	{
-		return cursor(m_header.child[1], 0);
+		return cursor(m_header[1], 0);
 	}
 	
 	/**
@@ -185,7 +185,7 @@ class binary_tree : public Balance {
 	 */ 	 
 	const_cursor inorder_first() const
 	{
-		return const_cursor(m_header.child[1], 0);
+		return const_cursor(m_header[1], 0);
 	}
 	
 	/// Functions returning (inorder) iterators (as required by the Sequence
@@ -269,7 +269,7 @@ class binary_tree : public Balance {
 
 		// Readjust begin
 		if ((iterator(pos) == this->begin()))
-			m_header.child[1] = p_node; 
+			m_header[1] = p_node; 
 		
 		// Readjust shoot
 		if (pos == this->shoot())
@@ -306,11 +306,14 @@ class binary_tree : public Balance {
 
  		balancer::remove(pos, root);
  		node_pointer p_node;
- 		if (pos == root)
+ 		if (pos == root) {
+ 			augmentor::pre_detach(pos, root);
  			p_node = pos.detach();
-		else
+ 		} else {
+ 			augmentor::pre_detach(pos, root, this->root());
  			p_node = pos.detach(root);
-
+ 		}
+ 		
 		m_value_alloc.destroy(p_node->data());
 		m_value_alloc.deallocate(p_node->data(), 1);
 		
@@ -334,8 +337,8 @@ class binary_tree : public Balance {
  	{
  		clear(this->root());
  		m_header.m_parent = &m_header;
- 		m_header.child[0] = node_base_type::nil();
-		m_header.child[1] = &m_header;
+ 		m_header[0] = node_base_type::nil();
+		m_header[1] = &m_header;
  	}
 
 	bool empty() const

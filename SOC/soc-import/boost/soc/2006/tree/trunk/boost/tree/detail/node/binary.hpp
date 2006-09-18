@@ -38,6 +38,7 @@
 #ifndef BOOST_TREE_DETAIL_NODE_BINARY_HPP
 #define BOOST_TREE_DETAIL_NODE_BINARY_HPP
 
+#include <boost/array.hpp>
 
 #include <iterator>
 #include <utility>
@@ -46,46 +47,35 @@ namespace boost {
 namespace tree {
 namespace detail {
 
+using boost::array;
 
-struct binary_node_base //TODO: make this a class (friend of binary_tree?)
-{
+struct binary_node_base;
+
+struct binary_node_base : public array<binary_node_base*, 2> {
+	//typedef array<binary_node_base*, 2> base_type;
 	typedef binary_node_base* base_pointer;
 	typedef binary_node_base const* const_base_pointer;
-	base_pointer m_parent;
-	base_pointer child[2];
+
+	//typedef base_type::size_type size_type;
 	
-	typedef std::size_t size_type; //TODO: use cheaper type. we only need 0, 1 !
+	base_pointer m_parent;
 	
 	binary_node_base()
 	{
 		m_parent = this;
 	}
 	
-	// this has to be outsourced from the ctor - otherwise we'd be stuck in 
-	// a recursion.
 	void init()
 	{
-		child[0] = nil();
-		child[1] = nil();
+		for (size_type i=0; i<max_size(); ++i)
+			operator[](i) = nil();
 	}
 	
-	//TODO: copy ctor. this is not trivial - what about self referrring pointers,eg?
-
 	static binary_node_base* nil()
 	{
 		static binary_node_base m_nil_obj;
 		static binary_node_base* m_nil = &m_nil_obj;
 		return m_nil;
-	}
-	
-	base_pointer begin()
-	{
-		return child[0];
-	}
-	
-	base_pointer end()
-	{
-		return child[1];
 	}
 	
 	base_pointer parent()
@@ -98,43 +88,34 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 		return m_parent;
 	}
 	
-	bool const empty() const
-	{
-		return (this == nil()); // && (this != this->m_parent));
-		//return ((this != nil()) && (this != this->m_parent));
-	}
-	
-	
-	// The following adapted from the Austern et al. paper. Needs revisit bad
-	// This should be wrapped by cursor!
 	size_type rotate(size_type const& c)
 	{
 		//TODO: Optimise.
 		//split up into even more atomic parts? probably not
-		base_pointer q = this->child[c];
+		base_pointer q = operator[](c);
 		
-		base_pointer B = this->child[c]->child[c ? 0 : 1];
+		base_pointer B = (operator[](c))->operator[](c ? 0 : 1);
 		//pre_rotate();
 		
 		//B swaps places with its m_parent:
 
-		this->child[c] = B;
+		operator[](c) = B;
 		B->m_parent = this;
 		q->m_parent = this->m_parent;
 
 		size_type qp = get_parity();
-		q->m_parent->child[qp] = q;
+		q->m_parent->operator[](qp) = q;
 		this->m_parent = q;
-		q->child[c ? 0 : 1] = this;
+		q->operator[](c ? 0 : 1) = this;
 		return qp;
 	}
 	
 	base_pointer detach(size_type m_pos)
 	{
-		base_pointer q = child[m_pos];
-		child[m_pos] = child[m_pos]->child[child[m_pos]->child[0] == 
-										   binary_node_base::nil() ? 1 : 0];
-		child[m_pos]->m_parent = this;
+		base_pointer q = operator[](m_pos);
+		operator[](m_pos) = operator[](m_pos)->operator[]((operator[](m_pos))->operator[](0) == 
+										   binary_node_base::nil() ? 1 : 0);
+		operator[](m_pos)->m_parent = this;
 		return q;
 	}
 	
@@ -146,21 +127,151 @@ struct binary_node_base //TODO: make this a class (friend of binary_tree?)
 		base_pointer x = detach(parity);
 
 		// q has been spliced out, now relink it in place of r.				
-		other->m_parent->child[other_parity] = this;
+		other->m_parent->operator[](other_parity) = this;
 		m_parent = other->m_parent;
 		//q->parity = r->parity;
-		child[0] = other->child[0];
-		child[1] = other->child[1];
-		child[0]->m_parent = this;
-		child[1]->m_parent = this;
+		
+		operator[](0) = other->operator[](0);
+		operator[](1) = other->operator[](1);
+		operator[](0)->m_parent = this;
+		operator[](1)->m_parent = this;
+//		child[0] = other[0];
+//		child[1] = other[1];
+//		child[0]->m_parent = this;
+//		child[1]->m_parent = this;
 		return x;
 	}
 	
 	size_type const get_parity() const
 	{
-		return (this->m_parent->child[0] == this ? 0 : 1);
+		return (this->m_parent->operator[](0) == this ? 0 : 1);
+	}
+	
+	// This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
+	bool const empty() const
+	{
+		return (this == nil()); // && (this != this->m_parent));
+		//return ((this != nil()) && (this != this->m_parent));
 	}
 };
+
+
+//struct binary_node_base //TODO: make this a class (friend of binary_tree?)
+//{
+//	typedef binary_node_base* base_pointer;
+//	typedef binary_node_base const* const_base_pointer;
+//	
+//	typedef std::size_t size_type; //TODO: use cheaper type. we only need 0, 1 !
+//
+//	static size_type const m_maxsize = 2;
+//	base_pointer m_parent;
+//	base_pointer child[m_maxsize];
+//	
+//	binary_node_base()
+//	{
+//		m_parent = this;
+//	}
+//	
+//	// this has to be outsourced from the ctor - otherwise we'd be stuck in 
+//	// a recursion.
+//	void init()
+//	{
+//		for (size_type i=0; i<m_maxsize; ++i)
+//			child[i] = nil();
+//	}
+//	
+//	//TODO: copy ctor. this is not trivial - what about self referrring pointers,eg?
+//
+//	static binary_node_base* nil()
+//	{
+//		static binary_node_base m_nil_obj;
+//		static binary_node_base* m_nil = &m_nil_obj;
+//		return m_nil;
+//	}
+//	
+//	base_pointer begin()
+//	{
+//		return child[0];
+//	}
+//	
+//	base_pointer end()
+//	{
+//		return child[1];
+//	}
+//	
+//	base_pointer parent()
+//	{
+//		return m_parent;
+//	}
+//	
+//	base_pointer const parent() const
+//	{
+//		return m_parent;
+//	}
+//	
+//	bool const empty() const
+//	{
+//		return (this == nil()); // && (this != this->m_parent));
+//		//return ((this != nil()) && (this != this->m_parent));
+//	}
+//	
+//	
+//	// The following adapted from the Austern et al. paper. Needs revisit bad
+//	// This should be wrapped by cursor!
+//	size_type rotate(size_type const& c)
+//	{
+//		//TODO: Optimise.
+//		//split up into even more atomic parts? probably not
+//		base_pointer q = this->child[c];
+//		
+//		base_pointer B = this->child[c]->child[c ? 0 : 1];
+//		//pre_rotate();
+//		
+//		//B swaps places with its m_parent:
+//
+//		this->child[c] = B;
+//		B->m_parent = this;
+//		q->m_parent = this->m_parent;
+//
+//		size_type qp = get_parity();
+//		q->m_parent->child[qp] = q;
+//		this->m_parent = q;
+//		q->child[c ? 0 : 1] = this;
+//		return qp;
+//	}
+//	
+//	base_pointer detach(size_type m_pos)
+//	{
+//		base_pointer q = child[m_pos];
+//		child[m_pos] = child[m_pos]->child[child[m_pos]->child[0] == 
+//										   binary_node_base::nil() ? 1 : 0];
+//		child[m_pos]->m_parent = this;
+//		return q;
+//	}
+//	
+//	// TODO: actually implement this.
+//	base_pointer detach(size_type parity, size_type other_parity, base_pointer other)
+//	{
+//		//Node::pre_splice(q, r);
+//		// splice out q
+//		base_pointer x = detach(parity);
+//
+//		// q has been spliced out, now relink it in place of r.				
+//		other->m_parent->child[other_parity] = this;
+//		m_parent = other->m_parent;
+//		//q->parity = r->parity;
+//		child[0] = other->child[0];
+//		child[1] = other->child[1];
+//		child[0]->m_parent = this;
+//		child[1]->m_parent = this;
+//		return x;
+//	}
+//	
+//	size_type const get_parity() const
+//	{
+//		return (this->m_parent->child[0] == this ? 0 : 1);
+//	}
+//};
 
 
 template <typename T, class Augment, class BalanceData>
