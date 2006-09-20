@@ -38,7 +38,6 @@
 void test_unbalance_binary_tree()
 {
 	using boost::tree::binary_tree;
-	using boost::tree::binary_node;
 	using boost::tree::tree_cursor;
 	using boost::tree::lower_bound;
 	
