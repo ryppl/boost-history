@@ -52,7 +52,7 @@
 namespace boost {
 namespace tree {
 
-using detail::binary_node;
+using detail::node;
 using detail::const_tree_cursor;
 using detail::tree_cursor;
 
