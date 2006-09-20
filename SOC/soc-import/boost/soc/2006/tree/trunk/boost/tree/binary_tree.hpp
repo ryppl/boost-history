@@ -74,7 +74,7 @@ class binary_tree : public Balance, public Augment {
 	typedef Balance balancer;
 	typedef Augment augmentor;
 	
-	typedef binary_node<T, typename augmentor::metadata_type, typename balancer::metadata_type> node_type;
+	typedef node<2, T, typename augmentor::metadata_type, typename balancer::metadata_type> node_type;
 	
 	typedef tree_cursor<node_type> cursor;
 	typedef const_tree_cursor<node_type> const_cursor;

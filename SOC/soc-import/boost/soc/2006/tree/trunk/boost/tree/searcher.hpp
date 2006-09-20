@@ -513,12 +513,6 @@ public:
  		c.clear();
  	}
  	
- 	// If we want to keep this, we need copy semantics.
- 	container_type get_container() const 
- 	{
- 		return c;
- 	}
- 	
 // protected. It's a sequence (and hierarchy) adaptor, and the STL ones do the 
 // same.
 protected: 

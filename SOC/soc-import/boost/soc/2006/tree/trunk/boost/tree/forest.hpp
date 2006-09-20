@@ -64,7 +64,7 @@ class forest {
 	typedef T value_type;
 	typedef BinaryTree container;
 
-//	typedef binary_node<T, typename augmentor::metadata_type, typename balancer::metadata_type> node_type;
+//	typedef node<2, T, typename augmentor::metadata_type, typename balancer::metadata_type> node_type;
 	
 	typedef typename container::cursor base_cursor;
 	typedef typename container::const_cursor base_const_cursor;

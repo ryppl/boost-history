@@ -27,7 +27,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
- * @file binary_tree.hpp
+ * @file binary.hpp
  * Binary node implementation
  */
  
@@ -49,33 +49,36 @@ namespace detail {
 
 using boost::array;
 
-struct binary_node_base;
+//struct node_base;
 
-struct binary_node_base : public array<binary_node_base*, 2> {
-	//typedef array<binary_node_base*, 2> base_type;
-	typedef binary_node_base* base_pointer;
-	typedef binary_node_base const* const_base_pointer;
-
-	//typedef base_type::size_type size_type;
+template <std::size_t N>
+class node_base : public array<node_base<N>*, N> {
+	typedef node_base<N> self_type;
 	
+ public:
+ 
+ 	typedef array<node_base<N>*, N> base_type;
+	typedef self_type* base_pointer;
+	typedef self_type const* const_base_pointer;
+
 	base_pointer m_parent;
 	
-	binary_node_base()
+	node_base()
 	{
 		m_parent = this;
 	}
 	
-	void init()
+	static base_pointer nil()
 	{
-		for (size_type i=0; i<max_size(); ++i)
-			operator[](i) = nil();
+		static self_type m_nil_obj;
+		static base_pointer m_nil = &m_nil_obj;
+		return m_nil;
 	}
 	
-	static binary_node_base* nil()
+	void init()
 	{
-		static binary_node_base m_nil_obj;
-		static binary_node_base* m_nil = &m_nil_obj;
-		return m_nil;
+		for (typename base_type::size_type i=0; i<base_type::max_size(); ++i)
+			operator[](i) = nil();
 	}
 	
 	base_pointer parent()
@@ -88,240 +91,100 @@ struct binary_node_base : public array<binary_node_base*, 2> {
 		return m_parent;
 	}
 	
-	size_type rotate(size_type const& c)
+	// This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
+	bool const empty() const
+	{
+		return (this == nil());
+	}
+	
+	typename base_type::size_type rotate(typename base_type::size_type const& c)
 	{
 		//TODO: Optimise.
 		//split up into even more atomic parts? probably not
-		base_pointer q = operator[](c);
+		base_pointer q = base_type::operator[](c);
 		
-		base_pointer B = (operator[](c))->operator[](c ? 0 : 1);
+		base_pointer B = (base_type::operator[](c))->base_type::operator[](c ? 0 : 1);
 		//pre_rotate();
 		
 		//B swaps places with its m_parent:
 
-		operator[](c) = B;
+		base_type::operator[](c) = B;
 		B->m_parent = this;
 		q->m_parent = this->m_parent;
 
-		size_type qp = get_parity();
-		q->m_parent->operator[](qp) = q;
+		typename base_type::size_type qp = get_parity();
+		q->m_parent->base_type::operator[](qp) = q;
 		this->m_parent = q;
-		q->operator[](c ? 0 : 1) = this;
+		q->base_type::operator[](c ? 0 : 1) = this;
 		return qp;
 	}
 	
-	base_pointer detach(size_type m_pos)
+	base_pointer detach(typename base_type::size_type m_pos)
 	{
-		base_pointer q = operator[](m_pos);
-		operator[](m_pos) = operator[](m_pos)->operator[]((operator[](m_pos))->operator[](0) == 
-										   binary_node_base::nil() ? 1 : 0);
-		operator[](m_pos)->m_parent = this;
+		base_pointer q = base_type::operator[](m_pos);
+		base_type::operator[](m_pos) = 
+			base_type::operator[](m_pos)
+		  ->base_type::operator[]((base_type::operator[](m_pos))
+		  ->base_type::operator[](0) == node_base::nil() ? 1 : 0);
+		base_type::operator[](m_pos)->m_parent = this;
 		return q;
 	}
 	
 	// TODO: actually implement this.
-	base_pointer detach(size_type parity, size_type other_parity, base_pointer other)
+	base_pointer detach(typename base_type::size_type parity, 
+						typename base_type::size_type other_parity, 
+						base_pointer other)
 	{
 		//Node::pre_splice(q, r);
 		// splice out q
 		base_pointer x = detach(parity);
 
 		// q has been spliced out, now relink it in place of r.				
-		other->m_parent->operator[](other_parity) = this;
+		other->m_parent->base_type::operator[](other_parity) = this;
 		m_parent = other->m_parent;
-		//q->parity = r->parity;
-		
-		operator[](0) = other->operator[](0);
-		operator[](1) = other->operator[](1);
-		operator[](0)->m_parent = this;
-		operator[](1)->m_parent = this;
-//		child[0] = other[0];
-//		child[1] = other[1];
-//		child[0]->m_parent = this;
-//		child[1]->m_parent = this;
+
+		for (typename base_type::size_type i=0; i<base_type::max_size(); ++i) {
+			base_type::operator[](i) = other->base_type::operator[](i);
+			base_type::operator[](i)->m_parent = this;
+		}
 		return x;
 	}
 	
-	size_type const get_parity() const
+	typename base_type::size_type const get_parity() const
 	{
-		return (this->m_parent->operator[](0) == this ? 0 : 1);
-	}
-	
-	// This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
-	bool const empty() const
-	{
-		return (this == nil()); // && (this != this->m_parent));
-		//return ((this != nil()) && (this != this->m_parent));
+		return (this->m_parent->base_type::operator[](0) == this ? 0 : 1);
 	}
 };
 
-
-//struct binary_node_base //TODO: make this a class (friend of binary_tree?)
-//{
-//	typedef binary_node_base* base_pointer;
-//	typedef binary_node_base const* const_base_pointer;
-//	
-//	typedef std::size_t size_type; //TODO: use cheaper type. we only need 0, 1 !
-//
-//	static size_type const m_maxsize = 2;
-//	base_pointer m_parent;
-//	base_pointer child[m_maxsize];
-//	
-//	binary_node_base()
-//	{
-//		m_parent = this;
-//	}
-//	
-//	// this has to be outsourced from the ctor - otherwise we'd be stuck in 
-//	// a recursion.
-//	void init()
-//	{
-//		for (size_type i=0; i<m_maxsize; ++i)
-//			child[i] = nil();
-//	}
-//	
-//	//TODO: copy ctor. this is not trivial - what about self referrring pointers,eg?
-//
-//	static binary_node_base* nil()
-//	{
-//		static binary_node_base m_nil_obj;
-//		static binary_node_base* m_nil = &m_nil_obj;
-//		return m_nil;
-//	}
-//	
-//	base_pointer begin()
-//	{
-//		return child[0];
-//	}
-//	
-//	base_pointer end()
-//	{
-//		return child[1];
-//	}
-//	
-//	base_pointer parent()
-//	{
-//		return m_parent;
-//	}
-//	
-//	base_pointer const parent() const
-//	{
-//		return m_parent;
-//	}
-//	
-//	bool const empty() const
-//	{
-//		return (this == nil()); // && (this != this->m_parent));
-//		//return ((this != nil()) && (this != this->m_parent));
-//	}
-//	
-//	
-//	// The following adapted from the Austern et al. paper. Needs revisit bad
-//	// This should be wrapped by cursor!
-//	size_type rotate(size_type const& c)
-//	{
-//		//TODO: Optimise.
-//		//split up into even more atomic parts? probably not
-//		base_pointer q = this->child[c];
-//		
-//		base_pointer B = this->child[c]->child[c ? 0 : 1];
-//		//pre_rotate();
-//		
-//		//B swaps places with its m_parent:
-//
-//		this->child[c] = B;
-//		B->m_parent = this;
-//		q->m_parent = this->m_parent;
-//
-//		size_type qp = get_parity();
-//		q->m_parent->child[qp] = q;
-//		this->m_parent = q;
-//		q->child[c ? 0 : 1] = this;
-//		return qp;
-//	}
-//	
-//	base_pointer detach(size_type m_pos)
-//	{
-//		base_pointer q = child[m_pos];
-//		child[m_pos] = child[m_pos]->child[child[m_pos]->child[0] == 
-//										   binary_node_base::nil() ? 1 : 0];
-//		child[m_pos]->m_parent = this;
-//		return q;
-//	}
-//	
-//	// TODO: actually implement this.
-//	base_pointer detach(size_type parity, size_type other_parity, base_pointer other)
-//	{
-//		//Node::pre_splice(q, r);
-//		// splice out q
-//		base_pointer x = detach(parity);
-//
-//		// q has been spliced out, now relink it in place of r.				
-//		other->m_parent->child[other_parity] = this;
-//		m_parent = other->m_parent;
-//		//q->parity = r->parity;
-//		child[0] = other->child[0];
-//		child[1] = other->child[1];
-//		child[0]->m_parent = this;
-//		child[1]->m_parent = this;
-//		return x;
-//	}
-//	
-//	size_type const get_parity() const
-//	{
-//		return (this->m_parent->child[0] == this ? 0 : 1);
-//	}
-//};
-
-
-template <typename T, class Augment, class BalanceData>
-class binary_node : public binary_node_base {
+template <std::size_t N, typename T, class Augment, class BalanceData>
+class node : public node_base<N> {
  public:
  	typedef T value_type;
 	typedef Augment augmentor;
 	typedef BalanceData balancer_data;
 
-	typedef binary_node<value_type, augmentor, balancer_data> node_type;
+	typedef node<N, value_type, augmentor, balancer_data> node_type;
 	typedef node_type* node_pointer;
 	typedef node_type& node_reference;
 	//typedef node_pointer position_type;
-	typedef binary_node_base base_type;
+	typedef node_base<N> base_type;
 	typedef base_type* base_pointer;
 	typedef base_type const* const_base_pointer;
 	
 	typedef value_type& reference;
 	typedef value_type* pointer;
 
-	 //enum size_t { first = 0, second = 1 };
-	typedef std::size_t size_type;
+	//enum size_t { first = 0, second = 1 };
+	//typedef std::size_t size_type;
 	
 	struct metadata_type : public augmentor, public balancer_data {};
 	
 	// TODO: add observers.
 
-	pointer&		value() { return m_data; }
-	reference	operator*() { return *m_data; } 
+	reference operator*() { return *m_data; } 
 	
-	binary_node(pointer data) : binary_node_base(), m_data(data)/*, m_size(1)*/  {}
-		
-	//move the following to node_base, then wrap around them?
-//	size_type size()
-//	{
-//		return m_size;
-//	}
+	node(pointer data) : base_type(), m_data(data) {}
 	
-	size_type max_size()
-	{
-		return 1;
-	}
-
-//	bool empty()
-//	{
-//		return m_size;
-//	}
-
-	//bool full?
-
 	pointer data()
 	{
 		return m_data;
@@ -332,12 +195,9 @@ class binary_node : public binary_node_base {
 		return m_meta;
 	}
 	
-	//call "do"rotate, splice (and pre_rotate, pre_splice) from rotate, splice.
-
  private:
 	pointer m_data;
 	metadata_type m_meta;
-	//size_type m_size;
 };
 
 } // namespace detail

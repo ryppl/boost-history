@@ -34,6 +34,8 @@
 #include <boost/tree/searcher.hpp>
 #include <boost/tree/algorithm.hpp>
 
+#include "helpers.hpp"
+
 //TODO: Make this a test suite.
 
 
@@ -43,7 +45,7 @@ void test_key_search_binary_tree()
 	using boost::tree::binary_tree;
 	using boost::tree::lower_bound;
 	
-	typedef searcher<false, binary_tree<int> > searcher_t;
+	typedef test_searcher<false, binary_tree<int> > searcher_t;
 	searcher_t my_tree;
 	
 	searcher_t::iterator c, c1, c2, c3, c4, c5;
@@ -125,7 +127,7 @@ void test_key_search_binary_tree()
 	BOOST_CHECK(++c2 == my_tree.end());
 	c = my_tree.end();
 	--c;
-	
+
 	BOOST_CHECK(*c != 39);
 	BOOST_CHECK(*c == 412);
 	--c;
@@ -134,9 +136,9 @@ void test_key_search_binary_tree()
 	c = my_tree.begin();
 	BOOST_CHECK(searcher_t::cursor(c).parity() == 0);
 	BOOST_CHECK(*(searcher_t::cursor(c).parent()) != 412);
-	BOOST_CHECK(*c < 413);
+	BOOST_CHECK(*c < 413);	
 	
-	searcher_t::container_type the_tree = my_tree.get_container();
+	searcher_t::container_type& the_tree = my_tree.container();
 	searcher_t::cursor tree_cur = boost::tree::lower_bound(the_tree.root(), 
 		the_tree.shoot(), 39, std::less<int>());
 
@@ -144,7 +146,6 @@ void test_key_search_binary_tree()
 	BOOST_CHECK((++tree_cur).empty());
 	--tree_cur;
 	BOOST_CHECK(*tree_cur == 39);
-	//BOOST_CHECK(*tree_cur.begin() > 412);
 	
 	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 18);	
 	BOOST_CHECK(*tree_cur == 18);
@@ -179,6 +180,7 @@ void test_key_search_binary_tree()
 	
 	------c;
 	BOOST_CHECK(*c == 31);
+
 	my_tree.erase(c);
 
 	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 412);	
@@ -192,6 +194,7 @@ void test_key_search_binary_tree()
 	BOOST_CHECK(*c++ == 39);
 	BOOST_CHECK(*c++ == 412);
 	BOOST_CHECK(c == my_tree.end());
+	
 
 }
 
