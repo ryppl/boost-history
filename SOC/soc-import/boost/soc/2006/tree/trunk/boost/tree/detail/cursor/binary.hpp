@@ -55,6 +55,7 @@ namespace boost {
 namespace tree {
 namespace detail {
 
+using boost::iterator_core_access;
 
 class access_rotate {
  public:
@@ -65,19 +66,222 @@ class access_rotate {
       }
 };
 
+class cursor_core_access {
+ public:
+  	template <class Facade>
+	static bool empty_(Facade const& f)
+	{
+		return f.empty_();
+	}
+	
+ 	template <class Facade>
+	static typename Facade::size_type size_(Facade const& f)
+	{
+		return f.size_();
+	}
+	
+	template <class Facade>
+	static typename Facade::size_type max_size_(Facade const& f)
+	{
+		return f.max_size_();
+	}
+	
+	template <class Facade>
+	static Facade begin_(Facade const& f)
+	{
+		return f.begin_();
+	}
+	
+	template <class Facade>
+	static Facade end_(Facade const& f)
+	{
+		return f.end_();
+	}
+	
+	template <class Facade>
+	static Facade parent_(Facade const& f)
+	{
+		return f.parent_();
+	}
+};
+
+template <class Hor, class Vert, class T, class Dist = std::ptrdiff_t,
+		  class Size = std::size_t, class Ptr = T*, class Ref = T&>
+class cursor {
+	typedef Hor		horizontal_iterator_traversal;
+	typedef Vert		vertical_iterator_traversal;
+	
+	typedef Size		size_type;
+	
+	typedef Hor		iterator_category;
+	typedef T		value_type;
+	typedef Dist		difference_type;
+	typedef Ptr		pointer;
+	typedef Ref		reference;
+};
+
+template <
+    class Derived             // The derived cursor type being constructed
+  , class Value
+  , class HorizontalCategoryOrTraversal
+  , class VerticalCategoryOrTraversal
+  , class Reference   = Value&
+  , class Difference  = std::ptrdiff_t
+  , class Size		  = std::size_t
+>
+class cursor_facade 
+ : public iterator_facade<Derived, Value, HorizontalCategoryOrTraversal, 
+						  Reference, Difference> {
+ private:
+ 	//typedef Derive<Value> Derived;
+	//
+	// Curiously Recurring Template interface.
+	//
+	Derived& derived()
+	{
+	    return *static_cast<Derived*>(this);
+	}
+	
+	Derived const& derived() const
+	{
+	    return *static_cast<Derived const*>(this);
+	}
+
+//	typedef iterator_facade<Derived, Value, HorizontalCategoryOrTraversal, 
+//							Reference, Difference> iterator_facade_;
+	typedef typename cursor_facade::iterator_facade_ iterator_facade_;
+ protected:
+ 	// For use by derived classes
+	typedef cursor_facade<Derived, Value, HorizontalCategoryOrTraversal,
+						  VerticalCategoryOrTraversal, Reference, Difference> 
+			cursor_facade_;
+ public:
+
+	typedef typename iterator_facade_::value_type value_type;
+	typedef Reference reference;
+	typedef Difference difference_type;
+	typedef typename iterator_facade_::pointer pointer;
+	typedef typename iterator_facade_::iterator_category iterator_category;
+
+	typedef Size size_type;
+
+	typedef bidirectional_traversal_tag vertical_traversal_type;
+
+//	typedef typename Derived::template rebind<value_type>::other cursor;
+//	typedef typename Derived::template rebind<add_const<value_type> >::other
+//			const_cursor;
+
+	bool const empty() const
+	{
+		return cursor_core_access::empty_(this->derived());
+	}
+	
+	size_type const size() const
+	{
+		return cursor_core_access::size_(this->derived());
+	}
+	
+	size_type const max_size() const
+	{
+		return cursor_core_access::max_size_(this->derived());
+	}
+		 
+ 	// if Value is const: Derived == const_cursor: only Derived
+ 	// otherwise: also Derived const. Really? implicit conversion to const_cursor?
+ 	Derived begin()
+ 	{
+		return cursor_core_access::begin_(this->derived()); 		
+ 	}
+
+ 	Derived end()
+ 	{
+		return cursor_core_access::end_(this->derived()); 		
+ 	}
+ 	
+ 	Derived parent()
+ 	{
+		return cursor_core_access::parent_(this->derived()); 		
+ 	}
+ 	//if Value isn't const: also cursor.
+};
+
+template <
+    class Derived
+  , class Base
+  , class Value               = use_default
+  , class HorizontalTraversal = use_default
+  , class VerticalTraversal	  = use_default
+  , class Reference           = use_default
+  , class Difference          = use_default
+  , class Size                = use_default
+>
+class cursor_adaptor 
+  : public iterator_adaptor<Derived, Base, Value, HorizontalTraversal, Reference,
+  							Difference>
+{
+	friend class iterator_core_access;
+	friend class cursor_core_access;
+	typedef iterator_adaptor<Derived, Base, Value, HorizontalTraversal, Reference,
+  							Difference> iterator_adaptor_;
+ public:
+    cursor_adaptor() : iterator_adaptor_()
+    { }
+    
+    explicit cursor_adaptor(Base const& iter) : iterator_adaptor_(iter)
+    { }
+    
+    typedef HorizontalTraversal horizontal_traversal;
+    typedef HorizontalTraversal vertical_traversal;
+    
+    typedef Size size_type;
+    typedef Base base_type;
+    
+    
+ protected:
+    typedef cursor_adaptor cursor_adaptor_;
+
+ public:
+ 	bool const empty_() const
+	{
+		return iterator_adaptor_::base().empty();
+	}
+	
+	size_type const size_() const
+	{
+		return iterator_adaptor_::base().size();
+	}
+	
+	size_type const max_size_() const
+	{
+		return iterator_adaptor_::base().max_size();
+	}
+	
+	Derived begin()
+	{
+		return Derived(this->base_reference().begin());
+	}
+		
+	Derived parent_()
+	{
+		return Derived(this->base_reference().parent());
+	}
+};
+
 
 template <class Node>
 class tree_cursor;
 
 template<class Node>
 class const_tree_cursor
- : public boost::iterator_facade<const_tree_cursor<Node>
+ : public cursor_facade<const_tree_cursor<Node>
       , typename Node::value_type const //const is a hint for iterator_facade!
       , random_access_traversal_tag
+      , bidirectional_traversal_tag
     > {
  private:
     struct enabler {};
-
+	typedef const_tree_cursor<Node> self_type;
+	typedef typename self_type::cursor_facade_ cursor_facade_;
  public:
  	//TODO: Tidy up typedefs
  	 	
@@ -88,7 +292,7 @@ class const_tree_cursor
 	typedef typename Node::const_base_pointer const_base_pointer;
 	
 	// Container-specific:
-	typedef typename Node::size_type size_type;
+	typedef typename cursor_facade_::size_type size_type;
 
 	// Cursor-specific
 	typedef integral_constant<size_type, 2> arity; // binary cursor
@@ -96,7 +300,7 @@ class const_tree_cursor
  	typedef tree_cursor<Node> cursor;
  	typedef const_tree_cursor<Node> const_cursor;
 
-	typedef bidirectional_traversal_tag vertical_traversal_type;
+	//typedef bidirectional_traversal_tag vertical_traversal_type;
 	
 	typedef typename Node::metadata_type metadata_type;
 	
@@ -129,8 +333,9 @@ class const_tree_cursor
 	const_base_pointer m_parent;
  	size_type m_pos;
 
-    friend class boost::iterator_core_access;
-    
+    friend class iterator_core_access;
+    friend class cursor_core_access;
+        
     typename Node::value_type const& dereference() const
 	{
 		return **static_cast<node_pointer>(m_parent);
@@ -151,57 +356,60 @@ class const_tree_cursor
 		--m_pos;
     }
     
-    void advance(typename const_tree_cursor::iterator_facade_::difference_type n)
+    void advance(typename const_tree_cursor::cursor_facade_::difference_type n)
     {
     		m_pos += n;
     }
     
-    typename const_tree_cursor::iterator_facade_::difference_type
+    typename const_tree_cursor::cursor_facade_::difference_type
     distance_to(const_tree_cursor z) const //TODO: convertible to instead of const_tree_cursor (?)
     {
     		return (z.m_pos - this->m_pos);
     }
 	
-public:
+private:
 	// Container-specific
-	size_type const size() const
+	
+	bool const empty_() const
+	{
+		return m_parent->operator[](m_pos)->empty();
+	}
+	
+	size_type const size_() const
 	{
 		return m_parent->size();
 	}
 	
-	size_type const max_size() const
+	size_type const max_size_() const
 	{
 		return m_parent->max_size();
 	}
 	
 	// TODO (following couple of functions): wrap around node member fn
-	const_cursor begin() const
+	const_cursor begin_() const
 	{
 		return const_cursor(m_parent->operator[](m_pos), 0); 
 	}
 		
-	const_cursor end() const
+	const_cursor end_() const
 	{
 		return const_cursor(m_parent->operator[](m_pos), m_parent->size()-1);
 	}
-	
-	// Cursor stuff. 
-	
-	const_cursor parent() const
+
+	// Cursor stuff. 	
+	const_cursor parent_() const
 	{
 		return const_cursor(m_parent->parent(), m_parent->get_parity());
 	}
+
+public:
+
 		
 	size_type const parity() const
 	{
 		return m_pos;
 	}
-		
-	bool const empty() const
-	{
-		return m_parent->operator[](m_pos)->empty();
-	}
-	
+
 	metadata_type const& metadata() const
 	{
 		return static_cast<node_pointer>(m_parent->operator[](m_pos))->metadata();
@@ -210,10 +418,10 @@ public:
 
 template <class Node> 
 class tree_cursor//
- : public boost::iterator_facade<tree_cursor<Node>
+ : public cursor_facade<tree_cursor<Node>
       , typename Node::value_type
       , random_access_traversal_tag
-      //, bidirectional_traversal_tag
+      , bidirectional_traversal_tag
     > {
  private:
   	typedef typename Node::base_pointer base_pointer;
@@ -265,7 +473,9 @@ class tree_cursor//
  	base_pointer m_parent;
  	size_type m_pos;
 
- 	friend class boost::iterator_core_access;
+ 	friend class iterator_core_access;
+    friend class cursor_core_access;
+    
  	friend class access_rotate;
  	friend class access_detach;
  	
@@ -289,28 +499,34 @@ class tree_cursor//
 		--m_pos;
     }    
     
-	void advance(typename tree_cursor::iterator_facade_::difference_type n)
+	void advance(typename tree_cursor::cursor_facade_::difference_type n)
     {
     		m_pos += n;
     }
     
-    typename tree_cursor::iterator_facade_::difference_type
+    typename tree_cursor::cursor_facade_::difference_type
     distance_to(tree_cursor z) const //FIXME: convertible to instead of const_tree_cursor
     {
     		return (z.m_pos - this->m_pos);
     }
-	
-public:
+    
 	// Container specific
-	size_type size()
+	bool const empty_() const
+	{
+		return m_parent->operator[](m_pos)->empty();
+	}
+	
+	size_type size_()
 	{
 		return m_parent->size();
 	}
 	
-	size_type max_size()
+	size_type max_size_()
 	{
 		return m_parent->max_size();
-	}
+	}	
+public:
+
 	
 	cursor begin()
 	{
@@ -321,7 +537,7 @@ public:
 	{
 		return const_cursor(m_parent->operator[](m_pos), 0);
 	}
-		
+
 	cursor end()
 	{
 		return cursor(m_parent->operator[](m_pos), m_parent->size()-1);
@@ -353,10 +569,7 @@ public:
 		return m_pos;
 	}
 		
-	bool const empty() const
-	{
-		return m_parent->operator[](m_pos)->empty();
-	}
+
 	
 //	bool const is_root() const
 //	{

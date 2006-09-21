@@ -62,10 +62,11 @@ class forest_cursor;
 
 template<class Cursor>
 class const_forest_cursor
- : public boost::iterator_adaptor<const_forest_cursor<Cursor>
+ : public cursor_adaptor<const_forest_cursor<Cursor>
       , Cursor const
       , boost::use_default
       , bidirectional_traversal_tag
+      , forward_traversal_tag
     > {
  private:
     struct enabler {};
@@ -90,10 +91,10 @@ class const_forest_cursor
 	
  	// Common iterator facade stuff
     const_forest_cursor()
-     : const_forest_cursor::iterator_adaptor_() {}
+     : const_forest_cursor::cursor_adaptor_() {}
 
     explicit const_forest_cursor(base_cursor p)
-     : const_forest_cursor::iterator_adaptor_(p) {}
+     : const_forest_cursor::cursor_adaptor_(p) {}
       
     template <class OtherCursor>
     const_forest_cursor(
@@ -128,14 +129,15 @@ class const_forest_cursor
 
 template <class Cursor> 
 class forest_cursor
- : public boost::iterator_adaptor<forest_cursor<Cursor>
+ : public cursor_adaptor<forest_cursor<Cursor>
       , Cursor
       , boost::use_default
       , bidirectional_traversal_tag
+      , forward_traversal_tag
     > {
  private:
     struct enabler {};
-
+	friend class cursor_core_access;
  public:
  	//TODO: Tidy up typedefs
 
@@ -144,9 +146,9 @@ class forest_cursor
  	typedef forest_cursor<Cursor> cursor;
  	typedef const_forest_cursor<Cursor> const_cursor;
 
-	typedef typename cursor_size<base_cursor>::type size_type;
+	//typedef typename cursor_size<base_cursor>::type size_type;
 
-	typedef bidirectional_traversal_tag vertical_traversal_type;
+	//typedef bidirectional_traversal_tag vertical_traversal_type;
 	
 	typedef typename base_cursor::metadata_type metadata_type;
 	
@@ -156,10 +158,10 @@ class forest_cursor
 	
  	// Common iterator facade stuff
     forest_cursor()
-     : forest_cursor::iterator_adaptor_() {}
+     : forest_cursor::cursor_adaptor_() {}
 
     explicit forest_cursor(base_cursor p)
-     : forest_cursor::iterator_adaptor_(p) {}
+     : forest_cursor::cursor_adaptor_(p) {}
       
     template <class OtherCursor>
     forest_cursor(
@@ -170,7 +172,7 @@ class forest_cursor
           , enabler
         >::type = enabler()
     )
-      : forest_cursor::iterator_adaptor_(other.base()) {}
+      : forest_cursor::cursor_adaptor_(other.base()) {}
 
 	operator base_cursor()
 	{
@@ -193,15 +195,15 @@ class forest_cursor
 	
 public:
 	// Range stuff.
-	cursor begin()
-	{
-		return cursor(this->base_reference().begin()); 
-	}
+//	cursor begin()
+//	{
+//		return cursor(this->base_reference().begin()); 
+//	}
 	
-	const_cursor begin() const
-	{
-		return const_cursor(this->base_reference().begin()); 
-	}		
+//	const_cursor begin() const
+//	{
+//		return const_cursor(this->base_reference().begin()); 
+//	}		
 
 	// Cursor stuff. 
 	
