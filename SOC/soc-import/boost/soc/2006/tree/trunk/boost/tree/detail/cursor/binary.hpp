@@ -87,21 +87,21 @@ class cursor_core_access {
 	}
 	
 	template <class Facade>
-	static Facade begin_(Facade const& f)
+	static Facade left(Facade const& f)
 	{
-		return f.begin_();
+		return f.left();
 	}
 	
 	template <class Facade>
-	static Facade end_(Facade const& f)
+	static Facade right(Facade const& f)
 	{
-		return f.end_();
+		return f.right();
 	}
 	
 	template <class Facade>
-	static Facade parent_(Facade const& f)
+	static Facade up(Facade const& f)
 	{
-		return f.parent_();
+		return f.up();
 	}
 };
 
@@ -190,17 +190,17 @@ class cursor_facade
  	// otherwise: also Derived const. Really? implicit conversion to const_cursor?
  	Derived begin()
  	{
-		return cursor_core_access::begin_(this->derived()); 		
+		return cursor_core_access::left(this->derived()); 		
  	}
 
  	Derived end()
  	{
-		return cursor_core_access::end_(this->derived()); 		
+		return cursor_core_access::right(this->derived()); 		
  	}
  	
  	Derived parent()
  	{
-		return cursor_core_access::parent_(this->derived()); 		
+		return cursor_core_access::up(this->derived()); 		
  	}
  	//if Value isn't const: also cursor.
 };
@@ -261,7 +261,7 @@ class cursor_adaptor
 		return Derived(this->base_reference().begin());
 	}
 		
-	Derived parent_()
+	Derived up()
 	{
 		return Derived(this->base_reference().parent());
 	}
@@ -386,18 +386,18 @@ private:
 	}
 	
 	// TODO (following couple of functions): wrap around node member fn
-	const_cursor begin_() const
+	const_cursor left() const
 	{
 		return const_cursor(m_parent->operator[](m_pos), 0); 
 	}
 		
-	const_cursor end_() const
+	const_cursor right() const
 	{
 		return const_cursor(m_parent->operator[](m_pos), m_parent->size()-1);
 	}
 
 	// Cursor stuff. 	
-	const_cursor parent_() const
+	const_cursor up() const
 	{
 		return const_cursor(m_parent->parent(), m_parent->get_parity());
 	}
@@ -533,7 +533,7 @@ public:
 		return cursor(m_parent->operator[](m_pos), 0);
 	}
 	
-	const_cursor begin() const
+	const_cursor left() const
 	{
 		return const_cursor(m_parent->operator[](m_pos), 0);
 	}
@@ -543,7 +543,7 @@ public:
 		return cursor(m_parent->operator[](m_pos), m_parent->size()-1);
 	}
 
-	const_cursor end() const
+	const_cursor right() const
 	{
 		return const_cursor(m_parent->operator[](m_pos), m_parent->size()-1);
 	}

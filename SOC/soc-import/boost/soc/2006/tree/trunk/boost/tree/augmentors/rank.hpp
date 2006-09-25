@@ -127,7 +127,7 @@ class rank {
 
 // This is actually some kind of algorithm...
 template <class Tree>
-typename Tree::const_cursor select_rank(Tree const& tree, typename Tree::augmentor::size_type i)
+typename Tree::const_cursor select_rank(Tree const& tree, typename Tree::augmentor_type::size_type i)
 {
 	typename Tree::const_cursor p = tree.root().begin();
 	if (p.metadata().rank() < i) {
@@ -148,7 +148,7 @@ typename Tree::const_cursor select_rank(Tree const& tree, typename Tree::augment
 }
 
 template <class Tree>
-typename Tree::cursor select_rank(Tree& tree, typename Tree::augmentor::size_type i)
+typename Tree::cursor select_rank(Tree& tree, typename Tree::augmentor_type::size_type i)
 {
 	typename Tree::cursor p = tree.root().begin();
 	if (p.metadata().rank() < i) {

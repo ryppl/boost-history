@@ -165,7 +165,7 @@ key_lower_bound(tree_cursor<Node> c, typename Extract::result_type key,
 				Descend descend,
 				Extract extract = Extract(), Compare compare = Compare())
 {
-	       bool end_flag = false;
+	       bool rightflag = false;
 	       typedef tree_cursor<Node> cursor;
 	       while (!c.empty())
 	       {
@@ -174,10 +174,10 @@ key_lower_bound(tree_cursor<Node> c, typename Extract::result_type key,
 					c = binary_lower_bound(p.begin(), p.end(), key, //FIXME: use node_search instead.
 	                		bind<bool>(cmp, bind<typename Extract::result_type>(extract, _1), _2));
 	                //	descend(c); 
-	                if ((end_flag = (c != p.end())) && (!cmp(key, extract(*c)))) // success!
-	                        return std::make_pair(c, std::make_pair(false, end_flag));
+	                if ((rightflag = (c != p.end())) && (!cmp(key, extract(*c)))) // success!
+	                        return std::make_pair(c, std::make_pair(false, rightflag));
 	        }
-	        return std::make_pair(c, std::make_pair(true, end_flag)); // not found.
+	        return std::make_pair(c, std::make_pair(true, rightflag)); // not found.
 }
 
 
@@ -199,14 +199,14 @@ key_lower_bound(Range& r, typename Extract::result_type key,
 
 //TODO: don't use binary_tree explicitly.
 
-template</* class NodeSearch, */class Extract, class Compare, class T, class Balance, class Augment, class ValAlloc, class NodeAlloc>
-std::pair<typename sortable_traits<binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc> >::cursor, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
-key_lower_bound(binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc>& t, typename Extract::result_type key, 
+template</* class NodeSearch, */class Extract, class Compare, class T, class Balance, class Augment, class ValAlloc>
+std::pair<typename sortable_traits<binary_tree<T, Balance, Augment, ValAlloc> >::cursor, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
+key_lower_bound(binary_tree<T, Balance, Augment, ValAlloc>& t, typename Extract::result_type key, 
 //				NodeSearch node_search, 
 				Extract extract = Extract(), Compare compare = Compare())
 {
-			//binary_tree<Node, Balance, ValAlloc, NodeAlloc>::descend 
-			typedef binary_tree<T, Balance, Augment, ValAlloc, NodeAlloc> Tree;
+			//binary_tree<Node, Balance, ValAlloc>::descend 
+			typedef binary_tree<T, Balance, Augment, ValAlloc> Tree;
 			typedef typename Tree::cursor cur;
 			typedef void(Tree::*efct)(cur &);
 			//efct e = &Augment::descend;

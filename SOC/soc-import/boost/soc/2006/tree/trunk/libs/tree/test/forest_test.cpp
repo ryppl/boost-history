@@ -50,19 +50,19 @@ void test_forest()
 	cur = tree_type::base_cursor(c);
 	BOOST_CHECK(*cur == 6);
 	
-	BOOST_CHECK(cur == mytree.c.root().begin());
+	BOOST_CHECK(cur == mytree.h.root().begin());
 	
 	c = mytree.insert(c, 5);	
 	BOOST_CHECK(*c == 5);
 	cur = tree_type::base_cursor(c);
-	BOOST_CHECK(cur == mytree.c.root().begin());
+	BOOST_CHECK(cur == mytree.h.root().begin());
 
 	c = mytree.insert(c, 4);	
 	BOOST_CHECK(*c == 4);
 	BOOST_CHECK(c == mytree.root().begin());
 	
 	cur = tree_type::base_cursor(c);
-	BOOST_CHECK(cur == mytree.c.root().begin());
+	BOOST_CHECK(cur == mytree.h.root().begin());
 
 //	++cur;
 //	cur = cur.begin();	

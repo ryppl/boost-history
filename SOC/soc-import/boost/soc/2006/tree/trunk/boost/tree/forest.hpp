@@ -57,17 +57,17 @@ using detail::forest_cursor;
  * sequence concept. TODO: complete this...
  *
 */
-template <class T, class BinaryTree = binary_tree<T> >
+template <class T, class Hierarchy = binary_tree<T> >
 class forest {
-	typedef forest<T, BinaryTree> self_type;
+	typedef forest<T, Hierarchy> self_type;
  public:
 	typedef T value_type;
-	typedef BinaryTree container;
+	typedef Hierarchy hierarchy_type;
 
 //	typedef node<2, T, typename augmentor::metadata_type, typename balancer::metadata_type> node_type;
 	
-	typedef typename container::cursor base_cursor;
-	typedef typename container::const_cursor base_const_cursor;
+	typedef typename hierarchy_type::cursor base_cursor;
+	typedef typename hierarchy_type::const_cursor base_const_cursor;
 	
 	typedef forest_cursor<base_cursor> cursor;
 	typedef const_forest_cursor<base_const_cursor> const_cursor;
@@ -93,15 +93,30 @@ class forest {
 
 //	forest()
 //	{
-//		c.insert(c.root(), );
+//		h.insert(h.root(), );
 //	}
+	
+	explicit forest(Hierarchy const& hier = Hierarchy()) : h(hier)
+	{ }
+	
+	bool empty()
+	{
+		return h.empty();
+	}
+	
+	size_type size() const
+	{
+		return h.size();
+	}
+	
+
 	
 	/**
 	 * Returns a read/write ("mutable") cursor to the %binary_tree's root.
 	 */ 	
 	cursor root()
 	{
-		return cursor(c.root());
+		return cursor(h.root());
 	}
 
 	/**
@@ -117,7 +132,7 @@ class forest {
 	 */ 	
 	const_cursor croot() const
 	{
-		return const_cursor(c.croot());
+		return const_cursor(h.croot());
 	}
 
 	cursor insert(cursor pos, value_type const& val)
@@ -125,14 +140,14 @@ class forest {
 		// TODO: Could we remove the root-checking part if root.parent() 
 		// returned root? Or don't we even want root?
 		base_cursor bc = base_cursor(pos);
-		if (bc != c.root())
+		if (bc != h.root())
 			bc = bc.parent();
 		//if (bc.parity())
-		return cursor(c.insert(bc, val));
+		return cursor(h.insert(bc, val));
 	}
 	
  //protected:
-	container c;
+	hierarchy_type h;
  	
 };
 

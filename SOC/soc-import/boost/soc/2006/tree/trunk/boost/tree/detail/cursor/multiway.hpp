@@ -30,111 +30,184 @@
 
 #ifndef BOOST_TREE_DETAIL_CURSOR_MULTIWAY_HPP
 #define BOOST_TREE_DETAIL_CURSOR_MULTIWAY_HPP
+#include <boost/tree/detail/cursor/binary.hpp>
 
+#include <boost/tree/cursor.hpp>
+
+//#include <boost/type_traits/integral_constant.hpp>
+//
+//#include <boost/type_traits/is_convertible.hpp>
+//#include <boost/utility/enable_if.hpp>
+//
+#include <boost/iterator/iterator_adaptor.hpp>
+
+
+#include <iterator>
+#include <utility>
 
 namespace boost {
 namespace tree {
+namespace detail {
 
-template <class Container>
-struct some_nary_node_base
-{
-	some_nary_node_base* parent;
-	std::vector<some_nary_node_base*> children; //how do we get a ValueAlloc ?
-};
+template <class Cursor>
+class multiway_cursor;
 
-
-class multiway_cursor_for_some_node
-{
+template<class Cursor>
+class const_multiway_cursor
+ : public cursor_adaptor<const_multiway_cursor<Cursor>
+      , Cursor const
+      , boost::use_default
+      , bidirectional_traversal_tag
+      , forward_traversal_tag
+    > {
  private:
- 	typedef multiway_cursor_for_some_node self_type;
- 	
- 	typedef some_node node_type;
-	typedef node_traits<node_type> traits;
-	
-	typedef typename traits::value_type container_type;
-	
-	typedef typename container_type::value_type value_type;
-	typedef typename container_type::reference_type reference;
-	typedef typename container_type::pointer_type pointer;
-	typedef typename container_type::size_type size_type;
-
-	
-	typedef typename traits::position_type position_type ;
-	
+    struct enabler {};
 
  public:
- 	//iterator part
- 
- 	explicit multiway_cursor_for_some_node(position_type pos)
- 	 : m_pos(pos) {}
- 	
- 	multiway_cursor_for_some_node(self_type const& other)
- 	{
- 		m_pos = other.m_pos;
- 	}
- 	
- 	//this could probably done more time-efficiently if we stored a size_type 
- 	//together with the parent or so...
-	reference operator*() 
-	{
-		typename container_type::iterator it =
-			(static_cast<node_type*>(this->parent()))->begin();
-		std::advance(it, std::distance((this->parent()).begin(), m_pos);
-		return *it;
-	}
+ 	//TODO: Tidy up typedefs
+
+	typedef Cursor base_cursor;
 	
-	reference operator++()
-	{
-		++mpos; //not +sizeof(...)?
-		return *this;
-	}
+ 	typedef multiway_cursor<Cursor> cursor;
+ 	typedef const_multiway_cursor<Cursor> const_cursor;
+
+	typedef typename cursor_size<base_cursor>::type size_type;
+
+	typedef bidirectional_traversal_tag vertical_traversal_type;
 	
-	reference operator--()
-	{
-		--mpos;
-		return *this;
-	}
+	typedef typename Cursor::metadata_type metadata_type;
 	
-	//Container part
-	self_type begin()
-	{
-		return multiway_cursor_for_some_node(m_pos->children->begin());
-	}
+	// Container-specific:
+	typedef cursor iterator;  // For (range) concepts' sake, mainly
+	typedef const_cursor const_iterator;
 	
-	self_type end()
+ 	// Common iterator facade stuff
+    const_multiway_cursor()
+     : const_multiway_cursor::cursor_adaptor_() {}
+
+    explicit const_multiway_cursor(base_cursor p)
+     : const_multiway_cursor::cursor_adaptor_(p) {}
+      
+    template <class OtherCursor>
+    const_multiway_cursor(
+        const_multiway_cursor<OtherCursor> const& other
+      , typename boost::enable_if<
+            boost::is_convertible<OtherCursor*, 
+           	typename Cursor::base_pointer>  // is that correct?
+          , enabler
+        >::type = enabler()
+    )
+      : const_multiway_cursor::iterator_adaptor_(other.base()) {}
+
+	operator base_cursor()
 	{
-		return multiway_cursor_for_some_node(m_pos->children->end());
-	}
+		return this->base();
+	}	
+ private:
 	
-	size_type size()
-	{
-		return m_pos->children->size();
-	}
+    friend class boost::iterator_core_access;
+       
+    void increment()
+    {
+		 this->base_reference()= (++this->base_reference()).begin();
+    }
+    
+    void decrement()
+    {
+		this->base_reference() = --this->base_reference().parent();
+    }
+
+};
+
+template <class Cursor> 
+class multiway_cursor
+ : public cursor_adaptor<multiway_cursor<Cursor>
+      , Cursor
+      , boost::use_default
+      , bidirectional_traversal_tag
+      , forward_traversal_tag
+    > {
+ private:
+    struct enabler {};
+	friend class cursor_core_access;
+ public:
+ 	//TODO: Tidy up typedefs
+
+	typedef Cursor base_cursor;
 	
-	size_type max_size()
-	{
-		return m_pos->children->size(); //FIXME: this may be constrained for nary nodes.
-	}
+ 	typedef multiway_cursor<Cursor> cursor;
+ 	typedef const_multiway_cursor<Cursor> const_cursor;
+
+	//typedef typename cursor_size<base_cursor>::type size_type;
+
+	//typedef bidirectional_traversal_tag vertical_traversal_type;
 	
-	//Cursor part
-	//cursor with parent:
-	self_type parent()
+	typedef typename base_cursor::metadata_type metadata_type;
+	
+	// Container-specific:
+	typedef cursor iterator;  // For (range) concepts' sake, mainly
+	typedef const_cursor const_iterator;
+	
+ 	// Common iterator facade stuff
+    multiway_cursor()
+     : multiway_cursor::cursor_adaptor_() {}
+
+    explicit multiway_cursor(base_cursor p)
+     : multiway_cursor::cursor_adaptor_(p) {}
+      
+    template <class OtherCursor>
+    multiway_cursor(
+        multiway_cursor<OtherCursor> const& other
+      , typename boost::enable_if<
+            boost::is_convertible<OtherCursor*, 
+           	typename Cursor::base_pointer>  // is that correct?
+          , enabler
+        >::type = enabler()
+    )
+      : multiway_cursor::cursor_adaptor_(other.base()) {}
+
+	operator base_cursor()
 	{
-		return multiway_cursor_for_some_node(m_pos->parent());
+		return this->base();
 	}
 	
  private:
- 	position_type m_pos;
+	
+    friend class boost::iterator_core_access;
+    
+    void increment()
+    {
+		 this->base_reference()= (++this->base_reference()).begin();
+    }
+    
+    void decrement()
+    {
+		this->base_reference() = --this->base_reference().parent();
+    }
+	
+public:
+	// Range stuff.
+//	cursor begin()
+//	{
+//		return cursor(this->base_reference().begin()); 
+//	}
+	
+//	const_cursor begin() const
+//	{
+//		return const_cursor(this->base_reference().begin()); 
+//	}		
+
+	// Cursor stuff. 
+	
+	const_cursor parent() const
+	{
+		if (!this->base_reference().parity()) {
+			return this->base_reference().parent();
+		}
+	}
 };
 
-//concept check: Node::value_type Sequence?
-template <class Node>
-class multiway_cursor
-{
-};
-
-
-
+} // namespace detail
 } // namespace tree
 } // namespace boost
 
