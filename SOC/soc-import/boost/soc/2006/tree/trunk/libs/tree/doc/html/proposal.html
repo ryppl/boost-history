@@ -52,7 +52,13 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
 <h2>Important Design Decisions</h2>
 <h3>Why did you choose the specific design that you did?</h3>
-
+<p>
+One of the most important assets of the present design is the cursor concept as a hierarchical 
+continuation to the STL's iterator concept (and the externally defined range concept). Among
+their benefits, cursors allow to handle both client data access (by dereference) and subtree
+access while hiding the normally underlying node structure, providing a uniform interface
+to algorithms that are thus enabled to deal with a number of different kinds of trees.
+</p>
 
 <h3>What alternatives did you consider, and what are the tradeoffs?</h3>
 
@@ -429,20 +435,6 @@ Operational semantics: <tt>a.size() == 0</tt>
 (Note A)
 </td>
 </tr>
-
-<tr>
-<td>
-<tt>...</tt>
-</td>
-<td>
-[Comparison functions?]
-</td>
-<td>
-</td>
-<td>
-</td>
-</tr>
-
 </table>
 
 Notes: the algorithms <tt>swap()</tt> and <tt>equal()</tt> <!--and lexicographical_compare()-->
@@ -468,35 +460,27 @@ each hierarchy object. In all hierarchy types defined in this clause, the member
 <tt>get_allocator()</tt> returns a copy of the Allocator object used to construct the
 hierarchy.
 </li>
-<li>[... Reverse hierarchies?]</li>
+<li>[... Reversible hierarchies?]</li>
 </ol>
 
 <h3>23.1.X.X Modifiable Hierarchies [... better name?]</h3>
 <ol>
 <li>
 A hierarchy is called <em>modifiable</em> if it allows modification of its contents by insertion
-and/or erasure of elements. <!--Both of these kinds of modification operations require a 
-position parameter that specifies where in a given hierarchy the desired operation has to take
-place.-->
+and/or deletion of elements. <!--In case of hierarchies, deletion can mean one out of two conceptually
+different operations: <em>clearing</em> denotes removing the elements a given cursor plus the
+ones all of its descendants point to, whilst <em>erasure</em> means removing only the one element
+the given cursor points to, and retaining its descendants in some hierarchy class dependent way.
+Consequently, while (one-argument) <tt>clear(p)</tt> operations (which generalize the STL
+containers' nullary <tt>clear()</tt> operations) are provided for all kinds of modifiable
+hierarchies,-->
 </li>
 <li>
-In Table Y, <tt>X</tt> denotes a hierarchy class, <tt>a</tt> denotes a class of <tt>X</tt>, 
+In Table Y, <tt>X</tt> denotes a hierarchy class, <tt>a</tt> denotes a value of <tt>X</tt>, 
 <tt>p</tt> denotes a valid, non-on-top cursor to <tt>a</tt>, <tt>q</tt> denotes a valid,
 dereferenceable cursor to <tt>a</tt>, and <tt>t</tt> denotes a value of 
 <tt>X::value_type</tt>. [...]
-</li>
-<li>
-The actual semantics of the <tt>insert</tt> and <tt>erase</tt> expressions are hierarchy 
-dependent.
-Depending on whether or not the previous hierarchy structure is always kept as an invariant, also
-after an insertion or erasure (only with an element added or removed in the position specified 
-by the <tt>p</tt> or <tt>q</tt> parameters, as in Table Y), modifiable hierarchies are further 
-categorized in <em>unbalanced</em> and <em>balanced</em> ones. (In the latter case, the invariant
-that is kept by balanced modifiable hierarchies, is the <em>inorder</em> of elements, as defined
-in clause [...].)
-</li>
 
-<li>
 <table>
 <caption>
 Table Y &#8212; Modifiable Hierarchy requirements
@@ -521,15 +505,259 @@ pre/post-condition
 <tt>cursor</tt>
 </td>
 <td>
-
+inserts a copy of <tt>t</tt> in the position indicated by <tt>p</tt>
+</td>
+</tr>
+<tr>
+<td>
+<tt>a.clear(q)</tt>
+</td>
+<td>
+<tt>void</tt>
+</td>
+<td>
+erases the subtree of <tt>q</tt>
+</td>
+</tr>
+<tr>
+<td>
+<tt>a.clear()</tt>
+</td>
+<td>
+<tt>void</tt>
+</td>
+<td>
+<tt>a.clear(a.root());</tt><br />
+post: <tt>a.size() == 0</tt>
 </td>
 </tr>
 </table>
 </li>
 
+<li>
+The actual semantics of the <tt>insert</tt> <!--and <tt>erase</tt>--> expression is hierarchy 
+dependent. Depending on whether or not the previous hierarchy structure is always kept as an invariant, also
+after an insertion (only with an element added in the position specified 
+by the <tt>p</tt> or <tt>q</tt> parameters, as in Table Y), modifiable hierarchies are further 
+categorized in <em>unbalanced</em> and <em>balanced</em> ones. 
+
+</li>
+<li>
+<em>
+Balanced Hierarchies</em> satisfy both Modifiable Hierarchy as well as Sequence requirements
+(see clause 23.1.1). Contrarily to unbalanced hierarchies, their hierarchical structure may
+change upon modification, as long as the linear order defined by their iterator types and 
+corresponding functions is retained.
+</em>
+</li>
+<li>
+For a given balanced hierarchy class <tt>X</tt>, <tt>X::iterator</tt> must be convertible 
+to <tt>X::cursor</tt>, and <tt>X::const_iterator</tt> must be convertible to 
+<tt>X::const_cursor</tt>. If the respective (mutable or <tt>const_</tt>) <tt>iterator</tt> is
+valid and dereferenceable, the [<tt>const_</tt>]<tt>cursor</tt> resulting from the conversion
+will also be valid and dereferenceable.
+</li>
+
+
+<li>
+As in some cases there might be interest to store additional information along
+with the client data in the tree that is automatically updated whenever the tree is modified, 
+depending on either the client data, the tree structure, or both, a tree can be <em>augmented</em>
+in which case it will perform operations to effect this behavior.
+</li>
+
 </ol>
 
-<h4>Template class<tt>forest</tt></h4>
+<h3>Template class <tt>binary_tree</tt></h3>
+<ol>
+<li>
+<pre>
+namespace std {
+	template <class Tp, class Balance = balancers::unbalanced,
+			  class Augment = augmentors::unaugmented,
+			  class Alloc = allocator<T>
+			 >
+	class binary_tree
+	public:
+	// types:
+		typedef Tp		value_type;
+		typedef Balance balancer_type;
+		typedef Augment augmentor_type;
+		typedef typename Alloc::template rebind<value_type>::other 
+			allocator_type;
+							
+		typedef /* implementation defined */					cursor;
+		typedef /* implementation defined */					const_cursor;
+	
+		typedef inorder::iterator<cursor>					iterator;
+		typedef inorder::iterator<const_cursor>				const_iterator;
+		
+		typedef std::reverse_iterator<iterator>				reverse_iterator;
+		typedef std::reverse_iterator<const_iterator>		const_reverse_iterator;
+		
+		typedef typename allocator_type::pointer				pointer;
+		typedef typename allocator_type::reference			reference;
+		typedef typename allocator_type::size_type			size_type;
+		typedef typename allocator_type::difference_type		difference_type;
+		
+	// construct/copy/destroy:
+		explicit binary_tree (allocator_type const& = allocator_type());
+		explicit binary_tree (size_type n, value_type const& value = value_type(), 
+			allocator_type const& = allocator_type());
+		template <class InputIterator>
+		binary_tree (InputIterator first, InputIterator last, 
+			allocator_type const& = allocator_type());
+		binary_tree (binary_tree<T, Balance, Augment, Alloc> const& x);
+		~binary_tree();
+		binary_tree<T, Balance, Augment, Alloc>& operator=(
+			binary_tree<T, Balance, Augment, Alloc> const& x);
+		template <class InputIterator>
+			void assign(InputIterator first, InputIterator last);
+		template <class Size, class T>
+			void assign(Size n, const T& t = T());
+		allocator_type get_allocator() const;
+	
+	// cursors:
+		cursor			root();
+		const_cursor		croot() const;
+		cursor			shoot();
+		const_cursor		cshoot() const;
+
+	// iterators:
+		iterator begin();
+		const_iterator cbegin() const;
+		iterator end();
+		const_iterator cend() const;
+		reverse_iterator rbegin();
+		const_reverse_iterator crbegin() const;
+		reverse_iterator rend();
+		const_reverse_iterator crend() const;
+
+	// capacity:
+		bool empty() const;
+		size_type size() const;
+		size_type max_size() const;
+		void resize(size_type sz, value_type c = value_type());
+
+	// element access:
+		reference front();
+		const_reference front() const;
+		reference back();
+		const_reference back() const;
+
+	// modifiers:
+		void push_front(const T& x);
+		void push_back(const T& x);
+		cursor insert(cursor position, value_type const& x = value_type());
+		iterator insert(iterator position, value_type const& x = value_type());
+		void insert(iterator position, size_type n, value_type const& x);
+		template <class InputIterator>
+		void insert (iterator position, InputIterator first, InputIterator last);
+		void pop_front();
+		void pop_back();
+		iterator erase(iterator position);
+		iterator erase(iterator first, iterator last);
+		void swap(binary_tree<Tp, Balance, Augment, Alloc>&);
+		void clear(cursor position);
+		void clear();
+	};
+	
+	template <class Tp, class Balance, class Augment, class Alloc>
+	bool operator==(binary_tree<Tp, Balance, Augment, Alloc> const& x, binary_tree<Tp, Balance, Augment, Alloc> const& y);
+	template <class Tp, class Balance, class Augment, class Alloc>
+	bool operator< (binary_tree<Tp, Balance, Augment, Alloc> const& x, binary_tree<Tp, Balance, Augment, Alloc> const& y);
+	template <class Tp, class Balance, class Augment, class Alloc>
+	bool operator!=(binary_tree<Tp, Balance, Augment, Alloc> const& x, binary_tree<Tp, Balance, Augment, Alloc> const& y);
+	template <class Tp, class Balance, class Augment, class Alloc>
+	bool operator> (binary_tree<Tp, Balance, Augment, Alloc> const& x, binary_tree<Tp, Balance, Augment, Alloc> const& y);
+	template <class Tp, class Balance, class Augment, class Alloc>
+	bool operator>=(binary_tree<Tp, Balance, Augment, Alloc> const& x, binary_tree<Tp, Balance, Augment, Alloc> const& y);
+	template <class Tp, class Balance, class Augment, class Alloc>
+	bool operator<=(binary_tree<Tp, Balance, Augment, Alloc> const& x, binary_tree<Tp, Balance, Augment, Alloc> const& y);
+	
+	// specialized algorithms:
+	template <class Tp, class Balance, class Augment, class Alloc>
+	void swap(binary_tree<Tp, Balance, Augment, Alloc>& x, binary_tree<Tp, Balance, Augment, Alloc>& y);
+}
+</pre>
+</li>
+</ol>
+
+<h3>Hierarchy adapters</h3>
+<ol>
+<li>
+The hierarchy adapters each take a Hierarchy template parameter, and each constructor takes a 
+Hierarchy reference argument. This hierarchy is copied into the Hierarchy member of each adapter.
+</li>
+</ol>
+<h4>Template class <tt>forest</tt></h4>
+<ol>
+<li>
+A <tt>forest</tt> is a kind of modifiable, unbalanced hierarchy that is instantiated with another
+modifiable, unbalanced hierarchy whose cursor class provides <tt>begin()</tt>, <tt>end()</tt> and 
+<tt>parent()</tt> operations. [...]
+<pre>
+namespace std {
+	template &lt;class T, class Hierarchy = binary_tree&lt;T&gt; &gt;
+	class forest {
+	public:
+		typedef typename Hierarchy 					hierarchy_type;
+		typedef typename hierarchy_type::value_type	value_type;
+		typedef typename hierarchy_type::size_type	size_type;
+	protected:
+		hierarchy_type h;
+		
+	public:
+		typedef typename forest_cursor<typename hierarchy_type::cursor>			cursor;
+		typedef typename forest_cursor<typename hierarchy_type::const_cursor>	const_cursor;
+		
+		explicit forest(hierarchy_type const& = hierarchy_type());
+		
+		bool			empty() const	{ return h.empty(); }
+		size_type	size() const		{ return h.size(); }
+		
+		cursor			root()		{ return h.root(); }
+		const_cursor		croot()		{ return h.croot(); }
+		
+		
+	};
+}
+</pre>
+
+</li>
+</ol>
+
+<h4>Template class <tt>multiway_tree</tt></h4>
+<ol>
+<li>
+A <tt>multiway_tree</tt> is [...]
+<pre>
+namespace std {
+	template &lt;class T, class Hierarchy&gt;
+	class multiway_tree {
+	public:
+		typedef typename Hierarchy 					hierarchy_type;
+		typedef typename T							value_type;
+		typedef typename hierarchy_type::size_type	size_type;
+	protected:
+		hierarchy_type h;
+		
+	public:
+		typedef typename multiway_cursor<typename hierarchy_type::cursor>		cursor;
+		typedef typename multiway_cursor<typename hierarchy_type::const_cursor>	const_cursor;
+		
+		explicit multiway_tree(hierarchy_type const& = hierarchy_type());
+		
+		bool			empty() const	{ return h.empty(); }
+		size_type	size() const		{ return h.size(); }
+		
+		cursor			root()		{ return h.root(); }
+		const_cursor		croot()		{ return h.croot(); }
+	};
+}
+</pre>
+</li>
+</ol>
 
 <h3>24.X Cursors</h3>
 <ol>
@@ -554,7 +782,7 @@ is a <em>child</em> (or <em>immediate descendant </em>) of <tt>i</tt>, and <tt>i
 A cursor <tt>j</tt> is another cursor <tt>i</tt>'s <tt>descendant</tt> if there
 is a finite sequential combination of applications of either of the expressions <tt>++i</tt> and
 <tt>i = i.begin()</tt> that makes <tt>i == j</tt>; <tt>i</tt> is then called <tt>j</tt>'s 
-ancestor.
+ancestor; the set of all descendants of <tt>i</tt> is called the <em>subtree</em> of <tt>i</tt>.
 If two cursors <tt>i</tt> and <tt>j</tt> share at least one common ancestor, they refer to the
 same container.
 The horizontal traversal capabilites of a class relate to the range of children of a 
@@ -571,8 +799,8 @@ Apart from cursors that are <em>past-the-end</em> (like their iterator counterpa
 the notion of a cursor <em>on-top</em> is introduced, denoting a cursor that is ancestor to all
 other cursors within a hierarchy is introduced; and just as for past-the-end
 ones, the library never assumes on-top cursors be dereferenceable; nor that they be incrementable
-or decrementable. In other words, as opposed to non-on-top cursurs, on-top cursors fulfill only 
-the Range concept requirements, but not any Iterator concept requirements.
+or decrementable. <!--In other words, as opposed to non-on-top cursurs, on-top cursors fulfill only 
+the Range concept requirements, but not any Iterator concept requirements.-->
 </li>
 [Leaf cursors/ empty()]
 </ol>
@@ -580,8 +808,8 @@ the Range concept requirements, but not any Iterator concept requirements.
 <ol>
 <li>
 For linear traversal of hierarchies, the library offers a number of useful algorithms, namely for
-<tt>preorder</tt>, <tt>postorder</tt> and <tt>inorder</tt> traversal in namespaces named 
-accordingly. 
+<tt>preorder</tt>, <tt>postorder</tt> and <tt>inorder</tt> traversal in namespaces of 
+corresponding names. 
 </li>
 <li>
 <em>Preorder traversal</em> means that after a given element, first the subtree to its left, 
@@ -597,8 +825,9 @@ left and before the one to its right will be visited.
 </li>
 <li>
 For each of the above kinds of traversal order, the library offers a kind of order traversal 
-iterator adaptor template class around a given cursor, for which increment and decrement 
-operations are implemented allow stepwise iteration according to the respective requirements. 
+iterator adaptor template class that takes a given cursor class as template argument, for which 
+increment and decrement operations are implemented allow stepwise iteration according to the 
+respective requirements. 
 Additionally, for cursors with bidirectional vertical traversal property, algorithms 
 <tt>forward</tt> and <tt>back</tt> in the respective namespaces are provided that set their 
 argument cursor to the next or previous, resp., in the corresponding traversal order.
