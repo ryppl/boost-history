@@ -263,7 +263,7 @@ posix_setup::operator()(void)
 //!
 inline
 void
-setup_input(info_map& info, bool closeflags[], int maxdescs)
+setup_input(info_map& info, bool* closeflags, int maxdescs)
 {
     for (info_map::iterator iter = info.begin(); iter != info.end(); iter++) {
         int d = (*iter).first;
@@ -313,7 +313,7 @@ setup_input(info_map& info, bool closeflags[], int maxdescs)
 //!
 inline
 void
-setup_output(info_map& info, merge_set& merges, bool closeflags[],
+setup_output(info_map& info, merge_set& merges, bool* closeflags,
              int maxdescs)
 {
     for (info_map::iterator iter = info.begin(); iter != info.end(); iter++) {

@@ -44,7 +44,7 @@ extern "C" {
 #if defined(BOOST_PROCESS_POSIX_API)
 extern "C" {
     extern char** environ;
-};
+}
 #endif
 
 namespace boost {
