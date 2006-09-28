@@ -15,7 +15,7 @@ using namespace std;
 
 static string replace_suffix (string src, const char * suffix) {
     int loc = src.find_last_of(".");
-    if (loc)
+    if (loc > 0)
         src.replace(loc, src.size()-loc, suffix);
     else
         src.append(suffix);
@@ -31,70 +31,50 @@ static bool validate_filename (string s) {
     }
 }
 
-/*
-static char * strip (char * src) {
-    char * p = src;
-    while (isspace(*p))
-        p++;
-    // go back from the end and kill any spaces there.
-    char * e = p + strlen(p) - 1;
-    while (isspace(*e))
-        e--;
-    *++e = 0;
-    return p;
-}*/
-
-/*
-static
-ostream& operator<<(ostream& o, const vector<string>& v) {
-    typedef vector<string>::const_iterator  vec_iter_t;
-    
-    for (vec_iter_t it = v.begin ();
-         it != v.end ();
-         ++it) {
-        o << " " << *it << endl;
-    }
-    
-    return o;
+namespace {
+	class NameGenerator {
+	public:
+		virtual ~NameGenerator () {}
+		virtual string get_name(const string& n, int i) = 0;
+	};
+	
+	class ArrayNameGen : public NameGenerator {
+		vector<string> m_names;
+	public:
+		ArrayNameGen (const vector<string>& v) : m_names(v) {}
+		virtual string get_name(const string&, int i) { return m_names[i]; }
+	};
+	
+	class SuffixNameGen : public NameGenerator {
+		string m_suffix;
+	public:
+		SuffixNameGen (const string& s) : m_suffix(s) {}
+		virtual string get_name(const string& s, int i) {
+			return replace_suffix (s, m_suffix.c_str ());
+		}
+	};
 }
-*/
 
 int
 Driver::
 execute (int args, const char ** argv) {
     if (args == 1) 
         return 0;
-    //vector<string> local_includes;
     vector<string> files = configure(args, argv);
-    //char buffer[1024];
-    /*
-    // scan the argument list for includes to add in
-    // eventually replace this with boost::program_options 
-    for (int i=1; i<args; i++) {
-        strncpy (buffer, argv[i], sizeof (buffer));
-        // options:
-        // -I<include> or -I <include>
-        // we won't be very smart about the .map file searching for now.
-        if (!strncmp(buffer, "-I", 2)) {
-            // see if the path is longer than this, or if not.
-            char * p = strip (buffer);
-            if (strlen(p) > 2) {
-                local_includes.push_back (string (p+2));
-            } else if (i+1 < args) {
-                strncpy(buffer, argv[++i], sizeof (buffer));
-                local_includes.push_back (strip(buffer));
-                continue;
-            }
-        } else {
-            files.push_back(buffer);
-        }
-    }
-*/
+    auto_ptr<NameGenerator> namegen(new SuffixNameGen (configure_getsuffix ()));
+
     typedef vector<string>::const_iterator  vec_iter_t;
+    vector<string> outputs = configure_outputnames ();
     
+    if (!outputs.empty ()) {
+    	//switch name generation methods
+    	namegen.reset (new ArrayNameGen (outputs));
+    }
+    
+    int cnt = 0;
     for (vec_iter_t file = files.begin (); 
          file != files.end ();
-         ++file) {
+         ++file, ++cnt) {
 
         MapManager maps(path(file->c_str()));
         ::configure_mapmanager(maps);
@@ -113,11 +93,6 @@ execute (int args, const char ** argv) {
 
         ::configure_context(ctx);
          
-//      for (vec_iter_t it= local_includes.begin ();
-//           it != local_includes.end ();
-//           ++it)
-//          ctx.add_include_path(it->c_str());
-
         // calculate header and generated filename names.
         // upon successful generation, put them the .map file.
 
@@ -125,14 +100,24 @@ execute (int args, const char ** argv) {
             if (!validate_filename(*file))
                 continue;
             
-            string header_n = replace_suffix(*file, "_gen.h");
-            string source_n = replace_suffix(*file, "_gen.cpp");
+            string header_n = 
+            	replace_suffix(namegen->get_name(*file,cnt), ".h");
+            	
+            string source_n = 
+            	replace_suffix(namegen->get_name(*file,cnt), ".cpp");
+            
+            if (header_n == *file || source_n == *file) {
+            	cerr << "Refusing to overwrite input file with output for " 
+            	     << *file << endl;
+            	continue;
+            }
             
             ofstream header(header_n.c_str());
             ofstream source(source_n.c_str());
-//          OutputDelegate del (header, source, maps);
+            
             OutputDelegate header_del (header, &maps);
             OutputDelegate source_del (source, &maps);
+            
             header << "// " << header_n << endl;
             source << "// " << source_n << endl;
             source << "#include \"" << header_n << "\"" << endl;

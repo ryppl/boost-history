@@ -1126,7 +1126,7 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 
              mod_export_decl 
                 =   (
-                    ch_p(T_EXPORT) >> ch_p(T_NAMESPACE) 
+                    ch_p(T_EXPORT)// >> ch_p(T_NAMESPACE) 
                     >> mod_name >> ch_p(T_LEFTBRACE)
                     >> !mod_default_group >> *mod_decl_group
                     >> ch_p(T_RIGHTBRACE) >> ch_p(T_SEMICOLON)
@@ -1134,8 +1134,8 @@ struct decl_grammar : public boost::spirit::grammar<decl_grammar> {
                 ;
              
              mod_import_decl
-                =    ( ch_p(T_IMPORT) >> ch_p(T_NAMESPACE) >> mod_name
-                       >> ch_p(T_SEMICOLON)
+                =    ( ch_p(T_IMPORT) //>> ch_p(T_NAMESPACE) 
+                       >> mod_name >> ch_p(T_SEMICOLON)
                      ) [ import_stmt(self.m_del) ]
                 ;
         }

@@ -6,4 +6,6 @@
 
 #undef BOOST_SPIRIT_DEBUG
 
+#define MFRONT_VERSION "0.1"
+
 #endif

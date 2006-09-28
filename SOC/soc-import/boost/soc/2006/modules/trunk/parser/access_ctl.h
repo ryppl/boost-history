@@ -14,10 +14,13 @@ class AccessCtlXForm : public TransformStage {
     /// Whether we've hit an access control token yet.
     enum parse_mode { mNotFound, mColon, mFound, mNormal } m_parse;
     std::string m_ns_name;
+    int m_id;
     void insert_private (TransformContext * ctx);
 public:
     AccessCtlXForm (const context_iter_t& s,
                     const context_iter_t& e);
+	static const std::string& get_identifier ();
+	virtual const std::string& identifier () const;
     virtual void at_start (TransformContext *);
     virtual void at_end (TransformContext *);
     virtual OperationPair process_token (const token_t& tok, 

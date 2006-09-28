@@ -6,6 +6,7 @@
 #include <vector>
 #include <stack>
 #include "operations.h"
+#include "modulename.h"
 /** @file xformctx.h
     \brief Transformation Context Management
     
@@ -104,6 +105,8 @@ public:
         /// the processed text.
         void register_module (const std::string& module) 
           { m_modules.push_back(module); }
+        void register_module (const ModuleName& module)
+          { register_module(module.canonical ()); }
         
         /// returns all the modules registered.
         std::vector<std::string> all_modules() { return m_modules; }
@@ -111,6 +114,11 @@ public:
         /// called by a transformer, during at_start or at_end.
         void add_header (Operation_p p) { m_for_header.push_back(p); }
         void add_source (Operation_p p) { m_for_source.push_back(p); }
+        
+        /// A query interface for transforms to find any enclosing transforms
+        /// of a specific type.
+		TransformStage_w upward_stage (const std::string& pattern,
+		                               TransformStage *start);
 
     //@}
 };

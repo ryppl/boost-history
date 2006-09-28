@@ -25,7 +25,6 @@ class Driver {
     
     // (temporary) local storehouse for all the .mapfiles.
     
-    
 public:
     static int execute (int args, const char ** argv);
 };

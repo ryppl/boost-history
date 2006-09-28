@@ -1,7 +1,7 @@
-//#include <stdio.h>
+#include <stdio.h>
 
-import namespace example;
-export namespace Foo::Bar {
+import example;
+export Foo::Bar {
 public:
 
 int main (int args, char ** argv) {
@@ -18,7 +18,7 @@ void foo () {
 
 };
 
-export namespace Foo::Bar["Baz Baz"] {
+export Foo::Bar["Baz Baz"] {
 	int crack () {
 		return 0;
 	}

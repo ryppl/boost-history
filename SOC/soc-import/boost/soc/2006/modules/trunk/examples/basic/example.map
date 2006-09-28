@@ -1,0 +1,3 @@
+module example: example.h ;
+module foo::bar["blah"]: blah.h ;
+

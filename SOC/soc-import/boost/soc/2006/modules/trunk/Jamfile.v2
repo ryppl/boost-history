@@ -15,6 +15,7 @@ exe mfront_bin :
 	parser/template_stmt.cpp
 	parser/import_stmt.cpp
 	parser/access_ctl.cpp
+	parser/modulename.cpp
 	$(BOOST_ROOT)//filesystem
 	$(BOOST_ROOT)//wave
 	$(BOOST_ROOT)//regex

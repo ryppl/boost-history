@@ -15,11 +15,11 @@ TokenStreamOp::operator () (OutputDelegate *out) {
          ++it) {
         result.append (it->get_value().begin (),
                        it->get_value().end ());
-        if (   (*it == T_RIGHTBRACE)
+/*        if (   (*it == T_RIGHTBRACE)
             || (*it == T_SEMICOLON))
             result.append ("\n");
         else
-            result.append (" ");
+            result.append (" "); */
     }
     out->text(result);
 }

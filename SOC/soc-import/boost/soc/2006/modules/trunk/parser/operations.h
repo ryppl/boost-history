@@ -58,6 +58,10 @@ struct TransformStage {
     TransformStage (const context_iter_t& s, const context_iter_t& e)
       : start(s), end(e) {}
 //  MarkupFunctor *at_start, *at_end;
+
+	// identifiers the type of stage, for inter-stage communication.
+	virtual const std::string& identifier () const = 0;
+
     virtual void at_start (TransformContext *) {}
     virtual void at_end (TransformContext *) {}
     /// when this entry's at the top of the stack, it 
@@ -68,6 +72,7 @@ struct TransformStage {
     virtual ~TransformStage () {}
 };
 typedef boost::shared_ptr<TransformStage>  TransformStage_p;
+typedef boost::weak_ptr<TransformStage>    TransformStage_w;
 
 bool operator< (const TransformStage& left, const TransformStage& right);
 bool operator< (const TransformStage_p left, const TransformStage& right);

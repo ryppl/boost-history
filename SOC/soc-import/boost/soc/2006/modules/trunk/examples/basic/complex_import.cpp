@@ -1,7 +1,7 @@
-//#include <stdio.h>
+#include <stdio.h>
 
-import namespace Foo::Bar["Baz Baz"];
-export namespace Foo::Baz {
+import Foo::Bar["Baz Baz"];
+export Foo::Baz {
 	int main () { return 0; }
 };
 
