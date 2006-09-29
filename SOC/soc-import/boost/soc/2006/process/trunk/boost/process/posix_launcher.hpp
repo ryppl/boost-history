@@ -25,12 +25,12 @@
 #include <cstdlib>
 #include <set>
 
-#include <boost/process/posix_child.hpp>
-#include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/posix_ops.hpp>
 #include <boost/process/detail/systembuf.hpp>
+#include <boost/process/environment.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/process/launcher.hpp>
+#include <boost/process/posix_child.hpp>
 #include <boost/process/stream_behavior.hpp>
 
 namespace boost {

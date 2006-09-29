@@ -158,7 +158,7 @@ private:
     //!
     boost::shared_ptr< pistream > m_sstderr;
 
-protected:
+public: // XXX?
     //!
     //! \brief Constructs a new child object representing a just spawned
     //!        child process.

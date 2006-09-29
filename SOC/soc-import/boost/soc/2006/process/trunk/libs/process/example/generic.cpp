@@ -32,18 +32,6 @@ main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    //
-    // Constructs a shell-based command line.
-    //
-    // This command line executes a CVS process passing it an update
-    // command.  Note that it will be executed through the standard system
-    // shell so that we do not have to know where the binary is located.
-    //
-    // In this case we have a command line that will work both on POSIX
-    // systems and under Windows.
-    //
-    bp::command_line cl = bp::command_line::shell("cvs -z3 update -dP");
-
     for (int i = 1; i < argc; i++) {
         std::cout << "===> Updating directory " << argv[i] << std::endl;
 
@@ -58,17 +46,26 @@ main(int argc, char* argv[])
         // to connect to servers and unsets the CVSROOT environment
         // variable to avoid side-effects.
         //
-        bp::launcher l;
-        l.set_stdout_behavior(bp::inherit_stream);
-        l.set_merge_out_err(true);
-        l.set_work_directory(argv[i]);
-        l.set_environment("CVS_RSH", "ssh");
-        l.unset_environment("CVSROOT");
+        bp::context ctx;
+        ctx.m_stdout_behavior = bp::redirect_stream;
+        ctx.m_merge_stderr_with_stdout = true;
+        ctx.m_work_directory = argv[i];
+        ctx.m_environment = bp::current_environment();
+        ctx.m_environment.insert
+            (bp::environment::value_type("CVS_RSH", "ssh"));
+        ctx.m_environment.erase("CVSROOT");
 
         //
         // Spawns the CVS child process.
         //
-        bp::child c = l.start(cl);
+        // This command line executes a CVS process passing it an update
+        // command.  Note that it will be executed through the standard system
+        // shell so that it is easier for us to provide the command.
+        //
+        // In this case we have a command line that will work both on POSIX
+        // systems and under Windows.
+        //
+        bp::child c = bp::launch_shell("cvs -z3 update -dP", ctx);
 
         //
         // Gets CVS' stdout stream.  As we asked for a merge of stdout and

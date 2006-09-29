@@ -28,7 +28,8 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/child.hpp>
-#include <boost/process/launcher.hpp>
+#include <boost/process/context.hpp>
+#include <boost/process/operations.hpp>
 #include <boost/process/status.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -50,10 +51,10 @@ get_argument(const std::string& word)
     args.push_back("echo-quoted");
     args.push_back(word);
 
-    bp::launcher l;
-    l.set_stdout_behavior(bp::redirect_stream);
+    bp::context ctx;
+    ctx.m_stdout_behavior = bp::redirect_stream;
 
-    bp::child c = l.start(get_helpers_path(), args);
+    bp::child c = bp::launch(get_helpers_path(), args, ctx);
     bp::pistream& is = c.get_stdout();
 
     std::string result;

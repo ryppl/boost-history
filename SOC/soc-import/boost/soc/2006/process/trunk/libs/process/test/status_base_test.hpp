@@ -13,7 +13,8 @@
 #include <vector>
 
 #include <boost/process/child.hpp>
-#include <boost/process/launcher.hpp>
+#include <boost/process/context.hpp>
+#include <boost/process/operations.hpp>
 #include <boost/test/unit_test.hpp>
 
 #include "misc.hpp"
@@ -33,7 +34,7 @@ launch_helper(const std::string& name)
     std::vector< std::string > args;
     args.push_back("helpers");
     args.push_back(name);
-    return bp::launcher().start(get_helpers_path(), args);
+    return bp::launch(get_helpers_path(), args, bp::context());
 }
 
 // ------------------------------------------------------------------------

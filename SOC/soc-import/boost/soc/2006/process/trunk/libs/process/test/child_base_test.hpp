@@ -32,8 +32,8 @@ namespace child_base_test {
 // tests generic makes it easy to check this restriction because the tests
 // can easily be applied to any specific Child implementation.
 //
-// Start concept
-// -------------
+// Factory concept
+// ---------------
 //
 // The functions in this file all rely on a Factory concept.  This concept
 // provides a class whose () operator constructs a new Child instance

@@ -24,24 +24,26 @@
 
 #include <boost/process/config.hpp>
 
-#include <boost/process/basic_pipeline.hpp>
+// XXX Reenable commented out files.
+
+//#include <boost/process/basic_pipeline.hpp>
 #include <boost/process/child.hpp>
 #include <boost/process/children.hpp>
+#include <boost/process/context.hpp>
 #include <boost/process/forward_decls.hpp>
-#include <boost/process/launcher.hpp>
 #include <boost/process/operations.hpp>
-#include <boost/process/pipeline.hpp>
+//#include <boost/process/pipeline.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
 #include <boost/process/status.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
-#   include <boost/process/posix_child.hpp>
-#   include <boost/process/posix_launcher.hpp>
-#   include <boost/process/posix_status.hpp>
+//#   include <boost/process/posix_child.hpp>
+//#   include <boost/process/posix_launcher.hpp>
+//#   include <boost/process/posix_status.hpp>
 #elif defined(BOOST_PROCESS_WIN32_API)
-#   include <boost/process/win32_child.hpp>
-#   include <boost/process/win32_launcher.hpp>
+//#   include <boost/process/win32_child.hpp>
+//#   include <boost/process/win32_launcher.hpp>
 #else
 #   error "Unsupported platform."
 #endif

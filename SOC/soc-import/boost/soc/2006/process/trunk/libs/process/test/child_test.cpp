@@ -20,9 +20,6 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-namespace boost {
-namespace process {
-
 class launcher
 {
 public:
@@ -30,12 +27,9 @@ public:
     operator()(bp::child::handle_type h, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
     {
-        return child(h, fhstdin, fhstdout, fhstderr);
+        return bp::child(h, fhstdin, fhstdout, fhstderr);
     }
 };
-
-} // namespace process
-} // namespace boost
 
 // ------------------------------------------------------------------------
 
@@ -44,7 +38,7 @@ init_unit_test_suite(int argc, char* argv[])
 {
     but::test_suite* test = BOOST_TEST_SUITE("child test suite");
 
-    add_tests_child_base< bp::child, bp::launcher >(test);
+    add_tests_child_base< bp::child, launcher >(test);
 
     return test;
 }

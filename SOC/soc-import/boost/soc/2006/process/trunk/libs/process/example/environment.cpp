@@ -17,6 +17,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include <boost/process.hpp>
 
@@ -28,19 +29,21 @@ namespace bp = ::boost::process;
 //
 static
 void
-run_it(const std::string& msg, const bp::launcher& l)
+run_it(const std::string& msg, const bp::context& ctx)
 {
-#if defined(BOOST_PROCESS_POSIX_API)
-    bp::command_line cl("env");
-#elif defined(BOOST_PROCESS_WIN32_API)
-    bp::command_line cl = bp::command_line::shell("set");
-#endif
-
-    bp::launcher l2(l);
-    l2.set_stdout_behavior(bp::inherit_stream);
+    bp::context ctx2 = ctx;
+    ctx2.m_stdout_behavior = bp::inherit_stream;
+    ctx2.m_merge_stderr_with_stdout = true;
 
     std::cout << "===> " << msg << std::endl;
-    bp::status s = l2.start(cl).wait();
+#if defined(BOOST_PROCESS_POSIX_API)
+    std::vector< std::string > args;
+    args.push_back("env");
+    bp::status s =
+        bp::launch(bp::find_executable_in_path("env"), args, ctx2).wait();
+#elif defined(BOOST_PROCESS_WIN32_API)
+    bp::status s = bp::launch_shell("set", ctx2).wait();
+#endif
     if (s.exited() && s.exit_status() == EXIT_SUCCESS)
         std::cout << "     *** SUCCESS ***" << std::endl;
     else
@@ -52,33 +55,36 @@ int
 main(int argc, char* argv[])
 {
     //
-    // This first launcher does not touch the environment so the child
-    // will receive a snapshot of our current table.
+    // This first launcher does not touch the environment in the context
+    // so it will be empty.
     //
-    bp::launcher l1;
-    run_it("Inherited environment", l1);
+    bp::context ctx1;
+    run_it("Clean environment", ctx1);
 
     //
-    // This second example clears the child's environment prior
-    // execution so it will not receive any variable.
+    // This second example obtains a snapshot of the current environment
+    // and passes it down to the child process.
     //
-    bp::launcher l2;
-    l2.clear_environment();
-    run_it("Clean environment", l2);
+    bp::context ctx2;
+    ctx2.m_environment = bp::current_environment();
+    run_it("Inherited environment", ctx2);
 
     //
     // This example adds an extra variable to the environment.
     //
-    bp::launcher l3;
-    l3.set_environment("NEW_VARIABLE", "Hello, world!");
-    run_it("Environment with the NEW_VARIABLE extra variable", l3);
+    bp::context ctx3;
+    ctx3.m_environment = bp::current_environment();
+    ctx3.m_environment.insert
+        (bp::environment::value_type("NEW_VARIABLE", "Hello, world!"));
+    run_it("Environment with the NEW_VARIABLE extra variable", ctx3);
 
     //
     // This example removes a standard variable from the environment.
     //
-    bp::launcher l4;
-    l4.unset_environment("PATH");
-    run_it("Environment without the standard PATH variable", l4);
+    bp::context ctx4;
+    ctx4.m_environment = bp::current_environment();
+    ctx4.m_environment.erase("PATH");
+    run_it("Environment without the standard PATH variable", ctx4);
 
 
     //
@@ -86,11 +92,12 @@ main(int argc, char* argv[])
     // with a completely controlled environment table that is not subject
     // to existing variables at all.
     //
-    bp::launcher l5;
-    l5.clear_environment();
-    l5.set_environment("HOME", "Known value for HOME");
-    l5.set_environment("PATH", "Known value for PATH");
-    run_it("Completely controlled environment", l5);
+    bp::context ctx5;
+    ctx5.m_environment.insert
+        (bp::environment::value_type("HOME", "Known value for HOME"));
+    ctx5.m_environment.insert
+        (bp::environment::value_type("PATH", "Known value for PATH"));
+    run_it("Completely controlled environment", ctx5);
 
     return EXIT_SUCCESS;
 }

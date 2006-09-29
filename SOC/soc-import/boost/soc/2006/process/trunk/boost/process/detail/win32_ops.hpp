@@ -32,10 +32,10 @@ extern "C" {
 }
 
 #include <boost/optional.hpp>
-#include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/pipe.hpp>
 #include <boost/process/detail/stream_info.hpp>
+#include <boost/process/environment.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/process/stream_behavior.hpp>
 #include <boost/scoped_ptr.hpp>
@@ -98,6 +98,56 @@ collection_to_win32_cmdline(const Arguments& args)
         ::_tcscat_s(cmdline.get(), length, TEXT(args[i].c_str()));
 
     return cmdline;
+}
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Converts an environment to a string used by CreateProcess().
+//!
+//! Converts the environment's contents to the format used by the
+//! CreateProcess() system call.  The returned TCHAR* string is
+//! allocated in dynamic memory and the caller must free it when not
+//! used any more.  This is enforced by the use of a shared pointer.
+//! The string is of the form var1=value1\\0var2=value2\\0\\0.
+//!
+inline
+boost::shared_array< TCHAR >
+environment_to_win32_strings(const environment& env)
+{
+    boost::shared_array< TCHAR > strs(NULL);
+
+    // TODO: Add the "" variable to the returned string; it shouldn't
+    // be in the environment if the user didn't add it.
+
+    if (size() == 0) {
+        strs.reset(new TCHAR[2]);
+        ::ZeroMemory(strs.get(), sizeof(TCHAR) * 2);
+    } else {
+        std::string::size_type len = sizeof(TCHAR);
+        for (environment::const_iterator iter = env.begin();
+             iter != env.end(); iter++)
+            len += ((*iter).first.length() + 1 + (*iter).second.length() +
+                    1) * sizeof(TCHAR);
+
+        strs.reset(new TCHAR[len]);
+
+        TCHAR* ptr = strs.get();
+        for (environment::const_iterator iter = env.begin();
+             iter != env.end(); iter++) {
+            std::string tmp = (*iter).first + "=" + (*iter).second;
+            _tcscpy_s(ptr, len - (ptr - strs.get()) * sizeof(TCHAR),
+                      TEXT(tmp.c_str()));
+            ptr += (tmp.length() + 1) * sizeof(TCHAR);
+
+            BOOST_ASSERT(static_cast< std::string::size_type >
+                (ptr - strs.get()) * sizeof(TCHAR) < len);
+        }
+        *ptr = '\0';
+    }
+
+    BOOST_ASSERT(strs.get() != NULL);
+    return strs;
 }
 
 // ------------------------------------------------------------------------
@@ -253,7 +303,7 @@ win32_start(const Executable& exe,
     boost::scoped_array< TCHAR > executable(::_tcsdup(TEXT(exe.c_str())));
     boost::scoped_array< TCHAR > workdir
         (::_tcsdup(TEXT(setup.m_work_directory.c_str())));
-    boost::shared_array< TCHAR > envstrs = env.win32_strings();
+    boost::shared_array< TCHAR > envstrs = environment_to_win32_strings(env);
     if (!::CreateProcess(executable.get(), cmdline.get(), NULL, NULL, TRUE,
                          0, envstrs.get(), workdir.get(),
                          si.get(), &pi)) {

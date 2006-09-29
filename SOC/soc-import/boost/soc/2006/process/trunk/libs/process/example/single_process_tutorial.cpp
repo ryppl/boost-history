@@ -34,20 +34,22 @@ if (argc < 2) {
 std::string dir = argv[1];
 
 // quickbook:begin(command-line)
-bp::command_line cl("svn");
-cl.argument("update");
+std::string exec = bp::find_executable_in_path("svn");
+std::vector< std::string > args;
+args.push_back("svn");
+args.push_back("update");
 // quickbook:end(command-line)
 
-// quickbook:begin(launcher)
-bp::launcher l;
-l.set_stdout_behavior(bp::redirect_stream);
-l.set_merge_out_err(true);
-l.set_work_directory(dir);
-// quickbook:end(launcher)
+// quickbook:begin(context)
+bp::context ctx;
+ctx.m_stdout_behavior = bp::redirect_stream;
+ctx.m_merge_stderr_with_stdout = true;
+ctx.m_work_directory = dir;
+// quickbook:end(context)
 
-// quickbook:begin(child-start)
-bp::child c = l.start(cl);
-// quickbook:end(child-start)
+// quickbook:begin(child-launch)
+bp::child c = bp::launch(exec, args, ctx);
+// quickbook:end(child-launch)
 
 // quickbook:begin(get-output)
 bp::pistream& is = c.get_stdout();

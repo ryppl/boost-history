@@ -13,7 +13,7 @@
 #include <string>
 
 #include <boost/process/child.hpp>
-#include <boost/process/launcher.hpp>
+#include <boost/process/context.hpp>
 #include <boost/process/operations.hpp>
 #include <boost/process/status.hpp>
 #include <boost/test/unit_test.hpp>
@@ -36,12 +36,12 @@ test_shell_execution(void)
     else
         BOOST_REQUIRE(false);
 
-    bp::launcher l;
-    l.set_stdout_behavior(bp::redirect_stream);
+    bp::context ctx;
+    ctx.m_stdout_behavior = bp::redirect_stream;
     // XXX Without the following line, bash returns an exit status of 4,
     // which makes the test fail...  Why?  I don't know.
-    l.set_merge_out_err(true);
-    bp::child c = bp::launch_shell(l, command);
+    ctx.m_merge_stderr_with_stdout = true;
+    bp::child c = bp::launch_shell(command, ctx);
 
     bp::pistream& is = c.get_stdout();
     std::string word;

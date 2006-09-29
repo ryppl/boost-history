@@ -36,11 +36,14 @@ namespace process {
 template< class Executable, class Arguments >
 class basic_pipeline;
 
+template< class String >
+class basic_context;
+
 class child;
 
 class children;
 
-class launcher;
+typedef basic_context< std::string > context;
 
 class pistream;
 
@@ -50,16 +53,17 @@ class status;
 
 typedef basic_pipeline< std::string, std::vector< std::string > > pipeline;
 
+// XXX Reenable these when ready.
 #if defined(BOOST_PROCESS_POSIX_API)
-class posix_child;
+//class posix_child;
 
-class posix_launcher;
+//class posix_launcher;
 
-class posix_status;
+//class posix_status;
 #elif defined(BOOST_PROCESS_WIN32_API)
-class win32_child;
+//class win32_child;
 
-class win32_launcher;
+//class win32_launcher;
 #else
 #   error "Unsupported platform."
 #endif

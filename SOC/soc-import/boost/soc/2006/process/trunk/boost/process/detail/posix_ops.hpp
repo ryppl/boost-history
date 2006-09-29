@@ -39,10 +39,10 @@ extern "C" {
 #include <utility>
 
 #include <boost/optional.hpp>
-#include <boost/process/detail/environment.hpp>
 #include <boost/process/detail/file_handle.hpp>
 #include <boost/process/detail/pipe.hpp>
 #include <boost/process/detail/stream_info.hpp>
+#include <boost/process/environment.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/process/stream_behavior.hpp>
 #include <boost/throw_exception.hpp>
@@ -85,6 +85,41 @@ collection_to_posix_argv(const Arguments& args)
     argv[nargs] = NULL;
 
     return std::pair< std::size_t, char ** >(nargs, argv);
+}
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Converts an environment to a char** table as used by execve().
+//!
+//! Converts the environment's contents to the format used by the
+//! execve() system call.  The returned char** array is allocated
+//! in dynamic memory and the caller must free it when not used any
+//! more.  Each entry is also allocated in dynamic memory and is a
+//! null-terminated string of the form var=value; these must also be
+//! released by the caller.
+//!
+inline
+char**
+environment_to_envp(const environment& env)
+{
+    char** ep = new char*[env.size() + 1];
+
+    environment::size_type i = 0;
+    for (environment::const_iterator iter = env.begin();
+         iter != env.end(); iter++) {
+        std::string tmp = (*iter).first + "=" + (*iter).second;
+
+        char* cstr = new char[tmp.length() + 1];
+        std::strncpy(cstr, tmp.c_str(), tmp.length());
+        cstr[tmp.length()] = '\0';
+
+        ep[i++] = cstr;
+    }
+
+    ep[i] = NULL;
+
+    return ep;
 }
 
 // ------------------------------------------------------------------------
@@ -421,7 +456,7 @@ posix_start(const Executable& exe,
         }
 
         std::pair< std::size_t, char** > argcv = collection_to_posix_argv(args);
-        char** envp = env.envp();
+        char** envp = environment_to_envp(env);
         ::execve(exe.c_str(), argcv.second, envp);
         system_error e("boost::process::detail::posix_start",
                        "execve(2) failed", errno);

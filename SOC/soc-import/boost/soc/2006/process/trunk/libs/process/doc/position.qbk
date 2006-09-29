@@ -39,6 +39,14 @@
   a standard string and a STL container).  This removes some black-box
   magic.
 
+* Replaced the `launcher` by the new `context` class and the free `launch`
+  function.  This decouples the action of launching the process from the
+  parameters describing its properties and removes a lot of useless
+  getters and setters.
+
+* The `environment` class was refactored (much simplified) and made public
+  because it is now exposed to the user through the new `context`.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]
@@ -60,6 +68,9 @@ consideration to decide the best way to solve them.
 
 [section Code]
 
+* Fix `posix_launcher` and `win32_launcher` by splitting them into context
+  classes and free functions.
+
 * Integrate with [@http://asio.sourceforge.net/ Boost.Asio] to permit
   asynchronous notification of child process termination and availability
   of new data in output streams.
@@ -71,16 +82,10 @@ consideration to decide the best way to solve them.
 
 * Parametrize classes that use strings to support wide characters.
 
-* Make the `detail::launcher_base` a public class?  It can be useful to
-  end users if they decide to implement a custom launcher.
-
 * Replace custom `system_error` with Boost.System's homologous when it is
   available.
 
 * Abstract `cstdlib`'s `EXIT_SUCCESS` and `EXIT_FAILURE`.
-
-* Make `launcher::start` a free function.  Need to rename `launcher` to
-  `context`.
 
 * Make `child::wait` return a constant object.
 

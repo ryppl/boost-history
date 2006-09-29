@@ -16,29 +16,10 @@ namespace bpd = ::boost::process::detail;
 
 // ------------------------------------------------------------------------
 
-namespace boost {
-namespace process {
-
-class launcher
-{
-public:
-    static
-    void*
-    test_it(void)
-    {
-        bp::child::handle_type h = (bp::child::handle_type)0;
-        bpd::file_handle fh;
-        return new bp::child(h, fh, fh, fh);
-    }
-};
-
-} // namespace process
-} // namespace boost
-
-// ------------------------------------------------------------------------
-
 void*
 test_it(void)
 {
-    return bp::launcher::test_it();
+    bp::child::handle_type h = (bp::child::handle_type)0;
+    bpd::file_handle fh;
+    return new bp::child(h, fh, fh, fh);
 }
