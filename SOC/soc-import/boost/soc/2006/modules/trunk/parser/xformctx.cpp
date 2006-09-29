@@ -90,24 +90,24 @@ set_position (const context_iter_t& pos) {
 TransformStage_w 
 TransformContext::
 upward_stage (const std::string& pattern, TransformStage *start) {
-	TransformStage_w result;
-	
-	if (m_curstate.empty ()) 
-		return result;
-		
-	// first, figure out where 'start' is in the chain.
-	list<TransformStage_p>::reverse_iterator ct = m_curstate.rbegin ();
-	while (ct != m_curstate.rend() && ct->get() != start)
-		++ct;
+    TransformStage_w result;
+    
+    if (m_curstate.empty ()) 
+        return result;
+        
+    // first, figure out where 'start' is in the chain.
+    list<TransformStage_p>::reverse_iterator ct = m_curstate.rbegin ();
+    while (ct != m_curstate.rend() && ct->get() != start)
+        ++ct;
 
-	// now, scan from here for the proper identifier.
-	while (ct != m_curstate.rend() && (*ct)->identifier() != pattern)
-		++ct;
+    // now, scan from here for the proper identifier.
+    while (ct != m_curstate.rend() && (*ct)->identifier() != pattern)
+        ++ct;
 
-	if (ct != m_curstate.rend())
-		result = TransformStage_w(*ct);
+    if (ct != m_curstate.rend())
+        result = TransformStage_w(*ct);
 
-	return result;
+    return result;
 }
 
 /// TODO: this single-token iteration results in several

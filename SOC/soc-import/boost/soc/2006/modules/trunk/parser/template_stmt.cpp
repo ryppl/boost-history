@@ -43,12 +43,12 @@ TemplateStmtXForm::
 const std::string& 
 TemplateStmtXForm::
 get_identifier (){
-	static std::string s_id("template_stmt");
-	return s_id;
+    static std::string s_id("template_stmt");
+    return s_id;
 }
 
 const std::string& 
 TemplateStmtXForm::
 identifier () const {
-	return get_identifier ();
+    return get_identifier ();
 }

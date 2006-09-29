@@ -32,43 +32,46 @@ static bool validate_filename (string s) {
 }
 
 namespace {
-	class NameGenerator {
-	public:
-		virtual ~NameGenerator () {}
-		virtual string get_name(const string& n, int i) = 0;
-	};
-	
-	class ArrayNameGen : public NameGenerator {
-		vector<string> m_names;
-	public:
-		ArrayNameGen (const vector<string>& v) : m_names(v) {}
-		virtual string get_name(const string&, int i) { return m_names[i]; }
-	};
-	
-	class SuffixNameGen : public NameGenerator {
-		string m_suffix;
-	public:
-		SuffixNameGen (const string& s) : m_suffix(s) {}
-		virtual string get_name(const string& s, int i) {
-			return replace_suffix (s, m_suffix.c_str ());
-		}
-	};
+    class NameGenerator {
+    public:
+        virtual ~NameGenerator () {}
+        virtual string get_name(const string& n, int i) = 0;
+    };
+    
+    class ArrayNameGen : public NameGenerator {
+        vector<string> m_names;
+    public:
+        ArrayNameGen (const vector<string>& v) : m_names(v) {}
+        virtual string get_name(const string&, int i) { return m_names[i]; }
+    };
+    
+    class SuffixNameGen : public NameGenerator {
+        string m_suffix;
+    public:
+        SuffixNameGen (const string& s) : m_suffix(s) {}
+        virtual string get_name(const string& s, int i) {
+            return replace_suffix (s, m_suffix.c_str ());
+        }
+    };
 }
 
 int
 Driver::
 execute (int args, const char ** argv) {
-    if (args == 1) 
+    if (args <= 1) { 
+        cout << "No arguments given, try mfront --help" << endl;
         return 0;
+    }
     vector<string> files = configure(args, argv);
+    
     auto_ptr<NameGenerator> namegen(new SuffixNameGen (configure_getsuffix ()));
 
     typedef vector<string>::const_iterator  vec_iter_t;
     vector<string> outputs = configure_outputnames ();
     
     if (!outputs.empty ()) {
-    	//switch name generation methods
-    	namegen.reset (new ArrayNameGen (outputs));
+        //switch name generation methods
+        namegen.reset (new ArrayNameGen (outputs));
     }
     
     int cnt = 0;
@@ -101,22 +104,22 @@ execute (int args, const char ** argv) {
                 continue;
             
             string header_n = 
-            	replace_suffix(namegen->get_name(*file,cnt), ".h");
-            	
+                replace_suffix(namegen->get_name(*file,cnt), ".h");
+                
             string source_n = 
-            	replace_suffix(namegen->get_name(*file,cnt), ".cpp");
+                replace_suffix(namegen->get_name(*file,cnt), ".cpp");
             
             if (header_n == *file || source_n == *file) {
-            	cerr << "Refusing to overwrite input file with output for " 
-            	     << *file << endl;
-            	continue;
+                cerr << "Refusing to overwrite input file with output for " 
+                     << *file << endl;
+                continue;
             }
             
             ofstream header(header_n.c_str());
             ofstream source(source_n.c_str());
             
-            OutputDelegate header_del (header, &maps);
-            OutputDelegate source_del (source, &maps);
+            OutputDelegate header_del (*file, header, &maps);
+            OutputDelegate source_del (*file, source, &maps);
             
             header << "// " << header_n << endl;
             source << "// " << source_n << endl;

@@ -117,8 +117,8 @@ public:
         
         /// A query interface for transforms to find any enclosing transforms
         /// of a specific type.
-		TransformStage_w upward_stage (const std::string& pattern,
-		                               TransformStage *start);
+        TransformStage_w upward_stage (const std::string& pattern,
+                                       TransformStage *start);
 
     //@}
 };

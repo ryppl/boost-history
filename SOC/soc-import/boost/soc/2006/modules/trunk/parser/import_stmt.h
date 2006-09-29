@@ -16,8 +16,8 @@ class ImportStmtXForm : public TransformStage {
 public:
     ImportStmtXForm (const context_iter_t& s,
                      const context_iter_t& e);
-	static const std::string& get_identifier ();                      
-	virtual const std::string& identifier () const;                      
+    static const std::string& get_identifier ();                      
+    virtual const std::string& identifier () const;                      
     virtual OperationPair process_token (const token_t& tok, 
                                          TransformContext *);
     virtual OperationPair process_upstream (OperationPair p, 

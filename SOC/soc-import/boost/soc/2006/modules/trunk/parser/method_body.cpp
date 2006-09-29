@@ -56,12 +56,12 @@ MethodBodyXForm::
 const std::string& 
 MethodBodyXForm::
 get_identifier (){
-	static std::string s_id("method_body");
-	return s_id;
+    static std::string s_id("method_body");
+    return s_id;
 }
 
 const std::string& 
 MethodBodyXForm::
 identifier () const {
-	return get_identifier ();
+    return get_identifier ();
 }

@@ -1,5 +1,5 @@
 import Lib;
 int main () { 
-	S s;
+    S s;
 }
 

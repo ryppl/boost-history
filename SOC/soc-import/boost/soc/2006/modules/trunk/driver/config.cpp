@@ -42,7 +42,7 @@ configure_mapmanager (MapManager& map) {
 }
 
 std::vector<std::string> configure_outputnames () {
-	return s_filenames;
+    return s_filenames;
 }
 
 std::string configure_getsuffix () {
@@ -69,8 +69,8 @@ void configure_context (context_t& context){
             static_cast<language_support>(context.get_language () 
                 | support_c99));
                 
-	if (s_preserve_comments)
-		context.set_language(
+    if (s_preserve_comments)
+        context.set_language(
                 enable_preserve_comments(context.get_language()));
 
     // this one isn't optional.
@@ -192,94 +192,100 @@ vector<string> configure (int args, const char **argv) {
     pos_opts.add("input-file", -1);
     
     opt::variables_map vm;
-    opt::store (opt::command_line_parser(args,(char **)argv)
-                .options(desc_cmdline)
-                .positional(pos_opts)
-                .extra_parser(at_option_parser)
-                .run (),
-                vm);
-    if (vm.count("config-file")) {
-        ifstream ifs (vm["config-file"].as<string>().c_str());
-        if (!ifs) {
-            cout << "Could not open the config file\n";
-        } else {
-            // Read the whole file into a string
-            stringstream ss;
-            ss << ifs.rdbuf();
-            // Split the file content
-            char_separator<char> sep("\n\r");
-            tokenizer<char_separator<char> > tok(ss.str(), sep);
-            vector<string> args;
-            copy(tok.begin(), tok.end(), back_inserter(args));
-            // Parse the file and store the options
-            opt::store(opt::command_line_parser(args)
-                 .options(desc_generic)
-                 .run(), 
-                vm);            
+    
+    try {    
+        opt::store (opt::command_line_parser(args,(char **)argv)
+                    .options(desc_cmdline)
+                    .positional(pos_opts)
+                    .extra_parser(at_option_parser)
+                    .run (),
+                    vm);
+        if (vm.count("config-file")) {
+            ifstream ifs (vm["config-file"].as<string>().c_str());
+            if (!ifs) {
+                cout << "Could not open the config file\n";
+            } else {
+                // Read the whole file into a string
+                stringstream ss;
+                ss << ifs.rdbuf();
+                // Split the file content
+                char_separator<char> sep("\n\r");
+                tokenizer<char_separator<char> > tok(ss.str(), sep);
+                vector<string> args;
+                copy(tok.begin(), tok.end(), back_inserter(args));
+                // Parse the file and store the options
+                opt::store(opt::command_line_parser(args)
+                     .options(desc_generic)
+                     .run(), 
+                    vm);            
+            }
         }
-    }
-    opt::notify (vm);
-    
-    // now extract the relevant data, and configure
-    if (vm.count ("map-only"))
-        s_maps_only = true;
-     
-    if (vm.count ("help"))
-    	cout << desc_cmdline;
-    
-    if (vm.count ("version")) {
-    	cout << "mfront version " << MFRONT_VERSION << endl;
-    }
-    
-    if (vm.count ("copyright")) {
-    	cout << "mfront Copyright 2006, Boost.org" << endl;
-    }
-    
-    
-    if (vm.count ("forceinclude"))
-        s_force_paths = vm["forceinclude"].as<vector<string> >();
-    vector<string> paths;       
-    if (vm.count ("sysinclude")) {
-        paths = vm["sysinclude"].as<vector<string> >();
-        copy (paths.begin (), paths.end (), back_inserter(s_sys_inc_paths));
-    }
-    if (vm.count ("include")) {
-    	paths = vm["include"].as<vector<string> >();
-    	copy (paths.begin(), paths.end (), back_inserter(s_inc_paths));
-    }
-    if (vm.count ("define"))
-        s_macros = vm["define"].as<vector<string> >();
+        opt::notify (vm);
         
-    if (vm.count ("predefine")) {
-        paths = vm["predefine"].as<vector<string> >();
-        copy (paths.begin (), paths.end (), back_inserter(s_macros));
-    }
-
-    if (vm.count ("undefine"))
-        s_undef = vm["undefine"].as<vector<string> >();
-
-	s_preserve_comments = vm.count ("preserve") > 0;
-    s_longlong = vm.count ("long_long") > 0;
-    s_c99 = vm.count ("c99") > 0;
-    s_variadics = (vm.count ("variadics") > 0) || s_c99;
+        // now extract the relevant data, and configure
+        if (vm.count ("map-only"))
+            s_maps_only = true;
+         
+        if (vm.count ("help"))
+            cout << desc_cmdline;
+        
+        if (vm.count ("version")) {
+            cout << "mfront version " << MFRONT_VERSION << endl;
+        }
+        
+        if (vm.count ("copyright")) {
+            cout << "mfront Copyright 2006, Boost.org" << endl;
+        }
+        
+        
+        if (vm.count ("forceinclude"))
+            s_force_paths = vm["forceinclude"].as<vector<string> >();
+        vector<string> paths;       
+        if (vm.count ("sysinclude")) {
+            paths = vm["sysinclude"].as<vector<string> >();
+            copy (paths.begin (), paths.end (), back_inserter(s_sys_inc_paths));
+        }
+        if (vm.count ("include")) {
+            paths = vm["include"].as<vector<string> >();
+            copy (paths.begin(), paths.end (), back_inserter(s_inc_paths));
+        }
+        if (vm.count ("define"))
+            s_macros = vm["define"].as<vector<string> >();
+            
+        if (vm.count ("predefine")) {
+            paths = vm["predefine"].as<vector<string> >();
+            copy (paths.begin (), paths.end (), back_inserter(s_macros));
+        }
     
-    if (vm.count ("output")) {
-    	paths = vm["output"].as<vector<string> >();
-    	if (paths.size () != vm.count ("input-file")) {
-    		cout << "Error: Mismatched count of input ("
-    		     << vm.count ("input-file")
-    		     << ") and output filenames ("
-    		     << paths.size ()
-    		     << ")" << endl;
-    		exit (1);
-    	}
-    	copy (paths.begin (), paths.end(), back_inserter(s_filenames));
+        if (vm.count ("undefine"))
+            s_undef = vm["undefine"].as<vector<string> >();
+    
+        s_preserve_comments = vm.count ("preserve") > 0;
+        s_longlong = vm.count ("long_long") > 0;
+        s_c99 = vm.count ("c99") > 0;
+        s_variadics = (vm.count ("variadics") > 0) || s_c99;
+        
+        if (vm.count ("output")) {
+            paths = vm["output"].as<vector<string> >();
+            if (paths.size () != vm.count ("input-file")) {
+                cout << "Error: Mismatched count of input ("
+                     << vm.count ("input-file")
+                     << ") and output filenames ("
+                     << paths.size ()
+                     << ")" << endl;
+                exit (1);
+            }
+            copy (paths.begin (), paths.end(), back_inserter(s_filenames));
+        }
+        
+        if (vm.count ("input-file"))
+            return vm["input-file"].as<vector<string> >();
+    } catch (opt::error& e) {
+        cout << e.what () << endl;
+        cout << desc_cmdline;
     }
     
-    if (vm.count ("input-file"))
-        return vm["input-file"].as<vector<string> >();
-    else
-        return vector<string> ();
+    return vector<string> ();
 }
 
 

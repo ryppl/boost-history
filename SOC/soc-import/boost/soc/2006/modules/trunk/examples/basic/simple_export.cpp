@@ -6,9 +6,9 @@ typedef   signed   char   __int8_t ;
 
  typedef   unsigned   char   __uint8_t ;
 
- typedef 	 short   __int16_t ;
+ typedef      short   __int16_t ;
 
- typedef 	 unsigned   short   __uint16_t ;
+ typedef      unsigned   short   __uint16_t ;
 
  typedef   int   __int32_t ;
 
@@ -16,44 +16,44 @@ typedef   signed   char   __int8_t ;
 
  typedef   long   long   __int64_t ;
 
- typedef   unsigned   long   long 	 __uint64_t ;
+ typedef   unsigned   long   long      __uint64_t ;
 
  typedef   long   __darwin_intptr_t ;
 
  typedef   unsigned   int   __darwin_natural_t ;
 
  typedef   int   __darwin_ct_rune_t ;
-	 
+     
  typedef   union   { 
  char   __mbstate8 [ 128 ] ;
 
- long   long 	 _mbstateL ;
+ long   long      _mbstateL ;
   
  }
   __mbstate_t ;
 
  typedef   __mbstate_t   __darwin_mbstate_t ;
-	 
- typedef   int 	 __darwin_ptrdiff_t ;
-	 
+     
+ typedef   int      __darwin_ptrdiff_t ;
+     
  typedef   long   unsigned   int   __darwin_size_t ;
-	 
- typedef   __builtin_va_list 	 __darwin_va_list ;
-	 
+     
+ typedef   __builtin_va_list      __darwin_va_list ;
+     
  typedef   int   __darwin_wchar_t ;
-	 
- typedef   __darwin_wchar_t 	 __darwin_rune_t ;
-	 
+     
+ typedef   __darwin_wchar_t      __darwin_rune_t ;
+     
  typedef   int   __darwin_wint_t ;
-	 
+     
  typedef   unsigned   long   __darwin_clock_t ;
-	 
+     
  typedef   __uint32_t   __darwin_socklen_t ;
-	 
+     
  typedef   long   __darwin_ssize_t ;
-	 
+     
  typedef   long   __darwin_time_t ;
-	 
+     
  struct   mcontext ;
 
  struct   mcontext64 ;
@@ -61,7 +61,7 @@ typedef   signed   char   __int8_t ;
  struct   __darwin_pthread_handler_rec 
  { 
  void   (   * __routine ) ( void   *   ) ;
-	 
+     
  void   * __arg ;
   
  struct   __darwin_pthread_handler_rec   * __next ;
@@ -115,35 +115,35 @@ typedef   signed   char   __int8_t ;
   }
 ;
 
- typedef 	 __int64_t 	 __darwin_blkcnt_t ;
-	 
- typedef 	 __int32_t 	 __darwin_blksize_t ;
-	 
- typedef   __int32_t 	 __darwin_dev_t ;
+ typedef      __int64_t      __darwin_blkcnt_t ;
+     
+ typedef      __int32_t      __darwin_blksize_t ;
+     
+ typedef   __int32_t      __darwin_dev_t ;
   
- typedef   unsigned   int 	 __darwin_fsblkcnt_t ;
-	 
- typedef   unsigned   int 	 __darwin_fsfilcnt_t ;
-	 
- typedef   __uint32_t 	 __darwin_gid_t ;
+ typedef   unsigned   int      __darwin_fsblkcnt_t ;
+     
+ typedef   unsigned   int      __darwin_fsfilcnt_t ;
+     
+ typedef   __uint32_t      __darwin_gid_t ;
   
- typedef   __uint32_t 	 __darwin_id_t ;
+ typedef   __uint32_t      __darwin_id_t ;
   
- typedef   __uint32_t 	 __darwin_ino_t ;
+ typedef   __uint32_t      __darwin_ino_t ;
   
  typedef   __darwin_natural_t   __darwin_mach_port_name_t ;
   
  typedef   __darwin_mach_port_name_t   __darwin_mach_port_t ;
   
  typedef   struct   mcontext   * __darwin_mcontext_t ;
-	 
+     
  typedef   struct   mcontext64   * __darwin_mcontext64_t ;
   
- typedef   __uint16_t 	 __darwin_mode_t ;
-	 
- typedef   __int64_t 	 __darwin_off_t ;
+ typedef   __uint16_t      __darwin_mode_t ;
+     
+ typedef   __int64_t      __darwin_off_t ;
   
- typedef   __int32_t 	 __darwin_pid_t ;
+ typedef   __int32_t      __darwin_pid_t ;
   
  typedef   struct   _opaque_pthread_attr_t 
  __darwin_pthread_attr_t ;
@@ -154,8 +154,8 @@ typedef   signed   char   __int8_t ;
  typedef   struct   _opaque_pthread_condattr_t 
  __darwin_pthread_condattr_t ;
   
- typedef   unsigned   long 	 __darwin_pthread_key_t ;
-	 
+ typedef   unsigned   long      __darwin_pthread_key_t ;
+     
  typedef   struct   _opaque_pthread_mutex_t 
  __darwin_pthread_mutex_t ;
   
@@ -173,81 +173,81 @@ typedef   signed   char   __int8_t ;
   
  typedef   struct   _opaque_pthread_t 
  * __darwin_pthread_t ;
-	 
- typedef   __uint32_t 	 __darwin_sigset_t ;
-	 
- typedef   __int32_t 	 __darwin_suseconds_t ;
-	 
- typedef   __uint32_t 	 __darwin_uid_t ;
+     
+ typedef   __uint32_t      __darwin_sigset_t ;
+     
+ typedef   __int32_t      __darwin_suseconds_t ;
+     
+ typedef   __uint32_t      __darwin_uid_t ;
   
- typedef   __uint32_t 	 __darwin_useconds_t ;
-	 
- typedef 	 unsigned   char 	 __darwin_uuid_t [ 16 ] ;
+ typedef   __uint32_t      __darwin_useconds_t ;
+     
+ typedef      unsigned   char      __darwin_uuid_t [ 16 ] ;
 
- struct 	 sigaltstack 
+ struct      sigaltstack 
  { 
- void 	 * ss_sp ;
+ void      * ss_sp ;
   
  __darwin_size_t   ss_size ;
-	 
- int 	 ss_flags ;
+     
+ int      ss_flags ;
   
  }
 ;
 
  typedef   struct   sigaltstack   __darwin_stack_t ;
-	 
+     
  struct   ucontext 
  { 
  int   uc_onstack ;
 
- __darwin_sigset_t 	 uc_sigmask ;
-	 
+ __darwin_sigset_t      uc_sigmask ;
+     
  __darwin_stack_t   uc_stack ;
-	 
- struct   ucontext 	 * uc_link ;
+     
+ struct   ucontext      * uc_link ;
   
- __darwin_size_t 	 uc_mcsize ;
+ __darwin_size_t      uc_mcsize ;
   
- __darwin_mcontext_t 	 uc_mcontext ;
-	 
+ __darwin_mcontext_t      uc_mcontext ;
+     
  }
 ;
 
  typedef   struct   ucontext   __darwin_ucontext_t ;
-	 
+     
  struct   ucontext64   { 
  int   uc_onstack ;
 
- __darwin_sigset_t 	 uc_sigmask ;
-	 
+ __darwin_sigset_t      uc_sigmask ;
+     
  __darwin_stack_t   uc_stack ;
-	 
+     
  struct   ucontext64   * uc_link ;
   
- __darwin_size_t 	 uc_mcsize ;
+ __darwin_size_t      uc_mcsize ;
   
  __darwin_mcontext64_t   uc_mcontext64 ;
-	 
+     
  }
 ;
 
  typedef   struct   ucontext64   __darwin_ucontext64_t ;
   
- typedef 	 int   __darwin_nl_item ;
+ typedef      int   __darwin_nl_item ;
 
- typedef 	 int   __darwin_wctrans_t ;
+ typedef      int   __darwin_wctrans_t ;
 
- typedef 	 unsigned   long 	 __darwin_wctype_t ;
+ typedef      unsigned   long      __darwin_wctype_t ;
 
- typedef   __darwin_va_list 	 va_list ;
+ typedef   __darwin_va_list      va_list ;
 
- typedef 	 __darwin_size_t   size_t ;
+ typedef      __darwin_size_t   size_t ;
 
  typedef   __darwin_off_t   fpos_t ;
 
  struct   __sbuf   { 
- unsigned   char 	 * _base ;
+ unsigned   char      * _base ;
 
  int   _size ;
 
@@ -256,47 +256,47 @@ typedef   signed   char   __int8_t ;
 
  struct   __sFILEX ;
 
- typedef 	 struct   __sFILE   { 
+ typedef      struct   __sFILE   { 
  unsigned   char   * _p ;
-	 
- int 	 _r ;
+     
+ int      _r ;
   
- int 	 _w ;
+ int      _w ;
   
- short 	 _flags ;
+ short      _flags ;
   
- short 	 _file ;
+ short      _file ;
   
- struct 	 __sbuf   _bf ;
-	 
- int 	 _lbfsize ;
-	 
- void 	 * _cookie ;
-	 
- int 	 (   * _close ) ( void   *   ) ;
+ struct      __sbuf   _bf ;
+     
+ int      _lbfsize ;
+     
+ void      * _cookie ;
+     
+ int      (   * _close ) ( void   *   ) ;
 
- int 	 (   * _read )   ( void   *   ,   char   *   ,   int ) ;
+ int      (   * _read )   ( void   *   ,   char   *   ,   int ) ;
 
- fpos_t 	 (   * _seek )   ( void   *   ,   fpos_t ,   int ) ;
+ fpos_t      (   * _seek )   ( void   *   ,   fpos_t ,   int ) ;
 
- int 	 (   * _write ) ( void   *   ,   const   char   *   ,   int ) ;
+ int      (   * _write ) ( void   *   ,   const   char   *   ,   int ) ;
 
- struct 	 __sbuf   _ub ;
-	 
+ struct      __sbuf   _ub ;
+     
  struct   __sFILEX   * _extra ;
   
- int 	 _ur ;
+ int      _ur ;
   
  unsigned   char   _ubuf [ 3 ] ;
-	 
+     
  unsigned   char   _nbuf [ 1 ] ;
-	 
- struct 	 __sbuf   _lb ;
-	 
- int 	 _blksize ;
-	 
- fpos_t 	 _offset ;
-	 
+     
+ struct      __sbuf   _lb ;
+     
+ int      _blksize ;
+     
+ fpos_t      _offset ;
+     
  }
   FILE ;
 
@@ -320,9 +320,9 @@ typedef   signed   char   __int8_t ;
 
  int   fgetpos ( FILE   *   ,   fpos_t   *   ) ;
 
- char 	 * fgets ( char   *   ,   int ,   FILE   *   ) ;
+ char      * fgets ( char   *   ,   int ,   FILE   *   ) ;
 
- FILE 	 * fopen ( const   char   *   ,   const   char   *   ) ;
+ FILE      * fopen ( const   char   *   ,   const   char   *   ) ;
 
  int   fprintf ( FILE   *   ,   const   char   *   ,   ...   )   __asm ( "_"   "fprintf"   "$LDBLStub" ) ;
 
@@ -332,7 +332,7 @@ typedef   signed   char   __int8_t ;
 
  size_t   fread ( void   *   ,   size_t ,   size_t ,   FILE   *   ) ;
 
- FILE 	 * freopen ( const   char   *   ,   const   char   *   , 
+ FILE      * freopen ( const   char   *   ,   const   char   *   , 
  FILE   *   )   ;
 
  int   fscanf ( FILE   *   ,   const   char   *   ,   ...   )   __asm ( "_"   "fscanf"   "$LDBLStub" ) ;
@@ -349,7 +349,7 @@ typedef   signed   char   __int8_t ;
 
  int   getchar ( void ) ;
 
- char 	 * gets ( char   *   ) ;
+ char      * gets ( char   *   ) ;
 
  extern   const   int   sys_nerr ;
   
@@ -381,9 +381,9 @@ typedef   signed   char   __int8_t ;
 
  int   sscanf ( const   char   *   ,   const   char   *   ,   ...   )   __asm ( "_"   "sscanf"   "$LDBLStub" ) ;
 
- FILE 	 * tmpfile ( void ) ;
+ FILE      * tmpfile ( void ) ;
 
- char 	 * tmpnam ( char   *   ) ;
+ char      * tmpnam ( char   *   ) ;
 
  int   ungetc ( int ,   FILE   *   ) ;
 
@@ -400,13 +400,13 @@ typedef   signed   char   __int8_t ;
  }
 
  extern   "C"   { 
- char 	 * ctermid ( char   *   ) ;
+ char      * ctermid ( char   *   ) ;
 
- char 	 * ctermid_r ( char   *   ) ;
+ char      * ctermid_r ( char   *   ) ;
 
- FILE 	 * fdopen ( int ,   const   char   *   ) ;
+ FILE      * fdopen ( int ,   const   char   *   ) ;
 
- char 	 * fgetln ( FILE   *   ,   size_t   *   ) ;
+ char      * fgetln ( FILE   *   ,   size_t   *   ) ;
 
  int   fileno ( FILE   *   ) ;
 
@@ -433,7 +433,7 @@ typedef   signed   char   __int8_t ;
 
  int   pclose ( FILE   *   ) ;
 
- FILE 	 * popen ( const   char   *   ,   const   char   *   ) ;
+ FILE      * popen ( const   char   *   ,   const   char   *   ) ;
 
  int   putc_unlocked ( int ,   FILE   *   ) ;
 
@@ -447,7 +447,7 @@ typedef   signed   char   __int8_t ;
 
  int   snprintf ( char   *   ,   size_t ,   const   char   *   ,   ...   )   __asm ( "_"   "snprintf"   "$LDBLStub" ) ;
 
- char 	 * tempnam ( const   char   *   ,   const   char   *   ) ;
+ char      * tempnam ( const   char   *   ,   const   char   *   ) ;
 
  int   vfscanf ( FILE   *   ,   const   char   *   ,   va_list )   __asm ( "_"   "vfscanf"   "$LDBLStub" ) ;
 
@@ -457,12 +457,12 @@ typedef   signed   char   __int8_t ;
 
  int   vsscanf ( const   char   *   ,   const   char   *   ,   va_list )   __asm ( "_"   "vsscanf"   "$LDBLStub" ) ;
 
- FILE 	 * zopen ( const   char   *   ,   const   char   *   ,   int ) ;
+ FILE      * zopen ( const   char   *   ,   const   char   *   ,   int ) ;
 
  }
 
  extern   "C"   { 
- FILE 	 * funopen ( const   void   *   , 
+ FILE      * funopen ( const   void   *   , 
  int   (   *   ) ( void   *   ,   char   *   ,   int ) , 
  int   (   *   ) ( void   *   ,   const   char   *   ,   int ) , 
  fpos_t   (   *   ) ( void   *   ,   fpos_t ,   int ) , 
@@ -471,11 +471,11 @@ typedef   signed   char   __int8_t ;
  }
 
  extern   "C"   { 
- int 	 __srget ( FILE   *   ) ;
+ int      __srget ( FILE   *   ) ;
 
- int 	 __svfscanf ( FILE   *   ,   const   char   *   ,   va_list )   __asm ( "_"   "__svfscanf"   "$LDBLStub" ) ;
+ int      __svfscanf ( FILE   *   ,   const   char   *   ,   va_list )   __asm ( "_"   "__svfscanf"   "$LDBLStub" ) ;
 
- int 	 __swbuf ( int ,   FILE   *   ) ;
+ int      __swbuf ( int ,   FILE   *   ) ;
 
  }
 

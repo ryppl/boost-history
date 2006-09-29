@@ -25,13 +25,14 @@ class OutputDelegate {
     std::ostream&  m_stream;
     MapManager   * m_mmgr;
     bool           m_emitted;
+    std::string    m_filename;
+
     std::vector<std::string>  m_includes;
     std::vector<std::string>  m_text;
-    
     void check ();
     
 public:
-    OutputDelegate (std::ostream& s, MapManager *m);
+    OutputDelegate (const std::string& filename, std::ostream& s, MapManager *m);
     ~OutputDelegate ();
     
     void text (const std::string& s);

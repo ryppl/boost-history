@@ -19,8 +19,8 @@ class AccessCtlXForm : public TransformStage {
 public:
     AccessCtlXForm (const context_iter_t& s,
                     const context_iter_t& e);
-	static const std::string& get_identifier ();
-	virtual const std::string& identifier () const;
+    static const std::string& get_identifier ();
+    virtual const std::string& identifier () const;
     virtual void at_start (TransformContext *);
     virtual void at_end (TransformContext *);
     virtual OperationPair process_token (const token_t& tok, 

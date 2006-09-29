@@ -22,7 +22,7 @@ AccessCtlXForm::
 AccessCtlXForm (const context_iter_t& s,
                     const context_iter_t& e)
   : TransformStage (s,e), m_access(mPrivate), m_parse(mNotFound) {
-	m_id = s_id++;
+    m_id = s_id++;
 }
 
 void 
@@ -43,7 +43,7 @@ at_end (TransformContext *ctx) {
         ctx->add_header(suffix);
         ctx->add_source(suffix);
     } else if (m_ns_name.length ()) {
-    	cerr << "[access_ctl::at_end(), not emitting for " << m_ns_name << "]";
+        cerr << "[access_ctl::at_end(), not emitting for " << m_ns_name << "]";
     }
 //  Operation_p suffix = Operation_p( new StringOp (
 //     (format ("/*end %s[%d]: %s*/") % (m_access == mPrivate? "private":"public") % m_id % m_ns_name).str ()));
@@ -65,7 +65,7 @@ process_token (const token_t& tok, TransformContext *ctx) {
                 m_parse = mColon;
                 m_access = (tok == T_PUBLIC)? mPublic:mPrivate;
                 if (m_access != mPrivate && m_ns_name.length ()) {
-                	cerr << "[access_ctl: err: already emitted a private ns for this public group!]" << endl;
+                    cerr << "[access_ctl: err: already emitted a private ns for this public group!]" << endl;
                 }
                 // eat the token, with result's default values of
                 // (null, null) ops.
@@ -101,8 +101,8 @@ AccessCtlXForm::
 insert_private (TransformContext * ctx) {
     static int s_counter;
     if (m_parse != mFound) {
-    	cerr << "[access_ctl::insert_private called prematurely.]";
-    	return;
+        cerr << "[access_ctl::insert_private called prematurely.]";
+        return;
     }
     if (m_access == mPrivate && m_ns_name.length () == 0) {
         // this should pop up before the current token's
@@ -135,12 +135,12 @@ AccessCtlXForm::
 const std::string& 
 AccessCtlXForm::
 get_identifier (){
-	static std::string s_id("access_ctl");
-	return s_id;
+    static std::string s_id("access_ctl");
+    return s_id;
 }
 
 const std::string& 
 AccessCtlXForm::
 identifier () const {
-	return get_identifier ();
+    return get_identifier ();
 }

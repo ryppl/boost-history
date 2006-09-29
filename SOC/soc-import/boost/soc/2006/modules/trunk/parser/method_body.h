@@ -19,8 +19,8 @@ public:
                      const context_iter_t& e);
 //  virtual void at_start ();
 //  virtual void at_end ();
-	static const std::string& get_identifier ();
-	virtual const std::string& identifier () const;
+    static const std::string& get_identifier ();
+    virtual const std::string& identifier () const;
     virtual OperationPair process_token (const token_t& tok, TransformContext *);
     virtual OperationPair process_upstream (OperationPair p, TransformContext *);
     virtual ~MethodBodyXForm ();

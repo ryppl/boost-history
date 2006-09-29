@@ -64,8 +64,8 @@ check () {
 }
 
 OutputDelegate::
-OutputDelegate (ostream& s, MapManager *m) 
- : m_stream(s), m_mmgr(m), m_emitted(false) {
+OutputDelegate (const string& filename, ostream& s, MapManager *m) 
+ : m_stream(s), m_mmgr(m), m_emitted(false), m_filename (filename) {
     _Add (this);
  }
 
@@ -98,7 +98,7 @@ emit () {
          ++it) {
         set<path>  names = m_mmgr->lookup(*it);
         if (names.empty()) {
-            cerr << "failed to find module '" << *it << "'" << endl;
+            cerr << m_filename << ": failed to find module '" << *it << "'" << endl;
         }
         for (set<path>::iterator n = names.begin ();
              n != names.end ();

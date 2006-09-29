@@ -51,23 +51,23 @@ process_token (const token_t& tok, TransformContext * ctx) {
                         ExportStmtXForm::get_identifier (),
                         this);
                 if (TransformStage_p enclosing = eq.lock ()) {
-                	ExportStmtXForm * p = dynamic_cast<ExportStmtXForm*>(enclosing.get ());
-                	// let's see if the enclosing module name's in the
-                	// same partition.
-                	if (p->modname().same_module(m_mod_name)) {
-                		// put out a using namespace XX decl for it.
-                		Operation_p ns(new StringOp ((format ("\nusing namespace %s;\n")
-                		   % p->modname().as_identifier ()).str ()));
-                		ctx->add_header(ns);
-                		ctx->add_source(ns);
-                	}
+                    ExportStmtXForm * p = dynamic_cast<ExportStmtXForm*>(enclosing.get ());
+                    // let's see if the enclosing module name's in the
+                    // same partition.
+                    if (p->modname().same_module(m_mod_name)) {
+                        // put out a using namespace XX decl for it.
+                        Operation_p ns(new StringOp ((format ("\nusing namespace %s;\n")
+                           % p->modname().as_identifier ()).str ()));
+                        ctx->add_header(ns);
+                        ctx->add_source(ns);
+                    }
                 }
                 m_mode = mFound;
             } else {
                 if (tok == T_IDENTIFIER) 
                     m_mod_name.add_segment (tok);
                 if (tok == T_STRINGLIT)
-                	m_mod_name.set_partition (tok);
+                    m_mod_name.set_partition (tok);
             }
             break;
         case mFound:
@@ -85,14 +85,14 @@ process_upstream (OperationPair p, TransformContext *) {
 const std::string& 
 ImportStmtXForm::
 get_identifier (){
-	static std::string s_id("import_stmt");
-	return s_id;
+    static std::string s_id("import_stmt");
+    return s_id;
 }
 
 const std::string& 
 ImportStmtXForm::
 identifier () const {
-	return get_identifier ();
+    return get_identifier ();
 }
 
 ImportStmtXForm::

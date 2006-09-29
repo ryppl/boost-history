@@ -59,8 +59,8 @@ struct TransformStage {
       : start(s), end(e) {}
 //  MarkupFunctor *at_start, *at_end;
 
-	// identifiers the type of stage, for inter-stage communication.
-	virtual const std::string& identifier () const = 0;
+    // identifiers the type of stage, for inter-stage communication.
+    virtual const std::string& identifier () const = 0;
 
     virtual void at_start (TransformContext *) {}
     virtual void at_end (TransformContext *) {}

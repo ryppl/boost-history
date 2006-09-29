@@ -19,30 +19,30 @@ using namespace boost::spirit;
 using namespace boost::wave;
 
 struct match_token : public char_parser<match_token> {
-	token_id  _id;
-	match_token(token_id id) : _id(id) {}
-	bool test (const token_t& t) const {
-		return _id == token_id(t);
-	}
+    token_id  _id;
+    match_token(token_id id) : _id(id) {}
+    bool test (const token_t& t) const {
+        return _id == token_id(t);
+    }
 };
 
 match_token
 m(token_id i) {
-	return match_token(i);
+    return match_token(i);
 }
 
 struct decl_grammar : public grammar<decl_grammar> {
-	template<typename ScannerT>
-	struct definition {
-		rule<ScannerT>  var_decl;
-		
-		definition (decl_grammar const& self) {
-			var_decl = m(T_IDENTIFIER) >> m(T_IDENTIFIER) 
-			           >> m(T_SEMICOLON);
-			BOOST_SPIRIT_DEBUG_RULE(var_decl);
-		}
-		rule<ScannerT> const& start () { return var_decl; }
-	};
+    template<typename ScannerT>
+    struct definition {
+        rule<ScannerT>  var_decl;
+        
+        definition (decl_grammar const& self) {
+            var_decl = m(T_IDENTIFIER) >> m(T_IDENTIFIER) 
+                       >> m(T_SEMICOLON);
+            BOOST_SPIRIT_DEBUG_RULE(var_decl);
+        }
+        rule<ScannerT> const& start () { return var_decl; }
+    };
 };
 
 struct skip_grammar : public grammar<skip_grammar>
@@ -52,8 +52,8 @@ struct skip_grammar : public grammar<skip_grammar>
     {
         definition(skip_grammar const& /*self*/)
         {
-			skip = m(T_SPACE) | m(T_NEWLINE);        
-			BOOST_SPIRIT_DEBUG_RULE(skip);
+            skip = m(T_SPACE) | m(T_NEWLINE);        
+            BOOST_SPIRIT_DEBUG_RULE(skip);
         }
 
         rule<ScannerT> skip;
@@ -64,20 +64,20 @@ struct skip_grammar : public grammar<skip_grammar>
 };
 
 int main(int args, char **argv) {
-	assert(args > 1);
-	ifstream f(argv[1]);
-	string instring;
-	f.unsetf(ios::skipws);
-	
-	instring = string(istreambuf_iterator<char>(f.rdbuf()),
-				  istreambuf_iterator<char>());
-				  
-	context_t ctx (instring.begin (), instring.end (), argv[1]);
-	decl_grammar g;
-	skip_grammar s;
-	if (parse (ctx.begin (), ctx.end (), g, s).full) {
-		puts ("parsed");
-	} else {
-		puts ("not parsed.");
-	}
+    assert(args > 1);
+    ifstream f(argv[1]);
+    string instring;
+    f.unsetf(ios::skipws);
+    
+    instring = string(istreambuf_iterator<char>(f.rdbuf()),
+                  istreambuf_iterator<char>());
+                  
+    context_t ctx (instring.begin (), instring.end (), argv[1]);
+    decl_grammar g;
+    skip_grammar s;
+    if (parse (ctx.begin (), ctx.end (), g, s).full) {
+        puts ("parsed");
+    } else {
+        puts ("not parsed.");
+    }
 }

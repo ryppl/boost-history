@@ -14,14 +14,15 @@
 class ExportStmtXForm : public TransformStage {
     ModuleName   m_mod_name;
     enum mode { mExport, mNamespace, mModule, mFound } m_mode;
-    std::string open_block ();	
+    
+    std::string open_block ();    
     std::string close_block ();
 public:
     ExportStmtXForm (const context_iter_t& s,
                      const context_iter_t& e);
-	ModuleName modname () const { return m_mod_name; }
-	static const std::string& get_identifier ();
-	virtual const std::string& identifier () const;                     
+    ModuleName modname () const { return m_mod_name; }
+    static const std::string& get_identifier ();
+    virtual const std::string& identifier () const;                     
     virtual void at_start (TransformContext *);
     virtual void at_end (TransformContext *);
     virtual OperationPair process_token (const token_t& tok, 

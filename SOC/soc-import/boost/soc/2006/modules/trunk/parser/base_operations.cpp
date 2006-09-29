@@ -29,12 +29,12 @@ TokenOp::operator() (OutputDelegate *del) {
     std::string result;
     result.append (m_tok.get_value().begin (),
                    m_tok.get_value().end ());
-    if (   (m_tok == T_RIGHTBRACE)
+/*    if (   (m_tok == T_RIGHTBRACE)
         || (m_tok == T_SEMICOLON))
         result.append ("\n");
     else
         result.append (" ");
-    
+*/    
     del->text(result);
 }
 
