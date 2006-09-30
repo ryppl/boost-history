@@ -45,6 +45,7 @@ extern "C" {
 #include <boost/process/environment.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/process/stream_behavior.hpp>
+#include <boost/scoped_array.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -437,15 +438,15 @@ posix_start(const Executable& exe,
         int maxdescs = 128; // XXX
 #endif
         try {
-            bool closeflags[maxdescs];
+            boost::scoped_array< bool > closeflags(new bool[maxdescs]);
             for (int i = 0; i < maxdescs; i++)
-                closeflags[i] = true;
+                closeflags.get()[i] = true;
 
-            setup_input(infoin, closeflags, maxdescs);
-            setup_output(infoout, merges, closeflags, maxdescs);
+            setup_input(infoin, closeflags.get(), maxdescs);
+            setup_output(infoout, merges, closeflags.get(), maxdescs);
 
             for (int i = 0; i < maxdescs; i++)
-                if (closeflags[i])
+                if (closeflags.get()[i])
                     ::close(i);
 
             setup();
