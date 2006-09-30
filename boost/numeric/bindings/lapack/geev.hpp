@@ -329,7 +329,7 @@ namespace boost { namespace numeric { namespace bindings {
 
       assert(traits::matrix_size2(a)==n); 
       assert(traits::vector_size(w)==n); 
-      assert(vecttraits::vector_size(w)==n); 
+      assert(traits::vector_size(w)==n); 
       assert(!vr || traits::matrix_size1(*vr)==n); 
       assert(!vl || traits::matrix_size1(*vl)==n); 
 
