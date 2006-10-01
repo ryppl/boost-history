@@ -54,8 +54,9 @@ test-suite process :
     [ compile include_postream_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
-#    [ compile include_win32_child_test.cpp : : ]
-#    [ compile include_win32_launcher_test.cpp : : ]
+    [ compile include_win32_child_test.cpp : : ]
+    [ compile include_win32_context_test.cpp : : ]
+    [ compile include_win32_operations_test.cpp : : ]
 
     [ run include_top_test_and_main.cpp include_top_test.cpp
         :
@@ -166,18 +167,18 @@ test-suite process :
           <library>$(BOOST_ROOT)//filesystem
         ]
 
-#    [ run win32_child_test.cpp
-#        :
-#        :
-#        : <library>$(BOOST_ROOT)//unit_test_framework
-#        ]
+    [ run win32_child_test.cpp
+        :
+        :
+        : <library>$(BOOST_ROOT)//unit_test_framework
+        ]
 
-#    [ run win32_launcher_test.cpp
-#        : helpers
-#        :
-#        : <library>$(BOOST_ROOT)//unit_test_framework
-#          <library>$(BOOST_ROOT)//filesystem
-#        ]
+    [ run win32_launch_test.cpp
+        : helpers
+        :
+        : <library>$(BOOST_ROOT)//unit_test_framework
+          <library>$(BOOST_ROOT)//filesystem
+        ]
 
     [ compile ../example/command_lines.cpp : : ]
     [ compile ../example/environment.cpp : : ]
@@ -186,7 +187,7 @@ test-suite process :
     [ compile ../example/single_process_tutorial.cpp : : ]
     [ compile ../example/posix_communication.cpp : : ]
     [ compile ../example/posix_status.cpp : : ]
-#    [ compile ../example/win32_child.cpp : : ]
-#    [ compile ../example/win32_startup.cpp : : ]
+    [ compile ../example/win32_child.cpp : : ]
+    [ compile ../example/win32_startup.cpp : : ]
 
     ;

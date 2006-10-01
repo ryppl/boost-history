@@ -25,6 +25,8 @@ extern "C" {
 
 #include <cstdlib>
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include <boost/process.hpp>
 
@@ -49,19 +51,14 @@ main(int argc, char* argv[])
         // Constructs a command line to launch Notepad, looking for its
         // availability in the PATH.
         //
-        bp::command_line cl("notepad");
-
-        //
-        // Constructs a Win32-specific launcher.  We do not need any of
-        // its extra features (compared to the regular launcher), but we
-        // must use it in order to construct a Win32-specific child.
-        //
-        bp::win32_launcher l;
+        std::string exe = bp::find_executable_in_path("notepad");
+        std::vector< std::string > args;
+        args.push_back("notepad");
 
         //
         // Starts the process.
         //
-        bp::win32_child c = l.start(cl);
+        bp::win32_child c = bp::win32_launch(exe, args, bp::win32_context());
 
         //
         // Prints out information about the new process.  Note that,

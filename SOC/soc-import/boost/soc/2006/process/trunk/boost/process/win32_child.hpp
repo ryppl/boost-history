@@ -34,8 +34,6 @@ extern "C" {
 namespace boost {
 namespace process {
 
-class win32_launcher;
-
 // ------------------------------------------------------------------------
 
 //!
@@ -65,7 +63,7 @@ class win32_child :
     //!
     PROCESS_INFORMATION m_process_information;
 
-protected:
+public: // XXX
     //!
     //! \brief Constructs a new Win32 child object representing a just
     //!        spawned child process.
@@ -86,7 +84,6 @@ protected:
                 detail::file_handle fhstdin,
                 detail::file_handle fhstdout,
                 detail::file_handle fhstderr);
-    friend class win32_launcher;
 
 public:
     //!

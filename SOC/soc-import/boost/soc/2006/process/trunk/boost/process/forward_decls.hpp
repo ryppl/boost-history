@@ -63,10 +63,12 @@ typedef basic_posix_context< std::string > posix_context;
 
 class posix_status;
 #elif defined(BOOST_PROCESS_WIN32_API)
-// XXX Reenable these when ready.
-//class win32_child;
+template< class String >
+class basic_win32_context;
 
-//class win32_launcher;
+class win32_child;
+
+typedef basic_win32_context< std::string > win32_context;
 #else
 #   error "Unsupported platform."
 #endif

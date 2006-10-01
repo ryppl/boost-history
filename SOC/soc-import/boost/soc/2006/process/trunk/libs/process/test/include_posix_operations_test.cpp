@@ -9,4 +9,10 @@
 // http://www.boost.org/LICENSE_1_0.txt.)
 //
 
-#include <boost/process/posix_operations.hpp>
+#include <boost/process/config.hpp>
+
+#if defined(BOOST_PROCESS_POSIX_API)
+
+#   include <boost/process/posix_operations.hpp>
+
+#endif

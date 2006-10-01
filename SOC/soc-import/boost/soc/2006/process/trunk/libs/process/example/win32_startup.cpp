@@ -25,6 +25,8 @@ extern "C" {
 
 #include <cstdlib>
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include <boost/process.hpp>
 
@@ -75,19 +77,22 @@ main(int argc, char* argv[])
         // above.  If the name does not contain any directory component,
         // it will be searched in the PATH.
         //
-        bp::command_line cl(app);
+        std::string exe = bp::find_executable_in_path(app);
+        std::vector< std::string > args;
+        args.push_back(bp::executable_to_progname(app));
 
         //
-        // Constructs a Win32-specific launcher with the start settings
+        // Constructs a Win32-specific context with the start settings
         // we configured.
         //
-        bp::win32_launcher l(&si);
+        bp::win32_context ctx;
+        ctx.m_startupinfo = &si;
 
         //
         // Starts the application and waits for its termination, reporting
         // the results to the user.
         //
-        bp::status s = l.start(cl).wait();
+        bp::status s = bp::win32_launch(exe, args, ctx).wait();
         if (s.exited()) {
             std::cout << "Application exited successfully" << std::endl;
             exitstatus = EXIT_SUCCESS;

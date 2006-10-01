@@ -43,8 +43,9 @@
 #   include <boost/process/posix_operations.hpp>
 #   include <boost/process/posix_status.hpp>
 #elif defined(BOOST_PROCESS_WIN32_API)
-//#   include <boost/process/win32_child.hpp>
-//#   include <boost/process/win32_launcher.hpp>
+#   include <boost/process/win32_child.hpp>
+#   include <boost/process/win32_context.hpp>
+#   include <boost/process/win32_operations.hpp>
 #else
 #   error "Unsupported platform."
 #endif

@@ -20,31 +20,12 @@ namespace bpd = ::boost::process::detail;
 
 // ------------------------------------------------------------------------
 
-namespace boost {
-namespace process {
-
-struct win32_launcher
-{
-public:
-    static
-    void*
-    test_it(void)
-    {
-        PROCESS_INFORMATION pi;
-        bpd::file_handle fh;
-        return new bp::win32_child(pi, fh, fh, fh);
-    }
-};
-
-} // namespace process
-} // namespace boost
-
-// ------------------------------------------------------------------------
-
 void*
 test_it(void)
 {
-    return bp::win32_launcher::test_it();
+    PROCESS_INFORMATION pi;
+    bpd::file_handle fh;
+    return new bp::win32_child(pi, fh, fh, fh);
 }
 
 // ------------------------------------------------------------------------
