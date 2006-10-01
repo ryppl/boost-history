@@ -50,6 +50,10 @@
 * The `environment` class was refactored (much simplified) and made public
   because it is now exposed to the user through the new `context`.
 
+* The `forward_decls.hpp` file was removed.  It is not clear it was any
+  useful, and it could be flawed in concept.  Will add later on again if
+  there really is a need for it.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]

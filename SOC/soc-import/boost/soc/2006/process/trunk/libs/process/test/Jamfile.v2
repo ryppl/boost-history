@@ -45,7 +45,6 @@ test-suite process :
     [ compile include_detail_win32_ops_test.cpp : : ]
     [ compile include_environment_test.cpp : : ]
     [ compile include_exceptions_test.cpp : : ]
-    [ compile include_forward_decls_test.cpp : : ]
     [ compile include_operations_test.cpp : : ]
 #    [ compile include_pipeline_test.cpp : : ]
     [ compile include_pistream_test.cpp : : ]

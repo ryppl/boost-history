@@ -30,7 +30,6 @@
 #include <boost/process/child.hpp>
 #include <boost/process/children.hpp>
 #include <boost/process/context.hpp>
-#include <boost/process/forward_decls.hpp>
 #include <boost/process/operations.hpp>
 //#include <boost/process/pipeline.hpp>
 #include <boost/process/pistream.hpp>
