@@ -39,10 +39,13 @@
   a standard string and a STL container).  This removes some black-box
   magic.
 
-* Replaced the `launcher` by the new `context` class and the free `launch`
-  function.  This decouples the action of launching the process from the
-  parameters describing its properties and removes a lot of useless
-  getters and setters.
+* Decoupled the launcher classes into context classes and free launch
+  functions.  For example, the configuration bits of the old `launcher`
+  class are now part of `context` while its `start` method is now
+  implemented as the `launch` free function.  The same goes for the POSIX
+  and Win32 launchers.  This was done to cleanly separate the action of
+  launching a process from the parameters describing its properties.  As a
+  side effect, a lot of useless getters and setters are gone.
 
 * The `environment` class was refactored (much simplified) and made public
   because it is now exposed to the user through the new `context`.

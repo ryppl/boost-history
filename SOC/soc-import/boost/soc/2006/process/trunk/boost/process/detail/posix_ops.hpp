@@ -349,7 +349,7 @@ setup_input(info_map& info, bool* closeflags, int maxdescs)
 //!
 inline
 void
-setup_output(info_map& info, merge_set& merges, bool* closeflags,
+setup_output(info_map& info, const merge_set& merges, bool* closeflags,
              int maxdescs)
 {
     for (info_map::iterator iter = info.begin(); iter != info.end(); iter++) {
@@ -423,7 +423,7 @@ posix_start(const Executable& exe,
             const environment& env,
             info_map& infoin,
             info_map& infoout,
-            merge_set& merges,
+            const merge_set& merges,
             const posix_setup& setup)
 {
     pid_t pid = ::fork();
@@ -555,9 +555,11 @@ posix_info_locate_pipe(info_map& info, int desc, bool out)
     if (iter != info.end()) {
         BOOST_ASSERT(iter != info.end());
         stream_info& si = (*iter).second;
-        BOOST_ASSERT(si.m_type == stream_info::usepipe);
-        fh = out ? si.m_pipe->rend().disown() : si.m_pipe->wend().disown();
-        BOOST_ASSERT(fh.is_valid());
+        // XXX This conditional was an assertion; should it be?
+        if (si.m_type == stream_info::usepipe) {
+            fh = out ? si.m_pipe->rend().disown() : si.m_pipe->wend().disown();
+            BOOST_ASSERT(fh.is_valid());
+        }
         info.erase(iter);
     }
 

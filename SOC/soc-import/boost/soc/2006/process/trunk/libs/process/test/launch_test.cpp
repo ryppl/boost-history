@@ -11,10 +11,11 @@
 
 #include <boost/filesystem/operations.hpp>
 #include <boost/process/child.hpp>
-#include <boost/process/launcher.hpp>
+#include <boost/process/context.hpp>
+#include <boost/process/operations.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "launcher_base_test.hpp"
+#include "launch_base_test.hpp"
 
 namespace bfs = ::boost::filesystem;
 namespace bp = ::boost::process;
@@ -22,15 +23,24 @@ namespace but = ::boost::unit_test;
 
 // ------------------------------------------------------------------------
 
-class start
+class launcher
 {
 public:
     bp::child
-    operator()(bp::launcher& l, const std::vector< std::string > args,
+    operator()(const std::vector< std::string > args,
+               bp::context ctx,
+               bp::stream_behavior bstdin = bp::close_stream,
+               bp::stream_behavior bstdout = bp::close_stream,
+               bp::stream_behavior bstderr = bp::close_stream,
+               bool merge_stderr_with_stdout = false,
                bool usein = false)
         const
     {
-        return l.start(get_helpers_path(), args);
+        ctx.m_stdin_behavior = bstdin;
+        ctx.m_stdout_behavior = bstdout;
+        ctx.m_stderr_behavior = bstderr;
+        ctx.m_merge_stderr_with_stdout = merge_stderr_with_stdout;
+        return bp::launch(get_helpers_path(), args, ctx);
     }
 };
 
@@ -41,9 +51,9 @@ init_unit_test_suite(int argc, char* argv[])
 {
     bfs::initial_path();
 
-    but::test_suite* test = BOOST_TEST_SUITE("launcher test suite");
+    but::test_suite* test = BOOST_TEST_SUITE("launch test suite");
 
-    add_tests_launcher_base< bp::launcher, bp::child, start >(test);
+    add_tests_launch_base< launcher, bp::context, bp::child >(test);
 
     return test;
 }

@@ -38,8 +38,6 @@
 namespace boost {
 namespace process {
 
-class posix_launcher;
-
 // ------------------------------------------------------------------------
 
 //!
@@ -118,7 +116,7 @@ private:
     //!
     output_map m_output_map;
 
-protected:
+public: // XXX
     //!
     //! \brief Constructs a new POSIX child object representing a just
     //!        spawned child process.
@@ -139,7 +137,6 @@ protected:
     posix_child(handle_type h,
                 detail::info_map& infoin,
                 detail::info_map& infoout);
-    friend class posix_launcher;
 };
 
 // ------------------------------------------------------------------------

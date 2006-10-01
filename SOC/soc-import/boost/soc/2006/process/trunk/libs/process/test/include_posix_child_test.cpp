@@ -20,31 +20,12 @@ namespace bpd = ::boost::process::detail;
 
 // ------------------------------------------------------------------------
 
-namespace boost {
-namespace process {
-
-class posix_launcher
-{
-public:
-    static
-    void*
-    test_it(void)
-    {
-        bp::posix_child::handle_type h = (bp::posix_child::handle_type)0;
-        bpd::info_map info;
-        return new bp::posix_child(h, info, info);
-    }
-};
-
-} // namespace process
-} // namespace boost
-
-// ------------------------------------------------------------------------
-
 void*
 test_it(void)
 {
-    return bp::posix_launcher::test_it();
+    bp::posix_child::handle_type h = (bp::posix_child::handle_type)0;
+    bpd::info_map info;
+    return new bp::posix_child(h, info, info);
 }
 
 // ------------------------------------------------------------------------

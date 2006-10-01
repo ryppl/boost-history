@@ -53,14 +53,17 @@ class status;
 
 typedef basic_pipeline< std::string, std::vector< std::string > > pipeline;
 
-// XXX Reenable these when ready.
 #if defined(BOOST_PROCESS_POSIX_API)
-//class posix_child;
+template< class String >
+class basic_posix_context;
 
-//class posix_launcher;
+class posix_child;
 
-//class posix_status;
+typedef basic_posix_context< std::string > posix_context;
+
+class posix_status;
 #elif defined(BOOST_PROCESS_WIN32_API)
+// XXX Reenable these when ready.
 //class win32_child;
 
 //class win32_launcher;

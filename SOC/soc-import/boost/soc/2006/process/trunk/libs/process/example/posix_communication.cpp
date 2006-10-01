@@ -48,17 +48,19 @@ main(int argc, char* argv[])
     //
     // Constructs a command line to launch a new D-BUS session daemon.
     //
-    bp::command_line cl("/usr/pkg/bin/dbus-daemon");
-    cl.argument("--fork");
-    cl.argument("--session");
+    std::string exe = bp::find_executable_in_path("dbus-daemon");
+    std::vector< std::string > args;
+    args.push_back(bp::executable_to_progname(exe));
+    args.push_back("--fork");
+    args.push_back("--session");
 
     //
     // The following arguments ask the dbus-daemon program to print the
     // new daemon's bind address and PID into two non-standard streams
     // (i.e. not stdout nor stderr).
     //
-    cl.argument("--print-address=3");
-    cl.argument("--print-pid=4");
+    args.push_back("--print-address=3");
+    args.push_back("--print-pid=4");
 
     //
     // Constructs the launcher for the previous command line.  We ask
@@ -66,16 +68,20 @@ main(int argc, char* argv[])
     // the two non-standard streams into which the daemon will print the
     // communication information.
     //
-    bp::posix_launcher l;
-    l.set_output_behavior(STDOUT_FILENO, bp::inherit_stream);
-    l.set_output_behavior(STDERR_FILENO, bp::inherit_stream);
-    l.set_output_behavior(3, bp::redirect_stream);
-    l.set_output_behavior(4, bp::redirect_stream);
+    bp::posix_context ctx;
+    ctx.m_output_behavior.insert
+        (bp::behavior_map::value_type(STDOUT_FILENO, bp::inherit_stream));
+    ctx.m_output_behavior.insert
+        (bp::behavior_map::value_type(STDERR_FILENO, bp::inherit_stream));
+    ctx.m_output_behavior.insert
+        (bp::behavior_map::value_type(3, bp::redirect_stream));
+    ctx.m_output_behavior.insert
+        (bp::behavior_map::value_type(4, bp::redirect_stream));
 
     //
     // Spawns the child process.
     //
-    bp::posix_child c = l.start(cl);
+    bp::posix_child c = bp::posix_launch(exe, args, ctx);
 
     //
     // Reads the information printed by the dbus-daemon child process

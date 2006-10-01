@@ -53,22 +53,24 @@ main(int argc, char* argv[])
     // Constructs a command line based on the arguments provided to the
     // program.
     //
-    bp::command_line cl(argv[1]);
+    std::string exe = argv[1];
+    std::vector< std::string > args;
+    args.push_back(bp::executable_to_progname(exe));
     for (int i = 2; i < argc; i++)
-        cl.argument(argv[i]);
+        args.push_back(argv[i]);
 
     //
     // Sets up a launcher inheriting all the three standard streams.
     //
-    bp::launcher l;
-    l.set_stdin_behavior(bp::inherit_stream);
-    l.set_stdout_behavior(bp::inherit_stream);
-    l.set_stderr_behavior(bp::inherit_stream);
+    bp::context ctx;
+    ctx.m_stdin_behavior = bp::inherit_stream;
+    ctx.m_stdout_behavior = bp::inherit_stream;
+    ctx.m_stderr_behavior = bp::inherit_stream;
 
     //
     // Spawns the new child process.
     //
-    bp::child c = l.start(cl);
+    bp::child c = bp::launch(exe, args, ctx);
 
     //
     // Waits until the process exits and parses its termination status.

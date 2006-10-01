@@ -38,9 +38,10 @@
 #include <boost/process/status.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
-//#   include <boost/process/posix_child.hpp>
-//#   include <boost/process/posix_launcher.hpp>
-//#   include <boost/process/posix_status.hpp>
+#   include <boost/process/posix_child.hpp>
+#   include <boost/process/posix_context.hpp>
+#   include <boost/process/posix_operations.hpp>
+#   include <boost/process/posix_status.hpp>
 #elif defined(BOOST_PROCESS_WIN32_API)
 //#   include <boost/process/win32_child.hpp>
 //#   include <boost/process/win32_launcher.hpp>
