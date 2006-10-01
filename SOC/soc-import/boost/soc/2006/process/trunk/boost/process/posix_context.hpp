@@ -73,9 +73,9 @@ public:
     //! * The environment variables table is empty.
     //! * The credentials are the same as those of the current process.
     //!
-    basic_posix_context(void);
+    posix_basic_context(void);
 
-    // XXX Add constructor to create a basic_posix_context from a
+    // XXX Add constructor to create a posix_basic_context from a
     // basic_context.
 
     //!
