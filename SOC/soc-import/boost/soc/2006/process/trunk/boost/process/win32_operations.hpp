@@ -31,6 +31,7 @@ extern "C" {
 }
 
 #include <boost/process/detail/file_handle.hpp>
+#include <boost/process/detail/win32_ops.hpp>
 #include <boost/process/win32_child.hpp>
 
 namespace boost {
@@ -41,9 +42,9 @@ namespace process {
 template< class Executable, class Arguments, class Win32_Context >
 inline
 win32_child
-win32_start(const Executable& exe,
-            const Arguments& args,
-            const Win32_Context& ctx)
+win32_launch(const Executable& exe,
+             const Arguments& args,
+             const Win32_Context& ctx)
 {
     detail::file_handle fhstdin, fhstdout, fhstderr;
 
@@ -56,7 +57,14 @@ win32_start(const Executable& exe,
 
     detail::win32_setup s;
     s.m_work_directory = ctx.m_work_directory;
-    s.m_startupinfo = m_startupinfo;
+
+    STARTUPINFO sitmp;
+    if (ctx.m_startupinfo == NULL) {
+        ZeroMemory(&sitmp, sizeof(sitmp));
+        sitmp.cb = sizeof(sitmp);
+        s.m_startupinfo = &sitmp;
+    } else
+        s.m_startupinfo = ctx.m_startupinfo;
 
     PROCESS_INFORMATION pi =
         detail::win32_start(exe, args, ctx.m_environment,

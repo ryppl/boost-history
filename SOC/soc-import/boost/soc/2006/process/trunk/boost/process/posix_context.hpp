@@ -9,28 +9,30 @@
 //
 
 //!
-//! \file boost/process/posix_launcher.hpp
+//! \file boost/process/posix_context.hpp
 //!
-//! Includes the declaration of the posix_launcher class.
+//! Includes the declaration of the posix_context class.
 //!
 
-#if !defined(BOOST_PROCESS_POSIX_LAUNCHER_HPP)
+#if !defined(BOOST_PROCESS_POSIX_CONTEXT_HPP)
 /** \cond */
-#define BOOST_PROCESS_POSIX_LAUNCHER_HPP
+#define BOOST_PROCESS_POSIX_CONTEXT_HPP
 /** \endcond */
+
+#include <boost/process/config.hpp>
+
+#if !defined(BOOST_PROCESS_POSIX_API)
+#   error "Unsupported platform."
+#endif
 
 #include <unistd.h>
 
-#include <cerrno>
-#include <cstdlib>
+#include <map>
 #include <set>
+#include <utility>
 
-#include <boost/process/detail/posix_ops.hpp>
-#include <boost/process/detail/systembuf.hpp>
+#include <boost/process/context.hpp> // XXX
 #include <boost/process/environment.hpp>
-#include <boost/process/exceptions.hpp>
-#include <boost/process/launcher.hpp>
-#include <boost/process/posix_child.hpp>
 #include <boost/process/stream_behavior.hpp>
 
 namespace boost {
@@ -39,372 +41,130 @@ namespace process {
 // ------------------------------------------------------------------------
 
 //!
-//! \brief POSIX implementation of the Launcher concept.
+//! Holds a mapping between native file descriptors and their corresponding
+//! pipes to set up communication between the parent and the %child process.
 //!
-//! The posix_launcher class implements the Launcher concept with features
-//! only available in POSIX systems.  Among these are the ability to set up
-//! more than three communication pipes and the possibility to change the
-//! security credentials of the spawned process as well as its file system
-//! root directory.
+typedef std::map< int, stream_behavior > behavior_map;
+
 //!
-//! This class is built on top of the generic launcher so as to allow its
-//! trivial adoption.  A program using the generic launcher may grow the
-//! need to use some POSIX-specific features.  In that case, adapting the
-//! code is only a matter of redefining the appropriate object and later
-//! using the required extra features: there should be no need to modify
-//! the existing code in any other way.
+//! Maintains a list of file descriptor pairs, aimed at keeping a list of
+//! stream merges (source descriptor, target descriptor).
 //!
-class posix_launcher :
-    public launcher
+// XXX This is duplicated in detail; see posix_ops.hpp.
+typedef std::set< std::pair< int, int > > merge_set;
+
+// ------------------------------------------------------------------------
+
+// XXX Maybe this should inherit from basic_context as happened before
+// with the launchers... but it'd be rather ugly.  Think about this some
+// more.
+template< class String >
+class posix_basic_context
 {
+public:
+    //!
+    //! \brief Constructs a new POSIX-specific context.
+    //!
+    //! Constructs a new context.  It is configured as follows:
+    //! * All communcation channels with the child process are closed.
+    //! * There are no channel mergings.
+    //! * The initial work directory of the child processes is set to the
+    //!   current working directory.
+    //! * The environment variables table is empty.
+    //! * The credentials are the same as those of the current process.
+    //!
+    basic_posix_context(void);
+
+    // XXX Add constructor to create a basic_posix_context from a
+    // basic_context.
+
     //!
     //! \brief List of stream merges (source descriptor - target descriptor).
     //!
-    detail::merge_set m_merge_set;
+    merge_set m_merge_set;
 
     //!
     //! \brief List of input streams that will be redirected.
     //!
-    detail::info_map m_input_info;
+    behavior_map m_input_behavior;
 
     //!
     //! \brief List of output streams that will be redirected.
     //!
-    detail::info_map m_output_info;
+    behavior_map m_output_behavior;
 
     //!
-    //! \brief POSIX-specific properties passed to the new process.
+    //! \brief The process' environment.
     //!
-    detail::posix_setup m_setup;
-
-public:
+    //! Contains the list of environment variables, alongside with their
+    //! values, that will be passed to the spawned child process.
     //!
-    //! \brief Sets up the behavior of an input channel.
-    //!
-    //! Configures the input descriptor \a desc to behave as described
-    //! by \b.  If \a desc matches STDIN_FILENO (defined in cstdlib), this
-    //! mimics the set_stdin_behavior() call.
-    //!
-    //! \return A reference to the launcher to allow daisy-chaining calls
-    //!         to redirection functions for simplicity.
-    //!
-    posix_launcher& set_input_behavior(int desc, stream_behavior b);
+    environment m_environment;
 
     //!
-    //! \brief Sets up the behavior of an output channel.
+    //! \brief The process' initial work directory.
     //!
-    //! Configures the output descriptor \a desc to behave as described
-    //! by \b.  If \a desc matches STDOUT_FILENO or STDERR_FILENO (both
-    //! defined in cstdlib), this mimics the set_stdout_behavior() and
-    //! set_stderr_behavior() calls respectively.
+    //! The work directory is the directory in which the process starts
+    //! execution.
     //!
-    //! \return A reference to the launcher to allow daisy-chaining calls
-    //!         to redirection functions for simplicity.
-    //!
-    posix_launcher& set_output_behavior(int desc, stream_behavior b);
+    String m_work_directory;
 
     //!
-    //! \brief Sets up a merge of two output streams.
+    //! \brief The user credentials.
     //!
-    //! Configures the launcher to merge to output streams; that is, that
-    //! when the child process writes to \a from, the data seems to have
-    //! been written to \a to.  If \a from matches STDOUT_FILENO and
-    //! \a to matches STDERR_FILENO (both defined in cstdlib), this mimics
-    //! the REDIR_STDERR_TO_STDOUT flag passed to the constructor.
+    //! UID that specifies the user credentials to use to run the %child
+    //! process.  Defaults to the current UID.
     //!
-    //! \return A reference to the launcher to allow daisy-chaining calls
-    //!         to redirection functions for simplicity.
-    //!
-    posix_launcher& merge_outputs(int from, int to);
+    uid_t m_uid;
 
     //!
-    //! \brief Gets the UID that will be used to launch the new child.
+    //! \brief The effective user credentials.
     //!
-    //! Returns the user identifier that will be used to launch the new
-    //! child process.  By default, this matches the user of the parent
-    //! process at the moment of the creation of the launcher object.
+    //! EUID that specifies the effective user credentials to use to run
+    //! the %child process.  Defaults to the current EUID.
     //!
-    uid_t get_uid(void) const;
+    uid_t m_euid;
 
     //!
-    //! \brief Sets the UID credentials used to launch the new process.
+    //! \brief The group credentials.
     //!
-    //! Sets the UID credentials used to launch the new process to those
-    //! given in \a uid.
+    //! GID that specifies the group credentials to use to run the %child
+    //! process.  Defaults to the current GID.
     //!
-    //! \return A reference to the launcher to allow daisy-chaining calls
-    //!         to configuration function for simplicity.
-    //!
-    posix_launcher& set_uid(uid_t uid);
+    uid_t m_gid;
 
     //!
-    //! \brief Gets the effective UID that will be used to launch the new
-    //!        child.
+    //! \brief The effective group credentials.
     //!
-    //! Returns the effective user identifier that will be used to launch
-    //! the new child process.  By default, this matches the effective user
-    //! of the parent process at the moment of the creation of the launcher
-    //! object.
+    //! EGID that specifies the effective group credentials to use to run
+    //! the %child process.  Defaults to the current EGID.
     //!
-    uid_t get_euid(void) const;
+    uid_t m_egid;
 
     //!
-    //! \brief Sets the effective UID credentials used to launch the new
-    //!        process.
+    //! \brief The chroot directory, if any.
     //!
-    //! Sets the effective UID credentials used to launch the new process
-    //! to those given in \a euid.
+    //! Specifies the directory in which the %child process is chrooted
+    //! before execution.  Empty if this feature is not desired.
     //!
-    //! \return A reference to the launcher to allow daisy-chaining calls
-    //!         to configuration function for simplicity.
-    //!
-    posix_launcher& set_euid(uid_t euid);
-
-    //!
-    //! \brief Gets the GID that will be used to launch the new child.
-    //!
-    //! Returns the group identifier that will be used to launch the new
-    //! child process.  By default, this matches the group of the parent
-    //! process at the moment of the creation of the launcher object.
-    //!
-    gid_t get_gid(void) const;
-
-    //!
-    //! \brief Sets the GID credentials used to launch the new process.
-    //!
-    //! Sets the GID credentials used to launch the new process to those
-    //! given in \a gid.
-    //!
-    //! \return A reference to the launcher to allow daisy-chaining calls
-    //!         to configuration function for simplicity.
-    //!
-    posix_launcher& set_gid(gid_t gid);
-
-    //!
-    //! \brief Gets the effective GID that will be used to launch the new
-    //!        child.
-    //!
-    //! Returns the effective group identifier that will be used to launch
-    //! the new child process.  By default, this matches the effective
-    //! group of the parent process at the moment of the creation of the
-    //! launcher object.
-    //!
-    gid_t get_egid(void) const;
-
-    //!
-    //! \brief Sets the effective GID credentials used to launch the new
-    //!        process.
-    //!
-    //! Sets the effective GID credentials used to launch the new process
-    //! to those given in \a egid.
-    //!
-    //! \return A reference to the launcher to allow daisy-chaining calls
-    //!         to configuration function for simplicity.
-    //!
-    posix_launcher& set_egid(gid_t egid);
-
-    //!
-    //! \brief Gets the directory that the new process will be chrooted to.
-    //!
-    //! Gets a path to the directory that will be used to chroot the
-    //! process to during execution.  If the resulting string is empty,
-    //! it means that no chroot shall take place (the default).
-    //!
-    const std::string& get_chroot(void) const;
-
-    //!
-    //! \brief Sets the directory to chroot the new process to.
-    //!
-    //! Sets the directory that will be used to chroot the process to
-    //! during execution.  \a dir may be empty to indicate that the process
-    //! should not be chrooted (the default).
-    //!
-    //! \return A reference to the launcher to allow daisy-chaining calls
-    //!         to configuration function for simplicity.
-    //!
-    posix_launcher& set_chroot(const std::string& dir);
-
-    //!
-    //! \brief Starts a new child process.
-    //!
-    //! Given an executable and the set of arguments passed to it, starts
-    //! a new process with all the
-    //! parameters configured in the launcher.  The launcher can be
-    //! reused afterwards to launch other different processes.
-    //!
-    //! \return A handle to the new child process.
-    //!
-    template< class Executable, class Arguments >
-    posix_child start(const Executable& exe, const Arguments& args);
+    String m_chroot;
 };
 
-// ------------------------------------------------------------------------
-
-inline
-posix_launcher&
-posix_launcher::set_input_behavior(int desc, stream_behavior b)
-{
-    if (desc == STDIN_FILENO)
-        set_stdin_behavior(b);
-    else
-        detail::posix_behavior_to_info(b, desc, false, m_input_info);
-    return *this;
-}
+typedef posix_basic_context< std::string > posix_context;
 
 // ------------------------------------------------------------------------
 
+template< class String >
 inline
-posix_launcher&
-posix_launcher::set_output_behavior(int desc, stream_behavior b)
+posix_basic_context< String >::posix_basic_context(void) :
+    m_uid(::getuid()),
+    m_euid(::geteuid()),
+    m_gid(::getgid()),
+    m_egid(::getegid())
 {
-    if (desc == STDOUT_FILENO)
-        set_stdout_behavior(b);
-    else if (desc == STDERR_FILENO)
-        set_stderr_behavior(b);
-    else
-        detail::posix_behavior_to_info(b, desc, true, m_output_info);
-    return *this;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-posix_launcher&
-posix_launcher::merge_outputs(int src, int dest)
-{
-    if (src == STDERR_FILENO && dest == STDOUT_FILENO)
-        set_merge_out_err(true);
-    else
-        m_merge_set.insert(std::pair< int, int >(src, dest));
-    return *this;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-uid_t
-posix_launcher::get_uid(void)
-    const
-{
-    return m_setup.m_uid;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-uid_t
-posix_launcher::get_euid(void)
-    const
-{
-    return m_setup.m_euid;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-gid_t
-posix_launcher::get_gid(void)
-    const
-{
-    return m_setup.m_gid;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-gid_t
-posix_launcher::get_egid(void)
-    const
-{
-    return m_setup.m_egid;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-const std::string&
-posix_launcher::get_chroot(void)
-    const
-{
-    return m_setup.m_chroot;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-posix_launcher&
-posix_launcher::set_uid(uid_t uid)
-{
-    m_setup.m_uid = uid;
-    return *this;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-posix_launcher&
-posix_launcher::set_euid(uid_t euid)
-{
-    m_setup.m_euid = euid;
-    return *this;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-posix_launcher&
-posix_launcher::set_gid(gid_t gid)
-{
-    m_setup.m_gid = gid;
-    return *this;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-posix_launcher&
-posix_launcher::set_egid(gid_t egid)
-{
-    m_setup.m_egid = egid;
-    return *this;
-}
-
-// ------------------------------------------------------------------------
-
-inline
-posix_launcher&
-posix_launcher::set_chroot(const std::string& dir)
-{
-    m_setup.m_chroot = dir;
-    return *this;
-}
-
-// ------------------------------------------------------------------------
-
-template< class Executable, class Arguments >
-inline
-posix_child
-posix_launcher::start(const Executable& exe, const Arguments& args)
-{
-    detail::posix_behavior_to_info(get_stdin_behavior(), STDIN_FILENO,
-                                   false, m_input_info);
-    detail::posix_behavior_to_info(get_stdout_behavior(), STDOUT_FILENO,
-                                   true, m_output_info);
-    detail::posix_behavior_to_info(get_stderr_behavior(), STDERR_FILENO,
-                                   true, m_output_info);
-    if (get_merge_out_err())
-        m_merge_set.insert(std::pair< int, int >(STDERR_FILENO,
-                                                 STDOUT_FILENO));
-
-    detail::posix_setup s = m_setup;
-    s.m_work_directory = get_work_directory();
-
-    pid_t pid = detail::posix_start(exe, args,
-                                    posix_launcher::get_environment(),
-                                    m_input_info, m_output_info,
-                                    m_merge_set, s);
-
-    return posix_child(pid, m_input_info, m_output_info);
+    // XXX Reuse context's code to determine current work directory.
+    context ctx;
+    m_work_directory = ctx.m_work_directory;
 }
 
 // ------------------------------------------------------------------------
@@ -412,4 +172,4 @@ posix_launcher::start(const Executable& exe, const Arguments& args)
 } // namespace process
 } // namespace boost
 
-#endif // !defined(BOOST_PROCESS_POSIX_LAUNCHER_HPP)
+#endif // !defined(BOOST_PROCESS_POSIX_CONTEXT_HPP)

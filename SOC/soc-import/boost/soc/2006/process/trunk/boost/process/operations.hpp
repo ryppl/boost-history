@@ -136,9 +136,10 @@ executable_to_progname(const std::string& exe)
         begin = tmp + 1;
 
 #if defined(BOOST_PROCESS_WIN32_API)
-    if (exe.substr(exe.length() - 4) == ".exe" ||
-        exe.substr(exe.length() - 4) == ".com" ||
-        exe.substr(exe.length() - 4) == ".bat")
+    if (exe.length() > 4 &&
+        (exe.substr(exe.length() - 4) == ".exe" ||
+         exe.substr(exe.length() - 4) == ".com" ||
+         exe.substr(exe.length() - 4) == ".bat"))
         end = exe.length() - 4;
 #endif
 

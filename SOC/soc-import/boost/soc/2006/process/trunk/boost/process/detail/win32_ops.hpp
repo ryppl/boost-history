@@ -39,6 +39,7 @@ extern "C" {
 #include <boost/process/exceptions.hpp>
 #include <boost/process/stream_behavior.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/shared_array.hpp>
 #include <boost/throw_exception.hpp>
 
 namespace boost {
@@ -66,7 +67,7 @@ boost::shared_array< TCHAR >
 collection_to_win32_cmdline(const Arguments& args)
 {
     typedef std::vector< std::string > arguments_vector;
-    arguments_vector args;
+    Arguments args2;
 
     typename Arguments::size_type i = 0;
     std::size_t length = 0;
@@ -86,7 +87,7 @@ collection_to_win32_cmdline(const Arguments& args)
         if (i != args.size() - 1)
             arg += ' ';
 
-        args.push_back(arg);
+        args2.push_back(arg);
         length += arg.size() + 1;
 
         i++;
@@ -94,8 +95,8 @@ collection_to_win32_cmdline(const Arguments& args)
 
     boost::shared_array< TCHAR > cmdline(new TCHAR[length]);
     ::_tcscpy_s(cmdline.get(), length, TEXT(""));
-    for (arguments_vector::size_type i = 0; i < args.size(); i++)
-        ::_tcscat_s(cmdline.get(), length, TEXT(args[i].c_str()));
+    for (arguments_vector::size_type i = 0; i < args2.size(); i++)
+        ::_tcscat_s(cmdline.get(), length, TEXT(args2[i].c_str()));
 
     return cmdline;
 }
@@ -120,7 +121,7 @@ environment_to_win32_strings(const environment& env)
     // TODO: Add the "" variable to the returned string; it shouldn't
     // be in the environment if the user didn't add it.
 
-    if (size() == 0) {
+    if (env.size() == 0) {
         strs.reset(new TCHAR[2]);
         ::ZeroMemory(strs.get(), sizeof(TCHAR) * 2);
     } else {

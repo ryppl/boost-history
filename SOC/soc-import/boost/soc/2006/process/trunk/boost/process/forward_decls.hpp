@@ -55,20 +55,20 @@ typedef basic_pipeline< std::string, std::vector< std::string > > pipeline;
 
 #if defined(BOOST_PROCESS_POSIX_API)
 template< class String >
-class basic_posix_context;
+class posix_basic_context;
 
 class posix_child;
 
-typedef basic_posix_context< std::string > posix_context;
+typedef posix_basic_context< std::string > posix_context;
 
 class posix_status;
 #elif defined(BOOST_PROCESS_WIN32_API)
 template< class String >
-class basic_win32_context;
+class win32_basic_context;
 
 class win32_child;
 
-typedef basic_win32_context< std::string > win32_context;
+typedef win32_basic_context< std::string > win32_context;
 #else
 #   error "Unsupported platform."
 #endif
