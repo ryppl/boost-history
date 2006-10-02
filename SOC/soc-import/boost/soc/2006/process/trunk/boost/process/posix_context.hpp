@@ -46,13 +46,6 @@ namespace process {
 //!
 typedef std::map< int, stream_behavior > behavior_map;
 
-//!
-//! Maintains a list of file descriptor pairs, aimed at keeping a list of
-//! stream merges (source descriptor, target descriptor).
-//!
-// XXX This is duplicated in detail; see posix_ops.hpp.
-typedef std::set< std::pair< int, int > > merge_set;
-
 // ------------------------------------------------------------------------
 
 // XXX Maybe this should inherit from basic_context as happened before
@@ -77,11 +70,6 @@ public:
 
     // XXX Add constructor to create a posix_basic_context from a
     // basic_context.
-
-    //!
-    //! \brief List of stream merges (source descriptor - target descriptor).
-    //!
-    merge_set m_merge_set;
 
     //!
     //! \brief List of input streams that will be redirected.

@@ -63,9 +63,9 @@ main(int argc, char* argv[])
     // Sets up a launcher inheriting all the three standard streams.
     //
     bp::context ctx;
-    ctx.m_stdin_behavior = bp::inherit_stream;
-    ctx.m_stdout_behavior = bp::inherit_stream;
-    ctx.m_stderr_behavior = bp::inherit_stream;
+    ctx.m_stdin_behavior = bp::inherit_stream();
+    ctx.m_stdout_behavior = bp::inherit_stream();
+    ctx.m_stderr_behavior = bp::inherit_stream();
 
     //
     // Spawns the new child process.

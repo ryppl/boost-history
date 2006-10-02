@@ -40,8 +40,8 @@ run(const std::string& exec, const std::vector< std::string >& args)
     std::cout << std::endl;
 
     bp::context ctx;
-    ctx.m_stdout_behavior = bp::inherit_stream;
-    ctx.m_stderr_behavior = bp::inherit_stream;
+    ctx.m_stdout_behavior = bp::inherit_stream();
+    ctx.m_stderr_behavior = bp::inherit_stream();
 
     bp::status s = bp::launch(exec, args, ctx).wait();
     if (s.exited() && s.exit_status() == EXIT_SUCCESS)
@@ -61,8 +61,8 @@ run(const std::string& command)
     std::cout << "===> Shell command: " << command << std::endl;
 
     bp::context ctx;
-    ctx.m_stdout_behavior = bp::inherit_stream;
-    ctx.m_stderr_behavior = bp::inherit_stream;
+    ctx.m_stdout_behavior = bp::inherit_stream();
+    ctx.m_stderr_behavior = bp::inherit_stream();
     ctx.m_environment = bp::current_environment();
 
     bp::status s = bp::launch_shell(command, ctx).wait();

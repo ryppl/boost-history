@@ -42,8 +42,8 @@ args.push_back("update");
 
 // quickbook:begin(context)
 bp::context ctx;
-ctx.m_stdout_behavior = bp::redirect_stream;
-ctx.m_merge_stderr_with_stdout = true;
+ctx.m_stdout_behavior = bp::capture_stream();
+ctx.m_stderr_behavior = bp::redirect_stream_to_stdout();
 ctx.m_work_directory = dir;
 // quickbook:end(context)
 

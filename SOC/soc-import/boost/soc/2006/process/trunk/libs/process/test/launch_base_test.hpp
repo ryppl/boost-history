@@ -62,14 +62,14 @@ test_close_stdin(void)
     args.push_back("helpers");
     args.push_back("is-closed-stdin");
 
-    bp::status s1 = Launcher()(args, Context(), bp::close_stream,
-                               bp::close_stream, bp::close_stream, false,
+    bp::status s1 = Launcher()(args, Context(), bp::close_stream(),
+                               bp::close_stream(), bp::close_stream(),
                                true).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
-    Child c2 = Launcher()(args, Context(), bp::redirect_stream,
-                          bp::close_stream, bp::close_stream, false, true);
+    Child c2 = Launcher()(args, Context(), bp::capture_stream(),
+                          bp::close_stream(), bp::close_stream(), true);
     c2.get_stdin() << "foo" << std::endl;
     c2.get_stdin().close();
     bp::status s2 = c2.wait();
@@ -92,8 +92,8 @@ test_close_stdout(void)
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
-    bp::status s2 = Launcher()(args, Context(), bp::close_stream,
-                               bp::redirect_stream).wait();
+    bp::status s2 = Launcher()(args, Context(), bp::close_stream(),
+                               bp::capture_stream()).wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
 }
@@ -113,8 +113,9 @@ test_close_stderr(void)
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
-    bp::status s2 = Launcher()(args, Context(), bp::close_stream,
-                               bp::close_stream, bp::redirect_stream).wait();
+    bp::status s2 = Launcher()(args, Context(), bp::close_stream(),
+                               bp::close_stream(),
+                               bp::capture_stream()).wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
 }
@@ -130,8 +131,8 @@ test_input(void)
     args.push_back("helpers");
     args.push_back("stdin-to-stdout");
 
-    Child c = Launcher()(args, Context(), bp::redirect_stream,
-                         bp::redirect_stream);
+    Child c = Launcher()(args, Context(), bp::capture_stream(),
+                         bp::capture_stream());
 
     bp::postream& os = c.get_stdin();
     bp::pistream& is = c.get_stdout();
@@ -160,9 +161,9 @@ test_output(bool out, const std::string& msg)
     args.push_back(out ? "echo-stdout" : "echo-stderr");
     args.push_back(msg);
 
-    Child c = Launcher()(args, Context(), bp::close_stream,
-                         out ? bp::redirect_stream : bp::close_stream,
-                         out ? bp::close_stream : bp::redirect_stream);
+    Child c = Launcher()(args, Context(), bp::close_stream(),
+                         out ? bp::capture_stream() : bp::close_stream(),
+                         out ? bp::close_stream() : bp::capture_stream());
 
     std::string word;
     if (out) {
@@ -206,15 +207,16 @@ test_stdout(void)
 template< class Launcher, class Context, class Child >
 static
 void
-test_merge_out_err(void)
+test_redirect_err_to_out(void)
 {
     std::vector< std::string > args;
     args.push_back("helpers");
     args.push_back("echo-stdout-stderr");
     args.push_back("message-to-two-streams");
 
-    Child c = Launcher()(args, Context(), bp::close_stream,
-                         bp::redirect_stream, bp::close_stream, true);
+    Child c = Launcher()(args, Context(), bp::close_stream(),
+                         bp::capture_stream(),
+                         bp::redirect_stream_to_stdout());
 
     bp::pistream& is = c.get_stdout();
     std::string word;
@@ -249,7 +251,8 @@ check_work_directory(const std::string& wdir)
                                     bfs::current_path().string()));
     else
         ctx.m_work_directory = wdir;
-    Child c = Launcher()(args, ctx, bp::close_stream, bp::redirect_stream);
+    Child c = Launcher()(args, ctx, bp::close_stream(),
+                         bp::capture_stream());
 
     bp::pistream& is = c.get_stdout();
     std::string dir;
@@ -294,7 +297,8 @@ get_var_value(Context& ctx, const std::string& var)
     args.push_back("query-env");
     args.push_back("TO_BE_SET");
 
-    Child c = Launcher()(args, ctx, bp::close_stream, bp::redirect_stream);
+    Child c = Launcher()(args, ctx, bp::close_stream(),
+                         bp::capture_stream());
 
     bp::pistream& is = c.get_stdout();
     std::string status;
@@ -438,7 +442,7 @@ add_tests_launch_base(boost::unit_test::test_suite* ts)
     ts->add(BOOST_TEST_CASE
             (&(test_stderr< Launcher, Context, Child >)), 0, 10);
     ts->add(BOOST_TEST_CASE
-            (&(test_merge_out_err< Launcher, Context, Child >)), 0, 10);
+            (&(test_redirect_err_to_out< Launcher, Context, Child >)), 0, 10);
     ts->add(BOOST_TEST_CASE
             (&(test_input< Launcher, Context, Child >)), 0, 10);
     ts->add(BOOST_TEST_CASE

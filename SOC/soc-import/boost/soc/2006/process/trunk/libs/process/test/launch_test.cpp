@@ -29,17 +29,15 @@ public:
     bp::child
     operator()(const std::vector< std::string > args,
                bp::context ctx,
-               bp::stream_behavior bstdin = bp::close_stream,
-               bp::stream_behavior bstdout = bp::close_stream,
-               bp::stream_behavior bstderr = bp::close_stream,
-               bool merge_stderr_with_stdout = false,
+               bp::stream_behavior bstdin = bp::close_stream(),
+               bp::stream_behavior bstdout = bp::close_stream(),
+               bp::stream_behavior bstderr = bp::close_stream(),
                bool usein = false)
         const
     {
         ctx.m_stdin_behavior = bstdin;
         ctx.m_stdout_behavior = bstdout;
         ctx.m_stderr_behavior = bstderr;
-        ctx.m_merge_stderr_with_stdout = merge_stderr_with_stdout;
         return bp::launch(get_helpers_path(), args, ctx);
     }
 };

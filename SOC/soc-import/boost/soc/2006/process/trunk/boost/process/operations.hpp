@@ -165,6 +165,8 @@ template< class Executable, class Arguments, class Context >
 child
 launch(const Executable& exe, const Arguments& args, const Context& ctx)
 {
+    using detail::stream_info;
+
     child::handle_type ph;
     detail::file_handle fhstdin, fhstdout, fhstderr;
 
@@ -172,47 +174,49 @@ launch(const Executable& exe, const Arguments& args, const Context& ctx)
 
     // Validate execution context.
     // XXX Should this be a 'validate()' method in it?
-    BOOST_ASSERT(!ctx.m_merge_stderr_with_stdout ||
-                 ctx.m_stderr_behavior == close_stream);
-    BOOST_ASSERT(!ctx.m_merge_stderr_with_stdout ||
-                 ctx.m_stdout_behavior != close_stream);
     BOOST_ASSERT(!ctx.m_work_directory.empty());
 
 #if defined(BOOST_PROCESS_POSIX_API)
     detail::info_map infoin, infoout;
-    detail::merge_set merges;
 
-    posix_behavior_to_info(ctx.m_stdin_behavior,  STDIN_FILENO,  false,
-                           infoin);
-    posix_behavior_to_info(ctx.m_stdout_behavior, STDOUT_FILENO, true,
-                           infoout);
-    posix_behavior_to_info(ctx.m_stderr_behavior, STDERR_FILENO, true,
-                           infoout);
+    if (ctx.m_stdin_behavior.get_type() != stream_behavior::close) {
+        stream_info si = stream_info(ctx.m_stdin_behavior, false);
+        infoin.insert(detail::info_map::value_type(STDIN_FILENO, si));
+    }
 
-    if (ctx.m_merge_stderr_with_stdout)
-        merges.insert(std::pair< int, int >(STDERR_FILENO, STDOUT_FILENO));
+    if (ctx.m_stdout_behavior.get_type() != stream_behavior::close) {
+        stream_info si = stream_info(ctx.m_stdout_behavior, true);
+        infoout.insert(detail::info_map::value_type(STDOUT_FILENO, si));
+    }
+
+    if (ctx.m_stderr_behavior.get_type() != stream_behavior::close) {
+        stream_info si = stream_info(ctx.m_stderr_behavior, true);
+        infoout.insert(detail::info_map::value_type(STDERR_FILENO, si));
+    }
 
     detail::posix_setup s;
     s.m_work_directory = ctx.m_work_directory;
 
-    ph = detail::posix_start(exe, args, ctx.m_environment, infoin, infoout,
-                             merges, s);
+    ph = detail::posix_start(exe, args, ctx.m_environment, infoin, infoout, s);
 
-    if (ctx.m_stdin_behavior == redirect_stream)
+    if (ctx.m_stdin_behavior.get_type() == stream_behavior::capture)
         fhstdin = posix_info_locate_pipe(infoin, STDIN_FILENO, false);
 
-    if (ctx.m_stdout_behavior == redirect_stream)
+    if (ctx.m_stdout_behavior.get_type() == stream_behavior::capture)
         fhstdout = posix_info_locate_pipe(infoout, STDOUT_FILENO, true);
 
-    if (ctx.m_stderr_behavior == redirect_stream)
+    if (ctx.m_stderr_behavior.get_type() == stream_behavior::capture)
         fhstderr = posix_info_locate_pipe(infoout, STDERR_FILENO, true);
 #elif defined(BOOST_PROCESS_WIN32_API)
-    detail::stream_info behin =
-        win32_behavior_to_info(ctx.m_stdin_behavior, false, fhstdin);
-    detail::stream_info behout =
-        win32_behavior_to_info(ctx.m_stdout_behavior, true, fhstdout);
-    detail::stream_info beherr =
-        win32_behavior_to_info(ctx.m_stderr_behavior, true, fhstderr);
+    stream_info behin = stream_info(ctx.m_stdin_behavior, false);
+    if (behin.m_type == stream_info::use_pipe)
+        fhstdin = behin.m_pipe->wend();
+    stream_info behout = stream_info(ctx.m_stdout_behavior, true);
+    if (behout.m_type == stream_info::use_pipe)
+        fhstdout = behout.m_pipe->rend();
+    stream_info beherr = stream_info(ctx.m_stderr_behavior, true);
+    if (beherr.m_type == stream_info::use_pipe)
+        fhstderr = beherr.m_pipe->rend();
 
     STARTUPINFO si;
     ::ZeroMemory(&si, sizeof(si));
@@ -224,8 +228,7 @@ launch(const Executable& exe, const Arguments& args, const Context& ctx)
 
     PROCESS_INFORMATION pi =
         detail::win32_start(exe, args, ctx.m_environment,
-                            behin, behout, beherr,
-                            ctx.m_merge_stderr_with_stdout, s);
+                            behin, behout, beherr, s);
 
     ph = pi.hProcess;
 #endif

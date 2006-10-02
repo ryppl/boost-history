@@ -131,12 +131,6 @@ environment_to_envp(const environment& env)
 //!
 typedef std::map< int, stream_info > info_map;
 
-//!
-//! Maintains a list of file descriptor pairs, aimed at keeping a list of
-//! stream merges (source descriptor, target descriptor).
-//!
-typedef std::set< std::pair< int, int > > merge_set;
-
 // ------------------------------------------------------------------------
 
 //!
@@ -308,7 +302,7 @@ setup_input(info_map& info, bool* closeflags, int maxdescs)
         BOOST_ASSERT(d < maxdescs);
         closeflags[d] = false;
 
-        if (si.m_type == stream_info::usefile) {
+        if (si.m_type == stream_info::use_file) {
             int fd = ::open(si.m_file.c_str(), O_RDONLY);
             if (fd == -1)
                 boost::throw_exception
@@ -320,10 +314,10 @@ setup_input(info_map& info, bool* closeflags, int maxdescs)
                 h.posix_remap(d);
                 h.disown();
             }
-        } else if (si.m_type == stream_info::usehandle) {
+        } else if (si.m_type == stream_info::use_handle) {
             if (si.m_handle.get() != d)
                 si.m_handle.posix_remap(d);
-        } else if (si.m_type == stream_info::usepipe) {
+        } else if (si.m_type == stream_info::use_pipe) {
             si.m_pipe->wend().close();
             if (d != si.m_pipe->rend().get())
                 si.m_pipe->rend().posix_remap(d);
@@ -338,9 +332,9 @@ setup_input(info_map& info, bool* closeflags, int maxdescs)
 //! \brief Configures child process' output streams.
 //!
 //! Sets up the current process' output streams to behave according to the
-//! information in the \a info map and in the \a merges set.  \a closeflags
-//! is modified to reflect those descriptors that should not be closed
-//! because they where modified by the function.
+//! information in the \a info map.  \a closeflags is modified to reflect
+//! those descriptors that should not be closed because they where modified
+//! by the function.
 //!
 //! Modifies the current execution environment, so this should only be run
 //! on the child process after the fork(2) has happened.
@@ -349,8 +343,7 @@ setup_input(info_map& info, bool* closeflags, int maxdescs)
 //!
 inline
 void
-setup_output(info_map& info, const merge_set& merges, bool* closeflags,
-             int maxdescs)
+setup_output(info_map& info, bool* closeflags, int maxdescs)
 {
     for (info_map::iterator iter = info.begin(); iter != info.end(); iter++) {
         int d = (*iter).first;
@@ -359,7 +352,12 @@ setup_output(info_map& info, const merge_set& merges, bool* closeflags,
         BOOST_ASSERT(d < maxdescs);
         closeflags[d] = false;
 
-        if (si.m_type == stream_info::usefile) {
+        if (si.m_type == stream_info::redirect) {
+            // Handled once all other descriptors have been configured.
+            // XXX This is most likely a hack begging for problems.
+            // Should replace info_map with another collection that
+            // respects ordering so that the user can control this.
+        } else if (si.m_type == stream_info::use_file) {
             int fd = ::open(si.m_file.c_str(), O_WRONLY);
             if (fd == -1)
                 boost::throw_exception
@@ -371,10 +369,10 @@ setup_output(info_map& info, const merge_set& merges, bool* closeflags,
                 h.posix_remap(d);
                 h.disown();
             }
-        } else if (si.m_type == stream_info::usehandle) {
+        } else if (si.m_type == stream_info::use_handle) {
             if (si.m_handle.get() != d)
                 si.m_handle.posix_remap(d);
-        } else if (si.m_type == stream_info::usepipe) {
+        } else if (si.m_type == stream_info::use_pipe) {
             si.m_pipe->rend().close();
             if (d != si.m_pipe->wend().get())
                 si.m_pipe->wend().posix_remap(d);
@@ -382,13 +380,12 @@ setup_output(info_map& info, const merge_set& merges, bool* closeflags,
             BOOST_ASSERT(si.m_type == stream_info::inherit);
     }
 
-    for (merge_set::const_iterator iter = merges.begin();
-         iter != merges.end(); iter++) {
-        const std::pair< int, int >& p = (*iter);
-        file_handle fh = file_handle::posix_dup(p.second, p.first);
-        fh.disown();
-        BOOST_ASSERT(p.first < maxdescs);
-        closeflags[p.first] = false;
+    for (info_map::iterator iter = info.begin(); iter != info.end(); iter++) {
+        int d = (*iter).first;
+        stream_info& si = (*iter).second;
+
+        if (si.m_type == stream_info::redirect)
+            file_handle::posix_dup(si.m_desc_to, d).disown();
     }
 }
 
@@ -409,7 +406,6 @@ setup_output(info_map& info, const merge_set& merges, bool* closeflags,
 //!               redirected.
 //! \param infoout A map describing all output file descriptors to be
 //!                redirected.
-//! \param merges A list of output file descriptors to be merged.
 //! \param setup A helper object used to configure the child's execution
 //!              environment.
 //! \return The new process' PID.  The caller is responsible of creating
@@ -423,7 +419,6 @@ posix_start(const Executable& exe,
             const environment& env,
             info_map& infoin,
             info_map& infoout,
-            const merge_set& merges,
             const posix_setup& setup)
 {
     pid_t pid = ::fork();
@@ -443,7 +438,7 @@ posix_start(const Executable& exe,
                 closeflags.get()[i] = true;
 
             setup_input(infoin, closeflags.get(), maxdescs);
-            setup_output(infoout, merges, closeflags.get(), maxdescs);
+            setup_output(infoout, closeflags.get(), maxdescs);
 
             for (int i = 0; i < maxdescs; i++)
                 if (closeflags.get()[i])
@@ -481,7 +476,7 @@ posix_start(const Executable& exe,
          iter != infoin.end(); iter++) {
         stream_info& si = (*iter).second;
 
-        if (si.m_type == stream_info::usepipe)
+        if (si.m_type == stream_info::use_pipe)
             si.m_pipe->rend().close();
     }
 
@@ -489,43 +484,11 @@ posix_start(const Executable& exe,
          iter != infoout.end(); iter++) {
         stream_info& si = (*iter).second;
 
-        if (si.m_type == stream_info::usepipe)
+        if (si.m_type == stream_info::use_pipe)
             si.m_pipe->wend().close();
     }
 
     return pid;
-}
-
-// ------------------------------------------------------------------------
-
-//!
-//! \brief Converts a stream_behavior to a info_map entry.
-//!
-//! Given a stream_behavior \a beh, a file descriptor \a desc and whether
-//! it is an input flow on an output one (\a out), inserts the appropriate
-//! information representing this stream in the \a info map.
-//!
-inline
-void
-posix_behavior_to_info(stream_behavior beh, int desc, bool out,
-                       info_map& info)
-{
-    if (beh == inherit_stream) {
-        stream_info si;
-        si.m_type = stream_info::inherit;
-        info.insert(info_map::value_type(desc, si));
-    } else if (beh == silent_stream) {
-        stream_info si;
-        si.m_type = stream_info::usefile;
-        si.m_file = out ? "/dev/null" : "/dev/zero";
-        info.insert(info_map::value_type(desc, si));
-    } else if (beh == redirect_stream) {
-        stream_info si;
-        si.m_type = stream_info::usepipe;
-        si.m_pipe = pipe();
-        info.insert(info_map::value_type(desc, si));
-    } else
-        BOOST_ASSERT(beh == close_stream);
 }
 
 // ------------------------------------------------------------------------
@@ -556,7 +519,7 @@ posix_info_locate_pipe(info_map& info, int desc, bool out)
         BOOST_ASSERT(iter != info.end());
         stream_info& si = (*iter).second;
         // XXX This conditional was an assertion; should it be?
-        if (si.m_type == stream_info::usepipe) {
+        if (si.m_type == stream_info::use_pipe) {
             fh = out ? si.m_pipe->rend().disown() : si.m_pipe->wend().disown();
             BOOST_ASSERT(fh.is_valid());
         }

@@ -48,17 +48,26 @@ posix_child
 posix_launch(const Executable& exe, const Arguments& args,
              const Posix_Context& ctx)
 {
-    detail::info_map input_info;
-    for (behavior_map::const_iterator iter = ctx.m_input_behavior.begin();
-         iter != ctx.m_input_behavior.end(); iter++)
-        detail::posix_behavior_to_info((*iter).second, (*iter).first,
-                                       false, input_info);
+    using detail::info_map;
+    using detail::stream_info;
 
-    detail::info_map output_info;
+    info_map input_info;
+    for (behavior_map::const_iterator iter = ctx.m_input_behavior.begin();
+         iter != ctx.m_input_behavior.end(); iter++) {
+        if ((*iter).second.get_type() != stream_behavior::close) {
+            stream_info si = stream_info((*iter).second, false);
+            input_info.insert(info_map::value_type((*iter).first, si));
+        }
+    }
+
+    info_map output_info;
     for (behavior_map::const_iterator iter = ctx.m_output_behavior.begin();
-         iter != ctx.m_output_behavior.end(); iter++)
-        detail::posix_behavior_to_info((*iter).second, (*iter).first,
-                                       true, output_info);
+         iter != ctx.m_output_behavior.end(); iter++) {
+        if ((*iter).second.get_type() != stream_behavior::close) {
+            stream_info si = stream_info((*iter).second, true);
+            output_info.insert(info_map::value_type((*iter).first, si));
+        }
+    }
 
     detail::posix_setup s;
     s.m_work_directory = ctx.m_work_directory;
@@ -69,8 +78,7 @@ posix_launch(const Executable& exe, const Arguments& args,
     s.m_chroot = ctx.m_chroot;
 
     pid_t pid = detail::posix_start(exe, args, ctx.m_environment,
-                                    input_info, output_info,
-                                    ctx.m_merge_set, s);
+                                    input_info, output_info, s);
 
     return posix_child(pid, input_info, output_info);
 }

@@ -1,6 +1,6 @@
 //
 // Boost.Process
-// Regression tests for the posix_launcher class.
+// Regression tests for the posix_launch class.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -18,9 +18,10 @@
 
 #   include <boost/format.hpp>
 #   include <boost/process/posix_child.hpp>
-#   include <boost/process/posix_launcher.hpp>
+#   include <boost/process/posix_context.hpp>
+#   include <boost/process/posix_operations.hpp>
 
-#   include "launcher_base_test.hpp"
+#   include "launch_base_test.hpp"
 
 namespace bp = ::boost::process;
 #endif
@@ -34,16 +35,31 @@ namespace but = ::boost::unit_test;
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_POSIX_API)
-class start
+class launcher
 {
 public:
     bp::posix_child
-    operator()(bp::posix_launcher& l,
-               const std::vector< std::string > args,
+    operator()(const std::vector< std::string > args,
+               bp::posix_context ctx,
+               bp::stream_behavior bstdin = bp::close_stream(),
+               bp::stream_behavior bstdout = bp::close_stream(),
+               bp::stream_behavior bstderr = bp::close_stream(),
                bool usein = false)
         const
     {
-        return l.start(get_helpers_path(), args);
+        if (bstdin.get_type() != bp::stream_behavior::close)
+            ctx.m_input_behavior.insert
+                (bp::behavior_map::value_type(STDIN_FILENO, bstdin));
+
+        if (bstdout.get_type() != bp::stream_behavior::close)
+            ctx.m_output_behavior.insert
+                (bp::behavior_map::value_type(STDOUT_FILENO, bstdout));
+
+        if (bstderr.get_type() != bp::stream_behavior::close)
+            ctx.m_output_behavior.insert
+                (bp::behavior_map::value_type(STDERR_FILENO, bstderr));
+
+        return bp::posix_launch(get_helpers_path(), args, ctx);
     }
 };
 #endif
@@ -58,10 +74,12 @@ test_input(void)
     args.push_back("helpers");
     args.push_back("stdin-to-stdout");
 
-    bp::posix_launcher l;
-    l.set_input_behavior(STDIN_FILENO, bp::redirect_stream);
-    l.set_output_behavior(STDOUT_FILENO, bp::redirect_stream);
-    bp::posix_child c = l.start(get_helpers_path(), args);
+    bp::posix_context ctx;
+    ctx.m_input_behavior.insert
+        (bp::behavior_map::value_type(STDIN_FILENO, bp::capture_stream()));
+    ctx.m_output_behavior.insert
+        (bp::behavior_map::value_type(STDOUT_FILENO, bp::capture_stream()));
+    bp::posix_child c = bp::posix_launch(get_helpers_path(), args, ctx);
 
     bp::postream& os = c.get_input(STDIN_FILENO);
     bp::pistream& is = c.get_output(STDOUT_FILENO);
@@ -91,9 +109,10 @@ check_output(int desc, const std::string& msg)
     args.push_back(boost::str(boost::format("%1%") % desc));
     args.push_back(msg);
 
-    bp::posix_launcher l;
-    l.set_output_behavior(desc, bp::redirect_stream);
-    bp::posix_child c = l.start(get_helpers_path(), args);
+    bp::posix_context ctx;
+    ctx.m_output_behavior.insert
+        (bp::behavior_map::value_type(desc, bp::capture_stream()));
+    bp::posix_child c = posix_launch(get_helpers_path(), args, ctx);
 
     bp::pistream& is = c.get_output(desc);
     std::string word;
@@ -126,7 +145,7 @@ test_output(void)
 
 #if defined(BOOST_PROCESS_POSIX_API)
 void
-check_merge(int desc1, int desc2, const std::string& msg)
+check_redirect(int desc1, int desc2, const std::string& msg)
 {
     std::vector< std::string > args;
     args.push_back("helpers");
@@ -135,10 +154,13 @@ check_merge(int desc1, int desc2, const std::string& msg)
     args.push_back(boost::str(boost::format("%1%") % desc2));
     args.push_back(msg);
 
-    bp::posix_launcher l;
-    l.set_output_behavior(desc1, bp::redirect_stream);
-    l.merge_outputs(desc2, desc1);
-    bp::posix_child c = l.start(get_helpers_path(), args);
+    bp::posix_context ctx;
+    ctx.m_output_behavior.insert
+        (bp::behavior_map::value_type(desc1, bp::capture_stream()));
+    ctx.m_output_behavior.insert
+        (bp::behavior_map::value_type(desc2,
+                                      bp::posix_redirect_stream(desc1)));
+    bp::posix_child c = posix_launch(get_helpers_path(), args, ctx);
 
     bp::pistream& is = c.get_output(desc1);
     int dtmp;
@@ -163,12 +185,12 @@ check_merge(int desc1, int desc2, const std::string& msg)
 #if defined(BOOST_PROCESS_POSIX_API)
 static
 void
-test_merge(void)
+test_redirect(void)
 {
-    check_merge(STDOUT_FILENO, STDERR_FILENO, "message");
-    check_merge(STDERR_FILENO, STDOUT_FILENO, "message");
-    check_merge(4, 5, "message");
-    check_merge(10, 20, "message");
+    check_redirect(STDOUT_FILENO, STDERR_FILENO, "message");
+    check_redirect(STDERR_FILENO, STDOUT_FILENO, "message");
+    check_redirect(4, 5, "message");
+    check_redirect(10, 20, "message");
 }
 #endif
 
@@ -179,44 +201,11 @@ static
 void
 test_default_ids(void)
 {
-    bp::posix_launcher pl;
-    BOOST_CHECK_EQUAL(pl.get_gid(), ::getgid());
-    BOOST_CHECK_EQUAL(pl.get_egid(), ::getegid());
-    BOOST_CHECK_EQUAL(pl.get_uid(), ::getuid());
-    BOOST_CHECK_EQUAL(pl.get_euid(), ::geteuid());
-}
-#endif
-
-// ------------------------------------------------------------------------
-
-#if defined(BOOST_PROCESS_POSIX_API)
-static
-void
-test_setters(void)
-{
-    bp::posix_launcher pl1;
-    gid_t gid = pl1.get_gid() + 1;
-    pl1.set_gid(gid);
-    BOOST_CHECK_EQUAL(pl1.get_gid(), gid);
-
-    bp::posix_launcher pl2;
-    gid_t egid = pl2.get_egid() + 1;
-    pl2.set_egid(egid);
-    BOOST_CHECK_EQUAL(pl2.get_egid(), egid);
-
-    bp::posix_launcher pl3;
-    uid_t uid = pl3.get_uid() + 1;
-    pl3.set_uid(uid);
-    BOOST_CHECK_EQUAL(pl3.get_uid(), uid);
-
-    bp::posix_launcher pl4;
-    uid_t euid = pl4.get_euid() + 1;
-    pl4.set_euid(euid);
-    BOOST_CHECK_EQUAL(pl4.get_euid(), euid);
-
-    bp::posix_launcher pl5;
-    pl5.set_chroot("/some/directory");
-    BOOST_CHECK_EQUAL(pl5.get_chroot(), "/some/directory");
+    bp::posix_context ctx;
+    BOOST_CHECK_EQUAL(ctx.m_gid, ::getgid());
+    BOOST_CHECK_EQUAL(ctx.m_egid, ::getegid());
+    BOOST_CHECK_EQUAL(ctx.m_uid, ::getuid());
+    BOOST_CHECK_EQUAL(ctx.m_euid, ::geteuid());
 }
 #endif
 
@@ -237,18 +226,17 @@ init_unit_test_suite(int argc, char* argv[])
 {
     bfs::initial_path();
 
-    but::test_suite* test = BOOST_TEST_SUITE("posix_launcher test suite");
+    but::test_suite* test = BOOST_TEST_SUITE("posix_launch test suite");
 
 #if defined(BOOST_PROCESS_POSIX_API)
-    add_tests_launcher_base< bp::posix_launcher, bp::child, start >(test);
-    add_tests_launcher_base< bp::posix_launcher, bp::posix_child, start >
+    add_tests_launch_base< launcher, bp::posix_context, bp::child >(test);
+    add_tests_launch_base< launcher, bp::posix_context, bp::posix_child >
         (test);
 
     test->add(BOOST_TEST_CASE(&test_output), 0, 10);
-    test->add(BOOST_TEST_CASE(&test_merge), 0, 10);
+    test->add(BOOST_TEST_CASE(&test_redirect), 0, 10);
     test->add(BOOST_TEST_CASE(&test_input), 0, 10);
     test->add(BOOST_TEST_CASE(&test_default_ids));
-    test->add(BOOST_TEST_CASE(&test_setters));
 #else
     test->add(BOOST_TEST_CASE(&test_dummy));
 #endif

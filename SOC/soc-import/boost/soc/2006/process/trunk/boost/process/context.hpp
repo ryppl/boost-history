@@ -22,6 +22,7 @@
 #include <boost/process/config.hpp>
 
 #if defined(BOOST_PROCESS_POSIX_API)
+#   include <errno.h>
 #elif defined(BOOST_PROCESS_WIN32_API)
 #   include <tchar.h>
 #   include <windows.h>
@@ -30,7 +31,6 @@
 #endif
 
 #include <boost/assert.hpp>
-#include <boost/process/detail/file_handle.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/process/exceptions.hpp>
 #include <boost/process/stream_behavior.hpp>
@@ -79,11 +79,6 @@ public:
     stream_behavior m_stderr_behavior;
 
     //!
-    //! \brief Whether the child's stderr should be redirected to stdout.
-    //!
-    bool m_merge_stderr_with_stdout;
-
-    //!
     //! \brief The process' environment.
     //!
     //! Contains the list of environment variables, alongside with their
@@ -106,11 +101,7 @@ typedef basic_context< std::string > context;
 
 template< class String >
 inline
-basic_context< String >::basic_context(void) :
-    m_stdin_behavior(close_stream),
-    m_stdout_behavior(close_stream),
-    m_stderr_behavior(close_stream),
-    m_merge_stderr_with_stdout(false)
+basic_context< String >::basic_context(void)
 {
 #if defined(BOOST_PROCESS_POSIX_API)
     const char* buf = ::getcwd(NULL, 0);

@@ -52,7 +52,7 @@ get_argument(const std::string& word)
     args.push_back(word);
 
     bp::context ctx;
-    ctx.m_stdout_behavior = bp::redirect_stream;
+    ctx.m_stdout_behavior = bp::capture_stream();
 
     bp::child c = bp::launch(get_helpers_path(), args, ctx);
     bp::pistream& is = c.get_stdout();

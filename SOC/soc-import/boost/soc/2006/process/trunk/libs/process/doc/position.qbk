@@ -54,6 +54,13 @@
   useful, and it could be flawed in concept.  Will add later on again if
   there really is a need for it.
 
+* The `stream_behavior` enumeration was converted to a class so that it
+  can carry more information than a simple type.  This is useful to be
+  able to implement more complex stream behaviors.  As a side effect,
+  stream merging by the use of booleans or standalone data sets is now
+  superseded by the new `redirect_to_stdout` and `posix_redirect`
+  behaviors.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]

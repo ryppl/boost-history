@@ -48,12 +48,15 @@ win32_launch(const Executable& exe,
 {
     detail::file_handle fhstdin, fhstdout, fhstderr;
 
-    detail::stream_info behin =
-        win32_behavior_to_info(ctx.m_stdin_behavior, false, fhstdin);
-    detail::stream_info behout =
-        win32_behavior_to_info(ctx.m_stdout_behavior, true, fhstdout);
-    detail::stream_info beherr =
-        win32_behavior_to_info(ctx.m_stderr_behavior, true, fhstderr);
+    stream_info behin = stream_info(ctx.m_stdin_behavior, false);
+    if (behin.m_type == stream_info::use_pipe)
+        fhstdin = behin.m_pipe->wend();
+    stream_info behout = stream_info(ctx.m_stdout_behavior, true);
+    if (behout.m_type == stream_info::use_pipe)
+        fhstdout = behout.m_pipe->rend();
+    stream_info beherr = stream_info(ctx.m_stderr_behavior, true);
+    if (beherr.m_type == stream_info::use_pipe)
+        fhstderr = beherr.m_pipe->rend();
 
     detail::win32_setup s;
     s.m_work_directory = ctx.m_work_directory;
@@ -68,8 +71,7 @@ win32_launch(const Executable& exe,
 
     PROCESS_INFORMATION pi =
         detail::win32_start(exe, args, ctx.m_environment,
-                            behin, behout, beherr,
-                            ctx.m_merge_stderr_with_stdout, s);
+                            behin, behout, beherr, s);
 
     return win32_child(pi, fhstdin, fhstdout, fhstderr);
 }

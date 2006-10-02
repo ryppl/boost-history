@@ -154,7 +154,7 @@ posix_child::posix_child(handle_type h,
          iter != infoin.end(); iter++) {
         detail::stream_info& si = (*iter).second;
 
-        if (si.m_type == detail::stream_info::usepipe) {
+        if (si.m_type == detail::stream_info::use_pipe) {
             BOOST_ASSERT(si.m_pipe->wend().is_valid());
             boost::shared_ptr< postream > st(new postream(si.m_pipe->wend()));
             m_input_map.insert(input_map::value_type((*iter).first, st));
@@ -165,7 +165,7 @@ posix_child::posix_child(handle_type h,
          iter != infoout.end(); iter++) {
         detail::stream_info& si = (*iter).second;
 
-        if (si.m_type == detail::stream_info::usepipe) {
+        if (si.m_type == detail::stream_info::use_pipe) {
             BOOST_ASSERT(si.m_pipe->rend().is_valid());
             boost::shared_ptr< pistream > st(new pistream(si.m_pipe->rend()));
             m_output_map.insert(output_map::value_type((*iter).first, st));

@@ -70,13 +70,13 @@ main(int argc, char* argv[])
     //
     bp::posix_context ctx;
     ctx.m_output_behavior.insert
-        (bp::behavior_map::value_type(STDOUT_FILENO, bp::inherit_stream));
+        (bp::behavior_map::value_type(STDOUT_FILENO, bp::inherit_stream()));
     ctx.m_output_behavior.insert
-        (bp::behavior_map::value_type(STDERR_FILENO, bp::inherit_stream));
+        (bp::behavior_map::value_type(STDERR_FILENO, bp::inherit_stream()));
     ctx.m_output_behavior.insert
-        (bp::behavior_map::value_type(3, bp::redirect_stream));
+        (bp::behavior_map::value_type(3, bp::capture_stream()));
     ctx.m_output_behavior.insert
-        (bp::behavior_map::value_type(4, bp::redirect_stream));
+        (bp::behavior_map::value_type(4, bp::capture_stream()));
 
     //
     // Spawns the child process.

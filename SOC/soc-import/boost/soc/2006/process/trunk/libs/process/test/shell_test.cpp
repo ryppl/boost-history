@@ -37,10 +37,10 @@ test_shell_execution(void)
         BOOST_REQUIRE(false);
 
     bp::context ctx;
-    ctx.m_stdout_behavior = bp::redirect_stream;
+    ctx.m_stdout_behavior = bp::capture_stream();
     // XXX Without the following line, bash returns an exit status of 4,
     // which makes the test fail...  Why?  I don't know.
-    ctx.m_merge_stderr_with_stdout = true;
+    ctx.m_stderr_behavior = bp::redirect_stream_to_stdout();
     bp::child c = bp::launch_shell(command, ctx);
 
     bp::pistream& is = c.get_stdout();

@@ -214,7 +214,6 @@ win32_start(const Executable& exe,
             stream_info& infoin,
             stream_info& infoout,
             stream_info& infoerr,
-            bool merge_out_err,
             const win32_setup& setup)
 {
     file_handle chin, chout, cherr;
@@ -230,7 +229,7 @@ win32_start(const Executable& exe,
     if (infoin.m_type == stream_info::close) {
     } else if (infoin.m_type == stream_info::inherit) {
         chin = file_handle::win32_std(STD_INPUT_HANDLE, true);
-    } else if (infoin.m_type == stream_info::usefile) {
+    } else if (infoin.m_type == stream_info::use_file) {
         HANDLE h = ::CreateFile(TEXT(infoin.m_file.c_str()), GENERIC_READ,
                                 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
                                 NULL);
@@ -239,10 +238,10 @@ win32_start(const Executable& exe,
                 (system_error("boost::process::detail::win32_start",
                               "CreateFile failed", ::GetLastError()));
         chin = file_handle(h);
-    } else if (infoin.m_type == stream_info::usehandle) {
+    } else if (infoin.m_type == stream_info::use_handle) {
         chin = infoin.m_handle;
         chin.win32_set_inheritable(true);
-    } else if (infoin.m_type == stream_info::usepipe) {
+    } else if (infoin.m_type == stream_info::use_pipe) {
         infoin.m_pipe->rend().win32_set_inheritable(true);
         chin = infoin.m_pipe->rend();
     } else
@@ -252,7 +251,7 @@ win32_start(const Executable& exe,
     if (infoout.m_type == stream_info::close) {
     } else if (infoout.m_type == stream_info::inherit) {
         chout = file_handle::win32_std(STD_OUTPUT_HANDLE, true);
-    } else if (infoout.m_type == stream_info::usefile) {
+    } else if (infoout.m_type == stream_info::use_file) {
         HANDLE h = ::CreateFile(TEXT(infoout.m_file.c_str()), GENERIC_WRITE,
                                 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL,
                                 NULL);
@@ -261,10 +260,10 @@ win32_start(const Executable& exe,
                 (system_error("boost::process::detail::win32_start",
                               "CreateFile failed", ::GetLastError()));
         chout = file_handle(h);
-    } else if (infoout.m_type == stream_info::usehandle) {
+    } else if (infoout.m_type == stream_info::use_handle) {
         chout = infoout.m_handle;
         chout.win32_set_inheritable(true);
-    } else if (infoout.m_type == stream_info::usepipe) {
+    } else if (infoout.m_type == stream_info::use_pipe) {
         infoout.m_pipe->wend().win32_set_inheritable(true);
         chout = infoout.m_pipe->wend();
     } else
@@ -272,13 +271,13 @@ win32_start(const Executable& exe,
     si->hStdOutput = chout.is_valid() ? chout.get() : INVALID_HANDLE_VALUE;
 
     if (infoerr.m_type == stream_info::close) {
-        if (merge_out_err) {
-            BOOST_ASSERT(chout.is_valid());
-            cherr = file_handle::win32_dup(chout.get(), true);
-        }
     } else if (infoerr.m_type == stream_info::inherit) {
         cherr = file_handle::win32_std(STD_ERROR_HANDLE, true);
-    } else if (infoerr.m_type == stream_info::usefile) {
+    } else if (infoerr.m_type == stream_info::redirect) {
+        BOOST_ASSERT(infoerr.m_desc_to == 1);
+        BOOST_ASSERT(chout.is_valid());
+        cherr = file_handle::win32_dup(chout.get(), true);
+    } else if (infoerr.m_type == stream_info::use_file) {
         HANDLE h = ::CreateFile(TEXT(infoerr.m_file.c_str()), GENERIC_WRITE,
                                 0, NULL, CREATE_NEW, FILE_ATTRIBUTE_NORMAL,
                                 NULL);
@@ -287,10 +286,10 @@ win32_start(const Executable& exe,
                 (system_error("boost::process::detail::win32_start",
                               "CreateFile failed", ::GetLastError()));
         cherr = file_handle(h);
-    } else if (infoerr.m_type == stream_info::usehandle) {
+    } else if (infoerr.m_type == stream_info::use_handle) {
         cherr = infoerr.m_handle;
         cherr.win32_set_inheritable(true);
-    } else if (infoerr.m_type == stream_info::usepipe) {
+    } else if (infoerr.m_type == stream_info::use_pipe) {
         infoerr.m_pipe->wend().win32_set_inheritable(true);
         cherr = infoerr.m_pipe->wend();
     } else
@@ -314,42 +313,6 @@ win32_start(const Executable& exe,
     }
 
     return pi;
-}
-
-// ------------------------------------------------------------------------
-
-//!
-//! \brief Converts a stream_behavior to a stream_info object.
-//!
-//! Given a stream_behavior \a beh and whether it shall behave as an input
-//! flow or as an output one (\a out), returns a stream_info object
-//! representing a flow that follows the provided behavior.
-//!
-//! \param parentfh A reference to a file_handle that receives the handle
-//!                 the parent can use to communicate with the child.
-//! \return The new stream_info object.
-//!
-inline
-stream_info
-win32_behavior_to_info(stream_behavior beh, bool out, file_handle& parentfh)
-{
-    stream_info si;
-
-    if (beh == inherit_stream) {
-        si.m_type = stream_info::inherit;
-    } else if (beh == redirect_stream) {
-        si.m_type = stream_info::usepipe;
-        si.m_pipe = pipe();
-        parentfh = out ? si.m_pipe->rend() : si.m_pipe->wend();
-    } else if (beh == silent_stream) {
-        si.m_type = stream_info::usefile;
-        si.m_file = "NUL";
-    } else {
-        BOOST_ASSERT(beh == close_stream);
-        si.m_type = stream_info::close;
-    }
-
-    return si;
 }
 
 // ------------------------------------------------------------------------

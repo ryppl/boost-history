@@ -32,8 +32,8 @@ void
 run_it(const std::string& msg, const bp::context& ctx)
 {
     bp::context ctx2 = ctx;
-    ctx2.m_stdout_behavior = bp::inherit_stream;
-    ctx2.m_merge_stderr_with_stdout = true;
+    ctx2.m_stdout_behavior = bp::inherit_stream();
+    ctx2.m_stderr_behavior = bp::redirect_stream_to_stdout();
 
     std::cout << "===> " << msg << std::endl;
 #if defined(BOOST_PROCESS_POSIX_API)

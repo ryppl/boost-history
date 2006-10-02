@@ -1,6 +1,6 @@
 //
 // Boost.Process
-// Regression tests for the win32_launcher class.
+// Regression tests for the win32_launch method and win32_context class.
 //
 // Copyright (c) 2006 Julio M. Merino Vidal.
 //
@@ -22,9 +22,10 @@ extern "C" {
 
 #   include <boost/process/child.hpp>
 #   include <boost/process/win32_child.hpp>
-#   include <boost/process/win32_launcher.hpp>
+#   include <boost/process/win32_context.hpp>
+#   include <boost/process/win32_operations.hpp>
 
-#   include "launcher_base_test.hpp"
+#   include "launch_base_test.hpp"
 
 namespace bp = ::boost::process;
 #endif
@@ -38,16 +39,22 @@ namespace but = ::boost::unit_test;
 // ------------------------------------------------------------------------
 
 #if defined(BOOST_PROCESS_WIN32_API)
-class start
+class launcher
 {
 public:
     bp::win32_child
-    operator()(bp::win32_launcher& l,
-               const std::vector< std::string > args,
+    operator()(const std::vector< std::string > args,
+               bp::win32_context ctx,
+               bp::stream_behavior bstdin = bp::close_stream(),
+               bp::stream_behavior bstdout = bp::close_stream(),
+               bp::stream_behavior bstderr = bp::close_stream(),
                bool usein = false)
         const
     {
-        return l.start(args);
+        ctx.m_stdin_behavior = bstdin;
+        ctx.m_stdout_behavior = bstdout;
+        ctx.m_stderr_behavior = bstderr;
+        return bp::win32_launch(get_helpers_path(), args, ctx);
     }
 };
 #endif
@@ -67,10 +74,10 @@ test_startupinfo(void)
     std::string line;
     std::ostringstream flags;
 
-    bp::win32_launcher l1;
-    l1.set_stdout_behavior(bp::redirect_stream);
+    bp::win32_context ctx1;
+    ctx1.m_stdout_behavior = bp::capture_stream();
     flags << STARTF_USESTDHANDLES;
-    Child c1 = l1.start(get_helpers_path(), args);
+    Child c1 = bp::win32_launch(get_helpers_path(), args, ctx1);
     portable_getline(c1.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwFlags = " + flags.str());
     flags.str("");
@@ -94,10 +101,11 @@ test_startupinfo(void)
     si.dwY = 200;
     si.dwXSize = 300;
     si.dwYSize = 400;
-    bp::win32_launcher l2(&si);
-    l2.set_stdout_behavior(bp::redirect_stream);
+    bp::win32_context ctx2;
+    ctx2.m_startupinfo = &si;
+    ctx2.m_stdout_behavior = bp::capture_stream();
     flags << (STARTF_USESTDHANDLES | STARTF_USEPOSITION | STARTF_USESIZE);
-    Child c2 = l2.start(get_helpers_path(), args);
+    Child c2 = bp::win32_launch(get_helpers_path(), args, ctx2);
     portable_getline(c2.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwFlags = " + flags.str());
     flags.str("");
@@ -132,11 +140,11 @@ init_unit_test_suite(int argc, char* argv[])
 {
     bfs::initial_path();
 
-    but::test_suite* test = BOOST_TEST_SUITE("win32_launcher test suite");
+    but::test_suite* test = BOOST_TEST_SUITE("win32_launch test suite");
 
 #if defined(BOOST_PROCESS_WIN32_API)
-    add_tests_launcher_base< bp::win32_launcher, bp::child, start >(test);
-    add_tests_launcher_base< bp::win32_launcher, bp::win32_child, start >
+    add_tests_launch_base< launcher, bp::win32_context, bp::child >(test);
+    add_tests_launch_base< launcher, bp::win32_context, bp::win32_child >
         (test);
     test->add(BOOST_TEST_CASE(&(test_startupinfo< bp::child >)));
     test->add(BOOST_TEST_CASE(&(test_startupinfo< bp::win32_child >)));
