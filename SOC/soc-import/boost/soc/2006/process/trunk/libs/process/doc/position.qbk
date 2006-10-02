@@ -87,9 +87,6 @@ consideration to decide the best way to solve them.
 
 [section Code]
 
-* Fix `posix_launcher` and `win32_launcher` by splitting them into context
-  classes and free functions.
-
 * Integrate with [@http://asio.sourceforge.net/ Boost.Asio] to permit
   asynchronous notification of child process termination and availability
   of new data in output streams.
