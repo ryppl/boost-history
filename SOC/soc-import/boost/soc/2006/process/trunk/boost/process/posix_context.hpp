@@ -31,9 +31,15 @@
 #include <set>
 #include <utility>
 
-#include <boost/process/context.hpp> // XXX
+#include <boost/process/context.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/process/stream_behavior.hpp>
+
+// XXX Merge the contents of this file with context.hpp and rename that
+// to contexts.hpp?  This could remove the need for the user to mess
+// around with preprocessor conditional to detect the current platform and
+// would reduce the number of headers in the library, which is IMHO a good
+// thing.
 
 namespace boost {
 namespace process {
@@ -48,11 +54,10 @@ typedef std::map< int, stream_behavior > behavior_map;
 
 // ------------------------------------------------------------------------
 
-// XXX Maybe this should inherit from basic_context as happened before
-// with the launchers... but it'd be rather ugly.  Think about this some
-// more.
-template< class String >
-class posix_basic_context
+template< class Path >
+class posix_basic_context :
+    public basic_work_directory_context< Path >,
+    public environment_context
 {
 public:
     //!
@@ -80,22 +85,6 @@ public:
     //! \brief List of output streams that will be redirected.
     //!
     behavior_map m_output_behavior;
-
-    //!
-    //! \brief The process' environment.
-    //!
-    //! Contains the list of environment variables, alongside with their
-    //! values, that will be passed to the spawned child process.
-    //!
-    environment m_environment;
-
-    //!
-    //! \brief The process' initial work directory.
-    //!
-    //! The work directory is the directory in which the process starts
-    //! execution.
-    //!
-    String m_work_directory;
 
     //!
     //! \brief The user credentials.
@@ -135,24 +124,21 @@ public:
     //! Specifies the directory in which the %child process is chrooted
     //! before execution.  Empty if this feature is not desired.
     //!
-    String m_chroot;
+    Path m_chroot;
 };
 
 typedef posix_basic_context< std::string > posix_context;
 
 // ------------------------------------------------------------------------
 
-template< class String >
+template< class Path >
 inline
-posix_basic_context< String >::posix_basic_context(void) :
+posix_basic_context< Path >::posix_basic_context(void) :
     m_uid(::getuid()),
     m_euid(::geteuid()),
     m_gid(::getgid()),
     m_egid(::getegid())
 {
-    // XXX Reuse context's code to determine current work directory.
-    context ctx;
-    m_work_directory = ctx.m_work_directory;
 }
 
 // ------------------------------------------------------------------------

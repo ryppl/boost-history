@@ -61,6 +61,11 @@
   superseded by the new `redirect_to_stdout` and `posix_redirect`
   behaviors.
 
+* The `basic_work_directory_context` and `environment_context` base classes
+  were added.  These are mainly provided to simplify the code in the final
+  Context implementations but may also come handy to the end user in case
+  he is working on his own Context implementation.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]
