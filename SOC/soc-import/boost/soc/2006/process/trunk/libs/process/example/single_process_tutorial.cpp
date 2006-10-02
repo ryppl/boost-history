@@ -59,7 +59,7 @@ while (std::getline(is, line))
 // quickbook:end(get-output)
 
 // quickbook:begin(wait)
-bp::status s = c.wait();
+const bp::status s = c.wait();
 // quickbook:end(wait)
 
 // quickbook:begin(parse-status)

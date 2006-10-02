@@ -77,7 +77,7 @@ main(int argc, char* argv[])
     // Note that we receive a posix_status object even when the wait()
     // method returns a status one.
     //
-    bp::posix_status s = c.wait();
+    const bp::posix_status s = c.wait();
     if (s.exited()) {
         std::cout << "Program returned exit code " << s.exit_status()
                   << std::endl;

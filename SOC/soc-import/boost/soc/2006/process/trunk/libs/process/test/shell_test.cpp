@@ -48,7 +48,7 @@ test_shell_execution(void)
     is >> word;
     BOOST_CHECK_EQUAL(word, "LINE-test");
 
-    bp::status s = c.wait();
+    const bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
     BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }

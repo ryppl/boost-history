@@ -120,7 +120,7 @@ public:
     //! \remark <b>Blocking remarks</b>: This call blocks if the child
     //! process has not finalized execution and waits until it terminates.
     //!
-    status wait(void);
+    const status wait(void);
 
 private:
     //!
@@ -247,7 +247,7 @@ child::get_stderr(void)
 // ------------------------------------------------------------------------
 
 inline
-status
+const status
 child::wait(void)
 {
 #if defined(BOOST_PROCESS_POSIX_API)

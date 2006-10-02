@@ -39,10 +39,10 @@ run_it(const std::string& msg, const bp::context& ctx)
 #if defined(BOOST_PROCESS_POSIX_API)
     std::vector< std::string > args;
     args.push_back("env");
-    bp::status s =
+    const bp::status s =
         bp::launch(bp::find_executable_in_path("env"), args, ctx2).wait();
 #elif defined(BOOST_PROCESS_WIN32_API)
-    bp::status s = bp::launch_shell("set", ctx2).wait();
+    const bp::status s = bp::launch_shell("set", ctx2).wait();
 #endif
     if (s.exited() && s.exit_status() == EXIT_SUCCESS)
         std::cout << "     *** SUCCESS ***" << std::endl;

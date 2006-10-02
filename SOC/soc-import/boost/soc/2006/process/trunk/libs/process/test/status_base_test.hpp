@@ -43,7 +43,7 @@ template< class Exit_Status >
 void
 test_exit_failure(void)
 {
-    Exit_Status s = launch_helper("exit-failure").wait();
+    const Exit_Status s = launch_helper("exit-failure").wait();
     BOOST_REQUIRE(s.exited());
     BOOST_CHECK_EQUAL(s.exit_status(), EXIT_FAILURE);
 }
@@ -55,7 +55,7 @@ static
 void
 test_exit_success(void)
 {
-    Exit_Status s = launch_helper("exit-success").wait();
+    const Exit_Status s = launch_helper("exit-success").wait();
     BOOST_REQUIRE(s.exited());
     BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }

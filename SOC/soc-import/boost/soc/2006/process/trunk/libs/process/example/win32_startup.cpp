@@ -92,7 +92,7 @@ main(int argc, char* argv[])
         // Starts the application and waits for its termination, reporting
         // the results to the user.
         //
-        bp::status s = bp::win32_launch(exe, args, ctx).wait();
+        const bp::status s = bp::win32_launch(exe, args, ctx).wait();
         if (s.exited()) {
             std::cout << "Application exited successfully" << std::endl;
             exitstatus = EXIT_SUCCESS;

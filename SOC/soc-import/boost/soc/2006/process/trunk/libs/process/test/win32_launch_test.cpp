@@ -89,7 +89,7 @@ test_startupinfo(void)
     BOOST_CHECK_EQUAL(line, "dwXSize = 0");
     portable_getline(c1.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwYSize = 0");
-    bp::status s1 = c1.wait();
+    const bp::status s1 = c1.wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
@@ -117,7 +117,7 @@ test_startupinfo(void)
     BOOST_CHECK_EQUAL(line, "dwXSize = 300");
     portable_getline(c2.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwYSize = 400");
-    bp::status s2 = c2.wait();
+    const bp::status s2 = c2.wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_SUCCESS);
 }

@@ -89,7 +89,7 @@ main(int argc, char* argv[])
         // Waits for the process to terminate and parses its exit status to
         // give the user feedback on the final results.
         //
-        bp::status s = c.wait();
+        const bp::status s = c.wait();
         if (s.exited() && s.exit_status() == EXIT_SUCCESS)
             std::cout << "     *** SUCCESSFUL UPDATE ***" << std::endl;
         else

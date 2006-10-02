@@ -95,7 +95,7 @@ main(int argc, char* argv[])
     //
     // Waits until the process exits and parses its termination status.
     //
-    bp::status s = c.wait();
+    const bp::status s = c.wait();
     if (s.exited()) {
         if (s.exit_status() == EXIT_SUCCESS) {
             std::cout << "D-BUS daemon's address is: " << address << std::endl;

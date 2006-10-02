@@ -77,7 +77,7 @@ main(int argc, char* argv[])
         //
         // Waits until the process terminates and reports status.
         //
-        bp::status s = c.wait();
+        const bp::status s = c.wait();
         if (s.exited()) {
             std::cout << "Application exited successfully" << std::endl;
             exitstatus = EXIT_SUCCESS;

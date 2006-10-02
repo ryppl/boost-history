@@ -67,7 +67,7 @@ os.close();
 // quickbook:end(feed-stdin)
 
 // quickbook:begin(wait)
-bp::status s = cs.wait();
+const bp::status s = cs.wait();
 // quickbook:end(wait)
 
 // quickbook:begin(parse-status)

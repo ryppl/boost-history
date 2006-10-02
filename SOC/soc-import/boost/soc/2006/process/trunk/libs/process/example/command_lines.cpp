@@ -43,7 +43,7 @@ run(const std::string& exec, const std::vector< std::string >& args)
     ctx.m_stdout_behavior = bp::inherit_stream();
     ctx.m_stderr_behavior = bp::inherit_stream();
 
-    bp::status s = bp::launch(exec, args, ctx).wait();
+    const bp::status s = bp::launch(exec, args, ctx).wait();
     if (s.exited() && s.exit_status() == EXIT_SUCCESS)
         std::cout << "     *** SUCCESS ***" << std::endl;
     else
@@ -65,7 +65,7 @@ run(const std::string& command)
     ctx.m_stderr_behavior = bp::inherit_stream();
     ctx.m_environment = bp::current_environment();
 
-    bp::status s = bp::launch_shell(command, ctx).wait();
+    const bp::status s = bp::launch_shell(command, ctx).wait();
     if (s.exited() && s.exit_status() == EXIT_SUCCESS)
         std::cout << "     *** SUCCESS ***" << std::endl;
     else

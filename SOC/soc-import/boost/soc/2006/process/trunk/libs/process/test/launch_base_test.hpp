@@ -62,9 +62,9 @@ test_close_stdin(void)
     args.push_back("helpers");
     args.push_back("is-closed-stdin");
 
-    bp::status s1 = Launcher()(args, Context(), bp::close_stream(),
-                               bp::close_stream(), bp::close_stream(),
-                               true).wait();
+    const bp::status s1 = Launcher()(args, Context(), bp::close_stream(),
+                                     bp::close_stream(), bp::close_stream(),
+                                     true).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
@@ -72,7 +72,7 @@ test_close_stdin(void)
                           bp::close_stream(), bp::close_stream(), true);
     c2.get_stdin() << "foo" << std::endl;
     c2.get_stdin().close();
-    bp::status s2 = c2.wait();
+    const bp::status s2 = c2.wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
 }
@@ -88,12 +88,12 @@ test_close_stdout(void)
     args.push_back("helpers");
     args.push_back("is-closed-stdout");
 
-    bp::status s1 = Launcher()(args, Context()).wait();
+    const bp::status s1 = Launcher()(args, Context()).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
-    bp::status s2 = Launcher()(args, Context(), bp::close_stream(),
-                               bp::capture_stream()).wait();
+    const bp::status s2 = Launcher()(args, Context(), bp::close_stream(),
+                                     bp::capture_stream()).wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
 }
@@ -109,12 +109,12 @@ test_close_stderr(void)
     args.push_back("helpers");
     args.push_back("is-closed-stderr");
 
-    bp::status s1 = Launcher()(args, Context()).wait();
+    const bp::status s1 = Launcher()(args, Context()).wait();
     BOOST_REQUIRE(s1.exited());
     BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
-    bp::status s2 = Launcher()(args, Context(), bp::close_stream(),
-                               bp::close_stream(),
+    const bp::status s2 = Launcher()(args, Context(), bp::close_stream(),
+                                     bp::close_stream(),
                                bp::capture_stream()).wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
@@ -144,7 +144,7 @@ test_input(void)
     is >> word;
     BOOST_CHECK_EQUAL(word, "message-to-process");
 
-    bp::status s = c.wait();
+    const bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
     BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
@@ -175,7 +175,7 @@ test_output(bool out, const std::string& msg)
     }
     BOOST_CHECK_EQUAL(word, msg);
 
-    bp::status s = c.wait();
+    const bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
     BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
@@ -229,7 +229,7 @@ test_redirect_err_to_out(void)
     is >> word;
     BOOST_CHECK_EQUAL(word, "message-to-two-streams");
 
-    bp::status s = c.wait();
+    const bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
     BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
@@ -258,7 +258,7 @@ check_work_directory(const std::string& wdir)
     std::string dir;
     portable_getline(is, dir);
 
-    bp::status s = c.wait();
+    const bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
     BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
 
@@ -307,7 +307,7 @@ get_var_value(Context& ctx, const std::string& var)
     if (status == "defined")
         is >> gotval;
 
-    bp::status s = c.wait();
+    const bp::status s = c.wait();
     BOOST_REQUIRE(s.exited());
     BOOST_REQUIRE_EQUAL(s.exit_status(), EXIT_SUCCESS);
 
