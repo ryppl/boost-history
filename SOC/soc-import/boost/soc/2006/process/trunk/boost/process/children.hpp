@@ -95,7 +95,7 @@ public:
     //! child processes have not finalized execution and waits until they
     //! terminate.
     //!
-    status wait(void);
+    const status wait(void);
 };
 
 // ------------------------------------------------------------------------
@@ -144,25 +144,26 @@ children::get_stderr(void)
 // ------------------------------------------------------------------------
 
 inline
-status
+const status
 children::wait(void)
 {
     BOOST_ASSERT(size() >= 2);
 
-    status s(0), s2(0);
-    bool update = true;
-
-    for (iterator iter = begin(); iter != end(); iter++) {
-        s2 = (*iter).wait();
-        if (!s2.exited() || s2.exit_status() != EXIT_SUCCESS) {
-            if (update) {
-                s = s2;
-                update = false;
-            }
+    iterator iter = begin();
+    while (iter != end()) {
+        const status s = (*iter).wait();
+        iter++;
+        if (iter == end())
+            return s;
+        else if (!s.m_exit_status || s.m_exit_status.get() != EXIT_SUCCESS) {
+            while (iter != end())
+                (*iter).wait();
+            return s;
         }
     }
 
-    return update ? s2 : s;
+    BOOST_ASSERT(false);
+    return status(0);
 }
 
 // ------------------------------------------------------------------------

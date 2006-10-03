@@ -66,6 +66,11 @@
   Context implementations but may also come handy to the end user in case
   he is working on his own Context implementation.
 
+* The `status` and `posix_status` were greatly simplified.  Instead of
+  providing lots of accessor functions they now just expose some constant
+  members.  This avoids the need for several preconditions and consistency
+  checks because the interface makes incoherent situations impossible.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]
@@ -104,8 +109,6 @@ consideration to decide the best way to solve them.
 * Abstract `cstdlib`'s `EXIT_SUCCESS` and `EXIT_FAILURE`.
 
 * Make `child::wait` return a constant object.
-
-* Make `status`' constructor private.
 
 * Allow to retrieve a handle for the current process.  Need to reintroduce
   the `process` class being a parent of `child` and correct the use of

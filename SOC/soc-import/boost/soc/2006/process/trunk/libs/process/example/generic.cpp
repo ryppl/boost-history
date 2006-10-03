@@ -90,7 +90,7 @@ main(int argc, char* argv[])
         // give the user feedback on the final results.
         //
         const bp::status s = c.wait();
-        if (s.exited() && s.exit_status() == EXIT_SUCCESS)
+        if (s.m_exit_status && s.m_exit_status.get() == EXIT_SUCCESS)
             std::cout << "     *** SUCCESSFUL UPDATE ***" << std::endl;
         else
             std::cout << "     *** FAILED UPDATE ***" << std::endl;

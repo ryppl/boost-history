@@ -30,7 +30,7 @@ extern "C" {
 #   error "Unsupported platform."
 #endif
 
-#include <boost/assert.hpp>
+#include <boost/optional.hpp>
 
 namespace boost {
 namespace process {
@@ -51,12 +51,6 @@ class children;
 //!
 class status
 {
-protected:
-    //!
-    //! \brief OS-specific codification of exit status.
-    //!
-    int m_flags;
-
     //!
     //! \brief Creates a status object based on exit information.
     //!
@@ -70,60 +64,38 @@ protected:
     status(int flags);
     friend class child;
     friend class children;
+    friend class posix_status;
+
+    //!
+    //! \brief OS-specific codification of the exit status.
+    //!
+    const int m_flags;
 
 public:
     //!
-    //! \brief Returns whether the process exited gracefully or not.
+    //! \brief The process' exit status code.
     //!
-    //! Returns whether the process exited gracefully or not.
+    //! When defined, this member contains the integer returned by the
+    //! child upon exit (be it by a return of main() or by a call to
+    //! exit()).  This is undefined if the process did not exit regularly:
+    //! e.g. a signal was received under a POSIX platform that caused an
+    //! unexpected termination.
     //!
-    bool exited(void) const;
-
-    //!
-    //! \brief If exited, returns the exit code.
-    //!
-    //! If the process exited, returns the exit code it returned.
-    //!
-    //! \pre exited() is true.
-    //!
-    int exit_status(void) const;
+    const boost::optional< int > m_exit_status;
 };
 
 // ------------------------------------------------------------------------
 
 inline
 status::status(int flags) :
-    m_flags(flags)
-{
-}
-
-// ------------------------------------------------------------------------
-
-inline
-bool
-status::exited(void)
-    const
-{
+    m_flags(flags),
 #if defined(BOOST_PROCESS_POSIX_API)
-    return WIFEXITED(m_flags);
+    m_exit_status(WIFEXITED(m_flags) ? WEXITSTATUS(m_flags) :
+                                       boost::optional< int >())
 #elif defined(BOOST_PROCESS_WIN32_API)
-    return true;
+    m_exit_status(m_flags)
 #endif
-}
-
-// ------------------------------------------------------------------------
-
-inline
-int
-status::exit_status(void)
-    const
 {
-    BOOST_ASSERT(exited());
-#if defined(BOOST_PROCESS_POSIX_API)
-    return WEXITSTATUS(m_flags);
-#elif defined(BOOST_PROCESS_WIN32_API)
-    return m_flags;
-#endif
 }
 
 // ------------------------------------------------------------------------

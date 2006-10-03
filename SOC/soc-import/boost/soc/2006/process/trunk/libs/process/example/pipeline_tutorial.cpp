@@ -71,7 +71,7 @@ const bp::status s = cs.wait();
 // quickbook:end(wait)
 
 // quickbook:begin(parse-status)
-return (s.exited() && s.exit_status() == EXIT_SUCCESS) ?
+return (s.m_exit_status && s.m_exit_status.get() == EXIT_SUCCESS) ?
     EXIT_SUCCESS : EXIT_FAILURE;
 // quickbook:end(parse-status)
 

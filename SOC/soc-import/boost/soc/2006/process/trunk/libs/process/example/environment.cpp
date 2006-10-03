@@ -44,7 +44,7 @@ run_it(const std::string& msg, const bp::context& ctx)
 #elif defined(BOOST_PROCESS_WIN32_API)
     const bp::status s = bp::launch_shell("set", ctx2).wait();
 #endif
-    if (s.exited() && s.exit_status() == EXIT_SUCCESS)
+    if (s.m_exit_status && s.m_exit_status.get() == EXIT_SUCCESS)
         std::cout << "     *** SUCCESS ***" << std::endl;
     else
         std::cout << "     *** FAILURE ***" << std::endl;

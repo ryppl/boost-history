@@ -72,8 +72,8 @@ test_exit(const std::string& middle, int value)
     BOOST_REQUIRE(cs.size() == 3);
 
     const bp::status s = cs.wait();
-    BOOST_REQUIRE(s.exited());
-    BOOST_CHECK_EQUAL(s.exit_status(), value);
+    BOOST_REQUIRE(s.m_exit_status);
+    BOOST_CHECK_EQUAL(s.m_exit_status.get(), value);
 }
 
 // ------------------------------------------------------------------------
@@ -127,8 +127,8 @@ test_simple(void)
     BOOST_CHECK_EQUAL(word, "proc2-proc1-message");
 
     const bp::status s = cs.wait();
-    BOOST_REQUIRE(s.exited());
-    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
+    BOOST_REQUIRE(s.m_exit_status);
+    BOOST_CHECK_EQUAL(s.m_exit_status.get(), EXIT_SUCCESS);
 }
 
 // ------------------------------------------------------------------------
@@ -162,8 +162,8 @@ test_merge_first(void)
     BOOST_CHECK_EQUAL(line, "second:stderr message");
 
     const bp::status s = cs.wait();
-    BOOST_REQUIRE(s.exited());
-    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
+    BOOST_REQUIRE(s.m_exit_status);
+    BOOST_CHECK_EQUAL(s.m_exit_status.get(), EXIT_SUCCESS);
 }
 
 // ------------------------------------------------------------------------

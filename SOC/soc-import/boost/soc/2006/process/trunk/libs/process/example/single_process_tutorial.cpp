@@ -63,7 +63,7 @@ const bp::status s = c.wait();
 // quickbook:end(wait)
 
 // quickbook:begin(parse-status)
-if (s.exited() && s.exit_status() == EXIT_SUCCESS)
+if (s.m_exit_status && s.m_exit_status.get() == EXIT_SUCCESS)
     std::cout << "Directory updated successfully." << std::endl;
 else
     std::cout << "Update failed." << std::endl;
