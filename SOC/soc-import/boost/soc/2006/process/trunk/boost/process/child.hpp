@@ -36,6 +36,7 @@ extern "C" {
 #endif
 
 #include <map>
+#include <vector>
 
 #include <boost/assert.hpp>
 #include <boost/process/detail/pipe.hpp>
@@ -183,6 +184,16 @@ public: // XXX?
     template< class Executable, class Arguments > friend class basic_pipeline;
     friend class launcher;
 };
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Collection of child objects.
+//!
+//! This convenience type represents a collection of child objects backed
+//! by a vector.
+//!
+typedef std::vector< child > children;
 
 // ------------------------------------------------------------------------
 

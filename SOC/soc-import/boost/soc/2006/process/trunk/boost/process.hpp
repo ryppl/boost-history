@@ -28,10 +28,8 @@
 
 //#include <boost/process/basic_pipeline.hpp>
 #include <boost/process/child.hpp>
-#include <boost/process/children.hpp>
 #include <boost/process/context.hpp>
 #include <boost/process/operations.hpp>
-//#include <boost/process/pipeline.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
 #include <boost/process/status.hpp>

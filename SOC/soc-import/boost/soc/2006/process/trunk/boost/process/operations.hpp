@@ -199,14 +199,20 @@ launch(const Executable& exe, const Arguments& args, const Context& ctx)
 
     ph = detail::posix_start(exe, args, ctx.m_environment, infoin, infoout, s);
 
-    if (ctx.m_stdin_behavior.get_type() == stream_behavior::capture)
+    if (ctx.m_stdin_behavior.get_type() == stream_behavior::capture) {
         fhstdin = posix_info_locate_pipe(infoin, STDIN_FILENO, false);
+        BOOST_ASSERT(fhstdin.is_valid());
+    }
 
-    if (ctx.m_stdout_behavior.get_type() == stream_behavior::capture)
+    if (ctx.m_stdout_behavior.get_type() == stream_behavior::capture) {
         fhstdout = posix_info_locate_pipe(infoout, STDOUT_FILENO, true);
+        BOOST_ASSERT(fhstdout.is_valid());
+    }
 
-    if (ctx.m_stderr_behavior.get_type() == stream_behavior::capture)
+    if (ctx.m_stderr_behavior.get_type() == stream_behavior::capture) {
         fhstderr = posix_info_locate_pipe(infoout, STDERR_FILENO, true);
+        BOOST_ASSERT(fhstderr.is_valid());
+    }
 #elif defined(BOOST_PROCESS_WIN32_API)
     stream_info behin = stream_info(ctx.m_stdin_behavior, false);
     if (behin.m_type == stream_info::use_pipe)
@@ -281,6 +287,309 @@ launch_shell(const std::string& command, const Context& ctx)
 #endif
 
     return launch(exe, args, ctx);
+}
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Launches a pipelined set of child processes.
+//!
+//! Given a collection of pipeline_entry objects describing how to launch
+//! a set of child processes, spawns them all and connects their inputs and
+//! outputs in a way that permits pipelined communication.
+//!
+//! \pre Let 1..N be the processes in the collection: the input behavior of
+//!      the 2..N processes must be set to close_stream().
+//! \pre Let 1..N be the processes in the collection: the output behavior of
+//!      the 1..N-1 processes must be set to close_stream().
+//!
+//! \remark <b>Blocking remarks</b>: This function may block if the
+//!         device holding the executable of one of the entries
+//!         blocks when loading the image.  This might happen if, e.g.,
+//!         the binary is being loaded from a network share.
+//!
+//! \return A set of Child objects that represent all the processes spawned
+//!         by this call.  You should use wait_children() to wait for their
+//!         termination.
+//!
+template< class Entries >
+children
+launch_pipeline(const Entries& entries)
+{
+    using detail::info_map;
+    using detail::stream_info;
+
+    BOOST_ASSERT(entries.size() >= 2);
+
+    // Method's result value.
+    children cs;
+
+    // Convenience variables to avoid clutter below.
+    detail::file_handle fhinvalid;
+
+    // The pipes used to connect the pipeline's internal process.
+    boost::scoped_array< detail::pipe > pipes
+        (new detail::pipe[entries.size() - 1]);
+
+#if defined(BOOST_PROCESS_POSIX_API)
+    // Configure and spawn the pipeline's first process.
+    {
+        typename Entries::size_type i = 0;
+        const typename Entries::value_type::context_type& ctx =
+            entries[i].m_context;
+
+        info_map infoin, infoout;
+
+        if (ctx.m_stdin_behavior.get_type() != stream_behavior::close) {
+            stream_info si = stream_info(ctx.m_stdin_behavior, false);
+            infoin.insert(info_map::value_type(STDIN_FILENO, si));
+        }
+
+        // XXX Simplify when we have a use_handle stream_behavior.
+        BOOST_ASSERT(ctx.m_stdout_behavior.get_type() ==
+                     stream_behavior::close);
+        stream_info si2(close_stream(), true);
+        si2.m_type = stream_info::use_handle;
+        si2.m_handle = pipes[i].wend().disown();
+        infoout.insert(info_map::value_type(STDOUT_FILENO, si2));
+
+        if (ctx.m_stderr_behavior.get_type() != stream_behavior::close) {
+            stream_info si = stream_info(ctx.m_stderr_behavior, true);
+            infoout.insert(info_map::value_type(STDERR_FILENO, si));
+        }
+
+        detail::posix_setup s;
+        s.m_work_directory = ctx.m_work_directory;
+
+        pid_t ph = detail::posix_start(entries[i].m_executable,
+                                       entries[i].m_arguments,
+                                       ctx.m_environment,
+                                       infoin, infoout, s);
+
+        detail::file_handle fhstdin;
+
+        if (ctx.m_stdin_behavior.get_type() == stream_behavior::capture) {
+            fhstdin = posix_info_locate_pipe(infoin, STDIN_FILENO, false);
+            BOOST_ASSERT(fhstdin.is_valid());
+        }
+
+        cs.push_back(child(ph, fhstdin, fhinvalid, fhinvalid));
+    }
+
+    // Configure and spawn the pipeline's internal processes.
+    for (typename Entries::size_type i = 1; i < entries.size() - 1; i++) {
+        const typename Entries::value_type::context_type& ctx =
+            entries[i].m_context;
+        info_map infoin, infoout;
+
+        BOOST_ASSERT(ctx.m_stdin_behavior.get_type() ==
+                     stream_behavior::close);
+        stream_info si1(close_stream(), false);
+        si1.m_type = stream_info::use_handle;
+        si1.m_handle = pipes[i - 1].rend().disown();
+        infoin.insert(info_map::value_type(STDIN_FILENO, si1));
+
+        BOOST_ASSERT(ctx.m_stdout_behavior.get_type() ==
+                     stream_behavior::close);
+        stream_info si2(close_stream(), true);
+        si2.m_type = stream_info::use_handle;
+        si2.m_handle = pipes[i].wend().disown();
+        infoout.insert(info_map::value_type(STDOUT_FILENO, si2));
+
+        if (ctx.m_stderr_behavior.get_type() != stream_behavior::close) {
+            stream_info si = stream_info(ctx.m_stderr_behavior, true);
+            infoout.insert(info_map::value_type(STDERR_FILENO, si));
+        }
+
+        detail::posix_setup s;
+        s.m_work_directory = ctx.m_work_directory;
+
+        pid_t ph = detail::posix_start(entries[i].m_executable,
+                                       entries[i].m_arguments,
+                                       ctx.m_environment,
+                                       infoin, infoout, s);
+
+        cs.push_back(child(ph, fhinvalid, fhinvalid, fhinvalid));
+    }
+
+    // Configure and spawn the pipeline's last process.
+    {
+        typename Entries::size_type i = entries.size() - 1;
+        const typename Entries::value_type::context_type& ctx =
+            entries[i].m_context;
+
+        info_map infoin, infoout;
+
+        BOOST_ASSERT(ctx.m_stdin_behavior.get_type() ==
+                     stream_behavior::close);
+        stream_info si1(close_stream(), true);
+        si1.m_type = stream_info::use_handle;
+        si1.m_handle = pipes[i - 1].rend().disown();
+        infoin.insert(info_map::value_type(STDIN_FILENO, si1));
+
+        if (ctx.m_stdout_behavior.get_type() != stream_behavior::close) {
+            stream_info si = stream_info(ctx.m_stdout_behavior, true);
+            infoout.insert(detail::info_map::value_type(STDOUT_FILENO, si));
+        }
+
+        if (ctx.m_stderr_behavior.get_type() != stream_behavior::close) {
+            stream_info si = stream_info(ctx.m_stderr_behavior, true);
+            infoout.insert(detail::info_map::value_type(STDERR_FILENO, si));
+        }
+
+        detail::posix_setup s;
+        s.m_work_directory = ctx.m_work_directory;
+
+        pid_t ph = detail::posix_start(entries[i].m_executable,
+                                       entries[i].m_arguments,
+                                       ctx.m_environment,
+                                       infoin, infoout, s);
+
+        detail::file_handle fhstdout, fhstderr;
+
+        if (ctx.m_stdout_behavior.get_type() == stream_behavior::capture) {
+            fhstdout = posix_info_locate_pipe(infoout, STDOUT_FILENO, true);
+            BOOST_ASSERT(fhstdout.is_valid());
+        }
+
+        if (ctx.m_stderr_behavior.get_type() == stream_behavior::capture) {
+            fhstderr = posix_info_locate_pipe(infoout, STDERR_FILENO, true);
+            BOOST_ASSERT(fhstderr.is_valid());
+        }
+
+        cs.push_back(child(ph, fhinvalid, fhstdout, fhstderr));
+    }
+#elif defined(BOOST_PROCESS_WIN32_API)
+    // Process context configuration.
+    detail::win32_setup s;
+    s.m_work_directory = get_work_directory();
+    STARTUPINFO si;
+    s.m_startupinfo = &si;
+
+    // Configure and spawn the pipeline's first process.
+    {
+        typename Entries::size_type i = 0;
+
+        detail::file_handle fhstdin;
+        stream_info sii = detail::win32_behavior_to_info
+            (get_stdin_behavior(), false, fhstdin);
+
+        stream_info sio;
+        sio.m_type = stream_info::use_handle;
+        sio.m_handle = pipes[i].wend().disown();
+
+        stream_info sie = detail::win32_behavior_to_info
+            (entries[i].m_merge_out_err ? close_stream : silent_stream,
+             true, fhinvalid);
+        BOOST_ASSERT(!fhinvalid.is_valid());
+
+        ::ZeroMemory(&si, sizeof(si));
+        si.cb = sizeof(si);
+        PROCESS_INFORMATION pi = detail::win32_start
+            (entries[i].m_executable, entries[i].m_arguments, get_environment(),
+             sii, sio, sie,
+             entries[i].m_merge_out_err, s);
+
+        cs.push_back(child(pi.hProcess, fhstdin, fhinvalid, fhinvalid));
+    }
+
+    // Configure and spawn the pipeline's internal processes.
+    for (typename Entries::size_type i = 1; i < entries.size() - 1; i++) {
+
+        stream_info sii;
+        sii.m_type = stream_info::use_handle;
+        sii.m_handle = pipes[i - 1].rend().disown();
+
+        stream_info sio;
+        sio.m_type = stream_info::use_handle;
+        sio.m_handle = pipes[i].wend().disown();
+
+        stream_info sie = detail::win32_behavior_to_info
+            (entries[i].m_merge_out_err ? close_stream : silent_stream,
+             true, fhinvalid);
+        BOOST_ASSERT(!fhinvalid.is_valid());
+
+        ::ZeroMemory(&si, sizeof(si));
+        si.cb = sizeof(si);
+        PROCESS_INFORMATION pi = detail::win32_start
+            (entries[i].m_executable, entries[i].m_arguments, get_environment(),
+             sii, sio, sie,
+             entries[i].m_merge_out_err, s);
+
+        cs.push_back(child(pi.hProcess, fhinvalid, fhinvalid, fhinvalid));
+    }
+
+    // Configure and spawn the pipeline's last process.
+    {
+        typename Entries::size_type i = entries.size() - 1;
+
+        stream_info sii;
+        sii.m_type = stream_info::use_handle;
+        sii.m_handle = pipes[i - 1].rend().disown();
+
+        detail::file_handle fhstdout, fhstderr;
+
+        stream_info sio = detail::win32_behavior_to_info
+            (get_stdout_behavior(), true, fhstdout);
+
+        stream_info sie = detail::win32_behavior_to_info
+            ((entries[i].m_merge_out_err || get_merge_out_err()) ?
+             close_stream : get_stderr_behavior(), true, fhstderr);
+
+        ::ZeroMemory(&si, sizeof(si));
+        si.cb = sizeof(si);
+        PROCESS_INFORMATION pi = detail::win32_start
+            (entries[i].m_executable, entries[i].m_arguments, get_environment(),
+             sii, sio, sie,
+             entries[i].m_merge_out_err || get_merge_out_err(), s);
+
+        cs.push_back(child(pi.hProcess, fhinvalid, fhstdout, fhstderr));
+    }
+#endif
+
+    return cs;
+}
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Waits for a collection of children to terminate.
+//!
+//! Given a collection of Child objects (such as std::vector< child > or
+//! the convenience children type), waits for the termination of all of
+//! them.
+//!
+//! \remark <b>Blocking remarks</b>: This call blocks if any of the
+//! children processes in the collection has not finalized execution and
+//! waits until it terminates.
+//!
+//! \return The exit status of the first process that returns an error
+//!         code or, if all of them executed correctly, the exit status
+//!         of the last process in the collection.
+//!
+template< class Children >
+const status
+wait_children(Children& cs)
+{
+    BOOST_ASSERT(cs.size() >= 2);
+
+    typename Children::iterator iter = cs.begin();
+    while (iter != cs.end()) {
+        const status s = (*iter).wait();
+        iter++;
+        if (iter == cs.end())
+            return s;
+        else if (!s.m_exit_status || s.m_exit_status.get() != EXIT_SUCCESS) {
+            while (iter != cs.end()) {
+                (*iter).wait();
+                iter++;
+            }
+            return s;
+        }
+    }
+
+    BOOST_ASSERT(false);
+    return (*cs.begin()).wait();
 }
 
 // ------------------------------------------------------------------------

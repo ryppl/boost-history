@@ -34,9 +34,7 @@ exe helpers
     ;
 
 test-suite process :
-#    [ compile include_basic_pipeline_test.cpp : : ]
     [ compile include_child_test.cpp : : ]
-#    [ compile include_children_test.cpp : : ]
     [ compile include_context_test.cpp : : ]
     [ compile include_detail_file_handle_test.cpp : : ]
     [ compile include_detail_pipe_test.cpp : : ]
@@ -46,7 +44,6 @@ test-suite process :
     [ compile include_environment_test.cpp : : ]
     [ compile include_exceptions_test.cpp : : ]
     [ compile include_operations_test.cpp : : ]
-#    [ compile include_pipeline_test.cpp : : ]
     [ compile include_pistream_test.cpp : : ]
     [ compile include_posix_child_test.cpp : : ]
     [ compile include_posix_context_test.cpp : : ]
@@ -148,12 +145,12 @@ test-suite process :
           <library>$(BOOST_ROOT)//filesystem
         ]
 
-#    [ run pipeline_test.cpp
-#        : helpers
-#        :
-#        : <library>$(BOOST_ROOT)//unit_test_framework
-#          <library>$(BOOST_ROOT)//filesystem
-#        ]
+    [ run pipeline_test.cpp
+        : helpers
+        :
+        : <library>$(BOOST_ROOT)//unit_test_framework
+          <library>$(BOOST_ROOT)//filesystem
+        ]
 
     [ run posix_child_test.cpp
         :
@@ -191,7 +188,7 @@ test-suite process :
     [ compile ../example/command_lines.cpp : : ]
     [ compile ../example/environment.cpp : : ]
     [ compile ../example/generic.cpp : : ]
-#    [ compile ../example/pipeline_tutorial.cpp : : ]
+    [ compile ../example/pipeline_tutorial.cpp : : ]
     [ compile ../example/single_process_tutorial.cpp : : ]
     [ compile ../example/posix_communication.cpp : : ]
     [ compile ../example/posix_status.cpp : : ]

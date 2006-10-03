@@ -35,9 +35,6 @@ extern "C" {
 namespace boost {
 namespace process {
 
-class child;
-class children;
-
 // ------------------------------------------------------------------------
 
 //!
@@ -63,7 +60,6 @@ class status
     //!
     status(int flags);
     friend class child;
-    friend class children;
     friend class posix_status;
 
     //!

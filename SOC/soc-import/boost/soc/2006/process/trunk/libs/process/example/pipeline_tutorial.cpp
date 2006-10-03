@@ -38,28 +38,44 @@ if (!file) {
     return EXIT_FAILURE;
 }
 
-// quickbook:begin(pipeline)
-bp::pipeline p;
-p.set_stdin_behavior(bp::redirect_stream);
-p.set_stdout_behavior(bp::inherit_stream);
-// quickbook:end(pipeline)
+// quickbook:begin(context)
+bp::context ctxin, ctxout;
+ctxin.m_stdin_behavior = bp::capture_stream();
+ctxout.m_stdout_behavior = bp::inherit_stream();
+ctxout.m_stderr_behavior = bp::redirect_stream_to_stdout();
+// quickbook:end(context)
 
 // quickbook:begin(command-lines)
-bp::command_line cl1 = bp::command_line::shell("cut -d ' ' -f 2-5");
-bp::command_line cl2 = bp::command_line::shell("sed 's,^,line: >>>,'");
-bp::command_line cl3 = bp::command_line::shell("sed 's,$,<<<,'");
+std::string exe1 = bp::find_executable_in_path("cut");
+std::vector< std::string > args1;
+args1.push_back("cut");
+args1.push_back("-d ");
+args1.push_back("-f2-5");
+
+std::string exe2 = bp::find_executable_in_path("sed");
+std::vector< std::string > args2;
+args2.push_back("sed");
+args2.push_back("s,^,line: >>>,");
+
+std::string exe3 = bp::find_executable_in_path("sed");
+std::vector< std::string > args3;
+args3.push_back("sed");
+args3.push_back("s,$,<<<,");
 // quickbook:end(command-lines)
 
 // quickbook:begin(addition)
-p.add(cl1).add(cl2).add(cl3);
+std::vector< bp::pipeline_entry > entries;
+entries.push_back(bp::pipeline_entry(exe1, args1, ctxin));
+entries.push_back(bp::pipeline_entry(exe2, args2, ctxout));
+entries.push_back(bp::pipeline_entry(exe3, args3, ctxout));
 // quickbook:end(addition)
 
 // quickbook:begin(children)
-bp::children cs = p.start();
+bp::children cs = bp::launch_pipeline(entries);
 // quickbook:end(children)
 
 // quickbook:begin(feed-stdin)
-bp::postream& os = cs.get_stdin();
+bp::postream& os = cs[0].get_stdin();
 std::string line;
 while (std::getline(file, line))
     os << line << std::endl;
@@ -67,7 +83,7 @@ os.close();
 // quickbook:end(feed-stdin)
 
 // quickbook:begin(wait)
-const bp::status s = cs.wait();
+const bp::status s = bp::wait_children(cs);
 // quickbook:end(wait)
 
 // quickbook:begin(parse-status)

@@ -31,6 +31,9 @@
 #   error "Unsupported platform."
 #endif
 
+#include <string>
+#include <vector>
+
 #include <boost/assert.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/process/exceptions.hpp>
@@ -155,6 +158,75 @@ public:
 };
 
 typedef basic_context< std::string > context;
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Represents a child process in a pipeline.
+//!
+//! This convenience class is a triplet that holds all the data required
+//! to spawn a new child process in a pipeline.
+//!
+template< class Executable, class Arguments, class Context >
+class basic_pipeline_entry
+{
+public:
+    //!
+    //! \brief The executable to launch.
+    //!
+    Executable m_executable;
+
+    //!
+    //! \brief The set of arguments to pass to the executable.
+    //!
+    Arguments m_arguments;
+
+    //!
+    //! \brief The child's execution context.
+    //!
+    Context m_context;
+
+    //!
+    //! \brief The type of the Executable concept used in this template
+    //!        instantiation.
+    //!
+    typedef Executable executable_type;
+
+    //!
+    //! \brief The type of the Arguments concept used in this template
+    //!        instantiation.
+    //!
+    typedef Arguments arguments_type;
+
+    //!
+    //! \brief The type of the Context concept used in this template
+    //!        instantiation.
+    //!
+    typedef Context context_type;
+
+    //!
+    //! \brief Constructs a new pipeline_entry object.
+    //!
+    //! Given the executable, set of arguments and execution triplet,
+    //! constructs a new pipeline_entry object that holds the three
+    //! values.
+    //!
+    basic_pipeline_entry(const Executable& e, const Arguments& a,
+                         const Context& c) :
+        m_executable(e),
+        m_arguments(a),
+        m_context(c)
+    {
+    }
+};
+
+// ------------------------------------------------------------------------
+
+//!
+//! \brief Default instantiation of basic_pipeline_entry.
+//!
+typedef basic_pipeline_entry< std::string, std::vector< std::string >,
+                              context > pipeline_entry;
 
 // ------------------------------------------------------------------------
 

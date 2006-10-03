@@ -71,6 +71,12 @@
   members.  This avoids the need for several preconditions and consistency
   checks because the interface makes incoherent situations impossible.
 
+* The `pipeline` and `children` classes were removed.  The former was
+  replaced by the `launch_pipeline` convenience function and the
+  `pipeline_entry` class.  The latter was superseded by a simple typedef
+  and a generic `wait_children` function that can be applied to any kind
+  of collection of Child objects.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]
