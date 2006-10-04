@@ -33,7 +33,7 @@
 
 
 #ifndef BOOST_TREE_FOREST_HPP
-#define BOOST_TREE_FOREST_TREE_HPP
+#define BOOST_TREE_FOREST_HPP
 
 //#include <boost/tree/cursor.hpp>
 #include <boost/tree/binary_tree.hpp>

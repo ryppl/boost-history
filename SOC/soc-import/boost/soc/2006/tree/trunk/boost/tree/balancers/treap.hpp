@@ -40,7 +40,7 @@
 #include <limits.h>
 #include <stdlib.h>
 
-using boost::tree::detail::access_rotate;
+using boost::tree::access_rotate;
 
 namespace boost {
 namespace tree {

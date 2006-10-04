@@ -80,6 +80,7 @@ class binary_tree : public Balance, public Augment {
 	typedef typename Alloc::template rebind<node_type>::other 
 		node_allocator_type;
 	typedef typename node_traits<node_type>::node_base_type node_base_type;
+	typedef node_base_type* node_base_pointer;
 	typedef typename node_traits<node_type>::node_pointer node_pointer;
 	
 	typedef tree_cursor<node_type> cursor;
@@ -165,7 +166,7 @@ class binary_tree : public Balance, public Augment {
 	 */ 	
 	cursor shoot()
 	{
-		return cursor(m_header.m_parent, 
+		return cursor(static_cast<node_base_pointer>(m_header.m_parent), 
 					  m_header.m_parent == &m_header ? 0 : 1);
 	}
 	
@@ -184,7 +185,7 @@ class binary_tree : public Balance, public Augment {
 	 */ 	
 	const_cursor cshoot() const
 	{
-		return const_cursor(m_header.m_parent, 
+		return const_cursor(static_cast<node_base_pointer>(m_header.m_parent), 
 							m_header.m_parent == &m_header ? 0 : 1);
 	}
 	

@@ -35,7 +35,7 @@
 
 #include <boost/tree/detail/cursor/binary.hpp>
 
-using boost::tree::detail::access_rotate;
+using boost::tree::access_rotate;
 
 namespace boost {
 namespace tree {

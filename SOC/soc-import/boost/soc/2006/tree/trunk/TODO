@@ -1,2 +1,6 @@
+Proposal:
+* Cursor validity after insertion/erasure/clearing
+* balancers/augmentors for nary trees...
+
 Implement associative containers and priority_queue specialization using searcher
 Implement (binary) heap
