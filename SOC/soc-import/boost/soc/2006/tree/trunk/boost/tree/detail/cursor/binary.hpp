@@ -218,7 +218,7 @@ class tree_cursor
 	// Cursor-specific
 	//typedef integral_constant<size_type, 2> arity; // binary cursor
 		
- 	typedef tree_cursor<node_type > cursor;
+ 	typedef tree_cursor<node_type> cursor;
  	typedef const_tree_cursor<node_type> const_cursor;
 
 	typedef bidirectional_traversal_tag vertical_traversal_type;
@@ -250,9 +250,11 @@ class tree_cursor
     )
       : m_parent(other.m_parent), m_pos(other.m_pos) {}
 
- private: 
+ public:
  	base_pointer m_parent;
  	size_type m_pos;
+
+ private: 
 
  	friend class iterator_core_access;
     friend class cursor_core_access;

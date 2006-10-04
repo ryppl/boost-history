@@ -127,7 +127,13 @@
   [... We'd profit from template typedefs to say e.g.</p>
   <pre>
 template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree = binary_tree&lt;T, rank_balance, rank_augment, Alloc&gt;;
-</pre>
+  </pre>
+  <p>Other than that, note that it might be worthwile to investigate 
+  if the present Container concept should be modified so that it only
+  covers the requirements as of paragraph 2 of section [tr.hierarchy.req] of 
+  this proposal, which correspond to the current Container concept with the
+  exception of any expressions that implicitly assume linear internal structure
+  and outsource those to a "Linear Container" concept. </p>
 
   <h2>Impact on the Standard</h2>
 

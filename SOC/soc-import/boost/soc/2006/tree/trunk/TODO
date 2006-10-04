@@ -2,5 +2,7 @@ Proposal:
 * Cursor validity after insertion/erasure/clearing
 * balancers/augmentors for nary trees...
 
+* formalize parameters for balancer/augmentor members. first is tree, second current cursor etc.
+
 Implement associative containers and priority_queue specialization using searcher
 Implement (binary) heap

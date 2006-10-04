@@ -93,7 +93,8 @@ class node_base : public node_with_parent_base, public Container<node_base<Conta
 	
  public:
  
- 	typedef Container<node_base*> base_type;
+ 	typedef Container<node_base<Container>*> base_type;
+ 	typedef typename base_type::size_type size_type;
 	typedef self_type* base_pointer;
 	typedef self_type const* const_base_pointer;
 	
@@ -109,7 +110,7 @@ class node_base : public node_with_parent_base, public Container<node_base<Conta
 	
 	void init()
 	{
-		for (typename base_type::size_type i=0; i<base_type::max_size(); ++i)
+		for (typename base_type::size_type i=0; i<base_type::size(); ++i)
 			operator[](i) = nil();
 	}
 
