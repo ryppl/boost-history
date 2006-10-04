@@ -259,8 +259,13 @@ class cursor_adaptor
 	{
 		return Derived(this->base_reference().begin());
 	}
-		
-	Derived up()
+	
+	Derived end()
+	{
+		return Derived(this->base_reference().end());
+	}
+	
+	Derived parent()
 	{
 		return Derived(this->base_reference().parent());
 	}
