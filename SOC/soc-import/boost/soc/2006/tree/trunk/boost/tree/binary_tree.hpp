@@ -75,7 +75,7 @@ class binary_tree : public Balance, public Augment {
 	typedef typename Alloc::template rebind<value_type>::other 
 		allocator_type;
 		
-	typedef node<2, value_type, typename augmentor_type::metadata_type, 
+	typedef node<value_type, detail::binary_array, typename augmentor_type::metadata_type, 
 				 typename balancer_type::metadata_type> node_type;
 	typedef typename Alloc::template rebind<node_type>::other 
 		node_allocator_type;
