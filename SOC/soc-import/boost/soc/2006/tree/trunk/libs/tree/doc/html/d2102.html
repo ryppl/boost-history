@@ -67,6 +67,9 @@
     background: #DDDDDD;
     border: 1px solid #AAAAAA;
   }
+  .add {
+    text-decoration: overline;
+  }
   /*]]>*/
   </style>
 </head>
@@ -127,13 +130,15 @@
   [... We'd profit from template typedefs to say e.g.</p>
   <pre>
 template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree = binary_tree&lt;T, rank_balance, rank_augment, Alloc&gt;;
-  </pre>
-  <p>Other than that, note that it might be worthwile to investigate 
-  if the present Container concept should be modified so that it only
-  covers the requirements as of paragraph 2 of section [tr.hierarchy.req] of 
-  this proposal, which correspond to the current Container concept with the
-  exception of any expressions that implicitly assume linear internal structure
-  and outsource those to a "Linear Container" concept. </p>
+  
+</pre>
+
+  <p>Other than that, note that it might be worthwile to investigate if the
+  present Container concept should be modified so that it only covers the
+  requirements as of paragraph 2 of section [tr.hierarchy.req] of this
+  proposal, which correspond to the current Container concept with the
+  exception of any expressions that implicitly assume linear internal
+  structure and outsource those to a "Linear Container" concept.</p>
 
   <h2>Impact on the Standard</h2>
 
@@ -148,10 +153,9 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
   hiding the normally underlying node structure, providing a uniform
   interface to algorithms that are thus enabled to deal with a number of
   different kinds of trees. On the other hand, this abstraction achieves
-  independence of implementation details (such as nodes for storage in many 
-  cases), allowing the underlying concepts to be applicable to other
-  possible implementations as well.
-  </p>
+  independence of implementation details (such as nodes for storage in many
+  cases), allowing the underlying concepts to be applicable to other possible
+  implementations as well.</p>
 
   <h3>What alternatives did you consider, and what are the tradeoffs?</h3>
 
@@ -191,11 +195,10 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
     <ol>
       <li>
         <p>A hierarchy is an object that stores a finite set of objects, all
-        of the same type, in a hierarchical manner. They fulfill all of the
-        Container requirements (<tt>[lib.container.requirements]</tt>);
-        additionally hierarchies introduce a cursor concept for navigation in
-        addition to iterators. The library provides two kinds of hierarchies:
-        <tt>binary_tree</tt>, and <tt>nary_tree</tt>.</p>
+        of the same type, in a hierarchical manner. Hierarchies introduce a
+        cursor concept for navigation in addition to iterators. The library
+        provides two kinds of hierarchies: <tt>binary_tree</tt>, and
+        <tt>nary_tree</tt>.</p>
       </li>
 
       <li>
@@ -410,7 +413,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
             </tr>
 
             <tr>
-              <td><tt>a.clear(q)</tt></td>
+              <td><tt>a.erase(q)</tt></td>
 
               <td><tt>void</tt></td>
 
@@ -424,7 +427,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
               <td><tt>void</tt></td>
 
-              <td><tt>a.clear(a.root());</tt><br />
+              <td><tt>a.erase(a.root());</tt><br />
               post: <tt>a.size() == 0</tt></td>
 
               <td>(Note A)</td>
@@ -488,8 +491,8 @@ namespace tr2 {
   <i>// Class template binary_tree</i>
   template &lt;
     class T,
-    class Balance = tr2::tree::balancers::unbalanced,
-    class Augment = tr2::tree::augmentors::unaugmented,
+    class Balance = std::tr2::tree::balancers::unbalanced,
+    class Augment = std::tr2::tree::augmentors::unaugmented,
     class Alloc = std::allocator&lt;T&gt;
     &gt;
   class binary_tree;
@@ -503,8 +506,8 @@ namespace std {
 namespace tr2 {
   template &lt;
     class T,
-    class Balance = tr2::tree::balancers::unbalanced,
-    class Augment = tr2::tree::augmentors::unaugmented,
+    class Balance = std::tr2::tree::balancers::unbalanced,
+    class Augment = std::tr2::tree::augmentors::unaugmented,
     class Alloc = std::allocator&lt;T&gt;
     &gt;
   class binary_tree
@@ -519,8 +522,8 @@ namespace tr2 {
     typedef <i>implementation defined</i>                        cursor;
     typedef <i>implementation defined</i>                        const_cursor;
 
-    typedef tr2::inorder::iterator&lt;cursor&gt;                iterator;
-    typedef tr2::inorder::iterator&lt;const_cursor&gt;          const_iterator;
+    typedef std::tr2::inorder::iterator&lt;cursor&gt;           iterator;
+    typedef std::tr2::inorder::iterator&lt;const_cursor&gt;     const_iterator;
 
     typedef std::reverse_iterator&lt;iterator&gt;               reverse_iterator;
     typedef std::reverse_iterator&lt;const_iterator&gt;         const_reverse_iterator;
@@ -587,10 +590,10 @@ namespace tr2 {
       void    insert (iterator position, InputIterator first, InputIterator last);
     void      pop_front();
     void      pop_back();
+    void      erase(cursor position);
     iterator  erase(iterator position);
     iterator  erase(iterator first, iterator last);
     void      swap(binary_tree&lt;Tp, Balance, Augment, Alloc&gt;&amp;);
-    void      clear(cursor position);
     void      clear();
   };
 
@@ -754,7 +757,438 @@ namespace tr2 {
       requirements, but not any Iterator concept requirements.</li>
 
       <li class="c1">[Leaf cursors/ empty()]</li>
+
+      <li>
+        <p>In the following sections <tt>X</tt> denotes a cursor over nodes
+        of type <tt>N</tt>, <tt>a</tt> and <tt>b</tt> denotes an identifier
+        and <tt>n</tt> denotes a value of <tt>N *</tt>.</p>
+      </li>
     </ol>
+
+    <h4>0.2.1 Horizontal Cursor</h4>
+
+    <h5>0.2.1.1 Horizontal Forward Cursor</h5>
+
+    <ol>
+      <li>
+        <p>A class type X satisfies the requirements of a horizontal
+        traversal cursor if the folow expressions are valid, as shown in
+        Table 4, in addition to the requirements of forward iterators
+        (<tt>[lib.forward.iterators]</tt>):</p>
+
+        <table summary=
+        "Horizontal forward cursor requirements (in addition to forward iterator)"
+               class="reqmts">
+          <caption>
+            Table 4 - Horizontal forward cursor requirements (in addition to
+            forward iterator)
+          </caption>
+
+          <thead>
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>operational sematics</th>
+
+              <th>assertion/note<br />
+              pre/post-condition</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>X::type</tt></td>
+
+              <td>Convertible to <tt>horizontal_forward_cursor_tag</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>X::iterator_category</tt></td>
+
+              <td>Convertible to <tt>forward_iterator_tag</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>X::node_type</tt></td>
+
+              <td><tt>N</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>X::node_pointer</tt></td>
+
+              <td><tt>node *</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>X::cursor</tt></td>
+
+              <td>Convertible to <tt>X</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>X::const_cursor</tt></td>
+
+              <td>Convertible to <tt>const X</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>X::vertical_cursor_type</tt></td>
+
+              <td></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>X::metadata_type</tt></td>
+
+              <td></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.begin()</tt></td>
+
+              <td><tt>cursor</tt> or <tt>const_cursor</tt> for constant
+              a</td>
+
+              <td></td>
+
+              <td>constant</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.end()</tt></td>
+
+              <td><tt>cursor</tt> or <tt>const_cursor</tt> for constant
+              a</td>
+
+              <td></td>
+
+              <td>constant</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.cbegin()</tt></td>
+
+              <td><tt>const_cursor</tt></td>
+
+              <td></td>
+
+              <td>constant</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.cend()</tt></td>
+
+              <td><tt>const_cursor</tt></td>
+
+              <td></td>
+
+              <td>constant</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.node()</tt></td>
+
+              <td><tt>node_pointer</tt></td>
+
+              <td></td>
+
+              <td>constant</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.parity()</tt></td>
+
+              <td><tt>size_type</tt></td>
+
+              <td></td>
+
+              <td>?</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.attach(n)</tt></td>
+
+              <td>void</td>
+
+              <td>?</td>
+
+              <td>?</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.detach()</tt></td>
+
+              <td><tt>node_pointer</tt></td>
+
+              <td>?</td>
+
+              <td>constant?</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.detach(n)</tt></td>
+
+              <td><tt>node_pointer</tt></td>
+
+              <td>?</td>
+
+              <td>constant?</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.metadata()</tt></td>
+
+              <td><tt>metadata_type &amp;</tt>; <tt>metadata_type const
+              &amp;</tt> for constant a</td>
+
+              <td></td>
+
+              <td>constant</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Notes: Those entries marked "(Note A)" should have at worst linear
+        complexity. See the individual hierarchy containers for specific
+        complexity.</p>
+
+        <p class="note">Need to describe <tt>a.parity()</tt>,
+        <tt>a.attach(n)</tt>, <tt>a.detach()</tt>, etc.</p>
+      </li>
+
+      <li>
+        <p>Additionaly a horizontal forward cursor conforms to the container
+        requirements (<tt>[lib.container.requirements]</tt>) to traverse the
+        children with the exception of the following expressions:</p>
+
+        <table summary="Container requirements that are not supported" class=
+        "reqmts">
+          <caption>
+            Table 5 - Container requirements that are not supported
+          </caption>
+
+          <thead>
+            <tr>
+              <th>unsopported expression</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>(&amp;a)-&gt;~X();</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>X(a);</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>X u(a);<br />
+              X u = a;</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a.begin()</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a.end()</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a == b</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a != b</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a.swap(b)</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>r = a</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a &lt; b</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a &gt; b</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a &lt;= b</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a &gt;= b</tt></td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ol>
+
+    <h5>0.2.1.2 Horizontal Bidirectional Cursor</h5>
+
+    <ol>
+      <li>
+        <p>A class type X satisfies the requirements of a horizontal
+        bidirectional cursor if, in addition to satisfying the requirements
+        for horizontal forward cursors it satisfies the requirements for
+        bidirectional iterators (<tt>[lib.bidirectional.iterators]</tt>).</p>
+      </li>
+    </ol>
+
+    <h5>0.2.1.3 Horizontal Random Access Cursor</h5>
+
+    <ol>
+      <li>
+        <p>A class type X satisfies the requirements of a horizontal randon
+        access cursor if, in addition to satisfying the requirements for
+        horizontal bidirectional cursors it satisfies the requirements for
+        random access iterators (<tt>[lib.random.access.iterators]</tt>).</p>
+      </li>
+    </ol>
+
+    <h4>0.2.2 Vertical Cursor</h4>
+
+    <h5>0.2.2.1 Vertical Forward Cursor</h5>
+
+    <ol>
+      <li>
+        <p>A class type X satisfies the requirements of a vertical forward
+        cursor if the folow expressions are valid, as shown in Table 6:</p>
+
+        <table summary="Vertical forward cursor requirements" class="reqmts">
+          <caption>
+            Table 6 - Vertical forward cursor requirements
+          </caption>
+
+          <thead>
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>operational sematics</th>
+
+              <th>assertion/note<br />
+              pre/post-condition</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>X::type</tt></td>
+
+              <td>Convertible to <tt>vertical_forward_cursor_tag</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ol>
+
+    <h5>0.2.2.1 Vertical Bidirectional Cursor</h5>
+
+    <ol>
+      <li>
+        <p>A class type X satisfies the requirements of a vertical
+        bidirectional cursor if, in addition to the requirements of vertical
+        forward cursors, the following expressions are valid as shown in
+        Table 7:</p>
+
+        <table summary="Vertical bidirectional cursor requirements" class=
+        "reqmts">
+          <caption>
+            Table 7 - Vertical bidirectional cursor requirements
+          </caption>
+
+          <thead>
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>operational sematics</th>
+
+              <th>assertion/note<br />
+              pre/post-condition</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>X::type</tt></td>
+
+              <td>Convertible to
+              <tt>vertical_bidirectional_cursor_tag</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.parent()</tt></td>
+
+              <td><tt>X</tt>; <tt>const X</tt> for constant a</td>
+
+              <td></td>
+
+              <td>(Note A)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Notes: Those entries marked "(Note A)" should have at worst linear
+        complexity. See the individual hierarchy containers for specific
+        complexity.</p>
+      </li>
+    </ol>
+
+    <h4>0.2.3 Header <tt>&lt;cursor&gt;</tt></h4>
 
     <h3>0.3 [...?] Hierarchy traversal</h3>
 
