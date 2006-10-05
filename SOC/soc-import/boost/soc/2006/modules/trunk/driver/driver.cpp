@@ -3,6 +3,7 @@
 #include <boost/wave/cpp_exceptions.hpp>
 #include <boost/wave/cpplexer/cpplexer_exceptions.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/format.hpp>
 #include "parser/generator.h"
 #include "config.h"
 #include "output.h"
@@ -20,6 +21,20 @@ static string replace_suffix (string src, const char * suffix) {
     else
         src.append(suffix);
     return src;
+}
+
+static string guard_name (string src) {
+    string result("INCLUDE_");
+    // a few transforms.
+    for (string::iterator it = src.begin (); it != src.end (); ++it) {
+        char c = *it;
+        if (isalpha(c))
+            c = toupper(c);
+        else c = '_';
+        result.push_back(c);
+    }
+    
+    return result;
 }
 
 static bool validate_filename (string s) {
@@ -102,12 +117,13 @@ execute (int args, const char ** argv) {
         try {
             if (!validate_filename(*file))
                 continue;
-            
             string header_n = 
                 replace_suffix(namegen->get_name(*file,cnt), ".h");
                 
             string source_n = 
                 replace_suffix(namegen->get_name(*file,cnt), ".cpp");
+            
+            string guard = guard_name (header_n);
             
             if (header_n == *file || source_n == *file) {
                 cerr << "Refusing to overwrite input file with output for " 
@@ -121,6 +137,8 @@ execute (int args, const char ** argv) {
             OutputDelegate header_del (*file, header, &maps);
             OutputDelegate source_del (*file, source, &maps);
             
+            
+            header << format("#ifndef %s\n#define %s\n") % guard % guard;
             header << "// " << header_n << endl;
             source << "// " << source_n << endl;
             source << "#include \"" << header_n << "\"" << endl;
@@ -140,6 +158,7 @@ execute (int args, const char ** argv) {
             // compilers seem happier with a newline as the last char.
             // well, at least some sort of whitespace as the last line (off by 
             // 1 bugs in lexers aren't as infrequent as they should be).
+            header << format ("\n#endif /* #ifdef %s */\n") % guard;
             header << endl;
             source << endl;
         } 

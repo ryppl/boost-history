@@ -30,7 +30,7 @@ class Map {
     vecmap_t m_map;
     const path m_path;
     boost::filesystem::fstream m_file;
-    bool m_save;
+    bool m_save, m_modified;
     string m_curmodule;
     
 public:
@@ -42,6 +42,7 @@ public:
     }
     
     void add (const string & module_name, const path & filename) {
+        m_modified = true;
         m_map[module_name].insert(filename);
     }
     
@@ -50,6 +51,7 @@ public:
     }
     
     void add_filename (const string& p) {
+        m_modified = true;
         m_map[m_curmodule].insert (path(p));
     }
     
@@ -234,7 +236,8 @@ struct mapfile_grammar : public grammar<mapfile_grammar> {
 
 Map::
 Map (const path & mapfile, bool create) 
-  :m_path (mapfile),  m_file (mapfile, ios_base::in), m_save(create) {
+  :m_path (mapfile),  m_file (mapfile, ios_base::in), m_save(create), 
+   m_modified(false) {
   
 //  cout << "Map::Map(" << mapfile <<", " << (create? "true)":"false)") <<  endl;
     
@@ -271,7 +274,7 @@ Map (const path & mapfile, bool create)
 
 Map::
 ~Map () {
-    if (m_save) {
+    if (m_save && m_modified) {
 //      cerr << "[Map::saving " << m_path << "]";
         // we rewrite the local map every time.
         // eh, not good, but enough for now

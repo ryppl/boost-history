@@ -12,14 +12,6 @@ using namespace std;
 using namespace boost::wave;
 using boost::format;
 
-/*
-NOTES:
- X If we're in a partition, we shouldn't make the ["label"] part of the
-   namespace name.  It should just be embedded namespace decls.
- X Multiple::Levels::Of::Nest should be translated to
-   namespace Multiple { namespace Levels { namespace Of { namespace Nest {
-   }}}} ---- Ignored now.  We're only putting out anonymous namespace names.
-*/
 
 //  std::string   m_mod_name;
 //  enum mode { mExport, mNamespace, mModule, mFound } m_mode;
@@ -95,7 +87,7 @@ process_token (const token_t& tok, TransformContext *ctx) {
                                       % m_mod_name.canonical ()).str ();
                 
                 for (int i=0; i<m_mod_name.depth (); i++) {
-                    header.append ( (format ("namespace %s {")
+                    header.append ( (format ("namespace %s { ")
                                      % m_mod_name.element(i)).str ());
                 }
                 
