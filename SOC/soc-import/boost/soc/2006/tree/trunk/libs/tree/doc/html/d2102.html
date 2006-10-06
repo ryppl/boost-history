@@ -133,12 +133,14 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
   
 </pre>
 
-  <p>Other than that, note that it might be worthwile to investigate if the
-  present Container concept should be modified so that it only covers the
-  requirements as of paragraph 2 of section [tr.hierarchy.req] of this
-  proposal, which correspond to the current Container concept with the
-  exception of any expressions that implicitly assume linear internal
-  structure and outsource those to a "Linear Container" concept.</p>
+  <p>Note that it might be worthwile to investigate if the present Container
+  concept should be modified so that it only covers the requirements as of
+  paragraph 2 of section [tr.hierarchy.req] of this proposal, which
+  correspond to the current Container concept with the exception of any
+  expressions that implicitly assume linear internal structure and outsource
+  those to a "Linear Container" concept as similarly formalized in the
+  <a href="http://boost.org/libs/range/doc/range.html">Boost Range
+  concept</a> externally to the Standard.</p>
 
   <h2>Impact on the Standard</h2>
 
@@ -480,7 +482,6 @@ namespace std {
 namespace tr2 {
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
-    
 </pre>
 
     <h5>0.1.2.2 Header &lt;binary_tree&gt; synopsis <span class=
@@ -712,20 +713,15 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h3>0.2 Cursors</h3>
+    <h3>0.2 Cursors <span class="section-id">[tr.cursors]</span></h3>
 
     <ol>
       <li>Cursors provide a uniform way of applying algorithms to
       hierarchical data structures. In order to also allow for algorithms
       relevant when dealing with linear data structures, any cursor class is
       actually a refinement of a corresponding iterator class whose traversal
-      related capabilities map to horizontal traversal. 
-      <!-- among a given cursor's immediate descendants or "child cursors" (or just "children").-->
-       Furthermore, as a cursor is meant to provide a means of descending
-      within a hierarchy, it refines parts of a Container corresponding to
-      the kind of Iterator it models which have been formalized as the
-      <a href="http://boost.org/libs/range/doc/range.html">Range concept</a>
-      externally to the Standard.</li>
+      related capabilities map to traversal of among a given cursor's
+      immediate descendants or "child cursors" (or just "children").</li>
 
       <li>If exactly one application of the expression <tt>i =
       i.begin()</tt>, followed by a finite sequence of applications of the
@@ -738,14 +734,13 @@ namespace tr2 {
       i.begin()</tt> that makes <tt>i == j</tt>; <tt>i</tt> is then called
       <tt>j</tt>'s ancestor. If two cursors <tt>i</tt> and <tt>j</tt> share
       at least one common ancestor, they refer to the same container. The
-      horizontal traversal capabilites of a class relate to the range of
+      descending traversal capabilites of a class relate to the range of
       children of a given instance of that class.</li>
 
-      <li>In additon to a cursor's horizontal (iterator) traversal tags, two
-      of them are reused to indicate a cursor's vertical traversal abilities,
-      namely <em>forward</em> and <em>bidirectional</em> traversal in order
-      to indicate whether a given cursor provides a method that returns its
-      parent cursor.</li>
+      <li>In additon to a cursor's descending traversal tags, two of them are
+      reused to indicate a cursor's ascending traversal abilities, namely
+      <em>forward</em> and <em>bidirectional</em> traversal in order to
+      indicate whether a given cursor provides traversal to the parent.</li>
 
       <li>Apart from cursors that are <em>past-the-end</em> (like their
       iterator counterparts can be), the notion of a cursor <em>on-top</em>
@@ -759,29 +754,30 @@ namespace tr2 {
       <li class="c1">[Leaf cursors/ empty()]</li>
 
       <li>
-        <p>In the following sections <tt>X</tt> denotes a cursor over nodes
-        of type <tt>N</tt>, <tt>a</tt> and <tt>b</tt> denotes an identifier
-        and <tt>n</tt> denotes a value of <tt>N *</tt>.</p>
+        <p>In the following sections <tt>X</tt> denotes a cursor over values
+        of type <tt>T</tt>, <tt>a</tt> and <tt>b</tt> denotes an identifier,
+        <tt>r</tt> denotes a value of <tt>T&amp;</tt> and <tt>t</tt> denotes
+        a value of type <tt>T</tt>.</p>
       </li>
     </ol>
 
-    <h4>0.2.1 Horizontal Cursor</h4>
-
-    <h5>0.2.1.1 Horizontal Forward Cursor</h5>
+    <h4>0.2.1 Cursor <span class=
+    "section-id">[tr.cursor.requirements]</span></h4>
 
     <ol>
       <li>
-        <p>A class type X satisfies the requirements of a horizontal
-        traversal cursor if the following expressions are valid, as shown in
-        Table 4, in addition to the requirements of forward iterators
-        (<tt>[lib.forward.iterators]</tt>):</p>
+        <p>A class <tt>X</tt> satisfies the requirements of a cursor if the
+        following expressions are valid, as show in Table 4, in addition to
+        satifying the requirements of input iterators
+        (<tt>[lib.input.iterators]</tt>) and output iterators
+        (<tt>[lib.output.iterators]</tt>):</p>
 
         <table summary=
-        "Horizontal forward cursor requirements (in addition to forward iterator)"
-               class="reqmts">
+        "Cursor requirements (in addition to input and output iterators)"
+        class="reqmts">
           <caption>
-            Table 4 - Horizontal forward cursor requirements (in addition to
-            forward iterator)
+            Table 4 - Cursor requirements (in addition to input and output
+            iterators)
           </caption>
 
           <thead>
@@ -799,39 +795,21 @@ namespace tr2 {
 
           <tbody>
             <tr>
+              <td><tt>X::value_type</tt></td>
+
+              <td>T</td>
+
+              <td>Any non-reference, non-cv-qualified type</td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
               <td><tt>X::type</tt></td>
 
-              <td>Convertible to <tt>horizontal_forward_cursor_tag</tt></td>
-
-              <td></td>
-
-              <td>compile time</td>
-            </tr>
-
-            <tr>
-              <td><tt>X::iterator_category</tt></td>
-
-              <td>Convertible to <tt>forward_iterator_tag</tt></td>
-
-              <td></td>
-
-              <td>compile time</td>
-            </tr>
-
-            <tr>
-              <td><tt>X::node_type</tt></td>
-
-              <td><tt>N</tt></td>
-
-              <td></td>
-
-              <td>compile time</td>
-            </tr>
-
-            <tr>
-              <td><tt>X::node_pointer</tt></td>
-
-              <td><tt>node *</tt></td>
+              <td>Convertible to <tt>cursor_tag</tt>,
+              <tt>input_iterator_tag</tt>, and
+              <tt>output_iterator_tag</tt></td>
 
               <td></td>
 
@@ -859,19 +837,75 @@ namespace tr2 {
             </tr>
 
             <tr>
-              <td><tt>X::vertical_cursor_type</tt></td>
+              <td><tt>X::metadata_type</tt></td>
 
               <td></td>
 
-              <td></td>
+              <td>Any non-reference, non-cv-qualified type</td>
 
               <td>compile time</td>
             </tr>
 
             <tr>
-              <td><tt>X::metadata_type</tt></td>
+              <td><tt>a.parity()</tt></td>
+
+              <td><tt>size_type</tt></td>
 
               <td></td>
+
+              <td>?</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.metadata()</tt></td>
+
+              <td><tt>metadata_type &amp;</tt>; <tt>metadata_type const
+              &amp;</tt> for constant a</td>
+
+              <td></td>
+
+              <td>constant</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ol>
+
+    <h5>0.2.1.1 Descending Cursor <span class=
+    "section-id">[tr.descending.cursors]</span></h5>
+
+    <ol>
+      <li>
+        <p>A class <tt>X</tt> satisfies the requirements of a descending
+        cursor if, in addition to satisfying the requirements for cursors
+        ([tr.cursor.requirements]) the following expression are valid, as
+        shown in Table 5:</p>
+
+        <table summary=
+        "Descending cursor requirements (in addition to cursor)" class=
+        "reqmts">
+          <caption>
+            Table 5 - Descending cursor requirements (in addition to cursor)
+          </caption>
+
+          <thead>
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>operational sematics</th>
+
+              <th>assertion/note<br />
+              pre/post-condition</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>X::type</tt></td>
+
+              <td>Convertible to <tt>descending_cursor_tag</tt></td>
 
               <td></td>
 
@@ -919,87 +953,19 @@ namespace tr2 {
 
               <td>constant</td>
             </tr>
-
-            <tr>
-              <td><tt>a.node()</tt></td>
-
-              <td><tt>node_pointer</tt></td>
-
-              <td></td>
-
-              <td>constant</td>
-            </tr>
-
-            <tr>
-              <td><tt>a.parity()</tt></td>
-
-              <td><tt>size_type</tt></td>
-
-              <td></td>
-
-              <td>?</td>
-            </tr>
-
-            <tr>
-              <td><tt>a.attach(n)</tt></td>
-
-              <td>void</td>
-
-              <td>?</td>
-
-              <td>?</td>
-            </tr>
-
-            <tr>
-              <td><tt>a.detach()</tt></td>
-
-              <td><tt>node_pointer</tt></td>
-
-              <td>?</td>
-
-              <td>constant?</td>
-            </tr>
-
-            <tr>
-              <td><tt>a.detach(n)</tt></td>
-
-              <td><tt>node_pointer</tt></td>
-
-              <td>?</td>
-
-              <td>constant?</td>
-            </tr>
-
-            <tr>
-              <td><tt>a.metadata()</tt></td>
-
-              <td><tt>metadata_type &amp;</tt>; <tt>metadata_type const
-              &amp;</tt> for constant a</td>
-
-              <td></td>
-
-              <td>constant</td>
-            </tr>
           </tbody>
         </table>
-
-        <p>Notes: Those entries marked "(Note A)" should have at worst linear
-        complexity. See the individual hierarchy containers for specific
-        complexity.</p>
-
-        <p class="note">Need to describe <tt>a.parity()</tt>,
-        <tt>a.attach(n)</tt>, <tt>a.detach()</tt>, etc.</p>
       </li>
 
       <li>
-        <p>Additionaly a horizontal forward cursor conforms to the container
-        requirements (<tt>[lib.container.requirements]</tt>) to traverse the
-        children with the exception of the following expressions:</p>
+        <p>Additionaly a descending cursors conform to the container
+        requirements (<tt>[lib.container.requirements]</tt>) with the
+        exception of the following expressions:</p>
 
         <table summary="Container requirements that are not supported" class=
         "reqmts">
           <caption>
-            Table 5 - Container requirements that are not supported
+            Table 6 - Container requirements that are not supported
           </caption>
 
           <thead>
@@ -1063,43 +1029,30 @@ namespace tr2 {
             </tr>
           </tbody>
         </table>
+
+        <p>Notes: The expressions <tt>a.begin()</tt> and <tt>a.end()</tt>
+        are, as shown in Table 5, replaced with equivalent expressions for
+        cursors.</p>
       </li>
     </ol>
 
-    <h5>0.2.1.2 Horizontal Bidirectional Cursor</h5>
+    <h5>0.2.1.2 Descending Forward Cursor <span class=
+    "section-id">[tr.descending.forward.cursors]</span></h5>
 
     <ol>
       <li>
-        <p>A class type X satisfies the requirements of a horizontal
-        bidirectional cursor if, in addition to satisfying the requirements
-        for horizontal forward cursors it satisfies the requirements for
-        bidirectional iterators (<tt>[lib.bidirectional.iterators]</tt>).</p>
-      </li>
-    </ol>
+        <p>A class type <tt>X</tt> satisfies the requirements of a descending
+        forward cursor if the following expressions are valid, as shown in
+        Table 7, in addition to the requirements of descending cursors
+        ([tr.descending.cursors]) and forward iterators
+        ([lib.forward.iterators]):</p>
 
-    <h5>0.2.1.3 Horizontal Random Access Cursor</h5>
-
-    <ol>
-      <li>
-        <p>A class type X satisfies the requirements of a horizontal randon
-        access cursor if, in addition to satisfying the requirements for
-        horizontal bidirectional cursors it satisfies the requirements for
-        random access iterators (<tt>[lib.random.access.iterators]</tt>).</p>
-      </li>
-    </ol>
-
-    <h4>0.2.2 Vertical Cursor</h4>
-
-    <h5>0.2.2.1 Vertical Forward Cursor</h5>
-
-    <ol>
-      <li>
-        <p>A class type X satisfies the requirements of a vertical forward
-        cursor if the folow expressions are valid, as shown in Table 6:</p>
-
-        <table summary="Vertical forward cursor requirements" class="reqmts">
+        <table summary=
+        "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
+               class="reqmts">
           <caption>
-            Table 6 - Vertical forward cursor requirements
+            Table 7 - Descending forward cursor requirements (in addition to
+            descending cursors and forward iterators)
           </caption>
 
           <thead>
@@ -1119,7 +1072,8 @@ namespace tr2 {
             <tr>
               <td><tt>X::type</tt></td>
 
-              <td>Convertible to <tt>vertical_forward_cursor_tag</tt></td>
+              <td>Convertible to <tt>descending_forward_cursor_tag</tt> and
+              <tt>forward_iterator_tag</tt></td>
 
               <td></td>
 
@@ -1130,19 +1084,246 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h5>0.2.2.1 Vertical Bidirectional Cursor</h5>
+    <h5>0.2.1.3 Descending Bidirectional Cursor <span class=
+    "section-id">[tr.descending.bidirectional.cursors]</span></h5>
 
     <ol>
       <li>
-        <p>A class type X satisfies the requirements of a vertical
-        bidirectional cursor if, in addition to the requirements of vertical
-        forward cursors, the following expressions are valid as shown in
-        Table 7:</p>
+        <p>A class type <tt>X</tt> satisfies the requirements of a descending
+        bidirectional cursor if the following expressions are valid, as show
+        in Table 8, in addition to satisfying the requirements for descending
+        forward cursors ([tr.descending.forward.cursors]) and bidirectional
+        iterators ([lib.bidirectional.iterators]):</p>
 
-        <table summary="Vertical bidirectional cursor requirements" class=
-        "reqmts">
+        <table summary=
+        "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
+               class="reqmts">
           <caption>
-            Table 7 - Vertical bidirectional cursor requirements
+            Table 8 - Descending bidirectional cursor requirements (in
+            addition to forward descending cursors and bidirectional
+            iterators)
+          </caption>
+
+          <thead>
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>operational sematics</th>
+
+              <th>assertion/note<br />
+              pre/post-condition</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>X::type</tt></td>
+
+              <td>Convertible to <tt>descending_bidirectional_cursor_tag</tt>
+              and <tt>bidirectional_iterator_tag</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ol>
+
+    <h5>0.2.1.4 Descending Random Access Cursor <span class=
+    "section-id">[tr.descending.random.access.cursors]</span></h5>
+
+    <ol>
+      <li>
+        <p>A class type <tt>X</tt> satisfies the requirements of a descending
+        randon access cursor if the following expressions are valid, as shown
+        in Table 9, in addition to satisfying the requirements for descending
+        bidirectional cursors ([tr.descending.bidirectional.cursors]) and
+        random access iterators ([lib.random.access.iterators]):</p>
+
+        <table summary=
+        "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
+               class="reqmts">
+          <caption>
+            Table 9 - Descending random access cursor requirements (in
+            addition to descending bidirectional cursors and random access
+            iterators)
+          </caption>
+
+          <thead>
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>operational sematics</th>
+
+              <th>assertion/note<br />
+              pre/post-condition</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>X::type</tt></td>
+
+              <td>Convertible to <tt>descending_random_access_cursor_tag</tt>
+              and <tt>random_access_iterator_tag</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ol>
+
+    <h5>0.2.1.5 Ascending Cursor <span class=
+    "section-id">[tr.ascending.cursors]</span></h5>
+
+    <ol>
+      <li>
+        <p>A class type <tt>X</tt> satisfies the requirements of an ascending
+        cursor if the following expressions are valid, as shown in Table 10,
+        in addition to satisfying the requirements for descending cursors
+        ([tr.descending.cursors]):</p>
+
+        <table summary=
+        "Acending cursor requirements (in addition to descending cursors)"
+        class="reqmts">
+          <caption>
+            Table 10 - Acending cursor requirements (in addition to
+            descending cursors)
+          </caption>
+
+          <thead>
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>operational sematics</th>
+
+              <th>assertion/note<br />
+              pre/post-condition</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>X::type</tt></td>
+
+              <td>Convertible to <tt>ascending_cursor_tag</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.parent()</tt></td>
+
+              <td><tt>cursor</tt>; <tt>const_cursor</tt> for a constant
+              <tt>a</tt></td>
+
+              <td></td>
+
+              <td>(Note A)</td>
+            </tr>
+
+            <tr>
+              <td><tt>!r</tt></td>
+
+              <td><tt>X&amp;</tt></td>
+
+              <td><tt>r = r.parent();</tt></td>
+
+              <td>pre: <tt>r</tt> is dereferenceable.<br />
+              post: <tt>r</tt> is dereferenceable or <tt>r</tt> is
+              on-top.<br />
+              <tt>r == s</tt> and <tt>r</tt> is dereferenceable implies
+              <tt>!r == !s</tt>.<br />
+              <tt>&amp;r == &amp;</tt><br />
+              (Note A)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>Notes: Those entries marked "(Note A)" should have at worst linear
+        complexity. See the individual hierarchy containers for specific
+        complexity.</p>
+      </li>
+    </ol>
+
+    <h5>0.2.1.6 Ascending Forward Cursor <span class=
+    "section-id">[tr.ascending.forward.cursors]</span></h5>
+
+    <ol>
+      <li>
+        <p>A class type X satisfies the requirements of an ascending forward
+        cursor if the folow expressions are valid, as shown in Table 11, in
+        addition to satisfying the requirements for ascending cursors
+        ([tr.ascending.cursors]) and descending forward cursors
+        ([tr.descending.forward.cursors]):</p>
+
+        <table summary=
+        "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
+               class="reqmts">
+          <caption>
+            Table 11 - Ascending forward cursor requirements (in addition to
+            ascending cursors and descending forward cursors)
+          </caption>
+
+          <thead>
+            <tr>
+              <th>expression</th>
+
+              <th>return type</th>
+
+              <th>operational sematics</th>
+
+              <th>assertion/note<br />
+              pre/post-condition</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>X::type</tt></td>
+
+              <td>Convertible to <tt>ascending_forward_cursor_tag</tt></td>
+
+              <td></td>
+
+              <td>compile time</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ol>
+
+    <h5>0.2.1.7 Ascending Bidirectional Cursor <span class=
+    "section-id">[tr.ascending.bidirectional.cursors]</span></h5>
+
+    <ol>
+      <li>
+        <p>A class type X satisfies the requirements of an ascending
+        bidirectional cursor if the following expressions are valid, as shown
+        in Table 12, in addition to satisfying the requirements of ascending
+        forward cursors ([tr.ascending.forward.cursors]) and descending
+        bidirectional cursors ([tr.descending.bidirectional.cursors]):</p>
+
+        <table summary=
+        "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
+               class="reqmts">
+          <caption>
+            Table 12 - Ascending bidirectional cursor requirements (in
+            addition to ascending forward cursors and descending
+            bidirectional cursors)
           </caption>
 
           <thead>
@@ -1163,32 +1344,34 @@ namespace tr2 {
               <td><tt>X::type</tt></td>
 
               <td>Convertible to
-              <tt>vertical_bidirectional_cursor_tag</tt></td>
+              <tt>ascending_bidirectional_cursor_tag</tt></td>
 
               <td></td>
 
               <td>compile time</td>
             </tr>
-
-            <tr>
-              <td><tt>a.parent()</tt></td>
-
-              <td><tt>X</tt>; <tt>const X</tt> for constant a</td>
-
-              <td></td>
-
-              <td>(Note A)</td>
-            </tr>
           </tbody>
         </table>
-
-        <p>Notes: Those entries marked "(Note A)" should have at worst linear
-        complexity. See the individual hierarchy containers for specific
-        complexity.</p>
       </li>
     </ol>
 
-    <h4>0.2.3 Header <tt>&lt;cursor&gt;</tt></h4>
+    <h4>0.2.2 Header <tt>&lt;cursor&gt;</tt> synopsis <span class=
+    "section-id">[tr.cursor.synopsis]</span></h4>
+    <pre>
+namespace std {
+namespace tr2 {
+  struct cursor_tag {};
+  struct descending_cursor_tag {};
+  struct descending_forward_cursor_tag {};
+  struct descending_bidirectional_cursor_tag {};
+  struct descending_random_access_cursor_tag {};
+  struct ascending_cursor_tag {};
+  struct ascending_forward_cursor_tag {};
+  struct ascending_bidirectional_cursor_tag {};
+  struct ascending_random_access_cursor_tag {};
+} <i>// namespace tr2</i>
+} <i>// namespace std</i>
+</pre>
 
     <h3>0.3 [...?] Hierarchy traversal</h3>
 
