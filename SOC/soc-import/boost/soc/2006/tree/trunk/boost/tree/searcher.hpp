@@ -159,14 +159,14 @@ class upper_bound_default
  * @ingroup searchers
 */
 template</* class NodeSearch, */class Extract, class Compare, class Node, class Descend>
-std::pair<tree_cursor<Node>, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
-key_lower_bound(tree_cursor<Node> c, typename Extract::result_type key, 
+std::pair<binary_tree_cursor<Node>, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
+key_lower_bound(binary_tree_cursor<Node> c, typename Extract::result_type key, 
 //				NodeSearch node_search, 
 				Descend descend,
 				Extract extract = Extract(), Compare compare = Compare())
 {
 	       bool rightflag = false;
-	       typedef tree_cursor<Node> cursor;
+	       typedef binary_tree_cursor<Node> cursor;
 	       while (!c.empty())
 	       {
 	                Compare cmp = compare;

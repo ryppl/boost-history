@@ -39,7 +39,7 @@
 #include <boost/tree/iterators.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
-#include <boost/tree/detail/cursor/binary.hpp>
+#include <boost/tree/detail/cursor/nary.hpp>
 #include <boost/tree/detail/sortable_traits.hpp>
 
 #include <boost/tree/augmentors/unaugmented.hpp>
@@ -57,8 +57,8 @@ namespace boost {
 namespace tree {
 
 using detail::node;
-using detail::const_tree_cursor;
-using detail::tree_cursor;
+using detail::const_nary_tree_cursor;
+using detail::nary_tree_cursor;
 
 /** 
  * @brief An %nary_tree.
@@ -106,14 +106,14 @@ class nary_tree /*: public Balance, public Augment*/ {
 	typedef node_base_type* node_base_pointer;
 	typedef typename node_traits<node_type>::node_pointer node_pointer;
 	
-	typedef tree_cursor<node_type> cursor;
-	typedef const_tree_cursor<node_type> const_cursor;
+	typedef nary_tree_cursor<node_type> cursor;
+	typedef const_nary_tree_cursor<node_type> const_cursor;
 
-	typedef inorder::iterator<cursor> iterator;
-	typedef inorder::iterator<const_cursor> const_iterator;
+//	typedef inorder::iterator<cursor> iterator;
+//	typedef inorder::iterator<const_cursor> const_iterator;
 	
-	typedef std::reverse_iterator<iterator> reverse_iterator;
-	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
+//	typedef std::reverse_iterator<iterator> reverse_iterator;
+//	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	typedef typename allocator_type::pointer pointer;
 	typedef typename allocator_type::reference reference;
@@ -231,59 +231,59 @@ class nary_tree /*: public Balance, public Augment*/ {
 		return const_cursor(m_header[1], 0);
 	}
 	
-	/// Functions returning (inorder) iterators (as required by the Sequence
-	/// concept)
-	
-	/**
-	 * Returns a read/write ("mutable") iterator to the first (inorder) value.
-	 */ 	 
-	iterator begin()
-	{
-		return iterator(inorder_first());
-	}
-	
-	/**
-	 * Returns a read-only const_iterator to the first (inorder) value.
-	 */ 	 
-	const_iterator begin() const
-	{
-		return cbegin();
-	}
-	
-	/**
-	 * Returns a read-only const_iterator to the first (inorder) value.
-	 */ 	 
-	const_iterator cbegin() const
-	{
-		return const_iterator(inorder_first());
-	}
-
-	/**
-	 * Returns a read/write ("mutable") inorder iterator to the position one 
-	 * past the last (inorder) value in the %nary_tree.  
-	 */
-	iterator end()
-	{
-		return iterator(shoot());
-	}
-
-	 /**
-	 * Returns a read-only inorder const_iterator to the position one past the 
-	 * last (inorder) value in the %nary_tree. 
-	 */	
-	const_iterator end() const
-	{
-		return cend();
-	}
-	
-	/**
-	 * Returns a read-only inorder const_iterator to the position one past the 
-	 * last (inorder) value in the %nary_tree. 
-	 */	
-	const_iterator cend() const
-	{
-		return const_iterator(cshoot());
-	}
+//	/// Functions returning (inorder) iterators (as required by the Sequence
+//	/// concept)
+//	
+//	/**
+//	 * Returns a read/write ("mutable") iterator to the first (inorder) value.
+//	 */ 	 
+//	iterator begin()
+//	{
+//		return iterator(inorder_first());
+//	}
+//	
+//	/**
+//	 * Returns a read-only const_iterator to the first (inorder) value.
+//	 */ 	 
+//	const_iterator begin() const
+//	{
+//		return cbegin();
+//	}
+//	
+//	/**
+//	 * Returns a read-only const_iterator to the first (inorder) value.
+//	 */ 	 
+//	const_iterator cbegin() const
+//	{
+//		return const_iterator(inorder_first());
+//	}
+//
+//	/**
+//	 * Returns a read/write ("mutable") inorder iterator to the position one 
+//	 * past the last (inorder) value in the %nary_tree.  
+//	 */
+//	iterator end()
+//	{
+//		return iterator(shoot());
+//	}
+//
+//	 /**
+//	 * Returns a read-only inorder const_iterator to the position one past the 
+//	 * last (inorder) value in the %nary_tree. 
+//	 */	
+//	const_iterator end() const
+//	{
+//		return cend();
+//	}
+//	
+//	/**
+//	 * Returns a read-only inorder const_iterator to the position one past the 
+//	 * last (inorder) value in the %nary_tree. 
+//	 */	
+//	const_iterator cend() const
+//	{
+//		return const_iterator(cshoot());
+//	}
 	
 	// Hierarchy-specific
 	/**
@@ -313,32 +313,90 @@ class nary_tree /*: public Balance, public Augment*/ {
 			p_node->m_parent = pos.m_parent;
 			static_cast<node_pointer>(pos.m_parent)->operator[](pos.m_pos)->push_back(p_node);
 			
-			// Readjust begin
-			if ((iterator(pos) == this->begin()))
-				m_header[1] = p_node; 
+//			// Readjust begin
+//			if ((iterator(pos) == this->begin()))
+//				m_header[1] = p_node; 
 			
 			// Readjust shoot
 			if (pos == this->shoot())
 				m_header.m_parent = p_node;	
 		}
-		return pos.begin().begin();
+		return pos.begin();
 //		balancer_type::add(pos, this->root());
 	}
 
 	/// Sequence-specific
 	
+//	/**
+//	 * @brief		Inserts val in front of @a pos, or, if @a pos' parent is
+//	 * 				already full, creates a new child node containing @a val 
+//	 * 				instead.
+//	 * @param pos	The %nary_tree inorder iterator in front of which to insert.
+//	 * @param val	The value to insert.
+//	 * @return		An inorder iterator that points to the inserted data.
+//	 */
+//	iterator insert(iterator pos, value_type const& val)
+//	{
+//		return iterator(this->insert(cursor(pos), val));
+//	}
+	
+
+ 	
+//	void erase (iterator pos)
+// 	{		
+// 		erase(cursor(pos));
+// 	}
+// 	
+// 	void erase (iterator a, iterator b)
+// 	{
+// 	}
+
+	 /** 
+ 	 * Removes a node and its descendants recursively in postorder
+ 	 * without rebalancing
+ 	 * @param c	Cursor pointing to the node to be removed.
+ 	 */
+ 	void clear(cursor c) 
+ 	{
+ 		if (!c.empty()) {
+ 		
+	 		// delete the value this c points to	
+	 		m_value_alloc.destroy(c.node()->data());
+	 		m_value_alloc.deallocate(c.node()->data(), 1);
+	 		
+			// recurse
+	 		clear(c.begin());
+	 		clear(c.end());
+	 		
+	 		// delete the node c points to
+			m_node_alloc.destroy(c.node());
+			m_node_alloc.deallocate(c.node(), 1); 
+		
+  		}
+ 	}
+ 	 	
 	/**
-	 * @brief		Inserts val in front of @a pos, or, if @a pos' parent is
-	 * 				already full, creates a new child node containing @a val 
-	 * 				instead.
-	 * @param pos	The %nary_tree inorder iterator in front of which to insert.
-	 * @param val	The value to insert.
-	 * @return		An inorder iterator that points to the inserted data.
+	 * @brief Clears all data from the tree (without any rebalancing).
 	 */
-	iterator insert(iterator pos, value_type const& val)
+ 	void clear()
+ 	{
+ 		clear(this->root());
+ 		m_header.m_parent = &m_header;
+ 		m_header[0] = node_base_type::nil();
+		m_header[1] = &m_header;
+ 	}
+
+	bool empty() const
 	{
-		return iterator(this->insert(cursor(pos), val));
+		return m_header.m_parent == &m_header;
 	}
+
+private:
+
+	node_base_type m_header;
+
+	allocator_type	 m_value_alloc;
+	node_allocator_type m_node_alloc;
 	
 	//erase operations must rebalance; clear doesn't need to.	
 	//TODO: Can/Should remove (and erase) return the next cursor's position ?
@@ -364,62 +422,6 @@ class nary_tree /*: public Balance, public Augment*/ {
 		m_node_alloc.destroy(p_node);
 		m_node_alloc.deallocate(p_node, 1);
 	}
- 	
-	void erase (iterator pos)
- 	{		
- 		erase(cursor(pos));
- 	}
- 	
- 	void erase (iterator a, iterator b)
- 	{
- 	}
- 	
-	/**
-	 * @brief Clears all data from the tree (without any rebalancing).
-	 */
- 	void clear()
- 	{
- 		clear(this->root());
- 		m_header.m_parent = &m_header;
- 		m_header[0] = node_base_type::nil();
-		m_header[1] = &m_header;
- 	}
-
-	bool empty() const
-	{
-		return m_header.m_parent == &m_header;
-	}
-
-private:
-
-	node_base_type m_header;
-
-	allocator_type	 m_value_alloc;
-	node_allocator_type m_node_alloc;
-	
-	 /** 
- 	 * Removes a node and its descendants recursively in postorder
- 	 * without rebalancing
- 	 * @param c	Cursor pointing to the node to be removed.
- 	 */
- 	void clear(cursor c) 
- 	{
- 		if (!c.empty()) {
- 		
-	 		// delete the value this c points to	
-	 		m_value_alloc.destroy(c.node()->data());
-	 		m_value_alloc.deallocate(c.node()->data(), 1);
-	 		
-			// recurse
-	 		clear(c.begin());
-	 		clear(c.end());
-	 		
-	 		// delete the node c points to
-			m_node_alloc.destroy(c.node());
-			m_node_alloc.deallocate(c.node(), 1); 
-		
-  		}
- 	}
 };
 
 //template <class Node, class Balance, class Alloc, class NodeAlloc>
@@ -433,7 +435,7 @@ private:
 //};
 //
 //template <class Node>
-//bool empty(tree_cursor<Node> cur)
+//bool empty(nary_tree_cursor<Node> cur)
 //{
 //	return !cur.empty();
 //}

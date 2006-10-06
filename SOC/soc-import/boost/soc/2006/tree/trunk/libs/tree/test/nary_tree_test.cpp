@@ -41,7 +41,7 @@ void test_nary_tree()
 	tree_type::cursor c = mytree.shoot();
 	c = mytree.insert(c, 4);
 	BOOST_CHECK(*c == 4);
-	//BOOST_CHECK(c == mytree.root().begin());
+	BOOST_CHECK(c == mytree.root().begin());
 }
 
 int test_main(int, char* [])
