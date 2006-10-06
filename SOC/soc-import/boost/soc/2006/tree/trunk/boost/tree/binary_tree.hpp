@@ -312,6 +312,62 @@ class binary_tree : public Balance, public Augment {
 	{
 		return iterator(this->insert(cursor(pos), val));
 	}
+	 	
+	void erase (iterator pos)
+ 	{		
+ 		erase(cursor(pos));
+ 	}
+ 	
+ 	void erase (iterator a, iterator b)
+ 	{
+ 	}
+ 	
+	 /** 
+ 	 * Removes a node and its descendants recursively in postorder
+ 	 * without rebalancing
+ 	 * @param c	Cursor pointing to the node to be removed.
+ 	 */
+ 	void clear(cursor c) 
+ 	{
+ 		if (!c.empty()) {
+ 		
+	 		// delete the value this c points to	
+	 		m_value_alloc.destroy(c.node()->data());
+	 		m_value_alloc.deallocate(c.node()->data(), 1);
+	 		
+			// recurse
+	 		clear(c.begin());
+	 		clear(c.end());
+	 		
+	 		// delete the node c points to
+			m_node_alloc.destroy(c.node());
+			m_node_alloc.deallocate(c.node(), 1); 
+		
+  		}
+ 	} 	
+ 	
+	/**
+	 * @brief Clears all data from the tree (without any rebalancing).
+	 */
+ 	void clear()
+ 	{
+ 		clear(this->root());
+ 		m_header.m_parent = &m_header;
+ 		m_header[0] = node_base_type::nil();
+		m_header[1] = &m_header;
+ 	}
+
+	bool empty() const
+	{
+		return m_header.m_parent == &m_header;
+	}
+
+private:
+
+	node_base_type m_header;
+
+	allocator_type	 m_value_alloc;
+	node_allocator_type m_node_alloc;
 	
 	//erase operations must rebalance; clear doesn't need to.	
 	//TODO: Can/Should remove (and erase) return the next cursor's position ?
@@ -337,62 +393,6 @@ class binary_tree : public Balance, public Augment {
 		m_node_alloc.destroy(p_node);
 		m_node_alloc.deallocate(p_node, 1);
 	}
- 	
-	void erase (iterator pos)
- 	{		
- 		erase(cursor(pos));
- 	}
- 	
- 	void erase (iterator a, iterator b)
- 	{
- 	}
- 	
-	/**
-	 * @brief Clears all data from the tree (without any rebalancing).
-	 */
- 	void clear()
- 	{
- 		clear(this->root());
- 		m_header.m_parent = &m_header;
- 		m_header[0] = node_base_type::nil();
-		m_header[1] = &m_header;
- 	}
-
-	bool empty() const
-	{
-		return m_header.m_parent == &m_header;
-	}
-
-private:
-
-	node_base_type m_header;
-
-	allocator_type	 m_value_alloc;
-	node_allocator_type m_node_alloc;
-	
-	 /** 
- 	 * Removes a node and its descendants recursively in postorder
- 	 * without rebalancing
- 	 * @param c	Cursor pointing to the node to be removed.
- 	 */
- 	void clear(cursor c) 
- 	{
- 		if (!c.empty()) {
- 		
-	 		// delete the value this c points to	
-	 		m_value_alloc.destroy(c.node()->data());
-	 		m_value_alloc.deallocate(c.node()->data(), 1);
-	 		
-			// recurse
-	 		clear(c.begin());
-	 		clear(c.end());
-	 		
-	 		// delete the node c points to
-			m_node_alloc.destroy(c.node());
-			m_node_alloc.deallocate(c.node(), 1); 
-		
-  		}
- 	}
 };
 
 template <class Node, class Balance, class Alloc, class NodeAlloc>

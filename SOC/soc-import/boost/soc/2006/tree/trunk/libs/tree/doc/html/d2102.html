@@ -415,7 +415,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
             </tr>
 
             <tr>
-              <td><tt>a.erase(q)</tt></td>
+              <td><tt>a.clear(q)</tt></td>
 
               <td><tt>void</tt></td>
 
@@ -429,7 +429,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
               <td><tt>void</tt></td>
 
-              <td><tt>a.erase(a.root());</tt><br />
+              <td><tt>a.clear(a.root());</tt><br />
               post: <tt>a.size() == 0</tt></td>
 
               <td>(Note A)</td>
@@ -591,10 +591,10 @@ namespace tr2 {
       void    insert (iterator position, InputIterator first, InputIterator last);
     void      pop_front();
     void      pop_back();
-    void      erase(cursor position);
     iterator  erase(iterator position);
     iterator  erase(iterator first, iterator last);
     void      swap(binary_tree&lt;Tp, Balance, Augment, Alloc&gt;&amp;);
+    void      clear(cursor position);
     void      clear();
   };
 
