@@ -27,16 +27,12 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
- * @file binary.hpp
- * Binary cursor implementation
+ * @file nary.hpp
+ * Nary cursor implementation
  */
 
-// TODO: Use TR1 type_traits (integral_constant)
-// can we abstract the cursor stuff any further, 
-// eventually producing cursor_adaptor?
-
-#ifndef BOOST_TREE_DETAIL_CURSOR_BINARY_HPP
-#define BOOST_TREE_DETAIL_CURSOR_BINARY_HPP
+#ifndef BOOST_TREE_DETAIL_CURSOR_NARY_HPP
+#define BOOST_TREE_DETAIL_CURSOR_NARY_HPP
 
 #include <boost/tree/cursor_helpers.hpp>
 
@@ -51,18 +47,48 @@ using boost::tree::cursor_core_access;
 using boost::tree::access_rotate;
 
 template <class Node>
-class binary_tree_cursor;
+class nary_tree_cursor;
+
+template <class Node, class BasePtr, class SizeType>
+class helper {
+ public:
+	static typename Node::reference deref(BasePtr par, SizeType pos)
+	{
+		return **static_cast<Node*>(par->operator[](pos));
+	}
+};
+
+
+template <class BasePtr, class SizeType, class Value, class Augment, class Balance>
+class helper<node<Value, detail::binary_array, Augment, Balance> const, BasePtr, SizeType > {
+	typedef node<Value, detail::binary_array, Augment, Balance> const node_type;
+ public:
+	static typename node_type::reference deref(BasePtr par, SizeType pos)
+	{
+		return **static_cast<node_type*>(par);
+	}
+};
+
+template <class BasePtr, class SizeType, class Value, class Augment, class Balance>
+class helper<node<Value, detail::binary_array, Augment, Balance>, BasePtr, SizeType > {
+	typedef node<Value, detail::binary_array, Augment, Balance> node_type;
+ public:
+	static typename node_type::reference deref(BasePtr par, SizeType pos)
+	{
+		return **static_cast<node_type*>(par);
+	}
+};
 
 template<class Node>
-class const_binary_tree_cursor
- : public cursor_facade<const_binary_tree_cursor<Node>
+class const_nary_tree_cursor
+ : public cursor_facade<const_nary_tree_cursor<Node>
       , typename Node::value_type const //const is a hint for iterator_facade!
       , random_access_traversal_tag
       , bidirectional_traversal_tag
     > {
  private:
     struct enabler {};
-	typedef const_binary_tree_cursor<Node> self_type;
+	typedef const_nary_tree_cursor<Node> self_type;
 	typedef typename self_type::cursor_facade_ cursor_facade_;
  public:
  	//TODO: Tidy up typedefs
@@ -77,12 +103,9 @@ class const_binary_tree_cursor
 	typedef typename cursor_facade_::size_type size_type;
 
 	// Cursor-specific
-	//typedef integral_constant<size_type, 2> arity; // binary cursor
 	
- 	typedef binary_tree_cursor<Node> cursor;
- 	typedef const_binary_tree_cursor<Node> const_cursor;
-
-	//typedef bidirectional_traversal_tag vertical_traversal_type;
+ 	typedef nary_tree_cursor<Node> cursor;
+ 	typedef const_nary_tree_cursor<Node> const_cursor;
 	
 	typedef typename Node::metadata_type metadata_type;
 	
@@ -91,17 +114,15 @@ class const_binary_tree_cursor
 	typedef const_cursor const_iterator;
 	
  	// Common iterator facade stuff
-    const_binary_tree_cursor()
+    const_nary_tree_cursor()
      : m_parent(0), m_pos(0) {}
 
-    explicit const_binary_tree_cursor(
-		const_base_pointer p, 
-		size_type pos /*= 1*/)
+    explicit const_nary_tree_cursor(const_base_pointer p, size_type pos)
      : m_parent(p), m_pos(pos) {}
       
     template <class OtherNode>
-    const_binary_tree_cursor(
-        const_binary_tree_cursor<OtherNode> const& other
+    const_nary_tree_cursor(
+        const_nary_tree_cursor<OtherNode> const& other
       , typename boost::enable_if<
             boost::is_convertible<OtherNode*, 
            	typename Node::base_pointer>  // is that correct?
@@ -119,12 +140,13 @@ class const_binary_tree_cursor
     friend class iterator_core_access;
     friend class cursor_core_access;
         
-    typename Node::value_type const& dereference() const
+    //const
+    typename node_type::reference dereference() const
 	{
-		return **static_cast<node_pointer>(m_parent);
+		return helper<node_type, const_base_pointer, size_type>::deref(m_parent, m_pos);
 	}
 	
-    bool equal(const_binary_tree_cursor const& other) const
+    bool equal(const_nary_tree_cursor const& other) const
     {
 		return (this->m_parent == other.m_parent) && (this->m_pos == other.m_pos);
     }
@@ -139,13 +161,13 @@ class const_binary_tree_cursor
 		--m_pos;
     }
     
-    void advance(typename const_binary_tree_cursor::cursor_facade_::difference_type n)
+    void advance(typename const_nary_tree_cursor::cursor_facade_::difference_type n)
     {
     		m_pos += n;
     }
     
-    typename const_binary_tree_cursor::cursor_facade_::difference_type
-    distance_to(const_binary_tree_cursor z) const //TODO: convertible to instead of const_binary_tree_cursor (?)
+    typename const_nary_tree_cursor::cursor_facade_::difference_type
+    distance_to(const_nary_tree_cursor z) const //TODO: convertible to instead of const_nary_tree_cursor (?)
     {
     		return (z.m_pos - this->m_pos);
     }
@@ -199,8 +221,8 @@ public:
 };
 
 template <class Node> 
-class binary_tree_cursor
- : public cursor_facade<binary_tree_cursor<Node>
+class nary_tree_cursor
+ : public cursor_facade<nary_tree_cursor<Node>
       , typename Node::value_type
       , random_access_traversal_tag
       , bidirectional_traversal_tag
@@ -217,13 +239,10 @@ class binary_tree_cursor
 	typedef typename node_type::size_type size_type;
 
 	// Cursor-specific
-	//typedef integral_constant<size_type, 2> arity; // binary cursor
 		
- 	typedef binary_tree_cursor<node_type> cursor;
- 	typedef const_binary_tree_cursor<node_type> const_cursor;
+ 	typedef nary_tree_cursor<node_type> cursor;
+ 	typedef const_nary_tree_cursor<node_type> const_cursor;
 
-	typedef bidirectional_traversal_tag vertical_traversal_type;
- 
  	typedef typename node_type::metadata_type metadata_type;
  	
 	// Container-specific:
@@ -232,18 +251,18 @@ class binary_tree_cursor
 	
 	template <class OtherValue>
 	struct rebind {
-		typedef binary_tree_cursor<OtherValue> other;
+		typedef nary_tree_cursor<OtherValue> other;
 	};
 	
-    binary_tree_cursor()
+    nary_tree_cursor()
       : m_parent(0), m_pos(0) {}
 
-    explicit binary_tree_cursor(base_pointer p, size_type pos /*= 1*/)
-      : m_parent(p), m_pos(pos) {}
+    explicit nary_tree_cursor(base_pointer p, size_type pos)
+    : m_parent(p), m_pos(pos) {}
 
     template <class OtherNode> //revisit
-    binary_tree_cursor(
-        binary_tree_cursor<OtherNode> const& other
+    nary_tree_cursor(
+        nary_tree_cursor<OtherNode> const& other
       , typename boost::enable_if<
             boost::is_convertible<OtherNode*, base_pointer>
           , enabler
@@ -264,7 +283,7 @@ class binary_tree_cursor
  	
     typename node_type::reference dereference() const
 	{
-		return **static_cast<node_pointer>(m_parent);
+		return helper<node_type, base_pointer, size_type>::deref(m_parent, m_pos);
 	}
 	
     bool equal(cursor const& other) const
@@ -282,13 +301,13 @@ class binary_tree_cursor
 		--m_pos;
     }    
     
-	void advance(typename binary_tree_cursor::cursor_facade_::difference_type n)
+	void advance(typename nary_tree_cursor::cursor_facade_::difference_type n)
     {
     		m_pos += n;
     }
     
-    typename binary_tree_cursor::cursor_facade_::difference_type
-    distance_to(binary_tree_cursor z) const //FIXME: convertible to instead of const_binary_tree_cursor
+    typename nary_tree_cursor::cursor_facade_::difference_type
+    distance_to(nary_tree_cursor z) const //FIXME: convertible to instead of const_nary_tree_cursor
     {
     		return (z.m_pos - this->m_pos);
     }
@@ -414,4 +433,4 @@ public:
 } // namespace boost
 
 
-#endif // BOOST_TREE_DETAIL_CURSOR_BINARY_HPP
+#endif // BOOST_TREE_DETAIL_CURSOR_NARY_HPP
