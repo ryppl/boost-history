@@ -79,42 +79,42 @@ class rank {
  	
  protected:
 	//or metadata as param-type?
-	template <class Cursor>
- 	void pre_rotate(Cursor& q)
+	template <class Tree>
+ 	void pre_rotate(Tree&, typename Tree::cursor& q)
  	{
- 		Cursor p = q->parent();
+ 		typename Tree::cursor p = q->parent();
 		if (!q.parity())
 			p.metadata().rank() -= q.metadata().rank();
 		else
 			q.metadata().rank() += p.metadata().rank();
  	}
  	
- 	template <class Cursor>
- 	void pre_detach(Cursor& y, Cursor const& header)
+ 	template <class Tree>
+ 	void pre_detach(Tree& t, typename Tree::cursor& y)
  	{
- 		Cursor p = y;
- 		while (p.parent() != header) {
+ 		typename Tree::cursor p = y;
+ 		while (p.parent() != t.root()) {
  			if (!p.parity())
  				--p.parent().metadata().rank();
  			p = p.parent();
  		}
  	}
  	
- 	template <class Cursor>
- 	void pre_detach(Cursor& y, Cursor& z, Cursor const& header)
+ 	template <class Tree>
+ 	void pre_detach(Tree& t, typename Tree::cursor& y, typename Tree::cursor& z)
  	{
- 		Cursor p = y;
- 		while (p.parent() != header) {
+ 		typename Tree::cursor p = y;
+ 		while (p.parent() != t.root()) {
  			if (!p.parity())
  				--p.parent().metadata().rank();
  			p = p.parent();
  		}
- 		if (z == header)
+ 		if (z == t.root())
  			y.metadata().rank() = z.metadata().rank();
  	}
 
- 	template <class Cursor>
- 	void descend(Cursor& p)
+ 	template <class Tree>
+ 	void descend(Tree&, typename Tree::cursor& p)
  	{
  		if (p.parity() == 0) {
  			++p.metadata().rank();

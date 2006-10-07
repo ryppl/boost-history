@@ -381,10 +381,10 @@ private:
  		balancer_type::remove(*this, pos);
  		node_pointer p_node;
 // 		if (pos == ret) {
- 			augmentor_type::pre_detach(pos, ret);
+ 			augmentor_type::pre_detach(*this, pos);
  			p_node = pos.detach();
 // 		} else {
-// 			augmentor_type::pre_detach(pos, ret, this->root());
+// 			augmentor_type::pre_detach(*this, pos, ret,);
 // 			p_node = pos.detach(ret);
 // 		}
  		

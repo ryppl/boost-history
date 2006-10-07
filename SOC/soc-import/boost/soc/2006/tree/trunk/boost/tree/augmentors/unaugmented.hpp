@@ -45,20 +45,20 @@ class unaugmented {
  public:
  	struct metadata_type {};
  protected:
-	template <class Cursor>
- 	void pre_rotate(Cursor&)
+	template <class Tree>
+ 	void pre_rotate(Tree&, typename Tree::cursor&)
  	{ }
  	
- 	template <class Cursor>
- 	void pre_detach(Cursor&, Cursor const&)
+ 	template <class Tree>
+ 	void pre_detach(Tree&, typename Tree::cursor&)
  	{ }
  	
- 	template <class Cursor>
- 	void pre_detach(Cursor&, Cursor&, Cursor const&)
+ 	template <class Tree>
+ 	void pre_detach(Tree&, typename Tree::cursor&, typename Tree::cursor&)
  	{ }
  	
- 	template <class Cursor>
- 	void descend(Cursor&)
+ 	template <class Tree>
+ 	void descend(Tree&, typename Tree::cursor&)
  	{ }
 };
 
