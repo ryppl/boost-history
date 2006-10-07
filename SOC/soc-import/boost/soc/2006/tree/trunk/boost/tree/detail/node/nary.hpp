@@ -117,9 +117,17 @@ class node_base : public node_with_parent_base, public Container<node_base<Conta
 	// This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
 	bool const empty() const
 	{
-		return (this == nil());
+		return ((this == nil()) || this->base_type::empty());
 	}
-	
+
+	// O(n); n is number of parent's children
+	typename base_type::size_type const get_parity() const
+	{
+		typename base_type::size_type i = 0;
+		while (static_cast<base_pointer>(this->m_parent)->base_type::operator[](i++) != this);
+		return --i;
+		//return (static_cast<base_pointer>(this->m_parent)->base_type::operator[](0) == this ? 0 : 1);
+	}
 };
 
 template <>
@@ -210,6 +218,7 @@ class node_base<binary_array>
 		return x;
 	}
 	
+	// O(1)
 	base_type::size_type const get_parity() const
 	{
 		return (static_cast<base_pointer>(this->m_parent)->base_type::operator[](0) == this ? 0 : 1);

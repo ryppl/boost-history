@@ -110,17 +110,17 @@ class const_nary_tree_cursor
     )
       : m_parent(other.m_parent), m_pos(other.m_pos) {}
 
-	
- private:
+
 	const_base_pointer m_parent;
  	size_type m_pos;
-
+ 	
+ private:
     friend class iterator_core_access;
     friend class cursor_core_access;
         
     typename Node::value_type const& dereference() const
 	{
-		return **static_cast<node_pointer>(m_parent);
+		return **static_cast<node_pointer>(m_parent->operator[](m_pos));
 	}
 	
     bool equal(const_nary_tree_cursor const& other) const
@@ -335,7 +335,7 @@ public:
 		return cursor(static_cast<base_pointer>(m_parent->parent()), m_parent->get_parity());
 	}
 	
-	const_cursor parent() const
+	const_cursor up() const
 	{
 		return const_cursor(static_cast<base_pointer>(m_parent->parent()), m_parent->get_parity());
 	}
@@ -350,15 +350,6 @@ public:
 		return m_pos;
 	}
 		
-
-	
-//	bool const is_root() const
-//	{
-//		return ((m_parent->m_parent->operator[](0) != m_parent) 
-//			 && (m_parent->m_parent->operator[](1) != m_parent))
-//			 ||  m_parent->m_parent == m_parent->operator[](1); // empty root
-//	}
-
 protected:	
 	void rotate()
 	{

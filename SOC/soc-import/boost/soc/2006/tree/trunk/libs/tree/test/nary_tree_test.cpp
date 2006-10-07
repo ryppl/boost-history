@@ -39,9 +39,28 @@ void test_nary_tree()
 	typedef nary_tree<int> tree_type;
 	tree_type mytree;
 	tree_type::cursor c = mytree.shoot();
+	BOOST_CHECK(mytree.root().empty());
+	BOOST_CHECK(c.empty());
+
 	c = mytree.insert(c, 4);
 	BOOST_CHECK(*c == 4);
-	BOOST_CHECK(c == mytree.root().begin());
+	BOOST_CHECK(c == mytree.root());
+	BOOST_CHECK(c.empty());
+	
+	c = mytree.insert(c, 5);
+	BOOST_CHECK(*c == 5);
+	BOOST_CHECK(c == mytree.root());
+	++c;
+	BOOST_CHECK(*c == 4);
+	BOOST_CHECK(c != mytree.root());
+	BOOST_CHECK(c.empty());
+	BOOST_CHECK(c.m_parent != tree_type::node_type::nil());
+
+	mytree.insert(c.end(), 3);
+	BOOST_CHECK(*(c.begin()) == 3);
+	BOOST_CHECK(!c.empty());
+	BOOST_CHECK(c == c.begin().parent());
+
 }
 
 int test_main(int, char* [])

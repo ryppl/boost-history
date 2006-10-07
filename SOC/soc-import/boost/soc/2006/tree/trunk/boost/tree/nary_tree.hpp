@@ -304,24 +304,21 @@ class nary_tree /*: public Balance, public Augment*/ {
 		pointer p_val = m_value_alloc.allocate(1, val_hint);
 		m_value_alloc.construct(p_val, val);
 		
-//		pos.attach(p_node);
-		if (pos.empty()) {
-			node_pointer p_node = m_node_alloc.allocate(1, node_hint);
-			m_node_alloc.construct(p_node, p_val);
-//			p_node->init();
-			
-			p_node->m_parent = pos.m_parent;
-			static_cast<node_pointer>(pos.m_parent)->operator[](pos.m_pos)->push_back(p_node);
-			
-//			// Readjust begin
-//			if ((iterator(pos) == this->begin()))
-//				m_header[1] = p_node; 
-			
-			// Readjust shoot
-			if (pos == this->shoot())
-				m_header.m_parent = p_node;	
-		}
-		return pos.begin();
+		node_pointer p_node = m_node_alloc.allocate(1, node_hint);
+		m_node_alloc.construct(p_node, p_val);	
+
+		p_node->m_parent = pos.m_parent;
+
+		if (pos.m_parent == node_type::nil())
+			static_cast<node_pointer>(pos.m_parent)->operator[](pos.m_pos) = p_node;
+		else if (static_cast<node_pointer>(pos.m_parent)->empty()) {
+			static_cast<node_pointer>(pos.m_parent)->push_back(p_node);
+			pos.m_pos = 0;
+		} else
+			static_cast<node_pointer>(pos.m_parent)->insert(
+				static_cast<node_pointer>(pos.m_parent)->begin()+(pos.m_pos), 
+				p_node);
+		return pos;
 //		balancer_type::add(pos, this->root());
 	}
 

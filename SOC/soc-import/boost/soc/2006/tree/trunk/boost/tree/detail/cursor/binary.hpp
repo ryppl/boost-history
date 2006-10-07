@@ -111,10 +111,11 @@ class const_binary_tree_cursor
       : m_parent(other.m_parent), m_pos(other.m_pos) {}
 
 	
- private:
+
 	const_base_pointer m_parent;
  	size_type m_pos;
 
+ private:
     friend class iterator_core_access;
     friend class cursor_core_access;
         
@@ -250,7 +251,6 @@ class binary_tree_cursor
     )
       : m_parent(other.m_parent), m_pos(other.m_pos) {}
 
- public:
  	base_pointer m_parent;
  	size_type m_pos;
 
@@ -337,7 +337,7 @@ public:
 		return cursor(static_cast<base_pointer>(m_parent->parent()), m_parent->get_parity());
 	}
 	
-	const_cursor parent() const
+	const_cursor up() const
 	{
 		return const_cursor(static_cast<base_pointer>(m_parent->parent()), m_parent->get_parity());
 	}
