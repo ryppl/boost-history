@@ -30,7 +30,7 @@
 
 #ifndef BOOST_TREE_DETAIL_CURSOR_MULTIWAY_HPP
 #define BOOST_TREE_DETAIL_CURSOR_MULTIWAY_HPP
-#include <boost/tree/detail/cursor/binary.hpp>
+#include <boost/tree/detail/cursor/nary.hpp>
 
 #include <boost/tree/cursor.hpp>
 

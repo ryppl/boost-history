@@ -39,7 +39,7 @@
 #include <boost/tree/iterators.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
-#include <boost/tree/detail/cursor/binary.hpp>
+#include <boost/tree/detail/cursor/nary.hpp>
 #include <boost/tree/detail/sortable_traits.hpp>
 
 #include <boost/tree/augmentors/unaugmented.hpp>
@@ -53,8 +53,8 @@ namespace boost {
 namespace tree {
 
 using detail::node;
-using detail::const_binary_tree_cursor;
-using detail::binary_tree_cursor;
+using detail::const_nary_tree_cursor;
+using detail::nary_tree_cursor;
 
 /** 
  * @brief A %binary_tree.
@@ -83,8 +83,8 @@ class binary_tree : public Balance, public Augment {
 	typedef node_base_type* node_base_pointer;
 	typedef typename node_traits<node_type>::node_pointer node_pointer;
 	
-	typedef binary_tree_cursor<node_type> cursor;
-	typedef const_binary_tree_cursor<node_type> const_cursor;
+	typedef nary_tree_cursor<node_type> cursor;
+	typedef const_nary_tree_cursor<node_type> const_cursor;
 
 	typedef inorder::iterator<cursor> iterator;
 	typedef inorder::iterator<const_cursor> const_iterator;
@@ -406,7 +406,7 @@ struct sortable_traits <class binary_tree<Node, Balance, Alloc, NodeAlloc> >
 };
 
 template <class Node>
-bool empty(binary_tree_cursor<Node> cur)
+bool empty(nary_tree_cursor<Node> cur)
 {
 	return !cur.empty();
 }

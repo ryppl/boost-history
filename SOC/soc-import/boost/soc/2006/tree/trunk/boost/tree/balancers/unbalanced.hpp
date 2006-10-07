@@ -29,7 +29,7 @@
 #ifndef BOOST_TREE_BALANCERS_UNBALANCED_HPP
 #define BOOST_TREE_BALANCERS_UNBALANCED_HPP
 
-#include <boost/tree/detail/cursor/binary.hpp>
+#include <boost/tree/detail/cursor/nary.hpp>
 #include <boost/tree/inorder.hpp>
 
 using boost::tree::access_rotate;

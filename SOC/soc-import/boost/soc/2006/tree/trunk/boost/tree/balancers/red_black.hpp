@@ -33,7 +33,7 @@
 //TODO: lots.
 //templatize with bool add_data?
 
-#include <boost/tree/detail/cursor/binary.hpp>
+#include <boost/tree/detail/cursor/nary.hpp>
 
 using boost::tree::access_rotate;
 
