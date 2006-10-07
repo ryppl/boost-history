@@ -303,16 +303,16 @@ class nary_tree /*: public Balance, public Augment*/ {
 		node_pointer p_node = m_node_alloc.allocate(1, node_hint);
 		m_node_alloc.construct(p_node, p_val);	
 
-		p_node->m_parent = pos.m_parent;
+		p_node->m_parent = pos.m_node;
 
-		if (pos.m_parent == node_type::nil())
-			static_cast<node_pointer>(pos.m_parent)->operator[](pos.m_pos) = p_node;
-		else if (static_cast<node_pointer>(pos.m_parent)->empty()) {
-			static_cast<node_pointer>(pos.m_parent)->push_back(p_node);
+		if (pos.m_node == node_type::nil())
+			static_cast<node_pointer>(pos.m_node)->operator[](pos.m_pos) = p_node;
+		else if (static_cast<node_pointer>(pos.m_node)->empty()) {
+			static_cast<node_pointer>(pos.m_node)->push_back(p_node);
 			pos.m_pos = 0;
 		} else
-			static_cast<node_pointer>(pos.m_parent)->insert(
-				static_cast<node_pointer>(pos.m_parent)->begin()+(pos.m_pos), 
+			static_cast<node_pointer>(pos.m_node)->insert(
+				static_cast<node_pointer>(pos.m_node)->begin()+(pos.m_pos), 
 				p_node);
 		return pos;
 //		balancer_type::add(pos, this->root());

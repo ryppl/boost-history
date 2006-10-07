@@ -115,10 +115,10 @@ class const_nary_tree_cursor
 	
  	// Common iterator facade stuff
     const_nary_tree_cursor()
-     : m_parent(0), m_pos(0) {}
+     : m_node(0), m_pos(0) {}
 
     explicit const_nary_tree_cursor(const_base_pointer p, size_type pos)
-     : m_parent(p), m_pos(pos) {}
+     : m_node(p), m_pos(pos) {}
       
     template <class OtherNode>
     const_nary_tree_cursor(
@@ -129,11 +129,11 @@ class const_nary_tree_cursor
           , enabler
         >::type = enabler()
     )
-      : m_parent(other.m_parent), m_pos(other.m_pos) {}
+      : m_node(other.m_node), m_pos(other.m_pos) {}
 
 	
 
-	const_base_pointer m_parent;
+	const_base_pointer m_node;
  	size_type m_pos;
 
  private:
@@ -143,12 +143,12 @@ class const_nary_tree_cursor
     //const
     typename node_type::reference dereference() const
 	{
-		return helper<node_type, const_base_pointer, size_type>::deref(m_parent, m_pos);
+		return helper<node_type, const_base_pointer, size_type>::deref(m_node, m_pos);
 	}
 	
     bool equal(const_nary_tree_cursor const& other) const
     {
-		return (this->m_parent == other.m_parent) && (this->m_pos == other.m_pos);
+		return (this->m_node == other.m_node) && (this->m_pos == other.m_pos);
     }
     
     void increment()
@@ -177,34 +177,34 @@ private:
 	
 	bool const empty_() const
 	{
-		return m_parent->operator[](m_pos)->empty();
+		return m_node->operator[](m_pos)->empty();
 	}
 	
 	size_type const size_() const
 	{
-		return m_parent->size();
+		return m_node->size();
 	}
 	
 	size_type const max_size_() const
 	{
-		return m_parent->max_size();
+		return m_node->max_size();
 	}
 	
 	// TODO (following couple of functions): wrap around node member fn
 	const_cursor left() const
 	{
-		return const_cursor(m_parent->operator[](m_pos), 0); 
+		return const_cursor(m_node->operator[](m_pos), 0); 
 	}
 		
 	const_cursor right() const
 	{
-		return const_cursor(m_parent->operator[](m_pos), m_parent->size()-1);
+		return const_cursor(m_node->operator[](m_pos), m_node->size()-1);
 	}
 
 	// Cursor stuff. 	
 	const_cursor up() const
 	{
-		return const_cursor(static_cast<const_base_pointer>(m_parent->parent()), m_parent->get_parity());
+		return const_cursor(static_cast<const_base_pointer>(m_node->parent()), m_node->get_parity());
 	}
 
 public:
@@ -216,7 +216,7 @@ public:
 
 	metadata_type const& metadata() const
 	{
-		return static_cast<node_pointer>(m_parent->operator[](m_pos))->metadata();
+		return static_cast<node_pointer>(m_node->operator[](m_pos))->metadata();
 	}
 };
 
@@ -255,10 +255,10 @@ class nary_tree_cursor
 	};
 	
     nary_tree_cursor()
-      : m_parent(0), m_pos(0) {}
+      : m_node(0), m_pos(0) {}
 
     explicit nary_tree_cursor(base_pointer p, size_type pos)
-    : m_parent(p), m_pos(pos) {}
+    : m_node(p), m_pos(pos) {}
 
     template <class OtherNode> //revisit
     nary_tree_cursor(
@@ -268,9 +268,9 @@ class nary_tree_cursor
           , enabler
         >::type = enabler()
     )
-      : m_parent(other.m_parent), m_pos(other.m_pos) {}
+      : m_node(other.m_node), m_pos(other.m_pos) {}
 
- 	base_pointer m_parent;
+ 	base_pointer m_node;
  	size_type m_pos;
 
  private: 
@@ -283,12 +283,12 @@ class nary_tree_cursor
  	
     typename node_type::reference dereference() const
 	{
-		return helper<node_type, base_pointer, size_type>::deref(m_parent, m_pos);
+		return helper<node_type, base_pointer, size_type>::deref(m_node, m_pos);
 	}
 	
     bool equal(cursor const& other) const
     {
-        return (this->m_parent == other.m_parent) && (this->m_pos == other.m_pos);
+        return (this->m_node == other.m_node) && (this->m_pos == other.m_pos);
     }
     
     void increment()
@@ -315,55 +315,55 @@ class nary_tree_cursor
 	// Container specific
 	bool const empty_() const
 	{
-		return m_parent->operator[](m_pos)->empty();
+		return m_node->operator[](m_pos)->empty();
 	}
 	
 	size_type size_()
 	{
-		return m_parent->size();
+		return m_node->size();
 	}
 	
 	size_type max_size_()
 	{
-		return m_parent->max_size();
+		return m_node->max_size();
 	}	
 public:
 
 	
 	cursor begin()
 	{
-		return cursor(m_parent->operator[](m_pos), 0);
+		return cursor(m_node->operator[](m_pos), 0);
 	}
 	
 	const_cursor left() const
 	{
-		return const_cursor(m_parent->operator[](m_pos), 0);
+		return const_cursor(m_node->operator[](m_pos), 0);
 	}
 
 	cursor end()
 	{
-		return cursor(m_parent->operator[](m_pos), m_parent->size()-1);
+		return cursor(m_node->operator[](m_pos), m_node->size()-1);
 	}
 
 	const_cursor right() const
 	{
-		return const_cursor(m_parent->operator[](m_pos), m_parent->size()-1);
+		return const_cursor(m_node->operator[](m_pos), m_node->size()-1);
 	}
 	
 	// Cursor stuff
 	cursor parent()
 	{
-		return cursor(static_cast<base_pointer>(m_parent->parent()), m_parent->get_parity());
+		return cursor(static_cast<base_pointer>(m_node->parent()), m_node->get_parity());
 	}
 	
 	const_cursor up() const
 	{
-		return const_cursor(static_cast<base_pointer>(m_parent->parent()), m_parent->get_parity());
+		return const_cursor(static_cast<base_pointer>(m_node->parent()), m_node->get_parity());
 	}
 	
 	node_pointer node() 
 	{
-		return static_cast<node_pointer>(m_parent->operator[](m_pos));
+		return static_cast<node_pointer>(m_node->operator[](m_pos));
 	}
 	
 	size_type const parity() const
@@ -375,16 +375,16 @@ public:
 	
 //	bool const is_root() const
 //	{
-//		return ((m_parent->m_parent->operator[](0) != m_parent) 
-//			 && (m_parent->m_parent->operator[](1) != m_parent))
-//			 ||  m_parent->m_parent == m_parent->operator[](1); // empty root
+//		return ((m_node->m_node->operator[](0) != m_node) 
+//			 && (m_node->m_node->operator[](1) != m_node))
+//			 ||  m_node->m_node == m_node->operator[](1); // empty root
 //	}
 
 protected:	
 	void rotate()
 	{
-		m_pos = m_parent->rotate(m_pos);
-		m_parent = static_cast<base_pointer>(m_parent->m_parent->m_parent);
+		m_pos = m_node->rotate(m_pos);
+		m_node = static_cast<base_pointer>(m_node->m_parent->m_parent);
 	}
 	
 
@@ -392,13 +392,13 @@ public:
 	// TODO: protect?
 	void attach(node_pointer p_node)
 	{
-		p_node->m_parent = m_parent;
+		p_node->m_parent = m_node;
 		
 		// Only forest-relevant:
-		p_node->operator[](1) = m_parent->operator[](m_pos);
-		m_parent->operator[](m_pos)->m_parent = p_node;
+		p_node->operator[](1) = m_node->operator[](m_pos);
+		m_node->operator[](m_pos)->m_parent = p_node;
 		
-		m_parent->operator[](m_pos) = p_node;
+		m_node->operator[](m_pos) = p_node;
 	}
 
 	/** 
@@ -407,17 +407,17 @@ public:
 	 */
 	node_pointer detach()
 	{
-		return static_cast<node_pointer>(m_parent->detach(m_pos));
+		return static_cast<node_pointer>(m_node->detach(m_pos));
 	}
 	
 	node_pointer detach(cursor y)
 	{
-		return static_cast<node_pointer>(m_parent->detach(m_pos, y.m_pos, y.m_parent));
+		return static_cast<node_pointer>(m_node->detach(m_pos, y.m_pos, y.m_node));
 	}
 		
 	metadata_type const& metadata() const
 	{
-		return static_cast<node_pointer>(m_parent->operator[](m_pos))->metadata();
+		return static_cast<node_pointer>(m_node->operator[](m_pos))->metadata();
 	}
 	
 	metadata_type& metadata()

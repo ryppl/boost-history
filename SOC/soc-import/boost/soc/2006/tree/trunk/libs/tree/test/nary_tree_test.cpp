@@ -54,7 +54,7 @@ void test_nary_tree()
 	BOOST_CHECK(*c == 4);
 	BOOST_CHECK(c != mytree.root());
 	BOOST_CHECK(c.empty());
-	BOOST_CHECK(c.m_parent != tree_type::node_type::nil());
+//	BOOST_CHECK(c.m_cur != tree_type::node_type::nil());
 
 	mytree.insert(c.end(), 3);
 	BOOST_CHECK(*(c.begin()) == 3);
