@@ -54,22 +54,22 @@ class unbalanced : public access_rotate {
 	}
 
  protected:	
-	template <class Cursor>
-	void add(Cursor&, Cursor const&)
+	template <class Tree>
+	void add(Tree&, typename Tree::cursor&)
 	{ }
 	  
-	template <class Cursor>
-	void remove(Cursor& x, Cursor& y)
+	template <class Tree>
+	void remove(Tree& t, typename Tree::cursor& x)
 	{
-		y = x;
+		typename Tree::cursor y = x;
 		if (x.begin().empty() || x.end().empty())
  			return;
  		inorder::forward(x);
  		return;
 	}
 	
-	template <class Cursor>
-	void touch(Cursor&, Cursor const&)
+	template <class Tree>
+	void touch(Tree&, typename Tree::cursor&)
 	{ }
 };
 

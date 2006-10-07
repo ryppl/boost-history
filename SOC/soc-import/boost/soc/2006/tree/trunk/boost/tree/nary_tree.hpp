@@ -45,12 +45,8 @@
 #include <boost/tree/augmentors/unaugmented.hpp>
 #include <boost/tree/balancers/unbalanced.hpp>
 
-#include <boost/test/minimal.hpp>
-
 #include <memory>
 #include <vector>
-
-#include <boost/test/minimal.hpp>
 
 
 namespace boost {

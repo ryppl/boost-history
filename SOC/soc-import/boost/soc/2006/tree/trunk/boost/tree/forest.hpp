@@ -42,7 +42,7 @@
 
 #include <boost/test/minimal.hpp>
 
-#include <memory>
+//#include <memory>
 
 namespace boost {
 namespace tree {
@@ -146,7 +146,7 @@ class forest {
 		return cursor(h.insert(bc, val));
 	}
 	
- //protected:
+ protected:
 	hierarchy_type h;
  	
 };

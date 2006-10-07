@@ -61,5 +61,5 @@ test-suite tree :
 	[ run treap_test.cpp ]
 	[ run forest_test.cpp ]
 	[ run nary_tree_test.cpp ]
-	
+	[ run multiway_tree_test.cpp ]	
 	;

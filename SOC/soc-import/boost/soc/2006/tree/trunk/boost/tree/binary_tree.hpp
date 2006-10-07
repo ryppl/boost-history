@@ -293,7 +293,7 @@ class binary_tree : public Balance, public Augment {
 			m_header.m_parent = p_node;
 
 		//cursor c = this->root(); //TODO: revisit (add's type sig.)
-		balancer_type::add(pos, this->root());
+		balancer_type::add(*this, pos);
 		
 		return pos.begin(); 
 	}
@@ -374,18 +374,19 @@ private:
 	//(There may be some DR concerning this for associative containers)
  	void erase (cursor pos)
  	{
- 		cursor root = this->root();
+ 		cursor ret; // = this->root();
  		pos = pos.parent();
 
- 		balancer_type::remove(pos, root);
+		// TODO: Get the following to work properly.
+ 		balancer_type::remove(*this, pos);
  		node_pointer p_node;
- 		if (pos == root) {
- 			augmentor_type::pre_detach(pos, root);
+// 		if (pos == ret) {
+ 			augmentor_type::pre_detach(pos, ret);
  			p_node = pos.detach();
- 		} else {
- 			augmentor_type::pre_detach(pos, root, this->root());
- 			p_node = pos.detach(root);
- 		}
+// 		} else {
+// 			augmentor_type::pre_detach(pos, ret, this->root());
+// 			p_node = pos.detach(ret);
+// 		}
  		
 		m_value_alloc.destroy(p_node->data());
 		m_value_alloc.deallocate(p_node->data(), 1);

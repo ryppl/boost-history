@@ -69,12 +69,12 @@ public:
 	typedef red_black_metadata metadata_type;
 	
 protected:
-	template <class Cursor>
-	void add(Cursor& x, Cursor const& header) 
+	template <class Tree>
+	void add(Tree& t, typename Tree::cursor& x) 
 	{
 		x.metadata().set_color(red);
 		while (x.parent().metadata().get_color() == red) {
-			Cursor y = x.parent();
+			typename Tree::cursor y = x.parent();
 			y = (y == y.parent().begin() ? y.parent().end() : y.parent().begin());
 			if (y.metadata().get_color() == red) {
 				x.parent().metadata().set_color(black);
@@ -91,21 +91,21 @@ protected:
 			x = x.parent(); //FIXME: was x.parent.rotate();
 			access_rotate::rotate(x); 
 			}
-		if (x.parent() == header)
+		if (x.parent() == t.root())
 			x.metadata().set_color(black);
 		}
 	}
 	
 	// second argument also used to pass second parameter for detach,
 	// if required.
-	template <class Cursor>
-	void remove(Cursor& x, Cursor& header) // or other signature?
+	template <class Tree>
+	void remove(Tree& t, typename Tree::cursor& x) // or other signature?
 	{
 		
 	}
 	
-	template <class Cursor>
-	void touch(Cursor& x, Cursor& header)
+	template <class Tree>
+	void touch(Tree& t, typename Tree::cursor&)
 	{ }
   
 };

@@ -71,19 +71,20 @@ class treap : public access_rotate {
 	
  protected:
 	// TODO: do we ever want to modify the second par directly?
-	template <class Cursor>
-	void add(Cursor& x, Cursor const& header) 
+	template <class Tree>
+	void add(Tree& t, typename Tree::cursor& x) 
 	{
 		x.metadata().set_priority((lrand48() >> 1) + 1);
-		while ((x != header) && 
+		while ((x != t.root()) && 
 			   (x.metadata().get_priority() > 
 			   	x.parent().metadata().get_priority()))
 			access_rotate::rotate(x);
 	}
 	  
-	template <class Cursor>
-	void remove(Cursor& p, Cursor& q)
+	template <class Tree>
+	void remove(Tree& t, typename Tree::cursor& p)
 	{
+		typename Tree::cursor q;
 		while((q = ((p.begin().metadata().get_priority()
 					 > p.end().metadata().get_priority())
 					 ? p.begin() : p.end())).empty())
@@ -91,8 +92,8 @@ class treap : public access_rotate {
 		q = p;
 	}
 	
-	template <class Cursor>
-	void touch(Cursor&, Cursor const&)
+	template <class Tree>
+	void touch(Tree&, typename Tree::cursor&)
 	{ }
 };
 

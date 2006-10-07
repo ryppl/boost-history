@@ -46,7 +46,7 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/iterator/iterator_facade.hpp>
-
+#include <boost/iterator/iterator_adaptor.hpp>
 
 #include <iterator>
 #include <utility>
