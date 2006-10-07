@@ -113,15 +113,64 @@
   vast field linked to the notion of trees in computer science.</p>
 
   <h2>Motivation and Scope</h2>
-
+  
+  <h3>Why is this important?</h3>
+  
+  <p>This proposal is motivated by the wish to establish methods of dealing with 
+  hierarchical data structures in a manner that is similar to that of the
+  <abbr title="Standard Template Libraries">STL</abbr> for linear ones.
+  That is, it seeks to provide clear, straight-forward, versatile and
+  comprehensive concepts, data structures and algorithms for trees and related
+  structures that allow efficient implementation while not exposing implementation
+  details.</p>
+  
+  <p>In particular, this proposal strives to unite types of hierarchical data
+  structures that have historically been treated separately, although there is
+  arguably good reason to view their role for algorithms as different
+  aspects of common underlying concepts. </p>
+   
+  <h3>What kinds of problems does it address, and what kinds of 
+  programmers is it intended to support?</h3>
+  
+  <p>Existing tree implementations as listed in the References section as well
+  as the number of posts on C++ related newsgroups give an evidence of
+  very general, high interest in tree and related data structures.
+  Formalization of how to deal with hierarchical data structures seems to be
+  relevant as programmers of any level of skill working in any given field
+  is likely to need such a structure at one point.</p>
+  
+  <h3>Is it based on existing practice?</h3>
+  <p>No; this proposal originates in an effort to create a generic tree container
+  component for <a href="http://www.boost.org"</a>Boost</a> in summer of 2006,
+  so at the time of this writing, implementation work is still unfinished
+  and, however inspired by and striving to avoid past issues it is, it has
+  not been used in practice yet.</p>
+  
+  <h3>Is there a reference implementation?</h3>
+  
+  <p>Yes; the current state is available from <abbr title="Subversion">svn</abbr>
+  from <a href="https://www.boost-consulting.com:8443/svn/main/boost/soc/2006/tree/trunk">
+  https://www.boost-consulting.com:8443/svn/main/boost/soc/2006/tree/trunk</a>.
+  Alternatively, the source code can be viewed in a web browser at
+  <a href="https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree">
+  https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree</a>.</p>
+  
+  <h2>Impact on the Standard</h2>
+  
   <h3>What does it depend on, and what depends on it?</h3>
 
-  <p>It depends on some standard library components, [...]</p>
+  <p>It depends on some standard library components, such as <tt>std::allocator</tt>
+  which is used as the default allocator template argument at some points. 
+  Concepts like allocators or iterators are reused and in some cases adapted.</p>
 
   <h3>Is it a pure extension, or does it require changes to standard
   components?</h3>
 
-  <p>Most of the proposed library is a pure extension. [...]</p>
+  <p>Most of the proposed library is a pure extension. </p>
+  
+  <p>Some modifications to <tt>&lt;algorithm&gt;</tt> are proposed, so
+  binary search algorithms can be applied to hierarchical data structures
+  as well. [...]</p>
 
   <h3>Can it be implemented using today's compilers, or does it require
   language features that will only be available as part of C++0x?</h3>
@@ -141,8 +190,6 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
   those to a "Linear Container" concept as similarly formalized in the
   <a href="http://boost.org/libs/range/doc/range.html">Boost Range
   concept</a> externally to the Standard.</p>
-
-  <h2>Impact on the Standard</h2>
 
   <h2>Important Design Decisions</h2>
 
@@ -164,11 +211,19 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
   <dl>
     <dt>Trees of trees</dt>
 
-    <dd>Duplicates allocators etc. ...</dd>
+    <dd>Trees, being recursively defined data structures, seem to somewhat
+    lend themselves to recursive implementation, i.e. declaring them in a way
+    so they consist of a client value part and a certain number of trees in
+    turn (as e.g. in case of <a href="#ref.haas">[haas]</a>). 
+    While allowing for a somewhat uniform treatment of a given trees' subtrees, 
+    such an approach would duplicate allocators and yield imply 
+    structural information being overly present, as a tree, like the existing 
+    <abbr title="Standard Template Library">STL</abbr> containers, should be 
+    responsible of its data storage.</dd>
 
     <dt>Store metadata differently</dt>
 
-    <dd>Duplicates allocators etc. ...</dd>
+    <dd>[...]</dd>
   </dl>
 
   <h3>What are the consequences of your choices, for users and
@@ -179,9 +234,35 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
   <h3>If there are any similar libraries in use, how do their design
   decisions compare to yours?</h3>
 
-  <p><a href=
-  "https://boost-consulting.com:8443/trac/soc/wiki/tree/resources/trees">Online
-  resources</a></p>
+  <p>Trees, having attracted much attention in the C++ community, 
+  are found in various implementations and as subjects of a number 
+  of papers. Contrarily to the present proposal, ractically all of them
+  deal either with trees as used for sorted associative containers
+  (with logarithmic time complexity for more relevant operations,
+  achieved by some sort of balancing; examples are 
+  <a href="ref.dreizin">[dreizin]</a>, 
+  <a href="ref.ekman">[ekman]</a> and <a href="ref.karas">[karas]</a>; 
+  plus, most current STL implementations
+  use a red-black tree as their associative containers' base) 
+  or with what we call "external"
+  hierarchies in the following (whose structure is dictated e.g. by a 
+  filesystem directory tree, an 
+  <abbr title="Extensible Markup Language">XML</abbr>
+  file or an <abbr title="Abstract syntax tree">AST</abbr>; see e.g.
+  <a href="ref.gottschlich">[gottschlich]</a>, <a href="ref.haas">[haas]</a>,
+  <a href="ref.parent">[parent]</a> and <a href="ref.peeters">[peeters]</a>),
+  but rarely both fields of application. </p>
+  <p>Approaches as found in 
+  <a href="ref.austern">[austern]</a> or <a href="ref.mirwaisi">[mirwaisi]</a>
+  go some steps further and have provided valuable inspiration for this 
+  projects, but still do not formalize anything similar as the cursor-based
+  interface in this proposal for dealing with a tree's contents.</p>
+  
+  <p>The <a href="http://www.boost.org/libs/graph/">
+  <abbr title="Boost Graph Library">BGL</abbr></a>, finally, deals with graphs
+  that are even more general than hierarchical ones, which does not allow
+  them to profit from specific hierarchy properties as much as the ones
+  presented in this proposal. </p>
 
   <h2>Proposed Text for Technical Report 2</h2>
 
@@ -1405,5 +1486,82 @@ namespace tr2 {
       <li>Traversal header</li>
     </ol>
   </div>
+  
+  <h2>References</h2>
+  <dl>
+    <dt><a id="ref.austern">[austern]</a></dt>
+    
+    <dd>Austern, Matthew H.; Stroustrup, Bjarne; Thorup, Mikkel; Wilikinson, John.
+    <em>Untangling the Balancing and Searching of Balanced Binary Search Trees</em>, 
+    Software: Practice and Experience 33(13): 1273-1298 (2003)<br />
+    Electronic Appendix: <a href="http://www.research.att.com/~bs/tree-appendix.pdf">
+    http://www.research.att.com/~bs/tree-appendix.pdf</a></dd>
+    
+    <dt><a id="ref.dreizin">[dreizin]</a></dt>
+    
+    <dd>Dreizin, Vladimir; Kosnik, Benjamin; Tavory, Ami.
+	<em>Policy-Based Data Structures</em>, 
+	<a href="http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/">
+	http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/</a></dd>
+    
+    <dt><a id="ref.ekman">[ekman]</a></dt>
+    
+    <dd>Ekman, Rasmus.
+    Structured Associative Containers
+    <a href="http://www.abc.se/~re/code/tst">
+    http://www.abc.se/~re/code/tst</a></dd>
+    
+    <dt><a id="ref.gottschlich">[gottschlich]</a></dt>
+    
+    <dd>Gottschlich, Justin.
+    <em>C++ Trees</em>, 
+    <a href="http://www.gamedev.net/reference/articles/article2192.asp">
+    http://www.gamedev.net/reference/articles/article2192.asp</a> and
+    <a href="http://www.gamedev.net/reference/articles/article2233.asp">
+    http://www.gamedev.net/reference/articles/article2233.asp</a></dd>
+    
+    <td><a id="ref.haas">[haas]</a></dt>
+    
+    <dd>Haas, Mitchell.
+    <em>Tree Container Library</em>
+    <a href="http://www.datasoftsolutions.net/tree_container_library/overview.php">
+    http://www.datasoftsolutions.net/tree_container_library/overview.php</a></dd>
+    
+    <td><a id="ref.karas">[karas]</a></dt>
+    
+    <dd>Karas, Walt.
+    <em>C++ AVL Tree Template</em>
+    <a href="http://us.geocities.com/wkaras/gen_cpp/avl_tree.html">
+    http://us.geocities.com/wkaras/gen_cpp/avl_tree.html</a></dd>
+
+    <td><a id="ref.mirwaisi">[mirwais]</a></dt>
+    
+    <dd>Mirwaisi, Jeff.
+    <em>treelib</em>
+    <a href="https://boost-consulting.com:8443/trac/soc/attachment/wiki/tree/resources/trees/treelib.tar.bz2">
+    https://boost-consulting.com:8443/trac/soc/attachment/wiki/tree/resources/trees/treelib.tar.bz2</a></dd>
+    
+    <td><a id="ref.parent">[parent]</a></dt>
+    
+    <dd>Parent, Sean <i>et al</i>.
+    <em>Forest</em>
+    <a href="http://opensource.adobe.com/group__forest__related.html">
+    http://opensource.adobe.com/group__forest__related.html</a></dd>
+    
+    <td><a id="ref.peeters">[peeters]</a></dt>
+    
+    <dd>Peeters, Kasper.
+    <em>tree.hh: an STL-like C++ tree class</em>
+    <a href="http://www.aei.mpg.de/~peekas/tree/">
+    http://www.aei.mpg.de/~peekas/tree/</a></dd>
+    
+    <td><a id="ref.rivera">[rivera]</a></dt>
+    
+    <dd>Rivera, René.
+    <em>RankTree.h
+    <a href="http://redshift-software.com/~grafik/RankTree.h">
+    http://redshift-software.com/~grafik/RankTree.h</a></dd>
+  </dl>
+  
 </body>
 </html>
