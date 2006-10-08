@@ -112,21 +112,6 @@ class cursor_core_access {
 	
 };
 
-template <class Hor, class Vert, class T, class Dist = std::ptrdiff_t,
-		  class Size = std::size_t, class Ptr = T*, class Ref = T&>
-class cursor {
-	typedef Hor		horizontal_iterator_traversal;
-	typedef Vert		vertical_iterator_traversal;
-	
-	typedef Size		size_type;
-	
-	typedef Hor		iterator_category;
-	typedef T		value_type;
-	typedef Dist		difference_type;
-	typedef Ptr		pointer;
-	typedef Ref		reference;
-};
-
 template <
     class Derived             // The derived cursor type being constructed
   , class Value

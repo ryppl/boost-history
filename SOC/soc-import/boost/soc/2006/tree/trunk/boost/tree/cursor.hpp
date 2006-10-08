@@ -26,13 +26,22 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
+/** 
+ * @file cursor.hpp
+ * Cursor traits structs, traversal tags, ...
+ */
+ 
 #ifndef BOOST_TREE_CURSOR_HPP
 #define BOOST_TREE_CURSOR_HPP
 
-/** 
- * @file cursor.hpp
- * Cursor traits structs, ...
- */
+#include <stddef.h>
+#include <iterator>
+
+using std::input_iterator_tag;
+using std::output_iterator_tag;
+using std::forward_iterator_tag;
+using std::bidirectional_iterator_tag;
+using std::random_access_iterator_tag;
 
 namespace boost {
 namespace tree {
@@ -78,6 +87,54 @@ struct cursor_arity {
 template <class Cursor>
 struct cursor_vertical_traversal {
 	typedef typename Cursor::vertical_traversal_type type;
+};
+
+//template <class Hor, class Vert, class T, class Dist = ptrdiff_t,
+//		  class Size = size_t, class Ptr = T*, class Ref = T&>
+//class cursor {
+//	typedef Hor		horizontal_iterator_traversal;
+//	typedef Vert		vertical_iterator_traversal;
+//	
+//	typedef Size		size_type;
+//	
+//	typedef Hor		iterator_category;
+//	typedef T		value_type;
+//	typedef Dist		difference_type;
+//	typedef Ptr		pointer;
+//	typedef Ref		reference;
+//};
+
+
+struct cursor_tag 
+	: public input_iterator_tag, public output_iterator_tag {};
+struct descending_cursor_tag
+	: public cursor_tag {};
+struct descending_forward_cursor_tag
+	: public descending_cursor_tag, public forward_iterator_tag {};
+struct descending_bidirectional_cursor_tag
+	: public descending_cursor_tag, public bidirectional_iterator_tag {};
+struct descending_random_access_cursor_tag
+	: public descending_cursor_tag, public random_access_iterator_tag {};
+
+struct ascending_cursor_tag
+	: public descending_cursor_tag {};
+struct ascending_forward_cursor_tag
+	: public descending_forward_cursor_tag {};
+struct ascending_bidirectional_cursor_tag
+	: public descending_bidirectional_cursor_tag {};
+struct ascending_random_access_cursor_tag
+	: public descending_random_access_cursor_tag {};
+
+  
+template <class Cat, class T, class Dist = ptrdiff_t, class Size = size_t,
+		  class Ptr = T*, class Ref = T&>
+struct cursor {
+	typedef Cat		cursor_category;
+	typedef T		value_type;
+	typedef Dist		difference_type;
+	typedef Size		size_type;
+	typedef Ptr		pointer;
+	typedef Ref		reference;	
 };
 
 //define freestanding begin, end, size, empty using node's member fns?
