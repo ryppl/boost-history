@@ -207,12 +207,12 @@ private:
 		return const_cursor(static_cast<const_base_pointer>(m_node->parent()), m_node->get_parity());
 	}
 
-public:
-
-	size_type const parity() const
+	size_type const par() const
 	{
 		return m_pos;
 	}
+	
+public:
 
 	metadata_type const& metadata() const
 	{
@@ -326,7 +326,13 @@ class nary_tree_cursor
 	size_type max_size_()
 	{
 		return m_node->max_size();
-	}	
+	}
+	
+	size_type const par() const
+	{
+		return m_pos;
+	}
+	
 public:
 
 	
@@ -366,12 +372,6 @@ public:
 		return static_cast<node_pointer>(m_node->operator[](m_pos));
 	}
 	
-	size_type const parity() const
-	{
-		return m_pos;
-	}
-		
-
 	
 //	bool const is_root() const
 //	{

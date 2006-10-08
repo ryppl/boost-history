@@ -84,7 +84,13 @@ class cursor_core_access {
 	{
 		return f.max_size_();
 	}
-	
+
+	template <class Facade>
+	static typename Facade::size_type par(Facade const& f)
+	{
+		return f.par();
+	}
+		
 	template <class Facade>
 	static Facade left(Facade const& f)
 	{
@@ -97,11 +103,13 @@ class cursor_core_access {
 		return f.right();
 	}
 	
+	//only if ascending
 	template <class Facade>
 	static Facade up(Facade const& f)
 	{
 		return f.up();
 	}
+	
 };
 
 template <class Hor, class Vert, class T, class Dist = std::ptrdiff_t,
@@ -184,7 +192,12 @@ class cursor_facade
 	{
 		return cursor_core_access::max_size_(this->derived());
 	}
-		 
+
+	size_type const parity() const
+	{
+		return cursor_core_access::par(this->derived());
+	}
+			 
  	// if Value is const: Derived == const_cursor: only Derived
  	// otherwise: also Derived const. Really? implicit conversion to const_cursor?
  	Derived begin()
@@ -254,7 +267,12 @@ class cursor_adaptor
 	{
 		return iterator_adaptor_::base().max_size();
 	}
-	
+
+	size_type const par() const
+	{
+		return iterator_adaptor_::base().parity();
+	}
+		
 	Derived begin()
 	{
 		return Derived(this->base_reference().begin());

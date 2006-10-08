@@ -105,7 +105,7 @@ class const_forest_cursor
           , enabler
         >::type = enabler()
     )
-      : const_forest_cursor::iterator_adaptor_(other.base()) {}
+      : const_forest_cursor::cursor_adaptor_(other.base()) {}
 
 	operator base_cursor()
 	{
