@@ -1609,6 +1609,138 @@ template &lt;class Cursor&gt;
 </pre>
       </li>
     </ol>
+    
+    <h5>24.4.X.2 Linear order <tt>iterator</tt> requirements <span class=
+    "section-id">[tr.order.iter.requirements]</span></h5>
+
+    <ol>
+      <li>The template parameter <tt>Cursor</tt> shall meet all the
+      requirements of a Forward Cursor.</li>
+
+      <li>Additionally, <tt>Cursor</tt> shall meet the requirements of a
+      Bidirectional Cursor (24.1.5) if the member <tt>operaror--</tt>
+      (24.4.X.3.7) is referenced in a way that requires instantiation
+      (14.7.1).</li>
+    </ol>
+
+    <h5>24.4.X.3 <tt>inorder::iterator</tt> operations <span class=
+    "section-id">[tr.order.iter.ops]</span></h5>
+
+    <h6>24.4.X.3.1 <tt>inorder::iterator</tt> constructor <span class=
+    "section-id">[tr.order.iter.cons]</span></h6>
+    <pre>
+explicit iterator(Cursor x);
+    </pre>
+
+    <ol>
+      <li>Effects: Initializes <tt>current</tt> with <tt>x</tt>.</li>
+    </ol>
+
+    <h6>24.4.X.3.2 Conversion <span class=
+    "section-id">[tr.order.iter.conv]</span></h6>
+    <pre>
+Iterator base() const; // explicit
+    </pre>
+
+    <ol>
+      <li>Returns: <tt>current</tt></li>
+    </ol>
+
+    <h6>24.4.X.3.3 <tt>operator*</tt> <span class=
+    "section-id">[tr.order.iter.op.star]</span></h6>
+    <pre>
+Reference operator*() const;
+    </pre>
+
+    <ol>
+      <li>Returns: <tt>*current</tt></li>
+    </ol>
+
+    <h6>24.4.X.3.4 <tt>operator-&gt;</tt> <span class=
+    "section-id">[tr.order.iter.opref]</span></h6>
+    <pre>
+Pointer operator-&gt;() const;
+    </pre>
+
+    <ol>
+      <li>Returns: <tt>&amp;(operator*())</tt></li>
+    </ol>
+
+    <h6>24.4.X.3.5 <tt>operator++</tt> <span class=
+    "section-id">[tr.order.iter.op++]</span></h6>
+    <pre>
+iterator&amp; operator++() const;
+    </pre>
+
+    <ol>
+      <li>Effects: Sets <tt>current</tt> to the next cursor in the given
+      order.</li>
+      <li>Returns: <tt>*this</tt></li>
+    </ol>
+    
+    <pre>
+iterator operator++(int) const;
+    </pre>
+    <ol>
+      <li>Effects:
+        <pre>
+iterator tmp = *this;
+this-&gt;operator++();
+return tmp;
+      </pre>
+      </li>
+    </ol>
+
+    <h6>24.4.X.3.6 <tt>operator--</tt> <span class=
+    "section-id">[tr.order.iter.op--]</span></h6>
+    <pre>
+iterator&amp; operator++() const;
+    </pre>
+
+    <ol>
+      <li>Effects: Sets <tt>current</tt> to the previous cursor in the given
+      order.</li>
+      <li>Returns: <tt>*this</tt></li>
+    </ol>
+    
+    <pre>
+iterator operator--(int) const;
+    </pre>
+    <ol>
+      <li>Effects:
+        <pre>
+iterator tmp = *this;
+this-&gt;operator--();
+return tmp;
+      </pre>
+      </li>
+    </ol>
+
+    <h6>24.4.X.3.7 <tt>operator==</tt> <span class=
+    "section-id">[tr.order.iter.op==]</span></h6>
+    <pre>
+template &lt;class Cursor&gt;
+  bool operator==(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+    </pre>
+
+    <ol>
+      <li>Returns: <tt>x.current == y.current</tt></li>
+    </ol>
+
+    <h6>24.4.X.3.8 <tt>operator!=</tt> <span class=
+    "section-id">[tr.order.iter.op!=]</span></h6>
+    <pre>
+template &lt;class Cursor&gt;
+  bool operator!=(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+    </pre>
+
+    <ol>
+      <li>Returns: <tt>x.current != y.current</tt></li>
+    </ol>
   </div>
 
   <h2>References</h2>
