@@ -5,8 +5,8 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Hierarchical Data Structures and Related Concepts for the C++ Standard Library
-  (TR2)</title>
+  <title>Hierarchical Data Structures and Related Concepts for the C++
+  Standard Library (TR2)</title>
   <style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
@@ -96,7 +96,8 @@
     "mailto:rrivera@acm.org">rrivera@acm.org</a>&gt;</dd>
   </dl>
 
-  <h1>Hierarchical Data Structures and Related Concepts for the C++ Standard Library</h1>
+  <h1>Hierarchical Data Structures and Related Concepts for the C++ Standard
+  Library</h1>
 
   <h2 class="byline">Bernhard Reiter and Rene Rivera</h2>
 
@@ -112,65 +113,66 @@
   vast field linked to the notion of trees in computer science.</p>
 
   <h2>Motivation and Scope</h2>
-  
+
   <h3>Why is this important?</h3>
-  
-  <p>This proposal is motivated by the wish to establish methods of dealing with 
-  hierarchical data structures in a manner that is similar to that of the
-  <abbr title="Standard Template Libraries">STL</abbr> for linear ones.
+
+  <p>This proposal is motivated by the wish to establish methods of dealing
+  with hierarchical data structures in a manner that is similar to that of
+  the <abbr title="Standard Template Libraries">STL</abbr> for linear ones.
   That is, it seeks to provide clear, straight-forward, versatile and
-  comprehensive concepts, data structures and algorithms for trees and related
-  structures that allow efficient implementation while not exposing implementation
-  details.</p>
-  
+  comprehensive concepts, data structures and algorithms for trees and
+  related structures that allow efficient implementation while not exposing
+  implementation details.</p>
+
   <p>In particular, this proposal strives to unite types of hierarchical data
-  structures that have historically been treated separately, although there is
-  arguably good reason to view their role for algorithms as different
-  aspects of common underlying concepts. Formally, this proposal's desired scope
-  is covering all <em>rooted ordered connected acyclic graphs</em>.</p>
-   
-  <h3>What kinds of problems does it address, and what kinds of 
-  programmers is it intended to support?</h3>
-  
-  <p>Existing tree implementations as listed in the References section as well
-  as the number of posts on C++ related newsgroups give an evidence of
+  structures that have historically been treated separately, although there
+  is arguably good reason to view their role for algorithms as different
+  aspects of common underlying concepts. Formally, this proposal's desired
+  scope is covering all <em>rooted ordered connected acyclic graphs</em>.</p>
+
+  <h3>What kinds of problems does it address, and what kinds of programmers
+  is it intended to support?</h3>
+
+  <p>Existing tree implementations as listed in the References section as
+  well as the number of posts on C++ related newsgroups give an evidence of
   very general, high interest in tree and related data structures.
   Formalization of how to deal with hierarchical data structures seems to be
-  relevant as programmers of any level of skill working in any given field
-  is likely to need such a structure at one point.</p>
-  
+  relevant as programmers of any level of skill working in any given field is
+  likely to need such a structure at one point.</p>
+
   <h3>Is it based on existing practice?</h3>
-  <p>No; this proposal originates in an effort to create a generic tree container
-  component for <a href="http://www.boost.org">Boost</a> in summer of 2006,
-  so at the time of this writing, implementation work is still unfinished
-  and, however inspired by and striving to avoid past issues it is, it has
-  not been used in practice yet.</p>
-  
+
+  <p>No; this proposal originates in an effort to create a generic tree
+  container component for <a href="http://www.boost.org">Boost</a> in summer
+  of 2006, so at the time of this writing, implementation work is still
+  unfinished and, however inspired by and striving to avoid past issues it
+  is, it has not been used in practice yet.</p>
+
   <h3>Is there a reference implementation?</h3>
-  
-  <p>Yes; the current state is available from <abbr title="Subversion">svn</abbr>
-  from <a href="https://www.boost-consulting.com:8443/svn/main/boost/soc/2006/tree/trunk">
-  https://www.boost-consulting.com:8443/svn/main/boost/soc/2006/tree/trunk</a>.
-  Alternatively, the source code can be viewed in a web browser at
-  <a href="https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree">
-  https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree</a>.</p>
-  
+
+  <p>Yes; the current state is available from <abbr title=
+  "Subversion">svn</abbr> from <a href=
+  "https://www.boost-consulting.com:8443/svn/main/boost/soc/2006/tree/trunk">https://www.boost-consulting.com:8443/svn/main/boost/soc/2006/tree/trunk</a>.
+  Alternatively, the source code can be viewed in a web browser at <a href=
+  "https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree">https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree</a>.</p>
+
   <h2>Impact on the Standard</h2>
-  
+
   <h3>What does it depend on, and what depends on it?</h3>
 
-  <p>It depends on some standard library components, such as <tt>std::allocator</tt>
-  which is used as the default allocator template argument at some points. 
-  Concepts like allocators or iterators are reused and in some cases adapted.</p>
+  <p>It depends on some standard library components, such as
+  <tt>std::allocator</tt> which is used as the default allocator template
+  argument at some points. Concepts like allocators or iterators are reused
+  and in some cases adapted.</p>
 
   <h3>Is it a pure extension, or does it require changes to standard
   components?</h3>
 
-  <p>Most of the proposed library is a pure extension. </p>
-  
-  <p>Some modifications to <tt>&lt;algorithm&gt;</tt> are proposed, so
-  binary search algorithms can be applied to hierarchical data structures
-  as well. [...]</p>
+  <p>Most of the proposed library is a pure extension.</p>
+
+  <p>Some modifications to <tt>&lt;algorithm&gt;</tt> are proposed, so binary
+  search algorithms can be applied to hierarchical data structures as well.
+  [...]</p>
 
   <h3>Can it be implemented using today's compilers, or does it require
   language features that will only be available as part of C++0x?</h3>
@@ -214,11 +216,11 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
     <dd>Trees, being recursively defined data structures, seem to somewhat
     lend themselves to recursive implementation, i.e. declaring them in a way
     so they consist of a client value part and a certain number of trees in
-    turn (as e.g. in case of <a href="#ref.haas">[haas]</a>). 
-    While allowing for a somewhat uniform treatment of a given trees' subtrees, 
-    such an approach would duplicate allocators and yield imply 
-    structural information being overly present, as a tree, like the existing 
-    STL containers, should be responsible of its data storage.</dd>
+    turn (as e.g. in case of <a href="#ref.haas">[haas]</a>). While allowing
+    for a somewhat uniform treatment of a given trees' subtrees, such an
+    approach would duplicate allocators and yield imply structural
+    information being overly present, as a tree, like the existing STL
+    containers, should be responsible of its data storage.</dd>
 
     <dt>Store metadata differently</dt>
 
@@ -233,35 +235,33 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
   <h3>If there are any similar libraries in use, how do their design
   decisions compare to yours?</h3>
 
-  <p>Trees, having attracted much attention in the C++ community, 
-  are found in various implementations and as subjects of a number 
-  of papers. Contrarily to the present proposal, ractically all of them
-  deal either with trees as used for sorted associative containers
-  (with logarithmic time complexity for more relevant operations,
-  achieved by some sort of balancing; examples are 
-  <a href="ref.dreizin">[dreizin]</a>, 
-  <a href="ref.ekman">[ekman]</a> and <a href="ref.karas">[karas]</a>; 
-  plus, most current STL implementations
-  use a red-black tree as their associative containers' base) 
-  or with what we call "external"
-  hierarchies in the following (whose structure is dictated e.g. by a 
-  filesystem directory tree, an 
-  <abbr title="Extensible Markup Language">XML</abbr>
-  file or an <abbr title="Abstract syntax tree">AST</abbr>; see e.g.
-  <a href="ref.gottschlich">[gottschlich]</a>, <a href="ref.haas">[haas]</a>,
+  <p>Trees, having attracted much attention in the C++ community, are found
+  in various implementations and as subjects of a number of papers.
+  Contrarily to the present proposal, ractically all of them deal either with
+  trees as used for sorted associative containers (with logarithmic time
+  complexity for more relevant operations, achieved by some sort of
+  balancing; examples are <a href="ref.dreizin">[dreizin]</a>, <a href=
+  "ref.ekman">[ekman]</a> and <a href="ref.karas">[karas]</a>; plus, most
+  current STL implementations use a red-black tree as their associative
+  containers' base) or with what we call "external" hierarchies in the
+  following (whose structure is dictated e.g. by a filesystem directory tree,
+  an <abbr title="Extensible Markup Language">XML</abbr> file or an
+  <abbr title="Abstract syntax tree">AST</abbr>; see e.g. <a href=
+  "ref.gottschlich">[gottschlich]</a>, <a href="ref.haas">[haas]</a>,
   <a href="ref.parent">[parent]</a> and <a href="ref.peeters">[peeters]</a>),
-  but rarely both fields of application. </p>
-  <p>Approaches as found in 
-  <a href="ref.austern">[austern]</a> or <a href="ref.mirwaisi">[mirwaisi]</a>
-  go some steps further and have provided valuable inspiration for this 
-  projects, but still do not formalize anything similar as the cursor-based
-  interface in this proposal for dealing with a tree's contents.</p>
-  
-  <p>The <a href="http://www.boost.org/libs/graph/">
-  <abbr title="Boost Graph Library">BGL</abbr></a>, finally, deals with graphs
-  that are even more general than hierarchical ones, which does not allow
-  them to profit from specific hierarchy properties as much as the ones
-  presented in this proposal. </p>
+  but rarely both fields of application.</p>
+
+  <p>Approaches as found in <a href="ref.austern">[austern]</a> or <a href=
+  "ref.mirwaisi">[mirwaisi]</a> go some steps further and have provided
+  valuable inspiration for this projects, but still do not formalize anything
+  similar as the cursor-based interface in this proposal for dealing with a
+  tree's contents.</p>
+
+  <p>The <a href="http://www.boost.org/libs/graph/"><abbr title=
+  "Boost Graph Library">BGL</abbr></a>, finally, deals with graphs that are
+  even more general than hierarchical ones, which does not allow them to
+  profit from specific hierarchy properties as much as the ones presented in
+  this proposal.</p>
 
   <h2>Proposed Text for Technical Report 2</h2>
 
@@ -536,11 +536,11 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
       <li>For a given balanced hierarchy class <tt>X</tt>,
       <tt>X::iterator</tt> must be convertible to <tt>X::cursor</tt>, and
       <tt>X::const_iterator</tt> must be convertible to
-      <tt>X::const_cursor</tt>; and vice versa. If the respective 
-      <tt>iterator</tt> or <tt>const_iterator</tt> is valid and 
-      dereferenceable, the <tt>cursor</tt> or <tt>const_cursor</tt> 
-      resulting from the conversion will also be valid and dereferenceable;
-      and vice versa.</li>
+      <tt>X::const_cursor</tt>; and vice versa. If the respective
+      <tt>iterator</tt> or <tt>const_iterator</tt> is valid and
+      dereferenceable, the <tt>cursor</tt> or <tt>const_cursor</tt> resulting
+      from the conversion will also be valid and dereferenceable; and vice
+      versa.</li>
 
       <li>As in some cases there might be interest to store additional
       information along with the client data in the tree that is
@@ -548,10 +548,9 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
       either the client data, the tree structure, or both, a tree can be
       <em>augmented</em> in which case it will perform operations to effect
       this behavior.</li>
-      
-      <li>Data which is not directly passed by the user but governed
-      by a given balancer or augmentor is called <em>metadata</em>.</li>
-      
+
+      <li>Data which is not directly passed by the user but governed by a
+      given balancer or augmentor is called <em>metadata</em>.</li>
     </ol>
 
     <h4>0.1.2 Hierarchy container classes <span class=
@@ -803,9 +802,9 @@ namespace tr2 {
       relevant when dealing with linear data structures, any cursor class is
       actually a refinement of a corresponding iterator class. 
       <!--whose traversal
-      related capabilities map to traversal of among a given cursor's
-      immediate descendants or "child cursors" (or just "children", as
-      defined in the following paragraph).--></li>
+            related capabilities map to traversal of among a given cursor's
+            immediate descendants or "child cursors" (or just "children", as
+            defined in the following paragraph).--></li>
 
       <li>If exactly one application of the expression <tt>i =
       i.begin()</tt>, followed by a finite sequence of applications of the
@@ -830,24 +829,24 @@ namespace tr2 {
       iterator counterparts can be), the notion of a cursor <em>on-top</em>
       is introduced, denoting a cursor that is ancestor to all other cursors
       within a hierarchy is introduced; and just as for past-the-end ones,
-      the library generally does not assume on-top cursors be dereferenceable;
-      nor that they be incrementable or decrementable unless stated otherwise
-      in a given hierarchy's requirement specifications.
+      the library generally does not assume on-top cursors be
+      dereferenceable; nor that they be incrementable or decrementable unless
+      stated otherwise in a given hierarchy's requirement specifications. 
       <!--In other words, as opposed to
-      non-on-top cursurs, on-top cursors fulfill only the Range concept
-      requirements, but not any Iterator concept requirements.--></li>
+            non-on-top cursurs, on-top cursors fulfill only the Range concept
+            requirements, but not any Iterator concept requirements.--></li>
 
       <li>A cursor <tt>i</tt> for which <tt>i.emtpy() == true</tt> is called
-      <em>leaf cursor</em>. A leaf cursor's children are never assumed to
-      be dereferenceable.</li>
-      
+      <em>leaf cursor</em>. A leaf cursor's children are never assumed to be
+      dereferenceable.</li>
+
       <li>A cursor, like an iterator, can have a singular value that is not
-      associated with any hierarchy, meaning that most expressions are undefined
-      for it, with the exception of assignment of a non-singular value to a
-      cursor that holds a singular value. The children of a leaf cursor's child
-      are never assumed to be non-singular; nor is the parent of an on-top node.
-      </li>
-      
+      associated with any hierarchy, meaning that most expressions are
+      undefined for it, with the exception of assignment of a non-singular
+      value to a cursor that holds a singular value. The children of a leaf
+      cursor's child are never assumed to be non-singular; nor is the parent
+      of an on-top node.</li>
+
       <li>
         <p>In the following sections <tt>X</tt> denotes a cursor over values
         of type <tt>T</tt>, <tt>a</tt> and <tt>b</tt> denotes an identifier,
@@ -1360,8 +1359,8 @@ namespace tr2 {
     <ol>
       <li>
         <p>A class type X satisfies the requirements of an ascending forward
-        cursor if the following expressions are valid, as shown in Table 11, in
-        addition to satisfying the requirements for ascending cursors
+        cursor if the following expressions are valid, as shown in Table 11,
+        in addition to satisfying the requirements for ascending cursors
         ([tr.ascending.cursors]) and descending forward cursors
         ([tr.descending.forward.cursors]):</p>
 
@@ -1468,12 +1467,14 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-  <h3>24.2 Header <tt>&lt;iterator</tt> synopsis
-  <span class="section-id">[lib.iterator.synsopsis]</span></h3>
-  
-  <div class="note">Append to section introduced with
-  <i>// subclause 24.4, predefined iterators:</i></div>
-  <pre>
+    <h3>24.2 Header <tt>&lt;iterator</tt> synopsis <span class=
+    "section-id">[lib.iterator.synsopsis]</span></h3>
+
+    <div class="note">
+      Append to section introduced with <i>// subclause 24.4, predefined
+      iterators:</i>
+    </div>
+    <pre>
   namespace tr2 {
   namespace preorder {
   template &lt;class Cursor&gt; class iterator;
@@ -1517,14 +1518,15 @@ namespace tr2 {
     const iterator&lt;Cursor&gt;&amp; y);
   } // namespace inorder   
   } // namespace tr2
-  </pre>
-	
-    <h4>24.4.X Linear order traversal iterators
-    <span class="section-id">[tr.order.iterators]</span></h4>
+  
+</pre>
+
+    <h4>24.4.X Linear order traversal iterators <span class=
+    "section-id">[tr.order.iterators]</span></h4>
 
     <ol>
       <li>For linear traversal of hierarchies, the library offers a number of
-      useful predefined iterators, namely for <tt>preorder</tt>, 
+      useful predefined iterators, namely for <tt>preorder</tt>,
       <tt>postorder</tt> and <tt>inorder</tt> traversal in namespaces named
       accordingly.</li>
 
@@ -1541,28 +1543,27 @@ namespace tr2 {
       will be visited.</li>
 
       <li>For each of the above kinds of traversal order, the library offers
-      a kind of order traversal iterator adaptor template class whose template
-      parameter is a bidirectional or random access (either ascending or
-      descending) cursor class. Increment and decrement operations for these
-      iterator adaptor classes are implemented to allow stepwise iteration
-      according to the respective requirements. 
+      a kind of order traversal iterator adaptor template class whose
+      template parameter is a bidirectional or random access (either
+      ascending or descending) cursor class. Increment and decrement
+      operations for these iterator adaptor classes are implemented to allow
+      stepwise iteration according to the respective requirements. 
       <!--Additionally, for cursors with bidirectional vertical
-      traversal property, algorithms <tt>forward</tt> and <tt>back</tt> in
-      the respective namespaces are provided that set their argument cursor
-      to the next or previous, resp., in the corresponding traversal
-      order.--></li>
+            traversal property, algorithms <tt>forward</tt> and <tt>back</tt> in
+            the respective namespaces are provided that set their argument cursor
+            to the next or previous, resp., in the corresponding traversal
+            order.--></li>
     </ol>
-    
-    <h5>24.4.X.1 Template class <tt>iterator</tt>
-    <span class="section-id">[tr.order.iterator]</span></h5>
-    
+
+    <h5>24.4.X.1 Template class <tt>iterator</tt> <span class=
+    "section-id">[tr.order.iterator]</span></h5>
+
     <ol>
       <li>
         <p>In the following, the template class <tt>iterator</tt> only as in
         <tt>namespace preorder</tt> is shown. Note that template classes of
-        same name and interface must also be present in 
-        <tt>namespace postorder</tt> as well as in 
-        <tt>namespace inorder</tt>.</p>
+        same name and interface must also be present in <tt>namespace
+        postorder</tt> as well as in <tt>namespace inorder</tt>.</p>
         <pre>
 namespace std {
 namespace tr2 {
@@ -1583,7 +1584,7 @@ namespace preorder {
     
     Cursor base() const;         // explicit
     Reference operator*() const;
-    Pointer   operator->() const;
+    Pointer   operator-&gt;() const;
     
     iterator&amp; operator++();
     iterator  operator++(int);
@@ -1604,86 +1605,73 @@ template &lt;class Cursor&gt;
 } // namespace preorder
 } // namespace tr2
 } // namespace std
-      </pre>
-    </li>
-  </ol>
+      
+</pre>
+      </li>
+    </ol>
   </div>
-  
+
   <h2>References</h2>
+
   <dl>
     <dt><a id="ref.austern">[austern]</a></dt>
-    
-    <dd>Austern, Matthew H.; Stroustrup, Bjarne; Thorup, Mikkel; Wilikinson, John.
-    <em>Untangling the Balancing and Searching of Balanced Binary Search Trees</em>, 
-    Software: Practice and Experience 33(13): 1273-1298 (2003)<br />
-    Electronic Appendix: <a href="http://www.research.att.com/~bs/tree-appendix.pdf">
-    http://www.research.att.com/~bs/tree-appendix.pdf</a></dd>
-    
+
+    <dd>Austern, Matthew H.; Stroustrup, Bjarne; Thorup, Mikkel; Wilikinson,
+    John. <em>Untangling the Balancing and Searching of Balanced Binary
+    Search Trees</em>, Software: Practice and Experience 33(13): 1273-1298
+    (2003)<br />
+    Electronic Appendix: <a href=
+    "http://www.research.att.com/~bs/tree-appendix.pdf">http://www.research.att.com/~bs/tree-appendix.pdf</a></dd>
+
     <dt><a id="ref.dreizin">[dreizin]</a></dt>
-    
-    <dd>Dreizin, Vladimir; Kosnik, Benjamin; Tavory, Ami.
-	<em>Policy-Based Data Structures</em>, 
-	<a href="http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/">
-	http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/</a></dd>
-    
+
+    <dd>Dreizin, Vladimir; Kosnik, Benjamin; Tavory, Ami. <em>Policy-Based
+    Data Structures</em>, <a href=
+    "http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/">http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/</a></dd>
+
     <dt><a id="ref.ekman">[ekman]</a></dt>
-    
-    <dd>Ekman, Rasmus.
-    <em>Structured Associative Containers</em>,
-    <a href="http://www.abc.se/~re/code/tst">
-    http://www.abc.se/~re/code/tst</a></dd>
-    
+
+    <dd>Ekman, Rasmus. <em>Structured Associative Containers</em>, <a href=
+    "http://www.abc.se/~re/code/tst">http://www.abc.se/~re/code/tst</a></dd>
+
     <dt><a id="ref.gottschlich">[gottschlich]</a></dt>
-    
-    <dd>Gottschlich, Justin.
-    <em>C++ Trees</em>, 
-    <a href="http://www.gamedev.net/reference/articles/article2192.asp">
-    http://www.gamedev.net/reference/articles/article2192.asp</a> and
-    <a href="http://www.gamedev.net/reference/articles/article2233.asp">
-    http://www.gamedev.net/reference/articles/article2233.asp</a></dd>
-    
+
+    <dd>Gottschlich, Justin. <em>C++ Trees</em>, <a href=
+    "http://www.gamedev.net/reference/articles/article2192.asp">http://www.gamedev.net/reference/articles/article2192.asp</a>
+    and <a href=
+    "http://www.gamedev.net/reference/articles/article2233.asp">http://www.gamedev.net/reference/articles/article2233.asp</a></dd>
+
     <dt><a id="ref.haas">[haas]</a></dt>
-    
-    <dd>Haas, Mitchell.
-    <em>Tree Container Library</em>,
-    <a href="http://www.datasoftsolutions.net/tree_container_library/overview.php">
-    http://www.datasoftsolutions.net/tree_container_library/overview.php</a></dd>
-    
+
+    <dd>Haas, Mitchell. <em>Tree Container Library</em>, <a href=
+    "http://www.datasoftsolutions.net/tree_container_library/overview.php">http://www.datasoftsolutions.net/tree_container_library/overview.php</a></dd>
+
     <dt><a id="ref.karas">[karas]</a></dt>
-    
-    <dd>Karas, Walt.
-    <em>C++ AVL Tree Template</em>,
-    <a href="http://us.geocities.com/wkaras/gen_cpp/avl_tree.html">
-    http://us.geocities.com/wkaras/gen_cpp/avl_tree.html</a></dd>
+
+    <dd>Karas, Walt. <em>C++ AVL Tree Template</em>, <a href=
+    "http://us.geocities.com/wkaras/gen_cpp/avl_tree.html">http://us.geocities.com/wkaras/gen_cpp/avl_tree.html</a></dd>
 
     <dt><a id="ref.mirwaisi">[mirwais]</a></dt>
-    
-    <dd>Mirwaisi, Jeff.
-    <em>treelib</em>,
-    <a href="https://boost-consulting.com:8443/trac/soc/attachment/wiki/tree/resources/trees/treelib.tar.bz2">
+
+    <dd>Mirwaisi, Jeff. <em>treelib</em>, <a href=
+    "https://boost-consulting.com:8443/trac/soc/attachment/wiki/tree/resources/trees/treelib.tar.bz2">
     https://boost-consulting.com:8443/trac/soc/attachment/wiki/tree/resources/trees/treelib.tar.bz2</a></dd>
-    
+
     <dt><a id="ref.parent">[parent]</a></dt>
-    
-    <dd>Parent, Sean <i>et al</i>.
-    <em>Forest</em>,
-    <a href="http://opensource.adobe.com/group__forest__related.html">
-    http://opensource.adobe.com/group__forest__related.html</a></dd>
-    
+
+    <dd>Parent, Sean <i>et al</i>. <em>Forest</em>, <a href=
+    "http://opensource.adobe.com/group__forest__related.html">http://opensource.adobe.com/group__forest__related.html</a></dd>
+
     <dt><a id="ref.peeters">[peeters]</a></dt>
-    
-    <dd>Peeters, Kasper.
-    <em>tree.hh: an STL-like C++ tree class</em>,
-    <a href="http://www.aei.mpg.de/~peekas/tree/">
-    http://www.aei.mpg.de/~peekas/tree/</a></dd>
-    
+
+    <dd>Peeters, Kasper. <em>tree.hh: an STL-like C++ tree class</em>,
+    <a href=
+    "http://www.aei.mpg.de/~peekas/tree/">http://www.aei.mpg.de/~peekas/tree/</a></dd>
+
     <dt><a id="ref.rivera">[rivera]</a></dt>
-    
-    <dd>Rivera, René.
-    <em>RankTree.h</em>,
-    <a href="http://redshift-software.com/~grafik/RankTree.h">
-    http://redshift-software.com/~grafik/RankTree.h</a></dd>
+
+    <dd>Rivera, Ren&eacute;. <em>RankTree.h</em>, <a href=
+    "http://redshift-software.com/~grafik/RankTree.h">http://redshift-software.com/~grafik/RankTree.h</a></dd>
   </dl>
-  
 </body>
 </html>
