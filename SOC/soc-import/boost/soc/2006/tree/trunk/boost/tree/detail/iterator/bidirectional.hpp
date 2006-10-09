@@ -113,7 +113,7 @@ class iterator<Cursor, bidirectional_traversal_tag>
 //template <class MultiwayTree>
 //iterator<typename MultiwayTree::cursor> begin(MultiwayTree& t)
 //{
-//	typedef typename cursor_vertical_traversal<typename MultiwayTree::cursor>::type
+//	typedef typename cursor_category<typename MultiwayTree::cursor>::type
 //		traversal;
 //	return begin(t, traversal());
 //}
@@ -147,7 +147,7 @@ class iterator<Cursor, bidirectional_traversal_tag>
 //template <class MultiwayTree>
 //iterator<typename MultiwayTree::const_cursor> cbegin(MultiwayTree& t)
 //{
-//	typedef typename cursor_vertical_traversal<
+//	typedef typename cursor_category<
 //		typename MultiwayTree::const_cursor>::type traversal;
 //	return cbegin(t, traversal());
 //}
@@ -169,7 +169,7 @@ class iterator<Cursor, bidirectional_traversal_tag>
 //template <class MultiwayTree>
 //iterator<typename MultiwayTree::cursor> end(MultiwayTree& t)
 //{
-//	typedef typename cursor_vertical_traversal<typename MultiwayTree::cursor>::type
+//	typedef typename cursor_category<typename MultiwayTree::cursor>::type
 //		traversal;
 //	return end(t, traversal());
 //}
@@ -202,7 +202,7 @@ class iterator<Cursor, bidirectional_traversal_tag>
 //template <class MultiwayTree>
 //iterator<typename MultiwayTree::const_cursor> cend(MultiwayTree& t)
 //{
-//	typedef typename cursor_vertical_traversal<
+//	typedef typename cursor_category<
 //		typename MultiwayTree::const_cursor>::type traversal;
 //	return cend(t, traversal());
 //}

@@ -122,23 +122,23 @@ class upper_bound_wrapper
 	}
 };
 
-template<class Cursor, typename T, typename Compare>
-class lower_bound_default
-{
-	Cursor operator() (Cursor first, Cursor last, T const& val, Compare cmp)
-	{
-		return do_lower_bound(first, last, val, cmp, typename cursor_arity<Cursor>::type());
-	}
-};
-
-template<class Cursor, typename T, typename Compare>
-class upper_bound_default
-{
-	Cursor operator() (Cursor first, Cursor last, T const& val, Compare cmp)
-	{
-		return do_upper_bound(first, last, val, cmp, typename cursor_arity<Cursor>::type());
-	}
-};
+//template<class Cursor, typename T, typename Compare>
+//class lower_bound_default
+//{
+//	Cursor operator() (Cursor first, Cursor last, T const& val, Compare cmp)
+//	{
+//		return do_lower_bound(first, last, val, cmp, typename cursor_arity<Cursor>::type());
+//	}
+//};
+//
+//template<class Cursor, typename T, typename Compare>
+//class upper_bound_default
+//{
+//	Cursor operator() (Cursor first, Cursor last, T const& val, Compare cmp)
+//	{
+//		return do_upper_bound(first, last, val, cmp, typename cursor_arity<Cursor>::type());
+//	}
+//};
 
 // The following functions make assumptions about how cmp is invoked by 
 // node_search. Although this seems pretty straight-forward, is this also 
@@ -267,16 +267,16 @@ key_lower_bound(binary_tree<T, Balance, Augment, ValAlloc>& t, typename Extract:
  * (only) modelling InputIterator.
  * 
 */
-template<class Cursor, class Extract, class Compare>
-std::pair<Cursor, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
-key_upper_bound(Cursor c, typename Extract::result_type key, 
-				Extract extract = Extract(), Compare compare = Compare())
-{
-	typedef typename cursor_arity<Cursor>::type arity;
-	return upper_bound_key(c, key, 
-		   bind(do_upper_bound, _1, _2, _3, _4, arity()), 
-		   extract, compare);
-}
+//template<class Cursor, class Extract, class Compare>
+//std::pair<Cursor, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
+//key_upper_bound(Cursor c, typename Extract::result_type key, 
+//				Extract extract = Extract(), Compare compare = Compare())
+//{
+//	typedef typename cursor_arity<Cursor>::type arity;
+//	return upper_bound_key(c, key, 
+//		   bind(do_upper_bound, _1, _2, _3, _4, arity()), 
+//		   extract, compare);
+//}
 
 
 /** @brief A %searcher

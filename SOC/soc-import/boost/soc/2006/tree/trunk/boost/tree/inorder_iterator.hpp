@@ -54,7 +54,7 @@ namespace tree {
 	
 namespace inorder {
 
-template <class Cursor, class Tag = typename cursor_vertical_traversal<Cursor>::type>
+template <class Cursor, class Tag = typename cursor_category<Cursor>::type>
 class iterator {};
 
 template <class Cursor>
@@ -184,7 +184,7 @@ begin(MultiwayTree& t, bidirectional_traversal_tag)
 template <class MultiwayTree>
 iterator<typename MultiwayTree::cursor> begin(MultiwayTree& t)
 {
-	typedef typename cursor_vertical_traversal<typename MultiwayTree::cursor>::type
+	typedef typename cursor_category<typename MultiwayTree::cursor>::type
 		traversal;
 	return begin(t, traversal());
 }
@@ -218,7 +218,7 @@ cbegin(MultiwayTree const& t, bidirectional_traversal_tag)
 template <class MultiwayTree>
 iterator<typename MultiwayTree::const_cursor> cbegin(MultiwayTree const& t)
 {
-	typedef typename cursor_vertical_traversal<
+	typedef typename cursor_category<
 		typename MultiwayTree::const_cursor>::type traversal;
 	return cbegin(t, traversal());
 }
@@ -251,7 +251,7 @@ end(MultiwayTree const& t, bidirectional_traversal_tag)
 template <class MultiwayTree>
 iterator<typename MultiwayTree::cursor> end(MultiwayTree& t)
 {
-	typedef typename cursor_vertical_traversal<typename MultiwayTree::cursor>::type
+	typedef typename cursor_category<typename MultiwayTree::cursor>::type
 		traversal;
 	return end(t, traversal());
 }
@@ -284,7 +284,7 @@ cend(MultiwayTree const& t, bidirectional_traversal_tag)
 template <class MultiwayTree>
 iterator<typename MultiwayTree::const_cursor> cend(MultiwayTree const& t)
 {
-	typedef typename cursor_vertical_traversal<
+	typedef typename cursor_category<
 		typename MultiwayTree::const_cursor>::type traversal;
 	return cend(t, traversal());
 }

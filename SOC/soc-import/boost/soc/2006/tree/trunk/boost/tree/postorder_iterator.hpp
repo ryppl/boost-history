@@ -49,7 +49,7 @@ namespace tree {
 	
 namespace postorder {
 
-template <class Cursor, class Tag = typename cursor_vertical_traversal<Cursor>::type>
+template <class Cursor, class Tag = typename cursor_category<Cursor>::type>
 class iterator {};
 
 template <class Cursor>

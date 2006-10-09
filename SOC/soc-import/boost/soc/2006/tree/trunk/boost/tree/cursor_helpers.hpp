@@ -157,7 +157,7 @@ class cursor_facade
 
 	typedef Size size_type;
 
-	typedef bidirectional_traversal_tag vertical_traversal_type;
+	typedef bidirectional_traversal_tag cursor_category;
 
 //	typedef typename Derived::template rebind<value_type>::other cursor;
 //	typedef typename Derived::template rebind<add_const<value_type> >::other
@@ -228,7 +228,7 @@ class cursor_adaptor
     { }
     
     typedef HorizontalTraversal horizontal_traversal;
-    typedef HorizontalTraversal vertical_traversal;
+    typedef VerticalTraversal cursor_category;
     
     typedef Size size_type;
     typedef Base base_type;

@@ -75,7 +75,7 @@ class const_multiway_tree_cursor
 
 	typedef typename cursor_size<base_cursor>::type size_type;
 
-	typedef bidirectional_traversal_tag vertical_traversal_type;
+	typedef bidirectional_traversal_tag cursor_category;
 	
 	typedef typename Cursor::metadata_type metadata_type;
 	
@@ -137,7 +137,7 @@ class multiway_tree_cursor
 
 	typedef typename cursor_size<base_cursor>::type size_type;
 
-	//typedef bidirectional_traversal_tag vertical_traversal_type;
+	//typedef bidirectional_traversal_tag cursor_category;
 	
 	typedef typename base_cursor::metadata_type metadata_type;
 	
