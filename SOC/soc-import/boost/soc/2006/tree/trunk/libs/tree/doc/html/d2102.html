@@ -7,7 +7,7 @@
 <head>
   <title>Hierarchical Data Structures and Related Concepts for the C++
   Standard Library (TR2)</title>
-  <style type="text/css">
+<style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
   .std {
@@ -71,7 +71,7 @@
     text-decoration: overline;
   }
   /*]]>*/
-  </style>
+</style>
 </head>
 
 <body>
@@ -291,7 +291,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
-               class="reqmts">
+        class="reqmts">
           <caption>
             Table 1: Container requirements that are not required for
             hierarchy containers
@@ -1143,7 +1143,7 @@ namespace tr2 {
 
         <table summary=
         "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
-               class="reqmts">
+        class="reqmts">
           <caption>
             Table 7 - Descending forward cursor requirements (in addition to
             descending cursors and forward iterators)
@@ -1191,7 +1191,7 @@ namespace tr2 {
 
         <table summary=
         "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
-               class="reqmts">
+        class="reqmts">
           <caption>
             Table 8 - Descending bidirectional cursor requirements (in
             addition to forward descending cursors and bidirectional
@@ -1240,7 +1240,7 @@ namespace tr2 {
 
         <table summary=
         "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
-               class="reqmts">
+        class="reqmts">
           <caption>
             Table 9 - Descending random access cursor requirements (in
             addition to descending bidirectional cursors and random access
@@ -1366,7 +1366,7 @@ namespace tr2 {
 
         <table summary=
         "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
-               class="reqmts">
+        class="reqmts">
           <caption>
             Table 11 - Ascending forward cursor requirements (in addition to
             ascending cursors and descending forward cursors)
@@ -1413,7 +1413,7 @@ namespace tr2 {
 
         <table summary=
         "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
-               class="reqmts">
+        class="reqmts">
           <caption>
             Table 12 - Ascending bidirectional cursor requirements (in
             addition to ascending forward cursors and descending
@@ -1560,10 +1560,11 @@ namespace tr2 {
 
     <ol>
       <li>
-        <p>In the following, the template class <tt>iterator</tt> only as in
-        <tt>namespace preorder</tt> is shown. Note that template classes of
-        same name and interface must also be present in <tt>namespace
-        postorder</tt> as well as in <tt>namespace inorder</tt>.</p>
+        <p>In the following, the template class <tt>iterator</tt> and related
+        operators only as in <tt>namespace preorder</tt> are shown. Note that
+        template classes of same name and interface must also be present in
+        <tt>namespace postorder</tt> as well as in <tt>namespace
+        inorder</tt>.</p>
         <pre>
 namespace std {
 namespace tr2 {
@@ -1609,7 +1610,7 @@ template &lt;class Cursor&gt;
 </pre>
       </li>
     </ol>
-    
+
     <h5>24.4.X.2 Linear order <tt>iterator</tt> requirements <span class=
     "section-id">[tr.order.iter.requirements]</span></h5>
 
@@ -1630,7 +1631,8 @@ template &lt;class Cursor&gt;
     "section-id">[tr.order.iter.cons]</span></h6>
     <pre>
 explicit iterator(Cursor x);
-    </pre>
+    
+</pre>
 
     <ol>
       <li>Effects: Initializes <tt>current</tt> with <tt>x</tt>.</li>
@@ -1640,7 +1642,8 @@ explicit iterator(Cursor x);
     "section-id">[tr.order.iter.conv]</span></h6>
     <pre>
 Iterator base() const; // explicit
-    </pre>
+    
+</pre>
 
     <ol>
       <li>Returns: <tt>current</tt></li>
@@ -1650,7 +1653,8 @@ Iterator base() const; // explicit
     "section-id">[tr.order.iter.op.star]</span></h6>
     <pre>
 Reference operator*() const;
-    </pre>
+    
+</pre>
 
     <ol>
       <li>Returns: <tt>*current</tt></li>
@@ -1660,7 +1664,8 @@ Reference operator*() const;
     "section-id">[tr.order.iter.opref]</span></h6>
     <pre>
 Pointer operator-&gt;() const;
-    </pre>
+    
+</pre>
 
     <ol>
       <li>Returns: <tt>&amp;(operator*())</tt></li>
@@ -1670,24 +1675,28 @@ Pointer operator-&gt;() const;
     "section-id">[tr.order.iter.op++]</span></h6>
     <pre>
 iterator&amp; operator++() const;
-    </pre>
+    
+</pre>
 
     <ol>
       <li>Effects: Sets <tt>current</tt> to the next cursor in the given
       order.</li>
+
       <li>Returns: <tt>*this</tt></li>
     </ol>
-    
     <pre>
 iterator operator++(int) const;
-    </pre>
+    
+</pre>
+
     <ol>
       <li>Effects:
         <pre>
 iterator tmp = *this;
 this-&gt;operator++();
 return tmp;
-      </pre>
+      
+</pre>
       </li>
     </ol>
 
@@ -1695,24 +1704,28 @@ return tmp;
     "section-id">[tr.order.iter.op--]</span></h6>
     <pre>
 iterator&amp; operator++() const;
-    </pre>
+    
+</pre>
 
     <ol>
       <li>Effects: Sets <tt>current</tt> to the previous cursor in the given
       order.</li>
+
       <li>Returns: <tt>*this</tt></li>
     </ol>
-    
     <pre>
 iterator operator--(int) const;
-    </pre>
+    
+</pre>
+
     <ol>
       <li>Effects:
         <pre>
 iterator tmp = *this;
 this-&gt;operator--();
 return tmp;
-      </pre>
+      
+</pre>
       </li>
     </ol>
 
@@ -1723,7 +1736,8 @@ template &lt;class Cursor&gt;
   bool operator==(
     const iterator&lt;Cursor&gt;&amp; x,
     const iterator&lt;Cursor&gt;&amp; y);
-    </pre>
+    
+</pre>
 
     <ol>
       <li>Returns: <tt>x.current == y.current</tt></li>
@@ -1736,7 +1750,8 @@ template &lt;class Cursor&gt;
   bool operator!=(
     const iterator&lt;Cursor&gt;&amp; x,
     const iterator&lt;Cursor&gt;&amp; y);
-    </pre>
+    
+</pre>
 
     <ol>
       <li>Returns: <tt>x.current != y.current</tt></li>
@@ -1746,7 +1761,7 @@ template &lt;class Cursor&gt;
   <h2>References</h2>
 
   <dl>
-    <dt><a id="ref.austern">[austern]</a></dt>
+    <dt><a id="ref.austern" name="ref.austern">[austern]</a></dt>
 
     <dd>Austern, Matthew H.; Stroustrup, Bjarne; Thorup, Mikkel; Wilikinson,
     John. <em>Untangling the Balancing and Searching of Balanced Binary
@@ -1755,52 +1770,52 @@ template &lt;class Cursor&gt;
     Electronic Appendix: <a href=
     "http://www.research.att.com/~bs/tree-appendix.pdf">http://www.research.att.com/~bs/tree-appendix.pdf</a></dd>
 
-    <dt><a id="ref.dreizin">[dreizin]</a></dt>
+    <dt><a id="ref.dreizin" name="ref.dreizin">[dreizin]</a></dt>
 
     <dd>Dreizin, Vladimir; Kosnik, Benjamin; Tavory, Ami. <em>Policy-Based
     Data Structures</em>, <a href=
     "http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/">http://gcc.gnu.org/onlinedocs/libstdc++/ext/pb_ds/</a></dd>
 
-    <dt><a id="ref.ekman">[ekman]</a></dt>
+    <dt><a id="ref.ekman" name="ref.ekman">[ekman]</a></dt>
 
     <dd>Ekman, Rasmus. <em>Structured Associative Containers</em>, <a href=
     "http://www.abc.se/~re/code/tst">http://www.abc.se/~re/code/tst</a></dd>
 
-    <dt><a id="ref.gottschlich">[gottschlich]</a></dt>
+    <dt><a id="ref.gottschlich" name="ref.gottschlich">[gottschlich]</a></dt>
 
     <dd>Gottschlich, Justin. <em>C++ Trees</em>, <a href=
     "http://www.gamedev.net/reference/articles/article2192.asp">http://www.gamedev.net/reference/articles/article2192.asp</a>
     and <a href=
     "http://www.gamedev.net/reference/articles/article2233.asp">http://www.gamedev.net/reference/articles/article2233.asp</a></dd>
 
-    <dt><a id="ref.haas">[haas]</a></dt>
+    <dt><a id="ref.haas" name="ref.haas">[haas]</a></dt>
 
     <dd>Haas, Mitchell. <em>Tree Container Library</em>, <a href=
     "http://www.datasoftsolutions.net/tree_container_library/overview.php">http://www.datasoftsolutions.net/tree_container_library/overview.php</a></dd>
 
-    <dt><a id="ref.karas">[karas]</a></dt>
+    <dt><a id="ref.karas" name="ref.karas">[karas]</a></dt>
 
     <dd>Karas, Walt. <em>C++ AVL Tree Template</em>, <a href=
     "http://us.geocities.com/wkaras/gen_cpp/avl_tree.html">http://us.geocities.com/wkaras/gen_cpp/avl_tree.html</a></dd>
 
-    <dt><a id="ref.mirwaisi">[mirwais]</a></dt>
+    <dt><a id="ref.mirwaisi" name="ref.mirwaisi">[mirwais]</a></dt>
 
     <dd>Mirwaisi, Jeff. <em>treelib</em>, <a href=
     "https://boost-consulting.com:8443/trac/soc/attachment/wiki/tree/resources/trees/treelib.tar.bz2">
     https://boost-consulting.com:8443/trac/soc/attachment/wiki/tree/resources/trees/treelib.tar.bz2</a></dd>
 
-    <dt><a id="ref.parent">[parent]</a></dt>
+    <dt><a id="ref.parent" name="ref.parent">[parent]</a></dt>
 
     <dd>Parent, Sean <i>et al</i>. <em>Forest</em>, <a href=
     "http://opensource.adobe.com/group__forest__related.html">http://opensource.adobe.com/group__forest__related.html</a></dd>
 
-    <dt><a id="ref.peeters">[peeters]</a></dt>
+    <dt><a id="ref.peeters" name="ref.peeters">[peeters]</a></dt>
 
     <dd>Peeters, Kasper. <em>tree.hh: an STL-like C++ tree class</em>,
     <a href=
     "http://www.aei.mpg.de/~peekas/tree/">http://www.aei.mpg.de/~peekas/tree/</a></dd>
 
-    <dt><a id="ref.rivera">[rivera]</a></dt>
+    <dt><a id="ref.rivera" name="ref.rivera">[rivera]</a></dt>
 
     <dd>Rivera, Ren&eacute;. <em>RankTree.h</em>, <a href=
     "http://redshift-software.com/~grafik/RankTree.h">http://redshift-software.com/~grafik/RankTree.h</a></dd>
