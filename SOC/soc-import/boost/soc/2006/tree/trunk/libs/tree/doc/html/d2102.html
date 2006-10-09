@@ -285,10 +285,9 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
       <li>
         <p>Hierarchy containers conform to the requirements of Containers
-        (<tt>[lib.container.requirements]</tt>), except that the expressions
-        in table <i>1</i> are not required to be valid, where <tt>a</tt> and
-        <tt>b</tt> denote values of a type X, and X is a hierarchy container
-        class:</p>
+        ([lib.container.requirements]), except that the expressions in Table
+        1 are not required to be valid, where <tt>a</tt> and <tt>b</tt>
+        denote values of a type X, and X is a hierarchy container class:</p>
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
@@ -338,15 +337,13 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
         expressed in terms of the number of operations <tt>n</tt>, which
         stands for the total number of elements in the hierarchy; or in terms
         of the number of operations <tt>c</tt>, which stands for the number
-        of child elements of a given element (as introduced by paragraph ...
-        of subclause ...).</p>
+        of child elements of a given element.</p>
       </li>
 
       <li>
-        <p>In table 2: <tt>X</tt> denotes a hierarchy class containing
-        objects of type <tt>T</tt>, <tt>a</tt> denotes a value of type X,
-        <tt>u</tt> denotes an identifier and <tt>r</tt> denotes a value of
-        <tt>X&amp;</tt>.</p>
+        <p>In Table 2: <tt>X</tt> denotes a hierarchy class containing
+        objects of type <tt>T</tt> and <tt>a</tt> denotes a value of type
+        X.</p>
 
         <table summary="Hierarchy requirements (in addition to container)"
         class="reqmts">
@@ -462,7 +459,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
         denotes a value of <tt>X</tt>, <tt>p</tt> denotes a valid, non-on-top
         cursor to <tt>a</tt>, <tt>q</tt> denotes a valid, dereferenceable
         cursor to <tt>a</tt>, and <tt>t</tt> denotes a value of
-        <tt>X::value_type</tt>. [...]</p>
+        <tt>X::value_type</tt>.</p>
 
         <table summary="Mutable hierarchy requirements" class="reqmts">
           <caption>
