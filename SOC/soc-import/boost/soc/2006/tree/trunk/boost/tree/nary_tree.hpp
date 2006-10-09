@@ -305,9 +305,10 @@ class nary_tree /*: public Balance, public Augment*/ {
 
 		p_node->m_parent = pos.m_node;
 
-		if (pos.m_node == node_type::nil())
+		if (pos.m_node->operator[](pos.m_pos) == node_type::nil())
 			static_cast<node_pointer>(pos.m_node)->operator[](pos.m_pos) = p_node;
-		else if (static_cast<node_pointer>(pos.m_node)->empty()) {
+		else 
+		if (static_cast<node_pointer>(pos.m_node)->empty()) {
 			static_cast<node_pointer>(pos.m_node)->push_back(p_node);
 			pos.m_pos = 0;
 		} else

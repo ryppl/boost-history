@@ -40,7 +40,7 @@ void test_multiway_tree()
 	tree_type mytree;
 
 	//tree_type::cursor c = 
-	mytree.insert(mytree.shoot(), 3);
+	//mytree.insert(mytree.shoot(), 3);
 }
 
 int test_main(int, char* [])

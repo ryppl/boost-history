@@ -539,10 +539,11 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
       <li>For a given balanced hierarchy class <tt>X</tt>,
       <tt>X::iterator</tt> must be convertible to <tt>X::cursor</tt>, and
       <tt>X::const_iterator</tt> must be convertible to
-      <tt>X::const_cursor</tt>. If the respective <tt>iterator</tt> or
-      <tt>const_iterator</tt> is valid and dereferenceable, the
-      <tt>cursor</tt> or <tt>const_cursor</tt> resulting from the conversion
-      will also be valid and dereferenceable.</li>
+      <tt>X::const_cursor</tt>; and vice versa. If the respective 
+      <tt>iterator</tt> or <tt>const_iterator</tt> is valid and 
+      dereferenceable, the <tt>cursor</tt> or <tt>const_cursor</tt> 
+      resulting from the conversion will also be valid and dereferenceable;
+      and vice versa.</li>
 
       <li>As in some cases there might be interest to store additional
       information along with the client data in the tree that is
@@ -550,6 +551,10 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
       either the client data, the tree structure, or both, a tree can be
       <em>augmented</em> in which case it will perform operations to effect
       this behavior.</li>
+      
+      <li>Data which is not directly passed by the user but governed
+      by a given balancer or augmentor is called <em>metadata</em>.</li>
+      
     </ol>
 
     <h4>0.1.2 Hierarchy container classes <span class=
@@ -799,9 +804,11 @@ namespace tr2 {
       <li>Cursors provide a uniform way of applying algorithms to
       hierarchical data structures. In order to also allow for algorithms
       relevant when dealing with linear data structures, any cursor class is
-      actually a refinement of a corresponding iterator class whose traversal
+      actually a refinement of a corresponding iterator class. 
+      <!--whose traversal
       related capabilities map to traversal of among a given cursor's
-      immediate descendants or "child cursors" (or just "children").</li>
+      immediate descendants or "child cursors" (or just "children", as
+      defined in the following paragraph).--></li>
 
       <li>If exactly one application of the expression <tt>i =
       i.begin()</tt>, followed by a finite sequence of applications of the
@@ -826,13 +833,24 @@ namespace tr2 {
       iterator counterparts can be), the notion of a cursor <em>on-top</em>
       is introduced, denoting a cursor that is ancestor to all other cursors
       within a hierarchy is introduced; and just as for past-the-end ones,
-      the library never assumes on-top cursors be dereferenceable; nor that
-      they be incrementable or decrementable. In other words, as opposed to
+      the library generally does not assume on-top cursors be dereferenceable;
+      nor that they be incrementable or decrementable unless stated otherwise
+      in a given hierarchy's requirement specifications.
+      <!--In other words, as opposed to
       non-on-top cursurs, on-top cursors fulfill only the Range concept
-      requirements, but not any Iterator concept requirements.</li>
+      requirements, but not any Iterator concept requirements.--></li>
 
-      <li class="c1">[Leaf cursors/ empty()]</li>
-
+      <li>A cursor <tt>i</tt> for which <tt>i.emtpy() == true</tt> is called
+      <em>leaf cursor</em>. A leaf cursor's children are never assumed to
+      be dereferenceable.</li>
+      
+      <li>A cursor, like an iterator, can have a singular value that is not
+      associated with any hierarchy, meaning that most expressions are undefined
+      for it, with the exception of assignment of a non-singular value to a
+      cursor that holds a singular value. The children of a leaf cursor's child
+      are never assumed to be non-singular; nor is the parent of an on-top node.
+      </li>
+      
       <li>
         <p>In the following sections <tt>X</tt> denotes a cursor over values
         of type <tt>T</tt>, <tt>a</tt> and <tt>b</tt> denotes an identifier,
@@ -1345,7 +1363,7 @@ namespace tr2 {
     <ol>
       <li>
         <p>A class type X satisfies the requirements of an ascending forward
-        cursor if the folow expressions are valid, as shown in Table 11, in
+        cursor if the following expressions are valid, as shown in Table 11, in
         addition to satisfying the requirements for ascending cursors
         ([tr.ascending.cursors]) and descending forward cursors
         ([tr.descending.forward.cursors]):</p>
@@ -1453,12 +1471,65 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-    <h3>0.3 [...?] Hierarchy traversal</h3>
+  <h3>24.2 Header <tt>&lt;iterator</tt> synopsis
+  <span class="section-id">[lib.iterator.synsopsis]</span></h3>
+  
+  <div class="note">Append to section introduced with
+  <i>// subclause 24.4, predefined iterators:</i></div>
+  <pre>
+  namespace tr2 {
+  namespace preorder {
+  template &lt;class Cursor&gt; class iterator;
+  
+  template &lt;class Cursor&gt;
+  bool operator==(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+
+  template &lt;class Cursor&gt;
+  bool operator!=(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+  } // namespace preorder   
+
+  namespace postorder {
+  template &lt;class Cursor&gt; class iterator;
+  
+  template &lt;class Cursor&gt;
+  bool operator==(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+
+  template &lt;class Cursor&gt;
+  bool operator!=(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+  } // namespace postorder   
+
+  namespace inorder {
+  template &lt;class Cursor&gt; class iterator;
+  
+  template &lt;class Cursor&gt;
+  bool operator==(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+
+  template &lt;class Cursor&gt;
+  bool operator!=(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+  } // namespace inorder   
+  } // namespace tr2
+  </pre>
+	
+    <h4>24.4.X Linear order traversal iterators
+    <span class="section-id">[tr.order.iterators]</span></h4>
 
     <ol>
       <li>For linear traversal of hierarchies, the library offers a number of
-      useful algorithms, namely for <tt>preorder</tt>, <tt>postorder</tt> and
-      <tt>inorder</tt> traversal in namespaces named accordingly.</li>
+      useful predefined iterators, namely for <tt>preorder</tt>, 
+      <tt>postorder</tt> and <tt>inorder</tt> traversal in namespaces named
+      accordingly.</li>
 
       <li><em>Preorder traversal</em> means that after a given element, first
       the subtree to its left, then the one to its right will be
@@ -1473,17 +1544,72 @@ namespace tr2 {
       will be visited.</li>
 
       <li>For each of the above kinds of traversal order, the library offers
-      a kind of order traversal iterator adaptor template class around a
-      given cursor, for which increment and decrement operations are
-      implemented allow stepwise iteration according to the respective
-      requirements. Additionally, for cursors with bidirectional vertical
+      a kind of order traversal iterator adaptor template class whose template
+      parameter is a bidirectional or random access (either ascending or
+      descending) cursor class. Increment and decrement operations for these
+      iterator adaptor classes are implemented to allow stepwise iteration
+      according to the respective requirements. 
+      <!--Additionally, for cursors with bidirectional vertical
       traversal property, algorithms <tt>forward</tt> and <tt>back</tt> in
       the respective namespaces are provided that set their argument cursor
       to the next or previous, resp., in the corresponding traversal
-      order.</li>
-
-      <li>Traversal header</li>
+      order.--></li>
     </ol>
+    
+    <h5>24.4.X.1 Template class <tt>iterator</tt>
+    <span class="section-id">[tr.order.iterator]</span></h5>
+    
+    <ol>
+      <li>
+        <p>In the following, the template class <tt>iterator</tt> only as in
+        <tt>namespace preorder</tt> is shown. Note that template classes of
+        same name and interface must also be present in 
+        <tt>namespace postorder</tt> as well as in 
+        <tt>namespace inorder</tt>.</p>
+        <pre>
+namespace std {
+namespace tr2 {
+namespace preorder {
+  template &lt;class Cursor&gt;
+  class iterator :
+    public iterator&lt;typename iterator_traits&lt;Cursor&gt;::iterator_category,
+                    typename iterator_traits&lt;Cursor&gt;::value_type,
+                    typename iterator_traits&lt;Cursor&gt;::difference_type,
+                    typename iterator_traits&lt;Cursor&gt;::pointer,
+                    typename iterator_traits&lt;Cursor&gt;::reference&gt; {
+  protected:
+    Cursor current;
+  public:
+    typedef Cursor cursor_type;
+    iterator();
+    explicit iterator(Cursor x);
+    
+    Cursor base() const;         // explicit
+    Reference operator*() const;
+    Pointer   operator->() const;
+    
+    iterator&amp; operator++();
+    iterator  operator++(int);
+    iterator&amp; operator--();
+    iterator  operator--(int);
+  };
+
+template &lt;class Cursor&gt;
+  bool operator==(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+
+template &lt;class Cursor&gt;
+  bool operator!=(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
+
+} // namespace preorder
+} // namespace tr2
+} // namespace std
+      </pre>
+    </li>
+  </ol>
   </div>
   
   <h2>References</h2>
