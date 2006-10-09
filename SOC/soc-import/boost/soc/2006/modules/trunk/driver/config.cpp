@@ -24,7 +24,7 @@ static vector<string> s_macros, s_predef, s_undef;
 static vector<string> s_filenames;
 static string s_suffix("_gen");
 static bool s_longlong = false, s_variadics = false, s_c99 = false, 
-            s_preserve_comments = false;
+            s_preserve_comments = false, s_import = false;
 
 void
 configure_mapmanager (MapManager& map) {
@@ -52,6 +52,10 @@ std::string configure_getsuffix () {
 static bool s_maps_only = false;
 bool configure_procfiles () {
     return !s_maps_only;
+}
+
+bool configure_import () {
+    return s_import;
 }
 
 void configure_context (context_t& context){
@@ -171,6 +175,7 @@ vector<string> configure (int args, const char **argv) {
         ("variadics", "enable certain C99 extensions in C++ mode")
         ("c99", "enable C99 mode (implies --variadics)")
         ("preserve,p", "preserve comments in output")
+        ("import,i", "import module namespaces")
         ;
         
 
@@ -264,6 +269,8 @@ vector<string> configure (int args, const char **argv) {
         s_longlong = vm.count ("long_long") > 0;
         s_c99 = vm.count ("c99") > 0;
         s_variadics = (vm.count ("variadics") > 0) || s_c99;
+        s_import = vm.count ("import") > 0;
+        
         
         if (vm.count ("output")) {
             paths = vm["output"].as<vector<string> >();

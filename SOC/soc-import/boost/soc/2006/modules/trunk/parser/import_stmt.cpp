@@ -4,6 +4,7 @@
 #include "base_operations.h"
 #include "lexpolicies.h"
 #include "xformctx.h"
+#include "driver/config.h"
 #include <boost/wave/token_ids.hpp>
 #include <boost/format.hpp>
 
@@ -61,6 +62,13 @@ process_token (const token_t& tok, TransformContext * ctx) {
                         ctx->add_header(ns);
                         ctx->add_source(ns);
                     }
+                } else if (configure_import ()) {
+                    // if so configured, put a using namespace XX for the 
+                    // global scope.
+                    Operation_p ns(new StringOp ((format ("\nusing namespace %s;\n")
+                       % m_mod_name.as_identifier ()).str ()));
+                    ctx->add_header(ns);
+                    ctx->add_source(ns);
                 }
                 m_mode = mFound;
             } else {
