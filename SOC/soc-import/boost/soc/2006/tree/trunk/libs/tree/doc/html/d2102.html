@@ -7,7 +7,7 @@
 <head>
   <title>Hierarchical Data Structures and Related Concepts for the C++
   Standard Library (TR2)</title>
-<style type="text/css">
+  <style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
   .std {
@@ -71,7 +71,7 @@
     text-decoration: overline;
   }
   /*]]>*/
-</style>
+  </style>
 </head>
 
 <body>
@@ -237,22 +237,22 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
   <p>Trees, having attracted much attention in the C++ community, are found
   in various implementations and as subjects of a number of papers.
-  Contrarily to the present proposal, ractically all of them deal either with
-  trees as used for sorted associative containers (with logarithmic time
+  Contrarily to the present proposal, practically all of them deal either
+  with trees as used for sorted associative containers (with logarithmic time
   complexity for more relevant operations, achieved by some sort of
-  balancing; examples are <a href="ref.dreizin">[dreizin]</a>, <a href=
-  "ref.ekman">[ekman]</a> and <a href="ref.karas">[karas]</a>; plus, most
+  balancing; examples are <a href="#ref.dreizin">[dreizin]</a>, <a href=
+  "#ref.ekman">[ekman]</a> and <a href="#ref.karas">[karas]</a>; plus, most
   current STL implementations use a red-black tree as their associative
   containers' base) or with what we call "external" hierarchies in the
   following (whose structure is dictated e.g. by a filesystem directory tree,
   an <abbr title="Extensible Markup Language">XML</abbr> file or an
   <abbr title="Abstract syntax tree">AST</abbr>; see e.g. <a href=
-  "ref.gottschlich">[gottschlich]</a>, <a href="ref.haas">[haas]</a>,
-  <a href="ref.parent">[parent]</a> and <a href="ref.peeters">[peeters]</a>),
-  but rarely both fields of application.</p>
+  "#ref.gottschlich">[gottschlich]</a>, <a href="#ref.haas">[haas]</a>,
+  <a href="#ref.parent">[parent]</a> and <a href=
+  "#ref.peeters">[peeters]</a>), but rarely both fields of application.</p>
 
-  <p>Approaches as found in <a href="ref.austern">[austern]</a> or <a href=
-  "ref.mirwaisi">[mirwaisi]</a> go some steps further and have provided
+  <p>Approaches as found in <a href="#ref.austern">[austern]</a> or <a href=
+  "#ref.mirwaisi">[mirwaisi]</a> go some steps further and have provided
   valuable inspiration for this projects, but still do not formalize anything
   similar as the cursor-based interface in this proposal for dealing with a
   tree's contents.</p>
@@ -292,7 +292,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 1: Container requirements that are not required for
             hierarchy containers
@@ -314,11 +314,35 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
             </tr>
 
             <tr>
+              <td><tt>X::reverse_iterator</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>X::const_reverse_iterator</tt></td>
+            </tr>
+
+            <tr>
               <td><tt>a.begin()</tt></td>
             </tr>
 
             <tr>
               <td><tt>a.end()</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a.rbegin()</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a.rend()</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a == b</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a != b()</tt></td>
             </tr>
 
             <tr>
@@ -551,7 +575,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
       from the conversion will also be valid and dereferenceable; and vice
       versa.</li>
 
-      <li>As in some cases there might be interest to store additional
+      <li>As in some cases there might be interest in storing additional
       information along with the client data in the tree that is
       automatically updated whenever the tree is modified, depending on
       either the client data, the tree structure, or both, a tree can be
@@ -565,21 +589,14 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
     <h4>0.1.2 Hierarchy container classes <span class=
     "section-id">[tr.hierarchy.tree]</span></h4>
 
-    <h5>0.1.2.1 Header &lt;tree&gt; synopsis <span class=
-    "section-id">[tr.hierarchy.syn.tree]</span></h5>
-    <pre>
-namespace std {
-namespace tr2 {
-} <i>// namespace tr2</i>
-} <i>// namespace std</i>
-</pre>
+    <p>Headers <tt>&lt;binary_tree&gt;</tt>, and
+    <tt>&lt;nary_tree&gt;</tt>.</p>
 
-    <h5>0.1.2.2 Header &lt;binary_tree&gt; synopsis <span class=
+    <h5>0.1.2.1 Header &lt;binary_tree&gt; synopsis <span class=
     "section-id">[tr.hierarchy.syn.bintree]</span></h5>
     <pre>
 namespace std {
 namespace tr2 {
-  <i>// Class template binary_tree</i>
   template &lt;
     class T,
     class Balance = std::tr2::tree::balancers::unbalanced,
@@ -587,11 +604,54 @@ namespace tr2 {
     class Alloc = std::allocator&lt;T&gt;
     &gt;
   class binary_tree;
+
+  template &lt;class T, class Balance, class Augment, class Alloc&gt;
+    bool operator==(  binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x,
+                      binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; y);
+  template &lt;class T, class Balance, class Augment, class Alloc&gt;
+    bool operator&lt; (  binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x,
+                      binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; y);
+  template &lt;class T, class Balance, class Augment, class Alloc&gt;
+    bool operator!=(  binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x,
+                      binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; y);
+  template &lt;class T, class Balance, class Augment, class Alloc&gt;
+    bool operator&gt; (  binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x,
+                      binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; y);
+  template &lt;class T, class Balance, class Augment, class Alloc&gt;
+    bool operator&gt;=(  binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x,
+                      binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; y);
+  template &lt;class T, class Balance, class Augment, class Alloc&gt;
+    bool operator&lt;=(  binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x,
+                      binary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; y);
+  template &lt;class T, class Balance, class Augment, class Alloc&gt;
+  void swap(  binary_tree&lt;T, Balance, Augment, Alloc&gt;&amp; x,
+              binary_tree&lt;T, Balance, Augment, Alloc&gt;&amp; y);
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
 </pre>
 
-    <h4>0.1.2.2 Class template <tt>binary_tree</tt></h4>
+    <h5>0.1.2.2 Header &lt;nary_tree&gt; synopsis <span class=
+    "section-id">[tr.hierarchy.syn.narytree]</span></h5>
+    <pre>
+namespace std {
+namespace tr2 {
+  template &lt;
+    class T,
+    class Balance = std::tr2::tree::balancers::unbalanced,
+    class Augment = std::tr2::tree::augmentors::unaugmented,
+    class Alloc = std::allocator&lt;T&gt;
+    &gt;
+  class nary_tree;
+
+  template &lt;class T, class Balance, class Augment, class Alloc&gt;
+  void swap(  nary_tree&lt;T, Balance, Augment, Alloc&gt;&amp; x,
+              nary_tree&lt;T, Balance, Augment, Alloc&gt;&amp; y);
+} <i>// namespace tr2</i>
+} <i>// namespace std</i>
+</pre>
+
+    <h5>0.1.2.3 Class template <tt>binary_tree</tt> <span class=
+    "section-id">[tr.hierarchy.bintree]</span></h5>
     <pre>
 namespace std {
 namespace tr2 {
@@ -715,7 +775,82 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-    <h4>0.1.2.3 Hierarchy adaptors</h4>
+    <h5>0.1.2.4 Class template <tt>nary_tree</tt> <span class=
+    "section-id">[tr.hierarchy.narytree]</span></h5>
+    <pre>
+namespace std {
+namespace tr2 {
+  template &lt;
+    class T,
+    class Balance = std::tr2::tree::balancers::unbalanced,
+    class Augment = std::tr2::tree::augmentors::unaugmented,
+    class Alloc = std::allocator&lt;T&gt;
+    &gt;
+  class nary_tree
+  {
+  public:
+    <i>// types:</i>
+    typedef T                                             value_type;
+    typedef Balance                                       balancer_type;
+    typedef Augment                                       augmentor_type;
+    typedef Alloc                                         allocator_type;
+
+    typedef <i>implementation defined</i>                        cursor;
+    typedef <i>implementation defined</i>                        const_cursor;
+
+    typedef typename allocator_type::pointer              pointer;
+    typedef typename allocator_type::const_pointer        const_pointer;
+    typedef typename allocator_type::reference            reference;
+    typedef typename allocator_type::const_reference      const_reference;
+    typedef typename allocator_type::size_type            size_type;
+    typedef typename allocator_type::difference_type      difference_type;
+
+    <i>// construct/copy/destroy:</i>
+    explicit nary_tree (allocator_type const&amp; = allocator_type());
+    explicit nary_tree (size_type n, value_type const&amp; value = value_type(),
+      allocator_type const&amp; = allocator_type());
+    template &lt;class InputCursor&gt;
+      nary_tree (InputCursor subtree,
+        allocator_type const&amp; = allocator_type());
+    nary_tree (nary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x);
+    ~binary_tree();
+    nary_tree&lt;T, Balance, Augment, Alloc&gt;&amp; operator=(
+      nary_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x);
+    template &lt;class InputICursor&gt;
+      void assign(InputCursor subtree);
+    template &lt;class Size, class T&gt;
+      void assign(Size n, const T&amp; t = T());
+    allocator_type get_allocator() const;
+
+    <i>// cursors:</i>
+    cursor        root();
+    const_cursor  croot() const;
+    cursor        shoot();
+    const_cursor  cshoot() const;
+
+    <i>// capacity:</i>
+    bool      empty() const;
+    size_type size() const;
+    size_type max_size() const;
+    void      resize(size_type sz, T c = T());
+
+    <i>// modifiers:</i>
+    cursor    insert(cursor position, value_type const&amp; x = value_type());
+    void      swap(nary_tree&lt;Tp, Balance, Augment, Alloc&gt;&amp;);
+    void      clear(cursor position);
+    void      clear();
+  };
+
+  <i>// specialized algorithms:</i>
+  template &lt;class Tp, class Balance, class Augment, class Alloc&gt;
+  void swap(  nary_tree&lt;Tp, Balance, Augment, Alloc&gt;&amp; x,
+              nary_tree&lt;Tp, Balance, Augment, Alloc&gt;&amp; y);
+} <i>// namespace tr2</i>
+} <i>// namespace std</i>
+</pre>
+
+    <h4>0.1.2.3 Hierarchy adaptors <span class=
+    "section-id">[tr.hierarchy.adaptors]</span></h4>
 
     <ol>
       <li>
@@ -725,7 +860,8 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h5>0.1.2.3.1 Template class <tt>forest</tt></h5>
+    <h5>0.1.2.3.1 Template class <tt>forest</tt> <span class=
+    "section-id">[tr.hierarchy.forest]</span></h5>
 
     <ol>
       <li>
@@ -765,7 +901,8 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h5>0.1.2.3.2 Class template <tt>multiway_tree</tt></h5>
+    <h5>0.1.2.3.2 Class template <tt>multiway_tree</tt> <span class=
+    "section-id">[tr.hierarchy.multiwaytree]</span></h5>
 
     <ol>
       <li>
@@ -810,10 +947,7 @@ namespace tr2 {
       hierarchical data structures. In order to also allow for algorithms
       relevant when dealing with linear data structures, any cursor class is
       actually a refinement of a corresponding iterator class. 
-      <!--whose traversal
-            related capabilities map to traversal of among a given cursor's
-            immediate descendants or "child cursors" (or just "children", as
-            defined in the following paragraph).--></li>
+      <!--whose traversal related capabilities map to traversal of among a given cursor's immediate descendants or "child cursors" (or just "children", as defined in the following paragraph).--></li>
 
       <li>If exactly one application of the expression <tt>i =
       i.begin()</tt>, followed by a finite sequence of applications of the
@@ -841,9 +975,7 @@ namespace tr2 {
       the library generally does not assume on-top cursors be
       dereferenceable; nor that they be incrementable or decrementable unless
       stated otherwise in a given hierarchy's requirement specifications. 
-      <!--In other words, as opposed to
-            non-on-top cursurs, on-top cursors fulfill only the Range concept
-            requirements, but not any Iterator concept requirements.--></li>
+      <!--In other words, as opposed to non-on-top cursurs, on-top cursors fulfill only the Range concept requirements, but not any Iterator concept requirements.--></li>
 
       <li>A cursor <tt>i</tt> for which <tt>i.emtpy() == true</tt> is called
       <em>leaf cursor</em>. A leaf cursor's children are never assumed to be
@@ -1079,6 +1211,22 @@ namespace tr2 {
 
           <tbody>
             <tr>
+              <td><tt>X::iterator</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>X::const_iterator</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>X::reverse_iterator</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>X::reverse_const_iterator</tt></td>
+            </tr>
+
+            <tr>
               <td><tt>(&amp;a)-&gt;~X();</tt></td>
             </tr>
 
@@ -1097,6 +1245,14 @@ namespace tr2 {
 
             <tr>
               <td><tt>a.end()</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a.rbegin()</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>a.rend()</tt></td>
             </tr>
 
             <tr>
@@ -1152,7 +1308,7 @@ namespace tr2 {
 
         <table summary=
         "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 7 - Descending forward cursor requirements (in addition to
             descending cursors and forward iterators)
@@ -1200,7 +1356,7 @@ namespace tr2 {
 
         <table summary=
         "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 8 - Descending bidirectional cursor requirements (in
             addition to forward descending cursors and bidirectional
@@ -1249,7 +1405,7 @@ namespace tr2 {
 
         <table summary=
         "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 9 - Descending random access cursor requirements (in
             addition to descending bidirectional cursors and random access
@@ -1375,7 +1531,7 @@ namespace tr2 {
 
         <table summary=
         "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 11 - Ascending forward cursor requirements (in addition to
             ascending cursors and descending forward cursors)
@@ -1422,7 +1578,7 @@ namespace tr2 {
 
         <table summary=
         "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 12 - Ascending bidirectional cursor requirements (in
             addition to ascending forward cursors and descending
@@ -1472,7 +1628,7 @@ namespace tr2 {
 
         <table summary=
         "Ascending random access cursor requirements (in addition to ascending bidirectional cursors and descending random access cursors)"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 9 - Ascending random access cursor requirements (in
             addition to ascending bidirectional cursors and descending random
@@ -1524,7 +1680,6 @@ namespace tr2 {
   template &lt;class Cat, class T, class Dist = ptrdiff_t, class Size = size_t,
             class Ptr = T*, class Ref = T&amp;&gt; struct cursor;
 
-
   struct cursor_tag 
     : public input_iterator_tag, public output_iterator_tag {};
   struct descending_cursor_tag
@@ -1547,7 +1702,7 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-    <h4>0.2.3 Cursor primitives<span class=
+    <h4>0.2.3 Cursor primitives <span class=
     "section-id">[tr.cursor.primitives]</span></h4>
 
     <ol>
@@ -1555,7 +1710,7 @@ namespace tr2 {
       several classes and functions:</li>
     </ol>
 
-    <h5>0.2.3.1 Cursor traits<span class=
+    <h5>0.2.3.1 Cursor traits <span class=
     "section-id">[tr.cursor.traits]</span></h5>
 
     <ol>
@@ -1563,38 +1718,37 @@ namespace tr2 {
       a cursor of type <tt>Cursor</tt>:
         <pre>
   template &lt;class Cursor&gt; struct cursor_value {
-        typedef typename Cursor::value_type type;
+    typedef typename Cursor::value_type type;
   };
 
   template &lt;class Cursor&gt; struct cursor_reference {
-        typedef typename Cursor::reference type;
+    typedef typename Cursor::reference type;
   };
 
   template &lt;class Cursor&gt; struct cursor_const_reference {
-        typedef typename Cursor::const_reference type;
+    typedef typename Cursor::const_reference type;
   };
 
   template &lt;class Cursor&gt; struct cursor_pointer {
-        typedef typename Cursor::pointer type;
+    typedef typename Cursor::pointer type;
   };
 
   template &lt;class Cursor&gt; struct cursor_difference {
-        typedef typename Cursor::difference_type type;
+    typedef typename Cursor::difference_type type;
   };
 
   template &lt;class Cursor&gt; struct cursor_size {
-        typedef typename Cursor::size_type type;
+    typedef typename Cursor::size_type type;
   };
 
   template &lt;class Cursor&gt; struct cursor_category {
-        typedef typename Cursor::cursor_category type;
+    typedef typename Cursor::cursor_category type;
   };
-        
 </pre>
       </li>
     </ol>
 
-    <h5>0.2.3.2 Basic cursor<span class=
+    <h5>0.2.3.2 Basic cursor <span class=
     "section-id">[tr.cursor.basic]</span></h5>
 
     <ol>
@@ -1604,19 +1758,18 @@ namespace tr2 {
 template &lt;class Cat, class T, class Dist = ptrdiff_t, class Size = size_t,
           class Ptr = T*, class Ref = T&amp;&gt;
 struct cursor {
-        typedef Cat     cursor_category;
-        typedef T       value_type;
-        typedef Dist        difference_type;
-        typedef Size        size_type;
-        typedef Ptr     pointer;
-        typedef Ref     reference;      
+  typedef Cat     cursor_category;
+  typedef T       value_type;
+  typedef Dist    difference_type;
+  typedef Size    size_type;
+  typedef Ptr     pointer;
+  typedef Ref     reference;      
 };
-        
 </pre>
       </li>
     </ol>
 
-    <h5>0.2.3.3 Standard cursor tags<span class=
+    <h5>0.2.3.3 Standard cursor tags <span class=
     "section-id">[tr.cursor.tags]</span></h5>
 
     <ol>
@@ -1656,7 +1809,6 @@ namespace tr2 {
     : public descending_random_access_cursor_tag {};
 } // namespace tr2
 } // namespace std
-        
 </pre>
       </li>
     </ol>
@@ -1742,11 +1894,7 @@ namespace tr2 {
       ascending or descending) cursor class. Increment and decrement
       operations for these iterator adaptor classes are implemented to allow
       stepwise iteration according to the respective requirements. 
-      <!--Additionally, for cursors with bidirectional vertical
-            traversal property, algorithms <tt>forward</tt> and <tt>back</tt> in
-            the respective namespaces are provided that set their argument cursor
-            to the next or previous, resp., in the corresponding traversal
-            order.--></li>
+      <!--Additionally, for cursors with bidirectional vertical traversal property, algorithms <tt>forward</tt> and <tt>back</tt> in the respective namespaces are provided that set their argument cursor to the next or previous, resp., in the corresponding traversal order.--></li>
     </ol>
 
     <h5>24.4.X.1 Template class <tt>iterator</tt> <span class=
