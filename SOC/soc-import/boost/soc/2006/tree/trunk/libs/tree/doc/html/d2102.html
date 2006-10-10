@@ -1913,7 +1913,7 @@ namespace tr2 {
 namespace preorder {
   template &lt;class Cursor&gt;
   class iterator :
-    public iterator&lt;typename iterator_traits&lt;Cursor&gt;::iterator_category,
+    public iterator&lt; <i>/* see Note A */</i>, <!--typename iterator_traits&lt;Cursor&gt;::iterator_category,-->
                     typename iterator_traits&lt;Cursor&gt;::value_type,
                     typename iterator_traits&lt;Cursor&gt;::difference_type,
                     typename iterator_traits&lt;Cursor&gt;::pointer,
@@ -1950,6 +1950,10 @@ template &lt;class Cursor&gt;
 } // namespace std
       
 </pre>
+      Note A: If <tt>typename iterator_traits&lt;Cursor&gt;::iterator_category</tt> is
+      equivalent to <tt>random_access_iterator_tag</tt>, put in <tt>bidirectional_iterator_tag</tt>;
+      otherwise put in <tt>typename iterator_traits&lt;Cursor&gt;::iterator_category</tt>.
+      
       </li>
     </ol>
 
