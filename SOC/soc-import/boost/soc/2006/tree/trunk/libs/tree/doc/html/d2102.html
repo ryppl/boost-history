@@ -278,7 +278,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
       <li>
         <p>A hierarchy is an object that stores a finite set of objects, all
         of the same type, in a hierarchical manner. Hierarchies introduce a
-        cursor concept for navigation in addition to iterators. The library
+        cursor concept for navigation instead of iterators. The library
         provides two kinds of hierarchies: <tt>binary_tree</tt>, and
         <tt>nary_tree</tt>.</p>
       </li>
@@ -287,7 +287,7 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
         <p>Hierarchy containers conform to the requirements of Containers
         ([lib.container.requirements]), except that the expressions in Table
         1 are not required to be valid, where <tt>a</tt> and <tt>b</tt>
-        denote values of a type X, and X is a hierarchy container class:</p>
+        denote values of a type <tt>X</tt>, and <tt>X</tt> is a hierarchy container class:</p>
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
@@ -305,13 +305,21 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
           <tbody>
             <tr>
-              <td><tt>a == b</tt></td>
+              <td><tt>X::iterator</tt></td>
+            </tr>
+            
+            <tr>
+              <td><tt>X::const_iterator</tt></td>
             </tr>
 
             <tr>
-              <td><tt>a != b</tt></td>
+              <td><tt>a.begin()</tt></td>
             </tr>
 
+            <tr>
+              <td><tt>a.end()</tt></td>
+            </tr>
+            
             <tr>
               <td><tt>a &lt; b</tt></td>
             </tr>
