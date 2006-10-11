@@ -145,8 +145,9 @@
   <p>No; this proposal originates in an effort to create a generic tree
   container component for <a href="http://www.boost.org">Boost</a> in summer
   of 2006, so at the time of this writing, implementation work is still
-  unfinished and, however inspired by and striving to avoid past issues it
-  is, it has not been used in practice yet.</p>
+  unfinished and, however inspired by and striving to avoid past issues and
+  such ones arising from current implementation efforts (see next paragraph)
+  it is, it has not been used in practice yet.</p>
 
   <h3>Is there a reference implementation?</h3>
 
@@ -170,9 +171,8 @@
 
   <p>Most of the proposed library is a pure extension.</p>
 
-  <p>Some modifications to <tt>&lt;algorithm&gt;</tt> are proposed, so binary
-  search algorithms can be applied to hierarchical data structures as well.
-  [...]</p>
+  <p>Some extensions and modifications to <tt>&lt;algorithm&gt;</tt> and some
+  extensions to <tt>&lt;iterator&gt;</tt>are proposed. [...]</p>
 
   <h3>Can it be implemented using today's compilers, or does it require
   language features that will only be available as part of C++0x?</h3>
@@ -362,11 +362,11 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
       <li>
         <p>Non-constant complexity requirements in this clause are stated in
-        one of two different ways: unless specified otherwise, they are
-        expressed in terms of the number of operations <tt>n</tt>, which
-        stands for the total number of elements in the hierarchy; or in terms
-        of the number of operations <tt>c</tt>, which stands for the number
-        of child elements of a given element.</p>
+        one of a number of possible different ways: unless specified
+        otherwise, they are expressed in terms of the number of operations
+        <tt>n</tt>, which stands for the total number of elements in the
+        hierarchy; in some cases, however, they are stated in terms of
+        another value.</p>
       </li>
 
       <li>
@@ -768,7 +768,7 @@ namespace tr2 {
     <ol>
       <li>
         <p>A balancing hierarchy adaptor satisfies the Sequence requirements
-        ([lib.sequence.reqmts]). It uses some kind of balancing method in
+        ([tr.sequence.reqmts]). It uses some kind of balancing method in
         order to guarantee logarithmic time complexity for many important
         operations while keeping the inorder of the adaptee hierarchy as its
         invariant. The balancing hierarchy adaptors' interfaces are mostly
@@ -810,12 +810,8 @@ namespace tr2 {
     typedef typename hierarchy_type::difference_type      difference_type;
     typedef typename hierarchy_type::allocator_type       allocator_type;
         
-    typedef std::tr2::inorder::iterator&lt;
-      typename hierarchy_type::cursor
-    &gt;                                                  iterator;
-    typedef std::tr2::inorder::iterator&lt;
-      typename hierarchy_type::const_cursor
-    &gt;                                                  const_iterator;
+    typedef std::tr2::inorder::iterator&lt;typename hierarchy_type::cursor&gt;        iterator;
+    typedef std::tr2::inorder::iterator&lt;typename hierarchy_type::const_cursor&gt;  const_iterator;
 
     typedef std::reverse_iterator&lt;iterator&gt;         reverse_iterator;
     typedef std::reverse_iterator&lt;const_iterator&gt;   const_reverse_iterator;
@@ -1023,9 +1019,11 @@ namespace tr2 {
           requirement specifications. 
           <!--In other words, as opposed to non-on-top cursurs, on-top cursors fulfill only the Range concept requirements, but not any Iterator concept requirements.--></li>
 
-          <li>A cursor <tt>i</tt> for which <tt>i.emtpy() == true</tt> is
+          <li>A cursor <tt>c</tt> for which <tt>c.emtpy() == true</tt> is
           called <em>leaf cursor</em>. A leaf cursor's children are never
-          assumed to be dereferenceable.</li>
+          assumed to be dereferenceable. A cursor which is either on-top or a
+          descendant of an on-top cursor, but in either case not a descendant
+          of a leaf cursor is called an <em>internal cursor</em>.</li>
 
           <li>A cursor, like an iterator, can have a singular value that is
           not associated with any hierarchy, meaning that most expressions
@@ -1118,34 +1116,14 @@ namespace tr2 {
                 </tr>
 
                 <tr>
-                  <td><tt>X::metadata_type</tt></td>
-
-                  <td></td>
-
-                  <td>Any non-reference, non-cv-qualified type</td>
-
-                  <td>compile time</td>
-                </tr>
-
-                <tr>
                   <td><tt>a.parity()</tt></td>
 
                   <td><tt>size_type</tt></td>
 
                   <td></td>
 
-                  <td>?</td>
-                </tr>
-
-                <tr>
-                  <td><tt>a.metadata()</tt></td>
-
-                  <td><tt>metadata_type &amp;</tt>; <tt>metadata_type const
-                  &amp;</tt> for constant a</td>
-
-                  <td></td>
-
-                  <td>constant</td>
+                  <td>Linear in the number of <tt>a</tt>'s parent's
+                  children.</td>
                 </tr>
               </tbody>
             </table>
@@ -1397,7 +1375,7 @@ namespace tr2 {
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of a
             descending bidirectional cursor if the following expressions are
-            valid, as show in Table 8, in addition to satisfying the
+            valid, as shown in Table 8, in addition to satisfying the
             requirements for descending forward cursors
             ([tr.descending.forward.cursors]) and bidirectional iterators
             ([lib.bidirectional.iterators]):</p>
@@ -1552,12 +1530,12 @@ namespace tr2 {
 
                   <td><tt>r = r.parent();</tt></td>
 
-                  <td>pre: <tt>r</tt> is dereferenceable.<br />
-                  post: <tt>r</tt> is dereferenceable or <tt>r</tt> is
-                  on-top.<br />
-                  <tt>r == s</tt> and <tt>r</tt> is dereferenceable implies
-                  <tt>!r == !s</tt>.<br />
-                  <tt>&amp;r == &amp;</tt><br />
+                  <td>pre: <tt>r</tt> is an internal, non-on-top
+                  cursor.<br />
+                  post: <tt>r</tt> is internal.<br />
+                  <tt>r == s</tt> and <tt>r</tt> is internal and non-on-top
+                  implies <tt>!r == !s</tt>.<br />
+                  <tt>&amp;r == &amp;!r</tt><br />
                   (Note A)</td>
                 </tr>
               </tbody>
@@ -1869,14 +1847,12 @@ namespace tr2 {
         </ol>
 
         <h3>24.2 Header <tt>&lt;iterator&gt;</tt> synopsis <span class=
-        "section-id">[lib.iterator.synsopsis]</span></h3>
-
-        <div class="note">
-          Append to section introduced with <i>// subclause 24.4, predefined
-          iterators:</i>
-        </div>
+        "section-id">[lib.iterator.synopsis]</span></h3><span class=
+        "note">Append to section introduced with <i>// subclause 24.4,
+        predefined iterators:</i></span>
         <pre>
   namespace tr2 {
+  
   namespace preorder {
   template &lt;class Cursor&gt; class iterator;
   
@@ -1917,7 +1893,8 @@ namespace tr2 {
   bool operator!=(
     const iterator&lt;Cursor&gt;&amp; x,
     const iterator&lt;Cursor&gt;&amp; y);
-  } // namespace inorder   
+  } // namespace inorder
+  
   } // namespace tr2
   
 </pre>
@@ -1966,6 +1943,7 @@ namespace tr2 {
             <pre>
 namespace std {
 namespace tr2 {
+
 namespace preorder {
   template &lt;class Cursor&gt;
   class iterator :
@@ -2003,6 +1981,7 @@ template &lt;class Cursor&gt;
     const iterator&lt;Cursor&gt;&amp; y);
 
 } // namespace preorder
+
 } // namespace tr2
 } // namespace std
       
@@ -2161,6 +2140,199 @@ template &lt;class Cursor&gt;
           <li>Returns: <tt>x.current != y.current</tt></li>
         </ol>
       </li>
+    </ol>
+
+    <h3>25 Algorithms library <span class=
+    "section-id">[tr.algorithm]</span></h3><span class="note">Append to
+    paragraph 2, <em>Header <tt>&lt;iterator&gt;</tt> synopsis</em>, after
+    <i>// subclause 25.1, non-modifying sequence operations</i></span>
+    <pre>
+<i>// subclause 2.X, non-modifying hierarchy operations</i>
+namespace tr2 {
+
+namespace preorder {
+  template &lt;class Hierarchy&gt;
+  preorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  preorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+  
+  template &lt;class Hierarchy&gt;
+  preorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  preorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
+} // namespace preorder
+
+namespace postorder {
+  template &lt;class Hierarchy&gt;
+  postorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  postorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+  
+  template &lt;class Hierarchy&gt;
+  postorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  postorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
+} // namespace postorder
+
+namespace inorder {
+  template &lt;class MultiwayHierarchy&gt;
+  inorder::iterator&lt;typename MultiwayHierarchy::cursor&gt; begin(MultiwayHierarchy&amp; m);
+  template &lt;class MultiwayHierarchy&gt;
+  inorder::iterator&lt;typename MultiwayHierarchy::const_cursor&gt; cbegin(MultiwayHierarchy const&amp; m);
+  
+  template &lt;class MultiwayHierarchy&gt;
+  inorder::iterator&lt;typename MultiwayHierarchy::cursor&gt; end(MultiwayHierarchy&amp; m);
+  template &lt;class MultiwayHierarchy&gt;
+  inorder::iterator&lt;typename MultiwayHierarchy::const_cursor&gt; cend(MultiwayHierarchy const&amp; m);
+} // namespace inorder
+
+} // namespace tr2
+        
+</pre>
+
+    <p><span class="note"><tt>[c]rbegin(...)</tt> and <tt>[c]rend(..)</tt>
+    are not provided as they can be achieved via
+    <tt>reverse_iterator({[c]begin(...)|[c]end(...)})</tt> (which also
+    defines requirements when this is possible)</span></p><span class=
+    "note">Change paragraph 3 to read:</span>
+
+    <p>All of the algorithms are separated from the particular
+    implementations of data structures and are parameterized by iterator or
+    hierarchy types. Because of this, they can work with programdefined data
+    structures, as long as these data structures have iterator or cursor
+    types satisfying the assumptions on the algorithms.t</p><span class=
+    "note">Append to paragraph 4:</span>
+
+    <p>If an algorithm's template parameter is <tt>Hierarchy</tt>, the actual
+    template argument shall satisfy the requirements of a hierarchy (...). If
+    an algorithm's template parameter is <tt>MultiwayHierarchy</tt>, the
+    actual template argument shall satisfy the requirements of a multiway
+    hierarchy (...).</p>
+
+    <h4>25.X Non-modifying hierarchy algorithms <span class=
+    "section-id">[tr.alg.hierarchy]</span></h4>
+
+    <h5>25.X.1 Non-modifying hierarchy preorder range algorithms <span class=
+    "section-id">[tr.alg.hier.preorder]</span></h5>
+
+    <h6>25.X.1.1 Preorder begin <span class=
+    "section-id">[tr.alg.hier.pre.begin]</span></h6>
+    <pre>
+namespace preorder {
+  template &lt;class Hierarchy&gt;
+  preorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  preorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+} // namespace preorder
+        
+</pre>
+
+    <ol>
+      <li>Returns: An iterator pointing to the first element of <tt>h</tt> in
+      preorder.</li>
+
+      <li>Complexity: constant</li>
+    </ol>
+
+    <h6>25.X.1.2 Preorder end <span class=
+    "section-id">[tr.alg.hier.pre.end]</span></h6>
+    <pre>
+namespace preorder { 
+  template &lt;class Hierarchy&gt;
+  preorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  preorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
+} // namespace preorder
+        
+</pre>
+
+    <ol>
+      <li>Returns: An iterator pointing one position past the last element of
+      <tt>h</tt> in preorder.</li>
+
+      <li>Complexity: liner</li>
+    </ol>
+
+    <h5>25.X.2 Non-modifying hierarchy postorder range algorithms
+    <span class="section-id">[tr.alg.hier.postorder]</span></h5>
+
+    <h6>25.X.2.1 Postorder begin <span class=
+    "section-id">[tr.alg.hier.post.begin]</span></h6>
+    <pre>
+namespace postorder {
+  template &lt;class Hierarchy&gt;
+  postorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  postorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+} // namespace postorder
+        
+</pre>
+
+    <ol>
+      <li>Returns: An iterator pointing to the first element of <tt>h</tt> in
+      postorder.</li>
+
+      <li>Complexity: liner</li>
+    </ol>
+
+    <h6>25.X.2.2 Postorder end <span class=
+    "section-id">[tr.alg.hier.post.end]</span></h6>
+    <pre>
+namespace postorder { 
+  template &lt;class Hierarchy&gt;
+  postorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  postorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
+} // namespace postorder
+        
+</pre>
+
+    <ol>
+      <li>Returns: An iterator pointing one position past the last element of
+      <tt>h</tt> in postorder.</li>
+
+      <li>Complexity: constant</li>
+    </ol>
+
+    <h5>25.X.2 Non-modifying hierarchy inorder range algorithms <span class=
+    "section-id">[tr.alg.hier.inorder]</span></h5>
+
+    <h6>25.X.2.1 Inorder begin <span class=
+    "section-id">[tr.alg.hier.in.begin]</span></h6>
+    <pre>
+namespace inorder {
+  template &lt;class Hierarchy&gt;
+  inorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  inorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+} // namespace inorder
+        
+</pre>
+
+    <ol>
+      <li>Returns: An iterator pointing to the first element of <tt>h</tt> in
+      inorder.</li>
+
+      <li>Complexity: linear</li>
+    </ol>
+
+    <h6>25.X.2.2 Inorder end <span class=
+    "section-id">[tr.alg.hier.in.end]</span></h6>
+    <pre>
+namespace inorder { 
+  template &lt;class Hierarchy&gt;
+  inorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
+  template &lt;class Hierarchy&gt;
+  inorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
+} // namespace inorder
+        
+</pre>
+
+    <ol>
+      <li>Returns: An iterator pointing one position past the last element of
+      <tt>h</tt> in inorder.</li>
+
+      <li>Complexity: linear</li>
     </ol>
   </div>
 
