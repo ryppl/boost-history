@@ -526,7 +526,8 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
               <td><tt>cursor</tt></td>
 
               <td>inserts a copy of the elements in the subtree of <tt>c</tt>
-              before <tt>p</tt></td>
+              before <tt>p</tt>.<br />
+              pre: <tt>c</tt> is dereferenceable.</td>
 
               <td>(Note A)</td>
             </tr>
@@ -536,7 +537,9 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
 
               <td><tt>void</tt></td>
 
-              <td>erases the subtree of <tt>q</tt></td>
+              <td>erases the subtree of <tt>q</tt> and the element <tt>q</tt>
+              points to.<br />
+              pre: <tt>q</tt> is dereferenceable and non-on-top.</td>
 
               <td>(Note A)</td>
             </tr>
@@ -610,9 +613,15 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-    <h5>0.1.2.3 Class template <tt>binary_tree</tt> <span class=
+    <h5>0.1.2.3 Template class <tt>binary_tree</tt> <span class=
     "section-id">[tr.hierarchy.bintree]</span></h5>
-    <pre>
+
+    <ol>
+      <li>A <tt>binary_tree</tt> satisfies all of the requirements of a
+      hierarchy. Descriptions are provided here only for operations on
+      <tt>binary_tree</tt> that are not described in one of these tables or
+      for operations where there is additional semantic information.
+        <pre>
 namespace std {
 namespace tr2 {
   template &lt;class T, class Alloc = std::allocator&lt;T&gt; &gt;
@@ -661,7 +670,8 @@ namespace tr2 {
     <i>// modifiers:</i>
     cursor    insert(cursor position, value_type const&amp; x = value_type());
     template &lt;class InputCursor&gt;
-      cursor  insert (cursor position, InputCursor subtree);
+      cursor  insert(cursor position, InputCursor subtree);
+    void      rotate(cursor position);
     void      swap(binary_tree&lt;Tp, Alloc&gt;&amp;);
     void      clear(cursor position);
     void      clear();
@@ -681,8 +691,21 @@ namespace tr2 {
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
 </pre>
+      </li>
+    </ol>
 
-    <h5>0.1.2.4 Class template <tt>nary_tree</tt> <span class=
+    <h6><tt>binary_tree</tt> constructors, copy, and assignment <span class=
+    "section-id">[tr.hierarchy.bintree.cons]</span></h6>
+    <pre>
+explicit binary_tree (allocator_type const&amp; = allocator_type());
+template &lt;class InputCursor&gt;
+  binary_tree (InputCursor subtree,
+    allocator_type const&amp; = allocator_type());
+binary_tree (binary_tree&lt;T, Alloc&gt; const&amp; x);
+    
+</pre>
+
+    <h5>0.1.2.4 Template class <tt>nary_tree</tt> <span class=
     "section-id">[tr.hierarchy.narytree]</span></h5>
     <pre>
 namespace std {
@@ -940,7 +963,7 @@ namespace tr2 {
           </li>
         </ol>
 
-        <h5>0.1.2.3.3 Class template <tt>multiway_tree</tt> <span class=
+        <h5>0.1.2.3.3 Template class <tt>multiway_tree</tt> <span class=
         "section-id">[tr.hierarchy.multiwaytree]</span></h5>
 
         <ol>
