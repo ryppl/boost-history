@@ -1137,17 +1137,6 @@ namespace tr2 {
 
                   <td>compile time</td>
                 </tr>
-
-                <tr>
-                  <td><tt>a.parity()</tt></td>
-
-                  <td><tt>size_type</tt></td>
-
-                  <td></td>
-
-                  <td>Linear in the number of <tt>a</tt>'s parent's
-                  children.</td>
-                </tr>
               </tbody>
             </table>
           </li>
@@ -1160,95 +1149,14 @@ namespace tr2 {
           <li>
             <p>A class <tt>X</tt> satisfies the requirements of a descending
             cursor if, in addition to satisfying the requirements for cursors
-            ([tr.cursor.requirements]) the following expression are valid, as
-            shown in Table 5:</p>
-
-            <table summary=
-            "Descending cursor requirements (in addition to cursor)" class=
-            "reqmts">
-              <caption>
-                Table 5 - Descending cursor requirements (in addition to
-                cursor)
-              </caption>
-
-              <thead>
-                <tr>
-                  <th>expression</th>
-
-                  <th>return type</th>
-
-                  <th>operational sematics</th>
-
-                  <th>assertion/note<br />
-                  pre/post-condition</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                <tr>
-                  <td><tt>X::type</tt></td>
-
-                  <td>Convertible to <tt>descending_cursor_tag</tt></td>
-
-                  <td></td>
-
-                  <td>compile time</td>
-                </tr>
-
-                <tr>
-                  <td><tt>a.begin()</tt></td>
-
-                  <td><tt>cursor</tt> or <tt>const_cursor</tt> for constant
-                  a</td>
-
-                  <td></td>
-
-                  <td>constant</td>
-                </tr>
-
-                <tr>
-                  <td><tt>a.end()</tt></td>
-
-                  <td><tt>cursor</tt> or <tt>const_cursor</tt> for constant
-                  a</td>
-
-                  <td></td>
-
-                  <td>constant</td>
-                </tr>
-
-                <tr>
-                  <td><tt>a.cbegin()</tt></td>
-
-                  <td><tt>const_cursor</tt></td>
-
-                  <td></td>
-
-                  <td>constant</td>
-                </tr>
-
-                <tr>
-                  <td><tt>a.cend()</tt></td>
-
-                  <td><tt>const_cursor</tt></td>
-
-                  <td></td>
-
-                  <td>constant</td>
-                </tr>
-              </tbody>
-            </table>
-          </li>
-
-          <li>
-            <p>Additionaly a descending cursors conform to the container
+            ([tr.cursor.requirements]) it also conforms to the container
             requirements (<tt>[lib.container.requirements]</tt>) with the
             exception of the following expressions:</p>
 
             <table summary="Container requirements that are not supported"
             class="reqmts">
               <caption>
-                Table 6 - Container requirements that are not supported
+                Table 5 - Container requirements that are not supported
               </caption>
 
               <thead>
@@ -1340,6 +1248,99 @@ namespace tr2 {
             <p>Notes: The expressions <tt>a.begin()</tt> and <tt>a.end()</tt>
             are, as shown in Table 5, replaced with equivalent expressions
             for cursors.</p>
+          </li>
+
+          <li>
+            <p>Additionally, for a descending cursor, the following
+            expression are valid, as shown in Table 6:</p>
+
+            <table summary=
+            "Descending cursor requirements (in addition to cursor)" class=
+            "reqmts">
+              <caption>
+                Table 6 - Descending cursor requirements (in addition to
+                cursor)
+              </caption>
+
+              <thead>
+                <tr>
+                  <th>expression</th>
+
+                  <th>return type</th>
+
+                  <th>operational sematics</th>
+
+                  <th>assertion/note<br />
+                  pre/post-condition</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <tr>
+                  <td><tt>X::type</tt></td>
+
+                  <td>Convertible to <tt>descending_cursor_tag</tt></td>
+
+                  <td></td>
+
+                  <td>compile time</td>
+                </tr>
+
+                <tr>
+                  <td><tt>a.begin()</tt></td>
+
+                  <td><tt>cursor</tt> or <tt>const_cursor</tt> for constant
+                  a</td>
+
+                  <td></td>
+
+                  <td>constant</td>
+                </tr>
+
+                <tr>
+                  <td><tt>a.end()</tt></td>
+
+                  <td><tt>cursor</tt> or <tt>const_cursor</tt> for constant
+                  a</td>
+
+                  <td></td>
+
+                  <td>constant</td>
+                </tr>
+
+                <tr>
+                  <td><tt>a.cbegin()</tt></td>
+
+                  <td><tt>const_cursor</tt></td>
+
+                  <td></td>
+
+                  <td>constant</td>
+                </tr>
+
+                <tr>
+                  <td><tt>a.cend()</tt></td>
+
+                  <td><tt>const_cursor</tt></td>
+
+                  <td></td>
+
+                  <td>constant</td>
+                </tr>
+
+                <tr>
+                  <td><tt>a.parity()</tt></td>
+
+                  <td><tt>size_type</tt></td>
+
+                  <td><tt>std::distance(b.begin(), a)</tt> if <tt>b</tt> is
+                  <tt>a</tt>'s parent.<br />
+                  pre: <tt>a</tt> is non-on-top.</td>
+
+                  <td>Linear in <tt>b.size()</tt></td>
+                </tr>
+              </tbody>
+            </table>
           </li>
         </ol>
 
