@@ -177,12 +177,7 @@
   <h3>Can it be implemented using today's compilers, or does it require
   language features that will only be available as part of C++0x?</h3>
 
-  <p>It can be (and has been) implemented with today's compilers. [...]<br />
-  [... We'd profit from template typedefs to say e.g.</p>
-  <pre>
-template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree = binary_tree&lt;T, rank_balance, rank_augment, Alloc&gt;;
-  
-</pre>
+  <p>It can be (and partly has been) implemented with today's compilers.</p>
 
   <p>Note that it might be worthwile to investigate if the present Container
   concept should be modified so that it only covers the requirements as of
@@ -222,17 +217,37 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
     information being overly present, as a tree, like the existing STL
     containers, should be responsible of its data storage.</dd>
 
-    <dt>Store metadata differently</dt>
-
-    <dd>[...]</dd>
-
     <dt>Augmentors/balancers as policies</dt>
 
-    <dd>as inspired by [austern] ...</dd>
+    <dd>Inspired by [austern] and [dreizin], the original approach undertaken
+    when working on the reference implementation was to pass policy template
+    arguments to template class <tt>binary_tree</tt>. While reproducing the
+    (otherwise unbalanced) tree/cursor interface seemed logical at first, it
+    turned out that this was conceptually not entirely clean, as e.g. it
+    preferred one type of linear order, namely inorder, over the others by
+    putting such strong focus on inorder-invariant balancing and its possible
+    applications; also, balancing and augmenting metadata would inevitably
+    have been much more visible. It seemed more appropriate to have different
+    balancing adaptors that would not and augmenting adaptors that would
+    replicate the interface do that work.</dd>
   </dl>
 
   <h3>What are the consequences of your choices, for users and
   implementors?</h3>
+
+  <p>As focus was put on versatility and comprehensiveness, users are hoped
+  to find this a powerful framework that covers most important aspects of
+  dealing with hierarchical data structures in a rather intuitive way, once
+  they have adapted to the notion of cursors which, although being the
+  interface relevant portion of the well-known node implementation of trees,
+  partly diverge in their usage from plain node objects.</p>
+
+  <p>Wherever reasonably possible, strong time complexity guarantees are
+  given, which mostly, while trying not to require much space overhead,
+  demand implementations that make use of any time and space saving
+  techniques available (e.g. using arrays for both children of a binary tree
+  node, see e.g. <a href="#ref.austern">[austern]), which may partly restrict
+  implementors to one "proper" way of doing things.</a></p>
 
   <h3>What decisions are left up to implementors?</h3>
 
@@ -265,9 +280,14 @@ template&lt;class T, class Alloc = std::allocator&lt;T&gt; &gt; using rank_tree 
   "Boost Graph Library">BGL</abbr></a>, finally, deals with graphs that are
   even more general than hierarchical ones, which does not allow them to
   profit from specific hierarchy properties as much as the ones presented in
-  this proposal.</p>
+  this proposal. Making cursors logical extensions of iterators would
+  probably also have been more difficult with a BGL-based approach.</p>
 
   <h2>Proposed Text for Technical Report 2</h2>
+
+  <div class="note">
+    Notes that are not part of the proposed text appear in grey boxes.
+  </div>
 
   <div class="std">
     <h2>0 Containers <span class="section-id">[tr.cont]</span></h2>
@@ -989,7 +1009,11 @@ namespace inorder {
       </li>
 
       <li>Returns: <tt>inorder::iterator&lt;binary_tree&lt;Tp,
-      Alloc&gt;::cursor&gt;(h.inorder_first())</tt>.
+      Alloc&gt;::cursor&gt;(h.inorder_first())</tt>.</li>
+
+      <li>Complexity: constant</li>
+
+      <li style="list-style: none">
         <pre>
 namespace inorder {
   template &lt;class Tp, class Alloc&gt;
@@ -1001,7 +1025,9 @@ namespace inorder {
 
       <li>Returns: <tt>inorder::iterator&lt;binary_tree&lt;Tp,
       Alloc&gt;::const_cursor&gt;(h.inorder_cfirst())</tt>.</li>
-    </ol><!-- inorder begin! shoot! -->
+
+      <li>Complexity: constant</li>
+    </ol>
 
     <h5>0.1.2.4 Template class <tt>nary_tree</tt> <span class=
     "section-id">[tr.hierarchy.narytree]</span></h5>
@@ -1756,6 +1782,13 @@ namespace tr2 {
                 </tr>
               </tbody>
             </table>
+
+            <div class="note">
+              rbegin() and rend() do not seem very useful for multiway trees,
+              as they hide end() and its possible children. Are different
+              semantics or maybe having rend() stand in for end() sensible
+              solutions? Or just ignore this aspect?
+            </div>
           </li>
         </ol>
 
@@ -2704,6 +2737,12 @@ namespace inorder {
     Electronic Appendix: <a href=
     "http://www.research.att.com/~bs/tree-appendix.pdf">http://www.research.att.com/~bs/tree-appendix.pdf</a></dd>
 
+    <dt><a id="ref.cormen" name="ref.cormen">[cormen]</a></dt>
+
+    <dd>Cormen, Thomas H.; Leiserson, Charles E.; Rivest, Ronald L.; Stein,
+    Clifford. <em>Introduction to Algorithms.</em> Second Edition (MIT Press,
+    2001)</dd>
+
     <dt><a id="ref.dreizin" name="ref.dreizin">[dreizin]</a></dt>
 
     <dd>Dreizin, Vladimir; Kosnik, Benjamin; Tavory, Ami. <em>Policy-Based
@@ -2732,7 +2771,19 @@ namespace inorder {
     <dd>Karas, Walt. <em>C++ AVL Tree Template</em>, <a href=
     "http://us.geocities.com/wkaras/gen_cpp/avl_tree.html">http://us.geocities.com/wkaras/gen_cpp/avl_tree.html</a></dd>
 
-    <dt><a id="ref.mirwaisi" name="ref.mirwaisi">[mirwais]</a></dt>
+    <dt><a id="ref.knuth97" name="ref.knuth97">[knuth97]</a></dt>
+
+    <dd>Knuth, Donald E. <em>The Art of Computer Programming.</em> Volume 1:
+    Fundamental Algorithms. Third Edition (Reading, Massachusetts:
+    Addison-Wesley, 1997)</dd>
+
+    <dt><a id="ref.knuth98" name="ref.knuth98">[knuth98]</a></dt>
+
+    <dd>Knuth, Donald E. <em>The Art of Computer Programming.</em> Volume 3:
+    Sorting and Searching. Second Edition (Reading, Massachusetts:
+    Addison-Wesley, 1998)</dd>
+
+    <dt><a id="ref.mirwaisi" name="ref.mirwaisi">[mirwaisi]</a></dt>
 
     <dd>Mirwaisi, Jeff. <em>treelib</em>, <a href=
     "https://boost-consulting.com:8443/trac/soc/attachment/wiki/tree/resources/trees/treelib.tar.bz2">
