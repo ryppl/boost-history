@@ -88,7 +88,7 @@
 
     <dt>Date</dt>
 
-    <dd>2006-10-??</dd>
+    <dd>2006-10-13</dd>
 
     <dt>Project</dt>
 
@@ -177,8 +177,23 @@
 
   <p>Most of the proposed library is a pure extension.</p>
 
-  <p>Some extensions and modifications to <tt>&lt;algorithm&gt;</tt> and some
-  extensions to <tt>&lt;iterator&gt;</tt>are proposed.</p>
+  <p>Some extensions <tt>&lt;algorithm&gt;</tt> and some extensions to
+  <tt>&lt;iterator&gt;</tt>are proposed.</p>
+
+  <p>Additionally, while not proposed herein, it has sometimes been suggested
+  to add a template parameter to the STL associative containers <tt>set</tt>,
+  <tt>multiset</tt>, <tt>map</tt>, and <tt>multimap</tt> (and possibly an
+  argument to their constructors) specifying which policy should for storing
+  elements, or, more concretely, what tree. The balancers presented in this
+  proposal would lend themselves to such use. Indicating what type of
+  balanced hierarchy to use for associative containers would create some
+  amount of symmetry to TR1's <tt>unordered_</tt> containers that allow
+  specification of a hash functor; it is however a momentous decicision in
+  which position to put such a parameter. The same position as for
+  <tt>unordered_</tt> containers (befor the comparison functor) would require
+  changes in existing code; making it the last parameter (after the
+  allocator) would allow existing code to remain unchanged, but seems
+  somewhat irritating when compared to <tt>unordered_</tt> containers.</p>
 
   <h3>Can it be implemented using today's compilers, or does it require
   language features that will only be available as part of C++0x?</h3>
@@ -258,6 +273,14 @@
 
   <h3>What decisions are left up to implementors?</h3>
 
+  <p>Most of the requirements for the library components presented in this
+  proposal are rather tightly formulated in order to allow for them being
+  both efficient and general enough. It is however hoped that the conceptual
+  abstraction of hierarchies and cursors may be of general use, also allowing
+  for more specific implementations where required (although probably not as
+  part of the library; ideally comparable to the role of containers and
+  iterators in modern C++ code).</p>
+
   <h3>If there are any similar libraries in use, how do their design
   decisions compare to yours?</h3>
 
@@ -289,6 +312,15 @@
   profit from specific hierarchy properties as much as the ones presented in
   this proposal. Making cursors logical extensions of iterators would
   probably also have been more difficult with a BGL-based approach.</p>
+
+  <h2>Future Directions</h2>
+
+  <p>While it is hoped that the current proposal somewhat reunites balanced
+  binary trees, B-trees and "external" hierarchies, which should also
+  faciliate work with some higher-level structures (e.g. <tt>nary_tree</tt>s
+  to implement tries), some of those higher-level components might be an
+  interesting feature to add to the library, such as patricia tries or
+  ternary search tries.</p>
 
   <h2>Proposed Text for Technical Report 2</h2>
 
@@ -1556,7 +1588,8 @@ typedef <i>implementation defined</i>                        const_cursor;
         <table summary=
         "Forest/binary tree cursor operational semantics corresponences">
           <caption>
-            Forest/binary tree cursor operational semantics correspondences
+            Table 6: Forest/binary tree cursor operational semantics
+            correspondences
           </caption>
 
           <thead>
@@ -2030,13 +2063,20 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     <h5>0.1.4.3.3 Balancing hierarchy adaptors <span class=
     "section-id">[tr.hierarchy.balance]</span></h5>
 
+    <div class="note">
+      These do not model AssociativeContainer yet but Sequence as they permit
+      insertion in arbitrary positions. (This way, they are not required to
+      take care of extracting, sorting and searching.)
+    </div>
+
     <ol>
       <li>
         <p>A balancing hierarchy adaptor satisfies the Sequence requirements
-        ([tr.sequence.reqmts]). It uses some kind of balancing method in
-        order to guarantee logarithmic time complexity for many important
-        operations while keeping the inorder of the adaptee hierarchy as its
-        invariant.</p>
+        ([tr.sequence.reqmts]), with the exception that its <tt>erase()</tt>
+        member functions return <tt>void</tt>. It uses some kind of balancing
+        method in order to guarantee logarithmic time complexity for many
+        important operations while keeping the inorder of the adaptee
+        hierarchy as its invariant.</p>
       </li>
 
       <li>
@@ -2119,6 +2159,38 @@ namespace tr2 {
     reference       back();
     const_reference back() const;
     
+    <i>// map operations:</i>
+    iterator find(const value_type&amp; x);
+    const_iterator find(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+    iterator find(const value_type&amp; x, Cmp cmp);
+    const_iterator find(const value_type&amp; x) const;
+
+    size_type count(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+    size_type count(const value_type&amp; x, Cmp cmp) const;
+
+    iterator lower_bound(const value_type&amp; x);
+    const_iterator lower_bound(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+    iterator lower_bound(const value_type&amp; x, Cmp cmp);
+    template &lt;class Cmp&gt;
+    const_iterator lower_bound(const value_type&amp; x, Cmp cmp) const;
+
+    iterator upper_bound(const value_type&amp; x);
+    const_iterator upper_bound(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+    iterator upper_bound(const value_type&amp; x, Cmp cmp);
+    template &lt;class Cmp&gt;
+    const_iterator upper_bound(const value_type&amp; x, Cmp cmp) const;
+
+    pair&lt;iterator,iterator&gt; equal_range(const value_type&amp; x);
+    pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+    pair&lt;iterator,iterator&gt; equal_range(const value_type&amp; x, Cmp cmp);
+    template &lt;class Cmp&gt;
+    pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x, Cmp cmp) const;
+
     <i>// modifiers:</i>
     void      push_front(value_type const&amp; x);
     void      push_back(value_type const&amp; x);
@@ -2128,8 +2200,8 @@ namespace tr2 {
       void    insert (iterator position, InputIterator first, InputIterator last);
     void      pop_front();
     void      pop_back();
-    iterator  erase(iterator position);
-    iterator  erase(iterator first, iterator last);
+    void      erase(iterator position);
+    void      erase(iterator first, iterator last);
     void      swap(avl_tree&lt;Tp, Hierarchy&gt;&amp;);
     void      clear() { h.clear(); }
   };
@@ -2161,6 +2233,212 @@ namespace tr2 {
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
 </pre>
+
+        <h6>0.1.4.1.1 Balancing adaptor types <span class=
+        "section-id">[tr.hierarchy.balance.types]</span></h6>
+        <pre>
+typedef <i>implementation defined</i>                        cursor;
+typedef <i>implementation defined</i>                        const_cursor;    
+</pre>
+
+        <ol>
+          <li>
+            <p>Both <tt>cursor</tt> and <tt>const_cursor</tt> have to fulfill
+            the multiway cursor ([tr.cursor.flavors]) and ascending random
+            access cursor ([tr.ascending.random.access.cursors])
+            requirements.</p>
+          </li>
+
+          <li>
+            <p>Additionally, for any instance <tt>a</tt> of either type
+            <tt>cursor</tt> or <tt>const_cursor</tt>, <tt>a.max_size() ==
+            1</tt>.</p>
+          </li>
+        </ol>
+
+        <h6>0.1.4.1.2 Balancing adaptor constructors, copy, and assignment
+        <span class="section-id">[tr.hierarchy.balance.cons]</span></h6>
+        <pre>
+    explicit avl_tree (allocator_type const&amp; = allocator_type());
+    template &lt;class InputIterator&gt;
+      avl_tree (InputIterator first, InputIterator last,
+        allocator_type const&amp; = allocator_type());
+    avl_tree (avl_tree&lt;T, Hier&gt; const&amp; x);
+</pre>
+
+        <ol>
+          <li>
+            <p><strong>Effects:</strong>[first, last).</p>
+          </li>
+
+          <li>
+            <p><strong>Complexity:</strong> Linear.</p>
+            <pre>
+    template &lt;class InputIterator&gt;
+      void assign(InputIterator first, InputIterator last);
+</pre>
+          </li>
+
+          <li>
+            <p><strong>Effects:</strong></p>
+            <pre>
+clear(); 
+while(first++ != last)
+  insert(end(), *first);
+</pre>
+          </li>
+        </ol>
+
+        <h6>0.1.4.1.2 Balancing adaptor element access <span class=
+        "section-id">[tr.hierarchy.balance.cons]</span></h6>
+        <pre>
+    explicit avl_tree (allocator_type const&amp; = allocator_type());
+    template &lt;class InputIterator&gt;
+      avl_tree (InputIterator first, InputIterator last,
+        allocator_type const&amp; = allocator_type());
+    avl_tree (avl_tree&lt;T, Hier&gt; const&amp; x);
+</pre>
+
+        <ol>
+          <li>
+            <p><strong>Effects:</strong>[first, last).</p>
+          </li>
+
+          <li>
+            <p><strong>Complexity:</strong> Linear.</p>
+            <pre>
+    template &lt;class InputIterator&gt;
+      void assign(InputIterator first, InputIterator last);
+</pre>
+          </li>
+
+          <li>
+            <p><strong>Effects:</strong></p>
+            <pre>
+clear(); 
+while(first++ != last)
+  insert(end(), *first);
+</pre>
+          </li>
+        </ol>
+
+        <h6>0.1.4.1.4 Balancing adaptor map operations <span class=
+        "section-id">[tr.hierarchy.balance.map]</span></h6>
+        <pre>
+iterator find(const value_type&amp; x);
+const_iterator find(const value_type&amp; x) const;
+template &lt;class Cmp&gt;
+iterator find(const value_type&amp; x, Cmp cmp);
+const_iterator find(const value_type&amp; x) const;
+
+size_type count(const value_type&amp; x) const;
+template &lt;class Cmp&gt;
+size_type count(const value_type&amp; x, Cmp cmp) const;
+
+iterator lower_bound(const value_type&amp; x);
+const_iterator lower_bound(const value_type&amp; x) const;
+template &lt;class Cmp&gt;
+iterator lower_bound(const value_type&amp; x, Cmp cmp);
+template &lt;class Cmp&gt;
+const_iterator lower_bound(const value_type&amp; x, Cmp cmp) const;
+
+iterator upper_bound(const value_type&amp; x);
+const_iterator upper_bound(const value_type&amp; x) const;
+template &lt;class Cmp&gt;
+iterator upper_bound(const value_type&amp; x, Cmp cmp);
+template &lt;class Cmp&gt;
+const_iterator upper_bound(const value_type&amp; x, Cmp cmp) const;
+
+pair&lt;iterator,iterator&gt; equal_range(const value_type&amp; x);
+pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x) const;
+template &lt;class Cmp&gt;
+pair&lt;iterator,iterator&gt; equal_range(const value_type&amp; x, Cmp cmp);
+template &lt;class Cmp&gt;
+pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x, Cmp cmp) const;
+</pre>
+
+        <ol>
+          <li>
+            <p><strong>Notes:</strong> The <tt>find</tt>,
+            <tt>lower_bound</tt>, <tt>upper_bound</tt> and
+            <tt>equal_range</tt> member functions each have four versions,
+            differing in if they return an <tt>iterator</tt> or a
+            <tt>const_iterator</tt>, and if they take a <tt>cmp</tt> function
+            object argument or not (<tt>count</tt> comes only in the latter
+            two variants, as it returns a <tt>size_type</tt>, not an
+            iterator). In each case the behavior of the four (two) functions
+            is in principle identical. See for a description of the behavior
+            of these functions.</p>
+          </li>
+
+          <li>
+            <p><strong>Complexity:</strong> logarithmic (with the exception
+            of <tt>count</tt>, which is <tt>log(size()) + count(x)</tt></p>
+          </li>
+        </ol>
+
+        <h6>0.1.4.1.4 Balancing adaptor modifiers <span class=
+        "section-id">[tr.hierarchy.balance.modifiers]</span></h6>
+        <pre>
+void      push_front(value_type const&amp; x);
+void      push_back(value_type const&amp; x);
+iterator  insert(iterator position, value_type const&amp; x = value_type());
+</pre>
+
+        <ol>
+          <li>
+            <p><strong>Complexity:</strong> amortized constant</p>
+            <pre>
+void      insert(iterator position, size_type n, value_type const&amp; x);
+template &lt;class InputIterator&gt;
+  void    insert (iterator position, InputIterator first, InputIterator last);    
+</pre>
+          </li>
+
+          <li>
+            <p><strong>Complexity:</strong> linear in the number of elements
+            to insert</p>
+            <pre>
+void      pop_front();
+void      pop_back();
+void      erase(iterator position);
+</pre>
+          </li>
+
+          <li>
+            <p><strong>Complexity:</strong> amortized constant</p>
+            <pre>
+void      erase(iterator first, iterator last);
+</pre>
+          </li>
+
+          <li>
+            <p><strong>Complexity:</strong> <tt>log(size())+ N</tt> where
+            <tt>N</tt> is the distance from <tt>first</tt> to
+            <tt>last</tt></p>
+            <pre>
+void      clear();
+</pre>
+          </li>
+
+          <li>
+            <p><strong>Complexity:</strong> <tt>log(size())+ N</tt></p>
+          </li>
+        </ol>
+
+        <h6>0.1.4.1.5 Balancing adaptor specialized algorithms <span class=
+        "section-id">[tr.hierarchy.balance.special]</span></h6>
+        <pre>
+    template &lt;class Tp, class Alloc&gt;
+    void swap(  avl_tree&lt;Tp, Alloc&gt;&amp; x,
+                avl_tree&lt;Tp, Alloc&gt;&amp; y);
+</pre>
+
+        <ol>
+          <li>
+            <p><strong>Effects:</strong> <tt>x.swap(y);</tt></p>
+          </li>
+        </ol>
 
         <h3>0.2 Cursors <span class="section-id">[tr.cursors]</span></h3>
 
