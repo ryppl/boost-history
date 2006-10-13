@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!-- boostinspect:nolink -->
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Hierarchical Data Structures and Related Concepts for the C++
   Standard Library (TR2)</title>
-  <style type="text/css">
+<style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
   .std {
@@ -77,7 +77,7 @@
     font-size: 100%;
   }
   /*]]>*/
-  </style>
+</style>
 </head>
 
 <body>
@@ -225,8 +225,9 @@
 
     <dt>Augmentors/balancers as policies</dt>
 
-    <dd>Inspired by [austern] and [dreizin], the original approach undertaken
-    when working on the reference implementation was to pass policy template
+    <dd>Inspired by <a href="#ref.austern">[austern]</a> and <a href=
+    "ref.dreizin">[dreizin]</a>, the original approach undertaken when
+    working on the reference implementation was to pass policy template
     arguments to template class <tt>binary_tree</tt>. While reproducing the
     (otherwise unbalanced) tree/cursor interface seemed logical at first, it
     turned out that this was conceptually not entirely clean, as e.g. it
@@ -252,8 +253,8 @@
   given, which mostly, while trying not to require much space overhead,
   demand implementations that make use of any time and space saving
   techniques available (e.g. using arrays for both children of a binary tree
-  node, see e.g. <a href="#ref.austern">[austern]), which may partly restrict
-  implementors to one "proper" way of doing things.</a></p>
+  node, see e.g. <a href="#ref.austern">[austern]</a>), which may partly
+  restrict implementors to one "proper" way of doing things.</p>
 
   <h3>What decisions are left up to implementors?</h3>
 
@@ -323,7 +324,7 @@
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
-               class="reqmts">
+        class="reqmts">
           <caption>
             Table 1: Container requirements that are not required for
             hierarchy containers
@@ -558,7 +559,9 @@
               <tt>q</tt> points to.<br />
               pre: <tt>q</tt> is dereferenceable.</td>
 
-              <td>(Note A)</td>
+              <td>Should be at worst linear in the the number of elements in
+              the subtree of <tt>q</tt> plus the distance to <tt>q</tt>'s
+              parent's <tt>end()</tt>.</td>
             </tr>
 
             <tr>
@@ -604,9 +607,9 @@
         <p>For a mutable plain hierarchy, the following expression as shown
         in Table 4, is additionally required to be valid:</p>
 
-        <table summary="Multiway hierarchy requirements" class="reqmts">
+        <table summary="Plain hierarchy requirements" class="reqmts">
           <caption>
-            Table 4: Multiway hierarchy requirements
+            Table 4: Plain hierarchy requirements
           </caption>
 
           <thead>
@@ -635,6 +638,18 @@
               <td>Should be at worst linear in the the number of elements in
               the subtree of <tt>c</tt> plus the distance to <tt>p</tt>'s
               parent's <tt>end()</tt>.</td>
+            </tr>
+
+            <tr>
+              <td><tt>a.insert_above(p,t)</tt></td>
+
+              <td><tt>cursor</tt></td>
+
+              <td>inserts a copy of <tt>t</tt> as child of <tt>p</tt>'s
+              parent and new parent of <tt>p</tt> and its siblings.<br />
+              pre: <tt>c</tt> is dereferenceable.</td>
+
+              <td>Linear in the the number <tt>p</tt>'s siblings.</td>
             </tr>
           </tbody>
         </table>
@@ -734,6 +749,13 @@ namespace tr2 {
   template &lt;class T, class Alloc&gt;
   void swap(  binary_tree&lt;T, Alloc&gt;&amp; x,
               binary_tree&lt;T, Alloc&gt;&amp; y);
+  namespace inorder {
+  template &lt;class Tp, class Alloc&gt;
+  inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::cursor&gt; begin(binary_tree&lt;Tp, Alloc&gt;&amp; h);
+  template &lt;class Tp, class Alloc&gt;
+  inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::const_cursor&gt; cbegin(binary_tree&lt;Tp, Alloc&gt; const&amp; h);
+  } // namespace inorder
+
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
 </pre>
@@ -898,8 +920,9 @@ typedef <i>implementation defined</i>                        const_cursor;
       <li>
         <p><strong>Effects:</strong></p>
         <pre>
-clear(); for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
-insert(root.end(), *i);
+clear(); 
+for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
+  insert(root.end(), *i);
 </pre>
       </li>
     </ol>
@@ -934,29 +957,26 @@ insert(root.end(), *i);
     "section-id">[tr.hierarchy.bintree.modifiers]</span></h6>
     <pre>
     cursor    insert(cursor position, value_type const&amp; x = value_type());
-    template &lt;class InputCursor&gt;
-      cursor  insert(cursor position, InputCursor subtree);
+    
 </pre>
 
     <ol>
       <li>
-        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
-        insert(cursor position, InputCursor subtree)</tt> is linear in the
-        number of elements in <tt>subtree</tt>.</p>
-        <pre>
-    void      rotate(cursor position);
-    void      swap(binary_tree&lt;Tp, Alloc&gt;&amp;);
-    void      clear(cursor position);
-    void      clear();
-</pre>
+        <p><strong>Effects:</strong> Let <tt>b</tt> be <tt>a</tt>'s
+        parent;<br />
+        if <tt>b.size() &lt; b.max_size()</tt>, insert a copy of <tt>t</tt>
+        before <tt>p</tt>, as child of <tt>b</tt>;<br />
+        Otherwise, if <tt>a.empty()</tt>, insert a copy of <tt>t</tt> as
+        child of <tt>a</tt>; and if <tt>!a.empty()</tt>, insert a copy of
+        <tt>t</tt> as parent of <tt>a</tt>'s current child, as new child of
+        <tt>a</tt>.</p>
       </li>
 
       <li>
-        <p><strong>Effects:</strong></p>
+        <p><strong>Complexity:</strong> constant</p>
         <pre>
-clear();
-for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
-  insert(root.end(), *i);
+    template &lt;class InputCursor&gt;
+      cursor  insert(cursor position, InputCursor subtree);
 </pre>
       </li>
 
@@ -1032,7 +1052,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
     <ol>
       <li>
-        <p><strong>Effects:</strong> x.swap(y);</p>
+        <p><strong>Effects:</strong> <tt>x.swap(y);</tt></p>
         <pre>
     namespace inorder {
       template &lt;class Tp, class Alloc&gt;
@@ -1077,8 +1097,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 namespace std {
 namespace tr2 {
   template &lt;class T, class Alloc = std::allocator&lt;T&gt; &gt;
-  class nary_tree
-  {
+  class nary_tree {
   public:
     <i>// types:</i>
     typedef T                                             value_type;
@@ -1096,19 +1115,15 @@ namespace tr2 {
 
     <i>// construct/copy/destroy:</i>
     explicit nary_tree (allocator_type const&amp; = allocator_type());
-    explicit nary_tree (size_type n, value_type const&amp; value = value_type(),
-      allocator_type const&amp; = allocator_type());
     template &lt;class InputCursor&gt;
       nary_tree (InputCursor subtree,
         allocator_type const&amp; = allocator_type());
     nary_tree (nary_tree&lt;T, Alloc&gt; const&amp; x);
-    ~binary_tree();
+    ~nary_tree();
     nary_tree&lt;T, Alloc&gt;&amp; operator=(
       nary_tree&lt;T, Alloc&gt; const&amp; x);
     template &lt;class InputICursor&gt;
       void assign(InputCursor subtree);
-    template &lt;class Size, class T&gt;
-      void assign(Size n, const T&amp; t = T());
     allocator_type get_allocator() const;
 
     <i>// cursors:</i>
@@ -1121,37 +1136,455 @@ namespace tr2 {
     bool      empty() const;
     size_type size() const;
     size_type max_size() const;
-    void      resize(size_type sz, T c = T());
+    size_type capacity(cursor position) const;
+    void      reserve(cursor position, size_type n);
 
     <i>// modifiers:</i>
     cursor    insert(cursor position, value_type const&amp; x = value_type());
     template &lt;class InputCursor&gt;
-      cursor  insert (cursor position, InputCursor subtree);
+      cursor  insert(cursor position, InputCursor subtree);
+    cursor    insert_above(cursor position, value_type const&amp; x = value_type());
     void      swap(nary_tree&lt;Tp, Alloc&gt;&amp;);
     void      clear(cursor position);
     void      clear();
   };
 
+  template &lt;class Tp, class Alloc&gt;
+    bool operator==(  nary_tree&lt;Tp, Alloc&gt; const&amp; x,
+                      nary_tree&lt;Tp, Alloc&gt; const&amp; y);
+  template &lt;class Tp, class Alloc&gt;
+    bool operator!=(  nary_tree&lt;Tp, Alloc&gt; const&amp; x,
+                      nary_tree&lt;Tp, Alloc&gt; const&amp; y);
+
   <i>// specialized algorithms:</i>
   template &lt;class Tp, class Alloc&gt;
   void swap(  nary_tree&lt;Tp, Alloc&gt;&amp; x,
               nary_tree&lt;Tp, Alloc&gt;&amp; y);
+              
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
 </pre>
 
-    <h4>0.1.2.3 Hierarchy adaptors <span class=
+    <h6>0.1.2.4.1 <tt>nary_tree</tt> types <span class=
+    "section-id">[tr.hierarchy.narytree.types]</span></h6>
+    <pre>
+typedef <i>implementation defined</i>                        cursor;
+typedef <i>implementation defined</i>                        const_cursor;    
+</pre>
+
+    <ol>
+      <li>
+        <p>Both <tt>cursor</tt> and <tt>const_cursor</tt> have to fulfill the
+        plain cursor ([tr.cursor.flavors]) and ascending forward cursor
+        ([tr.ascending.forward.cursors]) requirements.</p>
+      </li>
+    </ol>
+
+    <h6>0.1.2.4.2 <tt>nary_tree</tt> constructors, copy, and assignment
+    <span class="section-id">[tr.hierarchy.narytree.cons]</span></h6>
+    <pre>
+    explicit nary_tree (allocator_type const&amp; = allocator_type());
+    template &lt;class InputCursor&gt;
+      nary_tree (InputCursor subtree,
+        allocator_type const&amp; = allocator_type());
+    nary_tree (nary_tree&lt;T, Alloc&gt; const&amp; x);
+</pre>
+
+    <ol>
+      <li>
+        <p><strong>Complexity:</strong> The constructor <tt>template
+        &lt;class InputCursor&gt; vector(InputCursor subtree)</tt> makes only
+        <tt>N</tt> calls to the copy constructor of <tt>T</tt> (where
+        <tt>N</tt> is the number of elements in <tt>subtree</tt>) and no
+        reallocations if the cursor <tt>subtree</tt> is of (either descending
+        or ascending) forward, bidirectional, or random access categories. It
+        does at most <tt>2N</tt> calls to the copy constructor of <tt>T</tt>
+        and <tt>logN</tt> reallocations if they are just cursors, since it is
+        impossible to determine the size of <tt>subtree</tt> and then do
+        copying.</p>
+        <pre>
+    template &lt;class InputCursor&gt;
+      void assign(InputCursor subtree);
+</pre>
+      </li>
+
+      <li>
+        <p><strong>Effects:</strong></p>
+        <pre>
+clear();
+for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
+  insert(root.end(), *i);
+</pre>
+      </li>
+    </ol>
+
+    <h6>0.1.2.4.3 <tt>nary_tree</tt> cursors <span class=
+    "section-id">[tr.hierarchy.narytree.cursors]</span></h6>
+    <pre>
+    cursor        shoot();
+    const_cursor  cshoot() const;
+</pre>
+
+    <ol>
+      <li>
+        <p><strong>Complexity:</strong> constant</p>
+      </li>
+    </ol>
+
+    <h6>0.1.2.4.4 <tt>nary_tree</tt> capacity <span class=
+    "section-id">[tr.hierarchy.narytree.capacity]</span></h6>
+    <pre>
+size_type capacity(cursor position) const;
+
+</pre>
+
+    <ol>
+      <li>
+        <p><strong>Returns:</strong> The total number of child elements that
+        the cursor <tt>position</tt> can hold without requiring
+        reallocation.</p>
+        <pre>
+void      reserve(cursor position, size_type n);
+
+</pre>
+      </li>
+
+      <li>
+        <p><strong>Effects:</strong> A directive that informs an
+        <tt>nary_tree</tt> of a planned change in a given cursor's size, so
+        that it can manage the storage allocation accordingly. After
+        <tt>reserve(position, n)</tt>, <tt>capacity(position)</tt> is greater
+        or equal to the <tt>size_type</tt> argument <tt>n</tt> of reserve if
+        reallocation happens; and equal to the previous value of
+        <tt>capacity(position)</tt> otherwise. Reallocation happens at this
+        point if and only if the current capacity is less than the
+        <tt>size_type</tt> argument <tt>n</tt> of <tt>reserve()</tt>.</p>
+      </li>
+
+      <li>
+        <p><strong>Complexity:</strong> It does not change the size of the
+        <tt>nary_tree</tt> and takes at most linear time in
+        <tt>position.size()</tt>.</p>
+      </li>
+
+      <li>
+        <p><strong>Notes:</strong> Reallocation invalidates all the
+        references, pointers, and cursors referring to the child elements of
+        <tt>position</tt>. It is guaranteed that no reallocation takes place
+        during insertions to <tt>position</tt> that happen after a call to
+        <tt>reserve()</tt> until the time when an insertion would make
+        <tt>position.size()</tt> greater than the size specified in the most
+        recent call to <tt>reserve()</tt>.</p>
+      </li>
+    </ol>
+
+    <h6>0.1.2.4.5 <tt>nary_tree</tt> modifiers <span class=
+    "section-id">[tr.hierarchy.narytree.modifiers]</span></h6>
+    <pre>
+    template &lt;class InputCursor&gt;
+      cursor  insert(cursor position, InputCursor subtree);
+</pre>
+
+    <ol>
+      <li>
+        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
+        insert(cursor position, InputCursor subtree)</tt> is linear in the
+        number of elements in <tt>subtree</tt>.</p>
+      </li>
+
+      <li>
+        <p><strong>Effects:</strong></p>
+        <pre>
+clear();
+for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
+  insert(root.end(), *i);
+</pre>
+      </li>
+
+      <li>
+        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
+        insert(cursor position, InputCursor subtree)</tt> is linear in the
+        number of elements in <tt>subtree</tt>.</p>
+      </li>
+    </ol>
+
+    <h6>0.1.2.4.6 <tt>nary_tree</tt> specialized algorithms <span class=
+    "section-id">[tr.hierarchy.narytree.special]</span></h6>
+    <pre>
+    template &lt;class Tp, class Alloc&gt;
+    void swap(  nary_tree&lt;Tp, Alloc&gt;&amp; x,
+                nary_tree&lt;Tp, Alloc&gt;&amp; y);
+</pre>
+
+    <ol>
+      <li>
+        <p><strong>Effects:</strong> <tt>x.swap(y);</tt></p>
+      </li>
+    </ol>
+
+    <h4>0.1.2.5 Hierarchy adaptors <span class=
     "section-id">[tr.hierarchy.adaptors]</span></h4>
 
     <ol>
       <li>
-        <p>The hierarchy adaptors each take a Hierarchy template parameter,
-        and each constructor takes a Hierarchy reference argument. This
-        hierarchy is copied into the Hierarchy member of each adapter.</p>
+        <p>Hierarchy adaptors satisfy the hierarchy requirements except for
+        anything that deals with allocators, as storage managment is done by
+        the adaptees. The hierarchy adaptors each take a Hierarchy template
+        parameter, and each constructor takes a Hierarchy reference argument.
+        This hierarchy is copied into the Hierarchy member of each
+        adapter.</p>
       </li>
     </ol>
 
-    <h5>0.1.2.3.1 Balancing hierarchy adaptors <span class=
+    <h5>0.1.2.5.1 Template class <tt>forest</tt> <span class=
+    "section-id">[tr.hierarchy.forest]</span></h5>
+
+    <ol>
+      <li>
+        <p>A <tt>forest</tt> is a kind of mutable plain hierarchy that is
+        instantiated with a mutable multiway hierarchy that has insertion
+        semantics as a <tt>binary_tree</tt>
+        ([tr.hierarchy.bintree.modifiers], &amp;1)), and whose cursor types
+        <tt>cursor</tt> and <tt>const_cursor</tt> satisfy a
+        <tt>binary_tree</tt>'s <tt>cursor</tt> and <tt>const_cursor</tt> type
+        requirements ([tr.hierarchy.bintree.types], &amp;&amp;1-2)).</p>
+        <pre>
+namespace std {
+namespace tr2 {
+  template &lt;class T, class Hierarchy = binary_tree&lt;T&gt; &gt;
+  class forest {
+  public:
+    typedef Hierarchy                            hierarchy_type;
+  protected:
+    hierarchy_type h;
+    
+  public:
+    <i>// types:</i>
+    typedef T                                             value_type;
+
+    typedef <i>implementation defined</i>                        cursor;
+    typedef <i>implementation defined</i>                        const_cursor;
+
+    typedef typename hierarchy_type::pointer              pointer;
+    typedef typename hierarchy_type::const_pointer        const_pointer;
+    typedef typename hierarchy_type::reference            reference;
+    typedef typename hierarchy_type::const_reference      const_reference;
+    typedef typename hierarchy_type::size_type            size_type;
+    typedef typename hierarchy_type::difference_type      difference_type;
+
+    <i>// construct/copy/destroy:</i>
+    explicit forest (hierarchy_type const&amp; = hierarchy_type());
+    template &lt;class InputCursor&gt;
+      forest (InputCursor subtree);
+    forest (forest&lt;T, Hierarchy&gt; const&amp; x);
+    forest&lt;T, Hierarchy&gt;&amp; operator=(
+      forest&lt;T, Hierarchy&gt; const&amp; x);
+    template &lt;class InputICursor&gt;
+      void assign(InputCursor subtree);
+
+    <i>// cursors:</i>
+    cursor        root()    { return h.root(); }
+    const_cursor  croot()   { return h.croot(); }
+    cursor        shoot();
+    const_cursor  cshoot() const;
+
+    <i>// capacity:</i>
+    bool      empty() const { return h.empty(); }
+    size_type size() const  { return h.size(); }
+    size_type max_size() const;
+
+    <i>// modifiers:</i>
+    cursor    insert(cursor position, value_type const&amp; x = value_type());
+    template &lt;class InputCursor&gt;
+      cursor  insert(cursor position, InputCursor subtree);
+    cursor    insert_above(cursor position, value_type const&amp; x = value_type());
+    void      swap(forest&lt;Tp, Hierarchy&gt;&amp;);
+    void      clear(cursor position);
+    void      clear();
+  };
+
+  template &lt;class Tp, class Hierarchy&gt;
+    bool operator==(  forest&lt;Tp, Hierarchy&gt; const&amp; x,
+                      forest&lt;Tp, Hierarchy&gt; const&amp; y);
+  template &lt;class Tp, class Hierarchy&gt;
+    bool operator!=(  forest&lt;Tp, Hierarchy&gt; const&amp; x,
+                      forest&lt;Tp, Hierarchy&gt; const&amp; y);
+
+  <i>// specialized algorithms:</i>
+  template &lt;class Tp, class Hierarchy&gt;
+  void swap(  forest&lt;Tp, Hierarchy&gt;&amp; x,
+              forest&lt;Tp, Hierarchy&gt;&amp; y);
+
+
+} <i>// namespace tr2</i>
+} <i>// namespace std</i>
+</pre>
+      </li>
+    </ol>
+
+    <h6>0.1.2.5.1.1 <tt>forest</tt> types <span class=
+    "section-id">[tr.hierarchy.forest.types]</span></h6>
+    <pre>
+typedef <i>implementation defined</i>                        cursor;
+typedef <i>implementation defined</i>                        const_cursor;    
+</pre>
+
+    <ol>
+      <li>
+        <p><strong>Notes:</strong> If (the adaptee) <tt>Hierarchy</tt>'s
+        cursor types are at least ascending bidirectional cursors, both
+        <tt>cursor</tt> and <tt>const_cursor</tt> are ascending bidirectional
+        cursors. Otherwise, they are descending forward cursors. The adaptee
+        binary tree is "tilted" to yield an nary tree, meaning that the
+        operational semantics of the adaptor cursor are as follows in terms
+        of the adaptee cursor (only valid if present in the adaptor cursor's
+        category; only given for mutable versions of expressions, const ones
+        as according):</p>
+
+        <table summary=
+        "Forest/binary tree cursor operational semantics corresponences">
+          <caption>
+            Forest/binary tree cursor operational semantics corresponences
+          </caption>
+
+          <thead>
+            <tr>
+              <th>adaptor cursor <tt>f</tt></th>
+
+              <th>adaptee cursor <tt>b</tt></th>
+
+              <th>complexity <tt>b</tt></th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td><tt>f = f.begin()</tt></td>
+
+              <td><tt>b = b.begin();</tt></td>
+
+              <td>constant</td>
+            </tr>
+
+            <tr>
+              <td><tt>f = f.end()</tt></td>
+
+              <td><tt>while (!b.empty()) b = b.end();</tt></td>
+
+              <td>linear</td>
+            </tr>
+
+            <tr>
+              <td><tt>++f</tt></td>
+
+              <td><tt>b = (++b).begin();</tt></td>
+
+              <td>constant</td>
+            </tr>
+
+            <tr>
+              <td><tt>--f</tt></td>
+
+              <td><tt>b = --b.parent();</tt></td>
+
+              <td>as <tt>b.parent()</tt></td>
+            </tr>
+
+            <tr>
+              <td><tt>!f</tt></td>
+
+              <td><tt>while ((!b).parity() == 1); b =
+              (!b).begin();</tt><br /></td>
+
+              <td>linear</td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ol>
+
+    <h6>0.1.2.5.1.2 <tt>forest</tt> constructors, copy, and assignment
+    <span class="section-id">[tr.hierarchy.forest.cons]</span></h6>
+    <pre>
+    explicit forest (hierarchy_type const&amp; = hierarchy_type());
+    template &lt;class InputCursor&gt;
+      forest (InputCursor subtree);
+    forest (forest&lt;T, Hierarchy&gt; const&amp;);
+</pre>
+
+    <ol>
+      <li>
+        <p><strong>Complexity:</strong> The constructor <tt>template
+        &lt;class InputCursor&gt; vector(InputCursor subtree)</tt> makes only
+        <tt>N</tt> calls to the copy constructor of <tt>T</tt> (where
+        <tt>N</tt> is the number of elements in <tt>subtree</tt>) and no
+        reallocations if the cursor <tt>subtree</tt> is of (either descending
+        or ascending) forward, bidirectional, or random access categories. It
+        does at most <tt>2N</tt> calls to the copy constructor of <tt>T</tt>
+        and <tt>logN</tt> reallocations if they are just cursors, since it is
+        impossible to determine the size of <tt>subtree</tt> and then do
+        copying.</p>
+        <pre>
+    template &lt;class InputCursor&gt;
+      void assign(InputCursor subtree);
+</pre>
+      </li>
+
+      <li>
+        <p><strong>Effects:</strong></p>
+        <pre>
+clear();
+for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
+  insert(root.end(), *i);
+</pre>
+      </li>
+    </ol>
+
+    <h6>0.1.2.5.1.3 <tt>forest</tt> modifiers <span class=
+    "section-id">[tr.hierarchy.forest.modifiers]</span></h6>
+    <pre>
+    template &lt;class InputCursor&gt;
+      cursor  insert(cursor position, InputCursor subtree);
+</pre>
+
+    <ol>
+      <li>
+        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
+        insert(cursor position, InputCursor subtree)</tt> is linear in the
+        number of elements in <tt>subtree</tt>.</p>
+      </li>
+
+      <li>
+        <p><strong>Effects:</strong></p>
+        <pre>
+clear();
+for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
+  insert(root.end(), *i);
+</pre>
+      </li>
+
+      <li>
+        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
+        insert(cursor position, InputCursor subtree)</tt> is linear in the
+        number of elements in <tt>subtree</tt>.</p>
+      </li>
+    </ol>
+
+    <h6>0.1.2.5.1.4 <tt>forest</tt> specialized algorithms <span class=
+    "section-id">[tr.hierarchy.forest.special]</span></h6>
+    <pre>
+    template &lt;class Tp, class Hierarchy&gt;
+    void swap(  forest&lt;Tp, Hierarchy&gt;&amp; x,
+                forest&lt;Tp, Hierarchy&gt;&amp; y);
+</pre>
+
+    <ol>
+      <li>
+        <p><strong>Effects:</strong> <tt>x.swap(y);</tt></p>
+      </li>
+    </ol>
+
+    <h5>0.1.2.5.2 Balancing hierarchy adaptors <span class=
     "section-id">[tr.hierarchy.balance]</span></h5>
 
     <ol>
@@ -1160,9 +1593,7 @@ namespace tr2 {
         ([tr.sequence.reqmts]). It uses some kind of balancing method in
         order to guarantee logarithmic time complexity for many important
         operations while keeping the inorder of the adaptee hierarchy as its
-        invariant. <strike>The balancing hierarchy adaptors' interfaces are
-        mostly identical; the main difference is that they employ different
-        balancing mechanisms.</strike></p>
+        invariant.</p>
       </li>
 
       <li>
@@ -1199,8 +1630,8 @@ namespace tr2 {
     typedef typename hierarchy_type::difference_type      difference_type;
     typedef typename hierarchy_type::allocator_type       allocator_type;
         
-    typedef std::tr2::inorder::iterator&lt;typename hierarchy_type::cursor&gt;        iterator;
-    typedef std::tr2::inorder::iterator&lt;typename hierarchy_type::const_cursor&gt;  const_iterator;
+    typedef <i>implementation defined</i>        iterator;
+    typedef <i>implementation defined</i>  const_iterator;
 
     typedef std::reverse_iterator&lt;iterator&gt;         reverse_iterator;
     typedef std::reverse_iterator&lt;const_iterator&gt;   const_reverse_iterator;
@@ -1287,47 +1718,6 @@ namespace tr2 {
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
 </pre>
-
-        <h5>0.1.2.3.2 Template class <tt>forest</tt> <span class=
-        "section-id">[tr.hierarchy.forest]</span></h5>
-
-        <ol>
-          <li>
-            <p>A <tt>forest</tt> is a kind of mutable hierarchy that is
-            instantiated with another mutable hierarchy whose cursor class
-            provides <tt>begin()</tt>, <tt>end()</tt> and <tt>parent()</tt>
-            operations. [...]</p>
-            <pre>
-namespace std {
-namespace tr2 {
-  template &lt;class T, class Hierarchy = binary_tree&lt;T&gt; &gt;
-  class forest {
-  public:
-    typedef typename Hierarchy                            hierarchy_type;
-    typedef typename hierarchy_type::value_type           value_type;
-    typedef typename hierarchy_type::size_type            size_type;
-  protected:
-    hierarchy_type h;
-    
-  public:
-    typedef typename forest_cursor&lt;typename hierarchy_type::cursor&gt;
-                                                          cursor;
-    typedef typename forest_cursor&lt;typename hierarchy_type::const_cursor&gt;
-                                                          const_cursor;
-    
-    explicit forest(hierarchy_type const&amp; = hierarchy_type());
-    
-    bool      empty() const { return h.empty(); }
-    size_type size() const  { return h.size(); }
-    
-    cursor        root()    { return h.root(); }
-    const_cursor  croot()   { return h.croot(); }
-  };
-} <i>// namespace tr2</i>
-} <i>// namespace std</i>
-</pre>
-          </li>
-        </ol>
 
         <h5>0.1.2.3.3 Template class <tt>multiway_tree</tt> <span class=
         "section-id">[tr.hierarchy.multiwaytree]</span></h5>
@@ -1757,7 +2147,7 @@ namespace tr2 {
 
             <table summary=
             "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 9 - Descending forward cursor requirements (in addition
                 to descending cursors and forward iterators)
@@ -1806,7 +2196,7 @@ namespace tr2 {
 
             <table summary=
             "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 10 - Descending bidirectional cursor requirements (in
                 addition to forward descending cursors and bidirectional
@@ -1864,7 +2254,7 @@ namespace tr2 {
 
             <table summary=
             "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 11 - Descending random access cursor requirements (in
                 addition to descending bidirectional cursors and random
@@ -1913,7 +2303,7 @@ namespace tr2 {
 
             <table summary=
             "Acending cursor requirements (in addition to descending cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 12 - Acending cursor requirements (in addition to
                 descending cursors)
@@ -1991,7 +2381,7 @@ namespace tr2 {
 
             <table summary=
             "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 13 - Ascending forward cursor requirements (in addition
                 to ascending cursors and descending forward cursors)
@@ -2040,7 +2430,7 @@ namespace tr2 {
 
             <table summary=
             "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 14 - Ascending bidirectional cursor requirements (in
                 addition to ascending forward cursors and descending
@@ -2090,7 +2480,7 @@ namespace tr2 {
 
             <table summary=
             "Ascending random access cursor requirements (in addition to ascending bidirectional cursors and descending random access cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 15 - Ascending random access cursor requirements (in
                 addition to ascending bidirectional cursors and descending
