@@ -2060,6 +2060,140 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
+    <h5>0.1.4.3.3 Augmentin hierarchy adaptors <span class=
+    "section-id">[tr.hierarchy.augment]</span></h5>
+
+    <ol>
+      <li>
+        <p>An augmenting hierarchy "augments" a mutable multiway hierarchy
+        which it is given as a template parameter by associating additonal
+        information with its elements and modelling a mutable multiway
+        hierarchy in turn. This additional information is not directly
+        exposed, but only readable via certain member functions of the
+        augmentor; it is updated internally in order to adapt to structural
+        or content-wise changes in the hierarchy. The library provides one
+        augmenting hierarchy adaptor template class: <tt>rank_tree</tt>,
+        found in header <tt>&lt;augment&gt;</tt>.</p>
+      </li>
+    </ol>
+
+    <h6>0.1.4.3.3.1 Template class <tt>rank_tree</tt> <span class=
+    "section-id">[tr.hierarchy.ranktree]</span></h6>
+    <pre>
+namespace std {
+namespace tr2 {
+  template &lt;class T, class Hier = std::Hierarchy&lt;T&gt; &gt;
+  class rank_tree
+  {
+  public:
+    <i>// types:</i>
+    typedef T                                             value_type;
+    typedef Hier                                          hierarchy_type;
+  protected:
+    hierarchy_type h;
+  
+  public:
+    typedef <i>implementation defined</i>                        cursor;
+    typedef <i>implementation defined</i>                        const_cursor;
+
+    typedef typename hierarchy_type::pointer              pointer;
+    typedef typename hierarchy_type::const_pointer        const_pointer;
+    typedef typename hierarchy_type::reference            reference;
+    typedef typename hierarchy_type::const_reference      const_reference;
+    typedef typename hierarchy_type::size_type            size_type;
+    typedef typename hierarchy_type::difference_type      difference_type;
+
+    <i>// construct/copy/destroy:</i>
+    explicit rank_tree (hierarchy_type const&amp; = hierarchy_type());
+    template &lt;class InputCursor&gt;
+      rank_tree (InputCursor subtree);
+    rank_tree (rank_tree&lt;T, Hier&gt; const&amp; x);
+    ~rank_tree();
+    rank_tree&lt;T, Hier&gt;&amp; operator=(
+      rank_tree&lt;T, Hier&gt; const&amp; x);
+    template &lt;class InputICursor&gt;
+      void assign(InputCursor subtree);
+
+    <i>// cursors:</i>
+    cursor        root();
+    const_cursor  croot() const;
+    cursor        shoot();
+    const_cursor  cshoot() const;
+    cursor        inorder_first();
+    const_cursor  inorder_cfirst const();
+
+    cursor        rank(size_type n);
+    const_cursor  rank(size_type n) const;
+
+    <i>// capacity:</i>
+    bool      empty() const;
+    size_type size() const;
+    size_type max_size() const;
+    size_type capacity(cursor position) const;
+    void      reserve(cursor position, size_type n);
+
+    <i>// modifiers:</i>
+    cursor    insert(cursor position, value_type const&amp; x = value_type());
+    template &lt;class InputCursor&gt;
+      cursor  insert(cursor position, InputCursor subtree);
+    void      rotate(cursor position);
+    void      swap(rank_tree&lt;Tp, Hier&gt;&amp;);
+    void      clear(cursor position);
+    void      clear();
+  };
+
+  template &lt;class Tp, class Hier&gt;
+    bool operator==(  rank_tree&lt;Tp, Hier&gt; const&amp; x,
+                      rank_tree&lt;Tp, Hier&gt; const&amp; y);
+  template &lt;class Tp, class Hier&gt;
+    bool operator!=(  rank_tree&lt;Tp, Hier&gt; const&amp; x,
+                      rank_tree&lt;Tp, Hier&gt; const&amp; y);
+
+  <i>// specialized algorithms:</i>
+  template &lt;class Tp, class Hier&gt;
+  void swap(  rank_tree&lt;Tp, Hier&gt;&amp; x,
+              rank_tree&lt;Tp, Hier&gt;&amp; y);
+              
+  namespace inorder {
+  template &lt;class Tp, class Hier&gt;
+  inorder::iterator&lt;rank_tree&lt;Tp, Hier&gt;::cursor&gt; begin(rank_tree&lt;Tp, Hier&gt;&amp; h);
+  template &lt;class Tp, class Hier&gt;
+  inorder::iterator&lt;rank_tree&lt;Tp, Hier&gt;::const_cursor&gt; cbegin(rank_tree&lt;Tp, Hier&gt; const&amp; h);
+  } // namespace inorder
+  
+} <i>// namespace tr2</i>
+} <i>// namespace std</i>
+
+</pre>
+
+    <ol>
+      <li>
+        <p>Each function listed in the public interface of <tt>rank_tree</tt>
+        as above calls a function of the same name for its adaptee object
+        <tt>h</tt>, plus possibly other operations with guaranteed constant
+        time complexity in total. This means that operational semantics and
+        time complexities are as specified by the <tt>hierarchy_type</tt>;
+        and that a function can only be called if a function of the same name
+        is present in the public interface of <tt>hierarchy_type</tt>. (The
+        only exception to the above stated are the functions <tt>rank()</tt>,
+        which are newly introduced.)</p>
+        <pre>
+cursor        rank(size_type n);
+const_cursor  rank(size_type n) const;
+</pre>
+      </li>
+
+      <li>
+        <p><strong>Returns:</strong> <tt>A</tt> cursor (or
+        <tt>const_cursor</tt>) to the <tt>n</tt>th element of the hierarchy
+        in inorder, counting from <tt>inorder_first()</tt>.</p>
+      </li>
+
+      <li>
+        <p><strong>Complexity:</strong> logarithmic in <tt>size</tt>.</p>
+      </li>
+    </ol>
+
     <h5>0.1.4.3.3 Balancing hierarchy adaptors <span class=
     "section-id">[tr.hierarchy.balance]</span></h5>
 
@@ -2084,11 +2218,11 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         classes which take a mutable multiway template parameter that
         provides a <tt>rotate()</tt> operation and whose <tt>cursor</tt> and
         <tt>const_cursor</tt> types satisfy the requirements of a binary tree
-        cursor ([tr.hierarchy.balance.types], &Acirc;&sect;&Acirc;&sect;1 and
-        2): <tt>avl_tree</tt>, <tt>red_black_tree</tt>, <tt>splay_tree</tt>,
-        and <tt>treap</tt>. Furthermore, two balancing hierarchy adaptor
-        template classes that take a mutable multiway tree template parameter
-        are provided: <tt>b_tree</tt> and <tt>b_star_tree</tt>.</p>
+        cursor ([tr.hierarchy.balance.types], &sect;&sect;1 and 2):
+        <tt>avl_tree</tt>, <tt>red_black_tree</tt>, <tt>splay_tree</tt>, and
+        <tt>treap</tt>. Furthermore, two balancing hierarchy adaptor template
+        classes that take a mutable multiway tree template parameter are
+        provided: <tt>b_tree</tt> and <tt>b_star_tree</tt>.</p>
       </li>
 
       <li>
@@ -2096,7 +2230,12 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         related operators are shown. Note that also <tt>red_black_tree</tt>,
         <tt>splay_tree</tt>, and <tt>treap</tt> must be present and have
         identical interfaces (with all occurrences of <tt>avl_tree</tt>
-        replaced accordingly).</p>
+        replaced accordingly). The same holds true for <tt>b_tree</tt> and
+        <tt>b_star_tree</tt>, as well, except that the standard value for the
+        template parameter reads <tt>multiway_tree&lt;T&gt;</tt> (instead of
+        binary_tree&lt;T&gt;) in their case. All balancing adaptors and
+        corresponding free functions are found in header
+        <tt>&lt;balance&gt;</tt>.</p>
         <pre>
 namespace std {
 namespace tr2 {
@@ -2457,21 +2596,22 @@ void      clear();
             <!--whose traversal related capabilities map to traversal of among a given cursor's immediate descendants or "child cursors" (or just "children", as defined in the following paragraph).--></p>
           </li>
 
-          <li>If exactly one application of the expression <tt>i =
-          i.begin()</tt>, followed by a finite sequence of applications of
-          the expression <tt>++j</tt> makes <tt>i == j</tt>, <tt>j</tt> is a
-          <em>child</em> (or <em>immediate descendant</em> ) of <tt>i</tt>,
-          and <tt>i</tt> is the <em>parent</em> (or the <em>immediate
-          ancestor</em>) of <tt>j</tt>. A cursor <tt>j</tt> is another cursor
-          <tt>i</tt>'s <tt>descendant</tt> if there is a finite sequential
-          combination of applications of either of the expressions
-          <tt>++i</tt> and <tt>i = i.begin()</tt> that makes <tt>i == j</tt>;
-          <tt>i</tt> is then called <tt>j</tt>'s ancestor. If two cursors
-          <tt>i</tt> and <tt>j</tt> share at least one common ancestor, they
-          refer to the same container. The descending traversal capabilities
-          of a class relate to the range of children of a given instance of
-          that class.<br />
-          <br /></li>
+          <li>
+            <p>If exactly one application of the expression <tt>i =
+            i.begin()</tt>, followed by a finite sequence of applications of
+            the expression <tt>++j</tt> makes <tt>i == j</tt>, <tt>j</tt> is
+            a <em>child</em> (or <em>immediate descendant</em> ) of
+            <tt>i</tt>, and <tt>i</tt> is the <em>parent</em> (or the
+            <em>immediate ancestor</em>) of <tt>j</tt>. A cursor <tt>j</tt>
+            is another cursor <tt>i</tt>'s <tt>descendant</tt> if there is a
+            finite sequential combination of applications of either of the
+            expressions <tt>++i</tt> and <tt>i = i.begin()</tt> that makes
+            <tt>i == j</tt>; <tt>i</tt> is then called <tt>j</tt>'s ancestor.
+            If two cursors <tt>i</tt> and <tt>j</tt> share at least one
+            common ancestor, they refer to the same container. The descending
+            traversal capabilities of a class relate to the range of children
+            of a given instance of that class.</p>
+          </li>
 
           <li>
             <p>In addition to a cursor's descending traversal tags, two of
@@ -3704,10 +3844,13 @@ return tmp;
     <h3>25 Algorithms library <span class=
     "section-id">[tr.algorithm]</span></h3>
 
-    <p class="note">Append to paragraph 2, <em>Header
-    <tt>&lt;iterator&gt;</tt> synopsis</em>, after <i>// subclause 25.1,
-    non-modifying sequence operations</i>.</p>
+    <div class="note">
+      Append to paragraph 2, <em>Header <tt>&lt;iterator&gt;</tt>
+      synopsis</em>, after <i>// subclause 25.1, non-modifying sequence
+      operations</i>.
+    </div>
     <pre>
+
 <i>// subclause 2.X, non-modifying hierarchy operations</i>
 namespace tr2 {
 
@@ -3750,12 +3893,16 @@ namespace inorder {
 } // namespace tr2
 </pre>
 
-    <p class="note"><tt>[c]rbegin(...)</tt> and <tt>[c]rend(..)</tt> are not
-    provided as they can be achieved via
-    <tt>reverse_iterator({[c]begin(...)|[c]end(...)})</tt> (which also
-    defines requirements when this is possible)</p>
+    <div class="note">
+      <tt>[c]rbegin(...)</tt> and <tt>[c]rend(..)</tt> are not provided as
+      they can be achieved via
+      <tt>reverse_iterator({[c]begin(...)|[c]end(...)})</tt> (which also
+      defines requirements when this is possible)
+    </div>
 
-    <p class="note">Change paragraph 3 to read:</p>
+    <div class="note">
+      Change paragraph 3 to read:
+    </div>
 
     <p>All of the algorithms are separated from the particular
     implementations of data structures and are parameterized by iterator or
@@ -3763,7 +3910,9 @@ namespace inorder {
     structures, as long as these data structures have iterator or cursor
     types satisfying the assumptions on the algorithms.</p>
 
-    <p class="note">Append to paragraph 4:</p>
+    <div class="note">
+      Append to paragraph 4:
+    </div>
 
     <p>If an algorithm's template parameter is <tt>Hierarchy</tt>, the actual
     template argument shall satisfy the requirements of a hierarchy (...). If
@@ -3802,6 +3951,7 @@ namespace inorder {
     <h6>25.X.1.2 Preorder end <span class=
     "section-id">[tr.alg.hier.pre.end]</span></h6>
     <pre>
+
     namespace preorder { 
       template &lt;class Hierarchy&gt;
       preorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
@@ -3896,6 +4046,7 @@ namespace inorder {
     <h6>25.X.2.2 Inorder end <span class=
     "section-id">[tr.alg.hier.in.end]</span></h6>
     <pre>
+
     namespace inorder { 
       template &lt;class Hierarchy&gt;
       inorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
