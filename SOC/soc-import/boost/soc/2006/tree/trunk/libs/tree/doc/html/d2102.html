@@ -152,8 +152,8 @@
   container component for <a href="http://www.boost.org">Boost</a> in summer
   of 2006, so at the time of this writing, implementation work is still
   unfinished and, however inspired by and striving to avoid past issues and
-  such ones arising from current implementation efforts (see next paragraph)
-  it is, it has not been used in practice yet.</p>
+  such ones arising from current implementation efforts (see below) it is, it
+  has not been used in practice yet.</p>
 
   <h3>Is there a reference implementation?</h3>
 
@@ -178,12 +178,12 @@
   <p>Most of the proposed library is a pure extension.</p>
 
   <p>Some extensions and modifications to <tt>&lt;algorithm&gt;</tt> and some
-  extensions to <tt>&lt;iterator&gt;</tt>are proposed. [...]</p>
+  extensions to <tt>&lt;iterator&gt;</tt>are proposed.</p>
 
   <h3>Can it be implemented using today's compilers, or does it require
   language features that will only be available as part of C++0x?</h3>
 
-  <p>It can be (and partly has been) implemented with today's compilers.</p>
+  <p>It can be, and partly has been, implemented with today's compilers.</p>
 
   <p>Note that it might be worthwhile to investigate if the present Container
   concept should be modified so that it only covers the requirements as of
@@ -199,14 +199,14 @@
   <h3>Why did you choose the specific design that you did?</h3>
 
   <p>One of the most important assets of the present design is the cursor
-  concept as a hierarchical continuation to the STL's iterator concept (and
-  the externally defined range concept). Among their benefits, cursors allow
-  to handle both client data access (by dereference) and subtree access while
-  hiding the normally underlying node structure, providing a uniform
+  concept as a hierarchical continuation to the STL's iterator concept, and
+  the externally defined range concept. Among their benefits, cursors allow
+  to handle both client data access, by dereference, and subtree access while
+  hiding the normally underlying node structure and providing a uniform
   interface to algorithms that are thus enabled to deal with a number of
   different kinds of trees. On the other hand, this abstraction achieves
-  independence of implementation details (such as nodes for storage in many
-  cases), allowing the underlying concepts to be applicable to other possible
+  independence of implementation details, such as nodes for storage in many
+  cases, allowing the underlying concepts to be applicable to other possible
   implementations as well.</p>
 
   <h3>What alternatives did you consider, and what are the tradeoffs?</h3>
@@ -235,15 +235,15 @@
     putting such strong focus on inorder-invariant balancing and its possible
     applications; also, balancing and augmenting metadata would inevitably
     have been much more visible. It seemed more appropriate to have different
-    balancing adaptors that would not and augmenting adaptors that would
-    replicate the interface do that work.</dd>
+    balancing adaptors and augmenting adaptors that would replicate the
+    interface to do that work.</dd>
   </dl>
 
   <h3>What are the consequences of your choices, for users and
   implementors?</h3>
 
-  <p>As focus was put on versatility and comprehensiveness, users are hoped
-  to find this a powerful framework that covers most important aspects of
+  <p>As focus was put on versatility and comprehensiveness, we hope users
+  will find this a powerful framework that covers most important aspects of
   dealing with hierarchical data structures in a rather intuitive way, once
   they have adapted to the notion of cursors which, although being the
   interface relevant portion of the well-known node implementation of trees,
