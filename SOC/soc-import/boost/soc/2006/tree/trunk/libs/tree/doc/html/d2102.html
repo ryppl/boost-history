@@ -7,7 +7,7 @@
 <head>
   <title>Hierarchical Data Structures and Related Concepts for the C++
   Standard Library (TR2)</title>
-<style type="text/css">
+  <style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
   .std {
@@ -77,7 +77,7 @@
     font-size: 100%;
   }
   /*]]>*/
-</style>
+  </style>
 </head>
 
 <body>
@@ -98,14 +98,14 @@
 
     <dd>Bernhard Reiter &lt;<a href=
     "ockham@gmx.net">ockham@gmx.net&gt;</a>,<br />
-    Rene Rivera &lt;<a href=
+    Rene&eacute; Rivera &lt;<a href=
     "mailto:rrivera@acm.org">rrivera@acm.org</a>&gt;</dd>
   </dl>
 
   <h1>Hierarchical Data Structures and Related Concepts for the C++ Standard
   Library</h1>
 
-  <h2 class="byline">Bernhard Reiter and Rene Rivera</h2>
+  <h2 class="byline">Bernhard Reiter and Ren&eacute; Rivera</h2>
 
   <h2>Introduction</h2>
 
@@ -185,7 +185,7 @@
 
   <p>It can be (and partly has been) implemented with today's compilers.</p>
 
-  <p>Note that it might be worthwile to investigate if the present Container
+  <p>Note that it might be worthwhile to investigate if the present Container
   concept should be modified so that it only covers the requirements as of
   paragraph 2 of section [tr.hierarchy.req] of this proposal, which
   correspond to the current Container concept with the exception of any
@@ -270,8 +270,8 @@
   "#ref.ekman">[ekman]</a> and <a href="#ref.karas">[karas]</a>; plus, most
   current STL implementations use a red-black tree as their associative
   containers' base) or with what we call "external" hierarchies in the
-  following (whose structure is dictated e.g. by a filesystem directory tree,
-  an <abbr title="Extensible Markup Language">XML</abbr> file or an
+  following (whose structure is dictated e.g. by a file system directory
+  tree, an <abbr title="Extensible Markup Language">XML</abbr> file or an
   <abbr title="Abstract syntax tree">AST</abbr>; see e.g. <a href=
   "#ref.gottschlich">[gottschlich]</a>, <a href="#ref.haas">[haas]</a>,
   <a href="#ref.parent">[parent]</a> and <a href=
@@ -293,7 +293,7 @@
   <h2>Proposed Text for Technical Report 2</h2>
 
   <div class="note">
-    Notes that are not part of the proposed text appear in grey boxes.
+    Notes that are not part of the proposed text appear in gray boxes.
   </div>
 
   <div class="std">
@@ -324,7 +324,7 @@
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 1: Container requirements that are not required for
             hierarchy containers
@@ -707,7 +707,7 @@
               <td><tt>void</tt></td>
 
               <td>deletes the subtree of <tt>q</tt>.<br />
-              If <tt>q</tt> is dereferenceable, the expresion also deletes
+              If <tt>q</tt> is dereferenceable, the expression also deletes
               the element <tt>q</tt> points to.<br />
               If <tt>q</tt> is past-the-end, the expression deletes the
               element <tt>q</tt>'s predecessor points to.<br />
@@ -1438,7 +1438,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     <ol>
       <li>
         <p>Hierarchy adaptors satisfy the hierarchy requirements except for
-        anything that deals with allocators, as storage managment is done by
+        anything that deals with allocators, as storage management is done by
         the adaptees. The hierarchy adaptors each take a Hierarchy template
         parameter, and each constructor takes a Hierarchy reference argument.
         This hierarchy is copied into the Hierarchy member of each
@@ -1556,7 +1556,7 @@ typedef <i>implementation defined</i>                        const_cursor;
         <table summary=
         "Forest/binary tree cursor operational semantics corresponences">
           <caption>
-            Forest/binary tree cursor operational semantics corresponences
+            Forest/binary tree cursor operational semantics correspondences
           </caption>
 
           <thead>
@@ -1815,7 +1815,7 @@ typedef <i>implementation defined</i>                        const_cursor;
         <table summary=
         "Multiway/nary tree cursor operational semantics corresponences">
           <caption>
-            Multiway/nary tree cursor operational semantics corresponences
+            Multiway/nary tree cursor operational semantics correspondences
           </caption>
 
           <thead>
@@ -2050,7 +2050,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         <p>In the following, only the template class <tt>avl_tree</tt> and
         related operators are shown. Note that also <tt>red_black_tree</tt>,
         <tt>splay_tree</tt>, and <tt>treap</tt> must be present and have
-        identical interfaces (with all occurences of <tt>avl_tree</tt>
+        identical interfaces (with all occurrences of <tt>avl_tree</tt>
         replaced accordingly).</p>
         <pre>
 namespace std {
@@ -2185,13 +2185,13 @@ namespace tr2 {
           <tt>++i</tt> and <tt>i = i.begin()</tt> that makes <tt>i == j</tt>;
           <tt>i</tt> is then called <tt>j</tt>'s ancestor. If two cursors
           <tt>i</tt> and <tt>j</tt> share at least one common ancestor, they
-          refer to the same container. The descending traversal capabilites
+          refer to the same container. The descending traversal capabilities
           of a class relate to the range of children of a given instance of
           that class.<br />
           <br /></li>
 
           <li>
-            <p>In additon to a cursor's descending traversal tags, two of
+            <p>In addition to a cursor's descending traversal tags, two of
             them are reused to indicate a cursor's ascending traversal
             abilities, namely <em>forward</em> and <em>bidirectional</em>
             traversal in order to indicate whether a given cursor provides
@@ -2259,7 +2259,7 @@ namespace tr2 {
           <li>
             <p>A class <tt>X</tt> satisfies the requirements of a cursor if
             the following expressions are valid, as shown in Table 6, in
-            addition to satifying the requirements of input iterators
+            addition to satisfying the requirements of input iterators
             (<tt>[lib.input.iterators]</tt>) and output iterators
             (<tt>[lib.output.iterators]</tt>):</p>
 
@@ -2277,7 +2277,7 @@ namespace tr2 {
 
                   <th>return type</th>
 
-                  <th>operational sematics</th>
+                  <th>operational semantics</th>
 
                   <th>assertion/note<br />
                   pre/post-condition</th>
@@ -2457,7 +2457,7 @@ namespace tr2 {
 
                   <th>return type</th>
 
-                  <th>operational sematics</th>
+                  <th>operational semantics</th>
 
                   <th>assertion/note<br />
                   pre/post-condition</th>
@@ -2551,7 +2551,7 @@ namespace tr2 {
 
             <table summary=
             "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 9 - Descending forward cursor requirements (in addition
                 to descending cursors and forward iterators)
@@ -2563,7 +2563,7 @@ namespace tr2 {
 
                   <th>return type</th>
 
-                  <th>operational sematics</th>
+                  <th>operational semantics</th>
 
                   <th>assertion/note<br />
                   pre/post-condition</th>
@@ -2600,7 +2600,7 @@ namespace tr2 {
 
             <table summary=
             "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 10 - Descending bidirectional cursor requirements (in
                 addition to forward descending cursors and bidirectional
@@ -2613,7 +2613,7 @@ namespace tr2 {
 
                   <th>return type</th>
 
-                  <th>operational sematics</th>
+                  <th>operational semantics</th>
 
                   <th>assertion/note<br />
                   pre/post-condition</th>
@@ -2658,7 +2658,7 @@ namespace tr2 {
 
             <table summary=
             "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 11 - Descending random access cursor requirements (in
                 addition to descending bidirectional cursors and random
@@ -2671,7 +2671,7 @@ namespace tr2 {
 
                   <th>return type</th>
 
-                  <th>operational sematics</th>
+                  <th>operational semantics</th>
 
                   <th>assertion/note<br />
                   pre/post-condition</th>
@@ -2707,9 +2707,9 @@ namespace tr2 {
 
             <table summary=
             "Acending cursor requirements (in addition to descending cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
-                Table 12 - Acending cursor requirements (in addition to
+                Table 12 - Ascending cursor requirements (in addition to
                 descending cursors)
               </caption>
 
@@ -2719,7 +2719,7 @@ namespace tr2 {
 
                   <th>return type</th>
 
-                  <th>operational sematics</th>
+                  <th>operational semantics</th>
 
                   <th>assertion/note<br />
                   pre/post-condition</th>
@@ -2785,7 +2785,7 @@ namespace tr2 {
 
             <table summary=
             "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 13 - Ascending forward cursor requirements (in addition
                 to ascending cursors and descending forward cursors)
@@ -2797,7 +2797,7 @@ namespace tr2 {
 
                   <th>return type</th>
 
-                  <th>operational sematics</th>
+                  <th>operational semantics</th>
 
                   <th>assertion/note<br />
                   pre/post-condition</th>
@@ -2834,7 +2834,7 @@ namespace tr2 {
 
             <table summary=
             "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 14 - Ascending bidirectional cursor requirements (in
                 addition to ascending forward cursors and descending
@@ -2847,7 +2847,7 @@ namespace tr2 {
 
                   <th>return type</th>
 
-                  <th>operational sematics</th>
+                  <th>operational semantics</th>
 
                   <th>assertion/note<br />
                   pre/post-condition</th>
@@ -2884,7 +2884,7 @@ namespace tr2 {
 
             <table summary=
             "Ascending random access cursor requirements (in addition to ascending bidirectional cursors and descending random access cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 15 - Ascending random access cursor requirements (in
                 addition to ascending bidirectional cursors and descending
@@ -2897,7 +2897,7 @@ namespace tr2 {
 
                   <th>return type</th>
 
-                  <th>operational sematics</th>
+                  <th>operational semantics</th>
 
                   <th>assertion/note<br />
                   pre/post-condition</th>
@@ -3478,7 +3478,7 @@ namespace inorder {
     implementations of data structures and are parameterized by iterator or
     hierarchy types. Because of this, they can work with program defined data
     structures, as long as these data structures have iterator or cursor
-    types satisfying the assumptions on the algorithms.t</p>
+    types satisfying the assumptions on the algorithms.</p>
 
     <p class="note">Append to paragraph 4:</p>
 
