@@ -149,11 +149,14 @@
   <h3>Is it based on existing practice?</h3>
 
   <p>No; this proposal originates in an effort to create a generic tree
-  container component for <a href="http://www.boost.org">Boost</a> in summer
-  of 2006, so at the time of this writing, implementation work is still
-  unfinished and, however inspired by and striving to avoid past issues and
-  such ones arising from current implementation efforts (see below) it is, it
-  has not been used in practice yet.</p>
+  container component for <a href="http://www.boost.org">Boost</a> in the
+  course of <a href=
+  "http://code.google.com/soc/boost/appinfo.html?csaid=E17EA7C7C537C131">Google
+  Summer of Code&trade; 2006</a>, so at the time of this writing,
+  implementation work is still unfinished and, however inspired by and
+  striving to avoid past issues and such ones arising from current
+  implementation efforts (see below) it is, it has not been used in practice
+  yet.</p>
 
   <h3>Is there a reference implementation?</h3>
 
@@ -1483,8 +1486,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
     <ol>
       <li>
-        <p>A <tt>forest_tree</tt> is a kind of mutable plain hierarchy that is
-        instantiated with a mutable multiway hierarchy that has insertion
+        <p>A <tt>forest_tree</tt> is a kind of mutable plain hierarchy that
+        is instantiated with a mutable multiway hierarchy that has insertion
         semantics as a <tt>binary_tree</tt>
         ([tr.hierarchy.bintree.modifiers], &amp;1)), and whose cursor types
         <tt>cursor</tt> and <tt>const_cursor</tt> satisfy a
@@ -1587,7 +1590,7 @@ typedef <i>implementation defined</i>                        const_cursor;
 
         <table summary=
         "forest_tree/binary tree cursor operational semantics corresponences">
-          <caption>
+        <caption>
             Table 6: forest_tree/binary tree cursor operational semantics
             correspondences
           </caption>
