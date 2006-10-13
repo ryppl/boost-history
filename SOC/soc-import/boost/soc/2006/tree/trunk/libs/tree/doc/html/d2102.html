@@ -7,7 +7,7 @@
 <head>
   <title>Hierarchical Data Structures and Related Concepts for the C++
   Standard Library (TR2)</title>
-  <style type="text/css">
+<style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
   .std {
@@ -77,7 +77,7 @@
     font-size: 100%;
   }
   /*]]>*/
-  </style>
+</style>
 </head>
 
 <body>
@@ -356,7 +356,7 @@
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
-               class="reqmts">
+        class="reqmts">
           <caption>
             Table 1: Container requirements that are not required for
             hierarchy containers
@@ -2081,9 +2081,14 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
       <li>
         <p>The library provides four balancing hierarchy adaptor template
-        classes which take a binary tree template parameter that provides a
-        <tt>rotate()</tt> operation: <tt>avl_tree</tt>,
-        <tt>red_black_tree</tt>, <tt>splay_tree</tt>, and <tt>treap</tt>.</p>
+        classes which take a mutable multiway template parameter that
+        provides a <tt>rotate()</tt> operation and whose <tt>cursor</tt> and
+        <tt>const_cursor</tt> types satisfy the requirements of a binary tree
+        cursor ([tr.hierarchy.balance.types], &Acirc;&sect;&Acirc;&sect;1 and
+        2): <tt>avl_tree</tt>, <tt>red_black_tree</tt>, <tt>splay_tree</tt>,
+        and <tt>treap</tt>. Furthermore, two balancing hierarchy adaptor
+        template classes that take a mutable multiway tree template parameter
+        are provided: <tt>b_tree</tt> and <tt>b_star_tree</tt>.</p>
       </li>
 
       <li>
@@ -2829,7 +2834,7 @@ void      clear();
 
             <table summary=
             "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 9 - Descending forward cursor requirements (in addition
                 to descending cursors and forward iterators)
@@ -2878,7 +2883,7 @@ void      clear();
 
             <table summary=
             "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 10 - Descending bidirectional cursor requirements (in
                 addition to forward descending cursors and bidirectional
@@ -2936,7 +2941,7 @@ void      clear();
 
             <table summary=
             "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 11 - Descending random access cursor requirements (in
                 addition to descending bidirectional cursors and random
@@ -2985,7 +2990,7 @@ void      clear();
 
             <table summary=
             "Acending cursor requirements (in addition to descending cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 12 - Ascending cursor requirements (in addition to
                 descending cursors)
@@ -3063,7 +3068,7 @@ void      clear();
 
             <table summary=
             "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 13 - Ascending forward cursor requirements (in addition
                 to ascending cursors and descending forward cursors)
@@ -3112,7 +3117,7 @@ void      clear();
 
             <table summary=
             "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 14 - Ascending bidirectional cursor requirements (in
                 addition to ascending forward cursors and descending
@@ -3162,7 +3167,7 @@ void      clear();
 
             <table summary=
             "Ascending random access cursor requirements (in addition to ascending bidirectional cursors and descending random access cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 15 - Ascending random access cursor requirements (in
                 addition to ascending bidirectional cursors and descending
