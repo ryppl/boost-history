@@ -344,7 +344,7 @@
         cursor concept for navigation instead of iterators. The library
         provides two kinds of native hierarchies: <tt>binary_tree</tt>, and
         <tt>nary_tree</tt>, along with hierarchy-yielding hierarchy adaptors
-        <tt>forest</tt>, and <tt>multiway_tree</tt>.</p>
+        <tt>forest_tree</tt>, and <tt>multiway_tree</tt>.</p>
       </li>
 
       <li>
@@ -632,7 +632,7 @@
       <li>
         <p>The library provides one native kind of plain hierarchy,
         <tt>nary_tree</tt>, and a hierarchy adaptor that in turn yields a
-        plain hierarchy, <tt>forest</tt>.</p>
+        plain hierarchy, <tt>forest_tree</tt>.</p>
       </li>
 
       <li>
@@ -762,7 +762,7 @@
     <ol>
       <li>
         <p>Headers <tt>&lt;binary_tree&gt;</tt>, <tt>&lt;nary_tree&gt;</tt>,
-        <tt>&lt;forest&gt;</tt>, and <tt>&lt;multiway_tree&gt;</tt>.</p>
+        <tt>&lt;forest_tree&gt;</tt>, and <tt>&lt;multiway_tree&gt;</tt>.</p>
       </li>
     </ol>
 
@@ -819,22 +819,22 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-    <h5>Header &lt;forest&gt; synopsis</h5>
+    <h5>Header &lt;forest_tree&gt; synopsis</h5>
     <pre>
 namespace std {
 namespace tr2 {
   template &lt;class T, class Hierarchy = binary_tree&lt;T&gt; &gt;
-  class forest;
+  class forest_tree;
 
   template &lt;class T, class Hierarchy&gt;
-    bool operator==(  forest&lt;T, Hierarchy&gt; const&amp; x,
-                      forest&lt;T, Hierarchy&gt; const&amp; y);
+    bool operator==(  forest_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      forest_tree&lt;T, Hierarchy&gt; const&amp; y);
   template &lt;class T, class Alloc&gt;
-    bool operator!=(  forest&lt;T, Hierarchy&gt; const&amp; x,
-                      forest&lt;T, Hierarchy&gt; const&amp; y);
+    bool operator!=(  forest_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      forest_tree&lt;T, Hierarchy&gt; const&amp; y);
   template &lt;class T, class Hierarchy&gt;
-  void swap(  forest&lt;T, Hierarchy&gt;&amp; x,
-              forest&lt;T, Hierarchy&gt;&amp; y);
+  void swap(  forest_tree&lt;T, Hierarchy&gt;&amp; x,
+              forest_tree&lt;T, Hierarchy&gt;&amp; y);
   } // namespace inorder
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
@@ -1478,12 +1478,12 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h5>0.1.4.3.1 Template class <tt>forest</tt> <span class=
-    "section-id">[tr.hierarchy.forest]</span></h5>
+    <h5>0.1.4.3.1 Template class <tt>forest_tree</tt> <span class=
+    "section-id">[tr.hierarchy.foresttree]</span></h5>
 
     <ol>
       <li>
-        <p>A <tt>forest</tt> is a kind of mutable plain hierarchy that is
+        <p>A <tt>forest_tree</tt> is a kind of mutable plain hierarchy that is
         instantiated with a mutable multiway hierarchy that has insertion
         semantics as a <tt>binary_tree</tt>
         ([tr.hierarchy.bintree.modifiers], &amp;1)), and whose cursor types
@@ -1494,7 +1494,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 namespace std {
 namespace tr2 {
   template &lt;class T, class Hierarchy = binary_tree&lt;T&gt; &gt;
-  class forest {
+  class forest_tree {
   public:
     typedef Hierarchy                            hierarchy_type;
   protected:
@@ -1515,12 +1515,12 @@ namespace tr2 {
     typedef typename hierarchy_type::difference_type      difference_type;
 
     <i>// construct/copy/destroy:</i>
-    explicit forest (hierarchy_type const&amp; = hierarchy_type());
+    explicit forest_tree (hierarchy_type const&amp; = hierarchy_type());
     template &lt;class InputCursor&gt;
-      forest (InputCursor subtree);
-    forest (forest&lt;T, Hierarchy&gt; const&amp; x);
-    forest&lt;T, Hierarchy&gt;&amp; operator=(
-      forest&lt;T, Hierarchy&gt; const&amp; x);
+      forest_tree (InputCursor subtree);
+    forest_tree (forest_tree&lt;T, Hierarchy&gt; const&amp; x);
+    forest_tree&lt;T, Hierarchy&gt;&amp; operator=(
+      forest_tree&lt;T, Hierarchy&gt; const&amp; x);
     template &lt;class InputICursor&gt;
       void assign(InputCursor subtree);
 
@@ -1540,22 +1540,22 @@ namespace tr2 {
     template &lt;class InputCursor&gt;
       cursor  insert(cursor position, InputCursor subtree);
     cursor    insert_above(cursor position, value_type const&amp; x = value_type());
-    void      swap(forest&lt;Tp, Hierarchy&gt;&amp;);
+    void      swap(forest_tree&lt;Tp, Hierarchy&gt;&amp;);
     void      clear(cursor position);
     void      clear();
   };
 
   template &lt;class Tp, class Hierarchy&gt;
-    bool operator==(  forest&lt;Tp, Hierarchy&gt; const&amp; x,
-                      forest&lt;Tp, Hierarchy&gt; const&amp; y);
+    bool operator==(  forest_tree&lt;Tp, Hierarchy&gt; const&amp; x,
+                      forest_tree&lt;Tp, Hierarchy&gt; const&amp; y);
   template &lt;class Tp, class Hierarchy&gt;
-    bool operator!=(  forest&lt;Tp, Hierarchy&gt; const&amp; x,
-                      forest&lt;Tp, Hierarchy&gt; const&amp; y);
+    bool operator!=(  forest_tree&lt;Tp, Hierarchy&gt; const&amp; x,
+                      forest_tree&lt;Tp, Hierarchy&gt; const&amp; y);
 
   <i>// specialized algorithms:</i>
   template &lt;class Tp, class Hierarchy&gt;
-  void swap(  forest&lt;Tp, Hierarchy&gt;&amp; x,
-              forest&lt;Tp, Hierarchy&gt;&amp; y);
+  void swap(  forest_tree&lt;Tp, Hierarchy&gt;&amp; x,
+              forest_tree&lt;Tp, Hierarchy&gt;&amp; y);
 
 
 } <i>// namespace tr2</i>
@@ -1564,8 +1564,8 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h6>0.1.4.3.1.1 <tt>forest</tt> types <span class=
-    "section-id">[tr.hierarchy.forest.types]</span></h6>
+    <h6>0.1.4.3.1.1 <tt>forest_tree</tt> types <span class=
+    "section-id">[tr.hierarchy.foresttree.types]</span></h6>
     <pre>
 typedef <i>implementation defined</i>                        cursor;
 typedef <i>implementation defined</i>                        const_cursor;    
@@ -1586,9 +1586,9 @@ typedef <i>implementation defined</i>                        const_cursor;
         <tt>f</tt>):</p>
 
         <table summary=
-        "Forest/binary tree cursor operational semantics corresponences">
+        "forest_tree/binary tree cursor operational semantics corresponences">
           <caption>
-            Table 6: Forest/binary tree cursor operational semantics
+            Table 6: forest_tree/binary tree cursor operational semantics
             correspondences
           </caption>
 
@@ -1640,13 +1640,13 @@ typedef <i>implementation defined</i>                        const_cursor;
       </li>
     </ol>
 
-    <h6>0.1.4.3.1.2 <tt>forest</tt> constructors, copy, and assignment
-    <span class="section-id">[tr.hierarchy.forest.cons]</span></h6>
+    <h6>0.1.4.3.1.2 <tt>forest_tree</tt> constructors, copy, and assignment
+    <span class="section-id">[tr.hierarchy.foresttree.cons]</span></h6>
     <pre>
-    explicit forest (hierarchy_type const&amp; = hierarchy_type());
+    explicit forest_tree (hierarchy_type const&amp; = hierarchy_type());
     template &lt;class InputCursor&gt;
-      forest (InputCursor subtree);
-    forest (forest&lt;T, Hierarchy&gt; const&amp;);
+      forest_tree (InputCursor subtree);
+    forest_tree (forest_tree&lt;T, Hierarchy&gt; const&amp;);
 </pre>
 
     <ol>
@@ -1677,8 +1677,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.3.1.3 <tt>forest</tt> modifiers <span class=
-    "section-id">[tr.hierarchy.forest.modifiers]</span></h6>
+    <h6>0.1.4.3.1.3 <tt>forest_tree</tt> modifiers <span class=
+    "section-id">[tr.hierarchy.foresttree.modifiers]</span></h6>
     <pre>
     template &lt;class InputCursor&gt;
       cursor  insert(cursor position, InputCursor subtree);
@@ -1707,12 +1707,12 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.3.1.4 <tt>forest</tt> specialized algorithms <span class=
-    "section-id">[tr.hierarchy.forest.special]</span></h6>
+    <h6>0.1.4.3.1.4 <tt>forest_tree</tt> specialized algorithms <span class=
+    "section-id">[tr.hierarchy.foresttree.special]</span></h6>
     <pre>
     template &lt;class Tp, class Hierarchy&gt;
-    void swap(  forest&lt;Tp, Hierarchy&gt;&amp; x,
-                forest&lt;Tp, Hierarchy&gt;&amp; y);
+    void swap(  forest_tree&lt;Tp, Hierarchy&gt;&amp; x,
+                forest_tree&lt;Tp, Hierarchy&gt;&amp; y);
 </pre>
 
     <ol>
@@ -4133,8 +4133,8 @@ namespace inorder {
 
     <dt><a id="ref.parent" name="ref.parent">[parent]</a></dt>
 
-    <dd>Parent, Sean <i>et al</i>. <em>Forest</em>, <a href=
-    "http://opensource.adobe.com/group__forest__related.html">http://opensource.adobe.com/group__forest__related.html</a></dd>
+    <dd>Parent, Sean <i>et al</i>. <em>forest_tree</em>, <a href=
+    "http://opensource.adobe.com/group__forest_tree__related.html">http://opensource.adobe.com/group__forest_tree__related.html</a></dd>
 
     <dt><a id="ref.peeters" name="ref.peeters">[peeters]</a></dt>
 
