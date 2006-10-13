@@ -7,7 +7,7 @@
 <head>
   <title>Hierarchical Data Structures and Related Concepts for the C++
   Standard Library (TR2)</title>
-<style type="text/css">
+  <style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
   .std {
@@ -70,8 +70,14 @@
   .add {
     text-decoration: overline;
   }
+  .std h2 {
+    font-size: 150%
+  }
+  .std h3, .std h4, .std h5, .std h6, .std h7, .std h8 {
+    font-size: 100%;
+  }
   /*]]>*/
-</style>
+  </style>
 </head>
 
 <body>
@@ -317,7 +323,7 @@
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 1: Container requirements that are not required for
             hierarchy containers
@@ -1361,9 +1367,8 @@ namespace tr2 {
           <em>on-top</em> is introduced, denoting a cursor that is ancestor
           to all other cursors within a hierarchy is introduced; and just as
           for past-the-end ones, the library generally does not assume on-top
-          cursors be dereferenceable. <!--; nor that they be incrementable or
-          decrementable unless stated otherwise in a given hierarchy's
-          requirement specifications. -->
+          cursors be dereferenceable. 
+          <!--; nor that they be incrementable or decrementable unless stated otherwise in a given hierarchy's requirement specifications. -->
            
           <!--In other words, as opposed to non-on-top cursurs, on-top cursors fulfill only the Range concept requirements, but not any Iterator concept requirements.--></li>
 
@@ -1699,7 +1704,7 @@ namespace tr2 {
 
             <table summary=
             "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 9 - Descending forward cursor requirements (in addition
                 to descending cursors and forward iterators)
@@ -1748,7 +1753,7 @@ namespace tr2 {
 
             <table summary=
             "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 10 - Descending bidirectional cursor requirements (in
                 addition to forward descending cursors and bidirectional
@@ -1806,7 +1811,7 @@ namespace tr2 {
 
             <table summary=
             "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 11 - Descending random access cursor requirements (in
                 addition to descending bidirectional cursors and random
@@ -1855,7 +1860,7 @@ namespace tr2 {
 
             <table summary=
             "Acending cursor requirements (in addition to descending cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 12 - Acending cursor requirements (in addition to
                 descending cursors)
@@ -1933,7 +1938,7 @@ namespace tr2 {
 
             <table summary=
             "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 13 - Ascending forward cursor requirements (in addition
                 to ascending cursors and descending forward cursors)
@@ -1982,7 +1987,7 @@ namespace tr2 {
 
             <table summary=
             "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 14 - Ascending bidirectional cursor requirements (in
                 addition to ascending forward cursors and descending
@@ -2032,7 +2037,7 @@ namespace tr2 {
 
             <table summary=
             "Ascending random access cursor requirements (in addition to ascending bidirectional cursors and descending random access cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 15 - Ascending random access cursor requirements (in
                 addition to ascending bidirectional cursors and descending
