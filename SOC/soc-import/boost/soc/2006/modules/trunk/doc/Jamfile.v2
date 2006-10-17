@@ -1,0 +1,10 @@
+BOOST_ROOT = /usr/local/src/boost ;
+
+import doxygen ;
+import quickbook ;
+import boostbook ;
+
+JAVA_HOME = /usr ;
+xml mfront.xml : mfront.qbk ;
+boostbook mfront : mfront.xml ;
+

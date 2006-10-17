@@ -1,0 +1,341 @@
+[book mfront
+    [version 1.0]
+    [authors [Singh, Lally]]
+    [copyright 2006 Lally Singh]
+    [purpose Modular C++ Experimentation Tool]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        <ulink url="http://www.boost.org/LICENSE_1_0.txt">
+            http://www.boost.org/LICENSE_1_0.txt
+        </ulink>)
+    ]
+    [last-revision __DATE__ __TIME__ ]
+]
+
+[/ Based on Joel's quickbook.qbk]
+
+[def __note__       [$images/note.png]]
+[def __alert__      [$images/alert.png]]
+[def __tip__        [$images/tip.png]]
+[def :-)            [$images/smiley.png]]
+[def __spirit__     [@http://spirit.sourceforge.net Spirit]]
+[def __boostbook__  [@http://www.boost.org/doc/html/boostbook.html BoostBook]]
+[def __docbook__    [@http://www.docbook.org/ DocBook]]
+
+[section:ack Acknowledgements]
+
+Particular thanks to Joel de Guzman, Hartmut Kaiser, and Boost.  Y'all know why.  Also, thanks to Matias Capeletto for some nice graphics and moral support!
+[endsect]
+
+[section:intro Introduction]
+=mfront= implements (as much as possible) the [mcpp Modular C++] extension to C++.  It directly parses input Modular C++ code, and transforms it into traditional C++, which can be compiled.  A wrapper script, for either Windows or Posix style systems, invokes the =mfront= binary, =mfront_bin=, and sends its output to your native compiler for final compilation. 
+
+Modular C++ lets you use syntax such as this:
+
+[c++]
+
+    // File_1.cpp: 
+    export Lib { // Module definition header. 
+                 // Must precede all declarations. 
+      import std; 
+    public: 
+      struct S { 
+        S() { std::cout << "S()\n"; } 
+      }; 
+    } // End of module definition
+    
+    // File_2.cpp: 
+    import Lib; 
+    int main() { 
+      Lib::S s; 
+    } 
+
+Specifically, you export and import /modules/, which combine namespaces with header files, into a single sensible unit.  Some benefits:
+
+* No need to maintain separate header and implementation files.
+* Source code doesn't build dependencies upon the peculiarities of one filesystem or another: filenames for headers aren't encoded in source files.
+* Easily rename source files without breaking cross dependencies.
+* A mapping between module names and their generated C++ header and source files is generated in =.map= files, which are easily machine readable.
+
+
+[endsect]
+
+[section:usage Usage]
+Use =mfront= on your source files just as you would your normal compiler.  It'll invoke your C++ compiler for you after it's done.  It preprocesses the source, transforms it, emits some support files (specifically a =.map= and =.h= file), and feeds the transformed source to your compiler.
+
+[section:config Configuration]
+First, configure your startup script.  It's in =/wrappers=, either =mfront.sh= or =mfront.bat=.  The comments in there tell you what to do, but the basics are just give it the full path to =mfront.bin= and your C++ compiler.  You also may want to set up some additional flags to give your compiler in there.
+
+You may not want =mfront= to invoke your compiler.  Just comment out the invocation of your compiler, and let =mfront= generate new =.cpp= files for your traditional build system to compile for you. 
+
+Next, check out the relevant =params= file for your platform.  It includes the relevant \#include paths, macros, and preprocessor language features needed for your platform.  
+
+[blurb __note__ For the defined macros, try something like `cpp -dM anyfile.h`, for headers, you'll probably have to do a little poking around.\n\n
+	For headers, the method I used was:\n\n
+1. Put just this in a .cpp file: `#include <stdio.h>`\n
+2. Compile it\n 
+3. For each error about a dependent \#include file not found, =locate= it, and add it's directory to the system include path.
+]
+
+[endsect]
+
+
+[section:mcpp Modular C++]
+Modular C++ is (at the time of this writing) an evolving concept.  There is also plenty more of the language we can't yet implement in =mfront=.  It starts with two key constructs: `import Foo` and `export Foo { ... }`.
+
+[section:export Export Statements]
+A module is a set of types, functions, and operators enclosed in a logical group.  A module also has some `class`-like properties, specifically access control.  Some contents can be `public:`, and others `private:`.
+
+The full syntax is as follows:
+
+[c++]
+
+ export Foo {
+    // defaults to private: just like a class
+ private:
+    // but we'll explicitly mention the privacy.
+    void private_method () { ... }
+ public:
+    void public_method () { private_method () }
+    struct S {
+      int x;
+      int y;
+    private:
+      int z;
+    };
+ };
+ 
+ export Foo::Bar["first part of bar"] {
+ public:
+   S another_public_method () { public_method ();  S s;  return s; }
+ };
+
+
+The [^public]/[^private] breakup is simple to understand.  =private= declarations are only visible to the module, and =public= declarations are visible to all code importing the module.
+
+The rules for naming the modules is easy, but could still use a bit of explanation.  Modules can nest and be broken down into several parts.  We nest them just as we do any other nested name in C++, with `Nested::Names`.  We break them up by giving each part a different section name, as a string in brackets.  Hence, `Foo::Bar["first part of bar"]` is a section (named "first part of bar") of =Bar=, which is a sub-module of =Foo=, a top-level module.
+
+[endsect]
+
+
+[section:import Import Statements]
+Import statements declare what modules a source file uses.  Their use imports their module names into the global namespace, ready for use.  You can use them anywhere in the global scope (e.g. not within declarations or function/method bodies).  
+
+For example:
+
+[c++]
+
+ import Foo;
+ import Foo::Bar;
+ int main (int, char**) {
+   Foo::S result = Foo::Bar::another_public_method ();
+   cout << result.x << " " << result.y << endl;
+   return 0;
+ }
+
+
+One could wrap =std= into a module, and handle the semantically similar concepts of header inclusion and namespace uses at once.
+
+
+Please see our [link architecture.archrestrict Restrictions section] for limits on this, there are some doosies.
+[endsect]
+
+
+[endsect]
+
+
+[section:cmdline Command Line Options]
+[pre
+
+Options allowed on the command line only:
+  -h \[ --help \]               print out program usage (this message)
+  -v \[ --version \]            print the version number
+  -c \[ --copyright \]          print out the copyright statement
+  --map-only                  only process .map files, do not process files
+  --config-file arg           specify a config file (alternatively: @filepath)
+  --input-file arg            a file to process
+
+Options allowed anywhere.:
+  -o \[ --output \] arg         specify the name of the translated source file 
+                              \[arg\], or to stdout \[-\]
+  -s \[ --suffix \] arg (=_gen) suffix used for generated .h and .map files.  
+                              Defaults to _gen
+  -I \[ --include \] arg        an additional include directory
+  -S \[ --sysinclude \] arg     an additional system include directory
+  -F \[ --forceinclude \] arg   force inclusion of specified file
+  -D \[ --define \] arg         specify a macro to define (as macro\[=\[value\]\])
+  -P \[ --predefine \] arg      specify a macro to predefine (as macro\[=\[value\]\])
+  -U \[ --undefine \] arg       specify a macro to undefine
+  --long_long                 enable long long support in C++ mode
+  --variadics                 enable certain C99 extensions in C++ mode
+  --c99                       enable C99 mode (implies --variadics)
+  -p \[ --preserve \]           preserve comments in output
+  -i \[ --import \]             import module namespaces
+
+]
+
+Most of these are best left for your =params= file.  Of note are =--map-only=, which simply skips processing of =.cpp= files, and only validates command line options and =.map= files, and =--preserve=, which keeps comments in your =.cpp= file in the output.  This second command =--preserve=, may be handy if you don't want the output directly piped to your C++ compiler.
+
+[endsect]
+	
+[endsect]
+
+
+[section:mapping Mapping back to C++]
+We translate Modular C++ back into C++.  First it's preprocessed, analyzed, transformed, and then emitted into output files or possibly a pipe to the compiler.
+
+The general idea of the mapping's very simple: wrap the module in a namespace and separate the text into a header and source file.  The =import= statements are converted into \#include statements.
+
+The details here are critical.  First, the header and source files differ a bit, specifically in the bodies of methods and functions.  The former has those bodies stripped out altogether.  However, templates are kept verbatim between them.
+
+Also, a =.map= file is generated for every source file with an =export= statement.  These =.map= files contain the names of the headers that the =import= statements eventually \#include.
+
+
+First, let's look at some example input:
+
+[c++]
+
+	// File_1.cpp: 
+	export Lib { // Module definition header. 
+				 // Must precede all declarations. 
+	  import std; 
+	public: 
+	  struct S { 
+		S() { std::cout << "S()\n"; } 
+	  }; 
+	} ;
+
+
+We're exporting a module =Lib=, which imports [^std], and then declares =struct S= with a constructor.  As the C++ standard library isn't yet wrapped in a module, the `import std;` fails with an error message on the console.  
+
+This generates this header:
+
+[c++]
+	// File_1_gen.h
+	
+	
+	// module Lib
+	namespace Lib { 
+	
+	// private section
+	namespace _private_0 {
+	
+	}
+	using namespace _private_0;
+	 
+	 
+	struct S { 
+	S() ; 
+	}; 
+	} ;
+
+
+So far, simple enough- the module's converted to a namespace, and the body of [^S]'s constructor is stripped.  The innocuous private section's there for silly reasons.
+
+And this source:
+
+[c++]
+
+
+	// File_1_gen.cpp
+	#include "File_1_gen.h"
+	
+	
+	// module Lib
+	namespace Lib { 
+	
+	// private section
+	namespace _private_0 {
+	
+	}
+	using namespace _private_0;
+	 
+	 
+	struct S { 
+	S() { std::cout << "S()\n"; } 
+	}; 
+	} ;
+
+
+Most importantly, it includes the header and defines the method body.  Any =import= statements in =File_1.cpp= that referred to modules that did exist would have resulted in additional \#include statements at the very top.
+
+[endsect]
+
+[section:architecture Architecture]
+=mfront= works in three passes:
+
+# Parse the text and mark up ranges of it for transformation
+# Scan the text from beginning to end, maintaining a stack of active transformers for each token as needed, and feeding the tokens through them.  The result of all the transforms is saved to emission lists for the header and source.
+# Emit the lists to the output files.
+
+
+It seems a little contrived, but trust me, it ends up being a good idea.  First, the C++ grammar (Hannibal based) is still incomplete and changing.  Limiting our edits to markup only (not transformation) reduces our exposure to changes in Hannibal. The transformation stack provides proper block scoping for different combinations of Modular C++ constructs (or necessary dependent transforms).  We don't emit as we transform, as we have transformations that require modifications to the beginning of the file (=import= statements #include files, whose statements really should be at the top of the file).
+
+[section:spectypes Specific Types]
+We have a pair of =OutputDelegates= (=driver/output.h=) keeping track of the outputs, one for the header, and one for the source.  Each one accepts =Operations= done onto them, which usually end up emitting text to the file or adding an \#include to the beginning.  The =Operations= (=parser/operations.h=) are execututed in Phase II, which concatenate to strings maintained by the [^OutputDelegate]s (one for the include files, one for the remainder of the text).  Finally, the [^OutputDelegate]s write out their source files.
+
+The transformation stack is maintained and driven by =TransformContext= (=parser/xformctx.h=).  It's =output()= method implements Phase II.  Subclasses of =TransformStage= (=parser/operations.h=) implement each transformation.  During the parse (Phase I), [^TransformStage]-derived instances are given to =TransformContext=, via =add(TransformStage_p)= (the =_p= signifies an auto-pointer, in this case a [^boost::shared_ptr]).  Each instance is tagged with the start and end ranges of the text they apply on.  They are placed into a sorted list, used for playback in Phase II.
+
+During Phase II, a full pass is made from the beginning to the end of input, with a stack built of the [^TransformStage]s that currently apply.  Each token is fed into the toplevel =TransformStage= via its =process_token()= method.  It returns an =OperationPair= (just two [^Operation]s, one for the header, one for the source), which is fed into the next =TransformStage= in the stack, via its =process_upstream()= method.  The output of that's fed into the next [^TransformStage]'s =process_upstream()= method, and this process repeats until the entire stack's been processed.  Finally, the =OperationPair= is split up and saved into separate lists, one for the header, one for the source.
+
+Each [^TransformStage] is usually implemented as a linear finite state machine, using the token type and current state to determine what to do.  They are fully-fledged classes, with their own full-scale methods, able to do whatever they need to, of course.  They provide a lot of expressive power in transforming (within the restrictions in the next section) code, and can be written in relatively little code.
+
+In Phase III, =TransformContext= feeds the [^Operation]s for each file (header and source) into the relevant [^OutputDelegate]s.  They execute the [^Operation]s as they get them, building strings of \#include directives and of file text.  These strings are then concatenated and written to disk.
+[endsect]
+
+[section:archrestrict Restrictions]
+=mfront= doesn't have:
+
+# A symbol table.
+# The ability to scan inside method or function bodies.
+# It's not a full C++ front-end.
+
+
+That means it doesn't have enough context for figuring out which identifiers reference a module, nor can it do local imports within a block of code, nor can it alter name lookup rules to further fit within the Modular C++ specification.
+
+As such, =mfront= simply matches as much C++ as possible (Hannibal, while very good, doesn't match all of the language) and transforms only Modular C++ contexts as they're seen.  Other C++ code is only processed in bulk, such as converting full method or function declarations into prototypes for the header file.
+[endsect]
+
+[section:compliance Compliance to Modular C++]
+[table Unimplemented Core Language Features
+ [[Language Feature] [Description] [Reason]]
+ [
+   [Transitive Imports] 
+   [The ability to =import= one module within another, for local use within the module's definition.] 
+   [There are two parts to such an implementation: (1) An \#include of the module's header and (2) A `using namespace` declaration for the module.  The former makes the module visible to every client of the [^import]ing module.  The latter can be done using the =-i= flag (it's exact functionality and efficacy at implementing Transitive Imports is still under review).]
+ ]
+ [
+   [Private Class Members]
+   [When inheriting, =private= members of the superclass aren't used in name resolution.]
+   [In normal C++, they are.  =mfront= isn't a front-end, and can't transform code in sufficient depth (due to reasons 1 and 2 above) to hack around this difference.]
+ ]
+]
+
+[table Implemenation Notes for Premium Options
+ [[Language Feature] [Implementable?] [Description] [Reason]]
+ [
+   [Startup and Shutdown Functions] [Yes] 
+   [Let each module define a method called upon program load, and one called upon program shutdown.  It can be implemented as a static object that invokes the methods.]
+   [Scheduled for implementation if there's interest.]
+ ]
+ [
+   [Program Modules] [Yes]
+   [Denote a module as the "program" module, whose startup function takes the
+   place of the standard `int main(int, char*[])`.]
+   [Scheduled for implementation if there's interest.  Depends upon the prior feature, Startup and Shutdown Functions, being implemented.]
+ ]
+ [
+   [Nested Modules] [Yes]
+   [Let modules have 'inner modules' within them.]
+   [Implemented]
+ ]
+ [
+   [Prohibited Members] [No]
+   [Specifically disallow some members from normal name lookup.]
+   [See "Private Class Members" above.]
+ ]
+]
+[endsect]
+[endsect]
+
