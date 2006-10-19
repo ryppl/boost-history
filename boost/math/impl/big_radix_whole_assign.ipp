@@ -79,6 +79,51 @@ boost::math::big_radix_whole<Radix, Allocator>::reset
 }
 
 /** Resets the state of the current object to be equivalent to the given number.
+    It should be faster and more conservative with memory than the equivalent
+    #assign(uintmax_t) member function.
+
+    \pre  <code>0 &lt;= <var>value</var> &lt; Radix</code>
+
+    \param value  The new numerical value of this object.
+
+    \post  <code>this-&gt;digit_count() <= 1 &amp;&amp; this-&gt;digit_at(0) ==
+           <var>value</var></code>
+ */
+template < int Radix, class Allocator >
+void
+boost::math::big_radix_whole<Radix, Allocator>::assign_single
+(
+    digit_type  value
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+
+    BOOST_ASSERT( 0 <= value && value < self_type::radix );
+
+    if ( value )
+    {
+        if ( this->digits_.empty() )
+        {
+            // Allocate the sole digit
+            this->digits_.push_back( value );
+        }
+        else
+        {
+            // Remove any excess digits before replacing digit
+            this->digits_.erase(this->digits_.begin() + 1, this->digits_.end());
+            this->digits_.front() = value;
+        }
+    }
+    else
+    {
+        // Ensure a zero value
+        this->digits_.clear();
+    }
+
+    BOOST_ASSERT( this->test_invariant() );
+}
+
+/** Resets the state of the current object to be equivalent to the given number.
     It is like the (built-in) integer conversion constructor.
 
     \param value  The new numerical value of this object.

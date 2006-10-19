@@ -192,10 +192,11 @@ public:
 
     //! Changes the current value to zero
     void  reset();
+    //! Changes the current value to a new single-digit one
+    void  assign_single( digit_type value );
 
     //! Changes the current value to a new one (built-in unsigned integer)
     void  assign( uintmax_t value );
-
     //! Changes the current value to a new one (same type)
     void  assign( big_radix_whole const &value );
 

@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   17 Oct 2006  Initial version (Daryle Walker)
+//   18 Oct 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -646,6 +646,27 @@ BOOST_AUTO_TEST_CASE( assign_configure_test )
 
     a.assign( big_radix_whole<200, allocator_type>(161u) );
     BOOST_CHECK_EQUAL( a, onehundredsixtyone );
+
+    // Re-assign to single digit
+    a.assign_single( 0x8 );
+    BOOST_CHECK_EQUAL( a, eight );  // multi-digit to single
+
+    a.assign_single( 0xA );
+    BOOST_CHECK_EQUAL( a, big_hexadecimal(0xAu) );  // single-digit to same
+
+    a.assign_single( 0 );
+    BOOST_CHECK_EQUAL( a, zero );  // single-digit to empty
+
+    a.assign_single( 0 );
+    BOOST_CHECK_EQUAL( a, zero );  // empty to same
+
+    a.assign( twentyone );
+    BOOST_CHECK_EQUAL( a, twentyone );
+    a.assign_single( 0 );
+    BOOST_CHECK_EQUAL( a, zero );  // multi-digit to empty
+
+    a.assign_single( 0x8 );
+    BOOST_CHECK_EQUAL( a, eight );  // empty to single-digit
 }
 
 BOOST_AUTO_TEST_SUITE_END()
