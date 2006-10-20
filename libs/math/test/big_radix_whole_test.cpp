@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   18 Oct 2006  Initial version (Daryle Walker)
+//   20 Oct 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -15,19 +15,26 @@
 
 #include <boost/test/unit_test.hpp>                  // for BOOST_CHECK_EQUAL...
 #include <boost/test/floating_point_comparison.hpp>  // for BOOST_CHECK_CLOSE...
+#include <boost/test/test_case_template.hpp>
 
-#include <boost/cstdint.hpp>          // for boost::uintmax_t
-#include <boost/lexical_cast.hpp>     // for boost::lexical_cast
-#include <boost/pool/pool_alloc.hpp>  // for boost::fast_pool_allocator
+#include <boost/cstdint.hpp>                     // for boost::uintmax_t
+#include <boost/iterator/counting_iterator.hpp>  // for boost::counting_iterator
+#include <boost/lambda/bind.hpp>                 // for boost::lamda::bind
+#include <boost/lambda/lambda.hpp>               // for boost::lamda::_1, etc.
+#include <boost/mpl/list.hpp>                    // for boost::mpl::list
+#include <boost/lexical_cast.hpp>                // for boost::lexical_cast
+#include <boost/pool/pool_alloc.hpp>             // for ...fast_pool_allocator
 
-#include <cstddef>  // for std::size_t, ptrdiff_t
-#include <iomanip>  // for std:setw, resetiosflags, setfill
-#include <ios>      // for std::ios_base, left, right, internal
-#include <limits>   // for std::numeric_limits
-#include <memory>   // for std::allocator
-#include <new>      // for std::nothrow, std::bad_alloc
-#include <sstream>  // for std::ostringstream, std::istringstream
-#include <string>   // for std::string
+#include <algorithm>  // for std::transform
+#include <cstddef>    // for std::size_t, ptrdiff_t
+#include <iomanip>    // for std:setw, resetiosflags, setfill
+#include <ios>        // for std::ios_base, left, right, internal
+#include <limits>     // for std::numeric_limits
+#include <memory>     // for std::allocator
+#include <new>        // for std::nothrow, std::bad_alloc
+#include <sstream>    // for std::ostringstream, std::istringstream
+#include <string>     // for std::string
+#include <vector>     // for std::vector
 
 
 #pragma mark Intro stuff
@@ -38,10 +45,13 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( boost::fast_pool_allocator<int> );
 
 // Types & templates
 using boost::math::big_radix_whole;
+using boost::fast_pool_allocator;
 
 typedef big_radix_whole<10>  big_decimal;
 typedef big_radix_whole< 8>  big_octal;
 typedef big_radix_whole<16>  big_hexadecimal;
+
+typedef fast_pool_allocator<int>  fast_allocator;
 
 namespace
 {
@@ -73,6 +83,8 @@ bool  rigged::rigged_ = false;
 
 }  // anonymous namespace
 
+typedef fast_pool_allocator<int, rigged>  rigged_allocator;
+
 
 // Helper functions
 namespace
@@ -91,6 +103,23 @@ inline  T *  array_end( T (&a)[N] )  { return &a[N]; }
 
 template < typename T, std::size_t N >
 inline  T const *  array_end( T const (&a)[N] )  { return &a[N]; }
+
+// Create parity maps
+std::vector<int>  parity_list( std::size_t max_value )
+{
+    std::vector<int>  result;
+
+    result.reserve( max_value + 1u );
+    for ( std::size_t  i = 0 ; i <= max_value ; ++i )
+    {
+        result.push_back( i & 1u );
+    }
+    return result;
+}
+
+// Create a flipped copy of a vector
+std::vector<bool>  flip_vector( std::vector<bool> const &v )
+{  std::vector<bool>  result( v );  result.flip();  return result;  }
 
 }  // anonymous namespace
 
@@ -186,11 +215,9 @@ BOOST_AUTO_TEST_CASE( allocator_checking_test )
 
     // Custom allocator
     {
-        typedef boost::fast_pool_allocator<int>  allocator_type;
+        big_radix_whole<5, fast_allocator>  object2( 12u );
 
-        big_radix_whole<5, allocator_type>  object2( 12u );
-
-        BOOST_CHECK_EQUAL( object2.get_allocator(), allocator_type() );
+        BOOST_CHECK_EQUAL( object2.get_allocator(), fast_allocator() );
         BOOST_CHECK( object2.digit_limit() >= minimum_bits_per_int );
     }
 }
@@ -509,7 +536,7 @@ BOOST_AUTO_TEST_CASE( cross_constructor_test )
      big_hexadecimal(0xFFFFu) );
 
     // Same radix, different allocator
-    typedef big_radix_whole<10, boost::fast_pool_allocator<int> >  new_decimal;
+    typedef big_radix_whole<10, fast_allocator>  new_decimal;
 
     BOOST_CHECK_EQUAL( new_decimal(zero), new_decimal(0u) );
     BOOST_CHECK_EQUAL( new_decimal(one), new_decimal(1u) );
@@ -634,17 +661,15 @@ BOOST_AUTO_TEST_CASE( assign_configure_test )
     BOOST_CHECK_EQUAL( a, twentyone );
 
     // Re-assign from other object
-    typedef boost::fast_pool_allocator<int>  allocator_type;
-
     big_hexadecimal const  onehundredsixtyone( 0xA1u );
 
     a.assign( big_octal(0241u) );
     BOOST_CHECK_EQUAL( a, onehundredsixtyone );
 
-    a.assign( big_radix_whole<16, allocator_type>(0xA1u) );
+    a.assign( big_radix_whole<16, fast_allocator>(0xA1u) );
     BOOST_CHECK_EQUAL( a, onehundredsixtyone );
 
-    a.assign( big_radix_whole<200, allocator_type>(161u) );
+    a.assign( big_radix_whole<200, fast_allocator>(161u) );
     BOOST_CHECK_EQUAL( a, onehundredsixtyone );
 
     // Re-assign to single digit
@@ -1454,8 +1479,6 @@ BOOST_AUTO_TEST_CASE( subtract_single_product_test )
     BOOST_CHECK_EQUAL( a, big_decimal(499u) );
 }
 
-BOOST_AUTO_TEST_SUITE_END()
-
 // Divide by single digit, with single-digit remainder, test
 BOOST_AUTO_TEST_CASE( single_div_and_mod_test )
 {
@@ -1551,6 +1574,132 @@ BOOST_AUTO_TEST_CASE( single_div_and_mod_test )
     a.multiply_single_add_single( 5, 3 );
     BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
 }
+
+// Modulo by single digit test
+BOOST_AUTO_TEST_CASE( single_mod_test )
+{
+    using boost::math::big_radix_whole_divide_by_zero_error;
+
+    big_decimal const  zero, two(2u), thirty(30u), sixhundredseventyeight(678u);
+    big_decimal        a;
+
+    // Dividing by zero is an error
+    a = zero;
+    BOOST_CHECK_THROW( a.modulo_single(0),
+     big_radix_whole_divide_by_zero_error );
+
+    a = two;
+    BOOST_CHECK_THROW( a.modulo_single(0),
+     big_radix_whole_divide_by_zero_error );
+
+    a = thirty;
+    BOOST_CHECK_THROW( a.modulo_single(0),
+     big_radix_whole_divide_by_zero_error );
+
+    a = sixhundredseventyeight;
+    BOOST_CHECK_THROW( a.modulo_single(0),
+     big_radix_whole_divide_by_zero_error );
+
+    // Division of zero always gives a zero remainder
+    a = zero;
+    BOOST_CHECK_EQUAL( a.modulo_single(1), 0 );
+    BOOST_CHECK_EQUAL( a.modulo_single(2), 0 );
+    BOOST_CHECK_EQUAL( a.modulo_single(3), 0 );
+    BOOST_CHECK_EQUAL( a.modulo_single(5), 0 );
+    BOOST_CHECK_EQUAL( a.modulo_single(7), 0 );
+
+    // Non-zero divisor, various dividend digit-lengths
+    a = two;
+    BOOST_CHECK_EQUAL( a.modulo_single(1), 0 );
+    BOOST_CHECK_EQUAL( a.modulo_single(2), 0 );
+    BOOST_CHECK_EQUAL( a.modulo_single(5), 2 );
+
+    a.assign_single( 8 );
+    BOOST_CHECK_EQUAL( a.modulo_single(2), 0 );
+    BOOST_CHECK_EQUAL( a.modulo_single(3), 2 );
+    BOOST_CHECK_EQUAL( a.modulo_single(5), 3 );
+    BOOST_CHECK_EQUAL( a.modulo_single(9), 8 );
+
+    ++a;
+    BOOST_CHECK_EQUAL( a.modulo_single(2), 1 );
+    BOOST_CHECK_EQUAL( a.modulo_single(3), 0 );
+    BOOST_CHECK_EQUAL( a.modulo_single(5), 4 );
+
+    a.assign( 14u );
+    BOOST_CHECK_EQUAL( a.modulo_single(7), 0 );
+    a.add_single( 2 );
+    BOOST_CHECK_EQUAL( a.modulo_single(7), 2 );
+    a.add_single( 7 );
+    BOOST_CHECK_EQUAL( a.modulo_single(7), 2 );
+    a.add_single( 9 );
+    BOOST_CHECK_EQUAL( a.modulo_single(7), 4 );
+
+    a = sixhundredseventyeight;
+    BOOST_CHECK_EQUAL( a.modulo_single(6), 0 );
+    BOOST_CHECK_EQUAL( a.modulo_single(5), 3 );
+}
+
+// Modulo by 2, a.k.a. odd vs. even, test
+// (There are different implementations for odd radices, even radices, and a
+// base-2 exclusive.  Need to test zero, single-digit, and multi-digit values.)
+typedef ::boost::mpl::list<big_radix_whole<2>, big_radix_whole<3>, big_decimal>
+  parity_test_types;
+BOOST_AUTO_TEST_CASE_TEMPLATE( parity_test, T, parity_test_types )
+{
+    using namespace boost::lambda;
+
+    using std::vector;
+    using std::transform;
+
+    // The highest value to check (lowest is zero)
+    std::size_t const  highest( 27u ), length( highest + 1u );
+
+    // The expected results
+    vector<int> const   parities = parity_list( highest );
+    vector<bool> const  odds( parities.begin(), parities.end() );
+    vector<bool> const  evens = flip_vector( odds );
+
+    // Set up the source values (as big_radix_whole objects)
+    boost::counting_iterator<T> const  cb( 0u ), ce( length );
+
+    // Parity test
+    {
+        // Compute the results
+        vector<int>  parity_results( length );
+
+        transform( cb, ce, parity_results.begin(), bind(&T::parity, _1) );
+
+        // Check the results
+        BOOST_CHECK_EQUAL_COLLECTIONS( parity_results.begin(),
+         parity_results.end(), parities.begin(), parities.end() );
+    }
+
+    // Odd-check test
+    {
+        // Compute the results
+        vector<bool>  odd_results( length );
+
+        transform( cb, ce, odd_results.begin(), bind(&T::is_odd, _1) );
+
+        // Check the results
+        BOOST_CHECK_EQUAL_COLLECTIONS( odd_results.begin(), odd_results.end(),
+         odds.begin(), odds.end() );
+    }
+
+    // Even-check test
+    {
+        // Compute the results
+        vector<bool>  even_results( length );
+
+        transform( cb, ce, even_results.begin(), bind(&T::is_even, _1) );
+
+        // Check the results
+        BOOST_CHECK_EQUAL_COLLECTIONS( even_results.begin(), even_results.end(),
+         evens.begin(), evens.end() );
+    }
+}
+
+BOOST_AUTO_TEST_SUITE_END()
 
 
 #pragma mark -
@@ -1942,9 +2091,7 @@ BOOST_AUTO_TEST_CASE( input_test )
     BOOST_CHECK_EQUAL( iss.peek(), static_cast<int>(' ') );
 
     // Check exception compatibility
-    typedef boost::fast_pool_allocator<int, rigged>  allocator_type;
-
-    big_radix_whole<3, allocator_type>  object1;
+    big_radix_whole<3, rigged_allocator>  object1;
 
     iss.str( "211" );
     rigged::prime();
@@ -1960,7 +2107,7 @@ BOOST_AUTO_TEST_CASE( input_test )
     rigged::unprime();
 
     // Same tests with radix > 10
-    big_radix_whole<11, allocator_type>  object2;
+    big_radix_whole<11, rigged_allocator>  object2;
 
     iss.str( "2-10" );
     rigged::prime();

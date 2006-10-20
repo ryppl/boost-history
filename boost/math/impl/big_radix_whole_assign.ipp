@@ -86,8 +86,8 @@ boost::math::big_radix_whole<Radix, Allocator>::reset
 
     \param value  The new numerical value of this object.
 
-    \post  <code>this-&gt;digit_count() <= 1 &amp;&amp; this-&gt;digit_at(0) ==
-           <var>value</var></code>
+    \post  <code>this-&gt;digit_count() &lt;= 1 &amp;&amp; this-&gt;digit_at(0)
+           == <var>value</var></code>
  */
 template < int Radix, class Allocator >
 void

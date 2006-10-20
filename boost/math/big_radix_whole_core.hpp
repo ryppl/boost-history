@@ -245,6 +245,14 @@ public:
 
     //! Divide by a single-digit value, with separate remainder
     digit_type  div_and_mod_single( digit_type divisor );
+    //! Returns the remainder from division by a single-digit value
+    digit_type  modulo_single( digit_type divisor ) const;
+    //! Returns the remainder from division by two (i.e. even versus odd)
+    int         parity() const;
+    //! Returns whether the current value is odd
+    bool        is_odd() const;
+    //! Returns whether the current value is even
+    bool        is_even() const;
 
     //! Add the product of two single-digit values (fused-add/multiply)
     void  add_single_product( digit_type addend_multiplicand, digit_type
