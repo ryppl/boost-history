@@ -2,28 +2,6 @@
 //
 // Copyright (c) 2006 Matias Capeletto
 //
-// This code may be used under either of the following two licences:
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE. OF SUCH DAMAGE.
-//
-// Or:
-//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -60,6 +38,7 @@
 #include <boost/bimap/detail/manage_bimap_key.hpp>
 #include <boost/bimap/detail/manage_additional_parameters.hpp>
 #include <boost/bimap/detail/map_view_iterator.hpp>
+#include <boost/bimap/detail/set_view_iterator.hpp>
 
 #include <boost/bimap/set_of.hpp>
 #include <boost/bimap/unconstrained_set_of.hpp>
@@ -116,58 +95,9 @@ struct bimap_core
 
     >::type right_tagged_set_type;
 
-
     // Construct the relation type to be used
     // --------------------------------------------------------------------
     public:
-
-    /// \brief Relation type stored by the bimap.
-
-    typedef typename ::boost::bimap::relation::select_relation
-    <
-        typename ::boost::bimap::tags::support::apply_to_value_type
-        <
-            get_value_type< mpl::_>,
-            left_tagged_set_type
-
-        >::type,
-
-        typename ::boost::bimap::tags::support::apply_to_value_type
-        <
-            get_value_type< mpl::_ >,
-            right_tagged_set_type
-
-        >::type
-
-    >::type relation;
-
-    //@{
-
-        typedef typename relation::left_tag  left_tag;
-        typedef typename relation::right_tag right_tag;
-
-    //@}
-
-    //@{
-
-        typedef typename relation::left_value_type     left_key_type;
-        typedef typename relation::right_value_type   right_key_type;
-
-    //@}
-
-    //@{
-
-        typedef typename relation::right_value_type    left_data_type;
-        typedef typename relation:: left_value_type   right_data_type;
-
-    //@}
-
-    //@{
-
-        typedef typename relation::left_pair  left_value_type;
-        typedef typename relation::right_pair right_value_type;
-
-    //@}
 
     //@{
 
@@ -176,11 +106,91 @@ struct bimap_core
 
     //@}
 
+    //@{
+
+        typedef typename  left_tagged_set_type::tag  left_tag;
+        typedef typename right_tagged_set_type::tag right_tag;
+
+    //@}
+
+    //@{
+
+        typedef typename  left_set_type::value_type  left_key_type;
+        typedef typename right_set_type::value_type right_key_type;
+
+    //@}
+
+    //@{
+
+        typedef right_key_type  left_data_type;
+        typedef  left_key_type right_data_type;
+
+    //@}
+
     // Manage the additional parameters
     // --------------------------------------------------------------------
     private:
 
     typedef typename manage_additional_parameters<AP1,AP2,AP3>::type parameters;
+
+
+
+    /// \brief Relation type stored by the bimap.
+    // --------------------------------------------------------------------
+    public:
+
+    typedef typename ::boost::bimap::relation::select_relation
+    <
+
+        ::boost::bimap::tags::tagged<
+            typename mpl::if_<
+                mpl::and_
+                <
+                    typename left_set_type::mutable_key,
+                    typename parameters::set_type_of_relation::left_mutable_key
+                >,
+            // {
+                    left_key_type,
+            // }
+            // else
+            // {
+                    typename ::boost::add_const< left_key_type >::type
+            // }
+
+            >::type,
+            left_tag
+        >,
+
+        ::boost::bimap::tags::tagged<
+            typename mpl::if_<
+                mpl::and_
+                <
+                    typename right_set_type::mutable_key,
+                    typename parameters::set_type_of_relation::right_mutable_key
+                >,
+            // {
+                    right_key_type,
+            // }
+            // else
+            // {
+                    typename ::boost::add_const< right_key_type >::type
+            // }
+
+            >::type,
+            right_tag
+        >,
+
+        // Force mutable keys
+        true
+
+    >::type relation;
+
+    //@{
+
+        typedef typename relation::left_pair  left_value_type;
+        typedef typename relation::right_pair right_value_type;
+
+    //@}
 
     // Bind the member of the relation, so multi_index can manage them
     // --------------------------------------------------------------------
@@ -368,8 +378,8 @@ struct bimap_core
     typedef typename ::boost::multi_index::index<core_type, logic_left_tag>::type  left_index;
     typedef typename ::boost::multi_index::index<core_type,logic_right_tag>::type right_index;
 
-    typedef typename left_index::iterator       left_core_iterator;
-    typedef typename left_index::const_iterator left_core_const_iterator;
+    typedef typename  left_index::iterator        left_core_iterator;
+    typedef typename  left_index::const_iterator  left_core_const_iterator;
 
     typedef typename right_index::iterator       right_core_iterator;
     typedef typename right_index::const_iterator right_core_const_iterator;
@@ -384,9 +394,7 @@ struct bimap_core
         <
             left_tag,
             relation,
-            left_core_iterator,
-            typename relation::const_left_pair_reference,
-            const left_value_type
+            left_core_iterator
 
         > left_iterator;
 
@@ -394,9 +402,7 @@ struct bimap_core
         <
             right_tag,
             relation,
-            right_core_iterator,
-            typename relation::const_right_pair_reference,
-            const right_value_type
+            right_core_iterator
 
         > right_iterator;
 
@@ -404,23 +410,19 @@ struct bimap_core
 
     //@{
 
-        typedef ::boost::bimap::detail::map_view_iterator
+        typedef ::boost::bimap::detail::const_map_view_iterator
         <
             left_tag,
             relation,
-            left_core_const_iterator,
-            typename relation::const_left_pair_reference,
-            const left_value_type
+            left_core_const_iterator
 
         > left_const_iterator;
 
-        typedef ::boost::bimap::detail::map_view_iterator
+        typedef ::boost::bimap::detail::const_map_view_iterator
         <
             right_tag,
             relation,
-            right_core_const_iterator,
-            typename relation::const_right_pair_reference,
-            const right_value_type
+            right_core_const_iterator
 
         > right_const_iterator;
 
@@ -428,9 +430,15 @@ struct bimap_core
 
     // Relation set view
 
+    typedef typename ::boost::multi_index::index
+    <
+        core_type, logic_relation_set_tag
+
+    >::type relation_set_core_index;
+
     typedef typename relation_set_type_of::template set_view_bind
     <
-        typename ::boost::multi_index::index<core_type, logic_relation_set_tag >::type
+        relation_set_core_index
 
     >::type relation_set;
 

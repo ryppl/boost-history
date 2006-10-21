@@ -2,28 +2,6 @@
 //
 // Copyright (c) 2006 Matias Capeletto
 //
-// This code may be used under either of the following two licences:
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE. OF SUCH DAMAGE.
-//
-// Or:
-//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -61,30 +39,44 @@ namespace detail {
     typename ::boost::bimap::support::const_iterator_type_by<TAG,BIMAP>::type,   \
     typename ::boost::bimap::support::OTHER_ITER<TAG,BIMAP>::type,               \
     typename ::boost::bimap::support::CONST_OTHER_ITER<TAG,BIMAP>::type,         \
-    typename ::boost::bimap::detail::map_view_iterator_to_base<TAG,BIMAP>::type, \
+    ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
+    <                                                                            \
+        typename ::boost::bimap::support::                                       \
+            iterator_type_by<Tag,BimapType>::type,                               \
+        typename ::boost::bimap::support::                                       \
+            const_iterator_type_by<Tag,BimapType>::type                          \
+                                                                                 \
+    >,                                                                           \
     ::boost::bimap::container_adaptor::use_default,                              \
     ::boost::bimap::container_adaptor::use_default,                              \
     ::boost::bimap::container_adaptor::use_default,                              \
-    relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
+    ::boost::bimap::relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
 >
 /********************************************************************************/
 
 /********************************************************************************/
 #define BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(                            \
-    CONTAINER_ADAPTOR, TAG,BIMAP, OTHER_ITER, CONST_OTHER_ITER                   \
+    CONTAINER_ADAPTOR, TAG, BIMAP, CONST_OTHER_ITER                              \
 )                                                                                \
 ::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
 <                                                                                \
     const typename BIMAP::core_type::template index<TAG>::type,                  \
-    typename ::boost::bimap::support::iterator_type_by<TAG,BIMAP>::type,         \
     typename ::boost::bimap::support::const_iterator_type_by<TAG,BIMAP>::type,   \
-    typename ::boost::bimap::support::OTHER_ITER<TAG,BIMAP>::type,               \
+    typename ::boost::bimap::support::const_iterator_type_by<TAG,BIMAP>::type,   \
     typename ::boost::bimap::support::CONST_OTHER_ITER<TAG,BIMAP>::type,         \
-    typename ::boost::bimap::detail::map_view_iterator_to_base<TAG,BIMAP>::type, \
+    typename ::boost::bimap::support::CONST_OTHER_ITER<TAG,BIMAP>::type,         \
+    ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
+    <                                                                            \
+        typename ::boost::bimap::support::                                       \
+            const_iterator_type_by<Tag,BimapType>::type,                         \
+        typename ::boost::bimap::support::                                       \
+            const_iterator_type_by<Tag,BimapType>::type                          \
+                                                                                 \
+    >,                                                                           \
     ::boost::bimap::container_adaptor::use_default,                              \
     ::boost::bimap::container_adaptor::use_default,                              \
     ::boost::bimap::container_adaptor::use_default,                              \
-    relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
+    ::boost::bimap::relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
 >
 /********************************************************************************/
 
@@ -104,25 +96,16 @@ namespace detail {
 #endif
 
 
-/// \brief Metafunction to compute the iterator_to_base functor needed in map views.
-
-template< class Tag, class BimapType >
-struct map_view_iterator_to_base
-{
-    typedef ::boost::bimap::container_adaptor::support::iterator_facade_to_base
-    <
-        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
-        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type
-
-    > type;
-};
-
 /// \brief Common base for map views.
 
 template< class Derived, class Tag, class BimapType>
 class map_view_base
 {
-    typedef typename map_view_iterator_to_base<Tag,BimapType>::type iterator_to_base;
+    typedef ::boost::bimap::container_adaptor::support::iterator_facade_to_base<
+        typename ::boost::bimap::support::iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type
+
+    > iterator_to_base;
 
     public:
 
@@ -194,6 +177,31 @@ class map_view_base
                                                                               \
 template<typename LowerBounder,typename UpperBounder>                         \
 std::pair<typename BASE::iterator,typename BASE::iterator>                    \
+    range(LowerBounder lower,UpperBounder upper)                              \
+{                                                                             \
+    std::pair<                                                                \
+                                                                              \
+        typename BASE::base_type::iterator,                                   \
+        typename BASE::base_type::iterator                                    \
+                                                                              \
+    > r( this->base().range(lower,upper) );                                   \
+                                                                              \
+    return std::pair                                                          \
+    <                                                                         \
+        typename BASE::iterator,                                              \
+        typename BASE::iterator                                               \
+    >(                                                                        \
+        this->template functor<                                               \
+            typename BASE::iterator_from_base                                 \
+        >()                                         ( r.first ),              \
+        this->template functor<                                               \
+            typename BASE::iterator_from_base                                 \
+        >()                                         ( r.second )              \
+    );                                                                        \
+}                                                                             \
+                                                                              \
+template<typename LowerBounder,typename UpperBounder>                         \
+std::pair<typename BASE::const_iterator,typename BASE::const_iterator>        \
     range(LowerBounder lower,UpperBounder upper) const                        \
 {                                                                             \
     std::pair<                                                                \
@@ -216,6 +224,56 @@ std::pair<typename BASE::iterator,typename BASE::iterator>                    \
         >()                                         ( r.second )              \
     );                                                                        \
 }
+/*****************************************************************************/
+
+
+/*****************************************************************************/
+#define BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION                            \
+                                                                              \
+typename base_::reference front()                                             \
+{                                                                             \
+    return this->template functor<                                            \
+        typename base_::value_from_base>()                                    \
+    (                                                                         \
+                const_cast                                                    \
+        <                                                                     \
+            typename base_::base_type::value_type &                           \
+                                                                              \
+        > ( this->base().front() )                                            \
+    );                                                                        \
+}                                                                             \
+                                                                              \
+typename base_::reference back()                                              \
+{                                                                             \
+    return this->template functor<                                            \
+        typename base_::value_from_base>()                                    \
+    (                                                                         \
+        const_cast                                                            \
+        <                                                                     \
+            typename base_::base_type::value_type &                           \
+                                                                              \
+        >( this->base().back() )                                              \
+    );                                                                        \
+}                                                                             \
+                                                                              \
+typename base_::const_reference front() const                                 \
+{                                                                             \
+    return this->template functor<                                            \
+        typename base_::value_from_base>()                                    \
+    (                                                                         \
+        this->base().front()                                                  \
+    );                                                                        \
+}                                                                             \
+                                                                              \
+typename base_::const_reference back() const                                  \
+{                                                                             \
+    return this->template functor<                                            \
+        typename base_::value_from_base>()                                    \
+    (                                                                         \
+        this->base().back()                                                   \
+    );                                                                        \
+}                                                                             \
+
 /*****************************************************************************/
 
 } // namespace detail

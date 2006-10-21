@@ -2,28 +2,6 @@
 //
 // Copyright (c) 2006 Matias Capeletto
 //
-// This code may be used under either of the following two licences:
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE. OF SUCH DAMAGE.
-//
-// Or:
-//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -35,6 +13,8 @@
 #define BOOST_BIMAP_RELATION_STRUCTURED_PAIR_HPP
 
 #include <utility>
+
+#include <boost/type_traits/remove_const.hpp>
 
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
@@ -184,13 +164,6 @@ class structured_pair :
 
     public:
 
-    typedef structured_pair
-    <
-        FirstType, SecondType,
-        typename inverse_layout<Layout>::type
-
-    > mirror_pair_type;
-
     structured_pair() {}
 
     structured_pair(typename boost::call_traits< typename base_::first_type  >::param_type x,
@@ -211,29 +184,25 @@ class structured_pair :
 
     typedef std::pair
     <
-        typename base_::first_type,
-        typename base_::second_type
+        typename ::boost::remove_const< typename base_:: first_type >::type,
+        typename ::boost::remove_const< typename base_::second_type >::type
 
     > std_pair;
 
     typedef std::pair
     <
-        const typename base_::first_type,
-        typename base_::second_type
+        const typename ::boost::remove_const< typename base_:: first_type >::type,
+              typename ::boost::remove_const< typename base_::second_type >::type
 
     > std_map_pair;
 
-    explicit structured_pair(const std_pair & p)
-    {
-        base_::first  = p.first;
-        base_::second = p.second;
-    }
+    explicit structured_pair(const std_pair & p) :
+        base_(p.first,p.second)
+    {}
 
-    explicit structured_pair(const std_map_pair & p)
-    {
-        base_::first  = p.first;
-        base_::second = p.second;
-    }
+    explicit structured_pair(const std_map_pair & p) :
+        base_(p.first,p.second)
+    {}
 
     structured_pair& operator=(const std_pair & p)
     {
@@ -253,13 +222,6 @@ class structured_pair :
         base_::first, base_::second,
 
         structured_pair,
-        first,second
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
-
-        mirror_pair_type,
         first,second
     );
 

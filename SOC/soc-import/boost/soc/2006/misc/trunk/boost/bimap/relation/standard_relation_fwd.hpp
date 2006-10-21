@@ -2,6 +2,28 @@
 //
 // Copyright (c) 2006 Matias Capeletto
 //
+// This code may be used under either of the following two licences:
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE. OF SUCH DAMAGE.
+//
+// Or:
+//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -11,10 +33,6 @@
 
 #ifndef BOOST_BIMAP_RELATION_STANDARD_PAIR_VIEW_HPP
 #define BOOST_BIMAP_RELATION_STANDARD_PAIR_VIEW_HPP
-
-#include <boost/bimap/relation/standard_relation_fwd.hpp>
-
-#include <boost/type_traits/remove_const.hpp>
 
 #include <utility>
 
@@ -31,6 +49,7 @@ namespace boost {
 namespace bimap {
 namespace relation {
 
+template< class TA, class TB > class standard_relation;
 
 /// \brief The left side view of a standard relation
 /**
@@ -47,11 +66,7 @@ struct normal_reference_binder :
     public:
 
     typedef normal_reference_binder reference_binder_;
-
-    typedef standard_relation<FirstType,SecondType,true > relation_force_mutable;
-    typedef standard_relation<FirstType,SecondType,false> relation_not_force_mutable;
-
-    typedef       standard_relation_view<FirstType,SecondType>       relation_view;
+    typedef standard_relation<FirstType,SecondType> relation_;
 
     typedef typename base_::left_value_type  first_type;
     typedef typename base_::right_value_type second_type;
@@ -59,13 +74,7 @@ struct normal_reference_binder :
     first_type  & first;
     second_type & second;
 
-    normal_reference_binder(relation_force_mutable & r) :
-        first(r.left), second(r.right) {}
-
-    normal_reference_binder(relation_not_force_mutable & r) :
-        first(r.left), second(r.right) {}
-
-    normal_reference_binder(relation_view & r) :
+    normal_reference_binder(relation_ & r) :
         first(r.left), second(r.right) {}
 
     normal_reference_binder(first_type const & f, second_type const & s) :
@@ -107,11 +116,7 @@ struct mirror_reference_binder :
     public:
 
     typedef mirror_reference_binder reference_binder_;
-
-    typedef standard_relation<SecondType,FirstType,true > relation_force_mutable;
-    typedef standard_relation<SecondType,FirstType,false> relation_not_force_mutable;
-
-    typedef       standard_relation_view<SecondType,FirstType>       relation_view;
+    typedef standard_relation<SecondType,FirstType> relation_;
 
     typedef typename base_::right_value_type first_type;
     typedef typename base_::left_value_type  second_type;
@@ -119,13 +124,7 @@ struct mirror_reference_binder :
     second_type & second;
     first_type  & first;
 
-    mirror_reference_binder(relation_force_mutable & r) :
-        second(r.left), first(r.right) {}
-
-    mirror_reference_binder(relation_not_force_mutable & r) :
-        second(r.left), first(r.right) {}
-
-    mirror_reference_binder(relation_view & r) :
+    mirror_reference_binder(relation_ & r) :
         second(r.left), first(r.right) {}
 
     mirror_reference_binder(first_type const & f, second_type const & s) :
@@ -190,6 +189,7 @@ struct reference_binder_finder<FirstType,SecondType,mirror_layout>
 See also standard_relation, const_standard_pair_view.
                                                                                 **/
 
+
 template< class FirstType, class SecondType, class Layout >
 class standard_pair_view :
 
@@ -200,28 +200,34 @@ class standard_pair_view :
 
     public:
 
-    explicit standard_pair_view(typename base_::relation_force_mutable & r) :
+    typedef standard_pair_view
+    <
+        FirstType,SecondType,
+        typename inverse_layout<Layout>::type
+
+    > mirror_pair_type;
+
+    standard_pair_view(typename base_::relation_ & r) :
         base_(r) {}
 
-    explicit standard_pair_view(typename base_::relation_not_force_mutable & r) :
-        base_(r) {}
+    standard_pair_view(typename base_::first_type  const & f,
+                       typename base_::second_type const & s) :
+        base_(f,s) {}
 
-    explicit standard_pair_view(typename base_::relation_view & r) :
-        base_(r) {}
 
     // Interaction with std::pair
 
     typedef std::pair
     <
-        typename ::boost::remove_const< typename base_:: first_type >::type,
-        typename ::boost::remove_const< typename base_::second_type >::type
+        typename base_::first_type,
+        typename base_::second_type
 
     > std_pair;
 
     typedef std::pair
     <
-        const typename ::boost::remove_const< typename base_:: first_type >::type,
-              typename ::boost::remove_const< typename base_::second_type >::type
+        const typename base_::first_type,
+        typename base_::second_type
 
     > std_map_pair;
 
@@ -229,13 +235,21 @@ class standard_pair_view :
 
     private:
 
-    typedef structured_pair<FirstType,SecondType,Layout> structured_pair_type;
+    typedef structured_pair<FirstType,SecondType,normal_layout> normal_structured_pair;
+    typedef structured_pair<FirstType,SecondType,mirror_layout> mirror_structured_pair;
 
     public:
 
-    operator const structured_pair_type ()
+    operator const normal_structured_pair ()
     {
-        return structured_pair_type(
+        return normal_structured_pair(
+            base_::first, base_::second
+        );
+    }
+
+    operator const mirror_structured_pair ()
+    {
+        return mirror_structured_pair(
             base_::first, base_::second
         );
     }
@@ -244,6 +258,27 @@ class standard_pair_view :
         base_::first, base_::second,
 
         standard_pair_view,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        base_::first, base_::second,
+
+        mirror_pair_type,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        base_::first, base_::second,
+
+        normal_structured_pair,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        base_::first, base_::second,
+
+        mirror_structured_pair,
         first,second
     );
 

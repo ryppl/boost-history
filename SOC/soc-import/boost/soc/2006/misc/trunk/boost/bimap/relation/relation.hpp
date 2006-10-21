@@ -2,28 +2,6 @@
 //
 // Copyright (c) 2006 Matias Capeletto
 //
-// This code may be used under either of the following two licences:
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE. OF SUCH DAMAGE.
-//
-// Or:
-//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -91,10 +69,14 @@ struct is_mutant_idiom_supported_for
 
         typedef structured_pair<TA,TB,normal_layout> pab;
         typedef structured_pair<TB,TA,mirror_layout> pba;
-        typedef mutant_relation<TA,TB>               rel;
+        typedef mutant_relation<TA,TB,true>          rel;
+        typedef mutant_relation<TA,TB,false>         rvw;
 
         static const offset_type rel_left  = offsetof(rel,left);
         static const offset_type rel_right = offsetof(rel,right);
+
+        static const offset_type rvw_left  = offsetof(rvw,left);
+        static const offset_type rvw_right = offsetof(rvw,right);
 
         static const offset_type pab_left  = offsetof(pab,first);
         static const offset_type pab_right = offsetof(pab,second);
@@ -104,7 +86,9 @@ struct is_mutant_idiom_supported_for
 
         static const bool mutant_is_supported =
 
-            (   rel_left  == pab_left  &&
+            (   rel_left  == rvw_left  &&
+                rel_right == rvw_right &&
+                rel_left  == pab_left  &&
                 rel_right == pab_right &&
                 rel_left  == pba_left  &&
                 rel_right == pba_right     );
@@ -125,7 +109,8 @@ struct is_mutant_idiom_supported_for
 
             ( sizeof( structured_pair<TA,TB,normal_layout> ) == sAB ) &&
             ( sizeof( structured_pair<TB,TA,mirror_layout> ) == sAB ) &&
-            ( sizeof( mutant_relation<TA,TB>               ) == sAB ) ;
+            ( sizeof( mutant_relation<TA,TB,false>         ) == sAB ) &&
+            ( sizeof( mutant_relation<TA,TB,true>          ) == sAB ) ;
 
     #endif
 
@@ -179,17 +164,17 @@ pair_by(), pair_type_by.
 \ingroup relation_group
                                                            **/
 
-template< class TA, class TB >
+template< class TA, class TB, bool force_mutable = false >
 struct select_relation
 {
     typedef typename mpl::if_<
         ::boost::bimap::relation::detail::is_mutant_idiom_supported_for<TA,TB> ,
         // {
-                mutant_relation<TA,TB>,
+                mutant_relation<TA,TB,force_mutable>,
         // }
         // else
         // {
-                standard_relation<TA,TB>
+                standard_relation<TA,TB,force_mutable>
         // }
 
     >::type type;

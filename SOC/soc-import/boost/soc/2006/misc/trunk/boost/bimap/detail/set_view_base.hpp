@@ -2,28 +2,6 @@
 //
 // Copyright (c) 2006 Matias Capeletto
 //
-// This code may be used under either of the following two licences:
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE. OF SUCH DAMAGE.
-//
-// Or:
-//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -38,50 +16,141 @@
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/bimap/relation/support/data_extractor.hpp>
 #include <boost/bimap/detail/modifier_adaptor.hpp>
+#include <boost/bimap/detail/set_view_iterator.hpp>
+#include <boost/bimap/relation/support/get_pair_functor.hpp>
+
 
 namespace boost {
 namespace bimap {
 namespace detail {
 
+
+
 // The next macro can be converted in a metafunctor to gain code robustness.
 
 /********************************************************************************/
 #define BOOST_BIMAP_SET_VIEW_CONTAINER_ADAPTOR(                                  \
-    CONTAINER_ADAPTOR, OTHER_ITER, CONST_OTHER_ITER                              \
+    CONTAINER_ADAPTOR, CORE_INDEX, OTHER_ITER, CONST_OTHER_ITER                  \
 )                                                                                \
 ::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
 <                                                                                \
-    IndexType,                                                                   \
-    typename IndexType::iterator,                                                \
-    typename IndexType::const_iterator,                                          \
-    typename IndexType::OTHER_ITER,                                              \
-    typename IndexType::CONST_OTHER_ITER,                                        \
+    CORE_INDEX,                                                                  \
+    ::boost::bimap::detail::                                                     \
+              set_view_iterator< typename CORE_INDEX::iterator         >,        \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::const_iterator   >,        \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::OTHER_ITER       >,        \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
+    ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
+    <                                                                            \
+        ::boost::bimap::detail::      set_view_iterator<                         \
+            typename CORE_INDEX::iterator>,                                      \
+        ::boost::bimap::detail::const_set_view_iterator<                         \
+            typename CORE_INDEX::const_iterator>                                 \
+                                                                                 \
+    >,                                                                           \
     ::boost::bimap::container_adaptor::use_default,                              \
     ::boost::bimap::container_adaptor::use_default,                              \
     ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    typename IndexType::key_from_value                                           \
+    ::boost::bimap::relation::support::                                          \
+        GetAboveViewFunctor<typename CORE_INDEX::value_type >,                   \
+    typename CORE_INDEX::key_from_value                                          \
 >
 /********************************************************************************/
 
 /********************************************************************************/
 #define BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(                            \
-    CONTAINER_ADAPTOR, OTHER_ITER, CONST_OTHER_ITER                              \
+    CONTAINER_ADAPTOR, CORE_INDEX, CONST_OTHER_ITER                              \
 )                                                                                \
 ::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
 <                                                                                \
-    const IndexType,                                                             \
-    typename IndexType::iterator,                                                \
-    typename IndexType::const_iterator,                                          \
-    typename IndexType::OTHER_ITER,                                              \
-    typename IndexType::CONST_OTHER_ITER,                                        \
+    const CORE_INDEX,                                                            \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::const_iterator>,           \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::const_iterator>,           \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
+    ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
+    <                                                                            \
+        ::boost::bimap::detail::const_set_view_iterator<                         \
+            typename CORE_INDEX::const_iterator>,                                \
+        ::boost::bimap::detail::const_set_view_iterator<                         \
+            typename CORE_INDEX::const_iterator>                                 \
+                                                                                 \
+    >,                                                                           \
     ::boost::bimap::container_adaptor::use_default,                              \
     ::boost::bimap::container_adaptor::use_default,                              \
     ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::relation::support::                                          \
+        GetAboveViewFunctor<typename CORE_INDEX::value_type >,                   \
+    typename CORE_INDEX::key_from_value                                          \
+>
+/********************************************************************************/
+
+/********************************************************************************/
+#define BOOST_BIMAP_SEQUENCED_SET_VIEW_CONTAINER_ADAPTOR(                        \
+    CONTAINER_ADAPTOR, CORE_INDEX, OTHER_ITER, CONST_OTHER_ITER                  \
+)                                                                                \
+::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
+<                                                                                \
+    CORE_INDEX,                                                                  \
+    ::boost::bimap::detail::                                                     \
+              set_view_iterator< typename CORE_INDEX::iterator         >,        \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::const_iterator   >,        \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::OTHER_ITER       >,        \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
+    ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
+    <                                                                            \
+        ::boost::bimap::detail::      set_view_iterator<                         \
+            typename CORE_INDEX::iterator>,                                      \
+        ::boost::bimap::detail::const_set_view_iterator<                         \
+            typename CORE_INDEX::const_iterator>                                 \
+                                                                                 \
+    >,                                                                           \
     ::boost::bimap::container_adaptor::use_default,                              \
     ::boost::bimap::container_adaptor::use_default,                              \
-    typename IndexType::key_from_value                                           \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::relation::support::                                          \
+        GetAboveViewFunctor<typename CORE_INDEX::value_type >                    \
+>
+/********************************************************************************/
+
+/********************************************************************************/
+#define BOOST_BIMAP_CONST_SEQUENCED_SET_VIEW_CONTAINER_ADAPTOR(                  \
+    CONTAINER_ADAPTOR, CORE_INDEX, CONST_OTHER_ITER                              \
+)                                                                                \
+::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
+<                                                                                \
+    const CORE_INDEX,                                                            \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::const_iterator>,           \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::const_iterator>,           \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
+    ::boost::bimap::detail::                                                     \
+        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
+    ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
+    <                                                                            \
+        ::boost::bimap::detail::const_set_view_iterator<                         \
+            typename CORE_INDEX::const_iterator>,                                \
+        ::boost::bimap::detail::const_set_view_iterator<                         \
+            typename CORE_INDEX::const_iterator>                                 \
+                                                                                 \
+    >,                                                                           \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::bimap::relation::support::                                          \
+        GetAboveViewFunctor<typename CORE_INDEX::value_type >                    \
 >
 /********************************************************************************/
 
@@ -106,20 +175,34 @@ namespace detail {
 template< class Derived, class Index >
 class set_view_base
 {
+    typedef ::boost::bimap::container_adaptor::support::iterator_facade_to_base
+    <
+        ::boost::bimap::detail::
+                  set_view_iterator<typename Index::      iterator>,
+        ::boost::bimap::detail::
+            const_set_view_iterator<typename Index::const_iterator>
+
+    > iterator_to_base;
+
     public:
 
-    bool replace(typename Index::iterator position,
+    bool replace(::boost::bimap::detail::
+                    set_view_iterator<typename Index::iterator> position,
                  typename Index::value_type const & x)
     {
-        return derived().base().replace(position,x);
+        return derived().base().replace(
+            derived().template functor<iterator_to_base>()(position),x
+        );
     }
 
     template<typename Modifier>
-    bool modify(typename Index::iterator position,Modifier mod)
+    bool modify(::boost::bimap::detail::
+                    set_view_iterator<typename Index::iterator> position,
+                Modifier mod)
     {
         return derived().base().modify(
 
-            position,
+            derived().template functor<iterator_to_base>()(position),
 
             ::boost::bimap::detail::relation_modifier_adaptor
             <

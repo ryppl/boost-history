@@ -2,28 +2,6 @@
 //
 // Copyright (c) 2006 Matias Capeletto
 //
-// This code may be used under either of the following two licences:
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE. OF SUCH DAMAGE.
-//
-// Or:
-//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -35,9 +13,13 @@
 #define BOOST_BIMAP_RELATION_SUPPORT_GET_HPP
 
 #include <boost/bimap/relation/standard_pair_view.hpp>
+#include <boost/bimap/relation/standard_relation_view.hpp>
+
 #include <boost/bimap/detail/mpl/bool_result.hpp>
 #include <boost/bimap/relation/support/value_type_of.hpp>
 #include <boost/bimap/relation/detail/access_builder.hpp>
+
+#include <boost/mpl/or.hpp>
 
 
 #ifdef BOOST_BIMAP_ONLY_DOXYGEN_WILL_PROCESS_THE_FOLLOWING_LINES
@@ -138,9 +120,14 @@ struct is_standard_pair_view< standard_pair_view<FirstType,SecondType,Layout> >
     BOOST_BIMAP_MPL_BOOL_RESULT(true)
 };
 
-template< class Tag, class Symmetric >
-typename enable_if< is_standard_pair_view< Symmetric >,
+//------------------------------------------------------------------------------------
 
+template< class Tag, class Symmetric >
+typename enable_if<
+    mpl::or_<
+        is_standard_pair_view< Symmetric >,
+        is_standard_relation_view< Symmetric >
+    >,
 typename result_of::get< Tag, Symmetric >::type
 
 >::type
@@ -155,6 +142,7 @@ get( Symmetric s )
     return detail::get(member_at_tag(),s);
 }
 
+//------------------------------------------------------------------------------------
 
 BOOST_BIMAP_SYMMETRIC_ACCESS_INTERFACE_BUILDER
 (

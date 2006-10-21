@@ -2,28 +2,6 @@
 //
 // Copyright (c) 2006 Matias Capeletto
 //
-// This code may be used under either of the following two licences:
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE. OF SUCH DAMAGE.
-//
-// Or:
-//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -34,6 +12,10 @@
 #ifndef BOOST_BIMAP_RELATION_CONST_STANDARD_PAIR_VIEW_HPP
 #define BOOST_BIMAP_RELATION_CONST_STANDARD_PAIR_VIEW_HPP
 
+#include <boost/bimap/relation/standard_relation_fwd.hpp>
+
+#include <boost/type_traits/remove_const.hpp>
+
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
 #include <boost/bimap/relation/pair_layout.hpp>
@@ -41,11 +23,13 @@
 
 #include <boost/bimap/relation/detail/totally_ordered_pair.hpp>
 
+#include <boost/bimap/relation/standard_pair_view.hpp>
+
+
 namespace boost {
 namespace bimap {
 namespace relation {
 
-template< class TA, class TB > class standard_relation;
 
 /// \brief The left side view of a standard relation
 /**
@@ -62,7 +46,12 @@ struct const_normal_reference_binder :
     public:
 
     typedef const_normal_reference_binder reference_binder_;
-    typedef standard_relation<FirstType,SecondType> relation_;
+
+    typedef standard_relation<FirstType,SecondType,true > relation_force_mutable;
+    typedef standard_relation<FirstType,SecondType,false> relation_not_force_mutable;
+
+    typedef       standard_relation_view<FirstType,SecondType>       relation_view;
+    typedef const_standard_relation_view<FirstType,SecondType> const_relation_view;
 
     typedef typename base_::left_value_type  first_type;
     typedef typename base_::right_value_type second_type;
@@ -70,7 +59,16 @@ struct const_normal_reference_binder :
     first_type  const & first;
     second_type const & second;
 
-    const_normal_reference_binder(relation_ const & r) :
+    const_normal_reference_binder(relation_force_mutable const & r) :
+        first(r.left), second(r.right) {}
+
+    const_normal_reference_binder(relation_not_force_mutable const & r) :
+        first(r.left), second(r.right) {}
+
+   const_normal_reference_binder(relation_view const & r) :
+        first(r.left), second(r.right) {}
+
+    const_normal_reference_binder(const_relation_view const & r) :
         first(r.left), second(r.right) {}
 
     const_normal_reference_binder(first_type const & f, second_type const & s) :
@@ -111,7 +109,12 @@ struct const_mirror_reference_binder :
     public:
 
     typedef const_mirror_reference_binder reference_binder_;
-    typedef standard_relation<SecondType,FirstType> relation_;
+
+    typedef standard_relation<SecondType,FirstType,true > relation_force_mutable;
+    typedef standard_relation<SecondType,FirstType,false> relation_not_force_mutable;
+
+    typedef       standard_relation_view<SecondType,FirstType>       relation_view;
+    typedef const_standard_relation_view<SecondType,FirstType> const_relation_view;
 
     typedef typename base_::right_value_type first_type;
     typedef typename base_::left_value_type  second_type;
@@ -119,7 +122,16 @@ struct const_mirror_reference_binder :
     second_type const & second;
     first_type  const & first;
 
-    const_mirror_reference_binder(relation_ const & r) :
+    const_mirror_reference_binder(relation_force_mutable const & r) :
+        second(r.left), first(r.right) {}
+
+    const_mirror_reference_binder(relation_not_force_mutable const & r) :
+        second(r.left), first(r.right) {}
+
+    const_mirror_reference_binder(relation_view const & r) :
+        second(r.left), first(r.right) {}
+
+    const_mirror_reference_binder(const_relation_view const & r) :
         second(r.left), first(r.right) {}
 
     const_mirror_reference_binder(first_type const & f, second_type const & s) :
@@ -195,34 +207,34 @@ class const_standard_pair_view :
 
     public:
 
-    typedef const_standard_pair_view
-    <
-        FirstType,SecondType,
-        typename inverse_layout<Layout>::type
-
-    > mirror_pair_type;
-
-    const_standard_pair_view(typename base_::relation_ const & r) :
+    explicit const_standard_pair_view(typename base_::relation_force_mutable const & r) :
         base_(r) {}
 
-    const_standard_pair_view(typename base_::first_type  const & f,
-                             typename base_::second_type const & s) :
-        base_(f,s) {}
+    explicit const_standard_pair_view(typename base_::relation_not_force_mutable const & r) :
+        base_(r) {}
 
+    explicit const_standard_pair_view(typename base_::relation_view const & r) :
+        base_(r) {}
+
+    explicit const_standard_pair_view(typename base_::const_relation_view const & r) :
+        base_(r) {}
+
+    explicit const_standard_pair_view(standard_pair_view<FirstType,SecondType,Layout> const & p) :
+        base_(p.first, p.second) {}
 
     // Interaction with std::pair
 
     typedef std::pair
     <
-        typename base_::first_type,
-        typename base_::second_type
+        typename ::boost::remove_const< typename base_:: first_type >::type,
+        typename ::boost::remove_const< typename base_::second_type >::type
 
     > std_pair;
 
     typedef std::pair
     <
-        const typename base_::first_type,
-        typename base_::second_type
+        const typename ::boost::remove_const< typename base_:: first_type >::type,
+              typename ::boost::remove_const< typename base_::second_type >::type
 
     > std_map_pair;
 
@@ -236,27 +248,16 @@ class const_standard_pair_view :
 
     private:
 
-    typedef structured_pair<FirstType,SecondType,normal_layout> normal_structured_pair;
-    typedef structured_pair<FirstType,SecondType,mirror_layout> mirror_structured_pair;
+    typedef structured_pair<FirstType,SecondType,Layout> structured_pair_type;
 
     public:
 
-    const_standard_pair_view(normal_structured_pair const & p) :
+    const_standard_pair_view(structured_pair_type const & p) :
         base_::reference_binder_(p.first,p.second) {}
 
-    const_standard_pair_view(mirror_structured_pair const & p) :
-        base_::reference_binder_(p.first,p.second) {}
-
-    operator const normal_structured_pair ()
+    operator const structured_pair_type ()
     {
-        return normal_structured_pair(
-            base_::first, base_::second
-        );
-    }
-
-    operator const mirror_structured_pair ()
-    {
-        return mirror_structured_pair(
+        return structured_pair_type(
             base_::first, base_::second
         );
     }
@@ -265,27 +266,6 @@ class const_standard_pair_view :
         base_::first, base_::second,
 
         const_standard_pair_view,
-        first,second
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
-
-        mirror_pair_type,
-        first,second
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
-
-        normal_structured_pair,
-        first,second
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
-
-        mirror_structured_pair,
         first,second
     );
 
