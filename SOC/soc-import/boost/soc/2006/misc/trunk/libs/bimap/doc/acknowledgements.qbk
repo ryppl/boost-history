@@ -4,28 +4,6 @@ Boost.Bimap
 
 Copyright (c) 2006 Matias Capeletto
 
-This code may be used under either of the following two licences:
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. OF SUCH DAMAGE.
-
-Or:
-
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
 http://www.boost.org/LICENSE_1_0.txt)
@@ -36,43 +14,47 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 [section Acknowledgements]
 
-This library was develop in the context of the Google SoC 2006. I first want to
-thank my mentor, Joaquin, for his friendship during this project. He not only
-helped me go through the process of creating this library, he did his best so we
-could have a great time doing it. Also, Boost.Bimap would be impossible to exist
-if Boost.MultiIndex, Joaquin master piece did not exist. Thanks a lot!
+This library was developed in the context of the Google SoC 2006. I
+first want to thank my mentor, Joaquin, for his friendship during this
+project. Not only did he help me go through the process of creating this
+library, but he also did his best so we could have a great time doing
+it. Also, Boost.Bimap would not exist had Boost.MultiIndex, Joaquin's
+masterpiece, not existed. Thanks a lot!
 
 __GOOGLE_SOC_2006__
 
-I want to thank Google for this amazing ['boost] to the open source community and
-to Boost mentors to trust in my proposal in the first place. Next in the list are
-my colleagues from SoC that help me not to get bored during the longs hours of coding.
+I want to thank Google for this amazing ['boost] to the open-source
+community and to Boost mentors for trusting in my proposal in the first
+place. Next on the list are my colleagues from SoC that helped me not
+get bored during the long hours of coding.
 
-Special acknowledgements to the developers of the boost libraries that Boost.Bimap has
-abused. See the dependencies section for a complete list.
+Special acknowledgements to the developers of the Boost libraries that
+Boost.Bimap has abused. See the dependencies section for a complete list.
 
-I want to thank to the open source developers that write the tools I used
-during this project. The library was code using Blade, a full open source development
-environment composed in my opinion of the best tools for software building. The list
-name is infinity, so I give a general huge thanks here.
+I want to thank the open-source developers who wrote the tools I used
+during this project. The library was coded using Blade, a full
+open-source development environment composed, in my opinion, of the best
+tools for software building. The list of names is infinitely long, so I
+give a general huge thanks here.
 
 __BOOST_BLADE_LOGO__
 
-The icons in the TOC of the main page are from
-[@http://www.kde-look.org/kde-look.org kde-look.org]. I want to thank they effort to
-make the open source world a beautiful place. When I found some time I will look for
-each name of the authors, please forgive me to omit them for the moment.
+The icons in the TOC of the main page are from [@http://www.kde-look.org/kde-look.org kde-look.org].
+I want to thank them for their effort in making the open-source world a beautiful
+place. When I find time, I will look for the authors' names. Please
+forgive me for omitting them for the moment.
 
-Thanks to Paul Giaccone for proof-read this documentation. (He has not finished yet,
-the remaining typos and spelling errors are mine and will be corrected as soon as
-possible.)
+Thanks to Paul Giaccone for proof-reading this documentation. (He has
+not finished yet -- the remaining typos and spelling errors are mine and
+will be corrected as soon as possible.)
 
-Finally, thanks to my family that have to see me all day in home during the SoC. Special
-thanks to my brother Agustin, future famous novelist (at this time he is 19 years),
-that patiently read every word of this docs and while correcting they, bark at me
-for my bad English writing. I have learnt a lot of his sermons. I want to thank my
-dog, Mafalda, too for barking all day from my window and being such a good
-company.
+Finally, thanks to my family, who had to see me at home all day during
+the SoC. Special thanks to my brother Agustin, future famous novelist
+(at the present time he is 19 years old), who patiently read every word
+of these docs and while correcting them, barked at me for my bad written
+English. I have learned a lot from his sermons. I want to thank my dog,
+Mafalda, too for barking all day from my window and for being such a
+good company.
 
 [h2 Boost.Bimap Team]
 
@@ -83,6 +65,6 @@ __MAFALDA_PHOTO__
 __JOAQUIN_PHOTO__
 __HECTOR_PHOTO__
 
-Luckily the distance helps to avoid team members from eating each others.
+Luckily, the distance helps team members avoid eating each other.
 
 [endsect]

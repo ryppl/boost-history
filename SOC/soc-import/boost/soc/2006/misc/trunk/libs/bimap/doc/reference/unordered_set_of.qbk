@@ -4,28 +4,6 @@ Boost.Bimap
 
 Copyright (c) 2006 Matias Capeletto
 
-This code may be used under either of the following two licences:
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. OF SUCH DAMAGE.
-
-Or:
-
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
 http://www.boost.org/LICENSE_1_0.txt)
@@ -344,7 +322,7 @@ Upon construction, `max_load_factor()` is 1.0.
     std::pair<iterator,bool> insert(const value_type & x);
 
 [:  [*Effects:] Inserts `x` into the `bimap` to which the view belongs if\n
-    * the view is non-unique OR no other element exists with equivalent key,\n
+    * the view is non-unique OR no other element with equivalent key exists,\n
     * AND insertion is allowed by all other views of the `bimap`.\n
     [*Returns:] The return value is a pair `p`. `p.second` is `true` if and only if
     insertion took place. On successful insertion, `p.first` points to the element
@@ -360,7 +338,7 @@ Upon construction, `max_load_factor()` is 1.0.
 
 [:  [*Requires:] `position` is a valid iterator of the view.\n
     [*Effects:] Inserts `x` into the `bimap` to which the view belongs if\n
-    * the view is non-unique OR no other element exists with equivalent key,\n
+    * the view is non-unique OR no other element with equivalent key exists,\n
     * AND insertion is allowed by all other views of the `bimap`.
     `position` is used as a hint to improve the efficiency of the operation.\n
     [*Returns:] On successful insertion, an iterator to the newly inserted element.
@@ -422,8 +400,8 @@ Upon construction, `max_load_factor()` is 1.0.
 [:  [*Requires:] `position` is a valid dereferenceable `iterator` of the view.\n
     [*Effects:] Assigns the value `x` to the element pointed to by `position` into
     the `bimap` to which the view belongs if, for the value `x`\n
-    * the view is non-unique OR no other element exists (except possibly `*position`)
-    with equivalent key,\n
+    * the view is non-unique OR no other element with equivalent key exists
+    (except possibly `*position`),\n
     * AND replacing is allowed by all other views of the `bimap`.\n
     [*Postconditions:] Validity of position is preserved in all cases.\n
     [*Returns:] `true` if the replacement took place, `false` otherwise.\n
@@ -446,7 +424,7 @@ Upon construction, `max_load_factor()` is 1.0.
     where `e` is the element pointed to by `position` and
     rearranges `*position` into all the views of the `bimap`.
     Rearrangement is successful if\n
-    * the view is non-unique OR no other element exists with equivalent key,\n
+    * the view is non-unique OR no other element with equivalent key exists,\n
     * AND rearrangement is allowed by all other views of the `bimap`.\n
     If the rearrangement fails, the element is erased.\n
     [*Postconditions:] Validity of position is preserved if the operation succeeds.\n

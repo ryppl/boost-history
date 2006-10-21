@@ -4,28 +4,6 @@ Boost.Bimap
 
 Copyright (c) 2006 Matias Capeletto
 
-This code may be used under either of the following two licences:
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. OF SUCH DAMAGE.
-
-Or:
-
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
 http://www.boost.org/LICENSE_1_0.txt)
@@ -36,40 +14,42 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 [section Bimap Reference]
 
-[section Views concepts]
+[section View concepts]
 
 `bimap` instantiations comprise two side views and an view of the relation
-specified at compile time. Each view allows read/write access to the elements contained
-in a definite manner, mathing a STL container signature.
+specified at compile time. Each view allows read-write access to the elements contained
+in a definite manner, mathing an STL container signature.
 
-Views are not isolated objects, and so cannot be constructed on their own.
-Rather they are an integral part of a `bimap`. The name of the view class
-implementation proper is never directly exposed to the user, who has only access to
-the associated view type specifier.
+Views are not isolated objects and so cannot be constructed on their
+own; rather they are an integral part of a `bimap`. The name of the view
+class implementation proper is never directly exposed to the user, who
+has access only to the associated view type specifier.
 
-Insertion and erasing of elements are always performed through the appropriate
-interface of any of the three views of the `bimap`; these operations, however,
-do have an impact on all other views as well: for instance, insertion through
-a given view may fail because there exists another view which bans the operation
-in order to preserve its invariant (like uniqueness of elements.) The global
-operations performed in a joint manner among the any view can be reduced to six
-primitives:
+Insertion and deletion of elements are always performed through the
+appropriate interface of any of the three views of the `bimap`; these
+operations do, however, have an impact on all other views as well: for
+instance, insertion through a given view may fail because there exists
+another view that forbids the operation in order to preserve its
+invariant (such as uniqueness of elements). The global operations
+performed jointly in the any view can be reduced to six primitives:
 
-* Copying
+* copying
 * insertion of an element
-* hinted insertion, where a preexisting element is suggested in order to improve
+* hinted insertion, where a pre-existing element is suggested in order to improve
 the efficiency of the operation
 * deletion of an element
-* replacement of the value of an element, which may trigger the rearrangement of
-this element in one or more views, or the banning of the replacement
-* modification of an element, and its subsequent rearrangement/banning by the
-various views
+* replacement of the value of an element, which may trigger the
+rearrangement of this element in one or more views, or may forbid the
+replacement
+* modification of an element, and its subsequent
+rearrangement/banning by the various views
 
 The last two primitives deserve some further explanation: in order to
-guarantee the invariants associated to each view (e.g. some definite ordering,)
-elements of a `bimap` are not mutable. To overcome this restriction, the views
-expose member functions for updating and modifying, which allow for the
-mutation of elements in a controlled fashion.
+guarantee the invariants associated to each view (e.g. some definite
+ordering) elements of a `bimap` are not mutable. To overcome this
+restriction, the views expose member functions for updating and
+modifying, which allows for the mutation of elements in a controlled
+fashion.
 
 [endsect]
 
@@ -77,13 +57,13 @@ mutation of elements in a controlled fashion.
 
 [section Complexity signature]
 
-Some member functions of a view interface are implemented by global primitives
-from the list above. Complexity of these operations thus depends on all views
-of a given `bimap`, not just the currently used view.
+Some member functions of a view interface are implemented by global
+primitives from the above list. The complexity of these operations thus
+depends on all views of a given `bimap`, not just the currently used view.
 
-In order to establish complexity estimates, a view is characterized by its
-complexity signature, consisting of the following associated functions on the
-number of elements:
+In order to establish complexity estimates, a view is characterised by
+its complexity signature, consisting of the following associated
+functions on the number of elements:
 
 * `c(n)`: copying
 * `i(n)`: insertion
@@ -92,16 +72,15 @@ number of elements:
 * `r(n)`: replacement
 * `m(n)`: modifying
 
-Each function yields the complexity estimate of the contribution of the view
-to the corresponding global primitive. Let us consider an instantiation of
-`bimap`. If the set type of the relation is left_based or right_based, and
-we use an `l` subscript to denote the left view and a `r` for the right view
-then the insertion of an element in such a container is then of complexity
-O(i_l(n)+i_r(n)) where n is the number of elements. If the set type of
-relation is not side based then there is an additional term to sum that is
-aported by the set of relation view. Using 'a' to denote the above view, now
-the order of insertion will be O(i_l(n)+i_r(n)+i_a(n)).
-To abbreviate notation, we adopt the following definitions:
+If the set type of the relation is `left_based` or `right_based`, and we use
+an `l` subscript to denote the left view and an `r` for the right view, then
+the insertion of an element in such a container is of complexity
+`O(i_l(n)+i_r(n))`, where n is the number of elements. If the set type of
+relation is not side-based, then there is an additional term to add that
+is contributed by the set of relation view. Using `a` to denote the
+above view, the complexity of insertion will now be
+`O(i_l(n)+i_r(n)+i_a(n))`. To abbreviate the notation, we adopt the
+following definitions:
 
 * `C(n) = c_l(n) + c_r(n) [ + c_a(n) ]`
 * `I(n) = i_l(n) + i_r(n) [ + i_a(n) ]`
@@ -114,15 +93,14 @@ To abbreviate notation, we adopt the following definitions:
 
 [section Set type specification]
 
-Set type specifiers are passed as instantiation arguments to `bimap`
-and provide the information needed to incorporate the corresponding views.
-Currently, Boost.Bimap provides the set type specifiers
-The ['side set type] specifiers defines the constraints of the two map
-views of the bimap. The ['set type of relation] specifiers defines the main
-set view constraints.
-If `left_based` (the default parameter) or `right_based` is used, then the
-['set type of relation] will be based on the left or right set type
-correspondingly.
+Set type specifiers are passed as instantiation arguments to `bimap` and
+provide the information needed to incorporate the corresponding views.
+Currently, Boost.Bimap provides the set type specifiers. The ['side set type]
+specifiers define the constraints of the two map views of the
+bimap. The ['set type of relation] specifier defines the main set view
+constraints. If `left_based` (the default parameter) or `right_based` is
+used, then the set type of relation will be based on the left or right
+set type correspondingly.
 
 [table
 [[Side set type             ][Set type of relation            ][Include                                 ]]
@@ -141,8 +119,9 @@ correspondingly.
 
 [section Tags]
 
-Tags are just conventional types used as mnemonics for the types stored in a
-`bimap`. Boost.Bimap uses the tagged idiom to let the user specified this tags.
+Tags are just conventional types used as mnemonics for the types stored
+in a `bimap`. Boost.Bimap uses the tagged idiom to let the user specify
+this tags.
 
 [endsect]
 
@@ -250,7 +229,7 @@ This is the main component of Boost.Bimap.
 
 [section Complexity]
 
-In the descriptions of operations of `bimap`, we adopt the scheme
+In the descriptions of the operations of `bimap`, we adopt the scheme
 outlined in the complexity signature section.
 
 [endsect]
@@ -259,8 +238,9 @@ outlined in the complexity signature section.
 
 `bimap` is instantiated with the following types:
 
-# LeftSetType and RightSetType are set types specification optionally tagged, or any type optional
-tagged, in which case that side act as a set.
+# LeftSetType and RightSetType are set type specifications
+optionally tagged, or any type optionally tagged, in which case that
+side acts as a set.
 # AdditionalParameter_{1/2} can be any ordered subset of:
     * SetTypeOfRelation specification
     * Allocator
@@ -358,9 +338,9 @@ tagged, in which case that side act as a set.
 
 [:  [*Requires:] `InputIterator` is a model of Input Iterator over elements of
     type `relation` or a type convertible to `relation`. last is reachable from `first`.\n
-    [*Effects:] Constructs and empty `bimap` and fills it with the elements in the range
+    [*Effects:] Constructs an empty `bimap` and fills it with the elements in the range
     `[first,last)`. Insertion of each element may or may not succeed depending on
-    the acceptance by the set types of the `bimap`.\n
+    acceptance by the set types of the `bimap`.\n
     [*Complexity:] O(m*H(m)), where m is the number of elements in `[first,last)`.
 ]
 \n
@@ -369,7 +349,7 @@ tagged, in which case that side act as a set.
 
 [:  [*Effects:] Constructs a copy of x, copying its elements as well as its
     internal objects (key extractors, comparison objects, allocator.)\n
-    [*Postconditions:] `*this == x`. The order on the views of the `bimap`
+    [*Postconditions:] `*this == x`. The order of the views of the `bimap`
     is preserved as well.\n
     [*Complexity:] O(x.size()*log(x.size()) + C(x.size())).
 ]
@@ -409,9 +389,10 @@ tagged, in which case that side act as a set.
 
 [section Serialization]
 
-`bimap` can be archived/retrieved by means of __BOOST_SERIALIZATION__.
-Boost.Bimap does not expose a public serialization interface, as this is
-provided by Boost.Serialization itself. Both regular and XML archives are supported.
+A `bimap` can be archived and retrieved by means of __BOOST_SERIALIZATION__.
+Boost.Bimap does not expose a public serialisation interface, as this is
+provided by Boost.Serialization itself. Both regular and XML archives
+are supported.
 
 Each of the set specifications comprising a given `bimap` contributes its
 own preconditions as well as guarantees on the retrieved containers. In describing
@@ -432,7 +413,7 @@ and `y`, respectively.
 (XML archive) ar.]
 
 [:  [*Requires:] Value is serializable (XML-serializable). Additionally, each
-    of the views of b can impose another requirements.\n
+    of the views of b can impose other requirements.\n
     [*Exception safety:] Strong with respect to `b`. If an exception is thrown, ar
     may be left in an inconsistent state.
 ]
@@ -441,7 +422,7 @@ and `y`, respectively.
 (XML archive) ar.]
 
 [:  [*Requires:] Value is serializable (XML-serializable). Additionally, each of
-    the views of `b`' can impose another requirements.\n
+    the views of `b`' can impose other requirements.\n
     [*Exception safety:] Basic. If an exception is thrown, ar may be left in an
     inconsistent state.
 ]

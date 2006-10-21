@@ -4,28 +4,6 @@ Boost.Bimap
 
 Copyright (c) 2006 Matias Capeletto
 
-This code may be used under either of the following two licences:
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. OF SUCH DAMAGE.
-
-Or:
-
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
 http://www.boost.org/LICENSE_1_0.txt)
@@ -94,27 +72,26 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 [section Set type specifiers set_of and multiset_of]
 
-These set types specifiers allow for insertion of sets without and
-with allowance of duplicate elements, respectively. The syntax of
-`set_of` and `multiset_of` coincide, thus we describe them
-in a grouped manner.
+These set type specifiers allow for insertion of sets disallowing or
+allowing duplicate elements, respectively. The syntaxes of `set_of` and
+`multiset_of` coincide, so they are described together.
 
 [endsect]
 
 
 [section \[multi\]set_of Views]
 
-A \[multi\]set_of set view is a std::\[multi\]set signature compatible
+A \[multi\]set_of set view is a std::\[multi\]set signature-compatible
 interface to the underlying heap of elements contained in a `bimap`.
 
-There are two variants: set_of, which do not allow duplicate elements
+There are two variants: set_of, which does not allow duplicate elements
 (with respect to its associated comparison predicate) and multiset_of,
-which accept those duplicates. The interface of these two variants is the same
-to a great extent, so they are documented together with their differences
-explicitly noted when they exist.
+which does accept those duplicates. The interface of these two variants
+is largely the same, so they are documented together with their
+differences explicitly noted where they exist.
 
-If you look the bimap by a side, you will use a map view and if you looked
-it as a whole you will be using a set view.
+If you look the bimap from a side, you will use a map view, and if you
+look at it as a whole, you will be using a set view.
 
 
     namespace boost {
@@ -309,7 +286,7 @@ Assignment, on the other hand, is provided.
     std::pair<iterator,bool> insert(const value_type & x);
 
 [:  [*Effects:] Inserts `x` into the `bimap` to which the set view belongs if\n
-    * the set view is non-unique OR no other element exists with equivalent key,\n
+    * the set view is non-unique OR no other element with equivalent key exists,\n
     * AND insertion is allowed by the other set specifications the `bimap`.\n
     [*Returns:] The return value is a pair `p`. `p.second` is `true` if and only if insertion
     took place. On successful insertion, `p.first` points to the element inserted;
@@ -324,7 +301,7 @@ Assignment, on the other hand, is provided.
 
 [:  [*Requires:] `position` is a valid iterator of the view.\n
     [*Effects:] Inserts `x` into the `bimap` to which the view belongs if\n
-    * the set view is non-unique OR no other element exists with equivalent key,\n
+    * the set view is non-unique OR no other element with equivalent key exists,\n
     * AND insertion is allowed by all other views of the `bimap`.\n
     `position` is used as a hint to improve the efficiency of the operation.\n
     [*Returns:] On successful insertion, an iterator to the newly inserted
@@ -387,14 +364,14 @@ Assignment, on the other hand, is provided.
 [:  [*Requires:] `position` is a valid dereferenceable iterator of the set view.\n
     [*Effects:] Assigns the value `x` to the element pointed to by `position` into
     the `bimap` to which the set view belongs if, for the value `x`\n
-    * the set view is non-unique OR no other element exists (except possibly `*position`)
-    with equivalent key,\n
+    * the set view is non-unique OR no other element with equivalent key exists
+    (except possibly `*position`),\n
     * AND replacing is allowed by all other set specifications of the `bimap`.\n
     [*Postconditions:] Validity of position is preserved in all cases.\n
     [*Returns:] `true` if the replacement took place, `false` otherwise.\n
     [*Complexity:] O(R(n)).\n
     [*Exception safety:] Strong. If an exception is thrown by some user-provided
-    operation the `bimap` to which the set view belongs remains in
+    operation, the `bimap` to which the set view belongs remains in
     its original state.
 ]
 \n
@@ -412,7 +389,7 @@ Assignment, on the other hand, is provided.
     where e is the element pointed to by position and rearranges `*position` into all
     the views of the `bimap`.\n
     Rearrangement is successful if\n
-    * the view is non-unique OR no other element exists with equivalent key,\n
+    * the view is non-unique OR no other element with equivalent key exists,\n
     * AND rearrangement is allowed by all other views of the `bimap`.\n
     If the rearrangement fails, the element is erased.\n
     [*Postconditions:] Validity of `position` is preserved if the operation succeeds.\n
@@ -433,8 +410,8 @@ __SGI_SORTED_ASSOCIATIVE_CONTAINER__ and __SGI_UNIQUE_ASSOCIATIVE_CONTAINER__,
 namely `find`, `count`, `lower_bound`, `upper_bound` and `equal_range`.
 Additionally, these member functions are templatized to allow for non-standard
 arguments, so extending the types of search operations allowed.
-The kind of arguments permissible when invoking the lookup member functions
-is defined by the following concept.
+The kinds of arguments permissible when invoking the lookup member functions
+are defined by the following concept.
 
 Consider a __SGI_STRICT_WEAK_ORDERING__ `Compare` over values of type `Key`. A pair of
 types `(CompatibleKey, CompatibleCompare)` is said to be a ['compatible extension]
@@ -508,10 +485,10 @@ In the context of a compatible extension or a compatible key, the expressions
 
 [section Range operations]
 
-The member function range is not defined for sorted associative containers, but
-`[multi]set_of` views provide it as a convenient utility. A range or interval is
-defined by two conditions for the lower and upper bounds, which are modeled
-after the following concepts.
+The member function range is not defined for sorted associative
+containers, but `[multi]set_of` views provide it as a convenient utility.
+A range or interval is defined by two conditions for the lower and upper
+bounds, which are modelled after the following concepts.
 
 Consider a __SGI_STRICT_WEAK_ORDERING__ `Compare` over values of type Key.
 A type `LowerBounder` is said to be a lower bounder of `Compare` if
@@ -551,13 +528,14 @@ of type `Key`.
 
 [section operator\[\] - set_of only]
 
-The symmetry of bimap imposes some constraints to the `operator[]` that are not
-found in `std::maps`.
-If other views are unique, `bimap::duplicate_value` is thrown whenever an assignment is
-attempted to a value that is already a key in this views.
-As for bimap::value_not_found, this exception is thrown while trying to access
-a non-existent key: this behavior differs from that of std::map, which automatically
-assigns a default value to non-existent keys referred to by `operator[]`.
+The symmetry of bimap imposes some constraints on `operator[]` that are
+not found in `std::maps`. If other views are unique,
+`bimap::duplicate_value` is thrown whenever an assignment is attempted to
+a value that is already a key in these views. As for
+`bimap::value_not_found`, this exception is thrown while trying to access
+a non-existent key: this behaviour differs from that of `std::map`, which
+automatically assigns a default value to non-existent keys referred to
+by `operator[]`.
 
     const data_type & operator[](const typename key_type & k) const;
 
@@ -596,7 +574,7 @@ we use the concepts defined in the `bimap` serialization section.
 
 [blurb [*Operation:] loading of a `bimap` m' from an input archive (XML archive) ar.]
 
-[:  [*Requires:] Additionally to the general requirements, `value_comp()` must be
+[:  [*Requires:] In addition to the general requirements, `value_comp()` must be
     serialization-compatible with `m.get<i>().value_comp()`, where i is the position
     of the ordered view in the container.\n
     [*Postconditions:] On successful loading, each of the elements of `[begin(), end())`

@@ -4,28 +4,6 @@ Boost.Bimap
 
 Copyright (c) 2006 Matias Capeletto
 
-This code may be used under either of the following two licences:
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE. OF SUCH DAMAGE.
-
-Or:
-
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
 http://www.boost.org/LICENSE_1_0.txt)
@@ -36,36 +14,37 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 [section Rationale]
 
-This section assumes that you have read all the other sections, being the most
-important ['tutorial], ['std::set theory] and the ['reference], and that you
-have tested the library. A lot of effort was inverted in making the interface as
-intuitive and clean as possible. If you understand, and hopefully like, the
-interface of this library, it will be a lot easier to read this rationale.
-The following section is little more than just a rationale. This library was
-coded in the context of the Google SoC 2006 and the student and mentor where
-in different continents. A lot of e-mail flow between Joaquin and Matias. The
-most juicy parts of the conversations where extracted and rearranged here.
+This section assumes that you have read all other sections, the most of
+important of which being ['tutorial], ['std::set theory] and the ['reference],
+and that you have tested the library. A lot of effort was invested in
+making the interface as intuitive and clean as possible. If you
+understand, and hopefully like, the interface of this library, it will
+be a lot easier to read this rationale. The following section is little
+more than a rationale. This library was coded in the context of the
+Google SoC 2006 and the student and mentor were in different continents.
+A great deal of email flowed between Joaquin and Matias. The juiciest
+parts of the conversations where extracted and rearranged here.
 
-[note For code browsing, you can use the [@doxydoc/index.html ['Bimap Complete Reference]],
-a doxygen powered document targeted for developers.
+[note To browse the code, you can use the [@doxydoc/index.html ['Bimap Complete Reference]], a
+doxygen-powered document targeted at developers.
 ]
 
 [section General Design]
 
-The initial explanation does not include a lot of features. This section aims
-to tell the general design of the library and every additional feature that
-is not strictly necessary is supposed to be nonexistent as they are not needed
-to understand it. These features will be introduced later. \n
+The initial explanation includes few features. This section aims to
+describe the general design of the library and excludes details of those
+features that are of lesser importance; these features will be
+introduced later. \n
 
-The design of the library is divided in two parts. The first one is the
+The design of the library is divided into two parts. The first is the
 construction of a [^relation] class. This will be the object stored and
-managed by the [^multi_index_container] core. The idea is to try to make
-this class as comfortable as possible, while making it efficient in space
-and access time. \n
-This is a corner stone in the design of [*Boost.Bimap] and as you will see
-in this rationale the rest of the design follows easily with it. \n
-We will impose the following needed interface for the [^relation] class:
+managed by the [^multi_index_container] core. The idea is to make this
+class as easy as possible to use, while making it efficient in terms of
+memory and access time. This is a cornerstone in the design of
+[*Boost.Bimap] and, as you will see in this rationale, the rest of the
+design follows easily.
 
+The following interface is necessary for the [^relation] class:
 
     typedef -unspecified- TA; typedef -unspecified- TB;
 
@@ -98,61 +77,65 @@ We will impose the following needed interface for the [^relation] class:
 
 __RELATION__
 
-Although this seems easy to achieve, as you will understand later is
-the most difficult code hack of the library. It is, indeed very easy if we
-relax some of the efficiency constraints. For example it is trivial if we
-let the size of a relation bigger than the sum of the sizes of his
-components, or it is equally simple if we do not care about access
-speed. But one of the first decision about [*Boost.Bimap] was that, in
-order to be useful, it has to achieve zero overhead over the wrapped
-[*Boost.MultiIndex] container. Finally there is another constrain that
-can be relaxed, C++ standard conformance. This is by all means unacceptable.
-Lets now suppose that we have coded this class, and it is conformant with
-what we have asked for. \n
+Although this seems straightforward, as will be seen later, it is the
+most difficult code hack of the library. It is indeed very easy if we
+relax some of the efficiency constraints. For example, it is trivial if
+we allow a relation to have greater size than the the sum of those of
+its components. It is equally simple if access speed is not important.
+One of the first decisions made about [*Boost.Bimap] was, however, that, in
+order to be useful, it had to achieve zero overhead over the wrapped
+[*Boost.MultiIndex] container. Finally, there is another constraint that
+can be relaxed: conformance to C++ standards, but this is quite
+unacceptable. Let us now suppose that we have coded this class, and it
+conforms to what was required. \n
 
-The second part is based on this [^relation] class. We can now ['view] the
-data from any of the three points of view: pair<A,B>, relation<A,B> and pair<B,A>.
-Suppose that our bimap only supports one to one relations (The other relation types
-are considered additional features in this design). \n
-The proposed interface is very simple, and it is heavily based in the concepts of
-the STL. Given a `bimap<A,B> bm;` then:
+The second part is based on this [^relation] class. We can now view the
+data in any of three ways: `pair<A,B>`, `relation<A,B>` and `pair<B,A>`.
+Suppose that our bimap supports only one-to-one relations. (Other
+relation types are considered additional features in this design.)
+The proposed interface is very simple, and it is based heavily on the
+concepts of the STL. Given a `bimap<A,B> bm`:
 
-# `bm.left` is signature compatible with a `std::map<A,B>`
-# `bm.right` is signature compatible with a `std::map<B,A>`
-# `bm` is signature compatible with a `std::set<relation<A,B> >`
+# `bm.left` is signature-compatible with a `std::map<A,B>`
+# `bm.right` is signature-compatible with a `std::map<B,A>`
+# `bm` is signature-compatible with a `std::set<relation<A,B> >`
 
 __SIMPLE_BIMAP__
 
-This interface is very easy to learn by users that have a STL background and
-it is very comfortable and powerful. This is the general design.
+This interface is easily learned by users who have a STL background, as
+well as being simple and powerful. This is the general design.
 
 [h2 Relation Implementation]
 
 This section explains the details of the actual [^relation] class implementation. \n
 
-The first thing that we can imagine is the use of an [^union] but regretably the
-actual C++ standard only allows unions of POD types.
-For the views we can then try a wrapper around a relation<A,B> that have two
-references named first and second that bind to A and B, or B and A.
+
+The first thing that we can imagine is the use of an [^union]. Regrettably,
+the current C++ standard only allows unions of POD types. For the views,
+we can try a wrapper around a `relation<A,B>` that has two references
+named first and second that bind to `A` and `B`, or to `B` and `A`.
 
     relation<TA,TB> r;
 
     const_reference_pair<A,B> pba(r);
     const_reference_pair<B,A> pbb(r);
 
-It is not difficult to code the relation class using it but two references
-are initialized with every access and the use of `pba.first` will be slower
-in most compilers than to use directly `r.left`. There is another hidden
-drawback of using this scheme, it is not iterator friendly since with it the
-map views iterators must be degraded to ['Read Write] instead of ['LValue].
-This will be explained later. \n
-At first this is the best we can do with the actual C++ standard. However there
-is a not very C++ standard conformant solution to this problem that achieves
-zero overhead in access time and space, and as a plus allows to upgrade the
-views iterators to ['LValue] again. \n
-In order to use it, the compiler has to be conformant with a layout-compatibility
-clause that is not actually in the standard but it is very natural. The additional
-clause imposes that if we have two classes:
+It is not difficult to code the relation class using this, but two
+references are initialized at every access and using of `pba.first` will
+be slower in most compilers than using `r.left` directly . There is
+another hidden drawback of using this scheme: it is not
+iterator-friendly, since the map views iterators must be degraded to
+['Read Write] instead of ['LValue]. This will be explained later.
+
+At first, this seems to be the best we can do with the current C++
+standard. However there is a solution to this problem that does not
+conform very well to C++ standards but does achieve zero overhead in
+terms of access time and memory, and additionally allows the view
+iterators to be upgraded to ['LValue] again.
+
+In order to use this, the compiler must conform to a
+layout-compatibility clause that is not currently in the standard but is
+very natural. The additional clause imposes that if we have two classes:
 
     struct class_a_b
     {
@@ -166,55 +149,60 @@ clause imposes that if we have two classes:
         Type2 name_a;
     };
 
-the storage-layout of [^class_a_b] is equal to the storage-layout of [^class_b_a].
-If you are surprised this does not holds in a standard compliant C++ compiler, welcome
-to the club. It is the natural way to implement it from the compiler vendor point
-of view and it is very useful for the developer. Maybe it can be included in the standard
-someday. Anyway, every actual compiler is conformant with it. \n
-If we can count on this, then we can implement an idiom called [^mutant].
-The idea is to provide a secure wrapper around [^reinterpret_cast]. A class can
-declare that it can be viewed using different view classes that are storage-compatible
-with it. Then we use the free function [^mutate<view>(mutant)] to get the view. The
-[^mutate] function checks at compile time that the requested view is declared in the
-mutant views list. \n
-We implement a class name [^structured_pair] that is signature compatible with a [^std::pair]
-but the storage-layout can be configured with a third template parameter. Two instances of
-this template class will be the views of the relation. \n
+then the storage layout of [^class_a_b] is equal to the storage layout of
+[^class_b_a]. If you are surprised to learn that this does not hold in a
+standards-compliant C++ compiler, welcome to the club. It is the natural
+way to implement it from the point of view of the compiler's vendor and
+is very useful for the developer. Maybe it will be included in the
+standard some day. Every current compiler conforms to this.
 
-The thing is that if we want to be standard compliant we can not use this approach.
-It is very annoying not to be able to use something that we know will work in every
-compiler and that is far better than other alternatives. So, and this is an important
-decision, we have to find a way to use it and still make the library standard compliant. \n
-The idea is very simple, we code both approaches: the const_reference_pair based and the
-mutant based, and use the mutant approach if the compiler is compliant with our new
-layout-compatible clause. If the compiler really mess things up then we degrade the
-performance of the bimap a little. The only drawback here is that although the mutant
-approach allows to make ['LValue] iterators we have to degrade them to ['Read Write] in
-both cases, because we want that the same code can be compiled in any standard compliant
-compiler.
+If we are able to count on this, then we can implement an idiom called
+[^mutant]. The idea is to provide a secure wrapper around [^reinterpret_cast].
+A class can declare that it can be viewed using different view classes
+that are storage-compatible with it. Then we use the free function
+[^mutate<view>(mutant)] to get the view. The `mutate` function checks at
+compile time that the requested view is declared in the mutant views list.
+We implement a class name `structured_pair` that is signature-compatible
+with a `std::pair`, while the storage layout is configured with a third
+template parameter. Two instances of this template class will provide
+the views of the relation.
+
+The thing is that if we want to be standards-compliant, we cannot use
+this approach. It is very annoying not to be able to use something that
+we know will work with every compiler and that is far better than
+alternatives. So -- and this is an important decision -- we have to find
+a way to use it and still make the library standards-compliant.
+
+The idea is very simple. We code both approaches: the
+const_reference_pair-based and the mutant-based, and use the mutant
+approach if the compiler is compliant with our new layout-compatible
+clause. If the compiler really messes things up, we degrade the
+performance of the bimap a little. The only drawback here is that, while
+the mutant approach allows to make ['LValue] iterators, we have to degrade
+them to ['Read Write] in both cases, because we require that the same code
+be compilable by any standards-compliant compiler.
+
 
 [h2 Bimap Implementation]
 
-The core of bimap will be obviously a multi_index_container.
-The basic idea to confront the implementation of the bimap class is to use
+The core of bimap will be obviously a `multi_index_container`. The basic
+idea to tackle the implementation of the bimap class is to use
 [^iterator_adaptor] to convert the iterators from Boost.MultiIndex to the
-std::map and std::set behaviour.
-The map_view and the set_view can be implemented directly using this
-new transformed iterators and a wrapper around each index of the core
-container. However, there is a hidden idiom here, that once coded will
-be very useful for other parts of this library and Boost.MRU library.
-Following the ideas from [^iterator_adaptor], Boost.Bimap views are
-implemented using a [^container_adaptor]. Basically there are several
-template classes (for example [^map_adaptor] and [^set_adaptor]) that
-takes a std::map signature conformant class and new iterators, and
-adapts the container so it now use this iterators instead of the original
-ones.
-For example, if you have a `std::set<int*>` you can build other container
-that behaves exactly as a `std::set<int>` using [^set_adaptor] and
-[^iterator_adaptor]. The use of this two tools together is very powerful.
-A [^container_adaptor] can take classes that do not fulfill all the
-requirements of the adapted container. The new container must define these
-missing functions.
+`std::map` and `std::set` behaviour. The `map_view` and the `set_view` can be
+implemented directly using this new transformed iterators and a wrapper
+around each index of the core container. However, there is a hidden
+idiom here, that, once coded, will be very useful for other parts of
+this library and for Boost.MRU library. Following the ideas from
+`iterator_adaptor`, Boost.Bimap views are implemented using a
+[^container_adaptor]. There are several template classes (for example
+`map_adaptor` and `set_adaptor`) that take a `std::map` signature-conformant
+class and new iterators, and adapt the container so it now uses this
+iterators instead of the originals. For example, if you have a
+`std::set<int*>`, you can build other container that behaves exactly as a
+`std::set<int>` using `set_adaptor` and [^iterator_adaptor]. The combined use
+of this two tools is very powerful. A [^container_adaptor] can take classes
+that do not fulfil all the requirements of the adapted container. The
+new container must define these missing functions.
 
 [endsect]
 
@@ -222,32 +210,32 @@ missing functions.
 
 [h2 N-1, N-N, hashed maps]
 
-This is a very interesting point in this design. The framework introduced
-in ['std::set theory] allows to manage the different constraints with a
-very simple and conceptual approach. It is both easy to remember and to
-learn. The idea here is to allow the user to specify the set type of each
-key directly. To be able to implement this feature we have to solve two
-problems:
+This is a very interesting point of the design. The framework introduced
+in ['std::set theory] permits the management of the different constraints
+with a very simple and conceptual approach. It is easy both to remember
+and to learn. The idea here is to allow the user to specify the set type
+of each key directly. In order to implement this feature, we have to
+solve two problems:
 
-* The index types of the multi_index_container core, now depends on the
-set type use for each key.
-* The map views now change their semantic according to the set type chosen.
+* The index types of the `multi_index_container` core now depends on
+the set type used for each key.
+* The map views now change their semantics according to the set type
+chosen.
 
-Boost.Bimap relies heavily in Boost.MPL to implement all the the metaprogramming
-necessary to get this framework working.
-By default, if the user does not specify the kind of the set, it is used a
-std::set type.
+Boost.Bimap relies heavily on Boost.MPL to implement all of the
+metaprogramming necessary to make this framework work. By default, if
+the user does not specify the kind of the set, a `std::set` type is used.
 
 __BIMAP_STRUCTURES__
 
 [h2 set type of relation constraints]
 
-The constraints of the bimap set view are another very important feature.
-In general, Boost.Bimap users will base the set view type in one of the
-two set types of their keys. However it may be useful to give this set
-another constraints or simple order it differently.
-By default Boost.Bimap will base the set of the relation in the left key
-but the user is allowed to choose between:
+The constraints of the bimap set view are another very important
+feature. In general, Boost.Bimap users will base the set view type on
+one of the two set types of their keys. It may be useful however to give
+this set other constraints or simply to order it differently. By
+default, Boost.Bimap bases the set of the relation on the left key, but
+the user may choose between:
 
 * left_based
 * right_based
@@ -258,31 +246,31 @@ but the user is allowed to choose between:
 * list_of
 * vector_of
 
-In the first two cases there are only two indexes in the multi_index_core and
-for this reason are the prefeared option.
-The implementation uses some more metaprogramming to define a new index if
-it is necessary.
+In the first two cases, there are only two indices in the
+`multi_index_core`, and for this reason, these are the preferred options.
+The implementation uses further metaprogramming to define a new index if
+necessary.
 
 [h2 Hooking Data]
 
-This is one of the things that will make Boost.Bimap very appealing to attack
-a problem. In general programmers use maps to access information quickly.
-Boost.Bimap allows the user to hook data inside the bimap so it is not
-necessary to maintain another map.
-The implementation is based heavily in metaprogramming.
+This is one of the things that makes Boost.Bimap very appealing in
+tackling a problem. In general, programmers use maps to access
+information quickly. Boost.Bimap allows the user to hook data inside the
+bimap so that it is not necessary to maintain another map. The
+implementation is based heavily on metaprogramming.
 
 [h2 Tagged]
 
-The idea of use tags instead of the [^member_at::side] idiom is very appealing
-since the code is more readable with it. The only price is compile time.
-['boost/bimap/tagged] is the implementation of a non invasive [^tagged] idiom.
-The [^relation] class is built in such a way that even when the user use tags
-the [^member_at::side] idiom continues to work. This is good since an user can
-start tagging even when he have coded a part of the algorithm and the untagged
-code will continue to work.
-The development gets a little more complicated to include user defined tags but
-there are a lot of handy metafunctions defined in the [^tagged] idiom that help
-to keep things simple enough.
+The idea of using tags instead of the [^member_at::side] idiom is very
+appealing since code that uses it is more readable. The only cost is
+compile time. ['boost/bimap/tagged] is the implementation of a non-invasive
+tagged idiom. The [^relation] class is built in such a way that even when
+the user uses tags, the [^member_at::side] idiom continues to work. This is
+good since an user can start tagging even before completing the coding
+of the algorithm, and the untagged code continues to work. The
+development becomes a little more complicated when user-defined tags are
+included, but there are many handy metafunctions defined in the [^tagged]
+idiom that help to keep things simple enough.
 
 __TAGGED__
 
@@ -292,15 +280,15 @@ __TAGGED__
 
 You can browse the code using the [@doxydoc/index.html [*Boost.Bimap doxygen docs]].
 
-The code follows as close as possible the
-[@http://www.boost.org/more/lib_guide.htm Boost Library Requirement and Guidelines].
+The code follows the [@http://www.boost.org/more/lib_guide.htm Boost Library Requirement and Guidelines] as
+closely as possible.
 
 [table folders in boost/bimap
 [[name][what is inside?]]
 [[/                     ][user level header files             ]]
 [[tagged/               ][tagged idiom                        ]]
 [[relation/             ][the bimap data                      ]]
-[[container_adaptor/    ][easy way of adapt containers        ]]
+[[container_adaptor/    ][easy way of adapting containers     ]]
 [[views/                ][bimap views                         ]]
 [[property_map/         ][support for property map concept    ]]
 ]
@@ -309,7 +297,7 @@ The code follows as close as possible the
 [[name][what is inside?]]
 [[          ][class definitions]]
 [[support/  ][optional metafunctions and free functions]]
-[[detail/   ][things not intended for the user eye]]
+[[detail/   ][things not intended for the user's eyes]]
 ]
 
 [endsect]
