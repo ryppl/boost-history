@@ -12,6 +12,20 @@
 #include <list>
 #include <cmath>
 
+// If using VC, disable some warnings that trip in boost::serialization bowels
+#ifdef BOOST_MSVC
+    #pragma warning(disable:4267)   // Narrowing conversion
+    #pragma warning(disable:4996)   // Deprecated functions
+#endif
+
+#include <boost/property_tree/ptree_serialization.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/xml_iarchive.hpp>
+#include <boost/archive/xml_oarchive.hpp>
+
 // Predicate for sorting keys
 template<class Ptree>
 struct SortPred
@@ -134,6 +148,7 @@ int test_main(int, char *[])
         test_empty_size_max_size(pt);
         test_ptree_bad_path(pt);
         test_ptree_bad_data(pt);
+        test_serialization(pt);
         test_leaks(pt);                  // must be a final test
     }
 
@@ -163,6 +178,7 @@ int test_main(int, char *[])
         test_empty_size_max_size(pt);
         test_ptree_bad_path(pt);
         test_ptree_bad_data(pt);
+        test_serialization(pt);
         test_leaks(pt);                  // must be a final test
     }
 #endif
@@ -192,6 +208,7 @@ int test_main(int, char *[])
         test_empty_size_max_size(pt);
         test_ptree_bad_path(pt);
         test_ptree_bad_data(pt);
+        test_serialization(pt);
         test_leaks(pt);                  // must be a final test
     }
 
@@ -221,6 +238,7 @@ int test_main(int, char *[])
         test_empty_size_max_size(pt);
         test_ptree_bad_path(pt);
         test_ptree_bad_data(pt);
+        test_serialization(pt);
         test_leaks(pt);                  // must be a final test
     }
 #endif

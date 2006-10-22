@@ -1139,6 +1139,58 @@ void test_ptree_bad_data(PTREE *)
     BOOST_ERROR("No required exception thrown");
 }
 
+void test_serialization(PTREE *)
+{
+
+    // Prepare test tree
+    PTREE pt;
+    pt.put_value(1);
+    pt.put(T("key1"), 3);
+    pt.put(T("key1.key11)"), 3.3);
+    pt.put(T("key1.key12"), T("foo"));
+    pt.put(T("key2"), true);
+    pt.put(T("key2.key21.key211.key2111.key21111"), T("super deep!"));
+    pt.put_child(T("empty"), boost::property_tree::empty_ptree<PTREE>());
+    pt.put(T("loooooong"), PTREE::data_type(10000, CHTYPE('a')));
+
+    // Endforce const for input
+    const PTREE &pt1 = pt;
+    
+    // Test text archives
+    {
+        std::stringstream stream;
+        boost::archive::text_oarchive oa(stream);
+        oa & pt1;
+        boost::archive::text_iarchive ia(stream);
+        PTREE pt2;
+        ia & pt2;
+        BOOST_CHECK(pt1 == pt2);
+    }
+    
+    // Test binary archives
+    {
+        std::stringstream stream;
+        boost::archive::binary_oarchive oa(stream);
+        oa & pt1;
+        boost::archive::binary_iarchive ia(stream);
+        PTREE pt2;
+        ia & pt2;
+        BOOST_CHECK(pt1 == pt2);
+    }
+
+    // Test XML archives
+    {
+        std::stringstream stream;
+        boost::archive::xml_oarchive oa(stream);
+        oa & boost::serialization::make_nvp("pt", pt1);
+        boost::archive::xml_iarchive ia(stream);
+        PTREE pt2;
+        ia & boost::serialization::make_nvp("pt", pt2);
+        BOOST_CHECK(pt1 == pt2);
+    }
+
+}
+
 void test_leaks(PTREE *)
 {
     BOOST_CHECK(PTREE::debug_get_instances_count() == 0);

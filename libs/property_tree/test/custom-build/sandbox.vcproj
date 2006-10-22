@@ -48,7 +48,7 @@
 				TreatWChar_tAsBuiltInType="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -129,7 +129,7 @@
 				TreatWChar_tAsBuiltInType="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				Detect64BitPortabilityProblems="true"
+				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -281,6 +281,10 @@
 		</File>
 		<File
 			RelativePath="..\..\..\..\boost\property_tree\ptree_fwd.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\..\..\boost\property_tree\ptree_serialization.hpp"
 			>
 		</File>
 		<File

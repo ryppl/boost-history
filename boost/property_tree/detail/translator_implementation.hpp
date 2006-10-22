@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// ******
+// Copyright (C) 2002-2006 Marcin Kalicinski
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -16,6 +16,9 @@ namespace boost { namespace property_tree
     namespace detail
     {
         
+        ////////////////////////////////////////////////////////////////////////////
+        // Helpers
+
         // Data-to-string converter for std::string
         inline std::string data_to_string(const std::string &data)
         {
@@ -28,9 +31,6 @@ namespace boost { namespace property_tree
         {
             return narrow(data.c_str());
         }
-
-        ////////////////////////////////////////////////////////////////////////////
-        // Helpers
 
         template<class T>
         struct array_to_pointer_decay
@@ -45,8 +45,17 @@ namespace boost { namespace property_tree
         };
 
         ////////////////////////////////////////////////////////////////////////////
-        // Extractor and inserter
+        // Extractor
 
+        // Various specializations of extractors and inserters are provided to:
+        // 1. Optimize use of strings by copying them directly instead through stringstream
+        // 2. Optimize use of native char (i.e the same char as used by data string) by copying 
+        //    it directly instead of through stringstream
+        // 3. Treat signed and unsigned chars as integers, not as characters, i.e.
+        //    pt.put_value(signed char(65)) produces data equal to "65", instead of "A".
+        //    Only plain char is treated as a character type, i.e pt.put_value(char(65)) will
+        //    produce "A"
+        
         template<class Ch, class T>
         struct extractor
         {
@@ -56,7 +65,7 @@ namespace boost { namespace property_tree
             {
                 std::basic_istringstream<Ch> stream(data);
                 stream.imbue(loc);
-                stream >> extracted >> std::ws;
+                stream >> std::boolalpha >> extracted >> std::ws;
                 return stream.eof() && !stream.fail() && !stream.bad();
             }
         };
@@ -90,6 +99,51 @@ namespace boost { namespace property_tree
             }
         };
 
+        template<class Ch>
+        struct extractor<Ch, signed char>
+        {
+            inline bool operator()(const std::basic_string<Ch> &data, 
+                                   signed char &extracted,
+                                   const std::locale &loc) const
+            {
+                std::basic_istringstream<Ch> stream(data);
+                stream.imbue(loc);
+                int tmp;
+                stream >> tmp >> std::ws;
+                if (stream.eof() && !stream.fail() && !stream.bad())
+                {
+                    extracted = static_cast<signed char>(tmp);
+                    return true;
+                }
+                else
+                    return false;
+            }
+        };
+
+        template<class Ch>
+        struct extractor<Ch, unsigned char>
+        {
+            inline bool operator()(const std::basic_string<Ch> &data, 
+                                   unsigned char &extracted,
+                                   const std::locale &loc) const
+            {
+                std::basic_istringstream<Ch> stream(data);
+                stream.imbue(loc);
+                unsigned int tmp;
+                stream >> tmp >> std::ws;
+                if (stream.eof() && !stream.fail() && !stream.bad())
+                {
+                    extracted = static_cast<unsigned char>(tmp);
+                    return true;
+                }
+                else
+                    return false;
+            }
+        };
+
+        ////////////////////////////////////////////////////////////////////////////
+        // Inserter
+
         template<class Ch, class T>
         struct inserter
         {
@@ -100,11 +154,34 @@ namespace boost { namespace property_tree
                 typedef typename detail::array_to_pointer_decay<T>::type T2;
                 std::basic_ostringstream<Ch> stream;
                 stream.imbue(loc);
-                if (std::numeric_limits<T2>::is_specialized)
+                if (std::numeric_limits<T2>::is_specialized
+                    && !std::numeric_limits<T2>::is_exact)
                     stream.precision(std::numeric_limits<T2>::digits10 + 1);
-                stream << to_insert;
+                stream << std::boolalpha << to_insert;
                 data = stream.str();
                 return !stream.fail() && !stream.bad();
+            }
+        };
+
+        template<class Ch>
+        struct inserter<Ch, signed char>
+        {
+            inline bool operator()(std::basic_string<Ch> &data, 
+                                   const signed char &to_insert,
+                                   const std::locale &loc) const
+            {
+                return detail::inserter<Ch, int>()(data, static_cast<int>(to_insert), loc);
+            }
+        };
+
+        template<class Ch>
+        struct inserter<Ch, unsigned char>
+        {
+            inline bool operator()(std::basic_string<Ch> &data, 
+                                   const unsigned char &to_insert,
+                                   const std::locale &loc) const
+            {
+                return detail::inserter<Ch, unsigned int>()(data, static_cast<unsigned int>(to_insert), loc);
             }
         };
 
