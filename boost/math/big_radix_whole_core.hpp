@@ -66,6 +66,10 @@ template < int Radix, class Allocator >
 template < int Radix, class Allocator >
     int  sgn( big_radix_whole<Radix, Allocator> const &x );
 
+template < int Radix, class Allocator >
+    big_radix_whole<Radix, Allocator>  digit_sum( big_radix_whole<Radix,
+     Allocator> const &x );
+
 
 //  Radix-specific bignum unsigned integer class template declaration  -------//
 
@@ -222,9 +226,9 @@ public:
     void  negate_self() const;
 
     // Special multiplication and division operations
-    //void  add_product( big_radix_whole const &addend_multiplicand,
+    //void  add_full_product( big_radix_whole const &addend_multiplicand,
     // big_radix_whole const &addend_multiplier );
-    //void  subtract_product( big_radix_whole const &subtrahend_multiplicand,
+    //void  subtract_full_product( big_radix_whole const &subtrahend_multiplicand,
     // big_radix_whole const &subtrahend_multiplier );
     //std::pair<big_radix_whole, big_radix_whole>  divide_by( big_radix_whole
     // const &divisor ) const;
@@ -233,6 +237,11 @@ public:
     //void  power_self( unsigned exponent );
     //void  root_self( unsigned index );
     //void  square_root_self();
+
+    //void  add_mixed_product( big_radix_whole const &addend_full_factor,
+    // digit_type addend_single_factor );
+    //void  subtract_mixed_product( big_radix_whole const &subtrahend_full_factor,
+    // digit_type subtrahend_single_factor );
 
     //! Fuse-multiply/add by two single-digit values
     void  multiply_single_add_single( digit_type augend_multiplier, digit_type
@@ -271,6 +280,11 @@ public:
     //! Subtract a single-digit value
     void  subtract_single( digit_type subtrahend );
 
+    //void  add_shifted_full( big_radix_whole const &value, size_type index );
+    //void  subtract_shifted_full( big_radix_whole const &value, size_type index );
+
+    //void  subtract_absolutely( big_radix_whole const &value );
+
     // Special shifting operations
     //! Up-shift in a new one's digit
     void        shift_up_add_single( digit_type value );
@@ -298,6 +312,18 @@ public:
     //! Converts stored value to a given numeric type
     template < typename NumericType >
     NumericType  to_number() const;
+
+    // Digit plays
+    //! Returns the number of occurrences of a specific digit value
+    size_type  specific_digit_count( digit_type value ) const;
+
+    //! Assign digit sum to self
+    void        digit_summate_self();
+    //! Returns the final result of iterated digit sums
+    digit_type  digital_root() const;
+
+    //! Reverse the order of contained digits
+    void  reverse_digits();
 
     // Operators (use automatic copy-assignment operator)
     //! Boolean conversion

@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   20 Oct 2006  Initial version (Daryle Walker)
+//   22 Oct 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -84,6 +84,46 @@ bool  rigged::rigged_ = false;
 }  // anonymous namespace
 
 typedef fast_pool_allocator<int, rigged>  rigged_allocator;
+
+namespace
+{
+
+// Find the best square-root approximation for INT_MAX
+class sqrt_int_max_finder
+{
+    template < int DigitAmount, bool DigitAmountEven = true >
+    struct finder
+    {
+        static  int const  sqrt_max = 1 << DigitAmount / 2;
+    };
+
+    template < int DigitAmount >
+    struct finder<DigitAmount, false>
+    {
+        // I think/hope that built-in integers MUST be base-2.
+        // 70/99 is an approximation for 1/sqrt(2)
+        static  int const  sqrt_max = (1 << (DigitAmount + 1) / 2) * 70 / 99;
+    };
+
+    typedef std::numeric_limits<int>  limits_type;
+
+public:
+    static  int const  sqrt_max = finder<limits_type::digits,
+     (limits_type::digits % 2 == 0)>::sqrt_max;
+
+};
+
+template < int DigitAmount, bool DigitAmountEven >
+int const  sqrt_int_max_finder::finder<DigitAmount, DigitAmountEven>::sqrt_max;
+
+template < int DigitAmount >
+int const  sqrt_int_max_finder::finder<DigitAmount, false>::sqrt_max;
+
+int const  sqrt_int_max_finder::sqrt_max;
+
+}  // anonymous namespace
+
+typedef big_radix_whole<sqrt_int_max_finder::sqrt_max>  big_ultimate;
 
 
 // Helper functions
@@ -1770,6 +1810,285 @@ BOOST_AUTO_TEST_CASE( abs_sgn_test )
     BOOST_CHECK_EQUAL( object, fourhundredfiftysix );
     object.sign_self();
     BOOST_CHECK_EQUAL( object, one );
+}
+
+// Counting digit values
+BOOST_AUTO_TEST_CASE( specific_digit_count_test )
+{
+    using namespace boost::lambda;
+
+    using std::transform;
+
+    // Prepare items to compute, hold, and compare results
+    typedef big_octal::size_type  size_type;
+
+    boost::counting_iterator<big_octal::digit_type> const  cb( 0 ),
+                                            ce( big_octal::radix );
+    std::vector<size_type>             scratch( big_octal::radix );
+
+    // The compact representation doesn't have any digits for zero
+    {
+        big_octal const  zero( 0u );
+        size_type const  results_0[] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        transform( cb, ce, scratch.begin(),
+         bind(&big_octal::specific_digit_count, zero, _1) );
+        BOOST_CHECK_EQUAL_COLLECTIONS( scratch.begin(), scratch.end(),
+         array_begin(results_0), array_end(results_0) );
+    }
+
+    // Other single-digit values contain only themselves
+    {
+        big_octal const  five( 05u );
+        size_type const  results_5[] = { 0, 0, 0, 0, 0, 1, 0, 0 };
+
+        transform( cb, ce, scratch.begin(),
+         bind(&big_octal::specific_digit_count, five, _1) );
+        BOOST_CHECK_EQUAL_COLLECTIONS( scratch.begin(), scratch.end(),
+         array_begin(results_5), array_end(results_5) );
+    }
+
+    // Internal zeros do count (also tests multiple digits per number)
+    {
+        big_octal const  onehundredninetyseven( 0305u );
+        size_type const  results_197[] = { 1, 0, 0, 1, 0, 1, 0, 0 };
+
+        transform( cb, ce, scratch.begin(),
+         bind(&big_octal::specific_digit_count, onehundredninetyseven, _1) );
+        BOOST_CHECK_EQUAL_COLLECTIONS( scratch.begin(), scratch.end(),
+         array_begin(results_197), array_end(results_197) );
+    }
+
+    {
+        big_octal const  thirtytwo( 040 );
+        size_type const  results_32[] = { 1, 0, 0, 0, 1, 0, 0, 0 };
+
+        transform( cb, ce, scratch.begin(),
+         bind(&big_octal::specific_digit_count, thirtytwo, _1) );
+        BOOST_CHECK_EQUAL_COLLECTIONS( scratch.begin(), scratch.end(),
+         array_begin(results_32), array_end(results_32) );
+    }
+
+    // Multiple occurrences of a digit (including nothing else)
+    {
+        big_octal const  fourhundredthirtyeight( 0666u );
+        size_type const  results_438[] = { 0, 0, 0, 0, 0, 0, 3, 0 };
+
+        transform( cb, ce, scratch.begin(),
+         bind(&big_octal::specific_digit_count, fourhundredthirtyeight, _1) );
+        BOOST_CHECK_EQUAL_COLLECTIONS( scratch.begin(), scratch.end(),
+         array_begin(results_438), array_end(results_438) );
+    }
+
+    {
+        big_octal const  seventyseventhousandeighthundredseventeen( 0227771ul );
+        size_type const  results_77817[] = { 0, 1, 2, 0, 0, 0, 0, 3 };
+
+        transform( cb, ce, scratch.begin(),
+         bind(&big_octal::specific_digit_count,
+         seventyseventhousandeighthundredseventeen, _1) );
+        BOOST_CHECK_EQUAL_COLLECTIONS( scratch.begin(), scratch.end(),
+         array_begin(results_77817), array_end(results_77817) );
+    }
+
+    {
+        big_octal const  onethousandninehundredfifteen( 03573u );
+        size_type const  results_1915[] = { 0, 0, 0, 2, 0, 1, 0, 1 };
+
+        transform( cb, ce, scratch.begin(),
+         bind(&big_octal::specific_digit_count, onethousandninehundredfifteen,
+         _1) );
+        BOOST_CHECK_EQUAL_COLLECTIONS( scratch.begin(), scratch.end(),
+         array_begin(results_1915), array_end(results_1915) );
+    }
+}
+
+// Digit sum and digital root
+BOOST_AUTO_TEST_CASE( digit_sum_root_test )
+{
+    using boost::math::digit_sum;
+
+    {
+        // Zero values are their own digit sum and digital root
+        big_decimal const  zero( 0u );
+
+        BOOST_CHECK_EQUAL( zero.digital_root(), 0 );
+        BOOST_CHECK_EQUAL( digit_sum(zero), zero );
+
+        big_decimal  a = zero;
+
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, zero );
+
+        // Other single-digit values are also their own D.S. & D.R.
+        big_decimal const  one( 1u ), six( 6u );
+
+        BOOST_CHECK_EQUAL( one.digital_root(), 1 );
+        BOOST_CHECK_EQUAL( digit_sum(one), one );
+
+        BOOST_CHECK_EQUAL( six.digital_root(), 6 );
+        BOOST_CHECK_EQUAL( digit_sum(six), six );
+
+        a = one;
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, one );
+        a = six;
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, six );
+
+        // Try out multiple-digit values
+        big_decimal const  eighteen( 18u ), sevenhundredthirtyeight( 738u );
+
+        BOOST_CHECK_EQUAL( eighteen.digital_root(), 9 );
+        BOOST_CHECK_EQUAL( digit_sum(eighteen), big_decimal(9u) );
+
+        BOOST_CHECK_EQUAL( sevenhundredthirtyeight.digital_root(), 9 );
+        BOOST_CHECK_EQUAL( digit_sum(sevenhundredthirtyeight), eighteen );
+
+        // Demonstrate additive persistence with the smallest numbers for each
+        // length (0 steps: 0; 1 step: 10; 2 steps: 19; 3 steps: 199; 4 steps:
+        // 2 * 10**22 - 1).  The 5-step demonstration would need a 128-bit
+        // memory space!  (It's 2 * 10**[2 * [10**22 - 1] / 9] - 1.)
+        big_decimal const  ten( 10u ), nineteen( 19u ),
+         onehundredninetynine( 199u ),
+         twentysextillion_minus_1( "19999999999999999999999" );
+
+        BOOST_CHECK_EQUAL( twentysextillion_minus_1.digital_root(), 1 );
+
+        a = twentysextillion_minus_1;
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, onehundredninetynine );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, nineteen );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, ten );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, one );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, one );
+    }
+
+    // Try to force so many digits that multiple adding runs are needed
+    {
+        big_ultimate const  one_u( 1u );
+        big_ultimate        m( one_u );
+        std::size_t const   block_size = std::numeric_limits<int>::max() /
+                             big_ultimate::radix;
+
+        m <<= 3u + block_size;
+        BOOST_REQUIRE( m.digit_count() > block_size );
+        m.digit_summate_self();
+        BOOST_CHECK_EQUAL( m, one_u );
+    }
+
+    // Try other radices
+    {
+        big_octal const  zero( 0u );
+
+        BOOST_CHECK_EQUAL( zero.digital_root(), 0 );
+        BOOST_CHECK_EQUAL( digit_sum(zero), zero );
+
+        big_octal const  one( 01u ), eight( 010u ), fifteen( 017u ),
+                         onehundredtwentyseven( 0177u ),
+                         two_up_55_minus_1( "1777777777777777777" );
+
+        BOOST_CHECK_EQUAL( two_up_55_minus_1.digital_root(), 01 );
+
+        big_octal  a = two_up_55_minus_1;
+
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, onehundredtwentyseven );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, fifteen );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, eight );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, one );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, one );
+    }
+
+    {
+        big_hexadecimal const  zero( 0u );
+
+        BOOST_CHECK_EQUAL( zero.digital_root(), 0 );
+        BOOST_CHECK_EQUAL( digit_sum(zero), zero );
+
+        big_hexadecimal const  one( 0x1u ), sixteen( 0x10u ), thirtyone( 0x1Fu ),
+                               fivehundredeleven( 0x1FFu ), two_up_137_minus_1(
+                                "1FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF" );
+
+        BOOST_CHECK_EQUAL( two_up_137_minus_1.digital_root(), 0x1 );
+
+        big_hexadecimal  a = two_up_137_minus_1;
+
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, fivehundredeleven );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, thirtyone );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, sixteen );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, one );
+        a.digit_summate_self();
+        BOOST_CHECK_EQUAL( a, one );
+    }
+}
+
+// Digit-reversal
+BOOST_AUTO_TEST_CASE( reverse_digits_test )
+{
+    // Single-digit values are their own reversal
+    big_decimal const  zero( 0u ), three( 3u );
+    big_decimal        a;
+
+    a = zero;
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, zero );
+
+    a = three;
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, three );
+
+    // Reverse multiple-digit values
+    big_decimal const  sixtysix( 66u ), eighthundredseventyeight( 878u );
+
+    a.assign( 45u );
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, big_decimal(54u) );
+
+    a = sixtysix;
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, sixtysix );
+
+    a = eighthundredseventyeight;
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, eighthundredseventyeight );
+
+    a.assign( 1059u );
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, big_decimal(9501u) );
+
+    // Reversing with trailing zeros isn't recoverable
+    big_decimal const  nine( 9u ), ninety( 90u );
+
+    a = ninety;
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, nine );
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, nine );
+
+    a.assign( 780u );
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, big_decimal(87u) );
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, big_decimal(78u) );
+
+    a.assign( 302800ul );
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, big_decimal(8203u) );
+    a.reverse_digits();
+    BOOST_CHECK_EQUAL( a, big_decimal(3028u) );
 }
 
 BOOST_AUTO_TEST_SUITE_END()
