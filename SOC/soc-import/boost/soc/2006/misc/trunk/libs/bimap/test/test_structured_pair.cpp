@@ -18,7 +18,6 @@
 
 // Boost.Bimap
 #include <boost/bimap/detail/test/check_metadata.hpp>
-#include <boost/bimap/detail/test/check_size_of_pair.hpp>
 
 #include <boost/bimap/relation/structured_pair.hpp>
 
@@ -26,7 +25,6 @@
 BOOST_BIMAP_TEST_STATIC_FUNCTION( static_metadata_test )
 {
     using namespace boost::bimap::relation;
-    using namespace boost::bimap::detail::test;
 
     struct data_a { char     data; };
     struct data_b { double   data; };
@@ -46,9 +44,6 @@ BOOST_BIMAP_TEST_STATIC_FUNCTION( static_metadata_test )
         mirror_layout
 
     > sp_ba;
-
-    check_size_of_pair<sp_ab,data_a,data_b> test_1;
-    check_size_of_pair<sp_ba,data_a,data_b> test_2;
 
     BOOST_BIMAP_CHECK_METADATA(sp_ab, first_type , data_a);
     BOOST_BIMAP_CHECK_METADATA(sp_ab, second_type, data_b);
