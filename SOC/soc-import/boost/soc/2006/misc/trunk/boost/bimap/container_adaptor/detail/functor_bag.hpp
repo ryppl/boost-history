@@ -45,7 +45,7 @@ See it at \link http://www.cantrip.org/emptyopt.html
                                                                                     **/
 
 template < class Data, class FunctorList >
-struct DataWithFunctorBag :
+struct data_with_functor_bag :
 
     public mpl::inherit_linearly<
 
@@ -63,8 +63,8 @@ struct DataWithFunctorBag :
     >::type
 {
     Data data;
-    DataWithFunctorBag() {}
-    DataWithFunctorBag(typename add_reference<Data>::type const d) : data(d) {}
+    data_with_functor_bag() {}
+    data_with_functor_bag(typename add_reference<Data>::type const d) : data(d) {}
 
     template< class Functor >
     Functor& functor()

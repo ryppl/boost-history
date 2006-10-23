@@ -12,7 +12,8 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_MAP_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_MAP_ADAPTOR_HPP
 
-#include <boost/bimap/container_adaptor/detail/unordered_associative_container_adaptor.hpp>
+#include <boost/bimap/container_adaptor/unordered_associative_container_adaptor.hpp>
+#include <boost/mpl/aux_/na.hpp>
 
 namespace boost {
 namespace bimap {
@@ -29,18 +30,18 @@ template
     class LocalIterator,
     class ConstLocalIterator,
 
-    class IteratorToBaseConverter        = use_default,
-    class IteratorFromBaseConverter      = use_default,
-    class LocalIteratorFromBaseConverter = use_default,
-    class ValueToBaseConverter           = use_default,
-    class ValueFromBaseConverter         = use_default,
-    class KeyToBaseConverter             = use_default,
+    class IteratorToBaseConverter        = ::boost::mpl::na,
+    class IteratorFromBaseConverter      = ::boost::mpl::na,
+    class LocalIteratorFromBaseConverter = ::boost::mpl::na,
+    class ValueToBaseConverter           = ::boost::mpl::na,
+    class ValueFromBaseConverter         = ::boost::mpl::na,
+    class KeyToBaseConverter             = ::boost::mpl::na,
 
     class FunctorsFromDerivedClasses = mpl::list<>
 >
 class unordered_map_adaptor :
 
-    public ::boost::bimap::container_adaptor::detail::unordered_associative_container_adaptor
+    public ::boost::bimap::container_adaptor::unordered_associative_container_adaptor
     <
         Base,
         Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
@@ -53,7 +54,7 @@ class unordered_map_adaptor :
     >
 {
 
-    typedef ::boost::bimap::container_adaptor::detail::unordered_associative_container_adaptor
+    typedef ::boost::bimap::container_adaptor::unordered_associative_container_adaptor
     <
         Base,
         Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
@@ -81,20 +82,7 @@ class unordered_map_adaptor :
 
     protected:
 
-    typedef unordered_map_adaptor
-    <
-        Base,
-
-        Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
-
-        IteratorToBaseConverter, IteratorFromBaseConverter,
-        LocalIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter,
-
-        FunctorsFromDerivedClasses
-
-    > unordered_map_adaptor_;
+    typedef unordered_map_adaptor unordered_map_adaptor_;
 
     // Interface --------------------------------------------------------------
 
@@ -104,21 +92,6 @@ class unordered_map_adaptor :
 
 };
 
-
-
-/* TODO
-// Tests two maps for equality.
-template<class BimapType, class Tag>
-bool operator==(const map_view<BimapType,Tag>&, const map_view<BimapType,Tag>&)
-{
-}
-
-// Lexicographical comparison.
-template<class BimapType, class Tag>
-bool operator<(const map_view<BimapType,Tag>&, const map_view<BimapType,Tag>&)
-{
-}
-*/
 
 
 } // namespace container_adaptor

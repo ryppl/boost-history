@@ -18,7 +18,6 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/bimap/relation/support/member_with_tag.hpp>
 #include <boost/bimap/detail/mpl/bool_result.hpp>
-#include <boost/bimap/detail/safe_enabler.hpp>
 
 
 /** \struct boost::bimap::relation::support::is_tag_of_member_at_left
@@ -95,7 +94,7 @@ template
 <
     class Tag,
     class Relation,
-    class Enable = void // why bimap::detail::safe_enabler do not work?
+    class Enable = void
 >
 struct is_tag_of_member_at_left
 {
@@ -127,7 +126,7 @@ template
 <
     class Tag,
     class Relation,
-    class Enable = void // why bimap::detail::safe_enabler do not work?
+    class Enable = void
 >
 struct is_tag_of_member_at_right
 {

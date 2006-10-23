@@ -12,7 +12,8 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_MULTISET_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_MULTISET_ADAPTOR_HPP
 
-#include <boost/bimap/container_adaptor/detail/ordered_associative_container_adaptor.hpp>
+#include <boost/bimap/container_adaptor/ordered_associative_container_adaptor.hpp>
+#include <boost/mpl/aux_/na.hpp>
 
 namespace boost {
 namespace bimap {
@@ -29,18 +30,18 @@ template
     class ReverseIterator,
     class ConstReverseIterator,
 
-    class IteratorToBaseConverter          = use_default,
-    class IteratorFromBaseConverter        = use_default,
-    class ReverseIteratorFromBaseConverter = use_default,
-    class ValueToBaseConverter             = use_default,
-    class ValueFromBaseConverter           = use_default,
-    class KeyToBaseConverter               = use_default,
+    class IteratorToBaseConverter          = ::boost::mpl::na,
+    class IteratorFromBaseConverter        = ::boost::mpl::na,
+    class ReverseIteratorFromBaseConverter = ::boost::mpl::na,
+    class ValueToBaseConverter             = ::boost::mpl::na,
+    class ValueFromBaseConverter           = ::boost::mpl::na,
+    class KeyToBaseConverter               = ::boost::mpl::na,
 
     class FunctorsFromDerivedClasses = mpl::list<>
 >
 class multiset_adaptor :
 
-    public ::boost::bimap::container_adaptor::detail::ordered_associative_container_adaptor
+    public ::boost::bimap::container_adaptor::ordered_associative_container_adaptor
     <
         Base,
         Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
@@ -53,7 +54,7 @@ class multiset_adaptor :
     >
 {
 
-    typedef ::boost::bimap::container_adaptor::detail::ordered_associative_container_adaptor
+    typedef ::boost::bimap::container_adaptor::ordered_associative_container_adaptor
     <
         Base,
         Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
@@ -75,20 +76,7 @@ class multiset_adaptor :
 
     protected:
 
-    typedef multiset_adaptor
-    <
-        Base,
-
-        Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
-
-        IteratorToBaseConverter, IteratorFromBaseConverter,
-        ReverseIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter,
-        KeyToBaseConverter,
-
-        FunctorsFromDerivedClasses
-
-    > multiset_adaptor_;
+    typedef multiset_adaptor multiset_adaptor_;
 
 };
 

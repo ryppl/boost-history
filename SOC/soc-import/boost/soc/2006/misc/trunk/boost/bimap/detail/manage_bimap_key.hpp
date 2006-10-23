@@ -30,9 +30,6 @@ namespace boost {
 namespace bimap {
 namespace detail {
 
-// In detail, we are free to import same namespaces to augment the
-// readability of the code. No one is supposed to use this namespace.
-
 /** \struct boost::bimap::detail::manage_bimap_key
 \brief Metafunction to manage the set types of a bimap.
 

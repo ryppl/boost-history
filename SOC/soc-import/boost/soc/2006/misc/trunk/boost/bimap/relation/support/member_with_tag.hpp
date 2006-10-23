@@ -14,7 +14,6 @@
 
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/bimap/detail/debug/static_error.hpp>
-#include <boost/bimap/detail/safe_enabler.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/bool.hpp>
@@ -61,8 +60,7 @@ template
 <
     class Tag,
     class Relation,
-    class Enable = void // I do not know why this is not working
-                        // with bimap::detail::safe_enabler
+    class Enable = void
 >
 struct member_with_tag
 {
@@ -72,7 +70,7 @@ struct member_with_tag
 template< class Relation >
 struct member_with_tag
 <
-    member_at::left, Relation, void // bimap::detail::safe_enabler
+    member_at::left, Relation, void
 >
 {
     typedef member_at::left type;
@@ -81,7 +79,7 @@ struct member_with_tag
 template< class Relation >
 struct member_with_tag
 <
-    member_at::right, Relation, void // bimap::detail::safe_enabler
+    member_at::right, Relation, void
 >
 {
     typedef member_at::right type;

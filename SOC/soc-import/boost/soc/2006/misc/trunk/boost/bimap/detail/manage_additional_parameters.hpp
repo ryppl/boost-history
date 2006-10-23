@@ -16,6 +16,7 @@
 
 // Boost.MPL
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/aux_/na.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 #include <boost/bimap/detail/mpl/bool_result.hpp>
@@ -24,10 +25,6 @@
 namespace boost {
 namespace bimap {
 namespace detail {
-
-/// \brief States that a template parameter is not specified by the user.
-
-struct not_specified {};
 
 /// \brief Metafunction to check if a given type is a data_hook specification.
 
@@ -155,11 +152,11 @@ struct manage_additional_parameters
 
     typedef typename mpl::if_
     <
-        is_same<AP1,not_specified>,
+        ::boost::mpl::is_na<AP1>,
         case_NNN, // (1)
         typename mpl::if_
         <
-            is_same<AP2,not_specified>,
+            ::boost::mpl::is_na<AP2>,
             typename mpl::if_
             <
                 is_set_type_of_relation<AP1>,
@@ -175,7 +172,7 @@ struct manage_additional_parameters
             >::type,
             typename mpl::if_
             <
-                is_same<AP3,not_specified>,
+                ::boost::mpl::is_na<AP3>,
                 typename mpl::if_
                 <
                     is_data_hook<AP1>,

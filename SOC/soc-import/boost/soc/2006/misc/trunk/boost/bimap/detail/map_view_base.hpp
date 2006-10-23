@@ -47,9 +47,9 @@ namespace detail {
             const_iterator_type_by<Tag,BimapType>::type                          \
                                                                                  \
     >,                                                                           \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
     ::boost::bimap::relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
 >
 /********************************************************************************/
@@ -73,9 +73,9 @@ namespace detail {
             const_iterator_type_by<Tag,BimapType>::type                          \
                                                                                  \
     >,                                                                           \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
     ::boost::bimap::relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
 >
 /********************************************************************************/
@@ -170,7 +170,7 @@ class map_view_base
     }
 };
 
-// The following macro should we replace by a free function
+// The following macro should be replace by a free function
 
 /*****************************************************************************/
 #define BOOST_BIMAP_MAP_VIEW_RANGE_IMPLEMENTATION(BASE)                       \

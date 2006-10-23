@@ -16,7 +16,7 @@
 #include <boost/bimap/detail/debug/static_error.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/bimap/detail/safe_enabler.hpp>
+
 
 
 /******************************************************************************
@@ -45,7 +45,7 @@ struct NAME
     <                                                                         \
         class Tag,                                                            \
         class SymmetricType,                                                  \
-        class Enable = void /*why bimap::detail::safe_enabler do not work? */ \
+        class Enable = void                                                   \
     >                                                                         \
     struct NAME                                                               \
     {                                                                         \

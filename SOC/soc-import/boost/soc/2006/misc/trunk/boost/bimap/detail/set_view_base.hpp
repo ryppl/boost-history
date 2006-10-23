@@ -51,9 +51,9 @@ namespace detail {
             typename CORE_INDEX::const_iterator>                                 \
                                                                                  \
     >,                                                                           \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
     ::boost::bimap::relation::support::                                          \
         GetAboveViewFunctor<typename CORE_INDEX::value_type >,                   \
     typename CORE_INDEX::key_from_value                                          \
@@ -83,9 +83,9 @@ namespace detail {
             typename CORE_INDEX::const_iterator>                                 \
                                                                                  \
     >,                                                                           \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
     ::boost::bimap::relation::support::                                          \
         GetAboveViewFunctor<typename CORE_INDEX::value_type >,                   \
     typename CORE_INDEX::key_from_value                                          \
@@ -115,9 +115,9 @@ namespace detail {
             typename CORE_INDEX::const_iterator>                                 \
                                                                                  \
     >,                                                                           \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
     ::boost::bimap::relation::support::                                          \
         GetAboveViewFunctor<typename CORE_INDEX::value_type >                    \
 >
@@ -146,9 +146,9 @@ namespace detail {
             typename CORE_INDEX::const_iterator>                                 \
                                                                                  \
     >,                                                                           \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
-    ::boost::bimap::container_adaptor::use_default,                              \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
+    ::boost::mpl::na,                                                            \
     ::boost::bimap::relation::support::                                          \
         GetAboveViewFunctor<typename CORE_INDEX::value_type >                    \
 >

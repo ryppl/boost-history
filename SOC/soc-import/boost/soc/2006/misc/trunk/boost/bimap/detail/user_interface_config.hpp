@@ -45,12 +45,16 @@ the next step will be:
 #ifndef BOOST_BIMAP_BIMAP_HPP
 #define BOOST_BIMAP_BIMAP_HPP
 
+#ifdef BOOST_BIMAP_DISABLE_SERIALIZATION
+    #define BOOST_MULTI_INDEX_DISABLE_SERIALIZATION
+#endif
+
 #include <boost/config.hpp>
-#include <boost/bimap/detail/user_interface_config.hpp>
-#include <boost/mpl/aux_/na.hpp>
 
 #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
+
     #include <boost/serialization/nvp.hpp>
+
 #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 
 // Boost.Bimap
@@ -141,9 +145,9 @@ ones.
 template
 <
     class KeyTypeA, class KeyTypeB,
-    class AP1 = ::boost::mpl::na,
-    class AP2 = ::boost::mpl::na,
-    class AP3 = ::boost::mpl::na
+    class AP1 = ::boost::bimap::detail::not_specified,
+    class AP2 = ::boost::bimap::detail::not_specified,
+    class AP3 = ::boost::bimap::detail::not_specified
 >
 class bimap
 :

@@ -50,9 +50,6 @@ namespace bimap {
 
 namespace detail {
 
-// In detail, we are free to import same namespaces to augment the
-// readability of the code. No one is supposed to use this namespace.
-
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 template< class Type >

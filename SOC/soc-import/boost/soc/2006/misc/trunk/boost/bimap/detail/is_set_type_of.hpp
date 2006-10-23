@@ -14,7 +14,6 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/bimap/detail/safe_enabler.hpp>
 #include <boost/bimap/detail/mpl/bool_result.hpp>
 
 #include <boost/bimap/detail/concept_tags.hpp>
@@ -52,7 +51,7 @@ namespace boost {
 namespace bimap {
 namespace detail {
 
-template< class Type, class Enable = void > // why it is not working with detail::safe_enabler?
+template< class Type, class Enable = void >
 struct is_set_type_of
 {
     BOOST_BIMAP_MPL_BOOL_RESULT(false);
@@ -72,7 +71,7 @@ struct is_set_type_of
 };
 
 
-template< class Type, class Enable = void > // why it is not working with detail::safe_enabler?
+template< class Type, class Enable = void >
 struct is_set_type_of_relation
 {
     BOOST_BIMAP_MPL_BOOL_RESULT(false);

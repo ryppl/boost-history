@@ -17,6 +17,7 @@
 
 #include <boost/bimap/container_adaptor/list_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/identity_converters.hpp>
+#include <boost/mpl/aux_/na.hpp>
 
 namespace boost {
 namespace bimap {
@@ -33,11 +34,11 @@ template
     class ReverseIterator,
     class ConstReverseIterator,
 
-    class IteratorToBaseConverter          = use_default,
-    class IteratorFromBaseConverter        = use_default,
-    class ReverseIteratorFromBaseConverter = use_default,
-    class ValueToBaseConverter             = use_default,
-    class ValueFromBaseConverter           = use_default,
+    class IteratorToBaseConverter          = ::boost::mpl::na,
+    class IteratorFromBaseConverter        = ::boost::mpl::na,
+    class ReverseIteratorFromBaseConverter = ::boost::mpl::na,
+    class ValueToBaseConverter             = ::boost::mpl::na,
+    class ValueFromBaseConverter           = ::boost::mpl::na,
 
     class FunctorsFromDerivedClasses = mpl::list<>
 >
@@ -79,37 +80,9 @@ class list_map_adaptor :
 
     protected:
 
-    typedef list_map_adaptor
-    <
-        Base,
-
-        Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
-
-        IteratorToBaseConverter, IteratorFromBaseConverter,
-        ReverseIteratorFromBaseConverter,
-        ValueToBaseConverter, ValueFromBaseConverter,
-
-        FunctorsFromDerivedClasses
-
-    > list_map_adaptor_;
+    typedef list_map_adaptor list_map_adaptor_;
 
 };
-
-
-
-/* TODO
-// Tests two maps for equality.
-template<class BimapType, class Tag>
-bool operator==(const map_view<BimapType,Tag>&, const map_view<BimapType,Tag>&)
-{
-}
-
-// Lexicographical comparison.
-template<class BimapType, class Tag>
-bool operator<(const map_view<BimapType,Tag>&, const map_view<BimapType,Tag>&)
-{
-}
-*/
 
 
 } // namespace container_adaptor

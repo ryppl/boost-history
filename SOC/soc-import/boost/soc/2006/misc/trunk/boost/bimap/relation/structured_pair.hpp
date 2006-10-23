@@ -18,7 +18,6 @@
 
 #include <boost/call_traits.hpp>
 #include <boost/operators.hpp>
-#include <boost/bimap/detail/safe_enabler.hpp>
 #include <boost/bimap/detail/debug/static_error.hpp>
 #include <boost/bimap/relation/pair_layout.hpp>
 #include <boost/bimap/relation/symmetrical_base.hpp>

@@ -72,7 +72,7 @@ struct operator_bracket_proxy
         {
             ::boost::throw_exception( ::boost::bimap::duplicate_value() );
         }
-        return new_data;
+        return *this;
     }
 
     private:

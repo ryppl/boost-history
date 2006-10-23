@@ -12,9 +12,7 @@
 #ifndef BOOST_BIMAP_LIST_OF_HPP
 #define BOOST_BIMAP_LIST_OF_HPP
 
-#ifdef BOOST_BIMAP_DISABLE_SERIALIZATION
-    #define BOOST_MULTI_INDEX_DISABLE_SERIALIZATION
-#endif
+#include <boost/bimap/detail/user_interface_config.hpp>
 
 #include <boost/mpl/bool.hpp>
 
