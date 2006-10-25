@@ -97,7 +97,18 @@ class binary_tree : public Balance, public Augment {
 	}
 	binary_tree (self_type const& other)
 	: m_header(other.m_header), m_value_alloc(other.m_value_alloc)
-	{}
+	{
+		insert(this->root(), other.root());
+		
+		// TODO. The following lines take extra care of the header. A better 
+		// template <InputCursor> insert(...) function might make them obsolete
+		if (other.m_header[0] == &(other.m_header))
+			m_header[0] = &m_header;
+		if (other.m_header[1] == &(other.m_header))
+			m_header[1] = &m_header;
+		if (other.m_header.m_parent == &(other.m_header))
+			m_header.m_parent = &m_header;		
+	}
 	
 	~binary_tree()
 	{
@@ -106,11 +117,14 @@ class binary_tree : public Balance, public Augment {
 	
 	binary_tree<Tp, Balance, Augment, Alloc>& operator=(
 		binary_tree<Tp, Balance, Augment, Alloc> const& x);
-	template <class InputIterator>
-		void assign(InputIterator first, InputIterator last);
-	template <class Size, class T>
-		void assign(Size n, const T& t = T());
-	allocator_type get_allocator() const;
+	
+	template <class InputCursor>
+		void assign(InputCursor subtree);
+
+	allocator_type get_allocator() const
+	{
+		return m_value_alloc;
+	}
 	
 	/// Functions returning cursors (as required by the Hierarchy concept)
 	
@@ -180,9 +194,17 @@ class binary_tree : public Balance, public Augment {
 	 */ 	 
 	const_cursor inorder_first() const
 	{
+		return inorder_cfirst();
+	}
+
+	/**
+	 * Returns a read-only const_cursor to the first (inorder) value.
+	 */ 	 
+	const_cursor inorder_cfirst() const
+	{
 		return const_cursor(m_header[1], 0);
 	}
-	
+		
 	/// Functions returning (inorder) iterators (as required by the Sequence
 	/// concept)
 	
@@ -276,6 +298,20 @@ class binary_tree : public Balance, public Augment {
 		return pos.begin(); 
 	}
 
+	// TODO: Optimise. Especially wrt header links. 
+	// Making the other insert() a special case of this one might be more
+	// reasonable.
+    template <class InputCursor>
+	cursor insert(cursor pos, InputCursor subtree)
+	{
+		while (!subtree.empty()) {
+			insert(pos, *subtree);
+			insert(pos.begin(), subtree.begin());
+			insert(pos.end(), subtree.end());
+		}
+		return pos;
+	}
+
 	/// Sequence-specific
 	
 	/**
@@ -290,7 +326,7 @@ class binary_tree : public Balance, public Augment {
 	{
 		return iterator(this->insert(cursor(pos), val));
 	}
-	 	
+    
 	void erase (iterator pos)
  	{		
  		erase(cursor(pos));
@@ -305,6 +341,7 @@ class binary_tree : public Balance, public Augment {
  	 * without rebalancing
  	 * @param c	Cursor pointing to the node to be removed.
  	 */
+ 	// TODO: Take care of header-pointers
  	void clear(cursor c) 
  	{
  		if (!c.empty()) {
@@ -334,6 +371,13 @@ class binary_tree : public Balance, public Augment {
  		m_header[0] = node_base_type::nil();
 		m_header[1] = &m_header;
  	}
+
+	void swap(self_type& other)
+	{
+		// TODO
+		// Only swap headers, but don't forget about other nodes pointing to 
+		// header!
+	}
 
 	bool empty() const
 	{

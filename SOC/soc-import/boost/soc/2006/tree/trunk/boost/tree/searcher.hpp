@@ -334,11 +334,8 @@ public:
 	//TODO: invoke sortable ctors properly
  	searcher(key_extract const& extract = key_extract(), 
  			 key_compare const& compare = key_compare(),
-			 /*node_lower_bound const& node_lower = node_lower_bound(),*/ 
-			 const container_type& sortable = container_type())
- 	 : c(/* sortable */), //copyconstr? FIXME TODO
- 	   /* m_node_lower(node_lower_bound()),*/ 
- 	   comp(compare), ext(extract) { }
+			 container_type const& sortable = container_type())
+ 	 : c(sortable), comp(compare), ext(extract) { }
  	   	 
  	/**
 	 * Returns a read/write ("mutable") iterator to first value in the 

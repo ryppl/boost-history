@@ -1,13 +1,18 @@
 Proposal:
+* Add InputCursor requirements: binary cursor if it's a binary_tree member function, etc.
 * Cursor validity after insertion/erasure/clearing
-* balancers/augmentors for nary trees...
 
-* formalize parameters for balancer/augmentor members. first is tree, second current cursor etc.
+Implementation:
+
+* binary_tree: Implement swap, subtree insert, assign; copy ctor, assignment operator.
 * after shifting to balancers/augmentors as adaptors, should we try to keep the
 original ones as policy argument to them? (e.g. red_black_tree is say 
     balanced_tree<red_black_balancer, binary_tree> ?) May be esp. interesting with C++0x's
     template typedefs, faciliates development of new balancers (in an iterator adaptor like
     way, perhaps)...
+* See if searcher works with the adapting balancers as well as before...
+
+* Concept checks.
 
 Implement associative containers and priority_queue specialization using searcher
 Implement (binary) heap
