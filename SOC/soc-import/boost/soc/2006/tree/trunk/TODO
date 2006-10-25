@@ -3,6 +3,11 @@ Proposal:
 * balancers/augmentors for nary trees...
 
 * formalize parameters for balancer/augmentor members. first is tree, second current cursor etc.
+* after shifting to balancers/augmentors as adaptors, should we try to keep the
+original ones as policy argument to them? (e.g. red_black_tree is say 
+    balanced_tree<red_black_balancer, binary_tree> ?) May be esp. interesting with C++0x's
+    template typedefs, faciliates development of new balancers (in an iterator adaptor like
+    way, perhaps)...
 
 Implement associative containers and priority_queue specialization using searcher
 Implement (binary) heap
