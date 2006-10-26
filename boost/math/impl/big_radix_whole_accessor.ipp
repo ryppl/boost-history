@@ -130,6 +130,8 @@ boost::math::big_radix_whole<Radix, Allocator>::digit_limit
 (
 ) const
 {
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+
     return this->digits_.max_size();
 }
 
