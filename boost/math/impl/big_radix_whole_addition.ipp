@@ -53,6 +53,7 @@ boost::math::big_radix_whole<Radix, Allocator>::identify_self
     multiply) followed by an addition.
 
     \pre  <code>0 &lt;= <var>value</var> &lt; Radix</code>
+    \pre  <code><var>index</var> &lt; this-&gt;digit_limit()</code>
 
     \param value  The addend to be added to the specified digit
     \param index  The place of the specified digit
@@ -71,6 +72,7 @@ boost::math::big_radix_whole<Radix, Allocator>::add_shifted_single
     BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
 
     BOOST_ASSERT( 0 <= value && value < self_type::radix );
+    BOOST_ASSERT( index < this->digits_.max_size() );
 
     size_type const  s = this->digits_.size();
 
