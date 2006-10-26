@@ -58,36 +58,6 @@ class vector_map_view
     BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION
 };
 
-/// \brief Constant view of a side of a bimap that is signature compatible with std::map.
-/**
-
-This class uses container_adaptor and iterator_adaptor to wrapped a index of the
-multi_index bimap core so it can be used as a std::map.
-
-See also map_view.
-                                                                                    **/
-template< class Tag, class BimapType >
-class const_vector_map_view
-:
-    public BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
-        vector_map_adaptor,
-        Tag,BimapType,
-        const_reverse_iterator_type_by
-    )
-{
-    typedef BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
-        vector_map_adaptor,
-        Tag,BimapType,
-        const_reverse_iterator_type_by
-
-    ) base_;
-
-    public:
-
-    const_vector_map_view() {}
-    const_vector_map_view(typename base_::base_type & c) :
-        base_(c) {}
-};
 
 } // namespace views
 } // namespace bimap

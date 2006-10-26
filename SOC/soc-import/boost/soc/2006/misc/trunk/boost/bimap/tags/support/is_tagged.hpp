@@ -12,6 +12,7 @@
 #ifndef BOOST_BIMAP_TAGS_SUPPORT_IS_TAGGED_HPP
 #define BOOST_BIMAP_TAGS_SUPPORT_IS_TAGGED_HPP
 
+#include <boost/mpl/bool.hpp>
 #include <boost/bimap/tags/tagged.hpp>
 
 /** \struct boost::bimap::tags::support::is_tagged
@@ -39,20 +40,12 @@ namespace support {
 // is_tagged metafunction
 
 template< class Type >
-struct is_tagged
-{
-    typedef mpl::false_ type;
-    static const bool value = false;
-};
+struct is_tagged :
+    ::boost::mpl::false_ {};
 
 template< class Type, class Tag >
-struct is_tagged< tagged< Type, Tag > >
-{
-    typedef mpl::true_ type;
-    static const bool value = true;
-};
-
-
+struct is_tagged< tagged< Type, Tag > > :
+    ::boost::mpl::true_ {};
 
 } // namespace support
 } // namespace tags

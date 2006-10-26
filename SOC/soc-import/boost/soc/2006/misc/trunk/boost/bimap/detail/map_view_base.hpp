@@ -50,35 +50,11 @@ namespace detail {
     ::boost::mpl::na,                                                            \
     ::boost::mpl::na,                                                            \
     ::boost::mpl::na,                                                            \
-    ::boost::bimap::relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
+    ::boost::bimap::relation::support::                                          \
+        get_pair_functor<TAG, typename BIMAP::relation >                         \
 >
 /********************************************************************************/
 
-/********************************************************************************/
-#define BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(                            \
-    CONTAINER_ADAPTOR, TAG, BIMAP, CONST_OTHER_ITER                              \
-)                                                                                \
-::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
-<                                                                                \
-    const typename BIMAP::core_type::template index<TAG>::type,                  \
-    typename ::boost::bimap::support::const_iterator_type_by<TAG,BIMAP>::type,   \
-    typename ::boost::bimap::support::const_iterator_type_by<TAG,BIMAP>::type,   \
-    typename ::boost::bimap::support::CONST_OTHER_ITER<TAG,BIMAP>::type,         \
-    typename ::boost::bimap::support::CONST_OTHER_ITER<TAG,BIMAP>::type,         \
-    ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
-    <                                                                            \
-        typename ::boost::bimap::support::                                       \
-            const_iterator_type_by<Tag,BimapType>::type,                         \
-        typename ::boost::bimap::support::                                       \
-            const_iterator_type_by<Tag,BimapType>::type                          \
-                                                                                 \
-    >,                                                                           \
-    ::boost::mpl::na,                                                            \
-    ::boost::mpl::na,                                                            \
-    ::boost::mpl::na,                                                            \
-    ::boost::bimap::relation::support::GetPairFunctor<TAG, typename BIMAP::relation >            \
->
-/********************************************************************************/
 
 #if defined(BOOST_MSVC)
 /********************************************************************************/

@@ -58,38 +58,6 @@ class unordered_set_view
 };
 
 
-/// \brief Constant view of a bimap that is signature compatible with std::unordered_set.
-/**
-
-This class uses container_adaptor and iterator_adaptor to wrapped a index of the
-multi_index bimap core so it can be used as a std::unordered_set.
-
-See also unordered_set_view.
-                                                                                    **/
-
-template< class CoreIndex >
-class const_unordered_set_view
-:
-    public BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
-        unordered_set_adaptor,
-        CoreIndex,
-        const_local_iterator
-    )
-{
-    typedef BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
-        unordered_set_adaptor,
-        CoreIndex,
-        const_local_iterator
-
-    ) base_;
-
-    public:
-
-    const_unordered_set_view(typename base_::base_type & c)
-        : base_(c) {}
-};
-
-
 } // namespace views
 } // namespace bimap
 } // namespace boost

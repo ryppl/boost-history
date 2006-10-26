@@ -2,28 +2,6 @@
 //
 // Copyright (c) 2006 Matias Capeletto
 //
-// This code may be used under either of the following two licences:
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-// THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE. OF SUCH DAMAGE.
-//
-// Or:
-//
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -31,10 +9,15 @@
 /// \file relation/standard_relation.hpp
 /// \brief Includes the relation class
 
-#ifndef BOOST_BIMAP_RELATION_STANDARD_RELATION_HPP
-#define BOOST_BIMAP_RELATION_STANDARD_RELATION_HPP
+#ifndef BOOST_BIMAP_RELATION_STANDARD_RELATION_VIEW_HPP
+#define BOOST_BIMAP_RELATION_STANDARD_RELATION_VIEW_HPP
 
-// Boost
+#include <boost/bimap/relation/standard_relation_fwd.hpp>
+
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/remove_const.hpp>
+
 #include <boost/serialization/nvp.hpp>
 
 // Boost.Bimap
@@ -51,25 +34,25 @@
 
 #include <boost/bimap/relation/detail/totally_ordered_pair.hpp>
 
+
 namespace boost {
 namespace bimap {
 namespace relation {
 
-/// \brief Abstraction of a related pair of values, that extends the std::pair class.
-/**
+template< class TA, class TB >
+class const_standard_relation_view;
 
-This is a standard compliant suboptimal relation class.
+/** \brief Standard relation above view.
 
-See also standard_relation, mutant_relation.
-\ingroup relation_group
+See also standard_relation.
                                                            **/
 
 template< class TA, class TB >
-class standard_relation :
+class standard_relation_view  :
 
     public symmetrical_base<TA,TB>
-
 {
+
     typedef symmetrical_base<TA,TB> base_;
 
     public:
@@ -88,88 +71,51 @@ class standard_relation :
 
     //@}
 
-
     //@{
 
         /// data, exposed for easy manipulation
-        typename base_:: left_value_type  left;
-        typename base_::right_value_type right;
+        typename base_:: left_value_type &  left;
+        typename base_::right_value_type & right;
 
     //@}
 
-    standard_relation() {}
+    private:
 
-    standard_relation(typename ::boost::call_traits<
-                          typename base_:: left_value_type>::param_type l,
-                      typename ::boost::call_traits<
-                          typename base_::right_value_type>::param_type r) :
-        left (l),
-        right(r)
-    {}
+    typedef standard_relation<TA,TB,true > relation_force_mutable;
+    typedef standard_relation<TA,TB,false> relation_not_force_mutable;
 
-    standard_relation(const standard_relation & rel) :
+    public:
+
+    explicit standard_relation_view(relation_force_mutable & rel) :
 
         left (rel.left),
         right(rel.right)
     {}
 
-    // Allow to create relations from views
+    explicit standard_relation_view(relation_not_force_mutable & rel) :
 
-    explicit standard_relation(const left_pair & lp) :
-
-        left ( lp.first  ),
-        right( lp.second )
+        left (rel.left),
+        right(rel.right)
     {}
 
-    explicit standard_relation(const right_pair & rp) :
-
-        left ( rp.second ),
-        right( rp.first  )
-    {}
-
-    // Allow to create a relation from a std pair
-    // This allows to better integration with the stl
-
-    typedef std::pair
-    <
-        typename base_::left_value_type,
-        typename base_::right_value_type
-
-    > std_pair;
-
-    explicit standard_relation(const std_pair & p) :
-
-        left ( p.first  ),
-        right( p.second )
-    {}
-
-    // Operators
-
-    standard_relation& operator=(const standard_relation & rel)
+    operator const relation_not_force_mutable ()
     {
-        left  = rel.left ;
-        right = rel.right;
-        return *this;
-    }
-
-    standard_relation& operator=(const left_pair & p)
-    {
-        left  = p.first ;
-        right = p.second;
-        return *this;
-    }
-
-    standard_relation& operator=(const right_pair & p)
-    {
-        left  = p.second;
-        right = p.first ;
-        return *this;
+        return relation_not_force_mutable(
+            left, right
+        );
     }
 
     BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
         left,right,
 
-        standard_relation,
+        relation_force_mutable,
+        left,right
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        relation_not_force_mutable,
         left,right
     );
 
@@ -258,31 +204,189 @@ class standard_relation :
     {
         return const_right_pair_reference(*this);
     }
+};
 
-    #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
 
-    // Serialization support
+
+template< class TA, class TB >
+class const_standard_relation_view  :
+
+    public symmetrical_base<TA,TB>
+{
+
+    typedef symmetrical_base<TA,TB> base_;
+
+    public:
+
+    //@{
+        /// A signature compatible std::pair that is a view of the relation.
+
+        typedef structured_pair<TA,TB,normal_layout> left_pair ;
+        typedef structured_pair<TB,TA,mirror_layout> right_pair;
+
+        typedef standard_pair_view<TA,TB,normal_layout> left_pair_reference ;
+        typedef standard_pair_view<TB,TA,mirror_layout> right_pair_reference;
+
+        typedef const_standard_pair_view<TA,TB,normal_layout> const_left_pair_reference ;
+        typedef const_standard_pair_view<TB,TA,mirror_layout> const_right_pair_reference;
+
+    //@}
+
+    //@{
+
+        /// data, exposed for easy manipulation
+        const typename base_:: left_value_type &  left;
+        const typename base_::right_value_type & right;
+
+    //@}
 
     private:
 
-    friend class ::boost::serialization::access;
+    typedef standard_relation<TA,TB,true > relation_force_mutable;
+    typedef standard_relation<TA,TB,false> relation_not_force_mutable;
+    typedef standard_relation_view<TA,TB> relation_view;
 
-    template<class Archive>
-    void serialize(Archive & ar, const unsigned int version)
+    public:
+
+    explicit const_standard_relation_view(const relation_force_mutable & rel) :
+
+        left (rel.left),
+        right(rel.right)
+    {}
+
+    explicit const_standard_relation_view(const relation_not_force_mutable & rel) :
+
+        left (rel.left),
+        right(rel.right)
+    {}
+
+    const_standard_relation_view(const relation_view & rel) :
+
+        left (rel.left),
+        right(rel.right)
+    {}
+
+    operator const relation_not_force_mutable ()
     {
-        ar & BOOST_SERIALIZATION_NVP(left );
-        ar & BOOST_SERIALIZATION_NVP(right);
+        return relation_not_force_mutable(
+            left, right
+        );
     }
 
-    #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        const_standard_relation_view,
+        left,right
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        relation_view,
+        left,right
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        relation_force_mutable,
+        left,right
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        relation_not_force_mutable,
+        left,right
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        left_pair,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        right_pair,
+        second,first
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        left_pair_reference,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        right_pair_reference,
+        second,first
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        const_left_pair_reference,
+        first,second
+    );
+
+    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
+        left,right,
+
+        const_right_pair_reference,
+        second,first
+    );
+
+    // The following functions are redundant if you only consider this class.
+    // They are included to make easier the construction of the get and the
+    // pair_by metafunction. Remember that not all compiler supports the mutant
+    // idiom.
+
+    const typename base_::left_value_type & get_left() const
+    {
+        return left;
+    }
+
+    const typename base_::right_value_type & get_right() const
+    {
+        return right;
+    }
+
+    const_left_pair_reference get_left_pair() const
+    {
+        return const_left_pair_reference(*this);
+    }
+
+    const_right_pair_reference get_right_pair() const
+    {
+        return const_right_pair_reference(*this);
+    }
 };
 
+namespace support
+{
+
+template< class Type >
+struct is_standard_relation_view :
+    ::boost::mpl::false_ {};
+
+template< class TA, class TB >
+struct is_standard_relation_view< standard_relation_view<TA,TB> > :
+    ::boost::mpl::true_ {};
+
+} // namespace support
 
 } // namespace relation
 } // namespace bimap
 } // namespace boost
 
 
-#endif // BOOST_BIMAP_RELATION_STANDARD_RELATION_HPP
+#endif // BOOST_BIMAP_RELATION_STANDARD_RELATION_VIEW_HPP
 
 

@@ -15,10 +15,9 @@
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/type_traits/is_same.hpp>
 
+#include <boost/mpl/bool.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/bimap/relation/support/member_with_tag.hpp>
-#include <boost/bimap/detail/mpl/bool_result.hpp>
-
 
 /** \struct boost::bimap::relation::support::is_tag_of_member_at_left
 
@@ -27,11 +26,7 @@
 \code
 
 template< class Tag, class Relation >
-struct is_tag_of_member_at_left
-{
-    typedef {true_|false_} type;
-    typedef typename type::value value;
-};
+struct is_tag_of_member_at_left : {true_|false_} {};
 
 \endcode
 
@@ -57,11 +52,7 @@ See also member_with_tag, member_at, is_tag_of_member_at_right.
 \code
 
 template< class Tag, class Relation >
-struct is_tag_of_member_at_right
-{
-    typedef {true_|false_} type;
-    typedef typename type::value value;
-};
+struct is_tag_of_member_at_right : {true_|false_} {};
 
 \endcode
 
@@ -96,10 +87,8 @@ template
     class Relation,
     class Enable = void
 >
-struct is_tag_of_member_at_left
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(false);
-};
+struct is_tag_of_member_at_left :
+    ::boost::mpl::false_ {};
 
 template< class Tag, class Relation >
 struct is_tag_of_member_at_left
@@ -114,10 +103,8 @@ struct is_tag_of_member_at_left
         >
 
     >::type
->
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(true);
-};
+> :
+    ::boost::mpl::true_ {};
 
 // Metafunction is_tag_of_member_at_right
 // Easiear metaprogramming
@@ -128,10 +115,8 @@ template
     class Relation,
     class Enable = void
 >
-struct is_tag_of_member_at_right
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(false);
-};
+struct is_tag_of_member_at_right :
+    ::boost::mpl::false_ {};
 
 template< class Tag, class Relation >
 struct is_tag_of_member_at_right
@@ -146,10 +131,8 @@ struct is_tag_of_member_at_right
         >
 
     >::type
->
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(true);
-};
+> :
+    ::boost::mpl::true_ {};
 
 } // namespace support
 } // namespace relation

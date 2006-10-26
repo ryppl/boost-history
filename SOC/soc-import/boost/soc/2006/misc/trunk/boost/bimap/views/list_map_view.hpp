@@ -61,36 +61,6 @@ class list_map_view
     BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION
 };
 
-/// \brief Constant view of a side of a bimap.
-/**
-
-This class uses container_adaptor and iterator_adaptor to wrapped a index of the
-multi_index bimap core.
-
-See also list_map_view.
-                                                                                    **/
-template< class Tag, class BimapType >
-class const_list_map_view
-:
-    public BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
-        list_map_adaptor,
-        Tag,BimapType,
-        const_reverse_iterator_type_by
-    )
-{
-    typedef BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
-        list_map_adaptor,
-        Tag,BimapType,
-        const_reverse_iterator_type_by
-
-    ) base_;
-
-    public:
-
-    const_list_map_view(typename base_::base_type & c) :
-        base_(c) {}
-
-};
 
 } // namespace views
 } // namespace bimap

@@ -76,48 +76,6 @@ class unordered_map_view
 
 };
 
-/// \brief Constant view of a side of a bimap that is signature compatible with tr1::unordered_map.
-/**
-
-This class uses container_adaptor and iterator_adaptor to wrapped a index of the
-multi_index bimap core so it can be used as a tr1::unordered_map.
-
-See also unordered_map_view.
-                                                                                    **/
-
-template< class Tag, class BimapType >
-class const_unordered_map_view
-:
-    public BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
-        unordered_map_adaptor,
-        Tag,BimapType,
-        const_local_iterator_type_by
-    )
-{
-    typedef BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
-        unordered_map_adaptor,
-        Tag,BimapType,
-        const_local_iterator_type_by
-
-    ) base_;
-
-    public:
-
-    const_unordered_map_view(typename base_::base_type & c)
-        : base_(c) {}
-
-    typename base_::data_type const &
-        operator[](const typename base_::key_type & k) const
-    {
-        typename base_::const_iterator i = this->find(k);
-        if( i == this->end() )
-        {
-            ::boost::throw_exception( ::boost::bimap::value_not_found() );
-        }
-        return i->second;
-    }
-
-};
 
 } // namespace views
 } // namespace bimap

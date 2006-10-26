@@ -25,8 +25,6 @@
 #include <boost/bimap/views/unconstrained_map_view.hpp>
 #include <boost/bimap/views/unconstrained_set_view.hpp>
 
-#include <boost/bimap/detail/mpl/bool_result.hpp>
-
 namespace boost {
 namespace bimap {
 
@@ -102,16 +100,12 @@ struct unconstrained_set_of_relation : public ::boost::bimap::detail::set_type_o
 namespace detail {
 
 template<class T>
-struct is_unconstrained_set_of
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(false)
-};
+struct is_unconstrained_set_of :
+    ::boost::mpl::false_ {};
 
 template<class T>
-struct is_unconstrained_set_of< unconstrained_set_of<T> >
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(true)
-};
+struct is_unconstrained_set_of< unconstrained_set_of<T> > :
+    ::boost::mpl::true_ {};
 
 } // namespace detail
 

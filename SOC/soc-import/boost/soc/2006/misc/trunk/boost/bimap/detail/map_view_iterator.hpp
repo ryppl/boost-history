@@ -17,7 +17,7 @@
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/iterator/detail/enable_if.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
-#include <boost/bimap/relation/support/get_pair_functor.hpp>
+#include <boost/bimap/relation/support/pair_by.hpp>
 
 namespace boost {
 namespace bimap {
@@ -55,13 +55,9 @@ struct map_view_iterator_base
 template< class Tag, class Relation, class CoreIterator >
 struct map_view_iterator :
 
-    public map_view_iterator_base<Tag,Relation,CoreIterator>::type,
-    protected ::boost::bimap::relation::support::GetPairFunctor<Tag,Relation>
-
+    public map_view_iterator_base<Tag,Relation,CoreIterator>::type
 {
     typedef typename map_view_iterator_base<Tag,Relation,CoreIterator>::type base_;
-
-    typedef ::boost::bimap::relation::support::GetPairFunctor<Tag,Relation> get_pair_functor;
 
     public:
 
@@ -89,7 +85,9 @@ struct map_view_iterator :
 
     typename base_::reference dereference() const
     {
-        return get_pair_functor::operator()( *const_cast<typename base_::base_type::value_type*>(&(*this->base())) );
+        return ::boost::bimap::relation::support::pair_by<Tag>(
+            *const_cast<typename base_::base_type::value_type*>(&(*this->base()))
+        );
     }
 
     #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
@@ -141,12 +139,9 @@ struct const_map_view_iterator_base
 template< class Tag, class Relation, class CoreIterator >
 struct const_map_view_iterator :
 
-    public const_map_view_iterator_base<Tag,Relation,CoreIterator>::type,
-    protected ::boost::bimap::relation::support::GetPairFunctor<Tag,Relation>
+    public const_map_view_iterator_base<Tag,Relation,CoreIterator>::type
 {
     typedef typename const_map_view_iterator_base<Tag,Relation,CoreIterator>::type base_;
-
-    typedef ::boost::bimap::relation::support::GetPairFunctor<Tag,Relation> get_pair_functor;
 
     public:
 
@@ -177,7 +172,7 @@ struct const_map_view_iterator :
 
     typename base_::reference dereference() const
     {
-        return get_pair_functor::operator()(*this->base());
+        return ::boost::bimap::relation::support::pair_by<Tag>(*this->base());
     }
 
     #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION

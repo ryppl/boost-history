@@ -64,43 +64,6 @@ class multiset_view
     multiset_view & operator=(const multiset_view & v) { this->base() = v.base(); return *this; }
 };
 
-/// \brief Constant view of a bimap that is signature compatible with std::multiset.
-/**
-
-This class uses container_adaptor and iterator_adaptor to wrapped a index of the
-multi_index bimap core so it can be used as a std::multiset.
-
-See also multiset_view.
-                                                                                    **/
-
-template< class CoreIndex >
-class const_multiset_view
-:
-    public BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
-        multiset_adaptor,
-        CoreIndex,
-        const_reverse_iterator
-    )
-{
-    typedef BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
-        multiset_adaptor,
-        CoreIndex,
-        const_reverse_iterator
-
-    ) base_;
-
-    public:
-
-    const_multiset_view(typename base_::base_type & c) : base_(c) {}
-
-    template<typename LowerBounder,typename UpperBounder>
-    std::pair<typename base_::iterator, typename base_::iterator>
-        range(LowerBounder lower,UpperBounder upper) const
-    {
-        return this->base().range(lower,upper);
-    }
-};
-
 
 } // namespace views
 } // namespace bimap

@@ -59,37 +59,6 @@ class multimap_view
     multimap_view & operator=(const multimap_view & v) { this->base() = v.base(); return *this; }
 };
 
-/// \brief Constant view of a side of a bimap that is signature compatible with std::multimap.
-/**
-
-This class uses container_adaptor and iterator_adaptor to wrapped a index of the
-multi_index bimap core so it can be used as a std::multimap.
-
-See also multimap_view.
-                                                                                    **/
-
-template< class Tag, class BimapType >
-class const_multimap_view
-:
-    public BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
-        multimap_adaptor,
-        Tag,BimapType,
-        const_reverse_iterator_type_by
-    )
-{
-    typedef BOOST_BIMAP_CONST_MAP_VIEW_CONTAINER_ADAPTOR(
-        multimap_adaptor,
-        Tag,BimapType,
-        const_reverse_iterator_type_by
-
-    ) base_;
-
-    public:
-
-    const_multimap_view(typename base_::base_type & c) : base_(c) {}
-
-    BOOST_BIMAP_MAP_VIEW_RANGE_IMPLEMENTATION(base_)
-};
 
 } // namespace views
 } // namespace bimap

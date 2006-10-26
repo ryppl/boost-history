@@ -55,42 +55,11 @@ namespace detail {
     ::boost::mpl::na,                                                            \
     ::boost::mpl::na,                                                            \
     ::boost::bimap::relation::support::                                          \
-        GetAboveViewFunctor<typename CORE_INDEX::value_type >,                   \
+        get_above_view_functor<typename CORE_INDEX::value_type >,                \
     typename CORE_INDEX::key_from_value                                          \
 >
 /********************************************************************************/
 
-/********************************************************************************/
-#define BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(                            \
-    CONTAINER_ADAPTOR, CORE_INDEX, CONST_OTHER_ITER                              \
-)                                                                                \
-::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
-<                                                                                \
-    const CORE_INDEX,                                                            \
-    ::boost::bimap::detail::                                                     \
-        const_set_view_iterator< typename CORE_INDEX::const_iterator>,           \
-    ::boost::bimap::detail::                                                     \
-        const_set_view_iterator< typename CORE_INDEX::const_iterator>,           \
-    ::boost::bimap::detail::                                                     \
-        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
-    ::boost::bimap::detail::                                                     \
-        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
-    ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
-    <                                                                            \
-        ::boost::bimap::detail::const_set_view_iterator<                         \
-            typename CORE_INDEX::const_iterator>,                                \
-        ::boost::bimap::detail::const_set_view_iterator<                         \
-            typename CORE_INDEX::const_iterator>                                 \
-                                                                                 \
-    >,                                                                           \
-    ::boost::mpl::na,                                                            \
-    ::boost::mpl::na,                                                            \
-    ::boost::mpl::na,                                                            \
-    ::boost::bimap::relation::support::                                          \
-        GetAboveViewFunctor<typename CORE_INDEX::value_type >,                   \
-    typename CORE_INDEX::key_from_value                                          \
->
-/********************************************************************************/
 
 /********************************************************************************/
 #define BOOST_BIMAP_SEQUENCED_SET_VIEW_CONTAINER_ADAPTOR(                        \
@@ -119,40 +88,10 @@ namespace detail {
     ::boost::mpl::na,                                                            \
     ::boost::mpl::na,                                                            \
     ::boost::bimap::relation::support::                                          \
-        GetAboveViewFunctor<typename CORE_INDEX::value_type >                    \
+        get_above_view_functor<typename CORE_INDEX::value_type >                 \
 >
 /********************************************************************************/
 
-/********************************************************************************/
-#define BOOST_BIMAP_CONST_SEQUENCED_SET_VIEW_CONTAINER_ADAPTOR(                  \
-    CONTAINER_ADAPTOR, CORE_INDEX, CONST_OTHER_ITER                              \
-)                                                                                \
-::boost::bimap::container_adaptor::CONTAINER_ADAPTOR                             \
-<                                                                                \
-    const CORE_INDEX,                                                            \
-    ::boost::bimap::detail::                                                     \
-        const_set_view_iterator< typename CORE_INDEX::const_iterator>,           \
-    ::boost::bimap::detail::                                                     \
-        const_set_view_iterator< typename CORE_INDEX::const_iterator>,           \
-    ::boost::bimap::detail::                                                     \
-        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
-    ::boost::bimap::detail::                                                     \
-        const_set_view_iterator< typename CORE_INDEX::CONST_OTHER_ITER >,        \
-    ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
-    <                                                                            \
-        ::boost::bimap::detail::const_set_view_iterator<                         \
-            typename CORE_INDEX::const_iterator>,                                \
-        ::boost::bimap::detail::const_set_view_iterator<                         \
-            typename CORE_INDEX::const_iterator>                                 \
-                                                                                 \
-    >,                                                                           \
-    ::boost::mpl::na,                                                            \
-    ::boost::mpl::na,                                                            \
-    ::boost::mpl::na,                                                            \
-    ::boost::bimap::relation::support::                                          \
-        GetAboveViewFunctor<typename CORE_INDEX::value_type >                    \
->
-/********************************************************************************/
 
 #if defined(BOOST_MSVC)
 /********************************************************************************/

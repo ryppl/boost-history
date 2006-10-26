@@ -15,10 +15,10 @@
 #include <boost/bimap/relation/standard_pair_view.hpp>
 #include <boost/bimap/relation/standard_relation_view.hpp>
 
-#include <boost/bimap/detail/mpl/bool_result.hpp>
 #include <boost/bimap/relation/support/value_type_of.hpp>
 #include <boost/bimap/relation/detail/access_builder.hpp>
 
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
 
 
@@ -109,16 +109,12 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_IMPLEMENTATION_BUILDER
 // --------------------------------------------------------------------------
 
 template< class Type >
-struct is_standard_pair_view
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(false)
-};
+struct is_standard_pair_view :
+    ::boost::mpl::false_ {};
 
 template< class FirstType, class SecondType, class Layout >
-struct is_standard_pair_view< standard_pair_view<FirstType,SecondType,Layout> >
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(true)
-};
+struct is_standard_pair_view< standard_pair_view<FirstType,SecondType,Layout> > :
+    ::boost::mpl::true_ {};
 
 //------------------------------------------------------------------------------------
 

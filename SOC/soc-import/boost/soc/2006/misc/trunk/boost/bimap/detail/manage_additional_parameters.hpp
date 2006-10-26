@@ -15,11 +15,11 @@
 #include <memory>
 
 // Boost.MPL
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <boost/bimap/detail/mpl/bool_result.hpp>
 #include <boost/bimap/detail/is_set_type_of.hpp>
 
 namespace boost {
@@ -29,10 +29,7 @@ namespace detail {
 /// \brief Metafunction to check if a given type is a data_hook specification.
 
 template< class Type >
-struct is_data_hook
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(false);
-};
+struct is_data_hook : ::boost::mpl::false_ {};
 
 /** \struct boost::bimap::detail::manage_additional_parameters
 \brief Utility class to extract the additional parameters from the template parameters.

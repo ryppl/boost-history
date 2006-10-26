@@ -62,44 +62,6 @@ class set_view
     set_view & operator=(const set_view & v) { this->base() = v.base(); return *this; }
 };
 
-/// \brief Constant view of a bimap that is signature compatible with std::set.
-/**
-
-This class uses container_adaptor and iterator_adaptor to wrapped a index of the
-multi_index bimap core so it can be used as a std::set.
-
-See also set_view.
-                                                                                    **/
-
-
-template< class CoreIndex >
-class const_set_view
-:
-    public BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
-        set_adaptor,
-        CoreIndex,
-        const_reverse_iterator
-    )
-{
-    typedef BOOST_BIMAP_CONST_SET_VIEW_CONTAINER_ADAPTOR(
-        set_adaptor,
-        CoreIndex,
-        const_reverse_iterator
-
-    ) base_;
-
-    public:
-
-    const_set_view(typename base_::base_type & c) : base_(c) {}
-
-    template<typename LowerBounder,typename UpperBounder>
-    std::pair<typename base_::iterator,typename base_::iterator>
-        range(LowerBounder lower,UpperBounder upper) const
-    {
-        return this->base().range(lower,upper);
-    }
-};
-
 
 } // namespace views
 } // namespace bimap

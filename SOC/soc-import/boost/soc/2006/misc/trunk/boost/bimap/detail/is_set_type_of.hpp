@@ -12,10 +12,7 @@
 #ifndef BOOST_BIMAP_DETAIL_IS_SET_TYPE_OF_HPP
 #define BOOST_BIMAP_DETAIL_IS_SET_TYPE_OF_HPP
 
-#include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
-#include <boost/bimap/detail/mpl/bool_result.hpp>
-
 #include <boost/bimap/detail/concept_tags.hpp>
 
 /** \struct boost::bimap::detail::is_set_type_of
@@ -24,10 +21,7 @@
 
 \code
 template< class Type >
-struct is_set_type_of
-{
-    typedef {mpl::true_/mpl::false_} type;
-};
+struct is_set_type_of : {true_|false_} {};
 \endcode
                                                                         **/
 
@@ -37,10 +31,7 @@ struct is_set_type_of
 
 \code
 template< class Type >
-struct is_set_type_of_relation
-{
-    typedef {mpl::true_/mpl::false_} type;
-};
+struct is_set_type_of_relation : {true_|false_} {};
 \endcode
 
                                                                                **/
@@ -51,45 +42,13 @@ namespace boost {
 namespace bimap {
 namespace detail {
 
-template< class Type, class Enable = void >
-struct is_set_type_of
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(false);
-};
+template< class Type >
+struct is_set_type_of :
+    is_base_of< set_type_of_tag, Type > {};
 
-template
-<
-    class Type
->
-struct is_set_type_of
-<
-    Type,
-    typename enable_if< is_base_of< set_type_of_tag, Type > >::type
->
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(true);
-};
-
-
-template< class Type, class Enable = void >
-struct is_set_type_of_relation
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(false);
-};
-
-template
-<
-    class Type
->
-struct is_set_type_of_relation
-<
-    Type,
-    typename enable_if< is_base_of< set_type_of_relation_tag, Type > >::type
->
-{
-    BOOST_BIMAP_MPL_BOOL_RESULT(true);
-};
-
+template< class Type >
+struct is_set_type_of_relation :
+    is_base_of< set_type_of_relation_tag, Type > {};
 
 } // namespace detail
 } // namespace bimap

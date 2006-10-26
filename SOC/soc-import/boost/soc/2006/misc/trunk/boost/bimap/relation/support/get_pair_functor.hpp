@@ -7,7 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 /// \file relation/support/get_pair_functor.hpp
-/// \brief GetPairFunctor definition
+/// \brief get_pair_functor definition
 
 #ifndef BOOST_BIMAP_RELATION_SUPPORT_GET_PAIR_FUNCTOR_HPP
 #define BOOST_BIMAP_RELATION_SUPPORT_GET_PAIR_FUNCTOR_HPP
@@ -31,7 +31,7 @@ See also member_at, pair_by().
                                                                                   **/
 
 template< class Tag, class Relation >
-struct GetPairFunctor
+struct get_pair_functor
 {
     typename result_of::pair_by<Tag,Relation>::type
     operator()( Relation & r ) const
@@ -47,7 +47,7 @@ struct GetPairFunctor
 };
 
 template< class Relation >
-struct GetAboveViewFunctor
+struct get_above_view_functor
 {
     typename Relation::above_view_reference
     operator()( Relation & r ) const

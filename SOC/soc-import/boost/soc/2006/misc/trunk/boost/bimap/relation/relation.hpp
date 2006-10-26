@@ -15,7 +15,7 @@
 #include <boost/config.hpp>
 
 #include <boost/mpl/if.hpp>
-#include <boost/bimap/detail/mpl/bool_result.hpp>
+#include <boost/mpl/bool.hpp>
 
 // Boost.Bimap
 #include <boost/bimap/relation/mutant_relation.hpp>
@@ -114,7 +114,8 @@ struct is_mutant_idiom_supported_for
 
     #endif
 
-    BOOST_BIMAP_MPL_BOOL_RESULT(mutant_is_supported);
+    typedef mpl::bool_< mutant_is_supported > type;
+    static const bool value = type::value;
 };
 
 } // namespace detail

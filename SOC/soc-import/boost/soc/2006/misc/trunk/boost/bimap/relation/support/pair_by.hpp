@@ -81,8 +81,7 @@ namespace support {
 */
 
 
-// It cannot be used directly BOOST_BIMAP_SYMMETRIC_ACCESS_RESULT_OF_BUILDER
-// here because all the standard and mutant problem.
+// It cannot be used directly BOOST_BIMAP_SYMMETRIC_ACCESS_RESULT_OF_BUILDER here.
 
 namespace result_of {
 

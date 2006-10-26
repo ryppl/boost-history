@@ -59,39 +59,6 @@ class vector_set_view
     BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION
 };
 
-/// \brief Constant view of a bimap that is signature compatible with std::vector.
-/**
-
-This class uses container_adaptor and iterator_adaptor to wrapped a index of the
-multi_index bimap core so it can be used as a std::vector.
-
-See also set_view.
-                                                                                    **/
-
-
-template< class CoreIndex >
-class const_vector_set_view
-:
-    public BOOST_BIMAP_CONST_SEQUENCED_SET_VIEW_CONTAINER_ADAPTOR(
-        vector_adaptor,
-        CoreIndex,
-        const_reverse_iterator
-    )
-{
-    typedef BOOST_BIMAP_CONST_SEQUENCED_SET_VIEW_CONTAINER_ADAPTOR(
-        vector_adaptor,
-        CoreIndex,
-        const_reverse_iterator
-
-    ) base_;
-
-    public:
-
-    const_vector_set_view(typename base_::base_type & c) :
-        base_(c) {}
-
-};
-
 
 } // namespace views
 } // namespace bimap
