@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   22 Oct 2006  Initial version (Daryle Walker)
+//   29 Oct 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -873,10 +873,11 @@ BOOST_AUTO_TEST_SUITE_END()
 
 
 #pragma mark -
-#pragma mark Binary Operator & Routine Suite
+#pragma mark Basic Binary Operator & Routine Suite
 
-// The binary operators and the corresponding self-serve member function
-BOOST_AUTO_TEST_SUITE( binary_operator_and_routine_suite )
+// The binary operators and the corresponding self-serve member functions
+// (non-arithmetic)
+BOOST_AUTO_TEST_SUITE( binary_basic_operator_and_routine_suite )
 
 // Comparisons test
 BOOST_AUTO_TEST_CASE( comparison_test )
@@ -1046,6 +1047,16 @@ BOOST_AUTO_TEST_CASE( shifting_test )
     BOOST_CHECK_EQUAL( b.mod_radix_shift_down(), 3 );
     BOOST_CHECK_EQUAL( b, two );
 }
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+#pragma mark -
+#pragma mark Single-Precision Binary Operator & Routine Suite
+
+// The binary operators and the corresponding self-serve member function
+// (artihmetic, single-precision)
+BOOST_AUTO_TEST_SUITE( binary_single_operator_and_routine_suite )
 
 // Add with single digits test
 BOOST_AUTO_TEST_CASE( single_add_test )
@@ -1220,6 +1231,124 @@ BOOST_AUTO_TEST_CASE( single_subtract_test )
     BOOST_CHECK_EQUAL( a, big_decimal(10u) );
     a.subtract_single( 2 );
     BOOST_CHECK_EQUAL( a, big_decimal(8u) );
+}
+
+// Subtract-absolutely with single digits test
+BOOST_AUTO_TEST_CASE( single_subtract_absolutely_test )
+{
+    big_decimal const  zero, one( 1u ), two( 2u ), fortyfive( 45u );
+    big_decimal        a;
+
+    // Subtracting zero from anything, no matter the place, makes no change
+    a = zero;
+    BOOST_CHECK( !a.subtract_single_absolutely(0) );
+    BOOST_CHECK_EQUAL( a, zero );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(0, 1u) );
+    BOOST_CHECK_EQUAL( a, zero );
+
+    a = one;
+    BOOST_CHECK( !a.subtract_single_absolutely(0) );
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(0, 0u) );
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(0, 1u) );
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(0, 234u) );
+    BOOST_CHECK_EQUAL( a, one );
+
+    a = fortyfive;
+    BOOST_CHECK( !a.subtract_single_absolutely(0) );
+    BOOST_CHECK_EQUAL( a, fortyfive );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(0, 0u) );
+    BOOST_CHECK_EQUAL( a, fortyfive );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(0, 1u) );
+    BOOST_CHECK_EQUAL( a, fortyfive );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(0, 2u) );
+    BOOST_CHECK_EQUAL( a, fortyfive );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(0, 5678u) );
+    BOOST_CHECK_EQUAL( a, fortyfive );
+
+    // Subtract within the given digit range, without borrows
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(3, 0u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(42u) );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(2, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(22u) );
+
+    // Subtract enough to borrow, but stay within the given digit range
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(5, 0u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(17u) );
+
+    // Subtract enough from highest-placed digit to remove that digit
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(1, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(7u) );
+
+    // Subtract enough to borrow over a zero-run and remove top digit
+    a.assign( 100634ul );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(7, 2u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(99934ul) );
+
+    // Subtract enough to borrow over a run of zeros, but stay within range
+    a.assign( 300028ul );
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(4, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(299988ul) );
+
+    // Subtract a larger non-zero digit just in the range
+    BOOST_CHECK( a.subtract_shifted_single_absolutely(6, 5u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(300012ul) );
+
+    // Subtract a non-zero digit outside the range
+    BOOST_CHECK( a.subtract_shifted_single_absolutely(3, 6u) );  // just outside
+    BOOST_CHECK_EQUAL( a, big_decimal(2699988ul) );
+
+    BOOST_CHECK( a.subtract_shifted_single_absolutely(5, 9u) );  // w/ padding
+    BOOST_CHECK_EQUAL( a, big_decimal("4997300012") );
+
+    // Subtract within single digits
+    a = two;
+    BOOST_CHECK( !a.subtract_single_absolutely(1) );
+    BOOST_CHECK_EQUAL( a, one );
+
+    // Subtract to zero
+    BOOST_CHECK( !a.subtract_single_absolutely(1) );
+    BOOST_CHECK_EQUAL( a, zero );
+
+    // Subtract from zero
+    BOOST_CHECK( a.subtract_single_absolutely(2) );
+    BOOST_CHECK_EQUAL( a, two );
+
+    // Subtract past zero
+    BOOST_CHECK( a.subtract_single_absolutely(3) );
+    BOOST_CHECK_EQUAL( a, one );
+
+    // Double-to-single digit transition
+    a.assign( 12u );
+    BOOST_CHECK( !a.subtract_single_absolutely(1) );
+    BOOST_CHECK_EQUAL( a, big_decimal(11u) );
+
+    BOOST_CHECK( !a.subtract_single_absolutely(3) );
+    BOOST_CHECK_EQUAL( a, big_decimal(8u) );
+
+    // Subtract from zero to multiple-digit value
+    a.reset();
+    BOOST_CHECK( a.subtract_shifted_single_absolutely(3, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(30u) );
+
+    // Subtract to zero with multiple-digit value
+    BOOST_CHECK( !a.subtract_shifted_single_absolutely(3, 1u) );
+    BOOST_CHECK_EQUAL( a, zero );
+
+    // Subtract past zero with reducing digit count
+    a.assign( 187u );
+    BOOST_CHECK( a.subtract_shifted_single_absolutely(2, 2u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(13u) );
+
+    a.assign( 7965u );
+    BOOST_CHECK( a.subtract_shifted_single_absolutely(8, 3u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(35u) );
+
+    a.assign( 29994u );
+    BOOST_CHECK( a.subtract_shifted_single_absolutely(3, 4u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(6u) );
 }
 
 // Multiply with single digits, with fused add, test
@@ -1517,6 +1646,87 @@ BOOST_AUTO_TEST_CASE( subtract_single_product_test )
     BOOST_CHECK_EQUAL( a, big_decimal(580u) );
     a.subtract_single_product( 9, 9 );
     BOOST_CHECK_EQUAL( a, big_decimal(499u) );
+}
+
+// Multiply with single digits, fused subtract-absolutely, reverse order, test
+BOOST_AUTO_TEST_CASE( subtract_single_product_absolutely_test )
+{
+    big_decimal const  zero, eight( 8u ), thirtyfive( 35u ),
+                       onehundredsixtyseven( 167u );
+    big_decimal        a;
+
+    // Subtracting a zero-valued product doesn't change anything
+    a = zero;
+    BOOST_CHECK( !a.subtract_single_product_absolutely(0, 0) );
+    BOOST_CHECK_EQUAL( a, zero );
+    BOOST_CHECK( !a.subtract_single_product_absolutely(3, 0) );
+    BOOST_CHECK_EQUAL( a, zero );
+    BOOST_CHECK( !a.subtract_single_product_absolutely(0, 8) );
+    BOOST_CHECK_EQUAL( a, zero );
+
+    a = thirtyfive;
+    BOOST_CHECK( !a.subtract_single_product_absolutely(0, 0) );
+    BOOST_CHECK_EQUAL( a, thirtyfive );
+    BOOST_CHECK( !a.subtract_single_product_absolutely(2, 0) );
+    BOOST_CHECK_EQUAL( a, thirtyfive );
+    BOOST_CHECK( !a.subtract_single_product_absolutely(0, 7) );
+    BOOST_CHECK_EQUAL( a, thirtyfive );
+
+    // Subtracting with product digit(s) outside allocation
+    a = zero;
+    BOOST_CHECK( a.subtract_single_product_absolutely(4, 6) );  // 2 non-0 dgt's
+    BOOST_CHECK_EQUAL( a, big_decimal(24u) );
+    a.reset();
+    BOOST_CHECK( a.subtract_single_product_absolutely(3, 3) );  // single digit
+    BOOST_CHECK_EQUAL( a, big_decimal(9u) );
+    a.reset();
+    BOOST_CHECK( a.subtract_single_product_absolutely(2, 5) );  // only hi non-0
+    BOOST_CHECK_EQUAL( a, big_decimal(10u) );
+    // TODO: need outside allocation w/ padding (wait for shifted version)
+
+    // Subtracting with product digit(s) straddling allocation
+    a = eight;
+    BOOST_CHECK( a.subtract_single_product_absolutely(4, 6) );  // 2 non-0 dgt's
+    BOOST_CHECK_EQUAL( a, big_decimal(16u) );
+    a = eight;
+    BOOST_CHECK( a.subtract_single_product_absolutely(3, 3) );  // 1 digit, -
+    BOOST_CHECK_EQUAL( a, big_decimal(1u) );
+    a = eight;
+    BOOST_CHECK( !a.subtract_single_product_absolutely(2, 3) ); // 1 digit, +
+    BOOST_CHECK_EQUAL( a, big_decimal(2u) );
+    a = eight;
+    BOOST_CHECK( a.subtract_single_product_absolutely(5, 8) );  // only hi non-0
+    BOOST_CHECK_EQUAL( a, big_decimal(32u) );
+
+    // Subtracting with product digit(s) within allocation
+    a = thirtyfive;
+    BOOST_CHECK( a.subtract_single_product_absolutely(7, 8) );  // 2 non-0, -
+    BOOST_CHECK_EQUAL( a, big_decimal(21u) );
+    a = thirtyfive;
+    BOOST_CHECK( !a.subtract_single_product_absolutely(4, 6) ); // 2 non-0, +
+    BOOST_CHECK_EQUAL( a, big_decimal(11u) );
+    a = thirtyfive;
+    BOOST_CHECK( !a.subtract_single_product_absolutely(3, 3) ); // single digit
+    BOOST_CHECK_EQUAL( a, big_decimal(26u) );
+    a = thirtyfive;
+    BOOST_CHECK( a.subtract_single_product_absolutely(5, 8) );  // hi non-0, -
+    BOOST_CHECK_EQUAL( a, big_decimal(5u) );
+    a = thirtyfive;
+    BOOST_CHECK( !a.subtract_single_product_absolutely(5, 4) );  // hi non-0, +
+    BOOST_CHECK_EQUAL( a, big_decimal(15u) );
+
+    // Subtract with product digit(s) totally within allocation
+    a = onehundredsixtyseven;
+    BOOST_CHECK( !a.subtract_single_product_absolutely(2, 4) ); // 1d, borrow
+    BOOST_CHECK_EQUAL( a, big_decimal(159u) );
+    BOOST_CHECK( !a.subtract_single_product_absolutely(5, 1) ); // 1d, no borrow
+    BOOST_CHECK_EQUAL( a, big_decimal(154u) );
+    BOOST_CHECK( !a.subtract_single_product_absolutely(3, 6) ); // 2d, borrow
+    BOOST_CHECK_EQUAL( a, big_decimal(136u) );
+    BOOST_CHECK( !a.subtract_single_product_absolutely(2, 7) ); // 2d, no borrow
+    BOOST_CHECK_EQUAL( a, big_decimal(122u) );
+    BOOST_CHECK( !a.subtract_single_product_absolutely(9, 8) ); // 2d, borrow @1
+    BOOST_CHECK_EQUAL( a, big_decimal(50u) );
 }
 
 // Divide by single digit, with single-digit remainder, test

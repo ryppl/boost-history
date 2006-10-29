@@ -156,6 +156,140 @@ boost::math::big_radix_whole<Radix, Allocator>::subtract_single
     this->subtract_shifted_single( subtrahend, 0u );
 }
 
+/** Replaces the current value with its absolute value after decreasing one of
+    its digits, at a given place, by a given value (that's non-negative and less
+    than the radix).  It should be faster than using a left-shift, or multiply,
+    followed by a subtraction (and don't forget the sign and magnitude checks).
+
+    \pre  <code>0 &lt;= <var>value</var> &lt; Radix</code>
+    \pre  <code><var>index</var> &lt; this-&gt;digit_limit()</code>
+
+    \param value  The subtrahend to be subtracted from the specified digit
+    \param index  The place of the specified digit
+
+    \retval true   The difference was originally negative (i.e.
+                   <code><var>value</var> * Radix<sup><var>index</var></sup>
+                   &gt; *this</code>).
+    \retval false  The difference was originally non-negative.
+
+    \post  <code>*this == |<var>old_this</var> - <var>value</var> *
+           Radix<sup><var>index</var></sup>|</code>
+ */
+template < int Radix, class Allocator >
+bool
+boost::math::big_radix_whole<Radix,
+ Allocator>::subtract_shifted_single_absolutely
+(
+    digit_type  value,
+    size_type   index
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+
+    BOOST_ASSERT( 0 <= value && value < self_type::radix );
+    BOOST_ASSERT( index < this->digits_.max_size() );
+
+    typedef typename deque_type::iterator  iterator;
+
+    bool  result = false;
+
+    if ( value )
+    {
+        size_type  s = this->digits_.size();
+
+        if ( index < s )
+        {
+            // Just subtract the digit...
+            iterator const  d = this->digits_.begin() + index;
+
+            *d -= value;
+
+            // ...and propagate the borrow
+            iterator const  last_i = this->digits_.end() - 1;
+
+            for ( iterator  i = d ; (last_i > i) && (0 > *i) ; )
+            {
+                // The negative-value test is already in the FOR loop
+                *i += self_type::radix;
+                --*++i;
+            }
+
+            // Compensate for "1..." to "0..." cases
+            this->clear_leading_zeros();
+        }
+        else
+        {
+            // Append the space for the digit and intermediate zeros
+            // (in one shot to reduce the number of throw spots)
+            this->digits_.insert( this->digits_.end(), index - s + 1u, 0 );
+
+            // Add (actually subtract) the digit
+            this->digits_.back() = -value;
+        }
+
+        // A larger subtrahend gives a negative value in the highest place.
+        s = this->digits_.size();
+        if ( result = (s && ( 0 > this->digits_.back() )) )
+        {
+            typedef typename deque_type::reference  reference;
+
+            // Get the absolute value by negating all the digits...
+            iterator const  last_j = this->digits_.end() - 1;
+            bool            borrow = false;
+
+            for ( iterator  j = this->digits_.begin() ; last_j > j ; ++j )
+            {
+                reference  digit = *j;
+
+                // ...and then normalize
+                digit += static_cast<int>( borrow );
+                if ( borrow = static_cast<bool>(digit) )
+                {
+                    digit = self_type::radix - digit;
+                }
+            }
+
+            // Propagate the remaining borrow when negating highest digit
+            reference  last_d = *last_j;
+
+            last_d = -last_d - static_cast<int>( borrow );
+            this->clear_leading_zeros();
+        }
+    }
+    // ELSE: something - 0 == that something -> no change
+
+    BOOST_ASSERT( this->test_invariant() );
+    return result;
+}
+
+/** Replaces the current value with the absolute difference between that value
+    and another (non-negative) value that is less than the radix.  It should be
+    faster than converting the short subtrahend to a full \c big_radix_whole\<\>
+    before subtracting.
+
+    \pre  <code>0 &lt;= <var>subtrahend</var> &lt; Radix</code>
+
+    \param subtrahend  The value to be subtracted
+
+    \retval true   The difference was originally negative (i.e.
+                   <code><var>subtrahend</var> &gt; *this</code>).
+    \retval false  The difference was originally non-negative.
+
+    \post  <code>*this == |<var>old_this</var> - <var>subtrahend</var>|</code>
+
+    \see  #subtract_shifted_single_absolutely
+ */
+template < int Radix, class Allocator >
+inline
+bool
+boost::math::big_radix_whole<Radix, Allocator>::subtract_single_absolutely
+(
+    digit_type  subtrahend
+)
+{
+    return this->subtract_shifted_single_absolutely( subtrahend, 0u );
+}
+
 
 //  Radix/bignum/natural operator member function definitions  ---------------//
 

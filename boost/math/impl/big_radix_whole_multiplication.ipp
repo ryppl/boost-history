@@ -444,6 +444,176 @@ boost::math::big_radix_whole<Radix, Allocator>::subtract_single_product
     BOOST_ASSERT( this->test_invariant() );
 }
 
+/** Replaces the current value with the absolute difference between that value
+    and the product of two (non-negative) values, with both factors less than
+    the radix.  It should be faster than converting either of the factors or
+    their product to full \c big_radix_whole\<\> objects before subtracting.
+
+    \pre  <code>0 &lt;= <var>subtrahend_multiplicand</var>,
+          <var>subtrahend_multiplier</var> &lt; Radix</code>
+
+    \param subtrahend_multiplicand  The multiplicand in the product-subtrahend
+    \param subtrahend_multiplier    The multiplier in the product-subtrahend
+
+    \retval true   The difference was originally negative (i.e.
+                   <code><var>subtrahend_multiplicand</var> *
+                   <var>subtrahend_multiplier</var> &gt; *this</code>).
+    \retval false  The difference was originally non-negative.
+
+    \post  <code>*this == |<var>old_this</var> -
+           <var>subtrahend_multiplicand</var> *
+           <var>subtrahend_multiplier</var>|</code>
+ */
+template < int Radix, class Allocator >
+bool
+boost::math::big_radix_whole<Radix,
+ Allocator>::subtract_single_product_absolutely
+(
+    digit_type  subtrahend_multiplicand,
+    digit_type  subtrahend_multiplier
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+
+    size_type const  index = 0u;  // for later
+
+    BOOST_ASSERT( 0 <= subtrahend_multiplicand && subtrahend_multiplicand <
+     self_type::radix && 0 <= subtrahend_multiplier && subtrahend_multiplier <
+     self_type::radix );
+    BOOST_ASSERT( index < this->digits_.max_size() - 1u );
+
+    bool  result = false;
+
+    if ( digit_type const  product = subtrahend_multiplicand *
+     subtrahend_multiplier )
+    {
+        typedef typename deque_type::reference  reference;
+
+        // Determine the high and low digits of the 2-digit-max product
+        std::div_t const  product_hl = std::div( product, self_type::radix );
+        int const &       product_h = product_hl.quot;
+        int const &       product_l = product_hl.rem;
+
+        // Do the subtraction
+        size_type  s = this->digits_.size();
+
+        if ( index >= s )  // both digits outside block
+        {
+            // Append space for product digits and any intermediate zeros
+            // (in one shot to reduce number of throw spots)
+            this->digits_.insert( this->digits_.end(), index - s + 1u +
+             static_cast<unsigned>(0u != product_h), 0 );
+
+            // Add (actually subtract) the product's digits
+            reference  back_digit = this->digits_.back();
+
+            s = this->digits_.size();
+            if ( product_h )
+            {
+                reference  next_to_back = this->digits_[ s - 2u ];
+
+                back_digit = -product_h;
+                next_to_back = -product_l;
+
+                // Handle borrows
+                while ( 0 > next_to_back )
+                {
+                    next_to_back += self_type::radix;
+                    --back_digit;
+                }
+            }
+            else
+            {
+                // Leave out zero-valued upper digit, just handle lower digit
+                back_digit -= product_l;
+            }
+            BOOST_ASSERT( 0 > back_digit );
+        }
+        else if ( index + 1u == s )  // digits straddle block
+        {
+            // Append the new digit space for the subtracted higher digit
+            if ( product_h )
+            {
+                this->digits_.push_back( -product_h );
+                s = this->digits_.size();
+
+                // Finish the subtraction
+                reference  back_digit = this->digits_.back();
+                reference  next_to_back = this->digits_[ s - 2u ];
+
+                next_to_back -= product_l;
+
+                // Handle borrows
+                while ( 0 > next_to_back )
+                {
+                    next_to_back += self_type::radix;
+                    --back_digit;
+                }
+                BOOST_ASSERT( 0 > back_digit );
+            }
+            else
+            {
+                // Don't append a zero digit, just handle the lower digit
+                this->digits_.back() -= product_l;
+                this->clear_leading_zeros();
+            }
+        }
+        else  // both digits inside block
+        {
+            // Just do the subtraction
+            this->digits_[ index + 1u ] -= product_h;
+            this->digits_[ index ] -= product_l;
+
+            // Handle borrows
+            for ( size_type  i = index + 1u ; i < s ; ++i )
+            {
+                reference  current = this->digits_[ i ];
+                reference  previous = this->digits_[ i - 1u ];
+
+                while ( 0 > previous )
+                {
+                    previous += self_type::radix;
+                    --current;
+                }
+            }
+            this->clear_leading_zeros();
+        }
+
+        // A larger subtrahend gives a negative value in the highest place
+        // (copied from member function "subtract_shifted_single_absolutely")
+        if ( result = (s && ( 0 > this->digits_.back() )) )
+        {
+            typedef typename deque_type::iterator  iterator;
+
+            // Get the absolute value by negating all the digits...
+            iterator const  last_j = this->digits_.end() - 1;
+            bool            borrow = false;
+
+            for ( iterator  j = this->digits_.begin() ; last_j > j ; ++j )
+            {
+                reference  digit = *j;
+
+                // ...and then normalize
+                digit += static_cast<int>( borrow );
+                if ( borrow = static_cast<bool>(digit) )
+                {
+                    digit = self_type::radix - digit;
+                }
+            }
+
+            // Propagate the remaining borrow when negating highest digit
+            reference  last_d = *last_j;
+
+            last_d = -last_d - static_cast<int>( borrow );
+            this->clear_leading_zeros();
+        }
+    }
+    // ELSE: anything - 0 == anything -> no change
+
+    BOOST_ASSERT( this->test_invariant() );
+    return result;
+}
+
 
 //  Radix/bignum/natural operator member function definitions  ---------------//
 

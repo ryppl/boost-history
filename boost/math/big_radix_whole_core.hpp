@@ -230,6 +230,9 @@ public:
     // big_radix_whole const &addend_multiplier );
     //void  subtract_full_product( big_radix_whole const &subtrahend_multiplicand,
     // big_radix_whole const &subtrahend_multiplier );
+    //bool  subtract_full_product_absolutely( big_radix_whole const
+    // &subtrahend_multiplicand, big_radix_whole const &subtrahend_multiplier );
+
     //std::pair<big_radix_whole, big_radix_whole>  divide_by( big_radix_whole
     // const &divisor ) const;
 
@@ -242,6 +245,9 @@ public:
     // digit_type addend_single_factor );
     //void  subtract_mixed_product( big_radix_whole const &subtrahend_full_factor,
     // digit_type subtrahend_single_factor );
+    //bool  subtract_mixed_product_absolutely( big_radix_whole const
+    // &subtrahend_full_factor, digit_type subtrahend_single_factor );
+    // TODO: add shifted variants?
 
     //! Fuse-multiply/add by two single-digit values
     void  multiply_single_add_single( digit_type augend_multiplier, digit_type
@@ -269,6 +275,10 @@ public:
     //! Subtract the product of two single-digit values (fused-sub/multiply)
     void  subtract_single_product( digit_type subtrahend_multiplicand,
      digit_type subtrahend_multiplier );
+    //! Subtract product of single-digits (fused), ignoring difference's sign
+    bool  subtract_single_product_absolutely( digit_type
+     subtrahend_multiplicand, digit_type subtrahend_multiplier );
+    // TODO: add shifted variants?
 
     // Special addition and subtraction operations
     //! Add a single-digit value to a particular place
@@ -279,11 +289,16 @@ public:
     void  subtract_shifted_single( digit_type value, size_type index );
     //! Subtract a single-digit value
     void  subtract_single( digit_type subtrahend );
+    //! Subtract a shifted single-digit value, ignoring the difference's sign
+    bool  subtract_shifted_single_absolutely( digit_type value, size_type
+     index );
+    //! Subtract a single-digit value, ignoring the difference's sign
+    bool  subtract_single_absolutely( digit_type subtrahend );
 
     //void  add_shifted_full( big_radix_whole const &value, size_type index );
     //void  subtract_shifted_full( big_radix_whole const &value, size_type index );
-
-    //void  subtract_absolutely( big_radix_whole const &value );
+    //bool  subtract_shifted_full_absolutely( big_radix_whole const &value, size_type index );
+    //bool  subtract_full_absolutely( big_radix_whole const &subtrahend );
 
     // Special shifting operations
     //! Up-shift in a new one's digit
