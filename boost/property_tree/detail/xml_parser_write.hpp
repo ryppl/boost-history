@@ -18,6 +18,19 @@
 
 namespace boost { namespace property_tree { namespace xml_parser
 {
+    template<class Ch>
+    void write_xml_indent(std::basic_ostream<Ch> &stream,
+                          int indent)
+    {
+#ifdef BOOST_PROPERTY_TREE_XML_WRITER_TAB_INDENT
+        for(int i = indent; i-- > 0;)
+        {
+            stream << Ch('\t');
+        }
+#else
+        stream << std::basic_string<Ch>(4 * indent, Ch(' '));
+#endif        
+    }
 
     template<class Ch>
     void write_xml_comment(std::basic_ostream<Ch> &stream,
@@ -25,7 +38,7 @@ namespace boost { namespace property_tree { namespace xml_parser
                            int indent)
     {
         typedef typename std::basic_string<Ch> Str;
-        stream << Str(4 * indent, Ch(' '));
+        write_xml_indent(stream,indent);
         stream << Ch('<') << Ch('!') << Ch('-') << Ch('-');
         stream << s;
         stream << Ch('-') << Ch('-') << Ch('>') << std::endl;
@@ -37,9 +50,8 @@ namespace boost { namespace property_tree { namespace xml_parser
                         int indent, 
                         bool separate_line)
     {
-        typedef typename std::basic_string<Ch> Str;
         if (separate_line)    
-            stream << Str(4 * indent, Ch(' '));
+            write_xml_indent(stream,indent);
         stream << encode_char_entities(s);
         if (separate_line)    
             stream << Ch('\n');
@@ -58,20 +70,29 @@ namespace boost { namespace property_tree { namespace xml_parser
 
         // Find if elements present
         bool has_elements = false;
+        bool has_attrs_only = pt.data().empty();
         for (It it = pt.begin(), end = pt.end(); it != end; ++it)
-            if (it->first != xmlattr<Ch>() &&
-                it->first != xmltext<Ch>())
+        {
+            if (it->first != xmlattr<Ch>() )
             {
-                has_elements = true;
-                break;
+                has_attrs_only = false;
+                if (it->first != xmltext<Ch>())
+                {
+                    has_elements = true;
+                    break;
+                }
             }
+        }
         
         // Write element
         if (pt.data().empty() && pt.empty())    // Empty key
         {
             if (indent >= 0)
-                stream << Str(4 * indent, Ch(' ')) << Ch('<') << key << 
+            {
+                write_xml_indent(stream,indent);
+                stream << Ch('<') << key << 
                           Ch('/') << Ch('>') << std::endl;
+            }
         }
         else    // Nonempty key
         {
@@ -81,7 +102,7 @@ namespace boost { namespace property_tree { namespace xml_parser
             {
             
                 // Write opening brace and key
-                stream << Str(4 * indent, Ch(' '));
+                write_xml_indent(stream,indent);
                 stream << Ch('<') << key;
 
                 // Write attributes
@@ -90,13 +111,20 @@ namespace boost { namespace property_tree { namespace xml_parser
                         stream << Ch(' ') << it->first << Ch('=') << 
                                   Ch('"') << it->second.template get_value<std::basic_string<Ch> >() << Ch('"');
 
-                // Write closing brace
-                stream << Ch('>');
+                if ( has_attrs_only )
+                {
+                    // Write closing brace
+                    stream << Ch('/') << Ch('>') << std::endl;
+                }
+                else
+                {
+                    // Write closing brace
+                    stream << Ch('>');
 
-                // Break line if needed
-                if (has_elements)
-                    stream << Ch('\n');
-
+                    // Break line if needed
+                    if (has_elements)
+                        stream << Ch('\n');
+                }
             }
             
             // Write data text, if present
@@ -117,10 +145,10 @@ namespace boost { namespace property_tree { namespace xml_parser
             }
             
             // Write closing tag
-            if (indent >= 0)
+            if (indent >= 0 && !has_attrs_only)
             {
                 if (has_elements)
-                    stream << Str(4 * indent, Ch(' '));
+                    write_xml_indent(stream,indent);
                 stream << Ch('<') << Ch('/') << key << Ch('>') << std::endl;
             }
 
