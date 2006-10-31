@@ -195,7 +195,9 @@ namespace boost { namespace property_tree { namespace registry_parser
                     stream >> std::hex;
                     while (1)
                     {
-                        stream >> v >> std::ws;
+                        stream >> v;
+                        if ( !stream.eof() )
+                        	stream >> std::ws;
                         if (stream.fail() || stream.bad())
                             throw registry_parser_error("bad REG_BINARY value", 0);
                         data.push_back(v);
@@ -210,7 +212,9 @@ namespace boost { namespace property_tree { namespace registry_parser
                 {
                     DWORD v;
                     Stream stream(s);
-                    stream >> v >> std::ws;
+                    stream >> v;
+                    if ( !stream.eof() )
+                      	stream >> std::ws;
                     if (!stream.eof() || stream.fail() || stream.bad())
                         throw registry_parser_error("bad REG_DWORD value", 0);
                     for (size_t i = 0; i < sizeof(v); ++i)

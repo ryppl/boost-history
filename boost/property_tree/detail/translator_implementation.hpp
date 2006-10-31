@@ -65,7 +65,9 @@ namespace boost { namespace property_tree
             {
                 std::basic_istringstream<Ch> stream(data);
                 stream.imbue(loc);
-                stream >> std::boolalpha >> extracted >> std::ws;
+                stream >> std::boolalpha >> extracted; 
+                if ( !stream.eof() )
+                	stream >> std::ws;
                 return stream.eof() && !stream.fail() && !stream.bad();
             }
         };
@@ -109,7 +111,9 @@ namespace boost { namespace property_tree
                 std::basic_istringstream<Ch> stream(data);
                 stream.imbue(loc);
                 int tmp;
-                stream >> tmp >> std::ws;
+                stream >> tmp;
+                if ( !stream.eof() )
+	               	stream >> std::ws;
                 if (stream.eof() && !stream.fail() && !stream.bad())
                 {
                     extracted = static_cast<signed char>(tmp);
@@ -130,7 +134,9 @@ namespace boost { namespace property_tree
                 std::basic_istringstream<Ch> stream(data);
                 stream.imbue(loc);
                 unsigned int tmp;
-                stream >> tmp >> std::ws;
+                stream >> tmp;
+                if ( !stream.eof() )
+                	stream >> std::ws;
                 if (stream.eof() && !stream.fail() && !stream.bad())
                 {
                     extracted = static_cast<unsigned char>(tmp);
