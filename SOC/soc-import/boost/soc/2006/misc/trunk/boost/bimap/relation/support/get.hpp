@@ -113,7 +113,7 @@ struct is_standard_pair_view :
     ::boost::mpl::false_ {};
 
 template< class FirstType, class SecondType, class Layout >
-struct is_standard_pair_view< standard_pair_view<FirstType,SecondType,Layout> > :
+struct is_standard_pair_view< standard_pair_view<FirstType,SecondType,false,Layout> > :
     ::boost::mpl::true_ {};
 
 //------------------------------------------------------------------------------------

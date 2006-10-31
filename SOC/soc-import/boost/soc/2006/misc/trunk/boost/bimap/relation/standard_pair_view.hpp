@@ -14,6 +14,8 @@
 
 #include <boost/bimap/relation/standard_relation_fwd.hpp>
 
+#include <boost/mpl/if.hpp>
+#include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
 #include <utility>
@@ -31,13 +33,20 @@ namespace boost {
 namespace bimap {
 namespace relation {
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
+template< bool constant, class Type >
+struct add_const_if_c : ::boost::mpl::if_c< constant, typename ::boost::add_const< Type >::type , Type > {};
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 
 /// \brief The left side view of a standard relation
 /**
 See also reference_binder_finder, normal_reference_binder.
                                                                         **/
 
-template< class FirstType, class SecondType >
+template< class FirstType, class SecondType, bool constant = false >
 struct normal_reference_binder :
 
     public symmetrical_base<FirstType,SecondType>
@@ -47,56 +56,46 @@ struct normal_reference_binder :
     public:
 
     typedef normal_reference_binder reference_binder_;
-
+/*
     typedef standard_relation<FirstType,SecondType,true > relation_force_mutable;
     typedef standard_relation<FirstType,SecondType,false> relation_not_force_mutable;
 
     typedef       standard_relation_view<FirstType,SecondType>       relation_view;
+    typedef const_standard_relation_view<FirstType,SecondType> const_relation_view;
+*/
+    typedef typename add_const_if_c< constant, typename base_:: left_value_type >::type  first_type;
+    typedef typename add_const_if_c< constant, typename base_::right_value_type >::type second_type;
 
-    typedef typename base_::left_value_type  first_type;
-    typedef typename base_::right_value_type second_type;
-
-    first_type  & first;
+     first_type & first;
     second_type & second;
 
-    normal_reference_binder(relation_force_mutable & r) :
+    template< class Relation >
+    normal_reference_binder(Relation & r) :
+        first(r.left), second(r.right) {}
+/*
+    normal_reference_binder(typename add_const_if_c< constant, relation_not_force_mutable >::type & r) :
         first(r.left), second(r.right) {}
 
-    normal_reference_binder(relation_not_force_mutable & r) :
+    normal_reference_binder(typename add_const_if_c< constant, relation_view >::type & r) :
         first(r.left), second(r.right) {}
 
-    normal_reference_binder(relation_view & r) :
+    normal_reference_binder(const_relation_view const & r, typename enable_if_c<constant>::type* dummy = 0) :
         first(r.left), second(r.right) {}
-
-    normal_reference_binder(first_type const & f, second_type const & s) :
+*/
+    normal_reference_binder(first_type & f, second_type & s) :
         first(f), second(s) {}
 
-    typename base_::left_value_type & get_left()
-    {
-        return first;
-    }
-
-    const typename base_::left_value_type & get_left() const
-    {
-        return first;
-    }
-
-    typename base_::right_value_type & get_right()
-    {
-        return second;
-    }
-
-    const typename base_::right_value_type & get_right() const
-    {
-        return second;
-    }
+           first_type & get_left ()       { return first;  }
+    const  first_type & get_left () const { return first;  }
+          second_type & get_right()       { return second; }
+    const second_type & get_right() const { return second; }
 };
 
 /// \brief The right side view of a standard relation
 /**
 See also reference_binder_finder, mirror_reference_binder.
                                                                         **/
-template< class FirstType, class SecondType >
+template< class FirstType, class SecondType, bool constant = false >
 struct mirror_reference_binder :
 
     public symmetrical_base<SecondType,FirstType>
@@ -107,49 +106,29 @@ struct mirror_reference_binder :
     public:
 
     typedef mirror_reference_binder reference_binder_;
-
+/*
     typedef standard_relation<SecondType,FirstType,true > relation_force_mutable;
     typedef standard_relation<SecondType,FirstType,false> relation_not_force_mutable;
 
     typedef       standard_relation_view<SecondType,FirstType>       relation_view;
-
-    typedef typename base_::right_value_type first_type;
-    typedef typename base_::left_value_type  second_type;
+*/
+    typedef typename add_const_if_c< constant, typename base_::right_value_type >::type  first_type;
+    typedef typename add_const_if_c< constant, typename base_:: left_value_type >::type second_type;
 
     second_type & second;
-    first_type  & first;
+     first_type & first;
 
-    mirror_reference_binder(relation_force_mutable & r) :
+    template< class Relation >
+    mirror_reference_binder(Relation & r) :
         second(r.left), first(r.right) {}
 
-    mirror_reference_binder(relation_not_force_mutable & r) :
-        second(r.left), first(r.right) {}
-
-    mirror_reference_binder(relation_view & r) :
-        second(r.left), first(r.right) {}
-
-    mirror_reference_binder(first_type const & f, second_type const & s) :
+    mirror_reference_binder(first_type & f, second_type & s) :
         second(s), first(f) {}
 
-    typename base_::left_value_type & get_left()
-    {
-        return second;
-    }
-
-    const typename base_::left_value_type & get_left() const
-    {
-        return second;
-    }
-
-    typename base_::right_value_type & get_right()
-    {
-        return first;
-    }
-
-    const typename base_::right_value_type & get_right() const
-    {
-        return first;
-    }
+          second_type & get_left ()       { return second; }
+    const second_type & get_left () const { return second; }
+           first_type & get_right()       { return first;  }
+    const  first_type & get_right() const { return first;  }
 };
 
 
@@ -169,16 +148,16 @@ See also normal_reference_binder, mirror_reference_binder.
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-template< class FirstType, class SecondType, class Layout >
+template< class FirstType, class SecondType, bool constant, class Layout >
 struct reference_binder_finder
 {
-    typedef normal_reference_binder<FirstType,SecondType> type;
+    typedef normal_reference_binder<FirstType,SecondType,constant> type;
 };
 
-template< class FirstType, class SecondType >
-struct reference_binder_finder<FirstType,SecondType,mirror_layout>
+template< class FirstType, class SecondType, bool constant >
+struct reference_binder_finder<FirstType,SecondType,constant,mirror_layout>
 {
-    typedef mirror_reference_binder<FirstType,SecondType> type;
+    typedef mirror_reference_binder<FirstType,SecondType,constant> type;
 };
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
@@ -190,25 +169,26 @@ struct reference_binder_finder<FirstType,SecondType,mirror_layout>
 See also standard_relation, const_standard_pair_view.
                                                                                 **/
 
-template< class FirstType, class SecondType, class Layout >
+template< class FirstType, class SecondType, bool constant, class Layout >
 class standard_pair_view :
 
-    public reference_binder_finder<FirstType,SecondType,Layout>::type
+    public reference_binder_finder<FirstType,SecondType,constant,Layout>::type
 
 {
-    typedef typename reference_binder_finder<FirstType,SecondType,Layout>::type base_;
+    typedef typename reference_binder_finder<FirstType,SecondType,constant,Layout>::type base_;
 
     public:
 
-    explicit standard_pair_view(typename base_::relation_force_mutable & r) :
+    template< class Relation >
+    explicit standard_pair_view(Relation & r) :
+        base_(r) {}
+/*
+    explicit standard_pair_view(typename add_const_if_c< constant, typename base_::relation_not_force_mutable >::type & r) :
         base_(r) {}
 
-    explicit standard_pair_view(typename base_::relation_not_force_mutable & r) :
+    explicit standard_pair_view(typename add_const_if_c< constant, typename base_::relation_view >::type & r) :
         base_(r) {}
-
-    explicit standard_pair_view(typename base_::relation_view & r) :
-        base_(r) {}
-
+*/
     // Interaction with std::pair
 
     typedef std::pair

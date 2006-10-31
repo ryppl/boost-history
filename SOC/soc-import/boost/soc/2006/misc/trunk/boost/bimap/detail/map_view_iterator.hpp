@@ -53,9 +53,7 @@ struct map_view_iterator_base
 };
 
 template< class Tag, class Relation, class CoreIterator >
-struct map_view_iterator :
-
-    public map_view_iterator_base<Tag,Relation,CoreIterator>::type
+struct map_view_iterator : public map_view_iterator_base<Tag,Relation,CoreIterator>::type
 {
     typedef typename map_view_iterator_base<Tag,Relation,CoreIterator>::type base_;
 
@@ -79,16 +77,16 @@ struct map_view_iterator :
     map_view_iterator(map_view_iterator const & iter)
       : base_(iter.base()) {}
 
-    private:
-
-    friend class iterator_core_access;
-
     typename base_::reference dereference() const
     {
         return ::boost::bimap::relation::support::pair_by<Tag>(
             *const_cast<typename base_::base_type::value_type*>(&(*this->base()))
         );
     }
+
+    private:
+
+    friend class iterator_core_access;
 
     #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
 
@@ -166,14 +164,14 @@ struct const_map_view_iterator :
     const_map_view_iterator(map_view_iterator<Tag,Relation,CoreIterator> i)
       : base_(i.base()) {}
 
-    private:
-
-    friend class iterator_core_access;
-
     typename base_::reference dereference() const
     {
         return ::boost::bimap::relation::support::pair_by<Tag>(*this->base());
     }
+
+    private:
+
+    friend class iterator_core_access;
 
     #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
 
