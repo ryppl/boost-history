@@ -5,8 +5,8 @@
 #include <fstream>
 #include <cmath>
 
-boost::profiler::detail::context ctx1("ctx1");
-boost::profiler::detail::context ctx2("ctx2");
+BOOST_PROFILER_CONTEXT ( ctx1,"ctx1");
+BOOST_PROFILER_CONTEXT ( ctx2,"ctx2");
 
 inline void busy_delay(double seconds)
 {
@@ -21,8 +21,8 @@ inline void busy_delay(double seconds)
 int fact(int n)
 {
     BOOST_PROFILER_SET_CONTEXT(ctx2);
-    BOOST_PROFILER_SCOPE();
-    BOOST_PROFILER_START_N("fact");
+    BOOST_PROFILER_SCOPE("scope");
+    BOOST_PROFILER_START("fact");
     int r = n > 1 ? n * fact(n - 1) : 1;
     BOOST_PROFILER_STOP();
     return r;
@@ -45,18 +45,18 @@ int main()
     BOOST_PROFILER_SET_CONTEXT(BOOST_PROFILER_GET_DEFAULT_CONTEXT());
 
     {
-        BOOST_PROFILER_SCOPE_N("bd");     
+        BOOST_PROFILER_SCOPE("bd");     
         busy_delay(1);
-        BOOST_PROFILER_START_N("bd2");
+        BOOST_PROFILER_START("bd2");
         busy_delay(1);
-        BOOST_PROFILER_START_N("bd3");
+        BOOST_PROFILER_START("bd3");
         busy_delay(1);
         BOOST_PROFILER_STOP();
         busy_delay(1);
         BOOST_PROFILER_STOP();
     }
     
-    BOOST_PROFILER_DUMP("out.txt");
-    BOOST_PROFILER_DUMP(std::cout);
-
+    BOOST_PROFILER_DUMP_ALL("out.txt");
+    BOOST_PROFILER_DUMP_ALL(std::cout);
+	BOOST_PROFILER_DUMP_CONTEXT(BOOST_PROFILER_GET_DEFAULT_CONTEXT(),"out2.txt");
 }
