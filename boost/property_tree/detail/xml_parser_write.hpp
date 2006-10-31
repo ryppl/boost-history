@@ -23,10 +23,7 @@ namespace boost { namespace property_tree { namespace xml_parser
                           int indent)
     {
 #ifdef BOOST_PROPERTY_TREE_XML_WRITER_TAB_INDENT
-        for(int i = indent; i-- > 0;)
-        {
-            stream << Ch('\t');
-        }
+        stream << std::basic_string<Ch>(indent, Ch('\t'));
 #else
         stream << std::basic_string<Ch>(4 * indent, Ch(' '));
 #endif        
