@@ -26,7 +26,7 @@ void test_treap()
 	typedef test_searcher<false, tree_t> searcher_t;
 	searcher_t my_searcher;
 	
-	test_data_searcher(my_searcher);
+	create_test_data_searcher(my_searcher);
 	
 	test_inorder_iterator_traversal(my_searcher);
 	

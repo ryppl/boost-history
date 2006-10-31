@@ -14,5 +14,7 @@ original ones as policy argument to them? (e.g. red_black_tree is say
 
 * Concept checks.
 
+* Interoperability with BGL algorithms.
+
 Implement associative containers and priority_queue specialization using searcher
 Implement (binary) heap

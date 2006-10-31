@@ -19,7 +19,7 @@ using boost::tree::binary_tree;
 void test_rotate()
 {
 	binary_tree<int> mytree;
-	test_data_tree(mytree);
+	create_test_data_tree(mytree);
 	binary_tree<int>::cursor c = mytree.root().begin().end();
 	BOOST_CHECK(*c.begin() == 6);
 

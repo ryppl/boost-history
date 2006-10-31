@@ -9,8 +9,7 @@
  * Nary node implementation (with N=2, i.e. binary specialization)
  */
  
-//TODO: use Boost(TR1).Array (?)
-//		and maybe Boost.Optional (for the "empty" stuff?)
+//TODO: maybe Boost.Optional (for the "empty" stuff?)
 //Templatize with arity (so we can use this for multiway trees, too?)
 
 #ifndef BOOST_TREE_DETAIL_NODE_NARY_HPP

@@ -11,30 +11,25 @@
 
 #include <boost/test/minimal.hpp>
 
+#include "helpers.hpp"
+
 //TODO: Make this a test suite.
 
-void test_unbalance_binary_tree()
-{
-	using boost::tree::binary_tree;
-	using boost::tree::lower_bound;
-	
-	typedef binary_tree<int> tree_type;
-	tree_type mytree;
+using namespace boost::tree;
 
-	tree_type::cursor c, c1, c2, c3, c4;
-	tree_type::iterator it;
+template <class Tree>
+void create_unbalanced_binary_tree(Tree& mytree)
+{
+	typename Tree::cursor c, c1, c2, c3, c4;
 	
 	c = mytree.root();
 
 	BOOST_CHECK(c.empty());
-	//BOOST_CHECK(c.is_root());
 	
 	c1 = mytree.insert(c, 1);
 	BOOST_CHECK(*c1 == 1);
-	//BOOST_CHECK(!c1.is_root());
 	
 	BOOST_CHECK(!c.empty());
-	//BOOST_CHECK(c.is_root());
 	
 	BOOST_CHECK(c1.parent() == c);
 	
@@ -79,15 +74,55 @@ void test_unbalance_binary_tree()
 	//c1 = mytree.erase(c1);
 	//BOOST_CHECK(*c1 == 2);
 
-	mytree.clear();	
-	BOOST_CHECK(mytree.empty());
-	
 }
 
+template <class Tree>
+void destroy_unbalanced_binary_tree(Tree& mytree)
+{
+	mytree.clear();	
+	BOOST_CHECK(mytree.empty());
+}
 
+template <class Tree>
+void validate_unbalanced_binary_tree(Tree const& mytree)
+{
+	typename Tree::const_cursor c, c1, c2, c3, c4;
+
+	c = mytree.root();
+	BOOST_CHECK(!c.empty());
+	
+	c1 = c.begin();
+	BOOST_CHECK(c1.parent() == c);
+	BOOST_CHECK(*c1 == 14);
+	
+	c2 = c1.begin();
+	BOOST_CHECK(c2.parent() == c1);
+}
+
+template <class Tree>
+void test_swap_binary_trees(Tree& one, Tree& two)
+{
+	using std::swap;
+	swap(one, two);
+}
 
 int test_main(int, char* [])
 {
-	test_unbalance_binary_tree();
+	typedef binary_tree<int> tree_t;
+	tree_t tree1, tree2;
+	
+	create_unbalanced_binary_tree(tree1);
+	validate_unbalanced_binary_tree(tree1);
+
+	create_test_data_tree(tree2);
+	validate_test_data_tree(tree2);
+	
+	test_swap_binary_trees(tree1, tree2);
+	
+	validate_test_data_tree(tree1);
+	validate_unbalanced_binary_tree(tree2);
+	
+	destroy_unbalanced_binary_tree(tree2);
+	
 	return 0;
 }

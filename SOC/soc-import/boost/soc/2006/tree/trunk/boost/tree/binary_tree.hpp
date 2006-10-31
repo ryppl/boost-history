@@ -95,18 +95,25 @@ class binary_tree : public Balance, public Augment {
 		while (first++ != last)
 			this->insert(this->end(), *first);
 	}
-	binary_tree (self_type const& other)
-	: m_header(other.m_header), m_value_alloc(other.m_value_alloc)
+	
+	/**
+	 * @brief  Binary tree copy constructor.
+	 * @param  x  A %binary_tree of identical element and allocator types.
+	 * The newly-created %binary_tree uses a copy of the allocation object used
+	 * by @a x.
+	 */
+	binary_tree (self_type const& x)
+	: m_header(x.m_header), m_value_alloc(x.m_value_alloc)
 	{
-		insert(this->root(), other.root());
+		insert(this->root(), x.root());
 		
 		// TODO. The following lines take extra care of the header. A better 
 		// template <InputCursor> insert(...) function might make them obsolete
-		if (other.m_header[0] == &(other.m_header))
+		if (x.m_header[0] == &(x.m_header))
 			m_header[0] = &m_header;
-		if (other.m_header[1] == &(other.m_header))
+		if (x.m_header[1] == &(x.m_header))
 			m_header[1] = &m_header;
-		if (other.m_header.m_parent == &(other.m_header))
+		if (x.m_header.m_parent == &(x.m_header))
 			m_header.m_parent = &m_header;		
 	}
 	
@@ -115,12 +122,25 @@ class binary_tree : public Balance, public Augment {
 		clear();
 	}
 	
+	/**
+	 * @brief  Binary tree assignment operator.
+	 * @param  x  A %binary_tree of identical element and allocator types.
+	 * 
+	 * All the elements of @a x are copied, but unlike the
+	 * copy constructor, the allocator object is not copied.
+	 */
 	binary_tree<Tp, Balance, Augment, Alloc>& operator=(
-		binary_tree<Tp, Balance, Augment, Alloc> const& x);
+		binary_tree<Tp, Balance, Augment, Alloc> const& x)
+	{
+		self_type temp(x);
+		swap(temp);
+		return *this;
+	}
 	
 	template <class InputCursor>
 		void assign(InputCursor subtree);
 
+    /// Get a copy of the memory allocation object.
 	allocator_type get_allocator() const
 	{
 		return m_value_alloc;
@@ -259,7 +279,9 @@ class binary_tree : public Balance, public Augment {
 		return const_iterator(cshoot());
 	}
 	
+	
 	// Hierarchy-specific
+	
 	/**
 	 * @brief		Inserts val in front of @a pos, or, if @a pos' parent is
 	 * 				already full, creates a new child node containing @a val 
@@ -311,6 +333,7 @@ class binary_tree : public Balance, public Augment {
 		}
 		return pos;
 	}
+
 
 	/// Sequence-specific
 	
@@ -372,13 +395,41 @@ class binary_tree : public Balance, public Augment {
 		m_header[1] = &m_header;
  	}
 
+	/**
+	 * @brief  Swaps data with another %binary_tree.
+	 * @param  x  A %binary_tree of the same element and allocator types.
+	 * 
+	 * This exchanges the elements between two binary trees in constant time.
+	 * (Four pointers, so it should be quite fast.)
+	 */
 	void swap(self_type& other)
 	{
-		// TODO
-		// Only swap headers, but don't forget about other nodes pointing to 
-		// header!
+		using std::swap;
+		if (empty()) {
+			if (other.empty())
+				return;
+				
+			m_header[0]->m_parent = other.m_header[0]->m_parent;
+			m_header[0] = other.m_header[0];
+			m_header[1] = other.m_header[1];
+			m_header.m_parent = other.m_header.m_parent;
+			
+			other.m_header[0] = node_base_type::nil();
+			other.m_header[1] = &other.m_header;
+			other.m_header.m_parent = &other.m_header;
+			
+			return;
+		}
+		swap(m_header[0]->m_parent, other.m_header[0]->m_parent);
+		swap(m_header, other.m_header);
+		
+		return;
 	}
 
+	/**
+	 * Returns true if the %vector is empty.  (Thus root() would
+	 * equal shoot().)
+	 */
 	bool empty() const
 	{
 		return m_header.m_parent == &m_header;
@@ -417,6 +468,13 @@ private:
 		m_node_alloc.deallocate(p_node, 1);
 	}
 };
+
+/// See boost::tree::binary_tree::swap().
+template <class T, class B, class A, class Alloc>
+inline void swap(binary_tree<T, B, A, Alloc>& x, binary_tree<T, B, A, Alloc>& y)
+{
+	x.swap(y);
+}
 
 template <class Node, class Balance, class Alloc, class NodeAlloc>
 struct sortable_traits <class binary_tree<Node, Balance, Alloc, NodeAlloc> >

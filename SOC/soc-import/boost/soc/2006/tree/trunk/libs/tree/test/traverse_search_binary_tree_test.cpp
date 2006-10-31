@@ -253,9 +253,9 @@ void test_orphaned_reverse_inorder_traversal(binary_tree<int>& the_tree)
 int test_main(int, char* [])
 {
 	searcher_t test_searcher;
-	test_data_searcher(test_searcher);
+	create_test_data_searcher(test_searcher);
 	binary_tree<int>& test_tree = test_searcher.container();
-	//test_data_tree(test_tree);
+	//create_test_data_tree(test_tree);
 	
 	test_inorder_traversal(test_tree);
 	
