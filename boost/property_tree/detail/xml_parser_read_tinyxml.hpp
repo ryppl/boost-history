@@ -31,7 +31,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         {
             Ptree &tmp = pt.push_back(std::make_pair(elem->Value(), Ptree()))->second;
             for (TiXmlAttribute *attr = elem->FirstAttribute(); attr; attr = attr->Next())
-                tmp.put(Ch('/'), xmlattr<Ch>() + "/" + attr->Name(), attr->Value());
+                tmp.put( xmlattr<Ch>() + "." + attr->Name(), attr->Value());
             for (TiXmlNode *child = node->FirstChild(); child; child = child->NextSibling())
                 read_xml_node(child, tmp, flags);
         }
