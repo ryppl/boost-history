@@ -7,7 +7,7 @@
 <head>
   <title>Hierarchical Data Structures and Related Concepts for the C++
   Standard Library (TR2)</title>
-<style type="text/css">
+  <style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
   .std {
@@ -82,7 +82,7 @@
     top: -1.25em;
   }
   /*]]>*/
-</style>
+  </style>
 </head>
 
 <body>
@@ -191,17 +191,17 @@
   <p>Additionally, while not proposed herein, it has sometimes been suggested
   to add a template parameter to the STL associative containers <tt>set</tt>,
   <tt>multiset</tt>, <tt>map</tt>, and <tt>multimap</tt> (and possibly an
-  argument to their constructors) specifying which policy should for storing
-  elements, or, more concretely, what tree. The balancers presented in this
-  proposal would lend themselves to such use. Indicating what type of
-  balanced hierarchy to use for associative containers would create some
-  amount of symmetry to TR1's <tt>unordered_</tt> containers that allow
-  specification of a hash functor; it is however a momentous decicision in
-  which position to put such a parameter. The same position as for
-  <tt>unordered_</tt> containers (befor the comparison functor) would require
-  changes in existing code; making it the last parameter (after the
-  allocator) would allow existing code to remain unchanged, but seems
-  somewhat irritating when compared to <tt>unordered_</tt> containers.</p>
+  argument to their constructors) specifying a policy for storing elements,
+  or, more concretely, what tree. The balancers presented in this proposal
+  would lend themselves to such use. Indicating what type of balanced
+  hierarchy to use for associative containers would create some amount of
+  symmetry to TR1's <tt>unordered</tt> containers that allow specification of
+  a hash functor; it is however a momentous decision in which position to put
+  such a parameter. The same position as for <tt>unordered</tt> containers
+  (before the comparison functor) would require changes in existing code;
+  making it the last parameter (after the allocator) would allow existing
+  code to remain unchanged, but seems somewhat irritating when compared to
+  <tt>unordered</tt> containers.</p>
 
   <h3>Can it be implemented using today's compilers, or does it require
   language features that will only be available as part of C++0x?</h3>
@@ -215,7 +215,9 @@
   expressions that implicitly assume linear internal structure and outsource
   those to a "Linear Container" concept as similarly formalized in the
   <a href="http://boost.org/libs/range/doc/range.html">Boost Range
-  concept</a> externally to the Standard.</p>
+  concept</a> (<a href=
+  "http://boost.org/libs/range/doc/range.html">http://boost.org/libs/range/doc/range.html</a>)
+  externally to the Standard.</p>
 
   <h2>Important Design Decisions</h2>
 
@@ -240,11 +242,11 @@
     <dd>Trees, being recursively defined data structures, seem to somewhat
     lend themselves to recursive implementation, i.e. declaring them in a way
     so they consist of a client value part and a certain number of trees in
-    turn (as e.g. in case of <a href="#ref.haas">[haas]</a>). While allowing
-    for a somewhat uniform treatment of a given trees' subtrees, such an
-    approach would duplicate allocators and yield imply structural
-    information being overly present, as a tree, like the existing STL
-    containers, should be responsible of its data storage.</dd>
+    turn (as e.g. in case of <a href="#ref.haas">[haas]</a>). Such an
+    approach would allow for uniform treatment of the subtrees, but would
+    duplicate allocators and imply structure that need not be present. The
+    tree, like existing STL containers, should be responsible for data
+    representation and storage.</dd>
 
     <dt>Augmentors/balancers as policies</dt>
 
@@ -293,24 +295,24 @@
   decisions compare to yours?</h3>
 
   <p>Trees, having attracted much attention in the C++ community, are found
-  in various implementations and as subjects of a number of papers.
-  Contrarily to the present proposal, practically all of them deal either
-  with trees as used for sorted associative containers (with logarithmic time
-  complexity for more relevant operations, achieved by some sort of
-  balancing; examples are <a href="#ref.dreizin">[dreizin]</a>, <a href=
-  "#ref.ekman">[ekman]</a> and <a href="#ref.karas">[karas]</a>; plus, most
-  current STL implementations use a red-black tree as their associative
-  containers' base) or with what we call "external" hierarchies in the
-  following (whose structure is dictated e.g. by a file system directory
-  tree, an <abbr title="Extensible Markup Language">XML</abbr> file or an
-  <abbr title="Abstract syntax tree">AST</abbr>; see e.g. <a href=
+  in various implementations and as subjects of a number of papers. Contrary
+  to the present proposal, practically all of them deal either with trees as
+  used for sorted associative containers (with logarithmic time complexity
+  for more relevant operations, achieved by some sort of balancing; examples
+  are <a href="#ref.dreizin">[dreizin]</a>, <a href="#ref.ekman">[ekman]</a>
+  and <a href="#ref.karas">[karas]</a>; plus, most current STL
+  implementations use a red-black tree as their associative containers' base)
+  or with what we call "external" hierarchies in the following (whose
+  structure is dictated e.g. by a file system directory tree, an <abbr title=
+  "Extensible Markup Language">XML</abbr> file or an <abbr title=
+  "Abstract syntax tree">AST</abbr>; see e.g. <a href=
   "#ref.gottschlich">[gottschlich]</a>, <a href="#ref.haas">[haas]</a>,
   <a href="#ref.parent">[parent]</a> and <a href=
   "#ref.peeters">[peeters]</a>), but rarely both fields of application.</p>
 
   <p>Approaches as found in <a href="#ref.austern">[austern]</a> or <a href=
   "#ref.mirwaisi">[mirwaisi]</a> go some steps further and have provided
-  valuable inspiration for this projects, but still do not formalize anything
+  valuable inspiration for this project, but still do not formalize anything
   similar as the cursor-based interface in this proposal for dealing with a
   tree's contents.</p>
 
@@ -325,8 +327,8 @@
 
   <p>While it is hoped that the current proposal somewhat reunites balanced
   binary trees, B-trees and "external" hierarchies, which should also
-  faciliate work with some higher-level structures (e.g. <tt>nary_tree</tt>s
-  to implement tries), some of those higher-level components might be an
+  facilitate work with some higher-level structures (e.g. n-ary trees to
+  implement tries), some of those higher-level components might be an
   interesting feature to add to the library, such as patricia tries or
   ternary search tries.</p>
 
@@ -364,7 +366,7 @@
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 1: Container requirements that are not required for
             hierarchy containers
@@ -553,7 +555,7 @@
 
       <li>
         <p>A hierarchy satisfying the requirements shown in Table 3 is called
-        <em>mutable hierarchy</em>. In Table 3, <tt>X</tt> denotes a
+        a <em>mutable hierarchy</em>. In Table 3, <tt>X</tt> denotes a
         hierarchy class, <tt>a</tt> denotes a value of <tt>X</tt>, <tt>c</tt>
         denotes a valid, non-on-top cursor satisfying input cursor
         requirements, <tt>p</tt> denotes a valid, non-on-top cursor to
@@ -609,7 +611,7 @@
 
               <td><tt>void</tt></td>
 
-              <td><tt>while (a.size()) clear(a.begin());</tt><br />
+              <td><tt>while&nbsp;(a.size())&nbsp;clear(a.begin());</tt><br />
               post: <tt>a.size() == 0</tt></td>
 
               <td>(Note A)</td>
@@ -720,7 +722,7 @@
 
       <li>
         <p>For a mutable multiway hierarchy, the semantics of some
-        expressions from Table 3 is modified as shown in Table 5.</p>
+        expressions from Table 3 are modified as shown in Table 5.</p>
 
         <table summary="Multiway hierarchy requirements" class="reqmts">
           <caption>
@@ -779,7 +781,7 @@
 namespace std {
 namespace tr2 {
   template &lt;class T, class Alloc = std::allocator&lt;T&gt; &gt;
-  class binary_tree;
+    class binary_tree;
 
   template &lt;class T, class Alloc&gt;
     bool operator==(  binary_tree&lt;T, Alloc&gt; const&amp; x,
@@ -788,13 +790,15 @@ namespace tr2 {
     bool operator!=(  binary_tree&lt;T, Alloc&gt; const&amp; x,
                       binary_tree&lt;T, Alloc&gt; const&amp; y);
   template &lt;class T, class Alloc&gt;
-  void swap(  binary_tree&lt;T, Alloc&gt;&amp; x,
-              binary_tree&lt;T, Alloc&gt;&amp; y);
+    void swap(  binary_tree&lt;T, Alloc&gt;&amp; x,
+                binary_tree&lt;T, Alloc&gt;&amp; y);
   namespace inorder {
   template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::cursor&gt; begin(binary_tree&lt;Tp, Alloc&gt;&amp; h);
+    inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::cursor&gt;
+      begin(binary_tree&lt;Tp, Alloc&gt;&amp; h);
   template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::const_cursor&gt; cbegin(binary_tree&lt;Tp, Alloc&gt; const&amp; h);
+    inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::const_cursor&gt;
+      cbegin(binary_tree&lt;Tp, Alloc&gt; const&amp; h);
   } // namespace inorder
 
 } <i>// namespace tr2</i>
@@ -806,7 +810,7 @@ namespace tr2 {
 namespace std {
 namespace tr2 {
   template &lt;class T, class Alloc = std::allocator&lt;T&gt; &gt;
-  class nary_tree;
+    class nary_tree;
 
   template &lt;class T, class Alloc&gt;
     bool operator==(  binary_tree&lt;T, Alloc&gt; const&amp; x,
@@ -818,10 +822,12 @@ namespace tr2 {
   void swap(  nary_tree&lt;T, Alloc&gt;&amp; x,
               nary_tree&lt;T, Alloc&gt;&amp; y);
   namespace inorder {
-  template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::cursor&gt; begin(binary_tree&lt;Tp, Alloc&gt;&amp; h);
-  template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::const_cursor&gt; cbegin(binary_tree&lt;Tp, Alloc&gt; const&amp; h);
+  template &lt;class T, class Alloc&gt;
+    inorder::iterator&lt;binary_tree&lt;T, Alloc&gt;::cursor&gt;
+      begin(binary_tree&lt;T, Alloc&gt;&amp; h);
+  template &lt;class T, class Alloc&gt;
+    inorder::iterator&lt;binary_tree&lt;T, Alloc&gt;::const_cursor&gt;
+      cbegin(binary_tree&lt;T, Alloc&gt; const&amp; h);
   } // namespace inorder
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
@@ -832,7 +838,7 @@ namespace tr2 {
 namespace std {
 namespace tr2 {
   template &lt;class T, class Hierarchy = binary_tree&lt;T&gt; &gt;
-  class forest_tree;
+    class forest_tree;
 
   template &lt;class T, class Hierarchy&gt;
     bool operator==(  forest_tree&lt;T, Hierarchy&gt; const&amp; x,
@@ -843,6 +849,13 @@ namespace tr2 {
   template &lt;class T, class Hierarchy&gt;
   void swap(  forest_tree&lt;T, Hierarchy&gt;&amp; x,
               forest_tree&lt;T, Hierarchy&gt;&amp; y);
+  namespace inorder {
+  template &lt;class T, class Hierarchy&gt;
+    inorder::iterator&lt;forest_tree&lt;T, Hierarchy&gt;::cursor&gt;
+      begin(forest_tree&lt;T, Hierarchy&gt;&amp; h);
+  template &lt;class T, class Alloc&gt;
+    inorder::iterator&lt;forest_tree&lt;T, Hierarchy&gt;::const_cursor&gt;
+      cbegin(forest_tree&lt;T, Hierarchy&gt; const&amp; h);
   } // namespace inorder
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
@@ -852,8 +865,8 @@ namespace tr2 {
     <pre>
 namespace std {
 namespace tr2 {
-  template &lt;class T, class Hierarchy = nary_tree&lt;std::vector&lt;T&gt; &gt; &gt;
-  class multiway_tree;
+  template &lt;class T, class Hierarchy = nary_tree&lt; std::vector&lt;T&gt; &gt; &gt;
+    class multiway_tree;
 
   template &lt;class T, class Hierarchy&gt;
     bool operator==(  multiway_tree&lt;T, Hierarchy&gt; const&amp; x,
@@ -862,13 +875,15 @@ namespace tr2 {
     bool operator!=(  multiway_tree&lt;T, Hierarchy&gt; const&amp; x,
                       multiway_tree&lt;T, Hierarchy&gt; const&amp; y);
   template &lt;class T, class Hierarchy&gt;
-  void swap(  multiway_tree&lt;T, Hierarchy&gt;&amp; x,
-              multiway_tree&lt;T, Hierarchy&gt;&amp; y);
+    void swap(  multiway_tree&lt;T, Hierarchy&gt;&amp; x,
+                multiway_tree&lt;T, Hierarchy&gt;&amp; y);
   namespace inorder {
-  template &lt;class Tp, class Hierarchy&gt;
-  inorder::iterator&lt;multiway_tree&lt;Tp, Hierarchy&gt;::cursor&gt; begin(multiway_tree&lt;Tp, Hierarchy&gt;&amp; h);
-  template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;multiway_tree&lt;Tp, Hierarchy&gt;::const_cursor&gt; cbegin(multiway_tree&lt;Tp, Hierarchy&gt; const&amp; h);
+  template &lt;class T, class Hierarchy&gt;
+    inorder::iterator&lt;multiway_tree&lt;T, Hierarchy&gt;::cursor&gt;
+      begin(multiway_tree&lt;T, Hierarchy&gt;&amp; h);
+  template &lt;class T, class Alloc&gt;
+    inorder::iterator&lt;multiway_tree&lt;T, Hierarchy&gt;::const_cursor&gt;
+      cbegin(multiway_tree&lt;T, Hierarchy&gt; const&amp; h);
   } // namespace inorder
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
@@ -915,7 +930,7 @@ namespace tr2 {
     ~binary_tree();
     binary_tree&lt;T, Alloc&gt;&amp; operator=(
       binary_tree&lt;T, Alloc&gt; const&amp; x);
-    template &lt;class InputICursor&gt;
+    template &lt;class InputCursor&gt;
       void assign(InputCursor subtree);
     allocator_type get_allocator() const;
 
@@ -937,28 +952,30 @@ namespace tr2 {
     template &lt;class InputCursor&gt;
       cursor  insert(cursor position, InputCursor subtree);
     void      rotate(cursor position);
-    void      swap(binary_tree&lt;Tp, Alloc&gt;&amp;);
+    void      swap(binary_tree&lt;T, Alloc&gt;&amp;);
     void      clear(cursor position);
     void      clear();
   };
 
-  template &lt;class Tp, class Alloc&gt;
-    bool operator==(  binary_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      binary_tree&lt;Tp, Alloc&gt; const&amp; y);
-  template &lt;class Tp, class Alloc&gt;
-    bool operator!=(  binary_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      binary_tree&lt;Tp, Alloc&gt; const&amp; y);
+  template &lt;class T, class Alloc&gt;
+    bool operator==(  binary_tree&lt;T, Alloc&gt; const&amp; x,
+                      binary_tree&lt;T, Alloc&gt; const&amp; y);
+  template &lt;class T, class Alloc&gt;
+    bool operator!=(  binary_tree&lt;T, Alloc&gt; const&amp; x,
+                      binary_tree&lt;T, Alloc&gt; const&amp; y);
 
   <i>// specialized algorithms:</i>
-  template &lt;class Tp, class Alloc&gt;
-  void swap(  binary_tree&lt;Tp, Alloc&gt;&amp; x,
-              binary_tree&lt;Tp, Alloc&gt;&amp; y);
+  template &lt;class T, class Alloc&gt;
+    void swap(  binary_tree&lt;T, Alloc&gt;&amp; x,
+                binary_tree&lt;T, Alloc&gt;&amp; y);
               
   namespace inorder {
-  template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::cursor&gt; begin(binary_tree&lt;Tp, Alloc&gt;&amp; h);
-  template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::const_cursor&gt; cbegin(binary_tree&lt;Tp, Alloc&gt; const&amp; h);
+  template &lt;class T, class Alloc&gt;
+    inorder::iterator&lt;binary_tree&lt;T, Alloc&gt;::cursor&gt;
+      begin(binary_tree&lt;T, Alloc&gt;&amp; h);
+  template &lt;class T, class Alloc&gt;
+    inorder::iterator&lt;binary_tree&lt;T, Alloc&gt;::const_cursor&gt;
+      cbegin(binary_tree&lt;T, Alloc&gt; const&amp; h);
   } // namespace inorder
   
 } <i>// namespace tr2</i>
@@ -968,7 +985,7 @@ namespace tr2 {
     </ol>
 
     <h6>0.1.4.1.1 <tt>binary_tree</tt> types <span class=
-    "section-id">[tr.hierarchy.bintree.types]</span></h6>
+    "section-id">[tr.hierarchy.bintree.type]</span></h6>
     <pre>
 typedef <i>implementation defined</i>                        cursor;
 typedef <i>implementation defined</i>                        const_cursor;    
@@ -1111,8 +1128,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
           <li><tt>position.parity() == !par</tt></li>
 
           <li><tt>*(((position.begin())[par]).begin())</tt> yields what
-          *(p.begin()) yielded before, if <tt>p</tt> was <tt>position</tt>'s
-          parent</li>
+          <tt>*(p.begin())</tt> yielded before, if <tt>p</tt> was
+          <tt>position</tt>'s parent</li>
 
           <li><tt>position</tt>'s parent's value is what <tt>position</tt>'s
           parent's parent's value yielded before. The ancestors of that
@@ -1144,9 +1161,9 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     <h6>0.1.4.1.5 <tt>binary_tree</tt> specialized algorithms <span class=
     "section-id">[tr.hierarchy.bintree.special]</span></h6>
     <pre>
-    template &lt;class Tp, class Alloc&gt;
-    void swap(  binary_tree&lt;Tp, Alloc&gt;&amp; x,
-                binary_tree&lt;Tp, Alloc&gt;&amp; y);
+    template &lt;class T, class Alloc&gt;
+      void swap(  binary_tree&lt;T, Alloc&gt;&amp; x,
+                  binary_tree&lt;T, Alloc&gt;&amp; y);
 </pre>
 
     <ol>
@@ -1154,15 +1171,16 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         <p><strong>Effects:</strong> <tt>x.swap(y);</tt></p>
         <pre>
     namespace inorder {
-      template &lt;class Tp, class Alloc&gt;
-      inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::cursor&gt; begin(binary_tree&lt;Tp, Alloc&gt;&amp; h);
+      template &lt;class T, class Alloc&gt;
+        inorder::iterator&lt;binary_tree&lt;T, Alloc&gt;::cursor&gt;
+          begin(binary_tree&lt;T, Alloc&gt;&amp; h);
     } <i>// namespace inorder</i>
 </pre>
       </li>
 
       <li>
         <p><strong>Returns:</strong>
-        <tt>inorder::iterator&lt;binary_tree&lt;Tp,
+        <tt>inorder::iterator&lt;binary_tree&lt;T,
         Alloc&gt;::cursor&gt;(h.inorder_first())</tt>.</p>
       </li>
 
@@ -1170,15 +1188,16 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         <p><strong>Complexity:</strong> constant</p>
         <pre>
     namespace inorder {
-      template &lt;class Tp, class Alloc&gt;
-      inorder::iterator&lt;binary_tree&lt;Tp, Alloc&gt;::const_cursor&gt; cbegin(binary_tree&lt;Tp, Alloc&gt; const&amp; h);
+      template &lt;class T, class Alloc&gt;
+        inorder::iterator&lt;binary_tree&lt;T, Alloc&gt;::const_cursor&gt;
+          cbegin(binary_tree&lt;T, Alloc&gt; const&amp; h);
     } <i>// namespace inorder</i>
 </pre>
       </li>
 
       <li>
         <p><strong>Returns:</strong>
-        <tt>inorder::iterator&lt;binary_tree&lt;Tp,
+        <tt>inorder::iterator&lt;binary_tree&lt;T,
         Alloc&gt;::const_cursor&gt;(h.inorder_cfirst())</tt>.</p>
       </li>
 
@@ -1218,7 +1237,7 @@ namespace tr2 {
     ~nary_tree();
     nary_tree&lt;T, Alloc&gt;&amp; operator=(
       nary_tree&lt;T, Alloc&gt; const&amp; x);
-    template &lt;class InputICursor&gt;
+    template &lt;class InputCursor&gt;
       void assign(InputCursor subtree);
     allocator_type get_allocator() const;
 
@@ -1529,7 +1548,7 @@ namespace tr2 {
     forest_tree (forest_tree&lt;T, Hierarchy&gt; const&amp; x);
     forest_tree&lt;T, Hierarchy&gt;&amp; operator=(
       forest_tree&lt;T, Hierarchy&gt; const&amp; x);
-    template &lt;class InputICursor&gt;
+    template &lt;class InputCursor&gt;
       void assign(InputCursor subtree);
 
     <i>// cursors:</i>
@@ -1767,7 +1786,7 @@ namespace tr2 {
     ~multiway_tree();
     multiway_tree&lt;T, Hierarchy&gt;&amp; operator=(
       multiway_tree&lt;T, Hierarchy&gt; const&amp; x);
-    template &lt;class InputICursor&gt;
+    template &lt;class InputCursor&gt;
       void assign(InputCursor subtree);
 
     <i>// cursors:</i>
@@ -2074,8 +2093,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     <ol>
       <li>
         <p>An augmenting hierarchy "augments" a mutable multiway hierarchy
-        which it is given as a template parameter by associating additonal
-        information with its elements and modelling a mutable multiway
+        which it is given as a template parameter by associating additional
+        information with its elements and modeling a mutable multiway
         hierarchy in turn. This additional information is not directly
         exposed, but only readable via certain member functions of the
         augmentor; it is updated internally in order to adapt to structural
@@ -2119,7 +2138,7 @@ namespace tr2 {
     ~rank_tree();
     rank_tree&lt;T, Hier&gt;&amp; operator=(
       rank_tree&lt;T, Hier&gt; const&amp; x);
-    template &lt;class InputICursor&gt;
+    template &lt;class InputCursor&gt;
       void assign(InputCursor subtree);
 
     <i>// cursors:</i>
@@ -2982,7 +3001,7 @@ void      clear();
 
             <table summary=
             "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 9 - Descending forward cursor requirements (in addition
                 to descending cursors and forward iterators)
@@ -3031,7 +3050,7 @@ void      clear();
 
             <table summary=
             "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 10 - Descending bidirectional cursor requirements (in
                 addition to forward descending cursors and bidirectional
@@ -3089,7 +3108,7 @@ void      clear();
 
             <table summary=
             "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 11 - Descending random access cursor requirements (in
                 addition to descending bidirectional cursors and random
@@ -3138,7 +3157,7 @@ void      clear();
 
             <table summary=
             "Acending cursor requirements (in addition to descending cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 12 - Ascending cursor requirements (in addition to
                 descending cursors)
@@ -3216,7 +3235,7 @@ void      clear();
 
             <table summary=
             "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 13 - Ascending forward cursor requirements (in addition
                 to ascending cursors and descending forward cursors)
@@ -3265,7 +3284,7 @@ void      clear();
 
             <table summary=
             "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 14 - Ascending bidirectional cursor requirements (in
                 addition to ascending forward cursors and descending
@@ -3315,7 +3334,7 @@ void      clear();
 
             <table summary=
             "Ascending random access cursor requirements (in addition to ascending bidirectional cursors and descending random access cursors)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 15 - Ascending random access cursor requirements (in
                 addition to ascending bidirectional cursors and descending
