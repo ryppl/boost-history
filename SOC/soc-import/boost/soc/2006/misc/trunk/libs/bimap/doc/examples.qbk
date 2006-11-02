@@ -67,8 +67,8 @@ You can rewrite it using tags to gain readability.
 
     #include <boost/bimap/bimap.hpp>
 
-    struct country  {}
-    struct place    {}
+    struct country  {};
+    struct place    {};
 
     int main()
     {

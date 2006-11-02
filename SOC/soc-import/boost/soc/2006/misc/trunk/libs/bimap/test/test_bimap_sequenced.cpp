@@ -57,19 +57,39 @@ void test_bimap()
     right_data.insert( right_data_type::value_type(0.4,4) );
 
 
-
-
     //--------------------------------------------------------------------
     {
         bimap
         <
             list_of< int >, vector_of< double >
 
-        > b;
+        > b, c;
 
         test_sequence_container(b,data);
         test_sequence_container(b.left , left_data);
         test_sequence_container(b.right,right_data);
+
+        // Test splice and merge
+
+        b.clear();
+
+        c.left.insert(c.left.begin(),left_data.begin(),left_data.end());
+        b.left.splice(b.left.begin(),c.left);
+
+        BOOST_CHECK( c.size() == 0 );
+        BOOST_CHECK( b.size() == 4 );
+
+        c.left.splice(c.left.begin(),b.left,++b.left.begin());
+
+        BOOST_CHECK( c.size() == 1 );
+
+        c.splice(c.begin(),b,b.begin(),b.end());
+
+        BOOST_CHECK( b.size() == 0 );
+/*
+        b.left.merge(c.left);
+        c.left.merge(b.left,std::less<int>());
+*/
     }
     //--------------------------------------------------------------------
 
