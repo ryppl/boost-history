@@ -1266,23 +1266,25 @@ namespace tr2 {
     void      clear();
   };
 
-  template &lt;class Tp, class Alloc&gt;
-    bool operator==(  nary_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      nary_tree&lt;Tp, Alloc&gt; const&amp; y);
-  template &lt;class Tp, class Alloc&gt;
-    bool operator!=(  nary_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      nary_tree&lt;Tp, Alloc&gt; const&amp; y);
+  template &lt;class T, class Alloc&gt;
+    bool operator==(  nary_tree&lt;T, Alloc&gt; const&amp; x,
+                      nary_tree&lt;T, Alloc&gt; const&amp; y);
+  template &lt;class T, class Alloc&gt;
+    bool operator!=(  nary_tree&lt;T, Alloc&gt; const&amp; x,
+                      nary_tree&lt;T, Alloc&gt; const&amp; y);
 
   <i>// specialized algorithms:</i>
-  template &lt;class Tp, class Alloc&gt;
-  void swap(  nary_tree&lt;Tp, Alloc&gt;&amp; x,
-              nary_tree&lt;Tp, Alloc&gt;&amp; y);
+  template &lt;class T, class Alloc&gt;
+    void swap(  nary_tree&lt;T, Alloc&gt;&amp; x,
+                nary_tree&lt;T, Alloc&gt;&amp; y);
 
   namespace inorder {
-  template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;nary_tree&lt;Tp, Alloc&gt;::cursor&gt; begin(nary_tree&lt;Tp, Alloc&gt;&amp; h);
-  template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;nary_tree&lt;Tp, Alloc&gt;::const_cursor&gt; cbegin(nary_tree&lt;Tp, Alloc&gt; const&amp; h);
+  template &lt;class T, class Alloc&gt;
+    inorder::iterator&lt;nary_tree&lt;T, Alloc&gt;::cursor&gt;
+      begin(nary_tree&lt;T, Alloc&gt;&amp; h);
+  template &lt;class T, class Alloc&gt;
+    inorder::iterator&lt;nary_tree&lt;T, Alloc&gt;::const_cursor&gt;
+      cbegin(nary_tree&lt;T, Alloc&gt; const&amp; h);
   } // namespace inorder
               
 } <i>// namespace tr2</i>
@@ -1448,9 +1450,9 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     <h6>0.1.4.2.6 <tt>nary_tree</tt> specialized algorithms <span class=
     "section-id">[tr.hierarchy.narytree.special]</span></h6>
     <pre>
-    template &lt;class Tp, class Alloc&gt;
-    void swap(  nary_tree&lt;Tp, Alloc&gt;&amp; x,
-                nary_tree&lt;Tp, Alloc&gt;&amp; y);
+    template &lt;class T, class Alloc&gt;
+    void swap(  nary_tree&lt;T, Alloc&gt;&amp; x,
+                nary_tree&lt;T, Alloc&gt;&amp; y);
 </pre>
 
     <ol>
@@ -1458,15 +1460,15 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         <p><strong>Effects:</strong> <tt>x.swap(y);</tt></p>
         <pre>
     namespace inorder {
-      template &lt;class Tp, class Alloc&gt;
-      inorder::iterator&lt;nary_tree&lt;Tp, Alloc&gt;::cursor&gt; begin(nary_tree&lt;Tp, Alloc&gt;&amp; h);
+      template &lt;class T, class Alloc&gt;
+        inorder::iterator&lt;nary_tree&lt;T, Alloc&gt;::cursor&gt;
+          begin(nary_tree&lt;T, Alloc&gt;&amp; h);
     } <i>// namespace inorder</i>
 </pre>
       </li>
 
       <li>
-        <p><strong>Returns:</strong>
-        <tt>inorder::iterator&lt;nary_tree&lt;Tp,
+        <p><strong>Returns:</strong> <tt>inorder::iterator&lt;nary_tree&lt;T,
         Alloc&gt;::cursor&gt;(h.inorder_first())</tt>.</p>
       </li>
 
@@ -1474,15 +1476,15 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         <p><strong>Complexity:</strong> constant</p>
         <pre>
     namespace inorder {
-      template &lt;class Tp, class Alloc&gt;
-      inorder::iterator&lt;nary_tree&lt;Tp, Alloc&gt;::const_cursor&gt; cbegin(nary_tree&lt;Tp, Alloc&gt; const&amp; h);
+      template &lt;class T, class Alloc&gt;
+        inorder::iterator&lt;nary_tree&lt;T, Alloc&gt;::const_cursor&gt;
+          cbegin(nary_tree&lt;T, Alloc&gt; const&amp; h);
     } <i>// namespace inorder</i>
 </pre>
       </li>
 
       <li>
-        <p><strong>Returns:</strong>
-        <tt>inorder::iterator&lt;nary_tree&lt;Tp,
+        <p><strong>Returns:</strong> <tt>inorder::iterator&lt;nary_tree&lt;T,
         Alloc&gt;::const_cursor&gt;(h.inorder_cfirst())</tt>.</p>
       </li>
 
@@ -1513,17 +1515,18 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         <p>A <tt>forest_tree</tt> is a kind of mutable plain hierarchy that
         is instantiated with a mutable multiway hierarchy that has insertion
         semantics as a <tt>binary_tree</tt>
-        ([tr.hierarchy.bintree.modifiers], &amp;1)), and whose cursor types
+        ([tr.hierarchy.bintree.modifiers], &sect;1)), and whose cursor types
         <tt>cursor</tt> and <tt>const_cursor</tt> satisfy a
         <tt>binary_tree</tt>'s <tt>cursor</tt> and <tt>const_cursor</tt> type
-        requirements ([tr.hierarchy.bintree.types], &amp;&amp;1-2)).</p>
+        requirements ([tr.hierarchy.bintree.types], &sect;1-2)).</p>
         <pre>
 namespace std {
 namespace tr2 {
   template &lt;class T, class Hierarchy = binary_tree&lt;T&gt; &gt;
   class forest_tree {
   public:
-    typedef Hierarchy                            hierarchy_type;
+    typedef Hierarchy                                     hierarchy_type;
+
   protected:
     hierarchy_type h;
     
@@ -1572,18 +1575,26 @@ namespace tr2 {
     void      clear();
   };
 
-  template &lt;class Tp, class Hierarchy&gt;
-    bool operator==(  forest_tree&lt;Tp, Hierarchy&gt; const&amp; x,
-                      forest_tree&lt;Tp, Hierarchy&gt; const&amp; y);
-  template &lt;class Tp, class Hierarchy&gt;
-    bool operator!=(  forest_tree&lt;Tp, Hierarchy&gt; const&amp; x,
-                      forest_tree&lt;Tp, Hierarchy&gt; const&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    bool operator==(  forest_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      forest_tree&lt;T, Hierarchy&gt; const&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    bool operator!=(  forest_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      forest_tree&lt;T, Hierarchy&gt; const&amp; y);
 
   <i>// specialized algorithms:</i>
-  template &lt;class Tp, class Hierarchy&gt;
-  void swap(  forest_tree&lt;Tp, Hierarchy&gt;&amp; x,
-              forest_tree&lt;Tp, Hierarchy&gt;&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    void swap(  forest_tree&lt;T, Hierarchy&gt;&amp; x,
+                forest_tree&lt;T, Hierarchy&gt;&amp; y);
 
+  namespace inorder {
+  template &lt;class T, class Hierarchy&gt;
+    inorder::iterator&lt;forest_tree&lt;T, Hierarchy&gt;::cursor&gt;
+      begin(forest_tree&lt;T, Hierarchy&gt;&amp; h);
+  template &lt;class T, class Hierarchy&gt;
+    inorder::iterator&lt;forest_tree&lt;T, Hierarchy&gt;::const_cursor&gt;
+      cbegin(forest_tree&lt;T, Hierarchy&gt; const&amp; h);
+  } // namespace inorder
 
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
@@ -1604,7 +1615,7 @@ typedef <i>implementation defined</i>                        const_cursor;
         cursor types are at least ascending bidirectional cursors, both
         <tt>cursor</tt> and <tt>const_cursor</tt> are ascending bidirectional
         cursors. Otherwise, they are descending forward cursors. The adaptee
-        binary tree is "tilted" to yield an nary tree, meaning that the
+        binary tree is "tilted" to yield an n-ary tree, meaning that the
         operational semantics of the adaptor cursor are as follows in terms
         of the adaptee cursor (only valid if present in the adaptor cursor's
         category; only given for mutable versions of expressions, const ones
@@ -1737,9 +1748,9 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     <h6>0.1.4.3.1.4 <tt>forest_tree</tt> specialized algorithms <span class=
     "section-id">[tr.hierarchy.foresttree.special]</span></h6>
     <pre>
-    template &lt;class Tp, class Hierarchy&gt;
-    void swap(  forest_tree&lt;Tp, Hierarchy&gt;&amp; x,
-                forest_tree&lt;Tp, Hierarchy&gt;&amp; y);
+    template &lt;class T, class Hierarchy&gt;
+    void swap(  forest_tree&lt;T, Hierarchy&gt;&amp; x,
+                forest_tree&lt;T, Hierarchy&gt;&amp; y);
 </pre>
 
     <ol>
@@ -1764,19 +1775,24 @@ namespace tr2 {
   class multiway_tree
   {
   public:
+    typedef Hierarchy                                     hierarchy_type;
+
+  protected:
+    hierarchy_type h;
+
+  public:
     <i>// types:</i>
     typedef T                                             value_type;
-    typedef Alloc                                         allocator_type;
 
     typedef <i>implementation defined</i>                        cursor;
     typedef <i>implementation defined</i>                        const_cursor;
 
-    typedef typename allocator_type::pointer              pointer;
-    typedef typename allocator_type::const_pointer        const_pointer;
-    typedef typename allocator_type::reference            reference;
-    typedef typename allocator_type::const_reference      const_reference;
-    typedef typename allocator_type::size_type            size_type;
-    typedef typename allocator_type::difference_type      difference_type;
+    typedef typename hierarchy_type::pointer              pointer;
+    typedef typename hierarchy_type::const_pointer        const_pointer;
+    typedef typename hierarchy_type::reference            reference;
+    typedef typename hierarchy_type::const_reference      const_reference;
+    typedef typename hierarchy_type::size_type            size_type;
+    typedef typename hierarchy_type::difference_type      difference_type;
 
     <i>// construct/copy/destroy:</i>
     explicit multiway_tree (hierarchy_type const&amp; = hierarchy_type());
@@ -1809,28 +1825,30 @@ namespace tr2 {
     template &lt;class InputCursor&gt;
       cursor  insert(cursor position, InputCursor subtree);
     void      rotate(cursor position);
-    void      swap(multiway_tree&lt;Tp, Alloc&gt;&amp;);
+    void      swap(multiway_tree&lt;p, Hierarchy&gt;&amp;);
     void      clear(cursor position);
     void      clear();
   };
 
+  template &lt;class T, class Hierarchy&gt;
+    bool operator==(  multiway_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      multiway_tree&lt;T, Hierarchy&gt; const&amp; y);
   template &lt;class Tp, class Alloc&gt;
-    bool operator==(  multiway_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      multiway_tree&lt;Tp, Alloc&gt; const&amp; y);
-  template &lt;class Tp, class Alloc&gt;
-    bool operator!=(  multiway_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      multiway_tree&lt;Tp, Alloc&gt; const&amp; y);
+    bool operator!=(  multiway_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      multiway_tree&lt;T, Hierarchy&gt; const&amp; y);
 
   <i>// specialized algorithms:</i>
-  template &lt;class Tp, class Alloc&gt;
-  void swap(  multiway_tree&lt;Tp, Alloc&gt;&amp; x,
-              multiway_tree&lt;Tp, Alloc&gt;&amp; y);
-              
+  template &lt;class T, class Hierarchy&gt;
+    void swap(  multiway_tree&lt;T, Hierarchy&gt;&amp; x,
+                multiway_tree&lt;T, Hierarchy&gt;&amp; y);
+
   namespace inorder {
-  template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;multiway_tree&lt;Tp, Alloc&gt;::cursor&gt; begin(multiway_tree&lt;Tp, Alloc&gt;&amp; h);
-  template &lt;class Tp, class Alloc&gt;
-  inorder::iterator&lt;multiway_tree&lt;Tp, Alloc&gt;::const_cursor&gt; cbegin(multiway_tree&lt;Tp, Alloc&gt; const&amp; h);
+  template &lt;class T, class Hierarchy&gt;
+    inorder::iterator&lt;multiway_tree&lt;T, Hierarchy&gt;::cursor&gt;
+      begin(multiway_tree&lt;T, Hierarchy&gt;&amp; h);
+  template &lt;class T, class Hierarchy&gt;
+    inorder::iterator&lt;multiway_tree&lt;T, Hierarchy&gt;::const_cursor&gt;
+      cbegin(multiway_tree&lt;T, Hierarchy&gt; const&amp; h);
   } // namespace inorder
   
 } <i>// namespace tr2</i>
@@ -1849,8 +1867,8 @@ namespace tr2 {
     <h6>0.1.4.3.2.1 <tt>multiway_tree</tt> types <span class=
     "section-id">[tr.hierarchy.multiwaytree.types]</span></h6>
     <pre>
-typedef <i>implementation defined</i>                        cursor;
-typedef <i>implementation defined</i>                        const_cursor;
+    typedef <i>implementation defined</i>                        cursor;
+    typedef <i>implementation defined</i>                        const_cursor;
 </pre>
 
     <ol>
@@ -1907,7 +1925,7 @@ typedef <i>implementation defined</i>                        const_cursor;
     explicit multiway_tree (hierarchy_type const&amp; = hierarchy_type());
     template &lt;class InputCursor&gt;
       multiway_tree (InputCursor subtree);
-    multiway_tree (multiway_tree&lt;T, Alloc&gt; const&amp; x);
+    multiway_tree (multiway_tree&lt;T, Hierarchy&gt; const&amp; x);
 </pre>
 
     <ol>
@@ -2044,9 +2062,9 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     <h6>0.1.4.3.2.6 <tt>multiway_tree</tt> specialized algorithms
     <span class="section-id">[tr.hierarchy.multiwaytree.special]</span></h6>
     <pre>
-    template &lt;class Tp, class Alloc&gt;
-    void swap(  multiway_tree&lt;Tp, Alloc&gt;&amp; x,
-                multiway_tree&lt;Tp, Alloc&gt;&amp; y);
+    template &lt;class T, class Hierarchy&gt;
+      void swap(  multiway_tree&lt;T, Hierarchy&gt;&amp; x,
+                  multiway_tree&lt;T, Hierarchy&gt;&amp; y);
 </pre>
 
     <ol>
@@ -2054,16 +2072,17 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         <p><strong>Effects:</strong> <tt>x.swap(y);</tt></p>
         <pre>
     namespace inorder {
-      template &lt;class Tp, class Alloc&gt;
-      inorder::iterator&lt;multiway_tree&lt;Tp, Alloc&gt;::cursor&gt; begin(multiway_tree&lt;Tp, Alloc&gt;&amp; h);
+      template &lt;class T, class Hierarchy&gt;
+        inorder::iterator&lt;multiway_tree&lt;T, Hierarchy&gt;::cursor&gt;
+          begin(multiway_tree&lt;T, Hierarchy&gt;&amp; h);
     } <i>// namespace inorder</i>
 </pre>
       </li>
 
       <li>
         <p><strong>Returns:</strong>
-        <tt>inorder::iterator&lt;multiway_tree&lt;Tp,
-        Alloc&gt;::cursor&gt;(h.inorder_first())</tt>.</p>
+        <tt>inorder::iterator&lt;multiway_tree&lt;T,
+        Hierarchy&gt;::cursor&gt;(h.inorder_first())</tt>.</p>
       </li>
 
       <li>
@@ -2109,17 +2128,19 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     <pre>
 namespace std {
 namespace tr2 {
-  template &lt;class T, class Hier = std::Hierarchy&lt;T&gt; &gt;
+  template &lt;class T, class Hierarchy = binary_tree&lt;T&gt; &gt;
   class rank_tree
   {
   public:
-    <i>// types:</i>
-    typedef T                                             value_type;
-    typedef Hier                                          hierarchy_type;
+    typedef Hierarchy                                     hierarchy_type;
+
   protected:
     hierarchy_type h;
   
   public:
+    <i>// types:</i>
+    typedef T                                             value_type;
+
     typedef <i>implementation defined</i>                        cursor;
     typedef <i>implementation defined</i>                        const_cursor;
 
@@ -2134,10 +2155,10 @@ namespace tr2 {
     explicit rank_tree (hierarchy_type const&amp; = hierarchy_type());
     template &lt;class InputCursor&gt;
       rank_tree (InputCursor subtree);
-    rank_tree (rank_tree&lt;T, Hier&gt; const&amp; x);
+    rank_tree (rank_tree&lt;T, Hierarchy&gt; const&amp; x);
     ~rank_tree();
-    rank_tree&lt;T, Hier&gt;&amp; operator=(
-      rank_tree&lt;T, Hier&gt; const&amp; x);
+    rank_tree&lt;T, Hierarchy&gt;&amp; operator=(
+      rank_tree&lt;T, Hierarchy&gt; const&amp; x);
     template &lt;class InputCursor&gt;
       void assign(InputCursor subtree);
 
@@ -2164,28 +2185,30 @@ namespace tr2 {
     template &lt;class InputCursor&gt;
       cursor  insert(cursor position, InputCursor subtree);
     void      rotate(cursor position);
-    void      swap(rank_tree&lt;Tp, Hier&gt;&amp;);
+    void      swap(rank_tree&lt;T, Hierarchy&gt;&amp;);
     void      clear(cursor position);
     void      clear();
   };
 
-  template &lt;class Tp, class Hier&gt;
-    bool operator==(  rank_tree&lt;Tp, Hier&gt; const&amp; x,
-                      rank_tree&lt;Tp, Hier&gt; const&amp; y);
-  template &lt;class Tp, class Hier&gt;
-    bool operator!=(  rank_tree&lt;Tp, Hier&gt; const&amp; x,
-                      rank_tree&lt;Tp, Hier&gt; const&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    bool operator==(  rank_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      rank_tree&lt;T, Hierarchy&gt; const&amp; y);
+  template &lt;class T, class Hier&gt;
+    bool operator!=(  rank_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      rank_tree&lt;T, Hierarchy&gt; const&amp; y);
 
   <i>// specialized algorithms:</i>
-  template &lt;class Tp, class Hier&gt;
-  void swap(  rank_tree&lt;Tp, Hier&gt;&amp; x,
-              rank_tree&lt;Tp, Hier&gt;&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    void swap(  rank_tree&lt;T, Hierarchy&gt;&amp; x,
+                rank_tree&lt;T, Hierarchy&gt;&amp; y);
               
   namespace inorder {
-  template &lt;class Tp, class Hier&gt;
-  inorder::iterator&lt;rank_tree&lt;Tp, Hier&gt;::cursor&gt; begin(rank_tree&lt;Tp, Hier&gt;&amp; h);
-  template &lt;class Tp, class Hier&gt;
-  inorder::iterator&lt;rank_tree&lt;Tp, Hier&gt;::const_cursor&gt; cbegin(rank_tree&lt;Tp, Hier&gt; const&amp; h);
+  template &lt;class T, class Hierarchy&gt;
+    inorder::iterator&lt;rank_tree&lt;T, Hierarchy&gt;::cursor&gt;
+      begin(rank_tree&lt;T, Hierarchy&gt;&amp; h);
+  template &lt;class Tp, class Hierarchy&gt;
+    inorder::iterator&lt;rank_tree&lt;T, Hierarchy&gt;::const_cursor&gt;
+      cbegin(rank_tree&lt;T, Hierarchy&gt; const&amp; h);
   } // namespace inorder
   
 } <i>// namespace tr2</i>
@@ -2197,16 +2220,16 @@ namespace tr2 {
       <li>
         <p>Each function listed in the public interface of <tt>rank_tree</tt>
         as above calls a function of the same name for its adaptee object
-        <tt>h</tt>, plus possibly other operations with guaranteed constant
-        time complexity in total. This means that operational semantics and
-        time complexities are as specified by the <tt>hierarchy_type</tt>;
-        and that a function can only be called if a function of the same name
-        is present in the public interface of <tt>hierarchy_type</tt>. (The
-        only exception to the above stated are the functions <tt>rank()</tt>,
-        which are newly introduced.)</p>
+        <tt>h</tt>, plus possibly other operations with guaranteed
+        logarithmic time complexity in total. This means that operational
+        semantics and time complexities are as specified by the
+        <tt>hierarchy_type</tt>; and that a function can only be called if a
+        function of the same name is present in the public interface of
+        <tt>hierarchy_type</tt>. (The only exception to the above stated are
+        the functions <tt>rank()</tt>, which are newly introduced.)</p>
         <pre>
-cursor        rank(size_type n);
-const_cursor  rank(size_type n) const;
+    cursor        rank(size_type n);
+    const_cursor  rank(size_type n) const;
 </pre>
       </li>
 
@@ -2270,6 +2293,7 @@ namespace tr2 {
   class avl_tree {
   public:
     typedef Hierarchy        hierarchy_type;
+
   protected:
     hierarchy_type h;
     
