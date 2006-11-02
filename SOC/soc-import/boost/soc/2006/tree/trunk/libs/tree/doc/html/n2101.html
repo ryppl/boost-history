@@ -16,8 +16,8 @@
   .std {
     margin: 1em;
     padding: 1em 0em 1em 1.5em;
-    border-top: 1px solid grey;
-    border-bottom: 1px solid grey;
+    border-top: 1px solid #888888;
+    border-bottom: 1px solid #888888;
   }
   .std ol {
     margin: 0em;
@@ -64,8 +64,10 @@
     text-align: center;
   }
   .note {
-    background: #DDDDDD;
+    background: #EEEEEE;
     border: 1px solid #AAAAAA;
+    margin: 0.5em 0em 0.5em 0em;
+    padding: 0.25em;
   }
   .add {
     text-decoration: overline;
@@ -93,7 +95,7 @@
 
     <dt>Date</dt>
 
-    <dd>2006-10-31</dd>
+    <dd>2006-11-02</dd>
 
     <dt>Project</dt>
 
@@ -490,7 +492,7 @@
               <td><tt>iterator</tt> for mutable <tt>a</tt>;<br />
               <tt>const_iterator</tt> for constant <tt>a</tt></td>
 
-              <td></td>
+              <td>&nbsp;</td>
 
               <td>constant</td>
             </tr>
@@ -500,7 +502,7 @@
 
               <td><tt>const_iterator</tt></td>
 
-              <td></td>
+              <td>&nbsp;</td>
 
               <td>constant</td>
             </tr>
@@ -511,7 +513,7 @@
               <td><tt>iterator</tt> for mutable <tt>a</tt>;<br />
               <tt>const_iterator</tt> for constant <tt>a</tt></td>
 
-              <td></td>
+              <td>&nbsp;</td>
 
               <td>(Note A)</td>
             </tr>
@@ -521,7 +523,7 @@
 
               <td><tt>const_iterator</tt></td>
 
-              <td></td>
+              <td>&nbsp;</td>
 
               <td>(Note A)</td>
             </tr>
@@ -1073,7 +1075,6 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     "section-id">[tr.hierarchy.bintree.modifiers]</span></h6>
     <pre>
     cursor    insert(cursor position, value_type const&amp; x = value_type());
-    
 </pre>
 
     <ol>
@@ -1097,9 +1098,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
 
       <li>
-        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
-        insert(cursor position, InputCursor subtree)</tt> is linear in the
-        number of elements in <tt>subtree</tt>.</p>
+        <p><strong>Complexity:</strong> linear in the number of elements in
+        <tt>subtree</tt>.</p>
         <pre>
     void      rotate(cursor position);
 </pre>
@@ -1374,7 +1374,6 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     "section-id">[tr.hierarchy.narytree.capacity]</span></h6>
     <pre>
 size_type capacity(cursor position) const;
-
 </pre>
 
     <ol>
@@ -1384,7 +1383,6 @@ size_type capacity(cursor position) const;
         reallocation.</p>
         <pre>
 void      reserve(cursor position, size_type n);
-
 </pre>
       </li>
 
@@ -1426,12 +1424,6 @@ void      reserve(cursor position, size_type n);
 
     <ol>
       <li>
-        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
-        insert(cursor position, InputCursor subtree)</tt> is linear in the
-        number of elements in <tt>subtree</tt>.</p>
-      </li>
-
-      <li>
         <p><strong>Effects:</strong></p>
         <pre>
 clear();
@@ -1441,9 +1433,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
 
       <li>
-        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
-        insert(cursor position, InputCursor subtree)</tt> is linear in the
-        number of elements in <tt>subtree</tt>.</p>
+        <p><strong>Complexity:</strong> linear in the number of elements in
+        <tt>subtree</tt>.</p>
       </li>
     </ol>
 
@@ -1724,12 +1715,6 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
     <ol>
       <li>
-        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
-        insert(cursor position, InputCursor subtree)</tt> is linear in the
-        number of elements in <tt>subtree</tt>.</p>
-      </li>
-
-      <li>
         <p><strong>Effects:</strong></p>
         <pre>
 clear();
@@ -1739,9 +1724,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
 
       <li>
-        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
-        insert(cursor position, InputCursor subtree)</tt> is linear in the
-        number of elements in <tt>subtree</tt>.</p>
+        <p><strong>Complexity:</strong> linear in the number of elements in
+        <tt>subtree</tt>.</p>
       </li>
     </ol>
 
@@ -1853,7 +1837,6 @@ namespace tr2 {
   
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
-
 </pre>
       </li>
 
@@ -1893,7 +1876,8 @@ namespace tr2 {
         <table summary=
         "Multiway/nary tree cursor operational semantics corresponences">
           <caption>
-            Multiway/nary tree cursor operational semantics correspondences
+            Table 7: Multiway/nary tree cursor operational semantics
+            correspondences
           </caption>
 
           <thead>
@@ -1986,7 +1970,6 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     "section-id">[tr.hierarchy.multiwaytree.capacity]</span></h6>
     <pre>
 size_type capacity(cursor position) const;
-
 </pre>
 
     <ol>
@@ -1996,7 +1979,6 @@ size_type capacity(cursor position) const;
         reallocation.</p>
         <pre>
 void      reserve(cursor position, size_type n);
-
 </pre>
       </li>
 
@@ -2038,12 +2020,6 @@ void      reserve(cursor position, size_type n);
 
     <ol>
       <li>
-        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
-        insert(cursor position, InputCursor subtree)</tt> is linear in the
-        number of elements in <tt>subtree</tt>.</p>
-      </li>
-
-      <li>
         <p><strong>Effects:</strong></p>
         <pre>
 clear();
@@ -2053,9 +2029,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
 
       <li>
-        <p>The complexity of <tt>template &lt;class InputCursor&gt; cursor
-        insert(cursor position, InputCursor subtree)</tt> is linear in the
-        number of elements in <tt>subtree</tt>.</p>
+        <p><strong>Complexity:</strong> linear in the number of elements in
+        <tt>subtree</tt>.</p>
       </li>
     </ol>
 
@@ -2090,7 +2065,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         <pre>
     namespace inorder {
       template &lt;class Tp, class Alloc&gt;
-      inorder::iterator&lt;multiway_tree&lt;Tp, Alloc&gt;::const_cursor&gt; cbegin(multiway_tree&lt;Tp, Alloc&gt; const&amp; h);
+        inorder::iterator&lt;multiway_tree&lt;Tp, Alloc&gt;::const_cursor&gt;
+          cbegin(multiway_tree&lt;Tp, Alloc&gt; const&amp; h);
     } <i>// namespace inorder</i>
 </pre>
       </li>
@@ -2213,7 +2189,6 @@ namespace tr2 {
   
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
-
 </pre>
 
     <ol>
@@ -2268,7 +2243,7 @@ namespace tr2 {
         classes which take a mutable multiway template parameter that
         provides a <tt>rotate()</tt> operation and whose <tt>cursor</tt> and
         <tt>const_cursor</tt> types satisfy the requirements of a binary tree
-        cursor ([tr.hierarchy.balance.types], &sect;&sect;1 and 2):
+        cursor ([tr.hierarchy.balance.types], &sect;1 and &sect;2):
         <tt>avl_tree</tt>, <tt>red_black_tree</tt>, <tt>splay_tree</tt>, and
         <tt>treap</tt>. Furthermore, two balancing hierarchy adaptor template
         classes that take a mutable multiway tree template parameter are
@@ -2289,10 +2264,10 @@ namespace tr2 {
         <pre>
 namespace std {
 namespace tr2 {
-  template &lt;class Tp, class Hierarchy = binary_tree&lt;T&gt; &gt;
+  template &lt;class T, class Hierarchy = binary_tree&lt;T&gt; &gt;
   class avl_tree {
   public:
-    typedef Hierarchy        hierarchy_type;
+    typedef Hierarchy                                     hierarchy_type;
 
   protected:
     hierarchy_type h;
@@ -2307,14 +2282,14 @@ namespace tr2 {
     typedef typename hierarchy_type::size_type            size_type;
     typedef typename hierarchy_type::difference_type      difference_type;
     typedef typename hierarchy_type::allocator_type       allocator_type;
-        
-    typedef <i>implementation defined</i>        iterator;
-    typedef <i>implementation defined</i>  const_iterator;
 
-    typedef std::reverse_iterator&lt;iterator&gt;         reverse_iterator;
-    typedef std::reverse_iterator&lt;const_iterator&gt;   const_reverse_iterator;
-    
-    <i>// construct/copy/destroy:</i>
+    typedef <i>implementation defined</i>                        iterator;
+    typedef <i>implementation defined</i>                        const_iterator;
+
+    typedef std::reverse_iterator&lt;iterator&gt;               reverse_iterator;
+    typedef std::reverse_iterator&lt;const_iterator&gt;         const_reverse_iterator;
+
+<i>    // construct/copy/destroy:</i>
     explicit avl_tree(hierarchy_type const&amp; = hierarchy_type());
     explicit avl_tree(allocator_type const&amp; = allocator_type());
     explicit avl_tree(size_type n, value_type const&amp; value = value_type(),
@@ -2322,10 +2297,10 @@ namespace tr2 {
     template &lt;class InputIterator&gt;
       avl_tree (InputIterator first, InputIterator last,
         allocator_type const&amp; = allocator_type());
-    avl_tree (avl_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x);
+    avl_tree (avl_tree&lt;T, Hierarchy&gt; const&amp; x);
     ~avl_tree();
-    avl_tree&lt;T, Balance, Augment, Alloc&gt;&amp; operator=(
-      avl_tree&lt;T, Balance, Augment, Alloc&gt; const&amp; x);
+    avl_tree&lt;T, Hierarchy&gt;&amp; operator=(
+      avl_tree&lt;T, Hierarchy&gt; const&amp; x);
     template &lt;class InputIterator&gt;
       void assign(InputIterator first, InputIterator last);
     template &lt;class Size, class T&gt;
@@ -2344,7 +2319,7 @@ namespace tr2 {
     
     <i>// capacity:</i>
     bool      empty() const { return h.empty(); }
-    size_type size() const { return h.size(); }
+    size_type size() const  { return h.size(); }
     size_type max_size() const;
     void      resize(size_type sz, T c = T());
 
@@ -2356,35 +2331,38 @@ namespace tr2 {
     
     <i>// map operations:</i>
     iterator find(const value_type&amp; x);
-    const_iterator find(const value_type&amp; x) const;
+      const_iterator find(const value_type&amp; x) const;
     template &lt;class Cmp&gt;
-    iterator find(const value_type&amp; x, Cmp cmp);
-    const_iterator find(const value_type&amp; x) const;
+      iterator find(const value_type&amp; x, Cmp cmp);
+        const_iterator find(const value_type&amp; x) const;
 
     size_type count(const value_type&amp; x) const;
     template &lt;class Cmp&gt;
-    size_type count(const value_type&amp; x, Cmp cmp) const;
+      size_type count(const value_type&amp; x, Cmp cmp) const;
 
     iterator lower_bound(const value_type&amp; x);
     const_iterator lower_bound(const value_type&amp; x) const;
     template &lt;class Cmp&gt;
-    iterator lower_bound(const value_type&amp; x, Cmp cmp);
+      iterator lower_bound(const value_type&amp; x, Cmp cmp);
     template &lt;class Cmp&gt;
-    const_iterator lower_bound(const value_type&amp; x, Cmp cmp) const;
+      const_iterator lower_bound(const value_type&amp; x, Cmp cmp) const;
 
     iterator upper_bound(const value_type&amp; x);
     const_iterator upper_bound(const value_type&amp; x) const;
     template &lt;class Cmp&gt;
-    iterator upper_bound(const value_type&amp; x, Cmp cmp);
+      iterator upper_bound(const value_type&amp; x, Cmp cmp);
     template &lt;class Cmp&gt;
-    const_iterator upper_bound(const value_type&amp; x, Cmp cmp) const;
+      const_iterator upper_bound(const value_type&amp; x, Cmp cmp) const;
 
     pair&lt;iterator,iterator&gt; equal_range(const value_type&amp; x);
-    pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x) const;
+    pair&lt;const_iterator,const_iterator&gt;
+      equal_range(const value_type&amp; x) const;
     template &lt;class Cmp&gt;
-    pair&lt;iterator,iterator&gt; equal_range(const value_type&amp; x, Cmp cmp);
+      pair&lt;iterator,iterator&gt;
+        equal_range(const value_type&amp; x, Cmp cmp);
     template &lt;class Cmp&gt;
-    pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x, Cmp cmp) const;
+      pair&lt;const_iterator,const_iterator&gt;
+        equal_range(const value_type&amp; x, Cmp cmp) const;
 
     <i>// modifiers:</i>
     void      push_front(value_type const&amp; x);
@@ -2392,7 +2370,7 @@ namespace tr2 {
     iterator  insert(iterator position, value_type const&amp; x = value_type());
     void      insert(iterator position, size_type n, value_type const&amp; x);
     template &lt;class InputIterator&gt;
-      void    insert (iterator position, InputIterator first, InputIterator last);
+      void    insert(iterator position, InputIterator first, InputIterator last);
     void      pop_front();
     void      pop_back();
     void      erase(iterator position);
@@ -2401,57 +2379,35 @@ namespace tr2 {
     void      clear() { h.clear(); }
   };
   
-  template &lt;class Tp, class Alloc&gt;
-    bool operator==(  avl_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      avl_tree&lt;Tp, Alloc&gt; const&amp; y);
-  template &lt;class Tp, class Alloc&gt;
-    bool operator&lt; (  avl_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      avl_tree&lt;Tp, Alloc&gt; const&amp; y);
-  template &lt;class Tp, class Alloc&gt;
-    bool operator!=(  avl_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      avl_tree&lt;Tp, Alloc&gt; const&amp; y);
-  template &lt;class Tp, class Alloc&gt;
-    bool operator&gt; (  avl_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      avl_tree&lt;Tp, Alloc&gt; const&amp; y);
-  template &lt;class Tp, class Alloc&gt;
-    bool operator&gt;=(  avl_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      avl_tree&lt;Tp, Alloc&gt; const&amp; y);
-  template &lt;class Tp, class Alloc&gt;
-    bool operator&lt;=(  avl_tree&lt;Tp, Alloc&gt; const&amp; x,
-                      avl_tree&lt;Tp, Alloc&gt; const&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    bool operator==(  avl_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      avl_tree&lt;T, Hierarchy&gt; const&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    bool operator&lt; (  avl_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      avl_tree&lt;T, Hierarchy&gt; const&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    bool operator!=(  avl_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      avl_tree&lt;T, Hierarchy&gt; const&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    bool operator&gt; (  avl_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      avl_tree&lt;T, Hierarchy&gt; const&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    bool operator&gt;=(  avl_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      avl_tree&lt;T, Hierarchy&gt; const&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    bool operator&lt;=(  avl_tree&lt;T, Hierarchy&gt; const&amp; x,
+                      avl_tree&lt;T, Hierarchy&gt; const&amp; y);
 
   <i>// specialized algorithms:</i>
-  template &lt;class Tp, class Alloc&gt;
-  void swap(  avl_tree&lt;Tp, Alloc&gt;&amp; x,
-              avl_tree&lt;Tp, Alloc&gt;&amp; y);
+  template &lt;class T, class Hierarchy&gt;
+    void swap(  avl_tree&lt;T, Hierarchy&gt;&amp; x,
+                avl_tree&lt;T, Hierarchy&gt;&amp; y);
 
 } <i>// namespace tr2</i>
 } <i>// namespace std</i>
 </pre>
 
-        <h6>0.1.4.3.4.1 Balancing adaptor types <span class=
-        "section-id">[tr.hierarchy.balance.types]</span></h6>
-        <pre>
-typedef <i>implementation defined</i>                        cursor;
-typedef <i>implementation defined</i>                        const_cursor;    
-</pre>
-
-        <ol>
-          <li>
-            <p>Both <tt>cursor</tt> and <tt>const_cursor</tt> have to fulfill
-            the multiway cursor ([tr.cursor.flavors]) and ascending random
-            access cursor ([tr.ascending.random.access.cursors])
-            requirements.</p>
-          </li>
-
-          <li>
-            <p>Additionally, for any instance <tt>a</tt> of either type
-            <tt>cursor</tt> or <tt>const_cursor</tt>, <tt>a.max_size() ==
-            1</tt>.</p>
-          </li>
-        </ol>
-
-        <h6>0.1.4.3.4.2 Balancing adaptor constructors, copy, and assignment
+        <h6>0.1.4.3.4.1 Balancing adaptor constructors, copy, and assignment
         <span class="section-id">[tr.hierarchy.balance.cons]</span></h6>
         <pre>
     explicit avl_tree (allocator_type const&amp; = allocator_type());
@@ -2484,14 +2440,14 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.3 Balancing adaptor element access <span class=
+        <h6>0.1.4.3.4.2 Balancing adaptor element access <span class=
         "section-id">[tr.hierarchy.balance.cons]</span></h6>
         <pre>
     explicit avl_tree (allocator_type const&amp; = allocator_type());
     template &lt;class InputIterator&gt;
       avl_tree (InputIterator first, InputIterator last,
         allocator_type const&amp; = allocator_type());
-    avl_tree (avl_tree&lt;T, Hier&gt; const&amp; x);
+    avl_tree (avl_tree&lt;T, Hierarchy&gt; const&amp; x);
 </pre>
 
         <ol>
@@ -2517,39 +2473,42 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.4 Balancing adaptor map operations <span class=
+        <h6>0.1.4.3.4.3 Balancing adaptor map operations <span class=
         "section-id">[tr.hierarchy.balance.map]</span></h6>
         <pre>
-iterator find(const value_type&amp; x);
-const_iterator find(const value_type&amp; x) const;
-template &lt;class Cmp&gt;
-iterator find(const value_type&amp; x, Cmp cmp);
-const_iterator find(const value_type&amp; x) const;
+    iterator find(const value_type&amp; x);
+    const_iterator find(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+      iterator find(const value_type&amp; x, Cmp cmp);
+    const_iterator find(const value_type&amp; x) const;
 
-size_type count(const value_type&amp; x) const;
-template &lt;class Cmp&gt;
-size_type count(const value_type&amp; x, Cmp cmp) const;
+    size_type count(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+      size_type count(const value_type&amp; x, Cmp cmp) const;
 
-iterator lower_bound(const value_type&amp; x);
-const_iterator lower_bound(const value_type&amp; x) const;
-template &lt;class Cmp&gt;
-iterator lower_bound(const value_type&amp; x, Cmp cmp);
-template &lt;class Cmp&gt;
-const_iterator lower_bound(const value_type&amp; x, Cmp cmp) const;
+    iterator lower_bound(const value_type&amp; x);
+    const_iterator lower_bound(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+      iterator lower_bound(const value_type&amp; x, Cmp cmp);
+    template &lt;class Cmp&gt;
+      const_iterator lower_bound(const value_type&amp; x, Cmp cmp) const;
 
-iterator upper_bound(const value_type&amp; x);
-const_iterator upper_bound(const value_type&amp; x) const;
-template &lt;class Cmp&gt;
-iterator upper_bound(const value_type&amp; x, Cmp cmp);
-template &lt;class Cmp&gt;
-const_iterator upper_bound(const value_type&amp; x, Cmp cmp) const;
+    iterator upper_bound(const value_type&amp; x);
+    const_iterator upper_bound(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+      iterator upper_bound(const value_type&amp; x, Cmp cmp);
+    template &lt;class Cmp&gt;
+      const_iterator upper_bound(const value_type&amp; x, Cmp cmp) const;
 
-pair&lt;iterator,iterator&gt; equal_range(const value_type&amp; x);
-pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x) const;
-template &lt;class Cmp&gt;
-pair&lt;iterator,iterator&gt; equal_range(const value_type&amp; x, Cmp cmp);
-template &lt;class Cmp&gt;
-pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x, Cmp cmp) const;
+    pair&lt;iterator,iterator&gt; equal_range(const value_type&amp; x);
+    pair&lt;const_iterator,const_iterator&gt;
+      equal_range(const value_type&amp; x) const;
+    template &lt;class Cmp&gt;
+      pair&lt;iterator,iterator&gt;
+        equal_range(const value_type&amp; x, Cmp cmp);
+    template &lt;class Cmp&gt;
+      pair&lt;const_iterator,const_iterator&gt;
+        equal_range(const value_type&amp; x, Cmp cmp) const;
 </pre>
 
         <ol>
@@ -2557,13 +2516,12 @@ pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x, C
             <p><strong>Notes:</strong> The <tt>find</tt>,
             <tt>lower_bound</tt>, <tt>upper_bound</tt> and
             <tt>equal_range</tt> member functions each have four versions,
-            differing in if they return an <tt>iterator</tt> or a
+            differing in wether they return an <tt>iterator</tt> or a
             <tt>const_iterator</tt>, and if they take a <tt>cmp</tt> function
             object argument or not (<tt>count</tt> comes only in the latter
             two variants, as it returns a <tt>size_type</tt>, not an
             iterator). In each case the behavior of the four (two) functions
-            is in principle identical. See for a description of the behavior
-            of these functions.</p>
+            is in principle identical.</p>
           </li>
 
           <li>
@@ -2572,21 +2530,21 @@ pair&lt;const_iterator,const_iterator&gt; equal_range(const value_type&amp; x, C
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.5 Balancing adaptor modifiers <span class=
+        <h6>0.1.4.3.4.4 Balancing adaptor modifiers <span class=
         "section-id">[tr.hierarchy.balance.modifiers]</span></h6>
         <pre>
-void      push_front(value_type const&amp; x);
-void      push_back(value_type const&amp; x);
-iterator  insert(iterator position, value_type const&amp; x = value_type());
+    void      push_front(value_type const&amp; x);
+    void      push_back(value_type const&amp; x);
+    iterator  insert(iterator position, value_type const&amp; x = value_type());
 </pre>
 
         <ol>
           <li>
             <p><strong>Complexity:</strong> amortized constant</p>
             <pre>
-void      insert(iterator position, size_type n, value_type const&amp; x);
-template &lt;class InputIterator&gt;
-  void    insert (iterator position, InputIterator first, InputIterator last);    
+    void      insert(iterator position, size_type n, value_type const&amp; x);
+    template &lt;class InputIterator&gt;
+      void    insert(iterator position, InputIterator first, InputIterator last);    
 </pre>
           </li>
 
@@ -2594,16 +2552,16 @@ template &lt;class InputIterator&gt;
             <p><strong>Complexity:</strong> linear in the number of elements
             to insert</p>
             <pre>
-void      pop_front();
-void      pop_back();
-void      erase(iterator position);
+    void      pop_front();
+    void      pop_back();
+    void      erase(iterator position);
 </pre>
           </li>
 
           <li>
             <p><strong>Complexity:</strong> amortized constant</p>
             <pre>
-void      erase(iterator first, iterator last);
+    void      erase(iterator first, iterator last);
 </pre>
           </li>
 
@@ -2612,7 +2570,7 @@ void      erase(iterator first, iterator last);
             <tt>N</tt> is the distance from <tt>first</tt> to
             <tt>last</tt></p>
             <pre>
-void      clear();
+    void      clear();
 </pre>
           </li>
 
@@ -2621,12 +2579,12 @@ void      clear();
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.6 Balancing adaptor specialized algorithms <span class=
+        <h6>0.1.4.3.4.5 Balancing adaptor specialized algorithms <span class=
         "section-id">[tr.hierarchy.balance.special]</span></h6>
         <pre>
-    template &lt;class Tp, class Alloc&gt;
-    void swap(  avl_tree&lt;Tp, Alloc&gt;&amp; x,
-                avl_tree&lt;Tp, Alloc&gt;&amp; y);
+    template &lt;class T, class Hierarchy&gt;
+      void swap(  avl_tree&lt;T, Hierarchy&gt;&amp; x,
+                  avl_tree&lt;T, Hierarchy&gt;&amp; y);
 </pre>
 
         <ol>
@@ -2709,13 +2667,12 @@ void      clear();
             forward cursor</em>, <em>descending bidirectional cursor</em>,
             <em>descending random access cursor</em>, <em>ascending
             cursor</em>, <em>ascending forward cursor</em>, <em>ascending
-            bidirectional</em> , and <em>and ascending random access
-            cursor</em>. The cursors of any <em>ascending</em> category
-            generally support all the operations of their <em>descending</em>
-            counterpart, plus a method to obtain their parent; relations
-            between the <em>forward</em>, <em>bidirectional</em> and
-            <em>random access</em> parts are as for iterators of those
-            categories.</p>
+            bidirectional</em> , and <em>ascending random access cursor</em>.
+            The cursors of any <em>ascending</em> category generally support
+            all the operations of their <em>descending</em> counterpart, plus
+            a method to obtain their parent; relations between the
+            <em>forward</em>, <em>bidirectional</em> and <em>random
+            access</em> parts are as for iterators of those categories.</p>
           </li>
 
           <li>
@@ -2732,17 +2689,17 @@ void      clear();
         <ol>
           <li>
             <p>A class <tt>X</tt> satisfies the requirements of a cursor if
-            the following expressions are valid, as shown in Table 6, in
+            the following expressions are valid, as shown in Table 8, in
             addition to satisfying the requirements of input iterators
-            (<tt>[lib.input.iterators]</tt>) and output iterators
-            (<tt>[lib.output.iterators]</tt>):</p>
+            ([lib.input.iterators]) and output iterators
+            ([lib.output.iterators]):</p>
 
             <table summary=
             "Cursor requirements (in addition to input and output iterators)"
             class="reqmts">
               <caption>
-                Table 6 - Cursor requirements (in addition to input and
-                output iterators)
+                Table 8: Cursor requirements (in addition to input and output
+                iterators)
               </caption>
 
               <thead>
@@ -2813,13 +2770,13 @@ void      clear();
             <p>A class <tt>X</tt> satisfies the requirements of a descending
             cursor if, in addition to satisfying the requirements for cursors
             ([tr.cursor.requirements]) it also conforms to the container
-            requirements (<tt>[lib.container.requirements]</tt>) with the
-            exception of the following expressions:</p>
+            requirements ([lib.container.requirements]) with the exception of
+            the following expressions:</p>
 
             <table summary="Container requirements that are not supported"
             class="reqmts">
               <caption>
-                Table 7 - Container requirements that are not supported
+                Table 9: Container requirements that are not supported
               </caption>
 
               <thead>
@@ -2909,19 +2866,19 @@ void      clear();
             </table>
 
             <p>Notes: The expressions <tt>a.begin()</tt> and <tt>a.end()</tt>
-            are, as shown in Table 7, replaced with equivalent expressions
+            are, as shown in Table 9, replaced with equivalent expressions
             for cursors.</p>
           </li>
 
           <li>
             <p>Additionally, for a descending cursor, the following
-            expression are valid, as shown in Table 8:</p>
+            expression are valid, as shown in Table 10:</p>
 
             <table summary=
             "Descending cursor requirements (in addition to cursor)" class=
             "reqmts">
               <caption>
-                Table 8 - Descending cursor requirements (in addition to
+                Table 10: Descending cursor requirements (in addition to
                 cursor)
               </caption>
 
@@ -3019,7 +2976,7 @@ void      clear();
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of a
             descending forward cursor if the following expressions are valid,
-            as shown in Table 9, in addition to the requirements of
+            as shown in Table 11, in addition to the requirements of
             descending cursors ([tr.descending.cursors]) and forward
             iterators ([lib.forward.iterators]):</p>
 
@@ -3027,7 +2984,7 @@ void      clear();
             "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
                    class="reqmts">
               <caption>
-                Table 9 - Descending forward cursor requirements (in addition
+                Table 11: Descending forward cursor requirements (in addition
                 to descending cursors and forward iterators)
               </caption>
 
@@ -3067,7 +3024,7 @@ void      clear();
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of a
             descending bidirectional cursor if the following expressions are
-            valid, as shown in Table 10, in addition to satisfying the
+            valid, as shown in Table 12, in addition to satisfying the
             requirements for descending forward cursors
             ([tr.descending.forward.cursors]) and bidirectional iterators
             ([lib.bidirectional.iterators]):</p>
@@ -3076,7 +3033,7 @@ void      clear();
             "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
                    class="reqmts">
               <caption>
-                Table 10 - Descending bidirectional cursor requirements (in
+                Table 12: Descending bidirectional cursor requirements (in
                 addition to forward descending cursors and bidirectional
                 iterators)
               </caption>
@@ -3125,7 +3082,7 @@ void      clear();
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of a
             descending random access cursor if the following expressions are
-            valid, as shown in Table 11, in addition to satisfying the
+            valid, as shown in Table 13, in addition to satisfying the
             requirements for descending bidirectional cursors
             ([tr.descending.bidirectional.cursors]) and random access
             iterators ([lib.random.access.iterators]):</p>
@@ -3134,7 +3091,7 @@ void      clear();
             "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
                    class="reqmts">
               <caption>
-                Table 11 - Descending random access cursor requirements (in
+                Table 13: Descending random access cursor requirements (in
                 addition to descending bidirectional cursors and random
                 access iterators)
               </caption>
@@ -3176,14 +3133,14 @@ void      clear();
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of an
             ascending cursor if the following expressions are valid, as shown
-            in Table 12, in addition to satisfying the requirements for
+            in Table 14, in addition to satisfying the requirements for
             descending cursors ([tr.descending.cursors]):</p>
 
             <table summary=
             "Acending cursor requirements (in addition to descending cursors)"
                    class="reqmts">
               <caption>
-                Table 12 - Ascending cursor requirements (in addition to
+                Table 14: Ascending cursor requirements (in addition to
                 descending cursors)
               </caption>
 
@@ -3253,7 +3210,7 @@ void      clear();
           <li>
             <p>A class type X satisfies the requirements of an ascending
             forward cursor if the following expressions are valid, as shown
-            in Table 13, in addition to satisfying the requirements for
+            in Table 15, in addition to satisfying the requirements for
             ascending cursors ([tr.ascending.cursors]) and descending forward
             cursors ([tr.descending.forward.cursors]):</p>
 
@@ -3261,7 +3218,7 @@ void      clear();
             "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
                    class="reqmts">
               <caption>
-                Table 13 - Ascending forward cursor requirements (in addition
+                Table 15: Ascending forward cursor requirements (in addition
                 to ascending cursors and descending forward cursors)
               </caption>
 
@@ -3301,7 +3258,7 @@ void      clear();
           <li>
             <p>A class type X satisfies the requirements of an ascending
             bidirectional cursor if the following expressions are valid, as
-            shown in Table 14, in addition to satisfying the requirements of
+            shown in Table 16, in addition to satisfying the requirements of
             ascending forward cursors ([tr.ascending.forward.cursors]) and
             descending bidirectional cursors
             ([tr.descending.bidirectional.cursors]):</p>
@@ -3310,7 +3267,7 @@ void      clear();
             "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
                    class="reqmts">
               <caption>
-                Table 14 - Ascending bidirectional cursor requirements (in
+                Table 16: Ascending bidirectional cursor requirements (in
                 addition to ascending forward cursors and descending
                 bidirectional cursors)
               </caption>
@@ -3351,7 +3308,7 @@ void      clear();
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of an
             ascending random access cursor if the following expressions are
-            valid, as shown in Table 15, in addition to satisfying the
+            valid, as shown in Table 17, in addition to satisfying the
             requirements for ascending bidirectional cursors
             ([tr.ascending.bidirectional.cursors]) and descending random
             access cursors ([tr.descending.random.access.cursors]):</p>
@@ -3360,7 +3317,7 @@ void      clear();
             "Ascending random access cursor requirements (in addition to ascending bidirectional cursors and descending random access cursors)"
                    class="reqmts">
               <caption>
-                Table 15 - Ascending random access cursor requirements (in
+                Table 17: Ascending random access cursor requirements (in
                 addition to ascending bidirectional cursors and descending
                 random access cursors)
               </caption>
@@ -3412,7 +3369,7 @@ void      clear();
           </li>
         </ol>
 
-        <h4>0.2.2 Header <tt>&lt;cursor&gt;</tt> synopsis <span class=
+        <h4>0.2.3 Header <tt>&lt;cursor&gt;</tt> synopsis <span class=
         "section-id">[tr.cursor.synopsis]</span></h4>
         <pre>
 namespace std {
@@ -3425,8 +3382,9 @@ namespace tr2 {
   template &lt;class Cursor&gt; struct cursor_size;
   template &lt;class Cursor&gt; struct cursor_category;
 
-  template &lt;class Cat, class T, class Dist = ptrdiff_t, class Size = size_t,
-            class Ptr = T*, class Ref = T&amp;&gt; struct cursor;
+  template &lt;class Category, class T, class Distance = ptrdiff_t,
+            class Size = size_t, class Pointer = T*,
+            class Reference = T&amp;&gt; struct cursor;
 
   struct cursor_tag 
     : public input_iterator_tag, public output_iterator_tag {};
@@ -3450,7 +3408,7 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-        <h4>0.2.3 Cursor primitives <span class=
+        <h4>0.2.4 Cursor primitives <span class=
         "section-id">[tr.cursor.primitives]</span></h4>
 
         <ol>
@@ -3460,7 +3418,7 @@ namespace tr2 {
           </li>
         </ol>
 
-        <h5>0.2.3.1 Cursor traits <span class=
+        <h5>0.2.4.1 Cursor traits <span class=
         "section-id">[tr.cursor.traits]</span></h5>
 
         <ol>
@@ -3499,7 +3457,7 @@ template &lt;class Cursor&gt; struct cursor_category {
           </li>
         </ol>
 
-        <h5>0.2.3.2 Basic cursor <span class=
+        <h5>0.2.4.2 Basic cursor <span class=
         "section-id">[tr.cursor.basic]</span></h5>
 
         <ol>
@@ -3507,21 +3465,26 @@ template &lt;class Cursor&gt; struct cursor_category {
             <p>The <tt>cursor</tt> template may be used as a base class to
             ease the definition of required types for new cursors.</p>
             <pre>
-template &lt;class Cat, class T, class Dist = ptrdiff_t, class Size = size_t,
-          class Ptr = T*, class Ref = T&amp;&gt;
-struct cursor {
-  typedef Cat     cursor_category;
-  typedef T       value_type;
-  typedef Dist    difference_type;
-  typedef Size    size_type;
-  typedef Ptr     pointer;
-  typedef Ref     reference;      
-};
+namespace std {
+namespace tr2 {
+  template &lt;class Category, class T, class Distance = ptrdiff_t,
+            class Size = size_t, class Pointer = T*,
+            class Reference = T&amp;&gt;
+  struct cursor {
+    typedef Category  cursor_category;
+    typedef T         value_type;
+    typedef Distance  difference_type;
+    typedef Size      size_type;
+    typedef Pointer   pointer;
+    typedef Reference reference;
+  };
+} // namespace tr2
+} // namespace std
 </pre>
           </li>
         </ol>
 
-        <h5>0.2.3.3 Standard cursor tags <span class=
+        <h5>0.2.4.3 Standard cursor tags <span class=
         "section-id">[tr.cursor.tags]</span></h5>
 
         <ol>
@@ -3575,51 +3538,54 @@ namespace tr2 {
         <p class="note">Append to section introduced with <i>// subclause
         24.4, predefined iterators:</i></p>
         <pre>
+namespace std {
 namespace tr2 {
 
+
 namespace preorder {
-template &lt;class Cursor&gt; class iterator;
+  template &lt;class Cursor&gt; class iterator;
 
-template &lt;class Cursor&gt;
-bool operator==(
-  const iterator&lt;Cursor&gt;&amp; x,
-  const iterator&lt;Cursor&gt;&amp; y);
+  template &lt;class Cursor&gt;
+    bool operator==(
+      const iterator&lt;Cursor&gt;&amp; x,
+      const iterator&lt;Cursor&gt;&amp; y);
 
-template &lt;class Cursor&gt;
-bool operator!=(
-  const iterator&lt;Cursor&gt;&amp; x,
-  const iterator&lt;Cursor&gt;&amp; y);
+  template &lt;class Cursor&gt;
+    bool operator!=(
+      const iterator&lt;Cursor&gt;&amp; x,
+      const iterator&lt;Cursor&gt;&amp; y);
 } // namespace preorder   
 
 namespace postorder {
-template &lt;class Cursor&gt; class iterator;
+  template &lt;class Cursor&gt; class iterator;
 
-template &lt;class Cursor&gt;
-bool operator==(
-  const iterator&lt;Cursor&gt;&amp; x,
-  const iterator&lt;Cursor&gt;&amp; y);
+  template &lt;class Cursor&gt;
+  bool operator==(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
 
-template &lt;class Cursor&gt;
-bool operator!=(
-  const iterator&lt;Cursor&gt;&amp; x,
-  const iterator&lt;Cursor&gt;&amp; y);
+  template &lt;class Cursor&gt;
+  bool operator!=(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
 } // namespace postorder   
 
 namespace inorder {
-template &lt;class Cursor&gt; class iterator;
+  template &lt;class Cursor&gt; class iterator;
 
-template &lt;class Cursor&gt;
-bool operator==(
-  const iterator&lt;Cursor&gt;&amp; x,
-  const iterator&lt;Cursor&gt;&amp; y);
+  template &lt;class Cursor&gt;
+  bool operator==(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
 
-template &lt;class Cursor&gt;
-bool operator!=(
-  const iterator&lt;Cursor&gt;&amp; x,
-  const iterator&lt;Cursor&gt;&amp; y);
+  template &lt;class Cursor&gt;
+  bool operator!=(
+    const iterator&lt;Cursor&gt;&amp; x,
+    const iterator&lt;Cursor&gt;&amp; y);
 } // namespace inorder
 
 } // namespace tr2
+} // namespace std
 </pre>
 
         <h4>24.4.X Linear order traversal iterators <span class=
@@ -3681,7 +3647,6 @@ namespace preorder {
   template &lt;class Cursor&gt;
   class iterator :
     public iterator&lt; <i>/* see Note A */</i>, 
-<!--typename iterator_traits&lt;Cursor&gt;::iterator_category,-->
                     typename iterator_traits&lt;Cursor&gt;::value_type,
                     typename iterator_traits&lt;Cursor&gt;::difference_type,
                     typename iterator_traits&lt;Cursor&gt;::pointer,
@@ -3717,7 +3682,6 @@ template &lt;class Cursor&gt;
 
 } // namespace tr2
 } // namespace std
-      
 </pre>
 
             <p>Note A: If <tt>typename
@@ -3735,14 +3699,16 @@ template &lt;class Cursor&gt;
         <ol>
           <li>
             <p>The template parameter <tt>Cursor</tt> shall meet all the
-            requirements of a Forward Cursor.</p>
+            requirements of a Ascending Forward Cursor
+            ([tr.ascending.forward.cursors]).</p>
           </li>
 
           <li>
             <p>Additionally, <tt>Cursor</tt> shall meet the requirements of a
-            Bidirectional Cursor (24.1.5) if the member <tt>operaror--</tt>
-            (24.4.X.3.7) is referenced in a way that requires instantiation
-            (14.7.1).</p>
+            Ascending Bidirectional Cursor
+            ([tr.ascending.bidirectional.cursors]) if the member
+            <tt>operaror--</tt> (24.4.X.3.7) is referenced in a way that
+            requires instantiation (14.7.1).</p>
           </li>
         </ol>
 
@@ -3901,47 +3867,60 @@ return tmp;
       operations</i>.
     </div>
     <pre>
-
 <i>// subclause 2.X, non-modifying hierarchy operations</i>
+namespace std {
 namespace tr2 {
 
 namespace preorder {
   template &lt;class Hierarchy&gt;
-  preorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
+    iterator&lt;typename Hierarchy::cursor&gt;
+      begin(Hierarchy&amp; h);
   template &lt;class Hierarchy&gt;
-  preorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+    iterator&lt;typename Hierarchy::const_cursor&gt;
+      cbegin(Hierarchy const&amp; h);
   
   template &lt;class Hierarchy&gt;
-  preorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
+    iterator&lt;typename Hierarchy::cursor&gt;
+      end(Hierarchy&amp; h);
   template &lt;class Hierarchy&gt;
-  preorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
+    iterator&lt;typename Hierarchy::const_cursor&gt;
+      cend(Hierarchy const&amp; h);
 } // namespace preorder
 
 namespace postorder {
   template &lt;class Hierarchy&gt;
-  postorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
+    iterator&lt;typename Hierarchy::cursor&gt;
+      begin(Hierarchy&amp; h);
   template &lt;class Hierarchy&gt;
-  postorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+    iterator&lt;typename Hierarchy::const_cursor&gt;
+      cbegin(Hierarchy const&amp; h);
   
   template &lt;class Hierarchy&gt;
-  postorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
+    iterator&lt;typename Hierarchy::cursor&gt;
+      end(Hierarchy&amp; h);
   template &lt;class Hierarchy&gt;
-  postorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
+    iterator&lt;typename Hierarchy::const_cursor&gt;
+      cend(Hierarchy const&amp; h);
 } // namespace postorder
 
 namespace inorder {
   template &lt;class MultiwayHierarchy&gt;
-  inorder::iterator&lt;typename MultiwayHierarchy::cursor&gt; begin(MultiwayHierarchy&amp; m);
+    iterator&lt;typename MultiwayHierarchy::cursor&gt;
+      begin(MultiwayHierarchy&amp; m);
   template &lt;class MultiwayHierarchy&gt;
-  inorder::iterator&lt;typename MultiwayHierarchy::const_cursor&gt; cbegin(MultiwayHierarchy const&amp; m);
+    iterator&lt;typename MultiwayHierarchy::const_cursor&gt;
+      cbegin(MultiwayHierarchy const&amp; m);
   
   template &lt;class MultiwayHierarchy&gt;
-  inorder::iterator&lt;typename MultiwayHierarchy::cursor&gt; end(MultiwayHierarchy&amp; m);
+    iterator&lt;typename MultiwayHierarchy::cursor&gt;
+      end(MultiwayHierarchy&amp; m);
   template &lt;class MultiwayHierarchy&gt;
-  inorder::iterator&lt;typename MultiwayHierarchy::const_cursor&gt; cend(MultiwayHierarchy const&amp; m);
+    iterator&lt;typename MultiwayHierarchy::const_cursor&gt;
+      cend(MultiwayHierarchy const&amp; m);
 } // namespace inorder
 
 } // namespace tr2
+} // namespace std
 </pre>
 
     <div class="note">
@@ -3966,10 +3945,10 @@ namespace inorder {
     </div>
 
     <p>If an algorithm's template parameter is <tt>Hierarchy</tt>, the actual
-    template argument shall satisfy the requirements of a hierarchy (...). If
-    an algorithm's template parameter is <tt>MultiwayHierarchy</tt>, the
-    actual template argument shall satisfy the requirements of a multiway
-    hierarchy (...).</p>
+    template argument shall satisfy the requirements of a hierarchy
+    ([tr.hierarchy.req]). If an algorithm's template parameter is
+    <tt>MultiwayHierarchy</tt>, the actual template argument shall satisfy
+    the requirements of a multiway hierarchy ([tr.hierarchy.multiway]).</p>
 
     <h4>25.X Non-modifying hierarchy algorithms <span class=
     "section-id">[tr.alg.hierarchy]</span></h4>
@@ -3980,12 +3959,18 @@ namespace inorder {
     <h6>25.X.1.1 Preorder begin <span class=
     "section-id">[tr.alg.hier.pre.begin]</span></h6>
     <pre>
+    namespace std {
+    namespace tr2 {
     namespace preorder {
       template &lt;class Hierarchy&gt;
-      preorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
+        iterator&lt;typename Hierarchy::cursor&gt;
+          begin(Hierarchy&amp; h);
       template &lt;class Hierarchy&gt;
-      preorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+        iterator&lt;typename Hierarchy::const_cursor&gt;
+          cbegin(Hierarchy const&amp; h);
     } // namespace preorder
+    } // namespace tr2
+    } // namespace std
 </pre>
 
     <ol>
@@ -4002,13 +3987,18 @@ namespace inorder {
     <h6>25.X.1.2 Preorder end <span class=
     "section-id">[tr.alg.hier.pre.end]</span></h6>
     <pre>
-
+    namespace std {
+    namespace tr2 {
     namespace preorder { 
       template &lt;class Hierarchy&gt;
-      preorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
+        iterator&lt;typename Hierarchy::cursor&gt;
+          end(Hierarchy&amp; h);
       template &lt;class Hierarchy&gt;
-      preorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
+        iterator&lt;typename Hierarchy::const_cursor&gt;
+          cend(Hierarchy const&amp; h);
     } // namespace preorder
+    } // namespace tr2
+    } // namespace std
 </pre>
 
     <ol>
@@ -4028,12 +4018,18 @@ namespace inorder {
     <h6>25.X.2.1 Postorder begin <span class=
     "section-id">[tr.alg.hier.post.begin]</span></h6>
     <pre>
+    namespace std {
+    namespace tr2 {
     namespace postorder {
       template &lt;class Hierarchy&gt;
-      postorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
+        iterator&lt;typename Hierarchy::cursor&gt;
+          begin(Hierarchy&amp; h);
       template &lt;class Hierarchy&gt;
-      postorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+        iterator&lt;typename Hierarchy::const_cursor&gt;
+          cbegin(Hierarchy const&amp; h);
     } // namespace postorder
+    } // namespace tr2
+    } // namespace std
 </pre>
 
     <ol>
@@ -4050,12 +4046,18 @@ namespace inorder {
     <h6>25.X.2.2 Postorder end <span class=
     "section-id">[tr.alg.hier.post.end]</span></h6>
     <pre>
-  namespace postorder { 
-    template &lt;class Hierarchy&gt;
-    postorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
-    template &lt;class Hierarchy&gt;
-    postorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
-  } // namespace postorder
+    namespace std {
+    namespace tr2 {
+    namespace postorder { 
+      template &lt;class Hierarchy&gt;
+        iterator&lt;typename Hierarchy::cursor&gt;
+          end(Hierarchy&amp; h);
+      template &lt;class Hierarchy&gt;
+        iterator&lt;typename Hierarchy::const_cursor&gt;
+          cend(Hierarchy const&amp; h);
+    } // namespace postorder
+    } // namespace tr2
+    } // namespace std
 </pre>
 
     <ol>
@@ -4075,12 +4077,18 @@ namespace inorder {
     <h6>25.X.2.1 Inorder begin <span class=
     "section-id">[tr.alg.hier.in.begin]</span></h6>
     <pre>
+    namespace std {
+    namespace tr2 {
     namespace inorder {
-      template &lt;class Hierarchy&gt;
-      inorder::iterator&lt;typename Hierarchy::cursor&gt; begin(Hierarchy&amp; h);
-      template &lt;class Hierarchy&gt;
-      inorder::iterator&lt;typename Hierarchy::const_cursor&gt; cbegin(Hierarchy const&amp; h);
+      template &lt;class MultiwayHierarchy&gt;
+        iterator&lt;typename MultiwayHierarchy::cursor&gt;
+          begin(MultiwayHierarchy&amp; m);
+      template &lt;class MultiwayHierarchy&gt;
+        iterator&lt;typename MultiwayHierarchy::const_cursor&gt;
+          cbegin(MultiwayHierarchy const&amp; m);
     } // namespace inorder
+    } // namespace tr2
+    } // namespace std
 </pre>
 
     <ol>
@@ -4097,13 +4105,18 @@ namespace inorder {
     <h6>25.X.2.2 Inorder end <span class=
     "section-id">[tr.alg.hier.in.end]</span></h6>
     <pre>
-
+    namespace std {
+    namespace tr2 {
     namespace inorder { 
-      template &lt;class Hierarchy&gt;
-      inorder::iterator&lt;typename Hierarchy::cursor&gt; end(Hierarchy&amp; h);
-      template &lt;class Hierarchy&gt;
-      inorder::iterator&lt;typename Hierarchy::const_cursor&gt; cend(Hierarchy const&amp; h);
+      template &lt;class MultiwayHierarchy&gt;
+        iterator&lt;typename MultiwayHierarchy::cursor&gt;
+          end(MultiwayHierarchy&amp; m);
+      template &lt;class MultiwayHierarchy&gt;
+        iterator&lt;typename MultiwayHierarchy::const_cursor&gt;
+          cend(MultiwayHierarchy const&amp; m);
     } // namespace inorder
+    } // namespace tr2
+    } // namespace std
 </pre>
 
     <ol>
