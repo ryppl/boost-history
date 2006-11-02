@@ -14,6 +14,7 @@
 
 #include <boost/bimap/container_adaptor/ordered_associative_container_adaptor.hpp>
 #include <boost/mpl/aux_/na.hpp>
+#include <boost/call_traits.hpp>
 
 namespace boost {
 namespace bimap {
@@ -88,8 +89,10 @@ class map_adaptor :
 
     public:
 
-    data_type& operator[](const typename base_::key_type& k)  { return this->base()[k]; }
-
+    data_type& operator[](typename ::boost::call_traits< typename base_::key_type >::param_type k)
+    {
+        return this->base()[k]; 
+    }
 };
 
 

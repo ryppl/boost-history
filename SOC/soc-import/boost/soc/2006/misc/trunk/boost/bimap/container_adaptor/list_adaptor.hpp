@@ -15,6 +15,7 @@
 #include <boost/bimap/container_adaptor/sequence_container_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/comparison_adaptor.hpp>
 #include <boost/mpl/aux_/na.hpp>
+#include <boost/call_traits.hpp>
 
 namespace boost {
 namespace bimap {
@@ -75,28 +76,34 @@ class list_adaptor :
 
     public:
 
-    // TODO This require some work... later...
-    /*
-
-    void splice(iterator position,index class name& x)
+    void splice(Iterator position, list_adaptor & x)
     {
-
+        this->base().splice(
+            this->template functor<typename base_::iterator_to_base>()(position),
+            x.base()
+        );
     }
 
-    void splice(iterator position,index class name& x,iterator i)
+    void splice(Iterator position, list_adaptor & x, Iterator i)
     {
-
+        this->base().splice(
+            this->template functor<typename base_::iterator_to_base>()(position),
+            x.base(),
+            this->template functor<typename base_::iterator_to_base>()(i)
+        );
     }
 
-    void splice(
-        iterator position,index class name& x,iterator first,iterator last)
+    void splice(Iterator position, list_adaptor & x, Iterator first, Iterator last)
     {
-
+        this->base().splice(
+            this->template functor<typename base_::iterator_to_base>()(position),
+            x.base(),
+            this->template functor<typename base_::iterator_to_base>()(first),
+            this->template functor<typename base_::iterator_to_base>()(last)
+        );
     }
 
-    */
-
-    void remove(const typename base_::value_type& value)
+    void remove(typename ::boost::call_traits< typename base_::value_type >::param_type value)
     {
         this->base().remove(
             this->template functor<typename base_::value_to_base>()(value)
@@ -135,23 +142,26 @@ class list_adaptor :
             >( binary_pred, this->template functor<typename base_::value_to_base>() )
         );
     }
-
-    // TODO This require some work... later...
-    /*
-
-    void merge(index class name& x)
+/*
+    void merge(list_adaptor & x)
     {
-
+        this->base().merge(x.base());
     }
 
     template <typename Compare>
-    void merge(index class name& x,Compare comp)
+    void merge(list_adaptor & x,Compare comp)
     {
+        this->base().merge(x.base(),
+            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            <
+                Compare,
+                typename Base::value_type,
+                typename base_::value_to_base
 
+            >( comp, this->template functor<typename base_::value_to_base>() )
+        );
     }
-
-    */
-
+*/
     void sort()
     {
         this->base().sort();

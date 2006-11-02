@@ -6,21 +6,23 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-/// \file container_adaptor/detail/unordered_associative_container_adaptor.hpp
+/// \file container_adaptor/unordered_associative_container_adaptor.hpp
 /// \brief Container adaptor to build a type that is compliant to the concept of an unordered associative container.
 
-#ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_UNORDERED_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
-#define BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_UNORDERED_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
+#ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
+#define BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
 
-#include <boost/bimap/container_adaptor/detail/associative_container_adaptor.hpp>
+#include <boost/bimap/container_adaptor/associative_container_adaptor.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/push_front.hpp>
+#include <boost/mpl/aux_/na.hpp>
+#include <boost/call_traits.hpp>
 
 namespace boost {
 namespace bimap {
 namespace container_adaptor {
-namespace detail {
+
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
@@ -49,9 +51,9 @@ struct unordered_associative_container_adaptor_base
 
             FunctorsFromDerivedClasses,
 
-            typename mpl::if_< is_same< LocalIteratorFromBaseConverter, use_default >,
+            typename mpl::if_< ::boost::mpl::is_na<LocalIteratorFromBaseConverter>,
             // {
-                    iterator_from_base_identity
+                    detail::iterator_from_base_identity
                     <
                         typename Base::local_iterator                , LocalIterator,
                         typename Base::const_local_iterator          , ConstLocalIterator
@@ -86,12 +88,12 @@ template
 
     class KeyType,
 
-    class IteratorToBaseConverter        = use_default,
-    class IteratorFromBaseConverter      = use_default,
-    class LocalIteratorFromBaseConverter = use_default,
-    class ValueToBaseConverter           = use_default,
-    class ValueFromBaseConverter         = use_default,
-    class KeyToBaseConverter             = use_default,
+    class IteratorToBaseConverter        = ::boost::mpl::na,
+    class IteratorFromBaseConverter      = ::boost::mpl::na,
+    class LocalIteratorFromBaseConverter = ::boost::mpl::na,
+    class ValueToBaseConverter           = ::boost::mpl::na,
+    class ValueFromBaseConverter         = ::boost::mpl::na,
+    class KeyToBaseConverter             = ::boost::mpl::na,
 
     class FunctorsFromDerivedClasses     = mpl::list<>
 
@@ -136,9 +138,9 @@ class unordered_associative_container_adaptor :
 
     protected:
 
-    typedef typename mpl::if_< is_same< LocalIteratorFromBaseConverter, use_default >,
+    typedef typename mpl::if_< ::boost::mpl::is_na<LocalIteratorFromBaseConverter>,
         // {
-                iterator_from_base_identity
+                detail::iterator_from_base_identity
                 <
                     typename Base::local_iterator                , local_iterator,
                     typename Base::const_local_iterator          , const_local_iterator
@@ -161,23 +163,7 @@ class unordered_associative_container_adaptor :
     protected:
 
 
-    typedef unordered_associative_container_adaptor
-    <
-        Base,
-
-        Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
-
-        KeyType,
-
-        IteratorToBaseConverter, IteratorFromBaseConverter,
-        LocalIteratorFromBaseConverter,
-        ValueToBaseConverter   , ValueFromBaseConverter,
-
-        KeyToBaseConverter,
-
-        FunctorsFromDerivedClasses
-
-    > unordered_associative_container_adaptor_;
+    typedef unordered_associative_container_adaptor unordered_associative_container_adaptor_;
 
     // Interface --------------------------------------------------------------
 
@@ -200,7 +186,8 @@ class unordered_associative_container_adaptor :
         return this->base().bucket_size(n);
     }
 
-    typename base_::size_type bucket(const typename base_::key_type& k) const
+    typename base_::size_type bucket(
+        typename ::boost::call_traits< typename base_::key_type >::param_type k) const
     {
         typedef typename base_::key_to_base key_to_base;
         return this->base().bucket(
@@ -283,25 +270,9 @@ class unordered_associative_container_adaptor :
 };
 
 
-
-/* TODO
-// Tests two maps for equality.
-template<class BimapType, class Tag>
-bool operator==(const map_view<BimapType,Tag>&, const map_view<BimapType,Tag>&)
-{
-}
-
-// Lexicographical comparison.
-template<class BimapType, class Tag>
-bool operator<(const map_view<BimapType,Tag>&, const map_view<BimapType,Tag>&)
-{
-}
-*/
-
-} // namespace detail
 } // namespace container_adaptor
 } // namespace bimap
 } // namespace boost
 
 
-#endif // BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_UNORDERED_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
+#endif // BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP

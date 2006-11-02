@@ -90,7 +90,8 @@ class vector_adaptor :
     }
 
     void resize(typename base_::size_type n,
-                const typename base_::value_type& x = typename base_::value_type())
+                typename ::boost::call_traits< typename base_::value_type >::param_type x =
+                    typename base_::value_type())
     {
         this->base().resize(n,
             this->template functor<typename base_::value_to_base>()(x)

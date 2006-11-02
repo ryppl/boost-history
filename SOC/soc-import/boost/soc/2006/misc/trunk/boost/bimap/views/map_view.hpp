@@ -17,6 +17,7 @@
 #include <boost/bimap/detail/modifier_adaptor.hpp>
 #include <boost/bimap/detail/operator_bracket_proxy.hpp>
 #include <boost/bimap/detail/map_view_base.hpp>
+#include <boost/call_traits.hpp>
 
 namespace boost {
 namespace bimap {
@@ -55,13 +56,13 @@ class map_view
     map_view(typename base_::base_type & c) : base_(c) {}
 
     ::boost::bimap::detail::operator_bracket_proxy<map_view>
-        operator[](const typename base_::key_type & k)
+        operator[](typename ::boost::call_traits< typename base_::key_type >::param_type k)
     {
         return ::boost::bimap::detail::operator_bracket_proxy<map_view>(*this,k);
     }
 
     typename base_::data_type const &
-        operator[](const typename base_::key_type & k) const
+        operator[](typename ::boost::call_traits< typename base_::key_type >::param_type k) const
     {
         typename base_::const_iterator i = this->find(k);
         if( i == this->end() )

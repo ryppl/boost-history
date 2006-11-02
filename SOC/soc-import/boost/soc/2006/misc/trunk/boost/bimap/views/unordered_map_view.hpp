@@ -16,6 +16,7 @@
 #include <boost/bimap/support/iterator_type_by.hpp>
 #include <boost/bimap/detail/map_view_base.hpp>
 #include <boost/bimap/detail/operator_bracket_proxy.hpp>
+#include <boost/call_traits.hpp>
 
 namespace boost {
 namespace bimap {
@@ -58,13 +59,13 @@ class unordered_map_view
         : base_(c) {}
 
     ::boost::bimap::detail::operator_bracket_proxy<unordered_map_view>
-        operator[](const typename base_::key_type & k)
+        operator[](typename ::boost::call_traits< typename base_::key_type >::param_type k)
     {
         return ::boost::bimap::detail::operator_bracket_proxy<unordered_map_view>(*this,k);
     }
 
     typename base_::data_type const &
-        operator[](const typename base_::key_type & k) const
+        operator[](typename ::boost::call_traits< typename base_::key_type >::param_type k) const
     {
         typename base_::const_iterator i = this->find(k);
         if( i == this->end() )
