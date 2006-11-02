@@ -141,7 +141,7 @@ of the container.
         typedef bimap
         <
             tagged< unordered_set_of< std::string >, spanish >,
-            tagged< unordered_set_of< std::string >, english >
+            tagged< unordered_set_of< std::string >, english >,
             list_of_relation
 
         > translator_bimap;
@@ -258,7 +258,7 @@ int main()
     std::string word;
     std::getline(std::cin,word);
 
-    // search the queried word on the from index (Spanish) */
+    // search the queried word on the from index (Spanish)
 
     dictionary::iterator it = d.get<from>().find(word);
 
