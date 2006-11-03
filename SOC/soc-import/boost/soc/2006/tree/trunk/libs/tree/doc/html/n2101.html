@@ -527,6 +527,18 @@
 
               <td>(Note A)</td>
             </tr>
+
+            <tr>
+              <td><tt>typename&nbsp;X::template<br />
+              &nbsp;&nbsp;rebind&lt;U&gt;::other</tt></td>
+
+              <td><tt>Y</tt></td>
+
+              <td>For all <tt>U</tt> (including <tt>T</tt>), <tt>Y::template
+              rebind&lt;T&gt;::other</tt> is <tt>X</tt>.</td>
+
+              <td>compile time</td>
+            </tr>
           </tbody>
         </table>
 
@@ -553,6 +565,21 @@
         object. In all hierarchy types defined in this clause, the member
         <tt>get_allocator()</tt> returns a copy of the Allocator object used
         to construct the hierarchy.</p>
+      </li>
+
+      <li>
+        <p>The member class tamplate rebind in the table above is effectively
+        a typedef template: if the name <tt>Hierarchy</tt> is bound to
+        <tt>SomeHierarchy&lt;T&gt;</tt>, then
+        <tt>Hierarchy::rebind&lt;U&gt;::other</tt> is the same type as
+        <tt>SomeHierarchy&lt;U&gt;</tt>. Additionaly, because of the related
+        assertion, given <tt>SomeHierarchy&lt;T,R0,...,Rn&gt;</tt> for all
+        template arguments present is bound to the name <tt>Hierarchy</tt>,
+        then <tt>Hierarchy::rebind&lt;U&gt;::other</tt> is the same type as
+        <tt>SomeHierarchy&lt;U,S0,...,Sn&gt;</tt> such that the types
+        <tt>S0</tt> through <tt>Sn</tt> are the same as <tt>R0</tt> through
+        <tt>Rn</tt>, respectively, when <tt>U</tt> is the same type as
+        <tt>T</tt>.</p>
       </li>
 
       <li>
@@ -923,6 +950,11 @@ namespace tr2 {
     typedef typename allocator_type::size_type            size_type;
     typedef typename allocator_type::difference_type      difference_type;
 
+    template &lt;class U&gt; struct rebind {
+      typedef binary_tree&lt; U, typename allocator_type::rebind&lt;U&gt;::other &gt;
+        other;
+    };
+
     <i>// construct/copy/destroy:</i>
     explicit binary_tree (allocator_type const&amp; = allocator_type());
     template &lt;class InputCursor&gt;
@@ -1227,6 +1259,11 @@ namespace tr2 {
     typedef typename allocator_type::const_reference      const_reference;
     typedef typename allocator_type::size_type            size_type;
     typedef typename allocator_type::difference_type      difference_type;
+
+    template &lt;class U&gt; struct rebind {
+      typedef nary_tree&lt; U, typename allocator_type::rebind&lt;U&gt;::other &gt;
+        other;
+    };
 
     <i>// construct/copy/destroy:</i>
     explicit nary_tree (allocator_type const&amp; = allocator_type());
@@ -1535,6 +1572,11 @@ namespace tr2 {
     typedef typename hierarchy_type::size_type            size_type;
     typedef typename hierarchy_type::difference_type      difference_type;
 
+    template &lt;class U&gt; struct rebind {
+      typedef forest_tree&lt; U, typename hierarchy_type::rebind&lt;U&gt;::other &gt;
+        other;
+    };
+
     <i>// construct/copy/destroy:</i>
     explicit forest_tree (hierarchy_type const&amp; = hierarchy_type());
     template &lt;class InputCursor&gt;
@@ -1615,8 +1657,9 @@ typedef <i>implementation defined</i>                        const_cursor;
         <tt>f</tt>):</p>
 
         <table summary=
-        "forest_tree/binary tree cursor operational semantics corresponences">
-        <caption>
+        "forest_tree/binary tree cursor operational semantics corresponences"
+        class="reqmts">
+          <caption>
             Table 6: forest_tree/binary tree cursor operational semantics
             correspondences
           </caption>
@@ -1755,7 +1798,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
         <pre>
 namespace std {
 namespace tr2 {
-  template &lt;class T, class Hierarchy = nary_tree&lt;std::vector&lt;T&gt; &gt; &gt;
+  template &lt;class T, class Hierarchy = nary_tree&lt; std::vector&lt;T&gt; &gt; &gt;
   class multiway_tree
   {
   public:
@@ -1777,6 +1820,12 @@ namespace tr2 {
     typedef typename hierarchy_type::const_reference      const_reference;
     typedef typename hierarchy_type::size_type            size_type;
     typedef typename hierarchy_type::difference_type      difference_type;
+
+    template &lt;class U&gt; struct rebind {
+      typedef multiway_tree&lt; U,
+        typename hierarchy_type::rebind&lt; <em>implementation defined </em>&gt;::other &gt;
+          other;
+    };
 
     <i>// construct/copy/destroy:</i>
     explicit multiway_tree (hierarchy_type const&amp; = hierarchy_type());
@@ -1874,7 +1923,8 @@ namespace tr2 {
         <tt>m</tt> as they are for <tt>n</tt>):</p>
 
         <table summary=
-        "Multiway/nary tree cursor operational semantics corresponences">
+        "Multiway/nary tree cursor operational semantics corresponences"
+        class="reqmts">
           <caption>
             Table 7: Multiway/nary tree cursor operational semantics
             correspondences
@@ -2111,7 +2161,7 @@ namespace tr2 {
     typedef Hierarchy                                     hierarchy_type;
 
   protected:
-    hierarchy_type h;
+    typename hierarchy_type::rebind&lt; pair&lt;T,size_t&gt; &gt;::other h;
   
   public:
     <i>// types:</i>
@@ -2126,6 +2176,11 @@ namespace tr2 {
     typedef typename hierarchy_type::const_reference      const_reference;
     typedef typename hierarchy_type::size_type            size_type;
     typedef typename hierarchy_type::difference_type      difference_type;
+
+    template &lt;class U&gt; struct rebind {
+      typedef rank_tree&lt; U, typename hierarchy_type::rebind&lt;U&gt;::other &gt;
+        other;
+    };
 
     <i>// construct/copy/destroy:</i>
     explicit rank_tree (hierarchy_type const&amp; = hierarchy_type());
@@ -2289,6 +2344,11 @@ namespace tr2 {
     typedef std::reverse_iterator&lt;iterator&gt;               reverse_iterator;
     typedef std::reverse_iterator&lt;const_iterator&gt;         const_reverse_iterator;
 
+    template &lt;class U&gt; struct rebind {
+      typedef avl_tree&lt; U, typename hierarchy_type::rebind&lt;U&gt;::other &gt;
+        other;
+    };
+
 <i>    // construct/copy/destroy:</i>
     explicit avl_tree(hierarchy_type const&amp; = hierarchy_type());
     explicit avl_tree(allocator_type const&amp; = allocator_type());
@@ -2414,7 +2474,7 @@ namespace tr2 {
     template &lt;class InputIterator&gt;
       avl_tree (InputIterator first, InputIterator last,
         allocator_type const&amp; = allocator_type());
-    avl_tree (avl_tree&lt;T, Hier&gt; const&amp; x);
+    avl_tree (avl_tree&lt;T, Hierarchy&gt; const&amp; x);
 </pre>
 
         <ol>
