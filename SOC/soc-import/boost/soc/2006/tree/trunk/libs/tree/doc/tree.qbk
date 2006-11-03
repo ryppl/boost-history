@@ -61,7 +61,7 @@ A [@http://boost-consulting.com/vault/index.php?action=downloadfile&filename=tre
 [endsect] [/Download]
 
 [section Proposal]
-TR2 Proposal text: [@n2102.html Tree Structures and Related Concepts for the C++ Standard Library (TR2)]
+TR2 Proposal text: [@n2101.html Tree Structures and Related Concepts for the C++ Standard Library (TR2)]
 [endsect]
 
 [section Acknowledgements]

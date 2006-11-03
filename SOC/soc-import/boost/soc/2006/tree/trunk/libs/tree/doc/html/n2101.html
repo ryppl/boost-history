@@ -7,7 +7,7 @@
 <head>
   <title>Hierarchical Data Structures and Related Concepts for the C++
   Standard Library (TR2)</title>
-  <style type="text/css">
+<style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
   .std {
@@ -84,7 +84,7 @@
     top: -1.25em;
   }
   /*]]>*/
-  </style>
+</style>
 </head>
 
 <body>
@@ -368,7 +368,7 @@
 
         <table summary=
         "Container requirements that are not required for hierarchy containers"
-               class="reqmts">
+        class="reqmts">
           <caption>
             Table 1: Container requirements that are not required for
             hierarchy containers
@@ -1111,6 +1111,11 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
     <ol>
       <li>
+        <p><strong>Notes:</strong> Does not affect the validity of cursors
+        and references.</p>
+      </li>
+
+      <li>
         <p><strong>Effects:</strong> Let <tt>b</tt> be <tt>a</tt>'s
         parent;<br />
         if <tt>b.size() &lt; b.max_size()</tt>, insert a copy of <tt>t</tt>
@@ -1127,6 +1132,17 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     template &lt;class InputCursor&gt;
       cursor  insert(cursor position, InputCursor subtree);
 </pre>
+      </li>
+
+      <li>
+        <p><strong>Notes:</strong> Does not affect the validity of cursors
+        and references.</p>
+      </li>
+
+      <li>
+        <p><strong>Effects:</strong> as above, substituting <tt>InputCursor
+        subtree</tt> to insert instead of <tt>value_type const&amp;
+        x</tt>.</p>
       </li>
 
       <li>
@@ -1184,9 +1200,18 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
 
       <li>
-        <p><strong>Notes:</strong> Tree rotations are important
-        inorder-preserving (see [tr.order.iterators] &sect;4) operations on
-        binary trees that are especially required by balancers.</p>
+        <p><strong>Notes:</strong> Does not affect the validity of cursors
+        and references. Tree rotations are important inorder-preserving (see
+        [tr.order.iterators] &sect;4) operations on binary trees that are
+        especially required by balancers.</p>
+        <pre>
+    void      clear(cursor position);
+</pre>
+      </li>
+
+      <li>
+        <p><strong>Notes:</strong> Invalidates only the cursors and
+        references to the erased elements.</p>
       </li>
     </ol>
 
@@ -1455,23 +1480,24 @@ void      reserve(cursor position, size_type n);
     <h6>0.1.4.2.5 <tt>nary_tree</tt> modifiers <span class=
     "section-id">[tr.hierarchy.narytree.modifiers]</span></h6>
     <pre>
+    cursor    insert(cursor position, value_type const&amp; x = value_type());
     template &lt;class InputCursor&gt;
       cursor  insert(cursor position, InputCursor subtree);
+    cursor    insert_above(cursor position, value_type const&amp; x = value_type());
 </pre>
 
     <ol>
       <li>
-        <p><strong>Effects:</strong></p>
+        <p><strong>Notes:</strong> Does not affect the validity of cursors
+        and references.</p>
         <pre>
-clear();
-for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
-  insert(root.end(), *i);
+    void      clear(cursor position);  
 </pre>
       </li>
 
       <li>
-        <p><strong>Complexity:</strong> linear in the number of elements in
-        <tt>subtree</tt>.</p>
+        <p><strong>Notes:</strong> Invalidates only the cursors and
+        references to the erased elements.</p>
       </li>
     </ol>
 
@@ -1752,23 +1778,24 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
     <h6>0.1.4.3.1.3 <tt>forest_tree</tt> modifiers <span class=
     "section-id">[tr.hierarchy.foresttree.modifiers]</span></h6>
     <pre>
+    cursor    insert(cursor position, value_type const&amp; x = value_type());
     template &lt;class InputCursor&gt;
       cursor  insert(cursor position, InputCursor subtree);
+    cursor    insert_above(cursor position, value_type const&amp; x = value_type());
 </pre>
 
     <ol>
       <li>
-        <p><strong>Effects:</strong></p>
+        <p><strong>Notes:</strong> Does not affect the validity of cursors
+        and references.</p>
         <pre>
-clear();
-for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
-  insert(root.end(), *i);
+    void      clear(cursor position);  
 </pre>
       </li>
 
       <li>
-        <p><strong>Complexity:</strong> linear in the number of elements in
-        <tt>subtree</tt>.</p>
+        <p><strong>Notes:</strong> Invalidates only the cursors and
+        references to the erased elements.</p>
       </li>
     </ol>
 
@@ -2064,23 +2091,24 @@ void      reserve(cursor position, size_type n);
     <h6>0.1.4.3.2.5 <tt>multiway_tree</tt> modifiers <span class=
     "section-id">[tr.hierarchy.multiwaytree.modifiers]</span></h6>
     <pre>
+    cursor    insert(cursor position, value_type const&amp; x = value_type());
     template &lt;class InputCursor&gt;
       cursor  insert(cursor position, InputCursor subtree);
+    cursor    insert_above(cursor position, value_type const&amp; x = value_type());
 </pre>
 
     <ol>
       <li>
-        <p><strong>Effects:</strong></p>
+        <p><strong>Notes:</strong> Does not affect the validity of cursors
+        and references.</p>
         <pre>
-clear();
-for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
-  insert(root.end(), *i);
+    void      clear(cursor position);  
 </pre>
       </li>
 
       <li>
-        <p><strong>Complexity:</strong> linear in the number of elements in
-        <tt>subtree</tt>.</p>
+        <p><strong>Notes:</strong> Invalidates only the cursors and
+        references to the erased elements.</p>
       </li>
     </ol>
 
@@ -2285,12 +2313,24 @@ namespace tr2 {
 
     <ol>
       <li>
-        <p>A balancing hierarchy adaptor satisfies the Sequence requirements
-        ([tr.sequence.reqmts]), with the exception that its <tt>erase()</tt>
-        member functions return <tt>void</tt>. It uses some kind of balancing
-        method in order to guarantee logarithmic time complexity for many
-        important operations while keeping the inorder of the adaptee
-        hierarchy as its invariant.</p>
+        <p>A balancing hierarchy adaptor uses some kind of balancing method
+        in order to guarantee logarithmic time complexity for many important
+        operations while keeping the inorder of the adaptee hierarchy as its
+        invariant.</p>
+      </li>
+
+      <li>
+        <p>A balancing hierarchy adaptor satisfies all of the requirements of
+        a container ([lib.container.requirements]), of a sequence
+        ([lib.sequence.reqmts]), with the exception that its <tt>erase()</tt>
+        member functions return <tt>void</tt>, and most of the optional
+        sequence requirements, except for the <tt>operator[]</tt> and
+        <tt>at</tt> member functions, which are not provided. If the adaptee
+        hierarchy supports at least descending bidirectional cursors, it also
+        satisfies the requirements of a reversible container. Descriptions
+        are provided here only for operations on balancing hierarchy adaptors
+        that are not described in one of these tables or for operations where
+        there is additional semantic information.</p>
       </li>
 
       <li>
@@ -2336,7 +2376,6 @@ namespace tr2 {
     typedef typename hierarchy_type::const_reference      const_reference;
     typedef typename hierarchy_type::size_type            size_type;
     typedef typename hierarchy_type::difference_type      difference_type;
-    typedef typename hierarchy_type::allocator_type       allocator_type;
 
     typedef <i>implementation defined</i>                        iterator;
     typedef <i>implementation defined</i>                        const_iterator;
@@ -2351,12 +2390,11 @@ namespace tr2 {
 
 <i>    // construct/copy/destroy:</i>
     explicit avl_tree(hierarchy_type const&amp; = hierarchy_type());
-    explicit avl_tree(allocator_type const&amp; = allocator_type());
     explicit avl_tree(size_type n, value_type const&amp; value = value_type(),
-      allocator_type const&amp; = allocator_type());
+      hierarchy_type const&amp; = hierarchy_type());
     template &lt;class InputIterator&gt;
       avl_tree (InputIterator first, InputIterator last,
-        allocator_type const&amp; = allocator_type());
+        hierarchy_type const&amp; = hierarchy_type());
     avl_tree (avl_tree&lt;T, Hierarchy&gt; const&amp; x);
     ~avl_tree();
     avl_tree&lt;T, Hierarchy&gt;&amp; operator=(
@@ -2365,7 +2403,6 @@ namespace tr2 {
       void assign(InputIterator first, InputIterator last);
     template &lt;class Size, class T&gt;
       void assign(Size n, T const&amp; t = T());
-    allocator_type get_allocator() const      { return h.get_allocator(); }
 
     <i>// iterators:</i>
     iterator                begin();
@@ -2470,16 +2507,17 @@ namespace tr2 {
         <h6>0.1.4.3.4.1 Balancing adaptor constructors, copy, and assignment
         <span class="section-id">[tr.hierarchy.balance.cons]</span></h6>
         <pre>
-    explicit avl_tree (allocator_type const&amp; = allocator_type());
+    explicit avl_tree (hierarchy_type const&amp; = hierarchy_type());
     template &lt;class InputIterator&gt;
       avl_tree (InputIterator first, InputIterator last,
-        allocator_type const&amp; = allocator_type());
+        hierarchy_type const&amp; = hierarchy_type());
     avl_tree (avl_tree&lt;T, Hierarchy&gt; const&amp; x);
 </pre>
 
         <ol>
           <li>
-            <p><strong>Effects:</strong>[first, last).</p>
+            <p><strong>Effects:</strong> constructs a balanced tree equal to
+            the range <tt>[first, last)</tt>.</p>
           </li>
 
           <li>
@@ -2500,40 +2538,7 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.2 Balancing adaptor element access <span class=
-        "section-id">[tr.hierarchy.balance.cons]</span></h6>
-        <pre>
-    explicit avl_tree (allocator_type const&amp; = allocator_type());
-    template &lt;class InputIterator&gt;
-      avl_tree (InputIterator first, InputIterator last,
-        allocator_type const&amp; = allocator_type());
-    avl_tree (avl_tree&lt;T, Hierarchy&gt; const&amp; x);
-</pre>
-
-        <ol>
-          <li>
-            <p><strong>Effects:</strong>[first, last).</p>
-          </li>
-
-          <li>
-            <p><strong>Complexity:</strong> Linear.</p>
-            <pre>
-    template &lt;class InputIterator&gt;
-      void assign(InputIterator first, InputIterator last);
-</pre>
-          </li>
-
-          <li>
-            <p><strong>Effects:</strong></p>
-            <pre>
-clear(); 
-while(first++ != last)
-  insert(end(), *first);
-</pre>
-          </li>
-        </ol>
-
-        <h6>0.1.4.3.4.3 Balancing adaptor map operations <span class=
+        <h6>0.1.4.3.4.2 Balancing adaptor map operations <span class=
         "section-id">[tr.hierarchy.balance.map]</span></h6>
         <pre>
     iterator find(const value_type&amp; x);
@@ -2576,7 +2581,7 @@ while(first++ != last)
             <p><strong>Notes:</strong> The <tt>find</tt>,
             <tt>lower_bound</tt>, <tt>upper_bound</tt> and
             <tt>equal_range</tt> member functions each have four versions,
-            differing in wether they return an <tt>iterator</tt> or a
+            differing in whether they return an <tt>iterator</tt> or a
             <tt>const_iterator</tt>, and if they take a <tt>cmp</tt> function
             object argument or not (<tt>count</tt> comes only in the latter
             two variants, as it returns a <tt>size_type</tt>, not an
@@ -2590,7 +2595,7 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.4 Balancing adaptor modifiers <span class=
+        <h6>0.1.4.3.4.3 Balancing adaptor modifiers <span class=
         "section-id">[tr.hierarchy.balance.modifiers]</span></h6>
         <pre>
     void      push_front(value_type const&amp; x);
@@ -2639,7 +2644,7 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.5 Balancing adaptor specialized algorithms <span class=
+        <h6>0.1.4.3.4.4 Balancing adaptor specialized algorithms <span class=
         "section-id">[tr.hierarchy.balance.special]</span></h6>
         <pre>
     template &lt;class T, class Hierarchy&gt;
@@ -3042,7 +3047,7 @@ while(first++ != last)
 
             <table summary=
             "Descending forward cursor requirements (in addition to descending cursors and forward iterators)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 11: Descending forward cursor requirements (in addition
                 to descending cursors and forward iterators)
@@ -3091,7 +3096,7 @@ while(first++ != last)
 
             <table summary=
             "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 12: Descending bidirectional cursor requirements (in
                 addition to forward descending cursors and bidirectional
@@ -3149,7 +3154,7 @@ while(first++ != last)
 
             <table summary=
             "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 13: Descending random access cursor requirements (in
                 addition to descending bidirectional cursors and random
@@ -3198,7 +3203,7 @@ while(first++ != last)
 
             <table summary=
             "Acending cursor requirements (in addition to descending cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 14: Ascending cursor requirements (in addition to
                 descending cursors)
@@ -3276,7 +3281,7 @@ while(first++ != last)
 
             <table summary=
             "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 15: Ascending forward cursor requirements (in addition
                 to ascending cursors and descending forward cursors)
@@ -3325,7 +3330,7 @@ while(first++ != last)
 
             <table summary=
             "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 16: Ascending bidirectional cursor requirements (in
                 addition to ascending forward cursors and descending
@@ -3375,7 +3380,7 @@ while(first++ != last)
 
             <table summary=
             "Ascending random access cursor requirements (in addition to ascending bidirectional cursors and descending random access cursors)"
-                   class="reqmts">
+            class="reqmts">
               <caption>
                 Table 17: Ascending random access cursor requirements (in
                 addition to ascending bidirectional cursors and descending
@@ -4257,8 +4262,8 @@ namespace inorder {
 
     <dt><a id="ref.parent" name="ref.parent">[parent]</a></dt>
 
-    <dd>Parent, Sean <i>et al</i>. <em>forest_tree</em>, <a href=
-    "http://opensource.adobe.com/group__forest_tree__related.html">http://opensource.adobe.com/group__forest_tree__related.html</a></dd>
+    <dd>Parent, Sean <i>et al</i>. <em>forest</em>, <a href=
+    "http://opensource.adobe.com/group__forest__related.html">http://opensource.adobe.com/group__forest__related.html</a></dd>
 
     <dt><a id="ref.peeters" name="ref.peeters">[peeters]</a></dt>
 
