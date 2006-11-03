@@ -35,7 +35,24 @@ void test_balanced_binary_tree()
 	c1 = my_tree.insert(c, 8);
 	
 	BOOST_CHECK(*c1 == 8);
+	
+	c1 = my_tree.insert(c1, 7);
+	BOOST_CHECK(*c1 == 7);
 
+	++c1;
+	BOOST_CHECK(*c1 == 8);
+
+	++c1;
+	BOOST_CHECK(c1 == my_tree.end());
+	
+	c1 = my_tree.insert(my_tree.end(), 10);
+	BOOST_CHECK(*c1 == 10);
+	
+	--c1;
+	BOOST_CHECK(*c1 == 8);
+	
+	--c1;
+	BOOST_CHECK(*c1 == 7);
 }
 
 //boost::unit_test::test_suite*

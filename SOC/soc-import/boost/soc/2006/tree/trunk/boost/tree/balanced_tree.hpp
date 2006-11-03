@@ -163,16 +163,14 @@ class balanced_tree {
 	 */
 	iterator insert(iterator pos, value_type const& val)
 	{
-//		This change will require balancer_type's members to be static...
-
-//		balancer_type::add(h, h.insert(cursor(pos), val));
-//		return pos;
-		return iterator(h.insert(cursor(pos), val));
+		cursor c = h.insert(cursor(pos), val);
+		balancer_type::add(h, c);
+		return iterator(c);
 	}
 	 	
 	void erase (iterator pos)
- 	{		
- 		h.erase(cursor(pos));
+ 	{
+ 		h.erase(balancer_type::remove(*this, cursor(pos).parent()));
  	}
  	
  	void erase (iterator a, iterator b)

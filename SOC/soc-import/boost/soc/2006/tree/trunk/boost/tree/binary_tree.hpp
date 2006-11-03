@@ -315,7 +315,7 @@ class binary_tree : public Balance, public Augment {
 			m_header.m_parent = p_node;
 
 		//cursor c = this->root(); //TODO: revisit (add's type sig.)
-		balancer_type::add(*this, pos);
+		//balancer_type::add(*this, pos);
 		
 		return pos.begin(); 
 	}
@@ -451,7 +451,7 @@ private:
  		pos = pos.parent();
 
 		// TODO: Get the following to work properly.
- 		balancer_type::remove(*this, pos);
+ 		//balancer_type::remove(*this, pos);
  		node_pointer p_node;
 // 		if (pos == ret) {
  			augmentor_type::pre_detach(*this, pos);

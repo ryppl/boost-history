@@ -97,6 +97,12 @@ void validate_unbalanced_binary_tree(Tree const& mytree)
 	
 	c2 = c1.begin();
 	BOOST_CHECK(c2.parent() == c1);
+	BOOST_CHECK(*c2 == 2);
+	
+	c3 = c1.end();
+	BOOST_CHECK(c3.parent() == c1);
+	BOOST_CHECK(*c3.begin() == 4);
+	
 }
 
 template <class Tree>

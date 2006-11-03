@@ -31,13 +31,13 @@ class unbalanced : public access_rotate {
 		access_rotate::rotate(c);
 	}
 
- protected:	
+// protected:	
 	template <class Tree>
-	void add(Tree&, typename Tree::cursor&)
+	static void add(Tree&, typename Tree::cursor& c)
 	{ }
 	  
 	template <class Tree>
-	void remove(Tree& t, typename Tree::cursor& x)
+	static void remove(Tree& t, typename Tree::cursor& x)
 	{
 		typename Tree::cursor y = x;
 		if (x.begin().empty() || x.end().empty())
@@ -47,7 +47,7 @@ class unbalanced : public access_rotate {
 	}
 	
 	template <class Tree>
-	void touch(Tree&, typename Tree::cursor&)
+	static void touch(Tree&, typename Tree::cursor&)
 	{ }
 };
 
