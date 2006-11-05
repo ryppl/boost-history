@@ -189,7 +189,7 @@ void test_key_search_binary_tree()
 
 int test_main(int, char* [])
 {
-	test_key_search_binary_tree();
+	//test_key_search_binary_tree();
 
 	return 0;
 }

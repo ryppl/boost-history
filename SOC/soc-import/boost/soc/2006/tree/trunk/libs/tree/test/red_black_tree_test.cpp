@@ -10,6 +10,9 @@
 
 #include <boost/tree/searcher.hpp>
 
+#include <vector>
+#include <algorithm>
+
 #include "helpers.hpp"
 
 #include <boost/test/minimal.hpp>
@@ -22,22 +25,35 @@ void test_red_black_tree()
 {
 	using namespace boost::tree;
 	
-	typedef binary_tree<int, balancers::red_black> tree_t;
-	typedef searcher<false, tree_t> searcher_t;
-	searcher_t my_searcher;
-	
-	searcher_t::iterator it, c1, c2, c3, c4, c5;
-	searcher_t::const_iterator cit;
+	typedef test_balancer<binary_tree<int>, balancers::red_black> red_black_tree_t;
 
-	it = my_searcher.end();
-//	BOOST_CHECK(!c.has_child());
+	red_black_tree_t my_balancer;
+	std::vector<int> my_vector;
+		
+	create_test_data_sequence(my_balancer);
+	create_test_data_sequence(my_vector);
+	
+	BOOST_CHECK(std::equal(my_balancer.begin(), my_balancer.end(), my_vector.begin()));
+
+	
+//	typedef binary_tree<int, balancers::red_black> tree_t;
+//	typedef searcher<false, tree_t> searcher_t;
+//	searcher_t my_searcher;
+//	
+//	searcher_t::iterator it, c1, c2, c3, c4, c5;
+//	searcher_t::const_iterator cit;
+//
+
+//create_test_data_searcher(my_searcher);
+
+//	it = my_searcher.end();
 //	
 	//c1 = my_searcher.insert(c, 8);
-	c1 = my_searcher.insert(it, 8);
+//	c1 = my_searcher.insert(it, 8);
 //	
 
 //	cit = my_searcher.begin();
-	BOOST_CHECK(*c1 == 8);
+//	BOOST_CHECK(*c1 == 8);
 
 //	my_searcher.insert(5);
 //	my_searcher.insert(it, 7);

@@ -46,44 +46,43 @@ class red_black : public access_rotate {
 public:
 	typedef red_black_metadata metadata_type;
 	
-protected:
 	template <class Tree>
-	void add(Tree& t, typename Tree::cursor& x) 
+	static void add(Tree& t, typename Tree::cursor& x) 
 	{
-		x.metadata().set_color(red);
-		while (x.parent().metadata().get_color() == red) {
+		x->metadata().set_color(red);
+		while (x.parent()->metadata().get_color() == red) {
 			typename Tree::cursor y = x.parent();
 			y = (y == y.parent().begin() ? y.parent().end() : y.parent().begin());
-			if (y.metadata().get_color() == red) {
-				x.parent().metadata().set_color(black);
-				x.parent().parent().metadata().set_color(red);
-				y.metadata().set_color(black);
+			if (y->metadata().get_color() == red) {
+				x.parent()->metadata().set_color(black);
+				x.parent().parent()->metadata().set_color(red);
+				y->metadata().set_color(black);
 				x = x.parent().parent();
 			} else {
 				if (x.parity() != x.parent().parity()) {
 					access_rotate::rotate(x);
 					x = (x.parity() ? x.end() : x.begin());
 				}
-			x.parent().metadata().set_color(black);
-			x.parent().parent().metadata().set_color(red);
+			x.parent()->metadata().set_color(black);
+			x.parent().parent()->metadata().set_color(red);
 			x = x.parent(); //FIXME: was x.parent.rotate();
 			access_rotate::rotate(x); 
 			}
 		if (x.parent() == t.root())
-			x.metadata().set_color(black);
+			x->metadata().set_color(black);
 		}
 	}
 	
 	// second argument also used to pass second parameter for detach,
 	// if required.
 	template <class Tree>
-	void remove(Tree& t, typename Tree::cursor& x) // or other signature?
+	static void remove(Tree& t, typename Tree::cursor& x) // or other signature?
 	{
 		
 	}
 	
 	template <class Tree>
-	void touch(Tree& t, typename Tree::cursor&)
+	static void touch(Tree& t, typename Tree::cursor&)
 	{ }
   
 };

@@ -23,7 +23,7 @@ void test_balanced_binary_tree()
 {
 	using namespace boost::tree;
 	
-	typedef balanced_tree<int, binary_tree<int>, balancers::unbalanced> tree_t;
+	typedef balanced_tree<binary_tree<int>, balancers::unbalanced> tree_t;
 	tree_t my_tree;
 	
 	tree_t::iterator c, c1, c2, c3, c4, c5;

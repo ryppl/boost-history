@@ -33,7 +33,7 @@ namespace tree {
 namespace inorder {
 
 template <class Cursor, class Tag = typename cursor_category<Cursor>::type>
-class iterator {};
+class iterator;
 
 template <class Cursor>
 class iterator<Cursor, forward_traversal_tag>

@@ -10,11 +10,12 @@
 
 #include <boost/tree/searcher.hpp>
 
-#include "helpers.hpp"
+#include <vector>
+#include <algorithm>
 
 #include <boost/test/minimal.hpp>
 
-using boost::tree::binary_tree;
+#include "helpers.hpp"
 
 //TODO: Make this a test suite.
 
@@ -22,38 +23,62 @@ void test_treap()
 {
 	using namespace boost::tree;
 	
+	std::vector<int> my_vector;
 	typedef binary_tree<int, balancers::treap> tree_t;
-	typedef test_searcher<false, tree_t> searcher_t;
-	searcher_t my_searcher;
+	//typedef test_searcher<false, tree_t> searcher_t;
+	typedef test_balancer<binary_tree<int>, balancers::treap> treap_t;
 	
-	create_test_data_searcher(my_searcher);
+	//searcher_t my_searcher;
+	treap_t my_balancer;
 	
-	test_inorder_iterator_traversal(my_searcher);
+	//create_test_data_searcher(my_searcher);
+	create_test_data_sequence(my_balancer);
+	create_test_data_sequence(my_vector);
 	
-	tree_t& my_tree = my_searcher.container();
+	BOOST_CHECK(std::equal(my_balancer.begin(), my_balancer.end(), my_vector.begin()));
+	
+	// TODO: const_iterator !
+	treap_t::iterator bcit = my_balancer.begin();
+	BOOST_CHECK(*bcit == 8);
+	treap_t::hierarchy_type::cursor c = bcit.base().base();
+	BOOST_CHECK(bcit.base().base() == my_balancer.hierarchy().root().begin());
+	BOOST_CHECK(c.parent() == my_balancer.hierarchy().root());
+	
+	//my_balancer.hierarchy().rotate(c);
+	
+	BOOST_CHECK(*++bcit == 10);
+	BOOST_CHECK(*++bcit == 14);
+	
+	c = bcit.base().base();
+	BOOST_CHECK(c.parent().parent().parent() == my_balancer.hierarchy().root());
+	//my_balancer.hierarchy().rotate(c);
+	
+//	test_inorder_iterator_traversal(my_searcher);
+	
+//	tree_t& my_tree = my_searcher.container();
 	
 	// TODO: a level-order algo? 
 	
-	for (tree_t::const_iterator ci = my_tree.cbegin(); ci != my_tree.cend(); ++ci)
-		BOOST_CHECK(tree_t::const_cursor(ci).metadata().get_priority() 
-				  < tree_t::const_cursor(ci).parent().metadata().get_priority());
+//	for (tree_t::const_iterator ci = my_tree.cbegin(); ci != my_tree.cend(); ++ci)
+//		BOOST_CHECK(tree_t::const_cursor(ci).metadata().get_priority() 
+//				  < tree_t::const_cursor(ci).parent().metadata().get_priority());
 	
-	searcher_t::iterator c = my_searcher.begin();
-	BOOST_CHECK(*c++ == 1);
-	BOOST_CHECK(*c++ == 3);
-	BOOST_CHECK(*c++ == 4);
-	BOOST_CHECK(*c == 6);
-
-	my_searcher.erase(c);
+//	searcher_t::iterator c = my_searcher.begin();
+//	BOOST_CHECK(*c++ == 1);
+//	BOOST_CHECK(*c++ == 3);
+//	BOOST_CHECK(*c++ == 4);
+//	BOOST_CHECK(*c == 6);
+//
+//	my_searcher.erase(c);
 	
-	for (tree_t::const_iterator ci = my_tree.cbegin(); ci != my_tree.cend(); ++ci)
-		BOOST_CHECK(tree_t::const_cursor(ci).metadata().get_priority() 
-				  < tree_t::const_cursor(ci).parent().metadata().get_priority());
+//	for (tree_t::const_iterator ci = my_tree.cbegin(); ci != my_tree.cend(); ++ci)
+//		BOOST_CHECK(tree_t::const_cursor(ci).metadata().get_priority() 
+//				  < tree_t::const_cursor(ci).parent().metadata().get_priority());
 	
-	c = my_searcher.begin();
-	BOOST_CHECK(*c++ == 1);
-	BOOST_CHECK(*c++ == 3);
-	BOOST_CHECK(*c++ == 4);
+//	c = my_searcher.begin();
+//	BOOST_CHECK(*c++ == 1);
+//	BOOST_CHECK(*c++ == 3);
+//	BOOST_CHECK(*c++ == 4);
 //	BOOST_CHECK(*c++ == 7); //FIXME
 //	BOOST_CHECK(*c++ == 8);
 //	BOOST_CHECK(*c++ == 10);

@@ -74,7 +74,12 @@ class binary_tree : public Balance, public Augment {
 	typedef typename allocator_type::reference reference;
 	typedef typename allocator_type::size_type size_type;
 	typedef typename allocator_type::difference_type difference_type;
- public:
+	
+    template <class U, class B, class A> struct rebind {
+      typedef binary_tree< U, B, A, typename allocator_type::template rebind<U>::other >
+        other;
+    };
+    
 	explicit binary_tree (allocator_type const& alloc = allocator_type())
 	: m_header(), m_value_alloc(alloc)
 	{
@@ -395,6 +400,11 @@ class binary_tree : public Balance, public Augment {
 		m_header[1] = &m_header;
  	}
 
+//	void rotate(cursor pos)
+//	{
+//		pos.rotate();
+//	}
+	
 	/**
 	 * @brief  Swaps data with another %binary_tree.
 	 * @param  x  A %binary_tree of the same element and allocator types.
@@ -427,7 +437,7 @@ class binary_tree : public Balance, public Augment {
 	}
 
 	/**
-	 * Returns true if the %vector is empty.  (Thus root() would
+	 * Returns true if the %binary_tree is empty.  (Thus root() would
 	 * equal shoot().)
 	 */
 	bool empty() const
@@ -448,7 +458,7 @@ private:
  	void erase (cursor pos)
  	{
  		cursor ret; // = this->root();
- 		pos = pos.parent();
+// 		pos = pos.parent();
 
 		// TODO: Get the following to work properly.
  		//balancer_type::remove(*this, pos);

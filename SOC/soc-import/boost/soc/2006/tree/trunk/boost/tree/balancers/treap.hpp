@@ -47,31 +47,31 @@ class treap : public access_rotate {
  public:
 	typedef treap_metadata metadata_type;
 	
- protected:
+// protected:
 	// TODO: do we ever want to modify the second par directly?
 	template <class Tree>
-	void add(Tree& t, typename Tree::cursor& x) 
+	static void add(Tree& t, typename Tree::cursor& x) 
 	{
-		x.metadata().set_priority((lrand48() >> 1) + 1);
+		x->metadata().set_priority((lrand48() >> 1) + 1); // Move this to metadata ctor?
 		while ((x != t.root()) && 
-			   (x.metadata().get_priority() > 
-			   	x.parent().metadata().get_priority()))
-			access_rotate::rotate(x);
+			   (x->metadata().get_priority() > 
+			   	x.parent()->metadata().get_priority()))
+			t.rotate(x);
 	}
 	  
 	template <class Tree>
-	void remove(Tree& t, typename Tree::cursor& p)
+	static void remove(Tree& t, typename Tree::cursor& p)
 	{
 		typename Tree::cursor q;
-		while((q = ((p.begin().metadata().get_priority()
-					 > p.end().metadata().get_priority())
+		while((q = ((p.begin()->metadata().get_priority()
+					 > p.end()->metadata().get_priority())
 					 ? p.begin() : p.end())).empty())
 			access_rotate::rotate(q);
 		q = p;
 	}
 	
 	template <class Tree>
-	void touch(Tree&, typename Tree::cursor&)
+	static void touch(Tree&, typename Tree::cursor&)
 	{ }
 };
 
