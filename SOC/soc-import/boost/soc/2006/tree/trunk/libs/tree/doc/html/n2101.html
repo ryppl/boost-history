@@ -951,7 +951,7 @@ namespace tr2 {
     typedef typename allocator_type::difference_type      difference_type;
 
     template &lt;class U&gt; struct rebind {
-      typedef binary_tree&lt; U, typename allocator_type::rebind&lt;U&gt;::other &gt;
+      typedef binary_tree&lt; U, typename allocator_type::template rebind&lt;U&gt;::other &gt;
         other;
     };
 
@@ -1286,7 +1286,7 @@ namespace tr2 {
     typedef typename allocator_type::difference_type      difference_type;
 
     template &lt;class U&gt; struct rebind {
-      typedef nary_tree&lt; U, typename allocator_type::rebind&lt;U&gt;::other &gt;
+      typedef nary_tree&lt; U, typename allocator_type::template rebind&lt;U&gt;::other &gt;
         other;
     };
 
@@ -1599,7 +1599,7 @@ namespace tr2 {
     typedef typename hierarchy_type::difference_type      difference_type;
 
     template &lt;class U&gt; struct rebind {
-      typedef forest_tree&lt; U, typename hierarchy_type::rebind&lt;U&gt;::other &gt;
+      typedef forest_tree&lt; U, typename hierarchy_type::template rebind&lt;U&gt;::other &gt;
         other;
     };
 
@@ -1850,7 +1850,7 @@ namespace tr2 {
 
     template &lt;class U&gt; struct rebind {
       typedef multiway_tree&lt; U,
-        typename hierarchy_type::rebind&lt; <em>implementation defined </em>&gt;::other &gt;
+        typename hierarchy_type::template rebind&lt; <em>implementation defined </em>&gt;::other &gt;
           other;
     };
 
@@ -2189,7 +2189,7 @@ namespace tr2 {
     typedef Hierarchy                                     hierarchy_type;
 
   protected:
-    typename hierarchy_type::rebind&lt; pair&lt;T,size_t&gt; &gt;::other h;
+    typename hierarchy_type::template rebind&lt; pair&lt;T,size_t&gt; &gt;::other h;
   
   public:
     <i>// types:</i>
@@ -2206,7 +2206,7 @@ namespace tr2 {
     typedef typename hierarchy_type::difference_type      difference_type;
 
     template &lt;class U&gt; struct rebind {
-      typedef rank_tree&lt; U, typename hierarchy_type::rebind&lt;U&gt;::other &gt;
+      typedef rank_tree&lt; U, typename hierarchy_type::template rebind&lt;U&gt;::other &gt;
         other;
     };
 
