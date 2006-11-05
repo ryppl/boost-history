@@ -7,7 +7,7 @@
 <head>
   <title>Hierarchical Data Structures and Related Concepts for the C++
   Standard Library (TR2)</title>
-  <style type="text/css">
+<style type="text/css">
   /*<![CDATA[*/
   li.c1 {list-style: none}
   .std {
@@ -84,7 +84,7 @@
     top: -1.25em;
   }
   /*]]>*/
-  </style>
+</style>
 </head>
 
 <body>
@@ -114,7 +114,134 @@
 
   <h2 class="byline">Bernhard Reiter and Ren&eacute; Rivera</h2>
 
-  <h2>Introduction</h2>
+  <h2>Table of Contents</h2>
+
+  <ul>
+    <li><a href="#introduction">Introduction</a></li>
+
+    <li><a href="#motivation">Motivation and Scope</a></li>
+
+    <li><a href="#impact">Impact on the Standard</a></li>
+
+    <li><a href="#design">Important Design Decisions</a></li>
+
+    <li><a href="#future">Future Directions</a></li>
+
+    <li>
+      <a href="#proposed">Proposed Text for Technical Report 2</a>
+
+      <ul>
+        <li>
+          <a href="#tr.containers">Containers library</a>
+
+          <ul>
+            <li>
+              <a href="#tr.hierarchy">Hierarchy containers</a>
+
+              <ul>
+                <li><a href="#tr.hierarchy.req">Hierarchy container
+                requirements</a></li>
+
+                <li><a href="#tr.hierarchy.plain">Plain hierarchies</a></li>
+
+                <li><a href="#tr.hierarchy.multiway">Multiway
+                hierarchies</a></li>
+
+                <li>
+                  <a href="#tr.hierarchy.tree">Trees</a>
+
+                  <ul>
+                    <li><a href="#tr.hierarchy.bintree">Template class
+                    <tt>binary_tree</tt></a></li>
+
+                    <li><a href="#tr.hierarchy.narytree">Template class
+                    <tt>nary_tree</tt></a></li>
+
+                    <li>
+                      <a href="#tr.hierarchy.adaptors">Hierarchy adaptors</a>
+
+                      <ul>
+                        <li><a href="#tr.hierarchy.foresttree">Template class
+                        <tt>forest_tree</tt></a></li>
+
+                        <li><a href="#tr.hierarchy.multiwaytree">Template
+                        class <tt>multiway_tree</tt></a></li>
+
+                        <li><a href="#tr.hierarchy.augment">Augmenting
+                        hierarchy adaptors</a></li>
+
+                        <li><a href="#tr.hierarchy.balance">Balancing
+                        hierarchy adaptors</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="#tr.iterators">Iterators library</a>
+
+          <ul>
+            <li>
+              <a href="#tr.cursors">Cursors</a>
+
+              <ul>
+                <li><a href="#tr.cursor.requirements">Cursor
+                requirements</a></li>
+
+                <li><a href="#tr.cursor.flavors">Cursor flavors</a></li>
+
+                <li><a href="#tr.cursor.synopsis">Header
+                <tt>&lt;cursor&gt;</tt> synopsis</a></li>
+
+                <li><a href="#tr.cursor.primitives">Cursor
+                primitives</a></li>
+              </ul>
+            </li>
+
+            <li>
+              <a href="#triterator.synopsis">Header
+              <tt>&lt;iterator&gt;</tt> synopsis</a>
+
+              <ul>
+                <li><a href="#tr.order.iterators">Linear order traversal
+                iterators</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+
+        <li>
+          <a href="#tr.algorithm">Algorithms library</a>
+
+          <ul>
+            <li>
+              <a href="#tr.alg.hierarchy">Non-modifying hierarchy
+              algorithms</a>
+
+              <ul>
+                <li><a href="#tr.alg.hier.preorder">Non-modifying hierarchy
+                preorder range algorithms</a></li>
+
+                <li><a href="#tr.alg.hier.postorder">Non-modifying hierarchy
+                postorder range algorithms</a></li>
+
+                <li><a href="#tr.alg.hier.inorder">Non-modifying hierarchy
+                inorder range algorithms</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+
+    <li><a href="#references">References</a></li>
+  </ul>
+
+  <h2><a id="introduction" name="introduction">Introduction</a></h2>
 
   <p>This paper proposes addition of library components covering tree
   structures and related concepts to the C++ Standard Library Technical
@@ -125,7 +252,7 @@
   <p>The library strives to cover many of the relevant aspects within the
   vast field linked to the notion of trees in computer science.</p>
 
-  <h2>Motivation and Scope</h2>
+  <h2><a id="motivation" name="motivation">Motivation and Scope</a></h2>
 
   <h3>Why is this important?</h3>
 
@@ -173,7 +300,7 @@
   Alternatively, the source code can be viewed in a web browser at <a href=
   "https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree">https://boost-consulting.com:8443/trac/soc/browser/boost/soc/2006/tree</a>.</p>
 
-  <h2>Impact on the Standard</h2>
+  <h2><a id="impact" name="impact">Impact on the Standard</a></h2>
 
   <h3>What does it depend on, and what depends on it?</h3>
 
@@ -212,16 +339,17 @@
 
   <p>Note that it might be worthwhile to investigate if the present Container
   concept should be modified so that it only covers the requirements as of
-  paragraph 2 of section [tr.hierarchy.req] of this proposal, which
-  correspond to the current Container concept with the exception of any
-  expressions that implicitly assume linear internal structure and outsource
-  those to a "Linear Container" concept as similarly formalized in the
-  <a href="http://boost.org/libs/range/doc/range.html">Boost Range
-  concept</a> (<a href=
+  paragraph 2 of section <a href="#tr.hierarchy.req">[tr.hierarchy.req]</a>
+  of this proposal, which correspond to the current Container concept with
+  the exception of any expressions that implicitly assume linear internal
+  structure and outsource those to a "Linear Container" concept as similarly
+  formalized in the <a href=
+  "http://boost.org/libs/range/doc/range.html">Boost Range concept</a>
+  (<a href=
   "http://boost.org/libs/range/doc/range.html">http://boost.org/libs/range/doc/range.html</a>)
   externally to the Standard.</p>
 
-  <h2>Important Design Decisions</h2>
+  <h2><a id="design" name="design">Important Design Decisions</a></h2>
 
   <h3>Why did you choose the specific design that you did?</h3>
 
@@ -325,7 +453,7 @@
   this proposal. Making cursors logical extensions of iterators would
   probably also have been more difficult with a BGL-based approach.</p>
 
-  <h2>Future Directions</h2>
+  <h2><a id="future" name="future">Future Directions</a></h2>
 
   <p>While it is hoped that the current proposal somewhat reunites balanced
   binary trees, B-trees and "external" hierarchies, which should also
@@ -334,20 +462,23 @@
   interesting feature to add to the library, such as patricia tries or
   ternary search tries.</p>
 
-  <h2>Proposed Text for Technical Report 2</h2>
+  <h2><a id="proposed" name="proposed">Proposed Text for Technical Report
+  2</a></h2>
 
   <div class="note">
     Notes that are not part of the proposed text appear in gray boxes.
   </div>
 
   <div class="std">
-    <h2>0 Containers <span class="section-id">[tr.cont]</span></h2>
+    <h2><a id="tr.containers" name="tr.containers">23 Containers
+    library<span class="section-id">[tr.containers]</span></a></h2>
 
-    <h3>0.1 Hierarchy containers <span class=
-    "section-id">[tr.hierarchy]</span></h3>
+    <h3><a id="tr.hierarchy" name="tr.hierarchy">23.X Hierarchy containers
+    <span class="section-id">[tr.hierarchy]</span></a></h3>
 
-    <h4>0.1.1 Hierarchy container requirements <span class=
-    "section-id">[tr.hierarchy.req]</span></h4>
+    <h4><a id="tr.hierarchy.req" name="tr.hierarchy.req">23.X.1 Hierarchy
+    container requirements <span class=
+    "section-id">[tr.hierarchy.req]</span></a></h4>
 
     <ol>
       <li>
@@ -447,7 +578,7 @@
         X.</p>
 
         <table summary="Hierarchy requirements (in addition to container)"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 2 - Hierarchy requirements (in addition to container)
           </caption>
@@ -568,9 +699,9 @@
       </li>
 
       <li>
-        <p>The member class template <tt>rebind</tt> in the table above
-        is effectively a typedef template: if the name <tt>Hierarchy</tt>
-        is bound to <tt>SomeHierarchy&lt;T&gt;</tt>, then
+        <p>The member class template <tt>rebind</tt> in the table above is
+        effectively a typedef template: if the name <tt>Hierarchy</tt> is
+        bound to <tt>SomeHierarchy&lt;T&gt;</tt>, then
         <tt>Hierarchy::rebind&lt;U&gt;::other</tt> is the same type as
         <tt>SomeHierarchy&lt;U&gt;</tt>. Additionally, because of the related
         assertion, given <tt>SomeHierarchy&lt;T,R0,...,Rn&gt;</tt> for all
@@ -658,8 +789,8 @@
       as that of <tt>p</tt>.</li>
     </ol>
 
-    <h4>0.1.2 Plain hierarchies <span class=
-    "section-id">[tr.hierarchy.plain]</span></h4>
+    <h4><a id="tr.hierarchy.plain" name="tr.hierarchy.plain">23.X.2 Plain
+    hierarchies <span class="section-id">[tr.hierarchy.plain]</span></a></h4>
 
     <ol>
       <li>
@@ -733,8 +864,9 @@
       </li>
     </ol>
 
-    <h4>0.1.3 Multiway hierarchies <span class=
-    "section-id">[tr.hierarchy.multiway]</span></h4>
+    <h4><a id="tr.hierarchy.multiway" name="tr.hierarchy.multiway">23.X.3
+    Multiway hierarchies <span class=
+    "section-id">[tr.hierarchy.multiway]</span></a></h4>
 
     <ol>
       <li>
@@ -796,7 +928,8 @@
       </li>
     </ol>
 
-    <h4>0.1.4 Trees <span class="section-id">[tr.hierarchy.tree]</span></h4>
+    <h4><a id="tr.hierarchy.tree" name="tr.hierarchy.tree">23.X.4 Trees
+    <span class="section-id">[tr.hierarchy.tree]</span></a></h4>
 
     <ol>
       <li>
@@ -918,8 +1051,9 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-    <h5>0.1.4.1 Template class <tt>binary_tree</tt> <span class=
-    "section-id">[tr.hierarchy.bintree]</span></h5>
+    <h5><a id="tr.hierarchy.bintree" name="tr.hierarchy.bintree">23.X.4.1
+    Template class <tt>binary_tree</tt> <span class=
+    "section-id">[tr.hierarchy.bintree]</span></a></h5>
 
     <ol>
       <li>
@@ -1018,8 +1152,9 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h6>0.1.4.1.1 <tt>binary_tree</tt> types <span class=
-    "section-id">[tr.hierarchy.bintree.type]</span></h6>
+    <h6><a id="tr.hierarchy.bintree.types" name=
+    "tr.hierarchy.bintree.types">23.X.4.1.1 <tt>binary_tree</tt> types
+    <span class="section-id">[tr.hierarchy.bintree.types]</span></a></h6>
     <pre>
 typedef <i>implementation defined</i>                        cursor;
 typedef <i>implementation defined</i>                        const_cursor;    
@@ -1028,8 +1163,11 @@ typedef <i>implementation defined</i>                        const_cursor;
     <ol>
       <li>
         <p>Both <tt>cursor</tt> and <tt>const_cursor</tt> have to fulfill the
-        multiway cursor ([tr.cursor.flavors]) and ascending random access
-        cursor ([tr.ascending.random.access.cursors]) requirements.</p>
+        multiway cursor (<a href=
+        "#tr.cursor.flavors">[tr.cursor.flavors]</a>) and ascending random
+        access cursor (<a href=
+        "#tr.ascending.random.access.cursors">[tr.ascending.random.access.cursors]</a>)
+        requirements.</p>
       </li>
 
       <li>
@@ -1039,7 +1177,7 @@ typedef <i>implementation defined</i>                        const_cursor;
       </li>
     </ol>
 
-    <h6>0.1.4.1.2 <tt>binary_tree</tt> constructors, copy, and assignment
+    <h6>23.X.4.1.2 <tt>binary_tree</tt> constructors, copy, and assignment
     <span class="section-id">[tr.hierarchy.bintree.cons]</span></h6>
     <pre>
     explicit binary_tree (allocator_type const&amp; = allocator_type());
@@ -1077,7 +1215,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.1.3 <tt>binary_tree</tt> cursors <span class=
+    <h6>23.X.4.1.3 <tt>binary_tree</tt> cursors <span class=
     "section-id">[tr.hierarchy.bintree.cursors]</span></h6>
     <pre>
     cursor        shoot();
@@ -1095,7 +1233,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
       <li>
         <p><strong>Returns:</strong> A cursor to the <tt>binary_tree</tt>'s
-        first element in inorder (see [tr.order.iterators], &sect;4).</p>
+        first element in inorder (see <a href=
+        "#tr.order.iterators">[tr.order.iterators]</a>, &sect;4).</p>
       </li>
 
       <li>
@@ -1103,8 +1242,10 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.1.4 <tt>binary_tree</tt> modifiers <span class=
-    "section-id">[tr.hierarchy.bintree.modifiers]</span></h6>
+    <h6><a id="tr.hierarchy.bintree.modifiers" name=
+    "tr.hierarchy.bintree.modifiers">23.X.4.1.4 <tt>binary_tree</tt>
+    modifiers <span class=
+    "section-id">[tr.hierarchy.bintree.modifiers]</span></a></h6>
     <pre>
     cursor    insert(cursor position, value_type const&amp; x = value_type());
 </pre>
@@ -1202,8 +1343,9 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       <li>
         <p><strong>Notes:</strong> Does not affect the validity of cursors
         and references. Tree rotations are important inorder-preserving (see
-        [tr.order.iterators] &sect;4) operations on binary trees that are
-        especially required by balancers.</p>
+        <a href="#tr.order.iterators">[tr.order.iterators]</a> &sect;4)
+        operations on binary trees that are especially required by
+        balancers.</p>
         <pre>
     void      clear(cursor position);
 </pre>
@@ -1215,7 +1357,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.1.5 <tt>binary_tree</tt> specialized algorithms <span class=
+    <h6>23.X.4.1.5 <tt>binary_tree</tt> specialized algorithms <span class=
     "section-id">[tr.hierarchy.bintree.special]</span></h6>
     <pre>
     template &lt;class T, class Alloc&gt;
@@ -1263,8 +1405,9 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h5>0.1.4.2 Template class <tt>nary_tree</tt> <span class=
-    "section-id">[tr.hierarchy.narytree]</span></h5>
+    <h5><a id="tr.hierarchy.narytree" name="tr.hierarchy.narytree">23.X.4.2
+    Template class <tt>nary_tree</tt> <span class=
+    "section-id">[tr.hierarchy.narytree]</span></a></h5>
     <pre>
 namespace std {
 namespace tr2 {
@@ -1353,7 +1496,7 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-    <h6>0.1.4.2.1 <tt>nary_tree</tt> types <span class=
+    <h6>23.X.4.2.1 <tt>nary_tree</tt> types <span class=
     "section-id">[tr.hierarchy.narytree.types]</span></h6>
     <pre>
 typedef <i>implementation defined</i>                        cursor;
@@ -1363,12 +1506,14 @@ typedef <i>implementation defined</i>                        const_cursor;
     <ol>
       <li>
         <p>Both <tt>cursor</tt> and <tt>const_cursor</tt> have to fulfill the
-        plain cursor ([tr.cursor.flavors]) and ascending random access cursor
-        ([tr.ascending.random.access.cursors]) requirements.</p>
+        plain cursor (<a href="#tr.cursor.flavors">[tr.cursor.flavors]</a>)
+        and ascending random access cursor (<a href=
+        "#tr.ascending.random.access.cursors">[tr.ascending.random.access.cursors]</a>)
+        requirements.</p>
       </li>
     </ol>
 
-    <h6>0.1.4.2.2 <tt>nary_tree</tt> constructors, copy, and assignment
+    <h6>23.X.4.2.2 <tt>nary_tree</tt> constructors, copy, and assignment
     <span class="section-id">[tr.hierarchy.narytree.cons]</span></h6>
     <pre>
     explicit nary_tree (allocator_type const&amp; = allocator_type());
@@ -1406,7 +1551,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.2.3 <tt>nary_tree</tt> cursors <span class=
+    <h6>23.X.4.2.3 <tt>nary_tree</tt> cursors <span class=
     "section-id">[tr.hierarchy.narytree.cursors]</span></h6>
     <pre>
     cursor        shoot();
@@ -1424,7 +1569,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
       <li>
         <p><strong>Returns:</strong> A cursor to the <tt>nary_tree</tt>'s
-        first element in inorder (see [tr.order.iterators], &sect;4).</p>
+        first element in inorder (see <a href=
+        "#tr.order.iterators">[tr.order.iterators]</a>, &sect;4).</p>
       </li>
 
       <li>
@@ -1432,7 +1578,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.2.4 <tt>nary_tree</tt> capacity <span class=
+    <h6>23.X.4.2.4 <tt>nary_tree</tt> capacity <span class=
     "section-id">[tr.hierarchy.narytree.capacity]</span></h6>
     <pre>
 size_type capacity(cursor position) const;
@@ -1477,7 +1623,7 @@ void      reserve(cursor position, size_type n);
       </li>
     </ol>
 
-    <h6>0.1.4.2.5 <tt>nary_tree</tt> modifiers <span class=
+    <h6>23.X.4.2.5 <tt>nary_tree</tt> modifiers <span class=
     "section-id">[tr.hierarchy.narytree.modifiers]</span></h6>
     <pre>
     cursor    insert(cursor position, value_type const&amp; x = value_type());
@@ -1501,7 +1647,7 @@ void      reserve(cursor position, size_type n);
       </li>
     </ol>
 
-    <h6>0.1.4.2.6 <tt>nary_tree</tt> specialized algorithms <span class=
+    <h6>23.X.4.2.6 <tt>nary_tree</tt> specialized algorithms <span class=
     "section-id">[tr.hierarchy.narytree.special]</span></h6>
     <pre>
     template &lt;class T, class Alloc&gt;
@@ -1547,32 +1693,41 @@ void      reserve(cursor position, size_type n);
       </li>
     </ol>
 
-    <h4>0.1.4.3 Hierarchy adaptors <span class=
-    "section-id">[tr.hierarchy.adaptors]</span></h4>
+    <h4><a id="tr.hierarchy.adaptors" name="tr.hierarchy.adaptors">23.X.4.3
+    Hierarchy adaptors <span class=
+    "section-id">[tr.hierarchy.adaptors]</span></a></h4>
 
     <ol>
       <li>
-        <p>Hierarchy adaptors satisfy the hierarchy requirements except for
-        anything that deals with allocators, as storage management is done by
-        the adaptees. The hierarchy adaptors each take a Hierarchy template
-        parameter, and each constructor takes a Hierarchy reference argument.
-        This hierarchy is copied into the Hierarchy member of each
-        adapter.</p>
+        <p>Hierarchy adaptors each take a Hierarchy template parameter, and
+        each of their constructors takes a Hierarchy reference argument. This
+        hierarchy is copied into the Hierarchy member of each adapter. Most
+        hierarchy adaptors satisfy most of the hierarchy requirements (except
+        for anything that deals with allocators, as storage management is
+        done by the adaptees). The exception is the group of balancing
+        hierarchy adaptors (<a href=
+        "#tr.hierarchy.balance">[tr.hierarchy.balance]</a>), whose members
+        satisfy most of the requirements of a container, of a sequence and
+        most of the optional sequence requirements instead (again except for
+        anything allocation related, and some other exceptions).</p>
       </li>
     </ol>
 
-    <h5>0.1.4.3.1 Template class <tt>forest_tree</tt> <span class=
-    "section-id">[tr.hierarchy.foresttree]</span></h5>
+    <h5><a id="tr.hierarchy.foresttree" name=
+    "tr.hierarchy.foresttree">23.X.4.3.1 Template class <tt>forest_tree</tt>
+    <span class="section-id">[tr.hierarchy.foresttree]</span></a></h5>
 
     <ol>
       <li>
         <p>A <tt>forest_tree</tt> is a kind of mutable plain hierarchy that
         is instantiated with a mutable multiway hierarchy that has insertion
-        semantics as a <tt>binary_tree</tt>
-        ([tr.hierarchy.bintree.modifiers], &sect;1)), and whose cursor types
-        <tt>cursor</tt> and <tt>const_cursor</tt> satisfy a
-        <tt>binary_tree</tt>'s <tt>cursor</tt> and <tt>const_cursor</tt> type
-        requirements ([tr.hierarchy.bintree.types], &sect;1-2)).</p>
+        semantics as a <tt>binary_tree</tt> (<a href=
+        "#tr.hierarchy.bintree.modifiers">[tr.hierarchy.bintree.modifiers]</a>,
+        &sect;1)), and whose cursor types <tt>cursor</tt> and
+        <tt>const_cursor</tt> satisfy a <tt>binary_tree</tt>'s
+        <tt>cursor</tt> and <tt>const_cursor</tt> type requirements (<a href=
+        "#tr.hierarchy.bintree.types">[tr.hierarchy.bintree.types]</a>,
+        &sect;1-2)).</p>
         <pre>
 namespace std {
 namespace tr2 {
@@ -1661,7 +1816,7 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h6>0.1.4.3.1.1 <tt>forest_tree</tt> types <span class=
+    <h6>23.X.4.3.1.1 <tt>forest_tree</tt> types <span class=
     "section-id">[tr.hierarchy.foresttree.types]</span></h6>
     <pre>
 typedef <i>implementation defined</i>                        cursor;
@@ -1684,7 +1839,7 @@ typedef <i>implementation defined</i>                        const_cursor;
 
         <table summary=
         "forest_tree/binary tree cursor operational semantics corresponences"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 6: forest_tree/binary tree cursor operational semantics
             correspondences
@@ -1738,7 +1893,7 @@ typedef <i>implementation defined</i>                        const_cursor;
       </li>
     </ol>
 
-    <h6>0.1.4.3.1.2 <tt>forest_tree</tt> constructors, copy, and assignment
+    <h6>23.X.4.3.1.2 <tt>forest_tree</tt> constructors, copy, and assignment
     <span class="section-id">[tr.hierarchy.foresttree.cons]</span></h6>
     <pre>
     explicit forest_tree (hierarchy_type const&amp; = hierarchy_type());
@@ -1775,7 +1930,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.3.1.3 <tt>forest_tree</tt> modifiers <span class=
+    <h6>23.X.4.3.1.3 <tt>forest_tree</tt> modifiers <span class=
     "section-id">[tr.hierarchy.foresttree.modifiers]</span></h6>
     <pre>
     cursor    insert(cursor position, value_type const&amp; x = value_type());
@@ -1799,7 +1954,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.3.1.4 <tt>forest_tree</tt> specialized algorithms <span class=
+    <h6>23.X.4.3.1.4 <tt>forest_tree</tt> specialized algorithms <span class=
     "section-id">[tr.hierarchy.foresttree.special]</span></h6>
     <pre>
     template &lt;class T, class Hierarchy&gt;
@@ -1813,8 +1968,10 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h5>0.1.4.3.2 Template class <tt>multiway_tree</tt> <span class=
-    "section-id">[tr.hierarchy.multiwaytree]</span></h5>
+    <h5><a id="tr.hierarchy.multiwaytree" name=
+    "tr.hierarchy.multiwaytree">23.X.4.3.2 Template class
+    <tt>multiway_tree</tt> <span class=
+    "section-id">[tr.hierarchy.multiwaytree]</span></a></h5>
 
     <ol>
       <li>
@@ -1923,7 +2080,7 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h6>0.1.4.3.2.1 <tt>multiway_tree</tt> types <span class=
+    <h6>23.X.4.3.2.1 <tt>multiway_tree</tt> types <span class=
     "section-id">[tr.hierarchy.multiwaytree.types]</span></h6>
     <pre>
     typedef <i>implementation defined</i>                        cursor;
@@ -1933,12 +2090,14 @@ namespace tr2 {
     <ol>
       <li>
         <p>Both <tt>cursor</tt> and <tt>const_cursor</tt> have to fulfill the
-        plain cursor requirements ([tr.cursor.flavors]). If <tt>typename
+        plain cursor requirements (<a href=
+        "#tr.cursor.flavors">[tr.cursor.flavors]</a>). If <tt>typename
         hierarchy_type::cursor</tt> is an ascending random access cursor,
         <tt>cursor</tt> and <tt>const_cursor</tt> are also ascending random
-        access cursors ([tr.ascending.random.access.cursors]); otherwise,
-        they are descending random access cursor
-        ([tr.descending.random.access.cursors]).</p>
+        access cursors (<a href=
+        "#tr.ascending.random.access.cursors">[tr.ascending.random.access.cursors]</a>);
+        otherwise, they are descending random access cursor (<a href=
+        "#tr.descending.random.access.cursors">[tr.descending.random.access.cursors]</a>).</p>
       </li>
 
       <li>
@@ -1951,7 +2110,7 @@ namespace tr2 {
 
         <table summary=
         "Multiway/nary tree cursor operational semantics corresponences"
-        class="reqmts">
+               class="reqmts">
           <caption>
             Table 7: Multiway/nary tree cursor operational semantics
             correspondences
@@ -1980,8 +2139,9 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h6>0.1.4.3.2.2 <tt>multiway_tree</tt> constructors, copy, and assignment
-    <span class="section-id">[tr.hierarchy.multiwaytree.cons]</span></h6>
+    <h6>23.X.4.3.2.2 <tt>multiway_tree</tt> constructors, copy, and
+    assignment <span class=
+    "section-id">[tr.hierarchy.multiwaytree.cons]</span></h6>
     <pre>
     explicit multiway_tree (hierarchy_type const&amp; = hierarchy_type());
     template &lt;class InputCursor&gt;
@@ -2017,7 +2177,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.3.2.3 <tt>multiway_tree</tt> cursors <span class=
+    <h6>23.X.4.3.2.3 <tt>multiway_tree</tt> cursors <span class=
     "section-id">[tr.hierarchy.multiwaytree.cursors]</span></h6>
     <pre>
     cursor        shoot();
@@ -2035,7 +2195,8 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
 
       <li>
         <p><strong>Returns:</strong> A cursor to the <tt>multiway_tree</tt>'s
-        first element in inorder (see [tr.order.iterators], &sect;4).</p>
+        first element in inorder (see <a href=
+        "#tr.order.iterators">[tr.order.iterators]</a>, &sect;4).</p>
       </li>
 
       <li>
@@ -2043,7 +2204,7 @@ for(InputCursor i = subtree.begin(); i != subtree.end(); ++i)
       </li>
     </ol>
 
-    <h6>0.1.4.3.2.4 <tt>multiway_tree</tt> capacity <span class=
+    <h6>23.X.4.3.2.4 <tt>multiway_tree</tt> capacity <span class=
     "section-id">[tr.hierarchy.multiwaytree.capacity]</span></h6>
     <pre>
 size_type capacity(cursor position) const;
@@ -2088,7 +2249,7 @@ void      reserve(cursor position, size_type n);
       </li>
     </ol>
 
-    <h6>0.1.4.3.2.5 <tt>multiway_tree</tt> modifiers <span class=
+    <h6>23.X.4.3.2.5 <tt>multiway_tree</tt> modifiers <span class=
     "section-id">[tr.hierarchy.multiwaytree.modifiers]</span></h6>
     <pre>
     cursor    insert(cursor position, value_type const&amp; x = value_type());
@@ -2112,7 +2273,7 @@ void      reserve(cursor position, size_type n);
       </li>
     </ol>
 
-    <h6>0.1.4.3.2.6 <tt>multiway_tree</tt> specialized algorithms
+    <h6>23.X.4.3.2.6 <tt>multiway_tree</tt> specialized algorithms
     <span class="section-id">[tr.hierarchy.multiwaytree.special]</span></h6>
     <pre>
     template &lt;class T, class Hierarchy&gt;
@@ -2160,8 +2321,9 @@ void      reserve(cursor position, size_type n);
       </li>
     </ol>
 
-    <h5>0.1.4.3.3 Augmenting hierarchy adaptors <span class=
-    "section-id">[tr.hierarchy.augment]</span></h5>
+    <h5><a id="tr.hierarchy.augment" name="tr.hierarchy.augment">23.X.4.3.3
+    Augmenting hierarchy adaptors <span class=
+    "section-id">[tr.hierarchy.augment]</span></a></h5>
 
     <ol>
       <li>
@@ -2177,7 +2339,7 @@ void      reserve(cursor position, size_type n);
       </li>
     </ol>
 
-    <h6>0.1.4.3.3.1 Template class <tt>rank_tree</tt> <span class=
+    <h6>23.X.4.3.3.1 Template class <tt>rank_tree</tt> <span class=
     "section-id">[tr.hierarchy.ranktree]</span></h6>
     <pre>
 namespace std {
@@ -2302,8 +2464,9 @@ namespace tr2 {
       </li>
     </ol>
 
-    <h5>0.1.4.3.4 Balancing hierarchy adaptors <span class=
-    "section-id">[tr.hierarchy.balance]</span></h5>
+    <h5><a id="tr.hierarchy.balance" name="tr.hierarchy.balance">23.X.4.3.4
+    Balancing hierarchy adaptors <span class=
+    "section-id">[tr.hierarchy.balance]</span></a></h5>
 
     <div class="note">
       These do not model AssociativeContainer yet but Sequence as they permit
@@ -2338,11 +2501,14 @@ namespace tr2 {
         classes which take a mutable multiway template parameter that
         provides a <tt>rotate()</tt> operation and whose <tt>cursor</tt> and
         <tt>const_cursor</tt> types satisfy the requirements of a binary tree
-        cursor ([tr.hierarchy.balance.types], &sect;1 and &sect;2):
-        <tt>avl_tree</tt>, <tt>red_black_tree</tt>, <tt>splay_tree</tt>, and
-        <tt>treap</tt>. Furthermore, two balancing hierarchy adaptor template
-        classes that take a mutable multiway tree template parameter are
-        provided: <tt>b_tree</tt> and <tt>b_star_tree</tt>.</p>
+        cursor (<a href=
+        "#tr.hierarchy.bintree.types">[tr.hierarchy.bintree.types]</a>,
+        &sect;1 and &sect;2): <tt>avl_tree</tt>, <tt>red_black_tree</tt>,
+        <tt>splay_tree</tt>, and <tt>treap</tt>. Furthermore, two balancing
+        hierarchy adaptor template classes that take a mutable multiway tree
+        template parameter are provided: <tt>b_tree</tt> and
+        <tt>b_star_tree</tt>. All balancing adaptors and corresponding free
+        functions are found in header <tt>&lt;balance&gt;</tt>.</p>
       </li>
 
       <li>
@@ -2353,9 +2519,7 @@ namespace tr2 {
         replaced accordingly). The same holds true for <tt>b_tree</tt> and
         <tt>b_star_tree</tt>, as well, except that the standard value for the
         template parameter reads <tt>multiway_tree&lt;T&gt;</tt> (instead of
-        binary_tree&lt;T&gt;) in their case. All balancing adaptors and
-        corresponding free functions are found in header
-        <tt>&lt;balance&gt;</tt>.</p>
+        binary_tree&lt;T&gt;) in their case.</p>
         <pre>
 namespace std {
 namespace tr2 {
@@ -2499,7 +2663,7 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-        <h6>0.1.4.3.4.1 Balancing adaptor constructors, copy, and assignment
+        <h6>23.X.4.3.4.1 Balancing adaptor constructors, copy, and assignment
         <span class="section-id">[tr.hierarchy.balance.cons]</span></h6>
         <pre>
     explicit avl_tree (hierarchy_type const&amp; = hierarchy_type());
@@ -2533,7 +2697,7 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.2 Balancing adaptor map operations <span class=
+        <h6>23.X.4.3.4.2 Balancing adaptor map operations <span class=
         "section-id">[tr.hierarchy.balance.map]</span></h6>
         <pre>
     iterator find(const value_type&amp; x);
@@ -2590,7 +2754,7 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.3 Balancing adaptor modifiers <span class=
+        <h6>23.X.4.3.4.3 Balancing adaptor modifiers <span class=
         "section-id">[tr.hierarchy.balance.modifiers]</span></h6>
         <pre>
     void      push_front(value_type const&amp; x);
@@ -2639,8 +2803,8 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h6>0.1.4.3.4.4 Balancing adaptor specialized algorithms <span class=
-        "section-id">[tr.hierarchy.balance.special]</span></h6>
+        <h6>23.X.4.3.4.4 Balancing adaptor specialized algorithms
+        <span class="section-id">[tr.hierarchy.balance.special]</span></h6>
         <pre>
     template &lt;class T, class Hierarchy&gt;
       void swap(  avl_tree&lt;T, Hierarchy&gt;&amp; x,
@@ -2653,7 +2817,14 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h3>0.2 Cursors <span class="section-id">[tr.cursors]</span></h3>
+        <h2><a id="tr.iterators" name="tr.iterators">24 Iterators
+        library<span class="section-id">[tr.iterators]</span></a></h2>
+
+        <p class="note">Add before subclause 24.4, <em>Predefined
+        iterators</em> ([lib.predef.iterators]):</p>
+
+        <h3><a id="tr.cursors" name="tr.cursors">24.X Cursors <span class=
+        "section-id">[tr.cursors]</span></a></h3>
 
         <ol>
           <li>
@@ -2661,8 +2832,7 @@ while(first++ != last)
             hierarchical data structures. In order to also allow for
             algorithms relevant when dealing with linear data structures, any
             cursor class is actually a refinement of a corresponding iterator
-            class. 
-            <!--whose traversal related capabilities map to traversal of among a given cursor's immediate descendants or "child cursors" (or just "children", as defined in the following paragraph).--></p>
+            class.</p>
           </li>
 
           <li>
@@ -2743,8 +2913,9 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h4>0.2.1 Cursor <span class=
-        "section-id">[tr.cursor.requirements]</span></h4>
+        <h4><a id="tr.cursor.requirements" name=
+        "tr.cursor.requirements">24.X.1 Cursor requirements<span class=
+        "section-id">[tr.cursor.requirements]</span></a></h4>
 
         <ol>
           <li>
@@ -2756,7 +2927,7 @@ while(first++ != last)
 
             <table summary=
             "Cursor requirements (in addition to input and output iterators)"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 8: Cursor requirements (in addition to input and output
                 iterators)
@@ -2822,19 +2993,21 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h5>0.2.1.1 Descending Cursor <span class=
-        "section-id">[tr.descending.cursors]</span></h5>
+        <h5><a id="tr.descending.cursors" name=
+        "tr.descending.cursors">24.X.1.1 Descending Cursor <span class=
+        "section-id">[tr.descending.cursors]</span></a></h5>
 
         <ol>
           <li>
             <p>A class <tt>X</tt> satisfies the requirements of a descending
             cursor if, in addition to satisfying the requirements for cursors
-            ([tr.cursor.requirements]) it also conforms to the container
-            requirements ([lib.container.requirements]) with the exception of
-            the following expressions:</p>
+            (<a href="#tr.cursor.requirements">[tr.cursor.requirements]</a>)
+            it also conforms to the container requirements
+            ([lib.container.requirements]) with the exception of the
+            following expressions:</p>
 
             <table summary="Container requirements that are not supported"
-            class="reqmts">
+                   class="reqmts">
               <caption>
                 Table 9: Container requirements that are not supported
               </caption>
@@ -3029,15 +3202,18 @@ while(first++ != last)
           a.end();</tt></li>
         </ol>
 
-        <h5>0.2.1.2 Descending Forward Cursor <span class=
-        "section-id">[tr.descending.forward.cursors]</span></h5>
+        <h5><a id="tr.descending.forward.cursors" name=
+        "tr.descending.forward.cursors">24.X.1.2 Descending Forward Cursor
+        <span class=
+        "section-id">[tr.descending.forward.cursors]</span></a></h5>
 
         <ol>
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of a
             descending forward cursor if the following expressions are valid,
             as shown in Table 11, in addition to the requirements of
-            descending cursors ([tr.descending.cursors]) and forward
+            descending cursors (<a href=
+            "#tr.descending.cursors">[tr.descending.cursors]</a>) and forward
             iterators ([lib.forward.iterators]):</p>
 
             <table summary=
@@ -3077,17 +3253,19 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h5>0.2.1.3 Descending Bidirectional Cursor <span class=
-        "section-id">[tr.descending.bidirectional.cursors]</span></h5>
+        <h5><a id="tr.descending.bidirectional.cursors" name=
+        "tr.descending.bidirectional.cursors">24.X.1.3 Descending
+        Bidirectional Cursor <span class=
+        "section-id">[tr.descending.bidirectional.cursors]</span></a></h5>
 
         <ol>
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of a
             descending bidirectional cursor if the following expressions are
             valid, as shown in Table 12, in addition to satisfying the
-            requirements for descending forward cursors
-            ([tr.descending.forward.cursors]) and bidirectional iterators
-            ([lib.bidirectional.iterators]):</p>
+            requirements for descending forward cursors (<a href=
+            "#tr.descending.forward.cursors">[tr.descending.forward.cursors]</a>)
+            and bidirectional iterators ([lib.bidirectional.iterators]):</p>
 
             <table summary=
             "Descending bidirectional cursor requirements (in addition to descending forward cursors and bidirectional iterators)"
@@ -3135,17 +3313,19 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h5>0.2.1.4 Descending Random Access Cursor <span class=
-        "section-id">[tr.descending.random.access.cursors]</span></h5>
+        <h5><a id="tr.descending.random.access.cursors" name=
+        "tr.descending.random.access.cursors">24.X.1.4 Descending Random
+        Access Cursor <span class=
+        "section-id">[tr.descending.random.access.cursors]</span></a></h5>
 
         <ol>
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of a
             descending random access cursor if the following expressions are
             valid, as shown in Table 13, in addition to satisfying the
-            requirements for descending bidirectional cursors
-            ([tr.descending.bidirectional.cursors]) and random access
-            iterators ([lib.random.access.iterators]):</p>
+            requirements for descending bidirectional cursors (<a href=
+            "#tr.descending.bidirectional.cursors">[tr.descending.bidirectional.cursors]</a>)
+            and random access iterators ([lib.random.access.iterators]):</p>
 
             <table summary=
             "Descending random access cursor requirements (in addition to descending bidirectional cursors and random access iterators)"
@@ -3186,15 +3366,17 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h5>0.2.1.5 Ascending Cursor <span class=
-        "section-id">[tr.ascending.cursors]</span></h5>
+        <h5><a id="tr.ascending.cursors" name="tr.ascending.cursors">24.X.1.5
+        Ascending Cursor <span class=
+        "section-id">[tr.ascending.cursors]</span></a></h5>
 
         <ol>
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of an
             ascending cursor if the following expressions are valid, as shown
             in Table 14, in addition to satisfying the requirements for
-            descending cursors ([tr.descending.cursors]):</p>
+            descending cursors (<a href=
+            "#tr.descending.cursors">[tr.descending.cursors]</a>):</p>
 
             <table summary=
             "Acending cursor requirements (in addition to descending cursors)"
@@ -3263,16 +3445,20 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h5>0.2.1.6 Ascending Forward Cursor <span class=
-        "section-id">[tr.ascending.forward.cursors]</span></h5>
+        <h5><a id="tr.ascending.forward.cursors" name=
+        "tr.ascending.forward.cursors">24.X.1.6 Ascending Forward Cursor
+        <span class=
+        "section-id">[tr.ascending.forward.cursors]</span></a></h5>
 
         <ol>
           <li>
             <p>A class type X satisfies the requirements of an ascending
             forward cursor if the following expressions are valid, as shown
             in Table 15, in addition to satisfying the requirements for
-            ascending cursors ([tr.ascending.cursors]) and descending forward
-            cursors ([tr.descending.forward.cursors]):</p>
+            ascending cursors (<a href=
+            "#tr.ascending.cursors">[tr.ascending.cursors]</a>) and
+            descending forward cursors (<a href=
+            "#tr.descending.forward.cursors">[tr.descending.forward.cursors]</a>):</p>
 
             <table summary=
             "Ascending forward cursor requirements (in addition to ascending cursors and descending forward cursors)"
@@ -3311,17 +3497,20 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h5>0.2.1.7 Ascending Bidirectional Cursor <span class=
-        "section-id">[tr.ascending.bidirectional.cursors]</span></h5>
+        <h5><a id="tr.ascending.bidirectional.cursors" name=
+        "tr.ascending.bidirectional.cursors">24.X.1.7 Ascending Bidirectional
+        Cursor <span class=
+        "section-id">[tr.ascending.bidirectional.cursors]</span></a></h5>
 
         <ol>
           <li>
             <p>A class type X satisfies the requirements of an ascending
             bidirectional cursor if the following expressions are valid, as
             shown in Table 16, in addition to satisfying the requirements of
-            ascending forward cursors ([tr.ascending.forward.cursors]) and
-            descending bidirectional cursors
-            ([tr.descending.bidirectional.cursors]):</p>
+            ascending forward cursors (<a href=
+            "#tr.ascending.forward.cursors">[tr.ascending.forward.cursors]</a>)
+            and descending bidirectional cursors (<a href=
+            "#tr.descending.bidirectional.cursors">[tr.descending.bidirectional.cursors]</a>):</p>
 
             <table summary=
             "Ascending bidirectional cursor requirements (in addition to ascending forward cursors and descending bidirectional cursors)"
@@ -3361,17 +3550,20 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h5>0.2.1.8 Ascending Random Access Cursor <span class=
-        "section-id">[tr.ascending.random.access.cursors]</span></h5>
+        <h5><a id="tr.ascending.random.access.cursors" name=
+        "tr.ascending.random.access.cursors">24.X.1.8 Ascending Random Access
+        Cursor <span class=
+        "section-id">[tr.ascending.random.access.cursors]</span></a></h5>
 
         <ol>
           <li>
             <p>A class type <tt>X</tt> satisfies the requirements of an
             ascending random access cursor if the following expressions are
             valid, as shown in Table 17, in addition to satisfying the
-            requirements for ascending bidirectional cursors
-            ([tr.ascending.bidirectional.cursors]) and descending random
-            access cursors ([tr.descending.random.access.cursors]):</p>
+            requirements for ascending bidirectional cursors (<a href=
+            "#tr.ascending.bidirectional.cursors">[tr.ascending.bidirectional.cursors]</a>)
+            and descending random access cursors (<a href=
+            "#tr.descending.random.access.cursors">[tr.descending.random.access.cursors]</a>):</p>
 
             <table summary=
             "Ascending random access cursor requirements (in addition to ascending bidirectional cursors and descending random access cursors)"
@@ -3411,26 +3603,28 @@ while(first++ != last)
           </li>
         </ol>
 
-        <h4>0.2.2 Cursor flavors <span class=
-        "section-id">[tr.cursor.flavors]</span></h4>
+        <h4><a id="tr.cursor.flavors" name="tr.cursor.flavors">24.X.2 Cursor
+        flavors <span class="section-id">[tr.cursor.flavors]</span></a></h4>
 
         <ol>
           <li>
             <p>A cursor that satisfies at least the descending cursor
-            requirements ([tr.descending.cursors]) can be either a <em>plain
-            cursor</em> or a <em>multiway cursor</em>. If the expressions
-            <tt>a.begin()</tt>, <tt>a.cbegin()</tt>, <tt>a.end()</tt> and
-            <tt>a.cend()</tt> are valid for any internal cursor <tt>a</tt> of
-            type <tt>X</tt>, except for past-the-end ones, <tt>X</tt>
-            satisfies the <em>plain cursor</em> requirements. If those
-            expressions are valid for any internal cursor <em>including</em>
-            past-the-end ones, <tt>X</tt> satisfies the <em>multiway
-            cursor</em> requirements.</p>
+            requirements (<a href=
+            "#tr.descending.cursors">[tr.descending.cursors]</a>) can be
+            either a <em>plain cursor</em> or a <em>multiway cursor</em>. If
+            the expressions <tt>a.begin()</tt>, <tt>a.cbegin()</tt>,
+            <tt>a.end()</tt> and <tt>a.cend()</tt> are valid for any internal
+            cursor <tt>a</tt> of type <tt>X</tt>, except for past-the-end
+            ones, <tt>X</tt> satisfies the <em>plain cursor</em>
+            requirements. If those expressions are valid for any internal
+            cursor <em>including</em> past-the-end ones, <tt>X</tt> satisfies
+            the <em>multiway cursor</em> requirements.</p>
           </li>
         </ol>
 
-        <h4>0.2.3 Header <tt>&lt;cursor&gt;</tt> synopsis <span class=
-        "section-id">[tr.cursor.synopsis]</span></h4>
+        <h4><a id="tr.cursor.synopsis" name="tr.cursor.synopsis">24.X.3
+        Header <tt>&lt;cursor&gt;</tt> synopsis <span class=
+        "section-id">[tr.cursor.synopsis]</span></a></h4>
         <pre>
 namespace std {
 namespace tr2 {
@@ -3468,8 +3662,9 @@ namespace tr2 {
 } <i>// namespace std</i>
 </pre>
 
-        <h4>0.2.4 Cursor primitives <span class=
-        "section-id">[tr.cursor.primitives]</span></h4>
+        <h4><a id="tr.cursor.primitives" name="tr.cursor.primitives">24.X.4
+        Cursor primitives <span class=
+        "section-id">[tr.cursor.primitives]</span></a></h4>
 
         <ol>
           <li>
@@ -3478,7 +3673,7 @@ namespace tr2 {
           </li>
         </ol>
 
-        <h5>0.2.4.1 Cursor traits <span class=
+        <h5>24.X.4.1 Cursor traits <span class=
         "section-id">[tr.cursor.traits]</span></h5>
 
         <ol>
@@ -3517,7 +3712,7 @@ template &lt;class Cursor&gt; struct cursor_category {
           </li>
         </ol>
 
-        <h5>0.2.4.2 Basic cursor <span class=
+        <h5>24.X.4.2 Basic cursor <span class=
         "section-id">[tr.cursor.basic]</span></h5>
 
         <ol>
@@ -3544,14 +3739,16 @@ namespace tr2 {
           </li>
         </ol>
 
-        <h5>0.2.4.3 Standard cursor tags <span class=
+        <h5>24.X.4.3 Standard cursor tags <span class=
         "section-id">[tr.cursor.tags]</span></h5>
 
         <ol>
           <li>
-            <p>Cursor tags pick up the notion of iterator tags (24.3.3) and
-            extend them by adding information about a given cursor class'
-            descending or ascending traversal capabilities (0.2.1). This
+            <p>Cursor tags pick up the notion of iterator tags
+            ([lib.std.iterator.tags]) and extend them by adding information
+            about a given cursor class' descending or ascending traversal
+            capabilities (<a href=
+            "#tr.cursor.requirements">[tr.cursor.requirements]</a>). This
             yields the cursor tags <tt>cursor_tag</tt>,
             <tt>descending_cursor_tag</tt>,
             <tt>descending_forward_cursor_tag</tt>,
@@ -3592,8 +3789,9 @@ namespace tr2 {
           </li>
         </ol>
 
-        <h3>24.2 Header <tt>&lt;iterator&gt;</tt> synopsis <span class=
-        "section-id">[lib.iterator.synopsis]</span></h3>
+        <h3><a id="lib.iterator.synopsis" name="lib.iterator.synopsis">24.2
+        Header <tt>&lt;iterator&gt;</tt> synopsis <span class=
+        "section-id">[lib.iterator.synopsis]</span></a></h3>
 
         <p class="note">Append to section introduced with <i>// subclause
         24.4, predefined iterators:</i></p>
@@ -3648,8 +3846,9 @@ namespace inorder {
 } // namespace std
 </pre>
 
-        <h4>24.4.X Linear order traversal iterators <span class=
-        "section-id">[tr.order.iterators]</span></h4>
+        <h4><a id="tr.order.iterators" name="tr.order.iterators">24.4.X
+        Linear order traversal iterators <span class=
+        "section-id">[tr.order.iterators]</span></a></h4>
 
         <ol>
           <li>
@@ -3759,16 +3958,20 @@ template &lt;class Cursor&gt;
         <ol>
           <li>
             <p>The template parameter <tt>Cursor</tt> shall meet all the
-            requirements of a Ascending Forward Cursor
-            ([tr.ascending.forward.cursors]).</p>
+            requirements of an Ascending Forward Cursor (<a href=
+            "#tr.ascending.forward.cursors">[tr.ascending.forward.cursors]</a>).
+            Additionally, for the template class and operators in
+            <tt>namespace inorder</tt>, the template parameter
+            <tt>Cursor</tt> must be a Multiway Cursor (<a href=
+            "#tr.cursor.flavors">[tr.cursor.flavors]</a>).</p>
           </li>
 
           <li>
             <p>Additionally, <tt>Cursor</tt> shall meet the requirements of a
-            Ascending Bidirectional Cursor
-            ([tr.ascending.bidirectional.cursors]) if the member
-            <tt>operaror--</tt> (24.4.X.3.7) is referenced in a way that
-            requires instantiation (14.7.1).</p>
+            Ascending Bidirectional Cursor (<a href=
+            "#tr.ascending.bidirectional.cursors">[tr.ascending.bidirectional.cursors]</a>)
+            if the member <tt>operator--</tt> (24.4.X.3.7) is referenced in a
+            way that requires instantiation (14.7.1).</p>
           </li>
         </ol>
 
@@ -3918,8 +4121,8 @@ return tmp;
       </li>
     </ol>
 
-    <h3>25 Algorithms library <span class=
-    "section-id">[tr.algorithm]</span></h3>
+    <h2><a id="tr.algorithm" name="tr.algorithm">25 Algorithms library
+    <span class="section-id">[tr.algorithm]</span></a></h2>
 
     <div class="note">
       Append to paragraph 2, <em>Header <tt>&lt;iterator&gt;</tt>
@@ -4005,19 +4208,22 @@ namespace inorder {
     </div>
 
     <p>If an algorithm's template parameter is <tt>Hierarchy</tt>, the actual
-    template argument shall satisfy the requirements of a hierarchy
-    ([tr.hierarchy.req]). If an algorithm's template parameter is
-    <tt>MultiwayHierarchy</tt>, the actual template argument shall satisfy
-    the requirements of a multiway hierarchy ([tr.hierarchy.multiway]).</p>
+    template argument shall satisfy the requirements of a hierarchy (<a href=
+    "#tr.hierarchy.req">[tr.hierarchy.req]</a>). If an algorithm's template
+    parameter is <tt>MultiwayHierarchy</tt>, the actual template argument
+    shall satisfy the requirements of a multiway hierarchy (<a href=
+    "#tr.hierarchy.multiway">[tr.hierarchy.multiway]</a>).</p>
 
-    <h4>25.X Non-modifying hierarchy algorithms <span class=
-    "section-id">[tr.alg.hierarchy]</span></h4>
+    <h3><a id="tr.alg.hierarchy" name="tr.alg.hierarchy">25.X Non-modifying
+    hierarchy algorithms <span class=
+    "section-id">[tr.alg.hierarchy]</span></a></h3>
 
-    <h5>25.X.1 Non-modifying hierarchy preorder range algorithms <span class=
-    "section-id">[tr.alg.hier.preorder]</span></h5>
+    <h4><a id="tr.alg.hier.preorder" name="tr.alg.hier.preorder">25.X.1
+    Non-modifying hierarchy preorder range algorithms <span class=
+    "section-id">[tr.alg.hier.preorder]</span></a></h4>
 
-    <h6>25.X.1.1 Preorder begin <span class=
-    "section-id">[tr.alg.hier.pre.begin]</span></h6>
+    <h5>25.X.1.1 Preorder begin <span class=
+    "section-id">[tr.alg.hier.pre.begin]</span></h5>
     <pre>
     namespace std {
     namespace tr2 {
@@ -4044,8 +4250,8 @@ namespace inorder {
       </li>
     </ol>
 
-    <h6>25.X.1.2 Preorder end <span class=
-    "section-id">[tr.alg.hier.pre.end]</span></h6>
+    <h5>25.X.1.2 Preorder end <span class=
+    "section-id">[tr.alg.hier.pre.end]</span></h5>
     <pre>
     namespace std {
     namespace tr2 {
@@ -4072,11 +4278,12 @@ namespace inorder {
       </li>
     </ol>
 
-    <h5>25.X.2 Non-modifying hierarchy postorder range algorithms
-    <span class="section-id">[tr.alg.hier.postorder]</span></h5>
+    <h4><a id="tr.alg.hier.postorder" name="tr.alg.hier.postorder">25.X.2
+    Non-modifying hierarchy postorder range algorithms <span class=
+    "section-id">[tr.alg.hier.postorder]</span></a></h4>
 
-    <h6>25.X.2.1 Postorder begin <span class=
-    "section-id">[tr.alg.hier.post.begin]</span></h6>
+    <h5>25.X.2.1 Postorder begin <span class=
+    "section-id">[tr.alg.hier.post.begin]</span></h5>
     <pre>
     namespace std {
     namespace tr2 {
@@ -4103,8 +4310,8 @@ namespace inorder {
       </li>
     </ol>
 
-    <h6>25.X.2.2 Postorder end <span class=
-    "section-id">[tr.alg.hier.post.end]</span></h6>
+    <h5>25.X.2.2 Postorder end <span class=
+    "section-id">[tr.alg.hier.post.end]</span></h5>
     <pre>
     namespace std {
     namespace tr2 {
@@ -4131,11 +4338,12 @@ namespace inorder {
       </li>
     </ol>
 
-    <h5>25.X.2 Non-modifying hierarchy inorder range algorithms <span class=
-    "section-id">[tr.alg.hier.inorder]</span></h5>
+    <h4><a id="tr.alg.hier.inorder" name="tr.alg.hier.inorder">25.X.2
+    Non-modifying hierarchy inorder range algorithms <span class=
+    "section-id">[tr.alg.hier.inorder]</span></a></h4>
 
-    <h6>25.X.2.1 Inorder begin <span class=
-    "section-id">[tr.alg.hier.in.begin]</span></h6>
+    <h5>25.X.2.1 Inorder begin <span class=
+    "section-id">[tr.alg.hier.in.begin]</span></h5>
     <pre>
     namespace std {
     namespace tr2 {
@@ -4162,8 +4370,8 @@ namespace inorder {
       </li>
     </ol>
 
-    <h6>25.X.2.2 Inorder end <span class=
-    "section-id">[tr.alg.hier.in.end]</span></h6>
+    <h5>25.X.2.2 Inorder end <span class=
+    "section-id">[tr.alg.hier.in.end]</span></h5>
     <pre>
     namespace std {
     namespace tr2 {
@@ -4191,7 +4399,7 @@ namespace inorder {
     </ol>
   </div>
 
-  <h2>References</h2>
+  <h2><a id="references" name="references">References</a></h2>
 
   <dl>
     <dt><a id="ref.austern" name="ref.austern">[austern]</a></dt>
