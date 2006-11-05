@@ -19,7 +19,7 @@
 //TODO: Make this a test suite.
 
 
-void test_balanced_binary_tree()
+void test_unbalanced_binary_tree()
 {
 	using namespace boost::tree;
 	
@@ -68,7 +68,7 @@ void test_balanced_binary_tree()
 
 int test_main(int, char* [])
 {
-	test_balanced_binary_tree();
+	test_unbalanced_binary_tree();
 
 	return 0;
 }
