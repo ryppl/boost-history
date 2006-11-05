@@ -33,14 +33,14 @@ void test_rank_search_binary_tree()
 //	tree_t::cursor c = select(my_tree, 3);
 //	BOOST_CHECK(*c < 14);
 
-	typedef binary_tree<int, balancers::unbalanced, augmentors::rank<> > tree_t;
-	typedef test_searcher<false, tree_t> searcher_t;
-	searcher_t my_searcher;
-	
-	create_test_data_searcher(my_searcher);
-	tree_t& my_tree = my_searcher.container();
-
-	tree_t::cursor c = select_rank(my_tree, 3);
+//	typedef binary_tree<int, balancers::unbalanced, augmentors::rank<> > tree_t;
+//	typedef test_searcher<false, tree_t> searcher_t;
+//	searcher_t my_searcher;
+//	
+//	create_test_data_searcher(my_searcher);
+//	tree_t& my_tree = my_searcher.container();
+//
+//	tree_t::cursor c = select_rank(my_tree, 3);
 	//BOOST_CHECK(*c < 14);
 
 }

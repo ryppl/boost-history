@@ -40,43 +40,34 @@ using detail::nary_tree_cursor;
  * sequence concept. TODO: complete this...
  *
 */
-template <class Tp, class Balance = balancers::unbalanced,
-		  class Augment = augmentors::unaugmented,
-		  class Alloc = std::allocator<Tp>
-		 >
-class binary_tree : public Balance, public Augment {
-	typedef binary_tree<Tp, Balance, Augment, Alloc> self_type;
+template < class Tp, class Alloc = std::allocator<Tp> >
+class binary_tree {
+	typedef binary_tree<Tp, Alloc> self_type;
  public:
 	typedef Tp value_type;
-	typedef Balance balancer_type;
-	typedef Augment augmentor_type;
 	typedef typename Alloc::template rebind<value_type>::other 
 		allocator_type;
-		
-	typedef node<value_type, detail::binary_array, typename augmentor_type::metadata_type, 
-				 typename balancer_type::metadata_type> node_type;
+
+ private:		
+	typedef node<value_type, detail::binary_array, augmentors::unaugmented::metadata_type, 
+				 balancers::unbalanced::metadata_type> node_type;
 	typedef typename Alloc::template rebind<node_type>::other 
 		node_allocator_type;
 	typedef typename node_traits<node_type>::node_base_type node_base_type;
 	typedef node_base_type* node_base_pointer;
 	typedef typename node_traits<node_type>::node_pointer node_pointer;
 	
+ public:
 	typedef nary_tree_cursor<node_type> cursor;
 	typedef const_nary_tree_cursor<node_type> const_cursor;
-
-	typedef inorder::iterator<cursor> iterator;
-	typedef inorder::iterator<const_cursor> const_iterator;
-	
-	typedef std::reverse_iterator<iterator> reverse_iterator;
-	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
 
 	typedef typename allocator_type::pointer pointer;
 	typedef typename allocator_type::reference reference;
 	typedef typename allocator_type::size_type size_type;
 	typedef typename allocator_type::difference_type difference_type;
 	
-    template <class U, class B, class A> struct rebind {
-      typedef binary_tree< U, B, A, typename allocator_type::template rebind<U>::other >
+    template <class U> struct rebind {
+      typedef binary_tree< U, typename allocator_type::template rebind<U>::other >
         other;
     };
     
@@ -134,8 +125,7 @@ class binary_tree : public Balance, public Augment {
 	 * All the elements of @a x are copied, but unlike the
 	 * copy constructor, the allocator object is not copied.
 	 */
-	binary_tree<Tp, Balance, Augment, Alloc>& operator=(
-		binary_tree<Tp, Balance, Augment, Alloc> const& x)
+	binary_tree<Tp, Alloc>& operator=(binary_tree<Tp, Alloc> const& x)
 	{
 		self_type temp(x);
 		swap(temp);
@@ -229,61 +219,6 @@ class binary_tree : public Balance, public Augment {
 	{
 		return const_cursor(m_header[1], 0);
 	}
-		
-	/// Functions returning (inorder) iterators (as required by the Sequence
-	/// concept)
-	
-	/**
-	 * Returns a read/write ("mutable") iterator to the first (inorder) value.
-	 */ 	 
-	iterator begin()
-	{
-		return iterator(inorder_first());
-	}
-	
-	/**
-	 * Returns a read-only const_iterator to the first (inorder) value.
-	 */ 	 
-	const_iterator begin() const
-	{
-		return cbegin();
-	}
-	
-	/**
-	 * Returns a read-only const_iterator to the first (inorder) value.
-	 */ 	 
-	const_iterator cbegin() const
-	{
-		return const_iterator(inorder_first());
-	}
-
-	/**
-	 * Returns a read/write ("mutable") inorder iterator to the position one 
-	 * past the last (inorder) value in the %binary_tree.  
-	 */
-	iterator end()
-	{
-		return iterator(shoot());
-	}
-
-	 /**
-	 * Returns a read-only inorder const_iterator to the position one past the 
-	 * last (inorder) value in the %binary_tree. 
-	 */	
-	const_iterator end() const
-	{
-		return cend();
-	}
-	
-	/**
-	 * Returns a read-only inorder const_iterator to the position one past the 
-	 * last (inorder) value in the %binary_tree. 
-	 */	
-	const_iterator cend() const
-	{
-		return const_iterator(cshoot());
-	}
-	
 	
 	// Hierarchy-specific
 	
@@ -312,7 +247,7 @@ class binary_tree : public Balance, public Augment {
 		pos.attach(p_node);
 
 		// Readjust begin
-		if ((iterator(pos) == this->begin()))
+		if ((pos == inorder_first()))
 			m_header[1] = p_node; 
 		
 		// Readjust shoot
@@ -328,6 +263,14 @@ class binary_tree : public Balance, public Augment {
 	// TODO: Optimise. Especially wrt header links. 
 	// Making the other insert() a special case of this one might be more
 	// reasonable.
+	/**
+	 * @brief		Inserts val in front of @a pos, or, if @a pos' parent is
+	 * 				already full, creates a new child node containing @a val 
+	 * 				instead.
+	 * @param pos	The %binary_tree inorder iterator in front of which to insert.
+	 * @param val	The value to insert.
+	 * @return		An inorder iterator that points to the inserted data.
+	 */
     template <class InputCursor>
 	cursor insert(cursor pos, InputCursor subtree)
 	{
@@ -339,30 +282,31 @@ class binary_tree : public Balance, public Augment {
 		return pos;
 	}
 
-
-	/// Sequence-specific
-	
-	/**
-	 * @brief		Inserts val in front of @a pos, or, if @a pos' parent is
-	 * 				already full, creates a new child node containing @a val 
-	 * 				instead.
-	 * @param pos	The %binary_tree inorder iterator in front of which to insert.
-	 * @param val	The value to insert.
-	 * @return		An inorder iterator that points to the inserted data.
-	 */
-	iterator insert(iterator pos, value_type const& val)
-	{
-		return iterator(this->insert(cursor(pos), val));
-	}
-    
-	void erase (iterator pos)
- 	{		
- 		erase(cursor(pos));
- 	}
- 	
- 	void erase (iterator a, iterator b)
+	//erase operations must rebalance; clear doesn't need to.	
+	//TODO: Can/Should remove (and erase) return the next cursor's position ?
+	//(There may be some DR concerning this for associative containers)
+ 	void erase (cursor pos)
  	{
- 	}
+ 		cursor ret; // = this->root();
+// 		pos = pos.parent();
+
+		// TODO: Get the following to work properly.
+ 		//balancer_type::remove(*this, pos);
+ 		node_pointer p_node;
+// 		if (pos == ret) {
+// 			augmentor_type::pre_detach(*this, pos);
+ 			p_node = pos.detach();
+// 		} else {
+// 			augmentor_type::pre_detach(*this, pos, ret,);
+// 			p_node = pos.detach(ret);
+// 		}
+ 		
+		m_value_alloc.destroy(p_node->data());
+		m_value_alloc.deallocate(p_node->data(), 1);
+		
+		m_node_alloc.destroy(p_node);
+		m_node_alloc.deallocate(p_node, 1);
+	}
  	
 	 /** 
  	 * Removes a node and its descendants recursively in postorder
@@ -400,10 +344,10 @@ class binary_tree : public Balance, public Augment {
 		m_header[1] = &m_header;
  	}
 
-//	void rotate(cursor pos)
-//	{
-//		pos.rotate();
-//	}
+	void rotate(cursor pos)
+	{
+		pos.rotate();
+	}
 	
 	/**
 	 * @brief  Swaps data with another %binary_tree.
@@ -452,44 +396,20 @@ private:
 	allocator_type	 m_value_alloc;
 	node_allocator_type m_node_alloc;
 	
-	//erase operations must rebalance; clear doesn't need to.	
-	//TODO: Can/Should remove (and erase) return the next cursor's position ?
-	//(There may be some DR concerning this for associative containers)
- 	void erase (cursor pos)
- 	{
- 		cursor ret; // = this->root();
-// 		pos = pos.parent();
 
-		// TODO: Get the following to work properly.
- 		//balancer_type::remove(*this, pos);
- 		node_pointer p_node;
-// 		if (pos == ret) {
- 			augmentor_type::pre_detach(*this, pos);
- 			p_node = pos.detach();
-// 		} else {
-// 			augmentor_type::pre_detach(*this, pos, ret,);
-// 			p_node = pos.detach(ret);
-// 		}
- 		
-		m_value_alloc.destroy(p_node->data());
-		m_value_alloc.deallocate(p_node->data(), 1);
-		
-		m_node_alloc.destroy(p_node);
-		m_node_alloc.deallocate(p_node, 1);
-	}
 };
 
 /// See boost::tree::binary_tree::swap().
-template <class T, class B, class A, class Alloc>
-inline void swap(binary_tree<T, B, A, Alloc>& x, binary_tree<T, B, A, Alloc>& y)
+template <class T, class Alloc>
+inline void swap(binary_tree<T, Alloc>& x, binary_tree<T, Alloc>& y)
 {
 	x.swap(y);
 }
 
-template <class Node, class Balance, class Alloc, class NodeAlloc>
-struct sortable_traits <class binary_tree<Node, Balance, Alloc, NodeAlloc> >
+template <class T, class Alloc>
+struct sortable_traits <class binary_tree<T, Alloc> >
 {
-	typedef binary_tree<Node, Balance, Alloc, NodeAlloc> sortable_type;
+	typedef binary_tree<T, Alloc> sortable_type;
 	typedef typename sortable_type::cursor cursor;
 	typedef typename sortable_type::value_type value_type;
  	typedef typename sortable_type::size_type size_type;
@@ -502,8 +422,8 @@ bool empty(nary_tree_cursor<Node> cur)
 	return !cur.empty();
 }
 
-template <class Node, class Balance, class Alloc, class NodeAlloc>
-typename sortable_traits<binary_tree<Node, Balance, Alloc, NodeAlloc> >::container_type head(binary_tree<Node, Balance, Alloc, NodeAlloc>& t) //const.
+template <class T, class Alloc>
+typename sortable_traits<binary_tree<T, Alloc> >::container_type head(binary_tree<T, Alloc>& t) //const.
 {
 	//return head_wrapper<Sortable>()(s);
 	return t.root();
@@ -517,9 +437,9 @@ namespace inorder {
  * @param t	A binary_tree
  * @return	Mutable cursor to the first element of @a t in inorder traversal
  */
-template <class T, class Balance, class Augment, class Alloc>
-typename binary_tree<T, Balance, Augment, Alloc>::cursor 
-first(binary_tree<T, Balance, Augment, Alloc>& t)
+template <class T, class Alloc>
+typename binary_tree<T, Alloc>::cursor 
+first(binary_tree<T, Alloc>& t)
 {
 	return t.inorder_first();
 }
@@ -531,9 +451,9 @@ first(binary_tree<T, Balance, Augment, Alloc>& t)
  * @param t	A binary_tree
  * @return	Read-only cursor to the first element of @a t in inorder traversal
  */
-template <class T, class Balance, class Augment, class Alloc>
-typename binary_tree<T, Balance, Augment, Alloc>::const_cursor 
-first(binary_tree<T, Balance, Augment, Alloc>& t)
+template <class T, class Alloc>
+typename binary_tree<T, Alloc>::const_cursor 
+first(binary_tree<T, Alloc>& t)
 {
 	return t.inorder_first();
 }
@@ -544,9 +464,9 @@ first(binary_tree<T, Balance, Augment, Alloc>& t)
  * @param t	A binary_tree
  * @return	Read-only cursor to the first element of @a t in inorder traversal
  */
-template <class T, class Balance, class Augment, class Alloc>
-typename binary_tree<T, Balance, Augment, Alloc>::const_cursor 
-cfirst(binary_tree<T, Balance, Augment, Alloc>& t)
+template <class T, class Alloc>
+typename binary_tree<T, Alloc>::const_cursor 
+cfirst(binary_tree<T, Alloc>& t)
 {
 	return t.inorder_first();
 }

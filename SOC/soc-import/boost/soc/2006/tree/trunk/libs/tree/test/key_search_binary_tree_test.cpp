@@ -16,7 +16,6 @@
 
 //TODO: Make this a test suite.
 
-
 void test_key_search_binary_tree()
 {
 	using boost::tree::searcher;

@@ -8,7 +8,7 @@
 #include <boost/tree/balancers/treap.hpp>
 #include <boost/tree/augmentors/unaugmented.hpp>
 
-#include <boost/tree/searcher.hpp>
+//#include <boost/tree/searcher.hpp>
 
 #include <vector>
 #include <algorithm>

@@ -349,16 +349,8 @@ public:
 	{
 		return static_cast<node_pointer>(m_node->operator[](m_pos));
 	}
-	
-	
-//	bool const is_root() const
-//	{
-//		return ((m_node->m_node->operator[](0) != m_node) 
-//			 && (m_node->m_node->operator[](1) != m_node))
-//			 ||  m_node->m_node == m_node->operator[](1); // empty root
-//	}
 
-protected:	
+//protected:	
 	void rotate()
 	{
 		m_pos = m_node->rotate(m_pos);

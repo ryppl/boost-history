@@ -24,6 +24,8 @@
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/binary_tree.hpp>
 
+#include <boost/tree/inorder_iterator.hpp>
+
 #include <boost/tree/detail/range_helpers.hpp>
 
 #include <boost/bind.hpp>
@@ -177,14 +179,14 @@ key_lower_bound(Range& r, typename Extract::result_type key,
 
 //TODO: don't use binary_tree explicitly.
 
-template</* class NodeSearch, */class Extract, class Compare, class T, class Balance, class Augment, class ValAlloc>
-std::pair<typename sortable_traits<binary_tree<T, Balance, Augment, ValAlloc> >::cursor, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
-key_lower_bound(binary_tree<T, Balance, Augment, ValAlloc>& t, typename Extract::result_type key, 
+template</* class NodeSearch, */class Extract, class Compare, class T, class Alloc>
+std::pair<typename sortable_traits<binary_tree<T, Alloc> >::cursor, std::pair<bool, bool> > //TODO: ugly return type. use tuple instead?
+key_lower_bound(binary_tree<T, Alloc>& t, typename Extract::result_type key, 
 //				NodeSearch node_search, 
 				Extract extract = Extract(), Compare compare = Compare())
 {
 			//binary_tree<Node, Balance, ValAlloc>::descend 
-			typedef binary_tree<T, Balance, Augment, ValAlloc> Tree;
+			typedef binary_tree<T, Alloc> Tree;
 			typedef typename Tree::cursor cur;
 			typedef void(Tree::*efct)(cur &);
 			//efct e = &Augment::descend;
@@ -320,8 +322,8 @@ public:
 	typedef typename sortable_traits<container_type>::cursor cursor; //private?
 	
 	// TODO: use traits instead.
-	typedef typename container_type::iterator iterator; //inorder.
-	typedef typename container_type::const_iterator const_iterator;
+	typedef typename inorder::iterator<typename container_type::cursor> iterator; //inorder.
+	typedef typename inorder::iterator<typename container_type::const_cursor> const_iterator;
 		
  	typedef typename container_type::value_type value_type;
  	typedef typename container_type::size_type size_type;
@@ -344,7 +346,7 @@ public:
 	 */
  	iterator begin()
 	{
-		return c.begin();
+		return iterator(c.inorder_first());
 	}
 
 	/**
@@ -354,7 +356,7 @@ public:
 	 */ 	 
 	const_iterator begin() const
 	{
-		return c.cbegin();
+		return cbegin();
 	}
  	 
  	/**
@@ -364,7 +366,7 @@ public:
 	 */ 	 
 	const_iterator cbegin() const
 	{
-		return c.cbegin();
+		return const_iterator(c.inorder_cfirst());
 	}  	
 	 
 	/**
@@ -375,7 +377,7 @@ public:
 	 */
 	iterator end()
 	{
-		return c.end();
+		return iterator(c.shoot());
 	}
 	
 	/**
@@ -386,7 +388,7 @@ public:
 	 */
 	const_iterator end() const
 	{
-		return c.cend();
+		return cend();
 	}
 	
 	/**
@@ -397,7 +399,7 @@ public:
 	 */
 	const_iterator cend() const
 	{
-		return c.cend();
+		return const_iterator(c.cshoot());
 	}
 	
 	// include search algorithms or not?
@@ -446,7 +448,7 @@ public:
  	{
  		key_type key = ext(val);
  		
-		if ((pos != iterator(c.end())) && comp(key, *pos))
+		if ((pos.base() != c.shoot()) && comp(key, *pos))
 			if (comp(*--pos, key))
  				return iterator(c.insert(++cursor(pos), val));
  		

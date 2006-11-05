@@ -126,7 +126,7 @@ class balanced_tree {
 		}
 	};
 	
-	typedef typename Hierarchy::template rebind<data_type, balancers::unbalanced, augmentors::unaugmented>::other hierarchy_type;
+	typedef typename Hierarchy::template rebind<data_type>::other hierarchy_type;
 
  protected:
     hierarchy_type h;

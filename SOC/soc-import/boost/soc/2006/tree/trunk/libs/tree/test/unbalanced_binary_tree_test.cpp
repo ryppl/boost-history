@@ -6,7 +6,6 @@
 
 #include <boost/tree/binary_tree.hpp>
 
-#include <boost/tree/searcher.hpp>
 #include <boost/tree/algorithm.hpp>
 
 #include <boost/test/minimal.hpp>
