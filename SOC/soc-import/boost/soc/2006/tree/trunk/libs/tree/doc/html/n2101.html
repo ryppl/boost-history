@@ -568,11 +568,11 @@
       </li>
 
       <li>
-        <p>The member class tamplate rebind in the table above is effectively
-        a typedef template: if the name <tt>Hierarchy</tt> is bound to
-        <tt>SomeHierarchy&lt;T&gt;</tt>, then
+        <p>The member class template <tt>rebind</tt> in the table above
+        is effectively a typedef template: if the name <tt>Hierarchy</tt>
+        is bound to <tt>SomeHierarchy&lt;T&gt;</tt>, then
         <tt>Hierarchy::rebind&lt;U&gt;::other</tt> is the same type as
-        <tt>SomeHierarchy&lt;U&gt;</tt>. Additionaly, because of the related
+        <tt>SomeHierarchy&lt;U&gt;</tt>. Additionally, because of the related
         assertion, given <tt>SomeHierarchy&lt;T,R0,...,Rn&gt;</tt> for all
         template arguments present is bound to the name <tt>Hierarchy</tt>,
         then <tt>Hierarchy::rebind&lt;U&gt;::other</tt> is the same type as
@@ -2382,11 +2382,6 @@ namespace tr2 {
 
     typedef std::reverse_iterator&lt;iterator&gt;               reverse_iterator;
     typedef std::reverse_iterator&lt;const_iterator&gt;         const_reverse_iterator;
-
-    template &lt;class U&gt; struct rebind {
-      typedef avl_tree&lt; U, typename hierarchy_type::rebind&lt;U&gt;::other &gt;
-        other;
-    };
 
 <i>    // construct/copy/destroy:</i>
     explicit avl_tree(hierarchy_type const&amp; = hierarchy_type());
