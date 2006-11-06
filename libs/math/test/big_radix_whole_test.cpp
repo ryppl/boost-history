@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   29 Oct 2006  Initial version (Daryle Walker)
+//   06 Nov 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -1515,6 +1515,13 @@ BOOST_AUTO_TEST_CASE( add_single_product_test )
     a.add_single_product( 0, 3 );
     BOOST_CHECK_EQUAL( a, thirty );
 
+    a.add_shifted_single_product( 0, 2, 1u );
+    BOOST_CHECK_EQUAL( a, thirty );
+    a.add_shifted_single_product( 5, 0, 2u );
+    BOOST_CHECK_EQUAL( a, thirty );
+    a.add_shifted_single_product( 0, 0, 3u );
+    BOOST_CHECK_EQUAL( a, thirty );
+
     // Check results with 0, 1, or more digits in the bignum and 1 or 2 digits
     // in the short product.  With and without a zero in the one's place.  With
     // and without extra carries.
@@ -1570,6 +1577,13 @@ BOOST_AUTO_TEST_CASE( add_single_product_test )
     a.assign( 9999u );
     a.add_single_product( 9, 9 );
     BOOST_CHECK_EQUAL( a, big_decimal(10080u) );
+
+    // Out-of-bounds adding
+    a.assign( 120u );
+    a.add_shifted_single_product( 8, 9, 3u );
+    BOOST_CHECK_EQUAL( a, big_decimal(72120ul) );
+    a.add_shifted_single_product( 3, 2, 7u );
+    BOOST_CHECK_EQUAL( a, big_decimal(60072120ul) );
 }
 
 // Multiply with single digits, with fused subtract, in reverse order, test
@@ -1596,6 +1610,15 @@ BOOST_AUTO_TEST_CASE( subtract_single_product_test )
 
     a = sixhundredseventyeight;
     a.subtract_single_product( 0, 3 );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+
+    a.subtract_shifted_single_product( 0, 6, 1u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a.subtract_shifted_single_product( 7, 0, 2u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a.subtract_shifted_single_product( 0, 0, 3u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a.subtract_shifted_single_product( 8, 0, 11u );
     BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
 
     // Check results with 0, 1, 2, or more digits in the bignum and 1 or 2
@@ -1646,6 +1669,15 @@ BOOST_AUTO_TEST_CASE( subtract_single_product_test )
     BOOST_CHECK_EQUAL( a, big_decimal(580u) );
     a.subtract_single_product( 9, 9 );
     BOOST_CHECK_EQUAL( a, big_decimal(499u) );
+
+    a.subtract_shifted_single_product( 7, 7, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(9u) );
+    BOOST_CHECK_THROW( a.subtract_shifted_single_product(3, 2, 5u),
+     big_radix_whole_negative_result_error );
+    BOOST_CHECK_THROW( a.subtract_shifted_single_product(4, 3, 2u),
+     big_radix_whole_negative_result_error );
+    BOOST_CHECK_THROW( a.subtract_shifted_single_product(2, 4, 1u),
+     big_radix_whole_negative_result_error );
 }
 
 // Multiply with single digits, fused subtract-absolutely, reverse order, test
@@ -1682,7 +1714,9 @@ BOOST_AUTO_TEST_CASE( subtract_single_product_absolutely_test )
     a.reset();
     BOOST_CHECK( a.subtract_single_product_absolutely(2, 5) );  // only hi non-0
     BOOST_CHECK_EQUAL( a, big_decimal(10u) );
-    // TODO: need outside allocation w/ padding (wait for shifted version)
+    a.reset();
+    BOOST_CHECK( a.subtract_shifted_single_product_absolutely(7, 8, 2u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(5600u) );
 
     // Subtracting with product digit(s) straddling allocation
     a = eight;
@@ -2322,7 +2356,9 @@ BOOST_AUTO_TEST_CASE( numeric_limits_test )
     BOOST_CHECK( not limits_type::is_signed );
     BOOST_CHECK( limits_type::is_integer );
     BOOST_CHECK( limits_type::is_exact );
-    BOOST_CHECK_EQUAL( limits_type::radix, 10 );
+    BOOST_CHECK( limits_type::radix == 10 );
+      // "BOOST_CHECK_EQUAL" would disqualify "radix" from being a compile-time
+      // constant; i.e. it would need a full object definition in the header
 
     BOOST_CHECK( not limits_type::is_iec559 );
     BOOST_CHECK( not limits_type::is_bounded );

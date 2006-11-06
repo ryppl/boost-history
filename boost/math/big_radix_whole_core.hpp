@@ -131,6 +131,11 @@ class big_radix_whole
 
     typedef std::deque<int, Allocator>  deque_type;
 
+    typedef typename deque_type::reference              reference;
+    typedef typename deque_type::const_reference  const_reference;
+    typedef typename deque_type::iterator                iterator;
+    typedef typename deque_type::const_iterator    const_iterator;
+
 public:
     // Template parameters
     //! Value of the radix
@@ -269,16 +274,25 @@ public:
     //! Returns whether the current value is even
     bool        is_even() const;
 
+    //! Add the shifted product of two single-digit values (fused-add/multiply)
+    void  add_shifted_single_product( digit_type addend_multiplicand, digit_type
+     addend_multiplier, size_type index );
     //! Add the product of two single-digit values (fused-add/multiply)
     void  add_single_product( digit_type addend_multiplicand, digit_type
      addend_multiplier );
+    //! Subtract the shifted product of two single-digit values (fused)
+    void  subtract_shifted_single_product( digit_type subtrahend_multiplicand,
+     digit_type subtrahend_multiplier, size_type index );
     //! Subtract the product of two single-digit values (fused-sub/multiply)
     void  subtract_single_product( digit_type subtrahend_multiplicand,
      digit_type subtrahend_multiplier );
+    //! Subtract shifted product of single-digits (fused), ignoring sign
+    bool  subtract_shifted_single_product_absolutely( digit_type
+     subtrahend_multiplicand, digit_type subtrahend_multiplier, size_type
+     index );
     //! Subtract product of single-digits (fused), ignoring difference's sign
     bool  subtract_single_product_absolutely( digit_type
      subtrahend_multiplicand, digit_type subtrahend_multiplier );
-    // TODO: add shifted variants?
 
     // Special addition and subtraction operations
     //! Add a single-digit value to a particular place
@@ -484,10 +498,10 @@ namespace std
     template.  Only the members appropriate for an unlimited-length and
     non-negative integer type are meaningfully defined.
  */
-template < int Rx, class Al >
-class numeric_limits< ::boost::math::big_radix_whole<Rx, Al> >
+template < int Radix, class Allocator >
+class numeric_limits< ::boost::math::big_radix_whole<Radix, Allocator> >
 {
-    typedef ::boost::math::big_radix_whole<Rx, Al>  source_type;
+    typedef ::boost::math::big_radix_whole<Radix, Allocator>  source_type;
 
 public:
     //! Indicates if a particular specialization was made
@@ -505,7 +519,7 @@ public:
     //! Indicates if the source type is exact (i.e. not floating)
     static  bool const  is_exact   = true;
     //! Base of the representation
-    static  int const   radix      = source_type::radix;
+    static  int const   radix      = Radix;
 
     //! Indicates if the source type conforms to IEC 559
     static  bool const  is_iec559  = false;
@@ -566,14 +580,6 @@ public:
     //! Indicates how the source type performs rounding
     static  float_round_style const  round_style     = round_toward_zero;
 }; 
-
-/** Exposes the radix of the source type for later meta-programming.  Even
-    though it's a compile-time constant, it has a separate definition to satisfy
-    some compilers (especially since the constant it depends on has the same
-    constraint).
- */
-template < int Rx, class Al >
-int const  numeric_limits< ::boost::math::big_radix_whole<Rx, Al> >::radix;
 
 }  // namespace std
 

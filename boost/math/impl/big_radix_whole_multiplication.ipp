@@ -73,7 +73,7 @@ boost::math::big_radix_whole<Radix, Allocator>::multiply_single_add_single
 
         for ( size_type  i = 0u ; s >= i ; ++i )
         {
-            typename deque_type::reference  digit = this->digits_[ i ];
+            reference  digit = this->digits_[ i ];
 
             qr = std::div( digit * augend_multiplier + qr.quot,
              self_type::radix );
@@ -156,7 +156,7 @@ boost::math::big_radix_whole<Radix, Allocator>::multiply_single_subtract_single
 
             for ( size_type  i = 0u ; s >= i ; ++i )
             {
-                typename deque_type::reference  digit = this->digits_[ i ];
+                reference  digit = this->digits_[ i ];
 
                 qr = div( digit * minuend_multiplier + qr.quot,
                  self_type::radix );
@@ -168,7 +168,7 @@ boost::math::big_radix_whole<Radix, Allocator>::multiply_single_subtract_single
             // how division with negatives distributes the quot/rem signs)
             for ( size_type  j = 0u ; s > j ; ++j )
             {
-                typename deque_type::reference  digit = this->digits_[ j ];
+                reference  digit = this->digits_[ j ];
 
                 while ( 0 > digit )
                 {
@@ -245,6 +245,100 @@ boost::math::big_radix_whole<Radix, Allocator>::multiply_single
     this->multiply_single_add_single( multiplier, 0 );
 }
 
+/** Increases a pair of digits of the current number at a given place by the
+    product of two (non-negative) values, with both factors less than the radix.
+    It should be faster than converting either of the factors or the product to
+    full \c big_radix_whole\<\> objects before (possibly multiplying, shifting,
+    and) adding.
+
+    \pre  <code>0 &lt;= <var>addend_multiplicand</var>,
+          <var>addend_multiplier</var> &lt; Radix</code>
+    \pre  <code><var>index</var> &lt; this-&gt;digit_limit() - 2</code>
+
+    \param addend_multiplicand  The multiplicand in the product-addend
+    \param addend_multiplier    The multiplier in the product-addend
+    \param index                The place of the product-addend one's digit
+                                during the addition
+
+    \post  <code>*this == <var>old_this</var> + <var>addend_multiplicand</var> *
+           <var>addend_multiplier</var> *
+           Radix<sup><var>index</var></sup></code>
+ */
+template < int Radix, class Allocator >
+void
+boost::math::big_radix_whole<Radix, Allocator>::add_shifted_single_product
+(
+    digit_type  addend_multiplicand,
+    digit_type  addend_multiplier,
+    size_type   index
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+
+    BOOST_ASSERT( 0 <= addend_multiplicand && addend_multiplicand <
+     self_type::radix && 0 <= addend_multiplier && addend_multiplier <
+     self_type::radix );
+    BOOST_ASSERT( index < this->digits_.max_size() - 2u );  // extra for carry
+
+    if ( digit_type const  product = addend_multiplicand * addend_multiplier )
+    {
+        // Determine the high and low digits of the 2-digit-max product
+        std::div_t const  product_hl = std::div( product, self_type::radix );
+        int const &       product_h = product_hl.quot;
+        int const &       product_l = product_hl.rem;
+
+        // Do the addition
+        size_type const  s = this->digits_.size();
+
+        if ( index >= s )
+        {
+            // Append the product as new digits
+            this->digits_.insert( this->digits_.end(), index - s + 2u, 0 );
+            this->digits_.back() = product_h;
+            this->digits_[ index ] = product_l;
+        }
+        else if ( index == s - 1u )
+        {
+            // Append the high product digit, add the low one; due to the
+            // constraints on the factors, there can't be a carry cascade
+            this->digits_.push_back( product_h );
+            if ( (this->digits_[ index ] += product_l) >= self_type::radix )
+            {
+                this->digits_[ index ] -= self_type::radix;
+                ++this->digits_.back();
+            }
+        }
+        else
+        {
+            // Spare digit space for cascading addition carry
+            this->digits_.push_back( 0 );
+
+            // Both product digits can be added directly
+            iterator  i = this->digits_.begin() + index;
+
+            if( (*i++ += product_l) >= self_type::radix )
+            {
+                *(i - 1) -= self_type::radix;
+                ++*i;
+            }
+
+            *i += product_h;
+            while ( *i++ >= self_type::radix )
+            {
+                *(i - 1) -= self_type::radix;
+                ++*i;
+            }
+            BOOST_ASSERT( i <= this->digits_.end() );
+        }
+
+        // Remove unused highest-placed zeros
+        this->clear_leading_zeros();
+    }
+    // ELSE: anything + 0 == anything -> no change
+
+    BOOST_ASSERT( this->test_invariant() );
+}
+
 /** Increases the current number by the product of two (non-negative) values,
     with both factors less than the radix.  It should be faster than converting
     either of the factors or the product to full \c big_radix_whole\<\> objects
@@ -258,8 +352,11 @@ boost::math::big_radix_whole<Radix, Allocator>::multiply_single
 
     \post  <code>*this == <var>old_this</var> + <var>addend_multiplicand</var> *
            <var>addend_multiplier</var></code>
+
+    \see  #add_shifted_single_product
  */
 template < int Radix, class Allocator >
+inline
 void
 boost::math::big_radix_whole<Radix, Allocator>::add_single_product
 (
@@ -267,58 +364,129 @@ boost::math::big_radix_whole<Radix, Allocator>::add_single_product
     digit_type  addend_multiplier
 )
 {
+    this->add_shifted_single_product( addend_multiplicand, addend_multiplier,
+     0u );
+}
+
+/** Decreases a pair of digits of the current number at a given place by the
+    product of two (non-negative) values, with both factors less than the radix.
+    It should be faster than converting either of the factors or the product to
+    full \c big_radix_whole\<\> objects before (possibly multiplying, shifting,
+    and) subtracting.
+
+    \pre  <code>0 &lt;= <var>subtrahend_multiplicand</var>,
+          <var>subtrahend_multiplier</var> &lt; Radix</code>
+    \pre  <code><var>index</var> &lt; this-&gt;digit_limit() - 1</code>
+
+    \param subtrahend_multiplicand  The multiplicand in the product-subtrahend
+    \param subtrahend_multiplier    The multiplier in the product-subtrahend
+    \param index                    The place of the product-subtrahend's one's
+                                    digit during the subtraction
+
+    \throws boost::math::big_radix_whole_negative_result_error
+             The current state describes a value less than the shifted
+             product-subtrahend, which would require a negative value for the
+             new state, which is not representable.
+
+    \post  <code>*this == <var>old_this</var> -
+           <var>subtrahend_multiplicand</var> *
+           <var>subtrahend_multiplier</var> *
+           Radix<sup><var>index</var></sup></code>
+ */
+template < int Radix, class Allocator >
+void
+boost::math::big_radix_whole<Radix, Allocator>::subtract_shifted_single_product
+(
+    digit_type  subtrahend_multiplicand,
+    digit_type  subtrahend_multiplier,
+    size_type   index
+)
+{
     BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
 
-    BOOST_ASSERT( 0 <= addend_multiplicand && addend_multiplicand <
-     self_type::radix && 0 <= addend_multiplier && addend_multiplier <
+    BOOST_ASSERT( 0 <= subtrahend_multiplicand && subtrahend_multiplicand <
+     self_type::radix && 0 <= subtrahend_multiplier && subtrahend_multiplier <
      self_type::radix );
+    BOOST_ASSERT( index < this->digits_.max_size() - 1u );
 
-    if ( digit_type const  product = addend_multiplicand * addend_multiplier )
+    if ( digit_type const  product = subtrahend_multiplicand *
+     subtrahend_multiplier )
     {
-        // Current size determines the allocation strategy
-        switch ( size_type const  s = this->digits_.size() )
-        {
-        default:
-            // Spare digit space for cascading addition carry
-            this->digits_.push_back( 0 );
-            break;
-
-        case 1u:
-        case 0u:
-            // With the constraints on the factors, the final result can never
-            // go to three digits, so just allocate two.
-            this->digits_.insert( this->digits_.end(), 2u - s, 0 );
-            break;
-        }
-
-        size_type const  ss = this->digits_.size();
-
-        BOOST_ASSERT( ss >= 2u );
+        big_radix_whole_negative_result_error const  exception( "attempted to"
+         " subtract a larger short-product (possibly after shifting)" );
 
         // Determine the high and low digits of the 2-digit-max product
         std::div_t const  product_hl = std::div( product, self_type::radix );
+        int const &       product_h = product_hl.quot;
+        int const &       product_l = product_hl.rem;
 
-        this->digits_[ 0u ] += product_hl.rem;
-        this->digits_[ 1u ] += product_hl.quot;
+        // Do the subtraction
+        size_type const  s = this->digits_.size();
 
-        // Propagate carries, noting that the highest-placed digit should never
-        // propagate a carry of its own.
-        size_type const  rs = ss - 1u;
-
-        for ( size_type  i = 0u ; rs > i ; ++i )
+        if ( index >= s )
         {
-            while ( self_type::radix <= this->digits_[i] )
+            // Must be too large
+            throw exception;
+        }
+        else if ( index == s - 1u )
+        {
+            reference  top_digit = this->digits_.back();
+
+            if ( product_h || (product_l > top_digit) )
             {
-                this->digits_[ i ] -= self_type::radix;
-                ++this->digits_[ i + 1u ];
+                // Too large
+                throw exception;
+            }
+            else
+            {
+                top_digit -= product_l;
             }
         }
-        BOOST_ASSERT( this->digits_[rs] < self_type::radix );
+        else if ( index == s - 2u )
+        {
+            reference  u_digit = this->digits_.back(),
+                      pu_digit = this->digits_[ index ];
+
+            if ( product > (u_digit * self_type::radix + pu_digit) )
+            {
+                // Too large
+                throw exception;
+            }
+            else
+            {
+                u_digit -= product_h;
+                if ( (pu_digit -= product_l) < 0 )
+                {
+                    pu_digit += self_type::radix;
+                    --u_digit;
+                }
+            }
+        }
+        else
+        {
+            // The product will always fit
+            iterator  i = this->digits_.begin() + index;
+
+            *i -= product_l;
+            if ( 0 > *i )
+            {
+                *i += self_type::radix;
+                --*(i + 1);
+            }
+
+            *++i -= product_h;
+            while ( 0 > *i++ )
+            {
+                --*i;
+                *(i - 1) += self_type::radix;
+            }
+            BOOST_ASSERT( i <= this->digits_.end() );
+        }
 
         // Remove unused highest-placed zeros
         this->clear_leading_zeros();
     }
-    // ELSE: anything + 0 == anything -> no change
+    // ELSE: anything - 0 == anything -> no change
 
     BOOST_ASSERT( this->test_invariant() );
 }
@@ -342,8 +510,11 @@ boost::math::big_radix_whole<Radix, Allocator>::add_single_product
     \post  <code>*this == <var>old_this</var> -
            <var>subtrahend_multiplicand</var> *
            <var>subtrahend_multiplier</var></code>
+
+    \see  #subtract_shifted_single_product
  */
 template < int Radix, class Allocator >
+inline
 void
 boost::math::big_radix_whole<Radix, Allocator>::subtract_single_product
 (
@@ -351,131 +522,48 @@ boost::math::big_radix_whole<Radix, Allocator>::subtract_single_product
     digit_type  subtrahend_multiplier
 )
 {
-    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
-
-    BOOST_ASSERT( 0 <= subtrahend_multiplicand && subtrahend_multiplicand <
-     self_type::radix && 0 <= subtrahend_multiplier && subtrahend_multiplier <
-     self_type::radix );
-
-    if ( digit_type const  product = subtrahend_multiplicand *
-     subtrahend_multiplier )
-    {
-        big_radix_whole_negative_result_error const  exception( "attempted to"
-         " subtract a larger short-product" );
-
-        // Determine the high and low digits of the 2-digit-max product
-        std::div_t const  product_hl = std::div( product, self_type::radix );
-
-        // Do the subtraction
-        switch ( size_type const  s = this->digits_.size() )
-        {
-        default:
-            this->digits_.front() -= product_hl.rem;
-            if ( 0 > this->digits_.front() )
-            {
-                this->digits_.front() += self_type::radix;
-                --this->digits_[ 1u ];
-            }
-            this->digits_[ 1u ] -= product_hl.quot;
-
-            for ( size_type  i = 2u ; s > i ; ++i )
-            {
-                if ( 0 > this->digits_[i - 1u] )
-                {
-                    this->digits_[ i - 1u ] += self_type::radix;
-                    --this->digits_[ i ];
-                }
-                else
-                {
-                    // The loop should always end here, not at "s > i"
-                    break;
-                }
-            }
-            BOOST_ASSERT( 0 <= this->digits_.back() );
-
-            break;
-
-        case 2u:
-            if ( this->digits_.back() > product_hl.quot || this->digits_.back()
-             == product_hl.quot && this->digits_.front() >= product_hl.rem )
-            {
-                typename deque_type::reference  r_digit = this->digits_.back(),
-                 o_digit = this->digits_.front();
-
-                r_digit -= product_hl.quot;
-                o_digit -= product_hl.rem;
-
-                if ( 0 > o_digit )
-                {
-                    o_digit += self_type::radix;
-                    --r_digit;
-                }
-                BOOST_ASSERT( 0 <= r_digit );
-
-                break;
-            }
-            else
-            {
-                throw exception;
-            }
-
-        case 1u:
-            if ( !product_hl.quot && this->digits_.front() >= product_hl.rem )
-            {
-                this->digits_.front() -= product_hl.rem;
-                break;
-            }
-            else
-            {
-                throw exception;
-            }
-
-        case 0u:
-            // Since the short product is non-zero, it's too big for a
-            // zero-valued minuend.
-            throw exception;
-        }
-
-        // Remove unused highest-placed zeros
-        this->clear_leading_zeros();
-    }
-    // ELSE: anything - 0 == anything -> no change
-
-    BOOST_ASSERT( this->test_invariant() );
+    this->subtract_shifted_single_product( subtrahend_multiplicand,
+     subtrahend_multiplier, 0u );
 }
 
-/** Replaces the current value with the absolute difference between that value
-    and the product of two (non-negative) values, with both factors less than
-    the radix.  It should be faster than converting either of the factors or
-    their product to full \c big_radix_whole\<\> objects before subtracting.
+/** Replaces the current value with its absolute value after decreasing a pair
+    of its digits, at a given place and the place immediately above it, by a
+    product of two values (each one non-negative and less than the radix).  It
+    should be faster than converting either factor, or their product, to full
+    \c big_radix_whole\<\> objects before shifting/multiplying and subtracting
+    (and doing the sign and magnitude checks).
 
     \pre  <code>0 &lt;= <var>subtrahend_multiplicand</var>,
           <var>subtrahend_multiplier</var> &lt; Radix</code>
+    \pre  <code><var>index</var> &lt; this-&gt;digit_limit() - 1</code>
 
     \param subtrahend_multiplicand  The multiplicand in the product-subtrahend
     \param subtrahend_multiplier    The multiplier in the product-subtrahend
+    \param index                    The place of the product-subtrahend's one's
+                                    digit during the subtraction
 
     \retval true   The difference was originally negative (i.e.
                    <code><var>subtrahend_multiplicand</var> *
-                   <var>subtrahend_multiplier</var> &gt; *this</code>).
+                   <var>subtrahend_multiplier</var> *
+                   Radix<sup><var>index</var></sup> &gt; *this</code>).
     \retval false  The difference was originally non-negative.
 
     \post  <code>*this == |<var>old_this</var> -
            <var>subtrahend_multiplicand</var> *
-           <var>subtrahend_multiplier</var>|</code>
+           <var>subtrahend_multiplier</var> *
+           Radix<sup><var>index</var></sup>|</code>
  */
 template < int Radix, class Allocator >
 bool
 boost::math::big_radix_whole<Radix,
- Allocator>::subtract_single_product_absolutely
+ Allocator>::subtract_shifted_single_product_absolutely
 (
     digit_type  subtrahend_multiplicand,
-    digit_type  subtrahend_multiplier
+    digit_type  subtrahend_multiplier,
+    size_type   index
 )
 {
     BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
-
-    size_type const  index = 0u;  // for later
 
     BOOST_ASSERT( 0 <= subtrahend_multiplicand && subtrahend_multiplicand <
      self_type::radix && 0 <= subtrahend_multiplier && subtrahend_multiplier <
@@ -487,8 +575,6 @@ boost::math::big_radix_whole<Radix,
     if ( digit_type const  product = subtrahend_multiplicand *
      subtrahend_multiplier )
     {
-        typedef typename deque_type::reference  reference;
-
         // Determine the high and low digits of the 2-digit-max product
         std::div_t const  product_hl = std::div( product, self_type::radix );
         int const &       product_h = product_hl.quot;
@@ -583,8 +669,6 @@ boost::math::big_radix_whole<Radix,
         // (copied from member function "subtract_shifted_single_absolutely")
         if ( result = (s && ( 0 > this->digits_.back() )) )
         {
-            typedef typename deque_type::iterator  iterator;
-
             // Get the absolute value by negating all the digits...
             iterator const  last_j = this->digits_.end() - 1;
             bool            borrow = false;
@@ -612,6 +696,42 @@ boost::math::big_radix_whole<Radix,
 
     BOOST_ASSERT( this->test_invariant() );
     return result;
+}
+
+/** Replaces the current value with the absolute difference between that value
+    and the product of two (non-negative) values, with both factors less than
+    the radix.  It should be faster than converting either of the factors or
+    their product to full \c big_radix_whole\<\> objects before subtracting.
+
+    \pre  <code>0 &lt;= <var>subtrahend_multiplicand</var>,
+          <var>subtrahend_multiplier</var> &lt; Radix</code>
+
+    \param subtrahend_multiplicand  The multiplicand in the product-subtrahend
+    \param subtrahend_multiplier    The multiplier in the product-subtrahend
+
+    \retval true   The difference was originally negative (i.e.
+                   <code><var>subtrahend_multiplicand</var> *
+                   <var>subtrahend_multiplier</var> &gt; *this</code>).
+    \retval false  The difference was originally non-negative.
+
+    \post  <code>*this == |<var>old_this</var> -
+           <var>subtrahend_multiplicand</var> *
+           <var>subtrahend_multiplier</var>|</code>
+
+    \see  #subtract_shifted_single_product_absolutely
+ */
+template < int Radix, class Allocator >
+inline
+bool
+boost::math::big_radix_whole<Radix,
+ Allocator>::subtract_single_product_absolutely
+(
+    digit_type  subtrahend_multiplicand,
+    digit_type  subtrahend_multiplier
+)
+{
+    return this->subtract_shifted_single_product_absolutely(
+     subtrahend_multiplicand, subtrahend_multiplier, 0u );
 }
 
 
