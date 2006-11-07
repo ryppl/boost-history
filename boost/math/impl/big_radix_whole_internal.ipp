@@ -67,7 +67,6 @@ boost::math::big_radix_whole<Radix, Allocator>::normalize
 )
 {
     using std::div;
-    typedef typename deque_type::reference  reference;
 
     // Adjust each digit so |digit| < Radix, from the highest digit to the
     // lowest.  (The other way could lead to a carry bringing a very large

@@ -78,7 +78,7 @@ boost::math::big_radix_whole<Radix, Allocator>::add_shifted_single
 
     if ( index < s )
     {
-        typename deque_type::reference  digit = this->digits_[ index ];
+        reference  digit = this->digits_[ index ];
 
         if ( self_type::radix - digit > value )
         {
@@ -88,7 +88,7 @@ boost::math::big_radix_whole<Radix, Allocator>::add_shifted_single
         else
         {
             // Check for cascading carries
-            typename deque_type::iterator const  b = this->digits_.begin();
+            iterator const  b = this->digits_.begin();
 
             size_type const  start = index + 1u;
             size_type const  stop = std::find_if( b + start, this->digits_.end()
@@ -178,9 +178,9 @@ boost::math::big_radix_whole<Radix, Allocator>::operator ++
     // turned into zeros through a cascade of carries.  The lowest
     // non-"radix - 1" place then goes up by one.  (An offset is stored, instead
     // of an iterator, because the "else" block could invalidate iterators.)
-    typename deque_type::difference_type const  offset = std::find_if(
-     this->digits_.begin(), this->digits_.end(), lambda::_1 != self_type::radix
-     - 1 ) - this->digits_.begin();
+    difference_type const  offset = std::find_if( this->digits_.begin(),
+     this->digits_.end(), lambda::_1 != self_type::radix - 1 ) -
+     this->digits_.begin();
 
     if ( static_cast<size_type>(offset) < this->digits_.size() )
     {

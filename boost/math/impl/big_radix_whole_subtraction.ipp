@@ -106,7 +106,7 @@ boost::math::big_radix_whole<Radix, Allocator>::subtract_shifted_single
         else
         {
             // (self_type(value) << index) <= *this
-            typename deque_type::iterator  i = this->digits_.begin() + index;
+            iterator  i = this->digits_.begin() + index;
 
             *i -= value;
 
@@ -189,8 +189,6 @@ boost::math::big_radix_whole<Radix,
     BOOST_ASSERT( 0 <= value && value < self_type::radix );
     BOOST_ASSERT( index < this->digits_.max_size() );
 
-    typedef typename deque_type::iterator  iterator;
-
     bool  result = false;
 
     if ( value )
@@ -231,8 +229,6 @@ boost::math::big_radix_whole<Radix,
         s = this->digits_.size();
         if ( result = (s && ( 0 > this->digits_.back() )) )
         {
-            typedef typename deque_type::reference  reference;
-
             // Get the absolute value by negating all the digits...
             iterator const  last_j = this->digits_.end() - 1;
             bool            borrow = false;
@@ -320,8 +316,6 @@ boost::math::big_radix_whole<Radix, Allocator>::operator --
 
     if ( !this->digits_.empty() )
     {
-        typedef typename deque_type::iterator  iterator;
-
         digit_type const  highest_digit = self_type::radix - 1;
         bool              borrow = true;
         iterator const    e = this->digits_.end();
@@ -329,7 +323,7 @@ boost::math::big_radix_whole<Radix, Allocator>::operator --
         // Due to the invariant, this loop must stop before the end
         for ( iterator  i = this->digits_.begin() ; borrow && (e != i) ; ++i )
         {
-            typename deque_type::reference  digit = *i;
+            reference  digit = *i;
 
             if ( borrow = !digit )  // DELIBERATE ASSIGN-THEN-TEST
             {

@@ -248,15 +248,13 @@ boost::math::big_radix_whole<Radix, Allocator>::to_string
     }
     else
     {
-        typedef typename deque_type::const_reverse_iterator  iterator;
-
-        std::string         result;
-        char                digit_scratch_space[ 2 +
-                             std::numeric_limits<digit_type>::digits10 ];
-        char const * const  separator = detail::get_digit_separator_string<Radix
-                             >();
-        iterator            b = this->digits_.rbegin();
-        iterator const      e = this->digits_.rend();
+        std::string           result;
+        char                  digit_scratch_space[ 2 + std::numeric_limits<
+                                                        digit_type>::digits10 ];
+        char const * const    separator = detail::get_digit_separator_string<
+                                                                       Radix>();
+        const_reverse_iterator        b = this->digits_.rbegin();
+        const_reverse_iterator const  e = this->digits_.rend();
 
         result.reserve( this->digits_.size() * sizeof(digit_scratch_space) );
         goto place_digit;

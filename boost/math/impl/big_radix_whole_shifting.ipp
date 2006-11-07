@@ -155,7 +155,7 @@ boost::math::big_radix_whole<Radix, Allocator>::operator >>=(
     {
         if ( this->digits_.size() > amount )
         {
-            typename deque_type::iterator const  b = this->digits_.begin();
+            iterator const  b = this->digits_.begin();
 
             this->digits_.erase( b, b + amount );
         }

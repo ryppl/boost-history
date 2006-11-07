@@ -112,11 +112,10 @@ boost::math::big_radix_whole<Radix, Allocator>::compare
 
     if ( ts == rs )
     {
-        typedef typename deque_type::const_reverse_iterator  iterator;
+        const_reverse_iterator const  te = this->digits_.rend();
 
-        iterator const                       te = this->digits_.rend();
-        std::pair<iterator, iterator> const   c = std::mismatch(
-         this->digits_.rbegin(), te, r.digits_.rbegin() );
+        std::pair<const_reverse_iterator, const_reverse_iterator> const  c =
+         std::mismatch( this->digits_.rbegin(), te, r.digits_.rbegin() );
 
         return ( c.first == te ) ? 0 : ( *c.first < *c.second ) ? -1 : +1;
     }

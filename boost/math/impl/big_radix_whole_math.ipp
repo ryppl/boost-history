@@ -166,23 +166,19 @@ boost::math::big_radix_whole<Radix, Allocator>::digit_summate_self
         // The upper bound for the sum is "s * (Radix - 1)".  There is an easier
         // to compute higher bound of "s * Radix".  Use that to pre-allocate a
         // sufficient amount of digits.
-        typedef typename deque_type::iterator  iterator;
-
         deque_type      mantissa( detail::digits_for_number<Radix>(s) + 1u,
                          digit_type(), this->digits_.get_allocator() );
         iterator const  mb_inset = mantissa.begin() + 1;
         iterator const  me_inset = mantissa.end() - 1;
 
         // Add as many digits with built-in arithmetic as possible
-        typedef typename deque_type::const_iterator  const_iterator;
-
         int const     run_limit = INT_MAX / self_type::radix;
         const_iterator const  e = this->digits_.end();
 
         for ( const_iterator  i = this->digits_.begin() ; e > i ; )
         {
-            const_iterator const  local_end = i + std::min<typename
-             deque_type::difference_type>( e - i, run_limit );
+            const_iterator const  local_end = i + std::min<difference_type>( e -
+             i, run_limit );
 
             int const  run_sum = std::accumulate( i, local_end, 0 );
 
@@ -202,7 +198,7 @@ boost::math::big_radix_whole<Radix, Allocator>::digit_summate_self
 
             while ( (me_inset > j) && (self_type::radix <= *j) )
             {
-                typename deque_type::reference  digit = *j;
+                reference  digit = *j;
 
                 qr = div( digit, self_type::radix );
                 digit = qr.rem;

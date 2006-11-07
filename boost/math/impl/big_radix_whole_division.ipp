@@ -152,12 +152,10 @@ boost::math::big_radix_whole<Radix, Allocator>::div_and_mod_single
     }
 
     // ELSE: perform the short division, working even if the dividend is zero
-    typedef typename deque_type::reverse_iterator  iterator;
+    std::div_t             qr = { 0, 0 };
+    reverse_iterator const  e = this->digits_.rend();
 
-    std::div_t     qr = { 0, 0 };
-    iterator const  e = this->digits_.rend();
-
-    for ( iterator  i = this->digits_.rbegin() ; e != i ; ++i )
+    for ( reverse_iterator  i = this->digits_.rbegin() ; e != i ; ++i )
     {
         qr = std::div( qr.rem * self_type::radix + *i, divisor );
         *i = qr.quot;
@@ -203,12 +201,10 @@ boost::math::big_radix_whole<Radix, Allocator>::modulo_single
     }
 
     // ELSE: perform the short division, working even if the dividend is zero
-    typedef typename deque_type::const_reverse_iterator  iterator;
+    digit_type            remainder = 0;
+    const_reverse_iterator const  e = this->digits_.rend();
 
-    digit_type      remainder = 0;
-    iterator const  e = this->digits_.rend();
-
-    for ( iterator  i = this->digits_.rbegin() ; e != i ; ++i )
+    for ( const_reverse_iterator  i = this->digits_.rbegin() ; e != i ; ++i )
     {
         // Shift-in and divide the next dividend digit
         remainder *= self_type::radix;

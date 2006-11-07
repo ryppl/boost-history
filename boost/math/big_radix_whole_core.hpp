@@ -131,10 +131,13 @@ class big_radix_whole
 
     typedef std::deque<int, Allocator>  deque_type;
 
-    typedef typename deque_type::reference              reference;
-    typedef typename deque_type::const_reference  const_reference;
-    typedef typename deque_type::iterator                iterator;
-    typedef typename deque_type::const_iterator    const_iterator;
+    typedef typename deque_type::reference                            reference;
+    typedef typename deque_type::const_reference                const_reference;
+    typedef typename deque_type::iterator                              iterator;
+    typedef typename deque_type::const_iterator                  const_iterator;
+    typedef typename deque_type::reverse_iterator              reverse_iterator;
+    typedef typename deque_type::const_reverse_iterator  const_reverse_iterator;
+    typedef typename deque_type::difference_type                difference_type;
 
 public:
     // Template parameters
@@ -181,6 +184,7 @@ public:
     big_radix_whole( big_radix_whole<Radix2, Allocator2> const &source,
      allocator_type const &allocator = allocator_type() );
 
+    /*! \name Accessors */ //@{
     // Accessors
     //! Returns the (minimal) number of digits needed
     size_type  digit_count() const;
@@ -193,8 +197,9 @@ public:
     //! Returns a copy of the memory allocator used
     allocator_type  get_allocator() const;
     //! Returns the maximum number of digits that can be used
-    size_type       digit_limit() const;
+    size_type       digit_limit() const;//@}
 
+    /*! \name Assignment */ //@{
     // Assignment
     //! Exchanges state with another object
     void  swap( big_radix_whole &other );
@@ -218,8 +223,9 @@ public:
     void  configure( InputIterator begin, InputIterator end );
 
     //! Changes the current value to one based on a digit list string
-    void  configure( char const *digit_text );
+    void  configure( char const *digit_text );//@}
 
+    /*! \name Self-Applied Variants of the Unary Operations */ //@{
     // Apply-to-self versions of the unary operations
     //! Assigns Boolean-conversion to self
     void  verify_self();
@@ -228,7 +234,7 @@ public:
     //! "Assigns" same value to self
     void  identify_self() const;
     //! "Assigns" additive inverse to self
-    void  negate_self() const;
+    void  negate_self() const;//@}
 
     // Special multiplication and division operations
     //void  add_full_product( big_radix_whole const &addend_multiplicand,
@@ -254,6 +260,7 @@ public:
     // &subtrahend_full_factor, digit_type subtrahend_single_factor );
     // TODO: add shifted variants?
 
+    /*! \name Single-Digit Multiply-to-Self (Fused-Add/Subtract-to-Self) */ //@{
     //! Fuse-multiply/add by two single-digit values
     void  multiply_single_add_single( digit_type augend_multiplier, digit_type
      addend );
@@ -261,8 +268,9 @@ public:
     void  multiply_single_subtract_single( digit_type minuend_multiplier,
      digit_type subtrahend );
     //! Multiply by a single-digit value
-    void  multiply_single( digit_type multiplier );
+    void  multiply_single( digit_type multiplier );//@}
 
+    /*! \name Single-Digit Division-to-Self, Modulus, and Parity */ //@{
     //! Divide by a single-digit value, with separate remainder
     digit_type  div_and_mod_single( digit_type divisor );
     //! Returns the remainder from division by a single-digit value
@@ -272,8 +280,9 @@ public:
     //! Returns whether the current value is odd
     bool        is_odd() const;
     //! Returns whether the current value is even
-    bool        is_even() const;
+    bool        is_even() const;//@}
 
+    /*! \name Add/Subtract-to-Self Single-Digit Fused-Multiply */ //@{
     //! Add the shifted product of two single-digit values (fused-add/multiply)
     void  add_shifted_single_product( digit_type addend_multiplicand, digit_type
      addend_multiplier, size_type index );
@@ -292,8 +301,9 @@ public:
      index );
     //! Subtract product of single-digits (fused), ignoring difference's sign
     bool  subtract_single_product_absolutely( digit_type
-     subtrahend_multiplicand, digit_type subtrahend_multiplier );
+     subtrahend_multiplicand, digit_type subtrahend_multiplier );//@}
 
+    /*! \name Single-Digit Add/Subtract-to-Self */ //@{
     // Special addition and subtraction operations
     //! Add a single-digit value to a particular place
     void  add_shifted_single( digit_type value, size_type index );
@@ -307,29 +317,33 @@ public:
     bool  subtract_shifted_single_absolutely( digit_type value, size_type
      index );
     //! Subtract a single-digit value, ignoring the difference's sign
-    bool  subtract_single_absolutely( digit_type subtrahend );
+    bool  subtract_single_absolutely( digit_type subtrahend );//@}
 
     //void  add_shifted_full( big_radix_whole const &value, size_type index );
     //void  subtract_shifted_full( big_radix_whole const &value, size_type index );
     //bool  subtract_shifted_full_absolutely( big_radix_whole const &value, size_type index );
     //bool  subtract_full_absolutely( big_radix_whole const &subtrahend );
 
+    /*! \name Single Digit Shifting-to/from-Self */ //@{
     // Special shifting operations
     //! Up-shift in a new one's digit
     void        shift_up_add_single( digit_type value );
     //! Down-shift out the current one's digit
-    digit_type  mod_radix_shift_down();
+    digit_type  mod_radix_shift_down();//@}
 
+    /*! \name Full Comparision from Self */ //@{
     // Special comparison operations
     //! Compares with another object
-    int  compare( big_radix_whole const &r ) const;
+    int  compare( big_radix_whole const &r ) const;//@}
 
+    /*! \name Self-Applied Variants of the Special Functions */ //@{
     // Apply-to-self versions of the special functions
     //! "Assigns" absolute value to self
     void  absolve_self() const;
     //! Assigns (arithmetic) sign to self
-    void  sign_self();
+    void  sign_self();//@}
 
+    /*! \name Conversions to Alternate Representations */ //@{
     // Explicit conversions
     //! Converts stored value to a built-in integer
     uintmax_t    to_uintmax() const;
@@ -340,8 +354,9 @@ public:
 
     //! Converts stored value to a given numeric type
     template < typename NumericType >
-    NumericType  to_number() const;
+    NumericType  to_number() const;//@}
 
+    /*! \name Special Digit Manipulations */ //@{
     // Digit plays
     //! Returns the number of occurrences of a specific digit value
     size_type  specific_digit_count( digit_type value ) const;
@@ -352,8 +367,9 @@ public:
     digit_type  digital_root() const;
 
     //! Reverse the order of contained digits
-    void  reverse_digits();
+    void  reverse_digits();//@}
 
+    /*! \name Operators */ //@{
     // Operators (use automatic copy-assignment operator)
     //! Boolean conversion
     operator bool_type() const;
@@ -377,7 +393,7 @@ public:
     //! Left shift
     big_radix_whole &  operator <<=( size_type amount );
     //! Right shift
-    big_radix_whole &  operator >>=( size_type amount );
+    big_radix_whole &  operator >>=( size_type amount );//@}
 
 private:
     // State maintainence
