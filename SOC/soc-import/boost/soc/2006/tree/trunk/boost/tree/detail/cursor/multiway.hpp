@@ -116,9 +116,7 @@ class multiway_tree_cursor
 	typedef typename cursor_size<base_cursor>::type size_type;
 
 	//typedef bidirectional_traversal_tag cursor_category;
-	
-	typedef typename base_cursor::metadata_type metadata_type;
-	
+		
 	// Container-specific:
 	typedef cursor iterator;  // For (range) concepts' sake, mainly
 	typedef const_cursor const_iterator;

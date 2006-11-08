@@ -203,16 +203,14 @@ class node_base<binary_array>
 	
 };
 
-template <typename T, template <typename> class Container, class Augment, class BalanceData>
+template <typename T, template <typename> class Container>
 class node : public node_base<Container> {
  public:
  	typedef T value_type;
-	typedef Augment augmentor;
-	typedef BalanceData balancer_data;
 	
 	typedef Container<node_base<Container>*> container_type;
 
-	typedef node<value_type, Container, augmentor, balancer_data> node_type;
+	typedef node<value_type, Container> node_type;
 	typedef node_type* node_pointer;
 	typedef node_type& node_reference;
 	//typedef node_pointer position_type;
@@ -225,9 +223,7 @@ class node : public node_base<Container> {
 
 	//enum size_t { first = 0, second = 1 };
 	//typedef std::size_t size_type;
-	
-	struct metadata_type : public augmentor, public balancer_data {};
-	
+		
 	// TODO: add observers.
 
 	reference operator*() { return *m_data; } 
@@ -239,14 +235,8 @@ class node : public node_base<Container> {
 		return m_data;
 	}
 	
-	metadata_type& metadata()
-	{
-		return m_meta;
-	}
-	
  private:
 	pointer m_data;
-	metadata_type m_meta;
 };
 
 } // namespace detail

@@ -32,9 +32,6 @@ struct node_traits
 	// Node base
 	typedef typename node_type::base_type node_base_type;
 	typedef typename node_type::base_pointer node_base_pointer;
-
-	typedef typename node_type::augmentor augmentor;
-	//typedef typename node_type::balancer balancer;
 	
 	typedef node_base_pointer position_type;
 };

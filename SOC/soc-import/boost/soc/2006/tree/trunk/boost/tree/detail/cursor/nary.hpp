@@ -37,9 +37,9 @@ class helper {
 };
 
 
-template <class BasePtr, class SizeType, class Value, class Augment, class Balance>
-class helper<node<Value, detail::binary_array, Augment, Balance> const, BasePtr, SizeType > {
-	typedef node<Value, detail::binary_array, Augment, Balance> const node_type;
+template <class BasePtr, class SizeType, class Value>
+class helper<node<Value, detail::binary_array> const, BasePtr, SizeType > {
+	typedef node<Value, detail::binary_array> const node_type;
  public:
 	static typename node_type::reference deref(BasePtr par, SizeType pos)
 	{
@@ -47,9 +47,9 @@ class helper<node<Value, detail::binary_array, Augment, Balance> const, BasePtr,
 	}
 };
 
-template <class BasePtr, class SizeType, class Value, class Augment, class Balance>
-class helper<node<Value, detail::binary_array, Augment, Balance>, BasePtr, SizeType > {
-	typedef node<Value, detail::binary_array, Augment, Balance> node_type;
+template <class BasePtr, class SizeType, class Value>
+class helper<node<Value, detail::binary_array>, BasePtr, SizeType > {
+	typedef node<Value, detail::binary_array> node_type;
  public:
 	static typename node_type::reference deref(BasePtr par, SizeType pos)
 	{
@@ -84,8 +84,6 @@ class const_nary_tree_cursor
 	
  	typedef nary_tree_cursor<Node> cursor;
  	typedef const_nary_tree_cursor<Node> const_cursor;
-	
-	typedef typename Node::metadata_type metadata_type;
 	
 	// Container-specific:
 	typedef cursor iterator;  // For (range) concepts' sake, mainly
@@ -189,13 +187,7 @@ private:
 	{
 		return m_pos;
 	}
-	
-public:
 
-	metadata_type const& metadata() const
-	{
-		return static_cast<node_pointer>(m_node->operator[](m_pos))->metadata();
-	}
 };
 
 template <class Node> 
@@ -220,9 +212,7 @@ class nary_tree_cursor
 		
  	typedef nary_tree_cursor<node_type> cursor;
  	typedef const_nary_tree_cursor<node_type> const_cursor;
-
- 	typedef typename node_type::metadata_type metadata_type;
- 	
+	
 	// Container-specific:
 	typedef cursor iterator;
 	typedef const_cursor const_iterator;
@@ -351,11 +341,11 @@ public:
 	}
 
 //protected:	
-	void rotate()
-	{
-		m_pos = m_node->rotate(m_pos);
-		m_node = static_cast<base_pointer>(m_node->m_parent->m_parent);
-	}
+//	void rotate()
+//	{
+//		m_pos = m_node->rotate(m_pos);
+//		m_node = static_cast<base_pointer>(m_node->m_parent->m_parent);
+//	}
 	
 
 public:	
@@ -384,17 +374,7 @@ public:
 	{
 		return static_cast<node_pointer>(m_node->detach(m_pos, y.m_pos, y.m_node));
 	}
-		
-	metadata_type const& metadata() const
-	{
-		return static_cast<node_pointer>(m_node->operator[](m_pos))->metadata();
-	}
-	
-	metadata_type& metadata()
-	{
-		return const_cast<metadata_type&>
-			  (static_cast<cursor const*>(this)->metadata());
-	}
+
 };
 
 

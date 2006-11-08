@@ -49,8 +49,7 @@ class binary_tree {
 		allocator_type;
 
  private:		
-	typedef node<value_type, detail::binary_array, augmentors::unaugmented::metadata_type, 
-				 balancers::unbalanced::metadata_type> node_type;
+	typedef node<value_type, detail::binary_array> node_type;
 	typedef typename Alloc::template rebind<node_type>::other 
 		node_allocator_type;
 	typedef typename node_traits<node_type>::node_base_type node_base_type;
@@ -346,7 +345,8 @@ class binary_tree {
 
 	void rotate(cursor pos)
 	{
-		pos.rotate();
+		pos.m_pos = pos.m_node->rotate(pos.m_pos);
+		pos.m_node = static_cast<node_base_pointer>(pos.m_node->m_parent->m_parent);
 	}
 	
 	/**

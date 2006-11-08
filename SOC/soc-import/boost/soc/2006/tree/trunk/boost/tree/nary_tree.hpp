@@ -46,16 +46,12 @@ using detail::nary_tree_cursor;
 //Does nary_tree need them? Probably not, as nary_tree is functionally similar
 //to forest... Though: we might need metadata...
 
-template <class Tp, /*class Balance = balancers::unbalanced,
-		  class Augment = augmentors::unaugmented,*/
-		  class Alloc = std::allocator<Tp>, std::size_t N = /*numeric_limits<int>::max()*/ INT_MAX
-		 >
-class nary_tree /*: public Balance, public Augment*/ {
-	typedef nary_tree<Tp, /*Balance, Augment,*/ Alloc, N> self_type;
+template <class Tp, class Alloc = std::allocator<Tp>, 
+		  std::size_t N = /*numeric_limits<int>::max()*/ INT_MAX>
+class nary_tree {
+	typedef nary_tree<Tp, Alloc, N> self_type;
  public:
 	typedef Tp value_type;
-	typedef balancers::unbalanced balancer_type;
-	typedef augmentors::unaugmented augmentor_type;
 	typedef typename Alloc::template rebind<value_type>::other 
 		allocator_type;
 	
@@ -72,8 +68,7 @@ class nary_tree /*: public Balance, public Augment*/ {
 		{}
 	};
 	
-	typedef node<value_type, mycontainer, typename augmentor_type::metadata_type, 
-		typename balancer_type::metadata_type> node_type;
+	typedef node<value_type, mycontainer> node_type;
 	typedef typename Alloc::template rebind<node_type>::other 
 		node_allocator_type;
 	typedef typename node_traits<node_type>::node_base_type node_base_type;
@@ -126,8 +121,8 @@ class nary_tree /*: public Balance, public Augment*/ {
 		//clear();
 	}
 	
-	nary_tree<Tp, /*Balance, Augment,*/ Alloc>& operator=(
-		nary_tree<Tp, /*Balance, Augment,*/ Alloc> const& x);
+	nary_tree<Tp, Alloc>& operator=(
+		nary_tree<Tp, Alloc> const& x);
 	template <class InputIterator>
 		void assign(InputIterator first, InputIterator last);
 	template <class Size, class T>
@@ -378,13 +373,10 @@ private:
  		cursor root = this->root();
  		pos = pos.parent();
 
- 		balancer_type::remove(pos, root);
  		node_pointer p_node;
  		if (pos == root) {
- 			augmentor_type::pre_detach(pos, root);
  			p_node = pos.detach();
  		} else {
- 			augmentor_type::pre_detach(pos, root, this->root());
  			p_node = pos.detach(root);
  		}
  		
