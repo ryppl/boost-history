@@ -34,15 +34,6 @@ namespace tree {
 
 using boost::iterator_core_access;
 
-class access_rotate {
- public:
-      template <class Cursor>
-      static void rotate(Cursor& c)
-      {
-          c.rotate();
-      }
-};
-
 class cursor_core_access {
  public:
   	template <class Facade>

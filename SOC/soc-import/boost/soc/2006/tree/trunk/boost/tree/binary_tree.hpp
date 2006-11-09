@@ -246,7 +246,7 @@ class binary_tree {
 		pos.attach(p_node);
 
 		// Readjust begin
-		if ((pos == inorder_first()))
+		if ((pos == this->inorder_first()))
 			m_header[1] = p_node; 
 		
 		// Readjust shoot
@@ -343,7 +343,7 @@ class binary_tree {
 		m_header[1] = &m_header;
  	}
 
-	void rotate(cursor pos)
+	void rotate(cursor& pos)
 	{
 		pos.m_pos = pos.m_node->rotate(pos.m_pos);
 		pos.m_node = static_cast<node_base_pointer>(pos.m_node->m_parent->m_parent);

@@ -10,26 +10,16 @@
 #include <boost/tree/detail/cursor/nary.hpp>
 #include <boost/tree/inorder.hpp>
 
-using boost::tree::access_rotate;
-
 namespace boost {
 namespace tree {
 namespace balancers {
 
-//struct unbalance_metadata {};
-
-class unbalanced : public access_rotate {
+class unbalanced {
  public:
 	unbalanced() {}
 
 	struct metadata_type {};
 	metadata_type metadata;
-
-	template <class Cursor>
-	void rotate(Cursor& c)
-	{
-		access_rotate::rotate(c);
-	}
 
 // protected:	
 	template <class Tree>

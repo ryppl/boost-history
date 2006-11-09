@@ -30,11 +30,12 @@ void test_rotate()
 	BOOST_CHECK(*c.begin() == 1);
 	BOOST_CHECK(*((++c).begin()).begin() == 4);
 	BOOST_CHECK(*(++c.begin()).begin() == 7);
-	
+
+	BOOST_CHECK(c.parity() == 1);	
 	BOOST_CHECK(*c.begin() == 6);
-	
+		
 	mytree.rotate(c); // Left rotate
-	
+
 	BOOST_CHECK(*c.begin() == 6);
 	BOOST_CHECK(*c.parent().begin() == 8);
 	

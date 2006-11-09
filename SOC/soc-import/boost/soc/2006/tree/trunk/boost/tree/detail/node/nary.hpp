@@ -145,7 +145,6 @@ class node_base<binary_array>
 	base_type::size_type rotate(base_type::size_type const& c)
 	{
 		//TODO: Optimise.
-		//split up into even more atomic parts? probably not
 		base_pointer q = base_type::operator[](c);
 		
 		base_pointer B = (base_type::operator[](c))->base_type::operator[](c ? 0 : 1);
@@ -162,6 +161,7 @@ class node_base<binary_array>
 		this->m_parent = q;
 		q->base_type::operator[](c ? 0 : 1) = this;
 		return qp;
+		//return (c ? 0 : 1);
 	}
 	
 	base_pointer detach(base_type::size_type m_pos)

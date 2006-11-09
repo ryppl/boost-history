@@ -22,7 +22,6 @@ namespace detail {
 using boost::iterator_core_access;
 
 using boost::tree::cursor_core_access;
-using boost::tree::access_rotate;
 
 template <class Node>
 class nary_tree_cursor;
@@ -246,8 +245,7 @@ class nary_tree_cursor
  	friend class iterator_core_access;
     friend class cursor_core_access;
     
- 	friend class access_rotate;
- 	friend class access_detach;
+	friend class access_detach;
  	
     typename node_type::reference dereference() const
 	{
@@ -303,7 +301,6 @@ class nary_tree_cursor
 	
 public:
 
-	
 	cursor begin()
 	{
 		return cursor(m_node->operator[](m_pos), 0);
@@ -339,14 +336,6 @@ public:
 	{
 		return static_cast<node_pointer>(m_node->operator[](m_pos));
 	}
-
-//protected:	
-//	void rotate()
-//	{
-//		m_pos = m_node->rotate(m_pos);
-//		m_node = static_cast<base_pointer>(m_node->m_parent->m_parent);
-//	}
-	
 
 public:	
 	// TODO: protect?

@@ -18,8 +18,6 @@
 #include <limits.h>
 #include <stdlib.h>
 
-using boost::tree::access_rotate;
-
 namespace boost {
 namespace tree {
 namespace balancers {
@@ -43,7 +41,7 @@ private:
 };
 
 
-class treap : public access_rotate {
+class treap {
  public:
 	typedef treap_metadata metadata_type;
 	
@@ -66,7 +64,7 @@ class treap : public access_rotate {
 		while((q = ((p.begin()->metadata().get_priority()
 					 > p.end()->metadata().get_priority())
 					 ? p.begin() : p.end())).empty())
-			access_rotate::rotate(q);
+			t.rotate(q);
 		q = p;
 	}
 	

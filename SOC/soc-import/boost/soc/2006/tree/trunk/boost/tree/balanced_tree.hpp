@@ -93,7 +93,6 @@ class balancer_iterator<InorderIter, bidirectional_traversal_tag>
 		return this->base()->meta;
 	}
 	
-	
 };
 
 /** 

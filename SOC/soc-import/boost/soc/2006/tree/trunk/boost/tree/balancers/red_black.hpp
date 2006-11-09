@@ -13,8 +13,6 @@
 
 #include <boost/tree/detail/cursor/nary.hpp>
 
-using boost::tree::access_rotate;
-
 namespace boost {
 namespace tree {
 namespace balancers {
@@ -42,7 +40,7 @@ private:
 
 //make the following part of tree? that is, derive tree from this (as templ. arg)?
 //template <class Node> //tentative approach using CRTP.
-class red_black : public access_rotate {
+class red_black {
 public:
 	typedef red_black_metadata metadata_type;
 	
@@ -60,13 +58,13 @@ public:
 				x = x.parent().parent();
 			} else {
 				if (x.parity() != x.parent().parity()) {
-					access_rotate::rotate(x);
+					t.rotate(x);
 					x = (x.parity() ? x.end() : x.begin());
 				}
 			x.parent()->metadata().set_color(black);
 			x.parent().parent()->metadata().set_color(red);
 			x = x.parent(); //FIXME: was x.parent.rotate();
-			access_rotate::rotate(x); 
+			t.rotate(x); 
 			}
 		if (x.parent() == t.root())
 			x->metadata().set_color(black);
