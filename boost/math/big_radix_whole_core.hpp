@@ -106,7 +106,8 @@ template < int Radix, class Allocator >
     \note  The Boost.Operators library is used to synthesize the following
            operators: <code>!=</code>, <code>++</code> (post), <code>--</code>
            (post), <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>,
-           <code>&gt;&gt;</code>, and <code>&lt;&lt;</code>.
+           <code>&gt;&gt;</code>, <code>&lt;&lt;</code>, <code>+</code>
+           (binary), and <code>-</code> (binary).
  */
 template < int Radix, class Allocator >
 class big_radix_whole
@@ -115,6 +116,7 @@ class big_radix_whole
     , private shiftable2< big_radix_whole<Radix, Allocator>, typename
        std::deque<int, Allocator>::size_type >
     //, private integer_arithmetic1< big_radix_whole<Radix, Allocator> >
+    , private additive1< big_radix_whole<Radix, Allocator> >
 {
     // Pre-conditions
     BOOST_STATIC_ASSERT( Radix >= 2 );
@@ -319,10 +321,17 @@ public:
     //! Subtract a single-digit value, ignoring the difference's sign
     bool  subtract_single_absolutely( digit_type subtrahend );//@}
 
-    //void  add_shifted_full( big_radix_whole const &value, size_type index );
-    //void  subtract_shifted_full( big_radix_whole const &value, size_type index );
-    //bool  subtract_shifted_full_absolutely( big_radix_whole const &value, size_type index );
-    //bool  subtract_full_absolutely( big_radix_whole const &subtrahend );
+    /*! \name Full-Length Add/Subtract-to-Self */ //@{
+    //! Add a shifted value
+    void  add_shifted_full( big_radix_whole const &value, size_type index );
+    //! Subtract a shifted value
+    void  subtract_shifted_full( big_radix_whole const &value, size_type
+     index );
+    //! Subtract a shifted value, ignoring the difference's sign
+    bool  subtract_shifted_full_absolutely( big_radix_whole const &value,
+     size_type index );
+    //! Subtract another value, ignoring the difference's sign
+    bool  subtract_full_absolutely( big_radix_whole const &subtrahend );//@}
 
     /*! \name Single Digit Shifting-to/from-Self */ //@{
     // Special shifting operations
@@ -387,8 +396,10 @@ public:
     //big_radix_whole &  operator *=( big_radix_whole const &multiplier );
     //big_radix_whole &  operator /=( big_radix_whole const &divisor );
     //big_radix_whole &  operator %=( big_radix_whole const &divisor );
-    //big_radix_whole &  operator +=( big_radix_whole const &addend );
-    //big_radix_whole &  operator -=( big_radix_whole const &subtrahend );
+    //! Add
+    big_radix_whole &  operator +=( big_radix_whole const &addend );
+    //! Subtract
+    big_radix_whole &  operator -=( big_radix_whole const &subtrahend );
 
     //! Left shift
     big_radix_whole &  operator <<=( size_type amount );

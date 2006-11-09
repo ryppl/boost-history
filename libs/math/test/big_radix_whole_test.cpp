@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   06 Nov 2006  Initial version (Daryle Walker)
+//   09 Nov 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -1981,6 +1981,293 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( parity_test, T, parity_test_types )
         BOOST_CHECK_EQUAL_COLLECTIONS( even_results.begin(), even_results.end(),
          evens.begin(), evens.end() );
     }
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+#pragma mark -
+#pragma mark Full-Precision Binary Operator & Routine Suite
+
+// The binary operators and the corresponding self-serve member function
+// (artihmetic, full-precision)
+BOOST_AUTO_TEST_SUITE( binary_full_operator_and_routine_suite )
+
+// Add with multiple digits test
+BOOST_AUTO_TEST_CASE( full_add_test )
+{
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+    big_decimal        a;
+
+    // Adding zero to something doesn't change that something
+    a = zero;
+    a.add_shifted_full( zero, 5u );
+    BOOST_CHECK_EQUAL( a, zero );
+    a += zero;
+    BOOST_CHECK_EQUAL( a, zero );
+    BOOST_CHECK_EQUAL( a + zero, zero );
+
+    a = one;
+    a.add_shifted_full( zero, 2u );
+    BOOST_CHECK_EQUAL( a, one );
+    a += zero;
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK_EQUAL( a + zero, one );
+
+    a = sixhundredseventyeight;
+    a.add_shifted_full( zero, 1u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a.add_shifted_full( zero, 2u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a.add_shifted_full( zero, 3u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a.add_shifted_full( zero, 4u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a += zero;
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    BOOST_CHECK_EQUAL( zero + a, sixhundredseventyeight );
+
+    // Adding values shifted past the augend's digits
+    a = zero;
+    a.add_shifted_full( two, 3u );
+    BOOST_CHECK_EQUAL( a, big_decimal(2000u) );  // spaced
+    a.reset();
+    a += thirty;
+    BOOST_CHECK_EQUAL( a, thirty );  // immediately after
+
+    a.add_shifted_full( fortyfive, 4u );
+    BOOST_CHECK_EQUAL( a, big_decimal(450030ul) );  // spaced
+    a.add_shifted_full( one, 6u );
+    BOOST_CHECK_EQUAL( a, big_decimal(1450030ul) );  // immediately after
+
+    // Adding values partially shifted past the augend's digits
+    a = sixhundredseventyeight;
+    a.add_shifted_full( sixhundredseventyeight, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(7458u) );  // carries
+    a.assign( 6047u );
+    a.add_shifted_full( big_decimal(302u), 2u );
+    BOOST_CHECK_EQUAL( a, big_decimal(36247ul) );  // no carries
+
+    // Adding values shifted to peak where the augend peaks
+    a = sixhundredseventyeight;
+    a.add_shifted_full( big_decimal(21u), 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(888u) );  // no carries
+    a.add_shifted_full( big_decimal(13u), 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(1018u) );  // propagated internal carry
+    a.add_shifted_full( big_decimal(91u), 2u );
+    BOOST_CHECK_EQUAL( a, big_decimal(10118u) );  // peak-place carry
+
+    // Adding values shifted, but totally within, the augend's digits
+    a.assign( 53294ul );
+    a.add_shifted_full( big_decimal(23u), 2u );
+    BOOST_CHECK_EQUAL( a, big_decimal(55594ul) );  // no carries
+    a.add_shifted_full( big_decimal(11u), 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(55704ul) );  // internal carry
+    a.assign( 99954ul );
+    a.add_shifted_full( big_decimal(6u), 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(100014ul) );  // propagated internal carry
+    a.assign( 997431ul );
+    a.add_shifted_full( big_decimal(28u), 2u );
+    BOOST_CHECK_EQUAL( a, big_decimal(1000231ul) );  // propagated double carry
+
+    // Adding unshifted values
+    a = fortyfive;
+    a.add_shifted_full( thirty, 0u );
+    BOOST_CHECK_EQUAL( a, big_decimal(75u) );  // no carries
+    a += big_decimal( 7u );
+    BOOST_CHECK_EQUAL( a, big_decimal(82u) );  // internal carry
+    BOOST_CHECK_EQUAL( a + big_decimal(18u), one << 2u );  // propagating carry
+}
+
+// Subtract with multiple digits test
+BOOST_AUTO_TEST_CASE( full_subtract_test )
+{
+    using boost::math::big_radix_whole_negative_result_error;
+
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+    big_decimal        a;
+
+    // Subtracting zero from something doesn't change that something
+    a = zero;
+    a.subtract_shifted_full( zero, 5u );
+    BOOST_CHECK_EQUAL( a, zero );
+    a -= zero;
+    BOOST_CHECK_EQUAL( a, zero );
+    BOOST_CHECK_EQUAL( a - zero, zero );
+
+    a = one;
+    a.subtract_shifted_full( zero, 2u );
+    BOOST_CHECK_EQUAL( a, one );
+    a -= zero;
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK_EQUAL( a - zero, one );
+
+    a = sixhundredseventyeight;
+    a.subtract_shifted_full( zero, 1u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a.subtract_shifted_full( zero, 2u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a.subtract_shifted_full( zero, 3u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a.subtract_shifted_full( zero, 4u );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    a -= zero;
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    BOOST_CHECK_EQUAL( a - zero, sixhundredseventyeight );
+
+    // Subtracting from zero, by a non-zero, is an error
+    a.reset();
+    BOOST_CHECK_THROW( a.subtract_shifted_full(one, 45u),
+     big_radix_whole_negative_result_error );
+    BOOST_CHECK_THROW( a.subtract_shifted_full(one, 1u),
+     big_radix_whole_negative_result_error );
+    BOOST_CHECK_THROW( a.subtract_shifted_full(one, 0u),
+     big_radix_whole_negative_result_error );
+    BOOST_CHECK_THROW( a -= one, big_radix_whole_negative_result_error );
+    BOOST_CHECK_THROW( zero - one, big_radix_whole_negative_result_error );
+
+    // Other ways of subtracting a larger number is an error
+    a = fortyfive;
+    BOOST_CHECK_THROW( a -= sixhundredseventyeight,
+     big_radix_whole_negative_result_error );  // longer
+    BOOST_CHECK_THROW( a.subtract_shifted_full(two, 2u),
+     big_radix_whole_negative_result_error );  // shifted past
+    BOOST_CHECK_THROW( a.subtract_shifted_full(two, 5u),
+     big_radix_whole_negative_result_error );  // way shifted past
+    BOOST_CHECK_THROW( a.subtract_shifted_full(big_decimal( 5u ), 1u),
+     big_radix_whole_negative_result_error );  // greater after shifting to peak
+    a.assign( 67700ul );
+    BOOST_CHECK_THROW( a.subtract_shifted_full(sixhundredseventyeight, 2u),
+     big_radix_whole_negative_result_error );  // greater after shifting to peak
+
+    // Subtracting to zero
+    a.assign( 67800ul );
+    a.subtract_shifted_full( sixhundredseventyeight, 2u );
+    BOOST_CHECK_EQUAL( a, zero );
+
+    a = fortyfive;
+    a -= fortyfive;
+    BOOST_CHECK_EQUAL( a, zero );
+    BOOST_CHECK_EQUAL( thirty - thirty, zero );
+
+    // Subtract without borrows
+    a = fortyfive;
+    a -= thirty;
+    BOOST_CHECK_EQUAL( a, big_decimal(15u) );
+
+    // Subtract with internal borrows
+    a.assign( 7532u );
+    a.subtract_shifted_full( fortyfive, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(7082u) );
+
+    // Subtract with cascading borrows
+    a -= big_decimal( 91u );
+    BOOST_CHECK_EQUAL( a, big_decimal(6991u) );  // keep length
+
+    a.assign( 1001u );
+    a.subtract_shifted_full( two, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(981u) );  // reduce length
+}
+
+// Subtract-absolutely with multiple digits test
+BOOST_AUTO_TEST_CASE( full_subtract_absolutely_test )
+{
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+    big_decimal        a;
+
+    // Subtracting zero from something doesn't change that something
+    a = zero;
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(zero, 5u) );
+    BOOST_CHECK_EQUAL( a, zero );
+    BOOST_CHECK( !a.subtract_full_absolutely(zero) );
+    BOOST_CHECK_EQUAL( a, zero );
+
+    a = one;
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(zero, 2u) );
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK( !a.subtract_full_absolutely(zero) );
+    BOOST_CHECK_EQUAL( a, one );
+
+    a = sixhundredseventyeight;
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(zero, 1u) );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(zero, 2u) );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(zero, 3u) );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(zero, 4u) );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+    BOOST_CHECK( !a.subtract_full_absolutely(zero) );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+
+    // Subtracting from zero, by a non-zero
+    a.reset();
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(one, 5u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(100000ul) );
+    a.reset();
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(thirty, 2u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(3000u) );
+    a.reset();
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(fortyfive, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(450u) );
+    a.reset();
+    BOOST_CHECK( a.subtract_full_absolutely(sixhundredseventyeight) );
+    BOOST_CHECK_EQUAL( a, sixhundredseventyeight );
+
+    // Subtracting equal or lesser values
+    a.assign( 200u );
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(two, 2u) );
+    BOOST_CHECK_EQUAL( a, zero );
+    a.assign( 300u );
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(thirty, 1u) );
+    BOOST_CHECK_EQUAL( a, zero );
+    a = fortyfive;
+    BOOST_CHECK( !a.subtract_full_absolutely(fortyfive) );
+    BOOST_CHECK_EQUAL( a, zero );
+
+    a = sixhundredseventyeight;
+    BOOST_CHECK( !a.subtract_full_absolutely(fortyfive) );
+    BOOST_CHECK_EQUAL( a, big_decimal(633u) );  // no borrow
+    a = sixhundredseventyeight;
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(fortyfive, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(228u) );  // no borrow
+
+    BOOST_CHECK( !a.subtract_full_absolutely(thirty) );
+    BOOST_CHECK_EQUAL( a, big_decimal(198u) );  // borrow
+    a.assign( 10034u );
+    BOOST_CHECK( !a.subtract_shifted_full_absolutely(fortyfive, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(9584u) );  // borrow w/ shorter length
+
+    // Subtracting greater values
+    a = sixhundredseventyeight;
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(fortyfive, 2u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(3822u) );  // slight overlap
+    a = sixhundredseventyeight;
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(fortyfive, 3u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(44322ul) );  // adjacent
+    a = sixhundredseventyeight;
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(fortyfive, 4u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(449322ul) );  // spaced
+    a = sixhundredseventyeight;
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(fortyfive, 6u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(44999322ul) );  // really spaced
+
+    a = sixhundredseventyeight;
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(big_decimal( 48u ), 2u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(4122u) );  // slight overlap with borrow
+
+    a = sixhundredseventyeight;
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(big_decimal( 68u ), 1u) );
+    BOOST_CHECK_EQUAL( a, two );  // greater before peak, reduce length
+    a = sixhundredseventyeight;
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(big_decimal( 7u ), 2u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(22u) );  // just greater @peak, reduce len
+    a = sixhundredseventyeight;
+    BOOST_CHECK( a.subtract_shifted_full_absolutely(big_decimal( 8u ), 2u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(122u) );  // greater @ peak, same length
 }
 
 BOOST_AUTO_TEST_SUITE_END()
