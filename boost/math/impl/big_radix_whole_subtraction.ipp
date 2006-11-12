@@ -291,6 +291,7 @@ boost::math::big_radix_whole<Radix, Allocator>::subtract_single_absolutely
 
 /** Decreases the digit-values of the current number starting at the given place
     by a given value, propagating borrows as needed.  It should be faster than
+    using a left-shift (or multiply) followed by a subtraction.
 
     \pre  <code><var>value</var> * Radix<sup><var>index</var></sup> &lt;=
           *this</code>
