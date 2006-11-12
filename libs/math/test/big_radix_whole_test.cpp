@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   09 Nov 2006  Initial version (Daryle Walker)
+//   12 Nov 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -1981,6 +1981,178 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( parity_test, T, parity_test_types )
         BOOST_CHECK_EQUAL_COLLECTIONS( even_results.begin(), even_results.end(),
          evens.begin(), evens.end() );
     }
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+
+#pragma mark -
+#pragma mark Mixed-Precision Binary Operator & Routine Suite
+
+// The binary operators and the corresponding self-serve member function
+// (artihmetic, various precisions mixed together)
+BOOST_AUTO_TEST_SUITE( binary_mixed_operator_and_routine_suite )
+
+// Multiply with mixed sizes, fused add, reverse order, test
+BOOST_AUTO_TEST_CASE( add_mixed_product_test )
+{
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+    big_decimal        a;
+
+    // Adding a zero product to something doesn't change that something
+    a = one;
+    a.add_mixed_product( fortyfive, 0, 3u );
+    BOOST_CHECK_EQUAL( a, one );
+    a.add_mixed_product( zero, 0, 4u );
+    BOOST_CHECK_EQUAL( a, one );
+    a.add_mixed_product( zero, 7 );
+    BOOST_CHECK_EQUAL( a, one );
+
+    // Adding a product to zero gets that product
+    a = zero;
+    a.add_mixed_product( fortyfive, 5, 2u );
+    BOOST_CHECK_EQUAL( a, big_decimal(22500u) );  // use all reserved space
+
+    a.reset();
+    a.add_mixed_product( two, 4 );
+    BOOST_CHECK_EQUAL( a, big_decimal(8u) );  // 1-digit, no carry (1 spare sp)
+
+    a.reset();
+    a.add_mixed_product( fortyfive, 2, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(900u) );  // 2-digit, 1 carry (1 spare sp)
+
+    // Add product to non-zero
+    a = one;
+    a.add_mixed_product( fortyfive, 5, 2u );
+    BOOST_CHECK_EQUAL( a, big_decimal(22501u) );  // no overlap
+    a.add_mixed_product( two, 4 );
+    BOOST_CHECK_EQUAL( a, big_decimal(22509u) );  // overlap w/ no carry
+    a.add_mixed_product( fortyfive, 2, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(23409u) );  // overlap w/ carry in +
+    a.add_mixed_product( big_decimal(249u), 4, 2u );
+    BOOST_CHECK_EQUAL( a, big_decimal(123009ul) );  // carries in + and *
+
+    a = thirty;
+    a.add_mixed_product( sixhundredseventyeight, 9, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(61050ul) );  // carries in *
+}
+
+// Multiply with mixed sizes, fused subtract, reverse order, test
+BOOST_AUTO_TEST_CASE( subtract_mixed_product_test )
+{
+    using boost::math::big_radix_whole_negative_result_error;
+
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+    big_decimal        a;
+
+    // Subtracting a zero product from something doesn't change that something
+    a = one;
+    a.subtract_mixed_product( two, 0 );
+    BOOST_CHECK_EQUAL( a, one );
+    a.subtract_mixed_product( zero, 9 );
+    BOOST_CHECK_EQUAL( a, one );
+    a.subtract_mixed_product( zero, 0, 7u );
+    BOOST_CHECK_EQUAL( a, one );
+
+    // Subtracting something non-zero from zero is an error
+    a.reset();
+    BOOST_CHECK_THROW( a.subtract_mixed_product(fortyfive, 4),
+     big_radix_whole_negative_result_error );
+    BOOST_CHECK_THROW( a.subtract_mixed_product(thirty, 5),
+     big_radix_whole_negative_result_error );
+    BOOST_CHECK_THROW( a.subtract_mixed_product(two, 9, 8u),
+     big_radix_whole_negative_result_error );
+
+    // Conventional use
+    a = fortyfive;
+    a.subtract_mixed_product( thirty, 1 );
+    BOOST_CHECK_EQUAL( a, big_decimal(15u) );  // no carry* nor borrow-
+    a.subtract_mixed_product( two, 5 );
+    BOOST_CHECK_EQUAL( a, big_decimal(5u) );  // carry*, no borrow-, reduce len
+
+    a.assign( 60u );
+    a.subtract_mixed_product( two, 3, 1u );
+    BOOST_CHECK_EQUAL( a, zero );  // no carry* nor borrow-, reduce to 0
+
+    a = sixhundredseventyeight;
+    a.subtract_mixed_product( thirty, 2, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(78u) );  // no carry* no borrow- reduce le
+    a = sixhundredseventyeight;
+    a.subtract_mixed_product( fortyfive, 2 );
+    BOOST_CHECK_EQUAL( a, big_decimal(588u) );  // carry* and borrow-
+
+    a = fortyfive;
+    a.subtract_mixed_product( two, 3 );
+    BOOST_CHECK_EQUAL( a, big_decimal(39u) );  // no carry, have borrow-
+
+    // Oversized subtrahends (check for correct restore)
+    a = fortyfive;
+    BOOST_CHECK_THROW( a.subtract_mixed_product(two, 3, 1u),
+     big_radix_whole_negative_result_error );  // oversized peak digit
+    BOOST_CHECK_EQUAL( a, fortyfive );
+    BOOST_CHECK_THROW( a.subtract_mixed_product(big_decimal( 6u ), 8),
+     big_radix_whole_negative_result_error );  // oversized one's digit
+    BOOST_CHECK_EQUAL( a, fortyfive );
+    BOOST_CHECK_THROW( a.subtract_mixed_product(one, 8, 2u),
+     big_radix_whole_negative_result_error );  // oversized index
+    BOOST_CHECK_EQUAL( a, fortyfive );
+    BOOST_CHECK_THROW( a.subtract_mixed_product(sixhundredseventyeight, 9),
+     big_radix_whole_negative_result_error );  // oversized full-factor
+    BOOST_CHECK_EQUAL( a, fortyfive );
+    BOOST_CHECK_THROW( a.subtract_mixed_product(thirty, 1, 1u),
+     big_radix_whole_negative_result_error );  // oversized full-factor + index
+    BOOST_CHECK_EQUAL( a, fortyfive );
+}
+
+// Multiply with mixed sizes, fused subtract-absolutely, reverse order, test
+BOOST_AUTO_TEST_CASE( subtract_mixed_product_absolutely_test )
+{
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+    big_decimal        a;
+
+    // Subtracting zero from something doesn't change that something
+    a = one;
+    BOOST_CHECK( !a.subtract_mixed_product_absolutely(two, 0) );
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK( !a.subtract_mixed_product_absolutely(zero, 2) );
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK( !a.subtract_mixed_product_absolutely(zero, 0, 3u) );
+    BOOST_CHECK_EQUAL( a, one );
+
+    // Subtracting from zero by a non-zero
+    a.reset();
+    BOOST_CHECK( a.subtract_mixed_product_absolutely(two, 3, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(60u) );  // no carry*, excess sp
+    a.reset();
+    BOOST_CHECK( a.subtract_mixed_product_absolutely(fortyfive, 3) );
+    BOOST_CHECK_EQUAL( a, big_decimal(135u) );  // carry*, used sp
+
+    // Subtracting equal or lesser values
+    a = sixhundredseventyeight;
+    BOOST_CHECK( !a.subtract_mixed_product_absolutely(fortyfive, 3) );
+    BOOST_CHECK_EQUAL( a, big_decimal(543u) );  // carry*, no borrow-
+    BOOST_CHECK( !a.subtract_mixed_product_absolutely(thirty, 2) );
+    BOOST_CHECK_EQUAL( a, big_decimal(483u) );  // no carry*, borrow-
+    BOOST_CHECK( !a.subtract_mixed_product_absolutely(two, 4, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(403u) );  // no carry*, no borrow-
+    BOOST_CHECK( !a.subtract_mixed_product_absolutely(big_decimal( 38u ), 8) );
+    BOOST_CHECK_EQUAL( a, big_decimal(99u) );  // carry*, borrow-, reduce length
+    BOOST_CHECK( !a.subtract_mixed_product_absolutely(big_decimal( 11u ), 9) );
+    BOOST_CHECK_EQUAL( a, zero );  // no carry*, no borrow-, reduce to 0
+
+    // Subtracting greater values
+    a = sixhundredseventyeight;
+    BOOST_CHECK( a.subtract_mixed_product_absolutely(fortyfive, 2, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(222u) );  // borrow at peak
+    BOOST_CHECK( a.subtract_mixed_product_absolutely(thirty, 3, 3u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(89778ul) );  // no overlap
+    BOOST_CHECK( a.subtract_mixed_product_absolutely(two, 8, 4u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(70222ul) );  // overlap
+    BOOST_CHECK( a.subtract_mixed_product_absolutely(big_decimal(12u), 6, 3u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(1778u) );  // cascading borrow, reduce len
 }
 
 BOOST_AUTO_TEST_SUITE_END()

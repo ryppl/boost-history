@@ -254,13 +254,17 @@ public:
     //void  root_self( unsigned index );
     //void  square_root_self();
 
-    //void  add_mixed_product( big_radix_whole const &addend_full_factor,
-    // digit_type addend_single_factor );
-    //void  subtract_mixed_product( big_radix_whole const &subtrahend_full_factor,
-    // digit_type subtrahend_single_factor );
-    //bool  subtract_mixed_product_absolutely( big_radix_whole const
-    // &subtrahend_full_factor, digit_type subtrahend_single_factor );
-    // TODO: add shifted variants?
+    /*! \name Add/Subtract-to-Self Mixed-Mode Fused-Multiply */ //@{
+    //! Add the product of factors of various types (fused)
+    void  add_mixed_product( big_radix_whole const &addend_full_factor,
+     digit_type addend_single_factor, size_type index = 0u );
+    //! Subtract the product of factors of various types (fused)
+    void  subtract_mixed_product( big_radix_whole const &subtrahend_full_factor,
+     digit_type subtrahend_single_factor, size_type index = 0u );
+    //! Subtract the product of factors of various types (fused), ignoring sign
+    bool  subtract_mixed_product_absolutely( big_radix_whole const
+     &subtrahend_full_factor, digit_type subtrahend_single_factor, size_type
+     index = 0u );//@}
 
     /*! \name Single-Digit Multiply-to-Self (Fused-Add/Subtract-to-Self) */ //@{
     //! Fuse-multiply/add by two single-digit values

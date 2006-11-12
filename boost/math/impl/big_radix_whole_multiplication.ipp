@@ -23,9 +23,11 @@
 #error "#Include only as part of <boost/math/big_radix_whole_core.hpp>"
 #endif
 
-#include <cstdlib>  // for std::div, div_t
+#include <algorithm>  // for std::transform
+#include <cstdlib>    // for std::div, div_t
 
-#include <boost/assert.hpp>  // for BOOST_ASSERT
+#include <boost/assert.hpp>         // for BOOST_ASSERT
+#include <boost/lambda/lambda.hpp>  // for boost::lamda::_1, _2
 
 
 //  Radix/bignum/natural extra member function definitions  ------------------//
@@ -732,6 +734,328 @@ boost::math::big_radix_whole<Radix,
 {
     return this->subtract_shifted_single_product_absolutely(
      subtrahend_multiplicand, subtrahend_multiplier, 0u );
+}
+
+/** Increases the current number's value by the product of the given values,
+    each of a different type.  It should be faster than either converting the
+    single-digit factor to a full \c big_radix_whole\<\> object before
+    multiplying or doing the shifting separately from the primary
+    multiplication before the adding.
+
+    \pre  <code><b>Max</b>( this-&gt;digit_count(), <var>index</var> +
+          <var>addend_full_factor</var>.digit_count() + 1 ) + 1 &lt;=
+          this-&gt;digit_limit()</code>
+    \pre  <code>0 &lt;= <var>addend_single_factor</var> &lt; Radix</code>
+
+    \param addend_full_factor    The first factor in the product-addend
+    \param addend_single_factor  The second factor in the product-addend
+    \param index                 The place of the product-addend one's digit
+                                 during the addition.  If not given, it defaults
+                                 to zero (i.e. no shift).
+
+    \post  <code>*this == <var>old_this</var> + <var>addend_full_factor</var> *
+           <var>addend_single_factor</var> *
+           Radix<sup><var>index</var></sup></code>
+ */
+template < int Radix, class Allocator >
+void
+boost::math::big_radix_whole<Radix, Allocator>::add_mixed_product
+(
+    big_radix_whole const &  addend_full_factor,
+    digit_type               addend_single_factor,
+    size_type                index  // = 0u
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( addend_full_factor.test_invariant() );
+
+    deque_type const &  fd = addend_full_factor.digits_;
+    deque_type &        td = this->digits_;
+    size_type const     fs = fd.size(), ts = td.size(), tsm = td.max_size();
+
+    BOOST_ASSERT( 0 <= addend_single_factor && addend_single_factor <
+     self_type::radix );
+    BOOST_ASSERT( (fs < tsm) && (index < tsm - fs) && (std::max( ts, fs + index
+     + 1u ) <= tsm - 1u) );
+        // tests are ordered to avoid under/over-flow
+
+    if ( fs && addend_single_factor )
+    {
+        using namespace boost::lambda;
+
+        // Allocate space for the product, and a carry for the addition
+        size_type const  ps = fs + 1u + index;
+
+        if ( ps > ts )
+        {
+            td.insert( td.end(), ps - ts + 1u, 0 );
+        }
+        else
+        {
+            td.push_back( 0 );
+        }
+
+        // Do the fused-multiply/add
+        iterator const  tb = td.begin() + index;
+
+        std::transform( fd.begin(), fd.end(), tb, tb, _2 + _1 *
+         addend_single_factor );
+
+        // Resolve carries
+        iterator const  tp = td.end() - 1;
+
+        for ( iterator  i = tb ; tp > i ; )
+        {
+            reference  current = *i, next = *++i;
+
+            while ( self_type::radix <= current )
+            {
+                current -= self_type::radix;
+                ++next;
+            }
+        }
+        BOOST_ASSERT( self_type::radix > *tp );
+
+        // Removed unused space (e.g. the digits involved were small)
+        this->clear_leading_zeros();
+    }
+    // ELSE: anything + 0 == anything -> no change 
+
+    BOOST_ASSERT( this->test_invariant() );
+}
+
+/** Decreases the current number's value by the product of the given values,
+    each of a different type.  It should be faster than either converting the
+    single-digit factor to a full \c big_radix_whole\<\> object before
+    multiplying or doing the shifting separately from the primary
+    multiplication before the subtracting.
+
+    \pre  <code><var>subtrahend_full_factor</var> *
+          <var>subtrahend_single_factor</var> * Radix<sup><var>index</var></sup>
+          &lt;= *this</code>
+    \pre  <code>0 &lt;= <var>subtrahend_single_factor</var> &lt; Radix</code>
+
+    \param subtrahend_full_factor    The first factor in the product-subtrahend
+    \param subtrahend_single_factor  The second factor in the product-subtrahend
+    \param index                     The place of the product-subtrahend one's
+                                     digit during the subtraction.  If not
+                                     given, it defaults to zero (i.e. no shift).
+
+    \throws boost::math::big_radix_whole_negative_result_error
+             The current state describes a value less than the shifted
+             product-subtrahend, which would require a negative value for the
+             new state, which is not representable.
+
+    \post  <code>*this == <var>old_this</var> -
+           <var>subtrahend_full_factor</var> *
+           <var>subtrahend_single_factor</var> *
+           Radix<sup><var>index</var></sup></code>
+ */
+template < int Radix, class Allocator >
+void
+boost::math::big_radix_whole<Radix, Allocator>::subtract_mixed_product
+(
+    big_radix_whole const &  subtrahend_full_factor,
+    digit_type               subtrahend_single_factor,
+    size_type                index  // = 0u
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( subtrahend_full_factor.test_invariant() );
+
+    deque_type const &  fd = subtrahend_full_factor.digits_;
+    deque_type &        td = this->digits_;
+
+    BOOST_ASSERT( 0 <= subtrahend_single_factor && subtrahend_single_factor <
+     self_type::radix );
+
+    if ( !fd.empty() && subtrahend_single_factor )
+    {
+        using namespace boost::lambda;
+        using std::transform;
+
+        big_radix_whole_negative_result_error const  exception( "attempted to "
+         "subtract a larger mixed-product (possibly after shifting)" );
+
+        // Take care of obviously oversized subtrahends
+        size_type const  fs = fd.size(), ts = td.size();
+
+        if ( (fs > ts) || (index >= ts) || (fs > ts - index) )
+        {
+            throw exception;
+        }
+
+        // Do the fused-multiply/subtract
+        const_iterator const  fb = fd.begin(), fe = fd.end();
+        iterator const        tb = td.begin() + index;
+
+        transform( fb, fe, tb, tb, _2 - _1 * subtrahend_single_factor );
+
+        // Resolve borrows
+        iterator const  tp = td.end() - 1;
+
+        for ( iterator  i = tb ; tp > i ; )
+        {
+            reference  current = *i, next = *++i;
+
+            while ( 0 > current )
+            {
+                current += self_type::radix;
+                --next;
+            }
+        }
+
+        // If the product was larger than the existing number, then undo
+        // everything (checking for non-obvious oversized products in advance
+        // would take more resources than just doing it for real).
+        reference  last = *tp;
+
+        if ( 0 > last )
+        {
+            // Do a fused-multiply/add
+            transform( fb, fe, tb, tb, _2 + _1 * subtrahend_single_factor );
+
+            // Resolve carries
+            for ( iterator  j = tb ; tp > j ; )
+            {
+                reference  current = *j, next = *++j;
+
+                while ( self_type::radix <= current )
+                {
+                    current -= self_type::radix;
+                    ++next;
+                }
+            }
+            BOOST_ASSERT( self_type::radix > last && 0 < last );
+
+            // Send notice
+            throw exception;
+        }
+        else
+        {
+            // Remove cleared-out digits
+            this->clear_leading_zeros();
+        }
+    }
+    // ELSE: anything - 0 == anything -> no change
+
+    BOOST_ASSERT( this->test_invariant() );
+}
+
+/** Replaces the current number's value with its absolute value taken after
+    decreasing the value by the product of the given values, each of a different
+    type.  It should be faster than either converting the single-digit factor to
+    a full \c big_radix_whole\<\> object before multiplying or doing the
+    shifting separately from the primary multiplication before the subtracting
+    (and doing the sign and magnitude checks).
+
+    \pre  <code>0 &lt;= <var>subtrahend_single_factor</var> &lt; Radix</code>
+    \pre  <code><var>index</var> + <var>addend_full_factor</var>.digit_count() +
+          1 &lt;= this-&gt;digit_limit()</code>
+
+    \param subtrahend_full_factor    The first factor in the product-subtrahend
+    \param subtrahend_single_factor  The second factor in the product-subtrahend
+    \param index                     The place of the product-subtrahend one's
+                                     digit during the subtraction.  If not
+                                     given, it defaults to zero (i.e. no shift).
+
+    \retval true   The difference was originally negative (i.e.
+                   <code><var>subtrahend_full_factor</var> *
+                   <var>subtrahend_single_factor</var> *
+                   Radix<sup><var>index</var></sup> &gt; *this</code>).
+    \retval false  The difference was originally non-negative.
+
+    \post  <code>*this == |<var>old_this</var> -
+           <var>subtrahend_full_factor</var> *
+           <var>subtrahend_single_factor</var> *
+           Radix<sup><var>index</var></sup>|</code>
+ */
+template < int Radix, class Allocator >
+bool
+boost::math::big_radix_whole<Radix,
+ Allocator>::subtract_mixed_product_absolutely
+(
+    big_radix_whole const &  subtrahend_full_factor,
+    digit_type               subtrahend_single_factor,
+    size_type                index  // = 0u
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( subtrahend_full_factor.test_invariant() );
+
+    deque_type const &  fd = subtrahend_full_factor.digits_;
+    deque_type &        td = this->digits_;
+    size_type const     fs = fd.size(), tsm = td.max_size();
+
+    BOOST_ASSERT( 0 <= subtrahend_single_factor && subtrahend_single_factor <
+     self_type::radix );
+    BOOST_ASSERT( (fs < tsm) && (index <= tsm - fs - 1u) );
+        // tests are ordered to avoid under/over-flow
+
+    bool  result = false;
+
+    if ( fs && subtrahend_single_factor )
+    {
+        using namespace boost::lambda;
+
+        // Allocate space for the product
+        size_type const  ts = td.size(), ss = fs + 1u + index;
+
+        if ( ss > ts )
+        {
+            td.insert( td.end(), ss - ts, 0 );
+        }
+
+        // Do the fused-multiply/subtract
+        iterator const  tb = td.begin() + index;
+
+        std::transform( fd.begin(), fd.end(), tb, tb, _2 - _1 *
+         subtrahend_single_factor );
+
+        // Resolve borrows
+        iterator const  tp = td.end() - 1;
+
+        for ( iterator  i = tb ; tp > i ; )
+        {
+            reference  current = *i, next = *++i;
+
+            while ( 0 > current )
+            {
+                current += self_type::radix;
+                --next;
+            }
+        }
+
+        // Remove cleared-out digits (invalidates "tb" and "tp")
+        this->clear_leading_zeros();
+
+        // Negate a negative result
+        if ( result = !td.empty() && (0 > td.back()) )
+        {
+            iterator const  tp2 = td.end() - 1;
+            reference       last = *tp2;
+
+            for ( iterator  j = td.begin() ; tp2 > j ; )
+            {
+                reference  current = *j, next = *++j;
+
+                current = -current;
+                while ( 0 > current )
+                {
+                    current += self_type::radix;
+                    ++next;  // negates to operator-- on next iteration
+                }
+            }
+            last = -last;
+            BOOST_ASSERT( 0 <= last );
+
+            this->clear_leading_zeros();
+        }
+    }
+    // ELSE: |anything - 0| == |anything| -> no change for non-negatives
+
+    BOOST_ASSERT( this->test_invariant() );
+    return result;
 }
 
 
