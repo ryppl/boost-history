@@ -10,6 +10,9 @@
 // of the Boost.MultiIndex Library developped by Joaquin Lopez Muñoz.
 // See it in /libs/multi_index/perf/test_perf.cpp
 
+//***************************************************************************//
+//                          In construction                                  //
+//***************************************************************************//
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 
@@ -35,7 +38,6 @@ using namespace boost::multi_index;
 //   Stroustrup, B.: "Wrapping C++ Member Function Calls", The C++ Report,
 //     June 2000, Vol 12/No 6.
 // Original code retrievable at: http://www.research.att.com/~bs/wrap_code.cpp
-
 
 // How many clock units does it take to interrogate the clock?
 

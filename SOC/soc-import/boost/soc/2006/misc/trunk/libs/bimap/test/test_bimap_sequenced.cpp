@@ -27,6 +27,7 @@
 
 // bimap container
 #include <boost/bimap/bimap.hpp>
+#include <boost/bimap/support/lambda.hpp>
 
 #include <libs/bimap/test/test_bimap.hpp>
 
@@ -86,22 +87,82 @@ void test_bimap()
         c.splice(c.begin(),b,b.begin(),b.end());
 
         BOOST_CHECK( b.size() == 0 );
-/*
+
         b.left.merge(c.left);
         c.left.merge(b.left,std::less<int>());
-*/
+
+        b.left.sort();
+        b.left.sort(std::less<int>());
+
+        b.left.unique();
+        b.left.unique(std::equal_to<int>());
+
+        c.sort();
+        c.unique();
+        b.merge(c);
+        b.reverse();
+
+        b.left.remove_if( _key < 3 );
+
+        // Test splice and merge
+
+        b.clear(); c.clear();
+
+        c.left.insert(c.left.begin(),left_data.begin(),left_data.end());
+        b.right.splice(b.right.begin(),c.right);
+
+        BOOST_CHECK( c.size() == 0 );
+        BOOST_CHECK( b.size() == 4 );
+
+        c.right.splice(c.right.begin(),b.right,++b.right.begin());
+
+        b.right.merge(c.right);
+        c.right.merge(b.right,std::less<double>());
+
+        b.right.sort();
+        b.right.sort(std::less<double>());
+
+        b.right.unique();
+        b.right.unique(std::equal_to<double>());
+
+        b.right.remove_if( _key < 0.3 );
+
+        b.clear();
+        b.left.insert(b.left.begin(),left_data.begin(),left_data.end());
+
+        b.left.relocate(b.left.begin(), ++b.left.begin() );
+        b.left.relocate(b.left.end(), b.left.begin(), ++b.left.begin() );
+
+        b.right.relocate(b.right.begin(), ++b.right.begin() );
+        b.right.relocate(b.right.end(), b.right.begin(), ++b.right.begin() );
+
+        b.relocate(b.begin(), ++b.begin() );
+        b.relocate(b.end(), b.begin(), ++b.begin() );
     }
     //--------------------------------------------------------------------
 
 
     //--------------------------------------------------------------------
     {
-        bimap
+        typedef bimap
         <
-            vector_of< short >, list_of< std::string >,
-            list_of_relation
+            list_of< short >, list_of< std::string >,
+            vector_of_relation
 
-        > b;
+        > bm;
+
+        bm b;
+        b.push_back( bm::relation(1,"one"  ) );
+        b.push_back( bm::relation(2,"two"  ) );
+        b.push_back( bm::relation(3,"three") );
+        b.push_back( bm::relation(4,"four" ) );
+
+        b.sort();
+        b.unique();
+        b.reverse();
+
+        b.relocate( b.begin(), ++b.begin() );
+        b.relocate( b.end(), b.begin(), ++b.begin() );
     }
     //--------------------------------------------------------------------
 
