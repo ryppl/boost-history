@@ -27,8 +27,8 @@ struct relation_modifier_adaptor :
     FirstExtractor,
     SecondExtractor
 {
-    relation_modifier_adaptor( Modifier m ) : Modifier(m) {}
-    relation_modifier_adaptor( Modifier m, FirstExtractor fe, SecondExtractor se ) :
+    relation_modifier_adaptor( const Modifier & m ) : Modifier(m) {}
+    relation_modifier_adaptor( const Modifier & m, const FirstExtractor & fe, const SecondExtractor & se ) :
         Modifier(m), FirstExtractor(fe), SecondExtractor(se) {}
 
     void operator()( NewArgument & x ) const

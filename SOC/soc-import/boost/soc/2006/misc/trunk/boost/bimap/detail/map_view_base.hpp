@@ -42,9 +42,9 @@ namespace detail {
     ::boost::bimap::container_adaptor::support::iterator_facade_to_base          \
     <                                                                            \
         typename ::boost::bimap::support::                                       \
-            iterator_type_by<Tag,BimapType>::type,                               \
+                  iterator_type_by<TAG,BIMAP>::type,                             \
         typename ::boost::bimap::support::                                       \
-            const_iterator_type_by<Tag,BimapType>::type                          \
+            const_iterator_type_by<TAG,BIMAP>::type                              \
                                                                                  \
     >,                                                                           \
     ::boost::mpl::na,                                                            \

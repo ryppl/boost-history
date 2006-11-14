@@ -18,13 +18,17 @@ namespace boost {
 namespace bimap {
 namespace support {
 
-boost::lambda::placeholder1_type _first ;
-boost::lambda::placeholder2_type _second;
+namespace {
 
-boost::lambda::placeholder1_type _left  ;
-boost::lambda::placeholder2_type _right ;
+boost::lambda::placeholder1_type & _first  = boost::lambda::_1;
+boost::lambda::placeholder2_type & _second = boost::lambda::_2;
 
-boost::lambda::placeholder1_type _key   ;
+boost::lambda::placeholder1_type & _left   = boost::lambda::_1;
+boost::lambda::placeholder2_type & _right  = boost::lambda::_2;
+
+boost::lambda::placeholder1_type & _key    = boost::lambda::_1;
+
+}
 
 } // namespace support
 } // namespace bimap

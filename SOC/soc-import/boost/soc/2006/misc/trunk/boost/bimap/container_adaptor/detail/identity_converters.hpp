@@ -80,11 +80,6 @@ struct iterator_from_base_identity
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-// TODO
-// Is there a better way to do this?
-// There is an issue when the base iterator and the const base iterators
-// are the same.
-
 template< class BaseIterator, class Iterator, class ConstIterator >
 struct iterator_from_base_identity<BaseIterator,Iterator,BaseIterator,ConstIterator>
 {

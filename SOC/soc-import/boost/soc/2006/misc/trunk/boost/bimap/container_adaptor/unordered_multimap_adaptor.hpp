@@ -14,6 +14,7 @@
 
 #include <boost/bimap/container_adaptor/unordered_associative_container_adaptor.hpp>
 #include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/vector.hpp>
 
 namespace boost {
 namespace bimap {
@@ -37,7 +38,7 @@ template
     class ValueFromBaseConverter         = ::boost::mpl::na,
     class KeyToBaseConverter             = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class unordered_multimap_adaptor :
 

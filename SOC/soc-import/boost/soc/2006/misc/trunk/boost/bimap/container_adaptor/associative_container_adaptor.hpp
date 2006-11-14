@@ -14,6 +14,7 @@
 
 #include <utility>
 
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/bimap/container_adaptor/detail/identity_converters.hpp>
@@ -87,7 +88,7 @@ template
     class ValueFromBaseConverter    = ::boost::mpl::na,
     class KeyToBaseConverter        = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class associative_container_adaptor :
 

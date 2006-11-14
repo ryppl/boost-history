@@ -46,7 +46,7 @@ struct operator_bracket_proxy
         view(v), key(k)
     {}
 
-    operator typename View::data_type const & ()
+    operator typename View::data_type const & () const
     {
         typename View::const_iterator i = view.find(key);
         if( i == view.end() )
@@ -56,8 +56,7 @@ struct operator_bracket_proxy
         return i->second;
     }
 
-    typename View::data_type const &
-        operator=( typename View::data_type const & new_data )
+    operator_bracket_proxy & operator=( typename View::data_type const & new_data )
     {
         typename View::iterator iter = view.find(key);
         if

@@ -58,6 +58,26 @@ class list_set_view
     list_set_view & operator=(const list_set_view & v) { this->base() = v.base(); return *this; }
 
     BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION
+
+    // Rearrange Operations
+
+    void relocate(typename base_::iterator position, typename base_::iterator i)
+    {
+        this->base().relocate(
+            this->template functor<typename base_::iterator_to_base>()(position),
+            this->template functor<typename base_::iterator_to_base>()(i)
+        );
+    }
+
+    void relocate(typename base_::iterator position,
+                  typename base_::iterator first, typename base_::iterator last)
+    {
+        this->base().relocate(
+            this->template functor<typename base_::iterator_to_base>()(position),
+            this->template functor<typename base_::iterator_to_base>()(first),
+            this->template functor<typename base_::iterator_to_base>()(last)
+        );
+    }
 };
 
 

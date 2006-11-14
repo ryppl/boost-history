@@ -14,6 +14,7 @@
 
 #include <boost/bimap/container_adaptor/sequence_container_adaptor.hpp>
 #include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/vector.hpp>
 
 namespace boost {
 namespace bimap {
@@ -36,7 +37,7 @@ template
     class ValueToBaseConverter             = ::boost::mpl::na,
     class ValueFromBaseConverter           = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class vector_adaptor :
 

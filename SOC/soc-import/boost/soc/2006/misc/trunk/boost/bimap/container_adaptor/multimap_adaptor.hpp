@@ -14,6 +14,7 @@
 
 #include <boost/bimap/container_adaptor/ordered_associative_container_adaptor.hpp>
 #include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/vector.hpp>
 
 namespace boost {
 namespace bimap {
@@ -37,7 +38,7 @@ template
     class ValueFromBaseConverter           = ::boost::mpl::na,
     class KeyToBaseConverter               = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class multimap_adaptor :
 
@@ -83,6 +84,32 @@ class multimap_adaptor :
 
     typedef multimap_adaptor multimap_adaptor_;
 
+    // Change the insert functions
+
+    template <class InputIterator>
+    void insert(InputIterator iterBegin, InputIterator iterEnd)
+    {
+        for( ; iterBegin != iterEnd ; ++iterBegin )
+        {
+            this->base().insert( this->template functor<typename base_::value_to_base>()(
+                typename base_::value_type(*iterBegin)) );
+        }
+    }
+
+    typename base_::iterator insert(
+        typename ::boost::call_traits< typename base_::value_type >::param_type x)
+    {
+        return this->base().insert( this->template functor<typename base_::value_to_base>()(x) );
+    }
+
+    typename base_::iterator insert(typename base_::iterator pos,
+                    typename ::boost::call_traits< typename base_::value_type >::param_type x)
+    {
+        return this->template functor<typename base_::iterator_from_base>()(
+            this->base().insert(this->template functor<typename base_::iterator_to_base>()(pos),
+            this->template functor<typename base_::value_to_base>()(x))
+        );
+    }
 };
 
 

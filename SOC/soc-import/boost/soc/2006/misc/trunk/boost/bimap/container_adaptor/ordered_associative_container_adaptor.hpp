@@ -16,7 +16,7 @@
 #include <boost/bimap/container_adaptor/detail/value_comparison_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/comparison_adaptor.hpp>
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/list.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/operators.hpp>
@@ -90,7 +90,7 @@ template
     class ValueFromBaseConverter           = ::boost::mpl::na,
     class KeyToBaseConverter               = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class ordered_associative_container_adaptor :
 

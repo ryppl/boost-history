@@ -15,7 +15,9 @@
 #include <boost/bimap/container_adaptor/sequence_container_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/comparison_adaptor.hpp>
 #include <boost/mpl/aux_/na.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/call_traits.hpp>
+#include <functional>
 
 namespace boost {
 namespace bimap {
@@ -38,7 +40,7 @@ template
     class ValueToBaseConverter             = ::boost::mpl::na,
     class ValueFromBaseConverter           = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class list_adaptor :
 
@@ -118,15 +120,26 @@ class list_adaptor :
             <
                 Predicate,
                 typename Base::value_type,
-                typename base_::value_to_base
+                typename base_::value_from_base
 
-            >( pred, this->template functor<typename base_::value_to_base>() )
+            >( pred, this->template functor<typename base_::value_from_base>() )
         );
     }
 
     void unique()
     {
-        this->base().unique();
+        this->base().unique(
+            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            <
+                std::equal_to<typename base_::value_type>,
+                typename Base::value_type,
+                typename base_::value_from_base
+
+            >(
+                std::equal_to<typename base_::value_type>(),
+                this->template functor<typename base_::value_from_base>()
+            )
+        );
     }
 
     template <class BinaryPredicate>
@@ -137,34 +150,56 @@ class list_adaptor :
             <
                 BinaryPredicate,
                 typename Base::value_type,
-                typename base_::value_to_base
+                typename base_::value_from_base
 
-            >( binary_pred, this->template functor<typename base_::value_to_base>() )
+            >( binary_pred, this->template functor<typename base_::value_from_base>() )
         );
     }
-/*
+
     void merge(list_adaptor & x)
     {
-        this->base().merge(x.base());
+        this->base().merge(x.base(),
+            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            <
+                std::less<typename base_::value_type>,
+                typename Base::value_type,
+                typename base_::value_from_base
+
+            >(
+                std::less<typename base_::value_type>(),
+                this->template functor<typename base_::value_from_base>()
+            )
+        );
     }
 
     template <typename Compare>
-    void merge(list_adaptor & x,Compare comp)
+    void merge(list_adaptor & x, Compare comp)
     {
         this->base().merge(x.base(),
             ::boost::bimap::container_adaptor::detail::comparison_adaptor
             <
                 Compare,
                 typename Base::value_type,
-                typename base_::value_to_base
+                typename base_::value_from_base
 
-            >( comp, this->template functor<typename base_::value_to_base>() )
+            >( comp, this->template functor<typename base_::value_from_base>() )
         );
     }
-*/
+
     void sort()
     {
-        this->base().sort();
+        this->base().sort(
+            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            <
+                std::less<typename base_::value_type>,
+                typename Base::value_type,
+                typename base_::value_from_base
+
+            >(
+                std::less<typename base_::value_type>(),
+                this->template functor<typename base_::value_from_base>()
+            )
+        );
     }
 
     template <typename Compare>
@@ -175,9 +210,9 @@ class list_adaptor :
             <
                 Compare,
                 typename Base::value_type,
-                typename base_::value_to_base
+                typename base_::value_from_base
 
-            >( comp, this->template functor<typename base_::value_to_base>() )
+            >( comp, this->template functor<typename base_::value_from_base>() )
         );
     }
 

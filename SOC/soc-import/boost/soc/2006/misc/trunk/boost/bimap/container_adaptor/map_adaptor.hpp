@@ -13,6 +13,7 @@
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_MAP_ADAPTOR_HPP
 
 #include <boost/bimap/container_adaptor/ordered_associative_container_adaptor.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/call_traits.hpp>
 
@@ -38,7 +39,7 @@ template
     class ValueFromBaseConverter           = ::boost::mpl::na,
     class KeyToBaseConverter               = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class map_adaptor :
 

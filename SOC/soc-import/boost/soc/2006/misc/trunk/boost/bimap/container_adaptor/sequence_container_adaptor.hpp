@@ -15,6 +15,7 @@
 #include <utility>
 
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/bimap/container_adaptor/detail/identity_converters.hpp>
 #include <boost/bimap/container_adaptor/container_adaptor.hpp>
@@ -87,7 +88,7 @@ template
     class ValueToBaseConverter              = ::boost::mpl::na,
     class ValueFromBaseConverter            = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class sequence_container_adaptor :
 

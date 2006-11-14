@@ -18,10 +18,45 @@
 #include <boost/bimap/relation/support/pair_by.hpp>
 #include <boost/bimap/support/iterator_type_by.hpp>
 #include <boost/bimap/detail/map_view_base.hpp>
+#include <boost/bimap/relation/support/data_extractor.hpp>
 
 namespace boost {
 namespace bimap {
 namespace views {
+
+template< class Tag, class BimapType >
+struct list_map_view_base
+{
+    typedef ::boost::bimap::container_adaptor::list_map_adaptor
+    <
+        typename BimapType::core_type::template index<Tag>::type,
+        typename ::boost::bimap::support::      iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::      reverse_iterator_type_by<Tag,BimapType>::type,
+        typename ::boost::bimap::support::const_reverse_iterator_type_by<Tag,BimapType>::type,
+        ::boost::bimap::container_adaptor::support::iterator_facade_to_base
+        <
+            typename ::boost::bimap::support::
+                iterator_type_by<Tag,BimapType>::type,
+            typename ::boost::bimap::support::
+                const_iterator_type_by<Tag,BimapType>::type
+
+        >,
+        ::boost::mpl::na,
+        ::boost::mpl::na,
+        ::boost::mpl::na,
+        ::boost::bimap::relation::support::
+            get_pair_functor<Tag, typename BimapType::relation >,
+
+        typename ::boost::bimap::relation::support::data_extractor
+        <
+            Tag,
+            typename BimapType::relation
+
+        >::type
+
+    > type;
+};
 
 /// \brief View of a side of a bimap.
 /**
@@ -34,20 +69,11 @@ See also const_list_map_view.
 template< class Tag, class BimapType >
 class list_map_view
 :
-    public BOOST_BIMAP_MAP_VIEW_CONTAINER_ADAPTOR(
-        list_map_adaptor,
-        Tag,BimapType,
-        reverse_iterator_type_by,const_reverse_iterator_type_by
-    ),
+    public list_map_view_base<Tag,BimapType>::type,
     public ::boost::bimap::detail::map_view_base< list_map_view<Tag,BimapType>,Tag,BimapType >
 
 {
-    typedef BOOST_BIMAP_MAP_VIEW_CONTAINER_ADAPTOR(
-        list_map_adaptor,
-        Tag,BimapType,
-        reverse_iterator_type_by,const_reverse_iterator_type_by
-
-    ) base_;
+    typedef typename list_map_view_base<Tag,BimapType>::type base_;
 
     BOOST_BIMAP_MAP_VIEW_BASE_FRIEND(list_map_view,Tag,BimapType);
 
@@ -59,6 +85,26 @@ class list_map_view
     list_map_view & operator=(const list_map_view & v) { this->base() = v.base(); return *this; }
 
     BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION
+
+    // Rearrange Operations
+
+    void relocate(typename base_::iterator position, typename base_::iterator i)
+    {
+        this->base().relocate(
+            this->template functor<typename base_::iterator_to_base>()(position),
+            this->template functor<typename base_::iterator_to_base>()(i)
+        );
+    }
+
+    void relocate(typename base_::iterator position,
+                  typename base_::iterator first, typename base_::iterator last)
+    {
+        this->base().relocate(
+            this->template functor<typename base_::iterator_to_base>()(position),
+            this->template functor<typename base_::iterator_to_base>()(first),
+            this->template functor<typename base_::iterator_to_base>()(last)
+        );
+    }
 };
 
 

@@ -57,6 +57,39 @@ class multimap_view
     BOOST_BIMAP_MAP_VIEW_RANGE_IMPLEMENTATION(base_)
 
     multimap_view & operator=(const multimap_view & v) { this->base() = v.base(); return *this; }
+
+    // Change the insert functions
+
+    template <class InputIterator>
+    void insert(InputIterator iterBegin, InputIterator iterEnd)
+    {
+        for( ; iterBegin != iterEnd ; ++iterBegin )
+        {
+            this->base().insert( this->template functor<typename base_::value_to_base>()(
+                typename base_::value_type(*iterBegin)) );
+        }
+    }
+
+    std::pair<typename base_::iterator, bool> insert(
+        typename ::boost::call_traits< typename base_::value_type >::param_type x)
+    {
+        std::pair< typename base_::base_type::iterator, bool > r(
+            this->base().insert( this->template functor<typename base_::value_to_base>()(x) )
+        );
+
+        return std::pair<typename base_::iterator, bool>(
+            this->template functor<typename base_::iterator_from_base>()(r.first),r.second
+        );
+    }
+
+    typename base_::iterator insert(typename base_::iterator pos, 
+        typename ::boost::call_traits< typename base_::value_type >::param_type x)
+    {
+        return this->template functor<typename base_::iterator_from_base>()(
+            this->base().insert(this->template functor<typename base_::iterator_to_base>()(pos),
+            this->template functor<typename base_::value_to_base>()(x))
+        );
+    }
 };
 
 

@@ -20,7 +20,7 @@
 #include <boost/iterator/iterator_traits.hpp>
 
 #include <boost/bimap/container_adaptor/detail/functor_bag.hpp>
-#include <boost/mpl/list.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/copy.hpp>
 #include <boost/mpl/front_inserter.hpp>
 #include <boost/call_traits.hpp>
@@ -46,7 +46,7 @@ template
     class ValueToBaseConverter      = ::boost::mpl::na,
     class ValueFromBaseConverter    = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class container_adaptor
 {
@@ -267,7 +267,7 @@ class container_adaptor
 
         typename mpl::copy
         <
-            mpl::list
+            mpl::vector
             <
                 iterator_to_base,
                 iterator_from_base,

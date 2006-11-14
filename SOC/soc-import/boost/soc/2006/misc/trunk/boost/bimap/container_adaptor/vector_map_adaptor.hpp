@@ -17,6 +17,7 @@
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/bimap/container_adaptor/vector_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/identity_converters.hpp>
+#include <boost/mpl/vector.hpp>
 
 namespace boost {
 namespace bimap {
@@ -39,7 +40,7 @@ template
     class ValueToBaseConverter             = ::boost::mpl::na,
     class ValueFromBaseConverter           = ::boost::mpl::na,
 
-    class FunctorsFromDerivedClasses = mpl::list<>
+    class FunctorsFromDerivedClasses = mpl::vector<>
 >
 class vector_map_adaptor :
 

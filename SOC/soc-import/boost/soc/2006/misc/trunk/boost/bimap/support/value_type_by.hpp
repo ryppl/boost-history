@@ -19,7 +19,7 @@
 \brief Metafunction to obtain the value type of a bimap indexed by one of the sides.
 
 The tag parameter can be either a user defined tag or \c member_at::{side}.
-The returned type is compatible with std::pair.
+The returned type is signature-compatible with std::pair.
 
 \code
 

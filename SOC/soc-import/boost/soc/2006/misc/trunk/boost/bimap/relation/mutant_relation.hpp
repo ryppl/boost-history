@@ -15,7 +15,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
-#include <boost/mpl/list.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/operators.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/serialization/nvp.hpp>
@@ -114,7 +114,7 @@ class mutant_relation
 
     //@}
 
-    typedef ::boost::mpl::list3
+    typedef ::boost::mpl::vector3
     <
         structured_pair< TA, TB, normal_layout >,
         structured_pair< TB, TA, mirror_layout >,

@@ -26,14 +26,14 @@ namespace detail {
 A simple adaptor.
                                                                                     **/
 
-// TODO
+// Things that can be reworked:
 // * The value comparison adaptor can be optimized for NewValue equal to ValueCompare::argument_type
 // * Use ConceptCheck to ensure the validity of ValueCompare
 
 template < class ValueCompare, class NewValue >
 struct value_comparison_adaptor : std::binary_function<NewValue,NewValue,bool>
 {
-    value_comparison_adaptor( ValueCompare c ) : comp(c) {}
+    value_comparison_adaptor( const ValueCompare & c ) : comp(c) {}
 
     bool operator()( typename call_traits<NewValue>::param_type x,
                      typename call_traits<NewValue>::param_type y)

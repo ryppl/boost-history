@@ -23,7 +23,7 @@
 template< class Tag, class Relation >
 struct pair_type_by
 {
-        typedef {compatible with std::pair} type;
+        typedef {signature-compatible with std::pair} type;
 };
 
 \endcode

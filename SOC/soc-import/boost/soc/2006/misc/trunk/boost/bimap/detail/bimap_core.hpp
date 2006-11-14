@@ -18,7 +18,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/mpl/list.hpp>
+#include <boost/mpl/vector.hpp>
 
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -216,11 +216,11 @@ struct bimap_core
 
     typedef typename mpl::if_< ::boost::bimap::detail::is_unconstrained_set_of< left_set_type >,
     // {
-            mpl::list<>,
+            mpl::vector<>,
     // }
     // else
     // {
-            mpl::list
+            mpl::vector
             <
                 typename left_set_type::template index_bind
                 <
