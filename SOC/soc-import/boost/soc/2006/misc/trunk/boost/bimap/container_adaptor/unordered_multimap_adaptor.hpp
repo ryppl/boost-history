@@ -13,6 +13,7 @@
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_MULTIMAP_ADAPTOR_HPP
 
 #include <boost/bimap/container_adaptor/unordered_associative_container_adaptor.hpp>
+#include <boost/bimap/container_adaptor/detail/non_unique_container_helper.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/vector.hpp>
 
@@ -84,6 +85,9 @@ class unordered_multimap_adaptor :
 
     typedef unordered_multimap_adaptor unordered_multimap_adaptor_;
 
+    public:
+
+    BOOST_BIMAP_NON_UNIQUE_CONTAINER_ADAPTOR_INSERT_FUNCTIONS
 };
 
 

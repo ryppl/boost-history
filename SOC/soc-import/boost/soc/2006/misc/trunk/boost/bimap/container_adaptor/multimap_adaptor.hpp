@@ -13,6 +13,7 @@
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_MULTIMAP_ADAPTOR_HPP
 
 #include <boost/bimap/container_adaptor/ordered_associative_container_adaptor.hpp>
+#include <boost/bimap/container_adaptor/detail/non_unique_container_helper.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/vector.hpp>
 
@@ -84,32 +85,9 @@ class multimap_adaptor :
 
     typedef multimap_adaptor multimap_adaptor_;
 
-    // Change the insert functions
+    public:
 
-    template <class InputIterator>
-    void insert(InputIterator iterBegin, InputIterator iterEnd)
-    {
-        for( ; iterBegin != iterEnd ; ++iterBegin )
-        {
-            this->base().insert( this->template functor<typename base_::value_to_base>()(
-                typename base_::value_type(*iterBegin)) );
-        }
-    }
-
-    typename base_::iterator insert(
-        typename ::boost::call_traits< typename base_::value_type >::param_type x)
-    {
-        return this->base().insert( this->template functor<typename base_::value_to_base>()(x) );
-    }
-
-    typename base_::iterator insert(typename base_::iterator pos,
-                    typename ::boost::call_traits< typename base_::value_type >::param_type x)
-    {
-        return this->template functor<typename base_::iterator_from_base>()(
-            this->base().insert(this->template functor<typename base_::iterator_to_base>()(pos),
-            this->template functor<typename base_::value_to_base>()(x))
-        );
-    }
+    BOOST_BIMAP_NON_UNIQUE_CONTAINER_ADAPTOR_INSERT_FUNCTIONS
 };
 
 

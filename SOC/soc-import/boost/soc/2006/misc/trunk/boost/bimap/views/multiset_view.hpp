@@ -13,6 +13,7 @@
 #define BOOST_BIMAP_VIEWS_MULTISET_VIEW_HPP
 
 #include <boost/bimap/container_adaptor/multiset_adaptor.hpp>
+#include <boost/bimap/detail/non_unique_views_helper.hpp>
 #include <boost/bimap/detail/set_view_base.hpp>
 
 namespace boost {
@@ -62,6 +63,8 @@ class multiset_view
     }
 
     multiset_view & operator=(const multiset_view & v) { this->base() = v.base(); return *this; }
+
+    BOOST_BIMAP_NON_UNIQUE_VIEW_INSERT_FUNCTIONS
 };
 
 

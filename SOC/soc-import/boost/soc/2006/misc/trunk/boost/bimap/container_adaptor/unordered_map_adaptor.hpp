@@ -94,7 +94,6 @@ class unordered_map_adaptor :
     {
         return this->base()[k]; 
     }
-
 };
 
 

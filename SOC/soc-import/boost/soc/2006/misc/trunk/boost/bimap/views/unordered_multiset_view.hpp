@@ -13,6 +13,7 @@
 #define BOOST_BIMAP_VIEWS_UNORDERED_MULTISET_VIEW_HPP
 
 #include <boost/bimap/container_adaptor/unordered_multiset_adaptor.hpp>
+#include <boost/bimap/detail/non_unique_views_helper.hpp>
 #include <boost/bimap/detail/set_view_base.hpp>
 
 namespace boost {
@@ -55,6 +56,8 @@ class unordered_multiset_view
 
     unordered_multiset_view(typename base_::base_type & c)
         : base_(c) {}
+
+    BOOST_BIMAP_NON_UNIQUE_VIEW_INSERT_FUNCTIONS
 };
 
 

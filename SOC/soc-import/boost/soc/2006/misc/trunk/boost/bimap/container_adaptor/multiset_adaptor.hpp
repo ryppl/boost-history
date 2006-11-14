@@ -13,6 +13,7 @@
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_MULTISET_ADAPTOR_HPP
 
 #include <boost/bimap/container_adaptor/ordered_associative_container_adaptor.hpp>
+#include <boost/bimap/container_adaptor/detail/non_unique_container_helper.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/vector.hpp>
 
@@ -79,6 +80,9 @@ class multiset_adaptor :
 
     typedef multiset_adaptor multiset_adaptor_;
 
+    public:
+
+    BOOST_BIMAP_NON_UNIQUE_CONTAINER_ADAPTOR_INSERT_FUNCTIONS
 };
 
 

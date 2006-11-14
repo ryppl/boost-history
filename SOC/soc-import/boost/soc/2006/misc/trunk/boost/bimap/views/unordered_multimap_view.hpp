@@ -13,6 +13,7 @@
 #define BOOST_BIMAP_VIEWS_UNOREDERED_MULTIMAP_VIEW_HPP
 
 #include <boost/bimap/container_adaptor/unordered_multimap_adaptor.hpp>
+#include <boost/bimap/detail/non_unique_views_helper.hpp>
 #include <boost/bimap/support/iterator_type_by.hpp>
 #include <boost/bimap/detail/map_view_base.hpp>
 
@@ -55,6 +56,7 @@ class unordered_multimap_view
     unordered_multimap_view(typename base_::base_type & c)
         : base_(c) {}
 
+    BOOST_BIMAP_NON_UNIQUE_VIEW_INSERT_FUNCTIONS
 };
 
 
