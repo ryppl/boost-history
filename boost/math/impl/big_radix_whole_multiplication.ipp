@@ -949,9 +949,10 @@ boost::math::big_radix_whole<Radix, Allocator>::subtract_mixed_product
     shifting separately from the primary multiplication before the subtracting
     (and doing the sign and magnitude checks).
 
+    \pre  <code><var>index</var> +
+          <var>subtrahend_full_factor</var>.digit_count() + 1 &lt;=
+          this-&gt;digit_limit()</code>
     \pre  <code>0 &lt;= <var>subtrahend_single_factor</var> &lt; Radix</code>
-    \pre  <code><var>index</var> + <var>addend_full_factor</var>.digit_count() +
-          1 &lt;= this-&gt;digit_limit()</code>
 
     \param subtrahend_full_factor    The first factor in the product-subtrahend
     \param subtrahend_single_factor  The second factor in the product-subtrahend
@@ -1058,17 +1059,485 @@ boost::math::big_radix_whole<Radix,
     return result;
 }
 
+/** Increases the current number's value by the product of the given values
+    starting at a given shift amount.  (Using the built-in shift should be
+    faster than shifting an already-prepared product before adding).
+
+    \pre  <code><b>Max</b>( this-&gt;digit_count(), <var>index</var> +
+          <var>addend_multiplicand</var>.digit_count() +
+          <var>addend_multiplier</var>.digit_count() ) + 1 &lt;=
+          this-&gt;digit_limit()</code>
+
+    \param addend_multiplicand  The multiplicand in the product-addend
+    \param addend_multiplier    The multiplier in the product-addend
+    \param index                The place of the product-addend one's digit
+                                during the addition.
+
+    \post  <code>*this == <var>old_this</var> + <var>addend_multiplicand</var> *
+           <var>addend_multiplier</var> *
+           Radix<sup><var>index</var></sup></code>
+ */
+template < int Radix, class Allocator >
+void
+boost::math::big_radix_whole<Radix, Allocator>::add_shifted_full_product
+(
+    big_radix_whole const &  addend_multiplicand,
+    big_radix_whole const &  addend_multiplier,
+    size_type                index
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( addend_multiplicand.test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( addend_multiplier.test_invariant() );
+
+    deque_type const &  dd = addend_multiplicand.digits_;
+    deque_type const &  rd = addend_multiplier.digits_;
+    deque_type &        td = this->digits_;
+    size_type const     ds = dd.size(), rs = rd.size(), ts = td.size(),
+                        tsm = td.max_size();
+
+    BOOST_ASSERT( (index < tsm) && (rs < tsm - index) && (ds < tsm - index - rs)
+     && (std::max( ts, ds + rs + index ) <= tsm - 1u) );
+        // tests are ordered to avoid under/over-flow
+
+    if ( ds && rs )
+    {
+        // Reserve space for the product-addend and cascading carry
+        size_type const  ps = ds + rs, sps = ps + index;
+
+        if ( sps > ts )
+        {
+            td.insert( td.end(), sps - ts + 1u, 0 );
+        }
+        else
+        {
+            td.push_back( 0 );
+        }
+
+        // Do the huge partial-products loops, with fused adds and built-in
+        // carry propagation
+        const_iterator const  de = dd.end(), re = rd.end();
+        iterator const        tp = td.end() - 1;
+        iterator              tb0 = td.begin() + index;
+
+        for ( const_iterator  di = dd.begin() ; de > di ; ++di )
+        {
+            iterator  tb1 = tb0++;
+
+            // main fused-multiply/add
+            for ( const_iterator  ri = rd.begin() ; re > ri ; ++ri )
+            {
+                reference    current = *tb1, next = *++tb1;
+                std::div_t const  qr = std::div( current + (*di) * (*ri),
+                 self_type::radix );
+
+                current = qr.rem;
+                next += qr.quot;
+            }
+            BOOST_ASSERT( tb1 <= tp );
+
+            // resolve cascading carries
+            while ( (tb1 < tp) && (self_type::radix <= *tb1) )
+            {
+                *tb1 -= self_type::radix;
+                ++*++tb1;
+            }
+        }
+        BOOST_ASSERT( self_type::radix > td.back() );
+
+        // If partial products are small....
+        this->clear_leading_zeros();
+    }
+    // ELSE: anything + 0 == anything -> no change
+
+    BOOST_ASSERT( this->test_invariant() );
+}
+
+/** Increases the current number's value by the product of the given values.
+
+    \pre  <code><b>Max</b>( this-&gt;digit_count(),
+          <var>addend_multiplicand</var>.digit_count() +
+          <var>addend_multiplier</var>.digit_count() ) + 1 &lt;=
+          this-&gt;digit_limit()</code>
+
+    \param addend_multiplicand  The multiplicand in the product-addend
+    \param addend_multiplier    The multiplier in the product-addend
+
+    \post  <code>*this == <var>old_this</var> + <var>addend_multiplicand</var> *
+           <var>addend_multiplier</var></code>
+
+    \see  #add_shifted_full_product
+ */
+template < int Radix, class Allocator >
+inline
+void
+boost::math::big_radix_whole<Radix, Allocator>::add_full_product
+(
+    big_radix_whole const &  addend_multiplicand,
+    big_radix_whole const &  addend_multiplier
+)
+{
+    this->add_shifted_full_product(addend_multiplicand, addend_multiplier, 0u);
+}
+
+/** Decreases the current number's value by the product of the given values
+    starting at a given shift amount.  (Using the built-in shift should be
+    faster than shifting an already-prepared product before subtracting).
+
+    \pre  <code><var>subtrahend_multiplicand</var> *
+          <var>subtrahend_multiplier</var> * Radix<sup><var>index</var></sup>
+          &lt;= *this</code>
+
+    \param subtrahend_multiplicand  The multiplicand in the product-subtrahend
+    \param subtrahend_multiplier    The multiplier in the product-subtrahend
+    \param index                    The place of the product-subtrahend one's
+                                    digit during the subtraction.
+
+    \throws boost::math::big_radix_whole_negative_result_error
+             The current state describes a value less than the shifted
+             product-subtrahend, which would require a negative value for the
+             new state, which is not representable.
+
+    \post  <code>*this == <var>old_this</var> -
+           <var>subtrahend_multiplicand</var> *
+           <var>subtrahend_multiplier</var> *
+           Radix<sup><var>index</var></sup></code>
+ */
+template < int Radix, class Allocator >
+void
+boost::math::big_radix_whole<Radix, Allocator>::subtract_shifted_full_product
+(
+    big_radix_whole const &  subtrahend_multiplicand,
+    big_radix_whole const &  subtrahend_multiplier,
+    size_type                index
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( subtrahend_multiplicand.test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( subtrahend_multiplier.test_invariant() );
+
+    deque_type const &  dd = subtrahend_multiplicand.digits_;
+    deque_type const &  rd = subtrahend_multiplier.digits_;
+    deque_type &        td = this->digits_;
+
+    if ( !dd.empty() && !rd.empty() )
+    {
+        big_radix_whole_negative_result_error const  exception( "attempted to "
+         "subtract a larger full-product (possibly after shifting)" );
+
+        // Take care of obviously oversized subtrahends, noting that n-digits
+        // times m-digits is either n+m or n+m-1 digits
+        size_type const  ds = dd.size(), rs = rd.size(), ts = td.size();
+
+        if ( (index >= ts) || (ds > ts - index) || (rs > ts - index) ||
+         (ds > ts - index - rs + 1u) )
+        {
+            throw exception;
+        }
+
+        // Do the fused multiply/subtract on a scratch copy  (It's not
+        // feasible to do it in place and still keep undo-ability.)
+        const_iterator const  de = dd.end(), re = rd.end();
+        deque_type            cd( td );
+
+        cd.push_back( 0 );  // so the loop's "next" always works
+
+        iterator       cb0 = cd.begin() + index;
+        iterator const  cp = cd.end() - 1;
+
+        for ( const_iterator  di = dd.begin() ; de > di ; ++di )
+        {
+            iterator  cb1 = cb0++;
+
+            // main fused-multiply/subtract
+            for ( const_iterator  ri = rd.begin() ; re > ri ; ++ri )
+            {
+                reference    current = *cb1, next = *++cb1;
+                std::div_t const  qr = std::div( current - (*di) * (*ri),
+                 self_type::radix );
+
+                current = qr.rem;
+                next += qr.quot;
+
+                // Since integer-division rounds to either 0 or -Infinity ...
+                while ( 0 > current )
+                {
+                    current += self_type::radix;
+                    --next;
+                }
+            }
+            BOOST_ASSERT( cb1 <= cp );
+
+            // resolve cascading borrows
+            while ( (cb1 < cp) && (0 > *cb1) )
+            {
+                *cb1 += self_type::radix;
+                --*++cb1;
+            }
+        }
+
+        // Remove cleared peak digits to ease comparison
+        while ( !cd.empty() && !cd.back() )
+        {
+            cd.pop_back();
+        }
+
+        // Retain only non-negative results
+        if ( cd.empty() || (cd.back() > 0) )
+        {
+            cd.swap( td );
+        }
+        else
+        {
+            throw exception;
+        }
+    }
+    // ELSE: anything - 0 == anything -> no change
+
+    BOOST_ASSERT( this->test_invariant() );
+}
+
+/** Decreases the current number's value by the product of the given values.
+
+    \pre  <code><var>subtrahend_multiplicand</var> *
+          <var>subtrahend_multiplier</var> &lt;= *this</code>
+
+    \param subtrahend_multiplicand  The multiplicand in the product-subtrahend
+    \param subtrahend_multiplier    The multiplier in the product-subtrahend
+
+    \throws boost::math::big_radix_whole_negative_result_error
+             The current state describes a value less than the shifted
+             product-subtrahend, which would require a negative value for the
+             new state, which is not representable.
+
+    \post  <code>*this == <var>old_this</var> -
+           <var>subtrahend_multiplicand</var> *
+           <var>subtrahend_multiplier</var></code>
+
+    \see  #subtract_shifted_full_product
+ */
+template < int Radix, class Allocator >
+inline
+void
+boost::math::big_radix_whole<Radix, Allocator>::subtract_full_product
+(
+    big_radix_whole const &  subtrahend_multiplicand,
+    big_radix_whole const &  subtrahend_multiplier
+)
+{
+    this->subtract_shifted_full_product( subtrahend_multiplicand,
+     subtrahend_multiplier, 0u );
+}
+
+/** Replaces the current number's value with its absolute value taken after
+    decreasing the value by the product of the given values starting at a given
+    shift amount.  (Using the built-in shift should be faster than shifting an
+    already-prepared product before subtracting).
+
+    \pre  <code><var>index</var> +
+          <var>subtrahend_multiplicand</var>.digit_count() +
+          <var>subtrahend_multiplier</var>.digit_count() &lt;=
+          this-&gt;digit_limit()</code>
+
+    \param subtrahend_multiplicand  The multiplicand in the product-subtrahend
+    \param subtrahend_multiplier    The multiplier in the product-subtrahend
+    \param index                    The place of the product-subtrahend one's
+                                    digit during the subtraction.
+
+    \retval true   The difference was originally negative (i.e.
+                   <code><var>subtrahend_multiplicand</var> *
+                   <var>subtrahend_multiplier</var> *
+                   Radix<sup><var>index</var></sup> &gt; *this</code>).
+    \retval false  The difference was originally non-negative.
+
+    \post  <code>*this == |<var>old_this</var> -
+           <var>subtrahend_multiplicand</var> *
+           <var>subtrahend_multiplier</var> *
+           Radix<sup><var>index</var></sup>|</code>
+ */
+template < int Radix, class Allocator >
+bool
+boost::math::big_radix_whole<Radix,
+ Allocator>::subtract_shifted_full_product_absolutely
+(
+    big_radix_whole const &  subtrahend_multiplicand,
+    big_radix_whole const &  subtrahend_multiplier,
+    size_type                index
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( subtrahend_multiplicand.test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( subtrahend_multiplier.test_invariant() );
+
+    deque_type const &  dd = subtrahend_multiplicand.digits_;
+    deque_type const &  rd = subtrahend_multiplier.digits_;
+    deque_type &        td = this->digits_;
+    size_type const     ds = dd.size(), rs = rd.size(), tsm = td.max_size();
+
+    BOOST_ASSERT( (index < tsm) && (rs <= tsm - index) && (ds <= tsm - index -
+     rs) );
+        // tests are ordered to avoid under/over-flow
+
+    bool  result = false;
+
+    if ( ds && rs )
+    {
+        // Reserve space for the product-subtrahend, plus a spare
+        size_type const  ts = td.size(), ps = ds + rs, sps = ps + index;
+
+        if ( sps >= ts )
+        {
+            td.insert( td.end(), sps - ts + 1u, 0 );
+        }
+
+        // Do the huge partial-products loops, with fused subtracts and built-in
+        // borrow propagation
+        const_iterator const  de = dd.end(), re = rd.end();
+        iterator const        tp = td.end() - 1;
+        iterator              tb0 = td.begin() + index;
+
+        for ( const_iterator  di = dd.begin() ; de > di ; ++di )
+        {
+            iterator  tb1 = tb0++;
+
+            // main fused-multiply/subtract
+            for ( const_iterator  ri = rd.begin() ; re > ri ; ++ri )
+            {
+                reference    current = *tb1, next = *++tb1;
+                std::div_t const  qr = std::div( current - (*di) * (*ri),
+                 self_type::radix );
+
+                current = qr.rem;
+                next += qr.quot;
+
+                // Since integer-division rounds to either 0 or -Infinity ...
+                while ( 0 > current )
+                {
+                    current += self_type::radix;
+                    --next;
+                }
+            }
+            BOOST_ASSERT( tb1 <= tp );
+
+            // resolve cascading borrows
+            while ( (tb1 < tp) && (0 > *tb1) )
+            {
+                *tb1 += self_type::radix;
+                --*++tb1;
+            }
+        }
+
+        // Remove cleared peak digits to ease comparison
+        this->clear_leading_zeros();
+
+        // Negate the result if necessary
+        if ( result = (!td.empty() && ( 0 > td.back() )) )
+        {
+            // All the below-peak digits become negative...
+            iterator const  tb = td.begin(), tp2 = td.end() - 1;
+
+            for ( iterator  ti = tb ; tp2 > ti ; )
+            {
+                reference  current = *ti, next = *++ti;
+
+                current = -current;
+                while ( 0 > current )
+                {
+                    current += self_type::radix;
+                    ++next;  // following iteration turns this into "--current"
+                }
+            }
+
+            // ...and the peak one becomes positive
+            reference  last = *tp2;
+
+            last = -last;
+
+            // If results shrink the digit count further....
+            this->clear_leading_zeros();
+        }
+    }
+    // ELSE: |anything - 0| == |anything| -> no change for non-negatives
+
+    BOOST_ASSERT( this->test_invariant() );
+    return result;
+}
+
+/** Replaces the current number's value with its absolute value taken after
+    decreasing the value by the product of the given values.
+
+    \pre  <code><var>subtrahend_multiplicand</var>.digit_count() +
+          <var>subtrahend_multiplier</var>.digit_count() &lt;=
+          this-&gt;digit_limit()</code>
+
+    \param subtrahend_multiplicand  The multiplicand in the product-subtrahend
+    \param subtrahend_multiplier    The multiplier in the product-subtrahend
+
+    \retval true   The difference was originally negative (i.e.
+                   <code><var>subtrahend_multiplicand</var> *
+                   <var>subtrahend_multiplier</var> &gt; *this</code>).
+    \retval false  The difference was originally non-negative.
+
+    \post  <code>*this == |<var>old_this</var> -
+           <var>subtrahend_multiplicand</var> *
+           <var>subtrahend_multiplier</var>|</code>
+
+    \see  #subtract_shifted_full_product_absolutely
+ */
+template < int Radix, class Allocator >
+inline
+bool
+boost::math::big_radix_whole<Radix, Allocator>::subtract_full_product_absolutely
+(
+    big_radix_whole const &  subtrahend_multiplicand,
+    big_radix_whole const &  subtrahend_multiplier
+)
+{
+    return this->subtract_shifted_full_product_absolutely(
+     subtrahend_multiplicand, subtrahend_multiplier, 0u );
+}
+
 
 //  Radix/bignum/natural operator member function definitions  ---------------//
 
-/*template < int Radix, class Allocator >
+/** Amplifies the current number by a given value.
+
+    \param multiplier  The value to be multiplied to the current number, which
+                       serves as the multiplicand.  (Don't make it too large, to
+                       avoid memory problems.)
+
+    \return  A reference to <code>*this</code> object as the product.
+
+    \post  <code>*this == <var>old_this</var> <b>*</b>
+           <var>multiplier</var></code>
+
+    \note  The class declaration uses the Boost.Operators library to synthesize
+           the (binary) multiplication <code>operator *</code> from this one.
+
+    \see  #add_full_product
+ */
+template < int Radix, class Allocator >
 boost::math::big_radix_whole<Radix, Allocator> &
 boost::math::big_radix_whole<Radix, Allocator>::operator *=
 (
     big_radix_whole const &  multiplier
 )
 {
-}*/
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( multiplier.test_invariant() );
+
+    // For now, use the long multiplication method, which is the same as fused
+    // add & multiply with zero as the non-product addend.  Later, maybe
+    // something "kewl" like Karatsuba, Toom-Cook, and/or Fourier tranform
+    // methods (FFT, NTT, etc.) can be used.
+    self_type  other( 0u, this->get_allocator() );
+
+    other.add_full_product( *this, multiplier );
+    this->swap( other );
+
+    BOOST_ASSERT( this->test_invariant() );
+    return *this;
+}
 
 
 //  Radix/bignum/natural miscellaneous function definitions  -----------------//

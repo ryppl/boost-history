@@ -107,7 +107,7 @@ template < int Radix, class Allocator >
            operators: <code>!=</code>, <code>++</code> (post), <code>--</code>
            (post), <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>,
            <code>&gt;&gt;</code>, <code>&lt;&lt;</code>, <code>+</code>
-           (binary), and <code>-</code> (binary).
+           (binary), <code>-</code> (binary), and <code>*</code> (binary).
  */
 template < int Radix, class Allocator >
 class big_radix_whole
@@ -117,6 +117,7 @@ class big_radix_whole
        std::deque<int, Allocator>::size_type >
     //, private integer_arithmetic1< big_radix_whole<Radix, Allocator> >
     , private additive1< big_radix_whole<Radix, Allocator> >
+    , private multipliable1< big_radix_whole<Radix, Allocator> >
 {
     // Pre-conditions
     BOOST_STATIC_ASSERT( Radix >= 2 );
@@ -239,12 +240,27 @@ public:
     void  negate_self() const;//@}
 
     // Special multiplication and division operations
-    //void  add_full_product( big_radix_whole const &addend_multiplicand,
-    // big_radix_whole const &addend_multiplier );
-    //void  subtract_full_product( big_radix_whole const &subtrahend_multiplicand,
-    // big_radix_whole const &subtrahend_multiplier );
-    //bool  subtract_full_product_absolutely( big_radix_whole const
-    // &subtrahend_multiplicand, big_radix_whole const &subtrahend_multiplier );
+    /*! \name Full-Length Add/Subtract-to-Self Fused-Multiply */ //@{
+    //! Add the shifted product of two values (fused)
+    void  add_shifted_full_product( big_radix_whole const &addend_multiplicand,
+     big_radix_whole const &addend_multiplier, size_type index );
+    //! Add the product of two values (fused)
+    void  add_full_product( big_radix_whole const &addend_multiplicand,
+     big_radix_whole const &addend_multiplier );
+    //! Subtract the shifted product of two values (fused)
+    void  subtract_shifted_full_product( big_radix_whole const
+     &subtrahend_multiplicand, big_radix_whole const &subtrahend_multiplier,
+     size_type index );
+    //! Subtract the product of two values (fused)
+    void  subtract_full_product( big_radix_whole const &subtrahend_multiplicand,
+     big_radix_whole const &subtrahend_multiplier );
+    //! Subtract the shifted product of two values (fused), ignoring sign
+    bool  subtract_shifted_full_product_absolutely( big_radix_whole const
+     &subtrahend_multiplicand, big_radix_whole const &subtrahend_multiplier,
+     size_type index );
+    //! Subtract the product of two values (fused), ignoring difference's sign
+    bool  subtract_full_product_absolutely( big_radix_whole const
+     &subtrahend_multiplicand, big_radix_whole const &subtrahend_multiplier );//@}
 
     //std::pair<big_radix_whole, big_radix_whole>  divide_by( big_radix_whole
     // const &divisor ) const;
@@ -397,7 +413,8 @@ public:
     //! Equals
     bool  operator ==( big_radix_whole const &rhs ) const;
 
-    //big_radix_whole &  operator *=( big_radix_whole const &multiplier );
+    //! Multiply
+    big_radix_whole &  operator *=( big_radix_whole const &multiplier );
     //big_radix_whole &  operator /=( big_radix_whole const &divisor );
     //big_radix_whole &  operator %=( big_radix_whole const &divisor );
     //! Add

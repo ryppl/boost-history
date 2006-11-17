@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   12 Nov 2006  Initial version (Daryle Walker)
+//   16 Nov 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -2440,6 +2440,220 @@ BOOST_AUTO_TEST_CASE( full_subtract_absolutely_test )
     a = sixhundredseventyeight;
     BOOST_CHECK( a.subtract_shifted_full_absolutely(big_decimal( 8u ), 2u) );
     BOOST_CHECK_EQUAL( a, big_decimal(122u) );  // greater @ peak, same length
+}
+
+// Multiply with multiple digits, fused add, reverse order, test
+BOOST_AUTO_TEST_CASE( add_full_product_test )
+{
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+    big_decimal        a;
+
+    // Adding a zero product to something doesn't change that something
+    a = one;
+    a.add_full_product( zero, two );
+    BOOST_CHECK_EQUAL( a, one );
+    a.add_full_product( sixhundredseventyeight, zero );
+    BOOST_CHECK_EQUAL( a, one );
+    a.add_shifted_full_product( zero, zero, 5u );
+    BOOST_CHECK_EQUAL( a, one );
+
+    // Adding a product to zero gets that product
+    a = zero;
+    a.add_shifted_full_product( fortyfive, thirty, 2u );
+    BOOST_CHECK_EQUAL( a, big_decimal(135000ul) );  // 1 carry rd, 1 spare sp
+    a.reset();
+    a.add_full_product( big_decimal(58u), big_decimal(27u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(1566u) );  // 2 carry rds, 1 spare sp
+
+    // Full product add
+    a.assign( 8500u );
+    a.add_full_product( big_decimal(58u), big_decimal(27u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(10066u) );  // 2 carry rds, used spare sp
+    a.add_shifted_full_product( big_decimal(21u), big_decimal(32u), 6u );
+    BOOST_CHECK_EQUAL( a, big_decimal(672010066ul) );  // no carries, 1 spare sp
+
+    // Worst case
+    a.assign( 9999u );
+    a.add_full_product( big_decimal(99u), big_decimal(99u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(19800u) );
+
+    // Operator tests (as long as op* and op*= use "add_full_product")
+    a.reset();
+    BOOST_CHECK_EQUAL( a *= one, zero );
+    BOOST_CHECK_EQUAL( a *= zero, zero );
+    BOOST_CHECK_EQUAL( two * a, zero );
+
+    a = one;
+    BOOST_CHECK_EQUAL( a *= two, two );
+    BOOST_CHECK_EQUAL( a *= thirty, big_decimal(60u) );
+    BOOST_CHECK_EQUAL( fortyfive * a, big_decimal(2700u) );
+    BOOST_CHECK_EQUAL( (fortyfive * a) * sixhundredseventyeight,
+     big_decimal(1830600ul) );
+}
+
+// Multiply with multiple digits, fused subtract, reverse order, test
+BOOST_AUTO_TEST_CASE( subtract_full_product_test )
+{
+    using boost::math::big_radix_whole_negative_result_error;
+
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+    big_decimal        a;
+
+    // Subtracting a zero product from something doesn't change that something
+    a = one;
+    a.subtract_full_product( zero, two );
+    BOOST_CHECK_EQUAL( a, one );
+    a.subtract_full_product( sixhundredseventyeight, zero );
+    BOOST_CHECK_EQUAL( a, one );
+    a.subtract_shifted_full_product( zero, zero, 5u );
+    BOOST_CHECK_EQUAL( a, one );
+
+    a.reset();
+    a.subtract_full_product( zero, zero );
+    BOOST_CHECK_EQUAL( a, zero );
+
+    // Subtracting a non-zero product from zero gets an error
+    BOOST_CHECK_THROW( a.subtract_full_product(one, two),
+     big_radix_whole_negative_result_error );  // 1st oversized
+    BOOST_CHECK_EQUAL( a, zero );
+
+    // Other ways of subtracting a larger number is an error
+    a = two;
+    BOOST_CHECK_THROW( a.subtract_full_product(thirty, one),
+     big_radix_whole_negative_result_error );  // 1st oversized
+    BOOST_CHECK_EQUAL( a, two );
+    BOOST_CHECK_THROW( a.subtract_full_product(one, thirty),
+     big_radix_whole_negative_result_error );  // 2nd oversized
+    BOOST_CHECK_EQUAL( a, two );
+    BOOST_CHECK_THROW( a.subtract_shifted_full_product(one, one, 1u),
+     big_radix_whole_negative_result_error );  // index oversized
+    BOOST_CHECK_EQUAL( a, two );
+
+    a = thirty;
+    BOOST_CHECK_THROW( a.subtract_shifted_full_product(thirty, one, 1u),
+     big_radix_whole_negative_result_error );  // 1st + index outside
+    BOOST_CHECK_EQUAL( a, thirty );
+    BOOST_CHECK_THROW( a.subtract_shifted_full_product(one, thirty, 1u),
+     big_radix_whole_negative_result_error );  // 2nd + index outside
+    BOOST_CHECK_EQUAL( a, thirty );
+    a = sixhundredseventyeight;
+    BOOST_CHECK_THROW( a.subtract_shifted_full_product(thirty, fortyfive, 1u),
+     big_radix_whole_negative_result_error );  // 1st + 2nd + index outside
+    a = thirty;
+    BOOST_CHECK_THROW( a.subtract_full_product(one, fortyfive),
+     big_radix_whole_negative_result_error );  // product too large
+    BOOST_CHECK_EQUAL( a, thirty );
+
+    // Equal values
+    a.subtract_full_product( big_decimal(5u), big_decimal(6u) );  // 2-1*1=0
+    BOOST_CHECK_EQUAL( a, zero );
+    a = thirty;
+    a.subtract_shifted_full_product( one, big_decimal(3u), 1u );  // 2-1*1^1=0
+    BOOST_CHECK_EQUAL( a, zero );
+    a = thirty;
+    a.subtract_full_product( thirty, one );  // 2-2*1=0
+    BOOST_CHECK_EQUAL( a, zero );
+    a = thirty;
+    a.subtract_full_product( two, big_decimal(15u) );  //2-1*2=0
+    BOOST_CHECK_EQUAL( a, zero );
+
+    // Lesser values
+    a = two;
+    a.subtract_full_product( one, one );
+    BOOST_CHECK_EQUAL( a, one );  // 1-1*1=1, no borrow
+    a = fortyfive;
+    a.subtract_shifted_full_product( two, two, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(5u) );  // 2-1*1^1=1, no borrow
+    a = thirty;
+    a.subtract_full_product( big_decimal(5u), big_decimal(3u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(15u) );  // 2-1*1=2, 1 borrow
+    a = sixhundredseventyeight;
+    a.subtract_shifted_full_product( thirty, two, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(78u) );  // 3-2*1^1=2, no borrow
+    a.assign( 677u );
+    a.subtract_full_product( big_decimal(13u), big_decimal(6u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(599u) );  // 3-2*1=3, cascade borrow
+    a.subtract_full_product( big_decimal(3u), big_decimal(167u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(98u) );  // 3-1*3=2, no borrow
+    a.assign( 1024u );
+    a.subtract_shifted_full_product( two, fortyfive, 1u );
+    BOOST_CHECK_EQUAL( a, big_decimal(124u) );  // 4-1*2^1=3, borrow, reduce len
+}
+
+// Multiply with multiple digits, fused subtract-absolutely, reverse order, test
+BOOST_AUTO_TEST_CASE( subtract_full_product_absolutely_test )
+{
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+    big_decimal        a;
+
+    // Subtracting a zero product from something doesn't change that something
+    a = one;
+    BOOST_CHECK( !a.subtract_full_product_absolutely(zero, two) );
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK( !a.subtract_full_product_absolutely(sixhundredseventyeight,
+     zero) );
+    BOOST_CHECK_EQUAL( a, one );
+    BOOST_CHECK( !a.subtract_shifted_full_product_absolutely(zero, zero, 5u) );
+    BOOST_CHECK_EQUAL( a, one );
+
+    a.reset();
+    BOOST_CHECK( !a.subtract_full_product_absolutely(zero, zero) );
+    BOOST_CHECK_EQUAL( a, zero );
+
+    // Subtracting a non-zero product from zero
+    BOOST_CHECK( a.subtract_full_product_absolutely(one, two) );
+    BOOST_CHECK_EQUAL( a, two );
+    a.reset();
+    BOOST_CHECK( a.subtract_full_product_absolutely(thirty, one) );
+    BOOST_CHECK_EQUAL( a, thirty );
+    a.reset();
+    BOOST_CHECK( a.subtract_shifted_full_product_absolutely(fortyfive,
+     sixhundredseventyeight, 1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(305100ul) );
+
+    // Subtracting lesser values
+    a = sixhundredseventyeight;
+    BOOST_CHECK( !a.subtract_shifted_full_product_absolutely(one, fortyfive,
+     1u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(228u) );  // no carry* nor borrow-
+    BOOST_CHECK( !a.subtract_full_product_absolutely(two, thirty) );
+    BOOST_CHECK_EQUAL( a, big_decimal(168u) );  // no carry*, 1 borrow-
+    BOOST_CHECK( !a.subtract_full_product_absolutely(big_decimal( 3u ),
+     big_decimal( 23u )) );
+    BOOST_CHECK_EQUAL( a, big_decimal(99u) ); // no carry*, chain borrow-, short
+
+    a.assign( 200u );
+    BOOST_CHECK( !a.subtract_full_product_absolutely(fortyfive,
+     big_decimal( 3u )) );
+    BOOST_CHECK_EQUAL( a, big_decimal(65u) );  // carry*, chain borrow-, shorter
+
+    // Subtracting equal values
+    BOOST_CHECK( !a.subtract_full_product_absolutely(big_decimal( 13u ),
+     big_decimal( 5u )) );
+    BOOST_CHECK_EQUAL( a, zero );  // carry*
+    a = sixhundredseventyeight;
+    BOOST_CHECK( !a.subtract_full_product_absolutely(big_decimal( 113u ),
+     big_decimal( 6u )) );
+    BOOST_CHECK_EQUAL( a, zero );  // carry*
+    a.assign( 4u );
+    BOOST_CHECK( !a.subtract_full_product_absolutely(two, two) );
+    BOOST_CHECK_EQUAL( a, zero );  // no carry*
+
+    // Subtracting greater values (from non-zeros)
+    a = sixhundredseventyeight;
+    BOOST_CHECK(a.subtract_shifted_full_product_absolutely(two, fortyfive, 1u));
+    BOOST_CHECK_EQUAL( a, big_decimal(222u) );  // borrow at peak
+    BOOST_CHECK(a.subtract_shifted_full_product_absolutely(thirty, thirty, 2u));
+    BOOST_CHECK_EQUAL( a, big_decimal(89778ul) );  // no overlap
+    BOOST_CHECK( a.subtract_shifted_full_product_absolutely(two,
+     big_decimal( 8u ), 4u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(70222ul) );  // overlap
+    BOOST_CHECK( a.subtract_shifted_full_product_absolutely(big_decimal( 12u ),
+     big_decimal( 6u ), 3u) );
+    BOOST_CHECK_EQUAL( a, big_decimal(1778u) );  // cascading borrow, reduce len
 }
 
 BOOST_AUTO_TEST_SUITE_END()
