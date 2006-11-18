@@ -54,6 +54,12 @@ struct comparison_adaptor : std::binary_function<NewType,NewType,bool>
     Converter       converter;
 };
 
+/// \brief Unary Check adaptor
+/**
+
+A simple unary check adaptor.
+                                                                                    **/
+
 template < class CompareFunctor, class NewType, class Converter >
 struct unary_check_adaptor : std::unary_function<NewType,bool>
 {

@@ -253,6 +253,12 @@ typename base_::const_reference back() const                                  \
 /*****************************************************************************/
 
 } // namespace detail
+
+// This function is already part of Boost.Lambda.
+// They may be moved to Boost.Utility.
+
+template <class T> inline const T&  make_const(const T& t) { return t; }
+
 } // namespace bimap
 } // namespace boost
 

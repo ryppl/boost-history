@@ -46,6 +46,13 @@ struct get_pair_functor
     }
 };
 
+
+/// \brief A Functor that takes a relation as a parameter an return the above view.
+/**
+
+\ingroup relation_group
+                                                                                  **/
+
 template< class Relation >
 struct get_above_view_functor
 {

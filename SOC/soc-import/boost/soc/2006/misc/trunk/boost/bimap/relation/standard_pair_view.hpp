@@ -56,13 +56,7 @@ struct normal_reference_binder :
     public:
 
     typedef normal_reference_binder reference_binder_;
-/*
-    typedef standard_relation<FirstType,SecondType,true > relation_force_mutable;
-    typedef standard_relation<FirstType,SecondType,false> relation_not_force_mutable;
 
-    typedef       standard_relation_view<FirstType,SecondType>       relation_view;
-    typedef const_standard_relation_view<FirstType,SecondType> const_relation_view;
-*/
     typedef typename add_const_if_c< constant, typename base_:: left_value_type >::type  first_type;
     typedef typename add_const_if_c< constant, typename base_::right_value_type >::type second_type;
 
@@ -72,16 +66,7 @@ struct normal_reference_binder :
     template< class Relation >
     normal_reference_binder(Relation & r) :
         first(r.left), second(r.right) {}
-/*
-    normal_reference_binder(typename add_const_if_c< constant, relation_not_force_mutable >::type & r) :
-        first(r.left), second(r.right) {}
 
-    normal_reference_binder(typename add_const_if_c< constant, relation_view >::type & r) :
-        first(r.left), second(r.right) {}
-
-    normal_reference_binder(const_relation_view const & r, typename enable_if_c<constant>::type* dummy = 0) :
-        first(r.left), second(r.right) {}
-*/
     normal_reference_binder(first_type & f, second_type & s) :
         first(f), second(s) {}
 
@@ -106,12 +91,7 @@ struct mirror_reference_binder :
     public:
 
     typedef mirror_reference_binder reference_binder_;
-/*
-    typedef standard_relation<SecondType,FirstType,true > relation_force_mutable;
-    typedef standard_relation<SecondType,FirstType,false> relation_not_force_mutable;
 
-    typedef       standard_relation_view<SecondType,FirstType>       relation_view;
-*/
     typedef typename add_const_if_c< constant, typename base_::right_value_type >::type  first_type;
     typedef typename add_const_if_c< constant, typename base_:: left_value_type >::type second_type;
 
@@ -182,13 +162,7 @@ class standard_pair_view :
     template< class Relation >
     explicit standard_pair_view(Relation & r) :
         base_(r) {}
-/*
-    explicit standard_pair_view(typename add_const_if_c< constant, typename base_::relation_not_force_mutable >::type & r) :
-        base_(r) {}
 
-    explicit standard_pair_view(typename add_const_if_c< constant, typename base_::relation_view >::type & r) :
-        base_(r) {}
-*/
     // Interaction with std::pair
 
     typedef std::pair

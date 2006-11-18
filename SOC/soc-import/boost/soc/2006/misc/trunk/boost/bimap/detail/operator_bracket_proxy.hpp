@@ -13,6 +13,8 @@
 #define BOOST_BIMAP_DETAIL_OPERATOR_BRACKET_PROXY_HPP
 
 #include <stdexcept>
+#include <iostream>
+#include <cassert>
 
 namespace boost {
 namespace bimap {
@@ -46,7 +48,7 @@ struct operator_bracket_proxy
         view(v), key(k)
     {}
 
-    operator typename View::data_type const & () const
+    typename View::data_type const & get_const_data() const
     {
         typename View::const_iterator i = view.find(key);
         if( i == view.end() )
@@ -54,6 +56,11 @@ struct operator_bracket_proxy
             ::boost::throw_exception( ::boost::bimap::value_not_found() );
         }
         return i->second;
+    }
+
+    operator typename View::data_type const & () const
+    {
+        return get_const_data();
     }
 
     operator_bracket_proxy & operator=( typename View::data_type const & new_data )
@@ -75,9 +82,55 @@ struct operator_bracket_proxy
     }
 
     private:
+
     View & view;
     const typename View::key_type & key;
 };
+
+
+template< class View >
+std::ostream& operator<<(std::ostream& os, operator_bracket_proxy<View> const& p)
+{
+  return os << p.get_const_data();
+}
+
+
+// Boost.CallTraits do not work here
+
+/***************************************************************************/
+
+#define BOOST_BIMAP_OPERATOR_BRACKET_PROXY_COMPARISON_OPERATOR( OP )        \
+                                                                            \
+template< class View1, class View2 >                                        \
+bool operator OP (operator_bracket_proxy<View1> const& p1,                  \
+                  operator_bracket_proxy<View2> const& p2)                  \
+{                                                                           \
+    return p1.get_const_data() OP p2.get_const_data();                      \
+}                                                                           \
+                                                                            \
+template< class View, class T >                                             \
+bool operator OP (operator_bracket_proxy<View> const& p1,                   \
+                  const T & t)                                              \
+{                                                                           \
+    return p1.get_const_data() OP t;                                        \
+}                                                                           \
+                                                                            \
+template< class T, class View >                                             \
+bool operator OP (T const & t,                                              \
+                  operator_bracket_proxy<View> const& p2)                   \
+{                                                                           \
+    return t OP p2.get_const_data();                                        \
+}                                                                           \
+
+/***************************************************************************/
+
+
+BOOST_BIMAP_OPERATOR_BRACKET_PROXY_COMPARISON_OPERATOR( == )
+BOOST_BIMAP_OPERATOR_BRACKET_PROXY_COMPARISON_OPERATOR( != )
+BOOST_BIMAP_OPERATOR_BRACKET_PROXY_COMPARISON_OPERATOR( <= )
+BOOST_BIMAP_OPERATOR_BRACKET_PROXY_COMPARISON_OPERATOR( >= )
+BOOST_BIMAP_OPERATOR_BRACKET_PROXY_COMPARISON_OPERATOR( <  )
+BOOST_BIMAP_OPERATOR_BRACKET_PROXY_COMPARISON_OPERATOR( >  )
 
 
 } // namespace detail

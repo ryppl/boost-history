@@ -23,14 +23,7 @@ namespace boost {
 namespace bimap {
 namespace detail {
 
-
-/** \brief Iterator adaptor from multi index to bimap.
-
-This is class is based on transform iterator from Boost.Iterator that is
-modified to allow serialization. It has been specialized for this
-library, and EBO optimization was applied to the functor.
-
-                                                                      **/
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 template< class Tag, class Relation, class CoreIterator > struct map_view_iterator;
 
@@ -51,6 +44,16 @@ struct map_view_iterator_base
 
     > type;
 };
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
+/** \brief Map View Iterator adaptor from multi index to bimap.
+
+This is class is based on transform iterator from Boost.Iterator that is
+modified to allow serialization. It has been specialized for this
+library, and EBO optimization was applied to the functor.
+
+                                                                      **/
 
 template< class Tag, class Relation, class CoreIterator >
 struct map_view_iterator : public map_view_iterator_base<Tag,Relation,CoreIterator>::type
@@ -114,6 +117,8 @@ struct map_view_iterator : public map_view_iterator_base<Tag,Relation,CoreIterat
 };
 
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 template< class Tag, class Relation, class CoreIterator > struct const_map_view_iterator;
 
 template< class Tag, class Relation, class CoreIterator >
@@ -133,6 +138,14 @@ struct const_map_view_iterator_base
 
     > type;
 };
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
+
+/** \brief Const Map View Iterator adaptor from multi index to bimap.
+
+See also map_view_iterator.
+                                                                      **/
 
 template< class Tag, class Relation, class CoreIterator >
 struct const_map_view_iterator :

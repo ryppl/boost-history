@@ -24,13 +24,15 @@ namespace bimap {
 namespace detail {
 
 
-/** \brief Iterator adaptor from multi index to bimap.
+/** \brief Set View Iterator adaptor from multi index to bimap.
 
 This is class is based on transform iterator from Boost.Iterator that is
 modified to allow serialization. It has been specialized for this
 library, and EBO optimization was applied to the functor.
 
                                                                       **/
+
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 template< class CoreIterator > struct set_view_iterator;
 
@@ -51,6 +53,8 @@ struct set_view_iterator_base
 
     > type;
 };
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 template< class CoreIterator >
 struct set_view_iterator : public set_view_iterator_base<CoreIterator>::type
@@ -107,6 +111,7 @@ struct set_view_iterator : public set_view_iterator_base<CoreIterator>::type
     #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 };
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 template< class CoreIterator > struct const_set_view_iterator;
 
@@ -127,6 +132,14 @@ struct const_set_view_iterator_base
 
     > type;
 };
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
+
+/** \brief Const Set View Iterator adaptor from multi index to bimap.
+
+See also set_view_iterator.
+                                                                      **/
 
 template< class CoreIterator >
 struct const_set_view_iterator : public const_set_view_iterator_base<CoreIterator>::type

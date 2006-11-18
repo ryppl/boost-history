@@ -56,7 +56,7 @@ class map_view
     map_view(typename base_::base_type & c) : base_(c) {}
 
     ::boost::bimap::detail::operator_bracket_proxy<map_view>
-        operator[](typename ::boost::call_traits< typename base_::key_type >::param_type k)
+        operator[](const typename base_::key_type& k)
     {
         return ::boost::bimap::detail::operator_bracket_proxy<map_view>(*this,k);
     }

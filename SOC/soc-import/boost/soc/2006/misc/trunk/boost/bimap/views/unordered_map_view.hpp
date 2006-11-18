@@ -59,7 +59,7 @@ class unordered_map_view
         : base_(c) {}
 
     ::boost::bimap::detail::operator_bracket_proxy<unordered_map_view>
-        operator[](typename ::boost::call_traits< typename base_::key_type >::param_type k)
+        operator[](const typename base_::key_type & k)
     {
         return ::boost::bimap::detail::operator_bracket_proxy<unordered_map_view>(*this,k);
     }

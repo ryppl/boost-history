@@ -24,6 +24,8 @@ namespace boost {
 namespace bimap {
 namespace views {
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 template< class Tag, class BimapType >
 struct list_map_view_base
 {
@@ -57,6 +59,8 @@ struct list_map_view_base
 
     > type;
 };
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 /// \brief View of a side of a bimap.
 /**

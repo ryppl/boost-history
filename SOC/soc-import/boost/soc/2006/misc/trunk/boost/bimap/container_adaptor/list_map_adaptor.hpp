@@ -27,6 +27,8 @@ namespace boost {
 namespace bimap {
 namespace container_adaptor {
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 template
 <
     class Base, class Iterator, class ConstIterator, class ReverseIterator, class ConstReverseIterator,
@@ -68,8 +70,9 @@ struct list_map_adaptor_base
     > type;
 };
 
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-/// \brief Container adaptor.
+/// \brief Container adaptor to easily build a list map container
 
 template
 <
@@ -254,7 +257,6 @@ class list_map_adaptor :
             >( comp, this->template functor<key_from_base_value>() )
         );
     }
-
 
 };
 

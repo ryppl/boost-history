@@ -25,6 +25,8 @@
 #include <boost/mpl/front_inserter.hpp>
 #include <boost/call_traits.hpp>
 
+
+
 namespace boost {
 namespace bimap {
 
@@ -194,32 +196,10 @@ class container_adaptor
     template <class InputIterator>
     void insert(InputIterator iterBegin, InputIterator iterEnd)
     {
-
-        // TODO
-        // This is may be the correct way to do it, but i have to work a little
-        // bit more on it to make it work. There are problems with (*)
-        /*
-            typedef transform_iterator
-            <
-                value_to_base,
-                InputIterator,
-                const typename Base::value_type & (*)
-
-            > value_to_base_iterator;
-
-            base().insert(
-                value_to_base_iterator(iterBegin, functor<value_to_base>()),
-                value_to_base_iterator(iterEnd  , functor<value_to_base>())
-            );
-        */
-
-        // Go simpler for now, this can be optimized
-
         for( ; iterBegin != iterEnd ; ++iterBegin )
         {
-            base().insert( functor<value_to_base>()( value_type(*iterBegin)) );
+            base().insert( functor<value_to_base>()( value_type(*iterBegin) ) );
         }
-
     }
 
     std::pair<iterator, bool> insert(typename ::boost::call_traits< value_type >::param_type x)
@@ -231,7 +211,6 @@ class container_adaptor
         return std::pair<iterator, bool>(
                     functor<iterator_from_base>()(r.first),r.second
                );
-
     }
 
     iterator insert(iterator pos, typename ::boost::call_traits< value_type >::param_type x)

@@ -15,8 +15,10 @@
 namespace boost {
 namespace bimap {
 namespace container_adaptor {
-namespace detail {
 
+/// \brief Details of the container adaptor toolbox
+
+namespace detail {
 
 /// \brief Iterator identity converter used by default in container adaptors.
 /**

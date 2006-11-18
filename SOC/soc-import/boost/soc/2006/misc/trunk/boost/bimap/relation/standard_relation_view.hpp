@@ -205,7 +205,10 @@ class standard_relation_view  :
     }
 };
 
+/** \brief Const Standard relation above view.
 
+See also standard_relation_view, standard_relation.
+                                                           **/
 
 template< class TA, class TB >
 class const_standard_relation_view  :
@@ -368,6 +371,8 @@ class const_standard_relation_view  :
     }
 };
 
+#ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
+
 namespace support
 {
 
@@ -380,6 +385,8 @@ struct is_standard_relation_view< standard_relation_view<TA,TB> > :
     ::boost::mpl::true_ {};
 
 } // namespace support
+
+#endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 } // namespace relation
 } // namespace bimap
