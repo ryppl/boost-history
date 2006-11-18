@@ -56,7 +56,6 @@ void test_bimap()
     right_data.insert( right_data_type::value_type(0.4,4) );
 
 
-
     //--------------------------------------------------------------------
     {
         bimap< int, double > b;

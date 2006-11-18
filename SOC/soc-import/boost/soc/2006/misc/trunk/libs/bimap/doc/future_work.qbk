@@ -18,7 +18,42 @@ These features will be implemented soon:
 
 [h2 Projection of iterators]
 
-This is very useful, and the B.MI core allows to implement it very easily.
+This is very useful, and the B.MI core allows to implement it very easily. This
+feature will be implemented after the formal review to be able to discuss the best
+notation for it.
+
+[h2 Rearrange Function]
+
+Boost.MultiIndex includes some others functions that can be included in the views.
+
+[h2 Improved Modify Function]
+
+Improve the modify function of the views to be able to call it with a Unary Functor
+taking a value_type as a parameter.
+
+
+    typedef bimap< int, multiset_of<int> > bm_type;
+
+    void modify_relation( bm_type::relation & rel )
+    {
+        rel.right *= rel.left;
+    }
+
+    int main()
+    {
+        bm_type bm;
+
+        ...
+
+        bm.modify( bm.begin(), _right *= _left );
+
+        // or...
+
+        bm.modify( bm.begin(), modify_relation );
+
+        return 0;
+    }
+
 
 [h2 CompatibleKey functions]
 
@@ -38,16 +73,16 @@ necessary to maintain another map. This a possible code example:
 
     //...
 
-    bm.left_map.data(28928546) = "carpintero";
-    bm.right_map.data("John Wayne") = "actor";
+    bm.left_map.data(28928546) = "teacher";
+    bm.right_map.data("John Gray") = "singer";
 
     bm_type::left_iterator iter = bm.left_map.find(23345647);
-    iter->data = "programador";
+    iter->data = "programmer";
 
     bm_type::iterator iter = bm.find( bm_type::pair_by<member_at::left>(23345647,"Green Dert") );
-    iter->data = "estudiante";
+    iter->data = "student";
 
-    bm.insert( bm_type::value_type_by<member_at::left>(1456783342,"Fred Bypass","retirado") );
+    bm.insert( bm_type::value_type_by<member_at::left>(1456783342,"Fred Bypass","unemployed") );
 
 
 [h2 More...]

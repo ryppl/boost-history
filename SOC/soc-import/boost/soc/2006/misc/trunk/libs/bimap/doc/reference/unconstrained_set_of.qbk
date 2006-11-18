@@ -52,6 +52,32 @@ be accessed. An unconstrained view is an empty class.
     } // namespace boost
 
 
+\n
+
+In the case of a `bimap< unconstrained_set_of<Left>, ... >`
+
+In the set view:
+
+    typedef signature-compatible with relation< Left, ... > key_type;
+    typedef signature-compatible with relation< Left, ... > value_type;
+
+In the left map view:
+
+    typedef  Left  key_type;
+    typedef  ...   data_type;
+
+    typedef signature-compatible with std::pair< Left, ... > value_type;
+
+In the right map view:
+
+    typedef  ...  key_type;
+    typedef  Left data_type;
+
+    typedef signature-compatible with std::pair< ... , Left > value_type;
+
+\n
+
+
 [section Complexity signature]
 
 We adopt the scheme outlined in the

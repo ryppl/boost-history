@@ -45,6 +45,9 @@ explains this problem and how to create new types of bidirectional maps.
 mapping containers as a particular case. The section
 [link boost_bimap.the_tutorial.unconstrained_sets Unconstrained Sets] explains how they work.
 
+# In the section [link boost_bimap.the_tutorial.updating_a_bimap Updating a Bimap] we will
+learn how to modify the elements of this container.
+
 # The final section
 ([link boost_bimap.the_tutorial.complete_instantiation_scheme Complete Instantiation Scheme])
 summarizes bimap instantiation and explains how change the allocator type to be used.
@@ -177,7 +180,7 @@ The following is the list of all supported set types.
 [[`unordered_multiset_of`][['hashed         ]][`unordered_multimap`     ]]
 [[`list_of`              ][['sequenced      ]][`list_map`               ]]
 [[`vector_of`            ][['random access  ]][`vector_map`             ]]
-[[`unconstrained_set_of` ][['unconstrained  ]]['can not be viewed       ]]
+[[`unconstrained_set_of` ][['unconstrained  ]][['can not be viewed]     ]]
 ]
 
 `list_of` and `vector_of` map views are not associated with any existing STL
@@ -228,6 +231,7 @@ equality operator is `std::equal_to<T>`. ]]
 [[`vector_of<T>`            ][No additional parameters.]]
 [[`unconstrained_set_of<T>` ][No additional parameters.]]
 ]
+
 
 [endsect]
 
@@ -599,6 +603,190 @@ does not have.
 * Using this kind of map makes the code very extensible. If, at any
 moment of the development, the need to perform searches from the right
 side of the mapping arises, the only necessary change is to the `typedef`.
+
+[endsect]
+
+[section Updating a Bimap]
+
+[h2 iterator::value_type]
+
+The relations stored in the Bimap will not be in most cases modifiable
+directly by iterators because both sides are used as keys of
+['key-based] sets. When a `bimap<A,B>` left view iterator is dereferenced
+the return type is ['signature-compatible] with a
+`std::pair< const A, const B >`.
+However there are some set types that are not ['key_based], for example
+list_of. If a Bimap uses one of these set types there is no problem with
+modifying the data of that side. The following code is valid:
+
+    typedef bimap< int, list_of< std::string > > bm_type;
+    bm_type bm;
+    bm.insert( bm_type::relation( 1, "one" ) );
+    ...
+    bm.left.find(1)->second = "1";
+
+In this case, when the iterator is dereferenced the return type is
+['signature-compatible] with a `std::pair<const int, std::string>`.
+
+The following table shows the constness of the dereferenced data of each
+set type of:
+
+[table
+[[Set type of            ][Dereferenced data]]
+[[`set_of`               ][['constant]]]
+[[`multiset_of`          ][['constant]]]
+[[`unordered_set_of`     ][['constant]]]
+[[`unordered_multiset_of`][['constant]]]
+[[`list_of`              ][['mutable] ]]
+[[`vector_of`            ][['mutable] ]]
+[[`unconstrained_set_of` ][['mutable] ]]
+]
+
+Here are some examples. When dereferenced the iterators returns a type that
+is ['signature-compatible] with these types.
+
+[table
+[[Bimap type   ][Signature-compatible types]]
+[[`bimap<A,B>`][
+    `iterator      ` *->* `relation<const A,const B>`\n
+    `left_iterator ` *->* `pair<const A,const B>`\n
+    `right_iterator` *->* `pair<const B,const A>`
+]]
+[[`bimap<multiset_of<A>,unordered_set_of<B> >`][
+    `iterator      ` *->* `relation<const A,const B>`\n
+    `left_iterator ` *->* `pair<const A,const B>`\n
+    `right_iterator` *->* `pair<const B,const A>`
+]]
+[[`bimap<set_of<A>,list_of<B> >`][
+    `iterator      ` *->* `relation<const A,B>`\n
+    `left_iterator ` *->* `pair<const A,B>`\n
+    `right_iterator` *->* `pair<B,const A>`
+]]
+[[`bimap<vector_of<A>,set_of<B> >`][
+    `iterator      ` *->* `relation<A,const B>`\n
+    `left_iterator ` *->* `pair<A,const B>`\n
+    `right_iterator` *->* `pair<const B,A>`
+]]
+[[`bimap<list_of<A>,unconstrained_set_of<B> >`][
+    `iterator      ` *->* `relation<A,B>`\n
+    `left_iterator ` *->* `pair<A,B>`\n
+    `right_iterator` *->* `pair<B,A>`
+]]
+]
+
+[h2 `operator[]`]
+
+`set_of` and `unordered_set_of` views overload `operator[]` to retrieve the 
+associated data of a given key.
+The symmetry of bimap imposes some constraints on `operator[]` that are
+not found in `std::map` or `std::unordered_map`. If other views are unique,
+`bimap::duplicate_value` is thrown whenever an assignment is attempted to
+a value that is already a key in these views. As for
+`bimap::value_not_found`, this exception is thrown while trying to access
+a non-existent key: this behaviour differs from the standard containers,
+which automatically assigns a default value to non-existent keys referred to
+by `operator[]`.
+
+\n
+
+    const data_type & operator[](const typename key_type & k) const;
+
+[:  Returns the `data_type` reference that is associated with `k`, or
+    throws `bimap::value_not_found` if such an element does not exist.\n
+]
+\n
+
+    ``['-unspecified data_type proxy-]`` operator[](const typename key_type & k);
+
+[:  Returns a proxy to a `data_type` associated with `k` and the
+    bimap. The proxy behaves as a reference to the `data_type` object. If this
+    proxy is read and `k` was not in the bimap, the bimap::value_not_found is
+    thrown. If it is written then `bimap::duplicate_value` is thrown if the
+    assignment is not allowed by one of the other views of the `bimap`.\n
+]
+\n
+
+The following example shows the behaviour of `operator[]`
+
+    bimap<int,std::string> bm;
+
+    bm.left[1] = "one"; // Ok
+
+    bm.right["two"] = 2; // Ok
+
+    if( bm.left[3] == "three" ) // throws bimap::value_not_found
+    {
+        ...
+    }
+
+    bm.left[3] = "one"; // throws bimap::duplicate_value
+
+\n
+
+[h2 `modify` and `replace`]
+
+These two functions are members of the views of a bimap that are not founded in 
+their standard counterparts.
+
+The `replace` member function performs in-place replacement of a given element as
+the following example shows:
+
+    typedef bimap< int, std::string > bm_type;
+    bm_type bm;
+    bm[1] = "one";
+    bm[2] = "two";
+    ...
+    bm_type::right_iterator it = bm.right.find("two");
+
+    bm_type::right_value_type v = *it;
+    v.first = "2";
+
+    bm_type.right.replace( it, v );
+
+replace performs this substitution in such a manner that:
+
+* The complexity is constant time if the changed element retains its original order
+with respect to all views; it is logarithmic otherwise.
+* Iterator and reference validity are preserved.
+* The operation is strongly exception-safe, i.e. the `bimap` remains unchanged if 
+some exception (originated by the system or the user's data types) is thrown.
+
+`replace` is a powerful operation not provided by standard STL containers, and one that
+is specially handy when strong exception-safety is required.
+
+The observant reader might have noticed that the convenience of replace comes at a
+cost: namely the whole element has to be copied ['twice] to do the updating (when
+retrieving it and inside `replace`). If elements are expensive to copy, this may
+be quite a computational cost for the modification of just a tiny part of the
+object. To cope with this situation, Boost.Bimap provides an alternative
+updating mechanism called `modify`.
+
+`modify` accepts a functor (or pointer to function) taking two references to the each
+data of the relation to be changed, thus eliminating the need for spurious copies. Like
+`replace`, `modify` does preserve the internal orderings of all the indices of the
+`bimap`. However, the semantics of modify is not entirely equivalent
+to replace. Consider what happens if a collision occurs as a result of modifying
+the element, i.e. the modified element clashes with another with respect to some
+unique view. In the case of `replace`, the original value is kept and
+the method returns without altering the container, but `modify` cannot afford such
+an approach, since the modifying functor leaves no trace of the previous value
+of the element. Integrity constraints thus lead to the following policy: when a
+collision happens in the process of calling modify, the element is erased and
+the method returns false. This difference in behavior between replace and `modify`
+has to be considered by the programmer on a case-by-case basis.
+
+Boost.Bimap defines new placeholders to allow a sounder solution. For
+pairs, two new placeholders are instantiated: `_first` and `_second`, and
+for a relation, two more complete the set: `_left` and `_right`.
+
+    typedef bimap< int, std::string > bm_type;
+    bm_type bm;
+    bm[1] = "one";
+    bm[2] = "two";
+    ...
+    bm_type::right_iterator it = bm.right.find("two");
+
+    bm_type.right.modify( it , _first = "2" );
 
 [endsect]
 

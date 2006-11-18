@@ -36,6 +36,15 @@ __SIMPLE_BIMAP__
 The `relation` class is a generalization of `std::pair`. The two values are
 named left and right to express the symmetry of this type.
 
+The main difference between bimap views and their standard containers counterparts
+is that, because of the bidirectional nature of a bimap, the values stored in
+it can not be modified directly using iterators.
+For example, when a `std::map<A,B>` iterator is dereferenced the return type is
+`std::pair<const A, B>`, so the following code is valid:
+`m.begin()->second = new_value;`.
+However dereferencing a `bimap<A,B>::left_iterator` returns a type that is 
+['signature-compatible] with a `std::pair<const A, const B>`.
+
 That is more or less all that is needed to start using the bidirectional
 map. The following two lines must also be added:
 

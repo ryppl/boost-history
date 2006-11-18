@@ -191,6 +191,32 @@ for these types of containers.
     } // namespace boost
 
 
+\n
+
+In the case of a `bimap< vector_of<Left>, ... >`
+
+In the set view:
+
+    typedef signature-compatible with relation< Left, ... > key_type;
+    typedef signature-compatible with relation< Left, ... > value_type;
+
+In the left map view:
+
+    typedef  Left  key_type;
+    typedef  ...   data_type;
+
+    typedef signature-compatible with std::pair< Left, ... > value_type;
+
+In the right map view:
+
+    typedef  ...  key_type;
+    typedef  Left data_type;
+
+    typedef signature-compatible with std::pair< ... , Left > value_type;
+
+\n
+
+
 [section Complexity signature]
 
 Here and in the descriptions of operations of `vector_of` views, we adopt
@@ -576,11 +602,44 @@ the associated complexity bounds differ in general.
 ]
 \n
 
-    void reverse(); 
+    void reverse();
 
 [:  [*Effects:] Reverses the order of the elements in the view.\n
     [*Postconditions:] Validity of iterators and references is preserved.\n
     [*Complexity:] O(n).\n
+    [*Exception safety:] nothrow.
+]
+\n
+
+[endsect]
+
+[section Rearrange operations]
+
+These operations, without counterpart in `std::list` (although splice provides
+partially overlapping functionality), perform individual and global repositioning
+of elements inside the index.
+
+    void relocate(iterator position, iterator i);
+
+[:  [*Requires:] `position` is a valid iterator of the view. `i` is a valid
+    dereferenceable iterator of the view.\n
+    [*Effects:] Inserts the element pointed to by `i` before `position`.
+    If `position==i`, no operation is performed.\n
+    [*Postconditions:] No iterator or reference is invalidated.\n
+    [*Complexity:] Constant.\n
+    [*Exception safety:] nothrow.
+]
+\n
+
+    void relocate(iterator position, iterator first, iterator last);
+
+[:  [*Requires:] `position` is a valid iterator of the view. `first` and `last` are
+    valid iterators of the view. `last` is reachable from `first`. `position` is not
+    in the range `[first,last)`.\n
+    [*Effects:] The range of elements `[first,last)` is repositioned just before
+    `position`.\n
+    [*Postconditions:] No iterator or reference is invalidated.\n
+    [*Complexity:] Constant.\n
     [*Exception safety:] nothrow.
 ]
 \n

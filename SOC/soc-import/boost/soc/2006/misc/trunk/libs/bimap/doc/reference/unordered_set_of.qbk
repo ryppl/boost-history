@@ -224,27 +224,30 @@ do not exactly conform to the requirements for unordered associative containers.
 
 
 
-If the key types of a bimap are Left and Right and Relation is the
-type that bound them together then:
+\n
+
+In the case of a `bimap< unordered_{multi}set_of<Left>, ... >`
 
 In the set view:
 
-    typedef Relation   key_type;
-    typedef Relation value_type;
+    typedef signature-compatible with relation<       Left, ... > key_type;
+    typedef signature-compatible with relation< const Left, ... > value_type;
 
 In the left map view:
 
     typedef  Left  key_type;
-    typedef Right data_type;
+    typedef  ...   data_type;
 
-    typedef {compatible with std::pair}<Left,Right> value_type;
+    typedef signature-compatible with std::pair< const Left, ... > value_type;
 
 In the right map view:
 
-    typedef Right  key_type;
+    typedef  ...  key_type;
     typedef  Left data_type;
 
-    typedef {compatible with std::pair}<Right,Left> value_type;
+    typedef signature-compatible with std::pair< ... ,const Left > value_type;
+
+\n
 
 
 [section Complexity signature]
