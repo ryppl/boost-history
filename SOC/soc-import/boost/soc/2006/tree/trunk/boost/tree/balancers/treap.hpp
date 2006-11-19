@@ -51,7 +51,7 @@ class treap {
 	static void add(Tree& t, typename Tree::cursor& x) 
 	{
 		x->metadata().set_priority((lrand48() >> 1) + 1); // Move this to metadata ctor?
-		while ((x != t.root()) && 
+		while ((x != t.root()) &&
 			   (x->metadata().get_priority() > 
 			   	x.parent()->metadata().get_priority()))
 			t.rotate(x);

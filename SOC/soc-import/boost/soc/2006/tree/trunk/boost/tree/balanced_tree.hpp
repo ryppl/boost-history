@@ -85,13 +85,13 @@ class balancer_iterator<InorderIter, bidirectional_traversal_tag>
 		return this->base()->data;
 	}
 
- public:	
+// public:	
 	//typename balancer_iterator::iterator_adaptor_::value_type::metadata_type&
-	typename InorderIter::value_type::metadata_type&
-	metadata() const
-	{
-		return this->base()->meta;
-	}
+//	typename InorderIter::value_type::metadata_type&
+//	metadata() const
+//	{
+//		return this->base()->meta;
+//	}
 	
 };
 
@@ -119,10 +119,14 @@ class balanced_tree {
 		data_type(value_type const& d, metadata_type const& m = metadata_type())
 		: data(d), meta(m) {}
 		
+		data_type(data_type const& x)
+		: data(x.data), meta(x.meta) {}
+		
 		metadata_type& metadata()
 		{
 			return meta;
 		}
+		
 	};
 	
 	typedef typename Hierarchy::template rebind<data_type>::other hierarchy_type;
@@ -368,7 +372,12 @@ class balanced_tree {
 	{
 		return h.empty();
 	}
-
+	
+	void rotate(iterator& i)
+	{
+		cursor c = cursor(inorder::iterator<cursor>(i));
+		h.rotate(c);
+	}
 };
 
 

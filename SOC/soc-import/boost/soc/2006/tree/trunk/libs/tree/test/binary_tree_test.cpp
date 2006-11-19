@@ -17,7 +17,7 @@
 using namespace boost::tree;
 
 template <class Tree>
-void create_unbalanced_binary_tree(Tree& mytree)
+void create_binary_tree(Tree& mytree)
 {
 	typename Tree::cursor c, c1, c2, c3, c4;
 	
@@ -76,14 +76,14 @@ void create_unbalanced_binary_tree(Tree& mytree)
 }
 
 template <class Tree>
-void destroy_unbalanced_binary_tree(Tree& mytree)
+void destroy_binary_tree(Tree& mytree)
 {
 	mytree.clear();	
 	BOOST_CHECK(mytree.empty());
 }
 
 template <class Tree>
-void validate_unbalanced_binary_tree(Tree const& mytree)
+void validate_binary_tree(Tree const& mytree)
 {
 	typename Tree::const_cursor c, c1, c2, c3, c4;
 
@@ -116,18 +116,26 @@ int test_main(int, char* [])
 	typedef binary_tree<int> tree_t;
 	tree_t tree1, tree2;
 	
-	create_unbalanced_binary_tree(tree1);
-	validate_unbalanced_binary_tree(tree1);
+	create_binary_tree(tree1);
+	validate_binary_tree(tree1);
 
+	test_swap_binary_trees(tree1, tree2);
+	validate_binary_tree(tree2);
+	BOOST_CHECK(tree1.empty());
+
+	test_swap_binary_trees(tree1, tree2);
+	validate_binary_tree(tree1);
+	BOOST_CHECK(tree2.empty());
+	
 	create_test_data_tree(tree2);
 	validate_test_data_tree(tree2);
 	
 	test_swap_binary_trees(tree1, tree2);
 	
 	validate_test_data_tree(tree1);
-	validate_unbalanced_binary_tree(tree2);
+	validate_binary_tree(tree2);
 	
-	destroy_unbalanced_binary_tree(tree2);
+	destroy_binary_tree(tree2);
 	
 	return 0;
 }

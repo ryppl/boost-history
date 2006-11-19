@@ -23,10 +23,11 @@ void test_unbalanced_binary_tree()
 {
 	using namespace boost::tree;
 	
-	typedef balanced_tree<binary_tree<int>, balancers::unbalanced> tree_t;
-	tree_t my_tree;
+	typedef binary_tree<int> tree_t;
+	typedef balanced_tree<tree_t, balancers::unbalanced> balancer_t;
+	balancer_t my_tree; 
 	
-	tree_t::iterator c, c1, c2, c3, c4, c5;
+	balancer_t::iterator c, c1, c2, c3, c4, c5;
 
 	c = my_tree.end();
 	BOOST_CHECK(c == my_tree.end());
@@ -61,7 +62,7 @@ void test_unbalanced_binary_tree()
 //    boost::unit_test::test_suite* key_search_test = 
 //    		BOOST_TEST_SUITE( "Key search binary vector test" );
 //
-//    key_search_test->add( BOOST_TEST_CASE( &key_search_binary_tree_test ) );
+//    key_search_test->add( BOOST_TEST_CASE( &key_search_binary_balancer_test ) );
 //
 //    return key_search_test;
 //}

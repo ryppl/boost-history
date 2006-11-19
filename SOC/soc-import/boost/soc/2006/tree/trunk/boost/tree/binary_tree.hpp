@@ -82,13 +82,12 @@ class binary_tree {
 	: m_header(), m_value_alloc(alloc)
 	{}
 
-	template <class InputIterator>
-		binary_tree (InputIterator first, InputIterator last, 
+	template <class InputCursor>
+		binary_tree (InputCursor subtree,
 			allocator_type const& alloc = allocator_type())
 			: m_value_alloc(alloc)
 	{
-		while (first++ != last)
-			this->insert(this->end(), *first);
+		insert(this->root(), subtree.root());
 	}
 	
 	/**
@@ -109,7 +108,7 @@ class binary_tree {
 		if (x.m_header[1] == &(x.m_header))
 			m_header[1] = &m_header;
 		if (x.m_header.m_parent == &(x.m_header))
-			m_header.m_parent = &m_header;		
+			m_header.m_parent = &m_header;
 	}
 	
 	~binary_tree()
@@ -363,8 +362,9 @@ class binary_tree {
 			if (other.empty())
 				return;
 				
-			m_header[0]->m_parent = other.m_header[0]->m_parent;
 			m_header[0] = other.m_header[0];
+			m_header[0]->m_parent = &m_header;
+
 			m_header[1] = other.m_header[1];
 			m_header.m_parent = other.m_header.m_parent;
 			
@@ -374,8 +374,25 @@ class binary_tree {
 			
 			return;
 		}
-		swap(m_header[0]->m_parent, other.m_header[0]->m_parent);
+		
+		if (other.empty()) {
+			other.m_header[0] = m_header[0];
+			other.m_header[0]->m_parent = &other.m_header;
+			
+			other.m_header[1] = m_header[1];
+			other.m_header.m_parent = m_header.m_parent;
+			
+			m_header[0] = node_base_type::nil();
+			m_header[1] = &m_header;
+			m_header.m_parent = &m_header;
+			
+			return;			
+		}
+		
 		swap(m_header, other.m_header);
+		//swap(m_header[0]->m_parent, other.m_header[0]->m_parent);
+		m_header[0]->m_parent = &m_header;
+		other.m_header[0]->m_parent = &other.m_header;
 		
 		return;
 	}
