@@ -279,13 +279,12 @@ class binary_tree {
     template <class InputCursor>
 	cursor insert(cursor pos, InputCursor subtree)
 	{
-		if (!subtree.empty()) {
-
 		subtree = subtree.begin();
-			insert(pos, *subtree);
+		insert(pos, *subtree);
+		if (!subtree.empty())
 			insert(pos.begin(), subtree);
-			insert(pos.end(), ++subtree);
-		}
+		if (!(++subtree).empty())
+			insert(pos.end(), subtree);
 		return pos.begin();
 	}
 
