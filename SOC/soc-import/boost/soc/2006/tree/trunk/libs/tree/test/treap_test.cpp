@@ -26,17 +26,23 @@ void test_treap()
 	std::vector<int> my_vector;
 	typedef binary_tree<int> tree_t;
 	//typedef test_searcher<false, tree_t> searcher_t;
-	typedef test_balancer<binary_tree<int>, balancers::unbalanced> treap_t;
+	typedef test_balancer<binary_tree<int>, balancers::treap> treap_t;
 	
 	//searcher_t my_searcher;
 	treap_t my_balancer;
-	tree_t my_tree;
+	//tree_t my_tree;
 	
 	//create_test_data_searcher(my_searcher);
 	create_test_data_sequence(my_balancer);
 	create_test_data_sequence(my_vector);
 	
 	BOOST_CHECK(std::equal(my_balancer.begin(), my_balancer.end(), my_vector.begin()));
+		
+//	for (treap_t::const_iterator ci = my_balancer.cbegin(); ci != my_balancer.cend(); ++ci)
+//		BOOST_CHECK(ci.base().base()->metadata().get_priority() 
+//				  < ci.base().base().cparent()->metadata().get_priority());
+	
+	//BOOST_CHECK((*c).metadata().get_priority() != 0);
 	
 	// TODO: const_iterator !
 	treap_t::iterator bcit = my_balancer.begin();
@@ -51,30 +57,15 @@ void test_treap()
 	c = my_balancer.hierarchy().insert(c, treap_t::data_type(78));
 	BOOST_CHECK(c->data == 78);
 	
-//	treap_t::hierarchy_type h = my_balancer.hierarchy();
-//	h = my_balancer.hierarchy();
-//	c = 
-	
-	//my_balancer.hierarchy().rotate(c);
-	
-	//my_balancer.rotate(bcit);
-	
-//	BOOST_CHECK(*++bcit == 10);
-//	BOOST_CHECK(*++bcit == 14);
-//	
-//	c = bcit.base().base();
-//	BOOST_CHECK(c.parent().parent().parent() == my_balancer.hierarchy().root());
-	//my_balancer.hierarchy().rotate(c);
+	c = c.parent(); // FIXME: Without this line, rotate crashes.
+	my_balancer.hierarchy().rotate(c);
+//	my_balancer.rotate(bcit);
 	
 //	test_inorder_iterator_traversal(my_searcher);
 	
 //	tree_t& my_tree = my_searcher.container();
 	
 	// TODO: a level-order algo? 
-	
-//	for (tree_t::const_iterator ci = my_tree.cbegin(); ci != my_tree.cend(); ++ci)
-//		BOOST_CHECK(tree_t::const_cursor(ci).metadata().get_priority() 
-//				  < tree_t::const_cursor(ci).parent().metadata().get_priority());
 	
 //	searcher_t::iterator c = my_searcher.begin();
 //	BOOST_CHECK(*c++ == 1);

@@ -30,7 +30,7 @@
 [section Introduction]
 
 [caution This is not a Boost library (yet) but a work in progress that has not been reviewed 
-the Boost community!]
+by the Boost community!]
 
 ["Trees a pervasive in Computer Science and there are few programs that do not use a tree data-structure 
 in some form or another. The C++ standard library, however, does not provide a low-level tree-container.]

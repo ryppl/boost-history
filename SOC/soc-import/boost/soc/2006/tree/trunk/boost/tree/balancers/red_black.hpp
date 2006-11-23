@@ -61,10 +61,10 @@ public:
 					t.rotate(x);
 					x = (x.parity() ? x.end() : x.begin());
 				}
-			x.parent()->metadata().set_color(black);
-			x.parent().parent()->metadata().set_color(red);
-			x = x.parent(); //FIXME: was x.parent.rotate();
-			t.rotate(x); 
+				x.parent()->metadata().set_color(black);
+				x.parent().parent()->metadata().set_color(red);
+				x = x.parent(); //FIXME: was x.parent.rotate();
+				t.rotate(x); 
 			}
 		if (x.parent() == t.root())
 			x->metadata().set_color(black);
