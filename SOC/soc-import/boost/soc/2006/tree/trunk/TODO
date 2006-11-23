@@ -5,6 +5,7 @@ Proposal:
 Implementation:
 
 * binary_tree: Implement swap, subtree insert, assign; copy ctor, assignment operator.
+	* subtree insert: test cases.
 * after shifting to balancers/augmentors as adaptors, should we try to keep the
 original ones as policy argument to them? (e.g. red_black_tree is say 
     balanced_tree<red_black_balancer, binary_tree> ?) May be esp. interesting with C++0x's

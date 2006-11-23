@@ -51,7 +51,7 @@ void test_treap()
 	c = my_balancer.hierarchy().insert(c, treap_t::data_type(78));
 	BOOST_CHECK(c->data == 78);
 	
-	//treap_t::hierarchy_type h = my_balancer.hierarchy();
+//	treap_t::hierarchy_type h = my_balancer.hierarchy();
 //	h = my_balancer.hierarchy();
 //	c = 
 	

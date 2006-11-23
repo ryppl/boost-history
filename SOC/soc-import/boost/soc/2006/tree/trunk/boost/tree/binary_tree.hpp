@@ -85,8 +85,11 @@ class binary_tree {
 	template <class InputCursor>
 		binary_tree (InputCursor subtree,
 			allocator_type const& alloc = allocator_type())
-			: m_value_alloc(alloc)
+			: m_header(), m_value_alloc(alloc)
 	{
+		m_header[0] = node_base_type::nil();
+		m_header[1] = &m_header;
+
 		insert(this->root(), subtree.root());
 	}
 	
@@ -97,18 +100,22 @@ class binary_tree {
 	 * by @a x.
 	 */
 	binary_tree (self_type const& x)
-	: m_header(x.m_header), m_value_alloc(x.m_value_alloc)
+	: m_header(), m_value_alloc(x.m_value_alloc)
 	{
-		insert(this->root(), x.root());
+		m_header[0] = node_base_type::nil();
+		m_header[1] = &m_header;
+		
+		if (!x.empty())
+			insert(this->root(), x.root());
 		
 		// TODO. The following lines take extra care of the header. A better 
 		// template <InputCursor> insert(...) function might make them obsolete
-		if (x.m_header[0] == &(x.m_header))
-			m_header[0] = &m_header;
-		if (x.m_header[1] == &(x.m_header))
-			m_header[1] = &m_header;
-		if (x.m_header.m_parent == &(x.m_header))
-			m_header.m_parent = &m_header;
+//		if (x.m_header[0] == &(x.m_header))
+//			m_header[0] = &m_header;
+//		if (x.m_header[1] == &(x.m_header))
+//			m_header[1] = &m_header;
+//		if (x.m_header.m_parent == &(x.m_header))
+//			m_header.m_parent = &m_header;
 	}
 	
 	~binary_tree()
@@ -272,12 +279,14 @@ class binary_tree {
     template <class InputCursor>
 	cursor insert(cursor pos, InputCursor subtree)
 	{
-		while (!subtree.empty()) {
+		if (!subtree.empty()) {
+
+		subtree = subtree.begin();
 			insert(pos, *subtree);
-			insert(pos.begin(), subtree.begin());
-			insert(pos.end(), subtree.end());
+			insert(pos.begin(), subtree);
+			insert(pos.end(), ++subtree);
 		}
-		return pos;
+		return pos.begin();
 	}
 
 	//erase operations must rebalance; clear doesn't need to.	

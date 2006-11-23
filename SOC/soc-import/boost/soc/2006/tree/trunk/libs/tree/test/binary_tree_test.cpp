@@ -136,6 +136,13 @@ int test_main(int, char* [])
 	validate_binary_tree(tree2);
 	
 	destroy_binary_tree(tree2);
+
+	tree_t::cursor c = tree2.insert(tree2.root(), tree1.root());	
+	BOOST_CHECK(*c == 8);
+	validate_test_data_tree(tree2);
+	
+	tree_t tree3(tree2);	
+	validate_test_data_tree(tree3);
 	
 	return 0;
 }
