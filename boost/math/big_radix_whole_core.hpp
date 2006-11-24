@@ -25,6 +25,7 @@
 #include <limits>   // for std::numeric_limits
 #include <memory>   // for std::allocator
 #include <string>   // for std::string
+#include <utility>  // for std::pair
 
 #include <boost/cstdint.hpp>              // for boost::uintmax_t
 #include <boost/operators.hpp>            // for boost::totally_ordered1, etc.
@@ -107,17 +108,15 @@ template < int Radix, class Allocator >
            operators: <code>!=</code>, <code>++</code> (post), <code>--</code>
            (post), <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>,
            <code>&gt;&gt;</code>, <code>&lt;&lt;</code>, <code>+</code>
-           (binary), <code>-</code> (binary), and <code>*</code> (binary).
+           (binary), <code>-</code> (binary), <code>*</code> (binary),
+           <code>/</code>, and <code>%</code>.
  */
 template < int Radix, class Allocator >
 class big_radix_whole
-    : private totally_ordered1< big_radix_whole<Radix, Allocator> >
-    , private unit_steppable< big_radix_whole<Radix, Allocator> >
-    , private shiftable2< big_radix_whole<Radix, Allocator>, typename
-       std::deque<int, Allocator>::size_type >
-    //, private integer_arithmetic1< big_radix_whole<Radix, Allocator> >
-    , private additive1< big_radix_whole<Radix, Allocator> >
-    , private multipliable1< big_radix_whole<Radix, Allocator> >
+    : ordered_euclidian_ring_operators1< big_radix_whole<Radix, Allocator>,
+        unit_steppable< big_radix_whole<Radix, Allocator>,
+        shiftable2< big_radix_whole<Radix, Allocator>, typename std::deque<int,
+        Allocator>::size_type > > >
 {
     // Pre-conditions
     BOOST_STATIC_ASSERT( Radix >= 2 );
@@ -262,8 +261,12 @@ public:
     bool  subtract_full_product_absolutely( big_radix_whole const
      &subtrahend_multiplicand, big_radix_whole const &subtrahend_multiplier );//@}
 
-    //std::pair<big_radix_whole, big_radix_whole>  divide_by( big_radix_whole
-    // const &divisor ) const;
+    /*! \name Full-Length Division */ //@{
+    //! Divide self's value by another to a separate quotient & remainder
+    std::pair<big_radix_whole, big_radix_whole>  divide_by( big_radix_whole
+     const &divisor ) const;//@}
+
+    //big_radix_whole  pseudo_reciprocal() const;
 
     //void  square_self();
     //void  power_self( unsigned exponent );
@@ -415,8 +418,10 @@ public:
 
     //! Multiply
     big_radix_whole &  operator *=( big_radix_whole const &multiplier );
-    //big_radix_whole &  operator /=( big_radix_whole const &divisor );
-    //big_radix_whole &  operator %=( big_radix_whole const &divisor );
+    //! Divide
+    big_radix_whole &  operator /=( big_radix_whole const &divisor );
+    //! Modulo
+    big_radix_whole &  operator %=( big_radix_whole const &divisor );
     //! Add
     big_radix_whole &  operator +=( big_radix_whole const &addend );
     //! Subtract

@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   16 Nov 2006  Initial version (Daryle Walker)
+//   23 Nov 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -24,6 +24,7 @@
 #include <boost/mpl/list.hpp>                    // for boost::mpl::list
 #include <boost/lexical_cast.hpp>                // for boost::lexical_cast
 #include <boost/pool/pool_alloc.hpp>             // for ...fast_pool_allocator
+#include <boost/tuple/tuple.hpp>                 // for boost::tuple
 
 #include <algorithm>  // for std::transform
 #include <cstddef>    // for std::size_t, ptrdiff_t
@@ -41,7 +42,7 @@
 
 // Not every checked type is printable
 BOOST_TEST_DONT_PRINT_LOG_VALUE( std::allocator<int> );
-BOOST_TEST_DONT_PRINT_LOG_VALUE( boost::fast_pool_allocator<int> );
+BOOST_TEST_DONT_PRINT_LOG_VALUE( fast_pool_allocator<int> );
 
 // Types & templates
 using boost::math::big_radix_whole;
@@ -2654,6 +2655,183 @@ BOOST_AUTO_TEST_CASE( subtract_full_product_absolutely_test )
     BOOST_CHECK( a.subtract_shifted_full_product_absolutely(big_decimal( 12u ),
      big_decimal( 6u ), 3u) );
     BOOST_CHECK_EQUAL( a, big_decimal(1778u) );  // cascading borrow, reduce len
+}
+
+// Divide by multiple digits, with multiple-digit remainder, test
+BOOST_AUTO_TEST_CASE( full_div_and_mod_test )
+{
+    using boost::math::big_radix_whole_divide_by_zero_error;
+
+    big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
+                       fortyfive( 45u ), sixhundredseventyeight( 678u );
+
+    // Dividing by zero is an error
+    BOOST_CHECK_THROW( zero.divide_by(zero),
+     big_radix_whole_divide_by_zero_error );
+
+    BOOST_CHECK_THROW( one.divide_by(zero),
+     big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( two.divide_by(zero),
+     big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( thirty.divide_by(zero),
+     big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( fortyfive.divide_by(zero),
+     big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( sixhundredseventyeight.divide_by(zero),
+     big_radix_whole_divide_by_zero_error );
+
+    // Dividing by a single-digit number is relatively quick
+    big_decimal const  three( 3u ), four( 4u ), five( 5u ), six( 6u ),
+                       seven( 7u ), fifteen( 15u );
+    big_decimal        q, r;
+
+    boost::tuple<big_decimal &, big_decimal &>  qr( q, r );
+
+    qr = zero.divide_by( one );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, zero );
+    qr = zero.divide_by( two );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, zero );
+
+    qr = one.divide_by( one );
+    BOOST_CHECK_EQUAL( q, one ); BOOST_CHECK_EQUAL( r, zero );
+    qr = one.divide_by( two );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, one );
+
+    qr = two.divide_by( one );
+    BOOST_CHECK_EQUAL( q, two ); BOOST_CHECK_EQUAL( r, zero );
+    qr = two.divide_by( two );
+    BOOST_CHECK_EQUAL( q, one ); BOOST_CHECK_EQUAL( r, zero );
+    qr = two.divide_by( three );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, two );
+
+    qr = six.divide_by( one );
+    BOOST_CHECK_EQUAL( q, six ); BOOST_CHECK_EQUAL( r, zero );
+    qr = six.divide_by( two );
+    BOOST_CHECK_EQUAL( q, three ); BOOST_CHECK_EQUAL( r, zero );
+    qr = six.divide_by( three );
+    BOOST_CHECK_EQUAL( q, two ); BOOST_CHECK_EQUAL( r, zero );
+    qr = six.divide_by( four );
+    BOOST_CHECK_EQUAL( q, one ); BOOST_CHECK_EQUAL( r, two );
+    qr = six.divide_by( five );
+    BOOST_CHECK_EQUAL( q, one ); BOOST_CHECK_EQUAL( r, one );
+    qr = six.divide_by( six );
+    BOOST_CHECK_EQUAL( q, one ); BOOST_CHECK_EQUAL( r, zero );
+    qr = six.divide_by( seven );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, six );
+
+    qr = thirty.divide_by( one );
+    BOOST_CHECK_EQUAL( q, thirty ); BOOST_CHECK_EQUAL( r, zero );
+    qr = thirty.divide_by( two );
+    BOOST_CHECK_EQUAL( q, fifteen ); BOOST_CHECK_EQUAL( r, zero );
+    qr = thirty.divide_by( three );
+    BOOST_CHECK_EQUAL( q, big_decimal(10u) ); BOOST_CHECK_EQUAL( r, zero );
+    qr = thirty.divide_by( four );
+    BOOST_CHECK_EQUAL( q, seven ); BOOST_CHECK_EQUAL( r, two );
+    qr = thirty.divide_by( five );
+    BOOST_CHECK_EQUAL( q, six ); BOOST_CHECK_EQUAL( r, zero );
+    qr = thirty.divide_by( six );
+    BOOST_CHECK_EQUAL( q, five ); BOOST_CHECK_EQUAL( r, zero );
+    qr = thirty.divide_by( seven );
+    BOOST_CHECK_EQUAL( q, four ); BOOST_CHECK_EQUAL( r, two );
+
+    // Multiple-digit divisors
+    big_decimal const  eighteen( 18u );
+
+    qr = zero.divide_by( thirty );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, zero );
+    qr = one.divide_by( fortyfive );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, one );
+
+    qr = thirty.divide_by( thirty );
+    BOOST_CHECK_EQUAL( q, one ); BOOST_CHECK_EQUAL( r, zero );
+    qr = thirty.divide_by( fortyfive );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, thirty );
+    qr = fortyfive.divide_by( thirty );
+    BOOST_CHECK_EQUAL( q, one ); BOOST_CHECK_EQUAL( r, fifteen );
+    qr = fortyfive.divide_by( fortyfive );
+    BOOST_CHECK_EQUAL( q, one ); BOOST_CHECK_EQUAL( r, zero );
+
+    qr = thirty.divide_by( sixhundredseventyeight );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, thirty );
+    qr = fortyfive.divide_by( sixhundredseventyeight );
+    BOOST_CHECK_EQUAL( q, zero ); BOOST_CHECK_EQUAL( r, fortyfive );
+    qr = sixhundredseventyeight.divide_by( thirty );
+    BOOST_CHECK_EQUAL( q, big_decimal(22u) ); BOOST_CHECK_EQUAL( r, eighteen );
+    qr = sixhundredseventyeight.divide_by( fortyfive );
+    BOOST_CHECK_EQUAL( q, fifteen ); BOOST_CHECK_EQUAL( r, three );
+    qr = sixhundredseventyeight.divide_by( sixhundredseventyeight );
+    BOOST_CHECK_EQUAL( q, one ); BOOST_CHECK_EQUAL( r, zero );
+
+    // Multiple-digit everything
+    big_decimal  a( 30528u );
+
+    qr = a.divide_by( sixhundredseventyeight );
+    BOOST_CHECK_EQUAL( q, fortyfive ); BOOST_CHECK_EQUAL( r, eighteen );
+    qr = a.divide_by( thirty );
+    BOOST_CHECK_EQUAL( q, big_decimal(1017u) ); BOOST_CHECK_EQUAL(r, eighteen);
+
+    // Force trial divisor to be too large
+    big_decimal const  fiftyeight( 58u );
+
+    a.assign( 409u );
+    qr = a.divide_by( fiftyeight );
+    BOOST_CHECK_EQUAL( q, seven ); BOOST_CHECK_EQUAL( r, three );
+      // add back to non-zero remainder
+    BOOST_CHECK_EQUAL( a, (q *= fiftyeight) += r );  // reverse check
+
+    a.subtract_single( 3 );
+    qr = a.divide_by( fiftyeight );
+    BOOST_CHECK_EQUAL( q, seven ); BOOST_CHECK_EQUAL( r, zero );
+      // add back to zero remainder
+
+    // Knuth's special test: digit expansion of (Radix^X - 1)(Radix^Y - 1) has
+    // Min(X, Y) - 1 digits of Radix-1 followed by a digit of Radix-2 followed
+    // by |X - Y| digits of Radix-1 followed by Min(X, Y) - 1 digits of 0
+    // followed by a digit of 1 [for positive integer X and Y, of course].
+    a.assign( 998999003ul );
+    qr = a.divide_by( big_decimal(999u) );
+    BOOST_CHECK_EQUAL( q, big_decimal(999999ul) ); BOOST_CHECK_EQUAL( r, two );
+
+    a.configure( "99899999001" );
+    qr = a.divide_by( (one << 8u) - one );
+    BOOST_CHECK_EQUAL( q, (one << 3) - one ); BOOST_CHECK_EQUAL( r, zero );
+
+    // Operator tests (as long as op/, op/=, op%, and op%= use "divide_by")
+    a.reset();
+    BOOST_CHECK_THROW( a /= zero, big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( a %= zero, big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( a / zero, big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( a % zero, big_radix_whole_divide_by_zero_error );
+
+    ++a;
+    BOOST_CHECK_THROW( a /= zero, big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( a %= zero, big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( a / zero, big_radix_whole_divide_by_zero_error );
+    BOOST_CHECK_THROW( a % zero, big_radix_whole_divide_by_zero_error );
+
+    BOOST_CHECK_EQUAL( a /= one, one );
+    BOOST_CHECK_EQUAL( a %= one, zero );
+    ++a;
+    BOOST_CHECK_EQUAL( a / one, one );
+    BOOST_CHECK_EQUAL( a % one, zero );
+    BOOST_CHECK_EQUAL( a / two, zero );
+    BOOST_CHECK_EQUAL( a % two, one );
+
+    ++a;
+    BOOST_CHECK_EQUAL( a / one, two );
+    BOOST_CHECK_EQUAL( a % one, zero );
+    BOOST_CHECK_EQUAL( a / two, one );
+    BOOST_CHECK_EQUAL( a % two, zero );
+    BOOST_CHECK_EQUAL( a / three, zero );
+    BOOST_CHECK_EQUAL( a % three, two );
+
+    a = fortyfive;
+    BOOST_CHECK_EQUAL( a / thirty, one );
+    BOOST_CHECK_EQUAL( a % thirty, fifteen );
+    BOOST_CHECK_EQUAL( a / fortyfive, one );
+    BOOST_CHECK_EQUAL( a % fortyfive, zero );
+    BOOST_CHECK_EQUAL( a / sixhundredseventyeight, zero );
+    BOOST_CHECK_EQUAL( a % sixhundredseventyeight, fortyfive );
 }
 
 BOOST_AUTO_TEST_SUITE_END()

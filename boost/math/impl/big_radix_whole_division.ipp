@@ -23,7 +23,7 @@
 #error "#Include only as part of <boost/math/big_radix_whole_core.hpp>"
 #endif
 
-#include <algorithm>  // for std::count_if
+#include <algorithm>  // for std::count_if, min
 
 #include <boost/lambda/lambda.hpp>  // for boost::lamda::_1
 
@@ -267,26 +267,172 @@ boost::math::big_radix_whole<Radix, Allocator>::is_even
     return !this->is_odd();
 }
 
+/** Partitions the current number in blocks sized by a given value, possibly
+    with unpartitioned leftovers.
+
+    \pre  <code>0 != <var>divisor</var></code>
+
+    \param divisor  The value that the current object, acting as the dividend,
+                    will be divided by
+
+    \return  An object <var>x</var> such that <code><var>x</var>.first</code> is
+             the quotient from the division and <code><var>x</var>.second</code>
+             is the division's remainder.
+
+    \throws boost::math::big_radix_whole_divide_by_zero_error
+             A zero-valued divisor is used.
+
+    \post  <code>*this == <var>divisor</var> * <var>return_value</var>.first +
+           <var>return_value</var>.second</code>
+ */
+template < int Radix, class Allocator >
+std::pair< boost::math::big_radix_whole<Radix, Allocator>,
+ boost::math::big_radix_whole<Radix, Allocator> >
+boost::math::big_radix_whole<Radix, Allocator>::divide_by
+(
+    big_radix_whole const &  divisor
+) const
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( divisor.test_invariant() );
+
+    std::pair<self_type, self_type>  result( self_type(0u,
+                                      this->get_allocator()), self_type(0u,
+                                      this->get_allocator()) );
+    self_type                        &q = result.first, &r = result.second;
+    deque_type const &              drd = divisor.digits_;
+
+    switch ( size_type const  drs = drd.size() )
+    {
+    default:
+    {
+        // multi-digit long division
+        deque_type const &  ddd = this->digits_;
+        size_type           dds = ddd.size();
+        digit_type const    tdr = drd.back();
+
+        while ( dds-- )
+        {
+            // The remainder acts as the scratch dividend
+            r.shift_up_add_single( ddd[dds] );
+
+            // Determine the trial quotient digit
+            digit_type  tq = std::min<digit_type>( r.digit_at(drs) *
+                         self_type::radix + r.digit_at(drs - 1u) / tdr,
+                         self_type::radix - 1 );
+
+            if ( r.subtract_mixed_product_absolutely(divisor, tq) )
+            {
+                // Undo the over-estimation
+                do
+                {
+                    --tq;
+                }
+                while ( !r.subtract_full_absolutely(divisor) && r );
+                    // "&& r" just in case re-estimate fully cancels
+            }
+            BOOST_ASSERT( r < divisor );
+
+            // Incorporate that trial digit
+            BOOST_ASSERT( 0 <= tq );  // already have "td < Radix"
+            q.shift_up_add_single( tq );
+        }
+        return result;
+    }
+
+    case 1u:
+        // single-digit division
+        q.assign( *this );
+        r.assign( static_cast<uintmax_t>(q.div_and_mod_single( drd.front() )) );
+        return result;
+
+    case 0u:
+        // something / 0 -> banned
+        throw big_radix_whole_divide_by_zero_error( "attempted to divide and/or"
+         " modulo by zero" );
+    }
+}
+
 
 //  Radix/bignum/natural operator member function definitions  ---------------//
 
-/*template < int Radix, class Allocator >
+/** Attenuates the current number by a given value, truncating away any
+    fractional part.
+
+    \pre  <code>0 != <var>divisor</var></code>
+
+    \param divisor  The value to be divided into the current number, which
+                    serves as the dividend.
+
+    \return  A reference to <code>*this</code> object as the quotient.
+
+    \throws boost::math::big_radix_whole_divide_by_zero_error
+             A zero-valued divisor is used.
+
+    \post  <code>*this == <b>Floor</b>( <var>old_this</var> <b>/</b>
+           <var>divisor</var> )</code>
+
+    \note  The class declaration uses the Boost.Operators library to synthesize
+           the division <code>operator /</code> from this one.
+
+    \see  #divide_by
+ */
+template < int Radix, class Allocator >
 boost::math::big_radix_whole<Radix, Allocator> &
 boost::math::big_radix_whole<Radix, Allocator>::operator /=
 (
     big_radix_whole const &  divisor
 )
 {
-}*/
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( divisor.test_invariant() );
 
-/*template < int Radix, class Allocator >
+    // For now, use the long division method.  Later, maybe something "kewl"
+    // like multiplication by pseudo-reciprocal via Newton's method can be used.
+    this->divide_by( divisor ).first.swap( *this );
+
+    BOOST_ASSERT( this->test_invariant() );
+    return *this;
+}
+
+/** Gets the resulting remainder if the current number was divided by a given
+    value.
+
+    \pre  <code>0 != <var>divisor</var></code>
+
+    \param divisor  The value to be divided into the current number, which
+                    serves as the dividend.
+
+    \return  A reference to <code>*this</code> object as the remainder.
+
+    \throws boost::math::big_radix_whole_divide_by_zero_error
+             A zero-valued divisor is used.
+
+    \post  <code>*this == <var>old_this</var> - <var>divisor</var> *
+           <b>Floor</b>( <var>old_this</var> / <var>divisor</var> )</code>
+
+    \note  The class declaration uses the Boost.Operators library to synthesize
+           the modulus <code>operator %</code> from this one.
+
+    \see  #divide_by
+ */
+template < int Radix, class Allocator >
 boost::math::big_radix_whole<Radix, Allocator> &
 boost::math::big_radix_whole<Radix, Allocator>::operator %=
 (
     big_radix_whole const &  divisor
 )
 {
-}*/
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+    BOOST_PRIVATE_WILD_ASSERT( divisor.test_invariant() );
+
+    // For now, use the long division method.  Later, maybe something "kewl"
+    // like an exact-remainder method can be used.
+    this->divide_by( divisor ).second.swap( *this );
+
+    BOOST_ASSERT( this->test_invariant() );
+    return *this;
+}
 
 
 //  Radix/bignum/natural miscellaneous function definitions  -----------------//
