@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   23 Nov 2006  Initial version (Daryle Walker)
+//   25 Nov 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -3258,7 +3258,7 @@ BOOST_AUTO_TEST_CASE( conversion_test )
     BOOST_CHECK_EQUAL( "1-14", big_hexadecimal(0x1Eu).to_string() );
     BOOST_CHECK_EQUAL( "503", big_octal(0503u).to_string() );
 
-    // Check generic numeric conversion
+    // Check generic numeric conversion, bounded destination type
     BOOST_CHECK_EQUAL( big_decimal().to_uintmax(),
      big_decimal().to_number<uintmax_t>() );
     BOOST_CHECK_EQUAL( big_decimal(1u).to_uintmax(),
@@ -3279,7 +3279,31 @@ BOOST_AUTO_TEST_CASE( conversion_test )
      double_limits::max_exponent + 1u).to_number<double>(),
      big_radix_whole_conversion_error );
 
-    // TODO: Need to test generic conversion on unbounded types....
+    // Check generic numeric conversion, unbounded destination type
+    BOOST_CHECK_EQUAL( big_decimal().to_number<big_octal>(), big_octal() );
+    BOOST_CHECK_EQUAL( big_decimal().to_number<big_hexadecimal>(),
+     big_hexadecimal() );  // zero
+
+    BOOST_CHECK_EQUAL( big_decimal(1u).to_number<big_octal>(), big_octal(01u) );
+    BOOST_CHECK_EQUAL( big_decimal(1u).to_number<big_hexadecimal>(),
+     big_hexadecimal(0x1u) );  // one
+
+    BOOST_CHECK_EQUAL( big_decimal(9u).to_number<big_octal>(),big_octal(011u) );
+    BOOST_CHECK_EQUAL( big_decimal(9u).to_number<big_hexadecimal>(),
+     big_hexadecimal(0x9u) );  // one-digit except for lesser radix
+
+    BOOST_CHECK_EQUAL(big_decimal(12u).to_number<big_octal>(), big_octal(014u));
+    BOOST_CHECK_EQUAL( big_decimal(12u).to_number<big_hexadecimal>(),
+     big_hexadecimal(0xCu) );  // two-digits except for greater radix
+
+    BOOST_CHECK_EQUAL(big_decimal(31u).to_number<big_octal>(), big_octal(037u));
+    BOOST_CHECK_EQUAL( big_decimal(31u).to_number<big_hexadecimal>(),
+     big_hexadecimal(0x1Fu) );  // two digits for all radices
+
+    BOOST_CHECK_EQUAL( big_decimal(5764801ul).to_number<big_octal>(),
+     big_octal(025773301ul) );
+    BOOST_CHECK_EQUAL( big_decimal(5764801ul).to_number<big_hexadecimal>(),
+     big_hexadecimal(0x57F6C1ul) );  // lots of digits
 }
 
 // Stream-output test
