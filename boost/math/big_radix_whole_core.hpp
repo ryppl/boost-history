@@ -293,13 +293,17 @@ public:
     void  multiply_single_subtract_single( digit_type minuend_multiplier,
      digit_type subtrahend );
     //! Multiply by a single-digit value
-    void  multiply_single( digit_type multiplier );//@}
+    void  multiply_single( digit_type multiplier );
+    //! Multiply by two
+    void  double_self( bool add_one = false );//@}
 
     /*! \name Single-Digit Division-to-Self, Modulus, and Parity */ //@{
     //! Divide by a single-digit value, with separate remainder
     digit_type  div_and_mod_single( digit_type divisor );
     //! Returns the remainder from division by a single-digit value
     digit_type  modulo_single( digit_type divisor ) const;
+    //! Divide by two, with separate remainder
+    int         halve_self();
     //! Returns the remainder from division by two (i.e. even versus odd)
     int         parity() const;
     //! Returns whether the current value is odd

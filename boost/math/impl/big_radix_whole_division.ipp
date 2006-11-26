@@ -38,19 +38,45 @@ namespace math
 namespace detail
 {
 
-// Determine the even/odd status of a digit string.  The method used is
-// dependent on the radix.
+// Determine the even/odd status and the half-value of a digit string.  The
+// methods used are dependent on the radix.
 template < int Radix >
-class big_radix_whole_parity_checker
+class big_radix_whole_divmod2
 {
-    // The method used depends on the even/odd status of the radix
+    // The methods used depend on the even/odd status of the radix
     // (Useless "Rx" parameter added since the compiler needs it.)
     template < int Rx, bool IsOdd >
-    class parity_checker
+    class divmod2
     {
     public:
         template < class DequeType >
-        int  operator ()( DequeType const &digits ) const
+        int  halve( DequeType &digits ) const
+        {
+            // There's no pattern for odd radices, just do the division outright
+            int                                    result = 0;
+            typename DequeType::reverse_iterator const  e = digits.rend();
+
+            for ( typename DequeType::reverse_iterator  i = digits.rbegin() ; e
+             != i ; ++i )
+            {
+                typename DequeType::reference  digit = *i;
+
+                 digit  += result ? Radix : 0;
+                result   = digit & 1;
+                 digit >>= 1;
+            }
+
+            // Resolve a halving that reduces the digit length
+            while ( !digits.empty() && !digits.back() )
+            {
+                digits.pop_back();
+            }
+
+            return result;
+        }
+
+        template < class DequeType >
+        int  parity( DequeType const &digits ) const
         {
             // Odd * Any == Any; Odd + Any == ~Any; Even + Any == Any
             // This means that the even/odd status of a particular place depends
@@ -61,17 +87,59 @@ class big_radix_whole_parity_checker
              1) != 0 ) % 2;
         }
 
-    };  // parity_checker (1)
+    };  // divmod2 (1)
 
-    // The method for even radices is quicker
+    // The methods for even radices are quicker
     // (Useless "Rx" parameter added since the compiler can't accept an inner
     // template that's fully specialized.)
     template < int Rx >
-    class parity_checker< Rx, false >
+    class divmod2< Rx, false >
     {
     public:
         template < class DequeType >
-        int  operator ()( DequeType const &digits ) const
+        int  halve( DequeType &digits ) const
+        {
+            if ( !digits.empty() )
+            {
+                // Remember the parity before the halving destroys it
+                int const  result = digits.front() & 1;
+
+                // Halve the one's digit
+                digits.front() >>= 1;
+
+                // Halve the other digits, shifting any remainder down as an
+                // addition of Radix/2 to the next lower digit.
+                int const                  demi_radix = Radix / 2;
+                typename DequeType::iterator const  e = digits.end();
+
+                for ( typename DequeType::iterator  i = digits.begin() + 1 ; e
+                 != i ; ++i )
+                {
+                    typename DequeType::reference  current = *i,
+                                                   previous = *( i - 1 );
+                    int const                      parity = current & 1;
+
+                    current >>= 1;
+                    previous += parity ? demi_radix : 0;
+                }
+
+                // Resolve a halving that reduces the digit length
+                while ( !digits.empty() && !digits.back() )
+                {
+                    digits.pop_back();
+                }
+
+                return result;
+            }
+            else
+            {
+                // 0 DIV 2 == 0r0 -> no digits to remove
+                return 0;
+            }
+        }
+
+        template < class DequeType >
+        int  parity( DequeType const &digits ) const
         {
             // Even * Any == Even; Even + Any == Any
             // This means that all the places above the one's place contribute
@@ -81,28 +149,51 @@ class big_radix_whole_parity_checker
             return digits.empty() ? 0 : ( digits.front() & 1 );
         }
 
-    };  // parity_checker (2)
+    };  // divmod2 (2)
 
 public:
     template < class DequeType >
-    int  operator ()( DequeType const &digits ) const
-    {  return parity_checker<Radix, Radix % 2 != 0>()( digits );  }
+    int  halve( DequeType &digits ) const
+    {  return divmod2<Radix, Radix % 2 != 0>().halve( digits );  }
 
-};  // boost::math::detail::big_radix_whole_parity_checker (1)
+    template < class DequeType >
+    int  parity( DequeType const &digits ) const
+    {  return divmod2<Radix, Radix % 2 != 0>().parity( digits );  }
+
+};  // boost::math::detail::big_radix_whole_divmod2 (1)
 
 // Base-2 is really easy to specialize; little computation needed
 template < >
-class big_radix_whole_parity_checker< 2 >
+class big_radix_whole_divmod2< 2 >
 {
 public:
     template < class DequeType >
-    int  operator ()( DequeType const &digits ) const
+    int  halve( DequeType &digits ) const
+    {
+        if ( digits.empty() )
+        {
+            // 0 DIV 2 == 0r0 -> no digits to remove
+            return 0;
+        }
+        else
+        {
+            // Remember the one's digit before purging it
+            int const  result = digits.front();
+
+            // Unlike other radices, halving shifts just at container-level
+            digits.pop_front();
+            return result;
+        }
+    }
+
+    template < class DequeType >
+    int  parity( DequeType const &digits ) const
     {
         // Unlike other even radices, the one's digit is already either 0 or 1
         return digits.empty() ? 0 : digits.front();
     }
 
-};  // boost::math::detail::big_radix_whole_parity_checker (2)
+};  // boost::math::detail::big_radix_whole_divmod2 (2)
 
 }  // namespace detail
 }  // namespace math
@@ -215,6 +306,32 @@ boost::math::big_radix_whole<Radix, Allocator>::modulo_single
     return remainder;
 }
 
+/** Bisects the current number.  It should be faster than general division or
+    shift routines because this member function can take advantage of bit
+    twiddling.
+
+    \retval 0  The value of <code>*this</code> was initially even.
+    \retval 1  The value of <code>*this</code> was initially odd.
+
+    \post  <code><var>old_this</var> == *this * 2 +
+           <var>return_value</var></code>
+ */
+template < int Radix, class Allocator >
+inline
+int
+boost::math::big_radix_whole<Radix, Allocator>::halve_self
+(
+)
+{
+    BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
+
+    int const  result = detail::big_radix_whole_divmod2<Radix>().halve(
+                this->digits_ );
+
+    BOOST_ASSERT( this->test_invariant() );
+    return result;
+}
+
 /** Gets the current number's quality of being either even or odd.  This is the
     same as getting a modulo by two.  It should be faster than general division,
     modulo, or shift routines because this member function can take advantage of
@@ -232,7 +349,7 @@ boost::math::big_radix_whole<Radix, Allocator>::parity
 {
     BOOST_PRIVATE_WILD_ASSERT( this->test_invariant() );
 
-    return detail::big_radix_whole_parity_checker<Radix>()( this->digits_ );
+    return detail::big_radix_whole_divmod2<Radix>().parity( this->digits_ );
 }
 
 /** Gets whether or not the current number is odd (i.e. its remainder modulo two

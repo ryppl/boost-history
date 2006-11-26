@@ -30,6 +30,136 @@
 #include <boost/lambda/lambda.hpp>  // for boost::lamda::_1, _2
 
 
+//! \cond
+//  Implementation details  --------------------------------------------------//
+
+namespace boost
+{
+namespace math
+{
+namespace detail
+{
+
+// Determine the doubled-value of a digit string.  The method used is dependent
+// on the radix.
+template < int Radix >
+class big_radix_whole_doubler
+{
+    // The method used depends on the radix being a power of two
+    // (Useless "Rx" parameter added since the compiler needs it.)
+    template < int Rx, bool IsPowerOfTwo >
+    class doubler
+    {
+    public:
+        template < class DequeType >
+        void  operator ()( DequeType &digits, bool add_one ) const
+        {
+            if ( !digits.empty() )
+            {
+                // Append extra digit for overflow
+                digits.push_back( 0 );
+
+                // Loop through digits, doubling them and propagating carries
+                std::div_t                         qr = { 0, 0 };
+                typename DequeType::iterator const  p = digits.end() - 1;
+
+                qr.quot = static_cast<int>( add_one );
+                for ( typename DequeType::iterator  i = digits.begin() ; p != i
+                 ; ++i )
+                {
+                    typename DequeType::reference  digit = *i;
+
+                       qr = std::div( (digit << 1) | qr.quot, Radix );
+                    digit = qr.rem;
+                }
+                *p += qr.quot;
+
+                // Undo the append if it wasn't needed
+                while ( !digits.empty() && !digits.back() )
+                {
+                    digits.pop_back();
+                }
+            }
+            else if ( add_one )
+            {
+                // 0 -> 0 * 2 + 1 == 1
+                digits.push_back( 1 );
+            }
+            // ELSE: 0 -> 0 * 2 + 0 == 0 -> no change
+        }
+
+    };  // doubler (1)
+
+    // The method for radices that are exact powers of two is quicker
+    // (Useless "Rx" parameter added since the compiler can't accept an inner
+    // template that's fully specialized.)
+    template < int Rx >
+    class doubler< Rx, true >
+    {
+    public:
+        template < class DequeType >
+        void  operator ()( DequeType &digits, bool add_one ) const
+        {
+            // Append extra digit for overflow
+            digits.push_back( 0 );
+
+            // Loop through digits, doubling them and propagating carries
+            int                             carry = static_cast<int>( add_one );
+            int const                        mask = Radix - 1;
+            typename DequeType::iterator const  p = digits.end() - 1;
+
+            for ( typename DequeType::iterator  i = digits.begin() ; p != i ;
+             ++i )
+            {
+                typename DequeType::reference  digit = *i;
+
+                digit <<= 1;
+                digit  |= carry;
+                carry   = static_cast<int>( digit > mask );
+                digit  &= mask;
+            }
+            *p += carry;
+
+            // Undo the append if it wasn't needed
+            while ( !digits.empty() && !digits.back() )
+            {
+                digits.pop_back();
+            }
+        }
+
+    };  // doubler (2)
+
+public:
+    template < class DequeType >
+    void  operator ()( DequeType &digits, bool add_one ) const
+    { doubler<Radix, (Radix & (Radix - 1)) == 0>()( digits, add_one ); }
+
+};  // boost::math::detail::big_radix_whole_doubler (1)
+
+// Base-2 is really easy to specialize; little computation needed
+template < >
+class big_radix_whole_doubler< 2 >
+{
+public:
+    template < class DequeType >
+    void  operator ()( DequeType &digits, bool add_one ) const
+    {
+        if ( !digits.empty() || add_one )
+        {
+            // Unlike other radices, doubling shifts just at the container-level
+            digits.push_front( static_cast<int>(add_one) );
+        }
+        // ELSE: 0 -> 0 * 2 + 0 == 0 -> no change
+    }
+
+};  // boost::math::detail::big_radix_whole_doubler (2)
+
+}  // namespace detail
+}  // namespace math
+}  // namespace boost
+//! \endcond
+
+
 //  Radix/bignum/natural extra member function definitions  ------------------//
 
 /** Amplifies the current number by a given (non-negative) value, then increases
@@ -245,6 +375,27 @@ boost::math::big_radix_whole<Radix, Allocator>::multiply_single
 )
 {
     this->multiply_single_add_single( multiplier, 0 );
+}
+
+/** Augments the current number by its own value, i.e. its value becomes
+    twofold.  It should be faster than general multiplication or shift routines
+    because this member function can take advantage of bit twiddling.
+
+    \param add_one  Whether or not the number should be increased by one after
+                    the doubling.  If not given, \c false is the default (i.e.
+                    no additional increment).
+
+    \post  <code>*this == <var>old_this</var> * 2 + ( <var>add_one</var> ? 1 :
+           0 )</code>
+ */
+template < int Radix, class Allocator >
+void
+boost::math::big_radix_whole<Radix, Allocator>::double_self
+(
+    bool  add_one  // = false
+)
+{
+    detail::big_radix_whole_doubler<Radix>()( this->digits_, add_one );
 }
 
 /** Increases a pair of digits of the current number at a given place by the

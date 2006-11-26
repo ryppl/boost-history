@@ -7,7 +7,7 @@
 //  See <http://www.boost.org/libs/math/> for the library's home page.
 
 //  Revision History
-//   25 Nov 2006  Initial version (Daryle Walker)
+//   26 Nov 2006  Initial version (Daryle Walker)
 
 #define BOOST_TEST_MAIN  "big-radix-whole test"
 
@@ -26,10 +26,11 @@
 #include <boost/pool/pool_alloc.hpp>             // for ...fast_pool_allocator
 #include <boost/tuple/tuple.hpp>                 // for boost::tuple
 
-#include <algorithm>  // for std::transform
+#include <algorithm>  // for std::for_each, equal, transform
 #include <cstddef>    // for std::size_t, ptrdiff_t
 #include <iomanip>    // for std:setw, resetiosflags, setfill
 #include <ios>        // for std::ios_base, left, right, internal
+#include <iterator>   // for std::back_inserter
 #include <limits>     // for std::numeric_limits
 #include <memory>     // for std::allocator
 #include <new>        // for std::nothrow, std::bad_alloc
@@ -144,6 +145,34 @@ inline  T *  array_end( T (&a)[N] )  { return &a[N]; }
 
 template < typename T, std::size_t N >
 inline  T const *  array_end( T const (&a)[N] )  { return &a[N]; }
+
+// Create double-value maps
+template < typename T >
+std::vector<T>  doubles_list( std::size_t max_value )
+{
+    std::vector<T>  result;
+
+    result.reserve( max_value + 1u );
+    for ( std::size_t  i = 0u ; i <= max_value ; ++i )
+    {
+        result.push_back( static_cast<T>(i << 1u) );
+    }
+    return result;
+}
+
+// Create half-value maps
+template < typename T >
+std::vector<T>  halves_list( std::size_t max_value )
+{
+    std::vector<T>  result;
+
+    result.reserve( max_value + 1u );
+    for ( std::size_t  i = 0u ; i <= max_value ; ++i )
+    {
+        result.push_back( static_cast<T>(i >> 1u) );
+    }
+    return result;
+}
 
 // Create parity maps
 std::vector<int>  parity_list( std::size_t max_value )
@@ -1924,28 +1953,109 @@ BOOST_AUTO_TEST_CASE( single_mod_test )
     BOOST_CHECK_EQUAL( a.modulo_single(5), 3 );
 }
 
-// Modulo by 2, a.k.a. odd vs. even, test
-// (There are different implementations for odd radices, even radices, and a
-// base-2 exclusive.  Need to test zero, single-digit, and multi-digit values.)
-typedef ::boost::mpl::list<big_radix_whole<2>, big_radix_whole<3>, big_decimal>
-  parity_test_types;
-BOOST_AUTO_TEST_CASE_TEMPLATE( parity_test, T, parity_test_types )
+// Multiply, divide, and modulo by 2 tests, including odd vs. even
+// (There are different implementations for odd radices, even (> 2) radices,
+// power-of-two (> 2), and a base-2 exclusive.  Need to test zero, single-digit,
+// and multi-digit values.)
+typedef ::boost::mpl::list<big_radix_whole<2>, big_radix_whole<3>, big_octal>
+  twoplay_test_types;
+BOOST_AUTO_TEST_CASE_TEMPLATE( twoplay_test, T, twoplay_test_types )
 {
     using namespace boost::lambda;
 
     using std::vector;
+    using boost::counting_iterator;
+    using std::for_each;
     using std::transform;
 
     // The highest value to check (lowest is zero)
     std::size_t const  highest( 27u ), length( highest + 1u );
 
     // The expected results
+    vector<T> const     doubles = doubles_list<T>( highest );
+    vector<T> const     halves = halves_list<T>( highest );
     vector<int> const   parities = parity_list( highest );
     vector<bool> const  odds( parities.begin(), parities.end() );
     vector<bool> const  evens = flip_vector( odds );
 
     // Set up the source values (as big_radix_whole objects)
-    boost::counting_iterator<T> const  cb( 0u ), ce( length );
+    counting_iterator<T> const  cb( 0u ), ce( length );
+
+    // Doubling test
+    {
+        // Prepare the test objects
+        vector<T>  doubling_setup;
+
+        doubling_setup.reserve( length );
+        for ( counting_iterator<T>  i = cb ; ce != i ; ++i )
+        {
+            doubling_setup.push_back( *i );
+        }
+
+        // Compute the results
+        vector<T>  doubling_scratch0( doubling_setup ),
+                   doubling_scratch1( doubling_setup );
+
+        for_each( doubling_scratch0.begin(), doubling_scratch0.end(),
+         bind(&T::double_self, _1, false) );
+        for_each( doubling_scratch1.begin(), doubling_scratch1.end(),
+         bind(&T::double_self, _1, true) );
+
+        // Check the results
+        T const  one( 1u );
+
+        BOOST_CHECK_EQUAL_COLLECTIONS( doubling_scratch0.begin(),
+         doubling_scratch0.end(), doubles.begin(), doubles.end() );
+        BOOST_CHECK( std::equal(doubling_scratch0.begin(),
+         doubling_scratch0.end(), doubling_scratch1.begin(), ( _2 >= _1 ) && (
+         ret<T>(_2 - _1) == one )) );
+    }
+
+    // Halving test
+    {
+        // Prepare the test objects
+        vector<T>    halving_inputs;
+
+        halving_inputs.reserve( length );
+        for ( counting_iterator<T>  i = cb ; ce != i ; ++i )
+        {
+            halving_inputs.push_back( *i );
+              // std::copy(cb, ce, back_inserter(halving_inputs)) didn't work!
+        }
+
+        // Compute the results
+        vector<int>  halving_outputs;
+
+        halving_outputs.reserve( length );
+        transform( halving_inputs.begin(), halving_inputs.end(),
+         std::back_inserter(halving_outputs), bind(&T::halve_self, _1) );
+
+        // Check the results
+        BOOST_CHECK_EQUAL_COLLECTIONS( halving_inputs.begin(),
+         halving_inputs.end(), halves.begin(), halves.end() );
+        BOOST_CHECK_EQUAL_COLLECTIONS( halving_outputs.begin(),
+         halving_outputs.end(), parities.begin(), parities.end() );
+    }
+
+    // Doubling and halving invert each other
+    {
+        T const  onemillion( 1000000ul ), onemillionone( 1000001ul ),
+                 fivehundredthousand( 500000ul );
+        T        a;
+
+        a = onemillion;
+        BOOST_CHECK( !a.halve_self() );
+        BOOST_CHECK_EQUAL( a, fivehundredthousand );
+
+        a.double_self( true );
+        BOOST_CHECK_EQUAL( a, onemillionone );
+
+        BOOST_CHECK( a.halve_self() );
+        BOOST_CHECK_EQUAL( a, fivehundredthousand );
+
+        a.double_self();
+        BOOST_CHECK_EQUAL( a, onemillion );
+    }
 
     // Parity test
     {
