@@ -71,6 +71,11 @@ template < int Radix, class Allocator >
     big_radix_whole<Radix, Allocator>  digit_sum( big_radix_whole<Radix,
      Allocator> const &x );
 
+template < int Radix, class Allocator >
+    big_radix_whole<Radix, Allocator>  absolute_difference(
+     big_radix_whole<Radix, Allocator> const &minuend, big_radix_whole<Radix,
+     Allocator> const &subtrahend );
+
 
 //  Radix-specific bignum unsigned integer class template declaration  -------//
 

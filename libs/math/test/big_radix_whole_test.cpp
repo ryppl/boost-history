@@ -2457,6 +2457,8 @@ BOOST_AUTO_TEST_CASE( full_subtract_test )
 // Subtract-absolutely with multiple digits test
 BOOST_AUTO_TEST_CASE( full_subtract_absolutely_test )
 {
+    using boost::math::absolute_difference;
+
     big_decimal const  zero, one( 1u ), two( 2u ), thirty( 30u ),
                        fortyfive( 45u ), sixhundredseventyeight( 678u );
     big_decimal        a;
@@ -2551,6 +2553,17 @@ BOOST_AUTO_TEST_CASE( full_subtract_absolutely_test )
     a = sixhundredseventyeight;
     BOOST_CHECK( a.subtract_shifted_full_absolutely(big_decimal( 8u ), 2u) );
     BOOST_CHECK_EQUAL( a, big_decimal(122u) );  // greater @ peak, same length
+
+    // Separate function tests
+    BOOST_CHECK_EQUAL( absolute_difference(zero, zero), zero );
+    BOOST_CHECK_EQUAL( absolute_difference(one, zero), one );
+    BOOST_CHECK_EQUAL( absolute_difference(zero, one), one );
+    BOOST_CHECK_EQUAL( absolute_difference(two, one), one );
+    BOOST_CHECK_EQUAL( absolute_difference(one, two), one );
+    BOOST_CHECK_EQUAL( absolute_difference(sixhundredseventyeight, fortyfive),
+     big_decimal(633u) );
+    BOOST_CHECK_EQUAL( absolute_difference(thirty, sixhundredseventyeight),
+     big_decimal(648u) );
 }
 
 // Multiply with multiple digits, fused add, reverse order, test

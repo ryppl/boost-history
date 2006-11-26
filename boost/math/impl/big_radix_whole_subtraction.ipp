@@ -645,4 +645,39 @@ boost::math::operator -
 }
 
 
+//  Radix/bignum/natural miscellaneous function definitions  -----------------//
+
+/** \brief  Subtract-absolutely binary operation for \c big_radix_whole\<\>
+
+    Computes the absolute value of the difference of the values between the
+    given \c big_radix_whole\<\> objects.  The returned value is the distance
+    between the two values' positions on the number line, regardless of
+    direction.  Use the ordering-comparison operators, or
+    boost::math::big_radix_whole::compare, to determine the original direction.
+
+    \param minuend     The minuend.
+    \param subtrahend  The subtrahend.
+
+    \return  <code>|<var>minuend</var> - <var>subtrahend</var>|</code>
+
+    \see  boost::math::big_radix_whole::subtract_full_absolutely
+
+    \relates  boost::math::big_radix_whole
+ */
+template < int Radix, class Allocator >
+inline
+boost::math::big_radix_whole<Radix, Allocator>
+boost::math::absolute_difference
+(
+    boost::math::big_radix_whole<Radix, Allocator> const &  minuend,
+    boost::math::big_radix_whole<Radix, Allocator> const &  subtrahend
+)
+{
+    big_radix_whole<Radix, Allocator>  difference( minuend );
+
+    difference.subtract_full_absolutely( subtrahend );
+    return difference;
+}
+
+
 #endif  // BOOST_MATH_BIG_RADIX_WHOLE_IMPL_SUBTRACTION_IPP
