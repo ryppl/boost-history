@@ -19,7 +19,11 @@
 #ifdef BOOST_PROPERTY_TREE_XML_PARSER_TINYXML
 #include <boost/property_tree/detail/xml_parser_read_tinyxml.hpp>
 #else
+#ifdef BOOST_PROPERTY_TREE_XML_PARSER_PUGIXML
+#include <boost/property_tree/detail/xml_parser_read_pugixml.hpp>
+#else
 #include <boost/property_tree/detail/xml_parser_read_spirit.hpp>
+#endif
 #endif
 
 #include <fstream>
