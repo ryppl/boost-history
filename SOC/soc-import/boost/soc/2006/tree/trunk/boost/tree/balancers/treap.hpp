@@ -25,7 +25,7 @@ namespace balancers {
 class treap_metadata {
 public:	
 	treap_metadata()
-	: m_priority(0) {}
+	: m_priority((lrand48() >> 1) + 1) {}
 	
 	int const get_priority() const
 	{
@@ -50,14 +50,12 @@ class treap {
 	template <class Tree>
 	static void add(Tree& t, typename Tree::cursor& x) 
 	{
-		int priority = (lrand48() >> 1) + 1;
-		x->metadata().set_priority(priority);
-		// TODO(?): Move the above to metadata ctor?
+		int priority = x->metadata().get_priority();
 		
 		x = x.parent();
 		while ((x != t.root()) && (priority > x->metadata().get_priority())) {
-			priority = x->metadata().get_priority();
 			t.rotate(x);
+			priority = x->metadata().get_priority();
 		}
 		x = x.begin();
 	}

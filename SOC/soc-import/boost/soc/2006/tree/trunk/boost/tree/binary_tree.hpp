@@ -107,15 +107,6 @@ class binary_tree {
 		
 		if (!x.empty())
 			insert(this->root(), x.root());
-		
-		// TODO. The following lines take extra care of the header. A better 
-		// template <InputCursor> insert(...) function might make them obsolete
-//		if (x.m_header[0] == &(x.m_header))
-//			m_header[0] = &m_header;
-//		if (x.m_header[1] == &(x.m_header))
-//			m_header[1] = &m_header;
-//		if (x.m_header.m_parent == &(x.m_header))
-//			m_header.m_parent = &m_header;
 	}
 	
 	~binary_tree()
@@ -259,9 +250,6 @@ class binary_tree {
 		if (pos == this->shoot())
 			m_header.m_parent = p_node;
 
-		//cursor c = this->root(); //TODO: revisit (add's type sig.)
-		//balancer_type::add(*this, pos);
-		
 		return pos.begin(); 
 	}
 
@@ -415,13 +403,10 @@ class binary_tree {
 	}
 
 private:
-
 	node_base_type m_header;
 
 	allocator_type	 m_value_alloc;
 	node_allocator_type m_node_alloc;
-	
-
 };
 
 /// See boost::tree::binary_tree::swap().
