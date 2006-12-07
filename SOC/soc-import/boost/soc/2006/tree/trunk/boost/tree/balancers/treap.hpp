@@ -50,11 +50,16 @@ class treap {
 	template <class Tree>
 	static void add(Tree& t, typename Tree::cursor& x) 
 	{
-		x->metadata().set_priority((lrand48() >> 1) + 1); // Move this to metadata ctor?
-		while ((x != t.root()) &&
-			   (x->metadata().get_priority() > 
-			   	x.parent()->metadata().get_priority()))
+		int priority = (lrand48() >> 1) + 1;
+		x->metadata().set_priority(priority);
+		// TODO(?): Move the above to metadata ctor?
+		
+		x = x.parent();
+		while ((x != t.root()) && (priority > x->metadata().get_priority())) {
+			priority = x->metadata().get_priority();
 			t.rotate(x);
+		}
+		x = x.begin();
 	}
 	  
 	template <class Tree>

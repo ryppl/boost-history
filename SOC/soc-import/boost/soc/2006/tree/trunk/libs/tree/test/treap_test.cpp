@@ -38,59 +38,20 @@ void test_treap()
 	
 	BOOST_CHECK(std::equal(my_balancer.begin(), my_balancer.end(), my_vector.begin()));
 		
-//	for (treap_t::const_iterator ci = my_balancer.cbegin(); ci != my_balancer.cend(); ++ci)
+	for (treap_t::iterator ci = my_balancer.begin(); ci != my_balancer.end(); ++ci)
+		BOOST_CHECK(
+			treap_t::hierarchy_type::cursor(inorder::iterator<treap_t::hierarchy_type::cursor>(ci))->metadata().get_priority() <
+			treap_t::hierarchy_type::cursor(inorder::iterator<treap_t::hierarchy_type::cursor>(ci)).parent()->metadata().get_priority());
+//FIXME: The following would be nicer instead.
 //		BOOST_CHECK(ci.base().base()->metadata().get_priority() 
-//				  < ci.base().base().cparent()->metadata().get_priority());
-	
-	//BOOST_CHECK((*c).metadata().get_priority() != 0);
-	
-	// TODO: const_iterator !
-	treap_t::iterator bcit = my_balancer.begin();
-	BOOST_CHECK(*bcit == 8);
-	treap_t::hierarchy_type::cursor c = treap_t::hierarchy_type::cursor(inorder::iterator<treap_t::hierarchy_type::cursor>(bcit)); //bcit.base().base();
-	BOOST_CHECK(bcit.base().base() == my_balancer.hierarchy().root().begin());
-	BOOST_CHECK(c.parent() == my_balancer.hierarchy().root());
-	
-	//BOOST_CHECK(c.parity() != 0);
-	//BOOST_CHECK(c->data != 8);
-		
-	c = my_balancer.hierarchy().insert(c, treap_t::data_type(78));
-	BOOST_CHECK(c->data == 78);
-	
-	c = c.parent(); // FIXME: Without this line, rotate crashes.
-	my_balancer.hierarchy().rotate(c);
-//	my_balancer.rotate(bcit);
-	
-//	test_inorder_iterator_traversal(my_searcher);
-	
-//	tree_t& my_tree = my_searcher.container();
-	
-	// TODO: a level-order algo? 
-	
-//	searcher_t::iterator c = my_searcher.begin();
-//	BOOST_CHECK(*c++ == 1);
-//	BOOST_CHECK(*c++ == 3);
-//	BOOST_CHECK(*c++ == 4);
-//	BOOST_CHECK(*c == 6);
-//
-//	my_searcher.erase(c);
-	
-//	for (tree_t::const_iterator ci = my_tree.cbegin(); ci != my_tree.cend(); ++ci)
-//		BOOST_CHECK(tree_t::const_cursor(ci).metadata().get_priority() 
-//				  < tree_t::const_cursor(ci).parent().metadata().get_priority());
-	
-//	c = my_searcher.begin();
-//	BOOST_CHECK(*c++ == 1);
-//	BOOST_CHECK(*c++ == 3);
-//	BOOST_CHECK(*c++ == 4);
-//	BOOST_CHECK(*c++ == 7); //FIXME
-//	BOOST_CHECK(*c++ == 8);
-//	BOOST_CHECK(*c++ == 10);
-//	BOOST_CHECK(*c++ == 11);
-//	BOOST_CHECK(*c++ == 12);
-//	BOOST_CHECK(*c++ == 13);
-//	BOOST_CHECK(*c++ == 14);
-//	BOOST_CHECK(c == my_searcher.end());
+//				  < ci.base().base().parent()->metadata().get_priority());
+
+	//treap_t::iterator ci = my_balancer.begin();
+	//treap_t::hierarchy_type::cursor c;
+	//c = ci.base().base();
+	//c = c.parent();
+	//treap_t::metadata_type m = c->metadata();
+	//int i = ci.base().base().parent()->metadata().get_priority();//m.get_priority();
 }
 
 

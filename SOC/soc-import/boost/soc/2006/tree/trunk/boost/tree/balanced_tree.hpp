@@ -127,6 +127,11 @@ class balanced_tree {
 			return meta;
 		}
 		
+		metadata_type const& metadata() const
+		{
+			return meta;
+		}
+		
 	};
 	
 	typedef typename Hierarchy::template rebind<data_type>::other hierarchy_type;
@@ -309,8 +314,20 @@ class balanced_tree {
 	 */
 	iterator insert(iterator pos, value_type const& val)
 	{
-		cursor c = h.insert(pos.base().base(), data_type(val));
-		//balancer_type::add(h, c); //FIXME - rotating seems broken currently!
+		//TODO: we might need to go down in the hierarchy first
+		// That means some redundant work if pos was yielded by lower_bound,
+		// so maybe saving two cursors in the iterator would make sense
+		// (one for deref, one for insert)
+		
+		cursor c = pos.base().base();
+		while (!c.empty())
+			c = c.end();
+		
+		c = h.insert(c, data_type(val));
+		
+//		c = c.parent();
+		balancer_type::add(h, c);
+//		c = c.begin();
 		return iterator(c);
 	}
 

@@ -1,6 +1,9 @@
 Proposal:
 * Add InputCursor requirements: binary cursor if it's a binary_tree member function, etc.
 * Cursor validity after insertion/erasure/clearing
+* modify parity/parent specs according to newsgroup thread, but add to binary_tree cursor!
+* possibly rename ascending to hierarchy cursor? (because of other uses for ascending/cursors in a graph context)
+* remove operator* requirement? (for upward-growing trees with data only on the bottom level --- like B+trees)
 
 Implementation:
 
@@ -11,6 +14,7 @@ original ones as policy argument to them? (e.g. red_black_tree is say
     balanced_tree<red_black_balancer, binary_tree> ?) May be esp. interesting with C++0x's
     template typedefs, faciliates development of new balancers (in an iterator adaptor like
     way, perhaps)...
+* red_black: implement test...
 * See if searcher works with the adapting balancers as well as before...
 
 * Concept checks.
