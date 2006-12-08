@@ -5,7 +5,10 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/tree/binary_tree.hpp>
+#include <boost/tree/balanced_tree.hpp>
 #include <boost/tree/searcher.hpp>
+
+#include <boost/tree/balancers/unbalanced.hpp>
 
 #include <boost/tree/comparators/string.hpp>
 
@@ -24,10 +27,9 @@
 // TODO: get timings. that makes that no testcase anymore, right?
 void test_normal_string_search_binary_tree()
 {
-	using boost::tree::searcher;
-	using boost::tree::binary_tree;
+	using namespace boost::tree;
 	
-	typedef searcher<false, binary_tree<std::string> > searcher_t;
+	typedef searcher<false, balanced_tree<binary_tree<std::string>, balancers::unbalanced > > searcher_t;
 	searcher_t my_tree;
 	
 	my_tree.insert("anthology");
@@ -49,12 +51,10 @@ void test_normal_string_search_binary_tree()
 void test_optimized_string_search_binary_tree()
 {
 	
-	using boost::tree::searcher;
-	using boost::tree::binary_tree;
+	using namespace boost::tree;
 	using boost::multi_index::identity;
-	using boost::tree::container_lexicographical_compare;	
 
-	typedef searcher<false, binary_tree<std::string>, 
+	typedef searcher<false, balanced_tree<binary_tree<std::string>, balancers::unbalanced>, 
 					 identity<std::string>,
 					 container_lexicographical_compare<std::string, std::string>
 					> searcher_t;

@@ -315,11 +315,12 @@ class searcher<false, Sortable, Extract, Compare> {
 	typedef searcher<false, Sortable, Extract, Compare> self_type;
 
 public:
- 	typedef Sortable container_type; // type name as in STL sequence adaptors
- 
+ 	//typedef Sortable container_type; // type name as in STL sequence adaptors
+ 	//The following is only temporary...
+	typedef typename Sortable::hierarchy_type::template rebind<typename Sortable::value_type>::other container_type;
 
- 	
-	typedef typename sortable_traits<container_type>::cursor cursor; //private?
+	//typedef typename sortable_traits<container_type>::cursor cursor; //private?
+	typedef typename container_type::cursor cursor;
 	
 	// TODO: use traits instead.
 	typedef typename inorder::iterator<typename container_type::cursor> iterator; //inorder.
@@ -409,7 +410,32 @@ public:
 //		
 //	}
 
+	/**
+	 * @brief		Finds the first position in the searcher in which @a val 
+	 * 				could be inserted without changing the ordering, using comp
+	 * 				for comparisons.
+	 * @param k		The search term
+	 * @return		An iterator pointing to the first element not less than 
+	 *				@a k, or end() if every element in the searcher is less than 
+	 * 				@a k.
+	 */
+	 iterator lower_bound(key_type const& k)
+	 {
+	 }
 
+	/**
+	 * @brief		Finds the first position in the searcher in which @a val 
+	 * 				could be inserted without changing the ordering, using comp
+	 * 				for comparisons.
+	 * @param k		The search term
+	 * @return		A const_iterator pointing to the first element not less than 
+	 *				@a k, or end() if every element in the searcher is less than 
+	 * 				@a k.
+	 */
+	 const_iterator lower_bound(key_type const& k) const
+	 {
+	 }
+	 
  	/**
 	 * @brief		Attempts to insert @a val into the %searcher
 	 * @param val	Value to be inserted

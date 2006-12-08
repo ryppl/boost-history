@@ -16,16 +16,15 @@
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/iterators.hpp>
 
-#include <boost/tree/detail/sortable_traits.hpp>
-
 #include <boost/tree/balancers/unbalanced.hpp>
 #include <boost/tree/augmentors/unaugmented.hpp>
 
-//#include <boost/test/minimal.hpp>
+#include <boost/tree/search.hpp>
 
-#include <boost/iterator/iterator_adaptor.hpp>
-#include <boost/type_traits/is_convertible.hpp>
-#include <boost/utility/enable_if.hpp>
+#include <boost/tree/detail/iterator/augmented.hpp>
+
+#include <boost/bind.hpp>
+#include <boost/multi_index/member.hpp>
 
 #include <iterator>
 #include <memory>
@@ -37,62 +36,36 @@ using detail::node;
 using detail::const_nary_tree_cursor;
 using detail::nary_tree_cursor;
 
-template <class InorderIter, class Tag = typename std::iterator_traits<InorderIter>::iterator_category>
-class balancer_iterator;
+using detail::augmented_iterator;
 
-template <class InorderIter>
-class balancer_iterator<InorderIter, bidirectional_traversal_tag>
- : public boost::iterator_adaptor<balancer_iterator<InorderIter, bidirectional_traversal_tag>
-      , InorderIter
-      , typename InorderIter::value_type::value_type
-      , bidirectional_traversal_tag
-    > {
- private:
-    struct enabler {};
+using boost::multi_index::member;
 
- public:
-    balancer_iterator()
-      : balancer_iterator::iterator_adaptor_() {}
-
-    explicit balancer_iterator(InorderIter p)
-      : balancer_iterator::iterator_adaptor_(p) {}
-
-    explicit balancer_iterator(typename InorderIter::base_type c)
-      : balancer_iterator::iterator_adaptor_(InorderIter(c)) {}
-
-    template <class OtherInorderIter>
-    balancer_iterator(
-        balancer_iterator<OtherInorderIter> const& other
-      , typename boost::enable_if<
-            boost::is_convertible<OtherInorderIter,InorderIter>
-          , enabler
-        >::type = enabler()
-    )
-      : balancer_iterator::iterator_adaptor_(other.base()) {}
-
-	operator InorderIter()
+template <class Val, class Meta>
+struct augmented_type {
+	typedef Val value_type;
+	typedef Meta metadata_type;
+	
+	value_type data;
+	metadata_type meta;
+	
+	augmented_type(value_type const& d, metadata_type const& m = metadata_type())
+	: data(d), meta(m) {}
+	
+	augmented_type(augmented_type const& x)
+	: data(x.data), meta(x.meta) {}
+	
+	metadata_type& metadata()
 	{
-		return this->base();
+		return meta;
 	}
 	
- private:
-    friend class boost::iterator_core_access;
-    
-	//typename balancer_iterator::iterator_adaptor_::value_type::value_type& 
-	typename balancer_iterator::iterator_adaptor_::reference //value_type::value_type& 
-	dereference() const
+	metadata_type const& metadata() const
 	{
-		return this->base()->data;
+		return meta;
 	}
 
-// public:	
-	//typename balancer_iterator::iterator_adaptor_::value_type::metadata_type&
-//	typename InorderIter::value_type::metadata_type&
-//	metadata() const
-//	{
-//		return this->base()->meta;
-//	}
-	
+	typedef member<augmented_type,value_type,&augmented_type::data> extract_data;
+	typedef member<augmented_type,metadata_type,&augmented_type::meta> extract_meta;
 };
 
 /** 
@@ -109,31 +82,7 @@ class balanced_tree {
 	
 	typedef typename Balance::metadata_type metadata_type;
 	
-	struct data_type {
-		typedef typename balanced_tree::value_type value_type;
-		typedef typename balanced_tree::metadata_type metadata_type;
-		
-		value_type data;
-		metadata_type meta;
-		
-		data_type(value_type const& d, metadata_type const& m = metadata_type())
-		: data(d), meta(m) {}
-		
-		data_type(data_type const& x)
-		: data(x.data), meta(x.meta) {}
-		
-		metadata_type& metadata()
-		{
-			return meta;
-		}
-		
-		metadata_type const& metadata() const
-		{
-			return meta;
-		}
-		
-	};
-	
+	typedef augmented_type<value_type, metadata_type> data_type;
 	typedef typename Hierarchy::template rebind<data_type>::other hierarchy_type;
 
  protected:
@@ -146,8 +95,8 @@ class balanced_tree {
 	typedef typename hierarchy_type::const_cursor const_cursor;
 
  public:	
-	typedef balancer_iterator<inorder::iterator<cursor>, bidirectional_traversal_tag> iterator;
-	typedef balancer_iterator<inorder::iterator<const_cursor>, bidirectional_traversal_tag> const_iterator;
+	typedef augmented_iterator<inorder::iterator<cursor>, typename data_type::extract_data, bidirectional_traversal_tag> iterator;
+	typedef augmented_iterator<inorder::iterator<const_cursor>, typename data_type::extract_data, bidirectional_traversal_tag> const_iterator;
 	
 	typedef std::reverse_iterator<iterator> reverse_iterator;
 	typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -229,9 +178,9 @@ class balanced_tree {
 		return iterator(h.shoot());
 	}
 
-	 /**
+	/**
 	 * Returns a read-only inorder const_iterator to the position one past the 
-	 * last (inorder) value in the %balanced_tree. 
+	 * last (inorder) value in the %balanced_tree.
 	 */	
 	const_iterator end() const
 	{
@@ -248,6 +197,68 @@ class balanced_tree {
 	}
 
 	/**
+	 * @brief		Finds the first position in the @balanced_tree in which @a k
+	 * 				could be inserted without changing the ordering, using <
+	 * 				(less than) for comparisons.
+	 * @param k		The search term
+	 * @return		An iterator pointing to the first element not less than 
+	 *				@a k, or end() if every element in the @balanced_tree is
+	 * 				less than @a k.
+	 */
+	 iterator lower_bound(value_type const& k)
+	 {
+	 	return lower_bound(k, std::less<value_type>());
+	 }
+
+	/**
+	 * @brief		Finds the first position in the @balanced_tree in which @a k
+	 * 				could be inserted without changing the ordering, using <
+	 * 				(less than) for comparisons.
+	 * @param k		The search term
+	 * @return		A const_iterator pointing to the first element not less than 
+	 *				@a k, or end() if every element in the @balanced_tree is
+	 * 				less than @a k.
+	 */
+	 const_iterator lower_bound(value_type const& k) const
+	 {
+	 	return lower_bound(k, std::less<value_type>());
+	 }
+
+	/**
+	 * @brief		Finds the first position in the @balanced_tree in which @a k
+	 * 				could be inserted without changing the ordering, using cmp
+	 * 				for comparisons.
+	 * @param k		The search term
+	 * @param cmp	The comparison functor
+	 * @return		An iterator pointing to the first element not less than 
+	 *				@a k, or end() if every element in the @balanced_tree is
+	 * 				less than @a k.
+	 */
+	 template <class Cmp>
+	 iterator lower_bound(value_type const& k, Cmp cmp)
+	 {
+	 	return iterator(boost::tree::lower_bound(h.root(), h.shoot(), k, 
+	 		bind<bool>(cmp, bind(typename data_type::extract_data(), _1), _2)));
+	 }
+
+	/**
+	 * @brief		Finds the first position in the @balanced_tree in which @a k
+	 * 				could be inserted without changing the ordering, using cmp
+	 * 				for comparisons.
+	 * @param k		The search term
+	 * @param cmp	The comparison functor
+	 * @return		A const_iterator pointing to the first element not less than 
+	 *				@a k, or end() if every element in the @balanced_tree is
+	 * 				less than @a k.
+	 */
+	 template <class Cmp>
+	 const_iterator lower_bound(value_type const& k, Cmp cmp) const
+	 {
+	 	return const_iterator(boost::tree::lower_bound(h.croot(), h.cshoot(), k,
+		 	bind<bool>(cmp, bind(typename data_type::extract_data(), _1), _2)));
+	 }
+	 	 
+	/**
 	 * @brief  Add data to the front of the %balanced_tree.
 	 * @param  x  Data to be added.
 	 * 
@@ -258,7 +269,7 @@ class balanced_tree {
 	 */
     void push_front(value_type const& x)
     {
-    	    	insert(begin(), x);
+		insert(begin(), x);
     }
 
 	/**

@@ -8,6 +8,7 @@
 #include <boost/test/minimal.hpp>
 
 #include <boost/tree/binary_tree.hpp>
+#include <boost/tree/balancers/unbalanced.hpp>
 
 #include <boost/tree/searcher.hpp>
 #include <boost/tree/algorithm.hpp>
@@ -22,7 +23,7 @@ void test_key_search_binary_tree()
 	using boost::tree::binary_tree;
 	using boost::tree::lower_bound;
 	
-	typedef test_searcher<false, binary_tree<int> > searcher_t;
+	typedef test_searcher<false, balanced_tree<binary_tree<int>, balancers::unbalanced> > searcher_t;
 	searcher_t my_tree;
 	
 	searcher_t::iterator c, c1, c2, c3, c4, c5;

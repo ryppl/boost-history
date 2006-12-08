@@ -54,6 +54,9 @@ void test_unbalanced_binary_tree()
 	
 	--c1;
 	BOOST_CHECK(*c1 == 7);
+	
+	c = my_tree.lower_bound(8);
+	BOOST_CHECK(*c == 8);
 }
 
 //boost::unit_test::test_suite*

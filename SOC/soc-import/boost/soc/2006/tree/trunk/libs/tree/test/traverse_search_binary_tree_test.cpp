@@ -12,7 +12,10 @@
 //does boost have timers? what does the austern et al one look like?
 
 #include <boost/tree/binary_tree.hpp>
+#include <boost/tree/balanced_tree.hpp>
 #include <boost/tree/searcher.hpp>
+
+#include <boost/tree/balancers/unbalanced.hpp>
 
 #include <boost/tree/traversal.hpp>
 
@@ -23,9 +26,8 @@
 
 #include "helpers.hpp"
 
-using boost::tree::binary_tree;
-using boost::tree::searcher;
-typedef test_searcher<false, binary_tree<int> > searcher_t;
+using namespace boost::tree;
+typedef test_searcher<false, test_balancer<binary_tree<int>, balancers::unbalanced> > searcher_t;
 
 //std::vector<int> preorder_data()
 //{
