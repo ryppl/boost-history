@@ -11,8 +11,10 @@
 
 // TODO: concept checks.
 
-#ifndef BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP
-#define BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP
+// NO guards, as this is context-included!
+
+//#ifndef BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP
+//#define BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP
 
 
 #include <boost/tree/inorder.hpp>
@@ -190,4 +192,4 @@ class iterator<Cursor, bidirectional_traversal_tag>
 //} // namespace tree
 //} // namespace boost
 
-#endif // BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP
+//#endif // BOOST_TREE_DETAIL_ITERATOR_BIDIRECTIONAL_HPP

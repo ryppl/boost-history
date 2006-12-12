@@ -4,6 +4,7 @@ Proposal:
 * modify parity/parent specs according to newsgroup thread, but add to binary_tree cursor!
 * possibly rename ascending to hierarchy cursor? (because of other uses for ascending/cursors in a graph context)
 * remove operator* requirement? (for upward-growing trees with data only on the bottom level --- like B+trees)
+* have erase() operations return cursor/iterator instead of void (as in new STD)
 
 Implementation:
 

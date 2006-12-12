@@ -29,6 +29,7 @@ namespace detail {
 using boost::multi_index::identity;
 
 //TODO: Add extractor as 2nd ctor parameter?
+//		Possibly use boost::transform_iterator?
 template <class InorderIter, 
 		  class Extract = identity<typename InorderIter::value_type>,
 		  class Tag = typename std::iterator_traits<InorderIter>::iterator_category

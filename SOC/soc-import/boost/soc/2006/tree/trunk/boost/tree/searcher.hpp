@@ -315,17 +315,20 @@ class searcher<false, Sortable, Extract, Compare> {
 	typedef searcher<false, Sortable, Extract, Compare> self_type;
 
 public:
- 	//typedef Sortable container_type; // type name as in STL sequence adaptors
+ 	typedef Sortable container_type; // type name as in STL sequence adaptors
  	//The following is only temporary...
-	typedef typename Sortable::hierarchy_type::template rebind<typename Sortable::value_type>::other container_type;
+	//typedef typename Sortable::hierarchy_type::template rebind<typename Sortable::value_type>::other container_type;
 
 	//typedef typename sortable_traits<container_type>::cursor cursor; //private?
-	typedef typename container_type::cursor cursor;
+//	typedef typename container_type::cursor cursor;
 	
 	// TODO: use traits instead.
-	typedef typename inorder::iterator<typename container_type::cursor> iterator; //inorder.
-	typedef typename inorder::iterator<typename container_type::const_cursor> const_iterator;
-		
+//	typedef inorder::iterator<typename container_type::cursor> iterator; //inorder.
+//	typedef inorder::iterator<typename container_type::const_cursor> const_iterator;
+	
+	typedef typename container_type::iterator iterator;
+	typedef typename container_type::const_iterator const_iterator;
+			
  	typedef typename container_type::value_type value_type;
  	typedef typename container_type::size_type size_type;
  
@@ -347,7 +350,7 @@ public:
 	 */
  	iterator begin()
 	{
-		return iterator(c.inorder_first());
+		return c.begin();
 	}
 
 	/**
@@ -367,7 +370,7 @@ public:
 	 */ 	 
 	const_iterator cbegin() const
 	{
-		return const_iterator(c.inorder_cfirst());
+		return c.cbegin();
 	}  	
 	 
 	/**
@@ -378,7 +381,7 @@ public:
 	 */
 	iterator end()
 	{
-		return iterator(c.shoot());
+		return c.end();
 	}
 	
 	/**
@@ -400,7 +403,7 @@ public:
 	 */
 	const_iterator cend() const
 	{
-		return const_iterator(c.cshoot());
+		return c.cend();
 	}
 	
 	// include search algorithms or not?
@@ -451,12 +454,18 @@ public:
 	 */
 	std::pair<iterator, bool> insert(value_type const& val)
 	{
-		std::pair<iterator, std::pair<bool, bool> > ret = 
-			key_lower_bound(c, ext(val), 
-			/*m_node_lower,*/ ext, comp);
- 		if (ret.second.first) // true if it's not there yet.
-			return std::make_pair(c.insert(ret.first, val), true);
-		return std::make_pair(iterator(ret.first), false);
+		//TODO
+//		std::pair<iterator, std::pair<bool, bool> > ret = 
+//			key_lower_bound(c, ext(val), 
+//			/*m_node_lower,*/ ext, comp);
+// 		if (ret.second.first) // true if it's not there yet.
+//			return std::make_pair(c.insert(ret.first, val), true);
+//		return std::make_pair(iterator(ret.first), false);
+		iterator it = c.lower_bound(ext(val), bind<bool>(comp, 
+			bind<typename key_extract::result_type>(ext, _1), _2));
+		if (it == c.end())
+			return std::make_pair(it, false);
+		return std::make_pair(c.insert(it, val), true);
  	}
  	
 	
@@ -474,17 +483,20 @@ public:
  	{
  		key_type key = ext(val);
  		
-		if ((pos.base() != c.shoot()) && comp(key, *pos))
+		if ((pos != c.end()) && comp(key, *pos))
 			if (comp(*--pos, key))
- 				return iterator(c.insert(++cursor(pos), val));
- 		
- 		// the pos hint was not useful
- 		std::pair<cursor, std::pair<bool, bool> > ret = 
- 			key_lower_bound(c, key,
- 			/*m_node_lower,*/ ext, comp);
- 		if (ret.second.first) // true if it's not there yet.
- 			return iterator(c.insert(ret.first, val));
- 		return iterator(ret.first);
+ 				return iterator(c.insert(++pos, val));
+
+// 		the pos hint was not useful
+
+		return this->insert(val).first;
+
+// 		std::pair<cursor, std::pair<bool, bool> > ret = 
+// 			key_lower_bound(c, key,
+// 			/*m_node_lower,*/ ext, comp);
+// 		if (ret.second.first) // true if it's not there yet.
+// 			return iterator(c.insert(ret.first, val));
+// 		return iterator(ret.first);
  	}
  	
 
@@ -507,7 +519,7 @@ public:
  	{
  	}
  	
- 	void erase (cursor a, cursor b)
+ 	void erase (iterator a, iterator b)
  	{
  	}
  	

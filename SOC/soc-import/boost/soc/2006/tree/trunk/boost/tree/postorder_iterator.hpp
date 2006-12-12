@@ -96,9 +96,9 @@ iterator<typename MultiwayTree::cursor> begin(MultiwayTree& t)
  * @return	Read-only postorder iterator to the first element of @a t
  */
 template <class MultiwayTree>
-iterator<typename MultiwayTree::const_cursor> begin(MultiwayTree& t)
+iterator<typename MultiwayTree::const_cursor> begin(MultiwayTree const& t)
 {
-	return iterator<typename MultiwayTree::const_cursor>(first(t));
+	return cbegin(t);
 }
 
 /**
@@ -108,9 +108,9 @@ iterator<typename MultiwayTree::const_cursor> begin(MultiwayTree& t)
  * @return	Read-only postorder iterator to the first element of @a t
  */
 template <class MultiwayTree>
-iterator<typename MultiwayTree::const_cursor> cbegin(MultiwayTree& t)
+iterator<typename MultiwayTree::const_cursor> cbegin(MultiwayTree const& t)
 {
-	return cbegin(t);
+	return iterator<typename MultiwayTree::const_cursor>(first(t));
 }
 
 /**
@@ -120,7 +120,7 @@ iterator<typename MultiwayTree::const_cursor> cbegin(MultiwayTree& t)
  * @return	Mutable postorder iterator one position past the last element of @a t 
  */
 template <class MultiwayTree>
-iterator<typename MultiwayTree::cursor> end(MultiwayTree const& t)
+iterator<typename MultiwayTree::cursor> end(MultiwayTree& t)
 {
 	return iterator<typename MultiwayTree::cursor>(last(t));
 }

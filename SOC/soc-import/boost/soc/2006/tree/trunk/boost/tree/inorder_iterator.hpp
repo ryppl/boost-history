@@ -214,8 +214,8 @@ end(MultiwayTree& t, forward_traversal_tag)
 }
 
 template <class MultiwayTree>
-iterator<typename MultiwayTree::cursor>
-end(MultiwayTree const& t, bidirectional_traversal_tag)
+iterator<typename MultiwayTree::cursor, bidirectional_traversal_tag>
+end(MultiwayTree& t, bidirectional_traversal_tag)
 {
 	return iterator<typename MultiwayTree::cursor>(last(t));
 }

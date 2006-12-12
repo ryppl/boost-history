@@ -18,6 +18,7 @@
 #include <boost/tree/balancers/unbalanced.hpp>
 
 #include <boost/tree/traversal.hpp>
+#include <boost/tree/iterators.hpp>
 
 #include <vector>
 #include <algorithm>
@@ -43,153 +44,106 @@ typedef test_searcher<false, test_balancer<binary_tree<int>, balancers::unbalanc
 //	ret[8] = 13;
 //}
 
-void test_inorder_traversal(binary_tree<int> const& the_tree)
-{	
-	using namespace boost::tree::inorder;
-	binary_tree<int>::const_cursor c = first(the_tree);
-
-	BOOST_CHECK(*c == 1);
-	forward(c);
-	BOOST_CHECK(*c == 3);
-	forward(c);
-	BOOST_CHECK(*c == 4);
-	forward(c);
-	BOOST_CHECK(*c == 6);
-	forward(c);
-	BOOST_CHECK(*c == 7);
-	forward(c);
-	BOOST_CHECK(*c == 8);
-	forward(c);
-	BOOST_CHECK(*c == 10);
-	forward(c);
-	BOOST_CHECK(*c == 11);
-	forward(c);
-	BOOST_CHECK(*c == 12);
-	forward(c);
-	BOOST_CHECK(*c == 13);
-	forward(c);
-	BOOST_CHECK(*c == 14);
-	forward(c);
-	BOOST_CHECK(c == last(the_tree));
+template <class Iterator>
+void test_inorder_traversal(Iterator a, Iterator b)
+{		
+	BOOST_CHECK(*a++ == 1);
+	BOOST_CHECK(*a++ == 3);
+	BOOST_CHECK(*a++ == 4);
+	BOOST_CHECK(*a++ == 6);
+	BOOST_CHECK(*a++ == 7);
+	BOOST_CHECK(*a++ == 8);
+	BOOST_CHECK(*a++ == 10);
+	BOOST_CHECK(*a++ == 11);
+	BOOST_CHECK(*a++ == 12);
+	BOOST_CHECK(*a++ == 13);
+	BOOST_CHECK(*a++ == 14);
+	BOOST_CHECK(a == b);
 }
 
-void test_preorder_traversal(binary_tree<int> const& the_tree)
+template <class Iterator>
+void test_reverse_inorder_traversal(Iterator a, Iterator b)
 {	
-	using namespace boost::tree::preorder;
-
-	binary_tree<int>::const_cursor ci = first(the_tree); 
-	BOOST_CHECK(*ci == 8);
-	forward(ci);
-	BOOST_CHECK(*ci == 3);
-	forward(ci);
-	BOOST_CHECK(*ci == 1);
-	forward(ci);
-	BOOST_CHECK(*ci == 6);
-	forward(ci);
-	BOOST_CHECK(*ci == 4);
-	forward(ci);
-	BOOST_CHECK(*ci == 7);
-	forward(ci);
-	BOOST_CHECK(*ci == 10);
-	forward(ci);
-	BOOST_CHECK(*ci == 14);
-	forward(ci);
-	BOOST_CHECK(*ci == 13);
-	forward(ci);
-	BOOST_CHECK(*ci == 11);
-	forward(ci);
-	BOOST_CHECK(*ci == 12);
-	forward(ci);
-	BOOST_CHECK(ci == last(the_tree));
+	BOOST_CHECK(*--a == 14);
+	BOOST_CHECK(*--a == 13);
+	BOOST_CHECK(*--a == 12);
+	BOOST_CHECK(*--a == 11);
+	BOOST_CHECK(*--a == 10);
+	BOOST_CHECK(*--a == 8);
+	BOOST_CHECK(*--a == 7);
+	BOOST_CHECK(*--a == 6);
+	BOOST_CHECK(*--a == 4);
+	BOOST_CHECK(*--a == 3);
+	BOOST_CHECK(*--a == 1);
+	BOOST_CHECK(a == b);
 }
 
-void test_reverse_preorder_traversal(binary_tree<int> const& the_tree)
+template <class Iterator>
+void test_preorder_traversal(Iterator a, Iterator b)
 {	
-	using namespace boost::tree::preorder;
-
-	binary_tree<int>::const_cursor ci = last(the_tree); 
-	BOOST_CHECK(*ci == 12);
-	back(ci);
-	BOOST_CHECK(*ci == 11);
-	back(ci);
-	BOOST_CHECK(*ci == 13);
-	back(ci);
-	BOOST_CHECK(*ci == 14);
-	back(ci);
-	BOOST_CHECK(*ci == 10);
-	back(ci);
-	BOOST_CHECK(*ci == 7);
-	back(ci);
-	BOOST_CHECK(*ci == 4);
-	back(ci);
-	BOOST_CHECK(*ci == 6);
-	back(ci);
-	BOOST_CHECK(*ci == 1);
-	back(ci);
-	BOOST_CHECK(*ci == 3);
-	back(ci);
-	BOOST_CHECK(*ci == 8);
-	BOOST_CHECK(ci == first(the_tree));
+	BOOST_CHECK(*a++ == 8);
+	BOOST_CHECK(*a++ == 3);
+	BOOST_CHECK(*a++ == 1);
+	BOOST_CHECK(*a++ == 6);
+	BOOST_CHECK(*a++ == 4);
+	BOOST_CHECK(*a++ == 7);
+	BOOST_CHECK(*a++ == 10);
+	BOOST_CHECK(*a++ == 14);
+	BOOST_CHECK(*a++ == 13);
+	BOOST_CHECK(*a++ == 11);
+	BOOST_CHECK(*a++ == 12);
+	BOOST_CHECK(a == b);
 }
 
-void test_postorder_traversal(binary_tree<int> const& the_tree)
-{	
-	using namespace boost::tree::postorder;
-
-	binary_tree<int>::const_cursor ci = first(the_tree); 
-	BOOST_CHECK(*ci == 1);	
-	forward(ci);
-	BOOST_CHECK(*ci == 4);
-	forward(ci);
-	BOOST_CHECK(*ci == 7);
-	forward(ci);
-	BOOST_CHECK(*ci == 6);
-	forward(ci);
-	BOOST_CHECK(*ci == 3);
-	forward(ci);
-	BOOST_CHECK(*ci == 12);
-	forward(ci);
-	BOOST_CHECK(*ci == 11);
-	forward(ci);
-	BOOST_CHECK(*ci == 13);
-	forward(ci);
-	BOOST_CHECK(*ci == 14);
-	forward(ci);
-	BOOST_CHECK(*ci == 10);
-	forward(ci);
-	BOOST_CHECK(*ci == 8);
-	forward(ci);
-	BOOST_CHECK(ci == last(the_tree));
+template <class Iterator>
+void test_reverse_preorder_traversal(Iterator a, Iterator b)
+{	 
+	BOOST_CHECK(*--a == 12);
+	BOOST_CHECK(*--a == 11);
+	BOOST_CHECK(*--a == 13);
+	BOOST_CHECK(*--a == 14);
+	BOOST_CHECK(*--a == 10);
+	BOOST_CHECK(*--a == 7);
+	BOOST_CHECK(*--a == 4);
+	BOOST_CHECK(*--a == 6);
+	BOOST_CHECK(*--a == 1);
+	BOOST_CHECK(*--a == 3);
+	BOOST_CHECK(*--a == 8);
+	BOOST_CHECK(a == b);
 }
 
-void test_reverse_postorder_traversal(binary_tree<int> const& the_tree)
+template <class Iterator>
+void test_postorder_traversal(Iterator a, Iterator b)
 {	
-	using namespace boost::tree::postorder;
+	BOOST_CHECK(*a++ == 1);	
+	BOOST_CHECK(*a++ == 4);
+	BOOST_CHECK(*a++ == 7);
+	BOOST_CHECK(*a++ == 6);
+	BOOST_CHECK(*a++ == 3);
+	BOOST_CHECK(*a++ == 12);
+	BOOST_CHECK(*a++ == 11);
+	BOOST_CHECK(*a++ == 13);
+	BOOST_CHECK(*a++ == 14);
+	BOOST_CHECK(*a++ == 10);
+	BOOST_CHECK(*a++ == 8);
+	BOOST_CHECK(a == b);
+}
 
-	binary_tree<int>::const_cursor ci = last(the_tree); 
-	back(ci);
-	BOOST_CHECK(*ci == 8);	
-	back(ci);
-	BOOST_CHECK(*ci == 10);
-	back(ci);
-	BOOST_CHECK(*ci == 14);
-	back(ci);
-	BOOST_CHECK(*ci == 13);
-	back(ci);
-	BOOST_CHECK(*ci == 11);
-	back(ci);
-	BOOST_CHECK(*ci == 12);
-	back(ci);
-	BOOST_CHECK(*ci == 3);
-	back(ci);
-	BOOST_CHECK(*ci == 6);
-	back(ci);
-	BOOST_CHECK(*ci == 7);
-	back(ci);
-	BOOST_CHECK(*ci == 4);
-	back(ci);
-	BOOST_CHECK(*ci == 1);
-	BOOST_CHECK(ci == first(the_tree));
+template <class Iterator>
+void test_reverse_postorder_traversal(Iterator a, Iterator b)
+{	
+	BOOST_CHECK(*--a == 8);	
+	BOOST_CHECK(*--a == 10);
+	BOOST_CHECK(*--a == 14);
+	BOOST_CHECK(*--a == 13);
+	BOOST_CHECK(*--a == 11);
+	BOOST_CHECK(*--a == 12);
+	BOOST_CHECK(*--a == 3);
+	BOOST_CHECK(*--a == 6);
+	BOOST_CHECK(*--a == 7);
+	BOOST_CHECK(*--a == 4);
+	BOOST_CHECK(*--a == 1);
+	BOOST_CHECK(a == b);
 }
 
 // orphaned == no parent() links...
@@ -254,21 +208,24 @@ void test_orphaned_reverse_inorder_traversal(binary_tree<int>& the_tree)
 
 int test_main(int, char* [])
 {
-	searcher_t test_searcher;
-	create_test_data_searcher(test_searcher);
-	binary_tree<int>& test_tree = test_searcher.container();
-	//create_test_data_tree(test_tree);
+	binary_tree<int> test_tree;
+	create_test_data_tree(test_tree);
 	
-	test_inorder_traversal(test_tree);
+	test_inorder_traversal(inorder::begin(test_tree), 
+						   inorder::end(test_tree));
+	test_reverse_inorder_traversal(inorder::end(test_tree), 
+								   inorder::begin(test_tree));
+		
+	test_preorder_traversal(preorder::begin(test_tree),
+							preorder::end(test_tree));
+//FIXME
+//	test_reverse_preorder_traversal(preorder::end(test_tree),
+//									preorder::begin(test_tree));
 	
-	test_inorder_iterator_traversal(test_searcher);	
-	test_reverse_inorder_iterator_traversal(test_searcher);
-	
-	test_preorder_traversal(test_tree);
-	test_reverse_preorder_traversal(test_tree);
-	
-	test_postorder_traversal(test_tree);
-	test_reverse_postorder_traversal(test_tree);
+	test_postorder_traversal(postorder::begin(test_tree), 
+							 postorder::end(test_tree));
+	test_reverse_postorder_traversal(postorder::end(test_tree), 
+									 postorder::begin(test_tree));
 	
 	test_orphaned_inorder_traversal(test_tree);
 	test_orphaned_reverse_inorder_traversal(test_tree);

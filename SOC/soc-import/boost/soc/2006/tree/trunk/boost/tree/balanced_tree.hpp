@@ -359,7 +359,9 @@ class balanced_tree {
 	 */
 	void erase (iterator position)
  	{
- 		h.erase(balancer_type::remove(*this, position.base().base().parent()));
+ 		//TODO - we can only call h.clear, not h.erase!
+ 		//cursor c = position.base().base(); //.parent();
+ 		//h.erase(balancer_type::remove(*this, c.parent()));
  	}
 
 	/**
