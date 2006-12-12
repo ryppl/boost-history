@@ -14,14 +14,11 @@
 #define BOOST_TREE_NARY_TREE_HPP
 
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/iterators.hpp>
+//#include <boost/tree/iterator.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
 #include <boost/tree/detail/cursor/nary.hpp>
 #include <boost/tree/detail/sortable_traits.hpp>
-
-#include <boost/tree/augmentors/unaugmented.hpp>
-#include <boost/tree/balancers/unbalanced.hpp>
 
 #include <memory>
 #include <vector>
@@ -200,60 +197,6 @@ class nary_tree {
 		return const_cursor(m_header[1], 0);
 	}
 	
-//	/// Functions returning (inorder) iterators (as required by the Sequence
-//	/// concept)
-//	
-//	/**
-//	 * Returns a read/write ("mutable") iterator to the first (inorder) value.
-//	 */ 	 
-//	iterator begin()
-//	{
-//		return iterator(inorder_first());
-//	}
-//	
-//	/**
-//	 * Returns a read-only const_iterator to the first (inorder) value.
-//	 */ 	 
-//	const_iterator begin() const
-//	{
-//		return cbegin();
-//	}
-//	
-//	/**
-//	 * Returns a read-only const_iterator to the first (inorder) value.
-//	 */ 	 
-//	const_iterator cbegin() const
-//	{
-//		return const_iterator(inorder_first());
-//	}
-//
-//	/**
-//	 * Returns a read/write ("mutable") inorder iterator to the position one 
-//	 * past the last (inorder) value in the %nary_tree.  
-//	 */
-//	iterator end()
-//	{
-//		return iterator(shoot());
-//	}
-//
-//	 /**
-//	 * Returns a read-only inorder const_iterator to the position one past the 
-//	 * last (inorder) value in the %nary_tree. 
-//	 */	
-//	const_iterator end() const
-//	{
-//		return cend();
-//	}
-//	
-//	/**
-//	 * Returns a read-only inorder const_iterator to the position one past the 
-//	 * last (inorder) value in the %nary_tree. 
-//	 */	
-//	const_iterator cend() const
-//	{
-//		return const_iterator(cshoot());
-//	}
-	
 	// Hierarchy-specific
 	/**
 	 * @brief		Inserts val in front of @a pos, or, if @a pos' parent is
@@ -291,32 +234,6 @@ class nary_tree {
 		return pos;
 //		balancer_type::add(pos, this->root());
 	}
-
-	/// Sequence-specific
-	
-//	/**
-//	 * @brief		Inserts val in front of @a pos, or, if @a pos' parent is
-//	 * 				already full, creates a new child node containing @a val 
-//	 * 				instead.
-//	 * @param pos	The %nary_tree inorder iterator in front of which to insert.
-//	 * @param val	The value to insert.
-//	 * @return		An inorder iterator that points to the inserted data.
-//	 */
-//	iterator insert(iterator pos, value_type const& val)
-//	{
-//		return iterator(this->insert(cursor(pos), val));
-//	}
-	
-
- 	
-//	void erase (iterator pos)
-// 	{		
-// 		erase(cursor(pos));
-// 	}
-// 	
-// 	void erase (iterator a, iterator b)
-// 	{
-// 	}
 
 	 /** 
  	 * Removes a node and its descendants recursively in postorder
@@ -387,29 +304,6 @@ private:
 		m_node_alloc.deallocate(p_node, 1);
 	}
 };
-
-//template <class Node, class Balance, class Alloc, class NodeAlloc>
-//struct sortable_traits <class nary_tree<Node, Balance, Alloc, NodeAlloc> >
-//{
-//	typedef nary_tree<Node, Balance, Alloc, NodeAlloc> sortable_type;
-//	typedef typename sortable_type::cursor cursor;
-//	typedef typename sortable_type::value_type value_type;
-// 	typedef typename sortable_type::size_type size_type;
-// 	typedef cursor container_type;
-//};
-//
-//template <class Node>
-//bool empty(nary_tree_cursor<Node> cur)
-//{
-//	return !cur.empty();
-//}
-//
-//template <class Node, class Balance, class Alloc, class NodeAlloc>
-//typename sortable_traits<nary_tree<Node, Balance, Alloc, NodeAlloc> >::container_type head(nary_tree<Node, Balance, Alloc, NodeAlloc>& t) //const.
-//{
-//	//return head_wrapper<Sortable>()(s);
-//	return t.root();
-//}
 
 //namespace inorder {
 //

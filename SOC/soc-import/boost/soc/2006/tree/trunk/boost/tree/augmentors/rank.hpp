@@ -72,7 +72,7 @@ class rank {
  	{
  		typename Tree::cursor p = y;
  		while (p.parent() != t.root()) {
- 			if (!p.parity())
+			if (!p.parity())
  				--p.parent().metadata().rank();
  			p = p.parent();
  		}
@@ -83,7 +83,7 @@ class rank {
  	{
  		typename Tree::cursor p = y;
  		while (p.parent() != t.root()) {
- 			if (!p.parity())
+			if (!p.parity())
  				--p.parent().metadata().rank();
  			p = p.parent();
  		}
@@ -94,7 +94,7 @@ class rank {
  	template <class Tree>
  	void descend(Tree&, typename Tree::cursor& p)
  	{
- 		if (p.parity() == 0) {
+		if (p.parity() == 0) {
  			++p.metadata().rank();
  		}
  	}

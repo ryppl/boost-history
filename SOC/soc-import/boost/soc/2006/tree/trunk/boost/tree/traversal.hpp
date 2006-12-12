@@ -16,6 +16,8 @@
 #include <boost/tree/preorder.hpp>
 #include <boost/tree/postorder.hpp>
 
-//TODO: Add a two-argument parent(current, ancestor) version?
+#include <boost/tree/algorithm/inorder.hpp>
+#include <boost/tree/algorithm/preorder.hpp>
+#include <boost/tree/algorithm/postorder.hpp>
 
 #endif // BOOST_TREE_TRAVERSAL_HPP

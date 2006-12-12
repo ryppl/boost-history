@@ -45,7 +45,7 @@ MultiwayCursor lower_bound(MultiwayCursor x, MultiwayCursor y, T const& val)
 {
 	while (!x.empty()) {
 		x = std::lower_bound(x.begin(), x.end(), val);
-		if (x.parity() == 0)
+	if (x.parity() == 0)
 			y = x;
 	}
 	return y;
@@ -69,7 +69,7 @@ MultiwayCursor lower_bound(MultiwayCursor x, MultiwayCursor y, T const& val,
 {
 	while (!x.empty()) {
 		x = std::lower_bound(x.begin(), x.end(), val, cmp);
-		if (x.parity() == 0)
+	if (x.parity() == 0)
 			y = x;
 	}
 	return y;

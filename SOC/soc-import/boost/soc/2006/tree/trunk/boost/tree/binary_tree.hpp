@@ -14,14 +14,11 @@
 #define BOOST_TREE_BINARY_TREE_HPP
 
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/iterators.hpp>
+#include <boost/tree/algorithm/inorder.hpp>
 
 #include <boost/tree/detail/node/traits.hpp>
 #include <boost/tree/detail/cursor/nary.hpp>
 #include <boost/tree/detail/sortable_traits.hpp>
-
-#include <boost/tree/augmentors/unaugmented.hpp>
-#include <boost/tree/balancers/unbalanced.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -276,31 +273,31 @@ class binary_tree {
 		return pos.begin();
 	}
 
-	//erase operations must rebalance; clear doesn't need to.	
-	//TODO: Can/Should remove (and erase) return the next cursor's position ?
-	//(There may be some DR concerning this for associative containers)
- 	void erase (cursor pos)
- 	{
- 		cursor ret; // = this->root();
-// 		pos = pos.parent();
-
-		// TODO: Get the following to work properly.
- 		//balancer_type::remove(*this, pos);
- 		node_pointer p_node;
-// 		if (pos == ret) {
-// 			augmentor_type::pre_detach(*this, pos);
- 			p_node = pos.detach();
-// 		} else {
-// 			augmentor_type::pre_detach(*this, pos, ret,);
-// 			p_node = pos.detach(ret);
-// 		}
- 		
-		m_value_alloc.destroy(p_node->data());
-		m_value_alloc.deallocate(p_node->data(), 1);
-		
-		m_node_alloc.destroy(p_node);
-		m_node_alloc.deallocate(p_node, 1);
-	}
+//	//erase operations must rebalance; clear doesn't need to.	
+//	//TODO: Can/Should remove (and erase) return the next cursor's position ?
+//	//(There may be some DR concerning this for associative containers)
+// 	void erase (cursor pos)
+// 	{
+// 		cursor ret; // = this->root();
+//// 		pos = pos.parent();
+//
+//		// TODO: Get the following to work properly.
+// 		//balancer_type::remove(*this, pos);
+// 		node_pointer p_node;
+//// 		if (pos == ret) {
+//// 			augmentor_type::pre_detach(*this, pos);
+// 			p_node = pos.detach();
+//// 		} else {
+//// 			augmentor_type::pre_detach(*this, pos, ret,);
+//// 			p_node = pos.detach(ret);
+//// 		}
+// 		
+//		m_value_alloc.destroy(p_node->data());
+//		m_value_alloc.deallocate(p_node->data(), 1);
+//		
+//		m_node_alloc.destroy(p_node);
+//		m_node_alloc.deallocate(p_node, 1);
+//	}
  	
 	 /** 
  	 * Removes a node and its descendants recursively in postorder
@@ -340,6 +337,7 @@ class binary_tree {
 
 	void rotate(cursor& pos)
 	{
+		//TODO: Take care of shoot/inorder_first pointers!
 		pos.m_pos = pos.m_node->rotate(pos.m_pos);
 		pos.m_node = static_cast<node_base_pointer>(pos.m_node->m_parent->m_parent);
 	}
@@ -416,28 +414,6 @@ inline void swap(binary_tree<T, Alloc>& x, binary_tree<T, Alloc>& y)
 	x.swap(y);
 }
 
-template <class T, class Alloc>
-struct sortable_traits <class binary_tree<T, Alloc> >
-{
-	typedef binary_tree<T, Alloc> sortable_type;
-	typedef typename sortable_type::cursor cursor;
-	typedef typename sortable_type::value_type value_type;
- 	typedef typename sortable_type::size_type size_type;
- 	typedef cursor container_type;
-};
-
-template <class Node>
-bool empty(nary_tree_cursor<Node> cur)
-{
-	return !cur.empty();
-}
-
-template <class T, class Alloc>
-typename sortable_traits<binary_tree<T, Alloc> >::container_type head(binary_tree<T, Alloc>& t) //const.
-{
-	//return head_wrapper<Sortable>()(s);
-	return t.root();
-}
 
 namespace inorder {
 

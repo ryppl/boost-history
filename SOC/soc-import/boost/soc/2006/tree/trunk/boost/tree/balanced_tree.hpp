@@ -14,7 +14,7 @@
 #define BOOST_TREE_BALANCED_TREE_HPP
 
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/iterators.hpp>
+#include <boost/tree/iterator.hpp>
 
 #include <boost/tree/balancers/unbalanced.hpp>
 #include <boost/tree/augmentors/unaugmented.hpp>

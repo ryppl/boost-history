@@ -170,7 +170,7 @@ public:
 	
 //	const_cursor parent() const
 //	{
-//		if (!this->base_reference().parity()) {
+//		if (!this->base_reference().parity())) {
 //			return this->base_reference().parent();
 //		}
 //	}
