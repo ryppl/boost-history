@@ -18,7 +18,6 @@
 
 #include <boost/tree/detail/node/traits.hpp>
 #include <boost/tree/detail/cursor/nary.hpp>
-#include <boost/tree/detail/sortable_traits.hpp>
 
 #include <memory>
 #include <vector>

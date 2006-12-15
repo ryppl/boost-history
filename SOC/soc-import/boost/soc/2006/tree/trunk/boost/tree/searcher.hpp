@@ -14,32 +14,20 @@
 // * Move functionality to TR1 (wrappers)
 // * use boost:: (or tr1::)function
 
-// Rip out node_search finally. Clean up & refactor helpers.
-
 #ifndef BOOST_TREE_SEARCHER_HPP
 #define BOOST_TREE_SEARCHER_HPP
 
 
-#include <boost/tree/inorder.hpp>
-#include <boost/tree/cursor.hpp>
-#include <boost/tree/binary_tree.hpp>
-
 #include <boost/tree/inorder_iterator.hpp>
 
-#include <boost/tree/detail/range_helpers.hpp>
-
 #include <boost/bind.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/multi_index/identity.hpp>
 
-#include <boost/multi_index/identity.hpp> //remove
-
-#include <algorithm>	
-#include <functional>
-
-using boost::multi_index::identity; //remove
+using boost::multi_index::identity;
 
 namespace boost {
 namespace tree {
+
 
 /** @brief A %searcher
  * 
@@ -69,15 +57,12 @@ namespace tree {
  * 
  * These specializations are necessary as their interfaces differ.
  */
-template <bool Multi, class Sortable, /* class Cursor = typename Sortable::cursor, */
+template <bool Multi, class Container,
 		  class Extract = 
-		  	boost::multi_index::identity<typename Sortable::value_type>,
-		  class Compare = std::less<typename Extract::result_type> //,
-		  /*class NodeLowerBound = 
-		  	lower_bound_default<typename sortable_traits<Sortable>::cursor, typename Extract::result_type, 
-		  						Compare>*/
-		   >
-class searcher {}; 
+		  	boost::multi_index::identity<typename Container::value_type>,
+		  class Compare = std::less<typename Extract::result_type>
+		  >
+class searcher; 
 
 //derive both specializations from common base modelling only 
 //SortedAssociativeContainer
@@ -91,22 +76,13 @@ class searcher {};
  * unspecialized template's (boost::tree::searcher)
  * documentation for further information.
  */
-template <class Sortable, class Extract, class Compare>
-class searcher<false, Sortable, Extract, Compare> {
+template <class Container, class Extract, class Compare>
+class searcher<false, Container, Extract, Compare> {
 
-	typedef searcher<false, Sortable, Extract, Compare> self_type;
+	typedef searcher<false, Container, Extract, Compare> self_type;
 
 public:
- 	typedef Sortable container_type; // type name as in STL sequence adaptors
- 	//The following is only temporary...
-	//typedef typename Sortable::hierarchy_type::template rebind<typename Sortable::value_type>::other container_type;
-
-	//typedef typename sortable_traits<container_type>::cursor cursor; //private?
-//	typedef typename container_type::cursor cursor;
-	
-	// TODO: use traits instead.
-//	typedef inorder::iterator<typename container_type::cursor> iterator; //inorder.
-//	typedef inorder::iterator<typename container_type::const_cursor> const_iterator;
+ 	typedef Container container_type; // type name as in STL sequence adaptors
 	
 	typedef typename container_type::iterator iterator;
 	typedef typename container_type::const_iterator const_iterator;
@@ -114,12 +90,10 @@ public:
  	typedef typename container_type::value_type value_type;
  	typedef typename container_type::size_type size_type;
  
- 	//typedef NodeLowerBound node_lower_bound;
  	typedef Extract key_extract;
  	typedef typename key_extract::result_type key_type;
  	typedef Compare key_compare;
  	
-	//TODO: invoke sortable ctors properly
  	searcher(key_extract const& extract = key_extract(), 
  			 key_compare const& compare = key_compare(),
 			 container_type const& sortable = container_type())
@@ -187,13 +161,6 @@ public:
 	{
 		return c.cend();
 	}
-	
-	// include search algorithms or not?
-	// are their interfaces congruent for sequences and hierarchies?
-//	iterator lower_bound (key_type const& k)
-//	{
-//		
-//	}
 
 	/**
 	 * @brief		Finds the first position in the searcher in which @a val 
@@ -206,6 +173,7 @@ public:
 	 */
 	 iterator lower_bound(key_type const& k)
 	 {
+	 	return c.lower_bound(k, bind<bool>(comp, bind(ext(), _1), _2));
 	 }
 
 	/**
@@ -219,6 +187,7 @@ public:
 	 */
 	 const_iterator lower_bound(key_type const& k) const
 	 {
+	 	return c.lower_bound(k, bind<bool>(comp, bind(ext(), _1), _2));
 	 }
 	 
  	/**
@@ -237,12 +206,6 @@ public:
 	std::pair<iterator, bool> insert(value_type const& val)
 	{
 		//TODO
-//		std::pair<iterator, std::pair<bool, bool> > ret = 
-//			key_lower_bound(c, ext(val), 
-//			/*m_node_lower,*/ ext, comp);
-// 		if (ret.second.first) // true if it's not there yet.
-//			return std::make_pair(c.insert(ret.first, val), true);
-//		return std::make_pair(iterator(ret.first), false);
 		iterator it = c.lower_bound(ext(val), bind<bool>(comp, 
 			bind<typename key_extract::result_type>(ext, _1), _2));
 		if (it == c.end())
@@ -269,16 +232,8 @@ public:
 			if (comp(*--pos, key))
  				return iterator(c.insert(++pos, val));
 
-// 		the pos hint was not useful
-
+ 		//the pos hint was not useful
 		return this->insert(val).first;
-
-// 		std::pair<cursor, std::pair<bool, bool> > ret = 
-// 			key_lower_bound(c, key,
-// 			/*m_node_lower,*/ ext, comp);
-// 		if (ret.second.first) // true if it's not there yet.
-// 			return iterator(c.insert(ret.first, val));
-// 		return iterator(ret.first);
  	}
  	
 
@@ -316,11 +271,6 @@ protected:
  	container_type c;
  	key_compare comp;
  	key_extract ext;
- 	
-// TODO: kick this out finally.
-//private:
-// 	node_lower_bound m_node_lower;
-
 };
 
 /* @brief Multiple key %searcher specialization

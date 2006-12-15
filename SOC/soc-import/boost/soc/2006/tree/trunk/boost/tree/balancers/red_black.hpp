@@ -38,8 +38,6 @@ private:
 
 };
 
-//make the following part of tree? that is, derive tree from this (as templ. arg)?
-//template <class Node> //tentative approach using CRTP.
 class red_black {
 public:
 	typedef red_black_metadata metadata_type;
@@ -74,7 +72,7 @@ public:
 	// second argument also used to pass second parameter for detach,
 	// if required.
 	template <class Tree>
-	static void remove(Tree& t, typename Tree::cursor& x) // or other signature?
+	static void remove(Tree& t, typename Tree::cursor& x)
 	{
 		
 	}

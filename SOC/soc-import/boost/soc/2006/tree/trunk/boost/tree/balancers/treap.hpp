@@ -45,8 +45,6 @@ class treap {
  public:
 	typedef treap_metadata metadata_type;
 	
-// protected:
-	// TODO: do we ever want to modify the second par directly?
 	template <class Tree>
 	static void add(Tree& t, typename Tree::cursor& x) 
 	{

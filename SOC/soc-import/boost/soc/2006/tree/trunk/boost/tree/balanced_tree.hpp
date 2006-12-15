@@ -336,9 +336,7 @@ class balanced_tree {
 		
 		c = h.insert(c, data_type(val));
 		
-//		c = c.parent();
 		balancer_type::add(h, c);
-//		c = c.begin();
 		return iterator(c);
 	}
 
