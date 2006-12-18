@@ -42,10 +42,11 @@
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
-				ExceptionHandling="2"
+				ExceptionHandling="1"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				TreatWChar_tAsBuiltInType="true"
+				RuntimeTypeInfo="false"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
@@ -231,6 +232,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\pugxml.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\property_tree\detail\translator_implementation.hpp"
 				>
 			</File>
@@ -240,6 +245,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_flags.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_read_pugixml.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\property_tree\detail\xml_parser_read_pugxml.hpp"
 				>
 			</File>
 			<File

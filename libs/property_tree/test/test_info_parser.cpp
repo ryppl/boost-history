@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// ****----****
+// Copyright (C) 2002-2006 Marcin Kalicinski
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -194,35 +194,45 @@ void test_info_parser()
         "testok6.info", NULL, "testok6out.info", 3, 38, 30
     );
 
-    generic_parser_test_error<ptree, ReadFunc, WriteFunc, info_parser_error>
+    generic_parser_test_error<Ptree, ReadFunc, WriteFunc, info_parser_error>
     (
         ReadFunc(), WriteFunc(), error_data_1, NULL,
         "testerr1.info", NULL, "testerr1out.info", 2
     );
 
-    generic_parser_test_error<ptree, ReadFunc, WriteFunc, info_parser_error>
+    generic_parser_test_error<Ptree, ReadFunc, WriteFunc, info_parser_error>
     (
         ReadFunc(), WriteFunc(), error_data_2, NULL,
         "testerr2.info", NULL, "testerr2out.info", 2
     );
 
-    generic_parser_test_error<ptree, ReadFunc, WriteFunc, info_parser_error>
+    generic_parser_test_error<Ptree, ReadFunc, WriteFunc, info_parser_error>
     (
         ReadFunc(), WriteFunc(), error_data_3, NULL,
         "testerr3.info", NULL, "testerr3out.info", 2
     );
 
-    generic_parser_test_error<ptree, ReadFunc, WriteFunc, info_parser_error>
+    generic_parser_test_error<Ptree, ReadFunc, WriteFunc, info_parser_error>
     (
         ReadFunc(), WriteFunc(), error_data_4, NULL,
         "testerr4.info", NULL, "testerr4out.info", 2
     );
 
-    generic_parser_test_error<ptree, ReadFunc, WriteFunc, info_parser_error>
+    generic_parser_test_error<Ptree, ReadFunc, WriteFunc, info_parser_error>
     (
         ReadFunc(), WriteFunc(), error_data_5, NULL,
         "testerr5.info", NULL, "testerr5out.info", 4
     );
+
+    // Test read with default ptree
+    {
+        Ptree pt, default_pt;
+        pt.put_value(1);
+        default_pt.put_value(2);
+        BOOST_CHECK(pt != default_pt);
+        read_info("nonexisting file.nonexisting file", pt, default_pt);
+        BOOST_CHECK(pt == default_pt);
+    }
     
 }
 

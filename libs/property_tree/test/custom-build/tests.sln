@@ -27,6 +27,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_info_grammar_spirit", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_multi_module", "test_multi_module.vcproj", "{4B88BAC5-5CA8-403A-83E7-0F758405AB2D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_example_speed_test", "test_example_speed_test.vcproj", "{7FEE8BBE-307E-4E77-AA8B-13E14FE45DA3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -85,6 +87,10 @@ Global
 		{4B88BAC5-5CA8-403A-83E7-0F758405AB2D}.Debug|Win32.Build.0 = Debug|Win32
 		{4B88BAC5-5CA8-403A-83E7-0F758405AB2D}.Release|Win32.ActiveCfg = Release|Win32
 		{4B88BAC5-5CA8-403A-83E7-0F758405AB2D}.Release|Win32.Build.0 = Release|Win32
+		{7FEE8BBE-307E-4E77-AA8B-13E14FE45DA3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FEE8BBE-307E-4E77-AA8B-13E14FE45DA3}.Debug|Win32.Build.0 = Debug|Win32
+		{7FEE8BBE-307E-4E77-AA8B-13E14FE45DA3}.Release|Win32.ActiveCfg = Release|Win32
+		{7FEE8BBE-307E-4E77-AA8B-13E14FE45DA3}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

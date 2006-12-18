@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// ****----****
+// Copyright (C) 2002-2006 Marcin Kalicinski
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -10,7 +10,7 @@
 
 // Intentionally no include guards (to be included more than once)
 
-#if !defined(CHTYPE) || !defined(T) || !defined(PTREE) || !defined(NOCASE)
+#if !defined(CHTYPE) || !defined(T) || !defined(PTREE) || !defined(NOCASE) || !defined(WIDECHAR)
 #   error No character type specified
 #endif
 
@@ -1188,6 +1188,72 @@ void test_serialization(PTREE *)
         ia & boost::serialization::make_nvp("pt", pt2);
         BOOST_CHECK(pt1 == pt2);
     }
+
+}
+
+void test_bool(PTREE *)
+{
+
+    // Prepare test tree
+    PTREE pt;
+    pt.put(T("bool.false.1"), false);
+    pt.put(T("bool.false.2"), T("0"));
+    pt.put(T("bool.true.1"), true);
+    pt.put(T("bool.true.2"), 1);
+    pt.put(T("bool.invalid.1"), T(""));
+    pt.put(T("bool.invalid.2"), T("tt"));
+    pt.put(T("bool.invalid.3"), T("ff"));
+    pt.put(T("bool.invalid.4"), T("2"));
+    pt.put(T("bool.invalid.5"), T("-1"));
+
+    // Test false
+    for (PTREE::iterator it = pt.get_child(T("bool.false")).begin(); it != pt.get_child(T("bool.false")).end(); ++it)
+        BOOST_CHECK(it->second.get_value<bool>() == false);
+
+    // Test true
+    for (PTREE::iterator it = pt.get_child(T("bool.true")).begin(); it != pt.get_child(T("bool.true")).end(); ++it)
+        BOOST_CHECK(it->second.get_value<bool>() == true);
+    
+    // Test invalid
+    for (PTREE::iterator it = pt.get_child(T("bool.invalid")).begin(); it != pt.get_child(T("bool.invalid")).end(); ++it)
+    {
+        BOOST_CHECK(it->second.get_value<bool>(false) == false);
+        BOOST_CHECK(it->second.get_value<bool>(true) == true);
+    }
+
+}
+
+void test_char(PTREE *)
+{
+
+    // Prepare test tree
+    PTREE pt;
+#if WIDECHAR == 0    
+    pt.put(T("char"), char('A'));
+#endif
+    pt.put(T("signed char"), static_cast<signed char>('A'));
+    pt.put(T("unsigned char"), static_cast<unsigned char>('A'));
+    pt.put(T("signed char min"), (std::numeric_limits<signed char>::min)());
+    pt.put(T("signed char max"), (std::numeric_limits<signed char>::max)());
+    pt.put(T("unsigned char min"), (std::numeric_limits<unsigned char>::min)());
+    pt.put(T("unsigned char max"), (std::numeric_limits<unsigned char>::max)());
+
+    // Verify normal conversions
+#if WIDECHAR == 0    
+    BOOST_CHECK(pt.get<char>(T("char")) == 'A');
+#endif
+    BOOST_CHECK(pt.get<signed char>(T("signed char")) == static_cast<signed char>('A'));
+    BOOST_CHECK(pt.get<unsigned char>(T("unsigned char")) == static_cast<unsigned char>('A'));
+    
+    // Verify that numbers are saved for signed and unsigned char
+    BOOST_CHECK(pt.get<int>(T("signed char")) == int('A'));
+    BOOST_CHECK(pt.get<int>(T("unsigned char")) == int('A'));
+
+    // Verify ranges
+    BOOST_CHECK(pt.get<signed char>(T("signed char min")) == (std::numeric_limits<signed char>::min)());
+    BOOST_CHECK(pt.get<signed char>(T("signed char max")) == (std::numeric_limits<signed char>::max)());
+    BOOST_CHECK(pt.get<unsigned char>(T("unsigned char min")) == (std::numeric_limits<unsigned char>::min)());
+    BOOST_CHECK(pt.get<unsigned char>(T("unsigned char max")) == (std::numeric_limits<unsigned char>::max)());
 
 }
 

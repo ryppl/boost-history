@@ -7,15 +7,19 @@
 //
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/info_parser.hpp>
-#include <boost/property_tree/ini_parser.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/xml_parser.hpp>
 
-void f();
+#define _CRT_SECURE_NO_DEPRECATE
+#define BOOST_PROPERTY_TREE_XML_PARSER_PUGXML
+#include "test_xml_parser_common.hpp"
 
-int main()
+int test_main(int argc, char *argv[])
 {
-    f();
+    using namespace boost::property_tree;
+    test_xml_parser<ptree>();
+    //test_xml_parser<iptree>();
+#ifndef BOOST_NO_CWCHAR
+    //test_xml_parser<wptree>();
+    //test_xml_parser<wiptree>();
+#endif
+    return 0;
 }

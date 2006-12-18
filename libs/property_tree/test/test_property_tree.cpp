@@ -1,5 +1,5 @@
 // ----------------------------------------------------------------------------
-// ****----****
+// Copyright (C) 2002-2006 Marcin Kalicinski
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -75,11 +75,13 @@ struct MyTranslator
 #define T(s) s
 #define PTREE boost::property_tree::ptree
 #define NOCASE 0
+#define WIDECHAR 0
 #   include "test_property_tree.hpp"
 #undef CHTYPE
 #undef T
 #undef PTREE
 #undef NOCASE
+#undef WIDECHAR
 
 // Include wchar_t tests, case sensitive
 #ifndef BOOST_NO_CWCHAR
@@ -87,11 +89,13 @@ struct MyTranslator
 #   define T(s) L ## s
 #   define PTREE boost::property_tree::wptree
 #   define NOCASE 0
+#   define WIDECHAR 1
 #       include "test_property_tree.hpp"
 #   undef CHTYPE
 #   undef T
 #   undef PTREE
 #   undef NOCASE
+#   undef WIDECHAR
 #endif
 
 // Include char tests, case insensitive
@@ -99,11 +103,13 @@ struct MyTranslator
 #define T(s) s
 #define PTREE boost::property_tree::iptree
 #define NOCASE 1
+#   define WIDECHAR 0
 #   include "test_property_tree.hpp"
 #undef CHTYPE
 #undef T
 #undef PTREE
 #undef NOCASE
+#undef WIDECHAR
 
 // Include wchar_t tests, case insensitive
 #ifndef BOOST_NO_CWCHAR
@@ -111,11 +117,13 @@ struct MyTranslator
 #   define T(s) L ## s
 #   define PTREE boost::property_tree::wiptree
 #   define NOCASE 1
+#   define WIDECHAR 1
 #       include "test_property_tree.hpp"
 #   undef CHTYPE
 #   undef T
 #   undef PTREE
 #   undef NOCASE
+#   undef WIDECHAR
 #endif
 
 int test_main(int, char *[])
@@ -149,6 +157,8 @@ int test_main(int, char *[])
         test_ptree_bad_path(pt);
         test_ptree_bad_data(pt);
         test_serialization(pt);
+        test_bool(pt);
+        test_char(pt);
         test_leaks(pt);                  // must be a final test
     }
 
@@ -179,6 +189,8 @@ int test_main(int, char *[])
         test_ptree_bad_path(pt);
         test_ptree_bad_data(pt);
         test_serialization(pt);
+        test_bool(pt);
+        test_char(pt);
         test_leaks(pt);                  // must be a final test
     }
 #endif
@@ -209,6 +221,8 @@ int test_main(int, char *[])
         test_ptree_bad_path(pt);
         test_ptree_bad_data(pt);
         test_serialization(pt);
+        test_bool(pt);
+        test_char(pt);
         test_leaks(pt);                  // must be a final test
     }
 
@@ -239,6 +253,8 @@ int test_main(int, char *[])
         test_ptree_bad_path(pt);
         test_ptree_bad_data(pt);
         test_serialization(pt);
+        test_bool(pt);
+        test_char(pt);
         test_leaks(pt);                  // must be a final test
     }
 #endif
