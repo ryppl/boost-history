@@ -165,7 +165,7 @@ namespace boost { namespace property_tree { namespace registry_parser
             
             // Unknown data type
             default:
-                throw registry_parser_error("unsupported data type", 0);
+                BOOST_PROPERTY_TREE_THROW(registry_parser_error("unsupported data type", 0));
 
         };
         return value;
@@ -199,7 +199,7 @@ namespace boost { namespace property_tree { namespace registry_parser
                         if ( !stream.eof() )
                         	stream >> std::ws;
                         if (stream.fail() || stream.bad())
-                            throw registry_parser_error("bad REG_BINARY value", 0);
+                            BOOST_PROPERTY_TREE_THROW(registry_parser_error("bad REG_BINARY value", 0));
                         data.push_back(v);
                         if (stream.eof())
                             break;
@@ -216,7 +216,7 @@ namespace boost { namespace property_tree { namespace registry_parser
                     if ( !stream.eof() )
                       	stream >> std::ws;
                     if (!stream.eof() || stream.fail() || stream.bad())
-                        throw registry_parser_error("bad REG_DWORD value", 0);
+                        BOOST_PROPERTY_TREE_THROW(registry_parser_error("bad REG_DWORD value", 0));
                     for (size_t i = 0; i < sizeof(v); ++i)
                         data.push_back(*(reinterpret_cast<BYTE *>(&v) + i));
                 }
@@ -229,7 +229,7 @@ namespace boost { namespace property_tree { namespace registry_parser
                     Stream stream(s);
                     stream >> v;
                     if (!stream.eof() || stream.fail() || stream.bad())
-                        throw registry_parser_error("bad REG_QWORD value", 0);
+                        BOOST_PROPERTY_TREE_THROW(registry_parser_error("bad REG_QWORD value", 0));
                     for (size_t i = 0; i < sizeof(v); ++i)
                         data.push_back(*(reinterpret_cast<BYTE *>(&v) + i));
                 }
@@ -247,7 +247,7 @@ namespace boost { namespace property_tree { namespace registry_parser
             
             // Unknown data type
             default:
-                throw registry_parser_error("unsupported data type", 0);
+                BOOST_PROPERTY_TREE_THROW(registry_parser_error("unsupported data type", 0));
 
         };
         return data;
@@ -363,13 +363,13 @@ namespace boost { namespace property_tree { namespace registry_parser
             {
                 LONG result = reg_create_key_ex(root, key.c_str(), KEY_WRITE, &hkey);
                 if (result != ERROR_SUCCESS)
-                    throw registry_parser_error("RegCreateKeyEx failed", result);
+                    BOOST_PROPERTY_TREE_THROW(registry_parser_error("RegCreateKeyEx failed", result));
             }
             else
             {
                 LONG result = reg_open_key_ex(root, key.c_str(), KEY_READ, &hkey);
                 if (result != ERROR_SUCCESS)
-                    throw registry_parser_error("RegOpenKeyEx failed", result);
+                    BOOST_PROPERTY_TREE_THROW(registry_parser_error("RegOpenKeyEx failed", result));
             }
             BOOST_ASSERT(hkey);
         }
@@ -410,7 +410,7 @@ namespace boost { namespace property_tree { namespace registry_parser
         DWORD max_subkey_len, max_name_len, max_value_len;
         LONG result = reg_query_info_key<Ch>(rk.handle(), &max_subkey_len, &max_name_len, &max_value_len);
         if (result != ERROR_SUCCESS)
-            throw registry_parser_error("RegQueryInfoKey failed", result);
+            BOOST_PROPERTY_TREE_THROW(registry_parser_error("RegQueryInfoKey failed", result));
 
         // For all subkeys
         std::vector<Ch> subkey(max_subkey_len + 1);
@@ -423,7 +423,7 @@ namespace boost { namespace property_tree { namespace registry_parser
             if (result == ERROR_NO_MORE_ITEMS)
                 break;
             if (result != ERROR_SUCCESS)
-                throw registry_parser_error("RegEnumKeyEx failed", result);
+                BOOST_PROPERTY_TREE_THROW(registry_parser_error("RegEnumKeyEx failed", result));
             
             // Parse recursively
             Ptree &child = local.push_back(typename Ptree::value_type(&subkey.front(), Ptree()))->second;
@@ -447,7 +447,7 @@ namespace boost { namespace property_tree { namespace registry_parser
             if (result == ERROR_NO_MORE_ITEMS)
                 break;
             if (result != ERROR_SUCCESS)
-                throw registry_parser_error("RegEnumValue failed", result);
+                BOOST_PROPERTY_TREE_THROW(registry_parser_error("RegEnumValue failed", result));
 
             // Truncate data to actual size
             name.resize(name_size + 1);

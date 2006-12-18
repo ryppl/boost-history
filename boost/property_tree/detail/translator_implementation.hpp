@@ -55,6 +55,7 @@ namespace boost { namespace property_tree
         //    pt.put_value(signed char(65)) produces data equal to "65", instead of "A".
         //    Only plain char is treated as a character type, i.e pt.put_value(char(65)) will
         //    produce "A"
+        // 4. Allow recognizing various bool strings (0, 1, true, false)
         
         template<class Ch, class T>
         struct extractor
@@ -65,8 +66,8 @@ namespace boost { namespace property_tree
             {
                 std::basic_istringstream<Ch> stream(data);
                 stream.imbue(loc);
-                stream >> std::boolalpha >> extracted; 
-                if ( !stream.eof() )
+                stream >> extracted;
+                if (!stream.eof())
                 	stream >> std::ws;
                 return stream.eof() && !stream.fail() && !stream.bad();
             }
@@ -112,7 +113,7 @@ namespace boost { namespace property_tree
                 stream.imbue(loc);
                 int tmp;
                 stream >> tmp;
-                if ( !stream.eof() )
+                if (!stream.eof())
 	               	stream >> std::ws;
                 if (stream.eof() && !stream.fail() && !stream.bad())
                 {
@@ -135,7 +136,7 @@ namespace boost { namespace property_tree
                 stream.imbue(loc);
                 unsigned int tmp;
                 stream >> tmp;
-                if ( !stream.eof() )
+                if (!stream.eof())
                 	stream >> std::ws;
                 if (stream.eof() && !stream.fail() && !stream.bad())
                 {
@@ -144,6 +145,42 @@ namespace boost { namespace property_tree
                 }
                 else
                     return false;
+            }
+        };
+
+        template<class Ch>
+        struct extractor<Ch, bool>
+        {
+            inline bool operator()(const std::basic_string<Ch> &data, 
+                                   bool &extracted,
+                                   const std::locale &loc) const
+            {
+                std::basic_istringstream<Ch> stream(data);
+                stream.imbue(loc);
+                bool tmp;
+                stream >> std::boolalpha >> tmp;
+                if (!stream.eof())
+                    stream >> std::ws;
+                if (stream.eof() && !stream.fail() && !stream.bad())
+                {
+                    extracted = tmp;
+                    return true;
+                }
+                else
+                {
+                    std::basic_istringstream<Ch> stream2(data);
+                    stream2.imbue(loc);
+                    bool tmp;
+                    stream2 >> tmp;
+                    if (!stream2.eof())
+                        stream >> std::ws;
+                    if (stream2.eof() && !stream2.fail() && !stream2.bad())
+                    {
+                        extracted = tmp;
+                        return true;
+                    }
+                }
+                return false;
             }
         };
 

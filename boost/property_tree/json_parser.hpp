@@ -38,7 +38,7 @@ namespace boost { namespace property_tree { namespace json_parser
     {
         std::basic_ifstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
-            throw json_parser_error("cannot open file", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(json_parser_error("cannot open file", filename, 0));
         stream.imbue(loc);
         read_json_internal(stream, pt, filename);
     }
@@ -59,7 +59,7 @@ namespace boost { namespace property_tree { namespace json_parser
     {
         std::basic_ofstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
-            throw json_parser_error("cannot open file", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(json_parser_error("cannot open file", filename, 0));
         stream.imbue(loc);
         write_json_internal(stream, pt, filename);
     }

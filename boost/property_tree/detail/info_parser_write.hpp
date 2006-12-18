@@ -123,7 +123,7 @@ namespace boost { namespace property_tree { namespace info_parser
     {
         write_info_helper(stream, pt, -1);
         if (!stream.good())
-            throw info_parser_error("write error", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(info_parser_error("write error", filename, 0));
     }
 
 } } }

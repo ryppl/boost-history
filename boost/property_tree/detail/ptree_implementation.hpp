@@ -43,43 +43,26 @@ namespace boost { namespace property_tree
 {
 
     ///////////////////////////////////////////////////////////////////////////
-    // Impl
-
-    template<class C, class K, class P, class D, class X>
-    struct basic_ptree<C, K, P, D, X>::impl
-    {
-        data_type m_data;
-        container_type m_container;
-        index_type m_index;
-    };
-
-    ///////////////////////////////////////////////////////////////////////////
     // Construction & destruction
 
     template<class C, class K, class P, class D, class X>
     basic_ptree<C, K, P, D, X>::basic_ptree()
     {
-        m_impl = new impl;
         BOOST_PROPERTY_TREE_DEBUG_INCREMENT_INSTANCES_COUNT();
     }
 
     template<class C, class K, class P, class D, class X>
-    basic_ptree<C, K, P, D, X>::basic_ptree(const data_type &rhs)
+    basic_ptree<C, K, P, D, X>::basic_ptree(const data_type &rhs):
+        m_data(rhs)
     {
-        std::auto_ptr<impl> tmp(new impl);
-        tmp->m_data = rhs;
-        m_impl = tmp.release();
         BOOST_PROPERTY_TREE_DEBUG_INCREMENT_INSTANCES_COUNT();
     }
 
     template<class C, class K, class P, class D, class X>
     basic_ptree<C, K, P, D, X>::basic_ptree(const basic_ptree<C, K, P, D, X> &rhs)
     {
-        std::auto_ptr<impl> tmp(new impl);
-        tmp->m_data = rhs.data();
-        m_impl = tmp.get();
+        m_data = rhs.m_data;
         insert(end(), rhs.begin(), rhs.end());
-        tmp.release();
         BOOST_PROPERTY_TREE_DEBUG_INCREMENT_INSTANCES_COUNT();
     }
 
@@ -87,7 +70,6 @@ namespace boost { namespace property_tree
     basic_ptree<C, K, P, D, X>::~basic_ptree()
     {
         BOOST_PROPERTY_TREE_DEBUG_DECREMENT_INSTANCES_COUNT();
-        delete m_impl;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -97,56 +79,56 @@ namespace boost { namespace property_tree
     typename basic_ptree<C, K, P, D, X>::iterator 
         basic_ptree<C, K, P, D, X>::begin()
     {
-        return m_impl->m_container.begin();
+        return m_container.begin();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::const_iterator 
         basic_ptree<C, K, P, D, X>::begin() const
     {
-        return m_impl->m_container.begin();
+        return m_container.begin();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::iterator 
         basic_ptree<C, K, P, D, X>::end()
     {
-        return m_impl->m_container.end();
+        return m_container.end();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::const_iterator 
         basic_ptree<C, K, P, D, X>::end() const
     {
-        return m_impl->m_container.end();
+        return m_container.end();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::reverse_iterator 
         basic_ptree<C, K, P, D, X>::rbegin()
     {
-        return m_impl->m_container.rbegin();
+        return m_container.rbegin();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::const_reverse_iterator 
         basic_ptree<C, K, P, D, X>::rbegin() const
     {
-        return m_impl->m_container.rbegin();
+        return m_container.rbegin();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::reverse_iterator 
         basic_ptree<C, K, P, D, X>::rend()
     {
-        return m_impl->m_container.rend();
+        return m_container.rend();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::const_reverse_iterator 
         basic_ptree<C, K, P, D, X>::rend() const
     {
-        return m_impl->m_container.rend();
+        return m_container.rend();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -156,62 +138,62 @@ namespace boost { namespace property_tree
     typename basic_ptree<C, K, P, D, X>::size_type 
         basic_ptree<C, K, P, D, X>::size() const
     {
-        return m_impl->m_index.size();
+        return m_container.size();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::size_type 
         basic_ptree<C, K, P, D, X>::max_size() const
     {
-        return (std::min)(m_impl->m_container.max_size(), m_impl->m_index.max_size());
+        return m_container.max_size();
     }
 
     template<class C, class K, class P, class D, class X>
     bool basic_ptree<C, K, P, D, X>::empty() const
     {
-        return m_impl->m_index.empty();
+        return m_container.empty();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::data_type &
         basic_ptree<C, K, P, D, X>::data()
     {
-        return m_impl->m_data;
+        return m_data;
     }
 
     template<class C, class K, class P, class D, class X>
     const typename basic_ptree<C, K, P, D, X>::data_type &
         basic_ptree<C, K, P, D, X>::data() const
     {
-        return m_impl->m_data;
+        return m_data;
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::value_type &
         basic_ptree<C, K, P, D, X>::front()
     {
-        return m_impl->m_container.front();
+        return m_container.front();
     }
     
     template<class C, class K, class P, class D, class X>
     const typename basic_ptree<C, K, P, D, X>::value_type &
         basic_ptree<C, K, P, D, X>::front() const
     {
-        return m_impl->m_container.front();
+        return m_container.front();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::value_type &
         basic_ptree<C, K, P, D, X>::back()
     {
-        return m_impl->m_container.back();
+        return m_container.back();
     }
 
     template<class C, class K, class P, class D, class X>
     const typename basic_ptree<C, K, P, D, X>::value_type &
         basic_ptree<C, K, P, D, X>::back() const
     {
-        return m_impl->m_container.back();
+        return m_container.back();
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -269,31 +251,41 @@ namespace boost { namespace property_tree
     typename basic_ptree<C, K, P, D, X>::iterator 
         basic_ptree<C, K, P, D, X>::find(const key_type &key)
     {
-        typename index_type::iterator it = m_impl->m_index.find(key);
-        return it == m_impl->m_index.end() ? end() : it->second;
+        C comp;
+        for (iterator it = begin(); it != end(); ++it)
+            if (!comp(it->first, key) && !comp(key, it->first))
+                return it;
+        return end();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::const_iterator 
         basic_ptree<C, K, P, D, X>::find(const key_type &key) const
     {
-        typename index_type::const_iterator it = m_impl->m_index.find(key);
-        return it == m_impl->m_index.end() ? end() : it->second;
+        C comp;
+        for (const_iterator it = begin(); it != end(); ++it)
+            if (!comp(it->first, key) && !comp(key, it->first))
+                return it;
+        return end();
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::size_type 
         basic_ptree<C, K, P, D, X>::count(const key_type &key) const
     {
-        return m_impl->m_index.count(key);
+        C comp;
+        size_type count = 0;
+        for (const_iterator it = begin(); it != end(); ++it)
+            if (!comp(it->first, key) && !comp(key, it->first))
+                ++count;
+        return count;
     }
 
     template<class C, class K, class P, class D, class X>
     void basic_ptree<C, K, P, D, X>::clear()
     {
-        m_impl->m_data = data_type();
-        m_impl->m_container.clear();
-        m_impl->m_index.clear();
+        m_data = data_type();
+        m_container.clear();
     }
 
     template<class C, class K, class P, class D, class X>
@@ -301,20 +293,7 @@ namespace boost { namespace property_tree
     basic_ptree<C, K, P, D, X>::insert(iterator where, 
                                        const value_type &value)
     {
-
-        // Insert new value into container. If that throws nothing needs to be rolled back
-        where = m_impl->m_container.insert(where, value);
-
-        // Update index. If that throws we need to rollback the insert
-        try {
-            m_impl->m_index.insert(typename index_type::value_type(where->first, where));
-        } 
-        catch (...) {
-            m_impl->m_container.erase(where);   // rollback the insert
-            throw;
-        }
-
-        return where;
+        return m_container.insert(where, value);
     }
 
     template<class C, class K, class P, class D, class X>
@@ -329,37 +308,25 @@ namespace boost { namespace property_tree
     typename basic_ptree<C, K, P, D, X>::iterator 
         basic_ptree<C, K, P, D, X>::erase(iterator where)
     {
-
-        // Remove from index
-        typename index_type::iterator lo = m_impl->m_index.lower_bound(where->first);
-        typename index_type::iterator hi = m_impl->m_index.upper_bound(where->first);
-        for (; lo != hi; ++lo)
-            if (lo->second == where)
-            {
-                m_impl->m_index.erase(lo);
-                break;
-            }
-        
-        // Remove from container    
-        return m_impl->m_container.erase(where);
-
+        return m_container.erase(where);
     }
 
     template<class C, class K, class P, class D, class X>
     typename basic_ptree<C, K, P, D, X>::size_type 
         basic_ptree<C, K, P, D, X>::erase(const key_type &key)
     {
+        C comp;
         size_type count = 0;
-        typename index_type::iterator lo = m_impl->m_index.lower_bound(key);
-        if (lo != m_impl->m_index.end())
+        iterator it = m_container.begin();
+        while (it != m_container.end())
         {
-            typename index_type::iterator hi = m_impl->m_index.upper_bound(key);
-            while (lo != hi)
+            if (!comp(it->first, key) && !comp(key, it->first))
             {
-                typename index_type::iterator it = lo++;
-                erase(it->second);
+                it = erase(it);
                 ++count;
             }
+            else
+                ++it;
         }
         return count;
     }
@@ -405,20 +372,21 @@ namespace boost { namespace property_tree
     template<class C, class K, class P, class D, class X>
     void basic_ptree<C, K, P, D, X>::swap(basic_ptree<C, K, P, D, X> &rhs)
     {
-        std::swap(m_impl, rhs.m_impl);
+        m_data.swap(rhs.m_data);
+        m_container.swap(rhs.m_container);
     }
 
     template<class C, class K, class P, class D, class X>
     void basic_ptree<C, K, P, D, X>::reverse()
     {
-        m_impl->m_container.reverse();
+        m_container.reverse();
     }
     
     template<class C, class K, class P, class D, class X>
     template<class SortTr> 
     void basic_ptree<C, K, P, D, X>::sort(SortTr tr)
     {
-        m_impl->m_container.sort(tr);
+        m_container.sort(tr);
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -433,7 +401,7 @@ namespace boost { namespace property_tree
         if (child)
             return *child;
         else
-            throw ptree_bad_path("path does not exist", path);
+            BOOST_PROPERTY_TREE_THROW(ptree_bad_path("path does not exist", path));
     }
 
     // Get child ptree
@@ -506,7 +474,7 @@ namespace boost { namespace property_tree
         if (child)
             return *child;
         else
-            throw ptree_bad_path("path does not exist", path);
+            BOOST_PROPERTY_TREE_THROW(ptree_bad_path("path does not exist", path));
     }
 
     // Get value from data of ptree
@@ -519,8 +487,8 @@ namespace boost { namespace property_tree
         if (x.get_value(*this, value))
             return value;
         else
-            throw ptree_bad_data(std::string("conversion of data into type \"") + 
-                                 typeid(Type).name() + "\" failed", data());
+            BOOST_PROPERTY_TREE_THROW(ptree_bad_data(std::string("conversion of data into type \"") + 
+                                           typeid(Type).name() + "\" failed", data()));
     }
 
     // Get value from data of ptree
@@ -613,8 +581,8 @@ namespace boost { namespace property_tree
     void basic_ptree<C, K, P, D, X>::put_value(const Type &value, const translator_type &x)
     {
         if (!x.put_value(*this, value))
-            throw ptree_bad_data(std::string("conversion of type \"") + typeid(Type).name() + 
-                                 "\" into data failed", boost::any());
+            BOOST_PROPERTY_TREE_THROW(ptree_bad_data(std::string("conversion of type \"") + typeid(Type).name() + 
+                                                       "\" into data failed", boost::any()));
     }
 
     // Put value in data of child ptree

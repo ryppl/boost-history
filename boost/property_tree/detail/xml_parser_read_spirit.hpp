@@ -52,9 +52,9 @@ namespace boost { namespace property_tree { namespace xml_parser
             void operator()(It b, It e) const
             {
                 if (c.stack.empty())
-                    throw xml_parser_error("xml parse error", 
-                                           b.get_position().file, 
-                                           b.get_position().line);
+                    BOOST_PROPERTY_TREE_THROW(xml_parser_error("xml parse error", 
+                                                     b.get_position().file, 
+                                                     b.get_position().line));
                 Str name(b, e);
                 Ptree *child = &c.stack.back()->push_back(std::make_pair(name, Ptree()))->second;
                 c.stack.push_back(child);
@@ -68,9 +68,9 @@ namespace boost { namespace property_tree { namespace xml_parser
             void operator()(It b, It e) const
             {
                 if (c.stack.size() <= 1)
-                    throw xml_parser_error("xml parse error", 
-                                           b.get_position().file, 
-                                           b.get_position().line);
+                    BOOST_PROPERTY_TREE_THROW(xml_parser_error("xml parse error", 
+                                    b.get_position().file, 
+                                    b.get_position().line));
                 c.stack.pop_back();
             }
         };
@@ -703,7 +703,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         std::vector<Ch> v(std::istreambuf_iterator<Ch>(stream.rdbuf()),
                           std::istreambuf_iterator<Ch>());
         if (!stream.good())
-            throw xml_parser_error("read error", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(xml_parser_error("read error", filename, 0));
         
         // Initialize iterators
         It begin(v.begin(), v.end());
@@ -719,9 +719,9 @@ namespace boost { namespace property_tree { namespace xml_parser
         // Parse into local
         boost::spirit::parse_info<It> result = boost::spirit::parse(begin, end, g);
         if (!result.full || g.c.stack.size() != 1)
-            throw xml_parser_error("xml parse error", 
-                                   result.stop.get_position().file, 
-                                   result.stop.get_position().line);
+            BOOST_PROPERTY_TREE_THROW(xml_parser_error("xml parse error", 
+                                             result.stop.get_position().file, 
+                                             result.stop.get_position().line));
 
         // Swap local and pt
         pt.swap(local);

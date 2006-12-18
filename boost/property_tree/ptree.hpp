@@ -10,14 +10,17 @@
 #ifndef BOOST_PROPERTY_TREE_PTREE_HPP_INCLUDED
 #define BOOST_PROPERTY_TREE_PTREE_HPP_INCLUDED
 
-#include <boost/property_tree/ptree_fwd.hpp>    // Must be the first include
+#include <boost/property_tree/ptree_fwd.hpp>    // Must be the first include, because of config.hpp
 
 #include <boost/assert.hpp>
-#include <boost/config.hpp>
 #include <boost/optional.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/remove_const.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
 #include <boost/any.hpp>
+#include <boost/throw_exception.hpp>
 
 #ifdef BOOST_PROPERTY_TREE_DEBUG
 #   include <boost/detail/lightweight_mutex.hpp>   // For syncing debug instances counter
@@ -26,16 +29,21 @@
 #include <functional>               // for std::less
 #include <limits>
 #include <list>
-#include <map>
-#include <memory>                   // for std::auto_ptr
 #include <sstream>
 #include <stdexcept>
 #include <utility>                  // for std::pair
 #include <vector>
+#include <cstdlib>
+
+// Throwing macro to avoid no return warnings portably
+#define BOOST_PROPERTY_TREE_THROW(e) { throw_exception(e); std::exit(1); }
 
 namespace boost { namespace property_tree
 {
 
+    /// \brief gdgfdg dfgdfg dfgdfg
+    /// dfgdfg dfgdfgd dfgdgf dfgdgf dfgdgfdgf
+    /// dgfdg dfg dfg d gdf g dfg d fgd fg fdg
     template<class C, class K, class P, class D, class X>
     class basic_ptree
     {
@@ -68,11 +76,6 @@ namespace boost { namespace property_tree
         typedef typename container_type::const_iterator const_iterator;
         typedef typename container_type::reverse_iterator reverse_iterator;
         typedef typename container_type::const_reverse_iterator const_reverse_iterator;
-
-    private:
-
-        // Internal types
-        typedef std::multimap<key_type, iterator, key_compare> index_type;
 
     public:
         
@@ -181,8 +184,8 @@ namespace boost { namespace property_tree
 
     private:
 
-        struct impl;
-        impl *m_impl;
+        data_type m_data;
+        container_type m_container;
 
         ////////////////////////////////////////////////////////////////////////////
         // Debugging

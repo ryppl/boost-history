@@ -63,7 +63,7 @@ namespace boost { namespace property_tree { namespace ini_parser
             ++line_no;
             std::getline(stream, line);
             if (!stream.good() && !stream.eof())
-                throw ini_parser_error("read error", "", line_no);
+                BOOST_PROPERTY_TREE_THROW(ini_parser_error("read error", "", line_no));
 
             // If line is non-empty
             line = detail::trim(line, stream.getloc());
@@ -79,25 +79,25 @@ namespace boost { namespace property_tree { namespace ini_parser
                 {
                     typename Str::size_type end = line.find(Ch(']'));
                     if (end == Str::npos)
-                        throw ini_parser_error("unmatched '['", "", line_no);
+                        BOOST_PROPERTY_TREE_THROW(ini_parser_error("unmatched '['", "", line_no));
                     Str key = detail::trim(line.substr(1, end - 1), stream.getloc());
                     if (local.find(key) != local.end())
-                        throw ini_parser_error("duplicate section name", "", line_no);
+                        BOOST_PROPERTY_TREE_THROW(ini_parser_error("duplicate section name", "", line_no));
                     section = &local.push_back(std::make_pair(key, Ptree()))->second;
                 }
                 else
                 {
                     if (!section)
-                        throw ini_parser_error("section expected", "", line_no);
+                        BOOST_PROPERTY_TREE_THROW(ini_parser_error("section expected", "", line_no));
                     typename Str::size_type eqpos = line.find(Ch('='));
                     if (eqpos == Str::npos)
-                        throw ini_parser_error("'=' character not found in line", "", line_no);
+                        BOOST_PROPERTY_TREE_THROW(ini_parser_error("'=' character not found in line", "", line_no));
                     if (eqpos == 0)
-                        throw ini_parser_error("key expected", "", line_no);
+                        BOOST_PROPERTY_TREE_THROW(ini_parser_error("key expected", "", line_no));
                     Str key = detail::trim(line.substr(0, eqpos), stream.getloc());
                     Str data = detail::trim(line.substr(eqpos + 1, Str::npos), stream.getloc());
                     if (section->find(key) != section->end())
-                        throw ini_parser_error("duplicate key name", "", line_no);
+                        BOOST_PROPERTY_TREE_THROW(ini_parser_error("duplicate key name", "", line_no));
                     section->push_back(std::make_pair(key, Ptree(data)));
                 }
             }
@@ -116,13 +116,13 @@ namespace boost { namespace property_tree { namespace ini_parser
     {
         std::basic_ifstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
-            throw ini_parser_error("cannot open file", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(ini_parser_error("cannot open file", filename, 0));
         stream.imbue(loc);
         try {
             read_ini(stream, pt);
         }
         catch (ini_parser_error &e) {
-            throw ini_parser_error(e.message(), filename, e.line());
+            BOOST_PROPERTY_TREE_THROW(ini_parser_error(e.message(), filename, e.line()));
         }
     }
 
@@ -143,15 +143,15 @@ namespace boost { namespace property_tree { namespace ini_parser
             for (typename Ptree::const_iterator it = pt.begin(), end = pt.end(); it != end; ++it)
             {
                 if (!it->second.data().empty())
-                    throw ini_parser_error("ptree has data on root level keys", "", 0);
+                    BOOST_PROPERTY_TREE_THROW(ini_parser_error("ptree has data on root level keys", "", 0));
                 if (pt.count(it->first) > 1)
-                    throw ini_parser_error("duplicate section name", "", 0);
+                    BOOST_PROPERTY_TREE_THROW(ini_parser_error("duplicate section name", "", 0));
                 for (typename Ptree::const_iterator it2 = it->second.begin(), end2 = it->second.end(); it2 != end2; ++it2)
                 {
                     if (!it2->second.empty())
-                        throw ini_parser_error("ptree is too deep", "", 0);
+                        BOOST_PROPERTY_TREE_THROW(ini_parser_error("ptree is too deep", "", 0));
                     if (it->second.count(it2->first) > 1)
-                        throw ini_parser_error("duplicate key name", "", 0);
+                        BOOST_PROPERTY_TREE_THROW(ini_parser_error("duplicate key name", "", 0));
                 }
             }
 
@@ -174,13 +174,13 @@ namespace boost { namespace property_tree { namespace ini_parser
     {
         std::basic_ofstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
-            throw ini_parser_error("cannot open file", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(ini_parser_error("cannot open file", filename, 0));
         stream.imbue(loc);
         try {
             write_ini(stream, pt, flags);
         }
         catch (ini_parser_error &e) {
-            throw ini_parser_error(e.message(), filename, e.line());
+            BOOST_PROPERTY_TREE_THROW(ini_parser_error(e.message(), filename, e.line()));
         }
     }
 

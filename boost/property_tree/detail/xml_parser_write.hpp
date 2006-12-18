@@ -162,7 +162,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         stream << detail::widen<Ch>("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         write_xml_element(stream, Str(), pt, -1);
         if (!stream)
-            throw xml_parser_error("write error", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(xml_parser_error("write error", filename, 0));
     }
 
 } } }

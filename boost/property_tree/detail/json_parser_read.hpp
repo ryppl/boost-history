@@ -288,7 +288,7 @@ namespace boost { namespace property_tree { namespace json_parser
         std::vector<Ch> v(std::istreambuf_iterator<Ch>(stream.rdbuf()),
                           std::istreambuf_iterator<Ch>());
         if (!stream.good())
-            throw json_parser_error("read error", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(json_parser_error("read error", filename, 0));
         
         // Prepare grammar
         json_grammar<Ptree> g;
@@ -299,11 +299,11 @@ namespace boost { namespace property_tree { namespace json_parser
             parse_info<It> pi = parse(v.begin(), v.end(), g, 
                                       space_p | comment_p("//") | comment_p("/*", "*/"));
             if (!pi.hit || !pi.full)
-                throw parser_error<std::string, It>(v.begin(), "syntax error");
+                BOOST_PROPERTY_TREE_THROW((parser_error<std::string, It>(v.begin(), "syntax error")));
         }
         catch (parser_error<std::string, It> &e)
         {
-            throw json_parser_error(e.descriptor, filename, count_lines<It, Ch>(v.begin(), e.where));
+            BOOST_PROPERTY_TREE_THROW(json_parser_error(e.descriptor, filename, count_lines<It, Ch>(v.begin(), e.where)));
         }
 
         // Swap grammar context root and pt

@@ -73,7 +73,7 @@ namespace boost { namespace property_tree { namespace xml_parser
             {
                 typename Str::const_iterator semicolon = std::find(it + 1, end, Ch(';'));
                 if (semicolon == end)
-                    throw xml_parser_error("invalid character entity", "", 0);
+                    BOOST_PROPERTY_TREE_THROW(xml_parser_error("invalid character entity", "", 0));
                 Str ent(it + 1, semicolon);
                 if (ent == detail::widen<Ch>("lt")) r += Ch('<');
                 else if (ent == detail::widen<Ch>("gt")) r += Ch('>');
@@ -81,7 +81,7 @@ namespace boost { namespace property_tree { namespace xml_parser
                 else if (ent == detail::widen<Ch>("quot")) r += Ch('"');
                 else if (ent == detail::widen<Ch>("apos")) r += Ch('\'');
                 else
-                    throw xml_parser_error("invalid character entity", "", 0);
+                    BOOST_PROPERTY_TREE_THROW(xml_parser_error("invalid character entity", "", 0));
                 it = semicolon;
             }
             else

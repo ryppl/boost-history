@@ -16,14 +16,14 @@
 #include <boost/property_tree/detail/xml_parser_flags.hpp>
 
 // Include proper parser
-#ifdef BOOST_PROPERTY_TREE_XML_PARSER_TINYXML
+#if defined(BOOST_PROPERTY_TREE_XML_PARSER_TINYXML)
 #include <boost/property_tree/detail/xml_parser_read_tinyxml.hpp>
-#else
-#ifdef BOOST_PROPERTY_TREE_XML_PARSER_PUGIXML
+#elif defined(BOOST_PROPERTY_TREE_XML_PARSER_PUGXML)
+#include <boost/property_tree/detail/xml_parser_read_pugxml.hpp>
+#elif defined(BOOST_PROPERTY_TREE_XML_PARSER_PUGIXML)
 #include <boost/property_tree/detail/xml_parser_read_pugixml.hpp>
 #else
 #include <boost/property_tree/detail/xml_parser_read_spirit.hpp>
-#endif
 #endif
 
 #include <fstream>
@@ -52,7 +52,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         BOOST_ASSERT(validate_flags(flags));
         std::basic_ifstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
-            throw xml_parser_error("cannot open file", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(xml_parser_error("cannot open file", filename, 0));
         stream.imbue(loc);
         read_xml_internal(stream, pt, flags, filename);
     }
@@ -73,7 +73,7 @@ namespace boost { namespace property_tree { namespace xml_parser
     {
         std::basic_ofstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
-            throw xml_parser_error("cannot open file", filename, 0);
+            BOOST_PROPERTY_TREE_THROW(xml_parser_error("cannot open file", filename, 0));
         stream.imbue(loc);
         write_xml_internal(stream, pt, filename);
     }

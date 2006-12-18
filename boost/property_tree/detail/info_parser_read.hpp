@@ -35,7 +35,9 @@ namespace boost { namespace property_tree { namespace info_parser
             {
                 ++b;
                 if (b == e)
-                    throw info_parser_error("character expected after backslash", "", 0);
+                {
+                    BOOST_PROPERTY_TREE_THROW(info_parser_error("character expected after backslash", "", 0));
+                }
                 else if (*b == Ch('0')) result += Ch('\0');
                 else if (*b == Ch('a')) result += Ch('\a');
                 else if (*b == Ch('b')) result += Ch('\b');
@@ -48,7 +50,7 @@ namespace boost { namespace property_tree { namespace info_parser
                 else if (*b == Ch('\'')) result += Ch('\'');
                 else if (*b == Ch('\\')) result += Ch('\\');
                 else
-                    throw info_parser_error("unknown escape sequence", "", 0);
+                    BOOST_PROPERTY_TREE_THROW(info_parser_error("unknown escape sequence", "", 0));
             }
             else
                 result += *b;
@@ -121,13 +123,13 @@ namespace boost { namespace property_tree { namespace info_parser
                 if (*text == Ch('\\'))
                 {
                     if (!need_more_lines)
-                        throw info_parser_error("unexpected \\", "", 0);
+                        BOOST_PROPERTY_TREE_THROW(info_parser_error("unexpected \\", "", 0));
                     ++text;
                     skip_whitespace(text);
                     if (*text == Ch('\0') || *text == Ch(';'))
                         *need_more_lines = true;
                     else
-                        throw info_parser_error("expected end of line after \\", "", 0);
+                        BOOST_PROPERTY_TREE_THROW(info_parser_error("expected end of line after \\", "", 0));
                 }
                 else
                     if (need_more_lines)
@@ -135,11 +137,11 @@ namespace boost { namespace property_tree { namespace info_parser
                 return result;
             }
             else
-                throw info_parser_error("unexpected end of line", "", 0);
+                BOOST_PROPERTY_TREE_THROW(info_parser_error("unexpected end of line", "", 0));
 
         }
         else
-            throw info_parser_error("expected \"", "", 0);
+            BOOST_PROPERTY_TREE_THROW(info_parser_error("expected \"", "", 0));
     }
     
     // Extract key
@@ -205,7 +207,7 @@ namespace boost { namespace property_tree { namespace info_parser
                 ++line_no;
                 std::getline(stream, line);
                 if (!stream.good() && !stream.eof())
-                    throw info_parser_error("read error", "", 0);
+                    BOOST_PROPERTY_TREE_THROW(info_parser_error("read error", "", 0));
                 const Ch *text = line.c_str();
 
                 // If directive found
@@ -219,21 +221,21 @@ namespace boost { namespace property_tree { namespace info_parser
                     if (directive == convert_chtype<Ch, char>("include"))     // #include
                     {
                         if (include_depth > 100)
-                            throw info_parser_error("include depth too large, probably recursive include", "", 0);
+                            BOOST_PROPERTY_TREE_THROW(info_parser_error("include depth too large, probably recursive include", "", 0));
                         std::basic_string<Ch> s = read_string(text, NULL);
                         std::string inc_name = convert_chtype<char, Ch>(s.c_str());
                         std::basic_ifstream<Ch> inc_stream(inc_name.c_str());
                         if (!inc_stream.good())
-                            throw info_parser_error("cannot open include file " + inc_name, "", 0);
+                            BOOST_PROPERTY_TREE_THROW(info_parser_error("cannot open include file " + inc_name, "", 0));
                         read_info_internal(inc_stream, *stack.top(), inc_name, include_depth + 1);
                     }
                     else    // Unknown directive
-                        throw info_parser_error("unknown directive", "", 0);
+                        BOOST_PROPERTY_TREE_THROW(info_parser_error("unknown directive", "", 0));
 
                     // Directive must be followed by end of line
                     skip_whitespace(text);
                     if (*text != Ch('\0'))
-                        throw info_parser_error("expected end of line", "", 0);
+                        BOOST_PROPERTY_TREE_THROW(info_parser_error("expected end of line", "", 0));
 
                     // Go to next line
                     continue;
@@ -264,7 +266,7 @@ namespace boost { namespace property_tree { namespace info_parser
                             if (*text == Ch('{'))   // Brace opening found
                             {
                                 if (!last)
-                                    throw info_parser_error("unexpected {", "", 0);
+                                    BOOST_PROPERTY_TREE_THROW(info_parser_error("unexpected {", "", 0));
                                 stack.push(last);
                                 last = NULL;
                                 ++text;
@@ -272,7 +274,7 @@ namespace boost { namespace property_tree { namespace info_parser
                             else if (*text == Ch('}'))  // Brace closing found
                             {
                                 if (stack.size() <= 1)
-                                    throw info_parser_error("unmatched }", "", 0);
+                                    BOOST_PROPERTY_TREE_THROW(info_parser_error("unmatched }", "", 0));
                                 stack.pop();
                                 last = NULL;
                                 ++text;
@@ -303,7 +305,7 @@ namespace boost { namespace property_tree { namespace info_parser
                             else if (*text == Ch('}'))  // Brace closing found
                             {
                                 if (stack.size() <= 1)
-                                    throw info_parser_error("unmatched }", "", 0);
+                                    BOOST_PROPERTY_TREE_THROW(info_parser_error("unmatched }", "", 0));
                                 stack.pop();
                                 last = NULL;
                                 ++text;
@@ -335,7 +337,7 @@ namespace boost { namespace property_tree { namespace info_parser
                                 state = need_more_lines ? s_data_cont : s_key;
                             }
                             else
-                                throw info_parser_error("expected \" after \\ in previous line", "", 0);
+                                BOOST_PROPERTY_TREE_THROW(info_parser_error("expected \" after \\ in previous line", "", 0));
 
                         }; break;
 
@@ -349,16 +351,18 @@ namespace boost { namespace property_tree { namespace info_parser
 
             // Check if stack has initial size, otherwise some {'s have not been closed
             if (stack.size() != 1)
-                throw info_parser_error("unmatched {", "", 0);
+                BOOST_PROPERTY_TREE_THROW(info_parser_error("unmatched {", "", 0));
 
         }
         catch (info_parser_error &e)
         {
             // If line undefined rethrow error with correct filename and line
             if (e.line() == 0)
-                throw info_parser_error(e.message(), filename, line_no);
+            {
+                BOOST_PROPERTY_TREE_THROW(info_parser_error(e.message(), filename, line_no));
+            }
             else
-                throw e;
+                BOOST_PROPERTY_TREE_THROW(e);
 
         }
 
