@@ -1,27 +1,32 @@
-#ifndef BOOST_S11N_PTREE_OARCHIVE_HPP_INCLUDED
-#define BOOST_S11N_PTREE_OARCHIVE_HPP_INCLUDED
+#ifndef BOOST_S11N_XML_OARCHIVE_HPP_INCLUDED
+#define BOOST_S11N_XML_OARCHIVE_HPP_INCLUDED
 
 #include <boost/s11n/detail/common_oarchive.hpp>
 #include <boost/s11n/nvp.hpp>
-#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 #include <boost/assert.hpp>
 #include <string>
 
 namespace boost { namespace s11n
 {
 
-    class ptree_oarchive: public detail::common_oarchive<ptree_oarchive>
+    class xml_oarchive: public detail::common_oarchive<xml_oarchive>
     {
 
-        friend class detail::common_oarchive<ptree_oarchive>;
+        friend class detail::common_oarchive<xml_oarchive>;
 
     public:    
         
-        ptree_oarchive(boost::property_tree::iptree &pt): 
-            m_pt(pt), m_current(&pt)
+        xml_oarchive():
+            m_pt(), m_current(&m_pt)
         {
         }
-        
+
+        void get_xml(std::ostream &stream)
+        {
+            write_xml(stream, m_pt);
+        }
+
     private:    
         
         template<class T> void save(const T &t)
@@ -64,9 +69,10 @@ namespace boost { namespace s11n
         {
             if (t.default_value && t.value == *t.default_value)
                 return;
-            boost::property_tree::iptree::value_type v(t.name, boost::property_tree::empty_ptree<boost::property_tree::iptree>());
-            v.second.put_value(t.value);
-            m_current->push_back(v);
+            m_current->put(string("<xmlattr>.") + t.name, t.value);
+            //boost::property_tree::iptree::value_type v(t.name, boost::property_tree::empty_ptree<boost::property_tree::iptree>());
+            //v.second.put_value(t.value);
+            //m_current->push_back(v);
         }
 
         void save(const class_name_t &t)
@@ -93,17 +99,17 @@ namespace boost { namespace s11n
 
         template<class T> inline void internal_save(const T &t);
 
-        boost::property_tree::iptree &m_pt;
+        boost::property_tree::iptree m_pt;
         boost::property_tree::iptree *m_current;
         
     };
 
-    template<class T> inline void ptree_oarchive::internal_save(const T &t)
+    template<class T> inline void xml_oarchive::internal_save(const T &t)
     {
-        detail::common_oarchive<ptree_oarchive>::save(t);
+        detail::common_oarchive<xml_oarchive>::save(t);
     }
     
-    template<> inline void ptree_oarchive::internal_save<std::string>(const std::string &t)
+    template<> inline void xml_oarchive::internal_save<std::string>(const std::string &t)
     {
         m_current->put_value(t);
     }

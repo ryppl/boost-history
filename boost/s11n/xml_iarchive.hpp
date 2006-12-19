@@ -1,25 +1,26 @@
-#ifndef BOOST_S11N_PTREE_IARCHIVE_HPP_INCLUDED
-#define BOOST_S11N_PTREE_IARCHIVE_HPP_INCLUDED
+#ifndef BOOST_S11N_XML_IARCHIVE_HPP_INCLUDED
+#define BOOST_S11N_XML_IARCHIVE_HPP_INCLUDED
 
 #include <boost/s11n/detail/common_iarchive.hpp>
 #include <boost/s11n/nvp.hpp>
-#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/xml_parser.hpp>
 #include <string>
 #include <stdexcept>
 
 namespace boost { namespace s11n
 {
 
-	class ptree_iarchive: public detail::common_iarchive<ptree_iarchive>
+	class xml_iarchive: public detail::common_iarchive<xml_iarchive>
     {
 
-        friend class detail::common_iarchive<ptree_iarchive>;
+        friend class detail::common_iarchive<xml_iarchive>;
 
     public:    
         
-        ptree_iarchive(const boost::property_tree::iptree &pt): 
-            m_pt(pt), m_current(&m_pt)
+        xml_iarchive(std::istream &stream): 
+            m_pt(), m_current(&m_pt)
         {
+            read_xml(stream, m_pt);
         }
         
     private:    
@@ -80,11 +81,15 @@ namespace boost { namespace s11n
 
         template<class T> void load(concise_nvp<T> &t)
         {
-            boost::property_tree::iptree::iterator it = m_current->find(t.name);
-            if (it != m_current->end())
+            using namespace boost::property_tree;
+            iptree &attr = const_cast<iptree &>(m_current->get_child("<xmlattr>", empty_ptree<iptree>()));
+            iptree::iterator it = attr.find(t.name);
+            if (it != attr.end())
             {
                 t.value = it->second.get_value<T>();
-                m_current->erase(it);
+                attr.erase(it);
+                if (attr.empty())
+                    m_current->erase("<xmlattr>");
             }
             else if (t.default_value)
             {
@@ -131,12 +136,12 @@ namespace boost { namespace s11n
         
     };
 
-    template<class T> inline void ptree_iarchive::internal_load(T &t)
+    template<class T> inline void xml_iarchive::internal_load(T &t)
     {
-		detail::common_iarchive<ptree_iarchive>::load(t);
+		detail::common_iarchive<xml_iarchive>::load(t);
     }
     
-    template<> inline void ptree_iarchive::internal_load<std::string>(std::string &t)
+    template<> inline void xml_iarchive::internal_load<std::string>(std::string &t)
     {
         t = m_current->get_value<std::string>();
     }

@@ -10,7 +10,6 @@ namespace boost { namespace s11n
     
     public:
     
-        nvp() { }
         nvp(const char *name, T &value): name(name), value(value) { }
         const char *name;
         T &value;
