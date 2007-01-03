@@ -143,6 +143,22 @@ int test_main(int, char* [])
 	
 	tree_t tree3(tree2);	
 	validate_test_data_tree(tree3);
+	c = tree3.inorder_first();
+	BOOST_CHECK(*c == 1);
+	c = tree3.shoot();
+	--c;
+	BOOST_CHECK(*c == 14);	
+	
+	destroy_binary_tree(tree2);
+	tree2.splice(tree2.root(), tree3);
+
+	BOOST_CHECK(tree3.empty());	
+	validate_test_data_tree(tree2);
+	c = tree2.inorder_first();
+	BOOST_CHECK(*c == 1);
+	c = tree2.shoot();
+	--c;
+	BOOST_CHECK(*c == 14);
 	
 	return 0;
 }

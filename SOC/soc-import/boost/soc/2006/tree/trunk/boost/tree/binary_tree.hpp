@@ -41,8 +41,7 @@ class binary_tree {
 	typedef binary_tree<Tp, Alloc> self_type;
  public:
 	typedef Tp value_type;
-	typedef typename Alloc::template rebind<value_type>::other 
-		allocator_type;
+	typedef typename Alloc::template rebind<value_type>::other allocator_type;
 
  private:		
 	typedef node<value_type, detail::binary_array> node_type;
@@ -86,7 +85,7 @@ class binary_tree {
 		m_header[0] = node_base_type::nil();
 		m_header[1] = &m_header;
 
-		insert(this->root(), subtree.root());
+		insert(root(), subtree);
 	}
 	
 	/**
@@ -102,7 +101,7 @@ class binary_tree {
 		m_header[1] = &m_header;
 		
 		if (!x.empty())
-			insert(this->root(), x.root());
+			insert(root(), x.root());
 	}
 	
 	~binary_tree()
@@ -119,13 +118,17 @@ class binary_tree {
 	 */
 	binary_tree<Tp, Alloc>& operator=(binary_tree<Tp, Alloc> const& x)
 	{
-		self_type temp(x);
+		binary_tree temp(x);
 		swap(temp);
 		return *this;
 	}
 	
 	template <class InputCursor>
-		void assign(InputCursor subtree);
+		void assign(InputCursor subtree)
+	{
+		clear();
+		insert(this->root(), subtree);
+	}
 
     /// Get a copy of the memory allocation object.
 	allocator_type get_allocator() const
@@ -210,6 +213,15 @@ class binary_tree {
 	const_cursor inorder_cfirst() const
 	{
 		return const_cursor(m_header[1], 0);
+	}
+	
+	/**
+	 * Returns true if the %binary_tree is empty.  (Thus root() would
+	 * equal shoot().)
+	 */
+	bool empty() const
+	{
+		return m_header.m_parent == &m_header;
 	}
 	
 	// Hierarchy-specific
@@ -323,17 +335,6 @@ class binary_tree {
   		}
  	} 	
  	
-	/**
-	 * @brief Clears all data from the tree (without any rebalancing).
-	 */
- 	void clear()
- 	{
- 		clear(this->root());
- 		m_header.m_parent = &m_header;
- 		m_header[0] = node_base_type::nil();
-		m_header[1] = &m_header;
- 	}
-
 	void rotate(cursor& pos)
 	{
 		//TODO: Take care of shoot/inorder_first pointers!
@@ -391,14 +392,74 @@ class binary_tree {
 	}
 
 	/**
-	 * Returns true if the %binary_tree is empty.  (Thus root() would
-	 * equal shoot().)
+	 * @brief Clears all data from the tree (without any rebalancing).
 	 */
-	bool empty() const
+ 	void clear()
+ 	{
+ 		clear(this->root());
+ 		m_header.m_parent = &m_header;
+ 		m_header[0] = node_base_type::nil();
+		m_header[1] = &m_header;
+ 	}
+ 	
+	// splice operations
+	
+	//TODO: check for equal allocators...
+	/**
+	 * @brief  Insert contents of another %binary_tree.
+	 * @param  position  Empty cursor that is going to be the root of the newly
+	 *                   inserted subtree.
+	 * @param  x  Source binary_tree.
+	 * 
+	 * The elements of @a x are inserted in constant time as the subtree whose
+	 * root is referenced by @a position.  @a x becomes an empty
+	 * binary_tree.
+	 */
+	void splice(cursor position, binary_tree& x)
 	{
-		return m_header.m_parent == &m_header;
+		if (!x.empty()) {
+			if (position == shoot())         // Readjust shoot to x's
+				m_header.m_parent = x.m_header.m_parent;
+			if (position == inorder_first()) // Readjust inorder_first to x's
+				m_header[1] = x.m_header[1];
+				
+			position.m_node->node_base_type::operator[](position.m_pos) = x.m_header[0];
+			//TODO: replace the following by some temporary-swapping?
+			x.m_header[0] = node_base_type::nil();
+			x.m_header[1] = &x.m_header;
+			x.m_header.m_parent = &x.m_header;
+		}
+	}
+	
+	// Does this splice *p or the subtree?
+	// Maybe only *p, as the subtree would require knowledge about of shoot and
+	// inorder_first in order to remain O(1)
+	void splice(cursor pos, binary_tree& x, cursor p)
+	{
 	}
 
+	//void splice(cursor pos, binary_tree& x, cursor root, cursor shoot, cursor inorder_first)
+	
+	// also add splice_out (or call it splice_erase or even just erase or...?)
+	// for efficiency's sake (re balanced_tree::erase() ?)
+	// return something (inorder successor?)
+	void erase(cursor pos)
+	{
+ 		node_pointer p_node = pos.detach();
+ 		
+		m_value_alloc.destroy(p_node->data());
+		m_value_alloc.deallocate(p_node->data(), 1);
+		
+		m_node_alloc.destroy(p_node);
+		m_node_alloc.deallocate(p_node, 1);
+	}
+
+	// the "other" erase/detach?
+	void erase(cursor pos, cursor other)
+	{
+
+	}
+	
 private:
 	node_base_type m_header;
 

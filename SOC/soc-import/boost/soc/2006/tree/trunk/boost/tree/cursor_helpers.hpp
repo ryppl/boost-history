@@ -243,6 +243,11 @@ class cursor_adaptor
 	}
 };
 
+//TODO: Put somewhere else?
+template <class Value>
+struct metadata {
+	struct type {};
+};
 
 } // namespace tree
 } // namespace boost

@@ -40,10 +40,15 @@ using detail::augmented_iterator;
 
 using boost::multi_index::member;
 
-template <class Val, class Meta>
+struct empty_class { };
+
+template <class Val, class Meta, class Meta2 = empty_class>
 struct augmented_type {
 	typedef Val value_type;
-	typedef Meta metadata_type;
+	//typedef Meta metadata_type;
+	struct metadata_type : public Meta, public Meta2 {
+		metadata_type() : Meta(), Meta2() {}
+	};
 	
 	value_type data;
 	metadata_type meta;
@@ -68,6 +73,12 @@ struct augmented_type {
 	typedef member<augmented_type,metadata_type,&augmented_type::meta> extract_meta;
 };
 
+// metadata traits type specialization for augmented_type
+template <class Val, class Meta, class Meta2>
+struct metadata< augmented_type<Val,Meta,Meta2> > {
+	typedef typename augmented_type<Val,Meta,Meta2>::metadata_type type;
+};
+
 /** 
  * @brief A %balanced_tree.
  * This class models the hierarchy concept, the container concept and the
@@ -82,7 +93,8 @@ class balanced_tree {
 	
 	typedef typename Balance::metadata_type metadata_type;
 	
-	typedef augmented_type<value_type, metadata_type> data_type;
+	typedef augmented_type< value_type, metadata_type, 
+						    typename metadata<value_type>::type > data_type;
 	typedef typename Hierarchy::template rebind<data_type>::other hierarchy_type;
 
  protected:
@@ -299,7 +311,7 @@ class balanced_tree {
 	 */
     void push_back(value_type const& x)
     {
-    		insert(end(), x);
+    	insert(end(), x);
     }
 
 	/**

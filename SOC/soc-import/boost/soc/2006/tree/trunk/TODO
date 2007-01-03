@@ -1,12 +1,18 @@
+General:
+
+* Add (subtree) splice operations to (at least) binary_tree (needed for efficient balanced_tree erase operations) !!!
+* have erase() operations return cursor/iterator instead of void (as in new STD)
+* modify parity/parent specs according to newsgroup thread, but add to binary_tree cursor!
+
 Proposal:
 
 * Add InputCursor requirements: binary cursor if it's a binary_tree member function, etc.
 * Cursor validity after insertion/erasure/clearing
-* modify parity/parent specs according to newsgroup thread, but add to binary_tree cursor!
 * possibly rename ascending to hierarchy cursor? (because of other uses for ascending/cursors in a graph context)
 * remove operator* requirement? (for upward-growing trees with data only on the bottom level --- like B+trees)
-* have erase() operations return cursor/iterator instead of void (as in new STD)
 * add tree lower_bound algorithm (to namespace inorder because it's somewhat inorder dependent? or is it?)
+* Refactor balancer section to map implementation 
+	(balanced_tree template class using policies -- like red_black -- from namespace balancers)
 
 Implementation:
 
@@ -19,9 +25,7 @@ original ones as policy argument to them? (e.g. red_black_tree is say
     way, perhaps)...
 * red_black: implement test...
 * See if searcher works with the adapting balancers as well as before...
-
 * Concept checks.
-
 * Interoperability with BGL algorithms.
 
 Further applications:
