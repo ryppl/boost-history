@@ -331,11 +331,6 @@ public:
 	{
 		return const_cursor(static_cast<base_pointer>(m_node->parent()), m_node->get_parity());
 	}
-	
-	node_pointer node() 
-	{
-		return static_cast<node_pointer>(m_node->operator[](m_pos));
-	}
 
 public:	
 	// TODO: protect?
@@ -350,19 +345,19 @@ public:
 		m_node->operator[](m_pos) = p_node;
 	}
 
-	/** 
-	 * Detaches the node this cursor points to and returns a pointer to it;
-	 * this cursor will be set to its inorder successor afterwards (?)
-	 */
-	node_pointer detach()
-	{
-		return static_cast<node_pointer>(m_node->detach(m_pos));
-	}
-	
-	node_pointer detach(cursor y)
-	{
-		return static_cast<node_pointer>(m_node->detach(m_pos, y.m_pos, y.m_node));
-	}
+//	/** 
+//	 * Detaches the node this cursor points to and returns a pointer to it;
+//	 * this cursor will be set to its inorder successor afterwards (?)
+//	 */
+//	node_pointer detach()
+//	{
+//		return static_cast<node_pointer>(m_node->detach(m_pos));
+//	}
+//	
+//	node_pointer detach(cursor y)
+//	{
+//		return static_cast<node_pointer>(m_node->detach(m_pos, y.m_pos, y.m_node));
+//	}
 
 };
 

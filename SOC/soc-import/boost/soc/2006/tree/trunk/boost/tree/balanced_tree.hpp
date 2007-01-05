@@ -148,10 +148,6 @@ class balanced_tree {
 		void assign(InputIterator first, InputIterator last);
 	template <class Size, class T>
 		void assign(Size n, const T& t = T());
-//	allocator_type get_allocator() const
-//	{
-//		return h.get_allocator();
-//	}
 		
 	/// Functions returning (inorder) iterators (as required by the Sequence
 	/// concept)

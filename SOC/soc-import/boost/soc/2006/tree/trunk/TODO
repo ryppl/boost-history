@@ -1,34 +1,53 @@
+[/ 
+ /  Copyright (c) 2006, Bernhard Reiter
+ /
+ /  Distributed under the Boost Software License, Version 1.0.
+ /  (See accompanying file LICENSE_1_0.txt or copy at
+ /  http://www.boost.org/LICENSE_1_0.txt)
+ /
+ //////////////////////////////////////////////////////////////////////////////////////////////
+ /
+ / Boost.Tree
+ / TODO file; part of documentation also.
+ /]
+ 
+[section TODO]
+
 General:
 
-* Add (subtree) splice operations to (at least) binary_tree (needed for efficient balanced_tree erase operations) !!!
 * have erase() operations return cursor/iterator instead of void (as in new STD)
-* modify parity/parent specs according to newsgroup thread, but add to binary_tree cursor!
+* modify parity/parent specs according to newsgroup thread, but members add to binary_tree cursor!
+* Add O(n) generations(ancestor, descendant) algorithm (vertical distance) yielding number
+  of generations between ancestor and descendant (ascending cursor only)
 
 Proposal:
 
 * Add InputCursor requirements: binary cursor if it's a binary_tree member function, etc.
 * Cursor validity after insertion/erasure/clearing
-* possibly rename ascending to hierarchy cursor? (because of other uses for ascending/cursors in a graph context)
-* remove operator* requirement? (for upward-growing trees with data only on the bottom level --- like B+trees)
-* add tree lower_bound algorithm (to namespace inorder because it's somewhat inorder dependent? or is it?)
+* Possibly rename ascending to hierarchy cursor? (because of other uses for ascending/cursors in a graph context)
+* Remove operator* requirement? (for upward-growing trees with data only on the bottom level --- like B+trees)
+* Add tree lower_bound algorithm (to namespace inorder because it's somewhat inorder dependent? or is it?)
 * Refactor balancer section to map implementation 
 	(balanced_tree template class using policies -- like red_black -- from namespace balancers)
+* Add new metadata approach
+* Add inorder_erase to balanced_tree requirements
 
 Implementation:
 
-* binary_tree: Implement swap, subtree insert, assign; copy ctor, assignment operator.
-	* subtree insert: test cases.
-* after shifting to balancers/augmentors as adaptors, should we try to keep the
-original ones as policy argument to them? (e.g. red_black_tree is say 
-    balanced_tree<red_black_balancer, binary_tree> ?) May be esp. interesting with C++0x's
-    template typedefs, faciliates development of new balancers (in an iterator adaptor like
-    way, perhaps)...
-* red_black: implement test...
-* See if searcher works with the adapting balancers as well as before...
+* Implement remaining (binary_tree) balancers, augmentors
+* Implement forest. Can its cursor type have an O(1) parent()?
+* Implement nary_tree, multiway_tree, b_tree, b_star_tree
+* Add tests for and rework
+	* binary_tree: subtree insert; splice operations
+	* red_black
+	* searcher
 * Concept checks.
 * Interoperability with BGL algorithms.
+* C++0x: Add template typedefs (e.g. red_black_tree is balanced_tree<red_black_balancer, binary_tree>)
 
 Further applications:
 
 * Implement associative containers and priority_queue specialization using searcher
 * Implement (binary) heap
+
+[endsect]

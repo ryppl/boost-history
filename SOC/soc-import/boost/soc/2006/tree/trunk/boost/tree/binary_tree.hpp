@@ -316,22 +316,22 @@ class binary_tree {
  	 * @param c	Cursor pointing to the node to be removed.
  	 */
  	// TODO: Take care of header-pointers
- 	void clear(cursor c) 
+ 	void clear(cursor position) 
  	{
- 		if (!c.empty()) {
- 		
-	 		// delete the value this c points to	
-	 		m_value_alloc.destroy(c.node()->data());
-	 		m_value_alloc.deallocate(c.node()->data(), 1);
+ 		if (!position.empty()) {
+ 			node_pointer pos_node = 
+ 				static_cast<node_pointer>(position.m_node->operator[](position.m_pos));
+	 		// delete the value position points to	
+	 		m_value_alloc.destroy(pos_node->data());
+	 		m_value_alloc.deallocate(pos_node->data(), 1);
 	 		
 			// recurse
-	 		clear(c.begin());
-	 		clear(c.end());
+	 		clear(position.begin());
+	 		clear(position.end());
 	 		
-	 		// delete the node c points to
-			m_node_alloc.destroy(c.node());
-			m_node_alloc.deallocate(c.node(), 1); 
-		
+	 		// delete the node position points to
+			m_node_alloc.destroy(pos_node);
+			m_node_alloc.deallocate(pos_node, 1); 		
   		}
  	} 	
  	
@@ -434,31 +434,86 @@ class binary_tree {
 	// Does this splice *p or the subtree?
 	// Maybe only *p, as the subtree would require knowledge about of shoot and
 	// inorder_first in order to remain O(1)
-	void splice(cursor pos, binary_tree& x, cursor p)
-	{
-	}
+	// But what if p has children?... Then this would require some defined
+	// re-linking (splicing-out, actually) in turn!
+//	void splice(cursor pos, binary_tree& x, cursor p)
+//	{
+//	}
 
-	//void splice(cursor pos, binary_tree& x, cursor root, cursor shoot, cursor inorder_first)
-	
-	// also add splice_out (or call it splice_erase or even just erase or...?)
-	// for efficiency's sake (re balanced_tree::erase() ?)
-	// return something (inorder successor?)
-	void erase(cursor pos)
+	void splice(cursor position, binary_tree& x, 
+				cursor root, cursor shoot, cursor inorder_first)
 	{
- 		node_pointer p_node = pos.detach();
- 		
+		if (!x.empty()) {
+			if (shoot == x.shoot())
+				x.m_header.m_parent = root.m_node;
+			if (inorder_first == x.inorder_first())
+				x.m_header[1] = inorder_first.m_node;
+			if (position == shoot())         // Readjust shoot to x's
+				m_header.m_parent = shoot.m_node;
+			if (position == inorder_first()) // Readjust inorder_first to x's
+				m_header[1] = inorder_first.m_node;
+				
+			position.m_node->node_base_type::operator[](position.m_pos) = root.m_node;
+			
+			root.m_node[0] = node_base_type::nil();
+			if (root == x.root()) {
+				x.m_header[1] = &x.m_header;
+				x.m_header.m_parent = &x.m_header;			
+			} else
+				root.m_node[1] = node_base_type::nil();
+		}		
+	}
+	
+	// TODO: only one inorder_erase?
+	// Even return something different from inorder successor?
+	/**
+	 * @brief  Erases the value of the given cursor, keeping the binary_tree's
+	 *         inorder.
+	 * @param  position  Cursor that is empty or at least one of whose children is
+	 * @return The inorder successor of position
+	 */
+	cursor inorder_erase(cursor position)
+	{
+		cursor successor = position.end();
+		node_pointer p_node = 
+			static_cast<node_pointer>(node_base_type::operator[](position.m_pos));
+		
+		if (successor.empty()) {
+			while (successor.parity()) 
+				successor = successor.parent();
+			if (successor == root())
+				successor = shoot();
+
+			position.m_node.node_base_type::operator[](position.m_pos) = 
+				position.m_node.node_base_type::operator[](position.m_pos)
+			  ->node_base_type::operator[](0);
+		} else {
+			// Skip the following and just return successor.end()?
+			// Might make sense for rebalancing...
+			while (!successor.begin().empty())
+				successor = successor.begin();
+			successor = successor.begin();
+			
+			position.m_node.node_base_type::operator[](position.m_pos) = 
+				position.m_node.node_base_type::operator[](position.m_pos)
+			  ->node_base_type::operator[](1);
+		}
+		node_base_type::operator[](position.m_pos)->m_parent = position.m_node;
+				
 		m_value_alloc.destroy(p_node->data());
 		m_value_alloc.deallocate(p_node->data(), 1);
 		
 		m_node_alloc.destroy(p_node);
 		m_node_alloc.deallocate(p_node, 1);
+		
+		return successor;
 	}
 
 	// the "other" erase/detach?
-	void erase(cursor pos, cursor other)
-	{
-
-	}
+//	void inorder_erase(cursor position, cursor other)
+//	{
+//
+//	}
 	
 private:
 	node_base_type m_header;
