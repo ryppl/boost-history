@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Olaf Krzikalla 2004-2006.
-// (C) Copyright Ion Gaztañaga  2006.
+// (C) Copyright Ion Gaztañaga  2006-2007.
 //
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
@@ -46,17 +46,24 @@
 #include <boost/intrusive/detail/pointer_to_other.hpp>
 #include <boost/intrusive/rbtree_algorithms.hpp>
 #include <boost/get_pointer.hpp>
+//#include <boost/interprocess/offset_ptr.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <cstddef>
 #include <boost/detail/no_exceptions_support.hpp>
-
 
 namespace boost {
 namespace intrusive {
 namespace detail {
 
+/////////////////////////////////////////////////////////////////////////////
+//                                                                         //
+//                Generic node_traits for any pointer type                 //
+//                                                                         //
+/////////////////////////////////////////////////////////////////////////////
+
+//This is the default implementation, 3 generic pointers plus an enum
 template<class VoidPointer>
-struct rbtree_node_traits
+struct default_rbtree_node_traits_impl
 {
    struct node;
    typedef VoidPointer void_pointer;
@@ -115,12 +122,44 @@ struct rbtree_node_traits
    {  return node::red_t;  }
 };
 
+//The default possibility is the generic implementation
+template<class VoidPointer>
+struct rbtree_node_traits
+   :  public default_rbtree_node_traits_impl<VoidPointer>
+{};
+
+//This is the compact representation: 3 pointers
+template<class VoidPointer>
+struct compact_node
+{
+   typedef typename detail::pointer_to_other
+      <VoidPointer, compact_node>::type          node_ptr;   
+
+   enum color { red_t, black_t };
+
+   static color black()
+   {  return black_t;  }
+
+   static color red()
+   {  return red_t;  }
+
+   node_ptr parent_, left_, right_;
+};
+
+/////////////////////////////////////////////////////////////////////////////
+//                                                                         //
+//          Generic node_traits specialization for raw pointers            //
+//                                                                         //
+/////////////////////////////////////////////////////////////////////////////
+
+
+
 //This specialization, embeds the color in the parent pointer
 //so we save one word per node
-template<>
-struct rbtree_node_traits<void*>
+template <bool TwoByteAlignment>
+struct rbtree_node_traits_void_ptr
 {
-   struct node;
+   typedef compact_node<void*> node;
    typedef void* void_pointer;
 
    private:
@@ -128,21 +167,6 @@ struct rbtree_node_traits<void*>
    typedef const node * const_node_ptr;
 
    public:
-   struct node
-   {
-      enum color { red_t, black_t };
-
-      static color black()
-      {  return black_t;  }
-
-      static color red()
-      {  return red_t;  }
-
-      node_ptr parent_, left_, right_;
-
-      public:
-   };
-
    typedef node::color color;
 
    static node_ptr get_parent(const_node_ptr n)
@@ -176,54 +200,50 @@ struct rbtree_node_traits<void*>
    {  return node::red_t;  }
 };
 
+template<>
+struct rbtree_node_traits_void_ptr<false>
+   :  public default_rbtree_node_traits_impl<void*>
+{};
+
+//This specialization will check if the pointer optimization is
+//possible with raw pointers
+template<>
+struct rbtree_node_traits<void*>
+   :  public rbtree_node_traits_void_ptr
+      <((boost::alignment_of< compact_node<void*> >::value % 2) == 0)>
+{};
 /*
+/////////////////////////////////////////////////////////////////////////////
+//                                                                         //
+//       Generic node_traits specialization for offset_ptr pointers        //
+//                                                                         //
+/////////////////////////////////////////////////////////////////////////////
+
 //This specialization, embeds the color in the parent pointer
 //so we save one word per node.
 //offset_ptr, uses the offset between the pointer and the pointee
 //as an internal member. The 1 byte offset is defined as a null pointer
-//so, unlike raw pointers, so if pointers are aligned to 4 bytes,
+//so, unlike raw pointers, so if nodes are aligned to 4 bytes,
 //we will use the second bit as the color mark.
-template<>
-struct rbtree_node_traits<boost::interprocess::offset_ptr<void> >
+template <bool FourByteAlignment>
+struct rbtree_node_traits_offset_ptr_void
 {
-   struct node;
    typedef boost::interprocess::offset_ptr<void> void_pointer;
+   typedef compact_node<void_pointer> node;
 
    private:
    typedef boost::interprocess::offset_ptr<node>         node_ptr;
    typedef boost::interprocess::offset_ptr<const node>   const_node_ptr;
 
    public:
-   struct node
-   {
-      enum color { red_t, black_t };
-
-      static color black()
-      {  return black_t;  }
-
-      static color red()
-      {  return red_t;  }
-
-      node_ptr parent_, left_, right_;
-
-      public:
-   };
 
    typedef node::color color;
 
    static node_ptr get_parent(const_node_ptr n)
-   {  
-      const std::size_t ptr_alignment = boost::alignment_of<node_ptr>::value;
-      assert(0 == (ptr_alignment%2) && ptr_alignment >= 4);
-      //We'll suppose that we have, at least 4
-      //byte alignment in pointers
-      return node_ptr((node*)((std::size_t)n->parent_.get() & ~2));
-   }
+   {  return node_ptr((node*)((std::size_t)n->parent_.get() & ~2));  }
 
    static void set_parent(node_ptr n, node_ptr p)
-   {  
-      const std::size_t ptr_alignment = boost::alignment_of<node_ptr>::value;
-      assert(0 == (ptr_alignment%2) && ptr_alignment >= 4);
+   {
       n->parent_ = (node *)(((std::size_t)p.get()) | (((std::size_t)n->parent_.get()) & 2)); 
    }
 
@@ -251,7 +271,29 @@ struct rbtree_node_traits<boost::interprocess::offset_ptr<void> >
    static color red()
    {  return node::red_t;  }
 };
+
+//This is the specialization for nodes with no 4 byte alignment
+template <>
+struct rbtree_node_traits_offset_ptr_void<false>
+   :  public default_rbtree_node_traits_impl< boost::interprocess::offset_ptr<void> >
+{};
+
+//This specialization will check if the pointer optimization is
+//possible with offset_ptr pointers
+template<>
+struct rbtree_node_traits< boost::interprocess::offset_ptr<void> >
+   :  public rbtree_node_traits_offset_ptr_void
+         <((boost::alignment_of
+               < compact_node< boost::interprocess::offset_ptr<void> > > 
+            ::value % 4) == 0)
+         >
+{};
 */
+/////////////////////////////////////////////////////////////////////////////
+//                                                                         //
+//                A base class for the rbtree container                    //
+//                                                                         //
+/////////////////////////////////////////////////////////////////////////////
 
 // rbtree_iterator provides some basic functions for a 
 // rb tree node oriented bidirectional iterator:

@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -10,7 +10,7 @@
 // See http://www.boost.org/libs/intrusive for documentation.
 //
 /////////////////////////////////////////////////////////////////////////////
-/*
+
 #include <boost/intrusive/iset.hpp>
 #include <boost/intrusive/detail/pointer_to_other.hpp>
 #include "itestvalue.hpp"
@@ -105,7 +105,7 @@ void test_set<ValueTraits>::test_sort(std::vector<typename ValueTraits::value_ty
    BOOST_CHECK (testset2.rbegin()->value_ == 5);
 }  
   
-//test: assign, insert, const_iterator, const_reverse_iterator, erase, current:
+//test: insert, const_iterator, const_reverse_iterator, erase, current:
 template<class ValueTraits>
 void test_set<ValueTraits>::test_insert(std::vector<typename ValueTraits::value_type>& values)
 {
@@ -117,7 +117,7 @@ void test_set<ValueTraits>::test_insert(std::vector<typename ValueTraits::value_
       ,ValueTraits::value_type::constant_time_size, std::size_t 
       > set_type;
    set_type testset;
-   testset.assign (&values[0] + 2, &values[0] + 5);
+   testset.insert(&values[0] + 2, &values[0] + 5);
 
    const set_type& const_testset = testset;
    std::copy (const_testset.begin(), const_testset.end(), 
@@ -298,7 +298,7 @@ int test_main( int, char* [] )
    test_main_template<boost::intrusive::smart_ptr<void>, true>()();
    return 0;
 }
-*/
+/*
 
    #include <boost/intrusive/iset.hpp>
    #include <string>
@@ -340,12 +340,6 @@ int test_main( int, char* [] )
       {  return std::strcmp(c.get_key().c_str(), str) == 0;  }
    };
    
-   /*
-      ...
-      ...
-      ...
-   */
-
    //This funcion
    ExpensiveClass *get_object(const char* key, ExpensiveClassSet &expensive_class_set)
    {
@@ -374,7 +368,7 @@ int test_main( int, char* [] )
       }
       return ret.second;
    }
-/*
+
    bool insert_unique_object(const char* key, ExpensiveClassSet &expensive_class_set)
    {
       //Construct an expensive object
@@ -388,7 +382,7 @@ int test_main( int, char* [] )
       }
       return ret.second;
    }
-*/
+
 
 int main()
 {
@@ -398,7 +392,7 @@ int main()
    return 0;
 }
 
-
+*/
 
 
 

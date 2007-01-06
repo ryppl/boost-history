@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -266,19 +266,33 @@ class islist
    //! <b>Throws</b>: Nothing.
    //! 
    //! <b>Complexity</b>: Linear to the number of elements of the list.
-   //!   if it's a safe-mode or auto-unlink value. Constant time otherwise.
+   //!   if it's a safe-mode or auto-unlink value_type. Constant time otherwise.
    //! 
    //! <b>Note</b>: Invalidates the iterators (but not the references) to the erased elements.
    void clear()
    {
       if(safemode_or_autounlink){
-         this->erase(this->begin(), this->end()); 
+         this->erase_after(this->before_begin(), this->end()); 
       }
       else{
          sequence_algorithms::init(node_ptr(&root));
          size_traits::set_size(size_type(0));
       }
    }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the element range pointed by b and e
+   //!   Destroyer::operator()(pointer) is called for the removed elements.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Complexity</b>: Linear to the number of elements of the list.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators to the erased elements.
+   template <class Destroyer>
+   void clear(Destroyer destroyer)
+   {  this->erase_after(this->before_begin(), this->end(), destroyer);   }
 
    //! <b>Requires</b>: v must be an lvalue.
    //! 
@@ -295,7 +309,7 @@ class islist
       node_ptr to_insert(ValueTraits::to_node_ptr(v));
       if(safemode_or_autounlink)
          BOOST_ASSERT(sequence_algorithms::unique(to_insert));
-      sequence_algorithms::link_after(to_insert, get_root_node()); 
+      sequence_algorithms::link_after(get_root_node(), to_insert); 
       size_traits::increment();
    }
 
@@ -309,8 +323,32 @@ class islist
    //! <b>Note</b>: Invalidates the iterators (but not the references) to the erased element.
    void pop_front() 
    {
+      node_ptr to_erase = node_traits::get_next(get_root_node());
       sequence_algorithms::unlink_after(get_root_node());
       size_traits::decrement();
+      if(safemode_or_autounlink)
+         sequence_algorithms::init(to_erase);
+   }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the first element of the list.
+   //!   Destroyer::operator()(pointer) is called for the removed element.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Complexity</b>: Constant.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators to the erased element.
+   template<class Destroyer>
+   void pop_front(Destroyer destroyer)
+   {
+      node_ptr to_erase = node_traits::get_next(get_root_node());
+      sequence_algorithms::unlink_after(get_root_node());
+      size_traits::decrement();
+      if(safemode_or_autounlink)
+         sequence_algorithms::init(to_erase);
+      destroyer(ValueTraits::to_value_ptr(to_erase));
    }
 
    //! <b>Effects</b>: Returns a reference to the first element of the list.
@@ -422,10 +460,10 @@ class islist
       }
    }
 
-   //! <b>Requires</b>: v must be an lvalue and p must point to an element
+   //! <b>Requires</b>: v must be an lvalue and prev_p must point to an element
    //!   contained by the list or to end().
    //!
-   //! <b>Effects</b>: Inserts the value after the position pointed by p.
+   //! <b>Effects</b>: Inserts the value after the position pointed by prev_p.
    //!    No copy constructor is called.
    //!
    //! <b>Returns</b>: An iterator to the inserted element.
@@ -435,22 +473,22 @@ class islist
    //! <b>Complexity</b>: Constant.
    //! 
    //! <b>Note</b>: Does not affect the validity of iterators and references.
-   iterator insert_after(iterator p, value_type& v)
+   iterator insert_after(iterator prev_p, value_type& v)
    {
       node_ptr n = ValueTraits::to_node_ptr(v);
       if(safemode_or_autounlink)
          BOOST_ASSERT(sequence_algorithms::unique(n));
-      sequence_algorithms::link_after(n, p.list_node());
+      sequence_algorithms::link_after(prev_p.list_node(), n);
       size_traits::increment();
       return iterator (n);
    }
 
    //! <b>Requires</b>: Dereferencing Iterator must yield to 
-   //!   an lvalue of type value_type and p must point to an element
+   //!   an lvalue of type value_type and prev_p must point to an element
    //!   contained by the list or to the end node.
    //! 
-   //! <b>Effects</b>: Inserts the range pointed by prev_b + 1 and prev_e + 1 
-   //!   after the position p. No copy constructors are called.
+   //! <b>Effects</b>: Inserts the range pointed by [first, last)
+   //!   after the position prev_p.
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
@@ -458,10 +496,10 @@ class islist
    //! 
    //! <b>Note</b>: Does not affect the validity of iterators and references.
    template<class Iterator>
-   void insert_after(iterator prev, Iterator prev_b, Iterator prev_e)
+   void insert_after(iterator prev_p, Iterator first, Iterator last)
    {
-      for (; prev_b != prev_e; ++prev_b)
-         prev = insert_after(prev, *prev_b);
+      for (; first != last; ++first)
+         prev_p = insert_after(prev_p, *first);
    }
 
    //! <b>Requires</b>: v must be an lvalue and p must point to an element
@@ -507,11 +545,38 @@ class islist
    //! 
    //! <b>Note</b>: Invalidates the iterators (but not the references) to the
    //!   erased element.
-   iterator erase_after(iterator i)
-   {  
-      sequence_algorithms::unlink_after(i.list_node());
+   iterator erase_after(iterator prev)
+   {
+      node_ptr to_erase(prev.next().list_node());
+      sequence_algorithms::unlink_after(prev.list_node());
       size_traits::decrement();
-      return ++i; 
+      iterator ret(++prev);
+      if(safemode_or_autounlink)
+         sequence_algorithms::init(to_erase);
+      return ret;
+   }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the element after the element pointed by i of 
+   //!   the list.
+   //!   Destroyer::operator()(pointer) is called for the removed element.
+   //!
+   //! <b>Returns</b>: the first element remaining beyond the removed elements,
+   //!   or end() if no such element exists.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Complexity</b>: Constant.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators to the erased element.
+   template<class Destroyer>
+   iterator erase_after(iterator prev, Destroyer destroyer)
+   {
+      node_ptr to_erase(prev.next().list_node());
+      iterator ret(this->erase_after(prev));
+      destroyer(ValueTraits::to_value_ptr(to_erase));
+      return ret;
    }
 
    //! <b>Effects</b>: Erases the range (before_first, last) from
@@ -535,6 +600,30 @@ class islist
       return last;
    }
 
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the range (before_first, last) from
+   //!   the list.
+   //!   Destroyer::operator()(pointer) is called for the removed element.
+   //!
+   //! <b>Returns</b>: the first element remaining beyond the removed elements,
+   //!   or end() if no such element exists.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Complexity</b>: Lineal to the elements (last - before_first).
+   //! 
+   //! <b>Note</b>: Invalidates the iterators to the erased element.
+   template<class Destroyer>
+   iterator erase_after(iterator before_first, iterator last, Destroyer destroyer)
+   {
+      iterator first;
+      while(++(first = before_first) != last){
+         this->erase_after(before_first, destroyer);
+      }
+      return last;
+   }
+
    //! <b>Effects</b>: Erases the element pointed by i of the list. 
    //!   No destructors are called.
    //!
@@ -550,9 +639,7 @@ class islist
    iterator erase(iterator i)
    {  return this->erase_after(this->previous(i));  }
 
-   //! <b>Requires</b>: Dereferencing Iterator must yield to 
-   //! an lvalue of type value_type and p must point to an element contained
-   //! by the list or to the end node.
+   //! <b>Requires</b>: first and last must be valid iterator to elements in *this.
    //! 
    //! <b>Effects</b>: Erases the range pointed by b and e.
    //!   No destructors are called.
@@ -568,7 +655,7 @@ class islist
    //! <b>Note</b>: Invalidates the iterators (but not the references) to the
    //!   erased elements.
    iterator erase(iterator first, iterator last)
-   {  return erase_after(this->previous(first), last);  }    
+   {  return erase_after(this->previous(first), last);  }
 
    //! <b>Requires</b>: Dereferencing Iterator must yield to 
    //!   an lvalue of type value_type.
@@ -654,7 +741,7 @@ class islist
    //!   ++before_first != x.end() && before_last != x.end(). 
    //! 
    //! <b>Effects</b>: Transfers the sequence (before_first, before_last] from list x to this
-   //!   list, after the element pointed by pos. No destructors or copy constructors are called.
+   //!   list, after the element pointed by p. No destructors or copy constructors are called.
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
@@ -686,7 +773,7 @@ class islist
    //!   n == std::distance(before_first, iterator before_last).
    //! 
    //! <b>Effects</b>: Transfers the sequence (before_first, before_last] from list x to this
-   //!   list, after the element pointed by pos. No destructors or copy constructors are called.
+   //!   list, after the element pointed by p. No destructors or copy constructors are called.
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
@@ -698,9 +785,7 @@ class islist
    {
       if(n){
          if(ConstantTimeSize){
-            #ifndef NDEBUG
             BOOST_ASSERT(std::distance(before_first, before_last) == n);
-            #endif
             sequence_algorithms::transfer_after
                (prev_pos.list_node(), before_first.list_node(), before_last.list_node());
             size_traits::set_size(size_traits::get_size() + n);
@@ -725,28 +810,6 @@ class islist
    template<class Predicate>
    void sort(Predicate p)
    {
-   /* if (adaptor::next_node (&root) != &root && 
-          adaptor::next_node (adaptor::next_node (&root)) != &root) {
-        islist carry;
-        islist counter[64];
-        iterator end_iter;
-        int fill = 0;
-        while(!empty()) {
-          end_iter = begin();    
-          transfer_after (carry.end(), end(), end_iter);
-          int i = 0;
-          while(i < fill && !counter[i].empty()) {
-            end_iter = carry.merge_intern (counter[i++], p);
-          }
-          transfer_after (counter[i].end(), carry.end(), end_iter);
-          if (i == fill)
-            ++fill;
-        }
-        for (int i = 1; i < fill; ++i)
-          end_iter = counter[i].merge_intern (counter[i-1], p);
-
-        transfer_after (end(), counter[fill-1].end(), end_iter);
-      }  */
       if (!this->empty() &&
             node_traits::get_next(node_traits::get_next(get_root_node()))
                != this->get_root_node()) {
@@ -832,66 +895,6 @@ class islist
    template<class Predicate>
    iterator merge(islist& x, Predicate p) 
    {
-   /* //ilist merge
-      iterator e = this->end();
-      iterator bx = x.begin();
-      iterator ex = x.end();
-
-      for (iterator b = this->begin(); b != e; ++b) {
-         size_type n(0);
-         iterator ix(bx);
-         while(ix != ex && p(*ix, *b)){
-            ++ix; ++n;
-         }
-         this->splice(b, x, bx, ix, n);
-         bx = ix;
-      }
-      //Now transfer the rest at the end of the container
-      this->splice(e, x);
-   */
-   /* //old ilist merge
-      iterator b = end(), e = end();
-      iterator ex = x.end();
-      while(b.next() != e && !x.empty()) {
-        iterator this_next = b.next();
-        iterator bx = ex;
-        while(bx.next() != ex &&
-               p (*bx.next(), *this_next))
-          ++bx;
-        if (bx != ex) 
-          transfer_after (b, ex, bx);
-        b = this_next;
-      }  
-      if (!x.empty()) {
-        ex = previous (x.end());
-        transfer_after (b, x.end(), ex);
-        return ex;
-      } else {
-        while(b.next() != e)
-          ++b;
-        return b;
-      }*/
-
-/*    //good new one
-      node_ptr end_n(this->get_root_node());
-      node_ptr n1(end_n);
-      iterator last_inserted(end_n);
-      while(!x.empty() && (node_traits::get_next(n1) != end_n)) {
-         iterator x_begin(x.begin());
-         if (p(*x_begin
-              ,*ValueTraits::to_value_ptr(node_traits::get_next(n1)))){
-            this->splice_after(iterator(n1), x, x.before_begin(), x_begin);
-            last_inserted = x_begin;
-         }
-         n1 = node_traits::get_next(n1);
-      }
-
-      //n1 is the last element of *this
-      if (node_traits::get_next(n1) == end_n) {
-         last_inserted = this->splice_after(iterator(n1), x);
-      }
-      return last_inserted;
-*/
       iterator a(before_begin()), e(end()), ax(x.before_begin());
       iterator last_inserted(e);
       iterator a_next;
@@ -936,25 +939,14 @@ class islist
    //! 
    //! <b>Note</b>: Iterators and references are not invalidated
    void reverse() 
-   { 
-      if (!this->empty()) {
-         iterator i = begin(), e = end(); 
-         for (;;) {
-            iterator nxt(i.next());
-            if (nxt == e)
-               break;
-            sequence_algorithms::transfer_after
-               (e.list_node(), i.list_node(), nxt.list_node());
-         }  
-      }
-   }
+   {  sequence_algorithms::reverse(node_ptr(&root));  }
 
    //! <b>Effects</b>: Removes all the elements that compare equal to val.
    //!   No destructors are called.
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Complexity</b>: Linear time. it performs exactly size() comparisons for equality.
+   //! <b>Complexity</b>: Linear time. It performs exactly size() comparisons for equality.
    //! 
    //! <b>Note</b>: The relative order of elements that are not removed is unchanged,
    //!   and iterators to elements that are not removed remain valid. This function is 
@@ -969,7 +961,7 @@ class islist
    //!
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Complexity</b>: Linear time. it performs exactly size() comparisons for equality.
+   //! <b>Complexity</b>: Linear time. It performs exactly size() comparisons for equality.
    //! 
    //! <b>Note</b>: The relative order of elements that are not removed is unchanged,
    //!   and iterators to elements that are not removed remain valid.
@@ -980,9 +972,9 @@ class islist
    //! <b>Effects</b>: Removes all the elements for which a specified
    //!   predicate is satisfied. No destructors are called.
    //! 
-   //! <b>Throws</b>: Nothing.
+   //! <b>Throws</b>: If pred throws.
    //! 
-   //! <b>Complexity</b>: Linear time. it performs exactly size() calls to the predicate.
+   //! <b>Complexity</b>: Linear time. It performs exactly size() calls to the predicate.
    //! 
    //! <b>Note</b>: The relative order of elements that are not removed is unchanged,
    //!   and iterators to elements that are not removed remain valid.
@@ -996,9 +988,9 @@ class islist
    //!   predicate is satisfied.
    //!   Destroyer::operator()(pointer) is called for every removed element.
    //!
-   //! <b>Throws</b>: Nothing.
+   //! <b>Throws</b>: If pred throws.
    //! 
-   //! <b>Complexity</b>: Linear time. it performs exactly size() comparisons for equality.
+   //! <b>Complexity</b>: Linear time. It performs exactly size() comparisons for equality.
    //!
    //! <b>Note</b>: The relative order of elements that are not removed is unchanged,
    //!   and iterators to elements that are not removed remain valid.
@@ -1040,8 +1032,7 @@ class islist
    //! <b>Complexity</b>: Linear time (size()-1) comparisons equality comparisons.
    //! 
    //! <b>Note</b>: The relative order of elements that are not removed is unchanged,
-   //!   and iterators to elements that are not removed remain valid. This function is 
-   //!   linear time: it performs exactly size() calls to the predicate.
+   //!   and iterators to elements that are not removed remain valid.
    template<class BinaryPredicate>
    void unique(BinaryPredicate pred)
    {  unique(pred, detail::null_destroyer());  }
@@ -1108,26 +1099,6 @@ class islist
       BOOST_ASSERT (!sequence_algorithms::unique(ValueTraits::to_node_ptr(const_cast<value_type&> (v))));
       return const_iterator (ValueTraits::to_node_ptr(const_cast<value_type&> (v))); 
    }
-/*
-   //! <b>Requires</b>: v shall not be in a list of the appropriate type.
-   //! 
-   //! <b>Effects</b>: init_node post-constructs the node data in x used by lists of 
-   //! the appropriate type. For the accessors ilist_derived_node and ilist_member_node 
-   //! init_node has no effect, since the constructors of ilist_base_hook and ilist_member_hook 
-   //! have already initialized the node data. 
-   //! 
-   //! <b>Throws</b>: Nothing.
-   //! 
-   //! <b>Complexity</b>: Constant time.
-   //! 
-   //! <b>Note</b>: This function is meant to be used mainly with the member value_traits, 
-   //! where no implicit node initialization during construction occurs.
-   static void init_node(value_type& v)
-   { sequence_algorithms::init(node_ptr(&*ValueTraits::to_node_ptr(v))); }
-
-   static void swap_nodes(reference v1, reference v2)
-   { sequence_algorithms::swap_nodes(ValueTraits::to_node_ptr(v1), ValueTraits::to_node_ptr(v2)); }
-*/
 
    //! <b>Returns</b>: The iterator to the element before i in the sequence. 
    //!   Returns the end-iterator, if either i is the begin-iterator or the 
@@ -1156,34 +1127,6 @@ class islist
          (sequence_algorithms::get_previous_node
             (before_begin().list_node(), i.list_node()));
    }
-
-/*
-   //! <b>Effects</b>: removes x from a list of the appropriate type. It has no effect,
-   //! if x is not in such a list. 
-   //! 
-   //! <b>Throws</b>: Nothing.
-   //! 
-   //! <b>Complexity</b>: Constant time.
-   //! 
-   //! <b>Note</b>: This static function is only usable with the "safe mode"
-   //! hook and non-constant time size lists. Otherwise, the user must use
-   //! the non-static "erase(value_type &)" member. If the user calls
-   //! this function with a non "safe mode" or constant time size list
-   //! a compilation error will be issued.
-   template<class T>
-   static void remove_node(T& v)
-   {
-      //This function is only usable for safe mode hooks and non-constant
-      //time lists. 
-//      BOOST_STATIC_ASSERT((safemode_or_autounlink && !ConstantTimeSize));
-      //BOOST_STATIC_ASSERT((safemode_or_autounlink));
-      BOOST_STATIC_ASSERT((!ConstantTimeSize));
-      BOOST_STATIC_ASSERT((boost::is_convertible<T, value_type>::value));
-      node_ptr to_remove(ValueTraits::to_node_ptr(v));
-      sequence_algorithms::unlink(to_remove);
-      if(safemode_or_autounlink)
-         sequence_algorithms::init(to_remove);
-   }*/
 };
 
 

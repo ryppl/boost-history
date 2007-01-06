@@ -106,6 +106,12 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
+				RelativePath="..\..\..\..\..\boost\intrusive\ihashset.hpp">
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\intrusive\ihashset_hook.hpp">
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\intrusive\ilist.hpp">
 			</File>
 			<File
@@ -145,6 +151,9 @@
 					RelativePath="..\..\..\..\..\boost\intrusive\detail\config_end.hpp">
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\boost\intrusive\detail\ihashtable.hpp">
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\boost\intrusive\detail\irbtree.hpp">
 				</File>
 				<File
@@ -176,6 +185,52 @@
 			<File
 				RelativePath="..\..\..\doc\Jamfile.v2">
 			</File>
+			<Filter
+				Name="code"
+				Filter="">
+				<File
+					RelativePath="..\..\..\doc\code\doc_auto_unlink.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_entity.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_how_to_use.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_ihashset.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_ihashset_optimized_code.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_ilist.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_iset.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_iset_optimized_code.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_islist.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_list_algorithms.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_rbtree_algorithms.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_slist_algorithms.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_value_traits.cpp">
+				</File>
+				<File
+					RelativePath="..\..\..\doc\code\doc_window.cpp">
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Test headers"

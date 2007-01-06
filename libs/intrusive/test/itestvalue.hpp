@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -13,11 +13,17 @@
 #ifndef BOOST_INTRUSIVE_ITESTVALUE
 #define BOOST_INTRUSIVE_ITESTVALUE
 
+#ifdef _MSC_VER
+//#pragma warning(disable : 4584)
+#endif
+
 #include <iostream>
 #include <boost/intrusive/iset.hpp>
 #include <boost/intrusive/ilist.hpp>
 #include <boost/intrusive/islist.hpp>
+#include <boost/intrusive/ihashset.hpp>
 #include <boost/intrusive/detail/pointer_to_other.hpp>
+#include <boost/functional/hash.hpp>
 #include "smart_ptr.hpp"
 
 namespace boost{
@@ -27,6 +33,8 @@ template<class VoidPointer, bool ConstantTimeSize>
 struct testvalue
    :  boost::intrusive::iset_base_hook<0, true, VoidPointer>
    ,  boost::intrusive::iset_auto_base_hook<0, VoidPointer>
+   ,  boost::intrusive::ihashset_base_hook<0, true, VoidPointer>
+   ,  boost::intrusive::ihashset_auto_base_hook<0, VoidPointer>
    ,  boost::intrusive::ilist_base_hook<0, true, VoidPointer>
    ,  boost::intrusive::ilist_auto_base_hook<0, VoidPointer>
    ,  boost::intrusive::islist_base_hook<0, true, VoidPointer>
@@ -37,6 +45,11 @@ struct testvalue
    typedef boost::intrusive::iset_member_hook<testvalue, true, VoidPointer> set_member_hook;
    typedef boost::intrusive::iset_auto_base_hook<0, VoidPointer> set_auto_base_hook;
    typedef boost::intrusive::iset_auto_member_hook<testvalue, VoidPointer> set_auto_member_hook;
+
+   typedef boost::intrusive::ihashset_base_hook<0, true, VoidPointer> hashset_base_hook;
+   typedef boost::intrusive::ihashset_member_hook<testvalue, true, VoidPointer> hashset_member_hook;
+   typedef boost::intrusive::ihashset_auto_base_hook<0, VoidPointer> hashset_auto_base_hook;
+   typedef boost::intrusive::ihashset_auto_member_hook<testvalue, VoidPointer> hashset_auto_member_hook;
 
    typedef boost::intrusive::ilist_base_hook<0, true, VoidPointer> list_base_hook;
    typedef boost::intrusive::ilist_member_hook<testvalue, true, VoidPointer> list_member_hook;
@@ -57,6 +70,8 @@ struct testvalue
    //int set_color_;
    set_member_hook set_node_;
    set_auto_member_hook set_auto_node_;
+   hashset_member_hook hashset_node_;
+   hashset_auto_member_hook hashset_auto_node_;
 
    //List members
    //pointer list_next_, list_prev_;
@@ -88,6 +103,11 @@ struct testvalue
       set_member_hook::operator=(src.set_node_);
       set_auto_base_hook::operator=(src);
       set_auto_member_hook::operator=(src.set_auto_node_);
+
+      hashset_base_hook::operator=(src);
+      hashset_member_hook::operator=(src.hashset_node_);
+      hashset_auto_base_hook::operator=(src);
+      hashset_auto_member_hook::operator=(src.hashset_auto_node_);
 
       list_base_hook::operator=(src);
       list_member_hook::operator=(src.list_node_);
@@ -180,6 +200,13 @@ struct testvalue
    }
 */
 };
+
+template<class VoidPointer, bool ConstantTimeSize>
+std::size_t hash_value(const testvalue<VoidPointer, ConstantTimeSize> &t)
+{
+   boost::hash<int> hasher;
+   return hasher(t.value_);
+}
 
 template<class VoidPointer, bool constant_time_size>
 std::ostream& operator<<
@@ -288,6 +315,91 @@ typedef iset_ptr_to_member_hook
    , &value_s_t::set_left_
    , &value_s_t::set_right_>                  set_ptr_to_member_smart_t;
 */
+
+//Typedefs
+typedef value_r_f::hashset_base_hook::
+   value_traits<value_r_f >                              hashset_base_raw;
+
+typedef value_r_f::hashset_member_hook::
+      value_traits<&value_r_f::hashset_node_>                hashset_member_raw;
+
+typedef value_r_f::hashset_auto_base_hook::
+   value_traits<value_r_f>               hashset_auto_base_raw;
+
+typedef value_r_f::hashset_auto_member_hook::
+   value_traits<&value_r_f::hashset_auto_node_>          hashset_auto_member_raw;
+
+/*
+typedef ihashset_ptr_to_member_hook
+   < value_r_f 
+   , value_r_f *
+   , int 
+   , &value_r_f::hashset_color_
+   , 0
+   , 1
+   , &value_r_f::hashset_parent_
+   , &value_r_f::hashset_left_
+   , &value_r_f::hashset_right_>                             hashset_ptr_to_member_raw;
+*/
+typedef value_s_f::hashset_base_hook::
+   value_traits<value_s_f >                   hashset_base_smart;
+
+typedef value_s_f::hashset_member_hook::
+      value_traits<&value_s_f::hashset_node_>         hashset_member_smart;
+
+typedef value_s_f::hashset_auto_base_hook::
+   value_traits<value_s_f>               hashset_auto_base_smart;
+
+typedef value_s_f::hashset_auto_member_hook::
+      value_traits<&value_s_f::hashset_auto_node_>                    hashset_auto_member_smart;
+
+/*
+typedef ihashset_ptr_to_member_hook
+   < value_s_f
+   , smart_ptr<value_s_f >
+   , int 
+   , &value_s_f::hashset_color_
+   , 0
+   , 1
+   , &value_s_f::hashset_parent_
+   , &value_s_f::hashset_left_
+   , &value_s_f::hashset_right_>                  hashset_ptr_to_member_smart;
+*/
+typedef value_r_t::hashset_base_hook::
+   value_traits<value_r_t >                              hashset_base_raw_t;
+
+typedef value_r_t::hashset_member_hook::
+      value_traits<&value_r_t::hashset_node_>                    hashset_member_raw_t;
+/*
+typedef ihashset_ptr_to_member_hook
+   < value_r_t 
+   , value_r_t *
+   , int 
+   , &value_r_t::hashset_color_
+   , 0
+   , 1
+   , &value_r_t::hashset_parent_
+   , &value_r_t::hashset_left_
+   , &value_r_t::hashset_right_>                             hashset_ptr_to_member_raw_t;
+*/
+typedef value_s_t::hashset_base_hook::
+   value_traits<value_s_t >                   hashset_base_smart_t;
+
+typedef value_s_t::hashset_member_hook::
+      value_traits<&value_s_t::hashset_node_>         hashset_member_smart_t;
+/*
+typedef ihashset_ptr_to_member_hook
+   < value_s_t
+   , smart_ptr<value_s_t >
+   , int 
+   , &value_s_t::hashset_color_
+   , 0
+   , 1
+   , &value_s_t::hashset_parent_
+   , &value_s_t::hashset_left_
+   , &value_s_t::hashset_right_>                  hashset_ptr_to_member_smart_t;
+*/
+
 
 //Explicit instantiations
 typedef value_r_f::list_base_hook::

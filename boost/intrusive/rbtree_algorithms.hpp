@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Olaf Krzikalla 2004-2006.
-// (C) Copyright Ion Gaztañaga  2006.
+// (C) Copyright Ion Gaztañaga  2006-2007.
 //
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
@@ -746,7 +746,7 @@ struct rbtree_algorithms
       if(hint == header || !comp(hint, new_node)){
          node_ptr prev(hint);
          if(hint == NodeTraits::get_left(header) || 
-            !comp(new_node, (prev = prev_node(prev)))){
+            !comp(new_node, (prev = prev_node(hint)))){
             bool link_left = unique(header) || !NodeTraits::get_left(hint);
             link_and_balance(new_node, link_left ? hint : prev, link_left, header);
             return new_node;
@@ -876,14 +876,14 @@ struct rbtree_algorithms
 	   if(hint == header || comp(key, hint)){
          node_ptr prev = hint;
          //The previous value should be less than the key
-		   if(prev == NodeTraits::get_left(header) || comp((prev = prev_node(prev)), key)){
+		   if(prev == NodeTraits::get_left(header) || comp((prev = prev_node(hint)), key)){
             commit_data.link_left = unique(header) || !NodeTraits::get_left(hint);
             commit_data.node      = commit_data.link_left ? hint : prev;
             return std::pair<node_ptr, bool>(node_ptr(), true);
 		   }
-         //The value is already present
          else{
-            return std::pair<node_ptr, bool>(prev, false);
+            return insert_unique_check(header, key, comp, commit_data);
+            //return std::pair<node_ptr, bool>(prev, false);
          }
 	   }
       //The hint was wrong, use hintless insert

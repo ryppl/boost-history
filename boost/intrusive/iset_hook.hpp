@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -164,7 +164,7 @@ class iset_base_hook
    //!   a pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static this_type_ptr to_hook(node_ptr p)
+   static this_type_ptr to_hook_ptr(node_ptr p)
    {
       using boost::get_pointer;
       return this_type_ptr(static_cast<iset_base_hook*> (get_pointer(p))); 
@@ -174,7 +174,7 @@ class iset_base_hook
    //!   a const pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static const_this_type_ptr to_hook(const_node_ptr p)
+   static const_this_type_ptr to_hook_ptr(const_node_ptr p)
    {
       using boost::get_pointer;
       return const_this_type_ptr(static_cast<const iset_base_hook*> (get_pointer(p))); 
@@ -331,7 +331,7 @@ class iset_auto_base_hook
    //!   a pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static this_type_ptr to_hook(node_ptr p)
+   static this_type_ptr to_hook_ptr(node_ptr p)
    {
       using boost::get_pointer;
       return this_type_ptr(static_cast<iset_auto_base_hook*> (get_pointer(p))); 
@@ -341,7 +341,7 @@ class iset_auto_base_hook
    //!   a const pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static const_this_type_ptr to_hook(const_node_ptr p)
+   static const_this_type_ptr to_hook_ptr(const_node_ptr p)
    {
       using boost::get_pointer;
       return const_this_type_ptr(static_cast<const iset_auto_base_hook*> (get_pointer(p))); 
@@ -496,7 +496,7 @@ class iset_member_hook
    //!   a pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static this_type_ptr to_hook(node_ptr p)
+   static this_type_ptr to_hook_ptr(node_ptr p)
    {
       using boost::get_pointer;
       return this_type_ptr(static_cast<this_type*> (get_pointer(p))); 
@@ -506,7 +506,7 @@ class iset_member_hook
    //!   a const pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static const_this_type_ptr to_hook(const_node_ptr p)
+   static const_this_type_ptr to_hook_ptr(const_node_ptr p)
    {
       using boost::get_pointer;
       return const_this_type_ptr(static_cast<const this_type*> (get_pointer(p))); 
@@ -664,7 +664,7 @@ class iset_auto_member_hook
    //!   a pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static this_type_ptr to_hook(node_ptr p)
+   static this_type_ptr to_hook_ptr(node_ptr p)
    {
       using boost::get_pointer;
       return this_type_ptr(static_cast<this_type*> (get_pointer(p))); 
@@ -674,7 +674,7 @@ class iset_auto_member_hook
    //!   a const pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static const_this_type_ptr to_hook(const_node_ptr p)
+   static const_this_type_ptr to_hook_ptr(const_node_ptr p)
    {
       using boost::get_pointer;
       return const_this_type_ptr(static_cast<const this_type*> (get_pointer(p))); 

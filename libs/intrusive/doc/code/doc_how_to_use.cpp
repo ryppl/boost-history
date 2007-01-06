@@ -1,16 +1,17 @@
-//[doc_islist_code
-#include <boost/intrusive/islist.hpp>
+//[doc_how_to_use_code
+
+#include <boost/intrusive/ilist.hpp>
 #include <vector>
 
 using namespace boost::intrusive;
 
 class MyClass
-   :  public islist_base_hook<0>
+   :  public ilist_base_hook<0>
 {
    int int_;
 
    public:
-   islist_member_hook<MyClass> member_hook_;
+   ilist_member_hook<MyClass> member_hook_;
 
    MyClass(int i)
       :  int_(i)
@@ -20,15 +21,15 @@ class MyClass
    {  return int_;  }
 };
 
-//Define an islist that will store MyClass
+//Define an ilist that will store MyClass
 //using the public base hook
-typedef islist< islist_base_hook<0>::
+typedef ilist< ilist_base_hook<0>::
                   value_traits<MyClass> >
    BaseList;
 
-//Define an islist that will store MyClass
+//Define an ilist that will store MyClass
 //using the public member hook
-typedef islist< islist_member_hook<MyClass>::
+typedef ilist< ilist_member_hook<MyClass>::
                   value_traits<&MyClass::member_hook_> >
    MemberList;
 
@@ -57,27 +58,26 @@ int main()
 
    //Now insert them in the same order as in vector in the
    //member hook intrusive list
-   for(BaseList::iterator it(baselist.begin()), itend(baselist.end())
+   for(VectIt it(myclassvector.begin()), itend(myclassvector.end())
       ; it != itend
       ; ++it){
-      memberlist.push_front(*it);
+      memberlist.push_back(*it);
    }
 
    //Now test lists
    {
-      BaseList::iterator bit(baselist.begin()), bitend(baselist.end());
+      BaseList::reverse_iterator rbit(baselist.rbegin()), rbitend(baselist.rend());
       MemberList::iterator mit(memberlist.begin()), mitend(memberlist.end());
-      VectRit rit(myclassvector.rbegin()), ritend(myclassvector.rend());
       VectIt  it(myclassvector.begin()), itend(myclassvector.end());
 
       //Test the objects inserted in the base hook list
-      for(; rit != ritend; ++rit, ++bit){
-         if(&*bit != &*rit)
+      for(; it != itend; ++it, ++rbit){
+         if(&*rbit != &*it)
             return 1;
       }
 
       //Test the objects inserted in the member hook list
-      for(; it != itend; ++it, ++mit){
+      for(it = myclassvector.begin(); it != itend; ++it, ++mit){
          if(&*mit != &*it)
             return 1;
       }

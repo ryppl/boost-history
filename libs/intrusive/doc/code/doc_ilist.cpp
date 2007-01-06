@@ -1,3 +1,4 @@
+//[doc_ilist_code
 #include <boost/intrusive/ilist.hpp>
 #include <vector>
 
@@ -83,3 +84,4 @@ int main()
 
    return 0;
 }
+//]

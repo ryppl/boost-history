@@ -151,7 +151,6 @@ class irbtree
    }
 
    public:
-
    typedef typename sequence_algorithms::insert_commit_data insert_commit_data;
 
    class iterator
@@ -246,12 +245,15 @@ class irbtree
    //! 
    //! <b>Throws</b>: Nothing unless the copy constructor of the Compare object throws. 
    template<class Iterator>
-   irbtree(Iterator b, Iterator e, Compare cmp = Compare())
+   irbtree(bool unique, Iterator b, Iterator e, Compare cmp = Compare())
       : members_(cmp)
    {
       sequence_algorithms::init_header(&members_.header_);
       size_traits::set_size(size_type(0));
-      this->insert_equal_upper_bound(b, e);
+      if(unique)
+         this->insert_unique(b, e);
+      else
+         this->insert_equal(b, e);
    }
 
    //! <b>Effects</b>: Detaches all elements from this. The objects in the set 
@@ -435,7 +437,7 @@ class irbtree
    //! 
    //! <b>Note</b>: Does not affect the validity of iterators and references.
    //!   No copy-constructors are called.
-   iterator insert_equal(iterator hint, value_type& val)
+   iterator insert_equal(const_iterator hint, value_type& val)
    {
       key_node_ptr_compare<value_compare> key_node_comp(members_.get_comp());
       node_ptr to_insert(ValueTraits::to_node_ptr(val));
@@ -461,10 +463,17 @@ class irbtree
    //! <b>Note</b>: Does not affect the validity of iterators and references.
    //!   No copy-constructors are called.
    template<class Iterator>
-   void insert_equal_upper_bound(Iterator b, Iterator e)
+   void insert_equal(Iterator b, Iterator e)
    {
-      for (; b != e; ++b)
-        this->insert_equal_upper_bound(*b);
+      if(this->empty()){
+         iterator end(this->end());
+         for (; b != e; ++b)
+            this->insert_equal(end, *b);
+      }
+      else{
+         for (; b != e; ++b)
+            this->insert_equal_upper_bound(*b);
+      }
    }
 
    //! <b>Requires</b>: val must be an lvalue
@@ -502,7 +511,7 @@ class irbtree
    //! 
    //! <b>Note</b>: Does not affect the validity of iterators and references.
    //!   No copy-constructors are called.
-   iterator insert_unique(iterator hint, value_type& val)
+   iterator insert_unique(const_iterator hint, value_type& val)
    {
       insert_commit_data commit_data;
       std::pair<iterator, bool> ret = insert_unique_check(hint, val, commit_data);
@@ -527,8 +536,15 @@ class irbtree
    template<class Iterator>
    void insert_unique(Iterator b, Iterator e)
    {
-      for (; b != e; ++b)
-         this->insert_unique(*b);
+      if(this->empty()){
+         iterator end(this->end());
+         for (; b != e; ++b)
+            this->insert_unique(end, *b);
+      }
+      else{
+         for (; b != e; ++b)
+            this->insert_unique(*b);
+      }
    }
 
    std::pair<iterator, bool> insert_unique_check
@@ -547,13 +563,12 @@ class irbtree
    }
 
    std::pair<iterator, bool> insert_unique_check
-      (iterator hint, const value_type &value, insert_commit_data &commit_data)
+      (const_iterator hint, const value_type &value, insert_commit_data &commit_data)
    {  return insert_unique_check(hint, value, members_.get_comp(), commit_data); }
-
 
    template<class KeyType, class KeyValueCompare>
    std::pair<iterator, bool> insert_unique_check
-      (iterator hint, const KeyType &key
+      (const_iterator hint, const KeyType &key
       ,KeyValueCompare key_value_comp, insert_commit_data &commit_data)
    {
       key_node_ptr_compare<KeyValueCompare> comp(key_value_comp);
@@ -580,7 +595,7 @@ class irbtree
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    iterator erase(iterator i)
    {
@@ -603,16 +618,12 @@ class irbtree
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    iterator erase(iterator b, iterator e)
-   {
-      while(b != e)
-        this->erase(b++);
-      return b;
-   }
+   {  size_type n;   return private_erase(b, e, n);   }
 
-   //! <b>Effects</b>: Erases all the elements with the given key.
+   //! <b>Effects</b>: Erases all the elements with the given value.
    //! 
    //! <b>Returns</b>: The number of erased elements.
    //! 
@@ -620,38 +631,144 @@ class irbtree
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
-   size_type erase(const value_type &key)
+   size_type erase(const value_type &value)
    {
-      std::pair<iterator,iterator> p = this->equal_range(key);
-      iterator b = p.first, e = p.second;
-      size_type n = 0;
-      for(;b != e; ++n)
-        this->erase(b++);
+      key_node_ptr_compare<value_compare> key_node_comp(members_.get_comp());
+      std::pair<iterator,iterator> p = this->equal_range(value);
+      size_type n;
+      private_erase(p.first, p.second, n);
+      return n;
+   }
+
+   //! <b>Effects</b>: Erases all the elements with the given key.
+   //!   according to the comparison functor "comp".
+   //!
+   //! <b>Returns</b>: The number of erased elements.
+   //! 
+   //! <b>Complexity</b>: O(log(size()) + N.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
+   //!    to the erased elements. No destructors are called.
+   template<class KeyType, class KeyValueCompare>
+   size_type erase(const KeyType& key, KeyValueCompare comp)
+   {
+      std::pair<iterator,iterator> p = this->equal_range(key, comp);
+      size_type n;
+      private_erase(p.first, p.second, n);
+      return n;
+   }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the element pointed to by pos. 
+   //!   Destroyer::operator()(pointer) is called for the removed element.
+   //! 
+   //! <b>Complexity</b>: Average complexity for erase element is constant time. 
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators 
+   //!    to the erased elements.
+   template<class Destroyer>
+   iterator erase(iterator i, Destroyer destroyer)
+   {
+      node_ptr to_erase(i.tree_node());
+      iterator ret(this->erase(i));
+      destroyer(ValueTraits::to_value_ptr(to_erase));
+      return ret;
+   }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the range pointed to by b end e.
+   //!   Destroyer::operator()(pointer) is called for the removed element.
+   //! 
+   //! <b>Complexity</b>: Average complexity for erase range is at most 
+   //!   O(log(size()) + N), where N is the number of elements in the range.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators
+   //!    to the erased elements.
+   template<class Destroyer>
+   iterator erase(iterator b, iterator e, Destroyer destroyer)
+   {  size_type n;   return private_erase(b, e, n, destroyer);   }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases all the elements with the given value.
+   //!   Destroyer::operator()(pointer) is called for the removed elements.
+   //! 
+   //! <b>Returns</b>: The number of erased elements.
+   //! 
+   //! <b>Complexity</b>: O(log(size()) + N.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
+   //!    to the erased elements. No destructors are called.
+   template<class Destroyer>
+   size_type erase(const value_type &value, Destroyer destroyer)
+   {
+      std::pair<iterator,iterator> p = this->equal_range(value);
+      size_type n;
+      private_erase(p.first, p.second, n, destroyer);
+      return n;
+   }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases all the elements with the given key.
+   //!   according to the comparison functor "comp".
+   //!   Destroyer::operator()(pointer) is called for the removed elements.
+   //!
+   //! <b>Returns</b>: The number of erased elements.
+   //! 
+   //! <b>Complexity</b>: O(log(size()) + N.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators
+   //!    to the erased elements.
+   template<class KeyType, class KeyValueCompare, class Destroyer>
+   size_type erase(const KeyType& key, KeyValueCompare comp, Destroyer destroyer)
+   {
+      std::pair<iterator,iterator> p = this->equal_range(key, comp);
+      size_type n;
+      private_erase(p.first, p.second, n, destroyer);
       return n;
    }
 
    //! <b>Effects</b>: Erases all of the elements. 
    //! 
-   //! <b>Complexity</b>: Average complexity for is at most O(log(size()) + N),
-   //!   where N is the number of elements in the container.
+   //! <b>Complexity</b>: Linear to the number of elements on the container.
+   //!   if it's a safe-mode or auto-unlink value_type. Constant time otherwise.
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    void clear()
    {
-      while(1){
-         node_ptr leftmost
-            (sequence_algorithms::unlink_leftmost_without_rebalance
-               (node_ptr(&members_.header_)));
-         if(!leftmost)
-            break;
-         size_traits::decrement();
-         if(safemode_or_autounlink)
-            sequence_algorithms::init(leftmost);
+      if(safemode_or_autounlink){
+         while(1){
+            node_ptr leftmost
+               (sequence_algorithms::unlink_leftmost_without_rebalance
+                  (node_ptr(&members_.header_)));
+            if(!leftmost)
+               break;
+            size_traits::decrement();
+            if(safemode_or_autounlink)
+               sequence_algorithms::init(leftmost);
+         }
+      }
+      else{
+         sequence_algorithms::init_header(&members_.header_);
+         size_traits::set_size(0);
       }
    }
 
@@ -662,7 +779,7 @@ class irbtree
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. Calls N times to destroyer functor.
    template<class Destroyer>
    void clear(Destroyer destroyer)
@@ -680,10 +797,10 @@ class irbtree
       }
    }
 
-   //! <b>Effects</b>: Returns the number of contained elements with the given key
+   //! <b>Effects</b>: Returns the number of contained elements with the given value
    //! 
    //! <b>Complexity</b>: Logarithmic to the number of elements contained plus lineal
-   //!   to number of objects with the given key.
+   //!   to number of objects with the given value.
    //! 
    //! <b>Throws</b>: Nothing.
    size_type count(const value_type &value) const
@@ -703,26 +820,6 @@ class irbtree
    {
       std::pair<const_iterator, const_iterator> ret = this->equal_range(key, comp);
       return std::distance(ret.first, ret.second);
-   }
-
-   //! <b>Requires</b>: Dereferencing Iterator must yield to an lvalue 
-   //!   of type value_type.
-   //! 
-   //! <b>Effects</b>: Erases all of the elements of the container and inserts
-   //!   a new range.
-   //! 
-   //! <b>Complexity</b>: Average complexity for is at most O(log(size()) + N),
-   //!   where N is the number of elements in the container.
-   //! 
-   //! <b>Throws</b>: Nothing.
-   //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
-   //!    to the erased elements. No copy-constructors or destructors are called.
-   template<class Iterator>
-   void assign(Iterator b, Iterator e)
-   {
-      this->clear();
-      this->insert_equal_upper_bound(b, e);
    }
 
    //! <b>Effects</b>: Returns an iterator to the first element whose
@@ -965,7 +1062,7 @@ class irbtree
             ,node_ptr(&this->members_.header_)
             ,c ,d );
          size_traits::set_size(src.get_size());
-      }  
+      }
    }
 
    pointer unlink_leftmost_without_rebalance()
@@ -1046,6 +1143,21 @@ class irbtree
          sequence_algorithms::init(to_remove);
    }
 */
+   private:
+   template<class Destroyer>
+   iterator private_erase(iterator b, iterator e, size_type &n, Destroyer destroyer)
+   {
+      for(n = 0; b != e; ++n)
+        this->erase(b++, destroyer);
+      return b;
+   }
+
+   iterator private_erase(iterator b, iterator e, size_type &n)
+   {
+      for(n = 0; b != e; ++n)
+        this->erase(b++);
+      return b;
+   }
 };
 
 } //namespace detail

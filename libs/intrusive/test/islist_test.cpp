@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.

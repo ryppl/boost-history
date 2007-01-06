@@ -1,3 +1,4 @@
+//[doc_iset_code
 #include <boost/intrusive/iset.hpp>
 #include <vector>
 #include <algorithm>
@@ -91,3 +92,4 @@ int main()
    }
    return 0;
 }
+//]

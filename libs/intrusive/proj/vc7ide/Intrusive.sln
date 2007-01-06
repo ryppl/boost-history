@@ -19,10 +19,20 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "iset", "iset\iset.vcproj", 
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ihashset", "ihashset\ihashset.vcproj", "{90E701E6-2C91-F4A7-BA6C-A9F3B0949279}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ihashmultiset", "ihashmultiset\ihashmultiset.vcproj", "{9101EE76-BB6C-2C91-F4B7-A9F3B9490279}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectDependencies) = postSolution
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{977B61B4-9968-497C-9F0B-24A8145473B8}.Debug.ActiveCfg = Debug|Win32
@@ -45,6 +55,14 @@ Global
 		{960E01F6-92C1-F74A-BCA5-2A9F3B994979}.Debug.Build.0 = Debug|Win32
 		{960E01F6-92C1-F74A-BCA5-2A9F3B994979}.Release.ActiveCfg = Release|Win32
 		{960E01F6-92C1-F74A-BCA5-2A9F3B994979}.Release.Build.0 = Release|Win32
+		{90E701E6-2C91-F4A7-BA6C-A9F3B0949279}.Debug.ActiveCfg = Debug|Win32
+		{90E701E6-2C91-F4A7-BA6C-A9F3B0949279}.Debug.Build.0 = Debug|Win32
+		{90E701E6-2C91-F4A7-BA6C-A9F3B0949279}.Release.ActiveCfg = Release|Win32
+		{90E701E6-2C91-F4A7-BA6C-A9F3B0949279}.Release.Build.0 = Release|Win32
+		{9101EE76-BB6C-2C91-F4B7-A9F3B9490279}.Debug.ActiveCfg = Debug|Win32
+		{9101EE76-BB6C-2C91-F4B7-A9F3B9490279}.Debug.Build.0 = Debug|Win32
+		{9101EE76-BB6C-2C91-F4B7-A9F3B9490279}.Release.ActiveCfg = Release|Win32
+		{9101EE76-BB6C-2C91-F4B7-A9F3B9490279}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

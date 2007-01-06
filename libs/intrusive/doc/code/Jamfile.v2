@@ -31,4 +31,4 @@ rule test_all
    return $(all_rules) ;
 }
 
-test-suite interprocess_doc : [ test_all r ] ; 
+test-suite intrusive_doc : [ test_all r ] ; 

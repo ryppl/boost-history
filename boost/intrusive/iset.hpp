@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -92,7 +92,7 @@ class iset
    //! <b>Throws</b>: Nothing unless the copy constructor of the Compare object throws. 
    template<class Iterator>
    iset(Iterator b, Iterator e, Compare cmp = Compare())
-      : tree_(cmp)
+      : tree_(true, b, e, cmp)
    {  insert(b, e);  }
 
    //! <b>Effects</b>: Detaches all elements from this. The objects in the set 
@@ -249,7 +249,7 @@ class iset
    //! 
    //! <b>Note</b>: Does not affect the validity of iterators and references.
    //!   No copy-constructors are called.
-   iterator insert(iterator hint, value_type& val)
+   iterator insert(const_iterator hint, value_type& val)
    {  return tree_.insert_unique(hint, val);  }
 
    //! <b>Requires</b>: key_value_comp must be a comparison function that induces 
@@ -321,7 +321,7 @@ class iset
    //!   objects are inserted or erase from the set.
    template<class KeyType, class KeyValueCompare>
    std::pair<iterator, bool> insert_check
-      (iterator hint, const KeyType &key
+      (const_iterator hint, const KeyType &key
       ,const KeyValueCompare &key_value_comp, insert_commit_data &commit_data)
    {  return tree_.insert_unique_check(hint, key, key_value_comp, commit_data); }
 
@@ -368,7 +368,7 @@ class iset
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    iterator erase(iterator i)
    {  return tree_.erase(i);  }
@@ -380,7 +380,7 @@ class iset
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    iterator erase(iterator b, iterator e)
    {  return tree_.erase(b, e);  }
@@ -393,7 +393,7 @@ class iset
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    size_type erase(const value_type &value)
    {  return tree_.erase(value);  }
@@ -407,21 +407,86 @@ class iset
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
-/*
    template<class KeyType, class KeyValueCompare>
    size_type erase(const KeyType& key, KeyValueCompare comp)
    {  return tree_.erase(key, comp);  }
-*/
-   //! <b>Effects</b>: Erases all of the elements. 
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the element pointed to by pos. 
+   //!   Destroyer::operator()(pointer) is called for the removed element.
    //! 
-   //! <b>Complexity</b>: Average complexity for is at most O(log(size()) + N),
-   //!   where N is the number of elements in the container.
+   //! <b>Complexity</b>: Average complexity for erase element is constant time. 
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators 
+   //!    to the erased elements.
+   template<class Destroyer>
+   iterator erase(iterator i, Destroyer destroyer)
+   {  return tree_.erase(i, destroyer);  }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the range pointed to by b end e.
+   //!   Destroyer::operator()(pointer) is called for the removed element.
+   //! 
+   //! <b>Complexity</b>: Average complexity for erase range is at most 
+   //!   O(log(size()) + N), where N is the number of elements in the range.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators
+   //!    to the erased elements.
+   template<class Destroyer>
+   iterator erase(iterator b, iterator e, Destroyer destroyer)
+   {  return tree_.erase(b, e, destroyer);  }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases all the elements with the given value.
+   //!   Destroyer::operator()(pointer) is called for the removed elements.
+   //! 
+   //! <b>Returns</b>: The number of erased elements.
+   //! 
+   //! <b>Complexity</b>: O(log(size()) + N.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
+   //!    to the erased elements. No destructors are called.
+   template<class Destroyer>
+   size_type erase(const value_type &value, Destroyer destroyer)
+   {  return tree_.erase(value, destroyer);  }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases all the elements with the given key.
+   //!   according to the comparison functor "comp".
+   //!   Destroyer::operator()(pointer) is called for the removed elements.
+   //!
+   //! <b>Returns</b>: The number of erased elements.
+   //! 
+   //! <b>Complexity</b>: O(log(size()) + N.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators
+   //!    to the erased elements.
+   template<class KeyType, class KeyValueCompare, class Destroyer>
+   size_type erase(const KeyType& key, KeyValueCompare comp, Destroyer destroyer)
+   {  return tree_.erase(key, comp, destroyer);  }
+
+   //! <b>Effects</b>: Erases all of the elements. 
+   //! 
+   //! <b>Complexity</b>: Linear to the number of elements on the container.
+   //!   if it's a safe-mode or auto-unlink value_type. Constant time otherwise.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    void clear()
    {  return tree_.clear();  }
@@ -445,23 +510,6 @@ class iset
    template<class KeyType, class KeyValueCompare>
    size_type count(const KeyType& key, KeyValueCompare comp) const
    {  return tree_.find(key, comp) != end();  }
-
-   //! <b>Requires</b>: Dereferencing Iterator must yield to an lvalue 
-   //!   of type value_type.
-   //! 
-   //! <b>Effects</b>: Erases all of the elements of the container and inserts
-   //!   a new range.
-   //! 
-   //! <b>Complexity</b>: Average complexity for is at most O(log(size()) + N),
-   //!   where N is the number of elements in the container.
-   //! 
-   //! <b>Throws</b>: Nothing.
-   //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
-   //!    to the erased elements. No copy-constructors or destructors are called.
-   template<class Iterator>
-   void assign(Iterator b, Iterator e)
-   {  return tree_.assign(b, e);  }
 
    //! <b>Effects</b>: Returns an iterator to the first element whose
    //!   key is not less than k or end() if that element does not exist.
@@ -820,7 +868,7 @@ class imultiset
    //! <b>Throws</b>: Nothing unless the copy constructor of the Compare object throws. 
    template<class Iterator>
    imultiset(Iterator b, Iterator e, Compare cmp = Compare())
-      : tree_(b, e, cmp)
+      : tree_(false, b, e, cmp)
    {}
 
    //! <b>Effects</b>: Detaches all elements from this. The objects in the set 
@@ -968,7 +1016,7 @@ class imultiset
    //! 
    //! <b>Note</b>: Does not affect the validity of iterators and references.
    //!   No copy-constructors are called.
-   iterator insert(iterator hint, value_type& val)
+   iterator insert(const_iterator hint, value_type& val)
    {  return tree_.insert_equal(hint, val);  }
 
    //! <b>Requires</b>: Dereferencing Iterator must yield to an lvalue 
@@ -986,15 +1034,15 @@ class imultiset
    //!   No copy-constructors are called.
    template<class Iterator>
    void insert(Iterator b, Iterator e)
-   {  tree_.insert_equal_upper_bound(b, e);  }
+   {  tree_.insert_equal(b, e);  }
 
    //! <b>Effects</b>: Erases the element pointed to by pos. 
    //! 
-   //! <b>Complexity</b>: Average complexity for erase element is constant time. 
+   //! <b>Complexity</b>: Average complexity is constant time. 
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    iterator erase(iterator i)
    {  return tree_.erase(i);  }
@@ -1006,12 +1054,12 @@ class imultiset
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    iterator erase(iterator b, iterator e)
    {  return tree_.erase(b, e);  }
 
-   //! <b>Effects</b>: Erases all the elements with the given value_type.
+   //! <b>Effects</b>: Erases all the elements with the given value.
    //! 
    //! <b>Returns</b>: The number of erased elements.
    //! 
@@ -1019,19 +1067,100 @@ class imultiset
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
-   size_type erase(const value_type& value)
+   size_type erase(const value_type &value)
    {  return tree_.erase(value);  }
 
-   //! <b>Effects</b>: Erases all of the elements. 
+   //! <b>Effects</b>: Erases all the elements that compare equal with
+   //!   the given key and the given comparison functor.
    //! 
-   //! <b>Complexity</b>: Average complexity for is at most O(log(size()) + N),
-   //!   where N is the number of elements in the container.
+   //! <b>Returns</b>: The number of erased elements.
+   //! 
+   //! <b>Complexity</b>: O(log(size()) + N.
    //! 
    //! <b>Throws</b>: Nothing.
    //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
+   //!    to the erased elements. No destructors are called.
+   template<class KeyType, class KeyValueCompare>
+   size_type erase(const KeyType& key, KeyValueCompare comp)
+   {  return tree_.erase(key, comp);  }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the element pointed to by pos. 
+   //!   Destroyer::operator()(pointer) is called for the removed element.
+   //! 
+   //! <b>Complexity</b>: Average complexity for erase element is constant time. 
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators 
+   //!    to the erased elements.
+   template<class Destroyer>
+   iterator erase(iterator i, Destroyer destroyer)
+   {  return tree_.erase(i, destroyer);  }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases the range pointed to by b end e.
+   //!   Destroyer::operator()(pointer) is called for the removed element.
+   //! 
+   //! <b>Complexity</b>: Average complexity for erase range is at most 
+   //!   O(log(size()) + N), where N is the number of elements in the range.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators
+   //!    to the erased elements.
+   template<class Destroyer>
+   iterator erase(iterator b, iterator e, Destroyer destroyer)
+   {  return tree_.erase(b, e, destroyer);  }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases all the elements with the given value.
+   //!   Destroyer::operator()(pointer) is called for the removed elements.
+   //! 
+   //! <b>Returns</b>: The number of erased elements.
+   //! 
+   //! <b>Complexity</b>: O(log(size()) + N.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
+   //!    to the erased elements. No destructors are called.
+   template<class Destroyer>
+   size_type erase(const value_type &value, Destroyer destroyer)
+   {  return tree_.erase(value, destroyer);  }
+
+   //! <b>Requires</b>: Destroyer::operator()(pointer) shouldn't throw.
+   //!
+   //! <b>Effects</b>: Erases all the elements with the given key.
+   //!   according to the comparison functor "comp".
+   //!   Destroyer::operator()(pointer) is called for the removed elements.
+   //!
+   //! <b>Returns</b>: The number of erased elements.
+   //! 
+   //! <b>Complexity</b>: O(log(size()) + N.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators
+   //!    to the erased elements.
+   template<class KeyType, class KeyValueCompare, class Destroyer>
+   size_type erase(const KeyType& key, KeyValueCompare comp, Destroyer destroyer)
+   {  return tree_.erase(key, comp, destroyer);  }
+
+   //! <b>Effects</b>: Erases all of the elements. 
+   //! 
+   //! <b>Complexity</b>: Linear to the number of elements on the container.
+   //!   if it's a safe-mode or auto-unlink value_type. Constant time otherwise.
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Note</b>: Invalidates the iterators (but not the references)
    //!    to the erased elements. No destructors are called.
    void clear()
    {  return tree_.clear();  }
@@ -1045,23 +1174,6 @@ class imultiset
    template<class KeyType>
    size_type count(const KeyType& key) const
    {  return tree_.count(key);  }
-
-   //! <b>Requires</b>: Dereferencing Iterator must yield to an lvalue 
-   //!   of type value_type.
-   //! 
-   //! <b>Effects</b>: Erases all of the elements of the container and inserts
-   //!   a new range.
-   //! 
-   //! <b>Complexity</b>: Average complexity for is at most O(log(size()) + N),
-   //!   where N is the number of elements in the container.
-   //! 
-   //! <b>Throws</b>: Nothing.
-   //! 
-   //! <b>Note</b>: Note: Invalidates the iterators (but not the references)
-   //!    to the erased elements. No copy-constructors or destructors are called.
-   template<class Iterator>
-   void assign(Iterator b, Iterator e)
-   {  return tree_.assign(b, e);  }
 
    //! <b>Effects</b>: Returns an iterator to the first element whose
    //!   key is not less than k or end() if that element does not exist.

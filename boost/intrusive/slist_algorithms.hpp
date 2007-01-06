@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -161,7 +161,7 @@ struct slist_algorithms
    //! <b>Complexity</b>: Constant 
    //! 
    //! <b>Throws</b>: Nothing.
-   static void link_after(node_ptr this_node, node_ptr prev_node)
+   static void link_after(node_ptr prev_node, node_ptr this_node)
    {
       NodeTraits::set_next(this_node, NodeTraits::get_next(prev_node));
       NodeTraits::set_next(prev_node, this_node);
@@ -174,8 +174,8 @@ struct slist_algorithms
    //! <b>Complexity</b>: Linear to the number of elements in the sequence. 
    //! 
    //! <b>Throws</b>: Nothing.
-   static void link_before (node_ptr this_node, node_ptr nxt_node)
-   {  link_after(this_node, get_previous_node(nxt_node));   }
+   static void link_before (node_ptr nxt_node, node_ptr this_node)
+   {  link_after(get_previous_node(nxt_node), this_node);   }
 
    //! <b>Requires</b>: this_node and other_node must be nodes inserted
    //!  in sequences or empty sequences.
@@ -222,6 +222,24 @@ struct slist_algorithms
          NodeTraits::set_next(b, next_e);
          NodeTraits::set_next(e, next_p);
          NodeTraits::set_next(p, next_b);
+      }
+   }
+
+   //! <b>Effects</b>: Reverses the order of elements in the list. 
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Complexity</b>: This function is linear to the contained elements.
+   //! 
+   //! <b>Note</b>: Iterators and references are not invalidated
+   static void reverse(node_ptr p)
+   {
+      node_ptr i = NodeTraits::get_next(p), e(p); 
+      for (;;) {
+         node_ptr nxt(NodeTraits::get_next(i));
+         if (nxt == e)
+            break;
+         transfer_after(e, i, nxt);
       }
    }
 };

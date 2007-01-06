@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -53,17 +53,20 @@ class islist_base_hook
    private:
    typedef slist_algorithms<node_traits> sequence_algorithms;
    typedef typename node_traits::node                 node;
+   typedef islist_base_hook
+      <Tag, SafeMode, VoidPointer>                    this_type;
+
+   public:
    typedef typename detail::pointer_to_other
       <VoidPointer, node>::type                       node_ptr;
    typedef typename detail::pointer_to_other
       <VoidPointer, const node>::type                 const_node_ptr;
-   typedef islist_base_hook
-      <Tag, SafeMode, VoidPointer>                    this_type;
    typedef typename detail::pointer_to_other
       <VoidPointer, this_type>::type                  this_type_ptr;
    typedef typename detail::pointer_to_other
       <VoidPointer, const this_type>::type            const_this_type_ptr;
 
+   private:
    node_ptr this_as_node()
    {  return node_ptr(static_cast<node *const>(this)); }
 
@@ -177,7 +180,7 @@ class islist_base_hook
    //!   a pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing.
-   static this_type_ptr to_hook(node_ptr p)
+   static this_type_ptr to_hook_ptr(node_ptr p)
    {
       using boost::get_pointer;
       return this_type_ptr(static_cast<islist_base_hook*> (get_pointer(p))); 
@@ -187,7 +190,7 @@ class islist_base_hook
    //!   a const pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing.
-   static const_this_type_ptr to_hook(const_node_ptr p)
+   static const_this_type_ptr to_hook_ptr(const_node_ptr p)
    {
       using boost::get_pointer;
       return this_type_ptr(static_cast<const islist_base_hook*> (get_pointer(p))); 
@@ -237,18 +240,21 @@ class islist_auto_base_hook
 
    private:
    typedef slist_algorithms<node_traits> sequence_algorithms;
+   typedef islist_auto_base_hook
+      <Tag, VoidPointer>                              this_type;
    typedef typename node_traits::node                 node;
+
+   public:
    typedef typename detail::pointer_to_other
       <VoidPointer, node>::type                       node_ptr;
    typedef typename detail::pointer_to_other
       <VoidPointer, const node>::type                 const_node_ptr;
-   typedef islist_auto_base_hook
-      <Tag, VoidPointer>                              this_type;
    typedef typename detail::pointer_to_other
-      <VoidPointer, this_type>::type                  islist_node_d_ptr;
+      <VoidPointer, this_type>::type                  this_type_ptr;
    typedef typename detail::pointer_to_other
       <VoidPointer, const this_type>::type            const_this_type_ptr;
 
+   private:
    node_ptr this_as_node()
    {  return node_ptr(static_cast<node *const>(this)); }
 
@@ -343,20 +349,20 @@ class islist_auto_base_hook
    //!   a pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static islist_node_d_ptr to_hook(node_ptr p)
+   static this_type_ptr to_hook_ptr(node_ptr p)
    {
       using boost::get_pointer;
-      return islist_node_d_ptr(static_cast<islist_auto_base_hook*> (get_pointer(p))); 
+      return this_type_ptr(static_cast<islist_auto_base_hook*> (get_pointer(p))); 
    }
 
    //! <b>Effects</b>: Converts a const pointer to a node stored in a sequence into
    //!   a const pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static const_this_type_ptr to_hook(const_node_ptr p)
+   static const_this_type_ptr to_hook_ptr(const_node_ptr p)
    {
       using boost::get_pointer;
-      return islist_node_d_ptr(static_cast<const islist_auto_base_hook*> (get_pointer(p))); 
+      return this_type_ptr(static_cast<const islist_auto_base_hook*> (get_pointer(p))); 
    }
 
    //! <b>Effects</b>: Returns a pointer to the node that this hook holds.
@@ -398,18 +404,21 @@ class islist_member_hook
    private:
    typedef typename detail::pointer_to_other
       <VoidPointer, T>::type                          pointer;
-   typedef slist_algorithms<node_traits>      sequence_algorithms;
+   typedef slist_algorithms<node_traits>              sequence_algorithms;
    typedef typename node_traits::node                 node;
+   typedef islist_member_hook<T, SafeMode, VoidPointer> this_type;
+
+   public:
    typedef typename detail::pointer_to_other
       <VoidPointer, node>::type                       node_ptr;
    typedef typename detail::pointer_to_other
       <VoidPointer, const node>::type                 const_node_ptr;
-   typedef islist_member_hook<T, SafeMode, VoidPointer> this_type;
    typedef typename detail::pointer_to_other
       <VoidPointer, this_type >::type                 this_type_ptr;
    typedef typename detail::pointer_to_other
       <VoidPointer, const this_type >::type           const_this_type_ptr;
 
+   private:
    node_ptr this_as_node()
    {  return node_ptr(static_cast<node *const>(this)); }
 
@@ -523,7 +532,7 @@ class islist_member_hook
    //!   a pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static this_type_ptr to_hook(node_ptr p)
+   static this_type_ptr to_hook_ptr(node_ptr p)
    {
       using boost::get_pointer;
       return this_type_ptr(static_cast<this_type*> (get_pointer(p))); 
@@ -533,7 +542,7 @@ class islist_member_hook
    //!   a const pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static const_this_type_ptr to_hook(const_node_ptr p)
+   static const_this_type_ptr to_hook_ptr(const_node_ptr p)
    {
       using boost::get_pointer;
       return this_type_ptr(static_cast<this_type*> (get_pointer(p))); 
@@ -583,18 +592,21 @@ class islist_auto_member_hook
    private:
    typedef typename detail::pointer_to_other
       <VoidPointer, T>::type                          pointer;
-   typedef slist_algorithms<node_traits>      sequence_algorithms;
+   typedef slist_algorithms<node_traits>              sequence_algorithms;
    typedef typename node_traits::node                 node;
+   typedef islist_auto_member_hook<T, VoidPointer>    this_type;
+
+   public:
    typedef typename detail::pointer_to_other
       <VoidPointer, node>::type                       node_ptr;
    typedef typename detail::pointer_to_other
       <VoidPointer, const node>::type                 const_node_ptr;
-   typedef islist_auto_member_hook<T, VoidPointer>    this_type;
    typedef typename detail::pointer_to_other
       <VoidPointer, this_type >::type                 this_type_ptr;
    typedef typename detail::pointer_to_other
       <VoidPointer, const this_type >::type           const_this_type_ptr;
 
+   private:
    node_ptr this_as_node()
    {  return node_ptr(static_cast<node *const>(this)); }
 
@@ -690,7 +702,7 @@ class islist_auto_member_hook
    //!   a pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static this_type_ptr to_hook(node_ptr p)
+   static this_type_ptr to_hook_ptr(node_ptr p)
    {
       using boost::get_pointer;
       return this_type_ptr(static_cast<this_type*> (get_pointer(p))); 
@@ -700,7 +712,7 @@ class islist_auto_member_hook
    //!   a const pointer to the hook that holds that node.
    //! 
    //! <b>Throws</b>: Nothing. 
-   static const_this_type_ptr to_hook(const_node_ptr p)
+   static const_this_type_ptr to_hook_ptr(const_node_ptr p)
    {
       using boost::get_pointer;
       return const_this_type_ptr(static_cast<const this_type*> (get_pointer(p))); 

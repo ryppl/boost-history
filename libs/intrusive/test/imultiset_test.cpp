@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -106,7 +106,7 @@ void test_multiset<ValueTraits>::test_sort(std::vector<typename ValueTraits::val
    BOOST_CHECK (testset2.rbegin()->value_ == 5);
 }  
   
-//test: assign, insert, const_iterator, const_reverse_iterator, erase, current:
+//test: insert, const_iterator, const_reverse_iterator, erase, current:
 template<class ValueTraits>
 void test_multiset<ValueTraits>::test_insert(std::vector<typename ValueTraits::value_type>& values)
 {
@@ -120,7 +120,7 @@ void test_multiset<ValueTraits>::test_insert(std::vector<typename ValueTraits::v
       > multiset_type;
 
    multiset_type testset;
-   testset.assign (&values[0] + 2, &values[0] + 5);
+   testset.insert(&values[0] + 2, &values[0] + 5);
 
    const multiset_type& const_testset = testset;
    std::copy (const_testset.begin(), const_testset.end(), 

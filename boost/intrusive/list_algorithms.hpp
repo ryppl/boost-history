@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Olaf Krzikalla 2004-2006.
+// (C) Copyright Olaf Krzikalla 2004-2007.
 // (C) Copyright Ion Gaztañaga  2006.
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -145,7 +145,7 @@ struct list_algorithms
    //! <b>Complexity</b>: Constant 
    //! 
    //! <b>Throws</b>: Nothing.
-   static void link_before(node_ptr this_node, node_ptr nxt_node)
+   static void link_before(node_ptr nxt_node, node_ptr this_node)
    {
       node_ptr prev(NodeTraits::get_previous(nxt_node));
       NodeTraits::set_previous(this_node, prev);
@@ -161,7 +161,7 @@ struct list_algorithms
    //! <b>Complexity</b>: Constant 
    //! 
    //! <b>Throws</b>: Nothing.
-   static void link_after(node_ptr this_node, node_ptr prev_node)
+   static void link_after(node_ptr prev_node, node_ptr this_node)
    {
       node_ptr next(NodeTraits::get_next(prev_node));
       NodeTraits::set_previous(this_node, prev_node);
@@ -216,7 +216,8 @@ struct list_algorithms
    }
 
    //! <b>Requires</b>: b and e must be nodes of the same sequence or an empty range.
-   //!   and p must be a node of a different sequence.
+   //!   and p must be a node of a different sequence or may not be an iterator in 
+   //    the range [b, e).
    //! 
    //! <b>Effects</b>: Removes the nodes from [b, e) range from their sequence and inserts
    //!   them before p in p's sequence.
@@ -236,6 +237,50 @@ struct list_algorithms
          NodeTraits::set_previous(e, prev_b);
          NodeTraits::set_next(prev_p, b);
          NodeTraits::set_previous(b, prev_p);
+      }
+   }
+
+   //! <b>Requires</b>: i must a node of a sequence
+   //!   and p must be a node of a different sequence.
+   //! 
+   //! <b>Effects</b>: Removes the node i from its sequence and inserts
+   //!   it before p in p's sequence. 
+   //!   If p == i or p == NodeTraits::get_next(i), this function is a null operation.
+   //! 
+   //! <b>Complexity</b>: Constant 
+   //! 
+   //! <b>Throws</b>: Nothing.
+   static void transfer(node_ptr p, node_ptr i)
+   {
+      node_ptr n(NodeTraits::get_next(i));
+      if(n != p && i != p){
+         node_ptr prev_p(NodeTraits::get_previous(p));
+         node_ptr prev_i(NodeTraits::get_previous(i));
+         NodeTraits::set_next(prev_p, i);
+         NodeTraits::set_previous(i, prev_p);
+         NodeTraits::set_next(i, p);
+         NodeTraits::set_previous(p, i);
+         NodeTraits::set_previous(n, prev_i);
+         NodeTraits::set_next(prev_i, n);
+
+      }
+   }
+
+   //! <b>Effects</b>: Reverses the order of elements in the list. 
+   //! 
+   //! <b>Throws</b>: Nothing.
+   //! 
+   //! <b>Complexity</b>: This function is linear time.
+   static void reverse(node_ptr p)
+   {
+      node_ptr f(NodeTraits::get_next(p));
+      node_ptr i(NodeTraits::get_next(f)), e(p);
+      
+      while(i != e) {
+         node_ptr n = i;
+         i = NodeTraits::get_next(i);
+         transfer(f, n, i);
+         f = n;
       }
    }
 };

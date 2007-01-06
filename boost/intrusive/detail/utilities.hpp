@@ -130,13 +130,13 @@ struct derivation_value_traits
    static pointer to_value_ptr(node_ptr n) 
    { 
       using boost::get_pointer;
-      return static_cast<T*>(get_pointer(derivation_hook::to_hook(n))); 
+      return static_cast<T*>(get_pointer(derivation_hook::to_hook_ptr(n))); 
    }
 
    static const_pointer to_value_ptr(const_node_ptr n)
    { 
       using boost::get_pointer;
-      return static_cast<const T*>(get_pointer(derivation_hook::to_hook(n))); 
+      return static_cast<const T*>(get_pointer(derivation_hook::to_hook_ptr(n))); 
    }
 };
 
