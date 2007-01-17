@@ -1,3 +1,0 @@
-#ifndef BOOST_ACT_MAX_SECTIONS
-#define BOOST_ACT_MAX_SECTIONS 10
-#endif
