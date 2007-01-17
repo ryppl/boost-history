@@ -1,0 +1,193 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Boost.Act 0.4b</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="index.html" title="Boost.Act 0.4b">
+<link rel="next" href="act/beta_warning.html" title="Beta Warning">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.htm">Home</a></td>
+<td align="center"><a href="libraries.html">Libraries</a></td>
+<td align="center"><a href="../../people/people.htm">People</a></td>
+<td align="center"><a href="../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="act/beta_warning.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="article" lang="en">
+<div class="titlepage">
+<div>
+<div><h2 class="title">
+<a name="act"></a>Boost.Act 0.4b</h2></div>
+<div><div class="author"><h3 class="author">
+<span class="firstname">Matthew</span> <span class="surname">Calabrese</span>
+</h3></div></div>
+<div><p class="copyright">Copyright © 2006 Matthew Calabrese</p></div>
+<div><div class="legalnotice">
+<a name="id502684"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div>
+<hr>
+</div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#act.brief_description">Brief Description</a></span></dt>
+<dt><span class="section"><a href="act/beta_warning.html">Beta Warning</a></span></dt>
+<dt><span class="section"><a href="act/introduction.html">Introduction</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/introduction.html#act.introduction.polymorphic_algorithms">Polymorphic
+      Algorithms</a></span></dt>
+<dt><span class="section"><a href="act/introduction.html#act.introduction.algorithm_models">Algorithm Models</a></span></dt>
+<dt><span class="section"><a href="act/introduction.html#act.introduction.actions">Actions</a></span></dt>
+<dt><span class="section"><a href="act/introduction.html#act.introduction.active_objects">Active Objects</a></span></dt>
+<dt><span class="section"><a href="act/introduction.html#act.introduction.act_models">Act Models</a></span></dt>
+<dt><span class="section"><a href="act/introduction.html#act.introduction.atomic_objects">Atomic Objects</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/compiler_setup.html">Compiler Setup</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/compiler_setup.html#act.compiler_setup.downloading_boost">Downloading Boost</a></span></dt>
+<dt><span class="section"><a href="act/compiler_setup.html#act.compiler_setup.enabling_parallel_algorithms">Enabling
+      Parallel Algorithms</a></span></dt>
+<dt><span class="section"><a href="act/compiler_setup.html#act.compiler_setup.linking_with_boost_threads">Linking
+      with Boost.Threads</a></span></dt>
+<dt><span class="section"><a href="act/compiler_setup.html#act.compiler_setup.compiling_the_library">Compiling the
+      Library</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/basic_usage.html">Basic Usage</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/basic_usage.html#act.basic_usage.parallel_copy">Parallel Copy</a></span></dt>
+<dt><span class="section"><a href="act/basic_usage.html#act.basic_usage.parallel_for_each">Parallel For Each</a></span></dt>
+<dt><span class="section"><a href="act/basic_usage.html#act.basic_usage.creating_polymorphic_algorithms">Creating
+      Polymorphic Algorithms</a></span></dt>
+<dt><span class="section"><a href="act/basic_usage.html#act.basic_usage.creating_actions">Creating Actions</a></span></dt>
+<dt><span class="section"><a href="act/basic_usage.html#act.basic_usage.instantiating_active_types">Instantiating
+      Active Types</a></span></dt>
+<dt><span class="section"><a href="act/basic_usage.html#act.basic_usage.instantiating_atomic_types">Instantiating
+      Atomic Types</a></span></dt>
+<dt><span class="section"><a href="act/basic_usage.html#act.basic_usage.accessing_active_objects_via_actions">Accessing
+      Active Objects via Actions</a></span></dt>
+<dt><span class="section"><a href="act/basic_usage.html#act.basic_usage.creating_active_interfaces">Creating
+      Active Interfaces</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/advanced_usage.html">Advanced Usage</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/advanced_usage.html#act.advanced_usage.specifying_algorithm_models_at_the_call_site">Specifying
+      Algorithm Models at the Call-Site</a></span></dt>
+<dt><span class="section"><a href="act/advanced_usage.html#act.advanced_usage.passing_model_specific_arguments_to_polymorphic_algorithms">Passing
+      Model-Specific Arguments to Polymorphic Algorithms</a></span></dt>
+<dt><span class="section"><a href="act/advanced_usage.html#act.advanced_usage.specifying_act_models_during_action_and_active_type_instantiation">Specifying
+      Act Models during Action and Active Type Instantiation</a></span></dt>
+<dt><span class="section"><a href="act/advanced_usage.html#act.advanced_usage.overriding_a_concurrent_active_object_s_main_function">Overriding
+      a Concurrent Active Object's Main Function</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/concepts.html">Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.act_model">Act Model</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.active_interface">Active Interface</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.active_type">Active Type</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.algorithm_model">Algorithm Model</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.atomic_type">Atomic Type</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.concurrent_active_main">Concurrent Active
+      Main</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.polymorphic_algorithm">Polymorphic Algorithm</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.parallel_safe_assignable">Parallel-Safe
+      Assignable</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.parallel_safe_operation">Parallel-Safe Operation</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.worker_allocator">Worker Allocator</a></span></dt>
+<dt><span class="section"><a href="act/concepts.html#act.concepts.worker">Worker</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/parallel_safety.html">Parallel Safety</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/parallel_safety.html#act.parallel_safety.defaults">Defaults</a></span></dt>
+<dt><span class="section"><a href="act/parallel_safety.html#act.parallel_safety.overriding_defaults">Overriding Defaults</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/poly_algos.html"> Polymorphic Algorithms</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/poly_algos.html#act.poly_algos.act_algos"> Polymorphic Boost.Act Algorithms</a></span></dt>
+<dt><span class="section"><a href="act/poly_algos.html#act.poly_algos.non_mod_algos"> Polymorphic Non Modifying
+      Sequence Operations</a></span></dt>
+<dt><span class="section"><a href="act/poly_algos.html#act.poly_algos.polymorphic_mutating_sequence_operations">Polymorphic
+      Mutating Sequence Operations</a></span></dt>
+<dt><span class="section"><a href="act/poly_algos.html#act.poly_algos.polymorphic_sorting_and_related_operations">Polymorphic
+      Sorting and Related Operations</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/functional.html">Functional</a></span></dt>
+<dd><dl><dt><span class="section"><a href="act/functional.html#act.functional.parallel_ranges_function">Parallel Ranges
+      Function</a></span></dt></dl></dd>
+<dt><span class="section"><a href="act/type_traits.html">Type Traits</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.add_active">add_active</a></span></dt>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.add_atomic">add_atomic</a></span></dt>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.has_parallel_safe_assign">has_parallel_safe_assign</a></span></dt>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.is_act_model">is_act_model</a></span></dt>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.is_active">is_active</a></span></dt>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.is_atomic">is_atomic</a></span></dt>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.is_algo_model">is_algo_model</a></span></dt>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.is_parallel_safe">is_parallel_safe</a></span></dt>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.remove_active">remove_active</a></span></dt>
+<dt><span class="section"><a href="act/type_traits.html#act.type_traits.remove_atomic">remove_atomic</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/configuration.html">Configuration</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/configuration.html#act.configuration.checking_parallel_support">Checking
+      Parallel Support</a></span></dt>
+<dt><span class="section"><a href="act/configuration.html#act.configuration.default_algorithm_model">Default Algorithm
+      Model</a></span></dt>
+<dt><span class="section"><a href="act/configuration.html#act.configuration.default_act_model">Default Act Model</a></span></dt>
+<dt><span class="section"><a href="act/configuration.html#act.configuration.maximum_number_of_call_parameters">Maximum
+      Number of Call Parameters</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/common_act_models.html">Common Act Models</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/common_act_models.html#act.common_act_models.concurrent_act_model">Concurrent
+      Act Model</a></span></dt>
+<dt><span class="section"><a href="act/common_act_models.html#act.common_act_models.immediate_act_model">Immediate
+      Act Model</a></span></dt>
+<dt><span class="section"><a href="act/common_act_models.html#act.common_act_models.lazy_act_model">Lazy Act Model</a></span></dt>
+<dt><span class="section"><a href="act/common_act_models.html#act.common_act_models.concurrent_lazy_act_model">Concurrent
+      Lazy Act Model</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/common_algorithm_models.html">Common Algorithm Models</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/common_algorithm_models.html#act.common_algorithm_models.parallel_algorithm_model">Parallel
+      Algorithm Model</a></span></dt>
+<dt><span class="section"><a href="act/common_algorithm_models.html#act.common_algorithm_models.serial_algorithm_model">Serial
+      Algorithm Model</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/rationale.html">Rationale</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="act/rationale.html#act.rationale.policy_based_design">Policy-Based Design</a></span></dt>
+<dt><span class="section"><a href="act/rationale.html#act.rationale.actions_vs__futures">Actions vs. Futures</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="act/future_direction.html">Future Direction</a></span></dt>
+<dt><span class="section"><a href="act/acknowledgements.html">Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="act/development_status.html">Development status</a></span></dt>
+</dl>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="act.brief_description"></a><a href="index.html#act.brief_description" title="Brief Description">Brief Description</a></h2></div></div></div>
+<p>
+      Boost.Act is a C++ library which introduces STL-style algorithms that may be
+      toggled to run in parallel or serially, and which provides tools for creating
+      and working with parallelable algorithms, asynchronous function calls, active
+      objects, and atomic objects, all with implementations adjustable via policies.
+    </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small></small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="act/beta_warning.html"><img src="images/next.png" alt="Next"></a></div>
+</body>
+</html>

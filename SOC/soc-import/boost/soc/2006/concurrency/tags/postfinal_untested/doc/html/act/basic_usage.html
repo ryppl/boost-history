@@ -1,0 +1,529 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Basic Usage</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../index.html" title="Boost.Act 0.4b">
+<link rel="up" href="../index.html" title="Boost.Act 0.4b">
+<link rel="prev" href="compiler_setup.html" title="Compiler Setup">
+<link rel="next" href="advanced_usage.html" title="Advanced Usage">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="compiler_setup.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="advanced_usage.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="act.basic_usage"></a><a href="basic_usage.html" title="Basic Usage">Basic Usage</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="basic_usage.html#act.basic_usage.parallel_copy">Parallel Copy</a></span></dt>
+<dt><span class="section"><a href="basic_usage.html#act.basic_usage.parallel_for_each">Parallel For Each</a></span></dt>
+<dt><span class="section"><a href="basic_usage.html#act.basic_usage.creating_polymorphic_algorithms">Creating
+      Polymorphic Algorithms</a></span></dt>
+<dt><span class="section"><a href="basic_usage.html#act.basic_usage.creating_actions">Creating Actions</a></span></dt>
+<dt><span class="section"><a href="basic_usage.html#act.basic_usage.instantiating_active_types">Instantiating
+      Active Types</a></span></dt>
+<dt><span class="section"><a href="basic_usage.html#act.basic_usage.instantiating_atomic_types">Instantiating
+      Atomic Types</a></span></dt>
+<dt><span class="section"><a href="basic_usage.html#act.basic_usage.accessing_active_objects_via_actions">Accessing
+      Active Objects via Actions</a></span></dt>
+<dt><span class="section"><a href="basic_usage.html#act.basic_usage.creating_active_interfaces">Creating
+      Active Interfaces</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.basic_usage.parallel_copy"></a><a href="basic_usage.html#act.basic_usage.parallel_copy" title="Parallel Copy">Parallel Copy</a></h3></div></div></div>
+<p>
+        One operation which is easily parallelable is an algorithm which copies the
+        objects represented in one range to another range. Much like <code class="literal">::std::copy</code>
+        in the standard library, the corresponding algorithm in Boost.Act takes a
+        source iterator range, represented by a begin and end iterator, followed
+        by the begin iterator of a target range. Use of the algorithm is similar,
+        only it exists in the <code class="literal">::boost::act</code> namespace as opposed
+        to the <code class="literal">::std</code> namespace, and it also has the benefit of
+        being useable with Boost.Lambda.
+      </p>
+<p>
+        The following code uses Boost.Act to copy one range to another, making the
+        call parallel if the concurrent act model is the current default and the
+        compiler supports OpenMP.
+      </p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">algorithm</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">deque</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">copy</span><span class="special">;</span>
+
+  <span class="comment">// Source range of 100 elements, each having the value 5
+</span>  <span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">source</span><span class="special">(</span> <span class="number">100</span><span class="special">,</span> <span class="number">5</span> <span class="special">);</span>
+
+  <span class="comment">//Target range
+</span>  <span class="identifier">deque</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">target</span><span class="special">(</span> <span class="number">100</span> <span class="special">);</span>
+
+  <span class="comment">// Uses ::boost::act::copy to copy from source to target
+</span>  <span class="identifier">copy</span><span class="special">(</span> <span class="identifier">source</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">source</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">target</span><span class="special">.</span><span class="identifier">begin</span><span class="special">()</span> <span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Note that with user-defined types, an additional step has to be taken to
+        allow the algorithm to execute in parallel. For more details, see __parallel<span class="underline">traits</span>_.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.basic_usage.parallel_for_each"></a><a href="basic_usage.html#act.basic_usage.parallel_for_each" title="Parallel For Each">Parallel For Each</a></h3></div></div></div>
+<p>
+        Another common algorithm which is often easily parallelable is <code class="literal">for_each</code>.
+        Just like with <code class="literal">copy</code>, the semantics of <code class="literal">for_each</code>
+        are similar to those of <code class="literal">for_each</code> in the STL. Here, the
+        first two arguments are the begin and end iterators of a desired range, and
+        the last is a function object to be applied on each of the elements in that
+        range. This code also introduces a new mechanism, in the form of a base type
+        called <code class="literal">parallel_safe</code>, which specifies that the given function
+        object may be copied any number of times with each copy able to be invoked
+        at the same time in different threads of execution and have the effect be
+        the same as if a single instance were used in one thread for all iterations.
+      </p>
+<p class="blurb">
+        <span class="inlinemediaobject"><img src="../images/alert.png" alt="alert"></span> Without inheriting from the <code class="literal">parallel_safe</code>
+        base type or using other means to identify your function as being safe for
+        use in a parallel algorithm described in the __parallel<span class="underline">traits</span>_
+        section, calling <code class="literal">for_each</code> or any other parallelable algorithm
+        provided by Boost.Act with an instance of your function object type will
+        cause the algorithm to run synchronously.
+      </p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">algorithm</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">parallel_safe</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">increment</span>
+  <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">parallel_safe</span>
+<span class="special">{</span>
+  <span class="keyword">void</span> <span class="keyword">operator</span> <span class="special">()(</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">target</span> <span class="special">)</span> <span class="keyword">const</span>
+  <span class="special">{</span>
+    <span class="special">++</span><span class="identifier">target</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">;</span>
+
+  <span class="comment">// Source range of 100 elements, each having the value 4
+</span>  <span class="identifier">vector</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">source</span><span class="special">(</span> <span class="number">100</span><span class="special">,</span> <span class="number">4</span> <span class="special">);</span>
+
+  <span class="comment">// Uses ::boost::act::for_each to increment each element
+</span>  <span class="identifier">for_each</span><span class="special">(</span> <span class="identifier">source</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">source</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="identifier">increment</span><span class="special">()</span> <span class="special">);</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.basic_usage.creating_polymorphic_algorithms"></a><a href="basic_usage.html#act.basic_usage.creating_polymorphic_algorithms" title="Creating
+      Polymorphic Algorithms">Creating
+      Polymorphic Algorithms</a></h3></div></div></div>
+<p>
+        While Boost.Act provides many common polymorphic algorithms, it would not
+        be complete without the ability for users to create their own. The creation
+        of such algorithms in Boost.Act is performed through the use of the function
+        object <code class="literal">basic_for</code>. <code class="literal">basic_for</code> is a simplified
+        form of for loop construct which limits the loop variable to built-in integral
+        types, limits the comparison to ordered comparison operators, and limits
+        the step expression to additive operations applied to the loop variable.
+        All values other than the loop variable are calculated once upon entry into
+        the algorithm. If an attempt is made to specify more complex expressions
+        than described, the code will not compile.
+      </p>
+<p>
+        In order to use the <code class="literal">basic_for</code> algorithm, you may <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">algorithm</span><span class="special">/</span><span class="identifier">basic_for</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+        or <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">algorithm</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>.
+        Initialization, condition, and step expressions are specified as the first,
+        second, and third arguments respectively, using <code class="literal">boost::act::for_var</code>
+        to refer to the loop variable. The type of the loop variable is determined
+        by the type of the variable of which it is initialized to. To represent the
+        body of the for loop, one must pass a function object as an argument to the
+        index operator following the call to <code class="literal">basic_for</code>, or as
+        a fourth argument to <code class="literal">basic_for</code>. Function objects passed
+        in this manner are applied during each iteration of the associated <code class="literal">basic_for</code>
+        operation and receive the current loop variable value as an argument with
+        each call.
+      </p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">algorithm</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">output_for_var</span>
+  <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">parallel_safe</span>
+<span class="special">{</span>
+  <span class="keyword">void</span> <span class="keyword">operator</span> <span class="special">()(</span> <span class="keyword">int</span> <span class="identifier">index</span> <span class="special">)</span> <span class="keyword">const</span>
+  <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">index</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">basic_for</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">for_var</span><span class="special">;</span>
+  
+  <span class="identifier">basic_for</span><span class="special">(</span> <span class="identifier">for_var</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">for_var</span> <span class="special">&lt;</span> <span class="number">10</span><span class="special">,</span> <span class="special">++</span><span class="identifier">for_var</span> <span class="special">)</span>
+  <span class="special">[</span>
+    <span class="identifier">output_for_var</span><span class="special">()</span>
+  <span class="special">];</span>
+<span class="special">}</span>
+</pre>
+<p>
+        In future releases, Boost.Act will expose more constructs other than <code class="literal">basic_for</code>.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.basic_usage.creating_actions"></a><a href="basic_usage.html#act.basic_usage.creating_actions" title="Creating Actions">Creating Actions</a></h3></div></div></div>
+<p>
+        Having algorithms run in parallel and join prior to returning is one easy
+        way to take advantantage of multi-threading capabilities. However, as previously
+        described, often times one may wish to signal an operation to be performed
+        and not require the actual operation to complete its execution until some
+        later point in code. This allows you to signal one task, perform some other
+        unrelated operations, and then come back at some later point in time to optionally
+        force a wait for the original operation to complete. Such behavior is expressible
+        in Boost.Act through the use of <code class="literal">actions</code>.
+      </p>
+<p>
+        In the following code, an <code class="literal">action</code> is used to signal a function
+        call using the default act model, perform some simple calculations on unrelated
+        data, and then finally go back and obtain the result of the operation.
+      </p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">action</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">factorial</span><span class="special">(</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">)</span>
+<span class="special">{</span>
+  <span class="keyword">return</span> <span class="special">(</span> <span class="identifier">value</span> <span class="special">==</span> <span class="number">0</span> <span class="special">)</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="identifier">value</span> <span class="special">*</span> <span class="identifier">factorial</span><span class="special">(</span> <span class="identifier">value</span> <span class="special">-</span> <span class="number">1</span> <span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">action</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">as_function</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span>
+
+  <span class="comment">// Where unsigned int is the return type of the function
+</span>  <span class="identifier">action</span><span class="special">&lt;</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">fac_10</span><span class="special">(</span> <span class="identifier">as_function</span><span class="special">(</span> <span class="identifier">factorial</span> <span class="special">),</span> <span class="number">10</span> <span class="special">);</span>
+
+  <span class="identifier">factorial</span><span class="special">(</span> <span class="number">15</span> <span class="special">);</span>
+
+  <span class="comment">// Wait for the return value and store it in result
+</span>  <span class="keyword">int</span> <span class="keyword">const</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">fac_10</span><span class="special">-&gt;</span><span class="identifier">inactive_value</span><span class="special">();</span>
+
+  <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"10! = "</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The above code presents some unfamiliar functions. First, we have <code class="literal">as_function</code>,
+        which is used to specify that the first argument you are passing to the action
+        constructor is a function to execute. This is necessary for disambiguation
+        between other action constructors which will be described later. Following
+        that argument is the value 10, which is the argument to be passed to <code class="literal">factorial</code>
+        for invocation. Finally, before main finishes execution, we indirectly call
+        <code class="literal">inactive_value</code> through <code class="literal">fac_10</code>, which
+        is how we specify that we wish to obtain a copy of the result of the function
+        call, implicitly waiting for the function to complete. In this example, a
+        function was used, however, a function object could have been used as well.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.basic_usage.instantiating_active_types"></a><a href="basic_usage.html#act.basic_usage.instantiating_active_types" title="Instantiating
+      Active Types">Instantiating
+      Active Types</a></h3></div></div></div>
+<p>
+        Active objects in Boost.Act are implemented through the use of a pseudo-qualifier
+        applied via a macro. Much like <code class="literal">const</code> or <code class="literal">volatile</code>,
+        you can take any type and add the qualifier to it, which limits the interface
+        of the type to only active qualified member functions and other functions
+        which take an active qualified version as a parameter. Like with <code class="literal">const</code>
+        or <code class="literal">volatile</code> member functions, you must specify in their
+        definition that the object must be appropriately qualified for use with the
+        function. Such calls return <code class="literal">actions</code> so that you may wait
+        for completion and access the result of the call similar to the manner in
+        which you would for active function calls as described in the previous section.
+        Boost.Act defines appropriate operations for built-ins such that you may,
+        for example, work with active arithmetic types intuitively.
+      </p>
+<p>
+        The simplest way to qualify a type with active is to <code class="code"><span class="preprocessor">#include</span>
+        <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">active</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+        and use the macro <code class="literal">BOOST_ACTIVE</code>, which takes a single type
+        as a parameter enclosed in parenthesis yields a datatype which has the same
+        const-qualification as the type which was passed and which represents the
+        active form of the type.
+      </p>
+<p>
+        The following code defines an active int and performs a series of operations
+        on it.
+      </p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">action</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">active</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">action</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+  <span class="comment">// Note that int is encapsulated in an extra set of parenthesis
+</span>  <span class="identifier">BOOST_ACTIVE</span><span class="special">((</span><span class="keyword">int</span><span class="special">))</span> <span class="identifier">value</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+
+  <span class="identifier">value</span> <span class="special">+=</span> <span class="number">10</span><span class="special">;</span>
+
+  <span class="identifier">value</span> <span class="special">=</span> <span class="special">*-</span><span class="identifier">value</span><span class="special">;</span>
+
+  <span class="identifier">action</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">result</span> <span class="special">=</span> <span class="identifier">value</span> <span class="special">+</span> <span class="identifier">value</span><span class="special">;</span>
+
+  <span class="special">++</span><span class="identifier">value</span><span class="special">;</span>
+
+  <span class="comment">// result's value may not be calculated at this point
+</span>
+  <span class="comment">// Output the result (forcing a wait)
+</span>  <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"value after the calculation is completed: "</span>
+       <span class="special">&lt;&lt;</span> <span class="identifier">result</span><span class="special">-&gt;</span><span class="identifier">inactive_value</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The above code creates an active <code class="literal">int</code> and signals several
+        operations to be performed using its value. While each operation is guaranteed
+        to be performed in order, it's dependent on the default act model as to when
+        they will be run. At the end of main, the application waits for the result,
+        much like the code in the previous section. Here, the wait also implies that
+        the other calculations on value signaled prior to result's initialization
+        are completed by the time the call to <code class="literal">inactive_value</code> returns.
+        The call to <code class="literal">++value</code>, however, may have not yet occured.
+      </p>
+<a name="act.basic_usage.instantiating_active_types.active_qualifying_types_dependent_on_template_arguments"></a><h5>
+<a name="id503811"></a>
+        <a href="basic_usage.html#act.basic_usage.instantiating_active_types.active_qualifying_types_dependent_on_template_arguments">Active-qualifying
+        Types Dependent on Template Arguments</a>
+      </h5>
+<p>
+        While you may normally use the BOOST_ACTIVE macro to active-qualify a given
+        type, in cases where the type being qualified is dependent on a template
+        argument you must use BOOST_ACTIVE_T instead.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.basic_usage.instantiating_atomic_types"></a><a href="basic_usage.html#act.basic_usage.instantiating_atomic_types" title="Instantiating
+      Atomic Types">Instantiating
+      Atomic Types</a></h3></div></div></div>
+<p>
+        Atomic types in Boost.Act share the same interface as corresponding active
+        types, with the exception being that their functions directly return their
+        values as opposed to returning <code class="literal">actions</code>. Also unlike active
+        types is the exclusion of an explicit act model.
+      </p>
+<p>
+        Instantiation of atomic types is done using the <code class="literal">BOOST_ATOMIC</code>
+        macro and its associated forms. Much like with <code class="literal">BOOST_ACTIVE</code>,
+        the type being passed must be surrounded by an extra set of parenthesis.
+      </p>
+<p>
+        The following code defines an <code class="literal">atomic</code> int and manipulates
+        in two different threads.
+      </p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">action</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">atomic</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">void</span> <span class="identifier">modify_value</span><span class="special">(</span> <span class="identifier">BOOST_ATOMIC</span><span class="special">((</span><span class="keyword">int</span><span class="special">))&amp;</span> <span class="identifier">value</span> <span class="special">)</span>
+<span class="special">{</span>
+  <span class="comment">// value is updated atomically
+</span>  <span class="identifier">value</span> <span class="special">*=</span> <span class="number">2</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">action</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">as_function</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+  
+  <span class="comment">// Create an atomic int
+</span>  <span class="identifier">BOOST_ATOMIC</span><span class="special">((</span><span class="keyword">int</span><span class="special">))</span> <span class="identifier">value</span> <span class="special">=</span> <span class="number">20</span><span class="special">;</span>
+  
+  <span class="comment">// Execute the modify_value function asynchronous to the call-site
+</span>  <span class="identifier">action</span><span class="special">&lt;</span> <span class="keyword">void</span><span class="special">,</span> <span class="identifier">concurrent_act_model</span> <span class="special">&gt;</span> <span class="keyword">const</span>
+    <span class="identifier">modify_value_action</span><span class="special">(</span> <span class="identifier">as_function</span><span class="special">(</span> <span class="identifier">modify_value</span> <span class="special">)</span>
+                       <span class="special">,</span> <span class="identifier">value</span>
+                       <span class="special">);</span>
+  
+  <span class="comment">// value is updated atomically
+</span>  <span class="identifier">value</span> <span class="special">/=</span> <span class="number">2</span><span class="special">;</span>
+  
+  <span class="identifier">modify_value_action</span><span class="special">.</span><span class="identifier">wait</span><span class="special">();</span>
+  
+  <span class="comment">// Output is guaranteed to be the value 20
+</span>  <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"value: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.basic_usage.accessing_active_objects_via_actions"></a><a href="basic_usage.html#act.basic_usage.accessing_active_objects_via_actions" title="Accessing
+      Active Objects via Actions">Accessing
+      Active Objects via Actions</a></h3></div></div></div>
+<p>
+        As was mentioned, the results of actions can be accessed indirectly through
+        action objects. This allows you to make active function calls and signal
+        operations on the result without having to wait for the initial function
+        to complete.
+      </p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">action</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">factorial</span><span class="special">(</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">value</span> <span class="special">)</span>
+<span class="special">{</span>
+  <span class="keyword">return</span> <span class="special">(</span> <span class="identifier">value</span> <span class="special">==</span> <span class="number">0</span> <span class="special">)</span> <span class="special">?</span> <span class="number">1</span> <span class="special">:</span> <span class="identifier">value</span> <span class="special">*</span> <span class="identifier">factorial</span><span class="special">(</span> <span class="identifier">value</span> <span class="special">-</span> <span class="number">1</span> <span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">action</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">as_function</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">;</span>
+  <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+
+  <span class="comment">// Where int is the return type of the function
+</span>  <span class="identifier">action</span><span class="special">&lt;</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">fac_10</span><span class="special">(</span> <span class="identifier">as_function</span><span class="special">(</span> <span class="identifier">factorial</span> <span class="special">),</span> <span class="number">10</span> <span class="special">);</span>
+
+  <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="keyword">const</span> <span class="identifier">value</span> <span class="special">=</span> <span class="identifier">factorial</span><span class="special">(</span> <span class="number">15</span> <span class="special">);</span>
+
+  <span class="comment">// Use -&gt; and * to access the result value as though it were an active
+</span>  <span class="comment">// object. Note that this does not a force a wait, but rather, it adds the
+</span>  <span class="comment">// += operation to a queue
+</span>  <span class="identifier">action</span><span class="special">&lt;</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">result</span> <span class="special">=</span> <span class="special">(*</span><span class="identifier">fac_10</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">value</span><span class="special">;</span>
+
+  <span class="comment">// fac_10's value may not be calculated at this point
+</span>
+  <span class="comment">// Forces a wait to get the resultant value
+</span>  <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"10! + 15! = "</span> <span class="special">&lt;&lt;</span> <span class="identifier">result</span><span class="special">-&gt;</span><span class="identifier">inactive_value</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.basic_usage.creating_active_interfaces"></a><a href="basic_usage.html#act.basic_usage.creating_active_interfaces" title="Creating
+      Active Interfaces">Creating
+      Active Interfaces</a></h3></div></div></div>
+<p>
+        Working with built-in types is great, but without the ability to define active
+        interfaces for your own types, Boost.Act would leave much to be desired.
+        The code needed to make simple interfaces for active objects tends to be
+        somewhat complicated, so a collection of macros are provided to make the
+        development of active interfaces easier.
+      </p>
+<p>
+        To create an active interface for a type, you must start by partially specializing
+        <code class="literal">active_interface</code> in <code class="literal">boost::act</code> for
+        your type. The body of the template specialization now corresponds to an
+        extension of the body of the type for which you are making the active interface.
+        Here you may use macros provided by Boost.Act to create member functions
+        and friend functions which may be used with active qualified instantiations
+        of your type. From within the defintion of these functions, you have access
+        to the active-unqualified version of your object.
+      </p>
+<p>
+        From that point on, you may use the functions you created when you instantiate
+        your type with active qualification.
+      </p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">action</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">active</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">struct</span> <span class="identifier">your_type</span>
+<span class="special">{</span>
+  <span class="identifier">your_type</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">value</span><span class="special">(</span> <span class="number">0</span> <span class="special">)</span> <span class="special">{}</span>
+  <span class="keyword">int</span> <span class="identifier">value</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">namespace</span> <span class="identifier">boost</span>
+<span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">act</span>
+<span class="special">{</span>
+
+<span class="identifier">BOOST_ACT_ACTIVE_INTERFACE_SPEC</span><span class="special">(</span> <span class="special">::</span><span class="identifier">your_type</span> <span class="special">)</span>
+<span class="special">{</span>
+  <span class="identifier">BOOST_ACT_MEM_FUN</span><span class="special">(</span> <span class="special">(</span><span class="keyword">void</span><span class="special">),</span> <span class="identifier">update_value</span><span class="special">,</span> <span class="special">((</span><span class="keyword">int</span><span class="special">),</span><span class="identifier">left</span><span class="special">)</span> <span class="special">((</span><span class="keyword">int</span><span class="special">),</span><span class="identifier">right</span><span class="special">)</span> <span class="special">)</span>
+  <span class="special">{</span>
+    <span class="keyword">using</span> <span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    
+    <span class="comment">// Use target to access the target object
+</span>    <span class="identifier">target</span><span class="special">.</span><span class="identifier">value</span> <span class="special">+=</span> <span class="identifier">left</span> <span class="special">*</span> <span class="identifier">right</span><span class="special">;</span>
+    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"New value: "</span> <span class="special">&lt;&lt;</span> <span class="identifier">target</span><span class="special">.</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="special">}</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">action</span><span class="special">;</span>
+
+  <span class="identifier">BOOST_ACTIVE</span><span class="special">((</span><span class="identifier">your_type</span><span class="special">))</span> <span class="identifier">object</span><span class="special">;</span>
+  
+  <span class="comment">// Call update value (queues function, returns immediately)
+</span>  <span class="identifier">object</span><span class="special">.</span><span class="identifier">update_value</span><span class="special">(</span> <span class="number">3</span><span class="special">,</span> <span class="number">4</span> <span class="special">);</span>
+  
+  <span class="identifier">action</span><span class="special">&lt;&gt;</span> <span class="keyword">const</span> <span class="identifier">running_fun</span> <span class="special">=</span> <span class="identifier">object</span><span class="special">.</span><span class="identifier">update_value</span><span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="number">2</span> <span class="special">);</span>
+  
+  <span class="identifier">object</span><span class="special">.</span><span class="identifier">update_value</span><span class="special">(</span> <span class="number">1</span><span class="special">,</span> <span class="number">6</span> <span class="special">);</span>
+  
+  <span class="identifier">running_fun</span><span class="special">.</span><span class="identifier">wait</span><span class="special">();</span> <span class="comment">// Force running_fun to complete
+</span><span class="special">}</span>
+</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006 Matthew Calabrese</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="compiler_setup.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="advanced_usage.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

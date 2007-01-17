@@ -1,0 +1,2044 @@
+[part Boost.Act
+    [quickbook 1.4]
+    [version 0.4b]
+    [id act]
+    [dirname act]
+    [copyright 2006 Matthew Calabrese]
+    [category C++ Concurrency Library]
+    [authors [Calabrese, Matthew]]
+    [source-mode c++]
+]
+
+[template algo[effects returns complexity]
+
+[table
+[[Effects][Returns][Complexity]]
+[[[effects]][[returns]][[complexity]]]
+]
+
+]
+
+[template algo_req[requires effects returns complexity]
+
+[*Requires]: [requires]
+
+[table
+[[Effects][Returns][Complexity]]
+[[[effects]][[returns]][[complexity]]]
+]
+
+]
+
+[section:poly_algos Polymorphic Algorithms]
+
+All algorithms in this section are compliant =polymorphic algorithms=. In order
+to simplify the following descriptions, any code which is common to all
+compliant =polymorphic algorithms= is assumed rather than explicitly written.
+
+[section:act_algos Polymorphic Boost.Act Algorithms]
+
+The algorithms in this section do not have corresponding algorithms in the C++
+standard libraries.
+
+[section Basic For]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename AssignmentType
+            , typename PredicateType
+            , typename StepType
+            >
+    ``/unspecified-type/`` operator ()( AssignmentType ``/assign/``
+                                , PredicateType ``/pred/``
+                                , StepType ``/step/``
+                                ) const;
+    
+    template< typename AssignmentType
+            , typename PredicateType
+            , typename StepType
+            , typename BodyType
+            >
+    BodyType operator ()( AssignmentType ``/assign/``
+                        , PredicateType ``/pred/``
+                        , StepType ``/step/``
+                        , BodyType ``/body/``
+                        ) const;
+  } const basic_for;
+
+[algo_req
+ToDo: Put for_var requirements here and add info about
+/unspecified-type/.
+
+..Initializes internal variable `i` with `assign()` and calls `body( i )`
+followed by `step( i )` until `pred( i ) == false`.
+
+../body/.
+
+..Exactly `n` calls to `body`, where `n` is the number of iterations which take
+place while `pred( i ) != false`.
+]
+
+[endsect]
+
+[section Parallelize]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename Function >
+    void operator ()( Function fun ) const;
+  
+  } const parallelize;
+
+[algo
+Creates `N` copies of binary function object `fun` including the original, then
+invokes each copy with the arguments `I` and `N`, where `I` is a unique
+identifier in the range [`0`,`N`). Note that `N` must be greater than or equal
+to 1, implying that fun will always logically be invoked at least one time
+regardless of the algorithm model being used. The datatype of `I` and `N` is an
+implementation-defined integral type.
+
+..[']
+
+..`N` total copies of `fun` are made and all executed in their own thread prior
+to returning to the caller.
+]
+
+[endsect]
+
+[section Sections]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename Function1 >
+    void operator ()( Function1 fun1 ) const;
+    
+    template< typename Function1
+            , typename Function2
+            >
+    void operator ()( Function1 fun1
+                    , Function2 fun2
+                    ) const;
+  
+    // etc.
+  
+    template< typename Function1
+            , typename Function2
+              ...
+            , typename FunctionN
+            >
+    void operator ()( Function1 fun1
+                    , Function2 fun2
+                      ...
+                    , FunctionN funN
+                    ) const;
+  } const sections;
+
+[algo
+Calls all function objects passed to sections in an implementation-specified
+order. In particular, algorithm models are permitted to execute the functions in
+parallel, as is the case with the parallel algorithm model.
+
+..[']
+
+..Each function object is called exactly once prior to returning to the caller.
+]
+
+[endsect]
+
+[section For Each If]
+  
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename Function
+            , typename Compare
+            >
+    Function operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                        , Function ``/f/``
+                        , Compare ``/comp/``
+                        ) const;
+  } const for_each_if;
+
+[algo
+Applies /f/ to the result of dereferencing every iterator `i` in the range
+[`first`, `last`) if `comp( *i ) != false`. 
+
+../f/.
+
+..Applies `comp` exactly `last - first` times and applies `f` once for each
+element which satisfies `comp`.
+]
+
+[endsect]
+
+[endsect]
+
+[section:non_mod_algos Polymorphic Non Modifying Sequence Operations]
+
+The following are polymorphic forms of the C++ algorithms found in `<algorithm>`
+which are labled as "Non modifying sequence operations" in section 25.1 of the
+C++ standard.
+
+[section For Each]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename Function >
+    Function operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                        , Function ``/f/``
+                        ) const;
+  } const for_each;
+
+[algo
+Applies /f/ to the result of dereferencing every iterator in the range
+[`first`, `last`).
+
+../f/.
+
+..Applies /f/ exactly ['last - first] times.
+]
+
+[warning
+Unlike the standard C++ form of =for_each=, the polymorphic form of =for_each=
+does not impose any order of the execution of `f` with respect to individual
+elements. If you wish, you may pass `::boost::act::ordered()` as an
+=extended parameter= in order to force execution to occur in order from `first`
+to `last`.
+]
+
+[endsect]
+
+[section Find]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename T >
+    InputIterator operator ()( InputIterator ``/first/``
+                             , InputIterator ``/last/``
+                             , const T& ``/value/``
+                             ) const;
+  } const find;
+  
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename Predicate >
+    InputIterator operator ()( InputIterator ``/first/``
+                             , InputIterator ``/last/``
+                             , Predicate ``/pred/``
+                             ) const;
+  } const find_if;
+
+
+[algo_req
+Type `T` is =EqualityComparable= (C++ Standard: 20.1.1)
+
+..Finds a value in a sequence.
+
+..The first iterator `i` in the range [`first`, `last`) for which the following
+corresponding conditions hold: `*i == value`, `pred(*i) != false`. Returns
+`last` if no such iterator is found.
+
+..At most `last - first` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Find End]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator1, typename ForwardIterator2 >
+    ForwardIterator1
+      operator ()( ForwardIterator1 ``/first1/``, ForwardIterator1 ``/last1/``
+                 , ForwardIterator2 ``/first2/``, ForwardIterator2 ``/last2/``
+                 ) const;
+    
+    template< typename ForwardIterator1, typename ForwardIterator2
+            , typename BinaryPredicate
+            >
+    ForwardIterator1
+      operator ()( ForwardIterator1 ``/first1/``, ForwardIterator1 ``/last1/``
+                 , ForwardIterator2 ``/first2/``, ForwardIterator2 ``/last2/``
+                 , BinaryPredicate ``/pred/``
+                 ) const;
+  } const find_end;
+
+[algo
+Finds a subsequence of equal values in a sequence.
+
+..The last iterator =i= in the range [/first1/, ['last1 - (last2-first2))] such
+that for any non-negative integer =n= < ['(last2-first2)], the following
+corresponding conditions hold: `*(i+n) == *(first2+n)`, `pred(*(i+n),
+*(first2+n)) != false`. Returns /last1/ if no such iterator is found.
+
+..At most ['(last2 - first2) * (last1 - first1 - (last2 - first2) + 1)]
+applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Find First]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator1, typename ForwardIterator2 >
+    ForwardIterator1
+      operator ()( ForwardIterator1 ``/first1/``
+                 , ForwardIterator1 ``/last1/``
+                 , ForwardIterator2 ``/first2/``
+                 , ForwardIterator2 ``/last2/``
+                 ) const;
+    
+    template< typename ForwardIterator1, typename ForwardIterator2
+            , typename BinaryPredicate
+            >
+    ForwardIterator1
+      operator ()( ForwardIterator1 ``/first1/``
+                 , ForwardIterator1 ``/last1/``
+                 , ForwardIterator2 ``/first2/``
+                 , ForwardIterator2 ``/last2/``
+                 , BinaryPredicate ``/pred/``
+                 ) const;
+  } const find_first;
+
+[algo
+Finds an element that matches one of a set of values.
+
+..The first iterator =i= in the range [/first1/, ['last1]) such
+that for some integer =j= in the range, the following conditions hold: `*i ==
+*j`, `pred(*i,*j) != false`. Returns /last1/ if no such iterator is found.
+
+..At most ['(last1 - first1) * (last2 - first2)] applications of the
+corresponding predicate.
+]
+
+[endsect]
+
+[section Adjacent Find]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator >
+    ForwardIterator
+      operator ()( ForwardIterator ``/first/``
+                 , ForwardIterator ``/last/``
+                 ) const;
+    
+    template< typename ForwardIterator, typename BinaryPredicate >
+    ForwardIterator
+      operator ()( ForwardIterator ``/first/``
+                 , ForwardIterator ``/last/``
+                 , BinaryPredicate ``/pred/``
+                 ) const;
+  } const adjacent_find;
+
+[algo
+Finds the first of two adjacent elements which satisfy the specified binary
+predicate.
+
+..The first iterator =i= such that both =i= and =i= + 1 are in the range
+[['first, last]) for which the following corresponding conditions hold: `*i ==
+(*i + 1)`, `pred(*i, *(i + 1)) != false`. Returns /last/ if no such iterator is
+found.
+
+..Exactly `find( first, last, value) - first` applications of the corresponding
+predicate.
+]
+
+[endsect]
+
+[section Count]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename T >
+    typename ::boost::iterator_difference< InputIterator >::type
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/`` ) const;
+  } const count;
+  
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename Predicate >
+    typename ::boost::iterator_difference< InputIterator >::type
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                 , Predicate ``/pred/``
+                 ) const;
+  } const count_if;
+  
+[algo_req
+Type =T= is EqualityComparable (C++ Standard: 20.1.1)
+
+..Calculates the number of elements in a range which satisfy the specified
+predicate.
+
+..Returns the number of iterators =i= in the range[['first, last]) for which the
+following corresponding conditions hold: `*i == value`, `pred(*i) != false`.
+
+..Exactly `last - first` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Mismatch]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator1, typename InputIterator2 >
+    ::std::pair< InputIterator1, InputIterator2 >
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``
+                 );
+    
+    template< typename InputIterator1, typename InputIterator2
+            , typename BinaryPredicate
+            >
+    ::std::pair< InputIterator1, InputIterator2 >
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, BinaryPredicate ``/pred/``
+                 ) const;
+  } const mismatch;
+  
+[algo
+ToDo: Fill in.
+
+..A pair of iterators =i= and =j= such that `j == first2 + (i - first1)` and =i=
+is the first iterator in the range [['first1], /last1/) for which the following
+corresponding conditions hold: `!(Ii == *(first2 + (i - first1)))`, `pred(*i,
+*(first2 + (i-first1))) == false`. Returns the pair /last1/ and `first2 + (last1
+- first1)` if such an iterator =i= is not found.
+
+..At most `last1 - first1` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Equal]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator1, typename InputIterator2 >
+    bool operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                    , InputIterator2 ``/first2/``
+                    ) const;
+    
+    template< typename InputIterator1, typename InputIterator2
+            , typename BinaryPredicate
+            >
+    bool operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                    , InputIterator2 ``/first2/``, BinaryPredicate ``/pred/``
+                    ) const;
+  } const equal;
+
+[algo
+Checks the equality of two ranges based on a specified predicate.
+
+..=true= if for every iterator =i= in the range [['first1], /last1/) the
+following corresponding conditions hold: `*i == *(first2 + (i - first1))`,
+`pred(*i, *(first2 + (i - first1))) != false`. Otherwise, returns `false`.
+
+..At most `last1 - first1` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Search]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator1, typename ForwardIterator2 >
+    ForwardIterator1
+      operator ()( ForwardIterator1 ``/first1/``, ForwardIterator1 ``/last1/``
+                 , ForwardIterator2 ``/first2/``, ForwardIterator2 ``/last2/``
+                 ) const;
+    
+    template< typename ForwardIterator1, typename ForwardIterator2
+            , typename BinaryPredicate
+            >
+    ForwardIterator1
+      operator ()( ForwardIterator1 ``/first1/``, ForwardIterator1 ``/last1/``
+                 , ForwardIterator2 ``/first2/``, ForwardIterator2 ``/last2/``
+                 , BinaryPredicate ``/pred/``
+                 ) const;
+  } const search;
+
+[algo
+Finds a subsequence of equal values in a sequence.
+
+..The first iterator `i` in the range [`first1`, `last1 - (last2 - first2)`)
+such that for any non-negative integer `n` less than `last2 - first2` the
+following corresponding conditions hold: `*(i + n) == *(first2 + n)`,
+`pred(*(i + n), *(first2 + n)) != false`. Returns `last1` if no such iterator is
+found.
+
+..At most `(last1 - first1) * (last2 - first2)` applications of the
+corresponding predicate.
+]
+
+[endsect]
+
+[section Search N]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename typename Size, typename T >
+    ForwardIterator
+      operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                 , Size ``/count/``, const T& ``/value/``
+                 ) const;
+    
+    template< typename ForwardIterator, typename typename Size, typename T
+            , typename BinaryPredicate
+            >
+    ForwardIterator
+      operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                 , Size ``/count/``, const T& ``/value/``
+                 , BinaryPredicate ``/pred/``
+                 ) const;
+  } const search_n;
+
+[algo_req
+Type `T` is EqualityComparable (C++ Standard: 20.1.1), type `Size` is
+convertible to integral type (C++ Standard: 4.7, 12.3).
+
+..Finds a subsequence of equal values in a sequence.
+
+..The first iterator `i` in the range [`first1`, `last1 - count`) such that for
+any non-negative integer `n` less than `count` the following corresponding
+conditions hold: `*(i + n) == value`, `pred(*(i + n), value) != false`. Returns
+`last` if no such iterator is found.
+
+..At most `(last - first) * count` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[endsect]
+
+[section Polymorphic Mutating Sequence Operations]
+
+The following are polymorphic forms of the C++ algorithms found in `<algorithm>`
+which are labled as "Mutating Sequence Operations" in section 25.2 of the C++
+standard.
+
+[section Copy]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename OutputIterator >
+    OutputIterator
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                 , OutputIterator ``result``
+                 ) const;
+  } const copy;
+
+[algo_req
+`result` shall not be in the range [`first`, `last`).
+
+..Copies elements in the range [`first`, `last`) into the range [`result`,
+`result + (last - first))` starting from `first` and proceeding to `last`. For
+each non-negative integer `n < (last-first)`, performs `*(result + n) = *(first
++ n)`.
+
+..`result + (last - first)`
+
+..Exactly `last - first` assignments.
+]
+
+[endsect]
+
+[section Copy Backward]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename BidirectionalIterator1, typename BidirectionalIterator2 >
+    BidirectionalIterator2
+      operator ()( BidirectionalIterator1 ``/first/``
+                 , BidirectionalIterator1 ``/last/``
+                 , BidirectionalIterator2 ``result``
+                 ) const;
+  } const copy_backward;
+
+[algo_req
+`result` shall not be in the range [`first`, `last`).
+
+..Copies elements in the range [`first`, `last`) into the range [`result - (last
+- first)`, `result`) starting from `last - 1` and proceeding to `first`. For
+each positive integer `n <= (last - first)`, performs `*(result + n) = *(last -
+n)`.
+
+..`result + (last - first)`
+
+..Exactly `last - first` assignments.
+]
+
+[endsect]
+
+[section Swap]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename T >
+    void operator ()( T& ``/a/``, T& ``/b/`` ) const;
+  } const swap;
+
+[algo_req
+Type `T` is =Assignable= (C++ Standard: 23.1).
+
+..Exchanges the values of `a` and `b`.
+
+..[']
+
+..[']
+]
+
+[endsect]
+
+[section Swap Ranges]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator1, typename ForwardIterator2 >
+    ForwardIterator2
+      operator ()( ForwardIterator1 ``/first1/``, ForwardIterator1 ``/last1/``
+                 , ForwardIterator2 ``/first2/``
+                 ) const;
+  } const swap_ranges;
+
+[algo_req
+The two ranges [`first`, `last1`) and [`first2`, `first2 + (last1 - first1)`)
+shall not overlap.
+
+..For each non-negative integer `n < (last1 - first1)` performs: `swap(*(first1
++ n), *(first2 + n))`.
+
+..`first2 + (last1 - first1)`.
+
+..Exactly `last1 - first1` swaps.
+]
+
+[endsect]
+
+[section Iterator Swap]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator1, typename ForwardIterator2 >
+    void operator ()( ForwardIterator1 ``/a/``
+                    , ForwardIterator1 ``/b/``
+                    ) const;
+  } const iter_swap;
+
+[algo
+Exchanges the values pointed to by the two iteratos `a` and `b`.
+
+..[']
+
+..[']
+]
+
+[endsect]
+
+[section Transform]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename OutputIterator
+            , typename UnaryOperation
+            >
+    OutputIterator
+      operator ()( InputIterator ``/first1/``, InputIterator ``/last1/``
+                 , OutputIterator ``/result/``, UnaryOperation ``/op/``
+                 ) const;
+    
+    template< typename InputIterator1, InputIterator2
+            , typename OutputIterator, typename BinaryOperation
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator ``/last1/``
+                 , InputIterator2 ``/first2/``, OutputIterator ``/result/``
+                 , BinaryOperation ``/binary_op/``
+                 ) const;
+  } const transform;
+
+[algo_req
+`op` and `binary_op` shall not have any side effects.
+
+..Assigns through every iterator `i` in the range [`result`, `result + (last1 -
+first1)) a new corresponding value equal to `op(*(first1 + (i - result)))` or
+`binary_op(*(first1 + (i - result), *first2 + (i - result)))`.
+
+..`result + (last1 - first1)`.
+
+..Exactly `last1 - first1` applications of `op` or `binary_op`.
+]
+
+[endsect]
+
+[section Replace]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename T >
+    void operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                    , const T& ``/old_value/``, const T& ``/new_value/``
+                    ) const;
+  } const replace;
+  
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename Predicate, typename T >
+    void operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                    , Predicate ``/pred/``, const T& ``/new_value/``
+                    ) const;
+  } const replace_if;
+
+[algo_req
+Type `T` is =Assignable= (C++ Standard: 23.1) (and, for `replace()`,
+=EqualityComparable= (C++ Standard: 20.1.1)).
+
+..Substitutes elements referred by the iterator `i` in the range [`first`,
+`last`) with `new_value`, when the following corresponding conditions hold: `*i
+== old_value`, `pred(*i) != false`.
+
+..[']
+
+..Exactly `last - first` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Replace Copy]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename OutputIterator, typename T >
+    OutputIterator
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                 , OutputIterator ``/result/``
+                 , const T& ``/old_value/``, const T& ``/new_value/``
+                 ) const;
+  } const replace_copy;
+  
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename Iterator, typename OutputIterator
+            , typename Predicate, typename T
+            >
+    OutputIterator
+      operator ()( Iterator ``/first/``, Iterator ``/last/``
+                 , OutputIterator ``/result/``
+                 , Predicate ``/pred/``, const T& ``/new_value/``
+                 ) const;
+  } const replace_copy_if;
+
+[algo_req
+Type `T` is =Assignable= (C++ Standard: 23.1) (and, for `replace_copy()`,
+=EqualityComparable= (C++ Standard: 20.1.1)). The ranges [`first`, `last`) and
+[`result`, `result + (last - first)`) shall not overlap.
+
+..Assigns to every iterator `i` in the range [`result`, `result + (last -
+first)`) either `new_value` or `*(first + (i - result))` depending on whether
+the following corresponding conditions hold: `*(first + (i - result)) ==
+old_value`, `pred(*(first + (i - result))) != false`.
+
+..`result + (last - first).
+
+..Exactly `last - first` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Fill]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename T >
+    void operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                    , const T& ``/value/``
+                    ) const;
+  } const fill;
+  
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename OutputIterator, typename Size, typename T >
+    void operator ()( OutputIterator ``/first/``, Size ``/n/``
+                    , const T& ``/value/``
+                    ) const;
+  } const fill_n;
+
+[algo_req
+Type `T` is =Assignable= (C++ Standard: 23.1), `Size` is convertible to an
+integral type (C++ Standard: 4.7, 12.3).
+
+..Assigns `value` thriugh all iterators in the range [`first`, `last`) or
+[`first`, `first + n`).
+
+..[']
+
+..Exactly `last - first` (or `n`) assignments.
+]
+
+[endsect]
+
+[section Generate]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename Generator >
+    void operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                    , Generator ``/gen/``
+                    ) const;
+  } const generate;
+  
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename Size, typename Generator >
+    void operator ()( ForwardIterator ``/first/``, Size ``/n/``
+                    , Generator ``/gen/``
+                    ) const;
+  } const generate_n;
+  
+[algo_req
+`gen` takes no arguments, `Size` is convertible to an integral type (C++
+Standard: 4.7, 12.3).
+
+..Invokes the function object `gen` and assigns the return value of `gen`
+through all the iterators in the range [`first`, `last`) or [`first`, `first +
+n`).
+
+..[']
+
+..Exactly `last - first` (or `n`) invocations of `gen` and assignments.
+]
+
+[endsect]
+
+[section Remove]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename T >
+    ForwardIterator operator ()( ForwardIterator ``/first/``
+                               , ForwardIterator ``/last/``
+                               , const T& ``/value/``
+                               ) const;
+  } const remove;
+  
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename Predicate >
+    ForwardIterator operator ()( ForwardIterator ``/first/``
+                               , ForwardIterator ``/last/``
+                               , Predicate ``/pred/``
+                               ) const;
+  } const remove_if;
+
+[algo_req
+Type `T` is =EqualityComparable= (C++ Standard: 20.1.1).
+
+..Eliminates all the elements referred to by iterator `i` in the range [`first`,
+`last`) for which the following corresponding conditions hold: `*i == value`,
+`pred(*i) != false`.
+
+..The end of the resulting range.
+
+..Exactly `last - first` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Remove Copy]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename OutputIterator
+            , typename T
+            >
+    OutputIterator
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                 , OutputIterator ``/result/``, const T& ``/value/``
+                 ) const;
+  } const remove_copy;
+  
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename OutputIterator
+            , typename Predicate
+            >
+    OutputIterator
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                 , OutputIterator ``/result/``, Predicate ``/pred/``
+                 ) const;
+  } const remove_copy_if;
+
+[algo_req
+Type `T` is =EqualityComparable= (C++ Standard: 20.1.1). The ranges [`first`,
+`last`) and [`result`, `result+(last-first)`) shall not overlap.
+
+..Copies all the elements referred to by the iterator `i` in the range [`first`,
+`last`) for which the following corresponding conditions do not hold: `*i ==
+value`, `pred(*i) != false`.
+
+..The end of the resulting range.
+
+..Exactly `last - first` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Unique]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator >
+    ForwardIterator operator ()( ForwardIterator ``/first/``
+                               , ForwardIterator ``/last/``
+                               ) const;
+    
+    template< typename ForwardIterator, typename BinaryPredicate >
+    ForwardIterator operator ()( ForwardIterator ``/first/``
+                               , ForwardIterator ``/last/``
+                               , BinaryPredicate ``/pred/``
+                               ) const;
+  } const unique;
+
+[algo
+Eliminates all but the first element from every consecutive group of equal
+elements referred to by the iterator `i` in the range [`first`, `last`) for
+which the following corresponding conditions hold: `*i == *(i - 1)` or `pred(*i,
+*(i - 1)) != false`.
+
+..The end of the resulting range.
+
+..If the range `(last - first)` is not empty, exactly `(last - first) - 1`
+applications of the corresponding predicate, otherwise no application of the
+predicate.
+]
+
+[endsect]
+
+[section Unique Copy]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename OutputIterator >
+    OutputIterator
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                 , OutputIterator ``/result/``
+                 ) const;
+    
+    template< typename InputIterator, typename OutputIterator
+            , typename BinaryPredicate
+            >
+    OutputIterator
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                 , OutputIterator ``/result/``, BinaryPredicate ``/pred/``
+                 ) const;
+  } const unique_copy;
+
+[algo_req
+The ranges [`first`,`last`) and [`result`, `result+(last-first)`) shall not
+overlap.
+
+..Copies only the first element from every consecutive group of equal elements
+referred to by the iterator `i` in the range [`first`, `last`) for which the
+following corresponding conditions hold: `*i == *(i - 1)` or `pred(*i, *(i - 1))
+!= false`.
+
+..The end of the resulting range.
+
+..Exactly `last - first` applications of the corresponding predicate.
+]
+
+[endsect]
+
+[section Rotate]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator >
+    void operator ()( ForwardIterator ``/first/``, ForwardIterator ``/middle/``
+                    , ForwardIterator ``/last/``
+                    ) const;
+  } const rotate;
+
+[algo_req
+[`first`,`middle`) and [`middle`, `last`) are valid ranges.
+
+..For each non-negative integer `i < (last - first)`, places the element from
+the position `first + i` into position `first + (i + (last - middle)) % (last -
+first)`.
+
+..[']
+
+..At most `last - first` swaps.
+]
+
+[endsect]
+
+[section Rotate Copy]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename OutputIterator >
+    OutputIterator
+      operator ()( ForwardIterator ``/first/``, ForwardIterator ``/middle/``
+                 , ForwardIterator ``/last/``, OutputIterator ``/result/``
+                 ) const;
+  } const rotate_copy;
+
+[algo_req
+The ranges [`first`,`last`) and [`result`, `result + (last - first)`) shall
+not overlap.
+
+..For each non-negative integer `i < (last - first)`, places the element from
+the position `first + i` into position `first + (i + (last - middle)) % (last -
+first)`.
+
+..`result + (last - first)`.
+
+..Exactly `last - first` assignments.
+]
+
+[endsect]
+
+[section Random Shuffle]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename RandomAccessIterator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    ) const;
+    
+    template< typename RandomAccessIterator, typename RandomNumberGenerator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    , RandomNumberGenerator& ``/rand/``
+                    ) const;
+  } const random_shuffle;
+
+[algo
+Shuffles the elements in the range [`first`, `last`) with uniform
+distribution.
+
+..[']
+
+..Exactly `(last - first) - 1` swaps.
+]
+
+[endsect]
+
+[section Partition]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename BidirectionalIterator, typename Predicate >
+    BidirectionalIterator
+      operator ()( BidirectionalIterator ``/first/``
+                 , BidirectionalIterator ``/last/``
+                 , Predicate ``/pred/``
+                 ) const;
+  } const partition;
+
+[algo
+Places all the elements in the range [`first`, `last`) that satisfy `pred`
+before all the elements that do not satisfy it.
+
+..An iterator `i` such that for any iterator `j` in the range [`first`, `i`),
+`pred(*j) != false`, and for any iterator `k` in the range [`i`, `last`),
+`pred(*j) == false`.
+
+..At most `(last - first)/2` swaps. Exactly `last - first` applications of the
+predicate.
+]
+
+[endsect]
+
+[section Stable Partition]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename BidirectionalIterator, typename Predicate >
+    BidirectionalIterator
+      operator ()( BidirectionalIterator ``/first/``
+                 , BidirectionalIterator ``/last/``
+                 , Predicate ``/pred/``
+                 ) const;
+  } const stable_partition;
+
+[algo
+Places all the elements in the range [`first`, `last`) that satisfy `pred`
+before all the elements that do not satisfy it.
+
+..An iterator `i` such that for any iterator `j` in the range [`first`, `i`),
+`pred(*j) != false`, and for any iterator `k` in the range [`i`, `last`),
+`pred(*j) == false`. The relative order of the elements in both groups is
+preserved.
+
+..At most `(last - first) * log(last - first)` swaps, but only linear number of
+swaps if there is enough extra memory. Exactly `last - first` applications of
+the predicate.
+]
+
+[endsect]
+
+[endsect]
+
+[section Polymorphic Sorting and Related Operations]
+
+The following are polymorphic forms of the C++ algorithms found in `<algorithm>`
+which are labled as "Sorting and related operations" in section 25.3 of the C++
+standard.
+
+[section Polymorphic Sorting Operations]
+
+[section Sort]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename RandomAccessIterator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    ) const;
+    
+    template< typename RandomAccessIterator, typename Compare >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const sort;
+
+[algo
+Sorts the elements in the range [`first`, `last`).
+
+..[']
+
+..Approximately `N log N` (where `N == last - first`) comparisons on the
+average.
+]
+
+[endsect]
+
+[section Stable Sort]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename RandomAccessIterator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    ) const;
+    
+    template< typename RandomAccessIterator, typename Compare >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const stable_sort;
+
+[algo
+Sorts the elements in the range [`first`, `last`), preserving the relative
+order of equivalent elements.
+
+..[']
+
+..At most `N(log N)^2` (where `N == last - first`) comparisons; if enough extra
+memory is available, it is `N log N`.
+]
+
+[endsect]
+
+[section Partial Sort]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename RandomAccessIterator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/middle/``
+                    , RandomAccessIterator ``/last/``
+                    ) const;
+    
+    template< typename RandomAccessIterator, typename Compare >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/middle/``
+                    , RandomAccessIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const partial_sort;
+
+[algo
+Places the first `middle - first` sorted elements from the range [`first`,
+`last`) into the range [`first`, `middle`). The rest of the elements in the
+range [`middle`, `last`) are place in an unspecified order.
+
+..[']
+
+..Approximately `(last - first) * log(middle - first)` comparisons.
+]
+
+[endsect]
+
+[section Partial Sort Copy]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator, typename RandomAccessIterator >
+    RandomAccessIterator
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                 , RandomAccessIterator ``/result_first/``
+                 , RandomAccessIterator ``/result_last/``
+                 ) const;
+    
+    template< typename InputIterator, typename RandomAccessIterator
+            , typename Compare
+            >
+    RandomAccessIterator
+      operator ()( InputIterator ``/first/``, InputIterator ``/last/``
+                 , RandomAccessIterator ``/result_first/``
+                 , RandomAccessIterator ``/result_last/``
+                 , Compare ``/comp/``
+                 ) const;
+  } const partial_sort_copy;
+
+[algo
+Places the first `min(last - first, result_last - result_first)` sorted
+elements into the range [`result_first`, `result_first + min(last - first,
+result_last - result_first)`).
+
+..The smaller of: `result_last` or `result_first + (last - first)`.
+
+..Approximately `(last - first) * log(min(last - first, result_last -
+result_first))` comparisons.
+]
+
+[endsect]
+
+[endsect]
+
+[section Nth Element]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename RandomAccessIterator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/nth/``
+                    , RandomAccessIterator ``/last/``
+                    ) const;
+    
+    template< typename RandomAccessIterator, typename Compare >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/nth/``
+                    , RandomAccessIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const nth_element;
+
+[algo
+After `nth_element` executes, the element in the position pointed to by `nth`
+is the element that would be in that position if the whole range were sorted.
+Also for any iterator `i` in the range [`first`, `nth`) and any iterator `j` in
+the range [`nth`, `last`) it holds that: `!(*i > *j)` or `comp(*j, *i) ==
+false`.
+
+..[']
+
+..Linear on average
+]
+
+[endsect]
+
+[section Polymorphic Binary Search]
+
+The algorithms in this section assume the sequence being searched are ordered
+according to the associated explicit or implicit comparison function. They
+operate on non-random access iterators minimizing the number of comparisons,
+which will be logarithmic for all types of iterators. For random access
+iterators, these algorithms take a logarithmic number of steps through range.
+For non-random access iterators they take a linear number of steps.
+
+[section Lower Bound]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename T >
+    ForwardIterator
+      operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                 , const T& ``/value/``
+                 ) const;
+    
+    template< typename ForwardIterator, typename T, typename Compare >
+    ForwardIterator
+      operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                 , const T& ``/value/``, Compare ``/comp/``
+                 ) const;
+  } const lower_bound;
+
+[algo_req
+For the first form, Type `T` is =LessThanComparabe= (C++ Standard: 20.1.2)
+
+..Finds the first position into which `value` can be inserted without violating
+the ordering.
+
+..The furthermost iterator `i` in the range [`first`, `last`) such that for any
+iterator `j` in the range [`first`, `i`) the following corresponding conditions
+hold: `*j < value` or `comp(*j, value) != false`.
+
+..At most `log(last - first) + 1` comparisons.
+]
+
+[endsect]
+
+[section Upper Bound]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename T >
+    ForwardIterator
+      operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                 , const T& ``/value/``
+                 ) const;
+    
+    template< typename ForwardIterator, typename T, typename Compare >
+    ForwardIterator
+      operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                 , const T& ``/value/``, Compare ``/comp/``
+                 ) const;
+  } const upper_bound;
+
+[algo_req
+For the first form, Type `T` is =LessThanComparabe= (C++ Standard: 20.1.2)
+
+..Finds the first position into which `value` can be inserted without violating
+the ordering.
+
+..The furthermost iterator `i` in the range [`first`, `last`) such that for any
+iterator `j` in the range [`first`, `i`) the following corresponding conditions
+hold: `!(value < *j)` or `comp(value, *j) == false`.
+
+..At most `log(last - first) + 1` comparisons.
+]
+
+[endsect]
+
+[section Equal Range]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename T >
+    ::std::pair< ForwardIterator, ForwardIterator >
+      operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                 , const T& ``/value/``
+                 ) const;
+    
+    template< typename ForwardIterator, typename T, typename Compare >
+    ::std::pair< ForwardIterator, ForwardIterator >
+      operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                 , const T& ``/value/``, Compare ``/comp/``
+                 ) const;
+  } const equal_range;
+
+[algo_req
+For the first form, Type `T` is =LessThanComparabe= (C++ Standard: 20.1.2)
+
+..Finds the largest subrange [`i`, `j`) such that `value` can be inserted at any
+iterator `k` within that subrange without violating the ordering. `k` satisfies
+the corresponding conditions: `!(*k < value) && !(value < *k)` or `comp(*k,
+value) == false && comp(value, *k) == false.
+
+..A pair of iterators representing the range [`i`, `j`).
+
+..At most `2 * log(last - first) + 1` comparisons.
+]
+
+[endsect]
+
+[section Binary Search]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename ForwardIterator, typename T >
+    bool operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                    , const T& ``/value/``
+                    ) const;
+    
+    template< typename ForwardIterator, typename T, typename Compare >
+    bool operator ()( ForwardIterator ``/first/``, ForwardIterator ``/last/``
+                    , const T& ``/value/``, Compare ``/comp/``
+                    ) const;
+  } const binary_search;
+
+[algo_req
+For the first form, Type `T` is =LessThanComparabe= (C++ Standard: 20.1.2)
+
+..Determines if there exists an element in the range with the value of `value`.
+
+..`true` if there is an iterator `i` in the range [`first`, `last`) that
+satisfies the corresponding conditions: `!(*i < value) && !(value < *i)` or
+`comp(value, *i) == false && comp(*i, value) == false`.
+
+..At most `log(last - first) + 2` comparisons.
+]
+
+[endsect]
+
+[endsect]
+
+[section Merge]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``
+                 ) const;
+    
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator, typename Compare
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``, Compare ``/comp/``
+                 ) const;
+  } const merge;
+
+[algo
+Merges two sorted ranges [`first1`, `last1`) and [`first2`, `last2`) into the
+range [`result`, `result + (last1 - first1) + (last2 - first2)`). The resulting
+range shall not overlap with either of the original ranges. The range will be
+sorted in non-decreasing order according to the ordering defined by `comp`; that
+is, for every iterator `i` in [`first`, `last`) other than `first`, the
+condition `*i < *(i - 1)` or `comp(*i, *(i - 1))` will be `false`. For
+equivalent elements in the two ranges, the elements from the first range always
+precede the elements from the second.
+
+..`result + (last1 - first1) + (`last2 - first2)`.
+
+..At most `(last1 - first1) + (`last2 - first2) - 1` comparisons.
+]
+
+[endsect]
+
+[section Inplace Merge]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename BidirectionalIterator >
+    void operator ()( BidirectionalIterator ``/first/``
+                    , BidirectionalIterator ``/middle/``
+                    , BidirectionalIterator ``/last/``
+                    ) const;
+    
+    template< typename BidirectionalIterator, typename Compare >
+    void operator ()( BidirectionalIterator ``/first/``
+                    , BidirectionalIterator ``/middle/``
+                    , BidirectionalIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const inplace_merge;
+
+[algo
+Merges two sorted ranges [`first1`, `middle`) and [`middle`, `last`), putting
+the result of the merge into the range [`first`, `last`). The resulting range
+will be sorted in non-decreasing order according to the ordering defined by
+`comp`; that is, for every iterator `i` in [`first`, `last`) other than `first`,
+the condition `*i < *(i - 1)` or `comp(*i, *(i - 1))` will be `false`. For
+equivalent elements in the two ranges, the elements from the first range always
+precede the elements from the second.
+
+..[']
+
+..When enough additional memory is available, `(last - first) - 1` comparisons.
+If no additional memory is available, an algorithm with complexity `N log N` may
+be used (where `N` is equal to `last - first`).
+]
+
+[endsect]
+
+[section Polymorphic Set Operations on Sorted Structures]
+
+[section Includes]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator1, typename InputIterator2 >
+    bool operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                    , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                    ) const;
+    
+    template< typename InputIterator1, typename InputIterator2
+            , typename Compare
+            >
+    bool operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                    , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const includes;
+
+[algo
+Checks if all of the values in one range are all contained in another.
+
+..`true` if every element in the range [`first2`, `last2`) is contained in the
+range [`first1`, `last1`). Returns `false` otherwise.
+
+..At most `2 * ((last1 - first1) + (last2 - first2)) - 1` comparisons.
+]
+
+[endsect]
+
+[section Set Union]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``
+                 ) const;
+    
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator, typename Compare
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``, Compare ``/comp/``
+                 ) const;
+  } const set_union;
+
+[algo_req
+The resulting range shall not overlap with either of the original ranges.
+
+..Constructs a sorted union of the elements from the two ranges; that is, the
+set of elements that are present in one or both of the ranges. If an element is
+present in both ranges, the one from the first range is copied.
+
+..The end of the constructed range.
+
+..At most `2 * ((last1 - first1) + (last2 - first2)) - 1` comparisons.
+]
+
+[endsect]
+
+[section Set Intersection]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``
+                 ) const;
+    
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator, typename Compare
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``, Compare ``/comp/``
+                 ) const;
+  } const set_intersection;
+
+[algo_req
+The resulting range shall not overlap with either of the original ranges.
+
+..Constructs a sorted intersection of the elements from the two ranges; that is,
+the set of elements that are present in both of the ranges. If an element is
+present in both ranges, the one from the first range is copied.
+
+..The end of the constructed range.
+
+..At most `2 * ((last1 - first1) + (last2 - first2)) - 1` comparisons.
+]
+
+[endsect]
+
+[section Set Difference]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``
+                 ) const;
+    
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator, typename Compare
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``, Compare ``/comp/``
+                 ) const;
+  } const set_difference;
+
+[algo_req
+The resulting range shall not overlap with either of the original ranges.
+
+..Copies the elements of the range [`first1`, `last1`) which are not present in
+the range [`first2`, `last2`) to the range beginning at `result`. The elements
+in the constructed range are sorted.
+
+..The end of the constructed range.
+
+..At most `2 * ((last1 - first1) + (last2 - first2)) - 1` comparisons.
+]
+
+[endsect]
+
+[section Set Symmetric Difference]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``
+                 ) const;
+    
+    template< typename InputIterator1, typename InputIterator2
+            , typename OutputIterator, typename Compare
+            >
+    OutputIterator
+      operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                 , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                 , OutputIterator ``/result/``, Compare ``/comp/``
+                 ) const;
+  } const set_symmetric_distance;
+
+[algo_req
+The resulting range shall not overlap with either of the original ranges.
+
+..Copies the elements of the range [`first1`, `last1`) which are not present in
+the range [`first2`, `last2`), and the elements of the range [`first2`, `last2`)
+which are not present in the range [`first1`, `last1`) to the range beginning at
+`result`. The elements in the constructed range are sorted.
+
+..The end of the constructed range.
+
+..At most `2 * ((last1 - first1) + (last2 - first2)) - 1` comparisons.
+]
+
+[endsect]
+
+[endsect]
+
+[section Polymorphic Heap Operations]
+
+[section Push Heap]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename RandomAccessIterator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    ) const;
+    
+    template< typename RandomAccessIterator, typename Compare >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const push_heap;
+
+[algo_req
+The range [`first`, `last - 1`) shall be a valid heap.
+
+..Places the value in the location `last - 1` into the resulting heap [`first`,
+`last`).
+
+..[']
+
+..At most `log(last - first)` comparisons.
+]
+
+[endsect]
+
+[section Pop Heap]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename RandomAccessIterator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    ) const;
+    
+    template< typename RandomAccessIterator, typename Compare >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const pop_heap;
+
+[algo_req
+The range [`first`, `last - 1`) shall be a valid heap.
+
+..Swaps the value in the location `first` with the value in the location `last -
+1` and makes [`first`, `last - 1`) into a heap.
+
+..[']
+
+..At most `2 * log(last - first)` comparisons.
+]
+
+[endsect]
+
+[section Make Heap]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename RandomAccessIterator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    ) const;
+    
+    template< typename RandomAccessIterator, typename Compare >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const make_heap;
+
+[algo
+Constructs a heap out of the range [`first`, `last`).
+
+..[']
+
+..At most `3 * (last - first)` comparisons.
+]
+
+[endsect]
+
+[section Sort Heap]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename RandomAccessIterator >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    ) const;
+    
+    template< typename RandomAccessIterator, typename Compare >
+    void operator ()( RandomAccessIterator ``/first/``
+                    , RandomAccessIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const sort_heap;
+
+[algo_req
+The range [`first`, `last - 1`) shall be a valid heap.
+
+..Sorts the elements in the heap [`first`, `last`). This operation is not
+guaranteed to be stable.
+
+..[']
+
+..At most `N log N` comparisons (where `N == last - first`).
+]
+
+[endsect]
+
+[endsect]
+
+[section Minimum]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename T >
+    const T& operator ()( const T& ``/a/``, const T& ``/b/`` ) const;
+    
+    template< typename T, typename Compare >
+    const T& operator ()( const T& ``/a/``, const T& ``/b/``
+                        , Compare ``/comp/``
+                        ) const;
+  } const min;
+
+[algo_req
+Type `T` is =LessThanComparable= (C++ Standard: 20.1.2) and
+=CopyConstructible= (C++ Standard: 20.1.3).
+
+..Determines the smaller of the two arguments.
+
+..The smaller value, or the first value if the arguments are equivalent.
+
+..[']
+]
+
+[endsect]
+
+[section Maximum]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename T >
+    const T& operator ()( const T& ``/a/``, const T& ``/b/`` ) const;
+    
+    template< typename T, typename Compare >
+    const T& operator ()( const T& ``/a/``, const T& ``/b/``
+                        , Compare ``/comp/``
+                        ) const;
+  } const max;
+
+[algo_req
+Type `T` is =LessThanComparable= (C++ Standard: 20.1.2) and
+=CopyConstructible= (C++ Standard: 20.1.3).
+
+..Determines the smaller of the two arguments.
+
+..The larger value, or the first value if the arguments are equivalent.
+
+..[']
+]
+
+[endsect]
+
+[section Lexicographical Compare]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename InputIterator1, typename InputIterator1 >
+    bool operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                    , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                    ) const;
+  
+    template< typename InputIterator1, typename InputIterator1
+            , typename Compare
+            >
+    bool operator ()( InputIterator1 ``/first1/``, InputIterator1 ``/last1/``
+                    , InputIterator2 ``/first2/``, InputIterator2 ``/last2/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const lexicographical_compare;
+
+[algo
+Determines the smaller of the two ranges. If two sequences have the same number
+of elements and their corresponding elements are equivalent, then neither
+sequence is lexicographically less than the other. If one sequence is a prefix
+of the other, then the shorter sequence is lexicographically less than the
+longer sequence. Otherwise, the lexicographical comparison of the sequences
+yields the same result as the comparison of the first corresponding pair of
+elements that are not equivalent.
+
+..`true` if the sequence of elements defined by the range [`first1`, `last1`) is
+lexicographically less than the sequence of elements defined by the range
+[`first2`, `last2`). Returns `false` otherwise.
+
+..At most `min((last1 - first1), (last2 - first2))` applications of the
+corresponding comparison.
+]
+
+[endsect]
+
+[section Next Permutation]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename BidirectionalIterator >
+    bool operator ()( BidirectionalIterator ``/first/``
+                    , BidirectionalIterator ``/last/``
+                    ) const;
+  
+    template< typename BidirectionalIterator, typename Compare >
+    bool operator ()( BidirectionalIterator ``/first/``
+                    , BidirectionalIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const next_permutation;
+
+[algo
+Takes a sequence defined by the range [`first`, `last`) and transforms it into
+the next permutation. The next permutation is found by assuming that the set of
+all permutations is lexicographically sorted with respect to `operator<` or
+`comp`.
+
+..If a next permutation exists, it returns `true`. Otherwise, it transforms the
+sequence into the smallest permutation, that is, the ascendingly sorted one, and
+returns `false`.
+
+..At most `(last - first) / 2` swaps.
+]
+
+[endsect]
+
+[section Previous Permutation]
+
+  struct ``/unspecified-name/``
+  {
+    /* Standard polymorpic algorithm requirements */
+  
+    template< typename BidirectionalIterator >
+    bool operator ()( BidirectionalIterator ``/first/``
+                    , BidirectionalIterator ``/last/``
+                    ) const;
+  
+    template< typename BidirectionalIterator, typename Compare >
+    bool operator ()( BidirectionalIterator ``/first/``
+                    , BidirectionalIterator ``/last/``
+                    , Compare ``/comp/``
+                    ) const;
+  } const prev_permutation;
+
+[algo
+Takes a sequence defined by the range [`first`, `last`) and transforms it into
+the previous permutation. The previous permutation is found by assuming that the
+set of all permutations is lexicographically sorted with respect to `operator<`
+or `comp`.
+
+..If a previous permutation exists, it returns `true`. Otherwise, it transforms
+the sequence into the largest permutation, that is, the descendingly sorted one,
+and returns `false`.
+
+..At most `(last - first) / 2` swaps.
+]
+
+[endsect]
+
+[endsect]
+
+[endsect]

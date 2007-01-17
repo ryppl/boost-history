@@ -1,0 +1,139 @@
+[part Boost.Act
+    [quickbook 1.4]
+    [version 0.4b]
+    [id act]
+    [dirname act]
+    [copyright 2006 Matthew Calabrese]
+    [category C++ Concurrency Library]
+    [authors [Calabrese, Matthew]]
+    [source-mode c++]
+]
+
+[def __alert__           [$images/alert.png]]
+[def __note__            [$images/note.png]]
+[def __OpenMP__          [@http://www.OpenMP.org OpenMP]]
+
+[section Advanced Usage]
+
+[section Specifying Algorithm Models at the Call-Site]
+
+While changing the default algorithm model allows one to adjust how parallelable
+algorithms run, you may also adjust the execution model explicitly at each
+call-site, overriding the default. This is performed by passing an algorithm
+model instantiation to a call to the index operation of provided parallelable
+algorithms.
+
+  #include <boost/act/algorithm.hpp>
+  #include <boost/act/parallel_safe.hpp>
+  #include <boost/act/common_algo_models.hpp>
+  
+  #include <vector>
+  
+  struct operation
+    : boost::act::parallel_safe
+  {
+    void operator ()( int value ) const
+    {
+      // Implementation here
+    }
+  };
+  
+  int main()
+  {
+    using namespace boost::act;
+    using std::vector;
+    
+    vector< int > dummy_data( 100 );
+    
+    // Executes in parallel regardless of default algorithm model
+    for_each[ parallel ]( dummy_data.begin(), dummy_data.end()
+                        , operation()
+                        );
+
+    // Executes serially regardless of default algorithm model
+    for_each[ serial ]( dummy_data.begin(), dummy_data.end()
+                      , operation()
+                      );
+  }
+
+[endsect]
+
+[section Passing Model-Specific Arguments to Polymorphic Algorithms]
+
+In addition to using an algorithm model as a policy for polymorphic algorithms,
+you may also adjust the implementation of algorithms by passing model-specific
+arguments. Arguments passed in this manner are specified in place of the
+algorithm model, and the algorithm model is then deduced by the type of the
+arguments.
+
+The most common use of this feature is to pass the number of worker threads that
+the parallel algorithm model should use in its implementation. Without
+specifying this count, the application will automatically determine the number
+of worker threads to use at runtime.
+
+  #include <boost/act/algorithm/copy.hpp>
+  #include <boost/act/common_algo_models/parallel_algo_model.hpp>
+  
+  int main()
+  {
+    using namespace boost::act;
+    using std::vector;
+    
+    vector< int > source( 100 ),
+                  target( 100 );
+    
+    // Executes in parallel regardless of default algorithm model
+    // Specifies that 10 worker threads should be used
+    copy[ parallel, worker_count = 10 ]( source.begin()
+                                       , source.end()
+                                       , target.begin()
+                                       );
+  }
+
+[endsect]
+
+[section Specifying Act Models during Action and Active Type Instantiation]
+
+Specifying act models during the instantiation of active types and actions is
+just as easy. For active types, use BOOST_ACTIVE_M and pass the act model as a
+second argument, encapsulated in parenthesis. For actions, pass the act model as
+a second template argument to the standard action template. Keep in mind that if
+you signal a function on an active object and wish to have a handle to the
+running operation in the form of an action, you must instantiate the action
+template with the same act model type.
+
+  #include <boost/act/active.hpp>
+  #include <boost/act/action.hpp>
+  #include <boost/act/common_act_models.hpp>
+  
+  int main()
+  {
+    using namespace boost::act;
+    
+    // Use the concurrent act model regardless of the default
+    BOOST_ACTIVE_M( (int), (concurrent) ) value = 0;
+    
+    // Must use the same act model as above
+    action< int, concurrent > const other_value = value + 5;
+  }
+
+[blurb __note__ Much like the BOOST_ACTIVE macro, BOOST_ACTIVE_M cannot be used
+if the type being qualified is dependent on a template argument. Similarly, if
+the specified act model is dependent on a template argument, BOOST_ACTIVE_M
+cannot be used. If either of these conditions is true, you must use the macro
+BOOST_ACTIVE_M_T instead.]
+
+[endsect]
+
+[section Overriding a Concurrent Active Object's Main Function]
+
+Concurrent =active= objects execute associated operations in their respective
+thread. By default, the main function of this thread waits for a queue of
+function objects and executes them in first-in, first-out order. In certain
+situations, it may be beneficial to provide an alternative form of main which
+performs other operations in between queued calls, or which manages how it deals
+with its time-slices at a lower level.
+
+[endsect]
+
+[endsect]

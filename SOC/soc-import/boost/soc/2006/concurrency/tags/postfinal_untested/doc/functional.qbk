@@ -1,0 +1,18 @@
+[part Boost.Act
+    [quickbook 1.4]
+    [version 0.4b]
+    [id act]
+    [dirname act]
+    [copyright 2006 Matthew Calabrese]
+    [category C++ Concurrency Library]
+    [authors [Calabrese, Matthew]]
+    [source-mode c++]
+]
+
+[section Functional]
+
+[section Parallel Ranges Function]
+
+[endsect]
+
+[endsect]

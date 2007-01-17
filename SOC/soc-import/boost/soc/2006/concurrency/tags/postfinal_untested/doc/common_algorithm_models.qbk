@@ -1,0 +1,69 @@
+[part Boost.Act
+    [quickbook 1.4]
+    [version 0.4b]
+    [id act]
+    [dirname act]
+    [copyright 2006 Matthew Calabrese]
+    [category C++ Concurrency Library]
+    [authors [Calabrese, Matthew]]
+    [source-mode c++]
+]
+
+[section Common Algorithm Models]
+
+[*Header:] `#include <boost/act/common_algo_models.hpp>`
+
+The =act models= documented in this section are included with =Boost.Act=.
+In order to gain access to these =algorithm models= you may either include the
+header mentioned above, or you may include algorithms models on an individual
+basis through the headers mentioned in their corresponding section.
+
+[section Parallel Algorithm Model]
+
+[*Header:] `#include <boost/act/common_algo_models/parallel_algo_model.hpp>`
+
+The =parallel algorithm model= is an =algorithm model= which attempts to execute
+=polymorphic algorithms= in parallel when it can be determined that it is safe
+to do so, otherwise, they will execute serially.
+
+Identifying types as being safe for parallel execution is done through the use
+of type traits. In particular, often times a function object or other type must
+be identified as =parallel safe= in order for it to be used safely by an
+algorithm which splits execution up into multiple threads.
+
+The following is a list of algorithms whose operands must support expressions
+that are identifiable as being =parallel safe= if they are to be executed in
+parallel. Keep in mind that it is safe to call such algorithms without parallel
+safe arguments, however execution will be performed serially.
+
+[table Parallel Execution Requirements
+[[Algorithm]               [Requirements for Parallel Execution]               ]
+[[ for_each
+ , for_each_if
+ ]                         [`f(*i)` must be parallel-safe (where `i` is an
+                                    iterator in the range [`first`, `last`)).
+                           ]                                                   ]
+]
+
+[important The =parallel algorithm= model is currently implemented using
+__OpenMP__. To check if your compiler supports OpenMP and to see which flags are
+needed during compilation to enable it, refer to the compiler setup section of
+documentation. If you do not enable OpenMP for your compiler, all
+=polymorphic algorithms= executed with the =parallel algorithm model= will
+always run serially.
+]
+
+[section Extended Parameters]
+
+[endsect]
+
+[endsect]
+
+[section Serial Algorithm Model]
+
+[*Header:] `#include <boost/act/common_algo_models/serial_algo_model.hpp>`
+
+
+[endsect]
+
+[endsect]

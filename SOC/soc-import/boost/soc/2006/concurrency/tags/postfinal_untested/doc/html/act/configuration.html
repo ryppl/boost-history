@@ -1,0 +1,125 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Configuration</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../index.html" title="Boost.Act 0.4b">
+<link rel="up" href="../index.html" title="Boost.Act 0.4b">
+<link rel="prev" href="type_traits.html" title="Type Traits">
+<link rel="next" href="common_act_models.html" title="Common Act Models">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="type_traits.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="common_act_models.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="act.configuration"></a><a href="configuration.html" title="Configuration">Configuration</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="configuration.html#act.configuration.checking_parallel_support">Checking
+      Parallel Support</a></span></dt>
+<dt><span class="section"><a href="configuration.html#act.configuration.default_algorithm_model">Default Algorithm
+      Model</a></span></dt>
+<dt><span class="section"><a href="configuration.html#act.configuration.default_act_model">Default Act Model</a></span></dt>
+<dt><span class="section"><a href="configuration.html#act.configuration.maximum_number_of_call_parameters">Maximum
+      Number of Call Parameters</a></span></dt>
+</dl></div>
+<p>
+      <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">config</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+    </p>
+<p>
+      The configuration information described in the following sections may be accessed
+      by including the header file mentioned above or individually through the header
+      files as noted below.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.configuration.checking_parallel_support"></a><a href="configuration.html#act.configuration.checking_parallel_support" title="Checking
+      Parallel Support">Checking
+      Parallel Support</a></h3></div></div></div>
+<p>
+        <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">/</span><span class="identifier">has_parallel_support</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.configuration.default_algorithm_model"></a><a href="configuration.html#act.configuration.default_algorithm_model" title="Default Algorithm
+      Model">Default Algorithm
+      Model</a></h3></div></div></div>
+<p>
+        <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">/</span><span class="identifier">default_algo_model</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Do not confuse this header or macro with those required for accessing the
+          definition of the default <code class="literal">algorithm model</code>. See the default
+          act model section for more details.
+        </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.configuration.default_act_model"></a><a href="configuration.html#act.configuration.default_act_model" title="Default Act Model">Default Act Model</a></h3></div></div></div>
+<p>
+        <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">/</span><span class="identifier">default_act_model</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      </p>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          Do not confuse this header or macro with those required for accessing the
+          definition of the default <code class="literal">act model</code>. See the default
+          act model section for more details.
+        </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.configuration.maximum_number_of_call_parameters"></a><a href="configuration.html#act.configuration.maximum_number_of_call_parameters" title="Maximum
+      Number of Call Parameters">Maximum
+      Number of Call Parameters</a></h3></div></div></div>
+<p>
+        <span class="bold"><strong>Header:</strong></span> <code class="code"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">config</span><span class="special">/</span><span class="identifier">max_call_params</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code>
+      </p>
+<p>
+        <span class="bold"><strong>Macro:</strong></span> <code class="code"><span class="identifier">BOOST_ACT_MAX_PARAMS</span></code>
+      </p>
+<p>
+        The <code class="code"><span class="identifier">BOOST_ACT_MAX_PARAMS</span></code>
+        macro holds the maximum number of parameters that an asynchronous function
+        object or queued function object may have when explicitly passing arguments
+        through either <code class="code"><span class="identifier">queue_function</span></code>
+        or the constructor of an <code class="code"><span class="identifier">action</span></code>.
+        By default, <code class="code"><span class="identifier">BOOST_ACT_MAX_PARAMS</span></code>
+        is defined to 10, although this is adjustable by defining <code class="code"><span class="identifier">BOOST_ACT_MAX_PARAMS</span></code>
+        to another value in all translation units prior to using any <code class="literal">Boost.Act</code>
+        header files.
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006 Matthew Calabrese</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="type_traits.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="common_act_models.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Introduction</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../index.html" title="Boost.Act 0.4b">
+<link rel="up" href="../index.html" title="Boost.Act 0.4b">
+<link rel="prev" href="beta_warning.html" title="Beta Warning">
+<link rel="next" href="compiler_setup.html" title="Compiler Setup">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="beta_warning.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="compiler_setup.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="act.introduction"></a><a href="introduction.html" title="Introduction">Introduction</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="introduction.html#act.introduction.polymorphic_algorithms">Polymorphic
+      Algorithms</a></span></dt>
+<dt><span class="section"><a href="introduction.html#act.introduction.algorithm_models">Algorithm Models</a></span></dt>
+<dt><span class="section"><a href="introduction.html#act.introduction.actions">Actions</a></span></dt>
+<dt><span class="section"><a href="introduction.html#act.introduction.active_objects">Active Objects</a></span></dt>
+<dt><span class="section"><a href="introduction.html#act.introduction.act_models">Act Models</a></span></dt>
+<dt><span class="section"><a href="introduction.html#act.introduction.atomic_objects">Atomic Objects</a></span></dt>
+</dl></div>
+<p>
+      With the advent of multi-core processors reaching the mainstream user along
+      with the gradual tapering of the increase of individual core speeds, there
+      is a growing need for high-level tools to simplify the creation of multi-threaded
+      applications in order to allow for scalability of software over the years to
+      come. Preferably, a solution should also allow existing code-bases to be easily
+      and incrementally updated to take advantage of modern day processors, and as
+      well, code which may be targetting both multi-core and single-core processors
+      should not have to suffer by strictly using one model of execution. Rather,
+      behavior should be toggleable on a variety of levels such that alterations
+      in a small number of locations in code could change the technique used for
+      execution over a large portion of a given project.
+    </p>
+<p>
+      Boost.Act attempts to supply a solution to this problem in the form of a portable
+      library which provides STL-style algorithms that can be toggled via template
+      policies to execute either synchronously or in parallel, and by providing templates
+      and macros to allow the creation of asynchronous functions, active objects,
+      and atomic objects. In addition, Boost.Act also allows the decoupling of signaling
+      function calls from their actual invocations in such a way that one may switch
+      between immediate, concurrent, lazy evaluation, or a user-provided evaluation
+      strategy on a case-by-case basis with potentially no runtime cost to the application.
+    </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.introduction.polymorphic_algorithms"></a><a href="introduction.html#act.introduction.polymorphic_algorithms" title="Polymorphic
+      Algorithms">Polymorphic
+      Algorithms</a></h3></div></div></div>
+<p>
+        For the scope of this library, a polymorphic algorithm is considered to be
+        an algorithm whose model of execution may vary depending on policies passed
+        prior to invocation. For example, a polymorphic algorithm may run serially
+        with one policy and may internally run in parallel and rejoin with a different
+        policy. Regardless of which policies are used, the same logical operation
+        is performed, allowing users to switch between different execution models
+        with minimal changes to code.
+      </p>
+<p>
+        One of the fundamental components of Boost.Act is its collection of STL-style
+        polymorphic algorithms. Those familiar with the STL will find themselves
+        right at home, as the majority of the algorithms correspond directly with
+        those in the STL and are callable in a similar manner, with the additional
+        ability to toggle the execution model of the algorithm. Along with the standard
+        algorithms provided by the STL, other templates are also included for the
+        sole purpose of the creation of user-defined polymorphic algorithms.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.introduction.algorithm_models"></a><a href="introduction.html#act.introduction.algorithm_models" title="Algorithm Models">Algorithm Models</a></h3></div></div></div>
+<p>
+        By default, Boost.Act algorithms are performed in parallel whenever possible.
+        Algorithm models are types which are used as policies to alter this behavior
+        when required on both a global and call-by-call level. In addition to the
+        parallel algorithm model, a serial algorithm model is provided which forces
+        calls to be made in a single thread. Users may also create their own algorithm
+        models if the desired behavior is not provided by either of those included
+        with the library.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.introduction.actions"></a><a href="introduction.html#act.introduction.actions" title="Actions">Actions</a></h3></div></div></div>
+<p>
+        It is often desirable to be able to signal a function, perform other unrelated
+        operations, and then eventually wait for the signaled function's completion.
+        In order to provide such functionality, Boost.Act introduces the concept
+        of an <code class="literal">action</code>.
+      </p>
+<p>
+        An <code class="literal">action</code> is a type which represents a signaled operation.
+        With a stored <code class="literal">action</code>, you have access to that operation
+        such that you may wait for the function's completion if you need the effects
+        to have taken place prior to reaching a certain point in code. Actions also
+        provide an indirect interface to the result of a signaled function.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.introduction.active_objects"></a><a href="introduction.html#act.introduction.active_objects" title="Active Objects">Active Objects</a></h3></div></div></div>
+<p>
+        Much like we have a way of decoupling the signaling of a function from the
+        actual invocation of that function, Boost.Act also provides a way to separate
+        the signaling of intrinsic functions of a type from the invocation of such
+        functions, yet guarantees the same order of execution of such functions relative
+        to one another. Since the invocations of such functions are also implicitly
+        serialized, it makes it easy to signal several functions which all deal with
+        the same object without having to worry that one call may occur while another
+        is executing, and with the guarantee that they are called in the same order
+        as they were signaled.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.introduction.act_models"></a><a href="introduction.html#act.introduction.act_models" title="Act Models">Act Models</a></h3></div></div></div>
+<p>
+        While the main purpose of Boost.Act is to introduce higher-level threading
+        facilities to C++, it does so in a manner that makes their behavior toggleable
+        and very customizable. Modularity with respect to actions and active objects
+        is accomplished by allowing their implementation to be altered through the
+        use of policies called act models, much like how algorithm models are used
+        to alter the implementation of parallelable algorithms. Whenever you instantiate
+        an active type or an action, you have the option of passing an act model
+        which may alter its implementation. If you choose not to pass a policy explicitly,
+        the default policy is used, which is also changeable.
+      </p>
+<p>
+        Act models currently provided with Boost.Act are an immediate act model,
+        a concurrent act model, and a lazy act model. Each model causes very distinct
+        behavior, yet does not change the way you interface with the rest of the
+        library. In brief, the immediate act model guarantees that operations are
+        performed immediately when they are signaled and the function will not return
+        until execution is complete. The concurrent act model allows active function
+        calls to occur in their own thread and may also store active objects in their
+        own thread. The lazy act model receives active function signals and adds
+        them to a queue. The actual functions which are signaled will not be called
+        until the result is required by the user through an explicit or implicit
+        wait.
+      </p>
+<p>
+        By default, the concurrent act model is used, though this behavior is adjustable.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.introduction.atomic_objects"></a><a href="introduction.html#act.introduction.atomic_objects" title="Atomic Objects">Atomic Objects</a></h3></div></div></div>
+<p>
+        Frequently when working with multithreaded applications, a need arises to
+        access a single object from multiple threads. Those experienced in multithreaded
+        programming realize that this is not a trivial task for even relatively simple
+        types.
+      </p>
+<p>
+        A thread-safe active object implementation is one way of making such functionality
+        fairly simple to achieve without the possibility of deadlocks, however it
+        also has the side-effect of having functions result in <code class="literal">actions</code>
+        which can add needless complexity to the application if they are not needed.
+        Atomic types provide a simpler solution by sharing the same interface as
+        active objects but with functions that are executed immediately and that
+        return their values directly as opposed to through actions.
+      </p>
+<p>
+        By default, all atomic objects internally use active objects, although the
+        <code class="literal">atomic_type</code> template may be specialized to provide more
+        efficient implementations where possible. <span class="emphasis"><em>Note: If OpenMP is supported,
+        such optimizations are performed for standard scalar types</em></span>.
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006 Matthew Calabrese</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="beta_warning.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="compiler_setup.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

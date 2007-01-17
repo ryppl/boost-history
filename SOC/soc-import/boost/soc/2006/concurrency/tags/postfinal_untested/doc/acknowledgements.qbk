@@ -1,0 +1,20 @@
+[part Boost.Act
+    [quickbook 1.4]
+    [version 0.4b]
+    [id act]
+    [dirname act]
+    [copyright 2006 Matthew Calabrese]
+    [category C++ Concurrency Library]
+    [authors [Calabrese, Matthew]]
+    [source-mode c++]
+]
+
+[def __alert__           [$images/alert.png]]
+[def __note__            [$images/note.png]]
+[def __OpenMP__          [@http://www.OpenMP.org OpenMP]]
+
+[section Acknowledgements]
+
+Placeholder section
+
+[endsect]
