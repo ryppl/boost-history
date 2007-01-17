@@ -289,7 +289,7 @@ inline std::basic_ostream<E, T> & operator<<
 template<class E, class T, class Y> 
 inline std::basic_istream<E, T> & operator>> 
    (std::basic_istream<E, T> & os, smart_ptr<Y> & p)
-{  Y * tmp; return os >> tmp; p = tmp;   }
+{  Y * tmp; p = tmp;  return os >> tmp;    }
 
 /*!std::ptrdiff_t + smart_ptr  */
 template<class T>
