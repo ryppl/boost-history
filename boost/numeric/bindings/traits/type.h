@@ -30,7 +30,7 @@ union {
 } fcomplex_t ;
 
 typedef 
-struct
+struct {
   double cmplx[2] ;
 } dcomplex_t ;
 
