@@ -116,6 +116,7 @@ class list_iterator
    bool operator!= (const Self& i) const
    { return !operator== (i); }
 
+//   protected:
    node_ptr list_node() const
    { return node_; }
 
@@ -124,6 +125,9 @@ class list_iterator
 
    Self next() const
    {  return Self(NodeTraits::get_next(node_));  }  
+
+   Self &operator=(const node_ptr &node)
+   {  node_ = node;  return static_cast<Self&>(*this);  }
 
    private:
    node_ptr node_;

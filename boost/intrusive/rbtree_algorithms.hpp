@@ -910,13 +910,11 @@ struct rbtree_algorithms
    //!   previously executed to fill "commit_data". No value should be inserted or
    //!   erased between the "insert_check" and "insert_commit" calls.
    static void insert_unique_commit
-      (node_ptr header, node_ptr new_value, insert_commit_data &commit_data)
+      (node_ptr header, node_ptr new_value, const insert_commit_data &commit_data)
    {
       //Check if commit_data has not been initialized by a insert_unique_check call.
       BOOST_ASSERT(commit_data.node != 0);
       link_and_balance(new_value, commit_data.node, commit_data.link_left, header);
-      commit_data.link_left = false;
-      commit_data.node = 0;
    }
 
    private:

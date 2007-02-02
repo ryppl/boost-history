@@ -362,6 +362,9 @@ class rbtree_iterator
    Self parent() const
    {  return Self(NodeTraits::get_parent(node_));  }  
 
+   Self &operator=(const node_ptr &node)
+   {  node_ = node;  return static_cast<Self&>(*this);  }
+
    private:
    node_ptr node_;
 };

@@ -70,13 +70,14 @@ template< class ValueTraits
         >
 class ihashset
 {
+   private:
    typedef detail::ihashtable<ValueTraits, Hash, Equal, ConstantTimeSize, SizeType> table_type;
 
-   //!This class is non-copyable
+   //! This class is non-copyable
    ihashset (const ihashset&);
 
    //!This class is non-assignable
-   ihashset operator =(const ihashset&);
+   ihashset &operator =(const ihashset&);
 
    public:
    typedef typename table_type::value_type            value_type;
@@ -103,7 +104,7 @@ class ihashset
    public:
 
    //! <b>Requires</b>: buckets must not be being used by any other resource.
-   //!   hasher must be an standard-compatible hash functor and equal must be an
+   //!   hasher must be a standard-compatible hash functor and equal must be an
    //!   standard-compatible equality functor.
    //!
    //! <b>Effects</b>: Constructs an empty ihashset, storing a reference
@@ -125,7 +126,7 @@ class ihashset
 
    //! <b>Requires</b>: buckets must not be being used by any other resource
    //!   and Dereferencing Iterator must yield to an lvalue of type value_type.
-   //!   hasher must be an standard-compatible hash functor and equal must be an
+   //!   hasher must be a standard-compatible hash functor and equal must be an
    //!   standard-compatible equality functor.
    //! 
    //! <b>Effects</b>: Constructs an empty ihashset and inserts elements from 
@@ -317,7 +318,7 @@ class ihashset
    //! <b>Notes</b>: This function has only sense if a "insert_check" has been
    //!   previously executed to fill "commit_data". No value should be inserted or
    //!   erased between the "insert_check" and "insert_commit" calls.
-   iterator insert_commit(value_type &val, insert_commit_data &commit_data)
+   iterator insert_commit(value_type &val, const insert_commit_data &commit_data)
    {  return table_.insert_unique_commit(val, commit_data); }
 
    //! <b>Requires</b>: Dereferencing Iterator must yield to an lvalue 
@@ -914,13 +915,14 @@ template< class ValueTraits
         >
 class ihashmultiset
 {
+   private:
    typedef detail::ihashtable<ValueTraits, Hash, Equal, ConstantTimeSize, SizeType> table_type;
 
-   //!This class is non-copyable
+   //! This class is non-copyable
    ihashmultiset (const ihashmultiset&);
 
    //!This class is non-assignable
-   ihashmultiset operator =(const ihashmultiset&);
+   ihashmultiset &operator =(const ihashmultiset&);
 
    public:
    typedef typename table_type::value_type            value_type;
@@ -947,7 +949,7 @@ class ihashmultiset
    public:
 
    //! <b>Requires</b>: buckets must not be being used by any other resource.
-   //!   hasher must be an standard-compatible hash functor and equal must be an
+   //!   hasher must be a standard-compatible hash functor and equal must be an
    //!   standard-compatible equality functor.
    //!
    //! <b>Effects</b>: Constructs an empty ihashmultiset, storing a reference
@@ -969,7 +971,7 @@ class ihashmultiset
 
    //! <b>Requires</b>: buckets must not be being used by any other resource
    //!   and Dereferencing Iterator must yield to an lvalue of type value_type.
-   //!   hasher must be an standard-compatible hash functor and equal must be an
+   //!   hasher must be a standard-compatible hash functor and equal must be an
    //!   standard-compatible equality functor.
    //! 
    //! <b>Effects</b>: Constructs an empty ihashmultiset and inserts elements from 

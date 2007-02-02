@@ -45,7 +45,7 @@ class iset
    iset (const iset&);
 
    //!This class is non-assignable
-   iset operator =(const iset&);
+   iset &operator =(const iset&);
 
    public:
    typedef typename tree_type::value_type             value_type;
@@ -342,7 +342,7 @@ class iset
    //! <b>Notes</b>: This function has only sense if a "insert_check" has been
    //!   previously executed to fill "commit_data". No value should be inserted or
    //!   erased between the "insert_check" and "insert_commit" calls.
-   iterator insert_commit(value_type &val, insert_commit_data &commit_data)
+   iterator insert_commit(value_type &val, const insert_commit_data &commit_data)
    {  return tree_.insert_unique_commit(val, commit_data); }
 
    //! <b>Requires</b>: Dereferencing Iterator must yield to an lvalue 
@@ -821,9 +821,11 @@ class imultiset
 {
    typedef detail::irbtree<ValueTraits, Compare, ConstantTimeSize, SizeType> tree_type;
 
-   //noncopyable
+   //! This class is non-copyable
    imultiset (const imultiset&);
-   imultiset operator =(const imultiset&);
+
+   //! This class is non-asignable
+   imultiset &operator =(const imultiset&);
 
    public:
    typedef typename tree_type::value_type             value_type;

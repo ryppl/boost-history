@@ -95,11 +95,14 @@ class slist_iterator
    bool operator!= (const Self& i) const
    { return !operator== (i); }
 
+   node_ptr list_node() const
+   { return node_; }
+
    Self next() const
    {  return Self(NodeTraits::get_next(node_));  }  
 
-   node_ptr list_node() const
-   { return node_; }
+   Self &operator=(const node_ptr &node)
+   {  node_ = node;  return static_cast<Self&>(*this);  }
 
    private:
    node_ptr node_;

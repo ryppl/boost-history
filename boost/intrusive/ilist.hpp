@@ -57,9 +57,11 @@ class ilist
    typedef typename ValueTraits::node_traits                node_traits;
    typedef detail::size_holder<ConstantTimeSize, SizeType>  size_traits;
 
-   //noncopyable
+   //! This class is non-copyable
    ilist (const ilist&);
-   ilist operator =(const ilist&);
+
+   //! This class is non-asignable
+   ilist &operator =(const ilist&);
 
    //Public typedefs
    public:
@@ -169,9 +171,12 @@ class ilist
       const_iterator()
       {}
 
-      const_iterator(const iterator& it)
+      const_iterator(const typename ilist::iterator& it)
          :  inherited (it.list_node())
       {}
+
+      const_iterator & operator=(const typename ilist::iterator& it)
+      {  return inherited::operator=(it.list_node());  }
 
       private_pointer   operator->() const
       { return  ValueTraits::to_value_ptr(this->list_node()); }

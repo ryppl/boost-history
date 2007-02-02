@@ -67,7 +67,7 @@ class islist
    islist (const islist&);
 
    //! This class is non-asignable
-   islist operator =(const islist&);
+   islist &operator =(const islist&);
 
    //Public typedefs
    public:
@@ -168,12 +168,17 @@ class islist
       private_reference   operator*() const
       { return *ValueTraits::to_value_ptr(this->list_node()); }
 
+      node_ptr list_node()const
+      {  return inherited::list_node();   }
+
       private:
       explicit iterator (node_ptr node)
          :  inherited (node)
       {}
+
       iterator next()
       {  return ++iterator(*this)++; }
+
       friend class islist<ValueTraits, ConstantTimeSize, SizeType>;
       friend class detail::slist_iterator<private_vt, iterator, node_traits>;
    };
@@ -189,12 +194,15 @@ class islist
       typedef detail::slist_iterator<private_vt, const_iterator, node_traits>  inherited;
       
       public: 
-      const_iterator ()
+      const_iterator()
       {}
 
-      const_iterator(const iterator& it)
+      const_iterator(const typename islist::iterator& it)
          :  inherited (it.list_node())
       {}
+
+      const_iterator & operator=(const typename islist::iterator& it)
+      {  return inherited::operator=(it.list_node());  }
 
       private_pointer   operator->()
       { return  ValueTraits::to_value_ptr(this->list_node()); }
@@ -206,8 +214,10 @@ class islist
       explicit const_iterator (const_node_ptr node)
          :  inherited (uncast(node))
       {}
+
       const_iterator next()
       {  return ++const_iterator(*this); }
+
       friend class islist<ValueTraits, ConstantTimeSize, SizeType>;
       friend class detail::slist_iterator<private_vt, const_iterator, node_traits>;
    };

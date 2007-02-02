@@ -65,6 +65,11 @@ class irbtree
       <pointer>::difference_type                   difference_type;
    typedef value_type                              key_type;
    typedef Compare                                 value_compare;
+   class iterator;
+   class const_iterator;
+   friend class iterator;
+   friend class const_iterator;
+
 
    private:
    typedef typename node_traits::node              node;
@@ -196,9 +201,12 @@ class irbtree
       const_iterator ()
       {}
 
-      const_iterator (const iterator& it)
+      const_iterator(const typename irbtree::iterator& it)
          :  inherited (it.tree_node())
       {}
+
+      const_iterator & operator=(const typename irbtree::iterator& it)
+      {  return inherited::operator=(it.tree_node());  }
 
       private_pointer   operator->()
       { return  ValueTraits::to_value_ptr(this->tree_node()); }
@@ -578,7 +586,7 @@ class irbtree
       return std::pair<iterator, bool>(iterator(ret.first), ret.second);
    }
 
-   iterator insert_unique_commit(value_type &val, insert_commit_data &commit_data)
+   iterator insert_unique_commit(value_type &val, const insert_commit_data &commit_data)
    {
       node_ptr to_insert(ValueTraits::to_node_ptr(val));
       if(safemode_or_autounlink)

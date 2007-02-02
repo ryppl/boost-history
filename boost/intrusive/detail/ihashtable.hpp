@@ -37,13 +37,25 @@ namespace boost {
 namespace intrusive {
 namespace detail {
 
-static const std::size_t prime_list[] = {
+template<int Dummy = 0>
+struct prime_list_holder
+{
+   static const std::size_t prime_list[];
+   static const std::size_t prime_list_size;
+};
+
+template<int Dummy>
+const std::size_t prime_list_holder<Dummy>::prime_list[] = {
    53ul, 97ul, 193ul, 389ul, 769ul,
    1543ul, 3079ul, 6151ul, 12289ul, 24593ul,
    49157ul, 98317ul, 196613ul, 393241ul, 786433ul,
    1572869ul, 3145739ul, 6291469ul, 12582917ul, 25165843ul,
    50331653ul, 100663319ul, 201326611ul, 402653189ul, 805306457ul,
    1610612741ul, 3221225473ul, 4294967291ul };
+
+template<int Dummy>
+const std::size_t prime_list_holder<Dummy>::prime_list_size
+   = sizeof(prime_list)/sizeof(std::size_t);
 
 //! The class template ihashtable is an intrusive red-black tree container, that
 //! is used to construct intrusive set and tree containers. The no-throw 
@@ -59,6 +71,32 @@ class ihashtable
    :  private detail::size_holder<ConstantTimeSize, SizeType>
 {
    private:
+   template<class T, class Self, class NodeTraits>
+   class hashtable_iterator;
+
+   typedef islist<ValueTraits, false, SizeType> islist_impl;
+
+   struct bucket_type_impl
+      :  private islist_impl
+   {
+      friend class ihashtable<ValueTraits, Hash, Equal, ConstantTimeSize, SizeType>;
+
+      bucket_type_impl()
+      {}
+
+      bucket_type_impl(const bucket_type_impl &)
+      {}
+
+      bucket_type_impl &operator=(const bucket_type_impl&)
+      {  islist_impl::clear();   }
+   };
+
+   static islist_impl &islist_from_bucket(bucket_type_impl &b)
+   {  return static_cast<islist_impl&>(b);   }
+
+   static const islist_impl &islist_from_bucket(const bucket_type_impl &b)
+   {  return static_cast<const islist_impl&>(b);   }
+
    typedef ihashtable<ValueTraits, Hash, Equal
                      ,ConstantTimeSize, SizeType>           this_type; 
    typedef typename ValueTraits::node_traits                node_traits;
@@ -83,11 +121,11 @@ class ihashtable
    typedef value_type                              key_type;
    typedef Hash                                    hasher;
    typedef Equal                                   key_equal;
-   typedef islist<ValueTraits, false, size_type>   bucket_type;
+   typedef bucket_type_impl                        bucket_type;
    typedef typename detail::pointer_to_other
       <pointer, bucket_type>::type                 bucket_ptr;
-   typedef typename bucket_type::iterator          local_iterator;
-   typedef typename bucket_type::const_iterator    const_local_iterator;
+   typedef typename islist_impl::iterator          local_iterator;
+   typedef typename islist_impl::const_iterator    const_local_iterator;
 
    private:
    typedef typename node_traits::node              node;
@@ -232,15 +270,14 @@ class ihashtable
    class hashtable_iterator
       :  public std::iterator<std::forward_iterator_tag, T>
    {
-      //typedef hashtable_algorithms<NodeTraits> sequence_algorithms;
-
-      public:
-      hashtable_iterator ()
-      {}
-
+      protected:
       explicit hashtable_iterator
          (local_iterator ptr, bucket_info_ptr bucket_info, size_type n_bucket)
          :  local_it_ (ptr),   bucket_info_ (bucket_info),   n_bucket_ (n_bucket)
+      {}
+
+      public:
+      hashtable_iterator ()
       {}
 
       Self& operator++()
@@ -249,13 +286,13 @@ class ihashtable
          ++local_it_;
          bucket_info_t *info   = get_pointer(bucket_info_);
          bucket_type *buckets  = get_pointer(info->buckets_);
-			while (local_it_ == buckets[n_bucket_].end()){
+			while (local_it_ == islist_from_bucket(buckets[n_bucket_]).end()){
             size_type buckets_len  = info->buckets_len_;
 				if (++n_bucket_ == buckets_len){
 					local_it_ = invalid_local_it(*info);
                break;
             }
-            local_it_ = buckets[n_bucket_].begin();
+            local_it_ = islist_from_bucket(buckets[n_bucket_]).begin();
 			}
          return static_cast<Self&> (*this);
       }
@@ -273,8 +310,18 @@ class ihashtable
       bool operator!= (const Self& i) const
       { return !operator== (i); }
 
+      Self &set_internals
+         (local_iterator ptr, bucket_info_ptr bucket_info, size_type n_bucket)
+      {
+         local_it_ = ptr;  bucket_info_ = bucket_info;  n_bucket_ = n_bucket;
+         return static_cast<Self&>(*this);
+      }
+
       local_iterator local() const
       { return local_it_; }
+
+      bucket_info_ptr bucket_info() const
+      { return bucket_info_; }
 
       size_type bucket_num() const
       { return n_bucket_; }
@@ -311,7 +358,7 @@ class ihashtable
          (local_iterator local_it, bucket_info_ptr bucket_info, size_type n_bucket)
          :  inherited(local_it, bucket_info, n_bucket)
       {}
-      
+
       friend struct std::pair<iterator, iterator>;
 
       friend class ihashtable<ValueTraits, Hash, Equal, ConstantTimeSize, SizeType>; 
@@ -330,6 +377,13 @@ class ihashtable
       public:
       const_iterator()
       {}
+
+      const_iterator(const iterator& it)
+         :  inherited (it.local(), it.bucket_info(), it.bucket_num())
+      {}
+
+      const_iterator & operator=(const typename ihashtable::iterator& it)
+      {  return inherited::set_internals(it.local(), it.bucket_info(), it.bucket_num());  }
 
       private_pointer operator->() const
       { return &*this->local(); }
@@ -511,7 +565,7 @@ class ihashtable
          ,success);
    }
 
-   iterator insert_unique_commit(value_type &val, insert_commit_data &commit_data)
+   iterator insert_unique_commit(value_type &val, const insert_commit_data &commit_data)
    {
       bucket_type &b = this->buckets()[commit_data.bucket_num];
       size_traits::increment();
@@ -696,13 +750,13 @@ class ihashtable
    {  return this->buckets()[n].begin();  }
 
    const_local_iterator begin(size_type n) const
-   {  return const_cast<bucket_type&>(this->buckets()[n]).begin();  }
+   {  return const_cast<const bucket_type&>(this->buckets()[n]).begin();  }
 
    local_iterator end(size_type n)
    {  return this->buckets()[n].end();  }
 
    const_local_iterator end(size_type n) const
-   {  return const_cast<bucket_type&>(this->buckets()[n]).end();  }
+   {  return const_cast<const bucket_type&>(this->buckets()[n]).end();  }
 
    void rehash(bucket_ptr new_buckets, size_type new_buckets_len)
    {
@@ -712,7 +766,7 @@ class ihashtable
       try{
          size_type n = 0;
          bool same_buffer = old_buckets == new_buckets;
-         //If this is a bucket shrinking, just rehash the last nodes
+         //If we are shrinking the bucket array, just rehash the last nodes
          if(same_buffer && (old_buckets_len > new_buckets_len)){
             n = new_buckets_len;
          }
@@ -773,21 +827,25 @@ class ihashtable
    // no throw
    static size_type suggested_upper_bucket_count(size_type n)
    {
+      const std::size_t *primes     = &prime_list_holder<0>::prime_list[0];
+      const std::size_t *primes_end = primes + prime_list_holder<0>::prime_list_size;
       size_type const* bound =
-            std::lower_bound(prime_list,prime_list + 28, n);
-      if(bound == prime_list + 28)
+            std::lower_bound(primes, primes_end, n);
+      if(bound == primes_end)
             bound--;
-      return *bound;
+      return size_type(*bound);
    }
 
    // no throw
    static size_type suggested_lower_bucket_count(size_type n)
    {
+      const std::size_t *primes     = &prime_list_holder<0>::prime_list[0];
+      const std::size_t *primes_end = primes + prime_list_holder<0>::prime_list_size;
       size_type const* bound =
-            std::upper_bound(prime_list,prime_list + 28, n);
-      if(bound != prime_list)
+            std::upper_bound(primes, primes_end, n);
+      if(bound != primes_end)
             bound--;
-      return *bound;
+      return size_type(*bound);
    }
 
    private:
