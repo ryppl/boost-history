@@ -7,11 +7,13 @@
 using namespace boost::intrusive;
 
 class MyClass
+   //This is a derivation hook
    :  public ihashset_base_hook<0>
 {
    int int_;
 
    public:
+   //This is a member hook
    ihashset_member_hook<MyClass> member_hook_;
 
    MyClass(int i)

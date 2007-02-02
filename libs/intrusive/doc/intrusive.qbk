@@ -148,31 +148,31 @@ Intrusive containers have also downsides:
 
 *  Each type stored in an intrusive container needs some data members holding the 
    maintenance informations needed by the container. Hence, whenever a certain type shall
-   be stored in an intrusive container you have to change the definition of that type
+   be stored in an intrusive container [*you have to change the definition of that type]
    appropriately. Although this task is easy with [*Boost.Intrusive], touching the 
    definition of a type is sometimes a crucial issue.
 
-*  In intrusive containers you don't store a copy of an object, but rather the original 
-   object itself. Objects don't need copy-constructors or assignment operators to be 
+*  In intrusive containers you don't store a copy of an object, [*but rather the original 
+   object itself]. Objects don't need copy-constructors or assignment operators to be 
    stored in intrusive containers. But you have to take care of possible side effects, 
    whenever you change the content of an object (this is especially important for 
    associative containers).
 
-*  The user has to manage the lifetime of inserted objects independently from the
+*  The user [*has to manage the lifetime of inserted objects] independently from the
    containers.
 
-*  In addition, each object currently
-   stored in an intrusive container has identity semantics. That means, that you can't move
-   the memory location of the object (e.g. implicitly, if the object is also stored in a
+*  In addition, [*each object currently stored in an intrusive container
+   has identity semantics]. That means, that you can't move the memory location of
+   the object (e.g. implicitly, if the object is also stored in a
    `std::vector`) as long as it is stored in any intrusive container. 
 
-[/*  Whenever an object
-   stored in an intrusive container gets destructed, it removes itself from that container.
-   Iterators to that object become invalid. ]
-
-*  Again you have to be [*careful]: in contrast to STL containers it's easy to render an
-   iterator invalid without touching the intrusive container directly, because the object
+*  Again you have to be [*careful]: in contrast to STL containers [*it's easy to render an
+   iterator invalid] without touching the intrusive container directly, because the object
    can be destroyed before erasing it from the container.
+
+*  [*Boost.Intrusive] containers are [*non-copyable and non-assignable]. Since intrusive
+   containers don't have allocation capabilities, these operations have no sense. However
+   swapping can be used to implement move-capabilities.
 
 [endsect]
 
@@ -210,7 +210,7 @@ This section will try to explain the basic concepts used in the design of
    struct my_slist_algorithms
    {
       typedef typename NodeTraits::node *node_ptr;
-      typedef typename NodeTraits::node *const_node_ptr;
+      typedef typename const NodeTraits::node *const_node_ptr;
 
       //Get the previous node of "this_node"
       static node_ptr get_prev_node(node_ptr this_node)
@@ -241,7 +241,7 @@ This section will try to explain the basic concepts used in the design of
    operations about a node that forms a sequence:
    the type of the node, a function to obtain the pointer to the next node... 
    [*Node Traits] are the configuration information [*Sequence Algorithms]
-   need. Each type of [*Sequence Algorithms] define the interface that compatible
+   need. Each type of [*Sequence Algorithms] defines the interface that compatible
    [*Node Traits] must implement.
    As an example, this is the definition of a [*Node Traits] class that
    is compatible with the previously presented `my_slist_algorithms`:
@@ -377,8 +377,8 @@ This section will try to explain the basic concepts used in the design of
    };
 
 *  [*Pseudo-Intrusive Container]: A pseudo-intrusive container is similar to an
-   intrusive container, but apart from the hook that the value to be inserted
-   must add to its definition the pseudo-intrusive container needs additional
+   intrusive container, but apart from using hooks that in the types to be inserted
+   in the container, the pseudo-intrusive container needs additional
    memory (for example, auxiliary arrays or indexes).
 
 [endsect]
@@ -714,7 +714,7 @@ since [classref boost::intrusive::ilist ilist] doesn't do any ownership manageme
 These hooks have exactly the same size overhead as their non auto-unlinking hooks, but
 they have a restriction: they can only be used with non-constant time containers.
 There is a reason for this: 
-Non-constant time containers does not need to update the internal size member and 
+Non constant-time containers don't need to update the internal size member and 
 allow removing the object from the container without using
 any reference to the container This way, the auto-unlink hooks have the same size as
 their non auto-unlink counterparts. Ths auto-unlink feature is useful in certain applications
@@ -777,7 +777,7 @@ leads to an error similar to:
 ]
 
 
-Pointing to a code like this:
+Pointing to code like this:
 
 [c++]
 
@@ -1118,10 +1118,13 @@ will be discarded, and this is a waste of resources. Instead of that, let's use
 
 [doc_iset_optimized_code_optimized_insert]
 
-`insert_check` is similar to a normal `insert` but it can use arbitrary keys and if the
-insertion is possible (there is no equivalent value) collects all the needed information
+`insert_check` is similar to a normal `insert` but:
+
+*  `insert_check` can be used with arbitrary keys
+*  if the insertion is possible (there is no equivalent value) collects all the needed information
 in an `insert_commit_data` structure, so that `insert_commit` does not execute further comparisons 
 and can be executed with constant-time complexity (and no-throw guarantee).
+
 These functions must be used with care, since
 no other insertion or erasure must be executed between an `insert_check` and an `insert_commit`
 pair. Otherwise, the results are undefined. 
@@ -1144,7 +1147,7 @@ are pseudo-intrusive containers: they need additional memory apart from the hook
 that the value_type of the container must add as a base or member. This additional
 memory must be passed in the constructor of the container.
 
-Unlike C++ TR1 unordered_set family containers (which are also hashed containers),
+Unlike C++ TR1 `unordered_set` family containers (which are also hashed containers),
 the contents of this pseudo-intrusive containers are not rehashed to maintain a
 load factor: that would require memory management and intrusive containers don't
 implement any memory management at all. However, the user can request an explicit
@@ -1157,7 +1160,7 @@ rehashing passing a new bucket array.
 of singly linked lists. When an element is inserted in the container, it's hashed
 using the configured hash function. Then the container calculates the bucket
 (the singly linked list) where the value should be inserted using the modulo
-operation between the hash value and the lenght of the bucket array:
+operation between the hash value and the length of the bucket array:
 
 [c++]
 
@@ -1165,13 +1168,13 @@ operation between the hash value and the lenght of the bucket array:
 
 Since no automatic rehashing is done by the container, all the iterators to
 non-erased elements remain valid after insertions and erasures (the end(),
-iterator also remains valid). After a rehashing, all iterators might be
+iterator also remains valid). After rehashing, all iterators might be
 invalidated (including the end() iterator).
 
 [*Boost.Intrusive] hashed containers need four arguments to be passed in their
-constructors: A pointer to an array values whose type is called `bucket_type`,
+constructors: A pointer to an array of elements whose type is called `bucket_type`,
 the length of that array, the hash function to be used with the values and an
-equality functor of those values:
+equality functor for those values:
 
 [c++]
 
@@ -1374,10 +1377,13 @@ will be discarded, and this is a waste of resources. Instead of that, let's use
 
 [doc_ihashset_optimized_code_optimized_insert]
 
-`insert_check` is similar to a normal `insert` but it can use arbitrry keys and if the
-insertion is possible (there is no equivalent value) collects all the needed information
-in an `insert_commit_data` structure, so that `insert_commit` does not execute further hash
-or comparisons and can be executed with constant-time complexity (and no-throw guarantee).
+`insert_check` is similar to a normal `insert` but:
+
+*  `insert_check` can be used with arbitrary keys
+*  if the insertion is possible (there is no equivalent value) collects all the needed information
+in an `insert_commit_data` structure, so that `insert_commit` does not execute further comparisons 
+and can be executed with constant-time complexity (and no-throw guarantee).
+
 These functions must be used with care, since no other insertion or erasure must be
 executed between an `insert_check` and an `insert_commit`
 pair. Otherwise, the results are undefined. 
@@ -1396,8 +1402,8 @@ reference for more information about `insert_check` and `insert_commit`.
 As explained in the [link intrusive.concepts Concepts] section, [*Boost.Intrusive]
 containers are implemented using sequence algorithms that work on generic nodes.
 
-Instead of using [*Boost.Intrusive] containers, a user might want to develop its own containers,
-for example, using nodes that are optimized for an specific application or that are compatible
+Instead of using [*Boost.Intrusive] containers, a user might want to develop
+customized containers, for example, using nodes that are optimized for an specific application or that are compatible
 with a a legacy ABI. A user might want
 to have only two additional pointers in his class and insert the class in a doubly linked
 list sometimes and in a singly linked list in other situations. You can't achieve this using
@@ -1652,6 +1658,71 @@ value_traits:
 
 As seen, several key elements of [*Boost.Intrusive], can be reused with custom user types,
 if the user does not want to use provided [*Boost.Intrusive] facilities.
+
+[endsect]
+
+[endsect]
+
+[section:design_notes Design Notes]
+
+When designing [*Boost.Intrusive] the following guidelines have been taken in care:
+
+[section: Boost.Intrusive in performance sensitive environments]
+
+[*Boost.Intrusive] should be a valuable tool in performance sensitive environments
+and following this guideline, [*Boost.Intrusive] has been designed to offer well
+known complexity guarantees. Apart from that, some options, like optional 
+constant-time, have been designed to offer faster complexity guarantees in some
+functions, like `slist::splice`.
+
+The advanced lookup and insertion functions for associative containers, taking
+an arbitrary key type and predicates, were designed to avoid unnecessary object
+constructions.
+
+[endsect]
+
+[section: Boost.Intrusive in space constricted environments]
+
+[*Boost.Intrusive] should be useful in space constricted environments
+and following this guideline, [*Boost.Intrusive] separates sequence algorithms
+and intrusive containers to avoid instantiating sequence algorithms for each
+user type. For example, a single class of red-black algorithms will be instantiated
+to implement all iset and imultiset containers using raw pointers. This way,
+[*Boost.Intrusive] wants to avoid any code size overhead associated with templates.
+
+Apart from that, [*Boost.Intrusive] implements some size improvements: for example,
+red-black trees embed the color bit in the parent pointer lower bit, if nodes
+are two-byte aligned. The possibility to avoid constant-time size operations can
+save some size on containers, and this extra size optimization is noticeable
+when the container is empty or contains few values.
+
+[endsect]
+
+[section: Boost.Intrusive as basic building block]
+
+[*Boost.Intrusive] should be a basic building block to build more complex containers
+and this guideline has motivated many design decisions. For example, the possibility
+to have more than one hook per user type opens the possibility to implement multi-index
+containers on top of [*Boost.Intrusive].
+
+[*Boost.Intrusive] also offers advanced
+functions taking function objects to ease the inmplementation of non-intrusive
+containers on top of intrusive containers without knowing the internals of the
+intrusive container.
+
+[endsect]
+
+[section: Expanding Boost.Intrusive]
+
+[*Boost.Intrusive] offers a wide-range of containers but also allows the
+construction of custom containers reusing [*Boost.Intrusive] elements.
+The programer might want to use sequence algorithms directly or
+build its own hooks to take advantage of its application environment.
+
+For example, the programmer might want to save some space creating a hook that
+can be used with singly linked list or doubly linked list intrusive containers,
+because the programmer might know that the object won't be inserted at the same
+time in both containers.
 
 [endsect]
 

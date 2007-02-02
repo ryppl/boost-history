@@ -234,11 +234,11 @@ class test_main_template
       test_list <typename testvalue_t::list_member_hook::template
             value_traits<&testvalue_t::list_node_> >::test_all(data);
 
-/*
-   test_list <boost::intrusive::ilist_ptr_to_member
-      < testvalue_t        , typename testvalue_t::pointer
-      , &testvalue_t::list_prev_, &testvalue_t::list_next_> >::test_all(data);
-*/
+
+//   test_list <boost::intrusive::ilist_ptr_to_member
+//      < testvalue_t        , typename testvalue_t::pointer
+//      , &testvalue_t::list_prev_, &testvalue_t::list_next_> >::test_all(data);
+
       return 0;
    }
 };
@@ -260,11 +260,9 @@ class test_main_template<VoidPointer, false>
       test_list <typename testvalue_t::list_member_hook::template
             value_traits<&testvalue_t::list_node_> >::test_all(data);
 
-   /*
-      test_list <boost::intrusive::ilist_ptr_to_member
-         < testvalue_t        , typename testvalue_t::pointer
-         , &testvalue_t::list_prev_, &testvalue_t::list_next_> >::test_all(data);
-   */
+//      test_list <boost::intrusive::ilist_ptr_to_member
+//         < testvalue_t        , typename testvalue_t::pointer
+//         , &testvalue_t::list_prev_, &testvalue_t::list_next_> >::test_all(data);
 
       test_list <typename testvalue_t::list_auto_base_hook::template
          value_traits<testvalue_t> >::test_all(data);
