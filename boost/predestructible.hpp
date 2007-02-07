@@ -21,20 +21,9 @@ namespace boost
   public:
   template<typename T> friend class predestructing_deleter;
   protected:
-    predestructible(): _predestructed(false) {}
+    predestructible() {}
     virtual ~predestructible() {}
     virtual void predestruct() {}
-  private:
-    void do_predestruct()
-    {
-      if(_predestructed == false)
-      {
-        _predestructed = true;
-        predestruct();
-      }
-    }
-
-    bool _predestructed;
   };
 }
 #endif

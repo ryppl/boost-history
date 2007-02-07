@@ -22,7 +22,7 @@ namespace boost
     void do_postconstruct(const boost::postconstructible *ptr)
     {
       boost::postconstructible *nonconst_ptr = const_cast<boost::postconstructible*>(ptr);
-      nonconst_ptr->do_postconstruct();
+      nonconst_ptr->postconstruct();
     }
     void do_postconstruct(...)
     {

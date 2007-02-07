@@ -26,20 +26,9 @@ namespace boost
   public:
     friend void deconstruct_detail::do_postconstruct(const boost::postconstructible *ptr);
   protected:
-    postconstructible(): _postconstructed(false) {}
+    postconstructible() {}
     virtual ~postconstructible() {}
     virtual void postconstruct() {}
-  private:
-    void do_postconstruct()
-    {
-      if(_postconstructed == false)
-      {
-        _postconstructed = true;
-        postconstruct();
-      }
-    }
-
-    bool _postconstructed;
   };
 }
 #endif
