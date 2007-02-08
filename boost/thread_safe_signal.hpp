@@ -29,7 +29,9 @@
 #include <boost/type_traits.hpp>
 #include <boost/thread_safe_signals/connection.hpp>
 #include <boost/thread_safe_signals/detail/signals_common.hpp>
+#include <boost/thread_safe_signals/detail/slot_groups.hpp>
 #include <boost/thread_safe_signals/detail/slot_call_iterator.hpp>
+#include <functional>
 #include <list>
 
 #ifndef EPG_SIGNALS_MAX_ARGS
@@ -42,8 +44,10 @@
 
 namespace EPG
 {
-	template<typename Signature, typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type > >
-	class signal: public ::EPG::signalslib::detail::SignalN<boost::function_traits<Signature>::arity, Signature, Combiner>::type
+	template<typename Signature, typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type >,
+		typename Group = int, typename GroupCompare = std::less<int> >
+	class signal: public ::EPG::signalslib::detail::SignalN<boost::function_traits<Signature>::arity,
+		Signature, Combiner, Group, GroupCompare>::type
 	{};
 }
 
