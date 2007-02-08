@@ -19,6 +19,7 @@
 #define _EPG_SIGNALS_H
 
 #include <boost/function.hpp>
+#include <boost/last_value.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/iteration.hpp>
@@ -27,6 +28,8 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/thread_safe_signals/connection.hpp>
+#include <boost/thread_safe_signals/detail/signals_common.hpp>
+#include <boost/thread_safe_signals/detail/slot_call_iterator.hpp>
 #include <list>
 
 #ifndef EPG_SIGNALS_MAX_ARGS
@@ -39,8 +42,8 @@
 
 namespace EPG
 {
-	template<typename Signature>
-	class signal: public ::EPG::signalslib::detail::SignalN<boost::function_traits<Signature>::arity, Signature>::type
+	template<typename Signature, typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type > >
+	class signal: public ::EPG::signalslib::detail::SignalN<boost::function_traits<Signature>::arity, Signature, Combiner>::type
 	{};
 }
 
