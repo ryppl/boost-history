@@ -14,6 +14,12 @@
  * any other characteristic. We would appreciate acknowledgement if the
  * software is used.
  */
+// Use, modification and
+// distribution is subject to the Boost Software License, Version
+// 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+// For more information, see http://www.boost.org
 
 #ifndef _EPG_SIGNALS_H
 #define _EPG_SIGNALS_H
@@ -45,14 +51,17 @@
 
 namespace EPG
 {
-	template<typename Signature, typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type >,
-		typename Group = int, typename GroupCompare = std::less<Group> >
+	template<typename Signature,
+		typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type >,
+		typename Group = int,
+		typename GroupCompare = std::less<Group>,
+		typename SlotFunction = boost::function<Signature> >
 	class signal: public ::EPG::signalslib::detail::SignalN<boost::function_traits<Signature>::arity,
-		Signature, Combiner, Group, GroupCompare>::type
+		Signature, Combiner, Group, GroupCompare, SlotFunction>::type
 	{
 	private:
 		typedef typename signalslib::detail::SignalN<boost::function_traits<Signature>::arity,
-			Signature, Combiner, Group, GroupCompare>::type base_type;
+			Signature, Combiner, Group, GroupCompare, SlotFunction>::type base_type;
 	public:
 		signal(const Combiner &combiner = Combiner(), const GroupCompare &group_compare = GroupCompare()):
 			base_type(combiner, group_compare)
