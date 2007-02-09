@@ -18,6 +18,7 @@
 #ifndef _EPG_SIGNALS_H
 #define _EPG_SIGNALS_H
 
+#include <algorithm>
 #include <boost/function.hpp>
 #include <boost/last_value.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
@@ -45,10 +46,18 @@
 namespace EPG
 {
 	template<typename Signature, typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type >,
-		typename Group = int, typename GroupCompare = std::less<int> >
+		typename Group = int, typename GroupCompare = std::less<Group> >
 	class signal: public ::EPG::signalslib::detail::SignalN<boost::function_traits<Signature>::arity,
 		Signature, Combiner, Group, GroupCompare>::type
-	{};
+	{
+	private:
+		typedef typename signalslib::detail::SignalN<boost::function_traits<Signature>::arity,
+			Signature, Combiner, Group, GroupCompare>::type base_type;
+	public:
+		signal(const Combiner &combiner = Combiner(), const GroupCompare &group_compare = GroupCompare()):
+			base_type(combiner, group_compare)
+		{}
+	};
 }
 
 #endif	// _EPG_SIGNALS_H
