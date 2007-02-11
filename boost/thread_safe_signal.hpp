@@ -56,11 +56,11 @@ namespace EPG
 		typename Group = int,
 		typename GroupCompare = std::less<Group>,
 		typename SlotFunction = boost::function<Signature> >
-	class signal: public ::EPG::signalslib::detail::SignalN<boost::function_traits<Signature>::arity,
+	class signal: public ::EPG::signalslib::detail::signalN<boost::function_traits<Signature>::arity,
 		Signature, Combiner, Group, GroupCompare, SlotFunction>::type
 	{
 	private:
-		typedef typename signalslib::detail::SignalN<boost::function_traits<Signature>::arity,
+		typedef typename signalslib::detail::signalN<boost::function_traits<Signature>::arity,
 			Signature, Combiner, Group, GroupCompare, SlotFunction>::type base_type;
 	public:
 		signal(const Combiner &combiner = Combiner(), const GroupCompare &group_compare = GroupCompare()):
