@@ -49,14 +49,18 @@
 #define BOOST_PP_FILENAME_1 <boost/thread_safe_signals/detail/signal_template.hpp>
 #include BOOST_PP_ITERATE()
 
-namespace EPG
+namespace boost
 {
+#ifndef signals
+	// for backward compatibility
+	namespace signals = signalslib;
+#endif
 	template<typename Signature,
 		typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type >,
 		typename Group = int,
 		typename GroupCompare = std::less<Group>,
 		typename SlotFunction = boost::function<Signature> >
-	class signal: public ::EPG::signalslib::detail::signalN<boost::function_traits<Signature>::arity,
+	class signal: public ::boost::signalslib::detail::signalN<boost::function_traits<Signature>::arity,
 		Signature, Combiner, Group, GroupCompare, SlotFunction>::type
 	{
 	private:
