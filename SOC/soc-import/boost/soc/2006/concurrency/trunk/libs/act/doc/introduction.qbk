@@ -1,0 +1,136 @@
+[section Introduction]
+
+With the advent of multi-core processors reaching the mainstream user along with
+the gradual tapering of the increase of individual core speeds, there is a
+growing need for high-level tools to simplify the creation of multi-threaded
+applications in order to allow for scalability of software over the years to
+come. Preferably, a solution should also allow existing code-bases to be easily
+and incrementally updated to take advantage of modern day processors, and as
+well, code which may be targetting both multi-core and single-core processors
+should not have to suffer by strictly using one model of execution. Rather,
+behavior should be toggleable on a variety of levels such that alterations in a
+small number of locations in code could change the technique used for execution
+over a large portion of a given project.
+
+Boost.Act attempts to supply a solution to this problem in the form of a
+portable library which provides STL-style algorithms that can be toggled via
+template policies to execute either synchronously or in parallel, and by
+providing templates and macros to allow the creation of asynchronous functions,
+active objects, and atomic objects. In addition, Boost.Act also allows the
+decoupling of signaling function calls from their actual invocations in such a
+way that one may switch between immediate, concurrent, lazy evaluation, or a
+user-provided evaluation strategy on a case-by-case basis with potentially no
+runtime cost to the application.
+
+[section Polymorphic Algorithms]
+
+For the scope of this library, a polymorphic algorithm is considered to be an
+algorithm whose model of execution may vary depending on policies passed
+prior to invocation. For example, a polymorphic algorithm may run serially with
+one policy and may internally run in parallel and rejoin with a different
+policy. Regardless of which policies are used, the same logical operation is
+performed, allowing users to switch between different execution models with
+minimal changes to code.
+
+One of the fundamental components of Boost.Act is its collection of STL-style
+polymorphic algorithms. Those familiar with the STL will find themselves right
+at home, as the majority of the algorithms correspond directly with those in the
+STL and are callable in a similar manner, with the additional ability to toggle
+the execution model of the algorithm. Along with the standard algorithms
+provided by the STL, other templates are also included for the sole purpose of
+the creation of user-defined polymorphic algorithms.
+
+[endsect]
+
+[section Algorithm Models]
+
+By default, Boost.Act algorithms are performed in parallel whenever possible.
+Algorithm models are types which are used as policies to alter this behavior
+when required on both a global and call-by-call level. In addition to the
+parallel algorithm model, a serial algorithm model is provided which forces
+calls to be made in a single thread. Users may also create their own algorithm
+models if the desired behavior is not provided by either of those included with
+the library.
+
+[endsect]
+
+[section Actions]
+
+It is often desirable to be able to signal a function, perform other unrelated
+operations, and then eventually wait for the signaled function's completion. In
+order to provide such functionality, Boost.Act introduces the concept of an
+=action=.
+
+An =action= is a type which represents a signaled operation. With a stored
+=action=, you have access to that operation such that you may wait for the
+function's completion if you need the effects to have taken place prior to
+reaching a certain point in code. Actions also provide an indirect interface to
+the result of a signaled function.
+
+[endsect]
+
+[section Active Objects]
+
+Much like we have a way of decoupling the signaling of a function from the
+actual invocation of that function, Boost.Act also provides a way to separate
+the signaling of intrinsic functions of a type from the invocation of such
+functions, yet guarantees the same order of execution of such functions relative
+to one another. Since the invocations of such functions are also implicitly
+serialized, it makes it easy to signal several functions which all deal with the
+same object without having to worry that one call may occur while another is
+executing, and with the guarantee that they are called in the same order as they
+were signaled.
+
+[endsect]
+
+[section Act Models]
+
+While the main purpose of Boost.Act is to introduce higher-level threading
+facilities to C++, it does so in a manner that makes their behavior toggleable
+and very customizable. Modularity with respect to actions and active objects is
+accomplished by allowing their implementation to be altered through the use of
+policies called act models, much like how algorithm models are used to alter the
+implementation of parallelable algorithms. Whenever you instantiate an active
+type or an action, you have the option of passing an act model which may alter
+its implementation. If you choose not to pass a policy explicitly, the default
+policy is used, which is also changeable.
+
+Act models currently provided with Boost.Act are an immediate act model, a
+concurrent act model, and a lazy act model. Each model causes very distinct
+behavior, yet does not change the way you interface with the rest of the
+library. In brief, the immediate act model guarantees that operations are
+performed immediately when they are signaled and the function will not return
+until execution is complete. The concurrent act model allows active function
+calls to occur in their own thread and may also store active objects in their
+own thread. The lazy act model receives active function signals and adds them to
+a queue. The actual functions which are signaled will not be called until the
+result is required by the user through an explicit or implicit wait.
+
+By default, the concurrent act model is used, though this behavior is
+adjustable.
+
+[endsect]
+
+[section Atomic Objects]
+
+Frequently when working with multithreaded applications, a need arises to access
+a single object from multiple threads. Those experienced in multithreaded
+programming realize that this is not a trivial task for even relatively simple
+types.
+
+A thread-safe active object implementation is one way of making such
+functionality fairly simple to achieve without the possibility of deadlocks,
+however it also has the side-effect of having functions result in =actions=
+which can add needless complexity to the application if they are not needed.
+Atomic types provide a simpler solution by sharing the same interface as active
+objects but with functions that are executed immediately and that return their
+values directly as opposed to through actions.
+
+By default, all atomic objects internally use active objects, although the
+=atomic_type= template may be specialized to provide more efficient
+implementations where possible. ['Note: If OpenMP is supported, such
+optimizations are performed for standard scalar types].
+
+[endsect]
+
+[endsect]

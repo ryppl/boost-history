@@ -1,0 +1,8 @@
+[section Brief Description]
+
+Boost.Act is a C++ library which introduces STL-style algorithms that may be
+toggled to run in parallel or serially, and which provides tools for creating
+and working with parallelable algorithms, asynchronous function calls, active
+objects, and atomic objects, all with implementations adjustable via policies.
+
+[endsect]

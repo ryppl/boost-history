@@ -1,0 +1,104 @@
+[section Concepts]
+
+[section Worker Allocator]
+
+A =Worker Allocator= is type whose instances are used create __worker__ objects
+which execute user-specified functions. In Boost.Act, models of the
+=Worker Allocator= concept include `basic_worker_allocator` which is used by
+default when instantiating the =basic_concurrent_act_model= template.
+
+In order to be considered a valid =Worker Allocator=, given the variable
+definitions below, the following expressions must be well-formed and have the
+indicated effects.
+
+[table Descriptive Variable Definitions
+[[Variable]       [Definition]                                                 ]
+[[`A`]            [A Worker Allocator type.]                                   ]
+[[`a`, `a1`, `a2`][Values of type `A&` where `a1 == a`.      ]                 ]
+[[`uw`]           [A value of type `X::unmanged_worker&` with the corresponding
+                   object constructed with `a1` as an argument.
+                  ]                                                            ]
+[[`suw`]          [A value of type `X::safe_unmanaged_worker&` with the
+                   corresponding object constructed with `a1` as an argument.
+                  ]                                                            ]
+[[`f`]            [A nullary function object.]                                 ]
+]
+
+[table Worker Allocator Requirements
+[[Expression]           [Return Type][Pre/Post-Condition]                      ]
+[[`A::unmanaged_worker`][]           [A __worker__ type.]                      ]
+[[`A::safe_unmanaged_worker`][]      [A __worker__ type.]                      ]
+[[`a.join(uw)`]         [(unused)]   [The current thread of execution waits for
+                                      the worker `uw` to complete its execution.
+                                      If `a.join` has already been called with
+                                      `uw` as an argument the function call
+                                      returns immediately without error. /Note:/
+                                      This function may only safely be called
+                                      multiple times with the same argument if
+                                      each successive call occurs in the same
+                                      thread of execution as the first.
+                                      /--end note/
+                                     ]                                         ]
+[[`a.join(suw)`]        [(unused)]   [The current thread of execution waits for
+                                      the worker `suw` to complete its
+                                      execution. If `a.join` has already been
+                                      called with `uw` as an argument the
+                                      function call returns immediately without
+                                      error. /Note:/ This function may safely be
+                                      called from different threads of
+                                      execution. /--end note/
+                                     ]                                         ]
+[[`a.spawn_wild_worker(f)`][(unused)][`f` is executed in an
+                                      implementation-defined thread. /Note:/ `f`
+                                      is guaranteed to complete its execution
+                                      prior to a natural closing of the
+                                      corresponding process. /--end note/
+                                     ]                                         ]
+[[`a1 == a2`]           [`bool`]     [Returns true iff workers allocated from
+                                      each can be joined via the other.
+                                     ]                                         ]
+[[`a1 != a2`]           [`bool`]     [Same as `!(a1 == a2)`.]                  ]
+[[`A()`]                []           [Creates a default instance. A destructor
+                                      is assumed.
+                                     ]                                         ]
+]
+
+[endsect]
+
+
+[section Worker]
+
+A =Worker= is an object which represent a function executing either
+sychnronously or asynchronously with respect to its thread of construction
+depending on the corresponding model and implementation. In Boost.Act, models of
+this concepts may be found as members of models of the __worker_allocator__
+concept.
+
+In order to be considered a valid =Worker=, given the variable definitions
+below, the following expressions must be well-formed and have the indicated
+effects.
+
+[table Descriptive Variable Definitions
+[[Variable]       [Definition]                                                 ]
+[[`W`]            [A =Worker= type.]                                           ]
+[[`w`]            [Value of type `W&`.]                                        ]
+[[`A`]            [An allocator type which may be used in conjunction with
+                   =Worker= `w`. Note: Such allocator types are
+                   implementation-specified with respect to models of the
+                   =Worker= concept.
+                  ]                                                            ]
+[[`a`]            [Value of type `A&`.]                                        ]
+[[`f`]            [A nullary function object.]                                 ]
+]
+
+[table Worker Requirements
+[[Expression][Return Type][Pre/Post-Condition]                                 ]
+[[`W(a,f)`]  []           [Creates an instance which executes `f` in an
+                           implementation-specified thread of execution. A
+                           destructor is assumed.
+                          ]                                                    ]
+]
+
+[endsect]
+
+[endsect]

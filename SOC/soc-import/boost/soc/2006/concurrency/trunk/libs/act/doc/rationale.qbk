@@ -1,0 +1,67 @@
+[section Rationale]
+
+Boost.Act is a fairly large library and makes some controversial design
+decisions. This section is provided to briefly describe the rationale behind
+some of these decisions.
+
+[section Policy-Based Design]
+
+Boost.Act offers programmers customizability through two kinds of policies which
+control algorithm execution and active qualification implementation. These
+policies allow one to adjust whether algorithms run in parallel when possible or
+always serially, and allow one to adjust whether active types create their own
+thread or operate in the master thread. Default policies used can be overriden
+at a global level or individually at points of instantiation. The reason this
+may be considered controversial is that some may argue that the use of policies
+here adds needless complexity at little gain. ['In short, why not just use the
+STL in cases where algorithms need to be run serially and why not just not use
+active objects in places where you do not need your object to exist in its own
+thread?]
+
+The reasons for choosing policies stem mostly from the fact that they provide an
+easy way to switch execution models for arbitrary amounts of code with very few
+changes to the code using the library. Reasons one may wish to switch policies
+at the call-site range from reasons of optimization to reasons of debugging. In
+terms of optimization, using active objects and parallel algorithms may have a
+negative impact on performance in single-core systems, therefore the ability to
+toggle the execution model by merely changing the default policy used allows a
+programmer to target both single-core and multicore processors by simply
+rebuilding after changing the policy being used. In theory, using policies which
+target single-core sytems can be optimized to the same code as a project which
+avoided the abstraction entirely.
+
+As an example of switching policies for debugging, single-threaded algorithms
+can often be more simple to debug than multi-threaded algorithms. If a bug is
+narrowed down to a single algorithm which runs in parallel, one may easily
+switch execution for that call to be serial, making it much easier to step
+through in order to find the problem. This also helps in figuring out if certain
+unwanted behavior is being caused by multi-threading issues or if there is a
+more simple logical problem which exists at a higher-level in the algorithm's
+design.
+
+[endsect]
+
+[section Actions vs. Futures]
+
+Another fairly controversial design decision is the absence of futures, or at
+least futures as they are commonly known. Rather than returning futures from
+asynchronous function calls and function calls queued on active objects,
+=actions= are yielded which represent the running function and provide an
+indirect interface to an instance of the active qualified form of the return
+type. This choice was made for a variety of reasons. First and foremost, this
+allows a programmer to work with the results of such function calls without
+losing concurrency by default, as functions upon them are queued rather than
+performed immediately after implicitly or explicitly forcing the function to
+complete. The traditional blocking form of futures, while can potentially be
+implemented in such a way that is [slightly] more optimized for single-core
+processors, implies an unnecessary loss of concurrency and becomes less
+efficient if multiple cores are available. Still, the traditional behavior of
+futures can be forced through actions by simply copying the active result to an
+active-unqualified form of the result type using =inactive_value=, forcing a
+wait for the function to complete. This gives actions of Boost.Act a superset of
+the functionality provided by futures meaning that those who wish to use actions
+in a future-like manner may do so.
+
+[endsect]
+
+[endsect]

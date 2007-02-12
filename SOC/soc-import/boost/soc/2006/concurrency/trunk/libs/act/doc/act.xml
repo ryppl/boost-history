@@ -1,0 +1,629 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/12 21:22:29 $"
+ xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
+    <author>
+      <firstname>Matthew</firstname> <surname>Calabrese</surname>
+    </author>
+    <copyright>
+      <year>2006</year> <holder>, 2007 Matthew Calabrese</holder>
+    </copyright>
+    <legalnotice>
+      <para>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <ulink url="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</ulink>)
+      </para>
+    </legalnotice>
+    <articlepurpose>
+      Library for concurrent programming.
+    </articlepurpose>
+    <articlecategory name="category:C++ Concurrency Library"></articlecategory>
+  </articleinfo>
+  <title>Act 0.5b</title>
+  <section id="act.brief_description">
+    <title><link linkend="act.brief_description">Brief Description</link></title>
+    <para>
+      Boost.Act is a C++ library which introduces STL-style algorithms that may be
+      toggled to run in parallel or serially, and which provides tools for creating
+      and working with parallelable algorithms, asynchronous function calls, active
+      objects, and atomic objects, all with implementations adjustable via policies.
+    </para>
+  </section>
+  <section id="act.beta_warning">
+    <title><link linkend="act.beta_warning">Beta Warning</link></title>
+    <caution>
+      <para>
+        <literal>Boost.Act</literal> is still in beta and is not yet up for formal
+        review. The documentation that follows details both features which are fully
+        implemented and those which are partially. Because of this, <literal>Boost.Act</literal>
+        is currently only recommended for testing and experimentation. Current compilers
+        used during testing are Visual C++ 8.0, MinGW, and Intel 9.1.
+      </para>
+    </caution>
+  </section>
+  <section id="act.introduction">
+    <title><link linkend="act.introduction">Introduction</link></title>
+    <para>
+      With the advent of multi-core processors reaching the mainstream user along
+      with the gradual tapering of the increase of individual core speeds, there
+      is a growing need for high-level tools to simplify the creation of multi-threaded
+      applications in order to allow for scalability of software over the years to
+      come. Preferably, a solution should also allow existing code-bases to be easily
+      and incrementally updated to take advantage of modern day processors, and as
+      well, code which may be targetting both multi-core and single-core processors
+      should not have to suffer by strictly using one model of execution. Rather,
+      behavior should be toggleable on a variety of levels such that alterations
+      in a small number of locations in code could change the technique used for
+      execution over a large portion of a given project.
+    </para>
+    <para>
+      Boost.Act attempts to supply a solution to this problem in the form of a portable
+      library which provides STL-style algorithms that can be toggled via template
+      policies to execute either synchronously or in parallel, and by providing templates
+      and macros to allow the creation of asynchronous functions, active objects,
+      and atomic objects. In addition, Boost.Act also allows the decoupling of signaling
+      function calls from their actual invocations in such a way that one may switch
+      between immediate, concurrent, lazy evaluation, or a user-provided evaluation
+      strategy on a case-by-case basis with potentially no runtime cost to the application.
+    </para>
+    <section id="act.introduction.polymorphic_algorithms">
+      <title><link linkend="act.introduction.polymorphic_algorithms">Polymorphic
+      Algorithms</link></title>
+      <para>
+        For the scope of this library, a polymorphic algorithm is considered to be
+        an algorithm whose model of execution may vary depending on policies passed
+        prior to invocation. For example, a polymorphic algorithm may run serially
+        with one policy and may internally run in parallel and rejoin with a different
+        policy. Regardless of which policies are used, the same logical operation
+        is performed, allowing users to switch between different execution models
+        with minimal changes to code.
+      </para>
+      <para>
+        One of the fundamental components of Boost.Act is its collection of STL-style
+        polymorphic algorithms. Those familiar with the STL will find themselves
+        right at home, as the majority of the algorithms correspond directly with
+        those in the STL and are callable in a similar manner, with the additional
+        ability to toggle the execution model of the algorithm. Along with the standard
+        algorithms provided by the STL, other templates are also included for the
+        sole purpose of the creation of user-defined polymorphic algorithms.
+      </para>
+    </section>
+    <section id="act.introduction.algorithm_models">
+      <title><link linkend="act.introduction.algorithm_models">Algorithm Models</link></title>
+      <para>
+        By default, Boost.Act algorithms are performed in parallel whenever possible.
+        Algorithm models are types which are used as policies to alter this behavior
+        when required on both a global and call-by-call level. In addition to the
+        parallel algorithm model, a serial algorithm model is provided which forces
+        calls to be made in a single thread. Users may also create their own algorithm
+        models if the desired behavior is not provided by either of those included
+        with the library.
+      </para>
+    </section>
+    <section id="act.introduction.actions">
+      <title><link linkend="act.introduction.actions">Actions</link></title>
+      <para>
+        It is often desirable to be able to signal a function, perform other unrelated
+        operations, and then eventually wait for the signaled function's completion.
+        In order to provide such functionality, Boost.Act introduces the concept
+        of an <literal>action</literal>.
+      </para>
+      <para>
+        An <literal>action</literal> is a type which represents a signaled operation.
+        With a stored <literal>action</literal>, you have access to that operation
+        such that you may wait for the function's completion if you need the effects
+        to have taken place prior to reaching a certain point in code. Actions also
+        provide an indirect interface to the result of a signaled function.
+      </para>
+    </section>
+    <section id="act.introduction.active_objects">
+      <title><link linkend="act.introduction.active_objects">Active Objects</link></title>
+      <para>
+        Much like we have a way of decoupling the signaling of a function from the
+        actual invocation of that function, Boost.Act also provides a way to separate
+        the signaling of intrinsic functions of a type from the invocation of such
+        functions, yet guarantees the same order of execution of such functions relative
+        to one another. Since the invocations of such functions are also implicitly
+        serialized, it makes it easy to signal several functions which all deal with
+        the same object without having to worry that one call may occur while another
+        is executing, and with the guarantee that they are called in the same order
+        as they were signaled.
+      </para>
+    </section>
+    <section id="act.introduction.act_models">
+      <title><link linkend="act.introduction.act_models">Act Models</link></title>
+      <para>
+        While the main purpose of Boost.Act is to introduce higher-level threading
+        facilities to C++, it does so in a manner that makes their behavior toggleable
+        and very customizable. Modularity with respect to actions and active objects
+        is accomplished by allowing their implementation to be altered through the
+        use of policies called act models, much like how algorithm models are used
+        to alter the implementation of parallelable algorithms. Whenever you instantiate
+        an active type or an action, you have the option of passing an act model
+        which may alter its implementation. If you choose not to pass a policy explicitly,
+        the default policy is used, which is also changeable.
+      </para>
+      <para>
+        Act models currently provided with Boost.Act are an immediate act model,
+        a concurrent act model, and a lazy act model. Each model causes very distinct
+        behavior, yet does not change the way you interface with the rest of the
+        library. In brief, the immediate act model guarantees that operations are
+        performed immediately when they are signaled and the function will not return
+        until execution is complete. The concurrent act model allows active function
+        calls to occur in their own thread and may also store active objects in their
+        own thread. The lazy act model receives active function signals and adds
+        them to a queue. The actual functions which are signaled will not be called
+        until the result is required by the user through an explicit or implicit
+        wait.
+      </para>
+      <para>
+        By default, the concurrent act model is used, though this behavior is adjustable.
+      </para>
+    </section>
+    <section id="act.introduction.atomic_objects">
+      <title><link linkend="act.introduction.atomic_objects">Atomic Objects</link></title>
+      <para>
+        Frequently when working with multithreaded applications, a need arises to
+        access a single object from multiple threads. Those experienced in multithreaded
+        programming realize that this is not a trivial task for even relatively simple
+        types.
+      </para>
+      <para>
+        A thread-safe active object implementation is one way of making such functionality
+        fairly simple to achieve without the possibility of deadlocks, however it
+        also has the side-effect of having functions result in <literal>actions</literal>
+        which can add needless complexity to the application if they are not needed.
+        Atomic types provide a simpler solution by sharing the same interface as
+        active objects but with functions that are executed immediately and that
+        return their values directly as opposed to through actions.
+      </para>
+      <para>
+        By default, all atomic objects internally use active objects, although the
+        <literal>atomic_type</literal> template may be specialized to provide more
+        efficient implementations where possible. <emphasis>Note: If OpenMP is supported,
+        such optimizations are performed for standard scalar types</emphasis>.
+      </para>
+    </section>
+  </section>
+  <section id="act.compiler_setup">
+    <title><link linkend="act.compiler_setup">Compiler Setup</link></title>
+    <section id="act.compiler_setup.downloading_boost">
+      <title><link linkend="act.compiler_setup.downloading_boost">Downloading Boost</link></title>
+      <para>
+        <literal>Boost.Act</literal> uses some libraries which will be in Boost 1.34
+        yet are not available in 1.33. Because of this, if you wish to use <literal>Boost.Act</literal>,
+        you must grab the latest version from the <ulink url="http://boost.org/more/getting_started.html#CVS">Boost
+        CVS Repository</ulink>.
+      </para>
+    </section>
+    <section id="act.compiler_setup.enabling_parallel_algorithms">
+      <title><link linkend="act.compiler_setup.enabling_parallel_algorithms">Enabling
+      Parallel Algorithms</link></title>
+      <para>
+        With the current implementation, in order to take advantage of the parallel
+        algorithms provided by Boost.Act you must have a compiler that supports
+        <ulink url="http://www.OpenMP.org">OpenMP</ulink> 1.0 extensions or higher.
+      </para>
+      <important>
+        <para>
+          <emphasis role="bold">If your compiler does not support the OpenMP extensions
+          or if they are not enabled, <literal>polymorphic algorithms</literal> will
+          execute serially regardless of whether or not you are using the <literal>parallel_algo_model</literal>
+          policy.</emphasis>&nbsp;<sbr/> <sbr/> The following table is intended to
+          be a quick reference for some of the more commonly used compilers. If your
+          compiler is not listed it does not mean that OpenMP is not supported, but
+          rather, it means that you should check your compiler's documentation to
+          determine if you will be able to enable the OpenMP extensions in order
+          to take advantage of parallel algorithms through Boost.Act.
+        </para>
+      </important>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+          <phrase role="table-title">OpenMP Extension Support</phrase>
+        </bridgehead>
+        <tgroup cols="3">
+          <thead>
+            <row>
+              <entry>Compiler</entry><entry>OpenMP Support</entry><entry>Compiler
+              Switch</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><emphasis role="bold">Borland C++ Builder</emphasis></entry><entry>No</entry><entry>N/A</entry>
+            </row>
+            <row>
+              <entry><emphasis role="bold">G++</emphasis></entry><entry><emphasis
+              role="bold">GCC 4.2 and up:</emphasis> OpenMP 2.5</entry><entry>-fopenmp</entry>
+            </row>
+            <row>
+              <entry><emphasis role="bold">IBM XLC</emphasis></entry><entry>OpenMP
+              2.5</entry><entry>-qsmp=omp</entry>
+            </row>
+            <row>
+              <entry><emphasis role="bold">Intel C++</emphasis></entry><entry><emphasis
+              role="bold">9.0 and up:</emphasis> OpenMP 2.5</entry><entry><emphasis
+              role="bold">Windows:</emphasis> /Qopenmp <sbr/> <emphasis role="bold">Linux:</emphasis>
+              -openmp </entry>
+            </row>
+            <row>
+              <entry><emphasis role="bold">Lahey/Fujitsu</emphasis></entry><entry>OpenMP
+              1.0? <emphasis>(ToDo: Check)</emphasis></entry><entry>--openmp</entry>
+            </row>
+            <row>
+              <entry><emphasis role="bold">PG++</emphasis></entry><entry><emphasis
+              role="bold">Linux only:</emphasis> OpenMP 2.5</entry><entry>-mp</entry>
+            </row>
+            <row>
+              <entry><emphasis role="bold">Sun Studio Compilers</emphasis></entry><entry>OpenMP
+              2.5</entry><entry>-xopenmp</entry>
+            </row>
+            <row>
+              <entry><emphasis role="bold">Visual C++</emphasis></entry><entry><emphasis
+              role="bold">2005 Professional and up:</emphasis> OpenMP 2.0 </entry><entry>
+              /openmp <sbr/> <sbr/> <link linkend="vc_openmp">Through IDE </link>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <anchor id="vc_openmp" />
+      <para>
+      </para>
+      <anchor id="act.compiler_setup.enabling_parallel_algorithms.activating_openmp_support_in_visual_c___2005"/>
+      <bridgehead renderas="sect4">
+        <link linkend="act.compiler_setup.enabling_parallel_algorithms.activating_openmp_support_in_visual_c___2005">Activating
+        OpenMP Support in Visual C++ 2005</link>
+      </bridgehead>
+      <para>
+        In Visual Studio 2005 Professional Edition and higher, you may enable and
+        disable OpenMP support by opening up the properties for your project, selecting
+        <literal>Configuration Properties -&gt; C/C++ -&gt; Language</literal>, and
+        setting <literal>OpenMP Support</literal> to <literal>Yes</literal>. Note
+        that Visual Studio 2005 Express Edition and Standard Edition do <emphasis
+        role="bold">not</emphasis> support OpenMP despite the option being there,
+        so if you attempt to enable it you will get a linker error upon build.
+      </para>
+    </section>
+    <section id="act.compiler_setup.linking_with_boost_threads">
+      <title><link linkend="act.compiler_setup.linking_with_boost_threads">Linking
+      with Boost.Threads</link></title>
+      <para>
+        In order to compile programs which use <literal>Boost.Act</literal>, you
+        must build and link to <literal>Boost.Threads</literal>. For details on building
+        Boost, see <ulink url="http://boost.org/more/getting_started.html#Build_Install">Build
+        and Install</ulink>.
+      </para>
+    </section>
+    <section id="act.compiler_setup.compiling_the_library">
+      <title><link linkend="act.compiler_setup.compiling_the_library">Compiling the
+      Library</link></title>
+      <para>
+        For simplicity during testing, <literal>Boost.Act</literal> is currently
+        contained entirely in header files. Therefore, you do not need to explicitly
+        build or link to <literal>Boost.Act</literal> in order to use it.
+      </para>
+    </section>
+  </section>
+  <section id="act.concepts">
+    <title><link linkend="act.concepts">Concepts</link></title>
+    <section id="act.concepts.worker_allocator">
+      <title><link linkend="act.concepts.worker_allocator">Worker Allocator</link></title>
+      <para>
+        A <literal>Worker Allocator</literal> is type whose instances are used create
+        <link linkend="act.concepts.worker">Worker</link> objects which execute user-specified
+        functions. In Boost.Act, models of the <literal>Worker Allocator</literal>
+        concept include <code><phrase role="identifier">basic_worker_allocator</phrase></code>
+        which is used by default when instantiating the <literal>basic_concurrent_act_model</literal>
+        template.
+      </para>
+      <para>
+        In order to be considered a valid <literal>Worker Allocator</literal>, given
+        the variable definitions below, the following expressions must be well-formed
+        and have the indicated effects.
+      </para>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+          <phrase role="table-title">Descriptive Variable Definitions</phrase>
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Variable</entry><entry>Definition</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">A</phrase></code></entry><entry>A
+              Worker Allocator type.</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">a</phrase></code>, <code><phrase
+              role="identifier">a1</phrase></code>, <code><phrase role="identifier">a2</phrase></code></entry><entry>Values
+              of type <code><phrase role="identifier">A</phrase><phrase role="special">&amp;</phrase></code>
+              where <code><phrase role="identifier">a1</phrase>&nbsp;<phrase role="special">==</phrase>&nbsp;<phrase
+              role="identifier">a</phrase></code>. </entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">uw</phrase></code></entry><entry>A
+              value of type <code><phrase role="identifier">X</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">unmanged_worker</phrase><phrase role="special">&amp;</phrase></code>
+              with the corresponding object constructed with <code><phrase role="identifier">a1</phrase></code>
+              as an argument. </entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">suw</phrase></code></entry><entry>A
+              value of type <code><phrase role="identifier">X</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">safe_unmanaged_worker</phrase><phrase role="special">&amp;</phrase></code>
+              with the corresponding object constructed with <code><phrase role="identifier">a1</phrase></code>
+              as an argument. </entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">f</phrase></code></entry><entry>A
+              nullary function object.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+          <phrase role="table-title">Worker Allocator Requirements</phrase>
+        </bridgehead>
+        <tgroup cols="3">
+          <thead>
+            <row>
+              <entry>Expression</entry><entry>Return Type</entry><entry>Pre/Post-Condition</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">unmanaged_worker</phrase></code></entry><entry></entry><entry>A
+              <link linkend="act.concepts.worker">Worker</link> type.</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">safe_unmanaged_worker</phrase></code></entry><entry></entry><entry>A
+              <link linkend="act.concepts.worker">Worker</link> type.</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
+              role="identifier">join</phrase><phrase role="special">(</phrase><phrase
+              role="identifier">uw</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry>The
+              current thread of execution waits for the worker <code><phrase role="identifier">uw</phrase></code>
+              to complete its execution. If <code><phrase role="identifier">a</phrase><phrase
+              role="special">.</phrase><phrase role="identifier">join</phrase></code>
+              has already been called with <code><phrase role="identifier">uw</phrase></code>
+              as an argument the function call returns immediately without error.
+              <emphasis>Note:</emphasis> This function may only safely be called
+              multiple times with the same argument if each successive call occurs
+              in the same thread of execution as the first. <emphasis>--end note</emphasis>
+              </entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
+              role="identifier">join</phrase><phrase role="special">(</phrase><phrase
+              role="identifier">suw</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry>The
+              current thread of execution waits for the worker <code><phrase role="identifier">suw</phrase></code>
+              to complete its execution. If <code><phrase role="identifier">a</phrase><phrase
+              role="special">.</phrase><phrase role="identifier">join</phrase></code>
+              has already been called with <code><phrase role="identifier">uw</phrase></code>
+              as an argument the function call returns immediately without error.
+              <emphasis>Note:</emphasis> This function may safely be called from
+              different threads of execution. <emphasis>--end note</emphasis> </entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
+              role="identifier">spawn_wild_worker</phrase><phrase role="special">(</phrase><phrase
+              role="identifier">f</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry><code><phrase
+              role="identifier">f</phrase></code> is executed in an implementation-defined
+              thread. <emphasis>Note:</emphasis>&nbsp;<code><phrase role="identifier">f</phrase></code>
+              is guaranteed to complete its execution prior to a natural closing
+              of the corresponding process. <emphasis>--end note</emphasis> </entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">a1</phrase>&nbsp;<phrase role="special">==</phrase>&nbsp;<phrase
+              role="identifier">a2</phrase></code></entry><entry><code><phrase role="keyword">bool</phrase></code></entry><entry>Returns
+              true iff workers allocated from each can be joined via the other.
+              </entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">a1</phrase>&nbsp;<phrase role="special">!=</phrase>&nbsp;<phrase
+              role="identifier">a2</phrase></code></entry><entry><code><phrase role="keyword">bool</phrase></code></entry><entry>Same
+              as <code><phrase role="special">!(</phrase><phrase role="identifier">a1</phrase>&nbsp;<phrase
+              role="special">==</phrase>&nbsp;<phrase role="identifier">a2</phrase><phrase
+              role="special">)</phrase></code>.</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">A</phrase><phrase role="special">()</phrase></code></entry><entry></entry><entry>Creates
+              a default instance. A destructor is assumed. </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+    <section id="act.concepts.worker">
+      <title><link linkend="act.concepts.worker">Worker</link></title>
+      <para>
+        A <literal>Worker</literal> is an object which represent a function executing
+        either sychnronously or asynchronously with respect to its thread of construction
+        depending on the corresponding model and implementation. In Boost.Act, models
+        of this concepts may be found as members of models of the <link linkend="act.concepts.worker_allocator">Worker
+        Allocator</link> concept.
+      </para>
+      <para>
+        In order to be considered a valid <literal>Worker</literal>, given the variable
+        definitions below, the following expressions must be well-formed and have
+        the indicated effects.
+      </para>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+          <phrase role="table-title">Descriptive Variable Definitions</phrase>
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Variable</entry><entry>Definition</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">W</phrase></code></entry><entry>A
+              <literal>Worker</literal> type.</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">w</phrase></code></entry><entry>Value
+              of type <code><phrase role="identifier">W</phrase><phrase role="special">&amp;</phrase></code>.</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">A</phrase></code></entry><entry>An
+              allocator type which may be used in conjunction with <literal>Worker</literal>&nbsp;<code><phrase
+              role="identifier">w</phrase></code>. Note: Such allocator types are
+              implementation-specified with respect to models of the <literal>Worker</literal>
+              concept. </entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">a</phrase></code></entry><entry>Value
+              of type <code><phrase role="identifier">A</phrase><phrase role="special">&amp;</phrase></code>.</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">f</phrase></code></entry><entry>A
+              nullary function object.</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+          <phrase role="table-title">Worker Requirements</phrase>
+        </bridgehead>
+        <tgroup cols="3">
+          <thead>
+            <row>
+              <entry>Expression</entry><entry>Return Type</entry><entry>Pre/Post-Condition</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">W</phrase><phrase role="special">(</phrase><phrase
+              role="identifier">a</phrase><phrase role="special">,</phrase><phrase
+              role="identifier">f</phrase><phrase role="special">)</phrase></code></entry><entry></entry><entry>Creates
+              an instance which executes <code><phrase role="identifier">f</phrase></code>
+              in an implementation-specified thread of execution. A destructor is
+              assumed. </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+  </section>
+  <section id="act.basic_worker_allocator">
+    <title><link linkend="act.basic_worker_allocator">Basic Worker Allocator</link></title>
+    <anchor id="act.basic_worker_allocator.description"/>
+    <bridgehead renderas="sect3">
+      <link linkend="act.basic_worker_allocator.description">Description</link>
+    </bridgehead>
+    <para>
+      <code><phrase role="identifier">basic_worker_allocator</phrase></code> is a
+      <link linkend="act.concepts.worker_allocator">Worker Allocator</link> which
+      assigns each worker it allocates a new thread of execution.
+    </para>
+    <anchor id="act.basic_worker_allocator.header"/>
+    <bridgehead renderas="sect3">
+      <link linkend="act.basic_worker_allocator.header">Header</link>
+    </bridgehead>
+    
+<programlisting>
+<phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">act</phrase><phrase role="special">/</phrase><phrase role="identifier">worker_allocator</phrase><phrase role="special">/</phrase><phrase role="identifier">basic_worker_allocator</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+<phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">act</phrase><phrase role="special">/</phrase><phrase role="identifier">worker_allocator</phrase><phrase role="special">/</phrase><phrase role="identifier">basic_worker_allocator</phrase><phrase role="special">/</phrase><phrase role="identifier">basic_worker_allocator_fwd</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+</programlisting>
+    <anchor id="act.basic_worker_allocator.synopsis"/>
+    <bridgehead renderas="sect3">
+      <link linkend="act.basic_worker_allocator.synopsis">Synopsis</link>
+    </bridgehead>
+    
+<programlisting>
+<phrase role="keyword">class</phrase> <phrase role="identifier">basic_worker_allocator</phrase><phrase role="special">;</phrase>
+</programlisting>
+    <anchor id="act.basic_worker_allocator.model_of"/>
+    <bridgehead renderas="sect3">
+      <link linkend="act.basic_worker_allocator.model_of">Model of</link>
+    </bridgehead>
+    <itemizedlist>
+      <listitem>
+        <link linkend="act.concepts.worker_allocator">Worker Allocator</link>
+      </listitem>
+    </itemizedlist>
+  </section>
+  <section id="act.rationale">
+    <title><link linkend="act.rationale">Rationale</link></title>
+    <para>
+      Boost.Act is a fairly large library and makes some controversial design decisions.
+      This section is provided to briefly describe the rationale behind some of these
+      decisions.
+    </para>
+    <section id="act.rationale.policy_based_design">
+      <title><link linkend="act.rationale.policy_based_design">Policy-Based Design</link></title>
+      <para>
+        Boost.Act offers programmers customizability through two kinds of policies
+        which control algorithm execution and active qualification implementation.
+        These policies allow one to adjust whether algorithms run in parallel when
+        possible or always serially, and allow one to adjust whether active types
+        create their own thread or operate in the master thread. Default policies
+        used can be overriden at a global level or individually at points of instantiation.
+        The reason this may be considered controversial is that some may argue that
+        the use of policies here adds needless complexity at little gain. <emphasis>In
+        short, why not just use the STL in cases where algorithms need to be run
+        serially and why not just not use active objects in places where you do not
+        need your object to exist in its own thread?</emphasis>
+      </para>
+      <para>
+        The reasons for choosing policies stem mostly from the fact that they provide
+        an easy way to switch execution models for arbitrary amounts of code with
+        very few changes to the code using the library. Reasons one may wish to switch
+        policies at the call-site range from reasons of optimization to reasons of
+        debugging. In terms of optimization, using active objects and parallel algorithms
+        may have a negative impact on performance in single-core systems, therefore
+        the ability to toggle the execution model by merely changing the default
+        policy used allows a programmer to target both single-core and multicore
+        processors by simply rebuilding after changing the policy being used. In
+        theory, using policies which target single-core sytems can be optimized to
+        the same code as a project which avoided the abstraction entirely.
+      </para>
+      <para>
+        As an example of switching policies for debugging, single-threaded algorithms
+        can often be more simple to debug than multi-threaded algorithms. If a bug
+        is narrowed down to a single algorithm which runs in parallel, one may easily
+        switch execution for that call to be serial, making it much easier to step
+        through in order to find the problem. This also helps in figuring out if
+        certain unwanted behavior is being caused by multi-threading issues or if
+        there is a more simple logical problem which exists at a higher-level in
+        the algorithm's design.
+      </para>
+    </section>
+    <section id="act.rationale.actions_vs__futures">
+      <title><link linkend="act.rationale.actions_vs__futures">Actions vs. Futures</link></title>
+      <para>
+        Another fairly controversial design decision is the absence of futures, or
+        at least futures as they are commonly known. Rather than returning futures
+        from asynchronous function calls and function calls queued on active objects,
+        <literal>actions</literal> are yielded which represent the running function
+        and provide an indirect interface to an instance of the active qualified
+        form of the return type. This choice was made for a variety of reasons. First
+        and foremost, this allows a programmer to work with the results of such function
+        calls without losing concurrency by default, as functions upon them are queued
+        rather than performed immediately after implicitly or explicitly forcing
+        the function to complete. The traditional blocking form of futures, while
+        can potentially be implemented in such a way that is [slightly] more optimized
+        for single-core processors, implies an unnecessary loss of concurrency and
+        becomes less efficient if multiple cores are available. Still, the traditional
+        behavior of futures can be forced through actions by simply copying the active
+        result to an active-unqualified form of the result type using <literal>inactive_value</literal>,
+        forcing a wait for the function to complete. This gives actions of Boost.Act
+        a superset of the functionality provided by futures meaning that those who
+        wish to use actions in a future-like manner may do so.
+      </para>
+    </section>
+  </section>
+</article>

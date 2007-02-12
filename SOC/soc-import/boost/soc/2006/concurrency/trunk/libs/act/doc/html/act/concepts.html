@@ -1,0 +1,280 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Concepts</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
+<link rel="start" href="../index.html" title="Act 0.5b">
+<link rel="up" href="../index.html" title="Act 0.5b">
+<link rel="prev" href="compiler_setup.html" title="Compiler Setup">
+<link rel="next" href="basic_worker_allocator.html" title="Basic Worker Allocator">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="compiler_setup.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="basic_worker_allocator.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="act.concepts"></a><a href="concepts.html" title="Concepts">Concepts</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="concepts.html#act.concepts.worker_allocator">Worker Allocator</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.worker">Worker</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.worker_allocator"></a><a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator">Worker Allocator</a></h3></div></div></div>
+<p>
+        A <code class="literal">Worker Allocator</code> is type whose instances are used create
+        <a href="concepts.html#act.concepts.worker" title="Worker">Worker</a> objects which execute user-specified
+        functions. In Boost.Act, models of the <code class="literal">Worker Allocator</code>
+        concept include <code class="code"><span class="identifier">basic_worker_allocator</span></code>
+        which is used by default when instantiating the <code class="literal">basic_concurrent_act_model</code>
+        template.
+      </p>
+<p>
+        In order to be considered a valid <code class="literal">Worker Allocator</code>, given
+        the variable definitions below, the following expressions must be well-formed
+        and have the indicated effects.
+      </p>
+<div class="informaltable">
+<h5>
+<a name="id427556"></a>
+          <span class="table-title">Descriptive Variable Definitions</span>
+        </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Variable</th>
+<th>Definition</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="code"><span class="identifier">A</span></code></td>
+<td>A
+              Worker Allocator type.</td>
+</tr>
+<tr>
+<td>
+<code class="code"><span class="identifier">a</span></code>, <code class="code"><span class="identifier">a1</span></code>, <code class="code"><span class="identifier">a2</span></code>
+</td>
+<td>Values
+              of type <code class="code"><span class="identifier">A</span><span class="special">&amp;</span></code>
+              where <code class="code"><span class="identifier">a1</span> <span class="special">==</span> <span class="identifier">a</span></code>. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">uw</span></code></td>
+<td>A
+              value of type <code class="code"><span class="identifier">X</span><span class="special">::</span><span class="identifier">unmanged_worker</span><span class="special">&amp;</span></code>
+              with the corresponding object constructed with <code class="code"><span class="identifier">a1</span></code>
+              as an argument. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">suw</span></code></td>
+<td>A
+              value of type <code class="code"><span class="identifier">X</span><span class="special">::</span><span class="identifier">safe_unmanaged_worker</span><span class="special">&amp;</span></code>
+              with the corresponding object constructed with <code class="code"><span class="identifier">a1</span></code>
+              as an argument. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">f</span></code></td>
+<td>A
+              nullary function object.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="informaltable">
+<h5>
+<a name="id429426"></a>
+          <span class="table-title">Worker Allocator Requirements</span>
+        </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Expression</th>
+<th>Return Type</th>
+<th>Pre/Post-Condition</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="code"><span class="identifier">A</span><span class="special">::</span><span class="identifier">unmanaged_worker</span></code></td>
+<td> </td>
+<td>A
+              <a href="concepts.html#act.concepts.worker" title="Worker">Worker</a> type.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">A</span><span class="special">::</span><span class="identifier">safe_unmanaged_worker</span></code></td>
+<td> </td>
+<td>A
+              <a href="concepts.html#act.concepts.worker" title="Worker">Worker</a> type.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span><span class="special">(</span><span class="identifier">uw</span><span class="special">)</span></code></td>
+<td>(unused)</td>
+<td>The
+              current thread of execution waits for the worker <code class="code"><span class="identifier">uw</span></code>
+              to complete its execution. If <code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span></code>
+              has already been called with <code class="code"><span class="identifier">uw</span></code>
+              as an argument the function call returns immediately without error.
+              <span class="emphasis"><em>Note:</em></span> This function may only safely be called
+              multiple times with the same argument if each successive call occurs
+              in the same thread of execution as the first. <span class="emphasis"><em>--end note</em></span>
+              </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span><span class="special">(</span><span class="identifier">suw</span><span class="special">)</span></code></td>
+<td>(unused)</td>
+<td>The
+              current thread of execution waits for the worker <code class="code"><span class="identifier">suw</span></code>
+              to complete its execution. If <code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span></code>
+              has already been called with <code class="code"><span class="identifier">uw</span></code>
+              as an argument the function call returns immediately without error.
+              <span class="emphasis"><em>Note:</em></span> This function may safely be called from
+              different threads of execution. <span class="emphasis"><em>--end note</em></span> </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">spawn_wild_worker</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span></code></td>
+<td>(unused)</td>
+<td>
+<code class="code"><span class="identifier">f</span></code> is executed in an implementation-defined
+              thread. <span class="emphasis"><em>Note:</em></span> <code class="code"><span class="identifier">f</span></code>
+              is guaranteed to complete its execution prior to a natural closing
+              of the corresponding process. <span class="emphasis"><em>--end note</em></span> </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">a1</span> <span class="special">==</span> <span class="identifier">a2</span></code></td>
+<td><code class="code"><span class="keyword">bool</span></code></td>
+<td>Returns
+              true iff workers allocated from each can be joined via the other.
+              </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">a1</span> <span class="special">!=</span> <span class="identifier">a2</span></code></td>
+<td><code class="code"><span class="keyword">bool</span></code></td>
+<td>Same
+              as <code class="code"><span class="special">!(</span><span class="identifier">a1</span> <span class="special">==</span> <span class="identifier">a2</span><span class="special">)</span></code>.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">A</span><span class="special">()</span></code></td>
+<td> </td>
+<td>Creates
+              a default instance. A destructor is assumed. </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.worker"></a><a href="concepts.html#act.concepts.worker" title="Worker">Worker</a></h3></div></div></div>
+<p>
+        A <code class="literal">Worker</code> is an object which represent a function executing
+        either sychnronously or asynchronously with respect to its thread of construction
+        depending on the corresponding model and implementation. In Boost.Act, models
+        of this concepts may be found as members of models of the <a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator">Worker
+        Allocator</a> concept.
+      </p>
+<p>
+        In order to be considered a valid <code class="literal">Worker</code>, given the variable
+        definitions below, the following expressions must be well-formed and have
+        the indicated effects.
+      </p>
+<div class="informaltable">
+<h5>
+<a name="id429978"></a>
+          <span class="table-title">Descriptive Variable Definitions</span>
+        </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Variable</th>
+<th>Definition</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="code"><span class="identifier">W</span></code></td>
+<td>A
+              <code class="literal">Worker</code> type.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">w</span></code></td>
+<td>Value
+              of type <code class="code"><span class="identifier">W</span><span class="special">&amp;</span></code>.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">A</span></code></td>
+<td>An
+              allocator type which may be used in conjunction with <code class="literal">Worker</code> <code class="code"><span class="identifier">w</span></code>. Note: Such allocator types are
+              implementation-specified with respect to models of the <code class="literal">Worker</code>
+              concept. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">a</span></code></td>
+<td>Value
+              of type <code class="code"><span class="identifier">A</span><span class="special">&amp;</span></code>.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">f</span></code></td>
+<td>A
+              nullary function object.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="informaltable">
+<h5>
+<a name="id430155"></a>
+          <span class="table-title">Worker Requirements</span>
+        </h5>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Expression</th>
+<th>Return Type</th>
+<th>Pre/Post-Condition</th>
+</tr></thead>
+<tbody><tr>
+<td><code class="code"><span class="identifier">W</span><span class="special">(</span><span class="identifier">a</span><span class="special">,</span><span class="identifier">f</span><span class="special">)</span></code></td>
+<td> </td>
+<td>Creates
+              an instance which executes <code class="code"><span class="identifier">f</span></code>
+              in an implementation-specified thread of execution. A destructor is
+              assumed. </td>
+</tr></tbody>
+</table>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2006 , 2007 Matthew Calabrese</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="compiler_setup.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="basic_worker_allocator.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
