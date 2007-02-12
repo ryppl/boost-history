@@ -27,7 +27,7 @@ struct worker_main_fun
   void operator ()() const
   {
     boost::mutex::scoped_lock lock( global_mutex );
-    global_value = 1;
+    wild_worker_value = 1;
     global_condition.notify_all();
   }
 };
@@ -49,7 +49,7 @@ void test_wild_worker()
 
     global_condition.wait( lock );
 
-    test_value = global_value;
+    test_value = wild_worker_value;
   }
 
   if( test_value != 1 )
