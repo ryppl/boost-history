@@ -315,21 +315,21 @@ Metafunction to obtain the value type of one of the sides in a bimap.
     };
 ``
 ]]
-[[key_type_of][
+[[key_type_by][
 Metafunction to obtain the key type of one of the sides in a bimap.
 ``
     template< class Tag, class Bimap >
-    struct key_type_of
+    struct key_type_by
     {
         typedef typename Bimap::{side}_key_type type;
     };
 ``
 ]]
-[[data_type_of][
+[[data_type_by][
 Metafunction to obtain the data type of one of the sides in a bimap.
 ``
     template< class Tag, class Bimap >
-    struct data_type_of
+    struct data_type_by
     {
         typedef typename Bimap::{side}_data_type type;
     };
@@ -442,14 +442,20 @@ Gets a pair view of a relation.
 [section The set of relations type]
 
 Being able to change the set type of the bimap relation view is another
-very important feature.
+very important feature. Remember that this view allows the user to see
+the container as a group of the stored relations. This view has set
+semantics instead of map semantics.
+
+__MORE_BIMAP_STRUCTURES__
+
+By default, Boost.Bimap will base the set type of the relation on the
+type of the left set. If the left set type is a set, then the set
+type of the relation will be a set with the same order as the left view.
 
 In general, Boost.Bimap users will base the set type of a relation on
-the type of the set on one of the two sides. There are times however
+the type of the set on one of the two sides. However there are times
 where it is useful to give this set other constraints or simply to order
-it differently. By default, Boost.Bimap will base the set type of the
-relation on the type of the left set, but the user is allowed to choose
-between:
+it differently. The user is allowed to choose between:
 
 * left_based
 * right_based
@@ -547,7 +553,7 @@ the possibility of bidirectional iteration.
 Each set type of relation has different parameters to control its
 behaviour. For example, in the `set_of_relation` specification, you can
 pass a Functor type that compares two types. All of the parameters are
-exactly the as in the standard library container, except for the type,
+exactly as in the standard library containers, except for the type,
 which is set to the bimap relation and the allocator type. To help users
 in the creation of each functor, the set type of relation templates
 takes an mpl lambda expression where the relation type will be evaluated
@@ -575,6 +581,48 @@ the equality operator is `std::equal_to<_relation>`. ]]
 [[`unconstrained_set_of_relation`     ][Not a template.]]
 
 ]
+
+[h2 Examples]
+
+Consider this example:
+
+    template< class Rel >
+    struct RelOrder
+    {
+        bool operator()(Rel ra, Rel rb)
+        {
+            return (ra.left+ra.right) < (rb.left+rb.right);
+        }
+    };
+
+    typedef bimap
+    <
+            multiset_of< int >,
+            multiset_of< int >,
+            set_of_relation< RelOrder<_relation> >
+
+    > bimap_type;
+
+Here the bimap relation view is ordered using the information of
+both sides. This container will only allow unique relations because
+`set_of_relation` has been used but the elements in each side of the
+bimap can be repeated.
+
+    struct name         {};
+    struct phone_number {};
+
+    typedef bimap
+    <
+        tagged< unordered_multiset_of< string >, name         >,
+        tagged< unordered_set_of     < int    >, phone_number >,
+        set_of_relation<>
+
+    > bimap_type;
+
+In this other case the the bimap will relate names to phone numbers.
+Names can be repeated and phone numbers are unique. You can perform
+quick searches by name or phone number and the container can be viewed
+ordered using the relation view.
 
 [endsect]
 
