@@ -14,8 +14,8 @@
 
 #include <boost/property_map.hpp>
 #include <boost/bimap/set_of.hpp>
-#include <boost/bimap/support/data_type_of.hpp>
-#include <boost/bimap/support/key_type_of.hpp>
+#include <boost/bimap/support/data_type_by.hpp>
+#include <boost/bimap/support/key_type_by.hpp>
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
@@ -24,17 +24,17 @@ namespace boost {
 template< class Tag, class Bimap >
 struct property_traits< bimap::views::map_view<Tag,Bimap> >
 {
-    typedef typename ::boost::bimap::support::data_type_of<Tag,Bimap>::type value_type;
-    typedef typename ::boost::bimap::support:: key_type_of<Tag,Bimap>::type   key_type;
+    typedef typename ::boost::bimap::support::data_type_by<Tag,Bimap>::type value_type;
+    typedef typename ::boost::bimap::support:: key_type_by<Tag,Bimap>::type   key_type;
 
     typedef readable_property_map_tag category;
 };
 
 
 template< class Tag, class Bimap >
-const typename ::boost::bimap::support::data_type_of<Tag,Bimap>::type &
+const typename ::boost::bimap::support::data_type_by<Tag,Bimap>::type &
     get(const ::boost::bimap::views::map_view<Tag,Bimap> & m,
-        const typename ::boost::bimap::support::key_type_of<Tag,Bimap>::type & key)
+        const typename ::boost::bimap::support::key_type_by<Tag,Bimap>::type & key)
 {
     return m.find(key)->second;
 }

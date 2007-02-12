@@ -34,23 +34,26 @@
                                                                              \
     bool operator< (const B_TYPE & b) const                                  \
     {                                                                        \
-        return ( ( A_FIRST  <  b.B_FIRST  ) &&                               \
-                 ( A_SECOND <  b.B_SECOND ) );                               \
+        return ( ( A_FIRST  <  b.B_FIRST  ) ||                               \
+                (( A_FIRST == b.B_FIRST ) && ( A_SECOND < b.B_SECOND )));    \
     }                                                                        \
                                                                              \
     bool operator<=(const B_TYPE & b) const                                  \
     {                                                                        \
-        return ( *this < b || *this == b );                                  \
+        return ( ( A_FIRST  <  b.B_FIRST  ) ||                               \
+                (( A_FIRST == b.B_FIRST ) && ( A_SECOND <= b.B_SECOND )));   \
     }                                                                        \
                                                                              \
     bool operator> (const B_TYPE & b) const                                  \
     {                                                                        \
-        return ! (*this <= b);                                               \
+        return ( ( A_FIRST  >  b.B_FIRST  ) ||                               \
+                (( A_FIRST == b.B_FIRST ) && ( A_SECOND > b.B_SECOND )));    \
     }                                                                        \
                                                                              \
     bool operator>=(const B_TYPE & b) const                                  \
     {                                                                        \
-        return ( *this > b || *this == b );                                  \
+        return ( ( A_FIRST  >  b.B_FIRST  ) ||                               \
+                (( A_FIRST == b.B_FIRST ) && ( A_SECOND >= b.B_SECOND )));   \
     }
 
 /****************************************************************************/
