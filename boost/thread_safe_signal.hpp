@@ -39,7 +39,6 @@
 #include <boost/thread_safe_signals/detail/slot_groups.hpp>
 #include <boost/thread_safe_signals/detail/slot_call_iterator.hpp>
 #include <functional>
-#include <list>
 
 #ifndef BOOST_SIGNALS_NAMESPACE
 #define BOOST_SIGNALS_NAMESPACE signalslib
