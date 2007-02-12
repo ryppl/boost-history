@@ -41,6 +41,10 @@
 #include <functional>
 #include <list>
 
+#ifndef BOOST_SIGNALS_NAMESPACE
+#define BOOST_SIGNALS_NAMESPACE signalslib
+#endif
+
 #ifndef EPG_SIGNALS_MAX_ARGS
 #define EPG_SIGNALS_MAX_ARGS 10
 #endif
