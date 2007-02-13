@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/12 21:22:29 $"
+<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/13 18:06:31 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -210,65 +210,60 @@
           <emphasis role="bold">If your compiler does not support the OpenMP extensions
           or if they are not enabled, <literal>polymorphic algorithms</literal> will
           execute serially regardless of whether or not you are using the <literal>parallel_algo_model</literal>
-          policy.</emphasis>&nbsp;<sbr/> <sbr/> The following table is intended to
-          be a quick reference for some of the more commonly used compilers. If your
+          policy.</emphasis> <sbr/> <sbr/> The following table is intended to be
+          a quick reference for some of the more commonly used compilers. If your
           compiler is not listed it does not mean that OpenMP is not supported, but
           rather, it means that you should check your compiler's documentation to
           determine if you will be able to enable the OpenMP extensions in order
           to take advantage of parallel algorithms through Boost.Act.
         </para>
       </important>
-      <informaltable frame="all">
-        <bridgehead renderas="sect4">
-          <phrase role="table-title">OpenMP Extension Support</phrase>
-        </bridgehead>
-        <tgroup cols="3">
-          <thead>
-            <row>
-              <entry>Compiler</entry><entry>OpenMP Support</entry><entry>Compiler
-              Switch</entry>
-            </row>
-          </thead>
-          <tbody>
-            <row>
-              <entry><emphasis role="bold">Borland C++ Builder</emphasis></entry><entry>No</entry><entry>N/A</entry>
-            </row>
-            <row>
-              <entry><emphasis role="bold">G++</emphasis></entry><entry><emphasis
-              role="bold">GCC 4.2 and up:</emphasis> OpenMP 2.5</entry><entry>-fopenmp</entry>
-            </row>
-            <row>
-              <entry><emphasis role="bold">IBM XLC</emphasis></entry><entry>OpenMP
-              2.5</entry><entry>-qsmp=omp</entry>
-            </row>
-            <row>
-              <entry><emphasis role="bold">Intel C++</emphasis></entry><entry><emphasis
-              role="bold">9.0 and up:</emphasis> OpenMP 2.5</entry><entry><emphasis
-              role="bold">Windows:</emphasis> /Qopenmp <sbr/> <emphasis role="bold">Linux:</emphasis>
-              -openmp </entry>
-            </row>
-            <row>
-              <entry><emphasis role="bold">Lahey/Fujitsu</emphasis></entry><entry>OpenMP
-              1.0? <emphasis>(ToDo: Check)</emphasis></entry><entry>--openmp</entry>
-            </row>
-            <row>
-              <entry><emphasis role="bold">PG++</emphasis></entry><entry><emphasis
-              role="bold">Linux only:</emphasis> OpenMP 2.5</entry><entry>-mp</entry>
-            </row>
-            <row>
-              <entry><emphasis role="bold">Sun Studio Compilers</emphasis></entry><entry>OpenMP
-              2.5</entry><entry>-xopenmp</entry>
-            </row>
-            <row>
-              <entry><emphasis role="bold">Visual C++</emphasis></entry><entry><emphasis
-              role="bold">2005 Professional and up:</emphasis> OpenMP 2.0 </entry><entry>
-              /openmp <sbr/> <sbr/> <link linkend="vc_openmp">Through IDE </link>
-              </entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
-      <anchor id="vc_openmp" />
+      <table frame="all"> <title>OpenMP Extension Support</title>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Compiler</entry><entry>OpenMP Support</entry><entry>Compiler Switch</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><emphasis role="bold">Borland C++ Builder</emphasis></entry><entry>No</entry><entry>N/A</entry>
+          </row>
+          <row>
+            <entry><emphasis role="bold">G++</emphasis></entry><entry><emphasis role="bold">GCC
+            4.2 and up:</emphasis> OpenMP 2.5</entry><entry>-fopenmp</entry>
+          </row>
+          <row>
+            <entry><emphasis role="bold">IBM XLC</emphasis></entry><entry>OpenMP
+            2.5</entry><entry>-qsmp=omp</entry>
+          </row>
+          <row>
+            <entry><emphasis role="bold">Intel C++</emphasis></entry><entry><emphasis
+            role="bold">9.0 and up:</emphasis> OpenMP 2.5</entry><entry><emphasis
+            role="bold">Windows:</emphasis> /Qopenmp <sbr/> <emphasis role="bold">Linux:</emphasis>
+            -openmp </entry>
+          </row>
+          <row>
+            <entry><emphasis role="bold">Lahey/Fujitsu</emphasis></entry><entry>OpenMP
+            1.0? <emphasis>(ToDo: Check)</emphasis></entry><entry>--openmp</entry>
+          </row>
+          <row>
+            <entry><emphasis role="bold">PG++</emphasis></entry><entry><emphasis
+            role="bold">Linux only:</emphasis> OpenMP 2.5</entry><entry>-mp</entry>
+          </row>
+          <row>
+            <entry><emphasis role="bold">Sun Studio Compilers</emphasis></entry><entry>OpenMP
+            2.5</entry><entry>-xopenmp</entry>
+          </row>
+          <row>
+            <entry><emphasis role="bold">Visual C++</emphasis></entry><entry><emphasis
+            role="bold">2005 Professional and up:</emphasis> OpenMP 2.0 </entry><entry>
+            /openmp <sbr/> <sbr/> <link linkend="vc_openmp">Through IDE </link>
+            </entry>
+          </row>
+        </tbody>
+      </tgroup>
+      </table> <anchor id="vc_openmp" />
       <para>
       </para>
       <anchor id="act.compiler_setup.enabling_parallel_algorithms.activating_openmp_support_in_visual_c___2005"/>
@@ -308,141 +303,6 @@
   </section>
   <section id="act.concepts">
     <title><link linkend="act.concepts">Concepts</link></title>
-    <section id="act.concepts.worker_allocator">
-      <title><link linkend="act.concepts.worker_allocator">Worker Allocator</link></title>
-      <para>
-        A <literal>Worker Allocator</literal> is type whose instances are used create
-        <link linkend="act.concepts.worker">Worker</link> objects which execute user-specified
-        functions. In Boost.Act, models of the <literal>Worker Allocator</literal>
-        concept include <code><phrase role="identifier">basic_worker_allocator</phrase></code>
-        which is used by default when instantiating the <literal>basic_concurrent_act_model</literal>
-        template.
-      </para>
-      <para>
-        In order to be considered a valid <literal>Worker Allocator</literal>, given
-        the variable definitions below, the following expressions must be well-formed
-        and have the indicated effects.
-      </para>
-      <informaltable frame="all">
-        <bridgehead renderas="sect4">
-          <phrase role="table-title">Descriptive Variable Definitions</phrase>
-        </bridgehead>
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>Variable</entry><entry>Definition</entry>
-            </row>
-          </thead>
-          <tbody>
-            <row>
-              <entry><code><phrase role="identifier">A</phrase></code></entry><entry>A
-              Worker Allocator type.</entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">a</phrase></code>, <code><phrase
-              role="identifier">a1</phrase></code>, <code><phrase role="identifier">a2</phrase></code></entry><entry>Values
-              of type <code><phrase role="identifier">A</phrase><phrase role="special">&amp;</phrase></code>
-              where <code><phrase role="identifier">a1</phrase>&nbsp;<phrase role="special">==</phrase>&nbsp;<phrase
-              role="identifier">a</phrase></code>. </entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">uw</phrase></code></entry><entry>A
-              value of type <code><phrase role="identifier">X</phrase><phrase role="special">::</phrase><phrase
-              role="identifier">unmanged_worker</phrase><phrase role="special">&amp;</phrase></code>
-              with the corresponding object constructed with <code><phrase role="identifier">a1</phrase></code>
-              as an argument. </entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">suw</phrase></code></entry><entry>A
-              value of type <code><phrase role="identifier">X</phrase><phrase role="special">::</phrase><phrase
-              role="identifier">safe_unmanaged_worker</phrase><phrase role="special">&amp;</phrase></code>
-              with the corresponding object constructed with <code><phrase role="identifier">a1</phrase></code>
-              as an argument. </entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">f</phrase></code></entry><entry>A
-              nullary function object.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
-      <informaltable frame="all">
-        <bridgehead renderas="sect4">
-          <phrase role="table-title">Worker Allocator Requirements</phrase>
-        </bridgehead>
-        <tgroup cols="3">
-          <thead>
-            <row>
-              <entry>Expression</entry><entry>Return Type</entry><entry>Pre/Post-Condition</entry>
-            </row>
-          </thead>
-          <tbody>
-            <row>
-              <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
-              role="identifier">unmanaged_worker</phrase></code></entry><entry></entry><entry>A
-              <link linkend="act.concepts.worker">Worker</link> type.</entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
-              role="identifier">safe_unmanaged_worker</phrase></code></entry><entry></entry><entry>A
-              <link linkend="act.concepts.worker">Worker</link> type.</entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
-              role="identifier">join</phrase><phrase role="special">(</phrase><phrase
-              role="identifier">uw</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry>The
-              current thread of execution waits for the worker <code><phrase role="identifier">uw</phrase></code>
-              to complete its execution. If <code><phrase role="identifier">a</phrase><phrase
-              role="special">.</phrase><phrase role="identifier">join</phrase></code>
-              has already been called with <code><phrase role="identifier">uw</phrase></code>
-              as an argument the function call returns immediately without error.
-              <emphasis>Note:</emphasis> This function may only safely be called
-              multiple times with the same argument if each successive call occurs
-              in the same thread of execution as the first. <emphasis>--end note</emphasis>
-              </entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
-              role="identifier">join</phrase><phrase role="special">(</phrase><phrase
-              role="identifier">suw</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry>The
-              current thread of execution waits for the worker <code><phrase role="identifier">suw</phrase></code>
-              to complete its execution. If <code><phrase role="identifier">a</phrase><phrase
-              role="special">.</phrase><phrase role="identifier">join</phrase></code>
-              has already been called with <code><phrase role="identifier">uw</phrase></code>
-              as an argument the function call returns immediately without error.
-              <emphasis>Note:</emphasis> This function may safely be called from
-              different threads of execution. <emphasis>--end note</emphasis> </entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
-              role="identifier">spawn_wild_worker</phrase><phrase role="special">(</phrase><phrase
-              role="identifier">f</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry><code><phrase
-              role="identifier">f</phrase></code> is executed in an implementation-defined
-              thread. <emphasis>Note:</emphasis>&nbsp;<code><phrase role="identifier">f</phrase></code>
-              is guaranteed to complete its execution prior to a natural closing
-              of the corresponding process. <emphasis>--end note</emphasis> </entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">a1</phrase>&nbsp;<phrase role="special">==</phrase>&nbsp;<phrase
-              role="identifier">a2</phrase></code></entry><entry><code><phrase role="keyword">bool</phrase></code></entry><entry>Returns
-              true iff workers allocated from each can be joined via the other.
-              </entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">a1</phrase>&nbsp;<phrase role="special">!=</phrase>&nbsp;<phrase
-              role="identifier">a2</phrase></code></entry><entry><code><phrase role="keyword">bool</phrase></code></entry><entry>Same
-              as <code><phrase role="special">!(</phrase><phrase role="identifier">a1</phrase>&nbsp;<phrase
-              role="special">==</phrase>&nbsp;<phrase role="identifier">a2</phrase><phrase
-              role="special">)</phrase></code>.</entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">A</phrase><phrase role="special">()</phrase></code></entry><entry></entry><entry>Creates
-              a default instance. A destructor is assumed. </entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
-    </section>
     <section id="act.concepts.worker">
       <title><link linkend="act.concepts.worker">Worker</link></title>
       <para>
@@ -457,65 +317,199 @@
         definitions below, the following expressions must be well-formed and have
         the indicated effects.
       </para>
-      <informaltable frame="all">
-        <bridgehead renderas="sect4">
-          <phrase role="table-title">Descriptive Variable Definitions</phrase>
-        </bridgehead>
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>Variable</entry><entry>Definition</entry>
-            </row>
-          </thead>
-          <tbody>
-            <row>
-              <entry><code><phrase role="identifier">W</phrase></code></entry><entry>A
-              <literal>Worker</literal> type.</entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">w</phrase></code></entry><entry>Value
-              of type <code><phrase role="identifier">W</phrase><phrase role="special">&amp;</phrase></code>.</entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">A</phrase></code></entry><entry>An
-              allocator type which may be used in conjunction with <literal>Worker</literal>&nbsp;<code><phrase
-              role="identifier">w</phrase></code>. Note: Such allocator types are
-              implementation-specified with respect to models of the <literal>Worker</literal>
-              concept. </entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">a</phrase></code></entry><entry>Value
-              of type <code><phrase role="identifier">A</phrase><phrase role="special">&amp;</phrase></code>.</entry>
-            </row>
-            <row>
-              <entry><code><phrase role="identifier">f</phrase></code></entry><entry>A
-              nullary function object.</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
-      <informaltable frame="all">
-        <bridgehead renderas="sect4">
-          <phrase role="table-title">Worker Requirements</phrase>
-        </bridgehead>
-        <tgroup cols="3">
-          <thead>
-            <row>
-              <entry>Expression</entry><entry>Return Type</entry><entry>Pre/Post-Condition</entry>
-            </row>
-          </thead>
-          <tbody>
-            <row>
-              <entry><code><phrase role="identifier">W</phrase><phrase role="special">(</phrase><phrase
-              role="identifier">a</phrase><phrase role="special">,</phrase><phrase
-              role="identifier">f</phrase><phrase role="special">)</phrase></code></entry><entry></entry><entry>Creates
-              an instance which executes <code><phrase role="identifier">f</phrase></code>
-              in an implementation-specified thread of execution. A destructor is
-              assumed. </entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </informaltable>
+      <table frame="all"> <title>Worker Descriptive Variable Definitions</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Variable</entry><entry>Definition</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">W</phrase></code></entry><entry>A
+            <literal>Worker</literal> type.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">w</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">W</phrase><phrase role="special">&amp;</phrase></code>.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase></code></entry><entry>An
+            allocator type which may be used in conjunction with <literal>Worker</literal>
+            <code><phrase role="identifier">w</phrase></code>. <emphasis>Note: Such
+            allocator types are implementation-specified with respect to models of
+            the <literal>Worker</literal> concept. --end note</emphasis> </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">a</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">A</phrase><phrase role="special">&amp;</phrase></code>.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">f</phrase></code></entry><entry>A
+            nullary function object.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+      </table> <table frame="all"> <title>Worker Requirements</title>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Expression</entry><entry>Return Type</entry><entry>Pre/Post-Condition</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">W</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">a</phrase><phrase role="special">,</phrase><phrase
+            role="identifier">f</phrase><phrase role="special">)</phrase></code></entry><entry></entry><entry>Creates
+            an instance which executes <code><phrase role="identifier">f</phrase></code>
+            in an implementation-specified thread of execution. A destructor is assumed.
+            </entry>
+          </row>
+        </tbody>
+      </tgroup>
+      </table>
+    </section>
+    <section id="act.concepts.worker_allocator">
+      <title><link linkend="act.concepts.worker_allocator">Worker Allocator</link></title>
+      <para>
+        A <literal>Worker Allocator</literal> is type whose instances are used to
+        create <link linkend="act.concepts.worker">Worker</link> objects which execute
+        user-specified functions. These <literal>Worker Allocators</literal> generally
+        act as policies to higher-level types. In Boost.Act, models of the <literal>Worker
+        Allocator</literal> concept include <code><phrase role="identifier">basic_worker_allocator</phrase></code>
+        which is used as the default <literal>Worker Allocator</literal> policy when
+        instantiating the <literal>basic_concurrent_act_model</literal> template.
+      </para>
+      <para>
+        In order to be considered a valid <literal>Worker Allocator</literal>, given
+        the variable definitions below, the following expressions must be well-formed
+        and have the indicated effects.
+      </para>
+      <table frame="all"> <title>Worker Allocator Descriptive Variable Definitions</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Variable</entry><entry>Definition</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase></code></entry><entry>A
+            Worker Allocator type.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">a</phrase></code>, <code><phrase
+            role="identifier">a1</phrase></code>, <code><phrase role="identifier">a2</phrase></code></entry><entry>Values
+            of type <code><phrase role="identifier">A</phrase><phrase role="special">&amp;</phrase></code>
+            where <code><phrase role="identifier">a1</phrase> <phrase role="special">==</phrase>
+            <phrase role="identifier">a</phrase></code>. </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">uw</phrase></code></entry><entry>A
+            value of type <code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">unmanged_worker</phrase><phrase role="special">&amp;</phrase></code>
+            with the corresponding object constructed with <code><phrase role="identifier">a1</phrase></code>
+            as an argument. </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">suw</phrase></code></entry><entry>A
+            value of type <code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">safe_unmanaged_worker</phrase><phrase role="special">&amp;</phrase></code>
+            with the corresponding object constructed with <code><phrase role="identifier">a1</phrase></code>
+            as an argument. </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">f</phrase></code></entry><entry>A
+            nullary function object.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+      </table> <table frame="all"> <title>Worker Allocator Requirements</title>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Expression</entry><entry>Return Type</entry><entry>Pre/Post-Condition</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">unmanaged_worker</phrase></code></entry><entry></entry><entry>A
+            <link linkend="act.concepts.worker">Worker</link> type which may be joined
+            from a single thread and which must be joined prior to the parent process's
+            completion to be well-formed.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">safe_unmanaged_worker</phrase></code></entry><entry></entry><entry>A
+            <link linkend="act.concepts.worker">Worker</link> type which may be joined
+            from any number of threads and which must be joined prior to the parent
+            process's completion to be well-formed.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
+            role="identifier">join</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">uw</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry>The
+            current thread of execution waits for <code><phrase role="identifier">uw</phrase></code>
+            to complete its execution. If <code><phrase role="identifier">a</phrase><phrase
+            role="special">.</phrase><phrase role="identifier">join</phrase></code>
+            has already been called with <code><phrase role="identifier">uw</phrase></code>
+            as an argument, the function call returns immediately without error.
+            <emphasis>Note: This function may only safely be called multiple times
+            with the same argument if each successive call occurs in the same thread
+            of execution as the first. <emphasis role="bold">If <code><phrase role="identifier">a</phrase><phrase
+            role="special">.</phrase><phrase role="identifier">join</phrase></code>
+            is never called with <code><phrase role="identifier">uw</phrase></code>
+            as an argument, there is no guarantee that the thread will successfully
+            complete execution.</emphasis> --end note</emphasis> </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
+            role="identifier">join</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">suw</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry>The
+            current thread of execution waits for <code><phrase role="identifier">suw</phrase></code>
+            to complete its execution. If <code><phrase role="identifier">a</phrase><phrase
+            role="special">.</phrase><phrase role="identifier">join</phrase></code>
+            has already been called with <code><phrase role="identifier">uw</phrase></code>
+            as an argument, the function call returns immediately without error.
+            <emphasis>Note: This function may safely be called from different threads
+            of execution. <emphasis role="bold">If <code><phrase role="identifier">a</phrase><phrase
+            role="special">.</phrase><phrase role="identifier">join</phrase></code>
+            is never called with <code><phrase role="identifier">uw</phrase></code>
+            as an argument, there is no guarantee that the thread will successfully
+            complete execution.</emphasis> --end note</emphasis> </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
+            role="identifier">spawn_wild_worker</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">f</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry><code><phrase
+            role="identifier">f</phrase></code> is executed in an implementation-defined
+            thread. <emphasis>Note: <code><phrase role="identifier">f</phrase></code>
+            is guaranteed to complete its execution prior to a natural closing of
+            the corresponding process. --end note</emphasis> </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">a1</phrase> <phrase role="special">==</phrase>
+            <phrase role="identifier">a2</phrase></code></entry><entry><code><phrase
+            role="keyword">bool</phrase></code></entry><entry>Returns true iff workers
+            allocated from each can be joined via the other. </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">a1</phrase> <phrase role="special">!=</phrase>
+            <phrase role="identifier">a2</phrase></code></entry><entry><code><phrase
+            role="keyword">bool</phrase></code></entry><entry>Same as <code><phrase
+            role="special">!(</phrase><phrase role="identifier">a1</phrase> <phrase
+            role="special">==</phrase> <phrase role="identifier">a2</phrase><phrase
+            role="special">)</phrase></code>.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase><phrase role="special">()</phrase></code></entry><entry></entry><entry>Creates
+            a default instance. A destructor is assumed. </entry>
+          </row>
+        </tbody>
+      </tgroup>
+      </table>
     </section>
   </section>
   <section id="act.basic_worker_allocator">

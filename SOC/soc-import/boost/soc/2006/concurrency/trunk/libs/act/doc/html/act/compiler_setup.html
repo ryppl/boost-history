@@ -63,20 +63,17 @@
           <span class="bold"><strong>If your compiler does not support the OpenMP extensions
           or if they are not enabled, <code class="literal">polymorphic algorithms</code> will
           execute serially regardless of whether or not you are using the <code class="literal">parallel_algo_model</code>
-          policy.</strong></span> <br> <br> The following table is intended to
-          be a quick reference for some of the more commonly used compilers. If your
+          policy.</strong></span> <br> <br> The following table is intended to be
+          a quick reference for some of the more commonly used compilers. If your
           compiler is not listed it does not mean that OpenMP is not supported, but
           rather, it means that you should check your compiler's documentation to
           determine if you will be able to enable the OpenMP extensions in order
           to take advantage of parallel algorithms through Boost.Act.
         </p></td></tr>
 </table></div>
-<div class="informaltable">
-<h5>
-<a name="id427049"></a>
-          <span class="table-title">OpenMP Extension Support</span>
-        </h5>
-<table class="table">
+<div class="table">
+<a name="id426988"></a><p class="title"><b>Table 1. OpenMP Extension Support</b></p>
+<div class="table-contents"><table class="table" summary="OpenMP Extension Support">
 <colgroup>
 <col>
 <col>
@@ -85,8 +82,7 @@
 <thead><tr>
 <th>Compiler</th>
 <th>OpenMP Support</th>
-<th>Compiler
-              Switch</th>
+<th>Compiler Switch</th>
 </tr></thead>
 <tbody>
 <tr>
@@ -97,13 +93,14 @@
 <tr>
 <td><span class="bold"><strong>G++</strong></span></td>
 <td>
-<span class="bold"><strong>GCC 4.2 and up:</strong></span> OpenMP 2.5</td>
+<span class="bold"><strong>GCC
+            4.2 and up:</strong></span> OpenMP 2.5</td>
 <td>-fopenmp</td>
 </tr>
 <tr>
 <td><span class="bold"><strong>IBM XLC</strong></span></td>
 <td>OpenMP
-              2.5</td>
+            2.5</td>
 <td>-qsmp=omp</td>
 </tr>
 <tr>
@@ -112,12 +109,12 @@
 <span class="bold"><strong>9.0 and up:</strong></span> OpenMP 2.5</td>
 <td>
 <span class="bold"><strong>Windows:</strong></span> /Qopenmp <br> <span class="bold"><strong>Linux:</strong></span>
-              -openmp </td>
+            -openmp </td>
 </tr>
 <tr>
 <td><span class="bold"><strong>Lahey/Fujitsu</strong></span></td>
 <td>OpenMP
-              1.0? <span class="emphasis"><em>(ToDo: Check)</em></span>
+            1.0? <span class="emphasis"><em>(ToDo: Check)</em></span>
 </td>
 <td>--openmp</td>
 </tr>
@@ -130,7 +127,7 @@
 <tr>
 <td><span class="bold"><strong>Sun Studio Compilers</strong></span></td>
 <td>OpenMP
-              2.5</td>
+            2.5</td>
 <td>-xopenmp</td>
 </tr>
 <tr>
@@ -138,16 +135,16 @@
 <td>
 <span class="bold"><strong>2005 Professional and up:</strong></span> OpenMP 2.0 </td>
 <td>
-              /openmp <br> <br> <a href="compiler_setup.html#vc_openmp">Through IDE </a>
-              </td>
+            /openmp <br> <br> <a href="compiler_setup.html#vc_openmp">Through IDE </a>
+            </td>
 </tr>
 </tbody>
-</table>
+</table></div>
 </div>
-<a name="vc_openmp"></a><p>
+<br class="table-break"><a name="vc_openmp"></a><p>
       </p>
 <a name="act.compiler_setup.enabling_parallel_algorithms.activating_openmp_support_in_visual_c___2005"></a><h5>
-<a name="id427302"></a>
+<a name="id427233"></a>
         <a href="compiler_setup.html#act.compiler_setup.enabling_parallel_algorithms.activating_openmp_support_in_visual_c___2005">Activating
         OpenMP Support in Visual C++ 2005</a>
       </h5>
