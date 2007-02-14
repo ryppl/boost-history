@@ -10,6 +10,7 @@
 #define BOOST_ACT_WORKER_ALLOCATOR_BASIC_WORKER_ALLOCATOR_HPP
 
 #include <boost/act/worker_allocator/basic_worker_allocator/detail/thread_manager.hpp>
+
 #include <boost/thread/thread.hpp>
 #include <boost/noncopyable.hpp>
 
@@ -18,10 +19,8 @@ namespace boost
 namespace act
 {
 
-class basic_worker_policy
+class basic_worker_allocator
 {
-private:
-  //typedef detail::thread_manager_type::handle thread_handle;
 public:
   template< typename FunctionType >
   void spawn_wild_worker( FunctionType function )
@@ -33,10 +32,10 @@ public:
   class unmanaged_worker
     : noncopyable
   {
-    friend class basic_worker_policy;
+    friend class basic_worker_allocator;
   public:
     template< typename FunctionType >
-    unmanaged_worker( basic_worker_policy&, FunctionType function )
+    unmanaged_worker( basic_worker_allocator&, FunctionType function )
       : thread_m( function ), is_joined_m( false )
     {
     }
@@ -57,10 +56,10 @@ public:
   class safe_unmanaged_worker
     : noncopyable
   {
-    friend class basic_worker_policy;
+    friend class basic_worker_allocator;
   public:
     template< typename FunctionType >
-    safe_unmanaged_worker( basic_worker_policy&, FunctionType function )
+    safe_unmanaged_worker( basic_worker_allocator&, FunctionType function )
       : thread_m( function ), is_joined_m( false )
     {
     }

@@ -40,7 +40,7 @@ void test_wild_worker()
 {
   using namespace boost::act;
 
-  typedef basic_worker_policy allocator_type;
+  typedef basic_worker_allocator allocator_type;
 
   allocator_type worker_allocator;
 
@@ -63,7 +63,7 @@ void test_unmanaged_worker()
 {
   using namespace boost::act;
 
-  typedef basic_worker_policy allocator_type;
+  typedef basic_worker_allocator allocator_type;
   typedef allocator_type::unmanaged_worker worker_type;
 
   allocator_type worker_allocator;
@@ -90,7 +90,7 @@ void test_safe_unmanaged_worker()
 {
   using namespace boost::act;
 
-  typedef basic_worker_policy allocator_type;
+  typedef basic_worker_allocator allocator_type;
   typedef allocator_type::safe_unmanaged_worker worker_type;
 
   allocator_type worker_allocator;

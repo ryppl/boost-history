@@ -5,9 +5,9 @@
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-/*
-#ifndef BOOST_ACT_DETAIL_ACTIVE_TYPE_HPP
-#define BOOST_ACT_DETAIL_ACTIVE_TYPE_HPP
+
+#ifndef BOOST_ACT_DETAIL_RAW_ACTIVE_HPP
+#define BOOST_ACT_DETAIL_RAW_ACTIVE_HPP
 
 #include <boost/tuple/tuple.hpp> // ToDo: Remove
 
@@ -18,24 +18,25 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/arithmetic/inc.hpp>
 
+#include <boost/bind.hpp>
+
 #include <boost/mpl/deque.hpp>
 
 
-#include "../active/active_interface.hpp"
+#include <boost/act/active_interface.hpp>
 
-#include "active_helper.hpp"
+#include <boost/act/active/detail/active_helper.hpp>
 
-#include "action_return_meta.hpp"
+#include <boost/act/active/detail/action_return_meta.hpp>
 
-#include "../act_model.hpp"
+#include <boost/act/act_model.hpp>
 
-#include <boost/bind.hpp>
+#include <boost/act/config/max_params.hpp>
 
-#include "../config/max_active_call_params.hpp"
+#include <boost/act/detail/function_package.hpp>
+#include <boost/act/detail/tie.hpp>
 
-#include "function_package.hpp"
-#include "tie.hpp"
-#include "../active/detail/constructor_caller.hpp"
+#include <boost/act/active/detail/constructor_caller.hpp>
 
 namespace boost
 {
@@ -48,17 +49,17 @@ namespace detail
 template< typename UnqualifiedType
         , typename ActModel
         >
-class active_type
+class raw_active
   : ActModel::template active_impl< UnqualifiedType >
   , public active_interface< UnqualifiedType
                            , active_details
                              <
-                               active_type< UnqualifiedType, ActModel >
+                               raw_active< UnqualifiedType, ActModel >
                              , ActModel
                              , action_return_meta
                              >
                            >
-  , public active_helper< active_type< UnqualifiedType, ActModel >
+  , public active_helper< raw_active< UnqualifiedType, ActModel >
                         , UnqualifiedType
                         , ActModel
                         > // ToDo: Change to private
@@ -70,7 +71,7 @@ private:
   typedef typename ActModel::template active_impl< UnqualifiedType >
             active_impl_base_type;
 
-  typedef active_helper< active_type< UnqualifiedType, ActModel >
+  typedef active_helper< raw_active< UnqualifiedType, ActModel >
                        , UnqualifiedType
                        , ActModel
                        >
@@ -88,7 +89,7 @@ public: // ToDo: Make private
 public:
   // ToDo: Make constructors
 public:
-  active_type()
+  raw_active()
     : active_impl_base_type
       (
         detail::make_function_package
@@ -104,7 +105,7 @@ public:
   {
   }
 
-  explicit active_type( active_impl_constructor_tag )
+  explicit raw_active( active_impl_constructor_tag )
     : active_impl_base_type( active_impl_constructor_tag() )
   {
   }
@@ -112,7 +113,7 @@ public:
 // ToDo: Unwrap references
 #define BOOST_ACT_DETAIL_ACTIVE_IMPL_CONSTRUCTOR_MACRO( z, num_params, dummy ) \
   template< BOOST_PP_ENUM_PARAMS_Z( z, num_params, typename Param ) >          \
-  active_type( active_impl_constructor_tag                                     \
+  raw_active( active_impl_constructor_tag                                      \
                BOOST_PP_ENUM_TRAILING_BINARY_PARAMS_Z( z, num_params           \
                                                      , Param                   \
                                                      , const & arg             \
@@ -136,7 +137,7 @@ public:
 // ToDo: Unwrap references
 #define BOOST_ACT_DETAIL_ACTIVE_CONSTRUCTOR_MACRO( z, num_params, dummy )      \
   template< BOOST_PP_ENUM_PARAMS_Z( z, num_params, typename Param ) >          \
-  active_type( BOOST_PP_ENUM_BINARY_PARAMS_Z( z, num_params                    \
+  raw_active( BOOST_PP_ENUM_BINARY_PARAMS_Z( z, num_params                     \
                                             , Param                            \
                                             , const & arg                      \
                                             )                                  \
@@ -178,4 +179,4 @@ public:
 }
 
 #endif
-*/
+
