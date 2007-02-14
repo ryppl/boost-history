@@ -34,10 +34,11 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/thread_safe_signals/connection.hpp>
 #include <boost/thread_safe_signals/detail/signals_common.hpp>
 #include <boost/thread_safe_signals/detail/slot_groups.hpp>
 #include <boost/thread_safe_signals/detail/slot_call_iterator.hpp>
+#include <boost/thread_safe_signals/connection.hpp>
+#include <boost/thread_safe_signals/track.hpp>
 #include <functional>
 
 #ifndef BOOST_SIGNALS_NAMESPACE
