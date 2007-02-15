@@ -6,9 +6,9 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_WORKER_ALLOCATOR_HPP
-#define BOOST_ACT_WORKER_ALLOCATOR_HPP
+#ifndef BOOST_ACT_WORKER_ALLOCATOR_FWD_HPP
+#define BOOST_ACT_WORKER_ALLOCATOR_FWD_HPP
 
-#include <boost/act/worker_allocator/basic_worker_allocator.hpp>
+#include <boost/act/worker_allocator/basic_worker_allocator/basic_worker_allocator_fwd.hpp>
 
 #endif

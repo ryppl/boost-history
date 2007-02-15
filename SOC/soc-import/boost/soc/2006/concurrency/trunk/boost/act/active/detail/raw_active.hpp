@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2006-2007 Matthew Calabrese
+    Copyright (c) 2006, 2007 Matthew Calabrese
 
     Use, modification and distribution is subject to the Boost Software
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -9,19 +9,13 @@
 #ifndef BOOST_ACT_DETAIL_RAW_ACTIVE_HPP
 #define BOOST_ACT_DETAIL_RAW_ACTIVE_HPP
 
-#include <boost/tuple/tuple.hpp> // ToDo: Remove
-
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/preprocessor/arithmetic/inc.hpp>
-
-#include <boost/bind.hpp>
 
 #include <boost/mpl/deque.hpp>
-
 
 #include <boost/act/active_interface.hpp>
 
@@ -29,14 +23,13 @@
 
 #include <boost/act/active/detail/action_return_meta.hpp>
 
-#include <boost/act/act_model.hpp>
-
 #include <boost/act/config/max_params.hpp>
 
 #include <boost/act/detail/function_package.hpp>
-#include <boost/act/detail/tie.hpp>
 
 #include <boost/act/active/detail/constructor_caller.hpp>
+
+#include <boost/act/detail/tie.hpp>
 
 namespace boost
 {
@@ -87,8 +80,6 @@ public: // ToDo: Make private
     return static_cast< active_impl_base_type const& >( *this );
   }
 public:
-  // ToDo: Make constructors
-public:
   raw_active()
     : active_impl_base_type
       (
@@ -105,65 +96,9 @@ public:
   {
   }
 
-  explicit raw_active( active_impl_constructor_tag )
-    : active_impl_base_type( active_impl_constructor_tag() )
-  {
-  }
+  #include <boost/act/active/detail/raw_active/active_constructors.hpp>
 
-// ToDo: Unwrap references
-#define BOOST_ACT_DETAIL_ACTIVE_IMPL_CONSTRUCTOR_MACRO( z, num_params, dummy ) \
-  template< BOOST_PP_ENUM_PARAMS_Z( z, num_params, typename Param ) >          \
-  raw_active( active_impl_constructor_tag                                      \
-               BOOST_PP_ENUM_TRAILING_BINARY_PARAMS_Z( z, num_params           \
-                                                     , Param                   \
-                                                     , const & arg             \
-                                                     )                         \
-             )                                                                 \
-    : active_impl_base_type( active_impl_constructor_tag()                     \
-                             BOOST_PP_ENUM_TRAILING_PARAMS_Z( z, num_params    \
-                                                            , arg              \
-                                                            )                  \
-                           )                                                   \
-  {                                                                            \
-  }
-
-  BOOST_PP_REPEAT_FROM_TO( 1, BOOST_PP_INC( BOOST_ACT_MAX_PARAMS )
-                         , BOOST_ACT_DETAIL_ACTIVE_IMPL_CONSTRUCTOR_MACRO
-                         , BOOST_PP_NIL
-                         )
-
-#undef BOOST_ACT_DETAIL_ACTIVE_IMPL_CONSTRUCTOR_MACRO
-
-// ToDo: Unwrap references
-#define BOOST_ACT_DETAIL_ACTIVE_CONSTRUCTOR_MACRO( z, num_params, dummy )      \
-  template< BOOST_PP_ENUM_PARAMS_Z( z, num_params, typename Param ) >          \
-  raw_active( BOOST_PP_ENUM_BINARY_PARAMS_Z( z, num_params                     \
-                                            , Param                            \
-                                            , const & arg                      \
-                                            )                                  \
-             )                                                                 \
-    : active_impl_base_type                                                    \
-      (                                                                        \
-        detail::make_function_package                                          \
-        <                                                                      \
-          void, ActModel                                                       \
-        , mpl::deque                                                           \
-            < BOOST_PP_ENUM_PARAMS_Z( z, num_params, const Param ) >           \
-        >                                                                      \
-        (                                                                      \
-          constructor_caller< UnqualifiedType >()                              \
-        , detail::tie( BOOST_PP_ENUM_PARAMS_Z( z, num_params, arg ) )          \
-        )                                                                      \
-      )                                                                        \
-  {                                                                            \
-  }
-
-  BOOST_PP_REPEAT_FROM_TO( 1, BOOST_PP_INC( BOOST_ACT_MAX_PARAMS )
-                         , BOOST_ACT_DETAIL_ACTIVE_CONSTRUCTOR_MACRO
-                         , BOOST_PP_NIL
-                         )
-
-#undef BOOST_ACT_DETAIL_ACTIVE_CONSTRUCTOR_MACRO
+  #include <boost/act/active/detail/raw_active/active_impl_constructors.hpp>
 
 public:
   UnqualifiedType inactive_value() const
@@ -179,4 +114,3 @@ public:
 }
 
 #endif
-

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2006-2007 Matthew Calabrese
+    Copyright (c) 2006, 2007 Matthew Calabrese
 
     Use, modification and distribution is subject to the Boost Software
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -9,8 +9,6 @@
 #include <boost/detail/lightweight_test.hpp>
 
 #include <boost/act/worker_allocator.hpp>
-
-#include <boost/mpl/assert.hpp>
 
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
@@ -81,7 +79,7 @@ void test_unmanaged_worker()
     test_value = unmanaged_worker_value;
   }
 
-  if( unmanaged_worker_value != 1 )
+  if( test_value != 1 )
     BOOST_ERROR( "basic_worker_allocator general thread execution failure." );
 }
 
@@ -108,7 +106,7 @@ void test_safe_unmanaged_worker()
     test_value = safe_unmanaged_worker_value;
   }
 
-  if( safe_unmanaged_worker_value != 1 )
+  if( test_value != 1 )
     BOOST_ERROR( "basic_worker_allocator general thread execution failure." );
 }
 

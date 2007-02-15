@@ -1,0 +1,34 @@
+[section Worker]
+
+A =Worker= is an object which represents a function executing either
+sychnronously or asynchronously with respect to its thread of construction
+depending on the corresponding model and implementation. In Boost.Act, models of
+this concepts may be found as members of models of the __worker_allocator__
+concept.
+
+In order to be considered a valid =Worker=, given the variable definitions
+below, the following expressions must be well-formed and have the indicated
+effects.
+
+[table Worker Descriptive Variable Definitions
+[[Variable]       [Definition]                                                 ]
+[[`W`]            [A =Worker= type.]                                           ]
+[[`w`]            [Value of type `W&`.]                                        ]
+[[`A`]            [An allocator type which may be used in conjunction with
+                   =Worker= `w`. ['Note: Such allocator types are
+                   implementation-specified with respect to models of the
+                   =Worker= concept. --end note]
+                  ]                                                            ]
+[[`a`]            [Value of type `A&`.]                                        ]
+[[`f`]            [A nullary function object.]                                 ]
+]
+
+[table Worker Requirements
+[[Expression][Return Type][Pre/Post-Condition]                                 ]
+[[`W(a,f)`]  []           [Creates an instance which executes `f` in an
+                           implementation-specified thread of execution. A
+                           destructor is assumed.
+                          ]                                                    ]
+]
+
+[endsect]

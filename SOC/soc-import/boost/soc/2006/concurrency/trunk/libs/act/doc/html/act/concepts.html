@@ -33,7 +33,7 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="act.concepts.worker"></a><a href="concepts.html#act.concepts.worker" title="Worker">Worker</a></h3></div></div></div>
 <p>
-        A <code class="literal">Worker</code> is an object which represent a function executing
+        A <code class="literal">Worker</code> is an object which represents a function executing
         either sychnronously or asynchronously with respect to its thread of construction
         depending on the corresponding model and implementation. In Boost.Act, models
         of this concepts may be found as members of models of the <a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator">Worker
@@ -116,11 +116,11 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="act.concepts.worker_allocator"></a><a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator">Worker Allocator</a></h3></div></div></div>
 <p>
-        A <code class="literal">Worker Allocator</code> is type whose instances are used to
-        create <a href="concepts.html#act.concepts.worker" title="Worker">Worker</a> objects which execute
-        user-specified functions. These <code class="literal">Worker Allocators</code> generally
-        act as policies to higher-level types. In Boost.Act, models of the <code class="literal">Worker
-        Allocator</code> concept include <code class="code"><span class="identifier">basic_worker_allocator</span></code>
+        A <code class="literal">Worker Allocator</code> is a type whose instances are used
+        to create <a href="concepts.html#act.concepts.worker" title="Worker">Worker</a> objects which
+        execute user-specified functions. These <code class="literal">Worker Allocators</code>
+        generally act as policies to higher-level types. In Boost.Act, models of
+        the <code class="literal">Worker Allocator</code> concept include <code class="code"><span class="identifier">basic_worker_allocator</span></code>
         which is used as the default <code class="literal">Worker Allocator</code> policy when
         instantiating the <code class="literal">basic_concurrent_act_model</code> template.
       </p>

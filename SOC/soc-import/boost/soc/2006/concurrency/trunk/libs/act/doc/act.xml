@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/13 18:06:31 $"
+<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/14 07:36:12 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -306,7 +306,7 @@
     <section id="act.concepts.worker">
       <title><link linkend="act.concepts.worker">Worker</link></title>
       <para>
-        A <literal>Worker</literal> is an object which represent a function executing
+        A <literal>Worker</literal> is an object which represents a function executing
         either sychnronously or asynchronously with respect to its thread of construction
         depending on the corresponding model and implementation. In Boost.Act, models
         of this concepts may be found as members of models of the <link linkend="act.concepts.worker_allocator">Worker
@@ -373,11 +373,11 @@
     <section id="act.concepts.worker_allocator">
       <title><link linkend="act.concepts.worker_allocator">Worker Allocator</link></title>
       <para>
-        A <literal>Worker Allocator</literal> is type whose instances are used to
-        create <link linkend="act.concepts.worker">Worker</link> objects which execute
-        user-specified functions. These <literal>Worker Allocators</literal> generally
-        act as policies to higher-level types. In Boost.Act, models of the <literal>Worker
-        Allocator</literal> concept include <code><phrase role="identifier">basic_worker_allocator</phrase></code>
+        A <literal>Worker Allocator</literal> is a type whose instances are used
+        to create <link linkend="act.concepts.worker">Worker</link> objects which
+        execute user-specified functions. These <literal>Worker Allocators</literal>
+        generally act as policies to higher-level types. In Boost.Act, models of
+        the <literal>Worker Allocator</literal> concept include <code><phrase role="identifier">basic_worker_allocator</phrase></code>
         which is used as the default <literal>Worker Allocator</literal> policy when
         instantiating the <literal>basic_concurrent_act_model</literal> template.
       </para>

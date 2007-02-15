@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2006-2007 Matthew Calabrese
+    Copyright (c) 2006, 2007 Matthew Calabrese
 
     Use, modification and distribution is subject to the Boost Software
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,7 @@
 #include <boost/act/worker_allocator/basic_worker_allocator/detail/thread_manager.hpp>
 
 #include <boost/thread/thread.hpp>
+#include <boost/thread/mutex.hpp>
 #include <boost/noncopyable.hpp>
 
 namespace boost
