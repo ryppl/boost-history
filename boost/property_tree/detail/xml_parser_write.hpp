@@ -24,8 +24,7 @@ namespace boost { namespace property_tree { namespace xml_parser
           const xml_writer_settings<Ch> & settings
           )
     {
-        for ( ; indent > 0; --indent )
-            stream << settings.indent;
+        stream << std::basic_string<Ch>(indent * settings.indent_count, settings.indent_char);
     }
 
     template<class Ch>

@@ -22,8 +22,7 @@ namespace boost { namespace property_tree { namespace info_parser
           const info_writer_settings<Ch> &settings
           )
     {
-        for ( ; indent > 0; --indent )
-            stream << settings.indent;
+        stream << std::basic_string<Ch>(indent * settings.indent_count, settings.indent_char);
     }
     
     // Create necessary escape sequences from illegal characters

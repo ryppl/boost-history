@@ -20,21 +20,24 @@ namespace boost { namespace property_tree { namespace xml_parser
     class xml_writer_settings
     {
     public:
-        xml_writer_settings(const std::basic_string<Ch> & indent = "    ",
+        xml_writer_settings( Ch indent_char = Ch(' '),
+                            typename std::basic_string<Ch>::size_type indent_count = 4,
                             const std::basic_string<Ch> & encoding = "utf-8" ):
-            indent ( indent ),
+            indent_char ( indent_char ),
+            indent_count ( indent_count ),
             encoding ( encoding )
         {
         }
 
-        const std::basic_string<Ch> indent;
+        const Ch indent_char;
+        const typename std::basic_string<Ch>::size_type indent_count;
         const std::basic_string<Ch> encoding;
     };
 
     template <class Ch>
-    xml_writer_settings<Ch> xml_writer_make_settings (const Ch * indent, const Ch * encoding)
+    xml_writer_settings<Ch> xml_writer_make_settings ( Ch indent_char, typename std::basic_string<Ch>::size_type indent_count, const Ch * encoding)
     {
-        return xml_writer_settings<Ch>(indent,encoding);
+        return xml_writer_settings<Ch>(indent_char, indent_count, encoding);
     }
 
 } } }

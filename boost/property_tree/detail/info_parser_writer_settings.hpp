@@ -20,18 +20,21 @@ namespace boost { namespace property_tree { namespace info_parser
     class info_writer_settings
     {
     public:
-        info_writer_settings(const std::basic_string<Ch> & indent = "    " ):
-            indent ( indent )
+        info_writer_settings( Ch indent_char = Ch(' '),
+                              typename std::basic_string<Ch>::size_type indent_count = 4 ):
+            indent_char ( indent_char ),
+            indent_count ( indent_count )
         {
         }
 
-        const std::basic_string<Ch> indent;
+        const Ch indent_char;
+        const typename std::basic_string<Ch>::size_type indent_count;
     };
 
     template <class Ch>
-    info_writer_settings<Ch> info_writer_make_settings (const Ch * indent)
+    info_writer_settings<Ch> info_writer_make_settings ( Ch indent_char, typename std::basic_string<Ch>::size_type indent_count )
     {
-        return info_writer_settings<Ch>(indent);
+        return info_writer_settings<Ch>(indent_char, indent_count);
     }
 
 } } }
