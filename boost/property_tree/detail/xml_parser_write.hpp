@@ -20,22 +20,23 @@ namespace boost { namespace property_tree { namespace xml_parser
 {
     template<class Ch>
     void write_xml_indent(std::basic_ostream<Ch> &stream,
-                          int indent)
+          int indent,
+          const xml_writer_settings<Ch> & settings
+          )
     {
-#ifdef BOOST_PROPERTY_TREE_XML_WRITER_TAB_INDENT
-        stream << std::basic_string<Ch>(indent, Ch('\t'));
-#else
-        stream << std::basic_string<Ch>(4 * indent, Ch(' '));
-#endif        
+        for ( ; indent > 0; --indent )
+            stream << settings.indent;
     }
 
     template<class Ch>
     void write_xml_comment(std::basic_ostream<Ch> &stream,
                            const std::basic_string<Ch> &s, 
-                           int indent)
+                           int indent,
+                           const xml_writer_settings<Ch> & settings
+                           )
     {
         typedef typename std::basic_string<Ch> Str;
-        write_xml_indent(stream,indent);
+        write_xml_indent(stream,indent,settings);
         stream << Ch('<') << Ch('!') << Ch('-') << Ch('-');
         stream << s;
         stream << Ch('-') << Ch('-') << Ch('>') << std::endl;
@@ -45,10 +46,12 @@ namespace boost { namespace property_tree { namespace xml_parser
     void write_xml_text(std::basic_ostream<Ch> &stream,
                         const std::basic_string<Ch> &s, 
                         int indent, 
-                        bool separate_line)
+                        bool separate_line,
+                        const xml_writer_settings<Ch> & settings
+                        )
     {
         if (separate_line)    
-            write_xml_indent(stream,indent);
+            write_xml_indent(stream,indent,settings);
         stream << encode_char_entities(s);
         if (separate_line)    
             stream << Ch('\n');
@@ -58,7 +61,8 @@ namespace boost { namespace property_tree { namespace xml_parser
     void write_xml_element(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                            const std::basic_string<typename Ptree::key_type::value_type> &key,
                            const Ptree &pt, 
-                           int indent)
+                           int indent,
+                           const xml_writer_settings<typename Ptree::key_type::value_type> & settings)
     {
 
         typedef typename Ptree::key_type::value_type Ch;
@@ -86,7 +90,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         {
             if (indent >= 0)
             {
-                write_xml_indent(stream,indent);
+                write_xml_indent(stream,indent,settings);
                 stream << Ch('<') << key << 
                           Ch('/') << Ch('>') << std::endl;
             }
@@ -99,7 +103,7 @@ namespace boost { namespace property_tree { namespace xml_parser
             {
             
                 // Write opening brace and key
-                write_xml_indent(stream,indent);
+                write_xml_indent(stream,indent,settings);
                 stream << Ch('<') << key;
 
                 // Write attributes
@@ -126,7 +130,7 @@ namespace boost { namespace property_tree { namespace xml_parser
             
             // Write data text, if present
             if (!pt.data().empty())
-                write_xml_text(stream, pt.template get_value<std::basic_string<Ch> >(), indent + 1, has_elements);
+                write_xml_text(stream, pt.template get_value<std::basic_string<Ch> >(), indent + 1, has_elements, settings);
             
             // Write elements, comments and texts
             for (It it = pt.begin(); it != pt.end(); ++it)
@@ -134,18 +138,18 @@ namespace boost { namespace property_tree { namespace xml_parser
                 if (it->first == xmlattr<Ch>())
                     continue;
                 else if (it->first == xmlcomment<Ch>())
-                    write_xml_comment(stream, it->second.template get_value<std::basic_string<Ch> >(), indent + 1);
+                    write_xml_comment(stream, it->second.template get_value<std::basic_string<Ch> >(), indent + 1, settings);
                 else if (it->first == xmltext<Ch>())
-                    write_xml_text(stream, it->second.template get_value<std::basic_string<Ch> >(), indent + 1, has_elements);
+                    write_xml_text(stream, it->second.template get_value<std::basic_string<Ch> >(), indent + 1, has_elements, settings);
                 else
-                    write_xml_element(stream, it->first, it->second, indent + 1);
+                    write_xml_element(stream, it->first, it->second, indent + 1, settings);
             }
             
             // Write closing tag
             if (indent >= 0 && !has_attrs_only)
             {
                 if (has_elements)
-                    write_xml_indent(stream,indent);
+                    write_xml_indent(stream,indent,settings);
                 stream << Ch('<') << Ch('/') << key << Ch('>') << std::endl;
             }
 
@@ -155,12 +159,15 @@ namespace boost { namespace property_tree { namespace xml_parser
     template<class Ptree>
     void write_xml_internal(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                             const Ptree &pt,
-                            const std::string &filename)
+                            const std::string &filename,
+                            const xml_writer_settings<typename Ptree::key_type::value_type> & settings)
     {
         typedef typename Ptree::key_type::value_type Ch;
         typedef typename std::basic_string<Ch> Str;
-        stream << detail::widen<Ch>("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
-        write_xml_element(stream, Str(), pt, -1);
+        stream  << detail::widen<Ch>("<?xml version=\"1.0\" encoding=\"")
+                << detail::widen<Ch>(settings.encoding.c_str())
+                << detail::widen<Ch>("\"?>\n");
+        write_xml_element(stream, Str(), pt, -1, settings);
         if (!stream)
             BOOST_PROPERTY_TREE_THROW(xml_parser_error("write error", filename, 0));
     }

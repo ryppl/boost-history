@@ -13,6 +13,7 @@
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/detail/xml_parser_write.hpp>
 #include <boost/property_tree/detail/xml_parser_error.hpp>
+#include <boost/property_tree/detail/xml_parser_writer_settings.hpp>
 #include <boost/property_tree/detail/xml_parser_flags.hpp>
 
 // Include proper parser
@@ -60,22 +61,24 @@ namespace boost { namespace property_tree { namespace xml_parser
     // Write XML to stream
     template<class Ptree>
     void write_xml(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
-                   const Ptree &pt)
+                   const Ptree &pt,
+                   const xml_writer_settings<typename Ptree::key_type::value_type> & settings = xml_writer_settings<typename Ptree::key_type::value_type>() )
     {
-        write_xml_internal(stream, pt, std::string());
+        write_xml_internal(stream, pt, std::string(), settings);
     }
 
     // Write XML to file
     template<class Ptree>
     void write_xml(const std::string &filename,
                    const Ptree &pt,
-                   const std::locale &loc = std::locale())
+                   const std::locale &loc = std::locale(),
+                   const xml_writer_settings<typename Ptree::key_type::value_type> & settings = xml_writer_settings<typename Ptree::key_type::value_type>())
     {
         std::basic_ofstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
             BOOST_PROPERTY_TREE_THROW(xml_parser_error("cannot open file", filename, 0));
         stream.imbue(loc);
-        write_xml_internal(stream, pt, filename);
+        write_xml_internal(stream, pt, filename, settings);
     }
 
 } } }
@@ -85,6 +88,9 @@ namespace boost { namespace property_tree
     using xml_parser::read_xml;
     using xml_parser::write_xml;
     using xml_parser::xml_parser_error;
+
+    using xml_parser::xml_writer_settings;
+    using xml_parser::xml_writer_make_settings;
 } }
 
 #endif
