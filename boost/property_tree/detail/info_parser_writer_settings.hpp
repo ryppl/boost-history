@@ -15,7 +15,7 @@
 
 namespace boost { namespace property_tree { namespace info_parser
 {
-    //! Xml writer settings
+    //! Info writer settings
     template <class Ch>
     class info_writer_settings
     {
