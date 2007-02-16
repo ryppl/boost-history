@@ -34,7 +34,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/type_traits.hpp>
-#include <boost/thread_safe_signals/detail/quick_ptr.hpp>
 #include <boost/thread_safe_signals/detail/signals_common.hpp>
 #include <boost/thread_safe_signals/detail/slot_groups.hpp>
 #include <boost/thread_safe_signals/detail/slot_call_iterator.hpp>
