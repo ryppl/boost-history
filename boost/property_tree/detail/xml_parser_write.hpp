@@ -165,7 +165,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         typedef typename Ptree::key_type::value_type Ch;
         typedef typename std::basic_string<Ch> Str;
         stream  << detail::widen<Ch>("<?xml version=\"1.0\" encoding=\"")
-                << detail::widen<Ch>(settings.encoding.c_str())
+                << settings.encoding
                 << detail::widen<Ch>("\"?>\n");
         write_xml_element(stream, Str(), pt, -1, settings);
         if (!stream)

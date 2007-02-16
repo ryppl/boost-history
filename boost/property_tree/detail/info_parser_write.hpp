@@ -16,6 +16,15 @@
 
 namespace boost { namespace property_tree { namespace info_parser
 {
+    template<class Ch>
+    void write_info_indent(std::basic_ostream<Ch> &stream,
+          int indent,
+          const info_writer_settings<Ch> &settings
+          )
+    {
+        for ( ; indent > 0; --indent )
+            stream << settings.indent;
+    }
     
     // Create necessary escape sequences from illegal characters
     template<class Ch>
@@ -59,7 +68,8 @@ namespace boost { namespace property_tree { namespace info_parser
     template<class Ptree>
     void write_info_helper(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                            const Ptree &pt, 
-                           int indent)
+                           int indent,
+                           const info_writer_settings<typename Ptree::key_type::value_type> &settings)
     {
 
         // Character type
@@ -87,8 +97,11 @@ namespace boost { namespace property_tree { namespace info_parser
         {
             
             // Open brace
-            if (indent >= 0) 
-                stream << std::basic_string<Ch>(4 * indent, Ch(' ')) << Ch('{') << Ch('\n');
+            if (indent >= 0)
+            {
+                write_info_indent( stream, indent, settings);
+                stream << Ch('{') << Ch('\n');
+            }
             
             // Write keys
             typename Ptree::const_iterator it = pt.begin();
@@ -97,20 +110,23 @@ namespace boost { namespace property_tree { namespace info_parser
 
                 // Output key
                 std::basic_string<Ch> key = create_escapes(it->first);
-                stream << std::basic_string<Ch>(4 * (indent + 1), Ch(' '));
+                write_info_indent( stream, indent+1, settings);
                 if (is_simple_key(key))
                     stream << key;
                 else
                     stream << Ch('\"') << key << Ch('\"');
 
                 // Output data and children  
-                write_info_helper(stream, it->second, indent + 1);
+                write_info_helper(stream, it->second, indent + 1, settings);
 
             }
             
             // Close brace
-            if (indent >= 0) 
-                stream << std::basic_string<Ch>(4 * indent, Ch(' ')) << Ch('}') << Ch('\n');
+            if (indent >= 0)
+            {
+                write_info_indent( stream, indent, settings);
+                stream << Ch('}') << Ch('\n');
+            }
 
         }
     }
@@ -119,9 +135,10 @@ namespace boost { namespace property_tree { namespace info_parser
     template<class Ptree>
     void write_info_internal(std::basic_ostream<typename Ptree::key_type::value_type> &stream, 
                              const Ptree &pt,
-                             const std::string &filename)
+                             const std::string &filename,
+                             const info_writer_settings<typename Ptree::key_type::value_type> &settings)
     {
-        write_info_helper(stream, pt, -1);
+        write_info_helper(stream, pt, -1, settings);
         if (!stream.good())
             BOOST_PROPERTY_TREE_THROW(info_parser_error("write error", filename, 0));
     }

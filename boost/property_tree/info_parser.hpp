@@ -12,6 +12,7 @@
 
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/detail/info_parser_error.hpp>
+#include <boost/property_tree/detail/info_parser_writer_settings.hpp>
 #include <boost/property_tree/detail/info_parser_read.hpp>
 #include <boost/property_tree/detail/info_parser_write.hpp>
 #include <istream>
@@ -80,22 +81,24 @@ namespace boost { namespace property_tree { namespace info_parser
     // Write info to stream
     template<class Ptree, class Ch>
     void write_info(std::basic_ostream<Ch> &stream, 
-                    const Ptree &pt)
+                    const Ptree &pt,
+                    const info_writer_settings<Ch> &settings=info_writer_settings<Ch>())
     {
-        write_info_internal(stream, pt, std::string());
+        write_info_internal(stream, pt, std::string(), settings);
     }
 
     // Write info to file
     template<class Ptree>
     void write_info(const std::string &filename,
                     const Ptree &pt,
-                    const std::locale &loc = std::locale())
+                    const std::locale &loc = std::locale(),
+                    const info_writer_settings<typename Ptree::key_type::value_type> &settings=info_writer_settings<typename Ptree::key_type::value_type>())
     {
         std::basic_ofstream<typename Ptree::key_type::value_type> stream(filename.c_str());
         if (!stream)
             BOOST_PROPERTY_TREE_THROW(info_parser_error("cannot open file for writing", filename, 0));
         stream.imbue(loc);
-        write_info_internal(stream, pt, filename);
+        write_info_internal(stream, pt, filename, settings);
     }
 
 } } }
@@ -105,6 +108,9 @@ namespace boost { namespace property_tree
     using info_parser::info_parser_error;
     using info_parser::read_info;
     using info_parser::write_info;
+
+    using info_parser::info_writer_settings;
+    using info_parser::info_writer_make_settings;
 } }
 
 #endif
