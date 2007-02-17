@@ -32,11 +32,11 @@
 #include <boost/preprocessor/iteration.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/thread/mutex.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/thread_safe_signals/detail/signals_common.hpp>
 #include <boost/thread_safe_signals/detail/slot_groups.hpp>
 #include <boost/thread_safe_signals/detail/slot_call_iterator.hpp>
+#include <boost/thread_safe_signals/single_threaded.hpp>
 #include <boost/thread_safe_signals/connection.hpp>
 #include <boost/thread_safe_signals/track.hpp>
 #include <functional>
@@ -63,13 +63,14 @@ namespace boost
 		typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type >,
 		typename Group = int,
 		typename GroupCompare = std::less<Group>,
-		typename SlotFunction = boost::function<Signature> >
-	class signal: public ::boost::signalslib::detail::signalN<boost::function_traits<Signature>::arity,
-		Signature, Combiner, Group, GroupCompare, SlotFunction>::type
+		typename SlotFunction = boost::function<Signature>,
+		typename ThreadingModel = signalslib::single_threaded >
+	class signal: public signalslib::detail::signalN<boost::function_traits<Signature>::arity,
+		Signature, Combiner, Group, GroupCompare, SlotFunction, ThreadingModel>::type
 	{
 	private:
 		typedef typename signalslib::detail::signalN<boost::function_traits<Signature>::arity,
-			Signature, Combiner, Group, GroupCompare, SlotFunction>::type base_type;
+			Signature, Combiner, Group, GroupCompare, SlotFunction, ThreadingModel>::type base_type;
 	public:
 		signal(const Combiner &combiner = Combiner(), const GroupCompare &group_compare = GroupCompare()):
 			base_type(combiner, group_compare)
