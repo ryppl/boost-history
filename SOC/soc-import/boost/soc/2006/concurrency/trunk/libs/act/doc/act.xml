@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/14 07:36:12 $"
+<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/17 00:24:02 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -303,14 +303,200 @@
   </section>
   <section id="act.concepts">
     <title><link linkend="act.concepts">Concepts</link></title>
+    <section id="act.concepts.consumer">
+      <title><link linkend="act.concepts.consumer">Consumer</link></title>
+      <para>
+        A <literal>Consumer</literal> is an object which takes in data of a single
+        type one instance at a time and processes it in an implementation defined-manner
+        either sychnronously or asynchronously with respect to the thread it is interfaced
+        with. In Boost.Act, models of this concept may be found as members of models
+        of the <link linkend="act.concepts.consumer_allocator"> <literal>Consumer
+        Allocator</literal></link> concept.
+      </para>
+      <para>
+        In order to be considered a valid <literal>Consumer</literal>, given the
+        variable definitions below, the following expressions must be well-formed
+        and have the indicated effects.
+      </para>
+      <table frame="all"> <title>Worker Descriptive Variable Definitions</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Variable</entry><entry>Definition</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">C</phrase></code></entry><entry>A
+            <literal>Consumer</literal> type.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">c</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">C</phrase><phrase role="special">&amp;</phrase></code>.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase></code></entry><entry>An
+            allocator type which may be used in conjunction with <code><phrase role="identifier">C</phrase></code>.
+            <emphasis>Note: Such allocator types are implementation-specified with
+            respect to models of the <literal>Consumer</literal> concept. --end note</emphasis>
+            </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">a</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">A</phrase><phrase role="special">&amp;</phrase></code>.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">d</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">C</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">value_type</phrase> <phrase role="keyword">const</phrase><phrase
+            role="special">&amp;</phrase></code>.</entry>
+          </row>
+        </tbody>
+      </tgroup>
+      </table> <table frame="all"> <title>Worker Requirements</title>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Expression</entry><entry>Return Type</entry><entry>Pre/Post-Condition</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">C</phrase><phrase role="special">()</phrase></code></entry><entry></entry><entry>Creates
+            an instance using a default allocator. A destructor is assumed. </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">C</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">a</phrase><phrase role="special">)</phrase></code></entry><entry></entry><entry>Creates
+            an instance. A destructor is assumed.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">C</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">value_type</phrase></code></entry><entry></entry><entry>The
+            type of data which is processed.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">c</phrase><phrase role="special">.</phrase><phrase
+            role="identifier">consume</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">d</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry>Processes
+            a copy of <code><phrase role="identifier">d</phrase></code>. <emphasis>Note:
+            Processing takes place in an implementation-defined thread of execution.
+            --end note</emphasis> </entry>
+          </row>
+        </tbody>
+      </tgroup>
+      </table>
+    </section>
+    <section id="act.concepts.consumer_allocator">
+      <title><link linkend="act.concepts.consumer_allocator">Consumer Allocator</link></title>
+      <para>
+        A <literal>Consumer Allocator</literal> is a type whose instances are used
+        to create <link linkend="act.concepts.consumer"> <literal>Consumer</literal></link>
+        objects. These <literal>Consumer Allocators</literal> generally act as policies
+        to higher-level types. In Boost.Act, such allocator types are used, most
+        notably, as policies during active-qualification.
+      </para>
+      <para>
+        In order to be considered a valid <literal>Consumer Allocator</literal>,
+        given the variable definitions below, the following expressions must be well-formed
+        and have the indicated effects.
+      </para>
+      <table frame="all"> <title>Worker Allocator Descriptive Variable Definitions</title>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Variable</entry><entry>Definition</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase></code></entry><entry>A
+            <literal>Consumer Allocator</literal> type.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">a</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">A</phrase><phrase role="special">&amp;</phrase></code>.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">T</phrase></code></entry><entry>The
+            type of objects to be processed.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">t</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">T</phrase><phrase role="special">&amp;</phrase></code>.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">tc</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">T</phrase> <phrase role="keyword">const</phrase><phrase
+            role="special">&amp;</phrase></code>.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">P</phrase></code></entry><entry>A
+            unary function object which may take <code><phrase role="identifier">t</phrase></code>
+            as an argument.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">p</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">P</phrase> <phrase role="keyword">const</phrase><phrase
+            role="special">&amp;</phrase></code>.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">sc</phrase></code></entry><entry>A
+            value of type <code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">scoped_consumer</phrase><phrase role="special">&amp;</phrase></code></entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">ssc</phrase></code></entry><entry>A
+            value of type <code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">safe_scoped_consumer</phrase><phrase role="special">&amp;</phrase></code>
+            with the corresponding object constructed with <code><phrase role="identifier">a</phrase></code>
+            as an argument. </entry>
+          </row>
+        </tbody>
+      </tgroup>
+      </table> <table frame="all"> <title>Worker Allocator Requirements</title>
+      <tgroup cols="3">
+        <thead>
+          <row>
+            <entry>Expression</entry><entry>Return Type</entry><entry>Pre/Post-Condition</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">scoped_consumer</phrase><phrase role="special">&lt;</phrase><phrase
+            role="identifier">T</phrase><phrase role="special">,</phrase><phrase
+            role="identifier">P</phrase><phrase role="special">&gt;</phrase></code></entry><entry></entry><entry>A
+            <link linkend="act.concepts.consumer"> <literal>Consumer</literal></link>
+            type which guarantees all processing is completed prior to the object
+            being destroyed. </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">safe_scoped_consumer</phrase><phrase role="special">&lt;</phrase><phrase
+            role="identifier">T</phrase><phrase role="special">,</phrase><phrase
+            role="identifier">P</phrase><phrase role="special">&gt;</phrase></code></entry><entry></entry><entry>A
+            <link linkend="act.concepts.consumer"> <literal>Consumer</literal></link>
+            type which guarantees all processing is completed prior to the object
+            being destroyed and which may be interfaced with by any number of threads
+            of execution. </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">A</phrase><phrase role="special">()</phrase></code></entry><entry></entry><entry>Creates
+            a default instance. A destructor is assumed. </entry>
+          </row>
+        </tbody>
+      </tgroup>
+      </table>
+    </section>
     <section id="act.concepts.worker">
       <title><link linkend="act.concepts.worker">Worker</link></title>
       <para>
         A <literal>Worker</literal> is an object which represents a function executing
         either sychnronously or asynchronously with respect to its thread of construction
         depending on the corresponding model and implementation. In Boost.Act, models
-        of this concepts may be found as members of models of the <link linkend="act.concepts.worker_allocator">Worker
-        Allocator</link> concept.
+        of this concept may be found as members of models of the <link linkend="act.concepts.worker_allocator">
+        <literal>Worker Allocator</literal></link> concept.
       </para>
       <para>
         In order to be considered a valid <literal>Worker</literal>, given the variable
@@ -374,12 +560,9 @@
       <title><link linkend="act.concepts.worker_allocator">Worker Allocator</link></title>
       <para>
         A <literal>Worker Allocator</literal> is a type whose instances are used
-        to create <link linkend="act.concepts.worker">Worker</link> objects which
-        execute user-specified functions. These <literal>Worker Allocators</literal>
-        generally act as policies to higher-level types. In Boost.Act, models of
-        the <literal>Worker Allocator</literal> concept include <code><phrase role="identifier">basic_worker_allocator</phrase></code>
-        which is used as the default <literal>Worker Allocator</literal> policy when
-        instantiating the <literal>basic_concurrent_act_model</literal> template.
+        to create <link linkend="act.concepts.worker"> <literal>Worker</literal></link>
+        objects which execute user-specified functions. These <literal>Worker Allocators</literal>
+        generally act as policies to higher-level types.
       </para>
       <para>
         In order to be considered a valid <literal>Worker Allocator</literal>, given
@@ -403,7 +586,7 @@
             role="identifier">a1</phrase></code>, <code><phrase role="identifier">a2</phrase></code></entry><entry>Values
             of type <code><phrase role="identifier">A</phrase><phrase role="special">&amp;</phrase></code>
             where <code><phrase role="identifier">a1</phrase> <phrase role="special">==</phrase>
-            <phrase role="identifier">a</phrase></code>. </entry>
+            <phrase role="identifier">a</phrase></code>.</entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">uw</phrase></code></entry><entry>A
@@ -436,16 +619,16 @@
           <row>
             <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
             role="identifier">unmanaged_worker</phrase></code></entry><entry></entry><entry>A
-            <link linkend="act.concepts.worker">Worker</link> type which may be joined
-            from a single thread and which must be joined prior to the parent process's
-            completion to be well-formed.</entry>
+            <link linkend="act.concepts.worker"> <literal>Worker</literal></link>
+            type which may be joined from a single thread and which must be joined
+            prior to the parent process's completion to be well-formed.</entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">A</phrase><phrase role="special">::</phrase><phrase
             role="identifier">safe_unmanaged_worker</phrase></code></entry><entry></entry><entry>A
-            <link linkend="act.concepts.worker">Worker</link> type which may be joined
-            from any number of threads and which must be joined prior to the parent
-            process's completion to be well-formed.</entry>
+            <link linkend="act.concepts.worker"> <literal>Worker</literal></link>
+            type which may be joined from any number of threads and which must be
+            joined prior to the parent process's completion to be well-formed.</entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
@@ -520,8 +703,8 @@
     </bridgehead>
     <para>
       <code><phrase role="identifier">basic_worker_allocator</phrase></code> is a
-      <link linkend="act.concepts.worker_allocator">Worker Allocator</link> which
-      assigns each worker it allocates a new thread of execution.
+      <link linkend="act.concepts.worker_allocator"> <literal>Worker Allocator</literal></link>
+      which assigns each worker it allocates a new thread of execution.
     </para>
     <anchor id="act.basic_worker_allocator.header"/>
     <bridgehead renderas="sect3">
@@ -546,7 +729,7 @@
     </bridgehead>
     <itemizedlist>
       <listitem>
-        <link linkend="act.concepts.worker_allocator">Worker Allocator</link>
+        <link linkend="act.concepts.worker_allocator"> <literal>Worker Allocator</literal></link>
       </listitem>
     </itemizedlist>
   </section>

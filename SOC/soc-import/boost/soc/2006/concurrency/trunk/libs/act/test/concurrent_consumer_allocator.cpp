@@ -32,20 +32,31 @@ struct test_fun
   int& value;
 };
 
+struct execute
+{
+  void operator ()( test_fun& target ) const
+  {
+    target();
+  }
+};
+
 void test_scoped_consumer_allocator()
 {
   using namespace boost::act;
 
   typedef concurrent_consumer_allocator<> allocator_type;
-  typedef allocator_type::scoped_consumer<> consumer_type;
+  typedef allocator_type::scoped_consumer< test_fun
+                                         , execute
+                                         >
+                                         scoped_consumer_type;
 
   int test_value = 0;
 
   {
     boost::mutex::scoped_lock lock( global_mutex );
-    consumer_type consumer;
+    scoped_consumer_type consumer;
 
-    consumer.call( test_fun( scoped_consumer_value ) );
+    consumer.consume( test_fun( scoped_consumer_value ) );
 
     global_condition.wait( lock );
 

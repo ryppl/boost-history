@@ -3,7 +3,7 @@
 A =Worker= is an object which represents a function executing either
 sychnronously or asynchronously with respect to its thread of construction
 depending on the corresponding model and implementation. In Boost.Act, models of
-this concepts may be found as members of models of the __worker_allocator__
+this concept may be found as members of models of the __worker_allocator__
 concept.
 
 In order to be considered a valid =Worker=, given the variable definitions

@@ -1,5 +1,7 @@
 [section Concepts]
 
+[include consumer.qbk]
+[include consumer_allocator.qbk]
 [include worker.qbk]
 [include worker_allocator.qbk]
 

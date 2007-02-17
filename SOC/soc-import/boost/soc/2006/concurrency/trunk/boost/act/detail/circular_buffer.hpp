@@ -14,6 +14,8 @@
 #include <boost/type_traits/aligned_storage.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 
+#include <boost/utility/in_place_factory.hpp>
+
 namespace boost
 {
 namespace act
@@ -66,6 +68,11 @@ public:
   static size_type max_size() { return BufferSize; }
   bool full() const { return end_m == begin_m + 1; }
 public:
+  void push_back( Type const& source )
+  {
+    push_back( in_place( source ) );
+  }
+
   template< typename InPlaceFactory >
   void push_back( InPlaceFactory factory )
   {

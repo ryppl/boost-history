@@ -2,10 +2,7 @@
 
 A =Worker Allocator= is a type whose instances are used to create __worker__
 objects which execute user-specified functions. These =Worker Allocators=
-generally act as policies to higher-level types. In Boost.Act, models of the
-=Worker Allocator= concept include `basic_worker_allocator` which is used as the
-default =Worker Allocator= policy when instantiating the
-=basic_concurrent_act_model= template.
+generally act as policies to higher-level types.
 
 In order to be considered a valid =Worker Allocator=, given the variable
 definitions below, the following expressions must be well-formed and have the
@@ -14,7 +11,7 @@ indicated effects.
 [table Worker Allocator Descriptive Variable Definitions
 [[Variable]       [Definition]                                                 ]
 [[`A`]            [A Worker Allocator type.]                                   ]
-[[`a`, `a1`, `a2`][Values of type `A&` where `a1 == a`.      ]                 ]
+[[`a`, `a1`, `a2`][Values of type `A&` where `a1 == a`.]                       ]
 [[`uw`]           [A value of type `A::unmanged_worker&` with the corresponding
                    object constructed with `a1` as an argument.
                   ]                                                            ]
