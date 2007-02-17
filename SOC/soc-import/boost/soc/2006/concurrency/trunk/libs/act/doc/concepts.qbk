@@ -4,5 +4,7 @@
 [include consumer_allocator.qbk]
 [include worker.qbk]
 [include worker_allocator.qbk]
+[include threaded_worker.qbk]
+[include threaded_worker_allocator.qbk]
 
 [endsect]

@@ -23,6 +23,8 @@ indicated effects.
 [[`d`]            [Value of type `C::value_type const&`.]                      ]
 ]
 
+[heading Expression Requirements]
+
 [table Worker Requirements
 [[Expression]     [Return Type][Pre/Post-Condition]                            ]
 [[`C()`]          []           [Creates an instance using a default allocator. A

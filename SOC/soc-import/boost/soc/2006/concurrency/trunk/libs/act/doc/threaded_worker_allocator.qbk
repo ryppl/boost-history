@@ -1,0 +1,17 @@
+[section Threaded Worker Allocator]
+
+A [concept Threaded Worker Allocator] is a type which may be used to create
+models of __threaded_worker__ concept. In Boost.Act,
+[concept Threaded Worker Allocators] are used as policies to the
+__concurrent_consumer_allocator_ model.
+
+[heading Refinement of]
+[*]__worker_allocator__
+
+As a refinement of the __worker_allocator__ concept, a
+[concept Threaded Worker Allocator] must meet all of the requirements of the
+__worker_allocator__ concept along with the aformentioned restrictions. There
+are no additional interface requirements for a type to be considered a valid
+[concept Threaded Worker Allocator].
+
+[endsect]

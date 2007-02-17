@@ -23,6 +23,8 @@ effects.
 [[`f`]            [A nullary function object.]                                 ]
 ]
 
+[heading Expression Requirements]
+
 [table Worker Requirements
 [[Expression][Return Type][Pre/Post-Condition]                                 ]
 [[`W(a,f)`]  []           [Creates an instance which executes `f` in an

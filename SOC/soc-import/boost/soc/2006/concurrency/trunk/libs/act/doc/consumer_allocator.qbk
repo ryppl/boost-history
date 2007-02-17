@@ -24,6 +24,8 @@ have the indicated effects.
                   ]                                                            ]
 ]
 
+[heading Expression Requirements]
+
 [table Worker Allocator Requirements
 [[Expression]                    [Return Type][Pre/Post-Condition]             ]
 [[`A::scoped_consumer<T,P>`]     []           [A __consumer__ type which

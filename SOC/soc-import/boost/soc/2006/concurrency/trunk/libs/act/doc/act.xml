@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/17 00:24:02 $"
+<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/17 19:04:57 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -353,7 +353,12 @@
           </row>
         </tbody>
       </tgroup>
-      </table> <table frame="all"> <title>Worker Requirements</title>
+      </table> <anchor id="act.concepts.consumer.expression_requirements"/>
+      <bridgehead renderas="sect4">
+        <link linkend="act.concepts.consumer.expression_requirements">Expression
+        Requirements</link>
+      </bridgehead>
+      <table frame="all"> <title>Worker Requirements</title>
       <tgroup cols="3">
         <thead>
           <row>
@@ -454,7 +459,12 @@
           </row>
         </tbody>
       </tgroup>
-      </table> <table frame="all"> <title>Worker Allocator Requirements</title>
+      </table> <anchor id="act.concepts.consumer_allocator.expression_requirements"/>
+      <bridgehead renderas="sect4">
+        <link linkend="act.concepts.consumer_allocator.expression_requirements">Expression
+        Requirements</link>
+      </bridgehead>
+      <table frame="all"> <title>Worker Allocator Requirements</title>
       <tgroup cols="3">
         <thead>
           <row>
@@ -536,7 +546,11 @@
           </row>
         </tbody>
       </tgroup>
-      </table> <table frame="all"> <title>Worker Requirements</title>
+      </table> <anchor id="act.concepts.worker.expression_requirements"/>
+      <bridgehead renderas="sect4">
+        <link linkend="act.concepts.worker.expression_requirements">Expression Requirements</link>
+      </bridgehead>
+      <table frame="all"> <title>Worker Requirements</title>
       <tgroup cols="3">
         <thead>
           <row>
@@ -693,6 +707,59 @@
         </tbody>
       </tgroup>
       </table>
+    </section>
+    <section id="act.concepts.threaded_worker">
+      <title><link linkend="act.concepts.threaded_worker">Threaded Worker</link></title>
+      <para>
+        A <literal>Threaded Worker</literal> is type which may be used to execute
+        user-specified functions in a separate thread from that of its of construction.
+        In Boost.Act, models of this concept may be found as members of models of
+        the <link linkend="act.concepts.threaded_worker_allocator"> <literal>Threaded
+        Worker Allocator</literal></link> concept.
+      </para>
+      <anchor id="act.concepts.threaded_worker.refinement_of"/>
+      <bridgehead renderas="sect4">
+        <link linkend="act.concepts.threaded_worker.refinement_of">Refinement of</link>
+      </bridgehead>
+      <para>
+        <emphasis role="bold"></emphasis><link linkend="act.concepts.worker"> <literal>Worker</literal></link>
+      </para>
+      <para>
+        As a refinement of the <link linkend="act.concepts.worker"> <literal>Worker</literal></link>
+        concept, a <literal>Threaded Worker</literal> must meet all of the requirements
+        of the <link linkend="act.concepts.worker"> <literal>Worker</literal></link>
+        concept along with the aformentioned restrictions. There are no additional
+        interface requirements for a type to be considered a valid <literal>Threaded
+        Worker</literal>.
+      </para>
+    </section>
+    <section id="act.concepts.threaded_worker_allocator">
+      <title><link linkend="act.concepts.threaded_worker_allocator">Threaded Worker
+      Allocator</link></title>
+      <para>
+        A <literal>Threaded Worker Allocator</literal> is a type which may be used
+        to create models of <link linkend="act.concepts.threaded_worker"> <literal>Threaded
+        Worker</literal></link> concept. In Boost.Act, <literal>Threaded Worker Allocators</literal>
+        are used as policies to the __concurrent_consumer<emphasis role="underline">allocator</emphasis>
+        model.
+      </para>
+      <anchor id="act.concepts.threaded_worker_allocator.refinement_of"/>
+      <bridgehead renderas="sect4">
+        <link linkend="act.concepts.threaded_worker_allocator.refinement_of">Refinement
+        of</link>
+      </bridgehead>
+      <para>
+        <emphasis role="bold"></emphasis><link linkend="act.concepts.worker_allocator">
+        <literal>Worker Allocator</literal></link>
+      </para>
+      <para>
+        As a refinement of the <link linkend="act.concepts.worker_allocator"> <literal>Worker
+        Allocator</literal></link> concept, a <literal>Threaded Worker Allocator</literal>
+        must meet all of the requirements of the <link linkend="act.concepts.worker_allocator">
+        <literal>Worker Allocator</literal></link> concept along with the aformentioned
+        restrictions. There are no additional interface requirements for a type to
+        be considered a valid <literal>Threaded Worker Allocator</literal>.
+      </para>
     </section>
   </section>
   <section id="act.basic_worker_allocator">

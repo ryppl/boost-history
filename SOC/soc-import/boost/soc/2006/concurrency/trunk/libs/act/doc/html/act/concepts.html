@@ -30,6 +30,9 @@
 <dt><span class="section"><a href="concepts.html#act.concepts.consumer_allocator">Consumer Allocator</a></span></dt>
 <dt><span class="section"><a href="concepts.html#act.concepts.worker">Worker</a></span></dt>
 <dt><span class="section"><a href="concepts.html#act.concepts.worker_allocator">Worker Allocator</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.threaded_worker">Threaded Worker</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.threaded_worker_allocator">Threaded Worker
+      Allocator</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -90,8 +93,13 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><div class="table">
-<a name="id429296"></a><p class="title"><b>Table 3. Worker Requirements</b></p>
+<br class="table-break"><a name="act.concepts.consumer.expression_requirements"></a><h5>
+<a name="id429305"></a>
+        <a href="concepts.html#act.concepts.consumer.expression_requirements">Expression
+        Requirements</a>
+      </h5>
+<div class="table">
+<a name="id429322"></a><p class="title"><b>Table 3. Worker Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Worker Requirements">
 <colgroup>
 <col>
@@ -151,7 +159,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id429538"></a><p class="title"><b>Table 4. Worker Allocator Descriptive Variable Definitions</b></p>
+<a name="id429563"></a><p class="title"><b>Table 4. Worker Allocator Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Worker Allocator Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -214,8 +222,13 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><div class="table">
-<a name="id429842"></a><p class="title"><b>Table 5. Worker Allocator Requirements</b></p>
+<br class="table-break"><a name="act.concepts.consumer_allocator.expression_requirements"></a><h5>
+<a name="id429874"></a>
+        <a href="concepts.html#act.concepts.consumer_allocator.expression_requirements">Expression
+        Requirements</a>
+      </h5>
+<div class="table">
+<a name="id429892"></a><p class="title"><b>Table 5. Worker Allocator Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Worker Allocator Requirements">
 <colgroup>
 <col>
@@ -272,7 +285,7 @@
         the indicated effects.
       </p>
 <div class="table">
-<a name="id430107"></a><p class="title"><b>Table 6. Worker Descriptive Variable Definitions</b></p>
+<a name="id430158"></a><p class="title"><b>Table 6. Worker Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Worker Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -314,8 +327,12 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><div class="table">
-<a name="id487622"></a><p class="title"><b>Table 7. Worker Requirements</b></p>
+<br class="table-break"><a name="act.concepts.worker.expression_requirements"></a><h5>
+<a name="id487682"></a>
+        <a href="concepts.html#act.concepts.worker.expression_requirements">Expression Requirements</a>
+      </h5>
+<div class="table">
+<a name="id487700"></a><p class="title"><b>Table 7. Worker Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Worker Requirements">
 <colgroup>
 <col>
@@ -354,7 +371,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id487776"></a><p class="title"><b>Table 8. Worker Allocator Descriptive Variable Definitions</b></p>
+<a name="id487852"></a><p class="title"><b>Table 8. Worker Allocator Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Worker Allocator Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -402,7 +419,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id487999"></a><p class="title"><b>Table 9. Worker Allocator Requirements</b></p>
+<a name="id488075"></a><p class="title"><b>Table 9. Worker Allocator Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Worker Allocator Requirements">
 <colgroup>
 <col>
@@ -492,6 +509,63 @@
 </table></div>
 </div>
 <br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.threaded_worker"></a><a href="concepts.html#act.concepts.threaded_worker" title="Threaded Worker">Threaded Worker</a></h3></div></div></div>
+<p>
+        A <code class="literal">Threaded Worker</code> is type which may be used to execute
+        user-specified functions in a separate thread from that of its of construction.
+        In Boost.Act, models of this concept may be found as members of models of
+        the <a href="concepts.html#act.concepts.threaded_worker_allocator" title="Threaded Worker
+      Allocator"> <code class="literal">Threaded
+        Worker Allocator</code></a> concept.
+      </p>
+<a name="act.concepts.threaded_worker.refinement_of"></a><h5>
+<a name="id502818"></a>
+        <a href="concepts.html#act.concepts.threaded_worker.refinement_of">Refinement of</a>
+      </h5>
+<p>
+        <span class="bold"><strong></strong></span><a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a>
+      </p>
+<p>
+        As a refinement of the <a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a>
+        concept, a <code class="literal">Threaded Worker</code> must meet all of the requirements
+        of the <a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a>
+        concept along with the aformentioned restrictions. There are no additional
+        interface requirements for a type to be considered a valid <code class="literal">Threaded
+        Worker</code>.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.concepts.threaded_worker_allocator"></a><a href="concepts.html#act.concepts.threaded_worker_allocator" title="Threaded Worker
+      Allocator">Threaded Worker
+      Allocator</a></h3></div></div></div>
+<p>
+        A <code class="literal">Threaded Worker Allocator</code> is a type which may be used
+        to create models of <a href="concepts.html#act.concepts.threaded_worker" title="Threaded Worker"> <code class="literal">Threaded
+        Worker</code></a> concept. In Boost.Act, <code class="literal">Threaded Worker Allocators</code>
+        are used as policies to the __concurrent_consumer<span class="underline">allocator</span>
+        model.
+      </p>
+<a name="act.concepts.threaded_worker_allocator.refinement_of"></a><h5>
+<a name="id502968"></a>
+        <a href="concepts.html#act.concepts.threaded_worker_allocator.refinement_of">Refinement
+        of</a>
+      </h5>
+<p>
+        <span class="bold"><strong></strong></span><a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator">
+        <code class="literal">Worker Allocator</code></a>
+      </p>
+<p>
+        As a refinement of the <a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator"> <code class="literal">Worker
+        Allocator</code></a> concept, a <code class="literal">Threaded Worker Allocator</code>
+        must meet all of the requirements of the <a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator">
+        <code class="literal">Worker Allocator</code></a> concept along with the aformentioned
+        restrictions. There are no additional interface requirements for a type to
+        be considered a valid <code class="literal">Threaded Worker Allocator</code>.
+      </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
