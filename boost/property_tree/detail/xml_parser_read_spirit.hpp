@@ -53,7 +53,7 @@ namespace boost { namespace property_tree { namespace xml_parser
             {
                 if (c.stack.empty())
                     BOOST_PROPERTY_TREE_THROW(xml_parser_error("xml parse error", 
-                                                     b.get_position().file, 
+                                                     detail::narrow(b.get_position().file.c_str()), 
                                                      b.get_position().line));
                 Str name(b, e);
                 Ptree *child = &c.stack.back()->push_back(std::make_pair(name, Ptree()))->second;
@@ -69,7 +69,7 @@ namespace boost { namespace property_tree { namespace xml_parser
             {
                 if (c.stack.size() <= 1)
                     BOOST_PROPERTY_TREE_THROW(xml_parser_error("xml parse error", 
-                                    b.get_position().file, 
+                                    detail::narrow(b.get_position().file.c_str()), 
                                     b.get_position().line));
                 c.stack.pop_back();
             }
@@ -708,7 +708,8 @@ namespace boost { namespace property_tree { namespace xml_parser
         // Initialize iterators
         It begin(v.begin(), v.end());
         It end;
-        begin.set_position(filename);
+        
+        begin.set_position(detail::widen<Ch>(filename.c_str()));
         
         // Prepare grammar
         Ptree local;
@@ -720,7 +721,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         boost::spirit::parse_info<It> result = boost::spirit::parse(begin, end, g);
         if (!result.full || g.c.stack.size() != 1)
             BOOST_PROPERTY_TREE_THROW(xml_parser_error("xml parse error", 
-                                             result.stop.get_position().file, 
+                                             detail::narrow(result.stop.get_position().file.c_str()), 
                                              result.stop.get_position().line));
 
         // Swap local and pt
