@@ -50,6 +50,7 @@ namespace boost
   template<typename T>
   shared_ptr<T> deconstruct_ptr(T *ptr)
   {
+    if(ptr == 0) return shared_ptr<T>();
     shared_ptr<T> shared(ptr, boost::predestructing_deleter<T>());
     deconstruct_detail::do_postconstruct(ptr);
     return shared;
@@ -57,6 +58,7 @@ namespace boost
   template<typename T, typename D>
   shared_ptr<T> deconstruct_ptr(T *ptr, D deleter)
   {
+    if(ptr == 0) return shared_ptr<T>();
     shared_ptr<T> shared(ptr, deleter);
     deconstruct_detail::do_postconstruct(ptr);
     return shared;
