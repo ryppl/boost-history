@@ -41,9 +41,7 @@
 #include <boost/thread_safe_signals/track.hpp>
 #include <functional>
 
-#ifndef BOOST_SIGNALS_NAMESPACE
 #define BOOST_SIGNALS_NAMESPACE signalslib
-#endif
 
 #ifndef EPG_SIGNALS_MAX_ARGS
 #define EPG_SIGNALS_MAX_ARGS 10
@@ -57,9 +55,9 @@ namespace boost
 {
 #ifndef signals
 	// for backward compatibility
-	namespace signals = signalslib;
+    namespace signals = signalslib;
 #endif
-	template<typename Signature,
+    template<typename Signature,
 		typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type >,
 		typename Group = int,
 		typename GroupCompare = std::less<Group>,
