@@ -11,6 +11,7 @@
 #ifndef BOOST_DECONSTRUCT_PTR_HEADER
 #define BOOST_DECONSTRUCT_PTR_HEADER
 
+#include <boost/checked_delete.hpp>
 #include <boost/postconstructible.hpp>
 #include <boost/predestructible.hpp>
 #include <boost/shared_ptr.hpp>
@@ -34,7 +35,7 @@ namespace boost
     void operator()(T *ptr)
     {
       m_predestruct(ptr);
-      delete ptr;
+      checked_delete(ptr);
     }
   private:
     void m_predestruct(...)
