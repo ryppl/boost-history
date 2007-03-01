@@ -31,6 +31,7 @@
 #define BOOST_SIGNALS_NAMESPACE signalslib
 
 #include <algorithm>
+#include <boost/assert.hpp>
 #include <boost/function.hpp>
 #include <boost/last_value.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
@@ -44,6 +45,7 @@
 #include <boost/thread_safe_signals/detail/slot_groups.hpp>
 #include <boost/thread_safe_signals/detail/slot_call_iterator.hpp>
 #include <boost/thread_safe_signals/connection.hpp>
+#include <boost/thread_safe_signals/auto_threaded.hpp>
 #include <boost/thread_safe_signals/single_threaded.hpp>
 #include <boost/thread_safe_signals/slot.hpp>
 #include <boost/thread_safe_signals/track.hpp>
@@ -64,7 +66,7 @@ namespace boost
 		typename Group = int,
 		typename GroupCompare = std::less<Group>,
 		typename SlotFunction = boost::function<Signature>,
-		typename ThreadingModel = signalslib::single_threaded >
+		typename ThreadingModel = signalslib::auto_threaded >
 	class signal: public signalslib::detail::signalN<function_traits<Signature>::arity,
 		Signature, Combiner, Group, GroupCompare, SlotFunction, ThreadingModel>::type
 	{
