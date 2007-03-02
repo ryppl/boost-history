@@ -44,8 +44,9 @@
 #include <boost/thread_safe_signals/detail/signals_common_macros.hpp>
 #include <boost/thread_safe_signals/detail/slot_groups.hpp>
 #include <boost/thread_safe_signals/detail/slot_call_iterator.hpp>
-#include <boost/thread_safe_signals/connection.hpp>
 #include <boost/thread_safe_signals/auto_threaded.hpp>
+#include <boost/thread_safe_signals/connection.hpp>
+#include <boost/thread_safe_signals/shared_connection_block.hpp>
 #include <boost/thread_safe_signals/single_threaded.hpp>
 #include <boost/thread_safe_signals/slot.hpp>
 #include <boost/thread_safe_signals/track.hpp>
@@ -62,10 +63,10 @@ namespace boost
     namespace signals = signalslib;
 #endif
 	template<typename Signature,
-		typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type >,
+		typename Combiner = last_value<typename boost::function_traits<Signature>::result_type>,
 		typename Group = int,
 		typename GroupCompare = std::less<Group>,
-		typename SlotFunction = boost::function<Signature>,
+		typename SlotFunction = function<Signature>,
 		typename ThreadingModel = signalslib::auto_threaded >
 	class signal: public signalslib::detail::signalN<function_traits<Signature>::arity,
 		Signature, Combiner, Group, GroupCompare, SlotFunction, ThreadingModel>::type
