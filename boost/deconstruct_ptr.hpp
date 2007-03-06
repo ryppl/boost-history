@@ -16,6 +16,10 @@
 #include <boost/predestructible.hpp>
 #include <boost/shared_ptr.hpp>
 
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
+
 namespace boost
 {
   namespace deconstruct_detail
@@ -32,16 +36,16 @@ namespace boost
   template<typename T> class predestructing_deleter
   {
   public:
-    void operator()(T *ptr)
+    void operator()(const T *ptr) const
     {
       m_predestruct(ptr);
       checked_delete(ptr);
     }
   private:
-    void m_predestruct(...)
+    static void m_predestruct(...)
     {
     }
-    void m_predestruct(const boost::predestructible *ptr)
+    static void m_predestruct(const boost::predestructible *ptr)
     {
       boost::predestructible *nonconst_ptr = const_cast<boost::predestructible*>(ptr);
       nonconst_ptr->predestruct();
@@ -65,4 +69,9 @@ namespace boost
     return shared;
   }
 }
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
+
 #endif
