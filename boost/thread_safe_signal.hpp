@@ -32,6 +32,7 @@
 
 #include <algorithm>
 #include <boost/assert.hpp>
+#include <boost/config.hpp>
 #include <boost/function.hpp>
 #include <boost/last_value.hpp>
 #include <boost/preprocessor/arithmetic.hpp>
@@ -49,8 +50,11 @@
 #include <boost/thread_safe_signals/shared_connection_block.hpp>
 #include <boost/thread_safe_signals/single_threaded.hpp>
 #include <boost/thread_safe_signals/slot.hpp>
-#include <boost/thread_safe_signals/track.hpp>
 #include <functional>
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_PREFIX
+#endif
 
 #define BOOST_PP_ITERATION_LIMITS (0, BOOST_SIGNALS_MAX_ARGS)
 #define BOOST_PP_FILENAME_1 <boost/thread_safe_signals/detail/signal_template.hpp>
@@ -80,5 +84,9 @@ namespace boost
 		{}
 	};
 }
+
+#ifdef BOOST_HAS_ABI_HEADERS
+#  include BOOST_ABI_SUFFIX
+#endif
 
 #endif	// _THREAD_SAFE_SIGNAL_HPP
