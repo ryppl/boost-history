@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/17 19:04:57 $"
+<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/02/18 03:30:12 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -526,8 +526,9 @@
             <literal>Worker</literal> type.</entry>
           </row>
           <row>
-            <entry><code><phrase role="identifier">w</phrase></code></entry><entry>Value
-            of type <code><phrase role="identifier">W</phrase><phrase role="special">&amp;</phrase></code>.</entry>
+            <entry><code><phrase role="identifier">cw</phrase></code></entry><entry>Value
+            of type <code><phrase role="identifier">W</phrase> <phrase role="keyword">const</phrase><phrase
+            role="special">&amp;</phrase></code>.</entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">A</phrase></code></entry><entry>An
@@ -565,6 +566,14 @@
             an instance which executes <code><phrase role="identifier">f</phrase></code>
             in an implementation-specified thread of execution. A destructor is assumed.
             </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">cw</phrase><phrase role="special">.</phrase><phrase
+            role="identifier">join</phrase><phrase role="special">()</phrase></code></entry><entry>(unused)</entry><entry>Post:
+            The function passed in during construction has completed its execution.
+            <emphasis>Note: This function may be called multiple times without error.
+            No matter how many times the function is called, the corresponding function
+            will have only been run once. --end note</emphasis> </entry>
           </row>
         </tbody>
       </tgroup>
@@ -646,39 +655,6 @@
           </row>
           <row>
             <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
-            role="identifier">join</phrase><phrase role="special">(</phrase><phrase
-            role="identifier">uw</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry>The
-            current thread of execution waits for <code><phrase role="identifier">uw</phrase></code>
-            to complete its execution. If <code><phrase role="identifier">a</phrase><phrase
-            role="special">.</phrase><phrase role="identifier">join</phrase></code>
-            has already been called with <code><phrase role="identifier">uw</phrase></code>
-            as an argument, the function call returns immediately without error.
-            <emphasis>Note: This function may only safely be called multiple times
-            with the same argument if each successive call occurs in the same thread
-            of execution as the first. <emphasis role="bold">If <code><phrase role="identifier">a</phrase><phrase
-            role="special">.</phrase><phrase role="identifier">join</phrase></code>
-            is never called with <code><phrase role="identifier">uw</phrase></code>
-            as an argument, there is no guarantee that the thread will successfully
-            complete execution.</emphasis> --end note</emphasis> </entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
-            role="identifier">join</phrase><phrase role="special">(</phrase><phrase
-            role="identifier">suw</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry>The
-            current thread of execution waits for <code><phrase role="identifier">suw</phrase></code>
-            to complete its execution. If <code><phrase role="identifier">a</phrase><phrase
-            role="special">.</phrase><phrase role="identifier">join</phrase></code>
-            has already been called with <code><phrase role="identifier">uw</phrase></code>
-            as an argument, the function call returns immediately without error.
-            <emphasis>Note: This function may safely be called from different threads
-            of execution. <emphasis role="bold">If <code><phrase role="identifier">a</phrase><phrase
-            role="special">.</phrase><phrase role="identifier">join</phrase></code>
-            is never called with <code><phrase role="identifier">uw</phrase></code>
-            as an argument, there is no guarantee that the thread will successfully
-            complete execution.</emphasis> --end note</emphasis> </entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">a</phrase><phrase role="special">.</phrase><phrase
             role="identifier">spawn_wild_worker</phrase><phrase role="special">(</phrase><phrase
             role="identifier">f</phrase><phrase role="special">)</phrase></code></entry><entry>(unused)</entry><entry><code><phrase
             role="identifier">f</phrase></code> is executed in an implementation-defined
@@ -721,9 +697,11 @@
       <bridgehead renderas="sect4">
         <link linkend="act.concepts.threaded_worker.refinement_of">Refinement of</link>
       </bridgehead>
-      <para>
-        <emphasis role="bold"></emphasis><link linkend="act.concepts.worker"> <literal>Worker</literal></link>
-      </para>
+      <itemizedlist>
+        <listitem>
+          <link linkend="act.concepts.worker"> <literal>Worker</literal></link>
+        </listitem>
+      </itemizedlist>
       <para>
         As a refinement of the <link linkend="act.concepts.worker"> <literal>Worker</literal></link>
         concept, a <literal>Threaded Worker</literal> must meet all of the requirements
@@ -748,10 +726,11 @@
         <link linkend="act.concepts.threaded_worker_allocator.refinement_of">Refinement
         of</link>
       </bridgehead>
-      <para>
-        <emphasis role="bold"></emphasis><link linkend="act.concepts.worker_allocator">
-        <literal>Worker Allocator</literal></link>
-      </para>
+      <itemizedlist>
+        <listitem>
+          <link linkend="act.concepts.worker_allocator"> <literal>Worker Allocator</literal></link>
+        </listitem>
+      </itemizedlist>
       <para>
         As a refinement of the <link linkend="act.concepts.worker_allocator"> <literal>Worker
         Allocator</literal></link> concept, a <literal>Threaded Worker Allocator</literal>

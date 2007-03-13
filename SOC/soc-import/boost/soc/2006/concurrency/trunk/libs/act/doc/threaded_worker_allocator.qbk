@@ -6,7 +6,7 @@ models of __threaded_worker__ concept. In Boost.Act,
 __concurrent_consumer_allocator_ model.
 
 [heading Refinement of]
-[*]__worker_allocator__
+* __worker_allocator__
 
 As a refinement of the __worker_allocator__ concept, a
 [concept Threaded Worker Allocator] must meet all of the requirements of the

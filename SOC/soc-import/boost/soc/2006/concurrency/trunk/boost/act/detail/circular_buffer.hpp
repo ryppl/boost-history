@@ -73,8 +73,28 @@ public:
     push_back( in_place( source ) );
   }
 
+  void push_back()
+  {
+    //push_back( in_place() );
+
+    // ToDo: Replace with call to factory version once factory is fixed
+    if( full() ) { throw; }
+      // ToDo: Throw exception or assert
+
+    Type* next_end;
+
+    next_end = ( ( end_m == pivot_end() )
+               ? raw_begin() + 1
+               : end_m + 1
+               );
+
+    new( next_end - 1 ) Type;
+
+    end_m = next_end;
+  }
+
   template< typename InPlaceFactory >
-  void push_back( InPlaceFactory factory )
+  void push_back( InPlaceFactory const& factory )
   {
     if( full() ) { throw; }
       // ToDo: Throw exception or assert
@@ -110,6 +130,9 @@ public:
 
   Type& front() { return *begin_m; }
   Type const& front() const { return *begin_m; }
+
+  Type& back() { return *( end_m - 1 ); }
+  Type const& back() const { return *( end_m - 1 ); }
 private:
   Type* raw_begin() { return reinterpret_cast< Type* >( &buffer_m ); }
   Type const* raw_begin() const { return reinterpret_cast<Type*>( &buffer_m ); }

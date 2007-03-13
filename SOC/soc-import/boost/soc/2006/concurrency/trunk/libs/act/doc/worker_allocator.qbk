@@ -31,34 +31,6 @@ indicated effects.
                                       any number of threads and which must be
                                       joined prior to the parent process's
                                       completion to be well-formed.]           ]
-[[`a.join(uw)`]         [(unused)]   [The current thread of execution waits for
-                                      `uw` to complete its execution. If
-                                      `a.join` has already been called with `uw`
-                                      as an argument, the function call returns
-                                      immediately without error. ['Note: This
-                                      function may only safely be called
-                                      multiple times with the same argument if
-                                      each successive call occurs in the same
-                                      thread of execution as the first. [*If
-                                      `a.join` is never called with `uw` as an
-                                      argument, there is no guarantee that the
-                                      thread will successfully complete
-                                      execution.]
-                                      --end note]
-                                     ]                                         ]
-[[`a.join(suw)`]        [(unused)]   [The current thread of execution waits for
-                                      `suw` to complete its execution. If
-                                      `a.join` has already been called with `uw`
-                                      as an argument, the function call returns
-                                      immediately without error. ['Note: This
-                                      function may safely be called from
-                                      different threads of execution. [*If
-                                      `a.join` is never called with `uw` as an
-                                      argument, there is no guarantee that the
-                                      thread will successfully complete
-                                      execution.]
-                                      --end note]
-                                     ]                                         ]
 [[`a.spawn_wild_worker(f)`][(unused)][`f` is executed in an
                                       implementation-defined thread. ['Note: `f`
                                       is guaranteed to complete its execution

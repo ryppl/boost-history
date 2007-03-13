@@ -302,9 +302,9 @@
             <code class="literal">Worker</code> type.</td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">w</span></code></td>
+<td><code class="code"><span class="identifier">cw</span></code></td>
 <td>Value
-            of type <code class="code"><span class="identifier">W</span><span class="special">&amp;</span></code>.</td>
+            of type <code class="code"><span class="identifier">W</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">A</span></code></td>
@@ -328,11 +328,11 @@
 </table></div>
 </div>
 <br class="table-break"><a name="act.concepts.worker.expression_requirements"></a><h5>
-<a name="id487682"></a>
+<a name="id487687"></a>
         <a href="concepts.html#act.concepts.worker.expression_requirements">Expression Requirements</a>
       </h5>
 <div class="table">
-<a name="id487700"></a><p class="title"><b>Table 7. Worker Requirements</b></p>
+<a name="id487705"></a><p class="title"><b>Table 7. Worker Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Worker Requirements">
 <colgroup>
 <col>
@@ -344,14 +344,25 @@
 <th>Return Type</th>
 <th>Pre/Post-Condition</th>
 </tr></thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td><code class="code"><span class="identifier">W</span><span class="special">(</span><span class="identifier">a</span><span class="special">,</span><span class="identifier">f</span><span class="special">)</span></code></td>
 <td> </td>
 <td>Creates
             an instance which executes <code class="code"><span class="identifier">f</span></code>
             in an implementation-specified thread of execution. A destructor is assumed.
             </td>
-</tr></tbody>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">cw</span><span class="special">.</span><span class="identifier">join</span><span class="special">()</span></code></td>
+<td>(unused)</td>
+<td>Post:
+            The function passed in during construction has completed its execution.
+            <span class="emphasis"><em>Note: This function may be called multiple times without error.
+            No matter how many times the function is called, the corresponding function
+            will have only been run once. --end note</em></span> </td>
+</tr>
+</tbody>
 </table></div>
 </div>
 <br class="table-break">
@@ -371,7 +382,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id487852"></a><p class="title"><b>Table 8. Worker Allocator Descriptive Variable Definitions</b></p>
+<a name="id487901"></a><p class="title"><b>Table 8. Worker Allocator Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Worker Allocator Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -419,7 +430,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id488075"></a><p class="title"><b>Table 9. Worker Allocator Requirements</b></p>
+<a name="id488125"></a><p class="title"><b>Table 9. Worker Allocator Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Worker Allocator Requirements">
 <colgroup>
 <col>
@@ -447,35 +458,6 @@
             <a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a>
             type which may be joined from any number of threads and which must be
             joined prior to the parent process's completion to be well-formed.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span><span class="special">(</span><span class="identifier">uw</span><span class="special">)</span></code></td>
-<td>(unused)</td>
-<td>The
-            current thread of execution waits for <code class="code"><span class="identifier">uw</span></code>
-            to complete its execution. If <code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span></code>
-            has already been called with <code class="code"><span class="identifier">uw</span></code>
-            as an argument, the function call returns immediately without error.
-            <span class="emphasis"><em>Note: This function may only safely be called multiple times
-            with the same argument if each successive call occurs in the same thread
-            of execution as the first. <span class="bold"><strong>If <code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span></code>
-            is never called with <code class="code"><span class="identifier">uw</span></code>
-            as an argument, there is no guarantee that the thread will successfully
-            complete execution.</strong></span> --end note</em></span> </td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span><span class="special">(</span><span class="identifier">suw</span><span class="special">)</span></code></td>
-<td>(unused)</td>
-<td>The
-            current thread of execution waits for <code class="code"><span class="identifier">suw</span></code>
-            to complete its execution. If <code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span></code>
-            has already been called with <code class="code"><span class="identifier">uw</span></code>
-            as an argument, the function call returns immediately without error.
-            <span class="emphasis"><em>Note: This function may safely be called from different threads
-            of execution. <span class="bold"><strong>If <code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">join</span></code>
-            is never called with <code class="code"><span class="identifier">uw</span></code>
-            as an argument, there is no guarantee that the thread will successfully
-            complete execution.</strong></span> --end note</em></span> </td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">a</span><span class="special">.</span><span class="identifier">spawn_wild_worker</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span></code></td>
@@ -522,12 +504,10 @@
         Worker Allocator</code></a> concept.
       </p>
 <a name="act.concepts.threaded_worker.refinement_of"></a><h5>
-<a name="id502818"></a>
+<a name="id488487"></a>
         <a href="concepts.html#act.concepts.threaded_worker.refinement_of">Refinement of</a>
       </h5>
-<p>
-        <span class="bold"><strong></strong></span><a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a>
-      </p>
+<div class="itemizedlist"><ul type="disc"><li><a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a></li></ul></div>
 <p>
         As a refinement of the <a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a>
         concept, a <code class="literal">Threaded Worker</code> must meet all of the requirements
@@ -550,14 +530,11 @@
         model.
       </p>
 <a name="act.concepts.threaded_worker_allocator.refinement_of"></a><h5>
-<a name="id502968"></a>
+<a name="id502768"></a>
         <a href="concepts.html#act.concepts.threaded_worker_allocator.refinement_of">Refinement
         of</a>
       </h5>
-<p>
-        <span class="bold"><strong></strong></span><a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator">
-        <code class="literal">Worker Allocator</code></a>
-      </p>
+<div class="itemizedlist"><ul type="disc"><li><a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator"> <code class="literal">Worker Allocator</code></a></li></ul></div>
 <p>
         As a refinement of the <a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator"> <code class="literal">Worker
         Allocator</code></a> concept, a <code class="literal">Threaded Worker Allocator</code>

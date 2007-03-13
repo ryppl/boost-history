@@ -6,11 +6,17 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_CONSUMER_ALLOCATOR_HPP
-#define BOOST_ACT_CONSUMER_ALLOCATOR_HPP
+#ifndef BOOST_ACT_WORKER_ALLOCATOR_THREAD_ALLOCATOR_BASIC_THREAD_ALLOC_FWD_HPP
+#define BOOST_ACT_WORKER_ALLOCATOR_THREAD_ALLOCATOR_BASIC_THREAD_ALLOC_FWD_HPP
 
-#include <boost/act/consumer_allocator/concurrent_consumer_allocator.hpp>
-#include <boost/act/consumer_allocator/immediate_consumer_allocator.hpp>
-#include <boost/act/consumer_allocator/consumer_chooser.hpp>
+namespace boost
+{
+namespace act
+{
+
+class basic_thread_allocator;
+
+}
+}
 
 #endif

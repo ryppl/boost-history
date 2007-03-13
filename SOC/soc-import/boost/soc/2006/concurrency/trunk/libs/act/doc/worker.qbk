@@ -13,7 +13,7 @@ effects.
 [table Worker Descriptive Variable Definitions
 [[Variable]       [Definition]                                                 ]
 [[`W`]            [A =Worker= type.]                                           ]
-[[`w`]            [Value of type `W&`.]                                        ]
+[[`cw`]           [Value of type `W const&`.]                                  ]
 [[`A`]            [An allocator type which may be used in conjunction with
                    =Worker= `w`. ['Note: Such allocator types are
                    implementation-specified with respect to models of the
@@ -30,6 +30,12 @@ effects.
 [[`W(a,f)`]  []           [Creates an instance which executes `f` in an
                            implementation-specified thread of execution. A
                            destructor is assumed.
+                          ]                                                    ]
+[[`cw.join()`][(unused)]  [Post: The function passed in during construction has
+                           completed its execution. [tablenote This function may
+                           be called multiple times without error. No matter how
+                           many times the function is called, the corresponding
+                           function will have only been run once.]
                           ]                                                    ]
 ]
 

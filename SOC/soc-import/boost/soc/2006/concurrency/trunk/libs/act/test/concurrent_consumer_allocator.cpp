@@ -13,6 +13,8 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 
+#include "consumer_allocator_tester.hpp"
+
 boost::mutex global_mutex;
 boost::condition global_condition;
 
@@ -34,6 +36,8 @@ struct test_fun
 
 struct execute
 {
+  typedef void result_type;
+
   void operator ()( test_fun& target ) const
   {
     target();
@@ -44,27 +48,33 @@ void test_scoped_consumer_allocator()
 {
   using namespace boost::act;
 
+  test_consumer_allocator< concurrent_consumer_allocator<> >();
+
   typedef concurrent_consumer_allocator<> allocator_type;
-  typedef allocator_type::scoped_consumer< test_fun
-                                         , execute
+  typedef allocator_type::scoped_consumer< restraint< is< test_fun > >
+                                         , processor< execute >
                                          >
                                          scoped_consumer_type;
 
   int test_value = 0;
 
+  allocator_type::tracker<> tracker;
+
   {
     boost::mutex::scoped_lock lock( global_mutex );
     scoped_consumer_type consumer;
 
-    consumer.consume( test_fun( scoped_consumer_value ) );
+    tracker = consumer.tracked_consume( test_fun( scoped_consumer_value ) );
 
     global_condition.wait( lock );
 
     test_value = scoped_consumer_value;
   }
 
+  tracker.wait();
+
   if( test_value != 1 )
-    BOOST_ERROR( "basic_worker_allocator general thread execution failure." );
+    BOOST_ERROR( "concurrent_consumer_allocator scoped_consumer general execution failure." );
 }
 
 int main()

@@ -50,6 +50,13 @@ BOOST_ACT_DETAIL_UNSPECIFIED_FALSE_IMPL                                        \
 , BOOST_ACT_DETAIL_UNSPECIFIED_BOOL_NO_TYPENAME                                \
 )
 
+#define BOOST_ACT_DETAIL_UNSPECIFIED_BOOL_VALUE( tag, value )                  \
+BOOST_ACT_DETAIL_UNSPECIFIED_BOOL_VALUE_IMPL                                   \
+( tag                                                                          \
+, value                                                                        \
+, BOOST_ACT_DETAIL_UNSPECIFIED_BOOL_NO_TYPENAME                                \
+)
+
 #define BOOST_ACT_DETAIL_UNSPECIFIED_BOOL_T( tag )                             \
 BOOST_ACT_DETAIL_UNSPECIFIED_BOOL_IMPL                                         \
 ( tag                                                                          \
@@ -65,6 +72,13 @@ BOOST_ACT_DETAIL_UNSPECIFIED_TRUE_IMPL                                         \
 #define BOOST_ACT_DETAIL_UNSPECIFIED_FALSE_T( tag )                            \
 BOOST_ACT_DETAIL_UNSPECIFIED_FALSE_IMPL                                        \
 ( tag                                                                          \
+, typename                                                                     \
+)
+
+#define BOOST_ACT_DETAIL_UNSPECIFIED_BOOL_VALUE_T( tag, value )                \
+BOOST_ACT_DETAIL_UNSPECIFIED_BOOL_VALUE_IMPL                                   \
+( tag                                                                          \
+, value                                                                        \
 , typename                                                                     \
 )
 
@@ -94,6 +108,11 @@ static_cast                                                                    \
   >                                                                            \
   ::type                                                                       \
 >( 0 )
+
+#define BOOST_ACT_DETAIL_UNSPECIFIED_BOOL_VALUE_IMPL( tag, value, q_typename ) \
+( ( value ) ? BOOST_ACT_DETAIL_UNSPECIFIED_TRUE_IMPL( tag, q_typename )        \
+            : BOOST_ACT_DETAIL_UNSPECIFIED_FALSE_IMPL( tag, q_typename )       \
+)
 
 }
 }

@@ -6,7 +6,7 @@ models of this concept may be found as members of models of the
 __threaded_worker_allocator__ concept.
 
 [heading Refinement of]
-[*]__worker__
+* __worker__
 
 As a refinement of the __worker__ concept, a [concept Threaded Worker] must meet
 all of the requirements of the __worker__ concept along with the aformentioned
