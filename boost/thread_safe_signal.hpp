@@ -24,10 +24,6 @@
 #ifndef _THREAD_SAFE_SIGNAL_HPP
 #define _THREAD_SAFE_SIGNAL_HPP
 
-#ifndef BOOST_SIGNALS_MAX_ARGS
-#define BOOST_SIGNALS_MAX_ARGS 10
-#endif
-
 #define BOOST_SIGNALS_NAMESPACE signalslib
 
 #include <algorithm>
