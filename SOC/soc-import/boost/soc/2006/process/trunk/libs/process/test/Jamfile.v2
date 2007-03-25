@@ -64,9 +64,10 @@ test-suite process :
         ]
 
     [ run arguments_test.cpp
-        : helpers
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        :
+        : <dependency>helpers
+          <library>$(BOOST_ROOT)//unit_test_framework
           <library>$(BOOST_ROOT)//filesystem
         ]
 
@@ -95,15 +96,17 @@ test-suite process :
         ]
 
     [ run stream_behavior_test.cpp
-        : helpers
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        :
+        : <dependency>helpers
+          <library>$(BOOST_ROOT)//unit_test_framework
         ]
 
     [ run executable_test.cpp
-        : helpers
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        :
+        : <dependency>helpers
+          <library>$(BOOST_ROOT)//unit_test_framework
           <library>$(BOOST_ROOT)//filesystem
         ]
 
@@ -126,9 +129,10 @@ test-suite process :
         ]
 
     [ run launch_test.cpp
-        : helpers
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        :
+        : <dependency>helpers
+          <library>$(BOOST_ROOT)//unit_test_framework
           <library>$(BOOST_ROOT)//filesystem
         ]
 
@@ -139,16 +143,18 @@ test-suite process :
         ]
 
     [ run status_test.cpp
-        : helpers
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        :
+        : <dependency>helpers
+          <library>$(BOOST_ROOT)//unit_test_framework
           <library>$(BOOST_ROOT)//filesystem
         ]
 
     [ run pipeline_test.cpp
-        : helpers
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        :
+        : <dependency>helpers
+          <library>$(BOOST_ROOT)//unit_test_framework
           <library>$(BOOST_ROOT)//filesystem
         ]
 
@@ -159,16 +165,18 @@ test-suite process :
         ]
 
     [ run posix_launch_test.cpp
-        : helpers
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        :
+        : <dependency>helpers
+          <library>$(BOOST_ROOT)//unit_test_framework
           <library>$(BOOST_ROOT)//filesystem
         ]
 
     [ run posix_status_test.cpp
-        : helpers
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        :
+        : <dependency>helpers
+          <library>$(BOOST_ROOT)//unit_test_framework
           <library>$(BOOST_ROOT)//filesystem
         ]
 
@@ -179,9 +187,10 @@ test-suite process :
         ]
 
     [ run win32_launch_test.cpp
-        : helpers
         :
-        : <library>$(BOOST_ROOT)//unit_test_framework
+        :
+        : <dependency>helpers
+          <library>$(BOOST_ROOT)//unit_test_framework
           <library>$(BOOST_ROOT)//filesystem
         ]
 
