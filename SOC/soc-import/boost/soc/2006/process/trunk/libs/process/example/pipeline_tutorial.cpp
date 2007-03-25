@@ -12,16 +12,16 @@
 // Helper code for the "Pipeline tutorial" section in the documentation.
 //
 
-// quickbook:begin(code)
+//[pipeline_tutorial_all
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <string>
 
-// quickbook:begin(include-headers)
+//[pipeline_tutorial_include_headers
 #include <boost/process.hpp>
 namespace bp = ::boost::process;
-// quickbook:end(include-headers)
+//]
 
 int
 main(int argc, char* argv[])
@@ -38,14 +38,14 @@ if (!file) {
     return EXIT_FAILURE;
 }
 
-// quickbook:begin(context)
+//[pipeline_tutorial_context
 bp::context ctxin, ctxout;
 ctxin.m_stdin_behavior = bp::capture_stream();
 ctxout.m_stdout_behavior = bp::inherit_stream();
 ctxout.m_stderr_behavior = bp::redirect_stream_to_stdout();
-// quickbook:end(context)
+//]
 
-// quickbook:begin(command-lines)
+//[pipeline_tutorial_command_lines
 std::string exe1 = bp::find_executable_in_path("cut");
 std::vector< std::string > args1;
 args1.push_back("cut");
@@ -61,35 +61,35 @@ std::string exe3 = bp::find_executable_in_path("sed");
 std::vector< std::string > args3;
 args3.push_back("sed");
 args3.push_back("s,$,<<<,");
-// quickbook:end(command-lines)
+//]
 
-// quickbook:begin(addition)
+//[pipeline_tutorial_addition
 std::vector< bp::pipeline_entry > entries;
 entries.push_back(bp::pipeline_entry(exe1, args1, ctxin));
 entries.push_back(bp::pipeline_entry(exe2, args2, ctxout));
 entries.push_back(bp::pipeline_entry(exe3, args3, ctxout));
-// quickbook:end(addition)
+//]
 
-// quickbook:begin(children)
+//[pipeline_tutorial_children
 bp::children cs = bp::launch_pipeline(entries);
-// quickbook:end(children)
+//]
 
-// quickbook:begin(feed-stdin)
+//[pipeline_tutorial_feed_stdin
 bp::postream& os = cs[0].get_stdin();
 std::string line;
 while (std::getline(file, line))
     os << line << std::endl;
 os.close();
-// quickbook:end(feed-stdin)
+//]
 
-// quickbook:begin(wait)
+//[pipeline_tutorial_wait
 const bp::status s = bp::wait_children(cs);
-// quickbook:end(wait)
+//]
 
-// quickbook:begin(parse-status)
+//[pipeline_tutorial_parse_status
 return (s.m_exit_status && s.m_exit_status.get() == EXIT_SUCCESS) ?
     EXIT_SUCCESS : EXIT_FAILURE;
-// quickbook:end(parse-status)
+//]
 
 }
-// quickbook:end(code)
+//]

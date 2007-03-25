@@ -13,7 +13,7 @@
 // line and why such cases can be useful.
 //
 
-// quickbook:begin(code)
+//[command_lines_all
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -145,4 +145,4 @@ main(int argc, char* argv[])
 
     return EXIT_SUCCESS;
 }
-// quickbook:end(code)
+//]

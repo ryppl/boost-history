@@ -13,7 +13,7 @@
 // environment variables.
 //
 
-// quickbook:begin(code)
+//[environment_all
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -101,4 +101,4 @@ main(int argc, char* argv[])
 
     return EXIT_SUCCESS;
 }
-// quickbook:end(code)
+//]

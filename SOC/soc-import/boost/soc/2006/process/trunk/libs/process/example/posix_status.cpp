@@ -18,7 +18,7 @@
 #include <boost/process/config.hpp>
 #if defined(BOOST_PROCESS_POSIX_API)
 
-// quickbook:begin(code)
+//[posix_status_all
 extern "C" {
 #include <unistd.h>
 }
@@ -95,7 +95,7 @@ main(int argc, char* argv[])
 
     return s.m_exit_status ? s.m_exit_status.get() : EXIT_FAILURE;
 }
-// quickbook:end(code)
+//]
 
 #else // !defined(BOOST_PROCESS_POSIX_API)
 

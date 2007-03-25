@@ -134,7 +134,8 @@ uses the D-BUS daemon application because it allows to print useful
 information to two non-standard streams (3 and 4 in the code below).  The
 example utility captures these messages and provides them to the user:
 
-[include ../example/posix_communication.cpp c++ code]
+[import ../example/posix_communication.cpp]
+[posix_communication_all]
 
 [endsect]
 
@@ -215,7 +216,8 @@ the regular status class and includes additional methods to query all
 additional details.  It can be used anywhere a `status` object is created
 thanks to its conversion constructor.  For example:
 
-[include ../example/posix_status.cpp c++ code]
+[import ../example/posix_status.cpp]
+[posix_status_all]
 
 [endsect]
 
@@ -248,7 +250,8 @@ provided by Win32 operating systems to start a GUI process with hints on
 how to create the main window.  The example passes the suggested window
 position as well as size and then waits until the new process terminates.
 
-[include ../example/win32_startup.cpp c++ code]
+[import ../example/win32_startup.cpp]
+[win32_startup_all]
 
 [endsect]
 
@@ -299,7 +302,8 @@ process' and primary thread's identifier and handle.  It relies on the
 Win32-specific launcher and child classes to be able to access this
 information:
 
-[include ../example/win32_child.cpp c++ code]
+[import ../example/win32_child.cpp]
+[win32_child_all]
 
 [endsect]
 

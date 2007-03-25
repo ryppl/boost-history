@@ -13,15 +13,15 @@
 // documentation.
 //
 
-// quickbook:begin(code)
+//[single_process_tutorial_all
 #include <cstdlib>
 #include <iostream>
 #include <string>
 
-// quickbook:begin(include-headers)
+//[single_process_tutorial_include_headers
 #include <boost/process.hpp>
 namespace bp = ::boost::process;
-// quickbook:end(include-headers)
+//]
 
 int
 main(int argc, char* argv[])
@@ -33,44 +33,44 @@ if (argc < 2) {
 }
 std::string dir = argv[1];
 
-// quickbook:begin(command-line)
+//[single_process_tutorial_command_line
 std::string exec = bp::find_executable_in_path("svn");
 std::vector< std::string > args;
 args.push_back("svn");
 args.push_back("update");
-// quickbook:end(command-line)
+//]
 
-// quickbook:begin(context)
+//[single_process_tutorial_context
 bp::context ctx;
 ctx.m_stdout_behavior = bp::capture_stream();
 ctx.m_stderr_behavior = bp::redirect_stream_to_stdout();
 ctx.m_work_directory = dir;
-// quickbook:end(context)
+//]
 
-// quickbook:begin(child-launch)
+//[single_process_tutorial_child_launch
 bp::child c = bp::launch(exec, args, ctx);
-// quickbook:end(child-launch)
+//]
 
-// quickbook:begin(get-output)
+//[single_process_tutorial_get_output
 bp::pistream& is = c.get_stdout();
 std::string line;
 while (std::getline(is, line))
     std::cout << "Got line from child: " << line << std::endl;
-// quickbook:end(get-output)
+//]
 
-// quickbook:begin(wait)
+//[single_process_tutorial_wait
 const bp::status s = c.wait();
-// quickbook:end(wait)
+//]
 
-// quickbook:begin(parse-status)
+//[single_process_tutorial_parse_status
 if (s.m_exit_status && s.m_exit_status.get() == EXIT_SUCCESS)
     std::cout << "Directory updated successfully." << std::endl;
 else
     std::cout << "Update failed." << std::endl;
 std::cout << std::endl;
-// quickbook:end(parse-status)
+//]
 
 return EXIT_SUCCESS;
 
 }
-// quickbook:end(code)
+//]

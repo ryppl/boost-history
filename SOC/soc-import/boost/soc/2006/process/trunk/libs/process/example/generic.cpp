@@ -14,7 +14,7 @@
 // them bringing each one up to date.
 //
 
-// quickbook:begin(code)
+//[generic_all
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -99,4 +99,4 @@ main(int argc, char* argv[])
 
     return EXIT_SUCCESS;
 }
-// quickbook:end(code)
+//]

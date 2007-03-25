@@ -18,7 +18,7 @@
 #include <boost/process/config.hpp>
 #if defined(BOOST_PROCESS_WIN32_API)
 
-// quickbook:begin(code)
+//[win32_child_all
 extern "C" {
 #include <windows.h>
 }
@@ -90,7 +90,7 @@ main(int argc, char* argv[])
 
     return exitstatus;
 }
-// quickbook:end(code)
+//]
 
 #else // !defined(BOOST_PROCESS_WIN32_API)
 
