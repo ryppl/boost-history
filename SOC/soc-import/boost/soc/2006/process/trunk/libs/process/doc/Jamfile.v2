@@ -9,6 +9,8 @@
 # http://www.boost.org/LICENSE_1_0.txt.)
 #
 
+import path ;
+
 using doxygen ;
 using quickbook ;
 
@@ -20,11 +22,11 @@ if ! $(BOOST_ROOT)
 doxygen autodoc
     :
         ../../../boost/process.hpp
-        [ glob ../../../boost/process/*.hpp ]
+        [ path.glob ../../../boost/process : *.hpp ]
 
         # Enable the following to include documentation for the code
         # in the detail namespace.
-        #[ glob ../../../boost/process/detail/*.hpp ]
+        #[ path.glob ../../../boost/process/detail : *.hpp ]
     :
         <doxygen:param>"PREDEFINED=\"BOOST_PROCESS_DOXYGEN\""
 
