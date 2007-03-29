@@ -6,6 +6,8 @@
 
 #include "random.hpp"
 
+#include <boost/numeric/ublas/vector_proxy.hpp>
+#include <boost/numeric/ublas/matrix_proxy.hpp>
 #include <boost/numeric/bindings/traits/ublas_vector.hpp>
 #include <boost/numeric/bindings/traits/ublas_matrix.hpp>
 #include <boost/numeric/bindings/traits/std_vector.hpp>
@@ -15,6 +17,7 @@
 #include <complex>
 #include <iostream>
 #include <limits>
+#include <cmath>
 
 
 
@@ -24,6 +27,38 @@ void randomize(V& v) {
    for (typename V::size_type i=0; i<v.size(); ++i)
       v[i] = random_value< typename V::value_type >() ;
 } // randomize()
+
+
+float abs_sum_value( float const& f ) {
+  using namespace std ;
+  return abs(f) ;
+}
+
+double abs_sum_value( double const& f ) {
+  using namespace std ;
+  return abs(f) ;
+}
+
+float abs_sum_value( std::complex< float > const& f ) {
+  using namespace std ;
+  return abs(f.real()) + abs(f.imag()) ;
+}
+
+double abs_sum_value( std::complex< double > const& f ) {
+  using namespace std ;
+  return abs(f.real()) + abs(f.imag()) ;
+}
+
+template <typename V>
+typename boost::numeric::bindings::traits::type_traits<typename V::value_type>::real_type abs_sum( V const& v) {
+  typedef typename boost::numeric::bindings::traits::type_traits<typename V::value_type>::real_type real_type ;
+
+  real_type sum( 0.0 ) ;
+  for ( typename V::size_type i=0; i<v.size(); ++i ) {
+    sum += abs_sum_value( v[i] ) ;
+  }
+  return sum ;
+}
 
 
 // Blas operations using one vector.
@@ -51,10 +86,16 @@ struct OneVector {
 
      // Test blas routines and compare with reference
      real_type nrm = nrm2( v );
-     if ( std::abs(nrm - norm_2(v_ref_)) > std::numeric_limits< real_type >::epsilon() * norm_2(v_ref_)) return 255 ;
+     if ( std::abs(nrm - norm_2(v_ref_)) > std::numeric_limits< real_type >::epsilon() * norm_2(v_ref_)) {
+       std::cout << "nrm2 : " << std::abs(nrm - norm_2(v_ref_)) << " > " << std::numeric_limits< real_type >::epsilon() * norm_2(v_ref_) << std::endl ;
+       return 255 ;
+     }
 
      nrm = asum( v );
-     if ( std::abs(nrm - norm_1(v_ref_)) > std::numeric_limits< real_type >::epsilon() * norm_1(v_ref_)) return 255 ;
+     if ( std::abs(nrm - abs_sum(v_ref_)) > std::numeric_limits< real_type >::epsilon() * abs_sum(v_ref_)) {
+       std::cout << "asum : " << std::abs(nrm - abs_sum(v_ref_)) << " > " << std::numeric_limits< real_type >::epsilon() * abs_sum(v_ref_) << std::endl ;
+       return 255 ;
+     }
 
      scal( value_type(2.0), v );
      for (typename V::size_type i=0; i<v_ref_.size(); ++i)
@@ -122,14 +163,20 @@ struct TwoVectorOperations< float, V>
      copy_vector(w);
 
      // Test blas routines
-     value_type prod = dot( v_, w );
-     if ( std::abs(prod - inner_prod( v1_ref_, v2_ref_ ))
+     value_type prod = dot( this->v_, w );
+     if ( std::abs(prod - inner_prod( this->v1_ref_, this->v2_ref_ ))
           > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
-     axpy( value_type(2.0), v_, w );
-     for (size_t i=0; i<size(); ++i)
-        if ( std::abs(w[i] - (v2_ref_(i) + value_type(2.0)*v1_ref_(i)))
+     axpy( value_type(2.0), this->v_, w );
+     for (size_t i=0; i<this->size(); ++i)
+        if ( std::abs(w[i] - (this->v2_ref_(i) + value_type(2.0)*this->v1_ref_(i)))
           > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+
+     scal( value_type(0.0), w ) ;
+     copy( this->v_, w ) ;
+     for (size_t i=0; i<this->size(); ++i) {
+        if ( std::abs( w[i] - this->v_[i] ) != 0.0 ) return 255 ;
+     }
 
      return 0;
   }
@@ -155,14 +202,21 @@ struct TwoVectorOperations< double, V>
      copy_vector( w );
 
      // Test blas routines
-     value_type prod = dot( v_, w );
-     if ( std::abs(prod - inner_prod( v1_ref_, v2_ref_ ))
+     value_type prod = dot( this->v_, w );
+     if ( std::abs(prod - inner_prod( this->v1_ref_, this->v2_ref_ ))
           > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
-     axpy( value_type(2.0), v_, w );
-     for (size_t i=0; i<size(); ++i)
-        if ( std::abs(w[i] - (v2_ref_(i) + value_type(2.0)*v1_ref_(i)))
+     axpy( value_type(2.0), this->v_, w );
+     for (size_t i=0; i<this->size(); ++i)
+        if ( std::abs(w[i] - (this->v2_ref_(i) + value_type(2.0)*this->v1_ref_(i)))
           > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+
+     copy_vector( w ) ;
+     scal( value_type(-1.0), w ) ;
+     ::boost::numeric::bindings::blas::copy( this->v_, w ) ;
+     for (size_t i=0; i<this->size(); ++i) {
+        if ( w[i] != this->v_[i] ) return 255 ;
+     }
 
      return 0;
   }
@@ -189,18 +243,24 @@ struct TwoVectorOperations< std::complex<float>, V>
      copy_vector( w );
 
      // Test blas routines
-     value_type prod = dotc( v_, w );
-     if ( std::abs(prod - inner_prod( conj(v1_ref_), v2_ref_ ))
+     value_type prod = dotc( this->v_, w );
+     if ( std::abs(prod - inner_prod( conj(this->v1_ref_), this->v2_ref_ ))
           > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
-     prod = dotu( v_, w );
-     if ( std::abs(prod - inner_prod( v1_ref_, v2_ref_ ))
+     prod = dotu( this->v_, w );
+     if ( std::abs(prod - inner_prod( this->v1_ref_, this->v2_ref_ ))
           > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
-     axpy( value_type(2.0), v_, w );
-     for (size_t i=0; i<size(); ++i)
-        if ( std::abs(w[i] - (v2_ref_(i) + value_type(2.0)*v1_ref_(i)))
+     axpy( value_type(2.0), this->v_, w );
+     for (size_t i=0; i<this->size(); ++i)
+        if ( std::abs(w[i] - (this->v2_ref_(i) + value_type(2.0)*this->v1_ref_(i)))
           > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+
+     scal( value_type(0.0), w ) ;
+     copy( this->v_, w ) ;
+     for (size_t i=0; i<this->size(); ++i) {
+        if ( std::abs( w[i] - this->v_[i] ) != 0.0 ) return 255 ;
+     }
 
      return 0;
   }
@@ -227,18 +287,24 @@ struct TwoVectorOperations< std::complex<double>, V>
      copy_vector( w );
 
      // Test blas routines
-     value_type prod = dotc( v_, w );
-     if ( std::abs(prod - inner_prod( conj(v1_ref_), v2_ref_ ))
+     value_type prod = dotc( this->v_, w );
+     if ( std::abs(prod - inner_prod( conj(this->v1_ref_), this->v2_ref_ ))
           > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
-     prod = dotu( v_, w );
-     if ( std::abs(prod - inner_prod( v1_ref_, v2_ref_ ))
+     prod = dotu( this->v_, w );
+     if ( std::abs(prod - inner_prod( this->v1_ref_, this->v2_ref_ ))
           > std::numeric_limits< real_type >::epsilon() * std::abs(prod)) return 255 ;
 
-     axpy( value_type(2.0), v_, w );
-     for (size_t i=0; i<size(); ++i)
-        if ( std::abs(w[i] - (v2_ref_(i) + value_type(2.0)*v1_ref_(i)))
+     axpy( value_type(2.0), this->v_, w );
+     for (size_t i=0; i<this->size(); ++i)
+        if ( std::abs(w[i] - (this->v2_ref_(i) + value_type(2.0)*this->v1_ref_(i)))
           > std::numeric_limits< real_type >::epsilon() * std::abs(w[i])) return 255 ;
+
+     scal( value_type(0.0), w ) ;
+     copy( this->v_, w ) ;
+     for (size_t i=0; i<this->size(); ++i) {
+        if ( std::abs( w[i] - this->v_[i] ) != 0.0 ) return 255 ;
+     }
 
      return 0;
   }

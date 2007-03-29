@@ -75,16 +75,19 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
     static int leading_dimension (matrix_type& m) {
       // g++ 2.95.4 and 3.0.4 (with -pedantic) dislike 
       //   identifier_type::functor_type::size2()
-      return functor_t::size_m (m.size1(), m.size2());
+      //return functor_t::size_m (m.size1(), m.size2());
+      return detail::ublas_ordering<orientation_category>::leading_dimension( m ) ;
     }
 
     // stride1 == distance (m (i, j), m (i+1, j)) 
     static int stride1 (matrix_type& m) { 
-      return functor_t::one1 (m.size1(), m.size2());
+      //return functor_t::one1 (m.size1(), m.size2());
+      return detail::ublas_ordering<orientation_category>::stride1( m ) ;
     } 
     // stride2 == distance (m (i, j), m (i, j+1)) 
     static int stride2 (matrix_type& m) { 
-      return functor_t::one2 (m.size1(), m.size2());
+      //return functor_t::one2 (m.size1(), m.size2());
+      return detail::ublas_ordering<orientation_category>::stride2( m ) ;
     }
   }; 
 
