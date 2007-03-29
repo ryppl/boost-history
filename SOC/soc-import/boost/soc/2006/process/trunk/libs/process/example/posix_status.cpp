@@ -78,22 +78,22 @@ main(int argc, char* argv[])
     // method returns a status one.
     //
     const bp::posix_status s = c.wait();
-    if (s.m_exit_status) {
-        std::cout << "Program returned exit code " << s.m_exit_status.get()
+    if (s.exited()) {
+        std::cout << "Program returned exit code " << s.exit_status()
                   << std::endl;
-    } else if (s.m_term_signal) {
-        std::cout << "Program received signal " << s.m_term_signal.get()
+    } else if (s.signaled()) {
+        std::cout << "Program received signal " << s.term_signal()
                   << std::endl;
-        if (s.m_dumped_core && s.m_dumped_core.get())
+        if (s.dumped_core())
             std::cout << "Program also dumped core" << std::endl;
-    } else if (s.m_stop_signal) {
-        std::cout << "Program stopped by signal" << s.m_stop_signal.get()
+    } else if (s.stopped()) {
+        std::cout << "Program stopped by signal" << s.stop_signal()
                   << std::endl;
     } else {
         std::cout << "Unknown termination reason" << std::endl;
     }
 
-    return s.m_exit_status ? s.m_exit_status.get() : EXIT_FAILURE;
+    return s.exited() ? s.exit_status() : EXIT_FAILURE;
 }
 //]
 

@@ -96,18 +96,18 @@ main(int argc, char* argv[])
     // Waits until the process exits and parses its termination status.
     //
     const bp::status s = c.wait();
-    if (s.m_exit_status) {
-        if (s.m_exit_status.get() == EXIT_SUCCESS) {
+    if (s.exited()) {
+        if (s.exit_status() == EXIT_SUCCESS) {
             std::cout << "D-BUS daemon's address is: " << address << std::endl;
             std::cout << "D-BUS daemon's PID is: " << pid << std::endl;
         } else
             std::cout << "D-BUS daemon returned error condition: "
-                      << s.m_exit_status.get() << std::endl;
+                      << s.exit_status() << std::endl;
     } else {
         std::cout << "D-BUS daemon terminated abnormally" << std::endl;
     }
 
-    return s.m_exit_status ? s.m_exit_status.get() : EXIT_FAILURE;
+    return s.exited() ? s.exit_status() : EXIT_FAILURE;
 }
 //]
 

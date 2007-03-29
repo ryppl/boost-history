@@ -25,7 +25,6 @@
 #   error "Unsupported platform."
 #endif
 
-#include <boost/optional.hpp>
 #include <boost/process/status.hpp>
 
 namespace boost {
@@ -56,57 +55,117 @@ public:
     posix_status(const status& s);
 
     //!
-    //! \brief POSIX-specific codification of the exit status.
+    //! \brief Returns whether the process exited due to an external
+    //!        signal.
     //!
-    //! POSIX-specific codification of the exit status as returned by
-    //! the wait() family of calls.  This should not generally be
-    //! needed but may come helpful for those situations that were not
-    //! considered by this interface.
+    //! Returns whether the process exited due to an external signal.
+    //! The result is always false in Win32 systems.
     //!
-    const int m_flags;
+    bool signaled(void) const;
 
     //!
-    //! \brief The signal that terminated the process.
+    //! \brief If signaled, returns the terminating signal code.
     //!
-    //! When defined, this member contains the signal number that caused
-    //! the process to terminate.  This is undefined if the process did
-    //! not terminate because of the reception of a signal.
+    //! If the process was signaled, returns the terminating signal code.
+    //! Cannnot be called under Win32 because the preconditions will not
+    //! ever be met.
     //!
-    const boost::optional< int > m_term_signal;
+    //! \pre signaled() is true.
+    //!
+    int term_signal(void) const;
 
     //!
-    //! \brief Whether the process dumped core or not.
+    //! \brief If signaled, returns whether the process dumped core.
     //!
-    //! When defined, indicates if the process dumped a core image or not.
-    //! Because a core image is only dumped upon the reception of some
-    //! specific signals, this member is only defined when any signal is
-    //! received by the process and it terminates because of it.
+    //! If the process was signaled, returns whether the process
+    //! produced a core dump.
+    //! Cannnot be called under Win32 because the preconditions will not
+    //! ever be met.
     //!
-    const boost::optional< bool > m_dumped_core;
+    //! \pre signaled() is true.
+    //!
+    bool dumped_core(void) const;
 
     //!
-    //! \brief The signal that stopped the process.
+    //! \brief Returns whether the process was stopped by an external
+    //!        signal.
     //!
-    //! When defined, contains the signal number that caused the process
-    //! to stop execution.  This is undefined if the process was not
-    //! stopped.
+    //! Returns whether the process was stopped by an external signal.
+    //! The result is always false in Win32 systems.
     //!
-    const boost::optional< int > m_stop_signal;
+    bool stopped(void) const;
+
+    //!
+    //! \brief If stpped, returns the stop signal code.
+    //!
+    //! If the process was stopped, returns the stop signal code.
+    //! Cannnot be called under Win32 because the preconditions will not
+    //! ever be met.
+    //!
+    //! \pre signaled() is true.
+    //!
+    int stop_signal(void) const;
 };
 
 // ------------------------------------------------------------------------
 
 inline
 posix_status::posix_status(const status& s) :
-    status(s),
-    m_flags(s.m_flags),
-    m_term_signal(WIFSIGNALED(m_flags) ? WTERMSIG(m_flags) :
-                                         boost::optional< int >()),
-    m_dumped_core(WIFSIGNALED(m_flags) ? WCOREDUMP(m_flags) :
-                                         boost::optional< bool >()),
-    m_stop_signal(WIFSTOPPED(m_flags) ? WSTOPSIG(m_flags) :
-                                        boost::optional< int >())
+    status(s)
 {
+}
+
+// ------------------------------------------------------------------------
+
+inline
+bool
+posix_status::signaled(void)
+    const
+{
+    return WIFSIGNALED(m_flags);
+}
+
+// ------------------------------------------------------------------------
+
+inline
+int
+posix_status::term_signal(void)
+    const
+{
+    BOOST_ASSERT(signaled());
+    return WTERMSIG(m_flags);
+}
+
+// ------------------------------------------------------------------------
+
+inline
+bool
+posix_status::dumped_core(void)
+    const
+{
+    BOOST_ASSERT(signaled());
+    return WCOREDUMP(m_flags);
+}
+
+// ------------------------------------------------------------------------
+
+inline
+bool
+posix_status::stopped(void)
+    const
+{
+    return WIFSTOPPED(m_flags);
+}
+
+// ------------------------------------------------------------------------
+
+inline
+int
+posix_status::stop_signal(void)
+    const
+{
+    BOOST_ASSERT(stopped());
+    return WSTOPSIG(m_flags);
 }
 
 // ------------------------------------------------------------------------

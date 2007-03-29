@@ -90,8 +90,8 @@ test_startupinfo(void)
     portable_getline(c1.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwYSize = 0");
     const bp::status s1 = c1.wait();
-    BOOST_REQUIRE(s1.m_exit_status);
-    BOOST_CHECK_EQUAL(s1.m_exit_status.get(), EXIT_SUCCESS);
+    BOOST_REQUIRE(s1.exited());
+    BOOST_CHECK_EQUAL(s1.exit_status(), EXIT_SUCCESS);
 
     STARTUPINFO si;
     ::ZeroMemory(&si, sizeof(si));
@@ -118,8 +118,8 @@ test_startupinfo(void)
     portable_getline(c2.get_stdout(), line);
     BOOST_CHECK_EQUAL(line, "dwYSize = 400");
     const bp::status s2 = c2.wait();
-    BOOST_REQUIRE(s2.m_exit_status);
-    BOOST_CHECK_EQUAL(s2.m_exit_status.get(), EXIT_SUCCESS);
+    BOOST_REQUIRE(s2.exited());
+    BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_SUCCESS);
 }
 #endif
 

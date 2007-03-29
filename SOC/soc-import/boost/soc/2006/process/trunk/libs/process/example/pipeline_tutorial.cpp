@@ -87,7 +87,7 @@ const bp::status s = bp::wait_children(cs);
 //]
 
 //[pipeline_tutorial_parse_status
-return (s.m_exit_status && s.m_exit_status.get() == EXIT_SUCCESS) ?
+return (s.exited() && s.exit_status() == EXIT_SUCCESS) ?
     EXIT_SUCCESS : EXIT_FAILURE;
 //]
 

@@ -93,7 +93,7 @@ main(int argc, char* argv[])
         // the results to the user.
         //
         const bp::status s = bp::win32_launch(exe, args, ctx).wait();
-        if (s.m_exit_status) {
+        if (s.exited()) {
             std::cout << "Application exited successfully" << std::endl;
             exitstatus = EXIT_SUCCESS;
         } else {

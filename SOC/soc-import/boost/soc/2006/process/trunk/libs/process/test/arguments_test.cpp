@@ -61,8 +61,8 @@ get_argument(const std::string& word)
     portable_getline(is, result);
 
     const bp::status s = c.wait();
-    BOOST_REQUIRE(s.m_exit_status);
-    BOOST_CHECK_EQUAL(s.m_exit_status.get(), EXIT_SUCCESS);
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 
     return result;
 }

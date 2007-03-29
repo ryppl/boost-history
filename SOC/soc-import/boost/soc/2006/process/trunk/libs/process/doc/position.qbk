@@ -114,6 +114,8 @@ consideration to decide the best way to solve them.
 
 * Abstract `cstdlib`'s `EXIT_SUCCESS` and `EXIT_FAILURE`.
 
+* Make `status`' constructor private.
+
 * Make `child::wait` return a constant object.
 
 * Allow to retrieve a handle for the current process.  Need to reintroduce

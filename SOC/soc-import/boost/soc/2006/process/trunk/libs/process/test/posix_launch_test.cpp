@@ -92,8 +92,8 @@ test_input(void)
     BOOST_CHECK_EQUAL(word, "message-to-process");
 
     const bp::status s = c.wait();
-    BOOST_REQUIRE(s.m_exit_status);
-    BOOST_CHECK_EQUAL(s.m_exit_status.get(), EXIT_SUCCESS);
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
 #endif
 
@@ -120,8 +120,8 @@ check_output(int desc, const std::string& msg)
     BOOST_CHECK_EQUAL(word, msg);
 
     const bp::status s = c.wait();
-    BOOST_REQUIRE(s.m_exit_status);
-    BOOST_CHECK_EQUAL(s.m_exit_status.get(), EXIT_SUCCESS);
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
 #endif
 
@@ -175,8 +175,8 @@ check_redirect(int desc1, int desc2, const std::string& msg)
     BOOST_CHECK_EQUAL(word, msg);
 
     const bp::status s = c.wait();
-    BOOST_REQUIRE(s.m_exit_status);
-    BOOST_CHECK_EQUAL(s.m_exit_status.get(), EXIT_SUCCESS);
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
 #endif
 

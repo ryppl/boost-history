@@ -579,7 +579,7 @@ wait_children(Children& cs)
         iter++;
         if (iter == cs.end())
             return s;
-        else if (!s.m_exit_status || s.m_exit_status.get() != EXIT_SUCCESS) {
+        else if (!s.exited() || s.exit_status() != EXIT_SUCCESS) {
             while (iter != cs.end()) {
                 (*iter).wait();
                 iter++;

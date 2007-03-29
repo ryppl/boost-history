@@ -44,8 +44,8 @@ void
 test_exit_failure(void)
 {
     const Exit_Status s = launch_helper("exit-failure").wait();
-    BOOST_REQUIRE(s.m_exit_status);
-    BOOST_CHECK_EQUAL(s.m_exit_status.get(), EXIT_FAILURE);
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_FAILURE);
 }
 
 // ------------------------------------------------------------------------
@@ -56,8 +56,8 @@ void
 test_exit_success(void)
 {
     const Exit_Status s = launch_helper("exit-success").wait();
-    BOOST_REQUIRE(s.m_exit_status);
-    BOOST_CHECK_EQUAL(s.m_exit_status.get(), EXIT_SUCCESS);
+    BOOST_REQUIRE(s.exited());
+    BOOST_CHECK_EQUAL(s.exit_status(), EXIT_SUCCESS);
 }
 
 // ------------------------------------------------------------------------

@@ -63,7 +63,7 @@ const bp::status s = c.wait();
 //]
 
 //[single_process_tutorial_parse_status
-if (s.m_exit_status && s.m_exit_status.get() == EXIT_SUCCESS)
+if (s.exited() && s.exit_status() == EXIT_SUCCESS)
     std::cout << "Directory updated successfully." << std::endl;
 else
     std::cout << "Update failed." << std::endl;
