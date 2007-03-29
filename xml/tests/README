@@ -1,0 +1,21 @@
+dom
+===
+
+config: Create an xml ('config') document and write it to a file (config.xml).
+
+dom: Read in an xml document (use './dom article.xml'), query information
+     via direct manual inspection as well as XPath, set an 'author',
+     validate intra-document links, and write out the modified document
+     to 'article2.xml'.
+
+traverse: Read in xml file and traverse the tree using the traverse interface.
+
+validate_dtd: Test simple DTD-based validation.
+
+xinclude: Demonstrate simple XInclude processing (use './xinclude book.xml)
+
+
+reader
+======
+
+simple: read and process 'article.xml'
