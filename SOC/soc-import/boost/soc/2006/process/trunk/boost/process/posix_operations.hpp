@@ -20,6 +20,12 @@
 #define BOOST_PROCESS_POSIX_OPERATIONS_HPP
 /** \endcond */
 
+#include <boost/process/config.hpp>
+
+#if !defined(BOOST_PROCESS_POSIX_API)
+#   error "Unsupported platform."
+#endif
+
 #include <cstdlib>
 
 #include <boost/process/detail/posix_ops.hpp>
