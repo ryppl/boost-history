@@ -115,7 +115,7 @@ test_close_stderr(void)
 
     const bp::status s2 = Launcher()(args, Context(), bp::close_stream(),
                                      bp::close_stream(),
-                               bp::capture_stream()).wait();
+                                     bp::capture_stream()).wait();
     BOOST_REQUIRE(s2.exited());
     BOOST_CHECK_EQUAL(s2.exit_status(), EXIT_FAILURE);
 }
