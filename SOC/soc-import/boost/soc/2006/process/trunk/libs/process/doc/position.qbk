@@ -131,7 +131,13 @@ consideration to decide the best way to solve them.
 
 * Add some diagrams to illustrate interprocess communication.
 
-* Shorten "Motivation" section?
+* Reword the "The problem" section.  It is too generic.  The whole
+  introduction should focus on the library, and not the lack of certain
+  functionality in the standard C++ library.
+
+* Shorten "Motivation" section.  Similar to the previous point, this
+  section states that "there is a clear need for this library", although
+  it certainly won't be clear to everybody.
 
 * When process identifiers are fixed under Win32, document that process
   identifiers are integral types.
