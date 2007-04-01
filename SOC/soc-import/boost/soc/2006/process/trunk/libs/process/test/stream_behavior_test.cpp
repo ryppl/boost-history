@@ -23,9 +23,8 @@ namespace detail {
 
 // Tests are declared in this class so that we can access stream_behavior's
 // internals.  This is the only way to check the constructors.
-class stream_info
+struct stream_info
 {
-public:
     static void test_capture(void)
     {
         bp::stream_behavior sb = bp::capture_stream();

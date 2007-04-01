@@ -305,31 +305,21 @@ private:
     mutable handle_type m_handle;
 
     //!
-    //! \brief Constant representing an invalid handle value.
+    //! \brief Constant function representing an invalid handle value.
     //!
-#if defined(BOOST_PROCESS_DOXYGEN)
-    static const handle_type INVALID_VALUE = -1;
-#elif defined(BOOST_PROCESS_POSIX_API)
-    static const handle_type INVALID_VALUE = -1;
-#elif defined(BOOST_PROCESS_WIN32_API)
-    static const handle_type INVALID_VALUE;
-#endif
+    //! Returns the platform-specific handle value that represents an
+    //! invalid handle.  This is a constant function rather than a regular
+    //! constant because, in the latter case, we cannot define it under
+    //! Win32 due to the value being of a complex type.
+    //!
+    static const handle_type invalid_value(void);
 };
-
-// ------------------------------------------------------------------------
-
-// XXX No, no, no!  This is incorrect as it will cause conflicts if this
-// file is included in two different compilation units...
-#if defined(BOOST_PROCESS_WIN32_API)
-const file_handle::handle_type file_handle::INVALID_VALUE =
-    INVALID_HANDLE_VALUE;
-#endif
 
 // ------------------------------------------------------------------------
 
 inline
 file_handle::file_handle(void) :
-    m_handle(INVALID_VALUE)
+    m_handle(invalid_value())
 {
 }
 
@@ -339,7 +329,7 @@ inline
 file_handle::file_handle(handle_type h) :
     m_handle(h)
 {
-    BOOST_ASSERT(m_handle != INVALID_VALUE);
+    BOOST_ASSERT(m_handle != invalid_value());
 }
 
 // ------------------------------------------------------------------------
@@ -348,7 +338,7 @@ inline
 file_handle::file_handle(const file_handle& fh) :
     m_handle(fh.m_handle)
 {
-    fh.m_handle = INVALID_VALUE;
+    fh.m_handle = invalid_value();
 }
 
 // ------------------------------------------------------------------------
@@ -367,7 +357,7 @@ file_handle&
 file_handle::operator=(const file_handle& fh)
 {
     m_handle = fh.m_handle;
-    fh.m_handle = INVALID_VALUE;
+    fh.m_handle = invalid_value();
 
     return *this;
 }
@@ -379,7 +369,7 @@ bool
 file_handle::is_valid(void)
     const
 {
-    return m_handle != INVALID_VALUE;
+    return m_handle != invalid_value();
 }
 
 // ------------------------------------------------------------------------
@@ -396,7 +386,7 @@ file_handle::close(void)
     ::CloseHandle(m_handle);
 #endif
 
-    m_handle = INVALID_VALUE;
+    m_handle = invalid_value();
 }
 
 // ------------------------------------------------------------------------
@@ -408,7 +398,7 @@ file_handle::disown(void)
     BOOST_ASSERT(is_valid());
 
     handle_type h = m_handle;
-    m_handle = INVALID_VALUE;
+    m_handle = invalid_value();
     return h;
 }
 
@@ -524,6 +514,19 @@ file_handle::win32_set_inheritable(bool b)
                           ::GetLastError()));
 }
 #endif
+
+// ------------------------------------------------------------------------
+
+inline
+const file_handle::handle_type
+file_handle::invalid_value(void)
+{
+#if defined(BOOST_PROCESS_POSIX_API)
+    return -1;
+#elif defined(BOOST_PROCESS_WIN32_API)
+    return INVALID_HANDLE_VALUE;
+#endif
+}
 
 // ------------------------------------------------------------------------
 

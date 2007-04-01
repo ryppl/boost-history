@@ -111,10 +111,12 @@ stream_info::stream_info(const stream_behavior& sb, bool out)
         m_type = inherit;
         break;
 
+#if defined(BOOST_PROCESS_POSIX_API)
     case stream_behavior::posix_redirect:
         m_type = redirect;
         m_desc_to = sb.m_desc_to;
         break;
+#endif
 
     case stream_behavior::redirect_to_stdout:
         m_type = redirect;

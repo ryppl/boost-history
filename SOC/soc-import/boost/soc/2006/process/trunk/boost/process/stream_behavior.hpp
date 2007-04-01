@@ -26,7 +26,7 @@ namespace boost {
 namespace process {
 
 namespace detail {
-class stream_info;
+struct stream_info;
 } // namespace detail
 
 // ------------------------------------------------------------------------
@@ -127,7 +127,7 @@ private:
     // detail::stream_info provides a lower-level representation of
     // stream_behavior.  It is allowed to freely access this class'
     // contents for simplicity.
-    friend class detail::stream_info;
+    friend struct detail::stream_info;
 
     // Pseudo-constructors for each stream_behavior type.  These are
     // needed because some types need to store additional information and
