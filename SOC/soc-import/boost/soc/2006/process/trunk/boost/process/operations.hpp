@@ -316,7 +316,6 @@ template< class Entries >
 children
 launch_pipeline(const Entries& entries)
 {
-    using detail::info_map;
     using detail::stream_info;
 
     BOOST_ASSERT(entries.size() >= 2);
@@ -332,6 +331,8 @@ launch_pipeline(const Entries& entries)
         (new detail::pipe[entries.size() - 1]);
 
 #if defined(BOOST_PROCESS_POSIX_API)
+    using detail::info_map;
+
     // Configure and spawn the pipeline's first process.
     {
         typename Entries::size_type i = 0;
@@ -429,12 +430,12 @@ launch_pipeline(const Entries& entries)
 
         if (ctx.m_stdout_behavior.get_type() != stream_behavior::close) {
             stream_info si = stream_info(ctx.m_stdout_behavior, true);
-            infoout.insert(detail::info_map::value_type(STDOUT_FILENO, si));
+            infoout.insert(info_map::value_type(STDOUT_FILENO, si));
         }
 
         if (ctx.m_stderr_behavior.get_type() != stream_behavior::close) {
             stream_info si = stream_info(ctx.m_stderr_behavior, true);
-            infoout.insert(detail::info_map::value_type(STDERR_FILENO, si));
+            infoout.insert(info_map::value_type(STDERR_FILENO, si));
         }
 
         detail::posix_setup s;
@@ -462,59 +463,64 @@ launch_pipeline(const Entries& entries)
 #elif defined(BOOST_PROCESS_WIN32_API)
     // Process context configuration.
     detail::win32_setup s;
-    s.m_work_directory = get_work_directory();
     STARTUPINFO si;
     s.m_startupinfo = &si;
 
     // Configure and spawn the pipeline's first process.
     {
         typename Entries::size_type i = 0;
+        const typename Entries::value_type::context_type& ctx =
+            entries[i].m_context;
 
+        stream_info sii = stream_info(ctx.m_stdin_behavior, false);
         detail::file_handle fhstdin;
-        stream_info sii = detail::win32_behavior_to_info
-            (get_stdin_behavior(), false, fhstdin);
+        if (sii.m_type == stream_info::use_pipe)
+            fhstdin = sii.m_pipe->wend();
 
-        stream_info sio;
+        // XXX Simplify when we have a use_handle stream_behavior.
+        BOOST_ASSERT(ctx.m_stdout_behavior.get_type() ==
+                     stream_behavior::close);
+        stream_info sio(close_stream(), true);
         sio.m_type = stream_info::use_handle;
         sio.m_handle = pipes[i].wend().disown();
 
-        stream_info sie = detail::win32_behavior_to_info
-            (entries[i].m_merge_out_err ? close_stream : silent_stream,
-             true, fhinvalid);
-        BOOST_ASSERT(!fhinvalid.is_valid());
+        stream_info sie(ctx.m_stderr_behavior, true);
+
+        s.m_work_directory = ctx.m_work_directory;
 
         ::ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
         PROCESS_INFORMATION pi = detail::win32_start
-            (entries[i].m_executable, entries[i].m_arguments, get_environment(),
-             sii, sio, sie,
-             entries[i].m_merge_out_err, s);
+            (entries[i].m_executable, entries[i].m_arguments,
+             ctx.m_environment, sii, sio, sie, s);
 
         cs.push_back(child(pi.hProcess, fhstdin, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's internal processes.
     for (typename Entries::size_type i = 1; i < entries.size() - 1; i++) {
+        const typename Entries::value_type::context_type& ctx =
+            entries[i].m_context;
 
-        stream_info sii;
+        BOOST_ASSERT(ctx.m_stdin_behavior.get_type() ==
+                     stream_behavior::close);
+        stream_info sii(close_stream(), false);
         sii.m_type = stream_info::use_handle;
         sii.m_handle = pipes[i - 1].rend().disown();
 
-        stream_info sio;
+        stream_info sio(close_stream(), true);
         sio.m_type = stream_info::use_handle;
         sio.m_handle = pipes[i].wend().disown();
 
-        stream_info sie = detail::win32_behavior_to_info
-            (entries[i].m_merge_out_err ? close_stream : silent_stream,
-             true, fhinvalid);
-        BOOST_ASSERT(!fhinvalid.is_valid());
+        stream_info sie(ctx.m_stderr_behavior, true);
+
+        s.m_work_directory = ctx.m_work_directory;
 
         ::ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
         PROCESS_INFORMATION pi = detail::win32_start
-            (entries[i].m_executable, entries[i].m_arguments, get_environment(),
-             sii, sio, sie,
-             entries[i].m_merge_out_err, s);
+            (entries[i].m_executable, entries[i].m_arguments,
+             ctx.m_environment, sii, sio, sie, s);
 
         cs.push_back(child(pi.hProcess, fhinvalid, fhinvalid, fhinvalid));
     }
@@ -522,26 +528,31 @@ launch_pipeline(const Entries& entries)
     // Configure and spawn the pipeline's last process.
     {
         typename Entries::size_type i = entries.size() - 1;
+        const typename Entries::value_type::context_type& ctx =
+            entries[i].m_context;
 
-        stream_info sii;
+        BOOST_ASSERT(ctx.m_stdin_behavior.get_type() ==
+                     stream_behavior::close);
+        stream_info sii(close_stream(), true);
         sii.m_type = stream_info::use_handle;
         sii.m_handle = pipes[i - 1].rend().disown();
 
         detail::file_handle fhstdout, fhstderr;
 
-        stream_info sio = detail::win32_behavior_to_info
-            (get_stdout_behavior(), true, fhstdout);
+        stream_info sio(ctx.m_stdout_behavior, true);
+        if (sio.m_type == stream_info::use_pipe)
+            fhstdout = sio.m_pipe->rend();
+        stream_info sie(ctx.m_stderr_behavior, true);
+        if (sie.m_type == stream_info::use_pipe)
+            fhstderr = sie.m_pipe->rend();
 
-        stream_info sie = detail::win32_behavior_to_info
-            ((entries[i].m_merge_out_err || get_merge_out_err()) ?
-             close_stream : get_stderr_behavior(), true, fhstderr);
+        s.m_work_directory = ctx.m_work_directory;
 
         ::ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
         PROCESS_INFORMATION pi = detail::win32_start
-            (entries[i].m_executable, entries[i].m_arguments, get_environment(),
-             sii, sio, sie,
-             entries[i].m_merge_out_err || get_merge_out_err(), s);
+            (entries[i].m_executable, entries[i].m_arguments,
+             ctx.m_environment, sii, sio, sie, s);
 
         cs.push_back(child(pi.hProcess, fhinvalid, fhstdout, fhstderr));
     }

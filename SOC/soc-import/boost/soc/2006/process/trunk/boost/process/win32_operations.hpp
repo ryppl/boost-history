@@ -31,6 +31,7 @@ extern "C" {
 }
 
 #include <boost/process/detail/file_handle.hpp>
+#include <boost/process/detail/stream_info.hpp>
 #include <boost/process/detail/win32_ops.hpp>
 #include <boost/process/win32_child.hpp>
 
@@ -46,6 +47,8 @@ win32_launch(const Executable& exe,
              const Arguments& args,
              const Win32_Context& ctx)
 {
+    using detail::stream_info;
+
     detail::file_handle fhstdin, fhstdout, fhstderr;
 
     stream_info behin = stream_info(ctx.m_stdin_behavior, false);
