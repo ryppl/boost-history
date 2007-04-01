@@ -167,7 +167,7 @@ launch(const Executable& exe, const Arguments& args, const Context& ctx)
 {
     using detail::stream_info;
 
-    child::handle_type ph;
+    child::id_type pid;
     detail::file_handle fhstdin, fhstdout, fhstderr;
 
     BOOST_ASSERT(!args.empty());
@@ -197,7 +197,8 @@ launch(const Executable& exe, const Arguments& args, const Context& ctx)
     detail::posix_setup s;
     s.m_work_directory = ctx.m_work_directory;
 
-    ph = detail::posix_start(exe, args, ctx.m_environment, infoin, infoout, s);
+    pid = detail::posix_start(exe, args, ctx.m_environment, infoin,
+                              infoout, s);
 
     if (ctx.m_stdin_behavior.get_type() == stream_behavior::capture) {
         fhstdin = posix_info_locate_pipe(infoin, STDIN_FILENO, false);
@@ -236,10 +237,10 @@ launch(const Executable& exe, const Arguments& args, const Context& ctx)
         detail::win32_start(exe, args, ctx.m_environment,
                             behin, behout, beherr, s);
 
-    ph = pi.hProcess;
+    pid = pi.dwProcessId;
 #endif
 
-    return child(ph, fhstdin, fhstdout, fhstderr);
+    return child(pid, fhstdin, fhstdout, fhstderr);
 }
 
 // ------------------------------------------------------------------------
@@ -362,10 +363,10 @@ launch_pipeline(const Entries& entries)
         detail::posix_setup s;
         s.m_work_directory = ctx.m_work_directory;
 
-        pid_t ph = detail::posix_start(entries[i].m_executable,
-                                       entries[i].m_arguments,
-                                       ctx.m_environment,
-                                       infoin, infoout, s);
+        pid_t pid = detail::posix_start(entries[i].m_executable,
+                                        entries[i].m_arguments,
+                                        ctx.m_environment,
+                                        infoin, infoout, s);
 
         detail::file_handle fhstdin;
 
@@ -374,7 +375,7 @@ launch_pipeline(const Entries& entries)
             BOOST_ASSERT(fhstdin.is_valid());
         }
 
-        cs.push_back(child(ph, fhstdin, fhinvalid, fhinvalid));
+        cs.push_back(child(pid, fhstdin, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's internal processes.
@@ -405,12 +406,12 @@ launch_pipeline(const Entries& entries)
         detail::posix_setup s;
         s.m_work_directory = ctx.m_work_directory;
 
-        pid_t ph = detail::posix_start(entries[i].m_executable,
-                                       entries[i].m_arguments,
-                                       ctx.m_environment,
-                                       infoin, infoout, s);
+        pid_t pid = detail::posix_start(entries[i].m_executable,
+                                        entries[i].m_arguments,
+                                        ctx.m_environment,
+                                        infoin, infoout, s);
 
-        cs.push_back(child(ph, fhinvalid, fhinvalid, fhinvalid));
+        cs.push_back(child(pid, fhinvalid, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's last process.
@@ -441,10 +442,10 @@ launch_pipeline(const Entries& entries)
         detail::posix_setup s;
         s.m_work_directory = ctx.m_work_directory;
 
-        pid_t ph = detail::posix_start(entries[i].m_executable,
-                                       entries[i].m_arguments,
-                                       ctx.m_environment,
-                                       infoin, infoout, s);
+        pid_t pid = detail::posix_start(entries[i].m_executable,
+                                        entries[i].m_arguments,
+                                        ctx.m_environment,
+                                        infoin, infoout, s);
 
         detail::file_handle fhstdout, fhstderr;
 
@@ -458,7 +459,7 @@ launch_pipeline(const Entries& entries)
             BOOST_ASSERT(fhstderr.is_valid());
         }
 
-        cs.push_back(child(ph, fhinvalid, fhstdout, fhstderr));
+        cs.push_back(child(pid, fhinvalid, fhstdout, fhstderr));
     }
 #elif defined(BOOST_PROCESS_WIN32_API)
     // Process context configuration.
@@ -494,7 +495,7 @@ launch_pipeline(const Entries& entries)
             (entries[i].m_executable, entries[i].m_arguments,
              ctx.m_environment, sii, sio, sie, s);
 
-        cs.push_back(child(pi.hProcess, fhstdin, fhinvalid, fhinvalid));
+        cs.push_back(child(pi.dwProcessId, fhstdin, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's internal processes.
@@ -522,7 +523,7 @@ launch_pipeline(const Entries& entries)
             (entries[i].m_executable, entries[i].m_arguments,
              ctx.m_environment, sii, sio, sie, s);
 
-        cs.push_back(child(pi.hProcess, fhinvalid, fhinvalid, fhinvalid));
+        cs.push_back(child(pi.dwProcessId, fhinvalid, fhinvalid, fhinvalid));
     }
 
     // Configure and spawn the pipeline's last process.
@@ -554,7 +555,7 @@ launch_pipeline(const Entries& entries)
             (entries[i].m_executable, entries[i].m_arguments,
              ctx.m_environment, sii, sio, sie, s);
 
-        cs.push_back(child(pi.hProcess, fhinvalid, fhstdout, fhstderr));
+        cs.push_back(child(pi.dwProcessId, fhinvalid, fhstdout, fhstderr));
     }
 #endif
 

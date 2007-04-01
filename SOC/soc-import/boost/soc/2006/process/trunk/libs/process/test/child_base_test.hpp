@@ -37,8 +37,8 @@ namespace child_base_test {
 //
 // The functions in this file all rely on a Factory concept.  This concept
 // provides a class whose () operator constructs a new Child instance
-// based on a process handle and three file handles, one for each of the
-// standard communication channels.  Note that this is the most possible
+// based on a process's identifier and three file handles, one for each of
+// the standard communication channels.  Note that this is the most possible
 // generic construction, which should be conceptually supported by all
 // implementations.
 //
@@ -50,11 +50,11 @@ static
 void
 test_getters(void)
 {
-    typename Child::handle_type h = (typename Child::handle_type)0;
+    typename Child::id_type id = (typename Child::id_type)0;
     bpd::file_handle fhinvalid;
-    Child c = Factory()(h, fhinvalid, fhinvalid, fhinvalid);
+    Child c = Factory()(id, fhinvalid, fhinvalid, fhinvalid);
 
-    BOOST_CHECK_EQUAL(c.get_handle(), h);
+    BOOST_CHECK_EQUAL(c.get_id(), id);
 }
 
 // ------------------------------------------------------------------------
@@ -64,10 +64,10 @@ static
 void
 test_stdin(void)
 {
-    typename Child::handle_type h = (typename Child::handle_type)0;
+    typename Child::id_type id = (typename Child::id_type)0;
     bpd::pipe p;
     bpd::file_handle fhinvalid;
-    Child c = Factory()(h, p.wend(), fhinvalid, fhinvalid);
+    Child c = Factory()(id, p.wend(), fhinvalid, fhinvalid);
 
     bp::postream& os = c.get_stdin();
     os << "test-stdin" << std::endl;
@@ -85,10 +85,10 @@ static
 void
 test_stdout(void)
 {
-    typename Child::handle_type h = (typename Child::handle_type)0;
+    typename Child::id_type id = (typename Child::id_type)0;
     bpd::pipe p;
     bpd::file_handle fhinvalid;
-    Child c = Factory()(h, fhinvalid, p.rend(), fhinvalid);
+    Child c = Factory()(id, fhinvalid, p.rend(), fhinvalid);
 
     bp::postream os(p.wend());
     os << "test-stdout" << std::endl;
@@ -106,10 +106,10 @@ static
 void
 test_stderr(void)
 {
-    typename Child::handle_type h = (typename Child::handle_type)0;
+    typename Child::id_type id = (typename Child::id_type)0;
     bpd::pipe p;
     bpd::file_handle fhinvalid;
-    Child c = Factory()(h, fhinvalid, fhinvalid, p.rend());
+    Child c = Factory()(id, fhinvalid, fhinvalid, p.rend());
 
     bp::postream os(p.wend());
     os << "test-stderr" << std::endl;

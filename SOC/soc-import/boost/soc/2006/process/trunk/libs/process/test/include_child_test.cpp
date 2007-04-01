@@ -19,7 +19,7 @@ namespace bpd = ::boost::process::detail;
 void*
 test_it(void)
 {
-    bp::child::handle_type h = (bp::child::handle_type)0;
+    bp::child::id_type id = (bp::child::id_type)0;
     bpd::file_handle fh;
-    return new bp::child(h, fh, fh, fh);
+    return new bp::child(id, fh, fh, fh);
 }

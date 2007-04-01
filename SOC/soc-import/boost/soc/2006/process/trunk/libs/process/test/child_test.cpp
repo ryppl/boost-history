@@ -24,10 +24,10 @@ class launcher
 {
 public:
     bp::child
-    operator()(bp::child::handle_type h, bpd::file_handle fhstdin,
+    operator()(bp::child::id_type id, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
     {
-        return bp::child(h, fhstdin, fhstdout, fhstderr);
+        return bp::child(id, fhstdin, fhstdout, fhstderr);
     }
 };
 

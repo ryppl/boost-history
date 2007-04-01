@@ -134,7 +134,7 @@ public: // XXX
     //! business in creating representations of live processes himself;
     //! the library takes care of that in all cases.
     //!
-    posix_child(handle_type h,
+    posix_child(id_type id,
                 detail::info_map& infoin,
                 detail::info_map& infoout);
 };
@@ -142,10 +142,10 @@ public: // XXX
 // ------------------------------------------------------------------------
 
 inline
-posix_child::posix_child(handle_type h,
+posix_child::posix_child(id_type id,
                          detail::info_map& infoin,
                          detail::info_map& infoout) :
-    child(h,
+    child(id,
           posix_info_locate_pipe(infoin, STDIN_FILENO, false),
           posix_info_locate_pipe(infoout, STDOUT_FILENO, true),
           posix_info_locate_pipe(infoout, STDERR_FILENO, true))

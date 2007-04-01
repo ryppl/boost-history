@@ -77,6 +77,9 @@
   and a generic `wait_children` function that can be applied to any kind
   of collection of Child objects.
 
+* Made the processes be identified by a system-wide integer instead of a
+  process-specific handle under Win32.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]
@@ -117,8 +120,7 @@ consideration to decide the best way to solve them.
 * Make `status`' constructor private.
 
 * Allow to retrieve a handle for the current process.  Need to reintroduce
-  the `process` class being a parent of `child` and correct the use of
-  Win32 `HANDLE`s in the former: they really should be identifiers.
+  the `process` class being a parent of `child`.
 
 [endsect]
 

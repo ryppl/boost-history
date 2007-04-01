@@ -64,28 +64,28 @@ class child
 public:
 #if defined(BOOST_PROCESS_DOXYGEN)
     //!
-    //! \brief Opaque name for the native process' handle type.
+    //! \brief Opaque name for the native process' identifier type.
     //!
     //! Each operating system identifies processes using a specific type.
-    //! The \a handle_type type is used to transparently refer to a process
+    //! The \a id_type type is used to transparently refer to a process
     //! regarless of the operating system in which this class is used.
     //!
-    //! If this class is used in a POSIX system, \a NativeSystemHandle is
-    //! an integer type while it is a \a HANDLE in a Win32 system.
+    //! This type is guaranteed to be an integral type on all supported
+    //! platforms.
     //!
-    typedef NativeSystemHandle handle_type;
+    typedef NativeProcessId id_type;
 #elif defined(BOOST_PROCESS_WIN32_API)
-    typedef HANDLE handle_type;
+    typedef DWORD id_type;
 #elif defined(BOOST_PROCESS_POSIX_API)
-    typedef pid_t handle_type;
+    typedef pid_t id_type;
 #endif
 
     //!
-    //! \brief Returns the system handle that identifies the process.
+    //! \brief Returns the process' identifier.
     //!
-    //! Returns the system handle that identifies the process.
+    //! Returns the process' identifier.
     //!
-    handle_type get_handle(void) const;
+    id_type get_id(void) const;
 
     //!
     //! \brief Gets a reference to the child's standard input stream.
@@ -125,9 +125,9 @@ public:
 
 private:
     //!
-    //! \brief The handle that identifies the process.
+    //! \brief The process' identifier.
     //!
-    handle_type m_handle;
+    id_type m_id;
 
     //!
     //! \brief The standard input stream attached to the child process.
@@ -177,7 +177,7 @@ public: // XXX?
     //! business in creating representations of live processes himself;
     //! the library takes care of that in all cases.
     //!
-    child(handle_type h,
+    child(id_type id,
           detail::file_handle fhstdin,
           detail::file_handle fhstdout,
           detail::file_handle fhstderr);
@@ -198,11 +198,11 @@ typedef std::vector< child > children;
 // ------------------------------------------------------------------------
 
 inline
-child::child(handle_type h,
+child::child(id_type id,
              detail::file_handle fhstdin,
              detail::file_handle fhstdout,
              detail::file_handle fhstderr) :
-    m_handle(h)
+    m_id(id)
 {
     if (fhstdin.is_valid())
         m_sstdin.reset(new postream(fhstdin));
@@ -215,11 +215,11 @@ child::child(handle_type h,
 // ------------------------------------------------------------------------
 
 inline
-child::handle_type
-child::get_handle(void)
+child::id_type
+child::get_id(void)
     const
 {
-    return m_handle;
+    return m_id;
 }
 
 // ------------------------------------------------------------------------
@@ -263,19 +263,25 @@ child::wait(void)
 {
 #if defined(BOOST_PROCESS_POSIX_API)
     int s;
-    if (::waitpid(m_handle, &s, 0) == -1)
+    if (::waitpid(m_id, &s, 0) == -1)
         boost::throw_exception
             (system_error("boost::process::child::wait",
                           "waitpid(2) failed", errno));
     return status(s);
 #elif defined(BOOST_PROCESS_WIN32_API)
     DWORD code;
+    HANDLE h = ::OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE,
+                             FALSE, m_id);
+    if (h == INVALID_HANDLE_VALUE)
+        boost::throw_exception
+            (system_error("boost::process::child::wait",
+                          "OpenProcess failed", ::GetLastError()));
     // XXX This loop should go away in favour of a passive wait.
     do {
-        ::GetExitCodeProcess(m_handle, &code);
+        ::GetExitCodeProcess(h, &code);
         ::Sleep(500);
     } while (code == STILL_ACTIVE);
-    ::WaitForSingleObject(m_handle, 0);
+    ::WaitForSingleObject(h, 0);
     return status(code);
 #endif
 }

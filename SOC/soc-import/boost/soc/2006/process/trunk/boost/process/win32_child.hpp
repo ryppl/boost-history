@@ -87,15 +87,15 @@ public: // XXX
 
 public:
     //!
-    //! \brief Returns the process' identifier.
+    //! \brief Returns the process' handle.
     //!
-    //! Returns a system-wide value that identifies the process.  This is
-    //! the value of the \a dwProcessId field in the PROCESS_INFORMATION
-    //! structure returned by CreateProcess().
+    //! Returns a process-specific handle that can be used to access the
+    //! process.  This is the value of the \a hProcess field in the
+    //! PROCESS_INFORMATION structure returned by CreateProcess().
     //!
-    //! \see get_handle()
+    //! \see get_id()
     //!
-    DWORD get_id(void) const;
+    HANDLE get_handle(void) const;
 
     //!
     //! \brief Returns the primary thread's handle.
@@ -127,7 +127,7 @@ win32_child::win32_child(const PROCESS_INFORMATION& pi,
                          detail::file_handle fhstdin,
                          detail::file_handle fhstdout,
                          detail::file_handle fhstderr) :
-    child(pi.hProcess, fhstdin, fhstdout, fhstderr),
+    child(pi.dwProcessId, fhstdin, fhstdout, fhstderr),
     m_process_information(pi)
 {
 }
@@ -135,11 +135,11 @@ win32_child::win32_child(const PROCESS_INFORMATION& pi,
 // ------------------------------------------------------------------------
 
 inline
-DWORD
-win32_child::get_id(void)
+HANDLE
+win32_child::get_handle(void)
     const
 {
-    return m_process_information.dwProcessId;
+    return m_process_information.hProcess;
 }
 
 // ------------------------------------------------------------------------

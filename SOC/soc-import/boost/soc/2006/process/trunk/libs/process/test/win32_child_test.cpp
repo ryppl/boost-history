@@ -38,11 +38,11 @@ class win32_launcher
 {
 public:
     bp::win32_child
-    operator()(bp::win32_child::handle_type h, bpd::file_handle fhstdin,
+    operator()(bp::win32_child::id_type id, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
     {
         PROCESS_INFORMATION pi;
-        pi.hProcess = h;
+        pi.dwProcessId = id;
         return bp::win32_child(pi, fhstdin, fhstdout, fhstderr);
     }
 
