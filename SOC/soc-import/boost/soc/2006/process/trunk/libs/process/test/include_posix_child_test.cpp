@@ -23,9 +23,9 @@ namespace bpd = ::boost::process::detail;
 void*
 test_it(void)
 {
-    bp::posix_child::handle_type h = (bp::posix_child::handle_type)0;
+    bp::posix_child::id_type id = (bp::posix_child::id_type)0;
     bpd::info_map info;
-    return new bp::posix_child(h, info, info);
+    return new bp::posix_child(id, info, info);
 }
 
 // ------------------------------------------------------------------------
