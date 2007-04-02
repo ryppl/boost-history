@@ -43,5 +43,6 @@
 [include nonportable_usage.qbk]
 [include portability.qbk]
 [xinclude autodoc.boostbook]
+[include design.qbk]
 [include position.qbk]
 [include acknowledgements.qbk]

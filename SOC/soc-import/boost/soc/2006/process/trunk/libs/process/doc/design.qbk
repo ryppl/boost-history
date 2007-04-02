@@ -26,6 +26,37 @@ the library is functional enough. ]
 
 [/ ---------------------------------------------------------------------- ]
 
+[section Getters vs. public members]
+
+There are several classes in the library that provide trivial getters to
+fetch the values of their corresponding private members.  It was suggested
+to use public members instead, being constant when possible, to avoid the
+level of indirection added by the getters.  However, this idea was
+discarded because of the following reasons:
+
+* If the class' internals ever change, one can adapt the getters' code to
+  return the appropriate values.  Which means the [*API is not broken].
+
+* As sometimes getters cannot be avoided (either because there must be
+  some logic in them or because the data must be calculated on each call),
+  using them in all scenarios makes a [*more consistent interface].
+
+* Getters can do some [*sanity checks before returning a value].  Sometimes
+  these checks can be avoided by redesigning the class to not hide
+  invariants, but sometimes not.
+
+* It is sometimes hard, if not impossible, to implement constant public
+  members correctly.  Problems can arise, for example, when duplicating an
+  object through an assignment, a correct operation from the point of view
+  of the caller but unsupported because the target's fields cannot be
+  overwritten.
+
+* The standard C++ library uses getters almost everywhere.
+
+[endsect]
+
+[/ ---------------------------------------------------------------------- ]
+
 [section Quoting problems]
 
 It is common knowledge that executing processes can easily lead to security
