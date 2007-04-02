@@ -80,6 +80,13 @@
 * Made the processes be identified by a system-wide integer instead of a
   process-specific handle under Win32.
 
+* Added the `process` class, an abstraction on top of `child` that is
+  able to represent any running process within the system.  This was
+  a requisite to introduce the `self` class.
+
+* Added the `self` class, whose instances allow access to the current
+  process.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]
@@ -119,7 +126,13 @@ consideration to decide the best way to solve them.
 
 * Make `status`' constructor private.
 
-* Allow to retrieve a handle for the current process.
+* Add an interface to `self` to modify the current environment.
+
+* Abstract `child`'s streams so that `self` can also provide a way to
+  access the current process' standard streams.
+
+* Add a way (a `win32_self` class?) that allows the retrieval of a Win32
+  `HANDLE` for the current process.
 
 [endsect]
 

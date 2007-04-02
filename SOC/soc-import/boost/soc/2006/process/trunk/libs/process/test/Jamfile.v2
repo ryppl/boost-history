@@ -51,6 +51,7 @@ test-suite process :
     [ compile include_posix_status_test.cpp : : ]
     [ compile include_postream_test.cpp : : ]
     [ compile include_process_test.cpp : : ]
+    [ compile include_self_test.cpp : : ]
     [ compile include_status_test.cpp : : ]
     [ compile include_stream_behavior_test.cpp : : ]
     [ compile include_top_test.cpp : : ]
@@ -124,6 +125,12 @@ test-suite process :
         ]
 
     [ run process_test.cpp
+        :
+        :
+        : <library>$(BOOST_ROOT)//unit_test_framework
+        ]
+
+    [ run self_test.cpp
         :
         :
         : <library>$(BOOST_ROOT)//unit_test_framework
