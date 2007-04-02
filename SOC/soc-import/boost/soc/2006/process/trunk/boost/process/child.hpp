@@ -1,7 +1,7 @@
 //
 // Boost.Process
 //
-// Copyright (c) 2006 Julio M. Merino Vidal.
+// Copyright (c) 2006, 2007 Julio M. Merino Vidal.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -42,6 +42,7 @@ extern "C" {
 #include <boost/process/detail/pipe.hpp>
 #include <boost/process/pistream.hpp>
 #include <boost/process/postream.hpp>
+#include <boost/process/process.hpp>
 #include <boost/process/status.hpp>
 #include <boost/shared_ptr.hpp>
 
@@ -59,34 +60,9 @@ class launcher;
 //! The child class implements the Child concept in an operating system
 //! agnostic way.
 //!
-class child
+class child : public process
 {
 public:
-#if defined(BOOST_PROCESS_DOXYGEN)
-    //!
-    //! \brief Opaque name for the native process' identifier type.
-    //!
-    //! Each operating system identifies processes using a specific type.
-    //! The \a id_type type is used to transparently refer to a process
-    //! regarless of the operating system in which this class is used.
-    //!
-    //! This type is guaranteed to be an integral type on all supported
-    //! platforms.
-    //!
-    typedef NativeProcessId id_type;
-#elif defined(BOOST_PROCESS_WIN32_API)
-    typedef DWORD id_type;
-#elif defined(BOOST_PROCESS_POSIX_API)
-    typedef pid_t id_type;
-#endif
-
-    //!
-    //! \brief Returns the process' identifier.
-    //!
-    //! Returns the process' identifier.
-    //!
-    id_type get_id(void) const;
-
     //!
     //! \brief Gets a reference to the child's standard input stream.
     //!
@@ -124,11 +100,6 @@ public:
     const status wait(void);
 
 private:
-    //!
-    //! \brief The process' identifier.
-    //!
-    id_type m_id;
-
     //!
     //! \brief The standard input stream attached to the child process.
     //!
@@ -202,7 +173,7 @@ child::child(id_type id,
              detail::file_handle fhstdin,
              detail::file_handle fhstdout,
              detail::file_handle fhstderr) :
-    m_id(id)
+    process(id)
 {
     if (fhstdin.is_valid())
         m_sstdin.reset(new postream(fhstdin));
@@ -210,16 +181,6 @@ child::child(id_type id,
         m_sstdout.reset(new pistream(fhstdout));
     if (fhstderr.is_valid())
         m_sstderr.reset(new pistream(fhstderr));
-}
-
-// ------------------------------------------------------------------------
-
-inline
-child::id_type
-child::get_id(void)
-    const
-{
-    return m_id;
 }
 
 // ------------------------------------------------------------------------
@@ -263,7 +224,7 @@ child::wait(void)
 {
 #if defined(BOOST_PROCESS_POSIX_API)
     int s;
-    if (::waitpid(m_id, &s, 0) == -1)
+    if (::waitpid(get_id(), &s, 0) == -1)
         boost::throw_exception
             (system_error("boost::process::child::wait",
                           "waitpid(2) failed", errno));
@@ -271,7 +232,7 @@ child::wait(void)
 #elif defined(BOOST_PROCESS_WIN32_API)
     DWORD code;
     HANDLE h = ::OpenProcess(PROCESS_QUERY_INFORMATION | SYNCHRONIZE,
-                             FALSE, m_id);
+                             FALSE, get_id());
     if (h == INVALID_HANDLE_VALUE)
         boost::throw_exception
             (system_error("boost::process::child::wait",

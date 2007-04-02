@@ -2,7 +2,7 @@
 // Boost.Process
 // Regression tests for Child implementations.
 //
-// Copyright (c) 2006 Julio M. Merino Vidal.
+// Copyright (c) 2006, 2007 Julio M. Merino Vidal.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +11,8 @@
 
 #include <boost/process/detail/pipe.hpp>
 #include <boost/test/unit_test.hpp>
+
+#include "process_base_test.hpp"
 
 namespace bp = ::boost::process;
 namespace bpd = ::boost::process::detail;
@@ -42,20 +44,6 @@ namespace child_base_test {
 // generic construction, which should be conceptually supported by all
 // implementations.
 //
-
-// ------------------------------------------------------------------------
-
-template< class Child, class Factory >
-static
-void
-test_getters(void)
-{
-    typename Child::id_type id = (typename Child::id_type)0;
-    bpd::file_handle fhinvalid;
-    Child c = Factory()(id, fhinvalid, fhinvalid, fhinvalid);
-
-    BOOST_CHECK_EQUAL(c.get_id(), id);
-}
 
 // ------------------------------------------------------------------------
 
@@ -122,6 +110,20 @@ test_stderr(void)
 
 // ------------------------------------------------------------------------
 
+template< class Child >
+class launcher
+{
+public:
+    Child
+    operator()(typename Child::id_type id)
+    {
+        bpd::file_handle fhinvalid;
+        return Child(id, fhinvalid, fhinvalid, fhinvalid);
+    }
+};
+
+// ------------------------------------------------------------------------
+
 } // namespace child_base_test
 
 // ------------------------------------------------------------------------
@@ -131,8 +133,10 @@ void
 add_tests_child_base(boost::unit_test::test_suite* ts)
 {
     using namespace child_base_test;
+    using namespace process_base_test;
 
-    ts->add(BOOST_TEST_CASE(&(test_getters< Child, Factory >)));
+    add_tests_process_base< Child, launcher< Child > >(ts);
+
     ts->add(BOOST_TEST_CASE(&(test_stdin< Child, Factory >)));
     ts->add(BOOST_TEST_CASE(&(test_stdout< Child, Factory >)));
     ts->add(BOOST_TEST_CASE(&(test_stderr< Child, Factory >)));

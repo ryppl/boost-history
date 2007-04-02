@@ -119,8 +119,7 @@ consideration to decide the best way to solve them.
 
 * Make `status`' constructor private.
 
-* Allow to retrieve a handle for the current process.  Need to reintroduce
-  the `process` class being a parent of `child`.
+* Allow to retrieve a handle for the current process.
 
 [endsect]
 
