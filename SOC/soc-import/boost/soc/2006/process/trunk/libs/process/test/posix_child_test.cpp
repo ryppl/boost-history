@@ -9,6 +9,8 @@
 // http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <boost/process/config.hpp>
+
 #if defined(BOOST_PROCESS_POSIX_API)
 #   include <boost/process/posix_child.hpp>
 
@@ -40,39 +42,34 @@ public:
     }
 
     bp::posix_child
-    operator()(bp::posix_child::handle_type h, bpd::file_handle fhstdin,
+    operator()(bp::posix_child::id_type id, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
     {
         bpd::info_map infoin, infoout;
+        bp::stream_behavior withpipe = bp::capture_stream();
 
         if (fhstdin.is_valid()) {
-            bpd::stream_info si;
-            si.m_type = bpd::stream_info::usepipe;
-            si.m_pipe = bpd::pipe();
+            bpd::stream_info si(withpipe, false);
             si.m_pipe->rend().close();
             si.m_pipe->wend() = fhstdin;
             infoin.insert(bpd::info_map::value_type(STDIN_FILENO, si));
         }
 
         if (fhstdout.is_valid()) {
-            bpd::stream_info si;
-            si.m_type = bpd::stream_info::usepipe;
-            si.m_pipe = bpd::pipe();
+            bpd::stream_info si(withpipe, true);
             si.m_pipe->wend().close();
             si.m_pipe->rend() = fhstdout;
             infoout.insert(bpd::info_map::value_type(STDOUT_FILENO, si));
         }
 
         if (fhstderr.is_valid()) {
-            bpd::stream_info si;
-            si.m_type = bpd::stream_info::usepipe;
-            si.m_pipe = bpd::pipe();
+            bpd::stream_info si(withpipe, true);
             si.m_pipe->wend().close();
             si.m_pipe->rend() = fhstderr;
             infoout.insert(bpd::info_map::value_type(STDERR_FILENO, si));
         }
 
-        return bp::posix_child(h, infoin, infoout);
+        return bp::posix_child(id, infoin, infoout);
     }
 };
 
