@@ -37,7 +37,7 @@ namespace boost {
 namespace process {
 
 // ------------------------------------------------------------------------
-//
+
 //!
 //! \brief Starts a new child process.
 //!
