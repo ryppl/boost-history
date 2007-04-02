@@ -38,6 +38,15 @@ class win32_launcher
 {
 public:
     bp::win32_child
+    operator()(bp::win32_child::id_type id)
+    {
+        PROCESS_INFORMATION pi;
+        pi.dwProcessId = id;
+        bpd::file_handle fhinvalid;
+        return bp::win32_child(pi, fhinvalid, fhinvalid, fhinvalid);
+    }
+
+    bp::win32_child
     operator()(bp::win32_child::id_type id, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
     {

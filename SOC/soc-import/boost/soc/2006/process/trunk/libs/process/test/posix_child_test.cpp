@@ -32,6 +32,14 @@ class posix_launcher
 {
 public:
     bp::posix_child
+    operator()(bp::posix_child::id_type id)
+    {
+        bpd::info_map infoin, infoout;
+
+        return bp::posix_child(id, infoin, infoout);
+    }
+
+    bp::posix_child
     operator()(bp::posix_child::handle_type h, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
     {

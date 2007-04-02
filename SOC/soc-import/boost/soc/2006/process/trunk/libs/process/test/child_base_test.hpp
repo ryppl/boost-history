@@ -110,20 +110,6 @@ test_stderr(void)
 
 // ------------------------------------------------------------------------
 
-template< class Child >
-class launcher
-{
-public:
-    Child
-    operator()(typename Child::id_type id)
-    {
-        bpd::file_handle fhinvalid;
-        return Child(id, fhinvalid, fhinvalid, fhinvalid);
-    }
-};
-
-// ------------------------------------------------------------------------
-
 } // namespace child_base_test
 
 // ------------------------------------------------------------------------
@@ -135,7 +121,7 @@ add_tests_child_base(boost::unit_test::test_suite* ts)
     using namespace child_base_test;
     using namespace process_base_test;
 
-    add_tests_process_base< Child, launcher< Child > >(ts);
+    add_tests_process_base< Child, Factory >(ts);
 
     ts->add(BOOST_TEST_CASE(&(test_stdin< Child, Factory >)));
     ts->add(BOOST_TEST_CASE(&(test_stdout< Child, Factory >)));

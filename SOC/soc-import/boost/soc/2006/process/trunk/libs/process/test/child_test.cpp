@@ -24,6 +24,13 @@ class launcher
 {
 public:
     bp::child
+    operator()(bp::child::id_type id)
+    {
+        bpd::file_handle fhinvalid;
+        return bp::child(id, fhinvalid, fhinvalid, fhinvalid);
+    }
+
+    bp::child
     operator()(bp::child::id_type id, bpd::file_handle fhstdin,
                bpd::file_handle fhstdout, bpd::file_handle fhstderr)
     {
