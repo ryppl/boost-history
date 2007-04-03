@@ -20,10 +20,10 @@ namespace but = ::boost::unit_test;
 class launcher
 {
 public:
-    bp::self
+    bp::self&
     operator()(bp::self::id_type id)
     {
-        return bp::self();
+        return bp::self::get_instance();
     }
 };
 
@@ -33,7 +33,7 @@ static
 void
 test_id(void)
 {
-    bp::self p;
+    bp::self& p = bp::self::get_instance();
 
 #if defined(BOOST_PROCESS_POSIX_API)
     BOOST_REQUIRE(p.get_id() == ::getpid());
@@ -48,7 +48,9 @@ static
 void
 test_get_environment(void)
 {
-    bp::environment env1 = bp::self().get_environment();
+    bp::self& p = bp::self::get_instance();
+
+    bp::environment env1 = p.get_environment();
     BOOST_CHECK(env1.find("THIS_SHOULD_NOT_BE_DEFINED") == env1.end());
 
 #if defined(BOOST_PROCESS_POSIX_API)
@@ -58,7 +60,7 @@ test_get_environment(void)
                                            TEXT("some-value")) != 0);
 #endif
 
-    bp::environment env2 = bp::self().get_environment();
+    bp::environment env2 = p.get_environment();
     bp::environment::const_iterator iter =
         env2.find("THIS_SHOULD_BE_DEFINED");
     BOOST_CHECK(iter != env2.end());

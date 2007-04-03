@@ -32,6 +32,7 @@ extern "C" {
 #   error "Unsupported platform."
 #endif
 
+#include <boost/noncopyable.hpp>
 #include <boost/process/environment.hpp>
 #include <boost/process/process.hpp>
 
@@ -43,17 +44,25 @@ namespace process {
 //!
 //! \brief Generic implementation of the Process concept.
 //!
-//! The self class provides access to the current process.
+//! The self singleton provides access to the current process.
 //!
-class self : public process
+class self : public process, boost::noncopyable
 {
-public:
     //!
     //! \brief Constructs a new self object.
     //!
     //! Creates a new self object that represents the current process.
     //!
     self(void);
+
+public:
+    //!
+    //! \brief Returns the self instance representing the caller's process.
+    //!
+    //! Returns a reference to the self instance that represents the
+    //! caller's process.
+    //!
+    static self& get_instance(void);
 
     //!
     //! \brief Returns the current environment.
@@ -83,6 +92,20 @@ self::self(void) :
     process(::GetCurrentProcessId())
 #endif
 {
+}
+
+// ------------------------------------------------------------------------
+
+inline
+self&
+self::get_instance(void)
+{
+    static self *instance = NULL;
+
+    if (instance == NULL)
+        instance = new self;
+
+    return *instance;
 }
 
 // ------------------------------------------------------------------------

@@ -18,5 +18,5 @@ namespace bp = ::boost::process;
 void*
 test_it(void)
 {
-    return new bp::self();
+    return &bp::self::get_instance();
 }
