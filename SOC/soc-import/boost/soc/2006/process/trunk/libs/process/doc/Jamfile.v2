@@ -47,6 +47,7 @@ boostbook standalone
         <dependency>autodoc
         <xsl:param>boost.libraries=$(BOOST_ROOT)/libs/libraries.htm
         <xsl:param>boost.root=.
+        <xsl:param>chunk.first.sections=1
         <xsl:param>doc.standalone=1
         <xsl:param>nav.layout=none
         <xsl:param>toc.section.depth=2
