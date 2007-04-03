@@ -91,7 +91,8 @@ public: // XXX?
     //! the library takes care of that in all cases.
     //!
     process(id_type id);
-    //template< class Executable, class Arguments > friend class basic_pipeline;
+    //template< class Executable, class Arguments >
+    //    friend class basic_pipeline;
     //friend class launcher;
 };
 

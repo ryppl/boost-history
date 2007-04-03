@@ -114,13 +114,13 @@ test_progname(void)
     BOOST_CHECK_EQUAL(bp::executable_to_progname("/foo/bar/baz"), "baz");
 
     if (bp_api_type == win32_api) {
-        BOOST_CHECK_EQUAL(bp::executable_to_progname("foo.exe"), "foo");
-        BOOST_CHECK_EQUAL(bp::executable_to_progname("foo.com"), "foo");
-        BOOST_CHECK_EQUAL(bp::executable_to_progname("foo.bat"), "foo");
-        BOOST_CHECK_EQUAL(bp::executable_to_progname("foo.bar"), "foo.bar");
-        BOOST_CHECK_EQUAL(bp::executable_to_progname("foo.bar.exe"), "foo.bar");
-        BOOST_CHECK_EQUAL(bp::executable_to_progname("foo.bar.com"), "foo.bar");
-        BOOST_CHECK_EQUAL(bp::executable_to_progname("foo.bar.bat"), "foo.bar");
+        BOOST_CHECK_EQUAL(bp::executable_to_progname("f.exe"), "f");
+        BOOST_CHECK_EQUAL(bp::executable_to_progname("f.com"), "f");
+        BOOST_CHECK_EQUAL(bp::executable_to_progname("f.bat"), "f");
+        BOOST_CHECK_EQUAL(bp::executable_to_progname("f.bar"), "f.bar");
+        BOOST_CHECK_EQUAL(bp::executable_to_progname("f.bar.exe"), "f.bar");
+        BOOST_CHECK_EQUAL(bp::executable_to_progname("f.bar.com"), "f.bar");
+        BOOST_CHECK_EQUAL(bp::executable_to_progname("f.bar.bat"), "f.bar");
     }
 }
 

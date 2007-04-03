@@ -451,7 +451,8 @@ posix_start(const Executable& exe,
             ::exit(EXIT_FAILURE);
         }
 
-        std::pair< std::size_t, char** > argcv = collection_to_posix_argv(args);
+        std::pair< std::size_t, char** > argcv =
+            collection_to_posix_argv(args);
         char** envp = environment_to_envp(env);
         ::execve(exe.c_str(), argcv.second, envp);
         system_error e("boost::process::detail::posix_start",

@@ -202,7 +202,8 @@ h_query_env(int argc, char* argv[])
 {
 #if defined(BOOST_PROCESS_WIN32_API)
     TCHAR buf[1024];
-    DWORD res = GetEnvironmentVariable(TEXT(argv[1]), (LPTSTR) &buf, sizeof(buf));
+    DWORD res = GetEnvironmentVariable(TEXT(argv[1]), (LPTSTR) &buf,
+                                       sizeof(buf));
     if (res == 0)
         std::cout << "undefined" << std::endl;
     else {
