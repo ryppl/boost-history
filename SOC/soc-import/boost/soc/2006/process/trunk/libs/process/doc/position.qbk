@@ -134,11 +134,19 @@ consideration to decide the best way to solve them.
 * Add a way (a `win32_self` class?) that allows the retrieval of a Win32
   `HANDLE` for the current process.
 
+* The `process` class might conflict with the `process` namespace.  I like
+  the names as they are, but maybe one of the two should be renamed or
+  simply put a warning in the documentation explaining where the conflicts
+  may arise.  These happen in some compilers when giving both `using
+  namespace boost::process` and `using namespace boost`.
+
 [endsect]
 
 [section Documentation]
 
 * Add a ['Design decisions] chapter.
+
+* Explain why the `launcher` class was discarded in favour of the `context`.
 
 * Fix links to inherited methods.  Don't know which is the best approach
   to address this.
