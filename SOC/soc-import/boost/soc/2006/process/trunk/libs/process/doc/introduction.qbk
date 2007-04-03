@@ -2,7 +2,7 @@
  / Boost.Process
  / Introduction chapter.
  /
- / Copyright (c) 2006 Julio M. Merino Vidal.
+ / Copyright (c) 2006, 2007 Julio M. Merino Vidal.
  /
  / Distributed under the Boost Software License, Version 1.0.
  / (See accompanying file LICENSE_1_0.txt or copy at
@@ -15,91 +15,44 @@
 
 [/ ---------------------------------------------------------------------- ]
 
-[section The problem]
+[section Overview]
 
-C++ is a very powerful object oriented programming language: it is compiled
-into native code, supports generics through templates, allows multiple
-inheritance as well as lots of other programming techniques.  However, a
-language on its own is not that useful: it has to provide some libraries
-that aid the developer to accomplish his task at hand.  In this sense, the
-standard C++ library is currently limited to managing data collections and
-data streams.
+The Boost Process library provides a flexible framework for the C++
+programming language to manage running programs, also known as
+['processes].  Among other functionality, this includes the ability to
+manage the execution context of the currently running process, the ability
+to spawn new child processes, and a way to communicate with them them using
+standard C++ streams.
 
-If one looks at other languages and platforms __mdash__ e.g. Java and .NET
-__mdashnospc__, it is easy to see that they provide much more functionality
-in the standard APIs than C++ does.  These additional features ease the
-developer's job a lot because he can focus on the problem he has to solve.
-They also make the language much more useful out of the box, attracting
-more developers that need to quickly implement some code.
-
-It is clear that the standard C++ library lacks abstraction layers for the
-functionality provided by the underlying operating system.  Developers must
-directly call the underlying platform to achieve many trivial tasks such as
-directory iteration, process management, interprocess communication or
-network access.  This is a problem because the libraries included in the
-operating system (such as the POSIX libc or the Win32 API) do not integrate
-well with C++: they are not object oriented and are not developed following
-good C++ practices.  As a result, applications using them become difficult
-to maintain, are unportable and grow fragile classes to interact with
-low-level details.
-
-Although there are libraries that cover some of these gaps, there are still
-many subsystems for which no abstraction exists yet. One of these is
-process management.  Many applications need to interact with other programs
-either because they are front-ends or simply because they need to take
-advantage of their functionality.  This can make developers choose some
-language other than C++ that eases process interaction simply because they
-do not want to deal with low-level operating system details.
+The library is designed in a way to transparently abstract all process
+management details to the user, allowing for painless development of
+cross-platform applications.  However, as such abstractions often restrict
+what the developer can do, the framework allows direct access to operating
+system specific functionality __mdash__ obviously losing the portability
+features of the library.
 
 [endsect]
 
 [/ ---------------------------------------------------------------------- ]
 
-[section Motivation]
+[section Features]
 
-Boost has already addressed operating system abstraction layers area by
-providing some libraries that give access to specific functionality in a
-portable way.  These libraries aim at the eventual inclusion in the C++
-standard.  For example, consider the [@http://www.boost.org/libs/filesystem
-Boost.Filesystem] and [@http://www.boost.org/libs/threads Boost.Thread]
-libraries.
-
-It is clear that there is a need for a library to manage processes, and
-this library is well suited for eventual inclusion in Boost.  As time
-passes, it might also be proposed for addition into one of the future C++
-library revisions.
-
-[endsect]
-
-[/ ---------------------------------------------------------------------- ]
-
-[section Project overview]
-
-The Boost Process library provides a framework to manage processes and
-communicate with them using standard C++ streams.  The framework is
-flexible enough to handle operating system specific functionality while
-keeping a minimum common portable set to be used in applications that need
-to run in different operating systems.
-
-[endsect]
-
-[/ ---------------------------------------------------------------------- ]
-
-[section Functional requirements]
-
-The following list of items describe the features provided by the library.
+This section contains a summary of the most important features provided by
+the library.
 
 [/ ---------------------------------------------------------------------- ]
 
 [section Process management]
 
-In the long term, Boost.Process' most inner goal is to provide a portable
-abstraction layer over the operating system that allows the programmer to
-manage any running processes, not only those spawned by it.  The library is
-designed to allow this future extension, although it currently does not
-provide the necessary functionality to manage non-child processes due to
-its complexity.  In other words, the library currently focuses on child
-process management only.
+Boost.Process' long-term goal is to provide a portable abstraction layer
+over the operating system that allows the programmer to manage ['any
+running process], not only those spawned by it.  Due to the complexity in
+offering such an interface, the library currently focuses on child process
+management alone.
+
+As an exception, it also allows access to the caller's process because this
+is easy to expose, helps in providing a more modular interface and is a
+very useful feature.
 
 [endsect]
 
@@ -129,31 +82,28 @@ abstraction to handle all these details on behalf of the developer.
 [section Input/output redirection]
 
 An application launching a child process typically wants to communicate
-with it by means of data transfers.  This IPC happens at the level of file
-handles and typically involves the standard input (__stdin__), the standard
-output (__stdout__) and the standard error output (__stderr__).  If the
-operating system supports it (e.g. Unix), other unnamed data streams can be
+with it by means of data transfers.  This ['Inter-Process Communication]
+(IPC) happens at the level of file handles[footnote A file handle is a low
+level identifier for a data channel exposed by the operating system.] and
+typically involves the standard input (__stdin__), the standard output
+(__stdout__) and the standard error output (__stderr__).  If the operating
+system supports it (e.g. Unix), other unnamed data streams can be
 redirected.
 
 In order to properly integrate with the standard C++ library, this IPC is
 morphed into the standard C++ streams making interaction with child
-processes a piece of cake.
-
-Related to this, a process may emit data through multiple streams.  The
-most typical example are applications that print regular messages through
-their standard output and error messages through the standard error output.
-However, it is sometimes desired to forget about all distinctions and treat
-several of these streams as a single one.  Hence, the library allows
-merging different streams at the operating system level.  This involves
-much less coding and overhead at the final application than manually
-handling different streams, because the receiver will be presented a single
-data flow.
+processes a piece of cake.  Each of these streams can be configured based
+on many predefined modes, which allow you to simply ignore a stream,
+collect it for further processing or redirect it to another stream (be it
+a program, a file or a low-level file handle).
 
 [endsect]
 
 [/ ---------------------------------------------------------------------- ]
 
 [section Different operation modes]
+
+[/ XXX Rewrite when we get Boost.Asio support. ]
 
 Boost.Process allows a process to be managed in several different operation
 modes; these are described below:
@@ -179,10 +129,17 @@ modes; these are described below:
 
 [section Pipeline management]
 
-The library provides the necessary functionality to model pipelines and
-handle them.  A pipeline is a unidimensional chain of interconnected
+[/ TODO: Add a pipeline diagram here or in the section that describes
+pipelines.  In the latter case, add a link. ]
+
+A pipeline is a unidimensional and unidirectional chain of interconnected
 processes in which the output of one of them is connected to the input of
-the following.
+the following.  The programmer can then feed data to this pipeline through
+the first process' input channel and fetch the results through the last
+process' output channel.
+
+The library provides the necessary functionality to model pipelines and
+handle them.
 
 [endsect]
 
@@ -192,7 +149,7 @@ the following.
 
 [/ ---------------------------------------------------------------------- ]
 
-[section Non-functional requirements]
+[section Non-functional features]
 
 [/ ---------------------------------------------------------------------- ]
 
@@ -209,9 +166,9 @@ that lets the developer manage processes without ever knowing the operating
 system the code is running under.  However, it is a fact that each
 operating system provides specific and useful features that are not
 portable to others; these must not be banned to developers if they need
-them.  Therefore, the library provides a non-portable way to access these
-features that is clearly separated from the portable API to avoid
-introducing portability bugs by mistake.
+them.  Therefore, the library provides a way to access these features that
+is clearly separated from the cross-platform API to avoid introducing
+portability bugs by mistake.
 
 [endsect]
 
@@ -222,10 +179,9 @@ introducing portability bugs by mistake.
 Boost.Process is modelled around a set of abstract concepts that are
 implemented in the form of C++ templates and classes.  This allows the
 developer to replace any part of the library with custom implementations as
-long as they match the requirements of each concept.
-
-This comes helpful if there is a need for extreme efficiency or highly
-OS-specific functionality not provided by the standard classes.
+long as they match the requirements of each concept, useful when he may
+need extreme performance or highly OS-specific functionality not provided
+by the standard classes.
 
 [endsect]
 
@@ -234,15 +190,15 @@ OS-specific functionality not provided by the standard classes.
 [section Testability]
 
 The library comes with a very complete set of regression tests to ensure
-that it can be correctly used in new code and that it behaves according to
-its specifications.  These tests try to be as complete as possible and are
-an excellent tool to verify that the library works correctly on a new
-platform.
+that it behaves according to its specifications.  These tests try to be as
+complete as possible and are an excellent tool to verify that the library
+works correctly on a platform where it has not been tested before.
 
-Although the library was not developed following the test driven
-development methodology, it is still interesting to have as much automated
-tests as possible.  If the library misbehaves in some area, it should first
-be proved wrong by a new test and only then fixed to pass it.
+Although the library was not developed following the Test Driven
+Development (TDD) methodology, it is still interesting to have as much
+automated tests as possible.  Whenever a bug is found or a new
+functionality is added, a new test must be introduced to ensure that no
+regressions appear and that the fixed/new code works as expected.
 
 [endsect]
 
@@ -252,11 +208,13 @@ be proved wrong by a new test and only then fixed to pass it.
 
 The library is implemented with efficiency in mind although this is not a
 primary goal of its development.  Improvements to efficiency are of course
-welcome but are second class items in front of the other goals.  However,
+welcome but are a second class item in front of the other goals.  However,
 it is understandable that efficiency can be a very important feature for
-some developers.  So, as mentioned in the modularity requirement, the
-library user is allowed to replace parts of it to improve the areas that
-may not be efficient enough.
+some developers.  Therefore, and as mentioned in the [link
+boost_process.introduction.non_functional_features.modularity modularity
+requirement], the programmer is allowed to replace parts of the framework
+with custom implementations to improve the areas that may not be efficient
+enough.
 
 [endsect]
 
