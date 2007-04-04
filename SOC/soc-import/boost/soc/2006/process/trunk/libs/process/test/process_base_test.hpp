@@ -9,8 +9,15 @@
 // http://www.boost.org/LICENSE_1_0.txt.)
 //
 
+#include <boost/process/child.hpp>
+#include <boost/process/context.hpp>
 #include <boost/process/detail/pipe.hpp>
+#include <boost/process/operations.hpp>
+#include <boost/process/status.hpp>
+#include <boost/process/posix_status.hpp>
 #include <boost/test/unit_test.hpp>
+
+#include "misc.hpp"
 
 namespace bp = ::boost::process;
 namespace bpd = ::boost::process::detail;
@@ -57,6 +64,36 @@ test_getters(void)
 
 // ------------------------------------------------------------------------
 
+template< class Process, class Factory >
+static
+void
+test_terminate(void)
+{
+    std::vector< std::string > args;
+    args.push_back("helpers");
+    args.push_back("loop");
+
+    bp::context ctx;
+
+    bp::child c = bp::launch(get_helpers_path(), args, ctx);
+
+    Process p = Factory()(c.get_id());
+    p.terminate();
+
+    bp::status s = c.wait();
+    if (bp_api_type == posix_api) {
+        BOOST_REQUIRE(!s.exited());
+
+        bp::posix_status ps = s;
+        BOOST_REQUIRE(ps.signaled());
+    } else if (bp_api_type == win32_api) {
+        BOOST_REQUIRE(s.exited());
+        BOOST_REQUIRE(s.exit_status() == EXIT_FAILURE);
+    }
+}
+
+// ------------------------------------------------------------------------
+
 } // namespace process_base_test
 
 // ------------------------------------------------------------------------
@@ -68,4 +105,5 @@ add_tests_process_base(boost::unit_test::test_suite* ts)
     using namespace process_base_test;
 
     ts->add(BOOST_TEST_CASE(&(test_getters< Process, Factory >)));
+    ts->add(BOOST_TEST_CASE(&(test_terminate< Process, Factory >)));
 }

@@ -37,6 +37,7 @@ static int h_exit_success(int, char*[]);
 static int h_is_closed_stdin(int, char*[]);
 static int h_is_closed_stdout(int, char*[]);
 static int h_is_closed_stderr(int, char*[]);
+static int h_loop(int, char*[]);
 static int h_prefix(int, char*[]);
 static int h_pwd(int, char*[]);
 static int h_query_env(int, char*[]);
@@ -64,6 +65,7 @@ struct helper {
     { "is-closed-stdin", h_is_closed_stdin, 1, "" },
     { "is-closed-stdout", h_is_closed_stdout, 1, "" },
     { "is-closed-stderr", h_is_closed_stderr, 1, "" },
+    { "loop", h_loop, 1, "" },
     { "prefix", h_prefix, 2, "string" },
     { "pwd", h_pwd, 1, "" },
     { "query-env", h_query_env, 2, "variable" },
@@ -169,6 +171,18 @@ h_is_closed_stderr(int argc, char* argv[])
 {
     std::cerr << "foo" << std::endl;
     return std::cerr.bad() ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+
+// ------------------------------------------------------------------------
+
+static
+int
+h_loop(int argc, char* argv[])
+{
+    for (;;)
+        ;
+
+    return EXIT_SUCCESS;
 }
 
 // ------------------------------------------------------------------------

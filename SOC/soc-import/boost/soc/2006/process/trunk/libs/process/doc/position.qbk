@@ -87,6 +87,8 @@
 * Added the `self` class, whose instances allow access to the current
   process.
 
+* Added a way to force the termination of processes.
+
 [endsect]
 
 [section Version 0.1 (August 21st, 2006)]
@@ -111,8 +113,6 @@ consideration to decide the best way to solve them.
 * Integrate with [@http://asio.sourceforge.net/ Boost.Asio] to permit
   asynchronous notification of child process termination and availability
   of new data in output streams.
-
-* Add the ability to force/request the termination of a child process.
 
 * Make it possible to specify a timeout when waiting for child processes
   to terminate.

@@ -24,12 +24,18 @@
 #if defined(BOOST_PROCESS_POSIX_API)
 extern "C" {
 #   include <sys/types.h>
+#   include <signal.h>
 }
+#   include <cerrno>
 #elif defined(BOOST_PROCESS_WIN32_API)
 #   include <windows.h>
+#   include <cstdlib>
 #else
 #   error "Unsupported platform."
 #endif
+
+#include <boost/process/exceptions.hpp>
+#include <boost/throw_exception.hpp>
 
 namespace boost {
 namespace process {
@@ -94,6 +100,24 @@ public: // XXX?
     //template< class Executable, class Arguments >
     //    friend class basic_pipeline;
     //friend class launcher;
+
+    //!
+    //! \brief Terminates the process execution.
+    //!
+    //! Forces the termination of the process execution.  Some platforms
+    //! allow processes to ignore some external termination notifications
+    //! or to capture them for a proper exit cleanup.  You can set the
+    //! \a force flag to true in them to force their termination regardless
+    //! of any exit handler.
+    //!
+    //! After this call, accessing this object can be dangerous because the
+    //! process identifier may have been reused by a different process.  It
+    //! might still be valid, though, if the process has refused to die.
+    //!
+    //! \throw system_error If the system call used to terminate the
+    //!                     process fails.
+    //!
+    void terminate(bool force = false) const;
 };
 
 // ------------------------------------------------------------------------
@@ -112,6 +136,31 @@ process::get_id(void)
     const
 {
     return m_id;
+}
+
+// ------------------------------------------------------------------------
+
+inline
+void
+process::terminate(bool force)
+    const
+{
+#if defined(BOOST_PROCESS_POSIX_API)
+    if (::kill(m_id, force ? SIGKILL : SIGTERM) == -1)
+        boost::throw_exception
+            (system_error("boost::process::process::terminate",
+                          "kill(2) failed", errno));
+#elif defined(BOOST_PROCESS_WIN32_API)
+    HANDLE h = ::OpenProcess(PROCESS_TERMINATE, FALSE, m_id);
+    if (h == INVALID_HANDLE_VALUE)
+        boost::throw_exception
+            (system_error("boost::process::process::terminate",
+                          "OpenProcess failed", ::GetLastError()));
+    if (::TerminateProcess(h, EXIT_FAILURE) == 0)
+        boost::throw_exception
+            (system_error("boost::process::process::terminate",
+                          "TerminateProcess failed", ::GetLastError()));
+#endif
 }
 
 // ------------------------------------------------------------------------
