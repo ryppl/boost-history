@@ -37,7 +37,7 @@ test_id(void)
 
 #if defined(BOOST_PROCESS_POSIX_API)
     BOOST_REQUIRE(p.get_id() == ::getpid());
-#elif defined(BOOST_PROCESS_POSIX_API)
+#elif defined(BOOST_PROCESS_WIN32_API)
     BOOST_REQUIRE(p.get_id() == ::GetCurrentProcessId());
 #endif
 }
