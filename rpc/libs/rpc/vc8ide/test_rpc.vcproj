@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8.00"
+	Name="test_rpc"
+	ProjectGUID="{DC0901FF-C80A-4C97-8D50-7D1C66B5AB95}"
+	RootNamespace="test_rpc"
+	Keyword="MakeFileProj"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="debug|Win32"
+			OutputDirectory="..\..\..\bin.v2\libs\rpc\test\msvc\$(ConfigurationName)\threading-multi"
+			IntermediateDirectory="$(OutDir)"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="cd ../test&#x0D;&#x0A;bjam --v2 $(ConfigurationName)"
+				ReBuildCommandLine="cd ../test&#x0D;&#x0A;bjam --v2 -a"
+				CleanCommandLine="cd ../test&#x0D;&#x0A;bjam --v2 --clean"
+				Output="$(OutDir)\test_rpc.exe"
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="release|Win32"
+			OutputDirectory="..\..\..\bin.v2\libs\rpc\test\msvc\$(ConfigurationName)\threading-multi"
+			IntermediateDirectory="$(OutDir)"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="cd ../test&#x0D;&#x0A;bjam --v2 $(ConfigurationName)"
+				ReBuildCommandLine=""
+				CleanCommandLine=""
+				Output="$(OutDir)\test_rpc.exe"
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<Filter
+			Name="Source Files"
+			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
+			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
+			>
+			<File
+				RelativePath="..\test\test_rpc.cpp"
+				>
+			</File>
+		</Filter>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>
