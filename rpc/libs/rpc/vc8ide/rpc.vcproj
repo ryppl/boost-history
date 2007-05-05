@@ -74,61 +74,22 @@
 		</Configuration>
 		<Configuration
 			Name="release|Win32"
-			ConfigurationType="1"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="0"
 			>
 			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLinkerTool"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCManifestTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
+				Name="VCNMakeTool"
+				BuildCommandLine=""
+				ReBuildCommandLine=""
+				CleanCommandLine=""
+				Output=""
+				PreprocessorDefinitions=""
+				IncludeSearchPath=""
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
 			/>
 		</Configuration>
 	</Configurations>
@@ -143,22 +104,42 @@
 			<File
 				RelativePath="..\..\..\boost\detail\arity.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\detail\arity_epilogue.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\detail\arity_iterate.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\detail\arity_prologue.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\detail\storable.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -169,82 +150,162 @@
 			<File
 				RelativePath="..\..\..\boost\rpc\async_call.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\binary_archive.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\call.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\call_options.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\client.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\config.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\function.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\marshal.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\marshaled.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\registry.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\registry_server.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\remote_caller.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\serialize.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\server.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\simple_acceptor.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\simple_connector.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\socket_string_receiver.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\socket_string_sender.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\text_archive.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\..\boost\rpc\xml_archive.hpp"
 				>
+				<FileConfiguration
+					Name="release|Win32"
+					>
+				</FileConfiguration>
 			</File>
 			<Filter
 				Name="detail"
@@ -254,38 +315,74 @@
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\archive_out_param.hpp"
 					>
+					<FileConfiguration
+						Name="release|Win32"
+						>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\async_call_template.hpp"
 					>
+					<FileConfiguration
+						Name="release|Win32"
+						>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\call_template.hpp"
 					>
+					<FileConfiguration
+						Name="release|Win32"
+						>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\expanding_buffer.hpp"
 					>
+					<FileConfiguration
+						Name="release|Win32"
+						>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\marshaled_template.hpp"
 					>
+					<FileConfiguration
+						Name="release|Win32"
+						>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\protocol.hpp"
 					>
+					<FileConfiguration
+						Name="release|Win32"
+						>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\remote_caller_template.hpp"
 					>
+					<FileConfiguration
+						Name="release|Win32"
+						>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\serialize_template.hpp"
 					>
+					<FileConfiguration
+						Name="release|Win32"
+						>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\..\..\boost\rpc\detail\threaded_service.hpp"
 					>
+					<FileConfiguration
+						Name="release|Win32"
+						>
+					</FileConfiguration>
 				</File>
 			</Filter>
 		</Filter>

@@ -10,6 +10,7 @@
 #include <boost/detail/arity.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/rpc/detail/archive_out_param.hpp>
+#include <boost/rpc/call_options.hpp>
 
 namespace boost {
 namespace rpc {
@@ -18,27 +19,23 @@ namespace rpc {
 class call_base
 {
 public:
-    /// Returns true if the call has been completed.
-    volatile bool has_completed() const {return completed;}
-    /// Marks the call as completed.
-    void complete() {completed = true;}
     /// Returns the serialized call parameters.
     virtual const std::string &parameters() const = 0;
     /// Processes the serialized call results.
     virtual void result_string(const std::string &str, const call_options &options) = 0;
-protected:
-    /// Initializes the call.
-    call_base()
+    /// Returns a promise for completion
+    boost::future<void> completion()
     {
-        reset();
+        return completion_promise;
     }
-    /// Resets the call.
-    void reset()
-    {
-        completed = false;
-    }
+    /// Marks the call as completed.
+    void complete() {completion_promise.set();}
 private:
-    volatile bool completed;
+    boost::promise<void> completion_promise;
+};
+
+class handler_base
+{
 };
 
 template<typename ReturnType>
@@ -59,7 +56,7 @@ protected:
         if (options.marshal_option >= call_options::return_only)
             archive & return_val;
     }
-    typename boost::detail::storable<ReturnType>::type return_val;
+    storable_return_type return_val;
 };
 
 template<>
@@ -76,7 +73,14 @@ protected:
 };
 
 template<typename ReturnType>
-class sync_returning_call : public returning_call<typename ReturnType> {};
+class async_returning_call : public returning_call<ReturnType>
+{
+public:
+    virtual void assign_promises() = 0;
+    const promise<ReturnType> &return_promise() {return return_prom;}
+protected:
+    promise<ReturnType> return_prom;
+};
 
 template<typename Id, typename Signature, typename ArchivePair = binary_archive,
     typename Enable=void, typename Enable2=void>
@@ -92,6 +96,8 @@ class call
 #include <boost/detail/arity_iterate.hpp>
 #undef BOOST_ARITY_ITERATION_PARAMS
 #undef BOOST_ARITY_SEPARATE_VOID_RETURN
+
+
 
 } // namespace rpc
 } // namespace boost

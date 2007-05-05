@@ -3,7 +3,7 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-#import testing ;
+import testing ;
 
 project
     : requirements 
@@ -14,9 +14,7 @@ project
       <library>/boost/system//boost_system/<link>static
       <define>BOOST_ALL_NO_LIB=1
     ;
-
-exe test_rpc : test_rpc.cpp ;
     
-#test-suite rpc
-#    : [ run test_rpc.cpp ]
-#    ;
+test-suite rpc
+    : [ run ../test/test_rpc.cpp ]
+    ;

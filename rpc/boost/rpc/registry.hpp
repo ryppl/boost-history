@@ -24,50 +24,50 @@ class registry
 {
 public:
     typedef Id id_type;
- typedef ArchivePair archive_type;
+    typedef ArchivePair archive_type;
 
-   /// Adds a function and its id to the registry.
- /** \param id Id used to access the function
+    /// Adds a function and its id to the registry.
+    /** \param id Id used to access the function
         \param f Function to be added.
-      \todo figure out how to use call traits param type for
-      id so ptr_map doesn't complains on Id=int
-   */
-  template<typename Signature>
+        \todo figure out how to use call traits param type for
+            id so ptr_map doesn't complains on Id=int
+    */
+    template<typename Signature>
     void set(Id id, const boost::function<Signature> &f)
     {
        reg.insert(id, new marshaled<Signature>(f));
     }
 
-   /// Executes a function call.
-   /** \param id_and_params Marshaled id of the function to call and the parameters.
-       \param options Options specifying the results to be marshaled back.
-     \param result A string to contain the marshaled results.
+    /// Executes a function call.
+    /** \param id_and_params Marshaled id of the function to call and the parameters.
+        \param options Options specifying the results to be marshaled back.
+        \param result A string to contain the marshaled results.
     */
-  void operator()(const std::string &id_and_params, const call_options &options,
-      std::string *result = NULL)
- {
-       // prepare input archive to extract id and parameters
-       std::stringstream p_stream(id_and_params, std::ios::in | std::ios::out | std::ios::binary);
-     typename archive_type::iarchive_type p_archive(p_stream);
+    void operator()(const std::string &id_and_params, const call_options &options,
+        std::string *result = NULL)
+    {
+        // prepare input archive to extract id and parameters
+        std::stringstream p_stream(id_and_params, std::ios::in | std::ios::out | std::ios::binary);
+        typename archive_type::iarchive_type p_archive(p_stream);
        
         id_type id;
-     p_archive & id;
+        p_archive & id;
      
         // make the call
         if (options.marshal_option >= call_options::return_only)
         {
-           BOOST_ASSERT(result);
-           std::stringstream r_stream(std::ios::in | std::ios::out | std::ios::binary);
-            typename archive_type::oarchive_type r_archive(r_stream);
-           reg[id].call(options, p_archive, &r_archive);
-           *result = r_stream.str();
-       }
-       else
+            BOOST_ASSERT(result);
+            std::stringstream r_stream(std::ios::in | std::ios::out | std::ios::binary);
+                typename archive_type::oarchive_type r_archive(r_stream);
+            reg[id].call(options, p_archive, &r_archive);
+            *result = r_stream.str();
+        }
+        else
             reg[id].call(options, p_archive, NULL);
- }
+    }
 private:
-   /// Registered functions.
-   boost::ptr_map<Id, detail::function<ArchivePair> > reg;
+    /// Registered functions.
+    boost::ptr_map<Id, detail::function<ArchivePair> > reg;
 };
 
 } // namespace rpc

@@ -1,7 +1,8 @@
-#ifndef BOOST_RPC_CALL_HEADER_HPP
-#define BOOST_RPC_CALL_HEADER_HPP
+#ifndef BOOST_RPC_CALL_OPTIONS_HPP
+#define BOOST_RPC_CALL_OPTIONS_HPP
 
 #include <boost/cstdint.hpp>
+#include <boost/serialization/access.hpp>
 
 namespace boost {
 namespace rpc {
@@ -39,7 +40,6 @@ private:
     void serialize(Archive &archive, const unsigned int version)
     {
         archive & marshal_option;
-        archive & sync_option;
         archive & exception_option;
     }
 };
@@ -47,4 +47,4 @@ private:
 } // namespace rpc
 } // namespace boost
 
-#endif // BOOST_RPC_CALL_HEADER_HPP
+#endif // BOOST_RPC_CALL_OPTIONS_HPP

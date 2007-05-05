@@ -11,7 +11,7 @@ class call<Id, Signature, ArchivePair
    BOOST_ARITY_ENABLE_DISABLE_VOID
 #endif
    >
-   : public sync_returning_call<typename boost::function_traits<Signature>::result_type>
+   : public async_returning_call<typename boost::function_traits<Signature>::result_type>
 #endif // DOXYGEN_DOCS_ONLY
 {
 #ifdef DOXYGEN_DOCS_ONLY
@@ -29,26 +29,20 @@ protected:
     BOOST_ARITY_STORABLE_TYPES(Signature)
     BOOST_ARITY_TYPES(Signature)
 
-    BOOST_PP_REPEAT_FROM_TO(1,BOOST_ARITY_NUM_ARGS_INC,BOOST_RPC_REF_COPY,_)
+    BOOST_PP_REPEAT_FROM_TO(1,BOOST_ARITY_NUM_ARGS_INC,BOOST_RPC_ARGUMENT,_)
 
 public:
-    call(typename boost::call_traits<Id>::param_type id BOOST_ARITY_COMMA
-        BOOST_ARITY_TYPE_PARMS)
+    call(typename boost::call_traits<Id>::param_type id
+        BOOST_PP_ENUM_TRAILING(BOOST_ARITY_NUM_ARGS,BOOST_RPC_PARAM_TYPE_ARG,BOOST_PP_EMPTY))
     BOOST_PP_IF(BOOST_ARITY_NUM_ARGS,:,BOOST_PP_EMPTY())
-    BOOST_PP_ENUM_SHIFTED(BOOST_ARITY_NUM_ARGS_INC,BOOST_RPC_INIT_REF_COPY,_)
+    BOOST_PP_ENUM_SHIFTED(BOOST_ARITY_NUM_ARGS_INC,BOOST_RPC_INIT_ARGUMENT,_)
     {
-        set(id BOOST_ARITY_COMMA BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_ARITY_NUM_ARGS_INC,a));
-    }
-    void set(typename boost::call_traits<Id>::param_type id BOOST_ARITY_COMMA
-        BOOST_ARITY_TYPE_PARMS)
-    {
-        call_base::reset();
         params = detail::serialize<Id, ArchivePair,Signature>
             (id BOOST_ARITY_COMMA BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_ARITY_NUM_ARGS_INC,a));
     }
-    void reset()
+    void assign_promises()
     {
-        call_base::reset();
+        BOOST_PP_REPEAT_FROM_TO(1,BOOST_ARITY_NUM_ARGS_INC,BOOST_RPC_ARGUMENT_ASSIGN_PROMISE,BOOST_PP_EMPTY)
     }
 protected:
     virtual const std::string &parameters() const {return params;}
@@ -56,9 +50,11 @@ protected:
     {
         std::stringstream stream(str, std::ios::in | std::ios::out | std::ios::binary);
         typename ArchivePair::iarchive_type archive(stream);
+        extract_return_val(archive, options);
 #ifdef BOOST_ARITY_NON_VOID_RETURN_TYPE
-        if (options.marshal_option >= call_options::return_only)
-            archive & return_val;
+        return_prom.set(return_val);
+#else
+        return_prom.set();
 #endif
         if (options.marshal_option >= boost::rpc::call_options::all_out_parameters)
         {
