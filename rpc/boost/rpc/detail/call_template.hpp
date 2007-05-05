@@ -6,10 +6,7 @@
 #ifndef DOXYGEN_DOCS_ONLY
 template<typename Id, typename Signature, typename ArchivePair>
 class call<Id, Signature, ArchivePair
-#ifndef DOXYGEN_DOCS_ONLY
-    , typename enable_if_c<boost::function_traits<Signature>::arity==BOOST_ARITY_NUM_ARGS>::type,
-   BOOST_ARITY_ENABLE_DISABLE_VOID
-#endif
+    , typename enable_if_c<boost::function_traits<Signature>::arity==BOOST_ARITY_NUM_ARGS>::type
    >
    : public async_returning_call<typename boost::function_traits<Signature>::result_type>
 #endif // DOXYGEN_DOCS_ONLY
@@ -40,27 +37,15 @@ public:
         params = detail::serialize<Id, ArchivePair,Signature>
             (id BOOST_ARITY_COMMA BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_ARITY_NUM_ARGS_INC,a));
     }
-    void assign_promises()
+    std::auto_ptr<handler_base> spawn_handler()
     {
-        BOOST_PP_REPEAT_FROM_TO(1,BOOST_ARITY_NUM_ARGS_INC,BOOST_RPC_ARGUMENT_ASSIGN_PROMISE,BOOST_PP_EMPTY)
+        std::auto_ptr<handler_base> handler_ptr(
+            new handler<Signature, ArchivePair>(
+            BOOST_ARITY_ENUM(BOOST_RPC_VAR_arg_storableN_NAME,BOOST_PP_EMPTY())));
+        return handler_ptr;
     }
 protected:
     virtual const std::string &parameters() const {return params;}
-    virtual void result_string(const std::string &str, const call_options &options)
-    {
-        std::stringstream stream(str, std::ios::in | std::ios::out | std::ios::binary);
-        typename ArchivePair::iarchive_type archive(stream);
-        extract_return_val(archive, options);
-#ifdef BOOST_ARITY_NON_VOID_RETURN_TYPE
-        return_prom.set(return_val);
-#else
-        return_prom.set();
-#endif
-        if (options.marshal_option >= boost::rpc::call_options::all_out_parameters)
-        {
-            BOOST_PP_REPEAT_FROM_TO(1, BOOST_ARITY_NUM_ARGS_INC, BOOST_RPC_ARCHIVE_OUT_PARAM, archive)
-        }
-    };
 private:
     std::string params;
 

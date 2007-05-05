@@ -15,12 +15,10 @@
 namespace boost {
 namespace rpc {
 
-/// Base class for all of the call classes
-class call_base
+class handler_base
 {
 public:
-    /// Returns the serialized call parameters.
-    virtual const std::string &parameters() const = 0;
+    virtual ~handler_base(){}
     /// Processes the serialized call results.
     virtual void result_string(const std::string &str, const call_options &options) = 0;
     /// Returns a promise for completion
@@ -34,12 +32,23 @@ private:
     boost::promise<void> completion_promise;
 };
 
-class handler_base
+/// Base class for all of the call classes
+class call_base
+{
+public:
+    /// Returns the serialized call parameters.
+    virtual const std::string &parameters() const = 0;
+    virtual std::auto_ptr<handler_base> spawn_handler() = 0;
+};
+
+
+template<typename ReturnType>
+class async_returning_call : public call_base
 {
 };
 
 template<typename ReturnType>
-class returning_call : public call_base
+class returning_handler : public handler_base
 {
 public:
     typedef typename boost::detail::storable<ReturnType>::type storable_return_type;
@@ -60,7 +69,7 @@ protected:
 };
 
 template<>
-class returning_call<void> : public call_base
+class returning_handler<void> : public handler_base
 {
 public:
     typedef void storable_return_type;
@@ -73,7 +82,7 @@ protected:
 };
 
 template<typename ReturnType>
-class async_returning_call : public returning_call<ReturnType>
+class async_returning_handler : public returning_handler<ReturnType>
 {
 public:
     virtual void assign_promises() = 0;
@@ -82,22 +91,34 @@ protected:
     promise<ReturnType> return_prom;
 };
 
-template<typename Id, typename Signature, typename ArchivePair = binary_archive,
+
+template<typename Signature, typename ArchivePair = binary_archive,
     typename Enable=void, typename Enable2=void>
+class handler
+#ifdef DOXYGEN_DOCS_ONLY
+#include <boost/rpc/detail/handler_template.hpp>
+#endif // DOXYGEN_DOCS_ONLY
+;
+
+#define BOOST_ARITY_SEPARATE_VOID_RETURN
+#define BOOST_ARITY_ITERATION_PARAMS \
+    (3,(0,BOOST_RPC_MAX_ARGS,<boost/rpc/detail/handler_template.hpp>))
+#include <boost/detail/arity_iterate.hpp>
+#undef BOOST_ARITY_ITERATION_PARAMS
+#undef BOOST_ARITY_SEPARATE_VOID_RETURN
+
+template<typename Id, typename Signature, typename ArchivePair = binary_archive,
+    typename Enable=void>
 class call
 #ifdef DOXYGEN_DOCS_ONLY
 #include <boost/rpc/detail/call_template.hpp>
 #endif // DOXYGEN_DOCS_ONLY
 ;
 
-#define BOOST_ARITY_SEPARATE_VOID_RETURN
 #define BOOST_ARITY_ITERATION_PARAMS \
     (3,(0,BOOST_RPC_MAX_ARGS,<boost/rpc/detail/call_template.hpp>))
 #include <boost/detail/arity_iterate.hpp>
 #undef BOOST_ARITY_ITERATION_PARAMS
-#undef BOOST_ARITY_SEPARATE_VOID_RETURN
-
-
 
 } // namespace rpc
 } // namespace boost

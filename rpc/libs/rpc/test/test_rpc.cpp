@@ -19,6 +19,10 @@ using namespace boost::asio;
 class rpc_test_class
 {
 public:
+    void arg_construction()
+    {
+
+    }
     void connect()
     {
         // make a registry keyed on int id-s and using binary_archive serialization

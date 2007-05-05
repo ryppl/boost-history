@@ -23,7 +23,7 @@ public:
     typedef typename Registry::id_type id_type;
     typedef typename Registry::archive_type archive_type;
 
-    typedef std::map<protocol::request_id_type, call_base *> requests_type;
+    typedef std::map<protocol::request_id_type, boost::shared_ptr<handler_base> > requests_type;
 
     /// Initializes the client to communicate with the specified Boost.Asio endpoint.
     /** \todo Handle protocol error.
@@ -46,15 +46,18 @@ public:
     template<typename ReturnType>
     future<ReturnType> operator()(async_returning_call<ReturnType> &call, call_options options)
     {
+        boost::shared_ptr<handler_base> handler;
+        async_returning_handler<ReturnType> *r_handler;
         specify(options);
         {
             boost::mutex::scoped_lock lock(mutex);
 
-            process_call(call, options);
+            handler = process_call(call, options);
+            r_handler = (async_returning_handler<ReturnType> *)handler.get();
         }
         // any out parameter passed by reference should be assigned to the call's promises
-        call.assign_promises();
-        return call.return_promise();
+        r_handler->assign_promises();
+        return r_handler->return_promise();
     }
 protected:
     void prepare_async_read()
@@ -63,8 +66,10 @@ protected:
         boost::bind(&client::read_result_header, this, boost::asio::placeholders::error));
     }
 private:
-    void process_call(call_base &call, call_options &options)
+    boost::shared_ptr<handler_base> process_call(call_base &call, call_options &options)
     {
+        boost::shared_ptr<handler_base> handler;
+
         // send the header
         boost::asio::write(socket,
             protocol::call_header(next_request_id, options, call.parameters().size()).as_buffer(),
@@ -72,10 +77,12 @@ private:
         // send the marshal
         boost::asio::write(socket, asio::buffer(call.parameters()), boost::asio::transfer_all());
 
+        handler = call.spawn_handler();
         if (options.marshal_option > call_options::no_results)
-            requests[next_request_id] = &call;
+            requests[next_request_id] = handler;
 
         next_request_id++;
+        return handler;
     }
     void read_result_header(const boost::system::error_code& error)
     {
@@ -101,16 +108,16 @@ private:
             // unknown request!!!
             std::cerr << "unknown request" << result_header.request_id << std::endl;
         }
-        call_base *call_ptr = it->second;
+        boost::shared_ptr<handler_base> handler_ptr = it->second;
         requests.erase(it);
 
         // process the results
         if (result_header.options.marshal_option >= call_options::return_only)
         {
-            call_ptr->result_string(std::string(result_marshal_buffer, result_header.marshal_size),
+            handler_ptr->result_string(std::string(result_marshal_buffer, result_header.marshal_size),
                 result_header.options);
         }
-        call_ptr->complete();
+        handler_ptr->complete();
     }
     void specify(call_options &options)
     {
