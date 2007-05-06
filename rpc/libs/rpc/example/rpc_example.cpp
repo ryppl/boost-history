@@ -35,25 +35,31 @@ void inc_inplace(int &i)
 namespace rpc = boost::rpc;
 using namespace boost::asio;
 
-/*
 template<typename Registry>
 class remote_interface
 {
 public:
     remote_interface(rpc::client<Registry> &client) : client(client) {};
 
-    void nothing(rpc::call_options options = rpc::call_options())
-    {   client(rpc::call<int, void()> (0), options); }
-    int inc(int i, rpc::call_options options = rpc::call_options())
-    {   return client(rpc::call<int, int(int)> (1, i), options); }
-    int add2(int i, int j, rpc::call_options options = rpc::call_options())
-    {   return client(rpc::call<int, int(int, int)> (2, i,j), options); }
-    void inc_inplace(int &i, rpc::call_options options = rpc::call_options())
-    {   client(rpc::call<int, void(int &)> (3, i), options);    }
-
+    boost::future<void> nothing()
+    {   
+        return client(rpc::call<int, void()> (0));
+    }
+    boost::future<int> inc(int i)
+    {   
+        return client(rpc::call<int, int(int)> (1, i));
+    }
+    boost::future<int> add2(int i, int j)
+    {   
+        return client(rpc::call<int, int(int, int)> (2, i,j));
+    }
+    boost::future<void> inc_inplace(int &i)
+    {
+        return client(rpc::call<int, void(int &)> (3, i));
+    }
 private:
     rpc::client<Registry> &client;
-};*/
+};
 
 void network_marshal_test()
 {
@@ -93,41 +99,44 @@ void network_marshal_test()
 
 
     // make some function calls
+    
+    // this call is made asynchrously, nothing will be marshaled back
+    client(call0);
 
-/*    boost::shared_ptr<call_handler> handler = client(call0, rpc::call_options(
-        rpc::call_options::completed_only));
-    BOOST_CHECK_NO_THROW(call0.completion().get());*/
+    // this call will return a handler that we can use check for completion
+    rpc::acknowledgement_ptr handler = client(call0);
+    BOOST_CHECK_NO_THROW(handler->completion().get());
 
-    boost::future<int> result = 
-        client(call1__1, rpc::call_options(
-        rpc::call_options::return_only));
+    // this call will return a handler that can be used to get the return value
+    // since the call includes an "out" parameter, everything gets marshalled
+    // back no matter what.
+    rpc::async_returning_handler<int>::ptr handler_int = client(call1__1);
+    boost::future<int> future_int(handler_int->return_promise());
+    BOOST_CHECK_EQUAL(future_int, 2);
 
-    BOOST_CHECK_EQUAL(result, 2);
-
-    client(call3__i, rpc::call_options(
-        rpc::call_options::all_out_parameters));
-
+    // since the call sends by reference, it will act syncronously
+    client(call3__i);
     BOOST_CHECK_EQUAL(i, 2);
 
-    result = client(call2__5_6, rpc::call_options(
-        rpc::call_options::return_only));
+    // handler returners are imlplicitly convertible to futures
+    boost::future<int> result = client(call2__5_6);
 
     BOOST_CHECK_EQUAL(result, 11);
 
-    boost::future<int> inced1 = client(call1__1, rpc::call_options(
-        rpc::call_options::return_only));
+    // and values, making the call synchronous
+    int inced1 = client(call1__1);
+    BOOST_CHECK_EQUAL(inced1,  2);
 
-    BOOST_CHECK_EQUAL(inced1.get(),  2);
-
-    client(call3__inced, rpc::call_options(
-        rpc::call_options::all_out_parameters));
+    // this call sends the value through a feature (messy)
+    client(call3__inced);
     BOOST_CHECK_EQUAL(inced, 201);
 
-    client(call3__j, rpc::call_options(
-        rpc::call_options::all_out_parameters));
+    // another synchronous call
+    client(call3__j);
     BOOST_CHECK_EQUAL(j, 101);
 
-/*    remote_interface<rpc::registry<int> > remote(client);
+    // make calls using the interface class...
+    remote_interface<rpc::registry<int> > remote(client);
 
     remote.nothing();
 
@@ -135,7 +144,7 @@ void network_marshal_test()
     BOOST_CHECK_EQUAL(remote.add2(10, 20), 30);
     int x=20;
     remote.inc_inplace(x);
-    BOOST_CHECK_EQUAL(x, 21);*/
+    BOOST_CHECK_EQUAL(x, 21);
 
 } // end void network_marshal_test
 

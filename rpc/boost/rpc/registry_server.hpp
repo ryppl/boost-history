@@ -56,16 +56,18 @@ private:
     void read_marshal(const boost::system::error_code& error)
     {
         std::string result;
+        protocol::call_footer footer;
+        boost::asio::read(*socket_ptr, footer.as_buffer(), boost::asio::transfer_all());
      
         registry_(std::string(marshal_buffer, request_header.marshal_size),
-            request_header.options, &result);
+            footer.options, &result);
 
-        if (request_header.options.marshal_option >= call_options::completed_only)
+        if (footer.options.marshal_option >= call_options::completed_only)
         {
             request_header.marshal_size = static_cast<protocol::marshal_size_type>(result.size());
             socket_ptr->send(request_header.as_buffer());
         }
-        if (request_header.options.marshal_option >= call_options::return_only)
+        if (footer.options.marshal_option >= call_options::return_only)
         {
             socket_ptr->send(boost::asio::buffer(result));
         }

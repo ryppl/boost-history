@@ -229,6 +229,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\rpc\handler_return.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\rpc\detail\handler_template.hpp"
 					>
 				</File>

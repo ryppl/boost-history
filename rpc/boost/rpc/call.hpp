@@ -15,12 +15,10 @@
 namespace boost {
 namespace rpc {
 
-class handler_base
+class acknowledgement
 {
 public:
-    virtual ~handler_base(){}
-    /// Processes the serialized call results.
-    virtual void result_string(const std::string &str, const call_options &options) = 0;
+    virtual ~acknowledgement() {};
     /// Returns a promise for completion
     boost::future<void> completion()
     {
@@ -31,6 +29,18 @@ public:
 private:
     boost::promise<void> completion_promise;
 };
+
+class handler_base : public acknowledgement
+{
+public:
+    /// Processes the serialized call results.
+    virtual void result_string(const std::string &str) = 0;
+    virtual bool has_out_parameters() = 0;
+
+    call_options options;
+};
+
+typedef boost::shared_ptr<acknowledgement> acknowledgement_ptr;
 
 /// Base class for all of the call classes
 class call_base
@@ -85,8 +95,11 @@ template<typename ReturnType>
 class async_returning_handler : public returning_handler<ReturnType>
 {
 public:
+    typedef boost::shared_ptr<async_returning_handler<ReturnType> > ptr;
+
     virtual void assign_promises() = 0;
-    const promise<ReturnType> &return_promise() {return return_prom;}
+    const boost::promise<ReturnType> &return_promise() {return return_prom;}
+    operator boost::future<ReturnType> () {return return_prom;}
 protected:
     promise<ReturnType> return_prom;
 };

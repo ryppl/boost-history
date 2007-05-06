@@ -37,6 +37,9 @@
 #define BOOST_RPC_INIT_ARGUMENT(z,n,text) \
  BOOST_PP_CAT(arg_storable,n)(BOOST_PP_CAT(a,n))
 
+#define BOOST_RPC_ARGUMENT_CHECK_OUT(z,I,text) \
+    has_out |= BOOST_PP_CAT(arg_storable,I).is_out();
+
 #define BOOST_RPC_ARGUMENT_ASSIGN_PROMISE(z,I,text) \
     BOOST_PP_CAT(arg_storable,I).assign_promise();
 namespace boost {
@@ -113,6 +116,7 @@ class promising_argument : public argument<T>
 public:
     promising_argument(const argument<T> &a) : argument<T>(a) {}
     void assign_promise(){}
+    bool is_out(){return false;}
 };
 
 template<typename T>
@@ -128,6 +132,7 @@ public:
         if (passed == by_future)
             *future_ptr = boost::future<referred_type>(promise);
     }
+    bool is_out(){return true;}
     template<typename Archive>
     void deserialize(Archive &archive)
     {

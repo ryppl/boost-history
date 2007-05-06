@@ -33,25 +33,37 @@ struct call_header
     /// Does not initialize the header.
     call_header() {}
     /// Initializes the call header with the specified values.
-    call_header(request_id_type request_id, const boost::rpc::call_options &options,
-            marshal_size_type marshal_size)
+    call_header(request_id_type request_id, marshal_size_type marshal_size)
         : message_category(message::ok),
         request_id(request_id),
-        options(options),
         marshal_size(marshal_size) {}
 
     /// message_type is call_message.
     message_category_type message_category;
     /// Id associated with this call request
     request_id_type request_id;
-    /// Options of the call being made.
-    boost::rpc::call_options options;
     /// Size of the marshal part of the package.
     marshal_size_type marshal_size;
 
     boost::asio::mutable_buffers_1 as_buffer()
     {
         return boost::asio::buffer(this, sizeof(call_header));
+    }
+};
+
+struct call_footer
+{
+    call_footer(){}
+    call_footer(const boost::rpc::call_options &options)
+        : options(options)
+    {}
+
+    /// Options of the call being made.
+    boost::rpc::call_options options;
+
+    boost::asio::mutable_buffers_1 as_buffer()
+    {
+        return boost::asio::buffer(this, sizeof(call_footer));
     }
 };
 
