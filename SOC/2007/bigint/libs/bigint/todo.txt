@@ -1,0 +1,80 @@
+This is the todo list for the Bigint project.
+
+The project is divided into 2 parts - 'base' and 'extra features'. Base contains everything that has to be done anyway.
+Extra features contain features that will possibly be done if the time permits. Some of extra features obviously will not
+make it to the SoC deadline or perhaps even never.
+
+When the 'base' part will be near completion, the extra features list will be sorted by priority, now it is in random order.
+
+Base part.
+
+Feature name									Deadline		Status
+------------									--------		------
+1. Bigint interface (header)					21 May			Draft completed, waiting for input from the community
+2. GMP implementation							21 May			In progress
+3. Correctness tests							7 June			N/A
+4. Documentation								21 June			N/A
+5. Performance tests							7 July			N/A
+4. Interface for storage						14 July			N/A
+5. Storage implementation						14 July			N/A
+6. Default implementation						30 July			N/A
+
+Note that perhaps some features will be completed before the deadline and probably some features will not make the deadline,
+and instead be finished several days later. So the list is by no means static.
+
+Detailed information.
+
+1. Bigint interface (header)
+
+- uint64_t / int64_t - is it possible to implement 4 ctors (int/uint + same for 64 bit) to make it always work?
+Status: needs investigation
+
+- wide string support
+Status: needs implementing
+
+- safe bool conversion
+Status: needs implementing
+
+- conversion from string with different bases (2-36, use 26 letters + 10 digits)
+Status: needs implementing
+
+- extend implementation interface for efficient operator!() and safe bool
+Status: needs implementing
+
+- converting to/from string - there was a suggestion to use static functions
+My opinion: performance wise it is the same if compiler has NRVO support, and ctors/member functions are more convenient
+Status: get Jeffs opinion, wait for further community feedback
+
+- investigate Infinite Precision Integer for Library Technical Report 2 Draft by M.Kronenburg@inter.nl.net
+Status: needs investigation
+Jeffs opinion: be careful, the way in which the library uses inheritance is dead on arrival
+
+- make the bigint typedef depend on the available implementations (choose the most advanced instead of default one)
+My opinion: seems worthwhile
+Status: get Jeffs opinion, wait for further community feedback
+Comments: some set of defines is probably needed, like BOOST_BIGINT_HAS_GMP_SUPPORT, etc.
+
+- make sure it works on a wide range of compilers (test framework setup is needed)
+Status: needs implementing
+
+2. GMP implementation
+
+- proper 64-bit support for converting from and to bigint (implement one of suggestions given for the request at gmp devlist)
+Status: needs implementing
+
+- wide string support
+Status: needs implementing
+
+- conversion from string with different bases (2-36, use 26 letters + 10 digits)
+Status: needs implementing
+
+- more changes according to interface updates
+Status: waiting for updates
+
+-----------------------------------------------
+Extra features:
+
+- expression templates for base class (should be done so that this does not affect any implementation)
+- advanced algorithms for default implementation
+- make GMP work with arbitrary storage strategy (and perhaps enforce supporting arbitrary strategy in future implementations)
+- getting several bits from an integer (say, 7 bits from 4859-th one). Perhaps, assigning several bits.
