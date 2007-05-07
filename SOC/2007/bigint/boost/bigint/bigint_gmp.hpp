@@ -44,6 +44,16 @@ namespace detail {
 			mpz_set_ui(data, number);
 		}
 
+		void assign(int64_t number)
+		{
+			mpz_set_si(data, number);
+		}
+
+		void assign(uint64_t number)
+		{
+			mpz_set_ui(data, number);
+		}
+
 		void assign(const char* str)
 		{
 			mpz_set_str(data, str, 10);

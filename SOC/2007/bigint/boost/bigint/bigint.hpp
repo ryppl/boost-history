@@ -10,57 +10,176 @@ namespace boost {
 template <typename I> class bigint_base
 {
 	I impl;
+
 public:
+	bigint_base()
+	{
+	}
+	
+	bigint_base(int number)
+	{
+		impl.assign(number);
+	}
+	
+	bigint_base(unsigned int number)
+	{
+		impl.assign(number);
+	}
+	
+	bigint_base(int64_t number)
+	{
+		impl.assign(number);
+	}
+	
+	bigint_base(uint64_t number)
+	{
+		impl.assign(number);
+	}
 
-	bigint_base();
-	bigint_base(int number);
-	bigint_base(unsigned int number);
-	bigint_base(int64_t number);
-	bigint_base(uint64_t number);
-
-	explicit bigint_base(const char* str);
+	explicit bigint_base(const char* str)
+	{
+		impl.assign(str);
+	}
 	 // do we need const wchar_t* support?
 	 
-	explicit bigint_base(const std::string& str);
+	explicit bigint_base(const std::string& str)
+	{
+		impl.assign(str.c_str());
+	}
 	 // should we provide additional ctor for std::wstring? or should it be actually templated ctor from basic_string?
 
 	// - basic arithmetic operations (addition, subtraction, multiplication, division)
-	const bigint_base& operator+=(const bigint_base& other);
-	const bigint_base& operator-=(const bigint_base& other);
-	const bigint_base& operator*=(const bigint_base& other);
-	const bigint_base& operator/=(const bigint_base& other);
+	const bigint_base& operator+=(const bigint_base& other)
+	{
+		impl.add(impl, other.impl);
+		return *this;
+	}
+	
+	const bigint_base& operator-=(const bigint_base& other)
+	{
+		impl.sub(impl, other.impl);
+		return *this;
+	}
+
+	const bigint_base& operator*=(const bigint_base& other)
+	{
+		impl.mul(impl, other.impl);
+		return *this;
+	}
+
+	const bigint_base& operator/=(const bigint_base& other)
+	{
+		impl.div(impl, other.impl);
+		return *this;
+	}
 
 	// - modulo
-	const bigint_base& operator%=(const bigint_base& other);
+	const bigint_base& operator%=(const bigint_base& other)
+	{
+		impl.mod(impl, other.impl);
+		return *this;
+	}
 
 	// - bit operations (bit logic (or, and, xor), bit shifts (left/right))
-	const bigint_base& operator|=(const bigint_base& other);
-	const bigint_base& operator&=(const bigint_base& other);
-	const bigint_base& operator^=(const bigint_base& other);
+	const bigint_base& operator|=(const bigint_base& other)
+	{
+		impl.or_(impl, other.impl);
+		return *this;
+	}
 	
-	const bigint_base& operator<<=(boost::uint64_t other);
-	const bigint_base& operator>>=(boost::uint64_t other);
+	const bigint_base& operator&=(const bigint_base& other)
+	{
+		impl.and_(impl, other.impl);
+		return *this;
+	}
+	
+	const bigint_base& operator^=(const bigint_base& other)
+	{
+		impl.xor_(impl, other.impl);
+		return *this;
+	}
+	
+	const bigint_base& operator<<=(uint64_t other)
+	{
+		impl.lshift(impl, other);
+		return *this;
+	}
+	
+	const bigint_base& operator>>=(boost::uint64_t other)
+	{
+		impl.rshift(impl, other);
+		return *this;
+	}
 
-	const bigint_base& operator++();
-	bigint_base operator++(int);
+	const bigint_base& operator++()
+	{
+		impl.inc();
+		return *this;
+	}
+	
+	bigint_base operator++(int)
+	{
+		bigint_base old = *this;
+		impl.inc();
+		return old;
+	}
 
-	const bigint_base& operator--();
-	bigint_base operator--(int);
+	const bigint_base& operator--()
+	{
+		impl.dec();
+		return *this;
+	}
+	
+	bigint_base operator--(int)
+	{
+		bigint_base old = *this;
+		impl.dec();
+		return old;
+	}
 	
 	// unary operators
-	bigint_base operator+() const;
-	bigint_base operator-() const;
-	bigint_base operator~() const;
-	bool operator!() const;
+	bigint_base operator+() const
+	{
+		return *this;
+	}
+	
+	bigint_base operator-() const
+	{
+		bigint_base<I> result;
+		result.impl.negate(impl);
+		return result;
+	}
+	
+	bigint_base operator~() const
+	{
+		bigint_base<I> result;
+		result.impl.not_(impl);
+		return result;
+	}
+	
+	bool operator!() const
+	{
+		return *this == 0;
+	}
 	
 	// some safe bool conversion operator here - I'm not writing one now because
 	// none is portable :) need to steal it from boost::shared_ptr
 
-	std::string str() const;
+	std::string str() const
+	{
+		return impl.str();
+	}
 	
 	// conversion to numeric types (including 64 bit)
-	template <typename T> bool can_convert_to() const;
-	template <typename T> T to_number() const;
+	template <typename T> bool can_convert_to() const
+	{
+		return impl.can_convert_to<T>();
+	}
+	
+	template <typename T> T to_number() const
+	{
+		return impl.to_number<T>();
+	}
 
 	// - basic arithmetic operations (addition, subtraction, multiplication, division)
 	friend bigint_base operator+(const bigint_base& lhs, const bigint_base& rhs)
@@ -222,155 +341,5 @@ public:
 };
 
 typedef bigint_base<detail::bigint_gmp_implementation> bigint;
-
-// Implementation
-template <typename I> bigint_base<I>::bigint_base()
-{
-}
-
-template <typename I> bigint_base<I>::bigint_base(int number)
-{
-	impl.assign(number);
-}
-
-template <typename I> bigint_base<I>::bigint_base(unsigned int number)
-{
-	impl.assign(number);
-}
-
-template <typename I> bigint_base<I>::bigint_base(const char* str)
-{
-	impl.assign(str);
-}
-
-template <typename I> bigint_base<I>::bigint_base(const std::string& str)
-{
-	impl.assign(str.c_str());
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator+=(const bigint_base<I>& other)
-{
-	impl.add(impl, other.impl);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator-=(const bigint_base<I>& other)
-{
-	impl.sub(impl, other.impl);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator*=(const bigint_base<I>& other)
-{
-	impl.mul(impl, other.impl);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator/=(const bigint_base<I>& other)
-{
-	impl.div(impl, other.impl);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator%=(const bigint_base<I>& other)
-{
-	impl.mod(impl, other.impl);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator|=(const bigint_base<I>& other)
-{
-	impl.or_(impl, other.impl);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator&=(const bigint_base<I>& other)
-{
-	impl.and_(impl, other.impl);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator^=(const bigint_base<I>& other)
-{
-	impl.xor_(impl, other.impl);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator<<=(boost::uint64_t other)
-{
-	impl.lshift(impl, other);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator>>=(boost::uint64_t other)
-{
-	impl.rshift(impl, other);
-	return *this;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator++()
-{
-	impl.inc();
-	return *this;
-}
-
-template <typename I> bigint_base<I> bigint_base<I>::operator++(int)
-{
-	bigint_base old = *this;
-	impl.inc();
-	return old;
-}
-
-template <typename I> const bigint_base<I>& bigint_base<I>::operator--()
-{
-	impl.dec();
-	return *this;
-}
-
-template <typename I> bigint_base<I> bigint_base<I>::operator--(int)
-{
-	bigint_base old = *this;
-	impl.dec();
-	return old;
-}
-
-template <typename I> bigint_base<I> bigint_base<I>::operator+() const
-{
-	return *this;
-}
-
-template <typename I> bigint_base<I> bigint_base<I>::operator-() const
-{
-	bigint_base<I> result;
-	result.impl.negate(impl);
-	return result;
-}
-
-template <typename I> bigint_base<I> bigint_base<I>::operator~() const
-{
-	bigint_base<I> result;
-	result.impl.not_(impl);
-	return result;
-}
-
-template <typename I> bool bigint_base<I>::operator!() const
-{
-	return *this == bigint_base<I>(0); // not as efficient as it could be. Whatever :)
-}
-
-template <typename I> std::string bigint_base<I>::str() const
-{
-	return impl.str();
-}
-
-template <typename I> template <typename T> bool bigint_base<I>::can_convert_to() const
-{
-	return impl.can_convert_to<T>();
-}
-
-template <typename I> template <typename T> T bigint_base<I>::to_number() const
-{
-	return impl.to_number<T>();
-}
 
 } // namespace boost

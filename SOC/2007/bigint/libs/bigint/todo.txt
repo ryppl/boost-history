@@ -68,6 +68,12 @@ Status: needs implementing
 - conversion from string with different bases (2-36, use 26 letters + 10 digits)
 Status: needs implementing
 
+- proper converting to numbers
+Status: needs implementing
+
+- check semantics of bitwise and shift operations for negative numbers
+Status: needs investigation
+
 - more changes according to interface updates
 Status: waiting for updates
 
