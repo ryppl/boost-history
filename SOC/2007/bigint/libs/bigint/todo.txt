@@ -29,8 +29,12 @@ Detailed information.
 + conversion from string with different bases (2-36, use 26 letters + 10 digits)
 Status: implemented
 
-- wide string support
-Status: implemented ctors, do we need to provide a wstr() function?
++ investigate Infinite Precision Integer for Library Technical Report 2 Draft by M.Kronenburg@inter.nl.net
+Status: investigated, did not like the design decision, did not find anything useful apart from that
+Jeffs opinion: be careful, the way in which the library uses inheritance is dead on arrival
+
++ wide string support
+Status: implemented ctors, wstr function and proper << >> for streams (including different output/input flags (hex/oct/dec))
 
 - uint64_t / int64_t - is it possible to implement 4 ctors (int/uint + same for 64 bit) to make it always work?
 Status: needs investigation
@@ -45,10 +49,6 @@ Status: needs implementing
 My opinion: performance wise it is the same if compiler has NRVO support, and ctors/member functions are more convenient
 Status: get Jeffs opinion, wait for further community feedback
 
-- investigate Infinite Precision Integer for Library Technical Report 2 Draft by M.Kronenburg@inter.nl.net
-Status: needs investigation
-Jeffs opinion: be careful, the way in which the library uses inheritance is dead on arrival
-
 - make the bigint typedef depend on the available implementations (choose the most advanced instead of default one)
 My opinion: seems worthwhile
 Status: get Jeffs opinion, wait for further community feedback
@@ -62,14 +62,14 @@ Status: needs implementing
 + conversion from string with different bases (2-36, use 26 letters + 10 digits)
 Status: implemented
 
++ wide string support
+Status: implemented conversion to both strings and wide strings
+
++ revise bigint->string conversion, it is not standard-compliant (std::string is not required to be contiguous)
+Status: fixed
+
 - proper 64-bit support for converting from and to bigint (implement one of suggestions given for the request at gmp devlist)
 Status: needs implementing
-
-- wide string support
-Status: implemented conversion from string, do we need to convert to wide string?
-
-- revise bigint->string conversion, it is not standard-compliant (std::string is not required to be contiguous)
-Status: needs fixing
 
 - proper converting to numbers
 Status: needs implementing
@@ -87,3 +87,4 @@ Extra features:
 - advanced algorithms for default implementation
 - make GMP work with arbitrary storage strategy (and perhaps enforce supporting arbitrary strategy in future implementations)
 - getting several bits from an integer (say, 7 bits from 4859-th one). Perhaps, assigning several bits.
+- conversion from/to floating point (float, double, long double)

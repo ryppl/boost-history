@@ -14,7 +14,7 @@
 
 #include <boost/cstdint.hpp>
 
-#include "bigint_gmp.hpp"
+#include <boost/bigint/bigint_util.hpp>
 
 namespace boost {
 template <typename I> class bigint_base
@@ -183,11 +183,16 @@ public:
 	// some safe bool conversion operator here - I'm not writing one now because
 	// none is portable :) need to steal it from boost::shared_ptr
 
-	std::string str() const
+	std::string str(int base = 10) const
 	{
-		return impl.str();
+		return impl.str(base);
 	}
 	
+	std::wstring wstr(int base = 10) const
+	{
+		return impl.wstr(base);
+	}
+
 	// conversion to numeric types (including 64 bit)
 	template <typename T> bool can_convert_to() const
 	{
@@ -334,15 +339,17 @@ public:
 
 	template <typename T, typename Tr> friend std::basic_ostream<T, Tr>& operator<<(std::basic_ostream<T, Tr>& lhs, const bigint_base& rhs)
 	{
-		return lhs << rhs.str();
+		int base = (lhs.flags() & std::ios_base::hex) ? 16 : (lhs.flags() & std::ios_base::oct) ? 8 : 10;
+		return lhs << detail::bigint::to_string(rhs, base, T());
 	}
 
 	template <typename T, typename Tr> friend std::basic_istream<T, Tr>& operator>>(std::basic_istream<T, Tr>& lhs, bigint_base& rhs)
 	{
-		std::string data;
-		lhs >> data;
+		std::basic_string<T> result;
+		lhs >> result;
 		
-		rhs = bigint_base(data);
+		int base = (lhs.flags() & std::ios_base::hex) ? 16 : (lhs.flags() & std::ios_base::oct) ? 8 : 10;
+		rhs = bigint_base(result, base);
 		
 		return lhs;
 	}
@@ -357,6 +364,12 @@ public:
 		return bigint_base((int)value);
 	}
 };
+
+} // namespace boost
+
+#include <boost/bigint/bigint_gmp.hpp>
+
+namespace boost {
 
 typedef bigint_base<detail::bigint_gmp_implementation> bigint;
 

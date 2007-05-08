@@ -215,17 +215,30 @@ namespace boost { namespace detail {
 			return mpz_cmp(data, rhs.data);
 		}
 
-		std::string str() const
+		std::string str(int base) const
 		{
-			// Yeah, string does not have to be contiguous. This is proof of concept after all
-			std::string result;
-			result.resize(mpz_sizeinbase(data, 10) + 1);
-			const char* str = mpz_get_str(const_cast<char*>(result.data()), 10, data);
-			result.resize(strlen(str));
-
+			assert(base >= 2 && base <= 36);
+			
+			size_t s_size = mpz_sizeinbase(data, base) + (mpz_sgn(data) < 0);
+			scoped_array<char> s(new char[s_size + 1]);
+			mpz_get_str(s.get(), base, data);
+			
+			std::string result(s.get()); // NRVO
 			return result;
 		}
 		
+		std::wstring wstr(int base) const
+		{
+			assert(base >= 2 && base <= 36);
+			
+			size_t s_size = mpz_sizeinbase(data, base) + (mpz_sgn(data) < 0);
+			scoped_array<char> s(new char[s_size + 1]);
+			mpz_get_str(s.get(), base, data);
+			
+			std::wstring result(s.get(), s.get() + s_size);
+			return result;
+		}
+
 		template <typename T> bool can_convert_to() const
 		{
 			return mpz_fits_sint_p(data) != 0;

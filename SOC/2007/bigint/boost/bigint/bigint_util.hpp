@@ -46,7 +46,17 @@ namespace boost { namespace detail { namespace bigint {
 		
 		return count * bits_in_base;
 	}
+	
+	template <typename T> inline std::string to_string(const T& value, int base, char)
+	{
+		return value.str(base);
+	}
 
+	template <typename T> inline std::wstring to_string(const T& value, int base, wchar_t)
+	{
+		return value.wstr(base);
+	}
+	
 } } } // namespace boost::detail::bigint
 
 #endif // BOOST_BIGINT_BIGINT_UTIL_HPP
