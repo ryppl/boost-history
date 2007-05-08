@@ -1,4 +1,16 @@
-#include "bigint.hpp"
+/* Boost bigint.hpp header file
+ *
+ * Copyright 2007 Arseny Kapoulkine
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+#ifndef BOOST_BIGINT_BIGINT_SERIALIZE_HPP
+#define BOOST_BIGINT_BIGINT_SERIALIZE_HPP
+
+#include <boost/bigint/bigint.hpp>
 
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/split_free.hpp>
@@ -24,4 +36,6 @@ template <class Archive, typename I> inline void serialize(Archive & ar, bigint_
     split_free(ar, t, file_version); 
 }
 
-}}
+} } // namespace boost::serialization
+
+#endif // BOOST_BIGINT_BIGINT_SERIALIZE_HPP

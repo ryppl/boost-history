@@ -26,16 +26,16 @@ Detailed information.
 
 1. Bigint interface (header)
 
++ conversion from string with different bases (2-36, use 26 letters + 10 digits)
+Status: implemented
+
+- wide string support
+Status: implemented ctors, do we need to provide a wstr() function?
+
 - uint64_t / int64_t - is it possible to implement 4 ctors (int/uint + same for 64 bit) to make it always work?
 Status: needs investigation
 
-- wide string support
-Status: needs implementing
-
 - safe bool conversion
-Status: needs implementing
-
-- conversion from string with different bases (2-36, use 26 letters + 10 digits)
 Status: needs implementing
 
 - extend implementation interface for efficient operator!() and safe bool
@@ -59,14 +59,17 @@ Status: needs implementing
 
 2. GMP implementation
 
++ conversion from string with different bases (2-36, use 26 letters + 10 digits)
+Status: implemented
+
 - proper 64-bit support for converting from and to bigint (implement one of suggestions given for the request at gmp devlist)
 Status: needs implementing
 
 - wide string support
-Status: needs implementing
+Status: implemented conversion from string, do we need to convert to wide string?
 
-- conversion from string with different bases (2-36, use 26 letters + 10 digits)
-Status: needs implementing
+- revise bigint->string conversion, it is not standard-compliant (std::string is not required to be contiguous)
+Status: needs fixing
 
 - proper converting to numbers
 Status: needs implementing

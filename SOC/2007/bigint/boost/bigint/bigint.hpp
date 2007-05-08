@@ -1,4 +1,14 @@
-#pragma once
+/* Boost bigint.hpp header file
+ *
+ * Copyright 2007 Arseny Kapoulkine
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
+#ifndef BOOST_BIGINT_BIGINT_HPP
+#define BOOST_BIGINT_BIGINT_HPP
 
 #include <string>
 
@@ -36,17 +46,25 @@ public:
 		impl.assign(number);
 	}
 
-	explicit bigint_base(const char* str)
+	explicit bigint_base(const char* str, int base = 10)
 	{
-		impl.assign(str);
+		impl.assign(str, base);
 	}
-	 // do we need const wchar_t* support?
+	
+	explicit bigint_base(const wchar_t* str, int base = 10)
+	{
+		impl.assign(str, base);
+	}
 	 
-	explicit bigint_base(const std::string& str)
+	explicit bigint_base(const std::string& str, int base = 10)
 	{
-		impl.assign(str.c_str());
+		impl.assign(str.c_str(), base);
 	}
-	 // should we provide additional ctor for std::wstring? or should it be actually templated ctor from basic_string?
+	
+	explicit bigint_base(const std::wstring& str, int base = 10)
+	{
+		impl.assign(str.c_str(), base);
+	}
 
 	// - basic arithmetic operations (addition, subtraction, multiplication, division)
 	const bigint_base& operator+=(const bigint_base& other)
@@ -343,3 +361,5 @@ public:
 typedef bigint_base<detail::bigint_gmp_implementation> bigint;
 
 } // namespace boost
+
+#endif // BOOST_BIGINT_BIGINT_HPP
