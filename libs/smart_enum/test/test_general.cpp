@@ -8,8 +8,9 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/test/unit_test.hpp>
-using boost::unit_test_framework::test_suite;
+#include <boost/static_assert.hpp>
+#define BOOST_AUTO_TEST_MAIN
+#include <boost/test/auto_unit_test.hpp>
 
 template<typename enumT>
 struct UncheckedEnumTraits
@@ -107,39 +108,26 @@ private:
 
 enum myEnum { STATE1, STATE2, STATE3, STATE4 };
 
-void smart_enum_size_test()
-{
-  BOOST_MESSAGE("sizeof(smart_enum<>) = " << sizeof(smart_enum<myEnum>));
-  BOOST_WARN(sizeof(smart_enum<myEnum>) == sizeof(myEnum));
-}
+BOOST_STATIC_ASSERT(sizeof(smart_enum<myEnum>) == sizeof(myEnum));
 
-void state_enum_test()
+BOOST_AUTO_TEST_CASE( test_state_enum )
 {
-  typedef smart_enum<myEnum> enum_type;
-  enum_type state = 0;
-  BOOST_CHECK_EQUAL((state += 1), STATE2);
-  BOOST_CHECK_EQUAL((++state), STATE3);
-  BOOST_CHECK_EQUAL((--state), STATE2);
-  BOOST_CHECK_EQUAL((state++), STATE2);
-  BOOST_CHECK_EQUAL((state--), STATE3);
-  BOOST_CHECK_EQUAL((state), STATE2);
-  BOOST_CHECK_EQUAL((state -= 1), STATE1);
+  smart_enum<myEnum> state( 0 );
+  BOOST_REQUIRE_EQUAL((state += 1), STATE2);
+  BOOST_REQUIRE_EQUAL((++state), STATE3);
+  BOOST_REQUIRE_EQUAL((--state), STATE2);
+  BOOST_REQUIRE_EQUAL((state++), STATE2);
+  BOOST_REQUIRE_EQUAL((state--), STATE3);
+  BOOST_REQUIRE_EQUAL((state), STATE2);
+  BOOST_REQUIRE_EQUAL((state -= 1), STATE1);
 
   state = STATE4;
-  BOOST_CHECK_EQUAL(state, STATE4);
+  BOOST_REQUIRE_EQUAL(state, STATE4);
 
-  enum_type tmp = state;
-  BOOST_CHECK_EQUAL(state, tmp);
-  BOOST_CHECK(state < tmp+1);
+  smart_enum<myEnum> tmp( state );
+  BOOST_REQUIRE_EQUAL(state, tmp);
+  BOOST_REQUIRE(state < tmp+1);
 
   tmp = state - 1;
-  BOOST_CHECK_EQUAL(tmp, STATE3);
-}
-
-test_suite* init_unit_test_suite(int argc, char** argv)
-{
-  test_suite* test = BOOST_TEST_SUITE("test_general");
-  test->add(BOOST_TEST_CASE( &smart_enum_size_test ) );
-  test->add(BOOST_TEST_CASE( &state_enum_test ) );
-  return test;
+  BOOST_REQUIRE_EQUAL(tmp, STATE3);
 }
