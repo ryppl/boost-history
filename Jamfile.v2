@@ -1,0 +1,1 @@
+use-project /boost : $(BOOST_ROOT) ;
