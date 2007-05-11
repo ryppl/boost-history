@@ -1,0 +1,18 @@
+Just something to occupy the time when I don't feel like coding, I'm porting the 
+Boost.Graph documentation to quickbook.
+
+== Building ==
+
+This probably won't build in its current location - you have to relocate the entire
+quickbook directory to the Boost.Graph's documentation directory. So for me, I'd do this
+
+cd $PATH_TO_SOC07_GRAPHS/doc
+mv quickbook $PATH_TO_BOOST/libs/graph/doc
+cd $PATH_TO_BOOST/libs/doc
+bjam --v2
+
+Of course, you'll need a functional build of quickbook and boostbook for it to
+work.
+
+It ain't pretty, but hopefully it'll be better by the end of the summer. See the
+TODO file for the list of things that need to happen with it.

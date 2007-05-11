@@ -1,0 +1,16 @@
+
+- Obviously, finish copying over the rest of the documentation (there's lots of it...)
+- Fix the introduction page so that it's more of a brief preface than a complete intro.
+  The intro should be its own nested chapter - we might even want to incorporate the
+  history, publications, and usage pages into a sort of "social" chapter.
+- Make the "quick tour" a real user's guide a la xpressive or spririt. The one thing
+  that definitely needs to be updated is discussion of properties in the guide. It
+  might be nice to have the user's guide introduce topics based on various problems.
+  Obviously, different problems require different types of graphs and different
+  algorithms... 
+- Is it feasible to reference code in examples in the user's guide or should it all
+  be hand-written (and untested)?
+- Can we make Better images? Can we center images in quickbook? (maybe using tables).
+- Replace all occurences of "the BGL" with Boost.Graph to help harmonize with
+  the "how to reference page".
+- Get the build to generate xml documents and build a reference manual.

@@ -1,0 +1,27 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Who's Using Me Now?]
+
+This section should probably be merged into the global "Who's using me now page". But, for completeness
+here's the list (with links, too):
+
+* [@http://www.cs.rpi.edu/~musser/gsd/ Generic Software Design Course at RPI]
+* [@http://alps.comp-phys.org/ The ALPS quantum mechanics project]
+* [@http://bioinformatics.icmb.utexas.edu/lgl/ Large Graph Layout at University of Texas]
+* [@http://www.cs.concordia.ca/~gregb/home/c691R-w2004.html Bioinformatics Algorithms at Concordia University]
+* [@http://photon.poly.edu/~hbr/cs903/ Algorithm Course at Polytechnic University in Brooklyn]
+* [@http://www.bioconductor.org/repository/devel/vignette/RBGL.pdf BGL interface for language R]
+* [@http://www.cuj.com/documents/s=8470/cuj0307tan/ CUJ Article about Electronic Design Automation]
+* [@http://rubyforge.org/projects/rgl/ A BGL-inspired Ruby Graph Library]
+* [@http://www.codeproject.com/cs/miscctrl/quickgraph.asp A BGL-inspired C# Graph Library]
+* [@http://map1.squeakfoundation.org/sm/package/5729d80a-822b-4bc2-9420-ef7ecaea8553 A BGL-inspired Squeak (Smalltalk) Graph Library]
+* [@http://www.datasim.nl/education/coursedetails.asp?coursecategory=CPP&coursecode=ADCPP BGL course at DataSim]
+* [@http://www.vrjuggler.org/ VR Juggler: Virtual Reality Tools]
+* [@http://hyperworx.org Hyperworx Platform Project]
+
+[endsect]

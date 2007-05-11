@@ -1,0 +1,13 @@
+
+import quickbook ;
+
+xml graph
+	: graph.qbk
+	;
+
+boostbook standalone
+	: graph
+	;
+
+install html : ../../../../doc/html/boostbook.css ;
+install ../ : ../../../../boost.png ;
