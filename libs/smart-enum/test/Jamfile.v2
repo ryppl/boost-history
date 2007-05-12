@@ -1,9 +1,0 @@
-import testing ;
-
-test-suite smart_enum_tests
-  : [ run test_general.cpp          /boost//unit_test_framework ]
-    [ run test_bounded_enum.cpp     /boost//unit_test_framework ]
-    [ run test_lambda_enum.cpp      /boost//unit_test_framework ]
-    [ run test_sequential_enum.cpp  /boost//unit_test_framework ]
-    [ run test_wrapped_enum.cpp     /boost//unit_test_framework ]
-  ;
