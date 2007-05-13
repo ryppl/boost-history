@@ -1,0 +1,57 @@
+#if !defined(BOOST_PP_IS_ITERATING)
+# error Signal Network - do not include this file!
+#endif
+
+#include <boost/preprocessor/arithmetic/inc.hpp>
+
+#define SIGNAL_NETWORK_TEMPLATE_ARITY BOOST_PP_ITERATION()
+#define SIGNAL_NETWORK_TEMPLATE_ARITY_INC BOOST_PP_INC(SIGNAL_NETWORK_TEMPLATE_ARITY)
+
+namespace boost {
+namespace signal_network {
+namespace signet {
+namespace detail {
+
+#ifndef SIGNAL_NETWORK_TEMPLATE_NO_RETURNS
+#define SIGNAL_NETWORK_TEMPLATE_CLASS_IMPL_DECLARATION(_return) \
+	SIGNAL_NETWORK_TEMPLATE_CLASS_IMPL<SIGNAL_NETWORK_TEMPLATE_INPUTS_VALUES SIGNAL_NETWORK_TEMPLATE_TYPENAMES_LIST Signature, SIGNAL_NETWORK_TEMPLATE_ARITY \
+,typename boost::BOOST_PP_IF(_return,disable_if,enable_if) \
+<boost::is_void<typename boost::function_traits<Signature>::result_type > >::type >
+#else
+#define SIGNAL_NETWORK_TEMPLATE_CLASS_IMPL_DECLARATION(_return) \
+	SIGNAL_NETWORK_TEMPLATE_CLASS_IMPL<SIGNAL_NETWORK_TEMPLATE_INPUTS_VALUES SIGNAL_NETWORK_TEMPLATE_TYPENAMES_LIST Signature, SIGNAL_NETWORK_TEMPLATE_ARITY>
+#endif
+
+#define _return 0
+
+template<SIGNAL_NETWORK_TEMPLATE_TYPENAMES typename Signature>
+struct SIGNAL_NETWORK_TEMPLATE_CLASS_IMPL_DECLARATION(_return)
+SIGNAL_NETWORK_TEMPLATE_INHERIT
+	{
+#include SIGNAL_NETWORK_TEMPLATE_FILE_TO_INCLUDE
+	};
+
+#undef _return
+
+
+#ifndef SIGNAL_NETWORK_TEMPLATE_NO_RETURNS
+#define _return 1
+
+template<SIGNAL_NETWORK_TEMPLATE_TYPENAMES typename Signature>
+struct SIGNAL_NETWORK_TEMPLATE_CLASS_IMPL_DECLARATION(_return)
+SIGNAL_NETWORK_TEMPLATE_INHERIT
+	{
+#include SIGNAL_NETWORK_TEMPLATE_FILE_TO_INCLUDE
+	};
+
+#undef _return
+#endif 
+
+} // end namespace detail
+}
+}
+}
+
+#undef SIGNAL_NETWORK_TEMPLATE_CLASS_IMPL_DECLARATION
+#undef SIGNAL_NETWORK_TEMPLATE_ARITY
+#undef SIGNAL_NETWORK_TEMPLATE_ARITY_INC
