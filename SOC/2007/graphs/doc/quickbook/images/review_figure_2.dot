@@ -1,0 +1,15 @@
+
+graph G {
+	v;
+	b;
+	x;
+	z;
+	a;
+	y;
+	b -- y;
+	y -- v;
+	z -- a;
+	x -- x;
+	b -- x;
+	x -- v;
+}

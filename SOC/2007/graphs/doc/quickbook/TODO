@@ -1,16 +1,71 @@
 
-- Obviously, finish copying over the rest of the documentation (there's lots of it...)
-- Fix the introduction page so that it's more of a brief preface than a complete intro.
+= Content =
+* Obviously, finish copying over the rest of the documentation (there's lots of it...)
+
+* The documentary structure is probably going to change heavily since I'm not particularly
+  fond of its flow. It also has to adapt to the new undirected and directed graph classes
+  that I'm implementing. For example we should probably rewrite all the documentation
+  in terms of those classes since they're supposed to be easy to use. Using the
+  adjacency_list would be more of an advanced (actually intermediate) topic.
+
+* Fix the introduction page so that it's more of a brief preface than a complete intro.
   The intro should be its own nested chapter - we might even want to incorporate the
   history, publications, and usage pages into a sort of "social" chapter.
-- Make the "quick tour" a real user's guide a la xpressive or spririt. The one thing
+
+* Make the "quick tour" a real user's guide a la xpressive or spririt. The one thing
   that definitely needs to be updated is discussion of properties in the guide. It
   might be nice to have the user's guide introduce topics based on various problems.
   Obviously, different problems require different types of graphs and different
-  algorithms... 
-- Is it feasible to reference code in examples in the user's guide or should it all
-  be hand-written (and untested)?
-- Can we make Better images? Can we center images in quickbook? (maybe using tables).
-- Replace all occurences of "the BGL" with Boost.Graph to help harmonize with
-  the "how to reference page".
-- Get the build to generate xml documents and build a reference manual.
+  algorithms.
+
+  It might be nice to have the theory review before the tour since the tour actually
+  builds on information in the guide. In fact, there's actually we could probably build
+  the guide specifically to reference undirected/directed graph examples in the
+  review.
+
+* Is it feasible to reference code in examples in the user's guide or should it all
+  be hand-written (and untested)? In otherwords, are the examples in a citable
+  and readable condition?
+
+* Replace all occurences of "the BGL" with Boost.Graph to help harmonize with
+  the "how to reference" Boost info on the primary web site.
+
+* Get the build to generate xml documents via doxygen and build a reference manual
+  into the guide.
+
+* What properties do edges and vertices always have available?
+
+= Quickbook Stuff =
+* The documentation build needs a serious "HOWTO". I really don't know how to get
+  the Boost.Graph manual to integrate cleanly with Boost.Book - which I am guessing
+  is hosted in $BOOST/doc. Also, how are images integrated? The basic problem is
+  that there's nothing that describes the general virtual file system structure of
+  the build so its hard to guess how a reference to an image (for example) might
+  tranlate from the standalone documentation build to the BoostBook build.
+
+* It would also be nice if there was a way to generate dependencies from quickbook
+  so bjam would know when to rebuild documents when included sections have changed.
+
+* Quickbook doesn't support superscript/subscript which is needed by some of the
+  mathematical concepts presented in the review.
+
+   It might be kind of cool to embed latex mathematical notation into quickbook.
+   When found, quickbook could just shell the selected text to a latex processor
+  to automatically produce graphics of the math notation and automatically link
+  them into the output documents. This concept could also be expanded with graphviz
+  (for graphs), xfig (for other figures), gnuplot, etc. Of course, that would probably
+  restrict the documentation build to a *nix box...
+
+* Re-cite everything in the new version of the documents. Does quickbook contain
+  citation support? It might be kind of interesting to augment quickbook to implement
+  structured citation records like:
+  [reference
+	[authors ...]
+	[title ...]
+	[year ...]
+	[pages ...]
+	...
+  ]
+  Citations might be generated as links of the form:
+  [cite first-author.year] --> [#...]
+  Or something like that since author/year may prove ambigous.

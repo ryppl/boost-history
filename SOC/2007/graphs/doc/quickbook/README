@@ -1,15 +1,20 @@
 Just something to occupy the time when I don't feel like coding, I'm porting the 
 Boost.Graph documentation to quickbook.
 
+== Various Nots
+I've rewritten some of the original graphs as graphviz files and generated them
+with neato (as opposed to dot or circo). Currently, these have replaced graph images
+in the quick tour and theoretical review.
+
 == Building ==
 
 This probably won't build in its current location - you have to relocate the entire
 quickbook directory to the Boost.Graph's documentation directory. So for me, I'd do this
 
-cd $PATH_TO_SOC07_GRAPHS/doc
-mv quickbook $PATH_TO_BOOST/libs/graph/doc
-cd $PATH_TO_BOOST/libs/doc
-bjam --v2
+$ cd $PATH_TO_SOC07_GRAPHS/doc
+$ mv quickbook $PATH_TO_BOOST/libs/graph/doc
+$ cd $PATH_TO_BOOST/libs/doc
+$ bjam --v2
 
 Of course, you'll need a functional build of quickbook and boostbook for it to
 work.

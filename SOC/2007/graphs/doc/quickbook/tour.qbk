@@ -13,7 +13,7 @@ abstract interface that serves the same purpose for graphs that iterators do for
 (though iterators still play a large role). Figure 1 depicts the analogy between the STL and
 Boost.Graph.
 
-[$../images/analogy.gif]
+[$../images/tour_analogy.gif]
 
 The graph abstraction consists of a set of vertices (or nodes), and a set of edges (or arcs) that
 connect the vertices. Figure 2 depicts a directed graph with five vertices (labeled 0 through 4)
@@ -21,7 +21,7 @@ and 11 edges. The edges leaving a vertex are called the out-edges of the vertex.
 {(0,1),(0,2),(0,3),(0,4)} are all out-edges of vertex 0. The edges entering a vertex are called
 the in-edges of the vertex. The edges {(0,4),(2,4),(3,4)} are all in-edges of vertex 4.
 
-[$../images/quick_start.gif]
+[$../images/tour_graph.png]
 
 In the following sections we will use Boost.Graph to construct this example graph and manipulate it in
 various ways. The complete source code for this example can be found in examples/quick_tour.cpp. Each
@@ -104,7 +104,6 @@ the graph_traits class. Note that different graph classes can have different ass
 iterator types, which is why we need the `graph_traits<>` class. Given some graph type, the `graph_traits<>`
 class will provide access to the vertex_iterator type.
 
-[note Question: What are the default propties supported by Boost.Graph?]
 The following example prints out the index for each of the vertices in the graph. All vertex and
 edge properties, including index, are accessed via property map objects. The `property_map<>` class is
 used to obtain the property map type for a specific property (specified by `vertex_index_t`, one of the
