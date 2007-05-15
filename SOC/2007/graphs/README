@@ -1,0 +1,15 @@
+
+Various Notes to Self
+
+== Models of Concepts ==
+I didn't know this - or at least I hadn't thought about it, but it appears that
+undirected graphs model the BidirectionalGraph concept - at least they do with
+adjacency_list. Curious...
+
+== Nicities ==
+Apparently, that migrating into a new namespace isn't going to work too well
+since all the other algorithms are expecting functions in a particular namespace
+and (probably more importantly) with a particular signature.
+
+I think it would probably take a complete rewrite of Boost.Graph in order to
+successfully create the more familiar interfaces.
