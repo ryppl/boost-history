@@ -1,0 +1,6 @@
+boost_test_run(dead_slot_test LIBRARIES boost_signals-static)
+boost_test_run(deletion_test LIBRARIES boost_signals-static)
+boost_test_run(ordering_test LIBRARIES boost_signals-static)
+boost_test_run(signal_n_test LIBRARIES boost_signals-static)
+boost_test_run(signal_test LIBRARIES boost_signals-static)
+boost_test_run(trackable_test LIBRARIES boost_signals-static)
