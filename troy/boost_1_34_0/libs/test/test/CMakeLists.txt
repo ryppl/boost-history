@@ -1,4 +1,6 @@
 add_definitions(-DBOOST_TEST_NO_AUTO_LINK=1)
+# shared needs:
+add_definitions(-DBOOST_TEST_DYN_LINK=1)
 
 if(BORLAND)
   add_definitions(-w-8080)
