@@ -30,7 +30,7 @@
 #                            errors when compiled.
 #
 
-option(BUILD_TESTING "Enable testing")
+option(BUILD_TESTING "Enable testing" ON)
 include(CTest)
 
 macro(boost_test_parse_args testname)

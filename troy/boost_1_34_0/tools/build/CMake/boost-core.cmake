@@ -45,7 +45,6 @@ macro(boost_library)
   CDR(sources ${THIS_LIB_DEFAULT_ARGS})
 
   IF(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
-    MESSAGE("Adding static ${libname}")
     add_library("${libname}-static" STATIC ${sources})
     set_target_properties("${libname}-static" 
       PROPERTIES OUTPUT_NAME "${libname}"
@@ -58,9 +57,7 @@ macro(boost_library)
     install(TARGETS "${libname}-static" DESTINATION lib)
   ENDIF(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
 
-  MESSAGE("lib ${libname} THIS_LIB_NO_SHARED==${THIS_LIB_NO_SHARED}")
   IF(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE") 
-    MESSAGE("Adding shared ${libname}")
     add_library("${libname}-shared" SHARED ${sources})
     set_target_properties("${libname}-shared" 
       PROPERTIES OUTPUT_NAME "${libname}"
