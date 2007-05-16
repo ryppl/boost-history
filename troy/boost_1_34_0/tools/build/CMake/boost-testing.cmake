@@ -39,47 +39,35 @@ option(BUILD_TESTING "Enable testing" ON)
 include(CTest)
 
 macro(boost_test_parse_args testname)
-  set(BOOST_TEST_PARSING_VAR "SOURCES")
-  set(BOOST_TEST_SOURCES)
-  set(BOOST_TEST_LIBRARIES)
   set(BOOST_TEST_OKAY TRUE)
-
+  set(BOOST_TEST_COMPILE_FLAGS "")
+  parse_arguments(BOOST_TEST 
+    "SOURCES;LIBRARIES;DEPENDS;COMPILE_FLAGS"
+    ""
+    ${ARGN}
+    )
+    
   # Categorize each of the arguments
-  foreach(ARG ${ARGN})
-    if (${ARG} STREQUAL "SOURCES")
-      set(BOOST_TEST_PARSING_VAR "SOURCES")
-    elseif (${ARG} STREQUAL "LIBRARIES")
-      set(BOOST_TEST_PARSING_VAR "LIBRARIES")
-    else (${ARG} STREQUAL "SOURCES")
-      if(${BOOST_TEST_PARSING_VAR} STREQUAL "SOURCES") 
-        # Add this argument to the list of sources
-        set(BOOST_TEST_SOURCES ${BOOST_TEST_SOURCES} ${ARG})
-      else(${BOOST_TEST_PARSING_VAR} STREQUAL "SOURCES")
-        # Add this argument to the list of libraries to link against
-        set(BOOST_TEST_LIBRARIES ${BOOST_TEST_LIBRARIES} ${ARG})
+  foreach(ARG ${BOOST_TEST_DEPENDS})
+    # If building static libraries is turned off..
+    if (NOT BUILD_STATIC_LIBS)
+      # And this is a -static library
+      if (ARG MATCHES ".*-static$")
+        # We cannot build this test
+        set(BOOST_TEST_OKAY FALSE)
+      endif (ARG MATCHES ".*-static$")
+    endif (NOT BUILD_STATIC_LIBS)
 
-        # If building static libraries is turned off..
-        if (NOT BUILD_STATIC_LIBS)
-          # And this is a -static library
-          if (ARG MATCHES ".*-static$")
-            # We cannot build this test
-            set(BOOST_TEST_OKAY FALSE)
-          endif (ARG MATCHES ".*-static$")
-        endif (NOT BUILD_STATIC_LIBS)
+    if (NOT BUILD_SHARED_LIBS)
+      # And this is a -shared library
+      if (ARG MATCHES ".*-shared$")
+        # We cannot build this test
+        set(BOOST_TEST_OKAY FALSE)
+      endif (ARG MATCHES ".*-shared$")
+    endif (NOT BUILD_SHARED_LIBS)
+  endforeach(ARG ${BOOST_TEST_DEPENDS})
 
-        # If building shared libraries is turned off..
-        if (NOT BUILD_SHARED_LIBS)
-          # And this is a -shared library
-          if (ARG MATCHES ".*-shared$")
-            # We cannot build this test
-            set(BOOST_TEST_OKAY FALSE)
-          endif (ARG MATCHES ".*-shared$")
-        endif (NOT BUILD_SHARED_LIBS)
-      endif(${BOOST_TEST_PARSING_VAR} STREQUAL "SOURCES")
-    endif (${ARG} STREQUAL "SOURCES")
-  endforeach(ARG ${ARGN})
-
-  # Determine the list of sources
+  # If no test specified, use the name of the test
   if (NOT BOOST_TEST_SOURCES)
     set(BOOST_TEST_SOURCES "${testname}.cpp")
   endif (NOT BOOST_TEST_SOURCES)
@@ -94,10 +82,13 @@ macro(boost_test_run testname)
   boost_test_parse_args(${testname} ${ARGN})
   if (BOOST_TEST_OKAY)
     add_executable(${testname} ${BOOST_TEST_SOURCES})
-
-    if (BOOST_TEST_LIBRARIES)
-      target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
-    endif(BOOST_TEST_LIBRARIES)
+    set_source_files_properties(${BOOST_TEST_SOURCES}
+      COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
+      )
+    if (BOOST_TEST_DEPENDS)
+      target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
+    endif(BOOST_TEST_DEPENDS)
+    target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
 
     add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${testname})
   endif(BOOST_TEST_OKAY)
@@ -108,9 +99,9 @@ macro(boost_test_run_fail testname)
   if(BOOST_TEST_OKAY)
     add_executable(${testname} ${BOOST_TEST_SOURCES})
 
-    if (BOOST_TEST_LIBRARIES)
-      target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
-    endif(BOOST_TEST_LIBRARIES)
+    if (BOOST_TEST_DEPENDS)
+      target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
+    endif(BOOST_TEST_DEPENDS)
 
     add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${testname})
     set_tests_properties("${PROJECT_NAME}::${testname}" PROPERTIES WILL_FAIL TRUE)

@@ -6,5 +6,5 @@ boost_test_run(find_test)
 boost_test_run(split_test)
 boost_test_run(join_test)
 boost_test_run(replace_test)
-boost_test_run(regex_test LIBRARIES boost_regex-shared)
+boost_test_run(regex_test DEPENDS boost_regex-shared)
 

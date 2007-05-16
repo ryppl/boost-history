@@ -1,4 +1,4 @@
-boost_test_run(lib_function_test function_test.cpp)
+boost_test_run(lib_function_test SOURCES function_test.cpp)
 boost_test_run(function_n_test)
 boost_test_run(allocator_test)
 boost_test_run(stateless_test)

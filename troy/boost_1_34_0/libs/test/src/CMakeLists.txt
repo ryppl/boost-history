@@ -36,7 +36,7 @@ boost_library(boost_test_exec_monitor
     xml_report_formatter.cpp
     )
 
-boost_library(boost_unit_test_framework 
+boost_library(boost_unit_test_framework
     compiler_log_formatter.cpp
     exception_safety.cpp
     execution_monitor.cpp
@@ -55,4 +55,6 @@ boost_library(boost_unit_test_framework
     unit_test_suite.cpp
     xml_log_formatter.cpp
     xml_report_formatter.cpp
-    SHARED_COMPILE_FLAGS -DBOOST_TEST_DYN_LINK=1 ${BOOST_SHARED_COMPILE_FLAGS})
+  SHARED_COMPILE_FLAGS -DBOOST_TEST_DYN_LINK=1 ${BOOST_SHARED_COMPILE_FLAGS}
+  )
+

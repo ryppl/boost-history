@@ -19,7 +19,7 @@ boost_test_compile(filtered_graph_cc)
 boost_test_run(graph)
 boost_test_compile(graph_concepts)
 boost_test_run(graphviz_test 
-  LIBRARIES boost_test_exec_monitor-static boost_graph-static)
+  DEPENDS boost_test_exec_monitor-static boost_graph-static)
 boost_test_run(gursoy_atun_layout_test)
 boost_test_run(layout_test)
 # boost_test_run(serialize) NOTE: needs boost_serialization
