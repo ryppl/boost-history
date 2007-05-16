@@ -6,12 +6,5 @@ boost_test_run(find_test)
 boost_test_run(split_test)
 boost_test_run(join_test)
 boost_test_run(replace_test)
-MESSAGE("TDS: test depends on regex, fixme")
-#             regex_test.cpp
-#             ../../../regex/build//boost_regex
-#           : :
-#             :   
-#             : regex
-#         ]
-#     ;
+boost_test_run(regex_test LIBRARIES boost_regex-shared)
 
