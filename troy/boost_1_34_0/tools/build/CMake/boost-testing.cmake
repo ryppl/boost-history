@@ -113,7 +113,7 @@ macro(boost_test_run_fail testname)
     endif(BOOST_TEST_LIBRARIES)
 
     add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${testname})
-    set_tests_properties(${testname} PROPERTIES WILL_FAIL TRUE)
+    set_tests_properties("${PROJECT_NAME}::${testname}" PROPERTIES WILL_FAIL TRUE)
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run_fail)
 
@@ -145,6 +145,6 @@ macro(boost_test_compile_fail testname)
              --build-makeprogram "${MAKEPROGRAM}"
 	     --build-project CompileTest
 	     --build-options -DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}/${BOOST_TEST_SOURCES} -DINCLUDES=${Boost_SOURCE_DIR})
-    set_tests_properties(${testname} PROPERTIES WILL_FAIL ON)
+    set_tests_properties("${PROJECT_NAME}::${testname}" PROPERTIES WILL_FAIL ON)
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_compile_fail)
