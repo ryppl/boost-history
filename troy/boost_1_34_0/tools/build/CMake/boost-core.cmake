@@ -35,6 +35,43 @@ macro(boost_library_subproject libname)
   endif ("${BOOST_LIB_OPTION_NAME}")
 endmacro(boost_library_subproject)
 
+macro(boost_library)
+  parse_arguments(THIS_LIB
+    "DEPENDS;LIBRARIES;COMPILE_FLAGS;STATIC_COMPILE_FLAGS;SHARED_COMPILE_FLAGS"
+    "NO_STATIC;NO_SHARED"
+    ${ARGN}
+    )
+  CAR(libname ${THIS_LIB_DEFAULT_ARGS})
+  CDR(sources ${THIS_LIB_DEFAULT_ARGS})
+
+  IF(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
+    MESSAGE("Adding static ${libname}")
+    add_library("${libname}-static" STATIC ${sources})
+    set_target_properties("${libname}-static" 
+      PROPERTIES OUTPUT_NAME "${libname}"
+      CLEAN_DIRECT_OUTPUT 1
+      COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_STATIC_COMPILE_FLAGS}")
+    foreach(dependency ${THIS_LIB_DEPENDS})
+      target_link_libraries("${libname}-static" "${dependency}-static")
+    endforeach(dependency "${THIS_LIB_DEPENDS}")
+
+    install(TARGETS "${libname}-static" DESTINATION lib)
+  ENDIF(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
+
+  MESSAGE("lib ${libname} THIS_LIB_NO_SHARED==${THIS_LIB_NO_SHARED}")
+  IF(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE") 
+    MESSAGE("Adding shared ${libname}")
+    add_library("${libname}-shared" SHARED ${sources})
+    set_target_properties("${libname}-shared" 
+      PROPERTIES OUTPUT_NAME "${libname}"
+      CLEAN_DIRECT_OUTPUT 1
+      COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_SHARED_COMPILE_FLAGS}")
+    foreach(dependency ${THIS_LIB_DEPENDS})
+      target_link_libraries("${libname}-shared" "${dependency}-shared")
+    endforeach(dependency ${THIS_LIB_DEPENDS})
+    install(TARGETS "${libname}-shared" DESTINATION lib)
+  ENDIF(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE")
+endmacro(boost_library)
 
 macro(boost_add_library libname)
   # An internal flag used to keep track of the state of the keyword

@@ -1,6 +1,5 @@
-boost_add_library(
-  boost_wave
-  SOURCES 
+boost_library(
+  boost_wave 
   instantiate_cpp_exprgrammar.cpp
   instantiate_cpp_grammar.cpp
   instantiate_cpp_literalgrs.cpp
@@ -12,7 +11,6 @@ boost_add_library(
   wave_config_constant.cpp
   cpplexer/re2clex/aq.cpp
   cpplexer/re2clex/cpp_re.cpp
-  LIBRARIES boost_filesystem
-  STATIC
-  SHARED COMPILE_FLAGS "-DBOOST_ALL_DYN_LINK=1"
-  )
+  DEPENDS boost_filesystem
+  SHARED_COMPILE_FLAGS "-DBOOST_ALL_DYN_LINK=1"
+)

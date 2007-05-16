@@ -12,10 +12,13 @@ if (BORLAND)
   add_definitions(-w-8080)
 endif(BORLAND)
 
-set(PRG_EXEC_MON_SOURCES execution_monitor.cpp cpp_main.cpp)
+boost_library(boost_prg_exec_monitor 
+  execution_monitor.cpp cpp_main.cpp
+  SHARED_COMPILE_FLAGS "-DBOOST_TEST_DYN_LINK=1 ${BOOST_SHARED_COMPILE_FLAGS}")
 
-set(TEST_EXEC_MON_SOURCES
-    compiler_log_formatter.cpp
+boost_library(boost_test_exec_monitor
+  NO_SHARED
+  compiler_log_formatter.cpp
     execution_monitor.cpp
     framework.cpp
     plain_report_formatter.cpp
@@ -30,9 +33,11 @@ set(TEST_EXEC_MON_SOURCES
     unit_test_parameters.cpp
     unit_test_suite.cpp
     xml_log_formatter.cpp
-    xml_report_formatter.cpp)
+    xml_report_formatter.cpp
+    )
 
-set(UTF_SOURCES
+
+boost_library(boost_unit_test_framework 
     compiler_log_formatter.cpp
     exception_safety.cpp
     execution_monitor.cpp
@@ -50,12 +55,5 @@ set(UTF_SOURCES
     unit_test_parameters.cpp
     unit_test_suite.cpp
     xml_log_formatter.cpp
-    xml_report_formatter.cpp)
-
-boost_add_library(boost_prg_exec_monitor ${PRG_EXEC_MON_SOURCES}
-  STATIC
-  SHARED COMPILE_FLAGS "-DBOOST_TEST_DYN_LINK=1 ${BOOST_SHARED_COMPILE_FLAGS}")
-boost_add_library(boost_test_exec_monitor STATIC ${TEST_EXEC_MON_SOURCES})
-boost_add_library(boost_unit_test_framework ${UTF_SOURCES}
-  STATIC
-  SHARED COMPILE_FLAGS "-DBOOST_TEST_DYN_LINK=1 ${BOOST_SHARED_COMPILE_FLAGS}")
+    xml_report_formatter.cpp
+    SHARED_COMPILE_FLAGS "-DBOOST_TEST_DYN_LINK=1 ${BOOST_SHARED_COMPILE_FLAGS}")
