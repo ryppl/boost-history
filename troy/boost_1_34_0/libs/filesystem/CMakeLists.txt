@@ -1,4 +1,8 @@
-boost_library_subproject(Filesystem src test)
+boost_library_subproject(
+  Filesystem 
+  SRCDIRS src 
+  TESTDIRS test
+  )
 
 
 

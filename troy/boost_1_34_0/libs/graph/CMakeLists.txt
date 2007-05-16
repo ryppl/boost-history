@@ -1,2 +1,6 @@
-boost_library_subproject(Graph src test)
+boost_library_subproject(
+  Graph 
+  SRCDIRS src 
+  TESTDIRS test
+  )
 

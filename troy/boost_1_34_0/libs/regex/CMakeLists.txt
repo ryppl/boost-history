@@ -1,1 +1,4 @@
-boost_library_subproject(Regex src)
+boost_library_subproject(
+  Regex 
+  SRCDIRS src
+  )

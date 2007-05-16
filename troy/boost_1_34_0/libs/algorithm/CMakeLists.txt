@@ -1,1 +1,4 @@
-boost_library_subproject(Algorithm minmax/test string/test)
+boost_library_subproject(
+  Algorithm 
+  TESTDIRS minmax/test string/test
+  )

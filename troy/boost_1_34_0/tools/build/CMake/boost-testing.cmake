@@ -50,22 +50,15 @@ macro(boost_test_parse_args testname)
   # Categorize each of the arguments
   foreach(ARG ${BOOST_TEST_DEPENDS})
     # If building static libraries is turned off..
-    if (NOT BUILD_STATIC_LIBS)
-      # And this is a -static library
-      if (ARG MATCHES ".*-static$")
-        # We cannot build this test
-        set(BOOST_TEST_OKAY FALSE)
-      endif (ARG MATCHES ".*-static$")
-    endif (NOT BUILD_STATIC_LIBS)
-
-    if (NOT BUILD_SHARED_LIBS)
-      # And this is a -shared library
-      if (ARG MATCHES ".*-shared$")
-        # We cannot build this test
-        set(BOOST_TEST_OKAY FALSE)
-      endif (ARG MATCHES ".*-shared$")
-    endif (NOT BUILD_SHARED_LIBS)
-  endforeach(ARG ${BOOST_TEST_DEPENDS})
+    GET_TARGET_PROPERTY(DEPEND_TYPE ${ARG} TYPE)
+    MESSAGE("Dependency ${ARG} is ${DEPEND_TYPE}")
+    if (NOT BUILD_STATIC_LIBS AND ${DEPEND_TYPE} STREQUAL "STATIC_LIBRARY")
+      set(BOOST_TEST_OKAY FALSE)
+    endif (NOT BUILD_STATIC_LIBS AND ${DEPEND_TYPE} STREQUAL "STATIC_LIBRARY")
+    if (NOT BUILD_SHARED_LIBS AND ${DEPEND_TYPE} STREQUAL "SHARED_LIBRARY")
+      set(BOOST_TEST_OKAY FALSE)
+    endif (NOT BUILD_SHARED_LIBS AND ${DEPEND_TYPE} STREQUAL "SHARED_LIBRARY")
+    endforeach(ARG ${BOOST_TEST_DEPENDS})
 
   # If no test specified, use the name of the test
   if (NOT BOOST_TEST_SOURCES)
@@ -85,9 +78,7 @@ macro(boost_test_run testname)
     set_source_files_properties(${BOOST_TEST_SOURCES}
       COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
       )
-    if (BOOST_TEST_DEPENDS)
-      target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
-    endif(BOOST_TEST_DEPENDS)
+    target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
     target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
 
     add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${testname})

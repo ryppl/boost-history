@@ -26,14 +26,25 @@ endmacro(append varname)
 # included, so the library itself will not be built, installed, or
 # tested.
 macro(boost_library_subproject libname)
+  parse_arguments(THIS_SUBPROJECT
+    "SRCDIRS;TESTDIRS"
+    ""
+    ${ARGN}
+    )
+  project(${libname})
   string(TOUPPER "BUILD_BOOST_${libname}" BOOST_LIB_OPTION_NAME)
-  PROJECT(${libname})
   option("${BOOST_LIB_OPTION_NAME}" "Build the Boost.${libname} library" ON)
-  if ("${BOOST_LIB_OPTION_NAME}")
-    foreach(SUBDIR ${ARGN})
-      add_subdirectory("${SUBDIR}")
-    endforeach(SUBDIR ${ARGN})
-  endif ("${BOOST_LIB_OPTION_NAME}")
+
+  if(${BOOST_CMAKE_READ_PASS} STREQUAL "SRC")
+    foreach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS})
+      add_subdirectory(${SUBDIR})
+    endforeach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS})
+  endif(${BOOST_CMAKE_READ_PASS} STREQUAL "SRC")
+  if(${BOOST_CMAKE_READ_PASS} STREQUAL "TEST")
+    foreach(SUBDIR ${THIS_SUBPROJECT_TESTDIRS})
+      add_subdirectory(${SUBDIR})
+    endforeach(SUBDIR ${THIS_SUBPROJECT_TESTDIRS})
+  endif(${BOOST_CMAKE_READ_PASS} STREQUAL "TEST")
 endmacro(boost_library_subproject)
 
 macro(boost_library)
