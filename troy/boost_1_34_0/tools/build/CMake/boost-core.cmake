@@ -59,7 +59,7 @@ macro(boost_library)
   IF(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
     add_library("${libname}-static" STATIC ${sources})
     set_target_properties("${libname}-static" 
-      PROPERTIES OUTPUT_NAME "${libname}"
+      PROPERTIES OUTPUT_NAME "${libname}-static"
       CLEAN_DIRECT_OUTPUT 1
       COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_STATIC_COMPILE_FLAGS}")
     foreach(dependency ${THIS_LIB_DEPENDS})
