@@ -27,6 +27,7 @@ endmacro(append varname)
 # tested.
 macro(boost_library_subproject libname)
   string(TOUPPER "BUILD_BOOST_${libname}" BOOST_LIB_OPTION_NAME)
+  PROJECT(${libname})
   option("${BOOST_LIB_OPTION_NAME}" "Build the Boost.${libname} library" ON)
   if ("${BOOST_LIB_OPTION_NAME}")
     foreach(SUBDIR ${ARGN})

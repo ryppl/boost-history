@@ -28,8 +28,13 @@
 #
 #   boost_test_compile_fail: Tests that the given source file produces 
 #                            errors when compiled.
-#
 
+#
+#   these macros format the displayed name of the test as PROJECT_NAME::testname
+#   where PROJECT_NAME is a global set by the cmake PROJECT macro
+#   inside boost_library_subproject.  this use of a global (hrm) is standard practice 
+#   in cmakeland but we might not like this...  
+#
 option(BUILD_TESTING "Enable testing" ON)
 include(CTest)
 
@@ -94,7 +99,7 @@ macro(boost_test_run testname)
       target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
     endif(BOOST_TEST_LIBRARIES)
 
-    add_test(${testname} ${EXECUTABLE_OUTPUT_PATH}/${testname})
+    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${testname})
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run)
 
@@ -107,7 +112,7 @@ macro(boost_test_run_fail testname)
       target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
     endif(BOOST_TEST_LIBRARIES)
 
-    add_test(${testname} ${EXECUTABLE_OUTPUT_PATH}/${testname})
+    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${testname})
     set_tests_properties(${testname} PROPERTIES WILL_FAIL TRUE)
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run_fail)
@@ -115,7 +120,7 @@ endmacro(boost_test_run_fail)
 macro(boost_test_compile testname)
   boost_test_parse_args(${testname} ${ARGN})
   if(BOOST_TEST_OKAY)
-    add_test(${testname}
+    add_test("${PROJECT_NAME}::${testname}"
   	     ${CMAKE_CTEST_COMMAND}
              --build-and-test
              "${Boost_SOURCE_DIR}/tools/build/CMake/CompileTest"
@@ -131,7 +136,7 @@ macro(boost_test_compile_fail testname)
   boost_test_parse_args(${testname} ${ARGN})
     
   if(BOOST_TEST_OKAY)
-    add_test(${testname}
+    add_test("${PROJECT_NAME}::${testname}"
 	     ${CMAKE_CTEST_COMMAND}
              --build-and-test
              "${Boost_SOURCE_DIR}/tools/build/CMake/CompileTest"
