@@ -21,8 +21,5 @@ macro(ADD_SUBDIRECTORIES prefix)
 endmacro(ADD_SUBDIRECTORIES prefix)
 
 boost_collect_subproject_directory_names(BOOST_SUBPROJECT_DIRS)
-set(BOOST_CMAKE_READ_PASS "SRC")
-add_subdirectories("   src:  " ${BOOST_SUBPROJECT_DIRS})
-set(BOOST_CMAKE_READ_PASS "TEST")
-add_subdirectories("   test: " ${BOOST_SUBPROJECT_DIRS})
+add_subdirectories("   + " ${BOOST_SUBPROJECT_DIRS})
 
