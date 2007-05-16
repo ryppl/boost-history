@@ -1,0 +1,93 @@
+// (C) Copyright Andrew Sutton 2007
+//
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0 (See accompanying file
+// LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+
+#include <iostream>
+
+#include <boost/tokenizer.hpp>
+
+#include "movies.hpp"
+
+using namespace std;
+using namespace boost;
+
+static Vertex
+add_actor(Graph &g, ActorMap &actors, string &name)
+{
+    // get the actor name map associated with the graph
+    ActorNameMap actor_names = get(&Actor::name, g);
+
+    // try inserting the actors name into the actors map
+    Vertex v;
+    ActorMap::iterator it;
+    bool inserted;
+    tie(it, inserted) = actors.insert(make_pair(name, Vertex()));
+    if(inserted) {
+	// if the name was actually inserted, then add a new vertex
+	// to the graph, configure the entry in the map, and set
+	// the actors name
+	v = add_vertex(g);
+	it->second = v;
+	actor_names[v] = name;
+    }
+    else {
+	// otherwise, the name is already in the map, so just
+	// return the iterator associated with it
+	v = it->second;
+    }
+
+    return v;
+}
+
+static Edge
+add_performance(Graph &g, Vertex u, Vertex v, string const& movie)
+{
+    // get the movie name map associated with the graph
+    MovieNameMap movie_names = get(&Performance::movie, g);
+
+    Edge e;
+    bool inserted;
+    tie(e, inserted) = add_edge(u, v, g);
+    if(inserted) {
+	movie_names[e] = movie;
+    }
+    return e;
+}
+
+void
+build_movie_graph(istream& is, Graph& g, ActorMap& actors)
+{
+    // pull all of the data from std in.
+    for(string line; getline(is, line); ) {
+	char_delimiters_separator<char> sep(false, "", ";");
+	tokenizer<> tok(line, sep);
+	tokenizer<>::iterator i = tok.begin();
+	
+	// grab the first actor
+	string first = *i++;
+	string second = *i++;
+	string movie = *i++;
+
+	// get the vertices associated with the actors (adding them
+	// to the graph if necessary).
+	Vertex
+	    u = add_actor(g, actors, first),
+	    v = add_actor(g, actors, second);
+
+	// create an edge (performance) linking the actors
+	add_performance(g, u, v, movie);
+    }
+}
+
+Vertex
+find_actor_vertex(const Graph& g, const ActorMap& actors, const std::string& name)
+{
+    Vertex v = Graph::null_vertex();
+    ActorMap::const_iterator i = actors.find(name);
+    if(i != actors.end()) {
+	v = i->second;
+    }
+    return v;
+}
