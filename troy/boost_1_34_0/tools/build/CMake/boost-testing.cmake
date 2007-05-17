@@ -75,6 +75,9 @@ macro(boost_test_run testname)
   boost_test_parse_args(${testname} ${ARGN})
   if (BOOST_TEST_OKAY)
     add_executable(${testname} ${BOOST_TEST_SOURCES})
+    set_target_properties(${testname}
+      PROPERTIES
+      OUTPUT_NAME ${PROJECT_NAME}/${testname})
     set_source_files_properties(${BOOST_TEST_SOURCES}
       COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
       )

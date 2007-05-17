@@ -12,20 +12,7 @@ macro(append varname)
   set(${varname} ${${varname}} ${ARGN})
 endmacro(append varname)
 
-IF(0)
-macro(set_usage_requirements target)
-  parse_arguments(USAGE_REQS
-    "STATIC;SHARED"
-    ""
-    ${ARGN}
-    )
-  set_target_properties(target 
-    PROPERTIES
-    STATIC_USAGE_REQS "${USAGE_REQS_STATIC}"
-    SHARED_USAGE_REQS "${USAGE_REQS_SHARED}"
-    )
-endmacro(set_usage_requirements target)
-ENDIF(0)
+
 # Defines a Boost library subproject (e.g., for Boost.Python). Use as:
 #
 #   boost_library_subproject(libname, subdir1, subdir2, ...)
@@ -39,13 +26,19 @@ ENDIF(0)
 # subdirectories; otherwise, none of the subdirectories will be
 # included, so the library itself will not be built, installed, or
 # tested.
-macro(boost_library_subproject libname)
+macro(boost_library_subproject libname_)
   parse_arguments(THIS_SUBPROJECT
     "SRCDIRS;TESTDIRS"
     ""
     ${ARGN}
     )
+  STRING(TOLOWER "${libname_}" libname)
   project(${libname})
+
+  IF(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+    FILE(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+  ENDIF(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+
   string(TOUPPER "BUILD_BOOST_${libname}" BOOST_LIB_OPTION_NAME)
   # currently src and testdirs are irrelevant.  At one point it seemed
   # that they would need to be kept separate and scanned in order
