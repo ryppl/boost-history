@@ -75,6 +75,46 @@ void test()
 	oss << std::dec << bigint(10) << std::hex << bigint(10) << std::oct << bigint(10);
 
 	BOOST_CHECK_EQUAL(oss.str(), "10a12");
+
+	// can_convert_to
+	BOOST_CHECK( bigint("127").can_convert_to<char>());
+	BOOST_CHECK(!bigint("128").can_convert_to<char>());
+	BOOST_CHECK(!bigint("129").can_convert_to<char>());
+
+	BOOST_CHECK( bigint("-127").can_convert_to<char>());
+	BOOST_CHECK( bigint("-128").can_convert_to<char>());
+	BOOST_CHECK(!bigint("-129").can_convert_to<char>());
+
+	BOOST_CHECK( bigint("127").can_convert_to<unsigned char>());
+	BOOST_CHECK( bigint("128").can_convert_to<unsigned char>());
+	BOOST_CHECK( bigint("129").can_convert_to<unsigned char>());
+
+	BOOST_CHECK( bigint("255").can_convert_to<unsigned char>());
+	BOOST_CHECK(!bigint("256").can_convert_to<unsigned char>());
+
+	BOOST_CHECK( bigint("ffffffff", 16).can_convert_to<unsigned int>());
+	BOOST_CHECK(!bigint("100000000", 16).can_convert_to<unsigned int>());
+
+	BOOST_CHECK( bigint("7fffffff", 16).can_convert_to<int>());
+	BOOST_CHECK(!bigint("80000000", 16).can_convert_to<int>());
+	
+	BOOST_CHECK( bigint("-7fffffff", 16).can_convert_to<int>());
+	BOOST_CHECK( bigint("-80000000", 16).can_convert_to<int>());
+	BOOST_CHECK(!bigint("-80000001", 16).can_convert_to<int>());
+	
+	BOOST_CHECK( bigint("ffffffff", 16).can_convert_to<boost::uint64_t>());
+	BOOST_CHECK( bigint("100000000", 16).can_convert_to<boost::uint64_t>());
+
+	BOOST_CHECK( bigint("7fffffff", 16).can_convert_to<boost::int64_t>());
+	BOOST_CHECK( bigint("80000000", 16).can_convert_to<boost::int64_t>());
+	
+	BOOST_CHECK( bigint("-7fffffff", 16).can_convert_to<boost::int64_t>());
+	BOOST_CHECK( bigint("-80000000", 16).can_convert_to<boost::int64_t>());
+	BOOST_CHECK( bigint("-80000001", 16).can_convert_to<boost::int64_t>());
+
+	BOOST_CHECK_EQUAL(bigint("ffffffff", 16).to_number<unsigned int>(), 0xffffffff);
+	BOOST_CHECK_EQUAL(bigint("7fffffff", 16).to_number<int>(), 0x7fffffff);
+	BOOST_CHECK_EQUAL(bigint("-80000000", 16).to_number<int>(), -0x80000000);
 }
 
 int test_main( int argc, char* argv[] )

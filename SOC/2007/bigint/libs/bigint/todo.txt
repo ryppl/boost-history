@@ -71,8 +71,8 @@ Status: fixed
 + proper 64-bit support for converting to bigint (implement one of suggestions given for the request at gmp devlist)
 Status: implemented
 
-- proper converting to numbers (including 64-bit)
-Status: needs implementing
+* proper converting to numbers (including 64-bit)
+Status: implemented, but need Jeff's assistance with make_unsigned<T>
 
 - check semantics of bitwise and shift operations for negative numbers
 Status: needs investigation

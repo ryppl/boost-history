@@ -10,6 +10,8 @@
 #ifndef BOOST_BIGINT_BIGINT_GMP_HPP
 #define BOOST_BIGINT_BIGINT_GMP_HPP
 
+#include <limits>
+
 #include <boost/scoped_array.hpp>
 
 #include <boost/bigint/bigint_util.hpp>
@@ -71,7 +73,7 @@ namespace boost { namespace detail {
 		{
 			mp_size_t size;
 			
-			data->_mp_d[0] = number & GMP_NUMB_MAX;
+			data->_mp_d[0] = static_cast<mp_limb_t>(number & GMP_NUMB_MAX);
 			size = number != 0;
 			
 			if (number > GMP_NUMB_MAX)
@@ -82,7 +84,7 @@ namespace boost { namespace detail {
 				
 				while (number > 0)
 				{
-					data->_mp_d[size++] = number & GMP_NUMB_MAX;
+					data->_mp_d[size++] = static_cast<mp_limb_t>(number & GMP_NUMB_MAX);
 					number >>= GMP_NUMB_BITS;
 				}
 			}
@@ -149,7 +151,7 @@ namespace boost { namespace detail {
 			
 			size_t d_bits = detail::bigint::get_bit_count(d_size, base);
 			
-			mpz_init2(data, d_bits);
+			mpz_init2(data, static_cast<unsigned long>(d_bits));
 			data->_mp_size = sign * mpn_set_str(data->_mp_d, d.get(), d_size, base);
 		}
 
@@ -261,15 +263,70 @@ namespace boost { namespace detail {
 			std::wstring result(s.get(), s.get() + s_size);
 			return result;
 		}
+		
+		template <typename T> bool _can_convert_to_signed() const
+		{
+			switch (mpz_sgn(data))
+			{
+			case 1: return _can_convert_to_unsigned<T>(); // Reuse
+			case 0: return true;
+			}
+			
+			boost::uint64_t max_value = static_cast<boost::uint64_t>(-static_cast<boost::int64_t>((std::numeric_limits<T>::min)()));
+			
+			int count = data->_mp_size >= 0 ? data->_mp_size : -data->_mp_size; // abs() does not work on MSVC8
+			
+			for (int i = 0; i < count; ++i)
+			{
+				if (max_value < data->_mp_d[i]) return false;
+				max_value >>= GMP_NUMB_BITS;
+			}
+			
+			return true;
+		}
+
+		template <typename T> bool _can_convert_to_unsigned() const
+		{
+			switch (mpz_sgn(data))
+			{
+			case 0: return true;
+			case -1: return false; // Negative numbers can't fit into unsigned types
+			}
+			
+			T max_value = (std::numeric_limits<T>::max)();
+			
+			for (int i = 0; i < data->_mp_size; ++i)
+			{
+				if (max_value < data->_mp_d[i]) return false;
+				max_value >>= GMP_NUMB_BITS;
+			}
+			
+			return true;
+		}
 
 		template <typename T> bool can_convert_to() const
 		{
-			return mpz_fits_sint_p(data) != 0;
+			// Only integer types supported
+			if (!std::numeric_limits<T>::is_integer) return false;
+			
+			return std::numeric_limits<T>::is_signed ? _can_convert_to_signed<T>() : _can_convert_to_unsigned<T>();
 		}
 		
 		template <typename T> T to_number() const
 		{
-			return mpz_get_si(data);
+			if (!std::numeric_limits<T>::is_integer) return T();
+			
+			boost::uint64_t value = 0;
+			
+			int count = data->_mp_size >= 0 ? data->_mp_size : -data->_mp_size; // abs() does not work on MSVC8
+			
+			for (int i = 0; i < count; ++i)
+			{
+				value <<= GMP_NUMB_BITS;
+				value += data->_mp_d[i];
+			}
+			
+			return data->_mp_size >= 0 ? static_cast<T>(value) : static_cast<T>(-static_cast<boost::int64_t>(value));
 		}
 
 		bool is_zero() const
