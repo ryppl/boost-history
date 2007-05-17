@@ -7,7 +7,7 @@ include(parse_arguments)
 include(boost-core)
 include(boost-testing)
 
-set(DEBUG TRUE)
+set(DEBUG FALSE)
 macro(TRACE)
   if (DEBUG)
     MESSAGE("~~ " ${ARGN})

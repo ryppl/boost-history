@@ -65,7 +65,7 @@ macro(push_back_target_property target property pushvalue)
 endmacro(push_back_target_property target property pushvalue)
 
 macro(propagate_property)
-  trace("args: ${ARGN}")
+  trace("args:"  ${ARGN})
   parse_arguments(_
     "FROM_TARGET;TO_TARGET;FROM_PROPNAME;TO_PROPNAME"
     ""
@@ -104,10 +104,14 @@ macro(boost_library)
       STICKY_COMPILE_FLAGS "${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}"
       STICKY_LINK_FLAGS    "${THIS_LIB_STICKY_STATIC_LINK_FLAGS}"
       )
-    MESSAGE("sticky statics(${libname}): ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}")
+    trace("sticky statics(${libname}): ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}")
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-static" "${dependency}-static")
-#      propagate_property(TARGET ${libname}-static DEPENDENCY ${dependency}-static DEP_PROPNAME STICKY_STATIC_COMPILE_FLAGS TARG_PROPNAME STICKY_COMPILE_FLAGS)
+      propagate_property(FROM_TARGET "${dependency}-static"
+	FROM_PROPNAME STICKY_COMPILE_FLAGS
+	TO_TARGET ${libname}-static 
+	TO_PROPNAME COMPILE_FLAGS 
+	)
     endforeach(dependency "${THIS_LIB_DEPENDS}")
 
     install(TARGETS "${libname}-static" DESTINATION lib)
@@ -124,6 +128,11 @@ macro(boost_library)
       )
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-shared" "${dependency}-shared")
+      propagate_property(FROM_TARGET "${dependency}-shared"
+	FROM_PROPNAME STICKY_COMPILE_FLAGS
+	TO_TARGET ${libname}-shared
+	TO_PROPNAME COMPILE_FLAGS 
+	)
     endforeach(dependency ${THIS_LIB_DEPENDS})
     install(TARGETS "${libname}-shared" DESTINATION lib)
   ENDIF(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE")
