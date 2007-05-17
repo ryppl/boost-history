@@ -15,6 +15,7 @@
 namespace boost {
 namespace rpc {
 
+/// Used to verify whether a remote function call has completed.
 class acknowledgement
 {
 public:
@@ -104,9 +105,12 @@ protected:
     promise<ReturnType> return_prom;
 };
 
-
-template<typename Signature, typename ArchivePair = binary_archive,
-    typename Enable=void, typename Enable2=void>
+/// A call handler used to receive acknowledgment of rpc completion and return value.
+template<typename Signature, typename ArchivePair = binary_archive
+#ifndef DOXYGEN_DOCS_ONLY
+    ,typename Enable=void, typename Enable2=void
+#endif
+>
 class handler
 #ifdef DOXYGEN_DOCS_ONLY
 #include <boost/rpc/detail/handler_template.hpp>
@@ -120,8 +124,11 @@ class handler
 #undef BOOST_ARITY_ITERATION_PARAMS
 #undef BOOST_ARITY_SEPARATE_VOID_RETURN
 
-template<typename Id, typename Signature, typename ArchivePair = binary_archive,
-    typename Enable=void>
+template<typename Id, typename Signature, typename ArchivePair = binary_archive
+#ifndef DOXYGEN_DOCS_ONLY
+    ,typename Enable=void
+#endif
+>
 class call
 #ifdef DOXYGEN_DOCS_ONLY
 #include <boost/rpc/detail/call_template.hpp>

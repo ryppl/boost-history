@@ -35,33 +35,7 @@ void inc_inplace(int &i)
 namespace rpc = boost::rpc;
 using namespace boost::asio;
 
-template<typename Registry>
-class remote_interface
-{
-public:
-    remote_interface(rpc::client<Registry> &client) : client(client) {};
-
-    boost::future<void> nothing()
-    {   
-        return client(rpc::call<int, void()> (0));
-    }
-    boost::future<int> inc(int i)
-    {   
-        return client(rpc::call<int, int(int)> (1, i));
-    }
-    boost::future<int> add2(int i, int j)
-    {   
-        return client(rpc::call<int, int(int, int)> (2, i,j));
-    }
-    boost::future<void> inc_inplace(int &i)
-    {
-        return client(rpc::call<int, void(int &)> (3, i));
-    }
-private:
-    rpc::client<Registry> &client;
-};
-
-void network_marshal_test()
+void network_rpc_test()
 {
     // make a registry keyed on int id-s and using binary_archive serialization
     rpc::registry<int> reg;
@@ -135,22 +109,11 @@ void network_marshal_test()
     client(call3__j);
     BOOST_CHECK_EQUAL(j, 101);
 
-    // make calls using the interface class...
-    remote_interface<rpc::registry<int> > remote(client);
-
-    remote.nothing();
-
-    BOOST_CHECK_EQUAL(remote.inc(5), 6);
-    BOOST_CHECK_EQUAL(remote.add2(10, 20), 30);
-    int x=20;
-    remote.inc_inplace(x);
-    BOOST_CHECK_EQUAL(x, 21);
-
 } // end void network_marshal_test
 
 test_suite* init_unit_test_suite(int argc, char* argv[])
 {
     test_suite* test = BOOST_TEST_SUITE( "Utility test suite" );
-    test->add(BOOST_TEST_CASE(&network_marshal_test));
+    test->add(BOOST_TEST_CASE(&network_rpc_test));
     return test;
 }

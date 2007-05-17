@@ -10,18 +10,26 @@ class handler<Signature, ArchivePair
    BOOST_ARITY_ENABLE_DISABLE_VOID
    >
    : public async_returning_handler<typename boost::function_traits<Signature>::result_type>
-#endif // DOXYGEN_DOCS_ONLY
+#endif // !DOXYGEN_DOCS_ONLY
 {
 #ifdef DOXYGEN_DOCS_ONLY
 public:
-    /// Prepares the call with provided id and parameters.
-    call(typename boost::call_traits<Id>::param_type id, Args..);
-    /// Prepares the call with provided id and parameters.
-    void set(typename boost::call_traits<Id>::param_type id, Agrs...);
-    void reset();
-protected:
-    virtual const std::string &parameters() const;
-    virtual void result_string(const std::string &str, const call_options &options);
+    /// Initializes the handler with the specified arguments.
+    handler(...)
+    /// True if this handler has "out" arguments.
+    bool has_out_parameters()
+    {
+        bool has_out = false;
+        BOOST_PP_REPEAT_FROM_TO(1,BOOST_ARITY_NUM_ARGS_INC,BOOST_RPC_ARGUMENT_CHECK_OUT,BOOST_PP_EMPTY())
+        return has_out;
+    }
+    /// Assigns the promises of the handler to storage variables.
+    void assign_promises()
+    {
+        BOOST_PP_REPEAT_FROM_TO(1,BOOST_ARITY_NUM_ARGS_INC,BOOST_RPC_ARGUMENT_ASSIGN_PROMISE,BOOST_PP_EMPTY())
+    }
+    /// Handler will process the marshalled result string.
+    virtual void result_string(const std::string &str)
 };
 #else
     typedef async_returning_handler<typename boost::function_traits<Signature>::result_type> base_type;

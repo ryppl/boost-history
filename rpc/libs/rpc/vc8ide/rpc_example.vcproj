@@ -63,6 +63,10 @@
 			Name="Source Files"
 			>
 			<File
+				RelativePath="..\example\interface_example.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\example\rpc_example.cpp"
 				>
 			</File>
