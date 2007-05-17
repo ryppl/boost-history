@@ -36,14 +36,17 @@ Jeffs opinion: be careful, the way in which the library uses inheritance is dead
 + wide string support
 Status: implemented ctors, wstr function and proper << >> for streams (including different output/input flags (hex/oct/dec))
 
-- uint64_t / int64_t - is it possible to implement 4 ctors (int/uint + same for 64 bit) to make it always work?
-Status: needs investigation
++ uint64_t / int64_t - is it possible to implement 4 ctors (int/uint + same for 64 bit) to make it always work?
+Status: compiles ok on msvc and gcc
 
-- safe bool conversion
-Status: needs implementing
++ safe bool conversion
+Status: implemented
 
-- extend implementation interface for efficient operator!() and safe bool
-Status: needs implementing
++ extend implementation interface for efficient operator!() and safe bool
+Status: implemented
+
+* make sure it works on a wide range of compilers (test framework setup is needed)
+Status: made some setup, it works for me but: 1. linking gmp is done via a hack, 2. not sure it works for others :/
 
 - converting to/from string - there was a suggestion to use static functions
 My opinion: performance wise it is the same if compiler has NRVO support, and ctors/member functions are more convenient
@@ -53,9 +56,6 @@ Status: get Jeffs opinion, wait for further community feedback
 My opinion: seems worthwhile
 Status: get Jeffs opinion, wait for further community feedback
 Comments: some set of defines is probably needed, like BOOST_BIGINT_HAS_GMP_SUPPORT, etc.
-
-- make sure it works on a wide range of compilers (test framework setup is needed)
-Status: needs implementing
 
 2. GMP implementation
 
@@ -75,6 +75,9 @@ Status: needs implementing
 Status: needs implementing
 
 - check semantics of bitwise and shift operations for negative numbers
+Status: needs investigation
+
+- what if there is not enough memory for the request - what happens then? Investigate.
 Status: needs investigation
 
 - more changes according to interface updates

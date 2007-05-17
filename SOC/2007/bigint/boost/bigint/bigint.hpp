@@ -175,13 +175,62 @@ public:
 		return result;
 	}
 	
-	bool operator!() const
-	{
-		return *this == 0;
-	}
-	
-	// some safe bool conversion operator here - I'm not writing one now because
-	// none is portable :) need to steal it from boost::shared_ptr
+    // implicit conversion to "bool"
+
+#if defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, <= 0x580)
+
+    operator bool () const
+    {
+        return impl;
+    }
+
+#elif defined( _MANAGED )
+
+private:
+    static void unspecified_bool( bigint_base*** )
+    {
+    }
+
+    typedef void (*unspecified_bool_type)( bigint_base*** );
+
+public:
+    operator unspecified_bool_type() const // never throws
+    {
+        return impl.is_zero() ? 0 : unspecified_bool;
+    }
+
+#elif \
+    ( defined(__MWERKS__) && BOOST_WORKAROUND(__MWERKS__, < 0x3200) ) || \
+    ( defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 304) )
+
+private:
+    typedef std::string (bigint_base::*unspecified_bool_type)(int) const;
+
+public: 
+    operator unspecified_bool_type() const // never throws
+    {
+        return impl.is_zero() ? 0 : &bigint_base::str;
+    }
+
+#else 
+
+private:
+    typedef I* bigint_base::*unspecified_bool_type;
+
+public:
+    operator unspecified_bool_type() const // never throws
+    {
+        return impl.is_zero() ? 0 : &bigint_base::impl;
+    }
+
+#endif
+
+    // operator! is redundant, but some compilers need it
+
+    bool operator! () const // never throws
+    {
+        return impl.is_zero();
+    }
 
 	std::string str(int base = 10) const
 	{

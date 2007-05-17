@@ -248,6 +248,11 @@ namespace boost { namespace detail {
 		{
 			return mpz_get_si(data);
 		}
+
+		bool is_zero() const
+		{
+			return mpz_sgn(data) == 0;
+		}
 		
 		void abs(const bigint_gmp_implementation& rhs)
 		{

@@ -14,12 +14,12 @@ namespace boost { namespace detail { namespace bigint {
 
 	inline bool isspace(char ch)
 	{
-		return ::isspace(ch);
+		return ::isspace(ch) != 0;
 	}
 	
 	inline bool isspace(wchar_t ch)
 	{
-		return ::iswspace(ch);
+		return ::iswspace(ch) != 0;
 	}
 	
 	inline size_t length(const char* str)
