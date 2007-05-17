@@ -91,7 +91,7 @@ macro(boost_test_run testname)
 	TO_PROPNAME COMPILE_FLAGS 
 	)
     endforeach(_depend ${BOOST_TEST_DEPENDS})
-    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${testname})
+    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname})
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run)
 
