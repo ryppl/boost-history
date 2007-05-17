@@ -15,11 +15,11 @@ endmacro(BOOST_COLLECT_SUBPROJECT_DIRECTORY_NAMES varname)
 
 macro(ADD_SUBDIRECTORIES prefix)
   foreach(subdir ${ARGN})
-    MESSAGE("${prefix}${subdir}")
+    MESSAGE(STATUS "${prefix}${subdir}")
     add_subdirectory(${subdir})
   endforeach(subdir ${ARGN})
 endmacro(ADD_SUBDIRECTORIES prefix)
 
 boost_collect_subproject_directory_names(BOOST_SUBPROJECT_DIRS)
-add_subdirectories("   + " ${BOOST_SUBPROJECT_DIRS})
+add_subdirectories(" + " ${BOOST_SUBPROJECT_DIRS})
 
