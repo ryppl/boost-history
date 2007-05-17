@@ -1,1 +1,1 @@
-MESSAGE("*** Gore Warning:   program that generates jamfile ***")
+MESSAGE(STATUS "*** Gore Warning:   program that generates jamfile ***")
