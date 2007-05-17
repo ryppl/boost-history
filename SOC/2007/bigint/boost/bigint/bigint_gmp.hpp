@@ -14,7 +14,7 @@
 
 #include <boost/bigint/bigint_util.hpp>
 
-#include "gmp.h"
+#include <gmp.h>
 
 namespace boost { namespace detail {
 	// GMP-based implementation
@@ -59,12 +59,35 @@ namespace boost { namespace detail {
 
 		void assign(int64_t number)
 		{
-			mpz_set_si(data, number);
+			// number is [-2^32, 2^32-1]
+			// if number == -2^32, it's bit representation is 10...0, -number is 01...1+1 = 10...0 (the same)
+			// converting to uint64_t yields still 10...0, it's exactly 2^32. In other cases we're safe.
+			assign(static_cast<uint64_t>(number >= 0 ? number : -number));
+			
+			if (number < 0) mpz_neg(data, data);
 		}
 
 		void assign(uint64_t number)
 		{
-			mpz_set_ui(data, number);
+			mp_size_t size;
+			
+			data->_mp_d[0] = number & GMP_NUMB_MAX;
+			size = number != 0;
+			
+			if (number > GMP_NUMB_MAX)
+			{
+				mpz_realloc(data, 64 / GMP_NUMB_BITS); // we know that GMP_NUMB_BITS is 2^n
+				
+				number >>= GMP_NUMB_BITS;
+				
+				while (number > 0)
+				{
+					data->_mp_d[size++] = number & GMP_NUMB_MAX;
+					number >>= GMP_NUMB_BITS;
+				}
+			}
+			
+			data->_mp_size = size;
 		}
 		
 		template <typename Ch> void assign_str(const Ch* str, int base)

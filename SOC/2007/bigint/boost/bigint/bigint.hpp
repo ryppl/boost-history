@@ -402,16 +402,6 @@ public:
 		
 		return lhs;
 	}
-	
-	static bigint_base from_number(boost::int64_t value)
-	{
-		return bigint_base((int)value);
-	}
-	
-	static bigint_base from_number(boost::uint64_t value)
-	{
-		return bigint_base((int)value);
-	}
 };
 
 } // namespace boost

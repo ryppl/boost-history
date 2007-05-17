@@ -35,7 +35,7 @@ void test()
 	
 	b %= a;
 	
-	BOOST_CHECK(!(a / b));
+	BOOST_CHECK_EQUAL(!(a / b), false);
 	BOOST_CHECK(a - b);
 
 	BOOST_CHECK_EQUAL(a * b, bigint("42258228219342334666689684483132205000478474"));
@@ -56,11 +56,11 @@ void test()
 	BOOST_CHECK_EQUAL(b.can_convert_to<short>(), false);
 
 	boost::uint64_t ee = 0xffffffff;
-	bigint e = bigint::from_number(ee);
+	bigint e = bigint(ee + 1);
 
 	bigint f = ee;
 
-	BOOST_CHECK_EQUAL(e, bigint("4294967295"));
+	BOOST_CHECK_EQUAL(e, bigint("4294967296"));
 
 	unsigned short xx = 34;
 	bigint g = xx;

@@ -68,10 +68,10 @@ Status: implemented conversion to both strings and wide strings
 + revise bigint->string conversion, it is not standard-compliant (std::string is not required to be contiguous)
 Status: fixed
 
-- proper 64-bit support for converting from and to bigint (implement one of suggestions given for the request at gmp devlist)
-Status: needs implementing
++ proper 64-bit support for converting to bigint (implement one of suggestions given for the request at gmp devlist)
+Status: implemented
 
-- proper converting to numbers
+- proper converting to numbers (including 64-bit)
 Status: needs implementing
 
 - check semantics of bitwise and shift operations for negative numbers
