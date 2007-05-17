@@ -80,6 +80,14 @@ macro(boost_test_run testname)
       )
     target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
     target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
+    foreach(_depend ${BOOST_TEST_DEPENDS})
+      trace("propagate from ${BOOST_TEST_DEPENDS}")
+      propagate_property(FROM_TARGET ${_depend}
+	FROM_PROPNAME STICKY_COMPILE_FLAGS
+	TO_TARGET ${testname} 
+	TO_PROPNAME COMPILE_FLAGS 
+	)
+    endforeach(_depend ${BOOST_TEST_DEPENDS})
     add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${testname})
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run)

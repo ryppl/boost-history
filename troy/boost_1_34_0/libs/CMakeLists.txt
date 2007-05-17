@@ -5,7 +5,7 @@
 # return a list of directories that we should add_subdirectory()
 macro(BOOST_COLLECT_SUBPROJECT_DIRECTORY_NAMES varname)
   file(GLOB BOOST_LIBRARY_CMAKE_FILES 
-    RELATIVE "${Boost_SOURCE_DIR}/libs" "*/CMakeLists.txt")
+    RELATIVE "${CMAKE_SOURCE_DIR}/libs" "*/CMakeLists.txt")
   MESSAGE(STATUS "Scanning subdirectories:")
   foreach(BOOST_LIB_CMAKE_FILE ${BOOST_LIBRARY_CMAKE_FILES})
     get_filename_component(BOOST_LIB_DIR ${BOOST_LIB_CMAKE_FILE} PATH)

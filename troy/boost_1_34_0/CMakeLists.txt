@@ -29,11 +29,7 @@ add_definitions(-DBOOST_ALL_NO_LIB=1)
 # Make it easy to find Boost-specific CMake modules
 list(APPEND CMAKE_MODULE_PATH ${Boost_SOURCE_DIR}/tools/build/CMake)
 
-include(list_contains)
-include(parse_arguments)
-# Testing module
-include(boost-core)
-include(boost-testing)
+include(boost)
 
 ##########################################################################
 # Boost installation                                                     #
@@ -74,4 +70,8 @@ include(CPack)
 ##########################################################################
 
 # Subdirectories of Boost
-add_subdirectory(libs)
+if (RUN_SELFTESTS)
+  add_subdirectory(tools/build/CMake/testing)
+else (RUN_SELFTESTS)
+  add_subdirectory(libs)
+endif(RUN_SELFTESTS)

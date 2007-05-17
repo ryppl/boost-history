@@ -12,6 +12,20 @@ macro(append varname)
   set(${varname} ${${varname}} ${ARGN})
 endmacro(append varname)
 
+IF(0)
+macro(set_usage_requirements target)
+  parse_arguments(USAGE_REQS
+    "STATIC;SHARED"
+    ""
+    ${ARGN}
+    )
+  set_target_properties(target 
+    PROPERTIES
+    STATIC_USAGE_REQS "${USAGE_REQS_STATIC}"
+    SHARED_USAGE_REQS "${USAGE_REQS_SHARED}"
+    )
+endmacro(set_usage_requirements target)
+ENDIF(0)
 # Defines a Boost library subproject (e.g., for Boost.Python). Use as:
 #
 #   boost_library_subproject(libname, subdir1, subdir2, ...)
@@ -42,9 +56,35 @@ macro(boost_library_subproject libname)
   endforeach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS} ${THIS_SUBPROJECT_TESTDIRS})
 endmacro(boost_library_subproject)
 
+macro(push_back_target_property target property pushvalue)
+  get_target_property(oldvalue ${target} ${property})
+  if(NOT oldvalue)
+    set(oldvalue "")
+  endif(NOT oldvalue)
+  set_target_properties(${target} PROPERTIES ${property} "${oldvalue} ${pushvalue}")
+endmacro(push_back_target_property target property pushvalue)
+
+macro(propagate_property)
+  trace("args: ${ARGN}")
+  parse_arguments(_
+    "FROM_TARGET;TO_TARGET;FROM_PROPNAME;TO_PROPNAME"
+    ""
+    ${ARGN}
+    )
+  trace("propagate ${__FROM_TARGET}:${__FROM_PROPNAME} -> ${__TO_TARGET}:${__TO_PROPNAME} [${props_}]")
+  assert(__FROM_TARGET)
+  assert(__FROM_PROPNAME)
+  assert(__TO_TARGET)
+  get_target_property(props_ ${__FROM_TARGET} ${__FROM_PROPNAME})
+  trace("::: ${props_}")
+  if (props_)
+    push_back_target_property(${__TO_TARGET} ${__TO_PROPNAME} ${props_})
+  endif(props_)
+endmacro(propagate_property)
+  
 macro(boost_library)
   parse_arguments(THIS_LIB
-    "DEPENDS;LIBRARIES;COMPILE_FLAGS;STATIC_COMPILE_FLAGS;SHARED_COMPILE_FLAGS"
+    "DEPENDS;LIBRARIES;COMPILE_FLAGS;STICKY_COMPILE_FLAGS;STATIC_COMPILE_FLAGS;SHARED_COMPILE_FLAGS;STICKY_STATIC_COMPILE_FLAGS;STICKY_STATIC_LINK_FLAGS;STICKY_SHARED_COMPILE_FLAGS;STICKY_SHARED_LINK_FLAGS"
     "NO_STATIC;NO_SHARED"
     ${ARGN}
     )
@@ -57,11 +97,17 @@ macro(boost_library)
       # notice that the static ones have -static added to the lib name.
       # this is to accomodate those who insist on linking to the
       # static varieties even when dynamics are available.
-      PROPERTIES OUTPUT_NAME "${libname}-static"
+      PROPERTIES 
+      OUTPUT_NAME "${libname}-static"
       CLEAN_DIRECT_OUTPUT 1
-      COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_STATIC_COMPILE_FLAGS}")
+      COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STATIC_COMPILE_FLAGS} ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}"
+      STICKY_COMPILE_FLAGS "${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}"
+      STICKY_LINK_FLAGS    "${THIS_LIB_STICKY_STATIC_LINK_FLAGS}"
+      )
+    MESSAGE("sticky statics(${libname}): ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}")
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-static" "${dependency}-static")
+#      propagate_property(TARGET ${libname}-static DEPENDENCY ${dependency}-static DEP_PROPNAME STICKY_STATIC_COMPILE_FLAGS TARG_PROPNAME STICKY_COMPILE_FLAGS)
     endforeach(dependency "${THIS_LIB_DEPENDS}")
 
     install(TARGETS "${libname}-static" DESTINATION lib)
@@ -72,7 +118,10 @@ macro(boost_library)
     set_target_properties("${libname}-shared" 
       PROPERTIES OUTPUT_NAME "${libname}"
       CLEAN_DIRECT_OUTPUT 1
-      COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_SHARED_COMPILE_FLAGS}")
+      COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_SHARED_COMPILE_FLAGS} ${THIS_LIB_STICKY_SHARED_COMPILE_FLAGS}"
+      STICKY_COMPILE_FLAGS "${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STICKY_SHARED_COMPILE_FLAGS}"
+      STICKY_LINK_FLAGS    "${THIS_LIB_STICKY_SHARED_LINK_FLAGS}"
+      )
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-shared" "${dependency}-shared")
     endforeach(dependency ${THIS_LIB_DEPENDS})
