@@ -1,5 +1,5 @@
 boost_library_subproject(
   Functional
-  TESTDIRS hash/test hash/examples
+  TESTDIRS test hash/test hash/examples
 )
 
