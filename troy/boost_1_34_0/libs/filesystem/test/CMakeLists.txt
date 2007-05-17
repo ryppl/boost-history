@@ -15,7 +15,7 @@ FOREACH(test ${TESTS})
     COMPILE_FLAGS -DBOOST_FILESYSTEM_DYN_LINK)
 ENDFOREACH(test ${TESTS})
 
-boost_test_compile(../example/mbcopy)
-boost_test_compile(../example/mbpath)
-boost_test_compile(../example/simple_ls)
+boost_test_compile(mbcopy SOURCES ../example/mbcopy.cpp)
+boost_test_compile(mbpath SOURCES ../example/mbpath.cpp)
+boost_test_compile(simple_ls SOURCES ../example/simple_ls.cpp)
 

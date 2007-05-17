@@ -1,2 +1,4 @@
-MESSAGE("***** NO JAMFILE FOR ARRAY?!? *****")
-
+boost_library_subproject(
+  Array
+  TESTDIRS test
+)
