@@ -146,11 +146,11 @@ macro(boost_library_subproject libname_)
     ${ARGN}
     )
 
-  string(TOUPPER "DISABLE_BOOST_${libname_}" BOOST_DISABLE_LIB_OPTION)
-  option(${BOOST_DISABLE_LIB_OPTION} 
-    " Disable build of Boost.${libname_} (prefer make targets, not this, to build individual libs)" 
-    OFF)
-  if(NOT ${BOOST_DISABLE_LIB_OPTION})
+  string(TOUPPER "BUILD_BOOST_${libname_}" BOOST_BUILD_LIB_OPTION)
+  option(${BOOST_BUILD_LIB_OPTION} 
+    "Build Boost.${libname_} (prefer make targets, not this, to build individual libs)" 
+    ON)
+  if(${BOOST_BUILD_LIB_OPTION})
 
     string(TOLOWER "${libname_}" libname)
     project(${libname})
@@ -166,7 +166,7 @@ macro(boost_library_subproject libname_)
     foreach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS} ${THIS_SUBPROJECT_TESTDIRS})
       add_subdirectory(${SUBDIR})
     endforeach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS} ${THIS_SUBPROJECT_TESTDIRS})
-  endif(NOT ${BOOST_DISABLE_LIB_OPTION})
+  endif(${BOOST_BUILD_LIB_OPTION})
 endmacro(boost_library_subproject)
 
 macro(push_back_target_property target property pushvalue)

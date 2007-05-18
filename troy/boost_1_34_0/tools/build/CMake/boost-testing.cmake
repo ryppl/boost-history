@@ -35,7 +35,7 @@
 #   inside boost_library_subproject.  this use of a global (hrm) is standard practice 
 #   in cmakeland but we might not like this...  
 #
-option(BUILD_TESTING "Enable testing" ON)
+option(BUILD_TESTING "Enable testing" OFF)
 if(BUILD_TESTING)
   set(NIGHTLY_START_TIME "23:30:00 EDT")
   set(DROP_METHOD "xmlrpc")
