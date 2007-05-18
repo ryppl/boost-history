@@ -16,7 +16,7 @@ class threaded_service
 protected:
     /// Associates a permanent work with the service so it doesn't exit its run method
     /// until stopped.
-    threaded_service() : t(0), work(service) {}
+    threaded_service() : work(service), t(0) {}
     /// Starts the thread and runs the service.
     void start_service_thread()
     {

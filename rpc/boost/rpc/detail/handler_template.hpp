@@ -58,13 +58,13 @@ public:
     {
         std::stringstream stream(str, std::ios::in | std::ios::out | std::ios::binary);
         typename ArchivePair::iarchive_type archive(stream);
-        extract_return_val(archive, options);
+        extract_return_val(archive, base_type::options);
 #ifdef BOOST_ARITY_NON_VOID_RETURN_TYPE
-        return_prom.set(return_val);
+        base_type::return_prom.set(base_type::return_val);
 #else
-        return_prom.set();
+		base_type::return_prom.set();
 #endif
-        if (options.marshal_option >= boost::rpc::call_options::all_out_parameters)
+        if (base_type::options.marshal_option >= boost::rpc::call_options::all_out_parameters)
         {
             BOOST_PP_REPEAT_FROM_TO(1, BOOST_ARITY_NUM_ARGS_INC, BOOST_RPC_ARCHIVE_OUT_PARAM, archive)
         }

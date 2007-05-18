@@ -50,6 +50,7 @@ public:
     /// Returns the serialized call parameters.
     virtual const std::string &parameters() const = 0;
     virtual std::auto_ptr<handler_base> spawn_handler() = 0;
+    virtual ~call_base() {}
 };
 
 

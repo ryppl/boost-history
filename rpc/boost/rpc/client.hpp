@@ -30,9 +30,9 @@ public:
     /** \todo Handle protocol error.
     */
     client()
-        : next_request_id(0),
+        : socket(service),
+        next_request_id(0),
         result_marshal_buffer(BOOST_RPC_RPC_BUFFER_SIZE),
-        socket(service),
         stream(std::ios::in | std::ios::out | std::ios::binary),
         default_options(call_options::all_out_parameters, call_options::no_exception_handling),
         mutex_lock(mutex), sending(false)
@@ -46,9 +46,10 @@ public:
     {
         stop_service_thread();
     }
-    template<typename Registry, typename ReturnType>
+private:
+    template<typename ReturnType>
     class handler_return;
-
+public:
     /// Prepares and sends a complete rpc call.
     /** The call is made in the following way:
         \li This method will lock the client's mutex, and spawn a handler for the call.
@@ -60,7 +61,7 @@ public:
         \li The process_call method can now finish the call.
     */
     template<typename ReturnType>
-    handler_return<Registry, ReturnType> operator()(async_returning_call<ReturnType> &call)
+    handler_return<ReturnType> operator()(async_returning_call<ReturnType> &call)
     {
         mutex_lock.lock();
         if (sending)
@@ -70,7 +71,7 @@ public:
         boost::shared_ptr<handler_base> handler(call.spawn_handler());
         requests[next_request_id] = handler;
 
-        handler_return<Registry, ReturnType> handler_r(this,next_request_id);
+        handler_return<ReturnType> handler_r(this,next_request_id);
 
         // send the header
         boost::asio::write(socket,
@@ -198,7 +199,7 @@ private:
 //    template<typename ReturnType>
 //    friend class handler_return;
 
-    template<typename Registry, typename T>
+    template<typename T>
     class handler_return
     {
     public:
@@ -206,7 +207,7 @@ private:
         handler_return(client_type *client_ptr, typename client_type::id_type id)
             : client_ptr(client_ptr), id(id), called(false)
         {}
-        handler_return(const handler_return<Registry, T> &h_r)
+        handler_return(const handler_return<T> &h_r)
             : client_ptr(h_r.client_ptr), id(h_r.id), called(h_r.called)
         {
             h_r.called = true;
@@ -270,19 +271,19 @@ public:
     connecting_client(boost::asio::ip::tcp::endpoint endpoint) : connector(endpoint)
     {
         // Connect the socket.
-        connector.connect(socket);
+        connector.connect(client<Registry>::socket);
 //        protocol::message_reader<boost::asio::ip::tcp::socket> reader(socket);
 
 
         // Wait for acknowledgement on the socket.
         //if (reader.message() != protocol::message::ok)
-        if (protocol::read_message(socket) != protocol::message::ok)
+        if (protocol::read_message(client<Registry>::socket) != protocol::message::ok)
         {
            // protocol error
            std::cerr << "client protocol error" << std::endl;
         }
 
-        prepare_async_read();
+        client<Registry>::prepare_async_read();
     }
 private:
     Connector connector;

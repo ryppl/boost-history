@@ -27,8 +27,8 @@ public:
         Each successful connection will get a dedicated rpc::registry_server.
     */
     server(Registry &reg, int port)
-        : registry_(reg)
-        , acceptor(service, port, boost::bind(&server<Registry, Acceptor>::connected, this, _1))
+        : acceptor(service, port, boost::bind(&server<Registry, Acceptor>::connected, this, _1)),
+        registry_(reg)
     {
         start_service_thread();
     }

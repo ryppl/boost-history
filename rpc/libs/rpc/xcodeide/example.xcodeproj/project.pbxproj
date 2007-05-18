@@ -1,0 +1,244 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		08868DBD0BFBE7B7004D6DFB /* rpc_example */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 08868DC00BFBE7D5004D6DFB /* Build configuration list for PBXAggregateTarget "rpc_example" */;
+			buildPhases = (
+				08868DBC0BFBE7B7004D6DFB /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = rpc_example;
+			productName = rpc_example;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXFileReference section */
+		08EA48570BFBEAC200EA623C /* arity.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = arity.hpp; sourceTree = "<group>"; };
+		08EA48580BFBEAC200EA623C /* arity_epilogue.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = arity_epilogue.hpp; sourceTree = "<group>"; };
+		08EA48590BFBEAC200EA623C /* arity_iterate.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = arity_iterate.hpp; sourceTree = "<group>"; };
+		08EA485A0BFBEAC200EA623C /* arity_prologue.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = arity_prologue.hpp; sourceTree = "<group>"; };
+		08EA485B0BFBEAC200EA623C /* storable.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = storable.hpp; sourceTree = "<group>"; };
+		08EA485D0BFBEAC200EA623C /* binary_archive.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = binary_archive.hpp; sourceTree = "<group>"; };
+		08EA485E0BFBEAC200EA623C /* call.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = call.hpp; sourceTree = "<group>"; };
+		08EA485F0BFBEAC200EA623C /* call_options.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = call_options.hpp; sourceTree = "<group>"; };
+		08EA48600BFBEAC200EA623C /* client.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = client.hpp; sourceTree = "<group>"; };
+		08EA48610BFBEAC200EA623C /* config.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = config.hpp; sourceTree = "<group>"; };
+		08EA48630BFBEAC200EA623C /* archive_out_param.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = archive_out_param.hpp; sourceTree = "<group>"; };
+		08EA48640BFBEAC200EA623C /* call_template.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = call_template.hpp; sourceTree = "<group>"; };
+		08EA48650BFBEAC200EA623C /* expanding_buffer.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = expanding_buffer.hpp; sourceTree = "<group>"; };
+		08EA48660BFBEAC200EA623C /* handler_template.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = handler_template.hpp; sourceTree = "<group>"; };
+		08EA48670BFBEAC200EA623C /* marshaled_template.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = marshaled_template.hpp; sourceTree = "<group>"; };
+		08EA48680BFBEAC200EA623C /* protocol.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = protocol.hpp; sourceTree = "<group>"; };
+		08EA48690BFBEAC200EA623C /* remote_caller_template.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = remote_caller_template.hpp; sourceTree = "<group>"; };
+		08EA486A0BFBEAC200EA623C /* serialize_template.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = serialize_template.hpp; sourceTree = "<group>"; };
+		08EA486B0BFBEAC200EA623C /* threaded_service.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = threaded_service.hpp; sourceTree = "<group>"; };
+		08EA486C0BFBEAC200EA623C /* function.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = function.hpp; sourceTree = "<group>"; };
+		08EA486D0BFBEAC200EA623C /* marshal.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = marshal.hpp; sourceTree = "<group>"; };
+		08EA486E0BFBEAC200EA623C /* marshaled.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = marshaled.hpp; sourceTree = "<group>"; };
+		08EA486F0BFBEAC200EA623C /* registry.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = registry.hpp; sourceTree = "<group>"; };
+		08EA48700BFBEAC200EA623C /* registry_server.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = registry_server.hpp; sourceTree = "<group>"; };
+		08EA48710BFBEAC200EA623C /* remote_caller.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = remote_caller.hpp; sourceTree = "<group>"; };
+		08EA48720BFBEAC200EA623C /* serialize.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = serialize.hpp; sourceTree = "<group>"; };
+		08EA48730BFBEAC200EA623C /* server.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = server.hpp; sourceTree = "<group>"; };
+		08EA48740BFBEAC200EA623C /* simple_acceptor.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = simple_acceptor.hpp; sourceTree = "<group>"; };
+		08EA48750BFBEAC200EA623C /* simple_connector.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = simple_connector.hpp; sourceTree = "<group>"; };
+		08EA48760BFBEAC200EA623C /* socket_string_receiver.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = socket_string_receiver.hpp; sourceTree = "<group>"; };
+		08EA48770BFBEAC200EA623C /* socket_string_sender.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = socket_string_sender.hpp; sourceTree = "<group>"; };
+		08EA48780BFBEAC200EA623C /* text_archive.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = text_archive.hpp; sourceTree = "<group>"; };
+		08EA48790BFBEAC200EA623C /* xml_archive.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = xml_archive.hpp; sourceTree = "<group>"; };
+		08EA487B0BFBEAD300EA623C /* Jamfile.v2 */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Jamfile.v2; sourceTree = "<group>"; };
+		08EA487C0BFBEAD300EA623C /* rpc_example.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = rpc_example.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		089C166AFE841209C02AAC07 /* Automator Action */ = {
+			isa = PBXGroup;
+			children = (
+				08EA487A0BFBEAD300EA623C /* example */,
+				08EA48550BFBEAC200EA623C /* boost */,
+			);
+			name = "Automator Action";
+			sourceTree = "<group>";
+		};
+		08EA48550BFBEAC200EA623C /* boost */ = {
+			isa = PBXGroup;
+			children = (
+				08EA48560BFBEAC200EA623C /* detail */,
+				08EA485C0BFBEAC200EA623C /* rpc */,
+			);
+			name = boost;
+			path = ../../../boost;
+			sourceTree = SOURCE_ROOT;
+		};
+		08EA48560BFBEAC200EA623C /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				08EA48570BFBEAC200EA623C /* arity.hpp */,
+				08EA48580BFBEAC200EA623C /* arity_epilogue.hpp */,
+				08EA48590BFBEAC200EA623C /* arity_iterate.hpp */,
+				08EA485A0BFBEAC200EA623C /* arity_prologue.hpp */,
+				08EA485B0BFBEAC200EA623C /* storable.hpp */,
+			);
+			path = detail;
+			sourceTree = "<group>";
+		};
+		08EA485C0BFBEAC200EA623C /* rpc */ = {
+			isa = PBXGroup;
+			children = (
+				08EA485D0BFBEAC200EA623C /* binary_archive.hpp */,
+				08EA485E0BFBEAC200EA623C /* call.hpp */,
+				08EA485F0BFBEAC200EA623C /* call_options.hpp */,
+				08EA48600BFBEAC200EA623C /* client.hpp */,
+				08EA48610BFBEAC200EA623C /* config.hpp */,
+				08EA48620BFBEAC200EA623C /* detail */,
+				08EA486C0BFBEAC200EA623C /* function.hpp */,
+				08EA486D0BFBEAC200EA623C /* marshal.hpp */,
+				08EA486E0BFBEAC200EA623C /* marshaled.hpp */,
+				08EA486F0BFBEAC200EA623C /* registry.hpp */,
+				08EA48700BFBEAC200EA623C /* registry_server.hpp */,
+				08EA48710BFBEAC200EA623C /* remote_caller.hpp */,
+				08EA48720BFBEAC200EA623C /* serialize.hpp */,
+				08EA48730BFBEAC200EA623C /* server.hpp */,
+				08EA48740BFBEAC200EA623C /* simple_acceptor.hpp */,
+				08EA48750BFBEAC200EA623C /* simple_connector.hpp */,
+				08EA48760BFBEAC200EA623C /* socket_string_receiver.hpp */,
+				08EA48770BFBEAC200EA623C /* socket_string_sender.hpp */,
+				08EA48780BFBEAC200EA623C /* text_archive.hpp */,
+				08EA48790BFBEAC200EA623C /* xml_archive.hpp */,
+			);
+			path = rpc;
+			sourceTree = "<group>";
+		};
+		08EA48620BFBEAC200EA623C /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				08EA48630BFBEAC200EA623C /* archive_out_param.hpp */,
+				08EA48640BFBEAC200EA623C /* call_template.hpp */,
+				08EA48650BFBEAC200EA623C /* expanding_buffer.hpp */,
+				08EA48660BFBEAC200EA623C /* handler_template.hpp */,
+				08EA48670BFBEAC200EA623C /* marshaled_template.hpp */,
+				08EA48680BFBEAC200EA623C /* protocol.hpp */,
+				08EA48690BFBEAC200EA623C /* remote_caller_template.hpp */,
+				08EA486A0BFBEAC200EA623C /* serialize_template.hpp */,
+				08EA486B0BFBEAC200EA623C /* threaded_service.hpp */,
+			);
+			path = detail;
+			sourceTree = "<group>";
+		};
+		08EA487A0BFBEAD300EA623C /* example */ = {
+			isa = PBXGroup;
+			children = (
+				08EA487B0BFBEAD300EA623C /* Jamfile.v2 */,
+				08EA487C0BFBEAD300EA623C /* rpc_example.cpp */,
+			);
+			name = example;
+			path = ../example;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		089C1669FE841209C02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 4E59BCAE08A8249B001206A8 /* Build configuration list for PBXProject "example" */;
+			hasScannedForEncodings = 1;
+			mainGroup = 089C166AFE841209C02AAC07 /* Automator Action */;
+			projectDirPath = "";
+			targets = (
+				08868DBD0BFBE7B7004D6DFB /* rpc_example */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		08868DBC0BFBE7B7004D6DFB /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# shell script goes here\ncd ../example\nls\nbjam --v2 --toolset=darwin\nexit 0";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		08868DC10BFBE7D5004D6DFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = rpc_example;
+			};
+			name = Debug;
+		};
+		08868DC20BFBE7D5004D6DFB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = rpc_example;
+				ZERO_LINK = NO;
+			};
+			name = Release;
+		};
+		4E59BCAF08A8249B001206A8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Debug;
+		};
+		4E59BCB008A8249B001206A8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		08868DC00BFBE7D5004D6DFB /* Build configuration list for PBXAggregateTarget "rpc_example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				08868DC10BFBE7D5004D6DFB /* Debug */,
+				08868DC20BFBE7D5004D6DFB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4E59BCAE08A8249B001206A8 /* Build configuration list for PBXProject "example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4E59BCAF08A8249B001206A8 /* Debug */,
+				4E59BCB008A8249B001206A8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 089C1669FE841209C02AAC07 /* Project object */;
+}

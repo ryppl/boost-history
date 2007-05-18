@@ -16,6 +16,7 @@ public:
     virtual void call(const boost::rpc::call_options &options,
         typename ArchivePair::iarchive_type &params,
         typename ArchivePair::oarchive_type *results = 0) {};
+    virtual ~function() {}
 };
 
 } // namespace detail

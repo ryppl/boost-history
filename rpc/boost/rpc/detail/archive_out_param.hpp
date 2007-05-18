@@ -23,7 +23,7 @@
 
 #define BOOST_RPC_ARCHIVE_OUT_PARAM(z,I,archive) \
     boost::rpc::detail:: \
-    archive_out_param<boost::function_traits<Signature>::arg##I##_type>(archive,arg_storable##I);
+    archive_out_param<typename boost::function_traits<Signature>::arg##I##_type>(archive,arg_storable##I);
 
 #define BOOST_RPC_PARAM_TYPE(I) \
     typename boost::rpc::argument<BOOST_ARITY_ARG_TYPE_NAME(I)>::type
@@ -129,28 +129,28 @@ public:
 
     promising_argument(const argument<T> &a) : argument<T>(a), ref_future(promise)
     {
-        if (passed == by_future)
-            *future_ptr = boost::future<referred_type>(promise);
+        if (argument<T>::passed == argument<T>::by_future)
+            *argument<T>::future_ptr = boost::future<referred_type>(promise);
     }
     bool is_out(){return true;}
     template<typename Archive>
     void deserialize(Archive &archive)
     {
-        if (passed == by_future)
+        if (argument<T>::passed == argument<T>::by_future)
         {
-            archive & storable;
-            promise.set(storable);
+            archive & argument<T>::storable;
+            promise.set(argument<T>::storable);
         }
         else // if (passed == by_ref)
         {
-            archive & storable;
-            promise.set(storable);
+            archive & argument<T>::storable;
+            promise.set(argument<T>::storable);
         }
     }
     void assign_promise()
     {
-        if (passed == by_ref)
-            *referred_ptr = ref_future;
+        if (argument<T>::passed == argument<T>::by_ref)
+            *argument<T>::referred_ptr = ref_future;
     }
 private:
     boost::promise<referred_type> promise;
