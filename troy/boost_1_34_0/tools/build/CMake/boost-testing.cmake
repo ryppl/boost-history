@@ -115,6 +115,10 @@ macro(boost_test_run_fail testname)
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run_fail)
 
+macro(boost_test_fail testname)
+  add_test("${PROJECT_NAME}::${testname}" false)
+endmacro(boost_test_fail)
+
 macro(boost_test_compile testname)
   boost_test_parse_args(${testname} ${ARGN})
   if(BOOST_TEST_OKAY)

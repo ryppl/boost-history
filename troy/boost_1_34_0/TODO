@@ -6,6 +6,8 @@
 - Check to see how the tests look under XCode/VS.  Brad king indicates
   that the one-binary-per-test setup is wrong. 
 
+- need boost_add_executable or somesuch for building examples in projects
+
 - CMakeFiles for remaining libs
 
 - Overhaul "sticky" flags and test  
