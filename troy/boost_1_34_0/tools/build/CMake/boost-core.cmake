@@ -12,6 +12,93 @@ macro(append varname)
   set(${varname} ${${varname}} ${ARGN})
 endmacro(append varname)
 
+option(
+  USE_VERSIONING 
+  "Use versioned library names, e.g., libboost_filesystem-gcc41-d" 
+  ON)
+
+if(USE_VERSIONING)
+  # Set BOOST_VERSIONING_TOOLSET_TAG to the string that describes the
+  # Boost.Build toolset. This is used as part of the versioned library
+  # name.
+  set(BOOST_VERSIONING_TOOLSET_TAG "")
+
+  if (MSVC60)
+    set(BOOST_VERSIONING_TOOLSET_TAG "-vc6")
+  elseif(MSVC70)
+    set(BOOST_VERSIONING_TOOLSET_TAG "-vc7")
+  elseif(MSVC71)
+    set(BOOST_VERSIONING_TOOLSET_TAG "-vc71")
+  elseif(MSVC80)
+    set(BOOST_VERSIONING_TOOLSET_TAG "-vc80")
+  elseif(MSVC)
+    message("Unknown Microsoft Visual C++ compiler: cannot version libraries")
+  elseif(BORLAND)
+    set(BOOST_VERSIONING_TOOLSET_TAG "-bcb")
+  elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
+    # Execute GCC with the -dumpversion option, to give us a version string
+    execute_process(
+      COMMAND ${CMAKE_CXX_COMPILER} "-dumpversion" 
+      OUTPUT_VARIABLE GCC_VERSION_STRING)
+
+    # Match only the major and minor versions of the version string
+    string(REGEX MATCH "[0-9]+.[0-9]+" GCC_MAJOR_MINOR_VERSION_STRING
+      "${GCC_VERSION_STRING}")
+
+    # Strip out the period between the major and minor versions
+    string(REGEX REPLACE "\\." "" BOOST_VERSIONING_GCC_VERSION
+      "${GCC_MAJOR_MINOR_VERSION_STRING}")
+
+    # Set the GCC versioning toolset
+    set(BOOST_VERSIONING_TOOLSET_TAG "-gcc${BOOST_VERSIONING_GCC_VERSION}")
+  else(MSVC60)
+    message("Unknown compiler: cannot version libraries")
+  endif(MSVC60)
+
+  # TODO: Multithreading tag should go here
+
+  # When determining the ABI tag, we need to differentiate between
+  # what comes before the debug tag ('d') and what comes after,
+  # because we can't detect at this point whether we're going to build
+  # debug or not.
+  set(BOOST_VERSIONING_ABI_TAG_PREFIX "")
+  set(BOOST_VERSIONING_ABI_TAG_SUFFIX "")
+
+  # Determine the ABI tag for versioning
+  # TODO: Linking statically to C++ standard library
+  # TODO: Using debug versions of the standard/runtime support libs
+  # TODO: using debug build of Python
+  # This is where the debug tag lives. Switch from PREFIX to SUFFIX
+  # TODO: STLport rather than default library
+  # TODO: STLport's deprecated iostreams
+
+  set(BOOST_VERSIONING_ABI_TAG_DEBUG 
+    "-${BOOST_VERSIONING_ABI_TAG_PREFIX}d${BOOST_VERSIONING_ABI_TAG_SUFFIX}")
+  if(BOOST_VERSIONING_ABI_TAG_PREFIX OR BOOST_VERSIONING_ABI_TAG_SUFFIX)
+    set(BOOST_VERSIONING_ABI_TAG 
+      "-${BOOST_VERSIONING_ABI_TAG_PREFIX}${BOOST_VERSIONING_ABI_TAG_SUFFIX}")
+  else(BOOST_VERSIONING_ABI_TAG_PREFIX OR BOOST_VERSIONING_ABI_TAG_SUFFIX)
+    set(BOOST_VERSIONING_ABI_TAG "")
+  endif(BOOST_VERSIONING_ABI_TAG_PREFIX OR BOOST_VERSIONING_ABI_TAG_SUFFIX)
+
+  # Determine the Boost version number for versioning
+  if(BOOST_VERSION_SUBMINOR GREATER 0)
+    set(BOOST_VERSIONING_VERSION 
+      "${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}_${BOOST_VERSION_SUBMINOR}")
+  else(BOOST_VERSION_SUBMINOR GREATER 0)
+    set(BOOST_VERSIONING_VERSION 
+      "${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}")
+  endif(BOOST_VERSION_SUBMINOR GREATER 0)
+
+  set(BOOST_LIBRARY_VERSION_STRING
+    "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_VERSIONING_ABI_TAG}-${BOOST_VERSIONING_VERSION}")
+  set(BOOST_LIBRARY_VERSION_STRING_DEBUG
+    "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_VERSIONING_ABI_TAG_DEBUG}-${BOOST_VERSIONING_VERSION}")
+else(USE_VERSIONING)
+  set(BOOST_LIBRARY_VERSION_STRING "")
+  set(BOOST_LIBRARY_VERSION_STRING_DEBUG "")
+endif(USE_VERSIONING)
+
 
 # Defines a Boost library subproject (e.g., for Boost.Python). Use as:
 #
@@ -78,20 +165,31 @@ endmacro(propagate_property)
 macro(boost_library)
   parse_arguments(THIS_LIB
     "DEPENDS;LIBRARIES;COMPILE_FLAGS;STICKY_COMPILE_FLAGS;STATIC_COMPILE_FLAGS;SHARED_COMPILE_FLAGS;STICKY_STATIC_COMPILE_FLAGS;STICKY_STATIC_LINK_FLAGS;STICKY_SHARED_COMPILE_FLAGS;STICKY_SHARED_LINK_FLAGS"
-    "NO_STATIC;NO_SHARED"
+    "NO_STATIC;NO_SHARED;STATIC_TAG"
     ${ARGN}
     )
   CAR(libname ${THIS_LIB_DEFAULT_ARGS})
   CDR(sources ${THIS_LIB_DEFAULT_ARGS})
 
   IF(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
+    # If the STATIC_TAG option was provided, we append "-s" to the end
+    # of the target's name, so that it does not conflict with the
+    # dynamic library.
+    if (THIS_LIB_STATIC_TAG)
+      set(THIS_LIB_STATIC_TAG "-s")
+    else(THIS_LIB_STATIC_TAG)
+      set(THIS_LIB_STATIC_TAG "")
+    endif(THIS_LIB_STATIC_TAG)
+
     add_library("${libname}-static" STATIC ${sources})
     set_target_properties("${libname}-static" 
       # notice that the static ones have -static added to the lib name.
       # this is to accomodate those who insist on linking to the
       # static varieties even when dynamics are available.
       PROPERTIES 
-      OUTPUT_NAME "${libname}-static"
+      OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING}${THIS_LIB_STATIC_TAG}"
+      DEBUG_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}${THIS_LIB_STATIC_TAG}"
+      RELWITHDEBINFO_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}${THIS_LIB_STATIC_TAG}"
       CLEAN_DIRECT_OUTPUT 1
       COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STATIC_COMPILE_FLAGS} ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}"
       STICKY_COMPILE_FLAGS "${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}"
@@ -113,7 +211,10 @@ macro(boost_library)
   IF(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE") 
     add_library("${libname}-shared" SHARED ${sources})
     set_target_properties("${libname}-shared" 
-      PROPERTIES OUTPUT_NAME "${libname}"
+      PROPERTIES 
+      OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING}"
+      DEBUG_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}"
+      RELWITHDEBINFO_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}"
       CLEAN_DIRECT_OUTPUT 1
       COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_SHARED_COMPILE_FLAGS} ${THIS_LIB_STICKY_SHARED_COMPILE_FLAGS}"
       STICKY_COMPILE_FLAGS "${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STICKY_SHARED_COMPILE_FLAGS}"
