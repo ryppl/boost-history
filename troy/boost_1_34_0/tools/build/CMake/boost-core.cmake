@@ -120,25 +120,27 @@ macro(boost_library_subproject libname_)
     ${ARGN}
     )
 
-  # TDS: I think this should be done with toplevel targets as this
-  # gets you dependency checking, etc...
-  string(TOUPPER "BUILD_BOOST_${libname_}" BOOST_LIB_OPTION_NAME)
-  option(${BOOST_LIB_OPTION_NAME} "Build Boost.${libname_}" ON)
+  string(TOUPPER "DISABLE_BOOST_${libname_}" BOOST_DISABLE_LIB_OPTION)
+  option(${BOOST_DISABLE_LIB_OPTION} 
+    " Disable build of Boost.${libname_} (prefer make targets, not this, to build individual libs)" 
+    OFF)
+  if(NOT ${BOOST_DISABLE_LIB_OPTION})
 
-  STRING(TOLOWER "${libname_}" libname)
-  project(${libname})
+    string(TOLOWER "${libname_}" libname)
+    project(${libname})
 
-  IF(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
-    FILE(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
-  ENDIF(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+    if(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+      file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+    endif(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
 
-  # currently src and testdirs are irrelevant.  At one point it seemed
-  # that they would need to be kept separate and scanned in order
-  # CLEANUP:  put src/test dirs back together again, if no future
-  #           need for it comes up
-  foreach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS} ${THIS_SUBPROJECT_TESTDIRS})
-    add_subdirectory(${SUBDIR})
-  endforeach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS} ${THIS_SUBPROJECT_TESTDIRS})
+    # currently src and testdirs are irrelevant.  At one point it seemed
+    # that they would need to be kept separate and scanned in order
+    # CLEANUP:  put src/test dirs back together again, if no future
+    #           need for it comes up
+    foreach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS} ${THIS_SUBPROJECT_TESTDIRS})
+      add_subdirectory(${SUBDIR})
+    endforeach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS} ${THIS_SUBPROJECT_TESTDIRS})
+  endif(NOT ${BOOST_DISABLE_LIB_OPTION})
 endmacro(boost_library_subproject)
 
 macro(push_back_target_property target property pushvalue)
