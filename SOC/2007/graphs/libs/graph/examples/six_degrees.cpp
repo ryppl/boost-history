@@ -4,12 +4,15 @@
 // Boost Software License, Version 1.0 (See accompanying file
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
+// std includes
 #include <iostream>
 #include <vector>
 #include <map>
 
+// boost includes
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 
+// example includes
 #include "movies.hpp"
 
 using namespace std;
@@ -53,8 +56,20 @@ main(int argc, char *argv[])
 	return -1;
     }
 
-    // keep the number of vertices for later...
-    size_t n = num_vertices(g);
+    // The index map needs to be initialized before the shortest
+    // path algorithm - it's used to help index parent vertices among
+    // other things.
+    ActorIndexMap indices = get(&Actor::index, g);
+    build_vertex_index_map(g, indices);
+
+    // The distance map records the shortest distance from the source to
+    // the the vertex represented at that index.
+    ActorDistanceMap distances = get(&Actor::distance, g);
+
+    // The predeceessor map records, for the vertex at each index, the
+    // predecessor (or parent) in the shortest-path tree. By iterating
+    // from predecessor to predecessor, we can find the shortest path
+    ActorParentMap parents = get(&Actor::parent, g);
 
     // The weight map records the weight of each edge. Since the movie
     // graph is naturally unweighted (and has no weight property for the
@@ -62,21 +77,13 @@ main(int argc, char *argv[])
     // with all weights initially set to 1.
     MovieWeightMap weights = get(&Performance::weight, g);
 
-    // The distance map records the shortest distance from the source to
-    // the the vertex represented at that index.
-    typedef vector<int> DistanceMap;
-    DistanceMap distances(n);
-
-    // The predeceessor map records, for the vertex at each index, the
-    // predecessor (or parent) in the shortest-path tree. By iterating
-    // from predecessor to predecessor, we can find the shortest path
-    typedef vector<Vertex> PredecessorMap;
-    PredecessorMap predecessors(n);
-
-    dijkstra_shortest_paths(g, u,
-			    weight_map(weights).
-			    distance_map(&distances[0]).
-			    predecessor_map(&predecessors[0]));
+    dijkstra_shortest_paths(g, u, 
+			    // named parameters
+			    vertex_index_map(indices)
+			    .weight_map(weights)
+			    .distance_map(distances)
+			    .predecessor_map(parents)
+	);
 
 
     // we're going to need the actor and movie names for this...
@@ -86,7 +93,7 @@ main(int argc, char *argv[])
     // print the movies in which the actors appear by iterating over
     // the elements in the predecessor map
     while(v != u) {
-	Vertex p = predecessors[v];
+	Vertex p = parents[v];
 
 	// what are our two names...
 	string from = names[v];
@@ -109,7 +116,7 @@ main(int argc, char *argv[])
 	string movie = movies[e];
 
 	// print out the path
-	cout << from << " with " << to << " in '" << movie << "'\n";
+	cout << from << " starred with " << to << " in '" << movie << "'\n";
 
 	// move to the next predecessor
 	v = p;

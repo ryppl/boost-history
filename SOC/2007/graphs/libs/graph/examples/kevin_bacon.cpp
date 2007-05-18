@@ -4,11 +4,14 @@
 // Boost Software License, Version 1.0 (See accompanying file
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
+// std includes
 #include <iostream>
 
+// boost includes
 #include <boost/graph/visitors.hpp>
 #include <boost/graph/breadth_first_search.hpp>
 
+// example includes
 #include "movies.hpp"
 
 using namespace std;
@@ -65,8 +68,12 @@ main(int argc, char *argv[])
     build_movie_graph(cin, g, actors);
 
     // get the bacon number map associated with the graph
+    ActorIndexMap indices = get(&Actor::index, g);
     ActorNameMap names = get(&Actor::name, g);
     ActorBaconMap bacons = get(&Actor::bacon_number, g);
+
+    // actually populate the index map
+    build_vertex_index_map(g, indices);
 
     // pick a starting vertex (kevin bacon, obviously) and set his
     // number to 0.
@@ -75,9 +82,9 @@ main(int argc, char *argv[])
 
     // run a breadth-first search on the graph and record
     // the kevin bacon numbers for each actor
-    breadth_first_search(g, kevin, visitor(record_bacons(bacons)));
+    breadth_first_search(g, kevin, vertex_index_map(indices).visitor(record_bacons(bacons)));
 
-    // just run over the vertices and print the related info
+    // just run over the vertices and print the back numbers
     Graph::vertex_iterator i, j;
     for(tie(i, j) = vertices(g); i != j; ++i) {
 	cout << bacons[*i] << " : " << names[*i] << "\n";

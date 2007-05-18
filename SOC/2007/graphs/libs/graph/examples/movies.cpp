@@ -4,10 +4,13 @@
 // Boost Software License, Version 1.0 (See accompanying file
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
+// std includes
 #include <iostream>
 
+// boost includes
 #include <boost/tokenizer.hpp>
 
+// example includes
 #include "movies.hpp"
 
 using namespace std;
@@ -17,7 +20,7 @@ static Vertex
 add_actor(Graph &g, ActorMap &actors, string &name)
 {
     // get the actor name map associated with the graph
-    ActorNameMap actor_names = get(&Actor::name, g);
+    ActorNameMap names = get(&Actor::name, g);
 
     // try inserting the actors name into the actors map
     Vertex v;
@@ -30,7 +33,7 @@ add_actor(Graph &g, ActorMap &actors, string &name)
 	// the actors name
 	v = add_vertex(g);
 	it->second = v;
-	actor_names[v] = name;
+	names[v] = name;
     }
     else {
 	// otherwise, the name is already in the map, so just
@@ -61,6 +64,12 @@ build_movie_graph(istream& is, Graph& g, ActorMap& actors)
 {
     // pull all of the data from std in.
     for(string line; getline(is, line); ) {
+	// skip any comment or blank lines
+	if(line[0] == '#' || line.empty()) {
+	    continue;
+	}
+
+	// tokenize the string
 	char_delimiters_separator<char> sep(false, "", ";");
 	tokenizer<> tok(line, sep);
 	tokenizer<>::iterator i = tok.begin();
@@ -78,6 +87,16 @@ build_movie_graph(istream& is, Graph& g, ActorMap& actors)
 
 	// create an edge (performance) linking the actors
 	add_performance(g, u, v, movie);
+    }
+}
+
+void
+build_vertex_index_map(Graph &g, ActorIndexMap &indices)
+{
+    int index = 0;
+    Graph::vertex_iterator i, j;
+    for(tie(i, j) = vertices(g); i != j; ++i) {
+	indices[*i] = index++;
     }
 }
 

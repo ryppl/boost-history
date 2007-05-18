@@ -1,0 +1,22 @@
+# This basically follows make format rules. The target is
+# separated from the dependencies by a colon. Dependencies are
+# separated by whitespace. Notice: one target per line
+#
+# Example:
+# <target>: <dep1> <dep2>
+
+killerapp: libzigzag.a
+libzigzag.a: libfoobar.a zig.o zag.o
+libfoobar.a: foo.o bar.o
+foo.o: foo.cpp
+foo.cpp: zow.h dax.h
+bar.o: bar.cpp
+bar.cpp: boz.h yow.h dax.h
+yow.h: dax.h
+zig.o: zig.cpp
+zig.cpp: boz.h
+zag.o: zag.cpp
+zag.cpp: boz.h yow.h
+
+# uncomment this line to add a cycle
+# dax.h: bar.cpp

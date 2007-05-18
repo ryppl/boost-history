@@ -1,6 +1,10 @@
+# Revised movie graph format...
+# <actor>;<actor>;<movie>
+# Notice no extra whitespace is allowed
+
 William Shatner;Denise Richards;Loaded Weapon 1 (1993)
 Denise Richards;Kevin Bacon;Wild Things (1998)
-Patrick Stewart;Steve Martin;Prince of Egypt, The (1998)
+Patrick Stewart;Steve Martin;The Prince of Egypt (1998)
 Steve Martin;Kevin Bacon;Novocaine (2000)
 Gerard Depardieu;Clint Howard;Unhook the Stars (1996)
 Clint Howard;Kevin Bacon;My Dog Skip (2000)
@@ -70,3 +74,4 @@ John Belushi;Karen Allen;Animal House (1978)
 John Lithgow;Mike Meyers;Shrek (2001)
 John Lithgow;Sylvester Stallone;Cliffhanger (2001)
 Eddie Murphy;John Lithgow;Shrek (2001)
+Tim Matheson;Kevin Bacon;Animal House (1978)
