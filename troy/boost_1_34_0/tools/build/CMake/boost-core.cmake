@@ -119,6 +119,12 @@ macro(boost_library_subproject libname_)
     ""
     ${ARGN}
     )
+
+  # TDS: I think this should be done with toplevel targets as this
+  # gets you dependency checking, etc...
+  string(TOUPPER "BUILD_BOOST_${libname_}" BOOST_LIB_OPTION_NAME)
+  option(${BOOST_LIB_OPTION_NAME} "Build Boost.${libname_}" ON)
+
   STRING(TOLOWER "${libname_}" libname)
   project(${libname})
 
@@ -126,7 +132,6 @@ macro(boost_library_subproject libname_)
     FILE(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
   ENDIF(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
 
-  string(TOUPPER "BUILD_BOOST_${libname}" BOOST_LIB_OPTION_NAME)
   # currently src and testdirs are irrelevant.  At one point it seemed
   # that they would need to be kept separate and scanned in order
   # CLEANUP:  put src/test dirs back together again, if no future
@@ -171,6 +176,8 @@ macro(boost_library)
   CAR(libname ${THIS_LIB_DEFAULT_ARGS})
   CDR(sources ${THIS_LIB_DEFAULT_ARGS})
 
+  ADD_CUSTOM_TARGET(${libname})
+
   IF(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
     # If the STATIC_TAG option was provided, we append "-s" to the end
     # of the target's name, so that it does not conflict with the
@@ -195,6 +202,7 @@ macro(boost_library)
       STICKY_COMPILE_FLAGS "${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}"
       STICKY_LINK_FLAGS    "${THIS_LIB_STICKY_STATIC_LINK_FLAGS}"
       )
+    ADD_DEPENDENCIES(${libname} "${libname}-static")
     trace("sticky statics(${libname}): ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}")
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-static" "${dependency}-static")
@@ -221,6 +229,7 @@ macro(boost_library)
       STICKY_LINK_FLAGS    "${THIS_LIB_STICKY_SHARED_LINK_FLAGS}"
       SOVERSION "${BOOST_VERSION}"
       )
+    ADD_DEPENDENCIES(${libname} "${libname}-shared")
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-shared" "${dependency}-shared")
       propagate_property(FROM_TARGET "${dependency}-shared"
