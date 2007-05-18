@@ -155,6 +155,7 @@ macro(boost_library_subproject libname_)
     string(TOLOWER "${libname_}" libname)
     project(${libname})
 
+    add_custom_target(tests)
     if(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
       file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
     endif(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})

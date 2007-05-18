@@ -80,7 +80,8 @@ endmacro(boost_test_parse_args)
 macro(boost_test_run testname)
   boost_test_parse_args(${testname} ${ARGN})
   if (BOOST_TEST_OKAY)
-    add_executable(${testname} ${BOOST_TEST_SOURCES})
+    add_executable(${testname} EXCLUDE_FROM_ALL ${BOOST_TEST_SOURCES})
+    add_dependencies("tests" "${testname}")
     set_target_properties(${testname}
       PROPERTIES
       OUTPUT_NAME ${PROJECT_NAME}/${testname})
@@ -104,7 +105,7 @@ endmacro(boost_test_run)
 macro(boost_test_run_fail testname)
   boost_test_parse_args(${testname} ${ARGN})
   if(BOOST_TEST_OKAY)
-    add_executable(${testname} ${BOOST_TEST_SOURCES})
+    add_executable(${testname} EXCLUDE_FROM_ALL ${BOOST_TEST_SOURCES})
 
     if (BOOST_TEST_DEPENDS)
       target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
