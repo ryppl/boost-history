@@ -1,0 +1,17 @@
+
+- Interface for building/running tests on a per-project basis.  There
+  are CMake bugs and Brad King recommends using "test driver"
+  binaries.  Can of worms.  
+
+- Check to see how the tests look under XCode/VS.  Brad king indicates
+  that the one-binary-per-test setup is wrong. 
+
+- CMakeFiles for remaining libs
+
+- Overhaul "sticky" flags and test  
+
+- Multithreaded build variant.  
+
+- Docs
+
+
