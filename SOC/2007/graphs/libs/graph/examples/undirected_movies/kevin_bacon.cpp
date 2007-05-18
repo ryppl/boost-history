@@ -50,7 +50,7 @@ struct BaconNumberRecorder : public bfs_visitor<>
 // This is just a convenience function so we can call a function rather than
 // explicitly instantiate the visitor type. It makes it more "action-oriented".
 template <typename BaconMap>
-BaconNumberRecorder<BaconMap> record_bacons(BaconMap b)
+BaconNumberRecorder<BaconMap> record_bacon_numbers(BaconMap b)
 {
     return BaconNumberRecorder<BaconMap>(b);
 }
@@ -72,9 +72,6 @@ main(int argc, char *argv[])
     ActorNameMap names = get(&Actor::name, g);
     ActorBaconMap bacons = get(&Actor::bacon_number, g);
 
-    // actually populate the index map
-    build_vertex_index_map(g, indices);
-
     // pick a starting vertex (kevin bacon, obviously) and set his
     // number to 0.
     Vertex kevin = actors["Kevin Bacon"];
@@ -82,12 +79,16 @@ main(int argc, char *argv[])
 
     // run a breadth-first search on the graph and record
     // the kevin bacon numbers for each actor
-    breadth_first_search(g, kevin, vertex_index_map(indices).visitor(record_bacons(bacons)));
+    breadth_first_search(g, kevin,
+			 // named parameters
+			 vertex_index_map(indices)
+			 .visitor(record_bacon_numbers(bacons))
+	);
 
     // just run over the vertices and print the back numbers
     Graph::vertex_iterator i, j;
     for(tie(i, j) = vertices(g); i != j; ++i) {
-	cout << bacons[*i] << " : " << names[*i] << "\n";
+	cout << g[*i].bacon_number << " : " << g[*i].name << "\n";
     }
 
     return 0;

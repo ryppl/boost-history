@@ -19,9 +19,6 @@ using namespace boost;
 static Vertex
 add_actor(Graph &g, ActorMap &actors, string &name)
 {
-    // get the actor name map associated with the graph
-    ActorNameMap names = get(&Actor::name, g);
-
     // try inserting the actors name into the actors map
     Vertex v;
     ActorMap::iterator it;
@@ -33,7 +30,10 @@ add_actor(Graph &g, ActorMap &actors, string &name)
 	// the actors name
 	v = add_vertex(g);
 	it->second = v;
-	names[v] = name;
+
+	// configure the vertex
+	g[v].index = num_vertices(g) - 1;
+	g[v].name = name;
     }
     else {
 	// otherwise, the name is already in the map, so just
@@ -47,14 +47,12 @@ add_actor(Graph &g, ActorMap &actors, string &name)
 static Edge
 add_performance(Graph &g, Vertex u, Vertex v, string const& movie)
 {
-    // get the movie name map associated with the graph
-    MovieNameMap movie_names = get(&Performance::movie, g);
-
     Edge e;
     bool inserted;
     tie(e, inserted) = add_edge(u, v, g);
     if(inserted) {
-	movie_names[e] = movie;
+	g[e].weight = 1;
+	g[e].movie = movie;
     }
     return e;
 }
@@ -87,16 +85,6 @@ build_movie_graph(istream& is, Graph& g, ActorMap& actors)
 
 	// create an edge (performance) linking the actors
 	add_performance(g, u, v, movie);
-    }
-}
-
-void
-build_vertex_index_map(Graph &g, ActorIndexMap &indices)
-{
-    int index = 0;
-    Graph::vertex_iterator i, j;
-    for(tie(i, j) = vertices(g); i != j; ++i) {
-	indices[*i] = index++;
     }
 }
 

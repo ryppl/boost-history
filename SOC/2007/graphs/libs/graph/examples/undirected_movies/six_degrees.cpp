@@ -56,11 +56,11 @@ main(int argc, char *argv[])
 	return -1;
     }
 
-    // The index map needs to be initialized before the shortest
-    // path algorithm - it's used to help index parent vertices among
-    // other things.
+    // Get the index map
+    // WARNING: The current method for implementing this is highly unstable
+    // if any of the vertices are removed - basically, you'd have to reassign
+    // the indices after a sequence of removals.
     ActorIndexMap indices = get(&Actor::index, g);
-    build_vertex_index_map(g, indices);
 
     // The distance map records the shortest distance from the source to
     // the the vertex represented at that index.
@@ -86,18 +86,14 @@ main(int argc, char *argv[])
 	);
 
 
-    // we're going to need the actor and movie names for this...
-    ActorNameMap names = get(&Actor::name, g);
-    MovieNameMap movies = get(&Performance::movie, g);
-
     // print the movies in which the actors appear by iterating over
     // the elements in the predecessor map
     while(v != u) {
 	Vertex p = parents[v];
 
 	// what are our two names...
-	string from = names[v];
-	string to = names[p];
+	string from = g[v].name;
+	string to = g[p].name;
 
 	// what edge does (v,p) exist on. unforunately, because this isn't
 	// an adjacency matrix, we actually have to search the outgoing (or
@@ -113,7 +109,7 @@ main(int argc, char *argv[])
 	}
 
 	// what's the movie name?
-	string movie = movies[e];
+	string movie = g[e].movie;
 
 	// print out the path
 	cout << from << " starred with " << to << " in '" << movie << "'\n";

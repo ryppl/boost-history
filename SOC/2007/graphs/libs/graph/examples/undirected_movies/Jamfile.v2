@@ -1,15 +1,10 @@
 
 exe kevin_bacon
 	: kevin_bacon.cpp movies.cpp
-	: <include>../../../
+	: <include>../../../../
 	;
 
 exe six_degrees
 	: six_degrees.cpp movies.cpp
-	: <include>../../../
-	;
-
-exe build_order
-	: build_order.cpp
-	: <include>../../../
+	: <include>../../../../
 	;

@@ -46,16 +46,6 @@ struct Actor
 // weight map to work with some algorithms.
 struct Performance
 {
-    Performance()
-	: weight(1)
-	, movie()
-    {}
-
-    Performance(const Performance& copy)
-	: weight(1)
-	, movie(copy.movie)
-    {}
-
     unsigned weight;
     std::string movie;
 };
