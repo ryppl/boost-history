@@ -12,17 +12,15 @@ macro(append varname)
   set(${varname} ${${varname}} ${ARGN})
 endmacro(append varname)
 
-option(
-  USE_VERSIONING 
-  "Use versioned library names, e.g., libboost_filesystem-gcc41-d" 
-  ON)
-
-if(USE_VERSIONING)
-  # Set BOOST_VERSIONING_TOOLSET_TAG to the string that describes the
-  # Boost.Build toolset. This is used as part of the versioned library
-  # name.
-  set(BOOST_VERSIONING_TOOLSET_TAG "")
-
+# This internal macro detects the kind of compiler in use. If a
+# toolset is found, BOOST_VERSIONING_TOOLSET_TAG will be set to the
+# tag string used to describe that toolset.
+# 
+# If WANT_FULL_INFORMATION is TRUE, then this macro will determine
+# complete information. Otherwise, this macro will only determine
+# whether it recognizes the toolset at all.
+macro(boost_detect_toolset WANT_FULL_INFORMATION)
+  set(BOOST_VERSIONING_TOOLSET_TAG)
   if (MSVC60)
     set(BOOST_VERSIONING_TOOLSET_TAG "-vc6")
   elseif(MSVC70)
@@ -32,68 +30,96 @@ if(USE_VERSIONING)
   elseif(MSVC80)
     set(BOOST_VERSIONING_TOOLSET_TAG "-vc80")
   elseif(MSVC)
-    message("Unknown Microsoft Visual C++ compiler: cannot version libraries")
   elseif(BORLAND)
     set(BOOST_VERSIONING_TOOLSET_TAG "-bcb")
   elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    # Execute GCC with the -dumpversion option, to give us a version string
-    execute_process(
-      COMMAND ${CMAKE_CXX_COMPILER} "-dumpversion" 
-      OUTPUT_VARIABLE GCC_VERSION_STRING)
+    if(WANT_FULL_INFORMATION)
+      # Execute GCC with the -dumpversion option, to give us a version string
+      execute_process(
+        COMMAND ${CMAKE_CXX_COMPILER} "-dumpversion" 
+        OUTPUT_VARIABLE GCC_VERSION_STRING)
 
-    # Match only the major and minor versions of the version string
-    string(REGEX MATCH "[0-9]+.[0-9]+" GCC_MAJOR_MINOR_VERSION_STRING
-      "${GCC_VERSION_STRING}")
+      # Match only the major and minor versions of the version string
+      string(REGEX MATCH "[0-9]+.[0-9]+" GCC_MAJOR_MINOR_VERSION_STRING
+        "${GCC_VERSION_STRING}")
+      
+      # Strip out the period between the major and minor versions
+      string(REGEX REPLACE "\\." "" BOOST_VERSIONING_GCC_VERSION
+        "${GCC_MAJOR_MINOR_VERSION_STRING}")
 
-    # Strip out the period between the major and minor versions
-    string(REGEX REPLACE "\\." "" BOOST_VERSIONING_GCC_VERSION
-      "${GCC_MAJOR_MINOR_VERSION_STRING}")
-
-    # Set the GCC versioning toolset
-    set(BOOST_VERSIONING_TOOLSET_TAG "-gcc${BOOST_VERSIONING_GCC_VERSION}")
-  else(MSVC60)
-    message("Unknown compiler: cannot version libraries")
+      # Set the GCC versioning toolset
+      set(BOOST_VERSIONING_TOOLSET_TAG "-gcc${BOOST_VERSIONING_GCC_VERSION}")
+    else(WANT_FULL_INFORMATION)
+      set(BOOST_VERSIONING_TOOLSET_TAG "-gcc")
+    endif(WANT_FULL_INFORMATION)
   endif(MSVC60)
+endmacro(boost_detect_toolset)
 
-  # TODO: Multithreading tag should go here
+# Determine whether we should use library versioning by default
+boost_detect_toolset(FALSE)
+if(BOOST_VERSIONING_TOOLSET_TAG)
+  set(USE_VERSIONING_BY_DEFAULT ON)
+else(BOOST_VERSIONING_TOOLSET_TAG)
+  set(USE_VERSIONING_BY_DEFAULT OFF)
+endif(BOOST_VERSIONING_TOOLSET_TAG)
 
-  # When determining the ABI tag, we need to differentiate between
-  # what comes before the debug tag ('d') and what comes after,
-  # because we can't detect at this point whether we're going to build
-  # debug or not.
-  set(BOOST_VERSIONING_ABI_TAG_PREFIX "")
-  set(BOOST_VERSIONING_ABI_TAG_SUFFIX "")
+option(
+  USE_VERSIONING 
+  "Use versioned library names, e.g., boost_filesystem-gcc41-1_34" 
+  ${USE_VERSIONING_BY_DEFAULT})
 
-  # Determine the ABI tag for versioning
-  # TODO: Linking statically to C++ standard library
-  # TODO: Using debug versions of the standard/runtime support libs
-  # TODO: using debug build of Python
-  # This is where the debug tag lives. Switch from PREFIX to SUFFIX
-  # TODO: STLport rather than default library
-  # TODO: STLport's deprecated iostreams
-
-  set(BOOST_VERSIONING_ABI_TAG_DEBUG 
-    "-${BOOST_VERSIONING_ABI_TAG_PREFIX}d${BOOST_VERSIONING_ABI_TAG_SUFFIX}")
-  if(BOOST_VERSIONING_ABI_TAG_PREFIX OR BOOST_VERSIONING_ABI_TAG_SUFFIX)
-    set(BOOST_VERSIONING_ABI_TAG 
-      "-${BOOST_VERSIONING_ABI_TAG_PREFIX}${BOOST_VERSIONING_ABI_TAG_SUFFIX}")
-  else(BOOST_VERSIONING_ABI_TAG_PREFIX OR BOOST_VERSIONING_ABI_TAG_SUFFIX)
-    set(BOOST_VERSIONING_ABI_TAG "")
-  endif(BOOST_VERSIONING_ABI_TAG_PREFIX OR BOOST_VERSIONING_ABI_TAG_SUFFIX)
-
-  # Determine the Boost version number for versioning
-  if(BOOST_VERSION_SUBMINOR GREATER 0)
-    set(BOOST_VERSIONING_VERSION 
-      "${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}_${BOOST_VERSION_SUBMINOR}")
-  else(BOOST_VERSION_SUBMINOR GREATER 0)
-    set(BOOST_VERSIONING_VERSION 
-      "${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}")
-  endif(BOOST_VERSION_SUBMINOR GREATER 0)
-
-  set(BOOST_LIBRARY_VERSION_STRING
-    "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_VERSIONING_ABI_TAG}-${BOOST_VERSIONING_VERSION}")
-  set(BOOST_LIBRARY_VERSION_STRING_DEBUG
-    "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_VERSIONING_ABI_TAG_DEBUG}-${BOOST_VERSIONING_VERSION}")
+if(USE_VERSIONING)
+  # Set BOOST_VERSIONING_TOOLSET_TAG to the string that describes the
+  # Boost.Build toolset. This is used as part of the versioned library
+  # name.
+  boost_detect_toolset(TRUE)
+  if(NOT BOOST_VERSIONING_TOOLSET_TAG)
+    message("Unable to determine compiler toolset. Library versioning cannot be used")
+    set(USE_VERSIONING OFF CACHE BOOL 
+      "Use versioned library names, e.g., boost_filesystem-gcc41-1_34" FORCE)
+    set(BOOST_LIBRARY_VERSION_STRING "")
+    set(BOOST_LIBRARY_VERSION_STRING_DEBUG "")
+  else(NOT BOOST_VERSIONING_TOOLSET_TAG)
+    # TODO: Multithreading tag should go here
+    
+    # When determining the ABI tag, we need to differentiate between
+    # what comes before the debug tag ('d') and what comes after,
+    # because we can't detect at this point whether we're going to build
+    # debug or not.
+    set(BOOST_VERSIONING_ABI_TAG_PREFIX "")
+    set(BOOST_VERSIONING_ABI_TAG_SUFFIX "")
+    
+    # Determine the ABI tag for versioning
+    # TODO: Linking statically to C++ standard library
+    # TODO: Using debug versions of the standard/runtime support libs
+    # TODO: using debug build of Python
+    # This is where the debug tag lives. Switch from PREFIX to SUFFIX
+    # TODO: STLport rather than default library
+    # TODO: STLport's deprecated iostreams
+    
+    set(BOOST_VERSIONING_ABI_TAG_DEBUG 
+      "-${BOOST_VERSIONING_ABI_TAG_PREFIX}d${BOOST_VERSIONING_ABI_TAG_SUFFIX}")
+    if(BOOST_VERSIONING_ABI_TAG_PREFIX OR BOOST_VERSIONING_ABI_TAG_SUFFIX)
+      set(BOOST_VERSIONING_ABI_TAG 
+        "-${BOOST_VERSIONING_ABI_TAG_PREFIX}${BOOST_VERSIONING_ABI_TAG_SUFFIX}")
+    else(BOOST_VERSIONING_ABI_TAG_PREFIX OR BOOST_VERSIONING_ABI_TAG_SUFFIX)
+      set(BOOST_VERSIONING_ABI_TAG "")
+    endif(BOOST_VERSIONING_ABI_TAG_PREFIX OR BOOST_VERSIONING_ABI_TAG_SUFFIX)
+    
+    # Determine the Boost version number for versioning
+    if(BOOST_VERSION_SUBMINOR GREATER 0)
+      set(BOOST_VERSIONING_VERSION 
+        "${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}_${BOOST_VERSION_SUBMINOR}")
+    else(BOOST_VERSION_SUBMINOR GREATER 0)
+      set(BOOST_VERSIONING_VERSION 
+        "${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}")
+    endif(BOOST_VERSION_SUBMINOR GREATER 0)
+    
+    set(BOOST_LIBRARY_VERSION_STRING
+      "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_VERSIONING_ABI_TAG}-${BOOST_VERSIONING_VERSION}")
+    set(BOOST_LIBRARY_VERSION_STRING_DEBUG
+      "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_VERSIONING_ABI_TAG_DEBUG}-${BOOST_VERSIONING_VERSION}")
+  endif(NOT BOOST_VERSIONING_TOOLSET_TAG)
 else(USE_VERSIONING)
   set(BOOST_LIBRARY_VERSION_STRING "")
   set(BOOST_LIBRARY_VERSION_STRING_DEBUG "")
