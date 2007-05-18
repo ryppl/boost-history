@@ -110,7 +110,7 @@ macro(boost_test_run_fail testname)
       target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
     endif(BOOST_TEST_DEPENDS)
 
-    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${testname})
+    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname})
     set_tests_properties("${PROJECT_NAME}::${testname}" PROPERTIES WILL_FAIL TRUE)
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run_fail)
