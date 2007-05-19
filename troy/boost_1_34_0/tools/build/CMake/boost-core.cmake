@@ -147,11 +147,20 @@ macro(boost_library_subproject libname_)
     )
 
   string(TOUPPER "BUILD_BOOST_${libname_}" BOOST_BUILD_LIB_OPTION)
-  option(${BOOST_BUILD_LIB_OPTION} 
-    "Build Boost.${libname_} (prefer make targets, not this, to build individual libs)" 
-    ON)
-  if(${BOOST_BUILD_LIB_OPTION})
+  if (THIS_SUBPROJECT_SRCDIRS)
+    # This Boost library has source directories, so provide an option
+    # BUILD_BOOST_LIBNAME that allows one to turn on/off building of
+    # the library.
+    option(${BOOST_BUILD_LIB_OPTION} 
+      "Build Boost.${libname_} (prefer make targets, not this, to build individual libs)" 
+      ON)
+  else (THIS_SUBPROJECT_SRCDIRS)
+    # This Boost library has no source directories, and therefore does
+    # not require building. Always enable it.
+    set(${BOOST_BUILD_LIB_OPTION} ON)
+  endif (THIS_SUBPROJECT_SRCDIRS)
 
+  if(${BOOST_BUILD_LIB_OPTION})
     string(TOLOWER "${libname_}" libname)
     project(${libname})
 
