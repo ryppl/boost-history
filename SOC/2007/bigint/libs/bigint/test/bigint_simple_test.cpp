@@ -36,7 +36,7 @@ void test()
 	b %= a;
 	
 	BOOST_CHECK_EQUAL(!(a / b), false);
-	BOOST_CHECK(a - b);
+	BOOST_CHECK(a);
 
 	BOOST_CHECK_EQUAL(a * b, bigint("42258228219342334666689684483132205000478474"));
 	BOOST_CHECK_EQUAL(!(a / b), 0);
@@ -115,6 +115,16 @@ void test()
 	BOOST_CHECK_EQUAL(bigint("ffffffff", 16).to_number<unsigned int>(), 0xffffffff);
 	BOOST_CHECK_EQUAL(bigint("7fffffff", 16).to_number<int>(), 0x7fffffff);
 	BOOST_CHECK_EQUAL(bigint("-80000000", 16).to_number<int>(), -0x80000000);
+	
+	// 3 == 11
+	// -3 = 1....1101
+	//      0...01101
+	BOOST_CHECK_EQUAL((bigint("-3") | bigint("1101", 2)).str(2), "-11");
+	BOOST_CHECK_EQUAL((bigint("-3") & bigint("1101", 2)).str(2), "1101");
+	BOOST_CHECK_EQUAL((bigint("-3") ^ bigint("1101", 2)).str(2), "-10000");
+	
+	BOOST_CHECK_EQUAL(bigint("-1") << 5, -32);
+	BOOST_CHECK_EQUAL(bigint("-33") >> 3, -5); // 33 is 100001, -33 is 1....1011111, >>3 is 1...1011, which is complement for 101
 }
 
 int test_main( int argc, char* argv[] )

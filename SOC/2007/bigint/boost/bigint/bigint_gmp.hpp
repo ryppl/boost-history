@@ -217,12 +217,46 @@ namespace boost { namespace detail {
 
 		void lshift(const bigint_gmp_implementation& lhs, boost::uint64_t rhs)
 		{
-			mpz_mul_2exp(data, lhs.data, rhs);
+			unsigned long max_arg = (std::numeric_limits<unsigned long>::max)();
+
+            if (rhs <= max_arg)
+            {
+	            mpz_mul_2exp(data, lhs.data, static_cast<unsigned long>(rhs));
+	        }
+	        else
+	        {
+	            mpz_clear(data);
+	            mpz_init_set(data, lhs.data);
+
+    	        while (rhs > 0)
+	            {
+					unsigned long value = (rhs > max_arg) ? max_arg : static_cast<unsigned long>(rhs);
+	        	    mpz_mul_2exp(data, data, value);
+	            	rhs -= value;
+				}
+			}
 		}
 
 		void rshift(const bigint_gmp_implementation& lhs, boost::uint64_t rhs)
 		{
-			mpz_div_2exp(data, lhs.data, rhs);
+			unsigned long max_arg = (std::numeric_limits<unsigned long>::max)();
+
+            if (rhs <= max_arg)
+            {
+	            mpz_div_2exp(data, lhs.data, static_cast<unsigned long>(rhs));
+	        }
+	        else
+	        {
+	            mpz_clear(data);
+	            mpz_init_set(data, lhs.data);
+
+    	        while (rhs > 0)
+	            {	
+					unsigned long value = (rhs > max_arg) ? max_arg : static_cast<unsigned long>(rhs);
+	        	    mpz_div_2exp(data, data, value);
+	            	rhs -= value;
+				}
+			}
 		}
 
 		void inc()
@@ -274,8 +308,11 @@ namespace boost { namespace detail {
 			
 			boost::uint64_t max_value = static_cast<boost::uint64_t>(-static_cast<boost::int64_t>((std::numeric_limits<T>::min)()));
 			
-			int count = data->_mp_size >= 0 ? data->_mp_size : -data->_mp_size; // abs() does not work on MSVC8
+			int count = -data->_mp_size; // we have a negative number
 			
+			if (GMP_NUMB_BITS >= sizeof(boost::uint64_t) * 8) // we're going to have problems with >>= down there - but the check is simple
+				return (count == 1 && max_value >= data->_mp_d[0]);
+				
 			for (int i = 0; i < count; ++i)
 			{
 				if (max_value < data->_mp_d[i]) return false;
@@ -293,7 +330,10 @@ namespace boost { namespace detail {
 			case -1: return false; // Negative numbers can't fit into unsigned types
 			}
 			
-			T max_value = (std::numeric_limits<T>::max)();
+			boost::uint64_t max_value = (std::numeric_limits<T>::max)();
+			
+			if (GMP_NUMB_BITS >= sizeof(T) * 8) // we're going to have problems with >>= wodn there - but the check is simple
+				return (data->_mp_size == 1 && max_value >= data->_mp_d[0]);
 			
 			for (int i = 0; i < data->_mp_size; ++i)
 			{
@@ -341,7 +381,31 @@ namespace boost { namespace detail {
 		
 		void pow(const bigint_gmp_implementation& lhs, boost::uint64_t rhs)
 		{
-			mpz_pow_ui(data, lhs.data, rhs);
+			unsigned long max_arg = (std::numeric_limits<unsigned long>::max)();
+
+            if (rhs <= max_arg)
+            {
+	            mpz_pow_ui(data, lhs.data, static_cast<unsigned long>(rhs));
+	        }
+	        else
+	        {
+	            mpz_clear(data);
+	            mpz_init_set_ui(data, 1);
+
+				mpz_t temp;
+
+				mpz_init(temp);
+
+    	        while (rhs > 0)
+	            {	
+					unsigned long value = (rhs > max_arg) ? max_arg : static_cast<unsigned long>(rhs);
+	        	    mpz_pow_ui(temp, lhs.data, value);
+	        	    mpz_mul(data, data, temp);
+	            	rhs -= value;
+				}
+
+				mpz_clear(temp);
+			}
 		}
 		
 		void ldiv(const bigint_gmp_implementation& lhs, const bigint_gmp_implementation& rhs, bigint_gmp_implementation& remainder)

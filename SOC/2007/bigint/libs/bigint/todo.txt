@@ -71,11 +71,17 @@ Status: fixed
 + proper 64-bit support for converting to bigint (implement one of suggestions given for the request at gmp devlist)
 Status: implemented
 
-* proper converting to numbers (including 64-bit)
-Status: implemented, but need Jeff's assistance with make_unsigned<T>
++ proper lshift, rshift and pow functions (work in case of large exponents/bit counts)
+Status: implemented
 
-- check semantics of bitwise and shift operations for negative numbers
-Status: needs investigation
++ bug fix: problems with unit tests (not all of can_convert_to pass)
+Status: fixed
+
++ proper converting to numbers (including 64-bit)
+Status: implemented
+
++ check semantics of bitwise and shift operations for negative numbers
+Status: investigated, bitwise and shift operations behave as if numbers were 2-complement (as expected).
 
 - what if there is not enough memory for the request - what happens then? Investigate.
 Status: needs investigation
