@@ -74,7 +74,7 @@ To use the RPC library, you will need:
 
 Below are the different versions of the RPC library:
 
-* version 0.1 5/19/2007 \[[@marshal_07_05_19.zip download]\]
+* version 0.1 5/19/2007 \[[@rpc_07_05_19.zip download]\]
  * first implementation of the library using futures, making the RPC interface completely
    asynchronous (with futures facilitating synchronous behavior).
  * call options are deduced from the rpc call, and how the returned call handler is stored (or ignored).

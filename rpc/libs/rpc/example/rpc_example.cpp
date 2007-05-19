@@ -71,17 +71,21 @@ void network_rpc_test()
     rpc::call<std::string, int (int)> call_inc__1("inc",  1);
     // if the returned handler is ignored, nothing is marshaled back:
     client(call_inc__1);
+
     // if the returned handler is stored in an acknowledgement, only a confirmation of completion
     // is marshaled back.
     ack = client(call_inc__1);
     BOOST_CHECK_NO_THROW(ack->completion().get());
-    // if the returned handler is stored in a proper handler, we can get the return value
+
+    // if the returned handler is stored in a proper handler, the return value will be marshaled back
     rpc::async_returning_handler<int>::ptr handler_int = client(call_inc__1);
     boost::future<int> future_int(handler_int->return_promise());
     BOOST_CHECK_EQUAL(future_int, 2);
+
     // handler returners are imlplicitly convertible to futures, which will carry the returned value
     boost::future<int> result_inc = client(call_inc__1);
     BOOST_CHECK_EQUAL(result_inc, 2);
+
     // handler returners are also convertible to values, which immediately
     // get assigned the value of the return value future, making the call synchronous
     int inced1 = client(call_inc__1);
