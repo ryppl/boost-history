@@ -1,4 +1,4 @@
-add_definitions(-DBOOST_SIGNALS_NO_LIB=1)
+add_definitions(-DBOOST_DATE_TIME_NO_LIB=1)
 boost_library(
   boost_date_time
   gregorian/greg_month.cpp gregorian/greg_weekday.cpp gregorian/date_generators.cpp 

@@ -232,6 +232,7 @@ macro(boost_library)
       )
     ADD_DEPENDENCIES(${libname} "${libname}-static")
     trace("sticky statics(${libname}): ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}")
+    target_link_libraries("${libname}-static" ${THIS_LIB_LIBRARIES})
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-static" "${dependency}-static")
       propagate_property(FROM_TARGET "${dependency}-static"
@@ -258,6 +259,7 @@ macro(boost_library)
       SOVERSION "${BOOST_VERSION}"
       )
     ADD_DEPENDENCIES(${libname} "${libname}-shared")
+    target_link_libraries("${libname}-shared" ${THIS_LIB_LIBRARIES})
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-shared" "${dependency}-shared")
       propagate_property(FROM_TARGET "${dependency}-shared"
