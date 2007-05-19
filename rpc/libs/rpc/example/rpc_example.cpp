@@ -64,18 +64,28 @@ void network_rpc_test()
 
     // here, since the returned call handler is stored in an acknowledgement,
     // upon completion the server will marshal back only a confirmation of the completion.
-    rpc::acknowledgement_ptr handler = client(call_nothing);
-    BOOST_CHECK_NO_THROW(handler->completion().get());
+    rpc::acknowledgement_ptr ack = client(call_nothing);
+    BOOST_CHECK_NO_THROW(ack->completion().get());
 
     // embed the function id and parameter for an int (int) call
     rpc::call<std::string, int (int)> call_inc__1("inc",  1);
-    // here, the returned call handler is stored in a proper handler, which can be used
-    // to get the return value
-    // since the call includes an "out" parameter, everything gets marshalled
-    // back no matter what.
+    // if the returned handler is ignored, nothing is marshaled back:
+    client(call_inc__1);
+    // if the returned handler is stored in an acknowledgement, only a confirmation of completion
+    // is marshaled back.
+    ack = client(call_inc__1);
+    BOOST_CHECK_NO_THROW(ack->completion().get());
+    // if the returned handler is stored in a proper handler, we can get the return value
     rpc::async_returning_handler<int>::ptr handler_int = client(call_inc__1);
     boost::future<int> future_int(handler_int->return_promise());
     BOOST_CHECK_EQUAL(future_int, 2);
+    // handler returners are imlplicitly convertible to futures, which will carry the returned value
+    boost::future<int> result_inc = client(call_inc__1);
+    BOOST_CHECK_EQUAL(result_inc, 2);
+    // handler returners are also convertible to values, which immediately
+    // get assigned the value of the return value future, making the call synchronous
+    int inced1 = client(call_inc__1);
+    BOOST_CHECK_EQUAL(inced1,  2);
 
     int i = 1;
     // embed the function id and parameters for a void (int &) call
@@ -88,14 +98,8 @@ void network_rpc_test()
     // embed the function id and parameter for an int (int, int) call
     rpc::call<std::string, int (int, int)> call_add2__5_6("add2",  5, 6);
     // handler returners are imlplicitly convertible to futures, which will carry the returned value
-    boost::future<int> result = client(call_add2__5_6);
-
-    BOOST_CHECK_EQUAL(result, 11);
-
-    // handler returners are also convertible to values, which immediately
-    // get assigned the value of the return value future, making the call synchronous
-    int inced1 = client(call_inc__1);
-    BOOST_CHECK_EQUAL(inced1,  2);
+    boost::future<int> result_add = client(call_add2__5_6);
+    BOOST_CHECK_EQUAL(result_add, 11);
 
     // this call sends the "in" value of an "in/out" paramater through a future (messy)
     boost::promise<int> prom;
