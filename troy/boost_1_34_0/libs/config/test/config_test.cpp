@@ -1,4 +1,4 @@
-//  This file was automatically generated on Wed Feb 15 14:14:06 2006
+//  This file was automatically generated on Fri May 18 22:13:10 2007
 //  by libs/config/tools/generate.cpp
 //  Copyright John Maddock 2002-4.
 //  Use, modification and distribution are subject to the 
@@ -79,15 +79,15 @@ namespace boost_no_dependent_nested_derivations = empty_boost;
 #else
 namespace boost_no_dependent_types_in_template_value_parameters = empty_boost;
 #endif
-#ifndef BOOST_NO_EXCEPTIONS
-#include "boost_no_exceptions.ipp"
-#else
-namespace boost_no_exceptions = empty_boost;
-#endif
 #ifndef BOOST_NO_EXCEPTION_STD_NAMESPACE
 #include "boost_no_excep_std.ipp"
 #else
 namespace boost_no_exception_std_namespace = empty_boost;
+#endif
+#ifndef BOOST_NO_EXCEPTIONS
+#include "boost_no_exceptions.ipp"
+#else
+namespace boost_no_exceptions = empty_boost;
 #endif
 #ifndef BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
 #include "boost_no_exp_func_tem_arg.ipp"
@@ -144,16 +144,6 @@ namespace boost_no_long_long_numeric_limits = empty_boost;
 #else
 namespace boost_no_member_function_specializations = empty_boost;
 #endif
-#ifndef BOOST_NO_MEMBER_TEMPLATES
-#include "boost_no_mem_templates.ipp"
-#else
-namespace boost_no_member_templates = empty_boost;
-#endif
-#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
-#include "boost_no_mem_templ_frnds.ipp"
-#else
-namespace boost_no_member_template_friends = empty_boost;
-#endif
 #ifndef BOOST_NO_MEMBER_TEMPLATE_KEYWORD
 #include "boost_no_mem_tem_keyword.ipp"
 #else
@@ -163,6 +153,16 @@ namespace boost_no_member_template_keyword = empty_boost;
 #include "boost_no_mem_tem_pnts.ipp"
 #else
 namespace boost_no_pointer_to_member_template_parameters = empty_boost;
+#endif
+#ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
+#include "boost_no_mem_templ_frnds.ipp"
+#else
+namespace boost_no_member_template_friends = empty_boost;
+#endif
+#ifndef BOOST_NO_MEMBER_TEMPLATES
+#include "boost_no_mem_templates.ipp"
+#else
+namespace boost_no_member_templates = empty_boost;
 #endif
 #ifndef BOOST_NO_OPERATORS_IN_NAMESPACE
 #include "boost_no_ops_in_namespace.ipp"
@@ -199,11 +199,6 @@ namespace boost_no_sfinae = empty_boost;
 #else
 namespace boost_no_stringstream = empty_boost;
 #endif
-#ifndef BOOST_NO_STDC_NAMESPACE
-#include "boost_no_stdc_namespace.ipp"
-#else
-namespace boost_no_stdc_namespace = empty_boost;
-#endif
 #ifndef BOOST_NO_STD_ALLOCATOR
 #include "boost_no_std_allocator.ipp"
 #else
@@ -214,15 +209,15 @@ namespace boost_no_std_allocator = empty_boost;
 #else
 namespace boost_no_std_distance = empty_boost;
 #endif
-#ifndef BOOST_NO_STD_ITERATOR
-#include "boost_no_std_iterator.ipp"
-#else
-namespace boost_no_std_iterator = empty_boost;
-#endif
 #ifndef BOOST_NO_STD_ITERATOR_TRAITS
 #include "boost_no_std_iter_traits.ipp"
 #else
 namespace boost_no_std_iterator_traits = empty_boost;
+#endif
+#ifndef BOOST_NO_STD_ITERATOR
+#include "boost_no_std_iterator.ipp"
+#else
+namespace boost_no_std_iterator = empty_boost;
 #endif
 #ifndef BOOST_NO_STD_LOCALE
 #include "boost_no_std_locale.ipp"
@@ -258,6 +253,11 @@ namespace boost_no_std_wstreambuf = empty_boost;
 #include "boost_no_std_wstring.ipp"
 #else
 namespace boost_no_std_wstring = empty_boost;
+#endif
+#ifndef BOOST_NO_STDC_NAMESPACE
+#include "boost_no_stdc_namespace.ipp"
+#else
+namespace boost_no_stdc_namespace = empty_boost;
 #endif
 #ifndef BOOST_NO_SWPRINTF
 #include "boost_no_swprintf.ipp"
@@ -375,11 +375,6 @@ namespace boost_has_nrvo = empty_boost;
 #else
 namespace boost_has_partial_std_allocator = empty_boost;
 #endif
-#ifdef BOOST_HAS_PTHREADS
-#include "boost_has_pthreads.ipp"
-#else
-namespace boost_has_pthreads = empty_boost;
-#endif
 #ifdef BOOST_HAS_PTHREAD_DELAY_NP
 #include "boost_has_pthread_delay_np.ipp"
 #else
@@ -394,6 +389,11 @@ namespace boost_has_pthread_mutexattr_settype = empty_boost;
 #include "boost_has_pthread_yield.ipp"
 #else
 namespace boost_has_pthread_yield = empty_boost;
+#endif
+#ifdef BOOST_HAS_PTHREADS
+#include "boost_has_pthreads.ipp"
+#else
+namespace boost_has_pthreads = empty_boost;
 #endif
 #ifdef BOOST_HAS_SCHED_YIELD
 #include "boost_has_sched_yield.ipp"
@@ -613,11 +613,6 @@ int main( int, char *[] )
       std::cerr << "Failed test for BOOST_HAS_PARTIAL_STD_ALLOCATOR at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
-   if(0 != boost_has_pthreads::test())
-   {
-      std::cerr << "Failed test for BOOST_HAS_PTHREADS at: " << __FILE__ << ":" << __LINE__ << std::endl;
-      ++error_count;
-   }
    if(0 != boost_has_pthread_delay_np::test())
    {
       std::cerr << "Failed test for BOOST_HAS_PTHREAD_DELAY_NP at: " << __FILE__ << ":" << __LINE__ << std::endl;
@@ -631,6 +626,11 @@ int main( int, char *[] )
    if(0 != boost_has_pthread_yield::test())
    {
       std::cerr << "Failed test for BOOST_HAS_PTHREAD_YIELD at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_has_pthreads::test())
+   {
+      std::cerr << "Failed test for BOOST_HAS_PTHREADS at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_has_sched_yield::test())
@@ -828,14 +828,14 @@ int main( int, char *[] )
       std::cerr << "Failed test for BOOST_NO_DEPENDENT_TYPES_IN_TEMPLATE_VALUE_PARAMETERS at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
-   if(0 != boost_no_exceptions::test())
-   {
-      std::cerr << "Failed test for BOOST_NO_EXCEPTIONS at: " << __FILE__ << ":" << __LINE__ << std::endl;
-      ++error_count;
-   }
    if(0 != boost_no_exception_std_namespace::test())
    {
       std::cerr << "Failed test for BOOST_NO_EXCEPTION_STD_NAMESPACE at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_exceptions::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_EXCEPTIONS at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_no_explicit_function_template_arguments::test())
@@ -893,16 +893,6 @@ int main( int, char *[] )
       std::cerr << "Failed test for BOOST_NO_MEMBER_FUNCTION_SPECIALIZATIONS at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
-   if(0 != boost_no_member_templates::test())
-   {
-      std::cerr << "Failed test for BOOST_NO_MEMBER_TEMPLATES at: " << __FILE__ << ":" << __LINE__ << std::endl;
-      ++error_count;
-   }
-   if(0 != boost_no_member_template_friends::test())
-   {
-      std::cerr << "Failed test for BOOST_NO_MEMBER_TEMPLATE_FRIENDS at: " << __FILE__ << ":" << __LINE__ << std::endl;
-      ++error_count;
-   }
    if(0 != boost_no_member_template_keyword::test())
    {
       std::cerr << "Failed test for BOOST_NO_MEMBER_TEMPLATE_KEYWORD at: " << __FILE__ << ":" << __LINE__ << std::endl;
@@ -911,6 +901,16 @@ int main( int, char *[] )
    if(0 != boost_no_pointer_to_member_template_parameters::test())
    {
       std::cerr << "Failed test for BOOST_NO_POINTER_TO_MEMBER_TEMPLATE_PARAMETERS at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_member_template_friends::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_MEMBER_TEMPLATE_FRIENDS at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_member_templates::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_MEMBER_TEMPLATES at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_no_operators_in_namespace::test())
@@ -948,11 +948,6 @@ int main( int, char *[] )
       std::cerr << "Failed test for BOOST_NO_STRINGSTREAM at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
-   if(0 != boost_no_stdc_namespace::test())
-   {
-      std::cerr << "Failed test for BOOST_NO_STDC_NAMESPACE at: " << __FILE__ << ":" << __LINE__ << std::endl;
-      ++error_count;
-   }
    if(0 != boost_no_std_allocator::test())
    {
       std::cerr << "Failed test for BOOST_NO_STD_ALLOCATOR at: " << __FILE__ << ":" << __LINE__ << std::endl;
@@ -963,14 +958,14 @@ int main( int, char *[] )
       std::cerr << "Failed test for BOOST_NO_STD_DISTANCE at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
-   if(0 != boost_no_std_iterator::test())
-   {
-      std::cerr << "Failed test for BOOST_NO_STD_ITERATOR at: " << __FILE__ << ":" << __LINE__ << std::endl;
-      ++error_count;
-   }
    if(0 != boost_no_std_iterator_traits::test())
    {
       std::cerr << "Failed test for BOOST_NO_STD_ITERATOR_TRAITS at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_std_iterator::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_STD_ITERATOR at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_no_std_locale::test())
@@ -1006,6 +1001,11 @@ int main( int, char *[] )
    if(0 != boost_no_std_wstring::test())
    {
       std::cerr << "Failed test for BOOST_NO_STD_WSTRING at: " << __FILE__ << ":" << __LINE__ << std::endl;
+      ++error_count;
+   }
+   if(0 != boost_no_stdc_namespace::test())
+   {
+      std::cerr << "Failed test for BOOST_NO_STDC_NAMESPACE at: " << __FILE__ << ":" << __LINE__ << std::endl;
       ++error_count;
    }
    if(0 != boost_no_swprintf::test())

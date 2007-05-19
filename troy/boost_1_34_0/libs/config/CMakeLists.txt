@@ -1,1 +1,3 @@
-MESSAGE(STATUS "*** Gore Warning:   program that generates jamfile ***")
+boost_library_subproject(
+  Config
+  TESTDIRS test)

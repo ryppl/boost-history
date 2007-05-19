@@ -1,8 +1,4 @@
 boost_library_subproject(
   Dynamic_bitset
+  TESTDIRS test
 )
-
-boost_test_run(dyn_bitset_unit_tests1)
-boost_test_run(dyn_bitset_unit_tests2)
-boost_test_run(dyn_bitset_unit_tests3)
-boost_test_run(dyn_bitset_unit_tests4)
