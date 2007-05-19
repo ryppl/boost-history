@@ -47,7 +47,7 @@ public:
         stop_service_thread();
     }
 private:
-    template<typename ReturnType>
+    template<typename R, typename T>
     class handler_return;
 public:
     /// Prepares and sends a complete rpc call.
@@ -60,8 +60,8 @@ public:
         \li The client will store that in the handler's record and unlock the mutex.
         \li The process_call method can now finish the call.
     */
-    template<typename ReturnType>
-    handler_return<ReturnType> operator()(async_returning_call<ReturnType> &call)
+    template<typename T>
+    handler_return<Registry, T> operator()(async_returning_call<T> &call)
     {
         mutex_lock.lock();
         if (sending)
@@ -71,7 +71,7 @@ public:
         boost::shared_ptr<handler_base> handler(call.spawn_handler());
         requests[next_request_id] = handler;
 
-        handler_return<ReturnType> handler_r(this,next_request_id);
+        handler_return<Registry, T> handler_r(this,next_request_id);
 
         // send the header
         boost::asio::write(socket,
@@ -95,7 +95,7 @@ protected:
         boost::bind(&client::read_result_header, this, boost::asio::placeholders::error));
     }
 private:
-    requests_type::iterator find_request(id_type id)
+    requests_type::iterator find_request(protocol::request_id_type id)
     {
         requests_type::iterator it = requests.find(id);
         if (it == requests.end())
@@ -105,7 +105,7 @@ private:
         }
         return it;
     }
-    void complete_call(id_type id)
+    void complete_call(protocol::request_id_type id)
     {
         boost::mutex::scoped_lock lock(mutex);
 
@@ -122,7 +122,7 @@ private:
     }
 
     template<typename ReturnType>
-    shared_ptr<handler_base> handler_accepted_as(id_type id,
+    shared_ptr<handler_base> handler_accepted_as(protocol::request_id_type id,
         call_options::marshal_options marshal_option)
     {
         BOOST_ASSERT(mutex_lock.locked());
@@ -199,15 +199,15 @@ private:
 //    template<typename ReturnType>
 //    friend class handler_return;
 
-    template<typename T>
+    template<typename R, typename T>
     class handler_return
     {
     public:
-        typedef client<Registry> client_type;
-        handler_return(client_type *client_ptr, typename client_type::id_type id)
+        typedef client<R> client_type;
+        handler_return(client_type *client_ptr, protocol::request_id_type id)
             : client_ptr(client_ptr), id(id), called(false)
         {}
-        handler_return(const handler_return<T> &h_r)
+        handler_return(const handler_return<R,T> &h_r)
             : client_ptr(h_r.client_ptr), id(h_r.id), called(h_r.called)
         {
             h_r.called = true;
@@ -249,10 +249,8 @@ private:
         }
     private:
         client_type *client_ptr;
-        typename client_type::id_type id;
+        typename protocol::request_id_type id;
         mutable bool called;
-
-//        friend class client<Registry>;
     };
 };
 

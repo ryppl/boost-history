@@ -8,7 +8,7 @@ namespace boost {
 namespace rpc {
 
 /// Accepts a connection upon request.
-/** \warning Using this acceptor is unsecure.
+/** \warning Using this acceptor in exposed networks is unsecure.
 */
 class simple_acceptor
 {

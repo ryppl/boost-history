@@ -3,6 +3,7 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+//[ rpc_example
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
 
@@ -37,83 +38,80 @@ using namespace boost::asio;
 
 void network_rpc_test()
 {
-    // make a registry keyed on int id-s and using binary_archive serialization
-    rpc::registry<int> reg;
+    // make a registry keyed on string id-s and using binary_archive serialization
+    rpc::registry<std::string> reg;
 
     // register the functions
-    reg.set<void ()>(0, nothing);
-    reg.set<int (int)>(1, inc);
-    reg.set<int (int, int)>(2, add2);
-    reg.set<void (int &)>(3, inc_inplace);
+    reg.set<void ()>("nothing", nothing);
+    reg.set<int (int)>("inc", inc);
+    reg.set<int (int, int)>("add2", add2);
+    reg.set<void (int &)>("inc_inplace", inc_inplace);
 
     // create a server for the registry using a simple connection acceptor
-    rpc::server<rpc::registry<int>, rpc::simple_acceptor> server(reg, 1097);
+    rpc::server<rpc::registry<std::string>, rpc::simple_acceptor> server(reg, 1097);
 
     // create a client which will connect to the server through the network.
-    rpc::connecting_client<rpc::registry<int>, rpc::simple_connector> client(
+    rpc::connecting_client<rpc::registry<std::string>, rpc::simple_connector> client(
         ip::tcp::endpoint(ip::address::from_string("127.0.0.1"), 1097));
-
-    // prepare some function calls
-    int i = 1;
-    // embed the function id for a void () call
-    rpc::call<int, void ()> call0(0);
-    // embed the function id and parameter for an int (int) call
-    rpc::call<int, int (int)> call1__1(1,  1);
-    // embed the function id and parameter for an int (int, int) call
-    rpc::call<int, int (int, int)> call2__5_6(2,  5, 6);
-    // embed the function id and parameters for a void (int &) call
-    rpc::call<int, void (int &)> call3__i(3, i);
-
-    boost::promise<int> prom;
-    prom.set(200);
-    boost::future<int> inced(prom);
-    int j = 100;
-    rpc::call<int, void (int &)> call3__j(1, j);
-    rpc::call<int, void (int &)> call3__inced(1, inced);
-
 
     // make some function calls
     
-    // this call is made asynchrously, nothing will be marshaled back
-    client(call0);
+    // embed the function id for a void () call
+    rpc::call<std::string, void ()> call_nothing("nothing");
+    // this call is made asynchrously, nothing will be marshaled back because
+    // there are no "out" arguments and the returned handler is not stored.
+    client(call_nothing);
 
-    // this call will return a handler that we can use check for completion
-    rpc::acknowledgement_ptr handler = client(call0);
+    // here, since the returned call handler is stored in an acknowledgement,
+    // upon completion the server will marshal back only a confirmation of the completion.
+    rpc::acknowledgement_ptr handler = client(call_nothing);
     BOOST_CHECK_NO_THROW(handler->completion().get());
 
-    // this call will return a handler that can be used to get the return value
+    // embed the function id and parameter for an int (int) call
+    rpc::call<std::string, int (int)> call_inc__1("inc",  1);
+    // here, the returned call handler is stored in a proper handler, which can be used
+    // to get the return value
     // since the call includes an "out" parameter, everything gets marshalled
     // back no matter what.
-    rpc::async_returning_handler<int>::ptr handler_int = client(call1__1);
+    rpc::async_returning_handler<int>::ptr handler_int = client(call_inc__1);
     boost::future<int> future_int(handler_int->return_promise());
     BOOST_CHECK_EQUAL(future_int, 2);
 
-    // since the call sends by reference, it will act syncronously
-    client(call3__i);
+    int i = 1;
+    // embed the function id and parameters for a void (int &) call
+    rpc::call<std::string, void (int &)> call_inc_inplace__i("inc_inplace", i);
+    // since the call sends by reference, it will act syncronously - i will immediately be assigned
+    // the value of the future int carrying the modified value of the "out" parameter.
+    client(call_inc_inplace__i);
     BOOST_CHECK_EQUAL(i, 2);
 
-    // handler returners are imlplicitly convertible to futures
-    boost::future<int> result = client(call2__5_6);
+    // embed the function id and parameter for an int (int, int) call
+    rpc::call<std::string, int (int, int)> call_add2__5_6("add2",  5, 6);
+    // handler returners are imlplicitly convertible to futures, which will carry the returned value
+    boost::future<int> result = client(call_add2__5_6);
 
     BOOST_CHECK_EQUAL(result, 11);
 
-    // and values, making the call synchronous
-    int inced1 = client(call1__1);
+    // handler returners are also convertible to values, which immediately
+    // get assigned the value of the return value future, making the call synchronous
+    int inced1 = client(call_inc__1);
     BOOST_CHECK_EQUAL(inced1,  2);
 
-    // this call sends the value through a feature (messy)
-    client(call3__inced);
+    // this call sends the "in" value of an "in/out" paramater through a future (messy)
+    boost::promise<int> prom;
+    prom.set(200);
+    boost::future<int> inced(prom);
+    rpc::call<std::string, void (int &)> call_inc_inplace__inced("inc_inplace", inced);
+    client(call_inc_inplace__inced);
     BOOST_CHECK_EQUAL(inced, 201);
-
-    // another synchronous call
-    client(call3__j);
-    BOOST_CHECK_EQUAL(j, 101);
 
 } // end void network_marshal_test
 
 test_suite* init_unit_test_suite(int argc, char* argv[])
 {
-    test_suite* test = BOOST_TEST_SUITE( "Utility test suite" );
+    test_suite* test = BOOST_TEST_SUITE( "RPC test suite" );
     test->add(BOOST_TEST_CASE(&network_rpc_test));
     return test;
 }
+
+//]

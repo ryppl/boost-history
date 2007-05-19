@@ -11,7 +11,6 @@ namespace boost {
 - \ref sec_client_side
  - \ref sec_client
  - \ref sec_call
- - \ref sec_making_call
 - \ref sec_example
 
 \section sec_server_side Server-side Components
@@ -51,23 +50,16 @@ registry on the server side.
 \skip create a client
 \until ;
 
-\subsection sec_call Call
+\subsection sec_call Making a Call and Getting the Results
 
 rpc::call prepares a call by storing the function id and serializing the parameters.
-
-\dontinclude rpc_example.cpp
-\skip // prepare some function calls
-\until 3, i);
-
-\subsection sec_making_call Making a Call and Getting the Results
-
-A call is given to the client by passing the function id and parameters
+A call is then given to the client by passing the function id and parameters
 through the rpc::call class.  The call will return a call handler which
 can be used to get the return result or verify that the function has completed.
 
 The behavior is currently specified as follows:
- - if there are no "out" arguments (currently, any non-const references), and the returned
-   call handler is not stored, nothing will be marshaled back.
+ - if there are no "out" arguments (currently, "out" arguments are any non-const reference arguments),
+   and the returned call handler is not stored, nothing will be marshaled back.
  - if there are no "out" arguments, and the return handler is stored into an rpc::acknowledgement,
    only an acknowledgement that the call has completed will be marshaled back.
  - if there are no "out" arguments, and the returned call handler is stored into either an
