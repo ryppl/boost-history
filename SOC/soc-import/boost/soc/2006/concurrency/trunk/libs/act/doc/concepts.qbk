@@ -7,8 +7,8 @@
 
 [section Interlocked Concepts]
 
-[include concepts/interlocked_object.qbk]
-[include concepts/interlocked_object/interlocked_arithmetic_object.qbk]
+[include concepts/interlocked_type.qbk]
+[include concepts/interlocked_type/interlocked_arithmetic_type.qbk]
 
 [endsect]
 

@@ -26,33 +26,33 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="act.interlocked_concepts"></a><a href="interlocked_concepts.html" title="Interlocked Concepts">Interlocked Concepts</a></h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_object">Interlocked
-      Object</a></span></dt>
-<dt><span class="section"><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_object">Interlocked
-      Arithmetic Object</a></span></dt>
+<dt><span class="section"><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_type">Interlocked
+      Type</a></span></dt>
+<dt><span class="section"><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_type">Interlocked
+      Arithmetic Type</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.interlocked_concepts.interlocked_object"></a><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_object" title="Interlocked
-      Object">Interlocked
-      Object</a></h3></div></div></div>
+<a name="act.interlocked_concepts.interlocked_type"></a><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_type" title="Interlocked
+      Type">Interlocked
+      Type</a></h3></div></div></div>
 <p>
-        An <code class="literal">Interlocked Object</code> is an object which supports thread-safe
-        interlocked operations and which are often used in the implementation of
-        lock-free code. On systems which support interlocked operations, all non-member
+        An <code class="literal">Interlocked Type</code> is a type whose instances support
+        thread-safe interlocked operations and which are often used in the implementation
+        of lock-free code. On systems which support interlocked operations, all non-member
         and pointer types and some arithmetic types may be compliant <code class="literal">Interlocked
-        Objects</code> as well as some library-defined or user-defined types given
+        Types</code> as well as some library-defined or user-defined types given
         that they support the required operations. For details on how to select and
         take advantage of such types, see the <span class="underline">_interlocked</span>_.
       </p>
 <p>
-        In order to be considered a valid <code class="literal">Interlocked Object</code>,
-        given the variable definitions below, the following expressions must be well-formed
+        In order to be considered a valid <code class="literal">Interlocked Type</code>, given
+        the variable definitions below, the following expressions must be well-formed
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id429977"></a><p class="title"><b>Table 6. Interlocked Object Descriptive Variable Definitions</b></p>
-<div class="table-contents"><table class="table" summary="Interlocked Object Descriptive Variable Definitions">
+<a name="id429977"></a><p class="title"><b>Table 6. Interlocked Type Descriptive Variable Definitions</b></p>
+<div class="table-contents"><table class="table" summary="Interlocked Type Descriptive Variable Definitions">
 <colgroup>
 <col>
 <col>
@@ -65,7 +65,7 @@
 <tr>
 <td><code class="code"><span class="identifier">I</span></code></td>
 <td>An
-            <code class="literal">Interlocked Object</code> type.</td>
+            <code class="literal">Interlocked Type</code> type.</td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">IV</span></code></td>
@@ -100,9 +100,9 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><a name="act.interlocked_concepts.interlocked_object.expression_requirements"></a><h5>
+<br class="table-break"><a name="act.interlocked_concepts.interlocked_type.expression_requirements"></a><h5>
 <a name="id487564"></a>
-        <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_object.expression_requirements">Expression
+        <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_type.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="note"><table border="0" summary="Note">
@@ -132,8 +132,8 @@
         </p></td></tr>
 </table></div>
 <div class="table">
-<a name="id487708"></a><p class="title"><b>Table 7. Interlocked Object Requirements</b></p>
-<div class="table-contents"><table class="table" summary="Interlocked Object Requirements">
+<a name="id487708"></a><p class="title"><b>Table 7. Interlocked Type Requirements</b></p>
+<div class="table-contents"><table class="table" summary="Interlocked Type Requirements">
 <colgroup>
 <col>
 <col>
@@ -249,26 +249,26 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.interlocked_concepts.interlocked_arithmetic_object"></a><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_object" title="Interlocked
-      Arithmetic Object">Interlocked
-      Arithmetic Object</a></h3></div></div></div>
+<a name="act.interlocked_concepts.interlocked_arithmetic_type"></a><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_type" title="Interlocked
+      Arithmetic Type">Interlocked
+      Arithmetic Type</a></h3></div></div></div>
 <p>
-        An <code class="literal">Interlocked Arithmetic Object</code> is an <a href="../">
-        <code class="literal">Interlocked Object</code></a> which supports common arithmetic
+        An <code class="literal">Interlocked Arithmetic Type</code> is an <a href="../">
+        <code class="literal">Interlocked Type</code></a> which supports common arithmetic
         operations.
       </p>
 <p>
-        In order to be considered a valid <code class="literal">Interlocked Arithmetic Object</code>,
+        In order to be considered a valid <code class="literal">Interlocked Arithmetic Type</code>,
         given the variable definitions below, the following expressions must be well-formed
-        and have the indicated effects, in addition to those requirements of <a href="../"> <code class="literal">Interlocked Object</code></a>.
-        <code class="literal">Interlocked Arithmetic Objects</code> also support all operations
+        and have the indicated effects, in addition to those requirements of <a href="../"> <code class="literal">Interlocked Type</code></a>.
+        <code class="literal">Interlocked Arithmetic Types</code> also support all operations
         specified in the C++ standard for arithmetic types. Such operations do not
         imply memory barriers of any kind.
       </p>
 <div class="table">
-<a name="id502741"></a><p class="title"><b>Table 8. Interlocked Arithmetic Object Descriptive Variable
+<a name="id502741"></a><p class="title"><b>Table 8. Interlocked Arithmetic Type Descriptive Variable
       Definitions</b></p>
-<div class="table-contents"><table class="table" summary="Interlocked Arithmetic Object Descriptive Variable
+<div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Descriptive Variable
       Definitions">
 <colgroup>
 <col>
@@ -282,7 +282,7 @@
 <tr>
 <td><code class="code"><span class="identifier">I</span></code></td>
 <td>An
-            <code class="literal">Interlocked Arithmetic Object</code> type.</td>
+            <code class="literal">Interlocked Arithmetic Type</code> type.</td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">IV</span></code></td>
@@ -307,14 +307,14 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><a name="act.interlocked_concepts.interlocked_arithmetic_object.expression_requirements"></a><h5>
+<br class="table-break"><a name="act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements"></a><h5>
 <a name="id502927"></a>
-        <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_object.expression_requirements">Expression
+        <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id502946"></a><p class="title"><b>Table 9. Interlocked Arithmetic Object Requirements</b></p>
-<div class="table-contents"><table class="table" summary="Interlocked Arithmetic Object Requirements">
+<a name="id502946"></a><p class="title"><b>Table 9. Interlocked Arithmetic Type Requirements</b></p>
+<div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Requirements">
 <colgroup>
 <col>
 <col>
