@@ -10,29 +10,22 @@ In order to be considered a valid [concept Consumer], given the variable
 definitions below, the following expressions must be well-formed and have the
 indicated effects.
 
-[table Worker Descriptive Variable Definitions
+[table Consumer Descriptive Variable Definitions
 [[Variable]       [Definition]                                                 ]
 [[`C`]            [A [concept Consumer] type.]                                 ]
 [[`c`]            [Value of type `C&`.]                                        ]
-[[`A`]            [An policy type which may be used in conjunction with
-                   `C`. [tablenote Such policy types are
-                   implementation-specified with respect to models of the
-                   [concept Consumer] concept.]
-                  ]                                                            ]
-[[`a`]            [Value of type `A&`.]                                        ]
 [[`d`]            [Value of type `C::value_type const&`.]                      ]
 ]
 
 [heading Expression Requirements]
 
-[table Worker Requirements
+[table Consumer Requirements
 [[Expression]     [Return Type][Pre/Post-Condition]                            ]
 [[`C()`]          []           [Creates an instance using a default policy. A
                                 destructor is assumed.
                                ]                                               ]
-[[`C(a)`]         []           [Creates an instance. A destructor is assumed.] ]
 [[`C::value_type`][]           [The type of data which is processed.]          ]
-[[`c.consume(d)`] [(unused)]   [Processes a copy of `d`. [tablenote Processing
+[[`c(d)`] [(unused)]           [Processes a copy of `d`. [tablenote Processing
                                 takes place in an implementation-defined thread
                                 of execution.]
                                ]                                               ]

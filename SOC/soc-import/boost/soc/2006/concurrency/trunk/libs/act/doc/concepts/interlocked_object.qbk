@@ -120,7 +120,7 @@ have the indicated effects.
                                                      volatile-qualified along
                                                      with the guarantee that the
                                                      object will not be
-                                                     "partially updated" by
+                                                     partially updated by
                                                      another thread.
                                                     ]
                                                    ]                           ]

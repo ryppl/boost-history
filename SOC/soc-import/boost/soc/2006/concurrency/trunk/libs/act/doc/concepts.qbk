@@ -1,11 +1,17 @@
-[section Concepts]
+[section Consumer Concepts]
 
 [include consumer.qbk]
 [include consumer_policy.qbk]
+
+[endsect]
+
+[section Interlocked Concepts]
+
 [include concepts/interlocked_object.qbk]
-[include worker.qbk]
-[include worker_policy.qbk]
-[include thread.qbk]
-[include thread_policy.qbk]
+[include concepts/interlocked_object/interlocked_arithmetic_object.qbk]
+
+[endsect]
+
+[section Queue Concepts]
 
 [endsect]

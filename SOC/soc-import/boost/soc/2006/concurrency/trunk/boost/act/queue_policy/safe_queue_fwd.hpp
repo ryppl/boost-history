@@ -11,7 +11,9 @@
 
 namespace boost { namespace act { namespace queue_policy {
 
-template< typename QueuePolicy, typename ValueType >
+template< typename QueuePolicy, typename ValueType
+        , typename Arg0, typename Arg1
+        >
 struct safe_queue;
 
 } } }

@@ -83,53 +83,11 @@ were signaled.
 
 [endsect]
 
-[section Act Models]
-
-While the main purpose of Boost.Act is to introduce higher-level threading
-facilities to C++, it does so in a manner that makes their behavior toggleable
-and very customizable. Modularity with respect to actions and active objects is
-accomplished by allowing their implementation to be altered through the use of
-policies called act models, much like how algorithm models are used to alter the
-implementation of parallelable algorithms. Whenever you instantiate an active
-type or an action, you have the option of passing an act model which may alter
-its implementation. If you choose not to pass a policy explicitly, the default
-policy is used, which is also changeable.
-
-Act models currently provided with Boost.Act are an immediate act model, a
-concurrent act model, and a lazy act model. Each model causes very distinct
-behavior, yet does not change the way you interface with the rest of the
-library. In brief, the immediate act model guarantees that operations are
-performed immediately when they are signaled and the function will not return
-until execution is complete. The concurrent act model allows active function
-calls to occur in their own thread and may also store active objects in their
-own thread. The lazy act model receives active function signals and adds them to
-a queue. The actual functions which are signaled will not be called until the
-result is required by the user through an explicit or implicit wait.
-
-By default, the concurrent act model is used, though this behavior is
-adjustable.
-
-[endsect]
-
 [section Atomic Objects]
 
 Frequently when working with multithreaded applications, a need arises to access
-a single object from multiple threads. Those experienced in multithreaded
-programming realize that this is not a trivial task for even relatively simple
-types.
-
-A thread-safe active object implementation is one way of making such
-functionality fairly simple to achieve without the possibility of deadlocks,
-however it also has the side-effect of having functions result in =actions=
-which can add needless complexity to the application if they are not needed.
-Atomic types provide a simpler solution by sharing the same interface as active
-objects but with functions that are executed immediately and that return their
-values directly as opposed to through actions.
-
-By default, all atomic objects internally use active objects, although the
-=atomic_type= template may be specialized to provide more efficient
-implementations where possible. ['Note: If OpenMP is supported, such
-optimizations are performed for standard scalar types].
+a single object from multiple threads. Atomic objects are objects whose
+associated operations may be safely called by any number of threads.
 
 [endsect]
 

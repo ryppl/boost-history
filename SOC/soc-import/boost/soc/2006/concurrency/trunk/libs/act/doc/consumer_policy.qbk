@@ -9,7 +9,7 @@ In order to be considered a valid [concept Consumer Policy], given the
 variable definitions below, the following expressions must be well-formed and
 have the indicated effects.
 
-[table Worker Policy Descriptive Variable Definitions
+[table Consumer Policy Descriptive Variable Definitions
 [[Variable]       [Definition]                                                 ]
 [[`A`]            [A [concept Consumer Policy] type.]                          ]
 [[`a`]            [Value of type `A&`.]                                        ]
@@ -18,30 +18,37 @@ have the indicated effects.
 [[`tc`]           [Value of type `T const&`.]                                  ]
 [[`P`]            [A unary function object which may take `t` as an argument.] ]
 [[`p`]            [Value of type `P const&`.]                                  ]
-[[`sc`]           [A value of type `A::scoped_consumer&`]                      ]
-[[`ssc`]          [A value of type `A::safe_scoped_consumer&` with the
-                   corresponding object constructed with `a` as an argument.
-                  ]                                                            ]
 ]
 
 [heading Expression Requirements]
 
-[table Worker Policy Requirements
+[table Consumer Policy Requirements
 [[Expression]                    [Return Type][Pre/Post-Condition]             ]
-[[`A::scoped_consumer<T,P>`]     []           [A __consumer__ type which
+[[`consumer_policy
+   ::scoped_consumer
+     < A
+     , constraint<T>
+     , processor<P>
+     >
+     ::type`
+ ]                               []           [A __consumer__ type which
                                                guarantees all
                                                processing is completed prior to
                                                the object being destroyed.
                                               ]                                ]
-[[`A::safe_scoped_consumer<T,P>`][]           [A __consumer__ type which
+[[`consumer_policy
+   ::safe_scoped_consumer
+     < A
+     , constraint<T>
+     , processor<P>
+     >
+     ::type`
+ ]                               []           [A __consumer__ type which
                                                guarantees all processing is
                                                completed prior to the object
                                                being destroyed and which may be
                                                interfaced with by any number of
                                                threads of execution.
-                                              ]                                ]
-[[`A()`]                         []           [Creates a default instance. A
-                                               destructor is assumed.
                                               ]                                ]
 ]
 

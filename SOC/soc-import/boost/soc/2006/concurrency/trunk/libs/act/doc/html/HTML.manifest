@@ -2,6 +2,8 @@ index.html
 act/beta_warning.html
 act/introduction.html
 act/compiler_setup.html
-act/concepts.html
+act/consumer_concepts.html
+act/interlocked_concepts.html
+act/queue_concepts.html
 act/basic_worker_policy.html
 act/rationale.html
