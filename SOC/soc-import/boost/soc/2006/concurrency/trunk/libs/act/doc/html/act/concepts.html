@@ -30,7 +30,7 @@
 <dt><span class="section"><a href="concepts.html#act.concepts.consumer_policy">Consumer Policy</a></span></dt>
 <dt><span class="section"><a href="concepts.html#act.concepts.interlocked_object">Interlocked Object</a></span></dt>
 <dt><span class="section"><a href="concepts.html#act.concepts.worker">Worker</a></span></dt>
-<dt><span class="section"><a href="concepts.html#act.concepts.worker_allocator">Worker Allocator</a></span></dt>
+<dt><span class="section"><a href="concepts.html#act.concepts.worker_policy">Worker Policy</a></span></dt>
 <dt><span class="section"><a href="concepts.html#act.concepts.threaded_worker">Threaded Worker</a></span></dt>
 <dt><span class="section"><a href="concepts.html#act.concepts.threaded_worker_policy">Threaded Worker
       Policy</a></span></dt>
@@ -469,13 +469,15 @@
             prior to the operation being performed. </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">volatile_get</span><span class="special">(</span>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">safe_get</span><span class="special">(</span>
             <span class="identifier">iv</span> <span class="special">)</span></code></td>
 <td><code class="code"><span class="identifier">I</span></code></td>
 <td>Returns the value of
-            <code class="code"><span class="identifier">iv</span></code>. <span class="emphasis"><em>Note: Used
-            for retrieving the value of a potentially volatile-unqualified type as
-            though it were volatile-qualified. --end note</em></span> </td>
+            <code class="code"><span class="identifier">iv</span></code>. <span class="emphasis"><em>Note: This
+            template is used for retrieving the value of a potentially volatile-unqualified
+            type as though it were volatile-qualified along with the guarantee that
+            the object will not be "partially updated" by another thread.
+            --end note</em></span> </td>
 </tr>
 </tbody>
 </table></div>
@@ -497,7 +499,7 @@
         the indicated effects.
       </p>
 <div class="table">
-<a name="id502889"></a><p class="title"><b>Table 8. Worker Descriptive Variable Definitions</b></p>
+<a name="id502894"></a><p class="title"><b>Table 8. Worker Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Worker Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -540,11 +542,11 @@
 </table></div>
 </div>
 <br class="table-break"><a name="act.concepts.worker.expression_requirements"></a><h5>
-<a name="id503076"></a>
+<a name="id503081"></a>
         <a href="concepts.html#act.concepts.worker.expression_requirements">Expression Requirements</a>
       </h5>
 <div class="table">
-<a name="id503094"></a><p class="title"><b>Table 9. Worker Requirements</b></p>
+<a name="id503098"></a><p class="title"><b>Table 9. Worker Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Worker Requirements">
 <colgroup>
 <col>
@@ -581,21 +583,21 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.concepts.worker_allocator"></a><a href="concepts.html#act.concepts.worker_allocator" title="Worker Allocator">Worker Allocator</a></h3></div></div></div>
+<a name="act.concepts.worker_policy"></a><a href="concepts.html#act.concepts.worker_policy" title="Worker Policy">Worker Policy</a></h3></div></div></div>
 <p>
-        A <code class="literal">Worker Allocator</code> is a type whose instances are used
-        to create <a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a>
-        objects which execute user-specified functions. These <code class="literal">Worker Allocators</code>
+        A <code class="literal">Worker Policy</code> is a type whose instances are used to
+        create <a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a>
+        objects which execute user-specified functions. These <code class="literal">Worker Policys</code>
         generally act as policies to higher-level types.
       </p>
 <p>
-        In order to be considered a valid <code class="literal">Worker Allocator</code>, given
+        In order to be considered a valid <code class="literal">Worker Policy</code>, given
         the variable definitions below, the following expressions must be well-formed
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id503291"></a><p class="title"><b>Table 10. Worker Allocator Descriptive Variable Definitions</b></p>
-<div class="table-contents"><table class="table" summary="Worker Allocator Descriptive Variable Definitions">
+<a name="id503296"></a><p class="title"><b>Table 10. Worker Policy Descriptive Variable Definitions</b></p>
+<div class="table-contents"><table class="table" summary="Worker Policy Descriptive Variable Definitions">
 <colgroup>
 <col>
 <col>
@@ -608,7 +610,7 @@
 <tr>
 <td><code class="code"><span class="identifier">A</span></code></td>
 <td>A
-            Worker Allocator type.</td>
+            Worker Policy type.</td>
 </tr>
 <tr>
 <td>
@@ -642,8 +644,8 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id503515"></a><p class="title"><b>Table 11. Worker Allocator Requirements</b></p>
-<div class="table-contents"><table class="table" summary="Worker Allocator Requirements">
+<a name="id503520"></a><p class="title"><b>Table 11. Worker Policy Requirements</b></p>
+<div class="table-contents"><table class="table" summary="Worker Policy Requirements">
 <colgroup>
 <col>
 <col>
@@ -714,7 +716,7 @@
         the __threaded_worker<span class="underline">allocator</span>_ concept.
       </p>
 <a name="act.concepts.threaded_worker.refinement_of"></a><h5>
-<a name="id503869"></a>
+<a name="id503874"></a>
         <a href="concepts.html#act.concepts.threaded_worker.refinement_of">Refinement of</a>
       </h5>
 <div class="itemizedlist"><ul type="disc"><li><a href="concepts.html#act.concepts.worker" title="Worker"> <code class="literal">Worker</code></a></li></ul></div>
@@ -740,15 +742,15 @@
         model.
       </p>
 <a name="act.concepts.threaded_worker_policy.refinement_of"></a><h5>
-<a name="id504019"></a>
+<a name="id504024"></a>
         <a href="concepts.html#act.concepts.threaded_worker_policy.refinement_of">Refinement
         of</a>
       </h5>
-<div class="itemizedlist"><ul type="disc"><li><a href="../"> <code class="literal">Worker Policy</code></a></li></ul></div>
+<div class="itemizedlist"><ul type="disc"><li><a href="concepts.html#act.concepts.worker_policy" title="Worker Policy"> <code class="literal">Worker Policy</code></a></li></ul></div>
 <p>
-        As a refinement of the <a href="../"> <code class="literal">Worker
+        As a refinement of the <a href="concepts.html#act.concepts.worker_policy" title="Worker Policy"> <code class="literal">Worker
         Policy</code></a> concept, a <code class="literal">Threaded Worker Policy</code>
-        must meet all of the requirements of the <a href="../">
+        must meet all of the requirements of the <a href="concepts.html#act.concepts.worker_policy" title="Worker Policy">
         <code class="literal">Worker Policy</code></a> concept along with the aformentioned
         restrictions. There are no additional interface requirements for a type to
         be considered a valid <code class="literal">Threaded Worker Policy</code>.

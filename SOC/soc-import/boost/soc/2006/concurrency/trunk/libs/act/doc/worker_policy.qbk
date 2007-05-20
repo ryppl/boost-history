@@ -1,16 +1,16 @@
-[section Worker Allocator]
+[section Worker Policy]
 
-A =Worker Allocator= is a type whose instances are used to create __worker__
-objects which execute user-specified functions. These =Worker Allocators=
+A =Worker Policy= is a type whose instances are used to create __worker__
+objects which execute user-specified functions. These =Worker Policys=
 generally act as policies to higher-level types.
 
-In order to be considered a valid =Worker Allocator=, given the variable
+In order to be considered a valid =Worker Policy=, given the variable
 definitions below, the following expressions must be well-formed and have the
 indicated effects.
 
-[table Worker Allocator Descriptive Variable Definitions
+[table Worker Policy Descriptive Variable Definitions
 [[Variable]       [Definition]                                                 ]
-[[`A`]            [A Worker Allocator type.]                                   ]
+[[`A`]            [A Worker Policy type.]                                   ]
 [[`a`, `a1`, `a2`][Values of type `A&` where `a1 == a`.]                       ]
 [[`uw`]           [A value of type `A::unmanged_worker&` with the corresponding
                    object constructed with `a1` as an argument.
@@ -21,7 +21,7 @@ indicated effects.
 [[`f`]            [A nullary function object.]                                 ]
 ]
 
-[table Worker Allocator Requirements
+[table Worker Policy Requirements
 [[Expression]           [Return Type][Pre/Post-Condition]                      ]
 [[`A::unmanaged_worker`][]           [A __worker__ type which may be joined from
                                       a single thread and which must be joined

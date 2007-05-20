@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/04/02 01:30:40 $"
+<article id="act" name="Act" dirname="act" last-revision="$Date: 2007/05/20 02:51:25 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -684,12 +684,14 @@
           </row>
           <row>
             <entry><code><phrase role="identifier">interlocked</phrase><phrase role="special">::</phrase><phrase
-            role="identifier">volatile_get</phrase><phrase role="special">(</phrase>
+            role="identifier">safe_get</phrase><phrase role="special">(</phrase>
             <phrase role="identifier">iv</phrase> <phrase role="special">)</phrase></code></entry><entry><code><phrase
             role="identifier">I</phrase></code></entry><entry>Returns the value of
-            <code><phrase role="identifier">iv</phrase></code>. <emphasis>Note: Used
-            for retrieving the value of a potentially volatile-unqualified type as
-            though it were volatile-qualified. --end note</emphasis> </entry>
+            <code><phrase role="identifier">iv</phrase></code>. <emphasis>Note: This
+            template is used for retrieving the value of a potentially volatile-unqualified
+            type as though it were volatile-qualified along with the guarantee that
+            the object will not be &quot;partially updated&quot; by another thread.
+            --end note</emphasis> </entry>
           </row>
         </tbody>
       </tgroup>
@@ -775,20 +777,20 @@
       </tgroup>
       </table>
     </section>
-    <section id="act.concepts.worker_allocator">
-      <title><link linkend="act.concepts.worker_allocator">Worker Allocator</link></title>
+    <section id="act.concepts.worker_policy">
+      <title><link linkend="act.concepts.worker_policy">Worker Policy</link></title>
       <para>
-        A <literal>Worker Allocator</literal> is a type whose instances are used
-        to create <link linkend="act.concepts.worker"> <literal>Worker</literal></link>
-        objects which execute user-specified functions. These <literal>Worker Allocators</literal>
+        A <literal>Worker Policy</literal> is a type whose instances are used to
+        create <link linkend="act.concepts.worker"> <literal>Worker</literal></link>
+        objects which execute user-specified functions. These <literal>Worker Policys</literal>
         generally act as policies to higher-level types.
       </para>
       <para>
-        In order to be considered a valid <literal>Worker Allocator</literal>, given
+        In order to be considered a valid <literal>Worker Policy</literal>, given
         the variable definitions below, the following expressions must be well-formed
         and have the indicated effects.
       </para>
-      <table frame="all"> <title>Worker Allocator Descriptive Variable Definitions</title>
+      <table frame="all"> <title>Worker Policy Descriptive Variable Definitions</title>
       <tgroup cols="2">
         <thead>
           <row>
@@ -798,7 +800,7 @@
         <tbody>
           <row>
             <entry><code><phrase role="identifier">A</phrase></code></entry><entry>A
-            Worker Allocator type.</entry>
+            Worker Policy type.</entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">a</phrase></code>, <code><phrase
@@ -827,7 +829,7 @@
           </row>
         </tbody>
       </tgroup>
-      </table> <table frame="all"> <title>Worker Allocator Requirements</title>
+      </table> <table frame="all"> <title>Worker Policy Requirements</title>
       <tgroup cols="3">
         <thead>
           <row>
