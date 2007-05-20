@@ -1,0 +1,16 @@
+[section Threaded Worker]
+
+A [concept Threaded Worker] is type which may be used to execute user-specified
+functions in a separate thread from that of its of construction. In Boost.Act,
+models of this concept may be found as members of models of the
+__threaded_worker_allocator__ concept.
+
+[heading Refinement of]
+* __worker__
+
+As a refinement of the __worker__ concept, a [concept Threaded Worker] must meet
+all of the requirements of the __worker__ concept along with the aformentioned
+restrictions. There are no additional interface requirements for a type to be
+considered a valid [concept Threaded Worker].
+
+[endsect]

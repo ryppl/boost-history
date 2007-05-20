@@ -4,7 +4,7 @@ A [concept Consumer] is an object which takes in data of a single type one
 instance at a time and processes it in an implementation defined-manner either
 sychnronously or asynchronously with respect to the thread it is interfaced
 with. In Boost.Act, models of this concept may be found as members of models of
-the __consumer_allocator__ concept.
+the __consumer_policy__ concept.
 
 In order to be considered a valid [concept Consumer], given the variable
 definitions below, the following expressions must be well-formed and have the
@@ -14,8 +14,8 @@ indicated effects.
 [[Variable]       [Definition]                                                 ]
 [[`C`]            [A [concept Consumer] type.]                                 ]
 [[`c`]            [Value of type `C&`.]                                        ]
-[[`A`]            [An allocator type which may be used in conjunction with
-                   `C`. [tablenote Such allocator types are
+[[`A`]            [An policy type which may be used in conjunction with
+                   `C`. [tablenote Such policy types are
                    implementation-specified with respect to models of the
                    [concept Consumer] concept.]
                   ]                                                            ]
@@ -27,7 +27,7 @@ indicated effects.
 
 [table Worker Requirements
 [[Expression]     [Return Type][Pre/Post-Condition]                            ]
-[[`C()`]          []           [Creates an instance using a default allocator. A
+[[`C()`]          []           [Creates an instance using a default policy. A
                                 destructor is assumed.
                                ]                                               ]
 [[`C(a)`]         []           [Creates an instance. A destructor is assumed.] ]

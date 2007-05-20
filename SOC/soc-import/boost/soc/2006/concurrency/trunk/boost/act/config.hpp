@@ -5,3 +5,11 @@
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
+
+#ifndef BOOST_ACT_CONFIG_HPP
+#define BOOST_ACT_CONFIG_HPP
+
+#include <boost/act/config/max_params.hpp>
+#include <boost/act/config/queue_policy.hpp>
+
+#endif

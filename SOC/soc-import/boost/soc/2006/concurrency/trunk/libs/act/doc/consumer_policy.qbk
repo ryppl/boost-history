@@ -1,0 +1,48 @@
+[section Consumer Policy]
+
+A [concept Consumer Policy] is a type whose instances are used to create
+__consumer__ objects. These [concept Consumer Policys] generally act as
+policies to higher-level types. In Boost.Act, such allocator types are used,
+most notably, as policies during active-qualification.
+
+In order to be considered a valid [concept Consumer Policy], given the
+variable definitions below, the following expressions must be well-formed and
+have the indicated effects.
+
+[table Worker Policy Descriptive Variable Definitions
+[[Variable]       [Definition]                                                 ]
+[[`A`]            [A [concept Consumer Policy] type.]                          ]
+[[`a`]            [Value of type `A&`.]                                        ]
+[[`T`]            [The type of objects to be processed.]                       ]
+[[`t`]            [Value of type `T&`.]                                        ]
+[[`tc`]           [Value of type `T const&`.]                                  ]
+[[`P`]            [A unary function object which may take `t` as an argument.] ]
+[[`p`]            [Value of type `P const&`.]                                  ]
+[[`sc`]           [A value of type `A::scoped_consumer&`]                      ]
+[[`ssc`]          [A value of type `A::safe_scoped_consumer&` with the
+                   corresponding object constructed with `a` as an argument.
+                  ]                                                            ]
+]
+
+[heading Expression Requirements]
+
+[table Worker Policy Requirements
+[[Expression]                    [Return Type][Pre/Post-Condition]             ]
+[[`A::scoped_consumer<T,P>`]     []           [A __consumer__ type which
+                                               guarantees all
+                                               processing is completed prior to
+                                               the object being destroyed.
+                                              ]                                ]
+[[`A::safe_scoped_consumer<T,P>`][]           [A __consumer__ type which
+                                               guarantees all processing is
+                                               completed prior to the object
+                                               being destroyed and which may be
+                                               interfaced with by any number of
+                                               threads of execution.
+                                              ]                                ]
+[[`A()`]                         []           [Creates a default instance. A
+                                               destructor is assumed.
+                                              ]                                ]
+]
+
+[endsect]

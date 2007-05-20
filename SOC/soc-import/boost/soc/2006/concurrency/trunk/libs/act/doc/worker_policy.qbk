@@ -1,0 +1,49 @@
+[section Worker Allocator]
+
+A =Worker Allocator= is a type whose instances are used to create __worker__
+objects which execute user-specified functions. These =Worker Allocators=
+generally act as policies to higher-level types.
+
+In order to be considered a valid =Worker Allocator=, given the variable
+definitions below, the following expressions must be well-formed and have the
+indicated effects.
+
+[table Worker Allocator Descriptive Variable Definitions
+[[Variable]       [Definition]                                                 ]
+[[`A`]            [A Worker Allocator type.]                                   ]
+[[`a`, `a1`, `a2`][Values of type `A&` where `a1 == a`.]                       ]
+[[`uw`]           [A value of type `A::unmanged_worker&` with the corresponding
+                   object constructed with `a1` as an argument.
+                  ]                                                            ]
+[[`suw`]          [A value of type `A::safe_unmanaged_worker&` with the
+                   corresponding object constructed with `a1` as an argument.
+                  ]                                                            ]
+[[`f`]            [A nullary function object.]                                 ]
+]
+
+[table Worker Allocator Requirements
+[[Expression]           [Return Type][Pre/Post-Condition]                      ]
+[[`A::unmanaged_worker`][]           [A __worker__ type which may be joined from
+                                      a single thread and which must be joined
+                                      prior to the parent process's completion
+                                      to be well-formed.]                      ]
+[[`A::safe_unmanaged_worker`][]      [A __worker__ type which may be joined from
+                                      any number of threads and which must be
+                                      joined prior to the parent process's
+                                      completion to be well-formed.]           ]
+[[`a.spawn_wild_worker(f)`][(unused)][`f` is executed in an
+                                      implementation-defined thread. ['Note: `f`
+                                      is guaranteed to complete its execution
+                                      prior to a natural closing of the
+                                      corresponding process. --end note]
+                                     ]                                         ]
+[[`a1 == a2`]           [`bool`]     [Returns true iff workers allocated from
+                                      each can be joined via the other.
+                                     ]                                         ]
+[[`a1 != a2`]           [`bool`]     [Same as `!(a1 == a2)`.]                  ]
+[[`A()`]                []           [Creates a default instance. A destructor
+                                      is assumed.
+                                     ]                                         ]
+]
+
+[endsect]

@@ -1,0 +1,129 @@
+[section Interlocked Object]
+
+An [concept Interlocked Object] is an object which supports thread-safe
+interlocked operations and which are often used in the implementation of
+lock-free code. On systems which support interlocked operations, all non-member
+and pointer types and some arithmetic types may be compliant
+[concept Interlocked Objects] as well as some library-defined or user-defined
+types given that they support the required operations. For details on how to
+select and take advantage of such types, see the __interlocked__.
+
+In order to be considered a valid [concept Interlocked Object], given the
+variable definitions below, the following expressions must be well-formed and
+have the indicated effects.
+
+[table Interlocked Object Descriptive Variable Definitions
+[[Variable]       [Definition]                                                 ]
+[[`I`]            [An [concept Interlocked Object] type.]                      ]
+[[`IV`]           [`I volatile`.]                                              ]
+[[`C1`]           [A type which is convertible to `IV`.]                       ]
+[[`C2`]           [A type which is convertible to `IV`.]                       ]
+[[`iv`]           [Value of type `I volatile&`.]                               ]
+[[`c1`]           [Value of type `C1 const&`.]                                 ]
+[[`c2`]           [Value of type `C2 const&`.]                                 ]
+]
+
+[heading Expression Requirements]
+
+[note In the following requirements, certain operations are listed as having
+ /acquire/ memory semantics, /release/ memory semantics, or a
+ /full memory barrier/. Operations with /acquire/ memory semantics imply that
+ the memory operation being performed by the current thread will be visible
+ before any other memory operations are attempted. Operations with /release/
+ memory semantics imply that the memory operation being performed by the current
+ thread will be visible after all other memory operations have been completed.
+ Operations with a /full memory barrier/ imply that the memory operation being
+ performed by the current thread enforces a strict ordering with both /acqure/
+ memory semantics and /release/ memory semantics. These specifications are
+ merely a minimum requirement and therefore on certain systems, such operations
+ which require /acquire/ memory semantics or /release/ memory semantics may be
+ implemented with a /full memory barrier/. For brevity, functions and templates
+ in the namespace `::boost::act::interlocked` are prefixed simply with
+ `interlocked::`.
+]
+
+[table Interlocked Object Requirements
+[[Expression]                         [Return Type][Pre/Post-Condition]        ]
+[[`I()`]                              []           [Constructs an instance of
+                                                    `I` with an unspecified
+                                                    initial value.
+                                                   ]                           ]
+[[`I i = c1`]                         []           [Constructs an instance of
+                                                    `I` with `c1` as an initial
+                                                    value.
+                                                   ]                           ]
+[[`iv = c1`]                          [`I&`]       [Stores the value of `c1`
+                                                    to object `i`.
+                                                    Returns a reference to `iv`.
+                                                    [tablenote This is not an
+                                                     interlocked operation and
+                                                     does not imply a memory
+                                                     barrier of any kind.
+                                                    ]
+                                                   ]                           ]
+[[`interlocked::assign( iv, c1 )`]    [`I`]        [Stores the value of `c1`
+                                                    to object `iv` with a
+                                                    /full memory barrier/.
+                                                    Returns the value of `iv`
+                                                    prior to the operation being
+                                                    performed.
+                                                   ]                           ]
+[[`interlocked::assign_acquire( iv, c1 )`]
+                                      [`I`]        [Stores the value of `c1`
+                                                    to object `iv` with
+                                                    /acquire/ memory semantics.
+                                                    Returns the value of `iv`
+                                                    prior to the operation being
+                                                    performed.
+                                                   ]                           ]
+[[`interlocked::assign_if_was( iv, c1, c2 )`]
+                                      [`I`]        [Stores the value of `c1`
+                                                    to object `iv`
+                                                    iff `iv == c2` prior to the
+                                                    operation with a
+                                                    /full memory barrier/.
+                                                    Returns the value of `iv`
+                                                    prior to the operation being
+                                                    performed.
+                                                    [tablenote This is the same
+                                                     as the more commonly known
+                                                     "compare and swap"
+                                                     operation.
+                                                    ]
+                                                   ]                           ]
+[[`interlocked::assign_if_was_acquire( iv, c1, c2 )`]
+                                      [`I`]        [Stores the value of `c1`
+                                                    to object `iv`
+                                                    iff `iv == c2` prior to the
+                                                    operation with /aquire/
+                                                    memory semantics.
+                                                    Returns the value of `iv`
+                                                    prior to the operation being
+                                                    performed.
+                                                   ]                           ]
+[[`interlocked::assign_if_was_release( iv, c1, c2 )`]
+                                      [`I`]        [Stores the value of `c1`
+                                                    to object `iv`
+                                                    iff `iv == c2` prior to the
+                                                    operation with /release/
+                                                    memory semantics.
+                                                    Returns the value of `iv`
+                                                    prior to the operation being
+                                                    performed.
+                                                   ]                           ]
+[[`interlocked::safe_get( iv )`]  [`I`]            [Returns the value of `iv`.
+                                                    [tablenote This template is
+                                                     used for retrieving the
+                                                     value of a potentially
+                                                     volatile-unqualified
+                                                     type as though it were
+                                                     volatile-qualified along
+                                                     with the guarantee that the
+                                                     object will not be
+                                                     "partially updated" by
+                                                     another thread.
+                                                    ]
+                                                   ]                           ]
+]
+
+[endsect]

@@ -20,7 +20,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/empty_base.hpp>
 
-#include <boost/act/detail/has_result_type.hpp>
+#include <boost/act/detail/has_single_result_type.hpp>
 
 namespace boost
 {
@@ -81,7 +81,7 @@ struct result_type
     <
       mpl::or_
       <
-        has_result_type< Type >
+        has_single_result_type< Type >
       , mpl::not_< is_same< DefaultType, no_default_type > >
       >
     , result_type_impl< Type, DefaultType >

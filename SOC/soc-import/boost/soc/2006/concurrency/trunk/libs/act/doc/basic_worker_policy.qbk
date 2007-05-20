@@ -1,0 +1,23 @@
+[section Basic Worker Policy]
+
+[heading Description]
+
+`basic_worker_policy` is a __worker_policy__ which assigns each worker it
+allocates a new thread of execution.
+
+[heading Header]
+
+  #include <boost/act/worker_policy/basic_worker_policy.hpp>
+  #include <boost/act/worker_policy/basic_worker_policy/basic_worker_policy_fwd.hpp>
+
+
+[heading Synopsis]
+
+  class basic_worker_policy;
+
+[heading Model of]
+
+* __worker_policy__
+
+
+[endsect]

@@ -1,0 +1,17 @@
+[section Threaded Worker Policy]
+
+A [concept Threaded Worker Policy] is a type which may be used to create
+models of __threaded_worker__ concept. In Boost.Act,
+[concept Threaded Worker Policys] are used as policies to the
+__concurrent_consumer_policy_ model.
+
+[heading Refinement of]
+* __worker_policy__
+
+As a refinement of the __worker_policy__ concept, a
+[concept Threaded Worker Policy] must meet all of the requirements of the
+__worker_policy__ concept along with the aformentioned restrictions. There
+are no additional interface requirements for a type to be considered a valid
+[concept Threaded Worker Policy].
+
+[endsect]

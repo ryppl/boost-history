@@ -1,10 +1,11 @@
 [section Concepts]
 
 [include consumer.qbk]
-[include consumer_allocator.qbk]
+[include consumer_policy.qbk]
+[include concepts/interlocked_object.qbk]
 [include worker.qbk]
-[include worker_allocator.qbk]
-[include threaded_worker.qbk]
-[include threaded_worker_allocator.qbk]
+[include worker_policy.qbk]
+[include thread.qbk]
+[include thread_policy.qbk]
 
 [endsect]
