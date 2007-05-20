@@ -77,6 +77,8 @@ macro(boost_test_parse_args testname)
   endif(NOT BUILD_TESTING)
 endmacro(boost_test_parse_args)
 
+
+
 macro(boost_test_run testname)
   boost_test_parse_args(${testname} ${ARGN})
   if (BOOST_TEST_OKAY)
@@ -92,7 +94,7 @@ macro(boost_test_run testname)
     foreach(_depend ${BOOST_TEST_DEPENDS})
       trace("propagate from ${BOOST_TEST_DEPENDS}")
       propagate_property(FROM_TARGET ${_depend}
-	FROM_PROPNAME STICKY_COMPILE_FLAGS
+	FROM_PROPNAME COMPILE_REQUIREMENTS
 	TO_TARGET ${testname} 
 	TO_PROPNAME COMPILE_FLAGS 
 	)
@@ -100,6 +102,8 @@ macro(boost_test_run testname)
     add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname})
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run)
+
+
 
 macro(boost_test_run_fail testname)
   boost_test_parse_args(${testname} ${ARGN})

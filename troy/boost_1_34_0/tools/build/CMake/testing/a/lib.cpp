@@ -4,9 +4,6 @@
 #ifndef A_COMPILE_FLAGS
 #error A_COMPILE_FLAGS
 #endif
-#ifndef A_STICKY_COMPILE_FLAGS
-#error A_STICKY_COMPILE_FLAGS
-#endif
 
 // dont check (sticky)static/shared here, this gets compiled twice.
 // tests check that things worked right via LINKTYPE

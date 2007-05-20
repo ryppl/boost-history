@@ -69,9 +69,10 @@ endif(WIN32 AND NOT UNIX)
 include(CPack)
 ##########################################################################
 
+option(BOOST_SELFTEST "Build internal testing projects... not the boost libraries" OFF)
 # Subdirectories of Boost
-if (RUN_SELFTESTS)
+if (BOOST_SELFTEST)
   add_subdirectory(tools/build/CMake/testing)
-else (RUN_SELFTESTS)
+else (BOOST_SELFTEST)
   add_subdirectory(libs)
-endif(RUN_SELFTESTS)
+endif(BOOST_SELFTEST)

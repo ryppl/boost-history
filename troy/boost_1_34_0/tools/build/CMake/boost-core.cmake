@@ -214,7 +214,7 @@ endmacro(propagate_property)
   
 macro(boost_library)
   parse_arguments(THIS_LIB
-    "DEPENDS;LIBRARIES;COMPILE_FLAGS;STICKY_COMPILE_FLAGS;STATIC_COMPILE_FLAGS;SHARED_COMPILE_FLAGS;STICKY_STATIC_COMPILE_FLAGS;STICKY_STATIC_LINK_FLAGS;STICKY_SHARED_COMPILE_FLAGS;STICKY_SHARED_LINK_FLAGS"
+    "DEPENDS;LIBRARIES;STATIC_COMPILE_FLAGS;STATIC_COMPILE_REQUIREMENTS;STATIC_LINK_FLAGS;STATIC_LINK_REQUIREMENTS;SHARED_COMPILE_FLAGS;SHARED_COMPILE_REQUIREMENTS;SHARED_LINK_FLAGS;SHARED_LINK_REQUIREMENTS"
     "NO_STATIC;NO_SHARED;STATIC_TAG"
     ${ARGN}
     )
@@ -223,7 +223,7 @@ macro(boost_library)
 
   ADD_CUSTOM_TARGET(${libname})
 
-  IF(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
+  if(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
     # If the STATIC_TAG option was provided, we append "-s" to the end
     # of the target's name, so that it does not conflict with the
     # dynamic library.
@@ -243,26 +243,26 @@ macro(boost_library)
       DEBUG_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}${THIS_LIB_STATIC_TAG}"
       RELWITHDEBINFO_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}${THIS_LIB_STATIC_TAG}"
       CLEAN_DIRECT_OUTPUT 1
-      COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STATIC_COMPILE_FLAGS} ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}"
-      STICKY_COMPILE_FLAGS "${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}"
-      STICKY_LINK_FLAGS    "${THIS_LIB_STICKY_STATIC_LINK_FLAGS}"
+      COMPILE_FLAGS "${THIS_LIB_STATIC_COMPILE_FLAGS}"
+      COMPILE_REQUIREMENTS "${THIS_LIB_STATIC_COMPILE_REQUIREMENTS}"
       )
-    ADD_DEPENDENCIES(${libname} "${libname}-static")
-    trace("sticky statics(${libname}): ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}")
+      
+    add_dependencies(${libname} "${libname}-static")
+#    trace("sticky statics(${libname}): ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}")
     target_link_libraries("${libname}-static" ${THIS_LIB_LIBRARIES})
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-static" "${dependency}-static")
       propagate_property(FROM_TARGET "${dependency}-static"
-	FROM_PROPNAME STICKY_COMPILE_FLAGS
+	FROM_PROPNAME COMPILE_REQUIREMENTS
 	TO_TARGET ${libname}-static 
 	TO_PROPNAME COMPILE_FLAGS 
 	)
     endforeach(dependency "${THIS_LIB_DEPENDS}")
 
     install(TARGETS "${libname}-static" DESTINATION lib)
-  ENDIF(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
+  endif(NOT "${THIS_LIB_NO_STATIC}" STREQUAL "TRUE")
 
-  IF(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE") 
+  if(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE") 
     add_library("${libname}-shared" SHARED ${sources})
     set_target_properties("${libname}-shared" 
       PROPERTIES 
@@ -270,22 +270,21 @@ macro(boost_library)
       DEBUG_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}"
       RELWITHDEBINFO_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}"
       CLEAN_DIRECT_OUTPUT 1
-      COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS} ${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_SHARED_COMPILE_FLAGS} ${THIS_LIB_STICKY_SHARED_COMPILE_FLAGS}"
-      STICKY_COMPILE_FLAGS "${THIS_LIB_STICKY_COMPILE_FLAGS} ${THIS_LIB_STICKY_SHARED_COMPILE_FLAGS}"
-      STICKY_LINK_FLAGS    "${THIS_LIB_STICKY_SHARED_LINK_FLAGS}"
+      COMPILE_FLAGS "${THIS_LIB_SHARED_COMPILE_FLAGS}"
+      COMPILE_REQUIREMENTS "${THIS_LIB_SHARED_COMPILE_REQUIREMENTS}"
       SOVERSION "${BOOST_VERSION}"
       )
-    ADD_DEPENDENCIES(${libname} "${libname}-shared")
+    add_dependencies(${libname} "${libname}-shared")
     target_link_libraries("${libname}-shared" ${THIS_LIB_LIBRARIES})
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-shared" "${dependency}-shared")
       propagate_property(FROM_TARGET "${dependency}-shared"
-	FROM_PROPNAME STICKY_COMPILE_FLAGS
+	FROM_PROPNAME COMPILE_REQUIREMENTS
 	TO_TARGET ${libname}-shared
 	TO_PROPNAME COMPILE_FLAGS 
 	)
     endforeach(dependency ${THIS_LIB_DEPENDS})
     install(TARGETS "${libname}-shared" DESTINATION lib)
-  ENDIF(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE")
+  endif(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE")
 endmacro(boost_library)
 

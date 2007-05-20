@@ -6,12 +6,9 @@
 #ifndef B_COMPILE_FLAGS
 #error B_COMPILE_FLAGS
 #endif
-#ifndef B_STICKY_COMPILE_FLAGS
-#error B_STICKY_COMPILE_FLAGS
-#endif
 
-#ifndef A_STICKY_COMPILE_FLAGS
-#error A_STICKY_COMPILE_FLAGS
+#ifndef A_COMPILE_REQUIREMENTS
+#error A_COMPILE_REQUIREMENTS
 #endif
 
 /// should NOT see these
