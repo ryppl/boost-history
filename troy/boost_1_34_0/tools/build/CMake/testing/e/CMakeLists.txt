@@ -1,4 +1,4 @@
-boost_library_subproject(
+boost_library_project(
   E
 )
 boost_library(boost_e lib.cpp)

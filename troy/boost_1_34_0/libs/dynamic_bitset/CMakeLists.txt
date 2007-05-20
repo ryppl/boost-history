@@ -1,4 +1,4 @@
-boost_library_subproject(
+boost_library_project(
   Dynamic_bitset
   TESTDIRS test
 )

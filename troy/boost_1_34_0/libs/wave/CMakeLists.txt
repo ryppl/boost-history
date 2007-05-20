@@ -1,4 +1,4 @@
-boost_library_subproject(
+boost_library_project(
   Wave 
   SRCDIRS src 
   TESTDIRS test

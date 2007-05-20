@@ -1,2 +1,2 @@
-boost_library_subproject(IO
+boost_library_project(IO
   TESTDIRS test)

@@ -126,9 +126,9 @@ else(USE_VERSIONING)
 endif(USE_VERSIONING)
 
 
-# Defines a Boost library subproject (e.g., for Boost.Python). Use as:
+# Defines a Boost library project (e.g., for Boost.Python). Use as:
 #
-#   boost_library_subproject(libname, subdir1, subdir2, ...)
+#   boost_library_project(libname, subdir1, subdir2, ...)
 #
 # where libname is the name of the library (e.g., Python, or
 # Filesystem) and subdir1, subdir2, etc. are the subdirectories that
@@ -139,26 +139,34 @@ endif(USE_VERSIONING)
 # subdirectories; otherwise, none of the subdirectories will be
 # included, so the library itself will not be built, installed, or
 # tested.
-macro(boost_library_subproject libname_)
-  parse_arguments(THIS_SUBPROJECT
+macro(boost_library_project libname_)
+  parse_arguments(THIS_PROJECT
     "SRCDIRS;TESTDIRS"
     ""
     ${ARGN}
     )
 
   string(TOUPPER "BUILD_BOOST_${libname_}" BOOST_BUILD_LIB_OPTION)
-  if (THIS_SUBPROJECT_SRCDIRS)
+  if (THIS_PROJECT_SRCDIRS)
     # This Boost library has source directories, so provide an option
     # BUILD_BOOST_LIBNAME that allows one to turn on/off building of
     # the library.
     option(${BOOST_BUILD_LIB_OPTION} 
       "Build Boost.${libname_} (prefer make targets, not this, to build individual libs)" 
       ON)
-  else (THIS_SUBPROJECT_SRCDIRS)
+  else (THIS_PROJECT_SRCDIRS)
     # This Boost library has no source directories, and therefore does
     # not require building. Always enable it.
     set(${BOOST_BUILD_LIB_OPTION} ON)
-  endif (THIS_SUBPROJECT_SRCDIRS)
+  endif (THIS_PROJECT_SRCDIRS)
+
+  if (THIS_PROJECT_TESTDIRS)
+    string(TOUPPER "TEST_BOOST_${libname_}" BOOST_TEST_LIB_OPTION)
+    option(${BOOST_TEST_LIB_OPTION} 
+      "Enable testing of Boost.${libname_}" 
+      ON)
+  endif (THIS_PROJECT_TESTDIRS)
+
 
   if(${BOOST_BUILD_LIB_OPTION})
     string(TOLOWER "${libname_}" libname)
@@ -172,11 +180,11 @@ macro(boost_library_subproject libname_)
     # that they would need to be kept separate and scanned in order
     # CLEANUP:  put src/test dirs back together again, if no future
     #           need for it comes up
-    foreach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS} ${THIS_SUBPROJECT_TESTDIRS})
+    foreach(SUBDIR ${THIS_PROJECT_SRCDIRS} ${THIS_PROJECT_TESTDIRS})
       add_subdirectory(${SUBDIR})
-    endforeach(SUBDIR ${THIS_SUBPROJECT_SRCDIRS} ${THIS_SUBPROJECT_TESTDIRS})
+    endforeach(SUBDIR ${THIS_PROJECT_SRCDIRS} ${THIS_PROJECT_TESTDIRS})
   endif(${BOOST_BUILD_LIB_OPTION})
-endmacro(boost_library_subproject)
+endmacro(boost_library_project)
 
 macro(push_back_target_property target property pushvalue)
   get_target_property(oldvalue ${target} ${property})

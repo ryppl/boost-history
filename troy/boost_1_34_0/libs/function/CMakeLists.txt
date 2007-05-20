@@ -1,1 +1,1 @@
-boost_library_subproject(Function TESTDIRS test)
+boost_library_project(Function TESTDIRS test)

@@ -1,4 +1,4 @@
-boost_library_subproject(
+boost_library_project(
   Date_time 
   SRCDIRS src 
   TESTDIRS test
