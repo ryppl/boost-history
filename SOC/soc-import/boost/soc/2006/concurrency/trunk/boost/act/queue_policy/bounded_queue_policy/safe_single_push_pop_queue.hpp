@@ -211,7 +211,7 @@ struct safe_single_push_pop_queue
          , ValueType
          >
 {
-  typedef detail::bounded_safe_single_push_pop_queue
+  typedef act::detail::bounded_safe_single_push_pop_queue
           <
             BOOST_ACT_BOUNDED_QUEUE_POLICY_TRAITS()::max_size_t::value
           , ValueType

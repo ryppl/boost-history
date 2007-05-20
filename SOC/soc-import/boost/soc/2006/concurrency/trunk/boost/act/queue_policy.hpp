@@ -11,6 +11,7 @@
 
 #include <boost/act/queue_policy/bounded_queue_policy.hpp>
 #include <boost/act/queue_policy/queue.hpp>
+#include <boost/act/queue_policy/fully_safe_queue.hpp>
 #include <boost/act/queue_policy/safe_queue.hpp>
 #include <boost/act/queue_policy/safe_single_push_queue.hpp>
 #include <boost/act/queue_policy/safe_single_pop_queue.hpp>

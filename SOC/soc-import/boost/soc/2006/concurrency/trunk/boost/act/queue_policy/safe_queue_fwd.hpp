@@ -11,8 +11,16 @@
 
 namespace boost { namespace act { namespace queue_policy {
 
+namespace detail
+{
+
+struct queue_no_arg;
+
+}
+
 template< typename QueuePolicy, typename ValueType
-        , typename Arg0, typename Arg1
+        , typename Arg0 = detail::queue_no_arg
+        , typename Arg1 = detail::queue_no_arg
         >
 struct safe_queue;
 

@@ -1,0 +1,109 @@
+[section Interlocked Integer]
+
+[heading Header]
+
+  // Primary header (includes all other associated headers)
+  #include <boost/act/interlocked/integer.hpp>
+  
+  // Secondary headers (for more fine-grained inclusion)
+  #include <boost/act/interlocked/integer/types.hpp>
+  #include <boost/act/interlocked/integer/selection.hpp>
+
+[heading Description]
+
+=Boost.Act= exposes several methods for retrieving types which are models of
+__interlocked_type__ including common typedefs and template metafunctions
+similar to those found in =Boost.Integer=. The following types and typedefs are
+all found in the `::boost::act::interlocked` namespace.
+
+[section Integer Typedefs]
+
+[heading Header]
+
+  #include <boost/act/interlocked/integer/types.hpp>
+  
+[heading Exact-Width Integer Types]
+
+The typedef int#_t, with # replaced by the width, designates a signed
+__interlocked_integer_type__ of exactly # bits; int8_t denotes an 8-bit
+signed integer type.  Similarly, the typedef uint#_t designates and unsigned
+integer type of exactly # bits.
+
+These types are optional. However, if an implementation provides integer types
+with widths of 8, 16, 32, or 64 bits, it shall define the corresponding typedef
+names.
+
+[Note It is important to note that these typedefs do not necessarily
+ correspond to built-in integer types.
+]
+
+[heading Minimum-Width Integer Types]
+
+The typedef int_least#_t, with # replaced by the width, designates a signed
+__interlocked_integer_type__ type with a width of at least # bits, such that
+no signed integer type with lesser size has at least the specified width. Thus,
+int_least32_t denotes a signed integer type with a width of at least 32 bits.
+Similarly, the typedef name uint_least#_t designates an unsigned integer type
+with a width of at least # bits, such that no unsigned integer type with lesser
+size has at least the specified width.
+
+Required minimum-width integer types:
+
+* int_least8_t
+* int_least16_t
+* int_least32_t
+* uint_least8_t
+* uint_least16_t
+* uint_least32_t
+
+All other minimum-width integer types are optional.
+
+[heading Fastest Minimum-Width Integer Types]
+
+The typedef int_fast#_t, with # replaced by the width, designates the fastest
+signed __interlocked_integer_type__ type with a width of at least # bits.
+Similarly, the typedef name uint_fast#_t designates the fastest unsigned integer
+type with a width of at least # bits.
+
+There is no guarantee that these types are fastest for all purposes. In any
+case, however, they satisf  the signedness and width requirements.
+
+Required fastest minimum-width integer types:
+
+* int_fast8_t
+* int_fast16_t
+* int_fast32_t
+* uint_fast8_t
+* uint_fast16_t
+* uint_fast32_t
+
+All other fastest minimum-width integer types are optional.
+
+[heading Greatest-Width Integer Types]
+
+The typedef intmax_t designates a signed integer type capable of representing
+any value of any signed integer type.
+
+The typedef uintmax_t designates an unsigned __interlocked_integer_type__
+capable of representing any value of any unsigned __interlocked_integer_type__.
+
+These types are required.
+
+[heading Miscellaneous Integer Types]
+
+Along with the above types are interlocked versions of `::std::size_t` and
+`::std::ptrdiff_t`.
+
+* size_t
+* ptrdiff_t
+
+As well as two `bool` types:
+
+* bool_t
+* bool_fast_t
+
+These types are required.
+
+[endsect]
+
+[endsect]

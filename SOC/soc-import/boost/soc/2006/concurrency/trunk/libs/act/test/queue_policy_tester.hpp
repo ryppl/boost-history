@@ -69,7 +69,9 @@ void test_safe_single_push_pop_queue()
   using namespace boost::act;
 
   typedef typename queue_policy
-          ::safe_single_push_pop_queue< QueuePolicyType, int >
+          ::safe_queue< QueuePolicyType, int
+                      , one_pusher, one_popper
+                      >
           ::type int_queue;
 
   test_queue< int_queue >();
