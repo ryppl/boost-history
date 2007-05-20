@@ -1,6 +1,6 @@
 boost_library_project(
   E
 )
-boost_library(boost_e lib.cpp)
+boost_library(e lib.cpp)
 
 

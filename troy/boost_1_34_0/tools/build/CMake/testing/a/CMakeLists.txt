@@ -13,8 +13,8 @@ boost_library(a
 
   STATIC_COMPILE_REQUIREMENTS "-I${CMAKE_CURRENT_SOURCE_DIR} -DA_COMPILE_REQUIREMENTS -DA_STATIC_COMPILE_REQUIREMENTS"
   SHARED_COMPILE_REQUIREMENTS "-I${CMAKE_CURRENT_SOURCE_DIR} -DA_COMPILE_REQUIREMENTS -DA_SHARED_COMPILE_REQUIREMENTS"
-  STATIC_TAG  # tds: without STATIC_TAG (append -s to lib name) this fails on darwin.  
-              # also true for windows?
+  STATIC_TAG  # tds: without STATIC_TAG (append -s to lib name) this fails on darwin.  also true for windows?
+  LIBRARIES pthread
 )
 
 boost_test_run(test_static DEPENDS a-static)

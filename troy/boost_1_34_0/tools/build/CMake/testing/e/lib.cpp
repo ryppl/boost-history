@@ -1,7 +1,7 @@
 #include <iostream>
 #include <string>
 
-std::string e() { return "e"; }
+std::string link_requires_e() { return "e"; }
 
 
 
