@@ -5,4 +5,5 @@ act/compiler_setup.html
 act/consumer_concepts.html
 act/interlocked_concepts.html
 act/queue_concepts.html
+act/interlocked_integer.html
 act/rationale.html

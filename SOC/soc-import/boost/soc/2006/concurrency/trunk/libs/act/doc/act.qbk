@@ -36,4 +36,5 @@
 [include introduction.qbk]
 [include compiler_setup.qbk]
 [include concepts.qbk]
+[include interlocked_integer.qbk]
 [include rationale.qbk]
