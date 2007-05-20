@@ -35,5 +35,4 @@
 [include introduction.qbk]
 [include compiler_setup.qbk]
 [include concepts.qbk]
-[include basic_worker_policy.qbk]
 [include rationale.qbk]
