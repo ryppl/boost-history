@@ -7,6 +7,8 @@ project boost/rpc/doc ;
 import boostbook : boostbook ;
 using quickbook ;
 
+local loc = [ path.native [ path.pwd ] ] ;
+
 doxygen rpc_doxygen
    :
       [ glob ../../../boost/rpc/*.hpp dox/*.hpp ]
@@ -17,8 +19,8 @@ doxygen rpc_doxygen
         <doxygen:param>EXTRACT_PRIVATE=NO
         <doxygen:param>DETAILS_AT_TOP=YES
         <doxygen:param>GENERATE_HTML=YES
-        <doxygen:param>HTML_OUTPUT=html/rpc/doxygen
-        <doxygen:param>HTML_STYLESHEET=html/boostbook_doxygen.css
+        <doxygen:param>HTML_OUTPUT=$(loc)/html/doxygen
+        <doxygen:param>HTML_STYLESHEET=$(loc)/html/boostbook_doxygen.css
         <doxygen:param>ENABLE_PREPROCESSING=YES
         <doxygen:param>MACRO_EXPANSION=YES
         <doxygen:param>SEARCH_INCLUDES=YES

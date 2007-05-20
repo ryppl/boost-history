@@ -11,7 +11,6 @@ namespace boost {
 - \ref sec_client_side
  - \ref sec_client
  - \ref sec_call
-- \ref sec_example
 
 \section sec_server_side Server-side Components
 
@@ -73,11 +72,6 @@ be separated.
 \skip // make some function calls
 \until }
 
-\section sec_example Example Code
-
-\dontinclude rpc_example.cpp
-\skip <boost
-\until end void network_marshal_test
 */
 
 }

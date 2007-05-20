@@ -17,13 +17,13 @@
 	<Configurations>
 		<Configuration
 			Name="release|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
+			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
 			<Tool
 				Name="VCNMakeTool"
-				BuildCommandLine="cd ../doc&#x0D;&#x0A;bjam"
+				BuildCommandLine="cd ../doc&#x0D;&#x0A;bjam $(ConfigurationName)&#x0D;&#x0A;"
 				ReBuildCommandLine=""
 				CleanCommandLine=""
 				Output=""
@@ -53,6 +53,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath="..\doc\Jamfile.v2"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
