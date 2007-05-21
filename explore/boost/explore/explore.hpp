@@ -12,6 +12,7 @@
 //
 
 #include <iostream>
+#include <map>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -21,6 +22,7 @@
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/pop_front.hpp>
+#include <boost/mpl/identity.hpp>
 
 namespace explore {
 	using namespace boost::mpl;
@@ -181,16 +183,16 @@ namespace explore {
 				  typename container_policy_type,
 				  typename item_type
 		>
-		static std::ostream &print_item( const item_type &item, std::ostream &stream= std::cout)
+		static std::ostream &print_item( const item_type &item, std::ostream &stream )
 		{
 			// the first element of the format sequence is our current format-selector
 			typedef BOOST_DEDUCED_TYPENAME front<format_type>::type format_selector;
 
 			// the format-selector gives us a formatter, based on the type of the thing we need to format
-			typedef BOOST_DEDUCED_TYPENAME format_selector:: template range_format<item_type>::type formatter;
+			typedef BOOST_DEDUCED_TYPENAME format_selector::template range_format<item_type>::type formatter;
 
 			// the formatter in it's turn tells us what the format for the next depth in the tree will be
-			typedef BOOST_DEDUCED_TYPENAME formatter:: template next_format< format_type>::type next_format_type;
+			typedef BOOST_DEDUCED_TYPENAME formatter::template next_format< format_type>::type next_format_type;
 
 			stream << formatter::opening();
 			bool printing_first_item = true;
@@ -218,7 +220,7 @@ namespace explore {
 				  typename F,
 				  typename S
 		>
-		static std::ostream &print_item( const std::pair<F,S> &item, std::ostream &stream= std::cout)
+		static std::ostream &print_item( const std::pair<F,S> &item, std::ostream &stream )
 		{
 			typedef std::pair<F,S> item_type;
 
@@ -245,7 +247,7 @@ namespace explore {
 				  typename container_policy_type,
 				  typename item_type
 		>
-		static std::ostream &print_item( const item_type &item, std::ostream &stream= std::cout)
+		static std::ostream &print_item( const item_type &item, std::ostream &stream )
 		{
 			return stream << item;
 		}
@@ -275,11 +277,16 @@ namespace explore {
 		return print( item, stream, default_format(), default_container_policy());
 	}
 
-	template < typename item_type,
+// Danny, this doesn't appear to work. When I call print passing in a stringstream, this
+// is the function that gets called. When printing a streamed type, the type is always streamed
+// to cout since that is what this defaults the stream to and format is never used. With
+// containers the build fails since stringstream isn't a valid format. I haven't really had a
+// chance to look into why this happens yet. --Jared
+/*	template < typename item_type,
 				typename format_type>
 	std::ostream &print( const item_type &item, const format_type &format)
 	{
 		return print( item, std::cout, format, default_container_policy());
 	}
-
+*/
 }
