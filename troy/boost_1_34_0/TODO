@@ -16,4 +16,10 @@
 
 - Docs
 
+- Test ICU support in Regex
 
+- Try to figure out what is happening with "empty" .o files in Mac build
+
+- In libs/numeric/interval/test, how to detect OSF and HP's C++ compiler?
+
+- In libs/parameter/test, fix the test that depends on Python
