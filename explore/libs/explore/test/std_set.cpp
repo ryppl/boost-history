@@ -50,7 +50,9 @@ BOOST_AUTO_TEST_CASE( basic_multiset_test )
 	explore::print(msi, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[1]");
 	
-	msi.insert(1);
+	str_out.str("");
+
+    msi.insert(1);
 	explore::print(msi, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[1, 1]");
 	
@@ -72,7 +74,7 @@ BOOST_AUTO_TEST_CASE( vector_in_set_test )
 	vi.push_back(2);
 	vi.push_back(3);
 	
-	std::set<std::vector<int> > svi;
+	std::multiset<std::vector<int> > svi;
 	explore::print(svi, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[]");
 	
@@ -80,12 +82,12 @@ BOOST_AUTO_TEST_CASE( vector_in_set_test )
 	
 	svi.insert(vi);
 	explore::print(svi, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[[1,2,3]]");
+	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3]]");
 	
 	str_out.str("");
 	
 	svi.insert(vi);
 	svi.insert(vi);
 	explore::print(svi, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[[1,2,3], [1,2,3], [1,2,3]]");
+	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
 }
