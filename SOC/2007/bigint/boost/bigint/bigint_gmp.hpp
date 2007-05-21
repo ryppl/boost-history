@@ -134,13 +134,13 @@ namespace boost { namespace detail {
 			
 			for (size_t i = 0; i < d_size; ++i)
 			{
-				if (*str < 0 || *str > 127 || digit_value_tab[*str] >= base)
+				if (*str < 0 || *str > 127 || digit_value_tab[static_cast<unsigned int>(*str)] >= base)
 				{
 					d_size = i;
 					break;
 				}
 				
-				d[i] = digit_value_tab[*str++];
+				d[i] = digit_value_tab[static_cast<unsigned int>(*str++)];
 			}
 			
 			if (d_size == 0)

@@ -10,7 +10,7 @@ Base part.
 
 Feature name									Deadline		Status
 ------------									--------		------
-1. Bigint interface (header)					21 May			Draft completed, waiting for input from the community
+1. Bigint interface (header)					21 May			Awaiting resolution
 2. GMP implementation							21 May			In progress
 3. Correctness tests							7 June			N/A
 4. Documentation								21 June			N/A
@@ -48,14 +48,16 @@ Status: implemented
 * make sure it works on a wide range of compilers (test framework setup is needed)
 Status: made some setup, it works for me but: 1. linking gmp is done via a hack, 2. not sure it works for others :/
 
-- converting to/from string - there was a suggestion to use static functions
++ converting to/from string - there was a suggestion to use static functions
 My opinion: performance wise it is the same if compiler has NRVO support, and ctors/member functions are more convenient
-Status: get Jeffs opinion, wait for further community feedback
+Status: leaving it as is for now. Changing it later it trivial anyway.
 
-- make the bigint typedef depend on the available implementations (choose the most advanced instead of default one)
++ make the bigint typedef depend on the available implementations (choose the most advanced instead of default one)
 My opinion: seems worthwhile
-Status: get Jeffs opinion, wait for further community feedback
-Comments: some set of defines is probably needed, like BOOST_BIGINT_HAS_GMP_SUPPORT, etc.
+Status: implemented
+
++ remove warnings for both MSVC and GCC
+Status: all non-GMP-implementation-specific warnings were fixed
 
 2. GMP implementation
 
@@ -83,11 +85,24 @@ Status: implemented
 + check semantics of bitwise and shift operations for negative numbers
 Status: investigated, bitwise and shift operations behave as if numbers were 2-complement (as expected).
 
-- what if there is not enough memory for the request - what happens then? Investigate.
-Status: needs investigation
++ what if there is not enough memory for the request - what happens then? Investigate.
+Status: investigated. abort() is called in this case. The solution for this is complex - read below.
 
-- more changes according to interface updates
-Status: waiting for updates
+- remove warnings for both MSVC and GCC
+Status: needs fixing
+
+-----------------------------------------------
+
+Problem: GMP calls abort() when failing to allocate memory.
+
+Solution: GMP allocates memory in various places - mainly temporary storage and limb allocation. I don't know for now if limb
+allocation will be a problem (because if an extra feature "make GMP work with arbitrary storage strategy" is implemented,
+all limb allocation will be done by bigint library). Temporary storage allocation is a problem. Just providing own allocation
+functions to GMP and having them throw an exception is not a generic solution, because GMP is not exception safe. However, it
+may be a solution IF own allocation is performed - depends on where allocations are done - needs further investigation.
+
+Alternatively, only parts of GMP that actually are thread safe may be rewritten (if they do not include system layer (mpn), of
+course).
 
 -----------------------------------------------
 Extra features:

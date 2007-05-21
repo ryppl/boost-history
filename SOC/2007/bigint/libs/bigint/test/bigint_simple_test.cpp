@@ -39,7 +39,7 @@ void test()
 	BOOST_CHECK(a);
 
 	BOOST_CHECK_EQUAL(a * b, bigint("42258228219342334666689684483132205000478474"));
-	BOOST_CHECK_EQUAL(!(a / b), 0);
+	BOOST_CHECK_EQUAL(!(a / b), false);
 	BOOST_CHECK_EQUAL(a % b, bigint("1645142448812923432790"));
 
 	BOOST_CHECK_EQUAL(a | b, bigint("13870766920526448295931"));
@@ -114,7 +114,7 @@ void test()
 
 	BOOST_CHECK_EQUAL(bigint("ffffffff", 16).to_number<unsigned int>(), 0xffffffff);
 	BOOST_CHECK_EQUAL(bigint("7fffffff", 16).to_number<int>(), 0x7fffffff);
-	BOOST_CHECK_EQUAL(bigint("-80000000", 16).to_number<int>(), -0x80000000);
+	BOOST_CHECK_EQUAL(bigint("-80000000", 16).to_number<int>(), -static_cast<boost::int64_t>(0x80000000));
 	
 	// 3 == 11
 	// -3 = 1....1101

@@ -14,6 +14,7 @@
 
 #include <boost/cstdint.hpp>
 
+#include <boost/bigint/bigint_config.hpp>
 #include <boost/bigint/bigint_util.hpp>
 
 namespace boost {
@@ -406,6 +407,9 @@ public:
 
 } // namespace boost
 
+// Do we have GMP?
+#ifdef BOOST_BIGINT_HAS_GMP_SUPPORT
+
 #include <boost/bigint/bigint_gmp.hpp>
 
 namespace boost {
@@ -413,5 +417,12 @@ namespace boost {
 typedef bigint_base<detail::bigint_gmp_implementation> bigint;
 
 } // namespace boost
+
+#else
+
+// The default implementation should be here, but there's none yet
+#error "No default implementation for now"
+
+#endif
 
 #endif // BOOST_BIGINT_BIGINT_HPP
