@@ -1,0 +1,38 @@
+_python_copyright_
+
+project boost/_library_/doc ;
+
+import boostbook : boostbook ;
+using quickbook ;
+
+local loc = [ path.native [ path.pwd ] ] ;
+local root = [ path.native [ path.join [ path.pwd ] ../../.. ] ] ;
+
+doxygen _library__doxygen
+   :
+      [ glob ../../../boost/_library_/*.hpp dox/*.hpp ]
+   :
+        <doxygen:param>EXAMPLE_PATH=../example
+        <doxygen:param>STRIP_FROM_PATH=$(root)
+        <doxygen:param>STRIP_FROM_INC_PATH=$(root)
+        <doxygen:param>EXTRACT_ALL=NO
+        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>DETAILS_AT_TOP=YES
+        <doxygen:param>GENERATE_HTML=YES
+        <doxygen:param>HTML_OUTPUT=$(loc)/html/doxygen
+        <doxygen:param>HTML_STYLESHEET=$(loc)/html/boostbook_doxygen.css
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>INCLUDE_PATH=../../..
+        <doxygen:param>PREDEFINED=DOXYGEN_DOCS_ONLY
+   ;
+
+xml _library__xml : _library_.qbk ;
+
+boostbook standalone
+   :
+      _library__xml
+      _library__doxygen
+   ;
