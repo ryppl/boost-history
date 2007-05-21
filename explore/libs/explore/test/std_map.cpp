@@ -51,6 +51,8 @@ BOOST_AUTO_TEST_CASE( basic_multimap_test )
 	explore::print(mmis, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[1:first]");
 	
+    str_out.str("");
+
 	mmis.insert(std::make_pair(1, "single"));
 	explore::print(mmis, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single]");
@@ -81,12 +83,12 @@ BOOST_AUTO_TEST_CASE( vector_in_map_test )
 	
 	mivi.insert(std::make_pair(1, vi));
 	explore::print(mivi, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[1:[1,2,3]]");
+	BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3]]");
 	
 	str_out.str("");
 	
 	mivi.insert(std::make_pair(2, vi));
 	mivi.insert(std::make_pair(3, vi));
 	explore::print(mivi, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[1:[1,2,3], 2:[1,2,3], 3:[1,2,3]]");
+	BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3], 3:[1, 2, 3]]");
 }
