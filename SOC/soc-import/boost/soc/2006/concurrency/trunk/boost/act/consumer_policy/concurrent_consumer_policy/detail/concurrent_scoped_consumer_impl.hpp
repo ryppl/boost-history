@@ -12,6 +12,8 @@
 #include <boost/act/interlocked/assign/assign_acquire.hpp>
 #include <boost/act/interlocked/safe_get.hpp>
 
+#include <boost/thread/thread.hpp>
+
 namespace boost { namespace act { namespace detail {
 
 template< typename ConcurrentScopedConsumerType >
@@ -95,9 +97,7 @@ public:
         }
         while( --queue_size > 0 );
       else
-      {
-        // ToDo: Yield
-      }
+        thread::yield();
     }
   }
 private:

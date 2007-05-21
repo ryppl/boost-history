@@ -41,6 +41,8 @@
 
 #include <cassert>
 
+#include <boost/optional.hpp>
+
 namespace boost { namespace act {
 
 namespace detail
@@ -63,6 +65,7 @@ struct bounded_safe_single_push_pop_queue
 public:
   typedef ValueType         value_type;
   typedef ::std::size_t     size_type;
+private:
   typedef ::std::ptrdiff_t  difference_type;
 
   typedef value_type&       reference;
@@ -76,7 +79,7 @@ public:
     , curr_size_m( 0 ) {}
 public:
   ~bounded_safe_single_push_pop_queue() { clear(); }
-public:
+private:
   void clear()
   {
     for( size_type curr_size = size(); curr_size > 0; --curr_size )
@@ -142,6 +145,19 @@ public:
     interlocked::decrement_release( curr_size_m );
   }
 
+  optional< value_type > value_pop()
+  {
+    optional< value_type > result;
+
+    if( !empty() )
+    {
+      result = front;
+      pop();
+    }
+
+    return result;
+  }
+public:
   reference front() { return *begin_m; }
   const_reference front() const { return *begin_m; }
 

@@ -37,8 +37,8 @@
         type one instance at a time and processes it in an implementation defined-manner
         either sychnronously or asynchronously with respect to the thread it is interfaced
         with. In Boost.Act, models of this concept may be found as members of models
-        of the <a href="../"> <code class="literal">Consumer Policy</code></a>
-        concept.
+        of the <a href="consumer_concepts.html#act.consumer_concepts.consumer_policy" title="Consumer Policy"> <code class="literal">Consumer
+        Policy</code></a> concept.
       </p>
 <p>
         In order to be considered a valid <code class="literal">Consumer</code>, given the
@@ -46,7 +46,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id427343"></a><p class="title"><b>Table 2. Consumer Descriptive Variable Definitions</b></p>
+<a name="id427345"></a><p class="title"><b>Table 2. Consumer Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -76,12 +76,12 @@
 </table></div>
 </div>
 <br class="table-break"><a name="act.consumer_concepts.consumer.expression_requirements"></a><h5>
-<a name="id427476"></a>
+<a name="id427479"></a>
         <a href="consumer_concepts.html#act.consumer_concepts.consumer.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id427494"></a><p class="title"><b>Table 3. Consumer Requirements</b></p>
+<a name="id427496"></a><p class="title"><b>Table 3. Consumer Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Requirements">
 <colgroup>
 <col>
@@ -123,11 +123,14 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="act.consumer_concepts.consumer_policy"></a><a href="consumer_concepts.html#act.consumer_concepts.consumer_policy" title="Consumer Policy">Consumer Policy</a></h3></div></div></div>
 <p>
-        A <code class="literal">Consumer Policy</code> is a type whose instances are used to
-        create <a href="../"> <code class="literal">Consumer</code></a>
-        objects. These <code class="literal">Consumer Policys</code> generally act as policies
-        to higher-level types. In Boost.Act, such allocator types are used, most
-        notably, as policies during active-qualification.
+        A <code class="literal">Consumer Policy</code> is a type which is used as a handle
+        to related <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
+        types. These <code class="literal">Consumer Policys</code> generally act as policies
+        to higher-level templates which choose the appropriate <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer">
+        <code class="literal">Consumer</code></a> type based on the knowledge of how the
+        <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
+        will be used. In <code class="literal">Boost.Act</code>, such types are used as policies
+        during active-qualification.
       </p>
 <p>
         In order to be considered a valid <code class="literal">Consumer Policy</code>, given
@@ -135,7 +138,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id429338"></a><p class="title"><b>Table 4. Consumer Policy Descriptive Variable Definitions</b></p>
+<a name="id429369"></a><p class="title"><b>Table 4. Consumer Policy Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Policy Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -186,12 +189,12 @@
 </table></div>
 </div>
 <br class="table-break"><a name="act.consumer_concepts.consumer_policy.expression_requirements"></a><h5>
-<a name="id429566"></a>
+<a name="id429598"></a>
         <a href="consumer_concepts.html#act.consumer_concepts.consumer_policy.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id429584"></a><p class="title"><b>Table 5. Consumer Policy Requirements</b></p>
+<a name="id429616"></a><p class="title"><b>Table 5. Consumer Policy Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Policy Requirements">
 <colgroup>
 <col>
@@ -211,7 +214,7 @@
             <span class="special">,</span> <span class="identifier">constraint</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">,</span> <span class="identifier">processor</span><span class="special">&lt;</span><span class="identifier">P</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
 <td> </td>
 <td>A
-            <a href="../"> <code class="literal">Consumer</code></a>
+            <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
             type which guarantees all processing is completed prior to the object
             being destroyed. </td>
 </tr>
@@ -222,7 +225,7 @@
             <span class="special">,</span> <span class="identifier">constraint</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">,</span> <span class="identifier">processor</span><span class="special">&lt;</span><span class="identifier">P</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
 <td> </td>
 <td>A
-            <a href="../"> <code class="literal">Consumer</code></a>
+            <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
             type which guarantees all processing is completed prior to the object
             being destroyed and which may be interfaced with by any number of threads
             of execution. </td>

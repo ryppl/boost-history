@@ -27,7 +27,7 @@
 <a name="act.interlocked_integer"></a><a href="interlocked_integer.html" title="Interlocked Integer">Interlocked Integer</a></h2></div></div></div>
 <div class="toc"><dl><dt><span class="section"><a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs">Integer Typedefs</a></span></dt></dl></div>
 <a name="act.interlocked_integer.header"></a><h4>
-<a name="id504640"></a>
+<a name="id508587"></a>
       <a href="interlocked_integer.html#act.interlocked_integer.header">Header</a>
     </h4>
 <pre class="programlisting">
@@ -39,12 +39,13 @@
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">selection</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
 <a name="act.interlocked_integer.description"></a><h4>
-<a name="id504889"></a>
+<a name="id508835"></a>
       <a href="interlocked_integer.html#act.interlocked_integer.description">Description</a>
     </h4>
 <p>
       <code class="literal">Boost.Act</code> exposes several methods for retrieving types which
-      are models of <a href="../"> <code class="literal">Interlocked
+      are models of <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_type" title="Interlocked
+      Type"> <code class="literal">Interlocked
       Type</code></a> including common typedefs and template metafunctions
       similar to those found in <code class="literal">Boost.Integer</code>. The following types
       and typedefs are all found in the <code class="code"><span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">interlocked</span></code>
@@ -54,19 +55,21 @@
 <div class="titlepage"><div><div><h3 class="title">
 <a name="act.interlocked_integer.integer_typedefs"></a><a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs" title="Integer Typedefs">Integer Typedefs</a></h3></div></div></div>
 <a name="act.interlocked_integer.integer_typedefs.header"></a><h5>
-<a name="id505004"></a>
+<a name="id508952"></a>
         <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.header">Header</a>
       </h5>
 <pre class="programlisting">
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
 <a name="act.interlocked_integer.integer_typedefs.exact_width_integer_types"></a><h5>
-<a name="id505107"></a>
+<a name="id509055"></a>
         <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.exact_width_integer_types">Exact-Width
         Integer Types</a>
       </h5>
 <p>
-        The typedef int#_t, with # replaced by the width, designates a signed __interlocked_integer<span class="underline">type</span>_ of exactly # bits; int8_t denotes an 8-bit
+        The typedef int#_t, with # replaced by the width, designates a signed <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+      Integer Type"> <code class="literal">Interlocked
+        Integer Type</code></a> of exactly # bits; int8_t denotes an 8-bit
         signed integer type. Similarly, the typedef uint#_t designates and unsigned
         integer type of exactly # bits.
       </p>
@@ -80,19 +83,20 @@
         to built-in integer types. ]
       </p>
 <a name="act.interlocked_integer.integer_typedefs.minimum_width_integer_types"></a><h5>
-<a name="id505167"></a>
+<a name="id509125"></a>
         <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.minimum_width_integer_types">Minimum-Width
         Integer Types</a>
       </h5>
 <p>
         The typedef int_least#_t, with # replaced by the width, designates a signed
-        __interlocked_integer<span class="underline">type</span>_ type with
-        a width of at least # bits, such that no signed integer type with lesser
-        size has at least the specified width. Thus, int_least32_t denotes a signed
-        integer type with a width of at least 32 bits. Similarly, the typedef name
-        uint_least#_t designates an unsigned integer type with a width of at least
-        # bits, such that no unsigned integer type with lesser size has at least
-        the specified width.
+        <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+      Integer Type"> <code class="literal">Interlocked
+        Integer Type</code></a> type with a width of at least # bits, such
+        that no signed integer type with lesser size has at least the specified width.
+        Thus, int_least32_t denotes a signed integer type with a width of at least
+        32 bits. Similarly, the typedef name uint_least#_t designates an unsigned
+        integer type with a width of at least # bits, such that no unsigned integer
+        type with lesser size has at least the specified width.
       </p>
 <p>
         Required minimum-width integer types:
@@ -121,15 +125,17 @@
         All other minimum-width integer types are optional.
       </p>
 <a name="act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types"></a><h5>
-<a name="id505262"></a>
+<a name="id509232"></a>
         <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types">Fastest
         Minimum-Width Integer Types</a>
       </h5>
 <p>
         The typedef int_fast#_t, with # replaced by the width, designates the fastest
-        signed __interlocked_integer<span class="underline">type</span>_ type
-        with a width of at least # bits. Similarly, the typedef name uint_fast#_t
-        designates the fastest unsigned integer type with a width of at least # bits.
+        signed <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+      Integer Type">
+        <code class="literal">Interlocked Integer Type</code></a> type with a width of at
+        least # bits. Similarly, the typedef name uint_fast#_t designates the fastest
+        unsigned integer type with a width of at least # bits.
       </p>
 <p>
         There is no guarantee that these types are fastest for all purposes. In any
@@ -162,7 +168,7 @@
         All other fastest minimum-width integer types are optional.
       </p>
 <a name="act.interlocked_integer.integer_typedefs.greatest_width_integer_types"></a><h5>
-<a name="id505367"></a>
+<a name="id509340"></a>
         <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.greatest_width_integer_types">Greatest-Width
         Integer Types</a>
       </h5>
@@ -171,14 +177,18 @@
         any value of any signed integer type.
       </p>
 <p>
-        The typedef uintmax_t designates an unsigned __interlocked_integer<span class="underline">type</span>_ capable of representing any value of any
-        unsigned __interlocked_integer<span class="underline">type</span>_.
+        The typedef uintmax_t designates an unsigned <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+      Integer Type">
+        <code class="literal">Interlocked Integer Type</code></a> capable of representing
+        any value of any unsigned <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+      Integer Type">
+        <code class="literal">Interlocked Integer Type</code></a>.
       </p>
 <p>
         These types are required.
       </p>
 <a name="act.interlocked_integer.integer_typedefs.miscellaneous_integer_types"></a><h5>
-<a name="id505422"></a>
+<a name="id509410"></a>
         <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.miscellaneous_integer_types">Miscellaneous
         Integer Types</a>
       </h5>

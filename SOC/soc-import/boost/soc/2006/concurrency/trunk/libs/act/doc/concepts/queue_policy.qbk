@@ -1,0 +1,56 @@
+[section Queue Policy]
+
+A [concept Queue Policy] is a type which is used as a handle to related
+__pc_queue__ types. These [concept Queue Policys] generally act as policies to
+higher-level templates which choose the appropriate __pc_queue__ based on the
+knowledge of how the queue will be used. In =Boost.Act=, such types are used as
+policies to __consumer_policy__ templates.
+
+In order to be considered a valid [concept Queue Policy], given the
+variable definitions below, the following expressions must be well-formed and
+have the indicated effects.
+
+[table Queue Policy Descriptive Variable Definitions
+[[Variable]       [Definition]                                                 ]
+[[`A`]            [A [concept Queue Policy] type.]                             ]
+[[`a`]            [Value of type `A&`.]                                        ]
+[[`T`]            [The type of objects to be processed.]                       ]
+[[`t`]            [Value of type `T&`.]                                        ]
+[[`tc`]           [Value of type `T const&`.]                                  ]
+[[`P`]            [A unary function object which may take `t` as an argument.] ]
+[[`p`]            [Value of type `P const&`.]                                  ]
+]
+
+[heading Expression Requirements]
+
+[table Queue Policy Requirements
+[[Expression]                    [Return Type][Pre/Post-Condition]             ]
+[[`queue_policy
+   ::queue
+     < A
+     , V
+     >
+     ::type`
+ ]                               []           [A __pc_queue__ type whose
+                                               instances may individually be
+                                               safely interfaced with by exactly
+                                               one thread.
+                                              ]                                ]
+[[`queue_policy
+   ::safe_queue
+     < A
+     , V
+     , one_pusher
+     , one_popper
+     >
+     ::type`
+ ]                               []           [A __pc_queue__ type whose
+                                               instances may individually be
+                                               safely interfaced with by exactly
+                                               one "pusher" thread and exactly
+                                               one "popper" thread (those two
+                                               threads may be the same thread).
+                                              ]                                ]
+]
+
+[endsect]

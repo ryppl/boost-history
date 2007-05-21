@@ -1,0 +1,81 @@
+[section PC Queue]
+
+A [concept PC Queue] is a type whose instances represent a queue upon which data
+may be pushed on and popped off in FIFO order.
+
+In order to be considered a valid [concept PC Queue], given the variable
+definitions below, the following expressions must be well-formed and have the
+indicated effects.
+
+[table PC Queue Descriptive Variable Definitions
+[[Variable]       [Definition]                                                 ]
+[[`Q`]            [A [concept PC Queue] type.]                                 ]
+[[`q`]            [Value of type `q&`.]                                        ]
+[[`V`]            [The type `Q::value_type`.]                                  ]
+[[`v`]            [Value of type `V const&`.]                                  ]
+[[`OV`]           [Value of type `optional<OV>`.]                              ]
+[[`F`]            [An in_place_factory type.]                                  ]
+[[`f`]            [A value of type `F`.]                                       ]
+]
+
+[heading Expression Requirements]
+
+[table PC Queue Requirements
+[[Expression]     [Return Type][Pre/Post-Condition]                            ]
+[[`Q()`]          []           [Creates an instance. A destructor is assumed.] ]
+[[`Q::value_type`][]           [The type of data which is stored in the queue.]]
+[[`Q::size_type`] []           [The return type of a call to to `q.size()`.]   ]
+[[`q.size()`]     [`bool`]     [Returns the number of elements currently in
+                                `q`.
+                               ]                                               ]
+[[`q.empty()`]    [`bool`]     [Returns `true` if `q.size() == 0`; `false`
+                                otherwise.
+                               ]                                               ]
+[[`q.full()`]     [`bool`]     [Returns `true` if `q` has reached its maximum
+                                capacity; `false` otherwise.
+                               ]                                               ]
+[[`q.push()`]     [(not used)] [Pushes a default constructed `v` into the queue.
+                                If the queue is full then behavior is undefined.
+                               ]                                               ]
+[[`q.push(v)`]    [(not used)] [Pushes the value `v` into the queue.
+                                If the queue is full then behavior is undefined.
+                               ]                                               ]
+[[`q.push(f)`]    [(not used)] [Pushes a value into the queue with constructor
+                                arguments specified by `f`.
+                                If the queue is full then behavior is undefined.
+                               ]                                               ]
+[[`q.checked_push()`]
+                  [`bool`]     [Pushes a default constructed `v` into the queue.
+                                Returns `true` if the push was successful;
+                                `false` otherwise. [tablenote Push may return
+                                `false` if the queue is at maximum capacity.]
+                               ]                                               ]
+[[`q.checked_push(v)`]
+                  [`bool`]     [Pushes the value `v` into the queue.
+                                Returns `true` if the push was successful;
+                                `false` otherwise. [tablenote Push may return
+                                `false` if the queue is at maximum capacity.]
+                               ]                                               ]
+[[`q.checked_push(f)`]
+                  [`bool`]     [Pushes a value into the queue with constructor
+                                arguments specified by `f`.
+                                Returns `true` if the push was successful;
+                                `false` otherwise. [tablenote Push may return
+                                `false` if the queue is at maximum capacity.]
+                               ]                                               ]
+[[`q.pop()`]      [(not used)] [Pops a value from the queue. If the queue is
+                                empty then behavior is undefined.
+                               ]                                               ]
+[[`q.checked_pop()`]
+                  [`bool`]     [Pops a value from the queue.
+                                Returns `true` if the queue was not empty;
+                                `false` otherwise.
+                               ]                                               ]
+[[`q.value_pop()`][`OV`]       [Pops a value from the queue.
+                                Returns the popped value if the queue was not
+                                empty, otherwise a default-constructed `OV` is
+                                returned.
+                               ]                                               ]
+]
+
+[endsect]

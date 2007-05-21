@@ -147,28 +147,18 @@ assign_acquire( TargetType volatile& destination
 #include <boost/mpl/not.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/remove_volatile.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 
 template< typename TargetType, typename SourceType >
-typename enable_if
+typename lazy_enable_if
 <
-  mpl::and_
-  <
-    has_interlocked_operations< TargetType >
-  , mpl::not_< is_const< TargetType > >
-  , mpl::or_
-    <
-      mpl::and_< detail::is_interlocked_bool< TargetType >
-               , is_convertible< SourceType const, bool >
-               >
-    , is_convertible< SourceType const, TargetType >
-    >
-  >
-, TargetType
+  detail::assign::are_valid_params< TargetType, SourceType >
+, remove_volatile< TargetType >
 >
 ::type
-assign_acquire( TargetType volatile& destination, SourceType const& new_value )
+assign_acquire( TargetType& destination, SourceType const& new_value )
 {
   return assign( destination, new_value );
 }

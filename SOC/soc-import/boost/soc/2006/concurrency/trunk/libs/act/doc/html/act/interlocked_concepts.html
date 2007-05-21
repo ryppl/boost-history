@@ -30,6 +30,8 @@
       Type</a></span></dt>
 <dt><span class="section"><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_type">Interlocked
       Arithmetic Type</a></span></dt>
+<dt><span class="section"><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type">Interlocked
+      Integer Type</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -51,7 +53,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id429977"></a><p class="title"><b>Table 6. Interlocked Type Descriptive Variable Definitions</b></p>
+<a name="id430006"></a><p class="title"><b>Table 6. Interlocked Type Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Type Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -101,7 +103,7 @@
 </table></div>
 </div>
 <br class="table-break"><a name="act.interlocked_concepts.interlocked_type.expression_requirements"></a><h5>
-<a name="id487564"></a>
+<a name="id487593"></a>
         <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_type.expression_requirements">Expression
         Requirements</a>
       </h5>
@@ -132,7 +134,7 @@
         </p></td></tr>
 </table></div>
 <div class="table">
-<a name="id487708"></a><p class="title"><b>Table 7. Interlocked Type Requirements</b></p>
+<a name="id487737"></a><p class="title"><b>Table 7. Interlocked Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Type Requirements">
 <colgroup>
 <col>
@@ -253,20 +255,22 @@
       Arithmetic Type">Interlocked
       Arithmetic Type</a></h3></div></div></div>
 <p>
-        An <code class="literal">Interlocked Arithmetic Type</code> is an <a href="../">
+        An <code class="literal">Interlocked Arithmetic Type</code> is an <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_type" title="Interlocked
+      Type">
         <code class="literal">Interlocked Type</code></a> which supports common arithmetic
         operations.
       </p>
 <p>
         In order to be considered a valid <code class="literal">Interlocked Arithmetic Type</code>,
         given the variable definitions below, the following expressions must be well-formed
-        and have the indicated effects, in addition to those requirements of <a href="../"> <code class="literal">Interlocked Type</code></a>.
-        <code class="literal">Interlocked Arithmetic Types</code> also support all operations
-        specified in the C++ standard for arithmetic types. Such operations do not
-        imply memory barriers of any kind.
+        and have the indicated effects, in addition to those requirements of <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_type" title="Interlocked
+      Type"> <code class="literal">Interlocked
+        Type</code></a>. <code class="literal">Interlocked Arithmetic Types</code> also
+        support all operations specified in the C++ standard for arithmetic types.
+        Such operations do not imply memory barriers of any kind.
       </p>
 <div class="table">
-<a name="id502741"></a><p class="title"><b>Table 8. Interlocked Arithmetic Type Descriptive Variable
+<a name="id502773"></a><p class="title"><b>Table 8. Interlocked Arithmetic Type Descriptive Variable
       Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Descriptive Variable
       Definitions">
@@ -308,12 +312,12 @@
 </table></div>
 </div>
 <br class="table-break"><a name="act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements"></a><h5>
-<a name="id502927"></a>
+<a name="id502959"></a>
         <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id502946"></a><p class="title"><b>Table 9. Interlocked Arithmetic Type Requirements</b></p>
+<a name="id502978"></a><p class="title"><b>Table 9. Interlocked Arithmetic Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Requirements">
 <colgroup>
 <col>
@@ -510,6 +514,302 @@
 </table></div>
 </div>
 <br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="act.interlocked_concepts.interlocked_integer_type"></a><a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+      Integer Type">Interlocked
+      Integer Type</a></h3></div></div></div>
+<p>
+        An <code class="literal">Interlocked Integer Type</code> is an <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_type" title="Interlocked
+      Arithmetic Type">
+        <code class="literal">Interlocked Arithmetic Type</code></a> which supports common
+        integer operations.
+      </p>
+<p>
+        In order to be considered a valid <code class="literal">Interlocked Integer Type</code>,
+        given the variable definitions below, the following expressions must be well-formed
+        and have the indicated effects, in addition to those requirements of <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_type" title="Interlocked
+      Arithmetic Type"> <code class="literal">Interlocked
+        Arithmetic Type</code></a>. <code class="literal">Interlocked Integer Types</code>
+        also support all operations specified in the C++ standard for integer types.
+        Such operations do not imply memory barriers of any kind.
+      </p>
+<div class="table">
+<a name="id504713"></a><p class="title"><b>Table 10. Interlocked Arithmetic Type Descriptive Variable
+      Definitions</b></p>
+<div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Descriptive Variable
+      Definitions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Variable</th>
+<th>Definition</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>An
+            <code class="literal">Interlocked Integral Type</code> type.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">IV</span></code></td>
+<td>
+<code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span></code>.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">C1</span></code></td>
+<td>A
+            type which is convertible to <code class="code"><span class="identifier">IV</span></code>.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">iv</span></code></td>
+<td>Value
+            of type <code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span><span class="special">&amp;</span></code>.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">c1</span></code></td>
+<td>Value
+            of type <code class="code"><span class="identifier">C1</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">S</span></code></td>
+<td>An
+            integral or <code class="literal">Interlocked Integral</code> type.</td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">s</span></code></td>
+<td>A
+            value of type <code class="code"><span class="identifier">S</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><a name="act.interlocked_concepts.interlocked_integer_type.expression_requirements"></a><h5>
+<a name="id504955"></a>
+        <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type.expression_requirements">Expression
+        Requirements</a>
+      </h5>
+<div class="table">
+<a name="id504974"></a><p class="title"><b>Table 11. Interlocked Arithmetic Type Requirements</b></p>
+<div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Expression</th>
+<th>Return Type</th>
+<th>Pre/Post-Condition</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">mod_assign</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Mods <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">c1</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
+            <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">mod_assign_acquire</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Mods <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">c1</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">mod_assign_release</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Mods <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">c1</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">and_assign</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Ands <code class="code"><span class="identifier">iv</span></code> with <code class="code"><span class="identifier">c1</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
+            <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">and_assign_acquire</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Ands <code class="code"><span class="identifier">iv</span></code> with <code class="code"><span class="identifier">c1</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">and_assign_release</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Ands <code class="code"><span class="identifier">iv</span></code> with <code class="code"><span class="identifier">c1</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">or_assign</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Ors <code class="code"><span class="identifier">iv</span></code>
+            with <code class="code"><span class="identifier">c1</span></code> and stores the
+            result in <code class="code"><span class="identifier">iv</span></code> with a
+            <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of <code class="code"><span class="identifier">iv</span></code> after the operation is performed.
+            </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">or_assign_acquire</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Ors <code class="code"><span class="identifier">iv</span></code>
+            with <code class="code"><span class="identifier">c1</span></code> and stores the
+            result in <code class="code"><span class="identifier">iv</span></code> with <span class="emphasis"><em>acquire</em></span>
+            memory semantics. Returns the value of <code class="code"><span class="identifier">iv</span></code>
+            after the operation is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">or_assign_release</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Ors <code class="code"><span class="identifier">iv</span></code>
+            with <code class="code"><span class="identifier">c1</span></code> and stores the
+            result in <code class="code"><span class="identifier">iv</span></code> with <span class="emphasis"><em>release</em></span>
+            memory semantics. Returns the value of <code class="code"><span class="identifier">iv</span></code>
+            after the operation is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">xor_assign</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Xors <code class="code"><span class="identifier">iv</span></code> with <code class="code"><span class="identifier">c1</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
+            <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">xor_assign_acquire</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Xors <code class="code"><span class="identifier">iv</span></code> with <code class="code"><span class="identifier">c1</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">xor_assign_release</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">c1</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Xors <code class="code"><span class="identifier">iv</span></code> with <code class="code"><span class="identifier">c1</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">lshift_assign</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">s</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Left shifts <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">s</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
+            <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">lshift_assign_acquire</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">s</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Left shifts <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">s</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">lshift_assign_release</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">s</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Left shifts <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">s</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">rshift_assign</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">s</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Right shifts <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">s</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
+            <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">rshift_assign_acquire</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">s</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Right shifts <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">s</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+<tr>
+<td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">rshift_assign_release</span><span class="special">(</span>
+            <span class="identifier">iv</span><span class="special">,</span>
+            <span class="identifier">s</span> <span class="special">)</span></code></td>
+<td><code class="code"><span class="identifier">I</span></code></td>
+<td>Right shifts <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">s</span></code>
+            and stores the result in <code class="code"><span class="identifier">iv</span></code>
+            with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
+            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            is performed. </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+        ]
+      </p>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

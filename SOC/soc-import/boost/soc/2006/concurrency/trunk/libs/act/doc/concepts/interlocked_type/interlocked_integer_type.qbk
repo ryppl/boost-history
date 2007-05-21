@@ -1,93 +1,109 @@
-[section Interlocked Arithmetic Type]
+[section Interlocked Integer Type]
 
-An [concept Interlocked Arithmetic Type] is an __interlocked_type__ which
-supports common arithmetic operations.
+An [concept Interlocked Integer Type] is an __interlocked_arithmetic_type__
+which supports common integer operations.
 
-In order to be considered a valid [concept Interlocked Arithmetic Type], given
+In order to be considered a valid [concept Interlocked Integer Type], given
 the variable definitions below, the following expressions must be well-formed
 and have the indicated effects, in addition to those requirements of
-__interlocked_type__. [concept Interlocked Arithmetic Types] also support
-all operations specified in the C++ standard for arithmetic types. Such
+__interlocked_arithmetic_type__. [concept Interlocked Integer Types] also
+support all operations specified in the C++ standard for integer types. Such
 operations do not imply memory barriers of any kind.
 
 [table Interlocked Arithmetic Type Descriptive Variable Definitions
 [[Variable]       [Definition]                                                 ]
-[[`I`]            [An [concept Interlocked Arithmetic Type] type.]             ]
+[[`I`]            [An [concept Interlocked Integral Type] type.]               ]
 [[`IV`]           [`I volatile`.]                                              ]
 [[`C1`]           [A type which is convertible to `IV`.]                       ]
 [[`iv`]           [Value of type `I volatile&`.]                               ]
 [[`c1`]           [Value of type `C1 const&`.]                                 ]
+[[`S`]            [An integral or [concept Interlocked Integral] type.]        ]
+[[`s`]            [A value of type `S const&`.]                                ]
 ]
 
 [heading Expression Requirements]
 
 [table Interlocked Arithmetic Type Requirements
 [[Expression]                         [Return Type][Pre/Post-Condition]        ]
-[[`interlocked::increment( iv )`]     [`I`]        [Increments `iv` with a
+[[`interlocked::mod_assign( iv, c1 )`][`I`]        [Mods `iv` by `c1` and
+                                                    stores the result in `iv`
+                                                    with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::increment_acquire( iv )`]
-                                      [`I`]        [Increments `iv` with
-                                                    /acquire/ memory semantics.
+[[`interlocked::mod_assign_acquire( iv, c1 )`]
+                                      [`I`]        [Mods `iv` by `c1` and
+                                                    stores the result in `iv`
+                                                    with /acquire/ memory
+                                                    semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::increment_release( iv )`]
-                                      [`I`]        [Increments `iv` with
-                                                    /release/ memory semantics.
+[[`interlocked::mod_assign_release( iv, c1 )`]
+                                      [`I`]        [Mods `iv` by `c1` and
+                                                    stores the result in `iv`
+                                                    with /release/ memory
+                                                    semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::decrement( iv )`]     [`I`]        [Decrements `iv` with a
+[[`interlocked::and_assign( iv, c1 )`][`I`]        [Ands `iv` with `c1` and
+                                                    stores the result in `iv`
+                                                    with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::decrement_acquire( iv )`]
-                                      [`I`]        [Decrements `iv` with
-                                                    /acquire/ memory semantics.
+[[`interlocked::and_assign_acquire( iv, c1 )`]
+                                      [`I`]        [Ands `iv` with `c1` and
+                                                    stores the result in `iv`
+                                                    with /acquire/ memory
+                                                    semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::decrement_release( iv )`]
-                                      [`I`]        [Decrements `iv` with
-                                                    /release/ memory semantics.
+[[`interlocked::and_assign_release( iv, c1 )`]
+                                      [`I`]        [Ands `iv` with `c1` and
+                                                    stores the result in `iv`
+                                                    with /release/ memory
+                                                    semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::add_assign( iv, c1 )`][`I`]        [Adds `c1` to `iv` and stores
-                                                    the result in `iv` with a
+[[`interlocked::or_assign( iv, c1 )`] [`I`]        [Ors `iv` with `c1` and
+                                                    stores the result in `iv`
+                                                    with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::add_assign_acquire( iv, c1 )`]
-                                      [`I`]        [Adds `c1` to `iv` and stores
-                                                    the result in `iv` with
-                                                    /acquire/ memory semantics.
+[[`interlocked::or_assign_acquire( iv, c1 )`]
+                                      [`I`]        [Ors `iv` with `c1` and
+                                                    stores the result in `iv`
+                                                    with /acquire/ memory
+                                                    semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::add_assign_release( iv, c1 )`]
-                                      [`I`]        [Adds `c1` to `iv` and stores
-                                                    the result in `iv` with
-                                                    /release/ memory semantics.
+[[`interlocked::or_assign_release( iv, c1 )`]
+                                      [`I`]        [Ors `iv` with `c1` and
+                                                    stores the result in `iv`
+                                                    with /release/ memory
+                                                    semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::subtract_assign( iv, c1 )`]
-                                      [`I`]        [Subtracts `c1` from `iv` and
+[[`interlocked::xor_assign( iv, c1 )`][`I`]        [Xors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with a
                                                     /full memory barrier/.
@@ -95,8 +111,8 @@ operations do not imply memory barriers of any kind.
                                                     after the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::subtract_assign_acquire( iv, c1 )`]
-                                      [`I`]        [Subtracts `c1` from `iv` and
+[[`interlocked::xor_assign_acquire( iv, c1 )`]
+                                      [`I`]        [Xors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
                                                     semantics.
@@ -104,8 +120,8 @@ operations do not imply memory barriers of any kind.
                                                     after the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::subtract_assign_release( iv, c1 )`]
-                                      [`I`]        [Subtracts `c1` from `iv` and
+[[`interlocked::xor_assign_release( iv, c1 )`]
+                                      [`I`]        [Xors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /release/ memory
                                                     semantics.
@@ -113,58 +129,61 @@ operations do not imply memory barriers of any kind.
                                                     after the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::multiply_assign( iv, c1 )`][`I`]   [Multiplies `iv` by `c1` and
+[[`interlocked::lshift_assign( iv, s )`]
+                                      [`I`]        [Left shifts `iv` by `s` and
                                                     stores the result in `iv`
                                                     with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::multiply_assign_acquire( iv, c1 )`]
-                                      [`I`]        [Multiplies `iv` by `c1` and
+[[`interlocked::lshift_assign_acquire( iv, s )`]
+                                      [`I`]        [Left shifts `iv` by `s` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::multiply_assign_release( iv, c1 )`]
-                                      [`I`]        [Multiplies `iv` by `c1` and
+[[`interlocked::lshift_assign_release( iv, s )`]
+                                      [`I`]        [Left shifts `iv` by `s` and
                                                     stores the result in `iv`
                                                     with /release/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::divide_assign( iv, c1 )`][`I`]     [Divides `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with a
+[[`interlocked::rshift_assign( iv, s )`]
+                                      [`I`]        [Right shifts `iv` by `s`
+                                                    and stores the result in
+                                                    `iv` with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::divide_assign_acquire( iv, c1 )`]
-                                      [`I`]        [Divides `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with /acquire/ memory
+[[`interlocked::rshift_assign_acquire( iv, s )`]
+                                      [`I`]        [Right shifts `iv` by `s`
+                                                    and stores the result in
+                                                    `iv` with /acquire/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::divide_assign_release( iv, c1 )`]
-                                      [`I`]        [Divides `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with /release/ memory
+[[`interlocked::rshift_assign_release( iv, s )`]
+                                      [`I`]        [Right shifts `iv` by `s`
+                                                    and stores the result in
+                                                    `iv` with /release/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
+]
 ]
 
 [endsect]

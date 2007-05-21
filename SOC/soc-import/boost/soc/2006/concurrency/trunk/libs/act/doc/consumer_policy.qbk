@@ -1,9 +1,10 @@
 [section Consumer Policy]
 
-A [concept Consumer Policy] is a type whose instances are used to create
-__consumer__ objects. These [concept Consumer Policys] generally act as
-policies to higher-level types. In Boost.Act, such allocator types are used,
-most notably, as policies during active-qualification.
+A [concept Consumer Policy] is a type which is used as a handle to related
+__consumer__ types. These [concept Consumer Policys] generally act as policies
+to higher-level templates which choose the appropriate __consumer__ type based
+on the knowledge of how the __consumer__ will be used. In =Boost.Act=, such
+types are used as policies during active-qualification.
 
 In order to be considered a valid [concept Consumer Policy], given the
 variable definitions below, the following expressions must be well-formed and

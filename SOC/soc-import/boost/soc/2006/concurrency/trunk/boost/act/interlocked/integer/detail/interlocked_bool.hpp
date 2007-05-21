@@ -221,7 +221,20 @@ template< typename Type >
 struct is_interlocked_bool : mpl::false_ {};
 
 template< typename InternalType >
-struct is_interlocked_bool< interlocked_bool< InternalType > > : mpl::true_ {};
+struct is_interlocked_bool< interlocked_bool< InternalType > >
+  : mpl::true_ {};
+
+template< typename InternalType >
+struct is_interlocked_bool< interlocked_bool< InternalType > const >
+  : mpl::true_ {};
+
+template< typename InternalType >
+struct is_interlocked_bool< interlocked_bool< InternalType > volatile >
+  : mpl::true_ {};
+
+template< typename InternalType >
+struct is_interlocked_bool< interlocked_bool< InternalType > const volatile >
+  : mpl::true_ {};
 
 template< typename Type >
 struct interlocked_bool_internal_type

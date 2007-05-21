@@ -9,9 +9,13 @@
 
 [include concepts/interlocked_type.qbk]
 [include concepts/interlocked_type/interlocked_arithmetic_type.qbk]
+[include concepts/interlocked_type/interlocked_integer_type.qbk]
 
 [endsect]
 
 [section Queue Concepts]
+
+[include concepts/pc_queue.qbk]
+[include concepts/queue_policy.qbk]
 
 [endsect]
