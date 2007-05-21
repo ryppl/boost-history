@@ -36,7 +36,10 @@ include(boost)
 ##########################################################################
 
 # Installation of Boost headers
-install(DIRECTORY boost DESTINATION include)
+install(DIRECTORY boost 
+        DESTINATION include
+        PATTERN "CVS" EXCLUDE
+        REGEX ".svn" EXCLUDE)
 ##########################################################################
 
 ##########################################################################
