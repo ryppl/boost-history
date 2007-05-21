@@ -11,32 +11,31 @@
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <sstream>
-#include <vector>
+#include <boost/array.hpp>
 #include "../../../boost/explore/explore.hpp"
 
-BOOST_AUTO_TEST_CASE( basic_vector_test )
+BOOST_AUTO_TEST_CASE( basic_array_test )
 {
 	std::stringstream str_out;
 	
-	std::vector<int> vi;
-	explore::print(vi, str_out);
+	boost::array<int,0> ai0;
+	explore::print(ai0, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[]");
 	
 	str_out.str("");
 	
-	vi.push_back(1);
-	explore::print(vi, str_out);
+	boost::array<int,1> ai1 = {1};
+	explore::print(ai1, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[1]");
 	
 	str_out.str("");
 	
-	vi.push_back(2);
-	vi.push_back(3);
-	explore::print(vi, str_out);
+	boost::array<int,3> ai3 = {1, 2, 3};
+	explore::print(ai3, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
 }
 
-BOOST_AUTO_TEST_CASE( vector_in_vector_test )
+BOOST_AUTO_TEST_CASE( vector_in_array_test )
 {
 	std::stringstream str_out;
 	
@@ -45,32 +44,19 @@ BOOST_AUTO_TEST_CASE( vector_in_vector_test )
 	vi.push_back(2);
 	vi.push_back(3);
 	
-	std::vector<std::vector<int> > vvi;
-	explore::print(vvi, str_out);
+	boost::array<std::vector<int>,0> av0;
+	explore::print(av0, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[]");
 	
 	str_out.str("");
 	
-	vvi.push_back(vi);
-	explore::print(vvi, str_out);
+	boost::array<std::vector<int>,1> av1 = {vi};
+	explore::print(av1, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3]]");
 	
 	str_out.str("");
 	
-	vvi.push_back(vi);
-	vvi.push_back(vi);
-	explore::print(vvi, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
-}
-
-// This test shows that you can use a string to cause the same outputs
-// as other print statements.
-BOOST_AUTO_TEST_CASE( vector_with_ugly_string_case_test )
-{
-	std::stringstream str_out;
-	
-	std::vector<std::string> vs;
-	vs.push_back("[1, 2, 3], [1, 2, 3], [1, 2, 3]");
-	explore::print(vs, str_out);
+	boost::array<std::vector<int>,3> av3 = {vi, vi, vi};
+	explore::print(av3, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
 }

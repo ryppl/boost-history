@@ -9,7 +9,6 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
-//#include <boost/print.hpp>
 #include <string>
 #include <sstream>
 #include <boost/lexical_cast.hpp>
