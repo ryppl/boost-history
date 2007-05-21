@@ -4,8 +4,8 @@
 <title>Introduction</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../index.html" title="Act">
-<link rel="up" href="../index.html" title="Act">
+<link rel="start" href="../index.html" title="Boost.Act">
+<link rel="up" href="../index.html" title="Boost.Act">
 <link rel="prev" href="beta_warning.html" title="Beta Warning">
 <link rel="next" href="compiler_setup.html" title="Compiler Setup">
 </head>
@@ -24,14 +24,14 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="act.introduction"></a><a href="introduction.html" title="Introduction">Introduction</a></h2></div></div></div>
+<a name="boost_act.introduction"></a><a href="introduction.html" title="Introduction">Introduction</a></h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="introduction.html#act.introduction.polymorphic_algorithms">Polymorphic
+<dt><span class="section"><a href="introduction.html#boost_act.introduction.polymorphic_algorithms">Polymorphic
       Algorithms</a></span></dt>
-<dt><span class="section"><a href="introduction.html#act.introduction.algorithm_models">Algorithm Models</a></span></dt>
-<dt><span class="section"><a href="introduction.html#act.introduction.actions">Actions</a></span></dt>
-<dt><span class="section"><a href="introduction.html#act.introduction.active_objects">Active Objects</a></span></dt>
-<dt><span class="section"><a href="introduction.html#act.introduction.atomic_objects">Atomic Objects</a></span></dt>
+<dt><span class="section"><a href="introduction.html#boost_act.introduction.algorithm_models">Algorithm Models</a></span></dt>
+<dt><span class="section"><a href="introduction.html#boost_act.introduction.actions">Actions</a></span></dt>
+<dt><span class="section"><a href="introduction.html#boost_act.introduction.active_objects">Active Objects</a></span></dt>
+<dt><span class="section"><a href="introduction.html#boost_act.introduction.atomic_objects">Atomic Objects</a></span></dt>
 </dl></div>
 <p>
       With the advent of multi-core processors reaching the mainstream user along
@@ -58,7 +58,7 @@
     </p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.introduction.polymorphic_algorithms"></a><a href="introduction.html#act.introduction.polymorphic_algorithms" title="Polymorphic
+<a name="boost_act.introduction.polymorphic_algorithms"></a><a href="introduction.html#boost_act.introduction.polymorphic_algorithms" title="Polymorphic
       Algorithms">Polymorphic
       Algorithms</a></h3></div></div></div>
 <p>
@@ -82,7 +82,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.introduction.algorithm_models"></a><a href="introduction.html#act.introduction.algorithm_models" title="Algorithm Models">Algorithm Models</a></h3></div></div></div>
+<a name="boost_act.introduction.algorithm_models"></a><a href="introduction.html#boost_act.introduction.algorithm_models" title="Algorithm Models">Algorithm Models</a></h3></div></div></div>
 <p>
         By default, Boost.Act algorithms are performed in parallel whenever possible.
         Algorithm models are types which are used as policies to alter this behavior
@@ -95,7 +95,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.introduction.actions"></a><a href="introduction.html#act.introduction.actions" title="Actions">Actions</a></h3></div></div></div>
+<a name="boost_act.introduction.actions"></a><a href="introduction.html#boost_act.introduction.actions" title="Actions">Actions</a></h3></div></div></div>
 <p>
         It is often desirable to be able to signal a function, perform other unrelated
         operations, and then eventually wait for the signaled function's completion.
@@ -112,7 +112,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.introduction.active_objects"></a><a href="introduction.html#act.introduction.active_objects" title="Active Objects">Active Objects</a></h3></div></div></div>
+<a name="boost_act.introduction.active_objects"></a><a href="introduction.html#boost_act.introduction.active_objects" title="Active Objects">Active Objects</a></h3></div></div></div>
 <p>
         Much like we have a way of decoupling the signaling of a function from the
         actual invocation of that function, Boost.Act also provides a way to separate
@@ -127,7 +127,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.introduction.atomic_objects"></a><a href="introduction.html#act.introduction.atomic_objects" title="Atomic Objects">Atomic Objects</a></h3></div></div></div>
+<a name="boost_act.introduction.atomic_objects"></a><a href="introduction.html#boost_act.introduction.atomic_objects" title="Atomic Objects">Atomic Objects</a></h3></div></div></div>
 <p>
         Frequently when working with multithreaded applications, a need arises to
         access a single object from multiple threads. Atomic objects are objects

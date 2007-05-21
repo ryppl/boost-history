@@ -4,8 +4,8 @@
 <title>Queue Concepts</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../index.html" title="Act">
-<link rel="up" href="../index.html" title="Act">
+<link rel="start" href="../index.html" title="Boost.Act">
+<link rel="up" href="../index.html" title="Boost.Act">
 <link rel="prev" href="interlocked_concepts.html" title="Interlocked Concepts">
 <link rel="next" href="interlocked_integer.html" title="Interlocked Integer">
 </head>
@@ -24,14 +24,14 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="act.queue_concepts"></a><a href="queue_concepts.html" title="Queue Concepts">Queue Concepts</a></h2></div></div></div>
+<a name="boost_act.queue_concepts"></a><a href="queue_concepts.html" title="Queue Concepts">Queue Concepts</a></h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="queue_concepts.html#act.queue_concepts.pc_queue">PC Queue</a></span></dt>
-<dt><span class="section"><a href="queue_concepts.html#act.queue_concepts.queue_policy">Queue Policy</a></span></dt>
+<dt><span class="section"><a href="queue_concepts.html#boost_act.queue_concepts.pc_queue">PC Queue</a></span></dt>
+<dt><span class="section"><a href="queue_concepts.html#boost_act.queue_concepts.queue_policy">Queue Policy</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.queue_concepts.pc_queue"></a><a href="queue_concepts.html#act.queue_concepts.pc_queue" title="PC Queue">PC Queue</a></h3></div></div></div>
+<a name="boost_act.queue_concepts.pc_queue"></a><a href="queue_concepts.html#boost_act.queue_concepts.pc_queue" title="PC Queue">PC Queue</a></h3></div></div></div>
 <p>
         A <code class="literal">PC Queue</code> is a type whose instances represent a queue
         upon which data may be pushed on and popped off in FIFO order.
@@ -42,7 +42,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id506861"></a><p class="title"><b>Table 12. PC Queue Descriptive Variable Definitions</b></p>
+<a name="id506884"></a><p class="title"><b>Table 12. PC Queue Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="PC Queue Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -91,13 +91,13 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><a name="act.queue_concepts.pc_queue.expression_requirements"></a><h5>
-<a name="id507099"></a>
-        <a href="queue_concepts.html#act.queue_concepts.pc_queue.expression_requirements">Expression
+<br class="table-break"><a name="boost_act.queue_concepts.pc_queue.expression_requirements"></a><h5>
+<a name="id507120"></a>
+        <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id507116"></a><p class="title"><b>Table 13. PC Queue Requirements</b></p>
+<a name="id507138"></a><p class="title"><b>Table 13. PC Queue Requirements</b></p>
 <div class="table-contents"><table class="table" summary="PC Queue Requirements">
 <colgroup>
 <col>
@@ -227,15 +227,16 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.queue_concepts.queue_policy"></a><a href="queue_concepts.html#act.queue_concepts.queue_policy" title="Queue Policy">Queue Policy</a></h3></div></div></div>
+<a name="boost_act.queue_concepts.queue_policy"></a><a href="queue_concepts.html#boost_act.queue_concepts.queue_policy" title="Queue Policy">Queue Policy</a></h3></div></div></div>
 <p>
         A <code class="literal">Queue Policy</code> is a type which is used as a handle to
-        related <a href="queue_concepts.html#act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
+        related <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
         types. These <code class="literal">Queue Policys</code> generally act as policies to
-        higher-level templates which choose the appropriate <a href="queue_concepts.html#act.queue_concepts.pc_queue" title="PC Queue">
+        higher-level templates which choose the appropriate <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue" title="PC Queue">
         <code class="literal">PC Queue</code></a> based on the knowledge of how the queue
         will be used. In <code class="literal">Boost.Act</code>, such types are used as policies
-        to <a href="consumer_concepts.html#act.consumer_concepts.consumer_policy" title="Consumer Policy"> <code class="literal">Consumer
+        to <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer_policy" title="Consumer
+      Policy"> <code class="literal">Consumer
         Policy</code></a> templates.
       </p>
 <p>
@@ -244,7 +245,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id508085"></a><p class="title"><b>Table 14. Queue Policy Descriptive Variable Definitions</b></p>
+<a name="id508117"></a><p class="title"><b>Table 14. Queue Policy Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Queue Policy Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -294,13 +295,13 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><a name="act.queue_concepts.queue_policy.expression_requirements"></a><h5>
-<a name="id508314"></a>
-        <a href="queue_concepts.html#act.queue_concepts.queue_policy.expression_requirements">Expression
+<br class="table-break"><a name="boost_act.queue_concepts.queue_policy.expression_requirements"></a><h5>
+<a name="id508346"></a>
+        <a href="queue_concepts.html#boost_act.queue_concepts.queue_policy.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id508332"></a><p class="title"><b>Table 15. Queue Policy Requirements</b></p>
+<a name="id508364"></a><p class="title"><b>Table 15. Queue Policy Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Queue Policy Requirements">
 <colgroup>
 <col>
@@ -318,7 +319,7 @@
 <code class="code"><span class="identifier">queue_policy</span> <span class="special">::</span><span class="identifier">queue</span> <span class="special">&lt;</span> <span class="identifier">A</span> <span class="special">,</span> <span class="identifier">V</span> <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
 <td> </td>
 <td>A
-            <a href="queue_concepts.html#act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
+            <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
             type whose instances may individually be safely interfaced with by exactly
             one thread. </td>
 </tr>
@@ -332,7 +333,7 @@
             <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
 <td> </td>
 <td>A
-            <a href="queue_concepts.html#act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
+            <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
             type whose instances may individually be safely interfaced with by exactly
             one "pusher" thread and exactly one "popper" thread
             (those two threads may be the same thread). </td>

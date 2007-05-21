@@ -1,11 +1,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Act 0.5b</title>
+<title>Boost.Act</title>
 <link rel="stylesheet" href="boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="index.html" title="Act 0.5b">
-<link rel="next" href="act/beta_warning.html" title="Beta Warning">
+<link rel="start" href="index.html" title="Boost.Act">
+<link rel="next" href="boost_act/beta_warning.html" title="Beta Warning">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%">
@@ -17,12 +17,12 @@
 <td align="center"><a href="../../more/index.htm">More</a></td>
 </table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="act/beta_warning.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_act/beta_warning.html"><img src="images/next.png" alt="Next"></a></div>
 <div class="article" lang="en">
 <div class="titlepage">
 <div>
 <div><h2 class="title">
-<a name="act"></a>Act 0.5b</h2></div>
+<a name="act"></a>Boost.Act</h2></div>
 <div><div class="author"><h3 class="author">
 <span class="firstname">Matthew</span> <span class="surname">Calabrese</span>
 </h3></div></div>
@@ -39,58 +39,63 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl>
-<dt><span class="section"><a href="index.html#act.brief_description">Brief Description</a></span></dt>
-<dt><span class="section"><a href="act/beta_warning.html">Beta Warning</a></span></dt>
-<dt><span class="section"><a href="act/introduction.html">Introduction</a></span></dt>
+<dt><span class="section"><a href="index.html#boost_act.brief_description">Brief Description</a></span></dt>
+<dt><span class="section"><a href="boost_act/beta_warning.html">Beta Warning</a></span></dt>
+<dt><span class="section"><a href="boost_act/introduction.html">Introduction</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="act/introduction.html#act.introduction.polymorphic_algorithms">Polymorphic
+<dt><span class="section"><a href="boost_act/introduction.html#boost_act.introduction.polymorphic_algorithms">Polymorphic
       Algorithms</a></span></dt>
-<dt><span class="section"><a href="act/introduction.html#act.introduction.algorithm_models">Algorithm Models</a></span></dt>
-<dt><span class="section"><a href="act/introduction.html#act.introduction.actions">Actions</a></span></dt>
-<dt><span class="section"><a href="act/introduction.html#act.introduction.active_objects">Active Objects</a></span></dt>
-<dt><span class="section"><a href="act/introduction.html#act.introduction.atomic_objects">Atomic Objects</a></span></dt>
+<dt><span class="section"><a href="boost_act/introduction.html#boost_act.introduction.algorithm_models">Algorithm Models</a></span></dt>
+<dt><span class="section"><a href="boost_act/introduction.html#boost_act.introduction.actions">Actions</a></span></dt>
+<dt><span class="section"><a href="boost_act/introduction.html#boost_act.introduction.active_objects">Active Objects</a></span></dt>
+<dt><span class="section"><a href="boost_act/introduction.html#boost_act.introduction.atomic_objects">Atomic Objects</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="act/compiler_setup.html">Compiler Setup</a></span></dt>
+<dt><span class="section"><a href="boost_act/compiler_setup.html">Compiler Setup</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="act/compiler_setup.html#act.compiler_setup.downloading_boost">Downloading Boost</a></span></dt>
-<dt><span class="section"><a href="act/compiler_setup.html#act.compiler_setup.enabling_parallel_algorithms">Enabling
+<dt><span class="section"><a href="boost_act/compiler_setup.html#boost_act.compiler_setup.downloading_boost">Downloading
+      Boost</a></span></dt>
+<dt><span class="section"><a href="boost_act/compiler_setup.html#boost_act.compiler_setup.enabling_parallel_algorithms">Enabling
       Parallel Algorithms</a></span></dt>
-<dt><span class="section"><a href="act/compiler_setup.html#act.compiler_setup.linking_with_boost_threads">Linking
+<dt><span class="section"><a href="boost_act/compiler_setup.html#boost_act.compiler_setup.linking_with_boost_threads">Linking
       with Boost.Threads</a></span></dt>
-<dt><span class="section"><a href="act/compiler_setup.html#act.compiler_setup.compiling_the_library">Compiling the
-      Library</a></span></dt>
+<dt><span class="section"><a href="boost_act/compiler_setup.html#boost_act.compiler_setup.compiling_the_library">Compiling
+      the Library</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="act/consumer_concepts.html">Consumer Concepts</a></span></dt>
+<dt><span class="section"><a href="boost_act/consumer_concepts.html">Consumer Concepts</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="act/consumer_concepts.html#act.consumer_concepts.consumer">Consumer</a></span></dt>
-<dt><span class="section"><a href="act/consumer_concepts.html#act.consumer_concepts.consumer_policy">Consumer Policy</a></span></dt>
+<dt><span class="section"><a href="boost_act/consumer_concepts.html#boost_act.consumer_concepts.consumer">Consumer</a></span></dt>
+<dt><span class="section"><a href="boost_act/consumer_concepts.html#boost_act.consumer_concepts.consumer_policy">Consumer
+      Policy</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="act/interlocked_concepts.html">Interlocked Concepts</a></span></dt>
+<dt><span class="section"><a href="boost_act/interlocked_concepts.html">Interlocked Concepts</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="act/interlocked_concepts.html#act.interlocked_concepts.interlocked_type">Interlocked
+<dt><span class="section"><a href="boost_act/interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_type">Interlocked
       Type</a></span></dt>
-<dt><span class="section"><a href="act/interlocked_concepts.html#act.interlocked_concepts.interlocked_arithmetic_type">Interlocked
+<dt><span class="section"><a href="boost_act/interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_arithmetic_type">Interlocked
       Arithmetic Type</a></span></dt>
-<dt><span class="section"><a href="act/interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type">Interlocked
+<dt><span class="section"><a href="boost_act/interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_integer_type">Interlocked
       Integer Type</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="act/queue_concepts.html">Queue Concepts</a></span></dt>
+<dt><span class="section"><a href="boost_act/queue_concepts.html">Queue Concepts</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="act/queue_concepts.html#act.queue_concepts.pc_queue">PC Queue</a></span></dt>
-<dt><span class="section"><a href="act/queue_concepts.html#act.queue_concepts.queue_policy">Queue Policy</a></span></dt>
+<dt><span class="section"><a href="boost_act/queue_concepts.html#boost_act.queue_concepts.pc_queue">PC Queue</a></span></dt>
+<dt><span class="section"><a href="boost_act/queue_concepts.html#boost_act.queue_concepts.queue_policy">Queue Policy</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="act/interlocked_integer.html">Interlocked Integer</a></span></dt>
-<dd><dl><dt><span class="section"><a href="act/interlocked_integer.html#act.interlocked_integer.integer_typedefs">Integer Typedefs</a></span></dt></dl></dd>
-<dt><span class="section"><a href="act/rationale.html">Rationale</a></span></dt>
+<dt><span class="section"><a href="boost_act/interlocked_integer.html">Interlocked Integer</a></span></dt>
+<dd><dl><dt><span class="section"><a href="boost_act/interlocked_integer.html#boost_act.interlocked_integer.integer_typedefs">Integer
+      Typedefs</a></span></dt></dl></dd>
+<dt><span class="section"><a href="boost_act/rationale.html">Rationale</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="act/rationale.html#act.rationale.policy_based_design">Policy-Based Design</a></span></dt>
-<dt><span class="section"><a href="act/rationale.html#act.rationale.actions_vs__futures">Actions vs. Futures</a></span></dt>
+<dt><span class="section"><a href="boost_act/rationale.html#boost_act.rationale.policy_based_design">Policy-Based
+      Design</a></span></dt>
+<dt><span class="section"><a href="boost_act/rationale.html#boost_act.rationale.actions_vs__futures">Actions vs.
+      Futures</a></span></dt>
 </dl></dd>
 </dl>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="act.brief_description"></a><a href="index.html#act.brief_description" title="Brief Description">Brief Description</a></h2></div></div></div>
+<a name="boost_act.brief_description"></a><a href="index.html#boost_act.brief_description" title="Brief Description">Brief Description</a></h2></div></div></div>
 <p>
       Boost.Act is a C++ library which introduces STL-style algorithms that may be
       toggled to run in parallel or serially, and which provides tools for creating
@@ -104,6 +109,6 @@
 <td align="right"><small></small></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="act/beta_warning.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="boost_act/beta_warning.html"><img src="images/next.png" alt="Next"></a></div>
 </body>
 </html>

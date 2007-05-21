@@ -4,8 +4,8 @@
 <title>Interlocked Integer</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../index.html" title="Act">
-<link rel="up" href="../index.html" title="Act">
+<link rel="start" href="../index.html" title="Boost.Act">
+<link rel="up" href="../index.html" title="Boost.Act">
 <link rel="prev" href="queue_concepts.html" title="Queue Concepts">
 <link rel="next" href="rationale.html" title="Rationale">
 </head>
@@ -24,11 +24,12 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="act.interlocked_integer"></a><a href="interlocked_integer.html" title="Interlocked Integer">Interlocked Integer</a></h2></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs">Integer Typedefs</a></span></dt></dl></div>
-<a name="act.interlocked_integer.header"></a><h4>
-<a name="id508591"></a>
-      <a href="interlocked_integer.html#act.interlocked_integer.header">Header</a>
+<a name="boost_act.interlocked_integer"></a><a href="interlocked_integer.html" title="Interlocked Integer">Interlocked Integer</a></h2></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="interlocked_integer.html#boost_act.interlocked_integer.integer_typedefs">Integer
+      Typedefs</a></span></dt></dl></div>
+<a name="boost_act.interlocked_integer.header"></a><h4>
+<a name="id508627"></a>
+      <a href="interlocked_integer.html#boost_act.interlocked_integer.header">Header</a>
     </h4>
 <pre class="programlisting">
 <span class="comment">// Primary header (includes all other associated headers)
@@ -38,36 +39,38 @@
 </span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">selection</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
-<a name="act.interlocked_integer.description"></a><h4>
-<a name="id508839"></a>
-      <a href="interlocked_integer.html#act.interlocked_integer.description">Description</a>
+<a name="boost_act.interlocked_integer.description"></a><h4>
+<a name="id508878"></a>
+      <a href="interlocked_integer.html#boost_act.interlocked_integer.description">Description</a>
     </h4>
 <p>
       <code class="literal">Boost.Act</code> exposes several methods for retrieving types which
-      are models of <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_type" title="Interlocked
-      Type"> <code class="literal">Interlocked
-      Type</code></a> including common typedefs and template metafunctions
-      similar to those found in <code class="literal">Boost.Integer</code>. The following types
-      and typedefs are all found in the <code class="code"><span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">interlocked</span></code>
+      are models of <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_type" title="Interlocked
+      Type">
+      <code class="literal">Interlocked Type</code></a> including common typedefs and template
+      metafunctions similar to those found in <code class="literal">Boost.Integer</code>. The
+      following types and typedefs are all found in the <code class="code"><span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">interlocked</span></code>
       namespace.
     </p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.interlocked_integer.integer_typedefs"></a><a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs" title="Integer Typedefs">Integer Typedefs</a></h3></div></div></div>
-<a name="act.interlocked_integer.integer_typedefs.header"></a><h5>
-<a name="id508956"></a>
-        <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.header">Header</a>
+<a name="boost_act.interlocked_integer.integer_typedefs"></a><a href="interlocked_integer.html#boost_act.interlocked_integer.integer_typedefs" title="Integer
+      Typedefs">Integer
+      Typedefs</a></h3></div></div></div>
+<a name="boost_act.interlocked_integer.integer_typedefs.header"></a><h5>
+<a name="id508995"></a>
+        <a href="interlocked_integer.html#boost_act.interlocked_integer.integer_typedefs.header">Header</a>
       </h5>
 <pre class="programlisting">
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
-<a name="act.interlocked_integer.integer_typedefs.exact_width_integer_types"></a><h5>
-<a name="id509059"></a>
-        <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.exact_width_integer_types">Exact-Width
+<a name="boost_act.interlocked_integer.integer_typedefs.exact_width_integer_types"></a><h5>
+<a name="id509100"></a>
+        <a href="interlocked_integer.html#boost_act.interlocked_integer.integer_typedefs.exact_width_integer_types">Exact-Width
         Integer Types</a>
       </h5>
 <p>
-        The typedef int#_t, with # replaced by the width, designates a signed <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+        The typedef int#_t, with # replaced by the width, designates a signed <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_integer_type" title="Interlocked
       Integer Type"> <code class="literal">Interlocked
         Integer Type</code></a> of exactly # bits; int8_t denotes an 8-bit
         signed integer type. Similarly, the typedef uint#_t designates and unsigned
@@ -82,21 +85,21 @@
         [Note It is important to note that these typedefs do not necessarily correspond
         to built-in integer types. ]
       </p>
-<a name="act.interlocked_integer.integer_typedefs.minimum_width_integer_types"></a><h5>
-<a name="id509129"></a>
-        <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.minimum_width_integer_types">Minimum-Width
+<a name="boost_act.interlocked_integer.integer_typedefs.minimum_width_integer_types"></a><h5>
+<a name="id509172"></a>
+        <a href="interlocked_integer.html#boost_act.interlocked_integer.integer_typedefs.minimum_width_integer_types">Minimum-Width
         Integer Types</a>
       </h5>
 <p>
         The typedef int_least#_t, with # replaced by the width, designates a signed
-        <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
-      Integer Type"> <code class="literal">Interlocked
-        Integer Type</code></a> type with a width of at least # bits, such
-        that no signed integer type with lesser size has at least the specified width.
-        Thus, int_least32_t denotes a signed integer type with a width of at least
-        32 bits. Similarly, the typedef name uint_least#_t designates an unsigned
-        integer type with a width of at least # bits, such that no unsigned integer
-        type with lesser size has at least the specified width.
+        <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+      Integer Type">
+        <code class="literal">Interlocked Integer Type</code></a> type with a width of at
+        least # bits, such that no signed integer type with lesser size has at least
+        the specified width. Thus, int_least32_t denotes a signed integer type with
+        a width of at least 32 bits. Similarly, the typedef name uint_least#_t designates
+        an unsigned integer type with a width of at least # bits, such that no unsigned
+        integer type with lesser size has at least the specified width.
       </p>
 <p>
         Required minimum-width integer types:
@@ -124,14 +127,14 @@
 <p>
         All other minimum-width integer types are optional.
       </p>
-<a name="act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types"></a><h5>
-<a name="id509236"></a>
-        <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types">Fastest
+<a name="boost_act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types"></a><h5>
+<a name="id509276"></a>
+        <a href="interlocked_integer.html#boost_act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types">Fastest
         Minimum-Width Integer Types</a>
       </h5>
 <p>
         The typedef int_fast#_t, with # replaced by the width, designates the fastest
-        signed <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+        signed <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_integer_type" title="Interlocked
       Integer Type">
         <code class="literal">Interlocked Integer Type</code></a> type with a width of at
         least # bits. Similarly, the typedef name uint_fast#_t designates the fastest
@@ -167,9 +170,9 @@
 <p>
         All other fastest minimum-width integer types are optional.
       </p>
-<a name="act.interlocked_integer.integer_typedefs.greatest_width_integer_types"></a><h5>
-<a name="id509345"></a>
-        <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.greatest_width_integer_types">Greatest-Width
+<a name="boost_act.interlocked_integer.integer_typedefs.greatest_width_integer_types"></a><h5>
+<a name="id509385"></a>
+        <a href="interlocked_integer.html#boost_act.interlocked_integer.integer_typedefs.greatest_width_integer_types">Greatest-Width
         Integer Types</a>
       </h5>
 <p>
@@ -177,19 +180,19 @@
         any value of any signed integer type.
       </p>
 <p>
-        The typedef uintmax_t designates an unsigned <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+        The typedef uintmax_t designates an unsigned <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_integer_type" title="Interlocked
       Integer Type">
         <code class="literal">Interlocked Integer Type</code></a> capable of representing
-        any value of any unsigned <a href="interlocked_concepts.html#act.interlocked_concepts.interlocked_integer_type" title="Interlocked
+        any value of any unsigned <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_integer_type" title="Interlocked
       Integer Type">
         <code class="literal">Interlocked Integer Type</code></a>.
       </p>
 <p>
         These types are required.
       </p>
-<a name="act.interlocked_integer.integer_typedefs.miscellaneous_integer_types"></a><h5>
-<a name="id509415"></a>
-        <a href="interlocked_integer.html#act.interlocked_integer.integer_typedefs.miscellaneous_integer_types">Miscellaneous
+<a name="boost_act.interlocked_integer.integer_typedefs.miscellaneous_integer_types"></a><h5>
+<a name="id509456"></a>
+        <a href="interlocked_integer.html#boost_act.interlocked_integer.integer_typedefs.miscellaneous_integer_types">Miscellaneous
         Integer Types</a>
       </h5>
 <p>

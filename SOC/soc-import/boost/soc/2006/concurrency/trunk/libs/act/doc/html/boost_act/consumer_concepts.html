@@ -4,8 +4,8 @@
 <title>Consumer Concepts</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../index.html" title="Act">
-<link rel="up" href="../index.html" title="Act">
+<link rel="start" href="../index.html" title="Boost.Act">
+<link rel="up" href="../index.html" title="Boost.Act">
 <link rel="prev" href="compiler_setup.html" title="Compiler Setup">
 <link rel="next" href="interlocked_concepts.html" title="Interlocked Concepts">
 </head>
@@ -24,20 +24,22 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="act.consumer_concepts"></a><a href="consumer_concepts.html" title="Consumer Concepts">Consumer Concepts</a></h2></div></div></div>
+<a name="boost_act.consumer_concepts"></a><a href="consumer_concepts.html" title="Consumer Concepts">Consumer Concepts</a></h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="consumer_concepts.html#act.consumer_concepts.consumer">Consumer</a></span></dt>
-<dt><span class="section"><a href="consumer_concepts.html#act.consumer_concepts.consumer_policy">Consumer Policy</a></span></dt>
+<dt><span class="section"><a href="consumer_concepts.html#boost_act.consumer_concepts.consumer">Consumer</a></span></dt>
+<dt><span class="section"><a href="consumer_concepts.html#boost_act.consumer_concepts.consumer_policy">Consumer
+      Policy</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.consumer_concepts.consumer"></a><a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer">Consumer</a></h3></div></div></div>
+<a name="boost_act.consumer_concepts.consumer"></a><a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer">Consumer</a></h3></div></div></div>
 <p>
         A <code class="literal">Consumer</code> is an object which takes in data of a single
         type one instance at a time and processes it in an implementation defined-manner
         either sychnronously or asynchronously with respect to the thread it is interfaced
         with. In Boost.Act, models of this concept may be found as members of models
-        of the <a href="consumer_concepts.html#act.consumer_concepts.consumer_policy" title="Consumer Policy"> <code class="literal">Consumer
+        of the <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer_policy" title="Consumer
+      Policy"> <code class="literal">Consumer
         Policy</code></a> concept.
       </p>
 <p>
@@ -46,7 +48,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id427345"></a><p class="title"><b>Table 2. Consumer Descriptive Variable Definitions</b></p>
+<a name="id427350"></a><p class="title"><b>Table 2. Consumer Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -75,13 +77,13 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><a name="act.consumer_concepts.consumer.expression_requirements"></a><h5>
-<a name="id427479"></a>
-        <a href="consumer_concepts.html#act.consumer_concepts.consumer.expression_requirements">Expression
+<br class="table-break"><a name="boost_act.consumer_concepts.consumer.expression_requirements"></a><h5>
+<a name="id427487"></a>
+        <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id427496"></a><p class="title"><b>Table 3. Consumer Requirements</b></p>
+<a name="id427505"></a><p class="title"><b>Table 3. Consumer Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Requirements">
 <colgroup>
 <col>
@@ -121,14 +123,16 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="act.consumer_concepts.consumer_policy"></a><a href="consumer_concepts.html#act.consumer_concepts.consumer_policy" title="Consumer Policy">Consumer Policy</a></h3></div></div></div>
+<a name="boost_act.consumer_concepts.consumer_policy"></a><a href="consumer_concepts.html#boost_act.consumer_concepts.consumer_policy" title="Consumer
+      Policy">Consumer
+      Policy</a></h3></div></div></div>
 <p>
         A <code class="literal">Consumer Policy</code> is a type which is used as a handle
-        to related <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
+        to related <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
         types. These <code class="literal">Consumer Policys</code> generally act as policies
-        to higher-level templates which choose the appropriate <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer">
+        to higher-level templates which choose the appropriate <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer">
         <code class="literal">Consumer</code></a> type based on the knowledge of how the
-        <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
+        <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
         will be used. In <code class="literal">Boost.Act</code>, such types are used as policies
         during active-qualification.
       </p>
@@ -138,7 +142,7 @@
         and have the indicated effects.
       </p>
 <div class="table">
-<a name="id429369"></a><p class="title"><b>Table 4. Consumer Policy Descriptive Variable Definitions</b></p>
+<a name="id429384"></a><p class="title"><b>Table 4. Consumer Policy Descriptive Variable Definitions</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Policy Descriptive Variable Definitions">
 <colgroup>
 <col>
@@ -188,13 +192,13 @@
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><a name="act.consumer_concepts.consumer_policy.expression_requirements"></a><h5>
-<a name="id429598"></a>
-        <a href="consumer_concepts.html#act.consumer_concepts.consumer_policy.expression_requirements">Expression
+<br class="table-break"><a name="boost_act.consumer_concepts.consumer_policy.expression_requirements"></a><h5>
+<a name="id429616"></a>
+        <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer_policy.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id429616"></a><p class="title"><b>Table 5. Consumer Policy Requirements</b></p>
+<a name="id429634"></a><p class="title"><b>Table 5. Consumer Policy Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Policy Requirements">
 <colgroup>
 <col>
@@ -214,7 +218,7 @@
             <span class="special">,</span> <span class="identifier">constraint</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">,</span> <span class="identifier">processor</span><span class="special">&lt;</span><span class="identifier">P</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
 <td> </td>
 <td>A
-            <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
+            <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
             type which guarantees all processing is completed prior to the object
             being destroyed. </td>
 </tr>
@@ -225,7 +229,7 @@
             <span class="special">,</span> <span class="identifier">constraint</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">,</span> <span class="identifier">processor</span><span class="special">&lt;</span><span class="identifier">P</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
 <td> </td>
 <td>A
-            <a href="consumer_concepts.html#act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
+            <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
             type which guarantees all processing is completed prior to the object
             being destroyed and which may be interfaced with by any number of threads
             of execution. </td>

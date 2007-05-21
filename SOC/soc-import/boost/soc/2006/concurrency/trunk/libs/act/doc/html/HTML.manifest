@@ -1,9 +1,9 @@
 index.html
-act/beta_warning.html
-act/introduction.html
-act/compiler_setup.html
-act/consumer_concepts.html
-act/interlocked_concepts.html
-act/queue_concepts.html
-act/interlocked_integer.html
-act/rationale.html
+boost_act/beta_warning.html
+boost_act/introduction.html
+boost_act/compiler_setup.html
+boost_act/consumer_concepts.html
+boost_act/interlocked_concepts.html
+boost_act/queue_concepts.html
+boost_act/interlocked_integer.html
+boost_act/rationale.html
