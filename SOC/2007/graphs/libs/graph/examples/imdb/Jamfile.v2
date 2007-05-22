@@ -1,0 +1,6 @@
+
+exe imdb_six_degrees
+	: imdb.cpp
+	: <include>../../../../
+	: <optimization>speed
+	;

@@ -1,0 +1,125 @@
+
+File Prepraration
+=================
+Unfortunately, you're on your own for preparing the data for these queies. I
+don't think that the Boots moderators would appreciate ~450 MB files in the
+repository, nor would IMDB appreciate the usage. The data files, can be
+downloaded from: http://www.imdb.com/interfaces/. Click on the "Plain Text
+Files" link to connect to an FTP server to download them.
+
+You will only need two files: actors.txt and actresses.txt.
+
+These files are update every so often - I'm testing off a May 11 release
+so results may vary over time.
+
+You're going to have to trim some fat from the files. Load them in an editor
+that hopefully doesn't try to pull the entire file at one time, and cut the
+first ~240 lines. The first line of each file should be the name of an actor
+or actress and the movie(s) that they appear in. You will also need to trim
+the last ~200 lines from the file. The last line must be blank.
+
+I should note that these files do include porn actors and titles in case
+you're sensitive to that stuff.
+
+Running
+=======
+Eventually, I'd like to make this totally menu driven, but for now, its just
+text entry and CLI. The basic usage is:
+
+$ imdb_parse *.list
+
+The program dumps a lot of output while building the graph. This is just so you
+don't assume the program isn't doing anything, and you can watch the increasing
+numbers of actors and movies being added to the graph.
+
+After the graph has been built, simply follow the on-screen prompts. Note that
+when the program prompts for a name, it must be entered in IMDb input format
+(i.e., last name first and comma-separated). Note that this must also use
+IMDb's duplicate name distinction, which places a roman numeral in parenthesis
+if there are duplicate names for different people. A simple example might be:
+
+enter the first actor: Pitt, Brad
+enter the second actor: Wayne, John (I)
+
+The output happens to be (formatted for this file):
+
+1. Wayne, John (I) [as John Elder] stars in 'Sons of Katie Elder, The (1965)' 
+	with Hopper, Dennis [as Dave Hastings]
+2. Hopper, Dennis [as Clifford Worley] stars in 'True Romance (1993)' 
+	with Pitt, Brad [as Floyd]
+
+If an actor is not found, the program will alert you and start over, requiring
+you to enter the first actor again.
+
+To exit, simply hit ^D (or EOF). If you really don't care, just kill the
+program or hit ^C.
+
+Building a Co-citation Graph
+============================
+Initially, I had intended to run these queries on a co-citation graph,
+that connected actors with edges representing the movies they acted in
+together. As such, there was a 2-phase preprocessing program. The first
+would parse and filter the original IMDb files and produce an output
+file similar to that used in the original "Kevin Bacon" example of
+Boost.Graph.
+
+Note that the resulting graph is bipartite with actor vertices on the
+left and movie vertices on the right. The second step in creating the
+co-citation graph was to "fold" bipartite graph such that actors
+appearing in the same movie would be connected by an edge with that
+movies name.
+
+Here's why that doesn't work... Suppose the IMDb only has 1 movie and
+20 actors, and all actors perform in that one movie. This means that
+there are 21 vertices and 20 edges. Basically, the graph is perfectly
+star-shaped. When we "fold" this graph, we connect all the actors
+together who appear in this move. Ooops... We just made a clique with
+20 vertices (i.e., K20). From basic graph theory, the number of edges
+is going to be (20 * 19 / 2) = 190.
+
+That's about 900% more edges than our original graph for only 1 less
+vertex. There are about 286,000 movies and 934,000 actors and actresss
+that perform 3,190,000 roles. If we accept a general 900% increase in,
+edges than our resulting graph will contain about 28,426,000 edges.
+Of course we will only have 934,000 vertices instead of 286,000.
+Personally, I'm not going to wait for 28 million edges to be loaded
+into a program that tells me who's in what movie with whom.
+
+Efficiency Discussion
+=====================
+After a prototype implementation that follows basically the same lines as
+the first version, I realize now that this approach is woefully inadequate
+for parsing the movie data. Curiously, the inefficiency does not actually
+come from the parsing, but rather the O(log(n)) inserts into the maps that
+record relate actors and movies to each other - at least, I think so.
+
+Although this does process 10,000 lines "fairly" quickly, it's still too
+slow to actually be worthwhile. For example, it takes about 5m to parse
+about 350,000 lines of the graph (resulting in 4500 actors and 65K movies.
+Even though inserts into the map (should be?) O(log(n)), this still seems
+rather slow.
+
+Fortunately, it turns out that the maps aren't the problem. By the way,
+I should mention that I experimented with unordered_maps (TR1), and
+found no significant improvement.
+
+Apparently, this is one of those times that you actually want to use
+the adjacency list... One of the problems with the listS selector in
+the default undirected graph is that each additional edge and vertex
+for the graph requires a new allocation - although constant time, they
+hidden cost of allocating these objects one at a time is prohibitivley
+expesnive. Why? Probably locality of reference. My suspicion is that
+the RB tree (at least on GCC) holding the maps is so "wide" that randomly
+inserted movie titles are causing paging. I don't have any real evidence
+of this, but running with vecS is *way* faster.
+
+A timed test with undirected_graph<> on 50,000 entries gives the following:
+real    0m11.297s
+user    0m10.717s
+sys     0m0.044s
+
+Using vecS as the storage selector for an adjacency list gives:
+real    0m0.856s
+user    0m0.592s
+sys     0m0.008s
+
