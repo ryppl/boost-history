@@ -295,6 +295,59 @@ namespace explore {
 		return print( item, std::cout, format, default_container_policy());
 	}
 */
+
+    //
+    // The container_formatter type to allow "inline" streaming like the following
+    //
+    // std::cout << container_format( my_formatter) % my_container1 % my_container2 << ...
+    //
+
+    template< typename container, typename formatter>
+    struct container_format_class
+    {
+        container_format_class( const container &c)
+            : container_( c)
+        {
+            // nop
+        };
+
+        const container &get_container() const
+        {
+            return container_;
+        }
+    private:
+        const container &container_;
+
+    };
+
+    template< typename formatter>
+    struct unbound_container_format_class
+    {
+    };
+
+    template< typename formatter>
+        unbound_container_format_class< formatter> container_format( const formatter &)
+    {
+        return unbound_container_format_class<formatter>();
+    }
+
+    unbound_container_format_class< default_format> container_format()
+    {
+        return unbound_container_format_class< default_format>();
+    }
+
+    template< typename container, typename formatter>
+        container_format_class< container, formatter> operator%( unbound_container_format_class<formatter> &u, const container &c)
+    {
+        return container_format_class< container, formatter>( c);
+    }
+
+    template< typename container, typename formatter>
+        std::ostream &operator<<( std::ostream &strm, const container_format_class< container, formatter> &cf)
+    {
+        return print( cf.get_container(), strm);
+    }
+
 }
 
 #endif //__EXPLORE_HPP_INCLUDED__
