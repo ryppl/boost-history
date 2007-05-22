@@ -399,7 +399,7 @@ int double_to_int ( double n ) { return static_cast<int>(n) ; }
 void test_converter_as_function_object()
 {
 #if (defined(__FreeBSD__) && (__GNUC__ == 3) && (__GNUC_MINOR__ == 4) && (__GNUC_PATCHLEVEL__ == 4))
-#warning Test disabled.  This provokes an infinite loop in the compiler.
+#error This sends the compiler into an infinite loop
 #else
  
   cout << "Testing converter as function object.\n";
