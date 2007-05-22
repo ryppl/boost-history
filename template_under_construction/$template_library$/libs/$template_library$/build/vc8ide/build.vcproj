@@ -15,7 +15,7 @@
 	<Configurations>
 		<Configuration
 			Name="debug|Win32"
-			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
+			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
@@ -33,7 +33,7 @@ $template_msvc_build_command$
 		</Configuration>
 		<Configuration
 			Name="release|Win32"
-			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
+			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
@@ -60,12 +60,12 @@ $template_msvc_build_command$
 				Name="$template_library$"
 				>
 				<File
-					RelativePath="..\..\..\boost\$template_library$\$template_library$.hpp"
+					RelativePath="..\..\..\..\boost\$template_library$\$template_library$.hpp"
 					>
 				</File>
 			</Filter>
 			<File
-				RelativePath="..\..\..\boost\$template_library$.hpp"
+				RelativePath="..\..\..\..\boost\$template_library$.hpp"
 				>
 			</File>
 		</Filter>
@@ -73,20 +73,20 @@ $template_msvc_build_command$
 			Name="solution build"
 			>
 			<File
-				RelativePath="..\..\..\boost-build.jam"
+				RelativePath="..\..\..\..\boost-build.jam"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\project-root.jam"
+				RelativePath="..\..\..\..\project-root.jam"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\Jamfile.v2"
+				RelativePath="..\..\..\..\Jamfile.v2"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\build\Jamfile.v2"
+			RelativePath="..\..\build\Jamfile.v2"
 			>
 		</File>
 	</Files>

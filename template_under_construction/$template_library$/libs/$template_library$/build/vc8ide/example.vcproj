@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="debug|Win32"
-			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
+			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
@@ -26,7 +26,7 @@
 $template_msvc_build_command$
 				Output="$(OutDir)\example.exe"
 				PreprocessorDefinitions=""
-				IncludeSearchPath="../example"
+				IncludeSearchPath="..\../example"
 				ForcedIncludes=""
 				AssemblySearchPath=""
 				ForcedUsingAssemblies=""
@@ -35,7 +35,7 @@ $template_msvc_build_command$
 		</Configuration>
 		<Configuration
 			Name="release|Win32"
-			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
+			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
@@ -59,12 +59,12 @@ $template_msvc_build_command$
 			Name="Source Files"
 			>
 			<File
-				RelativePath="..\example\example.cpp"
+				RelativePath="..\..\example\example.cpp"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\example\Jamfile.v2"
+			RelativePath="..\..\example\Jamfile.v2"
 			>
 		</File>
 	</Files>

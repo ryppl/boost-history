@@ -17,7 +17,7 @@
 	<Configurations>
 		<Configuration
 			Name="release|Win32"
-			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
+			OutputDirectory="..\..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
 			ConfigurationType="0"
 			>
@@ -41,16 +41,16 @@ $template_msvc_build_command$
 			Name="Source Files"
 			>
 			<File
-				RelativePath="..\doc\dox\$template_library$.hpp"
+				RelativePath="..\..\doc\dox\$template_library$.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\doc\$template_library$.qbk"
+				RelativePath="..\..\doc\$template_library$.qbk"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\doc\Jamfile.v2"
+			RelativePath="..\..\doc\Jamfile.v2"
 			>
 		</File>
 	</Files>

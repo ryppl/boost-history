@@ -42,9 +42,9 @@ _COMMENT_accompanying file LICENSE_1_0.txt or copy at
 _COMMENT_http://www.boost.org/LICENSE_1_0.txt)
 """
 
-_msvc_build_command = """\t\t\t\tBuildCommandLine="cd ../$(ProjectName)&#x0D;&#x0A;bjam --v2 $(ConfigurationName)"
-\t\t\t\tReBuildCommandLine="cd ../$(ProjectName)&#x0D;&#x0A;bjam --v2 -a $(ConfigurationName)"
-\t\t\t\tCleanCommandLine="cd ../$(ProjectName)&#x0D;&#x0A;bjam --v2 --clean $(ConfigurationName)"
+_msvc_build_command = """\t\t\t\tBuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
+\t\t\t\tReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
+\t\t\t\tCleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
 """
 
 author_list = raw_input('library author[s]: (e.g., Yours Truly[,Yours D. NotTruly]): ')
