@@ -31,5 +31,5 @@ if(${ARCH} STREQUAL "unknown")
 endif(${ARCH} STREQUAL "unknown")
 
 
-set(BUILDNAME ${OSTYPE}-${OSVERSION}/${ARCH}/gcc-${COMPILER_VERSION})
+set(BUILDNAME ${OSTYPE}-${OSVERSION}/${ARCH}/gcc-${COMPILER_VERSION}/${CMAKE_BUILD_TYPE})
 message(STATUS "Testing is ON.  Build name = '${BUILDNAME}'")
