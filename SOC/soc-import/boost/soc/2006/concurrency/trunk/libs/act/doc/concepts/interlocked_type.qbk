@@ -60,7 +60,8 @@ have the indicated effects.
                                                      barrier of any kind.
                                                     ]
                                                    ]                           ]
-[[`interlocked::assign( iv, c1 )`]    [`I`]        [Stores the value of `c1`
+[[`interlocked::assign( iv, c1 )`]    [`assign_result<IV>::type`]
+                                                   [Stores the value of `c1`
                                                     to object `iv` with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
@@ -68,7 +69,8 @@ have the indicated effects.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::assign_acquire( iv, c1 )`]
-                                      [`I`]        [Stores the value of `c1`
+                                      [`assign_result<IV>::type`]
+                                                   [Stores the value of `c1`
                                                     to object `iv` with
                                                     /acquire/ memory semantics.
                                                     Returns the value of `iv`
@@ -76,7 +78,8 @@ have the indicated effects.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::assign_if_was( iv, c1, c2 )`]
-                                      [`I`]        [Stores the value of `c1`
+                                      [`assign_result<IV>::type`]
+                                                   [Stores the value of `c1`
                                                     to object `iv`
                                                     iff `iv == c2` prior to the
                                                     operation with a
@@ -91,7 +94,8 @@ have the indicated effects.
                                                     ]
                                                    ]                           ]
 [[`interlocked::assign_if_was_acquire( iv, c1, c2 )`]
-                                      [`I`]        [Stores the value of `c1`
+                                      [`assign_result<IV>::type`]
+                                                   [Stores the value of `c1`
                                                     to object `iv`
                                                     iff `iv == c2` prior to the
                                                     operation with /aquire/
@@ -101,7 +105,8 @@ have the indicated effects.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::assign_if_was_release( iv, c1, c2 )`]
-                                      [`I`]        [Stores the value of `c1`
+                                      [`assign_result<IV>::type`]
+                                                   [Stores the value of `c1`
                                                     to object `iv`
                                                     iff `iv == c2` prior to the
                                                     operation with /release/
@@ -113,12 +118,13 @@ have the indicated effects.
 [[`interlocked::safe_get( iv )`]  [`I`]            [Returns the value of `iv`.
                                                     [tablenote This template is
                                                      used for retrieving the
-                                                     value of a potentially
-                                                     volatile-unqualified
-                                                     type as though it were
-                                                     volatile-qualified along
-                                                     with the guarantee that the
-                                                     object will not be
+                                                     value of an object with the
+                                                     guarantee that the value
+                                                     obtained will be the most
+                                                     recent value after any
+                                                     modifications done by other
+                                                     threads. The value is also
+                                                     guaranteed to not be
                                                      partially updated by
                                                      another thread.
                                                     ]

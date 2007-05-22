@@ -62,7 +62,7 @@
         </dd>
 <dt><span class="term"><code class="code"><span class="identifier">OV</span></code></span></dt>
 <dd>
-          Value of type <code class="code"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">OV</span><span class="special">&gt;</span></code>.
+          Value of type <code class="code"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">V</span><span class="special">&gt;</span></code>.
         </dd>
 <dt><span class="term"><code class="code"><span class="identifier">F</span></code></span></dt>
 <dd>
@@ -75,12 +75,12 @@
 </dl>
 </div>
 <a name="boost_act.queue_concepts.pc_queue.expression_requirements"></a><h5>
-<a name="id506963"></a>
+<a name="id508915"></a>
         <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id506981"></a><p class="title"><b>Table 7. PC Queue Requirements</b></p>
+<a name="id508934"></a><p class="title"><b>Table 7. PC Queue Requirements</b></p>
 <div class="table-contents"><table class="table" summary="PC Queue Requirements">
 <colgroup>
 <col>
@@ -88,120 +88,297 @@
 <col>
 </colgroup>
 <thead><tr>
-<th>Expression</th>
-<th>Return Type</th>
-<th>Pre/Post-Condition</th>
+<th>
+            <p>
+              Expression
+            </p>
+            </th>
+<th>
+            <p>
+              Return Type
+            </p>
+            </th>
+<th>
+            <p>
+              Pre/Post-Condition
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
-<td><code class="code"><span class="identifier">Q</span><span class="special">()</span></code></td>
-<td> </td>
-<td>Creates
-            an instance. A destructor is assumed.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">Q</span><span class="special">::</span><span class="identifier">value_type</span></code></td>
-<td> </td>
-<td>The
-            type of data which is stored in the queue.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">Q</span><span class="special">::</span><span class="identifier">size_type</span></code></td>
-<td> </td>
-<td>The
-            return type of a call to to <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span></code></td>
-<td><code class="code"><span class="keyword">bool</span></code></td>
-<td>Returns the number
-            of elements currently in <code class="code"><span class="identifier">q</span></code>.
+<td>
+            <p>
+              <code class="code"><span class="identifier">Q</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td>
+            <p>
+              Creates an instance. A destructor is assumed.
+            </p>
             </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">empty</span><span class="special">()</span></code></td>
-<td><code class="code"><span class="keyword">bool</span></code></td>
-<td>Returns <code class="code"><span class="keyword">true</span></code> if <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span></code>; <code class="code"><span class="keyword">false</span></code>
-            otherwise. </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">Q</span><span class="special">::</span><span class="identifier">value_type</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td>
+            <p>
+              The type of data which is stored in the queue.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">full</span><span class="special">()</span></code></td>
-<td><code class="code"><span class="keyword">bool</span></code></td>
-<td>Returns <code class="code"><span class="keyword">true</span></code> if <code class="code"><span class="identifier">q</span></code>
-            has reached its maximum capacity; <code class="code"><span class="keyword">false</span></code>
-            otherwise. </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">Q</span><span class="special">::</span><span class="identifier">size_type</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td>
+            <p>
+              The return type of a call to to <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span></code>.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">push</span><span class="special">()</span></code></td>
-<td>(not
-            used)</td>
-<td>Pushes a default constructed <code class="code"><span class="identifier">v</span></code>
-            into the queue. If the queue is full then behavior is undefined. </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="code"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns the number of elements currently in <code class="code"><span class="identifier">q</span></code>.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">push</span><span class="special">(</span><span class="identifier">v</span><span class="special">)</span></code></td>
-<td>(not
-            used)</td>
-<td>Pushes the value <code class="code"><span class="identifier">v</span></code>
-            into the queue. If the queue is full then behavior is undefined. </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">empty</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="code"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns <code class="code"><span class="keyword">true</span></code> if <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span>
+              <span class="special">==</span> <span class="number">0</span></code>;
+              <code class="code"><span class="keyword">false</span></code> otherwise.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">push</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span></code></td>
-<td>(not
-            used)</td>
-<td>Pushes a value into the queue with constructor arguments
-            specified by <code class="code"><span class="identifier">f</span></code>. If the
-            queue is full then behavior is undefined. </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">full</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="code"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Returns <code class="code"><span class="keyword">true</span></code> if <code class="code"><span class="identifier">q</span></code> has reached its maximum capacity;
+              <code class="code"><span class="keyword">false</span></code> otherwise.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">checked_push</span><span class="special">()</span></code></td>
-<td><code class="code"><span class="keyword">bool</span></code></td>
-<td>Pushes a default constructed
-            <code class="code"><span class="identifier">v</span></code> into the queue. Returns
-            <code class="code"><span class="keyword">true</span></code> if the push was successful;
-            <code class="code"><span class="keyword">false</span></code> otherwise. <span class="emphasis"><em>Note:
-            Push may return <code class="code"><span class="keyword">false</span></code> if
-            the queue is at maximum capacity. --end note</em></span> </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">push</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              (not used)
+            </p>
+            </td>
+<td>
+            <p>
+              Pushes a default constructed <code class="code"><span class="identifier">v</span></code>
+              into the queue. If the queue is full then behavior is undefined.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">checked_push</span><span class="special">(</span><span class="identifier">v</span><span class="special">)</span></code></td>
-<td><code class="code"><span class="keyword">bool</span></code></td>
-<td>Pushes the value <code class="code"><span class="identifier">v</span></code> into the queue. Returns <code class="code"><span class="keyword">true</span></code> if the push was successful; <code class="code"><span class="keyword">false</span></code> otherwise. <span class="emphasis"><em>Note: Push
-            may return <code class="code"><span class="keyword">false</span></code> if the
-            queue is at maximum capacity. --end note</em></span> </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">push</span><span class="special">(</span><span class="identifier">v</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              (not used)
+            </p>
+            </td>
+<td>
+            <p>
+              Pushes the value <code class="code"><span class="identifier">v</span></code>
+              into the queue. If the queue is full then behavior is undefined.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">checked_push</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span></code></td>
-<td><code class="code"><span class="keyword">bool</span></code></td>
-<td>Pushes a value into
-            the queue with constructor arguments specified by <code class="code"><span class="identifier">f</span></code>.
-            Returns <code class="code"><span class="keyword">true</span></code> if the push
-            was successful; <code class="code"><span class="keyword">false</span></code> otherwise.
-            <span class="emphasis"><em>Note: Push may return <code class="code"><span class="keyword">false</span></code>
-            if the queue is at maximum capacity. --end note</em></span> </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">push</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              (not used)
+            </p>
+            </td>
+<td>
+            <p>
+              Pushes a value into the queue with constructor arguments specified
+              by <code class="code"><span class="identifier">f</span></code>. If the queue
+              is full then behavior is undefined.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">pop</span><span class="special">()</span></code></td>
-<td>(not
-            used)</td>
-<td>Pops a value from the queue. If the queue is empty
-            then behavior is undefined. </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">checked_push</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="code"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Pushes a default constructed <code class="code"><span class="identifier">v</span></code>
+              into the queue. Returns <code class="code"><span class="keyword">true</span></code>
+              if the push was successful; <code class="code"><span class="keyword">false</span></code>
+              otherwise. <span class="emphasis"><em>Note: Push may return <code class="code"><span class="keyword">false</span></code>
+              if the queue is at maximum capacity. --end note</em></span>
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">checked_pop</span><span class="special">()</span></code></td>
-<td><code class="code"><span class="keyword">bool</span></code></td>
-<td>Pops a value from the
-            queue. Returns <code class="code"><span class="keyword">true</span></code> if the
-            queue was not empty; <code class="code"><span class="keyword">false</span></code>
-            otherwise. </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">checked_push</span><span class="special">(</span><span class="identifier">v</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="code"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Pushes the value <code class="code"><span class="identifier">v</span></code>
+              into the queue. Returns <code class="code"><span class="keyword">true</span></code>
+              if the push was successful; <code class="code"><span class="keyword">false</span></code>
+              otherwise. <span class="emphasis"><em>Note: Push may return <code class="code"><span class="keyword">false</span></code>
+              if the queue is at maximum capacity. --end note</em></span>
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">value_pop</span><span class="special">()</span></code></td>
-<td><code class="code"><span class="identifier">OV</span></code></td>
-<td>Pops a value from
-            the queue. Returns the popped value if the queue was not empty, otherwise
-            a default-constructed <code class="code"><span class="identifier">OV</span></code>
-            is returned. </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">checked_push</span><span class="special">(</span><span class="identifier">f</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="code"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Pushes a value into the queue with constructor arguments specified
+              by <code class="code"><span class="identifier">f</span></code>. Returns <code class="code"><span class="keyword">true</span></code> if the push was successful; <code class="code"><span class="keyword">false</span></code> otherwise. <span class="emphasis"><em>Note: Push
+              may return <code class="code"><span class="keyword">false</span></code> if the
+              queue is at maximum capacity. --end note</em></span>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">pop</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              (not used)
+            </p>
+            </td>
+<td>
+            <p>
+              Pops a value from the queue. If the queue is empty then behavior is
+              undefined.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">checked_pop</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="code"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Pops a value from the queue. Returns <code class="code"><span class="keyword">true</span></code>
+              if the queue was not empty; <code class="code"><span class="keyword">false</span></code>
+              otherwise.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="code"><span class="identifier">q</span><span class="special">.</span><span class="identifier">value_pop</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">OV</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Pops a value from the queue. Returns the popped value if the queue
+              was not empty, otherwise a default-constructed <code class="code"><span class="identifier">OV</span></code>
+              is returned.
+            </p>
+            </td>
 </tr>
 </tbody>
 </table></div>
@@ -262,12 +439,12 @@
 </dl>
 </div>
 <a name="boost_act.queue_concepts.queue_policy.expression_requirements"></a><h5>
-<a name="id508161"></a>
+<a name="id510352"></a>
         <a href="queue_concepts.html#boost_act.queue_concepts.queue_policy.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id508180"></a><p class="title"><b>Table 8. Queue Policy Requirements</b></p>
+<a name="id510370"></a><p class="title"><b>Table 8. Queue Policy Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Queue Policy Requirements">
 <colgroup>
 <col>
@@ -275,39 +452,117 @@
 <col>
 </colgroup>
 <thead><tr>
-<th>Expression</th>
-<th>Return Type</th>
-<th>Pre/Post-Condition</th>
+<th>
+            <p>
+              Expression
+            </p>
+            </th>
+<th>
+            <p>
+              Return Type
+            </p>
+            </th>
+<th>
+            <p>
+              Pre/Post-Condition
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-<code class="code"><span class="identifier">queue_policy</span> <span class="special">::</span><span class="identifier">queue</span> <span class="special">&lt;</span> <span class="identifier">A</span> <span class="special">,</span> <span class="identifier">V</span> <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
-<td> </td>
-<td>A
-            <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
-            type whose instances may individually be safely interfaced with by exactly
-            one thread. </td>
+            <p>
+              <code class="code"><span class="identifier">queue_policy</span><span class="special">::</span><span class="identifier">queue</span><span class="special">&lt;</span>
+              <span class="identifier">A</span><span class="special">,</span>
+              <span class="identifier">V</span> <span class="special">&gt;::</span><span class="identifier">type</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td>
+            <p>
+              A <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
+              type which holds objects of type <code class="code"><span class="identifier">V</span></code>
+              and whose instances may individually be safely interfaced with by exactly
+              one thread.
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
-<code class="code"><span class="identifier">queue_policy</span> <span class="special">::</span><span class="identifier">safe_queue</span>
-            <span class="special">&lt;</span> <span class="identifier">A</span>
-            <span class="special">,</span> <span class="identifier">V</span>
-            <span class="special">,</span> <span class="identifier">one_pusher</span>
-            <span class="special">,</span> <span class="identifier">one_popper</span>
-            <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
-<td> </td>
-<td>A
-            <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
-            type whose instances may individually be safely interfaced with by exactly
-            one "pusher" thread and exactly one "popper" thread
-            (those two threads may be the same thread). </td>
+            <p>
+              <code class="code"><span class="identifier">queue_policy</span><span class="special">::</span><span class="identifier">safe_queue</span><span class="special">&lt;</span>
+              <span class="identifier">A</span><span class="special">,</span>
+              <span class="identifier">V</span> <span class="special">...</span></code>
+              <em class="replaceable"><code>
+                <a href="queue_concepts.html#boost_act.queue_concepts.queue_policy.queue_policy_pc_queue_unordered_parameters">Unordered
+                Parameters</a>
+              </code></em>
+              <code class="code"><span class="special">&gt;::</span><span class="identifier">type</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td>
+            <p>
+              A <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue" title="PC Queue"> <code class="literal">PC Queue</code></a>
+              type which holds objects of type <code class="code"><span class="identifier">V</span></code>
+              and which has a user-specified level of thread-safety (see link on
+              left for details).
+            </p>
+            </td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<br class="table-break">
+<br class="table-break"><a name="boost_act.queue_concepts.queue_policy.queue_policy_pc_queue_unordered_parameters"></a><h5>
+<a name="id510659"></a>
+        <a href="queue_concepts.html#boost_act.queue_concepts.queue_policy.queue_policy_pc_queue_unordered_parameters">Queue
+        Policy PC Queue Unordered Parameters</a>
+      </h5>
+<div class="variablelist">
+<p class="title"><b>--Pusher Parameter--</b></p>
+<dl>
+<dt><span class="term"><code class="code"><span class="identifier">one_pusher</span></code></span></dt>
+<dd>
+          Specifies that a single thread will be performing push operations on the
+          queue.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">many_pushers</span></code></span></dt>
+<dd>
+          Specifies that multiple threads may be performing push operations on the
+          queue.
+        </dd>
+<dt><span class="term"><span class="emphasis"><em>default value</em></span></span></dt>
+<dd><code class="code"><span class="identifier">many_pushers</span></code></dd>
+</dl>
+</div>
+<div class="variablelist">
+<p class="title"><b>--Popper Parameter--</b></p>
+<dl>
+<dt><span class="term"><code class="code"><span class="identifier">one_popper</span></code></span></dt>
+<dd>
+          Specifies that a single thread will be performing pop operations on the
+          queue.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">many_poppers</span></code></span></dt>
+<dd>
+          Specifies that multiple threads may be performing pop operations on the
+          queue.
+        </dd>
+<dt><span class="term"><span class="emphasis"><em>default value</em></span></span></dt>
+<dd><code class="code"><span class="identifier">many_poppers</span></code></dd>
+</dl>
+</div>
+<a name="boost_act.queue_concepts.queue_policy.queue_policy_pc_queue_type_selection_examples"></a><h5>
+<a name="id510807"></a>
+        <a href="queue_concepts.html#boost_act.queue_concepts.queue_policy.queue_policy_pc_queue_type_selection_examples">Queue
+        Policy PC Queue Type Selection Examples</a>
+      </h5>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

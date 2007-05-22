@@ -24,7 +24,8 @@ operations do not imply memory barriers of any kind.
 
 [table Interlocked Arithmetic Type Requirements
 [[Expression]                         [Return Type][Pre/Post-Condition]        ]
-[[`interlocked::mod_assign( iv, c1 )`][`I`]        [Mods `iv` by `c1` and
+[[`interlocked::mod_assign( iv, c1 )`][`mod_assign_result<IV,C1>::type`]
+                                                   [Mods `iv` by `c1` and
                                                     stores the result in `iv`
                                                     with a
                                                     /full memory barrier/.
@@ -33,7 +34,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::mod_assign_acquire( iv, c1 )`]
-                                      [`I`]        [Mods `iv` by `c1` and
+                                      [`mod_assign_result<IV,C1>::type`]
+                                                   [Mods `iv` by `c1` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
                                                     semantics.
@@ -42,7 +44,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::mod_assign_release( iv, c1 )`]
-                                      [`I`]        [Mods `iv` by `c1` and
+                                      [`mod_assign_result<IV,C1>::type`]
+                                                   [Mods `iv` by `c1` and
                                                     stores the result in `iv`
                                                     with /release/ memory
                                                     semantics.
@@ -50,7 +53,8 @@ operations do not imply memory barriers of any kind.
                                                     before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::and_assign( iv, c1 )`][`I`]        [Ands `iv` with `c1` and
+[[`interlocked::and_assign( iv, c1 )`][`and_assign_result<IV,C1>::type`]
+                                                   [Ands `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with a
                                                     /full memory barrier/.
@@ -59,7 +63,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::and_assign_acquire( iv, c1 )`]
-                                      [`I`]        [Ands `iv` with `c1` and
+                                      [`and_assign_result<IV,C1>::type`]
+                                                   [Ands `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
                                                     semantics.
@@ -68,7 +73,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::and_assign_release( iv, c1 )`]
-                                      [`I`]        [Ands `iv` with `c1` and
+                                      [`and_assign_result<IV,C1>::type`]
+                                                   [Ands `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /release/ memory
                                                     semantics.
@@ -76,7 +82,8 @@ operations do not imply memory barriers of any kind.
                                                     before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::or_assign( iv, c1 )`] [`I`]        [Ors `iv` with `c1` and
+[[`interlocked::or_assign( iv, c1 )`] [`or_assign_result<IV,C1>::type`]
+                                                   [Ors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with a
                                                     /full memory barrier/.
@@ -85,7 +92,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::or_assign_acquire( iv, c1 )`]
-                                      [`I`]        [Ors `iv` with `c1` and
+                                      [`or_assign_result<IV,C1>::type`]
+                                                   [Ors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
                                                     semantics.
@@ -94,7 +102,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::or_assign_release( iv, c1 )`]
-                                      [`I`]        [Ors `iv` with `c1` and
+                                      [`or_assign_result<IV,C1>::type`]
+                                                   [Ors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /release/ memory
                                                     semantics.
@@ -102,7 +111,8 @@ operations do not imply memory barriers of any kind.
                                                     before the operation is
                                                     performed.
                                                    ]                           ]
-[[`interlocked::xor_assign( iv, c1 )`][`I`]        [Xors `iv` with `c1` and
+[[`interlocked::xor_assign( iv, c1 )`][`xor_assign_result<IV,C1>::type`]
+                                                   [Xors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with a
                                                     /full memory barrier/.
@@ -111,7 +121,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::xor_assign_acquire( iv, c1 )`]
-                                      [`I`]        [Xors `iv` with `c1` and
+                                      [`xor_assign_result<IV,C1>::type`]
+                                                   [Xors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
                                                     semantics.
@@ -120,7 +131,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::xor_assign_release( iv, c1 )`]
-                                      [`I`]        [Xors `iv` with `c1` and
+                                      [`xor_assign_result<IV,C1>::type`]
+                                                   [Xors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /release/ memory
                                                     semantics.
@@ -129,7 +141,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::lshift_assign( iv, s )`]
-                                      [`I`]        [Left shifts `iv` by `s` and
+                                      [`lshift_assign_result<IV,C1>::type`]
+                                                   [Left shifts `iv` by `s` and
                                                     stores the result in `iv`
                                                     with a
                                                     /full memory barrier/.
@@ -138,7 +151,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::lshift_assign_acquire( iv, s )`]
-                                      [`I`]        [Left shifts `iv` by `s` and
+                                      [`lshift_assign_result<IV,C1>::type`]
+                                                   [Left shifts `iv` by `s` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
                                                     semantics.
@@ -147,7 +161,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::lshift_assign_release( iv, s )`]
-                                      [`I`]        [Left shifts `iv` by `s` and
+                                      [`lshift_assign_result<IV,C1>::type`]
+                                                   [Left shifts `iv` by `s` and
                                                     stores the result in `iv`
                                                     with /release/ memory
                                                     semantics.
@@ -156,7 +171,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::rshift_assign( iv, s )`]
-                                      [`I`]        [Right shifts `iv` by `s`
+                                      [`rshift_assign_result<IV,C1>::type`]
+                                                   [Right shifts `iv` by `s`
                                                     and stores the result in
                                                     `iv` with a
                                                     /full memory barrier/.
@@ -165,7 +181,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::rshift_assign_acquire( iv, s )`]
-                                      [`I`]        [Right shifts `iv` by `s`
+                                      [`rshift_assign_result<IV,C1>::type`]
+                                                   [Right shifts `iv` by `s`
                                                     and stores the result in
                                                     `iv` with /acquire/ memory
                                                     semantics.
@@ -174,7 +191,8 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`interlocked::rshift_assign_release( iv, s )`]
-                                      [`I`]        [Right shifts `iv` by `s`
+                                      [`rshift_assign_result<IV,C1>::type`]
+                                                   [Right shifts `iv` by `s`
                                                     and stores the result in
                                                     `iv` with /release/ memory
                                                     semantics.
@@ -182,7 +200,6 @@ operations do not imply memory barriers of any kind.
                                                     before the operation is
                                                     performed.
                                                    ]                           ]
-]
 ]
 
 [endsect]

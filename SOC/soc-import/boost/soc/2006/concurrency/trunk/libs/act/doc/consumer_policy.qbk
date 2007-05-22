@@ -24,25 +24,19 @@ have the indicated effects.
 
 [table Consumer Policy Requirements
 [[Expression]                    [Return Type][Pre/Post-Condition]             ]
-[[`consumer_policy
-   ::scoped_consumer
-     < A
-     , constraint<T>
-     , processor<P>
-     >
-     ::type`
+[[`consumer_policy::scoped_consumer< A,
+                                     constraint<T>,
+                                     processor<P>
+                                   >::type`
  ]                               []           [A __consumer__ type which
                                                guarantees all
                                                processing is completed prior to
                                                the object being destroyed.
                                               ]                                ]
-[[`consumer_policy
-   ::safe_scoped_consumer
-     < A
-     , constraint<T>
-     , processor<P>
-     >
-     ::type`
+[[`consumer_policy::safe_scoped_consumer< A,
+                                          constraint<T>,
+                                          processor<P>
+                                        >::type`
  ]                               []           [A __consumer__ type which
                                                guarantees all processing is
                                                completed prior to the object

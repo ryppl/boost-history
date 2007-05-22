@@ -24,32 +24,52 @@ have the indicated effects.
 
 [table Queue Policy Requirements
 [[Expression]                    [Return Type][Pre/Post-Condition]             ]
-[[`queue_policy
-   ::queue
-     < A
-     , V
-     >
-     ::type`
- ]                               []           [A __pc_queue__ type whose
+[[`queue_policy::queue< A,
+                        V
+                      >::type`
+ ]                               []           [A __pc_queue__ type which holds
+                                               objects of type `V` and whose
                                                instances may individually be
                                                safely interfaced with by exactly
                                                one thread.
                                               ]                                ]
-[[`queue_policy
-   ::safe_queue
-     < A
-     , V
-     , one_pusher
-     , one_popper
-     >
-     ::type`
- ]                               []           [A __pc_queue__ type whose
-                                               instances may individually be
-                                               safely interfaced with by exactly
-                                               one "pusher" thread and exactly
-                                               one "popper" thread (those two
-                                               threads may be the same thread).
+[[`queue_policy::safe_queue< A,
+                             V
+                            ...`
+                            [~[link boost_act.queue_concepts.queue_policy.queue_policy_pc_queue_unordered_parameters Unordered Parameters]]
+                            `>::type`
+ ]                               []           [A __pc_queue__ type which holds
+                                               objects of type `V` and which has
+                                               a user-specified level of
+                                               thread-safety (see link on left
+                                               for details).
                                               ]                                ]
 ]
+
+[heading Queue Policy PC Queue Unordered Parameters]
+
+[variablelist --Pusher Parameter--
+[[`one_pusher`]   [Specifies that a single thread will be performing push
+                   operations on the queue.
+                  ]                                                            ]
+[[`many_pushers`] [Specifies that multiple threads may be performing
+                   push operations on the queue.
+                  ]                                                            ]
+[[['default value]][`many_pushers`]                                            ]
+]
+
+[variablelist --Popper Parameter--
+[[`one_popper`]   [Specifies that a single thread will be performing pop
+                   operations on the queue.
+                  ]                                                            ]
+[[`many_poppers`] [Specifies that multiple threads may be performing pop
+                   operations on the queue.
+                  ]                                                            ]
+[[['default value]][`many_poppers`]                                            ]
+]
+
+[heading Queue Policy PC Queue Type Selection Examples]
+
+
 
 [endsect]

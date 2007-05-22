@@ -65,12 +65,12 @@
 </dl>
 </div>
 <a name="boost_act.consumer_concepts.consumer.expression_requirements"></a><h5>
-<a name="id427461"></a>
+<a name="id427470"></a>
         <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id427479"></a><p class="title"><b>Table 2. Consumer Requirements</b></p>
+<a name="id427488"></a><p class="title"><b>Table 2. Consumer Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Requirements">
 <colgroup>
 <col>
@@ -78,30 +78,73 @@
 <col>
 </colgroup>
 <thead><tr>
-<th>Expression</th>
-<th>Return Type</th>
-<th>Pre/Post-Condition</th>
+<th>
+            <p>
+              Expression
+            </p>
+            </th>
+<th>
+            <p>
+              Return Type
+            </p>
+            </th>
+<th>
+            <p>
+              Pre/Post-Condition
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
-<td><code class="code"><span class="identifier">C</span><span class="special">()</span></code></td>
-<td> </td>
-<td>Creates
-            an instance using a default policy. A destructor is assumed. </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">C</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td>
+            <p>
+              Creates an instance using a default policy. A destructor is assumed.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">C</span><span class="special">::</span><span class="identifier">value_type</span></code></td>
-<td> </td>
-<td>The
-            type of data which is processed.</td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">C</span><span class="special">::</span><span class="identifier">value_type</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td>
+            <p>
+              The type of data which is processed.
+            </p>
+            </td>
 </tr>
 <tr>
-<td><code class="code"><span class="identifier">c</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span></code></td>
-<td>(unused)</td>
-<td>Processes
-            a copy of <code class="code"><span class="identifier">d</span></code>. <span class="emphasis"><em>Note:
-            Processing takes place in an implementation-defined thread of execution.
-            --end note</em></span> </td>
+<td>
+            <p>
+              <code class="code"><span class="identifier">c</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              (unused)
+            </p>
+            </td>
+<td>
+            <p>
+              Processes a copy of <code class="code"><span class="identifier">d</span></code>.
+              <span class="emphasis"><em>Note: Processing takes place in an implementation-defined
+              thread of execution. --end note</em></span>
+            </p>
+            </td>
 </tr>
 </tbody>
 </table></div>
@@ -163,12 +206,12 @@
 </dl>
 </div>
 <a name="boost_act.consumer_concepts.consumer_policy.expression_requirements"></a><h5>
-<a name="id429562"></a>
+<a name="id429629"></a>
         <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer_policy.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id429581"></a><p class="title"><b>Table 3. Consumer Policy Requirements</b></p>
+<a name="id429648"></a><p class="title"><b>Table 3. Consumer Policy Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Policy Requirements">
 <colgroup>
 <col>
@@ -176,33 +219,65 @@
 <col>
 </colgroup>
 <thead><tr>
-<th>Expression</th>
-<th>Return Type</th>
-<th>Pre/Post-Condition</th>
+<th>
+            <p>
+              Expression
+            </p>
+            </th>
+<th>
+            <p>
+              Return Type
+            </p>
+            </th>
+<th>
+            <p>
+              Pre/Post-Condition
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
 <td>
-<code class="code"><span class="identifier">consumer_policy</span> <span class="special">::</span><span class="identifier">scoped_consumer</span>
-            <span class="special">&lt;</span> <span class="identifier">A</span>
-            <span class="special">,</span> <span class="identifier">constraint</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">,</span> <span class="identifier">processor</span><span class="special">&lt;</span><span class="identifier">P</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
-<td> </td>
-<td>A
-            <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
-            type which guarantees all processing is completed prior to the object
-            being destroyed. </td>
+            <p>
+              <code class="code"><span class="identifier">consumer_policy</span><span class="special">::</span><span class="identifier">scoped_consumer</span><span class="special">&lt;</span>
+              <span class="identifier">A</span><span class="special">,</span>
+              <span class="identifier">constraint</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+              <span class="identifier">processor</span><span class="special">&lt;</span><span class="identifier">P</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td>
+            <p>
+              A <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
+              type which guarantees all processing is completed prior to the object
+              being destroyed.
+            </p>
+            </td>
 </tr>
 <tr>
 <td>
-<code class="code"><span class="identifier">consumer_policy</span> <span class="special">::</span><span class="identifier">safe_scoped_consumer</span>
-            <span class="special">&lt;</span> <span class="identifier">A</span>
-            <span class="special">,</span> <span class="identifier">constraint</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">,</span> <span class="identifier">processor</span><span class="special">&lt;</span><span class="identifier">P</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">::</span><span class="identifier">type</span></code> </td>
-<td> </td>
-<td>A
-            <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
-            type which guarantees all processing is completed prior to the object
-            being destroyed and which may be interfaced with by any number of threads
-            of execution. </td>
+            <p>
+              <code class="code"><span class="identifier">consumer_policy</span><span class="special">::</span><span class="identifier">safe_scoped_consumer</span><span class="special">&lt;</span>
+              <span class="identifier">A</span><span class="special">,</span>
+              <span class="identifier">constraint</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+              <span class="identifier">processor</span><span class="special">&lt;</span><span class="identifier">P</span><span class="special">&gt;</span> <span class="special">&gt;::</span><span class="identifier">type</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+            </p>
+            </td>
+<td>
+            <p>
+              A <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer" title="Consumer"> <code class="literal">Consumer</code></a>
+              type which guarantees all processing is completed prior to the object
+              being destroyed and which may be interfaced with by any number of threads
+              of execution.
+            </p>
+            </td>
 </tr>
 </tbody>
 </table></div>

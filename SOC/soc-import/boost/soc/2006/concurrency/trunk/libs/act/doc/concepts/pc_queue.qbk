@@ -12,7 +12,7 @@ indicated effects.
 [[`q`]            [Value of type `q&`.]                                        ]
 [[`V`]            [The type `Q::value_type`.]                                  ]
 [[`v`]            [Value of type `V const&`.]                                  ]
-[[`OV`]           [Value of type `optional<OV>`.]                              ]
+[[`OV`]           [Value of type `optional<V>`.]                               ]
 [[`F`]            [An in_place_factory type.]                                  ]
 [[`f`]            [A value of type `F`.]                                       ]
 ]

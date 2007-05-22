@@ -17,7 +17,8 @@ __OpenMP__ 1.0 extensions or higher.
 
 [important [*If your compiler does not support the OpenMP extensions or if
 they are not enabled, =polymorphic algorithms= will execute serially regardless
-of whether or not you are using the =parallel_algo_model= policy.] \n \n
+of whether or not you are using the =parallel_algo_model= policy.]
+
 The following table is intended to be a quick reference for some of the more
 commonly used compilers. If your compiler is not listed it does not mean that
 OpenMP is not supported, but rather, it means that you should check your
@@ -30,14 +31,16 @@ extensions in order to take advantage of parallel algorithms through Boost.Act.]
 [[[*G++]]                 [[*GCC 4.2 and up:] OpenMP 2.5][-fopenmp]            ]
 [[[*IBM XLC]]             [OpenMP 2.5]                   [-qsmp=omp]           ]
 [[[*Intel C++]]           [[*9.0 and up:] OpenMP 2.5]    [*Windows:* /Qopenmp
-                                                          \n *Linux:* -openmp
+
+                                                          *Linux:* -openmp
                                                          ]                     ]
 [[[*Lahey/Fujitsu]]       [OpenMP 1.0? ['(ToDo: Check)]] [--openmp]            ]
 [[[*PG++]]                [[*Linux only:] OpenMP 2.5]    [-mp]                 ]
 [[[*Sun Studio Compilers]][OpenMP 2.5]                   [-xopenmp]            ]
 [[[*Visual C++]]          [[*2005 Professional and up:]
                            OpenMP 2.0
-                          ]                              [ /openmp \n \n
+                          ]                              [ /openmp
+                          
                                                            [link vc_openmp
                                                             Through IDE
                                                            ]
