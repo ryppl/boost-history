@@ -11,6 +11,9 @@
 //
 //
 
+#ifndef __EXPLORE_HPP_INCLUDED__
+#define __EXPLORE_HPP_INCLUDED__
+
 #include <iostream>
 #include <map>
 #include <boost/mpl/bool.hpp>
@@ -63,6 +66,18 @@ namespace explore {
 	template< typename T>
 	struct print_as_container : not_< is_streamable< T> > {};
 
+
+    //
+    // is_map metafunction
+    //
+    template< typename T>
+    struct is_map : false_ {};
+
+    template< typename K, typename V, typename P, typename A>
+    struct is_map< std::map< K, V, P, A> > : true_ {};
+
+    template< typename K, typename V, typename P, typename A>
+    struct is_map< std::multimap< K, V, P, A> > : true_ {};
 
 	//
 	// A container policy determines whether an item of a certain type 
@@ -127,14 +142,6 @@ namespace explore {
 		// string_ escape( const string_ &);
 	};
 
-	struct default_pair_format : basic_range_format
-	{
-		static char_ *opening() { return "(";}
-		static char_ *closing() { return ")";}
-		static char_ delimiter() { return ',';}
-		// string_ escape( const string_ &);
-	};
-
 	struct map_pair_format : basic_range_format
 	{
 		static char_ *opening() { return "";}
@@ -158,14 +165,13 @@ namespace explore {
 	// select a range format based on the type of the container
 	struct default_range_format_selector
 	{
-		template< typename T>
-		struct range_format: identity<default_range_format> {};
 
-		template< class K, class V, class P, class A>
-		struct range_format< std::map< K, V, P, A> > : identity< map_range_format> {};
+        template< typename T>
+        struct range_format : if_<
+                is_map< T>,
+                map_range_format,
+                default_range_format>{};
 
-		template< class F, class S>
-		struct range_format< std::pair< F, S> > : identity< default_pair_format> {};
 	};
 
 
@@ -290,3 +296,5 @@ namespace explore {
 	}
 */
 }
+
+#endif //__EXPLORE_HPP_INCLUDED__
