@@ -29,6 +29,7 @@ project
   
   [ run boost_array.cpp   ]
   [ run boost_any.cpp   ]
+  [ run boost_tuple.cpp   ]
  ;
 }
       
