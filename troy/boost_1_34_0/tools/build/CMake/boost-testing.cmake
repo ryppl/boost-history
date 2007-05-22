@@ -36,12 +36,6 @@
 #   in cmakeland but we might not like this...  
 #
 option(BUILD_TESTING "Enable testing" OFF)
-if(BUILD_TESTING)
-  set(NIGHTLY_START_TIME "23:30:00 EDT")
-  set(DROP_METHOD "xmlrpc")
-  set(DROP_SITE "http://public.kitware.com:8081")
-  set(DROP_LOCATION "boost")
-endif(BUILD_TESTING)
 include(CTest)
 
 macro(boost_test_parse_args testname)
