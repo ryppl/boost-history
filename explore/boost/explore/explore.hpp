@@ -121,8 +121,7 @@ namespace explore {
 	// formats.
 	struct basic_range_format
 	{
-		// curriously never occurring typedef pattern
-		char typedef char_;
+		typedef char char_;
 
 		static char_ *header() { return "";}
 		static char_ *footer() { return "";}
