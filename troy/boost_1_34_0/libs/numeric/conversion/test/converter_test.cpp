@@ -398,6 +398,10 @@ int double_to_int ( double n ) { return static_cast<int>(n) ; }
 
 void test_converter_as_function_object()
 {
+#if (defined(__FreeBSD__) && (__GNUC__ == 3) && (__GNUC_MINOR__ == 4) && (__GNUC_PATCHLEVEL__ == 4))
+#warning Test disabled.  This provokes an infinite loop in the compiler.
+#else
+ 
   cout << "Testing converter as function object.\n";
 
   // Create a sample sequence of double values.
@@ -432,8 +436,8 @@ void test_converter_as_function_object()
   // Match 's' and 'd' which should be equal.
   bool double_to_double_OK = std::equal(S.begin(),S.end(),D.begin()) ;
   BOOST_CHECK_MESSAGE(double_to_double_OK, "converter (double,double) as function object");
+#endif
 }
-
 #if BOOST_WORKAROUND(__IBMCPP__, <= 600 ) // VCAPP6
 #  define UNOPTIMIZED
 #else
@@ -559,4 +563,3 @@ int test_main( int, char* argv[] )
   return 0;
 }
 //---------------------------------------------------------------------------
-
