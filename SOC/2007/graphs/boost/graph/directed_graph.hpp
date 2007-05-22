@@ -19,8 +19,8 @@ namespace boost
     class directed_graph
     {
     public:
-	typedef adjacency_list<vecS,
-			       vecS,
+	typedef adjacency_list<listS,
+			       listS,
 			       bidirectionalS,
 			       VertexProperty,
 			       EdgeProperty,
@@ -78,6 +78,21 @@ namespace boost
 	    : m_graph(n, p)
 	{}
 
+	// bundled property support
+#ifndef BOOST_GRAPH_NO_BUNDLED_PROPERTIES
+	vertex_bundled& operator [](vertex_descriptor v)
+	{ return m_graph[v]; }
+
+	const vertex_bundled& operator [](vertex_descriptor v) const
+	{ return m_graph[v]; }
+
+	edge_bundled& operator [](edge_descriptor e)
+	{ return m_graph[e]; }
+
+	const edge_bundled& operator [](edge_descriptor e) const
+	{ return m_graph[e]; }
+#endif
+
 	// Graph concepts
 	static inline vertex_descriptor null_vertex()
 	{ return type::null_vertex(); }
@@ -104,6 +119,10 @@ namespace boost
 
 	inline degree_size_type degree(vertex_descriptor v)
 	{ return boost::degree(v, m_graph); }
+
+        // AdjacencyGraph concepts
+        inline std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices(vertex_descriptor v) const
+	{ return boost::adjacent_vertices(v, m_graph); }
 
 	// VertexListGraph concepts
 	inline vertices_size_type num_vertices() const
@@ -248,6 +267,18 @@ namespace boost
 	     const directed_graph<VP,EP,GP> &g)
     {
 	return g.in_edges(v);
+    }
+
+    // AdjacencyGraph concepts
+    template <class VP, class EP, class GP>
+    inline std::pair<
+        typename directed_graph<VP,EP,GP>::adjacency_iterator,
+        typename directed_graph<VP,EP,GP>::adjacency_iterator
+        >
+    adjacent_vertices(typename directed_graph<VP,EP,GP>::vertex_descriptor v,
+                     const directed_graph<VP,EP,GP>& g)
+    {
+        return g.adjacent_vertices(v);
     }
 
     // VertexListGraph concepts
