@@ -25,6 +25,7 @@
 #include <windows.h> // ToDo: Remove (forward declare functions)
 
 #include <boost/act/interlocked/detail/interlocked_result.hpp>
+#include <boost/act/interlocked/assign/detail/assign_operation.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 

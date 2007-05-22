@@ -5,37 +5,21 @@
 
 #ifdef BOOST_WINDOWS
 
-#include <boost/act/interlocked/assign/detail/assign_acquire_windows.hpp>
+#include <windows.h>
+
+#if WINVER >= 0x0600
+
+#include <boost/act/interlocked/assign/detail/assign_acquire_vista.hpp>
 
 #else // Else: No support for assign acquire (default to assign)
 
-#include <boost/act/interlocked/assign/detail/assign_impl.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/remove_volatile.hpp>
+#include <boost/act/interlocked/assign/detail/assign_acquire_default.hpp>
 
-namespace boost { namespace act { namespace interlocked { namespace detail {
+#endif
 
-namespace assign_acquire {
+#else // Else: No support for assign acquire (default to assign)
 
-template< typename TargetType, typename SourceType >
-struct are_valid_params
-  : detail::assign::are_valid_params< TargetType, SourceType > {};
-
-template< typename TargetType, typename SourceType >
-typename lazy_enable_if
-<
-  are_valid_params< TargetType, SourceType >
-, remove_volatile< TargetType >
->
-::type
-assign_acquire( TargetType& destination, SourceType const& new_value )
-{
-  return detail::assign::assign( destination, new_value );
-}
-
-}
-
-} } } }
+#include <boost/act/interlocked/assign/detail/assign_acquire_default.hpp>
 
 #endif
 
