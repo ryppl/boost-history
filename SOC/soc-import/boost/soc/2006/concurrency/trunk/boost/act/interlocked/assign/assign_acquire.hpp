@@ -155,7 +155,7 @@ template< typename TargetType, typename SourceType >
 typename lazy_enable_if
 <
   detail::assign::are_valid_params< TargetType, SourceType >
-, remove_volatile< TargetType >
+, assign_result< TargetType, SourceType >
 >
 ::type
 assign_acquire( TargetType& destination, SourceType const& new_value )

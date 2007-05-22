@@ -52,58 +52,41 @@
         the variable definitions below, the following expressions must be well-formed
         and have the indicated effects.
       </p>
-<div class="table">
-<a name="id430028"></a><p class="title"><b>Table 6. Interlocked Type Descriptive Variable Definitions</b></p>
-<div class="table-contents"><table class="table" summary="Interlocked Type Descriptive Variable Definitions">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>Variable</th>
-<th>Definition</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code class="code"><span class="identifier">I</span></code></td>
-<td>An
-            <code class="literal">Interlocked Type</code> type.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">IV</span></code></td>
-<td>
-<code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">C1</span></code></td>
-<td>A
-            type which is convertible to <code class="code"><span class="identifier">IV</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">C2</span></code></td>
-<td>A
-            type which is convertible to <code class="code"><span class="identifier">IV</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">iv</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">c1</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">C1</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">c2</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">C2</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-</tbody>
-</table></div>
+<div class="variablelist">
+<p class="title"><b>Interlocked Type Descriptive Variable Definitions</b></p>
+<dl>
+<dt><span class="term"><code class="code"><span class="identifier">I</span></code></span></dt>
+<dd>
+          An <code class="literal">Interlocked Type</code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">IV</span></code></span></dt>
+<dd>
+<code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">C1</span></code></span></dt>
+<dd>
+          A type which is convertible to <code class="code"><span class="identifier">IV</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">C2</span></code></span></dt>
+<dd>
+          A type which is convertible to <code class="code"><span class="identifier">IV</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">iv</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">c1</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">C1</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">c2</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">C2</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+</dl>
 </div>
-<br class="table-break"><a name="boost_act.interlocked_concepts.interlocked_type.expression_requirements"></a><h5>
-<a name="id487614"></a>
+<a name="boost_act.interlocked_concepts.interlocked_type.expression_requirements"></a><h5>
+<a name="id430190"></a>
         <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_type.expression_requirements">Expression
         Requirements</a>
       </h5>
@@ -134,7 +117,7 @@
         </p></td></tr>
 </table></div>
 <div class="table">
-<a name="id487758"></a><p class="title"><b>Table 7. Interlocked Type Requirements</b></p>
+<a name="id487679"></a><p class="title"><b>Table 4. Interlocked Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Type Requirements">
 <colgroup>
 <col>
@@ -269,55 +252,38 @@
         support all operations specified in the C++ standard for arithmetic types.
         Such operations do not imply memory barriers of any kind.
       </p>
-<div class="table">
-<a name="id502793"></a><p class="title"><b>Table 8. Interlocked Arithmetic Type Descriptive Variable
-      Definitions</b></p>
-<div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Descriptive Variable
-      Definitions">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>Variable</th>
-<th>Definition</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code class="code"><span class="identifier">I</span></code></td>
-<td>An
-            <code class="literal">Interlocked Arithmetic Type</code> type.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">IV</span></code></td>
-<td>
-<code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">C1</span></code></td>
-<td>A
-            type which is convertible to <code class="code"><span class="identifier">IV</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">iv</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">c1</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">C1</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-</tbody>
-</table></div>
+<div class="variablelist">
+<p class="title"><b>Interlocked Arithmetic Type Descriptive Variable Definitions</b></p>
+<dl>
+<dt><span class="term"><code class="code"><span class="identifier">I</span></code></span></dt>
+<dd>
+          An <code class="literal">Interlocked Arithmetic Type</code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">IV</span></code></span></dt>
+<dd>
+<code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">C1</span></code></span></dt>
+<dd>
+          A type which is convertible to <code class="code"><span class="identifier">IV</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">iv</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">c1</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">C1</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+</dl>
 </div>
-<br class="table-break"><a name="boost_act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements"></a><h5>
-<a name="id502975"></a>
+<a name="boost_act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements"></a><h5>
+<a name="id502870"></a>
         <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id502994"></a><p class="title"><b>Table 9. Interlocked Arithmetic Type Requirements</b></p>
+<a name="id502890"></a><p class="title"><b>Table 5. Interlocked Arithmetic Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Requirements">
 <colgroup>
 <col>
@@ -336,7 +302,7 @@
 <td><code class="code"><span class="identifier">I</span></code></td>
 <td>Increments <code class="code"><span class="identifier">iv</span></code> with a <span class="emphasis"><em>full memory barrier</em></span>.
             Returns the value of <code class="code"><span class="identifier">iv</span></code>
-            after the operation is performed. </td>
+            before the operation is performed. </td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">increment_acquire</span><span class="special">(</span>
@@ -344,7 +310,7 @@
 <td><code class="code"><span class="identifier">I</span></code></td>
 <td>Increments <code class="code"><span class="identifier">iv</span></code> with <span class="emphasis"><em>acquire</em></span>
             memory semantics. Returns the value of <code class="code"><span class="identifier">iv</span></code>
-            after the operation is performed. </td>
+            before the operation is performed. </td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">increment_release</span><span class="special">(</span>
@@ -352,7 +318,7 @@
 <td><code class="code"><span class="identifier">I</span></code></td>
 <td>Increments <code class="code"><span class="identifier">iv</span></code> with <span class="emphasis"><em>release</em></span>
             memory semantics. Returns the value of <code class="code"><span class="identifier">iv</span></code>
-            after the operation is performed. </td>
+            before the operation is performed. </td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">decrement</span><span class="special">(</span>
@@ -360,7 +326,7 @@
 <td><code class="code"><span class="identifier">I</span></code></td>
 <td>Decrements <code class="code"><span class="identifier">iv</span></code> with a <span class="emphasis"><em>full memory barrier</em></span>.
             Returns the value of <code class="code"><span class="identifier">iv</span></code>
-            after the operation is performed. </td>
+            before the operation is performed. </td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">decrement_acquire</span><span class="special">(</span>
@@ -368,7 +334,7 @@
 <td><code class="code"><span class="identifier">I</span></code></td>
 <td>Decrements <code class="code"><span class="identifier">iv</span></code> with <span class="emphasis"><em>acquire</em></span>
             memory semantics. Returns the value of <code class="code"><span class="identifier">iv</span></code>
-            after the operation is performed. </td>
+            before the operation is performed. </td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">decrement_release</span><span class="special">(</span>
@@ -376,7 +342,7 @@
 <td><code class="code"><span class="identifier">I</span></code></td>
 <td>Decrements <code class="code"><span class="identifier">iv</span></code> with <span class="emphasis"><em>release</em></span>
             memory semantics. Returns the value of <code class="code"><span class="identifier">iv</span></code>
-            after the operation is performed. </td>
+            before the operation is performed. </td>
 </tr>
 <tr>
 <td><code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">add_assign</span><span class="special">(</span>
@@ -386,7 +352,7 @@
 <td>Adds <code class="code"><span class="identifier">c1</span></code> to <code class="code"><span class="identifier">iv</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
-            <code class="code"><span class="identifier">iv</span></code> after the operation
+            <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -397,7 +363,7 @@
 <td>Adds <code class="code"><span class="identifier">c1</span></code> to <code class="code"><span class="identifier">iv</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -408,7 +374,7 @@
 <td>Adds <code class="code"><span class="identifier">c1</span></code> to <code class="code"><span class="identifier">iv</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -419,7 +385,7 @@
 <td>Subtracts <code class="code"><span class="identifier">c1</span></code> from <code class="code"><span class="identifier">iv</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
-            <code class="code"><span class="identifier">iv</span></code> after the operation
+            <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -430,7 +396,7 @@
 <td>Subtracts <code class="code"><span class="identifier">c1</span></code> from <code class="code"><span class="identifier">iv</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -441,7 +407,7 @@
 <td>Subtracts <code class="code"><span class="identifier">c1</span></code> from <code class="code"><span class="identifier">iv</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -452,7 +418,7 @@
 <td>Multiplies <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">c1</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
-            <code class="code"><span class="identifier">iv</span></code> after the operation
+            <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -463,7 +429,7 @@
 <td>Multiplies <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">c1</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -474,7 +440,7 @@
 <td>Multiplies <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">c1</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -485,7 +451,7 @@
 <td>Divides <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">c1</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
-            <code class="code"><span class="identifier">iv</span></code> after the operation
+            <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -496,7 +462,7 @@
 <td>Divides <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">c1</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -507,7 +473,7 @@
 <td>Divides <code class="code"><span class="identifier">iv</span></code> by <code class="code"><span class="identifier">c1</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 </tbody>
@@ -535,65 +501,46 @@
         also support all operations specified in the C++ standard for integer types.
         Such operations do not imply memory barriers of any kind.
       </p>
-<div class="table">
-<a name="id504731"></a><p class="title"><b>Table 10. Interlocked Arithmetic Type Descriptive Variable
-      Definitions</b></p>
-<div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Descriptive Variable
-      Definitions">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>Variable</th>
-<th>Definition</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code class="code"><span class="identifier">I</span></code></td>
-<td>An
-            <code class="literal">Interlocked Integral Type</code> type.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">IV</span></code></td>
-<td>
-<code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">C1</span></code></td>
-<td>A
-            type which is convertible to <code class="code"><span class="identifier">IV</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">iv</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">c1</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">C1</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">S</span></code></td>
-<td>An
-            integral or <code class="literal">Interlocked Integral</code> type.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">s</span></code></td>
-<td>A
-            value of type <code class="code"><span class="identifier">S</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-</tbody>
-</table></div>
+<div class="variablelist">
+<p class="title"><b>Interlocked Arithmetic Type Descriptive Variable Definitions</b></p>
+<dl>
+<dt><span class="term"><code class="code"><span class="identifier">I</span></code></span></dt>
+<dd>
+          An <code class="literal">Interlocked Integral Type</code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">IV</span></code></span></dt>
+<dd>
+<code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">C1</span></code></span></dt>
+<dd>
+          A type which is convertible to <code class="code"><span class="identifier">IV</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">iv</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">I</span> <span class="keyword">volatile</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">c1</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">C1</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">S</span></code></span></dt>
+<dd>
+          An integral or <code class="literal">Interlocked Integer Type</code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">s</span></code></span></dt>
+<dd>
+          A value of type <code class="code"><span class="identifier">S</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+</dl>
 </div>
-<br class="table-break"><a name="boost_act.interlocked_concepts.interlocked_integer_type.expression_requirements"></a><h5>
-<a name="id504974"></a>
+<a name="boost_act.interlocked_concepts.interlocked_integer_type.expression_requirements"></a><h5>
+<a name="id504844"></a>
         <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_integer_type.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id504993"></a><p class="title"><b>Table 11. Interlocked Arithmetic Type Requirements</b></p>
+<a name="id504863"></a><p class="title"><b>Table 6. Interlocked Arithmetic Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Requirements">
 <colgroup>
 <col>
@@ -713,7 +660,7 @@
 <td>Xors <code class="code"><span class="identifier">iv</span></code> with <code class="code"><span class="identifier">c1</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with a <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of
-            <code class="code"><span class="identifier">iv</span></code> after the operation
+            <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -724,7 +671,7 @@
 <td>Xors <code class="code"><span class="identifier">iv</span></code> with <code class="code"><span class="identifier">c1</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>acquire</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>
@@ -735,7 +682,7 @@
 <td>Xors <code class="code"><span class="identifier">iv</span></code> with <code class="code"><span class="identifier">c1</span></code>
             and stores the result in <code class="code"><span class="identifier">iv</span></code>
             with <span class="emphasis"><em>release</em></span> memory semantics. Returns the value
-            of <code class="code"><span class="identifier">iv</span></code> after the operation
+            of <code class="code"><span class="identifier">iv</span></code> before the operation
             is performed. </td>
 </tr>
 <tr>

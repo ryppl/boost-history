@@ -10,8 +10,7 @@ In order to be considered a valid [concept Queue Policy], given the
 variable definitions below, the following expressions must be well-formed and
 have the indicated effects.
 
-[table Queue Policy Descriptive Variable Definitions
-[[Variable]       [Definition]                                                 ]
+[variablelist Queue Policy Descriptive Variable Definitions
 [[`A`]            [A [concept Queue Policy] type.]                             ]
 [[`a`]            [Value of type `A&`.]                                        ]
 [[`T`]            [The type of objects to be processed.]                       ]

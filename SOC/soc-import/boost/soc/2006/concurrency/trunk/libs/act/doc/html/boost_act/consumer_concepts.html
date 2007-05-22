@@ -47,43 +47,30 @@
         variable definitions below, the following expressions must be well-formed
         and have the indicated effects.
       </p>
-<div class="table">
-<a name="id427350"></a><p class="title"><b>Table 2. Consumer Descriptive Variable Definitions</b></p>
-<div class="table-contents"><table class="table" summary="Consumer Descriptive Variable Definitions">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>Variable</th>
-<th>Definition</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code class="code"><span class="identifier">C</span></code></td>
-<td>A
-            <code class="literal">Consumer</code> type.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">c</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">C</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">d</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">C</span><span class="special">::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-</tbody>
-</table></div>
+<div class="variablelist">
+<p class="title"><b>Consumer Descriptive Variable Definitions</b></p>
+<dl>
+<dt><span class="term"><code class="code"><span class="identifier">C</span></code></span></dt>
+<dd>
+          A <code class="literal">Consumer</code> type.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">c</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">C</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">d</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">C</span><span class="special">::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+</dl>
 </div>
-<br class="table-break"><a name="boost_act.consumer_concepts.consumer.expression_requirements"></a><h5>
-<a name="id427487"></a>
+<a name="boost_act.consumer_concepts.consumer.expression_requirements"></a><h5>
+<a name="id427461"></a>
         <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id427505"></a><p class="title"><b>Table 3. Consumer Requirements</b></p>
+<a name="id427479"></a><p class="title"><b>Table 2. Consumer Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Requirements">
 <colgroup>
 <col>
@@ -141,64 +128,47 @@
         the variable definitions below, the following expressions must be well-formed
         and have the indicated effects.
       </p>
-<div class="table">
-<a name="id429384"></a><p class="title"><b>Table 4. Consumer Policy Descriptive Variable Definitions</b></p>
-<div class="table-contents"><table class="table" summary="Consumer Policy Descriptive Variable Definitions">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>Variable</th>
-<th>Definition</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code class="code"><span class="identifier">A</span></code></td>
-<td>A
-            <code class="literal">Consumer Policy</code> type.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">a</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">A</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">T</span></code></td>
-<td>The
-            type of objects to be processed.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">t</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">T</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">tc</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">P</span></code></td>
-<td>A
-            unary function object which may take <code class="code"><span class="identifier">t</span></code>
-            as an argument.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">p</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">P</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-</tbody>
-</table></div>
+<div class="variablelist">
+<p class="title"><b>Consumer Policy Descriptive Variable Definitions</b></p>
+<dl>
+<dt><span class="term"><code class="code"><span class="identifier">A</span></code></span></dt>
+<dd>
+          A <code class="literal">Consumer Policy</code> type.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">a</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">A</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">T</span></code></span></dt>
+<dd>
+          The type of objects to be processed.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">t</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">T</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">tc</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">P</span></code></span></dt>
+<dd>
+          A unary function object which may take <code class="code"><span class="identifier">t</span></code>
+          as an argument.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">p</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">P</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+</dl>
 </div>
-<br class="table-break"><a name="boost_act.consumer_concepts.consumer_policy.expression_requirements"></a><h5>
-<a name="id429616"></a>
+<a name="boost_act.consumer_concepts.consumer_policy.expression_requirements"></a><h5>
+<a name="id429562"></a>
         <a href="consumer_concepts.html#boost_act.consumer_concepts.consumer_policy.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id429634"></a><p class="title"><b>Table 5. Consumer Policy Requirements</b></p>
+<a name="id429581"></a><p class="title"><b>Table 3. Consumer Policy Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Consumer Policy Requirements">
 <colgroup>
 <col>

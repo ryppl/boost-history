@@ -10,8 +10,7 @@ In order to be considered a valid [concept Consumer], given the variable
 definitions below, the following expressions must be well-formed and have the
 indicated effects.
 
-[table Consumer Descriptive Variable Definitions
-[[Variable]       [Definition]                                                 ]
+[variablelist Consumer Descriptive Variable Definitions
 [[`C`]            [A [concept Consumer] type.]                                 ]
 [[`c`]            [Value of type `C&`.]                                        ]
 [[`d`]            [Value of type `C::value_type const&`.]                      ]

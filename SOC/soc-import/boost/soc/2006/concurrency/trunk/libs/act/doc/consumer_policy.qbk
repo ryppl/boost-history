@@ -10,8 +10,7 @@ In order to be considered a valid [concept Consumer Policy], given the
 variable definitions below, the following expressions must be well-formed and
 have the indicated effects.
 
-[table Consumer Policy Descriptive Variable Definitions
-[[Variable]       [Definition]                                                 ]
+[variablelist Consumer Policy Descriptive Variable Definitions
 [[`A`]            [A [concept Consumer Policy] type.]                          ]
 [[`a`]            [Value of type `A&`.]                                        ]
 [[`T`]            [The type of objects to be processed.]                       ]

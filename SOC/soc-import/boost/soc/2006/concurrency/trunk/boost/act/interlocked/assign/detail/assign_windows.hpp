@@ -24,9 +24,21 @@
 
 #include <windows.h> // ToDo: Remove (forward declare functions)
 
-namespace boost { namespace act { namespace interlocked { namespace detail {
+#include <boost/act/interlocked/detail/interlocked_result.hpp>
 
-namespace assign {
+namespace boost { namespace act { namespace interlocked {
+
+template< typename TargetType, typename SourceType >
+struct assign_result
+{
+  typedef detail::binary_interlocked_result< detail::assign_operation
+                                           , detail::old_value
+                                           , TargetType, SourceType
+                                           >
+          type;
+};
+
+namespace detail { namespace assign {
 
 template< typename TargetType, typename SourceType >
 struct are_valid_arithmetic32_params
@@ -90,83 +102,103 @@ struct are_valid_params
 };
 
 template< typename TargetType, typename SourceType >
-typename enable_if
+typename lazy_enable_if
 <
   are_valid_arithmetic32_params< TargetType, SourceType >
-, TargetType
+, assign_result< TargetType, SourceType >
 >
 ::type
 assign( TargetType volatile& destination, SourceType const& new_value )
 {
-  return static_cast< TargetType >
+  return make_interlocked_result< assign_operation, old_value >
          (
-           BOOST_INTERLOCKED_EXCHANGE
-           ( &reinterpret_cast< LONG volatile& >( destination )
-           , static_cast< LONG >( new_value )
+           static_cast< TargetType >
+           (
+             BOOST_INTERLOCKED_EXCHANGE
+             ( &reinterpret_cast< LONG volatile& >( destination )
+             , static_cast< LONG >( new_value )
+             )
            )
+         , new_value
          );
 }
 
 template< typename TargetType, typename SourceType >
-typename enable_if
+typename lazy_enable_if
 <
   are_valid_pointer_params< TargetType, SourceType >
-, TargetType
+, assign_result< TargetType, SourceType >
 >
 ::type
 assign( TargetType volatile& destination, SourceType const& new_value )
 {
-  return static_cast< TargetType >
+  return make_interlocked_result< assign_operation, old_value >
          (
-           BOOST_INTERLOCKED_EXCHANGE_POINTER
-           ( &destination
-           , reinterpret_cast< void* >( new_value )
+           static_cast< TargetType >
+           (
+             BOOST_INTERLOCKED_EXCHANGE_POINTER
+             ( &destination
+             , reinterpret_cast< void* >( new_value )
+             )
            )
+         , new_value
          );
 }
 
 template< typename TargetType, typename SourceType >
-typename enable_if
+typename lazy_enable_if
 <
   are_valid_bool_params< TargetType, SourceType >
-, TargetType
+, assign_result< TargetType, SourceType >
 >
 ::type
 assign( TargetType volatile& destination, SourceType const& new_value )
 {
-  return    assign
-            ( interlocked_bool_internal_value( destination )
-            , detail::convert_interlocked_bool_operand_to_bool< TargetType >
-                ( new_value )
-            )
-         != 0;
+  return make_interlocked_result< assign_operation, old_value >
+         (
+           static_cast< TargetType >
+           (
+                assign
+                ( interlocked_bool_internal_value( destination )
+                , detail::convert_interlocked_bool_operand_to_bool< TargetType >
+                    ( new_value )
+                )
+                .old_value()
+             != 0
+           )
+         , new_value
+         );
 }
 
 #if WINVER >= 0x0600
 
 template< typename TargetType, typename SourceType >
-typename enable_if
+typename lazy_enable_if
 <
   are_valid_arithmetic64_params< TargetType, SourceType >
-, Type
+, assign_result< TargetType, SourceType >
 >
 ::type
 assign( TargetType volatile& destination, SourceType const& new_value )
 {
-  return static_cast< TargetType >
+  return make_interlocked_result< assign_operation, old_value >
          (
-           InterlockedExchange64
-           ( &reinterpret_cast< LONGLONG volatile& >( destination )
-           , static_cast< LONGLONG >( new_value )
+           static_cast< TargetType >
+           (
+             InterlockedExchange64
+             ( &reinterpret_cast< LONGLONG volatile& >( destination )
+             , static_cast< LONGLONG >( new_value )
+             )
            )
+         , new_value
          );
 }
 
 #endif
 
-}
+} }
 
-} } } }
+} } }
 
 #endif
 

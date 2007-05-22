@@ -1,20 +1,19 @@
-[section Interlocked Object]
+[section Interlocked Type]
 
-An [concept Interlocked Object] is an object which supports thread-safe
+An [concept Interlocked Type] is a type whose instances support thread-safe
 interlocked operations and which are often used in the implementation of
 lock-free code. On systems which support interlocked operations, all non-member
 and pointer types and some arithmetic types may be compliant
-[concept Interlocked Objects] as well as some library-defined or user-defined
+[concept Interlocked Types] as well as some library-defined or user-defined
 types given that they support the required operations. For details on how to
 select and take advantage of such types, see the __interlocked__.
 
-In order to be considered a valid [concept Interlocked Object], given the
+In order to be considered a valid [concept Interlocked Type], given the
 variable definitions below, the following expressions must be well-formed and
 have the indicated effects.
 
-[table Interlocked Object Descriptive Variable Definitions
-[[Variable]       [Definition]                                                 ]
-[[`I`]            [An [concept Interlocked Object] type.]                      ]
+[variablelist Interlocked Type Descriptive Variable Definitions
+[[`I`]            [An [concept Interlocked Type].]                             ]
 [[`IV`]           [`I volatile`.]                                              ]
 [[`C1`]           [A type which is convertible to `IV`.]                       ]
 [[`C2`]           [A type which is convertible to `IV`.]                       ]
@@ -42,7 +41,7 @@ have the indicated effects.
  `interlocked::`.
 ]
 
-[table Interlocked Object Requirements
+[table Interlocked Type Requirements
 [[Expression]                         [Return Type][Pre/Post-Condition]        ]
 [[`I()`]                              []           [Constructs an instance of
                                                     `I` with an unspecified

@@ -7,8 +7,7 @@ In order to be considered a valid [concept PC Queue], given the variable
 definitions below, the following expressions must be well-formed and have the
 indicated effects.
 
-[table PC Queue Descriptive Variable Definitions
-[[Variable]       [Definition]                                                 ]
+[variablelist PC Queue Descriptive Variable Definitions
 [[`Q`]            [A [concept PC Queue] type.]                                 ]
 [[`q`]            [Value of type `q&`.]                                        ]
 [[`V`]            [The type `Q::value_type`.]                                  ]

@@ -41,63 +41,46 @@
         variable definitions below, the following expressions must be well-formed
         and have the indicated effects.
       </p>
-<div class="table">
-<a name="id506884"></a><p class="title"><b>Table 12. PC Queue Descriptive Variable Definitions</b></p>
-<div class="table-contents"><table class="table" summary="PC Queue Descriptive Variable Definitions">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>Variable</th>
-<th>Definition</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code class="code"><span class="identifier">Q</span></code></td>
-<td>A
-            <code class="literal">PC Queue</code> type.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">q</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">q</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">V</span></code></td>
-<td>The
-            type <code class="code"><span class="identifier">Q</span><span class="special">::</span><span class="identifier">value_type</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">v</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">V</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">OV</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">OV</span><span class="special">&gt;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">F</span></code></td>
-<td>An
-            in_place_factory type.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">f</span></code></td>
-<td>A
-            value of type <code class="code"><span class="identifier">F</span></code>.</td>
-</tr>
-</tbody>
-</table></div>
+<div class="variablelist">
+<p class="title"><b>PC Queue Descriptive Variable Definitions</b></p>
+<dl>
+<dt><span class="term"><code class="code"><span class="identifier">Q</span></code></span></dt>
+<dd>
+          A <code class="literal">PC Queue</code> type.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">q</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">q</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">V</span></code></span></dt>
+<dd>
+          The type <code class="code"><span class="identifier">Q</span><span class="special">::</span><span class="identifier">value_type</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">v</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">V</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">OV</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">optional</span><span class="special">&lt;</span><span class="identifier">OV</span><span class="special">&gt;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">F</span></code></span></dt>
+<dd>
+          An in_place_factory type.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">f</span></code></span></dt>
+<dd>
+          A value of type <code class="code"><span class="identifier">F</span></code>.
+        </dd>
+</dl>
 </div>
-<br class="table-break"><a name="boost_act.queue_concepts.pc_queue.expression_requirements"></a><h5>
-<a name="id507120"></a>
+<a name="boost_act.queue_concepts.pc_queue.expression_requirements"></a><h5>
+<a name="id506963"></a>
         <a href="queue_concepts.html#boost_act.queue_concepts.pc_queue.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id507138"></a><p class="title"><b>Table 13. PC Queue Requirements</b></p>
+<a name="id506981"></a><p class="title"><b>Table 7. PC Queue Requirements</b></p>
 <div class="table-contents"><table class="table" summary="PC Queue Requirements">
 <colgroup>
 <col>
@@ -244,64 +227,47 @@
         the variable definitions below, the following expressions must be well-formed
         and have the indicated effects.
       </p>
-<div class="table">
-<a name="id508117"></a><p class="title"><b>Table 14. Queue Policy Descriptive Variable Definitions</b></p>
-<div class="table-contents"><table class="table" summary="Queue Policy Descriptive Variable Definitions">
-<colgroup>
-<col>
-<col>
-</colgroup>
-<thead><tr>
-<th>Variable</th>
-<th>Definition</th>
-</tr></thead>
-<tbody>
-<tr>
-<td><code class="code"><span class="identifier">A</span></code></td>
-<td>A
-            <code class="literal">Queue Policy</code> type.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">a</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">A</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">T</span></code></td>
-<td>The
-            type of objects to be processed.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">t</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">T</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">tc</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">P</span></code></td>
-<td>A
-            unary function object which may take <code class="code"><span class="identifier">t</span></code>
-            as an argument.</td>
-</tr>
-<tr>
-<td><code class="code"><span class="identifier">p</span></code></td>
-<td>Value
-            of type <code class="code"><span class="identifier">P</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.</td>
-</tr>
-</tbody>
-</table></div>
+<div class="variablelist">
+<p class="title"><b>Queue Policy Descriptive Variable Definitions</b></p>
+<dl>
+<dt><span class="term"><code class="code"><span class="identifier">A</span></code></span></dt>
+<dd>
+          A <code class="literal">Queue Policy</code> type.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">a</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">A</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">T</span></code></span></dt>
+<dd>
+          The type of objects to be processed.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">t</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">T</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">tc</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">T</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">P</span></code></span></dt>
+<dd>
+          A unary function object which may take <code class="code"><span class="identifier">t</span></code>
+          as an argument.
+        </dd>
+<dt><span class="term"><code class="code"><span class="identifier">p</span></code></span></dt>
+<dd>
+          Value of type <code class="code"><span class="identifier">P</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+        </dd>
+</dl>
 </div>
-<br class="table-break"><a name="boost_act.queue_concepts.queue_policy.expression_requirements"></a><h5>
-<a name="id508346"></a>
+<a name="boost_act.queue_concepts.queue_policy.expression_requirements"></a><h5>
+<a name="id508161"></a>
         <a href="queue_concepts.html#boost_act.queue_concepts.queue_policy.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id508364"></a><p class="title"><b>Table 15. Queue Policy Requirements</b></p>
+<a name="id508180"></a><p class="title"><b>Table 8. Queue Policy Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Queue Policy Requirements">
 <colgroup>
 <col>

@@ -10,14 +10,13 @@ __interlocked_arithmetic_type__. [concept Interlocked Integer Types] also
 support all operations specified in the C++ standard for integer types. Such
 operations do not imply memory barriers of any kind.
 
-[table Interlocked Arithmetic Type Descriptive Variable Definitions
-[[Variable]       [Definition]                                                 ]
-[[`I`]            [An [concept Interlocked Integral Type] type.]               ]
+[variablelist Interlocked Arithmetic Type Descriptive Variable Definitions
+[[`I`]            [An [concept Interlocked Integral Type].]                    ]
 [[`IV`]           [`I volatile`.]                                              ]
 [[`C1`]           [A type which is convertible to `IV`.]                       ]
 [[`iv`]           [Value of type `I volatile&`.]                               ]
 [[`c1`]           [Value of type `C1 const&`.]                                 ]
-[[`S`]            [An integral or [concept Interlocked Integral] type.]        ]
+[[`S`]            [An integral or [concept Interlocked Integer Type].]         ]
 [[`s`]            [A value of type `S const&`.]                                ]
 ]
 
@@ -108,7 +107,7 @@ operations do not imply memory barriers of any kind.
                                                     with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::xor_assign_acquire( iv, c1 )`]
@@ -117,7 +116,7 @@ operations do not imply memory barriers of any kind.
                                                     with /acquire/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::xor_assign_release( iv, c1 )`]
@@ -126,7 +125,7 @@ operations do not imply memory barriers of any kind.
                                                     with /release/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::lshift_assign( iv, s )`]

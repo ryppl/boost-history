@@ -10,9 +10,8 @@ __interlocked_type__. [concept Interlocked Arithmetic Types] also support
 all operations specified in the C++ standard for arithmetic types. Such
 operations do not imply memory barriers of any kind.
 
-[table Interlocked Arithmetic Type Descriptive Variable Definitions
-[[Variable]       [Definition]                                                 ]
-[[`I`]            [An [concept Interlocked Arithmetic Type] type.]             ]
+[variablelist Interlocked Arithmetic Type Descriptive Variable Definitions
+[[`I`]            [An [concept Interlocked Arithmetic Type].]                  ]
 [[`IV`]           [`I volatile`.]                                              ]
 [[`C1`]           [A type which is convertible to `IV`.]                       ]
 [[`iv`]           [Value of type `I volatile&`.]                               ]
@@ -26,48 +25,48 @@ operations do not imply memory barriers of any kind.
 [[`interlocked::increment( iv )`]     [`I`]        [Increments `iv` with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::increment_acquire( iv )`]
                                       [`I`]        [Increments `iv` with
                                                     /acquire/ memory semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::increment_release( iv )`]
                                       [`I`]        [Increments `iv` with
                                                     /release/ memory semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::decrement( iv )`]     [`I`]        [Decrements `iv` with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::decrement_acquire( iv )`]
                                       [`I`]        [Decrements `iv` with
                                                     /acquire/ memory semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::decrement_release( iv )`]
                                       [`I`]        [Decrements `iv` with
                                                     /release/ memory semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::add_assign( iv, c1 )`][`I`]        [Adds `c1` to `iv` and stores
                                                     the result in `iv` with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::add_assign_acquire( iv, c1 )`]
@@ -75,7 +74,7 @@ operations do not imply memory barriers of any kind.
                                                     the result in `iv` with
                                                     /acquire/ memory semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::add_assign_release( iv, c1 )`]
@@ -83,7 +82,7 @@ operations do not imply memory barriers of any kind.
                                                     the result in `iv` with
                                                     /release/ memory semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::subtract_assign( iv, c1 )`]
@@ -92,7 +91,7 @@ operations do not imply memory barriers of any kind.
                                                     with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::subtract_assign_acquire( iv, c1 )`]
@@ -101,7 +100,7 @@ operations do not imply memory barriers of any kind.
                                                     with /acquire/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::subtract_assign_release( iv, c1 )`]
@@ -110,7 +109,7 @@ operations do not imply memory barriers of any kind.
                                                     with /release/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::multiply_assign( iv, c1 )`][`I`]   [Multiplies `iv` by `c1` and
@@ -118,7 +117,7 @@ operations do not imply memory barriers of any kind.
                                                     with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::multiply_assign_acquire( iv, c1 )`]
@@ -127,7 +126,7 @@ operations do not imply memory barriers of any kind.
                                                     with /acquire/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::multiply_assign_release( iv, c1 )`]
@@ -136,7 +135,7 @@ operations do not imply memory barriers of any kind.
                                                     with /release/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::divide_assign( iv, c1 )`][`I`]     [Divides `iv` by `c1` and
@@ -144,7 +143,7 @@ operations do not imply memory barriers of any kind.
                                                     with a
                                                     /full memory barrier/.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::divide_assign_acquire( iv, c1 )`]
@@ -153,7 +152,7 @@ operations do not imply memory barriers of any kind.
                                                     with /acquire/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 [[`interlocked::divide_assign_release( iv, c1 )`]
@@ -162,7 +161,7 @@ operations do not imply memory barriers of any kind.
                                                     with /release/ memory
                                                     semantics.
                                                     Returns the value of `iv`
-                                                    after the operation is
+                                                    before the operation is
                                                     performed.
                                                    ]                           ]
 ]
