@@ -18,7 +18,6 @@ file(MAKE_DIRECTORY ${NOTES_DIR})
 
 # put various stuff into build notes
 exec_program(uname ARGS -a > ${NOTES_DIR}/uname.txt OUTPUT_VARIABLE NOWHERE)
-exec_program(/usr/bin/env ARGS > ${NOTES_DIR}/env.txt OUTPUT_VARIABLE NOWHERE)
 exec_program(${CMAKE_CXX_COMPILER} --version > ${NOTES_DIR}/compiler-version.txt OUTPUT_VARIABLE NOWHERE)
 
 exec_program(svn ARGS info ${CMAKE_SOURCE_DIR} | grep Revision | cut -c 11- OUTPUT_VARIABLE SVN_REVISION)
