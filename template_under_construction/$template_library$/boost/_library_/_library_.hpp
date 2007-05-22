@@ -1,33 +1,39 @@
-_cpp_copyright_
+// Copyright 2007 Stjepan Rajko.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)_cpp_copyright_
 
-#ifndef BOOST__LIBRARY___LIBRARY__HPP
-#define BOOST__LIBRARY___LIBRARY__HPP
+$template_start$
+$template_cpp_copyright$
+
+#ifndef BOOST_$TEMPLATE_LIBRARY$_$TEMPLATE_LIBRARY$_HPP
+#define BOOST_$TEMPLATE_LIBRARY$_$TEMPLATE_LIBRARY$_HPP
 
 namespace boost {
-namespace _library_ {
+namespace $template_library$ {
 
-/// The _library_ class does nothing.
+/// The $template_library$ class does nothing.
 /** \ingroup group_nothing
-    \param T The type on which _library_ does nothing.
+    \param T The type on which $template_library$ does nothing.
     \warning This class does nothing.
     \todo Make this class do something.
     \bug This class does do something.
 
-    Since _library_ does nothing, it is not very useful.
+    Since $template_library$ does nothing, it is not very useful.
 */
 template<typename T
 #ifndef DOXYGEN_DOCS_ONLY
     , typename Enable=void // maybe documentation doesn't need to know about this.
 #endif
 >
-class _library_
+class $template_library$
 {
 public:
     /// Default constructor.
     /** This constructor actually does something.  It sets the internal
         counters to 0.
     */
-    _library_() : nothing_count(0), call_count(0) {}
+    $template_library$() : nothing_count(0), call_count(0) {}
 
     /// This function does nothing with the passed parameter.
     void nothing(T t)
@@ -71,8 +77,8 @@ private:
     int call_count;
 };
 
-} // namespace _library_
+} // namespace $template_library$
 } // namespace boost
 
-#endif // BOOST__LIBRARY___LIBRARY__HPP
+#endif // BOOST_$TEMPLATE_LIBRARY$_$TEMPLATE_LIBRARY$_HPP
 

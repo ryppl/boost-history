@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="build"
-	ProjectGUID="{_msvc_build_uuid_}"
+	ProjectGUID="{$template_msvc_build_uuid$}"
 	>
 	<Platforms>
 		<Platform
@@ -21,7 +21,7 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-_msvc_build_command_
+$template_msvc_build_command$
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -39,7 +39,7 @@ _msvc_build_command_
 			>
 			<Tool
 				Name="VCNMakeTool"
-_msvc_build_command_
+$template_msvc_build_command$
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -57,15 +57,15 @@ _msvc_build_command_
 			Name="boost"
 			>
 			<Filter
-				Name="_library_"
+				Name="$template_library$"
 				>
 				<File
-					RelativePath="..\..\..\boost\_library_\_library_.hpp"
+					RelativePath="..\..\..\boost\$template_library$\$template_library$.hpp"
 					>
 				</File>
 			</Filter>
 			<File
-				RelativePath="..\..\..\boost\_library_.hpp"
+				RelativePath="..\..\..\boost\$template_library$.hpp"
 				>
 			</File>
 		</Filter>

@@ -1,6 +1,12 @@
-_python_copyright_
+# Copyright 2007 Stjepan Rajko.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
 
-project boost/_library_/doc ;
+$template_start$
+$template_python_copyright$
+
+project boost/$template_library$/doc ;
 
 import boostbook : boostbook ;
 using quickbook ;
@@ -8,9 +14,9 @@ using quickbook ;
 local loc = [ path.native [ path.pwd ] ] ;
 local root = [ path.native [ path.join [ path.pwd ] ../../.. ] ] ;
 
-doxygen _library__doxygen
+doxygen $template_library$_doxygen
    :
-      [ glob ../../../boost/_library_/*.hpp dox/*.hpp ]
+      [ glob ../../../boost/$template_library$/*.hpp dox/*.hpp ]
    :
         <doxygen:param>EXAMPLE_PATH=../example
         <doxygen:param>STRIP_FROM_PATH=$(root)
@@ -29,10 +35,10 @@ doxygen _library__doxygen
         <doxygen:param>PREDEFINED=DOXYGEN_DOCS_ONLY
    ;
 
-xml _library__xml : _library_.qbk ;
+xml $template_library$_xml : $template_library$.qbk ;
 
 boostbook standalone
    :
-      _library__xml
-      _library__doxygen
+      $template_library$_xml
+      $template_library$_doxygen
    ;

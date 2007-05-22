@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="test"
-	ProjectGUID="{_msvc_test_uuid_}"
+	ProjectGUID="{$template_msvc_test_uuid$}"
 	RootNamespace="test"
 	Keyword="MakeFileProj"
 	>
@@ -23,7 +23,7 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-_msvc_build_command_
+$template_msvc_build_command$
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""
@@ -41,7 +41,7 @@ _msvc_build_command_
 			>
 			<Tool
 				Name="VCNMakeTool"
-_msvc_build_command_
+$template_msvc_build_command$
 				Output=""
 				PreprocessorDefinitions=""
 				IncludeSearchPath=""

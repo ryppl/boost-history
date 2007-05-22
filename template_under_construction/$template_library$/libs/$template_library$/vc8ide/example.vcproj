@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="doc"
-	ProjectGUID="{_msvc_doc_uuid_}"
-	RootNamespace="doc"
+	Name="example"
+	ProjectGUID="{$template_msvc_example_uuid$}"
+	RootNamespace="example"
 	Keyword="MakeFileProj"
 	>
 	<Platforms>
@@ -16,6 +16,24 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
+			Name="debug|Win32"
+			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
+			IntermediateDirectory="$(OutDir)"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+$template_msvc_build_command$
+				Output="$(OutDir)\example.exe"
+				PreprocessorDefinitions=""
+				IncludeSearchPath="../example"
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
 			Name="release|Win32"
 			OutputDirectory="..\..\..\bin.v2\libs\$(SolutionName)\$(ProjectName)\msvc-8.0\$(ConfigurationName)\threading-multi"
 			IntermediateDirectory="$(OutDir)"
@@ -23,9 +41,9 @@
 			>
 			<Tool
 				Name="VCNMakeTool"
-_msvc_build_command_
-				Output=""
-				PreprocessorDefinitions="WIN32;NDEBUG"
+$template_msvc_build_command$
+				Output="$(OutDir)\example.exe"
+				PreprocessorDefinitions=""
 				IncludeSearchPath=""
 				ForcedIncludes=""
 				AssemblySearchPath=""
@@ -41,16 +59,12 @@ _msvc_build_command_
 			Name="Source Files"
 			>
 			<File
-				RelativePath="..\doc\dox\_library_.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\doc\_library_.qbk"
+				RelativePath="..\example\example.cpp"
 				>
 			</File>
 		</Filter>
 		<File
-			RelativePath="..\doc\Jamfile.v2"
+			RelativePath="..\example\Jamfile.v2"
 			>
 		</File>
 	</Files>
