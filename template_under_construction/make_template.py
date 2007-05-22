@@ -43,17 +43,19 @@ _msvc_build_command = """\t\t\t\tBuildCommandLine="cd ../$(ProjectName)&#x0D;&#x
 """
 
 author_list = raw_input('library author[s]: (e.g., Yours Truly[,Yours D. NotTruly]): ')
-author_reversed = ''
+author_reversed = list()
 for name in author_list.rsplit(','):
-    first_last = name.rsplit(" ",2)
-    author_reversed += '[' + first_last[1] + ', ' + first_last[0] + ']'    
+    first_space_last = name.rpartition(" ")
+    author_reversed.append('[' + first_space_last[2] + ', ' + first_space_last[0] + ']')
 
+authors, comma, last_author = author_list.rpartition(",")
+author_list = (authors + " and " + last_author).replace(',', ', ')
 file_replacements = FileReplacements(['.hpp', '.cpp', '.v2', '.jam', '.qbk', '.vcproj', '.sln'])
 file_replacements.extend([boost_library, Library, LIBRARY, library])
 file_replacements.append(Replacement ('_python_copyright_', _copyright.replace('_COMMENT_','# ')))
 file_replacements.append(Replacement ('_cpp_copyright_', _copyright.replace('_COMMENT_','// ')))
 file_replacements.append(Replacement ('_qbk_copyright_', (_copyright.replace('_COMMENT_','')).replace('http://www.boost.org/LICENSE_1_0.txt','[@http://www.boost.org/LICENSE_1_0.txt]')))
-file_replacements.append(Replacement('_author_reversed_', author_reversed))
+file_replacements.append(Replacement('_author_reversed_', ','.join(author_reversed)))
 file_replacements.append(Replacement('_author_', author_list))
 file_replacements.append(Replacement('_year_', str(time.localtime().tm_year)))
 file_replacements.append(Replacement('_msvc_build_uuid_', str(uuid.uuid4())))
@@ -62,26 +64,40 @@ file_replacements.append(Replacement('_msvc_example_uuid_', str(uuid.uuid4())))
 file_replacements.append(Replacement('_msvc_test_uuid_', str(uuid.uuid4())))
 file_replacements.append(Replacement('_msvc_build_command_', _msvc_build_command))
 
+if os.path.exists(library.value):
+    print 'Directory ' + library.value + ' already exists.'
+    do_erase = raw_input('Erase it (please make sure you want to erase the entire directory tree rooted at ' + library.value + ')? [y/n] ')
+    if do_erase.lower().startswith('y'):
+        print 'Erasing...'
+        for root, dirs, files in os.walk(library.value, topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+        os.rmdir(library.value)
+
 os.mkdir(library.value)
-    
+
 for root, dirs, files in os.walk(library.template):
     new_root = library.replace(root)
-    print (new_root)
-    for name in dirs:
-        new_name = library.replace(name)
-        os.mkdir(os.path.join(new_root,new_name))
+    if os.path.exists(new_root):
+        print (new_root)
+        for name in dirs:
+            if not name.startswith("."):
+                new_name = library.replace(name)
+                os.mkdir(os.path.join(new_root,new_name))
 
-    for name in files:
-        new_name = library.replace(name)
-        if (file_replacements.process(name)):
-            fin = open(os.path.join(root, name), "r")
-            contents = fin.read()
-            fin.close()
+        for name in files:
+            new_name = library.replace(name)
+            if (file_replacements.process(name)):
+                fin = open(os.path.join(root, name), "r")
+                contents = fin.read()
+                fin.close()
 
-            contents = file_replacements.replace(contents)
+                contents = file_replacements.replace(contents)
 
-            fout = open(os.path.join(new_root, new_name), "w")
-            fout.write(contents)
-            fout.close()
-        else:
-            shutil.copy(os.path.join(root, name), os.path.join(new_root, new_name))
+                fout = open(os.path.join(new_root, new_name), "w")
+                fout.write(contents)
+                fout.close()
+            else:
+                shutil.copy(os.path.join(root, name), os.path.join(new_root, new_name))
