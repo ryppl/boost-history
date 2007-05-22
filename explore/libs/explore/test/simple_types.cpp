@@ -11,11 +11,13 @@
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include <boost/lexical_cast.hpp>
 #include "../../../boost/explore/explore.hpp"
 
 BOOST_AUTO_TEST_CASE( int_test )
 {
+
 	std::stringstream str_out;
 	int i = 123;
 	
@@ -40,7 +42,7 @@ BOOST_AUTO_TEST_CASE( float_test )
 	std::stringstream str_out;
 	float f = 1.234f;
 	
-	explore::print(f, str_out);
+    str_out << std::setprecision( 4) << explore::container_format() % f;
 	BOOST_CHECK_EQUAL(str_out.str(), "1.234");
 	
 	BOOST_CHECK_MESSAGE(false, "Test min precision");
@@ -52,8 +54,8 @@ BOOST_AUTO_TEST_CASE( double_test )
 	std::stringstream str_out;
 	double d = 1.2341234f;
 	
-	explore::print(d, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "1.2341234");
+    str_out << std::setprecision(7) <<  explore::container_format() % d;
+	BOOST_CHECK_EQUAL(str_out.str(), "1.234123");
 	
 	BOOST_CHECK_MESSAGE(false, "Test min precision");
 	BOOST_CHECK_MESSAGE(false, "Test max precision");
@@ -64,7 +66,7 @@ BOOST_AUTO_TEST_CASE( bool_test )
 	std::stringstream str_out;
 	bool b  = true;
 	
-	explore::print(b, str_out);
+    str_out << std::boolalpha << explore::container_format() %b;
 	BOOST_CHECK_EQUAL(str_out.str(), "true");
 	
 	str_out.str("");
