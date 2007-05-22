@@ -1,5 +1,4 @@
 boost_library_project(
-  Program_Options
-  SRCDIRS src
+  Property_Map
   TESTDIRS test
   )

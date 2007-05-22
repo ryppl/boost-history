@@ -79,10 +79,8 @@ macro(boost_test_run testname)
     add_executable(${testname} ${BOOST_TEST_SOURCES})
     set_target_properties(${testname}
       PROPERTIES
-      OUTPUT_NAME ${PROJECT_NAME}/${testname})
-    set_source_files_properties(${BOOST_TEST_SOURCES}
       COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
-      )
+      OUTPUT_NAME ${PROJECT_NAME}/${testname})
     target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
     target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
     foreach(_depend ${BOOST_TEST_DEPENDS})
@@ -103,10 +101,12 @@ macro(boost_test_run_fail testname)
   boost_test_parse_args(${testname} ${ARGN})
   if(BOOST_TEST_OKAY)
     add_executable(${testname} ${BOOST_TEST_SOURCES})
-
-    if (BOOST_TEST_DEPENDS)
-      target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
-    endif(BOOST_TEST_DEPENDS)
+    set_target_properties(${testname}
+      PROPERTIES
+      COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
+      OUTPUT_NAME ${PROJECT_NAME}/${testname})
+    target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
+    target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
 
     add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname})
     set_tests_properties("${PROJECT_NAME}::${testname}" PROPERTIES WILL_FAIL TRUE)

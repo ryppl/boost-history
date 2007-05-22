@@ -23,3 +23,9 @@
 - In libs/numeric/interval/test, how to detect OSF and HP's C++ compiler?
 
 - In libs/parameter/test, fix the test that depends on Python
+
+- Everything for the Python library
+
+- Testing for the Regex library
+
+

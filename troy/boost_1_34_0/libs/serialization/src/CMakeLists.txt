@@ -50,7 +50,8 @@ boost_library(boost_serialization
 option(BUILD_BOOST_WSERIALIZATION "Build wide-char boost serialization libs" ON)
 if (BUILD_BOOST_WSERIALIZATION)
   boost_library(boost_wserialization
-    ${SOURCES} ${WSOURCES}
+    ${WSOURCES}
     SHARED_COMPILE_FLAGS -DBOOST_SERIALIZATION_DYN_LINK=1
+      -DBOOST_WSERIALIZATION_DYN_LINK=1
     )
 endif(BUILD_BOOST_WSERIALIZATION)
