@@ -37,8 +37,8 @@ have the indicated effects.
  merely a minimum requirement and therefore on certain systems, such operations
  which require /acquire/ memory semantics or /release/ memory semantics may be
  implemented with a /full memory barrier/. For brevity, functions and templates
- in the namespace `::boost::act::interlocked` are prefixed simply with
- `interlocked::`.
+ are listed without qualification although they actually exist in in the
+ namespace `::boost::act::interlocked`.
 ]
 
 [table Interlocked Type Requirements
@@ -60,7 +60,7 @@ have the indicated effects.
                                                      barrier of any kind.
                                                     ]
                                                    ]                           ]
-[[`interlocked::assign( iv, c1 )`]    [`assign_result<IV>::type`]
+[[`assign( iv, c1 )`]    [`assign_result<IV>::type`]
                                                    [Stores the value of `c1`
                                                     to object `iv` with a
                                                     /full memory barrier/.
@@ -68,7 +68,7 @@ have the indicated effects.
                                                     prior to the operation being
                                                     performed.
                                                    ]                           ]
-[[`interlocked::assign_acquire( iv, c1 )`]
+[[`assign_acquire( iv, c1 )`]
                                       [`assign_result<IV>::type`]
                                                    [Stores the value of `c1`
                                                     to object `iv` with
@@ -77,8 +77,8 @@ have the indicated effects.
                                                     prior to the operation being
                                                     performed.
                                                    ]                           ]
-[[`interlocked::assign_if_was( iv, c1, c2 )`]
-                                      [`assign_result<IV>::type`]
+[[`assign_if_was( iv, c1, c2 )`]
+                                      [`assign_if_was_result<IV>::type`]
                                                    [Stores the value of `c1`
                                                     to object `iv`
                                                     iff `iv == c2` prior to the
@@ -93,8 +93,8 @@ have the indicated effects.
                                                      operation.
                                                     ]
                                                    ]                           ]
-[[`interlocked::assign_if_was_acquire( iv, c1, c2 )`]
-                                      [`assign_result<IV>::type`]
+[[`assign_if_was_acquire( iv, c1, c2 )`]
+                                      [`assign_if_was_result<IV>::type`]
                                                    [Stores the value of `c1`
                                                     to object `iv`
                                                     iff `iv == c2` prior to the
@@ -104,8 +104,8 @@ have the indicated effects.
                                                     prior to the operation being
                                                     performed.
                                                    ]                           ]
-[[`interlocked::assign_if_was_release( iv, c1, c2 )`]
-                                      [`assign_result<IV>::type`]
+[[`assign_if_was_release( iv, c1, c2 )`]
+                                      [`assign_if_was_result<IV>::type`]
                                                    [Stores the value of `c1`
                                                     to object `iv`
                                                     iff `iv == c2` prior to the
@@ -115,7 +115,7 @@ have the indicated effects.
                                                     prior to the operation being
                                                     performed.
                                                    ]                           ]
-[[`interlocked::safe_get( iv )`]  [`I`]            [Returns the value of `iv`.
+[[`safe_get( iv )`]  [`I`]            [Returns the value of `iv`.
                                                     [tablenote This template is
                                                      used for retrieving the
                                                      value of an object with the

@@ -115,15 +115,15 @@
             operations which require <span class="emphasis"><em>acquire</em></span> memory semantics
             or <span class="emphasis"><em>release</em></span> memory semantics may be implemented with
             a <span class="emphasis"><em>full memory barrier</em></span>. For brevity, functions and
-            templates in the namespace <code class="code"><span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">interlocked</span></code> are prefixed simply with
-            <code class="code"><span class="identifier">interlocked</span><span class="special">::</span></code>.
+            templates are listed without qualification although they actually exist
+            in in the namespace <code class="code"><span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">interlocked</span></code>.
           </p>
 <p>
         </p>
 </td></tr>
 </table></div>
 <div class="table">
-<a name="id487752"></a><p class="title"><b>Table 4. Interlocked Type Requirements</b></p>
+<a name="id487739"></a><p class="title"><b>Table 4. Interlocked Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Type Requirements">
 <colgroup>
 <col>
@@ -209,7 +209,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
@@ -230,7 +230,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">assign_acquire</span><span class="special">(</span>
+              <code class="code"><span class="identifier">assign_acquire</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
@@ -253,7 +253,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">assign_if_was</span><span class="special">(</span>
+              <code class="code"><span class="identifier">assign_if_was</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span><span class="special">,</span>
               <span class="identifier">c2</span> <span class="special">)</span></code>
@@ -261,7 +261,7 @@
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">assign_if_was_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -277,15 +277,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">assign_if_was_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span><span class="special">,</span>
-              <span class="identifier">c2</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">assign_if_was_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">assign_if_was_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -300,15 +297,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">assign_if_was_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span><span class="special">,</span>
-              <span class="identifier">c2</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">assign_if_was_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span><span class="special">,</span> <span class="identifier">c2</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">assign_if_was_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -323,7 +317,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">safe_get</span><span class="special">(</span>
+              <code class="code"><span class="identifier">safe_get</span><span class="special">(</span>
               <span class="identifier">iv</span> <span class="special">)</span></code>
             </p>
             </td>
@@ -394,12 +388,12 @@
 </dl>
 </div>
 <a name="boost_act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements"></a><h5>
-<a name="id503205"></a>
+<a name="id503132"></a>
         <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id503224"></a><p class="title"><b>Table 5. Interlocked Arithmetic Type Requirements</b></p>
+<a name="id503151"></a><p class="title"><b>Table 5. Interlocked Arithmetic Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Requirements">
 <colgroup>
 <col>
@@ -427,7 +421,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">increment</span><span class="special">(</span>
+              <code class="code"><span class="identifier">increment</span><span class="special">(</span>
               <span class="identifier">iv</span> <span class="special">)</span></code>
             </p>
             </td>
@@ -446,7 +440,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">increment_acquire</span><span class="special">(</span>
+              <code class="code"><span class="identifier">increment_acquire</span><span class="special">(</span>
               <span class="identifier">iv</span> <span class="special">)</span></code>
             </p>
             </td>
@@ -467,7 +461,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">increment_release</span><span class="special">(</span>
+              <code class="code"><span class="identifier">increment_release</span><span class="special">(</span>
               <span class="identifier">iv</span> <span class="special">)</span></code>
             </p>
             </td>
@@ -488,7 +482,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">decrement</span><span class="special">(</span>
+              <code class="code"><span class="identifier">decrement</span><span class="special">(</span>
               <span class="identifier">iv</span> <span class="special">)</span></code>
             </p>
             </td>
@@ -507,7 +501,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">decrement_acquire</span><span class="special">(</span>
+              <code class="code"><span class="identifier">decrement_acquire</span><span class="special">(</span>
               <span class="identifier">iv</span> <span class="special">)</span></code>
             </p>
             </td>
@@ -528,7 +522,7 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">decrement_release</span><span class="special">(</span>
+              <code class="code"><span class="identifier">decrement_release</span><span class="special">(</span>
               <span class="identifier">iv</span> <span class="special">)</span></code>
             </p>
             </td>
@@ -549,14 +543,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">add_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">add_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">add_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">add_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -570,14 +564,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">add_assign_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">add_assign_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">add_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">add_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -591,14 +583,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">add_assign_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">add_assign_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">add_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">add_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -612,14 +602,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">subtract_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">subtract_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">subtract_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">subtract_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -635,14 +625,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">subtract_assign_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">subtract_assign_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">subtract_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">subtract_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -658,14 +646,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">subtract_assign_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">subtract_assign_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">subtract_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">subtract_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -681,14 +667,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">multiply_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">multiply_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">multiply_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">multiply_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -702,14 +688,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">multiply_assign_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">multiply_assign_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">multiply_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">multiply_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -723,14 +707,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">multiply_assign_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">multiply_assign_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">multiply_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">multiply_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -744,14 +726,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">divide_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">divide_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">divide_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">divide_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -765,14 +747,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">divide_assign_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">divide_assign_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">divide_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">divide_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -786,14 +766,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">divide_assign_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">divide_assign_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">divide_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">divide_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -863,12 +841,12 @@
 </dl>
 </div>
 <a name="boost_act.interlocked_concepts.interlocked_integer_type.expression_requirements"></a><h5>
-<a name="id505964"></a>
+<a name="id505592"></a>
         <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_integer_type.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id505983"></a><p class="title"><b>Table 6. Interlocked Arithmetic Type Requirements</b></p>
+<a name="id505611"></a><p class="title"><b>Table 6. Interlocked Arithmetic Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Requirements">
 <colgroup>
 <col>
@@ -896,14 +874,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">mod_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">mod_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">mod_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">mod_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -917,14 +895,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">mod_assign_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">mod_assign_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">mod_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">mod_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -938,14 +914,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">mod_assign_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">mod_assign_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">mod_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">mod_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -959,14 +933,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">and_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">and_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">and_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">and_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -980,14 +954,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">and_assign_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">and_assign_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">and_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">and_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1001,14 +973,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">and_assign_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">and_assign_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">and_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">and_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1022,14 +992,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">or_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">or_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">or_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">or_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1043,14 +1013,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">or_assign_acquire</span><span class="special">(</span>
+              <code class="code"><span class="identifier">or_assign_acquire</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">or_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">or_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1064,14 +1034,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">or_assign_release</span><span class="special">(</span>
+              <code class="code"><span class="identifier">or_assign_release</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">or_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">or_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1085,14 +1055,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">xor_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">xor_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">xor_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">xor_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1106,14 +1076,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">xor_assign_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">xor_assign_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">xor_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">xor_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1127,14 +1095,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">xor_assign_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">c1</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">xor_assign_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">c1</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">xor_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">xor_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1148,14 +1114,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">lshift_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">lshift_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">s</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">lshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">lshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1171,14 +1137,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">lshift_assign_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">s</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">lshift_assign_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">s</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">lshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">lshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1194,14 +1158,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">lshift_assign_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">s</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">lshift_assign_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">s</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">lshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">lshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1217,14 +1179,14 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">rshift_assign</span><span class="special">(</span>
+              <code class="code"><span class="identifier">rshift_assign</span><span class="special">(</span>
               <span class="identifier">iv</span><span class="special">,</span>
               <span class="identifier">s</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">rshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">rshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1240,14 +1202,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">rshift_assign_acquire</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">s</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">rshift_assign_acquire</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">s</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">rshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">rshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
@@ -1263,14 +1223,12 @@
 <tr>
 <td>
             <p>
-              <code class="code"><span class="identifier">interlocked</span><span class="special">::</span><span class="identifier">rshift_assign_release</span><span class="special">(</span>
-              <span class="identifier">iv</span><span class="special">,</span>
-              <span class="identifier">s</span> <span class="special">)</span></code>
+              <code class="code"><span class="identifier">rshift_assign_release</span><span class="special">(</span> <span class="identifier">iv</span><span class="special">,</span> <span class="identifier">s</span> <span class="special">)</span></code>
             </p>
             </td>
 <td>
             <p>
-              <code class="code"><span class="identifier">rshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">,</span><span class="identifier">C1</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+              <code class="code"><span class="identifier">rshift_assign_result</span><span class="special">&lt;</span><span class="identifier">IV</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
             </p>
             </td>
 <td>
