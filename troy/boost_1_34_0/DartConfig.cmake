@@ -1,9 +1,9 @@
 # while developing, nice to start your nightly builds with the very latest 
 # code
-SET(CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE)
+set(CTEST_START_WITH_EMPTY_BINARY_DIRECTORY TRUE)
 # fixme on windows
-EXECUTE_PROCESS(COMMAND /bin/date "+%H:%M:%S %Z" OUTPUT_VARIABLE CURRENT_TIME)
-SET(NIGHTLY_START_TIME ${CURRENT_TIME})
+execute_process(COMMAND /bin/date "+%H:%M:%S %Z" OUTPUT_VARIABLE CURRENT_TIME)
+set(NIGHTLY_START_TIME ${CURRENT_TIME})
 
 #set(NIGHTLY_START_TIME "23:30:00 EDT")
 
@@ -12,20 +12,25 @@ set(DROP_METHOD "xmlrpc")
 set(DROP_SITE "http://dart.resophonic.com:8081")
 set(DROP_LOCATION "boost_1_34_0")
 
-SET(NOTES_DIR ${CMAKE_BINARY_DIR}/Testing/Notes)
-FILE(MAKE_DIRECTORY ${NOTES_DIR})
+set(NOTES_DIR ${CMAKE_BINARY_DIR}/Testing/Notes)
+file(MAKE_DIRECTORY ${NOTES_DIR})
 
 
 # put various stuff into build notes
-EXEC_PROGRAM(uname ARGS -a > ${NOTES_DIR}/uname.txt OUTPUT_VARIABLE NOWHERE)
-EXEC_PROGRAM(/usr/bin/env ARGS > ${NOTES_DIR}/env.txt OUTPUT_VARIABLE NOWHERE)
-EXEC_PROGRAM(${CMAKE_CXX_COMPILER} --version > ${NOTES_DIR}/compiler-version.txt OUTPUT_VARIABLE NOWHERE)
+exec_program(uname ARGS -a > ${NOTES_DIR}/uname.txt OUTPUT_VARIABLE NOWHERE)
+exec_program(/usr/bin/env ARGS > ${NOTES_DIR}/env.txt OUTPUT_VARIABLE NOWHERE)
+exec_program(${CMAKE_CXX_COMPILER} --version > ${NOTES_DIR}/compiler-version.txt OUTPUT_VARIABLE NOWHERE)
 
-EXEC_PROGRAM(svn ARGS info ${CMAKE_SOURCE_DIR} | grep Revision | cut -c 11- OUTPUT_VARIABLE SVN_REVISION)
+exec_program(svn ARGS info ${CMAKE_SOURCE_DIR} | grep Revision | cut -c 11- OUTPUT_VARIABLE SVN_REVISION)
 
-EXEC_PROGRAM(${CMAKE_C_COMPILER} ARGS -dumpversion OUTPUT_VARIABLE COMPILER_VERSION)
-EXEC_PROGRAM(uname ARGS -s OUTPUT_VARIABLE OSTYPE)
-EXEC_PROGRAM(uname ARGS -r OUTPUT_VARIABLE OSVERSION)
-EXEC_PROGRAM(uname ARGS -p OUTPUT_VARIABLE ARCH)
-SET(BUILDNAME ${OSTYPE}-${OSVERSION}/${ARCH}/gcc-${COMPILER_VERSION})
-MESSAGE(STATUS "Testing is ON.  Build name = '${BUILDNAME}'")
+exec_program(${CMAKE_C_COMPILER} ARGS -dumpversion OUTPUT_VARIABLE COMPILER_VERSION)
+exec_program(uname ARGS -s OUTPUT_VARIABLE OSTYPE)
+exec_program(uname ARGS -r OUTPUT_VARIABLE OSVERSION)
+exec_program(uname ARGS -p OUTPUT_VARIABLE ARCH)
+if(${ARCH} STREQUAL "unknown")
+  exec_program(uname ARGS -m OUTPUT_VARIABLE ARCH)
+endif(${ARCH} STREQUAL "unknown")
+
+
+set(BUILDNAME ${OSTYPE}-${OSVERSION}/${ARCH}/gcc-${COMPILER_VERSION})
+message(STATUS "Testing is ON.  Build name = '${BUILDNAME}'")
