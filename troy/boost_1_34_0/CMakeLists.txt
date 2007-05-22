@@ -8,7 +8,7 @@ project(Boost)
 
 # Boost version
 set(BOOST_VERSION_MAJOR 1)
-set(BOOST_VERSION_MINOR 35)
+set(BOOST_VERSION_MINOR 34)
 set(BOOST_VERSION_SUBMINOR 0)
 set(BOOST_VERSION "${BOOST_VERSION_MAJOR}.${BOOST_VERSION_MINOR}.${BOOST_VERSION_SUBMINOR}")
 
@@ -17,6 +17,14 @@ option(BUILD_STATIC_LIBS "Whether to build static libraries" ON)
 
 # Whether to build shared libraries
 option(BUILD_SHARED_LIBS "Whether to build shared libraries" ON)
+
+# Whether to enable threading
+if(MSVC)
+  set(DEFAULT_ENABLE_THREADING ON)
+elseif(MSVC)
+  set(DEFAULT_ENABLE_THREADING OFF)
+endif(MSVC)
+option(ENABLE_THREADING "Whether to enable threading" ${DEFAULT_ENABLE_THREADING})
 
 # Always include the Boost source directory, so that we can find
 # include files in boost/

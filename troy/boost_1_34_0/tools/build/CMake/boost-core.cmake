@@ -80,7 +80,12 @@ if(USE_VERSIONING)
     set(BOOST_LIBRARY_VERSION_STRING "")
     set(BOOST_LIBRARY_VERSION_STRING_DEBUG "")
   else(NOT BOOST_VERSIONING_TOOLSET_TAG)
-    # TODO: Multithreading tag should go here
+    # Multithreading tag
+    if(ENABLE_THREADING)
+      set(BOOST_LIBRARY_MT_TAG "-mt")
+    elseif(ENABLE_THREADING)
+      set(BOOST_LIBRARY_MT_TAG "")
+    endif(ENABLE_THREADING)
     
     # When determining the ABI tag, we need to differentiate between
     # what comes before the debug tag ('d') and what comes after,
@@ -116,9 +121,9 @@ if(USE_VERSIONING)
     endif(BOOST_VERSION_SUBMINOR GREATER 0)
     
     set(BOOST_LIBRARY_VERSION_STRING
-      "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_VERSIONING_ABI_TAG}-${BOOST_VERSIONING_VERSION}")
+      "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_LIBRARY_MT_TAG}${BOOST_VERSIONING_ABI_TAG}-${BOOST_VERSIONING_VERSION}")
     set(BOOST_LIBRARY_VERSION_STRING_DEBUG
-      "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_VERSIONING_ABI_TAG_DEBUG}-${BOOST_VERSIONING_VERSION}")
+      "${BOOST_VERSIONING_TOOLSET_TAG}${BOOST_LIBRARY_MT_TAG}${BOOST_VERSIONING_ABI_TAG_DEBUG}-${BOOST_VERSIONING_VERSION}")
   endif(NOT BOOST_VERSIONING_TOOLSET_TAG)
 else(USE_VERSIONING)
   set(BOOST_LIBRARY_VERSION_STRING "")
@@ -233,13 +238,19 @@ macro(boost_library)
       set(THIS_LIB_STATIC_TAG "")
     endif(THIS_LIB_STATIC_TAG)
 
+	if(WIN32 AND NOT CYGWIN)
+	  set(LIBPREFIX "lib")
+	else(WIN32 AND NOT CYGWIN)
+	  set(LIBPREFIX "")
+	endif(WIN32 AND NOT CYGWIN)
+	
     add_library("${libname}-static" STATIC ${sources})
     set_target_properties("${libname}-static" 
       # notice that the static ones have -static added to the lib name.
       # this is to accomodate those who insist on linking to the
       # static varieties even when dynamics are available.
       PROPERTIES 
-      OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING}${THIS_LIB_STATIC_TAG}"
+      OUTPUT_NAME "${LIBPREFIX}${libname}${BOOST_LIBRARY_VERSION_STRING}${THIS_LIB_STATIC_TAG}"
       DEBUG_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}${THIS_LIB_STATIC_TAG}"
       RELWITHDEBINFO_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}${THIS_LIB_STATIC_TAG}"
       CLEAN_DIRECT_OUTPUT 1
