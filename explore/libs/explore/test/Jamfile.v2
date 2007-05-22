@@ -20,16 +20,17 @@ project
 {
   test-suite signals
     : 
-  [ run simple_types.cpp  ]
+  [ run simple_types.cpp ]
 
-  [ run std_vector.cpp   ]
-  [ run std_map.cpp   ]
-  [ run std_set.cpp   ]
-  [ run std_pair.cpp   ]
+  [ run std_vector.cpp ]
+  [ run std_map.cpp ]
+  [ run std_set.cpp ]
+  [ run std_pair.cpp ]
   
-  [ run boost_array.cpp   ]
-  [ run boost_any.cpp   ]
-  [ run boost_tuple.cpp   ]
+  [ run boost_array.cpp ]
+  [ run boost_any.cpp ]
+  [ run boost_tuple.cpp ]
+  [ run boost_variant.cpp ]
  ;
 }
       
