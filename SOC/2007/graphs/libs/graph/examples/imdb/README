@@ -1,4 +1,9 @@
 
+Requirements
+============
+I initially built and tested this on a P4 2.8 GHz computer with 1GB of RAM
+so running it wasn't _too_ much of a problem.
+
 File Prepraration
 =================
 Unfortunately, you're on your own for preparing the data for these queies. I
