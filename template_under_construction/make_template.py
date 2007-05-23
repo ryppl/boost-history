@@ -7,7 +7,51 @@ import os
 import time
 import uuid
 import shutil
+import sys
+import getopt
+import re
 
+global template
+
+# The Options class holds user-specified options.
+class Options(object):
+    def __init__(self):
+        self.options = dict()
+        for arg in sys.argv[1:]:
+            option, eq, val = arg.partition('=')
+            self.options[option] = val
+        self.any = re.compile(r'.*\Z')
+        self.boolean = re.compile(r'[yn]\Z')
+        self.alnum = re.compile(r'\w+\Z')
+
+    def verify (self, string, regexp):
+        if not regexp.match(string):
+            raise NameError, string + ' does not match ' + regexp.pattern
+        return string
+
+    def make(self, option, value, regexp):
+        if value==None:
+            value = raw_input(option + ' [ ' + regexp.pattern + ' ]: ')
+        self.options[option] = value
+        return value
+
+    def get(self, option, regexp, default=None):
+        if self.options.has_key(option):
+            # option has already been set
+            return self.verify(self.options[option], regexp)
+        return self.verify(self.make(option, default, regexp), regexp)
+
+    def get_boolean(self, option, default=None):
+        if default != None:
+            if default:
+                default = 'y'
+            else:
+                default = 'n'     
+        value = self.get(option, self.boolean, default)
+        return value=='y'
+
+# The Replacement class models a template replacement,
+# either for file names or file content.
 class Replacement(object):
     def __init__(self, template, value):
         self.template = template
@@ -15,107 +59,201 @@ class Replacement(object):
     def replace(self, string):
         return string.replace(self.template, self.value)
 
-class FileReplacements(list):
-    def __init__(self, extensions):
-        self.process_extensions = extensions
-        
+# Replacements is a collection of Replacement objects.
+class Replacements(list):
     def replace(self, string):
         for item in self:
             string = item.replace(string)
         return string
 
-    def process(self, string):
+# FileSpecificReplacement associates file extensions with a replacement   
+class FileSpecificReplacement(Replacement):
+    def __init__(self, extensions, key, value):
+        Replacement.__init__(self, key, value)
+        self.process_extensions = extensions
+
+    def matches(self, name):
         for item in self.process_extensions:
-            if string.endswith(item):
+            if name.endswith(item):
                 return True
         return False
 
+class FileSpecificReplacements(Replacements):
+    def matches(self, name):
+        for item in self:
+            if item.matches(name):
+                return True
+        return False
 
-library = Replacement('$template_library$', raw_input('library name: (e.g., something_new): '))
-Library = Replacement('$template_Library$', library.value.capitalize())
-LIBRARY = Replacement('$template_LIBRARY$', library.value.upper())
-boost_library = Replacement('$template_Boost_Library$', 'Boost.' + Library.value)
+# ContentReplacements contains both templates for specific file extensions
+# and all processable file extensions.
+class ContentReplacements():
+    def __init__(self):
+        self.general_replacements = Replacements()
+        self.specific_replacements = FileSpecificReplacements()
 
-_copyright = """_COMMENT_Copyright $template_year$ $template_author$.
-_COMMENT_Distributed under the Boost Software License, Version 1.0. (See
-_COMMENT_accompanying file LICENSE_1_0.txt or copy at
-_COMMENT_http://www.boost.org/LICENSE_1_0.txt)
-"""
+    def replace(self, name, content):
+        # check to see if we should process this file
+        if not self.matches(name):
+            return content
+        for item in self.specific_replacements:
+            content = item.replace(content)
+        for item in self.general_replacements:
+            content = item.replace(content)
+        return content
+        
+    def matches(self, name):
+        match = False
+        for item in self.specific_replacements:
+            if item.matches(name):
+                match = True
+                break
+        return match
 
-_msvc_build_command = """\t\t\t\tBuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
-\t\t\t\tReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
-\t\t\t\tCleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
-"""
+# The Template class holds information about a template,
+# such as all of its options and replacements.
+class Template(object):
+    def __init__(self):
+        self.template_dir = ''
+        self.options = Options()
+        self.content_replacements = ContentReplacements()
+        self.name_replacements = Replacements()
 
-author_list = raw_input('library author[s]: (e.g., Yours Truly[,Yours D. NotTruly]): ')
-author_reversed = list()
-for name in author_list.rsplit(','):
-    first_space_last = name.rpartition(" ")
-    author_reversed.append('[' + first_space_last[2] + ', ' + first_space_last[0] + ']')
+    def read_content(self, file_name):
+        fin = open(file_name, "r")
+        content = fin.read()
+        fin.close()
+        return content
 
-authors, comma, last_author = author_list.rpartition(",")
-if len(comma) > 0:
-    author_list = (authors + " and " + last_author).replace(',', ', ')
-else:
-    author_list = last_author
+    def process_content(self, file_name):
+        if not template.content_replacements.matches(name):
+            return None
 
-file_replacements = FileReplacements(['.hpp', '.cpp', '.v2', '.jam', '.qbk', '.vcproj', '.sln'])
-file_replacements.extend([boost_library, Library, LIBRARY, library])
-file_replacements.append(Replacement ('$template_python_copyright$', _copyright.replace('_COMMENT_','# ')))
-file_replacements.append(Replacement ('$template_cpp_copyright$', _copyright.replace('_COMMENT_','// ')))
-file_replacements.append(Replacement ('$template_qbk_copyright$', (_copyright.replace('_COMMENT_','')).replace('http://www.boost.org/LICENSE_1_0.txt','[@http://www.boost.org/LICENSE_1_0.txt]')))
-file_replacements.append(Replacement('$template_author_reversed$', ','.join(author_reversed)))
-file_replacements.append(Replacement('$template_author$', author_list))
-file_replacements.append(Replacement('$template_year$', str(time.localtime().tm_year)))
-file_replacements.append(Replacement('$template_msvc_build_uuid$', str(uuid.uuid4())))
-file_replacements.append(Replacement('$template_msvc_doc_uuid$', str(uuid.uuid4())))
-file_replacements.append(Replacement('$template_msvc_example_uuid$', str(uuid.uuid4())))
-file_replacements.append(Replacement('$template_msvc_test_uuid$', str(uuid.uuid4())))
-file_replacements.append(Replacement('$template_msvc_build_command$', _msvc_build_command))
+        content = self.read_content(file_name)
+        # only take the content from first $template_start$ on,
+        # and convert all line breaks to '\n'
+        discarded, sep, content = content.partition('$template_start$')
+        if len(sep)==0:
+            content = discarded
+        
+        content_lines = content.splitlines()
+        if len(sep) != 0:
+            content_lines.pop(0)
+        content = '\n'.join(content_lines)
+                
+        return self.replace_content(file_name, content)
 
-if os.path.exists(library.value):
-    print 'Directory ' + library.value + ' already exists.'
-    do_erase = raw_input('Erase it (please make sure you want to erase the entire directory tree rooted at ' + library.value + ')? [y/n] ')
+    def log_message(self, string):
+        print '/--------------------'
+        print '| ' + string
+        print '/'
+
+    def name_replacement(self, key, value):
+        self.name_replacements.append(Replacement(key, value))
+
+    def all_content_replacement(self, key, value):                    
+        self.content_replacements.general_replacements.append(Replacement(key, value))
+
+    def content_replacement(self, extensions, key, value):                    
+        self.content_replacements.specific_replacements.append(
+            FileSpecificReplacement(extensions, key, value))
+
+    def replace_name(self, name):
+        return self.name_replacements.replace(name)
+
+    def replace_content(self, name, content):
+        return self.content_replacements.replace(name, content)
+
+    def examine(self, directory):
+        file_list = list()
+        directory_list = list()
+        python_list = list()
+
+        for root, dirs, files in os.walk(directory):
+            print root
+            self.__dirs_clear__ = list()
+
+            for name in files:
+                pathname = (os.path.join(root, name))
+                if name.endswith('.py'):
+                    content = self.read_content(os.path.join(root, name))
+
+                    if content.startswith('# template script'):
+                         execfile(pathname)
+                    elif content.startswith('# template module'):
+                        module_name,py,nothing = name.rpartition('.py')
+                        sys.path.insert(os.path.abspath(root), 0)
+                        mod = __import__(module_name, globals(),  locals(), [], -1)
+                        sys.path.remove(os.path.abspath(root))
+                        mod.do_smt()
+                    elif content.startswith('# template file'):
+                        python_list.append(pathname)
+                    else:
+                        file_list.append(pathname)
+                else:
+                    file_list.append(pathname)
+
+            for name in dirs:
+                if name.startswith('.'):
+                    self.ignore_subdirectory(name)
+            for name in self.__dirs_clear__:
+                dirs.remove(name)
+            for name in dirs:
+                directory_list.append( (os.path.join(root, name)) )
+
+        return directory_list, file_list, python_list
+
+    def ignore_subdirectory(self, name):
+        self.__dirs_clear__.append(name)            
+
+    
+# The main processing script.
+
+# template is a global variable accessible by template scripts.
+template = Template()
+
+# We first read a template script file and run it.
+template_file = template.options.get("template", template.options.any)
+template.log_message('Executing template file ' + template_file + '...')
+execfile(template_file)
+
+# We then traverse the template tree and prepare a list of
+# directories and files to be created, and process any found template
+# scripts.
+template.log_message('Examining the template project tree...')
+
+directory_list, file_list, python_list = template.examine(template_dir)
+
+project_dir = template.replace_name(template_dir)
+
+if os.path.exists(project_dir):
+    print 'Directory ' + project_dir + ' already exists.'
+    do_erase = raw_input('Erase it (please make sure you want to erase the entire directory tree rooted at ' + project_dir + ')? [y/n] ')
     if do_erase.lower().startswith('y'):
-        print 'Erasing...'
-        for root, dirs, files in os.walk(library.value, topdown=False):
+        template.log_message('Erasing...')
+        for root, dirs, files in os.walk(project_dir, topdown=False):
             for name in files:
                 os.remove(os.path.join(root, name))
             for name in dirs:
                 os.rmdir(os.path.join(root, name))
-        os.rmdir(library.value)
+        os.rmdir(project_dir)
 
-os.mkdir(library.value)
+template.log_message('Creating file tree from template...')
 
-for root, dirs, files in os.walk(library.template):
-    new_root = library.replace(root)
-    if os.path.exists(new_root):
-        print (new_root)
-        for name in dirs:
-            if not name.startswith("."):
-                new_name = library.replace(name)
-                os.mkdir(os.path.join(new_root,new_name))
+os.mkdir(project_dir)
 
-        for name in files:
-            new_name = library.replace(name)
-            if (file_replacements.process(name)):
-                fin = open(os.path.join(root, name), "r")
-                
-                contents = fin.read()
-                fin.close()
+for name in directory_list:
+    new_name = template.replace_name(name)
+    print new_name
+    os.mkdir(new_name)
 
-                # only take the content from last $template_start$ on,
-                # and convert all line breaks to '\n'
-                discarded, sep, contents = contents.rpartition('$template_start$')
-                content_lines = contents.splitlines()
-                if len(sep) != 0:
-                    content_lines.pop(0)
-                contents = '\n'.join(content_lines)
-                
-                contents = file_replacements.replace(contents)
+for name in file_list:
+    new_name = template.replace_name(name)
+    content = template.process_content(name)
+    if content:
+        fout = open(new_name, "w")
+        fout.write(content)
+        fout.close()
 
-                fout = open(os.path.join(new_root, new_name), "w")
-                fout.write(contents)
-                fout.close()
-            else:
-                shutil.copy(os.path.join(root, name), os.path.join(new_root, new_name))
+    else:
+        shutil.copy(name, new_name)
