@@ -1,10 +1,21 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+//  VC++ 8.0 warns on usage of certain Standard Library and API functions that
+//  can be cause buffer overruns or other possible security issues if misused.
+//  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
+//  But the wording of the warning is misleading and unsettling, there are no
+//  portable alternative functions, and VC++ 8.0's own libraries use the
+//  functions in question. So turn off the warnings.
+#define _CRT_SECURE_NO_DEPRECATE
+#define _SCL_SECURE_NO_DEPRECATE
+
+#include <boost/config.hpp>
 
 #define BOOST_BIMAP_DISABLE_SERIALIZATION
 
@@ -16,9 +27,6 @@
 #include <map>
 #include <string>
 #include <functional>
-
-// Boost
-#include <boost/assign/list_of.hpp>
 
 // Set type specifications
 #include <boost/bimap/set_of.hpp>
@@ -34,12 +42,7 @@ struct right_tag {};
 
 void test_bimap()
 {
-    using namespace boost::bimap;
-
-    typedef std::pair<int,double> std_pair;
-    std::set< std_pair > data =
-        boost::assign::list_of< std_pair >
-        (1,0.1) (2,0.2) (3,0.3) (4,0.4);
+    using namespace boost::bimaps;
 
     typedef std::map<int,double> left_data_type;
     left_data_type left_data;
@@ -58,34 +61,57 @@ void test_bimap()
 
     //--------------------------------------------------------------------
     {
-        bimap< int, double > b;
+        typedef bimap< int, double > bm_type;
 
-        test_set_set_bimap(b,data,left_data,right_data);
+        std::set< bm_type::value_type > data;
+        data.insert( bm_type::value_type(1,0.1) );
+        data.insert( bm_type::value_type(2,0.2) );
+        data.insert( bm_type::value_type(3,0.3) );
+        data.insert( bm_type::value_type(4,0.4) );
+
+        bm_type bm;
+        test_set_set_bimap(bm,data,left_data,right_data);
     }
     //--------------------------------------------------------------------
 
 
     //--------------------------------------------------------------------
     {
-        bimap
+        typedef bimap
         <
             tagged< multiset_of<int>   , left_tag  >,
             tagged< multiset_of<double>, right_tag >,
             multiset_of_relation< std::less< _relation > >
 
-        > b;
+        > bm_type;
 
-        test_multiset_multiset_bimap(b,data,left_data,right_data);
-        test_tagged_bimap<left_tag,right_tag>(b,data);
+        std::set< bm_type::value_type > data;
+        data.insert( bm_type::value_type(1,0.1) );
+        data.insert( bm_type::value_type(2,0.2) );
+        data.insert( bm_type::value_type(3,0.3) );
+        data.insert( bm_type::value_type(4,0.4) );
+
+        bm_type bm;
+
+        test_multiset_multiset_bimap(bm,data,left_data,right_data);
+        test_tagged_bimap<left_tag,right_tag>(bm,data);
     }
     //--------------------------------------------------------------------
 
 
     //--------------------------------------------------------------------
     {
-        bimap<int,double,right_based> b;
+        typedef bimap<int,double,right_based> bm_type;
 
-        test_set_set_bimap(b,data,left_data,right_data);
+        std::set< bm_type::value_type > data;
+        data.insert( bm_type::value_type(1,0.1) );
+        data.insert( bm_type::value_type(2,0.2) );
+        data.insert( bm_type::value_type(3,0.3) );
+        data.insert( bm_type::value_type(4,0.4) );
+
+        bm_type bm;
+
+        test_set_set_bimap(bm,data,left_data,right_data);
     }
     //--------------------------------------------------------------------
 
@@ -100,7 +126,10 @@ void test_bimap()
         > bimap_type;
 
         bimap_type b1;
-        bimap_type b2;
+
+        b1.insert( bimap_type::value_type(1,"one") );
+
+        bimap_type b2( b1 );
 
         BOOST_CHECK(     b1 == b2   );
         BOOST_CHECK( ! ( b1 != b2 ) );
@@ -109,13 +138,17 @@ void test_bimap()
         BOOST_CHECK( ! ( b1 <  b2 ) );
         BOOST_CHECK( ! ( b1 >  b2 ) );
 
-        b1.insert( bimap_type::relation(1,"one") );
+        b1.insert( bimap_type::value_type(2,"two") );
 
         b2 = b1;
         BOOST_CHECK( b2 == b1 );
 
+        b1.insert( bimap_type::value_type(3,"three") );
+
         b2.left = b1.left;
         BOOST_CHECK( b2 == b1 );
+
+        b1.insert( bimap_type::value_type(4,"four") );
 
         b2.right = b1.right;
         BOOST_CHECK( b2 == b1 );

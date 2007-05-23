@@ -2,7 +2,7 @@
 
 Boost.Bimap
 
-Copyright (c) 2006 Matias Capeletto
+Copyright (c) 2006-2007 Matias Capeletto
 
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
@@ -10,13 +10,17 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 ]
 
-[/ QuickBook Document version 1.3 ]
+[/ QuickBook Document version 1.4 ]
 
 [section Reference]
 
 [section Headers]
 
 The following are the interface headers of Boost.Bimap:
+
+[*Convenience]
+
+* "boost/bimap.hpp" ['(includes "boost/bimap/bimap.hpp" and imports the bimap class to boost namespace)]
 
 [*Container]
 
@@ -39,9 +43,11 @@ The following are the interface headers of Boost.Bimap:
 * "boost/bimap/property_map/unordered_set_support.hpp"
 
 A program using Boost.Bimap must therefore include
-"boost/bimap/bimap.hpp" and the headers defining the set types to be used.\n
+"boost/bimap/bimap.hpp" and the headers defining the collection types to be used.
+
 Additional headers allow the integration of Boost.Bimap with other boost libraries,
-like Boost.Lambda and Boost.Property_map.\n
+like Boost.Lambda and Boost.Property_map.
+
 In order to use the serialization capabilities of Boost.Bimap, the appropriate
 Boost.Serialization library module must be linked. Other than that, Boost.Bimap
 is a header-only library, requiring no additional object modules.

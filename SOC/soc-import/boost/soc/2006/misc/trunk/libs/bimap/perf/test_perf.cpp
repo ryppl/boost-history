@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -17,22 +17,23 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 
 #include <algorithm>
-#include <assert.h>
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/sequenced_index.hpp>
+#include <cassert>
 #include <climits>
 #include <ctime>
 #include <iomanip>
 #include <iostream>
-#include <list>
-#include <set>
-#include <string>
 #include <vector>
+
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/ordered_index.hpp>
+#include <boost/multi_index/sequenced_index.hpp>
+
+#include <boost/bimap/bimap.hpp>
 
 using namespace std;
 using namespace boost::multi_index;
+using namespace boost::bimaps;
 
 // Measurement harness by Andrew Koenig, extracted from companion code to
 //   Stroustrup, B.: "Wrapping C++ Member Function Calls", The C++ Report,
@@ -168,470 +169,150 @@ double measure(F f)
     exit(1);
 }
 
-
-// dereferencing compare predicate
-
-template < class Iterator, class Compare >
-struct it_compare
-{
-    bool operator()(const Iterator& x, const Iterator& y) const
-    {
-        return comp(*x,*y);
-    }
-
-    private:
-    Compare comp;
-};
-
-
-// list_wrapper and multiset_wrapper adapt std::lists and std::multisets
-// to make them conform to a set-like insert interface which test
-// routines do assume.
-
-template< class List >
-struct list_wrapper : List
-{
-    typedef typename List::value_type value_type;
-    typedef typename List::iterator   iterator;
-
-    pair<iterator,bool> insert(const value_type& v)
-    {
-        List::push_back(v);
-        return pair<iterator,bool>(--List::end(), true);
-    }
-};
-
-
-template < class Multiset>
-struct multiset_wrapper : Multiset
-{
-    typedef typename Multiset::value_type value_type;
-    typedef typename Multiset::iterator   iterator;
-
-    pair<iterator,bool> insert(const value_type& v)
-    {
-        return pair<iterator,bool>(Multiset::insert(v),true);
-    }
-};
-
-
-// space comsumption of manual simulations is determined by checking
-// the node sizes of the containers involved. This cannot be done in a
-// portable manner, so node_size has to be written on a per stdlibrary
-// basis. Add your own versions if necessary.
-
-#if defined(BOOST_DINKUMWARE_STDLIB)
-
-template< typename Container >
-size_t node_size(const Container&)
-{
-    return sizeof(*Container().begin()._Mynode());
-}
-
-#elif defined(__GLIBCPP__) || defined(__GLIBCXX__)
-
-template< typename Container >
-size_t node_size(const Container&)
-{
-    typedef typename Container::iterator::_Link_type node_ptr;
-    node_ptr p=0;
-    return sizeof(*p);
-}
-
-template<typename Value,typename Allocator>
-size_t node_size(const list<Value,Allocator>&)
-{
-    return sizeof(typename list<Value,Allocator>::iterator::_Node);
-}
-
-template< typename List >
-size_t node_size(const list_wrapper<List>&)
-{
-    return sizeof(typename List::iterator::_Node);
-}
-
-#else
-
-// default version returns 0 by convention
-
-template<typename Container>
-size_t node_size(const Container&)
-{
-    return 0;
-}
-
-#endif
-
-
-// mono_container runs the tested routine on multi_index and manual
-// simulations comprised of one standard container.
-// bi_container and tri_container run the equivalent routine for manual
-// compositions of two and three standard containers, respectively.
-
-template< class Container >
-struct mono_container
-{
-    mono_container(int n_):n(n_){}
-
-    void operator()()
-    {
-        typedef typename Container::iterator iterator;
-
-        Container c;
-
-        for(int i=0; i < n; ++i)c.insert(i);
-        for(iterator it = c.begin();it != c.end();)
-        {
-            c.erase(it++);
-        }
-    }
-
-    static size_t multi_index_node_size()
-    {
-        return sizeof(*Container().begin().get_node());
-    }
-
-    static size_t node_size()
-    {
-        return ::node_size(Container());
-    }
-
-    private:
-    int n;
-};
-
-
-template< class Container1, class Container2 >
-struct bi_container
-{
-    bi_container(int n_):n(n_){}
-
-    void operator()()
-    {
-        typedef typename Container1::iterator iterator1;
-        typedef typename Container2::iterator iterator2;
-
-        Container1 c1;
-        Container2 c2;
-
-        for(int i=0; i < n ; ++i)
-        {
-            iterator1 it1 = c1.insert(i).first;
-            c2.insert(it1);
-        }
-
-        for(iterator2 it2 = c2.begin(); it2 != c2.end(); )
-        {
-            c1.erase(*it2);
-            c2.erase(it2++);
-        }
-    }
-
-    static size_t node_size()
-    {
-        return ::node_size(Container1())+::node_size(Container2());
-    }
-
-    private:
-    int n;
-};
-
-template <typename Container1,typename Container2,typename Container3>
-struct tri_container
-{
-    tri_container(int n_):n(n_){}
-
-    void operator()()
-    {
-        typedef typename Container1::iterator iterator1;
-        typedef typename Container2::iterator iterator2;
-        typedef typename Container3::iterator iterator3;
-
-        Container1 c1;
-        Container2 c2;
-        Container3 c3;
-
-        for(int i=0; i < n; ++i)
-        {
-            iterator1 it1=c1.insert(i).first;
-            iterator2 it2=c2.insert(it1).first;
-            c3.insert(it2);
-        }
-        for(iterator3 it3=c3.begin();it3!=c3.end();)
-        {
-            c1.erase(**it3);
-            c2.erase(*it3);
-            c3.erase(it3++);
-        }
-    }
-
-    static size_t node_size()
-    {
-        return ::node_size(Container1())+
-               ::node_size(Container2())+::node_size(Container3());
-    }
-
-    private:
-    int n;
-};
-
 // measure and compare two routines for several numbers of elements
 // and also estimates relative memory consumption.
 
-template < typename IndexedTest, typename ManualTest>
+template< class BimapTest, class MultiIndexTest >
 void run_tests(
     const char* title
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(IndexedTest)
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(ManualTest))
+    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(MultiIndexTest)
+    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(BimapTest))
 {
-    cout<<fixed<<setprecision(2);
-    cout<<title<<endl;
-    int n=1000;
+    cout << fixed << setprecision(2);
+    cout << title << endl;
+    unsigned int n = 1000;
 
-    for(int i=0;i<3;++i)
+    for(unsigned int i=0 ; i<3 ; ++i)
     {
-        double indexed_t=measure(IndexedTest(n));
-        double manual_t=measure(ManualTest(n));
+        double bimap_t       = measure( BimapTest(n)  );
+        double multi_index_t = measure( MultiIndexTest(n) );
 
         cout << "  10^" << i + 3 << " elmts: "
-             << setw(6) << 100.0 * indexed_t / manual_t << "% "
+             << setw(6) << 100.0 * bimap_t / multi_index_t << "% "
              << "("
-             << setw(6) << 1000.0 * indexed_t / CLOCKS_PER_SEC << " ms / "
-             << setw(6) << 1000.0 * manual_t / CLOCKS_PER_SEC << " ms)"
+             << setw(6) << 1000.0 * bimap_t / CLOCKS_PER_SEC << " ms / "
+             << setw(6) << 1000.0 * multi_index_t / CLOCKS_PER_SEC << " ms)"
              << endl;
 
         n *= 10;
     }
+}
 
-    size_t indexed_t_node_size = IndexedTest::multi_index_node_size();
-    size_t  manual_t_node_size =  ManualTest::node_size();
+// insert
 
-    if(manual_t_node_size){
-        cout << "  space gain: "
-             << setw(6) << 100.0 * indexed_t_node_size / manual_t_node_size << "%" << endl;
+template< class MultiIndexType >
+struct insert_multi_index_test
+{
+    insert_multi_index_test(unsigned int n) : number(n) {}
+    void operator()()
+    {
+        for( unsigned int i = 0; i < number; ++i )
+        {
+            m.get<1>().insert( typename MultiIndexType::value_type(i,i) );
+        }
     }
-}
+    private:
+    MultiIndexType m;
+    unsigned int number;
+};
 
-// compare_structures accept a multi_index_container instantiation and
-// several standard containers, builds a manual simulation out of the
-// latter and run the tests.
-
-
-template <typename IndexedType,typename ManualType>
-void compare_structures(
-    const char* title
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(IndexedType)
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(ManualType))
+template< class BimapType >
+struct insert_bimap_test
 {
-    run_tests
-    <
-        mono_container<IndexedType>,
-        mono_container<ManualType>
+    insert_bimap_test(unsigned int n) : number(n) {}
+    void operator()()
+    {
+        for( unsigned int i = 0; i < number; ++i )
+        {
+            b.right.insert( typename BimapType::right_value_type(i,i) );
+        }
+    }
+    private:
+    BimapType b;
+    unsigned int number;
+};
 
-    >(title);
-}
+// find
 
-template <typename IndexedType,typename ManualType1,typename ManualType2>
-void compare_structures2(
-    const char* title
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(IndexedType)
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(ManualType1)
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(ManualType2))
+template< class MultiIndexType >
+struct find_multi_index_test
 {
-    run_tests
-    <
-        mono_container<IndexedType>,
-        bi_container<ManualType1,ManualType2>
+    find_multi_index_test(unsigned int n) : number(n) 
+    {
+        for( unsigned int i = 0; i < number; ++i )
+        {
+            m.get<1>().insert( typename MultiIndexType::value_type(i,i) );
+        }
+    }
+    void operator()()
+    {
+        for( unsigned int i = 0; i < number; ++i )
+        {
+            m.get<1>().find(i);
+        }
+    }
+    private:
+    MultiIndexType m;
+    unsigned int number;
+};
 
-    >(title);
-}
-
-template
-<
-    typename IndexedType,
-    typename ManualType1,typename ManualType2,typename ManualType3
->
-void compare_structures3(
-    const char* title
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(IndexedType)
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(ManualType1)
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(ManualType2)
-    BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(ManualType3))
+template< class BimapType >
+struct find_bimap_test
 {
-    run_tests
-    <
-        mono_container<IndexedType>,
-        tri_container<ManualType1,ManualType2,ManualType3>
+    find_bimap_test(unsigned int n) : number(n) 
+    {
+        for( unsigned int i = 0; i < number; ++i )
+        {
+            b.right.insert( typename BimapType::right_value_type(i,i) );
+        }
+    }
+    void operator()()
+    {
+        for( unsigned int i = 0; i < number; ++i )
+        {
+            b.right.find(i);
+        }
+    }
+    private:
+    BimapType b;
+    unsigned int number;
+};
 
-    >(title);
-}
+
+template< class BimapType, class MultiIndexType >
+void compare_structures(const string & title)
+{
+    cout << title << endl << endl;
+
+    run_tests<
+        insert_bimap_test<BimapType>,
+        insert_multi_index_test<MultiIndexType> 
+    >("insert");
+
+    run_tests<
+        find_bimap_test<BimapType>,
+        find_multi_index_test<MultiIndexType>
+    >("find");
+};
 
 int main()
 {
+    // Set Set
     {
-        // 1 ordered index
+        typedef std::pair<int,int> pair_type;
 
-        typedef multi_index_container<int> indexed_t;
-        typedef set<int>                   manual_t;
-        indexed_t dummy; // MSVC++ 6.0 chokes if indexed_t is not instantiated
+        compare_structures<
 
-        compare_structures<indexed_t,manual_t>("1 ordered index");
-    }
+            bimap<int,int>,
 
-    {
-        // 1 sequenced index
-
-        typedef list_wrapper
-        <
             multi_index_container<
-                int,
-                indexed_by<sequenced<> >
-            >
-
-        >  indexed_t;
-
-        typedef list_wrapper<list<int> >   manual_t;
-        indexed_t dummy; // MSVC++ 6.0 chokes if indexed_t is not instantiated
-
-        compare_structures<indexed_t,manual_t>("1 sequenced index");
-    }
-    {
-        // 2 ordered indices
-
-        typedef multi_index_container<
-            int,
-            indexed_by<
-                ordered_unique<identity<int> >,
-                ordered_non_unique<identity<int> >
-            >
-
-        > indexed_t;
-
-        typedef set<int> manual_t1;
-
-        typedef multiset<
-            manual_t1::iterator,
-            it_compare<
-                manual_t1::iterator,
-                manual_t1::key_compare
-            >
-
-        > manual_t2;
-
-        indexed_t dummy; // MSVC++ 6.0 chokes if indexed_t is not instantiated
-
-        compare_structures2<indexed_t,manual_t1,manual_t2>("2 ordered indices");
-    }
-    {
-        // 1 ordered index + 1 sequenced index
-
-        typedef multi_index_container<
-            int,
-            indexed_by<
-                boost::multi_index::ordered_unique<identity<int> >,
-                sequenced<>
-            >
-
-        > indexed_t;
-
-        typedef list_wrapper<
-            list<int>
-
-        > manual_t1;
-
-        typedef multiset<
-            manual_t1::iterator,
-            it_compare<
-                manual_t1::iterator,
-                std::less<int>
-            >
-
-        > manual_t2;
-
-        indexed_t dummy; // MSVC++ 6.0 chokes if indexed_t is not instantiated
-
-        compare_structures2<indexed_t,manual_t1,manual_t2>("1 ordered index + 1 sequenced index");
-    }
-    {
-        // 3 ordered indices
-
-        typedef multi_index_container<
-            int,
-            indexed_by<
-                ordered_unique<identity<int> >,
-                ordered_non_unique<identity<int> >,
-                ordered_non_unique<identity<int> >
-            >
-
-        > indexed_t;
-
-        typedef set<int>                   manual_t1;
-        typedef multiset_wrapper<
-            multiset<
-                manual_t1::iterator,
-                it_compare<
-                    manual_t1::iterator,
-                    manual_t1::key_compare
+                pair_type,
+                indexed_by<
+                    ordered_unique< member<pair_type,int,&pair_type::first > >,
+                    ordered_unique< member<pair_type,int,&pair_type::second> >
                 >
             >
-
-        > manual_t2;
-
-        typedef multiset<
-            manual_t2::iterator,
-            it_compare<
-                manual_t2::iterator,
-                manual_t2::key_compare
-            >
-
-        > manual_t3;
-
-        indexed_t dummy; // MSVC++ 6.0 chokes if indexed_t is not instantiated
-
-        compare_structures3<indexed_t,manual_t1,manual_t2,manual_t3>("3 ordered indices");
-    }
-
-    {
-        // 2 ordered indices + 1 sequenced index
-
-        typedef multi_index_container<
-            int,
-            indexed_by<
-                ordered_unique<identity<int> >,
-                ordered_non_unique<identity<int> >,
-                sequenced<>
-            >
-
-        > indexed_t;
-
-        typedef list_wrapper<
-            list<int>
-
-        > manual_t1;
-
-        typedef multiset_wrapper<
-            multiset<
-                manual_t1::iterator,
-                it_compare<
-                    manual_t1::iterator,
-                    std::less<int>
-                >
-            >
-
-        > manual_t2;
-
-        typedef multiset<
-            manual_t2::iterator,
-            it_compare<
-                manual_t2::iterator,
-                manual_t2::key_compare
-            >
-
-        > manual_t3;
-
-        indexed_t dummy; // MSVC++ 6.0 chokes if indexed_t is not instantiated
-
-        compare_structures3<indexed_t,manual_t1,manual_t2,manual_t3>("2 ordered indices + 1 sequenced index");
+        >("set_of - set_of");
     }
 
     return 0;

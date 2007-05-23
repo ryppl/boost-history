@@ -1,10 +1,21 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+//  VC++ 8.0 warns on usage of certain Standard Library and API functions that
+//  can be cause buffer overruns or other possible security issues if misused.
+//  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
+//  But the wording of the warning is misleading and unsettling, there are no
+//  portable alternative functions, and VC++ 8.0's own libraries use the
+//  functions in question. So turn off the warnings.
+#define _CRT_SECURE_NO_DEPRECATE
+#define _SCL_SECURE_NO_DEPRECATE
+
+#include <boost/config.hpp>
 
 // std
 #include <string>
@@ -35,9 +46,9 @@
 
 BOOST_BIMAP_TEST_STATIC_FUNCTION( untagged_static_test )
 {
-    using namespace boost::bimap::relation::member_at;
-    using namespace boost::bimap::relation;
-    using namespace boost::bimap::tags;
+    using namespace boost::bimaps::relation::member_at;
+    using namespace boost::bimaps::relation;
+    using namespace boost::bimaps::tags;
 
     struct left_data  {};
     struct right_data {};
@@ -64,7 +75,8 @@ struct standard_relation_builder
     template< class LeftType, class RightType >
     struct build
     {
-        typedef boost::bimap::relation::standard_relation<LeftType,RightType> type;
+        typedef boost::bimaps::relation::
+            standard_relation<LeftType,RightType> type;
     };
 };
 
@@ -75,7 +87,7 @@ void test_standard_relation()
 
     test_relation< standard_relation_builder, int   , int    >(  1 ,   2 );
 
-    test_relation< standard_relation_builder, std::string, int * >( "left value", 0 );
+    test_relation< standard_relation_builder,std::string,int*>("left value",0);
 }
 
 int test_main( int, char* [] )

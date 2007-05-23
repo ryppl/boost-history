@@ -2,7 +2,7 @@
 
 Boost.Bimap
 
-Copyright (c) 2006 Matias Capeletto
+Copyright (c) 2006-2007 Matias Capeletto
 
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
@@ -10,19 +10,12 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 ]
 
-[/ QuickBook Document version 1.3 ]
+
+[/ QuickBook Document version 1.4 ]
 
 [section Introduction]
 
-With Boost.Bimap you can create associative containers in which both
-types can be used as key. A `bimap<X,Y>` can be thought of as a
-combination of a `std::map<X,Y>` and a `std::map<Y,X>`. The learning curve
-of bimap is almost flat if you know how to use standard containers. A
-great deal of effort has been put into mapping the naming scheme of the
-STL in Boost.Bimap. The library is designed to match the common STL
-containers.
-
-[h2 How to use this document]
+[heading How to use this document]
 
 This documentation contains a large amount of information. Whereas it
 may be worth reading it all, this documentation is intended for
@@ -74,34 +67,33 @@ system to [@http://www.boost.org/more/bugs.htm track bugs] and
 and using it is the best way of dealing with them as soon as possible.
 ]
 
-[h2 Navigation]
+[heading Navigation]
 
 Used in combination with the configured browser key (usually Alt), the
 following keys act as handy shortcuts for common navigation tasks.
 
-[variablelist Shortcuts
-[
-[General][
-[^[*p]] - Previous page       \n
-[^[*n]] - Next page           \n
-[^[*h]] - home                \n
-[^[*u]] - Up
-]][
-[Main TOC][
-[^[*i]] - Introduction        \n
-[^[*o]] - One minute tutorial \n
-[^[*t]] - The tutorial        \n
-[^[*b]] - Bimap and Boost     \n
-[^[*r]] - Reference           \n
-[^[*c]] - Compiler specifics  \n
-[^[*v]] - Performance         \n
-[^[*e]] - Examples            \n
-[^[*s]] - Test Suite          \n
-[^[*f]] - Future work         \n
-[^[*m]] - Release notes       \n
-[^[*w]] - Rationale           \n
-[^[*y]] - History             \n
-[^[*a]] - Acknowledgements
-]]]
+* [*General]
+
+    * [^[*p]] - Previous page
+    * [^[*n]] - Next page
+    * [^[*h]] - home
+    * [^[*u]] - Up
+
+* [*Main TOC]
+
+    * [^[*i]] - Introduction
+    * [^[*o]] - One minute tutorial
+    * [^[*t]] - The tutorial
+    * [^[*b]] - Bimap and Boost
+    * [^[*r]] - Reference
+    * [^[*c]] - Compiler specifics
+    * [^[*v]] - Performance
+    * [^[*e]] - Examples
+    * [^[*s]] - Test Suite
+    * [^[*f]] - Future work
+    * [^[*m]] - Release notes
+    * [^[*w]] - Rationale
+    * [^[*y]] - History
+    * [^[*a]] - Acknowledgements
 
 [endsect]

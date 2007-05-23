@@ -1,17 +1,21 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-// std
-#include <set>
-#include <map>
-#include <cstddef>
-#include <cassert>
-#include <algorithm>
+//  VC++ 8.0 warns on usage of certain Standard Library and API functions that
+//  can be cause buffer overruns or other possible security issues if misused.
+//  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
+//  But the wording of the warning is misleading and unsettling, there are no
+//  portable alternative functions, and VC++ 8.0's own libraries use the
+//  functions in question. So turn off the warnings.
+#define _CRT_SECURE_NO_DEPRECATE
+#define _SCL_SECURE_NO_DEPRECATE
+
+#include <boost/config.hpp>
 
 // Boost.Test
 #include <boost/test/minimal.hpp>
@@ -27,37 +31,53 @@
 
 // Boost.Bimap
 #include <boost/bimap/list_of.hpp>
+#include <boost/bimap/unordered_multiset_of.hpp>
+#include <boost/bimap/vector_of.hpp>
 #include <boost/bimap/bimap.hpp>
 
 namespace ba =  boost::assign;
 
+
 void test_bimap_assign()
 {
-    using namespace boost::bimap;
+    using namespace boost::bimaps;
 
-    typedef bimap<int, list_of<double> > bm;
+    // test
+    {
+        typedef bimap< list_of<int>, double > bm_type;
+        bm_type bm = ba::list_of< bm_type::relation >(1,0.1)(2,0.2)(3,0.3);
+        ba::push_back( bm )(4,0.4)(5,0.5);
+        ba::insert( bm.right )(0.5,5)(0.6,6);
+        ba::push_back( bm.left )(6,0.6)(7,0.7);
+    }
 
-    bm b = ba::list_of< bm::relation >(1,0.1)(2,0.2)(3,0.3);
+    // test
+    {
+        typedef bimap< unordered_multiset_of<int>, vector_of<double>,
+                       list_of_relation > bm_type;
+        bm_type bm = ba::list_of< bm_type::relation >(1,0.1)(2,0.2)(3,0.3);
+        ba::push_front( bm )(4,0.4)(5,0.5);
+        ba::push_back( bm.right )(0.6,6)(0.7,7);
+        ba::insert( bm.left )(8,0.8)(9,0.9);
+    }
 
-    BOOST_CHECK( b.size() == 3 );
+    // test
+    {
+        typedef bimap< int, vector_of<double>, right_based > bm_type;
+        bm_type bm = ba::list_of< bm_type::relation >(1,0.1)(2,0.2)(3,0.3);
+        ba::push_back( bm )(4,0.4)(5,0.5);
+        ba::push_back( bm.right )(0.6,6)(0.7,7);
+        ba::insert( bm.left )(8,0.8)(9,0.9);
+    }
 
-    // Since it is left_based the main view is a set, so we use insert
-
-    ba::insert( b )
-        (4,0.4)
-        (5,0.5)
-        (6,0.6)
-        (7,0.7);
-
-    BOOST_CHECK( b.size() == 7 );
-
-    // The right map view is a list so we use push_back here
-
-    ba::push_back( b.right )
-        (0.8,8)
-        (0.9,9);
-
-    BOOST_CHECK( b.size() == 9 );
+    // test
+    {
+        typedef bimap< int, vector_of<double>, set_of_relation<> > bm_type;
+        bm_type bm = ba::list_of< bm_type::relation >(1,0.1)(2,0.2)(3,0.3);
+        ba::insert( bm )(4,0.4)(5,0.5);
+        ba::push_back( bm.right )(0.6,6)(0.7,7);
+        ba::insert( bm.left )(8,0.8)(9,0.9);
+    }
 }
 
 

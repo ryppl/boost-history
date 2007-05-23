@@ -1,10 +1,21 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+//  VC++ 8.0 warns on usage of certain Standard Library and API functions that
+//  can be cause buffer overruns or other possible security issues if misused.
+//  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
+//  But the wording of the warning is misleading and unsettling, there are no
+//  portable alternative functions, and VC++ 8.0's own libraries use the
+//  functions in question. So turn off the warnings.
+#define _CRT_SECURE_NO_DEPRECATE
+#define _SCL_SECURE_NO_DEPRECATE
+
+#include <boost/config.hpp>
 
 // std
 #include <set>
@@ -29,18 +40,15 @@
 template< class Bimap, class Archive >
 void save_bimap(const Bimap & b, Archive & ar)
 {
-    using namespace boost::bimap;
+    using namespace boost::bimaps;
 
     ar << b;
 
-    typedef typename const_iterator_type_by< member_at::left, Bimap >::type
-        left_const_iterator;
+    const typename Bimap::left_const_iterator left_iter = b.left.begin();
+    ar << left_iter;
 
-    left_const_iterator left_iter = b.left.begin();
-    ar << const_cast< const left_const_iterator& >(left_iter);
-
-    typename Bimap::const_iterator iter = ++b.begin();
-    ar << const_cast< const typename Bimap::const_iterator& >(iter);
+    const typename Bimap::const_iterator iter = ++b.begin();
+    ar << iter;
 }
 
 
@@ -48,15 +56,15 @@ void save_bimap(const Bimap & b, Archive & ar)
 
 void test_bimap_serialization()
 {
-    using namespace boost::bimap;
+    using namespace boost::bimaps;
 
     typedef bimap<int,double> bm;
 
-    std::set< bm::relation > data;
-    data.insert( bm::relation(1,0.1) );
-    data.insert( bm::relation(2,0.2) );
-    data.insert( bm::relation(3,0.3) );
-    data.insert( bm::relation(4,0.4) );
+    std::set< bm::value_type > data;
+    data.insert( bm::value_type(1,0.1) );
+    data.insert( bm::value_type(2,0.2) );
+    data.insert( bm::value_type(3,0.3) );
+    data.insert( bm::value_type(4,0.4) );
 
     std::ostringstream oss;
 
@@ -82,7 +90,7 @@ void test_bimap_serialization()
 
         BOOST_CHECK( std::equal( b.begin(), b.end(), data.begin() ) );
 
-        const_iterator_type_by< member_at::left, bm >::type left_iter;
+        bm::left_const_iterator left_iter;
 
         ia >> left_iter;
 

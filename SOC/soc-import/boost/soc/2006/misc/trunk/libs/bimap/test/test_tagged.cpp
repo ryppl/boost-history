@@ -1,10 +1,21 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+//  VC++ 8.0 warns on usage of certain Standard Library and API functions that
+//  can be cause buffer overruns or other possible security issues if misused.
+//  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
+//  But the wording of the warning is misleading and unsettling, there are no
+//  portable alternative functions, and VC++ 8.0's own libraries use the
+//  functions in question. So turn off the warnings.
+#define _CRT_SECURE_NO_DEPRECATE
+#define _SCL_SECURE_NO_DEPRECATE
+
+#include <boost/config.hpp>
 
 // Boost.Test
 #include <boost/test/minimal.hpp>
@@ -34,8 +45,8 @@
 
 BOOST_BIMAP_TEST_STATIC_FUNCTION( test_metafunctions )
 {
-    using namespace boost::bimap::tags::support;
-    using namespace boost::bimap::tags;
+    using namespace boost::bimaps::tags::support;
+    using namespace boost::bimaps::tags;
     using namespace boost::mpl::placeholders;
     using namespace boost;
 
@@ -57,8 +68,8 @@ struct data  {};
 void test_function()
 {
 
-    using namespace boost::bimap::tags::support;
-    using namespace boost::bimap::tags;
+    using namespace boost::bimaps::tags::support;
+    using namespace boost::bimaps::tags;
     using boost::is_same;
 
     typedef tagged< data, tag_a > data_a;
@@ -67,9 +78,15 @@ void test_function()
     BOOST_CHECK(( is_same< data_a::value_type   , data  >::value ));
     BOOST_CHECK(( is_same< data_a::tag          , tag_a >::value ));
 
-    BOOST_CHECK(( is_same< overwrite_tagged < data_a, tag_b >::type, data_b >::value ));
-    BOOST_CHECK(( is_same< default_tagged   < data_a, tag_b >::type, data_a >::value ));
-    BOOST_CHECK(( is_same< default_tagged   < data  , tag_b >::type, data_b >::value ));
+    BOOST_CHECK((
+        is_same< overwrite_tagged < data_a, tag_b >::type, data_b >::value
+    ));
+    BOOST_CHECK((
+        is_same< default_tagged   < data_a, tag_b >::type, data_a >::value
+    ));
+    BOOST_CHECK(( 
+        is_same< default_tagged   < data  , tag_b >::type, data_b >::value
+    ));
 
     BOOST_CHECK(( is_tagged< data   >::value == false ));
     BOOST_CHECK(( is_tagged< data_a >::value == true  ));

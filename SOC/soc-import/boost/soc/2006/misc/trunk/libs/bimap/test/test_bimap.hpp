@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -9,15 +9,21 @@
 #ifndef LIBS_BIMAP_TEST_BIMAP_TEST_HPP
 #define LIBS_BIMAP_TEST_BIMAP_TEST_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 // std
 #include <cassert>
 #include <algorithm>
 
+#include <boost/lambda/lambda.hpp>
+
 template< class Container, class Data >
 void test_container(Container & c, const Data & d)
 {
-    typedef typename Container::value_type value_type;
-
     assert( d.size() > 2 );
 
     c.clear();
@@ -25,7 +31,7 @@ void test_container(Container & c, const Data & d)
     BOOST_CHECK( c.size() == 0 );
     BOOST_CHECK( c.empty() );
 
-    c.insert( value_type(*d.begin()) );
+    c.insert( *d.begin() );
 
     c.insert( ++d.begin(),d.end() );
 
@@ -42,11 +48,11 @@ void test_container(Container & c, const Data & d)
 
     BOOST_CHECK( c.empty() );
 
-    c.insert( value_type(*d.begin()) );
+    c.insert( *d.begin() );
 
     BOOST_CHECK( c.size() == 1 );
 
-    c.insert( c.begin(), value_type(*(++d.begin())) );
+    c.insert( c.begin(), *(++d.begin()) );
 
     BOOST_CHECK( c.size() == 2 );
 
@@ -57,8 +63,6 @@ void test_container(Container & c, const Data & d)
 template< class Container, class Data >
 void test_sequence_container(Container & c, const Data & d)
 {
-    typedef typename Container::value_type value_type;
-
     assert( d.size() > 2 );
 
     c.clear();
@@ -66,8 +70,8 @@ void test_sequence_container(Container & c, const Data & d)
     BOOST_CHECK( c.size() == 0 );
     BOOST_CHECK( c.empty() );
 
-    c.push_front( value_type(*   d.begin() ) );
-    c.push_back ( value_type(*(++d.begin())) );
+    c.push_front( *   d.begin()  );
+    c.push_back ( *(++d.begin()) );
 
     BOOST_CHECK( c.front() == *   c.begin()  );
     BOOST_CHECK( c.back () == *(++c.begin()) );
@@ -81,13 +85,13 @@ void test_sequence_container(Container & c, const Data & d)
 
     BOOST_CHECK( c.size() == 1 );
 
-    c.insert( c.begin(), value_type(*(++d.begin())) );
+    c.insert( c.begin(), *(++d.begin()) );
 
     c.erase( c.begin(), c.end() );
 
     BOOST_CHECK( c.empty() );
 
-    c.push_front( value_type(*d.begin()) );
+    c.push_front( *d.begin() );
 
     BOOST_CHECK( c.size() == 1 );
 
@@ -98,8 +102,6 @@ void test_sequence_container(Container & c, const Data & d)
 template< class Container, class Data >
 void test_associative_container(Container & c, const Data & d)
 {
-    typedef typename Container::value_type value_type;
-
     assert( d.size() > 2 );
 
     c.clear();
@@ -108,35 +110,33 @@ void test_associative_container(Container & c, const Data & d)
     for( typename Data::const_iterator di = d.begin(), de = d.end();
          di != de; ++di )
     {
-        BOOST_CHECK( c.find(value_type(*di)) != c.end() );
+        BOOST_CHECK( c.find(*di) != c.end() );
     }
 
     typename Data::const_iterator da =   d.begin();
     typename Data::const_iterator db = ++d.begin();
 
-    c.erase(value_type(*da));
+    c.erase(*da);
 
     BOOST_CHECK( c.size() == d.size()-1 );
 
-    BOOST_CHECK( c.count(value_type(*da)) == 0 );
-    BOOST_CHECK( c.count(value_type(*db)) == 1 );
+    BOOST_CHECK( c.count(*da) == 0 );
+    BOOST_CHECK( c.count(*db) == 1 );
 
-    BOOST_CHECK( c.find(value_type(*da)) == c.end() );
-    BOOST_CHECK( c.find(value_type(*db)) != c.end() );
+    BOOST_CHECK( c.find(*da) == c.end() );
+    BOOST_CHECK( c.find(*db) != c.end() );
 
-    BOOST_CHECK( c.equal_range(value_type(*db)).first != c.end() );
+    BOOST_CHECK( c.equal_range(*db).first != c.end() );
 
     c.clear();
 
-    BOOST_CHECK( c.equal_range(value_type(*da)).first == c.end() );
+    BOOST_CHECK( c.equal_range(*da).first == c.end() );
 }
 
 
 template< class Container, class Data >
 void test_pair_associative_container(Container & c, const Data & d)
 {
-    typedef typename Container::value_type value_type;
-
     assert( d.size() > 2 );
 
     c.clear();
@@ -172,21 +172,16 @@ void test_pair_associative_container(Container & c, const Data & d)
 template< class Container, class Data >
 void test_simple_ordered_associative_container_equality(Container & c, const Data & d)
 {
-    typedef typename Container::value_type value_type;
+    BOOST_CHECK( std::equal( c. begin(), c. end(), d. begin() ) );
+    BOOST_CHECK( std::equal( c.rbegin(), c.rend(), d.rbegin() ) );
 
-    // TODO Is it right to allow a relation construction from a std::pair?
-    // BOOST_CHECK( std::equal( c. begin(), c. end(), d. begin() ) );
-    // BOOST_CHECK( std::equal( c.rbegin(), c.rend(), d.rbegin() ) );
-
-    BOOST_CHECK( c.lower_bound( value_type(*d.begin()) ) ==   c.begin() );
-    BOOST_CHECK( c.upper_bound( value_type(*d.begin()) ) == ++c.begin() );
+    BOOST_CHECK( c.lower_bound( *d.begin() ) ==   c.begin() );
+    BOOST_CHECK( c.upper_bound( *d.begin() ) == ++c.begin() );
 }
 
 template< class Container, class Data >
 void test_simple_ordered_associative_container(Container & c, const Data & d)
 {
-    typedef typename Container::value_type value_type;
-
     assert( d.size() > 2 );
 
     c.clear();
@@ -195,13 +190,11 @@ void test_simple_ordered_associative_container(Container & c, const Data & d)
     for( typename Data::const_iterator di = d.begin(), de = d.end();
          di != de; ++di )
     {
-        typename Container::const_iterator ci = c.find(value_type(*di));
+        typename Container::const_iterator ci = c.find(*di);
         BOOST_CHECK( ci != c.end() );
 
-        // TODO This need to be worked out
-        // BOOST_CHECK( ! c.key_comp()(*ci,*di) );
-
-        BOOST_CHECK( ! c.value_comp()(*ci,value_type(*di)) );
+        BOOST_CHECK( ! c.key_comp()(*ci,*di) );
+        BOOST_CHECK( ! c.value_comp()(*ci,*di) );
     }
 
     test_simple_ordered_associative_container_equality(c, d);
@@ -209,13 +202,18 @@ void test_simple_ordered_associative_container(Container & c, const Data & d)
     const Container & cr = c;
 
     test_simple_ordered_associative_container_equality(cr, d);
+
+    /*
+    BOOST_CHECK( c.range( *c.begin() <= ::boost::lambda::_1,
+                            ::boost::lambda::_1 <= *(++c.begin()) ).
+                    first == c.begin()
+    );
+    */
 }
 
 template< class Container, class Data >
 void test_simple_unordered_associative_container(Container & c, const Data & d)
 {
-    typedef typename Container::value_type value_type;
-
     c.clear();
     c.insert( d.begin(), d.end() );
 
@@ -227,7 +225,8 @@ void test_simple_unordered_associative_container(Container & c, const Data & d)
     {
         // non const
         {
-            typename Container::size_type nb = c.bucket(*c.find(value_type(*di)));
+            typename Container::size_type nb = c.bucket(*c.find(*di));
+
             BOOST_CHECK( c.begin(nb) != c.end(nb) );
         }
 
@@ -235,10 +234,16 @@ void test_simple_unordered_associative_container(Container & c, const Data & d)
         {
             const Container & const_c = c;
 
-            BOOST_CHECK( const_c.bucket_size(const_c.bucket(value_type(*di))) == 1 );
+            BOOST_CHECK(
+                const_c.bucket_size(const_c.bucket(*di)) == 1
+            );
 
-            typename Container::size_type nb = const_c.bucket(*const_c.find(value_type(*di)));
-            BOOST_CHECK( const_c.begin(nb) != const_c.end(nb) );
+            typename Container::size_type nb =
+                const_c.bucket(*const_c.find(*di));
+
+            BOOST_CHECK(
+                const_c.begin(nb) != const_c.end(nb) 
+            );
         }
     }
 
@@ -266,8 +271,6 @@ void test_pair_ordered_associative_container_equality(Container & c, const Data 
 template< class Container, class Data >
 void test_pair_ordered_associative_container(Container & c, const Data & d)
 {
-    typedef typename Container::value_type value_type;
-
     assert( d.size() > 2 );
 
     c.clear();
@@ -279,7 +282,7 @@ void test_pair_ordered_associative_container(Container & c, const Data & d)
         typename Data::const_iterator di = d.find(ci->first);
         BOOST_CHECK( di != d.end() );
         BOOST_CHECK( ! c.key_comp()(di->first,ci->first) );
-        BOOST_CHECK( ! c.value_comp()(*ci,value_type(*di)) );
+        BOOST_CHECK( ! c.value_comp()(*ci,*di) );
     }
 
     test_pair_ordered_associative_container_equality(c, d);
@@ -288,6 +291,10 @@ void test_pair_ordered_associative_container(Container & c, const Data & d)
 
     test_pair_ordered_associative_container_equality(cr, d);
 
+    BOOST_CHECK( c.range( c.begin()->first <= ::boost::lambda::_1,
+                          ::boost::lambda::_1 <= (++c.begin())->first ).
+                    first == c.begin()
+    );
 }
 
 
@@ -305,7 +312,9 @@ void test_pair_unordered_associative_container(Container & c, const Data & d)
     {
         // non const
         {
-            typename Container::size_type nb = c.bucket(c.find(di->first)->first);
+            typename Container::size_type nb =
+                c.bucket(c.find(di->first)->first);
+
             BOOST_CHECK( c.begin(nb) != c.end(nb) );
         }
 
@@ -315,7 +324,9 @@ void test_pair_unordered_associative_container(Container & c, const Data & d)
 
             BOOST_CHECK( const_c.bucket_size(const_c.bucket(di->first)) == 1 );
 
-            typename Container::size_type nb = const_c.bucket(const_c.find(di->first)->first);
+            typename Container::size_type nb =
+                const_c.bucket(const_c.find(di->first)->first);
+
             BOOST_CHECK( const_c.begin(nb) != const_c.end(nb) );
         }
     }
@@ -334,38 +345,34 @@ void test_pair_unordered_associative_container(Container & c, const Data & d)
 template< class Container, class Data >
 void test_unique_container(Container & c, Data & d)
 {
-    typedef typename Container::value_type value_type;
-
     c.clear();
     c.insert(d.begin(),d.end());
-    c.insert(value_type(*d.begin()));
+    c.insert(*d.begin());
     BOOST_CHECK( c.size() == d.size() );
 }
 
 template< class Container, class Data >
 void test_non_unique_container(Container & c, Data & d)
 {
-    typedef typename Container::value_type value_type;
-
     c.clear();
     c.insert(d.begin(),d.end());
-    c.insert(value_type(*d.begin()));
+    c.insert(*d.begin());
     BOOST_CHECK( c.size() == (d.size()+1) );
 }
 
 
+
 template< class Bimap, class Data, class LeftData, class RightData >
-void test_basic_bimap(Bimap & b,
+void test_basic_bimap( Bimap & b,
                       const Data & d,
                       const LeftData & ld, const RightData & rd)
 {
-    using namespace boost::bimap;
-
+    using namespace boost::bimaps;
 
     test_container(b,d);
 
-    BOOST_CHECK( &b.left  == &map_by<member_at::left >(b) );
-    BOOST_CHECK( &b.right == &map_by<member_at::right>(b) );
+    BOOST_CHECK( & b.left  == & b.template by<member_at::left >() );
+    BOOST_CHECK( & b.right == & b.template by<member_at::right>() );
 
     test_container(b.left , ld);
     test_container(b.right, rd);
@@ -375,21 +382,38 @@ template< class LeftTag, class RightTag, class Bimap, class Data >
 void test_tagged_bimap(Bimap & b,
                        const Data & d)
 {
-    typedef typename Bimap::value_type value_type;
+    using namespace boost::bimaps;
 
-    using namespace boost::bimap;
-
-    BOOST_CHECK( &b.left  == &map_by<LeftTag >(b) );
-    BOOST_CHECK( &b.right == &map_by<RightTag>(b) );
+    BOOST_CHECK( &b.left  == & b.template by<LeftTag >() );
+    BOOST_CHECK( &b.right == & b.template by<RightTag>() );
 
     b.clear();
-    b.insert( value_type(*d.begin()) );
+    b.insert( *d.begin() );
 
-    BOOST_CHECK( pair_by<LeftTag >(*b.begin()) == *map_by<LeftTag >(b).begin() );
-    BOOST_CHECK( pair_by<RightTag>(*b.begin()) == *map_by<RightTag>(b).begin() );
+    BOOST_CHECK(
+        b.begin()->template get<LeftTag>() ==
+            b.template by<RightTag>().begin()->template get<LeftTag>()
+    );
 
-    BOOST_CHECK( get<LeftTag >(*b.begin()) == get<LeftTag >(*map_by<RightTag>(b).begin()));
-    BOOST_CHECK( get<RightTag>(*b.begin()) == get<RightTag>(*map_by<LeftTag >(b).begin()));
+    BOOST_CHECK(
+        b.begin()->template get<RightTag>() ==
+            b.template by<LeftTag>().begin()->template get<RightTag>()
+    );
+
+    // const test
+    {
+
+    const Bimap & bc = b;
+
+    BOOST_CHECK( &bc.left  == & bc.template by<LeftTag>() );
+    BOOST_CHECK( &bc.right == & bc.template by<RightTag>() );
+
+    BOOST_CHECK( bc.begin()->template get<LeftTag>() ==
+                    bc.template by<RightTag>().begin()->template get<LeftTag>() );
+
+    BOOST_CHECK( bc.begin()->template get<RightTag>() ==
+                    bc.template by<LeftTag>().begin()->template get<RightTag>() );
+    }
 }
 
 
@@ -398,7 +422,7 @@ void test_set_set_bimap(Bimap & b,
                         const Data & d,
                         const LeftData & ld, const RightData & rd)
 {
-    using namespace boost::bimap;
+    using namespace boost::bimaps;
 
     test_basic_bimap(b,d,ld,rd);
 
@@ -421,7 +445,7 @@ void test_multiset_multiset_bimap(Bimap & b,
                                   const Data & d,
                                   const LeftData & ld, const RightData & rd)
 {
-    using namespace boost::bimap;
+    using namespace boost::bimaps;
 
     test_basic_bimap(b,d,ld,rd);
     test_associative_container(b,d);
@@ -442,7 +466,7 @@ void test_unordered_set_unordered_multiset_bimap(Bimap & b,
                                                  const LeftData & ld,
                                                  const RightData & rd)
 {
-    using namespace boost::bimap;
+    using namespace boost::bimaps;
 
     test_basic_bimap(b,d,ld,rd);
     test_associative_container(b,d);

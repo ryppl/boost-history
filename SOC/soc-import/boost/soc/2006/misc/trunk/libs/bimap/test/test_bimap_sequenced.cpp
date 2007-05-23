@@ -1,10 +1,21 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+//  VC++ 8.0 warns on usage of certain Standard Library and API functions that
+//  can be cause buffer overruns or other possible security issues if misused.
+//  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
+//  But the wording of the warning is misleading and unsettling, there are no
+//  portable alternative functions, and VC++ 8.0's own libraries use the
+//  functions in question. So turn off the warnings.
+#define _CRT_SECURE_NO_DEPRECATE
+#define _SCL_SECURE_NO_DEPRECATE
+
+#include <boost/config.hpp>
 
 #define BOOST_BIMAP_DISABLE_SERIALIZATION
 
@@ -18,8 +29,6 @@
 #include <string>
 #include <functional>
 
-// Boost
-#include <boost/assign/list_of.hpp>
 
 // Set type specifications
 #include <boost/bimap/list_of.hpp>
@@ -36,39 +45,57 @@ struct right_tag {};
 
 void test_bimap()
 {
-    using namespace boost::bimap;
+    using namespace boost::bimaps;
 
-    typedef std::pair<int,double> std_pair;
-    std::set< std_pair > data =
-        boost::assign::list_of< std_pair >
-        (1,0.1) (2,0.2) (3,0.3) (4,0.4);
-
-    typedef std::map<int,double> left_data_type;
+    typedef std::map<std::string,long> left_data_type;
     left_data_type left_data;
-    left_data.insert( left_data_type::value_type(1,0.1) );
-    left_data.insert( left_data_type::value_type(2,0.2) );
-    left_data.insert( left_data_type::value_type(3,0.3) );
-    left_data.insert( left_data_type::value_type(4,0.4) );
+    left_data.insert( left_data_type::value_type("1",1) );
+    left_data.insert( left_data_type::value_type("2",2) );
+    left_data.insert( left_data_type::value_type("3",3) );
+    left_data.insert( left_data_type::value_type("4",4) );
 
-    typedef std::map<double,int> right_data_type;
+    typedef std::map<long,std::string> right_data_type;
     right_data_type right_data;
-    right_data.insert( right_data_type::value_type(0.1,1) );
-    right_data.insert( right_data_type::value_type(0.2,2) );
-    right_data.insert( right_data_type::value_type(0.3,3) );
-    right_data.insert( right_data_type::value_type(0.4,4) );
+    right_data.insert( right_data_type::value_type(1,"1") );
+    right_data.insert( right_data_type::value_type(2,"2") );
+    right_data.insert( right_data_type::value_type(3,"3") );
+    right_data.insert( right_data_type::value_type(4,"4") );
 
 
     //--------------------------------------------------------------------
     {
-        bimap
-        <
-            list_of< int >, vector_of< double >
+        typedef bimap<
+            list_of< std::string >, vector_of< long >
 
-        > b, c;
+        > bm_type;
+
+        std::set< bm_type::value_type > data;
+        data.insert( bm_type::value_type("1",1) );
+        data.insert( bm_type::value_type("2",2) );
+        data.insert( bm_type::value_type("3",3) );
+        data.insert( bm_type::value_type("4",4) );
+
+        bm_type b;
 
         test_sequence_container(b,data);
         test_sequence_container(b.left , left_data);
         test_sequence_container(b.right,right_data);
+
+        bm_type c;
+
+        // Test assign
+
+        b.clear();
+        BOOST_CHECK( b.empty() );
+
+        b.left.assign(left_data.begin(),left_data.end());
+        BOOST_CHECK( b.size() == left_data.size() );
+
+        b.right.assign(right_data.begin(),right_data.end());
+        BOOST_CHECK( b.size() == right_data.size() );
+
+        b.assign(data.begin(),data.end());
+        BOOST_CHECK( b.size() == data.size() );
 
         // Test splice and merge
 
@@ -89,20 +116,34 @@ void test_bimap()
         BOOST_CHECK( b.size() == 0 );
 
         b.left.merge(c.left);
-        c.left.merge(b.left,std::less<int>());
+        c.left.merge(b.left,std::less<std::string>());
 
         b.left.sort();
-        b.left.sort(std::less<int>());
+        b.left.sort(std::less<std::string>());
 
         b.left.unique();
-        b.left.unique(std::equal_to<int>());
+        b.left.unique(std::equal_to<std::string>());
 
-        c.sort();
-        c.unique();
-        b.merge(c);
+        b.assign( data.begin(), data.end() );
+
+        BOOST_CHECK( std::equal( b.begin(), b.end(), data.begin() ) );
         b.reverse();
+        BOOST_CHECK( std::equal( b.rbegin(), b.rend(), data.begin() ) );
 
-        b.left.remove_if( _key < 3 );
+        b.sort();
+
+        BOOST_CHECK( std::equal( b.begin(), b.end(), data.begin() ) );
+
+        b.push_back( bm_type::value_type("4",4) );
+        BOOST_CHECK( b.size() == 5 );
+        b.unique();
+        BOOST_CHECK( b.size() == 4 );
+        b.remove_if( _key < bm_type::value_type("2",2) );
+        BOOST_CHECK( b.size() == 3 );
+
+        b.merge(c);
+
+        b.left.remove_if( _key < "3" );
 
         // Test splice and merge
 
@@ -117,15 +158,15 @@ void test_bimap()
         c.right.splice(c.right.begin(),b.right,++b.right.begin());
 
         b.right.merge(c.right);
-        c.right.merge(b.right,std::less<double>());
+        c.right.merge(b.right,std::less<long>());
 
         b.right.sort();
-        b.right.sort(std::less<double>());
+        b.right.sort(std::less<long>());
 
         b.right.unique();
-        b.right.unique(std::equal_to<double>());
+        b.right.unique(std::equal_to<long>());
 
-        b.right.remove_if( _key < 0.3 );
+        b.right.remove_if( _key < 3 );
 
         b.clear();
         b.left.insert(b.left.begin(),left_data.begin(),left_data.end());
@@ -146,23 +187,52 @@ void test_bimap()
     {
         typedef bimap
         <
-            list_of< short >, list_of< std::string >,
+            list_of<std::string>, list_of<long>,
             vector_of_relation
 
-        > bm;
+        > bm_type;
 
-        bm b;
-        b.push_back( bm::relation(1,"one"  ) );
-        b.push_back( bm::relation(2,"two"  ) );
-        b.push_back( bm::relation(3,"three") );
-        b.push_back( bm::relation(4,"four" ) );
+        std::set< bm_type::value_type > data;
+        data.insert( bm_type::value_type("1",1) );
+        data.insert( bm_type::value_type("2",2) );
+        data.insert( bm_type::value_type("3",3) );
+        data.insert( bm_type::value_type("4",4) );
+
+        bm_type b;
+        b.push_back( bm_type::value_type("1",1) );
+        b.push_back( bm_type::value_type("2",2) );
+        b.push_back( bm_type::value_type("3",3) );
+        b.push_back( bm_type::value_type("4",4) );
+
+        BOOST_CHECK( std::equal( b.begin(), b.end(), data.begin() ) );
+        b.reverse();
+        BOOST_CHECK( std::equal( b.rbegin(), b.rend(), data.begin() ) );
 
         b.sort();
+
+        BOOST_CHECK( std::equal( b.begin(), b.end(), data.begin() ) );
+
+        b.push_back( bm_type::value_type("4",4) );
+        BOOST_CHECK( b.size() == 5 );
         b.unique();
-        b.reverse();
+        BOOST_CHECK( b.size() == 4 );
+        b.remove_if( _key < bm_type::value_type("2",2) );
+        BOOST_CHECK( b.size() == 3 );
 
         b.relocate( b.begin(), ++b.begin() );
         b.relocate( b.end(), b.begin(), ++b.begin() );
+
+        b.clear();
+        BOOST_CHECK( b.empty() );
+
+        b.left.assign(left_data.begin(),left_data.end());
+        BOOST_CHECK( b.size() == left_data.size() );
+
+        b.right.assign(right_data.begin(),right_data.end());
+        BOOST_CHECK( b.size() == right_data.size() );
+
+        b.assign(data.begin(),data.end());
+        BOOST_CHECK( b.size() == data.size() );
     }
     //--------------------------------------------------------------------
 
@@ -177,7 +247,10 @@ void test_bimap()
         > bimap_type;
 
         bimap_type b1;
-        bimap_type b2;
+
+        b1.push_back( bimap_type::value_type(1,2) );
+
+        bimap_type b2( b1 );
 
         BOOST_CHECK(     b1 == b2   );
         BOOST_CHECK( ! ( b1 != b2 ) );
@@ -186,13 +259,17 @@ void test_bimap()
         BOOST_CHECK( ! ( b1 <  b2 ) );
         BOOST_CHECK( ! ( b1 >  b2 ) );
 
-        b1.push_back( bimap_type::relation(1,2) );
+        b1.push_back( bimap_type::value_type(2,3) );
 
         b2 = b1;
         BOOST_CHECK( b2 == b1 );
 
+        b1.push_back( bimap_type::value_type(3,4) );
+
         b2.left = b1.left;
         BOOST_CHECK( b2 == b1 );
+
+        b1.push_back( bimap_type::value_type(4,5) );
 
         b2.right = b1.right;
         BOOST_CHECK( b2 == b1 );

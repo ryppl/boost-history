@@ -2,7 +2,7 @@
 
 Boost.Bimap
 
-Copyright (c) 2006 Matias Capeletto
+Copyright (c) 2006-2007 Matias Capeletto
 
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
@@ -10,7 +10,7 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 ]
 
-[/ QuickBook Document version 1.3 ]
+[/ QuickBook Document version 1.4 ]
 
 [section Bimap and Boost]
 
@@ -18,11 +18,17 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 ['MISC] - [*M]ulti-[*I]ndex [*S]pecialized [*C]ontainers
 
-[:['Let's be generic, construct frameworks, describe the world in an
-unified way...] \n
-  ['No!, it is better to be specialized, design easy-to-use components,
-offer plug-and-play objects...] \n
-  [*Why not take advantage of the best of both worlds?]]
+[:['
+Let's be generic, construct frameworks, describe the world in an
+unified way...
+]]
+[:['
+No!, it is better to be specialized, design easy-to-use components,
+offer plug-and-play objects...
+]]
+[:[*
+Why not take advantage of the best of both worlds?
+]]
 
 __MI_FRAMEWORK__
 
@@ -40,8 +46,8 @@ the best for every specialization. People may end up wrapping a B.MI
 container in its own class every time they want to use it as a
 bidirectional map. Boost.Bimap takes advantage of the narrower scope to
 produce a better interface for bidirectional maps
-[footnote In the same fashion, Boost.MRU will allow the creation of ['most recent updated]
-aware containers, hiding the complexity of Boost.MultiIndex.].
+[footnote In the same fashion, Boost.MRU will allow the creation of ['most
+recent updated] aware containers, hiding the complexity of Boost.MultiIndex.].
 There is no learning curve if you know how to use standard containers.
 Great effort was put into mapping the naming scheme of the STL to Boost.Bimap.
 The library is designed to match the common STL containers.
@@ -49,27 +55,31 @@ The library is designed to match the common STL containers.
 Boost.MultiIndex is, in fact, the core of the bimap container.
 
 However, Boost.Bimap do not aim to tackle every problem with two indexed
-types. There exist some problems that are better modelled with
-Boost.MultiIndex.
-\n
+types. There exist some problems that are better modelled with Boost.MultiIndex.
 
-[variablelist
-[[Problem I  - An employee register]
-[
+
+[blurb
+
+[*Problem I  - An employee register]
+
 ['Store an ID and a name for an employee, with fast search on each member.]
-\n\n
+
 This type of problem is better modelled as a database table, and
 [*Boost.MultiIndex] is the preferred choice. It is possible that other data
 will need to be indexed later.
-]]
-[[Problem II - A partners container]
-[
+
+]
+
+[blurb
+
+[*Problem II - A partners container]
+
 ['Store the names of couples and be able to get the name of a person's
 partner.]
-\n\n
-This problem is better modelled as a set of relations, and
-[*Boost.Bimap] fits nicely here.
-]]
+
+This problem is better modelled as a collection of relations, and [*Boost.Bimap]
+fits nicely here.
+
 ]
 
 [endsect]
@@ -121,40 +131,11 @@ A bimap can be archived and retrieved by means of the Boost.Serialization Librar
 Both regular and XML archives are supported. The usage is straightforward and does
 not differ from that of any other serializable type. For instance:
 
+[import ../example/bimap_and_boost/serialization.cpp]
 
-    #include <boost/archive/text_oarchive.hpp>
-    #include <boost/archive/text_iarchive.hpp>
-    #include <fstream>
+[@../../example/bimap_and_boost/serialization.cpp Go to source code]
 
-    ...
-
-    void save(const bimap_type & b)
-    {
-        std::ofstream ofs("data");
-        boost::archive::text_oarchive oa(ofs);
-        oa << b;
-    }
-
-    void load(bimap_type & b)
-    {
-        std::ifstream ifs("data");
-        boost::archive::text_iarchive ia(ifs);
-        ia >> b;
-    }
-
-    ...
-
-    bimap_type b;
-
-    ... // fill it with data
-
-    save(b);
-
-    ...
-
-    bimap_type restored_b;
-    load(restored_b);
-
+[code_bimap_and_boost_serialization]
 
 Serialization capabilities are automatically provided by just linking with the
 appropriate Boost.Serialization library module: it is not necessary to explicitly
@@ -195,33 +176,17 @@ situations, but can also be handy otherwise. The library comes with predefined
 operators for the containers of the standard library, but most functionality will
 work with any standard compliant container. The library also makes it possible
 to extend user defined types so for example a member function can be called for
-a list of values instead of its normal arguments.\n
+a list of values instead of its normal arguments.
 
 Boost.Assign can be used with bimap containers.
-For example, `list_of` can be used to initialize a bimap in the following way:
-
-    typedef bimap<int,std::string> bm;
-
-    bm b = list_of< bm::relation > (1,"one") (2,"two") (3,"three");
-
 The views of a bimap are signature-compatible with their standard
-counterparts, so we can use other Boost.Assign utilities with them. For
-example:
+counterparts, so we can use other Boost.Assign utilities with them.
 
-    bimap< multiset_of<int>, list_of<double> > b;
+[import ../example/bimap_and_boost/assign.cpp]
 
-    // Since it is left_based the main view is a multiset, so we use insert
+[@../../example/bimap_and_boost/assign.cpp Go to source code]
 
-    insert( b ) (1,0.1) (2,0.2) (3,0.3);
-
-    // The left map view is a multiset, again we use insert
-
-    insert( b.left ) (4,0.4) (5,0.5) (6,0.6) (7,0.7);
-
-    // The right map view is a list so we use push_back here
-    // Note the order of the elements in the list!
-
-    push_back( b.right ) (0.8,8) (0.9,9);
+[code_bimap_and_boost_assign]
 
 [endsect]
 
@@ -229,15 +194,10 @@ example:
 
 The hash function is the very core of the fast lookup capabilities of the
 unordered sets: a hasher is just a Unary Function returning an std::size_t value
-for any given key. In general, it is impossible that every key map to a different
-hash value, for the space of keys can be greater than the number of permissible
-hash codes: what makes for a good hasher is that the probability of a collision
-(two different keys with the same hash value) is as close to zero as possible.
+for any given key. In general, it is impossible that every key map to a
+different hash value, for the space of keys can be greater than the number of permissible hash codes: what makes for a good hasher is that the probability of a collision (two different keys with the same hash value) is as close to zero as possible.
 
-This is a statistical property depending on the typical distribution of keys in a
-given application, so it is not feasible to have a general-purpose hash function
-with excellent results in every possible scenario; the default value for this
-parameter uses Boost.Hash, which often provides good enough results.
+This is a statistical property depending on the typical distribution of keys in a given application, so it is not feasible to have a general-purpose hash function with excellent results in every possible scenario; the default value for this parameter uses Boost.Hash, which often provides good enough results.
 
 Boost.Hash can be
 [@http://www.boost.org/regression-logs/cs-win32_metacomm/doc/html/hash/custom.html
@@ -254,36 +214,17 @@ lambda calculus, where a lambda abstraction defines an unnamed function.
 Lambda expressions are very useful to construct the function objects required by some of
 the functions in a bimap view.
 
-Boost.Bimap defines new placeholders to allow a sounder solution. For
-pairs, two new placeholders are instantiated: `_first` and `_second`, and
-for a relation, two more complete the set: `_left` and `_right`. A final
-placeholder serves to refer to the keys uniformly in an associative
-container: `_key`. The following example shows how to use them:
+Boost.Bimap defines new placeholders in `<boost/bimap/support/lambda.hpp>`
+to allow a sounder solution. The placeholders are named _key and _data and both
+are equivalent to boost::lambda::_1. There are two reasons to include this placeholders:
+the code looks better with them and they avoid the clash problem between lambda::_1 and
+boost::_1 from Boost.Bind.
 
-    #include <boost/bimap/support/lambda.hpp>
-    #include <boost/bimap/bimap.hpp>
+[import ../example/bimap_and_boost/lambda.cpp]
 
-    int main()
-    {
-        using namespace boost::bimap;
+[@../../example/bimap_and_boost/lambda.cpp Go to source code]
 
-        typedef bimap<int,double> bm;
-
-        bm b;
-        b.insert( bm::relation(1,0.1) );
-
-        b.left .modify( b.left.begin() , _first = 2 );
-        b.left .modify( b.left.begin() , _second = 0.1 );
-        b.right.modify( b.right.begin(), ( _first = 0.1, _second = 1 ) );
-
-        BOOST_CHECK( b.left[1] == 0.1 );
-
-        BOOST_CHECK( b.size() == 1 );
-
-        b.modify( b.begin(), ( _left = 2, _right = 0.2 ) );
-
-        BOOST_CHECK( b.left.range( 1 <= _key , _key < 3 ).first == b.left.begin() );
-    }
+[code_bimap_and_boost_lambda]
 
 [endsect]
 
@@ -301,20 +242,19 @@ interface in terms of Ranges as much as possible.
 As Boost.Bimap views are signature-compatible with their standard
 container counterparts, they are compatible with the concept of a range.
 As an additional feature, ordered bimap views offer a function named
-`range` that allows a range of values to be obtained. Range-searching,
-i.e. the look-up of all elements in a given interval, is a very
-frequently performed operation for which it is possible to resort to
-standard `lower_bound` and `upper_bound`, although this is cumbersome. Here
-is an example of what the code will like. Boost.Lambda helps very much
-in the construction of the Lower and Upper bound.
+`range` that allows a range of values to be obtained.
 
-    bimap<int,double> b;
+[import ../example/bimap_and_boost/range.cpp]
 
-    ...
+If we have some generic functions that accepts ranges:
 
-    foo( b. left.range(   1 <= _key, _key <   3 ) );
-    foo( b.right.range( 0.3 <= _key, _key < 1.2 ) );
+[code_bimap_and_boost_range_functions]
 
+We can use them with Boost.Bimap with the help of the `range` function.
+
+[code_bimap_and_boost_range]
+
+[@../../example/bimap_and_boost/range.cpp Go to source code]
 
 [endsect]
 
@@ -344,39 +284,11 @@ need to include one of the following headers:
 The following is adapted from the example in the Boost.PropertyMap
 documentation.
 
-    #include <iostream>
-    #include <string>
-    #include <boost/bimap/bimap.hpp>
-    #include <boost/bimap/multiset_of.hpp>
-    #include <boost/bimap/property_map/set_of.hpp>
+[import ../example/bimap_and_boost/property_map.cpp]
 
-    template <typename AddressMap>
-    void foo(AddressMap & address)
-    {
-        typedef typename boost::property_traits<AddressMap>::value_type value_type;
-        typedef typename boost::property_traits<AddressMap>::key_type key_type;
+[@../../example/bimap_and_boost/property_map.cpp Go to source code]
 
-        value_type old_address, new_address;
-        key_type fred = "Fred";
-        old_address = get(address, fred);
-        new_address = "384 Fitzpatrick Street";
-        put(address, fred, new_address);
-    }
-
-    int main()
-    {
-        typedef boost::bimap::bimap<std::string, multiset_of<std::string> > Name2Address;
-        typedef Name2Address::relation location;
-
-        Name2Address name2address;
-
-        name2address.insert(location("Fred", "710 West 13th Street"));
-        name2address.insert(location( "Joe", "710 West 13th Street"));
-
-        foo(name2address);
-
-        return 0;
-    }
+[code_bimap_and_boost_property_map]
 
 [endsect]
 
@@ -389,7 +301,7 @@ behind this decision is keeping the Boost code base small by reusing
 existent code. The libraries used are well-established and have been
 tested extensively, making this library easy to port since all the hard
 work has already been done. The glue that holds everything together is
-Boost.MPL. Clearly Boost.MultiIndex has been abused by this library.
+Boost.MPL. Clearly Boost.MultiIndex is the heart of this library.
 
 [table Boost Libraries needed by Boost.Bimap
 [[Name][Description][author]]

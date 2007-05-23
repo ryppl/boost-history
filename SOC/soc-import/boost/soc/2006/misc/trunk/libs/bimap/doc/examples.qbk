@@ -2,7 +2,7 @@
 
 Boost.Bimap
 
-Copyright (c) 2006 Matias Capeletto
+Copyright (c) 2006-2007 Matias Capeletto
 
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
@@ -10,185 +10,142 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 ]
 
-[/ QuickBook Document version 1.3 ]
+[/ QuickBook Document version 1.4 ]
 
 [section Examples]
+
+[section Examples list]
+
+In the folder [@../../example libs/bimap/example] you can find all the examples
+used in bimap documentation. Here is a list of them:
+
+
+[table Tutorial examples
+[[Program                          ][Description                          ]]
+
+[[[@../../example/simple_bimap.cpp
+    simple_bimap.cpp                                                      ]]
+    [Soccer world cup example                                             ]]
+
+[[[@../../example/tagged_simple_bimap.cpp
+    tagged_simple_bimap.cpp                                               ]]
+    [Soccer world cup example using user defined names                    ]]
+
+[[[@../../example/step_by_step.cpp
+    step_by_step.cpp                                                      ]]
+    [Basic example of the three views of bimap                            ]]
+
+[[[@../../example/population_bimap.cpp
+    population_bimap.cpp                                                  ]]
+    [Countries populations, using `unordered_set_of` and `multiset_of`    ]]
+
+[[[@../../example/repetitions_counter.cpp
+    repetitions_counter.cpp                                               ]]
+    [Word repetitions counter, using `unordered_set_of` and `list_of`     ]]
+
+[[[@../../example/mighty_bimap.cpp
+    mighty_bimap.cpp                                                      ]]
+    [Dictionary using `list_of_relation`                                  ]]
+
+[[[@../../example/user_defined_names.cpp
+    user_defined_names.cpp                                                ]]
+    [Equivalence between code with tagged and untagged code               ]]
+
+[[[@../../example/standard_map_comparison.cpp
+    standard_map_comparison.cpp                                           ]]
+    [Comparison between standard maps and bimap map views                 ]]
+
+[[[@../../example/at_function_examples.cpp
+    at_function_examples.cpp                                              ]]
+    [Functions `at(key)` and `operator[](key)` examples                   ]]
+
+[[[@../../example/tutorial_modify_and_replace.cpp
+    tutorial_modify_and_replace.cpp                                       ]]
+    [`modify` and `replace` examples                                      ]]
+
+[[[@../../example/tutorial_range.cpp
+    tutorial_range.cpp                                                    ]]
+    [`range` tutorial                                                     ]]
+
+[[[@../../example/unconstrained_collection.cpp
+    unconstrained_collection.cpp                                          ]]
+    [Using `unconstrained_set_of` collection type                         ]]
+]
+
+
+[table Bimap and Boost examples
+[[Program                          ][Description                          ]]
+
+[[[@../../example/bimap_and_boost/assign.cpp
+    assign.cpp                                                            ]]
+    [Bimap and Boost.Assign: Methods to insert elements                   ]]
+
+[[[@../../example/bimap_and_boost/lambda.cpp
+    lambda.cpp                                                            ]]
+    [Bimap and Boost.Lambda: new lambda placeholders                      ]]
+
+[[[@../../example/bimap_and_boost/property_map.cpp
+    property_map.cpp                                                      ]]
+    [Bimap and Boost.PropertyMap: PropertyMap support                     ]]
+
+[[[@../../example/bimap_and_boost/range.cpp
+    range.cpp                                                             ]]
+    [Bimap and Boost.Range: Using bimaps in the new range framework       ]]
+
+[[[@../../example/bimap_and_boost/serialization.cpp
+    serialization.cpp:                                                    ]]
+    [Bimap and Boost.Serialization: Load and save bimaps and iterators    ]]
+]
+
+
+[table Boost.MultiIndex to Boost.Bimap path examples
+[[Program                          ][Description                          ]]
+
+[[[@../../example/mi_to_b_path/bidirectional_map.cpp
+    bidirectional_map.cpp                                                 ]]
+    [Boost.MultiIndex to Boost.Bimap path example                         ]]
+
+[[[@../../example/mi_to_b_path/hashed_indices.cpp
+    hashed_indices.cpp                                                    ]]
+    [Boost.MultiIndex to Boost.Bimap path example                         ]]
+
+[[[@../../example/mi_to_b_path/tagged_bidirectional_map.cpp
+    tagged_bidirectional_map.cpp                                          ]]
+    [Boost.MultiIndex to Boost.Bimap path example                         ]]
+
+]
+
+[endsect]
 
 [section Simple Bimap]
 
 This is the example from the one minute tutorial section.
 
-    #include <iostream>
+[@../../example/simple_bimap.cpp Go to source code]
 
-    #include <boost/bimap/bimap.hpp>
-
-    int main()
-    {
-        using namespace bimap;
-
-        // Soccer World cup. (The results are not real)
-
-        typedef bimap<std::string,int> results_bimap;
-        typedef results_bimap::relation position;
-
-        results_bimap results;
-        results.insert( position("Argentina"    ,1) );
-        results.insert( position("Spain"        ,2) );
-        results.insert( position("Germany"      ,3) );
-        results.insert( position("France"       ,4) );
-
-        std::cout << "Countries names ordered by their final position:"
-                  << std::endl;
-
-        for( results_bimap::right_iterator i    = results.right.begin(),
-                                           iend = results.right.end() ;
-             i != iend; ++i )
-        {
-            std::cout << i->first << ") " << i->second << std::endl;
-        }
-
-        std::cout << std::endl
-                  << "Countries names ordered alfabetically along with"
-                     "their final position:"
-                  << std::endl;
-
-        for( results_bimap::left_iterator  i    = results.left.begin(),
-                                           iend = results.left.end() ;
-             i != iend; ++i )
-        {
-            std::cout << i->first << " ends " << i->second << "º" << std::endl;
-        }
-
-    }
+[code_simple_bimap]
 
 You can rewrite it using tags to gain readability.
 
-    #include <iostream>
+[@../../example/tagged_simple_bimap.cpp Go to source code]
 
-    #include <boost/bimap/bimap.hpp>
+[import ../example/tagged_simple_bimap.cpp]
 
-    struct country  {};
-    struct place    {};
+[code_tagged_simple_bimap]
 
-    int main()
-    {
-        using namespace bimap;
-
-        // Soccer World cup. (The results are not real)
-
-        typedef bimap
-        <
-            tagged< std::string, country >,
-            tagged< int        , place   >
-
-        > results_bimap;
-
-        typedef results_bimap::relation position;
-
-        results_bimap results;
-        results.insert( position("Argentina"    ,1) );
-        results.insert( position("Spain"        ,2) );
-        results.insert( position("Germany"      ,3) );
-        results.insert( position("France"       ,4) );
-
-        std::cout << "Countries names ordered by their final position:"
-                  << std::endl;
-
-        typedef iterator_type_by<place,results_bimap>::type iterator_by_place;
-        for( iterator_by_place i    = map_by<place>(results).begin(),
-                               iend = map_by<place>(results).end() ;
-             i != iend; ++i )
-        {
-            std::cout << get<place>(*i) << ") " << get<country>(*i) << std::endl;
-        }
-
-        std::cout << std::endl
-                  << "Countries names ordered alfabetically along with"
-                     "their final position:"
-                  << std::endl;
-
-        typedef iterator_type_by<country,results_bimap>::type iterator_by_country;
-        for(  iterator_by_country i    = map_by<country>(results).begin(),
-                                  iend = map_by<country>(results).end() ;
-             i != iend; ++i )
-        {
-            std::cout << get<country>(*i) << " ends " << get<place>(*i) << "º" << std::endl;
-        }
-
-    }
 
 [endsect]
 
 [section Mighty Bimap]
 
 This is the translator example from the tutorial.
-In this example the set type of relation is changed to allow the iteration
+In this example the collection type of relation is changed to allow the iteration
 of the container.
 
-    #include <iostream>
-    #include <string>
-    #include <boost/bimap/bimap.hpp>
-    #include <boost/bimap/list_of.hpp>
-    #include <boost/bimap/unordered_set_of.hpp>
+[@../../example/mighty_bimap.cpp Go to source code]
 
-    struct english {};
-    struct spanish {};
+[code_mighty_bimap]
 
-    int main()
-    {
-        using namespace boost::bimap;
-
-        typedef bimap
-        <
-            tagged< unordered_set_of< std::string >, spanish >,
-            tagged< unordered_set_of< std::string >, english >,
-            list_of_relation
-
-        > translator_bimap;
-
-        typedef translator_bimap::relation translation;
-        translator_bimap translator;
-        translator.insert( translation("hola"  ,"hello"   ) );
-        translator.insert( translation("adios" ,"goodbye" ) );
-        translator.insert( translation("rosa"  ,"rose"    ) );
-        translator.insert( translation("mesa"  ,"table"   ) );
-
-        std::cout << "enter a word" << std::endl;
-        std::string word;
-        std::getline(std::cin,word);
-
-        // Search the queried word on the from index (Spanish) */
-
-        iterator_type_by<spanish,translator_bimap>::type is = map_by<spanish>(d).find(word);
-
-        if( is != map_by<spanish>(d).end() )
-        {
-            std::cout << word << " is said " << get<english>(*is) << " in English" << std::endl;
-        }
-        else
-        {
-            // Word not found in Spanish, try our luck in English
-
-            iterator_type_by<english,translator_bimap>::type ie = map_by<english>(d).find(word);
-            if( ie != map_by<english>(d).end() )
-            {
-                std::cout << word << " is said " << get<spanish>(*ie) << " in Spanish" << std::endl;
-            }
-            else
-            {
-                // Word not found, show the possible translations
-
-                std::cout << "No such word in the dictionary" << std::endl;
-                std::cout << "These are the possible translations" << std::endl;
-                for( translator_bimap::iterator i = translator.begin(), i_end = translator.end();
-                     i != i_end ; ++i )
-                {
-                    std::cout << get<spanish>(*i) << " <---> " << get<english>(*i) << std::endl;
-                }
-            }
-        }
-        return 0;
-    }
 
 [endsect]
 
@@ -201,208 +158,33 @@ This example shows how to construct a bidirectional map with multi_index_contain
 By a bidirectional map we mean a container of elements of
 `std::pair<const FromType,const ToType>` such that no two elements exists with the
 same first or second value (`std::map` only guarantees uniqueness of the first member).
-Fast lookup is provided for both keys. The program features a tiny Spanish-English
-dictionary with online query of words in both languages.
+Fast look-up is provided for both keys. The program features a tiny Spanish-English
+dictionary with on-line query of words in both languages.
 ]
 
-[h2 Boost.MultiIndex]
+[heading Boost.MultiIndex]
 
-``
-// tags for accessing both sides of a bidirectional map
+[@../../example/mi_to_b_path/mi_bidirectional_map.cpp Go to source code]
 
-struct from {};
-struct to   {};
+[import ../example/mi_to_b_path/mi_bidirectional_map.cpp]
 
-// The class template bidirectional_map wraps the specification
-// of a bidirectional map based on multi_index_container.
+[code_mi_to_b_path_mi_bidirectional_map]
 
-template<typename FromType,typename ToType>
-struct bidirectional_map
-{
-    typedef std::pair<FromType,ToType> value_type;
+[heading Boost.Bimap]
 
-    typedef multi_index_container<
-        value_type,
-        indexed_by
-        <
-            ordered_unique
-            <
-                tag<from>, member<value_type,FromType,&value_type::first>
-            >,
-            ordered_unique
-            <
-                tag<to>, member<value_type,ToType,&value_type::second>
-            >
-        >
+[@../../example/mi_to_b_path/bidirectional_map.cpp Go to source code]
 
-  > type;
+[import ../example/mi_to_b_path/bidirectional_map.cpp]
 
-};
-
-// A dictionary is a bidirectional map from strings to strings
-
-typedef bidirectional_map<std::string,std::string>::type dictionary;
-
-int main()
-{
-    dictionary d;
-
-    // Fill up our microdictionary. first members Spanish, second members English.
-
-    d.insert(dictionary::value_type("hola","hello"));
-    d.insert(dictionary::value_type("adios","goodbye"));
-    d.insert(dictionary::value_type("rosa","rose"));
-    d.insert(dictionary::value_type("mesa","table"));
-
-    std::cout << "enter a word" << std::endl;
-    std::string word;
-    std::getline(std::cin,word);
-
-    // search the queried word on the from index (Spanish)
-
-    dictionary::iterator it = d.get<from>().find(word);
-
-    if( it != d.end() )
-    {
-        // the second part of the element is the equivalent in English
-
-        std::cout << word << " is said " << it->second << " in English" << std::endl;
-    }
-    else
-    {
-        // word not found in Spanish, try our luck in English
-
-        dictionary::index_iterator<to>::type it2 = d.get<to>().find(word);
-        if( it2 != d.get<to>().end() )
-        {
-            std::cout << word << " is said " << it2->first << " in Spanish" << std::endl;
-        }
-        else
-        {
-            std::cout << "No such word in the dictionary" << std::endl;
-        }
-    }
-
-    return 0;
-}
-``
-
-
-[h2 Boost.Bimap]
-
-
-``
-
-// A dictionary is a bidirectional map from strings to strings
-
-typedef bimap<std::string,std::string> dictionary;
-typedef dictionary::relation translation;
-
-int main()
-{
-    dictionary d;
-
-    // Fill up our microdictionary. first members Spanish, second members English.
-
-    d.insert(translation("hola","hello"));
-    d.insert(translation("adios","goodbye"));
-    d.insert(translation("rosa","rose"));
-    d.insert(translation("mesa","table"));
-
-    std::cout << "enter a word" << std::endl;
-    std::string word;
-    std::getline(std::cin,word);
-
-    // search the queried word on the from index (Spanish) */
-
-    iterator_type_by<member_at::left,dictionary>::type it = map_by<member_at::left>(d).find(word);
-
-    if( it != map_by<member_at::left>(d).end() )
-    {
-        // the second part of the element is the equivalent in English
-
-        std::cout << word << " is said " << it->second << " in English" << std::endl;
-    }
-    else
-    {
-        // word not found in Spanish, try our luck in English
-
-        iterator_type_by<member_at::right,dictionary>::type it2 = map_by<member_at::right>(d).find(word);
-        if( it2 != map_by<member_at::right>(d).end() )
-        {
-            std::cout << word << " is said " << it2->first << " in Spanish" << std::endl;
-        }
-        else
-        {
-            std::cout << "No such word in the dictionary" << std::endl;
-        }
-    }
-
-    return 0;
-}
-``
+[code_mi_to_b_path_bidirectional_map]
 
 Or better, using tags...
 
+[@../../example/mi_to_b_path/tagged_bidirectional_map.cpp Go to source code]
 
-``
+[import ../example/mi_to_b_path/tagged_bidirectional_map.cpp]
 
-// tags
-
-struct spanish {};
-struct english {};
-
-// A dictionary is a bidirectional map from strings to strings
-
-typedef bimap
-<
-    tagged< std::string,spanish >, tagged< std::string,english >
-
-> dictionary;
-
-typedef dictionary::relation translation;
-
-int main()
-{
-    dictionary d;
-
-    // Fill up our microdictionary. first members Spanish, second members English.
-
-    d.insert(translation("hola","hello"));
-    d.insert(translation("adios","goodbye"));
-    d.insert(translation("rosa","rose"));
-    d.insert(translation("mesa","table"));
-
-    std::cout << "enter a word" << std::endl;
-    std::string word;
-    std::getline(std::cin,word);
-
-    // search the queried word on the from index (Spanish) */
-
-    iterator_type_by<spanish,dictionary>::type it = map_by<spanish>(d).find(word);
-
-    if( it != map_by<spanish>(d).end() )
-    {
-        std::cout << word << " is said " << get<english>(*it) << " in English" << std::endl;
-    }
-    else
-    {
-        // word not found in Spanish, try our luck in English
-
-        iterator_type_by<english,dictionary>::type it2 = map_by<english>(d).find(word);
-        if( it2 != map_by<english>(d).end() )
-        {
-            std::cout << word << " is said " << get<spanish>(*it2) << " in Spanish" << std::endl;
-        }
-        else
-        {
-            std::cout << "No such word in the dictionary" << std::endl;
-        }
-    }
-
-    return 0;
-}
-``
+[code_mi_to_b_path_tagged_bidirectional_map]
 
 [endsect]
 
@@ -411,153 +193,26 @@ int main()
 This is example 8 of Boost.MultiIndex.
 
 [blurb
-Hashed indices can be used as an alternative to ordered indices when fast lookup is needed and sorting
+Hashed indices can be used as an alternative to ordered indices when fast look-up is needed and sorting
 information is of no interest. The example features a word counter where duplicate entries are checked by
 means of a hashed index.
 ]
 
-[h2 Boost.MultiIndex]
+[heading Boost.MultiIndex]
 
-``
+[@../../example/mi_to_b_path/mi_hashed_indices.cpp Go to source code]
 
-// word_counter keeps the ocurrences of words inserted. A hashed
-// index allows for fast checking of preexisting entries.
+[import ../example/mi_to_b_path/mi_hashed_indices.cpp]
 
-struct word_counter_entry
-{
-    std::string  word;
-    unsigned int occurrences;
+[code_mi_to_b_path_mi_hashed_indices]
 
-    word_counter_entry( std::string word_ ) : word(word_), occurrences(0) {}
-};
+[heading Boost.Bimap]
 
-typedef multi_index_container
-<
-    word_counter_entry,
-    indexed_by
-    <
-        ordered_non_unique
-        <
-            BOOST_MULTI_INDEX_MEMBER(word_counter_entry,unsigned int,occurrences),
-            std::greater<unsigned int>
-        >,
-        hashed_unique
-        <
-            BOOST_MULTI_INDEX_MEMBER(word_counter_entry,std::string,word)
-        >
-  >
+[@../../example/mi_to_b_path/hashed_indices.cpp Go to source code]
 
-> word_counter;
+[import ../example/mi_to_b_path/hashed_indices.cpp]
 
-typedef boost::tokenizer<boost::char_separator<char> > text_tokenizer;
-
-int main()
-{
-
-    std::string text=
-        "En un lugar de la Mancha, de cuyo nombre no quiero acordarme... "
-        "...snip..."
-        "...no se salga un punto de la verdad.";
-
-    // feed the text into the container
-
-    word_counter   wc;
-    text_tokenizer tok(text,boost::char_separator<char>(" \t\n.,;:!?'\"-"));
-    unsigned int   total_occurrences = 0;
-
-    for( text_tokenizer::iterator it = tok.begin(), it_end = tok.end();
-         it != it_end ; ++it )
-    {
-        ++total_occurrences;
-        word_counter::iterator wit = wc.insert(*it).first;
-        wc.modify_key(wit,++_1);
-    }
-
-    // list words by frequency of appearance
-
-    std::cout << std::fixed << std::setprecision(2);
-
-    for( word_counter::iterator wit = wc.begin(), wit_end=wc.end();
-         wit != wit_end; ++wit )
-    {
-        std::cout << std::setw(11) << wit->word << ": "
-                  << std::setw(5)
-                  << 100.0 * wit->occurrences / total_occurrences << "%"
-                  << std::endl;
-    }
-
-    return 0;
-}
-
-``
-
-[h2 Boost.Bimap]
-
-
-``
-
-typedef bimap
-<
-    tagged< std::string, word >,
-    tagged
-    <
-        multi_set_of
-        <
-            unsigned int,
-            std::greater<unsigned int>
-        >,
-        occurrences
-    >
-
-> word_counter;
-
-typedef boost::tokenizer<boost::char_separator<char> > text_tokenizer;
-
-int main()
-{
-
-    std::string text=
-        "Relations between data in the STL are represented with maps."
-        "A map is a directed relation, by using it you are representing"
-        "a mapping. In this directed relation, the first type is related to"
-        "the second type but it is not true that the inverse relationship"
-        "holds. This is useful in a lot of situations, but there are some"
-        "relationships that are bidirectional by nature.";
-
-    // feed the text into the container
-
-    word_counter   wc;
-    text_tokenizer tok(text,boost::char_separator<char>(" \t\n.,;:!?'\"-"));
-    unsigned int   total_occurrences = 0;
-
-    for( text_tokenizer::iterator it = tok.begin(), it_end = tok.end();
-         it != it_end ; ++it )
-    {
-        ++total_occurrences;
-        ++map_by<word>(wc)[*it];
-    }
-
-    // list words by frequency of appearance
-
-    std::cout << std::fixed << std::setprecision(2);
-
-    typedef iterator_type_by<occurrences,word_counter>::type iterator;
-
-    for( iterator wit     = map_by<occurrences>(wc).begin(),
-                  wit_end = map_by<occurrences>(wc).end();
-
-         wit != wit_end; ++wit )
-    {
-        std::cout << std::setw(11) << get<word>(*wit) << ": "
-                  << std::setw(5)
-                  << 100.0 * get<occurrences>(*wit) / total_occurrences << "%"
-                  << std::endl;
-    }
-
-    return 0;
-}
-
-``
+[code_mi_to_b_path_hashed_indices]
 
 
 [endsect]

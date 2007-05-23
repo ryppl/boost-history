@@ -1,14 +1,19 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-
 #ifndef BOOST_BIMAP_TEST_TEST_RELATION_HPP
 #define BOOST_BIMAP_TEST_TEST_RELATION_HPP
+
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
 
 // Boost.Test
 #include <boost/test/minimal.hpp>
@@ -36,9 +41,9 @@
 /*
 namespace static_test {
 
-using namespace boost::bimap::relation::member_at;
-using namespace boost::bimap::relation;
-using namespace boost::bimap::tags;
+using namespace boost::bimaps::relation::member_at;
+using namespace boost::bimaps::relation;
+using namespace boost::bimaps::tags;
 
 template< class Relation, class LeftData, class RightData >
 struct untagged_test
@@ -50,10 +55,14 @@ struct untagged_test
     BOOST_BIMAP_CHECK_METADATA(Relation,right_tag,right);
 
     typedef tagged<LeftData ,left > desired_tagged_left_type;
-    BOOST_BIMAP_CHECK_METADATA(Relation,tagged_left_type ,desired_tagged_left_type );
+    BOOST_BIMAP_CHECK_METADATA(
+        Relation,tagged_left_type ,desired_tagged_left_type 
+    );
 
     typedef tagged<RightData,right> desired_tagged_right_type;
-    BOOST_BIMAP_CHECK_METADATA(Relation,tagged_right_type,desired_tagged_right_type);
+    BOOST_BIMAP_CHECK_METADATA(
+        Relation,tagged_right_type,desired_tagged_right_type
+    );
 };
 
 template< class Relation, class LeftData, class RightData, class LeftTag, class RightTag >
@@ -66,10 +75,14 @@ struct tagged_test
     BOOST_BIMAP_CHECK_METADATA(Relation,right_tag,right_tag );
 
     typedef tagged<left_data ,left_tag > desired_tagged_left_type;
-    BOOST_BIMAP_CHECK_METADATA(Relation,tagged_left_type,desired_tagged_left_type);
+    BOOST_BIMAP_CHECK_METADATA(
+        Relation,tagged_left_type,desired_tagged_left_type
+    );
 
     typedef tagged<right_data,right_tag> desired_tagged_right_type;
-    BOOST_BIMAP_CHECK_METADATA(Relation,tagged_right_type,desired_tagged_right_type);
+    BOOST_BIMAP_CHECK_METADATA(
+        Relation,tagged_right_type,desired_tagged_right_type
+    );
 };
 
 } // namespace static_test
@@ -81,9 +94,9 @@ void test_relation_with_default_tags(Relation & rel,
     const typename Relation::right_value_type & rv)
 {
 
-    using namespace boost::bimap::relation::support;
-    using namespace boost::bimap::relation;
-    using namespace boost::bimap::tags;
+    using namespace boost::bimaps::relation::support;
+    using namespace boost::bimaps::relation;
+    using namespace boost::bimaps::tags;
 
     // It must work with normal tags
 
@@ -96,11 +109,21 @@ void test_relation_with_default_tags(Relation & rel,
     BOOST_CHECK( get<member_at::left >(rel) == rel.left  );
     BOOST_CHECK( get<member_at::right>(rel) == rel.right );
 
-    BOOST_CHECK( get<member_at::left >(pair_by<member_at::left >(rel)) == rel.left  );
-    BOOST_CHECK( get<member_at::right>(pair_by<member_at::left >(rel)) == rel.right );
+    BOOST_CHECK(
+        get<member_at::left >(pair_by<member_at::left >(rel)) == rel.left
+    );
 
-    BOOST_CHECK( get<member_at::left >(pair_by<member_at::right>(rel)) == rel.left  );
-    BOOST_CHECK( get<member_at::right>(pair_by<member_at::right>(rel)) == rel.right );
+    BOOST_CHECK(
+        get<member_at::right>(pair_by<member_at::left >(rel)) == rel.right
+    );
+
+    BOOST_CHECK(
+        get<member_at::left >(pair_by<member_at::right>(rel)) == rel.left
+    );
+
+    BOOST_CHECK(
+        get<member_at::right>(pair_by<member_at::right>(rel)) == rel.right
+    );
 
 }
 
@@ -110,9 +133,9 @@ void test_relation_with_user_tags(Relation & rel,
                    const typename Relation::right_value_type & rv)
 {
 
-    using namespace boost::bimap::relation::support;
-    using namespace boost::bimap::relation;
-    using namespace boost::bimap::tags;
+    using namespace boost::bimaps::relation::support;
+    using namespace boost::bimaps::relation;
+    using namespace boost::bimaps::tags;
 
     // And with users ones
 
@@ -131,8 +154,16 @@ void test_relation_with_user_tags(Relation & rel,
     BOOST_CHECK( get<LeftTag >(pair_by<RightTag>(rel)) == rel.left  );
     BOOST_CHECK( get<RightTag>(pair_by<RightTag>(rel)) == rel.right );
 
-    get<RightTag>(pair_by<RightTag>(rel)) = rv;
+    //----------------------------------------------------------------
 
+    BOOST_CHECK( rel.template get<LeftTag >() == rel.left  );
+    BOOST_CHECK( rel.template get<RightTag>() == rel.right );
+
+    BOOST_CHECK( pair_by<LeftTag >(rel).template get<LeftTag >()== rel.left );
+    BOOST_CHECK( pair_by<LeftTag >(rel).template get<RightTag>()== rel.right);
+
+    BOOST_CHECK( pair_by<RightTag>(rel).template get<LeftTag >()== rel.left );
+    BOOST_CHECK( pair_by<RightTag>(rel).template get<RightTag>()== rel.right);
 }
 
 struct  left_user_tag {};
@@ -141,9 +172,9 @@ struct right_user_tag {};
 template< class RelationBuilder, class LeftData, class RightData >
 void test_relation(const LeftData & lv, const RightData & rv)
 {
-    using namespace boost::bimap::relation::support;
-    using namespace boost::bimap::relation;
-    using namespace boost::bimap::tags;
+    using namespace boost::bimaps::relation::support;
+    using namespace boost::bimaps::relation;
+    using boost::bimaps::tags::tagged;
 
     // Untagged test
     {
@@ -181,7 +212,7 @@ void test_relation(const LeftData & lv, const RightData & rv)
 
     // Default Constructor, Constructor from views and some operators
     {
-
+/*
         typedef typename RelationBuilder::template build
         <
             tagged<LeftData , left_user_tag  >,
@@ -203,7 +234,7 @@ void test_relation(const LeftData & lv, const RightData & rv)
         rel = rel_from_left;
 
         BOOST_CHECK( rel == rel_from_left );
-
+*/
     }
 
 }

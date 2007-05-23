@@ -1,10 +1,21 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+//  VC++ 8.0 warns on usage of certain Standard Library and API functions that
+//  can be cause buffer overruns or other possible security issues if misused.
+//  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
+//  But the wording of the warning is misleading and unsettling, there are no
+//  portable alternative functions, and VC++ 8.0's own libraries use the
+//  functions in question. So turn off the warnings.
+#define _CRT_SECURE_NO_DEPRECATE
+#define _SCL_SECURE_NO_DEPRECATE
+
+#include <boost/config.hpp>
 
 // std
 #include <set>
@@ -15,7 +26,6 @@
 
 // Boost.Test
 #include <boost/test/minimal.hpp>
-#include <boost/assign/list_of.hpp>
 
 // Boost.Bimap
 
@@ -35,7 +45,8 @@ void test_readable_property_map(
     typename boost::property_traits<Map>::value_type const & value
 )
 {
-    // TODO Add STATIC_ASSERT( boost::property_traits<Map>::category is readable )
+    // TODO Add STATIC_ASSERT(
+    //              boost::property_traits<Map>::category is readable )
 
     BOOST_CHECK( get(m,key) == value );
     //BOOST_CHECK( m[key]     == value );
@@ -44,11 +55,14 @@ void test_readable_property_map(
 
 void test_bimap_property_map()
 {
-    using namespace boost::bimap;
+    using namespace boost::bimaps;
 
     typedef bimap< set_of<int>, unordered_set_of<double> > bm;
 
-    bm b = boost::assign::list_of< bm::relation >(1,0.1)(2,0.2)(3,0.3);
+    bm b;
+    b.insert( bm::value_type(1,0.1) );
+    b.insert( bm::value_type(2,0.2) );
+    b.insert( bm::value_type(3,0.3) );
 
     test_readable_property_map(b.left ,  1,0.1);
     test_readable_property_map(b.right,0.1,  1);

@@ -2,7 +2,7 @@
 
 Boost.Bimap
 
-Copyright (c) 2006 Matias Capeletto
+Copyright (c) 2006-2007 Matias Capeletto
 
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
@@ -10,15 +10,18 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 ]
 
-[/ QuickBook Document version 1.3 ]
+[/ QuickBook Document version 1.4 ]
 
 [section One minute tutorial]
 
-[h2 What is a bimap?]
+[heading What is a bimap?]
+
+A Bimap is a data structure that represents bidirectional relations between
+elements of two collections. The container is designed to work as two opposed STL maps. A bimap between a collection `X` and a collection `Y` can be viewed as a map from `X` to `Y` (this view will be called the ['left map view]) or as a map from `Y` to `X` (known as the ['right map view]). Additionally, the bimap can also be viewed as a set of relations between `X` and `Y` (named the ['collection of relations view]).
 
 The following code creates an empty bimap container:
 
-    typedef bimap<A,B> bm_type;
+    typedef bimap<X,Y> bm_type;
     bm_type bm;
 
 Given this code, the following is the complete description of the resulting bimap.
@@ -27,97 +30,135 @@ signature for functions and metadata. Preconditions, postconditions and the orde
 of operations need not be the same.
 ]
 
-* `bm.left` is signature-compatible with `std::map<A,B>`
-* `bm.right` is signature-compatible with `std::map<B,A>`
-* `bm` is signature-compatible with `std::set< relation<A,B> >`
+* `bm.left` is signature-compatible with `std::map<X,Y>`
+* `bm.right` is signature-compatible with `std::map<Y,X>`
+* `bm` is signature-compatible with `std::set< relation<X,Y> >`
 
 __SIMPLE_BIMAP__
 
-The `relation` class is a generalization of `std::pair`. The two values are
+You can see how a bimap container offers three views over the same collection of bidirectional relations. 
+
+The `relation` class represents two related elements. The two values are
 named left and right to express the symmetry of this type.
+
+If we have any generic function that work with maps
+
+    template< class MapType >
+    void print_map(const MapType & m)
+    {
+        typedef typename MapType::const_iterator const_iterator;
+        for( const_iterator iter = m.begin(), iend = m.end(); iter != iend; ++iter )
+        {
+            std::cout << iter->first << "-->" << iter->second << std::endl;
+        }
+    }
+
+We can use the ['left map view] and the ['right map view] with it
+
+    bimap< int, std::string > bm;
+    ...
+    print_map( bm.left  );
+    print_map( bm.right );
+
+And the output will be
+
+[pre
+[^1 --> one]
+[^2 --> two]
+...
+[^one --> 1]
+[^two --> 2]
+...
+]
+
+[heading Step by step]
+
+[import ../example/step_by_step.cpp]
+
+A convinience header is avaiable in the boost directory:
+
+    #include <boost/bimap.hpp>
+
+Lets define a bidirectional map between integers and strings:
+
+[code_step_by_step_definition]
+
+[heading The collection of relations view]
+
+Remember that `bm` alone can be used as a set of relations.
+We can insert elements or iterate over them using this view.
+
+[code_step_by_step_set_of_relations_view]
+
+[heading The left map view]
+
+`bm.left` works like a `std::map< int, std::string >`. We use it
+in the same way we will use a standard map.
+
+[code_step_by_step_left_map_view]
+
+[heading The right map view]
+
+`bm.right` works like a `std::map< std::string, int >`. It is
+important to note that the key is the first type and the data
+is the second one, exactly as with standard maps.
+
+[code_step_by_step_right_map_view]
+
+[heading Differences with std::map]
 
 The main difference between bimap views and their standard containers counterparts
 is that, because of the bidirectional nature of a bimap, the values stored in
 it can not be modified directly using iterators.
-For example, when a `std::map<A,B>` iterator is dereferenced the return type is
-`std::pair<const A, B>`, so the following code is valid:
+For example, when a `std::map<X,Y>` iterator is dereferenced the return type is
+`std::pair<const X, Y>`, so the following code is valid:
 `m.begin()->second = new_value;`.
-However dereferencing a `bimap<A,B>::left_iterator` returns a type that is 
-['signature-compatible] with a `std::pair<const A, const B>`.
+However dereferencing a `bimap<X,Y>::left_iterator` returns a type that is 
+['signature-compatible] with a `std::pair<const X, const Y>` 
 
-That is more or less all that is needed to start using the bidirectional
-map. The following two lines must also be added:
+    bm.left.find(1)->second = "1"; // Compilation error
 
-    #include <boost/bimap/bimap.hpp>
-    using namespace bimap;
+If you insert `(1,"one")` and `(1,"1")` in a `std::map<int,std::string>` the second insertion will have no effect. In a `bimap<X,Y>` both keys have to remain unique. The insertion may fail in other situtions too. Lets see an example
 
-[h2 A simple example]
+    bm.clear();
 
-Here is a simple example of how to build and use a bimap. A description
-follows of how to enhance bidirectional maps to generate more powerful,
-scalable and readable code.
+    bm.insert( bm_type::value_type( 1, "one" ) );
 
-    #include <iostream>
+    bm.insert( bm_type::value_type( 1, "1"   ) ); // No effect!
+    bm.insert( bm_type::value_type( 2, "one" ) ); // No effect!
 
-    #include <boost/bimap/bimap.hpp>
+    assert( bm.size() == 1 );
 
-    int main()
-    {
-        using namespace bimap;
+[heading A simple example]
 
-        // Soccer World cup. (The results are not real)
+Look how you can reuse code that is intend to be used with std::maps, like the
+print_map function in this example.
 
-        typedef bimap<std::string,int> results_bimap;
-        typedef results_bimap::relation position;
+[@../../example/simple_bimap.cpp Go to source code]
 
-        results_bimap results;
-        results.insert( position("Argentina"    ,1) );
-        results.insert( position("Spain"        ,2) );
-        results.insert( position("Germany"      ,3) );
-        results.insert( position("France"       ,4) );
-
-        std::cout << "Countries names ordered by their final position:"
-                  << std::endl;
-
-        for( results_bimap::right_iterator i    = results.right.begin(),
-                                           iend = results.right.end() ;
-             i != iend; ++i )
-        {
-            std::cout << i->first << ") " << i->second << std::endl;
-        }
-
-        std::cout << std::endl
-                  << "Countries names ordered alphabetically along with"
-                     "their final position:"
-                  << std::endl;
-
-        for( results_bimap::left_iterator  i    = results.left.begin(),
-                                           iend = results.left.end() ;
-             i != iend; ++i )
-        {
-            std::cout << i->first << " ends in position " << i->second << std::endl;
-        }
-
-    }
+[code_simple_bimap]
 
 The output of this program will be the following:
-[blurb
-[^
-Countries names ordered by their final position:\n
-1) Argentina\n
-2) Spain\n
-3) Germany\n
-4) France\n
-\n
-Countries names ordered alphabetically along with their final position:\n
-Argentina ends in position 1\n
-France ends in position 4\n
-Germany ends in position 3\n
-Spain ends in position 2\n
-]
+[pre
+[^The number of countries is 4]
+
+[^The winner is Argentina]
+
+[^Countries names ordered by their final position:]
+[^1) Argentina]
+[^2) Spain]
+[^3) Germany]
+[^4) France]
+
+[^Countries names ordered alphabetically along with their final position:]
+[^Argentina ends in position 1]
+[^France ends in position 4]
+[^Germany ends in position 3]
+[^Spain ends in position 2]
 ]
 
-[h2 Continuing the journey]
+
+[heading Continuing the journey]
 
 For information on function signatures, see any standard library
 documentation or read the [link boost_bimap.reference reference] section of

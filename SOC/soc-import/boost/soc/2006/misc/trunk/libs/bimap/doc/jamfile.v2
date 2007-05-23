@@ -1,6 +1,6 @@
 # Boost.Bimap
 #
-# Copyright (c) 2006 Matias Capeletto
+# Copyright (c) 2006-2007 Matias Capeletto
 #
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
@@ -42,11 +42,13 @@ actions apply
     mkdir html/images/bimap
     mkdir html/images/extern
     mkdir html/images/people
+    mkdir html/images/callouts
     cp style/template/images/*.png html/images/
     cp style/template/images/toc/*.png html/images/toc/
     cp style/template/images/bimap/*.png html/images/bimap/
     cp style/template/images/extern/*.png html/images/extern/
     cp style/template/images/people/*.png html/images/people/
+    cp style/template/images/callouts/*.png html/images/callouts/
     cp style/template/boostbook.css html/boostbook.css
     cp style/template/index.html html/index.html
     cp style/template/doxydoc/doxygen.css html/doxydoc/doxygen.css

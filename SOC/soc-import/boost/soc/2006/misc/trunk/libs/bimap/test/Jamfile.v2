@@ -1,6 +1,6 @@
 # Boost.Bimap
 #
-# Copyright (c) 2006 Matias Capeletto
+# Copyright (c) 2006-2007 Matias Capeletto
 #
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
@@ -24,8 +24,8 @@ test-suite "relation_test"
     # with struc { TA s; TB f; }; and this is not in the standard.
     # However, most modern compiler support it.
     #
-    #[ run test_mutant.cpp                                                   ]
-    #[ run test_mutant_relation.cpp                                          ]
+    [ run test_mutant.cpp                                                   ]
+    [ run test_mutant_relation.cpp                                          ]
 
     # Enable this to force the standard_relation test
     # It is not always enabled because if the mutant idiom is supported, then it
@@ -59,6 +59,8 @@ test-suite "bimap_test"
     [ run test_bimap_operator_bracket.cpp                                     ]
     [ run test_bimap_lambda.cpp                                               ]
     [ run test_bimap_extra.cpp                                                ]
+    [ run test_bimap_convenience_header.cpp                                   ]
+    [ run test_bimap_project.cpp                                              ]
     [ run test_bimap_serialization.cpp
           /boost/serialization//boost_serialization                           ]
     ;
