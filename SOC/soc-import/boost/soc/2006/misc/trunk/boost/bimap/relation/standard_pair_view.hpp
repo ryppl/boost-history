@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +11,12 @@
 
 #ifndef BOOST_BIMAP_RELATION_STANDARD_PAIR_VIEW_HPP
 #define BOOST_BIMAP_RELATION_STANDARD_PAIR_VIEW_HPP
+
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
 
 #include <boost/bimap/relation/standard_relation_fwd.hpp>
 
@@ -26,17 +32,16 @@
 #include <boost/bimap/relation/symmetrical_base.hpp>
 #include <boost/bimap/tags/support/value_type_of.hpp>
 #include <boost/bimap/relation/structured_pair.hpp>
-
-#include <boost/bimap/relation/detail/totally_ordered_pair.hpp>
+#include <boost/bimap/relation/support/get.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 template< bool constant, class Type >
-struct add_const_if_c : ::boost::mpl::if_c< constant, typename ::boost::add_const< Type >::type , Type > {};
+struct add_const_if_c : ::boost::mpl::if_c< constant, BOOST_DEDUCED_TYPENAME ::boost::add_const< Type >::type , Type > {};
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
@@ -57,8 +62,17 @@ struct normal_reference_binder :
 
     typedef normal_reference_binder reference_binder_;
 
-    typedef typename add_const_if_c< constant, typename base_:: left_value_type >::type  first_type;
-    typedef typename add_const_if_c< constant, typename base_::right_value_type >::type second_type;
+    typedef BOOST_DEDUCED_TYPENAME add_const_if_c<
+        constant,
+        BOOST_DEDUCED_TYPENAME base_:: left_value_type 
+
+    >::type  first_type;
+
+    typedef BOOST_DEDUCED_TYPENAME add_const_if_c< 
+        constant,
+        BOOST_DEDUCED_TYPENAME base_::right_value_type 
+
+    >::type second_type;
 
      first_type & first;
     second_type & second;
@@ -92,8 +106,17 @@ struct mirror_reference_binder :
 
     typedef mirror_reference_binder reference_binder_;
 
-    typedef typename add_const_if_c< constant, typename base_::right_value_type >::type  first_type;
-    typedef typename add_const_if_c< constant, typename base_:: left_value_type >::type second_type;
+    typedef BOOST_DEDUCED_TYPENAME add_const_if_c<
+        constant,
+        BOOST_DEDUCED_TYPENAME base_::right_value_type 
+
+    >::type  first_type;
+
+    typedef BOOST_DEDUCED_TYPENAME add_const_if_c<
+        constant,
+        BOOST_DEDUCED_TYPENAME base_:: left_value_type 
+
+    >::type second_type;
 
     second_type & second;
      first_type & first;
@@ -112,7 +135,7 @@ struct mirror_reference_binder :
 };
 
 
-/** \struct boost::bimap::relation::reference_binder_finder
+/** \struct boost::bimaps::relation::reference_binder_finder
 \brief Obtain the a pair reference binder with the correct layout.
 
 \code
@@ -155,29 +178,16 @@ class standard_pair_view :
     public reference_binder_finder<FirstType,SecondType,constant,Layout>::type
 
 {
-    typedef typename reference_binder_finder<FirstType,SecondType,constant,Layout>::type base_;
+    typedef BOOST_DEDUCED_TYPENAME reference_binder_finder<
+        FirstType,SecondType,constant,Layout
+
+    >::type base_;
 
     public:
 
     template< class Relation >
     explicit standard_pair_view(Relation & r) :
         base_(r) {}
-
-    // Interaction with std::pair
-
-    typedef std::pair
-    <
-        typename ::boost::remove_const< typename base_:: first_type >::type,
-        typename ::boost::remove_const< typename base_::second_type >::type
-
-    > std_pair;
-
-    typedef std::pair
-    <
-        const typename ::boost::remove_const< typename base_:: first_type >::type,
-              typename ::boost::remove_const< typename base_::second_type >::type
-
-    > std_map_pair;
 
     // Interaction with structured pair
 
@@ -187,38 +197,282 @@ class standard_pair_view :
 
     public:
 
-    operator const structured_pair_type ()
+    operator const structured_pair_type () const
     {
         return structured_pair_type(
             base_::first, base_::second
         );
     }
 
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
+    template< class Tag >
+    const BOOST_DEDUCED_TYPENAME ::boost::bimaps::relation::support::
+        result_of::get<Tag,standard_pair_view>::type
+    get(BOOST_EXPLICIT_TEMPLATE_TYPE(Tag)) const
+    {
+        return ::boost::bimaps::relation::support::get<Tag>(*this);
+    }
 
-        standard_pair_view,
-        first,second
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
-
-        std_pair,
-        first,second
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
-
-        std_map_pair,
-        first,second
-    );
-
+    template< class Tag >
+    BOOST_DEDUCED_TYPENAME ::boost::bimaps::relation::support::
+        result_of::get<Tag,standard_pair_view>::type
+    get(BOOST_EXPLICIT_TEMPLATE_TYPE(Tag))
+    {
+        return ::boost::bimaps::relation::support::get<Tag>(*this);
+    }
 };
 
+// standard_pair_view - standard_pair_view
+
+template< class First, class Second, bool C1, bool C2, class L1, class L2 >
+bool operator==(const standard_pair_view<First,Second,C1,L1> & a,
+                const standard_pair_view<First,Second,C2,L2> & b)
+{
+    return ( ( a.first  == b.first  ) &&
+             ( a.second == b.second ) );
+}
+
+template< class First, class Second, bool C1, bool C2, class L1, class L2 >
+bool operator!=(const standard_pair_view<First,Second,C1,L1> & a,
+                const standard_pair_view<First,Second,C2,L2> & b)
+{
+    return ! ( a == b );
+}
+
+template< class First, class Second, bool C1, bool C2, class L1, class L2 >
+bool operator<(const standard_pair_view<First,Second,C1,L1> & a,
+               const standard_pair_view<First,Second,C2,L2> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second < b.second )));
+}
+
+template< class First, class Second, bool C1, bool C2, class L1, class L2 >
+bool operator<=(const standard_pair_view<First,Second,C1,L1> & a,
+                const standard_pair_view<First,Second,C2,L2> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second <= b.second )));
+}
+
+template< class First, class Second, bool C1, bool C2, class L1, class L2 >
+bool operator>(const standard_pair_view<First,Second,C1,L1> & a,
+               const standard_pair_view<First,Second,C2,L2> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second > b.second )));
+}
+
+template< class First, class Second, bool C1, bool C2, class L1, class L2 >
+bool operator>=(const standard_pair_view<First,Second,C1,L1> & a,
+                const standard_pair_view<First,Second,C2,L2> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second >= b.second )));
+}
+
+
+// standard_pair_view - std::pair
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator==(const standard_pair_view<First,Second,C,L> & a,
+                const std::pair<F,S> & b)
+{
+    return ( ( a.first  == b.first  ) &&
+             ( a.second == b.second ) );
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator!=(const standard_pair_view<First,Second,C,L> & a,
+                const std::pair<F,S> & b)
+{
+    return ! ( a == b );
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator<(const standard_pair_view<First,Second,C,L> & a,
+               const std::pair<F,S> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second < b.second )));
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator<=(const standard_pair_view<First,Second,C,L> & a,
+                const std::pair<F,S> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second <= b.second )));
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator>(const standard_pair_view<First,Second,C,L> & a,
+               const std::pair<F,S> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second > b.second )));
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator>=(const standard_pair_view<First,Second,C,L> & a,
+                const std::pair<F,S> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second >= b.second )));
+}
+
+
+// std::pair - standard_pair_view
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator==(const std::pair<F,S> & a,
+                const standard_pair_view<First,Second,C,L> & b)
+{
+    return ( ( a.first  == b.first  ) &&
+             ( a.second == b.second ) );
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator!=(const std::pair<F,S> & a,
+                const standard_pair_view<First,Second,C,L> & b)
+{
+    return ! ( a == b );
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator<(const std::pair<F,S> & a,
+               const standard_pair_view<First,Second,C,L> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second < b.second )));
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator<=(const std::pair<F,S> & a,
+                const standard_pair_view<First,Second,C,L> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second <= b.second )));
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator>(const std::pair<F,S> & a,
+               const standard_pair_view<First,Second,C,L> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second > b.second )));
+}
+
+template< class First, class Second, bool C, class L, class F, class S >
+bool operator>=(const std::pair<F,S> & a,
+                const standard_pair_view<First,Second,C,L> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second >= b.second )));
+}
+
+
+// structured_pair - standard_pair_view
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator==(const structured_pair<First,Second,L1> & a,
+                const standard_pair_view<First,Second,C,L2> & b)
+{
+    return ( ( a.first  == b.first  ) &&
+             ( a.second == b.second ) );
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator!=(const structured_pair<First,Second,L1> & a,
+                const standard_pair_view<First,Second,C,L2> & b)
+{
+    return ! ( a == b );
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator<(const structured_pair<First,Second,L1> & a,
+               const standard_pair_view<First,Second,C,L2> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second < b.second )));
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator<=(const structured_pair<First,Second,L1> & a,
+                const standard_pair_view<First,Second,C,L2> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second <= b.second )));
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator>(const structured_pair<First,Second,L1> & a,
+               const standard_pair_view<First,Second,C,L2> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second > b.second )));
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator>=(const structured_pair<First,Second,L1> & a,
+                const standard_pair_view<First,Second,C,L2> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second >= b.second )));
+}
+
+
+// standard_pair_view - structured_pair
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator==(const standard_pair_view<First,Second,C,L1> & a,
+                const structured_pair<First,Second,L2> & b)
+{
+    return ( ( a.first  == b.first  ) &&
+             ( a.second == b.second ) );
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator!=(const standard_pair_view<First,Second,C,L1> & a,
+                const structured_pair<First,Second,L2> & b)
+{
+    return ! ( a == b );
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator<(const standard_pair_view<First,Second,C,L1> & a,
+               const structured_pair<First,Second,L2> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second < b.second )));
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator<=(const standard_pair_view<First,Second,C,L1> & a,
+                const structured_pair<First,Second,L2> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second <= b.second )));
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator>(const standard_pair_view<First,Second,C,L1> & a,
+               const structured_pair<First,Second,L2> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second > b.second )));
+}
+
+template< class First, class Second, class L1, class L2, bool C >
+bool operator>=(const standard_pair_view<First,Second,C,L1> & a,
+                const structured_pair<First,Second,L2> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second >= b.second )));
+}
+
+
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_RELATION_STANDARD_PAIR_VIEW_HPP

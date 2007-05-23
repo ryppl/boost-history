@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_RELATION_MUTANT_RELATION_HPP
 #define BOOST_BIMAP_RELATION_MUTANT_RELATION_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
@@ -19,6 +25,8 @@
 #include <boost/operators.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/serialization/nvp.hpp>
+
+#include <boost/functional/hash/hash.hpp>
 
 // Boost.Bimap
 #include <boost/bimap/tags/tagged.hpp>
@@ -29,11 +37,10 @@
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/bimap/relation/detail/mutant.hpp>
 #include <boost/bimap/relation/structured_pair.hpp>
-
-#include <boost/bimap/relation/detail/totally_ordered_pair.hpp>
+#include <boost/bimap/relation/support/get.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 
 /// \brief Abstraction of a related pair of values, that extends the std::pair class.
@@ -70,14 +77,14 @@ class mutant_relation
     typedef       mutant_relation<TA,TB> &       above_view_reference;
     typedef const mutant_relation<TA,TB> & const_above_view_reference;
 
-    typedef typename tags::support::default_tagged
+    typedef BOOST_DEDUCED_TYPENAME tags::support::default_tagged
     <
         TA,
         member_at::left
 
     >::type tagged_left_type;
 
-    typedef typename tags::support::default_tagged
+    typedef BOOST_DEDUCED_TYPENAME tags::support::default_tagged
     <
         TB,
         member_at::right
@@ -90,17 +97,19 @@ class mutant_relation
 
         /// The type stored in the relation
 
-        typedef typename ::boost::mpl::if_c< force_mutable,
+        typedef BOOST_DEDUCED_TYPENAME ::boost::mpl::if_c< force_mutable,
 
-            typename ::boost::remove_const< typename tagged_left_type::value_type >::type,
-            typename tagged_left_type::value_type
+            BOOST_DEDUCED_TYPENAME ::boost::remove_const<
+                BOOST_DEDUCED_TYPENAME tagged_left_type::value_type >::type,
+            BOOST_DEDUCED_TYPENAME tagged_left_type::value_type
 
         >::type left_value_type;
 
-        typedef typename ::boost::mpl::if_c< force_mutable,
+        typedef BOOST_DEDUCED_TYPENAME ::boost::mpl::if_c< force_mutable,
 
-            typename ::boost::remove_const< typename tagged_right_type::value_type >::type,
-            typename tagged_right_type::value_type
+            BOOST_DEDUCED_TYPENAME ::boost::remove_const<
+                BOOST_DEDUCED_TYPENAME tagged_right_type::value_type >::type,
+            BOOST_DEDUCED_TYPENAME tagged_right_type::value_type
 
         >::type right_value_type;
 
@@ -109,15 +118,16 @@ class mutant_relation
     //@{
 
         /// The tag of the member. By default it is \c member_at::{side}
-        typedef typename  tagged_left_type::tag  left_tag;
-        typedef typename tagged_right_type::tag right_tag;
+        typedef BOOST_DEDUCED_TYPENAME  tagged_left_type::tag  left_tag;
+        typedef BOOST_DEDUCED_TYPENAME tagged_right_type::tag right_tag;
 
     //@}
 
-    typedef ::boost::mpl::vector3
+    typedef ::boost::mpl::vector4
     <
         structured_pair< TA, TB, normal_layout >,
         structured_pair< TB, TA, mirror_layout >,
+        mutant_relation< TA, TB, true >,
         above_view
 
     > mutant_views;
@@ -145,9 +155,9 @@ class mutant_relation
 
     mutant_relation() {}
 
-    mutant_relation(typename ::boost::call_traits<
+    mutant_relation(BOOST_DEDUCED_TYPENAME ::boost::call_traits<
                         left_value_type >::param_type l,
-                    typename ::boost::call_traits<
+                    BOOST_DEDUCED_TYPENAME ::boost::call_traits<
                         right_value_type>::param_type r) :
         left (l),
         right(r)
@@ -165,93 +175,15 @@ class mutant_relation
         right(rel.right)
     {}
 
-    // Allow to create relations from views
-
-    explicit mutant_relation(const left_pair & lp) :
-
-        left ( lp.first  ),
-        right( lp.second )
-    {}
-
-    explicit mutant_relation(const right_pair & rp) :
-
-        left ( rp.second ),
-        right( rp.first  )
-    {}
-
-    // Allow to create a relation from a std pair
-    // This allows to better integration with the stl
-
-    typedef std::pair
-    <
-        left_value_type,
-        right_value_type
-
-    > std_pair;
-
-    explicit mutant_relation(const std_pair & p) :
-
-        left ( p.first  ),
-        right( p.second )
-    {}
-
     // Operators
 
-    mutant_relation& operator=(const mutant_relation & rel)
+    template< bool FM >
+    mutant_relation& operator=(const mutant_relation<TA,TB,FM> & rel)
     {
         left  = rel.left ;
         right = rel.right;
         return *this;
     }
-
-    mutant_relation& operator=(const left_pair & p)
-    {
-        left  = p.first ;
-        right = p.second;
-        return *this;
-    }
-
-    mutant_relation& operator=(const right_pair & p)
-    {
-        left  = p.second;
-        right = p.first ;
-        return *this;
-    }
-
-    private:
-
-    typedef mutant_relation<TA,TB,true > relation_force_mutable;
-    typedef mutant_relation<TA,TB,false> relation_not_force_mutable;
-
-    public:
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        left,right,
-
-        relation_force_mutable,
-        left,right
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        left,right,
-
-        relation_not_force_mutable,
-        left,right
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        left,right,
-
-        left_pair,
-        first,second
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        left,right,
-
-        right_pair,
-        second,first
-    );
 
     // The following functions are redundant if you only consider this class.
     // They are included to make easier the construction of the get and the
@@ -280,32 +212,48 @@ class mutant_relation
 
     left_pair_reference get_left_pair()
     {
-        return ::boost::bimap::relation::detail::mutate<left_pair>(*this);
+        return ::boost::bimaps::relation::detail::mutate<left_pair>(*this);
     }
 
     const_left_pair_reference get_left_pair() const
     {
-        return ::boost::bimap::relation::detail::mutate<left_pair>(*this);
+        return ::boost::bimaps::relation::detail::mutate<left_pair>(*this);
     }
 
     right_pair_reference get_right_pair()
     {
-        return ::boost::bimap::relation::detail::mutate<right_pair>(*this);
+        return ::boost::bimaps::relation::detail::mutate<right_pair>(*this);
     }
 
     const_right_pair_reference get_right_pair() const
     {
-        return ::boost::bimap::relation::detail::mutate<right_pair>(*this);
+        return ::boost::bimaps::relation::detail::mutate<right_pair>(*this);
     }
 
     above_view_reference get_view()
     {
-        return ::boost::bimap::relation::detail::mutate<above_view>(*this);
+        return ::boost::bimaps::relation::detail::mutate<above_view>(*this);
     }
 
     const_above_view_reference get_view() const
     {
-        return ::boost::bimap::relation::detail::mutate<above_view>(*this);
+        return ::boost::bimaps::relation::detail::mutate<above_view>(*this);
+    }
+
+    template< class Tag >
+    const BOOST_DEDUCED_TYPENAME ::boost::bimaps::relation::support::
+        result_of::get<Tag,mutant_relation>::type
+    get(BOOST_EXPLICIT_TEMPLATE_TYPE(Tag)) const
+    {
+        return ::boost::bimaps::relation::support::get<Tag>(*this);
+    }
+
+    template< class Tag >
+    BOOST_DEDUCED_TYPENAME ::boost::bimaps::relation::support::
+        result_of::get<Tag,mutant_relation>::type
+    get(BOOST_EXPLICIT_TEMPLATE_TYPE(Tag))
+    {
+        return ::boost::bimaps::relation::support::get<Tag>(*this);
     }
 
     #ifndef BOOST_BIMAP_DISABLE_SERIALIZATION
@@ -326,8 +274,69 @@ class mutant_relation
     #endif // BOOST_BIMAP_DISABLE_SERIALIZATION
 };
 
+// hash value
+
+template< class FirstType, class SecondType, bool FM >
+std::size_t hash_value(const mutant_relation<FirstType,SecondType,FM> & p)
+{
+    std::size_t seed = 0;
+    ::boost::hash_combine(seed, p.left );
+    ::boost::hash_combine(seed, p.right);
+
+    return seed;
+}
+
+// mutant_relation - mutant_relation
+
+template< class FirstType, class SecondType, bool FM1, bool FM2 >
+bool operator==(const mutant_relation<FirstType,SecondType,FM1> & a,
+                const mutant_relation<FirstType,SecondType,FM2> & b)
+{
+    return ( ( a.left  == b.left  ) &&
+             ( a.right == b.right ) );
+}
+
+template< class FirstType, class SecondType, bool FM1, bool FM2 >
+bool operator!=(const mutant_relation<FirstType,SecondType,FM1> & a,
+                const mutant_relation<FirstType,SecondType,FM2> & b)
+{
+    return ! ( a == b );
+}
+
+template< class FirstType, class SecondType, bool FM1, bool FM2 >
+bool operator<(const mutant_relation<FirstType,SecondType,FM1> & a,
+               const mutant_relation<FirstType,SecondType,FM2> & b)
+{
+    return (  ( a.left  <  b.left  ) ||
+             (( a.left == b.left ) && ( a.right < b.right )));
+}
+
+template< class FirstType, class SecondType, bool FM1, bool FM2 >
+bool operator<=(const mutant_relation<FirstType,SecondType,FM1> & a,
+                const mutant_relation<FirstType,SecondType,FM2> & b)
+{
+    return (  ( a.left  <  b.left  ) ||
+             (( a.left == b.left ) && ( a.right <= b.right )));
+}
+
+template< class FirstType, class SecondType, bool FM1, bool FM2 >
+bool operator>(const mutant_relation<FirstType,SecondType,FM1> & a,
+               const mutant_relation<FirstType,SecondType,FM2> & b)
+{
+    return ( ( a.left  >  b.left  ) ||
+             (( a.left == b.left ) && ( a.right > b.right )));
+}
+
+template< class FirstType, class SecondType, bool FM1, bool FM2 >
+bool operator>=(const mutant_relation<FirstType,SecondType,FM1> & a,
+                const mutant_relation<FirstType,SecondType,FM2> & b)
+{
+    return ( ( a.left  >  b.left  ) ||
+             (( a.left == b.left ) && ( a.right >= b.right )));
+}
+
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

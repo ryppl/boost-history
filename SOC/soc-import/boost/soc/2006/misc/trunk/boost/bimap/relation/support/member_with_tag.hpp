@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_RELATION_SUPPORT_MEMBER_WITH_TAG_HPP
 #define BOOST_BIMAP_RELATION_SUPPORT_MEMBER_WITH_TAG_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/bimap/detail/debug/static_error.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -20,7 +26,7 @@
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/and.hpp>
 
-/** \struct boost::bimap::relation::support::member_with_tag
+/** \struct boost::bimaps::relation::support::member_with_tag
 
 \brief Metafunction to convert user tags to the member_at idiom.
 
@@ -52,7 +58,7 @@ See also member_at, is_tag_of_member_at_left, is_tag_of_member_at_right.
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 namespace support {
 
@@ -89,7 +95,7 @@ template< class Tag, class Relation >
 struct member_with_tag
 <
     Tag, Relation,
-    typename enable_if
+    BOOST_DEDUCED_TYPENAME enable_if
     <
         mpl::and_
         <
@@ -97,7 +103,7 @@ struct member_with_tag
             is_same
             <
                 Tag,
-                typename Relation::left_tag
+                BOOST_DEDUCED_TYPENAME Relation::left_tag
             >
         >
 
@@ -112,7 +118,7 @@ struct member_with_tag
 <
     Tag,
     Relation,
-    typename enable_if
+    BOOST_DEDUCED_TYPENAME enable_if
     <
         mpl::and_
         <
@@ -120,7 +126,7 @@ struct member_with_tag
             is_same
             <
                 Tag,
-                typename Relation::right_tag
+                BOOST_DEDUCED_TYPENAME Relation::right_tag
             >
         >
 
@@ -133,7 +139,7 @@ struct member_with_tag
 
 } // namespace support
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES

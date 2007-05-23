@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,12 +12,18 @@
 #ifndef BOOST_BIMAP_DETAIL_CONCEPT_TAGS_HPP
 #define BOOST_BIMAP_DETAIL_CONCEPT_TAGS_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/bool.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace detail {
 
 /// \brief Tag of {SetType}_of definition classes
@@ -39,8 +45,8 @@ struct side_based_tag : set_type_of_relation_tag {};
 } // namespace detail
 
 
-/** \struct boost::bimap::left_based
-    \brief Tag to indicate that the set of relation will be based on the left side.
+/** \struct boost::bimaps::left_based
+    \brief Tag to indicate that the main view will be based on the left side.
 
 This is convenient because the multi-index core will be more efficient.
 If possible use this options or the right based one.
@@ -48,8 +54,8 @@ If possible use this options or the right based one.
 See also right_based.
                                                                             **/
 
-/** \struct boost::bimap::right_based
-    \brief Tag to indicate that the set of relation will be based on the right side.
+/** \struct boost::bimaps::right_based
+    \brief Tag to indicate that the main view will be based on the right side.
 
 This is convenient because the multi-index core will be more efficient.
 If possible use this options or the right based one.
@@ -59,9 +65,8 @@ See also left_based.
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-struct left_based : ::boost::bimap::detail::side_based_tag
+struct left_based : ::boost::bimaps::detail::side_based_tag
 {
-    // TODO
     // I run into troubles if I do not define bind for side based tags.
     // Maybe a more coherent way of binding the relation can be developped.
     template< class Relation > struct bind_to { typedef void type; };
@@ -70,9 +75,8 @@ struct left_based : ::boost::bimap::detail::side_based_tag
     typedef mpl::bool_<true> right_mutable_key;
 };
 
-struct right_based : ::boost::bimap::detail::side_based_tag
+struct right_based : ::boost::bimaps::detail::side_based_tag
 {
-    // TODO
     // I run into troubles if I do not define bind for side based tags.
     // Maybe a more coherent way of binding the relation can be developped.
     template< class Relation > struct bind_to { typedef void type; };
@@ -85,7 +89,7 @@ struct right_based : ::boost::bimap::detail::side_based_tag
 
 typedef mpl::_ _relation;
 
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

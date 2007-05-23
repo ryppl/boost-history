@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,10 +12,16 @@
 #ifndef BOOST_BIMAP_TAGS_SUPPORT_APPLY_TO_VALUE_TYPE_HPP
 #define BOOST_BIMAP_TAGS_SUPPORT_APPLY_TO_VALUE_TYPE_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/tags/tagged.hpp>
 #include <boost/mpl/apply.hpp>
 
-/** \struct boost::bimap::tags::support::apply_to_value_type
+/** \struct boost::bimaps::tags::support::apply_to_value_type
 \brief Higger order metafunction similar to mpl::apply but for tagged types.
 
 \code
@@ -40,7 +46,7 @@ See also tagged.
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace tags {
 namespace support {
 
@@ -50,13 +56,13 @@ struct apply_to_value_type;
 template < class F, class ValueType, class Tag >
 struct apply_to_value_type<F, tagged<ValueType,Tag> >
 {
-    typedef typename mpl::apply< F, ValueType >::type new_value_type;
+    typedef BOOST_DEDUCED_TYPENAME mpl::apply< F, ValueType >::type new_value_type;
     typedef tagged< new_value_type, Tag > type;
 };
 
 } // namespace support
 } // namespace tags
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES

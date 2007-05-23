@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_SUPPORT_ITERATOR_TYPE_BY_HPP
 #define BOOST_BIMAP_SUPPORT_ITERATOR_TYPE_BY_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/relation/detail/metadata_access_builder.hpp>
 #include <boost/bimap/relation/detail/static_access_builder.hpp>
 
@@ -19,7 +25,7 @@
 
 #include <boost/bimap/detail/map_view_iterator.hpp>
 
-/** \struct boost::bimap::support::iterator_type_by
+/** \struct boost::bimaps::support::iterator_type_by
 
 \brief Metafunction to obtain the iterator type of the map view by one of the sides.
 
@@ -70,7 +76,7 @@ See also member_at.
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace support {
 
 
@@ -100,21 +106,23 @@ BOOST_BIMAP_SYMMETRIC_STATIC_ACCESS_BUILDER
     core_reverse_iterator_type_by,
     BimapCore,
 
-    typedef typename BimapCore::core_type::template index<typename BimapCore::left_tag>
-        ::type::reverse_iterator type,
+    typedef BOOST_DEDUCED_TYPENAME BimapCore::core_type::BOOST_NESTED_TEMPLATE
+        index<BOOST_DEDUCED_TYPENAME BimapCore::left_tag>
+            ::type::reverse_iterator type,
 
-    typedef typename BimapCore::core_type::template index<typename BimapCore::right_tag>
-        ::type::reverse_iterator type
+    typedef BOOST_DEDUCED_TYPENAME BimapCore::core_type::BOOST_NESTED_TEMPLATE
+        index<BOOST_DEDUCED_TYPENAME BimapCore::right_tag>
+            ::type::reverse_iterator type
 );
 
 template< class Tag, class BimapCore >
 struct reverse_iterator_type_by
 {
-    typedef ::boost::bimap::detail::map_view_iterator
+    typedef ::boost::bimaps::detail::map_view_iterator
     <
         Tag,
-        typename BimapCore::relation,
-        typename core_reverse_iterator_type_by<Tag,BimapCore>::type
+        BOOST_DEDUCED_TYPENAME BimapCore::relation,
+        BOOST_DEDUCED_TYPENAME core_reverse_iterator_type_by<Tag,BimapCore>::type
 
     > type;
 };
@@ -126,22 +134,24 @@ BOOST_BIMAP_SYMMETRIC_STATIC_ACCESS_BUILDER
     core_const_reverse_iterator_type_by,
     BimapCore,
 
-    typedef typename BimapCore::core_type::template index<typename BimapCore::left_tag>
-        ::type::const_reverse_iterator type,
+    typedef BOOST_DEDUCED_TYPENAME BimapCore::core_type::BOOST_NESTED_TEMPLATE
+        index<BOOST_DEDUCED_TYPENAME BimapCore::left_tag>
+            ::type::const_reverse_iterator type,
 
-    typedef typename BimapCore::core_type::template index<typename BimapCore::right_tag>
-        ::type::const_reverse_iterator type
+    typedef BOOST_DEDUCED_TYPENAME BimapCore::core_type::BOOST_NESTED_TEMPLATE
+        index<BOOST_DEDUCED_TYPENAME BimapCore::right_tag>
+            ::type::const_reverse_iterator type
 );
 
 template< class Tag, class BimapCore >
 struct const_reverse_iterator_type_by
 {
 
-    typedef ::boost::bimap::detail::map_view_iterator
+    typedef ::boost::bimaps::detail::map_view_iterator
     <
         Tag,
-        typename BimapCore::relation,
-        typename core_const_reverse_iterator_type_by<Tag,BimapCore>::type
+        BOOST_DEDUCED_TYPENAME BimapCore::relation,
+        BOOST_DEDUCED_TYPENAME core_const_reverse_iterator_type_by<Tag,BimapCore>::type
 
     > type;
 };
@@ -154,11 +164,13 @@ BOOST_BIMAP_SYMMETRIC_STATIC_ACCESS_BUILDER
     core_local_iterator_type_by,
     BimapCore,
 
-    typedef typename BimapCore::core_type::template index<typename BimapCore::left_tag>
-        ::type::local_iterator type,
+    typedef BOOST_DEDUCED_TYPENAME BimapCore::core_type::BOOST_NESTED_TEMPLATE
+        index<BOOST_DEDUCED_TYPENAME BimapCore::left_tag>
+            ::type::local_iterator type,
 
-    typedef typename BimapCore::core_type::template index<typename BimapCore::right_tag>
-        ::type::local_iterator type
+    typedef BOOST_DEDUCED_TYPENAME BimapCore::core_type::BOOST_NESTED_TEMPLATE
+        index<BOOST_DEDUCED_TYPENAME BimapCore::right_tag>
+            ::type::local_iterator type
 );
 
 
@@ -166,11 +178,11 @@ template< class Tag, class BimapCore >
 struct local_iterator_type_by
 {
 
-    typedef ::boost::bimap::detail::map_view_iterator
+    typedef ::boost::bimaps::detail::map_view_iterator
     <
         Tag,
-        typename BimapCore::relation,
-        typename core_local_iterator_type_by<Tag,BimapCore>::type
+        BOOST_DEDUCED_TYPENAME BimapCore::relation,
+        BOOST_DEDUCED_TYPENAME core_local_iterator_type_by<Tag,BimapCore>::type
 
     > type;
 };
@@ -183,29 +195,31 @@ BOOST_BIMAP_SYMMETRIC_STATIC_ACCESS_BUILDER
     core_const_local_iterator_type_by,
     BimapCore,
 
-    typedef typename BimapCore::core_type::template index<typename BimapCore::left_tag>
-        ::type::const_local_iterator type,
+    typedef BOOST_DEDUCED_TYPENAME BimapCore::core_type::BOOST_NESTED_TEMPLATE
+        index<BOOST_DEDUCED_TYPENAME BimapCore::left_tag>
+            ::type::const_local_iterator type,
 
-    typedef typename BimapCore::core_type::template index<typename BimapCore::right_tag>
-        ::type::const_local_iterator type
+    typedef BOOST_DEDUCED_TYPENAME BimapCore::core_type::BOOST_NESTED_TEMPLATE
+        index<BOOST_DEDUCED_TYPENAME BimapCore::right_tag>
+            ::type::const_local_iterator type
 );
 
 template< class Tag, class BimapCore >
 struct const_local_iterator_type_by
 {
 
-    typedef ::boost::bimap::detail::map_view_iterator
+    typedef ::boost::bimaps::detail::map_view_iterator
     <
         Tag,
-        typename BimapCore::relation,
-        typename core_const_local_iterator_type_by<Tag,BimapCore>::type
+        BOOST_DEDUCED_TYPENAME BimapCore::relation,
+        BOOST_DEDUCED_TYPENAME core_const_local_iterator_type_by<Tag,BimapCore>::type
 
     > type;
 };
 
 
 } // namespace support
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES

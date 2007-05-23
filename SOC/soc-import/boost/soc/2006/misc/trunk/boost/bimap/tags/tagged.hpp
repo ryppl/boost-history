@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,8 +12,14 @@
 #ifndef BOOST_BIMAP_TAGS_TAGGED_HPP
 #define BOOST_BIMAP_TAGS_TAGGED_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 namespace boost {
-namespace bimap {
+namespace bimaps {
 
 /// \brief A light non-invasive idiom to tag a type.
 /**
@@ -79,10 +85,10 @@ struct tagged
 };
 
 } // namespace tags
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
-/** \namespace boost::bimap::tags::support
+/** \namespace boost::bimaps::tags::support
 \brief Metafunctions to work with tagged types.
 
 This metafunctions aims to make easier the manage of tagged types. They are all mpl

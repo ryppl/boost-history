@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,13 +12,17 @@
 #ifndef BOOST_BIMAP_VIEWS_LIST_SET_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_LIST_SET_VIEW_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
 #include <boost/config.hpp>
 
 #include <boost/bimap/container_adaptor/list_adaptor.hpp>
 #include <boost/bimap/detail/set_view_base.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace views {
 
 /// \brief View of a bimap that is signature compatible with std::list.
@@ -39,7 +43,8 @@ class list_set_view
         reverse_iterator, const_reverse_iterator
     ),
 
-    public ::boost::bimap::detail::set_view_base< list_set_view< CoreIndex >, CoreIndex >
+    public ::boost::bimaps::detail::
+        set_view_base< list_set_view< CoreIndex >, CoreIndex >
 {
     BOOST_BIMAP_SET_VIEW_BASE_FRIEND(list_set_view,CoreIndex);
 
@@ -52,37 +57,50 @@ class list_set_view
 
     public:
 
-    list_set_view(typename base_::base_type & c) :
+    list_set_view(BOOST_DEDUCED_TYPENAME base_::base_type & c) :
         base_(c) {}
 
-    list_set_view & operator=(const list_set_view & v) { this->base() = v.base(); return *this; }
+    list_set_view & operator=(const list_set_view & v) 
+    {
+        this->base() = v.base();
+        return *this;
+    }
 
-    BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION
+    BOOST_BIMAP_VIEW_ASSIGN_IMPLEMENTATION(base_)
+
+    BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION(base_)
 
     // Rearrange Operations
 
-    void relocate(typename base_::iterator position, typename base_::iterator i)
+    void relocate(BOOST_DEDUCED_TYPENAME base_::iterator position, 
+                  BOOST_DEDUCED_TYPENAME base_::iterator i)
     {
         this->base().relocate(
-            this->template functor<typename base_::iterator_to_base>()(position),
-            this->template functor<typename base_::iterator_to_base>()(i)
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(position),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(i)
         );
     }
 
-    void relocate(typename base_::iterator position,
-                  typename base_::iterator first, typename base_::iterator last)
+    void relocate(BOOST_DEDUCED_TYPENAME base_::iterator position,
+                  BOOST_DEDUCED_TYPENAME base_::iterator first,
+                  BOOST_DEDUCED_TYPENAME base_::iterator last)
     {
         this->base().relocate(
-            this->template functor<typename base_::iterator_to_base>()(position),
-            this->template functor<typename base_::iterator_to_base>()(first),
-            this->template functor<typename base_::iterator_to_base>()(last)
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(position),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(first),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(last)
         );
     }
 };
 
 
 } // namespace views
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

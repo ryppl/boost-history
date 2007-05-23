@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,9 +12,15 @@
 #ifndef BOOST_BIMAP_SUPPORT_VALUE_TYPE_BY_HPP
 #define BOOST_BIMAP_SUPPORT_VALUE_TYPE_BY_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/relation/detail/metadata_access_builder.hpp>
 
-/** \struct boost::bimap::support::value_type_by
+/** \struct boost::bimaps::support::value_type_by
 
 \brief Metafunction to obtain the value type of a bimap indexed by one of the sides.
 
@@ -36,7 +42,7 @@ See also member_at.
                                                                     **/
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace support {
 
 // Implementation of value type by metafunction
@@ -51,7 +57,7 @@ BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER
 
 
 } // namespace support
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,8 +12,14 @@
 #ifndef BOOST_BIMAP_RELATION_PAIR_LAYOUT_HPP
 #define BOOST_BIMAP_RELATION_PAIR_LAYOUT_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 
 //@{
@@ -28,7 +34,7 @@ struct mirror_layout {};
 
 //@}
 
-/** \struct boost::bimap::relation::inverse_layout
+/** \struct boost::bimaps::relation::inverse_layout
 \brief Metafunction to obtain the inverse of a layout.
 
 \code
@@ -59,7 +65,7 @@ struct inverse_layout< normal_layout >
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_RELATION_DETAIL_PAIR_LAYOUT_HPP

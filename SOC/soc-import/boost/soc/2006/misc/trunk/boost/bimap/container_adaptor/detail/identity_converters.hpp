@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,8 +12,14 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_IDENTITY_CONVERTERS_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_IDENTITY_CONVERTERS_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace container_adaptor {
 
 /// \brief Details of the container adaptor toolbox
@@ -162,7 +168,11 @@ struct key_to_base_identity
 template< class Key >
 struct key_to_base_identity< Key, Key >
 {
-    const Key & operator()(const Key & k) const
+    // As default accept any type as key in order to allow container
+    // adaptors to work with compatible key types
+
+    template< class CompatibleKey >
+    const CompatibleKey & operator()(const CompatibleKey & k) const
     {
         return k;
     }
@@ -172,7 +182,7 @@ struct key_to_base_identity< Key, Key >
 
 } // namespace detail
 } // namespace container_adaptor
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

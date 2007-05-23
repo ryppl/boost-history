@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_RELATION_STRUCTURED_PAIR_HPP
 #define BOOST_BIMAP_RELATION_STRUCTURED_PAIR_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <utility>
 
 #include <boost/type_traits/remove_const.hpp>
@@ -21,14 +27,16 @@
 #include <boost/bimap/detail/debug/static_error.hpp>
 #include <boost/bimap/relation/pair_layout.hpp>
 #include <boost/bimap/relation/symmetrical_base.hpp>
+#include <boost/bimap/relation/support/get.hpp>
 #include <boost/bimap/tags/support/value_type_of.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/vector.hpp>
 
-#include <boost/bimap/relation/detail/totally_ordered_pair.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 
 /// \brief Storage definition of the left view of a mutant relation.
@@ -47,23 +55,25 @@ class normal_storage :
 
     typedef normal_storage storage_;
 
-    typedef typename base_::left_value_type  first_type;
-    typedef typename base_::right_value_type second_type;
+    typedef BOOST_DEDUCED_TYPENAME base_::left_value_type  first_type;
+    typedef BOOST_DEDUCED_TYPENAME base_::right_value_type second_type;
 
     first_type   first;
     second_type  second;
 
     normal_storage() {}
 
-    normal_storage(typename ::boost::call_traits<first_type >::param_type f,
-                   typename ::boost::call_traits<second_type>::param_type s)
+    normal_storage(BOOST_DEDUCED_TYPENAME ::boost::call_traits<
+                        first_type >::param_type f,
+                   BOOST_DEDUCED_TYPENAME ::boost::call_traits<
+                        second_type>::param_type s)
 
         : first(f), second(s) {}
 
-          typename base_:: left_value_type &  get_left()       { return first;  }
-    const typename base_:: left_value_type &  get_left() const { return first;  }
-          typename base_::right_value_type & get_right()       { return second; }
-    const typename base_::right_value_type & get_right() const { return second; }
+          BOOST_DEDUCED_TYPENAME base_:: left_value_type &  get_left()      { return first;  }
+    const BOOST_DEDUCED_TYPENAME base_:: left_value_type &  get_left()const { return first;  }
+          BOOST_DEDUCED_TYPENAME base_::right_value_type & get_right()      { return second; }
+    const BOOST_DEDUCED_TYPENAME base_::right_value_type & get_right()const { return second; }
 };
 
 /// \brief Storage definition of the right view of a mutant relation.
@@ -82,26 +92,26 @@ class mirror_storage :
 
     typedef mirror_storage storage_;
 
-    typedef typename base_::left_value_type   second_type;
-    typedef typename base_::right_value_type  first_type;
+    typedef BOOST_DEDUCED_TYPENAME base_::left_value_type   second_type;
+    typedef BOOST_DEDUCED_TYPENAME base_::right_value_type  first_type;
 
     second_type  second;
     first_type   first;
 
     mirror_storage() {}
 
-    mirror_storage(typename ::boost::call_traits<first_type  >::param_type f,
-                   typename ::boost::call_traits<second_type >::param_type s)
+    mirror_storage(BOOST_DEDUCED_TYPENAME ::boost::call_traits<first_type  >::param_type f,
+                   BOOST_DEDUCED_TYPENAME ::boost::call_traits<second_type >::param_type s)
 
         : second(s), first(f)  {}
 
-          typename base_:: left_value_type &  get_left()       { return second; }
-    const typename base_:: left_value_type &  get_left() const { return second; }
-          typename base_::right_value_type & get_right()       { return first;  }
-    const typename base_::right_value_type & get_right() const { return first;  }
+          BOOST_DEDUCED_TYPENAME base_:: left_value_type &  get_left()      { return second; }
+    const BOOST_DEDUCED_TYPENAME base_:: left_value_type &  get_left()const { return second; }
+          BOOST_DEDUCED_TYPENAME base_::right_value_type & get_right()      { return first;  }
+    const BOOST_DEDUCED_TYPENAME base_::right_value_type & get_right()const { return first;  }
 };
 
-/** \struct boost::bimap::relation::storage_finder
+/** \struct boost::bimaps::relation::storage_finder
 \brief Obtain the a storage with the correct layout.
 
 \code
@@ -140,6 +150,9 @@ struct storage_finder<FirstType,SecondType,mirror_layout>
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
+template< class TA, class TB, bool FM >
+class mutant_relation;
+
 /// \brief A std::pair signature compatible class that allows you to control
 ///        the internal structure of the data.
 /**
@@ -159,88 +172,227 @@ class structured_pair :
     >::type
 
 {
-    typedef typename storage_finder< FirstType, SecondType, Layout >::type base_;
+    typedef typename storage_finder<
+        FirstType, SecondType, Layout >::type base_;
 
     public:
 
+    typedef ::boost::mpl::vector3<
+        structured_pair< FirstType, SecondType, normal_layout >,
+        structured_pair< FirstType, SecondType, mirror_layout >,
+        BOOST_DEDUCED_TYPENAME ::boost::mpl::if_<
+            BOOST_DEDUCED_TYPENAME ::boost::is_same<Layout, normal_layout>::type,
+            mutant_relation< FirstType, SecondType, true >,
+            mutant_relation< SecondType, FirstType, true >
+        >::type
+
+    > mutant_views;
+
     structured_pair() {}
 
-    structured_pair(typename boost::call_traits< typename base_::first_type  >::param_type x,
-                    typename boost::call_traits< typename base_::second_type >::param_type y)
+    structured_pair(BOOST_DEDUCED_TYPENAME boost::call_traits<
+                        BOOST_DEDUCED_TYPENAME base_::first_type  >::param_type x,
+                    BOOST_DEDUCED_TYPENAME boost::call_traits<
+                        BOOST_DEDUCED_TYPENAME base_::second_type >::param_type y)
 
         : base_(x,y) {}
 
-    structured_pair(const structured_pair & p)
+    template< class OtherLayout >
+    structured_pair(
+        const structured_pair<FirstType,SecondType,OtherLayout> & p)
 
         : base_(p.first,p.second) {}
 
-    structured_pair& operator=(const structured_pair & p)
+    template< class OtherLayout >
+    structured_pair& operator=(
+        const structured_pair<FirstType,SecondType,OtherLayout> & p)
     {
         base_::first = p.first;
         base_::second = p.second;
         return *this;
     }
 
-    typedef std::pair
-    <
-        typename ::boost::remove_const< typename base_:: first_type >::type,
-        typename ::boost::remove_const< typename base_::second_type >::type
-
-    > std_pair;
-
-    typedef std::pair
-    <
-        const typename ::boost::remove_const< typename base_:: first_type >::type,
-              typename ::boost::remove_const< typename base_::second_type >::type
-
-    > std_map_pair;
-
-    explicit structured_pair(const std_pair & p) :
+    template< class First, class Second >
+    structured_pair(const std::pair<First,Second> & p) :
         base_(p.first,p.second)
     {}
 
-    explicit structured_pair(const std_map_pair & p) :
-        base_(p.first,p.second)
-    {}
-
-    structured_pair& operator=(const std_pair & p)
+    template< class First, class Second >
+    structured_pair& operator=(const std::pair<First,Second> & p)
     {
         base_::first  = p.first;
         base_::second = p.second;
         return *this;
     }
 
-    structured_pair& operator=(const std_map_pair & p)
+    template< class Tag >
+    const BOOST_DEDUCED_TYPENAME ::boost::bimaps::relation::support::
+        result_of::get<Tag,structured_pair>::type
+    get(BOOST_EXPLICIT_TEMPLATE_TYPE(Tag)) const
     {
-        base_::first  = p.first;
-        base_::second = p.second;
-        return *this;
+        return ::boost::bimaps::relation::support::get<Tag>(*this);
     }
 
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
-
-        structured_pair,
-        first,second
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
-
-        std_pair,
-        first,second
-    );
-
-    BOOST_BIMAP_TOTALLY_ORDERED_PAIR_IMPLEMENTATION(
-        base_::first, base_::second,
-
-        std_map_pair,
-        first,second
-    );
+    template< class Tag >
+    BOOST_DEDUCED_TYPENAME ::boost::bimaps::relation::support::
+        result_of::get<Tag,structured_pair>::type
+    get(BOOST_EXPLICIT_TEMPLATE_TYPE(Tag))
+    {
+        return ::boost::bimaps::relation::support::get<Tag>(*this);
+    }
 };
 
+// structured_pair - structured_pair
+
+template< class FirstType, class SecondType, class Layout1, class Layout2 >
+bool operator==(const structured_pair<FirstType,SecondType,Layout1> & a,
+                const structured_pair<FirstType,SecondType,Layout2> & b)
+{
+    return ( ( a.first  == b.first  ) &&
+             ( a.second == b.second ) );
+}
+
+template< class FirstType, class SecondType, class Layout1, class Layout2 >
+bool operator!=(const structured_pair<FirstType,SecondType,Layout1> & a,
+                const structured_pair<FirstType,SecondType,Layout2> & b)
+{
+    return ! ( a == b );
+}
+
+template< class FirstType, class SecondType, class Layout1, class Layout2 >
+bool operator<(const structured_pair<FirstType,SecondType,Layout1> & a,
+               const structured_pair<FirstType,SecondType,Layout2> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second < b.second )));
+}
+
+template< class FirstType, class SecondType, class Layout1, class Layout2 >
+bool operator<=(const structured_pair<FirstType,SecondType,Layout1> & a,
+                const structured_pair<FirstType,SecondType,Layout2> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second <= b.second )));
+}
+
+template< class FirstType, class SecondType, class Layout1, class Layout2 >
+bool operator>(const structured_pair<FirstType,SecondType,Layout1> & a,
+               const structured_pair<FirstType,SecondType,Layout2> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second > b.second )));
+}
+
+template< class FirstType, class SecondType, class Layout1, class Layout2 >
+bool operator>=(const structured_pair<FirstType,SecondType,Layout1> & a,
+                const structured_pair<FirstType,SecondType,Layout2> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second >= b.second )));
+}
+
+// structured_pair - std::pair
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator==(const structured_pair<FirstType,SecondType,Layout> & a,
+                const std::pair<F,S> & b)
+{
+    return ( ( a.first  == b.first  ) &&
+             ( a.second == b.second ) );
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator!=(const structured_pair<FirstType,SecondType,Layout> & a,
+                const std::pair<F,S> & b)
+{
+    return ! ( a == b );
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator<(const structured_pair<FirstType,SecondType,Layout> & a,
+               const std::pair<F,S> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second < b.second )));
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator<=(const structured_pair<FirstType,SecondType,Layout> & a,
+                const std::pair<F,S> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second <= b.second )));
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator>(const structured_pair<FirstType,SecondType,Layout> & a,
+               const std::pair<F,S> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second > b.second )));
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator>=(const structured_pair<FirstType,SecondType,Layout> & a,
+                const std::pair<F,S> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second >= b.second )));
+}
+
+// std::pair - sturctured_pair
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator==(const std::pair<F,S> & a,
+                const structured_pair<FirstType,SecondType,Layout> & b)
+{
+    return ( ( a.first  == b.first  ) &&
+             ( a.second == b.second ) );
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator!=(const std::pair<F,S> & a,
+                const structured_pair<FirstType,SecondType,Layout> & b)
+{
+    return ! ( a == b );
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator<(const std::pair<F,S> & a,
+               const structured_pair<FirstType,SecondType,Layout> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second < b.second )));
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator<=(const std::pair<F,S> & a,
+                const structured_pair<FirstType,SecondType,Layout> & b)
+{
+    return (  ( a.first  <  b.first  ) ||
+             (( a.first == b.first ) && ( a.second <= b.second )));
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator>(const std::pair<F,S> & a,
+               const structured_pair<FirstType,SecondType,Layout> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second > b.second )));
+}
+
+template< class FirstType, class SecondType, class Layout, class F, class S >
+bool operator>=(const std::pair<F,S> & a,
+                const structured_pair<FirstType,SecondType,Layout> & b)
+{
+    return ( ( a.first  >  b.first  ) ||
+             (( a.first == b.first ) && ( a.second >= b.second )));
+}
+
+
+
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_RELATION_STRUCTURED_PAIR_HPP

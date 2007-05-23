@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_VECTOR_MAP_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_VECTOR_MAP_ADAPTOR_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/mpl/list.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/aux_/na.hpp>
@@ -20,7 +26,7 @@
 #include <boost/mpl/vector.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace container_adaptor {
 
 /// \brief Container adaptor.
@@ -69,8 +75,8 @@ class vector_map_adaptor :
 
     public:
 
-    typedef typename Iterator::value_type::first_type  key_type;
-    typedef typename Iterator::value_type::second_type data_type;
+    typedef BOOST_DEDUCED_TYPENAME Iterator::value_type::first_type  key_type;
+    typedef BOOST_DEDUCED_TYPENAME Iterator::value_type::second_type data_type;
 
     // Access -----------------------------------------------------------------
 
@@ -89,7 +95,7 @@ class vector_map_adaptor :
 
 
 } // namespace container_adaptor
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

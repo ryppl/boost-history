@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,9 +12,15 @@
 #ifndef BOOST_BIMAP_TAGS_SUPPORT_OVERWRITE_TAGGED_HPP
 #define BOOST_BIMAP_TAGS_SUPPORT_OVERWRITE_TAGGED_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/tags/tagged.hpp>
 
-/** \struct boost::bimap::tags::support::overwrite_tagged
+/** \struct boost::bimaps::tags::support::overwrite_tagged
 \brief Hard tagging metafunction
 
 \code
@@ -35,7 +41,7 @@ See also tagged, default_tagged.
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace tags {
 namespace support {
 
@@ -57,7 +63,7 @@ struct overwrite_tagged< tagged< Type, OldTag >, NewTag >
 
 } // namespace support
 } // namespace tags
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES

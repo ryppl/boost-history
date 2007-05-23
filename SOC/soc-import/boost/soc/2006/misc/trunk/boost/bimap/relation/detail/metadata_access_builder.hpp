@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +11,12 @@
 
 #ifndef BOOST_BIMAP_RELATION_DETAIL_METADATA_ACCESS_BUILDER_HPP
 #define BOOST_BIMAP_RELATION_DETAIL_METADATA_ACCESS_BUILDER_HPP
+
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
 
 #include <boost/bimap/relation/support/is_tag_of_member_at.hpp>
 #include <boost/bimap/detail/debug/static_error.hpp>
@@ -32,8 +38,7 @@ struct NAME
 ******************************************************************************/
 
 
-/*///////////////////////////////////////////////////////////////////////////*/
-
+/*===========================================================================*/
 #define BOOST_BIMAP_SYMMETRIC_METADATA_ACCESS_BUILDER(                        \
                                                                               \
         NAME,                                                                 \
@@ -59,9 +64,9 @@ struct NAME
     struct NAME                                                               \
     <                                                                         \
         Tag, SymmetricType,                                                   \
-        typename enable_if                                                    \
+        BOOST_DEDUCED_TYPENAME enable_if                                      \
         <                                                                     \
-            ::boost::bimap::relation::support::is_tag_of_member_at_left       \
+            ::boost::bimaps::relation::support::is_tag_of_member_at_left      \
             <                                                                 \
                 Tag,                                                          \
                 SymmetricType                                                 \
@@ -70,16 +75,16 @@ struct NAME
         >::type                                                               \
     >                                                                         \
     {                                                                         \
-        typedef typename SymmetricType::METADATA_BY_LEFT type;                \
+        typedef BOOST_DEDUCED_TYPENAME SymmetricType::METADATA_BY_LEFT type;  \
     };                                                                        \
                                                                               \
     template< class Tag, class SymmetricType >                                \
     struct NAME                                                               \
     <                                                                         \
         Tag, SymmetricType,                                                   \
-        typename enable_if                                                    \
+        BOOST_DEDUCED_TYPENAME enable_if                                      \
         <                                                                     \
-            ::boost::bimap::relation::support::is_tag_of_member_at_right      \
+            ::boost::bimaps::relation::support::is_tag_of_member_at_right     \
             <                                                                 \
                 Tag,                                                          \
                 SymmetricType                                                 \
@@ -88,10 +93,9 @@ struct NAME
         >::type                                                               \
     >                                                                         \
     {                                                                         \
-        typedef typename SymmetricType::METADATA_BY_RIGHT type;               \
+        typedef BOOST_DEDUCED_TYPENAME SymmetricType::METADATA_BY_RIGHT type; \
     };
-
-/*///////////////////////////////////////////////////////////////////////////*/
+/*===========================================================================*/
 
 
 #endif // BOOST_BIMAP_RELATION_DETAIL_METADATA_ACCES_BUILDER_HPP

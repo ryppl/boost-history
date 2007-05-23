@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_RELATION_SUPPORT_IS_TAG_OF_MEMBER_AT_HPP
 #define BOOST_BIMAP_RELATION_SUPPORT_IS_TAG_OF_MEMBER_AT_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/relation/member_at.hpp>
 #include <boost/type_traits/is_same.hpp>
 
@@ -19,7 +25,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/bimap/relation/support/member_with_tag.hpp>
 
-/** \struct boost::bimap::relation::support::is_tag_of_member_at_left
+/** \struct boost::bimaps::relation::support::is_tag_of_member_at_left
 
 \brief Metafunction to test if a user tag is refering to the left member.
 
@@ -45,7 +51,7 @@ See also member_with_tag, member_at, is_tag_of_member_at_right.
                                                                              **/
 
 
-/** \struct boost::bimap::relation::support::is_tag_of_member_at_right
+/** \struct boost::bimaps::relation::support::is_tag_of_member_at_right
 
 \brief Metafunction to test if a user tag is refering to the left member.
 
@@ -74,7 +80,7 @@ See also member_with_tag, member_at, is_tag_of_member_at_left.
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 namespace support {
 
@@ -94,11 +100,11 @@ template< class Tag, class Relation >
 struct is_tag_of_member_at_left
 <
     Tag, Relation,
-    typename enable_if
+    BOOST_DEDUCED_TYPENAME enable_if
     <
         is_same
         <
-            typename member_with_tag<Tag,Relation>::type,
+            BOOST_DEDUCED_TYPENAME member_with_tag<Tag,Relation>::type,
             member_at::left
         >
 
@@ -122,11 +128,11 @@ template< class Tag, class Relation >
 struct is_tag_of_member_at_right
 <
     Tag, Relation,
-    typename enable_if
+    BOOST_DEDUCED_TYPENAME enable_if
     <
         is_same
         <
-            typename member_with_tag<Tag,Relation>::type,
+            BOOST_DEDUCED_TYPENAME member_with_tag<Tag,Relation>::type,
             member_at::right
         >
 
@@ -136,7 +142,7 @@ struct is_tag_of_member_at_right
 
 } // namespace support
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES

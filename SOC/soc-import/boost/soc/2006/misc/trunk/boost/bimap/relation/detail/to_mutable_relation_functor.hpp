@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006-2007 Matias Capeletto
+// Copyright (c) 2006 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,16 +12,10 @@
 #ifndef BOOST_BIMAP_RELATION_SUPPORT_GET_PAIR_FUNCTOR_HPP
 #define BOOST_BIMAP_RELATION_SUPPORT_GET_PAIR_FUNCTOR_HPP
 
-#if defined(_MSC_VER) && (_MSC_VER>=1200)
-#pragma once
-#endif
-
-#include <boost/config.hpp>
-
 #include <boost/bimap/relation/support/pair_by.hpp>
 
 namespace boost {
-namespace bimaps {
+namespace bimap {
 namespace relation {
 namespace support {
 
@@ -39,13 +33,13 @@ See also member_at, pair_by().
 template< class Tag, class Relation >
 struct get_pair_functor
 {
-    BOOST_DEDUCED_TYPENAME result_of::pair_by<Tag,Relation>::type
+    typename result_of::pair_by<Tag,Relation>::type
     operator()( Relation & r ) const
     {
         return pair_by<Tag>(r);
     }
 
-    BOOST_DEDUCED_TYPENAME result_of::pair_by<Tag,const Relation>::type
+    typename result_of::pair_by<Tag,const Relation>::type
     operator()( const Relation & r ) const
     {
         return pair_by<Tag>(r);
@@ -62,13 +56,13 @@ struct get_pair_functor
 template< class Relation >
 struct get_above_view_functor
 {
-    BOOST_DEDUCED_TYPENAME Relation::above_view_reference
+    typename Relation::above_view_reference
     operator()( Relation & r ) const
     {
         return r.get_view();
     }
 
-    BOOST_DEDUCED_TYPENAME Relation::const_above_view_reference
+    typename Relation::const_above_view_reference
     operator()( const Relation & r ) const
     {
         return r.get_view();
@@ -77,7 +71,7 @@ struct get_above_view_functor
 
 } // namespace support
 } // namespace relation
-} // namespace bimaps
+} // namespace bimap
 } // namespace boost
 
 

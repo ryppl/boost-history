@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,13 +12,19 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_MULTISET_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_MULTISET_ADAPTOR_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/container_adaptor/unordered_associative_container_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/non_unique_container_helper.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/vector.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace container_adaptor {
 
 /// \brief Container adaptor to easily build a std::unordered_multiset signature compatible container.
@@ -43,11 +49,12 @@ template
 >
 class unordered_multiset_adaptor :
 
-    public ::boost::bimap::container_adaptor::unordered_associative_container_adaptor
+    public ::boost::bimaps::container_adaptor::
+                unordered_associative_container_adaptor
     <
         Base,
         Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
-        typename Iterator::value_type,
+        BOOST_DEDUCED_TYPENAME Iterator::value_type,
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
@@ -55,11 +62,12 @@ class unordered_multiset_adaptor :
         FunctorsFromDerivedClasses
     >
 {
-    typedef ::boost::bimap::container_adaptor::unordered_associative_container_adaptor
+    typedef ::boost::bimaps::container_adaptor::
+                unordered_associative_container_adaptor
     <
         Base,
         Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
-        typename Iterator::value_type,
+        BOOST_DEDUCED_TYPENAME Iterator::value_type,
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
@@ -86,7 +94,7 @@ class unordered_multiset_adaptor :
 
 
 } // namespace container_adaptor
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

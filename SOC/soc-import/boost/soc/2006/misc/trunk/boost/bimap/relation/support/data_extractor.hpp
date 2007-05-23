@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,9 +12,15 @@
 #ifndef BOOST_BIMAP_RELATION_SUPPORT_DATA_EXTRACTOR_HPP
 #define BOOST_BIMAP_RELATION_SUPPORT_DATA_EXTRACTOR_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/relation/detail/metadata_access_builder.hpp>
 
-/** \struct boost::bimap::relation::support::data_extractor
+/** \struct boost::bimaps::relation::support::data_extractor
 
 \brief Data extraction functor.
 
@@ -24,7 +30,7 @@
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 namespace support {
 
@@ -33,14 +39,16 @@ struct data_extractor_implementation;
 
 template< class Relation >
 struct data_extractor_implementation< member_at::left, Relation > :
-    public std::unary_function<Relation,typename Relation::left_value_type>
+    public std::unary_function<Relation,BOOST_DEDUCED_TYPENAME Relation::left_value_type>
 {
-    typename Relation::left_value_type const & operator()(Relation const & rel) const
+    BOOST_DEDUCED_TYPENAME Relation::left_value_type const &
+        operator()(Relation const & rel) const
     {
         return rel.left;
     }
 
-    typename Relation::left_value_type       & operator()(Relation       & rel) const
+    BOOST_DEDUCED_TYPENAME Relation::left_value_type &
+        operator()(Relation       & rel) const
     {
         return rel.left;
     }
@@ -48,14 +56,16 @@ struct data_extractor_implementation< member_at::left, Relation > :
 
 template< class Relation >
 struct data_extractor_implementation< member_at::right, Relation > :
-    public std::unary_function<Relation,typename Relation::right_value_type>
+    public std::unary_function<Relation,BOOST_DEDUCED_TYPENAME Relation::right_value_type>
 {
-    typename Relation::right_value_type const & operator()(Relation const & rel) const
+    BOOST_DEDUCED_TYPENAME Relation::right_value_type const & 
+        operator()(Relation const & rel) const
     {
         return rel.right;
     }
 
-    typename Relation::right_value_type       & operator()(Relation       & rel) const
+    BOOST_DEDUCED_TYPENAME Relation::right_value_type & 
+        operator()(Relation       & rel) const
     {
         return rel.right;
     }
@@ -66,7 +76,7 @@ struct data_extractor
 {
     typedef data_extractor_implementation
     <
-        typename member_with_tag<Tag,Relation>::type,
+        BOOST_DEDUCED_TYPENAME member_with_tag<Tag,Relation>::type,
         Relation
 
     > type;
@@ -74,7 +84,7 @@ struct data_extractor
 
 } // namespace support
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES

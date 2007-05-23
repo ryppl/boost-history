@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +11,12 @@
 
 #ifndef BOOST_BIMAP_UNORDERED_MULTISET_OF_HPP
 #define BOOST_BIMAP_UNORDERED_MULTISET_OF_HPP
+
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
 
 #include <boost/bimap/detail/user_interface_config.hpp>
 
@@ -30,7 +36,7 @@
 #include <boost/bimap/views/unordered_multiset_view.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 
 
 /// \brief Set Type Specification
@@ -109,7 +115,7 @@ template
     class HashFunctor   = hash< KeyType >,
     class EqualKey      = std::equal_to< KeyType >
 >
-struct unordered_multiset_of : public ::boost::bimap::detail::set_type_of_tag
+struct unordered_multiset_of : public ::boost::bimaps::detail::set_type_of_tag
 {
     /// The type that will be stored in the container
     typedef KeyType         value_type;
@@ -171,7 +177,7 @@ template
     class HashFunctor   = hash< _relation >,
     class EqualKey      = std::equal_to< _relation >
 >
-struct unordered_multiset_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
+struct unordered_multiset_of_relation : public ::boost::bimaps::detail::set_type_of_relation_tag
 {
     /// Hash Functor that takes value_type objects
     typedef HashFunctor     hasher;
@@ -195,7 +201,7 @@ struct unordered_multiset_of_relation : public ::boost::bimap::detail::set_type_
 };
 
 
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

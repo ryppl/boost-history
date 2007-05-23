@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,10 +12,16 @@
 #ifndef BOOST_BIMAP_DETAIL_IS_SET_TYPE_OF_HPP
 #define BOOST_BIMAP_DETAIL_IS_SET_TYPE_OF_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/bimap/detail/concept_tags.hpp>
 
-/** \struct boost::bimap::detail::is_set_type_of
+/** \struct boost::bimaps::detail::is_set_type_of
 
 \brief Type trait to check if a class is a set_type_of specification
 
@@ -25,7 +31,7 @@ struct is_set_type_of : {true_|false_} {};
 \endcode
                                                                         **/
 
-/** \struct boost::bimap::detail::is_set_type_of_relation
+/** \struct boost::bimaps::detail::is_set_type_of_relation
 
 \brief Type trait to check if a class is a set_type_of_relation specification
 
@@ -39,7 +45,7 @@ struct is_set_type_of_relation : {true_|false_} {};
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace detail {
 
 template< class Type >
@@ -51,7 +57,7 @@ struct is_set_type_of_relation :
     is_base_of< set_type_of_relation_tag, Type > {};
 
 } // namespace detail
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES

@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,8 +12,13 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_ORDERED_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_ORDERED_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/container_adaptor/associative_container_adaptor.hpp>
-#include <boost/bimap/container_adaptor/detail/value_comparison_adaptor.hpp>
 #include <boost/bimap/container_adaptor/detail/comparison_adaptor.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/vector.hpp>
@@ -23,7 +28,7 @@
 #include <boost/call_traits.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace container_adaptor {
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
@@ -34,7 +39,8 @@ template
     class ReverseIterator, class ConstReverseIterator, class KeyType,
     class IteratorToBaseConverter, class IteratorFromBaseConverter,
     class ReverseIteratorFromBaseConverter,
-    class ValueToBaseConverter, class ValueFromBaseConverter, class KeyToBaseConverter,
+    class ValueToBaseConverter, class ValueFromBaseConverter, 
+    class KeyToBaseConverter,
     class FunctorsFromDerivedClasses
 >
 struct ordered_associative_container_adaptor_base
@@ -44,16 +50,19 @@ struct ordered_associative_container_adaptor_base
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter, KeyToBaseConverter,
 
-        typename mpl::push_front<
+        BOOST_DEDUCED_TYPENAME mpl::push_front<
 
             FunctorsFromDerivedClasses,
 
-            typename mpl::if_< ::boost::mpl::is_na<ReverseIteratorFromBaseConverter>,
+            BOOST_DEDUCED_TYPENAME mpl::if_<
+                ::boost::mpl::is_na<ReverseIteratorFromBaseConverter>,
             // {
                     detail::iterator_from_base_identity
                     <
-                        typename Base::reverse_iterator                , ReverseIterator,
-                        typename Base::const_reverse_iterator          , ConstReverseIterator
+                        BOOST_DEDUCED_TYPENAME Base::reverse_iterator,
+                        ReverseIterator,
+                        BOOST_DEDUCED_TYPENAME Base::const_reverse_iterator,
+                        ConstReverseIterator
                     >,
             // }
             // else
@@ -109,16 +118,18 @@ class ordered_associative_container_adaptor :
     <
         ordered_associative_container_adaptor
         <
-            Base, Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
+            Base, Iterator, ConstIterator,
+            ReverseIterator, ConstReverseIterator,
             KeyType, IteratorToBaseConverter, IteratorFromBaseConverter,
-            ReverseIteratorFromBaseConverter, ValueToBaseConverter, ValueFromBaseConverter,
+            ReverseIteratorFromBaseConverter,
+            ValueToBaseConverter, ValueFromBaseConverter,
             KeyToBaseConverter, FunctorsFromDerivedClasses
         >
     >
 {
     // MetaData -------------------------------------------------------------
 
-    typedef typename ordered_associative_container_adaptor_base
+    typedef BOOST_DEDUCED_TYPENAME ordered_associative_container_adaptor_base
     <
         Base, Iterator, ConstIterator,
         ReverseIterator, ConstReverseIterator, KeyType,
@@ -131,18 +142,19 @@ class ordered_associative_container_adaptor :
 
     public:
 
-    typedef detail::comparison_adaptor
+    typedef detail::compatible_comparison_adaptor
     <
-        typename Base::key_compare,
-        typename base_::key_type,
-        typename base_::key_to_base
+        BOOST_DEDUCED_TYPENAME Base::key_compare,
+        BOOST_DEDUCED_TYPENAME base_::key_type,
+        BOOST_DEDUCED_TYPENAME base_::key_to_base
 
     > key_compare;
 
-    typedef detail::value_comparison_adaptor
+    typedef detail::comparison_adaptor
     <
-        typename Base::value_compare,
-        typename base_::value_type
+        BOOST_DEDUCED_TYPENAME Base::value_compare,
+        BOOST_DEDUCED_TYPENAME base_::value_type,
+        BOOST_DEDUCED_TYPENAME base_::value_to_base
 
     > value_compare;
 
@@ -151,12 +163,15 @@ class ordered_associative_container_adaptor :
 
     protected:
 
-    typedef typename mpl::if_< ::boost::mpl::is_na<ReverseIteratorFromBaseConverter>,
+    typedef BOOST_DEDUCED_TYPENAME mpl::if_<
+        ::boost::mpl::is_na<ReverseIteratorFromBaseConverter>,
         // {
                 detail::iterator_from_base_identity
                 <
-                    typename Base::reverse_iterator                , reverse_iterator,
-                    typename Base::const_reverse_iterator          , const_reverse_iterator
+                    BOOST_DEDUCED_TYPENAME Base::reverse_iterator,
+                    reverse_iterator,
+                    BOOST_DEDUCED_TYPENAME Base::const_reverse_iterator,
+                    const_reverse_iterator
                 >,
         // }
         // else
@@ -175,7 +190,8 @@ class ordered_associative_container_adaptor :
 
     protected:
 
-    typedef ordered_associative_container_adaptor ordered_associative_container_adaptor_;
+    typedef ordered_associative_container_adaptor
+                ordered_associative_container_adaptor_;
 
     // Interface --------------------------------------------------------------
 
@@ -212,57 +228,64 @@ class ordered_associative_container_adaptor :
 
     key_compare key_comp() const
     {
+        typedef BOOST_DEDUCED_TYPENAME base_::key_to_base key_to_base_;
+
         return key_compare(
             this->base().key_comp(),
-            this->template functor<typename base_::key_to_base>()
+            this->template functor<key_to_base_>()
         );
     }
 
     value_compare value_comp() const
     {
-        return value_compare( this->base().value_comp() );
+        typedef BOOST_DEDUCED_TYPENAME base_::value_to_base value_to_base_;
+
+        return value_compare(
+            this->base().value_comp(),
+            this->template functor<value_to_base_>()
+        );
     }
 
-    typename base_::iterator lower_bound(
-        typename ::boost::call_traits< typename base_::key_type >::param_type k)
+    template< class CompatibleKey >
+    BOOST_DEDUCED_TYPENAME base_::iterator lower_bound(const CompatibleKey & k)
     {
        return this->template functor<
-            typename base_::iterator_from_base>()(
+            BOOST_DEDUCED_TYPENAME base_::iterator_from_base>()(
                 this->base().lower_bound(
-                    this->template functor<typename base_::key_to_base>()(k)
+                    this->template functor<BOOST_DEDUCED_TYPENAME base_::key_to_base>()(k)
                 )
             );
     }
 
-    typename base_::const_iterator lower_bound(
-        typename ::boost::call_traits< typename base_::key_type >::param_type k) const
+    template< class CompatibleKey >
+    BOOST_DEDUCED_TYPENAME base_::const_iterator lower_bound(const CompatibleKey & k) const
     {
        return this->template functor<
-            typename base_::iterator_from_base>()(
+            BOOST_DEDUCED_TYPENAME base_::iterator_from_base>()(
                 this->base().lower_bound(
-                    this->template functor<typename base_::key_to_base>()(k)
+                    this->template functor<BOOST_DEDUCED_TYPENAME base_::key_to_base>()(k)
                 )
             );
     }
 
-    typename base_::iterator upper_bound(
-        typename ::boost::call_traits< typename base_::key_type >::param_type k)
+    template< class CompatibleKey >
+    BOOST_DEDUCED_TYPENAME base_::iterator upper_bound(const CompatibleKey & k)
     {
        return this->template functor<
-            typename base_::iterator_from_base>()(
+            BOOST_DEDUCED_TYPENAME base_::iterator_from_base>()(
                 this->base().upper_bound(
-                    this->template functor<typename base_::key_to_base>()(k)
+                    this->template functor<BOOST_DEDUCED_TYPENAME base_::key_to_base>()(k)
                 )
             );
     }
 
-    typename base_::const_iterator upper_bound(
-        typename ::boost::call_traits< typename base_::key_type >::param_type k) const
+    template< class CompatibleKey >
+    BOOST_DEDUCED_TYPENAME base_::const_iterator upper_bound(const CompatibleKey & k) const
     {
         return this->template functor<
-            typename base_::iterator_from_base>()(
+            BOOST_DEDUCED_TYPENAME base_::iterator_from_base>()(
                 this->base().upper_bound(
-                    this->template functor<typename base_::key_to_base>()(k)
+                    this->template functor<BOOST_DEDUCED_TYPENAME base_::key_to_base>()(k)
                 )
             );
     }
@@ -282,7 +305,7 @@ class ordered_associative_container_adaptor :
 
 
 } // namespace container_adaptor
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

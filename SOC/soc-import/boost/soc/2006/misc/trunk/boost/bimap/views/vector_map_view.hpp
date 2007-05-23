@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,13 +12,19 @@
 #ifndef BOOST_BIMAP_VIEWS_VECTOR_MAP_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_VECTOR_MAP_VIEW_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/container_adaptor/vector_map_adaptor.hpp>
 #include <boost/bimap/support/iterator_type_by.hpp>
 #include <boost/bimap/detail/map_view_base.hpp>
 #include <boost/bimap/container_adaptor/detail/comparison_adaptor.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace views {
 
 /// \brief View of a side of a bimap.
@@ -28,7 +34,7 @@ This class uses container_adaptor and iterator_adaptor to wrapped a index of the
 multi_index bimap core.
 
 See also const_map_view.
-                                                                                    **/
+                                                                             **/
 template< class Tag, class BimapType >
 class vector_map_view
 :
@@ -38,7 +44,8 @@ class vector_map_view
         reverse_iterator_type_by, const_reverse_iterator_type_by
     ),
 
-    public ::boost::bimap::detail::map_view_base< vector_map_view<Tag,BimapType>,Tag,BimapType >
+    public ::boost::bimaps::detail::
+                map_view_base< vector_map_view<Tag,BimapType>,Tag,BimapType >
 {
     typedef BOOST_BIMAP_MAP_VIEW_CONTAINER_ADAPTOR(
         vector_map_adaptor,
@@ -49,67 +56,85 @@ class vector_map_view
 
     BOOST_BIMAP_MAP_VIEW_BASE_FRIEND(vector_map_view,Tag,BimapType);
 
-    typedef typename ::boost::bimap::relation::support::data_extractor
+    typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::relation::support::data_extractor
     <
         Tag,
-        typename BimapType::relation
+        BOOST_DEDUCED_TYPENAME BimapType::relation
 
     >::type key_from_base_value;
 
     public:
 
-    vector_map_view(typename base_::base_type & c) :
+    vector_map_view(BOOST_DEDUCED_TYPENAME base_::base_type & c) :
         base_(c) {}
 
-    vector_map_view & operator=(const vector_map_view & v) { this->base() = v.base(); return *this; }
+    vector_map_view & operator=(const vector_map_view & v)
+    {
+        this->base() = v.base();
+        return *this;
+    }
 
-    BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION
+    BOOST_BIMAP_VIEW_ASSIGN_IMPLEMENTATION(base_)
+
+    BOOST_BIMAP_VIEW_FRONT_BACK_IMPLEMENTATION(base_)
 
     // Lists operations
 
-    void splice(typename base_::iterator position, vector_map_view & x)
+    void splice(BOOST_DEDUCED_TYPENAME base_::iterator position, vector_map_view & x)
     {
         this->base().splice(
-            this->template functor<typename base_::iterator_to_base>()(position),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(position),
             x.base()
         );
     }
 
-    void splice(typename base_::iterator position, vector_map_view & x, typename base_::iterator i)
+    void splice(BOOST_DEDUCED_TYPENAME base_::iterator position,
+                vector_map_view & x,
+                BOOST_DEDUCED_TYPENAME base_::iterator i)
     {
         this->base().splice(
-            this->template functor<typename base_::iterator_to_base>()(position),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(position),
             x.base(),
-            this->template functor<typename base_::iterator_to_base>()(i)
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(i)
         );
     }
 
-    void splice(typename base_::iterator position, vector_map_view & x,
-                typename base_::iterator first, typename base_::iterator last)
+    void splice(BOOST_DEDUCED_TYPENAME base_::iterator position,
+                vector_map_view & x,
+                BOOST_DEDUCED_TYPENAME base_::iterator first,
+                BOOST_DEDUCED_TYPENAME base_::iterator last)
     {
         this->base().splice(
-            this->template functor<typename base_::iterator_to_base>()(position),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(position),
             x.base(),
-            this->template functor<typename base_::iterator_to_base>()(first),
-            this->template functor<typename base_::iterator_to_base>()(last)
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(first),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(last)
         );
     }
 
-    void remove(typename ::boost::call_traits< typename base_::value_type >::param_type value)
+    void remove(BOOST_DEDUCED_TYPENAME ::boost::call_traits< 
+                    BOOST_DEDUCED_TYPENAME base_::value_type >::param_type value)
     {
         this->base().remove(
-            this->template functor<typename base_::value_to_base>()(value)
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::value_to_base>()(value)
         );
     }
 
-    template<typename Predicate>
+    template< class Predicate >
     void remove_if(Predicate pred)
     {
         this->base().remove_if(
-            ::boost::bimap::container_adaptor::detail::unary_check_adaptor
+            ::boost::bimaps::container_adaptor::detail::unary_check_adaptor
             <
                 Predicate,
-                typename base_::base_type::value_type,
+                BOOST_DEDUCED_TYPENAME base_::base_type::value_type,
                 key_from_base_value
 
             >( pred, key_from_base_value() )
@@ -119,24 +144,25 @@ class vector_map_view
     void unique()
     {
         this->base().unique(
-            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            ::boost::bimaps::container_adaptor::detail::comparison_adaptor
             <
-                std::equal_to<typename base_::key_type>,
-                typename base_::base_type::value_type,
+                std::equal_to<BOOST_DEDUCED_TYPENAME base_::key_type>,
+                BOOST_DEDUCED_TYPENAME base_::base_type::value_type,
                 key_from_base_value
 
-            >( std::equal_to<typename base_::key_type>(), key_from_base_value() )
+            >(std::equal_to<BOOST_DEDUCED_TYPENAME base_::key_type>(),
+                    key_from_base_value() )
         );
     }
 
-    template <class BinaryPredicate>
+    template< class BinaryPredicate >
     void unique(BinaryPredicate binary_pred)
     {
         this->base().unique(
-            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            ::boost::bimaps::container_adaptor::detail::comparison_adaptor
             <
                 BinaryPredicate,
-                typename base_::base_type::value_type,
+                BOOST_DEDUCED_TYPENAME base_::base_type::value_type,
                 key_from_base_value
 
             >( binary_pred, key_from_base_value() )
@@ -146,24 +172,25 @@ class vector_map_view
     void merge(vector_map_view & x)
     {
         this->base().merge(x.base(),
-            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            ::boost::bimaps::container_adaptor::detail::comparison_adaptor
             <
-                std::less<typename base_::key_type>,
-                typename base_::base_type::value_type,
+                std::less<BOOST_DEDUCED_TYPENAME base_::key_type>,
+                BOOST_DEDUCED_TYPENAME base_::base_type::value_type,
                 key_from_base_value
 
-            >( std::less<typename base_::key_type>(), key_from_base_value() )
+            >( std::less<BOOST_DEDUCED_TYPENAME base_::key_type>(), 
+                    key_from_base_value() )
         );
     }
 
-    template <typename Compare>
+    template< class Compare >
     void merge(vector_map_view & x, Compare comp)
     {
         this->base().merge(x.base(),
-            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            ::boost::bimaps::container_adaptor::detail::comparison_adaptor
             <
                 Compare,
-                typename base_::base_type::value_type,
+                BOOST_DEDUCED_TYPENAME base_::base_type::value_type,
                 key_from_base_value
 
             >( comp, key_from_base_value() )
@@ -173,24 +200,25 @@ class vector_map_view
     void sort()
     {
         this->base().sort(
-            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            ::boost::bimaps::container_adaptor::detail::comparison_adaptor
             <
-                std::less<typename base_::key_type>,
-                typename base_::base_type::value_type,
+                std::less<BOOST_DEDUCED_TYPENAME base_::key_type>,
+                BOOST_DEDUCED_TYPENAME base_::base_type::value_type,
                 key_from_base_value
 
-            >( std::less<typename base_::key_type>(), key_from_base_value() )
+            >( std::less<BOOST_DEDUCED_TYPENAME base_::key_type>(),
+                    key_from_base_value() )
         );
     }
 
-    template <typename Compare>
+    template< class Compare >
     void sort(Compare comp)
     {
         this->base().sort(
-            ::boost::bimap::container_adaptor::detail::comparison_adaptor
+            ::boost::bimaps::container_adaptor::detail::comparison_adaptor
             <
                 Compare,
-                typename base_::base_type::value_type,
+                BOOST_DEDUCED_TYPENAME base_::base_type::value_type,
                 key_from_base_value
 
             >( comp, key_from_base_value() )
@@ -204,21 +232,28 @@ class vector_map_view
 
     // Rearrange Operations
 
-    void relocate(typename base_::iterator position, typename base_::iterator i)
+    void relocate(BOOST_DEDUCED_TYPENAME base_::iterator position, 
+                  BOOST_DEDUCED_TYPENAME base_::iterator i)
     {
         this->base().relocate(
-            this->template functor<typename base_::iterator_to_base>()(position),
-            this->template functor<typename base_::iterator_to_base>()(i)
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(position),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(i)
         );
     }
 
-    void relocate(typename base_::iterator position,
-                  typename base_::iterator first, typename base_::iterator last)
+    void relocate(BOOST_DEDUCED_TYPENAME base_::iterator position,
+                  BOOST_DEDUCED_TYPENAME base_::iterator first, 
+                  BOOST_DEDUCED_TYPENAME base_::iterator last)
     {
         this->base().relocate(
-            this->template functor<typename base_::iterator_to_base>()(position),
-            this->template functor<typename base_::iterator_to_base>()(first),
-            this->template functor<typename base_::iterator_to_base>()(last)
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(position),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(first),
+            this->template functor<
+                BOOST_DEDUCED_TYPENAME base_::iterator_to_base>()(last)
         );
     }
 
@@ -226,7 +261,7 @@ class vector_map_view
 
 
 } // namespace views
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_VIEWS_VECTOR_MAP_VIEW_HPP

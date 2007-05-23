@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,11 @@
 #ifndef BOOST_BIMAP_DETAIL_MANAGE_BIMAP_KEY_HPP
 #define BOOST_BIMAP_DETAIL_MANAGE_BIMAP_KEY_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
 
 // Boost.Bimap.Tags
 #include <boost/bimap/tags/support/default_tagged.hpp>
@@ -27,10 +32,10 @@
 
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace detail {
 
-/** \struct boost::bimap::detail::manage_bimap_key
+/** \struct boost::bimaps::detail::manage_bimap_key
 \brief Metafunction to manage the set types of a bimap.
 
 \code
@@ -55,7 +60,7 @@ struct manage_bimap_key
 {
     // First, convert the type to a tagged one with the default tag
 
-    typedef typename tags::support::default_tagged
+    typedef BOOST_DEDUCED_TYPENAME tags::support::default_tagged
     <
         SetType, DefaultTag
 
@@ -64,9 +69,10 @@ struct manage_bimap_key
     // Then manage plain key types, were the set type of the collection
     // is not specified in the instantiation
 
-    typedef typename
+    typedef BOOST_DEDUCED_TYPENAME
 
-       mpl::if_< typename is_set_type_of< typename tagged_set_type::value_type >::type,
+       mpl::if_< BOOST_DEDUCED_TYPENAME is_set_type_of<
+                    BOOST_DEDUCED_TYPENAME tagged_set_type::value_type >::type,
     // {
             // The type is
             tagged_set_type,
@@ -74,7 +80,7 @@ struct manage_bimap_key
     // else
     // {
             // Default it to a set
-            typename tags::support::apply_to_value_type
+            BOOST_DEDUCED_TYPENAME tags::support::apply_to_value_type
             <
                 set_of< mpl::_ >,
                 tagged_set_type
@@ -88,7 +94,7 @@ struct manage_bimap_key
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 } // namespace detail
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_ASSOCIATIVE_CONTAINER_ADAPTOR_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <utility>
 
 #include <boost/mpl/vector.hpp>
@@ -22,7 +28,7 @@
 #include <boost/call_traits.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace container_adaptor {
 
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
@@ -45,15 +51,15 @@ struct associative_container_adaptor_base
         IteratorToBaseConverter, IteratorFromBaseConverter,
         ValueToBaseConverter   , ValueFromBaseConverter,
 
-        typename mpl::push_front<
+        BOOST_DEDUCED_TYPENAME mpl::push_front<
 
             FunctorsFromDerivedClasses,
 
-            typename mpl::if_< ::boost::mpl::is_na<KeyToBaseConverter>,
+            BOOST_DEDUCED_TYPENAME mpl::if_< ::boost::mpl::is_na<KeyToBaseConverter>,
             // {
                     detail::key_to_base_identity
                     <
-                        typename Base::key_type, KeyType
+                        BOOST_DEDUCED_TYPENAME Base::key_type, KeyType
                     >,
             // }
             // else
@@ -119,11 +125,11 @@ class associative_container_adaptor :
 
     protected:
 
-    typedef typename mpl::if_< ::boost::mpl::is_na<KeyToBaseConverter>,
+    typedef BOOST_DEDUCED_TYPENAME mpl::if_< ::boost::mpl::is_na<KeyToBaseConverter>,
     // {
             detail::key_to_base_identity
             <
-                typename Base::key_type, KeyType
+                BOOST_DEDUCED_TYPENAME Base::key_type, KeyType
             >,
     // }
     // else
@@ -147,8 +153,8 @@ class associative_container_adaptor :
 
     public:
 
-    typename base_::size_type
-        erase(typename ::boost::call_traits< key_type >::param_type k)
+    template< class CompatibleKey >
+    BOOST_DEDUCED_TYPENAME base_::size_type erase(const CompatibleKey & k)
     {
         return this->base().erase
         (
@@ -158,29 +164,29 @@ class associative_container_adaptor :
 
     // As we redefine erase, the other overloads need to be manually routed
 
-    typename base_::iterator erase(
-        typename base_::iterator pos)
+    BOOST_DEDUCED_TYPENAME base_::iterator erase(
+        BOOST_DEDUCED_TYPENAME base_::iterator pos)
     {
         return base_::container_adaptor_::erase(pos);
     }
 
-    typename base_::iterator erase(
-        typename base_::iterator first,
-        typename base_::iterator last)
+    BOOST_DEDUCED_TYPENAME base_::iterator erase(
+        BOOST_DEDUCED_TYPENAME base_::iterator first,
+        BOOST_DEDUCED_TYPENAME base_::iterator last)
     {
         return base_::container_adaptor_::erase(first,last);
     }
 
-    typename base_::size_type
-        count(typename ::boost::call_traits< key_type >::param_type k)
+    template< class CompatibleKey >
+    BOOST_DEDUCED_TYPENAME base_::size_type count(const CompatibleKey & k)
     {
         return this->base().count(
             this->template functor<key_to_base>()(k)
         );
     }
 
-    typename base_::iterator
-        find(typename ::boost::call_traits< key_type >::param_type k)
+    template< class CompatibleKey >
+    BOOST_DEDUCED_TYPENAME base_::iterator find(const CompatibleKey & k)
     {
         return this->template functor<typename base_::iterator_from_base>()
         (
@@ -190,11 +196,12 @@ class associative_container_adaptor :
         );
     }
 
-    typename base_::const_iterator
-        find(typename ::boost::call_traits< key_type >::param_type k) const
+    template< class CompatibleKey >
+    BOOST_DEDUCED_TYPENAME base_::const_iterator
+        find(const CompatibleKey & k) const
     {
         return this->template functor<
-            typename base_::iterator_from_base>()
+            BOOST_DEDUCED_TYPENAME base_::iterator_from_base>()
         (
             this->base().find(
                 this->template functor<key_to_base>()(k)
@@ -202,17 +209,20 @@ class associative_container_adaptor :
         );
     }
 
+    template< class CompatibleKey >
     std::pair
     <
-        typename base_::iterator,
-        typename base_::iterator
+        BOOST_DEDUCED_TYPENAME base_::iterator,
+        BOOST_DEDUCED_TYPENAME base_::iterator
     >
-        equal_range(typename ::boost::call_traits< key_type >::param_type k)
+        equal_range(const CompatibleKey & k)
     {
+        //TODO check this
+
         std::pair<
 
-            typename Base::iterator,
-            typename Base::iterator
+            BOOST_DEDUCED_TYPENAME Base::iterator,
+            BOOST_DEDUCED_TYPENAME Base::iterator
 
         > r( this->base().equal_range(
                 this->template functor<key_to_base>()(k)
@@ -221,29 +231,30 @@ class associative_container_adaptor :
 
         return std::pair
         <
-            typename base_::iterator,
-            typename base_::iterator
+            BOOST_DEDUCED_TYPENAME base_::iterator,
+            BOOST_DEDUCED_TYPENAME base_::iterator
         >(
             this->template functor<
-                typename base_::iterator_from_base
+                BOOST_DEDUCED_TYPENAME base_::iterator_from_base
             >()                                         ( r.first ),
             this->template functor<
-                typename base_::iterator_from_base
+                BOOST_DEDUCED_TYPENAME base_::iterator_from_base
             >()                                         ( r.second )
         );
     }
 
+    template< class CompatibleKey >
     std::pair
     <
-        typename base_::const_iterator,
-        typename base_::const_iterator
+        BOOST_DEDUCED_TYPENAME base_::const_iterator,
+        BOOST_DEDUCED_TYPENAME base_::const_iterator
     >
-        equal_range(typename ::boost::call_traits< key_type >::param_type k) const
+        equal_range(const CompatibleKey & k) const
     {
         std::pair<
 
-            typename Base::const_iterator,
-            typename Base::const_iterator
+            BOOST_DEDUCED_TYPENAME Base::const_iterator,
+            BOOST_DEDUCED_TYPENAME Base::const_iterator
 
         > r( this->base().equal_range(
                 this->template functor<key_to_base>()(k)
@@ -252,14 +263,14 @@ class associative_container_adaptor :
 
         return std::pair
         <
-            typename base_::const_iterator,
-            typename base_::const_iterator
+            BOOST_DEDUCED_TYPENAME base_::const_iterator,
+            BOOST_DEDUCED_TYPENAME base_::const_iterator
         >(
             this->template functor<
-                typename base_::iterator_from_base
+                BOOST_DEDUCED_TYPENAME base_::iterator_from_base
             >()                                         ( r.first ),
             this->template functor<
-                typename base_::iterator_from_base
+                BOOST_DEDUCED_TYPENAME base_::iterator_from_base
             >()                                         ( r.second )
         );
     }
@@ -268,7 +279,7 @@ class associative_container_adaptor :
 
 
 } // namespace container_adaptor
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +11,12 @@
 
 #ifndef BOOST_BIMAP_MULTISET_OF_HPP
 #define BOOST_BIMAP_MULTISET_OF_HPP
+
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
 
 #include <boost/bimap/detail/user_interface_config.hpp>
 
@@ -29,7 +35,7 @@
 #include <boost/bimap/views/multiset_view.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 
 /// \brief Set Type Specification
 /**
@@ -100,7 +106,7 @@ template
     class KeyType,
     class KeyCompare = std::less< KeyType >
 >
-struct multiset_of : public ::boost::bimap::detail::set_type_of_tag
+struct multiset_of : public ::boost::bimaps::detail::set_type_of_tag
 {
      /// Type of the object that will be stored in the set
     typedef KeyType value_type;
@@ -154,7 +160,7 @@ See also multiset_of, is_set_type_of_relation.
                                                                 **/
 
 template< class KeyCompare = std::less< _relation > >
-struct multiset_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
+struct multiset_of_relation : public ::boost::bimaps::detail::set_type_of_relation_tag
 {
     /// Functor that compare two keys
     typedef KeyCompare key_compare;
@@ -173,7 +179,7 @@ struct multiset_of_relation : public ::boost::bimap::detail::set_type_of_relatio
     typedef mpl::bool_<false> right_mutable_key;
 };
 
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

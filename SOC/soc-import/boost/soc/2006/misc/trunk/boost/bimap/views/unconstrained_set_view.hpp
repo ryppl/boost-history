@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,8 +12,14 @@
 #ifndef BOOST_BIMAP_VIEWS_UNCONSTRAINED_SET_VIEW_HPP
 #define BOOST_BIMAP_VIEWS_UNCONSTRAINED_SET_VIEW_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace views {
 
 /// \brief Unconstrained view of a bimap.
@@ -24,10 +30,13 @@ class unconstrained_set_view
     public:
     template< class T >
     unconstrained_set_view(const T & t) {}
+
+    typedef void iterator;
+    typedef void const_iterator;
 };
 
 } // namespace views
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_VIEWS_UNCONSTRAINED_SET_VIEW_HPP

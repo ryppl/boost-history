@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_SUPPORT_MAP_BY_HPP
 #define BOOST_BIMAP_SUPPORT_MAP_BY_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/support/map_type_by.hpp>
 #include <boost/bimap/relation/detail/access_builder.hpp>
 
@@ -19,7 +25,7 @@
 #ifdef BOOST_BIMAP_ONLY_DOXYGEN_WILL_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace support {
 
 /** \brief Gets a map view of a bidirectional map
@@ -44,11 +50,11 @@ See also member_at, value_type_of.
                                                                         **/
 
 template< class Tag, class Bimap >
-typename result_of::map_by<Tag,Bimap>::type
+BOOST_DEDUCED_TYPENAME result_of::map_by<Tag,Bimap>::type
     map_by( Bimap & b );
 
 } // namespace support
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_ONLY_DOXYGEN_WILL_PROCESS_THE_FOLLOWING_LINES
@@ -58,7 +64,7 @@ typename result_of::map_by<Tag,Bimap>::type
 #ifndef BOOST_BIMAP_DOXIGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace support {
 
 // Since it is very error-prone to directly write the hole bunch
@@ -119,7 +125,7 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_INTERFACE_BUILDER
 );
 
 } // namespace support
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_DOXIGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES

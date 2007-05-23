@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_DETAIL_SET_VIEW_ITERATOR_HPP
 #define BOOST_BIMAP_DETAIL_SET_VIEW_ITERATOR_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 // Boost
 #include <boost/serialization/nvp.hpp>
 #include <boost/type_traits/remove_reference.hpp>
@@ -20,7 +26,7 @@
 #include <boost/bimap/relation/support/get_pair_functor.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace detail {
 
 
@@ -43,13 +49,13 @@ struct set_view_iterator_base
     <
         set_view_iterator< CoreIterator >,
         CoreIterator,
-        typename remove_reference
+        BOOST_DEDUCED_TYPENAME remove_reference
         <
-            typename CoreIterator::value_type::above_view_reference
+            BOOST_DEDUCED_TYPENAME CoreIterator::value_type::above_view_reference
 
         >::type,
         ::boost::use_default,
-        typename CoreIterator::value_type::above_view_reference
+        BOOST_DEDUCED_TYPENAME CoreIterator::value_type::above_view_reference
 
     > type;
 };
@@ -59,15 +65,16 @@ struct set_view_iterator_base
 template< class CoreIterator >
 struct set_view_iterator : public set_view_iterator_base<CoreIterator>::type
 {
-    typedef typename set_view_iterator_base<CoreIterator>::type base_;
+    typedef BOOST_DEDUCED_TYPENAME set_view_iterator_base<CoreIterator>::type base_;
 
     public:
 
-    // The best way will be to pass the correct "value_type" to iterator_adaptor and
-    // to set the "pointer" to Reference*, but iterator_adaptor and iterator_facade
-    // defines "pointer" as value_type* and do not allow this to be changed.
+    // The best way will be to pass the correct "value_type" to
+    // iterator_adaptor and to set the "pointer" to Reference*, but
+    // iterator_adaptor and iterator_facade defines "pointer" as 
+    // value_type* and do not allow this to be changed.
 
-    typedef typename CoreIterator::value_type::above_view value_type;
+    typedef BOOST_DEDUCED_TYPENAME CoreIterator::value_type::above_view value_type;
 
     set_view_iterator() {}
 
@@ -79,7 +86,10 @@ struct set_view_iterator : public set_view_iterator_base<CoreIterator>::type
 
     typename base_::reference dereference() const
     {
-        return const_cast<typename base_::base_type::value_type*>(&(*this->base()))->get_view();
+        return const_cast<
+            BOOST_DEDUCED_TYPENAME base_::base_type::value_type*>(
+                &(*this->base())
+            )->get_view();
     }
 
     private:
@@ -94,13 +104,13 @@ struct set_view_iterator : public set_view_iterator_base<CoreIterator>::type
 
     friend class ::boost::serialization::access;
 
-    template<class Archive>
+    template< class Archive >
     void save(Archive & ar, const unsigned int version) const
     {
         ar << ::boost::serialization::make_nvp("mi_iterator",this->base());
     }
 
-    template<class Archive>
+    template< class Archive >
     void load(Archive & ar, const unsigned int version)
     {
         CoreIterator iter;
@@ -122,13 +132,13 @@ struct const_set_view_iterator_base
     <
         set_view_iterator< CoreIterator >,
         CoreIterator,
-        typename remove_reference
+        BOOST_DEDUCED_TYPENAME remove_reference
         <
-            typename CoreIterator::value_type::above_view_reference
+            BOOST_DEDUCED_TYPENAME CoreIterator::value_type::above_view_reference
 
         >::type,
         ::boost::use_default,
-        typename CoreIterator::value_type::above_view_reference
+        BOOST_DEDUCED_TYPENAME CoreIterator::value_type::above_view_reference
 
     > type;
 };
@@ -144,15 +154,16 @@ See also set_view_iterator.
 template< class CoreIterator >
 struct const_set_view_iterator : public const_set_view_iterator_base<CoreIterator>::type
 {
-    typedef typename const_set_view_iterator_base<CoreIterator>::type base_;
+    typedef BOOST_DEDUCED_TYPENAME const_set_view_iterator_base<CoreIterator>::type base_;
 
     public:
 
-    // The best way will be to pass the correct "value_type" to iterator_adaptor and
-    // to set the "pointer" to Reference*, but iterator_adaptor and iterator_facade
-    // defines "pointer" as value_type* and do not allow this to be changed.
+    // The best way will be to pass the correct "value_type" to
+    // iterator_adaptor and to set the "pointer" to Reference*, but
+    // iterator_adaptor and iterator_facade defines "pointer" as value_type*
+    // and do not allow this to be changed.
 
-    typedef typename CoreIterator::value_type::above_view value_type;
+    typedef BOOST_DEDUCED_TYPENAME CoreIterator::value_type::above_view value_type;
 
     const_set_view_iterator() {}
 
@@ -165,7 +176,7 @@ struct const_set_view_iterator : public const_set_view_iterator_base<CoreIterato
     const_set_view_iterator(set_view_iterator<CoreIterator> i)
       : base_(i.base()) {}
 
-    typename base_::reference dereference() const
+    BOOST_DEDUCED_TYPENAME base_::reference dereference() const
     {
         return this->base()->get_view();
     }
@@ -182,13 +193,13 @@ struct const_set_view_iterator : public const_set_view_iterator_base<CoreIterato
 
     friend class ::boost::serialization::access;
 
-    template<class Archive>
+    template< class Archive >
     void save(Archive & ar, const unsigned int version) const
     {
         ar << ::boost::serialization::make_nvp("mi_iterator",this->base());
     }
 
-    template<class Archive>
+    template< class Archive >
     void load(Archive & ar, const unsigned int version)
     {
         CoreIterator iter;
@@ -201,7 +212,7 @@ struct const_set_view_iterator : public const_set_view_iterator_base<CoreIterato
 
 
 } // namespace detail
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_DETAIL_MAP_VIEW_ITERATOR_HPP

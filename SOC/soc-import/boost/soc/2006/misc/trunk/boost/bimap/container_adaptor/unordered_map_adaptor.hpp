@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,13 +12,19 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_MAP_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_UNORDERED_MAP_ADAPTOR_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/container_adaptor/unordered_associative_container_adaptor.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/call_traits.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace container_adaptor {
 
 /// \brief Container adaptor to easily build a std::unordered_map signature compatible container.
@@ -43,11 +49,12 @@ template
 >
 class unordered_map_adaptor :
 
-    public ::boost::bimap::container_adaptor::unordered_associative_container_adaptor
+    public ::boost::bimaps::container_adaptor::
+                unordered_associative_container_adaptor
     <
         Base,
         Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
-        typename Iterator::value_type::first_type,
+        BOOST_DEDUCED_TYPENAME Iterator::value_type::first_type,
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
@@ -56,11 +63,12 @@ class unordered_map_adaptor :
     >
 {
 
-    typedef ::boost::bimap::container_adaptor::unordered_associative_container_adaptor
+    typedef ::boost::bimaps::container_adaptor::
+                unordered_associative_container_adaptor
     <
         Base,
         Iterator, ConstIterator, LocalIterator, ConstLocalIterator,
-        typename Iterator::value_type::first_type,
+        BOOST_DEDUCED_TYPENAME Iterator::value_type::first_type,
         IteratorToBaseConverter, IteratorFromBaseConverter,
         LocalIteratorFromBaseConverter,
         ValueToBaseConverter, ValueFromBaseConverter,
@@ -73,7 +81,7 @@ class unordered_map_adaptor :
 
     public:
 
-    typedef typename Iterator::value_type::second_type data_type;
+    typedef BOOST_DEDUCED_TYPENAME Iterator::value_type::second_type data_type;
 
     // Access -----------------------------------------------------------------
 
@@ -90,16 +98,33 @@ class unordered_map_adaptor :
 
     public:
 
-    data_type& operator[](typename ::boost::call_traits< typename base_::key_type >::param_type k)
+    template< class CompatibleKey >
+    data_type& operator[](const CompatibleKey & k)
     {
-        return this->base()[k]; 
+        return this->base()
+            [this->template functor<BOOST_DEDUCED_TYPENAME base_::key_to_base>()(k)];
     }
+
+    template< class CompatibleKey >
+    data_type& at(const CompatibleKey & k)
+    {
+        return this->base().
+            at(this->template functor<BOOST_DEDUCED_TYPENAME base_::key_to_base>()(k));
+    }
+
+    template< class CompatibleKey >
+    const data_type& at(const CompatibleKey & k) const
+    {
+        return this->base().
+            at(this->template functor<BOOST_DEDUCED_TYPENAME base_::key_to_base>()(k));
+    }
+
 };
 
 
 
 } // namespace container_adaptor
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

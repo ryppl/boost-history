@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +11,12 @@
 
 #ifndef BOOST_BIMAP_UNCONSTRAINED_SET_OF_HPP
 #define BOOST_BIMAP_UNCONSTRAINED_SET_OF_HPP
+
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
 
 #include <boost/bimap/detail/user_interface_config.hpp>
 
@@ -26,7 +32,7 @@
 #include <boost/bimap/views/unconstrained_set_view.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 
 /// \brief Set Type Specification
 /**
@@ -51,7 +57,7 @@ template
 <
     class KeyType
 >
-struct unconstrained_set_of : public ::boost::bimap::detail::set_type_of_tag
+struct unconstrained_set_of : public ::boost::bimaps::detail::set_type_of_tag
 {
     /// Type of the object that will be stored in the set
     typedef KeyType value_type;
@@ -82,7 +88,7 @@ specify the desired type of the main view.
 See also unconstrained_set_of, is_set_type_of_relation.
                                                                 **/
 
-struct unconstrained_set_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
+struct unconstrained_set_of_relation : public ::boost::bimaps::detail::set_type_of_relation_tag
 {
 
     BOOST_BIMAP_GENERATE_RELATION_BINDER_0CP(
@@ -111,11 +117,11 @@ struct is_unconstrained_set_of< unconstrained_set_of<T> > :
 
 #endif // BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 
-/** \struct boost::bimap::detail::is_unconstrained_set_of
+/** \struct boost::bimaps::detail::is_unconstrained_set_of
 \brief Trait to check if a type is unconstrained_set_of.
 \code
 template< class T >

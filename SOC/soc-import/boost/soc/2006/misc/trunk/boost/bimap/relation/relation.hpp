@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +11,10 @@
 
 #ifndef BOOST_BIMAP_RELATION_RELATION_HPP
 #define BOOST_BIMAP_RELATION_RELATION_HPP
+
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
 
 #include <boost/config.hpp>
 
@@ -25,9 +29,9 @@
 #include <cstddef>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 
-/// \brief Defines the relation class, an extension of the std::pair class, and utilities to work with it.
+/// \brief Defines the relation class
 /**
 
 The relation class is an extension of the std framework proposed to relate
@@ -95,14 +99,17 @@ struct is_mutant_idiom_supported_for
 
     #else
 
-        // This is the base test, supported in any standard compliant compiler. Other
-        // compiler specifics checks can be added above.
-        // It is a strong check based in sizeof. It is pesimistic, if it fails, the
-        // compiler may support the mutant idiom anyway. For compiler that used struct
-        // aligment different from 1 this will probably fail.
+        // This is the base test, supported in any standard compliant
+        // compiler. Other compiler specifics checks can be added above.
+        // It is a strong check based in sizeof. It is pesimistic, if it fails,
+        // the compiler may support the mutant idiom anyway. For compiler that
+        // used struct aligment different from 1 this will probably fail.
 
-        static const int sA = sizeof( typename tags::support::value_type_of<TA>::type );
-        static const int sB = sizeof( typename tags::support::value_type_of<TB>::type );
+        static const int sA = sizeof(
+            BOOST_DEDUCED_TYPENAME tags::support::value_type_of<TA>::type );
+        static const int sB = sizeof(
+            BOOST_DEDUCED_TYPENAME tags::support::value_type_of<TB>::type );
+
         static const int sAB = sA + sB;
 
         static const bool mutant_is_supported =
@@ -114,7 +121,7 @@ struct is_mutant_idiom_supported_for
 
     #endif
 
-    typedef mpl::bool_< mutant_is_supported > type;
+    typedef mpl::bool_< true > type; //mutant_is_supported > type;
     static const bool value = type::value;
 };
 
@@ -168,8 +175,8 @@ pair_by(), pair_type_by.
 template< class TA, class TB, bool force_mutable = false >
 struct select_relation
 {
-    typedef typename mpl::if_<
-        ::boost::bimap::relation::detail::is_mutant_idiom_supported_for<TA,TB> ,
+    typedef BOOST_DEDUCED_TYPENAME mpl::if_<
+        ::boost::bimaps::relation::detail::is_mutant_idiom_supported_for<TA,TB> ,
         // {
                 mutant_relation<TA,TB,force_mutable>,
         // }
@@ -234,7 +241,7 @@ get<name>(r) = "John Smith";
 namespace support {}
 
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

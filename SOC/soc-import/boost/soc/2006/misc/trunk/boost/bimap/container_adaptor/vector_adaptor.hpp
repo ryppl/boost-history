@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,12 +12,18 @@
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_VECTOR_ADAPTOR_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_VECTOR_ADAPTOR_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/bimap/container_adaptor/sequence_container_adaptor.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/vector.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace container_adaptor {
 
 /// \brief Container adaptor to easily build a std::vector signature compatible container.
@@ -41,7 +47,7 @@ template
 >
 class vector_adaptor :
 
-    public ::boost::bimap::container_adaptor::sequence_container_adaptor
+    public ::boost::bimaps::container_adaptor::sequence_container_adaptor
     <
         Base,
         Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
@@ -52,7 +58,7 @@ class vector_adaptor :
     >
 {
 
-    typedef ::boost::bimap::container_adaptor::sequence_container_adaptor
+    typedef ::boost::bimaps::container_adaptor::sequence_container_adaptor
     <
         Base,
         Iterator, ConstIterator, ReverseIterator, ConstReverseIterator,
@@ -80,45 +86,46 @@ class vector_adaptor :
 
     public:
 
-    typename base_::size_type capacity() const
+    BOOST_DEDUCED_TYPENAME base_::size_type capacity() const
     {
         return this->base().capacity();
     }
 
-    void reserve(typename base_::size_type m)
+    void reserve(BOOST_DEDUCED_TYPENAME base_::size_type m)
     {
         this->base().resize(m);
     }
 
-    void resize(typename base_::size_type n,
-                typename ::boost::call_traits< typename base_::value_type >::param_type x =
-                    typename base_::value_type())
+    void resize(BOOST_DEDUCED_TYPENAME base_::size_type n,
+                BOOST_DEDUCED_TYPENAME ::boost::call_traits<
+                    BOOST_DEDUCED_TYPENAME base_::value_type >::param_type x =
+                        BOOST_DEDUCED_TYPENAME base_::value_type())
     {
         this->base().resize(n,
-            this->template functor<typename base_::value_to_base>()(x)
+            this->template functor<BOOST_DEDUCED_TYPENAME base_::value_to_base>()(x)
         );
     }
 
-    typename base_::const_reference
-        operator[](typename base_::size_type n) const
+    BOOST_DEDUCED_TYPENAME base_::const_reference
+        operator[](BOOST_DEDUCED_TYPENAME base_::size_type n) const
     {
         return this->base().operator[](n);
     }
 
-    typename base_::const_reference
-        at(typename base_::size_type n) const
+    BOOST_DEDUCED_TYPENAME base_::const_reference
+        at(BOOST_DEDUCED_TYPENAME base_::size_type n) const
     {
         return this->base().at(n);
     }
 
-    typename base_::reference
-        operator[](typename base_::size_type n)
+    BOOST_DEDUCED_TYPENAME base_::reference
+        operator[](BOOST_DEDUCED_TYPENAME base_::size_type n)
     {
         return this->base().operator[](n);
     }
 
-    typename base_::reference
-        at(typename base_::size_type n)
+    BOOST_DEDUCED_TYPENAME base_::reference
+        at(BOOST_DEDUCED_TYPENAME base_::size_type n)
     {
         return this->base().at(n);
     }
@@ -126,7 +133,7 @@ class vector_adaptor :
 
 
 } // namespace container_adaptor
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

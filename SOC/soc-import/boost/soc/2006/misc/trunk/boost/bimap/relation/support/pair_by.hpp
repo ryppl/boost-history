@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,17 +12,25 @@
 #ifndef BOOST_BIMAP_RELATION_SUPPORT_PAIR_BY_HPP
 #define BOOST_BIMAP_RELATION_SUPPORT_PAIR_BY_HPP
 
-#include <boost/bimap/relation/standard_relation_view.hpp>
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
+#include <boost/bimap/relation/standard_relation_fwd.hpp>
 
 #include <boost/type_traits/is_const.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/bimap/relation/support/pair_type_by.hpp>
 #include <boost/bimap/relation/detail/access_builder.hpp>
 
 #ifdef BOOST_BIMAP_ONLY_DOXYGEN_WILL_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 namespace support {
 
@@ -32,12 +40,12 @@ namespace support {
                                                                         **/
 
 template< class Tag, class Relation >
-typename result_of::pair_by<Tag,Relation>::type
+BOOST_DEDUCED_TYPENAME result_of::pair_by<Tag,Relation>::type
     pair_by( Relation & rel );
 
 } // namespace support
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #endif // BOOST_BIMAP_ONLY_DOXYGEN_WILL_PROCESS_THE_FOLLOWING_LINES
@@ -46,7 +54,7 @@ typename result_of::pair_by<Tag,Relation>::type
 #ifndef BOOST_BIMAP_DOXYGEN_WILL_NOT_PROCESS_THE_FOLLOWING_LINES
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 namespace support {
 
@@ -80,7 +88,10 @@ namespace support {
 
 */
 
-
+// TODO
+// This works for Boost.Bimap but not for all the uses of Relation outside
+// Boost.Bimap. For now it will stay as is, because if standard_relation is
+// eliminated all the functions will be simplified.
 // It cannot be used directly BOOST_BIMAP_SYMMETRIC_ACCESS_RESULT_OF_BUILDER here.
 
 namespace result_of {
@@ -88,13 +99,13 @@ namespace result_of {
 template< class Tag, class Relation >
 struct pair_by
 {
-    typedef typename mpl::if_< is_const<Relation>,
+    typedef BOOST_DEDUCED_TYPENAME mpl::if_< is_const<Relation>,
     // {
-           typename const_pair_reference_type_by< Tag,Relation >::type,
+           BOOST_DEDUCED_TYPENAME const_pair_reference_type_by< Tag,Relation >::type,
     // }
     // else
     // {
-           typename pair_reference_type_by< Tag,Relation >::type
+           BOOST_DEDUCED_TYPENAME pair_reference_type_by< Tag,Relation >::type
     // }
     >::type type;
 };
@@ -117,17 +128,19 @@ BOOST_BIMAP_SYMMETRIC_ACCESS_IMPLEMENTATION_BUILDER
 // Interface
 // --------------------------------------------------------------------------
 
-//------------------------------------------------------------------------------------
-
 template< class Tag, class Symmetric >
-typename enable_if< is_standard_relation_view< Symmetric >,
-
-typename result_of::pair_by< Tag, Symmetric >::type
+BOOST_DEDUCED_TYPENAME enable_if<
+    ::boost::mpl::or_<
+        is_standard_pair_view< Symmetric >,
+        is_standard_relation_view< Symmetric >
+    >,
+BOOST_DEDUCED_TYPENAME result_of::pair_by< Tag, Symmetric >::type
 
 >::type
 pair_by( Symmetric s )
 {
-    typedef typename ::boost::bimap::relation::support::member_with_tag
+    typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::relation::support::
+    member_with_tag
     <
         Tag, Symmetric
 
@@ -136,15 +149,30 @@ pair_by( Symmetric s )
     return detail::pair_by(member_at_tag(),s);
 }
 
-BOOST_BIMAP_SYMMETRIC_ACCESS_INTERFACE_BUILDER
-(
-    pair_by
-);
+template< class Tag, class Symmetric >
+BOOST_DEDUCED_TYPENAME disable_if<
+    ::boost::mpl::or_<
+        is_standard_pair_view< Symmetric >,
+        is_standard_relation_view< Symmetric >
+    >,
+BOOST_DEDUCED_TYPENAME result_of::pair_by< Tag, Symmetric >::type
 
+>::type
+pair_by( Symmetric & s )
+{
+    typedef BOOST_DEDUCED_TYPENAME ::boost::bimaps::relation::support::
+    member_with_tag
+    <
+        Tag, Symmetric
+
+    >::type member_at_tag;
+
+    return detail::pair_by(member_at_tag(),s);
+}
 
 } // namespace support
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

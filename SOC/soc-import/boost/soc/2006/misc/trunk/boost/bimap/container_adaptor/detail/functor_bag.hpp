@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +11,10 @@
 
 #ifndef BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
 #define BOOST_BIMAP_CONTAINER_ADAPTOR_DETAIL_FUNCTOR_BAG_HPP
+
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
 
 #include <boost/config.hpp>
 
@@ -32,7 +36,7 @@
 #include <boost/mpl/inherit.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace container_adaptor {
 namespace detail {
 
@@ -64,7 +68,8 @@ struct data_with_functor_bag :
 {
     Data data;
     data_with_functor_bag() {}
-    data_with_functor_bag(typename add_reference<Data>::type const d) : data(d) {}
+    data_with_functor_bag(BOOST_DEDUCED_TYPENAME add_reference<Data>::type const d) 
+        : data(d) {}
 
     template< class Functor >
     Functor& functor()
@@ -81,7 +86,7 @@ struct data_with_functor_bag :
 
 } // namespace detail
 } // namespace container_adaptor
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 #if defined(BOOST_MSVC)

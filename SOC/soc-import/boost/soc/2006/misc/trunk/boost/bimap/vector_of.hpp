@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,6 +11,12 @@
 
 #ifndef BOOST_BIMAP_VECTOR_OF_HPP
 #define BOOST_BIMAP_VECTOR_OF_HPP
+
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
 
 #include <boost/bimap/detail/user_interface_config.hpp>
 
@@ -28,7 +34,7 @@
 #include <boost/bimap/views/vector_set_view.hpp>
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 
 
 /// \brief Set Type Specification
@@ -96,7 +102,7 @@ See also vector_of_relation.
                                                                         **/
 
 template< class Type >
-struct vector_of : public ::boost::bimap::detail::set_type_of_tag
+struct vector_of : public ::boost::bimaps::detail::set_type_of_tag
 {
     /// Type of the object that will be stored in the set
     typedef Type value_type;
@@ -142,7 +148,7 @@ struct bind_to
 See also vector_of, is_set_type_of_relation.
                                                                 **/
 
-struct vector_of_relation : public ::boost::bimap::detail::set_type_of_relation_tag
+struct vector_of_relation : public ::boost::bimaps::detail::set_type_of_relation_tag
 {
     BOOST_BIMAP_GENERATE_RELATION_BINDER_0CP(
 
@@ -155,7 +161,7 @@ struct vector_of_relation : public ::boost::bimap::detail::set_type_of_relation_
 };
 
 
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 

@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,10 +12,15 @@
 #ifndef BOOST_BIMAP_DETAIL_GENERATE_RELATION_BINDER_HPP
 #define BOOST_BIMAP_DETAIL_GENERATE_RELATION_BINDER_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 #include <boost/mpl/apply.hpp>
 
-/*///////////////////////////////////////////////////////////////////////////*/
-
+/*===========================================================================*/
 #define BOOST_BIMAP_GENERATE_RELATION_BINDER_0CP(                             \
                                                                               \
         SET_TYPE_OF                                                           \
@@ -27,13 +32,11 @@
         typedef SET_TYPE_OF<Relation> type;                                   \
                                                                               \
     };
-
-/*///////////////////////////////////////////////////////////////////////////*/
-
+/*===========================================================================*/
 
 
-/*///////////////////////////////////////////////////////////////////////////*/
 
+/*===========================================================================*/
 #define BOOST_BIMAP_GENERATE_RELATION_BINDER_1CP(                             \
                                                                               \
         SET_TYPE_OF,                                                          \
@@ -46,18 +49,16 @@
         typedef SET_TYPE_OF                                                   \
         <                                                                     \
             Relation,                                                         \
-            typename mpl::apply<CP1,Relation>::type                           \
+            BOOST_DEDUCED_TYPENAME mpl::apply<CP1,Relation>::type             \
                                                                               \
         > type;                                                               \
                                                                               \
     };
-
-/*///////////////////////////////////////////////////////////////////////////*/
-
+/*===========================================================================*/
 
 
-/*///////////////////////////////////////////////////////////////////////////*/
 
+/*===========================================================================*/
 #define BOOST_BIMAP_GENERATE_RELATION_BINDER_2CP(                             \
                                                                               \
         SET_TYPE_OF,                                                          \
@@ -71,14 +72,13 @@
         typedef SET_TYPE_OF                                                   \
         <                                                                     \
             Relation,                                                         \
-            typename mpl::apply<CP1,Relation>::type,                          \
-            typename mpl::apply<CP2,Relation>::type                           \
+            BOOST_DEDUCED_TYPENAME mpl::apply<CP1,Relation>::type,            \
+            BOOST_DEDUCED_TYPENAME mpl::apply<CP2,Relation>::type             \
                                                                               \
         > type;                                                               \
                                                                               \
     };
-
-/*///////////////////////////////////////////////////////////////////////////*/
+/*===========================================================================*/
 
 
 

@@ -1,6 +1,6 @@
 // Boost.Bimap
 //
-// Copyright (c) 2006 Matias Capeletto
+// Copyright (c) 2006-2007 Matias Capeletto
 //
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,12 @@
 #ifndef BOOST_BIMAP_RELATION_SYMMETRICAL_BASE_HPP
 #define BOOST_BIMAP_RELATION_SYMMETRICAL_BASE_HPP
 
+#if defined(_MSC_VER) && (_MSC_VER>=1200)
+#pragma once
+#endif
+
+#include <boost/config.hpp>
+
 // Boost.Bimap
 #include <boost/bimap/tags/tagged.hpp>
 #include <boost/bimap/tags/support/default_tagged.hpp>
@@ -20,7 +26,7 @@
 
 
 namespace boost {
-namespace bimap {
+namespace bimaps {
 namespace relation {
 
 /// \brief Base of symetrical tagged types.
@@ -34,14 +40,14 @@ class symmetrical_base
 
     public:
 
-    typedef typename tags::support::default_tagged
+    typedef BOOST_DEDUCED_TYPENAME tags::support::default_tagged
     <
         TA,
         member_at::left
 
     >::type tagged_left_type;
 
-    typedef typename tags::support::default_tagged
+    typedef BOOST_DEDUCED_TYPENAME tags::support::default_tagged
     <
         TB,
         member_at::right
@@ -53,16 +59,16 @@ class symmetrical_base
     //@{
 
         /// The type stored in the relation
-        typedef typename tagged_left_type::value_type left_value_type;
-        typedef typename tagged_right_type::value_type right_value_type;
+        typedef BOOST_DEDUCED_TYPENAME tagged_left_type::value_type left_value_type;
+        typedef BOOST_DEDUCED_TYPENAME tagged_right_type::value_type right_value_type;
 
     //@}
 
     //@{
 
         /// The tag of the member. By default it is \c member_at::{side}
-        typedef typename tagged_left_type::tag left_tag;
-        typedef typename tagged_right_type::tag right_tag;
+        typedef BOOST_DEDUCED_TYPENAME tagged_left_type::tag left_tag;
+        typedef BOOST_DEDUCED_TYPENAME tagged_right_type::tag right_tag;
 
     //@}
 };
@@ -70,7 +76,7 @@ class symmetrical_base
 
 
 } // namespace relation
-} // namespace bimap
+} // namespace bimaps
 } // namespace boost
 
 
