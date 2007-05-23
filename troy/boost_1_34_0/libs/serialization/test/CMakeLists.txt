@@ -25,7 +25,7 @@ macro(serialization_test testname)
         set(BSL_TEST_STATIC_LIBRARIES 
           "boost_wserialization-static" ${BSL_TEST_STATIC_LIBRARIES})
         set(BSL_TEST_SHARED_LIBRARIES 
-          "boost_wserialization-static" ${BSL_TEST_SHARED_LIBRARIES})
+          "boost_wserialization-shared" ${BSL_TEST_SHARED_LIBRARIES})
       endif(ARCHIVE MATCHES ".*warchive")
     endif(NOT BSL_NO_LIBS)
 
@@ -39,8 +39,7 @@ macro(serialization_test testname)
     boost_test_run("${testname}_${ARCHIVE}_dll"
       SOURCES "${testname}.cpp"
       LIBRARIES boost_test_exec_monitor-static ${BSL_TEST_SHARED_LIBRARIES}
-      COMPILE_FLAGS "-DBOOST_LIB_DIAGNOSTIC=1 -DBOOST_ALL_DYN_LINK=1" 
-        -DBOOST_ARCHIVE_TEST=${ARCHIVE}.hpp)
+      COMPILE_FLAGS "-DBOOST_ARCHIVE_TEST=${ARCHIVE}.hpp -DBOOST_LIB_DIAGNOSTIC=1 -DBOOST_ALL_DYN_LINK=1")
   endforeach(ARCHIVE ${BOOST_ARCHIVE_LIST})
 endmacro(serialization_test)
 
