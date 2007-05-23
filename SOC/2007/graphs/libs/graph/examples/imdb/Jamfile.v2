@@ -9,3 +9,9 @@ exe imdb_six_degrees
 	: <include>../../../../
 	: <optimization>speed
 	;
+
+exe imdb_fuzz_degrees
+	: fuzzy.cpp
+	: <include>../../../../
+	: <optimization>speed
+	;
