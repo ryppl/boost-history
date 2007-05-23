@@ -13,8 +13,9 @@
 #include <sstream>
 #include <boost/array.hpp>
 #include "../../../boost/explore/explore.hpp"
+#include "../../../boost/explore/stream_container.hpp"
 
-BOOST_AUTO_TEST_CASE( basic_array_test )
+BOOST_AUTO_TEST_CASE( basic_array_print_test )
 {
 	std::stringstream str_out;
 	
@@ -35,7 +36,29 @@ BOOST_AUTO_TEST_CASE( basic_array_test )
 	BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
 }
 
-BOOST_AUTO_TEST_CASE( vector_in_array_test )
+BOOST_AUTO_TEST_CASE( basic_array_stream_test )
+{
+	using namespace boost;
+	std::stringstream str_out;
+	
+	boost::array<int,0> ai0;
+	str_out << ai0;
+	BOOST_CHECK_EQUAL(str_out.str(), "[]");
+	
+	str_out.str("");
+	
+	boost::array<int,1> ai1 = {1};
+	str_out << ai1;
+	BOOST_CHECK_EQUAL(str_out.str(), "[1]");
+	
+	str_out.str("");
+	
+	boost::array<int,3> ai3 = {1, 2, 3};
+	str_out << ai3;
+	BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+}
+
+BOOST_AUTO_TEST_CASE( vector_in_array_print_test )
 {
 	std::stringstream str_out;
 	
@@ -58,5 +81,32 @@ BOOST_AUTO_TEST_CASE( vector_in_array_test )
 	
 	boost::array<std::vector<int>,3> av3 = {vi, vi, vi};
 	explore::print(av3, str_out);
+	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
+}
+
+BOOST_AUTO_TEST_CASE( vector_in_array_stream_test )
+{
+	using namespace boost;
+	std::stringstream str_out;
+	
+	std::vector<int> vi;
+	vi.push_back(1);
+	vi.push_back(2);
+	vi.push_back(3);
+	
+	boost::array<std::vector<int>,0> av0;
+	str_out << av0;
+	BOOST_CHECK_EQUAL(str_out.str(), "[]");
+	
+	str_out.str("");
+	
+	boost::array<std::vector<int>,1> av1 = {vi};
+	str_out << av1;
+	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3]]");
+	
+	str_out.str("");
+	
+	boost::array<std::vector<int>,3> av3 = {vi, vi, vi};
+	str_out << av3;
 	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
 }

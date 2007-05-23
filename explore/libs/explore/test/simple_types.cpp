@@ -14,10 +14,10 @@
 #include <iomanip>
 #include <boost/lexical_cast.hpp>
 #include "../../../boost/explore/explore.hpp"
+#include "../../../boost/explore/stream_container.hpp"
 
-BOOST_AUTO_TEST_CASE( int_test )
+BOOST_AUTO_TEST_CASE( int_print_test )
 {
-
 	std::stringstream str_out;
 	int i = 123;
 	
@@ -37,36 +37,81 @@ BOOST_AUTO_TEST_CASE( int_test )
 	delete pi;
 }
 
-BOOST_AUTO_TEST_CASE( float_test )
+BOOST_AUTO_TEST_CASE( int_stream_test )
+{
+	std::stringstream str_out;
+	int i = 123;
+	
+	str_out << i;
+	BOOST_CHECK_EQUAL(str_out.str(), "123");
+	
+	str_out.str("");
+	int* pi = new int(123);
+	
+	str_out << pi;
+	// technically, we should force this to be true, though
+	// it is highly unlikely to be false. Otherwise this test is only
+	// telling you whether the following is even valid.
+	BOOST_CHECK(0 != boost::lexical_cast<std::string>((long)pi).compare("123"));
+	BOOST_CHECK_EQUAL(str_out.str(), "123");
+	
+	delete pi;
+}
+
+BOOST_AUTO_TEST_CASE( float_print_test )
 {
 	std::stringstream str_out;
 	float f = 1.234f;
 	
-    str_out << std::setprecision( 4) << explore::container_format() % f;
+	str_out << std::setprecision( 4) << explore::container_format() % f;
 	BOOST_CHECK_EQUAL(str_out.str(), "1.234");
 	
 	BOOST_CHECK_MESSAGE(false, "Test min precision");
 	BOOST_CHECK_MESSAGE(false, "Test max precision");
 }
 
-BOOST_AUTO_TEST_CASE( double_test )
+BOOST_AUTO_TEST_CASE( float_stream_test )
+{
+	std::stringstream str_out;
+	float f = 1.234f;
+	
+	str_out << std::setprecision(4) << f;
+	BOOST_CHECK_EQUAL(str_out.str(), "1.234");
+	
+	BOOST_CHECK_MESSAGE(false, "Test min precision");
+	BOOST_CHECK_MESSAGE(false, "Test max precision");
+}
+
+BOOST_AUTO_TEST_CASE( double_print_test )
 {
 	std::stringstream str_out;
 	double d = 1.2341234f;
 	
-    str_out << std::setprecision(7) <<  explore::container_format() % d;
+	str_out << std::setprecision(7) <<  explore::container_format() % d;
 	BOOST_CHECK_EQUAL(str_out.str(), "1.234123");
 	
 	BOOST_CHECK_MESSAGE(false, "Test min precision");
 	BOOST_CHECK_MESSAGE(false, "Test max precision");
 }
 
-BOOST_AUTO_TEST_CASE( bool_test )
+BOOST_AUTO_TEST_CASE( double_stream_test )
+{
+	std::stringstream str_out;
+	double d = 1.2341234f;
+	
+	str_out << std::setprecision(7) << d;
+	BOOST_CHECK_EQUAL(str_out.str(), "1.234123");
+	
+	BOOST_CHECK_MESSAGE(false, "Test min precision");
+	BOOST_CHECK_MESSAGE(false, "Test max precision");
+}
+
+BOOST_AUTO_TEST_CASE( bool_print_test )
 {
 	std::stringstream str_out;
 	bool b  = true;
 	
-    str_out << std::boolalpha << explore::container_format() %b;
+	str_out << std::boolalpha << explore::container_format() %b;
 	BOOST_CHECK_EQUAL(str_out.str(), "true");
 	
 	str_out.str("");
@@ -76,7 +121,22 @@ BOOST_AUTO_TEST_CASE( bool_test )
 	BOOST_CHECK_EQUAL(str_out.str(), "false");
 }
 
-BOOST_AUTO_TEST_CASE( char_test )
+BOOST_AUTO_TEST_CASE( bool_stream_test )
+{
+	std::stringstream str_out;
+	bool b  = true;
+	
+	str_out << std::boolalpha << b;
+	BOOST_CHECK_EQUAL(str_out.str(), "true");
+	
+	str_out.str("");
+	b  = false;
+	
+	str_out << std::boolalpha << b;
+	BOOST_CHECK_EQUAL(str_out.str(), "false");
+}
+
+BOOST_AUTO_TEST_CASE( char_print_test )
 {
 	std::stringstream str_out;
 	char c = 'c';
@@ -91,12 +151,37 @@ BOOST_AUTO_TEST_CASE( char_test )
 	BOOST_CHECK_EQUAL(str_out.str(), "c");
 }
 
-BOOST_AUTO_TEST_CASE( string_test )
+BOOST_AUTO_TEST_CASE( char_stream_test )
+{
+	std::stringstream str_out;
+	char c = 'c';
+	
+	str_out << c;
+	BOOST_CHECK_EQUAL(str_out.str(), "c");
+	
+	str_out.str("");
+	char* pc = "c";
+	
+	str_out << pc;
+	BOOST_CHECK_EQUAL(str_out.str(), "c");
+}
+
+BOOST_AUTO_TEST_CASE( string_print_test )
 {
 	std::stringstream str_out;
 	std::string s = "some string";
 	
 	explore::print(s, str_out);
+	
+	BOOST_CHECK_EQUAL(str_out.str(), "some string");
+}
+
+BOOST_AUTO_TEST_CASE( string_stream_test )
+{
+	std::stringstream str_out;
+	std::string s = "some string";
+	
+	str_out << s;
 	
 	BOOST_CHECK_EQUAL(str_out.str(), "some string");
 }

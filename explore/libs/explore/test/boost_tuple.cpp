@@ -14,12 +14,23 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/tuple/tuple_io.hpp>
 #include "../../../boost/explore/explore.hpp"
+#include "../../../boost/explore/stream_container.hpp"
 
-BOOST_AUTO_TEST_CASE( basic_tuple_test )
+BOOST_AUTO_TEST_CASE( basic_tuple_print_test )
 {
 	std::stringstream str_out;
 	
 	boost::tuples::tuple<int, double> t(1, 3.14);
 	explore::print(t, str_out);
+	BOOST_CHECK_EQUAL(str_out.str(), "[1, 3.14]");
+}
+
+BOOST_AUTO_TEST_CASE( basic_tuple_stream_test )
+{
+	using namespace boost;
+	std::stringstream str_out;
+	
+	boost::tuples::tuple<int, double> t(1, 3.14);
+	str_out << t;
 	BOOST_CHECK_EQUAL(str_out.str(), "[1, 3.14]");
 }
