@@ -16,9 +16,13 @@
 #include "stream_state.hpp"
 
 #include <ostream>
-#include <map>   // concern: should we have an explore/map.hpp file?
+#include <map>    // concern: should we have an explore/map.hpp file?
+#include <vector> // ditto ...
+#include <set>
+#include <list>
+#include <boost/array.hpp>
 
-namespace explore
+namespace boost
 {
 	// A simple collection of additional stream state
 	template<typename Elem, typename Tr>
@@ -92,15 +96,17 @@ namespace explore
 		ostr << val.first << ":" << val.second;
 	}
 
-	template<typename Elem, typename Tr, typename FwdIter, typename F>
-	void stream_container(std::basic_ostream<Elem, Tr>& ostr, FwdIter first, FwdIter last, F f)
+	template<typename Elem, typename Tr, typename C, typename F>
+	void stream_container(std::basic_ostream<Elem, Tr>& ostr, const C& c, F f)
 	{
 		// grab the extra data embedded in the stream object.
-		container_stream_state<Elem, Tr>* state = get_stream_state<container_stream_state<Elem, Tr> >(ostr);
+		container_stream_state<Elem, Tr>* state = explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr);
 
 		// starting delimiter
 		ostr << state->start;
 
+		C::const_iterator first = c.begin();
+		C::const_iterator last = c.end();
 		while( first != last )
 		{
 			// value
@@ -116,11 +122,11 @@ namespace explore
 		ostr << state->end;
 	}
 
-	template<typename Elem, typename Tr, typename FwdIter>
-	void stream_container(std::basic_ostream<Elem, Tr>& ostr, FwdIter first, FwdIter last)
+	template<typename Elem, typename Tr, typename C>
+	void stream_container(std::basic_ostream<Elem, Tr>& ostr, const C& c)
 	{
 		// redirect with "normal" streaming.
-		stream_container(ostr, first, last, &stream_normal_value<Elem, Tr, typename FwdIter::value_type>);
+		stream_container(ostr, c, &stream_normal_value<Elem, Tr, C::value_type>);
 	}
 
 	// concern: this will match everything that does not have a streaming operator.  I'm not sure this is
@@ -129,18 +135,60 @@ namespace explore
 	// this approach.  Another option is to explicitly override for each container, leaving it up to the user
 	// to define for user-defined containers.  Yet another option is to use define traits, leaving it up to the
 	// user to define the traits for the user-defined container.  Any other ideas?
-	template<typename Elem, typename Tr, typename C>
-	std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const C& c)
+	//template<typename Elem, typename Tr, typename C>
+	//std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const C& c)
+	//{
+	//	stream_container(ostr, c.begin(), c.end());
+	//	return ostr;
+	//}
+
+	template<typename Elem, typename Tr, typename T>
+	std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::vector<T>& v)
 	{
-		stream_container(ostr, c.begin(), c.end());
+		stream_container(ostr, v);
 		return ostr;
+	}
+
+	template<typename Elem, typename Tr, typename T>
+	std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::set<T>& s)
+	{
+		stream_container(ostr, s);
+		return ostr;
+	}
+
+	template<typename Elem, typename Tr, typename T>
+	std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::multiset<T>& s)
+	{
+		stream_container(ostr, s);
+		return ostr;
+	}
+
+	template<typename Elem, typename Tr, typename T>
+	std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::list<T>& l)
+	{
+		stream_container(ostr, l);
+		return ostr;
+	}
+
+	template<typename Elem, typename Tr, typename T, std::size_t N>
+	std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const boost::array<T, N>& a)
+	{
+		stream_container(ostr, a);
+		return ostr;
+	}
+
+	template<typename Elem, typename Tr, typename T1, typename T2>
+	std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::pair<T1, T2>& p)
+	{
+		container_stream_state<Elem, Tr>* state = explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr);
+		return ostr << state->start << p.first << state->separator << p.second << state->end;
 	}
 
 	// stream map<K, T>
 	template<typename Elem, typename Tr, typename K, typename T>
 	std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::map<K, T>& m)
 	{
-		stream_container(ostr, m.begin(), m.end(), &stream_map_value<Elem, Tr, std::map<K,T>::value_type>);
+		stream_container(ostr, m, &stream_map_value<Elem, Tr, std::map<K,T>::value_type>);
 		return ostr;
 	}
 
@@ -148,7 +196,7 @@ namespace explore
 	template<typename Elem, typename Tr, typename K, typename T>
 	std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::multimap<K, T>& m)
 	{
-		stream_container(ostr, m.begin(), m.end(), &stream_map_value<Elem, Tr, std::multimap<K,T>::value_type>);
+		stream_container(ostr, m, &stream_map_value<Elem, Tr, std::multimap<K,T>::value_type>);
 		return ostr;
 	}
 
@@ -156,7 +204,7 @@ namespace explore
 	template<typename Elem, typename Tr>
 	void setSeparatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
 	{
-		get_stream_state<container_stream_state<Elem, Tr> >(ostr)->separator = sep;
+		explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->separator = sep;
 	}
 
 	// manipulator
@@ -170,7 +218,7 @@ namespace explore
 	template<typename Elem, typename Tr>
 	void setStartFn(std::basic_ostream<Elem, Tr>& ostr, const char* start)
 	{
-		get_stream_state<container_stream_state<Elem, Tr> >(ostr)->start = start;
+		explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->start = start;
 	}
 
 	// manipulator
@@ -184,7 +232,7 @@ namespace explore
 	template<typename Elem, typename Tr>
 	void setEndFn(std::basic_ostream<Elem, Tr>& ostr, const char* end)
 	{
-		get_stream_state<container_stream_state<Elem, Tr> >(ostr)->end = end;
+		explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->end = end;
 	}
 
 	// manipulator
