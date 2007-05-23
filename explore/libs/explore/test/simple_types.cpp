@@ -63,7 +63,7 @@ BOOST_AUTO_TEST_CASE( float_print_test )
 	std::stringstream str_out;
 	float f = 1.234f;
 	
-	str_out << std::setprecision( 4) << explore::container_format() % f;
+	explore::print(f, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "1.234");
 	
 	BOOST_CHECK_MESSAGE(false, "Test min precision");
@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE( double_print_test )
 	std::stringstream str_out;
 	double d = 1.2341234f;
 	
-	str_out << std::setprecision(7) <<  explore::container_format() % d;
+	explore::print(d, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "1.234123");
 	
 	BOOST_CHECK_MESSAGE(false, "Test min precision");
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE( bool_print_test )
 	std::stringstream str_out;
 	bool b  = true;
 	
-	str_out << std::boolalpha << explore::container_format() %b;
+	explore::print(b, str_out);
 	BOOST_CHECK_EQUAL(str_out.str(), "true");
 	
 	str_out.str("");
