@@ -15,7 +15,7 @@
 #ifndef stream_state_h_
 #define stream_state_h_
 
-#include <xiosbase> // TODO: is this a standard header?
+#include <ios> 
 #include <memory>
 
 namespace explore

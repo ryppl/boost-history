@@ -24,6 +24,65 @@
 
 namespace boost
 {
+
+  
+  namespace detail 
+  {
+  
+    template<typename charType>
+    std::basic_string<charType> init_separator();
+    
+    template<>
+    std::basic_string<char> 
+    init_separator<char>()
+    {
+      return ", ";
+    }
+
+    template<>
+    std::basic_string<wchar_t> 
+    init_separator<wchar_t>()
+    {
+      return L", ";
+    }
+
+    template<typename charType>
+    std::basic_string<charType> init_start();
+    
+    template<>
+    std::basic_string<char> 
+    init_start<char>()
+    {
+      return "[";
+    }
+
+    template<>
+    std::basic_string<wchar_t> 
+    init_start<wchar_t>()
+    {
+      return L"[";
+    }
+
+    template<typename charType>
+    std::basic_string<charType> init_end();
+    
+    template<>
+    std::basic_string<char> 
+    init_end<char>()
+    {
+      return "]";
+    }
+
+    template<>
+    std::basic_string<wchar_t> 
+    init_end<wchar_t>()
+    {
+      return L"]";
+    }
+
+    
+  }
+
 	// A simple collection of additional stream state
 	template<typename Elem, typename Tr>
 	struct container_stream_state
@@ -37,23 +96,12 @@ namespace boost
 		// is there an easier way to specialize between char and wchar_t?
 		// Concern: this is only specialized for char and wchar_t streams.
 		template<typename El>
-		void init();
-
-		template<>
-		void init<char>()
-		{
-			separator = ", ";
-			start = "[";
-			end = "]";
-		}
-
-		template<>
-		void init<wchar_t>()
-		{
-			separator = L", ";
-			start = L"[";
-			end = L"]";
-		}
+		void init()
+                {
+                  separator = detail::init_separator<El>();
+                  start = detail::init_start<El>();
+                  end = detail::init_end<El>();
+                }
 
 		str_typ separator;
 		str_typ start;
@@ -105,8 +153,8 @@ namespace boost
 		// starting delimiter
 		ostr << state->start;
 
-		C::const_iterator first = c.begin();
-		C::const_iterator last = c.end();
+		typename C::const_iterator first = c.begin();
+		typename C::const_iterator last = c.end();
 		while( first != last )
 		{
 			// value
@@ -125,8 +173,9 @@ namespace boost
 	template<typename Elem, typename Tr, typename C>
 	void stream_container(std::basic_ostream<Elem, Tr>& ostr, const C& c)
 	{
+          typedef typename C::value_type value_type;
 		// redirect with "normal" streaming.
-		stream_container(ostr, c, &stream_normal_value<Elem, Tr, C::value_type>);
+		stream_container(ostr, c, &stream_normal_value<Elem, Tr, value_type>);
 	}
 
 	// concern: this will match everything that does not have a streaming operator.  I'm not sure this is
