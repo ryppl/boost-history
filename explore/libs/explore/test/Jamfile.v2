@@ -20,6 +20,7 @@ project
   test-suite printing
     : 
   [ run simple_types.cpp  ]
+  [ run c_array.cpp  ]
 
   [ run std_vector.cpp   ]
   [ run std_deque.cpp   ]
@@ -29,7 +30,6 @@ project
   [ run std_pair.cpp   ]
   
   [ run boost_array.cpp   ]
-  
   [ run boost_tuple.cpp ]
   [ run boost_variant.cpp ]
  ;
