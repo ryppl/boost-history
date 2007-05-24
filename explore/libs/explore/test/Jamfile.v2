@@ -29,9 +29,6 @@ project
   
   [ run boost_array.cpp   ]
   
-# I don't think we can print an any without exhaustively
-# enumerating all possible types. DH.
-#  [ run boost_any.cpp   ]
   [ run boost_tuple.cpp ]
   [ run boost_variant.cpp ]
  ;
