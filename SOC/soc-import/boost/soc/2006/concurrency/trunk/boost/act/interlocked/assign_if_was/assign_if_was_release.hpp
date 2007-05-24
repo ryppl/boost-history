@@ -6,184 +6,100 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_COMPARE_AND_ASSIGN_CAS_RELEASE_HPP
-#define BOOST_ACT_INTERLOCKED_COMPARE_AND_ASSIGN_CAS_RELEASE_HPP
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_RELEASE_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_RELEASE_HPP
 
-#include <boost/config.hpp>
+#include <boost/act/interlocked/assign_if_was/detail/assign_if_was_release_impl.hpp>
 
-#ifdef BOOST_WINDOWS
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_volatile.hpp>
 
-// ToDo: Change to a leaner include file
-#include <windows.h>
-
-// ToDo: Cast on interlocked bool
-
-#if WINVER >= 0x0600
-
-
-#include <boost/act/interlocked/integer/has_interlocked_operations.hpp>
+#include <boost/act/interlocked/detail/cas_support.hpp>
+#include <boost/act/interlocked/assign_if_was/assign_if_was_result.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
-#include <boost/act/interlocked/integer/detail/convert_interlocked_bool_operand_to_bool.hpp>
 
-#include <boost/act/detail/is_nonfunction_pointer.hpp>
-
-#include <boost/detail/interlocked.hpp>
-
-#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
-#include <boost/mpl/or.hpp>
-#include <boost/mpl/bool.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/type_traits/is_pointer.hpp>
-#include <boost/type_traits/is_const.hpp>
+
+#include <boost/act/interlocked/detail/impl_decl.hpp>
+#include <boost/act/interlocked/detail/has_nested_type.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 
-// Note: ::boost::mpl::and_ has 5 params max by default
-template< typename TargetType, typename SourceType, typename ComparisonType >
-typename enable_if
+template< typename TargetType, typename SourceType, typename ConditionType >
+typename lazy_enable_if
 <
   mpl::and_
   <
-    mpl::and_< has_interlocked_operations< TargetType >
-             , is_integral< TargetType >
-             , mpl::bool_< ( sizeof( TargetType ) == 4 ) >
-             , mpl::not_< is_const< TargetType > >
-             >
-  , is_convertible< SourceType const, TargetType >
-  , is_convertible< ComparisonType const, TargetType >
+    detail::are_valid_assign_style_params< TargetType, SourceType const
+                                         , ConditionType const
+                                         >
+  , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
-, TargetType
+, assign_if_was_result< TargetType >
 >
 ::type
-assign_if_was_release( TargetType volatile& destination
-                     , SourceType const& new_value
-                     , ComparisonType const& old_value
+assign_if_was_release( TargetType& destination, SourceType const& new_value
+                     , ConditionType const& expected_value
                      )
 {
-  return static_cast< TargetType >
-         (
-           InterlockedCompareExchangeRelease
-           ( &reinterpret_cast< LONG volatile& >( destination )
-           , static_cast< TargetType >( new_value )
-           , static_cast< TargetType >( old_value )
-           )
-         );
+  typedef typename remove_volatile< TargetType >::type type;
+
+  type const source    = static_cast< type >( new_value ),
+             old_value = static_cast< type >( expected_value );
+
+  typedef typename assign_if_was_result< TargetType >::type result_type;
+
+  typedef detail::assign_if_was_release_impl
+          < result_type
+          , type
+          >
+          impl_type;
+
+  return mpl::if_< detail::has_nested_type< impl_type >
+                 , impl_type
+                 , detail::assign_if_was_release_default_impl
+                     < result_type, type >
+                 >
+                 ::type
+                 ::execute( destination, source, old_value );
 }
 
-template< typename TargetType, typename SourceType, typename ComparisonType >
-typename enable_if
+template< typename TargetType, typename SourceType, typename ConditionType >
+typename lazy_enable_if
 <
   mpl::and_
   <
-    mpl::and_< has_interlocked_operations< TargetType >
-             , act::detail::is_nonfunction_pointer< TargetType >
-             , mpl::not_< is_const< TargetType > >
-             >
-  , is_convertible< SourceType const, TargetType >
-  , is_convertible< ComparisonType const, TargetType >
+    detail::are_valid_assign_style_params< TargetType, SourceType const
+                                         , ConditionType const
+                                         >
+  , detail::is_interlocked_bool< TargetType >
   >
-, TargetType
+, assign_if_was_result< TargetType >
 >
 ::type
-assign_if_was_release( TargetType volatile& destination
-                     , SourceType const& new_value
-                     , ComparisonType const& old_value
+assign_if_was_release( TargetType& destination, SourceType const& new_value
+                     , ConditionType const& expected_value
                      )
 {
-  return static_cast< Type >
-         (
-           InterlockedCompareExchangePointerRelease
-           ( &destination
-           , static_cast< TargetType >( new_value )
-           , static_cast< TargetType >( old_value )
-           )
-         );
-}
+  typedef typename assign_if_was_result< TargetType >::type result_type;
 
-template< typename TargetType, typename SourceType, typename ComparisonType >
-typename enable_if
-<
-  mpl::and_
-  <
-    mpl::and_< has_interlocked_operations< TargetType >
-             , detail::is_interlocked_bool< TargetType >
-             , mpl::not_< is_const< TargetType > >
-             >
-  , mpl::or_< is_convertible< SourceType const, bool >
-            , is_convertible< SourceType const, TargetType >
-            >
-  , mpl::or_< is_convertible< ComparisonType const, bool >
-            , is_convertible< ComparisonType const, TargetType >
-            >
-  >
-, TargetType
->
-::type
-assign_if_was_release( TargetType volatile& destination
-                     , SourceType const& new_value
-                     , ComparisonType const& old_value
-                     )
-{
-  return assign_if_was
-         ( interlocked_bool_internal_address( destination )
-         , detail::convert_interlocked_bool_operand_to_bool< TargetType >
-             ( new_value )
-         , detail::convert_interlocked_bool_operand_to_bool< TargetType >
-             ( old_value )
+  typedef typename TargetType::internal_type internal_type;
+
+  return result_type
+         (
+           interlocked::assign_if_was_release
+           ( interlocked_bool_internal_value( destination )
+           , static_cast< bool >( new_value )
+           , static_cast< bool >( expected_value )
+           )
+           .old_value() != 0
+         , static_cast< bool >( new_value )
+         , static_cast< bool >( expected_value )
          );
 }
 
 } } }
-
-#else
-
-#include <boost/act/interlocked/assign_if_was/assign_if_was.hpp>
-#include <boost/act/interlocked/integer/has_interlocked_operations.hpp>
-#include <boost/utility/enable_if.hpp>
-
-namespace boost { namespace act { namespace interlocked {
-
-template< typename TargetType, typename SourceType, typename ComparisonType >
-typename enable_if
-<
-  mpl::and_
-  <
-    mpl::and_< has_interlocked_operations< TargetType >
-             , is_integral< TargetType >
-             , mpl::bool_< ( sizeof( TargetType ) == 4 ) >
-             , mpl::not_< is_const< TargetType > >
-             >
-  , mpl::or_
-    <
-      mpl::and_< detail::is_interlocked_bool< TargetType >
-               , is_convertible< SourceType const, bool >
-               >
-    , is_convertible< SourceType const, TargetType >
-    >
-  , mpl::or_
-    <
-      mpl::and_< detail::is_interlocked_bool< TargetType >
-               , is_convertible< ComparisonType const, bool >
-               >
-    , is_convertible< ComparisonType const, TargetType >
-    >
-  >
-, TargetType
->
-::type
-assign_if_was_release( TargetType volatile& destination
-                     , SourceType const& new_value
-                     , ComparisonType const& old_value
-                     )
-{
-  return assign_if_was( destination, new_value, old_value );
-}
-
-} } }
-
-#endif
-
-#endif
 
 #endif

@@ -6,21 +6,10 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_IMPL_HPP
-#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_IMPL_HPP
+#ifndef BOOST_ACT_INTERLOCKED_FWD_HPP
+#define BOOST_ACT_INTERLOCKED_FWD_HPP
 
-#include <boost/config.hpp>
-
-#ifdef BOOST_WINDOWS
-
-#include <windows.h>
-
-#if WINVER >= 0x0600
-
-#include <boost/act/interlocked/assign/detail/assign_acquire_vista.hpp>
-
-#endif
-
-#endif
+#include <boost/act/interlocked/assign_fwd.hpp>
+#include <boost/act/interlocked/assign_if_was_fwd.hpp>
 
 #endif

@@ -17,7 +17,10 @@
 namespace boost { namespace act { namespace interlocked {
 
 template< typename Type >
-struct has_interlocked_operations : mpl::false_ {};
+struct is_interlocked_type : mpl::false_ {};
+
+template< typename Type >
+struct has_interlocked_operations : is_interlocked_type< Type > {};
 
 } } }
 
@@ -34,52 +37,43 @@ struct has_interlocked_operations : mpl::false_ {};
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_pointer.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
-#include <boost/type_traits/is_function.hpp>
+#include <boost/act/detail/is_nonfunction_pointer.hpp>
 
 namespace boost { namespace act { namespace interlocked {
-
-namespace detail
-{
-
-template< typename Type >
-struct is_function_pointer_impl
-  : is_function< typename remove_pointer< Type >::type > {};
-
-}
 
 #if WINVER < 0x0600
 
 template< typename Type >
-struct has_interlocked_operations
+struct is_interlocked_type
   : mpl::or_< mpl::and_< is_integral< Type >
                        , mpl::bool_< ( sizeof( Type ) == 4 ) >
                        >
-            , mpl::and_< is_pointer< Type >
-                       , mpl::not_< detail::is_function_pointer_impl< Type > >
-                       >
+            , act::detail::is_nonfunction_pointer< Type >
             , is_same< Type, bool_t >
             , is_same< Type, bool_fast_t >
             > {};
 
+template< typename Type >
+struct has_interlocked_operations
+  : is_interlocked_type< Type > {};
+
 #else
 
 template< typename Type >
-struct has_interlocked_operations
+struct is_interlocked_type
   : mpl::or_< mpl::and_< is_integral< Type >
                        , mpl::or_< mpl::bool_< ( sizeof( Type ) == 8 ) >
                                  , mpl::bool_< ( sizeof( Type ) == 4 ) >
-                                 , mpl::bool_< ( sizeof( Type ) == 2 ) >
-                                 , mpl::bool_< ( sizeof( Type ) == 1 ) >
                                  >
                        >
-            , mpl::and_< is_pointer< Type >
-                       , mpl::not_< detail::is_function_pointer_impl< Type > >
-                       >
+            , act::detail::is_nonfunction_pointer< Type >
             , is_same< Type, bool_t >
             , is_same< Type, bool_fast_t >
             >
+
+template< typename Type >
+struct has_interlocked_operations
+  : is_interlocked_type< Type > {};
 {
 };
 

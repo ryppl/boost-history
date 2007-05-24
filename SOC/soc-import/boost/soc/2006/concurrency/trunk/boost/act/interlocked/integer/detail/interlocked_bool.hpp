@@ -10,6 +10,7 @@
 #define BOOST_ACT_INTERLOCKED_INTEGER_DETAIL_INTERLOCKED_BOOL_HPP
 
 #include <boost/mpl/bool.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
@@ -18,6 +19,8 @@ class interlocked_bool
 {
   template< typename >
   friend class interlocked_bool;
+public:
+  typedef InternalType internal_type;
 public:
   interlocked_bool() {}
   interlocked_bool( bool value_init ) : value_m( value_init ) {}
@@ -235,22 +238,6 @@ struct is_interlocked_bool< interlocked_bool< InternalType > volatile >
 template< typename InternalType >
 struct is_interlocked_bool< interlocked_bool< InternalType > const volatile >
   : mpl::true_ {};
-
-template< typename Type >
-struct interlocked_bool_internal_type
-{
-  BOOST_MPL_ASSERT_MSG
-  ( ( is_interlocked_bool< Type >::value )
-  , INTERNAL_INTERLOCKED_OPERATION_IMPLEMENTATION_ERROR_CONTACT_BOOST
-  , ( Type )
-  );
-};
-
-template< typename InternalType >
-struct interlocked_bool_internal_type< interlocked_bool< InternalType > >
-{
-  typedef InternalType type;
-};
 
 } } } } // namespace boost
 

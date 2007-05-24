@@ -6,21 +6,14 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_IMPL_HPP
-#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_IMPL_HPP
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_RESULT_FWD_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_RESULT_FWD_HPP
 
-#include <boost/config.hpp>
+namespace boost { namespace act { namespace interlocked {
 
-#ifdef BOOST_WINDOWS
+template< typename TargetType >
+struct assign_result;
 
-#include <windows.h>
-
-#if WINVER >= 0x0600
-
-#include <boost/act/interlocked/assign/detail/assign_acquire_vista.hpp>
-
-#endif
-
-#endif
+} } }
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <boost/act/detail/execute_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/assert.hpp>
@@ -11,6 +12,7 @@ namespace boost { namespace act { namespace interlocked { namespace detail {
 
 struct old_value;
 struct new_value;
+struct success_value;
 
 struct interlocked_identity
 {
@@ -38,7 +40,8 @@ class unary_interlocked_result
 private:
   typedef typename remove_volatile< ValueType >::type value_type;
 public:
-  explicit unary_interlocked_result( value_type const& value_init )
+  template< typename Type >
+  explicit unary_interlocked_result( Type const& value_init )
     : value_m( value_init ) {}
 public:
   value_type old_value() const
@@ -67,7 +70,7 @@ private:
 };
 
 template< typename Operation, typename ValueInfo
-        , typename ValueType, typename OperandType
+        , typename ValueType, typename OperandType = ValueType
         >
 class binary_interlocked_result
 {
@@ -83,8 +86,9 @@ private:
   typedef typename remove_volatile< ValueType >::type   value_type;
   typedef typename remove_volatile< OperandType >::type operand_type;
 public:
-  explicit binary_interlocked_result( value_type const& value_init
-                                    , operand_type const& operand_init
+  template< typename Type0, typename Type1 >
+  explicit binary_interlocked_result( Type0 const& value_init
+                                    , Type1 const& operand_init
                                     )
     : value_m( value_init ), operand_m( operand_init ) {}
 public:
@@ -114,24 +118,73 @@ private:
   operand_type operand_m;
 };
 
-template< typename Operation, typename ValueInfo, typename ValueType >
-unary_interlocked_result< Operation, ValueInfo, ValueType >
-make_interlocked_result( ValueType const& value )
+template< typename ValueInfo, typename ValueType >
+class assign_if_was_interlocked_result
 {
-  return unary_interlocked_result< Operation, ValueInfo, ValueType >( value );
-}
-
-template< typename Operation, typename ValueInfo
-        , typename ValueType, typename OperandType
-        >
-binary_interlocked_result< Operation, ValueInfo, ValueType, OperandType >
-make_interlocked_result( ValueType const& value, OperandType const& operand )
-{
-  return binary_interlocked_result< Operation, ValueInfo
-                                  , ValueType, OperandType
+  BOOST_MPL_ASSERT_MSG( ( mpl::or_< is_same< ValueInfo, old_value >
+                                  , is_same< ValueInfo, success_value >
                                   >
-                                  ( value, operand );
-}
+                                  ::value
+                        )
+                      , INVALID_VALUE_INFO_PASSED_TO_INTERLOCKED_RESULT
+                      , ( ValueInfo )
+                      );
+private:
+  typedef typename remove_volatile< ValueType >::type value_type;
+public:
+  template< typename Type0, typename Type1, typename Type2 >
+  explicit assign_if_was_interlocked_result
+           ( Type0 const& result_init
+           , Type1 const& attempted_new_value_init
+           , Type2 const& expected_value_init
+           )
+    : result_m( value_init )
+    , attempted_new_value_m( operand_init )
+    , expected_value_m( operand1_init ) {}
+public:
+  value_type old_value() const
+  {
+    BOOST_MPL_ASSERT_MSG( ( is_same< ValueInfo, old_value >::value )
+                        , CANNOT_RETRIEVE_OLD_VALUE_ON_THIS_OPERATING_SYSTEM
+                        , ()
+                        );
+
+    return result_m;
+  }
+
+  value_type new_value() const
+  {
+    BOOST_MPL_ASSERT_MSG( ( is_same< ValueInfo, old_value >::value )
+                        , CANNOT_RETRIEVE_NEW_VALUE_ON_THIS_OPERATING_SYSTEM
+                        , ()
+                        );
+
+    return was_successful() ? attempted_new_value_m : result_m;
+  }
+
+  struct was_successful_checker
+  {
+    static bool execute( value_type const& result
+                       , value_type const& expected_value
+                       )
+    {
+      return result == expected_value;
+    }
+  };
+
+  bool was_successful() const
+  {
+    return mpl::if_< is_same< ValueInfo, old_value >
+                   , was_successful_checker
+                   , interlocked_identity
+                   >
+                   ::type::execute( result_m, expected_value_m );
+  }
+private:
+  value_type result_m,
+             attempted_new_value_m,
+             expected_value_m;
+};
 
 } } } }
 

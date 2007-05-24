@@ -6,21 +6,15 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_IMPL_HPP
-#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_IMPL_HPP
+#ifndef BOOST_ACT_INTERLOCKED_DETAIL_HAS_NESTED_TYPE_HPP
+#define BOOST_ACT_INTERLOCKED_DETAIL_HAS_NESTED_TYPE_HPP
 
-#include <boost/config.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
-#ifdef BOOST_WINDOWS
+namespace boost { namespace act { namespace interlocked { namespace detail {
 
-#include <windows.h>
+BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF( has_nested_type, type, false )
 
-#if WINVER >= 0x0600
-
-#include <boost/act/interlocked/assign/detail/assign_acquire_vista.hpp>
-
-#endif
-
-#endif
+} } } }
 
 #endif

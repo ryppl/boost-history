@@ -6,23 +6,17 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_HPP
-#define BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_HPP
-
-#include <boost/act/interlocked/assign/detail/assign_impl.hpp>
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_FWD_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_FWD_HPP
 
 #include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/remove_volatile.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
-#include <boost/act/interlocked/assign/assign_result.hpp>
+#include <boost/act/interlocked/assign/assign_result_fwd.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
-
-#include <boost/act/interlocked/detail/impl_decl.hpp>
-#include <boost/act/interlocked/detail/has_nested_type.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 
@@ -37,16 +31,7 @@ typename lazy_enable_if
 , assign_result< TargetType >
 >
 ::type
-assign( TargetType& destination, SourceType const& new_value )
-{
-  typedef typename remove_volatile< TargetType >::type type;
-  type const source = static_cast< type >( new_value );
-
-  return detail::assign_impl< typename assign_result< TargetType >::type
-                            , type
-                            >
-           ::execute( destination, source );
-}
+assign( TargetType& destination, SourceType const& new_value );
 
 template< typename TargetType, typename SourceType >
 typename lazy_enable_if
@@ -59,20 +44,7 @@ typename lazy_enable_if
 , assign_result< TargetType >
 >
 ::type
-assign( TargetType& destination, SourceType const& new_value )
-{
-  typedef typename assign_result< TargetType >::type result_type;
-
-  return result_type
-         (
-           interlocked::assign
-           ( interlocked_bool_internal_value( destination )
-           , static_cast< bool >( new_value )
-           )
-           .old_value() != 0
-         , static_cast< bool >( new_value )
-         );
-}
+assign( TargetType& destination, SourceType const& new_value );
 
 } } }
 

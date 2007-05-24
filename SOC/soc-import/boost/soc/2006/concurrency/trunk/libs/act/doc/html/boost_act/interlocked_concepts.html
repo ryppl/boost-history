@@ -270,7 +270,7 @@
               to object <code class="code"><span class="identifier">iv</span></code> iff <code class="code"><span class="identifier">iv</span> <span class="special">==</span> <span class="identifier">c2</span></code> prior to the operation with a
               <span class="emphasis"><em>full memory barrier</em></span>. Returns the value of <code class="code"><span class="identifier">iv</span></code> prior to the operation being performed.
               <span class="emphasis"><em>Note: This is the same as the more commonly known "compare
-              and swap" operation. --end note</em></span>
+              and swap" operation with a full memory barrier. --end note</em></span>
             </p>
             </td>
 </tr>
@@ -290,7 +290,9 @@
               Stores the value of <code class="code"><span class="identifier">c1</span></code>
               to object <code class="code"><span class="identifier">iv</span></code> iff <code class="code"><span class="identifier">iv</span> <span class="special">==</span> <span class="identifier">c2</span></code> prior to the operation with <span class="emphasis"><em>aquire</em></span>
               memory semantics. Returns the value of <code class="code"><span class="identifier">iv</span></code>
-              prior to the operation being performed.
+              prior to the operation being performed. <span class="emphasis"><em>Note: This is the
+              same as the more commonly known "compare and swap" operation
+              with acquire memory semantics. --end note</em></span>
             </p>
             </td>
 </tr>
@@ -310,7 +312,9 @@
               Stores the value of <code class="code"><span class="identifier">c1</span></code>
               to object <code class="code"><span class="identifier">iv</span></code> iff <code class="code"><span class="identifier">iv</span> <span class="special">==</span> <span class="identifier">c2</span></code> prior to the operation with <span class="emphasis"><em>release</em></span>
               memory semantics. Returns the value of <code class="code"><span class="identifier">iv</span></code>
-              prior to the operation being performed.
+              prior to the operation being performed. <span class="emphasis"><em>Note: This is the
+              same as the more commonly known "compare and swap" operation
+              with release memory semantics. --end note</em></span>
             </p>
             </td>
 </tr>
@@ -388,12 +392,12 @@
 </dl>
 </div>
 <a name="boost_act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements"></a><h5>
-<a name="id503132"></a>
+<a name="id503150"></a>
         <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_arithmetic_type.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id503151"></a><p class="title"><b>Table 5. Interlocked Arithmetic Type Requirements</b></p>
+<a name="id503169"></a><p class="title"><b>Table 5. Interlocked Arithmetic Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Requirements">
 <colgroup>
 <col>
@@ -841,12 +845,12 @@
 </dl>
 </div>
 <a name="boost_act.interlocked_concepts.interlocked_integer_type.expression_requirements"></a><h5>
-<a name="id505592"></a>
+<a name="id505610"></a>
         <a href="interlocked_concepts.html#boost_act.interlocked_concepts.interlocked_integer_type.expression_requirements">Expression
         Requirements</a>
       </h5>
 <div class="table">
-<a name="id505611"></a><p class="title"><b>Table 6. Interlocked Arithmetic Type Requirements</b></p>
+<a name="id505629"></a><p class="title"><b>Table 6. Interlocked Arithmetic Type Requirements</b></p>
 <div class="table-contents"><table class="table" summary="Interlocked Arithmetic Type Requirements">
 <colgroup>
 <col>

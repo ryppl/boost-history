@@ -90,7 +90,8 @@ have the indicated effects.
                                                     [tablenote This is the same
                                                      as the more commonly known
                                                      "compare and swap"
-                                                     operation.
+                                                     operation with a full
+                                                     memory barrier.
                                                     ]
                                                    ]                           ]
 [[`assign_if_was_acquire( iv, c1, c2 )`]
@@ -103,6 +104,12 @@ have the indicated effects.
                                                     Returns the value of `iv`
                                                     prior to the operation being
                                                     performed.
+                                                    [tablenote This is the same
+                                                     as the more commonly known
+                                                     "compare and swap"
+                                                     operation with acquire
+                                                     memory semantics.
+                                                    ]
                                                    ]                           ]
 [[`assign_if_was_release( iv, c1, c2 )`]
                                       [`assign_if_was_result<IV>::type`]
@@ -114,6 +121,12 @@ have the indicated effects.
                                                     Returns the value of `iv`
                                                     prior to the operation being
                                                     performed.
+                                                    [tablenote This is the same
+                                                     as the more commonly known
+                                                     "compare and swap"
+                                                     operation with release
+                                                     memory semantics.
+                                                    ]
                                                    ]                           ]
 [[`safe_get( iv )`]  [`I`]            [Returns the value of `iv`.
                                                     [tablenote This template is

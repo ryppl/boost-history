@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_VISTA_HPP
-#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_VISTA_HPP
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_ASSIGN_IF_WAS_REL_VISTA_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_ASSIGN_IF_WAS_REL_VISTA_HPP
 
 #include <boost/config.hpp>
 
@@ -26,11 +26,11 @@
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
 template< typename ResultType, typename UnqualifiedType >
-struct assign_acquire_impl
+struct assign_if_was_release_impl
 {
   typedef void type;
 
-  template< typename LeftType, typename RightType >
+  template< typename LeftType, typename RightType, typename OldType >
   static
   typename enable_if_c
   <
@@ -38,22 +38,23 @@ struct assign_acquire_impl
   , ResultType
   >
   ::type
-  execute( LeftType& left, RightType& right )
+  execute( LeftType& left, RightType& right, OldType& old )
   {
     return ResultType
            (
              static_cast< UnqualifiedType >
              (
-               InterlockedExchangeAcquire
+               InterlockedCompareExchangeRelease
                ( reinterpret_cast< LONG volatile* >( &left )
                , reinterpret_cast< LONG const& >( right )
                )
              )
            , right
+           , old
            );
   }
 
-  template< typename LeftType, typename RightType >
+  template< typename LeftType, typename RightType, typename OldType >
   static
   typename enable_if_c
   <
@@ -61,39 +62,43 @@ struct assign_acquire_impl
   , ResultType
   >
   ::type
-  execute( LeftType& left, RightType& right )
+  execute( LeftType& left, RightType& right, OldType& old )
   {
     return ResultType
            (
              static_cast< UnqualifiedType >
              (
-               InterlockedExchange64Acquire
+               InterlockedCompareExchange64Release
                ( reinterpret_cast< LONGLONG volatile* >( &left )
                , reinterpret_cast< LONGLONG const& >( right )
+               , reinterpret_cast< LONGLONG const& >( old )
                )
              )
            , right
+           , old
            );
   }
 
-  template< typename LeftType, typename RightType >
+  template< typename LeftType, typename RightType, typename OldType >
   static
   ResultType
-  execute( LeftType*& left, RightType*& right )
+  execute( LeftType*& left, RightType*& right, OldType*& old )
   {
     return ResultType
            (
              static_cast< UnqualifiedType >
              (
-               InterlockedExchangePointerAcquire
+               InterlockedCompareExchangePointerRelease
                ( const_cast< void* volatile* >
                  (
                    reinterpret_cast< void const volatile* volatile* >( &left )
                  )
                , const_cast< void* >( right )
+               , const_cast< void* >( old )
                )
              )
            , right
+           , old
            );
   }
 };
