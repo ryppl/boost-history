@@ -31,3 +31,12 @@
 - Testing for the Spirit library
 
 - Testing for the Statechart library
+
+- Testing for the Thread library
+
+- Testing for the TR1 library (globs for tests)
+
+- Testing for the type traits library (globs for tests)
+
+- Testing for the typeof library
+

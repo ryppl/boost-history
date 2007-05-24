@@ -1,5 +1,4 @@
 boost_library_project(
-  Utility
+  Timer
   TESTDIRS test
-)
-
+  )

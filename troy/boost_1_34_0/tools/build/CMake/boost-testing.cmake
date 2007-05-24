@@ -42,7 +42,7 @@ macro(boost_test_parse_args testname)
   set(BOOST_TEST_OKAY TRUE)
   set(BOOST_TEST_COMPILE_FLAGS "")
   parse_arguments(BOOST_TEST 
-    "SOURCES;LIBRARIES;DEPENDS;COMPILE_FLAGS"
+    "SOURCES;LIBRARIES;DEPENDS;COMPILE_FLAGS;ARGS"
     ""
     ${ARGN}
     )
@@ -91,7 +91,7 @@ macro(boost_test_run testname)
 	TO_PROPNAME COMPILE_FLAGS 
 	)
     endforeach(_depend ${BOOST_TEST_DEPENDS})
-    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname})
+    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ARGS ${BOOST_TEST_ARGS})
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run)
 
@@ -108,7 +108,7 @@ macro(boost_test_run_fail testname)
     target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
     target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
 
-    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname})
+    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ARGS ${BOOST_TEST_ARGS})
     set_tests_properties("${PROJECT_NAME}::${testname}" PROPERTIES WILL_FAIL TRUE)
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run_fail)
