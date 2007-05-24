@@ -17,55 +17,55 @@
 
 BOOST_AUTO_TEST_CASE( basic_variant_print_test )
 {
-	std::stringstream str_out;
-	
-	boost::variant< int, std::string, std::vector<int> > varVal;
-	
-	varVal = 1;
-	explore::print(varVal, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "1");
-	
-	str_out.str("");
-	
-	varVal = std::string("some string");
-	explore::print(varVal, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "some string");
-	
-	str_out.str("");
-	
-	std::vector<int> vi;
-	vi.push_back(1);
-	vi.push_back(2);
-	vi.push_back(3);
-	varVal = vi;
-	explore::print(varVal, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+    std::stringstream str_out;
+
+    boost::variant< int, std::string, std::vector<int> > varVal;
+
+    varVal = 1;
+    explore::print(varVal, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "1");
+
+    str_out.str("");
+
+    varVal = std::string("some string");
+    explore::print(varVal, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "some string");
+
+    str_out.str("");
+
+    std::vector<int> vi;
+    vi.push_back(1);
+    vi.push_back(2);
+    vi.push_back(3);
+    varVal = vi;
+    explore::print(varVal, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
 }
 
 BOOST_AUTO_TEST_CASE( basic_variant_stream_test )
 {
-	using namespace boost;
-	std::stringstream str_out;
-	
-	boost::variant< int, std::string, std::vector<int> > varVal;
-	
-	varVal = 1;
-	str_out << varVal;
-	BOOST_CHECK_EQUAL(str_out.str(), "1");
-	
-	str_out.str("");
-	
-	varVal = std::string("some string");
-	str_out << varVal;
-	BOOST_CHECK_EQUAL(str_out.str(), "some string");
-	
-	str_out.str("");
-	
-	std::vector<int> vi;
-	vi.push_back(1);
-	vi.push_back(2);
-	vi.push_back(3);
-	varVal = vi;
-	str_out << varVal;
-	BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+    using namespace boost;
+    std::stringstream str_out;
+
+    boost::variant< int, std::string, std::vector<int> > varVal;
+
+    varVal = 1;
+    str_out << varVal;
+    BOOST_CHECK_EQUAL(str_out.str(), "1");
+
+    str_out.str("");
+
+    varVal = std::string("some string");
+    str_out << varVal;
+    BOOST_CHECK_EQUAL(str_out.str(), "some string");
+
+    str_out.str("");
+
+    std::vector<int> vi;
+    vi.push_back(1);
+    vi.push_back(2);
+    vi.push_back(3);
+    varVal = vi;
+    str_out << varVal;
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
 }

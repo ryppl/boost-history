@@ -16,21 +16,21 @@
 
 BOOST_AUTO_TEST_CASE( basic_pair_print_test )
 {
-	std::stringstream str_out;
-	
-	std::pair<int,int> pi = std::make_pair(1,2);
-	explore::print(pi, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+    std::stringstream str_out;
+
+    std::pair<int,int> pi = std::make_pair(1,2);
+    explore::print(pi, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
 BOOST_AUTO_TEST_CASE( basic_pair_stream_test )
 {
-	using namespace boost;
-	std::stringstream str_out;
-	
-	std::pair<int,int> pi = std::make_pair(1,2);
-	str_out << pi;
-	BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+    using namespace boost;
+    std::stringstream str_out;
+
+    std::pair<int,int> pi = std::make_pair(1,2);
+    str_out << pi;
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
 // This is an interesting case as it shows a stylistic difference between a vector of
@@ -38,49 +38,49 @@ BOOST_AUTO_TEST_CASE( basic_pair_stream_test )
 // formatters will need to be enhanced to meet this requirement.
 BOOST_AUTO_TEST_CASE( pair_in_vector_print_test )
 {
-	std::stringstream str_out;
-	
-	std::vector<std::pair<int,int> > vpi;
-	explore::print(vpi, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[]");
-	
-	str_out.str("");
-	
-	std::pair<int,int> pi = std::make_pair(1,2);
-	
-	vpi.push_back(pi);
-	explore::print(vpi, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2]]");
-	
-	str_out.str("");
-	
-	vpi.push_back(pi);
-	vpi.push_back(pi);
-	explore::print(vpi, str_out);
-	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2], [1, 2], [1, 2]]");
+    std::stringstream str_out;
+
+    std::vector<std::pair<int,int> > vpi;
+    explore::print(vpi, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[]");
+
+    str_out.str("");
+
+    std::pair<int,int> pi = std::make_pair(1,2);
+
+    vpi.push_back(pi);
+    explore::print(vpi, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2]]");
+
+    str_out.str("");
+
+    vpi.push_back(pi);
+    vpi.push_back(pi);
+    explore::print(vpi, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2], [1, 2], [1, 2]]");
 }
 
 BOOST_AUTO_TEST_CASE( pair_in_vector_stream_test )
 {
-	using namespace boost;
-	std::stringstream str_out;
-	
-	std::vector<std::pair<int,int> > vpi;
-	str_out << vpi;
-	BOOST_CHECK_EQUAL(str_out.str(), "[]");
-	
-	str_out.str("");
-	
-	std::pair<int,int> pi = std::make_pair(1,2);
-	
-	vpi.push_back(pi);
-	str_out << vpi;
-	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2]]");
-	
-	str_out.str("");
-	
-	vpi.push_back(pi);
-	vpi.push_back(pi);
-	str_out << vpi;
-	BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2], [1, 2], [1, 2]]");
+    using namespace boost;
+    std::stringstream str_out;
+
+    std::vector<std::pair<int,int> > vpi;
+    str_out << vpi;
+    BOOST_CHECK_EQUAL(str_out.str(), "[]");
+
+    str_out.str("");
+
+    std::pair<int,int> pi = std::make_pair(1,2);
+
+    vpi.push_back(pi);
+    str_out << vpi;
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2]]");
+
+    str_out.str("");
+
+    vpi.push_back(pi);
+    vpi.push_back(pi);
+    str_out << vpi;
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2], [1, 2], [1, 2]]");
 }
