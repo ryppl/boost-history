@@ -170,6 +170,13 @@ namespace boost
         return stream_container(ostr, v.begin(), v.end());
     }
 
+    // stream deque<T>
+    template<typename Elem, typename Tr, typename T, typename Allocator>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::deque<T, Allocator>& d)
+    {
+        return stream_container(ostr, d.begin(), d.end());
+    }
+
     // stream set<T>
     template<typename Elem, typename Tr, typename T, typename Compare, typename Alloc>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::set<T, Compare, Alloc>& s)
