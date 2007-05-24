@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <map>
+#include <iterator>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -26,6 +27,9 @@
 #include <boost/mpl/push_front.hpp>
 #include <boost/mpl/pop_front.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/utility/enable_if.hpp>
+#include <boost/foreach.hpp>
+#include <boost/range/iterator.hpp>
 
 namespace explore {
 	using namespace boost::mpl;
@@ -38,7 +42,7 @@ namespace explore {
 
 		struct AlmostAnything
 		{
-			template<typename T> AlmostAnything( T const &);
+            template<typename T> AlmostAnything( T const &);
 		};
 
 		// 
@@ -54,10 +58,36 @@ namespace explore {
 		struct is_streamable : bool_< sizeof( std::cout << make_t<T>()) != sizeof( char)> 
 		{
 		};
+
+        //
+        // helper stuff for the has_iterator_value metafunction
+        struct large_type
+        {
+            char member[100];
+        };
+
+        template< typename T>
+            struct AlmostAnyTemplate
+            {
+                typedef large_type type;
+            };
+
+        template< typename T>
+            typename boost::range_iterator< T>::type
+            has_iterator_value_f( T*);
+
+        char has_iterator_value_f( void *);
+
+        template< typename T>
+        struct has_iterator_value : bool_< sizeof( has_iterator_value_f( (T*)0)) != sizeof( char)> {};
 	};
+
+    template <typename T>
+    struct has_iterator_value: detail::has_iterator_value< T> {};
 
 	template< typename T>
 	struct is_streamable : detail::is_streamable<T> {};
+
 
 	//
 	// Generally, if we can stream it, we'll stream it. If not, we'll try
@@ -67,6 +97,12 @@ namespace explore {
 	struct print_as_container : not_< is_streamable< T> > {};
 
 
+    // treat arrays as containers even though they are streamable
+    // (normally they are streamed as pointer-to-void)
+    //
+    template< typename T, std::size_t size>
+    struct print_as_container< T[size]> : true_ {};
+ 
     //
     // is_map metafunction
     //
@@ -188,7 +224,8 @@ namespace explore {
 				  typename container_policy_type,
 				  typename item_type
 		>
-		static std::ostream &print_item( const item_type &item, std::ostream &stream )
+        // TODO: limit this overload to item_types that fit the range concept. I wish there was an is_range< > metafunction.
+         static std::ostream &print_item( const item_type &item, std::ostream &stream )
 		{
 			// the first element of the format sequence is our current format-selector
 			typedef BOOST_DEDUCED_TYPENAME front<format_type>::type format_selector;
@@ -202,16 +239,14 @@ namespace explore {
 			stream << formatter::opening();
 			bool printing_first_item = true;
 
-			// yeah, yeah, should use for_each. What can I say, I'm lazy
-			for (BOOST_DEDUCED_TYPENAME item_type::const_iterator i = item.begin(); i != item.end(); ++i)
+            BOOST_FOREACH( typename boost::iterator_value< typename boost::range_iterator< item_type>::type >::type const &element, item)
 			{
 				if (!printing_first_item)
 				{
 					stream << formatter::delimiter();
 				}
 				
-				// do I need ADL protection here?
-				print( *i, stream, next_format_type(), container_policy_type());
+				print( element, stream, next_format_type(), container_policy_type());
 				printing_first_item = false;
 			}
 			stream << formatter::closing();
@@ -225,7 +260,7 @@ namespace explore {
 				  typename F,
 				  typename S
 		>
-		static std::ostream &print_item( const std::pair<F,S> &item, std::ostream &stream )
+        static std::ostream &print_item( const std::pair<F,S> &item, std::ostream &stream )
 		{
 			typedef std::pair<F,S> item_type;
 
@@ -244,6 +279,18 @@ namespace explore {
 			print( item.second, stream, next_format_type(), container_policy_type());
 			return stream << formatter::closing();
 		}
+
+        /*
+        template< typename format_type,
+            typename container_policy_type,
+            typename item_type
+        >
+        static std::ostream &print_item( const item_type &t, std::ostream &stream)
+        {
+            stream << "<unknown>";
+        }
+        */
+
 	};
 
 	struct item_printer
@@ -273,7 +320,8 @@ namespace explore {
 				identity< item_printer>
 		>::type printer_type;
 
-		return printer_type::template print_item< format_type, container_policy_type>( item, stream);
+		
+        return printer_type::template print_item< format_type, container_policy_type>( item, stream);
 	}
 
 	template < typename item_type>
