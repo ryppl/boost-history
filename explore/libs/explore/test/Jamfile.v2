@@ -22,6 +22,7 @@ project
   [ run simple_types.cpp  ]
 
   [ run std_vector.cpp   ]
+  [ run std_deque.cpp   ]
   [ run std_list.cpp   ]
   [ run std_map.cpp   ]
   [ run std_set.cpp   ]
