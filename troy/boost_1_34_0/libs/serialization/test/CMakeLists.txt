@@ -13,8 +13,14 @@ set(BOOST_ARCHIVE_LIST
 # this macro will build separate static and dynamic tests for each
 # archive type listed in BOOST_ARCHIVE_LIST.
 macro(serialization_test testname)
-  parse_arguments(BSL_TEST "" "NO_LIBS" ${ARGN})
+  parse_arguments(BSL_TEST "SOURCES" "NO_LIBS;POLYMORPHIC" ${ARGN})
 
+  if (BSL_TEST_POLYMORPHIC)
+    set(BSL_TEST_POLY "polymorphic_")
+  elseif(BSL_TEST_POLYMORPHIC)
+    set(BSL_TEST_POLY "")
+  endif(BSL_TEST_POLYMORPHIC)
+  
   foreach(ARCHIVE ${BOOST_ARCHIVE_LIST})
     set(BSL_TEST_STATIC_LIBRARIES) 
     set(BSL_TEST_SHARED_LIBRARIES)
@@ -29,17 +35,21 @@ macro(serialization_test testname)
       endif(ARCHIVE MATCHES ".*warchive")
     endif(NOT BSL_NO_LIBS)
 
+    if(NOT BSL_TEST_SOURCES)
+      set(BSL_TEST_SOURCES "${testname}.cpp")
+    endif(NOT BSL_TEST_SOURCES)
+    
     # Tests linking against the static serialization library
     boost_test_run("${testname}_${ARCHIVE}"
-      SOURCES "${testname}.cpp"
+      SOURCES ${BSL_TEST_SOURCES}
       LIBRARIES boost_test_exec_monitor-static ${BSL_TEST_STATIC_LIBRARIES}
-      COMPILE_FLAGS "-DBOOST_ARCHIVE_TEST=${ARCHIVE}.hpp -DBOOST_LIB_DIAGNOSTIC=1")
+      COMPILE_FLAGS "-DBOOST_ARCHIVE_TEST=${BSL_TEST_POLY}${ARCHIVE}.hpp -DBOOST_LIB_DIAGNOSTIC=1")
     
     # Tests linking against the shared serialization library
     boost_test_run("${testname}_${ARCHIVE}_dll"
-      SOURCES "${testname}.cpp"
+      SOURCES ${BSL_TEST_SOURCES}
       LIBRARIES boost_test_exec_monitor-static ${BSL_TEST_SHARED_LIBRARIES}
-      COMPILE_FLAGS "-DBOOST_ARCHIVE_TEST=${ARCHIVE}.hpp -DBOOST_LIB_DIAGNOSTIC=1 -DBOOST_ALL_DYN_LINK=1")
+      COMPILE_FLAGS "-DBOOST_ARCHIVE_TEST=${BSL_TEST_POLY}${ARCHIVE}.hpp -DBOOST_LIB_DIAGNOSTIC=1 -DBOOST_ALL_DYN_LINK=1")
   endforeach(ARCHIVE ${BOOST_ARCHIVE_LIST})
 endmacro(serialization_test)
 
@@ -82,6 +92,54 @@ serialization_test(test_vector)
 serialization_test(test_optional)
 serialization_test(test_shared_ptr)
 serialization_test(test_shared_ptr_132)
-# TODO
-#     [ test-bsl-run_polymorphic_archive test_polymorphic : test_polymorphic_A ]
+serialization_test(test_polymorphic POLYMORPHIC 
+  SOURCES test_polymorphic.cpp test_polymorphic_A.cpp)
+serialization_test(test_iterators NO_LIBS)
+serialization_test(test_iterators_base64 NO_LIBS)
+serialization_test(test_inclusion NO_LIBS)
+serialization_test(test_private_ctor)
+serialization_test(test_reset_object_address)
+serialization_test(test_smart_cast NO_LIBS)
+serialization_test(test_static_warning NO_LIBS)
+serialization_test(test_utf8_codecvt 
+  SOURCES test_utf8_codecvt.cpp ../src/utf8_codecvt_facet.cpp NO_LIBS)
+serialization_test(test_void_cast)
+serialization_test(test_mult_archive_types)
+serialization_test(test_codecvt_null 
+  SOURCES test_codecvt_null.cpp ../src/codecvt_null.cpp NO_LIBS)
 
+# demos
+serialization_test(test_demo)
+serialization_test(test_demo_auto_ptr)
+serialization_test(test_demo_exception)
+serialization_test(test_demo_fast_archive)
+serialization_test(test_demo_pimpl 
+  SOURCES ../example/demo_pimpl.cpp ../example/demo_pimpl_A.cpp)
+serialization_test(test_demo_polymorphic 
+  SOURCES ../example/demo_polymorphic.cpp ../example/demo_polymorphic_A.cpp)
+serialization_test(test_demo_portable_archive)
+serialization_test(test_demo_shared_ptr)
+serialization_test(test_demo_xml)
+serialization_test(test_demo_xml_load)
+serialization_test(test_demo_xml_save)
+
+# should fail compilation
+boost_test_compile_fail(test_not_serializable) # FIXME std:locale-support ]
+boost_test_compile_fail(test_traits_fail) # FIXME std:locale-support ]
+boost_test_compile_fail(test_const_save_fail1) # FIXME std:locale-support ]
+boost_test_compile_fail(test_const_save_fail2) # FIXME std:locale-support ]
+boost_test_compile_fail(test_const_save_fail3) # FIXME std:locale-support ]
+# note - library unable to detect there errors for now
+#boost_test_compile_fail(test_const_save_fail1_nvp)
+#boost_test_compile_fail(test_const_save_fail2_nvp)
+#boost_test_compile_fail(test_const_save_fail3_nvp)
+boost_test_compile_fail(test_const_load_fail1) # FIXME std:locale-support ]
+boost_test_compile_fail(test_const_load_fail2) # FIXME std:locale-support ]
+boost_test_compile_fail(test_const_load_fail3) # FIXME std:locale-support ]
+boost_test_compile_fail(test_const_load_fail1_nvp) # FIXME std:locale-support ]
+boost_test_compile_fail(test_const_load_fail2_nvp) # FIXME std:locale-support ]
+boost_test_compile_fail(test_const_load_fail3_nvp) # FIXME std:locale-support ]
+
+# should compile
+boost_test_compile(test_traits_pass) # FIXME std:locale-support ]
+boost_test_compile(test_const_pass) # FIXME std:locale-support ]
