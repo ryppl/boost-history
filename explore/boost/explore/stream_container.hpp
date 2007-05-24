@@ -227,6 +227,13 @@ namespace boost
         return stream_container(ostr, m.begin(), m.end(), stream_map_value());
     }
 
+    // stream c-array
+    template<typename Elem, typename Tr, typename T, std::size_t size>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, T (&a)[size])
+    {
+        return stream_container(ostr, &a[0], &a[size]);
+    }
+
     // function ptr for separator manipulator
     template<typename Elem, typename Tr>
     void setSeparatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
