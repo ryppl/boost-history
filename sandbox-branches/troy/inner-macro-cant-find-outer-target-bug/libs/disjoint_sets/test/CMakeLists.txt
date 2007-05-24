@@ -1,0 +1,1 @@
+boost_test_run(disjoint_set_test SOURCES ../disjoint_set_test.cpp)

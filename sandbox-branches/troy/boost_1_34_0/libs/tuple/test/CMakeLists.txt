@@ -1,0 +1,2 @@
+boost_test_run(tuple_test_bench boost_test_exec_monitor-static)
+boost_test_run(io_test LIBRARIES boost_test_exec_monitor-static)
