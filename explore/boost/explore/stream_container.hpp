@@ -13,10 +13,7 @@
 #include "stream_state.hpp"
 
 #include <ostream>
-#include <map>    // concern: should we have an explore/map.hpp file?
-#include <vector> // ditto ...
-#include <set>
-#include <list>
+#include <boost/functional/detail/container_fwd.hpp>
 #include <boost/array.hpp>
 
 namespace boost
@@ -116,22 +113,27 @@ namespace boost
         return ostr;
     }
 
-    // stream 'normal' value
-    template<typename Elem, typename Tr, typename T>
-    void stream_normal_value(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem, Tr>* state)
+    struct stream_normal_value
     {
-        ostr << val;
-    }
+        template<typename Elem, typename Tr, typename T>
+        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val)
+        {
+            ostr << val;
+        }
+    };
 
     // stream value from associative container
-    template<typename Elem, typename Tr, typename T>
-    void stream_map_value(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem, Tr>* state)
+    struct stream_map_value
     {
-        ostr << val.first << ":" << val.second;
-    }
+        template<typename Elem, typename Tr, typename T>
+        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val)
+        {
+            ostr << val.first << ":" << val.second;
+        }
+    };
 
-    template<typename Elem, typename Tr, typename C, typename F>
-    void stream_container(std::basic_ostream<Elem, Tr>& ostr, const C& c, F f)
+    template<typename Elem, typename Tr, typename FwdIter, typename F>
+    std::basic_ostream<Elem, Tr>& stream_container(std::basic_ostream<Elem, Tr>& ostr, FwdIter first, FwdIter last, F f)
     {
         // grab the extra data embedded in the stream object.
         container_stream_state<Elem, Tr>* state = explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr);
@@ -139,12 +141,10 @@ namespace boost
         // starting delimiter
         ostr << state->start;
 
-        typename C::const_iterator first = c.begin();
-        typename C::const_iterator last = c.end();
         while( first != last )
         {
             // value
-            f(ostr, *first, state);
+            f(ostr, *first);
             if( ++first != last )
             {
                 // separation delimiter
@@ -153,68 +153,49 @@ namespace boost
         }
 
         // ending delimiter
-        ostr << state->end;
+        return ostr << state->end;
     }
 
-    template<typename Elem, typename Tr, typename C>
-    void stream_container(std::basic_ostream<Elem, Tr>& ostr, const C& c)
+    template<typename Elem, typename Tr, typename FwdIter>
+    std::basic_ostream<Elem, Tr>& stream_container(std::basic_ostream<Elem, Tr>& ostr, FwdIter first, FwdIter last)
     {
-        typedef typename C::value_type value_type;
         // redirect with "normal" streaming.
-        stream_container(ostr, c, &stream_normal_value<Elem, Tr, value_type>);
+        return stream_container(ostr, first, last, stream_normal_value());
     }
-
-    // concern: this will match everything that does not have a streaming operator.  I'm not sure this is
-    // good enough.  Is it fair to say that there are no other collection of objects, other than container,
-    // that may want add streaming functionality in this way?  I can't think of a case, but I still don't like
-    // this approach.  Another option is to explicitly override for each container, leaving it up to the user
-    // to define for user-defined containers.  Yet another option is to use define traits, leaving it up to the
-    // user to define the traits for the user-defined container.  Any other ideas?
-    //template<typename Elem, typename Tr, typename C>
-    //std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const C& c)
-    //{
-    //	stream_container(ostr, c.begin(), c.end());
-    //	return ostr;
-    //}
 
     // stream vector<T>
     template<typename Elem, typename Tr, typename T>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::vector<T>& v)
     {
-        stream_container(ostr, v);
-        return ostr;
+        return stream_container(ostr, v.begin(), v.end());
     }
 
     // stream set<T>
-    template<typename Elem, typename Tr, typename T>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::set<T>& s)
+    template<typename Elem, typename Tr, typename T, typename Compare, typename Alloc>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::set<T, Compare, Alloc>& s)
     {
-        stream_container(ostr, s);
-        return ostr;
+        return stream_container(ostr, s.begin(), s.end());
     }
 
     // stream multiset<T>
-    template<typename Elem, typename Tr, typename T>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::multiset<T>& s)
+    template<typename Elem, typename Tr, typename T, typename Compare, typename Allocator>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::multiset<T, Compare, Allocator>& s)
     {
-        stream_container(ostr, s);
-        return ostr;
+        return stream_container(ostr, s.begin(), s.end());
     }
 
     // stream list<T>
-    template<typename Elem, typename Tr, typename T>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::list<T>& l)
+    template<typename Elem, typename Tr, typename T, typename Allocator>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::list<T, Allocator>& l)
     {
-        stream_container(ostr, l);
-        return ostr;
+        return stream_container(ostr, l.begin(), l.end());
     }
 
     // stream array<T>
     template<typename Elem, typename Tr, typename T, std::size_t N>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const boost::array<T, N>& a)
     {
-        stream_container(ostr, a);
-        return ostr;
+        return stream_container(ostr, a.begin(), a.end());
     }
 
     // stream pair<T1, T2>
@@ -226,19 +207,17 @@ namespace boost
     }
 
     // stream map<K, T>
-    template<typename Elem, typename Tr, typename K, typename T>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::map<K, T>& m)
+    template<typename Elem, typename Tr, typename K, typename T, typename Compare, typename Allocator>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::map<K, T, Compare, Allocator>& m)
     {
-        stream_container(ostr, m, &stream_map_value<Elem, Tr, std::map<K,T>::value_type>);
-        return ostr;
+        return stream_container(ostr, m.begin(), m.end(), stream_map_value());
     }
 
     // stream multimap<K, T>
-    template<typename Elem, typename Tr, typename K, typename T>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::multimap<K, T>& m)
+    template<typename Elem, typename Tr, typename K, typename T, typename Compare, typename Allocator>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::multimap<K, T, Compare, Allocator>& m)
     {
-        stream_container(ostr, m, &stream_map_value<Elem, Tr, std::multimap<K,T>::value_type>);
-        return ostr;
+        return stream_container(ostr, m.begin(), m.end(), stream_map_value());
     }
 
     // function ptr for separator manipulator
