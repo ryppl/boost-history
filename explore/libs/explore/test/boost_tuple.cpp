@@ -22,7 +22,10 @@ BOOST_AUTO_TEST_CASE( basic_tuple_print_test )
 
     boost::tuples::tuple<int, double> t(1, 3.14);
     explore::print(t, str_out);
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 3.14]");
+
+    // I think things that already have a way to print should not change
+    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 3.14]");
+    BOOST_CHECK_EQUAL(str_out.str(), "(1 3.14)");
 }
 
 BOOST_AUTO_TEST_CASE( basic_tuple_stream_test )
@@ -32,5 +35,7 @@ BOOST_AUTO_TEST_CASE( basic_tuple_stream_test )
 
     boost::tuples::tuple<int, double> t(1, 3.14);
     str_out << t;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 3.14]");
+    // I think things that already have a way to print should not change
+    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 3.14]");
+    BOOST_CHECK_EQUAL(str_out.str(), "(1 3.14)");
 }
