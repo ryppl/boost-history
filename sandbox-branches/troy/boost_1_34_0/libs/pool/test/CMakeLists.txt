@@ -1,1 +1,0 @@
-boost_test_run(test_pool_alloc LIBRARIES boost_test_exec_monitor-static)
