@@ -292,6 +292,18 @@ namespace explore {
         */
 
 	};
+    
+    struct pointer_printer
+	{
+		template< typename format_type,
+        typename container_policy_type,
+        typename item_type
+		>
+		static std::ostream &print_item( const item_type *item, std::ostream &stream )
+        {
+			return print(*item, stream, format_type(), container_policy_type());
+        }
+	};
 
 	struct item_printer
 	{
@@ -316,9 +328,12 @@ namespace explore {
 	{
 		typedef  typename eval_if< 
 			typename container_policy_type:: template print_as_container< item_type>::type,
-				identity< container_printer>,
-				identity< item_printer>
-		>::type printer_type;
+				identity<container_printer>,
+                eval_if< 
+                    typename boost::is_pointer<item_type>::type,
+                        identity<pointer_printer>,
+                        identity<item_printer>
+		> >::type printer_type;
 
 		
         return printer_type::template print_item< format_type, container_policy_type>( item, stream);
