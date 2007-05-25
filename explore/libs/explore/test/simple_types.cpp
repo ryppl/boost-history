@@ -25,8 +25,14 @@ BOOST_AUTO_TEST_CASE( int_print_test )
     BOOST_CHECK_EQUAL(str_out.str(), "123");
 
     str_out.str("");
-    int* pi = &i;
-
+    
+    int* pi = NULL;
+    explore::print(pi, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "null");
+    
+    str_out.str("");
+    
+    pi = &i;
     explore::print(pi, str_out);
     // technically, we should force this to be true, though
     // it is highly unlikely to be false. Otherwise this test is only
@@ -36,7 +42,7 @@ BOOST_AUTO_TEST_CASE( int_print_test )
     // this is not a useful test.  pointers should print out as pointers.
     BOOST_CHECK_EQUAL(str_out.str(), "123");
 }
-/*
+
 BOOST_AUTO_TEST_CASE( int_stream_test )
 {
     std::stringstream str_out;
@@ -147,10 +153,22 @@ BOOST_AUTO_TEST_CASE( char_print_test )
     BOOST_CHECK_EQUAL(str_out.str(), "c");
 
     str_out.str("");
-    char* pc = "c";
 
+    char* pc = NULL;
+    explore::print(pc, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "null");
+    
+    str_out.str("");
+    
+    pc = "c";
     explore::print(pc, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "c");
+    
+    str_out.str("");
+    
+    pc = "cat";
+    explore::print(pc, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "cat");
 }
 
 BOOST_AUTO_TEST_CASE( char_stream_test )
@@ -187,4 +205,3 @@ BOOST_AUTO_TEST_CASE( string_stream_test )
 
     BOOST_CHECK_EQUAL(str_out.str(), "some string");
 }
-*/
