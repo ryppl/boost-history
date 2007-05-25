@@ -31,12 +31,12 @@ BOOST_AUTO_TEST_CASE( int_print_test )
     // technically, we should force this to be true, though
     // it is highly unlikely to be false. Otherwise this test is only
     // telling you whether the following is even valid.
-    //BOOST_CHECK(0 != boost::lexical_cast<std::string>((long)pi).compare("123"));
+    BOOST_CHECK(0 != boost::lexical_cast<std::string>((long)pi).compare("123"));
 
     // this is not a useful test.  pointers should print out as pointers.
-    //BOOST_CHECK_EQUAL(str_out.str(), "123");
+    BOOST_CHECK_EQUAL(str_out.str(), "123");
 }
-
+/*
 BOOST_AUTO_TEST_CASE( int_stream_test )
 {
     std::stringstream str_out;
@@ -187,3 +187,4 @@ BOOST_AUTO_TEST_CASE( string_stream_test )
 
     BOOST_CHECK_EQUAL(str_out.str(), "some string");
 }
+*/
