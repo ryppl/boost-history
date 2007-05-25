@@ -10,6 +10,7 @@
 #define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_ACQUIRE_HPP
 
 #include <boost/act/interlocked/assign_if_was/detail/assign_if_was_acquire_impl.hpp>
+#include <boost/act/interlocked/assign_if_was/detail/assign_if_was_acquire_default_impl.hpp>
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>

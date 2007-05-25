@@ -6,11 +6,14 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RELEASE_HPP
-#define BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RELEASE_HPP
+#ifndef BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RESULT_FWD_HPP
+#define BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RESULT_FWD_HPP
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_INFO ( increment, release )
+namespace boost { namespace act { namespace interlocked {
 
-#include <boost/act/interlocked/detail/unary_forwarder.hpp>
+template< typename TargetType >
+struct increment_result;
+
+} } }
 
 #endif

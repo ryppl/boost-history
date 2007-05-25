@@ -29,8 +29,8 @@ struct interlocked_identity
 template< typename Operation, typename ValueInfo, typename ValueType >
 class unary_interlocked_result
 {
-  BOOST_MPL_ASSERT_MSG( ( mpl::or_< is_same< ValueInfo, old_value >
-                                  , is_same< ValueInfo, new_value >
+  BOOST_MPL_ASSERT_MSG( ( mpl::or_< is_same< ValueInfo, detail::old_value >
+                                  , is_same< ValueInfo, detail::new_value >
                                   >
                                   ::value
                         )
@@ -41,7 +41,7 @@ private:
   typedef typename remove_volatile< ValueType >::type value_type;
 public:
   template< typename Type >
-  explicit unary_interlocked_result( Type const& value_init )
+  unary_interlocked_result( Type const& value_init )
     : value_m( value_init ) {}
 public:
   value_type old_value() const
@@ -74,8 +74,8 @@ template< typename Operation, typename ValueInfo
         >
 class binary_interlocked_result
 {
-  BOOST_MPL_ASSERT_MSG( ( mpl::or_< is_same< ValueInfo, old_value >
-                                  , is_same< ValueInfo, new_value >
+  BOOST_MPL_ASSERT_MSG( ( mpl::or_< is_same< ValueInfo, detail::old_value >
+                                  , is_same< ValueInfo, detail::new_value >
                                   >
                                   ::value
                         )
@@ -121,8 +121,8 @@ private:
 template< typename ValueInfo, typename ValueType >
 class assign_if_was_interlocked_result
 {
-  BOOST_MPL_ASSERT_MSG( ( mpl::or_< is_same< ValueInfo, old_value >
-                                  , is_same< ValueInfo, success_value >
+  BOOST_MPL_ASSERT_MSG( ( mpl::or_< is_same< ValueInfo, detail::old_value >
+                                  , is_same< ValueInfo, detail::success_value >
                                   >
                                   ::value
                         )
@@ -138,13 +138,13 @@ public:
            , Type1 const& attempted_new_value_init
            , Type2 const& expected_value_init
            )
-    : result_m( value_init )
-    , attempted_new_value_m( operand_init )
-    , expected_value_m( operand1_init ) {}
+    : result_m( result_init )
+    , attempted_new_value_m( attempted_new_value_init )
+    , expected_value_m( expected_value_init ) {}
 public:
   value_type old_value() const
   {
-    BOOST_MPL_ASSERT_MSG( ( is_same< ValueInfo, old_value >::value )
+    BOOST_MPL_ASSERT_MSG( ( is_same< ValueInfo, detail::old_value >::value )
                         , CANNOT_RETRIEVE_OLD_VALUE_ON_THIS_OPERATING_SYSTEM
                         , ()
                         );
@@ -154,7 +154,7 @@ public:
 
   value_type new_value() const
   {
-    BOOST_MPL_ASSERT_MSG( ( is_same< ValueInfo, old_value >::value )
+    BOOST_MPL_ASSERT_MSG( ( is_same< ValueInfo, detail::old_value >::value )
                         , CANNOT_RETRIEVE_NEW_VALUE_ON_THIS_OPERATING_SYSTEM
                         , ()
                         );
@@ -174,7 +174,7 @@ public:
 
   bool was_successful() const
   {
-    return mpl::if_< is_same< ValueInfo, old_value >
+    return mpl::if_< is_same< ValueInfo, detail::old_value >
                    , was_successful_checker
                    , interlocked_identity
                    >

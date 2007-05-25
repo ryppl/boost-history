@@ -6,11 +6,13 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RELEASE_HPP
-#define BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RELEASE_HPP
+#ifndef BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RESULT_HPP
+#define BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RESULT_HPP
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_INFO ( increment, release )
+#include <boost/act/interlocked/detail/result_impl.hpp>
 
-#include <boost/act/interlocked/detail/unary_forwarder.hpp>
+#define BOOST_ACT_INTERLOCKED_DETAIL_OP_NAME increment
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_UNARY_RESULT_IMPL()
 
 #endif

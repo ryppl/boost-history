@@ -36,8 +36,8 @@ are_valid_arithmeticn_params< ( elem / CHAR_BIT )                              \
                             , LeftOperand, RightOperand, ComparisonType        \
                             >,
 
-template< typename LeftOperand, typename RightOperand
-        , typename ComparisonType = LeftOperand
+template< typename LeftOperand, typename RightOperand = LeftOperand const
+        , typename ComparisonType = LeftOperand const
         >
 struct are_valid_arithmetic_params
   : mpl::or_
@@ -52,8 +52,8 @@ struct are_valid_arithmetic_params
 {
 };
 
-template< typename LeftOperand, typename RightOperand
-        , typename ComparisonType = LeftOperand
+template< typename LeftOperand, typename RightOperand = LeftOperand const
+        , typename ComparisonType = LeftOperand const
         >
 struct are_valid_assign_style_params
   : mpl::or_< are_valid_arithmetic_params< LeftOperand, RightOperand
