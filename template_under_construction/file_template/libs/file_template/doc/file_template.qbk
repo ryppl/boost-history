@@ -1,0 +1,55 @@
+[library FileTemplate
+    [quickbook 1.4]
+    [version 0.9]
+    [authors [Rajko, Stjepan]]
+    [copyright 2007 Stjepan Rajko]
+    [purpose generates file and directory trees from templates]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+
+FileTemplate is a template processor for files and directories.  It provides a basic
+framework which makes producing templated dile/directory trees relatively easy.
+The philosophy of the framework is that simple things should be simple, and more
+complicated things should be doable relatively simply.  By being implemented in
+Python, and allowing template-specific python scripts in the template, FileTemplate
+has a pretty good degree of flexibility.
+
+FileTemplate is being developed for construction of seed projects for the Boost Sandbox.
+The [link filetemplate.sandbox sandbox] template, which is used for this purpose,
+is currently the only template developed using FileTemplate.
+
+* [link filetemplate.sandbox Learn more about using the sandbox template].
+* [link filetemplate.templates
+ Learn more about the FileTemplate system, using and and developing templates].
+
+[section:sandbox Boost sandbox template]
+
+[include sandbox.qbk]
+
+[endsect]
+
+[section:templates FileTemplate templates]
+
+[include templates.qbk]
+
+[endsect]
+
+[section:acknowledgements Acknowledgements]
+
+Thanks for Rene Rivera for his suggestions on the development of FileTemplate.
+
+[endsect]
+
+[section:license License]
+
+Copyright 2007 Stjepan Rajko.
+Distributed under the Boost Software License, Version 1.0. (See
+accompanying file LICENSE_1_0.txt or copy at
+[@http://www.boost.org/LICENSE_1_0.txt])
+
+[endsect]

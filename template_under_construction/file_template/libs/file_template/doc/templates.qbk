@@ -1,0 +1,246 @@
+The FileTemplate processor offers basic functionality when dealing with
+file / directory templates.  It copies
+a template directory tree into a new location, renaming files where applicable,
+substituting the contents where specified, and processing scripts embedded in
+the template tree.
+
+To get a general idea of how this is done, please read the
+[link filetemplate.templates.phases processing phases] documentation.
+
+To learn about creating new templates or extending existing templates,
+you should also read about
+[link filetemplate.templates.options options] and
+[link filetemplate.templates.substitutions substitution templates]
+
+
+[section:phases Processing phases]
+
+[section:invocation Invocation]
+The template processor first initializes [link filetemplate.templates.reference template class]
+object, which processes the template and can be used by the python scripts present
+in the template to customize the behavior of the template.
+
+Then, the template processor will invoke the startup script for the template,
+which is specified through the =template= [link filetemplate.templates.options option].
+The startup script gives the template processor any information
+it needs to know, and sets up
+[link filetemplate.templates.substitutions substitution templates] if applicable.
+
+The template processor will then
+[link filetemplate.templates.phases examine the template tree].
+
+[endsect]
+
+[section:examination Examination of the template tree]
+
+After the startup script has been executed, the template processor will
+perform a top-down traversal of the template tree.  By default, it will record
+the names of all directories and files located in the tree, which will then
+be copied / processed in the next phase.
+
+To customize what information is to be copied, and to specify additional
+customization possibilites (e.g., via [link filetemplate.templates.substitutions
+substitution templates]),
+template scripts may be inserted in the template tree.
+
+Template scripts are python files which begin with the following text on their first line:
+[python]
+
+    # template script
+
+Every script found during the transversal will be executed.  The script can
+interact with the template processor through the
+[link filetemplate.templates.reference template object].
+
+[endsect]
+
+[section:processing Producing the resulting file tree]
+Finally, the template processor will produce the resulting file tree from the template.
+Different kinds of files will be processed as follows:
+
+[h4 Verbatim file copies]
+A file for which no specific substitution templates are specified will be copied verbatim.
+
+[h4 Processed file content]
+A file for which at least one specific substitution template is specified will be processed
+for substitution templates and specific templates.
+
+[h4 Python generated file content]
+A file of the name /filename/=.py= can be used to generate the file /filename/.  To do so,
+it must begin with
+
+    # template file
+    
+When the script generates the content, it supplies it to the template processor via the
+`template.submit_content(content)` command (see the
+[link filetemplate.templates.reference template object] reference).
+
+[endsect]
+
+[endsect]
+
+[section:options Options]
+
+Options are used to fine-tune the behavior of the FileTemplate template processor as well
+as the behavior of the template.  The following options are used by the template processor
+(specific templates may use additional options):
+
+[table Options used by the FileTemplate template processor
+    [[option][desctiption][valid values][default value]]
+    [[template][Template-specific script][valid filename][]]
+    [[erase][Determines whether the template processor should erase the destination
+    directory tree if it already exists][y/n]]
+]
+
+Options can be specified at command-line via [~option=value] arguments.  If an option
+is not specified, and it has no default value, the user will be prompted for the value.
+
+This is the output of a sample session:
+
+[pre
+
+>python make_template.py [*template=sandbox.py] [*library=my_library]
+/--------------------
+| Executing template file sandbox.py...
+/
+/--------------------
+| Processing Boost Sandbox template.
+/
+[*author: [~John Doe]]
+/--------------------
+| Examining the template project tree...
+/
+$template_library$
+$template_library$\boost
+$template_library$\boost\$template_library$
+$template_library$\libs
+$template_library$\libs\$template_library$
+$template_library$\libs\$template_library$\build
+$template_library$\libs\$template_library$\doc
+$template_library$\libs\$template_library$\doc\html
+$template_library$\libs\$template_library$\doc\html\images
+$template_library$\libs\$template_library$\example
+$template_library$\libs\$template_library$\src
+$template_library$\libs\$template_library$\test
+Directory my_library already exists.
+[*erase: Erase it (please make sure you want to erase the entire directory tree rooted at my_library)? \[y/n\] [~y]]
+/--------------------
+| Erasing...
+/
+/--------------------
+| Creating file tree from template...
+/
+my_library\boost
+my_library\libs
+my_library\boost\my_library
+my_library\libs\my_library
+my_library\libs\my_library\build
+my_library\libs\my_library\doc
+my_library\libs\my_library\example
+my_library\libs\my_library\src
+my_library\libs\my_library\test
+my_library\libs\my_library\doc\html
+my_library\libs\my_library\doc\html\images
+]
+[endsect]
+
+[section:substitutions Substitution templates and special templates]
+
+[h4 Substitution templates]
+
+Substitution templates are the simplest form of template customization.  For specified file
+extensions, the template processor will replace each occurence of a substitution template
+with the substituted text.  For some examples, see
+the [link filetemplate.sandbox.substitutions substitutions] of the sandbox template.
+
+Substitution templates are divided into two categories - /specific/ and /general/.
+Specific substitution templates are only applied to
+specific file extensions.  General substitution templates are applied to any file
+extension that has [*at least one] specific substitution defined.  Files with no
+specific substitution templates will be copied verbatim.
+
+[tip Substitutions are applied in the order they are specified in the template scripts, so
+substituted text for one substitution template can include substitution templates
+specified after it. For example, in the sandbox template
+$template\_cpp\_copyright$ expands into text which includes $template\_author$.]
+
+[h4 Special templates]
+
+There are also /special/ templates, which are also applied whenever substitution templates
+are applied (i.e., for file extensions with at least one specific extension defined).
+The FileTemplate processor uses one special template:
+
+[table Special templates used by the FileTemplate template processor
+    [[special template][desctiption]]
+    [[$template\_start$][Everything up to the line of the file containing
+    the first occurrence of this special template will be ignored.]]
+]
+
+[endsect]
+
+[section:reference Template object reference]
+The template object contains several functions which can be used from template
+scripts to customize template behavior.
+
+The following examples quickly illustrate some of the use:
+
+To get a user-specified option:
+
+    docs = template.options.get('docs')
+
+To get a user-specified option verified against a regular expression and with a default value:
+
+    template.options.get('docs', re.compile(r'(qb|qb\+doxyref|qb\+doxy)$'), 'qb+doxyref')
+
+To get a boolean (y/n) user specified option with a default value:
+
+    template.options.get_boolean('vc8ide', False):
+
+To set up a substitution template for file names:
+
+    template.name_replacement('$template_library$', library_name)
+
+To set up a specific substitution template:
+
+    template.content_replacement(['.hpp', '.cpp'], '$template_created$', '// Created in $template_year$')
+
+To set up a general substitution template:
+
+    template.all_content_replacement('$template_year$', str(time.localtime().tm_year))
+
+To ignore (not process) an entire subdirectory in the same directory as the script:
+
+    template.ignore_subdirectory('vc8ide')
+
+To ignore (not process) a file in the same directory as the script:
+
+    template.ignore_subfile('boostbook_doxygen.css')
+
+To submit python-generated file content from a python template file:
+
+    content="""
+    This is a script-generated file."""
+    content += """
+    Yes it is."""
+    
+    template.submit_content(content)
+
+[endsect]
+
+[section:changes Proposed changes]
+
+* template.all\_content\_replacement should become template.general\_content\_replacement
+
+* a =no-scripts= option should be introduced to disallow processing of
+in-template scripts (in case a template
+should be copied verbatim with minor processing to make another template)
+
+* Add `template.ignore_directory` and `template.ignore_file` functions
+which can ignore a file/directory located
+in a directory other than the same directory as the script.
+This allows templates configured in a more centralized way.
+
+* The =erase= option should require the user to type =erase= for the value
+instead of =y=, just to be safe.
+
+[endsect]
