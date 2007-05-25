@@ -32,5 +32,8 @@ project
   [ run boost_array.cpp   ]
   [ run boost_tuple.cpp ]
   [ run boost_variant.cpp ]
+  
+  // conflicts with stream operator already defined for iterator_range
+  //[ run boost_range.cpp ]
  ;
 }
