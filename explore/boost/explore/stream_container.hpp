@@ -234,6 +234,13 @@ namespace boost
         return stream_container(ostr, &a[0], &a[size]);
     }
 
+    // Boost.Range -- there is already a streaming operator defined, although it does not do what we want.
+    //template<typename Elem, typename Tr, typename Range>
+    //std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, boost::iterator_range<Range>& r)
+    //{
+    //    return stream_container(ostr, boost::begin(r), boost::end(r));
+    //}
+
     // function ptr for separator manipulator
     template<typename Elem, typename Tr>
     void setSeparatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
