@@ -227,12 +227,12 @@ namespace boost
         return stream_container(ostr, m.begin(), m.end(), stream_map_value());
     }
 
-    // stream c-array
-    template<typename Elem, typename Tr, typename T, std::size_t size>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, T (&a)[size])
-    {
-        return stream_container(ostr, &a[0], &a[size]);
-    }
+    // stream c-array - conflicts with char* streaming in VC7.1
+    //template<typename Elem, typename Tr, typename T, std::size_t size>
+    //std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, T (&a)[size])
+    //{
+    //    return stream_container(ostr, &a[0], &a[size]);
+    //}
 
     // Boost.Range -- there is already a streaming operator defined, although it does not do what we want.
     //template<typename Elem, typename Tr, typename Range>
