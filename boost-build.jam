@@ -1,17 +1,43 @@
-# Set the BOOST environment variable on your command-line or in the
-# environment to point at the root of your regular Boost installation.
-# Defaults to finding the boost installation in the same directory as
-# the directory containing this file.
-BOOST ?= $(.boost-build-file:D)/../boost ;
+# Copyright Rene Rivera 2007.
+#
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
 
-if --v2 in $(ARGV)
+# For instructions see Jamfile.v2, or "bjam --help".
+
+local rule if-has-file ( file + : dir * )
 {
-    JAMFILE = [Bb]uild.jam [Jj]amfile.v2 ;
-    BOOST_ROOT = $(BOOST) ;
-    boost-build $(BOOST)/tools/build/v2 ;
+    local result ;
+    if $(dir)
+    {
+        result = [ GLOB $(dir) : $(file) ] ;
+    }
+    return $(result[1]:P) ;
 }
-else
-{
-    BOOST_ROOT = $(.boost-build-file:D) $(BOOST) ;
-    boost-build $(BOOST)/tools/build/v1 ;
-}    
+
+#~ Attempts to find the Boost source tree...
+
+local boost-src = [ if-has-file configure :
+    [ MATCH --boost=(.*) : $(ARGV) ]
+    $(BOOST)
+    $(.boost-build-file:D)/../boost
+    ] ;
+
+#~ Attempts to find the Boost.Build files...
+
+local boost-build-src = [ if-has-file bootstrap.jam :
+    [ MATCH --boost-build=(.*) : $(ARGV) ]
+    $(BOOST_BUILD_PATH)
+    $(BOOST_BUILD)
+    $(boost-src)/tools/build/v2
+    ] ;
+
+#~ Set some common vars to refer to the Boost sources...
+
+BOOST ?= $(boost-src) ;
+BOOST_ROOT ?= $(boost-src) ;
+
+#~ And load up Boost.Build...
+
+boost-build $(boost-build-src) ;
