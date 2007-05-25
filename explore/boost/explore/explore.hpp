@@ -301,6 +301,11 @@ namespace explore {
 		>
 		static std::ostream &print_item( const item_type *item, std::ostream &stream )
         {
+            if( NULL == item )
+            {
+                return stream << "null"; 
+            }
+            
 			return print(*item, stream, format_type(), container_policy_type());
         }
 	};
