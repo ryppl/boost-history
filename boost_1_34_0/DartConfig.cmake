@@ -7,6 +7,9 @@ set(DROP_METHOD "xmlrpc")
 set(DROP_SITE "http://dart.resophonic.com:8081")
 set(DROP_LOCATION "boost_1_34_0")
 
+# no test may run longer than 3 minutes?  too loose?
+set(DART_TESTING_TIMEOUT 180)
+
 set(NOTES_DIR ${CMAKE_BINARY_DIR}/Testing/Notes)
 file(MAKE_DIRECTORY ${NOTES_DIR})
 
