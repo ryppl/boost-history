@@ -30,6 +30,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range/iterator.hpp>
+#include <boost/range/iterator_range.hpp>
 
 namespace explore {
 	using namespace boost::mpl;
@@ -349,6 +350,26 @@ namespace explore {
 	{
 		return print( item, stream, default_format(), default_container_policy());
 	}
+	
+	template< typename format_type,
+		typename container_policy_type ,
+		class InputIterator
+		>
+		std::ostream &print( InputIterator first,
+							 InputIterator last, 
+							 std::ostream &stream, 
+							 const format_type &format,
+							 const container_policy_type &policy)
+	{
+			return container_printer::print_item<format_type, container_policy_type>( boost::make_iterator_range(first, last), stream );
+	}
+	
+	template<class InputIterator>
+	std::ostream &print(InputIterator first, InputIterator last, std::ostream &stream = std::cout)
+	{
+		return print( first, last, stream, default_format(), default_container_policy());
+	}
+	
 
 // Danny, this doesn't appear to work. When I call print passing in a stringstream, this
 // is the function that gets called. When printing a streamed type, the type is always streamed
