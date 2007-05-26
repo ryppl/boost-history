@@ -1,0 +1,83 @@
+[/
+ / Copyright (c) 2007 Jeff Garland
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[library Boost.Explore
+    [quickbook 1.4]
+    [copyright 2007 Jeff Garland]
+    [purpose Library to output Collections]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [category template]
+    [category generic]
+    [last-revision $Date: 2007/05/27 15:50:13 $]
+]
+
+
+[/=============================================================================]
+
+Boost.Explore is a cross-platform C++ library for printing of containers.  
+
+
+[h2 Getting Started]
+
+Boost.explore is a library that provides for the output of data from containers
+or ranges.  
+
+The following are some simple usage examples:
+
+   //explore supports output for all stl container types
+   std::vector<int> vi += {1,2,3}; //boost assign!
+   std::cout << vi << std::endl;   //prints [1, 2, 3]
+   std::stringstream ss;
+   print(vi, ss);                  //prints [1, 2, 3]  
+   //lets do some containers in containers
+   std::vector<std::vector<int> > vvi;
+   vvi.push_back(vi);
+   vvi.push_back(vi);
+   std::cout << vi << std::endl;   //prints [[1, 2, 3], [1, 2, 3]]
+   std::map<std::string, int> si_map;
+   si_map["hello"] = 1;
+   si_map["world"] = 2;
+   std::cout << si_map << std::endl;   //prints [hello:1, world:2]
+   std::list<date> dl;                 //date from boost::gregorian
+   dl.push_back(date(2007, Jan, 1));
+   dl.push_back(date(2007, Jan, 3));
+   //printing of user defined types uses the types operator<< if available
+   std::cout << dl << std::endl;      //prints [2007-Jan-1, 2007-Jan-3] 
+   //how about some boost container types:
+   boost::array<std::string, 2> sa2;
+   sa2[0] = "one";
+   sa2[1] = "two";
+   
+
+
+The [link boost_explore.tutorial tutorial] shows more details on using explore.
+
+While explore is powerful and flexible, it is not infinitely flexible.  
+The reasons for this are discussed in the [link boost_explore.design design] 
+section.For very complex output custom methods or a template output system should 
+be considered.
+
+[include tutorial.qbk]
+[include dependencies_platforms.qbk]
+[include design.qbk]
+
+
+[h2 Acknowledgements]
+
+Most of the major concepts and interfaces for this library were developed
+at BoostCon 2007.  There were many participants in the 8:00 am sessions
+that developed the interfaces and concepts.  Notably Hartmut Kaiser,
+Joao ???, and Joel De Guzman for discussing Karma and doing some initial
+prototypes. 
+
+[/these sections t.b.d.]
+[/include requirements.qbk]
+[/include reference.qbk]

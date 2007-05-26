@@ -1,0 +1,41 @@
+[/
+ / Copyright (c) 2007 Jeff Garland (jeff at crystalclearsoftware dot com)
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section:tutorial Tutorial]
+
+[h2 Basic Container Printing]
+
+
+All of the explore library can be used by simply including the `"explore.hpp"` 
+header file.
+
+  ``''''''``#include <boost/explore.hpp>
+  ``''''''``using namespace boost::explore;
+
+
+More granular headers are also available under boost/explore.
+
+
+
+[h2 Customizing Delimiters]
+
+When printing a container explore users user several delimeters:
+
+* opening - printed at the start of the container default: '\['
+* closing - printed at the end of the container default: '\]'
+* delimiter - printed between each element default: ', '
+
+
+[h2 Printing of Contained Items]
+
+
+
+
+
+
+
+[endsect]

@@ -1,0 +1,108 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Boost.Explore</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.68.1">
+<link rel="start" href="index.html" title="Boost.Explore">
+<link rel="next" href="boost_explore/tutorial.html" title=" Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_explore/tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="chapter" lang="en">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="boost_explore"></a>Boost.Explore</h2></div>
+<div><p class="copyright">Copyright © 2007 Jeff Garland</p></div>
+<div><div class="legalnotice">
+<a name="id308141"></a><p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="boost_explore/tutorial.html"> Tutorial</a></span></dt>
+<dt><span class="section"><a href="boost_explore/dependencies_platforms.html"> Dependencies and Platforms</a></span></dt>
+<dt><span class="section"><a href="boost_explore/design.html"> Design Notes</a></span></dt>
+</dl>
+</div>
+<p>
+    Boost.Explore is a cross-platform C++ library for printing of containers.
+  </p>
+<a name="boost_explore..getting_started"></a><h2>
+<a name="id276942"></a>
+    Getting Started
+  </h2>
+<p>
+    Boost.explore is a library that provides for the output of data from containers
+    or ranges.
+  </p>
+<p>
+    The following are some simple usage examples:
+  </p>
+<pre class="programlisting">
+<span class="comment">//explore supports output for all stl container types
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span> <span class="special">+=</span> <span class="special">{</span><span class="number">1</span><span class="special">,</span><span class="number">2</span><span class="special">,</span><span class="number">3</span><span class="special">};</span> <span class="comment">//boost assign!
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">vi</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>   <span class="comment">//prints [1, 2, 3]
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span> <span class="identifier">ss</span><span class="special">;</span>
+<span class="identifier">print</span><span class="special">(</span><span class="identifier">vi</span><span class="special">,</span> <span class="identifier">ss</span><span class="special">);</span>                  <span class="comment">//prints [1, 2, 3]  
+</span><span class="comment">//lets do some containers in containers
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">vvi</span><span class="special">;</span>
+<span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">vi</span><span class="special">);</span>
+<span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">vi</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">vi</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>   <span class="comment">//prints [[1, 2, 3], [1, 2, 3]]
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">si_map</span><span class="special">;</span>
+<span class="identifier">si_map</span><span class="special">[</span><span class="string">"hello"</span><span class="special">]</span> <span class="special">=</span> <span class="number">1</span><span class="special">;</span>
+<span class="identifier">si_map</span><span class="special">[</span><span class="string">"world"</span><span class="special">]</span> <span class="special">=</span> <span class="number">2</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">si_map</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>   <span class="comment">//prints [hello:1, world:2]
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">date</span><span class="special">&gt;</span> <span class="identifier">dl</span><span class="special">;</span>                 <span class="comment">//date from boost::gregorian
+</span><span class="identifier">dl</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">date</span><span class="special">(</span><span class="number">2007</span><span class="special">,</span> <span class="identifier">Jan</span><span class="special">,</span> <span class="number">1</span><span class="special">));</span>
+<span class="identifier">dl</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">date</span><span class="special">(</span><span class="number">2007</span><span class="special">,</span> <span class="identifier">Jan</span><span class="special">,</span> <span class="number">3</span><span class="special">));</span>
+<span class="comment">//printing of user defined types uses the types operator&lt;&lt; if available
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">dl</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>      <span class="comment">//prints [2007-Jan-1, 2007-Jan-3] 
+</span><span class="comment">//how about some boost container types:
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="number">2</span><span class="special">&gt;</span> <span class="identifier">sa2</span><span class="special">;</span>
+<span class="identifier">sa2</span><span class="special">[</span><span class="number">0</span><span class="special">]</span> <span class="special">=</span> <span class="string">"one"</span><span class="special">;</span>
+<span class="identifier">sa2</span><span class="special">[</span><span class="number">1</span><span class="special">]</span> <span class="special">=</span> <span class="string">"two"</span><span class="special">;</span>
+</pre>
+<p>
+    The <a href="boost_explore/tutorial.html" title=" Tutorial">tutorial</a> shows more details
+    on using explore.
+  </p>
+<p>
+    While explore is powerful and flexible, it is not infinitely flexible. The reasons
+    for this are discussed in the <a href="boost_explore/design.html" title=" Design Notes">design</a>
+    section.For very complex output custom methods or a template output system should
+    be considered.
+  </p>
+<a name="boost_explore..acknowledgements"></a><h2>
+<a name="id317776"></a>
+    Acknowledgements
+  </h2>
+<p>
+    Most of the major concepts and interfaces for this library were developed at
+    BoostCon 2007. There were many participants in the 8:00 am sessions that developed
+    the interfaces and concepts. Notably Hartmut Kaiser, Joao ???, and Joel De Guzman
+    for discussing Karma and doing some initial prototypes.
+  </p>
+</div>
+<table width="100%"><tr>
+<td align="left"><small><p>Last revised: May 27, 2007 at 15:50:13 GMT</p></small></td>
+<td align="right"><small></small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="boost_explore/tutorial.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+</body>
+</html>
