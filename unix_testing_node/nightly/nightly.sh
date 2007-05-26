@@ -12,7 +12,9 @@ cd $topdir
 topdir=`pwd`
 
 cd $topdir/debug
-ctest -S nightly.cmake -V
+CXX="ccache gcc" ctest -S nightly.cmake -V
 cd $topdir/release
-ctest -S nightly.cmake -V
+CXX="ccache gcc" ctest -S nightly.cmake -V
+
+
 
