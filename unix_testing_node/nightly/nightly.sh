@@ -1,9 +1,9 @@
 #!/bin/sh -x
 
-if [[ `svn status $0` ]] 
+if [[ -z "$UPDATE_DONE" ]] 
 then
     svn update $0
-    $0
+    UPDATE_DONE=YES $0
     exit
 fi
 
