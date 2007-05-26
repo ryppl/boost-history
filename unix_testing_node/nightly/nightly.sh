@@ -19,9 +19,9 @@ cd $topdir
 topdir=`pwd`
 
 cd $topdir/debug
-CXX="ccache $COMPILER" ctest -S nightly.cmake -V
+CXX="$COMPILER" ctest -S nightly.cmake -V
 cd $topdir/release
-CXX="ccache $COMPILER" ctest -S nightly.cmake -V
+CXX="$COMPILER" ctest -S nightly.cmake -V
 
 
 
