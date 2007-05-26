@@ -19,7 +19,7 @@ namespace explore
 {
     // forward declaration for deletion callback
     template<typename T>
-    T* get_stream_state(std::ios_base& stream, bool create);
+    T* get_stream_state(std::ios_base& stream, bool create = true);
 
     namespace detail
     {
