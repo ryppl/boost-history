@@ -176,13 +176,19 @@ class Template(object):
     def replace_name(self, name):
         return self.name_replacements.replace(name)
 
+    def destination_name(self, name):
+        if name.startswith(self.template_root):
+            return self.name_replacements.replace(name[len(self.template_root):])
+        else:
+            return self.name_replacements.replace(name)        
+
     def replace_content(self, name, content):
         return self.content_replacements.replace(name, content)
 
     def examine(self, directory):
-        file_list = list()
-        directory_list = list()
-        python_list = list()
+        self.__file_list__ = list()
+        self.__directory_list__ = list()
+        self.__python_list__ = list()
 
         for root, dirs, files in os.walk(directory):
             print root
@@ -203,14 +209,14 @@ class Template(object):
                         sys.path.remove(os.path.abspath(root))
                         mod.do_smt()
                     elif content.startswith('# template file'):
-                        python_list.append(pathname[0:len(pathname)-3])
+                        self.__python_list__.append(pathname[0:len(pathname)-3])
                     else:
-                        file_list.append(pathname)
+                        self.__file_list__.append(pathname)
                 else:
-                    file_list.append(pathname)
+                    self.__file_list__.append(pathname)
 
             for name in self.__files_clear__:
-                file_list.remove(os.path.join(root, name))
+                self.__file_list__.remove(os.path.join(root, name))
 
             for name in dirs:
                 if name.startswith('.'):
@@ -218,17 +224,33 @@ class Template(object):
             for name in self.__dirs_clear__:
                 dirs.remove(name)
             for name in dirs:
-                directory_list.append( (os.path.join(root, name)) )
+                self.__directory_list__.append( (os.path.join(root, name)) )
             
-
-        return directory_list, file_list, python_list
+        return self.__directory_list__, self.__file_list__, self.__python_list__
 
     def ignore_subdirectory(self, name):
         self.__dirs_clear__.append(name)
 
     def ignore_subfile(self, name):
         self.__files_clear__.append(name)
-        
+
+    def __append_resulting__(self, resulting_list, item_list, prefix):
+        for name in item_list:
+            if name.startswith(prefix):
+                resulting_list.append(item)
+        return resulting_list
+
+    def resulting_directory_list(prefix):
+        new_prefix = self.replace_name(prefix)
+        result = list()
+        return self.__append_resulting__(result, self.__directory_list__, new_prefix)
+
+    def resulting_file_list(prefix):
+        new_prefix = self.replace_name(prefix)
+        result = list()
+        self.__append_resulting__(result, self.__file_list__, new_prefix)
+        return self.__append_resulting(result, self.__python_list__, new_prefix)
+
 def set_content(name, content):
     fout = open(name, "w")
     fout.write(content)
@@ -249,9 +271,9 @@ execfile(template_file)
 # scripts.
 template.log_message('Examining the template project tree...')
 
-directory_list, file_list, python_list = template.examine(template_dir)
+directory_list, file_list, python_list = template.examine(template.template_root + template.template_dir)
 
-project_dir = template.replace_name(template_dir)
+project_dir = template.replace_name(template.template_dir)
 
 if os.path.exists(project_dir):
     print 'Directory ' + project_dir + ' already exists.'
@@ -271,17 +293,17 @@ template.log_message('Creating file tree from template...')
 os.mkdir(project_dir)
 
 for name in directory_list:
-    new_name = template.replace_name(name)
+    new_name = template.destination_name(name)
     print new_name
     os.mkdir(new_name)
 
 for name in python_list:
-    new_name = template.replace_name(name)
+    new_name = template.destination_name(name)
     content = template.process_content(name, True)
     set_content(new_name, content)
 
 for name in file_list:
-    new_name = template.replace_name(name)
+    new_name = template.destination_name(name)
     content = template.process_content(name)
     if content:
         set_content(new_name, content)
