@@ -6,9 +6,9 @@ topdir=`pwd`
 while true
 do
   cd $topdir/debug/1.34.0/build
-  CXX="ccache gcc" ctest -D Continuous
+  ctest -D Continuous
   cd $topdir/release/1.34.0/build
-  CXX="ccache gcc" ctest -D Continuous
+  ctest -D Continuous
   sleep 180  # wait three minutes
 done
 
