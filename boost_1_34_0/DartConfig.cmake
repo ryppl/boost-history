@@ -17,7 +17,8 @@ exec_program(${CMAKE_CXX_COMPILER} --version > ${NOTES_DIR}/compiler-version.txt
 
 exec_program(svn ARGS info ${CMAKE_SOURCE_DIR} | grep Revision | cut -c 11- OUTPUT_VARIABLE SVN_REVISION)
 
-exec_program(${CMAKE_C_COMPILER} ARGS -dumpversion OUTPUT_VARIABLE COMPILER_VERSION)
+message(${CMAKE_CXX_COMPILER} ARGS ${CMAKE_CXX_COMPILER_ARG1} -dumpversion OUTPUT_VARIABLE COMPILER_VERSION)
+exec_program(${CMAKE_CXX_COMPILER} ARGS ${CMAKE_CXX_COMPILER_ARG1} -dumpversion OUTPUT_VARIABLE COMPILER_VERSION)
 exec_program(uname ARGS -s OUTPUT_VARIABLE OSTYPE)
 exec_program(uname ARGS -r OUTPUT_VARIABLE OSVERSION)
 exec_program(uname ARGS -p OUTPUT_VARIABLE ARCH)
