@@ -9,6 +9,7 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
+#include <boost/range/iterator_range.hpp>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -35,6 +36,16 @@ BOOST_AUTO_TEST_CASE( basic_vector_print_test )
     vi.push_back(3);
     explore::print(vi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+	
+    str_out.str("");
+	
+    explore::print(vi.begin(), ++(++vi.begin()), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+	
+    //str_out.str("");
+	
+    //explore::print(boost::make_iterator_range(vi.begin(), ++(++vi.begin())), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
 BOOST_AUTO_TEST_CASE( basic_vector_stream_test )
@@ -58,6 +69,16 @@ BOOST_AUTO_TEST_CASE( basic_vector_stream_test )
     vi.push_back(3);
     str_out << vi;
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+	
+    //str_out.str("");
+	
+    //explore::print(vi.begin(), ++(++vi.begin()), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+	
+    //str_out.str("");
+	
+    //explore::print(boost::make_iterator_range(vi.begin(), ++(++vi.begin())), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_vector_print_test )
@@ -85,6 +106,16 @@ BOOST_AUTO_TEST_CASE( vector_in_vector_print_test )
     vvi.push_back(vi);
     explore::print(vvi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
+	
+    str_out.str("");
+	
+    explore::print(vvi.begin(), ++(++vvi.begin()), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+	
+    //str_out.str("");
+	
+    //explore::print(boost::make_iterator_range(vvi.begin(), ++(++vvi.begin())), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_vector_stream_test )
@@ -113,6 +144,16 @@ BOOST_AUTO_TEST_CASE( vector_in_vector_stream_test )
     vvi.push_back(vi);
     str_out << vvi;
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
+	
+    //str_out.str("");
+	
+    //explore::print(vvi.begin(), ++(++vvi.begin()), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+	
+    //str_out.str("");
+	
+    //explore::print(boost::make_iterator_range(vvi.begin(), ++(++vvi.begin())), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
 
 // This test shows that you can use a string to cause the same outputs
