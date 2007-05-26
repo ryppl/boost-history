@@ -49,7 +49,7 @@ namespace explore
     // already exist, it will return 0.
     // T: the user-defined state class.  Must be default constructible.
     template<typename T>
-    T* get_stream_state(std::ios_base& stream, bool create = true)
+    T* get_stream_state(std::ios_base& stream, bool create)
     {
         // grab reserved index
         int index = detail::get_stream_state_index<T>(stream);
