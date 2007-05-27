@@ -34,8 +34,7 @@ project
   [ run boost_tuple.cpp ]
   [ run boost_variant.cpp ]
   
-  # conflicts with stream operator already defined for iterator_range
-  #[ run boost_range.cpp ]
+  [ run boost_range.cpp ]
   
   [ run custom_format_simple.cpp ]
  ;
