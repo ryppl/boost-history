@@ -16,7 +16,7 @@
 #include <boost/functional/detail/container_fwd.hpp>
 #include <boost/array.hpp>
 
-namespace boost
+namespace explore
 {
     namespace detail 
     {
@@ -162,54 +162,51 @@ namespace boost
         // redirect with "normal" streaming.
         return stream_container(ostr, first, last, stream_normal_value());
     }
+}
 
+namespace std
+{
     // stream vector<T>
     template<typename Elem, typename Tr, typename T>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::vector<T>& v)
     {
-        return stream_container(ostr, v.begin(), v.end());
+        return explore::stream_container(ostr, v.begin(), v.end());
     }
 
     // stream deque<T>
     template<typename Elem, typename Tr, typename T, typename Allocator>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::deque<T, Allocator>& d)
     {
-        return stream_container(ostr, d.begin(), d.end());
+        return explore::stream_container(ostr, d.begin(), d.end());
     }
 
     // stream set<T>
     template<typename Elem, typename Tr, typename T, typename Compare, typename Alloc>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::set<T, Compare, Alloc>& s)
     {
-        return stream_container(ostr, s.begin(), s.end());
+        return explore::stream_container(ostr, s.begin(), s.end());
     }
 
     // stream multiset<T>
     template<typename Elem, typename Tr, typename T, typename Compare, typename Allocator>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::multiset<T, Compare, Allocator>& s)
     {
-        return stream_container(ostr, s.begin(), s.end());
+        return explore::stream_container(ostr, s.begin(), s.end());
     }
 
     // stream list<T>
     template<typename Elem, typename Tr, typename T, typename Allocator>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::list<T, Allocator>& l)
     {
-        return stream_container(ostr, l.begin(), l.end());
-    }
-
-    // stream array<T>
-    template<typename Elem, typename Tr, typename T, std::size_t N>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const boost::array<T, N>& a)
-    {
-        return stream_container(ostr, a.begin(), a.end());
+        return explore::stream_container(ostr, l.begin(), l.end());
     }
 
     // stream pair<T1, T2>
     template<typename Elem, typename Tr, typename T1, typename T2>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::pair<T1, T2>& p)
     {
-        container_stream_state<Elem, Tr>* state = explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr);
+        using namespace explore;
+        container_stream_state<Elem, Tr>* state = get_stream_state<container_stream_state<Elem, Tr> >(ostr);
         return ostr << state->start << p.first << state->separator << p.second << state->end;
     }
 
@@ -217,6 +214,7 @@ namespace boost
     template<typename Elem, typename Tr, typename K, typename T, typename Compare, typename Allocator>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::map<K, T, Compare, Allocator>& m)
     {
+        using namespace explore;
         return stream_container(ostr, m.begin(), m.end(), stream_map_value());
     }
 
@@ -224,22 +222,26 @@ namespace boost
     template<typename Elem, typename Tr, typename K, typename T, typename Compare, typename Allocator>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::multimap<K, T, Compare, Allocator>& m)
     {
+        using namespace explore;
         return stream_container(ostr, m.begin(), m.end(), stream_map_value());
     }
+}
 
-    // stream c-array - conflicts with char* streaming in VC7.1
-    //template<typename Elem, typename Tr, typename T, std::size_t size>
-    //std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, T (&a)[size])
-    //{
-    //    return stream_container(ostr, &a[0], &a[size]);
-    //}
+namespace explore
+{
+#   if !BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+    template<typename Elem, typename Tr, typename T, std::size_t size>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, T (&a)[size])
+    {
+        return stream_container(ostr, &a[0], &a[size]);
+    }
 
-    // Boost.Range -- there is already a streaming operator defined, although it does not do what we want.
-    //template<typename Elem, typename Tr, typename Range>
-    //std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, boost::iterator_range<Range>& r)
-    //{
-    //    return stream_container(ostr, boost::begin(r), boost::end(r));
-    //}
+    template<typename Elem, typename Tr, std::size_t size>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const Elem* s)
+    {
+        return stream_container(ostr, &s[0], &s[strlen(s)]);
+    }
+#   endif
 
     // function ptr for separator manipulator
     template<typename Elem, typename Tr>
@@ -298,6 +300,16 @@ namespace boost
             << setStart("<ul>\n   <li>")
             << setSeparator("\n   <li>")
             << setEnd ("\n</ul>");
+    }
+}
+
+namespace boost
+{
+    // stream boost::array<T>
+    template<typename Elem, typename Tr, typename T, std::size_t N>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const boost::array<T, N>& a)
+    {
+        return explore::stream_container(ostr, a.begin(), a.end());
     }
 }
 
