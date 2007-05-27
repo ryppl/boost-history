@@ -11,7 +11,6 @@ macro(boost_configure what var)
   file(READ ${CMAKE_CURRENT_SOURCE_DIR}/${what}.ipp SRC)
   check_cxx_source_compiles("${SRC}  int main(int, char**) { }" tmp)
   set(${var} ${tmp})
-  message(STATUS "   ${var}=${tmp}")
 endmacro(boost_configure what)
 
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/main.cpp "int main(int, char**) { }")
@@ -28,7 +27,9 @@ boost_configure(boost_has_pthread_yield BOOST_HAS_PTHREAD_YIELD)
 
 set(vars "BOOST_HAS_PTHREAD_YIELD")
 foreach(var ${vars})
-  add_definitions(-D${var}=${${var}})
+  if(${var})
+    add_definitions(-D${var})
+  endif(${var})
 endforeach(var ${vars})
 
 boost_test_run(config_info)
