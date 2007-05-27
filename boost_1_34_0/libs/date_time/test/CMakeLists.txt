@@ -121,9 +121,13 @@ date_time_static_test(local_time testcustom_time_zone)
 date_time_static_test(local_time testposix_time_zone)
 date_time_static_test(local_time testwcustom_time_zone)
 date_time_static_test(local_time testwposix_time_zone)
+
+# we have to copy these into the binary dir because to make the 
+# paths inside the tests match
 if (NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   FILE(MAKE_DIRECTORY "${CMAKE_BINARY_DIR}/libs/date_time/data")
   execute_process(COMMAND cmake -E copy "${CMAKE_SOURCE_DIR}/libs/date_time/data/date_time_zonespec.csv" "${CMAKE_BINARY_DIR}/libs/date_time/data")
+  execute_process(COMMAND cmake -E copy "${CMAKE_SOURCE_DIR}/libs/date_time/test/local_time/poorly_formed_zonespec.csv" "${CMAKE_BINARY_DIR}/libs/date_time/test/local_time")
 endif (NOT ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 
 date_time_static_test(local_time testtz_database)
