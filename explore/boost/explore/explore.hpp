@@ -29,7 +29,8 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/foreach.hpp>
-#include <boost/range/iterator.hpp>
+#include <boost/range/const_iterator.hpp>
+#include <boost/range/functions.hpp>
 #include <boost/range/iterator_range.hpp>
 
 namespace explore {
@@ -105,7 +106,8 @@ namespace explore {
     struct print_as_container< T[size]> : true_ {};
  
     //
-    // is_map metafunction
+    // is_map metafunction, probably needs to be exteded for 
+    // hash_maps etc.
     //
     template< typename T>
     struct is_map : false_ {};
@@ -214,7 +216,6 @@ namespace explore {
 	struct default_format : boost::mpl::list< default_range_format_selector> {};
 
 
-
 	//
 	// the print_item methods of this class are called whenever print has deduced that
 	// the item to print is some container-type
@@ -237,17 +238,24 @@ namespace explore {
 			// the formatter in it's turn tells us what the format for the next depth in the tree will be
 			typedef BOOST_DEDUCED_TYPENAME formatter::template next_format< format_type>::type next_format_type;
 
+                       
 			stream << formatter::opening();
 			bool printing_first_item = true;
 
-            BOOST_FOREACH( typename boost::iterator_value< typename boost::range_iterator< item_type>::type >::type const &element, item)
+            typedef BOOST_DEDUCED_TYPENAME boost::range_const_iterator< const item_type>::type iterator_type;
+            typedef BOOST_DEDUCED_TYPENAME boost::iterator_value< iterator_type>::type value_type;
+
+            for ( 
+                iterator_type i = boost::const_begin( item);
+                i != boost::const_end( item);
+                ++i)
 			{
 				if (!printing_first_item)
 				{
 					stream << formatter::delimiter();
 				}
 				
-				print( element, stream, next_format_type(), container_policy_type());
+				print( *i, stream, next_format_type(), container_policy_type());
 				printing_first_item = false;
 			}
 			stream << formatter::closing();
