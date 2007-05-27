@@ -15,6 +15,7 @@
 #include <ostream>
 #include <boost/functional/detail/container_fwd.hpp>
 #include <boost/array.hpp>
+#include <boost/range/iterator_range.hpp>
 
 // generate string init functions for both char and wchar_t types
 #define BOOST_EXPLORE_INIT_STRING(name, str)                             \
@@ -96,6 +97,15 @@ namespace explore
         {
             explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_end = end;
         }
+
+        // used to work around some problems with overriding for operator<<, in particular where
+        // there already exists such an operator that does not do what we want.
+        template<typename T>
+        struct iterator_range_wrapper
+        {
+            iterator_range_wrapper(const boost::iterator_range<T>& ir) : t(ir) {}
+            const boost::iterator_range<T>& t;
+        };
     }
 
     // A simple collection of additional stream state
@@ -178,6 +188,12 @@ namespace explore
         // redirect with "normal" streaming.
         return stream_container(ostr, first, last, stream_normal_value());
     }
+
+    template<typename T>
+    detail::iterator_range_wrapper<T> as_container(const boost::iterator_range<T>& ir)
+    {
+        return detail::iterator_range_wrapper<T>(ir);
+    }
 }
 
 namespace std
@@ -258,6 +274,14 @@ namespace explore
         return stream_container(ostr, &s[0], &s[strlen(s)]);
     }
 #   endif
+
+    // stream boost::iterator_range
+    template<typename Elem, typename Tr, typename T>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, 
+    explore::detail::iterator_range_wrapper<T>& r)
+    {
+        return explore::stream_container(ostr, r.t.begin(), r.t.end());
+    }
 
     // manipulator
     template<typename Elem>
