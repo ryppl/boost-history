@@ -14,6 +14,7 @@
 // ***************************************************************************
 
 #include <cassert>
+#include <stdio.h>
 
 int cpp_main( int, char *[] )  // note the name
 {
@@ -22,7 +23,7 @@ int cpp_main( int, char *[] )  // note the name
   assert( div != 0 );
 
 #if NDEBUG
-  printf("assert check turned off under NDEBUG");
+  printf("assert check turned off under NDEBUG\n");
   return 1;
 #endif
 
