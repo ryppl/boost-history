@@ -7,18 +7,43 @@
 # Use, modification and distribution are subject to the 
 # Boost Software License, Version 1.0. (See accompanying file 
 # LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+macro(boost_configure what var)
+  file(READ ${CMAKE_CURRENT_SOURCE_DIR}/${what}.ipp SRC)
+  check_cxx_source_compiles("${SRC}  int main(int, char**) { }" tmp)
+  set(${var} ${tmp})
+  message(STATUS "   ${var}=${tmp}")
+endmacro(boost_configure what)
+
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/main.cpp "int main(int, char**) { }")
+
+# 
+# it would seem a lot easier to do this kind of thing here and write a config.h at build time
+# rather than checking all this stuff in 
+#
+
+boost_configure(boost_has_pthread_yield BOOST_HAS_PTHREAD_YIELD)
+# boost_configure(boost_has_nanosleep BOOST_HAS_NANOSLEEP)
+# boost_configure(boost_has_pthread_ma_st BOOST_HAS_PTHREAD_MUTEXATTR_SETTYPE)
+# boost_configure(boost_no_ded_typename BOOST_DEDUCED_TYPENAME)
+
+set(vars "BOOST_HAS_PTHREAD_YIELD")
+foreach(var ${vars})
+  add_definitions(-D${var}=${${var}})
+endforeach(var ${vars})
+
 boost_test_run(config_info)
 boost_test_run(math_info)
 
+
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-  boost_test_run(config_test LIBRARIES pthread rt)
-  boost_test_run(has_clock_gettime_pass LIBRARIES pthread rt)
-  boost_test_run(has_pthread_ma_st_pass LIBRARIES pthread rt)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Linux")
-  boost_test_run(config_test)
-  boost_test_run(has_clock_gettime_pass)
-  boost_test_run(has_pthread_ma_st_pass)
+  set(threadlibs "LIBRARIES;pthread;rt")
 endif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+
+set(tests_need_threadlibs config_test has_clock_gettime_pass has_pthread_ma_st_pass has_pthread_yield_pass)
+foreach(test ${tests_need_threadlibs})
+  boost_test_run(${test} ${threadlibs})
+endforeach(test ${tests_need_threadlibs})
+
 
 boost_test_run(limits_test LIBRARIES boost_test_exec_monitor-static)
 boost_test_run(abi_test SOURCES abi/abi_test.cpp abi/main.cpp)
@@ -58,7 +83,6 @@ boost_test_run(has_pthread_delay_np_pass)
 boost_test_compile_fail(has_pthread_delay_np_fail)
 
 boost_test_compile_fail(has_pthread_ma_st_fail)
-boost_test_run(has_pthread_yield_pass)
 boost_test_compile_fail(has_pthread_yield_fail)
 boost_test_run(has_pthreads_pass)
 boost_test_compile_fail(has_pthreads_fail)
