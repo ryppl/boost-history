@@ -16,54 +16,22 @@
 #include <boost/functional/detail/container_fwd.hpp>
 #include <boost/array.hpp>
 
+// generate string init functions for both char and wchar_t types
+#define BOOST_EXPLORE_INIT_STRING(name, str)                             \
+template<typename charType> std::basic_string<charType> init_##name();   \
+template<> std::basic_string<char> init_##name<char>() { return (str); } \
+template<> std::basic_string<wchar_t> init_##name<wchar_t>() { return L##str; }
+
 namespace explore
 {
     namespace detail 
     {
-        template<typename charType>
-        std::basic_string<charType> init_separator();
-
-        template<>
-        std::basic_string<char> init_separator<char>()
-        {
-            return ", ";
-        }
-
-        template<>
-        std::basic_string<wchar_t> init_separator<wchar_t>()
-        {
-            return L", ";
-        }
-
-        template<typename charType>
-        std::basic_string<charType> init_start();
-
-        template<>
-        std::basic_string<char> init_start<char>()
-        {
-            return "[";
-        }
-
-        template<>
-        std::basic_string<wchar_t> init_start<wchar_t>()
-        {
-            return L"[";
-        }
-
-        template<typename charType>
-        std::basic_string<charType> init_end();
-
-        template<>
-        std::basic_string<char> init_end<char>()
-        {
-            return "]";
-        }
-
-        template<>
-        std::basic_string<wchar_t> init_end<wchar_t>()
-        {
-            return L"]";
-        }
+        BOOST_EXPLORE_INIT_STRING(separator, ", ")
+        BOOST_EXPLORE_INIT_STRING(start, "[")
+        BOOST_EXPLORE_INIT_STRING(end, "]")
+        BOOST_EXPLORE_INIT_STRING(assoc_separator, ":")
+        BOOST_EXPLORE_INIT_STRING(assoc_start, "")
+        BOOST_EXPLORE_INIT_STRING(assoc_end, "")
     }
 
     // A simple collection of additional stream state
@@ -84,11 +52,17 @@ namespace explore
             separator = detail::init_separator<El>();
             start = detail::init_start<El>();
             end = detail::init_end<El>();
+            assoc_separator = detail::init_assoc_separator<El>();
+            assoc_start = detail::init_assoc_start<El>();
+            assoc_end = detail::init_assoc_end<El>();
         }
 
         str_typ separator;
         str_typ start;
         str_typ end;
+        str_typ assoc_separator;
+        str_typ assoc_start;
+        str_typ assoc_end;
     };
 
     // manipulator function wrapper for 1 char/wchar_t argument.  When streamed, will run manipulator
@@ -116,7 +90,7 @@ namespace explore
     struct stream_normal_value
     {
         template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val)
+        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem, Tr>*)
         {
             ostr << val;
         }
@@ -126,9 +100,9 @@ namespace explore
     struct stream_map_value
     {
         template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val)
+        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem, Tr>* state)
         {
-            ostr << val.first << ":" << val.second;
+            ostr << state->assoc_start << val.first << state->assoc_separator << val.second << state->assoc_end;
         }
     };
 
@@ -144,7 +118,7 @@ namespace explore
         while( first != last )
         {
             // value
-            f(ostr, *first);
+            f(ostr, *first, state);
             if( ++first != last )
             {
                 // separation delimiter
@@ -285,11 +259,54 @@ namespace explore
         return manipfunc<Elem>(&setEndFn, end);
     }
 
+    // function ptr for associative separator manipulator
+    template<typename Elem, typename Tr>
+    void setAssocSeparatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
+    {
+        explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_separator = sep;
+    }
+
+    // manipulator
+    template<typename Elem>
+    manipfunc<Elem> setAssocSeparator(const Elem* sep)
+    {
+        return manipfunc<Elem>(&setAssocSeparatorFn, sep);
+    }
+
+    // function ptr for associative start manipulator
+    template<typename Elem, typename Tr>
+    void setAssocStartFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* start)
+    {
+        explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_start = start;
+    }
+
+    // manipulator
+    template<typename Elem>
+    manipfunc<Elem> setAssocStart(const Elem* start)
+    {
+        return manipfunc<Elem>(&setAssocStartFn, start);
+    }
+
+    // function ptr for associative end manipulator
+    template<typename Elem, typename Tr>
+    void setAssocEndFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* end)
+    {
+        explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_end = end;
+    }
+
+    // manipulator
+    template<typename Elem>
+    manipfunc<Elem> setAssocEnd(const Elem* end)
+    {
+        return manipfunc<Elem>(&setAssocEndFn, end);
+    }
+
     // manipulator
     template<typename Elem, typename Tr>
     std::basic_ostream<Elem, Tr>& format_normal(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return ostr << setStart("[") << setSeparator(", ") << setEnd("]");
+        return ostr << setStart("[") << setSeparator(", ") << setEnd("]")
+                    << setAssocSeparator(":");
     }
 
     // manipulator
