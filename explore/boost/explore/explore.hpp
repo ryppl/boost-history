@@ -33,6 +33,7 @@
 #include <boost/range/functions.hpp>
 #include <boost/range/iterator_range.hpp>
 
+
 namespace explore {
 	using namespace boost::mpl;
 
@@ -61,31 +62,8 @@ namespace explore {
 		{
 		};
 
-        //
-        // helper stuff for the has_iterator_value metafunction
-        struct large_type
-        {
-            char member[100];
-        };
-
-        template< typename T>
-            struct AlmostAnyTemplate
-            {
-                typedef large_type type;
-            };
-
-        template< typename T>
-            typename boost::range_iterator< T>::type
-            has_iterator_value_f( T*);
-
-        char has_iterator_value_f( void *);
-
-        template< typename T>
-        struct has_iterator_value : bool_< sizeof( has_iterator_value_f( (T*)0)) != sizeof( char)> {};
 	};
 
-    template <typename T>
-    struct has_iterator_value: detail::has_iterator_value< T> {};
 
 	template< typename T>
 	struct is_streamable : detail::is_streamable<T> {};
@@ -99,6 +77,11 @@ namespace explore {
 	struct print_as_container : not_< is_streamable< T> > {};
 
 
+    // 
+    // Now follow a list exceptions that we want to print using our own functions
+    // instead of the provided operator<< for those types.
+    //
+
     // treat arrays as containers even though they are streamable
     // (normally they are streamed as pointer-to-void)
     //
@@ -106,8 +89,19 @@ namespace explore {
     struct print_as_container< T[size]> : true_ {};
  
     //
-    // is_map metafunction, probably needs to be exteded for 
+    // use our own implementation of streaming instead of the one 
+    // provided for iterator range.
+    //
+    template< typename T>
+    struct print_as_container< boost::iterator_range<T> > : true_ {};
+
+
+    //
+    // is_map metafunction, probably needs to be extended for 
     // hash_maps etc.
+    // explore expects any type T for which is_map<T> is true_ to 
+    // have std::pair as value_type and will adapt the default formatting of
+    // those pairs.
     //
     template< typename T>
     struct is_map : false_ {};
@@ -130,6 +124,13 @@ namespace explore {
 		template< typename T>
 		struct print_as_container : explore::print_as_container<T> {};
 	};
+
+    //
+    // Meta functions that are used by the default implementation of format
+    // These mainly deal with the fact that a format is a sequence of range
+    // format selector types and that we want to re-use the last element of that
+    // range when there are no other elements left.
+    //
 
 	//
 	// metafunction that removes the first element of a sequence unless that would
@@ -162,9 +163,16 @@ namespace explore {
 	{
 		typedef char char_;
 
+        //
+        // not used currently.
 		static char_ *header() { return "";}
 		static char_ *footer() { return "";}
 
+        //
+        // default implementation of the next_format
+        // meta function.
+        // This defines how the format for the next recursion level is 
+        // chosen.
 		template< typename sequence_type>
 		struct next_format : pop_front_if< sequence_type> {};
 	};
@@ -215,6 +223,74 @@ namespace explore {
 
 	struct default_format : boost::mpl::list< default_range_format_selector> {};
 
+    //
+    // Several container printer overloads.
+    //
+    template< typename format_type,
+			    typename container_policy_type,
+			    typename item_type
+    >
+    std::ostream &print_container( const item_type &item, std::ostream &stream )
+    {
+	    // the first element of the format sequence is our current format-selector
+	    typedef BOOST_DEDUCED_TYPENAME front<format_type>::type format_selector;
+
+	    // the format-selector gives us a formatter, based on the type of the thing we need to format
+	    typedef BOOST_DEDUCED_TYPENAME format_selector::template range_format<item_type>::type formatter;
+
+	    // the formatter in it's turn tells us what the format for the next depth in the tree will be
+	    typedef BOOST_DEDUCED_TYPENAME formatter::template next_format< format_type>::type next_format_type;
+
+                    
+	    stream << formatter::opening();
+	    bool printing_first_item = true;
+
+        typedef BOOST_DEDUCED_TYPENAME boost::range_const_iterator< const item_type>::type iterator_type;
+        typedef BOOST_DEDUCED_TYPENAME boost::iterator_value< iterator_type>::type value_type;
+
+        for ( 
+            iterator_type i = boost::const_begin( item);
+            i != boost::const_end( item);
+            ++i)
+	    {
+		    if (!printing_first_item)
+		    {
+			    stream << formatter::delimiter();
+		    }
+    		
+		    print( *i, stream, next_format_type(), container_policy_type());
+		    printing_first_item = false;
+	    }
+	    stream << formatter::closing();
+
+	    return stream;
+    }
+
+    // TODO: generalize for tuples
+    template< typename format_type,
+			    typename container_policy_type,
+			    typename F,
+			    typename S
+    >
+    std::ostream &print_container( const std::pair<F,S> &item, std::ostream &stream )
+    {
+	    typedef std::pair<F,S> item_type;
+
+	    // the first element of the format sequence is our current format-selector
+	    typedef BOOST_DEDUCED_TYPENAME front<format_type>::type format_selector;
+
+	    // the format-selector gives us a formatter, based on the type of the thing we need to format
+	    typedef BOOST_DEDUCED_TYPENAME format_selector:: template range_format<item_type>::type formatter;
+
+	    // the formatter in it's turn tells us what the format for the next depth in the tree will be
+	    typedef BOOST_DEDUCED_TYPENAME formatter:: template next_format< format_type>::type next_format_type;
+
+	    stream << formatter::opening();
+	    print( item.first, stream, next_format_type(), container_policy_type());
+	    stream << formatter::delimiter();
+	    print( item.second, stream, next_format_type(), container_policy_type());
+	    return stream << formatter::closing();
+    }
 
 	//
 	// the print_item methods of this class are called whenever print has deduced that
@@ -222,84 +298,17 @@ namespace explore {
 	//
 	struct container_printer
 	{
-		template< typename format_type,
-				  typename container_policy_type,
-				  typename item_type
-		>
-        // TODO: limit this overload to item_types that fit the range concept. I wish there was an is_range< > metafunction.
-         static std::ostream &print_item( const item_type &item, std::ostream &stream )
-		{
-			// the first element of the format sequence is our current format-selector
-			typedef BOOST_DEDUCED_TYPENAME front<format_type>::type format_selector;
-
-			// the format-selector gives us a formatter, based on the type of the thing we need to format
-			typedef BOOST_DEDUCED_TYPENAME format_selector::template range_format<item_type>::type formatter;
-
-			// the formatter in it's turn tells us what the format for the next depth in the tree will be
-			typedef BOOST_DEDUCED_TYPENAME formatter::template next_format< format_type>::type next_format_type;
-
-                       
-			stream << formatter::opening();
-			bool printing_first_item = true;
-
-            typedef BOOST_DEDUCED_TYPENAME boost::range_const_iterator< const item_type>::type iterator_type;
-            typedef BOOST_DEDUCED_TYPENAME boost::iterator_value< iterator_type>::type value_type;
-
-            for ( 
-                iterator_type i = boost::const_begin( item);
-                i != boost::const_end( item);
-                ++i)
-			{
-				if (!printing_first_item)
-				{
-					stream << formatter::delimiter();
-				}
-				
-				print( *i, stream, next_format_type(), container_policy_type());
-				printing_first_item = false;
-			}
-			stream << formatter::closing();
-
-			return stream;
-		}
-
-		// TODO: generalize for tuples
-		template< typename format_type,
-				  typename container_policy_type,
-				  typename F,
-				  typename S
-		>
-        static std::ostream &print_item( const std::pair<F,S> &item, std::ostream &stream )
-		{
-			typedef std::pair<F,S> item_type;
-
-			// the first element of the format sequence is our current format-selector
-			typedef BOOST_DEDUCED_TYPENAME front<format_type>::type format_selector;
-
-			// the format-selector gives us a formatter, based on the type of the thing we need to format
-			typedef BOOST_DEDUCED_TYPENAME format_selector:: template range_format<item_type>::type formatter;
-
-			// the formatter in it's turn tells us what the format for the next depth in the tree will be
-			typedef BOOST_DEDUCED_TYPENAME formatter:: template next_format< format_type>::type next_format_type;
-
-			stream << formatter::opening();
-			print( item.first, stream, next_format_type(), container_policy_type());
-			stream << formatter::delimiter();
-			print( item.second, stream, next_format_type(), container_policy_type());
-			return stream << formatter::closing();
-		}
-
-        /*
-        template< typename format_type,
-            typename container_policy_type,
-            typename item_type
+        template< 
+            typename format_type,
+	        typename container_policy_type,
+	        typename item_type
         >
-        static std::ostream &print_item( const item_type &t, std::ostream &stream)
+        static std::ostream &print_item( const item_type &item, std::ostream &stream)
         {
-            stream << "<unknown>";
+            return print_container<format_type, container_policy_type>( item, stream);
         }
-        */
 
+        
 	};
     
     struct pointer_printer
@@ -314,8 +323,10 @@ namespace explore {
             {
                 return stream << "null"; 
             }
-            
-			return print(*item, stream, format_type(), container_policy_type());
+            //
+            // DH - changed until we figure out what special things to do with pointer types
+			// return print(*item, stream, format_type(), container_policy_type());
+            return stream << item;
         }
 	};
 
@@ -343,11 +354,12 @@ namespace explore {
 		typedef  typename eval_if< 
 			typename container_policy_type:: template print_as_container< item_type>::type,
 				identity<container_printer>,
-                eval_if< 
+                    eval_if< 
                     typename boost::is_pointer<item_type>::type,
-                        identity<pointer_printer>,
-                        identity<item_printer>
-		> >::type printer_type;
+                            identity<pointer_printer>,
+                            identity<item_printer>
+		            > 
+                >::type printer_type;
 
 		
         return printer_type::template print_item< format_type, container_policy_type>( item, stream);
