@@ -42,10 +42,10 @@ BOOST_AUTO_TEST_CASE( basic_vector_print_test )
     explore::print(vi.begin(), ++(++vi.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 	
-    //str_out.str("");
+    str_out.str("");
 	
-    //explore::print(boost::make_iterator_range(vi.begin(), ++(++vi.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+    explore::print(boost::make_iterator_range(vi.begin(), ++(++vi.begin())), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
 BOOST_AUTO_TEST_CASE( basic_vector_stream_test )
@@ -112,10 +112,10 @@ BOOST_AUTO_TEST_CASE( vector_in_vector_print_test )
     explore::print(vvi.begin(), ++(++vvi.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 	
-    //str_out.str("");
+    str_out.str("");
 	
-    //explore::print(boost::make_iterator_range(vvi.begin(), ++(++vvi.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+    explore::print(boost::make_iterator_range(vvi.begin(), ++(++vvi.begin())), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_vector_stream_test )
