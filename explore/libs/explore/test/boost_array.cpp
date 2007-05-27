@@ -50,7 +50,6 @@ BOOST_AUTO_TEST_CASE( basic_array_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_array_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     boost::array<int,0> ai0;
@@ -122,7 +121,6 @@ BOOST_AUTO_TEST_CASE( vector_in_array_print_test )
 
 BOOST_AUTO_TEST_CASE( vector_in_array_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::vector<int> vi;

@@ -49,7 +49,6 @@ BOOST_AUTO_TEST_CASE( basic_set_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_set_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::set<int> si;
@@ -121,7 +120,6 @@ BOOST_AUTO_TEST_CASE( basic_multiset_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_multiset_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::multiset<int> msi;
@@ -198,7 +196,6 @@ BOOST_AUTO_TEST_CASE( vector_in_set_print_test )
 
 BOOST_AUTO_TEST_CASE( vector_in_set_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::vector<int> vi;

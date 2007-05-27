@@ -25,7 +25,6 @@ BOOST_AUTO_TEST_CASE( basic_pair_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_pair_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::pair<int,int> pi = std::make_pair(1,2);
@@ -62,7 +61,6 @@ BOOST_AUTO_TEST_CASE( pair_in_vector_print_test )
 
 BOOST_AUTO_TEST_CASE( pair_in_vector_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::vector<std::pair<int,int> > vpi;

@@ -30,7 +30,6 @@ BOOST_AUTO_TEST_CASE( basic_tuple_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_tuple_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     boost::tuples::tuple<int, double> t(1, 3.14);

@@ -50,7 +50,6 @@ BOOST_AUTO_TEST_CASE( basic_list_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_list_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::list<std::complex<double> > lc;
@@ -120,7 +119,6 @@ BOOST_AUTO_TEST_CASE( list_in_list_print_test )
 
 BOOST_AUTO_TEST_CASE( list_in_list_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::list<int> li;

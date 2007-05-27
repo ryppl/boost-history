@@ -50,7 +50,6 @@ BOOST_AUTO_TEST_CASE( basic_map_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_map_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::map<int,std::string> mis;
@@ -122,7 +121,6 @@ BOOST_AUTO_TEST_CASE( basic_multimap_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_multimap_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::multimap<int,std::string> mmis;
@@ -199,7 +197,6 @@ BOOST_AUTO_TEST_CASE( vector_in_map_print_test )
 
 BOOST_AUTO_TEST_CASE( vector_in_map_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::vector<int> vi;

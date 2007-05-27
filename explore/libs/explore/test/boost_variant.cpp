@@ -44,7 +44,6 @@ BOOST_AUTO_TEST_CASE( basic_variant_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_variant_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     boost::variant< int, std::string, std::vector<int> > varVal;

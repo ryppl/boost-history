@@ -49,7 +49,6 @@ BOOST_AUTO_TEST_CASE( basic_deque_print_test )
 
 BOOST_AUTO_TEST_CASE( basic_deque_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::deque<int> di;
@@ -119,7 +118,6 @@ BOOST_AUTO_TEST_CASE( deque_in_deque_print_test )
 
 BOOST_AUTO_TEST_CASE( deque_in_deque_stream_test )
 {
-    using namespace boost;
     std::stringstream str_out;
 
     std::deque<int> di;
