@@ -381,13 +381,13 @@ namespace explore {
 							 const format_type &format,
 							 const container_policy_type &policy)
 	{
-			return container_printer::print_item<format_type, container_policy_type>( boost::make_iterator_range(first, last), stream );
+			return print( boost::make_iterator_range(first, last), stream, format, policy );
 	}
 	
 	template<class InputIterator>
 	std::ostream &print(InputIterator first, InputIterator last, std::ostream &stream = std::cout)
 	{
-		return print( first, last, stream, default_format(), default_container_policy());
+		return print( boost::make_iterator_range(first, last), stream );
 	}
 	
 
