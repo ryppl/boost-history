@@ -11,129 +11,147 @@
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <sstream>
-#include <vector>
+#include <list>
+#include <complex>
 #include "../../../boost/explore/explore.hpp"
 #include "../../../boost/explore/stream_container.hpp"
 
-BOOST_AUTO_TEST_CASE( basic_vector_print_test )
+BOOST_AUTO_TEST_CASE( basic_list_print_test )
 {
     std::stringstream str_out;
 
-    std::vector<int> vi;
-    explore::print(vi, str_out);
+    std::list<std::complex<double> > lc;
+    explore::print(lc, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[]");
 
     str_out.str("");
 
-    vi.push_back(1);
-    explore::print(vi, str_out);
-    BOOST_CHECK_EQUAL(str_out.str(), "[1]");
+    lc.push_back(std::complex<double>(0,1));
+    explore::print(lc, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[(0,1)]");
 
     str_out.str("");
 
-    vi.push_back(2);
-    vi.push_back(3);
-    explore::print(vi, str_out);
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+    lc.push_back(std::complex<double>(2,3));
+    lc.push_back(std::complex<double>(4,5));
+    explore::print(lc, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3), (4,5)]");
+	
+    str_out.str("");
+	
+    explore::print(lc.begin(), ++(++lc.begin()), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
+	
+    str_out.str("");
+	
+    explore::print(boost::make_iterator_range(lc.begin(), ++(++lc.begin())), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
 }
 
-BOOST_AUTO_TEST_CASE( basic_vector_stream_test )
+BOOST_AUTO_TEST_CASE( basic_list_stream_test )
 {
     using namespace boost;
     std::stringstream str_out;
 
-    std::vector<int> vi;
-    str_out << vi;
+    std::list<std::complex<double> > lc;
+    str_out << lc;
     BOOST_CHECK_EQUAL(str_out.str(), "[]");
 
     str_out.str("");
 
-    vi.push_back(1);
-    str_out << vi;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1]");
+    lc.push_back(std::complex<double>(0,1));
+    str_out << lc;
+    BOOST_CHECK_EQUAL(str_out.str(), "[(0,1)]");
 
     str_out.str("");
 
-    vi.push_back(2);
-    vi.push_back(3);
-    str_out << vi;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+    lc.push_back(std::complex<double>(2,3));
+    lc.push_back(std::complex<double>(4,5));
+    str_out << lc;
+    BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3), (4,5)]");
+	
+    //str_out.str("");
+	
+    //explore::print(lc.begin(), ++(++lc.begin()), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
+	
+    //str_out.str("");
+	
+    //explore::print(boost::make_iterator_range(lc.begin(), ++(++lc.begin())), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
 }
 
-BOOST_AUTO_TEST_CASE( vector_in_vector_print_test )
+BOOST_AUTO_TEST_CASE( list_in_list_print_test )
 {
     std::stringstream str_out;
 
-    std::vector<int> vi;
-    vi.push_back(1);
-    vi.push_back(2);
-    vi.push_back(3);
+    std::list<int> li;
+    li.push_back(1);
+    li.push_back(2);
+    li.push_back(3);
 
-    std::vector<std::vector<int> > vvi;
-    explore::print(vvi, str_out);
+    std::list<std::list<int> > lli;
+    explore::print(lli, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[]");
 
     str_out.str("");
 
-    vvi.push_back(vi);
-    explore::print(vvi, str_out);
+    lli.push_back(li);
+    explore::print(lli, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3]]");
 
     str_out.str("");
 
-    vvi.push_back(vi);
-    vvi.push_back(vi);
-    explore::print(vvi, str_out);
+    lli.push_back(li);
+    lli.push_back(li);
+    explore::print(lli, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
+	
+    str_out.str("");
+	
+    explore::print(lli.begin(), ++(++lli.begin()), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+	
+    str_out.str("");
+	
+    explore::print(boost::make_iterator_range(lli.begin(), ++(++lli.begin())), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
 
-BOOST_AUTO_TEST_CASE( vector_in_vector_stream_test )
+BOOST_AUTO_TEST_CASE( list_in_list_stream_test )
 {
     using namespace boost;
     std::stringstream str_out;
 
-    std::vector<int> vi;
-    vi.push_back(1);
-    vi.push_back(2);
-    vi.push_back(3);
+    std::list<int> li;
+    li.push_back(1);
+    li.push_back(2);
+    li.push_back(3);
 
-    std::vector<std::vector<int> > vvi;
-    str_out << vvi;
+    std::list<std::list<int> > lli;
+    str_out << lli;
     BOOST_CHECK_EQUAL(str_out.str(), "[]");
 
     str_out.str("");
 
-    vvi.push_back(vi);
-    str_out << vvi;
+    lli.push_back(li);
+    str_out << lli;
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3]]");
 
     str_out.str("");
 
-    vvi.push_back(vi);
-    vvi.push_back(vi);
-    str_out << vvi;
+    lli.push_back(li);
+    lli.push_back(li);
+    str_out << lli;
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
-}
-
-// This test shows that you can use a string to cause the same outputs
-// as other print statements.
-BOOST_AUTO_TEST_CASE( vector_with_ugly_string_case_print_test )
-{
-    std::stringstream str_out;
-
-    std::vector<std::string> vs;
-    vs.push_back("[1, 2, 3], [1, 2, 3], [1, 2, 3]");
-    explore::print(vs, str_out);
-    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
-}
-
-BOOST_AUTO_TEST_CASE( vector_with_ugly_string_case_stream_test )
-{
-    using namespace boost;
-    std::stringstream str_out;
-
-    std::vector<std::string> vs;
-    vs.push_back("[1, 2, 3], [1, 2, 3], [1, 2, 3]");
-    str_out << vs;
-    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
+	
+    //str_out.str("");
+	
+    //explore::print(lli.begin(), ++(++lli.begin()), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+	
+    //str_out.str("");
+	
+    //explore::print(boost::make_iterator_range(lli.begin(), ++(++lli.begin())), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }

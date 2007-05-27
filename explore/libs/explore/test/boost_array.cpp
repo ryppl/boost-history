@@ -34,6 +34,18 @@ BOOST_AUTO_TEST_CASE( basic_array_print_test )
     boost::array<int,3> ai3 = {1, 2, 3};
     explore::print(ai3, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+	
+    str_out.str("");
+	
+	boost::array<int,3>::iterator itr = ai3.begin() + 2;
+	
+    explore::print(ai3.begin(), itr, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+	
+    str_out.str("");
+	
+    explore::print(boost::make_iterator_range(ai3.begin(), itr), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
 BOOST_AUTO_TEST_CASE( basic_array_stream_test )
@@ -56,6 +68,18 @@ BOOST_AUTO_TEST_CASE( basic_array_stream_test )
     boost::array<int,3> ai3 = {1, 2, 3};
     str_out << ai3;
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+	
+    //str_out.str("");
+	
+	//boost::array<int,3>::iterator itr = ai3.begin() + 2;
+	
+    //explore::print(ai3.begin(), itr, str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+	
+    //str_out.str("");
+	
+    //explore::print(boost::make_iterator_range(ai3.begin(), itr, str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_array_print_test )
@@ -82,6 +106,18 @@ BOOST_AUTO_TEST_CASE( vector_in_array_print_test )
     boost::array<std::vector<int>,3> av3 = {vi, vi, vi};
     explore::print(av3, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
+	
+    str_out.str("");
+	
+	boost::array<std::vector<int>,3>::iterator itr = av3.begin() + 2;
+	
+    explore::print(av3.begin(), itr, str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+	
+    str_out.str("");
+	
+    explore::print(boost::make_iterator_range(av3.begin(), itr), str_out);
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_array_stream_test )
@@ -109,4 +145,16 @@ BOOST_AUTO_TEST_CASE( vector_in_array_stream_test )
     boost::array<std::vector<int>,3> av3 = {vi, vi, vi};
     str_out << av3;
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
+	
+    //str_out.str("");
+	
+	//boost::array<std::vector<int>,3> itr = av3.begin() + 2;
+	
+    //explore::print(av3.begin(), itr, str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+	
+    //str_out.str("");
+	
+    //explore::print(boost::make_iterator_range(av3.begin(), itr), str_out);
+    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
