@@ -35,6 +35,6 @@ struct basic_lg_format : boost::mpl::list< basic_lg_range_format_selector> {};
 std::ostream& basic_lg_stream_format(std::ostream& ostr)
 {
     using namespace explore;
-    return ostr << setStart("<=") << setSeparator("#") << setEnd("=>")
-                << setAssocStart("<=") << setAssocSeparator("#") << setAssocEnd("=>");
+    return ostr << start("<=") << separator("#") << explore::end("=>")
+                << assoc_start("<=") << assoc_separator("#") << assoc_end("=>");
 }
