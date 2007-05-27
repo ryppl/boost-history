@@ -32,6 +32,70 @@ namespace explore
         BOOST_EXPLORE_INIT_STRING(assoc_separator, ":")
         BOOST_EXPLORE_INIT_STRING(assoc_start, "")
         BOOST_EXPLORE_INIT_STRING(assoc_end, "")
+
+        // manipulator function wrapper for 1 char/wchar_t argument.  When streamed, will run manipulator
+        // function with argument.
+        template<typename Elem>
+        struct manipfunc
+        {
+            manipfunc(void (*fun)(std::basic_ostream<Elem, std::char_traits<Elem> >&, const Elem*), const Elem* val)
+                : pfun(fun), arg(val)
+            {
+            }
+
+            void (*pfun)(std::basic_ostream<Elem, std::char_traits<Elem> >&, const Elem*);
+            const Elem* arg;
+        };
+
+        // stream manipfunc
+        template<typename Elem, typename Tr, typename Arg>
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<Arg>& manip)
+        {
+            (*manip.pfun)(ostr, manip.arg);
+            return ostr;
+        }
+
+        // function ptr for separator manipulator
+        template<typename Elem, typename Tr>
+        void separatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
+        {
+            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->separator = sep;
+        }
+
+        // function ptr for start manipulator
+        template<typename Elem, typename Tr>
+        void startFn(std::basic_ostream<Elem, Tr>& ostr, const char* start)
+        {
+            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->start = start;
+        }
+
+        // function ptr for end manipulator
+        template<typename Elem, typename Tr>
+        void endFn(std::basic_ostream<Elem, Tr>& ostr, const char* end)
+        {
+            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->end = end;
+        }
+
+        // function ptr for associative separator manipulator
+        template<typename Elem, typename Tr>
+        void assoc_separatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
+        {
+            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_separator = sep;
+        }
+
+        // function ptr for associative start manipulator
+        template<typename Elem, typename Tr>
+        void assoc_startFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* start)
+        {
+            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_start = start;
+        }
+
+        // function ptr for associative end manipulator
+        template<typename Elem, typename Tr>
+        void assoc_endFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* end)
+        {
+            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_end = end;
+        }
     }
 
     // A simple collection of additional stream state
@@ -64,28 +128,6 @@ namespace explore
         str_typ assoc_start;
         str_typ assoc_end;
     };
-
-    // manipulator function wrapper for 1 char/wchar_t argument.  When streamed, will run manipulator
-    // function with argument.
-    template<typename Elem>
-    struct manipfunc
-    {
-        manipfunc(void (*fun)(std::basic_ostream<Elem, std::char_traits<Elem> >&, const Elem*), const Elem* val)
-            : pfun(fun), arg(val)
-        {
-        }
-
-        void (*pfun)(std::basic_ostream<Elem, std::char_traits<Elem> >&, const Elem*);
-        const Elem* arg;
-    };
-
-    // stream manipulator
-    template<typename Elem, typename Tr, typename Arg>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<Arg>& manip)
-    {
-        (*manip.pfun)(ostr, manip.arg);
-        return ostr;
-    }
 
     struct stream_normal_value
     {
@@ -217,96 +259,54 @@ namespace explore
     }
 #   endif
 
-    // function ptr for separator manipulator
-    template<typename Elem, typename Tr>
-    void setSeparatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
+    // manipulator
+    template<typename Elem>
+    detail::manipfunc<Elem> separator(const Elem* sep)
     {
-        explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->separator = sep;
+        return detail::manipfunc<Elem>(&detail::separatorFn, sep);
     }
 
     // manipulator
     template<typename Elem>
-    manipfunc<Elem> setSeparator(const Elem* sep)
+    detail::manipfunc<Elem> start(const Elem* Start)
     {
-        return manipfunc<Elem>(&setSeparatorFn, sep);
-    }
-
-    // function ptr for start manipulator
-    template<typename Elem, typename Tr>
-    void setStartFn(std::basic_ostream<Elem, Tr>& ostr, const char* start)
-    {
-        explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->start = start;
+        return detail::manipfunc<Elem>(&detail::startFn, Start);
     }
 
     // manipulator
     template<typename Elem>
-    manipfunc<Elem> setStart(const Elem* Start)
+    detail::manipfunc<Elem> end(const Elem* end)
     {
-        return manipfunc<Elem>(&setStartFn, Start);
-    }
-
-    // function ptr for end manipulator
-    template<typename Elem, typename Tr>
-    void setEndFn(std::basic_ostream<Elem, Tr>& ostr, const char* end)
-    {
-        explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->end = end;
+        return detail::manipfunc<Elem>(&detail::endFn, end);
     }
 
     // manipulator
     template<typename Elem>
-    manipfunc<Elem> setEnd(const Elem* end)
+    detail::manipfunc<Elem> assoc_separator(const Elem* sep)
     {
-        return manipfunc<Elem>(&setEndFn, end);
-    }
-
-    // function ptr for associative separator manipulator
-    template<typename Elem, typename Tr>
-    void setAssocSeparatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
-    {
-        explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_separator = sep;
+        return detail::manipfunc<Elem>(&detail::assoc_separatorFn, sep);
     }
 
     // manipulator
     template<typename Elem>
-    manipfunc<Elem> setAssocSeparator(const Elem* sep)
+    detail::manipfunc<Elem> assoc_start(const Elem* start)
     {
-        return manipfunc<Elem>(&setAssocSeparatorFn, sep);
-    }
-
-    // function ptr for associative start manipulator
-    template<typename Elem, typename Tr>
-    void setAssocStartFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* start)
-    {
-        explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_start = start;
+        return detail::manipfunc<Elem>(&detail::assoc_startFn, start);
     }
 
     // manipulator
     template<typename Elem>
-    manipfunc<Elem> setAssocStart(const Elem* start)
+    detail::manipfunc<Elem> assoc_end(const Elem* end)
     {
-        return manipfunc<Elem>(&setAssocStartFn, start);
-    }
-
-    // function ptr for associative end manipulator
-    template<typename Elem, typename Tr>
-    void setAssocEndFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* end)
-    {
-        explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_end = end;
-    }
-
-    // manipulator
-    template<typename Elem>
-    manipfunc<Elem> setAssocEnd(const Elem* end)
-    {
-        return manipfunc<Elem>(&setAssocEndFn, end);
+        return detail::manipfunc<Elem>(&detail::assoc_endFn, end);
     }
 
     // manipulator
     template<typename Elem, typename Tr>
     std::basic_ostream<Elem, Tr>& format_normal(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return ostr << setStart("[") << setSeparator(", ") << setEnd("]")
-                    << setAssocSeparator(":");
+        return ostr << start("[") << separator(", ") << end("]")
+                    << assoc_start("") << assoc_separator(":") << assoc_end("");;
     }
 
     // manipulator
@@ -314,9 +314,9 @@ namespace explore
     std::basic_ostream<Elem, Tr>& format_html_list(std::basic_ostream<Elem, Tr>& ostr)
     {
         return ostr
-            << setStart("<ul>\n   <li>")
-            << setSeparator("\n   <li>")
-            << setEnd ("\n</ul>");
+            << start("<ul>\n   <li>")
+            << separator("\n   <li>")
+            << end("\n</ul>");
     }
 }
 
