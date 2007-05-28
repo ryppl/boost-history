@@ -97,15 +97,6 @@ namespace explore
         {
             explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_end = end;
         }
-
-        // used to work around some problems with overriding for operator<<, in particular where
-        // there already exists such an operator that does not do what we want.
-        template<typename T>
-        struct iterator_range_wrapper
-        {
-            iterator_range_wrapper(const boost::iterator_range<T>& ir) : t(ir) {}
-            const boost::iterator_range<T>& t;
-        };
     }
 
     // A simple collection of additional stream state
@@ -189,10 +180,33 @@ namespace explore
         return stream_container(ostr, first, last, stream_normal_value());
     }
 
+    // used to work around some problems with overriding for operator<< for boost::iterator_range
+    // there already exists such an operator that does not do what we want.
     template<typename T>
-    detail::iterator_range_wrapper<T> as_container(const boost::iterator_range<T>& ir)
+    struct iterator_range_wrapper
     {
-        return detail::iterator_range_wrapper<T>(ir);
+        iterator_range_wrapper(const boost::iterator_range<T>& ir) : t(ir) {}
+        boost::iterator_range<T> t;
+    };
+
+    template<typename T>
+    iterator_range_wrapper<T> as_container(const boost::iterator_range<T>& ir)
+    {
+        return iterator_range_wrapper<T>(ir);
+    }
+
+    template< typename IteratorT >
+    iterator_range_wrapper<IteratorT>
+        make_iterator_range( IteratorT Begin, IteratorT End ) 
+    {   
+        return as_container(boost::make_iterator_range(Begin, End));
+    }
+
+    template< class ForwardRange >
+    iterator_range_wrapper<BOOST_DEDUCED_TYPENAME boost::range_const_iterator<ForwardRange>::type>
+        make_iterator_range( const ForwardRange& r ) 
+    {   
+        return as_container(boost::make_iterator_range(r));
     }
 }
 
@@ -278,7 +292,7 @@ namespace explore
     // stream boost::iterator_range
     template<typename Elem, typename Tr, typename T>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, 
-    explore::detail::iterator_range_wrapper<T>& r)
+    explore::iterator_range_wrapper<T>& r)
     {
         return explore::stream_container(ostr, r.t.begin(), r.t.end());
     }
