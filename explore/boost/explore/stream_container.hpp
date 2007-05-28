@@ -343,8 +343,8 @@ namespace explore
     template<typename Elem, typename Tr>
     std::basic_ostream<Elem, Tr>& format_normal(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return ostr << start("[") << separator(", ") << end("]")
-                    << assoc_start("") << assoc_separator(":") << assoc_end("");;
+        get_stream_state<container_stream_state<Elem, Tr> >(ostr)->init<Elem>();
+        return ostr;
     }
 
     // manipulator
