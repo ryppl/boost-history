@@ -177,6 +177,10 @@ macro(boost_library_project libname_)
     string(TOLOWER "${libname_}" libname)
     project(${libname})
 
+    if(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+      file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+    endif(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+
     # currently src and testdirs are irrelevant.  At one point it seemed
     # that they would need to be kept separate and scanned in order
     # CLEANUP:  put src/test dirs back together again, if no future
