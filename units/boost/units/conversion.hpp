@@ -8,8 +8,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_UNITS_EXPERIMENTAL_CONVERSION_HPP
-#define BOOST_UNITS_EXPERIMENTAL_CONVERSION_HPP
+#ifndef BOOST_UNITS_CONVERSION_HPP
+#define BOOST_UNITS_CONVERSION_HPP
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/size.hpp>
@@ -18,11 +18,11 @@
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/divides.hpp>
 
-#include <boost/units/experimental/scaled_base_unit.hpp>
-#include <boost/units/experimental/make_system.hpp>
-#include <boost/units/experimental/heterogeneous_system.hpp>
-#include <boost/units/experimental/one.hpp>
-#include <boost/units/experimental/static_rational_power.hpp>
+#include <boost/units/scaled_base_unit.hpp>
+#include <boost/units/make_system.hpp>
+#include <boost/units/heterogeneous_system.hpp>
+#include <boost/units/detail/one.hpp>
+#include <boost/units/detail/static_rational_power.hpp>
 
 namespace boost {
 
@@ -215,6 +215,70 @@ struct conversion_helper<quantity<unit<D, homogeneous_system<L1> >, T1>, quantit
             ));
     }
 };
+
+namespace detail {
+
+template<class Source, class Dest>
+struct conversion_factor_helper;
+
+template<class D, class L1, class L2>
+struct conversion_factor_helper<unit<D, homogeneous_system<L1> >, unit<D, homogeneous_system<L2> > > {
+    typedef typename reduce_unit<unit<D, homogeneous_system<L1> > >::type source_unit;
+    typedef typename source_unit::system_type::type unit_list;
+    typedef typename detail::conversion_impl<mpl::size<unit_list>::value>::template apply<
+        typename mpl::begin<unit_list>::type,
+        homogeneous_system<L2>
+    > impl;
+    typedef typename impl::type type;
+    static type value() {
+        return(impl::value());
+    }
+};
+
+template<class D, class L1, class L2>
+struct conversion_factor_helper<unit<D, heterogeneous_system<L1> >, unit<D, homogeneous_system<L2> > > {
+    typedef typename detail::conversion_impl<mpl::size<typename L1::type>::value>::template apply<
+        typename mpl::begin<typename L1::type>::type,
+        homogeneous_system<L2>
+    > impl;
+    typedef typename impl::type type;
+    static type convert() {
+        return(impl::value());
+    }
+};
+
+// There is no simple algorithm for doing this conversion
+// other than just defining it as the reverse of the
+// heterogeneous->homogeneous case
+template<class D, class L1, class L2>
+struct conversion_factor_helper<unit<D, homogeneous_system<L1> >, unit<D, heterogeneous_system<L2> > > {
+    typedef typename detail::conversion_impl<mpl::size<typename L2::type>::value>::template apply<
+        typename mpl::begin<typename L2::type>::type,
+        homogeneous_system<L1>
+    > impl;
+    typedef typename impl::type type;
+    static type value() {
+        return(one() / impl::value());
+    }
+};
+
+}
+
+template<class FromUnit,class ToUnit>
+inline
+typename detail::conversion_factor_helper<FromUnit, ToUnit>::type
+conversion_factor(const FromUnit&,const ToUnit&)
+{
+    return(detail::conversion_factor_helper<FromUnit, ToUnit>::value());
+}
+
+template<class Y, class FromUnit,class ToUnit>
+inline
+Y
+conversion_factor(const FromUnit&,const ToUnit&)
+{
+    return(static_cast<Y>(detail::conversion_factor_helper<FromUnit, ToUnit>::value()));
+}
 
 } //namespace units
 

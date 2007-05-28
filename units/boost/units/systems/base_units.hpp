@@ -13,9 +13,11 @@
 
 #include <string>
 
+#include <boost/units/config.hpp>
+#include <boost/units/base_unit.hpp>
+#include <boost/units/scaled_base_unit.hpp>
+#include <boost/units/absolute.hpp>
 #include <boost/units/systems/physical_units.hpp>
-#include <boost/units/experimental/base_unit.hpp>
-#include <boost/units/experimental/scaled_base_unit.hpp>
 
 namespace boost {
 
@@ -75,35 +77,39 @@ struct kelvin_tag : public base_unit<kelvin_tag, temperature_type, -9> {
     static std::string name() { return("kelvin"); }
     static std::string symbol() { return("K"); }
 };
-struct fahrenheit_tag : public base_unit<fahrenheit_tag, temperature_type, -8> {
+struct celsius_tag : public base_unit<celsius_tag, temperature_type, -8> {
+    static std::string name() { return("celsius"); }
+    static std::string symbol() { return("C"); }
+};
+struct fahrenheit_tag : public base_unit<fahrenheit_tag, temperature_type, -7> {
     static std::string name() { return("fahrenheit"); }
     static std::string symbol() { return("F"); }
 };
 
-struct mole_tag : public base_unit<mole_tag, amount_type, -7> {
+struct mole_tag : public base_unit<mole_tag, amount_type, -6> {
     static std::string name() { return("mole"); }
     static std::string symbol() { return("mol"); }
 };
 
-struct candela_tag : public base_unit<candela_tag, luminous_intensity_type, -6> {
+struct candela_tag : public base_unit<candela_tag, luminous_intensity_type, -5> {
     static std::string name() { return("candela"); }
     static std::string symbol() { return("cd"); }
 };
 
-struct radian_tag : public base_unit<radian_tag, plane_angle_type, -5> {
+struct radian_tag : public base_unit<radian_tag, plane_angle_type, -4> {
     static std::string name() { return("radian"); }
     static std::string symbol() { return("rad"); }
 };
-struct degree_tag : public base_unit<degree_tag, plane_angle_type, -4> {
+struct degree_tag : public base_unit<degree_tag, plane_angle_type, -3> {
     static std::string name() { return("degree"); }
     static std::string symbol() { return("deg"); }
 };
-struct gradian_tag : public base_unit<gradian_tag, plane_angle_type, -3> {
+struct gradian_tag : public base_unit<gradian_tag, plane_angle_type, -2> {
     static std::string name() { return("gradian"); }
     static std::string symbol() { return("grad"); }
 };
 
-struct steradian_tag : public base_unit<steradian_tag, solid_angle_type, -2> {
+struct steradian_tag : public base_unit<steradian_tag, solid_angle_type, -1> {
     static std::string name() { return("steradian"); }
     static std::string symbol() { return("sr"); }
 };
@@ -112,11 +118,19 @@ struct steradian_tag : public base_unit<steradian_tag, solid_angle_type, -2> {
 
 }
 
+BOOST_UNITS_DEFINE_CONVERSION(boost::units::kelvin_tag, boost::units::celsius_tag::unit_type, one, one());
+BOOST_UNITS_DEFINE_CONVERSION(boost::units::kelvin_tag, boost::units::fahrenheit_tag::unit_type, double, 9.0/5.0);
+BOOST_UNITS_DEFINE_CONVERSION(boost::units::celsius_tag, boost::units::fahrenheit_tag::unit_type, double, 9.0/5.0);
+
+BOOST_UNITS_DEFINE_AFFINE_CONVERSION(boost::units::kelvin_tag::unit_type, boost::units::celsius_tag::unit_type, double, 273.15);
+BOOST_UNITS_DEFINE_AFFINE_CONVERSION(boost::units::kelvin_tag::unit_type, boost::units::fahrenheit_tag::unit_type, double, 273.15 * 9.0 / 5.0 + 32.0);
+BOOST_UNITS_DEFINE_AFFINE_CONVERSION(boost::units::celsius_tag::unit_type, boost::units::fahrenheit_tag::unit_type, double, 32.0);
+
 BOOST_UNITS_DEFINE_CONVERSION(boost::units::radian_tag, boost::units::degree_tag::unit_type, double, 180/3.14159265358979323846);
 BOOST_UNITS_DEFINE_CONVERSION(boost::units::radian_tag, boost::units::gradian_tag::unit_type, double, 200/3.14159265358979323846);
 BOOST_UNITS_DEFINE_CONVERSION(boost::units::degree_tag, boost::units::gradian_tag::unit_type, double, 10/9.);
 
-#ifdef BOOST_UNITS_HAS_BOOST_TYPEOF
+#if BOOST_UNITS_HAS_BOOST_TYPEOF
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
 
