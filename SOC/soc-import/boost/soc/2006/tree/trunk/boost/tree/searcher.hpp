@@ -17,7 +17,6 @@
 #ifndef BOOST_TREE_SEARCHER_HPP
 #define BOOST_TREE_SEARCHER_HPP
 
-
 #include <boost/tree/inorder_iterator.hpp>
 
 #include <boost/bind.hpp>
@@ -247,9 +246,9 @@ public:
 	 * @brief Erases the value at pos
 	 * @param pos	The iterator pointing to the value to be erased.
 	 */
- 	void erase (iterator pos)
+ 	iterator erase (iterator pos)
  	{
- 		c.erase(pos);
+ 		return c.erase(pos);
  	}
  	
  	size_type erase (key_type const& k)

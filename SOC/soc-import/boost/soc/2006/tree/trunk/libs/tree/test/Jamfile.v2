@@ -42,4 +42,5 @@ test-suite tree :
 	[ run multiway_tree_test.cpp ]
 	[ run unbalanced_binary_tree_test.cpp ]
 	
+	[ run bind_return_test.cpp ]
 	;

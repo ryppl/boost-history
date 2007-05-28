@@ -59,14 +59,15 @@ class treap {
 	}
 	  
 	template <class Tree>
-	static void remove(Tree& t, typename Tree::cursor& p)
+	static typename Tree::cursor remove(Tree& t, typename Tree::cursor& p)
 	{
 		typename Tree::cursor q;
 		while((q = ((p.begin()->metadata().get_priority()
 					 > p.end()->metadata().get_priority())
 					 ? p.begin() : p.end())).empty())
 			t.rotate(q);
-		q = p;
+		p = q;
+		return p;
 	}
 	
 	template <class Tree>

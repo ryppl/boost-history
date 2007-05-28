@@ -465,55 +465,116 @@ class binary_tree {
 	}
 	
 	// TODO: only one inorder_erase?
-	// Even return something different from inorder successor?
+	// Use boost::optional (or variant?) e.g.!!!
+	// What we actually want is: return an object containing
+	// all required (either one or two) parameters and that
+	// is somehow applied to inorder_erase (either with one or two
+	// parameters) -- but not requiring inorder_erase is provided
+	// [from a "what should know what" POV.]
+	// MPL?
+	// The class that is supposed to handle this should probably have two ctors,
+	// one taking one, the other taking two parameters
+	/* 
+	template <class T>
+	class return_type_for_use_with_inorder_erase {
+	public:
+		ctor(T const& arg1): m_arg1(arg) {}
+		ctor(T const& arg1, T const& arg2): m_arg1(arg1), m_arg2(arg2) {}
+		
+		// and, e.g.
+		template <Fun F>
+		call_function_with_arg_or_args(Fun) //... 
+		//use like call_function_with_arg_or_args(mem_fun(inorder_erase))
+		// will call inorder_erase(m_arg1) or inorder_erase(m_arg1, m_arg2), resp.
+	private:
+		// some object
+
+	};
+	*/
+
+	// Nah. Guess a good compiler should just optimise that anyway.
+	// That would still require a way of passing one or alternatively two values:
+	// SO will it be (?): pair<cursor, optional<cursor> > //?
+
 	/**
 	 * @brief  Erases the value of the given cursor, keeping the binary_tree's
-	 *         inorder.
+	 *         inorder, and returns the given cursor's inorder successor.
 	 * @param  position  Cursor that is empty or at least one of whose children is
 	 * @return The inorder successor of position
 	 */
 	cursor inorder_erase(cursor position)
 	{
-		cursor successor = position.end();
-		node_pointer p_node = 
-			static_cast<node_pointer>(node_base_type::operator[](position.m_pos));
+		node_pointer p_node = static_cast<node_pointer>(position.m_node);
+		++position;
 		
-		if (successor.empty()) {
-			while (successor.parity()) 
-				successor = successor.parent();
-			if (successor == root())
-				successor = shoot();
-
-			position.m_node.node_base_type::operator[](position.m_pos) = 
-				position.m_node.node_base_type::operator[](position.m_pos)
-			  ->node_base_type::operator[](0);
-		} else {
-			// Skip the following and just return successor.end()?
-			// Might make sense for rebalancing...
-			while (!successor.begin().empty())
-				successor = successor.begin();
-			successor = successor.begin();
-			
-			position.m_node.node_base_type::operator[](position.m_pos) = 
-				position.m_node.node_base_type::operator[](position.m_pos)
-			  ->node_base_type::operator[](1);
-		}
-		node_base_type::operator[](position.m_pos)->m_parent = position.m_node;
+		if (position.empty()) {						
+			(*p_node)[0]->m_parent = p_node->m_parent;
+			static_cast<node_base_pointer>(p_node->m_parent)
+				->node_base_type::operator[](0) = (*p_node)[0];
 				
+			while (position.parity()) 
+				position = position.parent();
+			if (position == root())
+				position = shoot();
+		} else {
+			position = position.begin();
+			position.m_node->m_parent = p_node->m_parent;
+			static_cast<node_base_pointer>(p_node->m_parent)
+				->node_base_type::operator[](1) = position.m_node;
+			
+			while (!position.empty())
+				position = position.begin();
+		}
+		
 		m_value_alloc.destroy(p_node->data());
 		m_value_alloc.deallocate(p_node->data(), 1);
 		
 		m_node_alloc.destroy(p_node);
 		m_node_alloc.deallocate(p_node, 1);
 		
-		return successor;
+		return position;
 	}
 
-	// the "other" erase/detach?
-//	void inorder_erase(cursor position, cursor other)
-//	{
-//
-//	}
+	cursor inorder_erase(cursor position, cursor descendant)
+	{
+		node_pointer p_node = static_cast<node_pointer>(descendant.m_node);
+		++descendant;
+		
+		if (descendant.empty()) {						
+			(*p_node)[0]->m_parent = p_node->m_parent;
+			static_cast<node_base_pointer>(p_node->m_parent)
+				->node_base_type::operator[](0) = (*p_node)[0];
+		} else {
+			descendant = descendant.begin();
+			descendant.m_node->m_parent = p_node->m_parent;
+			static_cast<node_base_pointer>(p_node->m_parent)
+				->node_base_type::operator[](1) = descendant.m_node;
+		}
+		
+		cursor pos_parent = position.parent();		
+		pos_parent.m_node->node_base_type::operator[](pos_parent.m_pos)
+			= descendant.m_node;
+		descendant.m_node->m_parent = pos_parent.m_node;
+		descendant.m_node->node_base_type::operator[](0)
+			= position.m_node->node_base_type::operator[](0);
+		descendant.m_node->node_base_type::operator[](1)
+			= position.m_node->node_base_type::operator[](1);
+		descendant.m_node->node_base_type::operator[](0)->m_parent
+			= descendant.m_node;
+		descendant.m_node->node_base_type::operator[](1)->m_parent
+			= descendant.m_node;
+
+		p_node = 
+			static_cast<node_pointer>(position.m_node->node_base_type::operator[](position.m_pos));
+			
+		m_value_alloc.destroy(p_node->data());
+		m_value_alloc.deallocate(p_node->data(), 1);
+		
+		m_node_alloc.destroy(p_node);
+		m_node_alloc.deallocate(p_node, 1);
+		
+		return descendant;
+	}
 	
 private:
 	node_base_type m_header;

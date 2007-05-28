@@ -363,11 +363,13 @@ class balanced_tree {
 	 * is itself a pointer, the pointed-to memory is not touched in
 	 * any way.  Managing the pointer is the user's responsibilty.
 	 */
-	void erase (iterator position)
+	iterator erase (iterator position)
  	{
- 		//TODO - we can only call h.clear, not h.erase!
- 		//cursor c = position.base().base(); //.parent();
- 		//h.erase(balancer_type::remove(*this, c.parent()));
+ 		cursor c = position.base().base();
+ 		cursor d = balancer_type::remove(h, c);
+// 		if (c == d)
+			return iterator(h.inorder_erase(c));
+//		return iterator(h.inorder_erase(d,c));			
  	}
 
 	/**

@@ -76,6 +76,35 @@ void create_binary_tree(Tree& mytree)
 }
 
 template <class Tree>
+void inorder_erase_test_data_tree(Tree& mytree)
+{
+	typename Tree::cursor c = mytree.shoot();
+	--c;
+	BOOST_CHECK(*c == 14);
+	
+	c = c.parent().parent();
+	BOOST_CHECK(*(c.begin()) == 10);
+	BOOST_CHECK(c.begin().empty());
+	BOOST_CHECK(!c.end().empty());
+	BOOST_CHECK(*c.end().begin() == 14);
+	c = c.begin();
+	
+	// Left child empty
+	c = mytree.inorder_erase(c);
+	BOOST_CHECK(*c == 11);
+
+	++c;
+	BOOST_CHECK(*c.begin() == 12);
+	BOOST_CHECK(c.begin().empty());
+	BOOST_CHECK(c.end().empty());
+	c = c.begin();
+	
+	// Both children empty
+	c = mytree.inorder_erase(c);
+	BOOST_CHECK(*c == 13);
+}
+
+template <class Tree>
 void destroy_binary_tree(Tree& mytree)
 {
 	mytree.clear();	
@@ -156,9 +185,8 @@ int test_main(int, char* [])
 	validate_test_data_tree(tree2);
 	c = tree2.inorder_first();
 	BOOST_CHECK(*c == 1);
-	c = tree2.shoot();
-	--c;
-	BOOST_CHECK(*c == 14);
+
+	inorder_erase_test_data_tree(tree2);
 	
 	return 0;
 }

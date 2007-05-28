@@ -19,7 +19,7 @@ class unbalanced {
 	unbalanced() {}
 
 	struct metadata_type {};
-	metadata_type metadata;
+	//metadata_type metadata;
 
 // protected:	
 	template <class Tree>
@@ -27,15 +27,15 @@ class unbalanced {
 	{ }
 	  
 	template <class Tree>
-	static void remove(Tree& t, typename Tree::cursor& x)
+	static typename Tree::cursor remove(Tree& t, typename Tree::cursor& x)
 	{
-		typename Tree::cursor y = x;
+		//typename Tree::cursor y = x;
 		if (x.begin().empty() || x.end().empty())
- 			return;
- 		inorder::forward(x);
- 		return;
+ 			return x;
+ 		//inorder::forward(x);
+ 		return inorder::next(x);
 	}
-	
+		
 	template <class Tree>
 	static void touch(Tree&, typename Tree::cursor&)
 	{ }

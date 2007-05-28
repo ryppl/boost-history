@@ -53,10 +53,11 @@ Many of the above is achieved by separation of logically separate parts. The cla
 eventually provide you with actual search functionality is a wrapper around whatever you choose as 
 technical foundations: Enter the `searcher` (template) class which acts as glue between the basic 
 structures and all those search-related aspects like key extraction, comparison, querying or insertion
-in the right position. Think of it as an adaptor (as the STL sequence adaptors) that turns a tree
-(or even "flat" sequence) into a [@http://www.sgi.com/tech/stl/SortedAssociativeContainer.html Sorted
+in the right position. Think of it as an adaptor (as the STL sequence adaptors) that turns a sequence
+into a [@http://www.sgi.com/tech/stl/SortedAssociativeContainer.html Sorted
 Associative Container] encapsulating the underlying structure, thus requiring no knowledge about nor
-allowing direct access to it.
+allowing direct access to it. The missing sequence layer between the underlying tree structure and the
+`searcher` is `balanced_tree`, which in turn adapts a tree (using a given balancing mechanism) and models a [@http://www.sgi.com/tech/stl/Sequence.html Sequence].
 
 [section A simple red-black tree]
 
@@ -68,16 +69,17 @@ look it up a little, you can make sure you don't have to just believe every word
 [@http://en.wikipedia.org/wiki/Red-black_tree Wikipedia] is your friend.]
 
 A red-black tree is a binary search tree with a balancing mechanism using some "metadata" (the red/black
-color part) attached to every node. Consequentially, we're going to need three components:
+color part) attached to every node. Consequentially, we're going to need four components:
 
 * A `binary_tree` that holds the user data.
-* A `red_black_balance`r that modifies the former's structure after any insertion or deletion so it
-remains balanced at all times (adding color information for its internal bookkeeping to each node).
+* A `balanced_tree` that linearizes the `binary_tree`.
+* A balancing mechanism (`balancers::red_black`, in our case) that modifies the `binary_tree`'s structure after any insertion or deletion so the it remains balanced at all times (adding color information for its internal bookkeeping to each node), while keeping the `balanced_tree`'s linear order.
 * A `searcher` to do the search-and-sort relevant parts, as mentioned above.
 
 So we start by pulling in headers and declaring `red_black_searcher`:
 	
 	#include <boost/tree/binary_tree.hpp>
+	#include <boost/tree/balanced_tree.hpp>
 	#include <boost/tree/balancers/red_black.hpp>
 	#include <boost/tree/searcher.hpp>
 
@@ -85,14 +87,15 @@ So we start by pulling in headers and declaring `red_black_searcher`:
 	
 	int main()
 	{
-		typedef binary_tree<int, red_black_balance> tree_t;
-		typedef searcher<false, tree_t> searcher_t;
+		typedef binary_tree<int> tree_t;
+		typeded balanced_tree<tree_t, balancers::red_black> balancer_t;
+		typedef searcher<false, balancer_t> searcher_t;
 		searcher_t red_black_searcher;
 		
 		/* ... */
 	}
 
-Obviously, we're going to use a red-black tree holding `int`s and wrapped by `red_black_searcher`. The
+Obviously, we're going to use a tree holding `int`s. The
 `false` boolean template argument to `searcher` denotes that we do ['not] want to store multiple values
 holding the same key in objects of type `red_black_searcher`. This is a template parameter 
 because `searcher`'s interface is different for each of its two possible values (compare to `map` and 

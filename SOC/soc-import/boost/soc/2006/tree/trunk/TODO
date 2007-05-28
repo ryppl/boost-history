@@ -15,10 +15,20 @@
 
 General:
 
-* have erase() operations return cursor/iterator instead of void (as in new STD)
+* have `erase()` operations return cursor/iterator instead of void (as in new STD)
 * modify parity/parent specs according to newsgroup thread, but members add to binary_tree cursor!
 * Add O(n) generations(ancestor, descendant) algorithm (vertical distance) yielding number
   of generations between ancestor and descendant (ascending cursor only)
+  Or rather, as this introduces something that shouldn't be conceptually different from
+  std::distance: introduce a (forward, of course) (hierarchy_)ascending::iterator that just moves up 
+  towards the root when incremented.
+* We might need still more binary_tree members for more efficient functions operating on
+  ranges...
+* `insert()` and `erase()` semantics need reworking. For instance, Proposal 23.X.4.1.4 §2 
+  (and related for deletion and multiway tree insertion/deletion) are way too convoluted
+  for a really basic operation. Still, it's important to consider special cases such as
+  root nodes and fields of use such as `forest_trees`; but for the latter, something similar
+  as inorder_insert might come in handy.
 
 Proposal:
 
@@ -44,6 +54,14 @@ Implementation:
 * Concept checks.
 * Interoperability with BGL algorithms.
 * C++0x: Add template typedefs (e.g. red_black_tree is balanced_tree<red_black_balancer, binary_tree>)
+
+Documentation:
+
+* Add some illustrations
+* Overview: develop hierarchy/cursor concept step by step, using illustrations that 
+  depict what is introduced at what step (nodes with pointers to their siblings, children, parents,
+  a frame around a given cursor [and possibly additionally required information stated]
+  that signifies what amount of information is contained within that cursor.
 
 Further applications:
 

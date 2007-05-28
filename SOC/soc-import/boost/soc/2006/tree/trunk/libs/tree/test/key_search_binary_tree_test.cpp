@@ -19,9 +19,7 @@
 
 void test_key_search_binary_tree()
 {
-	using boost::tree::searcher;
-	using boost::tree::binary_tree;
-	using boost::tree::lower_bound;
+	using namespace boost::tree;
 	
 	typedef test_searcher<false, balanced_tree<binary_tree<int>, balancers::unbalanced> > searcher_t;
 	searcher_t my_tree;
@@ -158,8 +156,10 @@ void test_key_search_binary_tree()
 	------c;
 	BOOST_CHECK(*c == 31);
 
-	my_tree.erase(c);
+	//my_tree.erase(c);
 
+	//BOOST_CHECK(*c == 39);
+	
 //	tree_cur = boost::tree::lower_bound(the_tree.root(), the_tree.shoot(), 412);	
 //	BOOST_CHECK(*tree_cur == 412);
 //	BOOST_CHECK(*tree_cur.parent() == 18);

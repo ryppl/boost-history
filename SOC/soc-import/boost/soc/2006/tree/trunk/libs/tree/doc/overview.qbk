@@ -27,7 +27,8 @@ structure or "topology" from searching, balancing and augmenting.
 The present approach in providing a consistent framework for trees is arranged roughly around the following 
 principles:
 
-* ['Cursors] as a consequent continuation of the iterator concept for tree structures.
+* ['Cursors] as a consequent continuation of the iterator concept for tree structures, abstracting the
+  usually underlying nodes.
 * ['Multiway tree search] as a generalization of binary tree search that in turn is viewed as a generalization
 of existing "linear" binary search algorithms (like `lower_bound`, `upper_bound` etc.) for STL containers.
 
@@ -166,7 +167,7 @@ work for red-black trees just as well as for treaps or splays (though in the lat
 forget to call the splay operation afterwards!).
 If you wonder if replacing a simple two-way decision control structure by a 
 not-exactly-so-lightweight STL algorithm was really worth it, let me for the time being refer you to the 
-following exercises...
+following exercises that are meant to take things a step further...
 
 [section Exercises]
 # Replace `std::lower_bound` in the above algorithm by `custom_lower_bound`. The latter should invoke
@@ -182,8 +183,81 @@ two versions of that algorithm, one for `const` trees and one for mutable ones.)
 ones. Implement them for non-cursor iterators so that `empty(iter)` always returns true.]
 [endsect] [/ Exercises]
 
-
 [endsect] [/ (Multiway) Tree Search]
+
+[section Insertion and erasure semantics]
+Given the cursor semantics developed in the above section, the logically next step is to ask how 
+modifications of trees, i.e. in particular insertion and erasure operations are to be performed.
+Let us once again turn to existing "linear" STL concepts. The statement
+
+	container.insert(iter, value);
+
+conveys information via three parameters, thus creating three degrees of freedom
+for the insert statement of the given form, only two of which are really independent:
+
+# `value` is obviously completely independent from the container it is to be inserted into
+  and also from the iterator that indicates the position in front of which this is to happen.
+  (Apart from some compile-time constraints on type, of course.)
+# On the other hand, if `iter` does not point to an element of `container` 
+  (or past its end, i.e., is equal to `container.end()`), your code is going to segfault
+  during execution.
+
+Unfortunately, the latter issue (singularity) is a direct consequence of the `insert` 
+statement requiring at least three arguments (degrees of freedom); but any version that
+would require only two "really" independent parameters would also imply that one parameter
+conveys information about both what container to insert into and at what position to do so.
+As this would e.g. lead to iterators containing pointers to "their" containers 
+(which, in turn, take care of allocation and keep track of size and their `begin()` and 
+`end()` iterators) and thus 
+introduce considerable overhead, it was obviously not the insertion semantics
+chosen by the STL designers. It's nevertheless good to keep in mind that it's generally a good
+idea not to introduce too many degrees of freedom if they (partly) depend on each other.
+
+Turning to hierarchies, it is enlightening to consider the somewaht canonical
+(and minimum information) implementation of (binary tree) nodes containing 
+pointers to their (left and right) children (which, in case of forests, often become the 
+"left child" and "right sibling").
+How much information is needed to insert a value at an unambiguous position 
+within a tree?
+
+[warning TODO: Add some graphics!]
+
+# Again, the given `value`.
+# The node that is going to become the inserted value's right sibling 
+  (in analogy to the `iterator` parameter in linear STL container insert semantics).
+# The node that is going to be the inserted value's parent.
+# The hierarchy container the value is inserted into, assuming that we want it
+  to be the structure that is responsible for "administrative" issues 
+  (again in analogy to the linear STL containers).
+
+If the tree nodes do store more than just the essential minimum of information,
+certain items can be omitted (e.g. item 3 if nodes store pointers to their parents).
+In the general case, however, it seems we would need semantics like
+
+	tree.insert(parent, sibling, value);
+
+where `parent` and `sibling` are, consequently, `cursors`. Compared to linear
+containers, there are of course some more special cases that deserve special attention.
+
+Among the more interesting issues, `sibling` is a parameter that (for an acyclical tree)
+is partly dependent on `parent` - so passing a `parent` that is not actually `sibling`'s parent
+is likely to produce obscure errors. Moreover, if a node stores a pointer to their parent anyway,
+passing a `parent` link would be even redundant. For this and other reasons (detailed later),
+the semantics chosen here are
+
+	tree.insert(sibling, value);
+
+This implies that sibling also contains the information what its parent node is.
+In fact, the referential implementation has cursors contain a pointer to a
+node plus an index indicating what child node is actually referenced (0 being the leftmost etc). 
+This is especially useful in combination with the multiway tree navigation semantics
+introduced earlier, as it also realises the duality of cursors indicating a position
+not necessarily only within a hierarchy, but even within a node. Note that for
+nodes containing a parent pointer, the index could be omitted, with no spatial overhead
+introduced; only for nodes that do not contain a parent pointer, the index is really
+required. 
+
+[endsect] [/ Insertion and erasure semantics]
 
 [section Components]
 [section Searcher]
