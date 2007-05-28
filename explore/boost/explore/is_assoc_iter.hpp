@@ -9,6 +9,9 @@
 //
 //
 
+#ifndef STREAM_IS_ASSOC_ITER_INCLUDED
+#define STREAM_IS_ASSOC_ITER_INCLUDED
+
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
 
@@ -62,3 +65,5 @@ namespace explore
             boost::mpl::false_
         > {};
 }
+
+#endif
