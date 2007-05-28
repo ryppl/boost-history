@@ -37,5 +37,7 @@ project
   [ run boost_range.cpp ]
   
   [ run custom_format_simple.cpp ]
+  
+  [ run is_assoc_iter.cpp ]
  ;
 }
