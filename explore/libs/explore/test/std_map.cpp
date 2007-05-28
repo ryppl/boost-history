@@ -36,14 +36,14 @@ BOOST_AUTO_TEST_CASE( basic_map_print_test )
     mis.insert(std::make_pair(3, "third"));
     explore::print(mis, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 2:second, 3:third]");
-	
+
     str_out.str("");
-	
+
     explore::print(mis.begin(), ++(++mis.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 2:second]");
-	
+
     str_out.str("");
-	
+
     explore::print(boost::make_iterator_range(mis.begin(), ++(++mis.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 2:second]");
 }
@@ -68,16 +68,11 @@ BOOST_AUTO_TEST_CASE( basic_map_stream_test )
     mis.insert(std::make_pair(3, "third"));
     str_out << mis;
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 2:second, 3:third]");
-	
-    //str_out.str("");
-	
-    //explore::print(mis.begin(), ++(++mis.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 2:second]");
-	
-    //str_out.str("");
-	
-    //explore::print(boost::make_iterator_range(mis.begin(), ++(++mis.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 2:second]");
+
+    str_out.str("");
+
+    str_out << explore::make_iterator_range(mis.begin(), ++(++mis.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 2:second]");
 }
 
 BOOST_AUTO_TEST_CASE( basic_multimap_print_test )
@@ -107,14 +102,14 @@ BOOST_AUTO_TEST_CASE( basic_multimap_print_test )
     mmis.insert(std::make_pair(3, "triple"));
     explore::print(mmis, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single, 2:second, 3:third, 3:triple]");
-	
+
     str_out.str("");
-	
+
     explore::print(mmis.begin(), ++(++mmis.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single]");
-	
+
     str_out.str("");
-	
+
     explore::print(boost::make_iterator_range(mmis.begin(), ++(++mmis.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single]");
 }
@@ -146,16 +141,11 @@ BOOST_AUTO_TEST_CASE( basic_multimap_stream_test )
     mmis.insert(std::make_pair(3, "triple"));
     str_out << mmis;
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single, 2:second, 3:third, 3:triple]");
-	
-    //str_out.str("");
-	
-    //explore::print(mmis.begin(), ++(++mmis.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single]");
-	
-    //str_out.str("");
-	
-    //explore::print(boost::make_iterator_range(mmis.begin(), ++(++mmis.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single]");
+
+    str_out.str("");
+
+    str_out << explore::make_iterator_range(mmis.begin(), ++(++mmis.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single]");
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_map_print_test )
@@ -183,14 +173,14 @@ BOOST_AUTO_TEST_CASE( vector_in_map_print_test )
     mivi.insert(std::make_pair(3, vi));
     explore::print(mivi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3], 3:[1, 2, 3]]");
-	
+
     str_out.str("");
-	
+
     explore::print(mivi.begin(), ++(++mivi.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3]]");
-	
+
     str_out.str("");
-	
+
     explore::print(boost::make_iterator_range(mivi.begin(), ++(++mivi.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3]]");
 }
@@ -220,14 +210,9 @@ BOOST_AUTO_TEST_CASE( vector_in_map_stream_test )
     mivi.insert(std::make_pair(3, vi));
     str_out << mivi;
     BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3], 3:[1, 2, 3]]");
-	
-    //str_out.str("");
-	
-    //explore::print(mivi.begin(), ++(++mivi.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3]]");
-	
-    //str_out.str("");
-	
-    //explore::print(boost::make_iterator_range(mivi.begin(), ++(++mivi.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3]]");
+
+    str_out.str("");
+
+    str_out << explore::make_iterator_range(mivi.begin(), ++(++mivi.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3]]");
 }

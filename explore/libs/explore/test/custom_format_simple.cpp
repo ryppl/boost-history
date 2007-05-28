@@ -76,20 +76,15 @@ BOOST_AUTO_TEST_CASE( basic_vector_custom_format_stream_test )
     str_out << vi;
     BOOST_CHECK_EQUAL(str_out.str(), "<=1#2#3=>");
 
-    //str_out.str("");
+    str_out.str("");
 
-    //explore::print(vi.begin(), ++(++vi.begin()), str_out, basic_lg_format(), explore::default_container_policy());
-    //BOOST_CHECK_EQUAL(str_out.str(), "<=1#2=>");
+    str_out << explore::make_iterator_range(vi.begin(), ++(++vi.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "<=1#2=>");
 
-    //str_out.str("");
+    str_out.str("");
 
-    //explore::print(boost::make_iterator_range(vi.begin(), ++(++vi.begin())), str_out, basic_lg_format(), explore::default_container_policy());
-    //BOOST_CHECK_EQUAL(str_out.str(), "<=1#2=>");
-
-    //str_out.str("");
-
-    //explore::print(vi, str_out, basic_lg_format(), explore::default_container_policy());
-    //BOOST_CHECK_EQUAL(str_out.str(), "<=1#2#3=>");
+    str_out << vi;
+    BOOST_CHECK_EQUAL(str_out.str(), "<=1#2#3=>");
 }
 
 BOOST_AUTO_TEST_CASE( basic_map_custom_format_print_test )
@@ -147,13 +142,8 @@ BOOST_AUTO_TEST_CASE( basic_map_custom_format_stream_test )
     str_out << mis;
     BOOST_CHECK_EQUAL(str_out.str(), "<=<=1#first=>#<=2#second=>#<=3#third=>=>");
 
-    //str_out.str("");
+    str_out.str("");
 
-    //explore::print(mis.begin(), ++(++mis.begin()), str_out, basic_lg_format(), explore::default_container_policy());
-    //BOOST_CHECK_EQUAL(str_out.str(), "<=<=1#first=>#<=2#second=>=>");
-
-    //str_out.str("");
-
-    //explore::print(boost::make_iterator_range(mis.begin(), ++(++mis.begin())), str_out, basic_lg_format(), explore::default_container_policy());
-    //BOOST_CHECK_EQUAL(str_out.str(), "<=<=1#first=>#<=2#second=>=>");
+    str_out << explore::make_iterator_range(mis.begin(), ++(++mis.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "<=<=1#first=>#<=2#second=>=>");
 }

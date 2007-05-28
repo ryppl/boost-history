@@ -35,14 +35,14 @@ BOOST_AUTO_TEST_CASE( basic_set_print_test )
     si.insert(3);
     explore::print(si, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
-	
+
     str_out.str("");
-	
+
     explore::print(si.begin(), ++(++si.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
-	
+
     str_out.str("");
-	
+
     explore::print(boost::make_iterator_range(si.begin(), ++(++si.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
@@ -67,16 +67,11 @@ BOOST_AUTO_TEST_CASE( basic_set_stream_test )
     si.insert(3);
     str_out << si;
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
-	
-    //str_out.str("");
-	
-    //explore::print(si.begin(), ++(++si.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
-	
-    //str_out.str("");
-	
-    //explore::print(boost::make_iterator_range(si.begin(), ++(++si.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+
+    str_out.str("");
+
+    str_out << explore::make_iterator_range(si.begin(), ++(++si.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
 BOOST_AUTO_TEST_CASE( basic_multiset_print_test )
@@ -106,14 +101,14 @@ BOOST_AUTO_TEST_CASE( basic_multiset_print_test )
     msi.insert(3);
     explore::print(msi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 1, 2, 3, 3]");
-	
+
     str_out.str("");
-	
+
     explore::print(msi.begin(), ++(++msi.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 1]");
-	
+
     str_out.str("");
-	
+
     explore::print(boost::make_iterator_range(msi.begin(), ++(++msi.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 1]");
 }
@@ -145,16 +140,11 @@ BOOST_AUTO_TEST_CASE( basic_multiset_stream_test )
     msi.insert(3);
     str_out << msi;
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 1, 2, 3, 3]");
-	
-    //str_out.str("");
-	
-    //explore::print(msi.begin(), ++(++msi.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 1]");
-	
-    //str_out.str("");
-	
-    //explore::print(boost::make_iterator_range(msi.begin(), ++(++msi.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 1]");	
+
+    str_out.str("");
+
+    str_out << explore::make_iterator_range(msi.begin(), ++(++msi.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 1]");	
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_set_print_test )
@@ -182,14 +172,14 @@ BOOST_AUTO_TEST_CASE( vector_in_set_print_test )
     svi.insert(vi);
     explore::print(svi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
-	
+
     str_out.str("");
-	
+
     explore::print(svi.begin(), ++(++svi.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
-	
+
     str_out.str("");
-	
+
     explore::print(boost::make_iterator_range(svi.begin(), ++(++svi.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
@@ -219,14 +209,9 @@ BOOST_AUTO_TEST_CASE( vector_in_set_stream_test )
     svi.insert(vi);
     str_out << svi;
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
-	
-    //str_out.str("");
-	
-    //explore::print(svi.begin(), ++(++svi.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
-	
-    //str_out.str("");
-	
-    //explore::print(boost::make_iterator_range(svi.begin(), ++(++svi.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+
+    str_out.str("");
+
+    str_out << explore::make_iterator_range(svi.begin(), ++(++svi.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }

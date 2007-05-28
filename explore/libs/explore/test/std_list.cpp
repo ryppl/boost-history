@@ -36,14 +36,14 @@ BOOST_AUTO_TEST_CASE( basic_list_print_test )
     lc.push_back(std::complex<double>(4,5));
     explore::print(lc, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3), (4,5)]");
-	
+
     str_out.str("");
-	
+
     explore::print(lc.begin(), ++(++lc.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
-	
+
     str_out.str("");
-	
+
     explore::print(boost::make_iterator_range(lc.begin(), ++(++lc.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
 }
@@ -68,16 +68,11 @@ BOOST_AUTO_TEST_CASE( basic_list_stream_test )
     lc.push_back(std::complex<double>(4,5));
     str_out << lc;
     BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3), (4,5)]");
-	
-    //str_out.str("");
-	
-    //explore::print(lc.begin(), ++(++lc.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
-	
-    //str_out.str("");
-	
-    //explore::print(boost::make_iterator_range(lc.begin(), ++(++lc.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
+
+    str_out.str("");
+
+    str_out << explore::make_iterator_range(lc.begin(), ++(++lc.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
 }
 
 BOOST_AUTO_TEST_CASE( list_in_list_print_test )
@@ -105,14 +100,14 @@ BOOST_AUTO_TEST_CASE( list_in_list_print_test )
     lli.push_back(li);
     explore::print(lli, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
-	
+
     str_out.str("");
-	
+
     explore::print(lli.begin(), ++(++lli.begin()), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
-	
+
     str_out.str("");
-	
+
     explore::print(boost::make_iterator_range(lli.begin(), ++(++lli.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
@@ -142,14 +137,9 @@ BOOST_AUTO_TEST_CASE( list_in_list_stream_test )
     lli.push_back(li);
     str_out << lli;
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
-	
-    //str_out.str("");
-	
-    //explore::print(lli.begin(), ++(++lli.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
-	
-    //str_out.str("");
-	
-    //explore::print(boost::make_iterator_range(lli.begin(), ++(++lli.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+
+    str_out.str("");
+
+    str_out << explore::make_iterator_range(lli.begin(), ++(++lli.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }

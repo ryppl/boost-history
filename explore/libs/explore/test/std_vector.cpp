@@ -19,19 +19,19 @@
 BOOST_AUTO_TEST_CASE( vector_custom_format_print_test )
 {
     std::stringstream str_out;
-	
+
     std::vector<int> vi;
     explore::print(vi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[]");
-	
+
     str_out.str("");
-	
+
     vi.push_back(1);
     explore::print(vi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1]");
-	
+
     str_out.str("");
-	
+
     vi.push_back(2);
     vi.push_back(3);
     explore::print(vi, str_out);
@@ -46,9 +46,9 @@ BOOST_AUTO_TEST_CASE( vector_custom_format_print_test )
 
     explore::print(boost::make_iterator_range(vi.begin(), ++(++vi.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
-	
+
     str_out.str("");
-	
+
     explore::print(vi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
 }
@@ -56,56 +56,51 @@ BOOST_AUTO_TEST_CASE( vector_custom_format_print_test )
 BOOST_AUTO_TEST_CASE( basic_vector_stream_test )
 {
     std::stringstream str_out;
-	
+
     std::vector<int> vi;
     str_out << vi;
     BOOST_CHECK_EQUAL(str_out.str(), "[]");
-	
+
     str_out.str("");
-	
+
     vi.push_back(1);
     str_out << vi;
     BOOST_CHECK_EQUAL(str_out.str(), "[1]");
-	
+
     str_out.str("");
-	
+
     vi.push_back(2);
     vi.push_back(3);
     str_out << vi;
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
 
-    //str_out.str("");
+    str_out.str("");
 
-    //explore::print(vi.begin(), ++(++vi.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
-
-    //str_out.str("");
-
-    //explore::print(boost::make_iterator_range(vi.begin(), ++(++vi.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+    str_out << explore::make_iterator_range(vi.begin(), ++(++vi.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_vector_print_test )
 {
     std::stringstream str_out;
-	
+
     std::vector<int> vi;
     vi.push_back(1);
     vi.push_back(2);
     vi.push_back(3);
-	
+
     std::vector<std::vector<int> > vvi;
     explore::print(vvi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[]");
-	
+
     str_out.str("");
-	
+
     vvi.push_back(vi);
     explore::print(vvi, str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3]]");
-	
+
     str_out.str("");
-	
+
     vvi.push_back(vi);
     vvi.push_back(vi);
     explore::print(vvi, str_out);
@@ -125,38 +120,33 @@ BOOST_AUTO_TEST_CASE( vector_in_vector_print_test )
 BOOST_AUTO_TEST_CASE( vector_in_vector_stream_test )
 {
     std::stringstream str_out;
-	
+
     std::vector<int> vi;
     vi.push_back(1);
     vi.push_back(2);
     vi.push_back(3);
-	
+
     std::vector<std::vector<int> > vvi;
     str_out << vvi;
     BOOST_CHECK_EQUAL(str_out.str(), "[]");
-	
+
     str_out.str("");
-	
+
     vvi.push_back(vi);
     str_out << vvi;
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3]]");
-	
+
     str_out.str("");
-	
+
     vvi.push_back(vi);
     vvi.push_back(vi);
     str_out << vvi;
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
 
-    //str_out.str("");
+    str_out.str("");
 
-    //explore::print(vvi.begin(), ++(++vvi.begin()), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
-
-    //str_out.str("");
-
-    //explore::print(boost::make_iterator_range(vvi.begin(), ++(++vvi.begin())), str_out);
-    //BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+    str_out << explore::make_iterator_range(vvi.begin(), ++(++vvi.begin()));
+    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
 
 // This test shows that you can use a string to cause the same outputs
@@ -164,7 +154,7 @@ BOOST_AUTO_TEST_CASE( vector_in_vector_stream_test )
 BOOST_AUTO_TEST_CASE( vector_with_ugly_string_case_print_test )
 {
     std::stringstream str_out;
-	
+
     std::vector<std::string> vs;
     vs.push_back("[1, 2, 3], [1, 2, 3], [1, 2, 3]");
     explore::print(vs, str_out);
@@ -174,7 +164,7 @@ BOOST_AUTO_TEST_CASE( vector_with_ugly_string_case_print_test )
 BOOST_AUTO_TEST_CASE( vector_with_ugly_string_case_stream_test )
 {
     std::stringstream str_out;
-	
+
     std::vector<std::string> vs;
     vs.push_back("[1, 2, 3], [1, 2, 3], [1, 2, 3]");
     str_out << vs;
