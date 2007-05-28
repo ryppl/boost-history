@@ -16,8 +16,6 @@ namespace explore
 {
     namespace detail
     {
-        using namespace boost::mpl;
-
         struct false_type
         {
             char member[100];
@@ -35,7 +33,7 @@ namespace explore
         T& make_t();
 
         template< typename T>
-        struct has_value_type : bool_<
+        struct has_value_type : boost::mpl::bool_<
             sizeof(false_type)
             !=
             sizeof(has_value_func(make_t<T>()))>
@@ -46,10 +44,10 @@ namespace explore
         // of a map of which the iterator matches iterator_t
         //
         template<typename T>
-        struct is_pair : false_ {};
+        struct is_pair : boost::mpl::false_ {};
 
         template<typename T1, typename T2>
-        struct is_pair<std::pair<T1, T2> > : true_ {};
+        struct is_pair<std::pair<T1, T2> > : boost::mpl::true_ {};
 
         template<typename T>
         struct value_type_is_pair : is_pair<typename T::value_type> {};
@@ -58,9 +56,9 @@ namespace explore
     // an associative iterator has a value type of pair<>
     template <typename T>
     struct is_assoc_iter :
-        eval_if<
+        boost::mpl::eval_if<
             detail::has_value_type<T>,
             detail::value_type_is_pair<T>,
-            false_
+            boost::mpl::false_
         > {};
 }
