@@ -7,7 +7,7 @@ clean_dirs () {
     echo "cleaning dirs"
     for builddir in debug release
       do
-      dir = $topdir/$builddir/1.34.0/build
+      dir=$topdir/$builddir/1.34.0/build
       rm -rf $dir
       mkdir -p $dir
       cd $dir
@@ -25,7 +25,6 @@ do_builds () {
 
 while true
 do
-  echo "COUNT = $COUNT"
   do_builds
   if [ `date +%H` -eq 0 ]
       then
