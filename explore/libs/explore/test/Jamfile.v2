@@ -10,11 +10,9 @@
 # bring in rules for testing
 import testing ;
 
-project
+project 
     : source-location .
     : requirements
-        <hardcode-dll-paths>true
-        <library>../../test/build//boost_test_exec_monitor
     ;
 {
   test-suite printing
