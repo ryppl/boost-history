@@ -1,6 +1,6 @@
 [library FileTemplate
     [quickbook 1.4]
-    [version 0.9]
+    [version 0.91]
     [authors [Rajko, Stjepan]]
     [copyright 2007 Stjepan Rajko]
     [purpose generates file and directory trees from templates]
@@ -11,17 +11,94 @@
     ]
 ]
 
+[def template_object_ref [link filetemplate.templates.reference.template template object]]
+[def results_object_ref [link filetemplate.templates.reference.results results object]]
+[def python_file_ref [link filetemplate.templates.phases.processing.python_files
+    python generated file]]
+[def python_files_ref [link filetemplate.templates.phases.processing.python_files
+    python generated files]]
+[def python_script_ref [link filetemplate.templates.phases.examination.template_script template script]]
+[def python_scripts_ref [link filetemplate.templates.phases.examination.template_script template scripts]]
+[def sandbox_template_ref [link filetemplate.sandbox sandbox template]]
+[def template_option_ref [link filetemplate.templates.options FileTemplate option]]
+[def template_options_ref [link filetemplate.templates.options FileTemplate options]]
+[def sandbox_option_ref [link filetemplate.sandbox.options sandbox option]]
+[def sandbox_options_ref [link filetemplate.sandbox.options sandbox options]]
+[def substitution_template_ref [link filetemplate.templates.substitutions substitution template]]
+[def substitution_templates_ref [link filetemplate.templates.substitutions substitution templates]]
+[def invocation_phase_ref [link filetemplate.templates.phases.invocation invocation phase]]
+[def template_merge_ref [link filetemplate.templates.merges template merge]]
+[def template_merges_ref [link filetemplate.templates.merges template merges]]
+[def command_line_ref [link filetemplate.templates.phases.invocation.command_line command line]]
+[python]
 
-FileTemplate is a template processor for files and directories.  It provides a basic
-framework which makes producing templated dile/directory trees relatively easy.
-The philosophy of the framework is that simple things should be simple, and more
-complicated things should be doable relatively simply.  By being implemented in
-Python, and allowing template-specific python scripts in the template, FileTemplate
-has a pretty good degree of flexibility.
+FileTemplate is a template processor for files and directories.  This could be useful in the
+following scenarios:
+
+* There is a generic starting point for a certain type of project.  The user can specify
+information to fine-tune their particular starting point.
+* The user would like to integrate their existing files, and integrate them into a starting
+point for a new project.  The user can perform a template_merge_ref between the template
+for the new project, and the existing files (acting as a second template).
+
+FileTemplate provides a basic
+framework which makes producing templated file/directory trees relatively easy.
+The philosophy behind the development of the framework is that simple things should be simple,
+and more complicated things should be doable.  By being implemented in
+Python, and allowing template-specific python scripts to be placed in a template, FileTemplate
+provides a reasonable degree of flexibility.
 
 FileTemplate is being developed for construction of seed projects for the Boost Sandbox.
-The [link filetemplate.sandbox sandbox] template, which is used for this purpose,
+The sandbox_template_ref, which is used for this purpose,
 is currently the only template developed using FileTemplate.
+
+[note FileTemplate is in no way an official part or tool of the Boost libraries.]
+
+Here are some examples of what you can do with FileTemplate, and how you would
+go about doing it:
+
+[table Examples of things you can do with the sandbox template
+    [[To accomplish this:][You can do this:]]
+    [
+        [Use the =sandbox= template to start a new Boost sandbox library (you will be prompted for whatever the
+        template processor needs to know)] 
+        [Run: [^python make_template.py sandbox]
+
+        =sandbox= specifies the root directory of the template.]
+    ][
+        [Use the =sandbox= template and specify everything from the command line]
+        [Run: [^python make_template.py destination\=/boost_sandbox sandbox library\=my_new_library "author\=John Doe"]
+
+        =destination= is a global template_option_ref, and specifies where the result is constructed.
+        =library= and =author= are sandbox_options_ref.]
+    ][
+        [Tell the =sandbox= template to also construct MSVC 8.0 IDE projects (which
+        provide access to files and =bjam= builds)]
+        [Run: [^ python make_template.py sandbox vc8ide\=y]]
+    ][
+        [Combine the =sandbox= template with your existing code (the created documentation build files and MSVC IDE projects will include your existing files)]
+        [Run: [^ python make_template.py sandbox library\=boostified_library vc8ide=y /old_library/include/old_library into\=boostified_library/boost/boostified_library]
+
+        Here, the template processor is performing a template_merge_ref.
+        The existing source tree =/old_library/include/old_library= is used as an additional template.
+        It is given the option =into\=boostified_library/boost/boostified_library=, which specifies where the content
+        should go in the built result.]
+    ]
+]
+
+[table Examples of things you can do if you're designing your own template
+    [[To accomplish this:][You can do this:]]
+    [
+        [Design a template =simple= which is meant to be copied verbatim]
+        [Create a directory called =simple=, and place the desired files and directories inside.]
+    ][
+        [Design a template in which =$template_whatever$= inside template files is substituted into a user-specified value]
+        [Place inside the template directory a python_script_ref which uses the template_object_ref to get the user-specified value and set up the substitution.]
+    ][
+        [Create a template for file =random.txt= whose content requires more than simple substitutions]
+        [In place of =random.txt= create a python_file_ref =random.txt.py= which constructs the content and submits it to the template_object_ref.]
+    ]
+]
 
 * [link filetemplate.sandbox Learn more about using the sandbox template].
 * [link filetemplate.templates

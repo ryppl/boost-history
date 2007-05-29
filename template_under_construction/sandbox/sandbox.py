@@ -1,16 +1,14 @@
 # template script
 
-template.log_message('Processing Boost Sandbox template.')
-
-template.template_root = 'sandbox/'
-template.template_dir = '$template_library$'
-
-library_name = template.options.get('library', template.options.alnum, None,
-    'library name (all lowercase, use underscores to separate words, e.g. "my_library"): ')
 # Copyright 2007 Stjepan Rajko.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
+
+log.message('Welcome to the Boost Sandbox template.')
+
+library_name = template.options.get('library', template.options.alnum_lowercase, None,
+    '(all lowercase, use underscores to separate words, e.g. "my_library"): ')
 
 library_name_list = library_name.split("_")
 library_name_list_capitalized = list()
@@ -26,7 +24,7 @@ _COMMENT_http://www.boost.org/LICENSE_1_0.txt)
 """
 
 author_list = template.options.get('author', template.options.any, None,
-    'list of authors (comma separated, no spaces outside names, e.g., "My Name,Notmy R. Name": ')
+    '(comma separated, no spaces outside names, e.g., "My Name,Notmy R. Name": ')
 author_reversed = list()
 for name in author_list.rsplit(','):
     first_space_last = name.rpartition(" ")

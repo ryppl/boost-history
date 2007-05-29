@@ -2,7 +2,7 @@
 
 if template.options.get_boolean('xcodeide', False):
 
-    template.log_message('Processing Xcode IDE template.')
+    log.message('Processing Xcode IDE template.')
     
 else:
 
