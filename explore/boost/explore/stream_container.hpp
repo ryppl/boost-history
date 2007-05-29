@@ -34,7 +34,41 @@ namespace explore
         BOOST_EXPLORE_INIT_STRING(assoc_separator, ":")
         BOOST_EXPLORE_INIT_STRING(assoc_start, "")
         BOOST_EXPLORE_INIT_STRING(assoc_end, "")
+    }
 
+    // A simple collection of additional stream state
+    template<typename Elem, typename Tr>
+    struct container_stream_state
+    {
+        typedef std::basic_string<Elem, Tr> str_typ;
+        container_stream_state()
+        {
+            init<Elem>();
+        }
+
+        // is there an easier way to specialize between char and wchar_t?
+        // Concern: this is only specialized for char and wchar_t streams.
+        template<typename El>
+        void init()
+        {
+            separator = detail::init_separator<El>();
+            start = detail::init_start<El>();
+            end = detail::init_end<El>();
+            assoc_separator = detail::init_assoc_separator<El>();
+            assoc_start = detail::init_assoc_start<El>();
+            assoc_end = detail::init_assoc_end<El>();
+        }
+
+        str_typ separator;
+        str_typ start;
+        str_typ end;
+        str_typ assoc_separator;
+        str_typ assoc_start;
+        str_typ assoc_end;
+    };
+
+    namespace detail 
+    {
         // manipulator function wrapper for 1 char/wchar_t argument.  When streamed, will run manipulator
         // function with argument.
         template<typename Elem>
@@ -99,37 +133,6 @@ namespace explore
             explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_end = end;
         }
     }
-
-    // A simple collection of additional stream state
-    template<typename Elem, typename Tr>
-    struct container_stream_state
-    {
-        typedef std::basic_string<Elem, Tr> str_typ;
-        container_stream_state()
-        {
-            init<Elem>();
-        }
-
-        // is there an easier way to specialize between char and wchar_t?
-        // Concern: this is only specialized for char and wchar_t streams.
-        template<typename El>
-        void init()
-        {
-            separator = detail::init_separator<El>();
-            start = detail::init_start<El>();
-            end = detail::init_end<El>();
-            assoc_separator = detail::init_assoc_separator<El>();
-            assoc_start = detail::init_assoc_start<El>();
-            assoc_end = detail::init_assoc_end<El>();
-        }
-
-        str_typ separator;
-        str_typ start;
-        str_typ end;
-        str_typ assoc_separator;
-        str_typ assoc_start;
-        str_typ assoc_end;
-    };
 
     struct stream_normal_value
     {
