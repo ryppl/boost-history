@@ -23,18 +23,14 @@ do_builds () {
     ctest -D Continuous
 }
 
-COUNT=0
-
 while true
 do
-#  sleep 180  # wait three minutes
-  COUNT=`expr $COUNT + 1`
   echo "COUNT = $COUNT"
   do_builds
-  if [ $COUNT -eq 5 ]
+  if [ `date +%H` -eq 0 ]
       then
       clean_dirs
-      COUNT=0
   fi
+  sleep 300 # wait 5 minutes
 done
 
