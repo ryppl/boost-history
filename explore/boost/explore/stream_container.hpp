@@ -218,8 +218,8 @@ namespace explore
 namespace std
 {
     // stream vector<T>
-    template<typename Elem, typename Tr, typename T>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::vector<T>& v)
+    template<typename Elem, typename Tr, typename T, typename Allocator>
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::vector<T, Allocator>& v)
     {
         return explore::stream_container(ostr, v.begin(), v.end());
     }
