@@ -1,0 +1,398 @@
+<?xml version="1.0" standalone="yes"?>
+<library-reference><header name="boost/signal_network/base.hpp"><namespace name="boost"><namespace name="signal_network"><struct name="slot_selector_t"><template>
+      <template-type-parameter name="T"/>
+      <template-type-parameter name="Signature"/>
+    </template><data-member name="link"><type>T &amp;</type></data-member><data-member name="func"><type><emphasis>unspecified</emphasis></type></data-member><method-group name="public member functions"><method name="conversion-operator" cv=""><type>T &amp;</type></method></method-group><constructor><parameter name="link"><paramtype>T &amp;</paramtype></parameter><parameter name="func"><paramtype><emphasis>unspecified</emphasis></paramtype></parameter></constructor></struct><namespace name="signet"><class name="filter_base"/></namespace><function name="slot_selector"><type>slot_selector_t&lt; T, Signature &gt;</type><template>
+          <template-type-parameter name="Signature"/>
+          <template-type-parameter name="T"/>
+        </template><parameter name="link"><paramtype>T &amp;</paramtype></parameter><parameter name="func"><paramtype><emphasis>unspecified</emphasis></paramtype></parameter><purpose>Allows functions other than operator() to serve as signet::filter slots. </purpose><description><para><para>signet::filter for an example </para>
+</para></description></function><function name="operator&gt;&gt;="><type>boost::enable_if&lt; boost::is_base_of&lt; signet::filter_base, Filter &gt;, Filter &amp; &gt;::type</type><template>
+          <template-type-parameter name="Filter"/>
+          <template-type-parameter name="T"/>
+        </template><parameter name="filter"><paramtype>Filter &amp;</paramtype></parameter><parameter name="link"><paramtype>T &amp;</paramtype></parameter><purpose>Connects a sequence of components using signals. </purpose><description><para>This operator is identical to signet::filter::operator&gt;= (it connects the left component to the right component, and returns a reference to the left component), except it is evaluated right to left. This makes it semantics more suitable for connecting a chain of connections. </para></description></function><function name="operator|"><type>boost::enable_if&lt; boost::is_base_of&lt; signet::filter_base, Filter &gt;, Filter &amp; &gt;::type</type><template>
+          <template-type-parameter name="Filter"/>
+          <template-type-parameter name="T"/>
+        </template><parameter name="filter"><paramtype>Filter &amp;</paramtype></parameter><parameter name="link"><paramtype>T &amp;</paramtype></parameter><purpose>Allows branching in a component connection sequence. </purpose><description><para>This operator is identical to signet::filter::operator&gt;&gt;=, (it connects the left component to the right component, and returns a reference to the left component) except it is evaluated left to right. This makes its semantics more suitable for branching connections. </para></description></function><function name="operator&gt;&gt;="><type>boost::enable_if&lt; boost::is_base_of&lt; signet::filter_base, Filter &gt;, Filter &amp; &gt;::type</type><template>
+          <template-type-parameter name="Filter"/>
+          <template-type-parameter name="T"/>
+          <template-type-parameter name="Signature"/>
+        </template><parameter name="filter"><paramtype>Filter &amp;</paramtype></parameter><parameter name="link"><paramtype>slot_selector_t&lt; T, Signature &gt;</paramtype></parameter><purpose>Allows slot functions other than operator() to be used in a sequence of components. </purpose><description><para><para>slot_selector() </para>
+</para></description></function><function name="operator|"><type>boost::enable_if&lt; boost::is_base_of&lt; signet::filter_base, Filter &gt;, Filter &amp; &gt;::type</type><template>
+          <template-type-parameter name="Filter"/>
+          <template-type-parameter name="T"/>
+          <template-type-parameter name="Signature"/>
+        </template><parameter name="filter"><paramtype>Filter &amp;</paramtype></parameter><parameter name="link"><paramtype>slot_selector_t&lt; T, Signature &gt;</paramtype></parameter><purpose>Allows slot functions other than operator() to be used with branching. </purpose><description><para><para>slot_selector() </para>
+</para></description></function><function name="operator&gt;&gt;="><type>boost::signal&lt; Signature &gt; &amp;</type><template>
+          <template-type-parameter name="Signature"/>
+          <template-type-parameter name="T"/>
+        </template><parameter name="signal"><paramtype>boost::signal&lt; Signature &gt; &amp;</paramtype></parameter><parameter name="link"><paramtype>T &amp;</paramtype></parameter></function><function name="operator&gt;="><type>boost::signal&lt; Signature &gt; &amp;</type><template>
+          <template-type-parameter name="Signature"/>
+          <template-type-parameter name="T"/>
+        </template><parameter name="signal"><paramtype>boost::signal&lt; Signature &gt; &amp;</paramtype></parameter><parameter name="link"><paramtype>T &amp;</paramtype></parameter></function></namespace></namespace><macro name="SIGNAL_NETWORK_TRACKABLE"/><macro name="SIGNAL_NETWORK_TEMPLATE_CLASS"/><macro name="SIGNAL_NETWORK_TEMPLATE_NO_RETURNS"/><macro name="SIGNAL_NETWORK_TEMPLATE_TYPENAME_T"/><macro name="SIGNAL_NETWORK_TEMPLATE_DETAIL"/><macro name="SIGNAL_NETWORK_TEMPLATE_NO_MAIN_CLASS"/></header><header name="boost/signal_network/chain.hpp"><macro name="SIGNAL_NETWORK_TEMPLATE_CLASS"/><macro name="SIGNAL_NETWORK_TEMPLATE_BASE"/><macro name="SIGNAL_NETWORK_TEMPLATE_TYPENAME_T"/></header><header name="boost/signal_network/chain.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="chain"><template>
+      <template-type-parameter name="T"/>
+      <template-type-parameter name="Signature"/>
+    </template><purpose>Connects a number of components of the same type in a chain. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read.</para>
+Example:<para> <programlisting>void chain_test()
+{
+    signet::chain&lt;DoublerClass, void(float)&gt; doubling_chain(4);
+    signet::storage&lt;void (float)&gt; floater(1.0f);
+    signet::storage&lt;void (float)&gt; collector(0.0f);
+
+    floater &gt;&gt;= doubling_chain &gt;&gt;= collector;
+    floater();
+
+    BOOST_CHECK(collector.value1() == 16.0f);
+} // end void chain_test
+</programlisting> </para>
+</para></description><method-group name="public member functions"><method name="operator()" cv=""><type/><parameter name=""><paramtype>...</paramtype></parameter><purpose>Sending a signal to the chain will forward it to the first component in the chain. </purpose></method><method name="default_signal" cv=""><type>boost::signal&lt; Signature &gt; &amp;</type><purpose>The default signal coming out of the chain is the default signal of the last component in the chain. </purpose></method></method-group><constructor><parameter name="copies"><paramtype>size_t</paramtype></parameter><purpose>Constructs a chain composed of instances of T. </purpose></constructor><constructor><parameter name="copies"><paramtype>size_t</paramtype></parameter><parameter name="component"><paramtype>T &amp;</paramtype></parameter><purpose>Constructs a chain composed of copies of component. </purpose></constructor></class></namespace></namespace></namespace></header><header name="boost/signal_network/collector.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="collector"><template>
+      <template-type-parameter name="Signature"/>
+    </template><purpose>Stores data received via a signal so that it can be retrieved. </purpose><description><para>
+Todo<para>Currently collector only supports signatures of type void (type).</para>Example:  <programlisting>void simple_test()
+{
+    // instantiate all of the components we need
+    signet::storage&lt;void ()&gt; banger;
+    signet::storage&lt;void (float)&gt; floater(2.5f);
+    signet::storage&lt;void (float)&gt; collector(0.0f);
+
+    // create the network
+    banger &gt;&gt;= floater &gt;&gt;= collector;
+
+    banger(); // signal from banger will now cause floater to output 2.5
+    BOOST_CHECK(collector.value1() == 2.5f);
+
+    floater(1.5f); // change the value in floater
+    floater(); // we can also signal floater directly
+    BOOST_CHECK(collector.value1() == 1.5f);
+} // end void simple_test()
+</programlisting> </para></description><typedef name="arg1_value_type"><purpose>Type of the stored value. </purpose><type>boost::remove_reference&lt; typename boost::function_traits&lt; Signature &gt;::arg1_type &gt;::type</type></typedef><method-group name="public member functions"><method name="operator()" cv=""><type>void</type><parameter name="arg1"><paramtype>typename boost::function_traits&lt; Signature &gt;::arg1_type</paramtype></parameter><purpose>Stores the value in the signal. </purpose></method><method name="operator()" cv=""><type>call_traits&lt; arg1_value_type &gt;::const_reference</type><purpose>Returns the last stored value. </purpose></method></method-group><constructor><purpose>The default constructor will not initialize the stored value. </purpose></constructor><constructor><parameter name="init"><paramtype>typename boost::call_traits&lt; arg1_value_type &gt;::param_type</paramtype></parameter><purpose>This constructor will initialize the stored value to what is provided. </purpose></constructor></class></namespace></namespace></namespace></header><header name="boost/signal_network/filter.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="filter"><template>
+      <template-type-parameter name="Signature"/>
+    </template><purpose>Provides a basis for filters (components that receive and send a signal). </purpose><description><para>
+Use this class as a base class for classes that produce a signal of a particular signature.</para><para>Example:<para> <programlisting>class DoublerClass : public signet::filter&lt;void (float)&gt;
+{
+public:
+    void operator()(float x) {out(2*x);}
+};
+
+void filter_test()
+{
+    DoublerClass doubler1, doubler2;
+    signet::storage&lt;void (float)&gt; floater(1.0f);
+    signet::storage&lt;void (float)&gt; collector(0.0f);
+
+    floater &gt;&gt;= doubler1 &gt;&gt;= doubler2 &gt;&gt;= collector;
+    floater();
+
+    BOOST_CHECK(collector.value1() == 4.0f);
+} // end void filter_test()
+</programlisting> </para>
+</para></description><typedef name="signature_type"><type>Signature</type></typedef><typedef name="signal_type"><type>boost::signal&lt; Signature &gt;</type></typedef><typedef name="result_type"><type>boost::function_traits&lt; Signature &gt;::result_type</type></typedef><method-group name="public member functions"><method name="default_signal" cv=""><type>signal_type &amp;</type><purpose>Returns the default out signal. </purpose></method><method name="disconnect_all_slots" cv=""><type>void</type><purpose>Disconnects all slots connected to the signet::filter. </purpose></method></method-group><constructor><parameter name=""><paramtype>const <classname>filter</classname> &amp;</paramtype></parameter></constructor><copy-assignment><parameter name=""><paramtype>const <classname>filter</classname> &amp;</paramtype></parameter></copy-assignment><constructor/></class></namespace></namespace></namespace></header><header name="boost/signal_network/function.hpp"><macro name="SIGNAL_NETWORK_TEMPLATE_CLASS"/><macro name="SIGNAL_NETWORK_TEMPLATE_BASE"/><macro name="SIGNAL_NETWORK_TEMPLATE_NO_RETURNS"/></header><header name="boost/signal_network/function.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="function"><template>
+      <template-type-parameter name="Signature"/>
+    </template><inherit access="public">boost::signal_network::signet::filter&lt; Signature &gt;</inherit><purpose>Converts a function into a Signal Network filter. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read.</para>
+The signet::function object will receive signals of signature void(function arguments), and send signals of signature void(function return type).</para><para>Example:<para> <programlisting>float DoublerFunc(float  x)
+{
+    return x*2;
+}
+
+void function_test()
+{
+    signet::function&lt;float(float)&gt; double_fun1(&amp;DoublerFunc);
+    signet::function&lt;float(float)&gt; double_fun2(&amp;DoublerFunc);
+    signet::storage&lt;void (float)&gt; floater(1.0f);
+    signet::storage&lt;void (float)&gt; collector(0.0f);
+
+    floater &gt;&gt;= double_fun1 &gt;&gt;= double_fun2 &gt;&gt;= collector;
+    floater();
+
+    BOOST_CHECK(collector.value1() == 4.0f);
+} // end void function_test()
+</programlisting> </para>
+</para></description><method-group name="public member functions"><method name="operator()" cv=""><type>void</type><parameter name=""><paramtype>...</paramtype></parameter><description><para>Calls the function with the arguments of the signal, and then sends a signal with the return value of the function </para></description></method></method-group><constructor><parameter name="f"><paramtype>boost::function&lt; Signature &gt;</paramtype></parameter><purpose>Initializes the object with the specified function. </purpose></constructor></class></namespace></namespace></namespace></header><header name="boost/signal_network/junction.hpp"><macro name="SIGNAL_NETWORK_TEMPLATE_CLASS"/><macro name="SIGNAL_NETWORK_TEMPLATE_BASE"/></header><header name="boost/signal_network/junction.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="junction"><template>
+      <template-type-parameter name="Signature"/>
+    </template><inherit access="public">boost::signal_network::signet::filter&lt; Signature &gt;</inherit><purpose>Forwards a single signal to multiple slots, and can also be disabled to stop the flow of signals. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read.</para>
+Example:<para> <programlisting>void junction_test()
+{
+    signet::storage&lt;void ()&gt; banger1, banger2;
+    SignalVoidCounter counter1, counter2;
+    signet::junction&lt;void ()&gt; junction;
+    
+    banger1 &gt;&gt;= junction &gt;&gt;= counter1;
+    banger2 &gt;&gt;= junction &gt;&gt;= counter2;
+
+    banger1();
+    banger2();
+
+    BOOST_CHECK(counter1.GetCount() == 2);
+    BOOST_CHECK(counter2.GetCount() == 2);
+
+    junction.disable();
+    banger1();
+    banger2();
+
+    BOOST_CHECK(counter1.GetCount() == 2);
+    BOOST_CHECK(counter2.GetCount() == 2);
+
+    junction.enable();
+    banger1();
+    banger2();
+
+    BOOST_CHECK(counter1.GetCount() == 4);
+    BOOST_CHECK(counter2.GetCount() == 4);
+} // end void junction_test()
+</programlisting> </para>
+</para></description><method-group name="public member functions"><method name="enable" cv=""><type>void</type><purpose>Enables the junction (signals will be forwarded). </purpose></method><method name="disable" cv=""><type>void</type><purpose>Disables the junction (signals will not be forwarded). </purpose></method><method name="operator()" cv=""><type>boost::function_traits&lt; Signature &gt;::result_type</type><parameter name=""><paramtype>...</paramtype></parameter><purpose>Upon receiving this signal, the same signal will be sent out if the junction is enabled. </purpose></method></method-group></class></namespace></namespace></namespace></header><header name="boost/signal_network/mutex.hpp"><macro name="SIGNAL_NETWORK_TEMPLATE_CLASS"/><macro name="SIGNAL_NETWORK_TEMPLATE_BASE"/></header><header name="boost/signal_network/mutex.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="mutex"><template>
+      <template-type-parameter name="Signature"/>
+    </template><inherit access="public">boost::signal_network::signet::filter&lt; Signature &gt;</inherit><purpose>Ensures a component is processing only one signal at a time when using multiple threads. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read.</para>
+Example:<para> <programlisting>void mutex_test()
+{
+    signet::timed_generator&lt;void ()&gt; banger1;
+    signet::timed_generator&lt;void ()&gt; banger2;
+    signet::mutex&lt;void ()&gt; lock;
+    SignalVoidCounter counter;
+    ticker tick;
+
+    banger1 &gt;&gt;= lock &gt;&gt;= counter;
+    banger2 &gt;&gt;= lock &gt;&gt;= tick;
+    banger1.enable(0.5, 5);
+    banger2.enable(0.5, 5);
+
+    while (counter.GetCount() &lt; 10) {}
+
+    BOOST_CHECK(counter.GetCount() == 10);
+    banger1.join();
+    banger2.join();
+} // end void mutex_test
+</programlisting> </para>
+</para></description><method-group name="public member functions"><method name="operator()" cv=""><type>boost::function_traits&lt; Signature &gt;::result_type</type><parameter name=""><paramtype>...</paramtype></parameter><purpose>Locks an internal mutex and forwards the signal. </purpose></method></method-group></class></namespace></namespace></namespace></header><header name="boost/signal_network/selector.hpp"><macro name="SIGNAL_NETWORK_SELECTOR_INPUT" kind="functionlike"><macro-parameter name="z"/><macro-parameter name="n"/><macro-parameter name="_arity"/></macro><macro name="SIGNAL_NETWORK_TEMPLATE_CLASS"/><macro name="SIGNAL_NETWORK_TEMPLATE_BASE"/><macro name="SIGNAL_NETWORK_TEMPLATE_ITERATE2"/></header><header name="boost/signal_network/selector.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="selector"><template>
+      <template-type-parameter name="Signature"/>
+    </template><inherit access="public">boost::signal_network::signet::filter&lt; Signature &gt;</inherit><purpose>Allows selection of signals from multiple inputs. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read.</para>
+This can be used to determine which signal out of a group of signals will continue through the selector (the others will not be forwarded).</para><para>Example:<para> <programlisting>void selector_test()
+{
+    signet::storage&lt;void ()&gt; banger;
+    signet::storage&lt;void (float)&gt; floater1, floater2;
+    floater1(1.0f);
+    floater2(2.0f);
+    signet::storage&lt;void (float)&gt; collector(0.0f);
+    signet::selector&lt;2, void (float)&gt; selector;
+
+    banger &gt;&gt;= floater1 &gt;&gt;= selector.slot1();
+    banger &gt;&gt;= floater2 &gt;&gt;= selector.slot2();
+    selector &gt;&gt;= collector;
+
+    selector.select(0);
+    banger();
+    BOOST_CHECK(collector.value1() == 0.0f);
+
+    selector.select(1);
+    banger();
+    BOOST_CHECK(collector.value1() == 1.0f);
+
+    selector.select(2);
+    banger();
+    BOOST_CHECK(collector.value1() == 2.0f);
+} // end void selector_test()
+</programlisting> </para>
+</para></description><method-group name="public member functions"><method name="select" cv=""><type>void</type><parameter name="input"><paramtype>int</paramtype></parameter><purpose>Selects the indicated input (if source is 0, no input will be selected). </purpose></method><method name="inputN" cv=""><type>boost::function_traits&lt; Signature &gt;::result_type</type><parameter name=""><paramtype>...</paramtype></parameter><purpose>If N is selected, the signal received at this slot will be forwared. </purpose></method><method name="slotN" cv=""><type>slot_selector_t&lt; <classname>selector</classname>, Signature &gt;</type><purpose>Returns the slot selector for inputN. </purpose></method></method-group></class></namespace></namespace></namespace></header><header name="boost/signal_network/socket_receiver.hpp"><macro name="SIGNAL_NETWORK_SOCKET_UNPACK" kind="functionlike"><macro-parameter name="z"/><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_TEMPLATE_CLASS"/><macro name="SIGNAL_NETWORK_TEMPLATE_BASE"/></header><header name="boost/signal_network/socket_receiver.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="socket_receiver"><template>
+      <template-type-parameter name="T"/>
+      <template-type-parameter name="Signature"/>
+    </template><inherit access="public">boost::signal_network::signet::storage&lt; Signature &gt;</inherit><purpose>Receives serializable signals through a Boost asio socket. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read. </para>
+Todo<para>socket_sender only works for Signatures of return type void.</para>Example:<para> <programlisting>// asio test
+boost::mutex mutex_;
+boost::condition cond;
+asio::io_service io_service;
+
+// This function will set up an asio acceptor, and wait for a connection.
+// Once established, it will set up a signal network which will send
+// its final signal through the socket.
+void asio_server()
+{
+    // set up the socket
+    asio::ip::tcp::acceptor acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 1097));
+    asio::ip::tcp::socket socket(io_service);
+    {
+        boost::mutex::scoped_lock lock(mutex_);
+        acceptor.listen();
+        cond.notify_all();
+    }
+    acceptor.accept(socket);
+
+    // instantiate the components - a float generator, a filter that adds 2, and a sender
+    signet::storage&lt;void (float)&gt; generator(1.0f);
+    signet::function&lt;float(float)&gt; add2(boost::bind(std::plus&lt;float&gt;(), _1, 2.0f));
+    signet::socket_sender&lt;void (float)&gt; sender(socket);
+
+    // create the network
+    generator &gt;&gt;= add2 &gt;&gt;= sender;
+
+    // cause the generator to send it's stored value
+    generator();
+}
+
+// main test function
+void asio_test()
+{
+    // start the server in a separate thread
+    boost::mutex::scoped_lock lock(mutex_);
+    boost::thread t(asio_server);
+    cond.wait(lock);
+
+    // set up the socket
+    asio::ip::tcp::endpoint endpoint_recv(asio::ip::address::from_string("127.0.0.1"), 1097);
+    asio::ip::tcp::socket socket(io_service);
+    socket.connect(endpoint_recv);
+
+    // instatiate the components
+    signet::socket_receiver&lt;void (float)&gt; receiver(socket);
+    signet::storage&lt;void (float)&gt; collector(0.0f);
+
+    // set up the network
+    receiver &gt;&gt;= collector;
+
+    // this receiver is synchronous - we have to tell it to receive a signal
+    receiver();
+
+    BOOST_CHECK(collector.value1() == 3.0f);
+
+    t.join();
+} // end void asio_test
+</programlisting> </para>
+</para></description><method-group name="public member functions"><method name="operator()" cv=""><type>void</type><purpose>Sets the receiver to wait for a packet and send its contents via the signal. </purpose></method></method-group><constructor><parameter name="socket"><paramtype>asio::ip::tcp::socket &amp;</paramtype></parameter><purpose>Initializes the socket_sender to use the provided socket. </purpose></constructor></class></namespace></namespace></namespace></header><header name="boost/signal_network/socket_sender.hpp"><macro name="SIGNAL_NETWORK_SOCKET_PACK" kind="functionlike"><macro-parameter name="z"/><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_TEMPLATE_CLASS"/></header><header name="boost/signal_network/socket_sender.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="socket_sender"><template>
+      <template-type-parameter name="T"/>
+      <template-type-parameter name="Signature"/>
+    </template><purpose>Sends serializable signals through a Boost asio socket. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read. </para>
+Todo<para>socket_sender only works for Signatures of return type void.</para>Example:<para> <programlisting>// asio test
+boost::mutex mutex_;
+boost::condition cond;
+asio::io_service io_service;
+
+// This function will set up an asio acceptor, and wait for a connection.
+// Once established, it will set up a signal network which will send
+// its final signal through the socket.
+void asio_server()
+{
+    // set up the socket
+    asio::ip::tcp::acceptor acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 1097));
+    asio::ip::tcp::socket socket(io_service);
+    {
+        boost::mutex::scoped_lock lock(mutex_);
+        acceptor.listen();
+        cond.notify_all();
+    }
+    acceptor.accept(socket);
+
+    // instantiate the components - a float generator, a filter that adds 2, and a sender
+    signet::storage&lt;void (float)&gt; generator(1.0f);
+    signet::function&lt;float(float)&gt; add2(boost::bind(std::plus&lt;float&gt;(), _1, 2.0f));
+    signet::socket_sender&lt;void (float)&gt; sender(socket);
+
+    // create the network
+    generator &gt;&gt;= add2 &gt;&gt;= sender;
+
+    // cause the generator to send it's stored value
+    generator();
+}
+
+// main test function
+void asio_test()
+{
+    // start the server in a separate thread
+    boost::mutex::scoped_lock lock(mutex_);
+    boost::thread t(asio_server);
+    cond.wait(lock);
+
+    // set up the socket
+    asio::ip::tcp::endpoint endpoint_recv(asio::ip::address::from_string("127.0.0.1"), 1097);
+    asio::ip::tcp::socket socket(io_service);
+    socket.connect(endpoint_recv);
+
+    // instatiate the components
+    signet::socket_receiver&lt;void (float)&gt; receiver(socket);
+    signet::storage&lt;void (float)&gt; collector(0.0f);
+
+    // set up the network
+    receiver &gt;&gt;= collector;
+
+    // this receiver is synchronous - we have to tell it to receive a signal
+    receiver();
+
+    BOOST_CHECK(collector.value1() == 3.0f);
+
+    t.join();
+} // end void asio_test
+</programlisting> </para>
+</para></description><method-group name="public member functions"><method name="operator()" cv=""><type>void</type><parameter name=""><paramtype>...</paramtype></parameter><purpose>Serializes each of the arguments and sends them in a single packet through the socket. </purpose></method></method-group><constructor><parameter name="socket"><paramtype>asio::ip::tcp::socket &amp;</paramtype></parameter><purpose>Initializes the socket_sender to use the provided socket. </purpose></constructor></class></namespace></namespace></namespace></header><header name="boost/signal_network/storage.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="storage"><template>
+      <template-type-parameter name="Signature"/>
+    </template><inherit access="public">boost::signal_network::signet::filter&lt; Signature &gt;</inherit><purpose>Upon receiving an empty signal, outputs the stored value. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read.</para>
+Example:<para> <programlisting>void simple_test()
+{
+    // instantiate all of the components we need
+    signet::storage&lt;void ()&gt; banger;
+    signet::storage&lt;void (float)&gt; floater(2.5f);
+    signet::storage&lt;void (float)&gt; collector(0.0f);
+
+    // create the network
+    banger &gt;&gt;= floater &gt;&gt;= collector;
+
+    banger(); // signal from banger will now cause floater to output 2.5
+    BOOST_CHECK(collector.value1() == 2.5f);
+
+    floater(1.5f); // change the value in floater
+    floater(); // we can also signal floater directly
+    BOOST_CHECK(collector.value1() == 1.5f);
+} // end void simple_test()
+</programlisting> </para>
+</para></description><typedef name="argN_value_type"><purpose>Stored value type. </purpose><type><emphasis>unspecified</emphasis></type></typedef><method-group name="public member functions"><method name="operator()" cv=""><type>boost::function_traits&lt; Signature &gt;::result_type</type><purpose>Sends a signal containing the stored values. </purpose></method><method name="operator()" cv=""><type>void</type><parameter name="arg1"><paramtype>typename boost::call_traits&lt; arg1_value_type &gt;::param_type</paramtype></parameter><parameter name="arg2"><paramtype>typename boost::call_traits&lt; arg2_value_type &gt;::param_type</paramtype></parameter><parameter name=""><paramtype>...</paramtype></parameter><purpose>Sets the stored values. </purpose></method><method name="valueN" cv=""><type>boost::call_traits&lt; argN_value_type &gt;::param_type</type><purpose>Returns the stored value of parameter N using a param_type cast. </purpose></method></method-group></class></namespace></namespace></namespace><macro name="SIGNAL_NETWORK_ARGVAR_TYPEDEF" kind="functionlike"><macro-parameter name="z"/><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_ARGVAR_TYPEDEFS" kind="functionlike"><macro-parameter name="n"/></macro><macro name="SIGNAL_NETWORK_ARGVAR" kind="functionlike"><macro-parameter name="z"/><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_ARGVARS" kind="functionlike"><macro-parameter name="n"/></macro><macro name="SIGNAL_NETWORK_ARGVAR_TYPENAME" kind="functionlike"><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_ARGVAR_TYPENAME_COMMA" kind="functionlike"><macro-parameter name="z"/><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_ARGVAR_TYPENAMES" kind="functionlike"><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_ARGVAR_NAME" kind="functionlike"><macro-parameter name="n"/></macro><macro name="SIGNAL_NETWORK_ARGVAR_NAME_COMMA" kind="functionlike"><macro-parameter name="z"/><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_ARGVAR_NAMES" kind="functionlike"><macro-parameter name="n"/></macro><macro name="SIGNAL_NETWORK_SET_ARGVAR" kind="functionlike"><macro-parameter name="z"/><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_SET_ARGVARS" kind="functionlike"><macro-parameter name="n"/></macro><macro name="SIGNAL_NETWORK_RETURN_STORED" kind="functionlike"><macro-parameter name="z"/><macro-parameter name="n"/><macro-parameter name="text"/></macro><macro name="SIGNAL_NETWORK_STORAGE_SIGNAL" kind="functionlike"><macro-parameter name=""/></macro><macro name="SIGNAL_NETWORK_TEMPLATE_CLASS"/><macro name="SIGNAL_NETWORK_TEMPLATE_BASE"/><macro name="SIGNAL_NETWORK_TEMPLATE_ITERATE_MAIN_CLASS"/></header><header name="boost/signal_network/storage.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="storage"><template>
+      <template-type-parameter name="Signature"/>
+    </template><inherit access="public">boost::signal_network::signet::filter&lt; Signature &gt;</inherit><purpose>Upon receiving an empty signal, outputs the stored value. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read.</para>
+Example:<para> <programlisting>void simple_test()
+{
+    // instantiate all of the components we need
+    signet::storage&lt;void ()&gt; banger;
+    signet::storage&lt;void (float)&gt; floater(2.5f);
+    signet::storage&lt;void (float)&gt; collector(0.0f);
+
+    // create the network
+    banger &gt;&gt;= floater &gt;&gt;= collector;
+
+    banger(); // signal from banger will now cause floater to output 2.5
+    BOOST_CHECK(collector.value1() == 2.5f);
+
+    floater(1.5f); // change the value in floater
+    floater(); // we can also signal floater directly
+    BOOST_CHECK(collector.value1() == 1.5f);
+} // end void simple_test()
+</programlisting> </para>
+</para></description><typedef name="argN_value_type"><purpose>Stored value type. </purpose><type><emphasis>unspecified</emphasis></type></typedef><method-group name="public member functions"><method name="operator()" cv=""><type>boost::function_traits&lt; Signature &gt;::result_type</type><purpose>Sends a signal containing the stored values. </purpose></method><method name="operator()" cv=""><type>void</type><parameter name="arg1"><paramtype>typename boost::call_traits&lt; arg1_value_type &gt;::param_type</paramtype></parameter><parameter name="arg2"><paramtype>typename boost::call_traits&lt; arg2_value_type &gt;::param_type</paramtype></parameter><parameter name=""><paramtype>...</paramtype></parameter><purpose>Sets the stored values. </purpose></method><method name="valueN" cv=""><type>boost::call_traits&lt; argN_value_type &gt;::param_type</type><purpose>Returns the stored value of parameter N using a param_type cast. </purpose></method></method-group></class></namespace></namespace></namespace></header><header name="boost/signal_network/timed_generator.hpp"><namespace name="boost"><namespace name="signal_network"><namespace name="signet"><class name="timed_generator"><template>
+      <template-type-parameter name="Signature"/>
+    </template><inherit access="public">boost::signal_network::signet::storage&lt; Signature &gt;</inherit><purpose>Creates its own thread and periodically sends a signal with the stored value. </purpose><description><para>
+<para>Since I can't get Doxygen to unravel the preprocessed definition of this class, the documentation was generated through a non-functioning class Doxygen could read.</para>
+Example:<para> <programlisting>void mutex_test()
+{
+    signet::timed_generator&lt;void ()&gt; banger1;
+    signet::timed_generator&lt;void ()&gt; banger2;
+    signet::mutex&lt;void ()&gt; lock;
+    SignalVoidCounter counter;
+    ticker tick;
+
+    banger1 &gt;&gt;= lock &gt;&gt;= counter;
+    banger2 &gt;&gt;= lock &gt;&gt;= tick;
+    banger1.enable(0.5, 5);
+    banger2.enable(0.5, 5);
+
+    while (counter.GetCount() &lt; 10) {}
+
+    BOOST_CHECK(counter.GetCount() == 10);
+    banger1.join();
+    banger2.join();
+} // end void mutex_test
+</programlisting> </para>
+</para></description><method-group name="public member functions"><method name="enable" cv=""><type>void</type><parameter name="interval"><paramtype>double</paramtype><description><para>Sets the time interval (in seconds) at which the signal is sent. </para></description></parameter><parameter name="signal_count"><paramtype>unsigned</paramtype><default>0</default><description><para>The signal will be sent signal_count times, or indefinitelly if signal_count==0. </para></description></parameter><purpose>Sets the object to send the stored value at specified time intervals. </purpose><description><para>
+</para></description></method><method name="disable" cv=""><type>void</type><purpose>Stops the sending of signals and suspends the thread. </purpose></method><method name="join" cv=""><type>void</type><purpose>Forces the thread to terminate. </purpose></method></method-group><constructor><purpose>Default constructor. Starts the thread, but signals won't be sent until the enable() function is called. </purpose></constructor><destructor><purpose>The thread should be joined by the time the destructor is called. </purpose></destructor><method-group name="private member functions"><method name="thread_function" cv=""><type>void</type></method></method-group></class></namespace></namespace></namespace></header><header name="C:/Development/boost_sandbox/SOC/2007/signals/libs/signal_network/doc/dox/signal_network.hpp"><namespace name="boost"><namespace name="signal_network"/></namespace></header></library-reference>

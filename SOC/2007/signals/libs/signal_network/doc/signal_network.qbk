@@ -1,0 +1,216 @@
+
+[library Signal Network
+    [quickbook 1.4]
+    [version 0.1]
+    [authors [Rajko, Stjepan]]
+    [copyright 2007 Stjepan Rajko]
+    [purpose Operators and Components for signal-based networks.]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+The Signal Network library aims to facilitate the
+implementation and interconnection of objects into signal networks using Boost.Signals.
+To see the rationale behind the Signal Network library, please visit the associated
+[@http://svn.boost.org/trac/boost/wiki/soc/2007/SignalNetwork GSoC page].
+
+[warning Signal Network is not an official Boost library.  It is being developed
+as a part of Google Summer of Code program.]
+
+* If you would like some more information about why one would want to connect objects into a signal-based
+  network, read my exploration of [link signal_network.dataflow Dataflow-oriented programming approaches in C++].
+* If you are interested in the progress of the implementation, see
+    * [link signal_network.discussion Discussion on Boost Community Feedback]
+    * [link signal_network.download Download and Changelog]
+    * [@doxygen/index.html Tutorial and Reference]
+
+[section:dataflow Dataflow-oriented programming approaches in C++]
+
+[note The purpose of this section is to place the Signal Network library in the bigger picture.
+It is only a start, so please forgive the incompleteness, possible inaccuracies,
+and the present lack of a real "point" to the section.  A
+lot of the ideas in this section have come from a discussion with Tobias Schwinger.]
+
+The Signal Network library attempts to afford some of the benefits of
+[@http://en.wikipedia.org/wiki/Dataflow_language Dataflow languages] to C++.  It does so by
+facilitating large-scale use of Boost.Signals as a mechanism to model the transfer
+of data between processing components.
+
+To explore this further, let us take a step back and (rather informally) divide things as follows:
+
+* on one hand, there is /data/ (variables, objects, etc...)
+* on the other, there are /computational components/ (functions, methods, etc...)
+
+Development of C++ programs is usually focused on the development of the computational
+components.  Data can then be processed by the computational
+components by applying the components to the data in some appropriate way.
+There are several ways of providing data to the computational components:
+
+* by placing it in a location where the component will read it
+* by passing it as a parameter in a call
+* (a combination of the above) by passing the location of the data as a parameter in a call
+
+Similarly, there are several ways of getting data out of a computation component
+
+* the component makes a function / signal call that carries the data as a parameter
+* the component places a value somewhere where it can be read
+* the component returns it as a return value
+
+Please note that there is a separation between providing the data to a component, and invoking the
+component.  In some cases, the two happen simoultaneously (when the data is passed and returned
+via a function call), while in others invoking the computational component
+can happen separately from providing the data (at least from a modeling perspective).
+An example of the latter is a computational component which uses data stored in a particular location.
+We can place the data in that location much before invoking the computational component.
+
+[h4 Signal-based approach and pin-based approach]
+
+The Signal Network library relies on moving the data via function parameters and return values.
+Here, the Boost.Signals library is used to model these individual data channels which couple
+the data transfer and the computational component invocation.  This is one possible dataflow-oriented
+approach.
+
+There is another approach, proposed by Tobias Schwinger, in which the computational components are
+connected by "pins". Here, the data is communicated by
+placing it in locations where the components will read it, and reading it
+from locations where the components write them.  Also, rather than the components
+activating each other, the network itself activates the components manually in an optimized
+order/way.
+
+Each of these approaches has different properties.  In the signal-based approach, the knowledge of the
+network is local - each component knows about where its signals are going, but it knows nothing
+of where the signals arriving at its own slots are coming from.  Unless we record how the network was
+constructed, there is no "big picture" of what the complete network looks like.  Similarly,
+the network is executed autonomously - the components invoke one another when appropriate, and
+no external control mechanism is required.
+
+In the pin-based approach, the situation is reversed.  There is a "big picture" of what the complete
+network looks like, and the network control mechanism uses this information to decide when a component
+should be invoked and to manage the data shared between the components via pins.  Global
+knowledge of the network can be used for better optimization, serialization, etc.  However, it may
+come at the price of some intrusiveness to the computation components.
+
+Even though these two frameworks are sufficiently different, they aim for the same goal:
+a dataflow-oriented approach using the C++ language.  It is possible that an application
+designed in a dataflow-oriented way could be implemented using either of the frameworks,
+that one framework could be convertible to the other, or that using both frameworks
+simoultaneously is in fact the best solution.  Even though investigating the relationships
+between these two frameworks, or implementing both, would be outside the scope of this
+Google Summer of Code project, I believe it is worthwhile to keep the connections in
+mind while designing and implementing the Signal Network library.
+
+For example, both frameworks could possibly benefit from the separation of the network
+creation layer (which may include factories and reflection) from the network execution
+layer (which only includes the necessary computation components).  Also, allowing additional
+mechanisms for network creation such as through a visual GUI designer, serialization/deserialization
+etc. would also be beneficial.  If I address any of these for the GSoC project, I will try to
+address them in a way that might be useful for both frameworks.
+
+[endsect]
+
+[section:discussion Discussion on Boost Community Feedback]
+
+The following summarizes some of the suggestions / comments given by the Boost community, and
+what has been done to incorporate this feedback.
+
+[* Tobias Schwinger indicated that the library could be used for pulling rather than pushing data.]
+
+* [@doxygen/index.html#signal_network_pull_example An example] which illustrates this has been addded.
+
+[* James Jones suggested that a ||-like operator could be used for branching, and >> for chaining.]
+
+* operator >= which was orignally used for branching has been replaced with operator |.
+* Since the most straightforward way for me to implement chaining/branching is using a left-to-right
+operator for one and a right-to-left operator for the other, I decided to stay with >>= as the chaining
+operator.
+
+[* Paolo Coletta suggested a "video_generator >>= ( effect1 && effect2 ) >>= image_sum" - like syntax that
+  would allow parallel processing of signals (identified as the "join" pattern by Yigong Liu)]
+
+* I have started to implement thread-related components in
+[@doxygen/classboost_1_1signal__network_1_1signet_1_1timed__generator.html signet::timed_generator] and
+[@doxygen/classboost_1_1signal__network_1_1signet_1_1mutex.html signet::mutex].
+More sophisticated threading components, control and syntax to follow.
+
+[* Yigong Liu suggested enhanced support for common network topologies, such as mesh. ]
+
+* I have implemented a prototype
+[@doxygen/classboost_1_1signal__network_1_1signet_1_1chain.html signet::chain] topology
+to get a start on this concept.
+
+[* Braddock Gaskill pointed out the relationship with the "pipes and filters" pattern, and suggested
+   the possibility of using functions as filters.  He also suggested the library would me more useful
+   if different functions executed in parallel threads, or were queued to specific worker threads,
+   if the library would provide functionality to control and schedule the execution of the invoked functions,
+   or traverse the call graph.]
+
+* In light of the possible connection with the "pipes and filters" pattern, the base
+  object for signal network components which receive a signal and send a signal has
+  been changed to
+  [@doxygen/classboost_1_1signal__network_1_1signet_1_1filter.html signet::filter].
+  I was not successful in finding a formal definition
+  of what "pipes and filters" semantics should be, so I am not sure whether this is appropriate.
+* [@doxygen/classboost_1_1signal__network_1_1signet_1_1function.html signet::function]
+  now offers the proposed functionality of converting functions into filters.
+* Threading and scheduling of the invoked functions is something I plan to address.
+* Providing a call graph would be a great feature, but I am not sure what the best
+  way to address that is, since each component might be of a different type.  Perhaps a graph
+  in which only the edges are labeled (with connection objects) would be doable and useful.
+
+[endsect]
+
+[section:download Download and Changelog]
+
+Please keep in mind that this code is a prototype and far from the finished product.  I am learning
+as I go, and any feedback on improving the implementation is very welcome.
+
+GSoC Development version (*latest*) \[located in the Boost sandbox /SOC/2007/signals\]
+
+* converting documentation to boostbook, using Boost.Build
+
+Proposal for Boost / Google SoC version  \[[@signal_network.zip download]\]
+
+* finished the signet::socket_sender and signet::socket_receiver components
+
+Draft proposal for Boost / Google SoC version
+
+* changed the file and namespace structure
+* implemented a file-iteration based mechanism for arity-dependent classes
+* changed the operators used
+* signal_link is now signet::filter and does not need to know it's descendant's type
+* implemented signet::junction, signet::selector, signet::storage, signet::timed_generator,
+  signet::mutex, signet::chain, signet::function classes
+
+Original request for interest version available as attachment to
+[@http://lists.boost.org/Archives/boost/2007/02/116869.php]
+
+[endsect]
+
+[section:reference Reference]
+
+The reference for this library is [@doxygen/index.html generated separately].
+
+[endsect]
+
+[section:acknowledgements Acknowledgements]
+
+* Thanks to all the members of the Boost community who have expressed an interest in this library
+  and contributed [link signal_network.discussion valuable feedback].
+* Thanks to Douglas Gregor for making himself available as a mentor for this project.
+* Thanks to Tobias Schwinger for a most valuable discussion on various [link signal_network.dataflow
+  dataflow-oriented approaches and ideas].
+  
+[endsect]
+
+[section:license License]
+
+Copyright 2007 Stjepan Rajko.
+Distributed under the Boost Software License, Version 1.0. (See
+accompanying file LICENSE_1_0.txt or copy at
+[@http://www.boost.org/LICENSE_1_0.txt])
+
+
+[endsect]

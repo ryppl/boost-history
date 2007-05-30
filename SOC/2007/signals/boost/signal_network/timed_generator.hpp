@@ -15,7 +15,7 @@ SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 		class, the documentation was generated through a non-functioning class Doxygen could read.
 
 	\par Example:
-	\dontinclude SignalNetworkTests.cpp
+	\dontinclude example.cpp
 	\skip mutex_test
 	\until end void mutex_test
 

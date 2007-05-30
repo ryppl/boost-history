@@ -21,7 +21,7 @@ SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 	of a particular signature.  
 
 	\par Example:
-	\dontinclude SignalNetworkTests.cpp
+	\dontinclude example.cpp
 	\skip DoublerClass
 	\until end void filter_test
 */

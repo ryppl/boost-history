@@ -12,7 +12,7 @@ SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 	\todo Currently collector only supports signatures of type void (type).
 
 	Example:
-	\dontinclude SignalNetworkTests.cpp
+	\dontinclude example.cpp
 	\skip simple_test
 	\until end void simple_test
 */
