@@ -14,14 +14,14 @@
 #include <boost/mpl/list/list10.hpp>
 
 #include <boost/units/config.hpp>
-#include <boost/units/experimental/sort.hpp>
+#include <boost/units/detail/sort.hpp>
 
 #ifdef BOOST_UNITS_CHECK_HOMOGENEOUS_UNITS
 
 #include <boost/is_same.hpp>
 #include <boost/mpl/not.hpp>
 
-#include <boost/units/experimental/linear_algebra.hpp>
+#include <boost/units/detail/linear_algebra.hpp>
 
 #endif
 
@@ -91,12 +91,12 @@ struct make_system;
 
 template<>
 struct make_system<> {
-    typedef homogeneous_system<mpl::list0<> > type;
+    typedef homogeneous_system<dimensionless_type> type;
 };
 
 template<class T0>
 struct make_system<T0> {
-    typedef homogeneous_system<typename detail::bubble_sort<mpl::list1<T0> >::type> type;
+    typedef homogeneous_system<dimension_list<T0, dimensionless_type> > type;
 };
 
 template<class T0, class T1>
