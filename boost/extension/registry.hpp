@@ -25,20 +25,42 @@ public:
       it->second.first.close();
     }
   }
+  bool clear() {
+    bool ret_val = false;
+    for (library_iterator it = libraries_.begin(); it != libraries_.end();)
+    {
+      if (!it->second.second) {
+        ret_val = true;
+        close((it++)->first.c_str());
+      }    
+      else
+      {
+        ++it;
+      }
+    }
+    return ret_val;
+  }
   bool open(const char * library_location, const char * function_name = 
-            "boost_extension_load_function") {
+            "boost_extension_registry_function") {
     library_iterator it = libraries_.find(library_location);
     if (it == libraries_.end()) {
       it = libraries_.insert(std::make_pair(std::string(library_location), 
-                                      std::make_pair(shared_library(library_location, false), int(0)))).first;
+                             std::make_pair(shared_library(library_location, false), int(0)))).first;
       this->current_library_ = library_location;
-      basic_counted_factory_map<TypeInfo>::current_counter_ = &it->second.second;
+      this->current_counter_ = &it->second.second;
       it->second.first.open();
       if (it->second.first.is_open() == false) {
         libraries_.erase(it);
         return false;
       }
-      return true;
+      functor<void, counted_factory_map &> load_func = 
+        it->second.first.get_functor<void, counted_factory_map &>(function_name);
+      if (load_func.is_valid())
+      {
+        load_func(*this);
+        return true;
+      }
+      return false;
     }
     return false;
   }
@@ -47,11 +69,11 @@ public:
     library_iterator it = libraries_.find(library_location);
     if (it == libraries_.end()) 
       return false;
-    it->second.first.close();
     for (typename basic_counted_factory_map<TypeInfo>::FactoryMap::iterator it = this->factories_.begin();
          it != this->factories_.end(); ++it) {
-      it->second->erase(library_location);
+      it->second->remove_library(library_location);
     }
+    it->second.first.close();
     libraries_.erase(it);
     return true;
   }

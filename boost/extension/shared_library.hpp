@@ -13,7 +13,7 @@ namespace boost{namespace extensions{
 template <class ReturnValue, class Param1 = void, class Param2 = void, class Param3 = void, class Param4 = void, class Param5 = void, class Param6 = void>
 class functor
 {
-private:
+protected:
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, Param5, Param6);
   FunctionType func_;
 public:
@@ -33,7 +33,7 @@ public:
 template <class ReturnValue, class Param1, class Param2, class Param3, class Param4, class Param5>
 class functor<ReturnValue, Param1, Param2, Param3, Param4, Param5>
 {
-private:
+protected:
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, Param5);
   FunctionType func_;
 public:
@@ -53,7 +53,7 @@ public:
 template <class ReturnValue, class Param1, class Param2, class Param3, class Param4>
 class functor<ReturnValue, Param1, Param2, Param3, Param4>
 {
-private:
+protected:
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4);
   FunctionType func_;
 public:
@@ -73,7 +73,7 @@ public:
 template <class ReturnValue, class Param1, class Param2, class Param3>
 class functor<ReturnValue, Param1, Param2, Param3>
 {
-private:
+protected:
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3);
   FunctionType func_;
 public:
@@ -93,7 +93,7 @@ public:
 template <class ReturnValue, class Param1, class Param2>
 class functor<ReturnValue, Param1, Param2>
 {
-private:
+protected:
   typedef ReturnValue (*FunctionType)(Param1, Param2);
   FunctionType func_;
 public:
@@ -113,7 +113,7 @@ public:
 template <class ReturnValue, class Param1>
 class functor<ReturnValue, Param1>
 {
-private:
+protected:
   typedef ReturnValue (*FunctionType)(Param1);
   FunctionType func_;
 public:
@@ -133,7 +133,7 @@ public:
 template <class ReturnValue>
 class functor<ReturnValue>
 {
-private:
+protected:
   typedef ReturnValue (*FunctionType)();
   FunctionType func_;
 public:
@@ -152,7 +152,7 @@ public:
 
 class shared_library
 {
-private:
+protected:
   std::string location_;
   library_handle handle_;
   bool auto_close_;

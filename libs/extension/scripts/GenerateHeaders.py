@@ -13,18 +13,21 @@ class header_generator:
     self.generate_shared_library_hpp()
     self.generate_factory_map_hpp("factory", "", "")
     self.generate_factory_map_hpp("counted_factory",
-      "\n    f.set_library(current_library_);\n    f.set_counter(current_counter_);",
-      "\n    std::string current_library_;\n    int * current_counter_;",
-      "\n    virtual bool erase(const char * library_name) = 0;", """
-    virtual bool erase(const char * library_name)
+      "\n    f.set_library(current_library_.c_str());\n    f.set_counter(current_counter_);",
+      "\n    std::string current_library_;\n    int default_counter_;\n    int * current_counter_;",
+      "\n    virtual bool remove_library(const char * library_name) = 0;", """
+    virtual bool remove_library(const char * library_name)
     {
-      for (iterator it = begin(); it != end(); ++it)
+      for (typename std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
+              Param4, Param5, Param6> >::iterator it = this->begin(); 
+              it != this->end(); ++it)
       {
         if (strcmp(it->library(), library_name) == 0)
-          erase(it); 
+          this->erase(it); 
       }
-      return size() == 0;
-    }""")
+      return this->size() == 0;
+    }""", 
+      "\n    basic_counted_factory_map() : default_counter_(0), current_counter_(&default_counter_){}")
       
   def template_header(self, start_string, start, count, add_void):
     if add_void:
@@ -71,7 +74,7 @@ namespace boost{namespace extensions{
       out.write("".join(["class factory",
         factory_template, 
         """{
-private:
+protected:
   class generic_factory_function
   {
   public:
@@ -155,7 +158,7 @@ namespace boost{namespace extensions{
       out.write("".join(["class counted_factory",
         factory_template, 
         """{
-private:
+protected:
   int * counter_;
   std::string library_;
   class generic_factory_function
@@ -163,7 +166,7 @@ private:
   public:
     virtual ~generic_factory_function(){}
     virtual Interface * operator()(""",
-    self.nameless_param_list(i, []),
+    self.nameless_param_list(i, ["int * counter"]),
     """) = 0;
     virtual generic_factory_function * copy() const = 0;
   };
@@ -194,14 +197,25 @@ private:
       (""", 
     self.named_param_list(i, ["int * counter"]),
       """)
-    {return new counted_object(""",
-    self.param_names(i, ["counter_"]),
-    """);}
+    {  // A compilation error here usually indicates that the
+       // class you are adding is not derived from the base class
+       // that you indicated.
+      return static_cast<Interface*>(new counted_object(""",
+    self.param_names(i, ["counter"]),
+    """));}
     virtual generic_factory_function * copy() const {return new factory_function<T>;}
   };
   std::auto_ptr<generic_factory_function> factory_func_ptr_;
   Info info_;
 public:
+  void set_library(const char * library_name)
+  {
+    library_ = library_name;
+  }
+  void set_counter(int * counter)
+  {
+    counter_ = counter;
+  }
   const char * library()
   {
     return library_.c_str();
@@ -215,20 +229,22 @@ public:
     info_(info)
   {}
   counted_factory(const counted_factory & first)
-    :factory_func_ptr_(first.factory_func_ptr_->copy()),
+    :counter_(first.counter_),
+    library_(first.library_),
+    factory_func_ptr_(first.factory_func_ptr_->copy()),
     info_(first.info_)
                        {}
   Interface * operator()(""",
-    self.named_param_list(i, []),
+    self.named_param_list(i, ["int * counter"]),
     """)
     {return create(""",
-    self.param_names(i, []),
+    self.param_names(i, ["counter"]),
     """);}
   Interface * create(""",
     self.named_param_list(i, []),
     """){return (*factory_func_ptr_)
   (""",
-    self.param_names(i, []),
+    self.param_names(i, ["counter_"]),
     """);}
   Info & get_info(){return info_;}
 };
@@ -267,7 +283,7 @@ namespace boost{namespace extensions{
       out.write("".join(["class functor",
         functor_template,
         """{
-private:
+protected:
   typedef ReturnValue (*FunctionType)(""",
         self.nameless_param_list(i, []),
         """);
@@ -294,7 +310,7 @@ public:
     # end for loop
     out.write("""class shared_library
 {
-private:
+protected:
   std::string location_;
   library_handle handle_;
   bool auto_close_;
@@ -333,7 +349,7 @@ public:
      
   def generate_factory_map_hpp(self, factory_type, factory_type_add, new_members,
                                generic_factory_container_additions = "",
-                               factory_container_additions = ""):
+                               factory_container_additions = "", new_public_members = ""):
     out = open(''.join(['../../../boost/extension/',factory_type,'_map.hpp']), mode='w')
     out.write(''.join(["""/* (C) Copyright Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -356,7 +372,7 @@ namespace boost{namespace extensions{
 template <class TypeInfo>
 class basic_""",factory_type,"""_map
 {
-private:
+protected:
   class generic_factory_container
   {
   public:""", generic_factory_container_additions, """
@@ -373,7 +389,7 @@ private:
   };
   typedef std::map<TypeInfo, generic_factory_container *> FactoryMap;
   FactoryMap factories_;""", new_members,""" 
-public:
+public:""", new_public_members,"""
   ~basic_""", factory_type, """_map(){
     for(typename FactoryMap::iterator it = factories_.begin(); it != factories_.end(); ++it)
       delete it->second;
@@ -438,10 +454,10 @@ public:
             """>();
     """,factory_type,"""<""",
             self.nameless_param_list(i, ["Interface", "Info"]),
-            """> f(info);
+            """> f(info);""",factory_type_add,"""
     //f.set_type<Actual>();
     f.set_type_special((Actual*)0);
-    s.push_back(f);""",factory_type_add,"""
+    s.push_back(f);
     //it->set_type<Actual>(); 
   }
 """]))

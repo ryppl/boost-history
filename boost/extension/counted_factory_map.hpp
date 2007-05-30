@@ -23,19 +23,21 @@ protected:
   class generic_factory_container
   {
   public:
-    virtual bool erase(const char * library_name) = 0;
+    virtual bool remove_library(const char * library_name) = 0;
     virtual ~generic_factory_container(){}
   };
   template <class Interface, class Info, class Param1 = void, class Param2 = void, class Param3 = void, class Param4 = void, class Param5 = void, class Param6 = void>
   class factory_container : public std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >, public generic_factory_container
   {
   public:
-    virtual bool erase(const char * library_name)
+    virtual bool remove_library(const char * library_name)
     {
-      for (typename std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >::iterator it = this->begin(); it != this->end(); ++it)
+      for (typename std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
+              Param4, Param5, Param6> >::iterator it = this->begin(); 
+              it != this->end(); ++it)
       {
         if (strcmp(it->library(), library_name) == 0)
-          erase(it); 
+          this->erase(it); 
       }
       return this->size() == 0;
     }
@@ -47,8 +49,10 @@ protected:
   typedef std::map<TypeInfo, generic_factory_container *> FactoryMap;
   FactoryMap factories_;
     std::string current_library_;
+    int default_counter_;
     int * current_counter_; 
 public:
+    basic_counted_factory_map() : default_counter_(0), current_counter_(&default_counter_){}
   ~basic_counted_factory_map(){
     for(typename FactoryMap::iterator it = factories_.begin(); it != factories_.end(); ++it)
       delete it->second;
@@ -84,11 +88,11 @@ void add(Info info)
     typedef std::list<counted_factory<Interface, Info> > ListType;
     ListType & s = this->get<Interface, Info>();
     counted_factory<Interface, Info> f(info);
+    f.set_library(current_library_.c_str());
+    f.set_counter(current_counter_);
     //f.set_type<Actual>();
     f.set_type_special((Actual*)0);
     s.push_back(f);
-    f.set_library(current_library_);
-    f.set_counter(current_counter_);
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1>
@@ -121,11 +125,11 @@ void add(Info info)
     typedef std::list<counted_factory<Interface, Info, Param1> > ListType;
     ListType & s = this->get<Interface, Info, Param1>();
     counted_factory<Interface, Info, Param1> f(info);
+    f.set_library(current_library_.c_str());
+    f.set_counter(current_counter_);
     //f.set_type<Actual>();
     f.set_type_special((Actual*)0);
     s.push_back(f);
-    f.set_library(current_library_);
-    f.set_counter(current_counter_);
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1, class Param2>
@@ -158,11 +162,11 @@ void add(Info info)
     typedef std::list<counted_factory<Interface, Info, Param1, Param2> > ListType;
     ListType & s = this->get<Interface, Info, Param1, Param2>();
     counted_factory<Interface, Info, Param1, Param2> f(info);
+    f.set_library(current_library_.c_str());
+    f.set_counter(current_counter_);
     //f.set_type<Actual>();
     f.set_type_special((Actual*)0);
     s.push_back(f);
-    f.set_library(current_library_);
-    f.set_counter(current_counter_);
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1, class Param2, class Param3>
@@ -195,11 +199,11 @@ void add(Info info)
     typedef std::list<counted_factory<Interface, Info, Param1, Param2, Param3> > ListType;
     ListType & s = this->get<Interface, Info, Param1, Param2, Param3>();
     counted_factory<Interface, Info, Param1, Param2, Param3> f(info);
+    f.set_library(current_library_.c_str());
+    f.set_counter(current_counter_);
     //f.set_type<Actual>();
     f.set_type_special((Actual*)0);
     s.push_back(f);
-    f.set_library(current_library_);
-    f.set_counter(current_counter_);
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4>
@@ -232,11 +236,11 @@ void add(Info info)
     typedef std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4> > ListType;
     ListType & s = this->get<Interface, Info, Param1, Param2, Param3, Param4>();
     counted_factory<Interface, Info, Param1, Param2, Param3, Param4> f(info);
+    f.set_library(current_library_.c_str());
+    f.set_counter(current_counter_);
     //f.set_type<Actual>();
     f.set_type_special((Actual*)0);
     s.push_back(f);
-    f.set_library(current_library_);
-    f.set_counter(current_counter_);
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5>
@@ -269,11 +273,11 @@ void add(Info info)
     typedef std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5> > ListType;
     ListType & s = this->get<Interface, Info, Param1, Param2, Param3, Param4, Param5>();
     counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5> f(info);
+    f.set_library(current_library_.c_str());
+    f.set_counter(current_counter_);
     //f.set_type<Actual>();
     f.set_type_special((Actual*)0);
     s.push_back(f);
-    f.set_library(current_library_);
-    f.set_counter(current_counter_);
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5, class Param6>
@@ -306,11 +310,11 @@ void add(Info info)
     typedef std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> > ListType;
     ListType & s = this->get<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6>();
     counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> f(info);
+    f.set_library(current_library_.c_str());
+    f.set_counter(current_counter_);
     //f.set_type<Actual>();
     f.set_type_special((Actual*)0);
     s.push_back(f);
-    f.set_library(current_library_);
-    f.set_counter(current_counter_);
     //it->set_type<Actual>(); 
   }
 };

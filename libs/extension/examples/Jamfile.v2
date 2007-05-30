@@ -30,17 +30,17 @@ lib CarOfTheFuture :
   <link>shared 
 ;
 exe MultipleInheritance : multiple_inheritance/main_mi.cpp Computer Vehicle ;
-stage ../stage :
-  HelloWorld HelloWorldLib Vehicle Car 
-  Plane Boat Computer FlyingCar 
-  CarOfTheFuture MultipleInheritance ;
+
+lib RegistryLibrary : registry/registry_library.cpp : <link>shared ;
+exe RegistryExample : registry/registry_example.cpp ;
 
 install ../bin : 
   HelloWorld HelloWorldLib Vehicle Boat FlyingCar 
-  CarOfTheFuture MultipleInheritance 
+  CarOfTheFuture MultipleInheritance RegistryLibrary
+  RegistryExample
   :
-  <install-dependencies>on 
-  <install-type>EXE 
-  <install-type>SHARED_LIB
-  <install-type>LIB
+ # <install-dependencies>on 
+ # <install-type>EXE 
+ # <install-type>SHARED_LIB
+ # <install-type>LIB
   ;

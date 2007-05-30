@@ -10,7 +10,7 @@ namespace boost{namespace extensions{
   template <class Interface, class Info, class Param1 = void, class Param2 = void, class Param3 = void, class Param4 = void, class Param5 = void, class Param6 = void>
 class factory
 {
-private:
+protected:
   class generic_factory_function
   {
   public:
@@ -52,7 +52,7 @@ public:
 template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5>
 class factory<Interface, Info, Param1, Param2, Param3, Param4, Param5>
 {
-private:
+protected:
   class generic_factory_function
   {
   public:
@@ -94,7 +94,7 @@ public:
 template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4>
 class factory<Interface, Info, Param1, Param2, Param3, Param4>
 {
-private:
+protected:
   class generic_factory_function
   {
   public:
@@ -136,7 +136,7 @@ public:
 template <class Interface, class Info, class Param1, class Param2, class Param3>
 class factory<Interface, Info, Param1, Param2, Param3>
 {
-private:
+protected:
   class generic_factory_function
   {
   public:
@@ -178,7 +178,7 @@ public:
 template <class Interface, class Info, class Param1, class Param2>
 class factory<Interface, Info, Param1, Param2>
 {
-private:
+protected:
   class generic_factory_function
   {
   public:
@@ -220,7 +220,7 @@ public:
 template <class Interface, class Info, class Param1>
 class factory<Interface, Info, Param1>
 {
-private:
+protected:
   class generic_factory_function
   {
   public:
@@ -262,7 +262,7 @@ public:
 template <class Interface, class Info>
 class factory<Interface, Info>
 {
-private:
+protected:
   class generic_factory_function
   {
   public:

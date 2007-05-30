@@ -19,7 +19,7 @@ namespace boost{namespace extensions{
 template <class TypeInfo>
 class basic_factory_map
 {
-private:
+protected:
   class generic_factory_container
   {
   public:
