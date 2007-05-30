@@ -8,8 +8,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_UNITS_EXPERIMENTAL_IO_HPP
-#define BOOST_UNITS_EXPERIMENTAL_IO_HPP
+#ifndef BOOST_UNITS_IO_HPP
+#define BOOST_UNITS_IO_HPP
 
 #include <string>
 #include <iosfwd>
@@ -18,12 +18,29 @@
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/deref.hpp>
+#include <boost/serialization/nvp.hpp>
 
 #include <boost/units/unit.hpp>
 #include <boost/units/quantity.hpp>
-#include <boost/units/experimental/heterogeneous_system.hpp>
+#include <boost/units/heterogeneous_system.hpp>
 
 namespace boost {
+
+namespace serialization {
+
+/// Boost Serialization library support for units.
+template<class Archive,class System,class Dim>
+inline void serialize(Archive& ar,boost::units::unit<Dim,System>&,const unsigned int /*version*/)
+{ }
+
+/// Boost Serialization library support for quantities.
+template<class Archive,class Unit,class Y>
+inline void serialize(Archive& ar,boost::units::quantity<Unit,Y>& q,const unsigned int /*version*/)
+{
+    ar & boost::serialization::make_nvp("value", units::quantity_cast<Y&>(q));
+}
+        
+} // namespace serialization
 
 namespace units {
 
@@ -46,13 +63,16 @@ inline std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Tra
 template<class T>
 struct heterogeneous_system;
 
-template<class T>
+/// traits template for unit names
+template<class BaseUnit>
 struct base_unit_info {
+    /// The full name of the unit (returns BaseUnit::name() by default)
     static std::string name() {
-        return(T::name());
+        return(BaseUnit::name());
     }
+    /// The symbol for the base unit (Returns BaseUnit::symbol() by default)
     static std::string symbol() {
-        return(T::symbol());
+        return(BaseUnit::symbol());
     }
 };
 
@@ -113,12 +133,14 @@ struct print_impl<0> {
 
 } // namespace detail
 
+/// Print an @c unit as a list of base units and exponents e.g "m s^-1"
 template<class Char, class Traits, class Dimension, class System>
 std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, const unit<Dimension, System>&) {
     os << typename reduce_unit<unit<Dimension, System> >::type();
     return(os);
 }
 
+/// INTERNAL ONLY
 template<class Char, class Traits, class Dimension, class System>
 std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, const unit<Dimension, heterogeneous_system<System> >&) {
     detail::print_impl<mpl::size<typename System::type>::value>::template apply<
@@ -127,6 +149,7 @@ std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& o
     return(os);
 }
 
+/// Print a @c quantity. Prints the value followed by the unit
 template<class Char, class Traits, class Unit, class T>
 std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& os, const quantity<Unit, T>& q) {
     os << q.value() << ' ' << Unit();
