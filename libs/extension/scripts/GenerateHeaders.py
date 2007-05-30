@@ -11,23 +11,34 @@ class header_generator:
     self.generate_factory_hpp()
     self.generate_counted_factory_hpp()
     self.generate_shared_library_hpp()
-    self.generate_factory_map_hpp("factory", "", "")
+    self.generate_factory_map_hpp("factory", "", "", "", """
+      factory_container() {}
+     // factory_container(basic_factory_map & z)
+      //  :std::list<factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, Param4, Param5, Param6>()){}
+      virtual ~factory_container(){}
+    """)
     self.generate_factory_map_hpp("counted_factory",
       "\n    f.set_library(current_library_.c_str());\n    f.set_counter(current_counter_);",
       "\n    std::string current_library_;\n    int default_counter_;\n    int * current_counter_;",
       "\n    virtual bool remove_library(const char * library_name) = 0;", """
+    int * counter_;
+    factory_container(int * counter) : counter_(counter) {++(*counter_);}
+    virtual ~factory_container() {--(*counter_);}
     virtual bool remove_library(const char * library_name)
     {
       for (typename std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
               Param4, Param5, Param6> >::iterator it = this->begin(); 
-              it != this->end(); ++it)
+              it != this->end();)
       {
         if (strcmp(it->library(), library_name) == 0)
-          this->erase(it); 
+          this->erase(it++); 
+        else
+          ++it;
       }
       return this->size() == 0;
     }""", 
-      "\n    basic_counted_factory_map() : default_counter_(0), current_counter_(&default_counter_){}")
+      "\n    basic_counted_factory_map() : default_counter_(0), current_counter_(&default_counter_){}",
+      "current_counter_")
       
   def template_header(self, start_string, start, count, add_void):
     if add_void:
@@ -349,7 +360,8 @@ public:
      
   def generate_factory_map_hpp(self, factory_type, factory_type_add, new_members,
                                generic_factory_container_additions = "",
-                               factory_container_additions = "", new_public_members = ""):
+                               factory_container_contents = "", new_public_members = "",
+                               factory_container_params = ""):
     out = open(''.join(['../../../boost/extension/',factory_type,'_map.hpp']), mode='w')
     out.write(''.join(["""/* (C) Copyright Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -381,11 +393,11 @@ protected:
   template <class Interface, class Info, class Param1 = void, class Param2 = void, class Param3 = void, class Param4 = void, class Param5 = void, class Param6 = void>
   class factory_container : public std::list<""",factory_type,"""<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >, public generic_factory_container
   {
-  public:""", factory_container_additions, """
-    factory_container(){}
-    factory_container(basic_""", factory_type, """_map & z)
-      :std::list<""",factory_type,"""<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, Param4, Param5, Param6>()){}
-    virtual ~factory_container(){}
+  public:""", factory_container_contents, """
+   // factory_container() {}
+   // factory_container(basic_""", factory_type, """_map & z)
+    //  :std::list<""",factory_type,"""<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, Param4, Param5, Param6>()){}
+    //virtual ~factory_container(){}
   };
   typedef std::map<TypeInfo, generic_factory_container *> FactoryMap;
   FactoryMap factories_;""", new_members,""" 
@@ -428,7 +440,7 @@ public:""", new_public_members,"""
            """> * ret = 
           new factory_container<""",
            self.nameless_param_list(i, ["Interface", "Info"]),
-           """>();
+           """>(""",factory_container_params,""");
         factories_[current_type] = ret;
         return *ret;
       }

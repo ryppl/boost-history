@@ -29,10 +29,15 @@ protected:
   class factory_container : public std::list<factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >, public generic_factory_container
   {
   public:
-    factory_container(){}
-    factory_container(basic_factory_map & z)
-      :std::list<factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, Param4, Param5, Param6>()){}
-    virtual ~factory_container(){}
+      factory_container() {}
+     // factory_container(basic_factory_map & z)
+      //  :std::list<factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, Param4, Param5, Param6>()){}
+      virtual ~factory_container(){}
+    
+   // factory_container() {}
+   // factory_container(basic_factory_map & z)
+    //  :std::list<factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, Param4, Param5, Param6>()){}
+    //virtual ~factory_container(){}
   };
   typedef std::map<TypeInfo, generic_factory_container *> FactoryMap;
   FactoryMap factories_; 

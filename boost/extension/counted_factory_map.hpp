@@ -30,21 +30,26 @@ protected:
   class factory_container : public std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >, public generic_factory_container
   {
   public:
+    int * counter_;
+    factory_container(int * counter) : counter_(counter) {++(*counter_);}
+    virtual ~factory_container() {--(*counter_);}
     virtual bool remove_library(const char * library_name)
     {
       for (typename std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
               Param4, Param5, Param6> >::iterator it = this->begin(); 
-              it != this->end(); ++it)
+              it != this->end();)
       {
         if (strcmp(it->library(), library_name) == 0)
-          this->erase(it); 
+          this->erase(it++); 
+        else
+          ++it;
       }
       return this->size() == 0;
     }
-    factory_container(){}
-    factory_container(basic_counted_factory_map & z)
-      :std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, Param4, Param5, Param6>()){}
-    virtual ~factory_container(){}
+   // factory_container() {}
+   // factory_container(basic_counted_factory_map & z)
+    //  :std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, Param4, Param5, Param6>()){}
+    //virtual ~factory_container(){}
   };
   typedef std::map<TypeInfo, generic_factory_container *> FactoryMap;
   FactoryMap factories_;
@@ -72,7 +77,7 @@ std::list<counted_factory<Interface, Info> > & get()
       if (it == factories_.end())
       {
         factory_container<Interface, Info> * ret = 
-          new factory_container<Interface, Info>();
+          new factory_container<Interface, Info>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
@@ -109,7 +114,7 @@ std::list<counted_factory<Interface, Info, Param1> > & get()
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1> * ret = 
-          new factory_container<Interface, Info, Param1>();
+          new factory_container<Interface, Info, Param1>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
@@ -146,7 +151,7 @@ std::list<counted_factory<Interface, Info, Param1, Param2> > & get()
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2> * ret = 
-          new factory_container<Interface, Info, Param1, Param2>();
+          new factory_container<Interface, Info, Param1, Param2>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
@@ -183,7 +188,7 @@ std::list<counted_factory<Interface, Info, Param1, Param2, Param3> > & get()
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2, Param3> * ret = 
-          new factory_container<Interface, Info, Param1, Param2, Param3>();
+          new factory_container<Interface, Info, Param1, Param2, Param3>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
@@ -220,7 +225,7 @@ std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4> > & g
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2, Param3, Param4> * ret = 
-          new factory_container<Interface, Info, Param1, Param2, Param3, Param4>();
+          new factory_container<Interface, Info, Param1, Param2, Param3, Param4>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
@@ -257,7 +262,7 @@ std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5> * ret = 
-          new factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5>();
+          new factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
@@ -294,7 +299,7 @@ std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> * ret = 
-          new factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6>();
+          new factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }

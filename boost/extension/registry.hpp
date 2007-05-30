@@ -70,8 +70,16 @@ public:
     if (it == libraries_.end()) 
       return false;
     for (typename basic_counted_factory_map<TypeInfo>::FactoryMap::iterator it = this->factories_.begin();
-         it != this->factories_.end(); ++it) {
-      it->second->remove_library(library_location);
+         it != this->factories_.end();) {
+      if(it->second->remove_library(library_location)) 
+      {
+        delete it->second;
+        this->factories_.erase(it++);
+      }
+      else
+      {
+        ++it; 
+      }
     }
     it->second.first.close();
     libraries_.erase(it);
