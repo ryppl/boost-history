@@ -22,7 +22,7 @@ public:
   ~basic_registry() {
     for (library_iterator it = libraries_.begin(); it != libraries_.end(); ++it)
     {
-      it->second.first.close();
+      close(it->first.c_str());
     }
   }
   bool clear() {
