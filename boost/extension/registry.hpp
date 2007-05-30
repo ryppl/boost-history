@@ -20,9 +20,9 @@ protected:
     library_iterator;
 public:
   ~basic_registry() {
-    for (library_iterator it = libraries_.begin(); it != libraries_.end(); ++it)
+    for (library_iterator it = libraries_.begin(); it != libraries_.end();)
     {
-      close(it->first.c_str());
+      close((it++)->first.c_str());
     }
   }
   bool clear() {
