@@ -8,6 +8,8 @@
 # include "lists.h"
 # include "execcmd.h"
 # include <errno.h>
+# include <signal.h>
+# include <stdio.h>
 # include <time.h>
 # include <unistd.h> /* needed for vfork(), _exit() prototypes */
 
@@ -55,14 +57,43 @@
 
 static int intr = 0;
 static int cmdsrunning = 0;
+static int fd_max = 0;
 static void (*istat)( int );
 
 static struct
 {
-	int	pid; /* on win32, a real process handle */
-	void	(*func)( void *closure, int status, timing_info* );
-	void 	*closure;
+    int	    pid;        /* on win32, a real process handle */
+    int     finished;   /* 1 if child process has signaled, 0 otherwise */
+    int     fd;         /* file descriptors for stdout and stderr */
+    FILE   *stream;     /* child's stderr file stream */
+    char   *buffer;     /* buffer to hold stderr output, if any */
+    void    (*func)( void *closure, int status, timing_info* );
+    void   *closure;
 } cmdtab[ MAXJOBS ] = {{0}};
+
+/* file descriptor set used by unix select */
+fd_set readfds;
+
+/* handle child termination signals */
+void sig_chld_handler(int signo, siginfo_t* info, void* uap)
+{
+    int i, status;
+
+    /* Find cmdtab entry that matches the pid of this
+     * terminating child process.  Set cmdtab[i].finished 
+     * to one to indicate this child process has terminated 
+     * and is ready to have it's output read.
+     */
+    for( i=0 ; i < MAXJOBS; ++i ) {
+        if( info->si_pid == cmdtab[ i ].pid ) {
+            cmdtab[ i ].finished = 1;
+            return;
+        }
+    }
+
+    /* if here, a process terminated that execunix didn't spawn, wait for it */
+    wait(&status);
+}
 
 /*
  * onintr() - bump intr to note command interruption
@@ -86,9 +117,11 @@ execcmd(
 	void *closure,
 	LIST *shell )
 {
-	int pid;
+        int p[2];
+        int pid;
 	int slot;
 	char *argv[ MAXARGC + 1 ];	/* +1 for NULL */
+        FILE *stream;
 
 	/* Find a slot in the running commands table for this one. */
 
@@ -140,37 +173,86 @@ execcmd(
 	    argv[3] = 0;
 	}
 
-	/* Catch interrupts whenever commands are running. */
+	/* increment jobs running */
+	++cmdsrunning;
 
-	if( !cmdsrunning++ )
-	    istat = signal( SIGINT, onintr );
+        /* create pipe from child to parent */
+
+        if (pipe(p) < 0)
+            exit(EXITBAD);
 
 	/* Start the command */
 
 	if ((pid = vfork()) == 0) 
    	{
-		execvp( argv[0], argv );
-		_exit(127);
-	}
+            dup2(p[1], STDERR_FILENO);
+            close(p[0]);
+            close(p[1]);
 
-	if( pid == -1 )
+	    execvp( argv[0], argv );
+	    _exit(127);
+	}
+        else if( pid == -1 )
 	{
 	    perror( "vfork" );
 	    exit( EXITBAD );
 	}
 
+        /* close write end of pipe, open read end of pipe */
+
+        close(p[1]); 
+        stream = fdopen(p[0], "r");
+        if (stream == NULL) {
+            perror( "fdopen" );
+            exit( EXITBAD );
+        }
+
 	/* Save the operation for execwait() to find. */
 
 	cmdtab[ slot ].pid = pid;
+	cmdtab[ slot ].fd = p[0];
+	cmdtab[ slot ].stream = stream;
 	cmdtab[ slot ].func = func;
 	cmdtab[ slot ].closure = closure;
+
+        /* save off max read file descriptor for use in select */
+
+        fd_max = fd_max < p[0] ? p[0] : fd_max;
+        FD_SET(p[0], &readfds);
 
 	/* Wait until we're under the limit of concurrent commands. */
 	/* Don't trust globs.jobs alone. */
 
-	while( cmdsrunning >= MAXJOBS || cmdsrunning >= globs.jobs )
-	    if( !execwait() )
-		break;
+        while( cmdsrunning >= MAXJOBS || cmdsrunning >= globs.jobs )
+            if( !execwait() )
+                break;
+}
+
+void read_descriptor(int i)
+{
+    int ret, len;
+    char *tmp;
+    char buffer[BUFSIZ];
+    while ((ret = fread(buffer, sizeof(char), BUFSIZ-1, cmdtab[i].stream)) > 0) 
+    {
+        buffer[ret] = 0;
+        if (!cmdtab[i].buffer)
+        {
+            /* never been allocated */
+            cmdtab[i].buffer = (char*)malloc(ret+1);
+            memcpy(cmdtab[i].buffer, buffer, ret+1);
+        }
+        else
+        {
+            /* previously allocated */
+            tmp = cmdtab[i].buffer;
+            len = strlen(tmp);
+            cmdtab[i].buffer = (char*)malloc(len+ret+1);
+            memcpy(cmdtab[i].buffer, tmp, len);
+            memcpy(cmdtab[i].buffer+len, buffer, ret+1);
+            free(tmp);
+        }
+    }
 }
 
 /*
@@ -180,65 +262,116 @@ execcmd(
 int
 execwait()
 {
-	int i;
-	int status, w;
-	int rstat;
+    int i, j, ret;
+    int status, w, finished;
+    int rstat;
     timing_info time;
+    fd_set fds;
     struct tms old_time, new_time;
     
-	/* Handle naive make1() which doesn't know if cmds are running. */
+    /* Handle naive make1() which doesn't know if cmds are running. */
 
-	if( !cmdsrunning )
-	    return 0;
+    if( !cmdsrunning )
+        return 0;
+
+    finished = 0;
+    while (!finished)
+    {
+        /* find first job that finished */
+        for (i=0; i<MAXJOBS; ++i)
+        {
+            if ( cmdtab[i].finished )
+            {
+                finished = 1;
+                read_descriptor(i);
+                break;
+            }
+        }
+
+        if (!finished) 
+        {
+            fds = readfds;
+
+            /* wait for io on a descriptor or a signal */
+            ret = select(fd_max+1, &fds, NULL, NULL, NULL);
+
+            /* check for data on a descriptor */
+            if (0 < ret)
+            {
+                for (i=0; i<MAXJOBS; ++i)
+                {
+                    if ( FD_ISSET(cmdtab[i].fd, &fds) )
+                    {
+                        read_descriptor(i);
+                    }
+                }
+            }
+        }
+    }
+
+    /* find first job that finished */
+    for (i=0; i<MAXJOBS; ++i)
+        if ( cmdtab[i].finished )
+            break;
+
+    /* ensure a job terminated */
+    if (i == MAXJOBS)
+        exit(EXITBAD);
 
     times(&old_time);
     
-	/* Pick up process pid and status */
-	while( ( w = wait( &status ) ) == -1 && errno == EINTR )
-		;
+    /* print out the buffer */
+    if (cmdtab[i].buffer)
+        printf("%s", cmdtab[i].buffer);
 
-	if( w == -1 )
-	{
-	    printf( "child process(es) lost!\n" );
-	    perror("wait");
-	    exit( EXITBAD );
-	}
+    /* close stderr file */
+    ret = fclose(cmdtab[i].stream);
+
+    /* wait for the child */
+    w = waitpid(cmdtab[i].pid, &status, 0);
+
+    if( w == -1 )
+    {
+        printf( "child process(es) lost!\n" );
+        perror("waitpid");
+        exit( EXITBAD );
+    }
+
+    /* clear this file descriptor from pselect */ 
+    FD_CLR(cmdtab[i].fd, &readfds);
+
+    /* initialize back to zero */
+    cmdtab[i].pid = 0;
+    cmdtab[i].finished = 0;
+    cmdtab[i].fd = 0;
+    cmdtab[i].stream = 0;
+    free(cmdtab[i].buffer);
+    cmdtab[i].buffer = 0;
+
+    /* compute fd_max */
+    fd_max = 0;
+    for (j=0; j<MAXJOBS; ++j)
+        fd_max = fd_max < cmdtab[j].fd ? cmdtab[j].fd : fd_max;
 
     times(&new_time);
 
     time.system = (double)(new_time.tms_cstime - old_time.tms_cstime) / CLOCKS_PER_SEC;
     time.user = (double)(new_time.tms_cutime - old_time.tms_cutime) / CLOCKS_PER_SEC;
     
-	/* Find the process in the cmdtab. */
+    /* Drive the completion */
 
-	for( i = 0; i < MAXJOBS; i++ )
-	    if( w == cmdtab[ i ].pid )
-		break;
+    --cmdsrunning;
 
-	if( i == MAXJOBS )
-	{
-	    printf( "waif child found!\n" );
-	    exit( EXITBAD );
-	}
+    if( intr )
+        rstat = EXEC_CMD_INTR;
+    else if( w == -1 || status != 0 )
+        rstat = EXEC_CMD_FAIL;
+    else
+        rstat = EXEC_CMD_OK;
 
-    
-	/* Drive the completion */
+    (*cmdtab[ i ].func)( cmdtab[ i ].closure, rstat, &time );
 
-	if( !--cmdsrunning )
-	    signal( SIGINT, istat );
-
-	if( intr )
-	    rstat = EXEC_CMD_INTR;
-	else if( w == -1 || status != 0 )
-	    rstat = EXEC_CMD_FAIL;
-	else
-	    rstat = EXEC_CMD_OK;
-
-	cmdtab[ i ].pid = 0;
-
-	(*cmdtab[ i ].func)( cmdtab[ i ].closure, rstat, &time );
-
-	return 1;
+    return 1;
 }
 
 # if defined( OS_NT ) && !defined( __BORLANDC__ )
