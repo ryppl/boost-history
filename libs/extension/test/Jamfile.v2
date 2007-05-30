@@ -8,6 +8,7 @@ project
       <include>../../../
       <include>$(BOOST_ROOT)
       <define>BOOST_TEST_NO_AUTO_LINK=1
+      <toolset>gcc:<find-static-library>dl
     :
     ;
 

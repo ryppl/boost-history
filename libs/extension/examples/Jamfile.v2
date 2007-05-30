@@ -9,7 +9,7 @@ project
     : requirements
       <include>../../../
       <include>$(BOOST_ROOT)
-      <find-static-library>dl
+      <toolset>gcc:<find-static-library>dl
     :
     ;
 
@@ -35,8 +35,8 @@ lib RegistryLibrary : registry/registry_library.cpp : <link>shared ;
 exe RegistryExample : registry/registry_example.cpp ;
 
 install ../bin : 
-  HelloWorld HelloWorldLib Vehicle Boat FlyingCar 
-  CarOfTheFuture MultipleInheritance RegistryLibrary
+  HelloWorld HelloWorldLib Vehicle Boat FlyingCar Car Plane
+  CarOfTheFuture MultipleInheritance RegistryLibrary Computer
   RegistryExample
   :
  # <install-dependencies>on 
