@@ -12,8 +12,11 @@
 #ifndef STREAM_IS_ASSOC_ITER_INCLUDED
 #define STREAM_IS_ASSOC_ITER_INCLUDED
 
+#include <map>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/remove_const.hpp>
 
 namespace explore
 {
@@ -54,6 +57,24 @@ namespace explore
 
         template<typename T>
         struct value_type_is_pair : is_pair<typename T::value_type> {};
+
+        template< typename value_t, typename iterator_t>
+        struct pair_matches_map : boost::mpl::false_ {};
+
+        template< typename F, typename S, typename iterator_t>
+        struct pair_matches_map< std::pair< F, S>, iterator_t> :
+            boost::is_same<
+                iterator_t,
+                typename std::map<
+                    typename boost::remove_const<F>::type,
+                    S
+                >::iterator
+            >
+        {};
+
+        template <typename T>
+        struct value_matches_map :
+            pair_matches_map< typename T::value_type, T> {};
     }
 
     // an associative iterator has a value type of pair<>
@@ -61,7 +82,8 @@ namespace explore
     struct is_assoc_iter :
         boost::mpl::eval_if<
             detail::has_value_type<T>,
-            detail::value_type_is_pair<T>,
+//            detail::value_type_is_pair<T>,
+            detail::value_matches_map<T>,
             boost::mpl::false_
         > {};
 }
