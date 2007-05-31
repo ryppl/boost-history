@@ -91,6 +91,53 @@ Status: investigated. abort() is called in this case. The solution for this is c
 - remove warnings for both MSVC and GCC
 Status: needs fixing
 
+3. Correctness tests
+
+- test all ctors for numbers
+Status: needs implementing
+
+- test all ctors for strings (various bases - 2, 9, 18, 27, 36)
+Status: needs implementing
+
+- test copy construction and assignment
+Status: needs implementing
+
+- test basic arithmetics and modulo (both op= and op) - bigint op/= bigint, bigint op/= number, number op bigint
+Status: needs implementing
+
+- test bit arithmetics - bigint op/= bigint, bigint op/= number, number op bigint (except << and >>)
+Status: needs implementing
+
+- test increment/decrement (postfix/prefix)
+Status: needs implementing
+
+- test unary operators (+, -, ~) - don't forget to check that -0 == 0
+Status: needs implementing
+
+- test bool conversion and operator!
+Status: needs implementing
+
+- test string conversion (various bases - 2, 9, 18, 27, 36)
+Status: needs implementing
+
+- test can_convert_to (char, short, int, int64 - both signed and unsigned, boundary cases)
+Status: needs implementing
+
+- test to_number (char, short, int, int64 - both signed and unsigned, boundary cases)
+Status: needs implementing
+
+- test comparison operators
+Status: needs implementing
+
+- test abs, pow, ldiv, sqrt
+Status: needs implementing
+
+- test stream input/output
+Status: needs implementing
+
+- test serialization
+Status: needs implementing
+
 -----------------------------------------------
 
 Problem: GMP calls abort() when failing to allocate memory.
