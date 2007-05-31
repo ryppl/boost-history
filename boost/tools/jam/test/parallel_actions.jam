@@ -1,0 +1,89 @@
+#~ Copyright 2006 Rene Rivera.
+#~ Distributed under the Boost Software License, Version 1.0.
+#~ (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
+
+if ! $(BJAM_SUBTEST)
+{
+    ECHO --- Testing -jN parallel execution of actions... ;
+
+    assert "...found 12 targets...
+...updating 8 targets...
+sleeper a0.txt
+[a0] 0
+[a0] 1
+[a0] 2
+sleeper a1.txt
+[a1] 0
+[a1] 1
+[a1] 2
+sleeper a2.txt
+[a2] 0
+[a2] 1
+[a2] 2
+sleeper a3.txt
+[a3] 0
+[a3] 1
+[a3] 2
+sleeper b0.txt
+[b0] 0
+[b0] 1
+[b0] 2
+sleeper b1.txt
+[b1] 0
+[b1] 1
+[b1] 2
+sleeper b2.txt
+[b2] 0
+[b2] 1
+[b2] 2
+sleeper b3.txt
+[b3] 0
+[b3] 1
+[b3] 2
+...updated 8 targets...
+" : (==) : [ SHELL "$(ARGV[1]) -f parallel_actions.jam -sBJAM_SUBTEST=1 -j4" ] ;
+}
+else
+{
+    if $(NT)
+    {
+        actions sleeper
+        {
+echo "[$(<:B)] 0"
+sleep 1
+echo "[$(<:B)] 1"
+sleep 1
+echo "[$(<:B)] 2"
+        }
+    }
+    else
+    {
+        actions sleeper
+        {
+echo "[$(<:B)] 0"
+sleep 1
+echo "[$(<:B)] 1"
+sleep 1
+echo "[$(<:B)] 2"
+        }
+    }
+    
+    rule sleeper
+    {
+        DEPENDS $(<) : $(>) ;
+    }
+    
+    NOTFILE front ;
+    sleeper a0.txt : front ;
+    sleeper a1.txt : front ;
+    sleeper a2.txt : front ;
+    sleeper a3.txt : front ;
+    NOTFILE choke ;
+    DEPENDS choke : a0.txt a1.txt a2.txt a3.txt ;
+    sleeper b0.txt : choke ;
+    sleeper b1.txt : choke ;
+    sleeper b2.txt : choke ;
+    sleeper b3.txt : choke ;
+    DEPENDS bottom : b0.txt b1.txt b2.txt b3.txt ;
+    DEPENDS all : bottom ;
+}
