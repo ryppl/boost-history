@@ -15,6 +15,7 @@
 #include <map>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
@@ -63,13 +64,15 @@ namespace explore
 
         template< typename F, typename S, typename iterator_t>
         struct pair_matches_map< std::pair< F, S>, iterator_t> :
-            boost::is_same<
-                iterator_t,
-                typename std::map<
-                    typename boost::remove_const<F>::type,
-                    S
-                >::iterator
-            >
+            boost::mpl::or_<
+                boost::is_same<
+                    iterator_t,
+                    typename std::map<typename boost::remove_const<F>::type, S >::iterator
+                >,
+                boost::is_same<
+                    iterator_t,
+                    typename std::multimap<typename boost::remove_const<F>::type, S >::iterator
+                > >
         {};
 
         template <typename T>
