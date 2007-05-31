@@ -85,7 +85,7 @@
     ]
 ]
 
-[table Complexity Guarantess
+[table Complexity Guarantees
     [[Operation] [Associative Containers] [Unordered Associative Containers]]
     [
         [Construction of empty container]
