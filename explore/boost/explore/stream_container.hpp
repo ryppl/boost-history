@@ -26,7 +26,7 @@ template<> std::basic_string<wchar_t> init_##name<wchar_t>() { return L##str; }
 
 namespace explore
 {
-    namespace detail 
+    namespace detail
     {
         BOOST_EXPLORE_INIT_STRING(separator, ", ")
         BOOST_EXPLORE_INIT_STRING(start, "[")
@@ -67,7 +67,7 @@ namespace explore
         str_typ assoc_end;
     };
 
-    namespace detail 
+    namespace detail
     {
         // manipulator function wrapper for 1 char/wchar_t argument.  When streamed, will run manipulator
         // function with argument.
@@ -201,15 +201,15 @@ namespace explore
     }
 
     template< typename IteratorT >
-    iterator_range_wrapper<IteratorT>
-        make_iterator_range(IteratorT Begin, IteratorT End) 
+    inline iterator_range_wrapper<IteratorT>
+    make_iterator_range(IteratorT Begin, IteratorT End)
     {
-        return as_container(boost::make_iterator_range(Begin, End));
+        return iterator_range_wrapper<IteratorT>(boost::make_iterator_range(Begin, End));
     }
 
     template< class ForwardRange >
     iterator_range_wrapper<BOOST_DEDUCED_TYPENAME boost::range_const_iterator<ForwardRange>::type>
-        make_iterator_range(const ForwardRange& r) 
+        make_iterator_range(const ForwardRange& r)
     {
         return as_container(boost::make_iterator_range(r));
     }
@@ -296,10 +296,10 @@ namespace explore
 
     // stream boost::iterator_range
     template<typename Elem, typename Tr, typename T>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, 
-        explore::iterator_range_wrapper<T>& r)
+    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr,
+        const iterator_range_wrapper<T>& r)
     {
-        return explore::stream_container(ostr, r.t.begin(), r.t.end(), explore::iterator_range_wrapper<T>::stream_type());
+        return stream_container(ostr, r.t.begin(), r.t.end(), typename iterator_range_wrapper<T>::stream_type());
     }
 
     // manipulator
@@ -348,7 +348,7 @@ namespace explore
     template<typename Elem, typename Tr>
     std::basic_ostream<Elem, Tr>& format_normal(std::basic_ostream<Elem, Tr>& ostr)
     {
-        get_stream_state<container_stream_state<Elem, Tr> >(ostr)->init<Elem>();
+        get_stream_state<container_stream_state<Elem, Tr> >(ostr)->template init<Elem>();
         return ostr;
     }
 
