@@ -19,13 +19,13 @@
 
 BOOST_AUTO_TEST_CASE( is_assoc_iter_test )
 {
-    bool mapHasAssocIter = explore::is_assoc_iter<std::map<int, double> >::type();
+    bool mapHasAssocIter = explore::is_assoc_iter<std::map<int, double>::iterator>::type();
     BOOST_CHECK(mapHasAssocIter);
 
-    bool multimapHasAssocIter = explore::is_assoc_iter<std::multimap<std::string, bool> >::type();
+    bool multimapHasAssocIter = explore::is_assoc_iter<std::multimap<std::string, bool>::iterator>::type();
     BOOST_CHECK(multimapHasAssocIter);
 
-    bool vectorHasAssocIter = explore::is_assoc_iter<std::vector<double> >::type();
+    bool vectorHasAssocIter = explore::is_assoc_iter<std::vector<double>::iterator>::type();
     BOOST_CHECK(!vectorHasAssocIter);
 
     bool pointerHasAssocIter = explore::is_assoc_iter<int*>::type();
@@ -34,6 +34,6 @@ BOOST_AUTO_TEST_CASE( is_assoc_iter_test )
     bool pairHasAssocIter = explore::is_assoc_iter<std::pair<int, double> >::type();
     BOOST_CHECK(!pairHasAssocIter);
 
-    bool listOfPairHasAssocIter = explore::is_assoc_iter<std::list<std::pair<int, double> > >::type();
+    bool listOfPairHasAssocIter = explore::is_assoc_iter<std::list<std::pair<int, double> >::iterator >::type();
     BOOST_CHECK(!listOfPairHasAssocIter);
 }
