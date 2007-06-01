@@ -57,43 +57,19 @@
 
 static int intr = 0;
 static int cmdsrunning = 0;
-static int fd_max = 0;
 static void (*istat)( int );
 
 static struct
 {
     int	    pid;        /* on win32, a real process handle */
-    int     finished;   /* 1 if child process has signaled, 0 otherwise */
     int     fd;         /* file descriptors for stdout and stderr */
     FILE   *stream;     /* child's stderr file stream */
+    int     com_len;    /* length of comamnd buffer */
+    char   *command;    /* buffer to hold command rule being invoked */
     char   *buffer;     /* buffer to hold stderr output, if any */
     void    (*func)( void *closure, int status, timing_info* );
     void   *closure;
 } cmdtab[ MAXJOBS ] = {{0}};
-
-/* file descriptor set used by unix select */
-fd_set readfds;
-
-/* handle child termination signals */
-void sig_chld_handler(int signo, siginfo_t* info, void* uap)
-{
-    int i, status;
-
-    /* Find cmdtab entry that matches the pid of this
-     * terminating child process.  Set cmdtab[i].finished 
-     * to one to indicate this child process has terminated 
-     * and is ready to have it's output read.
-     */
-    for( i=0 ; i < MAXJOBS; ++i ) {
-        if( info->si_pid == cmdtab[ i ].pid ) {
-            cmdtab[ i ].finished = 1;
-            return;
-        }
-    }
-
-    /* if here, a process terminated that execunix didn't spawn, wait for it */
-    wait(&status);
-}
 
 /*
  * onintr() - bump intr to note command interruption
@@ -115,11 +91,12 @@ execcmd(
 	char *string,
 	void (*func)( void *closure, int status, timing_info* ),
 	void *closure,
-	LIST *shell )
+	LIST *shell,
+        char *rule_name,
+        char *target )
 {
         int p[2];
-        int pid;
-	int slot;
+	int slot, len;
 	char *argv[ MAXARGC + 1 ];	/* +1 for NULL */
         FILE *stream;
 
@@ -134,7 +111,6 @@ execcmd(
 	    printf( "no slots for child!\n" );
 	    exit( EXITBAD );
 	}
-
 
 	/* Forumulate argv */
 	/* If shell was defined, be prepared for % and ! subs. */
@@ -181,18 +157,23 @@ execcmd(
         if (pipe(p) < 0)
             exit(EXITBAD);
 
+        fcntl(p[0], F_SETFL, O_NONBLOCK);
+        fcntl(p[1], F_SETFL, O_NONBLOCK);
+
+        /* child writes stderr to p[1], parent reads p[0] */
+	cmdtab[slot].fd = p[0];
+
 	/* Start the command */
 
-	if ((pid = vfork()) == 0) 
+	if ((cmdtab[slot].pid = vfork()) == 0) 
    	{
-            dup2(p[1], STDERR_FILENO);
             close(p[0]);
-            close(p[1]);
+            dup2(p[1], STDERR_FILENO);
 
 	    execvp( argv[0], argv );
 	    _exit(127);
 	}
-        else if( pid == -1 )
+        else if( cmdtab[slot].pid == -1 )
 	{
 	    perror( "vfork" );
 	    exit( EXITBAD );
@@ -201,24 +182,29 @@ execcmd(
         /* close write end of pipe, open read end of pipe */
 
         close(p[1]); 
-        stream = fdopen(p[0], "r");
-        if (stream == NULL) {
+	cmdtab[slot].stream = fdopen(cmdtab[slot].fd, "rb");
+        if (cmdtab[slot].stream == NULL) {
             perror( "fdopen" );
             exit( EXITBAD );
         }
 
+        /* ensure enough room for rule and target name */
+
+        len = strlen(rule_name) + strlen(target) + 2;
+        if (cmdtab[slot].com_len < len) 
+        {
+            free(cmdtab[ slot ].command);
+            cmdtab[ slot ].command = malloc(len);
+            cmdtab[ slot ].com_len = len;
+        }
+        strcpy(cmdtab[ slot ].command, rule_name);
+        strcat(cmdtab[ slot ].command, " ");
+        strcat(cmdtab[ slot ].command, target);
+
 	/* Save the operation for execwait() to find. */
 
-	cmdtab[ slot ].pid = pid;
-	cmdtab[ slot ].fd = p[0];
-	cmdtab[ slot ].stream = stream;
 	cmdtab[ slot ].func = func;
 	cmdtab[ slot ].closure = closure;
-
-        /* save off max read file descriptor for use in select */
-
-        fd_max = fd_max < p[0] ? p[0] : fd_max;
-        FD_SET(p[0], &readfds);
 
 	/* Wait until we're under the limit of concurrent commands. */
 	/* Don't trust globs.jobs alone. */
@@ -230,10 +216,10 @@ execcmd(
 
 void read_descriptor(int i)
 {
-    int ret, len;
-    char *tmp;
+    int done, ret, len;
     char buffer[BUFSIZ];
-    while ((ret = fread(buffer, sizeof(char), BUFSIZ-1, cmdtab[i].stream)) > 0) 
+
+    while (0 < (ret = fread(buffer, sizeof(char),  BUFSIZ-1, cmdtab[i].stream)))
     {
         buffer[ret] = 0;
         if (!cmdtab[i].buffer)
@@ -245,7 +231,7 @@ void read_descriptor(int i)
         else
         {
             /* previously allocated */
-            tmp = cmdtab[i].buffer;
+            char *tmp = cmdtab[i].buffer;
             len = strlen(tmp);
             cmdtab[i].buffer = (char*)malloc(len+ret+1);
             memcpy(cmdtab[i].buffer, tmp, len);
@@ -262,114 +248,105 @@ void read_descriptor(int i)
 int
 execwait()
 {
-    int i, j, ret;
-    int status, w, finished;
+    int i, j, len, ret, fd_max;
+    int pid, status, w, finished;
     int rstat;
     timing_info time;
     fd_set fds;
     struct tms old_time, new_time;
-    
+    char *tmp;
+    char buffer[BUFSIZ];
+
     /* Handle naive make1() which doesn't know if cmds are running. */
 
     if( !cmdsrunning )
         return 0;
 
+    /* process children that signaled */
     finished = 0;
-    while (!finished)
+    while (!finished && cmdsrunning)
     {
-        /* find first job that finished */
-        for (i=0; i<MAXJOBS; ++i)
-        {
-            if ( cmdtab[i].finished )
-            {
-                finished = 1;
-                read_descriptor(i);
-                break;
-            }
-        }
+            /* compute max read file descriptor for use in select */
+            fd_max = 0;
+            FD_ZERO(&fds);
+            for (i=0; i<globs.jobs; ++i)
+                if (0 < cmdtab[i].fd)
+                {
+                    fd_max = fd_max < cmdtab[i].fd ? cmdtab[i].fd : fd_max;
+                    FD_SET(cmdtab[i].fd, &fds);
+                }
 
-        if (!finished) 
-        {
-            fds = readfds;
+            /* select will wait until io or a signal */
+            ret = select(fd_max+1, &fds, 0, 0, 0);
 
-            /* wait for io on a descriptor or a signal */
-            ret = select(fd_max+1, &fds, NULL, NULL, NULL);
-
-            /* check for data on a descriptor */
             if (0 < ret)
             {
-                for (i=0; i<MAXJOBS; ++i)
+                for (i=0; i<globs.jobs; ++i)
                 {
-                    if ( FD_ISSET(cmdtab[i].fd, &fds) )
+                    if (FD_ISSET(cmdtab[i].fd, &fds))
                     {
                         read_descriptor(i);
+
+                        if (feof(cmdtab[i].stream))
+                        {
+                            /* close the stream and pipe descriptor */
+                            fclose(cmdtab[i].stream);
+                            cmdtab[i].stream = 0;
+                                                                                  
+                            close(cmdtab[i].fd);
+                            cmdtab[i].fd = 0;
+
+                            /* reap the child and release resources */
+                            pid = waitpid(cmdtab[i].pid, &status, 0);
+
+                            if (pid == cmdtab[i].pid)
+                            {
+                                finished = 1;
+                                pid = 0;
+                                cmdtab[i].pid = 0;
+
+                                times(&old_time);
+
+                                /* print out the rule and target name */
+                                printf("%s\n", cmdtab[i].command);
+
+                                /* print out the command output, if any */
+                                if (cmdtab[i].buffer)
+                                    printf("%s", cmdtab[i].buffer);
+                                free(cmdtab[i].buffer);
+                                cmdtab[i].buffer = 0;
+
+                                times(&new_time);
+
+                                time.system = (double)(new_time.tms_cstime - old_time.tms_cstime) / CLOCKS_PER_SEC;
+                                time.user = (double)(new_time.tms_cutime - old_time.tms_cutime) / CLOCKS_PER_SEC;
+    
+                                /* Drive the completion */
+
+                                --cmdsrunning;
+
+                                if( intr )
+                                        rstat = EXEC_CMD_INTR;
+                                else if( w == -1 || status != 0 )
+                                        rstat = EXEC_CMD_FAIL;
+                                else
+                                        rstat = EXEC_CMD_OK;
+
+                                (*cmdtab[ i ].func)( cmdtab[ i ].closure, rstat, &time );
+
+                                cmdtab[i].func = 0;
+                                cmdtab[i].closure = 0;
+                            }
+                            if (0 != pid)
+                            {
+                                printf("pid not one of our processes?\n");
+                                exit(EXITBAD);
+                            }
+                        }
                     }
                 }
             }
-        }
     }
-
-    /* find first job that finished */
-    for (i=0; i<MAXJOBS; ++i)
-        if ( cmdtab[i].finished )
-            break;
-
-    /* ensure a job terminated */
-    if (i == MAXJOBS)
-        exit(EXITBAD);
-
-    times(&old_time);
-    
-    /* print out the buffer */
-    if (cmdtab[i].buffer)
-        printf("%s", cmdtab[i].buffer);
-
-    /* close stderr file */
-    ret = fclose(cmdtab[i].stream);
-
-    /* wait for the child */
-    w = waitpid(cmdtab[i].pid, &status, 0);
-
-    if( w == -1 )
-    {
-        printf( "child process(es) lost!\n" );
-        perror("waitpid");
-        exit( EXITBAD );
-    }
-
-    /* clear this file descriptor from pselect */ 
-    FD_CLR(cmdtab[i].fd, &readfds);
-
-    /* initialize back to zero */
-    cmdtab[i].pid = 0;
-    cmdtab[i].finished = 0;
-    cmdtab[i].fd = 0;
-    cmdtab[i].stream = 0;
-    free(cmdtab[i].buffer);
-    cmdtab[i].buffer = 0;
-
-    /* compute fd_max */
-    fd_max = 0;
-    for (j=0; j<MAXJOBS; ++j)
-        fd_max = fd_max < cmdtab[j].fd ? cmdtab[j].fd : fd_max;
-
-    times(&new_time);
-
-    time.system = (double)(new_time.tms_cstime - old_time.tms_cstime) / CLOCKS_PER_SEC;
-    time.user = (double)(new_time.tms_cutime - old_time.tms_cutime) / CLOCKS_PER_SEC;
-    
-    /* Drive the completion */
-
-    --cmdsrunning;
-
-    if( intr )
-        rstat = EXEC_CMD_INTR;
-    else if( w == -1 || status != 0 )
-        rstat = EXEC_CMD_FAIL;
-    else
-        rstat = EXEC_CMD_OK;
-
-    (*cmdtab[ i ].func)( cmdtab[ i ].closure, rstat, &time );
 
     return 1;
 }

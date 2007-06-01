@@ -221,32 +221,6 @@ int  main( int argc, char **argv, char **arg_environ )
 
     BJAM_MEM_INIT();
 
-    #ifdef unix
-    {
-        /* handle child termination signals (in execunix.c) */
-        extern void sig_chld_handler(int signo, siginfo_t* info, void* uap);
-        extern fd_set readfds;
-        
-        struct sigaction act, oact;
-        
-        /* install child termination signal handler */
-
-        act.sa_sigaction = sig_chld_handler;
-        sigemptyset(&act.sa_mask);
-        act.sa_flags = 0;
-        act.sa_flags |= SA_NOCLDSTOP;
-        act.sa_flags |= SA_RESTART;
-        act.sa_flags |= SA_SIGINFO;
-        if (sigaction(SIGCHLD, &act, &oact) < 0)
-        {
-            perror("sigaction SIGCHLD error");
-        }
-
-        /* initialize file descriptor set used in select */
-        FD_ZERO(&readfds);
-    }
-    #endif
-    
 # ifdef OS_MAC
     InitGraf(&qd.thePort);
 # endif

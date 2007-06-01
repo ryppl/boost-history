@@ -21,7 +21,9 @@ void execcmd(
 	char *string,
 	void (*func)( void *closure, int status, timing_info* ),
 	void *closure,
-	LIST *shell );
+	LIST *shell,
+        char *rule_name,
+        char *target);
 
 int execwait();
 
