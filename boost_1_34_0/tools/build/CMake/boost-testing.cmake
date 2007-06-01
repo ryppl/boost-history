@@ -28,13 +28,11 @@
 #
 #   boost_test_compile_fail: Tests that the given source file produces 
 #                            errors when compiled.
-
 #
-#   these macros format the displayed name of the test as PROJECT_NAME::testname
-#   where PROJECT_NAME is a global set by the cmake PROJECT macro
-#   inside boost_library_subproject.  this use of a global (hrm) is standard practice 
-#   in cmakeland but we might not like this...  
 #
+#   These macros format the displayed name of the test as
+#   PROJECT_NAME::testname, where PROJECT_NAME is a global set by the
+#   CMake PROJECT macro inside boost_library_project.
 option(BUILD_TESTING "Enable testing" OFF)
 include(CTest)
 
@@ -50,8 +48,8 @@ macro(boost_test_parse_args testname)
   # Categorize each of the arguments
   foreach(ARG ${BOOST_TEST_DEPENDS})
     # If building static libraries is turned off..
-    GET_TARGET_PROPERTY(DEPEND_TYPE ${ARG} TYPE)
-    GET_TARGET_PROPERTY(DEPEND_LOCATION ${ARG} LOCATION)
+    get_target_property(DEPEND_TYPE ${ARG} TYPE)
+    get_target_property(DEPEND_LOCATION ${ARG} LOCATION)
     if (NOT BUILD_STATIC_LIBS AND ${DEPEND_TYPE} STREQUAL "STATIC_LIBRARY")
       set(BOOST_TEST_OKAY FALSE)
     endif (NOT BUILD_STATIC_LIBS AND ${DEPEND_TYPE} STREQUAL "STATIC_LIBRARY")
@@ -71,8 +69,6 @@ macro(boost_test_parse_args testname)
   endif(NOT BUILD_TESTING)
 endmacro(boost_test_parse_args)
 
-
-
 macro(boost_test_run testname)
   boost_test_parse_args(${testname} ${ARGN})
   if (BOOST_TEST_OKAY)
@@ -83,19 +79,10 @@ macro(boost_test_run testname)
       OUTPUT_NAME ${PROJECT_NAME}/${testname})
     target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
     target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
-    foreach(_depend ${BOOST_TEST_DEPENDS})
-      trace("propagate from ${BOOST_TEST_DEPENDS}")
-      propagate_property(FROM_TARGET ${_depend}
-	FROM_PROPNAME COMPILE_REQUIREMENTS
-	TO_TARGET ${testname} 
-	TO_PROPNAME COMPILE_FLAGS 
-	)
-    endforeach(_depend ${BOOST_TEST_DEPENDS})
-    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ${BOOST_TEST_ARGS})
+    add_test("${PROJECT_NAME}::${testname}" 
+      ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ${BOOST_TEST_ARGS})
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run)
-
-
 
 macro(boost_test_run_fail testname)
   boost_test_parse_args(${testname} ${ARGN})
@@ -107,15 +94,12 @@ macro(boost_test_run_fail testname)
       OUTPUT_NAME ${PROJECT_NAME}/${testname})
     target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
     target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
-
-    add_test("${PROJECT_NAME}::${testname}" ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ${BOOST_TEST_ARGS})
-    set_tests_properties("${PROJECT_NAME}::${testname}" PROPERTIES WILL_FAIL TRUE)
+    add_test("${PROJECT_NAME}::${testname}" 
+      ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ${BOOST_TEST_ARGS})
+    set_tests_properties("${PROJECT_NAME}::${testname}" 
+      PROPERTIES WILL_FAIL TRUE)
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run_fail)
-
-macro(boost_test_fail testname)
-  add_test("${PROJECT_NAME}::${testname}" false)
-endmacro(boost_test_fail)
 
 macro(boost_test_compile testname)
   boost_test_parse_args(${testname} ${ARGN})

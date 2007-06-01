@@ -199,27 +199,9 @@ macro(push_back_target_property target property pushvalue)
   set_target_properties(${target} PROPERTIES ${property} "${oldvalue} ${pushvalue}")
 endmacro(push_back_target_property target property pushvalue)
 
-macro(propagate_property)
-  trace("args:"  ${ARGN})
-  parse_arguments(_
-    "FROM_TARGET;TO_TARGET;FROM_PROPNAME;TO_PROPNAME"
-    ""
-    ${ARGN}
-    )
-  trace("propagate ${__FROM_TARGET}:${__FROM_PROPNAME} -> ${__TO_TARGET}:${__TO_PROPNAME} [${props_}]")
-  assert(__FROM_TARGET)
-  assert(__FROM_PROPNAME)
-  assert(__TO_TARGET)
-  get_target_property(props_ ${__FROM_TARGET} ${__FROM_PROPNAME})
-  trace("::: ${props_}")
-  if (props_)
-    push_back_target_property(${__TO_TARGET} ${__TO_PROPNAME} ${props_})
-  endif(props_)
-endmacro(propagate_property)
-  
 macro(boost_library)
   parse_arguments(THIS_LIB
-    "DEPENDS;LIBRARIES;STATIC_COMPILE_FLAGS;STATIC_COMPILE_REQUIREMENTS;SHARED_COMPILE_FLAGS;SHARED_COMPILE_REQUIREMENTS"
+    "DEPENDS;LIBRARIES;STATIC_COMPILE_FLAGS;SHARED_COMPILE_FLAGS"
     "NO_STATIC;NO_SHARED;STATIC_TAG"
     ${ARGN}
     )
@@ -255,19 +237,12 @@ macro(boost_library)
       RELWITHDEBINFO_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}${THIS_LIB_STATIC_TAG}"
       CLEAN_DIRECT_OUTPUT 1
       COMPILE_FLAGS "${THIS_LIB_STATIC_COMPILE_FLAGS}"
-      COMPILE_REQUIREMENTS "${THIS_LIB_STATIC_COMPILE_REQUIREMENTS}"
       )
       
     add_dependencies(${libname} "${libname}-static")
-#    trace("sticky statics(${libname}): ${THIS_LIB_STICKY_STATIC_COMPILE_FLAGS}")
     target_link_libraries("${libname}-static" ${THIS_LIB_LIBRARIES})
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-static" "${dependency}-static")
-      propagate_property(FROM_TARGET "${dependency}-static"
-	FROM_PROPNAME COMPILE_REQUIREMENTS
-	TO_TARGET ${libname}-static 
-	TO_PROPNAME COMPILE_FLAGS 
-	)
     endforeach(dependency "${THIS_LIB_DEPENDS}")
 
     install(TARGETS "${libname}-static" DESTINATION lib)
@@ -282,18 +257,12 @@ macro(boost_library)
       RELWITHDEBINFO_OUTPUT_NAME "${libname}${BOOST_LIBRARY_VERSION_STRING_DEBUG}"
       CLEAN_DIRECT_OUTPUT 1
       COMPILE_FLAGS "${THIS_LIB_SHARED_COMPILE_FLAGS}"
-      COMPILE_REQUIREMENTS "${THIS_LIB_SHARED_COMPILE_REQUIREMENTS}"
       SOVERSION "${BOOST_VERSION}"
       )
     add_dependencies(${libname} "${libname}-shared")
     target_link_libraries("${libname}-shared" ${THIS_LIB_LIBRARIES})
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries("${libname}-shared" "${dependency}-shared")
-      propagate_property(FROM_TARGET "${dependency}-shared"
-	FROM_PROPNAME COMPILE_REQUIREMENTS
-	TO_TARGET ${libname}-shared
-	TO_PROPNAME COMPILE_FLAGS 
-	)
     endforeach(dependency ${THIS_LIB_DEPENDS})
     install(TARGETS "${libname}-shared" DESTINATION lib)
   endif(NOT "${THIS_LIB_NO_SHARED}" STREQUAL "TRUE")
