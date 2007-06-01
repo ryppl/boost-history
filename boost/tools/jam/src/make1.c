@@ -502,9 +502,13 @@ make1c( state *pState )
 
 	if( cmd && pState->t->status == EXEC_CMD_OK )
 	{
+            char *rule_name = 0;
+            char *target = 0;
 		if( DEBUG_MAKEQ || 
             ! ( cmd->rule->actions->flags & RULE_QUIETLY ) && DEBUG_MAKE)
 	    {
+                rule_name = cmd->rule->name;
+                target = lol_get(&cmd->args, 0)->string;
 #if 0
 		printf( "%s ", cmd->rule->name );
 		list_print( lol_get( &cmd->args, 0 ) );
@@ -529,7 +533,7 @@ make1c( state *pState )
 			fflush( stdout );
 
 			pop_state(&state_stack); /* pop state first because execcmd could push state */
-			execcmd( cmd->buf, make_closure, t, cmd->shell, cmd->rule->name, lol_get(&cmd->args,0)->string );
+			execcmd( cmd->buf, make_closure, t, cmd->shell, rule_name, target );
 	    }
 	}
 	else

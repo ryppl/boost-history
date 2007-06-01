@@ -190,16 +190,25 @@ execcmd(
 
         /* ensure enough room for rule and target name */
 
-        len = strlen(rule_name) + strlen(target) + 2;
-        if (cmdtab[slot].com_len < len) 
+        if (rule_name && target)
+        {
+            len = strlen(rule_name) + strlen(target) + 2;
+            if (cmdtab[slot].com_len < len) 
+            {
+                free(cmdtab[ slot ].command);
+                cmdtab[ slot ].command = malloc(len);
+                cmdtab[ slot ].com_len = len;
+            }
+            strcpy(cmdtab[ slot ].command, rule_name);
+            strcat(cmdtab[ slot ].command, " ");
+            strcat(cmdtab[ slot ].command, target);
+        }
+        else
         {
             free(cmdtab[ slot ].command);
-            cmdtab[ slot ].command = malloc(len);
-            cmdtab[ slot ].com_len = len;
+            cmdtab[ slot ].command = 0;
+            cmdtab[ slot ].com_len = 0;
         }
-        strcpy(cmdtab[ slot ].command, rule_name);
-        strcat(cmdtab[ slot ].command, " ");
-        strcat(cmdtab[ slot ].command, target);
 
 	/* Save the operation for execwait() to find. */
 
@@ -308,7 +317,8 @@ execwait()
                                 times(&old_time);
 
                                 /* print out the rule and target name */
-                                printf("%s\n", cmdtab[i].command);
+                                if (cmdtab[i].command)
+                                    printf("%s\n", cmdtab[i].command);
 
                                 /* print out the command output, if any */
                                 if (cmdtab[i].buffer)
