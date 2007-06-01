@@ -8,6 +8,7 @@ project
       <include>../../../
       <include>$(BOOST_ROOT)
       <define>BOOST_TEST_NO_AUTO_LINK=1
+      <toolset>gcc:<define>BOOST_TEST_DYN_LINK
       <toolset>gcc:<find-static-library>dl
     :
     ;
@@ -17,6 +18,7 @@ test-suite extension_tests_all
 : [ run factory_test.cpp ] 
   [ run zone_test.cpp ] 
   [ run construction.cpp ]
+  [ run hello_world_test.cpp ]
   [ run extension_test.cpp ]
   [ run counted_factory_test.cpp ]
   [ run registry_test.cpp ]
