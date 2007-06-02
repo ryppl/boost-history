@@ -54,6 +54,7 @@ sleep 1
 echo "[$(<:B)] 1"
 sleep 1
 echo "[$(<:B)] 2"
+sleep $(<:S)
         }
     }
     else
@@ -65,6 +66,7 @@ sleep 1
 echo "[$(<:B)] 1"
 sleep 1
 echo "[$(<:B)] 2"
+sleep $(<:S)
         }
     }
     
@@ -74,16 +76,16 @@ echo "[$(<:B)] 2"
     }
     
     NOTFILE front ;
-    sleeper a0.txt : front ;
-    sleeper a1.txt : front ;
-    sleeper a2.txt : front ;
-    sleeper a3.txt : front ;
+    sleeper a.0 : front ;
+    sleeper a.1 : front ;
+    sleeper a.2 : front ;
+    sleeper a.3 : front ;
     NOTFILE choke ;
-    DEPENDS choke : a0.txt a1.txt a2.txt a3.txt ;
-    sleeper b0.txt : choke ;
-    sleeper b1.txt : choke ;
-    sleeper b2.txt : choke ;
-    sleeper b3.txt : choke ;
-    DEPENDS bottom : b0.txt b1.txt b2.txt b3.txt ;
+    DEPENDS choke : a.0 a.1 a.2 a.3 ;
+    sleeper b.0 : choke ;
+    sleeper b.1 : choke ;
+    sleeper b.2 : choke ;
+    sleeper b.3 : choke ;
+    DEPENDS bottom : b.0 b.1 b.2 b.3 ;
     DEPENDS all : bottom ;
 }
