@@ -225,8 +225,8 @@ execcmd(
             len = strlen(rule_name) + strlen(target) + 2;
             if (cmdtab[slot].com_len < len) 
             {
-                free(cmdtab[ slot ].command);
-                cmdtab[ slot ].command = malloc(len);
+                BJAM_FREE(cmdtab[ slot ].command);
+                cmdtab[ slot ].command = BJAM_MALLOC(len);
                 cmdtab[ slot ].com_len = len;
             }
             strcpy(cmdtab[ slot ].command, rule_name);
@@ -235,7 +235,7 @@ execcmd(
         }
         else
         {
-            free(cmdtab[ slot ].command);
+            BJAM_FREE(cmdtab[ slot ].command);
             cmdtab[ slot ].command = 0;
             cmdtab[ slot ].com_len = 0;
         }
@@ -275,7 +275,7 @@ int read_descriptor(int i, int s)
         if (!cmdtab[i].buffer[s])
         {
             /* never been allocated */
-            cmdtab[i].buffer[s] = (char*)malloc(ret+1);
+            cmdtab[i].buffer[s] = (char*)BJAM_MALLOC(ret+1);
             memcpy(cmdtab[i].buffer[s], buffer, ret+1);
         }
         else
@@ -283,10 +283,10 @@ int read_descriptor(int i, int s)
             /* previously allocated */
             char *tmp = cmdtab[i].buffer[s];
             len = strlen(tmp);
-            cmdtab[i].buffer[s] = (char*)malloc(len+ret+1);
+            cmdtab[i].buffer[s] = (char*)BJAM_MALLOC(len+ret+1);
             memcpy(cmdtab[i].buffer[s], tmp, len);
             memcpy(cmdtab[i].buffer[s]+len, buffer, ret+1);
-            free(tmp);
+            BJAM_FREE(tmp);
         }
     }
 
@@ -395,10 +395,10 @@ execwait()
                                 fprintf(stderr, "%s", cmdtab[i].buffer[ERR]);
                         }
 
-                        free(cmdtab[i].buffer[OUT]);
+                        BJAM_FREE(cmdtab[i].buffer[OUT]);
                         cmdtab[i].buffer[OUT] = 0;
 
-                        free(cmdtab[i].buffer[ERR]);
+                        BJAM_FREE(cmdtab[i].buffer[ERR]);
                         cmdtab[i].buffer[ERR] = 0;
 
                         times(&new_time);
