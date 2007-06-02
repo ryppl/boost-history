@@ -49,24 +49,24 @@ else
     {
         actions sleeper
         {
-echo "[$(<:B)] 0"
+echo [$(<:S)] 0
 sleep 1
-echo "[$(<:B)] 1"
+echo [$(<:S)] 1
 sleep 1
-echo "[$(<:B)] 2"
-sleep $(<:S)
+echo [$(<:S)] 2
+sleep $(<:B)
         }
     }
     else
     {
         actions sleeper
         {
-echo "[$(<:B)] 0"
+echo "[$(<:S)] 0"
 sleep 1
-echo "[$(<:B)] 1"
+echo "[$(<:S)] 1"
 sleep 1
-echo "[$(<:B)] 2"
-sleep $(<:S)
+echo "[$(<:S)] 2"
+sleep $(<:B)
         }
     }
     
@@ -76,16 +76,16 @@ sleep $(<:S)
     }
     
     NOTFILE front ;
-    sleeper a.0 : front ;
-    sleeper a.1 : front ;
-    sleeper a.2 : front ;
-    sleeper a.3 : front ;
+    sleeper 0.a : front ;
+    sleeper 1.a : front ;
+    sleeper 2.a : front ;
+    sleeper 3.a : front ;
     NOTFILE choke ;
-    DEPENDS choke : a.0 a.1 a.2 a.3 ;
-    sleeper b.0 : choke ;
-    sleeper b.1 : choke ;
-    sleeper b.2 : choke ;
-    sleeper b.3 : choke ;
-    DEPENDS bottom : b.0 b.1 b.2 b.3 ;
+    DEPENDS choke : 0.a 1.a 2.a 3.a ;
+    sleeper 0.b : choke ;
+    sleeper 1.b : choke ;
+    sleeper 2.b : choke ;
+    sleeper 3.b : choke ;
+    DEPENDS bottom : 0.b 1.b 2.b 3.b ;
     DEPENDS all : bottom ;
 }

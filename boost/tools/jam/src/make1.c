@@ -507,13 +507,16 @@ make1c( state *pState )
 		if( DEBUG_MAKEQ || 
             ! ( cmd->rule->actions->flags & RULE_QUIETLY ) && DEBUG_MAKE)
 	    {
-                rule_name = cmd->rule->name;
-                target = lol_get(&cmd->args, 0)->string;
-#if 0
-		printf( "%s ", cmd->rule->name );
-		list_print( lol_get( &cmd->args, 0 ) );
-		printf( "\n" );
-#endif
+            rule_name = cmd->rule->name;
+            target = lol_get(&cmd->args, 0)->string;
+            
+            /* For now the deferred output is Unix only. So for others
+               we print out the action header immediately. */
+            #ifndef unix
+            printf( "%s ", cmd->rule->name );
+            list_print( lol_get( &cmd->args, 0 ) );
+            printf( "\n" );
+            #endif
 	    }
 
 	    if( DEBUG_EXEC )
