@@ -7,6 +7,8 @@
  * copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#define BOOST_DISABLE_WIN32
+
 #include <boost/test/included/test_exec_monitor.hpp>
 
 #include <boost/bigint/bigint.hpp>

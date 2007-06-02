@@ -7,9 +7,10 @@
 import testing ;
 
 {
-  test-suite bigint:
-   : [ run bigint_simple_test.cpp
-       : : : : bigint_simple ]
+  test-suite bigint
+   :
+   [ run bigint_simple_test.cpp ]
+   [ run number_ctors.cpp ]
    ;
 }
 

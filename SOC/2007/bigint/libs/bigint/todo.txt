@@ -93,8 +93,8 @@ Status: needs fixing
 
 3. Correctness tests
 
-- test all ctors for numbers
-Status: needs implementing
++ test all ctors for numbers
+Status: implemented
 
 - test all ctors for strings (various bases - 2, 9, 18, 27, 36)
 Status: needs implementing
