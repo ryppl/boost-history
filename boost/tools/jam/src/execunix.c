@@ -1,5 +1,6 @@
 /*
  * Copyright 1993, 1995 Christopher Seiwald.
+ * Copyright 2007 Noel Belcourt.
  *
  * This file is part of Jam - see jam.c for Copyright information.
  */
