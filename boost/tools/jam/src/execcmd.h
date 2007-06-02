@@ -22,7 +22,7 @@ void execcmd(
 	void (*func)( void *closure, int status, timing_info* ),
 	void *closure,
 	LIST *shell,
-        char *rule_name,
+        char *action,
         char *target);
 
 int execwait();

@@ -95,7 +95,7 @@ execcmd(
 	void (*func)( void *closure, int status, timing_info* ),
 	void *closure,
 	LIST *shell,
-        char *rule_name,
+        char *action,
         char *target )
 {
         int out[2], err[2];
@@ -162,13 +162,13 @@ execcmd(
 
         fcntl(out[0], F_SETFL, O_NONBLOCK);
         fcntl(out[1], F_SETFL, O_NONBLOCK);
-#if 0
+
         if (pipe(err) < 0)
             exit(EXITBAD);
 
         fcntl(err[0], F_SETFL, O_NONBLOCK);
         fcntl(err[1], F_SETFL, O_NONBLOCK);
-#endif
+
 	/* Start the command */
 
 	if ((cmdtab[slot].pid = vfork()) == 0) 
@@ -176,12 +176,15 @@ execcmd(
             close(out[0]);
             dup2(out[1], STDOUT_FILENO);
 
-#if 0
-            close(err[0]);
-            dup2(err[1], STDERR_FILENO);
-#else
-            dup2(out[1], STDERR_FILENO);
-#endif
+            if (globs.pipe_action == 0)
+            {
+                dup2(out[1], STDERR_FILENO);
+            }
+            else
+            {
+                close(err[0]);
+                dup2(err[1], STDERR_FILENO);
+            }
 
 	    execvp( argv[0], argv );
 	    _exit(127);
@@ -192,44 +195,36 @@ execcmd(
 	    exit( EXITBAD );
 	}
 
-        /* close write end of pipe, open read end of pipe */
+        /* child writes stdout to out[1], parent reads from out[0] */
         close(out[1]); 
-#if 0
-        close(err[1]); 
-#endif
-
-        /* child writes stdout to out[1], parent reads from out[0]
-           child writes stderr to err[1], parent reads from err[0] */
 	cmdtab[slot].fd[OUT] = out[0];
-#if 0
-	cmdtab[slot].fd[ERR] = err[0];
-#endif
-
 	cmdtab[slot].stream[OUT] = fdopen(cmdtab[slot].fd[OUT], "rb");
         if (cmdtab[slot].stream[OUT] == NULL) {
             perror( "fdopen" );
             exit( EXITBAD );
         }
-#if 0
+
+        /* child writes stderr to err[1], parent reads from err[0] */
+        close(err[1]); 
+	cmdtab[slot].fd[ERR] = err[0];
 	cmdtab[slot].stream[ERR] = fdopen(cmdtab[slot].fd[ERR], "rb");
         if (cmdtab[slot].stream[ERR] == NULL) {
             perror( "fdopen" );
             exit( EXITBAD );
         }
-#endif
 
         /* ensure enough room for rule and target name */
 
-        if (rule_name && target)
+        if (action && target)
         {
-            len = strlen(rule_name) + strlen(target) + 2;
+            len = strlen(action) + strlen(target) + 2;
             if (cmdtab[slot].com_len < len) 
             {
                 BJAM_FREE(cmdtab[ slot ].command);
                 cmdtab[ slot ].command = BJAM_MALLOC_ATOMIC(len);
                 cmdtab[ slot ].com_len = len;
             }
-            strcpy(cmdtab[ slot ].command, rule_name);
+            strcpy(cmdtab[ slot ].command, action);
             strcat(cmdtab[ slot ].command, " ");
             strcat(cmdtab[ slot ].command, target);
         }
@@ -340,13 +335,11 @@ execwait()
                 fd_max = fd_max < cmdtab[i].fd[OUT] ? cmdtab[i].fd[OUT] : fd_max;
                 FD_SET(cmdtab[i].fd[OUT], &fds);
             }
-#if 0
             if (0 < cmdtab[i].fd[ERR])
             {
                 fd_max = fd_max < cmdtab[i].fd[ERR] ? cmdtab[i].fd[ERR] : fd_max;
                 FD_SET(cmdtab[i].fd[ERR], &fds);
             }
-#endif
         }
 
         /* select will wait until io on a descriptor or a signal */
@@ -359,10 +352,10 @@ execwait()
                 int out = 0, err = 0;
                 if (FD_ISSET(cmdtab[i].fd[OUT], &fds))
                     out = read_descriptor(i, OUT);
-#if 0
+
                 if (FD_ISSET(cmdtab[i].fd[ERR], &fds))
                     err = read_descriptor(i, ERR);
-#endif
+
                 /* if either descriptor closed, then we're done */
                 if (out || err)
                 {
@@ -382,17 +375,22 @@ execwait()
                         {
                             printf("%s\n", cmdtab[i].command);
 
-                            /* print out the command output, if any */
-                            if (cmdtab[i].buffer[OUT])
+                            /* print out the command output, if requested */
+                            if (globs.pipe_action & STDOUT_FILENO || 
+                                globs.pipe_action == 0)
                             {
-                                printf("%s", cmdtab[i].buffer[OUT]);
-                                /* print out rule and target to both stdout and stderr */
-                                if (cmdtab[i].buffer[ERR])
-                                    fprintf(stderr, "%s\n", cmdtab[i].command);
+                                if (cmdtab[i].buffer[OUT])
+                                {
+                                    printf("%s", cmdtab[i].buffer[OUT]);
+                                    if (globs.pipe_action & STDERR_FILENO)
+                                        if (cmdtab[i].buffer[ERR])
+                                            fprintf(stderr, "%s\n", cmdtab[i].command);
+                                }
                             }
 
-                            if (cmdtab[i].buffer[ERR])
-                                fprintf(stderr, "%s", cmdtab[i].buffer[ERR]);
+                            if (globs.pipe_action & STDERR_FILENO)
+                                if (cmdtab[i].buffer[ERR])
+                                    fprintf(stderr, "%s", cmdtab[i].buffer[ERR]);
                         }
 
                         BJAM_FREE(cmdtab[i].buffer[OUT]);
@@ -421,11 +419,6 @@ execwait()
 
                         cmdtab[i].func = 0;
                         cmdtab[i].closure = 0;
-                    }
-                    if (0 != pid)
-                    {
-                        printf("pid not one of our processes?\n");
-                        exit(EXITBAD);
                     }
                 }
             }
