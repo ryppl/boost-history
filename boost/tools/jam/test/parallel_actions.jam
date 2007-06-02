@@ -76,16 +76,16 @@ sleep $(<:B)
     }
     
     NOTFILE front ;
-    sleeper 0.a : front ;
     sleeper 1.a : front ;
     sleeper 2.a : front ;
     sleeper 3.a : front ;
+    sleeper 4.a : front ;
     NOTFILE choke ;
-    DEPENDS choke : 0.a 1.a 2.a 3.a ;
-    sleeper 0.b : choke ;
+    DEPENDS choke : 1.a 2.a 3.a 4.a ;
     sleeper 1.b : choke ;
     sleeper 2.b : choke ;
     sleeper 3.b : choke ;
-    DEPENDS bottom : 0.b 1.b 2.b 3.b ;
+    sleeper 4.b : choke ;
+    DEPENDS bottom : 1.b 2.b 3.b 4.b ;
     DEPENDS all : bottom ;
 }
