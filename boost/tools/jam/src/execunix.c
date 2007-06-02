@@ -226,7 +226,7 @@ execcmd(
             if (cmdtab[slot].com_len < len) 
             {
                 BJAM_FREE(cmdtab[ slot ].command);
-                cmdtab[ slot ].command = BJAM_MALLOC(len);
+                cmdtab[ slot ].command = BJAM_MALLOC_ATOMIC(len);
                 cmdtab[ slot ].com_len = len;
             }
             strcpy(cmdtab[ slot ].command, rule_name);
@@ -275,7 +275,7 @@ int read_descriptor(int i, int s)
         if (!cmdtab[i].buffer[s])
         {
             /* never been allocated */
-            cmdtab[i].buffer[s] = (char*)BJAM_MALLOC(ret+1);
+            cmdtab[i].buffer[s] = (char*)BJAM_MALLOC_ATOMIC(ret+1);
             memcpy(cmdtab[i].buffer[s], buffer, ret+1);
         }
         else
@@ -283,7 +283,7 @@ int read_descriptor(int i, int s)
             /* previously allocated */
             char *tmp = cmdtab[i].buffer[s];
             len = strlen(tmp);
-            cmdtab[i].buffer[s] = (char*)BJAM_MALLOC(len+ret+1);
+            cmdtab[i].buffer[s] = (char*)BJAM_MALLOC_ATOMIC(len+ret+1);
             memcpy(cmdtab[i].buffer[s], tmp, len);
             memcpy(cmdtab[i].buffer[s]+len, buffer, ret+1);
             BJAM_FREE(tmp);
@@ -434,72 +434,5 @@ execwait()
 
     return 1;
 }
-
-# if defined( OS_NT ) && !defined( __BORLANDC__ )
-
-# define WIN32_LEAN_AND_MEAN
-
-# include <windows.h>		/* do the ugly deed */
-
-static int
-my_wait( int *status )
-{
-	int i, num_active = 0;
-	DWORD exitcode, waitcode;
-	static HANDLE *active_handles = 0;
-
-	if (!active_handles)
-    {
-	    active_handles = (HANDLE *)BJAM_MALLOC(globs.jobs * sizeof(HANDLE) );
-    }
-
-	/* first see if any non-waited-for processes are dead,
-	 * and return if so.
-	 */
-	for ( i = 0; i < globs.jobs; i++ ) {
-	    if ( cmdtab[i].pid ) {
-		if ( GetExitCodeProcess((HANDLE)cmdtab[i].pid, &exitcode) ) {
-		    if ( exitcode == STILL_ACTIVE )
-			active_handles[num_active++] = (HANDLE)cmdtab[i].pid;
-		    else {
-			CloseHandle((HANDLE)cmdtab[i].pid);
-			*status = (int)((exitcode & 0xff) << 8);
-			return cmdtab[i].pid;
-		    }
-		}
-		else
-		    goto FAILED;
-	    }
-	}
-
-	/* if a child exists, wait for it to die */
-	if ( !num_active ) {
-	    errno = ECHILD;
-	    return -1;
-	}
-	waitcode = WaitForMultipleObjects( num_active,
-					   active_handles,
-					   FALSE,
-					   INFINITE );
-	if ( waitcode != WAIT_FAILED ) {
-	    if ( waitcode >= WAIT_ABANDONED_0
-		&& waitcode < WAIT_ABANDONED_0 + num_active )
-		i = waitcode - WAIT_ABANDONED_0;
-	    else
-		i = waitcode - WAIT_OBJECT_0;
-	    if ( GetExitCodeProcess(active_handles[i], &exitcode) ) {
-		CloseHandle(active_handles[i]);
-		*status = (int)((exitcode & 0xff) << 8);
-		return (int)active_handles[i];
-	    }
-	}
-
-FAILED:
-	errno = GetLastError();
-	return -1;
-    
-}
-
-# endif /* NT && !__BORLANDC__ */
 
 # endif /* USE_EXECUNIX */
