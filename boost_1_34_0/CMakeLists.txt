@@ -12,17 +12,20 @@ set(BOOST_VERSION_MINOR 34)
 set(BOOST_VERSION_SUBMINOR 0)
 set(BOOST_VERSION "${BOOST_VERSION_MAJOR}.${BOOST_VERSION_MINOR}.${BOOST_VERSION_SUBMINOR}")
 
+# Which library variants will we build?
 option(BUILD_STATIC "Whether to build static libraries" ON)
 option(BUILD_SHARED "Whether to build shared libraries" ON)
 option(BUILD_DEBUG "Whether to build debugging libraries" ON)
 option(BUILD_RELEASE "Whether to build release libraries" ON)
+option(BUILD_SINGLE_THREADED "Whether to build single-threaded libraries" ON)
+option(BUILD_MULTI_THREADED "Whether to build multi-threaded libraries" ON)
 
 # Always include the Boost source directory, so that we can find
 # include files in boost/
 include_directories(${Boost_SOURCE_DIR})
 
-# Boost.Build version 2 does this, also, due to trouble with autolinking 
-# during building and testing.
+# Boost.Build version 2 does this due to trouble with autolinking 
+# during building and testing. TODO: Try to remove this
 add_definitions(-DBOOST_ALL_NO_LIB=1)
 
 ##########################################################################
@@ -31,6 +34,12 @@ add_definitions(-DBOOST_ALL_NO_LIB=1)
 list(APPEND CMAKE_MODULE_PATH ${Boost_SOURCE_DIR}/tools/build/CMake)
 
 include(boost)
+include(BoostConfig)
+
+# The default set of library variants that we will be building
+boost_add_default_variant(STATIC SHARED)
+boost_add_default_variant(DEBUG RELEASE)
+boost_add_default_variant(SINGLE_THREADED MULTI_THREADED)
 
 ##########################################################################
 # Boost installation                                                     #

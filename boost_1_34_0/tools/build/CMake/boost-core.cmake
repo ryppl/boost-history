@@ -12,66 +12,6 @@ macro(append varname)
   set(${varname} ${${varname}} ${ARGN})
 endmacro(append varname)
 
-# Detects the kind of compiler in use. If a toolset is found,
-# BOOST_VERSIONING_TOOLSET_TAG will be set to the tag string used to
-# describe that toolset.
-if (NOT BOOST_VERSIONING_TOOLSET_TAG)
-  if (MSVC60)
-    set(BOOST_VERSIONING_TOOLSET_TAG "-vc6")
-  elseif(MSVC70)
-    set(BOOST_VERSIONING_TOOLSET_TAG "-vc7")
-  elseif(MSVC71)
-    set(BOOST_VERSIONING_TOOLSET_TAG "-vc71")
-  elseif(MSVC80)
-    set(BOOST_VERSIONING_TOOLSET_TAG "-vc80")
-  elseif(MSVC)
-  elseif(BORLAND)
-    set(BOOST_VERSIONING_TOOLSET_TAG "-bcb")
-  elseif(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
-    # Execute GCC with the -dumpversion option, to give us a version string
-    execute_process(
-      COMMAND ${CMAKE_CXX_COMPILER} "-dumpversion" 
-      OUTPUT_VARIABLE GCC_VERSION_STRING)
-    
-    # Match only the major and minor versions of the version string
-    string(REGEX MATCH "[0-9]+.[0-9]+" GCC_MAJOR_MINOR_VERSION_STRING
-      "${GCC_VERSION_STRING}")
-    
-    # Strip out the period between the major and minor versions
-    string(REGEX REPLACE "\\." "" BOOST_VERSIONING_GCC_VERSION
-      "${GCC_MAJOR_MINOR_VERSION_STRING}")
-    
-    # Set the GCC versioning toolset
-    set(BOOST_VERSIONING_TOOLSET_TAG "-gcc${BOOST_VERSIONING_GCC_VERSION}")
-  endif(MSVC60)
-endif (NOT BOOST_VERSIONING_TOOLSET_TAG)
-
-# Determine whether we should use library versioning by default
-if(BOOST_VERSIONING_TOOLSET_TAG)
-  set(USE_VERSIONING_BY_DEFAULT ON)
-else(BOOST_VERSIONING_TOOLSET_TAG)
-  set(USE_VERSIONING_BY_DEFAULT OFF)
-endif(BOOST_VERSIONING_TOOLSET_TAG)
-
-option(
-  USE_VERSIONING 
-  "Use versioned library names, e.g., boost_filesystem-gcc41-1_34" 
-  ${USE_VERSIONING_BY_DEFAULT})
-
-if(USE_VERSIONING)
-  # Set BOOST_VERSIONING_TOOLSET_TAG to the string that describes the
-  # Boost.Build toolset. This is used as part of the versioned library
-  # name.
-  if(NOT BOOST_VERSIONING_TOOLSET_TAG)
-    message("Unable to determine compiler toolset. Library versioning cannot be used")
-    set(USE_VERSIONING OFF CACHE BOOL 
-      "Use versioned library names, e.g., boost_filesystem-gcc41-1_34" FORCE)
-    set(BOOST_LIBRARY_VERSION_STRING "")
-    set(BOOST_LIBRARY_VERSION_STRING_DEBUG "")
-  endif(NOT BOOST_VERSIONING_TOOLSET_TAG)
-endif(USE_VERSIONING)
-
-
 # Defines a Boost library project (e.g., for Boost.Python). Use as:
 #
 #   boost_library_project(libname, subdir1, subdir2, ...)
@@ -102,17 +42,10 @@ macro(boost_library_project libname_)
       ON)
   else (THIS_PROJECT_SRCDIRS)
     # This Boost library has no source directories, and therefore does
-    # not require building. Always enable it.
+    # not require building. Always enable it (but don't make it an
+    # option in the cache).
     set(${BOOST_BUILD_LIB_OPTION} ON)
   endif (THIS_PROJECT_SRCDIRS)
-
-  if (THIS_PROJECT_TESTDIRS)
-    string(TOUPPER "TEST_BOOST_${libname_}" BOOST_TEST_LIB_OPTION)
-    option(${BOOST_TEST_LIB_OPTION} 
-      "Enable testing of Boost.${libname_}" 
-      ON)
-  endif (THIS_PROJECT_TESTDIRS)
-
 
   if(${BOOST_BUILD_LIB_OPTION})
     string(TOLOWER "${libname_}" libname)
@@ -122,13 +55,27 @@ macro(boost_library_project libname_)
       file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
     endif(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
 
-    # currently src and testdirs are irrelevant.  At one point it seemed
-    # that they would need to be kept separate and scanned in order
-    # CLEANUP:  put src/test dirs back together again, if no future
-    #           need for it comes up
-    foreach(SUBDIR ${THIS_PROJECT_SRCDIRS} ${THIS_PROJECT_TESTDIRS})
+    # Include each of the source directories
+    foreach(SUBDIR ${THIS_PROJECT_SRCDIRS})
       add_subdirectory(${SUBDIR})
-    endforeach(SUBDIR ${THIS_PROJECT_SRCDIRS} ${THIS_PROJECT_TESTDIRS})
+    endforeach(SUBDIR ${THIS_PROJECT_SRCDIRS})
+
+    if(BUILD_TESTING AND THIS_PROJECT_TESTDIRS)
+      # Testing is enabled globally and this project has some
+      # tests. So, add a testing option.
+      string(TOUPPER "TEST_BOOST_${libname_}" BOOST_TEST_LIB_OPTION)
+      option(${BOOST_TEST_LIB_OPTION} 
+        "Enable testing of Boost.${libname_}" 
+        ON)
+
+      # Only include the test directories when testing is enabled for
+      # this project.
+      if(${BOOST_TEST_LIB_OPTION})
+        foreach(SUBDIR ${THIS_PROJECT_TESTDIRS})
+          add_subdirectory(${SUBDIR})
+        endforeach(SUBDIR ${THIS_PROJECT_TESTDIRS})
+      endif(${BOOST_TEST_LIB_OPTION})
+    endif(BUILD_TESTING AND THIS_PROJECT_TESTDIRS)
   endif(${BOOST_BUILD_LIB_OPTION})
 endmacro(boost_library_project)
 
@@ -144,21 +91,21 @@ macro(boost_library_variant_target_name)
   set(VARIANT_TARGET_NAME "")
   set(VARIANT_VERSIONED_NAME "")
 
-  if (USE_VERSIONING)
+  if (BUILD_VERSIONED)
     # If we're using versioning for the names of our generated
     # libraries, detect the full toolset name.
-    set(VARIANT_VERSIONED_NAME "${BOOST_VERSIONING_TOOLSET_TAG}")
-  endif (USE_VERSIONING)
+    set(VARIANT_VERSIONED_NAME "-${BOOST_TOOLSET}")
+  endif (BUILD_VERSIONED)
 
   # Add -mt for multi-threaded libraries
   list_contains(variant_is_mt MULTI_THREADED ${ARGN})
   if (variant_is_mt)
     set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-mt")
 
-    if (USE_VERSIONING)
+    if (BUILD_VERSIONED)
       # If we're creating versioned names, tack on "-mt"
       set(VARIANT_VERSIONED_NAME "${VARIANT_VERSIONED_NAME}-mt")
-    endif (USE_VERSIONING)
+    endif (BUILD_VERSIONED)
   endif (variant_is_mt)
 
   # Add -static for static libraries, -shared for shared libraries
@@ -182,12 +129,12 @@ macro(boost_library_variant_target_name)
   if (variant_is_debug)
     set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-debug")
 
-    if (USE_VERSIONING)
+    if (BUILD_VERSIONED)
       set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}d")
-    endif (USE_VERSIONING)
+    endif (BUILD_VERSIONED)
   endif (variant_is_debug)
 
-  if (USE_VERSIONING)
+  if (BUILD_VERSIONED)
     # If there is an ABI tag, append it to the versioned name
     if (VARIANT_ABI_TAG)
       set(VARIANT_VERSIONED_NAME "${VARIANT_VERSIONED_NAME}-${VARIANT_ABI_TAG}")
@@ -201,7 +148,7 @@ macro(boost_library_variant_target_name)
       set(VARIANT_VERSIONED_NAME 
         "${VARIANT_VERSIONED_NAME}-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}")
     endif(BOOST_VERSION_SUBMINOR GREATER 0)
-  endif (USE_VERSIONING)
+  endif (BUILD_VERSIONED)
 endmacro(boost_library_variant_target_name)
 
 macro(boost_library_variant LIBNAME)
@@ -227,8 +174,8 @@ macro(boost_library_variant LIBNAME)
     endif(NOT BUILD_${ARG})
 
     # Accumulate compile and link flags
-    set(THIS_VARIANT_COMPILE_FLAGS "${THIS_VARIANT_COMPILE_FLAGS} ${THIS_LIB_${ARG}_COMPILE_FLAGS}")
-    set(THIS_VARIANT_LINK_FLAGS "${THIS_VARIANT_LINK_FLAGS} ${THIS_LIB_${ARG}_LINK_FLAGS}")
+    set(THIS_VARIANT_COMPILE_FLAGS "${THIS_VARIANT_COMPILE_FLAGS} ${THIS_LIB_${ARG}_COMPILE_FLAGS} ${${ARG}_COMPILE_FLAGS}")
+    set(THIS_VARIANT_LINK_FLAGS "${THIS_VARIANT_LINK_FLAGS} ${THIS_LIB_${ARG}_LINK_FLAGS} ${${ARG}_LINK_FLAGS}")
   endforeach(ARG ${ARGN})
 
   if (THIS_VARIANT_OKAY)
@@ -276,9 +223,23 @@ macro(boost_library_variant LIBNAME)
         OUTPUT_NAME "${LIBPREFIX}${LIBNAME}${VARIANT_VERSIONED_NAME}${THIS_LIB_STATIC_TAG}"
         CLEAN_DIRECT_OUTPUT 1
         COMPILE_FLAGS "${THIS_VARIANT_COMPILE_FLAGS}"
+        LINK_FLAGS "${THIS_VARIANT_LINK_FLAGS}"
+        )
+    elseif (THIS_LIB_MODULE)
+      # Add a module
+      add_library(${VARIANT_LIBNAME} MODULE ${THIS_LIB_SOURCES})
+
+      # Set properties on this library
+      set_target_properties(${VARIANT_LIBNAME}
+        PROPERTIES
+        OUTPUT_NAME "${LIBNAME}${VARIANT_VERSIONED_NAME}"
+        CLEAN_DIRECT_OUTPUT 1
+        COMPILE_FLAGS "${THIS_VARIANT_COMPILE_FLAGS}"
+        LINK_FLAGS "${THIS_VARIANT_LINK_FLAGS}"
+        SOVERSION "${BOOST_VERSION}"
         )
     else (THIS_LIB_IS_STATIC)
-      # Add the library itself
+      # Add a module
       add_library(${VARIANT_LIBNAME} SHARED ${THIS_LIB_SOURCES})
 
       # Set properties on this library
@@ -287,6 +248,7 @@ macro(boost_library_variant LIBNAME)
         OUTPUT_NAME "${LIBNAME}${VARIANT_VERSIONED_NAME}"
         CLEAN_DIRECT_OUTPUT 1
         COMPILE_FLAGS "${THIS_VARIANT_COMPILE_FLAGS}"
+        LINK_FLAGS "${THIS_VARIANT_LINK_FLAGS}"
         SOVERSION "${BOOST_VERSION}"
         )
     endif (THIS_LIB_IS_STATIC)
@@ -305,66 +267,95 @@ macro(boost_library_variant LIBNAME)
   endif (THIS_VARIANT_OKAY)
 endmacro(boost_library_variant)
 
-# Doug: None of this actually works, but it looks neat! I'll take
-# another shot at this another time, without the attempt at macro
-# recursion.
-macro(boost_library_enumerate_variants LIBNAME FEATURE_OPTIONS_IN)
-  message(STATUS "Feature options: ${FEATURE_OPTIONS}")
+# Updates the set of default build variants to account for variations
+# in the given feature.
+#
+#   boost_add_default_variant(feature-val1 feature-val2 ...)
+#
+# Each new feature creates a new set of build variants using that
+# feature. For example, writing:
+# 
+#    boost_add_default_variant(SINGLE_THREADED MULTI_THREADED)
+#
+# Will create single- and multi-threaded variants of every default
+# library variant already defined, doubling the number of variants
+# that will be built. See the top-level CMakeLists.txt for the set of
+# default variants.
+#
+# Variables affected:
+#
+#   BOOST_DEFAULT_VARIANTS:
+#     This variable describes all of the variants that will be built
+#     by default, and will be updated with each invocation of
+#     boost_add_default_variant. The variable itself is a list, where
+#     each element in the list contains a colon-separated string
+#     naming a specific set of features for that variant, e.g.,
+#     STATIC:DEBUG:SINGLE_THREADED.
+#
+#   BOOST_ADDLIB_ARG_NAMES:
+#
+#     This variable describes all of the feature-specific arguments
+#     that can be used for the boost_library macro, separated by
+#     semicolons. For example, given the use of
+#     boost_add_default_variant above, this variable will contain (at
+#     least)
+#
+#        SINGLE_THREADED_COMPILE_FLAGS;SINGLE_THREADED_LINK_FLAGS;
+#        MULTI_THREADED_COMPILE_FLAGS;MULTI_THREADED_LINK_FLAGS
+#
+#     When this variable is used in boost_library, it turns these
+#     names into feature-specific options. For example,
+#     MULTI_THREADED_COMPILE_FLAGS provides extra compile flags to be
+#     used only for multi-threaded variants of the library.
+#
+#   BOOST_ADDLIB_OPTION_NAMES:
+#
+#     Like BOOST_ADDLIB_ARG_NAMES, this variable describes
+#     feature-specific options to boost_library that can be used to
+#     turn off building of the library when the variant would require
+#     certain features. For example, the NO_SINGLE_THREADED option
+#     turns off building of single-threaded variants for a library.
+macro(boost_add_default_variant)
+  # Update BOOST_DEFAULT_VARIANTS
+  if (BOOST_DEFAULT_VARIANTS)
+    set(BOOST_DEFAULT_VARIANTS_ORIG ${BOOST_DEFAULT_VARIANTS})
+    set(BOOST_DEFAULT_VARIANTS)
+    foreach(VARIANT ${BOOST_DEFAULT_VARIANTS_ORIG})
+      foreach(FEATURE ${ARGN})
+        list(APPEND BOOST_DEFAULT_VARIANTS "${VARIANT}:${FEATURE}")
+      endforeach(FEATURE ${ARGN})
+    endforeach(VARIANT ${BOOST_DEFAULT_VARIANTS_ORIG})
+    set(BOOST_DEFAULT_VARIANTS_ORIG)
+  else (BOOST_DEFAULT_VARIANTS)
+    set(BOOST_DEFAULT_VARIANTS ${ARGN})
+  endif (BOOST_DEFAULT_VARIANTS)
 
-  # TODO: This is a kludge that determines when ARGN is
-  # non-empty. There must be a better way!
-  set(MORE_FEATURE_OPTIONS FALSE)
-  foreach(ARG ${ARGN})
-    set(MORE_FEATURE_OPTIONS TRUE)
-  endforeach(ARG ${ARGN})
-
-  # The options for a feature comes in as a colon-separated
-  # list; split that into a real list
-  string(REPLACE ":" ";" FEATURE_OPTIONS ${FEATURE_OPTIONS_IN})
-  separate_arguments(FEATURE_OPTIONS)
-    
-  foreach (FEATURE ${FEATURE_OPTIONS})
-    message(STATUS "Feature: ${FEATURE}")
-    if (MORE_FEATURE_OPTIONS)
-      message("Recursing...")
-      # Add this feature to the variant
-      list(APPEND CURRENT_VARIANT_FEATURES ${FEATURE})
-      
-      # Recurse to produce the full sets of features for each
-      # variant
-      boost_library_enumerate_variants(${LIBNAME} ${ARGN})
-      
-      # Remove this feature from the variant
-      list(REMOVE_ITEM CURRENT_VARIANT_FEATURES ${FEATURE})
-    elseif (MORE_FEATURE_OPTIONS)
-      # Produce the library variant
-      boost_library_variant(${LIBNAME} ${CURRENT_VARIANT_FEATURES} ${FEATURE})
-    endif (MORE_FEATURE_OPTIONS)
-  endforeach (FEATURE ${FEATURE_OPTIONS})
-endmacro(boost_library_enumerate_variants)
+  # Feature flag options, used by the boost_library macro
+  foreach(FEATURE ${ARGN})
+    set(BOOST_ADDLIB_ARG_NAMES 
+      "${BOOST_ADDLIB_ARG_NAMES};${FEATURE}_COMPILE_FLAGS;${FEATURE}_LINK_FLAGS")
+    set(BOOST_ADDLIB_OPTION_NAMES "${BOOST_ADDLIB_OPTION_NAMES};NO_${FEATURE}")
+  endforeach(FEATURE ${ARGN})
+endmacro(boost_add_default_variant)
 
 macro(boost_library)
   parse_arguments(THIS_LIB
-    "DEPENDS;LIBRARIES;STATIC_COMPILE_FLAGS;SHARED_COMPILE_FLAGS;DEBUG_COMPILE_FLAGS;RELEASE_COMPILE_FLAGS"
-    "NO_STATIC;NO_SHARED;STATIC_TAG"
+    "DEPENDS;LIBRARIES;${BOOST_ADDLIB_ARG_NAMES}"
+    "STATIC_TAG;MODULE;${BOOST_ADDLIB_OPTION_NAMES}"
     ${ARGN}
     )
   car(LIBNAME ${THIS_LIB_DEFAULT_ARGS})
   cdr(THIS_LIB_SOURCES ${THIS_LIB_DEFAULT_ARGS})
 
+  # A top-level target that refers to all of the variants of the
+  # library, collectively.
   add_custom_target(${LIBNAME})
 
-# See about: this doesn't work
-#  set(DEFAULT_VARIANT_OPTIONS)
-#  set(DEFAULT_VARIANT_OPTIONS ${DEFAULT_VARIANT_OPTIONS} "STATIC:SHARED")
-#  set(DEFAULT_VARIANT_OPTIONS ${DEFAULT_VARIANT_OPTIONS} "DEBUG:RELEASE")
-#  set(DEFAULT_VARIANT_OPTIONS ${DEFAULT_VARIANT_OPTIONS} "MULTI_THREADED:SINGLE_THREADED")
-
-#  set(CURRENT_VARIANT_FEATURES)
-#  boost_library_enumerate_variants (${LIBNAME} ${DEFAULT_VARIANT_OPTIONS})
-  boost_library_variant(${LIBNAME} STATIC DEBUG)
-  boost_library_variant(${LIBNAME} STATIC RELEASE)
-  boost_library_variant(${LIBNAME} SHARED DEBUG)
-  boost_library_variant(${LIBNAME} SHARED RELEASE)
+  # Build each of the default library variants
+  foreach(VARIANT_STR ${BOOST_DEFAULT_VARIANTS})
+    string(REPLACE ":" ";" VARIANT ${VARIANT_STR})
+    separate_arguments(VARIANT)
+    boost_library_variant(${LIBNAME} ${VARIANT})
+  endforeach(VARIANT_STR ${BOOST_DEFAULT_VARIANTS})
 endmacro(boost_library)
 
