@@ -51,7 +51,9 @@ execcmd(
 	char *string,
 	void (*func)( void *closure, int status ),
 	void *closure,
-	LIST *shell )
+	LIST *shell,
+    char *rule_name,
+    char *target )
 {
 	char *s, *e, *p;
 	int rstat = EXEC_CMD_OK;

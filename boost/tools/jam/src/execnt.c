@@ -497,10 +497,12 @@ record_times(int pid, timing_info* time)
 
 void
 execcmd( 
-	char *string,
-	void (*func)( void *closure, int status, timing_info* ),
-	void *closure,
-	LIST *shell )
+    char *string,
+    void (*func)( void *closure, int status, timing_info* ),
+    void *closure,
+    LIST *shell,
+    char *rule_name,
+    char *target )
 {
     int pid;
     int slot;
