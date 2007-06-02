@@ -167,8 +167,9 @@ execcmd(
 
 	if ((cmdtab[slot].pid = vfork()) == 0) 
    	{
-            close(p[0]);
-            dup2(p[1], STDERR_FILENO);
+        close(p[0]);
+        dup2(p[1], STDERR_FILENO);
+        dup2(p[1], STDOUT_FILENO);
 
 	    execvp( argv[0], argv );
 	    _exit(127);
