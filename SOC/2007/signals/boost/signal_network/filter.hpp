@@ -11,6 +11,8 @@
 #include <boost/bind.hpp>
 #include <boost/signal_network/base.hpp>
 #include <boost/type_traits/is_base_of.hpp>
+#include <boost/fusion/functional/adapter/fused.hpp>
+#include <boost/fusion/sequence/conversion/as_vector.hpp>
 
 SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 
@@ -43,6 +45,19 @@ public:
 	void disconnect_all_slots() {out.disconnect_all_slots();}
 protected:
 	signal_type out;
+}; // class filter
+
+template<typename Signature>
+class fused_filter : public filter<Signature>
+{
+public:
+    fused_filter() : fused_out(filter<Signature>::out) {}
+
+protected:
+    typedef boost::function_types::parameter_types<Signature> parameter_types;
+    typedef typename boost::fusion::result_of::as_vector<parameter_types >::type parameter_vector;
+
+    boost::fusion::fused<typename filter<Signature>::signal_type const &> fused_out;
 }; // class filter
 
 SIGNAL_NETWORK_CLOSE_SIGNET_NAMESPACE

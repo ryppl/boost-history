@@ -6,6 +6,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #define _CRT_SECURE_NO_DEPRECATE 1
+#include <boost/fusion/sequence/generation/make_vector.hpp>
+
 
 #include <boost/test/unit_test.hpp>
 using boost::unit_test::test_suite;
@@ -115,29 +117,29 @@ public:
 void simple_test()
 {
 	// instantiate all of the components we need
-	signet::storage<void ()> banger;
-	signet::storage<void (float)> floater(2.5f);
-	signet::storage<void (float)> collector(0.0f);
+    signet::storage<void ()>::unfused banger;
+	signet::storage<void (float)>::unfused floater(2.5f);
+	signet::storage<void (float)>::unfused collector(0.0f);
 
 	// create the network
 	banger >>= floater >>= collector;
 
 	banger(); // signal from banger will now cause floater to output 2.5
-	BOOST_CHECK(collector.value1() == 2.5f);
+	BOOST_CHECK(collector.value_<0>() == 2.5f);
 
 	floater(1.5f); // change the value in floater
 	floater(); // we can also signal floater directly
-	BOOST_CHECK(collector.value1() == 1.5f);
+	BOOST_CHECK(collector.value_<0>() == 1.5f);
 } // end void simple_test()
 
 void branching_test()
 {
-	signet::storage<void ()> banger;
+    signet::storage<void ()>::unfused banger;
 	SignalVoidCounter counter;
-	signet::storage<void (float)> floater;
+    signet::storage<void (float)>::unfused floater;
 	floater(2.5f);
 
-	signet::storage<void (float)> collector(0.0f);
+    signet::storage<void (float)>::unfused collector(0.0f);
 	
 	banger
 		| (floater >>= collector) // floater connects to collector, banger to floater
@@ -145,17 +147,17 @@ void branching_test()
 		
 	banger();
 	BOOST_CHECK(counter.GetCount() == 1);
-	BOOST_CHECK(collector.value1() == 2.5f);
+	BOOST_CHECK(collector.value_<0>() == 2.5f);
 } // end void branching_test()
 
 void disconnect_test()
 {
-	signet::storage<void ()> banger;
+    signet::storage<void ()>::unfused banger;
 	{
 		SignalVoidCounter counter;
-		signet::storage<void (float)> floater;
+        signet::storage<void (float)>::unfused floater;
 		floater(2.5f);
-		signet::storage<void (float)> collector(0.0f);
+        signet::storage<void (float)>::unfused collector(0.0f);
 
 		banger
 			| counter
@@ -163,7 +165,7 @@ void disconnect_test()
 
 		banger();
 		BOOST_CHECK(counter.GetCount() == 1);
-		BOOST_CHECK(collector.value1() == 2.5f);
+		BOOST_CHECK(collector.value_<0>() == 2.5f);
 	} // counter, floater, and collector are now destroyed and disconnected with Boost.Signals
 #ifdef SIGNAL_NETWORK_THREAD_SAFE
 	// if Signal Network has detected thread safe signals, we need to
@@ -184,10 +186,10 @@ void disconnect_test()
 
 void multi_type_test()
 {
-	signet::storage<void ()> banger;
-	signet::storage<void (int)> inter;
+    signet::storage<void ()>::unfused banger;
+	signet::storage<void (int)>::unfused inter;
 	inter(2);
-	signet::storage<void (float)> floater;
+	signet::storage<void (float)>::unfused floater;
 	floater(3.3f);
 	SignalIntFloatCollector collector;
 
@@ -239,8 +241,8 @@ public:
 
 void multi_num_args_test()
 {
-	signet::storage<void ()> banger;
-	signet::storage<void (float)> floater;
+	signet::storage<void ()>::unfused banger;
+	signet::storage<void (float)>::unfused floater;
 	floater(2.5f);
 	SignalFloatDuplicator duplicator;
 	SignalMultiCollector collector;
@@ -260,16 +262,16 @@ void multi_num_args_test()
 } // end void multi_num_args_test()
 
 
-class SignalMultiInheritedCollector : public signet::storage<void (float)>, public SignalVoidCounter, public SignalFloat2Collector
+class SignalMultiInheritedCollector : public signet::storage<void (float)>::unfused, public SignalVoidCounter, public SignalFloat2Collector
 {
 public:
-	SignalMultiInheritedCollector() : signet::storage<void (float)>(0) {}
+    SignalMultiInheritedCollector() : signet::storage<void (float)>::unfused(0) {}
 };
 
 void multi_num_args_inherited_test()
 {
-	signet::storage<void ()> banger;
-	signet::storage<void (float)> floater;
+	signet::storage<void ()>::unfused banger;
+	signet::storage<void (float)>::unfused floater;
 	floater(2.5f);
 	SignalFloatDuplicator duplicator;
 	SignalMultiInheritedCollector collector;
@@ -278,12 +280,12 @@ void multi_num_args_inherited_test()
 		| (SignalVoidCounter &) collector
 		|
 		(floater
-			| (signet::storage<void (float)> &) collector
+			| (signet::storage<void (float)>::unfused &) collector
 			| (duplicator >>= (SignalFloat2Collector &) collector));
 
 	banger();
 	BOOST_CHECK(collector.GetCount() == 1);
-	BOOST_CHECK(collector.value1() == 2.5f); // calls the collector<float>'s operator()
+	BOOST_CHECK(collector.value_<0>() == 2.5f); // calls the collector<float>'s operator()
 	BOOST_CHECK(collector.GetLast1() == optional<float>(2.5f));
 	BOOST_CHECK(collector.GetLast2() == optional<float>(2.5f));
 } // end void multi_num_args_inherited_test()
@@ -344,7 +346,7 @@ public:
 
 void multi_in_test()
 {
-	signet::storage<void ()> banger;
+	signet::storage<void ()>::unfused banger;
 	Signal2VoidCounter counter;
 	
 	banger
@@ -367,9 +369,9 @@ void multi_in_test()
 
 void junction_test()
 {
-	signet::storage<void ()> banger1, banger2;
+	signet::storage<void ()>::unfused banger1, banger2;
 	SignalVoidCounter counter1, counter2;
-	signet::junction<void ()> junction;
+    signet::junction<void ()>::unfused junction;
 	
 	banger1 >>= junction >>= counter1;
 	banger2 >>= junction >>= counter2;
@@ -397,11 +399,11 @@ void junction_test()
 
 void selector_test()
 {
-	signet::storage<void ()> banger;
-	signet::storage<void (float)> floater1, floater2;
+/*	signet::storage<void ()>::unfused banger;
+	signet::storage<void (float)>::unfused floater1, floater2;
 	floater1(1.0f);
 	floater2(2.0f);
-	signet::storage<void (float)> collector(0.0f);
+	signet::storage<void (float)>::unfused collector(0.0f);
 	signet::selector<2, void (float)> selector;
 
 	banger >>= floater1 >>= selector.slot1();
@@ -410,15 +412,15 @@ void selector_test()
 
 	selector.select(0);
 	banger();
-	BOOST_CHECK(collector.value1() == 0.0f);
+	BOOST_CHECK(collector.value_<0>() == 0.0f);
 
 	selector.select(1);
 	banger();
-	BOOST_CHECK(collector.value1() == 1.0f);
+	BOOST_CHECK(collector.value_<0>() == 1.0f);
 
 	selector.select(2);
 	banger();
-	BOOST_CHECK(collector.value1() == 2.0f);
+	BOOST_CHECK(collector.value_<0>() == 2.0f);*/
 } // end void selector_test()
 
 #include <iostream>
@@ -436,7 +438,7 @@ void mutex_test()
 {
 	signet::timed_generator<void ()> banger1;
 	signet::timed_generator<void ()> banger2;
-	signet::mutex<void ()> lock;
+    signet::mutex<void ()>::unfused lock;
 	SignalVoidCounter counter;
 	ticker tick;
 
@@ -461,13 +463,13 @@ public:
 void filter_test()
 {
 	DoublerClass doubler1, doubler2;
-	signet::storage<void (float)> floater(1.0f);
-	signet::storage<void (float)> collector(0.0f);
+	signet::storage<void (float)>::unfused floater(1.0f);
+	signet::storage<void (float)>::unfused collector(0.0f);
 
 	floater >>= doubler1 >>= doubler2 >>= collector;
 	floater();
 
-	BOOST_CHECK(collector.value1() == 4.0f);
+	BOOST_CHECK(collector.value_<0>() == 4.0f);
 } // end void filter_test()
 
 float DoublerFunc(float  x)
@@ -477,27 +479,27 @@ float DoublerFunc(float  x)
 
 void function_test()
 {
-	signet::function<float(float)> double_fun1(&DoublerFunc);
-	signet::function<float(float)> double_fun2(&DoublerFunc);
-	signet::storage<void (float)> floater(1.0f);
-	signet::storage<void (float)> collector(0.0f);
+    signet::function<float(float)>::unfused double_fun1(&DoublerFunc);
+    signet::function<float(float)>::unfused double_fun2(&DoublerFunc);
+	signet::storage<void (float)>::unfused floater(1.0f);
+	signet::storage<void (float)>::unfused collector(0.0f);
 
 	floater >>= double_fun1 >>= double_fun2 >>= collector;
 	floater();
 
-	BOOST_CHECK(collector.value1() == 4.0f);
+	BOOST_CHECK(collector.value_<0>() == 4.0f);
 } // end void function_test()
 
 void chain_test()
 {
-	signet::chain<DoublerClass, void(float)> doubling_chain(4);
-	signet::storage<void (float)> floater(1.0f);
-	signet::storage<void (float)> collector(0.0f);
+    signet::chain<DoublerClass, void(float)>::unfused doubling_chain(4, NULL);
+	signet::storage<void (float)>::unfused floater(1.0f);
+	signet::storage<void (float)>::unfused collector(0.0f);
 
 	floater >>= doubling_chain >>= collector;
 	floater();
 
-	BOOST_CHECK(collector.value1() == 16.0f);
+	BOOST_CHECK(collector.value_<0>() == 16.0f);
 } // end void chain_test
 
 class PullDoubler : public signet::filter<float ()>
@@ -511,10 +513,10 @@ public:
 
 void pull_test()
 {
-	signet::storage<void(float)> generator(1.0f);
+	signet::storage<void(float)>::unfused generator(1.0f);
 	PullDoubler doubler;
 
-	doubler >>= generator.slot_exact1();
+	doubler >>= generator.slot<0>();
 
 	BOOST_CHECK(doubler() == 2.0f);
 } // end void pull_test
@@ -540,9 +542,9 @@ void asio_server()
 	acceptor.accept(socket);
 
 	// instantiate the components - a float generator, a filter that adds 2, and a sender
-	signet::storage<void (float)> generator(1.0f);
-	signet::function<float(float)> add2(boost::bind(std::plus<float>(), _1, 2.0f));
-	signet::socket_sender<void (float)> sender(socket);
+	signet::storage<void (float)>::unfused generator(1.0f);
+    signet::function<float(float)>::unfused add2(boost::bind(std::plus<float>(), _1, 2.0f));
+    signet::socket_sender<void (float)>::unfused sender(socket);
 
 	// create the network
 	generator >>= add2 >>= sender;
@@ -565,8 +567,8 @@ void asio_test()
 	socket.connect(endpoint_recv);
 
 	// instatiate the components
-	signet::socket_receiver<void (float)> receiver(socket);
-	signet::storage<void (float)> collector(0.0f);
+    signet::socket_receiver<void (float)> receiver(socket);
+	signet::storage<void (float)>::unfused collector(0.0f);
 
 	// set up the network
 	receiver >>= collector;
@@ -574,13 +576,29 @@ void asio_test()
 	// this receiver is synchronous - we have to tell it to receive a signal
 	receiver();
 
-	BOOST_CHECK(collector.value1() == 3.0f);
+	BOOST_CHECK(collector.value_<0>() == 3.0f);
 
 	t.join();
 } // end void asio_test
 
 test_suite* init_unit_test_suite(int argc, char* argv[])
 {
+    signet::storage<void (int, int)> s;
+    boost::fusion::vector<int, int> val(4, 5);
+    s(val);
+    std::cout << s.value_<0>() << s.value_<1>() << std::endl;
+    signet::storage<void (int, int) >::unfused s2;
+
+    s >>= s2;
+    s();
+    std::cout << s2.value_<0>() << s2.value_<1>() << std::endl;
+
+    signet::storage<void (int, int) >::unfused s3(5, 6);
+    std::cout << s3.value_<0>() << s3.value_<1>() << std::endl;
+    s3(7, 8);
+    std::cout << s3.value_<0>() << s3.value_<1>() << std::endl;
+
+
     test_suite* test = BOOST_TEST_SUITE( "Utility test suite" );
 
 	test->add(BOOST_TEST_CASE(&simple_test));

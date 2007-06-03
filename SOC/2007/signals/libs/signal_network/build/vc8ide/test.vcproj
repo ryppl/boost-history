@@ -66,6 +66,34 @@
 				RelativePath="..\..\test\test.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\test\test_chain.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\test_counter.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\test_function.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\test_junction.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\test_mutex.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\test_socket.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\test\test_storage.cpp"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\test\Jamfile.v2"

@@ -3,20 +3,21 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
-
 import testing ;
 
 project
     : requirements 
       <include>../../..
-      <library>/boost/test//boost_unit_test_framework/<link>static
       <library>/boost/signals//boost_signals/<link>static
-      <library>/boost/thread//boost_thread/<link>static
       <library>/boost/system//boost_system/<link>static
-      <library>/boost/serialization//boost_serialization/<link>static
       <define>BOOST_ALL_NO_LIB=1
     ;
-    
-test-suite signal_network
-    : [ run test.cpp ]
-    ;
+
+run test_storage.cpp ;
+run test_counter.cpp ;
+run test_junction.cpp ;
+run test_function.cpp ;
+run test_chain.cpp ;
+run test_mutex.cpp /boost/thread//boost_thread/<link>static ;
+run test_socket.cpp /boost/serialization//boost_serialization/<link>static
+ /boost/thread//boost_thread/<link>static ;

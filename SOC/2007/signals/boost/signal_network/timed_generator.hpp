@@ -21,7 +21,7 @@ SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 
 */
 template<class Signature>
-class timed_generator : public storage<Signature>
+class timed_generator : public storage<Signature>::unfused
 {
 public:
 	/// Default constructor.  Starts the thread, but signals won't be sent until the enable() function is called.

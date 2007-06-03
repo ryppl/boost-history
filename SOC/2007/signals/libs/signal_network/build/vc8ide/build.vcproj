@@ -69,10 +69,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\boost\signal_network\collector.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\boost\signal_network\filter.hpp"
 				>
 			</File>
@@ -116,10 +112,6 @@
 				Name="detail"
 				>
 				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\chain_template.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\boost\signal_network\detail\connect_slot_template.hpp"
 					>
 				</File>
@@ -132,14 +124,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\function_template.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\junction_template.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\..\boost\signal_network\detail\loader.hpp"
 					>
 				</File>
@@ -148,27 +132,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\mutex_template.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\selector_template.hpp"
+					RelativePath="..\..\..\..\boost\signal_network\detail\serialize_fusion_vector.hpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\signal_network\detail\slot_type_template.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\socket_receiver_template.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\socket_sender_template.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\storage_template.hpp"
 					>
 				</File>
 				<File
@@ -177,6 +145,18 @@
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\signal_network\detail\template_loader2.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\signal_network\detail\unfused_inherited.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\signal_network\detail\unfused_typed_class.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\signal_network\detail\unfused_typed_class2.hpp"
 					>
 				</File>
 			</Filter>
