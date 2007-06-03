@@ -175,17 +175,17 @@ execcmd(
 	if ((cmdtab[slot].pid = vfork()) == 0) 
    	{
             close(out[0]);
+            close(err[0]);
+
             dup2(out[1], STDOUT_FILENO);
 
             if (globs.pipe_action == 0)
             {
                 dup2(out[1], STDERR_FILENO);
+                close(err[1]);
             }
             else
-            {
-                close(err[0]);
                 dup2(err[1], STDERR_FILENO);
-            }
 
 	    execvp( argv[0], argv );
 	    _exit(127);
@@ -196,8 +196,11 @@ execcmd(
 	    exit( EXITBAD );
 	}
 
-        /* child writes stdout to out[1], parent reads from out[0] */
+        /* close write end of pipes */
         close(out[1]); 
+        close(err[1]); 
+
+        /* child writes stdout to out[1], parent reads from out[0] */
 	cmdtab[slot].fd[OUT] = out[0];
 	cmdtab[slot].stream[OUT] = fdopen(cmdtab[slot].fd[OUT], "rb");
         if (cmdtab[slot].stream[OUT] == NULL) {
@@ -206,12 +209,18 @@ execcmd(
         }
 
         /* child writes stderr to err[1], parent reads from err[0] */
-        close(err[1]); 
-	cmdtab[slot].fd[ERR] = err[0];
-	cmdtab[slot].stream[ERR] = fdopen(cmdtab[slot].fd[ERR], "rb");
-        if (cmdtab[slot].stream[ERR] == NULL) {
-            perror( "fdopen" );
-            exit( EXITBAD );
+        if (globs.pipe_action == 0)
+        {
+          close(err[0]);
+        }
+        else
+        {
+	    cmdtab[slot].fd[ERR] = err[0];
+	    cmdtab[slot].stream[ERR] = fdopen(cmdtab[slot].fd[ERR], "rb");
+            if (cmdtab[slot].stream[ERR] == NULL) {
+                perror( "fdopen" );
+                exit( EXITBAD );
+            }
         }
 
         /* ensure enough room for rule and target name */
@@ -286,19 +295,17 @@ int read_descriptor(int i, int s)
         }
     }
 
-    if (feof(cmdtab[i].stream[s]))
-    {
-        /* close the stream and pipe descriptor */
-        fclose(cmdtab[i].stream[s]);
-        cmdtab[i].stream[s] = 0;
+    return feof(cmdtab[i].stream[s]);
+}
+
+void close_streams(int i, int s)
+{
+    /* close the stream and pipe descriptor */
+    fclose(cmdtab[i].stream[s]);
+    cmdtab[i].stream[s] = 0;
                                                                                   
-        close(cmdtab[i].fd[s]);
-        cmdtab[i].fd[s] = 0;
-
-        return 1;
-    }
-
-    return 0;
+    close(cmdtab[i].fd[s]);
+    cmdtab[i].fd[s] = 0;
 }
 
 /*
@@ -336,10 +343,13 @@ execwait()
                 fd_max = fd_max < cmdtab[i].fd[OUT] ? cmdtab[i].fd[OUT] : fd_max;
                 FD_SET(cmdtab[i].fd[OUT], &fds);
             }
-            if (0 < cmdtab[i].fd[ERR])
+            if (globs.pipe_action != 0)
             {
-                fd_max = fd_max < cmdtab[i].fd[ERR] ? cmdtab[i].fd[ERR] : fd_max;
-                FD_SET(cmdtab[i].fd[ERR], &fds);
+                if (0 < cmdtab[i].fd[ERR])
+                {
+                    fd_max = fd_max < cmdtab[i].fd[ERR] ? cmdtab[i].fd[ERR] : fd_max;
+                    FD_SET(cmdtab[i].fd[ERR], &fds);
+                }
             }
         }
 
@@ -357,9 +367,14 @@ execwait()
                 if (FD_ISSET(cmdtab[i].fd[ERR], &fds))
                     err = read_descriptor(i, ERR);
 
-                /* if either descriptor closed, then we're done */
+                /* if feof on either descriptor, then we're done */
                 if (out || err)
                 {
+                    /* close the stream and pipe descriptors */
+                    close_streams(i, OUT);
+                    if (globs.pipe_action != 0)
+                        close_streams(i, ERR);
+
                     /* reap the child and release resources */
                     pid = waitpid(cmdtab[i].pid, &status, 0);
 
@@ -420,6 +435,11 @@ execwait()
 
                         cmdtab[i].func = 0;
                         cmdtab[i].closure = 0;
+                    }
+                    else
+                    {
+                        printf("unknown pid %d with errno = %d\n", pid, errno);
+                        exit(EXITBAD);
                     }
                 }
             }
