@@ -47,16 +47,20 @@ macro(boost_test_parse_args testname)
     
   # Categorize each of the arguments
   foreach(ARG ${BOOST_TEST_DEPENDS})
-    # If building static libraries is turned off..
     get_target_property(DEPEND_TYPE ${ARG} TYPE)
     get_target_property(DEPEND_LOCATION ${ARG} LOCATION)
-    if (NOT BUILD_STATIC_LIBS AND ${DEPEND_TYPE} STREQUAL "STATIC_LIBRARY")
+    # If building static libraries is turned off, don't try to build
+    # the test
+    if (NOT BUILD_STATIC AND ${DEPEND_TYPE} STREQUAL "STATIC_LIBRARY")
       set(BOOST_TEST_OKAY FALSE)
-    endif (NOT BUILD_STATIC_LIBS AND ${DEPEND_TYPE} STREQUAL "STATIC_LIBRARY")
-    if (NOT BUILD_SHARED_LIBS AND ${DEPEND_TYPE} STREQUAL "SHARED_LIBRARY")
+    endif (NOT BUILD_STATIC AND ${DEPEND_TYPE} STREQUAL "STATIC_LIBRARY")
+
+    # If building shared libraries is turned off, don't try to build
+    # the test
+    if (NOT BUILD_SHARED AND ${DEPEND_TYPE} STREQUAL "SHARED_LIBRARY")
       set(BOOST_TEST_OKAY FALSE)
-    endif (NOT BUILD_SHARED_LIBS AND ${DEPEND_TYPE} STREQUAL "SHARED_LIBRARY")
-    endforeach(ARG ${BOOST_TEST_DEPENDS})
+    endif (NOT BUILD_SHARED AND ${DEPEND_TYPE} STREQUAL "SHARED_LIBRARY")
+  endforeach(ARG ${BOOST_TEST_DEPENDS})
 
   # If no test specified, use the name of the test
   if (NOT BOOST_TEST_SOURCES)
