@@ -321,7 +321,7 @@ namespace explore {
         {
             if( NULL == item )
             {
-                return stream << "null"; 
+                return stream << (char *)"null"; 
             }
             //
             // DH - changed until we figure out what special things to do with pointer types
@@ -342,6 +342,22 @@ namespace explore {
 		}
 	};
 
+	/**
+	 * This is the main entrance to print. 
+     * This function tries to stream it's first argument (the item) to the stream given as a second argument. 
+     * If the item has no stream operator, print will try to treat it as some form of container and call itself recursively
+     * on every element of the container.
+     *
+     * Print ask the container policy whether to treat the item as a container. If directed so, it will delegate to the
+     * print_container free function in namespace scope.
+     * Otherwise, it will try to stream the item using the expression "stream << item".
+     *
+	 * \param &item the item to stream
+	 * \param &stream the stream that receives the item or its elements
+	 * \param &format the format to use (string escaping, delimiters etc.)
+	 * \param &policy a type that decides when a type needs to be treated as a container.
+	 * \return the original stream (second argument)
+	 */
 	template< typename format_type,
 			  typename container_policy_type ,
 			  typename item_type
@@ -391,23 +407,10 @@ namespace explore {
 	}
 	
 
-// Danny, this doesn't appear to work. When I call print passing in a stringstream, this
-// is the function that gets called. When printing a streamed type, the type is always streamed
-// to cout since that is what this defaults the stream to and format is never used. With
-// containers the build fails since stringstream isn't a valid format. I haven't really had a
-// chance to look into why this happens yet. --Jared
-/*	template < typename item_type,
-				typename format_type>
-	std::ostream &print( const item_type &item, const format_type &format)
-	{
-		return print( item, std::cout, format, default_container_policy());
-	}
-*/
-
     //
     // The container_formatter type to allow "inline" streaming like the following
     //
-    // std::cout << container_format( my_formatter) % my_container1 % my_container2 << ...
+    // std::cout << container_format( my_formatter) % my_container1  << ...
     //
 
     template< typename container, typename formatter>
