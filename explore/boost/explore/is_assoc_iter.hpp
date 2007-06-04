@@ -48,17 +48,8 @@ namespace explore
 
         //
         // returns true if the value_t could be the value_type
-        // of a map of which the iterator matches iterator_t
+        // of a map or multimap of which the iterator matches iterator_t
         //
-        template<typename T>
-        struct is_pair : boost::mpl::false_ {};
-
-        template<typename T1, typename T2>
-        struct is_pair<std::pair<T1, T2> > : boost::mpl::true_ {};
-
-        template<typename T>
-        struct value_type_is_pair : is_pair<typename T::value_type> {};
-
         template< typename value_t, typename iterator_t>
         struct pair_matches_map : boost::mpl::false_ {};
 
@@ -85,7 +76,6 @@ namespace explore
     struct is_assoc_iter :
         boost::mpl::eval_if<
             detail::has_value_type<T>,
-//            detail::value_type_is_pair<T>,
             detail::value_matches_map<T>,
             boost::mpl::false_
         > {};
