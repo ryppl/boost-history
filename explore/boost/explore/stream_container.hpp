@@ -91,7 +91,7 @@ namespace explore
         }
 
     private:
-        friend detail::depth_guard<Elem>;
+        friend struct detail::depth_guard<Elem>;
 
         cont_typ m_separator;
         cont_typ m_start;
