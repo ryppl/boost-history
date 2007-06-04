@@ -35,6 +35,7 @@ project
   [ run boost_range.cpp ]
   
   [ run custom_format_simple.cpp ]
+  [ run html_table_output.cpp ]
   
   [ run is_assoc_iter.cpp ]
  ;

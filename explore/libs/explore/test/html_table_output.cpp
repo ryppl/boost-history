@@ -48,11 +48,20 @@ BOOST_AUTO_TEST_CASE( vector_in_c_array_html_print_test )
 std::ostream& html_table_stream_format(std::ostream& ostr)
 {
     using namespace explore;
-    return ostr << start("<table>\n<tr><td>") << separator("</td><td>") << explore::end("</td></tr>\n</table>\n");
+    ostr << start("<table>\n")
+         << separator("")
+         << explore::end("</table>\n");
+
+    ostr << start("<tr><td>", 1)
+         << separator("</td><td>", 1)
+         << explore::end("</td></tr>\n", 1);
+
+    return ostr;
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_c_array_html_stream_test )
 {
+    using namespace explore;
     std::stringstream str_out;
     str_out << html_table_stream_format;
 

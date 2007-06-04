@@ -14,6 +14,7 @@
 #include "is_assoc_iter.hpp"
 
 #include <ostream>
+#include <vector>
 #include <boost/functional/detail/container_fwd.hpp>
 #include <boost/array.hpp>
 #include <boost/range/iterator_range.hpp>
@@ -34,110 +35,196 @@ namespace explore
         BOOST_EXPLORE_INIT_STRING(assoc_separator, ":")
         BOOST_EXPLORE_INIT_STRING(assoc_start, "")
         BOOST_EXPLORE_INIT_STRING(assoc_end, "")
+
+        template<typename Elem>
+        struct depth_guard;
     }
 
+
     // A simple collection of additional stream state
-    template<typename Elem, typename Tr>
+    template<typename Elem>
     struct container_stream_state
     {
-        typedef std::basic_string<Elem, Tr> str_typ;
+        typedef std::basic_string<Elem> str_typ;
+        typedef std::vector<str_typ, std::allocator<str_typ> > cont_typ;
+
         container_stream_state()
+            : m_depth(0), m_itemw(0)
         {
             init<Elem>();
         }
 
-        // is there an easier way to specialize between char and wchar_t?
         // Concern: this is only specialized for char and wchar_t streams.
         template<typename El>
         void init()
         {
-            separator = detail::init_separator<El>();
-            start = detail::init_start<El>();
-            end = detail::init_end<El>();
-            assoc_separator = detail::init_assoc_separator<El>();
-            assoc_start = detail::init_assoc_start<El>();
-            assoc_end = detail::init_assoc_end<El>();
+            init(m_separator, detail::init_separator<El>());
+            init(m_start, detail::init_start<El>());
+            init(m_end, detail::init_end<El>());
+            init(m_assoc_separator, detail::init_assoc_separator<El>());
+            init(m_assoc_start, detail::init_assoc_start<El>());
+            init(m_assoc_end, detail::init_assoc_end<El>());
         }
 
-        str_typ separator;
-        str_typ start;
-        str_typ end;
-        str_typ assoc_separator;
-        str_typ assoc_start;
-        str_typ assoc_end;
+        // read
+        const str_typ& separator(std::size_t index = 0) const { return at(m_separator, index); }
+        const str_typ& start(std::size_t index = 0) const { return at(m_start, index); }
+        const str_typ& end(std::size_t index = 0) const { return at(m_end, index); }
+        const str_typ& assoc_separator(std::size_t index = 0) const { return at(m_assoc_separator, index); }
+        const str_typ& assoc_start(std::size_t index = 0) const { return at(m_assoc_start, index); }
+        const str_typ& assoc_end(std::size_t index = 0) const { return at(m_assoc_end, index); }
+        std::streamsize itemw() const { return m_itemw; }
+
+        // write
+        void set_separator(const str_typ& str, std::size_t index = 0) { at(m_separator, index) = str; }
+        void set_start(const str_typ& str, std::size_t index = 0) { at(m_start, index) = str; }
+        void set_end(const str_typ& str, std::size_t index = 0) { at(m_end, index) = str; }
+        void set_assoc_separator(const str_typ& str, std::size_t index = 0) { at(m_assoc_separator, index) = str; }
+        void set_assoc_start(const str_typ& str, std::size_t index = 0) { at(m_assoc_start, index) = str; }
+        void set_assoc_end(const str_typ& str, std::size_t index = 0) { at(m_assoc_end, index) = str; }
+        void set_itemw(std::streamsize itemw, std::size_t index = 0) { m_itemw = itemw; }
+
+        std::size_t depth() const
+        {
+            // we start at 0, increment before use, so we must decrement upon query.
+            return m_depth - 1;
+        }
+
+    private:
+        friend detail::depth_guard<Elem>;
+
+        cont_typ m_separator;
+        cont_typ m_start;
+        cont_typ m_end;
+        cont_typ m_assoc_separator;
+        cont_typ m_assoc_start;
+        cont_typ m_assoc_end;
+        std::size_t m_depth;
+
+        std::streamsize m_itemw;
+
+        void init(cont_typ& c, str_typ val)
+        {
+            c.resize(1);
+            c[0] = val;
+        }
+
+        // read
+        const str_typ& at(const cont_typ& c, std::size_t index) const
+        {
+            // return the highest item if it does not exist at the given index
+            return c[std::min(index, c.size() - 1)];
+        }
+
+        // write
+        str_typ& at(cont_typ& c, std::size_t index)
+        {
+            if( c.size() <= index )
+            {
+                c.resize(index+1);
+            }
+
+            return c[index];
+        }
     };
 
     namespace detail
     {
+        template<typename Elem>
+        struct depth_guard
+        {
+            depth_guard(container_stream_state<Elem>* state)
+                : m_state(state)
+            {
+                ++m_state->m_depth;
+            }
+
+            ~depth_guard()
+            {
+                --m_state->m_depth;
+            }
+
+        private:
+            container_stream_state<Elem>* m_state;
+        };
+
         // manipulator function wrapper for 1 char/wchar_t argument.  When streamed, will run manipulator
         // function with argument.
-        template<typename Elem>
+        template<typename T>
         struct manipfunc
         {
-            manipfunc(void (*fun)(std::basic_ostream<Elem, std::char_traits<Elem> >&, const Elem*), const Elem* val)
-                : pfun(fun), arg(val)
+            manipfunc(void (*fun)(std::ios_base&, T, std::size_t), T val, std::size_t d)
+                : pfun(fun), arg(val), depth(d)
             {
             }
 
-            void (*pfun)(std::basic_ostream<Elem, std::char_traits<Elem> >&, const Elem*);
-            const Elem* arg;
+            void (*pfun)(std::ios_base&, T, std::size_t);
+            T arg;
+            std::size_t depth;
         };
 
         // stream manipfunc
-        template<typename Elem, typename Tr, typename Arg>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<Arg>& manip)
+        template<typename Elem, typename Tr, typename T>
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<T>& manip)
         {
-            (*manip.pfun)(ostr, manip.arg);
+            (*manip.pfun)(ostr, manip.arg, manip.depth);
             return ostr;
         }
 
         // function ptr for separator manipulator
-        template<typename Elem, typename Tr>
-        void separatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
+        template<typename Elem>
+        void separatorFn(std::ios_base& ostr, const Elem* sep, std::size_t depth)
         {
-            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->separator = sep;
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_separator(sep, depth);
         }
 
         // function ptr for start manipulator
-        template<typename Elem, typename Tr>
-        void startFn(std::basic_ostream<Elem, Tr>& ostr, const char* start)
+        template<typename Elem>
+        void startFn(std::ios_base& ostr, const Elem* start, std::size_t depth)
         {
-            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->start = start;
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_start(start, depth);
         }
 
         // function ptr for end manipulator
-        template<typename Elem, typename Tr>
-        void endFn(std::basic_ostream<Elem, Tr>& ostr, const char* end)
+        template<typename Elem>
+        void endFn(std::ios_base& ostr, const Elem* end, std::size_t depth)
         {
-            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->end = end;
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_end(end, depth);
         }
 
         // function ptr for associative separator manipulator
-        template<typename Elem, typename Tr>
-        void assoc_separatorFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* sep)
+        template<typename Elem>
+        void assoc_separatorFn(std::ios_base& ostr, const Elem* sep, std::size_t depth)
         {
-            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_separator = sep;
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_separator(sep, depth);
         }
 
         // function ptr for associative start manipulator
-        template<typename Elem, typename Tr>
-        void assoc_startFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* start)
+        template<typename Elem>
+        void assoc_startFn(std::ios_base& ostr, const Elem* start, std::size_t depth)
         {
-            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_start = start;
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_start(start, depth);
         }
 
         // function ptr for associative end manipulator
-        template<typename Elem, typename Tr>
-        void assoc_endFn(std::basic_ostream<Elem, Tr>& ostr, const Elem* end)
+        template<typename Elem>
+        void assoc_endFn(std::ios_base& ostr, const Elem* end, std::size_t depth)
         {
-            explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr)->assoc_end = end;
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_end(end, depth);
+        }
+
+        // function ptr object for setitemw
+        //template<typename Elem>
+        void setitemwFn(std::ios_base& ostr, std::streamsize sz, std::size_t depth)
+        {
+            explore::get_stream_state<container_stream_state<char> >(ostr)->set_itemw(sz, depth);
         }
     }
 
     struct stream_normal_value
     {
         template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem, Tr>*)
+        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>*)
         {
             ostr << val;
         }
@@ -147,9 +234,9 @@ namespace explore
     struct stream_map_value
     {
         template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem, Tr>* state)
+        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state)
         {
-            ostr << state->assoc_start << val.first << state->assoc_separator << val.second << state->assoc_end;
+            ostr << state->assoc_start() << val.first << state->assoc_separator() << val.second << state->assoc_end();
         }
     };
 
@@ -157,10 +244,12 @@ namespace explore
     std::basic_ostream<Elem, Tr>& stream_container(std::basic_ostream<Elem, Tr>& ostr, FwdIter first, FwdIter last, F f)
     {
         // grab the extra data embedded in the stream object.
-        container_stream_state<Elem, Tr>* state = explore::get_stream_state<container_stream_state<Elem, Tr> >(ostr);
+        container_stream_state<Elem>* state = explore::get_stream_state<container_stream_state<Elem> >(ostr);
+        detail::depth_guard<Elem> guard(state);
+        std::size_t depth = state->depth();
 
         // starting delimiter
-        ostr << state->start;
+        ostr << state->start(depth);
 
         while( first != last )
         {
@@ -169,12 +258,12 @@ namespace explore
             if( ++first != last )
             {
                 // separation delimiter
-                ostr << state->separator;
+                ostr << state->separator(depth);
             }
         }
 
         // ending delimiter
-        return ostr << state->end;
+        return ostr << state->end(depth);
     }
 
     template<typename Elem, typename Tr, typename FwdIter>
@@ -257,8 +346,10 @@ namespace std
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::pair<T1, T2>& p)
     {
         using namespace explore;
-        container_stream_state<Elem, Tr>* state = get_stream_state<container_stream_state<Elem, Tr> >(ostr);
-        return ostr << state->start << p.first << state->separator << p.second << state->end;
+        container_stream_state<Elem>* state = get_stream_state<container_stream_state<Elem> >(ostr);
+        detail::depth_guard<Elem> guard(state);
+        std::size_t depth = state->depth();
+        return ostr << state->start(depth) << p.first << state->separator(depth) << p.second << state->end(depth);
     }
 
     // stream map<K, T>
@@ -304,51 +395,56 @@ namespace explore
 
     // manipulator
     template<typename Elem>
-    detail::manipfunc<Elem> separator(const Elem* sep)
+    detail::manipfunc<const Elem*> separator(const Elem* sep, std::size_t depth = 0)
     {
-        return detail::manipfunc<Elem>(&detail::separatorFn, sep);
+        return detail::manipfunc<const Elem*>(&detail::separatorFn, sep, depth);
     }
 
     // manipulator
     template<typename Elem>
-    detail::manipfunc<Elem> start(const Elem* Start)
+    detail::manipfunc<const Elem*> start(const Elem* Start, std::size_t depth = 0)
     {
-        return detail::manipfunc<Elem>(&detail::startFn, Start);
+        return detail::manipfunc<const Elem*>(&detail::startFn, Start, depth);
     }
 
     // manipulator
     template<typename Elem>
-    detail::manipfunc<Elem> end(const Elem* end)
+    detail::manipfunc<const Elem*> end(const Elem* end, std::size_t depth = 0)
     {
-        return detail::manipfunc<Elem>(&detail::endFn, end);
+        return detail::manipfunc<const Elem*>(&detail::endFn, end, depth);
     }
 
     // manipulator
     template<typename Elem>
-    detail::manipfunc<Elem> assoc_separator(const Elem* sep)
+    detail::manipfunc<const Elem*> assoc_separator(const Elem* sep, std::size_t depth = 0)
     {
-        return detail::manipfunc<Elem>(&detail::assoc_separatorFn, sep);
+        return detail::manipfunc<const Elem*>(&detail::assoc_separatorFn, sep, depth);
     }
 
     // manipulator
     template<typename Elem>
-    detail::manipfunc<Elem> assoc_start(const Elem* start)
+    detail::manipfunc<const Elem*> assoc_start(const Elem* start, std::size_t depth = 0)
     {
-        return detail::manipfunc<Elem>(&detail::assoc_startFn, start);
+        return detail::manipfunc<const Elem*>(&detail::assoc_startFn, start, depth);
     }
 
     // manipulator
     template<typename Elem>
-    detail::manipfunc<Elem> assoc_end(const Elem* end)
+    detail::manipfunc<const Elem*> assoc_end(const Elem* end, std::size_t depth = 0)
     {
-        return detail::manipfunc<Elem>(&detail::assoc_endFn, end);
+        return detail::manipfunc<const Elem*>(&detail::assoc_endFn, end, depth);
+    }
+
+    detail::manipfunc<std::streamsize> setitemw(std::streamsize sz, std::size_t depth = 0)
+    {
+        return detail::manipfunc<std::streamsize>(detail::setitemwFn, sz, depth);
     }
 
     // manipulator
     template<typename Elem, typename Tr>
     std::basic_ostream<Elem, Tr>& format_normal(std::basic_ostream<Elem, Tr>& ostr)
     {
-        get_stream_state<container_stream_state<Elem, Tr> >(ostr)->template init<Elem>();
+        get_stream_state<container_stream_state<Elem> >(ostr)->template init<Elem>();
         return ostr;
     }
 
