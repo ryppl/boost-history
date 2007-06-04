@@ -294,7 +294,7 @@ namespace boost { namespace detail {
 			scoped_array<char> s(new char[s_size + 1]);
 			mpz_get_str(s.get(), base, data);
 			
-			std::wstring result(s.get(), s.get() + s_size);
+			std::wstring result(s.get(), s.get() + strlen(s.get()));
 			return result;
 		}
 		

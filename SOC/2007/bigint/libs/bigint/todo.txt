@@ -88,6 +88,9 @@ Status: investigated, bitwise and shift operations behave as if numbers were 2-c
 + what if there is not enough memory for the request - what happens then? Investigate.
 Status: investigated. abort() is called in this case. The solution for this is complex - read below.
 
++ fix bug in wstr() - sometimes mpz_sizeinbase returns slightly bigger size
+Status: fixed
+
 - remove warnings for both MSVC and GCC
 Status: needs fixing
 
@@ -96,8 +99,11 @@ Status: needs fixing
 + test all ctors for numbers
 Status: implemented
 
-- test all ctors for strings (various bases - 2, 9, 18, 27, 36)
-Status: needs implementing
++ test all ctors for strings (various bases - 2, 9, 18, 27, 36)
+Status: implemented (merged with "test string conversion")
+
++ test string conversion (various bases - 2, 9, 18, 27, 36)
+Status: implemented (merged with "test all ctors for strings")
 
 - test copy construction and assignment
 Status: needs implementing
@@ -115,9 +121,6 @@ Status: needs implementing
 Status: needs implementing
 
 - test bool conversion and operator!
-Status: needs implementing
-
-- test string conversion (various bases - 2, 9, 18, 27, 36)
 Status: needs implementing
 
 - test can_convert_to (char, short, int, int64 - both signed and unsigned, boundary cases)

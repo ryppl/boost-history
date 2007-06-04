@@ -11,6 +11,7 @@ import testing ;
    :
    [ run bigint_simple_test.cpp ]
    [ run number_ctors.cpp ]
+   [ run string_conversion.cpp ]
    ;
 }
 

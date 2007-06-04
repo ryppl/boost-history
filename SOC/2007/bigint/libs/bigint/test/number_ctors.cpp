@@ -136,7 +136,7 @@ template <typename I> void test()
 	}
 }
 
-int test_main( int argc, char* argv[] )
+int test_main(int argc, char* argv[])
 {
   test<boost::detail::bigint_gmp_implementation>();
 
