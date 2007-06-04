@@ -10,3 +10,4 @@
 
 #include <explore/explore.hpp>
 #include <explore/stream_container.hpp>
+#include <explore/iterator_range.hpp>

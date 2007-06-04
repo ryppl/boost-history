@@ -14,6 +14,7 @@
 #include <boost/range/iterator_range.hpp>
 #include "../../../boost/explore/stream_container.hpp"
 #include "../../../boost/explore/explore.hpp"
+#include "../../../boost/explore/iterator_range.hpp"
 
 BOOST_AUTO_TEST_CASE( boost_range_print_test )
 {

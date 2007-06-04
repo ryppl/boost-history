@@ -14,6 +14,7 @@
 #include <boost/array.hpp>
 #include "../../../boost/explore/explore.hpp"
 #include "../../../boost/explore/stream_container.hpp"
+#include "../../../boost/explore/iterator_range.hpp"
 
 BOOST_AUTO_TEST_CASE( basic_array_print_test )
 {

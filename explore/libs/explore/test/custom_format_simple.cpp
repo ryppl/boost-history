@@ -15,6 +15,7 @@
 #include <vector>
 #include "../../../boost/explore/explore.hpp"
 #include "../../../boost/explore/stream_container.hpp"
+#include "../../../boost/explore/iterator_range.hpp"
 #include "basic_lg_format.hpp"
 
 BOOST_AUTO_TEST_CASE( basic_vector_custom_format_print_test )

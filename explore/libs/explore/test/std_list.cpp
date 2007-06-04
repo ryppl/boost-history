@@ -15,6 +15,7 @@
 #include <complex>
 #include "../../../boost/explore/explore.hpp"
 #include "../../../boost/explore/stream_container.hpp"
+#include "../../../boost/explore/iterator_range.hpp"
 
 BOOST_AUTO_TEST_CASE( basic_list_print_test )
 {

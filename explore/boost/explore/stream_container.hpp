@@ -11,123 +11,15 @@
 #define STREAM_CONTAINER_INCLUDED
 
 #include "stream_state.hpp"
-#include "is_assoc_iter.hpp"
+#include "stream_value.hpp"
+#include "container_stream_state.hpp"
 
 #include <ostream>
-#include <vector>
 #include <boost/functional/detail/container_fwd.hpp>
 #include <boost/array.hpp>
-#include <boost/range/iterator_range.hpp>
-
-// generate string init functions for both char and wchar_t types
-#define BOOST_EXPLORE_INIT_STRING(name, str)                             \
-template<typename charType> std::basic_string<charType> init_##name();   \
-template<> std::basic_string<char> init_##name<char>() { return (str); } \
-template<> std::basic_string<wchar_t> init_##name<wchar_t>() { return L##str; }
 
 namespace explore
 {
-    namespace detail
-    {
-        BOOST_EXPLORE_INIT_STRING(separator, ", ")
-        BOOST_EXPLORE_INIT_STRING(start, "[")
-        BOOST_EXPLORE_INIT_STRING(end, "]")
-        BOOST_EXPLORE_INIT_STRING(assoc_separator, ":")
-        BOOST_EXPLORE_INIT_STRING(assoc_start, "")
-        BOOST_EXPLORE_INIT_STRING(assoc_end, "")
-
-        template<typename Elem>
-        struct depth_guard;
-    }
-
-
-    // A simple collection of additional stream state
-    template<typename Elem>
-    struct container_stream_state
-    {
-        typedef std::basic_string<Elem> str_typ;
-        typedef std::vector<str_typ, std::allocator<str_typ> > cont_typ;
-
-        container_stream_state()
-            : m_depth(0), m_itemw(0)
-        {
-            init<Elem>();
-        }
-
-        // Concern: this is only specialized for char and wchar_t streams.
-        template<typename El>
-        void init()
-        {
-            init(m_separator, detail::init_separator<El>());
-            init(m_start, detail::init_start<El>());
-            init(m_end, detail::init_end<El>());
-            init(m_assoc_separator, detail::init_assoc_separator<El>());
-            init(m_assoc_start, detail::init_assoc_start<El>());
-            init(m_assoc_end, detail::init_assoc_end<El>());
-        }
-
-        // read
-        const str_typ& separator(std::size_t index = 0) const { return at(m_separator, index); }
-        const str_typ& start(std::size_t index = 0) const { return at(m_start, index); }
-        const str_typ& end(std::size_t index = 0) const { return at(m_end, index); }
-        const str_typ& assoc_separator(std::size_t index = 0) const { return at(m_assoc_separator, index); }
-        const str_typ& assoc_start(std::size_t index = 0) const { return at(m_assoc_start, index); }
-        const str_typ& assoc_end(std::size_t index = 0) const { return at(m_assoc_end, index); }
-        std::streamsize itemw() const { return m_itemw; }
-
-        // write
-        void set_separator(const str_typ& str, std::size_t index = 0) { at(m_separator, index) = str; }
-        void set_start(const str_typ& str, std::size_t index = 0) { at(m_start, index) = str; }
-        void set_end(const str_typ& str, std::size_t index = 0) { at(m_end, index) = str; }
-        void set_assoc_separator(const str_typ& str, std::size_t index = 0) { at(m_assoc_separator, index) = str; }
-        void set_assoc_start(const str_typ& str, std::size_t index = 0) { at(m_assoc_start, index) = str; }
-        void set_assoc_end(const str_typ& str, std::size_t index = 0) { at(m_assoc_end, index) = str; }
-        void set_itemw(std::streamsize itemw, std::size_t index = 0) { m_itemw = itemw; }
-
-        std::size_t depth() const
-        {
-            // we start at 0, increment before use, so we must decrement upon query.
-            return m_depth - 1;
-        }
-
-    private:
-        friend struct detail::depth_guard<Elem>;
-
-        cont_typ m_separator;
-        cont_typ m_start;
-        cont_typ m_end;
-        cont_typ m_assoc_separator;
-        cont_typ m_assoc_start;
-        cont_typ m_assoc_end;
-        std::size_t m_depth;
-
-        std::streamsize m_itemw;
-
-        void init(cont_typ& c, str_typ val)
-        {
-            c.resize(1);
-            c[0] = val;
-        }
-
-        // read
-        const str_typ& at(const cont_typ& c, std::size_t index) const
-        {
-            // return the highest item if it does not exist at the given index
-            return c[std::min(index, c.size() - 1)];
-        }
-
-        // write
-        str_typ& at(cont_typ& c, std::size_t index)
-        {
-            if( c.size() <= index )
-            {
-                c.resize(index+1);
-            }
-
-            return c[index];
-        }
-    };
-
     namespace detail
     {
         template<typename Elem>
@@ -221,25 +113,6 @@ namespace explore
         }
     }
 
-    struct stream_normal_value
-    {
-        template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>*)
-        {
-            ostr << val;
-        }
-    };
-
-    // stream value from associative container
-    struct stream_map_value
-    {
-        template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state)
-        {
-            ostr << state->assoc_start() << val.first << state->assoc_separator() << val.second << state->assoc_end();
-        }
-    };
-
     template<typename Elem, typename Tr, typename FwdIter, typename F>
     std::basic_ostream<Elem, Tr>& stream_container(std::basic_ostream<Elem, Tr>& ostr, FwdIter first, FwdIter last, F f)
     {
@@ -271,36 +144,6 @@ namespace explore
     {
         // redirect with "normal" streaming.
         return stream_container(ostr, first, last, stream_normal_value());
-    }
-
-    // used to work around some problems with overriding for operator<< for boost::iterator_range
-    // there already exists such an operator that does not do what we want.
-    template<typename T>
-    struct iterator_range_wrapper
-    {
-        iterator_range_wrapper(const boost::iterator_range<T>& ir) : t(ir) {}
-        boost::iterator_range<T> t;
-        typedef typename boost::mpl::if_<typename is_assoc_iter<T>::type, stream_map_value, stream_normal_value>::type stream_type;
-    };
-
-    template<typename T>
-    iterator_range_wrapper<T> as_container(const boost::iterator_range<T>& ir)
-    {
-        return iterator_range_wrapper<T>(ir);
-    }
-
-    template< typename IteratorT >
-    inline iterator_range_wrapper<IteratorT>
-    make_iterator_range(IteratorT Begin, IteratorT End)
-    {
-        return iterator_range_wrapper<IteratorT>(boost::make_iterator_range(Begin, End));
-    }
-
-    template< class ForwardRange >
-    iterator_range_wrapper<BOOST_DEDUCED_TYPENAME boost::range_const_iterator<ForwardRange>::type>
-        make_iterator_range(const ForwardRange& r)
-    {
-        return as_container(boost::make_iterator_range(r));
     }
 }
 
@@ -384,14 +227,6 @@ namespace explore
         return stream_container(ostr, &s[0], &s[strlen(s)]);
     }
 #   endif
-
-    // stream boost::iterator_range
-    template<typename Elem, typename Tr, typename T>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr,
-        const iterator_range_wrapper<T>& r)
-    {
-        return stream_container(ostr, r.t.begin(), r.t.end(), typename iterator_range_wrapper<T>::stream_type());
-    }
 
     // manipulator
     template<typename Elem>
