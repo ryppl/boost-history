@@ -103,7 +103,7 @@ static void make1atail(state *pState);
 static void make1b( state *pState );
 static void make1c( state *pState );
 static void make1d( state *pState );
-static void make_closure(void *closure, int status, timing_info*);
+static void make_closure(void *closure, int status, timing_info*, char *, char *);
 
 typedef struct _stack
 {
@@ -717,14 +717,60 @@ static void call_timing_rule(TARGET* target, timing_info* time)
     }
 }
 
+static void append_int_string(LOL *l, int x)
+{
+    char buffer[50];
+    sprintf(buffer, "%i", x);
+    lol_add(l, list_new(L0, newstr(buffer)));
+}
+
+/* Look up the __DART_RULE__ variable on the given target, and if
+ * non-empty, invoke the rule it names, passing the given
+ * timing_info
+ */
+static void call_dart_rule(TARGET* target, int status, timing_info* time)
+{
+    LIST* dart_rule;
+    
+    pushsettings(target->settings);
+    dart_rule = var_get( "__DART_RULE__" );
+    popsettings(target->settings);
+
+    if (dart_rule)
+    {
+        /* We'll prepend $(__DART_RULE__[2-]) to the first argument */
+        LIST* initial_args = list_copy( L0, dart_rule->next );
+            
+        /* Prepare the argument list */
+        FRAME frame[1];
+        frame_init( frame );
+
+        /* First argument is the name of the target */
+        lol_add( frame->args, list_new( initial_args, target->name ) );
+        append_int_string(frame->args, status);
+        append_double_string(frame->args, time->user);
+        append_double_string(frame->args, time->system);
+
+        if( lol_get( frame->args, 2 ) )
+            evaluate_rule( dart_rule->string, frame );
+            
+        /* Clean up */
+        frame_free( frame );
+    }
+}
+
+
 static void make_closure(
-    void *closure, int status, timing_info* time)
+    void *closure, int status, timing_info* time, char *executed_command,
+    char *command_output)
 {
     TARGET* built = (TARGET*)closure;
 
     call_timing_rule(built, time);
     if (DEBUG_EXECCMD)
         printf("%f sec system; %f sec user\n", time->system, time->user);
+
+    call_dart_rule(built, status, time);
     
     push_state(&state_stack, built, NULL, T_STATE_MAKE1D)->status = status;
 }

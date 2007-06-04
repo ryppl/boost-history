@@ -49,7 +49,7 @@ char tempnambuf[ L_tmpnam + 1 + 4 ] = {0};
 void
 execcmd( 
 	char *string,
-	void (*func)( void *closure, int status ),
+        void (*func)( void *closure, int status, timing_info*, char *, char * ),
 	void *closure,
 	LIST *shell,
     char *rule_name,

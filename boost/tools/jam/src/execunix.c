@@ -65,13 +65,14 @@ static void (*istat)( int );
 
 static struct
 {
-    int	    pid;        /* on win32, a real process handle */
-    int     fd[2];         /* file descriptors for stdout and stderr */
-    FILE   *stream[2];     /* child's stdout (0) and stderr (1) file stream */
-    int     com_len;    /* length of comamnd buffer */
-    char   *command;    /* buffer to hold command rule being invoked */
-    char   *buffer[2];     /* buffer to hold stdout and stderr, if any */
-    void    (*func)( void *closure, int status, timing_info* );
+    int	    pid;              /* on win32, a real process handle */
+    int     fd[2];            /* file descriptors for stdout and stderr */
+    FILE   *stream[2];        /* child's stdout (0) and stderr (1) file stream */
+    int     com_len;          /* length of comamnd buffer */
+    char   *action_target;    /* buffer to hold action and target invoked */
+    char   *command;          /* buffer to hold command being invoked */
+    char   *buffer[2];        /* buffer to hold stdout and stderr, if any */
+    void    (*func)( void *closure, int status, timing_info*, char *, char * );
     void   *closure;
 } cmdtab[ MAXJOBS ] = {{0}};
 
@@ -93,7 +94,7 @@ onintr( int disp )
 void
 execcmd( 
 	char *string,
-	void (*func)( void *closure, int status, timing_info* ),
+	void (*func)( void *closure, int status, timing_info*, char *, char * ),
 	void *closure,
 	LIST *shell,
         char *action,
@@ -155,6 +156,10 @@ execcmd(
 
 	/* increment jobs running */
 	++cmdsrunning;
+
+        /* save off actual command string */
+        cmdtab[ slot ].command = BJAM_MALLOC_ATOMIC(strlen(string)+1);
+        strcpy(cmdtab[slot].command, string);
 
         /* create pipe from child to parent */
 
@@ -230,18 +235,18 @@ execcmd(
             len = strlen(action) + strlen(target) + 2;
             if (cmdtab[slot].com_len < len) 
             {
-                BJAM_FREE(cmdtab[ slot ].command);
-                cmdtab[ slot ].command = BJAM_MALLOC_ATOMIC(len);
+                BJAM_FREE(cmdtab[ slot ].action_target);
+                cmdtab[ slot ].action_target = BJAM_MALLOC_ATOMIC(len);
                 cmdtab[ slot ].com_len = len;
             }
-            strcpy(cmdtab[ slot ].command, action);
-            strcat(cmdtab[ slot ].command, " ");
-            strcat(cmdtab[ slot ].command, target);
+            strcpy(cmdtab[ slot ].action_target, action);
+            strcat(cmdtab[ slot ].action_target, " ");
+            strcat(cmdtab[ slot ].action_target, target);
         }
         else
         {
-            BJAM_FREE(cmdtab[ slot ].command);
-            cmdtab[ slot ].command = 0;
+            BJAM_FREE(cmdtab[ slot ].action_target);
+            cmdtab[ slot ].action_target= 0;
             cmdtab[ slot ].com_len = 0;
         }
 
@@ -387,9 +392,9 @@ execwait()
                         times(&old_time);
 
                         /* print out the rule and target name */
-                        if (cmdtab[i].command)
+                        if (cmdtab[i].action_target)
                         {
-                            printf("%s\n", cmdtab[i].command);
+                            printf("%s\n", cmdtab[i].action_target);
 
                             /* print out the command output, if requested */
                             if (globs.pipe_action & STDOUT_FILENO || 
@@ -400,7 +405,7 @@ execwait()
                                     printf("%s", cmdtab[i].buffer[OUT]);
                                     if (globs.pipe_action & STDERR_FILENO)
                                         if (cmdtab[i].buffer[ERR])
-                                            fprintf(stderr, "%s\n", cmdtab[i].command);
+                                            fprintf(stderr, "%s\n", cmdtab[i].action_target);
                                 }
                             }
 
@@ -408,12 +413,6 @@ execwait()
                                 if (cmdtab[i].buffer[ERR])
                                     fprintf(stderr, "%s", cmdtab[i].buffer[ERR]);
                         }
-
-                        BJAM_FREE(cmdtab[i].buffer[OUT]);
-                        cmdtab[i].buffer[OUT] = 0;
-
-                        BJAM_FREE(cmdtab[i].buffer[ERR]);
-                        cmdtab[i].buffer[ERR] = 0;
 
                         times(&new_time);
 
@@ -431,7 +430,17 @@ execwait()
                         else
                             rstat = EXEC_CMD_OK;
 
-                        (*cmdtab[ i ].func)( cmdtab[ i ].closure, rstat, &time );
+                        /* assume -p0 in effect so only pass buffer[0] containing merged output */
+                        (*cmdtab[ i ].func)( cmdtab[ i ].closure, rstat, &time, cmdtab[i].command, cmdtab[i].buffer[0] );
+
+                        BJAM_FREE(cmdtab[i].buffer[OUT]);
+                        cmdtab[i].buffer[OUT] = 0;
+
+                        BJAM_FREE(cmdtab[i].buffer[ERR]);
+                        cmdtab[i].buffer[ERR] = 0;
+
+                        BJAM_FREE(cmdtab[i].command);
+                        cmdtab[i].command = 0;
 
                         cmdtab[i].func = 0;
                         cmdtab[i].closure = 0;

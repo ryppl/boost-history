@@ -498,7 +498,7 @@ record_times(int pid, timing_info* time)
 void
 execcmd( 
     char *string,
-    void (*func)( void *closure, int status, timing_info* ),
+    void (*func)( void *closure, int status, timing_info*, char *invoked_command, char *command_output),
     void *closure,
     LIST *shell,
     char *rule_name,
