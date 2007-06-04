@@ -155,10 +155,6 @@
 					RelativePath="..\..\..\..\boost\signal_network\detail\unfused_typed_class.hpp"
 					>
 				</File>
-				<File
-					RelativePath="..\..\..\..\boost\signal_network\detail\unfused_typed_class2.hpp"
-					>
-				</File>
 			</Filter>
 		</Filter>
 		<Filter

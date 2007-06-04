@@ -3,10 +3,11 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+
 use-project boost
    : $(BOOST_ROOT)
    ;
    
-project signal_network
+project boost/signal_network
    : build-dir bin.v2
    ;
