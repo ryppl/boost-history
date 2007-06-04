@@ -34,7 +34,7 @@ public:
 		stream.str(empty_string);
 		stream.write((char *)buffer, received_size);
 		boost::archive::binary_iarchive archive(stream);
-        archive & storage::stored;
+        archive & storage<Signature>::stored;
 		storage<Signature>::operator()();
 	}
 

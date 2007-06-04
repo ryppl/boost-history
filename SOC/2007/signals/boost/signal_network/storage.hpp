@@ -48,8 +48,8 @@ public:
     typedef boost::fusion::unfused_typed_class<storage<Signature>,
         typename boost::function_types::parameter_types<Signature> > unfused;
 
-    storage(const VecStorable &vec_par) : fused_out(out), stored(vec_par) {}
-    storage() : fused_out(out) {}
+    storage(const VecStorable &vec_par) : stored(vec_par), fused_out(filter<Signature>::out) {}
+    storage() : fused_out(filter<Signature>::out) {}
 
     template<class Seq>
     struct result
@@ -87,8 +87,8 @@ public:
     slot()
 	{
         return boost::signal_network::slot_selector<//typename boost::call_traits<
-            typename boost::mpl::at_c<ParTypes, N>::type
-         ()>(*this, &storage<Signature>::value_exact<N>);
+            typename boost::mpl::at_c<ParTypes, N>::type ()>
+        (*this, &storage<Signature>::template value_exact<N>);
     }
 
 protected:

@@ -25,7 +25,7 @@ class timed_generator : public storage<Signature>::unfused
 {
 public:
 	/// Default constructor.  Starts the thread, but signals won't be sent until the enable() function is called.
-	timed_generator() : enabled(false), terminating(false)
+	timed_generator() : terminating(false), enabled(false)
 	{
 		thread_object = new boost::thread(boost::bind(&timed_generator<Signature>::thread_function, boost::ref(*this)));
 	}
