@@ -271,8 +271,15 @@ int  main( int argc, char **argv, char **arg_environ )
         globs.noexec++, globs.debug[2] = 1;
 
     if( ( s = getoptval( optv, 'p', 0 ) ) )
+    {
         /* undocumented -p3 (acts like both -p1 -p2) means separate pipe action stdout and stderr */
         globs.pipe_action = atoi(s);
+        if (3 < globs.pipe_action || globs.pipe_action < 0)
+        {
+            printf( "Invalid pipe descriptor '%d', valid values are -p[0..3].\n", globs.pipe_action);
+            exit(EXITBAD);
+        }
+    }
 
     if( ( s = getoptval( optv, 'q', 0 ) ) )
  	globs.quitquick = 1;
