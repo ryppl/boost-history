@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE( basic_map_print_test )
 
     str_out.str("");
 
-    explore::print(boost::make_iterator_range(mis.begin(), ++(++mis.begin())), str_out);
+    explore::print(explore::make_iterator_range(mis.begin(), ++(++mis.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 2:second]");
 }
 
@@ -111,7 +111,7 @@ BOOST_AUTO_TEST_CASE( basic_multimap_print_test )
 
     str_out.str("");
 
-    explore::print(boost::make_iterator_range(mmis.begin(), ++(++mmis.begin())), str_out);
+    explore::print(explore::make_iterator_range(mmis.begin(), ++(++mmis.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single]");
 }
 
@@ -182,7 +182,7 @@ BOOST_AUTO_TEST_CASE( vector_in_map_print_test )
 
     str_out.str("");
 
-    explore::print(boost::make_iterator_range(mivi.begin(), ++(++mivi.begin())), str_out);
+    explore::print(explore::make_iterator_range(mivi.begin(), ++(++mivi.begin())), str_out);
     BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3]]");
 }
 
