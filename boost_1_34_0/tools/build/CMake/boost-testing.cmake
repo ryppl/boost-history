@@ -40,7 +40,7 @@ macro(boost_test_parse_args testname)
   set(BOOST_TEST_OKAY TRUE)
   set(BOOST_TEST_COMPILE_FLAGS "")
   parse_arguments(BOOST_TEST 
-    "SOURCES;LIBRARIES;DEPENDS;COMPILE_FLAGS;ARGS"
+    "SOURCES;LINK_LIBS;DEPENDS;COMPILE_FLAGS;ARGS"
     ""
     ${ARGN}
     )
@@ -82,7 +82,7 @@ macro(boost_test_run testname)
       COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
       OUTPUT_NAME ${PROJECT_NAME}/${testname})
     target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
-    target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
+    target_link_libraries(${testname} ${BOOST_TEST_LINK_LIBS})
     add_test("${PROJECT_NAME}::${testname}" 
       ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ${BOOST_TEST_ARGS})
   endif(BOOST_TEST_OKAY)
@@ -97,7 +97,7 @@ macro(boost_test_run_fail testname)
       COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
       OUTPUT_NAME ${PROJECT_NAME}/${testname})
     target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
-    target_link_libraries(${testname} ${BOOST_TEST_LIBRARIES})
+    target_link_libraries(${testname} ${BOOST_TEST_LINK_LIBS})
     add_test("${PROJECT_NAME}::${testname}" 
       ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ${BOOST_TEST_ARGS})
     set_tests_properties("${PROJECT_NAME}::${testname}" 

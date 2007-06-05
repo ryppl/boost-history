@@ -17,10 +17,6 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/aux_/test.hpp>
 
-#if defined (__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ == 1) && (__GNUC_PATCHLEVEL__ == 2)
-#warning Turning off certain tests due to internal compiler error
-#else
-
 template< typename T > struct std_vector
 {
 #if defined(BOOST_MPL_CFG_NO_IMPLICIT_METAFUNCTIONS)
@@ -134,4 +130,3 @@ MPL_TEST_CASE()
     MPL_ASSERT_RELATION( res::value, ==, 5 );
 }
 
-#endif

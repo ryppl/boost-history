@@ -36,17 +36,18 @@ boost_test_run(config_info)
 boost_test_run(math_info)
 
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-  set(threadlibs "LIBRARIES;pthread;rt")
-endif(CMAKE_SYSTEM_NAME MATCHES "Linux")
+# if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+#  set(threadlibs "LIBRARIES;pthread;rt")
+# endif(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
-set(tests_need_threadlibs config_test has_clock_gettime_pass has_pthread_ma_st_pass has_pthread_yield_pass)
-foreach(test ${tests_need_threadlibs})
-  boost_test_run(${test} ${threadlibs})
-endforeach(test ${tests_need_threadlibs})
+# these aren't really tests anyway
+#set(tests_need_threadlibs config_test has_clock_gettime_pass has_pthread_ma_st_pass has_pthread_yield_pass)
+#foreach(test ${tests_need_threadlibs})
+#  boost_test_run(${test})
+#endforeach(test ${tests_need_threadlibs})
 
 
-boost_test_run(limits_test LIBRARIES boost_test_exec_monitor-static)
+boost_test_run(limits_test DEPENDS boost_test_exec_monitor-static)
 boost_test_run(abi_test SOURCES abi/abi_test.cpp abi/main.cpp)
 
 boost_test_run(has_2arg_use_facet_pass)

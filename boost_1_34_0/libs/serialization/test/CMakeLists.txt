@@ -42,13 +42,13 @@ macro(serialization_test testname)
     # Tests linking against the static serialization library
     boost_test_run("${testname}_${ARCHIVE}"
       SOURCES ${BSL_TEST_SOURCES}
-      LIBRARIES boost_test_exec_monitor-static ${BSL_TEST_STATIC_LIBRARIES}
+      DEPENDS boost_test_exec_monitor-static ${BSL_TEST_STATIC_LIBRARIES}
       COMPILE_FLAGS "-DBOOST_ARCHIVE_TEST=${BSL_TEST_POLY}${ARCHIVE}.hpp -DBOOST_LIB_DIAGNOSTIC=1")
     
     # Tests linking against the shared serialization library
     boost_test_run("${testname}_${ARCHIVE}_dll"
       SOURCES ${BSL_TEST_SOURCES}
-      LIBRARIES boost_test_exec_monitor-static ${BSL_TEST_SHARED_LIBRARIES}
+      DEPENDS boost_test_exec_monitor-static ${BSL_TEST_SHARED_LIBRARIES}
       COMPILE_FLAGS "-DBOOST_ARCHIVE_TEST=${BSL_TEST_POLY}${ARCHIVE}.hpp -DBOOST_LIB_DIAGNOSTIC=1 -DBOOST_ALL_DYN_LINK=1")
   endforeach(ARCHIVE ${BOOST_ARCHIVE_LIST})
 endmacro(serialization_test)

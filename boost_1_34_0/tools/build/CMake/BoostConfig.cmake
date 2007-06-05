@@ -80,7 +80,7 @@ endif(BUILD_VERSIONED)
 # Multi-threading support
 if(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
   set(MULTI_THREADED_COMPILE_FLAGS "-pthreads")
-  set(MULTI_THREADED_LINK_FLAGS "-lrt")
+  set(MULTI_THREADED_LINK_LIBS rt)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "BeOS")
   # No threading options necessary for BeOS
 elseif(CMAKE_SYSTEM_NAME MATCHES ".*BSD")
