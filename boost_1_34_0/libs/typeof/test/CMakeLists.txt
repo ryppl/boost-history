@@ -5,9 +5,9 @@ foreach(TEST_FILE ${TEST_FILES})
   else (TEST_FILE MATCHES "odr.*cpp")
     get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
     boost_test_compile("${TEST_NAME}_native" 
-      SOURCES ${TEST_FILE} COMPILE_FLAGS "-DBOOST_TYPEOF_NATIVE")
+      SOURCES "${TEST_NAME}.cpp" COMPILE_FLAGS "-DBOOST_TYPEOF_NATIVE")
     boost_test_compile("${TEST_NAME}_emulation" 
-      SOURCES ${TEST_FILE} COMPILE_FLAGS "-DBOOST_TYPEOF_EMULATION")
+      SOURCES "${TEST_NAME}.cpp" COMPILE_FLAGS "-DBOOST_TYPEOF_EMULATION")
   endif (TEST_FILE MATCHES "odr.*cpp")
 endforeach(TEST_FILE ${TEST_FILES})
 
