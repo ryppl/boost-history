@@ -725,10 +725,11 @@ static void append_int_string(LOL *l, int x)
 }
 
 /* Look up the __DART_RULE__ variable on the given target, and if
- * non-empty, invoke the rule it names, passing the given
- * timing_info
+ * non-empty, invoke the rule it names, passing the given info, 
+ * timing_info, executed command and command output
  */
-static void call_dart_rule(TARGET* target, int status, timing_info* time)
+static void call_dart_rule(TARGET* target, int status, timing_info* time,
+    char *executed_command, char *command_output)
 {
     LIST* dart_rule;
     
@@ -751,6 +752,9 @@ static void call_dart_rule(TARGET* target, int status, timing_info* time)
         append_double_string(frame->args, time->user);
         append_double_string(frame->args, time->system);
 
+        /* note that the executed command and the 
+         * command output may be null */
+
         if( lol_get( frame->args, 2 ) )
             evaluate_rule( dart_rule->string, frame );
             
@@ -770,7 +774,7 @@ static void make_closure(
     if (DEBUG_EXECCMD)
         printf("%f sec system; %f sec user\n", time->system, time->user);
 
-    call_dart_rule(built, status, time);
+    call_dart_rule(built, status, time, executed_command, command_output);
     
     push_state(&state_stack, built, NULL, T_STATE_MAKE1D)->status = status;
 }
