@@ -11,7 +11,7 @@ clean_dirs () {
       rm -rf $dir
       mkdir -p $dir
       cd $dir
-      cmake ../src
+      ./initialize.sh
     done
 }
 
