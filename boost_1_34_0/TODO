@@ -24,6 +24,7 @@
 
 - Testing for the Spirit library
 
-- Testing for the Statechart library
+- Statechart library: deal with building libraries for testing, and
+  with link-only tests.
 
 - Xpressive: port multipledefs and msvc-stlport tests

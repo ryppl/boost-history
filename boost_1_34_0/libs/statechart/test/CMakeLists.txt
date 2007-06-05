@@ -1,0 +1,89 @@
+macro(statechart_compile_fail TESTNAME)
+  boost_test_compile_fail("${TESTNAME}Normal"
+    SOURCES ${TESTNAME}.cpp
+    )
+  boost_test_compile_fail("${TESTNAME}Native"
+    SOURCES ${TESTNAME}.cpp
+    COMPILE_FLAGS "-DBOOST_STATECHART_USE_NATIVE_RTTI"
+    )
+  boost_test_compile_fail("${TESTNAME}Relaxed"
+    SOURCES ${TESTNAME}.cpp
+    COMPILE_FLAGS "-DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
+    )
+  boost_test_compile_fail("${TESTNAME}Both"
+    SOURCES ${TESTNAME}.cpp
+    COMPILE_FLAGS "-DBOOST_STATECHART_USE_NATIVE_RTTI -DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
+    )
+endmacro(statechart_compile_fail)
+
+macro(statechart_run TESTNAME)
+  boost_test_run("${TESTNAME}Normal"
+    SOURCES ${TESTNAME}.cpp
+    DEPENDS boost_test_exec_monitor-static
+    )
+  boost_test_run("${TESTNAME}Native"
+    SOURCES ${TESTNAME}.cpp
+    COMPILE_FLAGS "-DBOOST_STATECHART_USE_NATIVE_RTTI"
+    DEPENDS boost_test_exec_monitor-static
+    )
+  boost_test_run("${TESTNAME}Relaxed"
+    SOURCES ${TESTNAME}.cpp
+    COMPILE_FLAGS "-DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
+    DEPENDS boost_test_exec_monitor-static
+    )
+  boost_test_run("${TESTNAME}Both"
+    SOURCES ${TESTNAME}.cpp
+    COMPILE_FLAGS "-DBOOST_STATECHART_USE_NATIVE_RTTI -DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
+    DEPENDS boost_test_exec_monitor-static
+    )
+endmacro(statechart_run)
+
+statechart_compile_fail(InvalidChartTest1)
+statechart_compile_fail(InvalidChartTest2)
+statechart_compile_fail(InvalidChartTest3)
+statechart_run(TransitionTest)
+statechart_compile_fail(InvalidTransitionTest1)
+statechart_compile_fail(InvalidTransitionTest2)
+statechart_run(InStateReactionTest)
+statechart_run(TerminationTest)
+statechart_run(DeferralTest)
+statechart_run(CustomReactionTest)
+statechart_compile_fail(InvalidResultAssignTest)
+statechart_compile_fail(InvalidResultDefCtorTest)
+statechart_run(InvalidResultCopyTest)
+statechart_run(UnconsumedResultTest)
+statechart_run(HistoryTest)
+statechart_compile_fail(InconsistentHistoryTest1)
+statechart_compile_fail(InconsistentHistoryTest2)
+statechart_compile_fail(InconsistentHistoryTest3)
+statechart_compile_fail(InconsistentHistoryTest4)
+statechart_compile_fail(InconsistentHistoryTest5)
+statechart_compile_fail(InconsistentHistoryTest6)
+statechart_compile_fail(InconsistentHistoryTest7)
+statechart_compile_fail(InconsistentHistoryTest8)
+statechart_compile_fail(UnsuppDeepHistoryTest)
+statechart_run(StateCastTest)
+statechart_run(TypeInfoTest)
+statechart_run(StateIterationTest)
+statechart_run(FifoSchedulerTest)
+# TODO: We need to create some libraries (just for testing!?), then link
+# and run tests against them. Ick.
+#statechart-st-lib-run LibTestNormal
+#  : TuTestMain : TuTest : <link>static $(normal))
+#statechart-st-lib-run LibTestNative
+#  : TuTestMain : TuTest : <link>static $(native))
+#statechart-st-lib-run DllTestNormal
+#  : TuTestMain : TuTest : <link>shared $(normal))
+#statechart-st-lib-run DllTestNative
+#  : TuTestMain : TuTest : <link>shared $(native))
+
+# TODO: These tests need support for link-only tests.
+#statechart-st-compile-example BitMachine : BitMachine : BitMachine)
+#statechart-st-compile-example Camera
+#  : Camera : Camera Configuring Main Shooting)
+#statechart-st-compile-example Handcrafted : Handcrafted : Handcrafted)
+#statechart-st-compile-example Keyboard : Keyboard : Keyboard :)
+#statechart-st-compile-example Performance : Performance : Performance)
+#statechart-st-compile-example PingPong : PingPong : PingPong)
+#statechart-st-compile-example StopWatch : StopWatch : StopWatch)
+#statechart-st-compile-example StopWatch2 : StopWatch : StopWatch2) ;
