@@ -10,13 +10,7 @@
 
 - CMakeFiles for remaining libs
 
-- Overhaul "sticky" flags and test  
-
-- Multithreaded build variant.  
-
 - Docs
-
-- Test ICU support in Regex
 
 - Try to figure out what is happening with "empty" .o files in Mac build
 
@@ -31,8 +25,6 @@
 - Testing for the Spirit library
 
 - Testing for the Statechart library
-
-- Testing for the TR1 library (globs for tests)
 
 - Testing for the type traits library (globs for tests)
 
