@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<library name="SVG_Plot" dirname="visualization" xmlns:xi="http://www.w3.org/2001/XInclude"
+  id="any" last-revision="$Date: 2007/06/04 23:00:00 $">
+  <libraryinfo>
+    <author>
+      <firstname>Jake</firstname>
+      <surname>Voytko</surname>
+    </author>
+    <librarypurpose>
+      Visualize STL data in the SVG format
+    </librarypurpose> 
+    <librarycategory name="category:data-structures"/>
+  </libraryinfo>
+</library>
+
