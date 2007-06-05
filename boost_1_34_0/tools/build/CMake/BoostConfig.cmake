@@ -85,6 +85,7 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "BeOS")
   # No threading options necessary for BeOS
 elseif(CMAKE_SYSTEM_NAME MATCHES ".*BSD")
   set(MULTI_THREADED_COMPILE_FLAGS "-pthread")
+  set(MULTI_THREADED_LINK_LIBS pthread)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "DragonFly")
   # DragonFly is  FreeBSD bariant
   set(MULTI_THREADED_COMPILE_FLAGS "-pthread")
