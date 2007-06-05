@@ -79,14 +79,6 @@ macro(boost_library_project libname_)
   endif(${BOOST_BUILD_LIB_OPTION})
 endmacro(boost_library_project)
 
-macro(push_back_target_property target property pushvalue)
-  get_target_property(oldvalue ${target} ${property})
-  if(NOT oldvalue)
-    set(oldvalue "")
-  endif(NOT oldvalue)
-  set_target_properties(${target} PROPERTIES ${property} "${oldvalue} ${pushvalue}")
-endmacro(push_back_target_property target property pushvalue)
-
 macro(boost_library_variant_target_name)
   set(VARIANT_TARGET_NAME "")
   set(VARIANT_VERSIONED_NAME "")
@@ -176,6 +168,7 @@ macro(boost_library_variant LIBNAME)
     # Accumulate compile and link flags
     set(THIS_VARIANT_COMPILE_FLAGS "${THIS_VARIANT_COMPILE_FLAGS} ${THIS_LIB_${ARG}_COMPILE_FLAGS} ${${ARG}_COMPILE_FLAGS}")
     set(THIS_VARIANT_LINK_FLAGS "${THIS_VARIANT_LINK_FLAGS} ${THIS_LIB_${ARG}_LINK_FLAGS} ${${ARG}_LINK_FLAGS}")
+    set(THIS_VARIANT_LINK_LIBS "${${ARG}_LINK_LIBS}")
   endforeach(ARG ${ARGN})
 
   if (THIS_VARIANT_OKAY)
@@ -262,6 +255,7 @@ macro(boost_library_variant LIBNAME)
       target_link_libraries(${VARIANT_LIBNAME} "${dependency}${VARIANT_TARGET_NAME}")
     endforeach(dependency "${THIS_LIB_DEPENDS}")
 
+    target_link_libraries(${VARIANT_LIBNAME} ${THIS_VARIANT_LINK_LIBS})
     # Installation of this library variant
     install(TARGETS ${VARIANT_LIBNAME} DESTINATION lib)
   endif (THIS_VARIANT_OKAY)

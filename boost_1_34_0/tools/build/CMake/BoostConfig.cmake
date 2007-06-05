@@ -96,7 +96,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
   # No threading options necessary for Mac OS X
 elseif(UNIX)
   # Assume -pthread and -lrt on all other variants
-  set(MULTI_THREADED_COMPILE_FLAGS "-pthread")
-  set(MULTI_THREADED_LINK_FLAGS "-lpthread -lrt")  
+  set(MULTI_THREADED_COMPILE_FLAGS "-pthread -D_REENTRANT")
+  set(MULTI_THREADED_LINK_FLAGS "")  
+  set(MULTI_THREADED_LINK_LIBS pthread rt)
 endif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
 
