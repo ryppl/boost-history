@@ -26,6 +26,4 @@
 
 - Testing for the Statechart library
 
-- Testing for the typeof library
-
 - Xpressive: port multipledefs and msvc-stlport tests
