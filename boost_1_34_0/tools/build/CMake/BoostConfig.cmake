@@ -97,6 +97,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 elseif(UNIX)
   # Assume -pthread and -lrt on all other variants
   set(MULTI_THREADED_COMPILE_FLAGS "-pthread")
-  set(MULTI_THREADED_LINK_FLAGS "-lrt")  
+  set(MULTI_THREADED_LINK_FLAGS "-lpthread -lrt")  
 endif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
 
