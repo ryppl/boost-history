@@ -19,6 +19,7 @@ test-suite extension_tests_all
   [ run zone_test.cpp ] 
   [ run construction.cpp ]
   [ run hello_world_test.cpp ]
+  [ run multiple_inheritance_test.cpp ]
   [ run extension_test.cpp ]
   [ run counted_factory_test.cpp ]
   [ run registry_test.cpp ]
