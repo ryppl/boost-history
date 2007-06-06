@@ -733,6 +733,11 @@ static void call_dart_rule(TARGET* target, int status, timing_info* time,
 {
     LIST* dart_rule;
     
+    /* note that the executed command and the 
+     * command output may be null */
+    if (!executed_command || !command_output)
+        return;
+
     pushsettings(target->settings);
     dart_rule = var_get( "__DART_RULE__" );
     popsettings(target->settings);
@@ -751,13 +756,12 @@ static void call_dart_rule(TARGET* target, int status, timing_info* time,
         append_int_string(frame->args, status);
         append_double_string(frame->args, time->user);
         append_double_string(frame->args, time->system);
-
-        /* note that the executed command and the 
-         * command output may be null */
+        lol_add(frame->args, list_new(L0, newstr(executed_command)));
+        lol_add(frame->args, list_new(L0, newstr(command_output)));
 
         if( lol_get( frame->args, 2 ) )
             evaluate_rule( dart_rule->string, frame );
-            
+
         /* Clean up */
         frame_free( frame );
     }
