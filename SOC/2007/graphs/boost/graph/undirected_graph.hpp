@@ -102,112 +102,6 @@ namespace boost
 	// Graph concepts
 	static inline vertex_descriptor null_vertex()
 	{ return type::null_vertex(); }
-
-	// IncidenceGraph concepts
-	vertex_descriptor source(edge_descriptor e) const
-	{ return boost::source(e, m_graph); }
-
-	vertex_descriptor target(edge_descriptor e) const
-	{ return boost::target(e, m_graph); }
-
-	inline degree_size_type out_degree(vertex_descriptor v) const
-	{ return boost::out_degree(v, m_graph); }
-
-	inline std::pair<out_edge_iterator, out_edge_iterator> out_edges(vertex_descriptor v) const
-	{ return boost::out_edges(v, m_graph); }
-
-	// BidirectionalGraph concepts
-	inline degree_size_type in_degree(vertex_descriptor v) const
-	{ return boost::in_degree(v, m_graph); }
-
-	inline std::pair<in_edge_iterator, in_edge_iterator> in_edges(vertex_descriptor v) const
-	{ return boost::in_edges(v, m_graph); }
-
-	inline degree_size_type degree(vertex_descriptor v)
-	{ return boost::degree(v, m_graph); }
-
-        // AdjacencyGraph concepts
-        inline std::pair<adjacency_iterator, adjacency_iterator> adjacent_vertices(vertex_descriptor v) const
-	{ return boost::adjacent_vertices(v, m_graph); }
-
-	// VertexListGraph concepts
-	inline vertices_size_type num_vertices() const
-	{ return boost::num_vertices(m_graph); }
-
-	inline std::pair<vertex_iterator, vertex_iterator> vertices() const
-	{ return boost::vertices(m_graph); }
-
-	// EdgeListGraph concepts
-	inline edges_size_type num_edges() const
-	{ return boost::num_edges(m_graph); }
-
-	inline std::pair<edge_iterator, edge_iterator> edges() const
-	{ return boost::edges(m_graph); }
-
-	// MutableGraph concepts
-	inline vertex_descriptor add_vertex()
-	{ return boost::add_vertex(m_graph); }
-
-	inline void clear_vertex(vertex_descriptor v)
-	{ boost::clear_vertex(v, m_graph); }
-
-	inline void remove_vertex(vertex_descriptor v)
-	{ boost::remove_vertex(v, m_graph); }
-
-	inline std::pair<edge_descriptor, bool> add_edge(vertex_descriptor u, vertex_descriptor v)
-	{ return boost::add_edge(u, v, m_graph); }
-
-	inline void remove_edge(vertex_descriptor u, vertex_descriptor v)
-	{ boost::remove_edge(u, v, m_graph); }
-
-	inline void remove_edge(edge_descriptor e)
-	{ boost::remove_edge(e, m_graph); }
-
-	inline void remove_edge(edge_iterator i)
-	{ boost::remove_edge(i, m_graph); }
-
-	template <typename Predicate>
-	inline void remove_edge_if(Predicate p)
-	{ boost::remove_edge_if(p, m_graph); }
-
-	template <typename Predicate>
-	inline void remove_out_edge_if(vertex_descriptor v, Predicate p)
-	{ boost::remove_out_edge_if(v, p, m_graph); }
-
-	template <typename Predicate>
-	inline void remove_in_edge_if(vertex_descriptor v, Predicate p)
-	{ boost::remove_in_edge_if(v, p, m_graph); }
-
-	// PropertyGraph concepts
-	template <typename Property>
-	inline typename property_map<type, Property>::type
-	get(Property p)
-	{ return boost::get(p, m_graph); }
-
-	template <typename Property>
-	inline typename property_map<type, Property>::const_type
-	get(Property p) const
-	{ return boost::get(p, m_graph); }
-
-	template <typename Property, typename Key>
-	inline typename property_traits<typename property_map<type, Property>::const_type>::value_type
-	get(Property p, const Key& k)
-	{ return boost::get(p, m_graph, k); }
-
-	template <typename Property, typename Key, typename Value>
-	inline void
-	put(Property p, const Key& k, const Value& v)
-	{ boost::put(p, m_graph, k, v); }
-
-	// MutablePropertyGraph concepts
-	template <typename Property>
-	inline vertex_descriptor add_vertex(const Property& vp)
-	{ return boost::add_vertex(vp, m_graph); }
-
-	template <typename Property>
-	inline std::pair<edge_descriptor, bool>
-	add_edge(vertex_descriptor u, vertex_descriptor v, const Property& ep)
-	{ return boost::add_edge(u, v, ep, m_graph); }
     };
 
     // IncidenceGraph concepts
@@ -216,7 +110,7 @@ namespace boost
     source(typename undirected_graph<VP,EP,GP>::edge_descriptor e,
 	   const undirected_graph<VP,EP,GP> &g)
     {
-	return g.source(e);
+	return source(e, g.impl());
     }
 
     template <class VP, class EP, class GP>
@@ -224,7 +118,7 @@ namespace boost
     target(typename undirected_graph<VP,EP,GP>::edge_descriptor e,
 	   const undirected_graph<VP,EP,GP> &g)
     {
-	return g.target(e);
+	return target(e, g.impl());
     }
 
     template <class VP, class EP, class GP>
@@ -232,7 +126,7 @@ namespace boost
     out_degree(typename undirected_graph<VP,EP,GP>::vertex_descriptor v,
 	       const undirected_graph<VP,EP,GP> &g)
     {
-	return g.out_degree(v);
+	return out_degree(v, g.impl());
     }
 
     template <class VP, class EP, class GP>
@@ -243,7 +137,7 @@ namespace boost
     out_edges(typename undirected_graph<VP,EP,GP>::vertex_descriptor v,
 	      const undirected_graph<VP,EP,GP> &g)
     {
-	return g.out_edges(v);
+	return out_edges(v, g.impl());
     }
 
     // BidirectionalGraph concepts
@@ -252,15 +146,7 @@ namespace boost
     in_degree(const undirected_graph<VP,EP,GP> &g,
 	      typename undirected_graph<VP,EP,GP>::vertex_descriptor v)
     {
-	return g.in_degree(v);
-    }
-
-    template <class VP, class EP, class GP>
-    inline typename undirected_graph<VP,EP,GP>::degree_size_type
-    degree(typename undirected_graph<VP,EP,GP>::vertex_descriptor v,
-	   const undirected_graph<VP,EP,GP> &g)
-    {
-	return g.degree(v);
+	return in_degree(v, g.impl());
     }
 
     template <class VP, class EP, class GP>
@@ -271,7 +157,15 @@ namespace boost
     in_edges(typename undirected_graph<VP,EP,GP>::vertex_descriptor v,
 	     const undirected_graph<VP,EP,GP> &g)
     {
-	return g.in_edges(v);
+	return in_edges(v, g.impl());
+    }
+
+    template <class VP, class EP, class GP>
+    inline typename undirected_graph<VP,EP,GP>::degree_size_type
+    degree(typename undirected_graph<VP,EP,GP>::vertex_descriptor v,
+	   const undirected_graph<VP,EP,GP> &g)
+    {
+	return degree(v, g.impl());
     }
 
     // AdjacencyGraph concepts
@@ -281,9 +175,9 @@ namespace boost
         typename undirected_graph<VP,EP,GP>::adjacency_iterator
         >
     adjacent_vertices(typename undirected_graph<VP,EP,GP>::vertex_descriptor v,
-                     const undirected_graph<VP,EP,GP>& g)
+		      const undirected_graph<VP,EP,GP>& g)
     {
-        return g.adjacent_vertices(v);
+        return adjacent_vertices(v, g.impl());
     }
 
     // VertexListGraph concepts
@@ -291,7 +185,7 @@ namespace boost
     inline typename undirected_graph<VP,EP,GP>::vertices_size_type
     num_vertices(const undirected_graph<VP,EP,GP>& g)
     {
-	return g.num_vertices();
+	return num_vertices(g.impl());
     }
 
     template <class VP, class EP, class GP>
@@ -301,7 +195,7 @@ namespace boost
 	>
     vertices(const undirected_graph<VP,EP,GP>& g)
     {
-	return g.vertices();
+	return vertices(g.impl());
     }
 
     // EdgeListGraph concepts
@@ -319,7 +213,7 @@ namespace boost
 	>
     edges(const undirected_graph<VP,EP,GP>& g)
     {
-	return g.edges();
+	return edges(g.impl());
     }
 
 
@@ -328,7 +222,7 @@ namespace boost
     inline typename undirected_graph<VP,EP,GP>::vertex_descriptor
     add_vertex(undirected_graph<VP,EP,GP> &g)
     {
-	return g.add_vertex();
+	return add_vertex(g.impl());
     }
 
 
@@ -337,7 +231,7 @@ namespace boost
     clear_vertex(typename undirected_graph<VP,EP,GP>::vertex_descriptor u,
 	undirected_graph<VP,EP,GP> &g)
     {
-	return g.clear_vertex(u);
+	return clear_vertex(u, g.impl());
     }
 
 
@@ -346,7 +240,7 @@ namespace boost
     remove_vertex(typename undirected_graph<VP,EP,GP>::vertex_descriptor u,
 		  undirected_graph<VP,EP,GP> &g)
     {
-	return g.remove_vertex(u);
+	return remove_vertex(u, g.impl());
     }
 
 
@@ -357,7 +251,7 @@ namespace boost
 	     typename undirected_graph<VP,EP,GP>::vertex_descriptor v,
 	     undirected_graph<VP,EP,GP> &g)
     {
-	return g.add_edge(u, v);
+	return add_edge(u, v, g.impl());
     }
 
 
@@ -367,7 +261,7 @@ namespace boost
 		typename undirected_graph<VP,EP,GP>::vertex_descriptor v,
 		undirected_graph<VP,EP,GP> &g)
     {
-	return g.remove_edge(u, v);
+	return remove_edge(u, v, g.impl());
     }
 
 
@@ -376,7 +270,7 @@ namespace boost
     remove_edge(typename undirected_graph<VP,EP,GP>::edge_descriptor e,
 		undirected_graph<VP,EP,GP> &g)
     {
-	return g.remove_edge(e);
+	return remove_edge(e, g.impl());
     }
 
 
@@ -385,7 +279,7 @@ namespace boost
     remove_edge(typename undirected_graph<VP,EP,GP>::edge_iterator i,
 		undirected_graph<VP,EP,GP> &g)
     {
-	return g.remove_edge(i);
+	return remove_edge(i, g.impl());
     }
 
     template <class VP, class EP, class GP, class Predicate>
@@ -394,7 +288,7 @@ namespace boost
 		   undirected_graph<VP,EP,GP> &g)
 
     {
-	return g.remove_edge_if(pred);
+	return remove_edge_if(pred, g.impl());
     }
 
 
@@ -404,7 +298,7 @@ namespace boost
 		       Predicate pred,
 		       undirected_graph<VP,EP,GP> &g)
     {
-	return g.remove_out_edge_if(v, pred);
+	return remove_out_edge_if(v, pred, g.impl());
     }
 
     template <class VP, class EP, class GP, class Predicate>
@@ -413,7 +307,7 @@ namespace boost
 		      Predicate pred,
 		      undirected_graph<VP,EP,GP> &g)
     {
-	return g.remove_in_edge_if(v, pred);
+	return remove_in_edge_if(v, pred, g.impl());
     }
 
     // PropertyGraph concepts
@@ -421,14 +315,14 @@ namespace boost
     inline typename property_map<typename undirected_graph<VP,EP,GP>::type, Property>::type
     get(Property p, undirected_graph<VP,EP,GP>& g)
     {
-	return g.get(p);
+	return get(p, g.impl());
     }
 
     template <class VP, class EP, class GP, typename Property>
     inline typename property_map<typename undirected_graph<VP,EP,GP>::type, Property>::const_type
     get(Property p, const undirected_graph<VP,EP,GP>& g)
     {
-	return g.get(p);
+	return get(p, g.impl());
     }
 
     template <class VP, class EP, class GP, typename Property, typename Key>
@@ -437,14 +331,14 @@ namespace boost
 	>::value_type
     get(Property p, const undirected_graph<VP,EP,GP> &g, const Key& k)
     {
-	return g.get(p, k);
+	return get(p, g.impl(), k);
     }
 
     template <class VP, class EP, class GP, typename Property, typename Key, typename Value>
     inline void
     put(Property p, undirected_graph<VP,EP,GP> &g, const Key& k, const Value& v)
     {
-	g.put(p, k, v);
+	put(p, g.impl(), k, v);
     }
 
     // MutablePropertyGraph concepts
@@ -452,7 +346,7 @@ namespace boost
     inline typename undirected_graph<VP,EP,GP>::vertex_descriptor
     add_vertex(const Property& vp, undirected_graph<VP,EP,GP>& g)
     {
-	return g.add_vertex(vp);
+	return add_vertex(vp, g.impl());
     }
 
     template <class VP, class EP, class GP, typename Property>
@@ -462,7 +356,7 @@ namespace boost
 	     const Property& ep,
 	     undirected_graph<VP,EP,GP> &g)
     {
-	return g.add_edge(u, v, ep);
+	return g.add_edge(u, v, g.impl(), ep);
     }
 }
 
