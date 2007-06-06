@@ -75,11 +75,10 @@ static int  is_win95_defined = 0;
 
 static struct
 {
-	int	pid; /* on win32, a real process handle */
-	void	(*func)( void *closure, int status, timing_info* );
-	void 	*closure;
-	char	*tempfile;
-
+    int     pid; /* on win32, a real process handle */
+    void    (*func)( void *closure, int status, timing_info*, char *, char * );
+    void    *closure;
+    char    *tempfile;
 } cmdtab[ MAXJOBS ] = {{0}};
 
 
@@ -709,7 +708,7 @@ execcmd(
             else
                 result = 1;
         }
-        func( closure, result ? EXEC_CMD_FAIL : EXEC_CMD_OK, &time );
+        func( closure, result ? EXEC_CMD_FAIL : EXEC_CMD_OK, &time, "*", "*" );
         return;
     }
 
@@ -834,7 +833,7 @@ execwait()
             BJAM_FREE(cmdtab[i].tempfile);
             cmdtab[i].tempfile = NULL;
 	}
-	(*cmdtab[ i ].func)( cmdtab[ i ].closure, rstat, &time );
+	(*cmdtab[ i ].func)( cmdtab[ i ].closure, rstat, &time, "*", "*" );
 
 	return 1;
 }
