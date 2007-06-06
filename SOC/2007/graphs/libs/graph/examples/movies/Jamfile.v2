@@ -8,3 +8,8 @@ exe six_degrees
 	: six_degrees.cpp movies.cpp
 	: <include>../../../../
 	;
+
+exe movie_stats
+	: stats.cpp movies.cpp
+	: <include>../../../../
+	;

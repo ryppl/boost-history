@@ -13,19 +13,18 @@ namespace boost
 	typename BidirectionalGraph,
 	typename Container
 	>
-    typename graph_traits<BindirectionalGraph>::degree_size_type
+    typename graph_traits<BidirectionalGraph>::degree_size_type
     degree_distribution(BidirectionalGraph &g, Container &dist)
     {
-	typedef BidirectionalGraph graph;
-	typedef typename graph_traits<Graph>::vertex_descriptor vertex;
-	typedef typename graph_traits<Graph>::degree_size_type degree;
+	typedef BidirectionalGraph Graph;
+	typedef typename graph_traits<Graph>::degree_size_type Degree;
 
 	// stash the degree of each vertex into its bucket - degree 1
 	// goes into index 1, degree 90 goes into index 90, etc.
-	degree max = 0;
-	vertex_iterator i, j;
+	Degree max = 0;
+	typename Graph::vertex_iterator i, j;
 	for(tie(i, j) = vertices(g); i != j; ++i) {
-	    degree d = degree(*i, g);
+	    Degree d = degree(*i, g);
 
 	    // we may need to resize the array to accomodate the
 	    // incrementation of this degrees bucket.
