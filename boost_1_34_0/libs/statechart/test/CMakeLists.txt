@@ -39,6 +39,7 @@ macro(statechart_run TESTNAME)
     )
 endmacro(statechart_run)
 
+
 statechart_compile_fail(InvalidChartTest1)
 statechart_compile_fail(InvalidChartTest2)
 statechart_compile_fail(InvalidChartTest3)
@@ -78,13 +79,3 @@ statechart_run(FifoSchedulerTest)
 #statechart-st-lib-run DllTestNative
 #  : TuTestMain : TuTest : <link>shared $(native))
 
-# TODO: These tests need support for link-only tests.
-#statechart-st-compile-example BitMachine : BitMachine : BitMachine)
-#statechart-st-compile-example Camera
-#  : Camera : Camera Configuring Main Shooting)
-#statechart-st-compile-example Handcrafted : Handcrafted : Handcrafted)
-#statechart-st-compile-example Keyboard : Keyboard : Keyboard :)
-#statechart-st-compile-example Performance : Performance : Performance)
-#statechart-st-compile-example PingPong : PingPong : PingPong)
-#statechart-st-compile-example StopWatch : StopWatch : StopWatch)
-#statechart-st-compile-example StopWatch2 : StopWatch : StopWatch2) ;

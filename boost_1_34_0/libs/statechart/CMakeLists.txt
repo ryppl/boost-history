@@ -1,4 +1,4 @@
 boost_library_project(
   Statechart
-  TESTDIRS test
+  TESTDIRS test example
   )

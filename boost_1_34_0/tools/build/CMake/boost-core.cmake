@@ -146,7 +146,7 @@ endmacro(boost_library_variant_target_name)
 macro(boost_library_variant LIBNAME)
   set(THIS_VARIANT_COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS}")
   set(THIS_VARIANT_LINK_FLAGS "${THIS_LIB_LINK_FLAGS}")
-  set(THIS_VARIANT_LINK_LIBS "${THIS_LIB_LINK_LIBS}")
+  set(THIS_VARIANT_LINK_LIBS ${THIS_LIB_LINK_LIBS})
 
   # Determine if it is okay to build this variant
   set(THIS_VARIANT_OKAY TRUE)
@@ -169,7 +169,7 @@ macro(boost_library_variant LIBNAME)
     # Accumulate compile and link flags
     set(THIS_VARIANT_COMPILE_FLAGS "${THIS_VARIANT_COMPILE_FLAGS} ${THIS_LIB_${ARG}_COMPILE_FLAGS} ${${ARG}_COMPILE_FLAGS}")
     set(THIS_VARIANT_LINK_FLAGS "${THIS_VARIANT_LINK_FLAGS} ${THIS_LIB_${ARG}_LINK_FLAGS} ${${ARG}_LINK_FLAGS}")
-    set(THIS_VARIANT_LINK_LIBS "${THIS_VARIANT_LINK_LIBS} ${THIS_LIB_${ARG}_LINK_LIBS} ${${ARG}_LINK_LIBS}")
+    set(THIS_VARIANT_LINK_LIBS ${THIS_VARIANT_LINK_LIBS} ${THIS_LIB_${ARG}_LINK_LIBS} ${${ARG}_LINK_LIBS})
   endforeach(ARG ${ARGN})
 
   if (THIS_VARIANT_OKAY)
@@ -178,11 +178,9 @@ macro(boost_library_variant LIBNAME)
     if (THIS_LIB_IS_DEBUG)
       set(THIS_VARIANT_COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} ${THIS_VARIANT_COMPILE_FLAGS}")
       set(THIS_VARIANT_LINK_FLAGS "${CMAKE_LINK_FLAGS_DEBUG} ${THIS_VARIANT_LINK_FLAGS}")
-      set(THIS_VARIANT_LINK_LIBS "${THIS_VARIANT_LINK_LIBS}")
     else (THIS_LIB_IS_DEBUG)
       set(THIS_VARIANT_COMPILE_FLAGS "${CMAKE_CXX_FLAGS_RELEASE} ${THIS_VARIANT_COMPILE_FLAGS}")
       set(THIS_VARIANT_LINK_FLAGS "${CMAKE_LINK_FLAGS_RELEASE} ${THIS_VARIANT_LINK_FLAGS}")
-      set(THIS_VARIANT_LINK_LIBS "${THIS_VARIANT_LINK_LIBS}")
     endif (THIS_LIB_IS_DEBUG)
 
     # Determine the suffix for this library target
@@ -253,10 +251,7 @@ macro(boost_library_variant LIBNAME)
     add_dependencies(${LIBNAME} ${VARIANT_LIBNAME})
     
     # Link against whatever libraries this library depends on
-    separate_arguments(THIS_VARIANT_LINK_LIBS)
-    foreach(library ${THIS_VARIANT_LINK_LIBS})
-      target_link_libraries(${VARIANT_LIBNAME} ${library}) # loop maybe unnecessary here
-    endforeach(library ${THIS_VARIANT_LINK_LIBS})
+    target_link_libraries(${VARIANT_LIBNAME} ${THIS_VARIANT_LINK_LIBS})
     foreach(dependency ${THIS_LIB_DEPENDS})
       target_link_libraries(${VARIANT_LIBNAME} "${dependency}${VARIANT_TARGET_NAME}")
     endforeach(dependency "${THIS_LIB_DEPENDS}")

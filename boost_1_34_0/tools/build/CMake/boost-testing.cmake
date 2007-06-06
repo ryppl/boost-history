@@ -105,6 +105,21 @@ macro(boost_test_run_fail testname)
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_run_fail)
 
+macro(boost_test_link testname)
+  boost_test_parse_args(${testname} ${ARGN})
+  if(BOOST_TEST_OKAY)
+    add_test("${PROJECT_NAME}::${testname}"
+  	     ${CMAKE_CTEST_COMMAND}
+             --build-and-test
+             "${Boost_SOURCE_DIR}/tools/build/CMake/LinkTest"
+             "${Boost_BINARY_DIR}/tools/build/CMake/LinkTest"
+             --build-generator "${CMAKE_GENERATOR}"
+             --build-makeprogram "${MAKEPROGRAM}"
+	     --build-project LinkTest
+	     --build-options -DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}/${BOOST_TEST_SOURCES} -DINCLUDES=${Boost_SOURCE_DIR} -DCOMPILE_FLAGS="${BOOST_TEST_COMPILE_FLAGS}")
+  endif(BOOST_TEST_OKAY)
+endmacro(boost_test_link)
+
 macro(boost_test_compile testname)
   boost_test_parse_args(${testname} ${ARGN})
   if(BOOST_TEST_OKAY)
@@ -116,7 +131,7 @@ macro(boost_test_compile testname)
              --build-generator "${CMAKE_GENERATOR}"
              --build-makeprogram "${MAKEPROGRAM}"
 	     --build-project CompileTest
-	     --build-options -DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}/${BOOST_TEST_SOURCES} -DINCLUDES=${Boost_SOURCE_DIR})
+	     --build-options -DSOURCE=${CMAKE_CURRENT_SOURCE_DIR}/${BOOST_TEST_SOURCES} -DINCLUDES=${Boost_SOURCE_DIR} -DCOMPILE_FLAGS="${BOOST_TEST_COMPILE_FLAGS}")
   endif(BOOST_TEST_OKAY)
 endmacro(boost_test_compile)
 

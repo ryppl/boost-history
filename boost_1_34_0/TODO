@@ -18,13 +18,18 @@
 
 - In libs/parameter/test, fix the test that depends on Python
 
-- Everything for the Python library
+- Python library: testing, handle Python debug library variants
 
 - Testing for the Regex library
 
-- Testing for the Spirit library
+- Spirit library: multi-threaded tests. There must be an easy way to
+  handle this... support variants in testing? (I think we need
+  "boost_add_executable" to handle these...)
 
 - Statechart library: deal with building libraries for testing, and
   with link-only tests.
+- list_contains seems to think that "SOURCES"
+ is equivalent to "BitMachine/BitMachine.cpp" (???)
 
 - Xpressive: port multipledefs and msvc-stlport tests
+
