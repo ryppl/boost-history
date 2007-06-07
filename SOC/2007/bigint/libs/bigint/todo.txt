@@ -45,9 +45,6 @@ Status: implemented
 + extend implementation interface for efficient operator!() and safe bool
 Status: implemented
 
-* make sure it works on a wide range of compilers (test framework setup is needed)
-Status: made some setup, it works for me but: 1. linking gmp is done via a hack, 2. not sure it works for others :/
-
 + converting to/from string - there was a suggestion to use static functions
 My opinion: performance wise it is the same if compiler has NRVO support, and ctors/member functions are more convenient
 Status: leaving it as is for now. Changing it later it trivial anyway.
@@ -58,6 +55,9 @@ Status: implemented
 
 + remove warnings for both MSVC and GCC
 Status: all non-GMP-implementation-specific warnings were fixed
+
+* make sure it works on a wide range of compilers (test framework setup is needed)
+Status: made some setup, it works for me but: 1. linking gmp is done via a hack, 2. not sure it works for others :/
 
 2. GMP implementation
 
@@ -97,6 +97,9 @@ Status: fixed
 + fix bug in can_convert_to() - fails for boundary case (-2^63-1) for boost::int64_t
 Status: fixed
 
++ fix division and remainder to truncating ones
+Status: fixed
+
 - remove warnings for both MSVC and GCC
 Status: needs fixing
 
@@ -117,11 +120,11 @@ Status: implemented
 + test to_number (char, short, int, int64 - both signed and unsigned, boundary cases)
 Status: implemented
 
-- test copy construction and assignment
-Status: needs implementing
+* test copy construction and assignment
+Status: it's all over the place, no additional test needed
 
-- test basic arithmetics and modulo (both op= and op) - bigint op/= bigint, bigint op/= number, number op bigint
-Status: needs implementing
++ test basic arithmetics and modulo (both op= and op) - bigint op/= bigint, bigint op/= number, number op bigint
+Status: implemented
 
 - test bit arithmetics - bigint op/= bigint, bigint op/= number, number op bigint (except << and >>)
 Status: needs implementing

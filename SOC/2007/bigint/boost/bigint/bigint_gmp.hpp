@@ -182,12 +182,12 @@ namespace boost { namespace detail {
 
 		void div(const bigint_gmp_implementation& lhs, const bigint_gmp_implementation& rhs)
 		{
-			mpz_div(data, lhs.data, rhs.data);
+			mpz_tdiv_q(data, lhs.data, rhs.data);
 		}
 
 		void mod(const bigint_gmp_implementation& lhs, const bigint_gmp_implementation& rhs)
 		{
-			mpz_mod(data, lhs.data, rhs.data);
+			mpz_tdiv_r(data, lhs.data, rhs.data);
 		}
 		
 		void or_(const bigint_gmp_implementation& lhs, const bigint_gmp_implementation& rhs)
