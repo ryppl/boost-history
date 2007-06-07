@@ -16,6 +16,9 @@ project
 exe HelloWorld : main.cpp ;
 lib HelloWorldLib : hello_world.cpp : <link>shared ;
 
+exe Parameters : parameters/main_lp.cpp ;
+lib ParametersLib : parameters/lots_of_parameters.cpp : <link>shared ;
+
 exe MultilanguageWord : info/multilanguage_main.cpp ;
 lib MultilanguageHelloWorld : info/multilanguage_hello_world.cpp : <link>shared ;
 
@@ -42,6 +45,7 @@ exe RegistryExample : registry/registry_example.cpp ;
 
 install ../bin : 
   HelloWorld HelloWorldLib 
+  Parameters ParametersLib
   MultilanguageWord MultilanguageHelloWorld
   IM IMPlugins
   Vehicle Boat FlyingCar Car Plane
