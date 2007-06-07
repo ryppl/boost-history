@@ -111,7 +111,7 @@ models and 2D drawings.  CADdy++ uses the Boost libraries:
 ['"Many thanks to all the boost developers for their great work and effort 
 spending into boost."]]
 
-[blurb [*Dimension 5, Miner3D]\n\n
+[blurb [*Dimesion 5, Miner3D]\n\n
    Data visualization technology enabling advanced data analysis,
    visualization, sonification and speech applications for business and science.\n
    The [@http://www.miner3D.com Miner3D] application provides means for interactive visual analysis of 
@@ -397,16 +397,6 @@ development team would like to thank everyone for their hard work on
 behalf of C++ coders everywhere."]
 ]
 
-[blurb [*LW-WORKS Software, Clipboard Recorder]\n\n
-[@http://www.lw-works.com/clipboard-recorder Clipboard Recorder]
-is an application that helps users to manage their
-clipboard history and provides easy ways for users to access their
-saved clipboard data.\n\n
-Libraries used:
-Smart Pointer, Serialization, Asio, String Algorithms, Bind, Thread,
-Conversion/Cast, Iostreams.
-]
-
 [endsect]
 
 [section:open Open Source Boost]
@@ -442,28 +432,6 @@ LyX uses many parts of Boost, including [@../../libs/array/index.html Array],
 [@../../libs/type_traits/index.html Type Traits], 
 [@../../libs/function/index.html Function],
 and [@../../libs/signals/index.html Signals].]
-
-[blurb [*CodeSynthesis XML Schema to C++ Data Binding Compiler (XSD) by Code Synthesis Tools CC]\n\n
-[@http://codesynthesis.com/products/xsd/ CodeSynthesis XML 
-Schema to C++ Data Binding Compiler (XSD)] is an
-open-source, cross-platform XML Data Binding implementation for C++.
-Provided with an XML instance specification (XML Schema), it generates
-C++ classes that represent the given vocabulary as well as parsing and
-serialization code. You can then access the data stored in XML using
-types and functions that semantically correspond to your application
-domain rather than dealing with elements, attributes, and text in a
-direct representation of XML such as DOM or SAX.
-\n\n
-XSD uses the [@../../libs/regex/index.html Regex] and 
-[@../../libs/filesystem/index.html Filesystem] libraries from Boost. 
-[@../../libs/regex/index.html Regex] is used
-to perform transformations on file, type and member names. 
-[@../../libs/filesystem/index.html Filesystem] is used to 
-capture and manipulate XML Schema include and import paths.
-Additionally, we are planning to provide an optional mapping of XML
-Schema date and time types to C++ types from the Boost 
-[@../../libs/date_time/index.html Date Time] library.
-]
 
 [blurb [*CGAL]\n\n
 [@http://www.cgal.org/ CGAL] is the Computational Geometry Algorithms Library,
@@ -765,19 +733,6 @@ low-level and middleware APIs and provides various low, mid and application
 level functionality as well as tools to create and import content.
 ]
 
-[blurb [*Python-Ogre]\n\n
-[@http://python-ogre.python-hosting.com/ Python-Ogre] 
-is a Python bindings for Ogre 3D - a scene-oriented,
-flexible 3D engine.\n
-Python-Ogre uses Boost.Python to expose next libraries to Python:\n
-  * Ogre\n
-  * Newton\n
-  * ODE\n
-  * OgreAL\n
-  * CEGUI\n
-  * OIS\n
-]
-
 [endsect]
 
 [section:inhouse In House Boost]
@@ -785,13 +740,6 @@ Python-Ogre uses Boost.Python to expose next libraries to Python:\n
 Whether you're a government department, an internet startup, or a specialist consultancy, in-house 
 developement using the Boost Libraries can significantly shorten your
 development cycles.
-
-[blurb [*Google]\n\n
-[@http://code.google.com/p/google-gtags/ google-gtags] Provides server-based 
-tags serving for large codebases. This is an extension to GNU Emacs and X-Emacs 
-TAGS functionality, that uses [@../../libs/test/index.html Boost.Test] as its 
-unit test framework.
-]
 
 [blurb [*LiquidNet]\n\n
 [@http://www.liquidnet.com/ LiquidNet] is Americas number one electronic 
@@ -926,17 +874,6 @@ U.S. option market maker focusing on the most active securities.\n\n
 [@../../libs/utility/index.html Utility]."]
 ]
 
-[blurb [*Automated Trading Deck] \n\n
-[@http://www.atdesk.com Automated Trading Deck] (ATD) uses a large number
-of Boost libraries.  ATD is a technology company specializing in
-automated trading and customized equity execution solutions for its
-customers. We offer automated execution solutions in all domestic cash
-equity markets, including the listed, over-the-counter, exchange traded
-fund and bulletin board marketplaces. Our proprietary "Pricing Engine"
-and automated limit-order trading algorithms apply advanced expert
-systems to limit-order trading and customer executions.
-]
-
 
 [endsect]
 
@@ -962,6 +899,5 @@ always interested to hear how these pages can be improved or better
 structured.
 
 [endsect]
-
 
 

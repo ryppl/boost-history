@@ -5,18 +5,7 @@
 # bring in rules for testing
 import testing ;
 
-project
-    : requirements
-#        <toolset>gcc:<cxxflags>-ftemplate-depth-1024
-        <toolset>intel:<debug-symbols>off
-        <toolset>msvc-7.1:<debug-symbols>off
-        <toolset>msvc-8.0:<define>_SCL_SECURE_NO_DEPRECATE
-        <toolset>msvc-8.0:<define>_CRT_SECURE_NO_DEPRECATE
-        <toolset>gcc:<cxxflags>-ftemplate-depth-1024
-        <toolset>msvc,<stdlib>stlport:<define>_STLP_EXPOSE_GLOBALS_IMPLEMENTATION
-        <library>/boost/test//boost_unit_test_framework
-        <link>static
-    ;
+project : requirements <toolset>intel:<debug-symbols>off ;
 
 test-suite "xpressive"
        : [ run regress.cpp ]
@@ -30,8 +19,8 @@ test-suite "xpressive"
          [ run test7.cpp ]
          [ run test8.cpp ]
          [ run test9.cpp ]
-         [ run test10.cpp ]
-         [ run test11.cpp ]
+	 [ run test10.cpp ]
+	 [ run test11.cpp ]
          [ run test1u.cpp ]
          [ run test2u.cpp ]
          [ run test3u.cpp ]
@@ -41,16 +30,13 @@ test-suite "xpressive"
          [ run test7u.cpp ]
          [ run test8u.cpp ]
          [ run test9u.cpp ]
-         [ run test10u.cpp ]
-         [ run test11u.cpp ]
+	 [ run test10u.cpp ]
+	 [ run test11u.cpp ]
          [ run misc1.cpp ]
-         [ run misc2.cpp ]
          [ run test_cycles.cpp ]
          [ run test_non_char.cpp ]
          [ run test_static.cpp ]
-         [ run test_actions.cpp ]
          [ run test_dynamic.cpp ]
-         [ run test_dynamic_grammar.cpp ]
          [ link multiple_defs1.cpp multiple_defs2.cpp : : multiple_defs ]
          [ compile test_basic_regex.cpp ]
          [ compile test_match_results.cpp ]
@@ -64,4 +50,3 @@ test-suite "xpressive"
          [ compile test_regex_traits.cpp ]
          [ compile test_sub_match.cpp ]
     ;
-

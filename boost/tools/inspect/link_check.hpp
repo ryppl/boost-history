@@ -19,7 +19,6 @@ namespace boost
   {
     const int m_linked_to = 1;
     const int m_present = 2;
-    const int m_nounlinked_errors = 4;
 
     class link_check : public hypertext_inspector
     {
@@ -31,8 +30,8 @@ namespace boost
       typedef std::map< string, int > m_path_map;
       m_path_map m_paths; // first() is relative initial_path()
 
-      void do_url( const string & url, const string & library_name,
-        const path & full_source_path, bool no_link_errors );
+      void do_url( const string & url,
+        const string & library_name, const path & full_source_path );
     public:
 
       link_check();

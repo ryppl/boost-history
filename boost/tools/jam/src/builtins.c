@@ -5,6 +5,7 @@
  */
 
 # include "jam.h"
+# include "debug.h"
 
 # include "lists.h"
 # include "parse.h"
@@ -53,7 +54,6 @@
 
 # if defined( OS_NT ) || defined( OS_CYGWIN )
 LIST* builtin_system_registry( PARSE *parse, FRAME *frame );
-LIST* builtin_system_registry_names( PARSE *parse, FRAME *frame );
 # endif
 
 int glob( char *s, char *c );
@@ -327,12 +327,6 @@ load_builtins()
           char * args[] = { "key_path", ":", "data", "?", 0 };
           bind_builtin( "W32_GETREG",
               builtin_system_registry, 0, args );
-      }
-
-      {
-          char * args[] = { "key_path", ":", "result-type", 0 };
-          bind_builtin( "W32_GETREGNAMES",
-              builtin_system_registry_names, 0, args );
       }
 # endif
 

@@ -1,7 +1,3 @@
-# copyright John Maddock 2003
-# Distributed under the Boost Software License, Version 1.0. 
-# (See accompanying file LICENSE_1_0.txt or copy at 
-# http://www.boost.org/LICENSE_1_0.txt.
 
 # very basic makefile for timer.exe
 #
@@ -24,7 +20,6 @@ timer.exe : regex_timer.cpp
   $(BCC32) @&&|
  $(COMPOPTS) -e$@ regex_timer.cpp
 |
-
 
 
 

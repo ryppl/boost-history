@@ -629,7 +629,6 @@ def collect_logs(
         , user
         , comment
         , incremental
-        , dart_server
         , args
         , **unused
         ):
@@ -668,7 +667,6 @@ def collect_logs(
         , user
         , source
         , run_type
-        , dart_server
         )
 
 def collect_book( **unused ):
@@ -694,14 +692,13 @@ def upload_logs(
         , ftp_proxy
         , debug_level
         , send_bjam_log
-        , dart_server
         , **unused
         ):
     import_utils()
     from runner import upload_logs
     retry(
           upload_logs
-        , ( regression_results, runner, tag, user, ftp_proxy, debug_level, send_bjam_log, timestamp_path, dart_server )
+        , ( regression_results, runner, tag, user, ftp_proxy, debug_level, send_bjam_log, timestamp_path )
         )
 
 def upload_book( tag, runner, ftp_proxy, debug_level, **unused ):
@@ -772,7 +769,6 @@ def regression(
         , ftp_proxy = None
         , debug_level = 0
         , v2 = 1
-        , dart_server = None
         , args = []
         ):
 
@@ -812,8 +808,8 @@ def regression(
         # told to have no toolsets in command line "--toolset="
         if  toolsets != '': # --toolset=,
             test( toolsets, bjam_options, monitored, timeout, v2, [] )
-            collect_logs( tag, runner, platform, user, comment, incremental, dart_server, [] )
-            upload_logs( tag, runner, user, ftp_proxy, debug_level, send_bjam_log, dart_server )
+            collect_logs( tag, runner, platform, user, comment, incremental, [] )
+            upload_logs( tag, runner, user, ftp_proxy, debug_level, send_bjam_log )
         if book:
             build_book()    
             collect_book()
@@ -881,7 +877,6 @@ def accept_args( args ):
         , 'help'
         , 'v2'
         , 'v1'
-        , 'dart-server='
         ]
 
     options = {
@@ -901,7 +896,6 @@ def accept_args( args ):
         , '--proxy'         : None
         , '--debug-level'   : 0
         , '--ftp-proxy'     : None
-        , '--dart-server'   : 'beta.boost.org:8081'
         }
 
     ( option_pairs, other_args ) = getopt.getopt( args, '', args_spec )
@@ -934,7 +928,6 @@ def accept_args( args ):
         , 'ftp_proxy'       : options[ '--ftp-proxy' ]
         , 'debug_level'     : int(options[ '--debug-level' ])
         , 'v2'              : not options.has_key( '--v1' )
-        , 'dart_server'     : options[ '--dart-server' ]
         , 'args'            : other_args
         }
 
@@ -993,7 +986,6 @@ Options:
 \t                output printed; 0 by default (no debug output)
 \t--v1            Use Boost.Build V1
 \t--v2            Use Boost.Build V2 (default)
-\t--dart-server   The dart server to send results to.
 ''' % '\n\t'.join( commands.keys() )
 
     print 'Example:\n\t%s --runner=Metacomm\n' % os.path.basename( sys.argv[0] )

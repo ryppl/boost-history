@@ -476,18 +476,7 @@ class abstract-file-target : virtual-target
 rule add-prefix-and-suffix ( specified-name : type ? : property-set )
 {
     local suffix = [ type.generated-target-suffix $(type) : $(property-set) ] ;
-    
-    # Handle suffixes for which no leading dot is desired.  Those are
-    # specified by enclosing them in <...>.  Needed by python so it
-    # can create "_d.so" extensions, for example.
-    if $(suffix:G)
-    {
-        suffix = [ utility.ungrist $(suffix) ] ;
-    }
-    else
-    {
-        suffix = .$(suffix) ;
-    }
+    suffix = .$(suffix) ;
     
     local prefix = [ type.generated-target-prefix $(type) : $(property-set) ] ;
       

@@ -1,5 +1,5 @@
 
-# Copyright (c) MetaCommunications, Inc. 2003-2007
+# Copyright (c) MetaCommunications, Inc. 2003-2005
 #
 # Distributed under the Boost Software License, Version 1.0. 
 # (See accompanying file LICENSE_1_0.txt or copy at 
@@ -304,22 +304,19 @@ class make_links_action( action ):
         utils.makedirs( os.path.join( os.path.dirname( self.links_file_path_ ), "developer", "output" ) )
         utils.makedirs( os.path.join( os.path.dirname( self.links_file_path_ ), "user", "output" ) )
         utils.log( '    Making test output files...' )
-        try:
-            utils.libxslt( 
-                  utils.log
-                , self.source_
-                , xsl_path( 'links_page.xsl' )
-                , self.links_file_path_
-                , {
-                    'source':                 self.tag_
-                  , 'run_date':               self.run_date_
-                  , 'comment_file':           self.comment_file_
-                  , 'explicit_markup_file':   self.failures_markup_file_
-                  }
-                )
-        except Exception, msg:
-            utils.log( '  Skipping "%s" due to errors (%s)' % ( self.source_, msg ) )
-
+        utils.libxslt( 
+            utils.log
+            , self.source_
+            , xsl_path( 'links_page.xsl' )
+            , self.links_file_path_
+            , {
+              'source':                 self.tag_
+              , 'run_date':               self.run_date_
+              , 'comment_file':           self.comment_file_
+              , 'explicit_markup_file':   self.failures_markup_file_
+              }
+            )
+        
         open( self.file_path_, "w" ).close()
 
 
@@ -669,20 +666,18 @@ def make_result_pages(
 def fix_file_names( dir ):
     """
     The current version of xslproc doesn't correctly handle
-    spaces. We have to manually go through the
-    result set and decode encoded spaces (%20).
+    spaces on posix systems. We have to manually go through the
+    result set and correct decode encoded spaces (%20).
     """
-    utils.log( 'Fixing encoded file names...' )
-    for root, dirs, files in os.walk( dir ):
-        for file in files:
-            if file.find( "%20" ) > -1:
-                new_name = file.replace( "%20", " " )
-                utils.rename(
-                      utils.log
-                    , os.path.join( root, file )
-                    , os.path.join( root, new_name )
-                    )
-
+    if os.name == 'posix':
+        for root, dirs, files in os.walk( dir ):
+            for file in files:
+                if file.find( "%20" ) > -1:
+                    new_name = file.replace( "%20", " " )
+                    old_file_path = os.path.join( root, file )
+                    new_file_path = os.path.join( root, new_name )
+                    print "renaming %s %s" % ( old_file_path, new_file_path )
+                    os.rename ( old_file_path, new_file_path )
 
 def build_xsl_reports( 
           locate_root_dir

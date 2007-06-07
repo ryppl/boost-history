@@ -152,14 +152,39 @@ namespace boost {
   }
 
   template <typename InputIterator, typename T>
-  bool container_contains(InputIterator first, InputIterator last, T value)
+  bool contains(InputIterator first, InputIterator last, T value)
   {
     return std::find(first, last, value) != last;
   }
   template <typename Container, typename T>
-  bool container_contains(const Container& c, const T& value)
+  bool contains(const Container& c, const T& value)
   {
-    return container_contains(begin(c), end(c), value);
+    return contains(begin(c), end(c), value);
+  }
+
+  template <typename InputIterator, typename Predicate>
+  bool all(InputIterator first, InputIterator last, Predicate p)
+  {
+    for (; first != last; ++first)
+      if (!p(*first))
+        return false;
+    return true;
+  }
+  template <typename Container, typename Predicate>
+  bool all(const Container& c, Predicate p)
+  {
+    return all(begin(c), end(c), p);
+  }
+
+  template <typename InputIterator, typename Predicate>
+  bool none(InputIterator first, InputIterator last, Predicate p)
+  {
+    return std::find_if(first, last, p) == last;
+  }
+  template <typename Container, typename Predicate>
+  bool none(const Container& c, Predicate p)
+  {
+    return none(begin(c), end(c), p);
   }
 
   template <typename Container, typename T>
