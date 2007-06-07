@@ -6,7 +6,7 @@ macro(program_options_test_run TESTNAME)
   boost_test_run(${TESTNAME} 
     DEPENDS boost_program_options-static boost_test_exec_monitor-static)
   boost_test_run("${TESTNAME}_dll"
-    SOURCES "${TESTNAME}.cpp"
+    "${TESTNAME}.cpp"
     DEPENDS boost_program_options-shared boost_test_exec_monitor-static)
 endmacro(program_options_test_run)
 

@@ -1,39 +1,39 @@
 macro(statechart_compile_fail TESTNAME)
   boost_test_compile_fail("${TESTNAME}Normal"
-    SOURCES ${TESTNAME}.cpp
+    ${TESTNAME}.cpp
     )
   boost_test_compile_fail("${TESTNAME}Native"
-    SOURCES ${TESTNAME}.cpp
+    ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_STATECHART_USE_NATIVE_RTTI"
     )
   boost_test_compile_fail("${TESTNAME}Relaxed"
-    SOURCES ${TESTNAME}.cpp
+    ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
     )
   boost_test_compile_fail("${TESTNAME}Both"
-    SOURCES ${TESTNAME}.cpp
+    ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_STATECHART_USE_NATIVE_RTTI -DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
     )
 endmacro(statechart_compile_fail)
 
 macro(statechart_run TESTNAME)
   boost_test_run("${TESTNAME}Normal"
-    SOURCES ${TESTNAME}.cpp
+    ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_DISABLE_THREADS"
     DEPENDS boost_test_exec_monitor-static
     )
   boost_test_run("${TESTNAME}Native"
-    SOURCES ${TESTNAME}.cpp
+    ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_DISABLE_THREADS -DBOOST_STATECHART_USE_NATIVE_RTTI"
     DEPENDS boost_test_exec_monitor-static
     )
   boost_test_run("${TESTNAME}Relaxed"
-    SOURCES ${TESTNAME}.cpp
+    ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_DISABLE_THREADS -DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
     DEPENDS boost_test_exec_monitor-static
     )
   boost_test_run("${TESTNAME}Both"
-    SOURCES ${TESTNAME}.cpp
+    ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_DISABLE_THREADS -DBOOST_STATECHART_USE_NATIVE_RTTI -DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
     DEPENDS boost_test_exec_monitor-static
     )

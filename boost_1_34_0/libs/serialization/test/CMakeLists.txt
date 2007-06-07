@@ -41,13 +41,13 @@ macro(serialization_test testname)
     
     # Tests linking against the static serialization library
     boost_test_run("${testname}_${ARCHIVE}"
-      SOURCES ${BSL_TEST_SOURCES}
+      ${BSL_TEST_SOURCES}
       DEPENDS boost_test_exec_monitor-static ${BSL_TEST_STATIC_LIBRARIES}
       COMPILE_FLAGS "-DBOOST_ARCHIVE_TEST=${BSL_TEST_POLY}${ARCHIVE}.hpp -DBOOST_LIB_DIAGNOSTIC=1")
     
     # Tests linking against the shared serialization library
     boost_test_run("${testname}_${ARCHIVE}_dll"
-      SOURCES ${BSL_TEST_SOURCES}
+      ${BSL_TEST_SOURCES}
       DEPENDS boost_test_exec_monitor-static ${BSL_TEST_SHARED_LIBRARIES}
       COMPILE_FLAGS "-DBOOST_ARCHIVE_TEST=${BSL_TEST_POLY}${ARCHIVE}.hpp -DBOOST_LIB_DIAGNOSTIC=1 -DBOOST_ALL_DYN_LINK=1")
   endforeach(ARCHIVE ${BOOST_ARCHIVE_LIST})
@@ -93,7 +93,7 @@ serialization_test(test_optional)
 serialization_test(test_shared_ptr)
 serialization_test(test_shared_ptr_132)
 serialization_test(test_polymorphic POLYMORPHIC 
-  SOURCES test_polymorphic.cpp test_polymorphic_A.cpp)
+  test_polymorphic.cpp test_polymorphic_A.cpp)
 serialization_test(test_iterators NO_LIBS)
 serialization_test(test_iterators_base64 NO_LIBS)
 serialization_test(test_inclusion NO_LIBS)
@@ -102,11 +102,11 @@ serialization_test(test_reset_object_address)
 serialization_test(test_smart_cast NO_LIBS)
 serialization_test(test_static_warning NO_LIBS)
 serialization_test(test_utf8_codecvt 
-  SOURCES test_utf8_codecvt.cpp ../src/utf8_codecvt_facet.cpp NO_LIBS)
+  test_utf8_codecvt.cpp ../src/utf8_codecvt_facet.cpp NO_LIBS)
 serialization_test(test_void_cast)
 serialization_test(test_mult_archive_types)
 serialization_test(test_codecvt_null 
-  SOURCES test_codecvt_null.cpp ../src/codecvt_null.cpp NO_LIBS)
+  test_codecvt_null.cpp ../src/codecvt_null.cpp NO_LIBS)
 
 # demos
 serialization_test(test_demo)
@@ -114,9 +114,9 @@ serialization_test(test_demo_auto_ptr)
 serialization_test(test_demo_exception)
 serialization_test(test_demo_fast_archive)
 serialization_test(test_demo_pimpl 
-  SOURCES ../example/demo_pimpl.cpp ../example/demo_pimpl_A.cpp)
+  ../example/demo_pimpl.cpp ../example/demo_pimpl_A.cpp)
 serialization_test(test_demo_polymorphic 
-  SOURCES ../example/demo_polymorphic.cpp ../example/demo_polymorphic_A.cpp)
+  ../example/demo_polymorphic.cpp ../example/demo_polymorphic_A.cpp)
 serialization_test(test_demo_portable_archive)
 serialization_test(test_demo_shared_ptr)
 serialization_test(test_demo_xml)

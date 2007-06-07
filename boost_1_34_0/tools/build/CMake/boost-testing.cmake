@@ -40,7 +40,7 @@ macro(boost_test_parse_args testname)
   set(BOOST_TEST_OKAY TRUE)
   set(BOOST_TEST_COMPILE_FLAGS "")
   parse_arguments(BOOST_TEST 
-    "SOURCES;LINK_LIBS;DEPENDS;COMPILE_FLAGS;ARGS"
+    "LINK_LIBS;DEPENDS;COMPILE_FLAGS;ARGS"
     ""
     ${ARGN}
     )
@@ -62,10 +62,13 @@ macro(boost_test_parse_args testname)
     endif (NOT BUILD_SHARED AND ${DEPEND_TYPE} STREQUAL "SHARED_LIBRARY")
   endforeach(ARG ${BOOST_TEST_DEPENDS})
 
-  # If no test specified, use the name of the test
-  if (NOT BOOST_TEST_SOURCES)
+  # Setup the SOURCES variables. If no sources are specified, use the
+  # name of the test.cpp
+  if (BOOST_TEST_DEFAULT_ARGS)
+    set(BOOST_TEST_SOURCES ${BOOST_TEST_DEFAULT_ARGS})
+  else (BOOST_TEST_DEFAULT_ARGS)
     set(BOOST_TEST_SOURCES "${testname}.cpp")
-  endif (NOT BOOST_TEST_SOURCES)
+  endif (BOOST_TEST_DEFAULT_ARGS)
 
   # If testing is turned off, this test is not okay
   if (NOT BUILD_TESTING)

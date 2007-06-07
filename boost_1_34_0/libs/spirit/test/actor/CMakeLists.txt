@@ -1,6 +1,6 @@
 # spirit.utility.actors
 spirit_run(action_tests
-  SOURCES action_tests.cpp
+  action_tests.cpp
           assign_test.cpp
           assign_key_test.cpp
           clear_test.cpp

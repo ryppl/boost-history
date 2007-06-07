@@ -4,7 +4,7 @@ boost_test_run(bind_tests_advanced DEPENDS boost_test_exec_monitor-static)
 boost_test_run(bind_tests_simple_f_refs DEPENDS boost_test_exec_monitor-static)
 boost_test_run(bll_and_function DEPENDS boost_test_exec_monitor-static)
 boost_test_run(lambda_cast_test 
-  SOURCES cast_test.cpp DEPENDS boost_test_exec_monitor-static)
+  cast_test.cpp DEPENDS boost_test_exec_monitor-static)
 boost_test_run(constructor_tests DEPENDS boost_test_exec_monitor-static)
 boost_test_run(control_structures DEPENDS boost_test_exec_monitor-static)
 boost_test_run(exception_test DEPENDS boost_test_exec_monitor-static)

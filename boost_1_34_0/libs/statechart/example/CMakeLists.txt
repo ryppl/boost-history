@@ -4,12 +4,12 @@ macro(statechart_example TESTNAME)
     set(SOURCES ${SOURCES} "${TESTNAME}/${ARG}.cpp")
   endforeach(ARG ${ARGN})
 
-  if (NOT SOURCES)
+  if (NOT)
     set(SOURCES "${TESTNAME}/${TESTNAME}.cpp")
-  endif (NOT SOURCES)
+  endif (NOT)
 
   boost_test_link("${TESTNAME}Example"
-    SOURCES ${SOURCES}
+    ${SOURCES}
     COMPILE_FLAGS "-DBOOST_DISABLE_THREADS"
     )
 endmacro(statechart_example)

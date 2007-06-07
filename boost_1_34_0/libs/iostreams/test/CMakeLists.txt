@@ -10,7 +10,7 @@ iostreams_test(array_test)
 iostreams_test(auto_close_test)
 iostreams_test(buffer_size_test)
 iostreams_test(code_converter_test 
-  SOURCES code_converter_test.cpp detail/utf8_codecvt_facet.cpp)
+  code_converter_test.cpp detail/utf8_codecvt_facet.cpp)
 iostreams_test(compose_test)
 iostreams_test(component_access_test)
 iostreams_test(copy_test)

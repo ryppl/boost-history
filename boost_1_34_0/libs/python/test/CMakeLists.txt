@@ -44,7 +44,7 @@ endmacro(bpl_test)
 
 macro(py_run TESTNAME)
   boost_test_run(${TESTNAME} 
-    SOURCES ${TESTNAME}.cpp
+    ${TESTNAME}.cpp
     DEPENDS boost_python-static
     LINK_LIBS ${PYTHON_LIBRARIES})
 endmacro(py_run)
@@ -54,7 +54,7 @@ boost_test_run(exec
   ARGS "${CMAKE_CURRENT_SOURCE_DIR}/exec.py"
   LINK_LIBS ${PYTHON_LIBRARIES})
 boost_test_run(exec-dynamic 
-  SOURCES exec.cpp
+  exec.cpp
   ARGS "${CMAKE_CURRENT_SOURCE_DIR}/exec.py"
   DEPENDS boost_python-shared 
   LINK_LIBS ${PYTHON_LIBRARIES})
@@ -173,7 +173,7 @@ py_run(upcast)
 boost_test_compile(select_holder)
 
 boost_test_run(select_from_python_test
-  SOURCES select_from_python_test.cpp ../src/converter/type_id.cpp
+  select_from_python_test.cpp ../src/converter/type_id.cpp
   COMPILE_FLAGS "-DBOOST_PYTHON_STATIC_LIB"
   LINK_LIBS ${PYTHON_LIBRARIES})
   
