@@ -18,7 +18,7 @@
 
 - In libs/parameter/test, fix the test that depends on Python
 
-- Python library: testing, handle Python debug library variants
+- Python library: handle Python debug library variants
 
 - Testing for the Regex library
 
