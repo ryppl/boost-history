@@ -732,11 +732,6 @@ static void call_dart_rule(TARGET* target, int status, timing_info* time,
     char *executed_command, char *command_output)
 {
     LIST* dart_rule;
-    
-    /* note that the executed command and the 
-     * command output may be null */
-    if (!executed_command || !command_output)
-        return;
 
     pushsettings(target->settings);
     dart_rule = var_get( "__DART_RULE__" );
@@ -757,7 +752,11 @@ static void call_dart_rule(TARGET* target, int status, timing_info* time,
         append_double_string(frame->args, time->user);
         append_double_string(frame->args, time->system);
         lol_add(frame->args, list_new(L0, newstr(executed_command)));
-        lol_add(frame->args, list_new(L0, newstr(command_output)));
+
+        if (command_output)
+            lol_add(frame->args, list_new(L0, newstr(command_output)));
+        else
+            lol_add(frame->args, L0);
 
         if( lol_get( frame->args, 2 ) )
             evaluate_rule( dart_rule->string, frame );
@@ -778,7 +777,8 @@ static void make_closure(
     if (DEBUG_EXECCMD)
         printf("%f sec system; %f sec user\n", time->system, time->user);
 
-    call_dart_rule(built, status, time, executed_command, command_output);
+    if (globs.dart_active)
+        call_dart_rule(built, status, time, executed_command, command_output);
     
     push_state(&state_stack, built, NULL, T_STATE_MAKE1D)->status = status;
 }
