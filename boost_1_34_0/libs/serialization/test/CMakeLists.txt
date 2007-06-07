@@ -13,7 +13,13 @@ set(BOOST_ARCHIVE_LIST
 # this macro will build separate static and dynamic tests for each
 # archive type listed in BOOST_ARCHIVE_LIST.
 macro(serialization_test testname)
-  parse_arguments(BSL_TEST "SOURCES" "NO_LIBS;POLYMORPHIC" ${ARGN})
+  parse_arguments(BSL_TEST "" "NO_LIBS;POLYMORPHIC" ${ARGN})
+
+  if(NOT BSL_TEST_DEFAULT_ARGS)
+    set(BSL_TEST_SOURCES "${testname}.cpp")
+  else(NOT BSL_TEST_DEFAULT_ARGS)
+    set(BSL_TEST_SOURCES "${BSL_TEST_DEFAULT_ARGS}")
+  endif(NOT BSL_TEST_DEFAULT_ARGS)
 
   if (BSL_TEST_POLYMORPHIC)
     set(BSL_TEST_POLY "polymorphic_")
@@ -35,10 +41,6 @@ macro(serialization_test testname)
       endif(ARCHIVE MATCHES ".*warchive")
     endif(NOT BSL_NO_LIBS)
 
-    if(NOT BSL_TEST_SOURCES)
-      set(BSL_TEST_SOURCES "${testname}.cpp")
-    endif(NOT BSL_TEST_SOURCES)
-    
     # Tests linking against the static serialization library
     boost_test_run("${testname}_${ARCHIVE}"
       ${BSL_TEST_SOURCES}
