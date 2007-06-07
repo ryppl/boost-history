@@ -91,6 +91,12 @@ Status: investigated. abort() is called in this case. The solution for this is c
 + fix bug in wstr() - sometimes mpz_sizeinbase returns slightly bigger size
 Status: fixed
 
++ fix bug in to_number() - fails for 64-bit integers
+Status: fixed
+
++ fix bug in can_convert_to() - fails for boundary case (-2^63-1) for boost::int64_t
+Status: fixed
+
 - remove warnings for both MSVC and GCC
 Status: needs fixing
 
@@ -104,6 +110,12 @@ Status: implemented (merged with "test string conversion")
 
 + test string conversion (various bases - 2, 9, 18, 27, 36)
 Status: implemented (merged with "test all ctors for strings")
+
++ test can_convert_to (char, short, int, int64 - both signed and unsigned, boundary cases)
+Status: implemented
+
++ test to_number (char, short, int, int64 - both signed and unsigned, boundary cases)
+Status: implemented
 
 - test copy construction and assignment
 Status: needs implementing
@@ -121,12 +133,6 @@ Status: needs implementing
 Status: needs implementing
 
 - test bool conversion and operator!
-Status: needs implementing
-
-- test can_convert_to (char, short, int, int64 - both signed and unsigned, boundary cases)
-Status: needs implementing
-
-- test to_number (char, short, int, int64 - both signed and unsigned, boundary cases)
 Status: needs implementing
 
 - test comparison operators

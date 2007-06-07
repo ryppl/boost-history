@@ -298,50 +298,20 @@ namespace boost { namespace detail {
 			return result;
 		}
 		
-		template <typename T> bool _can_convert_to_signed() const
+		boost::uint64_t _to_uint64() const
 		{
-			switch (mpz_sgn(data))
-			{
-			case 1: return _can_convert_to_unsigned<T>(); // Reuse
-			case 0: return true;
-			}
-			
-			boost::uint64_t max_value = static_cast<boost::uint64_t>(-static_cast<boost::int64_t>((std::numeric_limits<T>::min)()));
-			
-			int count = -data->_mp_size; // we have a negative number
-			
-			if (GMP_NUMB_BITS >= sizeof(boost::uint64_t) * 8) // we're going to have problems with >>= down there - but the check is simple
-				return (count == 1 && max_value >= data->_mp_d[0]);
-				
+			boost::uint64_t value = 0;
+			boost::uint64_t power = 1;
+
+			int count = data->_mp_size >= 0 ? data->_mp_size : -data->_mp_size; // abs() does not work on MSVC8
+
 			for (int i = 0; i < count; ++i)
 			{
-				if (max_value < data->_mp_d[i]) return false;
-				max_value >>= GMP_NUMB_BITS;
+				value += data->_mp_d[i] * power;
+				power <<= GMP_NUMB_BITS;
 			}
 			
-			return true;
-		}
-
-		template <typename T> bool _can_convert_to_unsigned() const
-		{
-			switch (mpz_sgn(data))
-			{
-			case 0: return true;
-			case -1: return false; // Negative numbers can't fit into unsigned types
-			}
-			
-			boost::uint64_t max_value = (std::numeric_limits<T>::max)();
-			
-			if (GMP_NUMB_BITS >= sizeof(T) * 8) // we're going to have problems with >>= wodn there - but the check is simple
-				return (data->_mp_size == 1 && max_value >= data->_mp_d[0]);
-			
-			for (int i = 0; i < data->_mp_size; ++i)
-			{
-				if (max_value < data->_mp_d[i]) return false;
-				max_value >>= GMP_NUMB_BITS;
-			}
-			
-			return true;
+			return value;
 		}
 
 		template <typename T> bool can_convert_to() const
@@ -349,23 +319,32 @@ namespace boost { namespace detail {
 			// Only integer types supported
 			if (!std::numeric_limits<T>::is_integer) return false;
 			
-			return std::numeric_limits<T>::is_signed ? _can_convert_to_signed<T>() : _can_convert_to_unsigned<T>();
+			boost::uint64_t max_value;
+			int count;
+			
+			if (mpz_sgn(data) < 0)
+			{
+				count = -data->_mp_size;
+				max_value = static_cast<boost::uint64_t>(-static_cast<boost::int64_t>((std::numeric_limits<T>::min)()));
+			}
+			else
+			{
+				count = data->_mp_size;
+				max_value = (std::numeric_limits<T>::max)();
+			}
+
+			if (count * GMP_NUMB_BITS > sizeof(boost::uint64_t) * 8) // we can't fit in uint64 => we won't fit in anything else
+				return false;
+
+			return max_value >= _to_uint64();
 		}
 		
 		template <typename T> T to_number() const
 		{
 			if (!std::numeric_limits<T>::is_integer) return T();
 			
-			boost::uint64_t value = 0;
-			
-			int count = data->_mp_size >= 0 ? data->_mp_size : -data->_mp_size; // abs() does not work on MSVC8
-			
-			for (int i = 0; i < count; ++i)
-			{
-				value <<= GMP_NUMB_BITS;
-				value += data->_mp_d[i];
-			}
-			
+			boost::uint64_t value = _to_uint64();
+						
 			return data->_mp_size >= 0 ? static_cast<T>(value) : static_cast<T>(-static_cast<boost::int64_t>(value));
 		}
 

@@ -10,8 +10,9 @@ import testing ;
   test-suite bigint
    :
    [ run bigint_simple_test.cpp ]
-   [ run number_ctors.cpp ]
+   [ run number_conversion.cpp ]
    [ run string_conversion.cpp ]
+   [ run can_convert_to.cpp ]
    ;
 }
 
