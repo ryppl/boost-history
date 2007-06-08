@@ -724,23 +724,23 @@ static void append_int_string(LOL *l, int x)
     lol_add(l, list_new(L0, newstr(buffer)));
 }
 
-/* Look up the __DART_RULE__ variable on the given target, and if
+/* Look up the __ACTION_RULE__ variable on the given target, and if
  * non-empty, invoke the rule it names, passing the given info, 
  * timing_info, executed command and command output
  */
-static void call_dart_rule(TARGET* target, int status, timing_info* time,
+static void call_action_rule(TARGET* target, int status, timing_info* time,
     char *executed_command, char *command_output)
 {
-    LIST* dart_rule;
+    LIST* action_rule;
 
     pushsettings(target->settings);
-    dart_rule = var_get( "__DART_RULE__" );
+    action_rule = var_get( "__ACTION_RULE__" );
     popsettings(target->settings);
 
-    if (dart_rule)
+    if (action_rule)
     {
-        /* We'll prepend $(__DART_RULE__[2-]) to the first argument */
-        LIST* initial_args = list_copy( L0, dart_rule->next );
+        /* We'll prepend $(__ACTION_RULE__[2-]) to the first argument */
+        LIST* initial_args = list_copy( L0, action_rule->next );
             
         /* Prepare the argument list */
         FRAME frame[1];
@@ -759,7 +759,7 @@ static void call_dart_rule(TARGET* target, int status, timing_info* time,
             lol_add(frame->args, L0);
 
         if( lol_get( frame->args, 2 ) )
-            evaluate_rule( dart_rule->string, frame );
+            evaluate_rule( action_rule->string, frame );
 
         /* Clean up */
         frame_free( frame );
@@ -777,8 +777,7 @@ static void make_closure(
     if (DEBUG_EXECCMD)
         printf("%f sec system; %f sec user\n", time->system, time->user);
 
-    if (globs.dart_active)
-        call_dart_rule(built, status, time, executed_command, command_output);
+    call_action_rule(built, status, time, executed_command, command_output);
     
     push_state(&state_stack, built, NULL, T_STATE_MAKE1D)->status = status;
 }

@@ -142,7 +142,6 @@ struct globs globs = {
 	0,			/* quitquick */
 	0,			/* newestfirst */
         0,                      /* pipes action stdout and stderr merged to action output */
-        0,                      /* enable dart rule invocation on built targets */
 # ifdef OS_MAC
 	{ 0, 0 },		/* debug - suppress tracing output */
 # else
@@ -229,7 +228,7 @@ int  main( int argc, char **argv, char **arg_environ )
 
     argc--, argv++;
 
-    if( getoptions( argc, argv, "-:rno:l:d:j:p:f:gs:t:ano:qv", optv ) < 0 )
+    if( getoptions( argc, argv, "-:l:d:j:p:f:gs:t:ano:qv", optv ) < 0 )
     {
         printf( "\nusage: %s [ options ] targets...\n\n", progname );
 
@@ -268,9 +267,6 @@ int  main( int argc, char **argv, char **arg_environ )
     }
 
     /* Pick up interesting options */
-
-    if( ( s = getoptval( optv, 'r', 0 ) ) )
-        globs.dart_active = 1;
 
     if( ( s = getoptval( optv, 'n', 0 ) ) )
         globs.noexec++, globs.debug[2] = 1;

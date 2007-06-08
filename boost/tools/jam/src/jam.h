@@ -523,7 +523,6 @@ struct globs {
 	int	quitquick;
 	int	newestfirst;		/* build newest sources first */
         int     pipe_action;
-        int     dart_active;
 	char	debug[DEBUG_MAX];
 	FILE	*cmdout;		/* print cmds, not run them */
     long timeout;           /* number of seconds to limit actions to, default 0 for no limit. */
