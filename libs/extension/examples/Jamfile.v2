@@ -16,6 +16,10 @@ project
 exe HelloWorld : main.cpp ;
 lib HelloWorldLib : hello_world.cpp : <link>shared ;
 
+exe HelloWorldVersions : versioning/main_versions.cpp ;
+lib HelloWorldLibv2 : versioning/hello_world_versions.cpp : <link>shared ;
+lib SaluteLib : versioning/salute.cpp : <link>shared ;
+
 exe Parameters : parameters/main_lp.cpp ;
 lib ParametersLib : parameters/lots_of_parameters.cpp : <link>shared ;
 
