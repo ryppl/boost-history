@@ -40,7 +40,7 @@ macro(boost_test_parse_args testname)
   set(BOOST_TEST_OKAY TRUE)
   set(BOOST_TEST_COMPILE_FLAGS "")
   parse_arguments(BOOST_TEST 
-    "LINK_LIBS;DEPENDS;COMPILE_FLAGS;ARGS"
+    "LINK_LIBS;LINK_FLAGS;DEPENDS;COMPILE_FLAGS;ARGS"
     ""
     ${ARGN}
     )
@@ -83,6 +83,7 @@ macro(boost_test_run testname)
     set_target_properties(${testname}
       PROPERTIES
       COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
+      LINK_FLAGS "${BOOST_TEST_LINK_FLAGS}"
       OUTPUT_NAME ${PROJECT_NAME}/${testname})
     target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
     target_link_libraries(${testname} ${BOOST_TEST_LINK_LIBS})
