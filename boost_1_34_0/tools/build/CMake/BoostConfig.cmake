@@ -25,6 +25,7 @@
 #   MULTI_THREADED_LINK_FLAGS:                                           #
 #     Linker flags when building multi-threaded programs.                #
 ##########################################################################
+include(CheckCXXSourceCompiles)
 
 # Toolset detection.
 if (NOT BOOST_TOOLSET)
