@@ -1,44 +1,65 @@
 ##########################################################################
-# Boost core support                                                     #
+# Core Functionality for Boost                                           #
 ##########################################################################
-
-# Put the libs and bins that get built into directories at the top of
-# the build tree rather than in hard to find leaf directories
-SET(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
-SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-
-# append to a variable
-macro(append varname)
-  set(${varname} ${${varname}} ${ARGN})
-endmacro(append varname)
+# Copyright (C) 2007 Douglas Gregor <doug.gregor@gmail.com>              #
+# Copyright (C) 2007 Troy Straszheim                                     #
+#                                                                        #
+# Distributed under the Boost Software License, Version 1.0.             #
+# See accompanying file LICENSE_1_0.txt or copy at                       #
+#   http://www.boost.org/LICENSE_1_0.txt                                 #
+##########################################################################
+# Important developer macros in this file:                               #
+#                                                                        #
+#   boost_library_project: Defines a Boost library project (e.g.,        #
+#   Boost.Python).                                                       #
+#                                                                        #
+#   boost_library: Builds library binaries for Boost libraries with      #
+#   compiled sources (e.g., boost_filesystem).                           #
+##########################################################################
 
 # Defines a Boost library project (e.g., for Boost.Python). Use as:
 #
-#   boost_library_project(libname, subdir1, subdir2, ...)
+#   boost_library_project(libname
+#                         [SRCDIRS srcdir1 srcdir2 ...] 
+#                         [TESTDIRS testdir1 testdir2 ...])
 #
 # where libname is the name of the library (e.g., Python, or
-# Filesystem) and subdir1, subdir2, etc. are the subdirectories that
-# contain CMakeLists files.
+# Filesystem), srcdir1, srcdir2, etc, are subdirectories containing
+# library sources (for Boost libraries that build actual library
+# binaries), and testdir1, testdir2, etc, are subdirectories
+# containing regression tests.
 #
-# This macro will define an option BUILD_BOOST_LIBNAME (which defaults
-# to ON). When the option is true, this macro will include the
-# subdirectories; otherwise, none of the subdirectories will be
-# included, so the library itself will not be built, installed, or
-# tested.
-macro(boost_library_project libname_)
+# For libraries that build actual library binaries, this macro adds a
+# option BUILD_BOOST_LIBNAME (which defaults to ON). When the option
+# is ON, this macro will include the source subdirectories, and
+# therefore, will build and install the library binary.
+#
+# For libraries that have regression tests, and when testing is
+# enabled globally by the BUILD_TESTING option, this macro also
+# defines the TEST_BOOST_LIBNAME option (defaults to ON). When ON, the
+# generated makefiles/project files will contain regression tests for
+# this library.
+#
+# Example: 
+#   boost_library_project(
+#     Thread
+#     SRCDIRS src 
+#     TESTDIRS test
+#     )
+macro(boost_library_project LIBNAME)
   parse_arguments(THIS_PROJECT
     "SRCDIRS;TESTDIRS"
     ""
     ${ARGN}
     )
 
-  string(TOUPPER "BUILD_BOOST_${libname_}" BOOST_BUILD_LIB_OPTION)
+  string(TOUPPER "BUILD_BOOST_${LIBNAME}" BOOST_BUILD_LIB_OPTION)
   if (THIS_PROJECT_SRCDIRS)
     # This Boost library has source directories, so provide an option
     # BUILD_BOOST_LIBNAME that allows one to turn on/off building of
     # the library.
     option(${BOOST_BUILD_LIB_OPTION} 
-      "Build Boost.${libname_} (prefer make targets, not this, to build individual libs)" 
+      "Build Boost.${LIBNAME} (prefer make targets, not this, to build individual libs)" 
       ON)
   else (THIS_PROJECT_SRCDIRS)
     # This Boost library has no source directories, and therefore does
@@ -48,7 +69,7 @@ macro(boost_library_project libname_)
   endif (THIS_PROJECT_SRCDIRS)
 
   if(${BOOST_BUILD_LIB_OPTION})
-    string(TOLOWER "${libname_}" libname)
+    string(TOLOWER "${LIBNAME}" libname)
     project(${libname})
 
     if(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
@@ -63,9 +84,9 @@ macro(boost_library_project libname_)
     if(BUILD_TESTING AND THIS_PROJECT_TESTDIRS)
       # Testing is enabled globally and this project has some
       # tests. So, add a testing option.
-      string(TOUPPER "TEST_BOOST_${libname_}" BOOST_TEST_LIB_OPTION)
+      string(TOUPPER "TEST_BOOST_${LIBNAME}" BOOST_TEST_LIB_OPTION)
       option(${BOOST_TEST_LIB_OPTION} 
-        "Enable testing of Boost.${libname_}" 
+        "Enable testing of Boost.${LIBNAME}" 
         ON)
 
       # Only include the test directories when testing is enabled for
@@ -79,35 +100,52 @@ macro(boost_library_project libname_)
   endif(${BOOST_BUILD_LIB_OPTION})
 endmacro(boost_library_project)
 
+# This macro is an internal utility macro that builds the name of a
+# particular variant of a library
+#
+#   boost_library_variant_target_name(feature1 feature2 ...)
+#
+# where feature1, feature2, etc. are the names of features to be
+# included in this variant, e.g., MULTI_THREADED, DEBUG. 
+#
+# This macro sets two macros:
+#   
+#   VARIANT_TARGET_NAME: The suffix that should be appended to the
+#   name of the library target to name this variant of the
+#   library. For example, this might be "-mt-static" for a static,
+#   multi-threaded variant. It should be used to name the CMake
+#   library target, e.g., boost_signals-mt-static.
+#
+#   VARIANT_VERSIONED_NAME: The suffix that will be added to the name
+#   of the generated library, containing information about the
+#   particular version of the library and the toolset used to build
+#   this library. For example, this might be "-gcc41-mt-1_34" for the
+#   multi-threaded, release variant of the library in Boost 1.34.0 as
+#   compiled with GCC 4.1.
 macro(boost_library_variant_target_name)
   set(VARIANT_TARGET_NAME "")
-  set(VARIANT_VERSIONED_NAME "")
-
-  if (BUILD_VERSIONED)
-    # If we're using versioning for the names of our generated
-    # libraries, detect the full toolset name.
-    set(VARIANT_VERSIONED_NAME "-${BOOST_TOOLSET}")
-  endif (BUILD_VERSIONED)
 
   # Add -mt for multi-threaded libraries
-  list_contains(variant_is_mt MULTI_THREADED ${ARGN})
-  if (variant_is_mt)
+  list_contains(VARIANT_IS_MT MULTI_THREADED ${ARGN})
+  if (VARIANT_IS_MT)
     set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-mt")
 
-    if (BUILD_VERSIONED)
-      # If we're creating versioned names, tack on "-mt"
-      set(VARIANT_VERSIONED_NAME "${VARIANT_VERSIONED_NAME}-mt")
-    endif (BUILD_VERSIONED)
-  endif (variant_is_mt)
+    # If we're creating versioned names, tack on "-mt"
+    set(VARIANT_VERSIONED_NAME "${VARIANT_VERSIONED_NAME}-mt")
+  endif (VARIANT_IS_MT)
 
   # Add -static for static libraries, -shared for shared libraries
-  list_contains(variant_is_static STATIC ${ARGN})
-  if (variant_is_static)
+  list_contains(VARIANT_IS_STATIC STATIC ${ARGN})
+  if (VARIANT_IS_STATIC)
     set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-static")
-  else (variant_is_static)
+  else (VARIANT_IS_STATIC)
     set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-shared")
-  endif (variant_is_static)
+  endif (VARIANT_IS_STATIC)
 
+  # The versioned name starts with the full Boost toolset
+  set(VARIANT_VERSIONED_NAME "-${BOOST_TOOLSET}")
+
+  # Compute the ABI tag, which depends on various kinds of options
   set(VARIANT_ABI_TAG "")
 
   # TODO: Linking statically to the runtime library
@@ -117,32 +155,48 @@ macro(boost_library_variant_target_name)
   # TODO: STLport's deprecated iostreams
 
   # Add -debug for debug libraries
-  list_contains(variant_is_debug DEBUG ${ARGN})
-  if (variant_is_debug)
+  list_contains(VARIANT_IS_DEBUG DEBUG ${ARGN})
+  if (VARIANT_IS_DEBUG)
     set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-debug")
+    set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}d")
+  endif (VARIANT_IS_DEBUG)
 
-    if (BUILD_VERSIONED)
-      set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}d")
-    endif (BUILD_VERSIONED)
-  endif (variant_is_debug)
+  # If there is an ABI tag, append it to the versioned name
+  if (VARIANT_ABI_TAG)
+    set(VARIANT_VERSIONED_NAME "${VARIANT_VERSIONED_NAME}-${VARIANT_ABI_TAG}")
+  endif (VARIANT_ABI_TAG)
 
-  if (BUILD_VERSIONED)
-    # If there is an ABI tag, append it to the versioned name
-    if (VARIANT_ABI_TAG)
-      set(VARIANT_VERSIONED_NAME "${VARIANT_VERSIONED_NAME}-${VARIANT_ABI_TAG}")
-    endif (VARIANT_ABI_TAG)
-
-    # Append the Boost version number to the versioned name
-    if(BOOST_VERSION_SUBMINOR GREATER 0)
-      set(VARIANT_VERSIONED_NAME
-        "${VARIANT_VERSIONED_NAME}-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}_${BOOST_VERSION_SUBMINOR}")
-    else(BOOST_VERSION_SUBMINOR GREATER 0)
-      set(VARIANT_VERSIONED_NAME 
-        "${VARIANT_VERSIONED_NAME}-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}")
-    endif(BOOST_VERSION_SUBMINOR GREATER 0)
-  endif (BUILD_VERSIONED)
+  # Append the Boost version number to the versioned name
+  if(BOOST_VERSION_SUBMINOR GREATER 0)
+    set(VARIANT_VERSIONED_NAME
+      "${VARIANT_VERSIONED_NAME}-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}_${BOOST_VERSION_SUBMINOR}")
+  else(BOOST_VERSION_SUBMINOR GREATER 0)
+    set(VARIANT_VERSIONED_NAME 
+      "${VARIANT_VERSIONED_NAME}-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}")
+  endif(BOOST_VERSION_SUBMINOR GREATER 0)
 endmacro(boost_library_variant_target_name)
 
+# This macro is an internal utility macro that builds a particular
+# variant of a boost library.
+#
+#   boost_library_variant(libname 
+#                         feature1 feature2 ...)
+#
+# where libname is the name of the Boost library (e.g.,
+# "boost_filesystem") and feature1, feature2, ... are the features
+# that will be used in this variant. 
+#
+# This macro will define a new library target based on libname and the
+# specific variant name (see boost_library_variant_target_name), which
+# depends on the utility target libname. The compilation and linking
+# flags for this library are defined by THIS_LIB_COMPILE_FLAGS,
+# THIS_LIB_LINK_FLAGS, THIS_LIB_LINK_LIBS, and all of the compile and
+# linking flags implied by the features provided.
+#
+# If any of the features listed conflict with this library, no new
+# targets will be built. For example, if the library provides the
+# option NOT_MULTI_THREADED, and one of the features provided is
+# MULTI_THREADED, this macro will essentially be a no-op.
 macro(boost_library_variant LIBNAME)
   set(THIS_VARIANT_COMPILE_FLAGS "${THIS_LIB_COMPILE_FLAGS}")
   set(THIS_VARIANT_LINK_FLAGS "${THIS_LIB_LINK_FLAGS}")
@@ -332,14 +386,129 @@ macro(boost_add_default_variant)
   endforeach(FEATURE ${ARGN})
 endmacro(boost_add_default_variant)
 
-macro(boost_library)
+# Creates a new Boost library target that generates a compiled library
+# (.a, .lib, .dll, .so, etc) from source files. This routine will
+# actually build several different variants of the same library, with
+# different compilation options, as determined by the set of "default"
+# library variants.
+#
+#   boost_library(libname
+#                 source1 source2 ...
+#                 [COMPILE_FLAGS compileflags]
+#                 [feature_COMPILE_FLAGS compileflags]
+#                 [LINK_FLAGS linkflags]
+#                 [feature_LINK_FLAGS linkflags]
+#                 [LINK_LIBS linklibs]
+#                 [feature_LINK_LIBS linklibs]
+#                 [DEPENDS libdepend1 libdepend2 ...]
+#                 [STATIC_TAG]
+#                 [MODULE]
+#                 [NOT_feature])
+#
+# where libname is the name of Boost library binary (e.g.,
+# "boost_regex") and source1, source2, etc. are the source files used
+# to build the library, e.g., cregex.cpp.
+#
+# This macro has a variety of options that affect its behavior. In
+# several cases, we use the placeholder "feature" in the option name
+# to indicate that there are actually several different kinds of
+# options, each referring to a different build feature, e.g., shared
+# libraries, multi-threaded, debug build, etc. For a complete listing
+# of these features, please refer to the CMakeLists.txt file in the
+# root of the Boost distribution, which defines the set of features
+# that will be used to build Boost libraries by default.
+#
+# The options that affect this macro's behavior are:
+#
+#   COMPILE_FLAGS: Provides additional compilation flags that will be
+#   used when building all variants of the library. For example, one
+#   might want to add "-DBOOST_SIGNALS_NO_LIB=1" through this option
+#   (which turns off auto-linking for the Signals library while
+#   building it).
+#
+#   feature_COMPILE_FLAGS: Provides additional compilation flags that
+#   will be used only when building variants of the library that
+#   include the given feature. For example,
+#   MULTI_THREADED_COMPILE_FLAGS are additional flags that will be
+#   used when building a multi-threaded variant, while
+#   SHARED_COMPILE_FLAGS will be used when building a shared library
+#   (as opposed to a static library).
+#
+#   LINK_FLAGS: Provides additional flags that will be passed to the
+#   linker when linking each variant of the library. This option
+#   should not be used to link in additional libraries; see LINK_LIBS
+#   and DEPENDS.
+#
+#   feature_LINK_FLAGS: Provides additional flags that will be passed
+#   to the linker when building variants of the library that contain a
+#   specific feature, e.g., MULTI_THREADED_LINK_FLAGS. This option
+#   should not be used to link in additional libraries; see
+#   feature_LINK_LIBS.
+#
+#   LINK_LIBS: Provides additional libraries against which each of the
+#   library variants will be linked. For example, one might provide
+#   "expat" as options to LINK_LIBS, to state that each of the library
+#   variants will link against the expat library binary. Use LINK_LIBS
+#   for libraries external to Boost; for Boost libraries, use DEPENDS.
+#
+#   feature_LINK_LIBS: Provides additional libraries for specific
+#   variants of the library to link against. For example,
+#   MULTI_THREADED_LINK_LIBS provides extra libraries to link into
+#   multi-threaded variants of the library.
+#
+#   DEPENDS: States that this Boost libraries depends on and links
+#   against another Boost library. The arguments to DEPENDS should be
+#   the unversioned name of the Boost library, such as
+#   "boost_filesystem". Like LINK_LIBS, this option states that all
+#   variants of the library being built will link against the stated
+#   libraries. Unlike LINK_LIBS, however, DEPENDS takes particular
+#   library variants into account, always linking the variant of one
+#   Boost library against the same variant of the other Boost
+#   library. For example, if the boost_mpi_python library DEPENDS on
+#   boost_python, multi-threaded variants of boost_mpi_python will
+#   link against multi-threaded variants of boost_python.
+#
+#   STATIC_TAG: States that the name of static library variants on
+#   Unix need to be named differently from shared library
+#   variants. This particular option should only be used in rare cases
+#   where the static and shared library variants are incompatible,
+#   such that linking against the shared library rather than the
+#   static library will cause features. When this option is provided,
+#   static libraries on Unix variants will have "-s" appended to their
+#   names. Note: we hope that this is a temporary solution. At
+#   present, it is only used by the Test library.
+#
+#   MODULE: This option states that, when building a shared library,
+#   the shared library should be built as a module rather than a
+#   normal shared library. Modules have special meaning an behavior on
+#   some platforms, such as Mac OS X.
+#
+#   NOT_feature: States that library variants containing a particular
+#   feature should not be built. For example, passing
+#   NOT_SINGLE_THREADED suppresses generation of single-threaded
+#   variants of this library.
+#
+#
+# Example:
+#   boost_library(
+#     boost_thread
+#     barrier.cpp condition.cpp exceptions.cpp mutex.cpp once.cpp 
+#     recursive_mutex.cpp thread.cpp tss_hooks.cpp tss_dll.cpp tss_pe.cpp 
+#     tss.cpp xtime.cpp
+#     SHARED_COMPILE_FLAGS "-DBOOST_THREAD_BUILD_DLL=1"
+#     STATIC_COMPILE_FLAGS "-DBOOST_THREAD_BUILD_LIB=1"
+#     NO_SINGLE_THREADED
+#   )
+#
+# TODO: 
+#   - Rename this to boost_add_library.
+macro(boost_library LIBNAME)
   parse_arguments(THIS_LIB
-    "DEPENDS;LINK_LIBS;COMPILE_FLAGS;LINK_FLAGS;${BOOST_ADDLIB_ARG_NAMES}"
+    "DEPENDS;COMPILE_FLAGS;LINK_FLAGS;LINK_LIBS;${BOOST_ADDLIB_ARG_NAMES}"
     "STATIC_TAG;MODULE;${BOOST_ADDLIB_OPTION_NAMES}"
     ${ARGN}
     )
-  car(LIBNAME ${THIS_LIB_DEFAULT_ARGS})
-  cdr(THIS_LIB_SOURCES ${THIS_LIB_DEFAULT_ARGS})
+  set(THIS_LIB_SOURCES ${THIS_LIB_DEFAULT_ARGS})
 
   # A top-level target that refers to all of the variants of the
   # library, collectively.
@@ -353,3 +522,4 @@ macro(boost_library)
   endforeach(VARIANT_STR ${BOOST_DEFAULT_VARIANTS})
 endmacro(boost_library)
 
+# TODO: Create boost_add_executable, which deals with variants well
