@@ -4,6 +4,32 @@ include(FindPythonLibs)
 if (PYTHON_LIBRARIES)
   include_directories(${PYTHON_INCLUDE_PATH})
 
+  # Determine extra libraries we need to link against to build Python
+  # extension modules.
+  if(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
+    set(PYTHON_LIBRARIES ${PYTHON_LIBRARIES} "dl")
+    if(CMAKE_COMPILER_IS_GNUCXX)
+      set(PYTHON_LIBRARIES ${PYTHON_LIBRARIES} "rt")
+    endif(CMAKE_COMPILER_IS_GNUCXX)
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "OSF")
+    set(PYTHON_LIBRARIES ${PYTHON_LIBRARIES} "pthread" "dl")
+    if(CMAKE_COMPILER_IS_GNUCXX)
+      set(PYTHON_LIBRARIES ${PYTHON_LIBRARIES} "rt")
+    endif(CMAKE_COMPILER_IS_GNUCXX)    
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "QNX")
+    # No options necessary for QNX
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+    # No options necessary for Mac OS X
+  elseif(CMAKE_SYSTEM_NAME STREQUAL "HP-UX")
+    set(PYTHON_LIBRARIES ${PYTHON_LIBRARIES} "rt")
+  elseif(UNIX)
+    # Assume -pthread and -ldl on all other variants
+    set(PYTHON_LIBRARIES ${PYTHON_LIBRARIES} "pthread" "dl")
+    if(CMAKE_COMPILER_IS_GNUCXX)
+      set(PYTHON_LIBRARIES ${PYTHON_LIBRARIES} "util")
+    endif(CMAKE_COMPILER_IS_GNUCXX)    
+  endif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
+
   macro(boost_python_extension MODULE_NAME)
     parse_arguments(BPL_EXT 
       "" 
