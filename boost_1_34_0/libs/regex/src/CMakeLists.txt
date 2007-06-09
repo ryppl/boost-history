@@ -7,7 +7,7 @@ if (ICU_FOUND AND ICU_I18N_FOUND)
   set(BOOST_REGEX_LIBRARIES ${ICU_LIBRARIES} ${ICU_I18N_LIBRARIES})
 endif (ICU_FOUND AND ICU_I18N_FOUND)
  
-boost_library(boost_regex
+boost_add_library(boost_regex
    c_regex_traits.cpp
    cpp_regex_traits.cpp
    cregex.cpp

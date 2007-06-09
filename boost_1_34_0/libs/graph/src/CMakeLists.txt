@@ -19,7 +19,7 @@ if (EXPAT_FOUND)
       "${BOOST_GRAPH_OPTIONAL_LIBRARIES} ${EXPAT_LIBRARIES}")
 endif (EXPAT_FOUND)
 
-boost_library(
+boost_add_library(
   boost_graph
   read_graphviz_spirit.cpp ${BOOST_GRAPH_OPTIONAL_SOURCES}
   LINK_LIBS ${BOOST_GRAPH_OPTIONAL_LIBRARIES}

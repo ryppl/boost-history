@@ -1,4 +1,4 @@
-boost_library(boost_python
+boost_add_library(boost_python
   numeric.cpp 
   list.cpp 
   long.cpp 

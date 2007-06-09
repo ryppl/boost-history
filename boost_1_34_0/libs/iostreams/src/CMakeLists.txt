@@ -26,7 +26,7 @@ if (BZIP2_FOUND)
   # NOTE: What to do about BZIP2_NEED_PREFIX?
 endif(BZIP2_FOUND)
 
-boost_library(boost_iostreams
+boost_add_library(boost_iostreams
   file_descriptor.cpp mapped_file.cpp ${BOOST_IOSTREAMS_EXTRA_SOURCES}
   LINK_LIBS "${BOOST_IOSTREAMS_LIBRARIES}"
   SHARED_COMPILE_FLAGS "-DBOOST_IOSTREAMS_DYN_LINK=1")
