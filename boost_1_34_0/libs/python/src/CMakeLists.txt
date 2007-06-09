@@ -1,7 +1,23 @@
 if (PYTHON_DEBUG_LIBRARIES AND BUILD_BOOST_PYTHON)
+  # We have detected that there might be Python debug libraries
+  # available, but check for ourselves whether this is true by trying
+  # to compile/link a program against them.
+  set(CMAKE_REQUIRED_DEFINITIONS "-DBOOST_DEBUG_PYTHON -DPy_DEBUG")
+  get_directory_property(CMAKE_REQUIRED_INCLUDES INCLUDE_DIRECTORIES)
+  set(CMAKE_REQUIRED_LIBRARIES ${PYTHON_DEBUG_LIBRARIES})
+  set(CHECK_PYDEBUG_SOURCE
+    "#include <boost/python/object.hpp>")
+  check_cxx_source_compiles(
+    "#include <boost/python/object.hpp>
+    void check(PyObject *obj) { Py_INCREF(obj); } int main() { }" 
+    PYDEBUG_CAN_BUILD)
+
+  # Setup an option to enable/disable building variants with Python
+  # debugging. If we were able to link against the debug libraries,
+  # default to ON; otherwise, default to OFF.
   option(BUILD_PYTHON_DEBUG
     "Build an additional Boost.Python library with Python debugging enabled"
-    OFF)
+    ${PYDEBUG_CAN_BUILD})
 endif (PYTHON_DEBUG_LIBRARIES AND BUILD_BOOST_PYTHON)
 
 # Always build the non-debug variants of the boost_python library
