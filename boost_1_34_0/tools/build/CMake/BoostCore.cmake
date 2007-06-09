@@ -562,17 +562,21 @@ macro(boost_add_library LIBNAME)
   # library, collectively.
   add_custom_target(${LIBNAME})
 
-  # Build the set of variants that we will generate for this library
-  set(THIS_LIB_VARIANTS)
-  foreach(VARIANT ${BOOST_DEFAULT_VARIANTS})
-    foreach(EXTRA_VARIANT ${THIS_LIB_EXTRA_VARIANTS})
-      string(REPLACE ":" ";" FEATURES "${EXTRA_VARIANT}")
-      separate_arguments(FEATURES)
-      foreach(FEATURE ${FEATURES})
-        list(APPEND THIS_LIB_VARIANTS "${VARIANT}:${FEATURE}")
-      endforeach(FEATURE ${FEATURES})
-    endforeach(EXTRA_VARIANT ${THIS_LIB_EXTRA_VARIANTS})
-  endforeach(VARIANT ${BOOST_DEFAULT_VARIANTS})
+  if (THIS_LIB_EXTRA_VARIANTS)
+    # Build the set of variants that we will generate for this library
+    set(THIS_LIB_VARIANTS)
+    foreach(VARIANT ${BOOST_DEFAULT_VARIANTS})
+      foreach(EXTRA_VARIANT ${THIS_LIB_EXTRA_VARIANTS})
+        string(REPLACE ":" ";" FEATURES "${EXTRA_VARIANT}")
+        separate_arguments(FEATURES)
+        foreach(FEATURE ${FEATURES})
+          list(APPEND THIS_LIB_VARIANTS "${VARIANT}:${FEATURE}")
+        endforeach(FEATURE ${FEATURES})
+      endforeach(EXTRA_VARIANT ${THIS_LIB_EXTRA_VARIANTS})
+    endforeach(VARIANT ${BOOST_DEFAULT_VARIANTS})
+  else (THIS_LIB_EXTRA_VARIANTS)
+    set(THIS_LIB_VARIANTS ${BOOST_DEFAULT_VARIANTS})
+  endif (THIS_LIB_EXTRA_VARIANTS)
 
   # Build each of the library variants
   foreach(VARIANT_STR ${THIS_LIB_VARIANTS})
