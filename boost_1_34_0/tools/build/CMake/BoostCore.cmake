@@ -148,7 +148,13 @@ macro(boost_library_variant_target_name)
   # Compute the ABI tag, which depends on various kinds of options
   set(VARIANT_ABI_TAG "")
 
-  # TODO: Linking statically to the runtime library
+  # Linking statically to the runtime library
+  list_contains(VARIANT_IS_STATIC_RUNTIME STATIC_RUNTIME ${ARGN})
+  if (VARIANT_IS_STATIC_RUNTIME)
+    set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-staticrt")
+    set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}s")
+  endif (VARIANT_IS_STATIC_RUNTIME)
+  
   # TODO: Using debug versions of the standard/runtime support libs
 
   # Add -pydebug for debug builds of Python

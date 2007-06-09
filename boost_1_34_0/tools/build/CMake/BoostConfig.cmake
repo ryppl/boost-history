@@ -109,3 +109,8 @@ elseif(UNIX)
   set(MULTI_THREADED_LINK_LIBS pthread rt)
 endif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
 
+# Static and dynamic runtime linking options
+if(MSVC)
+  set(RUNTIME_STATIC_LINK_FLAGS "/MT")
+  set(RUNTIME_DYNAMIC_LINK_FLAGS "/MD")
+endif(MSVC)

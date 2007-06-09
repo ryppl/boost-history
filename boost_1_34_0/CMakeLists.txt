@@ -58,10 +58,23 @@ option(BUILD_RELEASE "Whether to build release libraries" ON)
 option(BUILD_SINGLE_THREADED "Whether to build single-threaded libraries" ON)
 option(BUILD_MULTI_THREADED "Whether to build multi-threaded libraries" ON)
 
+# For now, we only actually support static/dynamic run-time variants for 
+# Visual C++. Provide both options for Visual C++ users, but just fix
+# the values of the variables for all other platforms.
+if(MSVC)
+  option(BUILD_STATIC_RUNTIME "Whether to build libraries linking against the static runtime" ON)
+  option(BUILD_DYNAMIC_RUNTIME "Whether to build libraries linking against the dynamic runtime" ON)
+else(MSVC)
+  set(BUILD_STATIC_RUNTIME OFF)
+  set(BUILD_DYNAMIC_RUNTIME ON)
+endif(MSVC)
+
 # The default set of library variants that we will be building
 boost_add_default_variant(STATIC SHARED)
 boost_add_default_variant(DEBUG RELEASE)
 boost_add_default_variant(SINGLE_THREADED MULTI_THREADED)
+boost_add_default_variant(STATIC_RUNTIME DYNAMIC_RUNTIME)
+
 
 # Extra features used by some libraries
 boost_add_extra_variant(PYTHON_NODEBUG PYTHON_DEBUG)
@@ -113,7 +126,7 @@ include(CPack)
 # include files in boost/
 include_directories(${Boost_SOURCE_DIR})
 
-# Put the libaroes and binaroes that get built into directories at the
+# Put the libaries and binaries that get built into directories at the
 # top of the build tree rather than in hard-to-find leaf
 # directories. This simplifies manual testing and the use of the build
 # tree rather than installed Boost libraries.
