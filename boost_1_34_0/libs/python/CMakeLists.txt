@@ -35,6 +35,7 @@ if (PYTHON_LIBRARIES)
     endif(CMAKE_COMPILER_IS_GNUCXX)    
   endif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
 
+  # Macro for building Boost.Python extension modules
   macro(boost_python_extension MODULE_NAME)
     parse_arguments(BPL_EXT 
       "" 

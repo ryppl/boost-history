@@ -62,6 +62,9 @@ option(BUILD_MULTI_THREADED "Whether to build multi-threaded libraries" ON)
 boost_add_default_variant(STATIC SHARED)
 boost_add_default_variant(DEBUG RELEASE)
 boost_add_default_variant(SINGLE_THREADED MULTI_THREADED)
+
+# Extra features used by some libraries
+boost_add_extra_variant(PYTHON_NODEBUG PYTHON_DEBUG)
 ##########################################################################
 
 ##########################################################################

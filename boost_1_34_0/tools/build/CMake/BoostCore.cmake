@@ -150,6 +150,14 @@ macro(boost_library_variant_target_name)
 
   # TODO: Linking statically to the runtime library
   # TODO: Using debug versions of the standard/runtime support libs
+
+  # Add -pydebug for debug builds of Python
+  list_contains(VARIANT_IS_PYDEBUG PYTHON_DEBUG ${ARGN})
+  if (VARIANT_IS_PYDEBUG)
+    set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-pydebug")
+    set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}y")
+  endif (VARIANT_IS_PYDEBUG)
+
   # TODO: using debug build of Python
   # TODO: STLport rather than default library
   # TODO: STLport's deprecated iostreams
@@ -325,7 +333,7 @@ endmacro(boost_library_variant)
 # 
 #    boost_add_default_variant(SINGLE_THREADED MULTI_THREADED)
 #
-# Will create single- and multi-threaded variants of every default
+# will create single- and multi-threaded variants of every default
 # library variant already defined, doubling the number of variants
 # that will be built. See the top-level CMakeLists.txt for the set of
 # default variants.
@@ -341,7 +349,6 @@ endmacro(boost_library_variant)
 #     STATIC:DEBUG:SINGLE_THREADED.
 #
 #   BOOST_ADDLIB_ARG_NAMES:
-#
 #     This variable describes all of the feature-specific arguments
 #     that can be used for the boost_library macro, separated by
 #     semicolons. For example, given the use of
@@ -357,7 +364,6 @@ endmacro(boost_library_variant)
 #     used only for multi-threaded variants of the library.
 #
 #   BOOST_ADDLIB_OPTION_NAMES:
-#
 #     Like BOOST_ADDLIB_ARG_NAMES, this variable describes
 #     feature-specific options to boost_library that can be used to
 #     turn off building of the library when the variant would require
@@ -381,10 +387,47 @@ macro(boost_add_default_variant)
   # Feature flag options, used by the boost_library macro
   foreach(FEATURE ${ARGN})
     set(BOOST_ADDLIB_ARG_NAMES 
-      "${BOOST_ADDLIB_ARG_NAMES};${FEATURE}_COMPILE_FLAGS;${FEATURE}_LINK_FLAGS:${FEATURE}_LINK_LIBS")
+      "${BOOST_ADDLIB_ARG_NAMES};${FEATURE}_COMPILE_FLAGS;${FEATURE}_LINK_FLAGS;${FEATURE}_LINK_LIBS")
     set(BOOST_ADDLIB_OPTION_NAMES "${BOOST_ADDLIB_OPTION_NAMES};NO_${FEATURE}")
   endforeach(FEATURE ${ARGN})
 endmacro(boost_add_default_variant)
+
+# Updates the set of "extra" build variants, which may be used to
+# generate extra, library-specific variants of libraries.
+#
+#   boost_add_extra_variant(feature-val1 feature-val2 ...)
+#
+# Each extra viarant makes it possible for libraries to define extra
+# variants.  For example, writing:
+# 
+#    boost_add_extra_variant(PYTHON_NODEBUG PYTHON_DEBUG)
+#
+# creates a PYTHON_NODEBUG/PYTHON_DEBUG feature pair as an extra
+# variant, used by the Boost.Python library, which generates separate
+# variants of the Boost.Python library: one variant uses the Python
+# debug libraries, the other does not.
+#
+# The difference between boost_add_default_variant and
+# boost_add_extra_variant is that adding a new default variant
+# introduces additional variants to *all* Boost libraries, unless
+# those variants are explicitly excluded by the library. Adding a new
+# extra variant, on the other hand, allows librarie to specifically
+# request extra variants using that feature.
+#
+# Variables affected:
+#
+#   BOOST_ADDLIB_ARG_NAMES: 
+#     See boost_add_default_variant.
+#
+#   BOOST_ADDLIB_OPTION_NAMES:
+#     See boost_add_default_variant.
+macro(boost_add_extra_variant)
+  foreach(FEATURE ${ARGN})
+    set(BOOST_ADDLIB_ARG_NAMES 
+      "${BOOST_ADDLIB_ARG_NAMES};${FEATURE}_COMPILE_FLAGS;${FEATURE}_LINK_FLAGS;${FEATURE}_LINK_LIBS")
+    set(BOOST_ADDLIB_OPTION_NAMES "${BOOST_ADDLIB_OPTION_NAMES};NO_${FEATURE}")
+  endforeach(FEATURE ${ARGN})  
+endmacro(boost_add_extra_variant)
 
 # Creates a new Boost library target that generates a compiled library
 # (.a, .lib, .dll, .so, etc) from source files. This routine will
@@ -403,7 +446,8 @@ endmacro(boost_add_default_variant)
 #                     [DEPENDS libdepend1 libdepend2 ...]
 #                     [STATIC_TAG]
 #                     [MODULE]
-#                     [NOT_feature])
+#                     [NOT_feature]
+#                     [EXTRA_VARIANTS variant1 variant2 ...])
 #
 # where libname is the name of Boost library binary (e.g.,
 # "boost_regex") and source1, source2, etc. are the source files used
@@ -488,6 +532,13 @@ endmacro(boost_add_default_variant)
 #   NOT_SINGLE_THREADED suppresses generation of single-threaded
 #   variants of this library.
 #
+#   EXTRA_VARIANTS: Specifies that extra variants of this library
+#   should be built, based on the features listed. Each "variant" is a 
+#   colon-separated list of features. For example, passing
+#     EXTRA_VARIANTS "PYTHON_NODEBUG:PYTHON_DEBUG"
+#   will result in the creation of an extra set of library variants,
+#   some with the PYTHON_NODEBUG feature and some with the
+#   PYTHON_DEBUG feature. 
 #
 # Example:
 #   boost_add_library(
@@ -501,7 +552,7 @@ endmacro(boost_add_default_variant)
 #   )
 macro(boost_add_library LIBNAME)
   parse_arguments(THIS_LIB
-    "DEPENDS;COMPILE_FLAGS;LINK_FLAGS;LINK_LIBS;${BOOST_ADDLIB_ARG_NAMES}"
+    "DEPENDS;COMPILE_FLAGS;LINK_FLAGS;LINK_LIBS;EXTRA_VARIANTS;${BOOST_ADDLIB_ARG_NAMES}"
     "STATIC_TAG;MODULE;${BOOST_ADDLIB_OPTION_NAMES}"
     ${ARGN}
     )
@@ -511,12 +562,24 @@ macro(boost_add_library LIBNAME)
   # library, collectively.
   add_custom_target(${LIBNAME})
 
-  # Build each of the default library variants
-  foreach(VARIANT_STR ${BOOST_DEFAULT_VARIANTS})
+  # Build the set of variants that we will generate for this library
+  set(THIS_LIB_VARIANTS)
+  foreach(VARIANT ${BOOST_DEFAULT_VARIANTS})
+    foreach(EXTRA_VARIANT ${THIS_LIB_EXTRA_VARIANTS})
+      string(REPLACE ":" ";" FEATURES "${EXTRA_VARIANT}")
+      separate_arguments(FEATURES)
+      foreach(FEATURE ${FEATURES})
+        list(APPEND THIS_LIB_VARIANTS "${VARIANT}:${FEATURE}")
+      endforeach(FEATURE ${FEATURES})
+    endforeach(EXTRA_VARIANT ${THIS_LIB_EXTRA_VARIANTS})
+  endforeach(VARIANT ${BOOST_DEFAULT_VARIANTS})
+
+  # Build each of the library variants
+  foreach(VARIANT_STR ${THIS_LIB_VARIANTS})
     string(REPLACE ":" ";" VARIANT ${VARIANT_STR})
     separate_arguments(VARIANT)
     boost_library_variant(${LIBNAME} ${VARIANT})
-  endforeach(VARIANT_STR ${BOOST_DEFAULT_VARIANTS})
+  endforeach(VARIANT_STR ${THIS_LIB_VARIANTS})
 endmacro(boost_add_library)
 
 # TODO: Create boost_add_executable, which deals with variants well
