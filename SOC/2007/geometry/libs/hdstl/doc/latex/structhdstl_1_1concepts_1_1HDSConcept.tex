@@ -1,0 +1,51 @@
+\section{hdstl::concepts::HDSConcept$<$ HDS $>$ Class Template Reference}
+\label{structhdstl_1_1concepts_1_1HDSConcept}\index{hdstl::concepts::HDSConcept@{hdstl::concepts::HDSConcept}}
+HDS concept definition.  
+
+
+{\tt \#include $<$hds\_\-concept.hpp$>$}
+
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class HDS$>$ class hdstl::concepts::HDSConcept$<$ HDS $>$}
+
+HDS concept definition. 
+
+\begin{Desc}
+\item[Definition]This class provides a concept checking class for the \doxyref{HDSConcept}{p.}{structhdstl_1_1concepts_1_1HDSConcept}, i.e., using the statement boost::function\_\-requires$<$HDSConcept$<$HDS$>$ $>$() inside a function body, or BOOST\_\-CLASS\_\-REQUIRE(HDS, boost::hdstl, HDSConcept) inside a class definition body, should trigger a compile-time error if the type HDS does not model the \doxyref{HDSConcept}{p.}{structhdstl_1_1concepts_1_1HDSConcept}.\end{Desc}
+\begin{Desc}
+\item[Refinement of:]This concept is not a refinement of another concept, in particular a model HDS of \doxyref{HDSConcept}{p.}{structhdstl_1_1concepts_1_1HDSConcept} does {\em not\/} need to be Default\-Constructible, Copy\-Constructible, or Assignable.\end{Desc}
+\begin{Desc}
+\item[Notation]\begin{itemize}
+\item HDS A type that is a model of \doxyref{HDSConcept}{p.}{structhdstl_1_1concepts_1_1HDSConcept}\item X The type HDSConcept$<$HDS$>$\item hds A non-modifiable instance of HDS\item h,g Halfedge descriptors, of type X::halfedge\_\-descriptor\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Associated types]\begin{itemize}
+\item X::halfedge\_\-descriptor: must be Default\-Constructible and Copy\-Constructible, Equality\-Comparable, Assignable.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Definitions]{\em halfedge\/} {\em descriptor\/} is a type that contains information to access the halfedge. Note that the halfedge descriptor type (accessible as a member of the hds\_\-traits$<$HDS$>$ type) is an opaque type. All that can be done to it is passing it to the function opposite and letting the hds use the information it contains to find the opposite halfedge. In particular, there is no guarantee that it is a pointer type.\end{Desc}
+\begin{Desc}
+\item[Valid Expressions]\begin{itemize}
+\item opposite(hds, h): Must return a value assignable to h.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Expression Semantics]\begin{itemize}
+\item opposite(hds, h): Returns a descriptor to the halfedge opposite h in the data structure hds. Does not modify the state of either hds, or h\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Complexity guarantees]\begin{itemize}
+\item opposite(hds, h): Amortized constant time.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Invariants]\begin{itemize}
+\item Every valid halfedge descriptor h must have a valid opposite g = opposite(hds, h), {\em distinct\/} from h, such that opposite(hds, g) returns h. (Hence, opposite is an involution.) \end{itemize}
+\end{Desc}
+
+
+
+
+The documentation for this class was generated from the following file:\begin{CompactItemize}
+\item 
+/home/huseyin/Documents/polytechnic/Projects/GSo\-C07/geometry/libs/hdstl/dev/hds\_\-concepts/\bf{hds\_\-concept.hpp}\end{CompactItemize}

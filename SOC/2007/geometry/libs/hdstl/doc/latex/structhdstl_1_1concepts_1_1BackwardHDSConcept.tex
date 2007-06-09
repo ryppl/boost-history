@@ -1,0 +1,51 @@
+\section{hdstl::concepts::Backward\-HDSConcept$<$ HDS $>$ Class Template Reference}
+\label{structhdstl_1_1concepts_1_1BackwardHDSConcept}\index{hdstl::concepts::BackwardHDSConcept@{hdstl::concepts::BackwardHDSConcept}}
+Backward HDS concept definition.  
+
+
+{\tt \#include $<$backward\_\-hds\_\-concept.hpp$>$}
+
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class HDS$>$ class hdstl::concepts::Backward\-HDSConcept$<$ HDS $>$}
+
+Backward HDS concept definition. 
+
+\begin{Desc}
+\item[Definition]This class provides a concept checking for the \doxyref{Backward\-HDSConcept}{p.}{structhdstl_1_1concepts_1_1BackwardHDSConcept}, i.e., using the statement boost::function\_\-requires$<$Backward\-HDSConcept$<$HDS$>$ $>$() inside a function body, or BOOST\_\-CLASS\_\-REQUIRE(HDS, boost::hdstl, \doxyref{Backward\-HDSConcept}{p.}{structhdstl_1_1concepts_1_1BackwardHDSConcept}) inside a class definition body, should trigger a compile-time error if the type HDS does not model the \doxyref{Backward\-HDSConcept}{p.}{structhdstl_1_1concepts_1_1BackwardHDSConcept}.\end{Desc}
+\begin{Desc}
+\item[Refinement of]\end{Desc}
+\begin{Desc}
+\item[HDSConcept]\end{Desc}
+\begin{Desc}
+\item[Associated types]\begin{itemize}
+\item X::halfedge\_\-descriptor: must be Default\-Constructible, Equality\-Comparable, Assignable.\item X::traversal\_\-category: must exist as a type, convertible to backward\_\-traversal\_\-tag.\item X::backward\_\-category: Defines the pointer type for backward iteration.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Notation]\begin{itemize}
+\item X A type that is a model of \doxyref{Backward\-HDSConcept}{p.}{structhdstl_1_1concepts_1_1BackwardHDSConcept}\item h,g halfedge descriptors\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Definitions]{\em halfedge\/} {\em descriptor\/} is a pointer to access the halfedge\end{Desc}
+\begin{Desc}
+\item[Valid Expressions]\begin{itemize}
+\item prev\_\-in\_\-facet(hds,h) : Must return pointer to prev halfedge in backward direction around the facet.\item prev\_\-at\_\-source(hds,h) : Must return pointer to prev halfedge in backward direction around the source.\item prev\_\-at\_\-target(hds,h) : Must return pointer to prev halfedge in backward direction around the target.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Expression Semantics]\end{Desc}
+\begin{Desc}
+\item[Complexity guarantees]\begin{itemize}
+\item prev\_\-in\_\-facet(hds,h) : Amortized constant time.\item prev\_\-at\_\-source(hds,h) : Amortized constant time.\item prev\_\-at\_\-target(hds,h) : Amortized constant time.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Invariants ]\begin{itemize}
+\item This concept should validate \doxyref{HDSConcept}{p.}{structhdstl_1_1concepts_1_1HDSConcept} also.\item backward\_\-category has to be convertible to one of: prev\_\-in\_\-facet, prev\_\-at\_\-source, or prev\_\-at\_\-target.\item traversal\_\-category has to be convertible to backward\_\-traversal\_\-tag\item g = prev\_\-in\_\-facet(hds,h), if defined, g should be a valid type\item g = prev\_\-at\_\-source(hds,h), if defined, g should be a valid type\item g = prev\_\-at\_\-target(hds,h), if defined, g should be a valid type \end{itemize}
+\end{Desc}
+
+
+
+
+The documentation for this class was generated from the following file:\begin{CompactItemize}
+\item 
+/home/huseyin/Documents/polytechnic/Projects/GSo\-C07/geometry/libs/hdstl/dev/hds\_\-concepts/\bf{backward\_\-hds\_\-concept.hpp}\end{CompactItemize}

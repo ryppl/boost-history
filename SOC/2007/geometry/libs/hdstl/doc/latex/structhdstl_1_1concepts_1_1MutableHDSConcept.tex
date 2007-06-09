@@ -1,0 +1,78 @@
+\section{hdstl::concepts::Mutable\-HDSConcept$<$ HDS $>$ Struct Template Reference}
+\label{structhdstl_1_1concepts_1_1MutableHDSConcept}\index{hdstl::concepts::MutableHDSConcept@{hdstl::concepts::MutableHDSConcept}}
+Mutable HDS concept definition.  
+
+
+{\tt \#include $<$mutable\_\-hds\_\-concept.hpp$>$}
+
+\subsection*{Public Types}
+\begin{Indent}{\bf Required types:}\par
+{\em The specialization of hds\_\-traits$<$HDS$>$ must have the required types below }\begin{CompactItemize}
+\item 
+typedef hds\_\-traits$<$ HDS $>$::halfedge\_\-descriptor \textbf{halfedge\_\-descriptor}\label{structhdstl_1_1concepts_1_1MutableHDSConcept_d93251b9204613003ffd3b15517ec82a}
+
+\item 
+typedef hds\_\-traits$<$ HDS $>$::traversal\_\-category \textbf{traversal\_\-category}\label{structhdstl_1_1concepts_1_1MutableHDSConcept_a8283f13b000543f54767aca98e1bd98}
+
+\end{CompactItemize}
+\end{Indent}
+\subsection*{Public Member Functions}
+\begin{Indent}{\bf Defined constraints:}\par
+\begin{CompactItemize}
+\item 
+void \textbf{constraints} ()\label{structhdstl_1_1concepts_1_1MutableHDSConcept_590873bec5b714a1f1339745fe52f593}
+
+\item 
+void \bf{const\_\-constraints} (HDS const \&hds)
+\end{CompactItemize}
+\end{Indent}
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class HDS$>$ struct hdstl::concepts::Mutable\-HDSConcept$<$ HDS $>$}
+
+Mutable HDS concept definition. 
+
+\begin{Desc}
+\item[Definition]This class provides a concept checking for the Mutable \doxyref{HDSConcept}{p.}{structhdstl_1_1concepts_1_1HDSConcept}, i.e., using the statement boost::function\_\-requires$<$HDSConcept$<$HDS$>$ $>$() inside a function body, or BOOST\_\-CLASS\_\-REQUIRE(HDS, boost::hdstl, HDSConcept) inside a class definition body, should trigger a compile-time error if the type HDS does not model the \doxyref{Mutable\-HDSConcept}{p.}{structhdstl_1_1concepts_1_1MutableHDSConcept}.\end{Desc}
+\begin{Desc}
+\item[Refinement of]\end{Desc}
+\begin{Desc}
+\item[Associated types]\begin{itemize}
+\item X::halfedge\_\-descriptor: must be Default\-Constructible, Equality\-Comparable, Assignable.\item X::traversal\_\-category: must exist as a type, no other requirement.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Notation]\begin{itemize}
+\item X A type that is a model of \doxyref{HDSConcept}{p.}{structhdstl_1_1concepts_1_1HDSConcept}\item h, h1, h2 halfedge descriptors\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Definitions]{\em halfedge\/} {\em descriptor\/} is a pointer to access the halfedge\end{Desc}
+\begin{Desc}
+\item[Valid Expressions]\begin{itemize}
+\item set\_\-opposite(hds,h1,h2): Sets the the opposite halfedge.\item h = new\_\-edge(h1,h2) : Creates a new edge, with two halfedges. (Note that halfedges are opposites of each other.)\item delete\_\-edge(h) : Deletes the edge defined by {\em h\/}. (Deletes two halfedges.)\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Expression Semantics]\end{Desc}
+\begin{Desc}
+\item[Complexity guarantees]\begin{itemize}
+\item opposite(hds, h): Amortized constant time.\item set\_\-opposite(hds, h1, h2): Amortized constant time.\item h = new\_\-edge(h1, h2): Amortized constant time.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Invariants ]\begin{itemize}
+\item set\_\-opposite(hds,h1,h2) : after setting should verify h1 = opposite(hds,h2), and h2 = opposite(h1).\item h = new\_\-edge(h1,h2) : should verify h1 = opposite(hds,h2), and h2 = opposite(hds,h1). \end{itemize}
+\end{Desc}
+
+
+
+
+\subsection{Member Function Documentation}
+\index{hdstl::concepts::MutableHDSConcept@{hdstl::concepts::Mutable\-HDSConcept}!const_constraints@{const\_\-constraints}}
+\index{const_constraints@{const\_\-constraints}!hdstl::concepts::MutableHDSConcept@{hdstl::concepts::Mutable\-HDSConcept}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}template$<$class HDS$>$ void \bf{hdstl::concepts::Mutable\-HDSConcept}$<$ HDS $>$::const\_\-constraints (HDS const \& {\em hds})\hspace{0.3cm}{\tt  [inline]}}\label{structhdstl_1_1concepts_1_1MutableHDSConcept_3c0a017321ea292cbf9c7dd216a4882d}
+
+
+Defined const constraints: 
+
+The documentation for this struct was generated from the following file:\begin{CompactItemize}
+\item 
+/home/huseyin/Documents/polytechnic/Projects/GSo\-C07/geometry/libs/hdstl/dev/hds\_\-concepts/mutable\_\-hds\_\-concept.hpp\end{CompactItemize}

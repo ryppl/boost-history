@@ -1,0 +1,51 @@
+\section{hdstl::concepts::Forward\-HDSConcept$<$ HDS $>$ Class Template Reference}
+\label{structhdstl_1_1concepts_1_1ForwardHDSConcept}\index{hdstl::concepts::ForwardHDSConcept@{hdstl::concepts::ForwardHDSConcept}}
+Forward HDS concept definition.  
+
+
+{\tt \#include $<$forward\_\-hds\_\-concept.hpp$>$}
+
+
+
+\subsection{Detailed Description}
+\subsubsection*{template$<$class HDS$>$ class hdstl::concepts::Forward\-HDSConcept$<$ HDS $>$}
+
+Forward HDS concept definition. 
+
+\begin{Desc}
+\item[Definition]This class provides a concept checking for the \doxyref{Forward\-HDSConcept}{p.}{structhdstl_1_1concepts_1_1ForwardHDSConcept}, i.e., using the statement boost::function\_\-requires$<$Forward\-HDSConcept$<$HDS$>$ $>$() inside a function body, or BOOST\_\-CLASS\_\-REQUIRE(HDS, boost::hdstl, \doxyref{Forward\-HDSConcept}{p.}{structhdstl_1_1concepts_1_1ForwardHDSConcept}) inside a class definition body, should trigger a compile-time error if the type HDS does not model the \doxyref{Forward\-HDSConcept}{p.}{structhdstl_1_1concepts_1_1ForwardHDSConcept}.\end{Desc}
+\begin{Desc}
+\item[Refinement of]\end{Desc}
+\begin{Desc}
+\item[HDSConcept]\end{Desc}
+\begin{Desc}
+\item[Associated types]\begin{itemize}
+\item X::halfedge\_\-descriptor: must be Default\-Constructible, Equality\-Comparable, Assignable.\item X::traversal\_\-category: must exist as a type, no other requirement.\item X::forward\_\-category: Defines the pointer type for forward iteration.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Notation]\begin{itemize}
+\item X A type that is a model of \doxyref{Forward\-HDSConcept}{p.}{structhdstl_1_1concepts_1_1ForwardHDSConcept}\item h,g halfedge descriptors\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Definitions]{\em halfedge\/} {\em descriptor\/} is a pointer to access the halfedge\end{Desc}
+\begin{Desc}
+\item[Valid Expressions]\begin{itemize}
+\item next\_\-in\_\-facet(hds,h) : Pointer to next halfedge in forward direction around the facet.\item next\_\-at\_\-source(hds,h) : Pointer to next halfedge in forward direction around the source.\item next\_\-at\_\-target(hds,h) : Pointer to next halfedge in forward direction around the target.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Expression Semantics]\end{Desc}
+\begin{Desc}
+\item[Complexity guarantees]\begin{itemize}
+\item next\_\-in\_\-facet(hds,h) : Amortized constant time\item next\_\-at\_\-source(hds,h) : Amortized constant time\item next\_\-at\_\-target(hds,h) : Amortized constant time\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Invariants ]\begin{itemize}
+\item This concept should validate \doxyref{HDSConcept}{p.}{structhdstl_1_1concepts_1_1HDSConcept} also.\item forward\_\-category has to be convertible to one of: next\_\-in\_\-facet, next\_\-at\_\-source, or next\_\-at\_\-target.\item traversal\_\-category has to be convertible to forward\-S\item g = next\_\-in\_\-facet(hds,h), if defined, g should be a valid type\item g = next\_\-at\_\-source(hds,h), if defined, g should be a valid type\item g = next\_\-at\_\-target(hds,h), if defined, g should be a valid type \end{itemize}
+\end{Desc}
+
+
+
+
+The documentation for this class was generated from the following file:\begin{CompactItemize}
+\item 
+/home/huseyin/Documents/polytechnic/Projects/GSo\-C07/geometry/libs/hdstl/dev/hds\_\-concepts/\bf{forward\_\-hds\_\-concept.hpp}\end{CompactItemize}
