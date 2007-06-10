@@ -11,22 +11,54 @@
     <li><a href="annotated.html"><span>Classes</span></a></li>
     <li id="current"><a href="files.html"><span>Files</span></a></li>
   </ul></div>
-<h1>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/hds_concept.hpp File Reference</h1>
+<h1>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/hds_concept.hpp File Reference</h1>HDS concept definition. <a href="#_details">More...</a>
+<p>
+
 <p>
 <a href="hds__concept_8hpp-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><b>hdstl</b></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><b>hdstl::concepts</b></td></tr>
-
-<tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structhdstl_1_1concepts_1_1HDSConcept.html">hdstl::concepts::HDSConcept&lt; HDS &gt;</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">HDS concept definition.  <a href="structhdstl_1_1concepts_1_1HDSConcept.html#_details">More...</a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-<hr size="1"><address style="align: right;"><small>Generated on Sat Jun 9 00:12:42 2007 by&nbsp;
+HDS concept definition. 
+<p>
+<dl compact><dt><b>Definition</b></dt><dd>This concept is the basic HDS concept, which all the other HDS concepts refine. It contains a few requirements which are common to all the graph concepts. One should note that a model of HDS is not required to be a model of Assignable, so algorithms should pass HDS objects by reference.</dd></dl>
+<dl compact><dt><b>Refinement of:</b></dt><dd>This concept is not a refinement of another concept, in particular a model HDS of HDSConcept does <em>not</em> need to be DefaultConstructible, CopyConstructible, or Assignable.</dd></dl>
+<dl compact><dt><b>Notation</b></dt><dd><ul>
+<li>HDS A type that is a model of HDSConcept</li><li>hds A non-modifiable instance of HDS</li><li>h,g Halfedge descriptors, of type X::halfedge_descriptor</li></ul>
+</dd></dl>
+<dl compact><dt><b>Associated types</b></dt><dd><ul>
+<li>hds_traits&lt;HDS&gt;::halfedge_descriptor: must be DefaultConstructible and CopyConstructible, EqualityComparable, Assignable.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Definitions</b></dt><dd><em>halfedge</em> <em>descriptor</em> is a type that contains information to access the halfedge. Note that the halfedge descriptor type (accessible as a member of the hds_traits&lt;HDS&gt; type) is an opaque type. All that can be done to it is passing it to the function opposite and letting the hds use the information it contains to find the opposite halfedge. In particular, there is no guarantee that it is a pointer type.</dd></dl>
+<dl compact><dt><b>Valid Expressions</b></dt><dd><ul>
+<li>opposite(hds, h): Must return a value assignable to h.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Expression Semantics</b></dt><dd><ul>
+<li>opposite(hds, h): Returns a descriptor to the halfedge opposite h in the data structure hds. Does not modify the state of either hds, or h.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Complexity guarantees</b></dt><dd><ul>
+<li>opposite(hds, h): Amortized constant time.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Invariants</b></dt><dd><ul>
+<li>Every valid halfedge descriptor h must have a valid opposite g = opposite(hds, h), <em>distinct</em> from h, such that opposite(hds, g) returns h. (Hence, opposite is an involution.)</li></ul>
+</dd></dl>
+<dl compact><dt><b>Concept-checking class</b></dt><dd><div class="fragment"><pre class="fragment"> <span class="keyword">template</span> &lt;<span class="keyword">class</span> HDS&gt; 
+ <span class="keyword">struct </span>HDSConcept {
+   <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::halfedge_descriptor halfedge_descriptor; 
+   <span class="keywordtype">void</span> constraints() {
+     <span class="keyword">using namespace </span>boost;
+     function_requires&lt;DefaultConstructibleConcept&lt;halfedge_descriptor&gt; &gt;();
+     function_requires&lt;CopyConstructibleConcept&lt;halfedge_descriptor&gt; &gt;();
+     function_requires&lt;EqualityComparableConcept&lt;halfedge_descriptor&gt; &gt;();
+     function_requires&lt;AssignableConcept&lt;halfedge_descriptor&gt; &gt;();
+     h = opposite(hds,h);
+     const_constraints(hds);
+   }
+   <span class="keywordtype">void</span> const_constraints(HDS <span class="keyword">const</span>&amp; hds) {
+     h = opposite(hds,h);
+   }
+</pre></div> </dd></dl>
+<hr size="1"><address style="align: right;"><small>Generated on Sun Jun 10 00:14:10 2007 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

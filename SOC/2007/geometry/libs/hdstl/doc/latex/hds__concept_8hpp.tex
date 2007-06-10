@@ -1,17 +1,60 @@
 \section{/home/huseyin/Documents/polytechnic/Projects/GSo\-C07/geometry/libs/hdstl/dev/hds\_\-concepts/hds\_\-concept.hpp File Reference}
 \label{hds__concept_8hpp}\index{/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/hds_concept.hpp@{/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds\_\-concepts/hds\_\-concept.hpp}}
-\subsection*{Namespaces}
-\begin{CompactItemize}
-\item 
-namespace \textbf{hdstl}
-\item 
-namespace \textbf{hdstl::concepts}
-\end{CompactItemize}
-\subsection*{Classes}
-\begin{CompactItemize}
-\item 
-class \bf{hdstl::concepts::HDSConcept$<$ HDS $>$}
-\begin{CompactList}\small\item\em HDS concept definition. \item\end{CompactList}\end{CompactItemize}
+HDS concept definition. 
+
 
 
 \subsection{Detailed Description}
+HDS concept definition. 
+
+\begin{Desc}
+\item[Definition]This concept is the basic HDS concept, which all the other HDS concepts refine. It contains a few requirements which are common to all the graph concepts. One should note that a model of HDS is not required to be a model of Assignable, so algorithms should pass HDS objects by reference.\end{Desc}
+\begin{Desc}
+\item[Refinement of:]This concept is not a refinement of another concept, in particular a model HDS of HDSConcept does {\em not\/} need to be Default\-Constructible, Copy\-Constructible, or Assignable.\end{Desc}
+\begin{Desc}
+\item[Notation]\begin{itemize}
+\item HDS A type that is a model of HDSConcept\item hds A non-modifiable instance of HDS\item h,g Halfedge descriptors, of type X::halfedge\_\-descriptor\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Associated types]\begin{itemize}
+\item hds\_\-traits$<$HDS$>$::halfedge\_\-descriptor: must be Default\-Constructible and Copy\-Constructible, Equality\-Comparable, Assignable.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Definitions]{\em halfedge\/} {\em descriptor\/} is a type that contains information to access the halfedge. Note that the halfedge descriptor type (accessible as a member of the hds\_\-traits$<$HDS$>$ type) is an opaque type. All that can be done to it is passing it to the function opposite and letting the hds use the information it contains to find the opposite halfedge. In particular, there is no guarantee that it is a pointer type.\end{Desc}
+\begin{Desc}
+\item[Valid Expressions]\begin{itemize}
+\item opposite(hds, h): Must return a value assignable to h.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Expression Semantics]\begin{itemize}
+\item opposite(hds, h): Returns a descriptor to the halfedge opposite h in the data structure hds. Does not modify the state of either hds, or h.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Complexity guarantees]\begin{itemize}
+\item opposite(hds, h): Amortized constant time.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Invariants]\begin{itemize}
+\item Every valid halfedge descriptor h must have a valid opposite g = opposite(hds, h), {\em distinct\/} from h, such that opposite(hds, g) returns h. (Hence, opposite is an involution.)\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Concept-checking class]
+
+\begin{Code}\begin{verbatim} template <class HDS> 
+ struct HDSConcept {
+   typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+   void constraints() {
+     using namespace boost;
+     function_requires<DefaultConstructibleConcept<halfedge_descriptor> >();
+     function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
+     function_requires<EqualityComparableConcept<halfedge_descriptor> >();
+     function_requires<AssignableConcept<halfedge_descriptor> >();
+     h = opposite(hds,h);
+     const_constraints(hds);
+   }
+   void const_constraints(HDS const& hds) {
+     h = opposite(hds,h);
+   }
+\end{verbatim}\end{Code}
+
+ \end{Desc}

@@ -50,13 +50,13 @@ void&nbsp;</td><td class="memItemRight" valign="bottom"><b>constraints</b> ()</t
 
 Mutable HDS concept definition. 
 <p>
-<dl compact><dt><b>Definition</b></dt><dd>This class provides a concept checking for the Mutable <a class="el" href="structhdstl_1_1concepts_1_1HDSConcept.html">HDSConcept</a>, i.e., using the statement boost::function_requires&lt;HDSConcept&lt;HDS&gt; &gt;() inside a function body, or BOOST_CLASS_REQUIRE(HDS, boost::hdstl, HDSConcept) inside a class definition body, should trigger a compile-time error if the type HDS does not model the <a class="el" href="structhdstl_1_1concepts_1_1MutableHDSConcept.html">MutableHDSConcept</a>.</dd></dl>
+<dl compact><dt><b>Definition</b></dt><dd>This class provides a concept checking for the Mutable HDSConcept, i.e., using the statement boost::function_requires&lt;HDSConcept&lt;HDS&gt; &gt;() inside a function body, or BOOST_CLASS_REQUIRE(HDS, boost::hdstl, HDSConcept) inside a class definition body, should trigger a compile-time error if the type HDS does not model the <a class="el" href="structhdstl_1_1concepts_1_1MutableHDSConcept.html">MutableHDSConcept</a>.</dd></dl>
 <dl compact><dt><b>Refinement of</b></dt><dd></dd></dl>
 <dl compact><dt><b>Associated types</b></dt><dd><ul>
 <li>X::halfedge_descriptor: must be DefaultConstructible, EqualityComparable, Assignable.</li><li>X::traversal_category: must exist as a type, no other requirement.</li></ul>
 </dd></dl>
 <dl compact><dt><b>Notation</b></dt><dd><ul>
-<li>X A type that is a model of <a class="el" href="structhdstl_1_1concepts_1_1HDSConcept.html">HDSConcept</a></li><li>h, h1, h2 halfedge descriptors</li></ul>
+<li>X A type that is a model of HDSConcept</li><li>h, h1, h2 halfedge descriptors</li></ul>
 </dd></dl>
 <dl compact><dt><b>Definitions</b></dt><dd><em>halfedge</em> <em>descriptor</em> is a pointer to access the halfedge</dd></dl>
 <dl compact><dt><b>Valid Expressions</b></dt><dd><ul>
@@ -96,7 +96,7 @@ Defined const constraints:
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/<a class="el" href="mutable__hds__concept_8hpp-source.html">mutable_hds_concept.hpp</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Sat Jun 9 00:12:42 2007 by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Sun Jun 10 00:14:10 2007 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
