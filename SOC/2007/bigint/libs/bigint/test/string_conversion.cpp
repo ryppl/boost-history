@@ -13,9 +13,7 @@
 
 #include <boost/bigint/bigint.hpp>
 
-#include <sstream>
-
-#include <iostream>
+#include <string>
 
 #pragma comment(lib, "libgmp-3.lib")
 
@@ -83,7 +81,7 @@ template <typename I> void test()
 		{-10, "ABCDEF", 0, 0},
 		{-10, "\xff", 0, 0},
 		// handling non-ASCII symbols
-		{-36, "sa3mx\xa3\xb3", 47500521, 0},
+		{-36, "sa3mx\xa3\xb3", 47500521, 0}
 	};
 
 	for (size_t i = 0; i < ARRAY_SIZE(entries); ++i)

@@ -1,4 +1,4 @@
-/* Boost number_ctors.cpp test file
+/* Boost number_conversion.cpp test file
  *
  * Copyright 2007 Arseny Kapoulkine
  *
@@ -14,8 +14,6 @@
 #include <boost/bigint/bigint.hpp>
 
 #include <sstream>
-
-#include <iostream>
 
 #pragma comment(lib, "libgmp-3.lib")
 
@@ -46,7 +44,13 @@ template <typename I, typename T> void test_number_ctors(T* values, size_t count
 		std::ostringstream oss;
 		oss << convert_to_number(values[i]);
 
-		BOOST_CHECK_EQUAL(oss.str(), number(values[i]).str());
+		// number -> bigint
+		number v(values[i]);
+		BOOST_CHECK_EQUAL(oss.str(), v.str());
+
+		// bigint -> number
+		BOOST_CHECK(v.can_convert_to<T>()); // we should be able to convert to T
+		BOOST_CHECK_EQUAL(convert_to_number(v.to_number<T>()), convert_to_number(values[i]));
 	}
 }
 

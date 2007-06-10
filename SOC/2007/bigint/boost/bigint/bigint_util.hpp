@@ -12,6 +12,19 @@
 
 namespace boost { namespace detail { namespace bigint {
 
+	struct toupper
+	{
+		char operator()(char ch) const
+		{
+			return ::toupper(ch);
+		}
+	
+		wchar_t operator()(wchar_t ch) const
+		{
+			return ::towupper(ch);
+		}
+	};
+
 	inline bool isspace(char ch)
 	{
 		return ::isspace(ch) != 0;
@@ -21,7 +34,7 @@ namespace boost { namespace detail { namespace bigint {
 	{
 		return ::iswspace(ch) != 0;
 	}
-	
+
 	inline size_t length(const char* str)
 	{
 		return ::strlen(str);

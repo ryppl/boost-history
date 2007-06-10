@@ -13,10 +13,6 @@
 
 #include <boost/bigint/bigint.hpp>
 
-#include <sstream>
-
-#include <iostream>
-
 #pragma comment(lib, "libgmp-3.lib")
 
 template <typename I> void test()

@@ -106,6 +106,10 @@ namespace boost { namespace detail {
 				sign = -1;
 				++str;
 			}
+			else if (*str == Ch('+'))
+			{
+				++str;
+			}
 
 			static const unsigned char digit_value_tab[] =
 			{

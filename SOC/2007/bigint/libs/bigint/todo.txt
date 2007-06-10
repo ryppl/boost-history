@@ -12,7 +12,7 @@ Feature name									Deadline		Status
 ------------									--------		------
 1. Bigint interface (header)					21 May			Awaiting resolution
 2. GMP implementation							21 May			In progress
-3. Correctness tests							7 June			N/A
+3. Correctness tests							7 June			In progress
 4. Documentation								21 June			N/A
 5. Performance tests							7 July			N/A
 4. Interface for storage						14 July			N/A
@@ -58,6 +58,18 @@ Status: all non-GMP-implementation-specific warnings were fixed
 
 * make sure it works on a wide range of compilers (test framework setup is needed)
 Status: made some setup, it works for me but: 1. linking gmp is done via a hack, 2. not sure it works for others :/
+
++ stream output support: What modifiers do we need to support? Flags (skipws, etc.)?
+Status: investigated. showpos ('+' for positive numbers), showbase, oct/dec/hex, uppercase, width, adjust, thousands separators
+
++ stream output support with all needed modifiers and other things
+Status: implemented
+
++ stream input support: What modifiers do we need to support? Flags (skipws, etc.)?
+Status: investigated. oct/dec/hex, skipws, correctly handle (check) separators, set bad state on invalid input, etc.
+
++ stream input support with all needed modifiers and other things
+Status: implemented
 
 2. GMP implementation
 
@@ -126,29 +138,32 @@ Status: it's all over the place, no additional test needed
 + test basic arithmetics and modulo (both op= and op) - bigint op/= bigint, bigint op/= number, number op bigint
 Status: implemented
 
-- test bit arithmetics - bigint op/= bigint, bigint op/= number, number op bigint (except << and >>)
-Status: needs implementing
++ test comparison operators
+Status: implemented
 
-- test increment/decrement (postfix/prefix)
-Status: needs implementing
++ test bit arithmetics - bigint op/= bigint, bigint op/= number, number op bigint (except << and >>)
+Status: implemented
 
-- test unary operators (+, -, ~) - don't forget to check that -0 == 0
-Status: needs implementing
++ test increment/decrement (postfix/prefix)
+Status: implemented
 
-- test bool conversion and operator!
-Status: needs implementing
++ test unary operators (+, -, ~) - don't forget to check that -0 == 0
+Status: implemented
 
-- test comparison operators
-Status: needs implementing
++ test bool conversion and operator!
+Status: implemented
+
++ test stream input/output
+Status: implemented
 
 - test abs, pow, ldiv, sqrt
 Status: needs implementing
 
-- test stream input/output
-Status: needs implementing
-
 - test serialization
 Status: needs implementing
+
+- Is it possible to test cases when bigint must cause illegal operations (division by zero, sqrt(negative number))?
+Status: needs investigation
 
 -----------------------------------------------
 
