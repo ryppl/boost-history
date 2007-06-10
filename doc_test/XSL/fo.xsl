@@ -129,53 +129,75 @@
  
  -->
 
-<xsl:template match="//programlisting/phrase[@role='keyword']">
+<xsl:template match="phrase[@role='keyword']">
   <fo:inline color="#3300CC"><xsl:apply-templates/></fo:inline>
 </xsl:template>
-<xsl:template match="//programlisting/phrase[@role='special']">
+<xsl:template match="phrase[@role='special']">
   <fo:inline color="#707070"><xsl:apply-templates/></fo:inline>
 </xsl:template>
-<xsl:template match="//programlisting/phrase[@role='preprocessor']">
+<xsl:template match="phrase[@role='preprocessor']">
   <fo:inline color="#009999"><xsl:apply-templates/></fo:inline>
 </xsl:template>
-<xsl:template match="//programlisting/phrase[@role='char']">
+<xsl:template match="phrase[@role='char']">
   <fo:inline color="teal"><xsl:apply-templates/></fo:inline>
 </xsl:template>
-<xsl:template match="//programlisting/phrase[@role='comment']">
+<xsl:template match="phrase[@role='comment']">
   <fo:inline color="#009900"><xsl:apply-templates/></fo:inline>
 </xsl:template>
-<xsl:template match="//programlisting/phrase[@role='string']">
+<xsl:template match="phrase[@role='string']">
   <fo:inline color="teal"><xsl:apply-templates/></fo:inline>
 </xsl:template>
-<xsl:template match="//programlisting/phrase[@role='number']">
+<xsl:template match="phrase[@role='number']">
   <fo:inline color="teal"><xsl:apply-templates/></fo:inline>
 </xsl:template>
-<xsl:template match="//programlisting/phrase[@role='white_bkd']">
+<xsl:template match="phrase[@role='white_bkd']">
   <fo:inline color="#E8FBE9"><xsl:apply-templates/></fo:inline>
 </xsl:template>
-<xsl:template match="//programlisting/phrase[@role='dk_grey_bkd']">
+<xsl:template match="phrase[@role='dk_grey_bkd']">
   <fo:inline color="#A0DAAC"><xsl:apply-templates/></fo:inline>
 </xsl:template>
 
 <!--
-Make all hyperlinks blue colored:
+Make all hyperlinks colored:
 -->
 <xsl:attribute-set name="xref.properties">
-  <xsl:attribute name="color">blue</xsl:attribute>
+  <xsl:attribute name="color">#0C7445</xsl:attribute>
 </xsl:attribute-set>
 
 <!--
 Put a box around admonishments and keep them together:
 -->
 <xsl:attribute-set name="graphical.admonition.properties">
-  <xsl:attribute name="border-color">#FF8080</xsl:attribute>
-  <xsl:attribute name="border-width">1px</xsl:attribute>
-  <xsl:attribute name="border-style">solid</xsl:attribute>
-  <xsl:attribute name="padding-left">0.2cm</xsl:attribute>
-  <xsl:attribute name="padding-right">0.2cm</xsl:attribute>
-  <xsl:attribute name="padding-top">0.2cm</xsl:attribute>
-  <xsl:attribute name="padding-bottom">0.2cm</xsl:attribute>
-  <xsl:attribute name="keep-together">1</xsl:attribute>
+   <xsl:attribute name="border-color">#DCDCDC</xsl:attribute>
+   <xsl:attribute name="border-width">1px</xsl:attribute>
+   <xsl:attribute name="border-bottom-color">#9D9D9D</xsl:attribute>
+   <xsl:attribute name="border-bottom-width">3px</xsl:attribute>
+   <xsl:attribute name="border-right-color">#9D9D9D</xsl:attribute>
+   <xsl:attribute name="border-right-width">3px</xsl:attribute>
+   <xsl:attribute name="border-style">solid</xsl:attribute>
+   <xsl:attribute name="padding-left">0.2cm</xsl:attribute>
+   <xsl:attribute name="padding-right">0.2cm</xsl:attribute>
+   <xsl:attribute name="padding-top">0.2cm</xsl:attribute>
+   <xsl:attribute name="padding-bottom">0.2cm</xsl:attribute>
+   <xsl:attribute name="keep-together">1</xsl:attribute>
+   <xsl:attribute name="background-color">#FAFFFB</xsl:attribute>
+</xsl:attribute-set>
+
+<!-- TOC border setup -->
+<xsl:attribute-set name="toc.margin.properties">
+   <xsl:attribute name="border-color">#DCDCDC</xsl:attribute>
+   <xsl:attribute name="border-width">1px</xsl:attribute>
+   <xsl:attribute name="border-bottom-color">#9D9D9D</xsl:attribute>
+   <xsl:attribute name="border-bottom-width">3px</xsl:attribute>
+   <xsl:attribute name="border-right-color">#9D9D9D</xsl:attribute>
+   <xsl:attribute name="border-right-width">3px</xsl:attribute>
+   <xsl:attribute name="border-style">solid</xsl:attribute>
+   <xsl:attribute name="padding-left">0.2cm</xsl:attribute>
+   <xsl:attribute name="padding-right">0.2cm</xsl:attribute>
+   <xsl:attribute name="padding-top">0.2cm</xsl:attribute>
+   <xsl:attribute name="padding-bottom">0.2cm</xsl:attribute>
+   <xsl:attribute name="keep-together">1</xsl:attribute>
+   <xsl:attribute name="background-color">#FAFFFB</xsl:attribute>
 </xsl:attribute-set>
 
 <!--
@@ -185,6 +207,10 @@ and keep the block together if we can:
 <xsl:attribute-set name="monospace.verbatim.properties">
   <xsl:attribute name="border-color">#DCDCDC</xsl:attribute>
   <xsl:attribute name="border-width">1px</xsl:attribute>
+  <xsl:attribute name="border-bottom-color">#9D9D9D</xsl:attribute>
+  <xsl:attribute name="border-bottom-width">3px</xsl:attribute>
+  <xsl:attribute name="border-right-color">#9D9D9D</xsl:attribute>
+  <xsl:attribute name="border-right-width">3px</xsl:attribute>
   <xsl:attribute name="border-style">solid</xsl:attribute>
   <xsl:attribute name="padding-left">0.2cm</xsl:attribute>
   <xsl:attribute name="padding-right">0.2cm</xsl:attribute>
@@ -192,6 +218,7 @@ and keep the block together if we can:
   <xsl:attribute name="padding-bottom">0.2cm</xsl:attribute>
   <xsl:attribute name="keep-together">1</xsl:attribute>
   <xsl:attribute name="font-size">9pt</xsl:attribute>
+  <xsl:attribute name="background-color">#FAFFFB</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:attribute-set name="table.cell.padding">
@@ -203,11 +230,29 @@ and keep the block together if we can:
 
 <xsl:attribute-set name="table.properties">
   <xsl:attribute name="keep-together">1</xsl:attribute>
+  <xsl:attribute name="background-color">#FAFFFB</xsl:attribute>
 </xsl:attribute-set>
 
 <xsl:param name="table.frame.border.color">#DCDCDC</xsl:param>
 <xsl:param name="table.cell.border.color">#DCDCDC</xsl:param>
 <xsl:param name="admon.graphics.extension">.svg</xsl:param>
+
+<!-- Render sidebars the same as Admonishments -->
+<xsl:attribute-set name="sidebar.properties">
+   <xsl:attribute name="border-color">#DCDCDC</xsl:attribute>
+   <xsl:attribute name="border-width">1px</xsl:attribute>
+   <xsl:attribute name="border-bottom-color">#9D9D9D</xsl:attribute>
+   <xsl:attribute name="border-bottom-width">3px</xsl:attribute>
+   <xsl:attribute name="border-right-color">#9D9D9D</xsl:attribute>
+   <xsl:attribute name="border-right-width">3px</xsl:attribute>
+   <xsl:attribute name="border-style">solid</xsl:attribute>
+   <xsl:attribute name="padding-left">0.2cm</xsl:attribute>
+   <xsl:attribute name="padding-right">0.2cm</xsl:attribute>
+   <xsl:attribute name="padding-top">0.2cm</xsl:attribute>
+   <xsl:attribute name="padding-bottom">0.2cm</xsl:attribute>
+   <xsl:attribute name="keep-together">1</xsl:attribute>
+   <xsl:attribute name="background-color">#FAFFFB</xsl:attribute>
+</xsl:attribute-set>
 
 </xsl:stylesheet>
 

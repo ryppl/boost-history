@@ -325,7 +325,7 @@
         float: left;
         position:relative;
         left: 4px;
-        top: 0px;
+        top: -12px;
         clear: left;
         margin-left:-22px;
     }
@@ -618,4 +618,6 @@
             font-weight: bold;
         }
     }
+
+
 

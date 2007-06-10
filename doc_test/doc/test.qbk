@@ -510,36 +510,15 @@ ibeta_inva, and ibeta_invb respectively.]]
 
 [h4 Callouts]
 
+[import stub.cpp]
+
 Here's some code with left-placed callouts:
 
-   class x
-   {
-   public:
-
-       1x() : n(0) /*<< Constructor >>*/
-       {
-       }
-
-       2~x() /*<< Destructor >>*/
-       {
-       }
-   };
+[class_]
 
 And again with callouts placed exactly where we put them:
 
-   class x
-   {
-   public:
-
-       1x() : n(0) /*< Constructor >*/
-       {
-       }
-
-       2~x() /*< Destructor >*/
-       {
-       }
-   };
-
+[foo_bar]
 
 [endsect]
 
