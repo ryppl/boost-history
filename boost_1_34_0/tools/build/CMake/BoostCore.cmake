@@ -150,12 +150,19 @@ macro(boost_library_variant_target_name)
 
   # Linking statically to the runtime library
   list_contains(VARIANT_IS_STATIC_RUNTIME STATIC_RUNTIME ${ARGN})
-  if (VARIANT_IS_STATIC_RUNTIME)
+  if (VARIANT_IS_STATIC_RUNTIME)  
     set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-staticrt")
     set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}s")
   endif (VARIANT_IS_STATIC_RUNTIME)
   
-  # TODO: Using debug versions of the standard/runtime support libs
+  # Using the debug version of the runtime library.
+  # With Visual C++, this comes automatically with debug
+  if (MSVC)
+    list_contains(VARIANT_IS_DEBUG DEBUG ${ARGN})
+    if (VARIANT_IS_DEBUG)
+      set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}g")
+    endif (VARIANT_IS_DEBUG)
+  endif (MSVC)
 
   # Add -pydebug for debug builds of Python
   list_contains(VARIANT_IS_PYDEBUG PYTHON_DEBUG ${ARGN})
@@ -164,7 +171,6 @@ macro(boost_library_variant_target_name)
     set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}y")
   endif (VARIANT_IS_PYDEBUG)
 
-  # TODO: using debug build of Python
   # TODO: STLport rather than default library
   # TODO: STLport's deprecated iostreams
 
@@ -240,17 +246,40 @@ macro(boost_library_variant LIBNAME)
     set(THIS_VARIANT_LINK_LIBS ${THIS_VARIANT_LINK_LIBS} ${THIS_LIB_${ARG}_LINK_LIBS} ${${ARG}_LINK_LIBS})
   endforeach(ARG ${ARGN})
 
-  if (THIS_VARIANT_OKAY)
-    # Use the appropriate C++ flags for debug vs. release variants
-    list_contains(THIS_LIB_IS_DEBUG "DEBUG" ${ARGN})
-    if (THIS_LIB_IS_DEBUG)
-      set(THIS_VARIANT_COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG} ${THIS_VARIANT_COMPILE_FLAGS}")
-      set(THIS_VARIANT_LINK_FLAGS "${CMAKE_LINK_FLAGS_DEBUG} ${THIS_VARIANT_LINK_FLAGS}")
-    else (THIS_LIB_IS_DEBUG)
-      set(THIS_VARIANT_COMPILE_FLAGS "${CMAKE_CXX_FLAGS_RELEASE} ${THIS_VARIANT_COMPILE_FLAGS}")
-      set(THIS_VARIANT_LINK_FLAGS "${CMAKE_LINK_FLAGS_RELEASE} ${THIS_VARIANT_LINK_FLAGS}")
-    endif (THIS_LIB_IS_DEBUG)
+  # Don't build a shared library against a static run-time
+  list_contains(IS_SHARED SHARED ${ARGN})
+  list_contains(IS_STATIC_RUNTIME STATIC_RUNTIME ${ARGN})
+  if (IS_SHARED AND IS_STATIC_RUNTIME)
+    set(THIS_VARIANT_OKAY FALSE)
+  endif (IS_SHARED AND IS_STATIC_RUNTIME)
+  
+  # With Visual C++, the dynamic runtime is multi-threaded only
+  list_contains(IS_DYNAMIC_RUNTIME DYNAMIC_RUNTIME ${ARGN})
+  list_contains(IS_SINGLE_THREADED SINGLE_THREADED ${ARGN})
+  if (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED)
+    set(THIS_VARIANT_OKAY FALSE)
+  endif (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED) 
+ 
+  # Visual C++-specific runtime library flags
+  if(MSVC)
+    list_contains(IS_STATIC_RUNTIME STATIC_RUNTIME ${ARGN})
+    list_contains(IS_DEBUG DEBUG ${ARGN})
+    if(IS_DEBUG)
+      if(IS_STATIC_RUNTIME)
+        set(THIS_VARIANT_COMPILE_FLAGS "/MTd ${THIS_VARIANT_COMPILE_FLAGS}")
+      else(IS_STATIC_RUNTIME)
+        set(THIS_VARIANT_COMPILE_FLAGS "/MDd ${THIS_VARIANT_COMPILE_FLAGS}")
+      endif(IS_STATIC_RUNTIME)       
+    else(IS_DEBUG)
+      if(IS_STATIC_RUNTIME)
+        set(THIS_VARIANT_COMPILE_FLAGS "/MT ${THIS_VARIANT_COMPILE_FLAGS}")
+      else(IS_STATIC_RUNTIME)
+        set(THIS_VARIANT_COMPILE_FLAGS "/MD ${THIS_VARIANT_COMPILE_FLAGS}")
+      endif(IS_STATIC_RUNTIME)       
+    endif(IS_DEBUG)
+  endif(MSVC)
 
+  if (THIS_VARIANT_OKAY)
     # Determine the suffix for this library target
     boost_library_variant_target_name(${ARGN})
     set(VARIANT_LIBNAME "${LIBNAME}${VARIANT_TARGET_NAME}")

@@ -75,7 +75,6 @@ boost_add_default_variant(DEBUG RELEASE)
 boost_add_default_variant(SINGLE_THREADED MULTI_THREADED)
 boost_add_default_variant(STATIC_RUNTIME DYNAMIC_RUNTIME)
 
-
 # Extra features used by some libraries
 boost_add_extra_variant(PYTHON_NODEBUG PYTHON_DEBUG)
 ##########################################################################

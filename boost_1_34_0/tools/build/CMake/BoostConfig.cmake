@@ -110,7 +110,32 @@ elseif(UNIX)
 endif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
 
 # Static and dynamic runtime linking options
-if(MSVC)
-  set(RUNTIME_STATIC_LINK_FLAGS "/MT")
-  set(RUNTIME_DYNAMIC_LINK_FLAGS "/MD")
-endif(MSVC)
+#if(MSVC)
+#  set(STATIC_RUNTIME_COMPILE_FLAGS "/MT")
+#  set(DYNAMIC_RUNTIME_COMPILE_FLAGS "/MD")
+#endif(MSVC)
+
+# Setup DEBUG_COMPILE_FLAGS, RELEASE_COMPILE_FLAGS, DEBUG_LINK_FLAGS and
+# and RELEASE_LINK_FLAGS based on the CMake equivalents
+if(CMAKE_CXX_FLAGS_DEBUG)
+  set(DEBUG_COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "Compilation flags for debug libraries")
+endif(CMAKE_CXX_FLAGS_DEBUG)
+if(CMAKE_CXX_FLAGS_RELEASE)
+  set(RELEASE_COMPILE_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "Compilation flags for release libraries")
+endif(CMAKE_CXX_FLAGS_RELEASE)
+if(CMAKE_SHARED_LINKER_FLAGS_DEBUG)
+  set(DEBUG_LINK_FLAGS "${CMAKE_SHARED_LINKER_FLAGS_DEBUG}" CACHE STRING "Linker flags for debug libraries")
+endif(CMAKE_SHARED_LINKER_FLAGS_DEBUG)
+if(CMAKE_SHARED_LINKER_FLAGS_RELEASE)
+  set(RELEASE_LINK_FLAGS "${CMAKE_SHARED_LINKER_FLAGS_RELEASE}" CACHE STRING "Link flags for release libraries")
+endif(CMAKE_SHARED_LINKER_FLAGS_RELEASE)
+
+# For project file generators that have multiple configurations,
+# clear out the built-in C++ compiler and link flags for each of the 
+# configurations.
+foreach(CONFIG ${CMAKE_CONFIGURATION_TYPES})
+  string(TOUPPER ${CONFIG} UCONFIG)
+  set(CMAKE_CXX_FLAGS_${UCONFIG} "" CACHE STRING "Unused by Boost" FORCE)
+  set(CMAKE_SHARED_LINKER_FLAGS_${UCONFIG} "" CACHE STRING "Unused by Boost" FORCE)
+  set(CMAKE_MODULE_LINKER_FLAGS_${UCONFIG} "" CACHE STRING "Unused by Boost" FORCE)
+endforeach(CONFIG ${CMAKE_CONFIGURATION_TYPES})
