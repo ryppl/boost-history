@@ -254,12 +254,14 @@ macro(boost_library_variant LIBNAME)
   endif (IS_SHARED AND IS_STATIC_RUNTIME)
   
   # With Visual C++, the dynamic runtime is multi-threaded only
-  list_contains(IS_DYNAMIC_RUNTIME DYNAMIC_RUNTIME ${ARGN})
-  list_contains(IS_SINGLE_THREADED SINGLE_THREADED ${ARGN})
-  if (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED)
-    set(THIS_VARIANT_OKAY FALSE)
-  endif (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED) 
- 
+  if (MSVC)
+    list_contains(IS_DYNAMIC_RUNTIME DYNAMIC_RUNTIME ${ARGN})
+    list_contains(IS_SINGLE_THREADED SINGLE_THREADED ${ARGN})
+    if (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED)
+      set(THIS_VARIANT_OKAY FALSE)
+    endif (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED) 
+  endif (MSVC)
+
   # Visual C++-specific runtime library flags
   if(MSVC)
     list_contains(IS_STATIC_RUNTIME STATIC_RUNTIME ${ARGN})
