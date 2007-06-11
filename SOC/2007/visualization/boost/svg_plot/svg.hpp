@@ -10,7 +10,6 @@
 #ifndef _SVG_HPP
 #define _SVG_HPP
 
-
 #include <vector>
 #include <ostream>
 #include <sstream>
@@ -27,8 +26,6 @@ namespace svg {
 class svg
 {
 private:
-    g_element document;
-
     std::ostream *s_out;
     
     void _write_header();
@@ -42,14 +39,22 @@ private:
 protected:
     unsigned int x_size;
     unsigned int y_size;
-    void _size(unsigned int, unsigned int);
     
+    g_element document;
+
+    void _size(unsigned int, unsigned int);
+
     void _write();
 
     void _point(double, double);
+    void _point(double, double, g_element&);
+    
     void _line(double, double, double, double);
+    void _line(double, double, double, double, g_element&); 
+    
     void _text(double, double, std::string);
     void _line_color(svg_color);
+
 
 public:
     svg(const std::string&);
@@ -84,7 +89,8 @@ svg::~svg()
     delete s_out;
 }
 
-//specify a new stream after the copy
+//I still need to put more thought into whether I want this class
+//copyable or not
 svg::svg(const svg& rhs)
 {
     x_size = rhs.x_size;
@@ -97,11 +103,8 @@ svg::svg(const svg& rhs)
 
 // -----------------------------------------------------------------
 // Processes the svg_instructions
-// This allows the user to easily enter information:
-//
-// my_image<<color(RED)<<line(x1,y1,x2,y2)<<write(); 
-// 
-// is the eventual goal for the interface to the svg object 
+// This allows the user to easily enter information than ordinary
+// method calls, and is more clear that the method supports chaining
 // -----------------------------------------------------------------
 svg& svg::operator<<(const svg_instruction& rhs)
 {
@@ -115,8 +118,9 @@ svg& svg::operator<<(const svg_instruction& rhs)
 }
 
 // -----------------------------------------------------------------
-// Stream operator to eventually stick data together in a stream-
-// like interface
+// Chained stream operators. Each operator overload below will
+// represent a different instruction type, after I rewrite svg's
+// instructions to be more generic.
 // -----------------------------------------------------------------
 svg& svg::operator<<(const svg_point &rhs)
 {
@@ -126,7 +130,7 @@ svg& svg::operator<<(const svg_point &rhs)
         _size((unsigned int)rhs.x, (unsigned int)rhs.y);
         break;
     case SVG_POINT:
-        _point(rhs.x, rhs.y);
+        _point(rhs.x, rhs.y, document);
     }
 
     return *this;
@@ -156,7 +160,6 @@ svg& svg::operator<<(const svg_stroke_color &rhs)
 // -----------------------------------------------------------------
 // Internal function to write the data to a specified stream
 // TODO: allow other streams than a file stream
-// TODO: Make a traversal of the new document structure
 // -----------------------------------------------------------------
 void svg::_write()
 {
@@ -183,14 +186,14 @@ void svg::_write_document()
     //Write all visual elements
     for(size_t i=0; i<document.size(); ++i)
     {
-        *s_out<<document[(unsigned int)i].to_string()<<std::endl;
+        document[ (unsigned int)i ].write(*s_out);
     }
 
     //end g tag
 }
 
 // -----------------------------------------------------------------
-// This prints the svg header into the document
+// This prints the svg 1.1 header into the document
 // -----------------------------------------------------------------
 void svg::_write_header()
 {
@@ -213,8 +216,15 @@ void svg::_size(unsigned int x, unsigned int y)
 // Writes the information about points to the document
 // Since a point is not visible, we are actually drawing small
 // circles
-// TODO: allow other unit identifiers
+// TODO: allow other unit identifiers, shapes
 // -----------------------------------------------------------------
+
+// this overload has a pointer to a node in the document tree
+void svg::_point(double x, double y, g_element& location)
+{
+    location.children.push_back(new point_element(x, y));
+}
+
 void svg::_point(double x, double y)
 {
     document.children.push_back(new point_element(x, y));
@@ -222,7 +232,6 @@ void svg::_point(double x, double y)
 
 // -----------------------------------------------------------------
 // Writes the information about lines to the document
-// TODO: allow other unit identifiers
 // TODO: Allow other line thicknesses
 // TODO: Allow other line colors
 // -----------------------------------------------------------------
@@ -231,8 +240,14 @@ void svg::_line(double x1, double y1, double x2, double y2)
     document.children.push_back(new line_element(x1, y1, x2, y2));
 }
 
+void svg::_line(double x1, double y1, double x2, double y2, 
+                g_element& location)
+{
+    location.children.push_back(new line_element(x1, y1, x2, y2));
+}
+
 // -----------------------------------------------------------------
-// Writes the information about lines to the document
+// Writes the information about text to the document
 // TODO: allow different fonts and font sizes
 // -----------------------------------------------------------------
 void svg::_text(double x, double y, std::string text)
@@ -241,23 +256,11 @@ void svg::_text(double x, double y, std::string text)
 }
 
 // -----------------------------------------------------------------
-// TODO: Add all of the colors that are supported by the SVG format
-// TODO: Update to account for the tree structure of the document now
+// Hopefully this one will be filld out next week
 // -----------------------------------------------------------------
 void svg::_line_color(svg_color col)
 {
-    switch(col)
-    {
-    case BLACK:
-//        document[SVG_G_STROKE] = "stroke = \"black\"";
-        break;
-    case GRAY:
-//        document[SVG_G_STROKE] = "stroke = \"gray\"";
-        break;
-    case RED:
-//        document[SVG_G_STROKE] = "stroke = \"red\"";
-        break;
-    }
+
 }
 
 

@@ -13,6 +13,14 @@
 namespace boost {
 namespace svg {
 
+#include "svg_style.hpp"
+
+// -----------------------------------------------------------------
+// IMPORTANT: the contents of this file will likely be completely
+// rewritten when I redo the public interface for svg::svg. I'm
+// focusing on the interface for svg::svg_plot currently
+// -----------------------------------------------------------------
+
 enum instruction_type{SVG_POINT, SVG_WRITE, SVG_SIZE};
 
 // -----------------------------------------------------------------
@@ -65,7 +73,6 @@ struct svg_text
 struct svg_stroke_color
 {
     svg_color col;
-
     svg_stroke_color(svg_color _c):col(_c)
     {
 

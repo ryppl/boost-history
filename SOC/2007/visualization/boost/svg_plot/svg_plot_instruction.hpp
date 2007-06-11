@@ -16,7 +16,10 @@
 namespace boost {
 namespace svg {
 
-enum plot_inst_type{PLOT_NONE, PLOT_SCALE_X, PLOT_SCALE_Y, PLOT_START, 
+// -----------------------------------------------------------------
+// This allows us to process operations by case in switch statements
+// -----------------------------------------------------------------
+enum plot_inst_type{PLOT_NONE, PLOT_SCALE_X, PLOT_START, 
                 PLOT_SIZE, PLOT_INTERVAL, PLOT_DRAW_AXIS, PLOT_LINE_COLOR};
 
 // -----------------------------------------------------------------
@@ -66,7 +69,7 @@ struct plot_single_val: public plot_instruction
 };
 
 // -----------------------------------------------------------------
-// plot_scale is to handle commands that take two arguments
+// plot_scale is to handle commands that take two double arguments
 // -----------------------------------------------------------------
 struct plot_two_vals: public plot_instruction
 {
@@ -96,6 +99,9 @@ struct plot_four_vals: public plot_instruction
     }
 };
 
+// -----------------------------------------------------------------
+// For arguments of a color nature
+// -----------------------------------------------------------------
 struct plot_color: public plot_instruction
 {
     svg_color col;
@@ -107,9 +113,6 @@ struct plot_color: public plot_instruction
     }
 };
 
-// -----------------------------------------------------------------
-// This is the instruction that deals with drawing ranges
-// -----------------------------------------------------------------
 struct plot_draw_range: public plot_instruction
 {
     std::vector<double>::iterator begin;
@@ -123,15 +126,29 @@ struct plot_draw_range: public plot_instruction
     }
 };
 
+// -----------------------------------------------------------------
+// fill_color defines the color of the points that are to be drawn
+// -----------------------------------------------------------------
+struct plot_draw_col_range: public plot_draw_range
+{
+    svg_color fill_color;
 
+    plot_draw_col_range(std::vector<double>::iterator _b,
+        std::vector<double>::iterator _e,
+        svg_color_constant _fill_color): 
+            fill_color(svg_color(_fill_color)), plot_draw_range(_b, _e)
+    {
+ 
+    }
+};
+
+// -----------------------------------------------------------------
+// The following functions return the values from the user
+// interface to values that the svg_plot class can understand
+// -----------------------------------------------------------------
 plot_two_vals x_scale(double x1, double x2)
 {
     return plot_two_vals(x1, x2, PLOT_SCALE_X);
-}
-
-plot_two_vals y_scale(double y1, double y2)
-{
-    return plot_two_vals(y1, y2, PLOT_SCALE_Y);
 }
 
 plot_two_vals image_size(int x, int y)
@@ -139,20 +156,17 @@ plot_two_vals image_size(int x, int y)
     return plot_two_vals(x, y, PLOT_SIZE);
 }
 
-plot_single_val set_start(double x)
-{
-    return plot_single_val(x, PLOT_START);
-}
-
-plot_single_val set_interval(double x)
-{
-    return plot_single_val(x, PLOT_INTERVAL);
-}
-
 plot_draw_range plot_range(std::vector<double>::iterator begin,
                     std::vector<double>::iterator end)
 {
     return plot_draw_range(begin, end);
+}
+
+plot_draw_col_range plot_range(std::vector<double>::iterator begin,
+                    std::vector<double>::iterator end,
+                    svg_color_constant col)
+{
+    return plot_draw_col_range(begin, end, col);
 }
 
 plot_command draw_axis()
@@ -163,6 +177,11 @@ plot_command draw_axis()
 plot_color line_color(svg_color c)
 {
     return plot_color(c, PLOT_LINE_COLOR);
+}
+
+plot_color line_color(svg_color_constant c)
+{
+    return plot_color(constant_to_rgb(c), PLOT_LINE_COLOR);
 }
 
 }

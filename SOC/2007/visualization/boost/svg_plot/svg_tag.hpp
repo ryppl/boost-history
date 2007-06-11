@@ -13,6 +13,7 @@
 #include <sstream>
 #include <string>
 #include <boost/ptr_container/ptr_container.hpp>
+#include <boost/noncopyable.hpp>
 
 #include "svg_style.hpp"
 
@@ -29,32 +30,34 @@ namespace svg {
 // -----------------------------------------------------------------
 // The base class for all leaf elements
 // -----------------------------------------------------------------
-
-class svg_element : boost::noncopyable
+    
+class svg_element
 {
 public:
-    virtual std::string to_string()=0;
+    virtual void write(std::ostream&) = 0;
 };
 
 // -----------------------------------------------------------------
 // The node element of our document tree
 // -----------------------------------------------------------------
 
-class g_element
+class g_element: public svg_element
 {
 private: 
-    svg_g_style styleInfo;
+    svg_g_style style_info;
 
 public:
-    //public allows me to skip dozens of add_point, add_line, etc methods
-    //or polymorphic checks. Also allows the root element of the node
-    //to act as a makeshift DOM
-    boost::ptr_vector<svg_element> children;    
+    boost::ptr_vector<svg_element> children;
     
     svg_element& operator[](unsigned int);
     size_t size();
     
-    void set_line_color(const svg_color&);
+    void set_stroke_color(const svg_color&);
+    void set_fill_color(const svg_color&);
+
+    void write(std::ostream&);
+
+    g_element& g_tag(int);
 };
 
 svg_element& g_element::operator[](unsigned int i)
@@ -67,10 +70,36 @@ size_t g_element::size()
     return children.size();
 }
 
-void set_line_color(const svg_color& rhs)
+void g_element::write(std::ostream& rhs)
 {
+    rhs << "<g ";
+    style_info.write(rhs);
+    rhs<< " >" << std::endl;
+    
+    for(unsigned int i=0; i<children.size(); ++i)
+    {
+        children[i].write(rhs);
+    }
+
+    rhs << "</g>" << std::endl;
 
 }
+
+g_element& g_element::g_tag(int i)
+{
+    return *(static_cast<g_element*>(&children[i]));
+}
+
+void g_element::set_stroke_color(const svg_color& _col)
+{
+    style_info.set_stroke_color(_col);
+}
+
+void g_element::set_fill_color(const svg_color& _col)
+{
+    style_info.set_fill_color(_col);
+}
+
 
 // -----------------------------------------------------------------
 // Represents a single point
@@ -82,7 +111,7 @@ private:
 
 public:
     point_element(double, double);
-    std::string to_string();
+    void write(std::ostream&);
 };
 
 point_element::point_element(double _x, double _y):x(_x), y(_y)
@@ -90,16 +119,10 @@ point_element::point_element(double _x, double _y):x(_x), y(_y)
     
 }
 
-std::string point_element::to_string()
+void point_element::write(std::ostream& rhs)
 {
-    std::stringstream fmt;
+    rhs<<"<circle cx=\""<<x<<"\" cy=\""<<y<<"\" r=\"5\"/>";
 
-    fmt<<"<circle cx=\""<<x<<"\" cy=\""<<y<<"\" r=\"5\" fill=\"red\" />";
-    
-    std::string to_ret;
-    std::getline(fmt, to_ret);
-
-    return to_ret;
 }
 
 // -----------------------------------------------------------------
@@ -112,7 +135,7 @@ private:
 
 public:
     line_element(double, double, double, double);
-    std::string to_string();
+    void write(std::ostream&);
 };
 
 line_element::line_element(double _x1, double _y1, double _x2,
@@ -122,17 +145,10 @@ line_element::line_element(double _x1, double _y1, double _x2,
     
 }
 
-std::string line_element::to_string()
+void line_element::write(std::ostream& rhs)
 {
-    std::stringstream fmt;
-
-    fmt<<"<line stroke=\"black\" x1=\""<<x1<<"\" y1=\""<<y1<<"\" x2=\""<<x2<<"\" y2=\""
+    rhs<<"<line x1=\""<<x1<<"\" y1=\""<<y1<<"\" x2=\""<<x2<<"\" y2=\""
         <<y2<<"\"/>";
-    
-    std::string to_ret;
-    std::getline(fmt, to_ret);
-
-    return to_ret;
 }
 
 // -----------------------------------------------------------------
@@ -146,7 +162,7 @@ private:
 
 public:
     text_element(double, double, std::string);
-    std::string to_string();
+    void write(std::ostream&);
 };
 
 text_element::text_element(double _x, double _y, std::string _text)
@@ -155,20 +171,13 @@ text_element::text_element(double _x, double _y, std::string _text)
     
 }
 
-std::string text_element::to_string()
+void text_element::write(std::ostream& rhs)
 {
-    std::stringstream fmt;
-    std::string to_write;
-
-    fmt<<"<text x=\""<<x<<"\""
+    rhs<<"<text x=\""<<x<<"\""
                 <<" y=\""<<y<<"\" "
-                <<" font-family=\"Veranda\" font-size=\"12\" fill=\"black\">"
+                <<" font-family=\"Veranda\" font-size=\"12\" stroke=\"black\">"
                 << text
                 <<" </text>";
-
-    getline(fmt, to_write);
-
-    return to_write;
 }
 
 
