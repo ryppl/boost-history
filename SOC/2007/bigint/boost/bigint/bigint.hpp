@@ -391,7 +391,7 @@ public:
 
 	template <typename T, typename Tr> friend std::basic_ostream<T, Tr>& operator<<(std::basic_ostream<T, Tr>& lhs, const bigint_base& rhs)
 	{
-		std::basic_ostream<T, Tr>::sentry ok(lhs);
+		typename std::basic_ostream<T, Tr>::sentry ok(lhs);
 
 		if (ok)
 		{
@@ -409,7 +409,7 @@ public:
 
 				if (uppercase && base == 16) std::transform(str.begin(), str.end(), str.begin(), detail::bigint::toupper());
 
-				std::string::size_type pad_length = 0;
+				typename std::basic_string<T>::size_type pad_length = 0;
 
 				// str[0] is safe, to_string will never return empty string
 				if (showpos && str[0] != '-')
@@ -427,8 +427,8 @@ public:
 				{
 					std::basic_string<T> nstr;
 
-					std::basic_string<T>::reverse_iterator it = str.rbegin();
-					std::basic_string<T>::reverse_iterator end = str.rend();
+					typename std::basic_string<T>::reverse_iterator it = str.rbegin();
+					typename std::basic_string<T>::reverse_iterator end = str.rend();
 					if (pad_length > 0) --end; // skip sign
 		
 					size_t group_id = 0;
@@ -480,7 +480,7 @@ public:
 					{
 						std::ios_base::fmtflags adjustfield = flags & std::ios_base::adjustfield;
 						
-						std::string::size_type pad_pos = 0; // pad before
+						typename std::basic_string<T>::size_type pad_pos = 0; // pad before
 						
 						if (adjustfield == std::ios_base::left) pad_pos = str.length();
 						else if (adjustfield == std::ios_base::internal) pad_pos = pad_length;
@@ -502,7 +502,7 @@ public:
 
 	template <typename T, typename Tr> friend std::basic_istream<T, Tr>& operator>>(std::basic_istream<T, Tr>& lhs, bigint_base& rhs)
 	{
-		std::basic_istream<T, Tr>::sentry ok(lhs);
+		typename std::basic_istream<T, Tr>::sentry ok(lhs);
 
 		if (ok)
 		{
@@ -552,7 +552,7 @@ public:
 
 				const std::numpunct<T>& punct = std::use_facet<std::numpunct<T> >(lhs.getloc());
 
-				Tr::int_type ch;
+				typename Tr::int_type ch;
 
 				while ((ch = lhs.peek()) != Tr::eof())
 				{
@@ -579,17 +579,16 @@ public:
 		
 				if (!grouping.empty())
 				{
-					std::basic_string<T>::reverse_iterator it = str.rbegin();
-					std::basic_string<T>::reverse_iterator end = str.rend();
+					typename std::basic_string<T>::reverse_iterator it = str.rbegin();
+					typename std::basic_string<T>::reverse_iterator end = str.rend();
 		
 					size_t group_id = 0;
-					size_t chars_to_go = str.size();
 
 					while (it != end)
 					{
 						char limit = group_id >= grouping.size() ? (grouping.empty() ? 0 : grouping[grouping.size() - 1]) : grouping[group_id];
 				
-						std::basic_string<T>::reverse_iterator sep_it = std::find(it, end, punct.thousands_sep());
+						typename std::basic_string<T>::reverse_iterator sep_it = std::find(it, end, punct.thousands_sep());
 
 						if (limit <= 0) // unlimited sequence of digits
 						{

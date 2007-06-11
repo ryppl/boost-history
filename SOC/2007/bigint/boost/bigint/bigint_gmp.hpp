@@ -138,7 +138,7 @@ namespace boost { namespace detail {
 			
 			for (size_t i = 0; i < d_size; ++i)
 			{
-				if (*str < 0 || *str > 127 || digit_value_tab[static_cast<unsigned int>(*str)] >= base)
+				if (static_cast<int>(*str) < 0 || static_cast<int>(*str) > 127 || digit_value_tab[static_cast<unsigned int>(*str)] >= base)
 				{
 					d_size = i;
 					break;
@@ -337,7 +337,7 @@ namespace boost { namespace detail {
 				max_value = (std::numeric_limits<T>::max)();
 			}
 
-			if (count * GMP_NUMB_BITS > sizeof(boost::uint64_t) * 8) // we can't fit in uint64 => we won't fit in anything else
+			if (static_cast<size_t>(count) * GMP_NUMB_BITS > sizeof(boost::uint64_t) * 8) // we can't fit in uint64 => we won't fit in anything else
 				return false;
 
 			return max_value >= _to_uint64();

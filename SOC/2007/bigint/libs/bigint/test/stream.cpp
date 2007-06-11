@@ -38,6 +38,26 @@ template <typename I> void test()
 {
 	typedef boost::bigint_base<I> number;
 
+#ifdef BOOST_NO_STD_WSTREAMBUF
+
+#define CHECK_OSS(expr, result) do \
+								{ \
+									std::ostringstream oss; oss << expr; \
+									BOOST_CHECK_EQUAL(oss.str(), result); \
+									BOOST_CHECK(oss.good()); \
+								} \
+								while (0)
+
+#define CHECK_ISS_MOD_STATE(input, mod, result, state) do \
+								{ \
+									number a(7); \
+									std::istringstream iss(input); iss >> mod >> a; \
+									BOOST_CHECK_EQUAL(a, number(result)); \
+									if (!state) BOOST_CHECK(iss.bad()); \
+								} while (0)
+
+#else
+
 #define CHECK_OSS(expr, result) do \
 								{ \
 									std::ostringstream oss; oss << expr; \
@@ -62,8 +82,10 @@ template <typename I> void test()
 									const char* i = input; \
 									std::wistringstream wiss(std::wstring(i, i + strlen(i))); wiss >> mod >> b; \
 									BOOST_CHECK_EQUAL(b, number(result)); \
-									if (!state) BOOST_CHECK(iss.bad()); \
+									if (!state) BOOST_CHECK(wiss.bad()); \
 								} while (0)
+
+#endif
 
 #define CHECK_ISS_STATE(input, result, state) CHECK_ISS_MOD_STATE(input, std::skipws, result, state)
 
@@ -198,6 +220,7 @@ template <typename I> void test()
 		BOOST_CHECK_EQUAL(iss.get(), 65);
 	}
 
+#ifndef BOOST_NO_STD_WSTREAMBUF
 	{
 		number b;
 		std::wistringstream wiss(L"-384ABC");
@@ -206,6 +229,7 @@ template <typename I> void test()
 		BOOST_CHECK_EQUAL(b, -384);
 		BOOST_CHECK_EQUAL(wiss.get(), 65);
 	}
+#endif
 
 	{
 		number a;
@@ -216,6 +240,7 @@ template <typename I> void test()
 		BOOST_CHECK_EQUAL(iss.get(), 90);
 	}
 
+#ifndef BOOST_NO_STD_WSTREAMBUF
 	{
 		number b;
 		std::wistringstream wiss(L"FFZYX");
@@ -224,6 +249,7 @@ template <typename I> void test()
 		BOOST_CHECK_EQUAL(b, 255);
 		BOOST_CHECK_EQUAL(wiss.get(), 90);
 	}
+#endif
 	
 	{
 		number a;
@@ -234,6 +260,7 @@ template <typename I> void test()
 		BOOST_CHECK_EQUAL(iss.get(), 56);
 	}
 
+#ifndef BOOST_NO_STD_WSTREAMBUF
 	{
 		number b;
 		std::wistringstream wiss(L"1238a");
@@ -242,6 +269,7 @@ template <typename I> void test()
 		BOOST_CHECK_EQUAL(b, 83);
 		BOOST_CHECK_EQUAL(wiss.get(), 56);
 	}
+#endif
 
 #undef CHECK_ISS
 #undef CHECK_OSS

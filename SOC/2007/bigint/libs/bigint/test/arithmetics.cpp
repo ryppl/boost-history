@@ -236,22 +236,22 @@ template <typename I> void test()
 								\
 								BOOST_CHECK_EQUAL(d, c); \
 								\
-								if (a.can_convert_to<boost::int64_t>()) \
+								if (a.template can_convert_to<boost::int64_t>()) \
 								{ \
-									BOOST_CHECK_EQUAL(a.to_number<boost::int64_t>() op b, c); \
+									BOOST_CHECK_EQUAL(a.template to_number<boost::int64_t>() op b, c); \
 								} \
 								\
-								if (b.can_convert_to<boost::int64_t>()) \
+								if (b.template can_convert_to<boost::int64_t>()) \
 								{ \
-									BOOST_CHECK_EQUAL(a op b.to_number<boost::int64_t>(), c); \
+									BOOST_CHECK_EQUAL(a op b.template to_number<boost::int64_t>(), c); \
 								} \
 							} break
 
 #define GEN_SOP(op, chop)	case chop: \
 							{ \
-								if (b.can_convert_to<boost::uint64_t>()) \
+								if (b.template can_convert_to<boost::uint64_t>()) \
 								{ \
-									boost::uint64_t ub = b.to_number<boost::uint64_t>(); \
+									boost::uint64_t ub = b.template to_number<boost::uint64_t>(); \
 									\
 									BOOST_CHECK_EQUAL(a op ub, c); \
 									\

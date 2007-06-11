@@ -267,14 +267,14 @@ template <typename I> void test()
 						{ \
 							BOOST_CHECK_EQUAL(a _op b, c); \
 							\
-							if (a.can_convert_to<boost::int64_t>()) \
+							if (a.template can_convert_to<boost::int64_t>()) \
 							{ \
-								BOOST_CHECK_EQUAL(a.to_number<boost::int64_t>() _op b, c); \
+								BOOST_CHECK_EQUAL(a.template to_number<boost::int64_t>() _op b, c); \
 							} \
 							\
-							if (b.can_convert_to<boost::int64_t>()) \
+							if (b.template can_convert_to<boost::int64_t>()) \
 							{ \
-								BOOST_CHECK_EQUAL(a _op b.to_number<boost::int64_t>(), c); \
+								BOOST_CHECK_EQUAL(a _op b.template to_number<boost::int64_t>(), c); \
 							} \
 						}
 

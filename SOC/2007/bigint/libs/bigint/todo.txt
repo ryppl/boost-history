@@ -11,7 +11,7 @@ Base part.
 Feature name									Deadline		Status
 ------------									--------		------
 1. Bigint interface (header)					21 May			Awaiting resolution
-2. GMP implementation							21 May			In progress
+2. GMP implementation							21 May			Awaiting resolution
 3. Correctness tests							7 June			In progress
 4. Documentation								21 June			N/A
 5. Performance tests							7 July			N/A
@@ -112,8 +112,8 @@ Status: fixed
 + fix division and remainder to truncating ones
 Status: fixed
 
-- remove warnings for both MSVC and GCC
-Status: needs fixing
++ remove warnings for both MSVC and GCC
+Status: fixed
 
 3. Correctness tests
 

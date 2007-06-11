@@ -49,8 +49,8 @@ template <typename I, typename T> void test_number_ctors(T* values, size_t count
 		BOOST_CHECK_EQUAL(oss.str(), v.str());
 
 		// bigint -> number
-		BOOST_CHECK(v.can_convert_to<T>()); // we should be able to convert to T
-		BOOST_CHECK_EQUAL(convert_to_number(v.to_number<T>()), convert_to_number(values[i]));
+		BOOST_CHECK(v.template can_convert_to<T>()); // we should be able to convert to T
+		BOOST_CHECK_EQUAL(convert_to_number(v.template to_number<T>()), convert_to_number(values[i]));
 	}
 }
 
@@ -87,7 +87,7 @@ template <typename I> void test()
 	}
 
 	{
-		unsigned int values[] = {0, 1, 200, 65535, 384983, 23849384, 1203002930, 2147483648, 4294967294, 4294967295};
+		unsigned int values[] = {0, 1, 200, 65535, 384983, 23849384, 1203002930, 2147483648u, 4294967294u, 4294967295u};
 		
 		test_number_ctors<I>(values, ARRAY_SIZE(values));
 	}
@@ -100,13 +100,13 @@ template <typename I> void test()
 
 		for (size_t i = 0; i < ARRAY_SIZE(values); ++i)
 		{
-			values[i] *= 2147483648; // 2^31
+			values[i] *= 2147483648u; // 2^31
 			values[i] *= 2;          // 2^32
 		}
 
 		// first element is -2^31 * 2^32 == -2^63 - ok
 		// last element is (2^31 - 1) * 2^32 == 2^63 - 2^32 - too small
-		values[ARRAY_SIZE(values) - 1] += 4294967295;
+		values[ARRAY_SIZE(values) - 1] += 4294967295u;
 
 		// testing unit tests
 		BOOST_CHECK(values[0] < 0 && values[0] - 1 > 0); // underflow
@@ -118,19 +118,19 @@ template <typename I> void test()
 	}
 
 	{
-		boost::uint64_t values[] = {0, 1, 200, 65535, 384983, 23849384, 1203002930, 2147483648, 4294967294, 4294967295};
+		boost::uint64_t values[] = {0, 1, 200, 65535, 384983, 23849384, 1203002930, 2147483648u, 4294967294u, 4294967295u};
 
 		// small values
 		test_number_ctors<I>(values, ARRAY_SIZE(values));
 
 		for (size_t i = 0; i < ARRAY_SIZE(values); ++i)
 		{
-			values[i] *= 2147483648; // 2^31
+			values[i] *= 2147483648u; // 2^31
 			values[i] *= 2;          // 2^32
 		}
 
 		// last element is (2^32 - 1) * 2^32 == 2^64 - 2^32 - too small
-		values[ARRAY_SIZE(values) - 1] += 4294967295;
+		values[ARRAY_SIZE(values) - 1] += 4294967295u;
 
 		// testing unit tests
 		BOOST_CHECK_EQUAL(values[ARRAY_SIZE(values) - 1] + 1, 0); // overflow
