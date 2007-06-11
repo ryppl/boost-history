@@ -391,9 +391,9 @@ namespace boost { namespace detail {
 			}
 		}
 		
-		void ldiv(const bigint_gmp_implementation& lhs, const bigint_gmp_implementation& rhs, bigint_gmp_implementation& remainder)
+		void div(const bigint_gmp_implementation& lhs, const bigint_gmp_implementation& rhs, bigint_gmp_implementation& remainder)
 		{
-			mpz_fdiv_qr(data, remainder.data, lhs.data, rhs.data);
+			mpz_tdiv_qr(data, remainder.data, lhs.data, rhs.data);
 		}
 		
 		void sqrt(const bigint_gmp_implementation& lhs)

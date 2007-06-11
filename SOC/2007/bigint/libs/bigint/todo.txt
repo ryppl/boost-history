@@ -156,11 +156,11 @@ Status: implemented
 + test stream input/output
 Status: implemented
 
-- test abs, pow, ldiv, sqrt
-Status: needs implementing
++ test serialization
+Status: implemented
 
-- test serialization
-Status: needs implementing
++ test abs, pow, ldiv, sqrt
+Status: implemented
 
 - Is it possible to test cases when bigint must cause illegal operations (division by zero, sqrt(negative number))?
 Status: needs investigation
@@ -186,3 +186,4 @@ Extra features:
 - make GMP work with arbitrary storage strategy (and perhaps enforce supporting arbitrary strategy in future implementations)
 - getting several bits from an integer (say, 7 bits from 4859-th one). Perhaps, assigning several bits.
 - conversion from/to floating point (float, double, long double)
+- other styles of division (for now there's only truncating; floor and/or ceil perhaps?) & modulo

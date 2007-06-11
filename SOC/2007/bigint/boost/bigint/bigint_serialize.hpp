@@ -12,6 +12,10 @@
 
 #include <boost/bigint/bigint.hpp>
 
+#ifndef BOOST_SERIALIZATION_DEFAULT_TYPE_INFO
+#include <boost/serialization/extended_type_info_typeid.hpp>
+#endif
+
 #include <boost/serialization/string.hpp>
 #include <boost/serialization/split_free.hpp>
 

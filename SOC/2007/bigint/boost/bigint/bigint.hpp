@@ -13,6 +13,7 @@
 #include <string>
 #include <algorithm>
 
+#include <boost/detail/workaround.hpp>
 #include <boost/cstdint.hpp>
 
 #include <boost/bigint/bigint_config.hpp>
@@ -362,7 +363,7 @@ public:
 	friend bigint_base abs(const bigint_base& value)
 	{
 		bigint_base result;
-		result.impl.abs(value);
+		result.impl.abs(value.impl);
 		return result;
 	}
 
@@ -373,11 +374,11 @@ public:
 		return result;
 	}
 
-	// non-standard. Do we need to change it (introduce some equivalent to ldiv_t type) or is it ok?
-	friend bigint_base ldiv(const bigint_base& lhs, const bigint_base& rhs, bigint_base& remainder)
+	// non-standard. Do we need to change it (introduce some equivalent to div_t type) or is it ok?
+	friend bigint_base div(const bigint_base& lhs, const bigint_base& rhs, bigint_base& remainder)
 	{
 		bigint_base result;
-		result.impl.ldiv(lhs.impl, rhs, remainder.impl);
+		result.impl.div(lhs.impl, rhs.impl, remainder.impl);
 		return result;
 	}
 

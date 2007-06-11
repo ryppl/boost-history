@@ -16,6 +16,8 @@ import testing ;
    [ run comparison.cpp ]
    [ run unary.cpp ]
    [ run stream.cpp ]
+   [ run serialization.cpp ../../serialization/build//boost_serialization : : : : ]
+   [ run functions.cpp ]
    ;
 }
 
