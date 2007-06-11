@@ -16,11 +16,11 @@
 #include <boost/graph/undirected_graph.hpp>
 
 struct Actor;
-struct Performance;
+struct Movie;
 
 // The Graph data structure is an undirected graph with vertices
 // being represented by actors and edges, their co-performances.
-typedef boost::undirected_graph<Actor, Performance> Graph;
+typedef boost::undirected_graph<Actor, Movie> Graph;
 typedef Graph::vertex_descriptor Vertex;
 typedef Graph::edge_descriptor Edge;
 
@@ -32,35 +32,32 @@ struct Actor
     int index;
     int distance;
     Vertex parent;
-
     std::string name;
-    unsigned bacon_number;
 };
 
-// The Performance struct describes information about the performance
+// The Movie struct describes information about the performance
 // of two actors - specifically, what movie and year they performed
 // together in.
 //
 // Note that the edge property type contains a weight. While a performance
 // wouldn't typically be weighted (it doesn't mean anything), we need a
 // weight map to work with some algorithms.
-struct Performance
+struct Movie
 {
     unsigned weight;
-    std::string movie;
+    std::string name;
 };
 
-// These property maps index information in the Actor and Performance
+// These property maps index information in the Actor and Movie
 // structures, respectively. They are used to access specific pieces
 // of information inside the graph.
 typedef boost::property_map<Graph::type, int Actor::*>::type ActorIndexMap;
 typedef boost::property_map<Graph::type, int Actor::*>::type ActorDistanceMap;
 typedef boost::property_map<Graph::type, Vertex Actor::*>::type ActorParentMap;
 typedef boost::property_map<Graph::type, std::string Actor::*>::type ActorNameMap;
-typedef boost::property_map<Graph::type, unsigned Actor::*>::type ActorBaconMap;
 
-typedef boost::property_map<Graph::type, unsigned Performance::*>::type MovieWeightMap;
-typedef boost::property_map<Graph::type, std::string Performance::*>::type MovieNameMap;
+typedef boost::property_map<Graph::type, unsigned Movie::*>::type MovieWeightMap;
+typedef boost::property_map<Graph::type, std::string Movie::*>::type MovieNameMap;
 
 // we use an extra map to help dynamically populate the graph.
 // this maps actor names to the vertices that they're inserted as

@@ -18,6 +18,40 @@
 using namespace std;
 using namespace boost;
 
+template <typename ParentMap>
+struct ActorParentRecorder : public bfs_visitor<>
+{
+    ActorParentRecorder(ParentMap d)
+	: parents(d)
+    {}
+
+    // record the parent
+    template <typename Edge, typename Graph>
+    void tree_edge(Edge e, const Graph& g) const
+    {
+	typedef typename Graph::vertex_descriptor Vertex;
+
+	Vertex
+	    u = source(e, g),
+	    v = target(e, g);
+
+	// the parent of v is u
+	parents[v] = u;
+    }
+
+    ParentMap parents;
+};
+
+// This is just a convenience function so we can call a function rather than
+// explicitly instantiate the visitor type. It makes it more "action-oriented".
+template <typename ParentMap>
+ActorParentRecorder<ParentMap> record_actor_parents(ParentMap d)
+{
+    return ActorParentRecorder<ParentMap>(d);
+}
+
+
+
 int
 main(int argc, char *argv[])
 {
@@ -62,29 +96,15 @@ main(int argc, char *argv[])
     // the indices after a sequence of removals.
     ActorIndexMap indices = get(&Actor::index, g);
 
-    // The distance map records the shortest distance from the source to
-    // the the vertex represented at that index.
-    ActorDistanceMap distances = get(&Actor::distance, g);
-
     // The predeceessor map records, for the vertex at each index, the
     // predecessor (or parent) in the shortest-path tree. By iterating
     // from predecessor to predecessor, we can find the shortest path
     ActorParentMap parents = get(&Actor::parent, g);
 
-    // The weight map records the weight of each edge. Since the movie
-    // graph is naturally unweighted (and has no weight property for the
-    // edges), we are "faking" it by creating it as an external property
-    // with all weights initially set to 1.
-    MovieWeightMap weights = get(&Performance::weight, g);
-
-    dijkstra_shortest_paths(g, u, 
-			    // named parameters
-			    vertex_index_map(indices)
-			    .weight_map(weights)
-			    .distance_map(distances)
-			    .predecessor_map(parents)
+    breadth_first_search(g, u,
+			 vertex_index_map(indices)
+			 .visitor(record_actor_parents(parents))
 	);
-
 
     // print the movies in which the actors appear by iterating over
     // the elements in the predecessor map
@@ -109,7 +129,7 @@ main(int argc, char *argv[])
 	}
 
 	// what's the movie name?
-	string movie = g[e].movie;
+	string movie = g[e].name;
 
 	// print out the path
 	cout << from << " starred with " << to << " in '" << movie << "'\n";

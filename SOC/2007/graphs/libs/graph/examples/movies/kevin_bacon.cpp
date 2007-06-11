@@ -19,11 +19,11 @@ using namespace boost;
 
 // This visitor is responsible for recording (setting) the bacon numbers
 // of actors in the movie graph.
-template <typename BaconMap>
-struct BaconNumberRecorder : public bfs_visitor<>
+template <typename DistanceMap>
+struct ActorDistanceRecorder : public bfs_visitor<>
 {
-    BaconNumberRecorder(BaconMap b)
-	: bacons(b)
+    ActorDistanceRecorder(DistanceMap d)
+	: distances(d)
     {}
 
     // The tree_edge() method is invoked when a vertex v is discovered
@@ -41,18 +41,18 @@ struct BaconNumberRecorder : public bfs_visitor<>
 	    v = target(e, g);
 
 	// set the bacon number to 1 + u's bacon number
-	bacons[v] = bacons[u] + 1;
+	distances[v] = distances[u] + 1;
     }
 
-    BaconMap bacons;
+    DistanceMap distances;
 };
 
 // This is just a convenience function so we can call a function rather than
 // explicitly instantiate the visitor type. It makes it more "action-oriented".
-template <typename BaconMap>
-BaconNumberRecorder<BaconMap> record_bacon_numbers(BaconMap b)
+template <typename DistanceMap>
+ActorDistanceRecorder<DistanceMap> record_actor_distances(DistanceMap d)
 {
-    return BaconNumberRecorder<BaconMap>(b);
+    return ActorDistanceRecorder<DistanceMap>(d);
 }
 
 int
@@ -69,26 +69,25 @@ main(int argc, char *argv[])
 
     // get the bacon number map associated with the graph
     ActorIndexMap indices = get(&Actor::index, g);
-    ActorNameMap names = get(&Actor::name, g);
-    ActorBaconMap bacons = get(&Actor::bacon_number, g);
+    ActorDistanceMap dists = get(&Actor::distance, g);
 
     // pick a starting vertex (kevin bacon, obviously) and set his
     // number to 0.
     Vertex kevin = actors["Kevin Bacon"];
-    bacons[kevin] = 0;
+    dists[kevin] = 0;
 
     // run a breadth-first search on the graph and record
     // the kevin bacon numbers for each actor
     breadth_first_search(g, kevin,
 			 // named parameters
 			 vertex_index_map(indices)
-			 .visitor(record_bacon_numbers(bacons))
+			 .visitor(record_actor_distances(dists))
 	);
 
     // just run over the vertices and print the back numbers
     Graph::vertex_iterator i, j;
     for(tie(i, j) = vertices(g); i != j; ++i) {
-	cout << g[*i].bacon_number << " : " << g[*i].name << "\n";
+	cout << g[*i].distance << " : " << g[*i].name << "\n";
     }
 
     return 0;

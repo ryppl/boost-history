@@ -45,14 +45,14 @@ add_actor(Graph &g, ActorMap &actors, string &name)
 }
 
 static Edge
-add_performance(Graph &g, Vertex u, Vertex v, string const& movie)
+add_movie(Graph &g, Vertex u, Vertex v, string const& movie)
 {
     Edge e;
     bool inserted;
     tie(e, inserted) = add_edge(u, v, g);
     if(inserted) {
 	g[e].weight = 1;
-	g[e].movie = movie;
+	g[e].name = movie;
     }
     return e;
 }
@@ -72,7 +72,7 @@ build_movie_graph(istream& is, Graph& g, ActorMap& actors)
 	tokenizer<> tok(line, sep);
 	tokenizer<>::iterator i = tok.begin();
 	
-	// grab the first actor
+	// grab the actor names and the movie title
 	string first = *i++;
 	string second = *i++;
 	string movie = *i++;
@@ -83,8 +83,8 @@ build_movie_graph(istream& is, Graph& g, ActorMap& actors)
 	    u = add_actor(g, actors, first),
 	    v = add_actor(g, actors, second);
 
-	// create an edge (performance) linking the actors
-	add_performance(g, u, v, movie);
+	// create an edge (movie) linking the actors
+	add_movie(g, u, v, movie);
     }
 }
 
