@@ -52,7 +52,7 @@ edges for this example.
 
  using namespace std;
  using namespace boost;
-  
+
  int main(int, char*[])
  {
    // create a typedef for the Graph type

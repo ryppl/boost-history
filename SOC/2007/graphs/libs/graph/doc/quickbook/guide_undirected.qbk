@@ -1,0 +1,528 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Working with Undirected Graphs]
+This section could be called "Things to do with Undirected Graphs" since its goal
+is to provide a number of concrete examples of how undirected graphs can be used
+to solve problems - and more specifically how to implement them using Boost.Graph.
+
+[h2 Citation Graphs]
+The first example problem we want to look at is the "Six Degrees of Kevin Bacon"
+problem. Mathematicians might be more familiar with this is as "Erdos Numbering".
+This problem is based on a network of relationships between people. In the Six
+Degrees problem, two actors are related if they appear in the same movie. With
+Erdos, two people are related if they collaborated on a published article. This
+type of network is often called a /citation/ graph (or network) and is trivially
+represented using an undirected graph.
+
+For the Six Degrees problem, we define a citation graph such that each vertex in
+the graph represents an actor, and each edge connects two actors if and only if
+they appear in the same movie. There are actually two different problems that we
+can solve:
+# How far is every actor in the graph from Kevin Bacon? This gives us the number
+of steps between Mr. Bacon and any other actor.
+# What is the fastest way to travel (along the citation graph) from Kevin Bacon
+to any other actor? This is more commonly known as the "Six Degrees of Kevin
+Bacon Game" and was actually discussed (on air) by its inventors on MTV's "The Jon
+Stewart Show" (go figure).
+These are actually two different instances of the same problem and can be solved
+using the same algorithm - a simple breadth-first search (BFS).
+
+[h3 Actors, Movies, and Graphs]
+
+Our program begins by inlcuding required headers and creating some convenient
+type aliases.
+
+ #include <string>
+ #include <map>
+ #include <boost/graph/undirected_graph.hpp>
+ #include <boost/graph/breadth_first_search.hpp>
+
+ struct Actor;
+ struct Movie;
+
+ typedef boost::undirected_graph<Actor, Movie> Graph;
+ typedef Graph::vertex_descriptor Vertex;
+ typedef Graph::edge_descriptor Edge;
+
+In this snippet, our `Actor` structure is going to represent the properties of each
+vertex in the graph while the `Movie` structure encapsulates edge information (i.e.,
+the movie that two actors appear in).
+
+The graph itself is defined by the type `boost::undirected_graph<Actor, Movie>`.
+Essentially, this states that each vertex will have properties given in the `Actor`
+structure, and that edges will have properties in the `Movie` structure. We also
+create some aliases for the graph's vertex and edge descriptors.
+
+[important
+Many of the examples in the Boost Graph Library treat vertex descriptors as the
+index of a vertex within the graph. It must be noted however, that this is not
+a reliable approach to indexing vertices and /will not/ work with the `undirected_graph`
+and `directed_graph` classes. Try to get in the habit of thinking of vertex and
+edge descriptors as opaque types and values - they are simply keys that provide
+access to the properties of their respective types.
+]
+
+In order to fully model our problem, we need to finish defining the `Actor` and
+`Movie` structures for our graph.
+
+ struct Actor
+ {
+   int index;
+   int distance;
+   std::string name;
+ };
+
+ struct Movie
+ {
+   std::string name;
+ };
+
+In this example, we are "internalizing" a number of properties for each vertex.
+Here, `Actor::index` represents the index of the vertex within the graph. Unfortunately,
+the graph class is not smart enough to automatically assign and maintain these indices
+(for a number of reasons), so we're going to have to manage this later. Likewise, the
+`Actor::distance` property records the distance from each actor to Kevin Bacon. This is
+the value that we will be computing for every actor in the data set. The `Actor::name`
+and `Movie::name` properties should be fairly self-explanatory.
+
+We're also going to define a number of other types related to the graphs properties:
+property maps. These maps provide a mechanism for accessing the interior and exterior
+properties of vertices and edges in a uniform manner. In this example, all of the
+vertex and edge properties are internal, but we could easily make them external and
+have the program run just as quickly.
+
+ typedef boost::property_map<Graph::type, int Actor::*>::type ActorIndexMap;
+ typedef boost::property_map<Graph::type, int Actor::*>::type ActorDistanceMap;
+
+The first template argument `Graph::type` defines the type of the structure that
+the property map is going to access. The second template argument with the somewhat
+peculiar syntax is the type of the property. These are pointers to member variables
+of type `int`.
+
+Now that the preliminaries are out of the way, we need to concentrate on the construction
+of our graph. For this task, we're going to need another data structure that maps actor
+names to vertices in the graph. We're going to use this to prevent adding mulitple
+vertices for the same actor and later, to find the vertex in the graph that corresponds to
+Kevin Bacon.
+
+This program reads an input file from standard input. The input file is given in an edge-
+list format with semicolon separators. Each line corresponds to an edge, giving the two
+actors as the endpoints and the name of the movie they both appear in. For example:
+[pre
+Tim Matheson;Kevin Bacon;Animal House (1978)
+John Belushi;Kevin Bacon;Animal House (1978)
+Carrie Fisher;John Belushi;The Blues Brothers (1980)
+Mark Hamill;Carrie Fisher;Star Wars (1977)
+]
+
+The following function implements the input parser for the graph data.
+
+ #include <boost/tokenizer.hpp>
+
+ typedef std::map<std::string, Vertex> ActorMap;
+
+ using namespace std;
+ using namespace boost;
+
+ void build_citation_graph(istream& is, Graph& graph, ActorMap&)
+ {
+   // pull all of the data from std in.
+   for(string line; getline(is, line); ) {
+     // skip any comment or blank lines
+     if(line[0] == '#' || line.empty()) {
+       continue;
+     }
+
+     // tokenize the string
+     char_delimiters_separator<char> sep(false, "", ";");
+     tokenizer<> tok(line, sep);
+     tokenizer<>::iterator i = tok.begin();
+
+     // grab the names of the two actors and the movie title
+     string first = *i++;
+     string second = *i++;
+     string movie = *i++;
+
+     // get the vertices associated with the actors adding them
+     // to the graph if necessary
+     Vertex
+       u = add_actor(g, actors, first),
+       v = add_actor(g, actors, second);
+
+     // create an edge (movie) linking the actors
+     add_movie(g, u, v, movie);
+   }
+ }
+
+To finish graph construction, we need to implement the `add_actor()` and `add_movie()`
+functions:
+
+ Vertex add_actor(Graph& graph, ActorMap& actors, const string& name)
+ {
+   // try inserting the actors name into the actors map
+   Vertex v;
+   ActorMap::iterator it;
+   bool inserted;
+   tie(it, inserted) = actors.insert(make_pair(name, Vertex()));
+
+   if(inserted) {
+     // if the vertex was inserted into the map, we need to
+     // create a new vertex in the graph
+     v = add_vertex(graph);
+     it->second = v;
+
+     // configure the vertex properties
+     g[v].index = num_vertices(graph) - 1;
+     g[v].name = name;
+   }
+   else {
+     // otherwise, the name is already in the map, so
+     // return the vertex associated with it
+     v = it->second;
+   }
+
+   return v;
+ }
+
+ Edge add_movie(Graph& g, Vertex u, Vertex v, const string& movie)
+ {
+   Edge e;
+   bool inserted;
+   tie(e, inserted) = add_edge(u, v, g);
+   if(inserted) {
+     g[e].name = movie;
+   }
+   return e;
+ }
+
+There are several important features of these two functions to pay special attention to.
+The first is the use of the `tie()` constructor. This is arguably one of the most useful
+and most used functions (it's actually a type) in Boost.Graph. It simply takes the
+values returned in a `std::pair` and assigns them to the variables passed to the
+constructor. In this function it is more or less equivalent to:
+
+ std::pair<ActorMap::Iterator, bool> x = actors.insert(...);
+ ActorMap::iterator iter = x.first;
+ bool inserted = x.second;
+
+The second (and most important) is the assignment of the vertex properties. These
+two lines of code use the /bundled properties/ syntax to assign both an index
+and a name to the vertex that was just added to the graph.
+
+[warning
+Vertex indices (as used in this example) are entirely unstable if vertices are removed
+from the graph. Many graph algorithms require vertex index maps with values in the range
+\[0, `num_vertices(g)`)/. If we were to remove the first vertex in this example, the
+vertex indices would be incorrect and the program would potentially crash (accessing
+beyond `num_vertices(g)`). It is relatively trivial and inexpensive (O(`num_vertices(g)`)
+to renumber vertices just before running algorithms that require vertex index maps.
+]
+
+Our main program looks like this:
+
+ int main()
+ {
+   Graph graph;
+   ActorMap actors;
+   build_citation_graph(cin, graph, actors);
+
+   // ...to be continued...
+ }
+
+[h3 Distance To Kevin Bacon]
+Now, all we have left to do is assign distances to Kevin Bacon. To do this, we're going
+to use a breadth-first search (starting from Kevin Bacon) and simply record the "depth"
+of each vertex as the distance from Kevin to every other actor. To do this, we're going
+to need some help in the form of a BFS visitor.
+
+ template <typename DistanceMap>
+ struct ActorDistanceRecorder : public bfs_visitor<>
+ {
+   ActorDistanceRecorder(DistanceMap d)
+     : distances(d)
+   {}
+
+   template <typename Edge, typename Graph>
+   void tree_edge(Edge e, const Graph& g) const
+   {
+     typedef typename Graph::vertex_descriptor Vertex;
+     Vertex
+       u = source(e, g),
+       v = target(e, g);
+     distances[v] = distances[u] + 1;
+   }
+
+   DistanceMap distances;
+ };
+
+This visitor overloads the `tree_edge()` member function in order to compute the distance
+from a central vertex. In this example, the distance of a vertex from a starting vertex
+is one plus the depth of its parent in the spanning tree generated by a BFS.
+
+We're also going to provide a simple little helper function so we don't have to
+explicitly instantiate the visitor when we use it with the BFS algorithm.
+
+ template <typename DistanceMap>
+ ActorDistanceRecorder<DistanceMap> record_actor_distances(DistanceMap d)
+ {
+   return ActorDistanceRecorder<DistanceMap>(d);
+ }
+
+This leaves the question: what is a DistanceMap? To answer that, we have to complete the
+solution to the Kevin Bacon problem. Back to the `main()`...
+
+ int main()
+ {
+   // ...continue from above...
+
+   ActorIndexMap indices = get(&Actor::index, graph);
+   ActorDistanceMap distances = get(&Actor::distance, graph);
+
+   // find kevin (our starting point) and zero out his distance-to-self
+   Vertex kevin = actors["Kevin Bacon"];
+   distances[kevin] = 0;
+
+   breadth_first_search(graph, kevin,
+     vertex_index_map(indices).
+     visitor(record_actor_distances(distances)));
+
+   // ...to be continued...
+ }
+
+Finally, we're using the property maps that we defined so far above. The `get()` function
+essentially returns a map-like object that allows us to read and/or write the specified vertex
+or edge property. As mentioned earlier, these maps allow algorithms to reand and write both
+internal and external properties in a uniform method. Because graph algorithms cannot guess
+whether properties are internal or external, we have to pass these maps to just about every
+algorithm in this manner.
+
+We actually use the actors' distance map as it is in the distance recorder above (mostly as
+an example). We could just as easily have written the distance assignment as:
+
+ graph[kevin].distance = 0;
+
+with the same effect.
+
+Finally, we can run our BFS and assign "Kevin Bacon numbers" to our actors. This is done
+by calling the `breadth_first_search()` function passing the graph, the starting vertex
+and some named parameters. The first named parameter is the vertex index map which provides
+read access to the `Actor::index` property assigned during graph construction. The second
+is an instance of our distance-recording visitor (as returned by our helper function).
+
+After finishing, each vertices distance property will be assigned. All there is left to do
+is display the numbers:
+
+ int main()
+ {
+   // ...continued from above...
+
+   Graph::vertex_iterator i, j;
+   for(tie(i, j) = vertices(g); i != j; ++i) {
+     cout << graph[*i].distance << " : " << graph[*i].name << "\n";
+   }
+ }
+
+The output should look something like this (note that $ is a shell prompt):
+[pre
+$ ./kevin_bacon < movies
+1 : Chris Penn
+1 : Sarah Jessica Parker
+2 : James Belushi
+2 : David Ogden Stiers
+3 : Mark Hamill
+3 : Dan Akroyd
+1 : John Belushi
+1 : Tim Matheson
+2 : Tom Hulce
+2 : Peter Riegert
+2 : Karen Allen
+2 : Mike Meyers
+2 : Sylvester Stallone
+2 : Eddie Murphy
+]
+
+[h3 The Kevin Bacon Game]
+Using the above algorithm we can find how far away each actor is from Kevin Bacon, but what
+if we want to know how to get there. For example, we know that Dan Akroyd is three steps away
+so what are the movies? We could look at the input file, but that won't really give us any
+advantage. A better solution would be to modify the program to record the shortest paths.
+
+Since the term /shortest paths/ arises in the problem description, we might be tempted to
+use a shortest paths algorithm such as Dijkstra's. However, if we think about the problem a
+little bit, we should realize that there aren't any edge weights - something required for
+Dijkstra's algorithm. We could implicitly treat all edges as having a weight of one, but
+that turns out to be somewhat ineffective. It turns out that we can use the same BFS
+algorithm to record shortest paths instead of (or in addition to) actors' distances to
+Kevin Bacon. Specifically, we can record each the parent of each vertex in the BFS tree
+and simply backtrack from a given actor to Kevin Bacon.
+
+There are only a couple of modifications that we really need to make. First, we want to
+add an extra property for each actor: its parent vertex in the search tree. For convenience,
+we are also going to add a new property map type.
+
+ struct Actor
+ {
+   // ...same as before...
+   Vertex parent;
+ };
+
+ // ...
+ typedef boost::property_map<Graph::type, &Vertex Actor::*>::type ActorParentMap;
+
+We are also going to change the BFS visitor that we used in the previous example.
+
+ template <typename ParentMap>
+ struct ActorParentRecorder : public bfs_visitor<>
+ {
+   ActorParentRecorder(ParentMap d)
+    : parents(d)
+   {}
+
+   template <typename Edge, typename Graph>
+   void tree_edge(Edge e, const Graph& g) const
+   {
+     typedef typename Graph::vertex_descriptor Vertex;
+     Vertex
+       u = source(e, g),
+       v = target(e, g);
+     parents[v] = u;
+   }
+
+   ParentMap parents;
+ };
+
+ template <typename ParentMap>
+ ActorParentRecorder<ParentMap> record_actor_parents(ParentMap d)
+ {
+   return ActorParentRecorder<ParentMap>(d);
+ }
+
+Despite the fact that this code is essentially cut, paste, and replace from the code
+above, there is one interesting change. Instead of assigning a distance to a vertex,
+we are setting the parent of the target to be the source. This one line allows us
+to walk the shortest paths from any actor to Kevin Bacon.
+
+The only other changes are going to be in the `main()` program.
+
+ int main(int argc, char *argv[])
+ {
+   string src = "Kevin Bacon";
+   string tgt;
+
+   if(argc < 2) {
+     cerr << "usage: actor_paths actor [actor] < movies";
+     return -1;
+   }
+   else if(argc == 2) {
+     tgt = argv[1];
+   }
+   else {
+     src = argv[1];
+     tgt = argv[2];
+   }
+
+   Graph graph;
+   ActorMap actors;
+   build_citation_graph(cin, graph, actors);
+
+   // ...to be continued...
+
+This program accepts a couple of command line parameters. If one actor is given then
+we find the path to Kevin Bacon. If two actors are given, we find the shortest path
+between the two actors. We can now get the vertices for specified actors, and find
+the paths between them.
+
+   // ...continued from before...
+   Vertex u = find_actor_vertex(g, actors, src);
+   Vertex v = find_actor_vertex(g, actors, tgt);
+   if(u == Graph::null_vertex()) {
+     cerr << "could not find actor " << src << "\n";
+     return -1;
+   }
+   if(v == Graph::null_vertex()) {
+     cerr << "could not find actor " << tgt << "\n";
+     return -1;
+   }
+
+   ActorIndexMap = get(&Actor::index, graph);
+   ActorParentMap = get(&Actor::parent, graph);
+
+   breadth_first_search(graph, u,
+     vertex_index_map(indices).
+     visitor(record_actor_parents(parents)));
+
+   // ...to be continued...
+
+The `find_actor_vertex()` method is relatively trivial:
+
+ Vertex find_actor_vertex(const Graph& g, const ActorMap& actors, const std::string& name)
+ {
+   Vertex v = Graph::null_vertex();
+   ActorMap::const_iterator i = actors.find(name);
+   if(i != actors.end()) {
+     v = i->second;
+   }
+   return v;
+ }
+
+Otherwise, the code is essentially the same as above. In this case, we're passing our
+modified parent-recording visitor to the `breadth_first_search()` function. The step
+in the solution is to backtrack from the target actor to the parent, printing the
+movies that form the citation chain.
+
+ int main(...)
+ {
+   // ...continued from before...
+   while(v != u) {
+     Vertex p = parents[v];
+     string from = g[v].name;
+     string to = g[p].name;
+
+     Edge e;
+     Graph::out_edge_iterator i, j;
+     for(tie(i, j) = out_edges(v, g); i != j; ++i) {
+       if(target(*i, g) == p) {
+         e = *i;
+         break;
+       }
+     }
+
+     string movie = g[e].name;
+     cout << from << " starred with " << to << " in '" << movie << "'\n";
+
+     v = p;
+   }
+ }
+
+The only "complicated" part of the backtracking is finding the edge from
+the child to the parent. Because `undirected_graph` does is not a model of an
+`adjacency_matrix`, there is no simple method that returns edge data given
+two vertices.
+
+[note This problem can be simplified using the `graph_as_matrix` adapter.]
+
+The output might look something like:
+[pre
+$ ./six_degrees "Dan Akroyd" < movies
+Dan Akroyd starred with Carrie Fisher in 'The Blues Brothers (1980)'
+Carrie Fisher starred with Elisabeth Shue in 'Soapdish (1991)'
+Elisabeth Shue starred with Kevin Bacon in 'Hollow Man (2000)'
+]
+
+You now have a completely unbeatable implementation of the "Six Degrees of Kevin
+Bacon" game - provided of course that you add a lot more movie data to the simple
+data set provided with this example.
+
+[h3 Closing Thoughts]
+Notice that this problem can be trivially adapted to the Erd\&ouml;s Numbering problem
+by simply redefining the semantics of the graph. Instead of actors, each vertex
+can represent an author, and each edge connects two authors if and only if both
+authors collaborated on the same publication. It is easy to see that the two graphs
+are equivalent, and the same algorithms will work on both.
+
+[endsect]

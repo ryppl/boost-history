@@ -6,7 +6,7 @@
  /]
 
 [section The `adjacency_list` Class]
-As mentioned in the Tour, the `adjacency_list<>` has six template parameters. Three are
+As mentioned in the Tour, the `adjacency_list` has six template parameters. Three are
 used to select storage types for the vertex list, the edge list and the out edge list,
 and the remaining three define the interior properties of vertices, edges, and the
 graph itself.

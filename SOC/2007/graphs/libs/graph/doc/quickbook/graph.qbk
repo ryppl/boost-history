@@ -44,5 +44,7 @@
 
 [include tour.qbk]
 
-[include tutorial.qbk]
+[include guide.qbk]
+
+
 

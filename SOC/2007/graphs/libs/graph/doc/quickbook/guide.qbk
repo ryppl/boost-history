@@ -1,0 +1,45 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section User's Guide]
+In order to help ease your transition to working with Boost Graph, the library
+provides two general purpose graph classes: `undirected_graph` and `directed_graph`.
+These two classes are simply abstractions over the much more configurable, but
+somewhat obstruse `adjacency_list` class. It may be important to note that these
+classes are designed to be applicable to as many problems as possible, and may
+perform poorly in some circumstances. See the section
+[link boost_graph.user_s_guide.optimizing_for_performance Optimizing for Performance]
+for details on why you would want to and how to accomplish it.
+
+Note that these examples all use /bundled properties/ - a mechanism for defining
+properties for graphs, vertices, and edges. Unfortunately, these may not work
+correctly on compilers that do not support partial template specialization. If you
+are trying to build these examples see the section on /bundled properties/ for
+translating to old-style properties.
+
+The following sections provide users guides and details for working with both
+the `undirected_graph` and `directed_graph`, the much more general `adjacency_list`
+and `adjacency_matrix` classes, the truth about properties and property maps,
+tips and tricks for optimizing, and notes on implementing new Boost.Graph
+algorithms.
+
+[include guide_undirected.qbk]
+
+[include guide_directed.qbk]
+
+[include guide_adjacency_list.qbk]
+
+[h2 Optimizing for Performance]
+One of the unfortunate problems of providing general purpose classes is that they often
+fail to scale up to larger problems. Consider the Six Degrees of Kevin Bacon game. What
+happens if you want to play on, say the entire contents of the
+[@http://www.imdb.com Internet Movie Database (IMDb)]?
+Will the `undirected_graph` class be capable of building the data structure and running
+the search algorithms in reasonable time? Probably not. This section is a guide on migrating
+from a "canned" graph to a customized solution.
+
+[endsect]
