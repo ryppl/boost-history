@@ -1,17 +1,60 @@
-\section{/home/huseyin/Documents/polytechnic/Projects/GSo\-C07/geometry/libs/hdstl/dev/hds\_\-concepts/bidirectional\_\-hds\_\-concept.hpp File Reference}
-\label{bidirectional__hds__concept_8hpp}\index{/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/bidirectional_hds_concept.hpp@{/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds\_\-concepts/bidirectional\_\-hds\_\-concept.hpp}}
-\subsection*{Namespaces}
-\begin{CompactItemize}
-\item 
-namespace \textbf{hdstl}
-\item 
-namespace \textbf{hdstl::concepts}
-\end{CompactItemize}
-\subsection*{Classes}
-\begin{CompactItemize}
-\item 
-class \bf{hdstl::concepts::Bidirectional\-HDSConcept$<$ HDS $>$}
-\begin{CompactList}\small\item\em Bidirectional HDS concept definition. \item\end{CompactList}\end{CompactItemize}
+\section{bidirectional\_\-hds\_\-concept.hpp File Reference}
+\label{bidirectional__hds__concept_8hpp}\index{bidirectional_hds_concept.hpp@{bidirectional\_\-hds\_\-concept.hpp}}
+Bidirectional HDS concept definition. 
+
 
 
 \subsection{Detailed Description}
+Bidirectional HDS concept definition. 
+
+\begin{Desc}
+\item[Definition]This concept refines the Forward\-HDSConcept and Backward\-HDSConcept, and specifies additional bidirectional traversal category. Bidirectional category requires both the forward\_\-category and the backward\_\-category defined to iterate over the HDS data structure, which means both clockwise \& counter clockwise movement around the facet and vertex. From these two categories all others can be accessed with the help of the opposite of a halfedge.\end{Desc}
+\begin{Desc}
+\item[Refinement of]\begin{itemize}
+\item Forward\-HDSConcept\item Backward\-HDSConcept\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Notation]\begin{itemize}
+\item HDS A type that is a model of Bidirectional\-HDSConcept\item hds A non-modifiable instance of HDS\item h,g Halfedge descriptors, of type X::halfedge\_\-descriptor\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Associated types]\begin{itemize}
+\item hds\_\-traits$<$HDS$>$::halfedge\_\-descriptor: must be Default\-Constructible and Copy\-Constructible, Equality\-Comparable, Assignable.\item hds\_\-traits$<$HDS$>$::traversal\_\-category: must be convertible to hds\_\-traits$<$HDS$>$::bidirectional\_\-traversal\_\-tag.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Definitions]\begin{itemize}
+\item {\em halfedge\/} {\em descriptor\/} is a type that contains information to access the halfedge.\item {\em traversal\/} {\em category\/} is a type that contains information about the direction of the traversal, which is forward, backward or bidirectional. For bidirectional hds concept, it has to be convertible to hds\_\-traits$<$HDS$>$::bidirectional\_\-traversal\_\-tag.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Valid Expressions]\begin{itemize}
+\item see Forward\-HDSConcept and Backward\-HDSConcept.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Expression Semantics]\begin{itemize}
+\item see Forward\-HDSConcept and Backward\-HDSConcept.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Complexity guarantees]\begin{itemize}
+\item see Forward\-HDSConcept and Backward\-HDSConcept.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Invariants ]The invariants for Forward\-HDSConcept, and Backward\-HDSConcept should hold for Bidirectional\-HDSConcept also.\end{Desc}
+\begin{Desc}
+\item[Concept-checking class]
+
+\begin{Code}\begin{verbatim} template <class HDS> 
+ struct BidirectionalHDSConcept {
+   typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+   typedef typename hds_traits<HDS>::traversal_category traversal_category;
+    void constraints() {
+       using namespace boost;
+       function_requires<ForwardHDSConcept<HDS> >();
+       function_requires<BackwardHDSConcept<HDS> >();
+       function_requires<ConvertibleConcept<traversal_category,
+                                          bidirectional_traversal_tag> >();  
+    }
+    BidirectionalHDS hds;
+ };
+\end{verbatim}\end{Code}
+
+ \end{Desc}

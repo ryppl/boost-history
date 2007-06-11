@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>facet_hds_concept.hpp File Reference</title>
+<title>vertex_hds_concept.hpp File Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -10,47 +10,47 @@
     <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
     <li id="current"><a href="files.html"><span>Files</span></a></li>
   </ul></div>
-<h1>facet_hds_concept.hpp File Reference</h1>Facet HDS concept definition. <a href="#_details">More...</a>
+<h1>vertex_hds_concept.hpp File Reference</h1>Vertex HDS concept definition. <a href="#_details">More...</a>
 <p>
 
 <p>
-<a href="facet__hds__concept_8hpp-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
+<a href="vertex__hds__concept_8hpp-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Facet HDS concept definition. 
+Vertex HDS concept definition. 
 <p>
-<dl compact><dt><b>Definition</b></dt><dd>This concept refines the HDSConcept, and specifies additional facet descriptor to attach facets to the HDS.</dd></dl>
+<dl compact><dt><b>Definition</b></dt><dd>This concept refines the HDSConcept, and specifies additional vertex descriptor to attach vertices to the HDS.</dd></dl>
 <dl compact><dt><b>Refinement of:</b></dt><dd><ul>
 <li>HDSConcept</li></ul>
 </dd></dl>
 <dl compact><dt><b>Notation</b></dt><dd><ul>
-<li>HDS A type that is a model of FacetHDSConcept</li><li>hds A non-modifiable instance of HDS</li><li>f Facet descriptor, of type X::facet_descriptor</li></ul>
+<li>HDS A type that is a model of VertexHDSConcept</li><li>hds A non-modifiable instance of HDS</li><li>v Vertex descriptor, of type X::vertex_descriptor</li></ul>
 </dd></dl>
 <dl compact><dt><b>Associated types</b></dt><dd><ul>
-<li>hds_traits&lt;HDS&gt;::facet_descriptor: must be DefaultConstructible and CopyConstructible, EqualityComparable, Assignable.</li></ul>
+<li>hds_traits&lt;HDS&gt;::vertex_descriptor: must be DefaultConstructible and CopyConstructible, EqualityComparable, Assignable.</li></ul>
 </dd></dl>
-<dl compact><dt><b>Definitions</b></dt><dd><em>facet</em> <em>descriptor</em> is a type that contains information to access the facets attached to the halfedge data structure.</dd></dl>
+<dl compact><dt><b>Definitions</b></dt><dd><em>vertex</em> <em>descriptor</em> is a type that contains information to access the vertices attached to the halfedge data structure.</dd></dl>
 <dl compact><dt><b>Valid Expressions</b></dt><dd>None.</dd></dl>
 <dl compact><dt><b>Expression Semantics</b></dt><dd>None.</dd></dl>
 <dl compact><dt><b>Complexity guarantees</b></dt><dd>None.</dd></dl>
 <dl compact><dt><b>Invariants</b></dt><dd>None.</dd></dl>
 <dl compact><dt><b>Concept-checking class</b></dt><dd><div class="fragment"><pre class="fragment"> <span class="keyword">template</span> &lt;<span class="keyword">class</span> HDS&gt; 
- <span class="keyword">struct </span>FacetHDSConcept {
-    <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::facet_descriptor facet_descriptor; 
+ <span class="keyword">struct </span>VertexHDSConcept {
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::vertex_descriptor vertex_descriptor; 
     <span class="keywordtype">void</span> constraints() {
        <span class="keyword">using namespace </span>boost;
        function_requires&lt;HDSConcept&gt;();
-       function_requires&lt;DefaultConstructibleConcept&lt;facet_descriptor&gt; &gt;();
-       function_requires&lt;CopyConstructibleConcept&lt;facet_descriptor&gt; &gt;();
-       function_requires&lt;EqualityComparableConcept&lt;facet_descriptor&gt; &gt;();
-       function_requires&lt;AssignableConcept&lt;facet_descriptor&gt; &gt;();
+       function_requires&lt;DefaultConstructibleConcept&lt;vertex_descriptor&gt; &gt;();
+       function_requires&lt;CopyConstructibleConcept&lt;vertex_descriptor&gt; &gt;();
+       function_requires&lt;EqualityComparableConcept&lt;vertex_descriptor&gt; &gt;();
+       function_requires&lt;AssignableConcept&lt;vertex_descriptor&gt; &gt;();
        const_constraints(hds);
     }
     <span class="keywordtype">void</span> const_constraints(HDS <span class="keyword">const</span>&amp; hds) {
     }
     HDS hds;
-    facet_descriptor f;
+    vertex_descriptor v;
  };
 </pre></div> </dd></dl>
 <hr size="1"><address style="align: right;"><small>Generated on Mon Jun 11 02:25:33 2007 by&nbsp;

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/bidirectional_hds_concept.hpp File Reference</title>
+<title>bidirectional_hds_concept.hpp File Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -8,25 +8,56 @@
 <div class="tabs">
   <ul>
     <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-    <li><a href="annotated.html"><span>Classes</span></a></li>
     <li id="current"><a href="files.html"><span>Files</span></a></li>
   </ul></div>
-<h1>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/bidirectional_hds_concept.hpp File Reference</h1>
+<h1>bidirectional_hds_concept.hpp File Reference</h1>Bidirectional HDS concept definition. <a href="#_details">More...</a>
+<p>
+
 <p>
 <a href="bidirectional__hds__concept_8hpp-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><b>hdstl</b></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><b>hdstl::concepts</b></td></tr>
-
-<tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structhdstl_1_1concepts_1_1BidirectionalHDSConcept.html">hdstl::concepts::BidirectionalHDSConcept&lt; HDS &gt;</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Bidirectional HDS concept definition.  <a href="structhdstl_1_1concepts_1_1BidirectionalHDSConcept.html#_details">More...</a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-<hr size="1"><address style="align: right;"><small>Generated on Sun Jun 10 00:14:10 2007 by&nbsp;
+Bidirectional HDS concept definition. 
+<p>
+<dl compact><dt><b>Definition</b></dt><dd>This concept refines the ForwardHDSConcept and BackwardHDSConcept, and specifies additional bidirectional traversal category. Bidirectional category requires both the forward_category and the backward_category defined to iterate over the HDS data structure, which means both clockwise &amp; counter clockwise movement around the facet and vertex. From these two categories all others can be accessed with the help of the opposite of a halfedge.</dd></dl>
+<dl compact><dt><b>Refinement of</b></dt><dd><ul>
+<li>ForwardHDSConcept</li><li>BackwardHDSConcept</li></ul>
+</dd></dl>
+<dl compact><dt><b>Notation</b></dt><dd><ul>
+<li>HDS A type that is a model of BidirectionalHDSConcept</li><li>hds A non-modifiable instance of HDS</li><li>h,g Halfedge descriptors, of type X::halfedge_descriptor</li></ul>
+</dd></dl>
+<dl compact><dt><b>Associated types</b></dt><dd><ul>
+<li>hds_traits&lt;HDS&gt;::halfedge_descriptor: must be DefaultConstructible and CopyConstructible, EqualityComparable, Assignable.</li><li>hds_traits&lt;HDS&gt;::traversal_category: must be convertible to hds_traits&lt;HDS&gt;::bidirectional_traversal_tag.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Definitions</b></dt><dd><ul>
+<li><em>halfedge</em> <em>descriptor</em> is a type that contains information to access the halfedge.</li><li><em>traversal</em> <em>category</em> is a type that contains information about the direction of the traversal, which is forward, backward or bidirectional. For bidirectional hds concept, it has to be convertible to hds_traits&lt;HDS&gt;::bidirectional_traversal_tag.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Valid Expressions</b></dt><dd><ul>
+<li>see ForwardHDSConcept and BackwardHDSConcept.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Expression Semantics</b></dt><dd><ul>
+<li>see ForwardHDSConcept and BackwardHDSConcept.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Complexity guarantees</b></dt><dd><ul>
+<li>see ForwardHDSConcept and BackwardHDSConcept.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Invariants </b></dt><dd>The invariants for ForwardHDSConcept, and BackwardHDSConcept should hold for BidirectionalHDSConcept also.</dd></dl>
+<dl compact><dt><b>Concept-checking class</b></dt><dd><div class="fragment"><pre class="fragment"> <span class="keyword">template</span> &lt;<span class="keyword">class</span> HDS&gt; 
+ <span class="keyword">struct </span>BidirectionalHDSConcept {
+   <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::halfedge_descriptor halfedge_descriptor; 
+   <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::traversal_category traversal_category;
+    <span class="keywordtype">void</span> constraints() {
+       <span class="keyword">using namespace </span>boost;
+       function_requires&lt;ForwardHDSConcept&lt;HDS&gt; &gt;();
+       function_requires&lt;BackwardHDSConcept&lt;HDS&gt; &gt;();
+       function_requires&lt;ConvertibleConcept&lt;traversal_category,
+                                          bidirectional_traversal_tag&gt; &gt;();  
+    }
+    BidirectionalHDS hds;
+ };
+</pre></div> </dd></dl>
+<hr size="1"><address style="align: right;"><small>Generated on Mon Jun 11 02:25:33 2007 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/backward_hds_concept.hpp File Reference</title>
+<title>backward_hds_concept.hpp File Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -8,25 +8,75 @@
 <div class="tabs">
   <ul>
     <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-    <li><a href="annotated.html"><span>Classes</span></a></li>
     <li id="current"><a href="files.html"><span>Files</span></a></li>
   </ul></div>
-<h1>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/backward_hds_concept.hpp File Reference</h1>
+<h1>backward_hds_concept.hpp File Reference</h1>Backward HDS concept definition. <a href="#_details">More...</a>
+<p>
+
 <p>
 <a href="backward__hds__concept_8hpp-source.html">Go to the source code of this file.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><b>hdstl</b></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><b>hdstl::concepts</b></td></tr>
-
-<tr><td colspan="2"><br><h2>Classes</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structhdstl_1_1concepts_1_1BackwardHDSConcept.html">hdstl::concepts::BackwardHDSConcept&lt; HDS &gt;</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Backward HDS concept definition.  <a href="structhdstl_1_1concepts_1_1BackwardHDSConcept.html#_details">More...</a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-<hr size="1"><address style="align: right;"><small>Generated on Sun Jun 10 00:14:10 2007 by&nbsp;
+Backward HDS concept definition. 
+<p>
+<dl compact><dt><b>Definition</b></dt><dd>This concept refines the HDSConcept, and specifies additional backward category to iterate over the HDS data structure, which means clockwise movement around the facet and counter clockwise movement around the vertex. Possible backward categories are prev_in_facet, prev_at_source, and prev_at_target. Once one of these categories are given all others can be accessed with the help of the opposite of a halfedge.</dd></dl>
+<dl compact><dt><b>Refinement of</b></dt><dd><ul>
+<li>HDSConcept</li></ul>
+</dd></dl>
+<dl compact><dt><b>Notation</b></dt><dd><ul>
+<li>HDS A type that is a model of BackwardHDSConcept</li><li>hds A non-modifiable instance of HDS</li><li>h,g Halfedge descriptors, of type X::halfedge_descriptor</li></ul>
+</dd></dl>
+<dl compact><dt><b>Associated types</b></dt><dd><ul>
+<li>hds_traits&lt;HDS&gt;::halfedge_descriptor: must be DefaultConstructible and CopyConstructible, EqualityComparable, Assignable.</li><li>hds_traits&lt;HDS&gt;::traversal_category: must be convertible to hds_traits&lt;HDS&gt;::backward_traversal_tag.</li><li>hds_traits&lt;HDS&gt;::backward_category: Defines the pointer type for backward iteration.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Definitions</b></dt><dd><ul>
+<li><em>halfedge</em> <em>descriptor</em> is a type that contains information to access the halfedge.</li><li><em>traversal</em> <em>category</em> is a type that contains information about the direction of the traversal, which is forward, backward or bidirectional. For backward hds concept, it has to be convertible to hds_traits&lt;HDS&gt;::backward_traversal_tag.</li><li><em>backward</em> <em>category</em> defines the type of the backward iteration.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Valid Expressions</b></dt><dd><ul>
+<li>prev_in_facet(hds,h) : Must return a value assignable to h.</li><li>prev_at_source(hds,h) : Must return a value assignable to h.</li><li>prev_at_target(hds,h) : Must return a value assignable to h.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Expression Semantics</b></dt><dd><ul>
+<li>prev_in_facet(hds,h) : returns an halfedge descriptor to next halfedge in clockwise order around the facet.</li><li>prev_at_source(hds,h) : returns an halfedge descriptor to next halfedge in counter clockwise order around the source vertex.</li><li>prev_at_target(hds,h) : returns an halfedge descriptor to next halfedge in counter clockwise order around the target vertex.</li></ul>
+</dd></dl>
+<dl compact><dt><b>Complexity guarantees</b></dt><dd><ul>
+<li>prev_in_facet(hds,h) : Amortized constant time</li><li>prev_at_source(hds,h) : Amortized constant time</li><li>prev_at_target(hds,h) : Amortized constant time</li></ul>
+</dd></dl>
+<dl compact><dt><b>Invariants </b></dt><dd><ul>
+<li>prev_in_facet(hds,h) == prev_at_target(opposite(hds,h)) == opposite(prev_at_source(hds,h))</li><li>prev_at_source(hds,h) == opposite(prev_in_facet(hds,h)) == opposite(prev_at_target(opposite(hds,h)))</li><li>prev_at_target(hds,h) == prev_in_facet(opposite(hds,h)) == opposite(prev_at_source(opposite(hds,h)))</li></ul>
+</dd></dl>
+<dl compact><dt><b>Concept-checking class</b></dt><dd><div class="fragment"><pre class="fragment"> <span class="keyword">template</span> &lt;<span class="keyword">class</span> HDS&gt; 
+ <span class="keyword">struct </span>BackwardHDSConcept {
+   <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::halfedge_descriptor halfedge_descriptor; 
+   <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::traversal_category traversal_category;
+   <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::backward_category backward_category;
+    <span class="keywordtype">void</span> constraints() {
+       <span class="keyword">using namespace </span>boost;
+       function_requires&lt;HDSConcept&lt;HDS&gt; &gt;();
+       function_requires&lt;ConvertibleConcept&lt;traversal_category,
+                                                backward_traversal_tag&gt; &gt;();  
+       <span class="keyword">const</span> <span class="keywordtype">bool</span> is_valid_storage_tag =
+          is_convertible&lt;backward_category,prev_at_source_tag&gt;::value ||
+          is_convertible&lt;backward_category,prev_at_target_tag&gt;::value ||
+          is_convertible&lt;backward_category,prev_in_facet_tag&gt;::value;
+       BOOST_STATIC_ASSERT( is_valid_storage_tag ); 
+       <span class="comment">// Error message could be improved</span>
+       h = prev_in_facet(hds,h);
+       h = prev_at_source(hds,h);
+       h = prev_at_target(hds,h);
+       const_constraints(hds);
+    }
+    <span class="keywordtype">void</span> const_constraints(HDS <span class="keyword">const</span>&amp; hds){
+       h = prev_in_facet(hds,h);
+       h = prev_at_source(hds,h);
+       h = prev_at_target(hds,h);
+    }
+    BackwardHDS hds;
+    halfedge_descriptor h;
+    halfedge_descriptor g;
+ };
+</pre></div> </dd></dl>
+<hr size="1"><address style="align: right;"><small>Generated on Mon Jun 11 02:25:33 2007 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

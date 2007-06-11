@@ -1,0 +1,67 @@
+\section{mutable\_\-hds\_\-concept.hpp File Reference}
+\label{mutable__hds__concept_8hpp}\index{mutable_hds_concept.hpp@{mutable\_\-hds\_\-concept.hpp}}
+Mutable HDS concept definition. 
+
+
+
+\subsection{Detailed Description}
+Mutable HDS concept definition. 
+
+\begin{Desc}
+\item[Definition]This concept is the basic Mutable HDS concept, which all the other Mutable HDS concepts refine. It contains a few requirements which are common to all the graph concepts. One should note that a model of Mutable HDS is not required to be a model of Assignable, so algorithms should pass Mutable HDS objects by reference.\end{Desc}
+\begin{Desc}
+\item[Refinement of:]\begin{itemize}
+\item HDSConcept\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Notation]\begin{itemize}
+\item HDS A type that is a model of Mutable\-HDSConcept\item hds A non-modifiable instance of HDS\item h1,h2 Halfedge descriptors, of type X::halfedge\_\-descriptor\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Associated types]\begin{itemize}
+\item hds\_\-traits$<$HDS$>$::halfedge\_\-descriptor: must be Default\-Constructible and Copy\-Constructible, Equality\-Comparable, Assignable.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Definitions]{\em halfedge\/} {\em descriptor\/} is a type that contains information to access the halfedge. Note that the halfedge descriptor type (accessible as a member of the hds\_\-traits$<$HDS$>$ type) is an opaque type. All that can be done to it is passing it to the function opposite and letting the hds use the information it contains to find the opposite halfedge. In particular, there is no guarantee that it is a pointer type.\end{Desc}
+\begin{Desc}
+\item[Valid Expressions]\begin{itemize}
+\item set\_\-opposite(hds,h1,h2): Sets the opposite halfedge.\item h = new\_\-edge(hds,h1,h2) : Creates a new edge, with two halfedges.\item delete\_\-edge(hds,h1,h2) : Deletes the edge defined by halfedge pairs h1 and h2.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Expression Semantics]\begin{itemize}
+\item set\_\-opposite(hds,h1,h2): Sets h1 and h2 as opposites of each other in the data structure hds.\item h = new\_\-edge(hds,h1,h2): Creates a new edge in data structure hds. Since halfedges are actually pairs, the new edge consists of two halfedges, h1 and h2, which are set as opposites of each other.\item delete\_\-edge(hds,h1,h2): Since halfedges are defined as pairs, and a single halfedge is useless, they are deleted as pairs also. Delete edge removes the opposite halfedges h1, and h2 from the data structure hds. Note that only the halfedges that form a pair by validating the opposite function can be deleted by this method.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Complexity guarantees]\begin{itemize}
+\item set\_\-opposite(hds,h1,h2): Amortized constant time.\item new\_\-edge(hds,h1,h2): Amortized constant time.\item delete\_\-edge(hds,h1,h2): Amortized constant time.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Invariants]\begin{itemize}
+\item After set\_\-opposite and new\_\-edge functions, h1=opposite(h2), and h2=opposite(h1) should be true.\item Before the delete\_\-edge method, h1=opposite(h2), and h2=opposite(h1) should be true.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Concept-checking class]
+
+\begin{Code}\begin{verbatim} template <class HDS> 
+ struct MutableHDSConcept {
+   typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+    void constraints() {
+       using namespace boost;
+       function_requires<HDSConcept<HDS> >();
+       set_opposite(hds,h1,h2);
+       h = new_edge(hds,h1,h2);
+       delete_edge(hds,h1,h2);
+       const_constraints(hds);
+    }
+    void const_constraints(HDS const& hds) {
+       set_opposite(hds,h1,h2);
+       h = new_edge(hds,h1,h2);
+       delete_edge(hds,h1,h2);
+    }
+    HDS hds;
+    halfedge_descriptor h1;
+    halfedge_descriptor h2;
+ };
+\end{verbatim}\end{Code}
+
+ \end{Desc}

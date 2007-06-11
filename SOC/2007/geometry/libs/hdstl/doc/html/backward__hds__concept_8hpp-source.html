@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/backward_hds_concept.hpp Source File</title>
+<title>backward_hds_concept.hpp Source File</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -8,49 +8,54 @@
 <div class="tabs">
   <ul>
     <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-    <li><a href="annotated.html"><span>Classes</span></a></li>
     <li id="current"><a href="files.html"><span>Files</span></a></li>
   </ul></div>
-<h1>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/backward_hds_concept.hpp</h1><a href="backward__hds__concept_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="keyword">namespace </span>hdstl{
-<a name="l00002"></a>00002 <span class="keyword">namespace </span>concepts{
-<a name="l00058"></a>00058    <span class="keyword">template</span> &lt;<span class="keyword">class</span> HDS&gt; 
-<a name="l00059"></a><a class="code" href="structhdstl_1_1concepts_1_1BackwardHDSConcept.html">00059</a>    <span class="keyword">struct </span><a class="code" href="structhdstl_1_1concepts_1_1BackwardHDSConcept.html">BackwardHDSConcept</a> {
-<a name="l00061"></a>00061 
-<a name="l00062"></a>00062 
-<a name="l00066"></a>00066       <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::halfedge_descriptor halfedge_descriptor; 
-<a name="l00067"></a>00067       <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::traversal_category traversal_category;
-<a name="l00068"></a>00068       <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::backward_category backward_category;
-<a name="l00070"></a>00070 
-<a name="l00074"></a>00074       <span class="keywordtype">void</span> constraints() {
-<a name="l00075"></a>00075          <span class="keyword">using namespace </span>boost;
-<a name="l00076"></a>00076 
-<a name="l00077"></a>00077          function_requires&lt;HDSConcept&lt;HDS&gt; &gt;();
-<a name="l00078"></a>00078          function_requires&lt;ConvertibleConcept&lt;traversal_category
-<a name="l00079"></a>00079                                                        ,backwardS&gt; &gt;();  
-<a name="l00080"></a>00080          <span class="keyword">const</span> <span class="keywordtype">bool</span> is_valid_storage_tag =
-<a name="l00081"></a>00081             is_convertible&lt;backward_category,prev_at_sourceS&gt;::value ||
-<a name="l00082"></a>00082             is_convertible&lt;backward_category,prev_at_targetS&gt;::value ||
-<a name="l00083"></a>00083             is_convertible&lt;backward_category,prev_in_facetS&gt;::value;
-<a name="l00084"></a>00084          BOOST_STATIC_ASSERT( is_valid_storage_tag ); 
-<a name="l00085"></a>00085          <span class="comment">// Error message could be improved</span>
-<a name="l00086"></a>00086 
-<a name="l00087"></a>00087          h = prev_in_facet(hds,h);
-<a name="l00088"></a>00088          h = prev_at_source(hds,h);
-<a name="l00089"></a>00089          h = prev_at_target(hds,h);
-<a name="l00090"></a>00090          const_constraints(hds);
-<a name="l00091"></a>00091       }
-<a name="l00095"></a>00095       <span class="keywordtype">void</span> const_constraints(HDS <span class="keyword">const</span>&amp; hds){
-<a name="l00096"></a>00096          h = prev_in_facet(hds,h);
-<a name="l00097"></a>00097          h = prev_at_source(hds,h);
-<a name="l00098"></a>00098          h = prev_at_target(hds,h);
-<a name="l00099"></a>00099       }
-<a name="l00100"></a>00100       
-<a name="l00101"></a>00101       BackwardHDS hds;
-<a name="l00102"></a>00102       halfedge_descriptor h;
-<a name="l00103"></a>00103       halfedge_descriptor g;
-<a name="l00105"></a>00105    };
-<a name="l00106"></a>00106 }} <span class="comment">//namespaces</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Jun 10 00:14:10 2007 by&nbsp;
+<h1>backward_hds_concept.hpp</h1><a href="backward__hds__concept_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 
+<a name="l00101"></a>00101 <span class="preprocessor">#ifdef BOOST_HDSTL_CONCEPTS_BACKWARDHDSCONCEPT_HPP</span>
+<a name="l00102"></a>00102 <span class="preprocessor"></span><span class="preprocessor">#define BOOST_HDSTL_CONCEPTS_BACKWARDHDSCONCEPT_HPP 1</span>
+<a name="l00103"></a>00103 <span class="preprocessor"></span>
+<a name="l00104"></a>00104 <span class="keyword">namespace </span>hdstl{
+<a name="l00105"></a>00105 <span class="keyword">namespace </span>concepts{
+<a name="l00118"></a>00118    <span class="keyword">template</span> &lt;<span class="keyword">class</span> HDS&gt; 
+<a name="l00119"></a>00119    <span class="keyword">struct </span>BackwardHDSConcept {
+<a name="l00121"></a>00121 
+<a name="l00125"></a>00125       <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::halfedge_descriptor halfedge_descriptor; 
+<a name="l00126"></a>00126       <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::traversal_category traversal_category;
+<a name="l00127"></a>00127       <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::backward_category backward_category;
+<a name="l00129"></a>00129 
+<a name="l00133"></a>00133       <span class="keywordtype">void</span> constraints() {
+<a name="l00134"></a>00134          <span class="keyword">using namespace </span>boost;
+<a name="l00135"></a>00135 
+<a name="l00136"></a>00136          function_requires&lt;HDSConcept&lt;HDS&gt; &gt;();
+<a name="l00137"></a>00137          function_requires&lt;ConvertibleConcept&lt;traversal_category,
+<a name="l00138"></a>00138                                                   backward_traversal_tag&gt; &gt;();  
+<a name="l00139"></a>00139          <span class="keyword">const</span> <span class="keywordtype">bool</span> is_valid_storage_tag =
+<a name="l00140"></a>00140             is_convertible&lt;backward_category,prev_at_source_tag&gt;::value ||
+<a name="l00141"></a>00141             is_convertible&lt;backward_category,prev_at_target_tag&gt;::value ||
+<a name="l00142"></a>00142             is_convertible&lt;backward_category,prev_in_facet_tag&gt;::value;
+<a name="l00143"></a>00143          BOOST_STATIC_ASSERT( is_valid_storage_tag ); 
+<a name="l00144"></a>00144          <span class="comment">// Error message could be improved</span>
+<a name="l00145"></a>00145 
+<a name="l00146"></a>00146          h = prev_in_facet(hds,h);
+<a name="l00147"></a>00147          h = prev_at_source(hds,h);
+<a name="l00148"></a>00148          h = prev_at_target(hds,h);
+<a name="l00149"></a>00149          const_constraints(hds);
+<a name="l00150"></a>00150       }
+<a name="l00154"></a>00154       <span class="keywordtype">void</span> const_constraints(HDS <span class="keyword">const</span>&amp; hds){
+<a name="l00155"></a>00155          h = prev_in_facet(hds,h);
+<a name="l00156"></a>00156          h = prev_at_source(hds,h);
+<a name="l00157"></a>00157          h = prev_at_target(hds,h);
+<a name="l00158"></a>00158       }
+<a name="l00159"></a>00159       
+<a name="l00160"></a>00160       BackwardHDS hds;
+<a name="l00161"></a>00161       halfedge_descriptor h;
+<a name="l00162"></a>00162       halfedge_descriptor g;
+<a name="l00163"></a>00163    };
+<a name="l00164"></a>00164 }  <span class="comment">// close namespace concepts</span>
+<a name="l00165"></a>00165 }  <span class="comment">// close namespace hdstl</span>
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167 <span class="preprocessor">#endif</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Mon Jun 11 02:25:33 2007 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

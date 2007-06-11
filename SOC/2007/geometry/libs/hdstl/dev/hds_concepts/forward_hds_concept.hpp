@@ -134,8 +134,8 @@ namespace concepts{
          using namespace boost;
 
          function_requires<HDSConcept<HDS> >();
-         function_requires<ConvertibleConcept<traversal_category
-                                                       ,forwardS> >();  
+         function_requires<ConvertibleConcept<traversal_category,
+                                                    forward_traversal_tag> >();  
          const bool is_valid_storage_tag =
             is_convertible<forward_category,next_at_source_tag>::value ||
             is_convertible<forward_category,next_at_target_tag>::value ||

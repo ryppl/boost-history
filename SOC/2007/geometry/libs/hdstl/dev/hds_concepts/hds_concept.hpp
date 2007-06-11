@@ -65,6 +65,7 @@
  *   void const_constraints(HDS const& hds) {
  *     h = opposite(hds,h);
  *   }
+ * };
  * \endcode
  */
 

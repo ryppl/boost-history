@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/mutable_hds_concept.hpp Source File</title>
+<title>mutable_hds_concept.hpp Source File</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -8,39 +8,44 @@
 <div class="tabs">
   <ul>
     <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
-    <li><a href="annotated.html"><span>Classes</span></a></li>
     <li id="current"><a href="files.html"><span>Files</span></a></li>
   </ul></div>
-<h1>/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/mutable_hds_concept.hpp</h1><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 <span class="keyword">namespace </span>hdstl{
-<a name="l00002"></a>00002 <span class="keyword">namespace </span>concepts{
-<a name="l00048"></a>00048    <span class="keyword">template</span> &lt;<span class="keyword">class</span> HDS&gt; 
-<a name="l00049"></a><a class="code" href="structhdstl_1_1concepts_1_1MutableHDSConcept.html">00049</a>    <span class="keyword">struct </span><a class="code" href="structhdstl_1_1concepts_1_1MutableHDSConcept.html">MutableHDSConcept</a> {
-<a name="l00051"></a>00051 
-<a name="l00055"></a>00055       <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::halfedge_descriptor halfedge_descriptor; 
-<a name="l00056"></a>00056       <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::traversal_category traversal_category;
-<a name="l00058"></a>00058 
-<a name="l00062"></a>00062       <span class="keywordtype">void</span> constraints() {
-<a name="l00063"></a>00063          <span class="keyword">using namespace </span>boost;
-<a name="l00064"></a>00064          function_requires&lt;HDSConcept&lt;HDS&gt; &gt;();
-<a name="l00065"></a>00065 
-<a name="l00066"></a>00066          set_opposite(hds,h1,h2);
-<a name="l00067"></a>00067          h = new_edge(h1,h2);
-<a name="l00068"></a>00068          delete_edge(h);
-<a name="l00069"></a>00069          <a class="code" href="structhdstl_1_1concepts_1_1MutableHDSConcept.html#3c0a017321ea292cbf9c7dd216a4882d">const_constraints</a>(hds);
-<a name="l00070"></a>00070       }
-<a name="l00071"></a>00071 
-<a name="l00075"></a><a class="code" href="structhdstl_1_1concepts_1_1MutableHDSConcept.html#3c0a017321ea292cbf9c7dd216a4882d">00075</a>       <span class="keywordtype">void</span> <a class="code" href="structhdstl_1_1concepts_1_1MutableHDSConcept.html#3c0a017321ea292cbf9c7dd216a4882d">const_constraints</a>(HDS <span class="keyword">const</span>&amp; hds) {
-<a name="l00076"></a>00076          set_opposite(hds,h1,h2);
-<a name="l00077"></a>00077          h = new_edge(h1,h2);
-<a name="l00078"></a>00078          delete_edge(h);
-<a name="l00079"></a>00079       }
-<a name="l00081"></a>00081       MutableHDS hds;
-<a name="l00082"></a>00082       halfedge_descriptor h;
-<a name="l00083"></a>00083       halfedge_descriptor h1;
-<a name="l00084"></a>00084       halfedge_descriptor h2;
-<a name="l00086"></a>00086    };
-<a name="l00087"></a>00087 }} <span class="comment">//namespaces</span>
-</pre></div><hr size="1"><address style="align: right;"><small>Generated on Sun Jun 10 00:14:10 2007 by&nbsp;
+<h1>mutable_hds_concept.hpp</h1><a href="mutable__hds__concept_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><pre class="fragment"><a name="l00001"></a>00001 
+<a name="l00087"></a>00087 <span class="preprocessor">#ifdef BOOST_HDSTL_CONCEPTS_MUTABLEHDSCONCEPT_HPP</span>
+<a name="l00088"></a>00088 <span class="preprocessor"></span><span class="preprocessor">#define BOOST_HDSTL_CONCEPTS_MUTABLEHDSCONCEPT_HPP 1</span>
+<a name="l00089"></a>00089 <span class="preprocessor"></span>
+<a name="l00090"></a>00090 <span class="keyword">namespace </span>hdstl{
+<a name="l00091"></a>00091 <span class="keyword">namespace </span>concepts {
+<a name="l00092"></a>00092 
+<a name="l00105"></a>00105    <span class="keyword">template</span> &lt;<span class="keyword">class</span> HDS&gt; 
+<a name="l00106"></a>00106    <span class="keyword">struct </span>MutableHDSConcept {
+<a name="l00108"></a>00108 
+<a name="l00113"></a>00113       <span class="keyword">typedef</span> <span class="keyword">typename</span> hds_traits&lt;HDS&gt;::halfedge_descriptor halfedge_descriptor; 
+<a name="l00115"></a>00115 
+<a name="l00119"></a>00119       <span class="keywordtype">void</span> constraints() {
+<a name="l00120"></a>00120          <span class="keyword">using namespace </span>boost;
+<a name="l00121"></a>00121          function_requires&lt;HDSConcept&lt;HDS&gt; &gt;();
+<a name="l00122"></a>00122 
+<a name="l00123"></a>00123          set_opposite(hds,h1,h2);
+<a name="l00124"></a>00124          h = new_edge(hds,h1,h2);
+<a name="l00125"></a>00125          delete_edge(hds,h1,h2);
+<a name="l00126"></a>00126          const_constraints(hds);
+<a name="l00127"></a>00127       }
+<a name="l00128"></a>00128 
+<a name="l00132"></a>00132       <span class="keywordtype">void</span> const_constraints(HDS <span class="keyword">const</span>&amp; hds) {
+<a name="l00133"></a>00133          set_opposite(hds,h1,h2);
+<a name="l00134"></a>00134          h = new_edge(hds,h1,h2);
+<a name="l00135"></a>00135          delete_edge(hds,h1,h2);
+<a name="l00136"></a>00136       }
+<a name="l00137"></a>00137       HDS hds;
+<a name="l00138"></a>00138       halfedge_descriptor h1;
+<a name="l00139"></a>00139       halfedge_descriptor h2;
+<a name="l00140"></a>00140    };
+<a name="l00141"></a>00141 }  <span class="comment">// close namespace concepts</span>
+<a name="l00142"></a>00142 }  <span class="comment">// close namespace hdstl</span>
+<a name="l00143"></a>00143 
+<a name="l00144"></a>00144 <span class="preprocessor">#endif</span>
+</pre></div><hr size="1"><address style="align: right;"><small>Generated on Mon Jun 11 02:25:33 2007 by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

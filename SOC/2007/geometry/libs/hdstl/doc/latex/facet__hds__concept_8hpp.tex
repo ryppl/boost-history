@@ -1,17 +1,56 @@
-\section{/home/huseyin/Documents/polytechnic/Projects/GSo\-C07/geometry/libs/hdstl/dev/hds\_\-concepts/facet\_\-hds\_\-concept.hpp File Reference}
-\label{facet__hds__concept_8hpp}\index{/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds_concepts/facet_hds_concept.hpp@{/home/huseyin/Documents/polytechnic/Projects/GSoC07/geometry/libs/hdstl/dev/hds\_\-concepts/facet\_\-hds\_\-concept.hpp}}
-\subsection*{Namespaces}
-\begin{CompactItemize}
-\item 
-namespace \textbf{hdstl}
-\item 
-namespace \textbf{hdstl::concepts}
-\end{CompactItemize}
-\subsection*{Classes}
-\begin{CompactItemize}
-\item 
-class \bf{hdstl::concepts::Facet\-HDSConcept$<$ HDS $>$}
-\begin{CompactList}\small\item\em Facet HDS concept definition. \item\end{CompactList}\end{CompactItemize}
+\section{facet\_\-hds\_\-concept.hpp File Reference}
+\label{facet__hds__concept_8hpp}\index{facet_hds_concept.hpp@{facet\_\-hds\_\-concept.hpp}}
+Facet HDS concept definition. 
+
 
 
 \subsection{Detailed Description}
+Facet HDS concept definition. 
+
+\begin{Desc}
+\item[Definition]This concept refines the HDSConcept, and specifies additional facet descriptor to attach facets to the HDS.\end{Desc}
+\begin{Desc}
+\item[Refinement of:]\begin{itemize}
+\item HDSConcept\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Notation]\begin{itemize}
+\item HDS A type that is a model of Facet\-HDSConcept\item hds A non-modifiable instance of HDS\item f Facet descriptor, of type X::facet\_\-descriptor\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Associated types]\begin{itemize}
+\item hds\_\-traits$<$HDS$>$::facet\_\-descriptor: must be Default\-Constructible and Copy\-Constructible, Equality\-Comparable, Assignable.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Definitions]{\em facet\/} {\em descriptor\/} is a type that contains information to access the facets attached to the halfedge data structure.\end{Desc}
+\begin{Desc}
+\item[Valid Expressions]None.\end{Desc}
+\begin{Desc}
+\item[Expression Semantics]None.\end{Desc}
+\begin{Desc}
+\item[Complexity guarantees]None.\end{Desc}
+\begin{Desc}
+\item[Invariants]None.\end{Desc}
+\begin{Desc}
+\item[Concept-checking class]
+
+\begin{Code}\begin{verbatim} template <class HDS> 
+ struct FacetHDSConcept {
+    typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor; 
+    void constraints() {
+       using namespace boost;
+       function_requires<HDSConcept>();
+       function_requires<DefaultConstructibleConcept<facet_descriptor> >();
+       function_requires<CopyConstructibleConcept<facet_descriptor> >();
+       function_requires<EqualityComparableConcept<facet_descriptor> >();
+       function_requires<AssignableConcept<facet_descriptor> >();
+       const_constraints(hds);
+    }
+    void const_constraints(HDS const& hds) {
+    }
+    HDS hds;
+    facet_descriptor f;
+ };
+\end{verbatim}\end{Code}
+
+ \end{Desc}

@@ -1,0 +1,56 @@
+\section{vertex\_\-hds\_\-concept.hpp File Reference}
+\label{vertex__hds__concept_8hpp}\index{vertex_hds_concept.hpp@{vertex\_\-hds\_\-concept.hpp}}
+Vertex HDS concept definition. 
+
+
+
+\subsection{Detailed Description}
+Vertex HDS concept definition. 
+
+\begin{Desc}
+\item[Definition]This concept refines the HDSConcept, and specifies additional vertex descriptor to attach vertices to the HDS.\end{Desc}
+\begin{Desc}
+\item[Refinement of:]\begin{itemize}
+\item HDSConcept\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Notation]\begin{itemize}
+\item HDS A type that is a model of Vertex\-HDSConcept\item hds A non-modifiable instance of HDS\item v Vertex descriptor, of type X::vertex\_\-descriptor\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Associated types]\begin{itemize}
+\item hds\_\-traits$<$HDS$>$::vertex\_\-descriptor: must be Default\-Constructible and Copy\-Constructible, Equality\-Comparable, Assignable.\end{itemize}
+\end{Desc}
+\begin{Desc}
+\item[Definitions]{\em vertex\/} {\em descriptor\/} is a type that contains information to access the vertices attached to the halfedge data structure.\end{Desc}
+\begin{Desc}
+\item[Valid Expressions]None.\end{Desc}
+\begin{Desc}
+\item[Expression Semantics]None.\end{Desc}
+\begin{Desc}
+\item[Complexity guarantees]None.\end{Desc}
+\begin{Desc}
+\item[Invariants]None.\end{Desc}
+\begin{Desc}
+\item[Concept-checking class]
+
+\begin{Code}\begin{verbatim} template <class HDS> 
+ struct VertexHDSConcept {
+    typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
+    void constraints() {
+       using namespace boost;
+       function_requires<HDSConcept>();
+       function_requires<DefaultConstructibleConcept<vertex_descriptor> >();
+       function_requires<CopyConstructibleConcept<vertex_descriptor> >();
+       function_requires<EqualityComparableConcept<vertex_descriptor> >();
+       function_requires<AssignableConcept<vertex_descriptor> >();
+       const_constraints(hds);
+    }
+    void const_constraints(HDS const& hds) {
+    }
+    HDS hds;
+    vertex_descriptor v;
+ };
+\end{verbatim}\end{Code}
+
+ \end{Desc}
