@@ -83,7 +83,7 @@ boost_add_extra_variant(PYTHON_NODEBUG PYTHON_DEBUG)
 # Installation                                                           #
 ##########################################################################
 install(DIRECTORY boost 
-        DESTINATION include
+        DESTINATION "include/boost-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}_${BOOST_VERSION_SUBMINOR}"
         PATTERN "CVS" EXCLUDE
         REGEX ".svn" EXCLUDE)
 ##########################################################################
@@ -93,7 +93,7 @@ install(DIRECTORY boost
 ##########################################################################
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Boost")
 set(CPACK_PACKAGE_VENDOR "Boost.org")
-set(CPACK_PACKAGE_DESCRIPTION_FILE "${Boost_SOURCE_DIR}/README")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${Boost_SOURCE_DIR}/README.txt")
 set(CPACK_RESOURCE_FILE_README "${Boost_SOURCE_DIR}/README.txt")
 set(CPACK_RESOURCE_FILE_LICENSE "${Boost_SOURCE_DIR}/LICENSE_1_0.txt")
 set(CPACK_RESOURCE_FILE_WELCOME "${Boost_SOURCE_DIR}/Welcome.txt")
