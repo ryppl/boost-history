@@ -7,20 +7,20 @@ This implementation is header-only.  It should be useable by simply adding
 this directory to your include path when compiling.  Be sure to place
 this directory before the path to your full boost headers.
 
+The web page for thread_safe_signals is at:
+
+http://www.comedi.org/projects/thread_safe_signals/doxygen/index.html
+
 The latest version of this library should be available from the
-boost sandbox cvs:
+boost sandbox svn:
 
-http://sourceforge.net/cvs/?group_id=53513
+http://svn.boost.org/trac/boost/wiki/BoostSubversion
 
-The files for thread_safe_signals are in
-boost-sandbox/boost/
-boost-sandbox/boost/thread_safe_signals and
-boost-sandbox/libs/thread_safe_signals.
-The boost-sandbox also has another thread-safe signals
-implementation by Timmo Stange which uses the regular naming
-scheme for the signals library (signal.hpp, signals/connection.hpp, etc.).
-This library is stored in the cvs under an alternate naming scheme
-(thread_safe_signal.hpp, thread_safe_signals/connection.hpp, etc.).
+The files for thread_safe_signals are in the thread_safe_signals
+subdirectory of the sandbox.  You can check out a copy of the files with the
+following command:
 
-2007-03-07
+svn co http://svn.boost.org/svn/boost/sandbox/thread_safe_signals thread_safe_signals
+
+2007-06-12
 Frank Mori Hess <fmhess@users.sourceforge.net>
