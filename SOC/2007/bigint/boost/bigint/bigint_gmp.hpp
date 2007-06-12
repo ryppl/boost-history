@@ -138,7 +138,8 @@ namespace boost { namespace detail {
 			
 			for (size_t i = 0; i < d_size; ++i)
 			{
-				if (static_cast<int>(*str) < 0 || static_cast<int>(*str) > 127 || digit_value_tab[static_cast<unsigned int>(*str)] >= base)
+				if (!detail::bigint::is_ascii(*str) || digit_value_tab[static_cast<unsigned int>(*str)] >= base
+				)
 				{
 					d_size = i;
 					break;

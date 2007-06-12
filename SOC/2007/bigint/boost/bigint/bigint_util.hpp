@@ -35,6 +35,16 @@ namespace boost { namespace detail { namespace bigint {
 		return ::iswspace(ch) != 0;
 	}
 
+	inline bool is_ascii(char ch)
+	{
+		return ch > 0;
+	}
+
+	inline bool is_ascii(wchar_t ch)
+	{
+		return ch > 0 && ch < 128;
+	}
+
 	inline size_t length(const char* str)
 	{
 		return ::strlen(str);
