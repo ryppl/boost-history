@@ -1,7 +1,7 @@
 This is an implementation of Boost.signals which is intended to be
 thread-safe.  There have been some changes to the API to support
-thread-safety.  See the html documentation in the 
-libs/thread_safe_signals/doc/html subdirectory for more information.
+thread-safety.  See the html documentation in the doc/html subdirectory
+for more information.
 
 This implementation is header-only.  It should be useable by simply adding
 this directory to your include path when compiling.  Be sure to place
