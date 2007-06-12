@@ -6,8 +6,8 @@
 $template_start$
 $template_cpp_copyright$
 
-#ifndef BOOST_$TEMPLATE_LIBRARY$_$TEMPLATE_LIBRARY$_HPP
-#define BOOST_$TEMPLATE_LIBRARY$_$TEMPLATE_LIBRARY$_HPP
+#ifndef BOOST_$template_LIBRARY$_$template_LIBRARY$_HPP
+#define BOOST_$template_LIBRARY$_$template_LIBRARY$_HPP
 
 namespace boost {
 namespace $template_library$ {
@@ -80,5 +80,5 @@ private:
 } // namespace $template_library$
 } // namespace boost
 
-#endif // BOOST_$TEMPLATE_LIBRARY$_$TEMPLATE_LIBRARY$_HPP
+#endif // BOOST_$template_LIBRARY$_$template_LIBRARY$_HPP
 

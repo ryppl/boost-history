@@ -6,10 +6,10 @@
 $template_start$
 $template_cpp_copyright$
 
-#ifndef BOOST_$TEMPLATE_LIBRARY$_HPP
-#define BOOST_$TEMPLATE_LIBRARY$_HPP
+#ifndef BOOST_$template_LIBRARY$_HPP
+#define BOOST_$template_LIBRARY$_HPP
 
 #include <boost/$template_library$/$template_library$.hpp>
 
-#endif // BOOST_$TEMPLATE_LIBRARY$_HPP
+#endif // BOOST_$template_LIBRARY$_HPP
 

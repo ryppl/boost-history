@@ -1,4 +1,12 @@
-<?xml version="1.0" encoding="Windows-1252"?>
+# template file
+
+# Copyright 2007 Stjepan Rajko.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+template.append_content(
+r"""<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
@@ -52,23 +60,9 @@ $template_msvc_build_command$
 	</Configurations>
 	<References>
 	</References>
-	<Files>
-		<Filter
-			Name="boost"
-			>
-			<Filter
-				Name="$template_library$"
-				>
-				<File
-					RelativePath="..\..\..\..\boost\$template_library$\$template_library$.hpp"
-					>
-				</File>
-			</Filter>
-			<File
-				RelativePath="..\..\..\..\boost\$template_library$.hpp"
-				>
-			</File>
-		</Filter>
+	<Files>""")
+vc_list_files(2, r'..\..\..\..', template.replace_name('$template_library$'), 'boost')
+template.append_content(r"""
 		<Filter
 			Name="solution build"
 			>
@@ -93,3 +87,4 @@ $template_msvc_build_command$
 	<Globals>
 	</Globals>
 </VisualStudioProject>
+""")
