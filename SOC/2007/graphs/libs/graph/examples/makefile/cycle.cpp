@@ -13,7 +13,7 @@
 #include <boost/tokenizer.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/graph/directed_graph.hpp>
-#include <boost/graph/topological_sort.hpp>
+#include <boost/graph/depth_first_search.hpp>
 
 using namespace std;
 using namespace boost;
@@ -31,6 +31,26 @@ typedef property_map<Graph::type, int Target::*>::type TargetIndexMap;
 typedef property_map<Graph::type, string Target::*>::type TargetNameMap;
 
 typedef map<string, Vertex> TargetMap;
+
+struct CycleDetector : public dfs_visitor<>
+{
+    CycleDetector(bool& c) 
+	: has_cycle(c)
+    {}
+
+    template <class Edge, class Graph>
+    void back_edge(Edge, Graph&)
+    {
+	has_cycle = true;
+    }
+    
+    bool& has_cycle;
+};
+
+CycleDetector detect_cycles(bool& c)
+{
+    return CycleDetector(c);
+}
 
 Vertex
 add_target(Graph& g, TargetMap& targets, const string& name)
@@ -121,25 +141,9 @@ main(int argc, char* argv[])
     // we can generate the build order
     TargetIndexMap indices = get(&Target::index, g);
 
-    // the build order is just a 
-    BuildOrder order;
-    topological_sort(g, front_inserter(order),
-		     // named parameters
-		     vertex_index_map(indices)
-	);
-
-    // write out the build order and compute time slots at the
-    // same time...
-    vector<int> time(num_vertices(g), 0);
-    BuildOrder::iterator i = order.begin(), j = order.end();
-    for( ; i != j; ++i) {
-	int slot = -1;
-	Graph::in_edge_iterator j, k;
-	for(tie(j, k) = in_edges(*i, g); j != k; ++j) {
-	    slot = std::max(time[g[source(*j, g)].index], slot);
-	}
-	time[g[*i].index] = slot + 1;
-
-	cout << g[*i].name << " [" << time[g[*i].index] << "]\n";
-    }
+    bool cycle = false;
+    depth_first_search(g,
+		       vertex_index_map(indices).
+		       visitor(detect_cycles(cycle)));
+    cout << "has cycle: " << cycle << "\n";
 }

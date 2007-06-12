@@ -5,18 +5,14 @@
 # Example:
 # <target>: <dep1> <dep2>
 
-killerapp: libzigzag.a
-libzigzag.a: libfoobar.a zig.o zag.o
-libfoobar.a: foo.o bar.o
-foo.o: foo.cpp
-foo.cpp: zow.h dax.h
-bar.o: bar.cpp
-bar.cpp: boz.h yow.h dax.h
-yow.h: dax.h
-zig.o: zig.cpp
-zig.cpp: boz.h
-zag.o: zag.cpp
-zag.cpp: boz.h yow.h
+undirected_graph.hpp :	adjacency_list.hpp
+directed_graph.hpp :	adjacency_list.hpp
+movies.hpp :		undirected_graph.hpp
+movies.cpp :		movies.hpp tokenizer.hpp
+kevin_bacon.cpp :	movies.hpp visitors.hpp breadth_first_search.hpp
+kevin_bacon.exe :	movies.cpp kevin_bacon.cpp
+build_order.cpp :	directed_graph.hpp topological_sort.hpp
+build_order.exe :	build_order.cpp
 
-# uncomment this line to add a cycle
-# dax.h: bar.cpp
+movies.cpp :		kevin_bacon.cpp
+kevin_bacon.cpp :	movies.cpp

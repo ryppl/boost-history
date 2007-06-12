@@ -2,3 +2,8 @@ exe build_order
 	: build_order.cpp
 	: <include>../../../../
 	;
+
+exe cycle
+	: cycle.cpp
+	: <include>../../../../
+	;
