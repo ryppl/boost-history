@@ -6,38 +6,54 @@
 #ifndef SIGNAL_NETWORK_COUNTER_HPP
 #define SIGNAL_NETWORK_COUNTER_HPP
 
-#include <boost/signal_network/detail/defines.hpp>
-#include <boost/signal_network/detail/unfused_inherited.hpp>
-#include <boost/signal_network/filter.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/fusion/sequence/adapted/mpl.hpp>
+#include <boost/signal_network/applicator.hpp>
+#include <boost/type_traits/remove_volatile.hpp>
 
 SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 
-template<typename Signature, typename T=int>
-class counter : public fused_filter<Signature>
+namespace detail
+{
+    template<typename T>
+    struct postincrement
+    {
+        void operator()(T &t)
+        {
+            t++;
+        }
+    };
+}
+/** \brief Counts the number of signals passing through the component.
+    counter is an applicator with a postincrement application and default member of type volatile int.
+    \param T Type of the internal counter variable.
+*/
+template<typename Signature,
+typename T=volatile int,
+typename OutSignal=default_out_signal,
+typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
+typename Group = int,
+typename GroupCompare = std::less<Group>,
+typename Base = applicator<detail::postincrement<T>, T, Signature, OutSignal, Combiner, Group, GroupCompare> >
+class counter : public Base
 {
 public:
-    typedef boost::fusion::unfused_inherited<counter<Signature, T>,
-        typename mpl::vector<>::type,
-        typename boost::function_types::parameter_types<Signature> > unfused;
+    typedef counter<Signature, T, OutSignal, Combiner, Group, GroupCompare,
+    typename applicator<detail::postincrement<T>, T, Signature, OutSignal, Combiner, Group, GroupCompare>::unfused >
+        unfused;
 
-    counter() : count_(0) {}
-    template <class Seq>
-    struct result
-    {
-        typedef typename boost::function_traits<Signature>::result_type type;
-    };
-    typename boost::function_traits<Signature>::result_type 
-    operator()(const typename fused_filter<Signature>::parameter_vector &vec_par)
-    {
-        count_++;
-        return static_cast<typename boost::function_traits<Signature>::result_type>
-            (fused_out(vec_par));
-    }
-    T count() {return count_;}
-private:
-    T count_;
+    /** Initializes the internal counter to 0.
+    */
+    counter()
+    {   reset(); }
+    
+    /** Sets the internal counter to 0.
+    */
+    void reset()
+    {   Base::member = 0; }
+
+    /** \return The internal signal counter.
+    */
+    typename boost::remove_volatile<T>::type count() const
+    {   return Base::member; }
 };
 
 SIGNAL_NETWORK_CLOSE_SIGNET_NAMESPACE

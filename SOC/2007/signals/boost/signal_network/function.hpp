@@ -8,39 +8,55 @@
 #ifndef SIGNAL_NETWORK_FUNCTION_HPP
 #define SIGNAL_NETWORK_FUNCTION_HPP
 
-#include <boost/signal_network/filter.hpp>
-#include <boost/signal_network/detail/defines.hpp>
+#include <boost/signal_network/modifier.hpp>
 #include <boost/function.hpp>
-#include <boost/signal_network/detail/unfused_inherited.hpp>
-#include <boost/mpl/vector.hpp>
-
+#include <boost/signal_network/storage.hpp>
 SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 
-template<typename Signature>
-class function : public filter<void (typename boost::function_traits<Signature>::result_type)>
+namespace detail
 {
-    typedef boost::function_types::parameter_types<Signature> ParTypes;
-public:
-    typedef boost::fusion::unfused_inherited<function<Signature>,
-        typename mpl::vector<boost::function<Signature> >::type,
-        typename boost::function_types::parameter_types<Signature> > unfused;
-
-    function(boost::function<Signature> f) :
-      func(f),
-      fused_func(boost::fusion::fused<boost::function<Signature> const &>(func)) {}
-    template <class Seq>
-    struct result
+    template<typename FunctionSignature, typename Signature>
+    struct function_adapter
     {
-        typedef void type;
+        function_adapter(const boost::function<FunctionSignature> &f) :
+            func(f),
+            fused_func(boost::fusion::fused<boost::function<FunctionSignature> const &>(func)) {}
+        function_adapter(const function_adapter &fa) :
+            func(fa.func),
+        fused_func(boost::fusion::fused<boost::function<FunctionSignature> const &>(func)) {}
+        template<typename Seq>
+        const typename storage<Signature>::storable_vector &
+        operator()(const Seq &seq)
+        {
+            boost::fusion::at_c<0>(vector) = fused_func(seq);
+            return vector;
+        }
+    protected:
+        typename storage<Signature>::storable_vector vector;
+        boost::function<FunctionSignature> func;
+        boost::fusion::fused<boost::function<FunctionSignature> const &> fused_func;
     };
-    template <class Seq>
-    void operator()(const Seq &vec_par)
-    {
-        out(fused_func(vec_par));
-    }
-protected:
-   	boost::function<Signature> func;
-    boost::fusion::fused<boost::function<Signature> const &> fused_func;
+}
+/** \brief Converts a function into a Signal Network filter.
+\param Signature Signature of the function to be converted.
+
+The signet::function object will receive signals of signature void(<i>function arguments</i>),
+and send signals of signature void(<i>function return type</i>).
+*/
+template<typename Signature,
+    typename FunctionSignature,
+    typename OutSignal=default_out_signal,
+    typename Combiner = boost::last_value<void>,
+    typename Group = int,
+    typename GroupCompare = std::less<Group>,
+    typename Base = modifier<detail::function_adapter<FunctionSignature, Signature>, Signature, OutSignal, Combiner, Group, GroupCompare>
+>
+class function : public Base
+{
+public:
+    typedef function<Signature, FunctionSignature, OutSignal, Combiner, Group, GroupCompare, typename Base::unfused > unfused;
+
+    function(const boost::function<FunctionSignature> &f) : Base(f) {}
 };
 
 SIGNAL_NETWORK_CLOSE_SIGNET_NAMESPACE

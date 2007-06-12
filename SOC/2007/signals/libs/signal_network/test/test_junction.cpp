@@ -15,32 +15,65 @@ using namespace boost;
 
 int test_main(int, char* [])
 {
-	signet::storage<void ()>::unfused banger1, banger2;
-    signet::counter<void ()>::unfused counter1, counter2;
-    signet::junction<void ()>::unfused junction;
-	
-	banger1 >>= junction >>= counter1;
-	banger2 >>= junction >>= counter2;
+    {
+        //[ test_junction_unfused
+        signet::storage<void ()>::unfused banger1, banger2;
+        signet::counter<void ()>::unfused counter1, counter2;
+        signet::junction<void ()>::unfused junction;
+        
+        banger1 >>= junction >>= counter1;
+        banger2 >>= junction >>= counter2;
 
-	banger1();
-	banger2();
+        banger1();
+        banger2();
 
-	BOOST_CHECK(counter1.count() == 2);
-	BOOST_CHECK(counter2.count() == 2);
+        BOOST_CHECK_EQUAL(counter1.count(), 2);
+        BOOST_CHECK_EQUAL(counter2.count(), 2);
 
-	junction.disable();
-	banger1();
-	banger2();
+        junction.disable();
+        banger1();
+        banger2();
 
-	BOOST_CHECK(counter1.count() == 2);
-	BOOST_CHECK(counter2.count() == 2);
+        BOOST_CHECK_EQUAL(counter1.count(), 2);
+        BOOST_CHECK_EQUAL(counter2.count(), 2);
 
-	junction.enable();
-	banger1();
-	banger2();
+        junction.enable();
+        banger1();
+        banger2();
 
-	BOOST_CHECK(counter1.count() == 4);
-	BOOST_CHECK(counter2.count() == 4);
-
+        BOOST_CHECK_EQUAL(counter1.count(),  4);
+        BOOST_CHECK_EQUAL(counter2.count(), 4);
+        //]
+    }
+    {
+        //[ test_junction_fused
+        signet::storage<void ()> banger1, banger2;
+        signet::counter<void ()> counter1, counter2;
+        signet::junction<void ()> junction;
+        
+        banger1 >>= junction >>= counter1;
+        banger2 >>= junction >>= counter2;
+        
+        banger1();
+        banger2();
+        
+        BOOST_CHECK_EQUAL(counter1.count(), 2);
+        BOOST_CHECK_EQUAL(counter2.count(), 2);
+        
+        junction.disable();
+        banger1();
+        banger2();
+        
+        BOOST_CHECK_EQUAL(counter1.count(), 2);
+        BOOST_CHECK_EQUAL(counter2.count(), 2);
+        
+        junction.enable();
+        banger1();
+        banger2();
+        
+        BOOST_CHECK_EQUAL(counter1.count(),  4);
+        BOOST_CHECK_EQUAL(counter2.count(), 4);
+        //]
+    }    
     return 0;
 } // int test_main(int, char* [])

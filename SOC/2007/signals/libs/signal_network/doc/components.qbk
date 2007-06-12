@@ -1,0 +1,186 @@
+[section:components Components]
+
+[section:generic Generic]
+
+[section:filter filter]
+[*See also]: [classref boost::signal_network::signet::filter filter class reference.]
+
+The __filter__ class is used as a base class for in / out components.  It provides support for Signal Network connection operators,
+and provides a default output signal.
+
+[endsect][/filter]
+
+[section:applicator applicator]
+[*See also]: [classref boost::signal_network::signet::applicator applicator class reference.]
+
+The __applicator__ class applies a specified function object to a member variable of a specified type whenever it receives a signal.
+The signal is always forwarded.
+
+Examples of applicators:
+
+* __counter__
+
+[endsect][/applicator]
+
+[section:conditional conditional]
+[*See also]: [classref boost::signal_network::signet::conditional conditional class reference.]
+
+The __conditional__ class applies a specified function object to a member variable of a specified type whenever it receives a signal.
+The signal is forwarded if the function object returns true.
+
+Examples of conditionals:
+
+* __junction__
+
+[endsect][/conditional]
+
+[section:instantiator instantiator]
+[*See also]: [classref boost::signal_network::signet::instantiator instantiator class reference.]
+
+The __instantiator__ class instantiates a specified type from a member variable of a specified type whenever it receives a signal.
+The signal is always forwarded.
+
+Examples of applicators:
+
+* __mutex__
+
+[endsect][/instantiator]
+
+[section:modifier modifier]
+[*See also]: [classref boost::signal_network::signet::modifier modifier class reference.]
+
+The __modifier__ class instantiates a member function object of specified type Member. It applies the member function object
+to each incoming signal, and sends the returned value.
+
+Examples of modifiers:
+
+* __function__
+
+[endsect][/modifier]
+
+[endsect][/generic]
+
+[section:properties Signal Properties]
+[section:storage storage]
+[*See also]: [classref boost::signal_network::signet::storage storage class reference.]
+
+The __storage__ class can store the parameters it receives from a signal, as well as transmit the stored
+parameter values through its own signal.
+
+[table storage class use example
+    [[fused][unfused]]
+    [[[test_storage_fused]][[test_storage_unfused]]]
+]
+[endsect][/storage]
+
+[section:counter counter]
+[*See also]: [classref boost::signal_network::signet::counter counter class reference.]
+
+The __counter__ class counts the number of passing signals.  Each time it receives a signal, it will increment an internal
+counter and forward the signal.
+
+[import ../test/test_counter.cpp]
+[table counter class use example
+    [[fused][unfused]]
+    [[[test_counter_fused]][[test_counter_unfused]]]
+]
+
+[endsect][/counter]
+[endsect][/properties]
+
+[section:flow Signal Flow]
+[section:junction junction]
+[*See also]: [classref boost::signal_network::signet::junction junction class reference.]
+
+The __junction__ class can be used to bring in multiple signals, and forward them all to the same set of
+output signals.
+
+[import ../test/test_junction.cpp]
+[table storage class use example
+    [[fused][unfused]]
+    [[[test_junction_fused]][[test_junction_unfused]]]
+]
+[endsect][/junction]
+
+[section:mutex mutex]
+[*See also]: [classref boost::signal_network::signet::mutex mutex class reference.]
+
+The __mutex__ class locks an internal mutex when it receives a signal, and then forwards the signal.
+__mutex__ is an __instantiator__ with the Instantiation boost::mutex::scoped_lock and Member boost::mutex.
+
+[import ../test/test_mutex.cpp]
+[table mutex class use example
+    [[fused][unfused]]
+    [[[test_mutex_fused]][[test_mutex_unfused]]]
+]
+[endsect][/mutex]
+
+[endsect][/flow]
+
+[section:adapters Adapters]
+[section:function function]
+[*See also]: [classref boost::signal_network::signet::function function class reference.]
+
+The __function__ class can be used to apply a function to an incoming signal and output the result.
+__function__ is a __modifier__ with the Modifier set to an adapter for the provided function.
+
+[table function class use example
+    [[fused][unfused]]
+    [[[test_function_fused]][[test_function_unfused]]]
+]
+
+[endsect][/function]
+
+[endsect][/adapters]
+
+[section:topologies Topologies]
+
+[section:chain chain]
+
+The __chain__ class chains together multiple copies of the same component.
+
+[table function class use example
+    [[fused][unfused]]
+    [[[test_chain_fused]][[test_chain_unfused]]]
+]
+
+The example above uses the following classes:
+
+[test_chain_classes]
+
+[endsect][/chain]
+
+[endsect][/topologies]
+
+[section:network Network]
+
+[section:socket_sender socket_sender]
+[*See also]: [classref boost::signal_network::signet::socket_sender socket_sender class reference.]
+
+The __socket_sender__ class can be used to bridge a signal network accross multiple computers via a
+network connection.  Any signal going to the __socket_sender__ will be serialized and sent over a provided
+socket.  A __socket_receiver__ can be used on the other end to unserialize the signal and forward it.
+
+Example:
+
+[test_socket]
+
+[endsect][/socket_sender]
+
+[section:socket_receiver socket_receiver]
+
+[*See also]: [classref boost::signal_network::signet::socket_receiver socket_receiver class reference.]
+
+The __socket_receiver__ class can be used to bridge a signal network accross multiple computers via a
+network connection.  Any signal going to the __socket_sender__ will be serialized and sent over a provided
+socket.  A __socket_receiver__ can be used on the other end to unserialize the signal and forward it.
+
+Example:
+
+[test_socket]
+
+[endsect][/socket_receiver]
+
+[endsect][/network]
+
+[endsect][/components]

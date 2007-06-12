@@ -1,0 +1,381 @@
+[section:introduction Introduction]
+
+[section:dataflow Dataflow-oriented programming in C++]
+
+[note The purpose of this section is to place the Signal Network library in the bigger picture.
+It is only a start, so please forgive the incompleteness and possible inaccuracies.
+A lot of the ideas in this section have come from a discussion with Tobias Schwinger,
+whom I thank sincerely for his continuing help and suggestions.]
+
+The Signal Network library attempts to afford some of the benefits of
+[@http://en.wikipedia.org/wiki/Dataflow_language dataflow languages] to portable, generic C++, while
+at the same time allowing the power and flexibility of C++ to be used easily
+in a dataflow-oriented environment.  It does so by
+facilitating large-scale use of Boost.Signals as a mechanism to model the transfer
+of data between processing components.
+
+[*["I don't get it.  Data is all over the place in C++.  How is it not already a dataflow language?]]
+
+The wikipedia description of [@http://en.wikipedia.org/wiki/Dataflow_language dataflow languages]
+does a pretty good job of introducing the dataflow concept.  Perhaps the most interesting point I'd like to
+focus on here is the notion that "data is what it is all about".  Even though data is an integral
+part of C++, and lot of things are very much about the data, programs tend not to be modeled with the
+flow of data as the central representation mechanism.
+
+Take the following example - a simple real-time camera-input-displayed-on-the-screen
+application.  Suppose there are three parts to the application - getting each image frame from the camera,
+processing the image in some way, and displaying it on the screen.  A program that does it might
+be structured as follows:
+
+[$dataflow1.png]
+
+Basically, the main program loop is a series of instructions which does this particular job.
+If you wanted to be a little bit more object oriented, you could encapsulate all this functionality
+into an Image class and just call the methods that do the right thing from the main program loop.
+But that's still not all about the flow of data.  It's about the instructions that work on the data.
+
+Let's take this a step further.  Video input libraries often provide callback functionality which will
+deliver a video stream as image frames at the appropriate frame rate.  With this in mind, we do the following
+
+# implement a function which takes an image as input.
+ # the function first invokes the image processing library function that modifies the image as appropriate
+ # the function then invokes the GUI library function that displays the image
+# register the function as a callback with the camera library
+# relax and have some coffee.
+
+The situation now looks something like this:
+
+[$dataflow2.png]
+
+OK, let's look at the situation now.  The image library is acting as some sort of a signal generator - it
+generates images at a certain frame rate.  And the function we implemented, that seems to be like
+a signal consumer which can take an image, process it, and display it on the screen.  
+
+This does seem to be a little more about the flow of data.
+But let's take it even further, and go into the realm of the atypical.  Right now
+we have two "components" - one image signal generator and one signal consumer.  How about this:
+
+# implement a component which accepts an input image signal, modifies the image as appropriate, and then outputs
+a signal with the modified image
+# implement a component which receives an imput image signal and displays it on the screen
+# connect the camera library input stream to the first component
+# connect the first component to the second component
+# relax and have some tea.  go take a nap.
+
+The big picture now looks like the following:
+
+[$dataflow3.png]
+
+[*["So what did we gain?]]
+
+First, maintenance of the program has just become very intuitive.  You don't
+want to process the image any more?  Connect the camera signal directly to the screen display and cut out
+the image processing component.  Someone gives you a new video signal generator component you'd like to use as input
+instead of the camera?  Just plug it in.
+
+Second, the program can now be divided between threads, processors, or computers more easily.
+The display is on a different computer?  No problem, just put the connection to it through a network socket.
+With the data flow clearly specified, it is much easier to distribute the work either manually or
+even automatically (although the Signal Network library at the moment offers no such automatic functionality).
+
+Third, we are not to far from the advantages of a [@http://en.wikipedia.org/wiki/Visual_programming_language
+visual programming language], since the components and the connections have a natural graphical representation.
+With a visaul development environment, programming becomes as easy as connecting components with connections
+(again, the Signal Network library provides no visual programming functionality).
+
+[*["I still don't get it.  I can do all of this using my favorite non-dataflow programming approach just the same!]]
+
+Sure.  Maybe you can.  But if the application is really about the flow of data, why not
+model it and implement it that way?  If it's about the data signals and the components that process it,
+rather than about the sequence of instructions that needs to be executed, then the dataflowimplementation can reflect
+the application more closely, and it just might be easier to design and maintain.
+
+[h4 Signal-based approach and pin-based approach]
+
+To explore the concept of dataflow in C++ further, let us take a step back and examine where the flow of data
+happens in C++.  Rather informally, we can divide things as follows:
+
+* on one hand, there is /data/ (variables, objects, etc...)
+* on the other, there are /computational components/ (functions, methods, etc...)
+
+Data can then be processed by the computational
+components by applying the components to the data in some appropriate way.
+There are several ways of providing data to the computational components:
+
+* by placing it in a location where the component will read it
+* by passing it as a parameter in a call
+* (a combination of the above) by passing the location of the data as a parameter in a call
+
+Similarly, there are several ways of getting data out of a computation component
+
+* the component makes a function call that carries the data as a parameter
+* the component places a value somewhere where it can be read
+* the component returns it as a return value
+
+There is a separation between providing the data to a component, and invoking the
+component.  In some cases, the two happen simoultaneously (when the data is passed and returned
+via a function call), while in others invoking the computational component
+can happen separately from providing the data (at least from a modeling perspective).
+An example of the latter is a computational component which uses data stored in a particular location.
+We can place the data in that location much before invoking the computational component.
+
+The Signal Network library relies on moving the data via function parameters and return values.
+Here, the Boost.Signals library is used to model these individual data channels which couple
+the data transfer and the computational component invocation.  This is one possible dataflow-oriented
+approach.
+
+There is another approach, proposed by Tobias Schwinger, in which the computational components are
+connected by "pins". Here, the data is communicated by
+placing it in locations where the components will read it, and reading it
+from locations where the components write them.  Also, rather than the components
+activating each other, the network itself activates the components manually in an optimized
+order/way.
+
+Each of these approaches has different properties.  In the signal-based approach, the knowledge of the
+network is local - each component knows about where its signals are going, but it knows nothing
+of where the signals arriving at its own slots are coming from.  Unless we record how the network was
+constructed, there is no "big picture" of what the complete network looks like.  Similarly,
+the network is executed autonomously - the components invoke one another when appropriate, and
+no external control mechanism is required.
+
+In the pin-based approach, the situation is reversed.  There is a "big picture" of what the complete
+network looks like, and the network control mechanism uses this information to decide when a component
+should be invoked and to manage the data shared between the components via pins.  Global
+knowledge of the network can be used for better optimization, serialization, etc.  However, it may
+come at the price of some intrusiveness to the computation components.
+
+[heading What's happening here for Google Summer of Code?]
+
+Even though these the signal-based approach and pin-based approach are sufficiently different, they aim for the same goal:
+a dataflow-oriented approach using the C++ language.  It is possible that an application
+designed in a dataflow-oriented way could be implemented using either of the approaches,
+that one approaches could be convertible to the other, or that using both approaches
+simoultaneously is in fact the best solution.  Even though investigating the relationships
+between these two frameworks, or implementing both, would be outside the scope of this
+Google Summer of Code project, I believe it is worthwhile to keep the connections in
+mind while designing and implementing the Signal Network library.
+
+For example, both frameworks could possibly benefit from the separation of the network
+creation layer (which may include factories and reflection) from the network execution
+layer (which only includes the necessary computation components).  Also, allowing additional
+mechanisms for network creation such as through a visual GUI designer, serialization/deserialization
+etc. would also be beneficial.  If I address any of these for the GSoC project, I will try to
+address them in a way that might be useful for both the signal-based approach and pin-based approach.
+
+[endsect]
+
+[section:use When to use]
+
+While the [link signal_network.introduction.dataflow dataflow] section hopefully convinced you
+that there are circumstances in which a dataflow approach is useful, please keep in mind that
+there are many circumstances in which this is not the case.
+
+First, a dataflow approach really only makes sense when the underlying task is
+really about the flow of data through the components that process it.  If you can't sketch a concise
+data flow diagram which truly represents the application, the dataflow approach might not be the best option.
+For example, if you are implementing a complicated algorithm which is really about the sequence of
+instructions that need to be executed on the data (rather than the data going through well-defined and
+self-contained processing components), you probably should't use the Signal Network library.
+If you are working on an audio or video processing application, maybe you should.
+
+Second, using signals as the underlying data transport mechanism makes the Signal Network library
+inherently a run-time contraption.  Every signal sent results in a function call, and if the processing
+components are so minute that the cost of the function calls overtakes the cost of the processing,
+using the Signal Network library will cause a significant performance hit.
+
+To sum up, consider using the Signal Network library when:
+
+* The application can be modeled well through the flow of data; and
+* The cost of the processing shadows the cost of the function calls that transport the data.
+
+[endsect]
+
+[section:fusion Signal Network and Boost.Fusion]
+The components in the Signal Network library are implemented using __fusion__.  To use the
+Signal Network library, you might benefit from the following if you're not familiar with fusion.
+
+[heading Fused vs. unfused]
+A simple C++ function object might look something like this:
+
+    struct f
+    {
+        int operator()(int arg1, int &arg2, const std::string &arg3)
+        {
+            ...
+        }
+    }
+
+The thing to note here is that there are three arguments (of types `int`, `int &`, and `const std::string &`
+respectively), and that when the function object is invoked, they are passed separately:
+
+    int x;
+    std::string s;
+    f()(1, x, s);
+    
+In the terminology of __fusion__, this function object is /unfused/.  This is in contrast to a /fused/
+fuction object, which might look like this:
+
+    struct fused_f
+    {
+        int operator()(fusion::vector<int, int &, const std::string &> &args)
+        {
+            ...
+        }
+    }
+
+Basically, the difference is that the three arguments from the unfused version are now sent in a single
+fusion container.  The benefit is that no matter how many "unfused" arguments there are, there is
+always a single "fused" argument.  Hence, writing templates that deal with a variable number of arguments
+becomes a lot simpler.
+
+[heading Signal Network provides both fused and unfused components]
+
+While writing the generic components provided in the Signal Network library benefits from using
+__fusion__, your particular use case might not.  For this reason, every component provided
+by the Signal Network library has both a fused and an unfused version.  The unfused
+component type is always accessible through the `::unfused` typedef of each component
+(which is fused by default)
+
+For example,
+
+    signet::storage<int (int, int &, const std::string &>)> fused_storage;
+    signet::storage<int (int, int &, const std::string &>)>::unfused unfused_storage;
+
+In the above case, `fused_storage` acts as a function object similar to `fused_f` above.
+Hence, it can be used as a slot for signals which carry a fusion container as an argument.
+On the other hand, `unfused_storage` is similar to `f` above, and can be used as a slot
+for signals which carry regular, unfused arguments.
+    
+In general, the difference between the fused and unfused components are as follows:
+
+[table Fused vs. Unfused differences
+    [[trait][fused][unfused]]
+    [[signals receivable][receives only fused signals][receives both fused and unfused signals]]
+    [[signals sent][sends fused signals by default][sends unfused signals by default]]
+]
+
+[endsect][/fusion]
+
+[section:namespace Namespace use]
+
+The connection operators (and a few other things) are located in the boost::signal_network namespace.
+All of the components are in the boost::signal_network::signet namespace.
+
+It is recommended that you do
+
+    using namespace boost::signal_network
+
+so that your code can use the operators >>= and |, and you can access the components via signet::/component/.
+	
+Otherwise, the following might be helpful:
+
+    namespace signet = boost::signal_network::signet;
+
+[endsect]
+
+[section:start Quick Start]
+
+[note You may want to read the [link signal_network.introduction.namespace Namespace Use] and
+[link signal_network.introduction.fusion Signal Network and Boost.Fusion] sections first.]
+
+The Sigal Network library provides many common building block components for a
+signal network.  The most basic is __storage__, which
+can be used to store a value received through a signal, send it on, and/or retreive it.
+
+By default, components in the library use operator() to receive a signal.
+For example, __storage__ objects can receive
+signals through [memberref boost::signal_network::signet::storage::operator()(void) operator()()].
+Upon receiving this signal, they will output their stored value through another signal.
+
+The value stored inside a __storage__ object
+can be retrieved via the [memberref boost::signal_network::signet::storage::at() at()] method.
+
+Using a few __storage__ objects, it is easy to
+create a network using [funcref boost::signal_network::operator>>=() operator>>=]:
+	
+[table storage class use example
+    [[fused][unfused]]
+    [[[test_storage_fused]][[test_storage_unfused]]]
+]
+
+[heading Creating your own signal receiver (slot)]
+
+The easiest way to create your own signal receiver which can be used with the Signal Network
+library is to create a class with `operator()` of the signal signature you wish to receive.
+
+For example, consider the signature `void()`.  This is the signature
+of a function that returns void and takes no arguments.
+A class that can receive signals of such a signature would be
+defined as follows:
+
+    class SignalVoidCounter
+    #ifdef SIGNAL_NETWORK_TRACKABLE
+        // Two base signals implementations are supported currently
+        // (Boost.Signals by Doug Gregor and the
+        // thread_safe_signals version under implementation by Frank Mori Hess).
+        // SIGNAL_NETWORK_TRACKABLE is defined if you are using Boost.Signals
+        // - in this case, we want to make our component trackable so that
+        // it gets disconnected automatically when this object is destroyed.
+        : public boost::signals::trackable
+    #endif
+    {
+        volatile int cnt;
+    public:
+        SignalVoidCounter() : cnt(0) {}
+        void operator()()
+        {
+            cnt++; // whenever a void() signal is received, increase the counter
+        }
+        int GetCount()
+        {
+            return cnt;
+        }
+    }; // end class SignalVoidCounter
+
+The above class does something really simple - it receives signals of signature `void()`, and counts
+how many it has received. While this functionality is actually covered by the library component __counter__,
+it's a good introductory example.
+
+If you read the section about [link signal_network.introduction.fusion Boost.Fusion], you will find out that the Signal Network
+library works with both /fused/ and /unfused/ signals.  If you wanted the above to work with fused signals,
+all you would need to do is add or substitute the following `operator()`:
+
+    void operator()(const fusion::vector<> &)
+    {
+        cnt++; // whenever a void() signal is received, increase the counter
+    }
+
+You can now introduce this component into a signal network:
+
+[table storage class use example
+    [[fused][unfused]]
+    [[``
+        SignalVoidCounter counter;
+        signet::storage<void()> storage;
+        
+        storage >>= counter;
+        for (int i=0; i<33; i++)
+            storage();
+        
+        assert(counter.GetCount());
+    ``][``
+        SignalVoidCounter counter;
+        signet::storage<void()>::unfused storage;
+        
+        storage >>= counter;
+        for (int i=0; i<33; i++)
+            storage();
+        
+        assert(counter.GetCount());
+    ``]]
+]
+
+To proceed, you may want to look at
+
+* Provided Signal Network library [link signal_network.components components].
+* Creating your own in/out components using the __filter__ class.
+* Using the [link signal_network.connections connection operators] to make connections.
+
+[endsect][/start]
+
+[endsect][/introduction]

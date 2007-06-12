@@ -6,11 +6,6 @@
 #include <boost/asio.hpp>
 #include <boost/test/included/test_exec_monitor.hpp>
 
-/*#ifdef WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#define _WIN32_WINDOWS
-#endif*/
 #include <boost/signal_network/socket_receiver.hpp>
 #include <boost/signal_network/socket_sender.hpp>
 #include <boost/signal_network/function.hpp>
@@ -18,14 +13,14 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 
+//[ test_socket
+
 // for access to connection operators >>= and |
 using namespace boost::signal_network;
 using namespace boost;
 
-
-// asio test
-boost::mutex mutex_;
-boost::condition cond;
+mutex mutex_;
+condition cond;
 asio::io_service io_service;
 
 // This function will set up an asio acceptor, and wait for a connection.
@@ -45,7 +40,7 @@ void asio_server()
 
 	// instantiate the components - a float generator, a filter that adds 2, and a sender
 	signet::storage<void (float)>::unfused generator(1.0f);
-    signet::function<float(float)>::unfused add2(boost::bind(std::plus<float>(), _1, 2.0f));
+    signet::function<void (float), float(float)>::unfused add2(boost::bind(std::plus<float>(), _1, 2.0f));
     signet::socket_sender<void (float)>::unfused sender(socket);
 
 	// create the network
@@ -77,9 +72,10 @@ int test_main(int, char* [])
 	// this receiver is synchronous - we have to tell it to receive a signal
 	receiver();
 
-	BOOST_CHECK(collector.value_<0>() == 3.0f);
+	BOOST_CHECK_EQUAL(collector.at<0>(), 3.0f);
 
 	t.join();
 
     return 0;
 } // int test_main(int, char* [])
+//]

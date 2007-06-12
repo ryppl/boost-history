@@ -13,11 +13,24 @@ using namespace boost;
 
 int test_main(int, char* [])
 {
-    signet::counter<void ()>::unfused counter1;
-	
-    for (int i=0; i<33; i++)
-        counter1();
-    BOOST_CHECK_EQUAL(counter1.count(), 33);
-
+    {
+        //[ test_counter_unfused
+        signet::counter<void ()>::unfused counter;
+        
+        for (int i=0; i<33; i++)
+            counter();
+        BOOST_CHECK_EQUAL(counter.count(), 33);
+        //]
+    }
+    {
+        //[ test_counter_fused
+        signet::counter<void ()> counter;
+        
+        for (int i=0; i<33; i++)
+            counter(boost::fusion::vector<>());
+        BOOST_CHECK_EQUAL(counter.count(), 33);
+        //]
+    }
+    
     return 0;
 } // int test_main(int, char* [])

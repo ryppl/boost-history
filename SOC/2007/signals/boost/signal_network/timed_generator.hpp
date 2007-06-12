@@ -11,23 +11,18 @@ SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 
 /** \brief Creates its own thread and periodically sends a signal with the stored value.
 	\param Signature signature of the sent signal.
-	\warning Since I can't get Doxygen to unravel the preprocessed definition of this
-		class, the documentation was generated through a non-functioning class Doxygen could read.
-
-	\par Example:
-	\dontinclude example.cpp
-	\skip mutex_test
-	\until end void mutex_test
-
 */
-template<class Signature>
-class timed_generator : public storage<Signature>::unfused
+template<class Signature,
+typename Base=storage<Signature> >
+class timed_generator : public storage<Signature>
 {
 public:
+    typedef timed_generator<Signature, typename Base::unfused> unfused;
+    
 	/// Default constructor.  Starts the thread, but signals won't be sent until the enable() function is called.
 	timed_generator() : terminating(false), enabled(false)
 	{
-		thread_object = new boost::thread(boost::bind(&timed_generator<Signature>::thread_function, boost::ref(*this)));
+		thread_object = new boost::thread(boost::bind(&timed_generator::thread_function, boost::ref(*this)));
 	}
 	/// Sets the object to send the stored value at specified time intervals.
 	/** \param[in] interval Sets the time interval (in seconds) at which the signal is sent.

@@ -13,17 +13,25 @@
 
 SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 
+/** \brief Connects a number of components of the same type in a chain.
+\param T Type of the component.
+\param Signature Signature of the signal sent and received.
+
+*/
 template<typename T, typename Signature>
 class chain : public filter_base
 {
 public:
     typedef boost::function_types::parameter_types<Signature> parameter_types;
+    
     typedef typename boost::fusion::result_of::as_vector<parameter_types >::type parameter_vector;
 
     typedef boost::fusion::unfused_inherited<chain<T, Signature>,
         typename mpl::vector<size_t, T *>::type,
         typename boost::function_types::parameter_types<Signature> > unfused;
 
+    ///	Constructs a chain composed of instances of T.
+    ///	Constructs a chain composed of copies of component.
 	chain(size_t copies, T *component=NULL)
 	{
 		initialize(copies, component);
@@ -37,12 +45,14 @@ public:
     {
         typedef typename boost::function_traits<Signature>::result_type type;
     };
+    /// Sending a signal to the chain will forward it to the first component in the chain.
     typename boost::function_traits<Signature>::result_type 
     operator()(const parameter_vector &vec_par)
     {
         return boost::fusion::fused<T &>(components[0])(vec_par);
     }
-	boost::signal<Signature> &default_signal()
+    ///	The default signal coming out of the chain is the default signal of the last component in the chain.
+    typename T::signal_type &default_signal()
 	{
 		return components[size-1].default_signal();
 	}

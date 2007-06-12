@@ -18,6 +18,10 @@
 
 SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 
+/** \brief Sends serializable signals through a Boost asio socket.
+\param Signature Signature of the signal received (and sent through the socket).
+\todo socket_sender only works for Signatures of return type void.
+*/
 template<typename Signature>
 class socket_sender
 {
@@ -28,7 +32,8 @@ public:
 
     typedef boost::function_types::parameter_types<Signature> ParTypes;
 
-    socket_sender(asio::ip::tcp::socket & socket) :
+    /// Initializes the socket_sender to use the provided socket.
+        socket_sender(asio::ip::tcp::socket & socket) :
         socket(& socket),
 		stream(std::ios::in | std::ios::out | std::ios::binary)
     { }
@@ -45,6 +50,7 @@ public:
     { 
         typedef void type;
     };
+    /// Serializes each of the arguments and sends them in a single packet through the socket.
     template <class Seq>
     void operator()(const Seq &vec_par)
     {

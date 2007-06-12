@@ -1,0 +1,111 @@
+[section:connections Connections]
+
+[section:chaining Chaining]
+
+[table chaining example
+    [[fused][unfused]]
+    [[[test_storage_fused]][[test_storage_unfused]]]
+]
+
+[endsect][/chaining]
+
+[section:branching Branching]
+
+More complex connections can also be made relatively easily using
+both `operator >>=`
+and `operator |`
+
+[table branching example
+    [[fused][unfused]]
+    [[[test_branching_fused]][[test_branching_unfused]]]
+]
+
+[endsect][/branching]
+
+[section:pull Pull-based networks]
+
+The Signal Network library was built with push-based networks in
+mind (the data producer sends data through a signal), but it can also
+be used for pull-based networks (the data consumer requests data through
+a signal).
+
+The following example illustrates this:
+
+\dontinclude example.cpp
+\skip PullDoubler
+\until end void pull_test
+
+[endsect][/pull]
+
+[section:disconnect Disconnecting]
+	
+\subsection	signal_network_disconnect_example Disconnecting connections
+
+Connections can be terminated in two ways.  One is through the "trackable"
+mechanism of Boost.Signals, which will automatically destroy connections
+to a trackable object when the object is destroyed.  The other
+way is through the disconnect_all_slots method of the signal sender.
+
+\dontinclude example.cpp
+\skip void disconnect_test
+\until end void disconnect_test
+
+[endsect][/disconnect]
+
+[section:multiple_different Multiple inputs of different signatures]
+
+It is simple to have an object provide multiple slots through operator() functions
+of different signatures.  The following class does so through providing 1-ary slots
+of different types:
+
+\dontinclude example.cpp
+\skip class SignalIntFloatCollector
+\until end class
+
+The following class, on the other hand, uses slots of different number of arguments:
+\dontinclude example.cpp
+\skip class SignalMultiCollector
+\until end class
+
+In such cases, where the operator() functions differ in their signature,
+standard connection operators will work out the correct connection:
+
+\dontinclude example.cpp
+\skip void multi_type_test
+\until end void multi_type_test
+
+[endsect][/multiple_different]
+
+[section:multiple_same Multiple inputs of the same signature]
+
+In some cases, a class may want to receive multiple signals of the same
+signature.  For example, the following class can receive a void() signal
+through its inherited operator() function, as well as through the
+operator() function of member "other":
+\dontinclude example.cpp
+\skip class Signal2VoidCounter
+\until end class
+
+Similarly, the following class could receive void() signals both
+through operator() and through AltInput:
+\dontinclude example.cpp
+\skip class Signal2VoidInputs
+\until end class
+
+The following example shows how to connect signals to all of the above slots.
+For the class Signal2VoidInputs, this is accomplished using the
+slot_selector function:
+\skip void multi_in_test
+\until end void multi_in_test
+
+[endsect][/multiple_same]
+
+[section:multi_out Multiple outputs]
+
+\dontinclude example.cpp
+\skip class SignalOutIntFloat
+\until end void multi_out_test
+
+[endsect][/multi_out]
+
+[endsect][/connections]

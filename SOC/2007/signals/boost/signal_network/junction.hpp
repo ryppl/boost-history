@@ -6,43 +6,50 @@
 #ifndef SIGNAL_NETWORK_JUNCTION_HPP
 #define SIGNAL_NETWORK_JUNCTION_HPP
 
-#include <boost/signal_network/filter.hpp>
-#include <boost/signal_network/detail/defines.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits.hpp>
-#include <boost/signal_network/detail/unfused_inherited.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/fusion/sequence/adapted/mpl.hpp>
+#include <boost/signal_network/conditional.hpp>
 
 SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 
-template<typename Signature>
-class junction : public fused_filter<Signature>
+namespace detail
+{
+    template<typename T>
+    struct identity
+    {
+        T operator ()(T t) const
+        {
+            return t;
+        }
+    };
+}
+
+/** \brief Forwards a single signal to multiple slots, and can
+also be disabled to stop the flow of signals.
+    junction is a conditional with Condition identity and Member volatile bool
+*/
+template<typename Signature,
+    typename OutSignal=default_out_signal,
+    typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
+    typename Group = int,
+    typename GroupCompare = std::less<Group>,
+    typename Base = conditional<detail::identity<bool>, volatile bool, Signature, OutSignal, Combiner, Group, GroupCompare>
+>
+class junction : public Base
 {
 public:
-    typedef boost::fusion::unfused_inherited<junction<Signature>,
-        typename mpl::vector<>::type,
-        typename boost::function_types::parameter_types<Signature> > unfused;
-
-    junction() : enabled(true) {}
-    void enable() {enabled = true;}
-    void disable() {enabled = false;}
-
-    template <class Seq>
-    struct result
+    typedef junction<Signature, OutSignal, Combiner, Group, GroupCompare, typename Base::unfused > unfused;
+    
+    /** Initializes the junction to be enabled.
+    */
+    junction(bool enabled=true)
     {
-        typedef typename boost::function_traits<Signature>::result_type type;
-    };
-
-    typename boost::function_traits<Signature>::result_type 
-    operator()(const typename fused_filter<Signature>::parameter_vector &vec_par)
-    {
-    	if (enabled)
-             return static_cast<typename boost::function_traits<Signature>::result_type>
-                 (fused_out(vec_par));
+        enable();
     }
-private:
-    volatile bool enabled;
+    /** Enables the junction (signals will be forwarded).
+    */
+    void enable() {Base::member = true;}
+    /**	Disables the junction (signals will not be forwarded).
+    */
+    void disable() {Base::member = false;}
 };
 
 SIGNAL_NETWORK_CLOSE_SIGNET_NAMESPACE
