@@ -1,6 +1,6 @@
 //backward_hds_concept.hpp  -*- C++ -*-
 //
-//@PURPOSE: Proviade 'BackwardHDS' concept definition and concept-checking class.
+//@PURPOSE: Provide 'BackwardHDS' concept definition and concept-checking class.
 //
 //@DESCRIPTION: This file provides a single class template that,
 // when used with the following concept-checking utilities:
