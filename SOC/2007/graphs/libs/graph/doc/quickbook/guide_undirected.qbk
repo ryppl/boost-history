@@ -5,34 +5,61 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Working with Undirected Graphs]
+[section Undirected Graphs]
 This section could be called "Things to do with Undirected Graphs" since its goal
 is to provide a number of concrete examples of how undirected graphs can be used
 to solve problems - and more specifically how to implement them using Boost.Graph.
 
-[h2 Citation Graphs]
+In this section, our example revolves around a particular type of /social network/.
+A social network is a graph that models the relationships between people. Specifically,
+in this example we are looking at a graph that connects co-stars of films.
+
+[h3 Co-Star Graphs]
 The first example problem we want to look at is the "Six Degrees of Kevin Bacon"
-problem. Mathematicians might be more familiar with this is as "Erdos Numbering".
-This problem is based on a network of relationships between people. In the Six
-Degrees problem, two actors are related if they appear in the same movie. With
-Erdos, two people are related if they collaborated on a published article. This
-type of network is often called a /citation/ graph (or network) and is trivially
-represented using an undirected graph.
+problem. In this problem, two actors are related if they appear in the same movie,
+which can be trivially represented using an undirected graph.
 
 For the Six Degrees problem, we define a citation graph such that each vertex in
 the graph represents an actor, and each edge connects two actors if and only if
-they appear in the same movie. There are actually two different problems that we
-can solve:
+they appear in the same movie. Consider the example in Figure 1. Here we have
+ten relatively well-known actors and the movies in which they appear together -
+and yes, Kevin Bacon is actually in /Animal House/ (he plays a snotty Omega pledge
+in his film debut).
+
+[$../images/movie.png]
+
+Although this is a relatively simple graph, it isn't hard to imagine that it
+scales up fairly quickly. Consider what would happen if we added all of Kevin
+Bacon's co-stars from major motion picture in which he starred - and all of
+their co-stars. It's not hard to imagine that only three iterations might
+actually encompass all of Hollywood and beyond (Bollywood?). What can we do
+with these graphs?
+
+For starters, we can identify two different problems of the "Six Degrees".
+
 # How far is every actor in the graph from Kevin Bacon? This gives us the number
-of steps between Mr. Bacon and any other actor.
-# What is the fastest way to travel (along the citation graph) from Kevin Bacon
+of steps between Mr. Bacon and any other actor. The distances from a central actor
+can give clues to the size (especially the diameter) of a graph.
+# What is the "fastest" way to travel (along the co-star graph) from Kevin Bacon
 to any other actor? This is more commonly known as the "Six Degrees of Kevin
 Bacon Game" and was actually discussed (on air) by its inventors on MTV's "The Jon
 Stewart Show" (go figure).
+
 These are actually two different instances of the same problem and can be solved
 using the same algorithm - a simple breadth-first search (BFS).
 
-[h3 Actors, Movies, and Graphs]
+[note
+The term "six degrees of separation" refers to the total distance one must travel
+in a social network to get from one's self to any other person in the network.
+This notion is supported through a number of social experiments, namely that of
+Stanley Milgram who coined the term "small world" with respect to social networks.
+His experiment showed that Americans are connected, on average by six friendships.
+The notion of a "small world" social network is now nearly synonymous with a
+graph having an average degree of connectivity (formally known as its /mean geodesic
+distance/) of just six steps.
+]
+
+[h4 Actors, Movies, and Graphs]
 
 Our program begins by inlcuding required headers and creating some convenient
 type aliases.
@@ -129,7 +156,7 @@ The following function implements the input parser for the graph data.
  using namespace std;
  using namespace boost;
 
- void build_citation_graph(istream& is, Graph& graph, ActorMap&)
+ void build_costar_graph(istream& is, Graph& graph, ActorMap&)
  {
    // pull all of the data from std in.
    for(string line; getline(is, line); ) {
@@ -229,12 +256,12 @@ Our main program looks like this:
  {
    Graph graph;
    ActorMap actors;
-   build_citation_graph(cin, graph, actors);
+   build_costar_graph(cin, graph, actors);
 
    // ...to be continued...
  }
 
-[h3 Distance To Kevin Bacon]
+[h4 Distance To Kevin Bacon]
 Now, all we have left to do is assign distances to Kevin Bacon. To do this, we're going
 to use a breadth-first search (starting from Kevin Bacon) and simply record the "depth"
 of each vertex as the distance from Kevin to every other actor. To do this, we're going
@@ -346,7 +373,7 @@ $ ./kevin_bacon < movies
 2 : Eddie Murphy
 ]
 
-[h3 The Kevin Bacon Game]
+[h4 The Kevin Bacon Game]
 Using the above algorithm we can find how far away each actor is from Kevin Bacon, but what
 if we want to know how to get there. For example, we know that Dan Akroyd is three steps away
 so what are the movies? We could look at the input file, but that won't really give us any
@@ -428,7 +455,7 @@ The only other changes are going to be in the `main()` program.
 
    Graph graph;
    ActorMap actors;
-   build_citation_graph(cin, graph, actors);
+   build_costar_graph(cin, graph, actors);
 
    // ...to be continued...
 
@@ -473,7 +500,7 @@ The `find_actor_vertex()` method is relatively trivial:
 Otherwise, the code is essentially the same as above. In this case, we're passing our
 modified parent-recording visitor to the `breadth_first_search()` function. The step
 in the solution is to backtrack from the target actor to the parent, printing the
-movies that form the citation chain.
+movies that form the chain of co-starring actors.
 
  int main(...)
  {
@@ -518,7 +545,7 @@ You now have a completely unbeatable implementation of the "Six Degrees of Kevin
 Bacon" game - provided of course that you add a lot more movie data to the simple
 data set provided with this example.
 
-[h3 Closing Thoughts]
+[h4 Closing Thoughts]
 Notice that this problem can be trivially adapted to the Erd\&ouml;s Numbering problem
 by simply redefining the semantics of the graph. Instead of actors, each vertex
 can represent an author, and each edge connects two authors if and only if both

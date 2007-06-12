@@ -1,0 +1,15 @@
+digraph {
+    "adjacency_list.hpp" -> "undirected_graph.hpp";
+    "adjacency_list.hpp" -> "directed_graph.hpp";
+    "undirected_graph.hpp" -> "movies.hpp";
+    "movies.hpp" -> "movies.cpp";
+    "tokenizer.hpp" -> "movies.cpp";
+    "movies.hpp" -> "kevin_bacon.cpp";
+    "visitors.hpp" -> "kevin_bacon.cpp";
+    "breadth_first_search.hpp" -> "kevin_bacon.cpp";
+    "movies.cpp" -> "kevin_bacon.exe";
+    "kevin_bacon.cpp" -> "kevin_bacon.exe";
+    "directed_graph.hpp" -> "build_order.cpp";
+    "topological_sort.hpp" -> "build_order.cpp";
+    "build_order.cpp" -> "build_order.exe";
+}

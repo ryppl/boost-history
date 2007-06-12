@@ -1,0 +1,13 @@
+graph {
+    "Kevin Bacon" -- "Lori Singer" [label="Footloose"];
+    "Kevin Bacon" -- "Chris Penn" [label="Footloose"];
+    "Lori Singer" -- "Tom Hanks" [label="The Man With One Red Shoe"];
+    "Lori Singer" -- "Carrie Fisher" [label="The Man With One Red Shoe"];
+    "Lori Singer" -- "James Belushi" [label="The Man With One Red Shoe"];
+    "Carrie Fisher" -- "Mark Hamill" [label="Star Wars"];
+    "Carrie Fisher" -- "John Belushi" [label="The Blues Brothers"];
+    "John Belushi" -- "Kevin Bacon" [label="Animal House"];
+    "John Belushi" -- "Dan Akroyd" [label="1941"];
+    "Dan Akroyd" -- "James Belushi" [label="Trading Places"];
+    "Tom Hanks" -- "Tawny Kitaen" [label="Bachelor Party"];
+}
