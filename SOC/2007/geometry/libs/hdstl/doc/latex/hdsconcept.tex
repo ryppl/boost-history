@@ -1,0 +1,41 @@
+\section{HDS concept definition}\label{hdsconcept}
+\subsection{Definition}\label{hdsconcept_refhdsconcept1}
+This concept is the basic {\tt HDSConcept}, which all the other {\tt HDS} concepts refine. It contains a few requirements which are common to all the graph concepts. One should note that a model of {\tt HDSConcept} is not required to be a model of {\tt Assignable}, so algorithms should pass {\tt HDS} objects by reference.\subsection{Refinement of:}\label{hdsconcept_refhdsconcept2}
+This concept is not a refinement of another concept, in particular a model {\tt HDS} of {\tt HDSConcept} does {\em not\/} need to be {\tt Default\-Constructible}, {\tt Copy\-Constructible}, or {\tt Assignable}.\subsection{Notation}\label{hdsconcept_refhdsconcept3}
+\begin{itemize}
+\item {\tt HDS} A type that is a model of {\tt HDSConcept}\item {\tt hds} A non-modifiable instance of {\tt HDS}\item {\tt h},{\tt g} Halfedge descriptors, of type {\tt hds\_\-traits$<$HDS$>$::halfedge\_\-descriptor}\end{itemize}
+\subsection{Associated types}\label{hdsconcept_refhdsconcept4}
+\begin{itemize}
+\item {\tt hds\_\-traits$<$HDS$>$::halfedge\_\-descriptor}: must be {\tt Default\-Constructible} and {\tt Copy\-Constructible}, {\tt Equality\-Comparable}, {\tt Assignable}.\end{itemize}
+\subsection{Definitions}\label{hdsconcept_refhdsconcept5}
+{\tt halfedge\_\-descriptor} is a type that contains information to access the halfedge. Note that the halfedge descriptor type (accessible as a member of the {\tt hds\_\-traits$<$HDS$>$} type) is an opaque type. All that can be done to it is passing it to the function opposite and letting the hds use the information it contains to find the opposite halfedge. In particular, there is no guarantee that it is a pointer type.\subsection{Valid Expressions}\label{hdsconcept_refhdsconcept6}
+The following expression must be valid and obey the syntactic requirement:\begin{itemize}
+\item {\tt opposite(hds, h)} must return a value assignable to {\tt h}.\end{itemize}
+\subsection{Expression Semantics}\label{hdsconcept_refhdsconcept7}
+The expressions semantics are as follows:\begin{itemize}
+\item {\tt opposite(hds, h)} returns a descriptor to the halfedge opposite {\tt h} in the data structure {\tt hds}. Does not modify the state of either {\tt hds} or {\tt h}.\end{itemize}
+\subsection{Complexity guarantees}\label{hdsconcept_refhdsconcept8}
+\begin{itemize}
+\item {\tt opposite(hds, h)}: Amortized constant time.\end{itemize}
+\subsection{Invariants}\label{hdsconcept_refhdsconcept9}
+Every valid halfedge descriptor {\tt h} must have a valid opposite {\tt g = opposite(hds, h)}, {\em distinct\/} from h, such that {\tt opposite(hds, g)} returns {\tt h}. (Hence, {\tt opposite} is an involution.)\subsection{Concept-checking class}\label{hdsconcept_refhdsconcept10}
+
+
+\begin{Code}\begin{verbatim}  template <class HDS> 
+  struct HDSConcept {
+    typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+    void constraints() {
+      using namespace boost;
+      function_requires<DefaultConstructibleConcept<halfedge_descriptor> >();
+      function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
+      function_requires<EqualityComparableConcept<halfedge_descriptor> >();
+      function_requires<AssignableConcept<halfedge_descriptor> >();
+      h = opposite(hds,h);
+      const_constraints(hds);
+    }
+    void const_constraints(HDS const& hds) {
+      h = opposite(hds,h);
+    }
+\end{verbatim}\end{Code}
+
+ 

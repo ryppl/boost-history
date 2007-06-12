@@ -1,0 +1,21 @@
+\section{hds\_\-concept.hpp File Reference}
+\label{hds__concept_8hpp}\index{hds_concept.hpp@{hds\_\-concept.hpp}}
+Provide {\tt HDS} concept definition and concept-checking class. 
+
+{\tt \#include $<$boost/concepts.h$>$}\par
+
+
+\subsection{Detailed Description}
+Provide {\tt HDS} concept definition and concept-checking class. 
+
+This file provides a single class template that, when used with the following concept-checking utilities: 
+
+\begin{Code}\begin{verbatim}   boost::function_requires<HDSConcept<HDS> >();
+\end{verbatim}\end{Code}
+
+ inside a function body, or 
+
+\begin{Code}\begin{verbatim}   BOOST_CLASS_REQUIRE(HDS, boost::hdstl, HDSConcept);
+\end{verbatim}\end{Code}
+
+ inside a class body, checks whether the type given as template argument is a model of the HDS concept described on the page \doxyref{HDS concept definition}{p.}{hdsconcept}. 

@@ -1,0 +1,59 @@
+\section{Forward HDS concept}\label{forwardhds}
+\subsection{Definition}\label{forwardhds_refforwardhds1}
+This concept refines the {\tt HDSConcept}, and specifies additional forward category to iterate over the {\tt HDS} data structure, which means clockwise movement around the facet and counter clockwise movement around the vertex. Possible forward categories are {\tt next\_\-in\_\-facet}, {\tt next\_\-at\_\-source}, and {\tt next\_\-at\_\-target}. Once one of these categories are given all others can be accessed with the help of the {\tt opposite} of a halfedge (see the section \char`\"{}Invariants\char`\"{} below for the algebraic relations that must hold).\subsection{Refinement of}\label{forwardhds_refforwardhds2}
+\begin{itemize}
+\item {\tt HDSConcept}\end{itemize}
+\subsection{Notation}\label{forwardhds_refforwardhds3}
+\begin{itemize}
+\item {\tt HDS} A type that is a model of {\tt Forward\-HDSConcept}\item {\tt hds} A non-modifiable instance of {\tt HDS}\item {\tt h},{\tt g} Halfedge descriptors, of type {\tt hds\_\-traits$<$HDS$>$::halfedge\_\-descriptor}\end{itemize}
+\subsection{Associated types}\label{forwardhds_refforwardhds4}
+\begin{itemize}
+\item {\tt hds\_\-traits$<$HDS$>$::halfedge\_\-descriptor}: from {\tt HDSConcept}.\item {\tt hds\_\-traits$<$HDS$>$::traversal\_\-category}: from {\tt HDSConcept}, with additional requirement that this type must be convertible to {\tt hdstl::forward\_\-traversal\_\-tag}.\item {\tt hds\_\-traits$<$HDS$>$::forward\_\-category}: defines the pointer type for forward iteration.\end{itemize}
+\subsection{Definitions}\label{forwardhds_refforwardhds5}
+\begin{itemize}
+\item {\tt halfedge\_\-descriptor} is a type that contains information to access the halfedge. (See the {\tt HDS} concept or a full definition.)\item {\tt traversal\_\-category} is a type that contains information about the direction of the traversal, which is forward, forward or bidirectional. For this {\tt Forward\-HDS} concept, the {\tt traversal\_\-category} has to be convertible to the {\tt hdstl::forward\_\-traversal\_\-tag} type defined in {\tt $<$boost/hdstl.hpp$>$}.\item {\tt forward\_\-category} defines the primary accessor of the forward information for use by algorithms which desire the most direct access.\end{itemize}
+\subsection{Valid Expressions}\label{forwardhds_refforwardhds6}
+In addition to the valid expressions of the {\tt HDS} concept:\begin{itemize}
+\item {\tt next\_\-in\_\-facet(hds,h)} must return a value assignable to h.\item {\tt next\_\-at\_\-source(hds,h)} must return a value assignable to h.\item {\tt next\_\-at\_\-target(hds,h)} must return a value assignable to h.\end{itemize}
+\subsection{Expression Semantics}\label{forwardhds_refforwardhds7}
+In addition to the expression semantics of the {\tt HDS} concept:\begin{itemize}
+\item {\tt next\_\-in\_\-facet(hds,h)} returns a halfedge descriptor to the halfedge preceding {\tt h} in the adjacent facet cycle, when facet cycles are oriented in counter-clockwise order.\item {\tt next\_\-at\_\-source(hds,h)} returns a halfedge descriptor to the halfedge preceding {\tt h} around the source vertex of {\tt h}, when halfedges are ordered around a given vertex in clockwise order.\item {\tt next\_\-at\_\-target(hds,h)} returns a halfedge descriptor to the halfedge preceding {\tt h} around the target vertex of {\tt h}, when halfedges are ordered around a given vertex in clockwise order.\end{itemize}
+\subsection{Complexity guarantees}\label{forwardhds_refforwardhds8}
+\begin{itemize}
+\item {\tt next\_\-in\_\-facet(hds,h)}: amortized constant time.\item {\tt next\_\-at\_\-source(hds,h)}: amortized constant time.\item {\tt next\_\-at\_\-target(hds,h)}: amortized constant time.\end{itemize}
+\subsection{Invariants}\label{forwardhds_refforwardhds9}
+The forward halfedge accessors are linked via the algebraic relations:\begin{itemize}
+\item {\tt next\_\-in\_\-facet(hds,h)} == {\tt next\_\-at\_\-source(opposite(hds,h))} == {\tt opposite(next\_\-at\_\-target(hds,h))}\item {\tt next\_\-at\_\-source(hds,h)} == {\tt next\_\-in\_\-facet(opposite(hds,h))} == {\tt opposite(next\_\-at\_\-target(opposite(hds,h)))}\item {\tt next\_\-at\_\-target(hds,h)} == {\tt opposite(next\_\-in\_\-facet(hds,h))} == {\tt opposite(next\_\-at\_\-source(opposite(hds,h)))}\end{itemize}
+\subsection{Concept-checking class}\label{forwardhds_refforwardhds10}
+
+
+\begin{Code}\begin{verbatim}  template <class HDS> 
+  struct ForwardHDSConcept {
+    typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+    typedef typename hds_traits<HDS>::traversal_category traversal_category;
+    typedef typename hds_traits<HDS>::forward_category forward_category;
+     void constraints() {
+        using namespace boost;
+        function_requires<HDSConcept<HDS> >();
+        function_requires<ConvertibleConcept<traversal_category,
+                                         hdstl::forward_traversal_tag> >();  
+        const bool is_valid_storage_tag =
+           is_convertible<forward_category,next_at_source_tag>::value ||
+           is_convertible<forward_category,next_at_target_tag>::value ||
+           is_convertible<forward_category,next_in_facet_tag>::value;
+        BOOST_STATIC_ASSERT( is_valid_storage_tag ); 
+ 
+        const_constraints(hds);
+     }
+     void const_constraints(HDS const& hds){
+        h = next_in_facet(hds,h);
+        h = next_at_source(hds,h);
+        h = next_at_target(hds,h);
+     }
+     ForwardHDS hds;
+     halfedge_descriptor h;
+     halfedge_descriptor g;
+  };
+\end{verbatim}\end{Code}
+
+ 
