@@ -280,7 +280,6 @@ public:
     void write(std::ostream&);
 };
 
-
 // -----------------------------------------------------------------
 // These are the defaults that I used in the prototype, and they
 // looked decent enough.

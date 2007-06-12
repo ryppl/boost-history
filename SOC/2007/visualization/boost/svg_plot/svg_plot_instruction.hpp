@@ -20,7 +20,8 @@ namespace svg {
 // This allows us to process operations by case in switch statements
 // -----------------------------------------------------------------
 enum plot_inst_type{PLOT_NONE, PLOT_SCALE_X, PLOT_START, 
-                PLOT_SIZE, PLOT_INTERVAL, PLOT_DRAW_AXIS, PLOT_LINE_COLOR};
+                PLOT_SIZE, PLOT_INTERVAL, PLOT_DRAW_AXIS, PLOT_LINE_COLOR,
+                PLOT_RANGE};
 
 // -----------------------------------------------------------------
 // plot_instruction is the ancestor of all of the instructions
@@ -113,17 +114,12 @@ struct plot_color: public plot_instruction
     }
 };
 
+// -----------------------------------------------------------------
+// 
+// -----------------------------------------------------------------
 struct plot_draw_range: public plot_instruction
 {
-    std::vector<double>::iterator begin;
-    std::vector<double>::iterator end;
-
-    plot_draw_range(std::vector<double>::iterator _b,
-        std::vector<double>::iterator _e)
-    {
-        begin = _b;
-        end = _e;
-    }
+    std::vector<double> data;
 };
 
 // -----------------------------------------------------------------
@@ -133,10 +129,8 @@ struct plot_draw_col_range: public plot_draw_range
 {
     svg_color fill_color;
 
-    plot_draw_col_range(std::vector<double>::iterator _b,
-        std::vector<double>::iterator _e,
-        svg_color_constant _fill_color): 
-            fill_color(svg_color(_fill_color)), plot_draw_range(_b, _e)
+    plot_draw_col_range(svg_color_constant _fill_color): 
+            fill_color(svg_color(_fill_color))
     {
  
     }
@@ -156,17 +150,34 @@ plot_two_vals image_size(int x, int y)
     return plot_two_vals(x, y, PLOT_SIZE);
 }
 
-plot_draw_range plot_range(std::vector<double>::iterator begin,
-                    std::vector<double>::iterator end)
+/*plot_draw_range plot_range(const Container<double, T>& begin,
+                           const Container<double, T>& end)
 {
-    return plot_draw_range(begin, end);
+    std::vector<double> hlal(begin, end);
+
+    return plot_draw_range(hlal.begin(), hlal.end());
+}*/
+
+template <class container>
+plot_draw_range plot_range(container begin, container end)
+{
+    plot_draw_range to_return;
+
+    to_return.data.insert(to_return.data.begin(), begin, end);
+
+    return to_return;
 }
 
-plot_draw_col_range plot_range(std::vector<double>::iterator begin,
-                    std::vector<double>::iterator end,
+template <class container>
+plot_draw_col_range plot_range(container begin,
+                    container end,
                     svg_color_constant col)
 {
-    return plot_draw_col_range(begin, end, col);
+    plot_draw_col_range to_return(col);
+
+    to_return.data.insert(to_return.data.begin(), begin, end);
+
+    return to_return;
 }
 
 plot_command draw_axis()

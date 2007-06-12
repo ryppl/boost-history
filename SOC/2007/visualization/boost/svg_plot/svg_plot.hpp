@@ -19,6 +19,8 @@
 #include "svg_plot_instruction.hpp"
 #include "svg.hpp"
 
+#include <boost/array.hpp>
+
 namespace boost {
 namespace svg {
 
@@ -75,11 +77,12 @@ private:
     void _x_scale(double, double);
     void _plot_image_size(unsigned int, unsigned int);
 
-    void _plot_range(std::vector<double>::iterator,
-        std::vector<double>::iterator);
-    void _plot_range(std::vector<double>::iterator,
-        std::vector<double>::iterator,
+    void _plot_range(std::vector<double>::const_iterator,
+        std::vector<double>::const_iterator);
+    void _plot_range(std::vector<double>::const_iterator,
+        std::vector<double>::const_iterator,
         svg_color);
+
 
     void _transform_point(double &x);
     void _draw_axis();
@@ -185,13 +188,13 @@ svg_plot& svg_plot::operator<<(const plot_command& rhs)
 
 svg_plot& svg_plot::operator<<(const plot_draw_range& rhs)
 {
-    _plot_range(rhs.begin, rhs.end);
+    _plot_range(rhs.data.begin(), rhs.data.end());
     return (svg_plot&)*this;
 }
 
 svg_plot& svg_plot::operator<<(const plot_draw_col_range& rhs)
 {
-    _plot_range(rhs.begin, rhs.end, rhs.fill_color);
+    _plot_range(rhs.data.begin(), rhs.data.end(), rhs.fill_color);
     return (svg_plot&)*this;
 }
 
@@ -239,8 +242,8 @@ void svg_plot::_plot_image_size(unsigned int x, unsigned int y)
 // -----------------------------------------------------------------
 // Actually draw data to the plot. Default color information
 // -----------------------------------------------------------------
-void svg_plot::_plot_range(std::vector<double>::iterator begin,
-                            std::vector<double>::iterator end)
+void svg_plot::_plot_range(std::vector<double>::const_iterator begin,
+                            std::vector<double>::const_iterator end)
 {
     double x;
 
@@ -248,7 +251,7 @@ void svg_plot::_plot_range(std::vector<double>::iterator begin,
 
     double y_point = (y_window_min + y_window_max) / 2.;
     
-    for(std::vector<double>::iterator b = begin; b!=end; ++b)
+    for(std::vector<double>::const_iterator b = begin; b!=end; ++b)
     {
         x = *b;
         _transform_point(x);
@@ -260,8 +263,8 @@ void svg_plot::_plot_range(std::vector<double>::iterator begin,
 // -----------------------------------------------------------------
 // Actually draw data to the plot. Fill color information provided
 // -----------------------------------------------------------------
-void svg_plot::_plot_range(std::vector<double>::iterator begin,
-                            std::vector<double>::iterator end,
+void svg_plot::_plot_range(std::vector<double>::const_iterator begin,
+                            std::vector<double>::const_iterator end,
                             svg_color _col)
 {
     double x;
@@ -281,7 +284,7 @@ void svg_plot::_plot_range(std::vector<double>::iterator begin,
 
     g_ptr->set_fill_color(_col);
 
-    for(std::vector<double>::iterator b = begin; b!=end; ++b)
+    for(std::vector<double>::const_iterator b = begin; b!=end; ++b)
     {
         x = *b;
         _transform_point(x);
