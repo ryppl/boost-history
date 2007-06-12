@@ -1,0 +1,26 @@
+This is an implementation of Boost.signals which is intended to be
+thread-safe.  There have been some changes to the API to support
+thread-safety.  See the html documentation in the doc/html subdirectory
+for more information.
+
+This implementation is header-only.  It should be useable by simply adding
+this directory to your include path when compiling.  Be sure to place
+this directory before the path to your full boost headers.
+
+The latest version of this library should be available from the
+boost sandbox cvs:
+
+http://sourceforge.net/cvs/?group_id=53513
+
+The files for thread_safe_signals are in
+boost-sandbox/boost/
+boost-sandbox/boost/thread_safe_signals and
+boost-sandbox/libs/thread_safe_signals.
+The boost-sandbox also has another thread-safe signals
+implementation by Timmo Stange which uses the regular naming
+scheme for the signals library (signal.hpp, signals/connection.hpp, etc.).
+This library is stored in the cvs under an alternate naming scheme
+(thread_safe_signal.hpp, thread_safe_signals/connection.hpp, etc.).
+
+2007-03-07
+Frank Mori Hess <fmhess@users.sourceforge.net>
