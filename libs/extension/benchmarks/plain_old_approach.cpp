@@ -10,7 +10,23 @@
 #include <boost/timer.hpp>
 
 #include <iostream>
+
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0501
+#endif
+
+#ifndef WINDOWS_LEAN_AND_MEAN
+#define WINDOWS_LEAN_AND_MEAN
+#endif
+
+#include <Windows.h>
+#   pragma comment(lib, "kernel32.lib")
+#else
 #include <dlfcn.h>
+#endif
+
 
 #include "../examples/word.hpp"
 
@@ -19,7 +35,7 @@ int main(void)
 {
 	using namespace boost::extensions;
 
-	const unsigned int times = 100000;
+	const unsigned int times = 1000;
 
 	// boost.extensions style
 	boost::timer extensions_style;
@@ -51,13 +67,26 @@ int main(void)
 	// plain old style
 	boost::timer old_style;
 	for(unsigned int c = 0; c < times; ++c) {
+
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+		HMODULE library = LoadLibrary("libPlainOldHelloWorldLib.extension");
+#else
 		void *library = dlopen("libPlainOldHelloWorldLib.extension", RTLD_LAZY);
+#endif
+
 		if(library == 0) {
 			std::cerr << "Cannot open Hello World Library." << std::endl;
 			return 1;
 		}
-		void (*export_words)(word **, word **);
+		typedef void (*export_words_function_type)(word **, word **);
+		export_words_function_type export_words;
+
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+		export_words = (export_words_function_type) GetProcAddress(library, "extension_export_words");
+#else
 		*(void **) (&export_words) = dlsym(library, "extension_export_words");
+#endif
+
 		if(export_words == 0) {
 			std::cerr << "Cannot get exported symbol." << std::endl;
 			return 1;
@@ -77,7 +106,11 @@ int main(void)
 		delete first_word;
 		delete second_word;
 
+#if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
+		FreeLibrary(library);
+#else
 		dlclose(library);
+#endif
 	}
 	std::cout << "Plain old style: " << old_style.elapsed() << std::endl;
 
