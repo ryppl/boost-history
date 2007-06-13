@@ -249,13 +249,24 @@ class Template(object):
         
         cwd = os.getcwd()
         os.chdir(self.directory)
-        for root, dirs, files in os.walk(''):
+        for root, dirs, files in os.walk('.'):
+            # strip the . from the root
+            rest = list()
+            rest_of_root = root
+            while rest_of_root != '.':
+                rest.insert(0, os.path.basename(rest_of_root))
+                rest_of_root = os.path.dirname(rest_of_root)
+            root = ''
+            for item in rest:
+                root = os.path.join(root, item)
             log.line(root)
 
             self.__dirs_clear__ = list()
             self.__files_clear__ = list()
 
             for name in files:
+                if name.startswith('.'):
+                    continue
                 pathname = (os.path.join(root, name))
                 if name.endswith('.py'):
                     content = self.read_content(os.path.join(root, name))
@@ -416,6 +427,10 @@ class Results(object):
 
     def files_in(self, directory):
         return self.__scan__(self.file_list + self.python_list, directory)
+
+#    def file_contents_in(self, directory):
+#        files = self.__scan__(self.file_list + self.python_list, directory)
+        
 
     def directories_in(self, directory):
         return self.__scan__(self.directory_list, directory)
