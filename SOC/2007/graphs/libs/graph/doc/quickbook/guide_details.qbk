@@ -1,0 +1,143 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section More About Simple Graphs]
+The `directed_graph` and `undirected_graph` classes - the so-called "simple graph
+classes" are not parts of the original Boost.Graph Libray. In fact, they are some
+of the most recent additions, designed to provide a lower entry barrier to graph
+programming with Boost. As such, they leverage much of the existing Boost.Graph
+infrastructure for their implementaiton.This section provides details on design
+and structure of these classes.
+
+Both simple graph classes provides three template parameters that can be used
+to customize the internal properties of vertices, edges, and the graph itself.
+They are described in Table 1.
+
+[table
+    [[Parameter] [Description] [Default]]
+    [
+        [VertexProperties]
+        [Specifies internal properties of each vertex.]
+        [`no_property`]
+    ]
+    [
+        [EdgeProperties]
+        [Specifies internal properties of each edge.]
+        [`no_property`]
+    ]
+    [
+        [GraphProperties]
+        [Specifies global, internal properties for the graph.]
+        [`no_property`]
+    ]
+]
+
+The previous examples have all been shown using /bundled properties/ - an approach
+to specifying internal properties that allows the user to use member variables
+of common structures in property maps. However, this is not the only means of
+specifying properties. If your compiler does not support partial template
+specialization, then you cannot use bundled properties in your program. See the
+page on [link boost_graph.old_style_properties old-Style properties] for details.
+
+One of the most important features of both of these classes is that they are
+implemented entirely in terms of an underlying `adjacency_list`. While, it may
+not be commonplace to disclose implementation details in a user's guide, I find
+that it is actually important in this case. Because the `adjacency_list` was
+designed as the "Swiss army knife" of graph classes, it is very customizable
+and there are some significant tradeoffs in graph behavior depending on the
+arguments supplied.
+
+The `adjacency_list` class traditionally provides seven template parameters.
+These are described in Table 2 along with the arguments supplied by the
+`directed_graph` and `undirected_graph` classes.
+
+[table
+    [[Parameter] [Description] [Default]]
+    [
+        [OutEdgeList]
+        [Storage component for the out-edges of each vertex.]
+        [`listS`]
+    ]
+    [
+        [VertexList]
+        [Storage component for vertices of the graph.]
+        [`listS`]
+    ]
+    [
+        [Directed]
+        [
+            Whether the graph is undirected, directed (out-edges only), or
+            bidirectional (out- and in-edges).
+        ]
+        [`undirectedS` or `bidirectionalS`]
+    ]
+    [
+        [VertexProperties]
+        [See Table 1.]
+        [As template argument]
+    ]
+    [
+        [VertexProperties]
+        [See Table 1.]
+        [As template argument]
+    ]
+    [
+        [VertexProperties]
+        [See Table 1.]
+        [As template argument]
+    ]
+    [
+        [EdgeList]
+        [Storage component for the edges of the graph.]
+        [`listS`]
+    ]
+]
+
+With both classes, the storage components are assigned as defaults and
+cannot be changed. The directionality of edges is also specified as
+a non-changeable parameter. It should be fairly obvious that the `undirected_graph`
+class uses the `undirectedS` selector while the `directed_graph` class uses
+`directedS`. The internal properties of the graph are assigned from the template
+parameters of the simple graph classes themselves. If omitted, these all default
+to `no_property`.
+
+This set of template arguments was chosen to provide maximum flexibility for
+solving different sets of problems. However, there may be cases where these
+classes do not meet your needs or perform poorly under certain situations.
+In this case, we suggest using `adjacency_list` directly. See the section
+[link boost_graph.user_s_guide.more_about_simple_graphs.customizing_graphs on
+customizing your graph] for more details.
+
+[h4 Stability and Validity]
+As you can see, all of the storage components for these graph classes are
+selected with `listS`. Using list storage provides a number of benefits over
+the more traditional vector storage, specifically in terms of iterator and
+descriptor stability for mutable graphs. Generally speaking stablity refers
+to the continuing validity of iterators and descriptors after changes to
+the graph such as adding or removing vertices and edges. With some storage
+components (e.g., `vecS`), iterators and descriptors can become invalide after
+some operations. However `listS` guarantees stability after most operations.
+A more complete description of containers, stability and their tradeoffs
+can be found [link boost_graph.adjacency_list.stability here].
+
+[h4 Customizing Graphs]
+Although the `undirected_graph` and `directed_graph` classes are designed
+along the "one-size fits most" principle, there can be times when these
+classes do not meet your performance requirements. For example, your problem
+may not require the extra memory overhead of bidirectional edges, which over
+a million edges or so tends to add up. Or maybe you're adding a million
+vertices to a graph and the repeated insertions to a list cause your
+computer to page a lot - potentially a performance nightmare. In these cases,
+you may need to consider customizing your graph by using an `adjacency_list`
+and tweaking some of the default storage components.
+
+Consider the first example of the co-star graphs. Suppose we have 200,000
+actors and three million edges in our data file.
+Migrating this example
+to an `adjacency_list` is nearly trivial since 
+
+[endsect]
