@@ -22,7 +22,6 @@ int main(void)
 	// load the shared library with 
 	load_single_library(fm, "libParametersLib.extension", "extension_export");
 
-	//  Get a reference to the list of constructors for words.
 	std::list<factory<lots_of_parameters_interface, int, bool, unsigned int, char, std::string, A, boost::shared_ptr<A> > > & factory_list = 
 		fm.get<lots_of_parameters_interface, int, bool, unsigned int, char, std::string, A, boost::shared_ptr<A>  >();
 	if (factory_list.size() != 1) {
