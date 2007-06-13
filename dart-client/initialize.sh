@@ -54,6 +54,12 @@ scriptdir=`dirname $0`
 cd $scriptdir
 topdir=`pwd`
 
+# 
+# recheckout to local copy
+#
+rm -rf src.tmp
+$svn_bin co $srcurl src.tmp
+
 for variant in debug release
 do
   for rate in nightly continuous
@@ -61,7 +67,8 @@ do
     builddir=$topdir/$variant/$rate
     rm -rf $builddir
     mkdir -p $builddir/build
-    $svn_bin co $srcurl $builddir/src
+    # instead of doing multiple checkouts and abusing the svn box, just rsync your temporary
+    rsync -a $topdir/src.tmp/ $builddir/src/
     cd $builddir/build
     rm -f CMakeCache.txt
     if [ "$variant" = "debug" ] ; then
