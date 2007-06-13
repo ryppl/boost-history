@@ -109,18 +109,22 @@ elseif(UNIX)
   set(MULTI_THREADED_LINK_LIBS pthread rt)
 endif(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
 
-# Static and dynamic runtime linking options
-#if(MSVC)
-#  set(STATIC_RUNTIME_COMPILE_FLAGS "/MT")
-#  set(DYNAMIC_RUNTIME_COMPILE_FLAGS "/MD")
-#endif(MSVC)
-
 # Setup DEBUG_COMPILE_FLAGS, RELEASE_COMPILE_FLAGS, DEBUG_LINK_FLAGS and
 # and RELEASE_LINK_FLAGS based on the CMake equivalents
 if(CMAKE_CXX_FLAGS_DEBUG)
+  if(MSVC)
+    # Eliminate the /MDd flag; we'll add it back when we need it
+    string(REPLACE "/MDd" "" CMAKE_CXX_FLAGS_DEBUG 
+           "${CMAKE_CXX_FLAGS_DEBUG}") 
+  endif(MSVC)
   set(DEBUG_COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "Compilation flags for debug libraries")
 endif(CMAKE_CXX_FLAGS_DEBUG)
 if(CMAKE_CXX_FLAGS_RELEASE)
+  if(MSVC)
+    # Eliminate the /MD flag; we'll add it back when we need it
+    string(REPLACE "/MD" "" CMAKE_CXX_FLAGS_RELEASE
+           "${CMAKE_CXX_FLAGS_RELEASE}") 
+  endif(MSVC)
   set(RELEASE_COMPILE_FLAGS "${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "Compilation flags for release libraries")
 endif(CMAKE_CXX_FLAGS_RELEASE)
 if(CMAKE_SHARED_LINKER_FLAGS_DEBUG)
