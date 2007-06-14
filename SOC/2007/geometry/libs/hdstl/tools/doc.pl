@@ -103,12 +103,13 @@ sub process_font {
     return $output.$content;
 }
 
-my $conceptMode  = 0;   # serves to remember if a @CONCEPT command was parsed
-my $conceptLabel = "";  # and if so, the concept name
-my $conceptRef   = 0;   # numbers the section references
-my $classOpen    = 0;   # serves to know if we're within a class body
-my $className    = "";  # and if so, the class name
-my $groupOpen    = 0;   # serves to close a named group before opening another
+my $finishedTopLevel = 0; # to avoid parsing later comments as if preamble
+my $conceptMode  = 0;     # serves to remember if a @CONCEPT command was parsed
+my $conceptLabel = "";    # and if so, the concept name
+my $conceptRef   = 0;     # numbers the section references
+my $classOpen    = 0;     # serves to know if we're within a class body
+my $className    = "";    # and if so, the class name
+my $groupOpen    = 0;     # serves to close a named group before opening another
 
 sub process_toplevel_comment_line {
     my $content = shift;
@@ -225,6 +226,78 @@ sub process_class_comment_line {
     }
 }
 
+sub process_class_line {
+    my $classLine = shift;
+
+    if ($classLine =~ m/^( *)\/\/(.*)$/) {
+        # C++-style comment within class definition scope, process accordingly.
+        # Special group comments first.
+        my $prefix = $1;
+        my $content = $2;
+        if ($content =~ m/^ *(public|protected|private)/) {
+            if ($groupOpen) {
+                print $prefix."//\@\}\n";
+                $groupOpen = 0;
+            }
+            print $content;
+        } elsif ($content =~ m/(NOT IMPL|TYPE|DATA|CREATOR|MANIP|ACCESS)/) {
+            if ($groupOpen) {
+                print $prefix."//\@\}\n";
+            }
+            $groupOpen = 1;
+            if ($content =~ m/TYPE/) {
+                print $prefix."//\@\{\n";
+                print $prefix.'/** @name Member types'." */\n";
+            } elsif ($content =~ m/DATA/) {
+                print $prefix."//\@\{\n";
+                print $prefix.'/** @name Data members'." */\n";
+            } elsif ($content =~ m/CREATOR/) {
+                print $prefix."//\@\{\n";
+                print $prefix.'/** @name Constructors, destructor'." */\n";
+            } elsif ($content =~ m/MANIP/) {
+                print $prefix."//\@\{\n";
+                print $prefix.'/** @name Manipulators'." */\n";
+            } elsif ($content =~ m/ACCESS/) {
+                print $prefix."//\@\{\n";
+                print $prefix.'/** @name Accessors'." */\n";
+            } elsif ($content =~ m/NOT IMPL/) {
+                print $prefix."/* Not implemented */\n";
+                $groupOpen = 0;
+            } else {
+                die("0x2: Unknown group comment".$1." at line ".$.."\n");
+            }
+        }
+        else {
+            # Normal comment, applies to either class, or entity above
+            if ($className eq "") {
+                print $1."/**< ".process_font($2)."\n";
+            } else {
+                print $1."/** \\class ".$className."\n".
+                      $1."  *  ".process_font($2)."\n";
+                $className = "";
+            }
+            my $comment = <>;
+            while ($comment =~ m/^( *)\/\/(.*)$/) {
+                process_class_comment_line($1, $2);
+                $comment = <>;
+            }
+            print $1." **/\n";
+            if ($comment !~ m/^( *)\};/) {
+                process_class_line($comment);
+            } else {
+                if ($groupOpen == 1) {
+                    print "    //\@\}\n";
+                    $groupOpen = 0;
+                }
+                $classOpen = 0;
+            }
+        }
+    } else {
+        # C++ code or C-style comments within class definition scope.
+        print $classLine;
+    }
+}
+
 # MAIN LOOP
 
 while(<>) {
@@ -236,80 +309,46 @@ while(<>) {
         }
     }
     elsif ($_ =~ m/^\/\/(.*)$/) {
-        # C++-style top-level comment, process accordingly.
-        my $comment = $_;
-        while ($comment =~ m/^\/\/(.*)$/) {
-            process_toplevel_comment_line($1);
-            $comment = <>;
+        if ($finishedTopLevel == 0) {
+            # C++-style top-level comment, process accordingly.
+            my $comment = $_;
+            while ($comment =~ m/^\/\/(.*)$/) {
+                process_toplevel_comment_line($1);
+                $comment = <>;
+            }
+            print " **/\n".$comment;
+            $finishedTopLevel = 1;
+        } else {
+            print $_;
         }
-        print " **/\n";
     }
-    elsif ($_ =~ m/^( +)(class|struct|union) +([a-zA-Z][a-zA-Z0-9_]*) *{/) {
+    elsif ($_ =~ m/^( *)(class|struct|union) +([a-zA-Z][a-zA-Z_]*)[^{]*\{/) {
         $classOpen = 1;
         $groupOpen = 0;
         $className = $3;
         print $_;
-    }
-    elsif (0 != $classOpen) {
-        if ($_ =~ m/^( +)\/\/(.*)$/) {
-            # C++-style comment within class definition scope, process accordingly.
-            # Special group comments first.
-            my $prefix = $1;
-            my $content = $2;
-            if ($content =~ m/(TYPE|DATA|CREATOR|MANIP|ACCESS)/) {
-                if ($groupOpen) {
-                    print $prefix."//\@\}\n";
-                }
-                $groupOpen = 1;
-                if ($content =~ m/TYPE/) {
-                    print $prefix."//\@\{\n";
-                    print $prefix.'/** @name Member types'." */\n";
-                } elsif ($content =~ m/DATA/) {
-                    print $prefix."//\@\{\n";
-                    print $prefix.'/** @name Data members'." */\n";
-                } elsif ($content =~ m/CREATOR/) {
-                    print $prefix."//\@\{\n";
-                    print $prefix.'/** @name Constructors, destructor'." */\n";
-                } elsif ($content =~ m/MANIP/) {
-                    print $prefix."//\@\{\n";
-                    print $prefix.'/** @name Manipulators'." */\n";
-                } elsif ($content =~ m/ACCESS/) {
-                    print $prefix."//\@\{\n";
-                    print $prefix.'/** @name Accessors'." */\n";
-                } else {
-                    die("0x2: Unknown group comment".$1." at line ".$.."\n");
-                }
+
+        my $classLine = <>;
+        while ($classLine !~ m/^( *)\};/) {
+            process_class_line($classLine);
+            # The following is a dirty hack - we read the end of line already
+            # and now we still must exit the loop...
+            if (0 == $classOpen) {
+                $classLine = "};\n";
+            } else {
+                $classLine = <>;
             }
-            else {
-                # Normal comment, applies to either class, or entity above
-                if ($className eq "") {
-                    print $1."/**< ".$2."\n";
-                } else {
-                    print $1."/** \\class ".$className."\n".
-                          $1."  *  ".$2."\n";
-                    $className = "";
-                }
-                my $comment = <>;
-                while ($comment =~ m/^( +)\/\/(.*)$/) {
-                    process_class_comment_line($1, $2);
-                    $comment = <>;
-                }
-                print $1." **/\n";
-                print $comment;    # not a comment line
-            }
-        } else {
-            # C++ code or C-style comments within class definition scope.
-            print $_;
         }
-    }
-    elsif ($_ =~ m/^( +)};/) {
+        if ($groupOpen == 1) {
+            print "    //\@\}\n";
+            $groupOpen = 0;
+        }
+        print $classLine;
         $classOpen = 0;
         $className = "";
-        print $_;
     }
     else {
         # C++ code or C-style comments outside class definition scope.
         print $_;
     }
 }
-
