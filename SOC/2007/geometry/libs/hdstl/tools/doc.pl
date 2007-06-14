@@ -109,6 +109,7 @@ my $conceptLabel = "";    # and if so, the concept name
 my $conceptRef   = 0;     # numbers the section references
 my $classOpen    = 0;     # serves to know if we're within a class body
 my $className    = "";    # and if so, the class name
+my $templateName = "";    # and any template parameters (one line before the class def)
 my $groupOpen    = 0;     # serves to close a named group before opening another
 
 sub process_toplevel_comment_line {
@@ -242,23 +243,23 @@ sub process_class_line {
             print $content;
         } elsif ($content =~ m/(NOT IMPL|TYPE|DATA|CREATOR|MANIP|ACCESS)/) {
             if ($groupOpen) {
-                print $prefix."//\@\}\n";
+                print $prefix."/** \@\} */\n";
             }
             $groupOpen = 1;
             if ($content =~ m/TYPE/) {
-                print $prefix."//\@\{\n";
+                print $prefix."/** \@\{ */\n";
                 print $prefix.'/** @name Member types'." */\n";
             } elsif ($content =~ m/DATA/) {
-                print $prefix."//\@\{\n";
+                print $prefix."/** \@\{ */\n";
                 print $prefix.'/** @name Data members'." */\n";
             } elsif ($content =~ m/CREATOR/) {
-                print $prefix."//\@\{\n";
+                print $prefix."/** \@\{ */\n";
                 print $prefix.'/** @name Constructors, destructor'." */\n";
             } elsif ($content =~ m/MANIP/) {
-                print $prefix."//\@\{\n";
+                print $prefix."/** \@\{ */\n";
                 print $prefix.'/** @name Manipulators'." */\n";
             } elsif ($content =~ m/ACCESS/) {
-                print $prefix."//\@\{\n";
+                print $prefix."/** \@\{ */\n";
                 print $prefix.'/** @name Accessors'." */\n";
             } elsif ($content =~ m/NOT IMPL/) {
                 print $prefix."/* Not implemented */\n";
@@ -272,9 +273,7 @@ sub process_class_line {
             if ($className eq "") {
                 print $1."/**< ".process_font($2)."\n";
             } else {
-                print $1."/** \\class ".$className."\n".
-                      $1."  *  ".process_font($2)."\n";
-                $className = "";
+                print $1."/** ".process_font($2)."\n";
             }
             my $comment = <>;
             while ($comment =~ m/^( *)\/\/(.*)$/) {
@@ -282,11 +281,17 @@ sub process_class_line {
                 $comment = <>;
             }
             print $1." **/\n";
+            if (!($className eq "")) {
+                print $templateName;
+                print $className;
+                $className = "";
+                $templateName = "";
+            }
             if ($comment !~ m/^( *)\};/) {
                 process_class_line($comment);
             } else {
                 if ($groupOpen == 1) {
-                    print "    //\@\}\n";
+                    print "    /** \@\} */\n";
                     $groupOpen = 0;
                 }
                 $classOpen = 0;
@@ -296,6 +301,30 @@ sub process_class_line {
         # C++ code or C-style comments within class definition scope.
         print $classLine;
     }
+}
+
+sub parse_class_code {
+    $classOpen = 1;
+    $groupOpen = 0;
+    my $classLine = <>;
+    while ($classLine !~ m/^( *)\};/) {
+        process_class_line($classLine);
+        # The following is a dirty hack - we read the end of line already
+        # and now we still must exit the loop...
+        if (0 == $classOpen) {
+            $classLine = "};\n";
+        } else {
+            $classLine = <>;
+        }
+    }
+    if ($groupOpen == 1) {
+        print "    /** \@\} */\n";
+        $groupOpen = 0;
+    }
+    print $classLine;
+    $classOpen = 0;
+    $className = "";
+    $templateName = "";
 }
 
 # MAIN LOOP
@@ -322,30 +351,12 @@ while(<>) {
             print $_;
         }
     }
+    elsif ($_ =~ m/^( *)template *(<.*>)/) {
+        $templateName = $_;
+    }
     elsif ($_ =~ m/^( *)(class|struct|union) +([a-zA-Z][a-zA-Z_]*)[^{]*\{/) {
-        $classOpen = 1;
-        $groupOpen = 0;
-        $className = $3;
-        print $_;
-
-        my $classLine = <>;
-        while ($classLine !~ m/^( *)\};/) {
-            process_class_line($classLine);
-            # The following is a dirty hack - we read the end of line already
-            # and now we still must exit the loop...
-            if (0 == $classOpen) {
-                $classLine = "};\n";
-            } else {
-                $classLine = <>;
-            }
-        }
-        if ($groupOpen == 1) {
-            print "    //\@\}\n";
-            $groupOpen = 0;
-        }
-        print $classLine;
-        $classOpen = 0;
-        $className = "";
+        $className = $_;
+        parse_class_code;
     }
     else {
         # C++ code or C-style comments outside class definition scope.

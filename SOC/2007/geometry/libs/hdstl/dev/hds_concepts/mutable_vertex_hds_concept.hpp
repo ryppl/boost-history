@@ -14,7 +14,7 @@
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page [mutablevertexhds].
 //
-//@CONCEPT: [mutablevertexhds] Vertex HDS concept
+//@CONCEPT: [mutablevertexhds] Mutable Vertex HDS concept
 //
 ///Definition
 ///----------

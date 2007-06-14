@@ -8,6 +8,7 @@
 <div class="tabs">
   <ul>
     <li><a href="index.html"><span>Main&nbsp;Page</span></a></li>
+    <li><a href="annotated.html"><span>Classes</span></a></li>
     <li><a href="files.html"><span>Files</span></a></li>
     <li><a href="pages.html"><span>Related&nbsp;Pages</span></a></li>
   </ul></div>
@@ -36,7 +37,7 @@ In addition to the valid expressions of the <code>HDS</code> concept:<ul>
 <h2><a class="anchor" name="refforwardhds7">
 Expression Semantics</a></h2>
 In addition to the expression semantics of the <code>HDS</code> concept:<ul>
-<li><code>next_in_facet(hds,h)</code> returns a halfedge descriptor to the halfedge preceding <code>h</code> in the adjacent facet cycle, when facet cycles are oriented in counter-clockwise order.</li><li><code>next_at_source(hds,h)</code> returns a halfedge descriptor to the halfedge preceding <code>h</code> around the source vertex of <code>h</code>, when halfedges are ordered around a given vertex in clockwise order.</li><li><code>next_at_target(hds,h)</code> returns a halfedge descriptor to the halfedge preceding <code>h</code> around the target vertex of <code>h</code>, when halfedges are ordered around a given vertex in clockwise order.</li></ul>
+<li><code>next_in_facet(hds,h)</code> returns a halfedge descriptor to the halfedge succeeding <code>h</code> in the adjacent facet cycle, when facet cycles are oriented in counter-clockwise order.</li><li><code>next_at_source(hds,h)</code> returns a halfedge descriptor to the halfedge succeeding <code>h</code> around the source vertex of <code>h</code>, when halfedges are ordered around a given vertex in clockwise order.</li><li><code>next_at_target(hds,h)</code> returns a halfedge descriptor to the halfedge succeeding <code>h</code> around the target vertex of <code>h</code>, when halfedges are ordered around a given vertex in clockwise order.</li></ul>
 <h2><a class="anchor" name="refforwardhds8">
 Complexity guarantees</a></h2>
 <ul>
@@ -74,7 +75,7 @@ Concept-checking class</a></h2>
      halfedge_descriptor h;
      halfedge_descriptor g;
   };
-</pre></div> <hr size="1"><address style="align: right;"><small>Generated on Tue Jun 12 02:11:13 2007 for HDSTL by&nbsp;
+</pre></div> <hr size="1"><address style="align: right;"><small>Generated on Thu Jun 14 00:29:34 2007 for HDSTL by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
