@@ -1,0 +1,98 @@
+ [/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Design Rationale]
+At the moment this is a somewhat rambling document that describes reasons why
+certain code is written the way that it is. Hopefully, it will one day become
+a much more organized collection of excuses.
+
+[h3 Complexity of Size Functions]
+It turns out - and some people probably knew this already - that the `list::size()`
+function is not required to be run in constant time. Under GCC's STL it's *linear*.
+This is a huge "gotcha" if you're using lists and calling the `size()` function
+repeatedly - as I was in my IMDb example. In fact, I was calling it every time
+a vertex was added to a 3 million vertex graph to generate vertex indices. Doing
+the math, it looks like I managed to write a single line of code that /looked/
+constant time, but was in fact O(n^2). Wow.
+
+After a discussion with Jeremey Siek, we decided that the easiest way to address
+this was to manually maintain the number of vertices and edges inside the new
+`undirected_graph` and `directed_graph` classes.
+
+To implement this, I made every mutable graph concept method a member function that
+was called by its non-member counterpart. This means I don't have to have lots of
+ugly friend functions, and the logic is nicely encapsulated.
+
+[h3 Vertex Indices]
+Since the `undirected_graph` and `directed_graph` use list storage selectors rather
+than vectors, I've been having to manually build vertex indices for my examples.
+Contrast this with almost every other example, where using vector storage results
+in vertex indices being automatically generated (since they correlate directly
+with the vertex_descriptor). My interim solution had been to simply add a member
+variable to each bundled property that acted as the index - works great.
+
+However, this is somewhat counter-intuitive for new developers. Indices shouldn't
+necessarily be something that new programmers really need to worry about. An
+alternative would be to define a hidden index property for vertices and then
+use the `VertexProperties` template argument as the property parameter for
+that property. Like this:
+
+ property<vertex_index_t, int, VertexProperties>
+
+Works great.
+
+[h4 Automatic Indexing and Re-indexing]
+If the `undirected_graph` and `directed_graph` classes have implicit index
+properties, It would make sense that we try to automatically manage those indices.
+This is actually relatively trivial at this point since we already have member
+functions responsible for maintaining the number of vertices and edges. We can
+add index management to those methods.
+
+Unfortunately, automatic indexing only really works well if we never remove
+vertices or edges from the graph. Because indices are assigned in a monotonically
+increasing fashion, removing a vertex will create gaps in the assignment, and
+probably wreak havoc with any algorithms requiring indices in the range
+\[0, num_vertices(g)).
+
+One solution to this is to provide a new function, renumber_vertices() or something
+similar. This simply iterates over vertices in the graph, assigning new monotonically
+increasing values to them. This obviously runs in linear time, but has the nice
+property of creating a continuous index for working with external properties in
+different algorithms.
+
+Another solution might be to provide another new method max_vertex_index() that
+returns the highest indexed vertex so algorithms could be designed to operate
+on vectors of size \[0, max_vertex_index(g)). There are two problems with this
+approach.
+
+# Non-continuous indexing (1, 3, 5) as the result of removes() will cause "gaps"
+in a vector used as an external property. Algorithms need to be aware that accessing
+a "gap" is probably some kind of boundary error since they're refering to a vertex
+that doesn't really exist. A special "does not exist" property value may need to
+be created in some cases.
+# Related to the problem above, these "gaps" introduce memory overhead. Over time,
+external property maps can grow and potentially consume significant amounts of
+memory. Consider the following:
+
+ for( ; ; ) {
+   vertex_descriptor v = add_vertex(g);
+   vector<color> colors(max_vertex_index(g));
+   remove_vertex(v);
+ }
+
+Although the example is entirely contrived, it shows how the size of a graph might
+remain stable over time while an external property map might not.
+
+Interestingly, we actually have some of the tools for managing these problems
+available to us. Specifically, we can use the renumber_vertices() method to
+a) create a continous numbering and b) reset the max_vertex_index() to
+num_vertices(). This could be managed either externally by the user or, we
+could implement some heuristic such when `max_vertex_index > 2 * num_vertices`
+we automatically renumber vertices on the next vertex removal (or something
+like that).
+
+[endsect]
