@@ -183,8 +183,8 @@
       <xsl:param name = "next" select = "/foo"/>
       <xsl:param name = "nav.context"/>
 
-      <xsl:choose>
-      <xsl:when test = "$page.style = 'website'">
+      <!--xsl:choose>
+      <xsl:when test = "$page.style = 'website'"-->
 
       <!-- Navigation -->
 
@@ -242,7 +242,7 @@
 
       <!-- Old style, textlinks -->
 
-      </xsl:when>
+      <!--/xsl:when>
       <xsl:when test = "$page.style = 'textlinks'">
       <xsl:call-template name="footer.content.textlinks"/>
       <hr />
@@ -252,7 +252,7 @@
          <xsl:with-param name = "nav.context" select = "$nav.context"/>
       </xsl:call-template>
       </xsl:when>
-      </xsl:choose>
+      </xsl:choose-->
 
    </xsl:template>
 

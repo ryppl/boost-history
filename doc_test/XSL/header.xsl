@@ -76,8 +76,8 @@
       <xsl:variable name = "home" select = "/*[1]"/>
       <xsl:variable name = "up"   select = "parent::*"/>
 
-      <xsl:choose>
-      <xsl:when test = "$page.style = 'website'">
+      <!--xsl:choose>
+      <xsl:when test = "$page.style = 'website'"-->
 
       <!-- Include the grouped links java script api -->
 
@@ -140,11 +140,11 @@
          <xsl:with-param name = "nav.context" select = "$nav.context"/>
       </xsl:call-template>
 
-      </xsl:when>
+      <!--/xsl:when>
       <xsl:when test = "$page.style = 'textlinks'">
          <xsl:call-template name="header.textlinks"/>
       </xsl:when>
-      </xsl:choose>
+      </xsl:choose-->
 
    </xsl:template>
 
