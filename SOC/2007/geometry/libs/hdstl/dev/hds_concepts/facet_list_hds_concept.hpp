@@ -91,11 +91,9 @@
 //     {
 //         using namespace boost;
 //         function_requires<HDSConcept>();
-//         function_requires<DefaultConstructibleConcept<facet_descriptor> >();
-//         function_requires<CopyConstructibleConcept<facet_descriptor> >();
-//         function_requires<EqualityComparableConcept<facet_descriptor> >();
-//         function_requires<AssignableConcept<facet_descriptor> >();
-//         function_requires<hdstl_detail::MultiPassInputIteratorConcept<facet_iterator> >();
+//         function_requires<FacetHDSConcept>();
+//         function_requires<hdstl_detail::MultiPassInputIteratorConcept<
+//                                                         facet_iterator> >();
 //         p = facets(hds);
 //         f = *p.first;
 //         F = num_facets(hds);
@@ -116,8 +114,8 @@
 // };
 //..
 
-#ifdef BOOST_HDSTL_CONCEPTS_FACETLISTHDSCONCEPT_HPP
-#define BOOST_HDSTL_CONCEPTS_FACETLISTHDSCONCEPT_HPP 1
+#ifdef BOOST_HDSTL_CONCEPTS_FACET_LIST_HDS_CONCEPT_HPP
+#define BOOST_HDSTL_CONCEPTS_FACET_LIST_HDS_CONCEPT_HPP 1
 
 #include <boost/concepts.h>
 
@@ -155,11 +153,9 @@ namespace concepts {
        {
            using namespace boost;
            function_requires<HDSConcept>();
-           function_requires<DefaultConstructibleConcept<facet_descriptor> >();
-           function_requires<CopyConstructibleConcept<facet_descriptor> >();
-           function_requires<EqualityComparableConcept<facet_descriptor> >();
-           function_requires<AssignableConcept<facet_descriptor> >();
-           function_requires<hdstl_detail::MultiPassInputIteratorConcept<facet_iterator> >();
+           function_requires<FacetHDSConcept>();
+           function_requires<hdstl_detail::MultiPassInputIteratorConcept<
+                                                           facet_iterator> >();
            p = facets(hds);
            f = *p.first;
            F = num_facets(hds);
