@@ -2,6 +2,8 @@
 
 [section:chaining Chaining]
 
+Chaining of components can be done using `operator >>=`.
+
 [table chaining example
     [[fused][unfused]]
     [[[test_storage_fused]][[test_storage_unfused]]]
@@ -13,7 +15,7 @@
 
 More complex connections can also be made relatively easily using
 both `operator >>=`
-and `operator |`
+and `operator |`, with `operator |` being used for branching.
 
 [table branching example
     [[fused][unfused]]
@@ -31,80 +33,90 @@ a signal).
 
 The following example illustrates this:
 
-\dontinclude example.cpp
-\skip PullDoubler
-\until end void pull_test
+[table pull-based network example
+    [[fused][unfused]]
+    [[[/test_pull_fused]][[test_pull_unfused]]]
+]
+
+The example uses the following classes:
+
+[test_pull_classes]
 
 [endsect][/pull]
 
 [section:disconnect Disconnecting]
-	
-\subsection	signal_network_disconnect_example Disconnecting connections
 
 Connections can be terminated in two ways.  One is through the "trackable"
 mechanism of Boost.Signals, which will automatically destroy connections
 to a trackable object when the object is destroyed.  The other
 way is through the disconnect_all_slots method of the signal sender.
 
-\dontinclude example.cpp
-\skip void disconnect_test
-\until end void disconnect_test
+[table disconnect example
+    [[fused][unfused]]
+    [[[/test_disconnect_fused]][[test_disconnect_unfused]]]
+]
 
 [endsect][/disconnect]
 
-[section:multiple_different Multiple inputs of different signatures]
+[section:multiple_different Multiple slots of different signatures]
 
 It is simple to have an object provide multiple slots through operator() functions
-of different signatures.  The following class does so through providing 1-ary slots
+of different signatures.  The following class does so through providing unary slots
 of different types:
 
-\dontinclude example.cpp
-\skip class SignalIntFloatCollector
-\until end class
+[test_multi_type_classes]
 
-The following class, on the other hand, uses slots of different number of arguments:
-\dontinclude example.cpp
-\skip class SignalMultiCollector
-\until end class
+[/The following class, on the other hand, uses slots of different number of arguments:
+
+[test_multi_type_classes]]
 
 In such cases, where the operator() functions differ in their signature,
 standard connection operators will work out the correct connection:
 
-\dontinclude example.cpp
-\skip void multi_type_test
-\until end void multi_type_test
+[table multiple slots example
+    [[fused][unfused]]
+    [[[/test_multi_args_unfused]][[test_multi_args_unfused]]]
+]
 
 [endsect][/multiple_different]
 
 [section:multiple_same Multiple inputs of the same signature]
 
 In some cases, a class may want to receive multiple signals of the same
-signature.  For example, the following class can receive a void() signal
+signature.  [/For example, the following class can receive a void() signal
 through its inherited operator() function, as well as through the
 operator() function of member "other":
-\dontinclude example.cpp
-\skip class Signal2VoidCounter
-\until end class
 
-Similarly, the following class could receive void() signals both
+[test_same_type_class1]]
+
+For example, the following class could receive void() signals both
 through operator() and through AltInput:
-\dontinclude example.cpp
-\skip class Signal2VoidInputs
-\until end class
+
+[test_same_type_classes]
 
 The following example shows how to connect signals to all of the above slots.
 For the class Signal2VoidInputs, this is accomplished using the
 slot_selector function:
-\skip void multi_in_test
-\until end void multi_in_test
+
+[table multiple slots example
+    [[fused][unfused]]
+    [[[/test_same_type_fused]][[test_same_type_unfused]]]
+]
 
 [endsect][/multiple_same]
 
 [section:multi_out Multiple outputs]
 
-\dontinclude example.cpp
-\skip class SignalOutIntFloat
-\until end void multi_out_test
+Multiple outputs can be achieved by introducing additional signals in the class.
+
+[table multiple outs example
+    [[fused][unfused]]
+    [[[/test_multi_out_fused]][[test_multi_out_unfused]]]
+]
+
+The example uses the following classes:
+
+[test_multi_out_classes]
 
 [endsect][/multi_out]
 

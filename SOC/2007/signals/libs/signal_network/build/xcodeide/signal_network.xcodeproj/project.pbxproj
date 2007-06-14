@@ -104,6 +104,11 @@
 		08C6759C0C13A03E00D85379 /* test_mutex.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_mutex.cpp; sourceTree = "<group>"; };
 		08C6759D0C13A03E00D85379 /* test_socket.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_socket.cpp; sourceTree = "<group>"; };
 		08C6759E0C13A03E00D85379 /* test_storage.cpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.cpp; path = test_storage.cpp; sourceTree = "<group>"; };
+		08EBB2CB0C210CC9004BE220 /* test_pull.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_pull.cpp; sourceTree = "<group>"; };
+		08EBB3020C21105B004BE220 /* test_disconnect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_disconnect.cpp; sourceTree = "<group>"; };
+		08EBB3910C211C36004BE220 /* test_multi_type.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_multi_type.cpp; sourceTree = "<group>"; };
+		08EBB3BC0C211F23004BE220 /* test_same_type.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_same_type.cpp; sourceTree = "<group>"; };
+		08EBB3E00C21209B004BE220 /* test_multi_args.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_multi_args.cpp; sourceTree = "<group>"; };
 		08EC84040C18DA8100820E53 /* connect.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = connect.hpp; sourceTree = "<group>"; };
 		08EC847E0C18EC9800820E53 /* connect_slot.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = connect_slot.hpp; sourceTree = "<group>"; };
 		08EFEADE0C1C892A00097C80 /* instantiator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = instantiator.hpp; sourceTree = "<group>"; };
@@ -116,6 +121,8 @@
 		08F082570C1DD53400687E1B /* components.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = components.qbk; sourceTree = "<group>"; };
 		08F0825A0C1DD58500687E1B /* connections.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = connections.qbk; sourceTree = "<group>"; };
 		08F082840C1DE02F00687E1B /* test_branching.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_branching.cpp; sourceTree = "<group>"; };
+		08F803D30C21895700D8296D /* test_multi_out.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_multi_out.cpp; sourceTree = "<group>"; };
+		08F804AD0C219CC300D8296D /* test_filter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_filter.cpp; sourceTree = "<group>"; };
 		08FD5DE80C1BA60700F00877 /* html_footer.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = html_footer.html; sourceTree = "<group>"; };
 		08FD5DE90C1BA60700F00877 /* html_header.html */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.html; path = html_header.html; sourceTree = "<group>"; };
 		08FD5DEA0C1BA60700F00877 /* signal_network.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = signal_network.hpp; sourceTree = "<group>"; };
@@ -201,6 +208,13 @@
 				08C6759E0C13A03E00D85379 /* test_storage.cpp */,
 				08668C560C19AD0100ACB19A /* test_connections.cpp */,
 				08F082840C1DE02F00687E1B /* test_branching.cpp */,
+				08EBB2CB0C210CC9004BE220 /* test_pull.cpp */,
+				08EBB3020C21105B004BE220 /* test_disconnect.cpp */,
+				08EBB3910C211C36004BE220 /* test_multi_type.cpp */,
+				08EBB3BC0C211F23004BE220 /* test_same_type.cpp */,
+				08EBB3E00C21209B004BE220 /* test_multi_args.cpp */,
+				08F803D30C21895700D8296D /* test_multi_out.cpp */,
+				08F804AD0C219CC300D8296D /* test_filter.cpp */,
 			);
 			name = test;
 			path = ../../test;

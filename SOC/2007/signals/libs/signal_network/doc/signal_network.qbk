@@ -27,10 +27,18 @@
 
 [def __fusion__ [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
 
+[import ../test/test_filter.cpp]
 [import ../test/test_storage.cpp]
 [import ../test/test_function.cpp]
 [import ../test/test_chain.cpp]
 [import ../test/test_socket.cpp]
+[import ../test/test_branching.cpp]
+[import ../test/test_pull.cpp]
+[import ../test/test_disconnect.cpp]
+[import ../test/test_multi_type.cpp]
+[import ../test/test_multi_args.cpp]
+[import ../test/test_same_type.cpp]
+[import ../test/test_multi_out.cpp]
 
 The Signal Network library aims to facilitate the
 implementation and interconnection of objects into signal networks using Boost.Signals.
@@ -137,7 +145,7 @@ Original request for interest version available as attachment to
 
 * Thanks to all the members of the Boost community who have expressed an interest in this library
   and contributed [link signal_network.discussion valuable feedback].
-* Thanks to Douglas Gregor for making himself available as a mentor for this project.
+* Thanks to Douglas Gregor for making himself available as a mentor for this project, and for his support, suggestions and feedback.
 * Thanks to Tobias Schwinger for a most valuable discussion on various [link signal_network.introduction.dataflow
   dataflow-oriented approaches and ideas].
 

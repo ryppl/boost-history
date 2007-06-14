@@ -133,7 +133,7 @@ public:
     {
         return boost::signal_network::slot_selector<
             typename boost::fusion::result_of::at_c<storable_vector, N>::type ()>
-            (*this, &storage<Signature>::template at<N>);
+            (*this, &this_type::template at<N>);
     }
     /** \return The slot selector for the value_at function.
     */
@@ -147,7 +147,7 @@ public:
 	{
         return boost::signal_network::slot_selector<
             typename boost::mpl::at_c<typename base_type::parameter_types, N>::type ()>
-            (*this, &storage<Signature>::template value_at<N>);
+            (*this, &this_type::template value_at<N>);
     }
 protected:
     storable_vector stored;

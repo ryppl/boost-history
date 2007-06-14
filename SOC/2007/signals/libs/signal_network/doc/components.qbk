@@ -5,8 +5,26 @@
 [section:filter filter]
 [*See also]: [classref boost::signal_network::signet::filter filter class reference.]
 
-The __filter__ class is used as a base class for in / out components.  It provides support for Signal Network connection operators,
-and provides a default output signal.
+The __filter__ class is provided as a base class for in / out components.  It provides support for Signal Network connection operators,
+and provides a default output signal.  Here is an example of a simple class which inherits __filter__:
+
+[test_filter_classes]
+
+The type of the output signal (in the above example, `unfused_out_signal`) is specified as the second template parameter.
+There are three options:
+
+* `unfused_out_signal` provides an unfused output signal named `out`.
+* `fused_out_signal` provides a fused output signal named `fused_out`.
+* `combined_out_signal` provides an unfused output signal named `out`, and a fused adapter for the signal named `fused_out`.
+   This is useful for components which wish to use fusion internally but output an unfused signal.
+
+A component developed on top of the __filter__ class can then be used in the appropriate network.  Here is an example
+which uses the class defined above:
+
+[table filter-based class use example
+    [[fused][unfused]]
+    [[[test_filter_fused]][[test_filter_unfused]]]
+]
 
 [endsect][/filter]
 

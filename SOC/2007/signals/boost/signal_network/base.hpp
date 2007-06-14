@@ -79,7 +79,7 @@ SIGNAL_NETWORK_CLOSE_SIGNAL_NETWORK_NAMESPACE
 SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
 
 namespace detail {
-	
+
 template<typename T, typename Signature, typename Combiner, typename Group, typename GroupCompare>
     void connect(boost::signal<Signature, Combiner, Group, GroupCompare> &signal, T &link)
 {
@@ -88,7 +88,7 @@ template<typename T, typename Signature, typename Combiner, typename Group, type
 }
 
 template<typename T, typename Signature, typename Combiner, typename Group, typename GroupCompare>
-    void connect_slot(boost::signal<Signature> &signal, const slot_selector_t<T, Signature> &link)
+    void connect_slot(boost::signal<Signature, Combiner, Group, GroupCompare> &signal, const slot_selector_t<T, Signature> &link)
 {
 	connect_slot_impl<T, Signature, Combiner, Group, GroupCompare, boost::function_traits<Signature>::arity>
         ::connect_slot(signal, link);
@@ -141,11 +141,11 @@ typename boost::enable_if<boost::is_base_of<signet::filter_base, Filter>, Filter
 operator | (Filter &filter, slot_selector_t<T, Signature> link) {signet::detail::connect_slot(filter.default_signal(), link); return filter;}
 
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare, typename T>
-boost::signal<Signature> &operator >>= (boost::signal<Signature> &signal, T &link)
+boost::signal<Signature> &operator >>= (boost::signal<Signature, Combiner, Group, GroupCompare> &signal, T &link)
 {signet::detail::connect(signal, link); return signal;}
 
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare, typename T>
-boost::signal<Signature> &operator >= (boost::signal<Signature> &signal, T &link)
+boost::signal<Signature> &operator | (boost::signal<Signature, Combiner, Group, GroupCompare> &signal, T &link)
 {signet::detail::connect(signal, link); return signal;}	
 
 SIGNAL_NETWORK_CLOSE_SIGNAL_NETWORK_NAMESPACE

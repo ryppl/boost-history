@@ -14,13 +14,13 @@ in a dataflow-oriented environment.  It does so by
 facilitating large-scale use of Boost.Signals as a mechanism to model the transfer
 of data between processing components.
 
-[*["I don't get it.  Data is all over the place in C++.  How is it not already a dataflow language?]]
-
 The wikipedia description of [@http://en.wikipedia.org/wiki/Dataflow_language dataflow languages]
 does a pretty good job of introducing the dataflow concept.  Perhaps the most interesting point I'd like to
 focus on here is the notion that "data is what it is all about".  Even though data is an integral
 part of C++, and lot of things are very much about the data, programs tend not to be modeled with the
 flow of data as the central representation mechanism.
+
+[*["Data is all over the place in C++.  How is it not already a dataflow language?]]
 
 Take the following example - a simple real-time camera-input-displayed-on-the-screen
 application.  Suppose there are three parts to the application - getting each image frame from the camera,
@@ -71,7 +71,7 @@ The big picture now looks like the following:
 First, maintenance of the program has just become very intuitive.  You don't
 want to process the image any more?  Connect the camera signal directly to the screen display and cut out
 the image processing component.  Someone gives you a new video signal generator component you'd like to use as input
-instead of the camera?  Just plug it in.
+instead of the camera?  Just plug it in. Literally.
 
 Second, the program can now be divided between threads, processors, or computers more easily.
 The display is on a different computer?  No problem, just put the connection to it through a network socket.
@@ -83,11 +83,11 @@ visual programming language], since the components and the connections have a na
 With a visaul development environment, programming becomes as easy as connecting components with connections
 (again, the Signal Network library provides no visual programming functionality).
 
-[*["I still don't get it.  I can do all of this using my favorite non-dataflow programming approach just the same!]]
+[*["But I can do all of this using my favorite non-dataflow programming approach just the same!]]
 
 Sure.  Maybe you can.  But if the application is really about the flow of data, why not
 model it and implement it that way?  If it's about the data signals and the components that process it,
-rather than about the sequence of instructions that needs to be executed, then the dataflowimplementation can reflect
+rather than about the sequence of instructions that needs to be executed, then the dataflow implementation can reflect
 the application more closely, and it just might be easier to design and maintain.
 
 [h4 Signal-based approach and pin-based approach]
@@ -282,7 +282,7 @@ The Sigal Network library provides many common building block components for a
 signal network.  The most basic is __storage__, which
 can be used to store a value received through a signal, send it on, and/or retreive it.
 
-By default, components in the library use operator() to receive a signal.
+By default, components in the library use `operator()` to receive a signal.
 For example, __storage__ objects can receive
 signals through [memberref boost::signal_network::signet::storage::operator()(void) operator()()].
 Upon receiving this signal, they will output their stored value through another signal.

@@ -14,7 +14,7 @@ namespace boost {
                 template<typename T, typename Signature, typename Combiner, typename Group, typename GroupCompare, int Arity>
                 struct connect_slot_impl;
                 
-#define BOOST_PP_ITERATION_PARAMS_1 (3,(0,3,<boost/signal_network/detail/connect.hpp>))
+#define BOOST_PP_ITERATION_PARAMS_1 (3,(0,3,<boost/signal_network/detail/connect_slot.hpp>))
 #include BOOST_PP_ITERATE()
                 
             } // namespace detail
@@ -26,7 +26,7 @@ namespace boost {
 #else // defined(BOOST_PP_IS_ITERATING)
 
 template<typename T, typename Signature, typename Combiner, typename Group, typename GroupCompare>
-struct connect_impl<T, Signature, Combiner, Group, GroupCompare, BOOST_PP_ITERATION()>
+struct connect_slot_impl<T, Signature, Combiner, Group, GroupCompare, BOOST_PP_ITERATION()>
 {
     static void connect_slot(boost::signal<Signature, Combiner, Group, GroupCompare> &signal, const slot_selector_t<T, Signature> &slot)
     {

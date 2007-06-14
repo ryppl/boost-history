@@ -7,7 +7,6 @@
 #include <boost/signal_network/counter.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
-#include <boost/fusion/sequence/view/single_view.hpp>
 
 // for access to connection operators >>= and |
 using namespace boost::signal_network;
