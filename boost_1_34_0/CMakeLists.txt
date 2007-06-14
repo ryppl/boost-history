@@ -82,8 +82,15 @@ boost_add_extra_variant(PYTHON_NODEBUG PYTHON_DEBUG)
 ##########################################################################
 # Installation                                                           #
 ##########################################################################
+if(BOOST_VERSION_SUBMINOR GREATER 0)
+  set(BOOST_HEADER_DIR 
+      "include/boost-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}_${BOOST_VERSION_SUBMINOR}")
+else(BOOST_VERSION_SUBMINOR GREATER 0)
+  set(BOOST_HEADER_DIR 
+      "include/boost-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}")  
+endif(BOOST_VERSION_SUBMINOR GREATER 0)
 install(DIRECTORY boost 
-        DESTINATION "include/boost-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}_${BOOST_VERSION_SUBMINOR}"
+        DESTINATION ${BOOST_HEADER_DIR}
         PATTERN "CVS" EXCLUDE
         REGEX ".svn" EXCLUDE)
 ##########################################################################
@@ -91,8 +98,9 @@ install(DIRECTORY boost
 ##########################################################################
 # Binary packages                                                        #
 ##########################################################################
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Boost")
+set(CPACK_PACKAGE_NAME "Boost")
 set(CPACK_PACKAGE_VENDOR "Boost.org")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Boost")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${Boost_SOURCE_DIR}/README.txt")
 set(CPACK_RESOURCE_FILE_README "${Boost_SOURCE_DIR}/README.txt")
 set(CPACK_RESOURCE_FILE_LICENSE "${Boost_SOURCE_DIR}/LICENSE_1_0.txt")
@@ -101,18 +109,31 @@ set(CPACK_PACKAGE_VERSION "${BOOST_VERSION}")
 set(CPACK_PACKAGE_VERSION_MAJOR "${BOOST_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${BOOST_VERSION_MINOR}")
 set(CPACK_PACKAGE_VERSION_PATCH "${BOOST_VERSION_SUBMINOR}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "boost-${BOOST_VERSION_MAJOR}.${BOOST_VERSION_MINOR}.${BOOST_VERSION_SUBMINOR}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Boost")
 if(WIN32 AND NOT UNIX)
   # There is a bug in NSI that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
   # NOTE: No Boost icon yet
-#  set(CPACK_PACKAGE_ICON "${CMake_SOURCE_DIR}/Utilities/Release\\\\InstallIcon.bmp")
+#  set(CPACK_PACKAGE_ICON "${Boost_SOURCE_DIR}/tools/build/CMake\\\\InstallIcon.bmp")
 #  set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\\\MyExecutable.exe")
   set(CPACK_NSIS_DISPLAY_NAME "Boost ${BOOST_VERSION_MAJOR}.${BOOST_VERSION_MINOR}.${BOOST_VERSION_SUBMINOR}")
   set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.boost.org")
   set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.boost.org")
   set(CPACK_NSIS_CONTACT "boost-users@lists.boost.org")
   set(CPACK_NSIS_MODIFY_PATH ON)
+  
+  # Encode the compiler name in the package 
+  if (MSVC60)
+    set(CPACK_PACKAGE_FILE_NAME "Boost-${BOOST_VERSION}-vc6")
+  elseif (MSVC70)
+    set(CPACK_PACKAGE_FILE_NAME "Boost-${BOOST_VERSION}-vc7")
+  elseif (MSVC71)
+    set(CPACK_PACKAGE_FILE_NAME "Boost-${BOOST_VERSION}-vc71")
+  elseif (MSVC80)
+    set(CPACK_PACKAGE_FILE_NAME "Boost-${BOOST_VERSION}-vc8")
+  elseif (BORLAND)
+    set(CPACK_PACKAGE_FILE_NAME "Boost-${BOOST_VERSION}-borland")  
+  endif (MSVC60)
 endif(WIN32 AND NOT UNIX)
 include(CPack)
 ##########################################################################
