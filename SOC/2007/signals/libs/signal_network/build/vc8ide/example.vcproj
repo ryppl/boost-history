@@ -66,6 +66,10 @@
 				RelativePath="..\..\example\example.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\example\timing_example.cpp"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\..\example\Jamfile.v2"
