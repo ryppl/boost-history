@@ -25,7 +25,26 @@ boostbook standalone
         <xsl:param>generate.section.toc.level=10
         # Logo location:
         <xsl:param>boost.logo=../boost.png
-        
+
+        # The page style
+        <xsl:param>page.style="'website'"
+        # Show chapters select box
+        <xsl:param>grouped.links.chapters.show="'true'"
+        # GroupedLinks xml definition chapters location
+        <xsl:param>grouped.links.chapters.xml="'boost_libs_grouped_links.xml'"
+        # Select the base url for the chapters GroupedLinks
+        <xsl:param>grouped.links.chapters.url="'http://www.boost.org/libs/'"
+        # Show sections select box
+        <xsl:param>grouped.links.sections.show="'true'"
+        # GroupedLinks xml definition sections location
+        <xsl:param>grouped.links.sections.xml="'sections_grouped_links.xml'"
+        # Select the base url for the chapters GroupedLinks
+        <xsl:param>grouped.links.sections.url="'./'"
+        # Show the Google Search Box
+        <xsl:param>search.box.show="'true'"
+        # Location of the cse defintion
+        <xsl:param>search.box.cse.definition.src="'http://www.drivehq.com/web/matias.capeletto/bimap/doc/html/context8.xml'"
+
         # PDF Options:
         # TOC Generation: this is needed for FOP-0.9 and later:
         # <xsl:param>fop1.extensions=1
