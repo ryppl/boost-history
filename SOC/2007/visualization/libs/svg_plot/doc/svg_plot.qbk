@@ -1,0 +1,94 @@
+[article SVG_Plot
+    [quickbook 1.4]
+    [version .1]
+    [authors [Voytko, Jake]]
+    [copyright 2007 Jake Voytko]
+    [purpose Plot STL containers onto graphs in SVG format]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[section:intro Introduction]
+This project is focused on using STL containers in order to graph data on a one-dimensional and two-dimensional (and if time allows, 3D!) plot. The plot would be written in an svg image, compliant with the W3C standard. The goals of the project are as follows:
+
+* To provide an easy syntax for graphing data
+* To let users produce a simple plot with minimal intervention by using sane defaults
+* To demonstrate how to incorporate SVG images into Boost documentation
+* To allow users to easily customize graphs to their heart's content
+* To allow the user to talk with the svg_graph class using coordinate units instead of pixels or other arbitrary measures 
+* To create the backbone of a svg class that will be extended to fully support storing the standard
+
+I have only a student's grasp of C++, so if you have a suggestion to help me with design or implementation, either leave them here or email me at jakevoytko (at) gmail (dot) com
+
+This page will hold examples of what I have implemented thus far, and what my program will be capable of in the future. More complete documentation will be live in a few days on my personal website. 
+[endsect]
+
+[section:svg_plot_interface SVG_Plot Interface]
+[section:svg_plot_intro Introduction]
+
+The [^svg_plot] class is where I have been spending most of my time recently
+making improvements. The internals are a lot more polished than that of its
+[^svg] ancestor.
+
+[endsect]
+[endsect]
+
+[section:color Colors]
+[section:color_intro Introduction]
+
+svg_plot supports any color definable by the RGB interface, as well as a number of constants that are named by the SVG standard.
+
+[link http://www.w3.org/TR/SVG/types.html#ColorKeywords Here] is a link to the SVG color constants that my program supports
+
+[endsect]
+
+[section:color_internals Internals and Rationale]
+
+All color information is stored in RGB format in a svg_struct. The rationale
+for storing information in RGB format is because it is precise and is always
+representable the exact same way. Storing as a floating point percentage 
+introduces the possibility of rounding error, which I would like to avoid at 
+all costs, so that the same image file displays the same way on any system 
+that correctly implements the SVG format.
+
+Constants are defined in an enum, svg_color_constant, in alphabetical order.
+This facilitates quick lookup of their RGB values quickly in an array.
+
+[endsect]
+
+[section:color_usage Usage]
+
+To use an example, set_line_color(), here are the two different ways we could 
+set the line color, one using RGB values, and the other using the constant.
+
+``
+// Using a new RGB value
+my_plot << set_line_color(svg_color(139, 69, 19));
+
+// Using an existing RGB value
+my_plot << set_line_color(my_color);
+
+// Using a color constant
+my_plot << set_line_color(saddlebrown);
+``
+
+[endsect]
+[endsect]
+
+[section:doc_structure SVG Document Structure]
+
+In order to more logically manipulate data, the svg document that is produced 
+is now structured in a tree format, with named constants to specific areas 
+that will allow the internals to easily manipulate the document as needed.
+
+[h3 Labelled image (conceptualization)]
+[~To do: insert image]
+
+[h3 Document tree]
+[~To do: insert image]
+
+[endsect]
+
