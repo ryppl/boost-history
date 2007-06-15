@@ -7,6 +7,8 @@
 
 if template.options.get_boolean('vc8ide', False):
 
+    import uuid
+
     log.message('Processing MSVC 8.0 IDE template.')
 
     _msvc_build_command = """\t\t\t\tBuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"

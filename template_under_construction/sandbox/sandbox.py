@@ -25,16 +25,19 @@ _COMMENT_http://www.boost.org/LICENSE_1_0.txt)
 
 author_list = template.options.get('author', template.options.any, None,
     '(comma separated, no spaces outside names, e.g., "My Name,Notmy R. Name": ')
+author_list = author_list.split(',')
 author_reversed = list()
-for name in author_list.rsplit(','):
-    first_space_last = name.rpartition(" ")
-    author_reversed.append('[' + first_space_last[2] + ', ' + first_space_last[0] + ']')
+for name in author_list:
+    names = name.split(" ")
+    first = names[0:len(names)-1]
+    last = names[len(names)-1:len(names)]
+    author_reversed.append('[' + ' '.join(last) + ', ' + ' '.join(first) + ']')
 
-authors, comma, last_author = author_list.rpartition(",")
-if len(comma) > 0:
-    author_list = (authors + " and " + last_author).replace(',', ', ')
+if len(author_list) > 1:
+    author_list = (','.join(author_list[0:len(author_list)-1]) +
+                   " and " + author_list[len(author_list)-1]).replace(',', ', ')
 else:
-    author_list = last_author
+    author_list = author_list[0]
 
 template.name_replacement('$template_library$', library_name)
 
@@ -43,7 +46,7 @@ template.all_content_replacement('$template_Library$', library_name_capitalized)
 template.all_content_replacement('$template_LibraryConcat$', library_name_concat_capitalized)
 template.all_content_replacement('$template_LIBRARY$', library_name.upper())
 template.all_content_replacement('$template_Boost_Library$', 'Boost.' + library_name_capitalized)
-template.content_replacement(['.v2', '.jam'], '$template_python_copyright$', _copyright.replace('_COMMENT_','# '))
+template.content_replacement(['.v2', '.jam', 'Jamfile'], '$template_python_copyright$', _copyright.replace('_COMMENT_','# '))
 template.content_replacement(['.hpp', '.cpp'], '$template_cpp_copyright$', _copyright.replace('_COMMENT_','// '))
 template.content_replacement(['.qbk'], '$template_qbk_copyright$',(_copyright.replace('_COMMENT_',''))
                              .replace('http://www.boost.org/LICENSE_1_0.txt',

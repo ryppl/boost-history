@@ -5,7 +5,6 @@
 
 import os
 import time
-import uuid
 import shutil
 import sys
 import getopt
@@ -21,7 +20,7 @@ class Log(object):
         self.__level__ = 0
 
     def __prefix__(self):
-        return ''.join('|' for x in range(self.__level__))
+        return '|'*self.__level__
 
     def __print__(self, string):
         print self.__prefix__() + string
@@ -57,7 +56,7 @@ class Options(object):
         
         # initialize self.options
         self.options = dict()
-        self.options['ignore']=set()
+        self.options['ignore']=list()
         
         # initialize common regular expressions
         self.any = re.compile(r'.*\Z')
@@ -141,6 +140,15 @@ class FileSpecificReplacement(Replacement):
             if name.endswith(item):
                 return True
         return False
+        
+    def replace(self, name, string):
+        if self.matches(name):
+            return string.replace(self.template, self.value)
+        return string
+    
+    def __str__(self):
+        return str(self.process_extensions) + ':' + self.template + '->' + self.value
+
 
 class FileSpecificReplacements(Replacements):
     def matches(self, name):
@@ -151,7 +159,7 @@ class FileSpecificReplacements(Replacements):
 
 # ContentReplacements contains both templates for specific file extensions
 # and all processable file extensions.
-class ContentReplacements():
+class ContentReplacements:
     def __init__(self):
         self.general_replacements = Replacements()
         self.specific_replacements = FileSpecificReplacements()
@@ -161,7 +169,7 @@ class ContentReplacements():
         if not self.matches(name):
             return content
         for item in self.specific_replacements:
-            content = item.replace(content)
+            content = item.replace(name, content)
         for item in self.general_replacements:
             content = item.replace(content)
         return content
@@ -214,15 +222,15 @@ class Template(object):
 
         # only take the content from first $template_start$ on,
         # and convert all line breaks to '\n'
-        discarded, sep, content = content.partition('$template_start$')
-        if len(sep)==0:
-            content = discarded
+        beginning = content.find('$template_start$')
+        if beginning >= 0:
+            content = content[beginning:len(content)]
         
         content_lines = content.splitlines()
-        if len(sep) != 0:
+        if beginning >= 0:
             content_lines.pop(0)
-        content = '\n'.join(content_lines)
-                
+        content = '\n'.join(content_lines) + '\n'
+
         return self.replace_content(name, content)
 
     def name_replacement(self, key, value):
@@ -231,7 +239,7 @@ class Template(object):
     def all_content_replacement(self, key, value):                    
         self.content_replacements.general_replacements.append(Replacement(key, value))
 
-    def content_replacement(self, extensions, key, value):                    
+    def content_replacement(self, extensions, key, value):
         self.content_replacements.specific_replacements.append(
             FileSpecificReplacement(extensions, key, value))
 
@@ -245,7 +253,7 @@ class Template(object):
     def examine(self):
         self.directory = self.options.get('template')
         self.into = self.options.get('into',None,'')
-        ignore_set = self.options.get('ignore')
+        ignore_list = self.options.get('ignore')
         
         cwd = os.getcwd()
         os.chdir(self.directory)
@@ -285,7 +293,7 @@ class Template(object):
 
             for name in dirs:
                 if name.startswith('.') or \
-                   os.path.normpath(os.path.join(root, name)) in ignore_set:
+                   ignore_list.count(os.path.normpath(os.path.join(root, name)))>0:
                     self.ignore_subdirectory(name)
             for name in self.__dirs_clear__:
                 dirs.remove(name)
@@ -417,12 +425,10 @@ class Results(object):
 
     def __scan__(self, my_list, directory):
         result_list = list()
-        result_set = set()
         for item in my_list:
             idir, ibase = os.path.split(item.destination)
-            if os.path.normpath(idir) == os.path.normpath(directory) and ibase not in result_set :
+            if os.path.normpath(idir) == os.path.normpath(directory) and result_list.count(ibase)==0:
                 result_list.append(ibase)
-                result_set.add(ibase)
         return result_list
 
     def files_in(self, directory):
@@ -455,12 +461,14 @@ def process_command_line():
     templates.append(Template())
     index = 0
 
-    global_options = set(['destination'])    
+    global_options = ['destination']    
     options = templates[0].options
     
     for arg in sys.argv[1:]:
-        option, eq, val = arg.partition('=')
-        if len(eq)==0:
+        split = arg.split('=')
+        option = split[0]
+        val = '='.join(split[1:len(split)])
+        if len(split)==1:
             # templates can be specified without template=
             val = option
             option = 'template'
@@ -470,7 +478,7 @@ def process_command_line():
             # done with this template, move to the next
             templates.append(Template())
             index += 1
-        if option in global_options:
+        if global_options.count(option)>0:
             options.options[option] = val
         elif option == 'ignore':
             templates[index].options.options[option].add(os.path.normpath(val))
