@@ -16,12 +16,12 @@
 //      typedef typename hds_traits<HDSConcept_archetype
 //                                 >::halfedge_descriptor halfedge_descriptor;
 //    public:
-//      void set_opposite(MutableHDSConcept_archetype&, halfedge_descriptor&, 
-//                                                      halfedge_descriptor&);
+//      void set_opposite(MutableHDSConcept_archetype&,i
+//                        halfedge_descriptor&, halfedge_descriptor&);
 //      halfedge_descriptor& new_edge(MutableHDSConcept_archetype&, 
-//                                  halfedge_descriptor&, halfedge_descriptor&);
-//      void delete_edge(MutableHDSConcept_archetype&, halfedge_descriptor&, 
-//                                                      halfedge_descriptor&);
+//                                 halfedge_descriptor&, halfedge_descriptor&);
+//      void delete_edge(MutableHDSConcept_archetype&,
+//                       halfedge_descriptor&, halfedge_descriptor&);
 //  };
 //..
 
@@ -44,8 +44,8 @@ class MutableHDSConcept_archetype : public HDSConcept_archetype {
                                >::halfedge_descriptor halfedge_descriptor;
 
   public:
-    void set_opposite(MutableHDSConcept_archetype&, halfedge_descriptor&, 
-                                                    halfedge_descriptor&);
+    void set_opposite(MutableHDSConcept_archetype&,
+                      halfedge_descriptor&, halfedge_descriptor&);
         // Set the second halfedge descriptor as the opposite of the first
         // halfedge descriptor in 'hds'.
 
@@ -53,8 +53,8 @@ class MutableHDSConcept_archetype : public HDSConcept_archetype {
                                   halfedge_descriptor&, halfedge_descriptor&);
        // add two halfedges to the data structure.
     
-    void delete_edge(MutableHDSConcept_archetype&, halfedge_descriptor&, 
-                                                    halfedge_descriptor&);
+    void delete_edge(MutableHDSConcept_archetype&,
+                     halfedge_descriptor&, halfedge_descriptor&);
       // delete two halfedges from the data structure.
 };
 
@@ -65,8 +65,8 @@ MutableHDSConcept_archetype::set_opposite(MutableHDSConcept_archetype&,
 {}
 
 typename hds_traits<MutableHDSConcept_archetype>::halfedge_descriptor
-new_edge(MutableHDSConcept_archetype&, 
-                                  halfedge_descriptor&, halfedge_descriptor&)
+MutableHDSConcept_archetype::new_edge(MutableHDSConcept_archetype&, 
+                                   halfedge_descriptor&, halfedge_descriptor&)
 {
     return halfedge_descriptor();
 }
