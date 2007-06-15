@@ -17,44 +17,6 @@
 using namespace std;
 using namespace boost;
 
-// This visitor is responsible for recording (setting) the bacon numbers
-// of actors in the movie graph.
-template <typename DistanceMap>
-struct ActorDistanceRecorder : public bfs_visitor<>
-{
-    ActorDistanceRecorder(DistanceMap d)
-	: distances(d)
-    {}
-
-    // The tree_edge() method is invoked when a vertex v is discovered
-    // while exploring an edge (u,v). With respect to a BFS, this means
-    // that v is in the next higher level (or depth) than u. Therefore,
-    // the Kevin Bacon number of v should be one more than that of u.
-    template <typename Edge, typename Graph>
-    void tree_edge(Edge e, const Graph& g) const
-    {
-	typedef typename Graph::vertex_descriptor Vertex;
-
-	// get the source and target vertices of this tree edge.
-	Vertex
-	    u = source(e, g),
-	    v = target(e, g);
-
-	// set the bacon number to 1 + u's bacon number
-	distances[v] = distances[u] + 1;
-    }
-
-    DistanceMap distances;
-};
-
-// This is just a convenience function so we can call a function rather than
-// explicitly instantiate the visitor type. It makes it more "action-oriented".
-template <typename DistanceMap>
-ActorDistanceRecorder<DistanceMap> record_actor_distances(DistanceMap d)
-{
-    return ActorDistanceRecorder<DistanceMap>(d);
-}
-
 int
 main(int argc, char *argv[])
 {
@@ -77,7 +39,14 @@ main(int argc, char *argv[])
 
     // run a breadth-first search on the graph and record
     // the kevin bacon numbers for each actor
-    breadth_first_search(g, kevin, visitor(record_actor_distances(dists)));
+    breadth_first_search(
+	g, kevin,
+	visitor(
+	    make_bfs_visitor(
+		record_distances(dists, on_tree_edge())
+		)
+	    )
+	);
 
     // just run over the vertices and print the back numbers
     Graph::vertex_iterator i, j;

@@ -1,0 +1,112 @@
+ [/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Managed Vertex Indexing]
+One of the most misleading aspects of the Boost.Graph library is that in many cases
+we treat vertex descriptors as vertex indices. Many of the examples simply assume
+that descriptor is an integral type (which in most examples it is) and that the
+descriptor value magically corresponds to the index into the vector into which the
+vertex is added (which in most cases it does). Unfortunately, this is quite misleading
+and can be trivially invalidated using a core algorithm in the following manner:
+
+ vertex_descriptor u = add_vertex(g);
+ vertex_descriptor v = add_vertex(g);
+ remove_vertex(u, g);
+ breadth_first_search(g, v, make_bfs_visitor(null_visitor())); // CRASH!
+
+This will probably result in a segmentation fault because of the algorithm's use
+of exterior property maps. Specifically, this algorithm uses an externior /color/
+property declared similarly to:
+
+ vector<color> colors(num_vertices(g));
+
+Unfortunately, the only remaining vertex has index 1, which means when the algorithm
+runs this line of code:
+
+ if(colors[get(vertex_index, g, v)] == BLACK) ...
+
+Oops. That index isn't in the bounds of the array, and so this may result in a
+crashed program. Somewhat ironically, this problem is trivially solved by simple
+/renumbering/ the vertex indices before calling the algorithm.
+
+[h3 The Vertex Indexing Suite]
+Because of the near-ubiquitous approach of accessing exterior properties via
+vector indices, it seems logical that the Boost.Graph Library provide facilities
+for making this easier. This set proposed set of features addresses three common
+indexing problems:
+
+# The fact that `undirected_graph`s, `directed_graph`s, and `adjacency_list`s
+using `listS` as a vertex storage selector do not have vertex indices by
+default - which means that there are precious few algorithms these classes
+will work with out of the box. The current solution is to manually define and
+manage these property maps.
+# The easy invalidation of indices on destructive graph operations (i.e, removing
+a vertex). It should be easy to reset the indices of a graph to a continuous
+integral range after a number of remove_vertex() operations.
+# The inability to correctly identify bounds on exterior property map for
+a graph that has had vertices removed (without first renumbering the indices).
+
+The first part of the proposal requires a change to the `undirected_graph` and
+`directed_graph` class. Specifically, that they provide a default property map
+for vertex indices. This functionality can be propogated to the `adjancency_list`
+class (with `listS` vertex storage) at a later time.
+
+There are also three new graph functions in the proposed suite. These functions
+all require their graph parameters to be a model of PropertyGraph, with a
+a property map for the `vertex_index` as part of the graph itself.
+
+[table
+    [[Function] [Description]]
+    [
+        [`get_vertex_index(v, g)`]
+        [
+            This is an alias for `get(vertex_index, g, v)` and provided for
+            convenience rather than added functionality.
+        ]
+        [`max_vertex_index(g)`]
+        [
+            This returns the total number of indices allocated for the vertices
+            of the graph /g/. The last vertex added to a graph will always have
+            the index `max_vertex_index(g) - 1`. The return type for this function
+            is the value type of the `vertex_index` property map, which is
+            typically an integer type.
+        ]
+        [`renumber_vertex_indices(g)`]
+        [
+            Renumber the indices in the vertex index map of /g/ such that the
+            index of each vertex is in the range \[0, num_vertices(g)). Also,
+            after calling this function, max_vertex_index(g) == num_vertices(g).
+        ]
+    ]
+]
+
+Implementing these three functions will allow more flexible algorithms for
+mutable graphs. Specifically, this model relaxes many of the constraints that
+vertices have indices in the range \[0, num_vertices(g)). Instead, algorithms
+can require indices in the range \[0, max_vertex_index(g)).
+
+As a downside, this relaxed constraint will result in over-sized vectors whose
+items may not correspond to vertices within the graph. However, if the algorithms
+employ vectors as exterior properties, there is probably a good chance that the
+difference in vector size and capacity will subsume space required by
+overallocating for missing vertices. Furthermore, correct use of the
+`get_vertex_index(v,g)` function will promote more correct accessing of
+said vectors. Since all valid vertex descriptors have valid and correct
+indices, there is no possibility of accessing an element in an exterior
+property that does not correspond to a valid vertex. As an added bonus,
+the explicit name should improve readability significantly and discourage
+new (and experienced?) developers from doing this:
+
+ vertex_descriptor v = add_vertex(g);
+ colors[v] = ...
+
+which, for non-trivial programs is in fact, incorrect.
+
+This proposal is implemented in this form for the `undirected_graph` and
+`directed_graph classes. Comments are welcome.
+
+[endsect]

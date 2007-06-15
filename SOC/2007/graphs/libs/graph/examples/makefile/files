@@ -14,5 +14,5 @@ kevin_bacon.exe :	movies.cpp kevin_bacon.cpp
 build_order.cpp :	directed_graph.hpp topological_sort.hpp
 build_order.exe :	build_order.cpp
 
-movies.cpp :		kevin_bacon.cpp
-kevin_bacon.cpp :	movies.cpp
+# movies.cpp :		kevin_bacon.cpp
+# kevin_bacon.cpp :	movies.cpp

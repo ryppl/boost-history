@@ -1,0 +1,20 @@
+
+exe properties
+	: properties.cpp
+	: <include>../../../
+	;
+
+exe mutable
+	: mutable.cpp
+	: <include>../../../
+	;
+
+exe index
+	: index.cpp
+	: <include>../../../
+	;
+
+exe range
+	: range.cpp
+	: <include>../../../
+	;

@@ -20,15 +20,14 @@ using namespace boost;
 
 struct Target
 {
-    int index;
     string name;
 };
 
 typedef directed_graph<Target> Graph;
 typedef Graph::vertex_descriptor Vertex;
 typedef Graph::edge_descriptor Edge;
-typedef property_map<Graph::type, int Target::*>::type TargetIndexMap;
-typedef property_map<Graph::type, string Target::*>::type TargetNameMap;
+
+typedef property_map<Graph, string Target::*>::type TargetNameMap;
 
 typedef map<string, Vertex> TargetMap;
 
@@ -63,12 +62,7 @@ add_target(Graph& g, TargetMap& targets, const string& name)
     if(inserted) {
 	// create a vertex for the name
 	v = add_vertex(g);
-
-	// associate the vertex with the name
 	it->second = v;
-
-	// configure the vertex properties
-	g[v].index = num_vertices(g) - 1;
 	g[v].name = name;
     }
     else {
@@ -137,13 +131,9 @@ main(int argc, char* argv[])
 	}
     }
 
-    // we need to create a vertex index map for the graph before
-    // we can generate the build order
-    TargetIndexMap indices = get(&Target::index, g);
-
     bool cycle = false;
-    depth_first_search(g,
-		       vertex_index_map(indices).
-		       visitor(detect_cycles(cycle)));
+    depth_first_search(g, visitor(detect_cycles(cycle)));
     cout << "has cycle: " << cycle << "\n";
+
+    return 0;
 }

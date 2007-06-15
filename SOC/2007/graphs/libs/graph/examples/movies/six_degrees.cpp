@@ -18,40 +18,6 @@
 using namespace std;
 using namespace boost;
 
-template <typename ParentMap>
-struct ActorParentRecorder : public bfs_visitor<>
-{
-    ActorParentRecorder(ParentMap d)
-	: parents(d)
-    {}
-
-    // record the parent
-    template <typename Edge, typename Graph>
-    void tree_edge(Edge e, const Graph& g) const
-    {
-	typedef typename Graph::vertex_descriptor Vertex;
-
-	Vertex
-	    u = source(e, g),
-	    v = target(e, g);
-
-	// the parent of v is u
-	parents[v] = u;
-    }
-
-    ParentMap parents;
-};
-
-// This is just a convenience function so we can call a function rather than
-// explicitly instantiate the visitor type. It makes it more "action-oriented".
-template <typename ParentMap>
-ActorParentRecorder<ParentMap> record_actor_parents(ParentMap d)
-{
-    return ActorParentRecorder<ParentMap>(d);
-}
-
-
-
 int
 main(int argc, char *argv[])
 {
@@ -90,12 +56,18 @@ main(int argc, char *argv[])
 	return -1;
     }
 
-    // The predeceessor map records, for the vertex at each index, the
-    // predecessor (or parent) in the shortest-path tree. By iterating
-    // from predecessor to predecessor, we can find the shortest path
+    // get the parents map so we can record them
+    // during a breadth first search
     ActorParentMap parents = get(&Actor::parent, g);
 
-    breadth_first_search(g, u, visitor(record_actor_parents(parents)));
+    breadth_first_search(
+	g, u,
+	visitor(
+	    make_bfs_visitor(
+		record_predecessors(parents, on_tree_edge())
+		)
+	    )
+	);
 
     // print the movies in which the actors appear by iterating over
     // the elements in the predecessor map

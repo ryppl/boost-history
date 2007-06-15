@@ -1,0 +1,48 @@
+ [/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Undirected Graph Reference]
+
+*TODO*: I should probably document somewhere that out_edges() and in_edges()
+are equivalent for this function. Is it important? I don't know, maybe.
+
+[h3 Members]
+The following tables define and describe the members of the `undirected_graph`
+class.
+
+[h4 Associated Types]
+
+[table
+    [[Member] [Where Defined] [Description]]
+    [
+        [`vertex_descriptor`]
+        [Graph]
+        [An opaque type whose values are used to access vertices and their properties.]
+    ]
+    [
+        [`edge_descriptor`]
+        [Graph]
+        [An opaque type whose values are used to access edges and their properties.]
+    ]
+    [
+        [`directed_category`]
+        [Graph]
+        [Indicates the graph has undirected edges. It's type is `undirected_tag`.]
+    ]
+    [
+        [`edge_parallel_category`]
+        [Graph]
+        [...]
+    ]
+    [
+        [`traversal_category`]
+        [Graph]
+        [...]
+    ]
+]
+
+[endsect]

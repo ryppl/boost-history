@@ -43,7 +43,9 @@ that property. Like this:
 
  property<vertex_index_t, int, VertexProperties>
 
-Works great.
+Works great except in the case of the MutablePropertyGraph functions. Basically,
+I have no idea how to specify the value of a vertex property in this form. It's
+kind of weird...
 
 [h4 Automatic Indexing and Re-indexing]
 If the `undirected_graph` and `directed_graph` classes have implicit index
@@ -94,5 +96,16 @@ num_vertices(). This could be managed either externally by the user or, we
 could implement some heuristic such when `max_vertex_index > 2 * num_vertices`
 we automatically renumber vertices on the next vertex removal (or something
 like that).
+
+[h4 Removing Edges]
+There is no great documentation for the actual behavior of the `remove_edge(u, v, g)`
+function. For example, in the `adjacency_list` reference page, it simply states that
+it removes "the" edge connecting the vertices /u/ and /v/. What if there are multiple
+edges connecting the two vertices? Does this remove all of them or some selection
+thereof.
+
+The correct answer, I think, is that it should remove all such edges. If a programmer
+needs finer-grained control he or she can easily use the remove_edge(e, g) function
+where /e/ is an edge descriptor.
 
 [endsect]
