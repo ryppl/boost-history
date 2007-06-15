@@ -6,7 +6,7 @@ urls = { 'boost_1_34_0' : boost_svn }
 
 build_variants = {
     'debug'  : ['-DBUILD_TESTING:BOOL=ON', '-DBUILD_RELEASE:BOOL=OFF', '-DBUILD_DEBUG:BOOL=ON'],
-    'release': ['-DBUILD_TESTING:BOOL=ON', '-DBUILD_RELEASE:BOOL=OFF', '-DBUILD_DEBUG:BOOL=ON']
+    'release': ['-DBUILD_TESTING:BOOL=ON', '-DBUILD_RELEASE:BOOL=ON', '-DBUILD_DEBUG:BOOL=OFF']
 }
 
 def nightly_dt(t):
