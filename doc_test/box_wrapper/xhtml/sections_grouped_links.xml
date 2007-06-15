@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!--=========================================================================
+
+    Grouped links for Boost.Bimap documentation
+
+    Copyright (c) 2007 Matias Capeletto
+
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+
+===========================================================================-->
+
+
+<groupedLinks version="1.0">
+
+<title tag="Sections" url="index.html"/>
+
+<group tag="Introduction" url="document_to_test_formatting/introduction.html"/>
+
+<group tag="Basic Formating Tests" url="document_to_test_formatting/basic_formatting_tests.html" >
+
+    <item tag="Inline blocks" url="document_to_test_formatting/basic_formatting_tests.html#document_to_test_formatting.basic_formatting_tests.inline_blocks"/>
+    <item tag="Lists" url="document_to_test_formatting/basic_formatting_tests.html#document_to_test_formatting.basic_formatting_tests.lists"/>
+    <item tag="Code Blocks" url="document_to_test_formatting/basic_formatting_tests.html#document_to_test_formatting.basic_formatting_tests.code_blocks"/>
+    <item tag="Blurbs" url="document_to_test_formatting/basic_formatting_tests.html#document_to_test_formatting.basic_formatting_tests.blurbs"/>
+    <item tag="Tables" url="document_to_test_formatting/basic_formatting_tests.html#document_to_test_formatting.basic_formatting_tests.tables"/>
+    <item tag="Variable Lists" url="document_to_test_formatting/basic_formatting_tests.html#document_to_test_formatting.basic_formatting_tests.variable_lists"/>
+    <item tag="Callouts" url="document_to_test_formatting/basic_formatting_tests.html#document_to_test_formatting.basic_formatting_tests.callouts"/>
+
+</group>
+
+<group tag="Images" url="document_to_test_formatting/images.html"/>
+
+<group tag="Test HTML4 symbols" url="document_to_test_formatting/test.html"/>
+
+</groupedLinks>
