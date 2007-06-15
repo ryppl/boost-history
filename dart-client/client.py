@@ -5,7 +5,6 @@ import pysvn
 import os.path
 import time
 from datetime import datetime, timedelta
-from termcolors import *
 
 class Build:
     def __init__(self, id_, build_variant_, ctest_variant_):
@@ -40,7 +39,6 @@ def initbuilds():
         for bv in build_variants:
             for cv in ctest_variants:
                 builds.append(Build(id, bv, cv))
-    print "next build is: " + str(nextbuild(builds))
     return builds
 
 def print_error(msg, cmd):
@@ -62,13 +60,13 @@ def checkout(argv):
     builds = initbuilds()
     for id, url in urls.items():
         srcdir = os.path.join(topdir,prefix,id,"src")
-        print "Checking out " + id
         try:
             os.mkdir(srcdir)
         except:
             print "Directory %s exists, not creating." % id
             
         try:
+            print "Checking out " + id
             client.checkout(url, srcdir)
         except pysvn.ClientError, e:
             print "Error:\n" + str(e)

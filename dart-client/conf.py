@@ -1,6 +1,8 @@
 prefix = 'prefix'
 
-urls = { 'boost_1_34_0' : 'http://svn.resophonic.com/pub/ctest-tiny' }
+boost_svn = 'http://svn.boost.org/svn/boost/sandbox-branches/boost-cmake/boost_1_34_0'
+test_svn = 'http://svn.resophonic.com/pub/ctest-tiny'
+urls = { 'boost_1_34_0' : boost_svn }
 
 build_variants = {
     'debug'  : ['-DBUILD_TESTING:BOOL=ON', '-DBUILD_RELEASE:BOOL=OFF', '-DBUILD_DEBUG:BOOL=ON'],
@@ -27,7 +29,7 @@ def continuous_dt(t):
 
 ctest_variants = { 
     'continuous' : (['-D', 'Continuous'], continuous_dt),
-    'nightly' : (['-D', 'Nightly'], minutely_dt)
+    'nightly' : (['-D', 'Nightly'], nightly_dt)
     }
 
 ctest = "ctest"
