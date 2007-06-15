@@ -32,7 +32,19 @@ ctest_variants = {
     'nightly' : (['-D', 'Nightly'], nightly_dt)
     }
 
+#
+# CUSTOMIZE THESE
+#
+# Typical settings on unix.  
+#
 ctest = "ctest"
 cmake = "cmake"
 
-    
+# Typical settings on windows:
+#
+# The escaped doublequotes around the name of the executables are necessary.
+#
+# cmake = "\"C:\\Program Files\???\cmake.exe\""
+# ctest = "\"C:\\Program Files\???\ctest.exe\""
+#
+   
