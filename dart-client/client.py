@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 import sys
-import pysvn
 import os.path
 import time
+import subprocess
 from datetime import datetime, timedelta
+from xml.dom.minidom import parseString
 
 class Build:
     def __init__(self, id_, build_variant_, ctest_variant_):
@@ -12,11 +13,36 @@ class Build:
         self.build_variant = build_variant_
         self.ctest_variant = ctest_variant_
         self.revision = -1
-        self.avg_time = datetime.min
         self.last_start = datetime.min
 
     def __str__(self):
-        return "id:" + self.id + " bv:" + self.build_variant + " cv:" + self.ctest_variant + " rev:" + str(self.revision) + " avg_t:" + str(self.avg_time) + " last_t:" + str(self.last_start)
+        return self.id + "/" + self.build_variant + "/" + self.ctest_variant + " r" + str(self.revision) + " last_t:" + str(self.last_start)
+
+def svn_status_revision(srcdir):
+    output = subprocess.Popen([svn, "info", "--xml", srcdir], stdout=subprocess.PIPE).communicate()[0]
+    dom = parseString(output)
+    rev = dom.getElementsByTagName("commit")[0].getAttribute("revision")
+    return rev
+
+def svn_update(srcdir, revision):
+    try:
+        retcode = subprocess.call([svn, "update", "-r", revision, srcdir])
+        if retcode < 0:
+            print >>sys.stderr, "Child was terminated by signal ", -retcode
+        else:
+            print >>sys.stderr, "Child returned", retcode
+    except OSError, e:
+        print >> sys.stderr, "Execution failed:", e
+
+def svn_checkout(url, srcdir):
+    try:
+        retcode = subprocess.call([svn, "co", url, srcdir])
+        if retcode < 0:
+            print >>sys.stderr, "Child was terminated by signal ", -retcode
+        else:
+            print >>sys.stderr, "Child returned", retcode
+    except OSError, e:
+        print >> sys.stderr, "Execution failed:", e
 
 def nextbuild(builds):
     front = Build('none', 'none', 'none')
@@ -52,8 +78,6 @@ def read_conf():
         exit(1)
 
 def checkout(argv):
-    client = pysvn.Client()
-    client.exception_style = 0
     builds = initbuilds()
     for id, url in urls.items():
         srcdir = os.path.join(topdir,prefix,id,"src")
@@ -62,11 +86,8 @@ def checkout(argv):
         except:
             print "Directory %s exists, not creating." % id
             
-        try:
-            print "Checking out " + id
-            client.checkout(url, srcdir)
-        except pysvn.ClientError, e:
-            print "Error:\n" + str(e)
+        print "Checking out " + id
+        svn_checkout(url, srcdir)
 
         print "Making build directories..."
         for build in builds:
@@ -82,28 +103,24 @@ def checkout(argv):
             os.system(cmd)
     
 def run(args):
-    client = pysvn.Client()
-    client.exception_style = 0
     builds = initbuilds()
     while True:
         build = nextbuild(builds)
-        print "*******\n******* " + str(build) + " *******\n*******" 
+        print ">>> Doing " + str(build)
+        if build.revision != -1:
+            print ">>> Updating " + srcdir + " to " + str(build.revision)
+            svn_update(srcdir, build.revision)
         build.last_start = datetime.now()
         os.chdir(os.path.join(topdir, prefix, build.id, build.build_variant, build.ctest_variant))
         cmd = ctest + " " + " ".join(ctest_variants[build.ctest_variant][0])
-        srcdir = os.path.join(topdir, prefix, build.id, "src")
-        if build.revision != -1:
-            print ">>> Updating " + srcdir + " to " + str(build.revision)
-            client.update(srcdir, recurse=True,
-                          revision=pysvn.Revision(pysvn.opt_revision_kind.number, build.revision))
-            time.sleep(0)
         print ">>> " + cmd
         os.system(cmd)
-        status_list = client.status(os.path.join(topdir, prefix, build.id, "src"), recurse=False)
-        rev = status_list[0].entry.revision.number
+        srcdir = os.path.join(topdir, prefix, build.id, "src")
+        rev = svn_status_revision(srcdir)
         build.revision = rev
-#        print "status: " + str(status_list)
-        time.sleep(0)
+        print ">>> New last-built revision of " + srcdir + " is " + str(rev)
+        print ">>>\n>>> Finshed build " + str(build) + "\n>>>"
+        time.sleep(interbuild_sleep)
                 
 def help(argv):
     print __name__
@@ -127,7 +144,6 @@ action_mapping = {
     'checkout' : checkout,
     'run' : run,
     'help' : help,
-    'initbuilds' : dropenv(initbuilds),
     }
 
 if __name__ == "__main__":
