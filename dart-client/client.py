@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import sys
 import pysvn
@@ -17,9 +17,6 @@ class Build:
 
     def __str__(self):
         return "id:" + self.id + " bv:" + self.build_variant + " cv:" + self.ctest_variant + " rev:" + str(self.revision) + " avg_t:" + str(self.avg_time) + " last_t:" + str(self.last_start)
-
-builds = []
-buildqueue = []
 
 def nextbuild(builds):
     front = Build('none', 'none', 'none')
@@ -42,7 +39,7 @@ def initbuilds():
     return builds
 
 def print_error(msg, cmd):
-    sys.stderr.write(style.BOLDRED('Error: %s' % msg) + '\nRun "%s --help" for help.\n' % cmd)
+    sys.stderr.write('%s: Error: %s\n' % (cmd, msg))
     sys.exit(1)
 
 configfile = "conf.py"
@@ -108,13 +105,6 @@ def run(args):
 #        print "status: " + str(status_list)
         time.sleep(0)
                 
-def init(argv):
-    print "Writing " + configfile + "\n" 
-    initfile = open(configfile, 'w')
-    initfile.write("prefix = 'prefix'\nurls = { 'boost_1_34_0' : 'http://svn.boost.org/svn/boost/sandbox-branches/boost-cmake/boost_1_34_0/tools/build/CMake' }\n")
-    initfile.write("build_variants = { 'debug' : ['BUILD_RELEASE:BOOL=OFF','BUILD_DEBUG:BOOL=ON'],\n 'release': ['BUILD_RLEASE:BOOL=OFF','BUILD_DEBUG:BOOL=ON'] }\n")
-    initfile.close()
-
 def help(argv):
     print __name__
     
@@ -134,7 +124,6 @@ def dropenv(fn, *args):
     return lambda x: fn(*args)
 
 action_mapping = {
-    'init' : init,
     'checkout' : checkout,
     'run' : run,
     'help' : help,
