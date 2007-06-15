@@ -13,7 +13,7 @@ interbuild_sleep = 180
 #
 boost_svn = 'http://svn.boost.org/svn/boost/sandbox-branches/boost-cmake/boost_1_34_0'
 test_svn = 'http://svn.resophonic.com/pub/ctest-tiny'
-urls = { 'boost_1_34_0' : test_svn }
+urls = { 'boost_1_34_0' : boost_svn }
 
 #
 #  Variants to build/test:  map of tag => [cmake_arguments]  
