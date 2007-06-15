@@ -52,7 +52,7 @@
 //  - set_vertex(hds,h,v)  sets the source vertex descriptor value of 'h' to 
 //    'v'.
 //  - add_vertex(hds,v)    adds a new vertex 'v' to the 'hds' data structure.
-//  - remove_vertex(hds,f) removes the vertex 'v' from the 'hds' data 
+//  - remove_vertex(hds,v) removes the vertex 'v' from the 'hds' data 
 //    structure.
 //
 ///Expression Semantics
@@ -65,7 +65,7 @@
 //    By this operation the vertex is added but no connections to the halfedges
 //    are set. In order to assign vertces to halfedges 'set_vertex(hds,h,v)' 
 //    operation should be used.
-//  - remove_vertex(hds,f) removes the vertex 'v' from the 'hds' data 
+//  - remove_vertex(hds,v) removes the vertex 'v' from the 'hds' data 
 //    structure, by iterating in clockwise order around the vertex and removing
 //    the connections with the halfedges.
 //
@@ -90,18 +90,19 @@
 //    void constraints() {
 //       using namespace boost;
 //       function_requires<HDSConcept>();
+//       function_requires<VertexHDSConcept>();
 //       function_requires<DefaultConstructibleConcept<vertex_descriptor> >();
 //       function_requires<CopyConstructibleConcept<vertex_descriptor> >();
 //       function_requires<EqualityComparableConcept<vertex_descriptor> >();
 //       function_requires<AssignableConcept<vertex_descriptor> >();
 //       set_vertex(hds,h,v);
-//       add_vertex(hds,f);
+//       add_vertex(hds,v);
 //       remove_vertex(hds,h,v);
 //       const_constraints(hds);
 //    }
 //    void const_constraints(HDS const& hds) {
 //       set_vertex(hds,h,v);
-//       add_vertex(hds,f);
+//       add_vertex(hds,v);
 //       remove_vertex(hds,h,v);
 //    }
 //    HDS hds;
@@ -110,8 +111,8 @@
 // };
 //..
 
-#ifdef BOOST_HDSTL_CONCEPTS_MUTABLEVERTEXHDSCONCEPT_HPP
-#define BOOST_HDSTL_CONCEPTS_MUTABLEVERTEXHDSCONCEPT_HPP 1
+#ifndef BOOST_HDSTL_CONCEPTS_MUTABLE_VERTEX_HDS_CONCEPT_HPP
+#define BOOST_HDSTL_CONCEPTS_MUTABLE_VERTEX_HDS_CONCEPT_HPP 1
 
 #include <boost/concepts.h>
 
@@ -147,13 +148,14 @@ namespace concepts {
         {
             using namespace boost;
             function_requires<HDSConcept>();
+            function_requires<VertexHDSConcept>();
             function_requires<DefaultConstructibleConcept<vertex_descriptor> >();
             function_requires<CopyConstructibleConcept<vertex_descriptor> >();
             function_requires<EqualityComparableConcept<vertex_descriptor> >();
             function_requires<AssignableConcept<vertex_descriptor> >();
 
             set_vertex(hds,h,v);
-            add_vertex(hds,f);
+            add_vertex(hds,v);
             remove_vertex(hds,h,v);
 
             const_constraints(hds);
@@ -165,7 +167,7 @@ namespace concepts {
             // satisfies all the constraints of 'MutableVertexHDSConcept'.
         {
             set_vertex(hds,h,v);
-            add_vertex(hds,f);
+            add_vertex(hds,v);
             remove_vertex(hds,h,v);
         }
 
@@ -173,7 +175,7 @@ namespace concepts {
         //DATA
         MutableVertexHDS hds;  // a halfedge data structure object
         halfedge_descriptor h; // a vertex descriptor
-        vertex_descriptor f;   // a vertex descriptor
+        vertex_descriptor v;   // a vertex descriptor
    };
 
 }  // close namespace concepts

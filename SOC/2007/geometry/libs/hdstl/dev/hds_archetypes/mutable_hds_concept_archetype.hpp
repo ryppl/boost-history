@@ -16,7 +16,7 @@
 //      typedef typename hds_traits<HDSConcept_archetype
 //                                 >::halfedge_descriptor halfedge_descriptor;
 //    public:
-//      void set_opposite(MutableHDSConcept_archetype&,i
+//      void set_opposite(MutableHDSConcept_archetype&,
 //                        halfedge_descriptor&, halfedge_descriptor&);
 //      halfedge_descriptor& new_edge(MutableHDSConcept_archetype&, 
 //                                 halfedge_descriptor&, halfedge_descriptor&);
