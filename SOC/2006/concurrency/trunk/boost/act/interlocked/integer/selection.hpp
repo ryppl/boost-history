@@ -123,14 +123,14 @@ struct uint_t
 template< long MaxValue >
 struct int_max_value_t 
 {
-  typedef typename boost::int_max_value_t< Bits >::least least;
+  typedef typename boost::int_max_value_t< MaxValue >::least least;
   typedef typename int_fast_t< least >::fast fast;
 };
 
 template< long MinValue >
 struct int_min_value_t 
 {
-  typedef typename boost::int_min_value_t< Bits >::least least;
+  typedef typename boost::int_min_value_t< MinValue >::least least;
   typedef typename int_fast_t< least >::fast fast;
 };
 
@@ -138,7 +138,7 @@ struct int_min_value_t
 template< unsigned long Value >
 struct uint_value_t 
 {
-  typedef typename boost::uint_value_t< Bits >::least least;
+  typedef typename boost::uint_value_t< Value >::least least;
   typedef typename int_fast_t< least >::fast fast;
 };
 

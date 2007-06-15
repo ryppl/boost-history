@@ -128,7 +128,7 @@ have the indicated effects.
                                                      memory semantics.
                                                     ]
                                                    ]                           ]
-[[`safe_get( iv )`]  [`I`]            [Returns the value of `iv`.
+[[`retrieve( iv )`]  [`I`]            [Returns the value of `iv`.
                                                     [tablenote This template is
                                                      used for retrieving the
                                                      value of an object with the
@@ -137,7 +137,7 @@ have the indicated effects.
                                                      recent value after any
                                                      modifications done by other
                                                      threads. The value is also
-                                                     guaranteed to not be
+                                                     guaranteed to not be only
                                                      partially updated by
                                                      another thread.
                                                     ]

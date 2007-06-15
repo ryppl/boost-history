@@ -36,7 +36,7 @@ BOOST_PP_IF( BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_RESULT_AFFIX_          \
 
 // ToDo: Fix to account for acquire/release
 #include <boost/act/interlocked/assign_if_was/assign.hpp>
-#include <boost/act/interlocked/safe_get.hpp>
+#include <boost/act/interlocked/retrieve.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
@@ -46,7 +46,7 @@ struct BOOST_ACT_INTERLOCKED_DETAIL_RESULT_FULL_NAME
   template< typename TargetType >
   static ResultType execute( TargetType& target )
   {
-    for( UnqualifiedType curr_value = safe_get( target ),
+    for( UnqualifiedType curr_value = retrieve( target ),
                          new_value  = curr_value
        ; curr_value = assign_if_was( target, ++new_value, curr_value )
        ; new_value = curr_value

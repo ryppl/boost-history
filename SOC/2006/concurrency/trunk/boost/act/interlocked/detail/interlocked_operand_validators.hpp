@@ -36,6 +36,7 @@
 #include <boost/type_traits/is_integral.hpp>
 
 #include <boost/act/detail/is_nonfunction_pointer.hpp>
+#include <cstddef>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
@@ -55,33 +56,21 @@ struct are_valid_arithmeticn_params
     , is_convertible< ComparisonType const, TargetType >
     > {};
 
-template< typename TargetType, typename SourceType
-        , typename ComparisonType = TargetType
+template< unsigned NumBytes
+        , typename TargetType, typename SourceType
         >
-struct are_valid_arithmetic8_params
-  : are_valid_arithmeticn_params< 1, TargetType, SourceType, ComparisonType >
-      {};
-
-template< typename TargetType, typename SourceType
-        , typename ComparisonType = TargetType
-        >
-struct are_valid_arithmetic16_params
-  : are_valid_arithmeticn_params< 2, TargetType, SourceType, ComparisonType >
-      {};
-
-template< typename TargetType, typename SourceType
-        , typename ComparisonType = TargetType
-        >
-struct are_valid_arithmetic32_params
-  : are_valid_arithmeticn_params< 4, TargetType, SourceType, ComparisonType >
-      {};
-
-template< typename TargetType, typename SourceType
-        , typename ComparisonType = TargetType
-        >
-struct are_valid_arithmetic64_params
-  : are_valid_arithmeticn_params< 8, TargetType, SourceType, ComparisonType >
-      {};
+struct are_valid_additiven_params
+  : mpl::or_
+    <
+      are_valid_arithmeticn_params< NumBytes, TargetType, SourceType >
+    , mpl::and_
+      <
+        act::detail::is_nonfunction_pointer< TargetType >
+      , mpl::bool_< ( sizeof( TargetType ) == NumBytes ) >
+      , mpl::not_< is_const< TargetType > >
+      , is_convertible< SourceType const, std::ptrdiff_t >
+      >
+    > {};
 
 template< typename TargetType, typename SourceType
         , typename ComparisonType = TargetType

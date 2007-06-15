@@ -9,8 +9,6 @@
 #ifndef BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_HPP
 #define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_HPP
 
-#include <boost/act/interlocked/assign_if_was/detail/assign_if_was_impl.hpp>
-
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
 
@@ -21,8 +19,12 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 
-#include <boost/act/interlocked/detail/impl_decl.hpp>
-#include <boost/act/interlocked/detail/has_nested_type.hpp>
+#include <boost/act/interlocked/detail/impl.hpp>
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_INFO                                 \
+( assign_if_was, full_barrier )
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
 
 namespace boost { namespace act { namespace interlocked {
 
@@ -90,5 +92,7 @@ assign_if_was( TargetType& destination, SourceType const& new_value
 }
 
 } } }
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_END()
 
 #endif

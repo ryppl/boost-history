@@ -1,0 +1,44 @@
+#==============================================================================
+#    Copyright (c) 2006-2007 Matthew Calabrese
+#
+#   Use, modification and distribution is subject to the Boost Software
+#   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#==============================================================================
+
+import testing ;
+    
+project act
+    : requirements
+        <library>../../thread/build//boost_thread
+    ;
+
+{
+    test-suite utility/binary
+        : [ run binary.cpp ]
+    ;
+
+    test-suite act/interlocked
+        : [ run interlocked/retrieve.cpp ]
+
+          [ run interlocked/assign/assign.cpp ]
+          [ run interlocked/assign/assign_acquire.cpp ]
+
+          [ run interlocked/assign_if_was/assign_if_was.cpp ]
+          [ run interlocked/assign_if_was/assign_if_was_acquire.cpp ]
+          [ run interlocked/assign_if_was/assign_if_was_release.cpp ]
+
+          [ run interlocked/add_assign/add_assign.cpp ]
+          [ run interlocked/add_assign/add_assign_acquire.cpp ]
+          [ run interlocked/add_assign/add_assign_release.cpp ]
+
+          [ run interlocked/subtract_assign/subtract_assign.cpp ]
+          [ run interlocked/subtract_assign/subtract_assign_acquire.cpp ]
+          [ run interlocked/subtract_assign/subtract_assign_release.cpp ]
+    ;
+    
+    test-suite act
+        : [ run concurrent_consumer_policy.cpp ]
+          [ run bounded_queue_policy.cpp ]
+    ;
+}

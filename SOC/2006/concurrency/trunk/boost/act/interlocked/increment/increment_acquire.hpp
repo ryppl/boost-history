@@ -9,8 +9,11 @@
 #ifndef BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_ACQUIRE_HPP
 #define BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_ACQUIRE_HPP
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_INFO ( increment, acquire )
-
 #include <boost/act/interlocked/detail/unary_forwarder.hpp>
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER_INFO ( increment, acquire )
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER()
+
 
 #endif

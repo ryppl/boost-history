@@ -9,10 +9,8 @@
 #ifndef BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RESULT_HPP
 #define BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_RESULT_HPP
 
-#include <boost/act/interlocked/detail/result_impl.hpp>
+#define BOOST_ACT_INTERLOCKED_DETAIL_RESULT_INFO increment
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_OP_NAME increment
-
-#include BOOST_ACT_INTERLOCKED_DETAIL_UNARY_RESULT_IMPL()
+#include <boost/act/interlocked/detail/unary_result_impl.hpp>
 
 #endif

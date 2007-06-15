@@ -21,7 +21,7 @@
 #include <boost/act/interlocked/increment/increment_release.hpp>
 #include <boost/act/interlocked/decrement/decrement_release.hpp>
 #include <boost/act/interlocked/integer/types.hpp>
-#include <boost/act/interlocked/safe_get.hpp>
+#include <boost/act/interlocked/retrieve.hpp>
 
 #include <cstddef>
 #include <new>
@@ -79,8 +79,8 @@ public:
     , curr_size_m( 0 ) {}
 public:
   ~bounded_safe_single_push_pop_queue() { clear(); }
-private:
-  void clear()
+public:
+  void clear() // ToDo: Remove
   {
     for( size_type curr_size = size(); curr_size > 0; --curr_size )
       pop();
@@ -90,7 +90,7 @@ public:
   {
     // Safe get insures an added volatile qualifier and that the type can safely
     // be read in whole when another thread is writing to it.
-    return static_cast< size_type >( interlocked::safe_get( curr_size_m ) );
+    return static_cast< size_type >( interlocked::retrieve( curr_size_m ) );
   }
 
   bool empty() const { return size() == 0; }

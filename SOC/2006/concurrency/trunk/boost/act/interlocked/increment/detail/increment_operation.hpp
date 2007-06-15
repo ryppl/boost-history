@@ -9,6 +9,9 @@
 #ifndef BOOST_ACT_INTERLOCKED_INCREMENT_DETAIL_INCREMENT_OPERATION_HPP
 #define BOOST_ACT_INTERLOCKED_INCREMENT_DETAIL_INCREMENT_OPERATION_HPP
 
+#include <boost/act/detail/next.hpp>
+#include <boost/act/detail/prior.hpp>
+
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
 struct increment_operation
@@ -18,9 +21,7 @@ struct increment_operation
     template< typename ValueType >
     static ValueType execute( ValueType& value )
     {
-      ValueType copy = value;
-
-      return ++copy;
+      return act::detail::next( value );
     }
   };
 
@@ -29,9 +30,7 @@ struct increment_operation
     template< typename ValueType >
     static ValueType execute( ValueType& value )
     {
-      ValueType copy = value;
-
-      return --copy;
+      return act::detail::prior( value );
     }
   };
 };

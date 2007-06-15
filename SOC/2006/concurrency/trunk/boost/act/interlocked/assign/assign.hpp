@@ -9,8 +9,6 @@
 #ifndef BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_HPP
 #define BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_HPP
 
-#include <boost/act/interlocked/assign/detail/assign_impl.hpp>
-
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
 
@@ -21,8 +19,12 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 
-#include <boost/act/interlocked/detail/impl_decl.hpp>
-#include <boost/act/interlocked/detail/has_nested_type.hpp>
+#include <boost/act/interlocked/detail/impl.hpp>
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_INFO                                 \
+( assign, full_barrier )
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
 
 namespace boost { namespace act { namespace interlocked {
 
@@ -75,5 +77,7 @@ assign( TargetType& destination, SourceType const& new_value )
 }
 
 } } }
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_END()
 
 #endif

@@ -9,8 +9,10 @@
 #ifndef BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_HPP
 #define BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_HPP
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_INFO ( increment, full_barrier )
-
 #include <boost/act/interlocked/detail/unary_forwarder.hpp>
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER_INFO ( increment, full_barrier )
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER()
 
 #endif

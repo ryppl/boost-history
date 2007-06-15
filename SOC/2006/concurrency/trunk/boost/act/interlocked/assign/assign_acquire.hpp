@@ -9,9 +9,6 @@
 #ifndef BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_ACQUIRE_HPP
 #define BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_ACQUIRE_HPP
 
-#include <boost/act/interlocked/assign/detail/assign_acquire_impl.hpp>
-#include <boost/act/interlocked/assign/detail/assign_acquire_default_impl.hpp>
-
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
 
@@ -23,8 +20,12 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 
-#include <boost/act/interlocked/detail/impl_decl.hpp>
-#include <boost/act/interlocked/detail/has_nested_type.hpp>
+#include <boost/act/interlocked/detail/impl.hpp>
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_INFO                                 \
+( assign, acquire )
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
 
 namespace boost { namespace act { namespace interlocked {
 
@@ -43,20 +44,10 @@ assign_acquire( TargetType& destination, SourceType const& new_value )
 {
   typedef typename remove_volatile< TargetType >::type type;
   type const source = static_cast< type >( new_value );
-  typedef typename assign_result< TargetType >::type result_type;
 
-  typedef detail::assign_acquire_impl
-          < result_type
-          , type
-          >
-          impl_type;
-
-  return mpl::if_< detail::has_nested_type< impl_type >
-                 , impl_type
-                 , detail::assign_acquire_default_impl< result_type, type >
-                 >
-                 ::type
-                 ::execute( destination, source );
+  return detail::assign_acquire_impl
+         < typename assign_result< TargetType >::type, type >
+         ::execute( destination, source );
 
 }
 
@@ -74,7 +65,6 @@ typename lazy_enable_if
 assign_acquire( TargetType& destination, SourceType const& new_value )
 {
   typedef typename assign_result< TargetType >::type result_type;
-
   typedef typename TargetType::internal_type internal_type;
 
   return result_type
@@ -89,5 +79,7 @@ assign_acquire( TargetType& destination, SourceType const& new_value )
 }
 
 } } }
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_END()
 
 #endif

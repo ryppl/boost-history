@@ -9,9 +9,6 @@
 #ifndef BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_ACQUIRE_HPP
 #define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_ACQUIRE_HPP
 
-#include <boost/act/interlocked/assign_if_was/detail/assign_if_was_acquire_impl.hpp>
-#include <boost/act/interlocked/assign_if_was/detail/assign_if_was_acquire_default_impl.hpp>
-
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
 
@@ -23,8 +20,12 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 
-#include <boost/act/interlocked/detail/impl_decl.hpp>
-#include <boost/act/interlocked/detail/has_nested_type.hpp>
+#include <boost/act/interlocked/detail/impl.hpp>
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_INFO                                 \
+( assign_if_was, acquire )
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
 
 namespace boost { namespace act { namespace interlocked {
 
@@ -52,19 +53,11 @@ assign_if_was_acquire( TargetType& destination, SourceType const& new_value
 
   typedef typename assign_if_was_result< TargetType >::type result_type;
 
-  typedef detail::assign_if_was_acquire_impl
-          < result_type
-          , type
-          >
-          impl_type;
-
-  return mpl::if_< detail::has_nested_type< impl_type >
-                 , impl_type
-                 , detail::assign_if_was_acquire_default_impl
-                     < result_type, type >
-                 >
-                 ::type
-                 ::execute( destination, source, old_value );
+  return detail::assign_if_was_acquire_impl
+         < typename assign_if_was_result< TargetType >::type
+         , type
+         >
+         ::execute( destination, source, old_value );
 }
 
 template< typename TargetType, typename SourceType, typename ConditionType >
@@ -102,5 +95,7 @@ assign_if_was_acquire( TargetType& destination, SourceType const& new_value
 }
 
 } } }
+
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_END()
 
 #endif

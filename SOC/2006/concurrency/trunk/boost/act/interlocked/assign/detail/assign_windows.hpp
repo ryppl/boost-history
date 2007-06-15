@@ -26,8 +26,6 @@ namespace boost { namespace act { namespace interlocked { namespace detail {
 template< typename ResultType, typename UnqualifiedType >
 struct assign_impl
 {
-  typedef void type;
-
   template< typename LeftType, typename RightType >
   static
   typename enable_if_c

@@ -11,5 +11,7 @@
 
 #include <boost/act/interlocked/assign_fwd.hpp>
 #include <boost/act/interlocked/assign_if_was_fwd.hpp>
+#include <boost/act/interlocked/increment_fwd.hpp>
+#include <boost/act/interlocked/decrement_fwd.hpp>
 
 #endif
