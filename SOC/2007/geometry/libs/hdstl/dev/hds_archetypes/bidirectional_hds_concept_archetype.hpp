@@ -98,4 +98,7 @@ class BidirectionalHDSConcept_archetype
     BidirectionalHDSConcept_archetype(const BidirectionalHDSConcept_archetype&);
 };
 
+} // end namespace hdstl
+} // end namespace boost
+
 #endif

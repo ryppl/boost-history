@@ -72,4 +72,7 @@ class MutableBidirectionalHDSConcept_archetype
                                const MutableBidirectionalHDSConcept_archetype&);
 };
 
+} // end namespace hdstl
+} // end namespace boost
+
 #endif

@@ -112,4 +112,7 @@ FacetListHDSConcept_archetype<>::num_facets(
     return facet_size_type();
 }
 
+} // end namespace hdstl
+} // end namespace boost
+
 #endif

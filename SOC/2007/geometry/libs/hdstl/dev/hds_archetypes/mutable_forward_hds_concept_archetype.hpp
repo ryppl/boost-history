@@ -121,4 +121,7 @@ MutableForwardHDSConcept_archetype<ForwardCategory>::set_next_at_target(
                                 halfedge_descriptor h, halfedge_descriptor g)
 {}
 
+} // end namespace hdstl
+} // end namespace boost
+
 #endif

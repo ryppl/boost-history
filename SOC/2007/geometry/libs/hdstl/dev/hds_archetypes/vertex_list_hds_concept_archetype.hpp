@@ -112,4 +112,7 @@ VertexListHDSConcept_archetype<>::num_vertices(
     return vertex_size_type();
 }
 
+} // end namespace hdstl
+} // end namespace boost
+
 #endif

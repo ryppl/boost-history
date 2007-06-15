@@ -31,6 +31,9 @@
 
 #include <boost/concept_archetype.hpp>
 
+namespace boost {
+namespace hdstl {
+
 class VertexHDSConcept_archetype;  // forward declaration
 
 template<>
@@ -57,5 +60,8 @@ class VertexHDSConcept_archetype : public HDSConcept_archetype {
     typedef typename hds_traits<VertexHDSConcept_archetype
                                >::vertex_descriptor vertex_descriptor;
 };
+
+} // end namespace hdstl
+} // end namespace boost
 
 #endif

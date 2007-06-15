@@ -121,4 +121,7 @@ MutableBackwardHDSConcept_archetype<BackwardCategory>::set_prev_at_target(
                                 halfedge_descriptor h, halfedge_descriptor g)
 {}
 
+} // end namespace hdstl
+} // end namespace boost
+
 #endif

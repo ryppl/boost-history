@@ -30,6 +30,9 @@
 
 #include <boost/concept_archetype.hpp>
 
+namespace boost {
+namespace hdstl {
+
 class MutableHDSConcept_archetype;  // forward declaration
 
 class MutableHDSConcept_archetype : public HDSConcept_archetype {
@@ -44,6 +47,7 @@ class MutableHDSConcept_archetype : public HDSConcept_archetype {
                                >::halfedge_descriptor halfedge_descriptor;
 
   public:
+    // MANIPULATORS
     void set_opposite(MutableHDSConcept_archetype&,
                       halfedge_descriptor&, halfedge_descriptor&);
         // Set the second halfedge descriptor as the opposite of the first
@@ -75,5 +79,8 @@ void
 MutableHDSConcept_archetype::delete_edge(MutableHDSConcept_archetype&, 
                                    halfedge_descriptor&, halfedge_descriptor&)
 {}
+
+} // end namespace hdstl
+} // end namespace boost
 
 #endif

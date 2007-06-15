@@ -39,6 +39,9 @@
 
 #include <boost/concept_archetype.hpp>
 
+namespace boost {
+namespace hdstl {
+
 class MutableVertexHDSConcept_archetype;  // forward declaration
 
 class MutableVertexHDSConcept_archetype : public HDSConcept_archetype,
@@ -104,5 +107,8 @@ MutableVertexHDSConcept_archetype::remove_vertex(
                               MutableVertexHDSConcept_archetype& hds,
                               vertex_descriptor                    v)
 {}
+
+} // end namespace hdstl
+} // end namespace boost
 
 #endif

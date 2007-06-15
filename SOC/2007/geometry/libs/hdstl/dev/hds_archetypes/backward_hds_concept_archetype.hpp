@@ -142,4 +142,6 @@ BackwardHDSConcept_archetype<BackwardCategory>::prev_at_target(
     return halfedge_descriptor();
 }
 
+} // end namespace hdstl
+} // end namespace boost
 #endif

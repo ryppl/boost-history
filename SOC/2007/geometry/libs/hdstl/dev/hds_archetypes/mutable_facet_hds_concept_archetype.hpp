@@ -39,6 +39,9 @@
 
 #include <boost/concept_archetype.hpp>
 
+namespace boost {
+namespace hdstl {
+
 class MutableFacetHDSConcept_archetype;  // forward declaration
 
 class MutableFacetHDSConcept_archetype : public HDSConcept_archetype,
@@ -104,5 +107,8 @@ MutableFacetHDSConcept_archetype::remove_facet(
                               MutableFacetHDSConcept_archetype& hds,
                               facet_descriptor                    f)
 {}
+
+} // end namespace hdstl
+} // end namespace boost
 
 #endif

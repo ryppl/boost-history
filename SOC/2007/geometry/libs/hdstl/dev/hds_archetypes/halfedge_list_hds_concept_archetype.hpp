@@ -109,4 +109,7 @@ HalfedgeListHDSConcept_archetype<>::num_halfedges(
     return halfedge_size_type();
 }
 
+} // end namespace hdstl
+} // end namespace boost
+
 #endif

@@ -31,6 +31,9 @@
 
 #include <boost/concept_archetype.hpp>
 
+namespace boost {
+namespace hdstl {
+
 class FacetHDSConcept_archetype;  // forward declaration
 
 template<>
@@ -57,5 +60,8 @@ class FacetHDSConcept_archetype : public HDSConcept_archetype {
     typedef typename hds_traits<FacetHDSConcept_archetype
                                >::facet_descriptor facet_descriptor;
 };
+
+} // end namespace hdstl
+} // end namespace boost
 
 #endif

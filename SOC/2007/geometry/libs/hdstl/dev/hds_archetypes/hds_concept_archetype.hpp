@@ -33,6 +33,9 @@
 
 #include <boost/concept_archetype.hpp>
 
+namespace boost {
+namespace hdstl {
+
 class HDSConcept_archetype;  // forward declaration
 
 template<>
@@ -60,6 +63,7 @@ class HDSConcept_archetype {
                                >::halfedge_descriptor halfedge_descriptor;
 
   public:
+    // MANIPULATORS
     halfedge_descriptor& opposite(halfedge_descriptor&) const;
         // Return the halfedge opposite 'h' in 'hds'.
 };
@@ -71,5 +75,8 @@ HDSConcept_archetype::opposite(ForwardHDSConcept_archetype const& hds,
 {
     return halfedge_descriptor();
 }
+
+} // end namespace hdstl
+} // end namespace boost
 
 #endif
