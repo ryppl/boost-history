@@ -57,6 +57,7 @@ class Options(object):
         # initialize self.options
         self.options = dict()
         self.options['ignore']=list()
+        self.options['fignore']=list()
         
         # initialize common regular expressions
         self.any = re.compile(r'.*\Z')
@@ -254,6 +255,7 @@ class Template(object):
         self.directory = self.options.get('template')
         self.into = self.options.get('into',None,'')
         ignore_list = self.options.get('ignore')
+        fignore_list = self.options.get('fignore')
         
         cwd = os.getcwd()
         os.chdir(self.directory)
@@ -275,6 +277,14 @@ class Template(object):
             for name in files:
                 if name.startswith('.'):
                     continue
+                fignored=False
+                for item in fignore_list:
+                    if name.endswith(item):
+                        fignored=True
+                        break
+                if fignored:
+                    continue
+
                 pathname = (os.path.join(root, name))
                 if name.endswith('.py'):
                     content = self.read_content(os.path.join(root, name))
@@ -453,9 +463,9 @@ class Results(object):
 
 # reads options from the command line
 # command line has the format:
-# python make_template.py ((option=value )* (template))* (option=value)*
-# options specified immediately before a template are for that template only.
-# options specified at the end are for all templates.
+# python make_template.py (option=value)* ((template) (option=value)*)* 
+# options specified immediately after a template are for that template only.
+# options specified at the beginning are for all templates.
 def process_command_line():  
     templates = list()
     templates.append(Template())
@@ -481,7 +491,9 @@ def process_command_line():
         if global_options.count(option)>0:
             options.options[option] = val
         elif option == 'ignore':
-            templates[index].options.options[option].add(os.path.normpath(val))
+            templates[index].options.options[option].append(os.path.normpath(val))
+        elif option == 'fignore':
+            templates[index].options.options[option].append(val)
         else:
             templates[index].options.options[option] = val
 
