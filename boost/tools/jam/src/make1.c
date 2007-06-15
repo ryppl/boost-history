@@ -509,21 +509,7 @@ make1c( state *pState )
 	    {
             rule_name = cmd->rule->name;
             target = lol_get(&cmd->args, 0)->string;
-            
-            /* For now the deferred output is Unix only. So for others
-               we print out the action header immediately. */
-            #ifndef unix
-            printf( "%s ", cmd->rule->name );
-            list_print( lol_get( &cmd->args, 0 ) );
-            printf( "\n" );
-            #endif
 	    }
-
-	    if( DEBUG_EXEC )
-		printf( "%s\n", cmd->buf );
-
-	    if( globs.cmdout )
-		fprintf( globs.cmdout, "%s", cmd->buf );
 
 	    if( globs.noexec )
 	    {
@@ -533,7 +519,6 @@ make1c( state *pState )
 	    else
 	    {
 			TARGET *t = pState->t;
-			fflush( stdout );
 
 			pop_state(&state_stack); /* pop state first because execcmd could push state */
 			execcmd( cmd->buf, make_closure, t, cmd->shell, rule_name, target );
