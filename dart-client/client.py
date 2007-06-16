@@ -49,7 +49,7 @@ class Build:
 # Get current svn revision number of srcdir
 #
 def svn_status_revision(srcdir):
-    output = subprocess.Popen([svn, "info", "--xml", srcdir], stdout=subprocess.PIPE).communicate()[0]
+    output = subprocess.Popen([svn, "info", "--xml", srcdir], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
     dom = parseString(output)
     rev = dom.getElementsByTagName("commit")[0].getAttribute("revision")
     return rev
@@ -147,18 +147,19 @@ def checkout(argv):
         print "Checking out " + id
         svn_checkout(url, srcdir)
 
-        print "Making build directories..."
-        for build in builds:
-            nextpath = os.path.join(topdir,prefix, build.id, build.build_variant, build.ctest_variant)
-            try:
-                os.makedirs(nextpath)
-                print "  " + nextpath
-            except Exception, e:
-                print "Directory %s exists, not creating (%s)" % (nextpath, e)
-            os.chdir(nextpath)
-            cmd = cmake + " " + " ".join(build_variants[build.build_variant]) + " " + srcdir
-            print cmd
-            os.system(cmd)
+    print "Making build directories..."
+    for build in builds:
+        buildpath = os.path.join(topdir,prefix, build.id, build.build_variant, build.ctest_variant)
+        srcpath = os.path.join(topdir, prefix, build.id, "src")
+        try:
+            os.makedirs(buildpath)
+            print ">>> Initializing " + buildpath
+        except Exception, e:
+            print "Directory %s exists, not creating (%s)" % (buildpath, e)
+        os.chdir(buildpath)
+        cmd = cmake + " " + " ".join(build_variants[build.build_variant]) + " " + srcdir
+        print ">>> Executing " + cmd
+        os.system(cmd)
     
 #
 #  Do the builds in an infinite loop.
