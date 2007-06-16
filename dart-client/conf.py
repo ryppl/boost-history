@@ -4,9 +4,10 @@
 prefix = 'prefix'
 
 #
-#  Wait 3 minutes between builds
+#  Wait 1 minute between builds
+#  Each build will trigger an svn update.  Go easy on the repository.   
 #
-interbuild_sleep = 180
+interbuild_sleep = 60
 
 #
 #  Association tag => url  of things to build/test
@@ -31,8 +32,8 @@ def nightly_dt(t):
     current_time = datetime.now()
     if current_time.date() > t.date():
         return current_time - t
-    else:
-        return timedelta(-1)  # delta of negative one day, won't get run
+    else: 
+        return timedelta(0)
 
 #
 # For testing, return dt if t didn't happen this minute.
@@ -42,7 +43,7 @@ def minutely_dt(t):
     if current_time.replace(microsecond=0, second=0) > t:
         return current_time - t
     else:
-        return timedelta(-1)  # delta of negative one day, won't get run
+        return timedelta(0)
 
 #
 # Straight delta-time for continuous builds 
@@ -62,7 +63,7 @@ def continuous_dt(t):
 #
 ctest_variants = { 
     'continuous' : (['-D', 'Continuous'], continuous_dt),
-    'nightly' : (['-D', 'Nightly'], nightly_dt)
+    'nightly' : (['-D', 'Nightly'], minutely_dt)
     }
 
 #

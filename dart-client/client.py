@@ -1,5 +1,22 @@
 #!/usr/bin/env python
 
+#
+#  Continuous/nightly testing script.
+#
+#  This script runs continuous and nightly tests in a continuous loop.
+#
+#  'client.py checkout' will check out the necessary source and set up
+#  the necessary directories.
+#
+#  'client.py run'  will run the tests in an infinite loop.
+#
+#  The script runs the test which was run least recently.  It
+#  determines how long it was since each test run with the *_dt(time)
+#  functions in conf.py.  Nightly tests are run only once per day
+#  because nightly_dt returns zero if its time argument occurs on the
+#  same day as the current time.
+#
+
 import sys
 import os.path
 import time
@@ -7,23 +24,39 @@ import subprocess
 from datetime import datetime, timedelta
 from xml.dom.minidom import parseString
 
+configfile = "conf.py"
+
+#
+# Build class holds the information about each build.
+#
+# build_variant:  as specified in build_variants in the configuration file.
+# ctest_variant:  as specified in ctest_variants in the configuration file (continuous/nightly).  
+# revision:       svn revision of the local checkout as of the last time this test was run.
+# last_start:     time this test was last started. 
+#
 class Build:
     def __init__(self, id_, build_variant_, ctest_variant_):
         self.id = id_
         self.build_variant = build_variant_
         self.ctest_variant = ctest_variant_
         self.revision = -1
-        self.last_start = datetime.min
+        self.last_start = datetime.now()
 
     def __str__(self):
         return self.id + "/" + self.build_variant + "/" + self.ctest_variant + " r" + str(self.revision) + " last_t:" + str(self.last_start)
 
+#
+# Get current svn revision number of srcdir
+#
 def svn_status_revision(srcdir):
     output = subprocess.Popen([svn, "info", "--xml", srcdir], stdout=subprocess.PIPE).communicate()[0]
     dom = parseString(output)
     rev = dom.getElementsByTagName("commit")[0].getAttribute("revision")
     return rev
 
+#
+# svn update "srcdir" to revision "revision"
+#
 def svn_update(srcdir, revision):
     try:
         retcode = subprocess.call([svn, "update", "-r", revision, srcdir])
@@ -34,6 +67,9 @@ def svn_update(srcdir, revision):
     except OSError, e:
         print >> sys.stderr, "Execution failed:", e
 
+#
+# svn checkout "url" to local directory "srcdir"
+#
 def svn_checkout(url, srcdir):
     try:
         retcode = subprocess.call([svn, "co", url, srcdir])
@@ -44,18 +80,24 @@ def svn_checkout(url, srcdir):
     except OSError, e:
         print >> sys.stderr, "Execution failed:", e
 
+#
+# return the build that was run longest ago
+# as reported by the *_dt functions in the config file.
+#
 def nextbuild(builds):
-    front = Build('none', 'none', 'none')
-    front_deltat = datetime.min
-    front.last_start = datetime.max
+    nextbuild = Build('none', 'none', 'none')
+    nextbuild_deltat = timedelta.min
 
-    for build in builds:
-        thisdt = ctest_variants[build.ctest_variant][1](build.last_start)
-        print "Delta for build " + str(build) + " is: " + str(thisdt)
-        if build.last_start <= front.last_start:
-            front = build
-    return front
+    for b in builds:
+        b_dt = ctest_variants[b.ctest_variant][1](b.last_start)
+        if b_dt > nextbuild_deltat:
+            nextbuild_deltat = b_dt
+            nextbuild = b
+    return nextbuild
     
+#
+# Create list of builds (used in initialization)
+#
 def initbuilds():
     builds = []
     for id in urls:
@@ -64,12 +106,16 @@ def initbuilds():
                 builds.append(Build(id, bv, cv))
     return builds
 
+#
+# print error message
+#
 def print_error(msg, cmd):
     sys.stderr.write('%s: Error: %s\n' % (cmd, msg))
     sys.exit(1)
 
-configfile = "conf.py"
-
+#
+# read the configuration file "configfile" into the current environment
+#
 def read_conf():
     if os.path.exists(configfile):
         execfile(configfile, globals())
@@ -77,6 +123,11 @@ def read_conf():
         print_error("Config file '" + configfile + "' not found, run " + sys.argv[0] + " init first.", sys.argv[0])
         exit(1)
 
+#
+# run when './client.py checkout' is specified.  Create the necessary
+# directories for the various build/test variants and checkout the
+# source.
+#
 def checkout(argv):
     builds = initbuilds()
     for id, url in urls.items():
@@ -102,6 +153,9 @@ def checkout(argv):
             print cmd
             os.system(cmd)
     
+#
+#  Do the builds in an infinite loop.
+#
 def run(args):
     builds = initbuilds()
     while True:
@@ -113,22 +167,24 @@ def run(args):
         build.last_start = datetime.now()
         os.chdir(os.path.join(topdir, prefix, build.id, build.build_variant, build.ctest_variant))
         cmd = ctest + " " + " ".join(ctest_variants[build.ctest_variant][0])
-        print ">>> " + cmd
         os.system(cmd)
         srcdir = os.path.join(topdir, prefix, build.id, "src")
         rev = svn_status_revision(srcdir)
         build.revision = rev
-        print ">>> New last-built revision of " + srcdir + " is " + str(rev)
-        print ">>>\n>>> Finshed build " + str(build) + "\n>>>"
+        print ">>> Finished %s/%s/%s @%s" % (build.id, build.build_variant, build.ctest_variant, build.revision)
+        print ">>> Sleeping %s seconds..." % interbuild_sleep
         time.sleep(interbuild_sleep)
-                
+
+#
+#  eh.
+#
 def help(argv):
-    print __name__
+    print "Usage:\n\n  " + argv[0] + " (checkout|run)\n\ncheckout:  checks out source and sets up build environment.  Do this first.\nrun:       run regression tests in a loop.\n\n"
+    sys.exit(1)
     
 topdir = '?'
 def main(argv):
     globals()['topdir'] = os.getcwd()
-    print "topdir is " + topdir
     if argv[1] == "init":
         init(argv)
     elif not action_mapping.has_key(argv[1]):
@@ -137,9 +193,9 @@ def main(argv):
         read_conf()
         action_mapping[argv[1]](argv)
 
-def dropenv(fn, *args):
-    return lambda x: fn(*args)
-
+#
+# map command-line strings to functions
+#
 action_mapping = {
     'checkout' : checkout,
     'run' : run,
@@ -147,4 +203,6 @@ action_mapping = {
     }
 
 if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        help(sys.argv)
     main(sys.argv)
