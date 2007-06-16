@@ -102,7 +102,10 @@ def initbuilds():
     builds = []
     for id in urls:
         srcdir = os.path.join(topdir, prefix, id, "src")
-        rev = svn_status_revision(srcdir)
+        try:
+            rev = svn_status_revision(srcdir)
+        except:
+            rev = -1
         for bv in build_variants:
             for cv in ctest_variants:
                 build = Build(id, bv, cv, rev)
