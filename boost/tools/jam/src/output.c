@@ -55,8 +55,8 @@ void out_action(
     
     /* print out the command output, if requested */
     if (0 != out_data &&
-        globs.pipe_action & 1 /* STDOUT_FILENO */ ||
-        globs.pipe_action == 0)
+       ( globs.pipe_action & 1 /* STDOUT_FILENO */ ||
+         globs.pipe_action == 0))
     {
         out_(out_data,bjam_out);
     }

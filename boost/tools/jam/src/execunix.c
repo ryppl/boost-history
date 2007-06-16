@@ -68,8 +68,10 @@ static struct
     int	    pid;              /* on win32, a real process handle */
     int     fd[2];            /* file descriptors for stdout and stderr */
     FILE   *stream[2];        /* child's stdout (0) and stderr (1) file stream */
-    int     com_len;          /* length of comamnd buffer */
-    char   *action_target;    /* buffer to hold action and target invoked */
+    int     action_length;    /* length of action string */
+    int     target_length;    /* length of target string */
+    char   *action;           /* buffer to hold action and target invoked */
+    char   *target;           /* buffer to hold action and target invoked */
     char   *command;          /* buffer to hold command being invoked */
     char   *buffer[2];        /* buffer to hold stdout and stderr, if any */
     void    (*func)( void *closure, int status, timing_info*, char *, char * );
@@ -232,22 +234,31 @@ execcmd(
 
         if (action && target)
         {
-            len = strlen(action) + strlen(target) + 2;
-            if (cmdtab[slot].com_len < len) 
+            len = strlen(action) + 1;
+            if (cmdtab[slot].action_length < len) 
             {
-                BJAM_FREE(cmdtab[ slot ].action_target);
-                cmdtab[ slot ].action_target = BJAM_MALLOC_ATOMIC(len);
-                cmdtab[ slot ].com_len = len;
+                BJAM_FREE(cmdtab[ slot ].action);
+                cmdtab[ slot ].action = BJAM_MALLOC_ATOMIC(len);
+                cmdtab[ slot ].action_length = len;
             }
-            strcpy(cmdtab[ slot ].action_target, action);
-            strcat(cmdtab[ slot ].action_target, " ");
-            strcat(cmdtab[ slot ].action_target, target);
+            strcpy(cmdtab[ slot ].action, action);
+            len = strlen(target) + 1;
+            if (cmdtab[slot].target_length < len) 
+            {
+                BJAM_FREE(cmdtab[ slot ].target);
+                cmdtab[ slot ].target = BJAM_MALLOC_ATOMIC(len);
+                cmdtab[ slot ].target_length = len;
+            }
+            strcpy(cmdtab[ slot ].target, target);
         }
         else
         {
-            BJAM_FREE(cmdtab[ slot ].action_target);
-            cmdtab[ slot ].action_target= 0;
-            cmdtab[ slot ].com_len = 0;
+            BJAM_FREE(cmdtab[ slot ].action);
+            BJAM_FREE(cmdtab[ slot ].target);
+            cmdtab[ slot ].action = 0;
+            cmdtab[ slot ].target = 0;
+            cmdtab[ slot ].action_length = 0;
+            cmdtab[ slot ].target_length = 0;
         }
 
 	/* Save the operation for execwait() to find. */
@@ -392,27 +403,8 @@ execwait()
                         times(&old_time);
 
                         /* print out the rule and target name */
-                        if (cmdtab[i].action_target)
-                        {
-                            printf("%s\n", cmdtab[i].action_target);
-
-                            /* print out the command output, if requested */
-                            if (globs.pipe_action & STDOUT_FILENO || 
-                                globs.pipe_action == 0)
-                            {
-                                if (cmdtab[i].buffer[OUT])
-                                {
-                                    printf("%s", cmdtab[i].buffer[OUT]);
-                                    if (globs.pipe_action & STDERR_FILENO)
-                                        if (cmdtab[i].buffer[ERR])
-                                            fprintf(stderr, "%s\n", cmdtab[i].action_target);
-                                }
-                            }
-
-                            if (globs.pipe_action & STDERR_FILENO)
-                                if (cmdtab[i].buffer[ERR])
-                                    fprintf(stderr, "%s", cmdtab[i].buffer[ERR]);
-                        }
+                        out_action(cmdtab[i].action, cmdtab[i].target,
+                            cmdtab[i].command, cmdtab[i].buffer[OUT], cmdtab[i].buffer[ERR]);
 
                         times(&new_time);
 
