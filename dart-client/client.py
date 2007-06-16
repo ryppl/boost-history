@@ -35,15 +35,15 @@ configfile = "conf.py"
 # last_start:     time this test was last started. 
 #
 class Build:
-    def __init__(self, id_, build_variant_, ctest_variant_):
+    def __init__(self, id_, build_variant_, ctest_variant_, revision_):
         self.id = id_
         self.build_variant = build_variant_
         self.ctest_variant = ctest_variant_
-        self.revision = -1
+        self.revision = revision_
         self.last_start = datetime.now()
 
     def __str__(self):
-        return self.id + "/" + self.build_variant + "/" + self.ctest_variant + " r" + str(self.revision) + " last_t:" + str(self.last_start)
+        return self.id + "/" + self.build_variant + "/" + self.ctest_variant + " r" + str(self.revision) + " last_start @ " + str(self.last_start)
 
 #
 # Get current svn revision number of srcdir
@@ -85,7 +85,7 @@ def svn_checkout(url, srcdir):
 # as reported by the *_dt functions in the config file.
 #
 def nextbuild(builds):
-    nextbuild = Build('none', 'none', 'none')
+    nextbuild = Build('none', 'none', 'none', -1)
     nextbuild_deltat = timedelta.min
 
     for b in builds:
@@ -101,9 +101,13 @@ def nextbuild(builds):
 def initbuilds():
     builds = []
     for id in urls:
+        srcdir = os.path.join(topdir, prefix, id, "src")
+        rev = svn_status_revision(srcdir)
         for bv in build_variants:
             for cv in ctest_variants:
-                builds.append(Build(id, bv, cv))
+                build = Build(id, bv, cv, rev)
+                builds.append(build)
+                print "Initialized build " + str(build)
     return builds
 
 #
@@ -160,7 +164,8 @@ def run(args):
     builds = initbuilds()
     while True:
         build = nextbuild(builds)
-        print ">>> Doing " + str(build)
+        print ">>> Starting " + str(build)
+        srcdir = os.path.join(topdir, prefix, build.id, "src")
         if build.revision != -1:
             print ">>> Updating " + srcdir + " to " + str(build.revision)
             svn_update(srcdir, build.revision)
@@ -168,13 +173,14 @@ def run(args):
         os.chdir(os.path.join(topdir, prefix, build.id, build.build_variant, build.ctest_variant))
         cmd = ctest + " " + " ".join(ctest_variants[build.ctest_variant][0])
         os.system(cmd)
-        srcdir = os.path.join(topdir, prefix, build.id, "src")
         rev = svn_status_revision(srcdir)
         build.revision = rev
-        print ">>> Finished %s/%s/%s @%s" % (build.id, build.build_variant, build.ctest_variant, build.revision)
+        print ">>> Finished %s/%s/%s, now at r%s" % (build.id, build.build_variant, build.ctest_variant, build.revision)
         print ">>> Sleeping %s seconds..." % interbuild_sleep
         time.sleep(interbuild_sleep)
 
+def srcdir_path(build):
+    return os.path.join(topdir, prefix, build.id, "src")
 #
 #  eh.
 #

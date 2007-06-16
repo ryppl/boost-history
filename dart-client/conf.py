@@ -63,7 +63,7 @@ def continuous_dt(t):
 #
 ctest_variants = { 
     'continuous' : (['-D', 'Continuous'], continuous_dt),
-    'nightly' : (['-D', 'Nightly'], minutely_dt)
+    'nightly' : (['-D', 'Nightly'], nightly_dt)
     }
 
 #
