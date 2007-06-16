@@ -174,12 +174,12 @@ macro(boost_library_variant_target_name)
   # TODO: STLport rather than default library
   # TODO: STLport's deprecated iostreams
 
-  # Add -debug for debug libraries
+  # Add -debug for debug libraries only if BUILD_RELEASE is ON
   list_contains(VARIANT_IS_DEBUG DEBUG ${ARGN})
-  if (VARIANT_IS_DEBUG)
+  if (VARIANT_IS_DEBUG AND BUILD_RELEASE)
     set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-debug")
     set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}d")
-  endif (VARIANT_IS_DEBUG)
+  endif (VARIANT_IS_DEBUG AND BUILD_RELEASE)
 
   # If there is an ABI tag, append it to the versioned name
   if (VARIANT_ABI_TAG)
