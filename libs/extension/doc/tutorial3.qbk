@@ -1,8 +1,8 @@
 [section:tutorial03 Tutorial 3]
 
 This tutorial shows how to register and instance classes that have multi-argument constructors (not default constructors) 
-in Boost.Extensions. In the example that we will describe in this tutorial we create a dummy class with a constructor
-that have six arguments. We'll register this class in a factory map and then get it from the main file.
+in Boost.Extensions. In the example that we will describe in this tutorial (examples/parameters) we create a dummy class 
+with a constructor that have six arguments. We'll register this class in a factory map and then get it from the main file.
 
 It is expected that before following this tutorial you have gone trough the first tutorial at least, and you are 
 familiar with the basic use of Boost.Extensions
