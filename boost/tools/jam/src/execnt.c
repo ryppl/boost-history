@@ -811,7 +811,8 @@ static void read_pipe(
                     int i;
                     for ( i = 0; i < bytesInBuffer; ++i )
                     {
-                        if ( ioBuffer[i] < 1 || ioBuffer[i] > 127 )
+                        if ((unsigned char)ioBuffer[i] < 1 ||
+                            (unsigned char)ioBuffer[i] > 127 )
                         {
                             ioBuffer[i] = '?';
                         }
