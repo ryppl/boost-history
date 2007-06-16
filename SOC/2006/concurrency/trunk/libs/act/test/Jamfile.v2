@@ -7,11 +7,6 @@
 #==============================================================================
 
 import testing ;
-    
-project act
-    : requirements
-        <library>../../thread/build//boost_thread
-    ;
 
 {
     test-suite utility/binary
