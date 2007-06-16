@@ -137,13 +137,15 @@ BOOST_AUTO_TEST_CASE(lib_caching_test)
 
 		  ++current_word;
 
+		  boost::filesystem::remove(BOOST_EXTENSION_LIBS_DIRECTORY "libHelloWorldCache.extension");
+
 		  std::auto_ptr<word> world_word_ptr(current_word->create());
 		  BOOST_CHECK_EQUAL( !world_word_ptr.get(), 0 );
 
 		  BOOST_CHECK_EQUAL( world_word_ptr->get_val(), "world! v2");
 		  std::cerr << world_word_ptr->get_val() << " " << std::endl;
 
-		  boost::filesystem::remove(BOOST_EXTENSION_LIBS_DIRECTORY "libHelloWorldCache.extension");
+
 	  }
 	  l.close();
   }
