@@ -131,6 +131,24 @@ def read_conf():
         exit(1)
 
 #
+# create local cache directories
+#
+def create_caches(argv):
+    print "Making build directories..."
+    for build in initbuilds():
+        buildpath = os.path.join(topdir,prefix, build.id, build.build_variant, build.ctest_variant)
+        srcpath = os.path.join(topdir, prefix, build.id, "src")
+        try:
+            os.makedirs(buildpath)
+            print ">>> Initializing " + buildpath
+        except Exception, e:
+            print "Directory %s exists, not creating (%s)" % (buildpath, e)
+        os.chdir(buildpath)
+        cmd = cmake + " " + " ".join(build_variants[build.build_variant]) + " " + srcpath
+        print ">>> Executing " + cmd
+        os.system(cmd)
+    
+#
 # run when './client.py checkout' is specified.  Create the necessary
 # directories for the various build/test variants and checkout the
 # source.
@@ -146,21 +164,8 @@ def checkout(argv):
             
         print "Checking out " + id
         svn_checkout(url, srcdir)
+    create_caches(argv)
 
-    print "Making build directories..."
-    for build in builds:
-        buildpath = os.path.join(topdir,prefix, build.id, build.build_variant, build.ctest_variant)
-        srcpath = os.path.join(topdir, prefix, build.id, "src")
-        try:
-            os.makedirs(buildpath)
-            print ">>> Initializing " + buildpath
-        except Exception, e:
-            print "Directory %s exists, not creating (%s)" % (buildpath, e)
-        os.chdir(buildpath)
-        cmd = cmake + " " + " ".join(build_variants[build.build_variant]) + " " + srcdir
-        print ">>> Executing " + cmd
-        os.system(cmd)
-    
 #
 #  Do the builds in an infinite loop.
 #
@@ -208,6 +213,7 @@ def main(argv):
 #
 action_mapping = {
     'checkout' : checkout,
+    'create_caches' : create_caches,
     'run' : run,
     'help' : help,
     }
