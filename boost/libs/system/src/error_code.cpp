@@ -49,11 +49,13 @@ using namespace boost::system;
 namespace
 {
 
+  //  Windows native -> errno decode table  ----------------------------------//  
+
 #ifdef BOOST_WINDOWS_API
   struct native_to_errno_t
   { 
     boost::int32_t native_value;
-    int to_errno;
+    int posix_errno;
   };
 
   const native_to_errno_t native_to_errno[] = 
@@ -107,16 +109,167 @@ namespace
     { ERROR_WRITE_PROTECT, EROFS }
   };
 
-  int windows_ed( const error_code & ec )
+#endif
+
+} // unnamed namespace
+
+namespace boost
+{
+  namespace system
   {
-    const native_to_errno_t * cur = native_to_errno;
-    do
+    //  standard error categories  -------------------------------------------//
+
+    class BOOST_SYSTEM_DECL posix_error_category : public error_category
     {
-      if ( ec.value() == cur->native_value ) return cur->to_errno;
-      ++cur;
-    } while ( cur != native_to_errno + sizeof(native_to_errno)/sizeof(native_to_errno_t) );
-    return EOTHER;
-  }
+    public:
+      const std::string &   name() const;
+      posix_errno           posix( int ev ) const;
+      std::string           message( int ev ) const;
+      wstring_t_workaround  wmessage( int ev ) const;
+    };
+  
+# ifdef BOOST_POSIX_API
+    typedef posix_error_category native_error_category;
+# else
+    class BOOST_SYSTEM_DECL native_error_category  : public error_category
+    {
+    public:
+      const std::string &   name() const;
+      posix_errno           posix( int ev ) const;
+      std::string           message( int ev ) const;
+      wstring_t_workaround  wmessage( int ev ) const;
+    };
+# endif
+
+    const posix_error_category posix_category_const;
+    BOOST_SYSTEM_DECL const error_category & posix_category = posix_category_const;
+
+    const native_error_category native_category_const;
+    BOOST_SYSTEM_DECL const error_category & native_category = native_category_const;
+
+    //  errno_error_category implementation  ---------------------------------//
+
+    const std::string & posix_error_category::name() const
+    {
+      static std::string s( "POSIX" );
+      return s;
+    }
+
+    posix_errno posix_error_category::posix( int ev ) const
+    {
+      return static_cast<posix_errno>(ev);
+    }
+
+    std::string posix_error_category::message( int ev ) const
+    {
+    // strerror_r is preferred because it is always thread safe,
+    // however, we fallback to strerror in certain cases because:
+    //   -- Windows doesn't provide strerror_r.
+    //   -- HP and Sundo provide strerror_r on newer systems, but there is
+    //      no way to tell if is available at runtime and in any case their
+    //      versions of strerror are thread safe anyhow.
+    //   -- Linux only sometimes provides strerror_r.
+  //   -- Tru64 provides strerror_r only when compiled -pthread.
+  //   -- VMS doesn't provide strerror_r, but on this platform, strerror is
+  //      thread safe.
+  # if defined(BOOST_WINDOWS_API) || defined(__hpux) || defined(__sun)\
+     || (defined(__linux) && (!defined(__USE_XOPEN2K) || defined(BOOST_SYSTEM_USE_STRERROR)))\
+     || (defined(__osf__) && !defined(_REENTRANT))\
+     || (defined(__vms))
+      const char * c_str = std::strerror( ev );
+      return std::string( c_str ? c_str : "EINVAL" );
+  # else
+      char buf[64];
+      char * bp = buf;
+      std::size_t sz = sizeof(buf);
+  #  if defined(__CYGWIN__) || defined(__USE_GNU)
+      // Oddball version of strerror_r
+      const char * c_str = strerror_r( ev, bp, sz );
+      return std::string( c_str ? c_str : "EINVAL" );
+  #  else
+      // POSIX version of strerror_r
+      int result;
+      for (;;)
+      {
+        // strerror_r returns 0 on success, otherwise ERANGE if buffer too small,
+        // EINVAL if ev not a valid error number
+        if ( (result = strerror_r( ev, bp, sz )) == 0 )
+          break;
+        else
+        {
+  #  if defined(__linux)
+          // Linux strerror_r returns -1 on error, with error number in errno
+          result = errno;
+  #  endif
+          if ( result !=  ERANGE ) break;
+        if ( sz > sizeof(buf) ) std::free( bp );
+        sz *= 2;
+        if ( (bp = static_cast<char*>(std::malloc( sz ))) == 0 )
+          return std::string( "ENOMEM" );
+        }
+      }
+      try
+      {
+      std::string msg( ( result == EINVAL ) ? "EINVAL" : bp );
+      if ( sz > sizeof(buf) ) std::free( bp );
+        sz = 0;
+      return msg;
+      }
+      catch(...)
+      {
+        if ( sz > sizeof(buf) ) std::free( bp );
+        throw;
+      }
+  #  endif
+  # endif
+    }
+
+    wstring_t_workaround posix_error_category::wmessage( int ev ) const
+    {
+      std::string str = message( ev );
+      wstring_t_workaround wstr;
+
+      for (std::size_t i = 0; i < str.size(); ++i )
+        { wstr += static_cast<wchar_t>(str[i]); }
+      return wstr;
+    }
+
+    //  native_error_category implementation  --------------------------------// 
+
+    const std::string & native_error_category::name() const
+    {
+      static std::string s( "native" );
+      return s;
+    }
+
+# if !defined( BOOST_WINDOWS_API )
+    int native_error_category::posix( boost::int_least32_t ev ) const
+    {
+      return ev;
+    }
+
+    std::string native_error_category::message( boost::int_least32_t ev ) const
+    {
+      return posix_category.message( ev );
+    }
+
+    wstring_t native_error_category::wmessage( boost::int_least32_t ev ) const
+    {
+      return posix_category.wmessage( ev );
+    }
+# else
+    posix_errno native_error_category::posix( int ev ) const
+    {
+      const native_to_errno_t * cur = native_to_errno;
+      do
+      {
+        if ( ev == cur->native_value )
+          return static_cast<posix_errno>(cur->posix_errno);
+        ++cur;
+      } while ( cur != native_to_errno
+        + sizeof(native_to_errno)/sizeof(native_to_errno_t) );
+      return static_cast<posix_errno>(EOTHER);
+    }
 
 // TODO:
   
@@ -133,205 +286,49 @@ namespace
 //
 //Cheers,
 //Chris
-
-  std::string windows_md( const error_code & ec )
-  {
-    LPVOID lpMsgBuf;
-    ::FormatMessageA( 
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-        FORMAT_MESSAGE_FROM_SYSTEM | 
-        FORMAT_MESSAGE_IGNORE_INSERTS,
-        NULL,
-        ec.value(),
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-        (LPSTR) &lpMsgBuf,
-        0,
-        NULL 
-    );
-    std::string str( static_cast<LPCSTR>(lpMsgBuf) );
-    ::LocalFree( lpMsgBuf ); // free the buffer
-    while ( str.size()
-      && (str[str.size()-1] == '\n' || str[str.size()-1] == '\r') )
-        str.erase( str.size()-1 );
-    return str;
-  }
-
-  wstring_t windows_wmd( const error_code & ec )
-  {
-    LPVOID lpMsgBuf;
-    ::FormatMessageW( 
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-        FORMAT_MESSAGE_FROM_SYSTEM | 
-        FORMAT_MESSAGE_IGNORE_INSERTS,
-        NULL,
-        ec.value(),
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-        (LPWSTR) &lpMsgBuf,
-        0,
-        NULL 
-    );
-    wstring_t str( static_cast<LPCWSTR>(lpMsgBuf) );
-    ::LocalFree( lpMsgBuf ); // free the buffer
-    while ( str.size()
-      && (str[str.size()-1] == L'\n' || str[str.size()-1] == L'\r') )
-        str.erase( str.size()-1 );
-    return str;
-  }
-
-#endif
-
-  int errno_ed( const error_code & ec ) { return ec.value(); }
-
-  std::string errno_md( const error_code & ec )
-  {
-  // strerror_r is preferred because it is always thread safe,
-  // however, we fallback to strerror in certain cases because:
-  //   -- Windows doesn't provide strerror_r.
-  //   -- HP and Sundo provide strerror_r on newer systems, but there is
-  //      no way to tell if is available at runtime and in any case their
-  //      versions of strerror are thread safe anyhow.
-  //   -- Linux only sometimes provides strerror_r.
-  //   -- Tru64 provides strerror_r only when compiled -pthread.
-  //   -- VMS doesn't provide strerror_r, but on this platform, strerror is
-  //      thread safe.
-# if defined(BOOST_WINDOWS_API) || defined(__hpux) || defined(__sun)\
-     || (defined(__linux) && (!defined(__USE_XOPEN2K) || defined(BOOST_SYSTEM_USE_STRERROR)))\
-     || (defined(__osf__) && !defined(_REENTRANT))\
-     || (defined(__vms))
-    const char * c_str = std::strerror( ec.value() );
-    return std::string( c_str ? c_str : "EINVAL" );
-# else
-    char buf[64];
-    char * bp = buf;
-    std::size_t sz = sizeof(buf);
-#  if defined(__CYGWIN__) || defined(__USE_GNU)
-    // Oddball version of strerror_r
-    const char * c_str = strerror_r( ec.value(), bp, sz );
-    return std::string( c_str ? c_str : "EINVAL" );
-#  else
-    // POSIX version of strerror_r
-    int result;
-    for (;;)
+    std::string native_error_category::message( int ev ) const
     {
-      // strerror_r returns 0 on success, otherwise ERANGE if buffer too small,
-      // EINVAL if ec.value() not a valid error number
-      if ( (result = strerror_r( ec.value(), bp, sz )) == 0 )
-        break;
-      else
-      {
-#  if defined(__linux)
-        // Linux strerror_r returns -1 on error, with error number in errno
-        result = errno;
-#  endif
-        if ( result !=  ERANGE ) break;
-        if ( sz > sizeof(buf) ) std::free( bp );
-        sz *= 2;
-        if ( (bp = static_cast<char*>(std::malloc( sz ))) == 0 )
-          return std::string( "ENOMEM" );
-      }
+      LPVOID lpMsgBuf;
+      ::FormatMessageA( 
+          FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+          FORMAT_MESSAGE_FROM_SYSTEM | 
+          FORMAT_MESSAGE_IGNORE_INSERTS,
+          NULL,
+          ev,
+          MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+          (LPSTR) &lpMsgBuf,
+          0,
+          NULL 
+      );
+      std::string str( static_cast<LPCSTR>(lpMsgBuf) );
+      ::LocalFree( lpMsgBuf ); // free the buffer
+      while ( str.size()
+        && (str[str.size()-1] == '\n' || str[str.size()-1] == '\r') )
+          str.erase( str.size()-1 );
+      return str;
     }
-    try
+
+    wstring_t_workaround native_error_category::wmessage( int ev ) const
     {
-      std::string msg( ( result == EINVAL ) ? "EINVAL" : bp );
-      if ( sz > sizeof(buf) ) std::free( bp );
-      sz = 0;
-      return msg;
+      LPVOID lpMsgBuf;
+      ::FormatMessageW( 
+          FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+          FORMAT_MESSAGE_FROM_SYSTEM | 
+          FORMAT_MESSAGE_IGNORE_INSERTS,
+          NULL,
+          ev,
+          MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+          (LPWSTR) &lpMsgBuf,
+          0,
+          NULL 
+      );
+      wstring_t_workaround str( static_cast<LPCWSTR>(lpMsgBuf) );
+      ::LocalFree( lpMsgBuf ); // free the buffer
+      while ( str.size()
+        && (str[str.size()-1] == L'\n' || str[str.size()-1] == L'\r') )
+          str.erase( str.size()-1 );
+      return str;
     }
-    catch(...)
-    {
-      if ( sz > sizeof(buf) ) std::free( bp );
-      throw;
-    }
-#  endif
 # endif
-  }
-
-  wstring_t errno_wmd( const error_code & ec )
-  {
-    // TODO: Implement this:
-    assert( 0 && "sorry, not implemented yet" );
-    wstring_t str;
-    return str;
-  }
-
-  struct decoder_element
-  {
-    errno_decoder ed;
-    message_decoder md;
-    wmessage_decoder wmd;
-
-    decoder_element( errno_decoder ed_,
-      message_decoder md_, wmessage_decoder wmd_ )
-      : ed(ed_), md(md_), wmd(wmd_) {}
- 
-    decoder_element() : ed(0), md(0), wmd(0) {}
-  };
-
-  typedef std::vector< decoder_element > decoder_vec_type;
-
-  decoder_vec_type & decoder_vec()
-  {
-    static const decoder_element init_decoders[] =
-#ifdef BOOST_WINDOWS_API
-    { decoder_element( errno_ed, errno_md, errno_wmd ),
-      decoder_element( windows_ed, windows_md, windows_wmd) };
-#else
-    { decoder_element( errno_ed, errno_md, errno_wmd ) };
-#endif
-
-    static decoder_vec_type dv( init_decoders,
-      init_decoders + sizeof(init_decoders)/sizeof(decoder_element));
-    return dv;
-  }
-} // unnamed namespace
-
-namespace boost
-{
-  namespace system
-  {
-    error_category error_code::new_category( 
-      errno_decoder ed, message_decoder md, wmessage_decoder wmd )
-    {
-      decoder_vec().push_back( decoder_element( ed, md, wmd ) );
-      return error_category( static_cast<value_type>(decoder_vec().size()) - 1 );
-    }
-
-    bool error_code::get_decoders( error_category cat,
-      errno_decoder & ed, message_decoder & md,  wmessage_decoder & wmd )                       
-    {
-      if ( cat.value() < decoder_vec().size() )
-      {
-        ed = decoder_vec()[cat.value()].ed;
-        md = decoder_vec()[cat.value()].md;
-        wmd = decoder_vec()[cat.value()].wmd;
-        return true;
-      }
-      return false;
-    }
-
-    int error_code::to_errno() const
-    {
-      return (m_category.value() < decoder_vec().size()
-        && decoder_vec()[m_category.value()].ed)
-          ? decoder_vec()[m_category.value()].ed( *this )
-          : EOTHER;
-    }
-
-    std::string error_code::message() const
-    {
-      return (m_category.value() < decoder_vec().size()
-        && decoder_vec()[m_category.value()].md)
-          ? decoder_vec()[m_category.value()].md( *this )
-          : std::string( "API error" );
-    }
-
-    wstring_t error_code::wmessage() const
-    {
-      return (m_category.value() < decoder_vec().size()
-        && decoder_vec()[m_category.value()].wmd)
-          ? decoder_vec()[m_category.value()].wmd( *this )
-          : wstring_t( L"API error" );
-    }
-
   } // namespace system
 } // namespace boost

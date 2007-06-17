@@ -15,6 +15,13 @@
 #include <boost/system/error_code.hpp>
 #include <boost/cerrno.hpp>
 
+
+# ifndef BOOST_NO_STD_WSTRING  // workaround Cygwin's lack of wstring_t
+    typedef std::wstring wstring_t;
+# else
+    typedef std::basic_string<wchar_t> wstring_t;
+# endif
+
 //  ------------------------------------------------------------------------  //
 
 //  header asio.hpp
@@ -27,7 +34,15 @@ namespace boost
   namespace asio
   {
     // asio declares have its own error_category:
-    extern system::error_category asio_error;
+    class asio_error_category : public boost::system::error_category
+    {
+    public:
+      const std::string &         name() const;
+      boost::system::posix_errno  posix( int ev ) const;
+      std::string                 message( int ev ) const;
+      wstring_t                   wmessage( int ev ) const;
+    };
+    extern asio_error_category asio_error;
     
     namespace error
     {
@@ -46,8 +61,30 @@ namespace boost
 {
   namespace asio
   {
+    asio_error_category asio_error;
 
-    system::error_category asio_error = system::error_code::new_category();
+    const std::string & asio_error_category::name() const
+    {
+      static std::string s( "asio" );
+      return s;
+    }
+    boost::system::posix_errno
+      asio_error_category::posix( int ev ) const
+    {
+      return ev == BOO_BOO
+        ? boost::system::io_error
+        : boost::system::other;
+    }
+
+    std::string asio_error_category::message( int ev ) const
+    {
+      return std::string( "Barf" );
+    }
+
+    wstring_t asio_error_category::wmessage( int ev ) const
+    {
+      return wstring_t( L"Barf" );
+    }
 
     namespace error
     {
@@ -80,13 +117,8 @@ int test_main( int, char *[] )
   BOOST_CHECK( ec.value() == BOO_BOO );
   BOOST_CHECK( ec.category() == boost::asio::asio_error );
 
-  // a real user can't rely on the value of an error_category object's value,
-  // but in this test program that value is known, so test for it.
-  BOOST_CHECK( ec.category().value() == boost::system::native_ecat.value()+1 );
-
-  // asio did not supply decoders, so test the defaults
-  BOOST_CHECK( ec.to_errno() == EOTHER );
-  BOOST_CHECK( ec.message() == "API error" );
-  BOOST_CHECK( ec.wmessage() == L"API error" );
+  BOOST_CHECK( ec.posix() == boost::system::io_error );
+  BOOST_CHECK( ec.message() == "Barf" );
+  BOOST_CHECK( ec.wmessage() == L"Barf" );
   return 0;
 }

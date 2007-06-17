@@ -14,9 +14,13 @@
 #include <boost/cstdint.hpp>
 #include <boost/assert.hpp>
 #include <boost/operators.hpp>
-#include <boost/detail/identifier.hpp>
+#include <boost/noncopyable.hpp>
+#include <ostream>
 #include <string>
 #include <stdexcept>
+
+#include <boost/cerrno.hpp> // we don't like doing this, but it appears
+                            // unavoidable to implement posix_errno.
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -25,67 +29,174 @@ namespace boost
   namespace system
   {
 # ifndef BOOST_NO_STD_WSTRING  // workaround Cygwin's lack of wstring_t
-    typedef std::wstring wstring_t;
+    typedef std::wstring wstring_t_workaround;
 # else
-    typedef std::basic_string<wchar_t> wstring_t;
+    typedef std::basic_string<wchar_t> wstring_t_workaround;
 # endif
 
     class error_code;
 
-    // typedefs for registering additional decoders  -------------------------//
-
-    typedef int          (*errno_decoder)( const error_code & );
-    typedef std::string  (*message_decoder)( const error_code & );
-    typedef wstring_t    (*wmessage_decoder)( const error_code & );
+    enum posix_errno
+    {
+      address_family_not_supported = EAFNOSUPPORT,
+      address_in_use = EADDRINUSE,
+      address_not_available = EADDRNOTAVAIL,
+      already_connected = EISCONN,
+      argument_list_too_long = E2BIG,
+      argument_out_of_domain = EDOM,
+      bad_address = EFAULT,
+      bad_file_descriptor = EBADF,
+      bad_message = EBADMSG,
+      broken_pipe = EPIPE,
+      connection_aborted = ECONNABORTED,
+      connection_already_in_progress = EALREADY,
+      connection_refused = ECONNREFUSED,
+      connection_reset = ECONNRESET,
+      cross_device_link = EXDEV,
+      destination_address_required = EDESTADDRREQ,
+      device_or_resource_busy = EBUSY,
+      directory_not_empty = ENOTEMPTY,
+      executable_format_error = ENOEXEC,
+      file_exists = EEXIST,
+      file_too_large = EFBIG,
+      filename_too_long = ENAMETOOLONG,
+      function_not_supported = ENOSYS,
+      host_unreachable = EHOSTUNREACH,
+      identifier_removed = EIDRM,
+      illegal_byte_sequence = EILSEQ,
+      inappropriate_io_control_operation = ENOTTY,
+      interrupted = EINTR,
+      invalid_argument = EINVAL,
+      invalid_seek = ESPIPE,
+      io_error = EIO,
+      is_a_directory = EISDIR,
+      message_size = EMSGSIZE,
+      network_down = ENETDOWN,
+      network_reset = ENETRESET,
+      network_unreachable = ENETUNREACH,
+      no_buffer_space = ENOBUFS,
+      no_child_process = ECHILD,
+      no_link = ENOLINK,
+      no_lock_available = ENOLCK,
+      no_message_available = ENODATA,
+      no_message = ENOMSG,
+      no_protocol_option = ENOPROTOOPT,
+      no_space_on_device = ENOSPC,
+      no_stream_resources = ENOSR,
+      no_such_device_or_address = ENXIO,
+      no_such_device = ENODEV,
+      no_such_file_or_directory = ENOENT,
+      no_such_process = ESRCH,
+      not_a_directory = ENOTDIR,
+      not_a_socket = ENOTSOCK,
+      not_a_stream = ENOSTR,
+      not_connected = ENOTCONN,
+      not_enough_memory = ENOMEM,
+      not_supported = ENOTSUP,
+      operation_canceled = ECANCELED,
+      operation_in_progress = EINPROGRESS,
+      operation_not_permitted = EPERM,
+      operation_not_supported = EOPNOTSUPP,
+      operation_would_block = EWOULDBLOCK,
+      other = EOTHER,
+      owner_dead = EOWNERDEAD,
+      permission_denied = EACCES,
+      protocol_error = EPROTO,
+      protocol_not_supported = EPROTONOSUPPORT,
+      read_only_file_system = EROFS,
+      resource_deadlock_would_occur = EDEADLK,
+      resource_unavailable_try_again = EAGAIN,
+      result_out_of_range = ERANGE,
+      state_not_recoverable = ENOTRECOVERABLE,
+      stream_timeout = ETIME,
+      text_file_busy = ETXTBSY,
+      timed_out = ETIMEDOUT,
+      too_many_files_open_in_system = ENFILE,
+      too_many_files_open = EMFILE,
+      too_many_links = EMLINK,
+      too_many_synbolic_link_levels = ELOOP,
+      value_too_large = EOVERFLOW,
+      wrong_protocol_type = EPROTOTYPE
+    };
 
     //  class error_category  ------------------------------------------------//
 
-    class BOOST_SYSTEM_DECL error_category
-      : public boost::detail::identifier< uint_least32_t, error_category >
+    class BOOST_SYSTEM_DECL error_category : public noncopyable
     {
     public:
-      error_category()
-        : boost::detail::identifier< uint_least32_t, error_category >(0){}
-      explicit error_category( value_type v )
-        : boost::detail::identifier< uint_least32_t, error_category >(v){}
+      virtual const std::string & name() const = 0;
+      virtual posix_errno posix( int ev) const = 0;
+      virtual std::string message( int ev ) const = 0;
+      virtual wstring_t_workaround wmessage( int ev) const = 0;
+
+      bool operator==(const error_category & rhs) const { return this == &rhs; }
+      bool operator!=(const error_category & rhs) const { return !(*this == rhs); }
+      bool operator<( const error_category & rhs ) const
+      {
+        return *this != rhs && name() < rhs.name(); 
+      }
     };
 
     //  predefined error categories  -----------------------------------------//
 
-    const error_category  errno_ecat(0);  // unspecified value
-
-# ifdef BOOST_WINDOWS_API
-    const error_category  native_ecat(1); // unspecified value
-# else
-    const error_category  native_ecat(0); // unspecified value
-# endif
+    BOOST_SYSTEM_DECL extern const error_category & posix_category;
+    BOOST_SYSTEM_DECL extern const error_category & native_category;
 
     //  class error_code  ----------------------------------------------------//
 
+    //  We want error_code to be a value type that can be copied without slicing
+    //  and without requiring heap allocation, but we also want it to have
+    //  polymorphic behavior based on the error category. This is achieved by
+    //  abstract base class error_category supplying the polymorphic behavior,
+    //  and error_code containing a pointer to an object of a type derived
+    //  from error_category.
     class BOOST_SYSTEM_DECL error_code
     {
     public:
-      typedef boost::int_least32_t  value_type;
 
       // constructors:
-      error_code()
-        : m_value(0), m_category(errno_ecat) {}
-      error_code( value_type val, error_category cat )
-        : m_value(val), m_category(cat) {}
+      error_code()                                      : m_val(0), m_cat(&posix_category) {}
+      error_code( int val, const error_category & cat ) : m_val(val), m_cat(&cat) {}
+      explicit error_code( posix_errno val )            : m_val(val), m_cat(&posix_category) {}
 
+      // modifiers:
+      void assign( int val, const error_category & cat )
+      { 
+        m_val = val;
+        m_cat = &cat;
+      }
+                                             
+      error_code & operator=( posix_errno val )
+      { 
+        m_val = val;
+        m_cat = &posix_category;
+        return *this;
+      }
+
+      void clear()
+      {
+        m_val = 0;
+        m_cat = &posix_category;
+      }
 
       // observers:
-      value_type      value() const         { return m_value; }
-      error_category  category() const      { return m_category; }
-      int             to_errno() const;  // name chosen to limit surprises
-                                         // see Kohlhoff Jun 28 '06
-      std::string     message() const;
-      wstring_t       wmessage() const;
+      int                     value() const         { return m_val; }
+      const error_category &  category() const      { return *m_cat; }
+      posix_errno             posix() const         { return m_cat->posix(value()); }        
+      std::string             message() const       { return m_cat->message(value()); }
+      wstring_t_workaround    wmessage() const      { return m_cat->wmessage(value()); }
 
-      void assign( value_type val, const error_category & cat )
+      typedef void (*unspecified_bool_type)();
+      static void unspecified_bool_true() {}
+
+      operator unspecified_bool_type() const  // true if error
       { 
-        m_value = val;
-        m_category = cat;
+        return m_val == 0 ? 0 : unspecified_bool_true;
+      }
+
+      bool operator!() const  // true if no error
+      {
+        return m_val == 0;
       }
 
       // relationals:
@@ -106,36 +217,33 @@ namespace boost
       bool operator> ( const error_code & rhs ) const { return !(*this <= rhs); }
       bool operator>=( const error_code & rhs ) const { return !(*this < rhs); }
 
-      typedef void (*unspecified_bool_type)();
-      static void unspecified_bool_true() {}
-
-      operator unspecified_bool_type() const  // true if error
-      { 
-        return m_value == value_type() ? 0 : unspecified_bool_true;
-      }
-
-      bool operator!() const  // true if no error
-      {
-        return m_value == value_type();
-      }
-
-      // statics:
-      static error_category new_category( errno_decoder ed = 0,
-        message_decoder md = 0, wmessage_decoder wmd = 0 );
-      static bool get_decoders( error_category cat, errno_decoder & ed,
-        message_decoder & md,  wmessage_decoder & wmd );
-
     private:
-      value_type      m_value;
-      error_category  m_category;
+      int                     m_val;
+      const error_category *  m_cat;
     };
 
     //  non-member functions  ------------------------------------------------//
 
+    inline bool operator==(const error_code & ec, posix_errno en) { return ec.posix() == en; }
+    inline bool operator==(posix_errno en, const error_code & ec) { return ec.posix() == en; }
+    inline bool operator!=(const error_code & ec, posix_errno en) { return ec.posix() != en; }
+    inline bool operator!=(posix_errno en, const error_code & ec) { return ec.posix() != en; }
+
+    template <class charT, class traits>
+    inline std::basic_ostream<charT,traits>&
+      operator<< (std::basic_ostream<charT,traits>& os, error_code ec)
+    {
+      os << ec.category().name() << ':' << ec.value();
+      return os;
+    }
+
     inline std::size_t hash_value( const error_code & ec )
     {
       return static_cast<std::size_t>(ec.value())
-        + (static_cast<std::size_t>(ec.category().value()) << 16 );
+        + (ec.category().name().size()
+            ? (static_cast<std::size_t>(ec.category().name()
+              [ec.category().name().size()-1]) << 16)
+            : 0);
     }
 
   } // namespace system
