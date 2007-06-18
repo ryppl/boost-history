@@ -11,7 +11,7 @@
 //  http://www.boost.org/libs/config
 //
 //  CAUTION: This file is intended to be completely stable -
-//           DO NOT MODIFY THIS FILE!   File modified to provoke continuous build.
+//           DO NOT MODIFY THIS FILE! 
 //
 
 #ifndef BOOST_CONFIG_HPP
