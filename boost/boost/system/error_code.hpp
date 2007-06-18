@@ -38,6 +38,7 @@ namespace boost
 
     enum posix_errno
     {
+      no_error = 0,
       address_family_not_supported = EAFNOSUPPORT,
       address_in_use = EADDRINUSE,
       address_not_available = EADDRNOTAVAIL,
