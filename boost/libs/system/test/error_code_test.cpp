@@ -97,6 +97,9 @@ int test_main( int, char ** )
   BOOST_CHECK( ec_0_posix.category().name() == "POSIX" );
   BOOST_CHECK( ec_0_native.category().name() == "native" );
 
+  BOOST_CHECK( ec_0_posix.category() < ec_0_native.category() );
+  BOOST_CHECK( ec_0_posix < ec_0_native );
+
   check_ostream( ec_0_posix, "POSIX:0" );
   check_ostream( ec_1_posix, "POSIX:1" );
   check_ostream( ec_0_native, "native:0" );
