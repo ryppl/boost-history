@@ -118,27 +118,27 @@ int test_main( int, char ** )
   //   test the first entry in the decoder table:
   ec = error_code( ERROR_FILE_NOT_FOUND, native_category );
   BOOST_CHECK( ec.value() == ERROR_FILE_NOT_FOUND );
-  BOOST_CHECK( ec.posix() == ENOENT );
+  BOOST_CHECK( ec.posix() == no_such_file_or_directory );
 
   //   test the second entry in the decoder table:
   ec = error_code( ERROR_PATH_NOT_FOUND, native_category );
   BOOST_CHECK( ec.value() == ERROR_PATH_NOT_FOUND );
-  BOOST_CHECK( ec.posix() == ENOENT );
+  BOOST_CHECK( ec.posix() == no_such_file_or_directory );
 
   //   test the third entry in the decoder table:
   ec = error_code( ERROR_ACCESS_DENIED, native_category );
   BOOST_CHECK( ec.value() == ERROR_ACCESS_DENIED );
-  BOOST_CHECK( ec.posix() == EACCES );
+  BOOST_CHECK( ec.posix() == permission_denied );
 
   //   test the last regular entry in the decoder table:
   ec = error_code( ERROR_WRITE_PROTECT, native_category );
   BOOST_CHECK( ec.value() == ERROR_WRITE_PROTECT );
-  BOOST_CHECK( ec.posix() == EROFS );
+  BOOST_CHECK( ec.posix() == permission_denied );
 
   //   test not-in-table condition:
   ec = error_code( 1234567890, native_category );
   BOOST_CHECK( ec.value() == 1234567890 );
-  BOOST_CHECK( ec.posix() == EOTHER );
+  BOOST_CHECK( ec.posix() == other );
 
 #else
   BOOST_CHECK( ec == ec_0_native );
