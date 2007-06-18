@@ -121,9 +121,10 @@ namespace boost
 
     //  class error_category  ------------------------------------------------//
 
-    class BOOST_SYSTEM_DECL error_category : public noncopyable
+    class error_category : public noncopyable
     {
     public:
+      virtual ~error_category(){}
       virtual const std::string & name() const = 0;
       virtual posix_errno posix( int ev) const = 0;
       virtual std::string message( int ev ) const = 0;
@@ -133,7 +134,7 @@ namespace boost
       bool operator!=(const error_category & rhs) const { return !(*this == rhs); }
       bool operator<( const error_category & rhs ) const
       {
-        return *this != rhs && name() < rhs.name(); 
+        return name() < rhs.name(); 
       }
     };
 
