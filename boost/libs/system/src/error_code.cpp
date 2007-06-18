@@ -337,7 +337,7 @@ namespace
     return posix_category.message( ev );
   }
 
-  wstring_t native_error_category::wmessage( boost::int_least32_t ev ) const
+  wstring_t_workaround native_error_category::wmessage( boost::int_least32_t ev ) const
   {
     return posix_category.wmessage( ev );
   }
