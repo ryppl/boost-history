@@ -47,18 +47,18 @@ endmacro(bpl_test)
 macro(py_run TESTNAME)
   boost_test_run(${TESTNAME} 
     ${TESTNAME}.cpp
-    DEPENDS boost_python-static
+    DEPENDS boost_python STATIC
     LINK_LIBS ${PYTHON_LIBRARIES})
 endmacro(py_run)
 
 boost_test_run(exec 
-  DEPENDS boost_python-static 
+  DEPENDS boost_python STATIC 
   ARGS "${CMAKE_CURRENT_SOURCE_DIR}/exec.py"
   LINK_LIBS ${PYTHON_LIBRARIES})
 boost_test_run(exec-dynamic 
   exec.cpp
   ARGS "${CMAKE_CURRENT_SOURCE_DIR}/exec.py"
-  DEPENDS boost_python-shared 
+  DEPENDS boost_python SHARED 
   LINK_LIBS ${PYTHON_LIBRARIES})
 
 bpl_test(crossmod_exception 

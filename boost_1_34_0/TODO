@@ -1,4 +1,3 @@
-
 - Interface for building/running tests on a per-project basis.  There
   are CMake bugs and Brad King recommends using "test driver"
   binaries.  Can of worms.  
@@ -6,21 +5,11 @@
 - Check to see how the tests look under XCode/VS.  Brad king indicates
   that the one-binary-per-test setup is wrong. 
 
-- need boost_add_executable or somesuch for building examples in projects
-
-- CMakeFiles for remaining libs
-
-- Docs
-
 - Try to figure out what is happening with "empty" .o files in Mac build
 
 - In libs/numeric/interval/test, how to detect OSF and HP's C++ compiler?
 
 - In libs/parameter/test, fix the test that depends on Python
-
-- Python library: handle Python debug library variants
-
-- Testing for the Regex library
 
 - Spirit library: multi-threaded tests. There must be an easy way to
   handle this... support variants in testing? (I think we need
@@ -28,8 +17,9 @@
 
 - Statechart library: deal with building libraries for testing, and
   with link-only tests.
-- list_contains seems to think that "SOURCES"
- is equivalent to "BitMachine/BitMachine.cpp" (???)
 
 - Xpressive: port multipledefs and msvc-stlport tests
 
+- Program options: DLL tests need to force linking against the static
+  boost_test_exec_monitor (since no others exist), even when linking
+  against the shared boost_program_options. Ugh.

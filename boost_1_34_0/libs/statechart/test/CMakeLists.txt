@@ -20,22 +20,22 @@ macro(statechart_run TESTNAME)
   boost_test_run("${TESTNAME}Normal"
     ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_DISABLE_THREADS"
-    DEPENDS boost_test_exec_monitor-static
+    DEPENDS boost_test_exec_monitor
     )
   boost_test_run("${TESTNAME}Native"
     ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_DISABLE_THREADS -DBOOST_STATECHART_USE_NATIVE_RTTI"
-    DEPENDS boost_test_exec_monitor-static
+    DEPENDS boost_test_exec_monitor
     )
   boost_test_run("${TESTNAME}Relaxed"
     ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_DISABLE_THREADS -DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
-    DEPENDS boost_test_exec_monitor-static
+    DEPENDS boost_test_exec_monitor
     )
   boost_test_run("${TESTNAME}Both"
     ${TESTNAME}.cpp
     COMPILE_FLAGS "-DBOOST_DISABLE_THREADS -DBOOST_STATECHART_USE_NATIVE_RTTI -DBOOST_STATECHART_RELAX_TRANSITION_CONTEXT"
-    DEPENDS boost_test_exec_monitor-static
+    DEPENDS boost_test_exec_monitor
     )
 endmacro(statechart_run)
 

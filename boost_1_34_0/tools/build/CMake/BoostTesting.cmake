@@ -161,19 +161,16 @@ endmacro(boost_test_parse_args)
 #     best library variant available to meet those features and the
 #     current build variant (Debug or Release).
 macro(boost_test_run testname)
-  boost_test_parse_args(${testname} ${ARGN})
-  if (BOOST_TEST_OKAY)
-    add_executable(${testname} ${BOOST_TEST_SOURCES})
-    set_target_properties(${testname}
-      PROPERTIES
-      COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
-      LINK_FLAGS "${BOOST_TEST_LINK_FLAGS}"
-      OUTPUT_NAME ${PROJECT_NAME}/${testname})
-    target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
-    target_link_libraries(${testname} ${BOOST_TEST_LINK_LIBS})
-    add_test("${PROJECT_NAME}::${testname}" 
-      ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ${BOOST_TEST_ARGS})
-  endif(BOOST_TEST_OKAY)
+  if (BUILD_TESTING)
+    boost_add_executable(${testname} ${ARGN}
+      OUTPUT_NAME tests/${PROJECT_NAME}/${testname}
+      NO_INSTALL)
+    if (THIS_EXE_OKAY)
+      add_test("${PROJECT_NAME}::${testname}" 
+        ${EXECUTABLE_OUTPUT_PATH}/tests/${PROJECT_NAME}/${testname} 
+        ${THIS_EXE_ARGS})
+    endif (THIS_EXE_OKAY)
+  endif(BUILD_TESTING)
 endmacro(boost_test_run)
 
 # This macro creates a Boost regression test that will be executed. If
@@ -230,21 +227,18 @@ endmacro(boost_test_run)
 #     best library variant available to meet those features and the
 #     current build variant (Debug or Release).
 macro(boost_test_run_fail testname)
-  boost_test_parse_args(${testname} ${ARGN})
-  if(BOOST_TEST_OKAY)
-    add_executable(${testname} ${BOOST_TEST_SOURCES})
-    set_target_properties(${testname}
-      PROPERTIES
-      COMPILE_FLAGS "${BOOST_TEST_COMPILE_FLAGS}"
-      LINK_FLAGS "${BOOST_TEST_LINK_FLAGS}"
-      OUTPUT_NAME ${PROJECT_NAME}/${testname})
-    target_link_libraries(${testname} ${BOOST_TEST_DEPENDS})
-    target_link_libraries(${testname} ${BOOST_TEST_LINK_LIBS})
-    add_test("${PROJECT_NAME}::${testname}" 
-      ${EXECUTABLE_OUTPUT_PATH}/${PROJECT_NAME}/${testname} ${BOOST_TEST_ARGS})
-    set_tests_properties("${PROJECT_NAME}::${testname}" 
-      PROPERTIES WILL_FAIL TRUE)
-  endif(BOOST_TEST_OKAY)
+  if (BUILD_TESTING)
+    boost_add_executable(${testname} ${ARGN}
+      OUTPUT_NAME tests/${PROJECT_NAME}/${testname}
+      NO_INSTALL)
+    if (THIS_EXE_OKAY)
+      add_test("${PROJECT_NAME}::${testname}" 
+        ${EXECUTABLE_OUTPUT_PATH}/tests/${PROJECT_NAME}/${testname} 
+        ${THIS_EXE_ARGS})
+      set_tests_properties("${PROJECT_NAME}::${testname}" 
+        PROPERTIES WILL_FAIL TRUE)
+    endif (THIS_EXE_OKAY)
+  endif(BUILD_TESTING)
 endmacro(boost_test_run_fail)
 
 # Under construction...

@@ -71,11 +71,12 @@ endif(MSVC)
 
 # The default set of library variants that we will be building
 boost_add_default_variant(STATIC SHARED)
-boost_add_default_variant(DEBUG RELEASE)
+boost_add_default_variant(RELEASE DEBUG)
 boost_add_default_variant(SINGLE_THREADED MULTI_THREADED)
-boost_add_default_variant(STATIC_RUNTIME DYNAMIC_RUNTIME)
+boost_add_default_variant(DYNAMIC_RUNTIME STATIC_RUNTIME)
 
 # Extra features used by some libraries
+set(BUILD_PYTHON_NODEBUG ON)
 boost_add_extra_variant(PYTHON_NODEBUG PYTHON_DEBUG)
 ##########################################################################
 
@@ -160,4 +161,7 @@ add_definitions(-DBOOST_ALL_NO_LIB=1)
 
 # Add build rules for all of the Boost libraries
 add_subdirectory(libs)
+
+# Add build rules for all of the Boost tools
+add_subdirectory(tools)
 ##########################################################################

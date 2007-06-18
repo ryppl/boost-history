@@ -15,6 +15,8 @@
 #                                                                        #
 #   boost_add_library: Builds library binaries for Boost libraries       #
 #   with compiled sources (e.g., boost_filesystem).                      #
+#                                                                        #
+#   boost_add_executable: Builds executables.                            #
 ##########################################################################
 
 # Defines a Boost library project (e.g., for Boost.Python). Use as:
@@ -72,9 +74,12 @@ macro(boost_library_project LIBNAME)
     string(TOLOWER "${LIBNAME}" libname)
     project(${libname})
 
-    if(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
-      file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
-    endif(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME})
+    if(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/tests)
+      file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/tests)
+    endif(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/tests)
+    if(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/tests/${PROJECT_NAME})
+      file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/bin/tests/${PROJECT_NAME})
+    endif(NOT EXISTS ${CMAKE_BINARY_DIR}/bin/tests/${PROJECT_NAME})
 
     # Include each of the source directories
     foreach(SUBDIR ${THIS_PROJECT_SRCDIRS})
@@ -174,12 +179,15 @@ macro(boost_library_variant_target_name)
   # TODO: STLport rather than default library
   # TODO: STLport's deprecated iostreams
 
-  # Add -debug for debug libraries only if BUILD_RELEASE is ON
+  # Add -debug for debug libraries
   list_contains(VARIANT_IS_DEBUG DEBUG ${ARGN})
-  if (VARIANT_IS_DEBUG AND BUILD_RELEASE)
-    set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-debug")
+  if (VARIANT_IS_DEBUG)
+    # Only add the actual "-debug" if we're also building release libraries
+    if (BUILD_RELEASE)
+      set(VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}-debug")
+    endif (BUILD_RELEASE)
     set(VARIANT_ABI_TAG "${VARIANT_ABI_TAG}d")
-  endif (VARIANT_IS_DEBUG AND BUILD_RELEASE)
+  endif (VARIANT_IS_DEBUG)
 
   # If there is an ABI tag, append it to the versioned name
   if (VARIANT_ABI_TAG)
@@ -195,6 +203,54 @@ macro(boost_library_variant_target_name)
       "${VARIANT_VERSIONED_NAME}-${BOOST_VERSION_MAJOR}_${BOOST_VERSION_MINOR}")
   endif(BOOST_VERSION_SUBMINOR GREATER 0)
 endmacro(boost_library_variant_target_name)
+
+# This macro is an internal utility macro that updates compilation and
+# linking flags based on interactions among the features in a variant.
+#
+#   boost_feature_interactions(prefix
+#                              feature1 feature2 ...)
+#
+# where "prefix" is the prefix of the compilation and linking flags
+# that will be updated (e.g., ${prefix}_COMPILE_FLAGS). feature1,
+# feature2, etc. are the names of the features used in this particular
+# variant. If the features in this variant conflict, set
+# ${prefix}_OKAY to FALSE.
+macro(boost_feature_interactions PREFIX)
+  # Don't build or link against a shared library and a static run-time
+  list_contains(IS_SHARED SHARED ${ARGN})
+  list_contains(IS_STATIC_RUNTIME STATIC_RUNTIME ${ARGN})
+  if (IS_SHARED AND IS_STATIC_RUNTIME)
+    set(${PREFIX}_OKAY FALSE)
+  endif (IS_SHARED AND IS_STATIC_RUNTIME)
+  
+  # With Visual C++, the dynamic runtime is multi-threaded only
+  if (MSVC)
+    list_contains(IS_DYNAMIC_RUNTIME DYNAMIC_RUNTIME ${ARGN})
+    list_contains(IS_SINGLE_THREADED SINGLE_THREADED ${ARGN})
+    if (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED)
+      set(${PREFIX}_OKAY FALSE)
+    endif (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED) 
+  endif (MSVC)
+
+  # Visual C++-specific runtime library flags
+  if(MSVC)
+    list_contains(IS_STATIC_RUNTIME STATIC_RUNTIME ${ARGN})
+    list_contains(IS_DEBUG DEBUG ${ARGN})
+    if(IS_DEBUG)
+      if(IS_STATIC_RUNTIME)
+        set(${PREFIX}_COMPILE_FLAGS "/MTd ${${PREFIX}_COMPILE_FLAGS}")
+      else(IS_STATIC_RUNTIME)
+        set(${PREFIX}_COMPILE_FLAGS "/MDd ${${PREFIX}_COMPILE_FLAGS}")
+      endif(IS_STATIC_RUNTIME)       
+    else(IS_DEBUG)
+      if(IS_STATIC_RUNTIME)
+        set(${PREFIX}_COMPILE_FLAGS "/MT ${${PREFIX}_COMPILE_FLAGS}")
+      else(IS_STATIC_RUNTIME)
+        set(${PREFIX}_COMPILE_FLAGS "/MD ${${PREFIX}_COMPILE_FLAGS}")
+      endif(IS_STATIC_RUNTIME)       
+    endif(IS_DEBUG)
+  endif(MSVC)  
+endmacro(boost_feature_interactions)
 
 # This macro is an internal utility macro that builds a particular
 # variant of a boost library.
@@ -246,40 +302,8 @@ macro(boost_library_variant LIBNAME)
     set(THIS_VARIANT_LINK_LIBS ${THIS_VARIANT_LINK_LIBS} ${THIS_LIB_${ARG}_LINK_LIBS} ${${ARG}_LINK_LIBS})
   endforeach(ARG ${ARGN})
 
-  # Don't build a shared library against a static run-time
-  list_contains(IS_SHARED SHARED ${ARGN})
-  list_contains(IS_STATIC_RUNTIME STATIC_RUNTIME ${ARGN})
-  if (IS_SHARED AND IS_STATIC_RUNTIME)
-    set(THIS_VARIANT_OKAY FALSE)
-  endif (IS_SHARED AND IS_STATIC_RUNTIME)
-  
-  # With Visual C++, the dynamic runtime is multi-threaded only
-  if (MSVC)
-    list_contains(IS_DYNAMIC_RUNTIME DYNAMIC_RUNTIME ${ARGN})
-    list_contains(IS_SINGLE_THREADED SINGLE_THREADED ${ARGN})
-    if (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED)
-      set(THIS_VARIANT_OKAY FALSE)
-    endif (IS_DYNAMIC_RUNTIME AND IS_SINGLE_THREADED) 
-  endif (MSVC)
-
-  # Visual C++-specific runtime library flags
-  if(MSVC)
-    list_contains(IS_STATIC_RUNTIME STATIC_RUNTIME ${ARGN})
-    list_contains(IS_DEBUG DEBUG ${ARGN})
-    if(IS_DEBUG)
-      if(IS_STATIC_RUNTIME)
-        set(THIS_VARIANT_COMPILE_FLAGS "/MTd ${THIS_VARIANT_COMPILE_FLAGS}")
-      else(IS_STATIC_RUNTIME)
-        set(THIS_VARIANT_COMPILE_FLAGS "/MDd ${THIS_VARIANT_COMPILE_FLAGS}")
-      endif(IS_STATIC_RUNTIME)       
-    else(IS_DEBUG)
-      if(IS_STATIC_RUNTIME)
-        set(THIS_VARIANT_COMPILE_FLAGS "/MT ${THIS_VARIANT_COMPILE_FLAGS}")
-      else(IS_STATIC_RUNTIME)
-        set(THIS_VARIANT_COMPILE_FLAGS "/MD ${THIS_VARIANT_COMPILE_FLAGS}")
-      endif(IS_STATIC_RUNTIME)       
-    endif(IS_DEBUG)
-  endif(MSVC)
+  # Handle feature interactions
+  boost_feature_interactions("THIS_VARIANT" ${ARGN})
 
   if (THIS_VARIANT_OKAY)
     # Determine the suffix for this library target
@@ -385,9 +409,16 @@ endmacro(boost_library_variant)
 #     naming a specific set of features for that variant, e.g.,
 #     STATIC:DEBUG:SINGLE_THREADED.
 #
-#   BOOST_ADDLIB_ARG_NAMES:
+#   BOOST_FEATURES:
+#     This variable describes all of the feature sets that we know about,
+#     and will be extended each time ither boost_add_default_variant or 
+#     boost_add_extra_variant is invoked. This macro will contain a list
+#     of feature sets, each containing the values for a given feature
+#     separated by colons, e.g., "DEBUG:RELEASE".
+#
+#   BOOST_ADD_ARG_NAMES:
 #     This variable describes all of the feature-specific arguments
-#     that can be used for the boost_library macro, separated by
+#     that can be used for the boost_add_library macro, separated by
 #     semicolons. For example, given the use of
 #     boost_add_default_variant above, this variable will contain (at
 #     least)
@@ -395,17 +426,25 @@ endmacro(boost_library_variant)
 #        SINGLE_THREADED_COMPILE_FLAGS;SINGLE_THREADED_LINK_FLAGS;
 #        MULTI_THREADED_COMPILE_FLAGS;MULTI_THREADED_LINK_FLAGS
 #
-#     When this variable is used in boost_library, it turns these
+#     When this variable is used in boost_add_library, it turns these
 #     names into feature-specific options. For example,
 #     MULTI_THREADED_COMPILE_FLAGS provides extra compile flags to be
 #     used only for multi-threaded variants of the library.
 #
 #   BOOST_ADDLIB_OPTION_NAMES:
-#     Like BOOST_ADDLIB_ARG_NAMES, this variable describes
+#     Like BOOST_ADD_ARG_NAMES, this variable describes
 #     feature-specific options to boost_library that can be used to
 #     turn off building of the library when the variant would require
 #     certain features. For example, the NO_SINGLE_THREADED option
 #     turns off building of single-threaded variants for a library.
+#
+#   BOOST_ADDEXE_OPTION_NAMES:
+#     Like BOOST_ADDLIB_OPTION_NAMES, execept that that variable 
+#     describes options to boost_add_executable that can be used to
+#     describe which features are needed to build the executable.
+#     For example, the MULTI_THREADED option requires that the 
+#     executable be built against multi-threaded libraries and with
+#     multi-threaded options.
 macro(boost_add_default_variant)
   # Update BOOST_DEFAULT_VARIANTS
   if (BOOST_DEFAULT_VARIANTS)
@@ -421,12 +460,21 @@ macro(boost_add_default_variant)
     set(BOOST_DEFAULT_VARIANTS ${ARGN})
   endif (BOOST_DEFAULT_VARIANTS)
 
-  # Feature flag options, used by the boost_library macro
+  # Set Feature flag options used by the boost_library macro and the
+  # BOOST_FEATURES variable
+  set(BOOST_DEFVAR_FEATURES)
   foreach(FEATURE ${ARGN})
-    set(BOOST_ADDLIB_ARG_NAMES 
-      "${BOOST_ADDLIB_ARG_NAMES};${FEATURE}_COMPILE_FLAGS;${FEATURE}_LINK_FLAGS;${FEATURE}_LINK_LIBS")
+    set(BOOST_ADD_ARG_NAMES 
+      "${BOOST_ADD_ARG_NAMES};${FEATURE}_COMPILE_FLAGS;${FEATURE}_LINK_FLAGS;${FEATURE}_LINK_LIBS")
     set(BOOST_ADDLIB_OPTION_NAMES "${BOOST_ADDLIB_OPTION_NAMES};NO_${FEATURE}")
+    set(BOOST_ADDEXE_OPTION_NAMES "${BOOST_ADDEXE_OPTION_NAMES};${FEATURE}")
+    if (BOOST_DEFVAR_FEATURES)
+      set(BOOST_DEFVAR_FEATURES "${BOOST_DEFVAR_FEATURES}:${FEATURE}")
+    else (BOOST_DEFVAR_FEATURES)
+      set(BOOST_DEFVAR_FEATURES "${FEATURE}")
+    endif (BOOST_DEFVAR_FEATURES)
   endforeach(FEATURE ${ARGN})
+  list(APPEND BOOST_FEATURES ${BOOST_DEFVAR_FEATURES})
 endmacro(boost_add_default_variant)
 
 # Updates the set of "extra" build variants, which may be used to
@@ -453,17 +501,31 @@ endmacro(boost_add_default_variant)
 #
 # Variables affected:
 #
-#   BOOST_ADDLIB_ARG_NAMES: 
+#   BOOST_FEATURES:
+#     See boost_add_default_variant.
+#
+#   BOOST_ADD_ARG_NAMES: 
 #     See boost_add_default_variant.
 #
 #   BOOST_ADDLIB_OPTION_NAMES:
 #     See boost_add_default_variant.
+#
+#   BOOST_ADDEXE_OPTION_NAMES:
+#     See boost_add_default_variant.
 macro(boost_add_extra_variant)
+  set(BOOST_EXTVAR_FEATURES)
   foreach(FEATURE ${ARGN})
-    set(BOOST_ADDLIB_ARG_NAMES 
-      "${BOOST_ADDLIB_ARG_NAMES};${FEATURE}_COMPILE_FLAGS;${FEATURE}_LINK_FLAGS;${FEATURE}_LINK_LIBS")
+    set(BOOST_ADD_ARG_NAMES 
+      "${BOOST_ADD_ARG_NAMES};${FEATURE}_COMPILE_FLAGS;${FEATURE}_LINK_FLAGS;${FEATURE}_LINK_LIBS")
     set(BOOST_ADDLIB_OPTION_NAMES "${BOOST_ADDLIB_OPTION_NAMES};NO_${FEATURE}")
+    set(BOOST_ADDEXE_OPTION_NAMES "${BOOST_ADDEXE_OPTION_NAMES};${FEATURE}")
+    if (BOOST_EXTVAR_FEATURES)
+      set(BOOST_EXTVAR_FEATURES "${BOOST_EXTVAR_FEATURES}:${FEATURE}")
+    else (BOOST_EXTVAR_FEATURES)
+      set(BOOST_EXTVAR_FEATURES "${FEATURE}")
+    endif (BOOST_EXTVAR_FEATURES)
   endforeach(FEATURE ${ARGN})  
+  list(APPEND BOOST_FEATURES ${BOOST_EXTVAR_FEATURES})
 endmacro(boost_add_extra_variant)
 
 # Creates a new Boost library target that generates a compiled library
@@ -537,7 +599,7 @@ endmacro(boost_add_extra_variant)
 #   MULTI_THREADED_LINK_LIBS provides extra libraries to link into
 #   multi-threaded variants of the library.
 #
-#   DEPENDS: States that this Boost libraries depends on and links
+#   DEPENDS: States that this Boost library depends on and links
 #   against another Boost library. The arguments to DEPENDS should be
 #   the unversioned name of the Boost library, such as
 #   "boost_filesystem". Like LINK_LIBS, this option states that all
@@ -589,7 +651,7 @@ endmacro(boost_add_extra_variant)
 #   )
 macro(boost_add_library LIBNAME)
   parse_arguments(THIS_LIB
-    "DEPENDS;COMPILE_FLAGS;LINK_FLAGS;LINK_LIBS;EXTRA_VARIANTS;${BOOST_ADDLIB_ARG_NAMES}"
+    "DEPENDS;COMPILE_FLAGS;LINK_FLAGS;LINK_LIBS;EXTRA_VARIANTS;${BOOST_ADD_ARG_NAMES}"
     "STATIC_TAG;MODULE;${BOOST_ADDLIB_OPTION_NAMES}"
     ${ARGN}
     )
@@ -623,4 +685,224 @@ macro(boost_add_library LIBNAME)
   endforeach(VARIANT_STR ${THIS_LIB_VARIANTS})
 endmacro(boost_add_library)
 
-# TODO: Create boost_add_executable, which deals with variants well
+# Creates a new executable from source files.
+#
+#   boost_add_executable(exename
+#                        source1 source2 ...
+#                        [COMPILE_FLAGS compileflags]
+#                        [feature_COMPILE_FLAGS compileflags]
+#                        [LINK_FLAGS linkflags]
+#                        [feature_LINK_FLAGS linkflags]
+#                        [LINK_LIBS linklibs]
+#                        [feature_LINK_LIBS linklibs]
+#                        [DEPENDS libdepend1 libdepend2 ...]
+#                        [feature]
+#                        [NO_INSTALL])
+#
+# where exename is the name of the executable (e.g., "wave") source1,
+# source2, etc. are the source files used to build the library, e.g.,
+# cpp.cpp. If no source files are provided, "exename.cpp" will be
+# used.
+#
+# This macro has a variety of options that affect its behavior. In
+# several cases, we use the placeholder "feature" in the option name
+# to indicate that there are actually several different kinds of
+# options, each referring to a different build feature, e.g., shared
+# libraries, multi-threaded, debug build, etc. For a complete listing
+# of these features, please refer to the CMakeLists.txt file in the
+# root of the Boost distribution, which defines the set of features
+# that will be used to build Boost libraries by default.
+#
+# The options that affect this macro's behavior are:
+#
+#   COMPILE_FLAGS: Provides additional compilation flags that will be
+#   used when building the executable.
+#
+#   feature_COMPILE_FLAGS: Provides additional compilation flags that
+#   will be used only when building the executable with the given
+#   feature (e.g., SHARED_COMPILE_FLAGS when we're linking against
+#   shared libraries). Note that the set of features used to build the
+#   executable depends both on the arguments given to
+#   boost_add_executable (see the "feature" argument description,
+#   below) and on the user's choice of variants to build.
+#
+#   LINK_FLAGS: Provides additional flags that will be passed to the
+#   linker when linking the executable. This option should not be used
+#   to link in additional libraries; see LINK_LIBS and DEPENDS.
+#
+#   feature_LINK_FLAGS: Provides additional flags that will be passed
+#   to the linker when linking the executable with the given feature
+#   (e.g., MULTI_THREADED_LINK_FLAGS when we're linking a
+#   multi-threaded executable).
+#
+#   LINK_LIBS: Provides additional libraries against which the
+#   executable will be linked. For example, one might provide "expat"
+#   as options to LINK_LIBS, to state that the executable will link
+#   against the expat library binary. Use LINK_LIBS for libraries
+#   external to Boost; for Boost libraries, use DEPENDS.
+#
+#   feature_LINK_LIBS: Provides additional libraries to link against
+#   when linking an executable built with the given feature. 
+#
+#   DEPENDS: States that this executable depends on and links against
+#   a Boostlibrary. The arguments to DEPENDS should be the unversioned
+#   name of the Boost library, such as "boost_filesystem". Like
+#   LINK_LIBS, this option states that the executable will link
+#   against the stated libraries. Unlike LINK_LIBS, however, DEPENDS
+#   takes particular library variants into account, always linking to
+#   the appropriate variant of one Boost library. For example, if the
+#   MULTI_THREADED feature was requested in the call to
+#   boost_add_executable, DEPENDS will ensure that we only link
+#   against multi-threaded libraries.
+#
+#   feature: States that the executable should always be built using a
+#   given feature, e.g., SHARED linking (against its libraries) or
+#   MULTI_THREADED (for multi-threaded builds). If that feature has
+#   been turned off by the user, the executable will not build.
+#
+#   NO_INSTALL: Don't install this executable with the rest of Boost.
+#
+#   OUTPUT_NAME: If you want the executable to be generated somewhere
+#   other than the binary directory, pass the path (including
+#   directory and file name) via the OUTPUT_NAME parameter.
+#
+# Example:
+#   boost_add_executable(wave cpp.cpp 
+#     DEPENDS boost_wave boost_program_options boost_filesystem 
+#             boost_serialization
+#     )
+macro(boost_add_executable EXENAME)
+  # Note: ARGS is here to support the use of boost_add_executable in
+  # the testing code.
+  parse_arguments(THIS_EXE
+    "DEPENDS;COMPILE_FLAGS;LINK_FLAGS;LINK_LIBS;OUTPUT_NAME;ARGS;${BOOST_ADD_ARG_NAMES}"
+    "NO_INSTALL;${BOOST_ADDEXE_OPTION_NAMES}"
+    ${ARGN}
+    )
+
+  # Determine the list of sources
+  if (THIS_EXE_DEFAULT_ARGS)
+    set(THIS_EXE_SOURCES ${THIS_EXE_DEFAULT_ARGS})
+  else (THIS_EXE_DEFAULT_ARGS)
+    set(THIS_EXE_SOURCES ${EXENAME}.cpp)
+  endif (THIS_EXE_DEFAULT_ARGS)
+  
+  # Compute the variant that will be used to build this executable,
+  # taking into account both the requested features passed to
+  # boost_add_executable and what options the user has set.
+  set(THIS_EXE_OKAY TRUE)
+  set(THIS_EXE_VARIANT)
+  foreach(FEATURESET_STR ${BOOST_FEATURES})
+    string(REPLACE ":" ";" FEATURESET ${FEATURESET_STR})
+    separate_arguments(FEATURESET)
+    set(THIS_EXE_REQUESTED_FROM_SET FALSE)
+    foreach (FEATURE ${FEATURESET})
+      if (THIS_EXE_${FEATURE})
+        # Make this feature part of the variant
+        list(APPEND THIS_EXE_VARIANT ${FEATURE})
+        set(THIS_EXE_REQUESTED_FROM_SET TRUE)
+
+        # The caller has requested this particular feature be used
+        # when building the executable. If we can't satisfy that
+        # request (because the user has turned off the build variants
+        # with that feature), then we won't build this executable.
+        if (NOT BUILD_${FEATURE})
+          set(THIS_EXE_OKAY FALSE)
+        endif (NOT BUILD_${FEATURE})
+      endif (THIS_EXE_${FEATURE})
+    endforeach (FEATURE ${FEATURESET})
+
+    if (NOT THIS_EXE_REQUESTED_FROM_SET)
+      # The caller did not specify which feature value to use from
+      # this set, so find the first feature value that actually works.
+      set(THIS_EXE_FOUND_FEATURE FALSE)
+      foreach (FEATURE ${FEATURESET})
+        # We only care about the first feature value we find...
+        if (NOT THIS_EXE_FOUND_FEATURE)
+          # Are we allowed to build this feature?
+          if (BUILD_${FEATURE})
+            # Found it: we're done
+            list(APPEND THIS_EXE_VARIANT ${FEATURE})
+            set(THIS_EXE_FOUND_FEATURE TRUE)
+          endif (BUILD_${FEATURE})
+        endif (NOT THIS_EXE_FOUND_FEATURE)
+      endforeach (FEATURE ${FEATURESET})
+
+      if (NOT THIS_EXE_FOUND_FEATURE)
+        # All of the features in this set were turned off. 
+        # Just don't build anything.
+        set(THIS_EXE_OKAY FALSE)
+      endif (NOT THIS_EXE_FOUND_FEATURE)
+    endif (NOT THIS_EXE_REQUESTED_FROM_SET)
+  endforeach(FEATURESET_STR ${BOOST_FEATURES})
+
+  # Propagate flags from each of the features
+  if (THIS_EXE_OKAY)
+    foreach (FEATURE ${THIS_EXE_VARIANT})
+      # Add all of the flags for this feature
+      set(THIS_EXE_COMPILE_FLAGS 
+        "${THIS_EXE_COMPILE_FLAGS} ${THIS_EXE_${FEATURE}_COMPILE_FLAGS} ${${FEATURE}_COMPILE_FLAGS}")
+      set(THIS_EXE_LINK_FLAGS 
+        "${THIS_EXE_LINK_FLAGS} ${THIS_EXE_${FEATURE}_LINK_FLAGS} ${${FEATURE}_LINK_FLAGS}")
+      set(THIS_EXE_LINK_LIBS 
+        ${THIS_EXE_LINK_LIBS} ${THIS_EXE_${FEATURE}_LINK_LIBS} ${${FEATURE}_LINK_LIBS})
+    endforeach (FEATURE ${THIS_EXE_VARIANT})
+
+    # Handle feature interactions
+    boost_feature_interactions("THIS_EXE" ${THIS_EXE_VARIANT})
+  endif (THIS_EXE_OKAY)
+
+  if (THIS_EXE_OKAY)
+    # Compute the name of the variant targets that we'll be linking
+    # against. We'll use this to link against the appropriate
+    # dependencies.
+    boost_library_variant_target_name(${THIS_EXE_VARIANT})
+
+    # Compute the actual set of library dependencies, based on the
+    # variant name we computed above.
+    set(THIS_EXE_ACTUAL_DEPENDS)
+    foreach(LIB ${THIS_EXE_DEPENDS})
+      if (LIB MATCHES ".*-.*")
+        # The user tried to state exactly which variant to use. Just
+        # propagate the dependency and hope that s/he was
+        # right. Eventually, this should at least warn, because it is
+        # not the "proper" way to do things
+        list(APPEND THIS_EXE_ACTUAL_DEPENDS ${LIB})
+      else (LIB MATCHES ".*-.*")
+        # The user has given the name of just the library target,
+        # e.g., "boost_filesystem". We add on the appropriate variant
+        # name.
+        list(APPEND THIS_EXE_ACTUAL_DEPENDS "${LIB}${VARIANT_TARGET_NAME}")
+      endif (LIB MATCHES ".*-.*")
+    endforeach(LIB ${THIS_EXE_DEPENDS})
+
+    # Build the executable
+    add_executable(${EXENAME} ${THIS_EXE_SOURCES})
+    
+    # Set the various properties we need
+    # TODO: For Visual Studio, set _DEBUG and _RELEASE versions
+    set_target_properties(${EXENAME}
+      PROPERTIES
+      COMPILE_FLAGS "${THIS_EXE_COMPILE_FLAGS}"
+      LINK_FLAGS "${THIS_EXE_LINK_FLAGS}"
+      )
+
+    # If the user gave an output name, use it.
+    if (THIS_EXE_OUTPUT_NAME)
+      set_target_properties(${EXENAME}
+        PROPERTIES
+        OUTPUT_NAME "${THIS_EXE_OUTPUT_NAME}"
+        )
+    endif (THIS_EXE_OUTPUT_NAME)
+
+    # Link against the various libraries 
+    target_link_libraries(${EXENAME} 
+      ${THIS_EXE_ACTUAL_DEPENDS} 
+      ${THIS_EXE_LINK_LIBS})
+
+    # Install the executable, if not suppressed
+    if (NOT THIS_EXE_NO_INSTALL)
+      install(TARGETS ${EXENAME} DESTINATION bin)
+    endif (NOT THIS_EXE_NO_INSTALL)
+  endif (THIS_EXE_OKAY)
+endmacro(boost_add_executable)

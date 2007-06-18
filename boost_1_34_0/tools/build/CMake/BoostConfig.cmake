@@ -59,31 +59,6 @@ if (NOT BOOST_TOOLSET)
   endif(MSVC60)
 endif (NOT BOOST_TOOLSET)
 
-# Determine whether we should use library versioning by default
-if(BOOST_TOOLSET)
-  set(BUILD_VERSIONED_BY_DEFAULT ON)
-else(BOOST_TOOLSET)
-  set(BUILD_VERSIONED_BY_DEFAULT OFF)
-endif(BOOST_TOOLSET)
-
-option(
-  BUILD_VERSIONED 
-  "Use versioned library names, e.g., boost_filesystem-gcc41-1_34" 
-  ${BUILD_VERSIONED_BY_DEFAULT})
-
-if(BUILD_VERSIONED)
-  # Set BOOST_TOOLSET to the string that describes the
-  # Boost.Build toolset. This is used as part of the versioned library
-  # name.
-  if(NOT BOOST_TOOLSET)
-    message("Unable to determine compiler toolset. Library versioning cannot be used")
-    set(BUILD_VERSIONED OFF CACHE BOOL 
-      "Use versioned library names, e.g., boost_filesystem-gcc41-1_34" FORCE)
-    set(BOOST_LIBRARY_VERSION_STRING "")
-    set(BOOST_LIBRARY_VERSION_STRING_DEBUG "")
-  endif(NOT BOOST_TOOLSET)
-endif(BUILD_VERSIONED)
-
 # Multi-threading support
 if(CMAKE_SYSTEM_NAME STREQUAL "SunOS")
   set(MULTI_THREADED_COMPILE_FLAGS "-pthreads")
