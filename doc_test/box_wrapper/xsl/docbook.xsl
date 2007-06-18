@@ -4,15 +4,15 @@
   
    Distributed under the Boost Software License, Version 1.0.
    (See accompanying file LICENSE_1_0.txt or copy at
-   http://www.boost.org/LICENSE_1_0.txt)
+   http://www.boost.org/LICENSE_1_0.txt) xmlns="http://www.w3.org/1999/xhtml"
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:xi="http://www.w3.org/2001/XInclude"
                 version="1.0">
-
+<!--
   <xsl:include
     href="http://docbook.sourceforge.net/release/xsl/current/xhtml/chunker.xsl"/>
-
+-->
   <xsl:include href="reference.xsl"/>
 
   <xsl:output method="xml"
@@ -295,8 +295,8 @@ Error: XSL template 'link-or-anchor' called with invalid link-type '<xsl:value-o
       <refnamediv>
         <refname><xsl:value-of select="$refname"/></refname>
         <refpurpose>
-		  <xsl:apply-templates mode="annotation" select="$purpose"/>
-		</refpurpose>
+          <xsl:apply-templates mode="annotation" select="$purpose"/>
+        </refpurpose>
       </refnamediv>
       <refsynopsisdiv>
         <synopsis>

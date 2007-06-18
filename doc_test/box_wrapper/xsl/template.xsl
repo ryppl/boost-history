@@ -8,6 +8,7 @@
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
+
   <!-- Determine the length of a template header synopsis -->
   <xsl:template name="template.synopsis.length">
     <xsl:variable name="text">

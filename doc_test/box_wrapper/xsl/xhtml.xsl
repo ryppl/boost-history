@@ -8,13 +8,17 @@
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision"
+                xmlns="http://www.w3.org/1999/xhtml"
+                exclude-result-prefixes="rev"
                 version="1.0">
 
   <!-- Import the HTML chunking stylesheet -->
+
   <xsl:import
     href="http://docbook.sourceforge.net/release/xsl/current/xhtml/chunk.xsl"/>
   <xsl:import
     href="http://docbook.sourceforge.net/release/xsl/current/xhtml/math.xsl"/>
+
 
   <xsl:import href="chunk-common.xsl"/>
   <xsl:import href="docbook-layout.xsl"/>
@@ -29,6 +33,7 @@
   <xsl:param name="navig.graphics" select="1"/>
   <xsl:param name="navig.graphics.extension" select="'.png'"/>
   <xsl:param name="chapter.autolabel" select="1"/>
+  <xsl:param name="css.decoration" select="0"/> <!-- [XHTML] -->
   <xsl:param name="use.id.as.filename" select="1"/>
   <xsl:param name="refentry.generate.name" select="0"/>
   <xsl:param name="refentry.generate.title" select="1"/>
@@ -43,7 +48,7 @@
             select = "concat($boost.root, '/doc/html/images/')"/>
   <xsl:param name = "navig.graphics.path"
             select = "concat($boost.root, '/doc/html/images/')"/>
-
+  
 
    <xsl:param name="admon.style">
     <!-- Remove the style. Let the CSS do the styling -->

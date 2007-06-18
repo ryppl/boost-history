@@ -7,6 +7,7 @@
    http://www.boost.org/LICENSE_1_0.txt)
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns="http://www.w3.org/1999/xhtml"
                 version="1.0">
 
 <xsl:import href="relative-href.xsl"/>
@@ -37,6 +38,7 @@
    <!-- location of the various Boost elements for the textlinks page style -->
 
    <xsl:param name = "boost.root"      select = "'../..'"/>
+
    <xsl:param name = "boost.image.src" 
               select = "concat($boost.root, '/boost.png')"/>
    <xsl:param name = "boost.image.alt" select = "'Boost C++ Libraries'"/>

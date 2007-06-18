@@ -12,6 +12,7 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns="http://www.w3.org/1999/xhtml"
                 version="1.0">
 
 <xsl:import href="relative-href.xsl"/>
@@ -145,9 +146,9 @@
       <xsl:param name = "cse.definition"/>
 
       <form id="cref" action="http://google.com/cse">
-         <input type="hidden" name="cref" value="{$cse.definition}" />
          <div> Search Boost </div>
          <div>
+         <input type="hidden" name="cref" value="{$cse.definition}" />
          <input class="search_box" type="text" name="q" id="q" size="40"
                 maxlength="255" alt="Search Text"/>
          </div>

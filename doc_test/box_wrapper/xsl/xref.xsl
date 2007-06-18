@@ -8,14 +8,21 @@
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:suwl="http://nwalsh.com/xslt/ext/com.nwalsh.saxon.UnwrapLinks"
+                xmlns="http://www.w3.org/1999/xhtml"
                 exclude-result-prefixes="suwl"
                 version="1.0">
 
 <!-- Import the HTML chunking stylesheet -->
-<!-- needed? 
+<!--
+<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/common/stripns.xsl"/>
+-->
+<!-- needed?
+
 <xsl:import
     href="http://docbook.sourceforge.net/release/xsl/current/html/xref.xsl"/>
+
 -->
+<!--   -->
 
 <xsl:template name="adjust-url">
     <xsl:param name="target"/>
@@ -48,11 +55,11 @@
           <xsl:with-param name="target" select="@url"/>
         </xsl:call-template>
       </xsl:attribute>
-      <xsl:if test="$ulink.target != ''">
+      <!--xsl:if test="$ulink.target != ''">   [XHTML]
         <xsl:attribute name="target">
           <xsl:value-of select="$ulink.target"/>
         </xsl:attribute>
-      </xsl:if>
+      </xsl:if-->
       <xsl:choose>
         <xsl:when test="count(child::node())=0">
           <xsl:value-of select="@url"/>

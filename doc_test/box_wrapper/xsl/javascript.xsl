@@ -9,10 +9,11 @@
 
 <!--
    Templates that allows the use javascript
-   Support for GroupedLinks select boxes
+   Support for GroupedLinks select boxes  
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns="http://www.w3.org/1999/xhtml"
                 version="1.0">
 
 <xsl:import href="relative-href.xsl"/>

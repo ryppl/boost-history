@@ -7,9 +7,10 @@
    http://www.boost.org/LICENSE_1_0.txt)
   -->
 
-<xsl:stylesheet version = "1.0"
-   xmlns:xsl = "http://www.w3.org/1999/XSL/Transform"
->
+<xsl:stylesheet xmlns:xsl = "http://www.w3.org/1999/XSL/Transform"
+                xmlns="http://www.w3.org/1999/xhtml"
+                version = "1.0">
+
   <!-- needed for calsTable template -->
 
   <!-- not needed ?
@@ -451,8 +452,111 @@ to be safe.
 </xsl:template>
 
 
+<!-- [XHTML] Overwrites to achive Strict XHTML validation -->
+
+<xsl:template name="process.footnotes">
+  <xsl:variable name="footnotes" select=".//footnote"/>
+  <xsl:variable name="fcount">
+    <xsl:call-template name="count.footnotes.in.this.chunk">
+      <xsl:with-param name="node" select="."/>
+      <xsl:with-param name="footnotes" select="$footnotes"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+<!--
+  <xsl:message>
+    <xsl:value-of select="name(.)"/>
+    <xsl:text> fcount: </xsl:text>
+    <xsl:value-of select="$fcount"/>
+  </xsl:message>
+-->
+
+  <!-- Only bother to do this if there's at least one non-table footnote -->
+  <xsl:if test="$fcount &gt; 0">
+    <div class="footnotes">
+      <xsl:call-template name="process.footnotes.in.this.chunk">
+        <xsl:with-param name="node" select="."/>
+        <xsl:with-param name="footnotes" select="$footnotes"/>
+      </xsl:call-template>
+    </div>
+  </xsl:if>
+
+  <!-- FIXME: When chunking, only the annotations actually used
+              in this chunk should be referenced. I don't think it
+              does any harm to reference them all, but it adds
+              unnecessary bloat to each chunk. -->
+  <xsl:if test="$annotation.support != 0 and //annotation">
+    <div class="annotation-list">
+      <div class="annotation-nocss">
+        <p>The following annotations are from this essay. You are seeing
+        them here because your browser doesn&#8217;t support the user-interface
+        techniques used to make them appear as &#8216;popups&#8217; on modern browsers.</p>
+      </div>
+
+      <xsl:apply-templates select="//annotation" mode="annotation-popup"/>
+    </div>
+  </xsl:if>
+</xsl:template>
+
+
+<xsl:template match="orderedlist">
+  <xsl:variable name="start">
+    <xsl:call-template name="orderedlist-starting-number"/>
+  </xsl:variable>
+
+  <xsl:variable name="numeration">
+    <xsl:call-template name="list.numeration"/>
+  </xsl:variable>
+
+  <xsl:variable name="type">
+    <xsl:choose>
+      <xsl:when test="$numeration='arabic'">ol_1</xsl:when>
+      <xsl:when test="$numeration='loweralpha'">ol_a</xsl:when>
+      <xsl:when test="$numeration='lowerroman'">ol_i</xsl:when>
+      <xsl:when test="$numeration='upperalpha'">ol_A</xsl:when>
+      <xsl:when test="$numeration='upperroman'">ol_I</xsl:when>
+      <!-- What!? This should never happen -->
+      <xsl:otherwise>
+        <xsl:message>
+          <xsl:text>Unexpected numeration: </xsl:text>
+          <xsl:value-of select="$numeration"/>
+        </xsl:message>
+        <xsl:value-of select="1"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
+  <div>
+    <xsl:apply-templates select="." mode="class.attribute"/>
+    <xsl:call-template name="anchor"/>
+
+    <xsl:if test="title">
+      <xsl:call-template name="formal.object.heading"/>
+    </xsl:if>
+
+    <!-- Preserve order of PIs and comments -->
+    <xsl:apply-templates select="*[not(self::listitem                   or self::title                   or self::titleabbrev)]                 |comment()[not(preceding-sibling::listitem)]                 |processing-instruction()[not(preceding-sibling::listitem)]"/>
+
+    <ol>
+      <xsl:if test="$start != '1'">
+        <xsl:attribute name="start">
+          <xsl:value-of select="$start"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:if test="$numeration != ''">
+        <xsl:attribute name="class">
+          <xsl:value-of select="$type"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="listitem                     |comment()[preceding-sibling::listitem]                     |processing-instruction()[preceding-sibling::listitem]"/>
+    </ol>
+  </div>
+</xsl:template>
 
 
 
+<xsl:template name="language.attribute">
+  <xsl:param name="node" select="."/>
+</xsl:template>
 
 </xsl:stylesheet>

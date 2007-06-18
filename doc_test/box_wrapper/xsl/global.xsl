@@ -6,7 +6,9 @@
    (See accompanying file LICENSE_1_0.txt or copy at
    http://www.boost.org/LICENSE_1_0.txt)
   -->
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="1.0">
+
   <xsl:template name="global-synopsis">
     <xsl:param name="indentation" select="0" />
     <xsl:if test="not(local-name(preceding-sibling::*[position()=1])=local-name(.)) and (position() &gt; 1)">

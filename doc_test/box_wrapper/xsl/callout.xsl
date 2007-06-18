@@ -7,6 +7,7 @@
    http://www.boost.org/LICENSE_1_0.txt)
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns="http://www.w3.org/1999/xhtml"
                 version="1.0">
 
 <!-- Not needed?
@@ -31,7 +32,7 @@
       </xsl:variable>
 
       <img src="{$relative_callout_graphics_path}{$conum}{$callout.graphics.extension}"
-           alt="{$conum}" border="0"/>
+           alt="{$conum}"/>     <!-- border="0" [XHTML] -->
     </xsl:when>
 
     <xsl:when test="$callout.unicode != 0
@@ -70,5 +71,39 @@
     </xsl:otherwise>
   </xsl:choose>
 </xsl:template>
+
+
+<!-- Overwrites calloutlist to make the output validate against Strict XHTML
+     Avoid the use of "width" and "compact"
+-->
+
+<xsl:template match="calloutlist">
+  <div class="calloutlist">
+    <xsl:apply-templates select="." mode="class.attribute"/>
+    <xsl:call-template name="anchor"/>
+    <xsl:if test="title|info/title">
+      <xsl:call-template name="formal.object.heading"/>
+    </xsl:if>
+
+    <!-- Preserve order of PIs and comments -->
+    <xsl:apply-templates select="*[not(self::callout or self::title or self::titleabbrev)]                    |comment()[not(preceding-sibling::callout)]      |processing-instruction()[not(preceding-sibling::callout)]"/>
+
+    <dl>
+       <xsl:apply-templates select="callout            |comment()[preceding-sibling::calllout]     |processing-instruction()[preceding-sibling::callout]"/>
+    </dl>
+  </div>
+</xsl:template>
+
+
+<xsl:template match="callout">
+   <dt>
+     <xsl:call-template name="anchor"/>
+     <xsl:call-template name="callout.arearefs">
+        <xsl:with-param name="arearefs" select="@arearefs"/>
+     </xsl:call-template>
+   </dt>
+   <dd><xsl:apply-templates/></dd>
+</xsl:template>
+
 
 </xsl:stylesheet>

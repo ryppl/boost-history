@@ -437,6 +437,13 @@
         text-align: left;
     }
 
+    .ol_1 { list-style-type: decimal; }
+    .ol_a { list-style-type: lower-alpha; }
+    .ol_i { list-style-type: lower-roman; }
+    .ol_A { list-style-type: upper-alpha; }
+    .ol_I { list-style-type: upper-roman; }
+
+
 /*=============================================================================
     Links
 =============================================================================*/
@@ -504,7 +511,6 @@
         padding-bottom: 0px;
         background-color: #F8F8F8;
         border: 1px solid #ECECEC;
-        border-bottom: 2px solid #EAEAEA;
     }
 
     div.informaltable table tr th p,
@@ -527,7 +533,6 @@
         padding-bottom: 0px;
         background-color: white;
         border: 1px solid #ECECEC;
-        border-bottom: 2px solid #EAEAEA;
     }
 
     div.informaltable table tr td p,
@@ -603,6 +608,12 @@
     Callouts
 =============================================================================*/
 
+    .calloutlist
+    {
+        padding-left: 75px;
+        padding-bottom: 10px;
+    }
+
     .line_callout_bug img
     {
         float: left;
@@ -611,13 +622,19 @@
         top: -12px;
         clear: left;
         margin-left:-22px;
+        border: none;
     }
 
-    .callout_bug img
+    .callout_bug a img
     {
+        border: none;
     }
 
-
+    .calloutlist dl dt a img
+    {
+        float: left;
+        border: none;
+    }
 
 /*=============================================================================
     Variable Lists
@@ -685,6 +702,8 @@
     {
         text-align: left
     }
+
+
 
 /*=============================================================================
     Colors

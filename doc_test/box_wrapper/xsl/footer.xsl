@@ -12,7 +12,9 @@
   -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision"
+                exclude-result-prefixes="rev"
                 version="1.0">
 
 <xsl:import href="navbar.xsl"/>
@@ -204,7 +206,7 @@
 
     <xsl:template match="copyright" mode="boost.footer">
        <!--xsl:if test="position() &gt; 1"-->
-       <p>
+       <p xmlns="http://www.w3.org/1999/xhtml">
        <xsl:call-template name="gentext">
           <xsl:with-param name="key" select="'Copyright'"/>
        </xsl:call-template>

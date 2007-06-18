@@ -8,7 +8,8 @@
   -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0">
-  <!-- Indent the current line-->
+
+  <!-- Indent the current line xmlns="http://www.w3.org/1999/xhtml"-->
   <xsl:template name="indent">
     <xsl:param name="indentation"/>
     <xsl:if test="$indentation > 0">
