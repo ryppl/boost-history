@@ -54,9 +54,6 @@ assign_if_was_acquire( TargetType& destination, SourceType const& new_value
   typedef typename assign_if_was_result< TargetType >::type result_type;
 
   return detail::assign_if_was_acquire_impl
-         < typename assign_if_was_result< TargetType >::type
-         , type
-         >
          ::execute( destination, source, old_value );
 }
 

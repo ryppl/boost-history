@@ -9,11 +9,8 @@
 #ifndef BOOST_ACT_INTERLOCKED_ADD_ASSIGN_ADD_ASSIGN_RESULT_FWD_HPP
 #define BOOST_ACT_INTERLOCKED_ADD_ASSIGN_ADD_ASSIGN_RESULT_FWD_HPP
 
-namespace boost { namespace act { namespace interlocked {
-
-template< typename TargetType, typename OperandType = TargetType >
-struct add_assign_result;
-
-} } }
+#include <boost/act/interlocked/add_assign/add_assign_result/add_assign_result_fwd.hpp>
+#include <boost/act/interlocked/add_assign/add_assign_result/add_assign_acquire_result_fwd.hpp>
+#include <boost/act/interlocked/add_assign/add_assign_result/add_assign_release_result_fwd.hpp>
 
 #endif

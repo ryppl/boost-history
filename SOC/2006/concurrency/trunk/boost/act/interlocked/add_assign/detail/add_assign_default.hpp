@@ -9,13 +9,11 @@
 #ifndef BOOST_ACT_INTERLOCKED_ADD_ASSIGN_DETAIL_ADD_ASSIGN_DEFAULT_HPP
 #define BOOST_ACT_INTERLOCKED_ADD_ASSIGN_DETAIL_ADD_ASSIGN_DEFAULT_HPP
 
-#ifdef BOOST_ACT_INTERLOCKED_DETAIL_DEFAULT_IMPL_INFO
-#undef BOOST_ACT_INTERLOCKED_DETAIL_DEFAULT_IMPL_INFO
-#endif
+#include <boost/act/interlocked/detail/binary_default.hpp>
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_DEFAULT_IMPL_INFO                         \
+#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO                       \
 ( add_assign, full_barrier, + )
 
-#include <boost/act/interlocked/detail/binary_default_impl.hpp>
+#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT()
 
 #endif

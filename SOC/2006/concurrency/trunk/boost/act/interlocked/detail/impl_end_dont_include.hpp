@@ -16,13 +16,9 @@ Note: If you are getting an error in this file, please post to the mailing list
 #error Improper incusion of interlocked implementation header. Contact Boost.
 #else
 
-#include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_IS_READY_FOR_CLEANUP
-
-// ToDo: Make this 80 characters max (push to macro invocation)
-#if BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_SHORT_NAME, BOOST_ACT_INTERLOCKED_DETAIL_IMPL_SEMANTICS )
+#if BOOST_ACT_INTERLOCKED_DETAIL_IMPL_HAS_CUSTOM_IMPL
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_HEADER_RAW()                         \
 BOOST_PP_CAT                                                                   \
@@ -52,27 +48,6 @@ BOOST_PP_CAT                                                                   \
 
 #else
 
-namespace boost { namespace act { namespace interlocked { namespace detail {
-
-template< typename ResultType, typename UnqualifiedType >
-struct BOOST_PP_CAT
-       ( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME
-       , _default_impl
-       );
-
-template< typename ResultType, typename UnqualifiedType >
-struct BOOST_PP_CAT
-       ( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME
-       , _impl
-       )
-  : BOOST_PP_CAT
-    ( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME
-    , _default_impl
-    )
-    < ResultType, UnqualifiedType > {};
-
-} } } }
-
 #define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_HEADER_RAW()                         \
 BOOST_PP_CAT                                                                   \
 (                                                                              \
@@ -100,6 +75,8 @@ BOOST_PP_CAT                                                                   \
 )
 
 #endif
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_IS_READY_FOR_CLEANUP
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_HEADER_RAW()
 

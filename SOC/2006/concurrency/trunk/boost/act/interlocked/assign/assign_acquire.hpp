@@ -46,7 +46,6 @@ assign_acquire( TargetType& destination, SourceType const& new_value )
   type const source = static_cast< type >( new_value );
 
   return detail::assign_acquire_impl
-         < typename assign_result< TargetType >::type, type >
          ::execute( destination, source );
 
 }

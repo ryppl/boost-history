@@ -60,7 +60,7 @@ typename lazy_enable_if
 , BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_SHORT_NAME
               , _result
               )
-              < TargetType >
+              < TargetType, OperandType const >
 >
 ::type
 BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_FULL_NAME( TargetType& target

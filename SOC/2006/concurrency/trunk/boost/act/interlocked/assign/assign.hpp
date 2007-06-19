@@ -44,10 +44,8 @@ assign( TargetType& destination, SourceType const& new_value )
   typedef typename remove_volatile< TargetType >::type type;
   type const source = static_cast< type >( new_value );
 
-  return detail::assign_impl< typename assign_result< TargetType >::type
-                            , type
-                            >
-           ::execute( destination, source );
+  return detail::assign_impl
+         ::execute( destination, source );
 }
 
 template< typename TargetType, typename SourceType >

@@ -22,27 +22,35 @@
 #else
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/act/interlocked/detail/interlocked_result.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
 template< typename ResultType, typename UnqualifiedType >
 struct assign_if_was_acquire_impl
 {
-  typedef void type;
+  template< typename LeftType, typename RightType, typename OldType >
+  struct result : assign_if_was_interlocked_result_returns_old< LeftType > {};
 
   template< typename LeftType, typename RightType, typename OldType >
   static
-  typename enable_if_c
+  typename lazy_enable_if_c
   <
     ( sizeof( LeftType ) == 4 )
-  , ResultType
+  , result< LeftType, RightType, OldType >
   >
   ::type
   execute( LeftType& left, RightType& right, OldType& old )
   {
-    return ResultType
+    typedef typename result< LeftType, RightType, OldType >::type
+            result_type;
+
+    typedef typename remove_cv< LeftType >::type unqualified_type;
+
+    return result_type
            (
-             static_cast< UnqualifiedType >
+             static_cast< unqualified_type >
              (
                InterlockedCompareExchangeAcquire
                ( reinterpret_cast< LONG volatile* >( &left )
@@ -56,17 +64,22 @@ struct assign_if_was_acquire_impl
 
   template< typename LeftType, typename RightType, typename OldType >
   static
-  typename enable_if_c
+  typename lazy_enable_if_c
   <
     ( sizeof( LeftType ) == 8 )
-  , ResultType
+  , result< LeftType, RightType, OldType >
   >
   ::type
   execute( LeftType& left, RightType& right, OldType& old )
   {
-    return ResultType
+    typedef typename result< LeftType, RightType, OldType >::type
+            result_type;
+
+    typedef typename remove_cv< LeftType >::type unqualified_type;
+
+    return result_type
            (
-             static_cast< UnqualifiedType >
+             static_cast< unqualified_type >
              (
                InterlockedCompareExchange64Acquire
                ( reinterpret_cast< LONGLONG volatile* >( &left )
@@ -81,12 +94,17 @@ struct assign_if_was_acquire_impl
 
   template< typename LeftType, typename RightType, typename OldType >
   static
-  ResultType
+  typename result< LeftType, RightType, OldType >::type
   execute( LeftType*& left, RightType*& right, OldType*& old )
   {
-    return ResultType
+    typedef typename result< LeftType*, RightType*, OldType* >::type
+            result_type;
+
+    typedef typename remove_cv< LeftType* >::type unqualified_type;
+
+    return result_type
            (
-             static_cast< UnqualifiedType >
+             static_cast< unqualified_type >
              (
                InterlockedCompareExchangePointerAcquire
                ( const_cast< void* volatile* >

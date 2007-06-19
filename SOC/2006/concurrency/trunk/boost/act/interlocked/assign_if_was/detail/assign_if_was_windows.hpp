@@ -21,26 +21,35 @@
 
 #include <windows.h> // ToDo: Remove (forward declare functions)
 
+#include <boost/act/interlocked/detail/interlocked_result.hpp>
+
+#include <boost/type_traits/remove_cv.hpp>
+
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
-template< typename ResultType, typename UnqualifiedType >
 struct assign_if_was_impl
 {
-  typedef void type;
+  template< typename LeftType, typename RightType, typename OldType >
+  struct result : assign_if_was_interlocked_result_returns_old< LeftType > {};
 
   template< typename LeftType, typename RightType, typename OldType >
   static
-  typename enable_if_c
+  typename lazy_enable_if_c
   <
     ( sizeof( LeftType ) == 4 )
-  , ResultType
+  , result< LeftType, RightType, OldType >
   >
   ::type
   execute( LeftType& left, RightType& right, OldType& old )
   {
-    return ResultType
+    typedef typename result< LeftType, RightType, OldType >::type
+            result_type;
+
+    typedef typename remove_cv< LeftType >::type unqualified_type;
+
+    return result_type
            (
-             static_cast< UnqualifiedType >
+             static_cast< unqualified_type >
              (
                BOOST_INTERLOCKED_COMPARE_EXCHANGE
                ( reinterpret_cast< LONG volatile* >( &left )
@@ -55,12 +64,17 @@ struct assign_if_was_impl
 
   template< typename LeftType, typename RightType, typename OldType >
   static
-  ResultType
+  typename result< LeftType, RightType, OldType >::type
   execute( LeftType*& left, RightType*& right, OldType*& old )
   {
-    return ResultType
+    typedef typename result< LeftType*, RightType*, OldType* >::type
+            result_type;
+
+    typedef typename remove_cv< LeftType* >::type unqualified_type;
+
+    return result_type
            (
-             static_cast< UnqualifiedType >
+             static_cast< unqualified_type >
              (
                BOOST_INTERLOCKED_COMPARE_EXCHANGE_POINTER
                ( const_cast< void* volatile* >
@@ -81,17 +95,22 @@ struct assign_if_was_impl
 
   template< typename LeftType, typename RightType, typename OldType >
   static
-  typename enable_if_c
+  typename lazy_enable_if_c
   <
     ( sizeof( LeftType ) == 8 )
-  , ResultType
+  , result< LeftType, RightType, OldType >
   >
   ::type
   execute( LeftType& left, RightType& right, OldType& old )
   {
-    return ResultType
+    typedef typename result< LeftType, RightType, OldType >::type
+            result_type;
+
+    typedef typename remove_cv< LeftType >::type unqualified_type;
+
+    return result_type
            (
-             static_cast< UnqualifiedType >
+             static_cast< unqualified_type >
              (
                InterlockedCompareExchange64
                ( reinterpret_cast< LONGLONG volatile* >( &left )

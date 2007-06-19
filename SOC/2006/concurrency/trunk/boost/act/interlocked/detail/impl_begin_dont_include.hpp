@@ -32,10 +32,33 @@ BOOST_ACT_INTERLOCKED_DETAIL_FULL_NAME                                         \
 , BOOST_ACT_INTERLOCKED_DETAIL_IMPL_SEMANTICS                                  \
 )
 
+#include <boost/act/interlocked/detail/cas_support.hpp>
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_HAS_CUSTOM_IMPL                      \
+BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL                                   \
+( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_SHORT_NAME                                 \
+, BOOST_ACT_INTERLOCKED_DETAIL_IMPL_SEMANTICS                                  \
+)
+
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
-template< typename ResultType, typename UnqualifiedType >
+#if BOOST_ACT_INTERLOCKED_DETAIL_IMPL_HAS_CUSTOM_IMPL
+
 struct BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME, _impl );
+
+#else
+
+struct BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME
+                   , _default_impl
+                   );
+
+typedef BOOST_PP_CAT
+        ( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME
+        , _default_impl
+        )
+        BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME, _impl );
+
+#endif
 
 } } } }
 

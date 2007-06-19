@@ -6,14 +6,14 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_SUB_ASSIGN_DETAIL_SUB_ASSIGN_RELEASE_DEFAULT_HPP
-#define BOOST_ACT_INTERLOCKED_SUB_ASSIGN_DETAIL_SUB_ASSIGN_RELEASE_DEFAULT_HPP
+#ifndef BOOST_ACT_INTERLOCKED_ADD_ASSIGN_ADD_ASSIGN_RESULT_ADD_ASSIGN_RS_FWD_HPP
+#define BOOST_ACT_INTERLOCKED_ADD_ASSIGN_ADD_ASSIGN_RESULT_ADD_ASSIGN_RS_FWD_HPP
 
-#include <boost/act/interlocked/detail/binary_default.hpp>
+namespace boost { namespace act { namespace interlocked {
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO                       \
-( subtract_assign, release, - )
+template< typename TargetType, typename OperandType = TargetType >
+struct add_assign_result;
 
-#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT()
+} } }
 
 #endif

@@ -13,13 +13,14 @@
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
-template< typename ResultType, typename UnqualifiedType >
 struct assign_if_was_acquire_default_impl
 {
   template< typename LeftType, typename RightType, typename OldType >
-  static ResultType execute( LeftType& left, RightType& right
-                           , OldType& old
-                           )
+  struct result : assign_if_was_impl::result< LeftType, RightType, OldType > {};
+
+  template< typename LeftType, typename RightType, typename OldType >
+  static typename result< LeftType, RightType, OldType >::type
+  execute( LeftType& left, RightType& right, OldType& old )
   {
     return interlocked::assign_if_was( left, right, old );
   }

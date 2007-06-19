@@ -51,9 +51,6 @@ assign_if_was( TargetType& destination, SourceType const& new_value
              old_value = static_cast< type >( expected_value );
 
   return detail::assign_if_was_impl
-         < typename assign_if_was_result< TargetType >::type
-         , type
-         >
          ::execute( destination, source, old_value );
 }
 

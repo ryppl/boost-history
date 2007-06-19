@@ -6,14 +6,14 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_SUB_ASSIGN_DETAIL_SUB_ASSIGN_RELEASE_DEFAULT_HPP
-#define BOOST_ACT_INTERLOCKED_SUB_ASSIGN_DETAIL_SUB_ASSIGN_RELEASE_DEFAULT_HPP
+#ifndef BOOST_ACT_INTERLOCKED_SUB_ASSIGN_SUB_ASSIGN_RESULT_REL_RES_HPP
+#define BOOST_ACT_INTERLOCKED_SUB_ASSIGN_SUB_ASSIGN_RESULT_REL_RES_HPP
 
-#include <boost/act/interlocked/detail/binary_default.hpp>
+#include <boost/act/interlocked/detail/binary_result.hpp>
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO                       \
-( subtract_assign, release, - )
+#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_RESULT_INFO                        \
+( subtract_assign, release )
 
-#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT()
+#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_RESULT()
 
 #endif

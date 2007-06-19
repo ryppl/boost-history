@@ -16,11 +16,12 @@
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
-template< typename ResultType, typename UnqualifiedType >
+// ToDo: Make better stub impl
+
 struct assign_if_was_default_impl
 {
   template< typename LeftType, typename RightType, typename ConditionType >
-  static ResultType execute( LeftType&, RightType&, ConditionType& )
+  static void execute( LeftType&, RightType&, ConditionType& )
   {
     BOOST_MPL_ASSERT_MSG
     (

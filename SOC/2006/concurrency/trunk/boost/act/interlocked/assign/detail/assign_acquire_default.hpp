@@ -13,11 +13,14 @@
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
-template< typename ResultType, typename UnqualifiedType >
 struct assign_acquire_default_impl
 {
   template< typename LeftType, typename RightType >
-  static ResultType execute( LeftType& left, RightType& right )
+  struct result : assign_impl::result< LeftType, RightType > {};
+
+  template< typename LeftType, typename RightType >
+  static typename result< LeftType, RightType >::type
+  execute( LeftType& left, RightType& right )
   {
     return interlocked::assign( left, right );
   }

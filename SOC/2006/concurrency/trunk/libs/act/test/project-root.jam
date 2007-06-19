@@ -43,7 +43,7 @@ if ! $(boost-root)
 use-project /boost/unit_test : $(boost-root)/libs/test/build ;
 use-project /boost/boost_thread : $(boost-root)/libs/thread/build/ ;
 
-project act
+project act_build
     : requirements
         <include>$(boost-root)
         <include>$(act-include)

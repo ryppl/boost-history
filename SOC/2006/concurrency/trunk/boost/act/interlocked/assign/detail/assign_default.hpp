@@ -16,7 +16,6 @@
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
-template< typename ResultType, typename UnqualifiedType >
 struct assign_default_impl
 {
   template< typename LeftType, typename RightType >

@@ -86,6 +86,8 @@ unsigned int const random_unsigned_ints_binary[num_random_test_values]
     , BOOST_BINARY( 11110 10010 001001 ), BOOST_BINARY( 11 1000010 1100 111 )
     };
 
+
+// ToDo: Rewrite the following arrays using the preprocessor
 unsigned int const unsigned_ints_1_bit[2] =
 { BOOST_BINARY( 0 )
 , BOOST_BINARY( 1 )

@@ -9,11 +9,8 @@
 #ifndef BOOST_ACT_INTERLOCKED_SUBTRACT_ASSIGN_SUBTRACT_ASSIGN_RESULT_FWD_HPP
 #define BOOST_ACT_INTERLOCKED_SUBTRACT_ASSIGN_SUBTRACT_ASSIGN_RESULT_FWD_HPP
 
-namespace boost { namespace act { namespace interlocked {
-
-template< typename TargetType, typename OperandType = TargetType >
-struct subtract_assign_result;
-
-} } }
+#include <boost/act/interlocked/subtract_assign/subtract_assign_result/subtract_assign_result_fwd.hpp>
+#include <boost/act/interlocked/subtract_assign/subtract_assign_result/subtract_assign_acquire_result_fwd.hpp>
+#include <boost/act/interlocked/subtract_assign/subtract_assign_result/subtract_assign_release_result_fwd.hpp>
 
 #endif

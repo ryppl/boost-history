@@ -26,6 +26,8 @@
 
 #include <boost/type_traits/remove_volatile.hpp>
 
+#include <boost/act/interlocked/detail/impl_meta.hpp>
+
 #define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_IS_ADDITIVE              \
 BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_AFFIX_             \
             , BOOST_PP_TUPLE_ELEM                                              \
@@ -66,7 +68,7 @@ typename lazy_enable_if
 , BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SHORT_NAME
               , _result
               )
-              < TargetType >
+              < TargetType, OperandType const >
 >
 ::type
 BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FULL_NAME( TargetType& target
@@ -81,11 +83,13 @@ BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FULL_NAME( TargetType& target
                    < TargetType >
                    ::type result_type;
 
-  return detail::BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FULL_NAME
-                             , _impl
-                             )
-         < result_type
-         , type
+  return detail::impl_meta
+         <
+           detail::BOOST_PP_CAT
+                   ( BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FULL_NAME
+                   , _impl
+                   )
+         , TargetType
          >
          ::execute( target, operand );
 }

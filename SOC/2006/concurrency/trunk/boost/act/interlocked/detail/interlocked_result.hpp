@@ -1,8 +1,17 @@
+/*=============================================================================
+    Copyright (c) 2006, 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
 #ifndef BOOST_ACT_INTERLOCKED_DETAIL_INTERLOCKED_RESULT_HPP
 #define BOOST_ACT_INTERLOCKED_DETAIL_INTERLOCKED_RESULT_HPP
 
 #include <boost/act/detail/execute_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/or.hpp>
@@ -69,6 +78,18 @@ private:
   value_type value_m;
 };
 
+template< typename Operation, typename ValueType >
+class unary_interlocked_result_returns_old
+{
+private:
+  typedef typename remove_cv< ValueType >::type   value_type;
+public:
+  typedef unary_interlocked_result< Operation, detail::old_value
+                                  , value_type
+                                  >
+                                  type;
+};
+
 template< typename Operation, typename ValueInfo
         , typename ValueType, typename OperandType = ValueType
         >
@@ -118,6 +139,36 @@ private:
   operand_type operand_m;
 };
 
+template< typename Operation
+        , typename ValueType, typename OperandType = ValueType
+        >
+struct binary_interlocked_result_returns_old
+{
+private:
+  typedef typename remove_cv< ValueType >::type   value_type;
+  typedef typename remove_cv< OperandType >::type operand_type;
+public:
+  typedef binary_interlocked_result< Operation, detail::old_value
+                                   , value_type, operand_type
+                                   >
+                                   type;
+};
+
+template< typename Operation, typename ValueInfo
+        , typename ValueType, typename OperandType = ValueType
+        >
+struct binary_interlocked_result_returns_new
+{
+private:
+  typedef typename remove_cv< ValueType >::type   value_type;
+  typedef typename remove_cv< OperandType >::type operand_type;
+public:
+  typedef binary_interlocked_result< Operation, detail::new_value
+                                   , value_type, operand_type
+                                   >
+                                   type;
+};
+
 template< typename ValueInfo, typename ValueType >
 class assign_if_was_interlocked_result
 {
@@ -159,6 +210,8 @@ public:
                         , ()
                         );
 
+    // ToDo: Allow toggle for regular assert, not static assert
+
     return was_successful() ? attempted_new_value_m : result_m;
   }
 
@@ -184,6 +237,30 @@ private:
   value_type result_m,
              attempted_new_value_m,
              expected_value_m;
+};
+
+template< typename ValueType >
+class assign_if_was_interlocked_result_returns_old
+{
+private:
+  typedef typename remove_cv< ValueType >::type   value_type;
+public:
+  typedef assign_if_was_interlocked_result< detail::old_value
+                                          , value_type
+                                          >
+                                          type;
+};
+
+template< typename ValueType >
+class assign_if_was_interlocked_result_returns_success
+{
+private:
+  typedef typename remove_cv< ValueType >::type   value_type;
+public:
+  typedef assign_if_was_interlocked_result< detail::success_value
+                                          , value_type
+                                          >
+                                          type;
 };
 
 } } } }
