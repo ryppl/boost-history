@@ -17,7 +17,7 @@
 #include <limits>
 
 #include "svg.hpp"
-#include "svg_plot_instruction.hpp"
+#include "detail/svg_plot_instruction.hpp"
 
 
 #include <boost/array.hpp>
@@ -36,10 +36,10 @@ namespace svg {
 // "legend" is on top because either it'll be laid on top of the graph,
 // or it'll be off to the side. 
 // -----------------------------------------------------------------
-#define SVG_PLOT_DOC_CHILDREN 3
+#define SVG_PLOT_DOC_CHILDREN 4
 
 enum svg_plot_doc_structure{SVG_PLOT_BACKGROUND, SVG_PLOT_PLOT, 
-    SVG_PLOT_LEGEND};
+    SVG_PLOT_LEGEND, SVG_PLOT_TITLE};
 
 // -----------------------------------------------------------------
 // The following enums define the children for the legend. This will be
@@ -78,17 +78,13 @@ private:
     bool legend_on;
     std::vector<legend_point> legend;
 
-    //Don't let the user use this without specifying a stream.
-    //I can't think of a reasonable default, and I don't think
-    //they'd want the svg formatted output spit to the console
-    svg_plot();
-
     void _transform_point(double &x);
     void _clear_legend();
     void _draw_legend_header(int, int, int, int);
     void _draw_legend();
 
 public:
+    svg_plot();
     svg_plot(const std::string& file);
     
     svg_plot& x_scale(double, double);
@@ -98,9 +94,13 @@ public:
     
     svg_plot& line_color(const svg_color&);
 
-    svg_plot& write();
+    svg_plot& write(const std::string&);
+    svg_plot& write(std::ostream&);
 
     svg_plot& image_size(unsigned int, unsigned int);
+
+    svg_plot& set_title(const std::string&);
+    svg_plot& set_title_font_size(unsigned int);
 
     svg_plot& set_background_color(svg_color_constant);
     svg_plot& set_background_color(const svg_color&);
@@ -108,11 +108,16 @@ public:
     svg_plot& set_legend_background_color(svg_color_constant);
     svg_plot& set_legend_background_color(const svg_color&);
 
+    svg_plot& set_axis_color(svg_color_constant);
+    svg_plot& set_axis_color(const svg_color&);
+
+    svg_plot& set_axis_thickness(unsigned int);
+
     void plot_range(std::vector<double>::const_iterator,
-        std::vector<double>::const_iterator, std::string);
+        std::vector<double>::const_iterator, const std::string&);
     
     void plot_range(std::vector<double>::const_iterator, 
-        std::vector<double>::const_iterator, std::string, svg_color_constant);
+        std::vector<double>::const_iterator, const std::string&, svg_color_constant);
 };
 
 // -----------------------------------------------------------------
@@ -125,7 +130,7 @@ public:
 // Note: All of the points are going to be on the same line, so
 // there is no sense calculating any aspect of the y value
 // -----------------------------------------------------------------
-svg_plot::svg_plot(const std::string& file): svg(file)
+svg_plot::svg_plot()
 {
     for(int i = 0; i < 3; ++i)
     {
@@ -215,7 +220,7 @@ svg_plot& svg_plot::image_size(unsigned int x, unsigned int y)
 // -----------------------------------------------------------------
 void svg_plot::plot_range(std::vector<double>::const_iterator begin,
                             std::vector<double>::const_iterator end,
-                            std::string _str)
+                            const std::string& _str)
 {
     double x;
 
@@ -251,7 +256,7 @@ void svg_plot::plot_range(std::vector<double>::const_iterator begin,
 // -----------------------------------------------------------------
 void svg_plot::plot_range(std::vector<double>::const_iterator begin,
                             std::vector<double>::const_iterator end,
-                            std::string _str,
+                            const std::string& _str,
                             svg_color_constant _col)
 {
     double x;
@@ -281,6 +286,36 @@ void svg_plot::plot_range(std::vector<double>::const_iterator begin,
     // so that it's easier to deal with when when turn it on after
     // we call this function =)
     legend.push_back(legend_point(g_ptr->get_stroke_color(), _col, _str));
+}
+
+// -----------------------------------------------------------------
+// Sets the title. Currently, the title is centered at the top of
+// the screen
+// -----------------------------------------------------------------
+svg_plot& svg_plot::set_title(const std::string& _title)
+{
+    text_element title(x_size/2., 30, _title);
+
+    title.set_alignment(center_align);
+
+    document.g_tag(SVG_PLOT_TITLE)
+        .children.push_back(new text_element(title));
+
+    return (svg_plot&)*this;
+}
+
+// -----------------------------------------------------------------
+// Setting the font size for the title before the text has been
+// written causes a runtime error
+// -----------------------------------------------------------------
+svg_plot& svg_plot::set_title_font_size(unsigned int _size)
+{
+    text_element* t_ptr = static_cast<text_element*>(&(document.
+                                    g_tag(SVG_PLOT_TITLE).children[0]));
+
+    t_ptr->set_font_size(_size);
+
+    return (svg_plot&)*this;
 }
 
 // -----------------------------------------------------------------
@@ -319,6 +354,35 @@ svg_plot& svg_plot::set_legend_background_color(const svg_color& _col)
 {
     document.g_tag(SVG_PLOT_LEGEND).g_tag(SVG_PLOT_LEGEND_BACKGROUND)
             .set_fill_color(_col);
+
+    return (svg_plot&)*this;
+}
+
+// -----------------------------------------------------------------
+// Currently sets the color of both axes
+// -----------------------------------------------------------------
+svg_plot& svg_plot::set_axis_color(svg_color_constant _col)
+{
+    set_axis_color(constant_to_rgb(_col));
+
+    return (svg_plot&)*this;
+}
+
+svg_plot& svg_plot::set_axis_color(const svg_color& _col)
+{
+    document.g_tag(SVG_PLOT_PLOT).g_tag(SVG_PLOT_PLOT_AXIS)
+            .set_fill_color(_col);
+
+    document.g_tag(SVG_PLOT_PLOT).g_tag(SVG_PLOT_PLOT_AXIS)
+            .set_stroke_color(_col);
+
+    return (svg_plot&)*this;
+}
+
+svg_plot& svg_plot::set_axis_thickness(unsigned int _width)
+{
+    document.g_tag(SVG_PLOT_PLOT).g_tag(SVG_PLOT_PLOT_AXIS)
+            .set_stroke_width(_width);
 
     return (svg_plot&)*this;
 }
@@ -509,7 +573,7 @@ void svg_plot::_draw_legend()
     }
 }
 
-svg_plot& svg_plot::write()
+svg_plot& svg_plot::write(const std::string& _str)
 {
     // Hold off drawing the legend until the very end.. it's
     // easier to draw the size that it needs at the end than
@@ -520,8 +584,20 @@ svg_plot& svg_plot::write()
         _draw_legend();
     }
 
-    svg::write();
+    svg::write(_str);
 
+    return (svg_plot&)*this;
+}
+
+svg_plot& svg_plot::write(std::ostream& s_out)
+{
+    if(legend_on)
+    {
+        _draw_legend();
+    }
+    
+    svg::write(s_out);
+    
     return (svg_plot&)*this;
 }
 

@@ -16,8 +16,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "svg_tag.hpp"
-#include "svg_style.hpp"
+#include "detail/svg_tag.hpp"
+#include "detail/svg_style.hpp"
 
 namespace boost {
 namespace svg {
@@ -25,15 +25,8 @@ namespace svg {
 class svg
 {
 private:
-    std::ostream *s_out;
-    
-    void _write_header();
-    void _write_document();
-
-    //Don't let people initialize this class
-    //without specifying the stream. I can't think
-    //of a reasonable default.
-    svg();
+    void _write_header(std::ostream&);
+    void _write_document(std::ostream&);
 
 protected:
     unsigned int x_size;
@@ -42,7 +35,7 @@ protected:
     g_element document;
 
 public:
-    svg(const std::string&);
+    svg();
     
     virtual ~svg();
 
@@ -50,7 +43,9 @@ public:
     svg& operator=(const svg&);
 
     svg& image_size(unsigned int, unsigned int);
-    svg& write();
+
+    svg& write(std::string);
+    svg& write(std::ostream&);
 
     svg& point(double, double);
     svg& point(double, double, g_element&);
@@ -68,46 +63,54 @@ public:
 };
 
 // -----------------------------------------------------------------
-// Constructors will be added so that the user can specify
-// a stream instead of a filename
 // -----------------------------------------------------------------
-svg::svg(const std::string& fname)
-            :s_out(new std::ofstream(fname.c_str())) 
-{ 
+svg::svg():x_size(200), y_size(200)
+{
+
 }
 
 svg::~svg()
-{ 
-    delete s_out;
+{
+
 }
 
-//I still need to put more thought into whether I want this class
-//copyable or not
-svg::svg(const svg& rhs)
+svg& svg::write(std::string _file)
 {
-    x_size = rhs.x_size;
-    y_size = rhs.y_size;
-    //Todo: put something that will copy the elements from the
-    //ptr_vector in rhs to this. ptr_vectors are noncopyable
+    std::ofstream fout(_file.c_str());
+    
+    if(fout.fail())
+    {
+        throw "Unable to open file "+_file;
+    }
 
-    //document = rhs.document;
-}
-
-// -----------------------------------------------------------------
-// -----------------------------------------------------------------
-svg& svg::write()
-{
-    _write_header();
+    _write_header(fout);
 
     //begin svg tag
-    *s_out<<"<svg width=\""<<x_size<<"\" height =\"" 
+    fout<<"<svg width=\""<<x_size<<"\" height =\"" 
                     <<y_size<<"\" version=\"1.1\""
                     <<" xmlns=\"http://www.w3.org/2000/svg\">"<<std::endl;
 
-    _write_document();
+    _write_document(fout);
 
     //close off svg tag
-    *s_out<<"</svg>";
+    fout<<"</svg>";
+
+    return *this;
+}
+
+svg& svg::write(std::ostream& s_out)
+{
+     _write_header(s_out);
+
+    //begin svg tag
+    s_out<<"<svg width=\""<<x_size<<"\" height =\"" 
+                    <<y_size<<"\" version=\"1.1\""
+                    <<" xmlns=\"http://www.w3.org/2000/svg\">"<<std::endl;
+
+    _write_document(s_out);
+
+    //close off svg tag
+    s_out<<"</svg>";
 
     return *this;
 }
@@ -115,14 +118,14 @@ svg& svg::write()
 // -----------------------------------------------------------------
 // Internal function to write all of the data to the svg document
 // -----------------------------------------------------------------
-void svg::_write_document()
+void svg::_write_document(std::ostream& s_out)
 {
     //Write color information
 
     //Write all visual elements
     for(size_t i=0; i<document.size(); ++i)
     {
-        document[ (unsigned int)i ].write(*s_out);
+        document[ (unsigned int)i ].write(s_out);
     }
 
     //end g tag
@@ -131,9 +134,9 @@ void svg::_write_document()
 // -----------------------------------------------------------------
 // This prints the svg 1.1 header into the document
 // -----------------------------------------------------------------
-void svg::_write_header()
+void svg::_write_header(std::ostream& s_out)
 {
-    *s_out << "<?xml version=\"1.0\" standalone=\"no\"?>"
+    s_out << "<?xml version=\"1.0\" standalone=\"no\"?>"
            << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" "
            << "\"http://www.w3.org/graphics/svg/1.1/dtd/svg11.dtd\">"<<std::endl;
 }

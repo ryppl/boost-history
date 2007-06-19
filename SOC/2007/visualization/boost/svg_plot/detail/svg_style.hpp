@@ -271,23 +271,23 @@ class svg_g_style
 private:
     svg_color fill_color;
     svg_color stroke_color;
+
+    unsigned int stroke_width;
     
 public:
     svg_g_style();
     svg_g_style(const svg_color&, const svg_color&);
+
     void set_fill_color(const svg_color&);
     void set_stroke_color(const svg_color&);
+    
+    void set_stroke_width(unsigned int);
     void write(std::ostream&);
 
-    svg_color get_fill_color()
-    {
-        return svg_color(fill_color);
-    }
-    
-    svg_color get_stroke_color()
-    {
-        return svg_color(stroke_color);
-    }
+    svg_color get_fill_color();
+    svg_color get_stroke_color();
+
+    unsigned int get_stroke_width();
 };
 
 // -----------------------------------------------------------------
@@ -295,7 +295,7 @@ public:
 // looked decent enough.
 // -----------------------------------------------------------------
 svg_g_style::svg_g_style():fill_color(svg_color(255, 0, 0)), 
-    stroke_color(svg_color(0, 0, 0))
+    stroke_color(svg_color(0, 0, 0)), stroke_width(0)
 {
 
 }
@@ -305,18 +305,9 @@ svg_g_style::svg_g_style():fill_color(svg_color(255, 0, 0)),
 // For changing the defaults for the colors
 // -----------------------------------------------------------------
 svg_g_style::svg_g_style(const svg_color& _fill, const svg_color& _stroke)
-:fill_color(_fill), stroke_color(_stroke)
+:fill_color(_fill), stroke_color(_stroke), stroke_width(0)
 {
 
-}
-
-void svg_g_style::write(std::ostream& rhs)
-{
-    rhs << "stroke=\"";
-    stroke_color.write(rhs);
-    rhs << "\" fill=\"";
-    fill_color.write(rhs);
-    rhs<<"\"";
 }
 
 void svg_g_style::set_stroke_color(const svg_color& rhs)
@@ -329,6 +320,41 @@ void svg_g_style::set_fill_color(const svg_color& rhs)
     fill_color = rhs;
 }
 
+void svg_g_style::set_stroke_width(unsigned int _width)
+{
+    stroke_width = _width;
+}
+
+svg_color svg_g_style::get_fill_color()
+{
+    return svg_color(fill_color);
+}
+
+svg_color svg_g_style::get_stroke_color()
+{
+    return svg_color(stroke_color);
+}
+
+unsigned int svg_g_style::get_stroke_width()
+{
+    return stroke_width;
+}
+
+void svg_g_style::write(std::ostream& rhs)
+{
+    rhs << "stroke=\"";
+    stroke_color.write(rhs);
+    rhs << "\" fill=\"";
+    fill_color.write(rhs);
+    rhs<<"\" ";
+
+    if(stroke_width > 0)
+    {
+        rhs << "stroke-width=\""
+            << stroke_width
+            << "\" ";
+    }
+}
 
 }//svg
 }//boost

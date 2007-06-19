@@ -35,7 +35,13 @@ class svg_element
 {
 public:
     virtual void write(std::ostream&) = 0;
+    virtual ~svg_element();
 };
+
+svg_element::~svg_element()
+{
+
+}
 
 // -----------------------------------------------------------------
 // The node element of our document tree
@@ -54,11 +60,10 @@ public:
     
     void set_stroke_color(const svg_color&);
     void set_fill_color(const svg_color&);
+    void set_stroke_width(unsigned int);
 
-    svg_color get_stroke_color()
-    {
-        return style_info.get_stroke_color();
-    }
+    svg_color get_stroke_color();
+
     void write(std::ostream&);
 
     g_element& g_tag(int);
@@ -104,6 +109,15 @@ void g_element::set_fill_color(const svg_color& _col)
     style_info.set_fill_color(_col);
 }
 
+void g_element::set_stroke_width(unsigned int _width)
+{
+    style_info.set_stroke_width(_width);
+}
+
+svg_color g_element::get_stroke_color()
+{
+    return style_info.get_stroke_color();
+}
 
 // -----------------------------------------------------------------
 // Represents a single point
@@ -164,12 +178,16 @@ class text_element: public svg_element
 {
 private:
     double x, y;
+    int font_size;
     std::string text;
     text_style alignment;
 
 public:
     text_element(double, double, std::string);
     void write(std::ostream&);
+
+    void set_font_size(unsigned int);
+
     void set_alignment(text_style _a)
     {
         alignment = _a;
@@ -177,7 +195,7 @@ public:
 };
 
 text_element::text_element(double _x, double _y, std::string _text)
-            :x(_x), y(_y), text(_text), alignment(left_align)
+            :x(_x), y(_y), text(_text), alignment(left_align), font_size(12)
 {
     
 }
@@ -213,13 +231,26 @@ void text_element::write(std::ostream& rhs)
         rhs << "text-anchor=\""<<align<<"\" ";
     }
 
-    rhs <<" fill=\"black\" stroke=\"black\" font-family=\"verdana\""
-        <<" font-size=\"12\">"
-        << text
+    rhs <<" fill=\"black\" stroke=\"black\" font-family=\"verdana\"";
+
+    if(font_size == 0)
+    {
+        rhs <<" font-size=\"12\">";
+    }
+
+    else
+    {
+        rhs <<" font-size=\""<<font_size<<"\">";
+    }
+
+    rhs << text
         <<" </text>";
 }
 
-
+void text_element::set_font_size(unsigned int _size)
+{
+    font_size = _size;
+}
 
 // -----------------------------------------------------------------
 // Represents a single block of text
