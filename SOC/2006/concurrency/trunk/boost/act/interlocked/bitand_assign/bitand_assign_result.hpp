@@ -9,8 +9,8 @@
 #ifndef BOOST_ACT_INTERLOCKED_BITAND_ASSIGN_BITAND_ASSIGN_RESULT_HPP
 #define BOOST_ACT_INTERLOCKED_BITAND_ASSIGN_BITAND_ASSIGN_RESULT_HPP
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_RESULT_INFO bitand_assign
-
-#include <boost/act/interlocked/detail/binary_result_impl.hpp>
+#include <boost/act/interlocked/bitand_assign/bitand_assign_result/bitand_assign_result.hpp>
+#include <boost/act/interlocked/bitand_assign/bitand_assign_result/bitand_assign_acquire_result.hpp>
+#include <boost/act/interlocked/bitand_assign/bitand_assign_result/bitand_assign_release_result.hpp>
 
 #endif
