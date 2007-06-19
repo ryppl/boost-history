@@ -24,18 +24,54 @@
 
     .spirit-nav
     {
-        text-align: right;
         margin: 16px;
+        float: right;
     }
 
+/*
     .spirit-nav a
     {
         color: white;
         padding-left: 0.5em;
     }
-
+*//*
     .spirit-nav img
     {
         border-width: 0px;
     }
+*/
+    .spirit-nav-icon
+    {
+        float: left;
+        margin-bottom: 10px;/*
+        height: 30px;
+        width: 30px;*/
+    }
 
+    .prev-icon
+    {
+        background: url(images/navigation/prev.png)
+                    no-repeat center;
+        height: 30px; width: 30px;
+    }
+
+    .next-icon
+    {
+        background: url(images/navigation/next.png)
+                    no-repeat center;
+        height: 30px; width: 30px;
+    }
+
+    .up-icon
+    {
+        background: url(images/navigation/up.png)
+                    no-repeat center;
+        height: 30px; width: 30px;
+    }
+
+    .home-icon
+    {
+        background: url(images/navigation/home.png)
+                    no-repeat center;
+        height: 30px; width: 30px;
+    }

@@ -18,27 +18,86 @@ xsl:import href="http://docbook.sourceforge.net/release/xsl/current/html/admon.x
 
 <xsl:import href="relative-href.xsl"/>
 
-   <xsl:template name="admon.graphic">
+
+   <xsl:template name="admon.graphic.icon">
       <xsl:param name="node" select="."/>
 
-      <xsl:call-template name="href.target.relative">
-         <xsl:with-param name="target" select="$admon.graphics.path"/>
-      </xsl:call-template>
+      <xsl:variable name="admon.icon.type">
+         <xsl:choose>
+            <xsl:when test="local-name($node)='note'">note</xsl:when>
+            <xsl:when test="local-name($node)='warning'">warning</xsl:when>
+            <xsl:when test="local-name($node)='caution'">caution</xsl:when>
+            <xsl:when test="local-name($node)='tip'">tip</xsl:when>
+            <xsl:when test="local-name($node)='important'">important</xsl:when>
+            <xsl:otherwise>note</xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
 
-      <xsl:choose>
-         <xsl:when test="local-name($node)='note'">note</xsl:when>
-         <xsl:when test="local-name($node)='warning'">warning</xsl:when>
-         <xsl:when test="local-name($node)='caution'">caution</xsl:when>
-         <xsl:when test="local-name($node)='tip'">tip</xsl:when>
-         <xsl:when test="local-name($node)='important'">important</xsl:when>
-         <xsl:otherwise>note</xsl:otherwise>
-      </xsl:choose>
-
-      <xsl:value-of select="$admon.graphics.extension"/>
+      <div class="admonition-icon">
+          <div class="{$admon.icon.type}-icon" />
+      </div>
 
    </xsl:template>
 
 
+
+   <!-- overwrites docbook graphical.admonition -->
+
+   <xsl:template name="graphical.admonition">
+
+      <xsl:variable name="admon.type">
+         <xsl:choose>
+            <xsl:when test="local-name(.)='note'">Note</xsl:when>
+            <xsl:when test="local-name(.)='warning'">Warning</xsl:when>
+            <xsl:when test="local-name(.)='caution'">Caution</xsl:when>
+            <xsl:when test="local-name(.)='tip'">Tip</xsl:when>
+            <xsl:when test="local-name(.)='important'">Important</xsl:when>
+            <xsl:otherwise>Note</xsl:otherwise>
+         </xsl:choose>
+      </xsl:variable>
+
+      <xsl:variable name="alt">
+         <xsl:call-template name="gentext">
+            <xsl:with-param name="key" select="$admon.type"/>
+         </xsl:call-template>
+      </xsl:variable>
+
+      <div class="{name(.)}">
+
+         <!-- top box wrapper -->
+         <div class="box-outer-wrapper">
+         <div class="box-top-left" />
+         <div class="box-top-right" />
+         <div class="box-top" />
+         <div class="box-inner-wrapper">
+         <!-- top box wrapper -->
+
+         <div class="admonition-graphic">
+            <xsl:call-template name="admon.graphic.icon"/>
+         </div>
+         <div class="admonition-body">
+         <div class="admonition-title">
+            <xsl:call-template name="anchor"/>
+            <xsl:if test="$admon.textlabel != 0 or title">
+               <xsl:apply-templates select="." mode="object.title.markup"/>
+            </xsl:if>
+         </div>
+         <div class="admonition-content">
+            <xsl:apply-templates/>
+         </div>
+         </div>
+
+         <!-- bottom box wrapper -->
+         </div>
+         <div class="box-bottom-left" />
+         <div class="box-bottom-right" />
+         <div class="box-bottom" />
+         </div>
+         <!-- bottom box wrapper -->
+
+      </div>
+
+   </xsl:template>
 
 
 </xsl:stylesheet>

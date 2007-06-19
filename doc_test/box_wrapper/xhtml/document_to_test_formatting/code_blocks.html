@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Code Blocks</title>
+    <link rel="stylesheet" href="../boostbook.css" type="text/css" />
+    <meta name="generator" content="DocBook XSL Stylesheets V1.72.0" />
+    <link rel="start" href="../index.html" title="Document To Test Formatting" />
+    <link rel="up" href="../index.html" title="Document To Test Formatting" />
+    <link rel="prev" href="introduction.html" title="Introduction" />
+    <link rel="next" href="basic_formatting.html" title="Basic Formatting" />
+  </head>
+  <body>
+    <script type="text/javascript" src="../grouped_links.js"></script>
+    <div id="heading">
+      <div id="heading-placard"></div>
+      <div class="heading_navigation_box">
+        <div class="grouped_links" id="chapters_select_box">
+          <script type="text/javascript">
+            grouped_links_select_box(
+               '../boost_libs_grouped_links.xml',
+                'chapters_select_box',
+                'http://www.boost.org/libs/');
+         </script>
+        </div>
+        <div class="grouped_links" id="sections_select_box">
+          <script type="text/javascript">
+            grouped_links_select_box(
+               '../sections_grouped_links.xml',
+                'sections_select_box',
+                '.././');
+         </script>
+        </div>
+      </div>
+      <div class="heading_search_box">
+        <form id="cref" action="http://google.com/cse">
+          <div> Search Boost </div>
+          <div>
+            <input type="hidden" name="cref" value="" />
+            <input class="search_box" type="text" name="q" id="q" size="40" maxlength="255" alt="Search Text" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="spirit-nav">
+      <div class="spirit-nav-icon">
+        <a accesskey="p" href="introduction.html">
+          <div class="prev-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="u" href="../index.html">
+          <div class="up-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="h" href="../index.html">
+          <div class="home-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="n" href="basic_formatting.html">
+          <div class="next-icon"></div>
+        </a>
+      </div>
+    </div>
+    <div id="body">
+      <div id="body-inner">
+        <div id="content">
+          <div class="section">
+            <div class="titlepage">
+              <div>
+                <div>
+                  <h2 class="title">
+                    <a id="document_to_test_formatting.code_blocks"></a>
+                    <a href="code_blocks.html" title="Code Blocks">Code Blocks</a>
+                  </h2>
+                </div>
+              </div>
+            </div>
+            <div class="toc">
+              <div class="box-outer-wrapper">
+                <div class="box-top-left"></div>
+                <div class="box-top-right"></div>
+                <div class="box-top"></div>
+                <div class="box-inner-wrapper">
+                  <dl>
+                    <dt>
+                      <span class="section">
+                        <a href="code_blocks.html#document_to_test_formatting.code_blocks.embedded_code">Embedded
+      code</a>
+                      </span>
+                    </dt>
+                    <dt>
+                      <span class="section">
+                        <a href="code_blocks.html#document_to_test_formatting.code_blocks.imported_code_and_callouts">Imported
+      code and callouts</a>
+                      </span>
+                    </dt>
+                    <dt>
+                      <span class="section">
+                        <a href="code_blocks.html#document_to_test_formatting.code_blocks.larger_example">Larger
+      example</a>
+                      </span>
+                    </dt>
+                  </dl>
+                </div>
+                <div class="box-bottom-left"></div>
+                <div class="box-bottom-right"></div>
+                <div class="box-bottom"></div>
+              </div>
+            </div>
+            <div class="section">
+              <div class="titlepage">
+                <div>
+                  <div>
+                    <h3 class="title">
+                      <a id="document_to_test_formatting.code_blocks.embedded_code"></a>
+                      <a href="code_blocks.html#document_to_test_formatting.code_blocks.embedded_code" title="Embedded code">Embedded
+      code</a>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <p>
+        These should be syntax highlighted:
+      </p>
+              <div class="programlisting">
+                <div class="box-outer-wrapper">
+                  <div class="box-top-left"></div>
+                  <div class="box-top-right"></div>
+                  <div class="box-top"></div>
+                  <div class="box-inner-wrapper">
+                    <pre>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="comment">// Sample code
+</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Hello, World\n"</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+                  </div>
+                  <div class="box-bottom-left"></div>
+                  <div class="box-bottom-right"></div>
+                  <div class="box-bottom"></div>
+                </div>
+              </div>
+            </div>
+            <div class="section">
+              <div class="titlepage">
+                <div>
+                  <div>
+                    <h3 class="title">
+                      <a id="document_to_test_formatting.code_blocks.imported_code_and_callouts"></a>
+                      <a href="code_blocks.html#document_to_test_formatting.code_blocks.imported_code_and_callouts" title="Imported code and callouts">Imported
+      code and callouts</a>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <p>
+        Here's some code with left-placed callouts:
+      </p>
+              <p>
+        </p>
+              <p>
+          
+</p>
+              <div class="programlisting">
+                <div class="box-outer-wrapper">
+                  <div class="box-top-left"></div>
+                  <div class="box-top-right"></div>
+                  <div class="box-top"></div>
+                  <div class="box-inner-wrapper">
+                    <pre>
+<span class="keyword">class</span> <span class="identifier">x</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="line_callout_bug"><a id="document_to_test_formatting2co" href="code_blocks.html#document_to_test_formatting2"><img src="../images/callouts/1.png" alt="1" /></a></span><span class="identifier">x</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">n</span><span class="special">(</span><span class="number">0</span><span class="special">)</span>
+    <span class="special">{</span>
+    <span class="special">}</span>
+
+    <span class="line_callout_bug"><a id="document_to_test_formatting3co" href="code_blocks.html#document_to_test_formatting3"><img src="../images/callouts/2.png" alt="2" /></a></span><span class="special">~</span><span class="identifier">x</span><span class="special">()</span>
+    <span class="special">{</span>
+    <span class="special">}</span>
+
+    <span class="line_callout_bug"><a id="document_to_test_formatting4co" href="code_blocks.html#document_to_test_formatting4"><img src="../images/callouts/3.png" alt="3" /></a></span><span class="keyword">int</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span>
+    <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">n</span><span class="special">;</span> 
+    <span class="special">}</span>
+
+    <span class="line_callout_bug"><a id="document_to_test_formatting5co" href="code_blocks.html#document_to_test_formatting5"><img src="../images/callouts/4.png" alt="4" /></a></span><span class="keyword">void</span> <span class="identifier">set</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">n_</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">n</span> <span class="special">=</span> <span class="identifier">n_</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+                  </div>
+                  <div class="box-bottom-left"></div>
+                  <div class="box-bottom-right"></div>
+                  <div class="box-bottom"></div>
+                </div>
+              </div>
+              <p>
+        </p>
+              <p>
+        </p>
+              <p>
+          </p>
+              <div class="calloutlist">
+                <dl>
+                  <dt><a id="document_to_test_formatting2"></a><a href="#document_to_test_formatting2co"><img src="../images/callouts/1.png" alt="1" /></a> </dt>
+                  <dd>
+                    <p> Constructor </p>
+                  </dd>
+                  <dt><a id="document_to_test_formatting3"></a><a href="#document_to_test_formatting3co"><img src="../images/callouts/2.png" alt="2" /></a> </dt>
+                  <dd>
+                    <p> Destructor </p>
+                  </dd>
+                  <dt><a id="document_to_test_formatting4"></a><a href="#document_to_test_formatting4co"><img src="../images/callouts/3.png" alt="3" /></a> </dt>
+                  <dd>
+                    <p> Get the <code class="computeroutput"><span class="identifier">n</span></code>
+          member variable </p>
+                  </dd>
+                  <dt><a id="document_to_test_formatting5"></a><a href="#document_to_test_formatting5co"><img src="../images/callouts/4.png" alt="4" /></a> </dt>
+                  <dd>
+                    <p> Set the <code class="computeroutput"><span class="identifier">n</span></code>
+          member variable </p>
+                  </dd>
+                </dl>
+              </div>
+              <p>
+        </p>
+              <p>
+      </p>
+              <p>
+        And again with callouts placed exactly where we put them:
+      </p>
+              <p>
+        </p>
+              <p>
+          
+</p>
+              <div class="programlisting">
+                <div class="box-outer-wrapper">
+                  <div class="box-top-left"></div>
+                  <div class="box-top-right"></div>
+                  <div class="box-top"></div>
+                  <div class="box-inner-wrapper">
+                    <pre>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">foo_bar</span><span class="special">()</span> <span class="callout_bug"><a id="document_to_test_formatting0co" href="code_blocks.html#document_to_test_formatting0"><img src="../images/callouts/1.png" alt="1" /></a></span>
+<span class="special">{</span>
+    <span class="keyword">return</span> <span class="string">"foo-bar"</span><span class="special">;</span> <span class="callout_bug"><a id="document_to_test_formatting1co" href="code_blocks.html#document_to_test_formatting1"><img src="../images/callouts/2.png" alt="2" /></a></span>
+<span class="special">}</span>
+</pre>
+                  </div>
+                  <div class="box-bottom-left"></div>
+                  <div class="box-bottom-right"></div>
+                  <div class="box-bottom"></div>
+                </div>
+              </div>
+              <p>
+        </p>
+              <p>
+        </p>
+              <p>
+          </p>
+              <div class="calloutlist">
+                <dl>
+                  <dt><a id="document_to_test_formatting0"></a><a href="#document_to_test_formatting0co"><img src="../images/callouts/1.png" alt="1" /></a> </dt>
+                  <dd>
+                    <p> The <span class="emphasis"><em>Mythical</em></span> FooBar. See <a href="http://en.wikipedia.org/wiki/Foobar">Foobar
+          for details</a> </p>
+                  </dd>
+                  <dt><a id="document_to_test_formatting1"></a><a href="#document_to_test_formatting1co"><img src="../images/callouts/2.png" alt="2" /></a> </dt>
+                  <dd>
+                    <p> return 'em, foo-bar man! </p>
+                  </dd>
+                </dl>
+              </div>
+              <p>
+        </p>
+              <p>
+      </p>
+            </div>
+            <div class="section">
+              <div class="titlepage">
+                <div>
+                  <div>
+                    <h3 class="title">
+                      <a id="document_to_test_formatting.code_blocks.larger_example"></a>
+                      <a href="code_blocks.html#document_to_test_formatting.code_blocks.larger_example" title="Larger example">Larger
+      example</a>
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <p>
+        Now let's include a larger example, this may span several pages and should
+        not be chopped off half way through... some FO processors get this wrong!
+      </p>
+              <div class="programlisting">
+                <div class="box-outer-wrapper">
+                  <div class="box-top-left"></div>
+                  <div class="box-top-right"></div>
+                  <div class="box-top"></div>
+                  <div class="box-inner-wrapper">
+                    <pre>
+<span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">sub_match</span><span class="special">;</span>
+
+<span class="keyword">typedef</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*&gt;</span>                    <span class="identifier">csub_match</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="keyword">wchar_t</span><span class="special">*&gt;</span>                 <span class="identifier">wcsub_match</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">::</span><span class="identifier">const_iterator</span><span class="special">&gt;</span>    <span class="identifier">ssub_match</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">wstring</span><span class="special">::</span><span class="identifier">const_iterator</span><span class="special">&gt;</span>   <span class="identifier">wssub_match</span><span class="special">;</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">sub_match</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">pair</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+   <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="identifier">value_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">difference_type</span>   <span class="identifier">difference_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span>          <span class="identifier">BidirectionalIterator</span>                                    <span class="identifier">iterator</span><span class="special">;</span>
+
+   <span class="keyword">bool</span>  <span class="identifier">matched</span><span class="special">;</span>
+
+   <span class="identifier">difference_type</span> <span class="identifier">length</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">operator</span> <span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">value_type</span><span class="special">&gt;()</span><span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">value_type</span><span class="special">&gt;</span> <span class="identifier">str</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+
+   <span class="keyword">int</span> <span class="identifier">compare</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">int</span> <span class="identifier">compare</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">value_type</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">int</span> <span class="identifier">compare</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">*</span> <span class="identifier">s</span><span class="special">)</span><span class="keyword">const</span><span class="special">;</span>
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_REGEX_MATCH_EXTRA</span>
+   <span class="keyword">typedef</span> <span class="identifier">implementation</span><span class="special">-</span><span class="keyword">private</span> <span class="identifier">capture_sequence_type</span><span class="special">;</span>
+   <span class="keyword">const</span> <span class="identifier">capture_sequence_type</span><span class="special">&amp;</span> <span class="identifier">captures</span><span class="special">()</span><span class="keyword">const</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+<span class="special">};</span>        
+<span class="comment">//
+</span><span class="comment">// comparisons to another sub_match:
+</span><span class="comment">//
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+
+
+<span class="comment">//
+</span><span class="comment">// comparisons to a basic_string:
+</span><span class="comment">//
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span>
+                                          <span class="identifier">traits</span><span class="special">,</span> 
+                                          <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span>
+                                          <span class="identifier">traits</span><span class="special">,</span> 
+                                          <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span>
+                                          <span class="identifier">traits</span><span class="special">,</span> 
+                                          <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span>
+                                          <span class="identifier">traits</span><span class="special">,</span> 
+                                          <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span>
+                                          <span class="identifier">traits</span><span class="special">,</span> 
+                                          <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span>
+                                          <span class="identifier">traits</span><span class="special">,</span> 
+                                          <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span> 
+                                          <span class="identifier">traits</span><span class="special">,</span> 
+                                          <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span> 
+                                          <span class="identifier">traits</span><span class="special">,</span> 
+                                          <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span> 
+                                       <span class="identifier">traits</span><span class="special">,</span> 
+                                       <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span> 
+                                       <span class="identifier">traits</span><span class="special">,</span> 
+                                       <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span> 
+                                       <span class="identifier">traits</span><span class="special">,</span> 
+                                       <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span> 
+                                          <span class="identifier">traits</span><span class="special">,</span> 
+                                          <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+
+<span class="comment">//
+</span><span class="comment">// comparisons to a pointer to a character array:
+</span><span class="comment">//
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">]</span>##<span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span> 
+
+<span class="comment">//
+</span><span class="comment">// comparisons to a single character:
+</span><span class="comment">//
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">==</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">!=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+               <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&gt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="keyword">bool</span> <span class="keyword">operator</span> <span class="special">&lt;=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span>
+                  <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span> 
+<span class="comment">// 
+</span><span class="comment">// addition operators: 
+</span><span class="comment">//
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span> <span class="identifier">traits</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+   <span class="keyword">operator</span> <span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span>
+                                       <span class="identifier">traits</span><span class="special">,</span> 
+                                       <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">,</span> 
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">m</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Allocator</span><span class="special">&gt;</span> 
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span> <span class="identifier">traits</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span>
+   <span class="keyword">operator</span> <span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">m</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">,</span> 
+                                       <span class="identifier">traits</span><span class="special">,</span> 
+                                       <span class="identifier">Allocator</span><span class="special">&gt;&amp;</span> <span class="identifier">s</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">&gt;</span> 
+   <span class="keyword">operator</span> <span class="special">+</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">m</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">&gt;</span> 
+   <span class="keyword">operator</span> <span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">m</span><span class="special">,</span>
+               <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span> <span class="special">*</span> <span class="identifier">s</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">&gt;</span> 
+   <span class="keyword">operator</span> <span class="special">+</span> <span class="special">(</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">m</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">&gt;</span> 
+   <span class="keyword">operator</span> <span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">m</span><span class="special">,</span>
+               <span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">s</span><span class="special">);</span> 
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span> 
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_string</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">iterator_traits</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;::</span><span class="identifier">value_type</span><span class="special">&gt;</span> 
+   <span class="keyword">operator</span> <span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">m1</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">m2</span><span class="special">);</span>
+
+<span class="comment">//
+</span><span class="comment">// stream inserter:
+</span><span class="comment">//
+</span><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">charT</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">traits</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">BidirectionalIterator</span><span class="special">&gt;</span>
+<span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span> <span class="identifier">traits</span><span class="special">&gt;&amp;</span>
+   <span class="keyword">operator</span> <span class="special">&lt;&lt;</span> <span class="special">(</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">charT</span><span class="special">,</span> <span class="identifier">traits</span><span class="special">&gt;&amp;</span> <span class="identifier">os</span><span class="special">,</span>
+               <span class="keyword">const</span> <span class="identifier">sub_match</span><span class="special">&lt;</span><span class="identifier">BidirectionalIterator</span><span class="special">&gt;&amp;</span> <span class="identifier">m</span><span class="special">);</span>
+
+<span class="special">}</span> <span class="comment">// namespace boost
+</span></pre>
+                  </div>
+                  <div class="box-bottom-left"></div>
+                  <div class="box-bottom-right"></div>
+                  <div class="box-bottom"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div class="spirit-nav">
+      <div class="spirit-nav-icon">
+        <a accesskey="p" href="introduction.html">
+          <div class="prev-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="u" href="../index.html">
+          <div class="up-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="h" href="../index.html">
+          <div class="home-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="n" href="basic_formatting.html">
+          <div class="next-icon"></div>
+        </a>
+      </div>
+    </div>
+    <div id="footer">
+      <div id="footer-left">
+        <div id="copyright">
+          <p>Copyright © 2007 John Maddock, Joel de Guzman, Eric Niebler and Matias
+      Capeletto</p>
+        </div>
+        <div id="license">
+          <p>Distributed under the
+                  <a href="/LICENSE_1_0.txt" class="internal">Boost Software License, Version 1.0</a>.
+               </p>
+        </div>
+      </div>
+      <div id="footer-right">
+        <div id="banners">
+          <p id="banner-xhtml">
+            <a href="http://validator.w3.org/check?uri=referer" class="external">XHTML 1.0</a>
+          </p>
+          <p id="banner-css">
+            <a href="http://jigsaw.w3.org/css-validator/check/referer" class="external">CSS</a>
+          </p>
+          <p id="banner-sourceforge">
+            <a href="http://sourceforge.net" class="external">SourceForge</a>
+          </p>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </body>
+</html>

@@ -23,12 +23,12 @@
 
 
 
-    div.note,
-    div.tip,
-    div.important,
-    div.caution,
-    div.warning,
-    div.sidebar
+    .note,
+    .tip,
+    .important,
+    .caution,
+    .warning,
+    .sidebar
     {
         font-size: 10pt;
         line-height: 1.2;
@@ -36,30 +36,63 @@
         margin: 1pc 4% 0pc 4%;
     }
 
-    div.sidebar div.box-inner-wrapper
+    .sidebar .box-inner-wrapper
     {
         padding-left: 28px;
     }
 
-    div.sidebar div.box-inner-wrapper img
+    .sidebar .box-inner-wrapper img
     {
         padding: 1pt;
     }
 
-    div.admonition-body {
-        padding-left: 70px;
+    .admonition-body
+    {
+        padding-left: 50px;
     }
 
-    div.admonition-graphic {
+    .admonition-graphic
+    {
         float: left;
         display: inline;
-        min-width: 50px;
+        padding-top: 5px;
     }
 
-    div.admonition-title {
+    .admonition-title
+    {
         font-weight: bold;
     }
 
-    div.admonition-content {
+    .admonition-content
+    {
 
     }
+
+    .admonition-icon
+    {
+        border: none;
+    }
+
+    .note-icon      { background: url(images/admonitions/note.png)
+                                  no-repeat center;
+                      height: 30px; width: 30px;                }
+
+    .warning-icon   { background: url(images/admonitions/warning.png)
+                                  no-repeat center;
+                      height: 30px; width: 30px;                }
+
+    .caution-icon   { background: url(images/admonitions/caution.png)
+                                  no-repeat center;
+                      height: 30px; width: 30px;                }
+
+    .tip-icon       { background: url(images/admonitions/tip.png)
+                                  no-repeat center;
+                      height: 30px; width: 30px;                }
+
+    .important-icon { background: url(images/admonitions/important.png)
+                                  no-repeat center;
+                      height: 30px; width: 30px;                }
+
+
+
+

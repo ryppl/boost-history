@@ -27,7 +27,7 @@
 
     #heading
     {
-	  color: black;
+        color: black;
         height: 100px;
         background: url(images/header/background.png) no-repeat top left;
         border-bottom: solid 1px;
@@ -69,12 +69,6 @@
         padding-right: 10px;
         height: 40px;
     }
-
-    div.grouped_links
-    {
-        display: inline;
-    }
-
 
     /* --- IE6 patch using the star hack --- (Thanks to Daniel James) */
 

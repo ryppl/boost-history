@@ -17,10 +17,16 @@
   <xsl:import
     href="http://docbook.sourceforge.net/release/xsl/current/html/formal.xsl"/>
 -->
+
+  <xsl:import href="relative-href.xsl"/>
+
+  <xsl:param name = "logo.image.src" select = "''"/>
+
   <!--
      Override the behaviour of some DocBook elements for better
      integration with the new look & feel.
   -->
+
 
   <xsl:template match = "programlisting[ancestor::informaltable]">
      <pre class = "table-{name(.)}"><xsl:apply-templates/></pre>
@@ -32,6 +38,44 @@
   </xsl:template>
 
 
+  <!-- logo -->
+
+  <xsl:template name="insert.titlepage.logo">
+    <xsl:if test="$logo.image.src != ''">
+      <div class="titlepage_logo"><img src="{$logo.image.src}"/></div>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="chapter.titlepage.before.recto">
+     <xsl:call-template name="insert.titlepage.logo" />
+  </xsl:template>
+
+  <xsl:template name="article.titlepage.before.recto">
+     <xsl:call-template name="insert.titlepage.logo" />
+  </xsl:template>
+
+  <xsl:template name="set.titlepage.before.recto">
+     <xsl:call-template name="insert.titlepage.logo" />
+  </xsl:template>
+
+  <xsl:template name="book.titlepage.before.recto">
+     <xsl:call-template name="insert.titlepage.logo" />
+  </xsl:template>
+
+  <xsl:template name="part.titlepage.before.recto">
+     <xsl:call-template name="insert.titlepage.logo" />
+  </xsl:template>
+
+  <!-- separators -->
+
+  <xsl:template name="section.titlepage.separator">
+     <xsl:if test="count(parent::*)='0'"><div class="titlepage_separator"/></xsl:if>
+  </xsl:template>
+
+  <xsl:template name="article.titlepage.separator"><div class="titlepage_separator"/></xsl:template>
+  <xsl:template name="set.titlepage.separator"><div class="titlepage_separator"/></xsl:template>
+  <xsl:template name="book.titlepage.separator"><div class="titlepage_separator"/></xsl:template>
+  <xsl:template name="reference.titlepage.separator"><div class="titlepage_separator"/></xsl:template>
 
   <!-- table: remove border = '1' -->
 
@@ -251,67 +295,7 @@ to be safe.
 </xsl:template>
 
 
-  <!-- overwrites docbook graphical.admonition -->
 
-   <xsl:template name="graphical.admonition">
-
-      <xsl:variable name="admon.type">
-         <xsl:choose>
-            <xsl:when test="local-name(.)='note'">Note</xsl:when>
-            <xsl:when test="local-name(.)='warning'">Warning</xsl:when>
-            <xsl:when test="local-name(.)='caution'">Caution</xsl:when>
-            <xsl:when test="local-name(.)='tip'">Tip</xsl:when>
-            <xsl:when test="local-name(.)='important'">Important</xsl:when>
-            <xsl:otherwise>Note</xsl:otherwise>
-         </xsl:choose>
-      </xsl:variable>
-
-      <xsl:variable name="alt">
-         <xsl:call-template name="gentext">
-            <xsl:with-param name="key" select="$admon.type"/>
-         </xsl:call-template>
-      </xsl:variable>
-
-      <div class="{name(.)}">
-
-         <!-- top box wrapper -->
-         <div class="box-outer-wrapper">
-         <div class="box-top-left" />
-         <div class="box-top-right" />
-         <div class="box-top" />
-         <div class="box-inner-wrapper">
-         <!-- top box wrapper -->
-
-         <div class="admonition-graphic">
-            <img alt="[{$alt}]">
-               <xsl:attribute name="src">
-                  <xsl:call-template name="admon.graphic"/>
-               </xsl:attribute>
-            </img>
-         </div>
-         <div class="admonition-body">
-         <div class="admonition-title">
-            <xsl:call-template name="anchor"/>
-            <xsl:if test="$admon.textlabel != 0 or title">
-               <xsl:apply-templates select="." mode="object.title.markup"/>
-            </xsl:if>
-         </div>
-         <div class="admonition-content">
-            <xsl:apply-templates/>
-         </div>
-         </div>
-
-         <!-- bottom box wrapper -->
-         </div>
-         <div class="box-bottom-left" />
-         <div class="box-bottom-right" />
-         <div class="box-bottom" />
-         </div>
-         <!-- bottom box wrapper -->
-
-      </div>
-
-   </xsl:template>
 
 <!-- Overwrites make.toc to add the box wrapper -->
 

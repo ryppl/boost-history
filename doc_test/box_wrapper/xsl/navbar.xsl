@@ -166,6 +166,20 @@
       </tr>
    </xsl:template>
 
+
+   <xsl:template name = "insert.spirit.navig.icon">
+      <xsl:param name="direction" select="'next'"/>
+      <xsl:param name="accesskey" select="''"/>
+      <xsl:param name="target" select="''"/>
+
+      <div class = "spirit-nav-icon">
+         <a accesskey = "{$accesskey}" href="{$target}">
+            <div class = "{$direction}-icon" />
+         </a>
+      </div>
+
+   </xsl:template>
+
    <xsl:template name = "navbar.spirit">
       <xsl:param name = "prev" select = "/foo"/>
       <xsl:param name = "next" select = "/foo"/>
@@ -176,38 +190,48 @@
 
       <div class = "spirit-nav">
          <!-- prev -->
-         <xsl:if test = "count($prev)>0"><a accesskey = "p">
-            <xsl:attribute name = "href"><xsl:call-template name = "href.target">
-               <xsl:with-param name = "object" select = "$prev"/>
-            </xsl:call-template></xsl:attribute>
-            <xsl:call-template name = "navig.content">
+         <xsl:if test = "count($prev)>0">
+            <xsl:call-template name = "insert.spirit.navig.icon">
                <xsl:with-param name = "direction" select = "'prev'"/>
+               <xsl:with-param name = "accesskey" select="'p'" />
+               <xsl:with-param name = "target">
+                  <xsl:call-template name = "href.target">
+                     <xsl:with-param name = "object" select = "$prev"/>
+                  </xsl:call-template>
+               </xsl:with-param>
             </xsl:call-template>
-         </a></xsl:if>
+         </xsl:if>
+
          <!-- up -->
-         <xsl:if test = "count($up)>0"><a accesskey = "u">
-            <xsl:attribute name = "href"><xsl:call-template name = "href.target">
-               <xsl:with-param name = "object" select = "$up"/>
-            </xsl:call-template></xsl:attribute>
-            <xsl:call-template name = "navig.content">
+         <xsl:if test = "count($up)>0">
+            <xsl:call-template name = "insert.spirit.navig.icon">
                <xsl:with-param name = "direction" select = "'up'"/>
+               <xsl:with-param name = "accesskey" select="'u'" />
+               <xsl:with-param name = "target">
+                  <xsl:call-template name = "href.target">
+                     <xsl:with-param name = "object" select = "$up"/>
+                  </xsl:call-template>
+               </xsl:with-param>
             </xsl:call-template>
-         </a></xsl:if>
+         </xsl:if>
+
          <!-- home -->
          <xsl:if test = "$home != . or $nav.context = 'toc'">
-            <a accesskey = "h">
-               <xsl:attribute name = "href"><xsl:call-template name = "href.target">
-                  <xsl:with-param name = "object" select = "$home"/>
-               </xsl:call-template></xsl:attribute>
-               <xsl:call-template name = "navig.content">
-                  <xsl:with-param name = "direction" select = "'home'"/>
-               </xsl:call-template>
-            </a>
+            <xsl:call-template name = "insert.spirit.navig.icon">
+               <xsl:with-param name = "direction" select = "'home'"/>
+               <xsl:with-param name = "accesskey" select="'h'" />
+               <xsl:with-param name = "target">
+                  <xsl:call-template name = "href.target">
+                     <xsl:with-param name = "object" select = "$home"/>
+                  </xsl:call-template>
+               </xsl:with-param>
+            </xsl:call-template>
             <xsl:if test = "$chunk.tocs.and.lots != 0 and $nav.context != 'toc'">
                <xsl:text>|</xsl:text>
             </xsl:if>
          </xsl:if>
-         <xsl:if test = "$chunk.tocs.and.lots != 0 and $nav.context != 'toc'"><a accesskey = "t">
+         <xsl:if test = "$chunk.tocs.and.lots != 0 and $nav.context != 'toc'">
+            <a accesskey = "t">
             <xsl:attribute name = "href">
                <xsl:apply-templates select = "/*[1]" mode = "recursive-chunk-filename"/>
                <xsl:text>-toc</xsl:text>
@@ -216,17 +240,21 @@
             <xsl:call-template name = "gentext">
                <xsl:with-param name = "key" select = "'nav-toc'"/>
             </xsl:call-template>
-         </a></xsl:if>
+            </a>
+        </xsl:if>
          <!-- next -->
-         <xsl:if test = "count($next)>0"><a accesskey = "n">
-            <xsl:attribute name = "href"><xsl:call-template name = "href.target">
-               <xsl:with-param name = "object" select = "$next"/>
-            </xsl:call-template></xsl:attribute>
-            <xsl:call-template name = "navig.content">
+         <xsl:if test = "count($next)>0">
+            <xsl:call-template name = "insert.spirit.navig.icon">
                <xsl:with-param name = "direction" select = "'next'"/>
+               <xsl:with-param name = "accesskey" select="'n'" />
+               <xsl:with-param name = "target">
+                  <xsl:call-template name = "href.target">
+                     <xsl:with-param name = "object" select = "$next"/>
+                  </xsl:call-template>
+               </xsl:with-param>
             </xsl:call-template>
-         </a></xsl:if>
-      </div>
+        </xsl:if>
+     </div>
    </xsl:template>
 
    <!-- Old style header navigation -->
