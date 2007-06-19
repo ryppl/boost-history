@@ -6,11 +6,11 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_XOR_ASSIGN_XOR_ASSIGN_RESULT_HPP
-#define BOOST_ACT_INTERLOCKED_XOR_ASSIGN_XOR_ASSIGN_RESULT_HPP
+#ifndef BOOST_ACT_INTERLOCKED_XOR_ASSIGN_XOR_ASSIGN_RESULT_FWD_HPP
+#define BOOST_ACT_INTERLOCKED_XOR_ASSIGN_XOR_ASSIGN_RESULT_FWD_HPP
 
-#include <boost/act/interlocked/xor_assign/xor_assign_result/xor_assign_result.hpp>
-#include <boost/act/interlocked/xor_assign/xor_assign_result/xor_assign_acquire_result.hpp>
-#include <boost/act/interlocked/xor_assign/xor_assign_result/xor_assign_release_result.hpp>
+#include <boost/act/interlocked/xor_assign/xor_assign_result/xor_assign_result_fwd.hpp>
+#include <boost/act/interlocked/xor_assign/xor_assign_result/xor_assign_acquire_result_fwd.hpp>
+#include <boost/act/interlocked/xor_assign/xor_assign_result/xor_assign_release_result_fwd.hpp>
 
 #endif

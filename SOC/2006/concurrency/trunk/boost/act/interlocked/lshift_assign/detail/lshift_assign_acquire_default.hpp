@@ -6,14 +6,14 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_XOR_ASSIGN_XOR_ASSIGN_ACQUIRE_HPP
-#define BOOST_ACT_INTERLOCKED_XOR_ASSIGN_XOR_ASSIGN_ACQUIRE_HPP
+#ifndef BOOST_ACT_INTERLOCKED_LSHIFT_ASSIGN_DETAIL_LSHIFT_ASSIGN_ACQUIRE_DEFAULT_HPP
+#define BOOST_ACT_INTERLOCKED_LSHIFT_ASSIGN_DETAIL_LSHIFT_ASSIGN_ACQUIRE_DEFAULT_HPP
 
-#include <boost/act/interlocked/detail/binary_forwarder.hpp>
+#include <boost/act/interlocked/detail/binary_default.hpp>
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO                     \
-( xor_assign, acquire, not_additive )
+#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO                       \
+( lshift_assign, acquire, << )
 
-#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER()
+#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT()
 
 #endif
