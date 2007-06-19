@@ -141,7 +141,7 @@ int test_main( int, char ** )
   BOOST_CHECK( ec.posix() == other );
 
 #else
-  BOOST_CHECK( ec == ec_0_native );
+  // TODO: write some POSIX tests
 #endif
   
   return 0;
