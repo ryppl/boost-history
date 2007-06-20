@@ -72,7 +72,7 @@ T inverse_students_t_tail_series(T df, T v, T u, const L& l)
    using namespace std;
    // Tail series expansion, see section 6 of Shaw's paper.
    // w is calculated using Eq 60:
-   T w = detail::tgamma_delta_ratio_imp(df / 2, constants::half<T>(), l)
+   T w = detail::tgamma_delta_ratio_imp(df / 2, constants::half<T>(), policy::policy<>())
       * sqrt(df * constants::pi<T>()) * v;
    // define some variables:
    T np2 = df + 2;
@@ -126,7 +126,7 @@ T inverse_students_t_body_series(T df, T u, const L& l)
    //
    // Start with Eq 56 of Shaw:
    //
-   T v = detail::tgamma_delta_ratio_imp(df / 2, constants::half<T>(), l)
+   T v = detail::tgamma_delta_ratio_imp(df / 2, constants::half<T>(), policy::policy<>())
       * sqrt(df * constants::pi<T>()) * (u - constants::half<T>());
    //
    // Workspace for the polynomial coefficients:

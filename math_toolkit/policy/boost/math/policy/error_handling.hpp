@@ -419,7 +419,7 @@ inline bool check_overflow(T val, R* result, const char* function, const Policy&
    using namespace std;
    if(fabs(val) > tools::max_value<R>())
    {
-      *result = raise_overflow_error<R>(function, 0, pol);
+      *result = static_cast<R>(raise_overflow_error<R>(function, 0, pol));
       return true;
    }
    return false;
@@ -429,7 +429,7 @@ inline bool check_underflow(T val, R* result, const char* function, const Policy
 {
    if((val != 0) && (static_cast<R>(val) == 0))
    {
-      *result = raise_underflow_error<R>(function, 0, pol);
+      *result = static_cast<R>(raise_underflow_error<R>(function, 0, pol));
       return true;
    }
    return false;
@@ -440,18 +440,18 @@ inline bool check_denorm(T val, R* result, const char* function, const Policy& p
    using namespace std;
    if((fabs(val) < static_cast<T>(tools::min_value<R>())) && (static_cast<R>(val) != 0))
    {
-      *result = raise_denorm_error<R>(function, 0, val, pol);
+      *result = static_cast<R>(raise_denorm_error<R>(function, 0, static_cast<R>(val), pol));
       return true;
    }
    return false;
 }
 
 template <class R, class T>
-inline bool check_overflow(T val, R* result, const overflow_error<ignore_error>&){ return false; }
+inline bool check_overflow(T val, R* result, const char* function, const overflow_error<ignore_error>&){ return false; }
 template <class R, class T>
-inline bool check_underflow(T val, R* result, const overflow_error<ignore_error>&){ return false; }
+inline bool check_underflow(T val, R* result, const char* function, const underflow_error<ignore_error>&){ return false; }
 template <class R, class T>
-inline bool check_denormflow(T val, R* result, const overflow_error<ignore_error>&){ return false; }
+inline bool check_denorm(T val, R* result, const char* function, const denorm_error<ignore_error>&){ return false; }
 
 }
 
@@ -473,6 +473,15 @@ inline R checked_narrowing_cast(T val, const char* function)
       return result;
 
    return static_cast<R>(val);
+}
+
+template <class Policy>
+inline void check_series_iterations(const char* function, boost::uintmax_t max_iter, const Policy& pol)
+{
+   if(max_iter >= BOOST_MATH_MAX_ITER)
+      raise_evaluation_error<boost::uintmax_t>(
+         function,
+         "Series evaluation exceeded %1% iterations, giving up now.", max_iter, pol);
 }
 
 } //namespace policy

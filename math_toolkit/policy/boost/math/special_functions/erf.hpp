@@ -113,13 +113,13 @@ T erf_imp(T z, bool invert, const L& l, const Tag& t)
          result = z * exp(-x);
          result /= sqrt(boost::math::constants::pi<T>());
          if(result != 0)
-            result *= 2 * detail::lower_gamma_series(T(0.5f), x, boost::math::tools::digits<T>());
+            result *= 2 * detail::lower_gamma_series(T(0.5f), x, policy::policy<>());
       }
       else if(x < 1.1f)
       {
          // Compute Q:
          invert = !invert;
-         result = tgamma_small_upper_part(T(0.5f), x, l);
+         result = tgamma_small_upper_part(T(0.5f), x, policy::policy<>());
          result /= sqrt(boost::math::constants::pi<T>());
       }
       else
@@ -772,6 +772,13 @@ inline typename tools::promote_args<T>::type erfc(T z)
       true,
       evaluation_type(),
       tag_type()), BOOST_CURRENT_FUNCTION);
+}
+
+template <class T, class Policy>
+inline typename tools::promote_args<T>::type erfc(T z, const Policy& pol)
+{
+   // Temporary Hack:
+   return erfc(z);
 }
 
 } // namespace math

@@ -15,6 +15,7 @@
 #include <boost/mpl/size.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/math/tools/config.hpp>
 
 namespace boost{ namespace math{ namespace policy{
 
@@ -46,7 +47,11 @@ namespace boost{ namespace math{ namespace policy{
 #define BOOST_MATH_PROMOTE_FLOAT_POLICY true
 #endif
 #ifndef BOOST_MATH_PROMOTE_DOUBLE_POLICY
+#ifdef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
+#define BOOST_MATH_PROMOTE_DOUBLE_POLICY false
+#else
 #define BOOST_MATH_PROMOTE_DOUBLE_POLICY true
+#endif
 #endif
 #ifndef BOOST_MATH_DISCRETE_QUANTILE_POLICY
 #define BOOST_MATH_DISCRETE_QUANTILE_POLICY integer_outside
@@ -602,6 +607,69 @@ struct evaluation<double, Policy>
 {
    typedef typename mpl::if_<typename Policy::double_promote_type, long double, double>::type type;
 };
+
+template <class Real, class Policy>
+struct precision
+{
+   typedef typename Policy::precision_type precision_type;
+   typedef typename mpl::if_c<
+      ((std::numeric_limits<Real>::is_specialized == 0) || (std::numeric_limits<Real>::digits == 0)),
+      // Possibly unknown precision:
+      precision_type,
+      typename mpl::if_c<
+#ifndef __BORLANDC__
+         ((::std::numeric_limits<Real>::digits <= precision_type::value) 
+         || (Policy::precision_type::value <= 0)),
+#else
+         ((::std::numeric_limits<Real>::digits <= ::boost::math::policy::precision::precision_type::value) 
+         || (::boost::math::policy::precision::precision_type::value <= 0)),
+#endif
+         // Default case, full precision for RealType:
+         digits2< ::std::numeric_limits<Real>::digits>,
+         // User customised precision:
+         precision_type
+      >::type
+   >::type type;
+};
+
+template <class T, class Policy>
+inline int digits(BOOST_EXPLICIT_TEMPLATE_TYPE(T))
+{
+#ifndef BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
+   BOOST_STATIC_ASSERT( ::std::numeric_limits<T>::is_specialized);
+#else
+   BOOST_ASSERT(::std::numeric_limits<T>::is_specialized);
+#endif
+   typedef typename precision<T, Policy>::type p_t;
+   return p_t::value;
+}
+
+namespace detail{
+
+template <class A1, 
+          class A2, 
+          class A3,
+          class A4,
+          class A5,
+          class A6,
+          class A7,
+          class A8,
+          class A9,
+          class A10,
+          class A11>
+char test_is_policy(const policy<A1,A2,A3,A4,A5,A6,A7,A8,A9,A10,A11>*);
+double test_is_policy(...);
+
+template <class P>
+struct is_policy_imp
+{
+   BOOST_STATIC_CONSTANT(bool, value = (sizeof(test_is_policy(static_cast<P*>(0))) == 1));
+};
+
+}
+
+template <class P>
+struct is_policy : public mpl::bool_< ::boost::math::policy::detail::is_policy_imp<P>::value> {};
 
 }}} // namespaces
 

@@ -428,6 +428,18 @@ typename tools::promote_args<T>::type erf_inv(T z)
       detail::erf_inv_imp(static_cast<eval_type>(p), static_cast<eval_type>(q), static_cast<tag_type const*>(0)), BOOST_CURRENT_FUNCTION);
 }
 
+template <class T, class Policy>
+inline typename tools::promote_args<T>::type erfc_inv(T z, const Policy&)
+{
+   return erfc_inv(z);
+}
+
+template <class T, class Policy>
+inline typename tools::promote_args<T>::type erf_inv(T z, const Policy&)
+{
+   return erf_inv(z);
+}
+
 } // namespace math
 } // namespace boost
 

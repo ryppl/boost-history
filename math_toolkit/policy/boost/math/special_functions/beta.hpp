@@ -711,17 +711,17 @@ T beta_small_b_large_a_series(T a, T b, T x, T y, T s0, T mult, const L& l, bool
    u = -t * lx;
    // and from from 9.2:
    T prefix;
-   T h = regularised_gamma_prefix(b, u, l);
+   T h = regularised_gamma_prefix(b, u, policy::policy<>(), l);
    if(h <= tools::min_value<T>())
       return s0;
    if(normalised)
    {
-      prefix = h / tgamma_delta_ratio_imp(a, b, l);
+      prefix = h / tgamma_delta_ratio_imp(a, b, policy::policy<>());
       prefix /= pow(t, b);
    }
    else
    {
-      prefix = full_igamma_prefix(b, u) / pow(t, b);
+      prefix = full_igamma_prefix(b, u, policy::policy<>()) / pow(t, b);
    }
    prefix *= mult;
    //

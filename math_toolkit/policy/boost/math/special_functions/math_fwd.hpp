@@ -71,15 +71,21 @@ namespace boost
    // erf & erfc error functions.
    template <class RT> // Error function.
    typename tools::promote_args<RT>::type erf(RT z);
+   template <class RT, class Policy> // Error function.
+   typename tools::promote_args<RT>::type erf(RT z, const Policy&);
 
    template <class RT>// Error function complement.
    typename tools::promote_args<RT>::type erfc(RT z);
+   template <class RT, class Policy>// Error function complement.
+   typename tools::promote_args<RT>::type erfc(RT z, const Policy&);
 
    template <class RT>// Error function inverse.
    typename tools::promote_args<RT>::type erf_inv(RT z);
+   template <class RT, class Policy>// Error function inverse.
+   typename tools::promote_args<RT>::type erf_inv(RT z, const Policy& pol);
 
-   template <class RT>// Error function complement inverse.
-   typename tools::promote_args<RT>::type erfc_inv(RT z);
+   template <class RT, class Policy>// Error function complement inverse.
+   typename tools::promote_args<RT>::type erfc_inv(RT z, const Policy& pol);
 
    // Polynomials:
    template <class T1, class T2, class T3>
@@ -244,6 +250,10 @@ namespace boost
    // log1p is log(x + 1)
    template <class T>
    typename tools::promote_args<T>::type log1p(T);
+
+   // log1pmx is log(x + 1) - x
+   template <class T>
+   typename tools::promote_args<T>::type log1pmx(T);
 
    // Exp (x) minus 1 functions.
    template <class T>
