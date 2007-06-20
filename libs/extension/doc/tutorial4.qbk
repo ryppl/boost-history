@@ -90,7 +90,7 @@ Then you can access them as any other factory_map:
 We get the following output:
 [table 
 [[=words:=\n
-[^hello world! | v2 hello world! v2 | v2 hello world! v2]]]
+[^hello world! | v2 hello world! v2 | v2 hello world! v2]]]]
 
 
 The first "hello world" is returned by the first version of the library, and the second and third retruned by the second version.
@@ -156,7 +156,7 @@ The output is:
 
 [table 
 [[=salutes:= \n
-=hello bye!=]]
+=hello bye!=]]]
 
 
 In conclusion, with Boost.Extension we can implement the same class in different libraries, the same class for different interfaces and
