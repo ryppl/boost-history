@@ -1,16 +1,15 @@
 [section:tutorial04 Tutorial 4]
 
-TODO: formatting
 
 In this tutorial we will see different features of the library related to multiple loading of the same library, instance or interface.
 
-We will follow some parts of versions example (examples/versioning/). As we expect that at this point you've gone through
+We will follow some parts of versions example ([^examples\/versioning]). As we expect that at this point you've gone through
 the first tutorials we will not enter into specific details of the use of the library.
 
 First, we want to show that it is possible to load several libraries into one factory map. We'll create a new HelloWorld library
 very similar to the one that we have described in the first tutorial. 
 
-Let's remember the classes that we have implemented (in hello_world.cpp) for the "hello world" example:
+Let's remember the classes that we have implemented (in [^hello_world.cpp]) for the "hello world" example:
 
 ``
 class world : public word
@@ -18,11 +17,13 @@ class world : public word
 public:
   virtual const char * get_val(){return "world!";}
 };
+
 class hello : public word
 {
 public:
   virtual const char * get_val(){return "hello";}
 };
+
 extern "C" void BOOST_EXTENSION_EXPORT_DECL extension_export_word(boost::extensions::factory_map & fm)
 {
   fm.add<hello, word, int>(1);
@@ -30,8 +31,8 @@ extern "C" void BOOST_EXTENSION_EXPORT_DECL extension_export_word(boost::extensi
 }
 ``
 
-And now let's see the new version that we've implemented for this example (as defined in hello_world_versions.cpp). The 
-classes have the same name and methods, both implement the same interface, but the get_val() methods differ in the 
+And now let's see the new version that we've implemented for this example (as defined in [^hello_world_versions.cpp]). The 
+classes have the same name and methods, both implement the same interface, but the `get_val()` methods differ in the 
 returned string (to be able to recognize each one after loading them).
 
 ``
@@ -40,17 +41,20 @@ class world : public word
 public:
   virtual const char * get_val(){return "world! v2";}
 };
+
 class hello : public word
 {
 public:
   virtual const char * get_val(){return "| v2 hello";}
 };
+
 extern "C" void BOOST_EXTENSION_EXPORT_DECL extension_export_word(boost::extensions::factory_map & fm)
 {
-	fm.add<hello, word, int>(21);	// int could be used as version (v2 word 1)
-	fm.add<world, word, int>(22);	// int could be used as version (v2 word 2)
+ fm.add<world, word, int>(22);	// int could be used as version (v2 word 2)
+ fm.add<hello, word, int>(21);	// int could be used as version (v2 word 1)
 }
 ``
+
 
 Also note that we are using the Info int to store some kind of "version", and then we could diferrentiate the classes
 by its int (see Info class tutorial for more information on this).
@@ -68,7 +72,7 @@ by its int (see Info class tutorial for more information on this).
 	load_single_library(fm, "libHelloWorldLibv2.extension", "extension_export_word");
 ``
 
-We can see here that loading multiple libraries is as easy as calling load_single_library for each one and
+We can see here that loading multiple libraries is as easy as calling `load_single_library` for each one and
 using the same factory map.
 
 Then you can access them as any other factory_map:
@@ -84,11 +88,10 @@ Then you can access them as any other factory_map:
 ``
 
 We get the following output:
+[table 
+[[=words:=\n
+[^hello world! | v2 hello world! v2 | v2 hello world! v2]]]
 
-TODO: output font
-
-words: 
-hello world! | v2 hello world! v2 | v2 hello world! v2 
 
 The first "hello world" is returned by the first version of the library, and the second and third retruned by the second version.
 
@@ -112,20 +115,20 @@ And the implementations:
 class hello : public salute
 {
 public:
-	virtual const char *say(void) {return "hello";}
+  virtual const char *say(void) {return "hello";}
 };
 
 class bye : public salute
 {
 public:
-	virtual const char *say(void) {return "bye!";}
+  virtual const char *say(void) {return "bye!";}
 };
 
 
 extern "C" void BOOST_EXTENSION_EXPORT_DECL extension_export_salute(boost::extensions::factory_map & fm)
 {
-	fm.add<hello, salute, int>(1);
-	fm.add<bye, salute, int>(2);
+  fm.add<hello, salute, int>(1);
+  fm.add<bye, salute, int>(2);
 }
 ``
 
@@ -151,10 +154,9 @@ iterate it getting each of the salutes, including hello.
 
 The output is:
 
-TODO: output
-
-salutes: 
-hello bye! 
+[table 
+[[=salutes:= \n
+=hello bye!=]]
 
 
 In conclusion, with Boost.Extension we can implement the same class in different libraries, the same class for different interfaces and
