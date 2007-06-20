@@ -19,9 +19,10 @@ urls = { 'boost_1_34_0' : boost_svn }
 #
 #  Variants to build/test:  map of tag => [cmake_arguments]  
 #
+all_args = ['-DBUILD_TESTING:BOOL=ON']
 build_variants = {
-    'debug'  : ['-DBUILD_TESTING:BOOL=ON', '-DBUILD_RELEASE:BOOL=OFF', '-DBUILD_DEBUG:BOOL=ON'],
-    'release': ['-DBUILD_TESTING:BOOL=ON', '-DBUILD_RELEASE:BOOL=ON', '-DBUILD_DEBUG:BOOL=OFF']
+    'debug'  : all_args + ['-DBUILD_RELEASE:BOOL=OFF', '-DBUILD_DEBUG:BOOL=ON'],
+    'release': all_args + ['-DBUILD_RELEASE:BOOL=ON', '-DBUILD_DEBUG:BOOL=OFF']
 }
 
 #
