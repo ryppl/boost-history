@@ -147,7 +147,7 @@ T ibeta_inv_ab_imp(const T& b, const T& z, const T& p, const T& q, bool swap_ab)
    // Max iterations permitted:
    //
    boost::uintmax_t max_iter = 200;
-   std::pair<T, T> r = bracket_and_solve_root(f, guess, factor, swap_ab ? true : false, tol, max_iter);
+   std::pair<T, T> r = bracket_and_solve_root(f, guess, factor, swap_ab ? true : false, tol, max_iter, policy::policy<>());
    if(max_iter >= 200)
       tools::logic_error<T>(BOOST_CURRENT_FUNCTION, "Unable to locate the root within a reasonable number of iterations, closest approximation so far was %1%", r.first);
    return (r.first + r.second) / 2;

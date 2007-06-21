@@ -284,7 +284,7 @@ RealType students_t_distribution<RealType>::estimate_degrees_of_freedom(
    detail::sample_size_func<RealType> f(alpha, beta, sd, difference_from_mean);
    tools::eps_tolerance<RealType> tol(tools::digits<RealType>());
    boost::uintmax_t max_iter = 10000;
-   std::pair<RealType, RealType> r = tools::bracket_and_solve_root(f, hint, RealType(2), false, tol, max_iter);
+   std::pair<RealType, RealType> r = tools::bracket_and_solve_root(f, hint, RealType(2), false, tol, max_iter, policy::policy<>());
    RealType result = r.first + (r.second - r.first) / 2;
    if(max_iter == 10000)
    {

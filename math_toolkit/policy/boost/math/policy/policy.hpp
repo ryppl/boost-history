@@ -394,7 +394,7 @@ public:
 #if BOOST_MATH_DIGITS10_POLICY == 0
    typedef digits2<> precision_type;
 #else
-   typedef typename detail::precision<digits10<>, digits2<> >::type precision_type;
+   typedef detail::precision<digits10<>, digits2<> >::type precision_type;
 #endif
    typedef promote_float<> float_promote_type;
    typedef promote_double<> double_promote_type;
@@ -414,7 +414,7 @@ public:
 #if BOOST_MATH_DIGITS10_POLICY == 0
    typedef digits2<> precision_type;
 #else
-   typedef typename detail::precision<digits10<>, digits2<> >::type precision_type;
+   typedef detail::precision<digits10<>, digits2<> >::type precision_type;
 #endif
    typedef promote_float<false> float_promote_type;
    typedef promote_double<false> double_promote_type;

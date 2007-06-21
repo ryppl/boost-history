@@ -662,7 +662,8 @@ namespace boost
            factor,
            true,
            tol,
-           max_iter);
+           max_iter,
+           policy::policy<>());
         if(max_iter >= 1000)
            tools::logic_error<RealType>(BOOST_CURRENT_FUNCTION, "Unable to locate the root within a reasonable number of iterations, closest approximation so far was %1%", r.first);
         // return centre point of range found:
@@ -749,7 +750,8 @@ namespace boost
            factor,
            true,
            tol,
-           max_iter);
+           max_iter,
+           policy::policy<>());
         if(max_iter >= 1000)
            tools::logic_error<RealType>(BOOST_CURRENT_FUNCTION, "Unable to locate the root within a reasonable number of iterations, closest approximation so far was %1%", r.first);
         // return centre point of range found:

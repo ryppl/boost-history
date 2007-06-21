@@ -356,9 +356,9 @@ T gamma_p_inv_imp(T a, T p, const Policy& pol)
    // large convergence is slow, so we'll bump it up to full 
    // precision to prevent premature termination of the root-finding routine.
    //
-   unsigned digits = (tools::digits<T>() * 2) / 3;
+   unsigned digits = (policy::digits<T, Policy>() * 2) / 3;
    if((a < 0.125) && (fabs(gamma_p_derivative(a, guess, pol)) > 1 / sqrt(tools::epsilon<T>())))
-      digits = tools::digits<T>() - 2;
+      digits = policy::digits<T, Policy>() - 2;
    //
    // Go ahead and iterate:
    //

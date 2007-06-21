@@ -253,8 +253,8 @@ T cubic_interpolate(const T& a, const T& b, const T& d,
 
 } // namespace detail
 
-template <class F, class T, class Tol>
-std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const T& fbx, Tol tol, boost::uintmax_t& max_iter)
+template <class F, class T, class Tol, class Policy>
+std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const T& fbx, Tol tol, boost::uintmax_t& max_iter, const Policy& pol)
 {
    //
    // Main entry point and logic for Toms Algorithm 748
@@ -270,15 +270,15 @@ std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const
    a = ax;
    b = bx;
    if(a >= b)
-      tools::domain_error(
+      policy::raise_domain_error(
          BOOST_CURRENT_FUNCTION, 
-         "Parameters a and b out of order: a=%1%", a);
+         "Parameters a and b out of order: a=%1%", a, pol);
    fa = fax;
    fb = fbx;
    if(boost::math::sign(fa) * boost::math::sign(fb) > 0)
-      tools::domain_error(
+      policy::raise_domain_error(
          BOOST_CURRENT_FUNCTION, 
-         "Parameters a and b do not bracket the root: a=%1%", a);
+         "Parameters a and b do not bracket the root: a=%1%", a, pol);
    // dummy value for fd, e and fe:
    fe = e = fd = 1e5F;
 
@@ -415,16 +415,28 @@ std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const
 }
 
 template <class F, class T, class Tol>
-inline std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, Tol tol, boost::uintmax_t& max_iter)
+inline std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const T& fbx, Tol tol, boost::uintmax_t& max_iter)
+{
+   return toms748_solve(f, ax, bx, fax, fbx, tol, max_iter, policy::policy<>());
+}
+
+template <class F, class T, class Tol, class Policy>
+inline std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, Tol tol, boost::uintmax_t& max_iter, const Policy& pol)
 {
    max_iter -= 2;
-   std::pair<T, T> r = toms748_solve(f, ax, bx, f(ax), f(bx), tol, max_iter);
+   std::pair<T, T> r = toms748_solve(f, ax, bx, f(ax), f(bx), tol, max_iter, pol);
    max_iter += 2;
    return r;
 }
 
 template <class F, class T, class Tol>
-std::pair<T, T> bracket_and_solve_root(F f, const T& guess, const T& factor, bool rising, Tol tol, boost::uintmax_t& max_iter)
+inline std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, Tol tol, boost::uintmax_t& max_iter)
+{
+   return toms748_solve(f, ax, bx, tol, max_iter, policy::policy<>());
+}
+
+template <class F, class T, class Tol, class Policy>
+std::pair<T, T> bracket_and_solve_root(F f, const T& guess, const T& factor, bool rising, Tol tol, boost::uintmax_t& max_iter, const Policy& pol)
 {
    using namespace std;
    //
@@ -448,7 +460,7 @@ std::pair<T, T> bracket_and_solve_root(F f, const T& guess, const T& factor, boo
       while(sign(fb) == sign(fa))
       {
          if(count == 0)
-            tools::logic_error(BOOST_CURRENT_FUNCTION, "Unable to bracket root, last nearest value was %1%", b);
+            policy::raise_evaluation_error(BOOST_CURRENT_FUNCTION, "Unable to bracket root, last nearest value was %1%", b, pol);
          a = b;
          fa = fb;
          b *= factor;
@@ -473,7 +485,7 @@ std::pair<T, T> bracket_and_solve_root(F f, const T& guess, const T& factor, boo
             return a > 0 ? std::make_pair(T(0), T(a)) : std::make_pair(T(a), T(0)); 
          }
          if(count == 0)
-            tools::logic_error(BOOST_CURRENT_FUNCTION, "Unable to bracket root, last nearest value was %1%", a);
+            policy::raise_evaluation_error(BOOST_CURRENT_FUNCTION, "Unable to bracket root, last nearest value was %1%", a, pol);
          b = a;
          fb = fa;
          a /= factor;
@@ -484,10 +496,16 @@ std::pair<T, T> bracket_and_solve_root(F f, const T& guess, const T& factor, boo
    }
    max_iter -= count;
    max_iter += 1;
-   std::pair<T, T> r = toms748_solve(f, a, b, fa, fb, tol, count);
+   std::pair<T, T> r = toms748_solve(f, a, b, fa, fb, tol, count, pol);
    max_iter += count;
    BOOST_MATH_INSTRUMENT_CODE("max_iter = " << max_iter << " count = " << count);
    return r;
+}
+
+template <class F, class T, class Tol>
+inline std::pair<T, T> bracket_and_solve_root(F f, const T& guess, const T& factor, bool rising, Tol tol, boost::uintmax_t& max_iter)
+{
+   return bracket_and_solve_root(f, guess, factor, rising, tol, max_iter, policy::policy<>());
 }
 
 } // namespace tools
