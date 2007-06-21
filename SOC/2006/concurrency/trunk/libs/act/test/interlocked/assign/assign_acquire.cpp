@@ -8,15 +8,15 @@
 
 #include "../assign_retrieve_helper.hpp"
 #include <boost/thread/barrier.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include "assign_helper.hpp"
 
 #include <boost/act/interlocked/assign/assign_acquire.hpp>
-#include <boost/act/interlocked/assign/assign_result.hpp>
 
 struct interlocked_assign_acquire_set
 {
   template< typename VariableType, typename SourceType >
-  typename boost::act::interlocked::assign_result< VariableType >::type
+  typename boost::remove_cv< VariableType >::type
   operator ()( VariableType& var, SourceType new_val ) const
   {
     return boost::act::interlocked::assign_acquire( var, new_val );

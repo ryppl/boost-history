@@ -1,0 +1,43 @@
+/*=============================================================================
+    Copyright (c) 2006, 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_GCC_X86_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_GCC_X86_HPP
+
+#include <boost/type_traits/remove_cv.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct assign_impl
+{
+  template< typename LeftType, typename RightType, typename OldType >
+  static typename remove_cv< LeftType >::type
+  execute( LeftType& left, RightType right )
+  {
+    typedef typename remove_cv< LeftType >::type unqualified_type;
+
+    unqualified_type old_value;
+
+    // __volatile__ guarantees no compiler reordering
+    // Note: lock is implied with xchg
+    __asm__ __volatile__
+    (
+      "sfence\n\t"
+      "xchg %1, %0":
+      "=m"( left ), "=r"( old_value ): // outputs (%0, %1)
+      "m"( left ), "1"( right ): // inputs (%2, %3 == %1)
+      "memory", "cc" // clobbers
+    );
+
+    return old_value;
+  }
+};
+
+} } } }
+
+#endif

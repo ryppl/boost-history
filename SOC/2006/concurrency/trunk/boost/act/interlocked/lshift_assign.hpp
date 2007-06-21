@@ -12,6 +12,5 @@
 #include <boost/act/interlocked/lshift_assign/lshift_assign.hpp>
 #include <boost/act/interlocked/lshift_assign/lshift_assign_acquire.hpp>
 #include <boost/act/interlocked/lshift_assign/lshift_assign_release.hpp>
-#include <boost/act/interlocked/lshift_assign/lshift_assign_result.hpp>
 
 #endif

@@ -13,7 +13,7 @@
 #include "../integral_additive_helper.hpp"
 #include "../operation_result_checker.hpp"
 #include <boost/act/interlocked/add_assign.hpp>
-#include <boost/act/interlocked/add_assign/add_assign_result.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 #include <boost/preprocessor/cat.hpp>
 
 struct BOOST_PP_CAT( interlocked_
@@ -21,7 +21,7 @@ struct BOOST_PP_CAT( interlocked_
                    )
 {
   template< typename LeftType, typename RightType >
-  typename boost::act::interlocked::add_assign_result< LeftType >::type
+  typename boost::remove_cv< LeftType >::type
   operator ()( LeftType& left, RightType const& right ) const
   {
     return boost::act::interlocked::BOOST_ACT_TEST_INTERLOCKED_NAME

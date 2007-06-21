@@ -14,6 +14,7 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
@@ -43,22 +44,11 @@ typename lazy_enable_if
     detail::are_valid_assign_style_params< TargetType >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
-, BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SHORT_NAME
-              , _result
-              )
-              < TargetType >
+, remove_cv< TargetType >
 >
 ::type
 BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FULL_NAME( TargetType& target )
 {
-  typedef typename remove_volatile< TargetType >::type type;
-  typedef typename BOOST_PP_CAT
-                   ( BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SHORT_NAME
-                   , _result
-                   )
-                   < TargetType >
-                   ::type result_type;
-
   return detail::impl_meta
          <
            detail::BOOST_PP_CAT

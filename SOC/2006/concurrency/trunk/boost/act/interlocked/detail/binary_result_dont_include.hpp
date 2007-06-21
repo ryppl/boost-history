@@ -21,6 +21,7 @@ Note: If you are getting an error in this file, please post to the mailing list
 #ifdef BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA
 
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/stringize.hpp>
 
 #include <boost/act/interlocked/detail/impl.hpp>
 
@@ -28,27 +29,6 @@ Note: If you are getting an error in this file, please post to the mailing list
 BOOST_ACT_INTERLOCKED_DETAIL_BINARY_RESULT_INFO
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_RESULT_DECLARATION_HEADER()        \
-BOOST_PP_CAT                                                                   \
-( BOOST_PP_CAT                                                                 \
-  ( BOOST_PP_CAT                                                               \
-    ( BOOST_PP_CAT                                                             \
-      ( BOOST_PP_CAT                                                           \
-        ( BOOST_PP_CAT                                                         \
-          ( <boost/act/interlocked/                                            \
-          , BOOST_ACT_INTERLOCKED_DETAIL_IMPL_SHORT_NAME                       \
-          )                                                                    \
-        , /                                                                    \
-        )                                                                      \
-      , BOOST_ACT_INTERLOCKED_DETAIL_IMPL_SHORT_NAME                           \
-      )                                                                        \
-    , _result/                                                                 \
-    )                                                                          \
-  , BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME                                \
-  )                                                                            \
-, _result_fwd.hpp>                                                             \
-)
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_RESULT_DECLARATION_HEADER()
 

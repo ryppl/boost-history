@@ -175,18 +175,6 @@ BOOST_PP_EQUAL                                                                 \
 BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_                        \
             , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_RETRIEVE_INFO           \
             )
-/*
-#define BOOST_ACT_INTERLOCKED_DETAIL_CUSTOM_IMPL_HEADER()                      \
-BOOST_PP_IF                                                                    \
-(                                                                              \
-  BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL                                 \
-  ( BOOST_PP_TUPLE_ELEM( 2, 0, BOOST_ACT_INTERLOCKED_DETAIL_CUSTOM_IMPL_INFO ) \
-  , BOOST_PP_TUPLE_ELEM( 2, 1, BOOST_ACT_INTERLOCKED_DETAIL_CUSTOM_IMPL_INFO ) \
-  )                                                                            \
-, <boost/act/interlocked/detail/custom_impl.hpp>                               \
-, <boost/act/interlocked/detail/default_impl.hpp>                              \
-)
-*/
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 

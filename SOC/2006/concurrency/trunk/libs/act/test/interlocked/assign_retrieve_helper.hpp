@@ -11,7 +11,6 @@
 
 #include <boost/test/minimal.hpp>
 #include <boost/act/interlocked/retrieve.hpp>
-#include <boost/act/interlocked/assign/assign_result.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/barrier.hpp>
 #include <boost/act/interlocked/assign.hpp>
@@ -72,7 +71,7 @@ struct single_thread_basic_get
 struct interlocked_assign_set
 {
   template< typename VariableType, typename SourceType >
-  typename boost::act::interlocked::assign_result< VariableType >::type
+  typename boost::remove_cv< VariableType >::type
   operator ()( VariableType& var, SourceType new_val ) const
   {
     return boost::act::interlocked::assign( var, new_val );

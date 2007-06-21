@@ -12,6 +12,5 @@
 #include <boost/act/interlocked/bitor_assign/bitor_assign.hpp>
 #include <boost/act/interlocked/bitor_assign/bitor_assign_acquire.hpp>
 #include <boost/act/interlocked/bitor_assign/bitor_assign_release.hpp>
-#include <boost/act/interlocked/bitor_assign/bitor_assign_result.hpp>
 
 #endif

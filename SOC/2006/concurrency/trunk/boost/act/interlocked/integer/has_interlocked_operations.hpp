@@ -28,7 +28,9 @@ struct has_interlocked_operations : is_interlocked_type< Type > {};
 
 #include <boost/config.hpp>
 
-#ifdef BOOST_WINDOWS
+// ToDo: Fix
+
+//#ifdef BOOST_WINDOWS
 
 #include <boost/act/interlocked/integer/types.hpp>
 #include <boost/mpl/and.hpp>
@@ -41,7 +43,8 @@ struct has_interlocked_operations : is_interlocked_type< Type > {};
 
 namespace boost { namespace act { namespace interlocked {
 
-#if WINVER < 0x0600
+// ToDo: Fix
+#if 1
 
 template< typename Type >
 struct is_interlocked_type
@@ -81,7 +84,7 @@ struct has_interlocked_operations
 
 } } }  // namespace boost
 
-#endif
+//#endif
 
 #endif
 

@@ -12,6 +12,5 @@
 #include <boost/act/interlocked/bitand_assign/bitand_assign.hpp>
 #include <boost/act/interlocked/bitand_assign/bitand_assign_acquire.hpp>
 #include <boost/act/interlocked/bitand_assign/bitand_assign_release.hpp>
-#include <boost/act/interlocked/bitand_assign/bitand_assign_result.hpp>
 
 #endif

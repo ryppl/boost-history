@@ -12,6 +12,5 @@
 #include <boost/act/interlocked/xor_assign/xor_assign.hpp>
 #include <boost/act/interlocked/xor_assign/xor_assign_acquire.hpp>
 #include <boost/act/interlocked/xor_assign/xor_assign_release.hpp>
-#include <boost/act/interlocked/xor_assign/xor_assign_result.hpp>
 
 #endif

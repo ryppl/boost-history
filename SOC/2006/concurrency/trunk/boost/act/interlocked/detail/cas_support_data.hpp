@@ -70,6 +70,23 @@
 
   #endif // End WINVER checks
 
+#elif defined( __GNUC__ )
+
+  #if defined( __i386__ )
+
+    // Note: Same name as x64 on purpose
+    #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA                      \
+              ( gcc_x86,(32),old_value,volatile_retrieve                       \
+              , ( ( assign,        ( full_barrier ) ) )                        \
+                ( ( assign_if_was, ( full_barrier ) ) )                        \
+              )
+
+  #elif defined( __x86_64__ )
+
+    #error GCC not supported for 64-bit.
+
+  #endif
+
 #endif // End OS checks
 
 #endif

@@ -26,26 +26,6 @@ BOOST_ACT_INTERLOCKED_DETAIL_FULL_NAME                                         \
 , BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_SEMANTICS                         \
 )
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_OP_HEADER_OPENER()          \
-BOOST_PP_CAT                                                                   \
-(                                                                              \
-  BOOST_PP_CAT( <boost/act/interlocked/                                        \
-              , BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_SHORT_NAME          \
-              )                                                                \
-, /                                                                            \
-)
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_OP_RESULT_HEADER()          \
-BOOST_PP_CAT                                                                   \
-(                                                                              \
-  BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_OP_HEADER_OPENER()                \
-, BOOST_PP_CAT                                                                 \
-  (                                                                            \
-   BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_SHORT_NAME                       \
-  , _result_fwd.hpp>                                                           \
-  )                                                                            \
-)
-
-#include BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_OP_RESULT_HEADER()
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
 
 #endif

@@ -11,14 +11,16 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
-#include <boost/act/interlocked/assign/assign_result.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+
+#include <boost/act/interlocked/detail/impl_meta.hpp>
 
 #include <boost/act/interlocked/detail/impl.hpp>
 
@@ -37,16 +39,13 @@ typename lazy_enable_if
     detail::are_valid_assign_style_params< TargetType, SourceType const >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
-, assign_result< TargetType >
+, remove_cv< TargetType >
 >
 ::type
 assign_acquire( TargetType& destination, SourceType const& new_value )
 {
-  typedef typename remove_volatile< TargetType >::type type;
-  type const source = static_cast< type >( new_value );
-
-  return detail::assign_acquire_impl
-         ::execute( destination, source );
+  return detail::impl_meta< detail::assign_acquire_impl, TargetType >
+         ::execute( destination, new_value );
 
 }
 
@@ -58,13 +57,12 @@ typename lazy_enable_if
     detail::are_valid_assign_style_params< TargetType, SourceType const >
   , detail::is_interlocked_bool< TargetType >
   >
-, assign_result< TargetType >
+, remove_cv< TargetType >
 >
 ::type
 assign_acquire( TargetType& destination, SourceType const& new_value )
 {
-  typedef typename assign_result< TargetType >::type result_type;
-  typedef typename TargetType::internal_type internal_type;
+  typedef typename remove_cv< TargetType >::type result_type;
 
   return result_type
          (
@@ -72,8 +70,7 @@ assign_acquire( TargetType& destination, SourceType const& new_value )
            ( interlocked_bool_internal_value( destination )
            , static_cast< bool >( new_value )
            )
-           .old_value() != 0
-         , static_cast< bool >( new_value )
+           != 0
          );
 }
 

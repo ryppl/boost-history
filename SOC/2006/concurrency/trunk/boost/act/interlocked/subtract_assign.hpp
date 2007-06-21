@@ -12,6 +12,5 @@
 #include <boost/act/interlocked/subtract_assign/subtract_assign.hpp>
 #include <boost/act/interlocked/subtract_assign/subtract_assign_acquire.hpp>
 #include <boost/act/interlocked/subtract_assign/subtract_assign_release.hpp>
-#include <boost/act/interlocked/subtract_assign/subtract_assign_result.hpp>
 
 #endif

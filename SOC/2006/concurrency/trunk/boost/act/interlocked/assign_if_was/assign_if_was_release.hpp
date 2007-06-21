@@ -11,14 +11,16 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
-#include <boost/act/interlocked/assign_if_was/assign_if_was_result.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+
+#include <boost/act/interlocked/detail/impl_meta.hpp>
 
 #include <boost/act/interlocked/detail/impl.hpp>
 
@@ -39,22 +41,15 @@ typename lazy_enable_if
                                          >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
-, assign_if_was_result< TargetType >
+, remove_cv< TargetType >
 >
 ::type
 assign_if_was_release( TargetType& destination, SourceType const& new_value
                      , ConditionType const& expected_value
                      )
 {
-  typedef typename remove_volatile< TargetType >::type type;
-
-  type const source    = static_cast< type >( new_value ),
-             old_value = static_cast< type >( expected_value );
-
-  typedef typename assign_if_was_result< TargetType >::type result_type;
-
-  return detail::assign_if_was_release_impl
-         ::execute( destination, source, old_value );
+  return detail::impl_meta< detail::assign_if_was_release_impl, TargetType >
+         ::execute( destination, new_value, expected_value );
 }
 
 template< typename TargetType, typename SourceType, typename ConditionType >
@@ -67,16 +62,14 @@ typename lazy_enable_if
                                          >
   , detail::is_interlocked_bool< TargetType >
   >
-, assign_if_was_result< TargetType >
+, remove_cv< TargetType >
 >
 ::type
 assign_if_was_release( TargetType& destination, SourceType const& new_value
                      , ConditionType const& expected_value
                      )
 {
-  typedef typename assign_if_was_result< TargetType >::type result_type;
-
-  typedef typename TargetType::internal_type internal_type;
+  typedef typename remove_cv< TargetType >::type result_type;
 
   return result_type
          (
@@ -85,9 +78,7 @@ assign_if_was_release( TargetType& destination, SourceType const& new_value
            , static_cast< bool >( new_value )
            , static_cast< bool >( expected_value )
            )
-           .old_value() != 0
-         , static_cast< bool >( new_value )
-         , static_cast< bool >( expected_value )
+           != 0
          );
 }
 

@@ -13,6 +13,7 @@
 #include <boost/preprocessor/cat.hpp>
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
@@ -57,10 +58,7 @@ typename lazy_enable_if
     < TargetType, OperandType >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
-, BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_SHORT_NAME
-              , _result
-              )
-              < TargetType, OperandType const >
+, remove_cv< TargetType >
 >
 ::type
 BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_FULL_NAME( TargetType& target

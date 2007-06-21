@@ -9,7 +9,6 @@
 #include <boost/test/minimal.hpp>
 #include "../operation_result_checker.hpp"
 #include <boost/act/interlocked/bitand_assign.hpp>
-#include <boost/act/interlocked/bitand_assign/bitand_assign_result.hpp>
 
 struct interlocked_bitand_assign
 {

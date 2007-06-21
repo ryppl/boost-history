@@ -46,19 +46,6 @@ BOOST_ACT_TEST_DETAIL_BASIC_BINARY_OP( rshift,   >> )
 
 #undef BOOST_ACT_TEST_DETAIL_BASIC_BINARY_OP
 
-template< typename ValueType, typename ResultType >
-void check_operation_results( ValueType old_value, ValueType expected_value
-                            , ResultType result
-                            )
-{
-  ValueType const result_old_value = result.old_value(),
-                  result_new_value = result.new_value();
-
-  BOOST_CHECK( result_old_value == old_value );
-  BOOST_CHECK( result_new_value == expected_value );
-}
-
-
 template< typename SingleThreadOperationType, typename OperationType >
 void brute_operation_result_checker( SingleThreadOperationType single_thread_op
                                    , OperationType operation
@@ -72,9 +59,7 @@ void brute_operation_result_checker( SingleThreadOperationType single_thread_op
   {
     uint_least8_t const copy = test_var;
 
-    check_operation_results( copy, single_thread_op( copy, val )
-                                 , operation( test_var, val )
-                           );
+    BOOST_CHECK( operation( test_var, val ) == copy );
   }
 }
 

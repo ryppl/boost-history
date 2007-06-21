@@ -72,6 +72,8 @@ BOOST_PP_CAT                                                                   \
 
 #endif
 
+#include <boost/type_traits/remove_cv.hpp>
+
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
 struct BOOST_PP_CAT
@@ -80,67 +82,22 @@ struct BOOST_PP_CAT
        , _default_impl
        )
 {
-  template< typename TargetType, typename OperandType = TargetType >
-  struct result;
-
   template< typename TargetType, typename OperandType >
-  static typename result< TargetType, OperandType >::type
+  static typename remove_cv< TargetType >::type
   execute( TargetType& target, OperandType& operand );
 };
 
 } } } }
 
-#include <boost/act/interlocked/detail/interlocked_result.hpp>
-
-#define BOOST_ACT_INTERLOCKED_BINARY_DEFAULT_IMPL_OPERATION_HEADER()           \
-BOOST_PP_CAT                                                                   \
-(                                                                              \
-  BOOST_PP_CAT( BOOST_PP_CAT                                                   \
-                ( <boost/act/interlocked/                                      \
-                , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME       \
-                )                                                              \
-              , BOOST_PP_CAT                                                   \
-                ( /detail/                                                     \
-                , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME       \
-                )                                                              \
-              )                                                                \
-, _operation.hpp>                                                              \
-)
-
-#include BOOST_ACT_INTERLOCKED_BINARY_DEFAULT_IMPL_OPERATION_HEADER()
-
-#undef BOOST_ACT_INTERLOCKED_BINARY_DEFAULT_IMPL_OPERATION_HEADER
-
 #if BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_FULL_BARRIER
 
 #include <boost/act/interlocked/assign_if_was/assign_if_was_fwd.hpp>
 #include <boost/act/interlocked/retrieve_fwd.hpp>
-#include <boost/type_traits/remove_cv.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
 template< typename TargetType, typename OperandType >
-struct BOOST_PP_CAT
-       (
-         BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
-       , _default_impl
-       )
-       ::result
-  : binary_interlocked_result_returns_old // ToDo: Change to select
-    <
-      BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME
-                  , _operation
-                  )
-    , TargetType, OperandType
-    > {};
-
-template< typename TargetType, typename OperandType >
-typename BOOST_PP_CAT
-         (
-           BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
-         , _default_impl
-         )
-       ::result< TargetType, OperandType >::type
+typename remove_cv< TargetType >::type
 BOOST_PP_CAT
 (
   BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
@@ -160,17 +117,13 @@ execute( TargetType& target, OperandType& operand )
                           operand
                         , curr_value
                         )
-                        .old_value()
           )
        != curr_value
      ; curr_value = new_value
      );
 
-  typedef typename typename result< TargetType, OperandType >::type
-          result_type;
-
   // Note: new_value is the old value here
-  return result_type( new_value, operand );
+  return new_value;
 }
 
 } } } }
@@ -206,26 +159,7 @@ BOOST_PP_CAT                                                                   \
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
 template< typename TargetType, typename OperandType >
-struct BOOST_PP_CAT
-       (
-         BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
-       , _default_impl
-       )
-       ::result
-  : BOOST_PP_CAT
-    (
-      BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME
-    , _impl
-    )
-    ::template result< TargetType, OperandType > {};
-
-template< typename TargetType, typename OperandType >
-typename BOOST_PP_CAT
-         (
-           BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
-         , _default_impl
-         )
-         ::result< TargetType, OperandType >::type
+typename remove_cv< TargetType >::type
 BOOST_PP_CAT
 (
   BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME

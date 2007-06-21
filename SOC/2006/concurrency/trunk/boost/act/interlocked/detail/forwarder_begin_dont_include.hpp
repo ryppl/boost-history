@@ -18,6 +18,7 @@ Note: If you are getting an error in this file, please post to the mailing list
 
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/stringize.hpp>
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/act/interlocked/detail/full_name.hpp>
 
@@ -32,28 +33,6 @@ BOOST_ACT_INTERLOCKED_DETAIL_FULL_NAME                                         \
 ( BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SHORT_NAME                            \
 , BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SEMANTICS                             \
 )
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_OP_HEADER_OPENER()              \
-BOOST_PP_CAT                                                                   \
-(                                                                              \
-  BOOST_PP_CAT( <boost/act/interlocked/                                        \
-              , BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SHORT_NAME              \
-              )                                                                \
-, /                                                                            \
-)
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_OP_RESULT_HEADER()              \
-BOOST_PP_CAT                                                                   \
-(                                                                              \
-  BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_OP_HEADER_OPENER()                    \
-, BOOST_PP_CAT                                                                 \
-  (                                                                            \
-   BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SHORT_NAME                           \
-  , _result.hpp>                                                               \
-  )                                                                            \
-)
-
-#include BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_OP_RESULT_HEADER()
 
 #include <boost/act/interlocked/detail/impl.hpp>
 

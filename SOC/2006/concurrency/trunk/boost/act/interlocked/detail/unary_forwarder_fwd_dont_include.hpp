@@ -11,6 +11,7 @@
 #else
 
 #include <boost/preprocessor/cat.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 #include <boost/utility/enable_if.hpp>
 
@@ -37,10 +38,7 @@ typename lazy_enable_if
     detail::are_valid_assign_style_params< TargetType >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
-, BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_SHORT_NAME
-              , _result
-              )
-              < TargetType >
+, remove_cv< TargetType >
 >
 ::type
 BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_FULL_NAME( TargetType& target );

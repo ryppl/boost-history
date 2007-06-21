@@ -11,7 +11,6 @@
 
 #include <boost/test/minimal.hpp>
 #include <boost/foreach.hpp>
-#include <boost/act/interlocked/assign/assign_result.hpp>
 #include <boost/act/interlocked/integer/types.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/thread.hpp>
@@ -19,6 +18,7 @@
 #include <boost/range/begin.hpp>
 #include <boost/range/end.hpp>
 #include <set>
+#include <boost/type_traits/remove_cv.hpp>
 
 #include "../random_uint8.hpp"
 
@@ -40,18 +40,15 @@ public:
   {
     barrier_m.wait(); // Wait until all other perform_assigns are ready
 
-    typedef typename boost::act::interlocked::assign_result< DestinationType >
-            ::type result_type;
+    typedef typename boost::remove_cv< DestinationType >::type result_type;
 
     result_type const result = assign_m( destination_m, source_m );
-
-    BOOST_CHECK( result.new_value() == source_m );
 
     {
       boost::mutex::scoped_lock const lock( mutex_m );
 
       typename ContainerType::iterator it
-        = container_m.find( result.old_value() );
+        = container_m.find( result );
 
       BOOST_CHECK( it != container_m.end() );
 

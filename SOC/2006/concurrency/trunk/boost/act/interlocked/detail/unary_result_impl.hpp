@@ -14,7 +14,6 @@
 
 #ifdef BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA
 
-#include <boost/act/interlocked/detail/interlocked_result.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_OP_HEADER()                               \

@@ -17,7 +17,7 @@
 
 // ToDo: Add in toggles for 64-bit
 
-#ifdef BOOST_WINDOWS
+//#ifdef BOOST_WINDOWS
 
 #include <windows.h>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
@@ -44,7 +44,8 @@ typedef unsigned long ulong_t;
 typedef ::std::size_t    size_t;
 typedef ::std::ptrdiff_t ptrdiff_t;
 
-#if WINVER < 0x0600
+//#if WINVER < 0x0600
+#if 1
 
 typedef unsigned long bits_least8_t;
 typedef unsigned long bits_least16_t;
@@ -103,7 +104,7 @@ typedef detail::interlocked_bool< long > bool_fast_t;
 
 } } }  // namespace boost
 
-#endif
+//#endif
 
 #endif
 

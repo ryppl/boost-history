@@ -10,9 +10,9 @@
 #define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_FWD_HPP
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
-#include <boost/act/interlocked/assign_if_was/assign_if_was_result.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
 
 #include <boost/mpl/and.hpp>
@@ -30,7 +30,7 @@ typename lazy_enable_if
                                          >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
-, assign_if_was_result< TargetType >
+, remove_cv< TargetType >
 >
 ::type
 assign_if_was( TargetType& destination, SourceType const& new_value
@@ -47,7 +47,7 @@ typename lazy_enable_if
                                          >
   , detail::is_interlocked_bool< TargetType >
   >
-, assign_if_was_result< TargetType >
+, remove_cv< TargetType >
 >
 ::type
 assign_if_was( TargetType& destination, SourceType const& new_value

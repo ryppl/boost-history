@@ -12,11 +12,11 @@
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
-#include <boost/act/interlocked/assign/assign_result.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 
@@ -28,7 +28,7 @@ typename lazy_enable_if
     detail::are_valid_assign_style_params< TargetType, SourceType const >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
-, assign_result< TargetType >
+, remove_cv< TargetType >
 >
 ::type
 assign_acquire( TargetType& destination, SourceType const& new_value );
@@ -41,7 +41,7 @@ typename lazy_enable_if
     detail::are_valid_assign_style_params< TargetType, SourceType const >
   , detail::is_interlocked_bool< TargetType >
   >
-, assign_result< TargetType >
+, remove_cv< TargetType >
 >
 ::type
 assign_acquire( TargetType& destination, SourceType const& new_value );
