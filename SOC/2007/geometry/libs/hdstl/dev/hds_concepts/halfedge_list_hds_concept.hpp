@@ -20,7 +20,7 @@
 ///Definition
 ///----------
 // This concept refines the 'HDSConcept', and specifies additional accessors
-// to handle halfedges in the 'HDS' data structure. 
+// to iterate over halfedges in the 'HDS' data structure. 
 //
 ///Refinement of:
 ///--------------
@@ -31,48 +31,45 @@
 //  - 'HDS'  A type that is a model of HalfedgeListHDSConcept
 //  - 'hds'  A non-modifiable instance of HDS
 //  - 'h'    Halfedge descriptor, of type 'hds_traits<HDS>::halfedge_descriptor'
-//  - 'p'    Halfedge iterator pair, of type 
-//           'std::pair<halfedge_iterator,halfedge_iterator>'
-//  - 'H'    Halfedge size type, of type 'hds_traits<HDS>::halfedge_size_type'
+//  - 'p'    Halfedge iterator, of type 'hds_traits<HDS>::halfedge_iterator'
+//  - 'n'    Halfedge size type, of type 'hds_traits<HDS>::size_type'
 //
 ///Associated types
 ///----------------
 //  - 'hds_traits<HDS>::halfedge_descriptor': must be 'DefaultConstructible', 
 //    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
 //  - 'hds_traits<HDS>::halfedge_iterator': must be 'MultiPassInputIterator'.
-//  - 'hds_traits<HDS>::halfedge_size_type': halfedge size type.
+//  - 'hds_traits<HDS>::size_type': halfedge size type.
 //
 ///Definitions
 ///-----------
 //  - 'halfedge_descriptor' is a type that contains information to access 
 //     the halfedge.  (See the 'HDSConcept' for a full definition.)
 //  - 'halfedge_iterator' is an iterator type for the halfedges.
-//  - 'halfedge_size_type' defines the size type.
+//  - 'size_type' defines the size type.
 //
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'HDS' concept:
-//  - 'halfedges(hds)' must return a value assignable to 'p'.  
-//  - '*p.first' must return a value assignable to 'h'.
-//  - 'num_halfedges(HDS)' must return a value assignable to 'H'.
+//  - 'halfedges_begin(hds)' must return a value assignable to 'p'.  
+//  - 'halfedges_end(hds)' must return a value assignable to 'p'.  
+//  - 'num_halfedges(hds)' must return a value assignable to 'n'.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the valid expression semantics of the 'HDS' concept:
-//  - 'halfedges(hds)' returns a 'halfedge_iterator' pair 'p', consistent 
-//    with the STL style iterator ranges, which means all the halfedges
-//    can be accessed by increasing the first part of the pair until the second
-//    part is reached.
-//  - '*p.first' returns a 'halfedge_descriptor'.
-//  - 'num_halfedges(HDS)' returns the number of halfedges in the 'HDS' data
+//  - 'halfedges_begin(hds)' returns a 'halfedge_iterator' 'p' pointing to the 
+//    beginning of the 'halfedge list'.
+//  - 'halfedges_end(hds)' returns a 'halfedge_iterator' 'p' pointing to the 
+//    end of the 'halfedge list'.
+//  - 'num_halfedges(hds)' returns the number of halfedges in the 'HDS' data
 //    structure.
 //
 ///Complexity guarantees
 ///---------------------
-//  - 'halfedges(hds)'    : amortized constant time. (for just getting the 
-//    'halfedge_iterator' pair, accessing the halfedges takes linear time.)
-//  - '*p.first'          : amortized constant time.
-//  - 'num_halfedges(HDS)': amortized constant time.
+//  - 'halfedges_begin(hds)': amortized constant time.
+//  - 'halfedges_end(hds)'  : amortized constant time.
+//  - 'num_halfedges(HDS)'  : amortized constant time.
 //
 ///Invariants 
 ///----------
@@ -96,23 +93,23 @@
 //         function_requires<EqualityComparableConcept<halfedge_descriptor> >();
 //         function_requires<AssignableConcept<halfedge_descriptor> >();
 //         function_requires<hdstl_detail::MultiPassInputIteratorConcept<halfedge_iterator> >();
-//         p = halfedges(hds);
-//         h = *p.first;
-//         H = num_halfedges(hds);
+//         b = halfedges_begin(hds);
+//         e = halfedges_end(hds);
+//         n = num_halfedges(hds);
 //         const_constraints(hds);
 //     }
 //     void const_constraints(HDS const& hds) 
 //     {
-//         p = halfedges(hds);
-//         h = *p.first;
-//         H = num_halfedges(hds);
+//         b = halfedges_begin(hds);
+//         e = halfedges_end(hds);
+//         n = num_halfedges(hds);
 //     }
-
 //     private:
 //     HalfedgeListHDS hds;
 //     halfedge_descriptor h;
-//     std::pair<halfedge_iterator,halfedge_iterator> p;
-//     halfedge_size_type H;
+//     halfedge_iterator b;
+//     halfedge_iterator e;
+//     size_type n;
 // };
 //..
 
@@ -160,9 +157,9 @@ namespace concepts {
            function_requires<EqualityComparableConcept<halfedge_descriptor> >();
            function_requires<AssignableConcept<halfedge_descriptor> >();
            function_requires<hdstl_detail::MultiPassInputIteratorConcept<halfedge_iterator> >();
-           p = halfedges(hds);
-           h = *p.first;
-           H = num_halfedges(hds);
+           b = halfedges_begin(hds);
+           e = halfedges_end(hds);
+           n = num_halfedges(hds);
            const_constraints(hds);
        }
 
@@ -171,17 +168,18 @@ namespace concepts {
            // Check that the non-modifiable 'HDS' template parameters
            // satisfies all the constraints of 'HalfedgeListHDSConcept'.
        {
-           p = halfedges(hds);
-           h = *p.first;
-           H = num_halfedges(hds);
+           b = halfedges_begin(hds);
+           e = halfedges_end(hds);
+           n = num_halfedges(hds);
        }
 
        private:
        //DATA
-       HalfedgeListHDS hds;         // a halfedge data structure object
-       halfedge_descriptor h;   // a halfedge descriptor
-       std::pair<halfedge_iterator,halfedge_iterator> p; // a halfedge iterator pair
-       halfedge_size_type H; // halfedge size type
+       HalfedgeListHDS hds;      // a halfedge data structure object
+       halfedge_descriptor h;    // a halfedge descriptor
+       halfedge_iterator b;      // a halfedge iterator
+       halfedge_iterator e;      // a halfedge iterator
+       size_type n;              // halfedge size type
 
    };
 

@@ -4,7 +4,15 @@
 //
 ///HDS Introduction
 ///----------------
-// FILLME
+// The Halfedge Data Structure Template Library, or HDSTL, is a C++ library of
+// edge-based data structures and algorithms to represent two-dimensional
+// combinatorial structures.Halfedge data structures represent two-dimensional
+// combinatorial structures like planar structures (including planar graphs,
+// triangulations, Voronoi diagrams), and 2-manifolds (like polyhedral
+// boundaries, 2D surfaces).
+
+
+
 //
 ///HDS Concepts
 ///------------

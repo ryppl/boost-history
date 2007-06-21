@@ -15,7 +15,7 @@
 // class ForwardHDSConcept_archetype
 //    :HDSConcept_archetype {
 //    public:
-//       halfedge_descriptor& next_in_faccet(ForwardHDSConcept_archetype,
+//       halfedge_descriptor& next_in_facet(ForwardHDSConcept_archetype,
 //                                               halfedge_descriptor&) const{};
 //       halfedge_descriptor& next_at_source(ForwardHDSConcept_archetype,
 //                                               halfedge_descriptor&) const{};

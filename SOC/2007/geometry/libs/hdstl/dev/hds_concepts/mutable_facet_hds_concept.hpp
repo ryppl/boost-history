@@ -50,30 +50,29 @@
 ///-----------------
 // In addition to the valid expressions of the 'FacetHDS' concept, and the 
 // 'MutableHDS' concept:
-//  - set_facet(hds,h,f) sets the facet descriptor value of 'h' to 'f'.
-//  - add_facet(hds,f)   adds a new facet 'f' to the 'hds' data structure.
-//  - remove_facet(hds,f) removes the facet 'f' from the 'hds' data structure.
+//  - 'set_facet(hds,h,f)' sets the facet descriptor value of 'h' to 'f'.
+//  - 'add_facet(hds,f)'   adds a new facet 'f' to the 'hds' data structure.
+//  - 'remove_facet(hds,f)' removes the facet 'f' from the 'hds' data structure.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the expression semantics of the 'FacetHDS' concept, and the 
 // 'MutableHDS' concept.
-//  - set_facet(hds,h,f) sets the facet descriptor value of 'h' to 'f' for a
+//  - 'set_facet(hds,h,f)' sets the facet descriptor value of 'h' to 'f' for a
 //    single halfedge in the 'hds' data structure.
-//  - add_facet(hds,f)   adds a new facet 'f' to the 'hds' data structure.
+//  - 'add_facet(hds,f)'   adds a new facet 'f' to the 'hds' data structure.
 //    By this operation the facet is added but no connections to the halfedges
 //    are set. In order to assign facets to halfedges 'set_facet(hds,h,f)' 
 //    operation should be used.
-//  - remove_facet(hds,f) removes the facet 'f' from the 'hds' data structure, 
-//    by iterating in counter-clockwise order around this facet and removing
-//    the connections with the halfedges.
+//  - 'remove_facet(hds,f)' removes the facet 'f' from the 'hds' data 
+//    structure. All 'facet_descriptors' related to this facet will be 
+//    invalidated after this call.
 //
 ///Complexity guarantees
 ///---------------------
-//  - set_facet(hds,h,f) : amortized constant time.
-//  - add_facet(hds,f)   : amortized constant time.
-//  - remove_facet(hds,f): 'O(e)', where 'e' is the maximum number of edges of 
-//    the facet.
+//  - 'set_facet(hds,h,f)' : amortized constant time.
+//  - 'add_facet(hds,f)'   : amortized constant time.
+//  - 'remove_facet(hds,f)': amortized constant time.
 //
 ///Invariants 
 ///----------

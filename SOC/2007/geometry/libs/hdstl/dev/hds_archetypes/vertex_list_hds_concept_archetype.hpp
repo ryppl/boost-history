@@ -15,7 +15,7 @@
 //  template <>
 //  struct hds_traits<VertexListHDSConcept_archetype> {
 //      typedef hdstl_detail::MultiPassInputIteratorConcept<> vertex_iterator;
-//      typedef vertex_size_type                      vertex_size_type;
+//      typedef size_type                      size_type;
 //  };
 //  class VertexListHDSConcept_archetype : public HDSConcept_archetype, 
 //                                        public VertexHDSConcept_archetype {
@@ -24,13 +24,15 @@
 //      typedef typename hds_traits<VertexHDSConcept_archetype
 //                                 >::vertex_descriptor vertex_descriptor;
 //      typedef typename hds_traits<VertexListHDSConcept_archetype
-//                                 >::vertex_size_type vertex_size_type;
+//                                 >::size_type size_type;
 //      VertexListHDSConcept_archetype();
 //      VertexListHDSConcept_archetype(const VertexListHDSConcept_archetype&);
 //    public:
-//      std::pair<vertex_iterator,vertex_iterator>
-//      vertices(VertexListHDSConcept_archetype const& hds) const;
-//      vertex_size_type
+//      vertex_iterator
+//      vertices_begin(VertexListHDSConcept_archetype const& hds) const;
+//      vertex_iterator
+//      vertices_end(VertexListHDSConcept_archetype const& hds) const;
+//      size_type
 //      num_vertices(VertexListHDSConcept_archetype const& hds) const;
 //  };
 //..
@@ -49,13 +51,13 @@ template <>
 struct hds_traits<VertexListHDSConcept_archetype> {
     // This template specialization of 'hds_traits' for the
     // 'VertexListHDSConcept_archetype' provides the 'vertex_iterator'
-    // and 'vertex_size_type' types.
+    // and 'size_type' types.
     
     // TYPES
     typedef hdstl_detail::MultiPassInputIteratorConcept<> vertex_iterator;
         // Vertex iterator type for the 'VertexListHDSConcept' archetype.
 
-    typedef vertex_size_type                      vertex_size_type;
+    typedef size_type                      size_type;
         // Vertex size type for the 'VertexListHDSConcept' archetype.
 };
 
@@ -77,7 +79,7 @@ class VertexListHDSConcept_archetype : public HDSConcept_archetype,
         //vertex_descriptor from the VertexHDSConcept used here.
 
     typedef typename hds_traits<VertexListHDSConcept_archetype
-                               >::vertex_size_type vertex_size_type;
+                               >::size_type size_type;
     
     // NOT IMPLEMENTED
     VertexListHDSConcept_archetype();
@@ -85,31 +87,41 @@ class VertexListHDSConcept_archetype : public HDSConcept_archetype,
 
   public:
     // MANIPULATORS
-    std::pair<vertex_iterator,vertex_iterator>
-    vertices(VertexListHDSConcept_archetype const& hds) const;
-        // Returns a 'vertex_iterator' pair, consistent with the STL style
-        // iterator ranges, which means all the vertices can be accessed by
-        // increasing the first part of the pair until the second part is
-        // reached.
+    vertex_iterator
+    vertices_begin(VertexListHDSConcept_archetype const& hds) const;
+        // Returns a 'vertex_iterator' pointing to the beginning of the 
+        // 'vertex list'.
 
-    vertex_size_type
+    vertex_iterator
+    vertices_end(VertexListHDSConcept_archetype const& hds) const;
+        // Returns a 'vertex_iterator' pointing to the end of the 
+        // 'vertex list'.
+    
+    size_type
     num_vertices(VertexListHDSConcept_archetype const& hds) const;
         // Returns the number of vertices in the 'hds' data structure.
 };
 
 // MANIPULATORS
-typename std::pair<vertex_iterator,vertex_iterator>
-VertexListHDSConcept_archetype<>::vertices(
+typename hds_traits<VertexListHDSConcept_archetype>::vertex_iterator
+VertexListHDSConcept_archetype<>::vertices_begin(
                                VertexListHDSConcept_archetype const& hds) const
 {
-    return std::pair<vertex_iterator,vertex_iterator>();
+    return vertex_iterator();
 }
 
-typename hds_traits<VertexListHDSConcept_archetype>::vertex_size_type
+typename hds_traits<VertexListHDSConcept_archetype>::vertex_iterator
+VertexListHDSConcept_archetype<>::vertices_end(
+                               VertexListHDSConcept_archetype const& hds) const
+{
+    return vertex_iterator();
+}
+
+typename hds_traits<VertexListHDSConcept_archetype>::size_type
 VertexListHDSConcept_archetype<>::num_vertices(
                                VertexListHDSConcept_archetype const& hds) const
 {
-    return vertex_size_type();
+    return size_type();
 }
 
 } // end namespace hdstl

@@ -15,7 +15,7 @@
 //  template <>
 //  struct hds_traits<HalfedgeListHDSConcept_archetype> {
 //      typedef hdstl_detail::MultiPassInputIteratorConcept<> halfedge_iterator;
-//      typedef halfedge_size_type                      halfedge_size_type;
+//      typedef size_type                      size_type;
 //  };
 //  class HalfedgeListHDSConcept_archetype : public HDSConcept_archetype {
 //      typedef typename hds_traits<HalfedgeListHDSConcept_archetype
@@ -23,13 +23,15 @@
 //      typedef typename hds_traits<HalfedgeHDSConcept_archetype
 //                                 >::halfedge_descriptor halfedge_descriptor;
 //      typedef typename hds_traits<HalfedgeListHDSConcept_archetype
-//                                 >::halfedge_size_type halfedge_size_type;
+//                                 >::size_type size_type;
 //      HalfedgeListHDSConcept_archetype();
 //    HalfedgeListHDSConcept_archetype(const HalfedgeListHDSConcept_archetype&);
 //    public:
-//      std::pair<halfedge_iterator,halfedge_iterator>
-//      halfedges(HalfedgeListHDSConcept_archetype const& hds) const;
-//      halfedge_size_type
+//      halfedge_iterator
+//      halfedges_begin(HalfedgeListHDSConcept_archetype const& hds) const;
+//      halfedge_iterator
+//      halfedges_end(HalfedgeListHDSConcept_archetype const& hds) const;
+//      size_type
 //      num_halfedges(HalfedgeListHDSConcept_archetype const& hds) const;
 //  };
 //..
@@ -48,13 +50,13 @@ template <>
 struct hds_traits<HalfedgeListHDSConcept_archetype> {
     // This template specialization of 'hds_traits' for the
     // 'HalfedgeListHDSConcept_archetype' provides the 'halfedge_iterator'
-    // and 'halfedge_size_type' types.
+    // and 'size_type' types.
     
     // TYPES
     typedef hdstl_detail::MultiPassInputIteratorConcept<> halfedge_iterator;
         // Halfedge iterator type for the 'HalfedgeListHDSConcept' archetype.
 
-    typedef halfedge_size_type                      halfedge_size_type;
+    typedef size_type                      size_type;
         // Halfedge size type for the 'HalfedgeListHDSConcept' archetype.
 };
 
@@ -74,7 +76,7 @@ class HalfedgeListHDSConcept_archetype : public HDSConcept_archetype {
         //halfedge_descriptor from the HalfedgeHDSConcept used here.
 
     typedef typename hds_traits<HalfedgeListHDSConcept_archetype
-                               >::halfedge_size_type halfedge_size_type;
+                               >::size_type size_type;
     
     // NOT IMPLEMENTED
     HalfedgeListHDSConcept_archetype();
@@ -82,31 +84,41 @@ class HalfedgeListHDSConcept_archetype : public HDSConcept_archetype {
 
   public:
     // MANIPULATORS
-    std::pair<halfedge_iterator,halfedge_iterator>
-    halfedges(HalfedgeListHDSConcept_archetype const& hds) const;
-        // Returns a 'halfedge_iterator' pair, consistent with the STL style
-        // iterator ranges, which means all the halfedges can be accessed by
-        // increasing the first part of the pair until the second part is
-        // reached.
+    halfedge_iterator
+    halfedges_begin(HalfedgeListHDSConcept_archetype const& hds) const;
+        // Returns a 'halfedge_iterator' pointing to the beginning of the 
+        // 'halfedge list'.
 
-    halfedge_size_type
+    halfedge_iterator
+    halfedges_end(HalfedgeListHDSConcept_archetype const& hds) const;
+        // Returns a 'halfedge_iterator' pointing to the end of the 
+        // 'halfedge list'.
+
+    size_type
     num_halfedges(HalfedgeListHDSConcept_archetype const& hds) const;
         // Returns the number of halfedges in the 'hds' data structure.
 };
 
 // MANIPULATORS
-typename std::pair<halfedge_iterator,halfedge_iterator>
-HalfedgeListHDSConcept_archetype<>::halfedges(
+typename hds_traits<HalfedgeListHDSConcept_archetype>::halfedge_iterator
+HalfedgeListHDSConcept_archetype<>::halfedges_begin(
                               HalfedgeListHDSConcept_archetype const& hds) const
 {
-    return std::pair<halfedge_iterator,halfedge_iterator>();
+    return halfedge_iterator();
 }
 
-typename hds_traits<HalfedgeListHDSConcept_archetype>::halfedge_size_type
+typename hds_traits<HalfedgeListHDSConcept_archetype>::halfedge_iterator
+HalfedgeListHDSConcept_archetype<>::halfedges_end(
+                              HalfedgeListHDSConcept_archetype const& hds) const
+{
+    return halfedge_iterator();
+}
+
+typename hds_traits<HalfedgeListHDSConcept_archetype>::size_type
 HalfedgeListHDSConcept_archetype<>::num_halfedges(
                               HalfedgeListHDSConcept_archetype const& hds) const
 {
-    return halfedge_size_type();
+    return size_type();
 }
 
 } // end namespace hdstl

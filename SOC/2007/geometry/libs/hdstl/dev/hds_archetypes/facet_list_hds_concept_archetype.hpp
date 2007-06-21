@@ -15,7 +15,7 @@
 //  template <>
 //  struct hds_traits<FacetListHDSConcept_archetype> {
 //      typedef hdstl_detail::MultiPassInputIteratorConcept<> facet_iterator;
-//      typedef facet_size_type                      facet_size_type;
+//      typedef size_type                      size_type;
 //  };
 //  class FacetListHDSConcept_archetype : public HDSConcept_archetype, 
 //                                        public FacetHDSConcept_archetype {
@@ -24,13 +24,15 @@
 //      typedef typename hds_traits<FacetHDSConcept_archetype
 //                                 >::facet_descriptor facet_descriptor;
 //      typedef typename hds_traits<FacetListHDSConcept_archetype
-//                                 >::facet_size_type facet_size_type;
+//                                 >::size_type size_type;
 //      FacetListHDSConcept_archetype();
 //      FacetListHDSConcept_archetype(const FacetListHDSConcept_archetype&);
 //    public:
-//      std::pair<facet_iterator,facet_iterator>
-//      facets(FacetListHDSConcept_archetype const& hds) const;
-//      facet_size_type
+//      facet_iterator
+//      facets_begin(FacetListHDSConcept_archetype const& hds) const;
+//      facet_iterator
+//      facets_end(FacetListHDSConcept_archetype const& hds) const;
+//      size_type
 //      num_facets(FacetListHDSConcept_archetype const& hds) const;
 //  };
 //..
@@ -49,13 +51,13 @@ template <>
 struct hds_traits<FacetListHDSConcept_archetype> {
     // This template specialization of 'hds_traits' for the
     // 'FacetListHDSConcept_archetype' provides the 'facet_iterator'
-    // and 'facet_size_type' types.
+    // and 'size_type' types.
     
     // TYPES
     typedef hdstl_detail::MultiPassInputIteratorConcept<> facet_iterator;
         // Facet iterator type for the 'FacetListHDSConcept' archetype.
 
-    typedef facet_size_type                      facet_size_type;
+    typedef size_type                      size_type;
         // Facet size type for the 'FacetListHDSConcept' archetype.
 };
 
@@ -77,7 +79,7 @@ class FacetListHDSConcept_archetype : public HDSConcept_archetype,
         //facet_descriptor from the FacetHDSConcept used here.
 
     typedef typename hds_traits<FacetListHDSConcept_archetype
-                               >::facet_size_type facet_size_type;
+                               >::size_type size_type;
     
     // NOT IMPLEMENTED
     FacetListHDSConcept_archetype();
@@ -85,31 +87,41 @@ class FacetListHDSConcept_archetype : public HDSConcept_archetype,
 
   public:
     // MANIPULATORS
-    std::pair<facet_iterator,facet_iterator>
-    facets(FacetListHDSConcept_archetype const& hds) const;
-        // Returns a 'facet_iterator' pair, consistent with the STL style
-        // iterator ranges, which means all the facets can be accessed by
-        // increasing the first part of the pair until the second part is
-        // reached.
+    facet_iterator
+    facets_begin(FacetListHDSConcept_archetype const& hds) const;
+        // Returns a 'facet_iterator' pointing to the beginning of the 
+        // 'facet list'.
 
-    facet_size_type
+    facet_iterator
+    facets_end(FacetListHDSConcept_archetype const& hds) const;
+        // Returns a 'facet_iterator' pointing to the end of the 
+        // 'facet list'.
+
+    size_type
     num_facets(FacetListHDSConcept_archetype const& hds) const;
         // Returns the number of facets in the 'hds' data structure.
 };
 
 // MANIPULATORS
-typename std::pair<facet_iterator,facet_iterator>
-FacetListHDSConcept_archetype<>::facets(
+typename hds_traits<FacetListHDSConcept_archetype>::facet_iterator
+FacetListHDSConcept_archetype<>::facets_begin(
                                FacetListHDSConcept_archetype const& hds) const
 {
-    return std::pair<facet_iterator,facet_iterator>();
+    return facet_iterator();
 }
 
-typename hds_traits<FacetListHDSConcept_archetype>::facet_size_type
+typename hds_traits<FacetListHDSConcept_archetype>::facet_iterator
+FacetListHDSConcept_archetype<>::facets_end(
+                               FacetListHDSConcept_archetype const& hds) const
+{
+    return facet_iterator();
+}
+
+typename hds_traits<FacetListHDSConcept_archetype>::size_type
 FacetListHDSConcept_archetype<>::num_facets(
                                FacetListHDSConcept_archetype const& hds) const
 {
-    return facet_size_type();
+    return size_type();
 }
 
 } // end namespace hdstl

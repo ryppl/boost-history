@@ -54,36 +54,32 @@
 ///-----------------
 // The following expression must be valid and obey the syntactic requirement:
 //  - 'set_opposite(hds,h1,h2)': sets the opposite halfedge.
-//  - 'h = new_edge(hds,h1,h2)': creates a new edge, with two halfedges. 
-//  - 'delete_edge(hds,h1,h2)' : deletes the edge defined by halfedge pairs 
+//  - 'h = new_edge(hds)': creates a new edge, with two halfedges. 
+//  - 'delete_edge(hds,h1,h2)': deletes the edge defined by halfedge pairs 
 //    'h1' and 'h2'.
 //
 ///Expression Semantics
 ///--------------------
 // The expressions semantics are as follows:
-//  - 'set_opposite(hds,h1,h2)': sets 'h1' and 'h2' as opposites of each other 
+//  - 'set_opposite(hds,h1,h2)' sets 'h1' and 'h2' as opposites of each other 
 //    in the data structure 'hds'. 
-//  - 'h = new_edge(hds,h1,h2)': creates a new edge in data structure 'hds'. 
-//    Since halfedges are actually pairs, the new edge consists of two 
-//    halfedges, 'h1' and 'h2', which are set as opposites of each other.
-//  - 'delete_edge(hds,h1,h2)' : since halfedges are defined as pairs, and a 
-//    single halfedge is useless, they are deleted as pairs also. Delete edge 
-//    removes the opposite halfedges 'h1', and 'h2' from the data structure 
-//    'hds'. Note that only the halfedges that form a pair by validating the 
-//    'opposite' function can be deleted by this method.
+//  - 'h = new_edge(hds)' creates a new edge in data structure 'hds'. 
+//    Halfedges are created as pairs, and this call creates two halfedges
+//    'h' and 'opposite(hds,h)'.
+//  - 'delete_edge(hds,h1,h2)' removes the opposite halfedges 'h1' and 'h2' 
+//    from the data structure 'hds'. Note that only the halfedges that form 
+//    a pair by validating the 'opposite' function can be deleted by this 
+//    method, otherwise the behavior is undefined. 
 //
 ///Complexity guarantees
 ///---------------------
 //  - 'set_opposite(hds,h1,h2)': amortized constant time.
-//  - 'h=new_edge(hds,h1,h2)'  : amortized constant time.
+//  - 'h=new_edge(hds)'        : amortized constant time.
 //  - 'delete_edge(hds,h1,h2)' : amortized constant time.
 //
 ///Invariants
 ///----------
-//  - Post-condition for 'set_opposite(hds,h1,h2)' and 'h=new_edge(hds,h1,h2)':
-//    'h1=opposite(h2)', and 'h2=opposite(h1)' should verify.
-//  - Pre-condition for 'delete_edge(hds,h1,h2)': 'h1=opposite(h2)', and 
-//    'h2=opposite(h1)' should verify. 
+// None.
 //
 ///Concept-checking class
 ///----------------------
@@ -150,7 +146,7 @@ namespace concepts {
             function_requires<HDSConcept<HDS> >();
 
             set_opposite(hds,h1,h2);
-            h = new_edge(hds,h1,h2);
+            h = new_edge(hds);
             delete_edge(hds,h1,h2);
             const_constraints(hds);
         }
@@ -161,7 +157,7 @@ namespace concepts {
             // satisfies all the constraints of 'MutableHDSConcept'.
         {
             set_opposite(hds,h1,h2);
-            h = new_edge(hds,h1,h2);
+            h = new_edge(hds);
             delete_edge(hds,h1,h2);
         }
 

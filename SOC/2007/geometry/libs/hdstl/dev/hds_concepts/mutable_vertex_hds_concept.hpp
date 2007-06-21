@@ -49,32 +49,31 @@
 ///-----------------
 // In addition to the valid expressions of the 'MutableHDS' concept, and the
 // 'VertexHDS' concept:
-//  - set_vertex(hds,h,v)  sets the source vertex descriptor value of 'h' to 
+//  - 'set_vertex(hds,h,v)'  sets the source vertex descriptor value of 'h' to 
 //    'v'.
-//  - add_vertex(hds,v)    adds a new vertex 'v' to the 'hds' data structure.
-//  - remove_vertex(hds,v) removes the vertex 'v' from the 'hds' data 
+//  - 'add_vertex(hds,v)'    adds a new vertex 'v' to the 'hds' data structure.
+//  - 'remove_vertex(hds,v)' removes the vertex 'v' from the 'hds' data 
 //    structure.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the expression semantics of the 'MutableHDS' concept, and the
 // 'VertexHDS' concept:
-//  - set_vertex(hds,h,v)  sets the source vertex descriptor value of 'h' to 
+//  - 'set_vertex(hds,h,v)'  sets the source vertex descriptor value of 'h' to 
 //    'v' for a single halfedge in the 'hds' data structure.
-//  - add_vertex(hds,v)    adds a new vertex 'v' to the 'hds' data structure.
+//  - 'add_vertex(hds,v)'    adds a new vertex 'v' to the 'hds' data structure.
 //    By this operation the vertex is added but no connections to the halfedges
 //    are set. In order to assign vertces to halfedges 'set_vertex(hds,h,v)' 
 //    operation should be used.
-//  - remove_vertex(hds,v) removes the vertex 'v' from the 'hds' data 
-//    structure, by iterating in clockwise order around the vertex and removing
-//    the connections with the halfedges.
+//  - 'remove_vertex(hds,v)' removes the vertex 'v' from the 'hds' data 
+//  structure. All 'vertex_descriptors' related to this vertex will be 
+//  invalidated after this call.
 //
 ///Complexity guarantees
 ///---------------------
-//  - set_vertex(hds,h,v)   : amortized constant time.
-//  - add_vertex(hds,f)     : amortized constant time.
-//  - remove_vertex(hds,h,v): O(v), where 'v' is the maximum out-bound value of
-//    a vertex.
+//  - 'set_vertex(hds,h,v)'   : amortized constant time.
+//  - 'add_vertex(hds,f)'     : amortized constant time.
+//  - 'remove_vertex(hds,v)'  : amortized constant time.
 //
 ///Invariants 
 ///----------
@@ -156,7 +155,7 @@ namespace concepts {
 
             set_vertex(hds,h,v);
             add_vertex(hds,v);
-            remove_vertex(hds,h,v);
+            remove_vertex(hds,v);
 
             const_constraints(hds);
         }
@@ -168,7 +167,7 @@ namespace concepts {
         {
             set_vertex(hds,h,v);
             add_vertex(hds,v);
-            remove_vertex(hds,h,v);
+            remove_vertex(hds,v);
         }
 
         private:

@@ -20,7 +20,7 @@
 ///Definition
 ///----------
 // This concept refines the 'HDSConcept', and specifies additional accessors
-// to handle facets in the 'HDS' data structure. 
+// to iterate over facets in the 'HDS' data structure. 
 //
 ///Refinement of:
 ///--------------
@@ -31,48 +31,46 @@
 //  - 'HDS'  A type that is a model of FacetListHDSConcept
 //  - 'hds'  A non-modifiable instance of HDS
 //  - 'f'    Facet descriptor, of type 'hds_traits<HDS>::facet_descriptor'
-//  - 'p'    Facet iterator pair, of type 
-//           'std::pair<facet_iterator,facet_iterator>'
-//  - 'F'    Facet size type, of type 'hds_traits<HDS>::facet_size_type'
+//  - 'p'    Facet iterator, of type 'hds_traits<HDS>::facet_iterator'
+//  - 'n'    Facet size type, of type 'hds_traits<HDS>::size_type'
 //
 ///Associated types
 ///----------------
 //  - 'hds_traits<HDS>::facet_descriptor': must be 'DefaultConstructible', 
 //    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
 //  - 'hds_traits<HDS>::facet_iterator': must be 'MultiPassInputIterator'.
-//  - 'hds_traits<HDS>::facet_size_type': facet size type.
+//  - 'hds_traits<HDS>::size_type': unsigned size type.
 //
 ///Definitions
 ///-----------
 //  - 'facet_descriptor' is a type that contains information to access 
 //     the facet.  (See the 'HDSConcept' for a full definition.)
 //  - 'facet_iterator' is an iterator type for the facets.
-//  - 'facet_size_type' defines the size type.
+//  - 'size_type' defines the size type.
 //
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'HDS' concept:
-//  - 'facets(hds)' must return a value assignable to 'p'.  
+//  - 'facets_begin(hds)' must return a value assignable to 'p'.  
+//  - 'facets_end(hds)' must return a value assignable to 'p'.  
 //  - '*p.first' must return a value assignable to 'f'.
-//  - 'num_facets(HDS)' must return a value assignable to 'F'.
+//  - 'num_facets(hds)' must return a value assignable to 'n'.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the valid expression semantics of the 'HDS' concept:
-//  - 'facets(hds)' returns a 'facet_iterator' pair 'p', consistent 
-//    with the STL style iterator ranges, which means all the facets
-//    can be accessed by increasing the first part of the pair until the second
-//    part is reached.
-//  - '*p.first' returns a 'facet_descriptor'.
+//  - 'facets_begin(hds)' returns a 'facet_iterator' 'p' pointing to the 
+//    beginning of the 'facet list'.
+//  - 'facets_end(hds)' returns a 'facet_iterator' 'p' pointing to the 
+//    end of the 'facet list'.
 //  - 'num_facets(HDS)' returns the number of facets in the 'HDS' data
 //    structure.
 //
 ///Complexity guarantees
 ///---------------------
-//  - 'facets(hds)'    : amortized constant time. (for just getting the 
-//    'facet_iterator' pair, accessing the facets takes linear time.)
-//  - '*p.first'       : amortized constant time.
-//  - 'num_facets(HDS)': amortized constant time.
+//  - 'facets_begin(hds)': amortized constant time.  
+//  - 'facets_end(hds)'  : amortized constant time.  
+//  - 'num_facets(hds)'  : amortized constant time.
 //
 ///Invariants 
 ///----------
@@ -86,7 +84,7 @@
 // struct FacetListHDSConcept {
 //     typedef typename hds_traits<HDS>::facet_iterator  facet_iterator;
 //     typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor;
-//     typedef typename hds_traits<HDS>::facets_size_type facets_size_type;
+//     typedef typename hds_traits<HDS>::size_type size_type;
 //     void constraints() 
 //     {
 //         using namespace boost;
@@ -94,22 +92,23 @@
 //         function_requires<FacetHDSConcept>();
 //         function_requires<hdstl_detail::MultiPassInputIteratorConcept<
 //                                                         facet_iterator> >();
-//         p = facets(hds);
-//         f = *p.first;
-//         F = num_facets(hds);
+//         b = facets_begin(hds);
+//         e = facets_end(hds);
+//         n = num_facets(hds);
 //         const_constraints(hds);
 //     }
 //     void const_constraints(HDS const& hds) 
 //     {
-//         p = facets(hds);
-//         f = *p.first;
-//         F = num_facets(hds);
+//         b = facets_begin(hds);
+//         e = facets_end(hds);
+//         n = num_facets(hds);
 //     }
 //     private:
 //     FacetListHDS hds;   
 //     facet_descriptor f;
-//     std::pair<facet_iterator,facet_iterator> p;
-//     facet_size_type F; 
+//     facet_iterator b;
+//     facet_iterator e;
+//     size_type n; 
 
 // };
 //..
@@ -139,7 +138,7 @@ namespace concepts {
        // TYPES
        typedef typename hds_traits<HDS>::facet_iterator  facet_iterator;
        typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor;
-       typedef typename hds_traits<HDS>::facets_size_type facets_size_type;
+       typedef typename hds_traits<HDS>::size_type size_type;
        // The specialization of 'hds_traits<HDS>' must have these required
        // types, obeying the types requirements stated in the detailed
        // description of the 'FacetListHDS' concept on page 
@@ -156,9 +155,9 @@ namespace concepts {
            function_requires<FacetHDSConcept>();
            function_requires<hdstl_detail::MultiPassInputIteratorConcept<
                                                            facet_iterator> >();
-           p = facets(hds);
-           f = *p.first;
-           F = num_facets(hds);
+           b = facets_begin(hds);
+           e = facets_end(hds);
+           n = num_facets(hds);
            const_constraints(hds);
        }
 
@@ -167,17 +166,18 @@ namespace concepts {
            // Check that the non-modifiable 'HDS' template parameters
            // satisfies all the constraints of 'FacetListHDSConcept'.
        {
-           p = facets(hds);
-           f = *p.first;
-           F = num_facets(hds);
+           b = facets_begin(hds);
+           e = facets_end(hds);
+           n = num_facets(hds);
        }
 
        private:
        //DATA
        FacetListHDS hds;     // a halfedge data structure object
        facet_descriptor f;   // a facet descriptor
-       std::pair<facet_iterator,facet_iterator> p; // a facet iterator pair
-       facet_size_type F;    // facet size type
+       facet_iterator b;     // a facet iterator
+       facet_iterator e;     // a facet iterator 
+       size_type n;          // facet size type
 
    };
 

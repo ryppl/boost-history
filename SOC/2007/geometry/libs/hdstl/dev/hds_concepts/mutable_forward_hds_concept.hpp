@@ -55,17 +55,18 @@
 ///-----------------
 // In addition to the valid expressions of the 'HDS' concept, and the 
 // 'ForwardHDS' concept:
-//   - 'set_next_in_facet(hds,h,g)' sets 'g' as the next_in_facet value of 'h'.
-//   - 'set_next_at_source(hds,h,g)' sets 'g' as the next_at_source value of 
+//   - 'set_next_in_facet(hds,h,g)' sets 'g' as the 'next_in_facet' value of 
 //     'h'.
-//   - 'set_next_at_target(hds,h,g)' sets 'g' as the next_at_target value of
+//   - 'set_next_at_source(hds,h,g)' sets 'g' as the 'next_at_source' value of 
+//     'h'.
+//   - 'set_next_at_target(hds,h,g)' sets 'g' as the 'next_at_target' value of
 //     'h'.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the expression semantics of the 'HDS' concept, and the
 // 'ForwardHDS' concept:
-//   - 'set_next_in_facet(hds,h,g)' set 'g' as the halfedge 
+//   - 'set_next_in_facet(hds,h,g)' sets 'g' as the halfedge 
 //      succeeding 'h' in the adjacent facet cycle, when facet cycles are
 //      oriented in counter-clockwise order.
 //   - 'set_next_at_source(hds,h,g)' sets 'g' as the halfedge 
