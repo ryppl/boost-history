@@ -15,8 +15,9 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/barrier.hpp>
 #include <boost/integer_traits.hpp>
+#include <boost/act/interlocked/retrieve.hpp>
 
-#include "../random_uint8.hpp"
+#include "random_uint8.hpp"
 
 /*
 Logic for additive tests:

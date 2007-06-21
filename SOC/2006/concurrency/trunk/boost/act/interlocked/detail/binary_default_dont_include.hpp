@@ -35,47 +35,15 @@ BOOST_PP_TUPLE_ELEM( 3, 2                                                      \
                    , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO          \
                    )
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_FULL_BARRIER            \
-BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_AFFIX_                              \
-            , BOOST_PP_TUPLE_ELEM                                              \
-              ( 3, 1                                                           \
-              , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO               \
-              )                                                                \
-            )                                                                  \
-== BOOST_ACT_INTERLOCKED_DETAIL_AFFIX_full_barrier
-
-#if BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_FULL_BARRIER
-
-#include <boost/act/interlocked/assign_if_was/assign_if_was_fwd.hpp>
-#include <boost/act/interlocked/retrieve_fwd.hpp>
-
-#else
-
-#define BOOST_ACT_INTERLOCKED_BINARY_DEFAULT_INFO_FWD_HEADER()                 \
-BOOST_PP_CAT                                                                   \
-(                                                                              \
-  BOOST_PP_CAT( BOOST_PP_CAT                                                   \
-                ( <boost/act/interlocked/                                      \
-                , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME       \
-                )                                                              \
-              , BOOST_PP_CAT                                                   \
-                ( /                                                            \
-                , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME       \
-                )                                                              \
-              )                                                                \
-, _fwd.hpp>                                                                    \
-)
-
-#include BOOST_ACT_INTERLOCKED_BINARY_DEFAULT_INFO_FWD_HEADER()
-
-#undef BOOST_ACT_INTERLOCKED_BINARY_DEFAULT_INFO_FWD_HEADER
-
-#endif
+// ToDo: Change to only include appropriate versions of assign_if_was
+#include <boost/act/interlocked/assign_if_was.hpp>
+#include <boost/act/interlocked/retrieve.hpp>
 
 #include <boost/type_traits/remove_cv.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
+// ToDo: Change to minimize memory barriers (don't always use full barrier form)
 struct BOOST_PP_CAT
        (
          BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
@@ -84,117 +52,34 @@ struct BOOST_PP_CAT
 {
   template< typename TargetType, typename OperandType >
   static typename remove_cv< TargetType >::type
-  execute( TargetType& target, OperandType& operand );
+  execute( TargetType& target, OperandType operand )
+  {
+    typedef typename remove_cv< TargetType >::type unqualified_type;
+    unqualified_type new_value;
+
+    for( unqualified_type curr_value = interlocked::retrieve( target )
+       ;    ( new_value = interlocked::assign_if_was
+                          ( target
+                          , curr_value
+                            BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_OP
+                            operand
+                          , curr_value
+                          )
+            )
+         != curr_value
+       ; curr_value = new_value
+       );
+
+    // Note: new_value is the old value here
+    return new_value;
+  }
 };
 
 } } } }
-
-#if BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_FULL_BARRIER
-
-#include <boost/act/interlocked/assign_if_was/assign_if_was_fwd.hpp>
-#include <boost/act/interlocked/retrieve_fwd.hpp>
-
-namespace boost { namespace act { namespace interlocked { namespace detail {
-
-template< typename TargetType, typename OperandType >
-typename remove_cv< TargetType >::type
-BOOST_PP_CAT
-(
-  BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
-, _default_impl
-)
-::
-execute( TargetType& target, OperandType& operand )
-{
-  typedef typename remove_cv< TargetType >::type unqualified_type;
-  unqualified_type new_value;
-
-  for( unqualified_type curr_value = interlocked::retrieve( target )
-     ;    ( new_value = interlocked::assign_if_was
-                        ( target
-                        , curr_value
-                          BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_OP
-                          operand
-                        , curr_value
-                        )
-          )
-       != curr_value
-     ; curr_value = new_value
-     );
-
-  // Note: new_value is the old value here
-  return new_value;
-}
-
-} } } }
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_HEADER() BOOST_PP_NIL
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_READY_FOR_CLEANUP
 
 #include <boost/act/interlocked/assign_if_was/assign_if_was.hpp>
 #include <boost/act/interlocked/retrieve.hpp>
-
-#else
-
-#define BOOST_ACT_INTERLOCKED_DEFAULT_IS_FWD_HEADER()                          \
-BOOST_PP_CAT                                                                   \
-(                                                                              \
-  BOOST_PP_CAT( BOOST_PP_CAT                                                   \
-                ( <boost/act/interlocked/                                      \
-                , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME       \
-                )                                                              \
-              , BOOST_PP_CAT                                                   \
-                ( /                                                            \
-                , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME       \
-                )                                                              \
-              )                                                                \
-, _fwd.hpp>                                                                    \
-)
-
-#include BOOST_ACT_INTERLOCKED_DEFAULT_IS_FWD_HEADER()
-
-#undef BOOST_ACT_INTERLOCKED_DEFAULT_IS_FWD_HEADER
-
-namespace boost { namespace act { namespace interlocked { namespace detail {
-
-template< typename TargetType, typename OperandType >
-typename remove_cv< TargetType >::type
-BOOST_PP_CAT
-(
-  BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
-, _default_impl
-)
-::execute( TargetType& target, OperandType& operand )
-{
-  return interlocked
-         ::BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME( target
-                                                                 , operand
-                                                                 );
-
-}
-
-} } } }
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_HEADER()                \
-BOOST_PP_CAT                                                                   \
-(                                                                              \
-  BOOST_PP_CAT( BOOST_PP_CAT                                                   \
-                ( <boost/act/interlocked/                                      \
-                , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME       \
-                )                                                              \
-              , BOOST_PP_CAT                                                   \
-                ( /                                                            \
-                , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SHORT_NAME       \
-                )                                                              \
-              )                                                                \
-, .hpp>                                                                        \
-)
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_READY_FOR_CLEANUP
-
-#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_HEADER()
-
-#endif
 
 #endif

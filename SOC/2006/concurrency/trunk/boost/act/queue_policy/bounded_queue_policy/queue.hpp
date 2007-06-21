@@ -79,7 +79,7 @@ private:
   }
 public:
   bool empty() const { return begin_m == end_m; }
-  static size_type max_size() { return max_size_c; }
+  static size_type max_size() { return MaxSize; }
   bool full() const { return end_m == begin_m + 1; }
 private:
   struct no_arg_factory
@@ -109,7 +109,7 @@ public:
 
     pointer const next_end = this->next_end();
 
-    factory.template apply< Type >( next_end - 1 );
+    factory.template apply< value_type >( next_end - 1 );
 
     end_m = next_end;
   }
@@ -133,14 +133,17 @@ public:
   const_reference back() const { return *( end_m - 1 ); }
 private:
   pointer raw_begin() { return reinterpret_cast< pointer >( &buffer_m ); }
-  const_pointer raw_begin() const { return reinterpret_cast<Type*>( &buffer_m ); }
+  const_pointer raw_begin() const
+  {
+    return reinterpret_cast< const_pointer >( &buffer_m );
+  }
 
-  pointer pivot_end() { return raw_begin() + max_size_c; }
-  const_pointer pivot_end() const { return raw_begin() + max_size_c; }
+  pointer pivot_end() { return raw_begin() + MaxSize; }
+  const_pointer pivot_end() const { return raw_begin() + MaxSize; }
 private:
   pointer next( pointer curr )
   {
-    return   ( curr == raw_begin() + max_size_c - 1 )
+    return   ( curr == raw_begin() + MaxSize - 1 )
            ? raw_begin()
            : begin_m + 1;
   }

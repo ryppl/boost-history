@@ -9,7 +9,7 @@
 #ifndef BOOST_ACT_CONSUMER_POLICY_SCOPED_CONCURRENT_CONSUMER_DETAIL_SCOPED_C_HPP
 #define BOOST_ACT_CONSUMER_POLICY_SCOPED_CONCURRENT_CONSUMER_DETAIL_SCOPED_C_HPP
 
-#include <boost/act/interlocked/assign/assign_acquire.hpp>
+#include <boost/act/interlocked/assign/assign.hpp>
 #include <boost/act/interlocked/retrieve.hpp>
 
 #include <boost/thread/thread.hpp>
@@ -198,9 +198,9 @@ public:
 
   ~concurrent_scoped_consumer_nonvoid_impl()
   {
-    interlocked::assign_acquire( internal_data_m.is_triggered_to_close_m
-                               , true
-                               );
+    interlocked::assign( internal_data_m.is_triggered_to_close_m
+                       , true
+                       );
 
     consumer_thread_m.join();
   }
@@ -208,7 +208,7 @@ public:
   template< typename Type >
   typename enable_if
   <
-    mpl::apply< constraint, Type >
+    typename mpl::apply< constraint, Type >::type
   >
   ::type operator ()( Type& arg )
   {
@@ -218,7 +218,7 @@ public:
   template< typename Type >
   typename enable_if
   <
-    mpl::apply< constraint, Type const >
+    typename mpl::apply< constraint, Type const >::type
   >
   ::type operator ()( Type const& arg )
   {

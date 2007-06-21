@@ -11,7 +11,7 @@
 
 #include <boost/act/config/interlocked/has_interlocked_operations.hpp>
 
-#ifdef BOOST_ACT_HAS_INTERLOCKED_OPERATIONS
+//#ifdef BOOST_ACT_HAS_INTERLOCKED_OPERATIONS
 
 #include <boost/config.hpp>
 
@@ -106,6 +106,6 @@ typedef detail::interlocked_bool< long > bool_fast_t;
 
 //#endif
 
-#endif
+//#endif
 
 #endif

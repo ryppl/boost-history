@@ -10,6 +10,6 @@
 #define BOOST_ACT_INTERLOCKED_ASSIGN_HPP
 
 #include <boost/act/interlocked/assign/assign.hpp>
-#include <boost/act/interlocked/assign/assign_acquire.hpp>
+#include <boost/act/interlocked/assign/assign_release.hpp>
 
 #endif

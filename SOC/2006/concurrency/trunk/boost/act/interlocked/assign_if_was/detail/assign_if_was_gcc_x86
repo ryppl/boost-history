@@ -23,23 +23,20 @@ struct assign_if_was_impl
   static typename remove_cv< LeftType >::type
   execute( LeftType& left, RightType right, OldType old )
   {
-    typedef typename remove_cv< LeftType >::type unqualified_type;
-
-    unqualified_type old_value;
-
-    // __volatile__ guarantees no compiler reordering
+    // ToDo: Very important!!!! This currently is just release semantics!
+    //       Rewrite to have both acquire and release semantics!!!
     __asm__ __volatile__
     (
         "sfence\n\t"
         "lock\n\t"
-        "cmpxchgl %1, %2":
-        "=a"( old_value ):
-        "q"( right ), "m"( left ), "0"( old ):
+        "cmpxchgl %1, %2\n\t"
+        /*"lfence\n\t"*/:
+        "=a" (old):
+        "q" (right), "m" (left), "0" (old):
         "memory", "cc"
-        "lfence\n\t"
     );
 
-    return old_value;
+    return old;
   }
 };
 

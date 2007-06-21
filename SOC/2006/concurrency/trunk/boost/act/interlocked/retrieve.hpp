@@ -27,20 +27,7 @@ struct retrieve_impl : retrieve_default_impl< ResultType, UnqualifiedType > {};
 
 #else
 
-#include <boost/preprocessor/cat.hpp>
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_RETRIEVE_CUSTOM_IMPL_HEADER()             \
-BOOST_PP_CAT                                                                   \
-(                                                                              \
-  BOOST_PP_CAT( <boost/act/interlocked/retrieve/detail/retrieve_               \
-              , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NAME                  \
-              )                                                                \
-, .hpp>                                                                        \
-)
-
-#include BOOST_ACT_INTERLOCKED_DETAIL_RETRIEVE_CUSTOM_IMPL_HEADER()
-
-#undef BOOST_ACT_INTERLOCKED_DETAIL_RETRIEVE_CUSTOM_IMPL_HEADER
+#error Custom retrieve functionality is not yet implemented
 
 #endif
 
@@ -58,7 +45,7 @@ retrieve( TargetType const& target )
   typedef typename remove_volatile< TargetType >::type unqualified_type;
 
   return detail::retrieve_impl< unqualified_type, unqualified_type >
-           ::execute( target );
+         ::execute( target );
 }
 
 } } }

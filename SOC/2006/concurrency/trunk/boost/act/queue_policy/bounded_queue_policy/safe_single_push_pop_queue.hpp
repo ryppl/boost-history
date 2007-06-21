@@ -165,7 +165,10 @@ public:
   const_reference back() const { return *( end_m - 1 ); }
 private:
   pointer raw_begin() { return reinterpret_cast< pointer >( &buffer_m ); }
-  const_pointer raw_begin() const { return reinterpret_cast<Type*>( &buffer_m ); }
+  const_pointer raw_begin() const
+  {
+    return reinterpret_cast< const_pointer >( &buffer_m );
+  }
 
   pointer pivot_end() { return raw_begin() + MaxSize; }
   const_pointer pivot_end() const { return raw_begin() + MaxSize; }

@@ -15,26 +15,22 @@ namespace boost { namespace act { namespace interlocked { namespace detail {
 
 struct assign_impl
 {
-  template< typename LeftType, typename RightType, typename OldType >
+  template< typename LeftType, typename RightType >
   static typename remove_cv< LeftType >::type
   execute( LeftType& left, RightType right )
   {
-    typedef typename remove_cv< LeftType >::type unqualified_type;
-
-    unqualified_type old_value;
-
     // __volatile__ guarantees no compiler reordering
     // Note: lock is implied with xchg
     __asm__ __volatile__
     (
       "sfence\n\t"
-      "xchg %1, %0":
-      "=m"( left ), "=r"( old_value ): // outputs (%0, %1)
-      "m"( left ), "1"( right ): // inputs (%2, %3 == %1)
+      "xchg %0, (%1)":
+      "+r"( right ):
+      "r"( &left ):
       "memory", "cc" // clobbers
     );
 
-    return old_value;
+    return right;
   }
 };
 

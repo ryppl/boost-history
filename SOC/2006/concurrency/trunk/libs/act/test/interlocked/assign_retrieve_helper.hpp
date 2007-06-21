@@ -38,11 +38,9 @@
 template< typename GetType, typename SetType >
 void test_assign_retrieve_no_threads( GetType get, SetType set )
 {
-  using namespace boost::act::interlocked;
+  ::boost::act::interlocked::uint_least8_t test_var = 0;
 
-  uint_least8_t test_var = 0;
-
-  BOOST_FOREACH( uint_least8_t val, random_uint8 )
+  BOOST_FOREACH( ::boost::act::interlocked::uint_least8_t val, random_uint8 )
   {
     set( test_var, val );
     BOOST_CHECK( get( test_var ) == val );

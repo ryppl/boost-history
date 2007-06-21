@@ -17,7 +17,7 @@ import testing ;
         : [ run interlocked/retrieve.cpp ]
 
           [ run interlocked/assign/assign.cpp ]
-          [ run interlocked/assign/assign_acquire.cpp ]
+          [ run interlocked/assign/assign_release.cpp ]
 
           [ run interlocked/assign_if_was/assign_if_was.cpp ]
           [ run interlocked/assign_if_was/assign_if_was_acquire.cpp ]

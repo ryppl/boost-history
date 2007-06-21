@@ -19,7 +19,7 @@ Note: The template in this file only checks for proper result functionality.
 #include <boost/foreach.hpp>
 #include <boost/act/interlocked/integer/types.hpp>
 
-#include "../random_uint8.hpp"
+#include "random_uint8.hpp"
 
 #include <boost/preprocessor/cat.hpp>
 
