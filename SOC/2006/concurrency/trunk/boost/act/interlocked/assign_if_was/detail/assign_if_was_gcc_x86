@@ -9,28 +9,24 @@
 #ifndef BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_ASSIGN_IF_WAS_GCC_X86_HPP
 #define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_ASSIGN_IF_WAS_GCC_X86_HPP
 
-#include <boost/config.hpp>
-
-#include <boost/detail/interlocked.hpp>
-
 #include <boost/type_traits/remove_cv.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
 struct assign_if_was_impl
 {
-  template< typename LeftType, typename RightType, typename OldType >
-  static typename remove_cv< LeftType >::type
-  execute( LeftType& left, RightType right, OldType old )
+  template< typename Type >
+  static typename remove_cv< Type >::type
+  execute( Type& left
+         , typename remove_cv< Type >::type right
+         , typename remove_cv< Type >::type old
+         )
   {
-    // ToDo: Very important!!!! This currently is just release semantics!
-    //       Rewrite to have both acquire and release semantics!!!
+    // ToDo: Verify semantics
     __asm__ __volatile__
     (
-        "sfence\n\t"
         "lock\n\t"
-        "cmpxchgl %1, %2\n\t"
-        /*"lfence\n\t"*/:
+        "cmpxchgl %1, %2":
         "=a" (old):
         "q" (right), "m" (left), "0" (old):
         "memory", "cc"
