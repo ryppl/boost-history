@@ -10,7 +10,7 @@
 #define BOOST_ACT_CONSUMER_POLICY_SCOPED_CONCURRENT_CONSUMER_DETAIL_SCOPED_C_HPP
 
 #include <boost/act/interlocked/assign/assign.hpp>
-#include <boost/act/interlocked/retrieve.hpp>
+#include <boost/act/interlocked/load.hpp>
 
 #include <boost/thread/thread.hpp>
 
@@ -72,7 +72,7 @@ public:
     for(;;)
     {
       bool const is_triggered_to_close
-        = interlocked::retrieve( body_m.is_triggered_to_close_m );
+        = interlocked::load( body_m.is_triggered_to_close_m );
 
       size_type queue_size = body_m.queue_m.size();
 

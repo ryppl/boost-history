@@ -21,7 +21,7 @@
 #include <boost/act/interlocked/increment/increment_release.hpp>
 #include <boost/act/interlocked/decrement/decrement_release.hpp>
 #include <boost/act/interlocked/integer/types.hpp>
-#include <boost/act/interlocked/retrieve.hpp>
+#include <boost/act/interlocked/load.hpp>
 
 #include <cstddef>
 #include <new>
@@ -90,7 +90,7 @@ public:
   {
     // Safe get insures an added volatile qualifier and that the type can safely
     // be read in whole when another thread is writing to it.
-    return static_cast< size_type >( interlocked::retrieve( curr_size_m ) );
+    return static_cast< size_type >( interlocked::load( curr_size_m ) );
   }
 
   bool empty() const { return size() == 0; }

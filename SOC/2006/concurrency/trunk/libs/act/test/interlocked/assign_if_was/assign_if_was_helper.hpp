@@ -10,7 +10,7 @@
 #define BOOST_ACT_TEST_INTERLOCKED_ASSIGN_IF_WAS_HELPER_HPP
 
 #include <boost/test/minimal.hpp>
-#include <boost/act/interlocked/retrieve.hpp>
+#include <boost/act/interlocked/load.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/xtime.hpp>
 #include <boost/act/interlocked/assign.hpp>
@@ -26,7 +26,7 @@
 //       
 //       In primary thread, wait several seconds to give the opposing thread
 //       a decent amount of time to set the value, then yield,
-//       then use retrieve.
+//       then use load.
 //
 //       Repeat similar tests with different threads.
 //
@@ -35,7 +35,7 @@
 //       particularly in a multicore environment.
 
 template< typename GetType, typename SetType >
-void test_assign_retrieve_no_threads( GetType get, SetType set )
+void test_assign_load_no_threads( GetType get, SetType set )
 {
   using namespace boost::act::interlocked;
 
@@ -85,13 +85,13 @@ struct interlocked_assign_set
   }
 };
 
-struct interlocked_retrieve_get
+struct interlocked_load_get
 {
   template< typename VariableType >
   typename boost::remove_cv< VariableType >::type
   operator ()( VariableType& var ) const
   {
-    return boost::act::interlocked::retrieve( var );
+    return boost::act::interlocked::load( var );
   }
 };
 
@@ -155,7 +155,7 @@ void assign_in_new_thread( VariableType& var, SourceType new_val
 }
 
 template< typename GetType, typename SetType >
-void test_assign_retrieve_with_threads( GetType get, SetType set )
+void test_assign_load_with_threads( GetType get, SetType set )
 {
   using namespace boost::act::interlocked;
 

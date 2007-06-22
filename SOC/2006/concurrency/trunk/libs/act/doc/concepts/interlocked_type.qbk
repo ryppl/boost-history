@@ -128,7 +128,7 @@ have the indicated effects.
                                                      memory semantics.
                                                     ]
                                                    ]                           ]
-[[`retrieve( iv )`]  [`I`]            [Returns the value of `iv`.
+[[`load( iv )`]  [`I`]            [Returns the value of `iv`.
                                                     [tablenote This template is
                                                      used for retrieving the
                                                      value of an object with the

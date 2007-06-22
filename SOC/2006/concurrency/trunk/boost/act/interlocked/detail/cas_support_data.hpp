@@ -11,7 +11,7 @@
 
 // Note: BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT has the form
 //
-// ( name, valid_bit_count_for_cas, cas_return, retrieve_info
+// ( name, valid_bit_count_for_cas, cas_return, load_info
 // , custom_implementations
 // )
 //
@@ -23,11 +23,11 @@
 //                    -or-
 //   success_value, meaning it returns true if the operation was successful
 //
-// Where retrieve_info is either:
-//   volatile_retrieve, meaning interlocked::retrieve is automatically
+// Where load_info is either:
+//   volatile_load, meaning interlocked::load is automatically
 //     implemented to access the passed object with added volatile qualification
 //                    -or-
-//   custom_retrieve, meaning interlocked::retrieve does not have a default
+//   custom_load, meaning interlocked::load does not have a default
 //     implementation and must be provided by the implementor
 //
 // Where custom_implementations is a preprocessor sequence of tuples of the form
@@ -48,13 +48,13 @@
 
   #include <windows.h>
 
-  // ToDo: Only use volatile_retrieve if VC 8.0 or higher
+  // ToDo: Only use volatile_load if VC 8.0 or higher
 
   #if WINVER < 0x0600 // Windows prior to vista
 
     // Note: Same name as vista windows on purpose
     #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA                      \
-              ( windows,(32),old_value,volatile_retrieve                       \
+              ( windows,(32),old_value,volatile_load                       \
               , ( ( assign,        ( full_fence ) ) )                        \
                 ( ( assign_if_was, ( full_fence ) ) )                        \
               )
@@ -63,7 +63,7 @@
 
     // Note: Same name as pre-vista windows on purpose
     #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA                      \
-              ( windows,(32)(64),old_value,volatile_retrieve                   \
+              ( windows,(32)(64),old_value,volatile_load                   \
               , ( ( assign,        ( full_fence )( acquire ) ) )             \
                 ( ( assign_if_was, ( full_fence )( acquire )( release ) ) )  \
               )
@@ -76,7 +76,7 @@
 
     // Note: Same name as x64 on purpose
     #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA                      \
-              ( gcc_x86,(32),old_value,volatile_retrieve                       \
+              ( gcc_x86,(32),old_value,volatile_load                       \
               , ( ( assign,        ( full_fence ) ) )                        \
                 ( ( assign_if_was, ( full_fence ) ) )                        \
               )

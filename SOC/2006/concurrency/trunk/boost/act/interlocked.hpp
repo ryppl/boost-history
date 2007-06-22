@@ -13,6 +13,6 @@
 #include <boost/act/interlocked/assign_if_was.hpp>
 #include <boost/act/interlocked/decrement.hpp>
 #include <boost/act/interlocked/increment.hpp>
-#include <boost/act/interlocked/retrieve.hpp>
+#include <boost/act/interlocked/load.hpp>
 
 #endif

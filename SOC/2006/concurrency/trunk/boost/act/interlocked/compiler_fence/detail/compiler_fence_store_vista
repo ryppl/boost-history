@@ -6,11 +6,19 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_COMPILER_FENCE_HPP
-#define BOOST_ACT_INTERLOCKED_COMPILER_FENCE_HPP
+#ifndef BOOST_ACT_INTERLOCKED_COMPILER_FENCE_DETAIL_COMPILER_FENCE_STR_VISTA_HPP
+#define BOOST_ACT_INTERLOCKED_COMPILER_FENCE_DETAIL_COMPILER_FENCE_STR_VISTA_HPP
 
-#include <boost/act/interlocked/compiler_fence/compiler_fence.hpp>
-#include <boost/act/interlocked/compiler_fence/compiler_fence_load.hpp>
-#include <boost/act/interlocked/compiler_fence/compiler_fence_store.hpp>
+// ToDo: Don't include windows.h
+#include <windows.h>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+inline void compiler_fence_store_impl()
+{
+  _WriteBarrier();
+}
+
+} } } }
 
 #endif

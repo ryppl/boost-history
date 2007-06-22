@@ -28,7 +28,7 @@ modify_acquire( TargetType& destination, OperationType operation )
   typedef typename remove_cv< TargetType >::type unqualified_type;
   unqualified_type new_value;
 
-  for( unqualified_type curr_value = interlocked::retrieve( target )
+  for( unqualified_type curr_value = interlocked::load( target )
      ;    ( new_value = interlocked::assign_if_was_acquire
                         ( target
                         , operation( curr_value )

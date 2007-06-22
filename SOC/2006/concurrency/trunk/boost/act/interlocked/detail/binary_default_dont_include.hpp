@@ -37,7 +37,7 @@ BOOST_PP_TUPLE_ELEM( 3, 2                                                      \
 
 // ToDo: Change to only include appropriate versions of assign_if_was
 #include <boost/act/interlocked/assign_if_was.hpp>
-#include <boost/act/interlocked/retrieve.hpp>
+#include <boost/act/interlocked/load.hpp>
 
 #include <boost/type_traits/remove_cv.hpp>
 
@@ -57,7 +57,7 @@ struct BOOST_PP_CAT
     typedef typename remove_cv< TargetType >::type unqualified_type;
     unqualified_type new_value;
 
-    for( unqualified_type curr_value = interlocked::retrieve( target )
+    for( unqualified_type curr_value = interlocked::load( target )
        ;    ( new_value = interlocked::assign_if_was
                           ( target
                           , curr_value
@@ -80,6 +80,6 @@ struct BOOST_PP_CAT
 #define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_IS_READY_FOR_CLEANUP
 
 #include <boost/act/interlocked/assign_if_was/assign_if_was.hpp>
-#include <boost/act/interlocked/retrieve.hpp>
+#include <boost/act/interlocked/load.hpp>
 
 #endif

@@ -14,7 +14,7 @@ import testing ;
     ;
 
     test-suite act/interlocked
-        : [ run interlocked/retrieve.cpp ]
+        : [ run interlocked/load.cpp ]
 
           [ run interlocked/assign/assign.cpp ]
           [ run interlocked/assign/assign_release.cpp ]

@@ -196,7 +196,7 @@ public:
   value_type old_value() const
   {
     BOOST_MPL_ASSERT_MSG( ( is_same< ValueInfo, detail::old_value >::value )
-                        , CANNOT_RETRIEVE_OLD_VALUE_ON_THIS_OPERATING_SYSTEM
+                        , CANNOT_LOAD_OLD_VALUE_ON_THIS_OPERATING_SYSTEM
                         , ()
                         );
 
@@ -206,7 +206,7 @@ public:
   value_type new_value() const
   {
     BOOST_MPL_ASSERT_MSG( ( is_same< ValueInfo, detail::old_value >::value )
-                        , CANNOT_RETRIEVE_NEW_VALUE_ON_THIS_OPERATING_SYSTEM
+                        , CANNOT_LOAD_NEW_VALUE_ON_THIS_OPERATING_SYSTEM
                         , ()
                         );
 

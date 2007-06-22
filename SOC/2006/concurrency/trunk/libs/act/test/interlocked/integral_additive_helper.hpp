@@ -15,7 +15,7 @@
 #include <boost/thread/thread.hpp>
 #include <boost/thread/barrier.hpp>
 #include <boost/integer_traits.hpp>
-#include <boost/act/interlocked/retrieve.hpp>
+#include <boost/act/interlocked/load.hpp>
 
 #include "random_uint8.hpp"
 
@@ -130,7 +130,7 @@ void brute_additive_assign_test( SingleThreadOperationType single_thread_op
     single_thread_op( test_var_copy, val );
   }
 
-  BOOST_CHECK( boost::act::interlocked::retrieve( test_var ) == test_var_copy );
+  BOOST_CHECK( boost::act::interlocked::load( test_var ) == test_var_copy );
 }
 
 #endif

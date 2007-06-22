@@ -54,7 +54,7 @@
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_ARITHMETIC_RETURN             \
   old_value
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_RETRIEVE_INFO                 \
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_LOAD_INFO                 \
   BOOST_PP_TUPLE_ELEM( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NUM_PARAMS     \
                      , 3, BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT       \
                      )
@@ -88,7 +88,7 @@
 #define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_multiply_assign 11
 #define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_negate_assign   12
 #define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_not_assign      13
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_retrieve        14
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_load        14
 #define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_subtract_assign 15
 #define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_xor_assign      16
 
@@ -168,12 +168,12 @@ BOOST_PP_EQUAL                                                                 \
 , 2                                                                            \
 )
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_custom_retrieve 0
-#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_retrieve 1
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_custom_load 0
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_load 1
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_RETRIEVE                     \
+#define BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_LOAD                     \
 BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_                        \
-            , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_RETRIEVE_INFO           \
+            , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_LOAD_INFO           \
             )
 
 namespace boost { namespace act { namespace interlocked { namespace detail {

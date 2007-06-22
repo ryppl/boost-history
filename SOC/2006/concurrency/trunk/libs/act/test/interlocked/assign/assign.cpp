@@ -6,25 +6,25 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#include "../assign_retrieve_helper.hpp"
+#include "../assign_load_helper.hpp"
 #include <boost/thread/barrier.hpp>
 #include "assign_helper.hpp"
 
 int test_main( int, char *[] )
 {
-  test_assign_retrieve_no_threads( single_thread_basic_get()
+  test_assign_load_no_threads( single_thread_basic_get()
                                  , interlocked_assign_set()
                                  );
 
-  test_assign_retrieve_no_threads( interlocked_retrieve_get()
+  test_assign_load_no_threads( interlocked_load_get()
                                  , interlocked_assign_set()
                                  );
 
   {
     boost::barrier barrier( 2 );
 
-    test_assign_retrieve_with_threads( barrier
-                                     , interlocked_retrieve_get()
+    test_assign_load_with_threads( barrier
+                                     , interlocked_load_get()
                                      , interlocked_assign_set()
                                      );
   }

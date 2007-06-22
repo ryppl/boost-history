@@ -21,7 +21,7 @@
 #include <boost/mpl/if.hpp>
 
 #include <boost/act/interlocked/increment/increment_acquire.hpp>
-#include <boost/act/interlocked/retrieve.hpp>
+#include <boost/act/interlocked/load.hpp>
 #include <boost/act/interlocked/integer/types.hpp>
 
 #include <boost/act/consumer_policy/scoped_consumer.hpp>
@@ -173,7 +173,7 @@ void test_scoped_consumer()
     consumer( long_process( test_val ) );
   }
 
-  if( interlocked::retrieve( test_val ) != 2 )
+  if( interlocked::load( test_val ) != 2 )
     BOOST_ERROR( "Scoped Consumer does not complete execution prior to." );
 /*
   using namespace boost::act;
