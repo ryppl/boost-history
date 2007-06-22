@@ -148,7 +148,7 @@ The concepts described below specifies associated types as [@../../libs/mpl/doc/
 `X` 	A type that is a model of __single_pass_range__.
 `a` 	Object of type X.
 
-[h3 Description]
+[h4 Description]
 
 A range `X` where `boost::range_iterator<X>::type` is a model of __single_pass_iterator__.
 
@@ -157,22 +157,18 @@ A range `X` where `boost::range_iterator<X>::type` is a model of __single_pass_i
 [table
   []
   [[Value type         ] [`boost::range_value<X>::type`         ] [The type of the object stored in a Range.]]
-
   [[Iterator type      ] [`boost::range_iterator<X>::type`      ] [The type of iterator used to iterate through a Range's elements. The iterator's value type is expected to be the Range's value type. A conversion from the iterator type to the `const` iterator type must exist.]]
-
   [[Const iterator type] [`boost::range_const_iterator<X>::type`] [A type of iterator that may be used to examine, but not to modify, a Range's elements.]]
 ]
 
-[h3 Valid expressions]
+[h4 Valid expressions]
 
 The following expressions must be valid.
 
 [table
   [[Name              ] [Expression       ] [Return type        ]]
   [[Beginning of range] [`boost::begin(a)`] [`boost::range_iterator<X>::type` if `a` is mutable,[br] `boost::range_const_iterator<X>::type` otherwise]]
-
   [[End of range      ] [`boost::end(a)`  ] [`boost::range_iterator<X>::type` if `a` is mutable,[br] `boost::range_const_iterator<X>::type` otherwise]]
-
   [[Is range empty?   ] [boost::empty(a)  ] [Convertible to bool]]
 ]
 
@@ -181,10 +177,8 @@ The following expressions must be valid.
 [table
   [[Expression       ] [Semantics                                                               ] [Postcondition]]
   [[`boost::begin(a)`] [Returns an iterator pointing to the first element in the Range.         ] [`boost::begin(a)` is either dereferenceable or past-the-end. It is past-the-end if and only if `boost::size(a) == 0`.]]
-
   [[`boost::end(a)`  ] [Returns an iterator pointing one past the last element in the Range.    ] [`boost::end(a)` is past-the-end.]]
-
-  [[`boost::empty(a)`] [Equivalent to `boost::begin(a) == boost::end(a)`. (But possibly faster.)] [-]]
+  [[`boost::empty(a)`] [Equivalent to `boost::begin(a) == boost::end(a)`. (But possibly faster.)] [-            ]]
 ]
 
 [h4 Complexity guarantees]
@@ -231,7 +225,6 @@ __single_pass_range__
 [table
   []
   [[Distance type] [`boost::range_difference<X>::type`] [A signed integral type used to represent the distance between two of the Range's iterators. This type must be the same as the iterator's distance type.]]
-
   [[Size type    ] [`boost::range_size<X>::type`      ] [An unsigned integral type that can represent any nonnegative value of the Range's distance type.]]
 ]
 
