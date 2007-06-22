@@ -9,9 +9,9 @@
 #ifndef BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_HPP
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_HPP
 
-#include <boost/act/interlocked/detail/cas_support_data.hpp>
+#include <boost/act/interlocked/detail/implementation_info/operation_support.hpp>
 
-#ifdef BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA
+#ifdef BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT
 
 #include <climits>
 #include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
@@ -36,18 +36,18 @@
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NAME                          \
   BOOST_PP_TUPLE_ELEM( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NUM_PARAMS     \
-                     , 0, BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA        \
+                     , 0, BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT       \
                      )
 
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_SEQ                           \
   BOOST_PP_TUPLE_ELEM( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NUM_PARAMS     \
-                     , 1, BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA        \
+                     , 1, BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT       \
                      )
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_CAS_RETURN                    \
   BOOST_PP_TUPLE_ELEM( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NUM_PARAMS     \
-                     , 2, BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA        \
+                     , 2, BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT       \
                      )
 
 // ToDo: Remove this eventually
@@ -56,21 +56,21 @@
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_RETRIEVE_INFO                 \
   BOOST_PP_TUPLE_ELEM( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NUM_PARAMS     \
-                     , 3, BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA        \
+                     , 3, BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT       \
                      )
 
 #ifndef BOOST_ACT_INTERLOCKED_FORCE_DEFAULTS
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_IMPL_INFO                     \
   BOOST_PP_TUPLE_ELEM( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NUM_PARAMS     \
-                     , 4, BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA        \
+                     , 4, BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT       \
                      )
 
 #else
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_IMPL_INFO                     \
-( ( assign,        ( full_barrier ) ) )                                        \
-( ( assign_if_was, ( full_barrier ) ) )
+( ( assign,        ( full_fence ) ) )                                        \
+( ( assign_if_was, ( full_fence ) ) )
 
 #endif
 
@@ -95,7 +95,7 @@
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_0            0
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_acquire      1
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_release      2
-#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_full_barrier 3
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_full_fence 3
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_COMPARE( data, elem )                     \
 BOOST_PP_EQUAL                                                                 \
@@ -162,7 +162,7 @@ BOOST_PP_EQUAL                                                                 \
       , BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_, semantics )   \
       )                                                                        \
     , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_IMPL_INFO                       \
-      ((0,(acquire)(release)(full_barrier)))                                   \
+      ((0,(acquire)(release)(full_fence)))                                   \
     )                                                                          \
   )                                                                            \
 , 2                                                                            \

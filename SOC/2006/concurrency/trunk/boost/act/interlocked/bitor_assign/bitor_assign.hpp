@@ -12,7 +12,7 @@
 #include <boost/act/interlocked/detail/binary_forwarder.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO                     \
-( bitor_assign, full_barrier, not_additive )
+( bitor_assign, full_fence, not_additive )
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER()
 

@@ -12,7 +12,7 @@
 #include <boost/act/interlocked/detail/binary_forwarder_fwd.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_FWD_INFO                 \
-( rshift_assign, full_barrier, not_additive )
+( rshift_assign, full_fence, not_additive )
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_FWD()
 

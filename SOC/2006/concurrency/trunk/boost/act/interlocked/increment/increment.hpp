@@ -11,7 +11,7 @@
 
 #include <boost/act/interlocked/detail/unary_forwarder.hpp>
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER_INFO ( increment, full_barrier )
+#define BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER_INFO ( increment, full_fence )
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER()
 

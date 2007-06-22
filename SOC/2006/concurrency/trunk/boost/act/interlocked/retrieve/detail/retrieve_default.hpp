@@ -11,7 +11,7 @@
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 
-#ifdef BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA
+#ifdef BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT
 
 #if BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_RETRIEVE // If: volatile impl
 

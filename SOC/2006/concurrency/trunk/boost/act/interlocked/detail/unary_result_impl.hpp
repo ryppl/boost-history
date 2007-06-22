@@ -12,7 +12,7 @@
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 
-#ifdef BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA
+#ifdef BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT
 
 #include <boost/type_traits/remove_volatile.hpp>
 

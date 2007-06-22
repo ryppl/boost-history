@@ -39,7 +39,7 @@
 //                    -or-
 //       release, meanining there is an one for release semantics
 //                    -or-
-//       full_barrier, meanining there is one for full barrier semantics
+//       full_fence, meanining there is one for full barrier semantics
 //
 
 #include <boost/config.hpp>
@@ -55,8 +55,8 @@
     // Note: Same name as vista windows on purpose
     #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA                      \
               ( windows,(32),old_value,volatile_retrieve                       \
-              , ( ( assign,        ( full_barrier ) ) )                        \
-                ( ( assign_if_was, ( full_barrier ) ) )                        \
+              , ( ( assign,        ( full_fence ) ) )                        \
+                ( ( assign_if_was, ( full_fence ) ) )                        \
               )
 
   #else // Windows Vista and higher
@@ -64,8 +64,8 @@
     // Note: Same name as pre-vista windows on purpose
     #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA                      \
               ( windows,(32)(64),old_value,volatile_retrieve                   \
-              , ( ( assign,        ( full_barrier )( acquire ) ) )             \
-                ( ( assign_if_was, ( full_barrier )( acquire )( release ) ) )  \
+              , ( ( assign,        ( full_fence )( acquire ) ) )             \
+                ( ( assign_if_was, ( full_fence )( acquire )( release ) ) )  \
               )
 
   #endif // End WINVER checks
@@ -77,8 +77,8 @@
     // Note: Same name as x64 on purpose
     #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA                      \
               ( gcc_x86,(32),old_value,volatile_retrieve                       \
-              , ( ( assign,        ( full_barrier ) ) )                        \
-                ( ( assign_if_was, ( full_barrier ) ) )                        \
+              , ( ( assign,        ( full_fence ) ) )                        \
+                ( ( assign_if_was, ( full_fence ) ) )                        \
               )
 
   #elif defined( __x86_64__ )

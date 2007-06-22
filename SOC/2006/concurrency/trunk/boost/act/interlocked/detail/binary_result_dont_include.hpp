@@ -18,7 +18,7 @@ Note: If you are getting an error in this file, please post to the mailing list
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 
-#ifdef BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA
+#ifdef BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/stringize.hpp>

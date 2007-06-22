@@ -24,7 +24,7 @@
 #include <boost/act/interlocked/detail/impl.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_INFO                                 \
-( assign_if_was, full_barrier )
+( assign_if_was, full_fence )
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
 

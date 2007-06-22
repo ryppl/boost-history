@@ -6,14 +6,11 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_BITOR_ASSIGN_DETAIL_BITOR_ASSIGN_DEFAULT_HPP
-#define BOOST_ACT_INTERLOCKED_BITOR_ASSIGN_DETAIL_BITOR_ASSIGN_DEFAULT_HPP
+#ifndef BOOST_ACT_INTERLOCKED_MODIFY_HPP
+#define BOOST_ACT_INTERLOCKED_MODIFY_HPP
 
-#include <boost/act/interlocked/detail/binary_default.hpp>
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO                       \
-( bitor_assign, full_fence, | )
-
-#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT()
+#include <boost/act/interlocked/modify/modify.hpp>
+#include <boost/act/interlocked/modify/modify_acquire.hpp>
+#include <boost/act/interlocked/modify/modify_release.hpp>
 
 #endif

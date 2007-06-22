@@ -9,9 +9,9 @@
 #ifndef BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERLOCKED_HPP
 #define BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERLOCKED_HPP
 
-#include <boost/act/interlocked/detail/cas_support_data.hpp>
+#include <boost/act/interlocked/detail/implementation_info/operation_support.hpp>
 
-#ifdef BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_DATA
+#ifdef BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT
 #define BOOST_ACT_HAS_INTERLOCKED_OPERATIONS
 #endif
 
