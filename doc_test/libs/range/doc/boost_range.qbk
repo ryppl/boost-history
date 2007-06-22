@@ -21,21 +21,25 @@
 [def __iterator_range__         [link boost.range.utilities.iterator_range `iterator_range`]]
 [def __sub_range__              [link boost.range.utilities.sub_range `sub_range`]]
 [def __minimal_interface__      [link boost.range.reference.extending minimal interface]]
-[def __range_result_iterator__  [link boost.range.reference.synopsis.metafunctions `range_result_iterator`]]
+[def __range_result_iterator__  [link boost.range.reference.semantics.metafunctions `range_result_iterator`]]
+[def __implementation_of_metafunctions__ [link boost.range.reference.semantics.metafunctions implementation of metafunctions]]
+[def __implementation_of_functions__     [link boost.range.reference.semantics.functions implementation of functions]]
 
-[def __single_pass_iterator__   [@../../libs/iterator/doc/new-iter-concepts.html#singls-pass-iterators-lib-single-pass-iterators Single pass iterators]]
+[def __single_pass_iterator__   [@../../libs/iterator/doc/new-iter-concepts.html#singls-pass-iterators-lib-single-pass-iterators Single Pass Iterator]]
 [def __forward_traversal_iterator__ [@../../libs/iterator/doc/new-iter-concepts.html#forward-traversal-iterators-lib-forward-traversal-iterators Forward Traversal Iterator]]
+[def __bidirectional_traversal_iterator__ [@../../libs/iterator/doc/new-iter-concepts.html#bidirectional-traversal-iterators-lib-bidirectional-traversal-iterators Bidirectional Traversal Iterator]]
+[def __random_access_traversal_iterator__ [@../../libs/iterator/doc/new-iter-concepts.html#random-access-traversal-iterators-lib-random-access-traversal-iterators Random Access Traversal Iterator]]
 [def __new_style_iterators__    [@../../libs/iterator/doc/new-iter-concepts.html new style iterators]]
+[def __iterator_concepts__      [@../../libs/iterator/doc/iterator_concepts.html Iterator concepts]]
 
 [def __container__              [@http://www.sgi.com/Technology/STL/Container.html Container]]
 [def __metafunctions__          [@../../libs/mpl/doc/refmanual/metafunction.html metafunctions]]
-[def __concept_check__          [@../../libs/concept_check/ concept check]]
+[def __concept_check__          [@../../libs/concept_check/index.html Boost Concept Check library]]
 [def __boost_array__            [@../../libs/array/index.html boost::array]]
 [def __the_forwarding_problem__ [@http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1385.htm The Forwarding Problem]]
 
 
-Boost.Range is a collection of concepts and utilities that are particularly useful for specifying and implementing generic algorithms. The documentation consists of the following sections:
-
+Boost.Range is a collection of concepts and utilities that are particularly useful for specifying and implementing generic algorithms.
 
 
 [section Introduction]
@@ -96,7 +100,7 @@ Below are given a small example (the complete example can be found [@http://www.
         const int N = 5;
         std::vector<int> my_vector;
         int values[] = { 1,2,3,4,5,6,7,8,9 };
-        
+
         my_vector.assign( values, boost::end( values ) );
         typedef std::vector<int>::iterator iterator;
         std::pair<iterator,iterator>       my_view( boost::begin( my_vector ),
@@ -109,7 +113,6 @@ Below are given a small example (the complete example can be found [@http://www.
         std::cout << my_generic_replace( str, 'a', 'b' );
 
         // prints '3', '5' and '0'     
-        
 ``
 
 By using the free-standing functions and __metafunctions__, the code automatically works for all the types supported by this library; now and in the future. Notice that we have to provide two version of `find()` since we cannot forward a non-const rvalue with reference arguments (see this article about __the_forwarding_problem__ ).
@@ -142,19 +145,21 @@ The concepts described below specifies associated types as [@../../libs/mpl/doc/
 
 [h4 Notation]
 
-`X` 	A type that is a model of Single Pass Range.
+`X` 	A type that is a model of __single_pass_range__.
 `a` 	Object of type X.
 
 [h3 Description]
 
-A range `X` where `boost::range_iterator<X>::type` is a model of Single Pass Iterator
+A range `X` where `boost::range_iterator<X>::type` is a model of __single_pass_iterator__.
 
 [h4 Associated types]
 
 [table
   []
-  [[Value type] 	[`boost::range_value<X>::type`] 	[The type of the object stored in a Range.]]
-  [[Iterator type] [`boost::range_iterator<X>::type`] [The type of iterator used to iterate through a Range's elements. The iterator's value type is expected to be the Range's value type. A conversion from the iterator type to the const iterator type must exist.]]
+  [[Value type         ] [`boost::range_value<X>::type`         ] [The type of the object stored in a Range.]]
+
+  [[Iterator type      ] [`boost::range_iterator<X>::type`      ] [The type of iterator used to iterate through a Range's elements. The iterator's value type is expected to be the Range's value type. A conversion from the iterator type to the `const` iterator type must exist.]]
+
   [[Const iterator type] [`boost::range_const_iterator<X>::type`] [A type of iterator that may be used to examine, but not to modify, a Range's elements.]]
 ]
 
@@ -163,18 +168,22 @@ A range `X` where `boost::range_iterator<X>::type` is a model of Single Pass Ite
 The following expressions must be valid.
 
 [table
-  [[Name] [Expression] [Return type]]
-  [[Beginning of range] [`boost::begin(a)`] [`boost::range_iterator<X>::type` if `a` is mutable, `boost::range_const_iterator<X>::type` otherwise]]
-  [[End of range] [`boost::end(a)`] [`boost::range_iterator<X>::type` if `a` is mutable, `boost::range_const_iterator<X>::type` otherwise]]
-  [[Is range empty?] [boost::empty(a)] [Convertible to bool]]
+  [[Name              ] [Expression       ] [Return type        ]]
+  [[Beginning of range] [`boost::begin(a)`] [`boost::range_iterator<X>::type` if `a` is mutable,[br] `boost::range_const_iterator<X>::type` otherwise]]
+
+  [[End of range      ] [`boost::end(a)`  ] [`boost::range_iterator<X>::type` if `a` is mutable,[br] `boost::range_const_iterator<X>::type` otherwise]]
+
+  [[Is range empty?   ] [boost::empty(a)  ] [Convertible to bool]]
 ]
 
 [h4 Expression semantics]
 
 [table
-  [[Expression] [Semantics] [Postcondition]]
-  [[`boost::begin(a)`] [Returns an iterator pointing to the first element in the Range.] [`boost::begin(a)` is either dereferenceable or past-the-end. It is past-the-end if and only if `boost::size(a) == 0`.]]
-  [[`boost::end(a)`] [Returns an iterator pointing one past the last element in the Range.] [`boost::end(a)` is past-the-end.]]
+  [[Expression       ] [Semantics                                                               ] [Postcondition]]
+  [[`boost::begin(a)`] [Returns an iterator pointing to the first element in the Range.         ] [`boost::begin(a)` is either dereferenceable or past-the-end. It is past-the-end if and only if `boost::size(a) == 0`.]]
+
+  [[`boost::end(a)`  ] [Returns an iterator pointing one past the last element in the Range.    ] [`boost::end(a)` is past-the-end.]]
+
   [[`boost::empty(a)`] [Equivalent to `boost::begin(a) == boost::end(a)`. (But possibly faster.)] [-]]
 ]
 
@@ -186,7 +195,8 @@ All three functions are at most amortized linear time. For most practical purpos
 
 [table
   []
-  [[Valid range] [For any Range `a`, `[boost::begin(a),boost::end(a))` is a valid range, that is, `boost::end(a)` is reachable from `boost::begin(a)` in a finite number of increments.]]
+  [[Valid range ] [For any Range `a`, `[boost::begin(a),boost::end(a))` is a valid range, that is, `boost::end(a)` is reachable from `boost::begin(a)` in a finite number of increments.]]
+
   [[Completeness] [An algorithm that iterates through the range `[boost::begin(a),boost::end(a))` will pass through every element of `a`.]]
 ]
 
@@ -194,9 +204,9 @@ All three functions are at most amortized linear time. For most practical purpos
 
 __container__
 
-implementation of metafunctions
+__implementation_of_metafunctions__
 
-implementation of functions 
+__implementation_of_functions__
 
 [endsect]
 
@@ -205,36 +215,37 @@ implementation of functions
 
 [h4 Notation]
 
-`X` 	A type that is a model of Forward Range.
+`X` 	A type that is a model of __forward_range__.
 `a` 	Object of type X.
 
 [h4 Description]
 
-A range `X` where `boost::range_iterator<X>::type` is a model of Forward Traversal Iterator
+A range `X` where `boost::range_iterator<X>::type` is a model of __forward_traversal_iterator__.
 
 [h4 Refinement of]
 
-Single Pass Range
+__single_pass_range__
 
 [h4 Associated types]
 
 [table
   []
   [[Distance type] [`boost::range_difference<X>::type`] [A signed integral type used to represent the distance between two of the Range's iterators. This type must be the same as the iterator's distance type.]]
-  [[Size type] [`boost::range_size<X>::type`] [An unsigned integral type that can represent any nonnegative value of the Range's distance type.]]
+
+  [[Size type    ] [`boost::range_size<X>::type`      ] [An unsigned integral type that can represent any nonnegative value of the Range's distance type.]]
 ]
 
 [h4 Valid expressions]
 
 [table
-  [[Name] [Expression] [Return type]]
+  [[Name         ] [Expression      ] [Return type                 ]]
   [[Size of range] [`boost::size(a)`] [`boost::range_size<X>::type`]]
 ]
 
 [h4 Expression semantics]
 
 [table
-  [[Expression] [Semantics] [Postcondition]]
+  [[Expression      ] [Semantics] [Postcondition]]
   [[`boost::size(a)`] [Returns the size of the Range, that is, its number of elements. Note `boost::size(a) == 0u` is equivalent to `boost::empty(a)`.] [`boost::size(a) >= 0`]]
 ]
 
@@ -251,9 +262,9 @@ Single Pass Range
 
 [h4 See also]
 
-implementation of metafunctions
+__implementation_of_metafunctions__
 
-implementation of functions 
+__implementation_of_functions__
 
 [endsect]
 
@@ -262,50 +273,53 @@ implementation of functions
 
 [h4 Notation]
 
-`X` 	A type that is a model of Bidirectional Range.
+`X` 	A type that is a model of __bidirectional_range__.
 `a` 	Object of type X.
 
 [h4 Description]
 
-This concept provides access to iterators that traverse in both directions (forward and reverse). The `boost::range_iterator<X>::type` iterator must meet all of the requirements of Bidirectional Traversal Iterator.
+This concept provides access to iterators that traverse in both directions (forward and reverse). The `boost::range_iterator<X>::type` iterator must meet all of the requirements of __bidirectional_traversal_iterator__.
 
 [h4 Refinement of]
 
-Forward Range
+__forward_range__
 
 [h4 Associated types]
 
 [table
   []
-  [[Reverse Iterator type] [`boost::range_reverse_iterator<X>::type`] [The type of iterator used to iterate through a Range's elements in reverse order. The iterator's value type is expected to be the Range's value type. A conversion from the reverse iterator type to the const reverse iterator type must exist.]]
+  [[Reverse Iterator type      ] [`boost::range_reverse_iterator<X>::type`      ] [The type of iterator used to iterate through a Range's elements in reverse order. The iterator's value type is expected to be the Range's value type. A conversion from the reverse iterator type to the const reverse iterator type must exist.]]
+
   [[Const reverse iterator type] [`boost::range_const_reverse_iterator<X>::type`] [A type of reverse iterator that may be used to examine, but not to modify, a Range's elements.]]
 ]
 
 [h4 Valid expressions]
 
 [table
-  [[Name] [Expression] [Return type] [Semantics]]
-  [[Beginning of range] [`boost::rbegin(a)`] [`boost::range_reverse_iterator<X>::type` if `a` is mutable, `boost::range_const_reverse_iterator<X>::type` otherwise.] [Equivalent to `boost::range_reverse_iterator<X>::type(boost::end(a))`.]]
-  [[End of range] [`boost::rend(a)`] [`boost::range_reverse_iterator<X>::type` if `a` is mutable, `boost::range_const_reverse_iterator<X>::type` otherwise.] [Equivalent to `boost::range_reverse_iterator<X>::type(boost::begin(a))`.]]
+  [[Name              ] [Expression        ] [Return type] [Semantics]]
+  [[Beginning of range] [`boost::rbegin(a)`] [`boost::range_reverse_iterator<X>::type` if `a` is mutable[br] `boost::range_const_reverse_iterator<X>::type` otherwise.] [Equivalent to `boost::range_reverse_iterator<X>::type(boost::end(a))`.]]
+
+  [[End of range      ] [`boost::rend(a)`  ] [`boost::range_reverse_iterator<X>::type` if `a` is mutable,[br] `boost::range_const_reverse_iterator<X>::type` otherwise.] [Equivalent to `boost::range_reverse_iterator<X>::type(boost::begin(a))`.]]
 ]
 
 [h4 Complexity guarantees]
 
-`boost::rbegin(a)` has the same complexity as `boost::end(a)` and `boost::rend(a)` has the same complexity as `boost::begin(a)` from Forward Range.
+`boost::rbegin(a)` has the same complexity as `boost::end(a)` and `boost::rend(a)` has the same complexity as `boost::begin(a)` from __forward_range__.
 
 [h4 Invariants]
 
 [table
   []
   [[Valid reverse range] [For any Bidirectional Range a, `[boost::rbegin(a),boost::rend(a))` is a valid range, that is, `boost::rend(a)` is reachable from `boost::rbegin(a)` in a finite number of increments.]]
-  [[Completeness] [`An algorithm that iterates through the range `[boost::rbegin(a),boost::rend(a))` will pass through every element of `a`.]]
+
+  [[Completeness       ] [`An algorithm that iterates through the range `[boost::rbegin(a),boost::rend(a))` will pass through every element of `a`.]]
 ]
 
 [h4 See also]
 
-implementation of metafunctions
+__implementation_of_metafunctions__
 
-implementation of functions 
+__implementation_of_functions__
 
 [endsect]
 
@@ -314,18 +328,18 @@ implementation of functions
 
 [h4 Description]
 
-A range `X` where `boost::range_iterator<X>::type` is a model of Random Access Traversal Iterator
+A range `X` where `boost::range_iterator<X>::type` is a model of __random_access_traversal_iterator__.
 
 [h4 Refinement of]
 
-Bidirectional Range
+__bidirectional_range__
 
 [endsect]
 
 
 [section Concept Checking]
 
-Each of the range concepts has a corresponding concept checking class in the file `boost/range/concepts.hpp`. These classes may be used in conjunction with the [@../../libs/concept_check/concept_check.htm Boost Concept Check] library to insure that the type of a template parameter is compatible with a range concept. If not, a meaningful compile time error is generated. Checks are provided for the range concepts related to iterator traversal categories. For example, the following line checks that the type `T` models the ForwardRange concept.
+Each of the range concepts has a corresponding concept checking class in the file [@../../boost/range/concepts.hpp `boost/range/concepts.hpp`]. These classes may be used in conjunction with the __concept_check__ to insure that the type of a template parameter is compatible with a range concept. If not, a meaningful compile time error is generated. Checks are provided for the range concepts related to iterator traversal categories. For example, the following line checks that the type `T` models the __forward_range__ concept.
 
 ``
 function_requires<ForwardRangeConcept<T> >();
@@ -344,16 +358,16 @@ function_requires<ForwardRangeConcept<T> >();
 
 The following range concept checking classes are provided.
 
-* Class SinglePassRangeConcept checks for Single Pass Range
-* Class ForwardRangeConcept checks for Forward Range
-* Class BidirectionalRangeConcept checks for Bidirectional Range
-* Class RandomAccessRangeConcept checks for Random Access Range 
+* Class SinglePassRangeConcept checks for __single_pass_range__
+* Class ForwardRangeConcept checks for __forward_range__
+* Class BidirectionalRangeConcept checks for __bidirectional_range__
+* Class RandomAccessRangeConcept checks for __random_access_range__
 
 [h4 See also]
 
 [link boost.range.style_guide Range Terminology and style guidelines]
 
-Iterator Concepts
+__iterator_concepts__
 
 __concept_check__
 
@@ -392,114 +406,114 @@ namespace boost
     //
     // Single Pass Range metafunctions
     //
-    
+
     template< class T >
     struct range_value;
-                 
+
     template< class T >
     struct range_iterator;
-    
+
     template< class T >
     struct range_const_iterator;
-    
+
     //
     // Forward Range metafunctions
     //
-    
+
     template< class T >
     struct range_difference;
-    
+
     template< class T >
     struct range_size;
-    
+
     //
     // Bidirectional Range metafunctions
     //
-    
+
     template< class T >
     struct range_reverse_iterator;
 
     template< class T >
     struct range_const_reverse_iterator;
-    
+
     //
     // Special metafunctions
     //
-    
+
     template< class T >
     struct range_result_iterator;
-                 
+
     template< class T >
     struct range_reverse_result_iterator;
 
     //
     // Single Pass Range functions
     //
-    
+
     template< class T >
     typename range_iterator<T>::type
     begin( T& c );
-    
+
     template< class T >
     typename range_const_iterator<T>::type
     begin( const T& c );
-        
+
     template< class T >
     typename range_iterator<T>::type
     end( T& c );
-                      
+
     template< class T >
     typename range_const_iterator<T>::type
     end( const T& c );
-    
+
     template< class T >
     bool
     empty( const T& c );
-               
+
     //
     // Forward Range functions
     //
-    
+
     template< class T >
     typename range_size<T>::type
     size( const T& c );
-                            
+
     //
     // Bidirectional Range functions
     //
-                     
+
     template< class T >
     typename range_reverse_iterator<T>::type
     rbegin( T& c );
-    
+
     template< class T >
     typename range_const_reverse_iterator<T>::type
     rbegin( const T& c );
-        
+
     template< class T >
     typename range_reverse_iterator<T>::type
     rend( T& c );
-                      
+
     template< class T >
     typename range_const_reverse_iterator<T>::type
     rend( const T& c );
-    
+
     //
     // Special const Range functions
-    // 
-    
+    //
+
     template< class T >
     typename range_const_iterator<T>::type 
     const_begin( const T& r );
-    
+
     template< class T >
     typename range_const_iterator<T>::type 
     const_end( const T& r );
-    
+
     template< class T >
     typename range_const_reverse_iterator<T>::type 
     const_rbegin( const T& r );
-    
+
     template< class T >
     typename range_const_reverse_iterator<T>::type 
     const_rend( const T& r );
@@ -525,7 +539,7 @@ namespace boost
 
 Please notice in tables below that when four lines appear in a cell, the first line will describe the primary template, the second line pairs of iterators, the third line arrays and the last line null-terminated strings.
 
-[h5:metafunctions Metafunctions]
+[section Metafunctions]
 
 [table
   [[Expression] [Return type] [Complexity]]
@@ -557,7 +571,10 @@ Please notice in tables below that when four lines appear in a cell, the first l
 ]
 
 The special metafunctions `range_result_iterator` and `range_reverse_result_iterator` are not part of any Range concept, but they are very useful when implementing certain Range classes like __sub_range__ because of their ability to select iterators based on constness.
-Functions
+
+[endsect]
+
+[section Functions]
 
 [table
   [[Expression] [Return type] [Returns] [Complexity]]
@@ -600,6 +617,8 @@ constant time otherwise]]
 ]
 
 The special const functions are not part of any Range concept, but are very useful when you want to document clearly that your code is read-only.
+
+[endsect]
 
 [endsect]
 
@@ -798,7 +817,7 @@ Both classes can be used as ranges since they implement the __minimal_interface_
 
 The intention of the `iterator_range` class is to encapsulate two iterators so they fulfill the __forward_range__ concept. A few other functions are also provided for convenience.
 
-If the template argument is not a model of _forward_traversal_iterator__, one can still use a subset of the interface. In particular, `size()` requires Forward Traversal Iterators whereas `empty()` only requires Single Pass Iterators.
+If the template argument is not a model of __forward_traversal_iterator__, one can still use a subset of the interface. In particular, `size()` requires Forward Traversal Iterators whereas `empty()` only requires Single Pass Iterators.
 
 Recall that many default constructed iterators are singular and hence can only be assigned, but not compared or incremented or anything. However, if one creates a default constructed `iterator_range`, then one can still call all its member functions. This means that the `iterator_range` will still be usable in many contexts even though the iterators underneath are not.
 

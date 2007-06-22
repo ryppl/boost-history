@@ -1,6 +1,6 @@
 
 use-project boost : $(BOOST_ROOT) ;
-#project libraries ;
+
 
 import boostbook : boostbook ;
 import quickbook ;
@@ -15,8 +15,8 @@ boostbook standalone
     <xsl:param>boost.libraries=/usr/local/src/boost/libs/libraries.html
     <xsl:param>generate.section.toc.level=4
     <xsl:param>chunk.first.sections=7
-#  <xsl:param>toc.max.depth=10
-#    <xsl:param>toc.section.depth=10
+#    <xsl:param>toc.max.depth=10
+    <xsl:param>toc.section.depth=10
 #    <xsl:param>chunk.section.depth=10
   ;
 
