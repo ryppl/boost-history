@@ -13,6 +13,7 @@
 #include <boost/lexical_cast.hpp>
 
 #include <iostream>
+#include <string>
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 
@@ -34,53 +35,44 @@
 #include "../examples/word.hpp"
 
 
+// copy the original library qty times to be loaded in the main routine
+void copy_libraries(const std::string &lib_base, unsigned int qty)
+{
+	for(unsigned int i = 1; i <= qty; ++i) {
+		std::string library_copy = lib_base + boost::lexical_cast<std::string>(i) + ".extension";
+		if(boost::filesystem::exists(lib_base + ".extension") && !boost::filesystem::exists(library_copy)) {
+			boost::filesystem::copy_file(lib_base + ".extension", library_copy);
+		}
+	}
+}
+
+// remove the libraries after using them
+void remove_libraries(const std::string &lib_base, unsigned int qty)
+{
+	for(unsigned int i = 1; i <= qty; ++i) {
+		std::string library_copy = lib_base + boost::lexical_cast<std::string>(i) + ".extension";
+		if(boost::filesystem::exists(library_copy)) {
+			boost::filesystem::remove(library_copy);
+		}
+	}
+}
+
+
 int main(void)
 {
 	using namespace boost::extensions;
 
-	unsigned int libs = 50;
+	unsigned int libs = 500;
 
-	// FIXME: functions
-	for(unsigned int i = 1; i <= libs; ++i) {
-		std::string library_copy = "libHelloWorldLib" + boost::lexical_cast<std::string>(i) + ".extension";
-		if(boost::filesystem::exists("libHelloWorldLib.extension") && !boost::filesystem::exists(library_copy)) {
+	copy_libraries("libHelloWorldLib", libs);
+	copy_libraries("libPlainOldHelloWorldLib", libs);
 
-			boost::filesystem::copy_file("libHelloWorldLib.extension", library_copy);
-		}
-	}
-
-	for(unsigned int i = 1; i <= libs; ++i) {
-		std::string library_copy = "libPlainOldHelloWorldLib" + boost::lexical_cast<std::string>(i) + ".extension";
-		if(boost::filesystem::exists("libPlainOldHelloWorldLib.extension") && !boost::filesystem::exists(library_copy)) {
-
-			boost::filesystem::copy_file("libPlainOldHelloWorldLib.extension", library_copy);
-		}
-	}
-
-	for(unsigned int i = 1; i <= libs; ++i) {
-		std::string library_copy = "libHelloWorldLib" + boost::lexical_cast<std::string>(i) + ".extension";
-		if(boost::filesystem::exists(library_copy)) {
-			boost::filesystem::remove(library_copy);
-		}
-	}
-
-	for(unsigned int i = 1; i <= libs; ++i) {
-		std::string library_copy = "libPlainOldHelloWorldLib" + boost::lexical_cast<std::string>(i) + ".extension";
-		if(boost::filesystem::exists(library_copy)) {
-			boost::filesystem::remove(library_copy);
-		}
-	}
-
-
-/*
-
-	const unsigned int times = 1000;
 
 	// boost.extensions style
 	boost::timer extensions_style;
-	for(unsigned int c = 0; c < times; ++c) {
+	for(unsigned int lib_number = 1; lib_number <= libs; ++lib_number) {
 
-		shared_library l((std::string("libHelloWorldLib") + ".extension").c_str());
+		shared_library l(std::string("libHelloWorldLib" + boost::lexical_cast<std::string>(lib_number) + ".extension").c_str());
 		l.open();
 		{
 			factory_map fm;
@@ -105,16 +97,16 @@ int main(void)
 
 	// plain old style
 	boost::timer old_style;
-	for(unsigned int c = 0; c < times; ++c) {
+	for(unsigned int lib_number = 1; lib_number <= libs; ++lib_number) {
 
 #if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
-		HMODULE library = LoadLibrary("libPlainOldHelloWorldLib.extension");
+		HMODULE library = LoadLibrary(std::string("libPlainOldHelloWorldLib" + boost::lexical_cast<std::string>(lib_number) + ".extension").c_str());
 #else
-		void *library = dlopen("libPlainOldHelloWorldLib.extension", RTLD_LAZY);
+		void *library = dlopen(std::string("libPlainOldHelloWorldLib" + boost::lexical_cast<std::string>(lib_number) + ".extension").c_str(), RTLD_LAZY);
 #endif
 
 		if(library == 0) {
-			std::cerr << "Cannot open Hello World Library." << std::endl;
+			std::cerr << "Cannot open Hello World Library (libPlainOldHelloWorldLib" << lib_number << ".extension)" << std::endl;
 			return 1;
 		}
 		typedef void (*export_words_function_type)(word **, word **);
@@ -152,6 +144,10 @@ int main(void)
 #endif
 	}
 	std::cout << "Plain old style: " << old_style.elapsed() << std::endl;
-*/
+
+
+	remove_libraries("libHelloWorldLib", libs);
+	remove_libraries("libPlainOldHelloWorldLib", libs);
+
 	return 0;
 }
