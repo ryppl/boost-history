@@ -1,0 +1,786 @@
+[article Boost.Bind
+    [quickbook 1.4]
+    [purpose Generalized binders for function\/object\/pointers and member functions, from Peter Dimov.]
+    [source-mode c++]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [authors [Dimov, Peter]]
+    [category bind]
+]
+
+[/ Converted to Quickbook format by Glyn Matthews, 2007]
+
+[def __ref__ [@http://www.boost.org/libs/bind/ref.html boost::ref]]
+[def __cref__ [@http://www.boost.org/libs/bind/ref.html boost::cref]]
+[def __mem_fn__ [@http://www.boost.org/libs/bind/mem_fn.html boost::mem_fn]]
+[def __shared_ptr__ [@http://www.boost.org/libs/smart_ptr/shared_ptr.htm boost::shared_ptr]]
+[def __compose__ [@http://www.boost.org/libs/compose/index.htm Boost.Compose]]
+[def __config__ [@http://www.boost.org/libs/config/index.htm Boost.Config]]
+[def __function__ [@http://www.boost.org/libs/function/index.html boost::function]]
+[def __generic__ [link using_bind_with_function_objects generic function object]]
+
+
+[section Purpose]
+[* boost::bind] is a generalization of the standard functions [* std::bind1st] and [* std::bind2nd].  It supports arbitrary function objects, functions, function pointers, and member function pointers, and is able to bind any argument to a specific value or route input arguments into arbitrary positions. [* bind] does not place any requirements on the function object; in particular, it does not need the [* result_type], [* first_argument_type] and [* second_argument_type] standard typedefs.
+
+[h3 Using bind with function and functions pointers]
+Given these definitions:
+
+``
+int f(int a, int b)
+{
+    return a + b;
+}
+
+int g(int a, int b, int c)
+{
+    return a + b + c;
+}
+``
+
+`bind(f, 1, 2)` will produce a "nullary" function object that takes no arguments and returns `f(1, 2)`. Similarly, `bind(g, 1, 2, 3)()` is equivalent to `g(1, 2, 3)`.
+
+It is possible to selectively bind only some of the arguments. `bind(f, _1, 5)(x)` is equivalent to `f(x, 5)`; here [* _1] is a placeholder argument that means "substitute with the first input argument."
+
+For comparison, here is the same operation expressed with the standard library primitives:
+
+``std::bind2nd(std::ptr_fun(f), 5)(x);``
+
+[* bind] covers the functionality of [* std::bind1st] as well:
+
+``
+std::bind1st(std::ptr_fun(f), 5)(x);   // f(5, x)
+bind(f, 5, _1)(x);                     // f(5, x)
+``
+
+[* bind] can handle functions with more than two arguments, and its argument substitution mechanism is more general:
+
+``bind(f, _2, _1)(x, y);                 // f(y, x)``
+
+``bind(g, _1, 9, _1)(x);                 // g(x, 9, x)``
+
+``bind(g, _3, _3, _3)(x, y, z);          // g(z, z, z)``
+
+``bind(g, _1, _1, _1)(x, y, z);          // g(x, x, x)``
+
+Note that, in the last example, the function object produced by `bind(g, _1, _1, _1)` does not contain references to any arguments beyond the first, but it can still be used with more than one argument. Any extra arguments are silently ignored, just like the first and the second argument are ignored in the third example.
+
+The arguments that [* bind] takes are copied and held internally by the returned function object. For example, in the following code:
+
+``int i = 5;``
+
+``bind(f, i, _1);``
+
+a copy of the value of [* i] is stored into the function object.  boost::ref and boost::cref can be used to make the function object store a reference to an object, rather than a copy:
+
+``int i = 5;``
+
+``bind(f, ref(i), _1);``
+
+``bind(f, cref(42), _1);``
+
+[#using_bind_with_function_objects]
+[h3 Using bind with function objects]
+
+[* bind] is not limited to functions; it accepts arbitrary function objects. In the general case, the return type of the generated function object's [* operator()]  has to be specified explicitly (without a [* typeof] operator the return type cannot be inferred):
+
+``
+struct F
+{
+    int operator()(int a, int b) { return a - b; }
+    bool operator()(long a, long b) { return a == b; }
+};
+
+F f;
+
+int x = 104;
+
+bind<int>(f, _1, _1)(x);		// f(x, x), i.e. zero
+``
+
+Some compilers have trouble with the bind<R>(f, ...) syntax. For portability reasons, an alternative way to express the above is supported:
+
+``boost::bind(boost::type<int>(), f, _1, _1)(x);``
+
+Note, however, that the alternative syntax is provided only as a workaround. It is not part of the interface.
+
+When the function object exposes a nested type named [* result_type], the explicit return type can be omitted:
+
+``int x = 8;``
+
+``bind(std::less<int>(), _1, 9)(x);	// x < 9``
+
+\[Note: the ability to omit the return type is not available on all compilers.\]
+
+[h3 Using bind with pointers to members]
+
+Pointers to member functions and pointers to data members are not function objects, because they do not support `operator()`. For convenience, [* bind]  accepts member pointers as its first argument, and the behavior is as if __mem_fn__ has been used to convert the member pointer into a function object. In other words, the expression
+
+``bind(&X::f, args)``
+
+is equivalent to
+
+``bind<R>(mem_fn(&X::f), args)``
+
+where [* R] is the return type of [* X::f] (for member functions) or the type of the member (for data members.)
+
+\[Note: [* mem_fn] creates function objects that are able to accept a pointer, a reference, or a smart pointer to an object as its first argument; for additional information, see the [* mem_fn] [@http://www.boost.org/libs/bind/mem_fn.html documentation].\]
+
+Example:
+
+``
+struct X
+{
+    bool f(int a);
+};
+
+X x;
+
+shared_ptr<X> p(new X);
+
+int i = 5;
+
+bind(&X::f, ref(x), _1)(i);		// x.f(i)
+bind(&X::f, &x, _1)(i);			//(&x)->f(i)
+bind(&X::f, x, _1)(i);			// (internal copy of x).f(i)
+bind(&X::f, p, _1)(i);			// (internal copy of p)->f(i)
+``
+
+The last two examples are interesting in that they produce "self-contained" function objects. `bind(&X::f, x, _1)` stores a copy of [* x]. `bind(&X::f, p, _1)` stores a copy of [* p], and since [* p] is a __shared_ptr__, the function object retains a reference to its instance of [* X] and will remain valid even when [* p] goes out of scope or is [* reset()].
+
+[h3 Using nested binds for function composition]
+
+Some of the arguments passed to [* bind] may be nested [* bind] expressions themselves:
+
+``
+bind(f, bind(g, _1))(x);               // f(g(x))
+``
+
+The inner [* bind] expressions are evaluated, in unspecified order, before the outer [* bind] when the function object is called; the results of the evaluation are then substituted in their place when the outer [* bind] is evaluated. In the example above, when the function object is called with the argument list `(x)`, `bind(g, _1)(x)` is evaluated first, yielding `g(x)`, and then `bind(f, g(x))(x)` is evaluated, yielding the final result `f(g(x))`.
+
+This feature of [* bind] can be used to perform function composition. See [@http://www.boost.org/libs/bind/bind_as_compose.cpp bind_as_compose.cpp] for an example that demonstrates how to use bind to achieve similar functionality to __compose__.
+
+Note that the first argument - the bound function object - is not evaluated, even when it's a function object that is produced by [* bind] or a placeholder argument, so the example below does not work as expected:
+
+``typedef void (*pf)(int);``
+
+``std::vector<pf> v;``
+
+``std::for_each(v.begin(), v.end(), bind(_1, 5));``
+
+The desired effect can be achieved via a helper function object [* apply] that applies its first argument, as a function object, to the rest of its argument list. For convenience, an implementation of [* apply] is provided in the [* boost/bind/apply.hpp] header file. Here is how the modified version of the previous example looks like:
+
+``typedef void (*pf)(int);``
+
+``std::vector<pf> v;``
+
+``std::for_each(v.begin(), v.end(), bind(apply<void>(), _1, 5));``
+
+Although the first argument is, by default, not evaluated, all other arguments are. Sometimes it is necessary not to evaluate arguments subsequent to the first, even when they are nested [* bind] subexpressions. This can be achieved with the help of another function object, [* protect], that masks the type so that [* bind] does not recognize and evaluate it. When called, [* protect] simply forwards the argument list to the other function object unmodified.
+
+The header [* boost/bind/protect.hpp] contains an implementation of [* protect]. To protect a [* bind] function object from evaluation, use 'protect(bind(f, ...))'.
+
+[h3 Overloaded operators (new in Boost 1.33)]
+
+For convenience, the function objects produced by `bind` overload the logical not operator [* !] and the relational operators [* ==], [* !=], [* <], [* <=], [* >], [* >=].
+
+`!bind(f, ...)` is equivalent to `bind( logical_not(), bind(f, ...) )`, where `logical_not` is a function object that takes one argument `x` and returns `!x`.
+
+`bind(f, ...) /op/ x`, where op is a relational operator, is equivalent to `bind( relation(), bind(f, ...), x )`, where /relation/ is a function object that takes two arguments [^ a] and [^ b] and returns [^ a /op/ b].
+
+What this means in practice is that you can conveniently negate the result of bind:
+
+``std::remove_if( first, last, !bind( &X::visible, _1 ) ); // remove invisible objects``
+
+and compare the result of bind against a value:
+
+``std::find_if( first, last, bind( &X::name, _1 ) == "peter" );``
+
+against a placeholder:
+
+``bind( &X::name, _1 ) == _2``
+
+or against another bind expression:
+
+``std::sort( first, last, bind( &X::name, _1 ) < bind( &X::name, _2 ) ); // sort by name``
+
+[endsect]
+
+[section Examples]
+
+[h3 Using bind with standard algorithms]
+
+``
+class image;
+
+class animation
+{
+public:
+
+    void advance(int ms);
+    bool inactive() const;
+    void render(image & target) const;
+};
+
+std::vector<animation> anims;
+
+template<class C, class P> void erase_if(C & c, P pred)
+{
+    c.erase(std::remove_if(c.begin(), c.end(), pred), c.end());
+}
+
+void update(int ms)
+{
+    std::for_each(anims.begin(), anims.end(), boost::bind(&animation::advance, _1, ms));
+    erase_if(anims, boost::mem_fn(&animation::inactive));
+}
+
+void render(image & target)
+{
+    std::for_each(anims.begin(), anims.end(), boost::bind(&animation::render, _1, boost::ref(target)));
+}
+``
+
+
+[h3 Using bind with Boost.Function]
+``
+class button
+{
+public:
+
+    __function__<void> onClick;
+};
+
+class player
+{
+public:
+
+    void play();
+    void stop();
+};
+
+button playButton, stopButton;
+player thePlayer;
+
+void connect()
+{
+    playButton.onClick = boost::bind(&player::play, &thePlayer);
+    stopButton.onClick = boost::bind(&player::stop, &thePlayer);
+}
+``
+
+
+
+[h3 Limitations]
+The function objects generated by [* bind] take their arguments by reference and cannot, therefore, accept non-const temporaries or literal constants. This is an inherent limitation of the C++ language, known as [@http://std.dkuug.dk/jtc1/sc22/wg21/docs/papers/2002/n1385.htm the forwarding problem].
+
+The library uses signatures of the form
+
+``template<class T> void f(T & t);``
+
+to accept arguments of arbitrary types and pass them on unmodified. As noted, this does not work with non-const r-values.
+
+An oft-proposed "solution" to this problem is to add an overload:
+
+``
+template<class T> void f(T & t);
+template<class T> void f(T const & t);
+``
+
+Unfortunately, this (a) requires providing 512 overloads for nine arguments and (b) does not actually work for const arguments, both l- and r-values, since the two templates produce the exact same signature and cannot be partially ordered.
+
+\[Note: this is a dark corner of the language, and the [@http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_defects.html#214 corresponding] issue has only recently been resolved.\] 
+
+
+
+[endsect]
+
+[section Frequently Asked Questions]
+
+[h3 Why doesn't this compile?]
+See the [link boost_bind.troubleshooting dedicated Troubleshooting section].
+
+
+[h3 Why does this compile? It should not.]
+Probably because you used the general `bind<R>(f, ...)` syntax, thereby instructing [* bind] to not "inspect" [* f] to detect arity and return type errors.
+
+
+[# Q_forms]
+[h3 What is the difference between bind(f, ...) and bind<R>(f, ...)?]
+The first form instructs [* bind] to inspect the type of [* f] in order to determine its arity (number of arguments) and return type. Arity errors will be detected at "bind time". This syntax, of course, places some requirements on [* f]. It must be a function, function pointer, member function pointer, or a function object that defines a nested type named [* result_type]; in short, it must be something that [* bind] can recognize.
+
+The second form instructs [* bind] to [* not] attempt to recognize the type of [* f]. It is generally used with function objects that do not, or cannot, expose [* result_type], but it can also be used with nonstandard functions. For example, the current implementation does not automatically recognize variable-argument functions like [* printf], so you will have to use `bind<int>(printf, ...)`. Note that an alternative `bind(type<R>(), f, ...)` syntax is supported for portability reasons.
+
+Another important factor to consider is that compilers without partial template specialization or function template partial ordering support cannot handle the first form when [*  f] is a function object, and in most cases will not handle the second form when [* f] is a function (pointer) or a member function pointer.
+
+
+[h3 Does [* bind] work with Windows API functions?]
+Yes, if you [link stdcall #define BOOST_BIND_ENABLE_STDCALL]. An alternative is to treat the function as a __generic__ and use the `bind<R>(f, ...)` syntax.
+
+
+[h3 Does [* bind] work with COM methods? ]
+Yes, if you [link stdcall #define BOOST_MEM_FN_ENABLE_STDCALL].
+
+
+[h3 Does [* bind] work with Mac toolbox functions]
+Yes, if you [link stdcall #define BOOST_BIND_ENABLE_PASCAL]. An alternative is to treat the function as a __generic__ and use the `bind<R>(f, ...)` syntax.
+
+
+[h3 Does [* bind] work with extern "C" functions? ]
+Sometimes. On some platforms, pointers to extern "C" functions are equivalent to "ordinary" function pointers, so they work fine. Other platforms treat them as different types. A platform-specific implementation of [* bind] is expected to handle the problem transparently; this implementation does not. As usual, the workaround is to treat the function as a __generic__ and use the `bind<R>(f, ...)` syntax.
+
+
+[h3 Why doesn't [* bind] automaticall recognize nonstandard functions? ]
+Non-portable extensions, in general, should default to off to prevent vendor lock-in. Had the [link stdcall appropriate macros] been defined automatically, you could have accidentally taken advantage of them without realizing that your code is, perhaps, no longer portable. In addition, some compilers have the option to make [* \_\_stdcall (\_\_fastcall)] their default calling convention, in which case no separate support would be necessary.
+
+[endsect]
+
+
+
+[section Troubleshooting]
+
+[h3 Incorrect number of arguments]
+In a `bind(f, a1, a2, ..., aN)` expression, the function object [* f] must be able to take exactly [* N] arguments. This error is normally detected at "bind time"; in other words, the compilation error is reported on the line where bind() is invoked:
+
+``
+int f(int, int);
+
+int main()
+{
+    boost::bind(f, 1);    // error, f takes two arguments
+    boost::bind(f, 1, 2); // OK
+}
+``
+
+A common variation of this error is to forget that member functions have an implicit "this" argument:
+
+``
+struct X
+{
+    int f(int);
+}
+
+int main()
+{
+    boost::bind(&X::f, 1);     // error, X::f takes two arguments
+    boost::bind(&X::f, _1, 1); // OK
+}
+``
+
+
+[h3 The function object cannot be called with the specified arguments]
+As in normal function calls, the function object that is bound must be compatible with the argument list. The incompatibility will usually be detected by the compiler at "call time" and the result is typically an error in [* bind.hpp] on a line that looks like:
+
+``
+    return f(a[a1_], a[a2_]);
+``
+
+An example of this kind of error:
+
+``
+int f(int);
+
+int main()
+{
+    boost::bind(f, "incompatible");      // OK so far, no call
+    boost::bind(f, "incompatible")();    // error, "incompatible" is not an int
+    boost::bind(f, _1);                  // OK
+    boost::bind(f, _1)("incompatible");  // error, "incompatible" is not an int
+}
+``
+
+[h3 Accessing an argument that does not exist]
+The placeholder [* _N] selects the argument at position [* N] from the argument list passed at "call time." Naturally, it is an error to attempt to access beyond the end of this list:
+
+``
+int f(int);
+
+int main()
+{
+    boost::bind(f, _1);                  // OK
+    boost::bind(f, _1)();                // error, there is no argument number 1
+}
+``
+
+The error is usually reported in [* bind.hpp], at a line similar to:
+
+``
+    return f(a[a1_]);
+``
+
+When emulating `std::bind1st(f, a)`, a common mistake of this category is to type `bind(f, a, _2)` instead of the correct `bind(f, a, _1)`.
+
+
+[h3 Inappropriate use of bind(f, ...)]
+The `bind(f, a1, a2, ..., aN)` [link Q_forms form] causes automatic recognition of the type of [* f]. It will not work with arbitrary function objects; [* f] must be a function or a member function pointer.
+
+It is possible to use this form with function objects that define [* result_type], but [* only on compilers] that support partial specialization and partial ordering. In particular, MSVC up to version 7.0 does not support this syntax for function objects.
+
+
+[h3 Inappropriate use of bind<R>(f, ...)]
+The `bind<R>(f, a1, a2, ..., aN)` [link Q_forms form] supports arbitrary function objects.
+
+It is possible (but not recommended) to use this form with functions or member function pointers, but [* only on compilers] that support partial ordering. In particular, MSVC up to version 7.0 does not fully support this syntax for functions and member function pointers.
+
+
+[h3 Binding a nonstandard function]
+By default, the `bind(f, a1, a2, ..., aN)` form recognizes "ordinary" C++ functions and function pointers. [link stdcall Functions that use a different calling convention], or variable-argument functions such as [* std::printf], do not work. The general `bind<R>(f, a1, a2, ..., aN)` [link Q_forms form] works with nonstandard functions.
+
+On some platforms, extern "C" functions, like std::strcmp, are not recognized by the short form of bind.
+
+See also [link stdcall "\_\_stdcall" and "pascal" Support].
+
+
+[h3 const in signatures]
+Some compilers, including MSVC 6.0 and Borland C++ 5.5.1, have problems with the top-level [* const] in function signatures:
+
+``
+int f(int const);
+
+int main()
+{
+    boost::bind(f, 1);     // error
+}
+``
+
+Workaround: remove the [* const] qualifier from the argument. 
+
+
+[h3 MSVC specific: using boost::bind;]
+On MSVC (up to version 7.0), when [* boost::bind] is brought into scope with an using declaration:
+
+``using boost::bind;``
+
+the syntax `bind<R>(f, ...)` does not work. Workaround: either use the qualified name, [* boost::bind], or use an using directive instead:
+
+``
+using namespace boost;
+``
+
+
+[h3 MSVC specific: class templates shadow function templates]
+On MSVC (up to version 7.0), a nested class template named [* bind] will shadow the function template [* boost::bind], breaking the `bind<R>(f, ...)` syntax. Unfortunately, some libraries contain nested class templates named [* bind] (ironically, such code is often an MSVC specific workaround.)
+
+The workaround is to use the alternative `bind(type<R>(), f, ...)` syntax.
+
+
+[h3 MSVC specific: ... in signatures treated as type]
+MSVC (up to version 7.0) treats the ellipsis in a variable argument function (such as [* std::printf]) as a type. Therefore, it will accept the (incorrect in the current implementation) form:
+
+``
+    bind(printf, "%s\n", _1);
+``
+
+and will reject the correct version:
+
+``
+    bind<int>(printf, "%s\n", _1);
+``
+
+
+
+[endsect]
+
+[section Interface]
+
+
+[def __bind_1__ [link bind_1 bind]]
+[def __bind_1_1__ [link bind_1_1 bind]]
+[def __bind_2__ [link bind_2 bind]]
+[def __bind_3__ [link bind_3 bind]]
+[def __bind_3_1__ [link bind_3_1 bind]]
+[def __bind_4__ [link bind_4 bind]]
+[def __bind_5__ [link bind_5 bind]]
+[def __bind_6__ [link bind_6 bind]]
+[def __bind_6_1__ [link bind_6_1 bind]]
+[def __bind_7__ [link bind_7 bind]]
+[def __bind_7_1__ [link bind_7_1 bind]]
+[def __bind_8__ [link bind_8 bind]]
+[def __bind_9__ [link bind_9 bind]]
+[def __bind_10__ [link bind_10 bind]]
+
+[h3 Synopsis ]
+``
+namespace boost
+{
+
+// no arguments
+
+template<class R, class F> unspecified-1 __bind_1__(F f);
+
+template<class F> unspecified-1-1 __bind_1_1__(F f);
+
+template<class R> unspecified-2 __bind_2__(R (*f) ());
+
+// one argument
+
+template<class R, class F, class A1> unspecified-3 __bind_3__(F f, A1 a1);
+
+template<class F, class A1> unspecified-3-1 __bind_3_1__(F f, A1 a1);
+
+template<class R, class B1, class A1> unspecified-4 __bind_4__(R (*f) (B1), A1 a1);
+
+template<class R, class T, class A1> unspecified-5 __bind_5__(R (T::*f) (), A1 a1);
+
+template<class R, class T, class A1> unspecified-6 __bind_6__(R (T::*f) () const, A1 a1);
+
+template<class R, class T, class A1> unspecified-6-1 __bind_6_1__(R T::*f, A1 a1);
+
+// two arguments
+
+template<class R, class F, class A1, class A2> unspecified-7 __bind_7__(F f, A1 a1, A2 a2);
+
+template<class F, class A1, class A2> unspecified-7-1 __bind_7_1__(F f, A1 a1, A2 a2);
+
+template<class R, class B1, class B2, class A1, class A2> unspecified-8 __bind_8__(R (*f) (B1, B2), A1 a1, A2 a2);
+
+template<class R, class T, class B1, class A1, class A2> unspecified-9 __bind_9__(R (T::*f) (B1), A1 a1, A2 a2);
+
+template<class R, class T, class B1, class A1, class A2> unspecified-10 __bind_10__(R (T::*f) (B1) const, A1 a1, A2 a2);
+
+// implementation defined number of additional overloads for more arguments
+
+}
+
+namespace
+{
+
+unspecified-placeholder-type-1 _1;
+
+unspecified-placeholder-type-2 _2;
+
+unspecified-placeholder-type-3 _3;
+
+// implementation defined number of additional placeholder definitions
+
+}
+``
+
+
+[h3 Common requirements]
+All [^ unspecified-N] types returned by [* bind] are [* CopyConstructible]. [^ unspecified-N::result_type] is defined as the return type of [^ unspecified-N::operator()].
+
+All [^ unspecified-placeholder-N] types are [* CopyConstructible]. Their copy constructors do not throw exceptions.
+
+
+[h3 Common definitions]
+The function µ(x, v1, v2, ..., vm), where m is a nonnegative integer, is defined as:
+
+* `x.get()`, when [^ x] is of type `[@http://www.boost.org/libs/bind/ref.html boost::reference_wrapper]<T>` for some type [^ T];
+* vk, when x is (a copy of) the placeholder _k for some positive integer k;
+* x(v1, v2, ..., vm) when x is (a copy of) a function object returned by bind;
+* x otherwise
+
+
+[h3 bind]
+[# bind_1]
+template<class R, class F> unspecified-1 bind(F f)
+
+    Returns: A function object λ such that the expression λ(v1, v2, ..., vm) is equivalent to f(), implicitly converted to R.
+
+    Throws: Nothing unless the copy constructor of F throws an exception.
+
+[# bind_1_1]
+template<class F> unspecified-1-1 bind(F f)
+
+    Effects: Equivalent to bind<typename F::result_type, F>(f);
+
+    Notes: Implementations are allowed to infer the return type of f via other means as an extension, without relying on the result_type member.
+
+[# bind_2]
+template<class R> unspecified-2 bind(R (*f) ())
+
+    Returns: A function object λ such that the expression λ(v1, v2, ..., vm) is equivalent to f().
+
+    Throws: Nothing.
+
+[# bind_3]
+template<class R, class F, class A1> unspecified-3 bind(F f, A1 a1)
+
+    Returns: A function object λ such that the expression λ(v1, v2, ..., vm) is equivalent to f(µ(a1, v1, v2, ..., vm)), implicitly converted to R.
+
+    Throws: Nothing unless the copy constructors of F or A1 throw an exception.
+
+[# bind_3_1]
+template<class F, class A1> unspecified-3-1 bind(F f, A1 a1)
+
+    Effects: Equivalent to bind<typename F::result_type, F, A1>(f, a1);
+
+    Notes: Implementations are allowed to infer the return type of f via other means as an extension, without relying on the result_type member.
+
+[# bind_4]
+template<class R, class B1, class A1> unspecified-4 bind(R (*f) (B1), A1 a1)
+
+    Returns: A function object λ such that the expression λ(v1, v2, ..., vm) is equivalent to f(µ(a1, v1, v2, ..., vm)).
+
+    Throws: Nothing unless the copy constructor of A1 throws an exception.
+
+[# bind_5]
+template<class R, class T, class A1> unspecified-5 bind(R (T::*f) (), A1 a1)
+
+    Effects: Equivalent to bind<R>(boost::mem_fn(f), a1);
+
+[# bind_6]
+template<class R, class T, class A1> unspecified-6 bind(R (T::*f) () const, A1 a1)
+
+    Effects: Equivalent to bind<R>(boost::mem_fn(f), a1);
+
+[# bind_6_1]
+template<class R, class T, class A1> unspecified-6-1 bind(R T::*f, A1 a1)
+
+    Effects: Equivalent to bind<R>(boost::mem_fn(f), a1);
+
+[# bind_7]
+template<class R, class F, class A1, class A2> unspecified-7 bind(F f, A1 a1, A2 a2)
+
+    Returns: A function object λ such that the expression λ(v1, v2, ..., vm) is equivalent to f(µ(a1, v1, v2, ..., vm), µ(a2, v1, v2, ..., vm)), implicitly converted to R.
+
+    Throws: Nothing unless the copy constructors of F, A1 or A2 throw an exception.
+
+[# bind_7_1]
+template<class F, class A1, class A2> unspecified-7-1 bind(F f, A1 a1, A2 a2)
+
+    Effects: Equivalent to bind<typename F::result_type, F, A1, A2>(f, a1, a2);
+
+    Notes: Implementations are allowed to infer the return type of f via other means as an extension, without relying on the result_type member.
+
+[# bind_8]
+template<class R, class B1, class B2, class A1, class A2> unspecified-8 bind(R (*f) (B1, B2), A1 a1, A2 a2)
+
+    Returns: A function object λ such that the expression λ(v1, v2, ..., vm) is equivalent to f(µ(a1, v1, v2, ..., vm), µ(a2, v1, v2, ..., vm)).
+
+    Throws: Nothing unless the copy constructors of A1 or A2 throw an exception.
+
+[# bind_9]
+template<class R, class T, class B1, class A1, class A2> unspecified-9 bind(R (T::*f) (B1), A1 a1, A2 a2)
+
+    Effects: Equivalent to bind<R>(boost::mem_fn(f), a1, a2);
+
+[# bind_10]
+template<class R, class T, class B1, class A1, class A2> unspecified-10 bind(R (T::*f) (B1) const, A1 a1, A2 a2)
+
+    Effects: Equivalent to bind<R>(boost::mem_fn(f), a1, a2);
+
+
+[h3 Additional overloads]
+Implementations are allowed to provide additional bind overloads in order to support more arguments or different function pointer variations.
+
+
+[endsect]
+
+[section Implementation]
+
+[h3 Files]
+[def __bind_hpp__ [@http://www.boost.org/boost/bind.hpp boost/bind.hpp]]
+[def __bind_cc_hpp__ [@http://www.boost.org/boost/bind/bind_cc.hpp boost/bind/bind_cc.hpp]]
+[def __bind_mf_cc_hpp__ [@http://www.boost.org/boost/bind/bind_mf_cc.hpp boost/bind/bind_mf_cc.hpp]]
+[def __bind_template_hpp__ [@http://www.boost.org/boost/bind/bind_template.hpp boost/bind/bind_template.hpp]]
+[def __bind_arg_hpp__ [@http://www.boost.org/boost/bind/bind_arg.hpp boost/bind/bind_arg.hpp]]
+[def __bind_placeholders_hpp__ [@http://www.boost.org/boost/bind/bind_placeholders.hpp boost/bind/bind_placeholders.hpp]]
+[def __bind_apply_hpp__ [@http://www.boost.org/boost/bind/bind_apply.hpp boost/bind/bind_apply.hpp]]
+[def __bind_protect_hpp__ [@http://www.boost.org/boost/bind/bind_protect.hpp boost/bind/bind_protect.hpp]]
+[def __bind_make_adaptable_hpp__ [@http://www.boost.org/boost/bind/bind_make_adaptable.hpp boost/bind/bind_make_adaptable.hpp]]
+[def __bind_test_cpp__ [@http://www.boost.org/libs/bind/test/bind_test.cpp libs/bind/test/bind_test.cpp]]
+[def __bind_as_compose_cpp__ [@http://www.boost.org/libs/bind/bind_as_compose.cpp libs/bind/bind_as_compose.cpp]]
+[def __bind_visitor_cpp__ [@http://www.boost.org/libs/bind/bind_visitor.cpp libs/bind/bind_visitor.cpp]]
+[def __bind_stdcall_test_cpp__ [@http://www.boost.org/libs/bind/bind_stdcall_test.cpp libs/bind/bind_stdcall_test.cpp]]
+[def __bind_fastcall_test_cpp__ [@http://www.boost.org/libs/bind/bind_fastcall_test.cpp libs/bind/bind_fastcall_test.cpp]]
+[def __bind_fastcall_mf_test_cpp__ [@http://www.boost.org/libs/bind/bind_fastcall_mf_test.cpp libs/bind/bind_fastcall_mf_test.cpp]]
+
+* __bind_hpp__  (main header)
+* __bind_cc_hpp__ (used by bind.hpp, do not include directly)
+* __bind_mf_cc_hpp__ (used by bind.hpp, do not include directly)
+* __bind_template_hpp__ (used by bind.hpp, do not include directly)
+* __bind_arg_hpp__ (defines the type of the placeholder arguments)
+* __bind_placeholders_hpp__ (defines the _1, _2, ... _9 placeholders)
+* __bind_apply_hpp__ (apply helper function object)
+* __bind_protect_hpp__ (protect helper function)
+* __bind_make_adaptable_hpp__ (make_adaptable helper function)
+* __bind_test_cpp__ (test)
+* __bind_as_compose_cpp__ (function composition example)
+* __bind_visitor_cpp__ (visitor example)
+* __bind_stdcall_test_cpp__ (test with \_\_stdcall member functions)
+* __bind_fastcall_test_cpp__ (test with \_\_fastcall functions)
+* __bind_fastcall_mf_test_cpp__ (test with \_\_fastcall member functions)
+
+
+[h3 Dependencies]
+[def __ref_hpp__ [@http:/www.boost.org/libs/bind/ref.hpp boost/ref.hpp]]
+[def __mem_fn_hpp__ [@http://www.boost.org/libs/bind/mem_fn.hpp boost/mem_fn.hpp]]
+[def __type_hpp__ [@http://www.boost.org/boost/type.hpp boost/type.hpp]]
+
+* __config__
+* __ref_hpp__
+* __mem_fn_hpp__
+* __type_hpp__
+
+
+[h3 Number of Arguments]
+This implementation supports function objects with up to nine arguments. This is an implementation detail, not an inherent limitation of the design.
+
+
+[# stdcall]
+[h3 "\_\_stdcall", "\_\_cdecl", "\_\_fastcall", and "pascal" Support ]
+Some platforms allow several types of (member) functions that differ by their [* calling convention] (the rules by which the function is invoked: how are arguments passed, how is the return value handled, and who cleans up the stack - if any.)
+
+For example, Windows API functions and COM interface member functions use a calling convention known as [* \_\_stdcall].  Borland VCL components use [* \_\_fastcall]. Mac toolbox functions use a [* pascal] calling convention.
+
+To use [* bind] with [* \_\_stdcall] functions, [* #define] the macro [* BOOST_BIND_ENABLE_STDCALL] before including [* <boost/bind.hpp>].
+
+To use [* bind] with [* \_\_stdcall] member functions, [* #define] the macro [* BOOST_MEM_FN_ENABLE_STDCALL] before including [* <boost/bind.hpp>].
+
+To use [* bind] with [* \_\_fastcall] functions, [* #define] the macro [* BOOST_BIND_ENABLE_FASTCALL] before including [* <boost/bind.hpp>].
+
+To use [* bind] with [* \_\_fastcall] member functions, [* #define] the macro [* BOOST_MEM_FN_ENABLE_FASTCALL] before including [* <boost/bind.hpp>].
+
+To use [* bind] with [* pascal] functions, [* #define] the macro [* BOOST_BIND_ENABLE_PASCAL] before including [* <boost/bind.hpp>].
+
+To use [* bind] with [* \_\_cdecl] member functions, [* #define] the macro [* BOOST_MEM_FN_ENABLE_CDECL] before including [* <boost/bind.hpp>].
+
+[* It is best to define these macros in the project options, via -D on the command line, or as the first line in the translation unit (.cpp file) where bind is used]. Not following this rule can lead to obscure errors when a header includes bind.hpp before the macro has been defined.
+
+\[Note: this is a non-portable extension. It is not part of the interface.\]
+
+\[Note: Some compilers provide only minimal support for the \_\_stdcall keyword.\]
+
+
+[h3 visit_each support]
+Function objects returned by [* bind] support the experimental and undocumented, as of yet, [* visit_each] enumeration interface.
+
+See [@http://www.boost.org/libs/bind/bind_visitor.cpp bind_visitor.cpp] for an example.
+[endsect]
+
+
+[section Acknowledgements]
+Earlier efforts that have influenced the library design:
+
+[def __binder__ [@http://staff.cs.utu.fi/BL/ Binder Library]]
+[def __lambda__ [@http://www.boost.org/libs/lambda/index.html Lambda Library]]
+[def __more__ [@http://more.sourceforge.net/ Extensions to the STL]]
+[def __type_traits__ [@http://www.boost.org/libs/type_traits/index.html type traits library]]
+[def __iterator_adaptors__ [@http://www.boost.org/libs/utility/iterator_adaptors.htm iterator adaptors library]]
+
+* The __binder__ by Jaakko Järvi;
+* The __lambda__ (now part of Boost) by Jaakko Järvi and Gary Powell (the successor to the Binder Library);
+* __more__ by Petter Urkedal.
+
+Doug Gregor suggested that a visitor mechanism would allow [* bind] to interoperate with a signal/slot library.
+
+John Maddock fixed a MSVC-specific conflict between [* bind] and the __type_traits__.
+
+Numerous improvements were suggested during the formal review period by Ross Smith, Richard Crossley, Jens Maurer, Ed Brey, and others. Review manager was Darin Adler.
+
+The precise semantics of [* bind] were refined in discussions with Jaakko Järvi.
+
+Dave Abrahams fixed a MSVC-specific conflict between [* bind] and the __iterator_adaptors__.
+
+Dave Abrahams modified [* bind] and [* mem_fn] to support void returns on deficient compilers.
+
+Mac Murrett contributed the "pascal" support enabled by BOOST_BIND_ENABLE_PASCAL.
+
+The alternative `bind(type<R>(), f, ...)` syntax was inspired by a discussion with Dave Abrahams and Joel de Guzman.
+
+[endsect]

@@ -1,0 +1,18 @@
+
+using quickbook ;
+ 
+xml "bind" : bind.qbk ;
+
+boostbook standalone
+  :
+    "bind"
+  :
+    <xsl:param>boost.root=/home/boost/boost
+    <xsl:param>boost.libraries=/home/boost/boost/libs/libraries.html
+    <xsl:param>generate.section.toc.level=10
+    <xsl:param>toc.section.depth=10
+    <xsl:param>toc.max.depth=4
+    <xsl:param>chunk.section.depth=10
+    <xsl:param>chunk.first.sections=1
+    <xsl:param>boost.logo=../../../boost.png
+  ;
