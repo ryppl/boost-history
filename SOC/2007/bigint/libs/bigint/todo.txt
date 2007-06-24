@@ -162,8 +162,8 @@ Status: implemented
 + test abs, pow, ldiv, sqrt
 Status: implemented
 
-- Is it possible to test cases when bigint must cause illegal operations (division by zero, sqrt(negative number))?
-Status: needs investigation
+* Is it possible to test cases when bigint must cause illegal operations (division by zero, sqrt(negative number))?
+Status: investigated; there is no portable way
 
 -----------------------------------------------
 
