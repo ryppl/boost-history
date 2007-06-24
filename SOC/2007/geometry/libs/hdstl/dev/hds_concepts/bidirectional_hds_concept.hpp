@@ -35,20 +35,15 @@
 //  - 'ForwardHDSConcept'
 //  - 'BackwardHDSConcept'
 //
-///Notation
-///--------
-//  - 'HDS'     A type that is a model of 'BidirectionalHDSConcept'
-//  - 'hds'     A non-modifiable instance of 'HDS'
-//  - 'h','g'   Halfedge descriptors, of type 
-//              'hds_traits<HDS>::halfedge_descriptor'
-//
 ///Associated types
 ///----------------
 //  - 'hds_traits<HDS>::halfedge_descriptor': from 'HDSConcept'.
-//  - 'hds_traits<HDS>::traversal_category' : must be convertible to
-//    'hds_traits<HDS>::bidirectional_traversal_tag'.
-//  - 'hds_traits<HDS>::forward_category'   : from 'ForwardHDSConcept' 
-//  - 'hds_traits<HDS>::backward_category'  : from 'BackwardHDSConcept' 
+//  - 'hds_traits<HDS>::traversal_category' :  from 'HDSConcept', with
+//     the additional requirement that this type must be convertible to
+//     the 'hds_traits<HDS>::bidirectional_traversal_tag' type which is
+//     defined in '<boost/hdstl.hpp>'.
+//  - 'hds_traits<HDS>::forward_category': from 'ForwardHDSConcept' 
+//  - 'hds_traits<HDS>::backward_category': from 'BackwardHDSConcept' 
 //
 ///Definitions
 ///-----------
@@ -61,23 +56,25 @@
 //     in '<boost/hdstl.hpp>'.
 //  - 'forward_category' defines the primary accessor of the forward
 //     information for use by algorithms which desire the most direct access. 
+//     (See the 'ForwardHDSConcept' for a full definition.)
 //  - 'backward_category' defines the primary accessor of the backward
 //     information for use by algorithms which desire the most direct access. 
+//     (See the 'BackwardHDSConcept' for a full definition.)
 //
 ///Valid Expressions
 ///-----------------
-//  See the valid expressions of the 'ForwardHDSConcept' and 
-//    the 'BackwardHDSConcept'.
+// None besides the valid expressions of the 'ForwardHDSConcept' and 
+// the 'BackwardHDSConcept'.
 //
 ///Expression Semantics
 ///--------------------
-//  See the expression semantics of the 'ForwardHDSConcept' and 
-//  the 'BackwardHDSConcept'.
+// Same as the expression semantics of the 'ForwardHDSConcept' and 
+// the 'BackwardHDSConcept'.
 //
 ///Complexity guarantees
 ///---------------------
-//  See the complexity guarantees of the 'ForwardHDSConcept' and 
-//  the 'BackwardHDSConcept'.
+// Same as the complexity guarantees of the 'ForwardHDSConcept' and 
+// the 'BackwardHDSConcept'.
 //
 ///Invariants 
 ///----------
@@ -133,14 +130,14 @@ namespace concepts{
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::forward_category forward_category;
         typedef typename hds_traits<HDS>::backward_category backward_category;
-        // The specialization of 'hds_traits<HDS>' must have these required
-        // types, obeying the types requirements stated in the detailed
-        // description of the 'BidirectionalHDS' concept on page 
-        // [bidirectionalhdsconcept].
+            // The specialization of 'hds_traits<HDS>' must have these required
+            // types, obeying the types requirements stated in the detailed
+            // description of the 'BidirectionalHDS' concept on page 
+            // [bidirectionalhdsconcept].
 
         //MANIPULATORS
         void constraints() 
-            // Check that the 'HDS' template parameters satisfies all the
+            // Check that the 'HDS' template parameter satisfies all the
             // constraints of 'BidirectionalHDSConcept' on page 
             // [bidirectionalhdsconcept].
         {
@@ -158,9 +155,9 @@ namespace concepts{
         {
         }
 
-        private:
+      private:
         //DATA
-        BidirectionalHDS hds;     // a halfedge data structure object
+        BidirectionalHDS hds;  // a halfedge data structure object
    };
 
 }  // close namespace concepts

@@ -38,8 +38,9 @@
 ///----------------
 //  - 'hds_traits<HDS>::halfedge_descriptor': must be 'DefaultConstructible', 
 //    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
-//  - 'hds_traits<HDS>::halfedge_iterator': must be 'MultiPassInputIterator'.
-//  - 'hds_traits<HDS>::size_type': halfedge size type.
+//  - 'hds_traits<HDS>::halfedge_iterator': must be 'ForwardIterator'.
+//    Its value type must be the same as the 'halfedge_descriptor' type.
+//  - 'hds_traits<HDS>::size_type': integral halfedge size type.
 //
 ///Definitions
 ///-----------
@@ -58,9 +59,9 @@
 ///Expression Semantics
 ///--------------------
 // In addition to the valid expression semantics of the 'HDS' concept:
-//  - 'halfedges_begin(hds)' returns a 'halfedge_iterator' 'p' pointing to the 
+//  - 'halfedges_begin(hds)' returns a 'halfedge_iterator' pointing to the 
 //    beginning of the 'halfedge list'.
-//  - 'halfedges_end(hds)' returns a 'halfedge_iterator' 'p' pointing to the 
+//  - 'halfedges_end(hds)' returns a 'halfedge_iterator' pointing to the 
 //    end of the 'halfedge list'.
 //  - 'num_halfedges(hds)' returns the number of halfedges in the 'HDS' data
 //    structure.
@@ -68,13 +69,13 @@
 ///Complexity guarantees
 ///---------------------
 //  - 'halfedges_begin(hds)': amortized constant time.
-//  - 'halfedges_end(hds)'  : amortized constant time.
-//  - 'num_halfedges(HDS)'  : amortized constant time.
+//  - 'halfedges_end(hds)': amortized constant time.
+//  - 'num_halfedges(hds)': amortized constant time.
 //
 ///Invariants 
 ///----------
-// 'HalfedgeListHDSConcept' should validate all the invariants for the 
-// 'HDSConcept'.
+// In addition to the invariants of the 'HDSConcept':
+//  - 'std::distance(halfedges_begin(hds), halfedges_end(hds)) == num_halfedges(hds)'
 //
 ///Concept-checking class
 ///----------------------
@@ -92,10 +93,8 @@
 //         function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
 //         function_requires<EqualityComparableConcept<halfedge_descriptor> >();
 //         function_requires<AssignableConcept<halfedge_descriptor> >();
-//         function_requires<hdstl_detail::MultiPassInputIteratorConcept<halfedge_iterator> >();
-//         b = halfedges_begin(hds);
-//         e = halfedges_end(hds);
-//         n = num_halfedges(hds);
+//         function_requires<ForwardIteratorConcept<halfedge_iterator> >();
+//         function_requires<ConvertibleConcept<halfedges_size_type> >();
 //         const_constraints(hds);
 //     }
 //     void const_constraints(HDS const& hds) 
@@ -107,8 +106,7 @@
 //     private:
 //     HalfedgeListHDS hds;
 //     halfedge_descriptor h;
-//     halfedge_iterator b;
-//     halfedge_iterator e;
+//     halfedge_iterator b, e;
 //     size_type n;
 // };
 //..
@@ -156,10 +154,8 @@ namespace concepts {
            function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
            function_requires<EqualityComparableConcept<halfedge_descriptor> >();
            function_requires<AssignableConcept<halfedge_descriptor> >();
-           function_requires<hdstl_detail::MultiPassInputIteratorConcept<halfedge_iterator> >();
-           b = halfedges_begin(hds);
-           e = halfedges_end(hds);
-           n = num_halfedges(hds);
+           function_requires<ForwardIteratorConcept<halfedge_iterator> >();
+           function_requires<ConvertibleConcept<halfedge_size_type> >();
            const_constraints(hds);
        }
 
@@ -173,7 +169,7 @@ namespace concepts {
            n = num_halfedges(hds);
        }
 
-       private:
+     private:
        //DATA
        HalfedgeListHDS hds;      // a halfedge data structure object
        halfedge_descriptor h;    // a halfedge descriptor

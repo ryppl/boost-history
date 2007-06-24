@@ -32,9 +32,9 @@
 ///Notation
 ///--------
 //  - 'HDS'      A type that is a model of 'MutableHDSConcept'
-//  - 'hds'      A non-modifiable instance of 'HDS'
-//  - 'h1','h2'  Halfedge descriptors, of type 
-//                  'hds_traits<HDS>::halfedge_descriptor'
+//  - 'hds'      A modifiable instance of 'HDS'
+//  - 'h', h1','h2'
+//               Halfedge descriptors, of type 'hds_traits<HDS>::halfedge_descriptor'
 //
 ///Associated types
 ///----------------
@@ -52,30 +52,31 @@
 //
 ///Valid Expressions
 ///-----------------
-// The following expression must be valid and obey the syntactic requirement:
-//  - 'set_opposite(hds,h1,h2)': sets the opposite halfedge.
-//  - 'h = new_edge(hds)': creates a new edge, with two halfedges. 
-//  - 'delete_edge(hds,h1,h2)': deletes the edge defined by halfedge pairs 
-//    'h1' and 'h2'.
+// In addition to the valid expressions of the 'HDS' concept,
+// the following expressions must be valid and obey the syntactic requirement:
+//  - 'set_opposite(hds,h1,h2)'
+//  - 'h = new_edge(hds)'
+//  - 'delete_edge(hds,h)'
 //
 ///Expression Semantics
 ///--------------------
 // The expressions semantics are as follows:
 //  - 'set_opposite(hds,h1,h2)' sets 'h1' and 'h2' as opposites of each other 
 //    in the data structure 'hds'. 
-//  - 'h = new_edge(hds)' creates a new edge in data structure 'hds'. 
-//    Halfedges are created as pairs, and this call creates two halfedges
-//    'h' and 'opposite(hds,h)'.
-//  - 'delete_edge(hds,h1,h2)' removes the opposite halfedges 'h1' and 'h2' 
+//  - 'new_edge(hds)' creates a new edge in data structure 'hds', and
+//    returns the halfedge descriptor of one of the two halfedges created. 
+//    The other new halfedge can be obtained using 'opposite(hds,h)'.
+//    Note that halfedges can only be created in opposite pairs.
+//  - 'delete_edge(hds,h)' removes the halfedges 'h' and 'opposite(hds,h)'
 //    from the data structure 'hds'. Note that only the halfedges that form 
 //    a pair by validating the 'opposite' function can be deleted by this 
-//    method, otherwise the behavior is undefined. 
+//    method.
 //
 ///Complexity guarantees
 ///---------------------
 //  - 'set_opposite(hds,h1,h2)': amortized constant time.
-//  - 'h=new_edge(hds)'        : amortized constant time.
-//  - 'delete_edge(hds,h1,h2)' : amortized constant time.
+//  - 'new_edge(hds)': amortized constant time.
+//  - 'delete_edge(hds,h)' : amortized constant time.
 //
 ///Invariants
 ///----------
@@ -91,14 +92,11 @@
 //       using namespace boost;
 //       function_requires<HDSConcept<HDS> >();
 //       set_opposite(hds,h1,h2);
-//       h = new_edge(hds,h1,h2);
-//       delete_edge(hds,h1,h2);
+//       h = new_edge(hds);
+//       delete_edge(hds,h);
 //       const_constraints(hds);
 //    }
 //    void const_constraints(HDS const& hds) {
-//       set_opposite(hds,h1,h2);
-//       h = new_edge(hds,h1,h2);
-//       delete_edge(hds,h1,h2);
 //    }
 //    HDS hds;
 //    halfedge_descriptor h1;
@@ -147,7 +145,7 @@ namespace concepts {
 
             set_opposite(hds,h1,h2);
             h = new_edge(hds);
-            delete_edge(hds,h1,h2);
+            delete_edge(hds,h);
             const_constraints(hds);
         }
 
@@ -156,14 +154,12 @@ namespace concepts {
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'MutableHDSConcept'.
         {
-            set_opposite(hds,h1,h2);
-            h = new_edge(hds);
-            delete_edge(hds,h1,h2);
         }
 
         private:
         // DATA
             HDS hds;                   // a halfedge data structure object
+            halfedge_descriptor h;     // a halfedge descriptor
             halfedge_descriptor h1;    // a halfedge descriptor
             halfedge_descriptor h2;    // a halfedge descriptor
    };

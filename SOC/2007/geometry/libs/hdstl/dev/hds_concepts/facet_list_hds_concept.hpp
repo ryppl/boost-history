@@ -24,7 +24,7 @@
 //
 ///Refinement of:
 ///--------------
-//  - 'HDSConcept'
+//  - 'FacetHDSConcept'
 //
 ///Notation
 ///--------
@@ -32,19 +32,20 @@
 //  - 'hds'  A non-modifiable instance of HDS
 //  - 'f'    Facet descriptor, of type 'hds_traits<HDS>::facet_descriptor'
 //  - 'p'    Facet iterator, of type 'hds_traits<HDS>::facet_iterator'
-//  - 'n'    Facet size type, of type 'hds_traits<HDS>::size_type'
+//  - 'n'    Facet list size, of type 'hds_traits<HDS>::size_type'
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::facet_descriptor': must be 'DefaultConstructible', 
-//    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
-//  - 'hds_traits<HDS>::facet_iterator': must be 'MultiPassInputIterator'.
-//  - 'hds_traits<HDS>::size_type': unsigned size type.
+// In addition to the types of the 'FacetHDS' concept:
+//  - 'hds_traits<HDS>::facet_iterator': must be a model of the
+//    'ForwardIterator' concept.  The value type of the facet iterator
+//    must be the same as the 'facet_descriptor'.
+//  - 'hds_traits<HDS>::size_type': integral size type.
 //
 ///Definitions
 ///-----------
 //  - 'facet_descriptor' is a type that contains information to access 
-//     the facet.  (See the 'HDSConcept' for a full definition.)
+//     the facet.  (See the 'FacetHDSConcept' for a full definition.)
 //  - 'facet_iterator' is an iterator type for the facets.
 //  - 'size_type' defines the size type.
 //
@@ -60,22 +61,22 @@
 ///--------------------
 // In addition to the valid expression semantics of the 'HDS' concept:
 //  - 'facets_begin(hds)' returns a 'facet_iterator' 'p' pointing to the 
-//    beginning of the 'facet list'.
+//    beginning of the "facet list".
 //  - 'facets_end(hds)' returns a 'facet_iterator' 'p' pointing to the 
-//    end of the 'facet list'.
+//    end of the "facet list".
 //  - 'num_facets(HDS)' returns the number of facets in the 'HDS' data
 //    structure.
 //
 ///Complexity guarantees
 ///---------------------
+// In addition to the complexity guarantees of the 'FacetHDS' concept:
 //  - 'facets_begin(hds)': amortized constant time.  
-//  - 'facets_end(hds)'  : amortized constant time.  
-//  - 'num_facets(hds)'  : amortized constant time.
+//  - 'facets_end(hds)': amortized constant time.  
+//  - 'num_facets(hds)': amortized constant time.
 //
 ///Invariants 
 ///----------
-// 'FacetListHDSConcept' should validate all the invariants for the 
-// 'HDSConcept'.
+//  - 'std::distance(facets_begin(hds), facets_end(hds)) ==  num_facets(hds)'
 //
 ///Concept-checking class
 ///----------------------
@@ -90,11 +91,8 @@
 //         using namespace boost;
 //         function_requires<HDSConcept>();
 //         function_requires<FacetHDSConcept>();
-//         function_requires<hdstl_detail::MultiPassInputIteratorConcept<
-//                                                         facet_iterator> >();
-//         b = facets_begin(hds);
-//         e = facets_end(hds);
-//         n = num_facets(hds);
+//         function_requires<ForwardIteratorConcept<facet_iterator> >();
+//         function_requires<ConvertibleConcept<size_type,int> >();
 //         const_constraints(hds);
 //     }
 //     void const_constraints(HDS const& hds) 
@@ -153,8 +151,9 @@ namespace concepts {
            using namespace boost;
            function_requires<HDSConcept>();
            function_requires<FacetHDSConcept>();
-           function_requires<hdstl_detail::MultiPassInputIteratorConcept<
+           function_requires<hdstl_detail::ForwardIteratorConcept<
                                                            facet_iterator> >();
+           function_requires<ConvertibleConcept<size_type,int> >();
            b = facets_begin(hds);
            e = facets_end(hds);
            n = num_facets(hds);
@@ -171,7 +170,7 @@ namespace concepts {
            n = num_facets(hds);
        }
 
-       private:
+     private:
        //DATA
        FacetListHDS hds;     // a halfedge data structure object
        facet_descriptor f;   // a facet descriptor

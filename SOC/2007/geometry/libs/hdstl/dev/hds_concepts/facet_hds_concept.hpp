@@ -18,7 +18,7 @@
 //
 ///Definition
 ///----------
-// This concept refines the 'HDSConcept', and specifies additional facet
+// This concept refines the 'HDSConcept', and requires an additional facet
 // descriptor to handle facets in the 'HDS' data structure. 
 //
 ///Refinement of:
@@ -29,10 +29,12 @@
 ///--------
 //  - 'HDS'   A type that is a model of FacetHDSConcept
 //  - 'hds'   A non-modifiable instance of HDS
+//  - 'h'     Halfedge descriptor, of type 'hds_traits<HDS>::halfedge_descriptor'
 //  - 'f'     Facet descriptor, of type 'hds_traits<HDS>::facet_descriptor'
 //
 ///Associated types
 ///----------------
+// In addition to the types required by the 'HDSConcept':
 //  - 'hds_traits<HDS>::facet_descriptor': must be 'DefaultConstructible', 
 //    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
 //
@@ -41,19 +43,26 @@
 //  - 'halfedge_descriptor' is a type that contains information to access 
 //     the halfedge.  (See the 'HDSConcept' for a full definition.)
 //  - 'facet_descriptor' is a type that contains information to access the
-//     facet to the left of the halfedge (in counter clockwise rotation).
+//     facet to the left of the halfedge, if forward facet cycles are
+//     ordered in counter clockwise rotation around the facet.
 //
 ///Valid Expressions
 ///-----------------
-// See the valid expressions of the 'HDS' concept.
+// In addition to the valid expressions of the 'HDSConcept':
+//  - 'facet(hds,h)' must return a value assignable to 'f'.
 //
 ///Expression Semantics
 ///--------------------
-// See the expression semantics of the 'HDS' concept.
+// In addition to the expressions semantics of the 'HDSConcept':
+//  - 'hds_traits<HDS>::supports_facets': must compare equal to 'true'.
+//  - 'facet(hds,h)' returns the facet descriptor of the facet to the
+//     left of 'h', when forward facet cycles are oriented in
+//     counter-clockwise order.
 //
 ///Complexity guarantees
 ///---------------------
-// See the complexity guarantees of the 'HDS' concept.
+// In addition to the complexity guarantees of the 'HDSConcept':
+//  - 'facet(hds,h)': amortized constant time.
 //
 ///Invariants 
 ///----------
@@ -72,9 +81,11 @@
 //       function_requires<CopyConstructibleConcept<facet_descriptor> >();
 //       function_requires<EqualityComparableConcept<facet_descriptor> >();
 //       function_requires<AssignableConcept<facet_descriptor> >();
+//       BOOST_STATIC_ASSERT(hds_traits<HDS>::supports_facets);
 //       const_constraints(hds);
 //    }
 //    void const_constraints(HDS const& hds) {
+//       f = facet(hds, h);
 //    }
 //    HDS hds;
 //    facet_descriptor f;
@@ -121,6 +132,7 @@ namespace concepts {
            function_requires<EqualityComparableConcept<facet_descriptor> >();
            function_requires<AssignableConcept<facet_descriptor> >();
 
+	   BOOST_STATIC_ASSERT(hds_traits<HDS>::supports_facets);
            const_constraints(hds);
        }
 
@@ -129,9 +141,10 @@ namespace concepts {
            // Check that the non-modifiable 'HDS' template parameters
            // satisfies all the constraints of 'FacetHDSConcept'.
        {
+	   f = facet(hds,h);
        }
 
-       private:
+     private:
        //DATA
        FacetHDS hds;         // a halfedge data structure object
        facet_descriptor f;   // a facet descriptor

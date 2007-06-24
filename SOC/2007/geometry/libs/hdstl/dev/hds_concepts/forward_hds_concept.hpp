@@ -36,7 +36,7 @@
 ///--------
 //  - 'HDS'    A type that is a model of 'ForwardHDSConcept'
 //  - 'hds'    A non-modifiable instance of 'HDS'
-//  - 'h','g'  Halfedge descriptors, of type 'hds_traits<HDS>::halfedge_descriptor'
+//  - 'h'      Halfedge descriptors, of type 'hds_traits<HDS>::halfedge_descriptor'
 //
 ///Associated types
 ///----------------
@@ -61,9 +61,9 @@
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'HDS' concept:
-//   - 'next_in_facet(hds,h)' must return a value assignable to h.
-//   - 'next_at_source(hds,h)' must return a value assignable to h.
-//   - 'next_at_target(hds,h)' must return a value assignable to h.
+//   - 'next_in_facet(hds,h)' must return a value assignable to 'h'.
+//   - 'next_at_source(hds,h)' must return a value assignable to 'h'.
+//   - 'next_at_target(hds,h)' must return a value assignable to 'h'.
 //
 ///Expression Semantics
 ///--------------------
@@ -150,11 +150,18 @@ namespace concepts{
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::forward_category forward_category;
+            // The specialization of 'hds_traits<HDS>' must have these required
+            // types, obeying the types requirements stated in the detailed
+            // description of the 'ForwardHDS' concept on page 
+            // [forwardhdsconcept].
 
         // MANIPULATORS
-        void constraints() {
+        void constraints()
+            // Check that the 'HDS' template parameter satisfies all the
+            // constraints of 'ForwardHDSConcept' on page 
+            // [forwardhdsconcept].
+       	{
             using namespace boost;
-
             function_requires<HDSConcept<HDS> >();
             function_requires<ConvertibleConcept<traversal_category,
             forward_traversal_tag> >();  
@@ -168,7 +175,10 @@ namespace concepts{
         }
 
         // ACCESSORS
-        void const_constraints(HDS const& hds){
+        void const_constraints(HDS const& hds)
+            // Check that the non-modifiable 'HDS' template parameters
+            // satisfies all the constraints of 'ForwardHDSConcept'.
+	{
             h = next_in_facet(hds,h);
             h = next_at_source(hds,h);
             h = next_at_target(hds,h);

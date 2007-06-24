@@ -49,16 +49,19 @@
 // member of the 'hds_traits<HDS>' type) is an opaque type.  All that can be
 // done to it is passing it to the function opposite and letting the hds use
 // the information it contains to find the opposite halfedge.  In
-// particular, there is no guarantee that it is a pointer type.
+// particular, there is no guarantee that the descriptor be a pointer type.
 //
 ///Valid Expressions
 ///-----------------
 // The following expression must be valid and obey the syntactic requirement:
 //   - 'opposite(hds, h)' must return a value assignable to 'h'.
+//   - 'hds_traits<HDS>::supports_facets' must be usable as a Boolean.
 //
 ///Expression Semantics
 ///--------------------
 // The expressions semantics are as follows:
+//   - 'hds_traits<HDS>::supports_facets' is true if and only if 'HDS'
+//     is a model of the 'FacetHDS' concept (see the page [facethdsconcept]).
 //   - 'opposite(hds, h)' returns a descriptor to the halfedge opposite 'h' in
 //     the data structure 'hds'. Does not modify the state of either 'hds'
 //     or 'h'.

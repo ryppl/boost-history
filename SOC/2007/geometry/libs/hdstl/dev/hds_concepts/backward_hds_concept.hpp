@@ -61,9 +61,9 @@
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'HDS' concept:
-//   - 'prev_in_facet(hds,h)' must return a value assignable to h.
-//   - 'prev_at_source(hds,h)' must return a value assignable to h.
-//   - 'prev_at_target(hds,h)' must return a value assignable to h.
+//   - 'prev_in_facet(hds,h)' must return a value assignable to 'h'.
+//   - 'prev_at_source(hds,h)' must return a value assignable to 'h'.
+//   - 'prev_at_target(hds,h)' must return a value assignable to 'h'.
 //
 ///Expression Semantics
 ///--------------------
@@ -152,9 +152,12 @@ namespace concepts{
         typedef typename hds_traits<HDS>::backward_category backward_category;
 
         // MANIPULATORS
-        void constraints() {
+        void constraints()
+            // Check that the 'HDS' template parameter satisfies all the
+            // constraints of 'BackwardHDSConcept' on page 
+            // [backwardhdsconcept].
+	{
             using namespace boost;
-
             function_requires<HDSConcept<HDS> >();
             function_requires<ConvertibleConcept<traversal_category,
             backward_traversal_tag> >();  
@@ -168,7 +171,10 @@ namespace concepts{
         }
 
         // ACCESSORS
-        void const_constraints(HDS const& hds){
+        void const_constraints(HDS const& hds)
+            // Check that the non-modifiable 'HDS' template parameters
+            // satisfies all the constraints of 'BackwardHDSConcept'.
+	{
             h = prev_in_facet(hds,h);
             h = prev_at_source(hds,h);
             h = prev_at_target(hds,h);

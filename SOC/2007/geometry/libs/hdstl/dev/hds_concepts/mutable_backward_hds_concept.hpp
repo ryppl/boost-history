@@ -53,8 +53,8 @@
 //
 ///Valid Expressions
 ///-----------------
-// In addition to the valid expressions of the 'HDS' concept, and the 
-// 'BackwardHDS' concept:
+// In addition to the valid expressions of the 'HDS' and the 
+// 'BackwardHDS' concepts:
 //   - 'set_prev_in_facet(hds,h,g)' sets 'g' as the 'prev_in_facet' value of 
 //     'h'.
 //   - 'set_prev_at_source(hds,h,g)' sets 'g' as the 'prev_at_source' value of 
