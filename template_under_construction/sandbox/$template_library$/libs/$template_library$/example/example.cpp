@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 $template_start$
-$template_cpp_copyright$
+$template_copyright$
 
 //[ $template_library$_example
 #include <boost/test/unit_test.hpp>

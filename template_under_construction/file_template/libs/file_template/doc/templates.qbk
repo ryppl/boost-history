@@ -8,8 +8,8 @@ To get a general idea of how this is done, please read the
 [link filetemplate.templates.phases processing phases] documentation.
 
 To learn about creating new templates or extending existing templates,
-you should also read about template_options_ref and 
-substitution_templates_ref.
+you should also read about __template_options__ and 
+__substitution_templates__.
 
 [section:phases Processing phases]
 
@@ -17,44 +17,45 @@ substitution_templates_ref.
 
 [section:command_line Command line]
 
-The template processor begins by processing the command line for template_options_ref.
+The template processor begins by processing the command line for __template_options__.
 The options are specified via [~option=value] arguments.  In simple cases, such
 as when using only one template, the ordering of the command line arguments should not
 affect the output.  However, when multiple templates are used symoultaneously for a
-template_merge_ref, the order matters.  The order is as follows.
+__template_merge__, the order matters.  The order is as follows.
 
-# Global template_options_ref can be specified at any point, but are recommended to be
+#  __global_options__ can be specified at any point, but are recommended to be
 placed at the beginning for consistency.
-# template_options_ref that should be applied to all templates are specified before any
+# __template_options__ that should be applied to all templates are specified before any
 template is listed.
-# template_options_ref that should be applied to an individual template only should be
+# __template_options__ that should be applied to an individual template only should be
 specified after listing the template (and before the next template is listed).
 
 [tip The template can be specified without explicitly using =template\==.  E.g., you can run
-[^ python make_template.py sandbox] instead of [^ python make_template.py template=sandbox]]
+[^ python file_template.py sandbox] instead of [^ python file_template.py template=sandbox]]
 
 The following examples illustrates this structure:
 
 [table Command line structure examples:
     [[invocation][global options][options for all templates][first template][second template]]
 
-    [[=python make_template.py=][][][sandbox][]]
+    [[=python file_template.py=][][][sandbox][]]
 
-    [[=python make_template.py=][[^ destination=/boost_sandbox]]
+    [[=python file_template.py=][[^ destination=/boost_sandbox]]
     []
     [[^ sandbox library=boostified_library vc8ide\=y ignore\=$template_library$/boost]]
     [ /old_library/include/old_library into\=boostified_library/boost/boostified_library]]
 ]
 
-Some options, such as =ignore=, can be specified multiple times.
+Some __template_options__, such as =ignore= and =fignore=, can be specified multiple times
+for the same template.
 
 [endsect]
 
 After processing the command line, or prompting the user if necessary, the template
 processor will initialize
-each template_object_ref (which processes the template and can be used by any in-template
-python_script_ref to customize the behavior of the template)
-and the global template_options_ref.
+each __template_object__ (which processes the template and can be used by any in-template
+__python_script__ to customize the behavior of the template)
+and the global __template_options__.
 
 The template processor will then
 [link filetemplate.templates.phases.examination examine the template tree].
@@ -71,7 +72,7 @@ be copied / processed in the next phase.
 [section:template_script Template scripts]
 
 To customize what information is to be copied, and to specify additional
-customization possibilites (e.g., via substitution_templates_ref),
+customization possibilites (e.g., via __substitution_templates__),
 template scripts may be inserted in the template tree.
 
 Template scripts are python files which begin with the following text on their first line:
@@ -79,7 +80,7 @@ Template scripts are python files which begin with the following text on their f
     # template script
 
 Every script found during the transversal will be executed.  The script can
-interact with the template processor through the template_object_ref.
+interact with the template processor through the __template_object__.
 
 [endsect]
 
@@ -93,8 +94,8 @@ Different kinds of files will be processed as follows:
 A file for which no specific substitution templates are specified will be copied verbatim.
 
 [h4 Processed file content]
-A file for which at least one specific substitution_template_ref is specified will be processed
-for global substitution_templates_ref and specific substitution_templates_ref.
+A file for which at least one specific __substitution_template__ is specified will be processed
+for both global __substitution_templates__ and specific __substitution_templates__.
 
 [section:python_file Python generated files]
 A file of the name /filename/=.py= can be used to generate the file /filename/.  To do so,
@@ -103,7 +104,8 @@ it must begin with
     # template file
     
 When the script generates the content, it supplies it to the template processor via the
-`template.submit_content(content)` command (see the template_object_ref reference).
+`template.submit_content(content)` or `template.append_content(content)` commands
+(see the __template_object__ reference).
 
 [endsect]
 
@@ -111,6 +113,18 @@ When the script generates the content, it supplies it to the template processor 
 
 [endsect]
 
+[section:merges Template merges]
+
+FileTemplate can be used to merge results created by several templates.  If a template uses
+the __results_object__ to customize its output based on files created by all processed templates,
+this can be used to seamlessly integrate additional files in the template results.
+
+The __sandbox_template__ uses this to allow additional files (e.g., existing source code) to be
+integrated in the newly created Boost sandbox library project.
+    
+[endsect]
+
+[section:reference Reference]
 [section:options Options]
 
 Options are used to fine-tune the behavior of the FileTemplate template processor as well
@@ -129,7 +143,7 @@ as the behavior of the template.
 
 [h4 Template options]
 /Template options/ can be used to specify how a particular template is processed.
-Templates may use additional, template-specific options, as is the case with sandbox_options_ref.
+Templates may use additional, template-specific options, as is the case with __sandbox_options__.
 
 [table Template options
     [[option][desctiption][valid values][default value]]
@@ -138,142 +152,20 @@ Templates may use additional, template-specific options, as is the case with san
     [[into][Determines where the output of the template will be placed inside the resulting tree]
     [valid directoy in resulting tree][root of the resulting tree]]
     
-    [[ignore][Ignores a directory of the source template tree][directory in source template tree]
+    [[ignore][Ignores a file or directory of the source template tree][file or directory in source template tree]
     []]
     
+    [[fignore][Ignores all files in the source template tree that have the specified suffix][file suffix]
+    []]
+
     [/    [[erase][Determines whether the template processor should erase the destination
-    directory tree if it already exists][y/n]]]    
+    directory tree if it already exists][y/n]]]
 ]
 
-Options can be specified using the command line.  See the invocation_phase_ref reference
+Options can be specified using the command line.  See the __invocation_phase__ reference
 for more information.  If an option
 is not specified in the command line, and it has no default value, the user will be prompted for the value.
 
-This is the output of a sample session:
-
-[pre
-
-python.exe make_template.py [* sandbox]
-/-------------------------------------------
-| Processing template sandbox with options:
-+---
-|| {'ignore': set(\[\]), 'template': 'sandbox'}
-|\/-------------------------------------------
-|| Examining the template project tree...
-|+---
-|||
-||\/-------------------------------------------
-||| Welcome to the Boost Sandbox template.
-||+---
-||\/-------------------------------------------
-||| [* Enter value for option library:]
-||+---
-||| [* (all lowercase, use underscores to separate words, e.g. "my_library"): my_library]
-||\/-------------------------------------------
-||| [* Enter value for option author:
-||+---
-||| (comma separated, no spaces outside names, e.g., "My Name,Notmy R. Name": Stjepan Rajko]
-||| $template_library$
-||| $template_library$\/boost
-||| $template_library$\/boost\/$template_library$
-||| $template_library$\/libs
-||| $template_library$\/libs\/$template_library$
-||| $template_library$\/libs\/$template_library$\/build
-||| $template_library$\/libs\/$template_library$\/test
-||| $template_library$\/libs\/$template_library$\/doc
-||| $template_library$\/libs\/$template_library$\/doc\html
-||| $template_library$\/libs\/$template_library$\/doc\/html\/images
-||| $template_library$\/libs\/$template_library$\/src
-||| $template_library$\/libs\/$template_library$\/example
-\/-------------------------------------------
-| Preparing destination tree...
-+---
-|\/-------------------------------------------
-|| Directories:
-|+---
-|| my_library
-|| my_library\/boost
-|| my_library\/libs
-|| my_library\/boost\/my_library
-|| my_library\/libs\/my_library
-|| my_library\/libs\/my_library\/build
-|| my_library\/libs\/my_library\/test
-|| my_library\/libs\/my_library\/doc
-|| my_library\/libs\/my_library\/src
-|| my_library\/libs\/my_library\/example
-|| my_library\/libs\/my_library\/doc\/html
-|| my_library\/libs\/my_library\/doc\/html\/images
-|\/-------------------------------------------
-|| Files:
-|+---
-|| my_library\/LICENSE_1_0.txt
-|| my_library\/boost-build.jam
-|| my_library\/Jamfile.v2
-|| my_library\/project-root.jam
-|| my_library\/boost\/my_library.hpp
-|| my_library\/boost\/my_library\/my_library.hpp
-|| my_library\/libs\/my_library\/test\/test.cpp
-|| my_library\/libs\/my_library\/test\/Jamfile.v2
-|| my_library\/libs\/my_library\/doc\/html\/reference.css
-|| my_library\/libs\/my_library\/doc\/html\/boostbook.css
-|| my_library\/libs\/my_library\/doc\/html\/images\/prev.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/tip.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/important.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/next.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/toc-minus.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/draft.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/caution.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/Thumbs.db
-|| my_library\/libs\/my_library\/doc\/html\/images\/up.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/note.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/warning.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/toc-plus.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/blank.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/home.png
-|| my_library\/libs\/my_library\/doc\/html\/images\/toc-blank.png
-|| my_library\/libs\/my_library\/example\/example.cpp
-|| my_library\/libs\/my_library\/example\/Jamfile.v2
-|| my_library\/libs\/my_library\/doc\/my_library.qbk
-|| my_library\/libs\/my_library\/doc\/Jamfile.v2
-\/-------------------------------------------
-| Creating file tree from template...
-+---
-|/-------------------------------------------
-|| Python files...
-|+---
-||| .\/my_library\/libs\/my_library\/doc\/my_library.qbk
-||| .\/my_library\/libs\/my_library\/doc\/Jamfile.v2
-|\/-------------------------------------------
-|| Files...
-|+---
-||| .\/my_library\/LICENSE_1_0.txt
-||| .\/my_library\/boost-build.jam
-||| .\/my_library\/Jamfile.v2
-||| .\/my_library\/project-root.jam
-||| .\/my_library\/boost\/my_library.hpp
-||| .\/my_library\/boost\/my_library\/my_library.hpp
-||| .\/my_library\/libs\/my_library\/test\/test.cpp
-||| .\/my_library\/libs\/my_library\/test\/Jamfile.v2
-||| .\/my_library\/libs\/my_library\/doc\/html\/reference.css
-||| .\/my_library\/libs\/my_library\/doc\/html\/boostbook.css
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/prev.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/tip.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/important.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/next.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/toc-minus.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/draft.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/caution.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/Thumbs.db
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/up.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/note.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/warning.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/toc-plus.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/blank.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/home.png
-||| .\/my_library\/libs\/my_library\/doc\/html\/images\/toc-blank.png
-||| .\/my_library\/libs\/my_library\/example\/example.cpp
-||| .\/my_library\/libs\/my_library\/example\/Jamfile.v2
-]
 [endsect]
 
 [section:substitutions Substitution templates and special templates]
@@ -294,7 +186,7 @@ specific substitution templates will be copied verbatim.
 [tip Substitutions are applied in the order they are specified in the template scripts, so
 substituted text for one substitution template can include substitution templates
 specified after it. For example, in the sandbox template
-$template\_cpp\_copyright$ expands into text which includes $template\_author$.]
+$template\_copyright$ expands into text which includes $template\_authors$.]
 
 [h4 Special templates]
 
@@ -310,18 +202,6 @@ The FileTemplate processor uses one special template:
 
 [endsect]
 
-[section:merges Template merges]
-
-FileTemplate can be used to merge results created by several templates.  If a template uses
-the results_object_ref to customize its output based on files created by all processed templates,
-this can be used to seamlessly integrate additional files in the template results.
-
-The sandbox_template_ref uses this to allow additional files (e.g., existing source code) to be
-integrated in the newly created Boost sandbox library project.
-    
-[endsect]
-
-[section:reference Reference]
 [section:template Template object]
 The template object contains several functions which can be used from template
 scripts to customize template behavior.
@@ -344,13 +224,13 @@ To set up a substitution template for file names:
 
     template.name_replacement('$template_library$', library_name)
 
-To set up a specific substitution_template_ref:
+To set up a specific __substitution_template__:
 
     template.content_replacement(['.hpp', '.cpp'], '$template_created$', '// Created in $template_year$')
 
-To set up a general substitution_template_ref:
+To set up a general __substitution_template__:
 
-    template.all_content_replacement('$template_year$', str(time.localtime().tm_year))
+    template.general_content_replacement('$template_year$', str(time.localtime().tm_year))
 
 To ignore (not process) an entire subdirectory in the same directory as the script:
 
@@ -389,7 +269,7 @@ For example, if a template includes a file whose
 contents depend on the directory tree below a certain directory,
 you can =walk= the results object and extract the directory tree.
 The following example does so to include all non-detail include
-directories for the sandbox_template_ref:
+directories for the __sandbox_template__:
 
     doxy_source_files = list()
     for root, dirs, files in results.walk(
@@ -431,16 +311,9 @@ result object to construct the list of files and filters for a MSVC IDE:
 
 [section:changes Proposed changes]
 
-* template.all\_content\_replacement should become template.general\_content\_replacement
-
 * a =no-scripts= option should be introduced to disallow processing of
 in-template scripts (in case a template
 should be copied verbatim with minor processing to make another template)
-
-* Add `template.ignore_directory` and `template.ignore_file` functions
-which can ignore a file/directory located
-in a directory other than the same directory as the script.
-This allows templates configured in a more centralized way.
 
 [/
 * The =erase= option should require the user to type =erase= for the value

@@ -6,10 +6,11 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 docs = template.options.get('docs')
-doxygen = docs != 'qb'    
+doxygen = docs != 'qb'
+htmlfiles = template.options.get('htmlfiles', None, 'local')
 
 template.append_content("""$template_start$
-$template_python_copyright$
+$template_copyright$
 
 project boost/$template_library$/doc ;
 
@@ -80,6 +81,14 @@ template.append_content("""
         <xsl:param>toc.section.depth=3
         <xsl:param>toc.max.depth=3
         <xsl:param>generate.section.toc.level=3
-    ;
+""")
+
+if htmlfiles=='global':
+    template.append_content('<xsl:param>boost.root=http://www.boost.org\n')
+elif htmlfiles!='local':
+    template.append_content('<xsl:param>boost.root=' + htmlfiles + '\n')
+
+template.append_content(
+"""    ;
 """)
 

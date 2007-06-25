@@ -4,7 +4,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 $template_start$
-$template_python_copyright$
+$template_copyright$
 
 # Set the BOOST_ROOT environment variable on your command-line or in the 
 # environment to point at the root of your regular Boost installation.

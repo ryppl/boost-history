@@ -9,6 +9,6 @@ text = template.options.get('text', template.options.alnum_lowercase, None, '(ty
 
 template.name_replacement('$template_text$', text)
 
-template.all_content_replacement('$template_substitution$', 'substituted')
+template.general_content_replacement('$template_substitution$', 'substituted')
 template.content_replacement(['.txt'], '$template_text$', text + ' in txt file')
 template.content_replacement(['.xyz'], '$template_text$', text + ' in xyz file')

@@ -11,8 +11,8 @@ template.append_content("""
 [library $template_Library$
     [quickbook 1.4]
     [version 0.01e-10]
-    [authors $template_author_reversed$]
-    [copyright $template_year$ $template_author$]
+    [authors $template_authors_reversed$]
+    [copyright $template_year$ $template_authors$]
     [purpose Doing nothing.]
     [license
         Distributed under the Boost Software License, Version 1.0.
