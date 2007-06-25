@@ -30,30 +30,22 @@
 ///Notation
 ///--------
 //  - 'HDS'    A type that is a model of 'MutableBackwardHDSConcept'
-//  - 'hds'    A non-modifiable instance of 'HDS'
+//  - 'hds'    A modifiable instance of 'HDS'
 //  - 'h','g'  Halfedge descriptors, of type 
 //    'hds_traits<HDS>::halfedge_descriptor'
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::halfedge_descriptor': from 'HDSConcept'.
-//  - 'hds_traits<HDS>::traversal_category':  from 'BackwardHDSConcept'.
-//  - 'hds_traits<HDS>::backward_category':   from 'BackwardHDSConcept'.
+// None besides the types in the 'MutableHDS' and 'BackwardHDS' concepts.
 //
 ///Definitions
 ///-----------
-//  - 'halfedge_descriptor' is a type that contains information to access 
-//     the halfedge.  (See the 'HDS' concept for a full definition.)
-//  - 'traversal_category' is a type that contains information about the 
-//     direction of the traversal, which is forward, backward or bidirectional.
-//     (See the 'HDS' concept for a full definition.)
-//  - 'backward_category' defines the primary accessor of the backward
-//     information for use by algorithms which desire the most direct access. 
-//     (See the 'HDS' concept for a full definition.)
+// None besides the definitions in the 'MutableHDS' and 'BackwardHDS' 
+// concepts.
 //
 ///Valid Expressions
 ///-----------------
-// In addition to the valid expressions of the 'HDS' and the 
+// In addition to the valid expressions of the 'MutableHDS' and the 
 // 'BackwardHDS' concepts:
 //   - 'set_prev_in_facet(hds,h,g)' sets 'g' as the 'prev_in_facet' value of 
 //     'h'.
@@ -64,8 +56,8 @@
 //
 ///Expression Semantics
 ///--------------------
-// In addition to the expression semantics of the 'HDS' concept, and the
-// 'BackwardHDS' concept:
+// In addition to the expression semantics of the 'Mutable HDS' and the
+// 'BackwardHDS' concepts:
 //   - 'set_prev_in_facet(hds,h,g)' sets 'g' as the halfedge 
 //      preceding 'h' in the adjacent facet cycle, when facet cycles are
 //      oriented in counter-clockwise order.
@@ -78,6 +70,8 @@
 //
 ///Complexity guarantees
 ///---------------------
+// In addition to the complexity guarantees of the 'Mutable HDS' and the
+// 'BackwardHDS' concepts:
 //  - 'set_prev_in_facet(hds,h,g)': amortized constant time.
 //  - 'set_prev_at_source(hds,h,g)': amortized constant time.
 //  - 'set_prev_at_target(hds,h,g)': amortized constant time.
@@ -110,8 +104,7 @@
 //      }
 //    private:
 //      MutableBackwardHDS hds;
-//      halfedge_descriptor h;
-//      halfedge_descriptor g;
+//      halfedge_descriptor h,g;
 //  };
 //..
 
@@ -141,10 +134,10 @@ namespace concepts{
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::backward_category backward_category;
-        // The specialization of 'hds_traits<HDS>' must have these
-        // required types, obeying the types requirements stated in the
-        // detailed description of the 'MutableBackwardHDS' concept on page
-        // [mutablebackwardhdsconcept].
+            // The specialization of 'hds_traits<HDS>' must have these
+            // required types, obeying the types requirements stated in the
+            // detailed description of the 'MutableBackwardHDS' concept on page
+            // [mutablebackwardhdsconcept].
 
         // MANIPULATORS
         void constraints() 
@@ -174,8 +167,7 @@ namespace concepts{
       private:
         // DATA
         MutableBackwardHDS hds; // a halfedge data structure object
-        halfedge_descriptor h;  // a halfedge descriptor
-        halfedge_descriptor g;  // another halfedge descriptor
+        halfedge_descriptor h,g;  // halfedge descriptors
     };
 
 }  // close namespace concepts

@@ -40,7 +40,7 @@
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::halfedge_descriptor': from 'HDSConcept'.
+// In addition to the types of the 'HDS' concept:
 //  - 'hds_traits<HDS>::traversal_category':  from 'HDSConcept', with
 //     additional requirement that this type must be convertible to
 //     'hdstl::backward_traversal_tag'.
@@ -49,12 +49,12 @@
 //
 ///Definitions
 ///-----------
-//  - 'halfedge_descriptor' is a type that contains information to access 
-//     the halfedge.  (See the 'HDS' concept or a full definition.)
+// In addition to the definitions of the 'HDS' concept:
 //  - 'traversal_category' is a type that contains information about the 
 //     direction of the traversal, which is forward, backward or bidirectional.
-//     For this 'BackwardHDS' concept, the 'traversal_category' has to be convertible to  
-//     the 'hdstl::backward_traversal_tag' type defined in '<boost/hdstl.hpp>'.
+//     For this 'BackwardHDS' concept, the 'traversal_category' has to be 
+//     convertible to the 'hdstl::backward_traversal_tag' type defined in 
+//     '<boost/hdstl.hpp>'.
 //  - 'backward_category' defines the primary accessor of the backward
 //     information for use by algorithms which desire the most direct access. 
 //
@@ -80,6 +80,7 @@
 //
 ///Complexity guarantees
 ///---------------------
+// In addition to the complexity guarantees of the 'HDS' concept:
 //  - 'prev_in_facet(hds,h)': amortized constant time.
 //  - 'prev_at_source(hds,h)': amortized constant time.
 //  - 'prev_at_target(hds,h)': amortized constant time.
@@ -162,9 +163,9 @@ namespace concepts{
             function_requires<ConvertibleConcept<traversal_category,
             backward_traversal_tag> >();  
             const bool is_valid_storage_tag =
-                    is_convertible<backward_category,prev_at_source_tag>::value ||
-                    is_convertible<backward_category,prev_at_target_tag>::value ||
-                    is_convertible<backward_category,prev_in_facet_tag>::value;
+                  is_convertible<backward_category,prev_at_source_tag>::value ||
+                  is_convertible<backward_category,prev_at_target_tag>::value ||
+                  is_convertible<backward_category,prev_in_facet_tag>::value;
             BOOST_STATIC_ASSERT( is_valid_storage_tag ); 
 
             const_constraints(hds);

@@ -34,46 +34,34 @@
 ///Notation
 ///--------
 //  - 'HDS'     A type that is a model of 'MutableBidirectionalHDSConcept'
-//  - 'hds'     A non-modifiable instance of 'HDS'
+//  - 'hds'     A modifiable instance of 'HDS'
 //  - 'h','g'   Halfedge descriptors, of type 
 //              'hds_traits<HDS>::halfedge_descriptor'
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::halfedge_descriptor': from 'HDSConcept'.
-//  - 'hds_traits<HDS>::traversal_category' : must be convertible to
-//    'hds_traits<HDS>::bidirectional_traversal_tag'.
-//  - 'hds_traits<HDS>::forward_category'   : from 'ForwardHDSConcept' 
-//  - 'hds_traits<HDS>::backward_category'  : from 'BackwardHDSConcept' 
+//  None besides the types in the 'BidirectionalHDS', 'MutableForwardHDS',
+//  and 'MutableBackwardHDS' concepts
 //
 ///Definitions
 ///-----------
-//  - 'halfedge_descriptor' is a type that contains information to access 
-//     the halfedge.  (See the 'HDSConcept' for a full definition.)
-//  - 'traversal_category' is a type that contains information about the 
-//     direction of the traversal, which is forward, backward or bidirectional.
-//     For this 'MutableBidirectionalHDS' concept, the 'traversal_category' has to be 
-//     convertible to the 'hdstl::bidirectional_traversal_tag' type defined 
-//     in '<boost/hdstl.hpp>'.
-//  - 'forward_category' defines the primary accessor of the forward
-//     information for use by algorithms which desire the most direct access. 
-//  - 'backward_category' defines the primary accessor of the backward
-//     information for use by algorithms which desire the most direct access. 
+//  Same as the definitions in the 'BidirectionalHDS', 'MutableForwardHDS',
+//  and 'MutableBackwardHDS' concepts
 //
 ///Valid Expressions
 ///-----------------
-//  See the valid expressions of the 'MutableForwardHDSConcept' and 
-//    the 'MutableBackwardHDSConcept'.
+//  Same as the valid expressions in the 'BidirectionalHDS', 
+//  'MutableForwardHDS', and 'MutableBackwardHDS' concepts
 //
 ///Expression Semantics
 ///--------------------
-//  See the expression semantics of the 'MutableForwardHDSConcept' and 
-//  the 'MutableBackwardHDSConcept'.
+//  Same as the expression semantics in the 'BidirectionalHDS', 
+//  'MutableForwardHDS', and 'MutableBackwardHDS' concepts
 //
 ///Complexity guarantees
 ///---------------------
-//  See the complexity guarantees of the 'MutableForwardHDSConcept' and 
-//  the 'MutableBackwardHDSConcept'.
+//  Same as the complexity guarantees in the 'BidirectionalHDS', 
+//  'MutableForwardHDS', and 'MutableBackwardHDS' concepts
 //
 ///Invariants 
 ///----------
@@ -130,10 +118,10 @@ namespace concepts{
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::forward_category forward_category;
         typedef typename hds_traits<HDS>::backward_category backward_category;
-        // The specialization of 'hds_traits<HDS>' must have these required
-        // types, obeying the types requirements stated in the detailed
-        // description of the 'MutableBidirectionalHDS' concept on page 
-        // [mutablebidirectionalhdsconcept].
+            // The specialization of 'hds_traits<HDS>' must have these required
+            // types, obeying the types requirements stated in the detailed
+            // description of the 'MutableBidirectionalHDS' concept on page 
+            // [mutablebidirectionalhdsconcept].
 
         //MANIPULATORS
         void constraints() 
@@ -152,11 +140,12 @@ namespace concepts{
         // ACCESSORS
         void const_constraints(HDS const& hds)
             // Check that the non-modifiable 'HDS' template parameters
-            // satisfies all the constraints of 'MutableBidirectionalHDSConcept'.
+            // satisfies all the constraints of 
+            // 'MutableBidirectionalHDSConcept'.
         {
         }
 
-        private:
+      private:
         //DATA
         MutableBidirectionalHDS hds;     // a halfedge data structure object
    };

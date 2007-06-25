@@ -35,12 +35,13 @@
 ///--------
 //  - 'HDS'    A type that is a model of 'HDSConcept'
 //  - 'hds'    A non-modifiable instance of 'HDS'
-//  - 'h','g'  Halfedge descriptors, of type 'hds_traits<HDS>::halfedge_descriptor'
+//  - 'h','g'  Halfedge descriptors, of type 
+//    'hds_traits<HDS>::halfedge_descriptor'
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::halfedge_descriptor': must be 'DefaultConstructible' and 
-//    'CopyConstructible', 'EqualityComparable', 'Assignable'.
+//  - 'hds_traits<HDS>::halfedge_descriptor': must be 'DefaultConstructible',
+//    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
 //
 ///Definitions
 ///-----------
@@ -56,12 +57,15 @@
 // The following expression must be valid and obey the syntactic requirement:
 //   - 'opposite(hds, h)' must return a value assignable to 'h'.
 //   - 'hds_traits<HDS>::supports_facets' must be usable as a Boolean.
+//   - 'hds_traits<HDS>::supports_vertices' must be usable as a Boolean.
 //
 ///Expression Semantics
 ///--------------------
 // The expressions semantics are as follows:
 //   - 'hds_traits<HDS>::supports_facets' is true if and only if 'HDS'
 //     is a model of the 'FacetHDS' concept (see the page [facethdsconcept]).
+//   - 'hds_traits<HDS>::supports_vertices' is true if and only if 'HDS'
+//     is a model of the 'VertexHDS' concept (see the page [vertexhdsconcept]).
 //   - 'opposite(hds, h)' returns a descriptor to the halfedge opposite 'h' in
 //     the data structure 'hds'. Does not modify the state of either 'hds'
 //     or 'h'.

@@ -34,12 +34,13 @@
 //
 ///Associated types
 ///----------------
-// In addition to the types required by the 'HDSConcept':
+// In addition to the types of the 'HDS' concept:
 //  - 'hds_traits<HDS>::facet_descriptor': must be 'DefaultConstructible', 
 //    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
 //
 ///Definitions
 ///-----------
+// In addition to the definitions of the 'HDS' concept:
 //  - 'halfedge_descriptor' is a type that contains information to access 
 //     the halfedge.  (See the 'HDSConcept' for a full definition.)
 //  - 'facet_descriptor' is a type that contains information to access the
@@ -48,12 +49,12 @@
 //
 ///Valid Expressions
 ///-----------------
-// In addition to the valid expressions of the 'HDSConcept':
+// In addition to the valid expressions of the 'HDS' concept:
 //  - 'facet(hds,h)' must return a value assignable to 'f'.
 //
 ///Expression Semantics
 ///--------------------
-// In addition to the expressions semantics of the 'HDSConcept':
+// In addition to the expressions semantics of the 'HDS' concept:
 //  - 'hds_traits<HDS>::supports_facets': must compare equal to 'true'.
 //  - 'facet(hds,h)' returns the facet descriptor of the facet to the
 //     left of 'h', when forward facet cycles are oriented in
@@ -61,7 +62,7 @@
 //
 ///Complexity guarantees
 ///---------------------
-// In addition to the complexity guarantees of the 'HDSConcept':
+// In addition to the complexity guarantees of the 'HDS' concept:
 //  - 'facet(hds,h)': amortized constant time.
 //
 ///Invariants 
@@ -116,9 +117,9 @@ namespace concepts {
 
        // TYPES
        typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor; 
-       // The specialization of 'hds_traits<HDS>' must have these required
-       // types, obeying the types requirements stated in the detailed
-       // description of the 'FacetHDS' concept on page [facethdsconcept].
+           // The specialization of 'hds_traits<HDS>' must have these required
+           // types, obeying the types requirements stated in the detailed
+           // description of the 'FacetHDS' concept on page [facethdsconcept].
 
        //MANIPULATORS
        void constraints() 

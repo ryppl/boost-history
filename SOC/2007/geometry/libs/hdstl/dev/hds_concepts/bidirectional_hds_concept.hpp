@@ -37,29 +37,21 @@
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::halfedge_descriptor': from 'HDSConcept'.
+// In addition to the types of the 'ForwardHDS' and 'BackwardHDS' concepts:
 //  - 'hds_traits<HDS>::traversal_category' :  from 'HDSConcept', with
 //     the additional requirement that this type must be convertible to
 //     the 'hds_traits<HDS>::bidirectional_traversal_tag' type which is
 //     defined in '<boost/hdstl.hpp>'.
-//  - 'hds_traits<HDS>::forward_category': from 'ForwardHDSConcept' 
-//  - 'hds_traits<HDS>::backward_category': from 'BackwardHDSConcept' 
 //
 ///Definitions
 ///-----------
-//  - 'halfedge_descriptor' is a type that contains information to access 
-//     the halfedge.  (See the 'HDSConcept' for a full definition.)
+// In addition to the definitions of the 'ForwardHDS' and 'BackwardHDS'
+// concepts:
 //  - 'traversal_category' is a type that contains information about the 
 //     direction of the traversal, which is forward, backward or bidirectional.
 //     For this 'BidirectionalHDS' concept, the 'traversal_category' has to be 
 //     convertible to the 'hdstl::bidirectional_traversal_tag' type defined 
 //     in '<boost/hdstl.hpp>'.
-//  - 'forward_category' defines the primary accessor of the forward
-//     information for use by algorithms which desire the most direct access. 
-//     (See the 'ForwardHDSConcept' for a full definition.)
-//  - 'backward_category' defines the primary accessor of the backward
-//     information for use by algorithms which desire the most direct access. 
-//     (See the 'BackwardHDSConcept' for a full definition.)
 //
 ///Valid Expressions
 ///-----------------
@@ -79,7 +71,7 @@
 ///Invariants 
 ///----------
 // 'BidirectionalHDSConcept' should validate all the invariants for the 
-// 'ForwardHDSConcept', and the 'BackwardHDSConcept'.
+// 'ForwardHDSConcept' and the 'BackwardHDSConcept'.
 //
 ///Concept-checking class
 ///----------------------

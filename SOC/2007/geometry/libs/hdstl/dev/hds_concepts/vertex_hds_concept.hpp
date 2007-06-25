@@ -18,7 +18,7 @@
 //
 ///Definition
 ///----------
-// This concept refines the 'HDSConcept', and specifies additional vertex
+// This concept refines the 'HDSConcept', and requires an additional vertex
 // descriptor to handle vertices in the 'HDS' data structure. 
 //
 ///Refinement of:
@@ -29,31 +29,40 @@
 ///--------
 //  - 'HDS'  A type that is a model of 'VertexHDSConcept'
 //  - 'hds'  A non-modifiable instance of 'HDS'
+//  - 'h'    Halfedge descriptor, of type 'hds_traits<HDS>::halfedge_descriptor'
 //  - 'v'    Vertex descriptor, of type 'hds_traits<HDS>::vertex_descriptor'
 //
 ///Associated types
 ///----------------
+// In addition to the types in the 'HDS' concept:
 //  - 'hds_traits<HDS>::vertex_descriptor': must be 'DefaultConstructible', 
 //    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
 //
 ///Definitions
 ///-----------
+// In addition to the definitions in the 'HDS' concept:
 //  - 'halfedge_descriptor' is a type that contains information to access 
 //     the halfedge.  (See the 'HDSConcept' for a full definition.)
 //  - 'vertex_descriptor' is a type that contains information to access the
-//     vertex at the source of the halfedge.
+//     vertex at the source or the target of the halfedge.
 //
 ///Valid Expressions
 ///-----------------
-// See the valid expressions of the 'HDS' concept.
+// In addition to the valid expressions of the 'HDS' concept:
+//  - 'vertex(hds,h)' must return a value assignable to 'v'.
 //
 ///Expression Semantics
 ///--------------------
-// See the expression semantics of the 'HDS' concept.
+// In addition to the expressions semantics of the 'HDS' concept:
+//  - 'hds_traits<HDS>::supports_vertices': must compare equal to 'true'.
+//  - 'vertex(hds,h)' returns the vertex descriptor of the vertex to the
+//    source or target of 'h', depending on the 'source_access_tag' and
+//    'target_access_tag'.
 //
 ///Complexity guarantees
 ///---------------------
-// See the complexity guarantees of the 'HDS' concept.
+// In addition to the complexity guarantees of the 'HDS' concept:
+//  - 'vertex(hds,h)': amortized constant time.
 //
 ///Invariants 
 ///----------
@@ -72,9 +81,12 @@
 //       function_requires<CopyConstructibleConcept<vertex_descriptor> >();
 //       function_requires<EqualityComparableConcept<vertex_descriptor> >();
 //       function_requires<AssignableConcept<vertex_descriptor> >();
+//       BOOST_STATIC_ASSERT(hds_traits<HDS>::supports_vertices);
+//       v = vertex(hds,h);
 //       const_constraints(hds);
 //    }
 //    void const_constraints(HDS const& hds) {
+//       v = vertex(hds,h);
 //    }
 //    HDS hds;
 //    vertex_descriptor v;
@@ -105,9 +117,9 @@ namespace concepts {
 
         // TYPES
         typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
-        // The specialization of 'hds_traits<HDS>' must have these required
-        // types, obeying the types requirements stated in the detailed
-        // description of the 'VertexHDS' concept on page [vertexhdsconcept].
+            // The specialization of 'hds_traits<HDS>' must have these required
+            // types, obeying the types requirements stated in the detailed
+            // description of the 'VertexHDS' concept on page [vertexhdsconcept].
 
         //MANIPULATORS
         void constraints() 
@@ -120,7 +132,9 @@ namespace concepts {
             function_requires<CopyConstructibleConcept<vertex_descriptor> >();
             function_requires<EqualityComparableConcept<vertex_descriptor> >();
             function_requires<AssignableConcept<vertex_descriptor> >();
+            BOOST_STATIC_ASSERT(hds_traits<HDS>::supports_vertices);
 
+            v = vertex(hds,h);
             const_constraints(hds);
         }
 
@@ -129,9 +143,10 @@ namespace concepts {
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'VertexHDSConcept'.
         {
+            v = vertex(hds,h);
         }
 
-        private:
+      private:
         //DATA
         VertexHDS hds;         // a halfedge data structure object
         vertex_descriptor f;   // a vertex descriptor

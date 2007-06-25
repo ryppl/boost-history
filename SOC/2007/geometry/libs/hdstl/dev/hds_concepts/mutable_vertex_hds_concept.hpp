@@ -12,7 +12,8 @@
 //  BOOST_CLASS_REQUIRE(HDS, boost::hdstl,MutableVertexHDSConcept);
 //..
 // inside a class body, checks whether the type given as template
-// argument is a model of the HDS concept described on the page [mutablevertexhds].
+// argument is a model of the HDS concept described on the page 
+// [mutablevertexhds].
 //
 //@CONCEPT: [mutablevertexhds] Mutable Vertex HDS concept
 //
@@ -30,38 +31,35 @@
 ///Notation
 ///--------
 //  - 'HDS'  A type that is a model of 'MutableVertexHDSConcept'
-//  - 'hds'  A non-modifiable instance of 'HDS'
+//  - 'hds'  A modifiable instance of 'HDS'
 //  - 'v'    Vertex descriptor, of type 'hds_traits<HDS>::vertex_descriptor'
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::vertex_descriptor': must be 'DefaultConstructible', 
-//    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
+// None besides the types in the 'VertexHDS' and the 'MutableHDS' concepts.
 //
 ///Definitions
 ///-----------
-//  - 'halfedge_descriptor' is a type that contains information to access 
-//     the halfedge.  (See the 'HDSConcept' for a full definition.)
-//  - 'vertex_descriptor' is a type that contains information to access the
-//     vertex at the source of the halfedge.
+// Same as the definitions in the 'VertexHDS' and the 'MutableHDS' concepts.
 //
 ///Valid Expressions
 ///-----------------
-// In addition to the valid expressions of the 'MutableHDS' concept, and the
-// 'VertexHDS' concept:
-//  - 'set_vertex(hds,h,v)'  sets the source vertex descriptor value of 'h' to 
+// In addition to the valid expressions of the 'VertexHDS' and the
+// 'MutableHDS' concepts:
+//  - 'set_vertex(hds,h,v)' sets the source vertex descriptor value of 'h' to 
 //    'v'.
-//  - 'add_vertex(hds,v)'    adds a new vertex 'v' to the 'hds' data structure.
+//  - 'new_vertex(hds)' adds a new vertex 'v' to the 'hds' data structure
+//    and returns the vertex descriptor to this new vertex.
 //  - 'remove_vertex(hds,v)' removes the vertex 'v' from the 'hds' data 
 //    structure.
 //
 ///Expression Semantics
 ///--------------------
-// In addition to the expression semantics of the 'MutableHDS' concept, and the
-// 'VertexHDS' concept:
+// In addition to the expression semantics of the 'VertexHDS' and the
+// 'MutableHDS' concepts:
 //  - 'set_vertex(hds,h,v)'  sets the source vertex descriptor value of 'h' to 
 //    'v' for a single halfedge in the 'hds' data structure.
-//  - 'add_vertex(hds,v)'    adds a new vertex 'v' to the 'hds' data structure.
+//  - 'new_vertex(hds)' adds a new vertex 'v' to the 'hds' data structure.
 //    By this operation the vertex is added but no connections to the halfedges
 //    are set. In order to assign vertces to halfedges 'set_vertex(hds,h,v)' 
 //    operation should be used.
@@ -71,14 +69,16 @@
 //
 ///Complexity guarantees
 ///---------------------
-//  - 'set_vertex(hds,h,v)'   : amortized constant time.
-//  - 'add_vertex(hds,f)'     : amortized constant time.
-//  - 'remove_vertex(hds,v)'  : amortized constant time.
+// In addition to the complexity guarantees of the 'VertexHDS' and the
+// 'MutableHDS' concepts:
+//  - 'set_vertex(hds,h,v)': amortized constant time.
+//  - 'new_vertex(hds)': amortized constant time.
+//  - 'remove_vertex(hds,v)': amortized constant time.
 //
 ///Invariants 
 ///----------
-// 'MutableVertexHDSConcept' should validate all the invariants for the 
-// 'VertexHDSConcept', and the 'MutableHDSConcept'.
+// 'MutableVertexHDSConcept' should verify all the invariants for the 
+// 'VertexHDSConcept' and the 'MutableHDSConcept'.
 //
 ///Concept-checking class
 ///----------------------
@@ -95,14 +95,11 @@
 //       function_requires<EqualityComparableConcept<vertex_descriptor> >();
 //       function_requires<AssignableConcept<vertex_descriptor> >();
 //       set_vertex(hds,h,v);
-//       add_vertex(hds,v);
+//       v = new_vertex(hds);
 //       remove_vertex(hds,h,v);
 //       const_constraints(hds);
 //    }
 //    void const_constraints(HDS const& hds) {
-//       set_vertex(hds,h,v);
-//       add_vertex(hds,v);
-//       remove_vertex(hds,h,v);
 //    }
 //    HDS hds;
 //    halfedge_descriptor h;
@@ -134,10 +131,10 @@ namespace concepts {
 
         // TYPES
         typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
-        // The specialization of 'hds_traits<HDS>' must have these required
-        // types, obeying the types requirements stated in the detailed
-        // description of the 'MutableVertexHDS' concept on page 
-        // [mutablevertexhdsconcept].
+            // The specialization of 'hds_traits<HDS>' must have these required
+            // types, obeying the types requirements stated in the detailed
+            // description of the 'MutableVertexHDS' concept on page 
+            // [mutablevertexhdsconcept].
 
         //MANIPULATORS
         void constraints() 
@@ -154,7 +151,7 @@ namespace concepts {
             function_requires<AssignableConcept<vertex_descriptor> >();
 
             set_vertex(hds,h,v);
-            add_vertex(hds,v);
+            v = new_vertex(hds);
             remove_vertex(hds,v);
 
             const_constraints(hds);
@@ -165,12 +162,9 @@ namespace concepts {
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'MutableVertexHDSConcept'.
         {
-            set_vertex(hds,h,v);
-            add_vertex(hds,v);
-            remove_vertex(hds,v);
         }
 
-        private:
+      private:
         //DATA
         MutableVertexHDS hds;  // a halfedge data structure object
         halfedge_descriptor h; // a vertex descriptor

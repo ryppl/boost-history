@@ -34,33 +34,26 @@
 //  - 'HDS'      A type that is a model of 'MutableHDSConcept'
 //  - 'hds'      A modifiable instance of 'HDS'
 //  - 'h', h1','h2'
-//               Halfedge descriptors, of type 'hds_traits<HDS>::halfedge_descriptor'
+//         Halfedge descriptors, of type 'hds_traits<HDS>::halfedge_descriptor'
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::halfedge_descriptor': must be 'DefaultConstructible', 
-//    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
+// None besides the types of the 'HDS' concept,
 //
 ///Definitions
 ///-----------
-// 'halfedge descriptor' is a type that contains information to access
-// the halfedge.  Note that the halfedge descriptor type (accessible as a
-// member of the 'hds_traits<HDS>' type) is an opaque type.  All that can be
-// done to it is passing it to the function opposite and letting the hds use
-// the information it contains to find the opposite halfedge.  In
-// particular, there is no guarantee that it is a pointer type.
+// Same as the definitions of the 'HDS' concept,
 //
 ///Valid Expressions
 ///-----------------
-// In addition to the valid expressions of the 'HDS' concept,
-// the following expressions must be valid and obey the syntactic requirement:
+// In addition to the valid expressions of the 'HDS' concept:
 //  - 'set_opposite(hds,h1,h2)'
 //  - 'h = new_edge(hds)'
 //  - 'delete_edge(hds,h)'
 //
 ///Expression Semantics
 ///--------------------
-// The expressions semantics are as follows:
+// In addition to the expression semantics of the 'HDS' concept:
 //  - 'set_opposite(hds,h1,h2)' sets 'h1' and 'h2' as opposites of each other 
 //    in the data structure 'hds'. 
 //  - 'new_edge(hds)' creates a new edge in data structure 'hds', and
@@ -74,6 +67,7 @@
 //
 ///Complexity guarantees
 ///---------------------
+// In addition to the complexity guarantees of the 'HDS' concept:
 //  - 'set_opposite(hds,h1,h2)': amortized constant time.
 //  - 'new_edge(hds)': amortized constant time.
 //  - 'delete_edge(hds,h)' : amortized constant time.
@@ -99,8 +93,7 @@
 //    void const_constraints(HDS const& hds) {
 //    }
 //    HDS hds;
-//    halfedge_descriptor h1;
-//    halfedge_descriptor h2;
+//    halfedge_descriptor h,h1,h2;
 // };
 //.. 
 
@@ -130,10 +123,10 @@ namespace concepts {
         // TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor 
                                           halfedge_descriptor; 
-        // The specialization of 'hds_traits<HDS>' must have these
-        // required types, obeying the types requirements stated in the
-        // detailed description of the 'MutableHDS' concept on page
-        // [mutablehdsconcept].
+            // The specialization of 'hds_traits<HDS>' must have these
+            // required types, obeying the types requirements stated in the
+            // detailed description of the 'MutableHDS' concept on page
+            // [mutablehdsconcept].
 
         // MANIPULATORS
         void constraints() 
@@ -159,9 +152,7 @@ namespace concepts {
         private:
         // DATA
             HDS hds;                   // a halfedge data structure object
-            halfedge_descriptor h;     // a halfedge descriptor
-            halfedge_descriptor h1;    // a halfedge descriptor
-            halfedge_descriptor h2;    // a halfedge descriptor
+            halfedge_descriptor h,h1,h2;  // halfedge descriptors
    };
 
 }  // close namespace concepts

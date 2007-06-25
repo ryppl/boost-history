@@ -31,36 +31,32 @@
 ///Notation
 ///--------
 //  - 'HDS'   A type that is a model of MutableFacetHDSConcept
-//  - 'hds'   A non-modifiable instance of HDS
+//  - 'hds'   A modifiable instance of HDS
 //  - 'f'     Facet descriptor, of type 'hds_traits<HDS>::facet_descriptor'
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::facet_descriptor': must be 'DefaultConstructible', 
-//    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
+//  None besides the types in the 'MutableHDS' and 'FacetHDS' concepts.
 //
 ///Definitions
 ///-----------
-//  - 'halfedge_descriptor' is a type that contains information to access 
-//     the halfedge.  (See the 'HDSConcept' for a full definition.)
-//  - 'facet_descriptor' is a type that contains information to access the
-//     facets. (See the 'FacetHDSConcept' for a full definition.) 
+//  Same as the definitions in the 'MutableHDS' and 'FacetHDS' concepts.
 //
 ///Valid Expressions
 ///-----------------
-// In addition to the valid expressions of the 'FacetHDS' concept, and the 
-// 'MutableHDS' concept:
+// In addition to the valid expressions of the 'FacetHDS' and the 
+// 'MutableHDS' concepts:
 //  - 'set_facet(hds,h,f)' sets the facet descriptor value of 'h' to 'f'.
-//  - 'add_facet(hds,f)'   adds a new facet 'f' to the 'hds' data structure.
+//  - 'new_facet(hds)' creates a new facet 'f' in data structure 'hds'.
 //  - 'remove_facet(hds,f)' removes the facet 'f' from the 'hds' data structure.
 //
 ///Expression Semantics
 ///--------------------
-// In addition to the expression semantics of the 'FacetHDS' concept, and the 
-// 'MutableHDS' concept.
+// In addition to the expression semantics of the 'FacetHDS' and the 
+// 'MutableHDS' concepts.
 //  - 'set_facet(hds,h,f)' sets the facet descriptor value of 'h' to 'f' for a
 //    single halfedge in the 'hds' data structure.
-//  - 'add_facet(hds)'   adds a new facet to the 'hds' data structure
+//  - 'new_facet(hds)' creates a new facet 'f' data structure 'hds'
 //    and returns the facet descriptor of this new facet.
 //    By this operation the facet is added but no connections to the halfedges
 //    are set. In order to assign facets to halfedges 'set_facet(hds,h,f)' 
@@ -71,8 +67,10 @@
 //
 ///Complexity guarantees
 ///---------------------
+// In addition to the complexity guarantees of the 'FacetHDS' and the 
+// 'MutableHDS' concepts.
 //  - 'set_facet(hds,h,f)' : amortized constant time.
-//  - 'add_facet(hds)': amortized constant time.
+//  - 'new_facet(hds)': amortized constant time.
 //  - 'remove_facet(hds,f)': amortized constant time.
 //
 ///Invariants 
@@ -93,11 +91,11 @@
 //       function_requires<CopyConstructibleConcept<facet_descriptor> >();
 //       function_requires<EqualityComparableConcept<facet_descriptor> >();
 //       function_requires<AssignableConcept<facet_descriptor> >();
+//       set_facet(hds,h,f);
+//       f = new_facet(hds);
+//       remove_facet(hds,f);
 //    }
 //    void const_constraints(HDS const& hds) {
-//       set_facet(hds,h,f);
-//       f = add_facet(hds);
-//       remove_facet(hds,f);
 //    }
 //    HDS hds;
 //    halfedge_descriptor h;
@@ -146,6 +144,9 @@ namespace concepts {
            function_requires<CopyConstructibleConcept<facet_descriptor> >();
            function_requires<EqualityComparableConcept<facet_descriptor> >();
            function_requires<AssignableConcept<facet_descriptor> >();
+           set_facet(hds,h,f);
+           f = new_facet(hds);
+           delete_facet(hds,f);
            const_constraints(hds);
        }
 
@@ -154,9 +155,6 @@ namespace concepts {
            // Check that the non-modifiable 'HDS' template parameters
            // satisfies all the constraints of 'MutableFacetHDSConcept'.
        {
-           set_facet(hds,h,f);
-           f = add_facet(hds);
-           delete_facet(hds,f);
        }
 
      private:

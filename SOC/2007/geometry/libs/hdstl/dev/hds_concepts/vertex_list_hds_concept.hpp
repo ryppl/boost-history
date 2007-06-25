@@ -24,57 +24,58 @@
 //
 ///Refinement of:
 ///--------------
-//  - 'HDSConcept'
+//  - 'VertexHDSConcept'
 //
 ///Notation
 ///--------
 //  - 'HDS'  A type that is a model of VertexListHDSConcept
 //  - 'hds'  A non-modifiable instance of HDS
 //  - 'v'    Vertex descriptor, of type 'hds_traits<HDS>::vertex_descriptor'
-//  - 'p'    Vertex iterator pair, of type 'hds_traits<HDS>::vertex_iterator' 
-//  - 'n'    Vertex size type, of type 'hds_traits<HDS>::size_type'
+//  - 'p'    Vertex iterator, of type 'hds_traits<HDS>::vertex_iterator' 
+//  - 'n'    Vertex list size, of type 'hds_traits<HDS>::size_type'
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::vertex_descriptor': must be 'DefaultConstructible', 
-//    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
-//  - 'hds_traits<HDS>::vertex_iterator': must be 'MultiPassInputIterator'.
-//  - 'hds_traits<HDS>::size_type': vertex size type.
+// In addition to the types of the 'VertexHDS' concept:
+//  - 'hds_traits<HDS>::vertex_iterator': must be a model of the 
+//    'ForwardIterator' concept. The value type of the vertex iterator must
+//    be the same as the 'vertex_descriptor'.
+//  - 'hds_traits<HDS>::size_type': integral size type.
 //
 ///Definitions
 ///-----------
-//  - 'vertex_descriptor' is a type that contains information to access 
-//     the vertex.  (See the 'HDSConcept' for a full definition.)
+// In addition to the definitions of the 'VertexHDS' concept:
 //  - 'vertex_iterator' is an iterator type for the vertices.
 //  - 'size_type' defines the size type.
 //
 ///Valid Expressions
 ///-----------------
-// In addition to the valid expressions of the 'HDS' concept:
+// In addition to the valid expressions of the 'VertexHDS' concept:
 //  - 'vertices_begin(hds)' must return a value assignable to 'p'.  
 //  - 'vertices_end(hds)' must return a value assignable to 'p'.  
 //  - 'num_vertices(hds)' must return a value assignable to 'n'.
 //
 ///Expression Semantics
 ///--------------------
-// In addition to the valid expression semantics of the 'HDS' concept:
+// In addition to the valid expression semantics of the 'VertexHDS' concept:
 //  - 'vertices_begin(hds)' returns a 'vertex_iterator' 'p' pointing to the 
-//    beginning of the 'vertex list'.
+//    beginning of the "vertex list".
 //  - 'vertices_end(hds)' returns a 'vertex_iterator' 'p' pointing to the 
-//    end of the 'vertex list'.
+//    end of the "vertex list".
 //  - 'num_vertices(hds)' returns the number of vertices in the 'HDS' data
 //    structure.
 //
 ///Complexity guarantees
 ///---------------------
+// In addition to the complexity guarantees of the 'VertexHDS' concept:
 //  - 'vertices_begin(hds)': amortized constant time.  
-//  - 'vertices_end(hds)'  : amortized constant time.  
-//  - 'num_vertices(hds)'  : amortized constant time.
+//  - 'vertices_end(hds)': amortized constant time.  
+//  - 'num_vertices(hds)': amortized constant time.
 //
 ///Invariants 
 ///----------
-// 'VertexListHDSConcept' should validate all the invariants for the 
-// 'HDSConcept'.
+//  - 'std::distance(vertices_begin(hds), vertices_end(hds)) 
+//                                     ==  num_vertices(hds)'
 //
 ///Concept-checking class
 ///----------------------
@@ -92,10 +93,8 @@
 //         function_requires<CopyConstructibleConcept<vertex_descriptor> >();
 //         function_requires<EqualityComparableConcept<vertex_descriptor> >();
 //         function_requires<AssignableConcept<vertex_descriptor> >();
-//         function_requires<hdstl_detail::MultiPassInputIteratorConcept<vertex_iterator> >();
-//         b = vertices_begin(hds);
-//         e = vertices_end(hds);
-//         n = num_vertices(hds);
+//         function_requires<ForwardIteratorConcept<vertex_iterator> >();
+//         function_requires<ConvertibleConcept<size_type,int> >();
 //         const_constraints(hds);
 //     }
 //     void const_constraints(HDS const& hds) 
@@ -138,11 +137,11 @@ namespace concepts {
        // TYPES
        typedef typename hds_traits<HDS>::vertex_iterator  vertex_iterator;
        typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor;
-       typedef typename hds_traits<HDS>::vertices_size_type vertices_size_type;
-       // The specialization of 'hds_traits<HDS>' must have these required
-       // types, obeying the types requirements stated in the detailed
-       // description of the 'VertexListHDS' concept on page 
-       // [vertexlisthdsconcept].
+       typedef typename hds_traits<HDS>::size_type size_type;
+           // The specialization of 'hds_traits<HDS>' must have these required
+           // types, obeying the types requirements stated in the detailed
+           // description of the 'VertexListHDS' concept on page 
+           // [vertexlisthdsconcept].
 
        //MANIPULATORS
        void constraints() 
@@ -156,10 +155,8 @@ namespace concepts {
            function_requires<CopyConstructibleConcept<vertex_descriptor> >();
            function_requires<EqualityComparableConcept<vertex_descriptor> >();
            function_requires<AssignableConcept<vertex_descriptor> >();
-           function_requires<hdstl_detail::MultiPassInputIteratorConcept<vertex_iterator> >();
-           b = vertices_begin(hds);
-           e = vertices_end(hds);
-           n = num_vertices(hds);
+           function_requires<ForwardIteratorConcept<vertex_iterator> >();
+           function_requires<ConvertibleConcept<size_type,int> >();
            const_constraints(hds);
        }
 
@@ -173,12 +170,11 @@ namespace concepts {
            n = num_vertices(hds);
        }
 
-       private:
+     private:
        //DATA
        VertexListHDS hds;     // a halfedge data structure object
        vertex_descriptor v;   // a vertex descriptor
-       vertex_iterator b;     // a vertex iterator
-       vertex_iterator e;     // a vertex iterator
+       vertex_iterator b,e;   // a vertex iterators
        size_type n;    // vertex size type
 
    };

@@ -32,20 +32,20 @@
 //  - 'hds'  A non-modifiable instance of HDS
 //  - 'h'    Halfedge descriptor, of type 'hds_traits<HDS>::halfedge_descriptor'
 //  - 'p'    Halfedge iterator, of type 'hds_traits<HDS>::halfedge_iterator'
-//  - 'n'    Halfedge size type, of type 'hds_traits<HDS>::size_type'
+//  - 'n'    Halfedge list size, of type 'hds_traits<HDS>::size_type'
 //
 ///Associated types
 ///----------------
-//  - 'hds_traits<HDS>::halfedge_descriptor': must be 'DefaultConstructible', 
-//    'CopyConstructible', 'EqualityComparable', and 'Assignable'.
-//  - 'hds_traits<HDS>::halfedge_iterator': must be 'ForwardIterator'.
+// In addition to the types of the 'HDS' concept:
+//  - 'hds_traits<HDS>::halfedge_iterator': must be a model of the
+//    'ForwardIterator' concept. The value type of the halfedge iterator
+//    must be the same as the 'halfedge_descriptor'.
 //    Its value type must be the same as the 'halfedge_descriptor' type.
-//  - 'hds_traits<HDS>::size_type': integral halfedge size type.
+//  - 'hds_traits<HDS>::size_type': integral size type.
 //
 ///Definitions
 ///-----------
-//  - 'halfedge_descriptor' is a type that contains information to access 
-//     the halfedge.  (See the 'HDSConcept' for a full definition.)
+// In addition to the definitions of the 'HDS' concept:
 //  - 'halfedge_iterator' is an iterator type for the halfedges.
 //  - 'size_type' defines the size type.
 //
@@ -58,11 +58,11 @@
 //
 ///Expression Semantics
 ///--------------------
-// In addition to the valid expression semantics of the 'HDS' concept:
+// In addition to the expression semantics of the 'HDS' concept:
 //  - 'halfedges_begin(hds)' returns a 'halfedge_iterator' pointing to the 
-//    beginning of the 'halfedge list'.
+//    beginning of the "halfedge list".
 //  - 'halfedges_end(hds)' returns a 'halfedge_iterator' pointing to the 
-//    end of the 'halfedge list'.
+//    end of the "halfedge list".
 //  - 'num_halfedges(hds)' returns the number of halfedges in the 'HDS' data
 //    structure.
 //
@@ -75,7 +75,8 @@
 ///Invariants 
 ///----------
 // In addition to the invariants of the 'HDSConcept':
-//  - 'std::distance(halfedges_begin(hds), halfedges_end(hds)) == num_halfedges(hds)'
+//  - 'std::distance(halfedges_begin(hds), halfedges_end(hds)) 
+//                                       == num_halfedges(hds)'
 //
 ///Concept-checking class
 ///----------------------
@@ -173,8 +174,7 @@ namespace concepts {
        //DATA
        HalfedgeListHDS hds;      // a halfedge data structure object
        halfedge_descriptor h;    // a halfedge descriptor
-       halfedge_iterator b;      // a halfedge iterator
-       halfedge_iterator e;      // a halfedge iterator
+       halfedge_iterator b,e;    // halfedge iterators
        size_type n;              // halfedge size type
 
    };
