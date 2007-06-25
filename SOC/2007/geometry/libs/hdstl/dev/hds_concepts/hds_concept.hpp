@@ -103,10 +103,11 @@
 #ifndef BOOST_HDSTL_CONCEPTS_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include "../hds_traits.hpp"
 
+namespace boost {
 namespace hdstl {
-namespace concepts {
 
     template <class HDS> 
     struct HDSConcept {
@@ -138,12 +139,12 @@ namespace concepts {
             function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
             function_requires<EqualityComparableConcept<halfedge_descriptor> >();
             function_requires<AssignableConcept<halfedge_descriptor> >();
-           
+            h= hds.opposite(h);
             const_constraints(hds);
         }
 
         // ACCESSORS
-        void const_constraints(HDS const& hds)
+        void const_constraints(const HDS& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'HDSConcept'.
         {
@@ -156,7 +157,7 @@ namespace concepts {
             halfedge_descriptor h;   // a halfedge descriptor
     };
 
-}  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif
