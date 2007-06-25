@@ -7,7 +7,6 @@
 project
     : requirements 
       <include>../../..
-      <library>/boost/test//boost_unit_test_framework/<link>static
       <define>BOOST_ALL_NO_LIB=1
     ;
 

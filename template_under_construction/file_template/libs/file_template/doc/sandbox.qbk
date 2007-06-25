@@ -352,7 +352,16 @@ visually and navigationally.  You should probably *not* use it.]
 [endsect]
 [endsect][/reference]
 
-[section:changes Proposed Changes]
+[section:changes Version History and Proposed Changes]
+
+[heading Version History]
+
+* started supporting Xcode IDE generation
+* the author option and template substitutions changed to authors to match the quickbook syntax
+* changed $template\_cpp\_copyright$ and $template\_py\_copyright$ to just $template\_copyright$.
+
+	
+[heading Proposed Changes]
 
 * In the MSVC projects, the Rebuild action is mapped to a =bjam -a= invocation.  This causes
 all projects required to be rebuilt, and might not be the most common use case (i.e., if

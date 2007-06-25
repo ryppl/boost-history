@@ -97,12 +97,14 @@
 		08F006150C2B888F00093576 /* sandbox.py */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.python; path = sandbox.py; sourceTree = "<group>"; };
 		08F006160C2B890E00093576 /* project.pbxproj.py */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.python; name = project.pbxproj.py; path = $template_library$.xcodeproj/project.pbxproj.py; sourceTree = "<group>"; };
 		08F062730C283EA9005301DA /* file_template.py */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.python; name = file_template.py; path = ../../../../../file_template.py; sourceTree = SOURCE_ROOT; };
+		08F105890C303C6200CEFC5F /* bjam_sandbox_test.sh */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.sh; name = bjam_sandbox_test.sh; path = ../../test/bjam_sandbox_test.sh; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
 		0818EB840C26438D00DB816F /* test */ = {
 			isa = PBXGroup;
 			children = (
+				08F105890C303C6200CEFC5F /* bjam_sandbox_test.sh */,
 				0818EB850C26439C00DB816F /* test.py */,
 			);
 			name = test;

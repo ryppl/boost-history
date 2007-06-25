@@ -309,7 +309,20 @@ result object to construct the list of files and filters for a MSVC IDE:
 
 [endsect]
 
-[section:changes Proposed changes]
+[section:changes Version History and Proposed changes]
+
+[heading Version History]
+
+[*version 0.94]
+
+* =make_template.py= changed to =file_template.py=
+* `template.all_content_replacement` changed to `template.general_content_replacement` 
+* added `template.ignore` function which can ignore any file/directory in the source tree
+  (available as [^ignore=] command line option)
+* added testing
+* made to work on non-windows and on Python 2.3
+
+[heading Proposed Changes]
 
 * a =no-scripts= option should be introduced to disallow processing of
 in-template scripts (in case a template

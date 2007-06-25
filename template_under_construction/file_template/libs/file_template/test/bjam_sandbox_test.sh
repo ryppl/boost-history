@@ -4,7 +4,7 @@
 # http://www.boost.org/LICENSE_1_0.txt)
 
 current=`pwd`
-cd results/sandbox_command_line/test/libs/test/doc
+cd results/sandbox_command_line/my_library/libs/my_library/doc
 bjam $*
 cd ../example
 bjam $*
