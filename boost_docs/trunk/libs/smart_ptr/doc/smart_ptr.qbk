@@ -1,0 +1,17 @@
+[library smart_ptr
+    [quickbook 1.4]
+    [copyright 1999 Greg Colvin and Beman Dawes, 2002 Darin Adler, 2002 Peter Dimov]
+    [purpose Five smart pointer class templates, from Greg Colvin, Beman Dawes, Peter Dimov, and Darin Adler.]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [authors [Colvin, Greg], [Dawes, Beman], [Dimov, Peter], [Adler, Darin]]
+    [category memory]
+    [/last-revision $Date: 2007/06/20 16:39:52 +0100 $]
+]
+
+[section Introduction]
+
+[endsect]
