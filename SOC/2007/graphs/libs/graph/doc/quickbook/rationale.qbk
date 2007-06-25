@@ -1,4 +1,4 @@
- [/
+[/
  / Copyright (c) 2007 Andrew Sutton
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -107,5 +107,11 @@ thereof.
 The correct answer, I think, is that it should remove all such edges. If a programmer
 needs finer-grained control he or she can easily use the remove_edge(e, g) function
 where /e/ is an edge descriptor.
+
+[h3 Property-based Add Functions]
+The `\[un\]directed_graph` classes no longer provide `add` functionst that take
+a property as an argument. These tend not to work so well with bundled properties -
+especially when we're introducing a hidden property in the undirected_graph
+class. It makes type determination really difficult.
 
 [endsect]

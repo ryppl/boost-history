@@ -5,12 +5,10 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section User's Guide]
+[section Reference Guide]
 
-[include guide_undirected.qbk]
-
-[include guide_directed.qbk]
-
-[include guide_adjacency_list.qbk]
+[include ref_undirected_graph.qbk]
+[include ref_directed_graph.qbk]
+[include ref_adjacency_list.qbk]
 
 [endsect]

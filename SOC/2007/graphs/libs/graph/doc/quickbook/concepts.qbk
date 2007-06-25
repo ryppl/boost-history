@@ -5,12 +5,11 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section User's Guide]
+[section Concepts]
+This section provides a detailed listing of the type concepts in the Boost.Graph
+library.
 
-[include guide_undirected.qbk]
-
-[include guide_directed.qbk]
-
-[include guide_adjacency_list.qbk]
+[include con_graphs.qbk]
+[include con_visitors.qbk]
 
 [endsect]

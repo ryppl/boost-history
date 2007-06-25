@@ -5,7 +5,7 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section The `adjacency_list` Class]
+[section The Adjacency List]
 As mentioned in the Tour, the `adjacency_list` has seven template parameters. Three are
 used to select storage types for the vertex list, the edge list and the out edge list,
 and the remaining three define the interior properties of vertices, edges, and the

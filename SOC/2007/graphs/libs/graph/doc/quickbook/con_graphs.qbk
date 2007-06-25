@@ -1,0 +1,35 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Graph Concepts]
+The heart of the Boost Graph Library (BGL) is the interface, or concepts (in the
+parlance of generic programming), that define how a graph can be examined and
+manipulated in a data-structure neutral fashion. In fact, the BGL interface need
+not even be implemented using a data-structure, as for some problems it is easier
+or more efficient to define a graph implicitly based on some functions.
+
+The Boost.Graph interface does not appear as a single graph concept. Instead it is
+factored into much smaller peices. The reason for this is that the purpose of a
+concept is to summarize the requirements for particular algorithms. Any one algorithm
+does not need every kind of graph operation, typically only a small subset. Furthermore,
+there are many graph data-structures that can not provide efficient implementations of
+all the operations, but provide highly efficient implementations of the operations
+necessary for a particular algorithm . By factoring the graph interface into many smaller
+concepts we provide the graph algorithm writer with a good selection from which to choose
+the concept that is the closest match for their algorithm.
+
+Figure 1 shows the refinements relations between the graph concepts. The reason for factoring the graph interface into so many concepts is to encourage algorithm interfaces to require and use only the minimum interface of a graph, thereby increasing the reusability of the algorithm.
+
+Figure 1: The graph concepts and refinement relationships.
+
+Table 1 gives a summary of the valid expressions and associated types for the graph concepts and provides links to the detailed descriptions of each of the concepts. The notation used in the table is as follows.
+
+[h3 Undirected Graphs]
+
+Lots of stuff here on undirected graphs...
+
+[endsect]
