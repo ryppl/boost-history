@@ -27,8 +27,6 @@ typedef directed_graph<Target> Graph;
 typedef Graph::vertex_descriptor Vertex;
 typedef Graph::edge_descriptor Edge;
 
-typedef property_map<Graph, string Target::*>::type TargetNameMap;
-
 typedef map<string, Vertex> TargetMap;
 
 struct CycleDetector : public dfs_visitor<>

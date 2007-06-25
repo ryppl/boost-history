@@ -40,18 +40,16 @@ main(int argc, char *argv[])
     // run a breadth-first search on the graph and record
     // the kevin bacon numbers for each actor
     breadth_first_search(
-	g, kevin,
-	visitor(
-	    make_bfs_visitor(
-		record_distances(dists, on_tree_edge())
-		)
-	    )
-	);
+        g, kevin,
+        visitor(
+            make_bfs_visitor(record_distances(dists, on_tree_edge()))
+            )
+    );
 
     // just run over the vertices and print the back numbers
     Graph::vertex_iterator i, j;
     for(tie(i, j) = vertices(g); i != j; ++i) {
-	cout << g[*i].distance << " : " << g[*i].name << "\n";
+    cout << g[*i].distance << " : " << g[*i].name << "\n";
     }
 
     return 0;
