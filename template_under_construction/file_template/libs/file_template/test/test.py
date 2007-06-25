@@ -20,8 +20,8 @@ def compare(a, b):
         test_results += '...comparing ' + a + ' and ' + b + '...\n'
     for item in dircmp.diff_files:
         test_results += 'Differing file ' + item + '\n'
-        linesa = open(os.path.join(a, item), "rb").readlines()
-        linesb = open(os.path.join(b, item), "rb").readlines()
+        linesa = open(os.path.join(a, item), "rbU").readlines()
+        linesb = open(os.path.join(b, item), "rbU").readlines()
 
         id = re.compile(' [a-fA-F0-9]{24} ')
         if item == 'project.pbxproj':
