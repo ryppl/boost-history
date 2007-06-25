@@ -1,17 +1,611 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
-  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<library name="SVG_Plot" dirname="visualization" xmlns:xi="http://www.w3.org/2001/XInclude"
-  id="any" last-revision="$Date: 2007/06/04 23:00:00 $">
-  <libraryinfo>
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<article id="svg_plot" name="SVG_Plot" dirname="svg_plot" last-revision="$Date: 2007/06/25 23:44:03 $"
+ xmlns:xi="http://www.w3.org/2001/XInclude">
+  <articleinfo>
     <author>
-      <firstname>Jake</firstname>
-      <surname>Voytko</surname>
+      <firstname>Jake</firstname> <surname>Voytko</surname>
     </author>
-    <librarypurpose>
-      Visualize STL data in the SVG format
-    </librarypurpose> 
-    <librarycategory name="category:data-structures"/>
-  </libraryinfo>
-</library>
+    <copyright>
+      <year>2007</year> <holder>Jake Voytko</holder>
+    </copyright>
+    <legalnotice>
+      <para>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <ulink url="http://www.boost.org/LICENSE_1_0.txt">http://www.boost.org/LICENSE_1_0.txt</ulink>)
+      </para>
+    </legalnotice>
+    <articlepurpose>
+      Plot STL containers onto graphs in SVG format
+    </articlepurpose>
+  </articleinfo>
+  <title>SVG_Plot</title>
+  <section id="svg_plot.intro">
+    <title> Introduction</title>
+    <para>
+      This project is focused on using STL containers in order to graph data on a
+      one-dimensional and two-dimensional (and if time allows, 3D!) plot. The plot
+      would be written in an svg image, compliant with the W3C standard. The goals
+      of the project are as follows:
+    </para>
+    <itemizedlist>
+      <listitem>
+        To provide an easy syntax for graphing data
+      </listitem>
+      <listitem>
+        To let users produce a simple plot with minimal intervention by using sane
+        defaults
+      </listitem>
+      <listitem>
+        To demonstrate how to incorporate SVG images into Boost documentation
+      </listitem>
+      <listitem>
+        To allow users to easily customize graphs to their heart's content
+      </listitem>
+      <listitem>
+        To allow the user to talk with the svg_graph class using coordinate units
+        instead of pixels or other arbitrary measures
+      </listitem>
+      <listitem>
+        To create the backbone of a svg class that will be extended to fully support
+        storing the standard
+      </listitem>
+    </itemizedlist>
+    <para>
+      I have only a student's grasp of C++, so if you have a suggestion to help me
+      with design or implementation, either leave them here or email me at jakevoytko
+      (at) gmail (dot) com
+    </para>
+    <para>
+      This page will hold examples of what I have implemented thus far, and what
+      my program will be capable of in the future. More complete documentation will
+      be live in a few days on my personal website.
+    </para>
+  </section>
+  <section id="svg_plot.color">
+    <title> Colors</title>
+    <section id="svg_plot.color.color_intro">
+      <title> Introduction</title>
+      <para>
+        svg_plot supports any color definable by the RGB interface, as well as a
+        number of constants that are named by the SVG standard.
+      </para>
+      <para>
+        <ulink url="http://www.w3.org/TR/SVG/types.html#ColorKeywords">Here</ulink>
+        is a link to the SVG color constants that my program supports
+      </para>
+    </section>
+    <section id="svg_plot.color.color_internals">
+      <title> Internals and Rationale</title>
+      <para>
+        All color information is stored in RGB format in a svg_struct. The rationale
+        for storing information in RGB format is because it is precise and is always
+        representable the exact same way. Storing as a floating point percentage
+        introduces the possibility of rounding error, which I would like to avoid
+        at all costs, so that the same image file displays the same way on any system
+        that correctly implements the SVG format.
+      </para>
+      <para>
+        Constants are defined in an enum, svg_color_constant, in alphabetical order.
+        This facilitates quick lookup of their RGB values quickly in an array.
+      </para>
+    </section>
+    <section id="svg_plot.color.color_usage">
+      <title> Usage</title>
+      <para>
+        To use an example, set_line_color(), here are the two different ways we could
+        set the line color, one using RGB values, and the other using the constant.
+      </para>
+      <para>
+        
+<programlisting>
+<phrase role="comment">// Using a new RGB value
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_line_color</phrase><phrase role="special">(</phrase><phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="number">139</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">69</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">19</phrase><phrase role="special">));</phrase>
 
+<phrase role="comment">// Using an existing RGB value
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_line_color</phrase><phrase role="special">(</phrase><phrase role="identifier">my_color</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">// Using a color constant
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_line_color</phrase><phrase role="special">(</phrase><phrase role="identifier">saddlebrown</phrase><phrase role="special">);</phrase>
+</programlisting>
+      </para>
+    </section>
+  </section>
+  <section id="svg_plot.svg_public_interface">
+    <title>SVG Public Interface</title>
+    <informaltable frame="all">
+      <bridgehead renderas="sect4">
+        <phrase role="table-title">class svg</phrase>
+      </bridgehead>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Signature</entry><entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">()</phrase></code></entry><entry>Constructor</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">image_size</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            the size of the image produced, in pixels</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">write</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase
+            role="special">::</phrase><phrase role="identifier">string</phrase><phrase
+            role="special">&amp;)</phrase></code></entry><entry>Writes the document
+            to the file represented by the argument</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">write</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">ostream</phrase><phrase role="special">&amp;)</phrase></code></entry><entry>Writes
+            the document to the stream represented by the argument</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">point</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
+            a point at (x,y) in the root level of the document</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">point</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+            role="identifier">g_element</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">elem</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
+            a point at (x, y) at g_element <code><phrase role="identifier">elem</phrase></code></entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">line</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x1</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x2</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y2</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
+            a line from (x1,y1) to (x2,y2) in the root level of the document</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">line</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x1</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x2</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y2</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+            role="identifier">g_element</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">elem</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
+            a point at (x, y) at g_element <code><phrase role="identifier">elem</phrase></code></entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">text</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+            role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">string</phrase>&nbsp;<phrase role="identifier">text</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Adds text <code><phrase
+            role="identifier">text</phrase></code> at (x,y) in the root level of
+            the document</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">rect</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x1</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">width</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">height</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
+            a rectangle at point (x1, y1) that has width <code><phrase role="identifier">width</phrase></code>
+            and height <code><phrase role="identifier">height</phrase></code></entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">rect</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x1</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x2</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">y2</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+            role="identifier">g_element</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">elem</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
+            a point at (x, y) at g_element <code><phrase role="identifier">elem</phrase></code></entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+  </section>
+  <section id="svg_plot.svg_graph_public_interface">
+    <title>svg_graph Public Interface</title>
+    <informaltable frame="all">
+      <bridgehead renderas="sect4">
+        <phrase role="table-title">Misc</phrase>
+      </bridgehead>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Signature</entry><entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry>
+<programlisting>
+<phrase role="keyword">void</phrase>&nbsp;<phrase role="identifier">plot_range</phrase><phrase role="special">(</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">&gt;::</phrase><phrase role="identifier">const_iterator</phrase>&nbsp;<phrase role="identifier">begin</phrase><phrase role="special">,</phrase>
+                <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">&gt;::</phrase><phrase role="identifier">const_iterator</phrase>&nbsp;<phrase role="identifier">end</phrase><phrase role="special">,</phrase>
+                <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">string</phrase>&nbsp;<phrase role="identifier">text</phrase><phrase role="special">)</phrase>
+</programlisting>
+            </entry><entry>Plots a vector&lt;double&gt; from begin() to end(). It
+            adds the text <code><phrase role="identifier">text</phrase></code> to
+            the legend. If you are looking for the generic version, you can find
+            it below.</entry>
+          </row>
+          <row>
+            <entry>
+<programlisting>
+<phrase role="keyword">void</phrase>&nbsp;<phrase role="identifier">plot_range</phrase><phrase role="special">(</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">&gt;::</phrase><phrase role="identifier">const_iterator</phrase>&nbsp;<phrase role="identifier">begin</phrase><phrase role="special">,</phrase>
+                <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">&gt;::</phrase><phrase role="identifier">const_iterator</phrase>&nbsp;<phrase role="identifier">end</phrase><phrase role="special">,</phrase>
+                <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">string</phrase>&nbsp;<phrase role="identifier">text</phrase><phrase role="special">,</phrase>
+                <phrase role="identifier">svg_color_constant</phrase>&nbsp;<phrase role="identifier">col</phrase><phrase role="special">)</phrase>
+</programlisting>
+            </entry><entry>Plots a vector&lt;double&gt; from begin() to end(). It
+            adds the text <code><phrase role="identifier">text</phrase></code> to
+            the legend. The point color for this series is going to be <code><phrase
+            role="identifier">col</phrase></code>. If you are looking for the generic
+            version, you can find it below.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase
+            role="special">::</phrase><phrase role="identifier">string</phrase><phrase
+            role="special">&amp;)</phrase></code></entry><entry>Constructor. The
+            string represents a filename</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_image_size</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            the size of the image produced, in pixels</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_title</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">string</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            the string to be used for the title</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_title_font_size</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the font size for
+            the title</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_legend_title_font_size</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the font size for
+            the legend title</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <informaltable frame="all">
+      <bridgehead renderas="sect4">
+        <phrase role="table-title">Commands</phrase>
+      </bridgehead>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Signature</entry><entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_axis</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            whether the axis is on or off</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_legend</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            whether the legend is on or off</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_plot_window</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            whether the plot will be displayed in its own window, or will be &quot;full
+            screen&quot; in the image</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_label</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            whether or not the x axis label will show</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_major_labels</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>sets
+            whether or not the major ticks will be labelled on the x axis</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <informaltable frame="all">
+      <bridgehead renderas="sect4">
+        <phrase role="table-title">Color Information</phrase>
+      </bridgehead>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Signature</entry><entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_title_color</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">svg_color_constant</phrase>&nbsp;<phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Set the title color</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_title_color</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
+            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Set the title color</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_background_color</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">svg_color_constant</phrase>&nbsp;<phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Set the background color
+            for the whole image</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_background_color</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
+            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Set the background color
+            for the whole image</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_legend_background_color</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">svg_color_constant</phrase>&nbsp;<phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Set the background color
+            for the legend as <code><phrase role="identifier">col</phrase></code>,
+            a SVG Color Constant</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_legend_background_color</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
+            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Set the background color
+            for the legend as <code><phrase role="identifier">col</phrase></code>,
+            an RGB color</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_plot_background_color</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">svg_color_constant</phrase>&nbsp;<phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Set the color of the plot
+            area. Note: this only goes into effect if set_plot_area(true) has been
+            called</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_plot_background_color</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
+            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Set the color of the plot
+            area. Note: this only goes into effect if set_plot_area(true) has been
+            called</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_axis_color</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">svg_color_constant</phrase>&nbsp;<phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the color of the
+            lines that form the axis</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_axis_color</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
+            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the color of the
+            lines that form the axis</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_major_tick_color</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">svg_color_constant</phrase>&nbsp;<phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the color of the
+            major ticks of the x-axis</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_major_tick_color</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
+            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the color of the
+            major ticks of the x-axis</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_minor_tick_color</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">svg_color_constant</phrase>&nbsp;<phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the color of the
+            minor ticks of the x-axis</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_minor_tick_color</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
+            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the color of the
+            minor ticks of the x-axis</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+    <informaltable frame="all">
+      <bridgehead renderas="sect4">
+        <phrase role="table-title">Axis Information</phrase>
+      </bridgehead>
+      <tgroup cols="2">
+        <thead>
+          <row>
+            <entry>Signature</entry><entry>Description</entry>
+          </row>
+        </thead>
+        <tbody>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_scale</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x1</phrase><phrase
+            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
+            role="identifier">x2</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            the scale of the x axis from x1 to x2. Throws an exception if x2&lt;=x1
+            </entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_axis_width</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the stroke width
+            of the x-axis</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_major_tick</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">double</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            the distance (in Cartesian units) between ticks on the x-axis</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_major_tick_length</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            the length (in pixels) of the x-axis major ticks</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_minor_tick</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the length (in pixels)
+            of the x-axis minor ticks</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_num_minor_ticks</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            the number of minor ticks between each major tick</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_label_text</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">string</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+            the label of the x-axis. This does not guarantee that it will be shown.
+            You must run <code><phrase role="identifier">set_x_label</phrase><phrase
+            role="special">(</phrase><phrase role="keyword">true</phrase><phrase
+            role="special">)</phrase></code> for that guarantee</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_major_tick_width</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the width (in pixels)
+            of the major ticks on the x-axis</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">set_x_minor_tick_width</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+            role="special">)</phrase></code></entry><entry>Sets the width (in pixels)
+            of the minor ticks on the x-axis</entry>
+          </row>
+        </tbody>
+      </tgroup>
+    </informaltable>
+  </section>
+  <section id="svg_plot.advanced">
+    <title> Advanced</title> <anchor id="svg_plot.advanced.chaining" />
+    <bridgehead renderas="sect3">
+      Chaining
+    </bridgehead>
+    <para>
+      If you would like to make the syntax more concise, the interface supports 'chaining'.
+      That is, the following code:
+    </para>
+    <para>
+      
+<programlisting>
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_legend_background_color</phrase><phrase role="special">(</phrase>&nbsp;<phrase role="identifier">whitesmoke</phrase>&nbsp;<phrase role="special">);</phrase>
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_legend_title_color</phrase><phrase role="special">(</phrase>&nbsp;<phrase role="identifier">red</phrase>&nbsp;<phrase role="special">);</phrase>
+</programlisting>
+    </para>
+    <para>
+      can be written as:
+    </para>
+    <para>
+      
+<programlisting>
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_legend_background_color</phrase><phrase role="special">(</phrase>&nbsp;<phrase role="identifier">whitesmoke</phrase>&nbsp;<phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_legend_title_color</phrase><phrase role="special">(</phrase>&nbsp;<phrase role="identifier">red</phrase>&nbsp;<phrase role="special">);</phrase>
+</programlisting>
+    </para>
+    <para>
+      This is done to allow the user more flexibility in how they group options.
+    </para>
+    <para>
+      This works because the header for each method is as follows:
+    </para>
+    <para>
+      
+<programlisting>
+<phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase role="identifier">svg_plot</phrase><phrase role="special">::</phrase><phrase role="identifier">set_option</phrase><phrase role="special">(</phrase><phrase role="identifier">parameter</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">parameter</phrase><phrase role="special">);</phrase>
+</programlisting>
+    </para>
+    <para>
+      This is identical to the syntax behind chaining <code><phrase role="keyword">operator</phrase><phrase
+      role="special">=()]</phrase></code> and <code><phrase role="keyword">operator</phrase><phrase
+      role="special">&lt;&lt;()</phrase></code>.
+    </para>
+    <para>
+      
+<programlisting>
+<phrase role="keyword">int</phrase>&nbsp;<phrase role="identifier">a</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">b</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">c</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">d</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="number">0</phrase><phrase role="special">;</phrase>
+<phrase role="identifier">cout</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="string">&quot;Value a: &quot;</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="identifier">a</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+</programlisting>
+    </para>
+  </section>
+</article>

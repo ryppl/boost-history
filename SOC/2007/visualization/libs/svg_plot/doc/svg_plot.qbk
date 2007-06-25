@@ -1,6 +1,5 @@
 [article SVG_Plot
     [quickbook 1.4]
-    [version .1]
     [authors [Voytko, Jake]]
     [copyright 2007 Jake Voytko]
     [purpose Plot STL containers onto graphs in SVG format]
@@ -26,22 +25,12 @@ I have only a student's grasp of C++, so if you have a suggestion to help me wit
 This page will hold examples of what I have implemented thus far, and what my program will be capable of in the future. More complete documentation will be live in a few days on my personal website. 
 [endsect]
 
-[section:svg_plot_interface SVG_Plot Interface]
-[section:svg_plot_intro Introduction]
-
-The [^svg_plot] class is where I have been spending most of my time recently
-making improvements. The internals are a lot more polished than that of its
-[^svg] ancestor.
-
-[endsect]
-[endsect]
-
 [section:color Colors]
 [section:color_intro Introduction]
 
 svg_plot supports any color definable by the RGB interface, as well as a number of constants that are named by the SVG standard.
 
-[link http://www.w3.org/TR/SVG/types.html#ColorKeywords Here] is a link to the SVG color constants that my program supports
+[@http://www.w3.org/TR/SVG/types.html#ColorKeywords Here] is a link to the SVG color constants that my program supports
 
 [endsect]
 
@@ -66,29 +55,127 @@ set the line color, one using RGB values, and the other using the constant.
 
 ``
 // Using a new RGB value
-my_plot << set_line_color(svg_color(139, 69, 19));
+my_plot.set_line_color(svg_color(139, 69, 19));
 
 // Using an existing RGB value
-my_plot << set_line_color(my_color);
+my_plot.set_line_color(my_color);
 
 // Using a color constant
-my_plot << set_line_color(saddlebrown);
+my_plot.set_line_color(saddlebrown);
 ``
 
 [endsect]
 [endsect]
 
-[section:doc_structure SVG Document Structure]
-
-In order to more logically manipulate data, the svg document that is produced 
-is now structured in a tree format, with named constants to specific areas 
-that will allow the internals to easily manipulate the document as needed.
-
-[h3 Labelled image (conceptualization)]
-[~To do: insert image]
-
-[h3 Document tree]
-[~To do: insert image]
-
+[section SVG Public Interface]
+[table class svg
+  [[Signature] [Description]]
+  [[`svg()`] [Constructor]]
+  [[`svg& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels]]
+  [[`svg& write(const std::string&)`] [Writes the document to the file represented by the argument]]
+  [[`svg& write(std::ostream&)`] [Writes the document to the stream represented by the argument]]
+  [[`svg& point(double x, double y)`] [Adds a point at (x,y) in the root level of the document]]
+  [[`svg& point(double x, double y, g_element& elem)`] [Adds a point at (x, y) at g_element `elem`]]
+  [[`svg& line(double x1, double y1, double x2, double y2)`] [Adds a line from (x1,y1) to (x2,y2) in the root level of the document]]
+  [[`svg& line(double x1, double y1, double x2, double y2, g_element& elem)`] [Adds a point at (x, y) at g_element `elem`]]
+  [[`svg& text(double x, double y, std::string text)`] [Adds text `text` at (x,y) in the root level of the document]]
+  [[`svg& rect(double x1, double y1, double width, double height)`] [Adds a rectangle at point (x1, y1) that has width `width` and height `height`]]
+  [[`svg& rect(double x1, double y1, double x2, double y2, g_element& elem)`] [Adds a point at (x, y) at g_element `elem`]]]
 [endsect]
 
+[section svg_graph Public Interface]
+[table Misc
+  [[Signature] [Description]]
+[[``
+void plot_range(std::vector<double>::const_iterator begin,
+                std::vector<double>::const_iterator end,
+                std::string text)
+``] [Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. If you are looking for the generic version, you can find it below.]]
+  [[``
+void plot_range(std::vector<double>::const_iterator begin,
+                std::vector<double>::const_iterator end,
+                std::string text,
+                svg_color_constant col)
+``] [Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. The point color for this series is going to be `col`. If you are looking for the generic version, you can find it below.]]
+  [[`svg_plot(const std::string&)`] [Constructor. The string represents a filename]]
+  [[`svg_plot& set_image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels]]
+  [[`svg_plot& set_title(std::string)`] [Sets the string to be used for the title]]
+  [[`svg_plot& set_title_font_size(unsigned int)`] [Sets the font size for the title]]
+  [[`svg_plot& set_legend_title_font_size(unsigned int)`] [Sets the font size for the legend title]]]
+
+[table Commands
+  [[Signature] [Description]]
+  [[`svg_plot& set_axis(bool)`] [Sets whether the axis is on or off]]
+  [[`svg_plot& set_legend(bool)`] [Sets whether the legend is on or off]]
+  [[`svg_plot& set_plot_window(bool)`] [Sets whether the plot will be displayed in its own window, or will be "full screen" in the image]]
+  [[`svg_plot& set_x_label(bool)`] [Sets whether or not the x axis label will show]]
+  [[`svg_plot& set_x_major_labels(bool)`] [sets whether or not the major ticks will be labelled on the x axis]]]
+
+[table Color Information
+  [[Signature] [Description]]
+  [[`svg_plot& set_title_color(svg_color_constant col)`] [Set the title color]]
+  [[`svg_plot& set_title_color(const svg_color &col)`] [Set the title color]]
+  [[`svg_plot& set_background_color(svg_color_constant col)`] [Set the background color for the whole image]]
+  [[`svg_plot& set_background_color(const svg_color &col)`] [Set the background color for the whole image]]
+  [[`svg_plot& set_legend_background_color(svg_color_constant col)`] [Set the background color for the legend as `col`, a SVG Color Constant]]
+  [[`svg_plot& set_legend_background_color(const svg_color &col)`] [Set the background color for the legend as `col`, an RGB color]]
+  [[`svg_plot& set_plot_background_color(svg_color_constant col)`] [Set the color of the plot area. Note: this only goes into effect if set_plot_area(true) has been called]]
+  [[`svg_plot& set_plot_background_color(const svg_color &col)`] [Set the color of the plot area. Note: this only goes into effect if set_plot_area(true) has been called]]
+  [[`svg_plot& set_x_axis_color(svg_color_constant col)`] [Sets the color of the lines that form the axis]]
+  [[`svg_plot& set_x_axis_color(const svg_color &col)`] [Sets the color of the lines that form the axis]]
+  [[`svg_plot& set_x_major_tick_color(svg_color_constant col)`] [Sets the color of the major ticks of the x-axis]]
+  [[`svg_plot& set_x_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the x-axis]]
+  [[`svg_plot& set_x_minor_tick_color(svg_color_constant col)`] [Sets the color of the minor ticks of the x-axis]]
+  [[`svg_plot& set_x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the x-axis]]
+  ]
+
+[table Axis Information
+  [[Signature] [Description]]
+  [[`svg_plot& set_x_scale(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2<=x1 ] ]
+  [[`svg_plot& set_x_axis_width(unsigned int)`] [Sets the stroke width of the x-axis] ]
+  [[`svg_plot& set_x_major_tick(double)`] [Sets the distance (in Cartesian units) between ticks on the x-axis] ]
+  [[`svg_plot& set_x_major_tick_length(int)`] [Sets the length (in pixels) of the x-axis major ticks] ]
+  [[`svg_plot& set_x_minor_tick(unsigned int)`] [Sets the length (in pixels) of the x-axis minor ticks] ]
+  [[`svg_plot& set_x_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick] ]
+  [[`svg_plot& set_x_label_text(std::string)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must run `set_x_label(true)` for that guarantee] ]
+  [[`svg_plot& set_x_major_tick_width(unsigned int)`] [Sets the width (in pixels) of the major ticks on the x-axis] ]
+  [[`svg_plot& set_x_minor_tick_width(unsigned int)`] [Sets the width (in pixels) of the minor ticks on the x-axis] ]
+]
+[endsect]
+
+
+[section:advanced Advanced]
+[h3 Chaining]
+
+If you would like to make the syntax more concise, the interface supports 
+'chaining'. That is, the following code:
+
+``
+my_plot.set_legend_background_color( whitesmoke );
+my_plot.set_legend_title_color( red );
+``
+
+can be written as:
+
+``
+my_plot.set_legend_background_color( whitesmoke )
+       .set_legend_title_color( red );
+``
+
+This is done to allow the user more flexibility in how they group options.
+
+This works because the header for each method is as follows:
+
+``
+svg_plot& svg_plot::set_option(parameter, parameter);
+``
+
+This is identical to the syntax behind chaining `operator=()]` and 
+`operator<<()`.
+
+``
+	int a = b = c = d = 0;
+	cout << "Value a: " << a << endl;
+``
+
+[endsect]
