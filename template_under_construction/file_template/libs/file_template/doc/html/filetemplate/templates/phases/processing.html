@@ -1,0 +1,89 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Producing
+        the resulting file tree</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../../index.html" title="Chapter 1. FileTemplate 0.94">
+<link rel="up" href="../phases.html" title=" Processing phases">
+<link rel="prev" href="examination.html" title=" Examination
+        of the template tree">
+<link rel="next" href="../merges.html" title=" Template merges">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="examination.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../phases.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../merges.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="filetemplate.templates.phases.processing"></a><a href="processing.html" title=" Producing
+        the resulting file tree"> Producing
+        the resulting file tree</a></h4></div></div></div>
+<p>
+          Finally, the template processor will produce the resulting file tree from
+          the template. Different kinds of files will be processed as follows:
+        </p>
+<a name="filetemplate.templates.phases.processing.verbatim_file_copies"></a><h4>
+<a name="id905479"></a>
+          <a href="processing.html#filetemplate.templates.phases.processing.verbatim_file_copies">Verbatim
+          file copies</a>
+        </h4>
+<p>
+          A file for which no specific substitution templates are specified will
+          be copied verbatim.
+        </p>
+<a name="filetemplate.templates.phases.processing.processed_file_content"></a><h4>
+<a name="id905508"></a>
+          <a href="processing.html#filetemplate.templates.phases.processing.processed_file_content">Processed
+          file content</a>
+        </h4>
+<p>
+          A file for which at least one specific <a href="../reference/substitutions.html" title=" Substitution
+        templates and special templates">substitution
+          template</a> is specified will be processed for both global <a href="../reference/substitutions.html" title=" Substitution
+        templates and special templates">substitution
+          templates</a> and specific <a href="../reference/substitutions.html" title=" Substitution
+        templates and special templates">substitution
+          templates</a>.
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="filetemplate.templates.phases.processing.python_file"></a><a href="processing.html#filetemplate.templates.phases.processing.python_file" title="
+          Python generated files">
+          Python generated files</a></h5></div></div></div>
+<p>
+            A file of the name <span class="emphasis"><em>filename</em></span><code class="literal">.py</code>
+            can be used to generate the file <span class="emphasis"><em>filename</em></span>. To do
+            so, it must begin with
+          </p>
+<pre class="programlisting">
+<span class="comment"># template file
+</span></pre>
+<p>
+            When the script generates the content, it supplies it to the template
+            processor via the <code class="computeroutput"><span class="identifier">template</span><span class="special">.</span><span class="identifier">submit_content</span><span class="special">(</span><span class="identifier">content</span><span class="special">)</span></code> or <code class="computeroutput"><span class="identifier">template</span><span class="special">.</span><span class="identifier">append_content</span><span class="special">(</span><span class="identifier">content</span><span class="special">)</span></code> commands (see the <a href="../reference/template.html" title=" Template
+        object">template
+            object</a> reference).
+          </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Stjepan Rajko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="examination.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../phases.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../merges.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

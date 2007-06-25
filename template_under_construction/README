@@ -5,7 +5,7 @@
 
 To make a new sandbox project from the template, try running:
 
-python make_template.py sandbox
+python file_template.py sandbox
 
 in this directory.
 

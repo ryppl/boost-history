@@ -53,6 +53,7 @@
 		08B512580C2CDC9C00E85405 /* simple_template.py */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.python; path = simple_template.py; sourceTree = "<group>"; };
 		08B5125A0C2CDC9C00E85405 /* file.xyz */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = file.xyz; sourceTree = "<group>"; };
 		08DE94EA0C2C87B700E3D69A /* xcode_elements.py */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.python; name = xcode_elements.py; path = $template_library$.xcodeproj/xcode_elements.py; sourceTree = "<group>"; };
+		08EFC18E0C30654000C730EC /* README */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = README; path = ../../../../../README; sourceTree = SOURCE_ROOT; };
 		08F005DD0C2B888F00093576 /* $template_library$.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = $template_library$.hpp; sourceTree = "<group>"; };
 		08F005DE0C2B888F00093576 /* $template_library$.hpp */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.h; path = $template_library$.hpp; sourceTree = "<group>"; };
 		08F005DF0C2B888F00093576 /* boost-build.jam */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.jam; path = "boost-build.jam"; sourceTree = "<group>"; };
@@ -114,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				08F062730C283EA9005301DA /* file_template.py */,
+				08EFC18E0C30654000C730EC /* README */,
 				0818EB840C26438D00DB816F /* test */,
 				0839351C0C23D9C700716EE7 /* doc */,
 				08F005D90C2B888F00093576 /* sandbox */,

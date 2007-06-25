@@ -1,0 +1,70 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Version History and Proposed
+      Changes</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. FileTemplate 0.94">
+<link rel="up" href="../sandbox.html" title=" Boost sandbox template">
+<link rel="prev" href="reference/documentation.html" title=" Documentation
+        formats">
+<link rel="next" href="../templates.html" title=" FileTemplate templates">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="reference/documentation.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../sandbox.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../templates.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="filetemplate.sandbox.changes"></a><a href="changes.html" title=" Version History and Proposed
+      Changes"> Version History and Proposed
+      Changes</a></h3></div></div></div>
+<a name="filetemplate.sandbox.changes.version_history"></a><h4>
+<a name="id904831"></a>
+        <a href="changes.html#filetemplate.sandbox.changes.version_history">Version History</a>
+      </h4>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          started supporting Xcode IDE generation
+        </li>
+<li>
+          the author option and template substitutions changed to authors to match
+          the quickbook syntax
+        </li>
+<li>
+          changed $template_cpp_copyright$ and $template_py_copyright$ to just $template_copyright$.
+        </li>
+</ul></div>
+<a name="filetemplate.sandbox.changes.proposed_changes"></a><h4>
+<a name="id904870"></a>
+        <a href="changes.html#filetemplate.sandbox.changes.proposed_changes">Proposed Changes</a>
+      </h4>
+<div class="itemizedlist"><ul type="disc"><li>
+          In the MSVC projects, the Rebuild action is mapped to a <code class="literal">bjam -a</code>
+          invocation. This causes all projects required to be rebuilt, and might
+          not be the most common use case (i.e., if you want to rebuild the documentation,
+          you most likely don't want to rebuild quickbook). It might be better to
+          perform a clean followed by a build. However, this has the downside of
+          not being to be able to access <code class="literal">bjam -a</code> from the IDE.
+        </li></ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Stjepan Rajko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="reference/documentation.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../sandbox.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../templates.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

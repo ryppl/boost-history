@@ -1,6 +1,6 @@
 [library FileTemplate
     [quickbook 1.4]
-    [version 0.93]
+    [version 0.94]
     [authors [Rajko, Stjepan]]
     [copyright 2007 Stjepan Rajko]
     [purpose generates file and directory trees from templates]

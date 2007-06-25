@@ -1,0 +1,302 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Use Cases</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="Chapter 1. FileTemplate 0.94">
+<link rel="up" href="../sandbox.html" title=" Boost sandbox template">
+<link rel="prev" href="tools.html" title=" Configuring the tools and
+      checking out the Boost sandbox">
+<link rel="next" href="outside_docs.html" title=" Links to helpful
+      outside documentation">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tools.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../sandbox.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="outside_docs.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="filetemplate.sandbox.use"></a><a href="use.html" title=" Use Cases"> Use Cases</a></h3></div></div></div>
+<p>
+        The following examples illustrate a few tasks you can achieve using the sandbox
+        template by executing the <code class="computeroutput"><span class="identifier">file_template</span><span class="special">.</span><span class="identifier">py</span></code> script
+        from the <code class="computeroutput"><span class="identifier">template</span><span class="special">-</span><span class="identifier">under</span><span class="special">-</span><span class="identifier">construction</span></code> directory of the <a href="tools.html" title=" Configuring the tools and
+      checking out the Boost sandbox">Boost
+        Sandbox</a>.
+      </p>
+<p>
+        <span class="bold"><strong>To start a new sandbox project (the script will ask
+        you for any required information):</strong></span>
+      </p>
+<pre class="programlisting">
+<span class="identifier">python</span> <span class="identifier">file_template</span><span class="special">.</span><span class="identifier">py</span> <span class="identifier">sandbox</span>
+</pre>
+<p>
+        <code class="literal">sandbox</code> specifies the root directory of the template.
+      </p>
+<p>
+        <span class="bold"><strong>To start a new sandbox project and provide the required
+        information in the <a href="../templates/phases/invocation.html#filetemplate.templates.phases.invocation.command_line" title="
+          Command line">command
+        line</a>:</strong></span>
+      </p>
+<pre class="programlisting">python file_template.py sandbox library=my_library "authors=John J. Doe"
+</pre>
+<p>
+        <code class="literal">library</code> and <code class="literal">authors</code> are <a href="reference/options.html" title=" Options">sandbox
+        options</a>.
+      </p>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td colspan="2" align="left" valign="top">
+<p>
+          </p>
+<p>
+            To include an author with multiple last names, use the <code class="literal">_</code>
+            character instead of spaces (e.g., "authors=Jan De_Man")
+          </p>
+<p>
+        </p>
+</td></tr>
+</table></div>
+<p>
+        <span class="bold"><strong>To place the result in a particular destination directory:</strong></span>
+      </p>
+<pre class="programlisting">python file_template.py destination=/boost_sandbox sandbox
+</pre>
+<p>
+        <code class="literal">destination</code> is a <a href="../templates/reference/options.html" title=" Options">global
+        option</a>, and specifies where the result is constructed.
+      </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../doc/html/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td colspan="2" align="left" valign="top">
+<p>
+          </p>
+<p>
+            The following use cases are works in progress, and will produce half-baked
+            results. In, particular, generated Xcode IDE projects should contain
+            the correct Targets to invoke bjam on docs, tests, and examples, but
+            they will not reference any of the source files in the project. Also,
+            any existing code integrated into the template (last listed use case)
+            will be intelligently recognized by only some parts of the <a href="../sandbox.html" title=" Boost sandbox template">sandbox
+            template</a>.
+          </p>
+<p>
+        </p>
+</td></tr>
+</table></div>
+<p>
+        <span class="bold"><strong>To start a new sandbox project with the optional Xcode
+        and MSVC IDE projects and a non-default documentation format:</strong></span>
+      </p>
+<pre class="programlisting">python file_template.py sandbox library=file_template "authors=Stjepan Rajko" docs=qb xcodeide=y vc8ide=y
+</pre>
+<p>
+        <code class="literal">docs</code>, <code class="literal">xcodeide</code> and <code class="literal">vc8ide</code>
+        are <a href="reference/options.html" title=" Options">sandbox options</a>.
+      </p>
+<p>
+        <span class="bold"><strong>To integrate existing code into a new sandbox project:</strong></span>
+      </p>
+<pre class="programlisting">python file_template.py sandbox library=my_library "authors=John Doe,Jane Dough" fignore=.hpp fignore=.cpp
+    (...)          /path/to/existing/my_library into=my_library
+</pre>
+<p>
+        <code class="literal">fignore</code> is a <a href="../templates/reference/options.html" title=" Options">template
+        option</a> which will cause the processor to ignore any files in the
+        <a href="../sandbox.html" title=" Boost sandbox template">sandbox template</a> with the specified
+        suffix. <code class="literal">into</code> specifies that the existing my_library code
+        should go into the my_library directory of the destination tree.
+      </p>
+<p>
+        This assumes that any content under =/path/to/existing/my_library has a structure
+        compatibile with the <a href="../sandbox.html" title=" Boost sandbox template">sandbox template</a>,
+        i.e. something like:
+      </p>
+<pre class="programlisting">/boost
+  /my_library
+ /libs
+  /my_library
+   /doc
+   /test
+   ...
+</pre>
+<p>
+        If <code class="literal">my_library</code> was the only thing inside <code class="literal">/path/to/existing</code>,
+        we chould just use <code class="literal">/path/to/existing</code> as the template,
+        and omit the <code class="literal">into</code> <a href="../templates/reference/options.html" title=" Options">template
+        option</a>.
+      </p>
+<a name="filetemplate.sandbox.use.for_more_information___"></a><h4>
+<a name="id903927"></a>
+        <a href="use.html#filetemplate.sandbox.use.for_more_information___">For more
+        information...</a>
+      </h4>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<a href="reference/options.html" title=" Options">sandbox options</a>
+          reference
+        </li>
+<li>
+<a href="reference/substitutions.html" title=" Substitution
+        templates">sandbox substitution
+          templates</a> reference
+        </li>
+<li><a href="outside_docs.html" title=" Links to helpful
+      outside documentation">links to helpful outside
+          documentation</a></li>
+</ul></div>
+<a name="filetemplate.sandbox.use.output_of_a_sample_session"></a><h4>
+<a name="id903991"></a>
+        <a href="use.html#filetemplate.sandbox.use.output_of_a_sample_session">Output
+        of a sample session</a>
+      </h4>
+<pre class="programlisting">python.exe file_template.py <span class="bold"><strong>sandbox</strong></span>
+/-------------------------------------------
+| Processing template sandbox with options:
++---
+|| {'ignore': set([]), 'template': 'sandbox'}
+|/-------------------------------------------
+|| Examining the template project tree...
+|+---
+|||
+||/-------------------------------------------
+||| Welcome to the Boost Sandbox template.
+||+---
+||/-------------------------------------------
+||| <span class="bold"><strong>Enter value for option library:</strong></span>
+||+---
+||| <span class="bold"><strong>(all lowercase, use underscores to separate words, e.g. "my_library"): my_library</strong></span>
+||/-------------------------------------------
+||| <span class="bold"><strong>Enter value for option authors:
+||+---
+||| (comma separated, no spaces outside names, e.g., "My Name,Notmy R. Name": Stjepan Rajko</strong></span>
+||| $template_library$
+||| $template_library$/boost
+||| $template_library$/boost/$template_library$
+||| $template_library$/libs
+||| $template_library$/libs/$template_library$
+||| $template_library$/libs/$template_library$/build
+||| $template_library$/libs/$template_library$/test
+||| $template_library$/libs/$template_library$/doc
+||| $template_library$/libs/$template_library$/doc\html
+||| $template_library$/libs/$template_library$/doc/html/images
+||| $template_library$/libs/$template_library$/src
+||| $template_library$/libs/$template_library$/example
+/-------------------------------------------
+| Preparing destination tree...
++---
+|/-------------------------------------------
+|| Directories:
+|+---
+|| my_library
+|| my_library/boost
+|| my_library/libs
+|| my_library/boost/my_library
+|| my_library/libs/my_library
+|| my_library/libs/my_library/build
+|| my_library/libs/my_library/test
+|| my_library/libs/my_library/doc
+|| my_library/libs/my_library/src
+|| my_library/libs/my_library/example
+|| my_library/libs/my_library/doc/html
+|| my_library/libs/my_library/doc/html/images
+|/-------------------------------------------
+|| Files:
+|+---
+|| my_library/LICENSE_1_0.txt
+|| my_library/boost-build.jam
+|| my_library/Jamfile.v2
+|| my_library/project-root.jam
+|| my_library/boost/my_library.hpp
+|| my_library/boost/my_library/my_library.hpp
+|| my_library/libs/my_library/test/test.cpp
+|| my_library/libs/my_library/test/Jamfile.v2
+|| my_library/libs/my_library/doc/html/reference.css
+|| my_library/libs/my_library/doc/html/boostbook.css
+|| my_library/libs/my_library/doc/html/images/prev.png
+|| my_library/libs/my_library/doc/html/images/tip.png
+|| my_library/libs/my_library/doc/html/images/important.png
+|| my_library/libs/my_library/doc/html/images/next.png
+|| my_library/libs/my_library/doc/html/images/toc-minus.png
+|| my_library/libs/my_library/doc/html/images/draft.png
+|| my_library/libs/my_library/doc/html/images/caution.png
+|| my_library/libs/my_library/doc/html/images/Thumbs.db
+|| my_library/libs/my_library/doc/html/images/up.png
+|| my_library/libs/my_library/doc/html/images/note.png
+|| my_library/libs/my_library/doc/html/images/warning.png
+|| my_library/libs/my_library/doc/html/images/toc-plus.png
+|| my_library/libs/my_library/doc/html/images/blank.png
+|| my_library/libs/my_library/doc/html/images/home.png
+|| my_library/libs/my_library/doc/html/images/toc-blank.png
+|| my_library/libs/my_library/example/example.cpp
+|| my_library/libs/my_library/example/Jamfile.v2
+|| my_library/libs/my_library/doc/my_library.qbk
+|| my_library/libs/my_library/doc/Jamfile.v2
+/-------------------------------------------
+| Creating file tree from template...
++---
+|/-------------------------------------------
+|| Python files...
+|+---
+||| ./my_library/libs/my_library/doc/my_library.qbk
+||| ./my_library/libs/my_library/doc/Jamfile.v2
+|/-------------------------------------------
+|| Files...
+|+---
+||| ./my_library/LICENSE_1_0.txt
+||| ./my_library/boost-build.jam
+||| ./my_library/Jamfile.v2
+||| ./my_library/project-root.jam
+||| ./my_library/boost/my_library.hpp
+||| ./my_library/boost/my_library/my_library.hpp
+||| ./my_library/libs/my_library/test/test.cpp
+||| ./my_library/libs/my_library/test/Jamfile.v2
+||| ./my_library/libs/my_library/doc/html/reference.css
+||| ./my_library/libs/my_library/doc/html/boostbook.css
+||| ./my_library/libs/my_library/doc/html/images/prev.png
+||| ./my_library/libs/my_library/doc/html/images/tip.png
+||| ./my_library/libs/my_library/doc/html/images/important.png
+||| ./my_library/libs/my_library/doc/html/images/next.png
+||| ./my_library/libs/my_library/doc/html/images/toc-minus.png
+||| ./my_library/libs/my_library/doc/html/images/draft.png
+||| ./my_library/libs/my_library/doc/html/images/caution.png
+||| ./my_library/libs/my_library/doc/html/images/Thumbs.db
+||| ./my_library/libs/my_library/doc/html/images/up.png
+||| ./my_library/libs/my_library/doc/html/images/note.png
+||| ./my_library/libs/my_library/doc/html/images/warning.png
+||| ./my_library/libs/my_library/doc/html/images/toc-plus.png
+||| ./my_library/libs/my_library/doc/html/images/blank.png
+||| ./my_library/libs/my_library/doc/html/images/home.png
+||| ./my_library/libs/my_library/doc/html/images/toc-blank.png
+||| ./my_library/libs/my_library/example/example.cpp
+||| ./my_library/libs/my_library/example/Jamfile.v2
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Stjepan Rajko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tools.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../sandbox.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="outside_docs.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

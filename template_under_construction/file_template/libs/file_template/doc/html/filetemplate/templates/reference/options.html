@@ -1,0 +1,246 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Options</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../../index.html" title="Chapter 1. FileTemplate 0.94">
+<link rel="up" href="../reference.html" title=" Reference">
+<link rel="prev" href="../reference.html" title=" Reference">
+<link rel="next" href="substitutions.html" title=" Substitution
+        templates and special templates">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="substitutions.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="filetemplate.templates.reference.options"></a><a href="options.html" title=" Options"> Options</a></h4></div></div></div>
+<p>
+          Options are used to fine-tune the behavior of the FileTemplate template
+          processor as well as the behavior of the template.
+        </p>
+<a name="filetemplate.templates.reference.options.global_options"></a><h4>
+<a name="id905778"></a>
+          <a href="options.html#filetemplate.templates.reference.options.global_options">Global
+          options</a>
+        </h4>
+<p>
+          <span class="emphasis"><em>Global options</em></span> govern the behavior of the template
+          processor.
+        </p>
+<div class="table">
+<a name="id905801"></a><p class="title"><b>Table 1.5. Global options</b></p>
+<table class="table" summary="Global options">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                option
+              </p>
+              </th>
+<th>
+              <p>
+                desctiption
+              </p>
+              </th>
+<th>
+              <p>
+                valid values
+              </p>
+              </th>
+<th>
+              <p>
+                default value
+              </p>
+              </th>
+</tr></thead>
+<tbody><tr>
+<td>
+              <p>
+                destination
+              </p>
+              </td>
+<td>
+              <p>
+                Destination directory where the results will be constructed.
+              </p>
+              </td>
+<td>
+              <p>
+                valid directory path (will be created if it does not exist)
+              </p>
+              </td>
+<td>
+              <p>
+                current directory
+              </p>
+              </td>
+</tr></tbody>
+</table>
+</div>
+<a name="filetemplate.templates.reference.options.template_options"></a><h4>
+<a name="id905888"></a>
+          <a href="options.html#filetemplate.templates.reference.options.template_options">Template
+          options</a>
+        </h4>
+<p>
+          <span class="emphasis"><em>Template options</em></span> can be used to specify how a particular
+          template is processed. Templates may use additional, template-specific
+          options, as is the case with <a href="../../sandbox/reference/options.html" title=" Options">sandbox
+          options</a>.
+        </p>
+<div class="table">
+<a name="id905923"></a><p class="title"><b>Table 1.6. Template options</b></p>
+<table class="table" summary="Template options">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                option
+              </p>
+              </th>
+<th>
+              <p>
+                desctiption
+              </p>
+              </th>
+<th>
+              <p>
+                valid values
+              </p>
+              </th>
+<th>
+              <p>
+                default value
+              </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                template
+              </p>
+              </td>
+<td>
+              <p>
+                Template directory
+              </p>
+              </td>
+<td>
+              <p>
+                valid directory
+              </p>
+              </td>
+<td>
+              <p>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                into
+              </p>
+              </td>
+<td>
+              <p>
+                Determines where the output of the template will be placed inside
+                the resulting tree
+              </p>
+              </td>
+<td>
+              <p>
+                valid directoy in resulting tree
+              </p>
+              </td>
+<td>
+              <p>
+                root of the resulting tree
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                ignore
+              </p>
+              </td>
+<td>
+              <p>
+                Ignores a file or directory of the source template tree
+              </p>
+              </td>
+<td>
+              <p>
+                file or directory in source template tree
+              </p>
+              </td>
+<td>
+              <p>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                fignore
+              </p>
+              </td>
+<td>
+              <p>
+                Ignores all files in the source template tree that have the specified
+                suffix
+              </p>
+              </td>
+<td>
+              <p>
+                file suffix
+              </p>
+              </td>
+<td>
+              <p>
+              </p>
+              </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+          Options can be specified using the command line. See the <a href="../phases/invocation.html" title=" Invocation">invocation
+          phase</a> reference for more information. If an option is not specified
+          in the command line, and it has no default value, the user will be prompted
+          for the value.
+        </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Stjepan Rajko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="substitutions.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

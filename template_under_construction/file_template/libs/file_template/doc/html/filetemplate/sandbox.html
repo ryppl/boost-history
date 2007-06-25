@@ -1,0 +1,114 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Boost sandbox template</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../index.html" title="Chapter 1. FileTemplate 0.94">
+<link rel="up" href="../index.html" title="Chapter 1. FileTemplate 0.94">
+<link rel="prev" href="../index.html" title="Chapter 1. FileTemplate 0.94">
+<link rel="next" href="sandbox/tools.html" title=" Configuring the tools and
+      checking out the Boost sandbox">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="sandbox/tools.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="filetemplate.sandbox"></a><a href="sandbox.html" title=" Boost sandbox template"> Boost sandbox template</a></h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="sandbox/tools.html"> Configuring the tools and
+      checking out the Boost sandbox</a></span></dt>
+<dt><span class="section"><a href="sandbox/use.html"> Use Cases</a></span></dt>
+<dt><span class="section"><a href="sandbox/outside_docs.html"> Links to helpful
+      outside documentation</a></span></dt>
+<dt><span class="section"><a href="sandbox/reference.html"> Reference</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="sandbox/reference/options.html"> Options</a></span></dt>
+<dt><span class="section"><a href="sandbox/reference/substitutions.html"> Substitution
+        templates</a></span></dt>
+<dt><span class="section"><a href="sandbox/reference/documentation.html"> Documentation
+        formats</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="sandbox/changes.html"> Version History and Proposed
+      Changes</a></span></dt>
+</dl></div>
+<p>
+      The sandbox template is a template for Boost sandbox projects. Given some information
+      about the project (e.g., library name and author), it will generate the following:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        a directory tree for the library
+      </li>
+<li>
+        commonly used source, documentation and build files
+      </li>
+<li>
+        optionally, projects for several IDEs (currently, Xcode and MSVC)
+      </li>
+</ul></div>
+<p>
+      The content in the generated project contains a fill-in-the-blanks documentation,
+      and an implementation of a small class.
+    </p>
+<p>
+      If you need to download the tools required to build everything in the created
+      sandbox project, and/or you need to download the Boost sandbox, see the <a href="sandbox/tools.html" title=" Configuring the tools and
+      checking out the Boost sandbox">configuring and download</a> section.
+    </p>
+<p>
+      If you'd like some more information using the <a href="sandbox.html" title=" Boost sandbox template">sandbox
+      template</a>, please read the documentation on <a href="sandbox/use.html" title=" Use Cases">sandbox
+      use cases</a>.
+    </p>
+<p>
+      If you'd just like to try the sandbox template, go to the Boost subversion
+      and type <code class="literal">sandbox/template-under-construction</code> directory and
+      execute:
+    </p>
+<pre class="programlisting">python file_template.py sandbox
+</pre>
+<p>
+      The script will ask you some questions and create a project with the information
+      you specified.
+    </p>
+<div class="caution"><table border="0" summary="Caution">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../../doc/html/images/caution.png"></td>
+<th align="left">Caution</th>
+</tr>
+<tr><td colspan="2" align="left" valign="top">
+<p>
+        </p>
+<p>
+          The sandbox template is in very early stages of development. At this point,
+          it is likely <span class="bold"><strong>not</strong></span> a good starting point
+          for a boost sandbox project. It has not been verified that the projects
+          it generates adhere to Boost guidelines.
+        </p>
+<p>
+      </p>
+</td></tr>
+</table></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Stjepan Rajko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="sandbox/tools.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

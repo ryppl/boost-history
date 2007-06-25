@@ -1,0 +1,204 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Invocation</title>
+<link rel="stylesheet" href="../../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../../index.html" title="Chapter 1. FileTemplate 0.94">
+<link rel="up" href="../phases.html" title=" Processing phases">
+<link rel="prev" href="../phases.html" title=" Processing phases">
+<link rel="next" href="examination.html" title=" Examination
+        of the template tree">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../phases.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../phases.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="examination.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="filetemplate.templates.phases.invocation"></a><a href="invocation.html" title=" Invocation"> Invocation</a></h4></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="filetemplate.templates.phases.invocation.command_line"></a><a href="invocation.html#filetemplate.templates.phases.invocation.command_line" title="
+          Command line">
+          Command line</a></h5></div></div></div>
+<p>
+            The template processor begins by processing the command line for <a href="../reference/options.html" title=" Options">template options</a>.
+            The options are specified via
+            <em class="replaceable"><code>
+              option=value
+            </code></em>
+            arguments. In simple cases, such as when using only one template, the
+            ordering of the command line arguments should not affect the output.
+            However, when multiple templates are used symoultaneously for a <a href="../merges.html" title=" Template merges">template merge</a>, the order
+            matters. The order is as follows.
+          </p>
+<div class="orderedlist"><ol type="1">
+<li>
+<a href="../reference/options.html" title=" Options">global options</a>
+              can be specified at any point, but are recommended to be placed at
+              the beginning for consistency.
+            </li>
+<li>
+<a href="../reference/options.html" title=" Options">template options</a>
+              that should be applied to all templates are specified before any template
+              is listed.
+            </li>
+<li>
+<a href="../reference/options.html" title=" Options">template options</a>
+              that should be applied to an individual template only should be specified
+              after listing the template (and before the next template is listed).
+            </li>
+</ol></div>
+<div class="tip"><table border="0" summary="Tip">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="../../../../../doc/html/images/tip.png"></td>
+<th align="left">Tip</th>
+</tr>
+<tr><td colspan="2" align="left" valign="top">
+<p>
+              </p>
+<p>
+                The template can be specified without explicitly using <code class="literal">template\</code>=.
+                E.g., you can run <code class="literal">python file_template.py sandbox</code>
+                instead of <code class="literal">python file_template.py template=sandbox</code>
+              </p>
+<p>
+            </p>
+</td></tr>
+</table></div>
+<p>
+            The following examples illustrates this structure:
+          </p>
+<div class="table">
+<a name="id905134"></a><p class="title"><b>Table 1.4. Command line structure examples:</b></p>
+<table class="table" summary="Command line structure examples:">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  invocation
+                </p>
+                </th>
+<th>
+                <p>
+                  global options
+                </p>
+                </th>
+<th>
+                <p>
+                  options for all templates
+                </p>
+                </th>
+<th>
+                <p>
+                  first template
+                </p>
+                </th>
+<th>
+                <p>
+                  second template
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="literal">python file_template.py</code>
+                </p>
+                </td>
+<td>
+                <p>
+                </p>
+                </td>
+<td>
+                <p>
+                </p>
+                </td>
+<td>
+                <p>
+                  sandbox
+                </p>
+                </td>
+<td>
+                <p>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="literal">python file_template.py</code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="literal">destination=/boost_sandbox</code>
+                </p>
+                </td>
+<td>
+                <p>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="literal">sandbox library=boostified_library vc8ide=y ignore=$template_library$/boost</code>
+                </p>
+                </td>
+<td>
+                <p>
+                  /old_library/include/old_library into=boostified_library/boost/boostified_library
+                </p>
+                </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+            Some <a href="../reference/options.html" title=" Options">template
+            options</a>, such as <code class="literal">ignore</code> and <code class="literal">fignore</code>,
+            can be specified multiple times for the same template.
+          </p>
+</div>
+<p>
+          After processing the command line, or prompting the user if necessary,
+          the template processor will initialize each <a href="../reference/template.html" title=" Template
+        object">template
+          object</a> (which processes the template and can be used by any in-template
+          <a href="examination.html#filetemplate.templates.phases.examination.template_script" title="
+          Template scripts">template
+          script</a> to customize the behavior of the template) and the global
+          <a href="../reference/options.html" title=" Options">template options</a>.
+        </p>
+<p>
+          The template processor will then <a href="examination.html" title=" Examination
+        of the template tree">examine
+          the template tree</a>.
+        </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Stjepan Rajko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../phases.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../phases.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="examination.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
