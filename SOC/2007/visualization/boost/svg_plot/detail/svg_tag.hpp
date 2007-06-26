@@ -33,14 +33,57 @@ namespace svg {
     
 class svg_element
 {
+protected:
+    svg_style style_info;
+
 public:
     virtual void write(std::ostream&) = 0;
     virtual ~svg_element();
+
+    void set_stroke_color(const svg_color&);
+    void set_fill_color(const svg_color&);
+    void set_stroke_width(unsigned int);
+
+    svg_color get_stroke_color();
+    svg_color get_fill_color();
+
+    unsigned int get_stroke_width();
+
 };
 
 svg_element::~svg_element()
 {
 
+}
+
+void svg_element::set_stroke_color(const svg_color& _col)
+{
+    style_info.set_stroke_color(_col);
+}
+
+void svg_element::set_fill_color(const svg_color& _col)
+{
+    style_info.set_fill_color(_col);
+}
+
+void svg_element::set_stroke_width(unsigned int _width)
+{
+    style_info.set_stroke_width(_width);
+}
+
+svg_color svg_element::get_stroke_color()
+{
+    return style_info.get_stroke_color();
+}
+
+svg_color svg_element::get_fill_color()
+{
+    return style_info.get_stroke_color();
+}
+
+unsigned int svg_element::get_stroke_width()
+{
+    return style_info.get_stroke_width();
 }
 
 // -----------------------------------------------------------------
@@ -50,23 +93,21 @@ svg_element::~svg_element()
 class g_element: public svg_element
 {
 private: 
-    svg_g_style style_info;
-
-public:
     boost::ptr_vector<svg_element> children;
+    
+public:
     
     svg_element& operator[](unsigned int);
     size_t size();
-    
-    void set_stroke_color(const svg_color&);
-    void set_fill_color(const svg_color&);
-    void set_stroke_width(unsigned int);
-
-    svg_color get_stroke_color();
 
     void write(std::ostream&);
 
     g_element& g_tag(int);
+    g_element& add_g_element();
+
+    void push_back(svg_element*);
+
+    void clear();
 };
 
 svg_element& g_element::operator[](unsigned int i)
@@ -99,24 +140,21 @@ g_element& g_element::g_tag(int i)
     return *(static_cast<g_element*>(&children[i]));
 }
 
-void g_element::set_stroke_color(const svg_color& _col)
+//returns a reference to the node created
+g_element& g_element::add_g_element()
 {
-    style_info.set_stroke_color(_col);
+    children.push_back(new g_element);
+    return *(static_cast<g_element*>(&children[children.size()-1]));
 }
 
-void g_element::set_fill_color(const svg_color& _col)
+void g_element::push_back(svg_element* _g)
 {
-    style_info.set_fill_color(_col);
+    children.push_back(_g);
 }
 
-void g_element::set_stroke_width(unsigned int _width)
+void g_element::clear()
 {
-    style_info.set_stroke_width(_width);
-}
-
-svg_color g_element::get_stroke_color()
-{
-    return style_info.get_stroke_color();
+    children.clear();
 }
 
 // -----------------------------------------------------------------
@@ -192,6 +230,23 @@ public:
     {
         alignment = _a;
     }
+
+    std::string get_text();
+
+    int get_font_size()
+    {
+        return font_size;
+    }
+
+    double set_x(double _x)
+    {
+        x = _x;
+    }
+
+    double set_y(double _y)
+    {
+        y = _y;
+    }
 };
 
 text_element::text_element(double _x, double _y, std::string _text)
@@ -231,7 +286,7 @@ void text_element::write(std::ostream& rhs)
         rhs << "text-anchor=\""<<align<<"\" ";
     }
 
-    rhs <<" fill=\"black\" stroke=\"black\" font-family=\"verdana\"";
+    rhs <<" font-family=\"verdana\"";
 
     if(font_size == 0)
     {
@@ -250,6 +305,11 @@ void text_element::write(std::ostream& rhs)
 void text_element::set_font_size(unsigned int _size)
 {
     font_size = _size;
+}
+
+std::string text_element::get_text()
+{
+    return text;
 }
 
 // -----------------------------------------------------------------

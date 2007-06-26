@@ -54,12 +54,20 @@ public:
     svg& line(double, double, double, double, g_element&); 
     
     svg& text(double, double, std::string);
-    svg& line_color(svg_color);
 
     svg& rect(double, double, double, double);
-    svg& rect(double, double, double, double, g_element&); 
+    svg& rect(double, double, double, double, g_element&);
+
+    g_element& add_g_element();
+    g_element& add_g_element(g_element&);
+
+    g_element& get_g_element(int i);
+    g_element& svg::get_g_element(int, g_element&);
 
     friend std::ostream& operator<<(std::ostream&, const svg&);
+
+    unsigned int get_x_size();
+    unsigned int get_y_size();
 };
 
 // -----------------------------------------------------------------
@@ -163,26 +171,26 @@ svg& svg::image_size(unsigned int x, unsigned int y)
 // this overload has a pointer to a node in the document tree
 svg& svg::point(double x, double y, g_element& location)
 {
-    location.children.push_back(new point_element(x, y));
+    location.push_back(new point_element(x, y));
 
     return *this;
 }
 
 svg& svg::point(double x, double y)
 {
-    document.children.push_back(new point_element(x, y));
+    document.push_back(new point_element(x, y));
 
     return *this;
 }
 
 // -----------------------------------------------------------------
 // Writes the information about lines to the document
-// TODO: Allow other line thicknesses
+// TODO: Allow other line width
 // TODO: Allow other line colors
 // -----------------------------------------------------------------
 svg& svg::line(double x1, double y1, double x2, double y2)
 {
-    document.children.push_back(new line_element(x1, y1, x2, y2));
+    document.push_back(new line_element(x1, y1, x2, y2));
 
     return *this;
 }
@@ -190,7 +198,7 @@ svg& svg::line(double x1, double y1, double x2, double y2)
 svg& svg::line(double x1, double y1, double x2, double y2, 
                 g_element& location)
 {
-    location.children.push_back(new line_element(x1, y1, x2, y2));
+    location.push_back(new line_element(x1, y1, x2, y2));
 
     return *this;
 }
@@ -201,22 +209,14 @@ svg& svg::line(double x1, double y1, double x2, double y2,
 // -----------------------------------------------------------------
 svg& svg::text(double x, double y, std::string text)
 {
-    document.children.push_back(new text_element(x, y, text));
+    document.push_back(new text_element(x, y, text));
 
-    return *this;
-}
-
-// -----------------------------------------------------------------
-// Hopefully this one will be filld out next week
-// -----------------------------------------------------------------
-svg& svg::line_color(svg_color col)
-{
     return *this;
 }
 
 svg& svg::rect(double x1, double y1, double x2, double y2)
 {
-    document.children.push_back(new rect_element(x1, y1, x2, y2));
+    document.push_back(new rect_element(x1, y1, x2, y2));
 
     return *this;
 }
@@ -224,11 +224,40 @@ svg& svg::rect(double x1, double y1, double x2, double y2)
 svg& svg::rect(double x1, double y1, double x2, double y2, 
                 g_element& location)
 {
-    location.children.push_back(new rect_element(x1, y1, x2, y2));
+    location.push_back(new rect_element(x1, y1, x2, y2));
 
     return *this;
 }
 
+g_element& svg::add_g_element()
+{
+    return document.add_g_element();
+}
+
+g_element& svg::add_g_element(g_element& _g)
+{
+    return _g.add_g_element();
+}
+
+g_element& svg::get_g_element(int i)
+{
+    return document.g_tag(i);
+}
+
+g_element& svg::get_g_element(int i, g_element& _g)
+{
+    return _g.g_tag(i);
+}
+
+unsigned int svg::get_x_size()
+{
+    return x_size;
+}
+
+unsigned int svg::get_y_size()
+{
+    return y_size;
+}
 
 }
 }
