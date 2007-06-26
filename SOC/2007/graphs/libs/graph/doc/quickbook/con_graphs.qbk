@@ -52,7 +52,7 @@ The notation used in the table is as follows.
     [[`graph_traits<G>::in_edge_iterator`] [Type for iterating over in edges.]]
     [[`in_edges(v,g)`] [`std::pair<in_edge_iterator,in_edge_iterator>`]]
     [[`in_degree(v,g)`] [`degree_size_type`]]
-    [[`degree(v,g)`] [`degree_size_type]]
+    [[`degree(v,g)`] [`degree_size_type`]]
     [[*AdjacencyGraph* refines Graph]]
     [[`graph_traits<G>::adjacency_iterator`] [Type for iterating over adjacent vertices.]]
     [[`adjacent_vertices(v,g)`] [`std::pair<adjacency_iterator,adjacency_iterator>`]]
@@ -75,6 +75,7 @@ The notation used in the table is as follows.
     [[`clear_vertex(v,g)`] [`void`]]
     [[`clear_out_edges(v,g)`] [`void`]]
     [[`clear_in_edges(v,g)`] [`void`]]
+    [[`add_edge(u,v,g)`] [`std::pair<edge_descriptor,bool>`]]
     [[`remove_edge(u,v,g)`] [`void`]]
     [[`remove_edge(e,g)`] [`void`]]
     [[`remove_edge(ei,g)`] [`void`]]
@@ -83,7 +84,7 @@ The notation used in the table is as follows.
     [[`remove_in_edge_if(v,pred,g)`] [`void`]]
     [[*MutablePropertyGraph* refines Graph]]
     [[`add_vertex(vp,g)`] [`vertex_descriptor`]]
-    [[`add_edge(u,v,ep,g)`] [`std::pair<edge_descriptor,bool>]]
+    [[`add_edge(u,v,ep,g)`] [`std::pair<edge_descriptor,bool>`]]
     [[*PropertyGraph* refines Graph]]
     [[`property_map<G,Property>::type`] [Type for a mutable property map.]]
     [[`property_map<G,Property>::const_type`] [Type for a non-mutable property map.]]
@@ -92,7 +93,7 @@ The notation used in the table is as follows.
     [[`put(p,g,x,v`)] [Set the property value for vertex or edge `x` to value `v`.]]
 ]
 
-*TODO*
+[*TODO]
 
 There are some functions missing like `get_property()` and `put/set_property()`.
 These occur in some documentation somewhere but are in no means pervasive, complete
