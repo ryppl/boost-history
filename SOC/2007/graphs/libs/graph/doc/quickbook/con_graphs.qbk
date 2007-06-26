@@ -22,11 +22,85 @@ necessary for a particular algorithm . By factoring the graph interface into man
 concepts we provide the graph algorithm writer with a good selection from which to choose
 the concept that is the closest match for their algorithm.
 
-Figure 1 shows the refinements relations between the graph concepts. The reason for factoring the graph interface into so many concepts is to encourage algorithm interfaces to require and use only the minimum interface of a graph, thereby increasing the reusability of the algorithm.
+Figure 1 shows the refinements relations between the graph concepts. The reason for
+factoring the graph interface into so many concepts is to encourage algorithm interfaces
+to require and use only the minimum interface of a graph, thereby increasing the
+usability of the algorithm.
 
 Figure 1: The graph concepts and refinement relationships.
 
-Table 1 gives a summary of the valid expressions and associated types for the graph concepts and provides links to the detailed descriptions of each of the concepts. The notation used in the table is as follows.
+Table 1 gives a summary of the valid expressions and associated types for the graph
+concepts and provides links to the detailed descriptions of each of the concepts.
+The notation used in the table is as follows.
+
+[table
+    [[Expression] [Return Type or Description]]
+    [[*Graph*]]
+    [[`graph_traits<G>::vertex_descriptor`] [The type for vertex representative objects.]]
+    [[`graph_traits<G>::edge_descriptor`] [The type for edge representative objects.]]
+    [[`graph_traits<G>::directed_category`] [Graph is directed or undirected?]]
+    [[`graph_traits<G>::edge_parallel_category`] [Graph allows parallel edges?]]
+    [[`graph_traits<G>::traversal_category`] [The ways in which the vertices and edges can be traversed.]]
+    [[*Incidence Graph* refines Graph]]
+    [[`graph_traits<G>::degree_size_type`] [The integer type for vertex degree.]] 
+    [[`graph_traits<G>::out_edge_iterator`] [Type for iterating over out edges.]]
+    [[`out_edges(v,g)`] [`std::pair<out_edge_iterator, out_edge_iterator>`]]
+    [[`out_degree(v,g)`] [`degree_size_type`]]
+    [[`source(e,g)`] [`vertex_descriptor`]]
+    [[`target(e,g)`] [`vertex_descriptor`]]
+    [[*BidirectionalGraph* refines IncidenceGraph]]
+    [[`graph_traits<G>::in_edge_iterator`] [Type for iterating over in edges.]]
+    [[`in_edges(v,g)`] [`std::pair<in_edge_iterator,in_edge_iterator>`]]
+    [[`in_degree(v,g)`] [`degree_size_type`]]
+    [[`degree(v,g)`] [`degree_size_type]]
+    [[*AdjacencyGraph* refines Graph]]
+    [[`graph_traits<G>::adjacency_iterator`] [Type for iterating over adjacent vertices.]]
+    [[`adjacent_vertices(v,g)`] [`std::pair<adjacency_iterator,adjacency_iterator>`]]
+    [[*VertexListGraph* refines IncidenceGraph and AdjacencyGraph]]
+    [[`graph_traits<G>::vertex_iterator`] [Type for iterating over vertices.]]
+    [[`graph_traits<G>::vertices_size_type`] [Unsigned integer type for the number of vertices.]]
+    [[`vertices(g)`] [`std::pair<vertex_iterator,vertex_iterator>`]]
+    [[`num_vertices(g)`] [`vertices_size_type`]]
+    [[*EdgeListGraph* refines Graph]]
+    [[`graph_traits<G>::edge_iterator`] [Type for iterating over edges.]]
+    [[`graph_traits<G>::edges_size_type`] [Unsigned integer type for the number of edges.]]
+    [[`edges(g)`] [`std::pair<edge_iterator, edge_iterator>`]]
+    [[`num_edges(g)`] [`edges_size_type`]]
+    [[`source(e,g)`] [`vertex_descriptor`]]
+    [[`target(e,g)`] [`vertex_descriptor`]]
+    [[*AdjacencyMatrix* refines Graph]]
+    [[`edge(u,v,g)`] [`std::pair<edge_descriptor,boo>`]]
+    [[*MutableGraph* refines Graph]]
+    [[`add_vertex(g)`] [`vertex_descriptor`]]
+    [[`clear_vertex(v,g)`] [`void`]]
+    [[`clear_out_edges(v,g)`] [`void`]]
+    [[`clear_in_edges(v,g)`] [`void`]]
+    [[`remove_edge(u,v,g)`] [`void`]]
+    [[`remove_edge(e,g)`] [`void`]]
+    [[`remove_edge(ei,g)`] [`void`]]
+    [[`remove_edge_if(pred,g)`] [`void`]]
+    [[`remove_out_edge_if(v,pred,g)`] [`void`]]
+    [[`remove_in_edge_if(v,pred,g)`] [`void`]]
+    [[*MutablePropertyGraph* refines Graph]]
+    [[`add_vertex(vp,g)`] [`vertex_descriptor`]]
+    [[`add_edge(u,v,ep,g)`] [`std::pair<edge_descriptor,bool>]]
+    [[*PropertyGraph* refines Graph]]
+    [[`property_map<G,Property>::type`] [Type for a mutable property map.]]
+    [[`property_map<G,Property>::const_type`] [Type for a non-mutable property map.]]
+    [[`get(p,g)`] [Function to get a property map.]]
+    [[`get(p,g,x)`] [Get the property value for vertex or edge `x`]]
+    [[`put(p,g,x,v`)] [Set the property value for vertex or edge `x` to value `v`.]]
+]
+
+*TODO*
+
+There are some functions missing like `get_property()` and `put/set_property()`.
+These occur in some documentation somewhere but are in no means pervasive, complete
+or accurate.
+
+It should also be worth pointing out that we can redefine the entire concept hierarchy
+based on a) vertex or edge operations, b) directed/undirected or c) simple or multigraphs.
+Basically, there are some interesting ways to conceptualize the Boost.Graph interface.
 
 [h3 Undirected Graphs]
 
