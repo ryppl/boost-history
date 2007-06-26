@@ -1,3 +1,10 @@
+[/ Boost.Extension - fifth tutorial ]
+[/ Copyright 2007 Mariano G. Consoni ]
+[/ Distributed under the Boost Software License, Version 1.0. (See]
+[/ accompanying file LICENSE_1_0.txt or copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ See http://www.boost.org/ for latest version. ]
+
 [section:tutorial05 Tutorial 5]
 
 In this tutorial we will describe an advanced example using the Info class. The basics of Info classes are explained 
