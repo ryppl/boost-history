@@ -22,11 +22,6 @@
 #include "svg.hpp"
 #include "detail/svg_plot_instruction.hpp"
 
-#include <boost/parameter/name.hpp>
-#include <boost/parameter/preprocessor.hpp>
-
-
-
 
 namespace boost {
 namespace svg {
@@ -325,7 +320,7 @@ svg_plot& svg_plot::write(std::ostream& s_out)
 template <class iter>
 void plot_range(svg_plot& _cont, iter _begin, iter _end, std::string _str)
 {
-    vector<double> vect(_begin, _end);
+    std::vector<double> vect(_begin, _end);
 
     _cont.plot_range(vect.begin(), vect.end(), _str);
 }
@@ -334,7 +329,7 @@ template <class iter>
 void plot_range(svg_plot& _cont, iter _begin, iter _end, std::string _str,
                       svg_color_constant _col)
 {
-    vector<double> vect(_begin, _end);
+    std::vector<double> vect(_begin, _end);
 
     _cont.plot_range(vect.begin(), vect.end(), _str, _col);
 }

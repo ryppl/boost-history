@@ -83,7 +83,7 @@ int main()
     plot_range(my_plot, data1.begin(), data1.end(), "Tigers", purple);
     plot_range(my_plot, data3.begin(), data3.end(), "Bears",  red);
 
-    my_plot.write("D:\\1D_legend_demo.svg");
+    my_plot.write("./test.svg");
 
     return 0;
 }
