@@ -109,12 +109,23 @@ if(CMAKE_SHARED_LINKER_FLAGS_RELEASE)
   set(RELEASE_LINK_FLAGS "${CMAKE_SHARED_LINKER_FLAGS_RELEASE}" CACHE STRING "Link flags for release libraries")
 endif(CMAKE_SHARED_LINKER_FLAGS_RELEASE)
 
+# Tweak the configuration and build types appropriately.
+if(CMAKE_CONFIGURATION_TYPES)
+  # Limit CMAKE_CONFIGURATION_TYPES to Debug and Release
+  set(CMAKE_CONFIGURATION_TYPES "Debug;Release")
+else(CMAKE_CONFIGURATION_TYPES)
+  # Build in release mode by default
+  if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build, options are Release or Debug" FORCE)
+  endif (NOT CMAKE_BUILD_TYPE)
+endif(CMAKE_CONFIGURATION_TYPES)
+
 # For project file generators that have multiple configurations,
 # clear out the built-in C++ compiler and link flags for each of the 
 # configurations.
 foreach(CONFIG ${CMAKE_CONFIGURATION_TYPES})
   string(TOUPPER ${CONFIG} UCONFIG)
-  set(CMAKE_CXX_FLAGS_${UCONFIG} "" CACHE STRING "Unused by Boost" FORCE)
-  set(CMAKE_SHARED_LINKER_FLAGS_${UCONFIG} "" CACHE STRING "Unused by Boost" FORCE)
-  set(CMAKE_MODULE_LINKER_FLAGS_${UCONFIG} "" CACHE STRING "Unused by Boost" FORCE)
+  set(CMAKE_CXX_FLAGS_${UCONFIG} "" CACHE INTERNAL "Unused by Boost")
+  set(CMAKE_SHARED_LINKER_FLAGS_${UCONFIG} "" CACHE INTERNAL "Unused by Boost")
+  set(CMAKE_MODULE_LINKER_FLAGS_${UCONFIG} "" CACHE INTERNAL "Unused by Boost")
 endforeach(CONFIG ${CMAKE_CONFIGURATION_TYPES})

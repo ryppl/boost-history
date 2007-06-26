@@ -24,7 +24,8 @@
 #                                                                        #
 # For more information about CMake, see http://www.cmake.org             #
 ##########################################################################
-cmake_minimum_required(VERSION 2.4.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.4.5 FATAL_ERROR)
+set(CMAKE_BACKWARDS_COMPATIBILITY 2.4)
 project(Boost)
 
 ##########################################################################

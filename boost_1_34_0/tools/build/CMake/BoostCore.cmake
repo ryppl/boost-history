@@ -699,8 +699,8 @@ endmacro(boost_add_library)
 #                        [feature]
 #                        [NO_INSTALL])
 #
-# where exename is the name of the executable (e.g., "wave") source1,
-# source2, etc. are the source files used to build the library, e.g.,
+# where exename is the name of the executable (e.g., "wave").  source1,
+# source2, etc. are the source files used to build the executable, e.g.,
 # cpp.cpp. If no source files are provided, "exename.cpp" will be
 # used.
 #
@@ -750,7 +750,7 @@ endmacro(boost_add_library)
 #   LINK_LIBS, this option states that the executable will link
 #   against the stated libraries. Unlike LINK_LIBS, however, DEPENDS
 #   takes particular library variants into account, always linking to
-#   the appropriate variant of one Boost library. For example, if the
+#   the appropriate variant of a Boost library. For example, if the
 #   MULTI_THREADED feature was requested in the call to
 #   boost_add_executable, DEPENDS will ensure that we only link
 #   against multi-threaded libraries.
