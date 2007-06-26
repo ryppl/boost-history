@@ -1,3 +1,10 @@
+# Boost.Extension - Benchmarks Jamfile
+#
+# Copyright 2007 Mariano G. Consoni
+#
+# See http://www.boost.org/ for latest version.
+#
+
 import type : change-generated-target-suffix ;
 import type : change-generated-target-prefix ;
 type.change-generated-target-suffix SHARED_LIB : : extension ;
