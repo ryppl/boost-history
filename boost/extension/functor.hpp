@@ -1,7 +1,7 @@
 /*
  * Boost.Extension / functor:
- * 	functor used as the exported function of the libraries (the one that 
- *	registers the implementations at library loading time)
+ *        functor used as the exported function of the libraries (the one that 
+ *        registers the implementations at library loading time)
  *
  * (C) Copyright Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -66,12 +66,12 @@ BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSIONS_MAX_FUNCTOR_PARAMS), BOOST_EXTENSI
 #else
 
 template <class ReturnValue, class Param1 = void, class Param2 = void, 
-	  class Param3 = void, class Param4 = void, class Param5 = void, 
-	  class Param6 = void>
+          class Param3 = void, class Param4 = void, class Param5 = void, 
+          class Param6 = void>
 class functor {
 private:
     typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, 
-					Param5, Param6);
+                                        Param5, Param6);
     FunctionType func_;
 
 public:
@@ -86,19 +86,19 @@ public:
     {}
 
     ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4, 
-			   Param5 p5, Param6 p6)
+                           Param5 p5, Param6 p6)
     {
         return func_(p1, p2, p3, p4, p5, p6);
     }
 };
 
 template <class ReturnValue, class Param1, class Param2, class Param3, 
-	  class Param4, class Param5>
+          class Param4, class Param5>
 class functor<ReturnValue, Param1, Param2, Param3, Param4, Param5>
 {
 private:
     typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, 
-					Param5);
+                                        Param5);
     FunctionType func_;
 
 public:
@@ -111,14 +111,14 @@ public:
         :func_(FunctionType(func))
     {}
     ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4, 
-			   Param5 p5)
+                           Param5 p5)
     {
         return func_(p1, p2, p3, p4, p5);
     }
 };
 
 template <class ReturnValue, class Param1, class Param2, class Param3, 
-	  class Param4>
+          class Param4>
 class functor<ReturnValue, Param1, Param2, Param3, Param4>
 {
 private:

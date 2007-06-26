@@ -1,6 +1,6 @@
 /*
  * Boost.Extension / typeinfo:
- * 	implementations name management with RTTI
+ *         implementations name management with RTTI
  *
  * (C) Copyright Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See

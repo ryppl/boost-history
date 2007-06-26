@@ -1,6 +1,6 @@
 /*
  * Boost.Extension / main header:
- * 	main header for extensions
+ *         main header for extensions
  *
  * (C) Copyright Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See

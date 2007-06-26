@@ -1,6 +1,7 @@
 /*
  * Boost.Extension / convenience functions:
- * 	for now only one to load a library and register it in the factory map.
+ *         for now only one to load a library and register it in the factory 
+ *         map.
  *
  * (C) Copyright Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -18,8 +19,8 @@
 namespace boost{namespace extensions{
   
 inline void load_single_library(factory_map & current_zone, 
-				const char * library_path, 
-				const char * external_function_name)
+                                const char * library_path, 
+                                const char * external_function_name)
 {
   shared_library lib(library_path);
   if (!lib.open())

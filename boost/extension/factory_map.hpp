@@ -1,6 +1,6 @@
 /*
  * Boost.Extension / factory map:
- * 	map of factories (for the implementations)
+ *         map of factories (for the implementations)
  *
  * (C) Copyright Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -32,12 +32,12 @@ protected:
     virtual ~generic_factory_container(){}
   };
   template <class Interface, class Info, class Param1 = void, 
-	    class Param2 = void, class Param3 = void, class Param4 = void, 
-	    class Param5 = void, class Param6 = void>
+            class Param2 = void, class Param3 = void, class Param4 = void, 
+            class Param5 = void, class Param6 = void>
   class factory_container : public std::list<factory<Interface, Info, Param1, 
-						     Param2, Param3, Param4, 
-						     Param5, Param6> >, 
-			    public generic_factory_container
+                                                     Param2, Param3, Param4, 
+                                                     Param5, Param6> >, 
+                            public generic_factory_container
   {
   public:
       factory_container() {}
@@ -59,7 +59,7 @@ protected:
 public:
   ~basic_factory_map(){
     for(typename FactoryMap::iterator it = factories_.begin(); 
-	it != factories_.end(); ++it)
+        it != factories_.end(); ++it)
       delete it->second;
     //TODO - test for memory leaks.
   }
@@ -85,7 +85,7 @@ std::list<factory<Interface, Info> > & get()
       {
         // Change to dynamic if this fails
         return static_cast<factory_container<Interface, 
-	  Info> &>(*(it->second));
+          Info> &>(*(it->second));
       }
   }
 template <class Actual, class Interface, class Info>
@@ -121,7 +121,7 @@ std::list<factory<Interface, Info, Param1> > & get()
       {
         // Change to dynamic if this fails
         return static_cast<factory_container<Interface, 
-	  Info, Param1> &>(*(it->second));
+          Info, Param1> &>(*(it->second));
       }
   }
 template <class Actual, class Interface, class Info, class Param1>
@@ -158,11 +158,11 @@ std::list<factory<Interface, Info, Param1, Param2> > & get()
       {
         // Change to dynamic if this fails
         return static_cast<factory_container<Interface, Info, Param1, 
-	  Param2> &>(*(it->second));
+          Param2> &>(*(it->second));
       }
   }
 template <class Actual, class Interface, class Info, class Param1, 
-	  class Param2>
+          class Param2>
 void add(Info info)
   {
     typedef std::list<factory<Interface, Info, Param1, Param2> > ListType;
@@ -174,11 +174,11 @@ void add(Info info)
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1, class Param2, 
-	    class Param3>
+            class Param3>
 operator std::list<factory<Interface, Info, Param1, Param2, Param3> > & ()
   {return this->get<Interface, Info, Param1, Param2, Param3>();}
   template <class Interface, class Info, class Param1, class Param2, 
-	    class Param3>
+            class Param3>
 std::list<factory<Interface, Info, Param1, Param2, Param3> > & get()
   {
       TypeInfo current_type = 
@@ -197,11 +197,11 @@ std::list<factory<Interface, Info, Param1, Param2, Param3> > & get()
       {
         // Change to dynamic if this fails
         return static_cast<factory_container<Interface, Info, Param1, Param2, 
-	  Param3> &>(*(it->second));
+          Param3> &>(*(it->second));
       }
   }
 template <class Actual, class Interface, class Info, class Param1, 
-	  class Param2, class Param3>
+          class Param2, class Param3>
 void add(Info info)
   {
     typedef std::list<factory<Interface, Info, Param1, Param2, 
@@ -214,12 +214,12 @@ void add(Info info)
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1, class Param2, 
-	    class Param3, class Param4>
+            class Param3, class Param4>
 operator std::list<factory<Interface, Info, Param1, Param2, Param3, 
-			   Param4> > & ()
+                           Param4> > & ()
   {return this->get<Interface, Info, Param1, Param2, Param3, Param4>();}
   template <class Interface, class Info, class Param1, class Param2, 
-	    class Param3, class Param4>
+            class Param3, class Param4>
 std::list<factory<Interface, Info, Param1, Param2, Param3, Param4> > & get()
   {
       TypeInfo current_type = 
@@ -230,8 +230,8 @@ std::list<factory<Interface, Info, Param1, Param2, Param3, Param4> > & get()
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2, Param3, 
-	  Param4> * ret = new factory_container<Interface, Info, Param1, 
-	  Param2, Param3, Param4>();
+          Param4> * ret = new factory_container<Interface, Info, Param1, 
+          Param2, Param3, Param4>();
         factories_[current_type] = ret;
         return *ret;
       }
@@ -239,11 +239,11 @@ std::list<factory<Interface, Info, Param1, Param2, Param3, Param4> > & get()
       {
         // Change to dynamic if this fails
         return static_cast<factory_container<Interface, Info, Param1, Param2, 
-	  Param3, Param4> &>(*(it->second));
+          Param3, Param4> &>(*(it->second));
       }
   }
 template <class Actual, class Interface, class Info, class Param1, class 
-	  Param2, class Param3, class Param4>
+          Param2, class Param3, class Param4>
 void add(Info info)
   {
     typedef std::list<factory<Interface, Info, Param1, Param2, Param3, 
@@ -257,15 +257,15 @@ void add(Info info)
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1, class Param2, 
-	    class Param3, class Param4, class Param5>
+            class Param3, class Param4, class Param5>
 operator std::list<factory<Interface, Info, Param1, Param2, Param3, Param4, 
-			   Param5> > & ()
+                           Param5> > & ()
   {return this->get<Interface, Info, Param1, Param2, Param3, Param4, 
       Param5>();}
   template <class Interface, class Info, class Param1, class Param2, 
-	    class Param3, class Param4, class Param5>
+            class Param3, class Param4, class Param5>
 std::list<factory<Interface, Info, Param1, Param2, Param3, Param4, 
-		  Param5> > & get()
+                  Param5> > & get()
   {
       TypeInfo current_type = 
          type_info_handler<TypeInfo, factory<Interface, Info, Param1, Param2, 
@@ -276,8 +276,8 @@ std::list<factory<Interface, Info, Param1, Param2, Param3, Param4,
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2, Param3, Param4, 
-	  Param5> * ret = new factory_container<Interface, Info, Param1, 
-	  Param2, Param3, Param4, Param5>();
+          Param5> * ret = new factory_container<Interface, Info, Param1, 
+          Param2, Param3, Param4, Param5>();
         factories_[current_type] = ret;
         return *ret;
       }
@@ -285,11 +285,11 @@ std::list<factory<Interface, Info, Param1, Param2, Param3, Param4,
       {
         // Change to dynamic if this fails
         return static_cast<factory_container<Interface, Info, Param1, Param2, 
-	  Param3, Param4, Param5> &>(*(it->second));
+          Param3, Param4, Param5> &>(*(it->second));
       }
   }
 template <class Actual, class Interface, class Info, class Param1, class 
-	  Param2, class Param3, class Param4, class Param5>
+          Param2, class Param3, class Param4, class Param5>
 void add(Info info)
   {
     typedef std::list<factory<Interface, Info, Param1, Param2, Param3, 
@@ -303,16 +303,16 @@ void add(Info info)
     //it->set_type<Actual>(); 
   }
   template <class Interface, class Info, class Param1, class Param2, 
-	    class Param3, class Param4, class Param5, class Param6>
+            class Param3, class Param4, class Param5, class Param6>
   operator std::list<factory<Interface, Info, Param1, Param2, Param3, 
-			     Param4, Param5, Param6> > & ()
+                             Param4, Param5, Param6> > & ()
   {
     return this->get<Interface, Info, Param1, Param2, Param3, Param4, 
       Param5, Param6>();}
   template <class Interface, class Info, class Param1, class Param2, 
-	    class Param3, class Param4, class Param5, class Param6>
+            class Param3, class Param4, class Param5, class Param6>
   std::list<factory<Interface, Info, Param1, Param2, Param3, Param4, 
-		    Param5, Param6> > & get()
+                    Param5, Param6> > & get()
   {
       TypeInfo current_type = type_info_handler<TypeInfo, factory<Interface, 
       Info, Param1, 
@@ -323,8 +323,8 @@ void add(Info info)
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2, Param3, Param4, 
-	  Param5, Param6> * ret = new factory_container<Interface, Info, 
-	  Param1, Param2, Param3, Param4, Param5, Param6>();
+          Param5, Param6> * ret = new factory_container<Interface, Info, 
+          Param1, Param2, Param3, Param4, Param5, Param6>();
         factories_[current_type] = ret;
         return *ret;
       }
@@ -332,11 +332,11 @@ void add(Info info)
       {
         // Change to dynamic if this fails
         return static_cast<factory_container<Interface, Info, Param1, Param2, 
-	  Param3, Param4, Param5, Param6> &>(*(it->second));
+          Param3, Param4, Param5, Param6> &>(*(it->second));
       }
   }
 template <class Actual, class Interface, class Info, class Param1, 
-	  class Param2, class Param3, class Param4, class Param5, class Param6>
+          class Param2, class Param3, class Param4, class Param5, class Param6>
 void add(Info info)
   {
     typedef std::list<factory<Interface, Info, Param1, Param2, Param3, 
