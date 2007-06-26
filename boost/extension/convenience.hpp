@@ -17,14 +17,18 @@
 
 namespace boost{namespace extensions{
   
-inline void load_single_library(factory_map & current_zone, const char * library_path, const char * external_function_name)
+inline void load_single_library(factory_map & current_zone, 
+				const char * library_path, 
+				const char * external_function_name)
 {
   shared_library lib(library_path);
   if (!lib.open())
   {
     return;
   }
-  functor<void, factory_map &> load_func = lib.get_functor<void, factory_map &>(external_function_name);
+  functor<void, factory_map &> load_func = 
+    lib.get_functor<void, factory_map &>(external_function_name);
+
   if (!load_func.is_valid())
   {
     return;

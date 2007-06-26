@@ -32,8 +32,13 @@ protected:
     virtual bool remove_library(const char * library_name) = 0;
     virtual ~generic_factory_container(){}
   };
-  template <class Interface, class Info, class Param1 = void, class Param2 = void, class Param3 = void, class Param4 = void, class Param5 = void, class Param6 = void>
-  class factory_container : public std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >, public generic_factory_container
+  template <class Interface, class Info, class Param1 = void, 
+	    class Param2 = void, class Param3 = void, class Param4 = void, 
+	    class Param5 = void, class Param6 = void>
+  class factory_container : 
+    public std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
+				     Param4, Param5, Param6> >, 
+    public generic_factory_container
   {
   public:
     int * counter_;
@@ -41,9 +46,10 @@ protected:
     virtual ~factory_container() {--(*counter_);}
     virtual bool remove_library(const char * library_name)
     {
-      for (typename std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
-              Param4, Param5, Param6> >::iterator it = this->begin(); 
-              it != this->end();)
+      for (typename std::list<counted_factory<Interface, Info, Param1, 
+	     Param2, Param3, Param4, Param5, Param6> >::iterator it = 
+	     this->begin(); 
+	   it != this->end();)
       {
         if (strcmp(it->library(), library_name) == 0)
           this->erase(it++); 
@@ -54,7 +60,9 @@ protected:
     }
    // factory_container() {}
    // factory_container(basic_counted_factory_map & z)
-    //  :std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, Param4, Param5, Param6>()){}
+    //  :std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
+    // Param4, Param5, Param6> >(z.get<Interface, Param1, Param2, Param3, 
+    // Param4, Param5, Param6>()){}
     //virtual ~factory_container(){}
   };
   typedef std::map<TypeInfo, generic_factory_container *> FactoryMap;
@@ -63,9 +71,11 @@ protected:
     int default_counter_;
     int * current_counter_; 
 public:
-    basic_counted_factory_map() : default_counter_(0), current_counter_(&default_counter_){}
+    basic_counted_factory_map() : default_counter_(0), 
+				  current_counter_(&default_counter_){}
   ~basic_counted_factory_map(){
-    for(typename FactoryMap::iterator it = factories_.begin(); it != factories_.end(); ++it)
+    for(typename FactoryMap::iterator it = factories_.begin(); 
+	it != factories_.end(); ++it)
       delete it->second;
     //TODO - test for memory leaks.
   }
@@ -76,7 +86,8 @@ operator std::list<counted_factory<Interface, Info> > & ()
 std::list<counted_factory<Interface, Info> > & get()
   {
       TypeInfo current_type = 
-         type_info_handler<TypeInfo, counted_factory<Interface, Info> >::get_class_type();
+         type_info_handler<TypeInfo, 
+      counted_factory<Interface, Info> >::get_class_type();
       typename FactoryMap::iterator it = 
         factories_.find(current_type);
       
@@ -90,7 +101,8 @@ std::list<counted_factory<Interface, Info> > & get()
       else
       {
         // Change to dynamic if this fails
-        return static_cast<factory_container<Interface, Info> &>(*(it->second));
+        return static_cast<factory_container<Interface, 
+	  Info> &>(*(it->second));
       }
   }
 template <class Actual, class Interface, class Info>
@@ -113,9 +125,9 @@ operator std::list<counted_factory<Interface, Info, Param1> > & ()
 std::list<counted_factory<Interface, Info, Param1> > & get()
   {
       TypeInfo current_type = 
-         type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1> >::get_class_type();
-      typename FactoryMap::iterator it = 
-        factories_.find(current_type);
+         type_info_handler<TypeInfo, counted_factory<Interface, Info, 
+      Param1> >::get_class_type();
+      typename FactoryMap::iterator it = factories_.find(current_type);
       
       if (it == factories_.end())
       {
@@ -127,7 +139,8 @@ std::list<counted_factory<Interface, Info, Param1> > & get()
       else
       {
         // Change to dynamic if this fails
-        return static_cast<factory_container<Interface, Info, Param1> &>(*(it->second));
+        return static_cast<factory_container<Interface, Info, 
+	  Param1> &>(*(it->second));
       }
   }
 template <class Actual, class Interface, class Info, class Param1>
@@ -150,27 +163,32 @@ operator std::list<counted_factory<Interface, Info, Param1, Param2> > & ()
 std::list<counted_factory<Interface, Info, Param1, Param2> > & get()
   {
       TypeInfo current_type = 
-         type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, Param2> >::get_class_type();
+         type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, 
+      Param2> >::get_class_type();
       typename FactoryMap::iterator it = 
         factories_.find(current_type);
       
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2> * ret = 
-          new factory_container<Interface, Info, Param1, Param2>(current_counter_);
+          new factory_container<Interface, Info, Param1, 
+	  Param2>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
       else
       {
         // Change to dynamic if this fails
-        return static_cast<factory_container<Interface, Info, Param1, Param2> &>(*(it->second));
+        return static_cast<factory_container<Interface, Info, Param1, 
+	  Param2> &>(*(it->second));
       }
   }
-template <class Actual, class Interface, class Info, class Param1, class Param2>
+template <class Actual, class Interface, class Info, class Param1, 
+	  class Param2>
 void add(Info info)
   {
-    typedef std::list<counted_factory<Interface, Info, Param1, Param2> > ListType;
+    typedef std::list<counted_factory<Interface, Info, Param1, Param2> > 
+      ListType;
     ListType & s = this->get<Interface, Info, Param1, Param2>();
     counted_factory<Interface, Info, Param1, Param2> f(info);
     f.set_library(current_library_.c_str());
@@ -180,34 +198,42 @@ void add(Info info)
     s.push_back(f);
     //it->set_type<Actual>(); 
   }
-  template <class Interface, class Info, class Param1, class Param2, class Param3>
-operator std::list<counted_factory<Interface, Info, Param1, Param2, Param3> > & ()
+  template <class Interface, class Info, class Param1, class Param2, 
+	    class Param3>
+operator std::list<counted_factory<Interface, Info, Param1, Param2, 
+				   Param3> > & ()
   {return this->get<Interface, Info, Param1, Param2, Param3>();}
-  template <class Interface, class Info, class Param1, class Param2, class Param3>
+  template <class Interface, class Info, class Param1, class Param2, 
+	    class Param3>
 std::list<counted_factory<Interface, Info, Param1, Param2, Param3> > & get()
   {
       TypeInfo current_type = 
-         type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, Param2, Param3> >::get_class_type();
+         type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, 
+      Param2, Param3> >::get_class_type();
       typename FactoryMap::iterator it = 
         factories_.find(current_type);
       
       if (it == factories_.end())
       {
         factory_container<Interface, Info, Param1, Param2, Param3> * ret = 
-          new factory_container<Interface, Info, Param1, Param2, Param3>(current_counter_);
+          new factory_container<Interface, Info, Param1, Param2, 
+	  Param3>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
       else
       {
         // Change to dynamic if this fails
-        return static_cast<factory_container<Interface, Info, Param1, Param2, Param3> &>(*(it->second));
+        return static_cast<factory_container<Interface, Info, Param1, Param2, 
+	  Param3> &>(*(it->second));
       }
   }
-template <class Actual, class Interface, class Info, class Param1, class Param2, class Param3>
+template <class Actual, class Interface, class Info, class Param1, 
+	  class Param2, class Param3>
 void add(Info info)
   {
-    typedef std::list<counted_factory<Interface, Info, Param1, Param2, Param3> > ListType;
+    typedef std::list<counted_factory<Interface, Info, Param1, Param2, 
+      Param3> > ListType;
     ListType & s = this->get<Interface, Info, Param1, Param2, Param3>();
     counted_factory<Interface, Info, Param1, Param2, Param3> f(info);
     f.set_library(current_library_.c_str());
@@ -217,35 +243,46 @@ void add(Info info)
     s.push_back(f);
     //it->set_type<Actual>(); 
   }
-  template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4>
-operator std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4> > & ()
+  template <class Interface, class Info, class Param1, class Param2, 
+	    class Param3, class Param4>
+operator std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
+				   Param4> > & ()
   {return this->get<Interface, Info, Param1, Param2, Param3, Param4>();}
-  template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4>
-std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4> > & get()
+  template <class Interface, class Info, class Param1, class Param2, 
+	    class Param3, class Param4>
+std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
+			  Param4> > & get()
   {
       TypeInfo current_type = 
-         type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, Param2, Param3, Param4> >::get_class_type();
+         type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, 
+      Param2, Param3, Param4> >::get_class_type();
       typename FactoryMap::iterator it = 
         factories_.find(current_type);
       
       if (it == factories_.end())
       {
-        factory_container<Interface, Info, Param1, Param2, Param3, Param4> * ret = 
-          new factory_container<Interface, Info, Param1, Param2, Param3, Param4>(current_counter_);
+        factory_container<Interface, Info, Param1, Param2, Param3, 
+	  Param4> * ret = 
+          new factory_container<Interface, Info, Param1, Param2, Param3, 
+	  Param4>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
       else
       {
         // Change to dynamic if this fails
-        return static_cast<factory_container<Interface, Info, Param1, Param2, Param3, Param4> &>(*(it->second));
+        return static_cast<factory_container<Interface, Info, Param1, Param2, 
+	  Param3, Param4> &>(*(it->second));
       }
   }
-template <class Actual, class Interface, class Info, class Param1, class Param2, class Param3, class Param4>
+template <class Actual, class Interface, class Info, class Param1, 
+	  class Param2, class Param3, class Param4>
 void add(Info info)
   {
-    typedef std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4> > ListType;
-    ListType & s = this->get<Interface, Info, Param1, Param2, Param3, Param4>();
+    typedef std::list<counted_factory<Interface, Info, Param1, Param2, 
+      Param3, Param4> > ListType;
+    ListType & s = this->get<Interface, Info, Param1, Param2, Param3, 
+      Param4>();
     counted_factory<Interface, Info, Param1, Param2, Param3, Param4> f(info);
     f.set_library(current_library_.c_str());
     f.set_counter(current_counter_);
@@ -254,36 +291,47 @@ void add(Info info)
     s.push_back(f);
     //it->set_type<Actual>(); 
   }
-  template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5>
-operator std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5> > & ()
-  {return this->get<Interface, Info, Param1, Param2, Param3, Param4, Param5>();}
-  template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5>
-std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5> > & get()
+  template <class Interface, class Info, class Param1, class Param2, 
+	    class Param3, class Param4, class Param5>
+  operator std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
+				     Param4, Param5> > & ()
   {
-      TypeInfo current_type = 
-         type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5> >::get_class_type();
-      typename FactoryMap::iterator it = 
-        factories_.find(current_type);
-      
-      if (it == factories_.end())
-      {
-        factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5> * ret = 
-          new factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5>(current_counter_);
-        factories_[current_type] = ret;
-        return *ret;
-      }
-      else
-      {
-        // Change to dynamic if this fails
-        return static_cast<factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5> &>(*(it->second));
-      }
+    return this->get<Interface, Info, Param1, Param2, Param3, Param4, 
+      Param5>();
   }
-template <class Actual, class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5>
-void add(Info info)
+  template <class Interface, class Info, class Param1, class Param2, 
+	    class Param3, class Param4, class Param5>
+  std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, 
+			    Param5> > & get()
   {
-    typedef std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5> > ListType;
-    ListType & s = this->get<Interface, Info, Param1, Param2, Param3, Param4, Param5>();
-    counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5> f(info);
+    TypeInfo current_type = 
+      type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, 
+      Param2, Param3, Param4, Param5> >::get_class_type();
+    typename FactoryMap::iterator it = 
+      factories_.find(current_type);
+      
+    if (it == factories_.end()) {
+      factory_container<Interface, Info, Param1, Param2, Param3, Param4, 
+	Param5> * ret = new factory_container<Interface, Info, Param1, Param2,
+	Param3, Param4, Param5>(current_counter_);
+      factories_[current_type] = ret;
+      return *ret;
+    } else {
+      // Change to dynamic if this fails
+      return static_cast<factory_container<Interface, Info, Param1, Param2, 
+	Param3, Param4, Param5> &>(*(it->second));
+    }
+  }
+  template <class Actual, class Interface, class Info, class Param1, 
+	    class Param2, class Param3, class Param4, class Param5>
+  void add(Info info)
+  {
+    typedef std::list<counted_factory<Interface, Info, Param1, Param2, 
+      Param3, Param4, Param5> > ListType;
+    ListType & s = this->get<Interface, Info, Param1, Param2, Param3, Param4, 
+      Param5>();
+    counted_factory<Interface, Info, Param1, Param2, Param3, Param4, 
+      Param5> f(info);
     f.set_library(current_library_.c_str());
     f.set_counter(current_counter_);
     //f.set_type<Actual>();
@@ -291,36 +339,49 @@ void add(Info info)
     s.push_back(f);
     //it->set_type<Actual>(); 
   }
-  template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5, class Param6>
-operator std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> > & ()
-  {return this->get<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6>();}
-  template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5, class Param6>
-std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> > & get()
+  template <class Interface, class Info, class Param1, class Param2, 
+	    class Param3, class Param4, class Param5, class Param6>
+  operator std::list<counted_factory<Interface, Info, Param1, Param2, Param3, 
+				     Param4, Param5, Param6> > & () {
+    return this->get<Interface, Info, Param1, Param2, Param3, Param4, Param5, 
+								   Param6>();}
+  template <class Interface, class Info, class Param1, class Param2, 
+	    class Param3, class Param4, class Param5, class Param6>
+  std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, 
+			    Param5, Param6> > & get()
   {
-      TypeInfo current_type = 
-         type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> >::get_class_type();
-      typename FactoryMap::iterator it = 
-        factories_.find(current_type);
+    TypeInfo current_type = 
+      type_info_handler<TypeInfo, counted_factory<Interface, Info, Param1, 
+      Param2, Param3, Param4, Param5, Param6> >::get_class_type();
+    typename FactoryMap::iterator it = 
+      factories_.find(current_type);
       
-      if (it == factories_.end())
-      {
-        factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> * ret = 
-          new factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6>(current_counter_);
+    if (it == factories_.end()) {
+      factory_container<Interface, Info, Param1, Param2, Param3, Param4, 
+	Param5, Param6> * ret = 
+          new factory_container<Interface, Info, Param1, Param2, Param3, 
+	Param4, Param5, Param6>(current_counter_);
         factories_[current_type] = ret;
         return *ret;
       }
       else
       {
         // Change to dynamic if this fails
-        return static_cast<factory_container<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> &>(*(it->second));
+        return static_cast<factory_container<Interface, Info, Param1, Param2, 
+	  Param3, Param4, Param5, Param6> &>(*(it->second));
       }
   }
-template <class Actual, class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5, class Param6>
-void add(Info info)
+  template <class Actual, class Interface, class Info, class Param1, 
+	    class Param2, class Param3, class Param4, class Param5, 
+	    class Param6>
+  void add(Info info)
   {
-    typedef std::list<counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> > ListType;
-    ListType & s = this->get<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6>();
-    counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, Param6> f(info);
+    typedef std::list<counted_factory<Interface, Info, Param1, Param2, 
+      Param3, Param4, Param5, Param6> > ListType;
+    ListType & s = this->get<Interface, Info, Param1, Param2, Param3, 
+      Param4, Param5, Param6>();
+    counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5, 
+      Param6> f(info);
     f.set_library(current_library_.c_str());
     f.set_counter(current_counter_);
     //f.set_type<Actual>();

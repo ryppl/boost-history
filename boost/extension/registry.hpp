@@ -52,7 +52,9 @@ public:
     library_iterator it = libraries_.find(library_location);
     if (it == libraries_.end()) {
       it = libraries_.insert(std::make_pair(std::string(library_location), 
-                             std::make_pair(shared_library(library_location, false), int(0)))).first;
+                             std::make_pair(shared_library(library_location, 
+							   false), 
+					    int(0)))).first;
       this->current_library_ = library_location;
       this->current_counter_ = &it->second.second;
       it->second.first.open();
@@ -61,7 +63,8 @@ public:
         return false;
       }
       functor<void, counted_factory_map &> load_func = 
-        it->second.first.get_functor<void, counted_factory_map &>(function_name);
+        it->second.first.get_functor<void, counted_factory_map &>
+	(function_name);
       if (load_func.is_valid())
       {
         load_func(*this);
@@ -76,8 +79,8 @@ public:
     library_iterator it = libraries_.find(library_location);
     if (it == libraries_.end()) 
       return false;
-    for (typename basic_counted_factory_map<TypeInfo>::FactoryMap::iterator it = this->factories_.begin();
-         it != this->factories_.end();) {
+    for (typename basic_counted_factory_map<TypeInfo>::FactoryMap::iterator it 
+	   = this->factories_.begin(); it != this->factories_.end();) {
       if(it->second->remove_library(library_location)) 
       {
         delete it->second;

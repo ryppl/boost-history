@@ -1,6 +1,7 @@
 /*
  * Boost.Extension / counted factory:
- * 	factory to register the implementations and create them (with a reference count)
+ * 	factory to register the implementations and create them 
+ *	(with a reference count)
  *
  * (C) Copyright Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -14,7 +15,9 @@
 #define BOOST_EXTENSION_COUNTED_FACTORY_HPP
 #include <string>
 namespace boost{namespace extensions{
-  template <class Interface, class Info, class Param1 = void, class Param2 = void, class Param3 = void, class Param4 = void, class Param5 = void, class Param6 = void>
+  template <class Interface, class Info, class Param1 = void, 
+	    class Param2 = void, class Param3 = void, class Param4 = void, 
+	    class Param5 = void, class Param6 = void>
 class counted_factory
 {
 protected:
@@ -24,7 +27,8 @@ protected:
   {
   public:
     virtual ~generic_factory_function(){}
-    virtual Interface * operator()(int * counter, Param1, Param2, Param3, Param4, Param5, Param6) = 0;
+    virtual Interface * operator()(int * counter, Param1, Param2, Param3, 
+				   Param4, Param5, Param6) = 0;
     virtual generic_factory_function * copy() const = 0;
   };
   template <class T>
@@ -36,7 +40,9 @@ protected:
     private:
       int * counter_;
     public:
-      counted_object(int * counter, Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6) : T(p1, p2, p3, p4, p5, p6),
+      counted_object(int * counter, Param1 p1, Param2 p2, Param3 p3, 
+		     Param4 p4, Param5 p5, Param6 p6) 
+	: T(p1, p2, p3, p4, p5, p6),
       counter_(counter)
       {
         ++(*counter_);
@@ -48,12 +54,17 @@ protected:
     };
     virtual ~factory_function(){}
     virtual Interface * operator()
-      (int * counter, Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6)
+      (int * counter, Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, 
+       Param6 p6)
     {  // A compilation error here usually indicates that the
        // class you are adding is not derived from the base class
        // that you indicated.
-      return static_cast<Interface*>(new counted_object(counter, p1, p2, p3, p4, p5, p6));}
-    virtual generic_factory_function * copy() const {return new factory_function<T>;}
+      return static_cast<Interface*>(new counted_object(counter, p1, p2, p3, 
+							p4, p5, p6));}
+    virtual generic_factory_function * copy() const 
+    {
+      return new factory_function<T>;
+    }
   };
   std::auto_ptr<generic_factory_function> factory_func_ptr_;
   Info info_;
@@ -71,9 +82,11 @@ public:
     return library_.c_str();
   }
   template <class Actual>
-    void set_type_special(Actual *){factory_func_ptr_.reset(new factory_function<Actual>());}
+  void set_type_special(Actual *) {
+    factory_func_ptr_.reset(new factory_function<Actual>());
+  }
   template <class Actual>
-    void set_type(){factory_func_ptr_ = new factory_function<Actual>();}
+  void set_type(){factory_func_ptr_ = new factory_function<Actual>();}
   counted_factory(Info info)
     :factory_func_ptr_(0),
     info_(info)
@@ -84,13 +97,16 @@ public:
     factory_func_ptr_(first.factory_func_ptr_->copy()),
     info_(first.info_)
                        {}
-  Interface * operator()(int * counter, Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6)
+  Interface * operator()(int * counter, Param1 p1, Param2 p2, Param3 p3, 
+			 Param4 p4, Param5 p5, Param6 p6)
     {return create(counter, p1, p2, p3, p4, p5, p6);}
-  Interface * create(Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, Param6 p6){return (*factory_func_ptr_)
+  Interface * create(Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5, 
+		     Param6 p6){return (*factory_func_ptr_)
   (counter_, p1, p2, p3, p4, p5, p6);}
   Info & get_info(){return info_;}
 };
-template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4, class Param5>
+template <class Interface, class Info, class Param1, class Param2, 
+	  class Param3, class Param4, class Param5>
 class counted_factory<Interface, Info, Param1, Param2, Param3, Param4, Param5>
 {
 protected:
@@ -100,7 +116,8 @@ protected:
   {
   public:
     virtual ~generic_factory_function(){}
-    virtual Interface * operator()(int * counter, Param1, Param2, Param3, Param4, Param5) = 0;
+    virtual Interface * operator()(int * counter, Param1, Param2, Param3, 
+				   Param4, Param5) = 0;
     virtual generic_factory_function * copy() const = 0;
   };
   template <class T>
@@ -112,7 +129,8 @@ protected:
     private:
       int * counter_;
     public:
-      counted_object(int * counter, Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5) : T(p1, p2, p3, p4, p5),
+      counted_object(int * counter, Param1 p1, Param2 p2, Param3 p3, 
+		     Param4 p4, Param5 p5) : T(p1, p2, p3, p4, p5),
       counter_(counter)
       {
         ++(*counter_);
@@ -128,8 +146,11 @@ protected:
     {  // A compilation error here usually indicates that the
        // class you are adding is not derived from the base class
        // that you indicated.
-      return static_cast<Interface*>(new counted_object(counter, p1, p2, p3, p4, p5));}
-    virtual generic_factory_function * copy() const {return new factory_function<T>;}
+      return static_cast<Interface*>(new counted_object(counter, p1, p2, p3, 
+							p4, p5));}
+    virtual generic_factory_function * copy() const {
+      return new factory_function<T>;
+    }
   };
   std::auto_ptr<generic_factory_function> factory_func_ptr_;
   Info info_;
@@ -147,7 +168,8 @@ public:
     return library_.c_str();
   }
   template <class Actual>
-    void set_type_special(Actual *){factory_func_ptr_.reset(new factory_function<Actual>());}
+    void set_type_special(Actual *){
+    factory_func_ptr_.reset(new factory_function<Actual>());}
   template <class Actual>
     void set_type(){factory_func_ptr_ = new factory_function<Actual>();}
   counted_factory(Info info)
@@ -160,13 +182,16 @@ public:
     factory_func_ptr_(first.factory_func_ptr_->copy()),
     info_(first.info_)
                        {}
-  Interface * operator()(int * counter, Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5)
+  Interface * operator()(int * counter, Param1 p1, Param2 p2, Param3 p3, 
+			 Param4 p4, Param5 p5)
     {return create(counter, p1, p2, p3, p4, p5);}
-  Interface * create(Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5){return (*factory_func_ptr_)
-  (counter_, p1, p2, p3, p4, p5);}
+  Interface * create(Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5) {
+    return (*factory_func_ptr_) (counter_, p1, p2, p3, p4, p5);
+  }
   Info & get_info(){return info_;}
 };
-template <class Interface, class Info, class Param1, class Param2, class Param3, class Param4>
+template <class Interface, class Info, class Param1, class Param2, 
+	  class Param3, class Param4>
 class counted_factory<Interface, Info, Param1, Param2, Param3, Param4>
 {
 protected:
@@ -176,7 +201,8 @@ protected:
   {
   public:
     virtual ~generic_factory_function(){}
-    virtual Interface * operator()(int * counter, Param1, Param2, Param3, Param4) = 0;
+    virtual Interface * operator()(int * counter, Param1, Param2, Param3, 
+				   Param4) = 0;
     virtual generic_factory_function * copy() const = 0;
   };
   template <class T>
@@ -188,7 +214,8 @@ protected:
     private:
       int * counter_;
     public:
-      counted_object(int * counter, Param1 p1, Param2 p2, Param3 p3, Param4 p4) : T(p1, p2, p3, p4),
+      counted_object(int * counter, Param1 p1, Param2 p2, Param3 p3, 
+		     Param4 p4) : T(p1, p2, p3, p4),
       counter_(counter)
       {
         ++(*counter_);
@@ -204,8 +231,11 @@ protected:
     {  // A compilation error here usually indicates that the
        // class you are adding is not derived from the base class
        // that you indicated.
-      return static_cast<Interface*>(new counted_object(counter, p1, p2, p3, p4));}
-    virtual generic_factory_function * copy() const {return new factory_function<T>;}
+      return static_cast<Interface*>(new counted_object(counter, p1, p2, p3, 
+							p4));}
+    virtual generic_factory_function * copy() const {
+      return new factory_function<T>;
+    }
   };
   std::auto_ptr<generic_factory_function> factory_func_ptr_;
   Info info_;
@@ -223,7 +253,9 @@ public:
     return library_.c_str();
   }
   template <class Actual>
-    void set_type_special(Actual *){factory_func_ptr_.reset(new factory_function<Actual>());}
+  void set_type_special(Actual *){
+    factory_func_ptr_.reset(new factory_function<Actual>());
+  }
   template <class Actual>
     void set_type(){factory_func_ptr_ = new factory_function<Actual>();}
   counted_factory(Info info)
@@ -236,13 +268,16 @@ public:
     factory_func_ptr_(first.factory_func_ptr_->copy()),
     info_(first.info_)
                        {}
-  Interface * operator()(int * counter, Param1 p1, Param2 p2, Param3 p3, Param4 p4)
+  Interface * operator()(int * counter, Param1 p1, Param2 p2, Param3 p3, 
+			 Param4 p4)
     {return create(counter, p1, p2, p3, p4);}
-  Interface * create(Param1 p1, Param2 p2, Param3 p3, Param4 p4){return (*factory_func_ptr_)
-  (counter_, p1, p2, p3, p4);}
+  Interface * create(Param1 p1, Param2 p2, Param3 p3, Param4 p4) {
+    return (*factory_func_ptr_) (counter_, p1, p2, p3, p4);
+  }
   Info & get_info(){return info_;}
 };
-template <class Interface, class Info, class Param1, class Param2, class Param3>
+template <class Interface, class Info, class Param1, class Param2, 
+	  class Param3>
 class counted_factory<Interface, Info, Param1, Param2, Param3>
 {
 protected:
@@ -264,7 +299,8 @@ protected:
     private:
       int * counter_;
     public:
-      counted_object(int * counter, Param1 p1, Param2 p2, Param3 p3) : T(p1, p2, p3),
+      counted_object(int * counter, Param1 p1, Param2 p2, Param3 p3) 
+	: T(p1, p2, p3),
       counter_(counter)
       {
         ++(*counter_);
@@ -281,7 +317,9 @@ protected:
        // class you are adding is not derived from the base class
        // that you indicated.
       return static_cast<Interface*>(new counted_object(counter, p1, p2, p3));}
-    virtual generic_factory_function * copy() const {return new factory_function<T>;}
+    virtual generic_factory_function * copy() const {
+      return new factory_function<T>;
+    }
   };
   std::auto_ptr<generic_factory_function> factory_func_ptr_;
   Info info_;
@@ -299,7 +337,9 @@ public:
     return library_.c_str();
   }
   template <class Actual>
-    void set_type_special(Actual *){factory_func_ptr_.reset(new factory_function<Actual>());}
+    void set_type_special(Actual *){
+    factory_func_ptr_.reset(new factory_function<Actual>());
+  }
   template <class Actual>
     void set_type(){factory_func_ptr_ = new factory_function<Actual>();}
   counted_factory(Info info)
@@ -314,8 +354,9 @@ public:
                        {}
   Interface * operator()(int * counter, Param1 p1, Param2 p2, Param3 p3)
     {return create(counter, p1, p2, p3);}
-  Interface * create(Param1 p1, Param2 p2, Param3 p3){return (*factory_func_ptr_)
-  (counter_, p1, p2, p3);}
+  Interface * create(Param1 p1, Param2 p2, Param3 p3){
+    return (*factory_func_ptr_) (counter_, p1, p2, p3);
+  }
   Info & get_info(){return info_;}
 };
 template <class Interface, class Info, class Param1, class Param2>
@@ -357,7 +398,9 @@ protected:
        // class you are adding is not derived from the base class
        // that you indicated.
       return static_cast<Interface*>(new counted_object(counter, p1, p2));}
-    virtual generic_factory_function * copy() const {return new factory_function<T>;}
+    virtual generic_factory_function * copy() const {
+      return new factory_function<T>;
+    }
   };
   std::auto_ptr<generic_factory_function> factory_func_ptr_;
   Info info_;
@@ -375,7 +418,9 @@ public:
     return library_.c_str();
   }
   template <class Actual>
-    void set_type_special(Actual *){factory_func_ptr_.reset(new factory_function<Actual>());}
+    void set_type_special(Actual *){
+    factory_func_ptr_.reset(new factory_function<Actual>());
+  }
   template <class Actual>
     void set_type(){factory_func_ptr_ = new factory_function<Actual>();}
   counted_factory(Info info)
@@ -433,7 +478,9 @@ protected:
        // class you are adding is not derived from the base class
        // that you indicated.
       return static_cast<Interface*>(new counted_object(counter, p1));}
-    virtual generic_factory_function * copy() const {return new factory_function<T>;}
+    virtual generic_factory_function * copy() const {
+      return new factory_function<T>;
+    }
   };
   std::auto_ptr<generic_factory_function> factory_func_ptr_;
   Info info_;
@@ -451,7 +498,9 @@ public:
     return library_.c_str();
   }
   template <class Actual>
-    void set_type_special(Actual *){factory_func_ptr_.reset(new factory_function<Actual>());}
+    void set_type_special(Actual *){
+    factory_func_ptr_.reset(new factory_function<Actual>());
+  }
   template <class Actual>
     void set_type(){factory_func_ptr_ = new factory_function<Actual>();}
   counted_factory(Info info)
@@ -509,7 +558,9 @@ protected:
        // class you are adding is not derived from the base class
        // that you indicated.
       return static_cast<Interface*>(new counted_object(counter));}
-    virtual generic_factory_function * copy() const {return new factory_function<T>;}
+    virtual generic_factory_function * copy() const {
+      return new factory_function<T>;
+    }
   };
   std::auto_ptr<generic_factory_function> factory_func_ptr_;
   Info info_;
@@ -527,7 +578,9 @@ public:
     return library_.c_str();
   }
   template <class Actual>
-    void set_type_special(Actual *){factory_func_ptr_.reset(new factory_function<Actual>());}
+    void set_type_special(Actual *){
+    factory_func_ptr_.reset(new factory_function<Actual>());
+  }
   template <class Actual>
     void set_type(){factory_func_ptr_ = new factory_function<Actual>();}
   counted_factory(Info info)
