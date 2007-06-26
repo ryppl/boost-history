@@ -813,6 +813,22 @@ macro(boost_add_executable EXENAME)
     endforeach (FEATURE ${FEATURESET})
 
     if (NOT THIS_EXE_REQUESTED_FROM_SET)
+      # If this feature set decides between Release and Debug, the
+      # build type might tell us which one to choose.
+      if (FEATURESET_STR STREQUAL "RELEASE:DEBUG")
+        if (CMAKE_BUILD_TYPE STREQUAL "Release")
+          # Make this feature part of the variant
+          list(APPEND THIS_EXE_VARIANT RELEASE)
+          set(THIS_EXE_REQUESTED_FROM_SET TRUE)
+        elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+          # Make this feature part of the variant
+          list(APPEND THIS_EXE_VARIANT DEBUG)
+          set(THIS_EXE_REQUESTED_FROM_SET TRUE)
+        endif (CMAKE_BUILD_TYPE STREQUAL "Release")
+      endif (FEATURESET_STR STREQUAL "RELEASE:DEBUG")
+    endif (NOT THIS_EXE_REQUESTED_FROM_SET)
+
+    if (NOT THIS_EXE_REQUESTED_FROM_SET)
       # The caller did not specify which feature value to use from
       # this set, so find the first feature value that actually works.
       set(THIS_EXE_FOUND_FEATURE FALSE)

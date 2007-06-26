@@ -120,12 +120,17 @@ else(CMAKE_CONFIGURATION_TYPES)
   endif (NOT CMAKE_BUILD_TYPE)
 endif(CMAKE_CONFIGURATION_TYPES)
 
-# For project file generators that have multiple configurations,
-# clear out the built-in C++ compiler and link flags for each of the 
+# Clear out the built-in C++ compiler and link flags for each of the 
 # configurations.
-foreach(CONFIG ${CMAKE_CONFIGURATION_TYPES})
-  string(TOUPPER ${CONFIG} UCONFIG)
-  set(CMAKE_CXX_FLAGS_${UCONFIG} "" CACHE INTERNAL "Unused by Boost")
-  set(CMAKE_SHARED_LINKER_FLAGS_${UCONFIG} "" CACHE INTERNAL "Unused by Boost")
-  set(CMAKE_MODULE_LINKER_FLAGS_${UCONFIG} "" CACHE INTERNAL "Unused by Boost")
-endforeach(CONFIG ${CMAKE_CONFIGURATION_TYPES})
+set(CMAKE_CXX_FLAGS_DEBUG "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_SHARED_LINKER_FLAGS_DEBUG "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_MODULE_LINKER_FLAGS_DEBUG "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_CXX_FLAGS_RELEASE "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_SHARED_LINKER_FLAGS_RELEASE "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_MODULE_LINKER_FLAGS_RELEASE "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_CXX_FLAGS_MINSIZEREL "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_SHARED_LINKER_FLAGS_MINSIZEREL "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_MODULE_LINKER_FLAGS_MINSIZEREL "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_SHARED_LINKER_FLAGS_RELWITHDEBINFO "" CACHE INTERNAL "Unused by Boost")
+set(CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO "" CACHE INTERNAL "Unused by Boost")
