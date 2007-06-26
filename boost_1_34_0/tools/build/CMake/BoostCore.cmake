@@ -786,12 +786,18 @@ macro(boost_add_executable EXENAME)
   else (THIS_EXE_DEFAULT_ARGS)
     set(THIS_EXE_SOURCES ${EXENAME}.cpp)
   endif (THIS_EXE_DEFAULT_ARGS)
+
+  # Whether we can build both debug and release versions of this
+  # executable within an IDE (based on the selected configuration
+  # type).
+  set(THIS_EXE_DEBUG_AND_RELEASE FALSE)
   
   # Compute the variant that will be used to build this executable,
   # taking into account both the requested features passed to
   # boost_add_executable and what options the user has set.
   set(THIS_EXE_OKAY TRUE)
   set(THIS_EXE_VARIANT)
+
   foreach(FEATURESET_STR ${BOOST_FEATURES})
     string(REPLACE ":" ";" FEATURESET ${FEATURESET_STR})
     separate_arguments(FEATURESET)
@@ -813,25 +819,39 @@ macro(boost_add_executable EXENAME)
     endforeach (FEATURE ${FEATURESET})
 
     if (NOT THIS_EXE_REQUESTED_FROM_SET)
-      # If this feature set decides between Release and Debug, the
-      # build type might tell us which one to choose.
-      if (FEATURESET_STR STREQUAL "RELEASE:DEBUG")
-        if (CMAKE_BUILD_TYPE STREQUAL "Release")
-          # Make this feature part of the variant
-          list(APPEND THIS_EXE_VARIANT RELEASE)
-          set(THIS_EXE_REQUESTED_FROM_SET TRUE)
-        elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
-          # Make this feature part of the variant
-          list(APPEND THIS_EXE_VARIANT DEBUG)
-          set(THIS_EXE_REQUESTED_FROM_SET TRUE)
-        endif (CMAKE_BUILD_TYPE STREQUAL "Release")
-      endif (FEATURESET_STR STREQUAL "RELEASE:DEBUG")
-    endif (NOT THIS_EXE_REQUESTED_FROM_SET)
-
-    if (NOT THIS_EXE_REQUESTED_FROM_SET)
       # The caller did not specify which feature value to use from
       # this set, so find the first feature value that actually works.
       set(THIS_EXE_FOUND_FEATURE FALSE)
+
+      # If this feature set decides between Release and Debug, we
+      # either query CMAKE_BUILD_TYPE to determine which to use (for
+      # makefile targets) or handle both variants separately (for IDE
+      # targets).
+      if (FEATURESET_STR STREQUAL "RELEASE:DEBUG")
+        if (CMAKE_CONFIGURATION_TYPES)
+          # IDE target: can we build both debug and release?
+          if (BUILD_DEBUG AND BUILD_RELEASE)
+            # Remember that we're capable of building both configurations
+            set(THIS_EXE_DEBUG_AND_RELEASE TRUE)
+
+            # Don't add RELEASE or DEBUG to the variant (yet)
+            set(THIS_EXE_FOUND_FEATURE TRUE)
+          endif (BUILD_DEBUG AND BUILD_RELEASE)
+        else (CMAKE_CONFIGURATION_TYPES)
+          # Makefile target: CMAKE_BUILD_TYPE tells us which variant to build
+          if (CMAKE_BUILD_TYPE STREQUAL "Release")
+            # Okay, build the release variant
+            list(APPEND THIS_EXE_VARIANT RELEASE)
+            set(THIS_EXE_FOUND_FEATURE TRUE)
+          elseif (CMAKE_BUILD_TYPE STREQUAL "Debug")
+            # Okay, build the debug variant
+            list(APPEND THIS_EXE_VARIANT DEBUG)
+            set(THIS_EXE_FOUND_FEATURE TRUE)
+          endif (CMAKE_BUILD_TYPE STREQUAL "Release")
+        endif (CMAKE_CONFIGURATION_TYPES)
+      endif (FEATURESET_STR STREQUAL "RELEASE:DEBUG")
+
+      # Search through all of the features in the set to find one that works
       foreach (FEATURE ${FEATURESET})
         # We only care about the first feature value we find...
         if (NOT THIS_EXE_FOUND_FEATURE)
@@ -871,12 +891,24 @@ macro(boost_add_executable EXENAME)
   if (THIS_EXE_OKAY)
     # Compute the name of the variant targets that we'll be linking
     # against. We'll use this to link against the appropriate
-    # dependencies.
-    boost_library_variant_target_name(${THIS_EXE_VARIANT})
+    # dependencies. For IDE targets where we can build both debug and
+    # release configurations, create DEBUG_ and RELEASE_ versions of
+    # the macros.
+    if (THIS_EXE_DEBUG_AND_RELEASE)
+      boost_library_variant_target_name(RELEASE ${THIS_EXE_VARIANT})
+      set(RELEASE_VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}")
+      boost_library_variant_target_name(DEBUG ${THIS_EXE_VARIANT})
+      set(DEBUG_VARIANT_TARGET_NAME "${VARIANT_TARGET_NAME}")
+    else (THIS_EXE_DEBUG_AND_RELEASE)
+      boost_library_variant_target_name(${THIS_EXE_VARIANT})
+    endif (THIS_EXE_DEBUG_AND_RELEASE)
 
     # Compute the actual set of library dependencies, based on the
-    # variant name we computed above.
+    # variant name we computed above. The RELEASE and DEBUG versions
+    # only apply when THIS_EXE_DEBUG_AND_RELEASE.
     set(THIS_EXE_ACTUAL_DEPENDS)
+    set(THIS_EXE_RELEASE_ACTUAL_DEPENDS)
+    set(THIS_EXE_DEBUG_ACTUAL_DEPENDS)
     foreach(LIB ${THIS_EXE_DEPENDS})
       if (LIB MATCHES ".*-.*")
         # The user tried to state exactly which variant to use. Just
@@ -884,24 +916,39 @@ macro(boost_add_executable EXENAME)
         # right. Eventually, this should at least warn, because it is
         # not the "proper" way to do things
         list(APPEND THIS_EXE_ACTUAL_DEPENDS ${LIB})
+        list(APPEND THIS_EXE_RELEASE_ACTUAL_DEPENDS ${LIB})
+        list(APPEND THIS_EXE_DEBUG_ACTUAL_DEPENDS ${LIB})
       else (LIB MATCHES ".*-.*")
         # The user has given the name of just the library target,
         # e.g., "boost_filesystem". We add on the appropriate variant
-        # name.
+        # name(s).
         list(APPEND THIS_EXE_ACTUAL_DEPENDS "${LIB}${VARIANT_TARGET_NAME}")
+        list(APPEND THIS_EXE_RELEASE_ACTUAL_DEPENDS "${LIB}${RELEASE_VARIANT_TARGET_NAME}")
+        list(APPEND THIS_EXE_DEBUG_ACTUAL_DEPENDS "${LIB}${DEBUG_VARIANT_TARGET_NAME}")
       endif (LIB MATCHES ".*-.*")
     endforeach(LIB ${THIS_EXE_DEPENDS})
 
     # Build the executable
     add_executable(${EXENAME} ${THIS_EXE_SOURCES})
     
-    # Set the various properties we need
-    # TODO: For Visual Studio, set _DEBUG and _RELEASE versions
+    # Set the various compilation and linking flags
     set_target_properties(${EXENAME}
       PROPERTIES
       COMPILE_FLAGS "${THIS_EXE_COMPILE_FLAGS}"
       LINK_FLAGS "${THIS_EXE_LINK_FLAGS}"
       )
+
+    # For IDE generators where we can build both debug and release
+    # configurations, pass the configurations along separately.
+    if (THIS_EXE_DEBUG_AND_RELEASE)
+      set_target_properties(${EXENAME}
+        PROPERTIES
+        COMPILE_FLAGS_DEBUG "${DEBUG_COMPILE_FLAGS} ${THIS_EXE_COMPILE_FLAGS}"
+        COMPILE_FLAGS_RELEASE "${RELEASE_COMPILE_FLAGS} ${THIS_EXE_COMPILE_FLAGS}"
+        LINK_FLAGS_DEBUG "${DEBUG_LINK_FLAGS} ${THIS_EXE_LINK_FLAGS}"
+        LINK_FLAGS_RELEASE "${RELEASE_LINK_FLAGS} ${THIS_EXE_LINK_FLAGS}"
+        )
+    endif (THIS_EXE_DEBUG_AND_RELEASE)
 
     # If the user gave an output name, use it.
     if (THIS_EXE_OUTPUT_NAME)
@@ -912,9 +959,17 @@ macro(boost_add_executable EXENAME)
     endif (THIS_EXE_OUTPUT_NAME)
 
     # Link against the various libraries 
-    target_link_libraries(${EXENAME} 
-      ${THIS_EXE_ACTUAL_DEPENDS} 
-      ${THIS_EXE_LINK_LIBS})
+    if (THIS_EXE_DEBUG_AND_RELEASE)
+      target_link_libraries(${EXENAME} 
+        ${THIS_EXE_LINK_LIBS}
+        release ${THIS_EXE_RELEASE_ACTUAL_DEPENDS} ${THIS_EXE_RELEASE_LINK_LIBS} 
+        debug ${THIS_EXE_DEBUG_ACTUAL_DEPENDS} ${THIS_EXE_DEBUG_LINK_LIBS} 
+        )
+    else (THIS_EXE_DEBUG_AND_RELEASE)
+      target_link_libraries(${EXENAME} 
+        ${THIS_EXE_ACTUAL_DEPENDS} 
+        ${THIS_EXE_LINK_LIBS})
+    endif (THIS_EXE_DEBUG_AND_RELEASE)
 
     # Install the executable, if not suppressed
     if (NOT THIS_EXE_NO_INSTALL)
