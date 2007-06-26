@@ -1,6 +1,6 @@
 /*
  * Boost.Extension / hello_world_plain_old benchmark
- * 	hello world plugin implemented in dl* style
+ *         hello world plugin implemented in dl* style
  *
  * (C) Copyright Mariano G. Consoni 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -32,6 +32,6 @@ public:
 
 extern "C" void EXPORT_DECL extension_export_words(word **h, word **w)
 {
-	*h = new hello;
-	*w = new world;
+  *h = new hello;
+  *w = new world;
 }
