@@ -31,7 +31,7 @@
 //  - 'HDS'  A type that is a model of VertexListHDSConcept
 //  - 'hds'  A non-modifiable instance of HDS
 //  - 'v'    Vertex descriptor, of type 'hds_traits<HDS>::vertex_descriptor'
-//  - 'p'    Vertex iterator, of type 'hds_traits<HDS>::vertex_iterator' 
+//  - 'vit'  Vertex iterator, of type 'hds_traits<HDS>::vertex_iterator' 
 //  - 'n'    Vertex list size, of type 'hds_traits<HDS>::size_type'
 //
 ///Associated types
@@ -51,8 +51,9 @@
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'VertexHDS' concept:
-//  - 'vertices_begin(hds)' must return a value assignable to 'p'.  
-//  - 'vertices_end(hds)' must return a value assignable to 'p'.  
+//  - 'vertices_begin(hds)' must return a value assignable to 'vit'.  
+//  - 'vertices_end(hds)' must return a value assignable to 'vit'.  
+//  - '*vit' must return a value assignable to 'v'.  
 //  - 'num_vertices(hds)' must return a value assignable to 'n'.
 //
 ///Expression Semantics
@@ -62,6 +63,7 @@
 //    beginning of the "vertex list".
 //  - 'vertices_end(hds)' returns a 'vertex_iterator' 'p' pointing to the 
 //    end of the "vertex list".
+//  - '*vit' returns a descriptor to the vertex 'v' pointed to by 'vit'.
 //  - 'num_vertices(hds)' returns the number of vertices in the 'HDS' data
 //    structure.
 //
@@ -70,6 +72,7 @@
 // In addition to the complexity guarantees of the 'VertexHDS' concept:
 //  - 'vertices_begin(hds)': amortized constant time.  
 //  - 'vertices_end(hds)': amortized constant time.  
+//  - '*vit': worst-case constant time.
 //  - 'num_vertices(hds)': amortized constant time.
 //
 ///Invariants 
@@ -88,19 +91,21 @@
 //     void constraints() 
 //     {
 //         using namespace boost;
-//         function_requires<HDSConcept>();
-//         function_requires<DefaultConstructibleConcept<vertex_descriptor> >();
-//         function_requires<CopyConstructibleConcept<vertex_descriptor> >();
-//         function_requires<EqualityComparableConcept<vertex_descriptor> >();
-//         function_requires<AssignableConcept<vertex_descriptor> >();
+//         function_requires<VertexHDSConcept<HDS> >();
 //         function_requires<ForwardIteratorConcept<vertex_iterator> >();
 //         function_requires<ConvertibleConcept<size_type,int> >();
+
+//         b = vertices_begin(hds);
+//         e = vertices_end(hds);
+//         v = *b;
+//         n = num_vertices(hds);
 //         const_constraints(hds);
 //     }
 //     void const_constraints(HDS const& hds) 
 //     {
 //         b = vertices_begin(hds);
 //         e = vertices_end(hds);
+//         v = *b;
 //         n = num_vertices(hds);
 //     }
 //     private:
@@ -150,13 +155,14 @@ namespace concepts {
            // [vertexlisthdsconcept].
        {
            using namespace boost;
-           function_requires<HDSConcept>();
-           function_requires<DefaultConstructibleConcept<vertex_descriptor> >();
-           function_requires<CopyConstructibleConcept<vertex_descriptor> >();
-           function_requires<EqualityComparableConcept<vertex_descriptor> >();
-           function_requires<AssignableConcept<vertex_descriptor> >();
+           function_requires<VertexHDSConcept<HDS> >();
            function_requires<ForwardIteratorConcept<vertex_iterator> >();
            function_requires<ConvertibleConcept<size_type,int> >();
+
+           b = vertices_begin(hds);
+           e = vertices_end(hds);
+           v = *b;
+           n = num_vertices(hds);
            const_constraints(hds);
        }
 
@@ -167,15 +173,16 @@ namespace concepts {
        {
            b = vertices_begin(hds);
            e = vertices_end(hds);
+           v = *b;
            n = num_vertices(hds);
        }
 
      private:
        //DATA
-       VertexListHDS hds;     // a halfedge data structure object
+       HDS hds;               // a halfedge data structure object
        vertex_descriptor v;   // a vertex descriptor
        vertex_iterator b,e;   // a vertex iterators
-       size_type n;    // vertex size type
+       size_type n;           // vertex size type
 
    };
 

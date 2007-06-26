@@ -38,15 +38,11 @@
 ///----------------
 // None besides the types in the 'VertexHDS' and the 'MutableHDS' concepts.
 //
-///Definitions
-///-----------
-// Same as the definitions in the 'VertexHDS' and the 'MutableHDS' concepts.
-//
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'VertexHDS' and the
 // 'MutableHDS' concepts:
-//  - 'set_vertex(hds,h,v)' sets the source vertex descriptor value of 'h' to 
+//  - 'set_vertex(h, v, hds)' sets the source vertex descriptor value of 'h' to 
 //    'v'.
 //  - 'new_vertex(hds)' adds a new vertex 'v' to the 'hds' data structure
 //    and returns the vertex descriptor to this new vertex.
@@ -57,21 +53,21 @@
 ///--------------------
 // In addition to the expression semantics of the 'VertexHDS' and the
 // 'MutableHDS' concepts:
-//  - 'set_vertex(hds,h,v)'  sets the source vertex descriptor value of 'h' to 
+//  - 'set_vertex(h, v, hds)'  sets the source vertex descriptor value of 'h' to 
 //    'v' for a single halfedge in the 'hds' data structure.
 //  - 'new_vertex(hds)' adds a new vertex 'v' to the 'hds' data structure.
 //    By this operation the vertex is added but no connections to the halfedges
-//    are set. In order to assign vertces to halfedges 'set_vertex(hds,h,v)' 
+//    are set. In order to assign vertces to halfedges 'set_vertex(h, v, hds)' 
 //    operation should be used.
 //  - 'remove_vertex(hds,v)' removes the vertex 'v' from the 'hds' data 
-//  structure. All 'vertex_descriptors' related to this vertex will be 
-//  invalidated after this call.
+//    structure. All 'vertex_descriptor's related to this vertex will be 
+//    invalidated after this call.
 //
 ///Complexity guarantees
 ///---------------------
 // In addition to the complexity guarantees of the 'VertexHDS' and the
 // 'MutableHDS' concepts:
-//  - 'set_vertex(hds,h,v)': amortized constant time.
+//  - 'set_vertex(h, v, hds)': amortized constant time.
 //  - 'new_vertex(hds)': amortized constant time.
 //  - 'remove_vertex(hds,v)': amortized constant time.
 //
@@ -83,28 +79,29 @@
 ///Concept-checking class
 ///----------------------
 //..
-// template <class HDS> 
-// struct MutableVertexHDSConcept {
-//    typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
-//    void constraints() {
-//       using namespace boost;
-//       function_requires<HDSConcept>();
-//       function_requires<VertexHDSConcept>();
-//       function_requires<DefaultConstructibleConcept<vertex_descriptor> >();
-//       function_requires<CopyConstructibleConcept<vertex_descriptor> >();
-//       function_requires<EqualityComparableConcept<vertex_descriptor> >();
-//       function_requires<AssignableConcept<vertex_descriptor> >();
-//       set_vertex(hds,h,v);
-//       v = new_vertex(hds);
-//       remove_vertex(hds,h,v);
-//       const_constraints(hds);
-//    }
-//    void const_constraints(HDS const& hds) {
-//    }
-//    HDS hds;
-//    halfedge_descriptor h;
-//    vertex_descriptor v;
-// };
+//  template <class HDS> 
+//  struct MutableVertexHDSConcept {
+//     typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
+//     void constraints() {
+//        using namespace boost;
+//        function_requires<HDSConcept>();
+//        function_requires<VertexHDSConcept>();
+//        function_requires<DefaultConstructibleConcept<vertex_descriptor> >();
+//        function_requires<CopyConstructibleConcept<vertex_descriptor> >();
+//        function_requires<EqualityComparableConcept<vertex_descriptor> >();
+//        function_requires<AssignableConcept<vertex_descriptor> >();
+//
+//        set_vertex(h, v, hds);
+//        v = new_vertex(hds);
+//        remove_vertex(h, v, hds);
+//        const_constraints(hds);
+//     }
+//     void const_constraints(HDS const& hds) {
+//     }
+//     HDS hds;
+//     halfedge_descriptor h;
+//     vertex_descriptor v;
+//  };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_MUTABLE_VERTEX_HDS_CONCEPT_HPP
@@ -150,7 +147,7 @@ namespace concepts {
             function_requires<EqualityComparableConcept<vertex_descriptor> >();
             function_requires<AssignableConcept<vertex_descriptor> >();
 
-            set_vertex(hds,h,v);
+            set_vertex(h, v, hds);
             v = new_vertex(hds);
             remove_vertex(hds,v);
 

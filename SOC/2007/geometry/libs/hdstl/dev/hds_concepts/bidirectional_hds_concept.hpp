@@ -38,7 +38,7 @@
 ///Associated types
 ///----------------
 // In addition to the types of the 'ForwardHDS' and 'BackwardHDS' concepts:
-//  - 'hds_traits<HDS>::traversal_category' :  from 'HDSConcept', with
+//  - 'hds_traits<HDS>::traversal_category':  from 'HDSConcept', with
 //     the additional requirement that this type must be convertible to
 //     the 'hds_traits<HDS>::bidirectional_traversal_tag' type which is
 //     defined in '<boost/hdstl.hpp>'.
@@ -76,23 +76,23 @@
 ///Concept-checking class
 ///----------------------
 //..
-// template <class HDS> 
-// struct BidirectionalHDSConcept {
-//   typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
-//   typedef typename hds_traits<HDS>::traversal_category traversal_category;
-//   typedef typename hds_traits<HDS>::forward_category forward_category;
-//   typedef typename hds_traits<HDS>::backward_category backward_category;
-//    void constraints() {
-//       using namespace boost;
-//       function_requires<ForwardHDSConcept<HDS> >();
-//       function_requires<BackwardHDSConcept<HDS> >();
-//       function_requires<ConvertibleConcept<traversal_category,
-//                                          bidirectional_traversal_tag> >();  
-//    }
-//    void const_constraints(HDS const& hds) {
-//    }
-//    BidirectionalHDS hds;
-// };
+//  template <class HDS> 
+//  struct BidirectionalHDSConcept {
+//    typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+//    typedef typename hds_traits<HDS>::traversal_category traversal_category;
+//    typedef typename hds_traits<HDS>::forward_category forward_category;
+//    typedef typename hds_traits<HDS>::backward_category backward_category;
+//     void constraints() {
+//        using namespace boost;
+//        function_requires<ForwardHDSConcept<HDS> >();
+//        function_requires<BackwardHDSConcept<HDS> >();
+//        function_requires<ConvertibleConcept<traversal_category,
+//                                             bidirectional_traversal_tag> >();  
+//     }
+//     void const_constraints(HDS const& hds) {
+//     }
+//     BidirectionalHDS hds;
+//  };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_BIDIRECTIONAL_HDS_CONCEPT_HPP
@@ -137,7 +137,7 @@ namespace concepts{
             function_requires<ForwardHDSConcept<HDS> >();
             function_requires<BackwardHDSConcept<HDS> >();
             function_requires<ConvertibleConcept<traversal_category,
-                bidirectional_traversal_tag> >();  
+                                                 bidirectional_traversal_tag> >();  
         }
 
         // ACCESSORS

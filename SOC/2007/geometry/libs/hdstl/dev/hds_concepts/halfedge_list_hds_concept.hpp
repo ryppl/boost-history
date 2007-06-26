@@ -31,7 +31,7 @@
 //  - 'HDS'  A type that is a model of HalfedgeListHDSConcept
 //  - 'hds'  A non-modifiable instance of HDS
 //  - 'h'    Halfedge descriptor, of type 'hds_traits<HDS>::halfedge_descriptor'
-//  - 'p'    Halfedge iterator, of type 'hds_traits<HDS>::halfedge_iterator'
+//  - 'hit'  Halfedge iterator, of type 'hds_traits<HDS>::halfedge_iterator'
 //  - 'n'    Halfedge list size, of type 'hds_traits<HDS>::size_type'
 //
 ///Associated types
@@ -47,22 +47,25 @@
 ///-----------
 // In addition to the definitions of the 'HDS' concept:
 //  - 'halfedge_iterator' is an iterator type for the halfedges.
-//  - 'size_type' defines the size type.
+//  - 'size_type' is an integral type wide enough to hold any possible
+//    number of halfedges that might be stored in a particular model.
 //
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'HDS' concept:
-//  - 'halfedges_begin(hds)' must return a value assignable to 'p'.  
-//  - 'halfedges_end(hds)' must return a value assignable to 'p'.  
+//  - 'halfedges_begin(hds)' must return a value assignable to 'hit'.  
+//  - 'halfedges_end(hds)' must return a value assignable to 'hit'.  
+//  - '*hit' must return a value assignable to 'h'.
 //  - 'num_halfedges(hds)' must return a value assignable to 'n'.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the expression semantics of the 'HDS' concept:
-//  - 'halfedges_begin(hds)' returns a 'halfedge_iterator' pointing to the 
-//    beginning of the "halfedge list".
-//  - 'halfedges_end(hds)' returns a 'halfedge_iterator' pointing to the 
+//  - 'halfedges_begin(hds)' returns a 'halfedge_iterator' 'hit' pointing to
+//    the beginning of the "halfedge list".
+//  - 'halfedges_end(hds)' returns a 'halfedge_iterator' 'hit' pointing to the
 //    end of the "halfedge list".
+//  - '*hit' returns a descriptor to the halfedge pointed to by 'hit'.
 //  - 'num_halfedges(hds)' returns the number of halfedges in the 'HDS' data
 //    structure.
 //
@@ -70,6 +73,7 @@
 ///---------------------
 //  - 'halfedges_begin(hds)': amortized constant time.
 //  - 'halfedges_end(hds)': amortized constant time.
+//  - '*hit': worst-case constant time.
 //  - 'num_halfedges(hds)': amortized constant time.
 //
 ///Invariants 
@@ -81,35 +85,35 @@
 ///Concept-checking class
 ///----------------------
 //..
-// template <class HDS> 
-// struct HalfedgeListHDSConcept {
-//    typedef typename hds_traits<HDS>::halfedge_iterator  halfedge_iterator;
-//    typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor;
-//    typedef typename hds_traits<HDS>::halfedges_size_type halfedges_size_type;
-//     void constraints() 
-//     {
-//         using namespace boost;
-//         function_requires<HDSConcept>();
-//         function_requires<DefaultConstructibleConcept<halfedge_descriptor> >();
-//         function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
-//         function_requires<EqualityComparableConcept<halfedge_descriptor> >();
-//         function_requires<AssignableConcept<halfedge_descriptor> >();
-//         function_requires<ForwardIteratorConcept<halfedge_iterator> >();
-//         function_requires<ConvertibleConcept<halfedges_size_type> >();
-//         const_constraints(hds);
-//     }
-//     void const_constraints(HDS const& hds) 
-//     {
-//         b = halfedges_begin(hds);
-//         e = halfedges_end(hds);
-//         n = num_halfedges(hds);
-//     }
-//     private:
-//     HalfedgeListHDS hds;
-//     halfedge_descriptor h;
-//     halfedge_iterator b, e;
-//     size_type n;
-// };
+//  template <class HDS> 
+//  struct HalfedgeListHDSConcept {
+//     typedef typename hds_traits<HDS>::halfedge_iterator  halfedge_iterator;
+//     typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor;
+//     typedef typename hds_traits<HDS>::halfedges_size_type halfedges_size_type;
+//      void constraints() 
+//      {
+//          using namespace boost;
+//          function_requires<HDSConcept>();
+//          function_requires<DefaultConstructibleConcept<halfedge_descriptor> >();
+//          function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
+//          function_requires<EqualityComparableConcept<halfedge_descriptor> >();
+//          function_requires<AssignableConcept<halfedge_descriptor> >();
+//          function_requires<ForwardIteratorConcept<halfedge_iterator> >();
+//          function_requires<ConvertibleConcept<halfedges_size_type> >();
+//          const_constraints(hds);
+//      }
+//      void const_constraints(HDS const& hds) 
+//      {
+//          b = halfedges_begin(hds);
+//          e = halfedges_end(hds);
+//          n = num_halfedges(hds);
+//      }
+//      private:
+//      HalfedgeListHDS hds;
+//      halfedge_descriptor h;
+//      halfedge_iterator b, e;
+//      size_type n;
+//  };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_HALFEDGE_LIST_HDS_CONCEPT_HPP
@@ -172,7 +176,7 @@ namespace concepts {
 
      private:
        //DATA
-       HalfedgeListHDS hds;      // a halfedge data structure object
+       HDS hds;                  // a halfedge data structure object
        halfedge_descriptor h;    // a halfedge descriptor
        halfedge_iterator b,e;    // halfedge iterators
        size_type n;              // halfedge size type

@@ -44,7 +44,7 @@
 //  - 'hds_traits<HDS>::traversal_category':  from 'HDSConcept', with
 //     additional requirement that this type must be convertible to
 //     'hdstl::forward_traversal_tag'.
-//  - 'hds_traits<HDS>::forward_category':    defines the pointer type for 
+//  - 'hds_traits<HDS>::forward_category': defines the pointer type for 
 //     forward iteration.
 //
 ///Definitions
@@ -61,70 +61,73 @@
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'HDS' concept:
-//   - 'next_in_facet(hds,h)' must return a value assignable to 'h'.
-//   - 'next_at_source(hds,h)' must return a value assignable to 'h'.
-//   - 'next_at_target(hds,h)' must return a value assignable to 'h'.
+//   - 'next_in_facet(h, hds)' must return a value assignable to 'h'.
+//   - 'next_at_source(h, hds)' must return a value assignable to 'h'.
+//   - 'next_at_target(h, hds)' must return a value assignable to 'h'.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the expression semantics of the 'HDS' concept:
-//   - 'next_in_facet(hds,h)' returns a halfedge descriptor to the halfedge 
+//   - 'next_in_facet(h, hds)' returns a halfedge descriptor to the halfedge 
 //      succeeding 'h' in the adjacent facet cycle, when facet cycles are
 //      oriented in counter-clockwise order.
-//   - 'next_at_source(hds,h)' returns a halfedge descriptor to the halfedge 
+//   - 'next_at_source(h, hds)' returns a halfedge descriptor to the halfedge 
 //      succeeding 'h' around the source vertex of 'h', when halfedges are
 //      ordered around a given vertex in clockwise order.
-//   - 'next_at_target(hds,h)' returns a halfedge descriptor to the halfedge 
+//   - 'next_at_target(h, hds)' returns a halfedge descriptor to the halfedge 
 //      succeeding 'h' around the target vertex of 'h', when halfedges are
 //      ordered around a given vertex in clockwise order.
 //
 ///Complexity guarantees
 ///---------------------
 // In addition to the complexity guarantees of the 'HDS' concept:
-//  - 'next_in_facet(hds,h)': amortized constant time.
-//  - 'next_at_source(hds,h)': amortized constant time.
-//  - 'next_at_target(hds,h)': amortized constant time.
+//  - 'next_in_facet(h, hds)': amortized constant time.
+//  - 'next_at_source(h, hds)': amortized constant time.
+//  - 'next_at_target(h, hds)': amortized constant time.
 //
 ///Invariants 
 ///----------
 // The forward halfedge accessors are linked via the algebraic relations:
-//   - 'next_in_facet(hds,h)'  == 'next_at_source(opposite(hds,h))' 
-//                             == 'opposite(next_at_target(hds,h))'
-//   - 'next_at_source(hds,h)' == 'next_in_facet(opposite(hds,h))'
-//                             == 'opposite(next_at_target(opposite(hds,h)))'
-//   - 'next_at_target(hds,h)' == 'opposite(next_in_facet(hds,h))' 
-//                             == 'opposite(next_at_source(opposite(hds,h)))'
+//   - 'next_in_facet(h, hds)'  == 'next_at_source(opposite(h, hds), hds)' 
+//                              == 'opposite(next_at_target(h, hds), hds)'
+//   - 'next_at_source(h, hds)' == 'next_in_facet(opposite(h, hds), hds)'
+//               == 'opposite(next_at_target(opposite(h, hds), hds), hds)'
+//   - 'next_at_target(h, hds)' == 'opposite(next_in_facet(h, hds), hds)' 
+//               == 'opposite(next_at_source(opposite(h, hds), hds), hds)'
 //
 ///Concept-checking class
 ///----------------------
 //..
-// template <class HDS> 
-// struct ForwardHDSConcept {
-//   typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
-//   typedef typename hds_traits<HDS>::traversal_category traversal_category;
-//   typedef typename hds_traits<HDS>::forward_category forward_category;
-//    void constraints() {
-//       using namespace boost;
-//       function_requires<HDSConcept<HDS> >();
-//       function_requires<ConvertibleConcept<traversal_category,
-//                                        hdstl::forward_traversal_tag> >();  
-//       const bool is_valid_storage_tag =
-//          is_convertible<forward_category,next_at_source_tag>::value ||
-//          is_convertible<forward_category,next_at_target_tag>::value ||
-//          is_convertible<forward_category,next_in_facet_tag>::value;
-//       BOOST_STATIC_ASSERT( is_valid_storage_tag ); 
+//  template <class HDS> 
+//  struct ForwardHDSConcept {
+//    typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+//    typedef typename hds_traits<HDS>::traversal_category traversal_category;
+//    typedef typename hds_traits<HDS>::forward_category forward_category;
+//     void constraints() {
+//        using namespace boost;
+//        function_requires<HDSConcept<HDS> >();
+//        function_requires<ConvertibleConcept<traversal_category,
+//                                         hdstl::forward_traversal_tag> >();  
+//        const bool is_valid_storage_tag =
+//           is_convertible<forward_category,next_at_source_tag>::value ||
+//           is_convertible<forward_category,next_at_target_tag>::value ||
+//           is_convertible<forward_category,next_in_facet_tag>::value;
+//        BOOST_STATIC_ASSERT( is_valid_storage_tag ); 
 //
-//       const_constraints(hds);
-//    }
-//    void const_constraints(HDS const& hds){
-//       h = next_in_facet(hds,h);
-//       h = next_at_source(hds,h);
-//       h = next_at_target(hds,h);
-//    }
-//    ForwardHDS hds;
-//    halfedge_descriptor h;
-//    halfedge_descriptor g;
-// };
+//        h = next_in_facet(h, hds);
+//        h = next_at_source(h, hds);
+//        h = next_at_target(h, hds);
+//        const_constraints(hds);
+//     }
+//     void const_constraints(HDS const& hds){
+//        h = next_in_facet(h, hds);
+//        h = next_at_source(h, hds);
+//        h = next_at_target(h, hds);
+//     }
+//     ForwardHDS hds;
+//     halfedge_descriptor h;
+//     halfedge_descriptor g;
+//  };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_FORWARD_HDS_CONCEPT_HPP
@@ -165,13 +168,17 @@ namespace concepts{
             using namespace boost;
             function_requires<HDSConcept<HDS> >();
             function_requires<ConvertibleConcept<traversal_category,
-            forward_traversal_tag> >();  
+                                                 forward_traversal_tag> >();  
+
             const bool is_valid_storage_tag =
                    is_convertible<forward_category,next_at_source_tag>::value ||
                    is_convertible<forward_category,next_at_target_tag>::value ||
                    is_convertible<forward_category,next_in_facet_tag>::value;
             BOOST_STATIC_ASSERT( is_valid_storage_tag ); 
 
+            h = next_in_facet(h, hds);
+            h = next_at_source(h, hds);
+            h = next_at_target(h, hds);
             const_constraints(hds);
         }
 
@@ -180,14 +187,14 @@ namespace concepts{
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'ForwardHDSConcept'.
 	{
-            h = next_in_facet(hds,h);
-            h = next_at_source(hds,h);
-            h = next_at_target(hds,h);
+            h = next_in_facet(h, hds);
+            h = next_at_source(h, hds);
+            h = next_at_target(h, hds);
         }
 
       private:
         // DATA
-        ForwardHDS hds;        // a halfedge data structure object
+        HDS hds;                // a halfedge data structure object
         halfedge_descriptor h;  // a halfedge descriptor
         halfedge_descriptor g;  // another halfedge descriptor
     };

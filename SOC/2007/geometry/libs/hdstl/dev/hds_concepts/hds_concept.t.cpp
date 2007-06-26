@@ -16,44 +16,49 @@
 // the concept requirements of the concept.  Note that the purpose of
 // this test driver is to verify the validity of the concept checking
 // class, not of the archetype.  This is why it suffices to take the
-// halfedge_descriptor as an int, although a real archetype would make
+// 'halfedge_descriptor' as an 'int', although a real archetype would make
 // this into a custom-made class with the tailored minimal requirements.
+
+namespace hdstl1 {
+
+    struct hds_archetype {
+        // This 'struct', intentionally defined in a namespace different from
+        // 'hdstl', the 'hds_traits' specialization defined in the namespace
+        // 'hdstl', and the supporting function 'opposite', defined in the same
+        // namespace as this 'struct' to take advantage of ADL
+        // (argument-dependent lookup) provide an archetype for the 'HDS'
+        // concept.
+
+        typedef int halfedge_descriptor;
+    };
+
+    hds_archetype::halfedge_descriptor
+    opposite(hds_archetype::halfedge_descriptor h,
+             const hds_archetype&)
+    {
+        return h;
+    }
+
+}  // namespace hdstl
 
 namespace boost {
 namespace hdstl {
-struct hds_archetype1 {
-    typedef int halfedge_descriptor;
-    halfedge_descriptor opposite(halfedge_descriptor h) const { return h; }
-};
-
-
-template<typename T>
-int opposite(const T& hds, int h) { return h; }
-
-struct hds_archetype2 {
-    typedef int halfedge_descriptor;
-    halfedge_descriptor opposite(halfedge_descriptor h) const 
-    {
-        return boost::hdstl::opposite(*this, h);
-    }
-};
-
+    
     template <>
-    class hds_traits<hds_archetype1>
+    struct hds_traits<hdstl1::hds_archetype>
     {
-        public:
-        typedef int halfedge_descriptor;
-        static const bool supports_vertices = false;
-        static const bool supports_facets   = false;
+        typedef hdstl1::hds_archetype::halfedge_descriptor
+                halfedge_descriptor;
+        enum { supports_vertices = false};
+        static const int supports_facets = true;
     };
-    template <>
-    class hds_traits<hds_archetype2>
-    {
-        public:
-        typedef int halfedge_descriptor;
-        enum { supports_vertices = true };
-        enum { supports_facets   = true };
-    };
+    
+}  // namespace hdstl
+}  // namespace boost
+
+// ===========================================================================
+//                              BOOST TEST APPARATUS
+// ===========================================================================
 
 template <class HDS>
 struct class_concept_requirements
@@ -64,16 +69,13 @@ struct class_concept_requirements
 template <class HDS>
 bool concept_requirements()
 {
-   function_requires<HDSConcept<HDS> >();
-   class_concept_requirements<HDS>(); // force instantiation
+    boost::function_requires<boost::hdstl::HDSConcept<HDS> >();
+    class_concept_requirements<HDS>(); // force instantiation
+    return true;
 }
 
-int main()
+int test_main(int, char **)
 {
-    BOOST_CHECK(( concept_requirements<hds_archetype1>() ));
-    BOOST_CHECK(( concept_requirements<hds_archetype2>() ));
+    BOOST_CHECK(( concept_requirements<hdstl1::hds_archetype>() ));
     return 0;
 }
-
-} // end namespace hdstl
-} // end namespace boost

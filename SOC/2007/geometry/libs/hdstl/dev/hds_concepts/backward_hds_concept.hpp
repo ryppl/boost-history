@@ -61,39 +61,39 @@
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'HDS' concept:
-//   - 'prev_in_facet(hds,h)' must return a value assignable to 'h'.
-//   - 'prev_at_source(hds,h)' must return a value assignable to 'h'.
-//   - 'prev_at_target(hds,h)' must return a value assignable to 'h'.
+//   - 'prev_in_facet(h, hds)' must return a value assignable to 'h'.
+//   - 'prev_at_source(h, hds)' must return a value assignable to 'h'.
+//   - 'prev_at_target(h, hds)' must return a value assignable to 'h'.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the expression semantics of the 'HDS' concept:
-//   - 'prev_in_facet(hds,h)' returns a halfedge descriptor to the halfedge 
+//   - 'prev_in_facet(h, hds)' returns a halfedge descriptor to the halfedge 
 //      preceding 'h' in the adjacent facet cycle, when facet cycles are
 //      oriented in counter-clockwise order.
-//   - 'prev_at_source(hds,h)' returns a halfedge descriptor to the halfedge 
+//   - 'prev_at_source(h, hds)' returns a halfedge descriptor to the halfedge 
 //      preceding 'h' around the source vertex of 'h', when halfedges are
 //      ordered around a given vertex in clockwise order.
-//   - 'prev_at_target(hds,h)' returns a halfedge descriptor to the halfedge 
+//   - 'prev_at_target(h, hds)' returns a halfedge descriptor to the halfedge 
 //      preceding 'h' around the target vertex of 'h', when halfedges are
 //      ordered around a given vertex in clockwise order.
 //
 ///Complexity guarantees
 ///---------------------
 // In addition to the complexity guarantees of the 'HDS' concept:
-//  - 'prev_in_facet(hds,h)': amortized constant time.
-//  - 'prev_at_source(hds,h)': amortized constant time.
-//  - 'prev_at_target(hds,h)': amortized constant time.
+//  - 'prev_in_facet(h, hds)': amortized constant time.
+//  - 'prev_at_source(h, hds)': amortized constant time.
+//  - 'prev_at_target(h, hds)': amortized constant time.
 //
 ///Invariants 
 ///----------
 // The backward halfedge accessors are linked via the algebraic relations:
-//   - 'prev_in_facet(hds,h)'  == 'prev_at_target(opposite(hds,h))' 
-//                             == 'opposite(prev_at_source(hds,h))'
-//   - 'prev_at_source(hds,h)' == 'opposite(prev_in_facet(hds,h))' 
-//                             == 'opposite(prev_at_target(opposite(hds,h)))'
-//   - 'prev_at_target(hds,h)' == 'prev_in_facet(opposite(hds,h))'
-//                             == 'opposite(prev_at_source(opposite(hds,h)))'
+//   - 'prev_in_facet(h, hds)'  == 'prev_at_target(opposite(h, hds), hds)' 
+//                                  == 'opposite(prev_at_source(h, hds), hds)'
+//   - 'prev_at_source(h, hds)' == 'opposite(prev_in_facet(h, hds), hds)' 
+//                             == 'opposite(prev_at_target(opposite(h, hds)))'
+//   - 'prev_at_target(h, hds)' == 'prev_in_facet(opposite(h, hds), hds)'
+//                   == 'opposite(prev_at_source(opposite(h, hds), hds), hds)'
 //
 ///Concept-checking class
 ///----------------------
@@ -117,9 +117,9 @@
 //       const_constraints(hds);
 //    }
 //    void const_constraints(HDS const& hds){
-//       h = prev_in_facet(hds,h);
-//       h = prev_at_source(hds,h);
-//       h = prev_at_target(hds,h);
+//       h = prev_in_facet(h, hds);
+//       h = prev_at_source(h, hds);
+//       h = prev_at_target(h, hds);
 //    }
 //    BackwardHDS hds;
 //    halfedge_descriptor h;
@@ -161,13 +161,16 @@ namespace concepts{
             using namespace boost;
             function_requires<HDSConcept<HDS> >();
             function_requires<ConvertibleConcept<traversal_category,
-            backward_traversal_tag> >();  
+                                                 backward_traversal_tag> >();  
             const bool is_valid_storage_tag =
                   is_convertible<backward_category,prev_at_source_tag>::value ||
                   is_convertible<backward_category,prev_at_target_tag>::value ||
                   is_convertible<backward_category,prev_in_facet_tag>::value;
             BOOST_STATIC_ASSERT( is_valid_storage_tag ); 
 
+            h = prev_in_facet(h, hds);
+            h = prev_at_source(h, hds);
+            h = prev_at_target(h, hds);
             const_constraints(hds);
         }
 
@@ -176,9 +179,9 @@ namespace concepts{
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'BackwardHDSConcept'.
 	{
-            h = prev_in_facet(hds,h);
-            h = prev_at_source(hds,h);
-            h = prev_at_target(hds,h);
+            h = prev_in_facet(h, hds);
+            h = prev_at_source(h, hds);
+            h = prev_at_target(h, hds);
         }
 
       private:

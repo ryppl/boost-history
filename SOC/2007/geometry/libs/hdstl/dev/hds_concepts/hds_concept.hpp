@@ -35,8 +35,7 @@
 ///--------
 //  - 'HDS'    A type that is a model of 'HDSConcept'
 //  - 'hds'    A non-modifiable instance of 'HDS'
-//  - 'h','g'  Halfedge descriptors, of type 
-//    'hds_traits<HDS>::halfedge_descriptor'
+//  - 'h','g'  Halfedge descriptors, of type 'hds_traits<HDS>::halfedge_descriptor'
 //
 ///Associated types
 ///----------------
@@ -55,7 +54,7 @@
 ///Valid Expressions
 ///-----------------
 // The following expression must be valid and obey the syntactic requirement:
-//   - 'opposite(hds, h)' must return a value assignable to 'h'.
+//   - 'opposite(h, hds)' must return a value assignable to 'h'.
 //   - 'hds_traits<HDS>::supports_facets' must be usable as a Boolean.
 //   - 'hds_traits<HDS>::supports_vertices' must be usable as a Boolean.
 //
@@ -66,45 +65,51 @@
 //     is a model of the 'FacetHDS' concept (see the page [facethdsconcept]).
 //   - 'hds_traits<HDS>::supports_vertices' is true if and only if 'HDS'
 //     is a model of the 'VertexHDS' concept (see the page [vertexhdsconcept]).
-//   - 'opposite(hds, h)' returns a descriptor to the halfedge opposite 'h' in
+//   - 'opposite(h, hds)' returns a descriptor to the halfedge opposite 'h' in
 //     the data structure 'hds'. Does not modify the state of either 'hds'
 //     or 'h'.
 //
 ///Complexity guarantees
 ///---------------------
-//   - 'opposite(hds, h)': Amortized constant time.
+//   - 'opposite(h, hds)': Amortized constant time.
 //
 ///Invariants
 ///----------
 // Every valid halfedge descriptor 'h' must have a valid opposite
-// 'g = opposite(hds, h)', *distinct* from h, such that
-// 'opposite(hds, g)' returns 'h'.  (Hence, 'opposite' is an involution.)
+// 'g = opposite(h, hds)', *distinct* from h, such that
+// 'opposite(g, hds)' returns 'h'.  (Hence, 'opposite' is an involution.)
 //
 ///Concept-checking class
 ///----------------------
 //..
-// template <class HDS> 
-// struct HDSConcept {
-//   typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
-//   void constraints() {
-//     using namespace boost;
-//     function_requires<DefaultConstructibleConcept<halfedge_descriptor> >();
-//     function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
-//     function_requires<EqualityComparableConcept<halfedge_descriptor> >();
-//     function_requires<AssignableConcept<halfedge_descriptor> >();
-//     h = opposite(hds,h);
-//     const_constraints(hds);
-//   }
-//   void const_constraints(HDS const& hds) {
-//     h = opposite(hds,h);
-//   }
+//  template <class HDS> 
+//  struct HDSConcept {
+//    typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+//    void constraints() {
+//      using namespace boost;
+//      function_requires<DefaultConstructibleConcept<halfedge_descriptor> >();
+//      function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
+//      function_requires<EqualityComparableConcept<halfedge_descriptor> >();
+//      function_requires<AssignableConcept<halfedge_descriptor> >();
+//
+//      h = opposite(h, hds);
+//      const_constraints(hds);
+//    }
+//    void const_constraints(HDS const& hds) {
+//      if (hds_traits<HDS>::supports_vertices) {}
+//      if (hds_traits<HDS>::supports_facets) {}
+//      h = opposite(h, hds);
+//    }
+//    HDS hds;
+//    halfedge_descriptor h;
+//  }
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_HDS_CONCEPT_HPP 1
 
 #include <boost/concept_check.hpp>
-#include "../hds_traits.hpp"
+#include <boost/hdstl/hds_traits.hpp>
 
 namespace boost {
 namespace hdstl {
@@ -139,7 +144,8 @@ namespace hdstl {
             function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
             function_requires<EqualityComparableConcept<halfedge_descriptor> >();
             function_requires<AssignableConcept<halfedge_descriptor> >();
-            h= hds.opposite(h);
+
+            h = opposite(h, hds);
             const_constraints(hds);
         }
 
@@ -148,13 +154,15 @@ namespace hdstl {
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'HDSConcept'.
         {
-            h = opposite(hds,h);
+            if (hds_traits<HDS>::supports_vertices) {}
+            if (hds_traits<HDS>::supports_facets) {}
+            h = opposite(h, hds);
         }
 
-        private:
-	    // DATA
-            HDS hds;                 // a halfedge data structure object
-            halfedge_descriptor h;   // a halfedge descriptor
+      private:
+	// DATA
+        HDS hds;                 // a halfedge data structure object
+        halfedge_descriptor h;   // a halfedge descriptor
     };
 
 }  // close namespace hdstl

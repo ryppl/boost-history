@@ -31,36 +31,28 @@
 //
 ///Notation
 ///--------
-//  - 'HDS'      A type that is a model of 'MutableHDSConcept'
-//  - 'hds'      A modifiable instance of 'HDS'
-//  - 'h', h1','h2'
-//         Halfedge descriptors, of type 'hds_traits<HDS>::halfedge_descriptor'
+//  - 'HDS'  A type that is a model of 'MutableHDSConcept'
+//  - 'hds'  A modifiable instance of 'HDS'
+//  - 'h'    Halfedge descriptors, of type 'hds_traits<HDS>::halfedge_descriptor'
 //
 ///Associated types
 ///----------------
 // None besides the types of the 'HDS' concept,
 //
-///Definitions
-///-----------
-// Same as the definitions of the 'HDS' concept,
-//
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'HDS' concept:
-//  - 'set_opposite(hds,h1,h2)'
 //  - 'h = new_edge(hds)'
-//  - 'delete_edge(hds,h)'
+//  - 'delete_edge(h, hds)'
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the expression semantics of the 'HDS' concept:
-//  - 'set_opposite(hds,h1,h2)' sets 'h1' and 'h2' as opposites of each other 
-//    in the data structure 'hds'. 
-//  - 'new_edge(hds)' creates a new edge in data structure 'hds', and
+//  - 'new_edge(hds)' creates a pair of opposite halfedges in 'hds', and
 //    returns the halfedge descriptor of one of the two halfedges created. 
-//    The other new halfedge can be obtained using 'opposite(hds,h)'.
+//    The other new halfedge can be obtained using 'opposite(h, hds)'.
 //    Note that halfedges can only be created in opposite pairs.
-//  - 'delete_edge(hds,h)' removes the halfedges 'h' and 'opposite(hds,h)'
+//  - 'delete_edge(h, hds)' removes the halfedges 'h' and 'opposite(h, hds)'
 //    from the data structure 'hds'. Note that only the halfedges that form 
 //    a pair by validating the 'opposite' function can be deleted by this 
 //    method.
@@ -68,9 +60,8 @@
 ///Complexity guarantees
 ///---------------------
 // In addition to the complexity guarantees of the 'HDS' concept:
-//  - 'set_opposite(hds,h1,h2)': amortized constant time.
 //  - 'new_edge(hds)': amortized constant time.
-//  - 'delete_edge(hds,h)' : amortized constant time.
+//  - 'delete_edge(h, hds)' : amortized constant time.
 //
 ///Invariants
 ///----------
@@ -85,15 +76,15 @@
 //    void constraints() {
 //       using namespace boost;
 //       function_requires<HDSConcept<HDS> >();
-//       set_opposite(hds,h1,h2);
+//
 //       h = new_edge(hds);
-//       delete_edge(hds,h);
+//       delete_edge(h, hds);
 //       const_constraints(hds);
 //    }
 //    void const_constraints(HDS const& hds) {
 //    }
 //    HDS hds;
-//    halfedge_descriptor h,h1,h2;
+//    halfedge_descriptor h;
 // };
 //.. 
 
@@ -136,9 +127,8 @@ namespace concepts {
             using namespace boost;
             function_requires<HDSConcept<HDS> >();
 
-            set_opposite(hds,h1,h2);
             h = new_edge(hds);
-            delete_edge(hds,h);
+            delete_edge(h, hds);
             const_constraints(hds);
         }
 
@@ -151,8 +141,8 @@ namespace concepts {
 
         private:
         // DATA
-            HDS hds;                   // a halfedge data structure object
-            halfedge_descriptor h,h1,h2;  // halfedge descriptors
+            HDS hds;                // a halfedge data structure object
+            halfedge_descriptor h;  // a halfedge descriptor
    };
 
 }  // close namespace concepts

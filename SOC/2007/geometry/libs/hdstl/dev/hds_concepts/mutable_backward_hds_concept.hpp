@@ -38,33 +38,28 @@
 ///----------------
 // None besides the types in the 'MutableHDS' and 'BackwardHDS' concepts.
 //
-///Definitions
-///-----------
-// None besides the definitions in the 'MutableHDS' and 'BackwardHDS' 
-// concepts.
-//
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'MutableHDS' and the 
 // 'BackwardHDS' concepts:
-//   - 'set_prev_in_facet(hds,h,g)' sets 'g' as the 'prev_in_facet' value of 
+//   - 'set_prev_in_facet(h, g, hds)' sets 'g' as the 'prev_in_facet' value of 
 //     'h'.
-//   - 'set_prev_at_source(hds,h,g)' sets 'g' as the 'prev_at_source' value of 
+//   - 'set_prev_at_source(h, g, hds)' sets 'g' as the 'prev_at_source' value of 
 //     'h'.
-//   - 'set_prev_at_target(hds,h,g)' sets 'g' as the 'prev_at_target' value of
+//   - 'set_prev_at_target(h, g, hds)' sets 'g' as the 'prev_at_target' value of
 //     'h'.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the expression semantics of the 'Mutable HDS' and the
 // 'BackwardHDS' concepts:
-//   - 'set_prev_in_facet(hds,h,g)' sets 'g' as the halfedge 
+//   - 'set_prev_in_facet(h, g, hds)' sets 'g' as the halfedge 
 //      preceding 'h' in the adjacent facet cycle, when facet cycles are
 //      oriented in counter-clockwise order.
-//   - 'set_prev_at_source(hds,h,g)' sets 'g' as the halfedge 
+//   - 'set_prev_at_source(h, g, hds)' sets 'g' as the halfedge 
 //      preceding 'h' around the source vertex of 'h', when halfedges are
 //      ordered around a given vertex in clockwise order.
-//   - 'set_prev_at_target(hds,h,g)' sets 'g' as the halfedge  
+//   - 'set_prev_at_target(h, g, hds)' sets 'g' as the halfedge  
 //      preceding 'h' around the target vertex of 'h', when halfedges are
 //      ordered around a given vertex in clockwise order.
 //
@@ -72,9 +67,9 @@
 ///---------------------
 // In addition to the complexity guarantees of the 'Mutable HDS' and the
 // 'BackwardHDS' concepts:
-//  - 'set_prev_in_facet(hds,h,g)': amortized constant time.
-//  - 'set_prev_at_source(hds,h,g)': amortized constant time.
-//  - 'set_prev_at_target(hds,h,g)': amortized constant time.
+//  - 'set_prev_in_facet(h, g, hds)': amortized constant time.
+//  - 'set_prev_at_source(h, g, hds)': amortized constant time.
+//  - 'set_prev_at_target(h, g, hds)': amortized constant time.
 //
 ///Invariants 
 ///----------
@@ -94,9 +89,10 @@
 //          using namespace boost;
 //          function_requires<BackwardHDSConcept<HDS> >();
 //          function_requires<MutableHDSConcept<HDS> >();
-//          set_prev_in_facet(hds,h,g);
-//          set_prev_at_source(hds,h,g);
-//          set_prev_at_target(hds,h,g);
+//
+//          set_prev_in_facet(h, g, hds);
+//          set_prev_at_source(h, g, hds);
+//          set_prev_at_target(h, g, hds);
 //          const_constraints(hds);
 //      }
 //      void const_constraints(HDS const& hds)
@@ -150,10 +146,9 @@ namespace concepts{
             function_requires<BackwardHDSConcept<HDS> >();
             function_requires<MutableHDSConcept<HDS> >();
 
-            set_prev_in_facet(hds,h,g);
-            set_prev_at_source(hds,h,g);
-            set_prev_at_target(hds,h,g);
-
+            set_prev_in_facet(h, g, hds);
+            set_prev_at_source(h, g, hds);
+            set_prev_at_target(h, g, hds);
             const_constraints(hds);
         }
 

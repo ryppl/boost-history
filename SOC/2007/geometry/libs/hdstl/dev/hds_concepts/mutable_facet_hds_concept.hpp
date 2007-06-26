@@ -38,30 +38,26 @@
 ///----------------
 //  None besides the types in the 'MutableHDS' and 'FacetHDS' concepts.
 //
-///Definitions
-///-----------
-//  Same as the definitions in the 'MutableHDS' and 'FacetHDS' concepts.
-//
 ///Valid Expressions
 ///-----------------
 // In addition to the valid expressions of the 'FacetHDS' and the 
 // 'MutableHDS' concepts:
-//  - 'set_facet(hds,h,f)' sets the facet descriptor value of 'h' to 'f'.
+//  - 'set_facet(h, f, hds)' sets the facet descriptor value of 'h' to 'f'.
 //  - 'new_facet(hds)' creates a new facet 'f' in data structure 'hds'.
-//  - 'remove_facet(hds,f)' removes the facet 'f' from the 'hds' data structure.
+//  - 'remove_facet(f, hds)' removes the facet 'f' from the 'hds' data structure.
 //
 ///Expression Semantics
 ///--------------------
 // In addition to the expression semantics of the 'FacetHDS' and the 
 // 'MutableHDS' concepts.
-//  - 'set_facet(hds,h,f)' sets the facet descriptor value of 'h' to 'f' for a
+//  - 'set_facet(h, f, hds)' sets the facet descriptor value of 'h' to 'f' for a
 //    single halfedge in the 'hds' data structure.
 //  - 'new_facet(hds)' creates a new facet 'f' data structure 'hds'
 //    and returns the facet descriptor of this new facet.
 //    By this operation the facet is added but no connections to the halfedges
-//    are set. In order to assign facets to halfedges 'set_facet(hds,h,f)' 
+//    are set. In order to assign facets to halfedges 'set_facet(h, f, hds)' 
 //    operation should be used.
-//  - 'remove_facet(hds,f)' removes the facet 'f' from the 'hds' data 
+//  - 'remove_facet(f, hds)' removes the facet 'f' from the 'hds' data 
 //    structure. All 'facet_descriptors' related to this facet will be 
 //    invalidated after this call.
 //
@@ -69,9 +65,9 @@
 ///---------------------
 // In addition to the complexity guarantees of the 'FacetHDS' and the 
 // 'MutableHDS' concepts.
-//  - 'set_facet(hds,h,f)' : amortized constant time.
+//  - 'set_facet(h, f, hds)' : amortized constant time.
 //  - 'new_facet(hds)': amortized constant time.
-//  - 'remove_facet(hds,f)': amortized constant time.
+//  - 'remove_facet(f, hds)': amortized constant time.
 //
 ///Invariants 
 ///----------
@@ -81,26 +77,27 @@
 ///Concept-checking class
 ///----------------------
 //..
-// template <class HDS> 
-// struct MutableFacetHDSConcept {
-//    typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor; 
-//    void constraints() {
-//       using namespace boost;
-//       function_requires<HDSConcept>();
-//       function_requires<DefaultConstructibleConcept<facet_descriptor> >();
-//       function_requires<CopyConstructibleConcept<facet_descriptor> >();
-//       function_requires<EqualityComparableConcept<facet_descriptor> >();
-//       function_requires<AssignableConcept<facet_descriptor> >();
-//       set_facet(hds,h,f);
-//       f = new_facet(hds);
-//       remove_facet(hds,f);
-//    }
-//    void const_constraints(HDS const& hds) {
-//    }
-//    HDS hds;
-//    halfedge_descriptor h;
-//    facet_descriptor f;
-// };
+//  template <class HDS> 
+//  struct MutableFacetHDSConcept {
+//     typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor; 
+//     void constraints() {
+//        using namespace boost;
+//        function_requires<HDSConcept>();
+//        function_requires<DefaultConstructibleConcept<facet_descriptor> >();
+//        function_requires<CopyConstructibleConcept<facet_descriptor> >();
+//        function_requires<EqualityComparableConcept<facet_descriptor> >();
+//        function_requires<AssignableConcept<facet_descriptor> >();
+//
+//        set_facet(h, f, hds);
+//        f = new_facet(hds);
+//        remove_facet(f, hds);
+//     }
+//     void const_constraints(HDS const& hds) {
+//     }
+//     HDS hds;
+//     halfedge_descriptor h;
+//     facet_descriptor f;
+//  };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_MUTABLE_FACET_HDS_CONCEPT_HPP
@@ -144,9 +141,10 @@ namespace concepts {
            function_requires<CopyConstructibleConcept<facet_descriptor> >();
            function_requires<EqualityComparableConcept<facet_descriptor> >();
            function_requires<AssignableConcept<facet_descriptor> >();
-           set_facet(hds,h,f);
+
+           set_facet(h, f, hds);
            f = new_facet(hds);
-           delete_facet(hds,f);
+           delete_facet(f, hds);
            const_constraints(hds);
        }
 
