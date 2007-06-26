@@ -1,0 +1,28 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Connectivity Measures]
+
+Reference for connectivity measures. Apparently, these are just going to be
+simple wrappers around connected_components or strong_components to provide
+some extra information. These might include:
+
+* `is_connected()`, `is_strongly_connected()`
+* `largest_connected_component()`, `largest_strong_component()`
+
+We might extend these for biconnected components also. Essentially, these
+functions take the component map computed by the connectivity stuff as
+an input and produce results. If the connectivity map isn't provided,
+we could compute it on the fly.
+
+[Examples]
+
+``
+ connected_comp
+``
+
+[endsect]

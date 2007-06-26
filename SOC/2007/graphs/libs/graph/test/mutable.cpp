@@ -1,4 +1,3 @@
-
 // (C) Copyright Andrew Sutton 2007
 //
 // Use, modification and distribution are subject to the

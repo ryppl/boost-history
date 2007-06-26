@@ -5,7 +5,7 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Adjacency List Reference]
+[section Adjacency List]
 
 [warning
 This reference is missing documentation for a number of associated types and

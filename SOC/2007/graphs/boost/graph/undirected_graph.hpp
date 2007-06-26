@@ -629,11 +629,9 @@ namespace boost
 
     template <class VP, class EP, class GP>
     void
-    renumber_vertex_indices(
-        typename undirected_graph<VP,EP,GP>::vertex_iterator i,
-        undirected_graph<VP,EP,GP>& g)
+    renumber_vertex_indices(undirected_graph<VP,EP,GP>& g)
     {
-        g.renumber_vertex_indices(i);
+        g.renumber_vertex_indices();
     }
 
     template <class VP, class EP, class GP>

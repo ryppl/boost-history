@@ -7,8 +7,40 @@
 
 [section Reference Guide]
 
+[section Graph Types]
 [include ref_undirected_graph.qbk]
 [include ref_directed_graph.qbk]
 [include ref_adjacency_list.qbk]
+[endsect]
+
+[section Algorithms]
+[section Core Algorithms]
+[endsect]
+
+[section Shortest Path Algorithms]
+[endsect]
+
+[section Minimum Spanning Tree Algorithms]
+[endsect]
+
+[section Connectivity Algorithms]
+[include ref_connected_components.qbk]
+[include ref_strong_components.qbk]
+[include ref_connectivity.qbk]
+[endsect]
+
+[section Maximum Flow Algorithms]
+[endsect]
+
+[section Sparse Matrix Ordering Algorithms]
+[endsect]
+
+[section Layout Algorithms]
+[endsect]
+
+[section Graph Measures]
+[include ref_distributions.qbk]
+[endsect]
+[endsect]
 
 [endsect]

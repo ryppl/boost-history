@@ -18,3 +18,8 @@ exe range
 	: range.cpp
 	: <include>../../../
 	;
+
+exe misc
+    : misc.cpp
+    : <include>../../../
+    ;
