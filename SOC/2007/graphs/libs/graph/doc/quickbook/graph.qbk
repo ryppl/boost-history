@@ -28,14 +28,10 @@
 
 [include history.qbk]
 
-[/ [include theory.qbk] /]
+[include guide/guide.qbk]
 
-[/ [include tour.qbk] /]
+[include concepts/concepts.qbk]
 
-[include guide.qbk]
-
-[include concepts.qbk]
-
-[include reference.qbk]
+[include reference/reference.qbk]
 
 [/ [include bibliography.qbk] /]

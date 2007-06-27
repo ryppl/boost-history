@@ -5,10 +5,5 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section User's Guide]
-
-[include undirected_graph.qbk]
-[include directed_graph.qbk]
-[include adjacency_list.qbk]
-
+[section Graph Concept]
 [endsect]

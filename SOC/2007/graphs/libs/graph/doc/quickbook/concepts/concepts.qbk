@@ -28,7 +28,7 @@ For the following sections, we use the following notional convents:
     [[pred] [An object of type Predicate]]
 ]
 
-[include con_graphs.qbk]
-[include con_visitors.qbk]
+[include graphs.qbk]
+[include visitors.qbk]
 
 [endsect]
