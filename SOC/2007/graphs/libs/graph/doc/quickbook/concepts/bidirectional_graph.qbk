@@ -14,7 +14,7 @@ the in_edges() and out_edges() functions are the same, they both return the edge
 the vertex.
 
 [heading Refinement Of]
-[link boost_graph.concepts.graph_concepts.incidence_graph IncidenceGraph]
+[BoostIncidenceGraph]
 
 [heading Associated Types]
 [table

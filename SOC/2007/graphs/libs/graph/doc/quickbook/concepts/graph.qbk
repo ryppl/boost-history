@@ -63,6 +63,8 @@ should pass graph objects by reference (or `const` reference).
             Returns a special `vertex_descriptor` which does not refer to any vertex for graphs
             of type `G`. Note that default initialization of `vertex_descriptors` are /not/
             guaranteed to be equal to then `null_vertex()`.
+
+            *Returns* `vertex_descriptor`
         ]
     ]
 ]

@@ -7,11 +7,15 @@
 
 [section Undirected Graph]
 This section provides detailed information about the `undirected_graph` class,
-its associated types, member functions and non-member interface.
+its associated types, member functions and non-member interface. An undirected graph
+is one in which edges have no direction - this is to say that edges can be "traveled"
+in both directions. This class provides general purpose implementation of undirected
+graphs and that can be used with algorithms in the Boost Graph Library.
 
 [h4 Notation]
 The following notation is used in this documentation. The following type names
 are generally meant to mean the following:
+
 [table
     [[Used Type] [Actual Type]]
     [
@@ -54,14 +58,46 @@ following types.
     [[`v`] [The value of a property (usually a template parameter)]]
 ]
 
-[h4 Duplicitous Operations]
-Many of the original operations in the Boost Graph library are named in accordance
-with the terminology for directed graphs, specifically the use of out-edges as
-the canonical adjacencty list for vertices. As a result, undirected graphs also
+[h4 Descriptor and Iterator Stability]
+With the `undirected_graph` class, descriptors and iterators remain stable after
+all operations except descriptors and iterators referencing the vertices and edges
+that have been removed. Removing a vertex or edge will not invalidate descriptors
+and iterators to other vertices or edges.
+
+For example, consider the following code:
+
+    undirected_graph<> g;
+    undirected_graph<>::vertex_descriptor u = add_vertex(g);
+    undirected_graph<>::vertex_descriptor v = add_vertex(g);
+    undirected_graph<>::vertex_descriptor w = add_vertex(g);
+    remove_vertex(u);
+    add_edge(v, w, g);
+
+After running this program, the descriptor `u` will be invalid but `v` and `w` will
+still be valid so the call to `add_edge(v,w,g)` is also valid. Note that this
+property does not hold for all graph types.
+
+[h4 Vertex Indexing and Stability]
+The `undirected_graph` class provides a built-in internal properties for vertex
+types, and will provide semi-automated index management. Algorithms that use vertex
+indices generally assume that they are in the range \[0, `num_vertices(g)`). With
+the `undirected_graph` class vertex indices will be in this continuous range until
+a vertex is removed from the graph. This is the only operation that invalidates
+vertex indices, but the vertices will need to be renumbered using the
+`renumber_vertex_indices(g)` function.
+
+The `remove_vertex_and_renumber_indices(vi,g)` function can be used to autmoatically
+renumber indices after removing the vertex referenced by the given iterator. Because
+this function runs in linear time, it should not be used for repeated removals.
+
+[h4 Function Names for Directed and Undirected Graphs]
+Many of the  operations in the Boost Graph library are named in accordance
+with the concepts of directed graphs, specifically the use of out-edges as the
+canonical adjacencty list for vertices. As a result, undirected graphs also
 use the out-edge terminology to refern to its incident edges, but in-edge operations
 are identical in behavior to out-edge operations.
 
-There are three sets of operations that have multiple names and duplicate behavior:
+There are three sets of operations that have multiple names and duplicate behaviors:
 `*degree()`-computing functions, `*_edge()`-iterating accessors, and the `remove_*_edge()`
 predicate-based functions. These functions are grouped together in their reference
 sections.
@@ -76,37 +112,6 @@ Boost Graph Library.
 Developers of generic algoriths should be aware that, when generalizing an algorithm
 for both directed and undirected graphs, it is better to use the `out_degree(g)`
 function to access out-edges since it is guaranteed by every other graph class.
-
-[h4 Vertex and Edge Storage]
-The `undirected` graph class has three distinct storage compontents: one for each
-of vertices, edges, and incident-edges per vertex. Each of these storage components
-uses a `std::list`. This is important to remember when considering the performance
-of oeprations on these graphs.
-
-Note that mutating (modifying) edge operations on a graph must operate on both
-the edge list and incident edge lists. For example, adding an edge to the graph
-will insert the edge or descriptors into both the edge list and the incidence
-edge list of the edge's source and target.
-
-It is important to note that the use of the term /incident edges/ in this context
-generally refers to the /out/-edges of a vertex. Because the graph is undirected,
-every in-edge is also an out-edge, and so we use the term /incident/ to capture
-these semantics. As a result, the `out_edges(g)`, `in_edges(g)` and `incident_edges(g)`
-functions all return identical iterator ranges.
-
-[h4 Descriptor and Iterator Stability]
-With the `undirected_graph` class, descriptors and iterators remain stable after
-most operations. This is to say that removing a vertex or edge will not invalidate
-descriptors and iterators to other vertices or edges.
-
-[h4 Vertex Indexing and Stability]
-The `undirected_graph` class provides a built-in internal properties for vertex
-types, and will provide some degree of automated index management. Algorithms
-that use vertex indices generally assume that they are in the range
-\[0, `num_vertices(g)`). With the `undirected_graph` class vertex indices will
-be in this continuous range until a vertex is removed from the graph. This is
-the only operation that invalidates vertex indices, but the vertices will need
-to be renumbered using the `renumber_vertex_indices()` function.
 
 [h4 Template Parameters]
 There are only three parameters to the `undirected_graph` class.
@@ -130,7 +135,12 @@ There are only three parameters to the `undirected_graph` class.
 ]
 
 [h5 Model Of]
-VertexAndEdgeListGraph, MutablePropertyGraph, CopyConstructible, Assignable, and Serializable.
+[BoostIncidenceGraph], [BoostVertexListGraph], [BoostEdgeListGraph], [BoostAdjacencyGraph],
+[BoostMutableGraph], [BoostPropertyGraph], [BoostMutablePropertyGraph].
+
+Additionally, the `undirected_graph` class provides a non-constant time implementation
+of the [BoostAdjacencyMatrix] associated function `edge(u,v,g)`, but does not model
+the concept.
 
 [h5 Where Defined]
 `boost/graph/undirected_graph.hpp`
@@ -146,13 +156,15 @@ For convenience these types have been grouped by purpose.
     [
         [`graph_traits<undirected_graph>::vertex_descriptor`]
         [
-            The type for the vertex descriptors associated with the graph.
+            The type for the vertex descriptors associated with the graph. The `vertex_descriptor`
+            models the following concepts: [BoostDescriptor].
         ]
     ]
     [
         [`graph_traits<undirected_graph>::edge_descriptor`]
         [
-            The type for the edge descriptors associated with the graph.
+            The type for the edge descriptors associated with the graph. The `edge_descriptor`
+            models the followign concepts: [BoostDescriptor].
         ]
     ]
 ]
@@ -164,35 +176,35 @@ For convenience these types have been grouped by purpose.
         [`graph_traits<undirected_graph>::vertex_iterator`]
         [
             The type for iterators returned by `vertices()`. Verex iterators are
-            models of the `BidirectionalIterator` concept.
+            models of the [SgiBidirectionalIterator] concept.
         ]
     ]
     [
         [`graph_traits<undirected_graph>::edge_iterator`]
         [
             The type for iterators returned by `edges()`. Edge iterators are
-            models of the `BidirectionalIterator` concept.
+            models of the [SgiBidirectionalIterator] concept.
         ]
     ]
     [
         [`graph_traits<undirected_graph>::out_edge_iterator`]
         [
             The type for iterators returned by `out_edges()`. Out-edge iterators
-            are models of the `BidirectionalIterator` concept.
+            are models of the [SgiBidirectionalIterator] concept.
         ]
     ]
     [
         [`graph_traits<undirected_graph>::in_edge_iterator`]
         [
             The type for iterators returned by `in_edges()`. In-edge iterators
-            are models of the `BidirectionalIterator` concept.
+            are models of the [SgiBidirectionalIterator] concept.
         ]
     ]
     [
         [`graph_traits<undirected_graph>::adjacency_iterator`]
         [
             The type for iterators returned by `adjacent_vertices`. Adjacency
-            iterators are models of the `BidirectionalIterator` concept.
+            iterators are models of the [SgiBidirectionalIterator] concept.
         ]
     ]
 ]
@@ -519,8 +531,7 @@ renumber_vertex_indices(undirected_graph& g)
         [
             Renumbers all interior vertex indices such that each vertex has an index
             in the range \[0, `num_vertices(g)`). Generally, this function needs to
-            be called after removing vertices and before invoking different graph
-            algorithms.
+            be called after removing vertices and before invoking graph algorithms.
         ]
     ]
     [

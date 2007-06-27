@@ -93,8 +93,10 @@ The notation used in the table is as follows.
     [[`put(p,g,x,v`)] [Set the property value for vertex or edge `x` to value `v`.]]
 ]
 
+[include descriptor.qbk]
 [include graph.qbk]
 [include incidence_graph.qbk]
+[include bidirectional_graph.qbk]
 
 [*TODO]
 

@@ -23,6 +23,32 @@
 ]
 
 [/ Templates /]
+[template NoConcept[x] [x]]   [/ No public web documentation for this concept. /]
+
+[/ SGI Concept Documentation /]
+[template SgiAssignable[] [@http://www.sgi.com/tech/stl/Assignable.html Assignable]]
+[template SgiDefaultConstructible[] [@http://www.sgi.com/tech/stl/DefaultConstructible.html DefaultConstructible]]
+[template SgiCopyConstructible[] [@http://www.sgi.com/tech/stl/CopyConstructible.html CopyConstructible]]
+[template SgiEqualityComparable[] [@http://www.sgi.com/tech/stl/EqualityComparable.html EqualityComparable]]
+[template SgiLessThanComparable[] [@http://www.sgi.com/tech/stl/LessThanComparable.html LessThanComparable]]
+
+[template SgiAssociativeContainer[] [@http://www.sgi.com/tech/stl/AssociativeContainer.html AssociativeContainer]]
+
+[template SgiBidirectionalIterator[] [@http://www.sgi.com/tech/stl/BidirectionalIterator.html BidirectionalIterator]]
+[template SgiRandomAccessIterator[] [@http://www.sgi.com/tech/stl/RandomAccessIterator.html RandomAccessIterator]]
+
+[/ Boost Concept Documentation /]
+[template BoostDescriptor[] [link boost_graph.concepts.graph_concepts.descriptor Descriptor]]
+[template BoostGraph[] [link boost_graph.concepts.graph_concepts.graph Graph]]
+[template BoostIncidenceGraph[] [link boost_graph.concepts.graph_concepts.incidence_graph IncidenceGraph]]
+[template BoostBidirectionalGraph[] [link boost_graph.concepts.graph_concepts.bidirectional_graph BidirectionalGraph]]
+[template BoostVertexListGraph[] [link boost_graph.concepts.graph_concepts.vertex_list_graph VertexListGraph]]
+[template BoostEdgeListGraph[] [link boost_graph.concepts.graph_concepts.edge_list_graph EdgeListGraph]]
+[template BoostAdjacencyGraph[] [link boost_graph.concepts.graph_concepts.adjacency_graph AdjacencyGraph]]
+[template BoostAdjacencyMatrix[] [link boost_graph.concepts.graph_concepts.adjacency_matrix AdjacencyMatrix]]
+[template BoostMutableGraph[] [link boost_graph.concepts.graph_concepts.mutable_graph MutableGraph]]
+[template BoostPropertyGraph[] [link boost_graph.concepts.graph_concepts.property_graph PropertyGraph]]
+[template BoostMutablePropertyGraph[] [link boost_graph.concepts.graph_concepts.mutable_property_graph MutablePropertyGraph]]
 
 [/ Contents ]
 [include introduction.qbk]
