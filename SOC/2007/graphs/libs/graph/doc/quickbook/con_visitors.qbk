@@ -5,7 +5,7 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Concepts]
+[section Visitor Concepts]
 The visitor concepts plays the same role in Boost.Graph as functors play in the STL.
 Functors provide a mechanism for extending an algorithm; for customizing what is done
 at each step of the algorithm. Visitors allow the user to insert their own operations
