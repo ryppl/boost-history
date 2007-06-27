@@ -35,7 +35,7 @@ The notation used in the table is as follows.
 
 [table
     [[Expression] [Return Type or Description]]
-    [[link boost_graph.concepts.graph_concepts.graph *Graph*]]
+    [[[link boost_graph.concepts.graph_concepts.graph *Graph*]]]
     [[`graph_traits<G>::vertex_descriptor`] [The type for vertex representative objects.]]
     [[`graph_traits<G>::edge_descriptor`] [The type for edge representative objects.]]
     [[`graph_traits<G>::directed_category`] [Graph is directed or undirected?]]
