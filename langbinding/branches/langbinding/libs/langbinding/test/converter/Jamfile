@@ -1,8 +1,0 @@
-# declare the location of this subproject relative to the root
-subproject libs/langbinding/test/converter ;
-
-import testing ;
-
-DEPENDS all : test ;
-
-run converter.cpp <lib>../../build/langbinding : : : <sysinclude>$(BOOST_ROOT) ;
