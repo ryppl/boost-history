@@ -1,10 +1,6 @@
 //hds_concept.t.cpp   -*- C++ -*-
 
-//#include <boost/hdstl/hds_concepts/hds_concept.hpp>
-#include "hds_concept.hpp"
-
-//#include <boost/test/unit_test.hpp>
-//#include <boost/test/included/unit_test_framework.hpp>
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
 #include <boost/test/minimal.hpp>
 #include <boost/concept_check.hpp>
 
