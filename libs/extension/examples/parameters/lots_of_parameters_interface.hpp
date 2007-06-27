@@ -25,7 +25,7 @@ class lots_of_parameters_interface
 {
 public:
   lots_of_parameters_interface(bool b, unsigned int i, char c, std::string s, 
-			       A a, boost::shared_ptr<A> ptr_a) {}
+                               A a, boost::shared_ptr<A> ptr_a) {}
   virtual ~lots_of_parameters_interface(void) {}
 };
 

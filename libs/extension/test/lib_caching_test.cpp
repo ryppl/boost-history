@@ -32,35 +32,35 @@ using namespace boost::extensions;
 BOOST_AUTO_TEST_CASE(lib_caching_test)
 {
   if(boost::filesystem::exists(BOOST_EXTENSION_LIBS_DIRECTORY 
-			       "libHelloWorldCache.extension")) {
+                               "libHelloWorldCache.extension")) {
     boost::filesystem::remove(BOOST_EXTENSION_LIBS_DIRECTORY 
-			      "libHelloWorldCache.extension");
+                              "libHelloWorldCache.extension");
   }
   boost::filesystem::copy_file(BOOST_EXTENSION_LIBS_DIRECTORY 
-			       "libHelloWorldLib.extension", 
-			       BOOST_EXTENSION_LIBS_DIRECTORY 
-			       "libHelloWorldCache.extension");
+                               "libHelloWorldLib.extension", 
+                               BOOST_EXTENSION_LIBS_DIRECTORY 
+                               "libHelloWorldCache.extension");
 
   {
     // load the first version
     shared_library l((std::string("libHelloWorldCache") 
-			    + ".extension").c_str());
+                            + ".extension").c_str());
     BOOST_CHECK_EQUAL( l.open(), true );
     {
 
       // check if the factory can return the functor
       factory_map fm;
       functor<void, factory_map &> load_func = l.get_functor<void, 
-	factory_map &>("extension_export_word");
+        factory_map &>("extension_export_word");
       BOOST_CHECK_EQUAL( load_func.is_valid(), true );
-	  
+          
       load_func(fm);
 
       std::list<factory<word, int> > & factory_list = fm.get<word, int>();  
       BOOST_CHECK_EQUAL( factory_list.size(), 2U );
 
       std::list<factory<word, int> >::iterator current_word = 
-	factory_list.begin();
+        factory_list.begin();
 
       std::auto_ptr<word> hello_word_ptr(current_word->create());
       BOOST_CHECK_EQUAL( !hello_word_ptr.get(), 0 );
@@ -81,23 +81,23 @@ BOOST_AUTO_TEST_CASE(lib_caching_test)
 
   // replace the loaded library and try to reload
   boost::filesystem::remove(BOOST_EXTENSION_LIBS_DIRECTORY 
-			    "libHelloWorldCache.extension");
+                            "libHelloWorldCache.extension");
   boost::filesystem::copy_file(BOOST_EXTENSION_LIBS_DIRECTORY 
-			       "libHelloWorldLibv2.extension", 
-			       BOOST_EXTENSION_LIBS_DIRECTORY 
-			       "libHelloWorldCache.extension");
+                               "libHelloWorldLibv2.extension", 
+                               BOOST_EXTENSION_LIBS_DIRECTORY 
+                               "libHelloWorldCache.extension");
 
   {
     // load the second version
     shared_library l((std::string("libHelloWorldCache") 
-		      + ".extension").c_str());
+                      + ".extension").c_str());
     BOOST_CHECK_EQUAL( l.open(), true );
 
     {
       // check if the factory can return the functor
       factory_map fm;
       functor<void, factory_map &> load_func = l.get_functor<void, 
-	factory_map &>("extension_export_word");
+        factory_map &>("extension_export_word");
       BOOST_CHECK_EQUAL( load_func.is_valid(), true );
 
       load_func(fm);
@@ -105,12 +105,12 @@ BOOST_AUTO_TEST_CASE(lib_caching_test)
       // check if we can get the word list
       std::list<factory<word, int> > & factory_list = fm.get<word, int>();  
       BOOST_CHECK_EQUAL( factory_list.size(), 2U );
-	  
+          
       // iterate trough the classes and execute get_val method 
       // to obtain the correct words
       std::list<factory<word, int> >::iterator current_word = 
-	factory_list.begin();
-	  
+        factory_list.begin();
+          
       std::auto_ptr<word> hello_word_ptr(current_word->create());
       BOOST_CHECK_EQUAL( !hello_word_ptr.get(), 0 );
 
@@ -131,14 +131,14 @@ BOOST_AUTO_TEST_CASE(lib_caching_test)
   {
     // load the library again and remove it when loaded
     shared_library l((std::string("libHelloWorldCache") 
-		      + ".extension").c_str());
+                      + ".extension").c_str());
     BOOST_CHECK_EQUAL( l.open(), true );
 
     {
       // check if the factory can return the functor
       factory_map fm;
       functor<void, factory_map &> load_func = l.get_functor<void, 
-	factory_map &>("extension_export_word");
+        factory_map &>("extension_export_word");
       BOOST_CHECK_EQUAL( load_func.is_valid(), true );
 
       load_func(fm);
@@ -146,12 +146,12 @@ BOOST_AUTO_TEST_CASE(lib_caching_test)
       // check if we can get the word list
       std::list<factory<word, int> > & factory_list = fm.get<word, int>();  
       BOOST_CHECK_EQUAL( factory_list.size(), 2U );
-	  
+          
       // iterate trough the classes and execute get_val method 
       // to obtain the correct words
       std::list<factory<word, int> >::iterator current_word = 
-	factory_list.begin();
-	  
+        factory_list.begin();
+          
       std::auto_ptr<word> hello_word_ptr(current_word->create());
       BOOST_CHECK_EQUAL( !hello_word_ptr.get(), 0 );
 
@@ -161,7 +161,7 @@ BOOST_AUTO_TEST_CASE(lib_caching_test)
       ++current_word;
 
       boost::filesystem::remove(BOOST_EXTENSION_LIBS_DIRECTORY 
-				"libHelloWorldCache.extension");
+                                "libHelloWorldCache.extension");
 
       std::auto_ptr<word> world_word_ptr(current_word->create());
       BOOST_CHECK_EQUAL( !world_word_ptr.get(), 0 );

@@ -18,7 +18,7 @@ class six_parameters : public lots_of_parameters_interface
 {
 public:
   six_parameters(bool b, unsigned int i, char c, std::string s, A a, 
-		 boost::shared_ptr<A> ptr_a) 
+                 boost::shared_ptr<A> ptr_a) 
     : lots_of_parameters_interface(b, i, c, s, a, ptr_a)
   {
     std::cout << "Constructor called." << std::endl << std::endl;

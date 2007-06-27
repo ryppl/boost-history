@@ -41,7 +41,7 @@ int main(void)
     factory_list.begin();
   std::auto_ptr< lots_of_parameters_interface > 
     par_ptr(par->create(true, 4, 'c', "test", A(2), 
-			boost::shared_ptr<A>(new A(15))));
+                        boost::shared_ptr<A>(new A(15))));
 
   return 0;
 }

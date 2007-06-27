@@ -73,7 +73,7 @@ extension_export_multilanguage_word(boost::extensions::factory_map & fm)
   fm.add<monde, word, word_description>(word_description("french", "world!"));
 
   fm.add<buonasera, word, word_description>(word_description("italian", 
-							     "hello"));
+                                                             "hello"));
   fm.add<mondo, word, word_description>(word_description("italian", "world!"));
 
   fm.add<hello, word, word_description>(word_description("english", "hello"));

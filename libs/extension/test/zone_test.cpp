@@ -60,16 +60,16 @@ BOOST_AUTO_TEST_CASE(different_base)
 {
   factory_map z;
   BOOST_CHECK_EQUAL((z.get<vegetable, vegetable_info, float>().size()), 
-		    size_t(0));
+                    size_t(0));
   z.add<apple, fruit, std::string, int, int>("A round fruit");
   z.add<tomato, fruit, std::string, int, 
     int>("A round fruit that isn't very sweet");
   z.add<tomato, vegetable, vegetable_info, float>(vegetable_info("Tomato", 
-								 112));
+                                                                 112));
   BOOST_CHECK_EQUAL((z.get<fruit, std::string, int, int>().size()), size_t(2));
   BOOST_CHECK_EQUAL((z.get<vegetable, vegetable_info, float>().size()), 
-		    size_t(1));
+                    size_t(1));
   BOOST_CHECK_EQUAL((z.get<vegetable, vegetable_info, 
-		     float>().begin()->get_info().get_calories()), 112);
+                     float>().begin()->get_info().get_calories()), 112);
 }
 

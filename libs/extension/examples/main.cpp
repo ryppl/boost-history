@@ -23,13 +23,13 @@ int main()
   factory_map fm;
   // load the shared library with 
   load_single_library(fm, "libHelloWorldLib.extension", 
-		      "extension_export_word");
+                      "extension_export_word");
   //  Get a reference to the list of constructors for words.
   std::list<factory<word, int> > & factory_list = fm.get<word, int>();  
   if (factory_list.size() < 2)
     std::cout << "Error - the classes were not found.";
   for (std::list<factory<word, int> >::iterator current_word = 
-	 factory_list.begin(); current_word != factory_list.end(); 
+         factory_list.begin(); current_word != factory_list.end(); 
        ++current_word)
   {
     //  Using auto_ptr to avoid needing delete. Using smart_ptrs is 

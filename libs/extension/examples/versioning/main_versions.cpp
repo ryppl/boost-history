@@ -30,15 +30,15 @@ int main(void)
 
   // load hello world first version
   load_single_library(fm, "libHelloWorldLib.extension", 
-		      "extension_export_word");
+                      "extension_export_word");
 
   // load hello world second version
   load_single_library(fm, "libHelloWorldLibv2.extension", 
-		      "extension_export_word");
+                      "extension_export_word");
 
   // load hello world second version again
   load_single_library(fm, "libHelloWorldLibv2.extension", 
-		      "extension_export_word");
+                      "extension_export_word");
 
   // load salute library (with hello included)
   load_single_library(fm, "libSaluteLib.extension", "extension_export_salute");
@@ -48,13 +48,13 @@ int main(void)
 
   if (factory_list.size() < 6) {
     std::cout << "Error - the classes were not found (" 
-	      << factory_list.size() << " classes)" << std::endl;
+              << factory_list.size() << " classes)" << std::endl;
     return 1;
   }
 
   std::cout << "words: " << std::endl;
   for (std::list<factory<word, int> >::iterator current_word = 
-	 factory_list.begin();
+         factory_list.begin();
        current_word != factory_list.end(); ++current_word)
     {
       //  Using auto_ptr to avoid needing delete. Using smart_ptrs is 
@@ -73,13 +73,13 @@ int main(void)
 
   if (salute_factory_list.size() < 2) {
     std::cout << "Error - the classes were not found (" 
-	      << salute_factory_list.size() << " classes)" << std::endl;
+              << salute_factory_list.size() << " classes)" << std::endl;
     return 1;
   }
 
   std::cout << "salutes: " << std::endl;
   for (std::list<factory<salute, int> >::iterator current_salute = 
-	 salute_factory_list.begin();
+         salute_factory_list.begin();
        current_salute != salute_factory_list.end(); ++current_salute)
     {
       //  Using auto_ptr to avoid needing delete. Using smart_ptrs is

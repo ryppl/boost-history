@@ -26,6 +26,6 @@ public:
 extern "C" void BOOST_EXTENSION_EXPORT_DECL 
 extension_export_word(boost::extensions::factory_map & fm)
 {
-  fm.add<hello, word, int>(21);	// int could be used as version (v2 word 1)
-  fm.add<world, word, int>(22);	// int could be used as version (v2 word 2)
+  fm.add<hello, word, int>(21);        // int could be used as version (v2 word 1)
+  fm.add<world, word, int>(22);        // int could be used as version (v2 word 2)
 }

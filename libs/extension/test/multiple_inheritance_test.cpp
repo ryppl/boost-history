@@ -44,15 +44,15 @@ BOOST_AUTO_TEST_CASE(multiple_inheritance_example)
 
   // check if the libraries can be loaded
   shared_library libVehicle((std::string("libVehicle") 
-			     + ".extension").c_str());
+                             + ".extension").c_str());
   shared_library libCar((std::string("libCar") + ".extension").c_str());
   shared_library libComputer((std::string("libComputer") 
-			      + ".extension").c_str());
+                              + ".extension").c_str());
   shared_library libBoat((std::string("libBoat") + ".extension").c_str());
   shared_library libFlyingCar((std::string("libFlyingCar") 
-			       + ".extension").c_str());
+                               + ".extension").c_str());
   shared_library libCarOfTheFuture((std::string("libCarOfTheFuture") 
-				    + ".extension").c_str());
+                                    + ".extension").c_str());
   shared_library libPlane((std::string("libPlane") + ".extension").c_str());
   BOOST_CHECK_EQUAL( libVehicle.open(), true );
   BOOST_CHECK_EQUAL( libCar.open(), true );
@@ -119,7 +119,7 @@ BOOST_AUTO_TEST_CASE(multiple_inheritance_example)
   std::auto_ptr<vehicle> v1_ptr(v->create());
   BOOST_CHECK_EQUAL( v->get_info(),  "A vehicle exported as a vehicle" );
   BOOST_CHECK_EQUAL( v1_ptr->list_capabilities(), 
-		     "\nIt is some sort of vehicle." );
+                     "\nIt is some sort of vehicle." );
 
   ++v;
 
@@ -141,19 +141,19 @@ BOOST_AUTO_TEST_CASE(multiple_inheritance_example)
   std::auto_ptr<vehicle> v4_ptr(v->create());
   BOOST_CHECK_EQUAL( v->get_info(),  "A flying car exported as a vehicle");
   BOOST_CHECK_EQUAL( v4_ptr->list_capabilities(), 
-		     "\nIt travels on roads.\nIt flies in the air.\n"
-		     "It takes off from your driveway" );
+                     "\nIt travels on roads.\nIt flies in the air.\n"
+                     "It takes off from your driveway" );
 
   ++v;
 
   // a car of the future as a vehicle
   std::auto_ptr<vehicle> v5_ptr(v->create());
   BOOST_CHECK_EQUAL( v->get_info(),  "A car of the future exported as "
-		     "a vehicle" );
+                     "a vehicle" );
   BOOST_CHECK_EQUAL( v5_ptr->list_capabilities(), "\nIt floats on water.\n"
-		     "It travels on roads.\nIt flies in the air.\n"
-		     "It takes off from your driveway\nIt computes.\n"
-		     "Costs an arm and a leg" );
+                     "It travels on roads.\nIt flies in the air.\n"
+                     "It takes off from your driveway\nIt computes.\n"
+                     "Costs an arm and a leg" );
 
   ++v;
 

@@ -31,7 +31,7 @@ int main(void)
 
   // load the shared library with 
   load_single_library(fm, "libIMPlugins.extension", 
-		      "extension_export_plugins");
+                      "extension_export_plugins");
 
   //  get a reference to the list of constructors for protocols
   std::list< factory<protocol, boost::shared_ptr<network_parameters> > > & 
@@ -60,7 +60,7 @@ int main(void)
   // server
   std::cout << "MSN hostname: " << msn_parameters->hostname() << std::endl;
   std::cout << "Jabber hostname: " << jabber_parameters->hostname() 
-	    << std::endl;
+            << std::endl;
   std::cout << std::endl;
 
   // http_mode: note that one of the implementations doesn't support it, 
@@ -76,12 +76,12 @@ int main(void)
   MSN_ptr->login("testuser", "testpass");
   Jabber_ptr->login("testuser", "testpass");
   std::cout << std::endl;
-	
+        
   // send message
   MSN_ptr->send("hi");
   Jabber_ptr->send("hi");
   std::cout << std::endl;
-	
+        
   // change status
   MSN_ptr->change_status("away");
   Jabber_ptr->change_status("away");

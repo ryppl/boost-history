@@ -32,14 +32,14 @@ int main(int argc, char * argv[])
       if (strcmp(value = w->get_val(), "First Time") != 0)
       {
         std::cout << "The string's value should have been \"First Time\" "
-		  << "but was: " 
+                  << "but was: " 
                   << value << std::endl;
         return -1;
       }
       if (strcmp(value = w->get_val(), "Second Time") != 0)
       {
         std::cout << "The string's value should have been \"Second Time\" "
-		  << "but was: " 
+                  << "but was: " 
                   << value << std::endl;
         return -1;
       }
@@ -66,15 +66,15 @@ int main(int argc, char * argv[])
       if (strcmp(value = w->get_val(), "First Time") != 0)
       {
         std::cout << "The string's value should have been \"First Time\" "
-		  <<  "but was: " 
-		  << value << std::endl;
+                  <<  "but was: " 
+                  << value << std::endl;
         return -1;
       }
       if (strcmp(value = w->get_val(), "Second Time") != 0)
       {
         std::cout << "The string's value should have been \"Second Time\" "
-		  << "but was: " 
-		  << value << std::endl;
+                  << "but was: " 
+                  << value << std::endl;
         return -1;
       }
     }

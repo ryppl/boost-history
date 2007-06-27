@@ -33,7 +33,7 @@ int main()
   load_single_library(twilight, "libBoat.extension", "extension_export");
   load_single_library(twilight, "libFlyingCar.extension", "extension_export");
   load_single_library(twilight, "libCarOfTheFuture.extension", 
-		      "extension_export");
+                      "extension_export");
   load_single_library(twilight, "libPlane.extension", "extension_export");
   // load_all_libraries(twilight, "./", "extension_export_word");
   //  Get a reference to the list of constructors.
@@ -47,7 +47,7 @@ int main()
   if (factory_list.size() < 1)
     std::cout << "Error - no computers were found.";
   for (std::list<factory<computer, std::string> >::iterator comp = 
-	 factory_list.begin(); comp != factory_list.end(); ++comp)
+         factory_list.begin(); comp != factory_list.end(); ++comp)
   {
     //  Using auto_ptr to avoid needing delete. Using smart_ptrs is 
     //  recommended.
@@ -69,7 +69,7 @@ int main()
   if (factory_list2.size() < 1)
     std::cout << "Error - no vehicles were found.";
   for (std::list<factory<vehicle, std::string> >::iterator comp = 
-	 factory_list2.begin(); comp != factory_list2.end(); ++comp)
+         factory_list2.begin(); comp != factory_list2.end(); ++comp)
   {
     //  Using auto_ptr to avoid needing delete. Using smart_ptrs is 
     //  recommended.

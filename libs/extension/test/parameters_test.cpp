@@ -38,18 +38,18 @@ BOOST_AUTO_TEST_CASE(parameters_example)
   // check if we can get the parameter list
   std::list<factory<lots_of_parameters_interface, int, bool, unsigned int, 
     char, std::string, A, boost::shared_ptr<A> > > & factory_list = 
-	  fm.get<lots_of_parameters_interface, int, bool, unsigned int, char, 
+          fm.get<lots_of_parameters_interface, int, bool, unsigned int, char, 
     std::string, A, boost::shared_ptr<A> >();  
   BOOST_CHECK_EQUAL( factory_list.size(), 1U );
 
   // get the interface and construct it
   std::list<factory<lots_of_parameters_interface, int, bool, unsigned int, 
     char, std::string, A, boost::shared_ptr<A> > >::iterator params = 
-	  factory_list.begin();
+          factory_list.begin();
 
   std::auto_ptr<lots_of_parameters_interface> 
     params_ptr(params->create(true, 4, 'c', "test", A(2), 
-			      boost::shared_ptr<A>(new A(15))));
+                              boost::shared_ptr<A>(new A(15))));
   BOOST_CHECK_EQUAL( !params_ptr.get(), 0 );
 
 }

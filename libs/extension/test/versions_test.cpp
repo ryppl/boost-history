@@ -34,15 +34,15 @@ BOOST_AUTO_TEST_CASE(versions_test)
 
   // load hello world first version
   load_single_library(fm, "libHelloWorldLib.extension", 
-		      "extension_export_word");
+                      "extension_export_word");
 
   // load hello world second version
   load_single_library(fm, "libHelloWorldLibv2.extension", 
-		      "extension_export_word");
+                      "extension_export_word");
 
   // load hello world second version again
   load_single_library(fm, "libHelloWorldLibv2.extension", 
-		      "extension_export_word");
+                      "extension_export_word");
 
   // load salute library (with hello included)
   load_single_library(fm, "libSaluteLib.extension", "extension_export_salute");
@@ -65,7 +65,7 @@ BOOST_AUTO_TEST_CASE(versions_test)
 
   std::vector<std::string>::const_iterator expected_word = words.begin();
   for (std::list<factory<word, int> >::iterator current_word = 
-	 factory_list.begin(); current_word != factory_list.end(); 
+         factory_list.begin(); current_word != factory_list.end(); 
        ++current_word)
     {
       /// check that the pointer is OK and the word is the one that 
@@ -91,7 +91,7 @@ BOOST_AUTO_TEST_CASE(versions_test)
   std::vector<std::string>::const_iterator expected_salute = salutes.begin();
 
   for (std::list<factory<salute, int> >::iterator current_salute = 
-	 salute_factory_list.begin();
+         salute_factory_list.begin();
        current_salute != salute_factory_list.end(); ++current_salute)
     {
       /// check that the pointer is OK and the salute is the one that 

@@ -22,42 +22,42 @@
 class MSN : public protocol
 {
 public:
-	virtual void login(const std::string &user, const std::string &pass) { 
-	  std::cout << "MSN: Logged In" << std::endl; 
-	}
-	virtual void send(const std::string &msg) { 
-	  std::cout << "MSN: message [" << msg << "] sent" << std::endl; 
-	}
-	virtual std::string receive(void) { 
-	  return std::string("MSN: hello! msg received"); 
-	}
-	virtual void change_status(const std::string &new_status) { 
-	  std::cout << "MSN: Status changed to [" << new_status << "]" 
-		    << std::endl; 
-	}
+        virtual void login(const std::string &user, const std::string &pass) { 
+          std::cout << "MSN: Logged In" << std::endl; 
+        }
+        virtual void send(const std::string &msg) { 
+          std::cout << "MSN: message [" << msg << "] sent" << std::endl; 
+        }
+        virtual std::string receive(void) { 
+          return std::string("MSN: hello! msg received"); 
+        }
+        virtual void change_status(const std::string &new_status) { 
+          std::cout << "MSN: Status changed to [" << new_status << "]" 
+                    << std::endl; 
+        }
 
-	virtual ~MSN(void) {}
+        virtual ~MSN(void) {}
 };
 
 // Jabber protocol implementation
 class Jabber : public protocol
 {
 public:
-	virtual void login(const std::string &user, const std::string &pass) { 
-	  std::cout << "Jabber: Logged In" << std::endl; 
-	}
-	virtual void send(const std::string &msg) { 
-	  std::cout << "Jabber: message [" << msg << "] sent" << std::endl; 
-	}
-	virtual std::string receive(void) { 
-	  return std::string("Jabber: hello! msg received"); 
-	}
-	virtual void change_status(const std::string &new_status) { 
-	  std::cout << "Jabber: Status changed to [" << new_status << "]" 
-		    << std::endl; 
-	}
+        virtual void login(const std::string &user, const std::string &pass) { 
+          std::cout << "Jabber: Logged In" << std::endl; 
+        }
+        virtual void send(const std::string &msg) { 
+          std::cout << "Jabber: message [" << msg << "] sent" << std::endl; 
+        }
+        virtual std::string receive(void) { 
+          return std::string("Jabber: hello! msg received"); 
+        }
+        virtual void change_status(const std::string &new_status) { 
+          std::cout << "Jabber: Status changed to [" << new_status << "]" 
+                    << std::endl; 
+        }
 
-	virtual ~Jabber(void) {}
+        virtual ~Jabber(void) {}
 };
 
 

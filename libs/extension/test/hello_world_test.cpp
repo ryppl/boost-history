@@ -30,7 +30,7 @@ BOOST_AUTO_TEST_CASE(hello_world_example)
   // check if the factory can return the functor
   factory_map fm;
   functor<void, factory_map &> load_func = 
-	  l.get_functor<void, factory_map &>("extension_export_word");
+          l.get_functor<void, factory_map &>("extension_export_word");
   BOOST_CHECK_EQUAL( load_func.is_valid(), true );
 
   load_func(fm);
