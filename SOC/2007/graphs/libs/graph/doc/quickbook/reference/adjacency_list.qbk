@@ -231,21 +231,31 @@ operation.
         [Valid]
         [Valid]
         [Valid]
-        [OEL = `vecS` && [br] Directed = `directedS`]
+        [
+            OEL = `vecS` &&
+
+            Directed = `directedS`]
         [OEL = `vecS`]
     ]
     [
         [
-            `remove_edge()`[br]
-            `remove_edge_if()`[br]
-            `remove_out_edge_if()`[br]
-            `remove_in_edge_if()`[br]
+            `remove_edge()`
+
+            `remove_edge_if()`
+
+            `remove_out_edge_if()`
+
+            `remove_in_edge_if()`
+
             `clear_vertex()`
         ]
         [Valid]
         [Valid]
         [Valid]
-        [OEL = `vecS` && [br] Directed = `directedS`]
+        [
+            OEL = `vecS` &&
+
+            Directed = `directedS`]
         [OEL = `vecS`]
     ]
     [
@@ -352,7 +362,8 @@ operation.
     ]
     [
         [
-            `property_map<adjacency_list, Property>::type` [br]
+            `property_map<adjacency_list, Property>::type`
+
             `property_map<adjacency_list, Property>::const_type`
         ]
         [

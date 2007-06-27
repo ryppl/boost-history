@@ -22,16 +22,13 @@
     ]
 ]
 
+[/ Templates /]
+
 [/ Contents ]
-
 [include introduction.qbk]
-
 [include history.qbk]
-
 [include guide/guide.qbk]
-
 [include concepts/concepts.qbk]
-
 [include reference/reference.qbk]
 
 [/ [include bibliography.qbk] /]

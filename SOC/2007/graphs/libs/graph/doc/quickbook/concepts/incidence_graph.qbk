@@ -1,0 +1,87 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Incidence Graph]
+The IncidenceGraph concept provides an interface for efficient access to the out-edges
+(for directed graphs) or incident edges (for undirected graphs) of each vertex in
+the graph.
+
+[heading Refinement Of]
+[link boost_graph.concepts.graph_concepts.graph Graph]
+
+[heading Associated Types]
+[table
+    [[Type] [Description]]
+    [
+        [`graph_traits<G>::traversal_category`]
+        [
+            This tag type must be convertible to `incidence_graph_tag`.
+        ]
+    ]
+    [
+        [`graph_traits<G>::degree_size_type`]
+        [
+            The unsigned integral type used for representing the number of edges incident
+            to a vertex. The `degree_size_type` must meet the requirements of the
+            UnsignedIntegral concept.
+        ]
+    ]
+    [
+        [`graph_traits<G>::out_edge_iterator`]
+        [
+            An out-edge iterator for a vertex /v/ provides access to the out-edges of the
+            vertex. As such, the value type of an out-edge iterator is the `edge_descriptor`
+            type of the graph. An out-edge iterator must meet the requirements of
+            MultiPassInputIterator.
+        ]
+    ]
+]
+
+[heading Valid Expressions]
+[table
+    [[Expression] [Description]]
+    [
+        [`source(e,g)`]
+        [
+            If `e` represents the edge /(u,v)/, this function returns the vertex descriptor
+            for /u/.
+
+            *Returns* `vertex_descriptor`.
+        ]
+    ]
+    [
+        [`target(e,g)`]
+        [
+            If `e` represents the edge /(u,v)/, this function returns the vertex descriptor
+            for /v/.
+
+            *Returns* `vertex_descriptor`.
+        ]
+    ]
+    [
+        [`out_edges(v,g)`]
+        [
+            Returns an iterator range providing access to the out-edges (for directed graphs)
+            or the incident edges (for undirected graphs). The source vertex of an edge obtained
+            via an out-edge iterator is guaranteed to be the vertex `v` in the call to
+            `out_edges(v,g)`, and the target vertex must be adjacenct to `v`.
+
+            *Returns* `std::pair<out_edge_iterator, out_edge_iterator>`
+        ]
+    ]
+    [
+        [`out_degree(v,g)`]
+        [
+            Returns the number of out-edges (for directed graphs) or the number of incident
+            edges (for undirected graphs) of the vertex `v`.
+
+            *Returns* `degree_size_type`.
+        ]
+    ]
+]
+
+[endsect]
