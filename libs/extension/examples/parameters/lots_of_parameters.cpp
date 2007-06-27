@@ -9,7 +9,7 @@
  * See http://www.boost.org/ for latest version.
  */
 
-#include "lots_of_parameters_interface.hpp"
+#include "lots_of_parameters_iface.hpp"
 #include <boost/extension/factory_map.hpp>
 
 #include <iostream>

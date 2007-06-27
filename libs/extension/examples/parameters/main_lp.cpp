@@ -14,7 +14,7 @@
 #include <iostream>
 #include <boost/extension/convenience.hpp>
 
-#include "lots_of_parameters_interface.hpp"
+#include "lots_of_parameters_iface.hpp"
 
 int main(void)
 {
