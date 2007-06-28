@@ -1,6 +1,31 @@
-# declare the location of this subproject relative to the root
-subproject libs/langbinding/test ;
+##==============================================================================
+#    Copyright (c) 2003-2006 Joel de Guzman
+#
+#   Use, modification and distribution is subject to the Boost Software
+#   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#==============================================================================
+# bring in rules for testing
+import testing ;
 
-subinclude libs/langbinding/test/classes ;
-subinclude libs/langbinding/test/converter ;
-subinclude libs/langbinding/test/function ;
+project
+    : requirements
+      <library>/boost/langbinding//boost_langbinding
+      <define>BOOST_ALL_NO_LIB
+    ;
+
+{
+    test-suite langbinding :
+    #[ run classes/holder.cpp :  :  :  : ]
+    [ run classes/inheritance.cpp :  :  :  : ]
+
+    #[ run converter/converter.cpp :  :  :  : ]
+
+    [ run function/dispatch.cpp :  :  :  : ]
+    [ run function/make_function.cpp :  :  :  : ]
+    [ run function/result_converter.cpp :  :  :  : ]
+    [ run function/rvalue_conversion.cpp :  :  :  : ]
+
+    ;
+}
+

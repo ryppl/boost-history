@@ -280,6 +280,27 @@ struct result_converter
         );
     }
 
+    // JHM: I decided to pass auto_ptr<>s by value here.  This may 
+    //      not be the right thing to do.  This works, but it moves 
+    //      ownership of the "pointee" inside of the call.  However, 
+    //      this is what's usually expected, and the installer will 
+    //      move ownership anyway if invoked.
+    //
+    //      Passing by reference doesn't work, because an auto_ptr<> 
+    //      returned from a function is usually an rvalue, and a non-
+    //      const reference can't be bound to an rvalue.
+    template <class U>
+    void* operator()(std::auto_ptr<U> x) const
+    {
+        return callback(
+            &x
+          , make_installer(
+                typename has_installer::type()
+              , x
+            )
+        );
+    }
+
 private:
     converter::to_xxx_function callback;
     backend::plugin const& backend_;

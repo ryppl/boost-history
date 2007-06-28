@@ -13,14 +13,14 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
 
-#include <boost/spirit/fusion/sequence/get.hpp>
+#include <boost/fusion/sequence/intrinsic/at.hpp>
 
 #include <boost/langbinding/function/config.hpp>
 #include <boost/langbinding/function/aux_/invoke_tag.hpp>
 
 namespace boost { namespace langbinding { namespace function { namespace aux {
 
-#define BOOST_LANGBINDING_EXTRACT(z, n, tuple) fusion::get<n>(tuple)()
+#define BOOST_LANGBINDING_EXTRACT(z, n, tuple) fusion::at_c<n>(tuple)()
 #define BOOST_LANGBINDING_EXTRACT_SKIP_THIS(z, n, tuple) \
     fusion::get<BOOST_PP_INC(n)>(tuple)()
 
@@ -55,7 +55,7 @@ void* invoke(invoke_tag_<false, false>, mpl::long_<N>, F const& fn, Converters c
 template<class F, class Converters>
 void* invoke(invoke_tag_<true, true>, mpl::long_<N>, F const& fn, Converters const& cvs)
 {
-    (fusion::get<0>(cvs.args)().*fn)(
+    (fusion::at_c<0>(cvs.args)().*fn)(
         BOOST_PP_ENUM(BOOST_PP_DEC(N), BOOST_LANGBINDING_EXTRACT, cvs.args)
     );
     return cvs.return_();
@@ -65,7 +65,7 @@ template<class F, class Converters>
 void* invoke(invoke_tag_<false, true>, mpl::long_<N>, F const& fn, Converters const& cvs)
 {
     return cvs.return_(
-        (fusion::get<0>(cvs.args)().*fn)(
+        (fusion::at_c<0>(cvs.args)().*fn)(
             BOOST_PP_ENUM(BOOST_PP_DEC(N), BOOST_LANGBINDING_EXTRACT, cvs.args)
         )
     );

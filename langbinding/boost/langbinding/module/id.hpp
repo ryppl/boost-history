@@ -5,7 +5,7 @@
 #ifndef BOOST_LANGBINDING_MODULE_040921_HPP
 #define BOOST_LANGBINDING_MODULE_040921_HPP
 
-#include <boost/langbinding/module/config.hpp>
+#include <boost/langbinding/aux_/config.hpp>
 
 namespace boost { namespace langbinding { namespace module {
 

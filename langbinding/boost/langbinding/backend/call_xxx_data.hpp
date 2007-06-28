@@ -11,6 +11,11 @@
 
 namespace boost { namespace langbinding { namespace backend { 
 
+#if defined(BOOST_MSVC) 
+#pragma warning(push)
+#pragma warning(disable : 4251) 
+#endif
+
 // The constant data associated with any given call signature from C++
 // to XXX.
 struct BOOST_LANGBINDING_DECL call_xxx_data
@@ -28,6 +33,10 @@ struct BOOST_LANGBINDING_DECL call_xxx_data
     // by backend plugin ID.
     std::vector<boost::shared_ptr<void> > cache;
 };
+
+#if defined(BOOST_MSVC) 
+#pragma warning(pop)
+#endif
 
 inline call_xxx_data::call_xxx_data(unsigned arity, util::type_info const* types)
   : arity(arity), types(types)

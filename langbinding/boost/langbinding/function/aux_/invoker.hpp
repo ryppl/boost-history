@@ -11,14 +11,14 @@
 #include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/iterator_range.hpp>
 #include <boost/mpl/front.hpp>
+#include <boost/mpl/pop_front.hpp>
 
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 
-#include <boost/spirit/fusion/sequence/type_sequence.hpp>
-#include <boost/spirit/fusion/algorithm/transform.hpp>
-#include <boost/spirit/fusion/sequence/generate.hpp>
+#include <boost/fusion/sequence/adapted/mpl.hpp>
+#include <boost/fusion/sequence/conversion/as_list.hpp>
 
 #include <boost/langbinding/function/invoker.hpp>
 #include <boost/langbinding/function/argument_type.hpp>
@@ -105,10 +105,7 @@ struct invoker : boost::langbinding::function::invoker
 {
     invoker(F fn);
 
-    typedef mpl::iterator_range<
-        typename mpl::next<typename mpl::begin<Signature>::type>::type
-      , typename mpl::end<Signature>::type
-    > argument_types;
+    typedef typename mpl::pop_front<Signature>::type argument_types;
 
     typedef typename mpl::front<Signature>::type return_type_;
     typedef result_converter<return_type_> rc_type;
@@ -117,14 +114,16 @@ struct invoker : boost::langbinding::function::invoker
         backend::plugin const& backend_
       , converter::from_xxx_data* args) const
     {
-        aux::fusion_arg_iterator arg_iterator(args);
+        aux::fusion_arg_sequence<
+            typename mpl::size<argument_types>::type
+        > arg_seq(args);
 
-        typename fusion::meta::generate<
+        typename fusion::result_of::as_list<
             mpl::transform_view<
                 argument_types
               , arg_extractor<mpl::_>
             >
-        >::type argument_converters(arg_iterator);
+        >::type argument_converters(arg_seq);
 
         // Find to_xxx converter in registry.
         converter::to_xxx_function rc_fn = get_result_converter(

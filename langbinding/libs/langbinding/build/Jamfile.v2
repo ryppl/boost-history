@@ -1,0 +1,28 @@
+# (C) Copyright John H. Moeller 2007
+# Use, modification and distribution are subject to the
+# Boost Software License, Version 1.0. (See accompanying file
+# LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+project boost/langbinding
+    : source-location ../src
+    : requirements 
+      <define>BOOST_LANGBINDING_SOURCE
+	  <link>shared:<define>BOOST_LANGBINDING_DYNAMIC_LIB=1
+	  <link>static:<define>BOOST_LANGBINDING_STATIC_LIB=1
+	: # default build
+    : usage-requirements 
+	  <link>shared:<define>BOOST_LANGBINDING_DYNAMIC_LIB=1
+	  <link>static:<define>BOOST_LANGBINDING_STATIC_LIB=1
+    ;
+
+SOURCES =  
+    backend/plugin
+    backend/call_xxx_data
+    classes/inheritance
+    converter/registry
+    module/id 
+    ;
+
+lib boost_langbinding
+    : $(SOURCES).cpp
+    ;

@@ -22,7 +22,7 @@ struct polymorphic
     }
     
  private:
-    template<class> friend class instance_holder;
+    template<class> friend struct instance_holder;
     backend::class_instance instance;
 };
 

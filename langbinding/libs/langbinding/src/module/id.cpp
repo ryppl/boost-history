@@ -2,7 +2,7 @@
 // subject to the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/langbinding/module/config.hpp>
+#include <boost/langbinding/module/id.hpp>
 
 namespace boost { namespace langbinding { namespace module { namespace aux {
 
