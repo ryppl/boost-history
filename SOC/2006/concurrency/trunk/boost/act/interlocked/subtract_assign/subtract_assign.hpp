@@ -9,11 +9,33 @@
 #ifndef BOOST_ACT_INTERLOCKED_SUBTRACT_ASSIGN_SUBTRACT_ASSIGN_HPP
 #define BOOST_ACT_INTERLOCKED_SUBTRACT_ASSIGN_SUBTRACT_ASSIGN_HPP
 
-#include <boost/act/interlocked/detail/binary_forwarder.hpp>
+#include <boost/act/config/interlocked/has.hpp>
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO                     \
-( subtract_assign, full_fence, additive )
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( subtract_assign, acq_rel )
 
-#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER()
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/act/interlocked/subtract_assign/subtract_assign_acq_rel.hpp>
+
+#include <boost/act/interlocked/detail/cas_support.hpp>
+
+namespace boost { namespace act { namespace interlocked {
+
+template< typename TargetType, typename SourceType >
+typename lazy_enable_if
+<
+  detail::are_valid_additive_params< TargetType, SourceType const >
+, remove_cv< TargetType >
+>
+::type
+subtract_assign( TargetType& destination, SourceType const& new_value )
+{
+  return interlocked::subtract_assign_acq_rel( destination, new_value );
+
+}
+
+} } }
+
+#endif
 
 #endif

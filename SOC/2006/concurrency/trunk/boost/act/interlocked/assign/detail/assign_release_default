@@ -6,23 +6,21 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_DEFAULT_HPP
-#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQUIRE_DEFAULT_HPP
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_RELEASE_DEFAULT_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_RELEASE_DEFAULT_HPP
 
-#include <boost/act/interlocked/assign/assign.hpp>
+#include <boost/act/interlocked/assign/assign_acq_rel.hpp>
+#include <boost/type_traits/remove_cv.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
-struct assign_acquire_default_impl
+struct assign_release_default_impl
 {
   template< typename LeftType, typename RightType >
-  struct result : assign_impl::result< LeftType, RightType > {};
-
-  template< typename LeftType, typename RightType >
-  static typename result< LeftType, RightType >::type
+  static typename remove_cv< LeftType >::type
   execute( LeftType& left, RightType& right )
   {
-    return interlocked::assign( left, right );
+    return interlocked::assign_acq_rel( left, right );
   }
 };
 

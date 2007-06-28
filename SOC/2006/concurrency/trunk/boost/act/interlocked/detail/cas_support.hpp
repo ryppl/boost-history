@@ -11,6 +11,7 @@
 
 #include <boost/act/interlocked/detail/implementation_info/operation_support.hpp>
 
+// ToDo: Change to use appropriate default macro definitions when undefined
 #ifdef BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT
 
 #include <climits>
@@ -30,6 +31,7 @@
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/preprocessor/seq/fold_left.hpp>
 #include <boost/preprocessor/seq/elem.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/act/interlocked/detail/full_name.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NUM_PARAMS 5
@@ -45,7 +47,7 @@
                      , 1, BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT       \
                      )
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_CAS_RETURN                    \
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_LOAD_INFO                     \
   BOOST_PP_TUPLE_ELEM( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NUM_PARAMS     \
                      , 2, BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT       \
                      )
@@ -54,7 +56,7 @@
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_ARITHMETIC_RETURN             \
   old_value
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_LOAD_INFO                 \
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_STORE_INFO                    \
   BOOST_PP_TUPLE_ELEM( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_NUM_PARAMS     \
                      , 3, BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT       \
                      )
@@ -69,8 +71,10 @@
 #else
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_IMPL_INFO                     \
-( ( assign,        ( full_fence ) ) )                                        \
-( ( assign_if_was, ( full_fence ) ) )
+( ( assign,        ( acq_rel ) ) )                                          \
+( ( assign_if_was, ( acq_rel ) ) )                                          \
+( ( load,          ( acquire ) ) )                                             \
+( ( store,         ( release ) ) )
 
 #endif
 
@@ -80,22 +84,31 @@
 #define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_assign_if_was   3
 #define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_bitand_assign   4
 #define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_bitor_assign    5
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_compl_assign    6
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_decrement       7
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_divide_assign   8
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_increment       9
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_mod_assign      10
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_multiply_assign 11
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_negate_assign   12
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_not_assign      13
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_load        14
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_subtract_assign 15
-#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_xor_assign      16
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_compiler_fence  6
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_compl_assign    7
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_decrement       8
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_divide_assign   9
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_fence           10
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_increment       11
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_lshift_assign   12
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_mod_assign      13
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_modify          14
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_multiply_assign 15
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_negate_assign   16
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_not_assign      17
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_load            18
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_rshift_assign   19
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_store           20
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_subtract_assign 21
+#define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_xor_assign      22
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_0            0
-#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_acquire      1
-#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_release      2
-#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_full_fence 3
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_0               0
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_unordered       1
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_acquire         2
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_read            2
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_release         3
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_write           3
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_acq_rel      4
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_COMPARE( data, elem )                     \
 BOOST_PP_EQUAL                                                                 \
@@ -162,19 +175,56 @@ BOOST_PP_EQUAL                                                                 \
       , BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_, semantics )   \
       )                                                                        \
     , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_IMPL_INFO                       \
-      ((0,(acquire)(release)(full_fence)))                                   \
+      ((0,(unordered)(acquire)(release)(acq_rel)))                          \
     )                                                                          \
   )                                                                            \
 , 2                                                                            \
 )
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_custom_load 0
-#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_load 1
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_custom_load              0
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_custom_store             0
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_load_unordered  1
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_store_unordered 1
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_load_acquire    2
+#define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_store_release   2
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_LOAD                     \
-BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_                        \
-            , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_LOAD_INFO           \
-            )
+#define BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_LOAD_UNORDERED               \
+BOOST_PP_EQUAL                                                                 \
+( BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_                      \
+              , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_LOAD_INFO             \
+              )                                                                \
+, BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_load_unordered             \
+)
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_LOAD_ACQUIRE                 \
+BOOST_PP_EQUAL                                                                 \
+( BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_                      \
+              , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_LOAD_INFO             \
+              )                                                                \
+, BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_load_acquire               \
+)
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_STORE_UNORDERED              \
+BOOST_PP_EQUAL                                                                 \
+( BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_                      \
+              , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_LOAD_INFO             \
+              )                                                                \
+, BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_store_unordered            \
+)
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_STORE_RELEASE                \
+BOOST_PP_EQUAL                                                                 \
+( BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_                      \
+              , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_LOAD_INFO             \
+              )                                                                \
+, BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_volatile_store_release              \
+)
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_IS_NAME( name, desired_name )             \
+BOOST_PP_EQUAL                                                                 \
+( BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_, name )              \
+, BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_, desired_name )      \
+)
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
@@ -223,7 +273,7 @@ struct are_valid_additive_params
 template< typename LeftOperand, typename RightOperand = LeftOperand const
         , typename ComparisonType = LeftOperand const
         >
-struct are_valid_assign_style_params
+struct are_valid_store_style_params
   : mpl::or_< are_valid_arithmetic_params< LeftOperand, RightOperand
                                          , ComparisonType
                                          >
@@ -267,7 +317,7 @@ struct are_valid_arithmetic_params
 template< typename LeftOperand, typename RightOperand = LeftOperand
         , typename ComparisonType = LeftOperand
         >
-struct are_valid_assign_style_params
+struct are_valid_store_style_params
   : mpl::false_
 {
 

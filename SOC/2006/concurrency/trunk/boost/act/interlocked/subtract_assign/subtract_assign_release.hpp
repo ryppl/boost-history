@@ -9,11 +9,17 @@
 #ifndef BOOST_ACT_INTERLOCKED_SUBTRACT_ASSIGN_SUBTRACT_ASSIGN_RELEASE_HPP
 #define BOOST_ACT_INTERLOCKED_SUBTRACT_ASSIGN_SUBTRACT_ASSIGN_RELEASE_HPP
 
+#include <boost/act/config/interlocked/has.hpp>
+
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( subtract_assign, release )
+
 #include <boost/act/interlocked/detail/binary_forwarder.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO                     \
 ( subtract_assign, release, additive )
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER()
+
+#endif
 
 #endif

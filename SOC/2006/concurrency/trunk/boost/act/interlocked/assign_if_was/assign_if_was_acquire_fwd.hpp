@@ -9,6 +9,10 @@
 #ifndef BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_ACQUIRE_FWD_HPP
 #define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_ASSIGN_IF_WAS_ACQUIRE_FWD_HPP
 
+#include <boost/act/config/interlocked/has.hpp>
+
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign_if_was, acquire )
+
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
@@ -25,7 +29,7 @@ typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_assign_style_params< TargetType, SourceType const
+    detail::are_valid_store_style_params< TargetType, SourceType const
                                          , ConditionType const
                                          >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
@@ -42,7 +46,7 @@ typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_assign_style_params< TargetType, SourceType const
+    detail::are_valid_store_style_params< TargetType, SourceType const
                                          , ConditionType const
                                          >
   , detail::is_interlocked_bool< TargetType >
@@ -55,5 +59,7 @@ assign_if_was_acquire( TargetType& destination, SourceType const& new_value
                      );
 
 } } }
+
+#endif
 
 #endif

@@ -12,5 +12,7 @@
 #include <boost/act/interlocked/assign_if_was/assign_if_was.hpp>
 #include <boost/act/interlocked/assign_if_was/assign_if_was_acquire.hpp>
 #include <boost/act/interlocked/assign_if_was/assign_if_was_release.hpp>
+#include <boost/act/interlocked/assign_if_was/assign_if_was_acq_rel.hpp>
+#include <boost/act/interlocked/assign_if_was/assign_if_was_unordered.hpp>
 
 #endif

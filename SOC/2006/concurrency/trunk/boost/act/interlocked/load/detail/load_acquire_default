@@ -1,0 +1,61 @@
+/*=============================================================================
+    Copyright (c) 2006, 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef BOOST_ACT_INTERLOCKED_LOAD_DETAIL_LOAD_ACQUIRE_DEFAULT_IMPL_HPP
+#define BOOST_ACT_INTERLOCKED_LOAD_DETAIL_LOAD_ACQUIRE_DEFAULT_IMPL_HPP
+
+#include <boost/act/interlocked/detail/cas_support.hpp>
+
+#if BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_LOAD_ACQUIRE
+
+#include <boost/type_traits/remove_cv.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct load_acquire_default_impl
+{
+  template< typename TargetType >
+  static typename remove_cv< TargetType >::type
+  execute( TargetType volatile& target )
+  {
+    return target;
+  }
+};
+
+} } } }
+
+#else // Else: Custom interlocked load for this system (no default)
+
+#include <boost/type_traits/remove_cv.hpp>
+
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/always.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/bool.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct load_acquire_default_impl
+{
+  template< typename TargetType >
+  static typename remove_cv< TargetType >::type execute( TargetType& target )
+  {
+    BOOST_MPL_ASSERT_MSG
+    (
+      ( mpl::apply< mpl::always< mpl::false_ >, TargetType >::type::value )
+    , NO_DEFAULT_INTERLOCKED_LOAD_ACQUIRE_IMPLEMENTATION_FOR_THIS_SYSTEM
+    , ()
+    );
+  }
+};
+
+} } } }
+
+#endif
+
+#endif

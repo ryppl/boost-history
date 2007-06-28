@@ -1,0 +1,95 @@
+/*=============================================================================
+    Copyright (c) 2006, 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_UNORDERED_WINDOWS_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_UNORDERED_WINDOWS_HPP
+
+#include <boost/config.hpp>
+
+#include <boost/detail/interlocked.hpp>
+
+#include <boost/utility/enable_if.hpp>
+
+#include <windows.h> // ToDo: Remove (forward declare functions)
+
+#include <boost/type_traits/remove_volatile.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct assign_unordered_impl
+{
+  template< typename Type >
+  static
+  typename lazy_enable_if_c
+  <
+    ( sizeof( Type ) == 4 )
+  , remove_volatile< Type >
+  >
+  ::type
+  execute( Type& left, typename remove_volatile< Type >::type right )
+  {
+    typedef typename remove_volatile< Type >::type unqualified_type;
+
+    unqualified_type result;
+
+__asm
+{
+  mov  eax,               right;
+  mov  ecx,               left;
+  xchg eax,               ecx;
+  mov  result, eax
+}
+/*
+0041ECFE  mov         eax,dword ptr [right] 
+0041ED01  mov         ecx,dword ptr [left] 
+0041ED04  xchg        eax,dword ptr [ecx] 
+0041ED06  mov         dword ptr [result],eax 
+*/
+/*
+  unqualified_type result = static_cast< unqualified_type >
+                            (
+                              BOOST_INTERLOCKED_EXCHANGE
+                              ( reinterpret_cast< LONG volatile* >( &left )
+                              , reinterpret_cast< LONG const& >( right )
+                              )
+                            );
+
+*/
+    return result;
+  }
+
+#if WINVER >= 0x0600
+
+  template< typename Type >
+  static
+  typename lazy_enable_if_c
+  <
+    ( sizeof( Type ) == 8 )
+  , remove_volatile< Type >
+  >
+  ::type
+  execute( Type& left, typename remove_volatile< Type >::type right )
+  {
+    typedef typename remove_volatile< Type >::type unqualified_type;
+
+    return static_cast< unqualified_type >
+           (
+             InterlockedExchange64
+             ( reinterpret_cast< LONGLONG volatile* >( &left )
+             , reinterpret_cast< LONGLONG const& >( right )
+             )
+           );
+  }
+
+#endif
+
+};
+
+} } } }
+
+#endif

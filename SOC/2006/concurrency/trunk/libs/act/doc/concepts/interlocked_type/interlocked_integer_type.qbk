@@ -24,7 +24,7 @@ operations do not imply memory barriers of any kind.
 
 [table Interlocked Arithmetic Type Requirements
 [[Expression]                         [Return Type][Pre/Post-Condition]        ]
-[[`mod_assign( iv, c1 )`][`mod_assign_result<IV>::type`]
+[[`mod_assign( iv, c1 )`][`remove_cv<IV>::type`]
                                                    [Mods `iv` by `c1` and
                                                     stores the result in `iv`
                                                     with a
@@ -34,7 +34,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`mod_assign_acquire( iv, c1 )`]
-                                      [`mod_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Mods `iv` by `c1` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
@@ -44,7 +44,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`mod_assign_release( iv, c1 )`]
-                                      [`mod_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Mods `iv` by `c1` and
                                                     stores the result in `iv`
                                                     with /release/ memory
@@ -53,7 +53,7 @@ operations do not imply memory barriers of any kind.
                                                     before the operation is
                                                     performed.
                                                    ]                           ]
-[[`and_assign( iv, c1 )`][`and_assign_result<IV>::type`]
+[[`and_assign( iv, c1 )`][`remove_cv<IV>::type`]
                                                    [Ands `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with a
@@ -63,7 +63,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`and_assign_acquire( iv, c1 )`]
-                                      [`and_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Ands `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
@@ -73,7 +73,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`and_assign_release( iv, c1 )`]
-                                      [`and_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Ands `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /release/ memory
@@ -82,7 +82,7 @@ operations do not imply memory barriers of any kind.
                                                     before the operation is
                                                     performed.
                                                    ]                           ]
-[[`or_assign( iv, c1 )`] [`or_assign_result<IV>::type`]
+[[`or_assign( iv, c1 )`] [`remove_cv<IV>::type`]
                                                    [Ors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with a
@@ -92,7 +92,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`or_assign_acquire( iv, c1 )`]
-                                      [`or_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Ors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
@@ -102,7 +102,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`or_assign_release( iv, c1 )`]
-                                      [`or_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Ors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /release/ memory
@@ -111,7 +111,7 @@ operations do not imply memory barriers of any kind.
                                                     before the operation is
                                                     performed.
                                                    ]                           ]
-[[`xor_assign( iv, c1 )`][`xor_assign_result<IV>::type`]
+[[`xor_assign( iv, c1 )`][`remove_cv<IV>::type`]
                                                    [Xors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with a
@@ -121,7 +121,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`xor_assign_acquire( iv, c1 )`]
-                                      [`xor_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Xors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
@@ -131,7 +131,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`xor_assign_release( iv, c1 )`]
-                                      [`xor_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Xors `iv` with `c1` and
                                                     stores the result in `iv`
                                                     with /release/ memory
@@ -141,7 +141,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`lshift_assign( iv, s )`]
-                                      [`lshift_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Left shifts `iv` by `s` and
                                                     stores the result in `iv`
                                                     with a
@@ -151,7 +151,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`lshift_assign_acquire( iv, s )`]
-                                      [`lshift_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Left shifts `iv` by `s` and
                                                     stores the result in `iv`
                                                     with /acquire/ memory
@@ -161,7 +161,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`lshift_assign_release( iv, s )`]
-                                      [`lshift_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Left shifts `iv` by `s` and
                                                     stores the result in `iv`
                                                     with /release/ memory
@@ -171,7 +171,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`rshift_assign( iv, s )`]
-                                      [`rshift_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Right shifts `iv` by `s`
                                                     and stores the result in
                                                     `iv` with a
@@ -181,7 +181,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`rshift_assign_acquire( iv, s )`]
-                                      [`rshift_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Right shifts `iv` by `s`
                                                     and stores the result in
                                                     `iv` with /acquire/ memory
@@ -191,7 +191,7 @@ operations do not imply memory barriers of any kind.
                                                     performed.
                                                    ]                           ]
 [[`rshift_assign_release( iv, s )`]
-                                      [`rshift_assign_result<IV>::type`]
+                                      [`remove_cv<IV>::type`]
                                                    [Right shifts `iv` by `s`
                                                     and stores the result in
                                                     `iv` with /release/ memory

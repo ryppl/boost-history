@@ -41,7 +41,7 @@ typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_assign_style_params< TargetType >
+    detail::are_valid_store_style_params< TargetType >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
 , remove_cv< TargetType >

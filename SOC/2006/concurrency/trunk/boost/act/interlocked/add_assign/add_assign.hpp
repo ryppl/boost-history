@@ -9,11 +9,33 @@
 #ifndef BOOST_ACT_INTERLOCKED_ADD_ASSIGN_ADD_ASSIGN_HPP
 #define BOOST_ACT_INTERLOCKED_ADD_ASSIGN_ADD_ASSIGN_HPP
 
-#include <boost/act/interlocked/detail/binary_forwarder.hpp>
+#include <boost/act/config/interlocked/has.hpp>
 
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO                     \
-( add_assign, full_fence, additive )
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( add_assign, acq_rel )
 
-#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER()
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+#include <boost/act/interlocked/add_assign/add_assign_acq_rel.hpp>
+
+#include <boost/act/interlocked/detail/cas_support.hpp>
+
+namespace boost { namespace act { namespace interlocked {
+
+template< typename TargetType, typename SourceType >
+typename lazy_enable_if
+<
+  detail::are_valid_additive_params< TargetType, SourceType const >
+, remove_cv< TargetType >
+>
+::type
+add_assign( TargetType& destination, SourceType const& new_value )
+{
+  return interlocked::add_assign_acq_rel( destination, new_value );
+
+}
+
+} } }
+
+#endif
 
 #endif

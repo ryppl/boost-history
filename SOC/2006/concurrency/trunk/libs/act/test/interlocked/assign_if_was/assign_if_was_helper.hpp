@@ -35,7 +35,7 @@
 //       particularly in a multicore environment.
 
 template< typename GetType, typename SetType >
-void test_assign_load_no_threads( GetType get, SetType set )
+void test_store_load_no_threads( GetType get, SetType set )
 {
   using namespace boost::act::interlocked;
 
@@ -76,7 +76,7 @@ struct single_thread_basic_get
   }
 };
 
-struct interlocked_assign_set
+struct interlocked_store_set
 {
   template< typename VariableType, typename SourceType >
   void operator ()( VariableType& var, SourceType new_val ) const
@@ -155,7 +155,7 @@ void assign_in_new_thread( VariableType& var, SourceType new_val
 }
 
 template< typename GetType, typename SetType >
-void test_assign_load_with_threads( GetType get, SetType set )
+void test_store_load_with_threads( GetType get, SetType set )
 {
   using namespace boost::act::interlocked;
 

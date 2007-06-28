@@ -1,0 +1,37 @@
+/*=============================================================================
+    Copyright (c) 2006, 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_UNORDERED_VC_x86_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_UNORDERED_VC_x86_HPP
+
+#include <boost/type_traits/remove_volatile.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct assign_unordered_impl
+{
+  template< typename Type >
+  static execute( Type& left, typename remove_volatile< Type >::type right )
+  {
+    typename remove_volatile< Type >::type result;
+
+    __asm
+    {
+      mov  eax,               right;
+      mov  ecx,               left;
+      xchg eax,               ecx;
+      mov  result, eax
+    }
+
+    return result;
+  }
+};
+
+} } } }
+
+#endif

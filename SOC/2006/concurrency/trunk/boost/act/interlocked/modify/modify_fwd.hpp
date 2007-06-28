@@ -18,7 +18,7 @@ namespace boost { namespace act { namespace interlocked {
 template< typename TargetType, typename OperationType >
 typename lazy_enable_if
 <
-  detail::are_valid_assign_style_params< TargetType >
+  detail::are_valid_store_style_params< TargetType >
 , remove_cv< TargetType >
 >
 ::type

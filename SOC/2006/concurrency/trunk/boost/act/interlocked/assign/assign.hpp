@@ -9,71 +9,33 @@
 #ifndef BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_HPP
 #define BOOST_ACT_INTERLOCKED_ASSIGN_ASSIGN_HPP
 
+#include <boost/act/config/interlocked/has.hpp>
+
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign, acq_rel )
+
 #include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/remove_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <boost/act/interlocked/assign/assign_acq_rel.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
-#include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
-
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
-
-#include <boost/act/interlocked/detail/impl_meta.hpp>
-
-#include <boost/act/interlocked/detail/impl.hpp>
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_IMPL_INFO                                 \
-( assign, full_fence )
-
-#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
 
 namespace boost { namespace act { namespace interlocked {
 
 template< typename TargetType, typename SourceType >
 typename lazy_enable_if
 <
-  mpl::and_
-  <
-    detail::are_valid_assign_style_params< TargetType, SourceType const >
-  , mpl::not_< detail::is_interlocked_bool< TargetType > >
-  >
+  detail::are_valid_store_style_params< TargetType, SourceType const >
 , remove_cv< TargetType >
 >
 ::type
 assign( TargetType& destination, SourceType const& new_value )
 {
-  return detail::impl_meta< detail::assign_impl, TargetType >
-         ::execute( destination, new_value );
-}
+  return interlocked::assign_acq_rel( destination, new_value );
 
-template< typename TargetType, typename SourceType >
-typename lazy_enable_if
-<
-  mpl::and_
-  <
-    detail::are_valid_assign_style_params< TargetType, SourceType const >
-  , detail::is_interlocked_bool< TargetType >
-  >
-, remove_cv< TargetType >
->
-::type
-assign( TargetType& destination, SourceType const& new_value )
-{
-  typedef typename remove_cv< TargetType >::type result_type;
-
-  return result_type
-         (
-           interlocked::assign
-           ( interlocked_bool_internal_value( destination )
-           , static_cast< bool >( new_value )
-           )
-           != 0
-         );
 }
 
 } } }
 
-#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_END()
+#endif
 
 #endif

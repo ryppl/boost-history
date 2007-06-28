@@ -12,7 +12,7 @@
 #include <boost/act/interlocked/detail/binary_default.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO                       \
-( rshift_assign, full_fence, >> )
+( rshift_assign, acq_rel, >> )
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT()
 

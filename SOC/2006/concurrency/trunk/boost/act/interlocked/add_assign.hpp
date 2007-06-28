@@ -12,5 +12,7 @@
 #include <boost/act/interlocked/add_assign/add_assign.hpp>
 #include <boost/act/interlocked/add_assign/add_assign_acquire.hpp>
 #include <boost/act/interlocked/add_assign/add_assign_release.hpp>
+#include <boost/act/interlocked/add_assign/add_assign_acq_rel.hpp>
+#include <boost/act/interlocked/add_assign/add_assign_unordered.hpp>
 
 #endif

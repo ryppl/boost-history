@@ -6,14 +6,4 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_ADD_ASSIGN_DETAIL_ADD_ASSIGN_DEFAULT_HPP
-#define BOOST_ACT_INTERLOCKED_ADD_ASSIGN_DETAIL_ADD_ASSIGN_DEFAULT_HPP
-
-#include <boost/act/interlocked/detail/binary_default.hpp>
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO                       \
-( add_assign, full_fence, + )
-
-#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT()
-
-#endif
+#include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_LOCAL_INCLUDE()

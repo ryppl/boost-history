@@ -19,9 +19,12 @@ struct assign_impl
   static typename remove_cv< Type >::type
   execute( Type& left, typename remove_cv< Type >::type right )
   {
+    // Note: SSE2 is assumed otherwise the file wouldn't be included
     __asm__ __volatile__
     (
-      "xchg %0, (%1)":
+      "sfence\n\t"
+      "xchg %0, (%1)\n\t"
+      "lfence":
       "+r"( right ):
       "r"( &left ):
       "memory", "cc"

@@ -11,10 +11,6 @@
 
 #include <boost/config.hpp>
 
-#ifndef BOOST_WINDOWS
-#error Windows interlocked assign included on non-windows OS.
-#else
-
 #include <boost/detail/interlocked.hpp>
 
 #include <boost/utility/enable_if.hpp>
@@ -48,25 +44,6 @@ struct assign_impl
            );
   }
 
-  template< typename Type >
-  static typename remove_cv< Type* >::type
-  execute( Type*& left, typename remove_cv< Type >::type right )
-  {
-    typedef typename remove_cv< Type* >::type unqualified_type;
-
-    return static_cast< unqualified_type >
-           (
-             BOOST_INTERLOCKED_EXCHANGE_POINTER
-             ( const_cast< void* volatile* >
-               (
-                 reinterpret_cast< void const volatile* volatile* >( &left )
-               )
-             , const_cast< void* >( right )
-             )
-           );
-    
-  }
-
 #if WINVER >= 0x0600
 
   template< typename Type >
@@ -95,7 +72,5 @@ struct assign_impl
 };
 
 } } } }
-
-#endif
 
 #endif
