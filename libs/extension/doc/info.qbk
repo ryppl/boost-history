@@ -7,7 +7,7 @@
 
 [section:info Info Classes]
 
-In this section we explain how to use Info classes in Boost.Extensions. 
+In this section we explain how to use Info classes in Boost.Extension. 
 
 Info classes is a mechanism that allows you to store important information of each implementation. The 
 type and utility of this information is arbitrary as the Info class is a template argument of the factories where 
