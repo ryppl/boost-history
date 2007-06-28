@@ -6,6 +6,6 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#define BOOST_ACT_TEST_INTERLOCKED_NAME subtract_assign_release
+#define BOOST_ACT_TEST_INTERLOCKED_SEMANTICS release
 
 #include "subtract_assign_helper.hpp"

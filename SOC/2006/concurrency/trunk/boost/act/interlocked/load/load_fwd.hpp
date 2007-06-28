@@ -9,6 +9,10 @@
 #ifndef BOOST_ACT_INTERLOCKED_LOAD_LOAD_FWD_HPP
 #define BOOST_ACT_INTERLOCKED_LOAD_LOAD_FWD_HPP
 
+#include <boost/act/config/interlocked/has.hpp>
+
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( load, acquire )
+
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
 
@@ -24,5 +28,7 @@ typename lazy_enable_if
 load( TargetType const& target );
 
 } } }
+
+#endif
 
 #endif

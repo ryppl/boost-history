@@ -13,6 +13,9 @@
 
 #if BOOST_ACT_CONFIG_INTERLOCKED_HAS( subtract_assign, acq_rel )
 
+#include <boost/act/interlocked/semantics/default.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/act/interlocked/subtract_assign/subtract_assign_acq_rel.hpp>
@@ -30,8 +33,21 @@ typename lazy_enable_if
 ::type
 subtract_assign( TargetType& destination, SourceType const& new_value )
 {
-  return interlocked::subtract_assign_acq_rel( destination, new_value );
+  return interlocked::subtract_assign< acq_rel >( destination, new_value );
+}
 
+template< typename Semantics, typename TargetType, typename SourceType >
+typename lazy_enable_if
+<
+  mpl::and_< is_same< Semantics, default_ >
+           , detail::are_valid_additive_params< TargetType, SourceType const >
+           >
+, remove_cv< TargetType >
+>
+::type
+subtract_assign( TargetType& destination, SourceType const& new_value )
+{
+  return interlocked::subtract_assign< acq_rel >( destination, new_value );
 }
 
 } } }

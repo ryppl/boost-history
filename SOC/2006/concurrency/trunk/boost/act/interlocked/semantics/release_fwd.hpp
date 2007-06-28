@@ -9,6 +9,10 @@
 #ifndef BOOST_ACT_INTERLOCKED_SEMANTICS_RELEASE_FWD_HPP
 #define BOOST_ACT_INTERLOCKED_SEMANTICS_RELEASE_FWD_HPP
 
-namespace boost { namespace act { namespace interlocked { struct release; } } }
+namespace boost { namespace act { namespace interlocked {
+
+struct release {};
+
+} } }
 
 #endif

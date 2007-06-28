@@ -20,7 +20,7 @@ struct assign_if_was_release_default_impl
   static typename boost::remove_cv< LeftType >::type
   execute( LeftType& left, RightType& right, OldType& old )
   {
-    return interlocked::assign_if_was_acq_rel( left, right, old );
+    return interlocked::assign_if_was< acq_rel >( left, right, old );
   }
 };
 

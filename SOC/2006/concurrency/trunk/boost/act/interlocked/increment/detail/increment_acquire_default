@@ -26,10 +26,11 @@ struct increment_acquire_default_impl
     unqualified_type new_value;
 
     for( unqualified_type curr_value = load( target )
-       ;    ( new_value = assign_if_was_acquire( target
-                                               , act::detail::next( curr_value )
-                                               , curr_value
-                                               )
+       ;    ( new_value = assign_if_was< acquire >
+                          ( target
+                          , act::detail::next( curr_value )
+                          , curr_value
+                          )
             )
          != curr_value
        ; curr_value = new_value

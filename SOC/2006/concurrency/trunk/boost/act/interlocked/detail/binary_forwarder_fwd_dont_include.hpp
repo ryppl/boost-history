@@ -14,6 +14,8 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <boost/act/interlocked/semantics.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
@@ -44,12 +46,13 @@ BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_FWD_AFFIX_         \
 
 namespace boost { namespace act { namespace interlocked {
 
-template< typename TargetType, typename OperandType >
+template< typename Semantics, typename TargetType, typename OperandType >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::
+    is_same< Semantics, BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_SEMANTICS >
+  , detail::
 #if BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_FWD_IS_ADDITIVE
     are_valid_additive_params
 #else
@@ -61,9 +64,10 @@ typename lazy_enable_if
 , remove_cv< TargetType >
 >
 ::type
-BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_FULL_NAME( TargetType& target
-                                                    , OperandType const& operand
-                                                    );
+BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FWD_SHORT_NAME
+( TargetType& target
+, OperandType const& operand
+);
 
 } } }
 

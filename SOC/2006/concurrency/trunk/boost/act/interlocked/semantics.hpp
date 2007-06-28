@@ -12,7 +12,7 @@
 #include <boost/act/interlocked/semantics/acquire.hpp>
 #include <boost/act/interlocked/semantics/release.hpp>
 #include <boost/act/interlocked/semantics/acq_rel.hpp>
-#include <boost/act/interlocked/semantics/acq_rel.hpp>
 #include <boost/act/interlocked/semantics/unordered.hpp>
+#include <boost/act/interlocked/semantics/default.hpp>
 
 #endif

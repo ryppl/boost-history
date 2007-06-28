@@ -13,9 +13,11 @@
 
 #if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign_if_was, release )
 
+#include <boost/act/interlocked/semantics/release.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
@@ -35,12 +37,15 @@
 
 namespace boost { namespace act { namespace interlocked {
 
-template< typename TargetType, typename SourceType, typename ConditionType >
+template< typename Semantics
+        , typename TargetType, typename SourceType, typename ConditionType
+        >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType, SourceType const
+    is_same< Semantics, release >
+  , detail::are_valid_store_style_params< TargetType, SourceType const
                                          , ConditionType const
                                          >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
@@ -48,20 +53,23 @@ typename lazy_enable_if
 , remove_cv< TargetType >
 >
 ::type
-assign_if_was_release( TargetType& destination, SourceType const& new_value
-                     , ConditionType const& expected_value
-                     )
+assign_if_was( TargetType& destination, SourceType const& new_value
+             , ConditionType const& expected_value
+             )
 {
   return detail::impl_meta< detail::assign_if_was_release_impl, TargetType >
          ::execute( destination, new_value, expected_value );
 }
 
-template< typename TargetType, typename SourceType, typename ConditionType >
+template< typename Semantics
+        , typename TargetType, typename SourceType, typename ConditionType
+        >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType, SourceType const
+    is_same< Semantics, release >
+  , detail::are_valid_store_style_params< TargetType, SourceType const
                                          , ConditionType const
                                          >
   , detail::is_interlocked_bool< TargetType >
@@ -69,15 +77,15 @@ typename lazy_enable_if
 , remove_cv< TargetType >
 >
 ::type
-assign_if_was_release( TargetType& destination, SourceType const& new_value
-                     , ConditionType const& expected_value
-                     )
+assign_if_was( TargetType& destination, SourceType const& new_value
+             , ConditionType const& expected_value
+             )
 {
   typedef typename remove_cv< TargetType >::type result_type;
 
   return result_type
          (
-           interlocked::assign_if_was_release
+           interlocked::assign_if_was< release >
            ( interlocked_bool_internal_value( destination )
            , static_cast< bool >( new_value )
            , static_cast< bool >( expected_value )

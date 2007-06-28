@@ -13,7 +13,9 @@
 
 #if BOOST_ACT_CONFIG_INTERLOCKED_HAS( store, unordered )
 
+#include <boost/act/interlocked/semantics/unordered.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
@@ -24,29 +26,31 @@
 
 namespace boost { namespace act { namespace interlocked {
 
-template< typename TargetType, typename SourceType >
+template< typename Semantics, typename TargetType, typename SourceType >
 typename enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType, SourceType const >
+    is_same< Semantics, unordered >
+  , detail::are_valid_store_style_params< TargetType, SourceType const >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
 >
 ::type
-store_unordered( TargetType& destination, SourceType const& new_value );
+store( TargetType& destination, SourceType const& new_value );
 
-template< typename TargetType, typename SourceType >
+template< typename Semantics, typename TargetType, typename SourceType >
 typename enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType, SourceType const >
+    is_same< Semantics, unordered >
+  , detail::are_valid_store_style_params< TargetType, SourceType const >
   , detail::is_interlocked_bool< TargetType >
   >
 >
 ::type
-store_unordered( TargetType& destination, SourceType const& new_value );
+store( TargetType& destination, SourceType const& new_value );
 
 } } }
 

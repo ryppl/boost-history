@@ -19,27 +19,28 @@ struct interlocked_assign_unordered_set
   typename boost::remove_cv< VariableType >::type
   operator ()( VariableType& var, SourceType new_val ) const
   {
-    return boost::act::interlocked::assign_unordered( var, new_val );
+    return boost::act::interlocked::assign< boost::act::interlocked::unordered >
+           ( var, new_val );
   }
 };
 
 int test_main( int, char *[] )
 {
   test_store_load_no_threads( single_thread_basic_get()
-                             , interlocked_assign_unordered_set()
-                             );
+                            , interlocked_assign_unordered_set()
+                            );
 
   test_store_load_no_threads( interlocked_load_get()
-                                 , interlocked_assign_unordered_set()
-                                 );
+                            , interlocked_assign_unordered_set()
+                            );
 
   {
     boost::barrier barrier( 2 );
 
     test_store_load_with_threads( barrier
-                                 , interlocked_load_get()
-                                 , interlocked_assign_unordered_set()
-                                 );
+                                , interlocked_load_get()
+                                , interlocked_assign_unordered_set()
+                                );
   }
 
   brute_assign_test( interlocked_assign_unordered_set() );

@@ -20,7 +20,7 @@ struct assign_release_default_impl
   static typename remove_cv< LeftType >::type
   execute( LeftType& left, RightType& right )
   {
-    return interlocked::assign_acq_rel( left, right );
+    return interlocked::assign< acq_rel >( left, right );
   }
 };
 

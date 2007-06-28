@@ -9,6 +9,10 @@
 #ifndef BOOST_ACT_INTERLOCKED_SEMANTICS_ACQUIRE_FWD_HPP
 #define BOOST_ACT_INTERLOCKED_SEMANTICS_ACQUIRE_FWD_HPP
 
-namespace boost { namespace act { namespace interlocked { struct acquire; } } }
+namespace boost { namespace act { namespace interlocked {
+
+struct acquire {};
+
+} } }
 
 #endif

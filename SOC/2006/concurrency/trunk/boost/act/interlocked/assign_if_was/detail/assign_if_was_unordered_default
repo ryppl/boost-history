@@ -16,19 +16,22 @@
 
 #include <boost/act/interlocked/assign_if_was/assign_if_was_acquire.hpp>
 
-#define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_UN_IMPL assign_if_was_acquire
+#define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_UN_IMPL                     \
+assign_if_was< acquire >
 
 #elif BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( assign_if_was, release )
 
 #include <boost/act/interlocked/assign_if_was/assign_if_was_release.hpp>
 
-#define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_UN_IMPL assign_if_was_release
+#define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_UN_IMPL                     \
+assign_if_was< release >
 
 #elif BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( assign_if_was, acq_rel )
 
 #include <boost/act/interlocked/assign_if_was/assign_if_was_acq_rel.hpp>
 
-#define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_UN_IMPL assign_if_was_acq_rel
+#define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_UN_IMPL                     \
+assign_if_was< acq_rel >
 
 #else
 

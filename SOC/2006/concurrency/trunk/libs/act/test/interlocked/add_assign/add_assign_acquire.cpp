@@ -6,6 +6,6 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#define BOOST_ACT_TEST_INTERLOCKED_NAME add_assign_acquire
+#define BOOST_ACT_TEST_INTERLOCKED_SEMANTICS acquire
 
 #include "add_assign_helper.hpp"

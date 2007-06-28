@@ -13,8 +13,10 @@
 
 #if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign_if_was, unordered )
 
+#include <boost/act/interlocked/semantics/unordered.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
@@ -24,12 +26,15 @@
 
 namespace boost { namespace act { namespace interlocked {
 
-template< typename TargetType, typename SourceType, typename ConditionType >
+template< typename Semantics
+        , typename TargetType, typename SourceType, typename ConditionType
+        >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType, SourceType const
+    is_same< Semantics, unordered >
+  , detail::are_valid_store_style_params< TargetType, SourceType const
                                          , ConditionType const
                                          >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
@@ -37,16 +42,19 @@ typename lazy_enable_if
 , remove_cv< TargetType >
 >
 ::type
-assign_if_was_unordered( TargetType& destination, SourceType const& new_value
-                     , ConditionType const& expected_value
-                     );
+assign_if_was( TargetType& destination, SourceType const& new_value
+             , ConditionType const& expected_value
+             );
 
-template< typename TargetType, typename SourceType, typename ConditionType >
+template< typename Semantics
+        , typename TargetType, typename SourceType, typename ConditionType
+        >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType, SourceType const
+    is_same< Semantics, unordered >
+  , detail::are_valid_store_style_params< TargetType, SourceType const
                                          , ConditionType const
                                          >
   , detail::is_interlocked_bool< TargetType >
@@ -54,9 +62,9 @@ typename lazy_enable_if
 , remove_cv< TargetType >
 >
 ::type
-assign_if_was_unordered( TargetType& destination, SourceType const& new_value
-                     , ConditionType const& expected_value
-                     );
+assign_if_was( TargetType& destination, SourceType const& new_value
+             , ConditionType const& expected_value
+             );
 
 } } }
 

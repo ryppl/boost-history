@@ -15,15 +15,16 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/preprocessor/cat.hpp>
 
-struct BOOST_PP_CAT( interlocked_
-                   , BOOST_ACT_TEST_INTERLOCKED_NAME
+struct BOOST_PP_CAT( interlocked_subtract_assign_
+                   , BOOST_ACT_TEST_INTERLOCKED_SEMANTICS
                    )
 {
   template< typename LeftType, typename RightType >
   typename boost::remove_cv< LeftType >::type
   operator ()( LeftType& left, RightType const& right ) const
   {
-    return boost::act::interlocked::BOOST_ACT_TEST_INTERLOCKED_NAME
+    return boost::act::interlocked::subtract_assign
+           < boost::act::interlocked::BOOST_ACT_TEST_INTERLOCKED_SEMANTICS >
            ( left, right );
   }
 };
@@ -31,15 +32,16 @@ struct BOOST_PP_CAT( interlocked_
 int test_main( int, char *[] )
 {
   brute_operation_result_checker( basic_subtract()
-                                , BOOST_PP_CAT( interlocked_
-                                              , BOOST_ACT_TEST_INTERLOCKED_NAME
-                                              )
-                                              ()
+                                , BOOST_PP_CAT
+                                  ( interlocked_subtract_assign_
+                                  , BOOST_ACT_TEST_INTERLOCKED_SEMANTICS
+                                  )
+                                  ()
                                 );
 
   brute_additive_assign_test( basic_subtract_assign()
-                            , BOOST_PP_CAT( interlocked_
-                                          , BOOST_ACT_TEST_INTERLOCKED_NAME
+                            , BOOST_PP_CAT( interlocked_subtract_assign_
+                                          , BOOST_ACT_TEST_INTERLOCKED_SEMANTICS
                                           )
                                           ()
                             );

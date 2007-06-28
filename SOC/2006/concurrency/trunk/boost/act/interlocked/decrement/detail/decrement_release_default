@@ -26,7 +26,7 @@ struct decrement_release_default_impl
     unqualified_type new_value;
 
     for( unqualified_type curr_value = load( target )
-       ;    ( new_value = assign_if_was_release
+       ;    ( new_value = assign_if_was< release >
                           ( target
                           , act::detail::prior( curr_value )
                           , curr_value

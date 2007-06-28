@@ -6,12 +6,21 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_SEMANTICS_ACQ_REL_FWD_HPP
-#define BOOST_ACT_INTERLOCKED_SEMANTICS_ACQ_REL_FWD_HPP
+#ifndef BOOST_ACT_INTERLOCKED_TYPE_TRAITS_IS_SEMANTICS_HPP
+#define BOOST_ACT_INTERLOCKED_TYPE_TRAITS_IS_SEMANTICS_HPP
+
+#include <boost/mpl/or.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/act/interlocked/semantics_fwd.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 
-struct acq_rel {};
+template< typename Type >
+struct is_semantics
+  : mpl::or_< is_same< Type, acquire >, is_same< Type, release >
+            , is_same< Type, acq_rel >, is_same< Type, unordered >
+            , is_same< Type, default_ >
+            > {};
 
 } } }
 

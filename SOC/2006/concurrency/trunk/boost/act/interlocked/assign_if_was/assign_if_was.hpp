@@ -13,6 +13,9 @@
 
 #if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign_if_was, acq_rel )
 
+#include <boost/act/interlocked/semantics/default.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/act/interlocked/assign_if_was/assign_if_was_acq_rel.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_cv.hpp>
@@ -34,9 +37,33 @@ assign_if_was( TargetType& destination, SourceType const& new_value
              , ConditionType const& expected_value
              )
 {
-  return interlocked::assign_if_was_acq_rel( destination, new_value
-                                           , expected_value
-                                           );
+  return interlocked::assign_if_was< acq_rel >( destination, new_value
+                                              , expected_value
+                                              );
+}
+
+template< typename Semantics
+        , typename TargetType, typename SourceType, typename ConditionType
+        >
+typename lazy_enable_if
+<
+  mpl::and_
+  <
+    is_same< Semantics, default_ >
+  , detail::are_valid_store_style_params< TargetType, SourceType const
+                                        , ConditionType const
+                                        >
+  >
+, remove_cv< TargetType >
+>
+::type
+assign_if_was( TargetType& destination, SourceType const& new_value
+             , ConditionType const& expected_value
+             )
+{
+  return interlocked::assign_if_was< acq_rel >( destination, new_value
+                                              , expected_value
+                                              );
 }
 
 } } }

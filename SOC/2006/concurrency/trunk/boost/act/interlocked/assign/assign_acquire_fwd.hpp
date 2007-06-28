@@ -13,7 +13,10 @@
 
 #if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign, acquire )
 
+#include <boost/act/interlocked/semantics/acquire.hpp>
+
 #include <boost/utility/enable_if.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
@@ -24,31 +27,33 @@
 
 namespace boost { namespace act { namespace interlocked {
 
-template< typename TargetType, typename SourceType >
+template< typename Semantics, typename TargetType, typename SourceType >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType, SourceType const >
+    is_same< Semantics, acquire >
+  , detail::are_valid_store_style_params< TargetType, SourceType const >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
 , remove_cv< TargetType >
 >
 ::type
-assign_acquire( TargetType& destination, SourceType const& new_value );
+assign( TargetType& destination, SourceType const& new_value );
 
-template< typename TargetType, typename SourceType >
+template< typename Semantics, typename TargetType, typename SourceType >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType, SourceType const >
+    is_same< Semantics, acquire >
+  , detail::are_valid_store_style_params< TargetType, SourceType const >
   , detail::is_interlocked_bool< TargetType >
   >
 , remove_cv< TargetType >
 >
 ::type
-assign_acquire( TargetType& destination, SourceType const& new_value );
+assign( TargetType& destination, SourceType const& new_value );
 
 } } }
 

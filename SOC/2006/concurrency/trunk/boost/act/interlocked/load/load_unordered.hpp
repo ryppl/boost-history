@@ -13,9 +13,11 @@
 
 #if BOOST_ACT_CONFIG_INTERLOCKED_HAS( load, unordered )
 
+#include <boost/act/interlocked/semantics/unordered.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
@@ -35,42 +37,44 @@
 
 namespace boost { namespace act { namespace interlocked {
 
-template< typename TargetType >
+template< typename Semantics, typename TargetType >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType >
+    is_same< Semantics, unordered >
+  , detail::are_valid_store_style_params< TargetType >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
 , remove_cv< TargetType >
 >
 ::type
-load_unordered( TargetType& destination )
+load( TargetType& destination )
 {
   return detail::impl_meta< detail::load_unordered_impl, TargetType >
          ::execute( destination );
 
 }
 
-template< typename TargetType >
+template< typename Semantics, typename TargetType >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType >
+    is_same< Semantics, unordered >
+  , detail::are_valid_store_style_params< TargetType >
   , detail::is_interlocked_bool< TargetType >
   >
 , remove_cv< TargetType >
 >
 ::type
-load_unordered( TargetType& destination )
+load( TargetType& destination )
 {
   typedef typename remove_cv< TargetType >::type result_type;
 
   return result_type
          (
-           interlocked::load_unordered
+           interlocked::load< unordered >
            ( interlocked_bool_internal_value( destination )
            )
            != 0

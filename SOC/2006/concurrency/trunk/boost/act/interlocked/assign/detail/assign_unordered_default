@@ -16,13 +16,13 @@
 
 #include <boost/act/interlocked/assign/assign_acquire.hpp>
 
-#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_UNORDERED_IMPL assign_acquire
+#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_UNORDERED_IMPL assign< acquire >
 
 #elif BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( assign, release )
 
 #include <boost/act/interlocked/assign/assign_release.hpp>
 
-#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_UNORDERED_IMPL assign_release
+#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_UNORDERED_IMPL assign< release >
 
 #elif BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( assign, acq_rel )
 

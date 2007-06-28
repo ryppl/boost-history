@@ -9,6 +9,10 @@
 #ifndef BOOST_ACT_INTERLOCKED_SEMANTICS_UNORDERED_FWD_HPP
 #define BOOST_ACT_INTERLOCKED_SEMANTICS_UNORDERED_FWD_HPP
 
-namespace boost { namespace act { namespace interlocked { struct unordered; } } }
+namespace boost { namespace act { namespace interlocked {
+
+struct unordered {};
+
+} } }
 
 #endif

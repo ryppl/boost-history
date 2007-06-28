@@ -6,13 +6,9 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_SEMANTICS_ACQ_REL_FWD_HPP
-#define BOOST_ACT_INTERLOCKED_SEMANTICS_ACQ_REL_FWD_HPP
+#ifndef BOOST_ACT_INTERLOCKED_SEMANTICS_DEFAULT_HPP
+#define BOOST_ACT_INTERLOCKED_SEMANTICS_DEFAULT_HPP
 
-namespace boost { namespace act { namespace interlocked {
-
-struct acq_rel;
-
-} } }
+#include <boost/act/interlocked/semantics/default_fwd.hpp>
 
 #endif

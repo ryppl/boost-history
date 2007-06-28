@@ -12,7 +12,7 @@
 #include <boost/act/interlocked/semantics/acquire_fwd.hpp>
 #include <boost/act/interlocked/semantics/release_fwd.hpp>
 #include <boost/act/interlocked/semantics/acq_rel_fwd.hpp>
-#include <boost/act/interlocked/semantics/acq_rel_fwd.hpp>
 #include <boost/act/interlocked/semantics/unordered_fwd.hpp>
+#include <boost/act/interlocked/semantics/default_fwd.hpp>
 
 #endif

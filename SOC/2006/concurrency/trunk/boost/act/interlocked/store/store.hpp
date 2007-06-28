@@ -28,7 +28,7 @@ typename enable_if
 ::type
 store( TargetType& destination, SourceType const& new_value )
 {
-  store_release( destination, new_value );
+  store< release >( destination, new_value );
 }
 
 } } }

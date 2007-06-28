@@ -42,7 +42,7 @@ struct load_unordered_default_impl
   static typename remove_cv< TargetType >::type execute( TargetType& target )
   {
     // ToDo: Look ahead for load_acquire_support and produce error here
-    return interlocked::load_acquire( target );
+    return interlocked::load< acquire >( target );
   }
 };
 

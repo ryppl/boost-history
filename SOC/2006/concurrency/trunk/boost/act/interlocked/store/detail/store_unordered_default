@@ -42,7 +42,7 @@ struct store_unordered_default_impl
   static typename remove_cv< TargetType >::type execute( TargetType& target )
   {
     // ToDo: Look ahead for store_release_support and produce error here
-    return interlocked::store_release( target );
+    return interlocked::store< release >( target );
   }
 };
 
