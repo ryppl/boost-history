@@ -1,9 +1,5 @@
 //hds_concept.t.cpp   -*- C++ -*-
-
-#include <boost/hdstl/hds_concepts/hds_concept.hpp>
-#include <boost/test/minimal.hpp>
-#include <boost/concept_check.hpp>
-
+//
 //@OVERVIEW:  The component under test is a concept-checking class.  We
 // proceed with the standard test plan for such a class.
 //
@@ -14,6 +10,10 @@
 // class, not of the archetype.  This is why it suffices to take the
 // 'halfedge_descriptor' as an 'int', although a real archetype would make
 // this into a custom-made class with the tailored minimal requirements.
+
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
+#include <boost/test/minimal.hpp>
+#include <boost/concept_check.hpp>
 
 namespace hdstl1 {
 

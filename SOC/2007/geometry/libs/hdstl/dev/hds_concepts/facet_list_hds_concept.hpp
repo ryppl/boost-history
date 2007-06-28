@@ -109,8 +109,8 @@
 //          f = *b;
 //          n = num_facets(hds);
 //      }
-//      private:
-//      FacetListHDS hds;   
+//    private:
+//      HDS hds;   
 //      facet_descriptor f;
 //      facet_iterator b;
 //      facet_iterator e;

@@ -53,8 +53,8 @@ struct hds_traits<HDSConcept_archetype> {
 
 class HDSConcept_archetype {
     // This archetype class for the 'HDSConcept' class can be used wherever a
-    // template parameter of a class or of a function template is required to be a
-    // model of the 'HDS' concept, in order to ensure that no further
+    // template parameter of a class or of a function template is required to
+    // be a model of the 'HDS' concept, in order to ensure that no further
     // requirements are placed on the template parameter than are stated in the
     // 'HDS' concept.
 

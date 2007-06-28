@@ -14,9 +14,9 @@
 //..
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page
-// [bidirectionalhdsconcept].
+// [bidirectionalhds].
 //
-//@CONCEPT: [bidirectionalhdsconcept] Bidirectional HDS concept
+//@CONCEPT: [bidirectionalhds] Bidirectional HDS concept
 //
 ///Definition
 ///-----------
@@ -91,18 +91,21 @@
 //     }
 //     void const_constraints(HDS const& hds) {
 //     }
-//     BidirectionalHDS hds;
+//     HDS hds;
 //  };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_BIDIRECTIONAL_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_BIDIRECTIONAL_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/forward_hds_concept.hpp>
+#include <boost/hdstl/hds_concepts/backward_hds_concept.hpp>
 
 namespace boost {
-namespace hdstl{
-namespace concepts{
+namespace hdstl {
+namespace concepts {
    
     template <class HDS> 
     struct BidirectionalHDSConcept {
@@ -118,7 +121,7 @@ namespace concepts{
         // inside a class definition body, should trigger a compile-time error
         // if the type HDS does not model the 'BidirectionalHDSConcept'.
 
-        // OPAQUE TYPES
+        // TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::forward_category forward_category;
@@ -128,7 +131,7 @@ namespace concepts{
             // description of the 'BidirectionalHDS' concept on page 
             // [bidirectionalhdsconcept].
 
-        // OPAQUE MANIPULATORS
+        //MANIPULATORS
         void constraints() 
             // Check that the 'HDS' template parameter satisfies all the
             // constraints of 'BidirectionalHDSConcept' on page 
@@ -141,7 +144,7 @@ namespace concepts{
                                                  bidirectional_traversal_tag> >();  
         }
 
-        // OPAQUE ACCESSORS
+        // ACCESSORS
         void const_constraints(HDS const& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'BidirectionalHDSConcept'.
@@ -150,7 +153,7 @@ namespace concepts{
 
       private:
         //DATA
-        BidirectionalHDS hds;  // a halfedge data structure object
+        HDS hds;  // a halfedge data structure object
    };
 
 }  // close namespace concepts

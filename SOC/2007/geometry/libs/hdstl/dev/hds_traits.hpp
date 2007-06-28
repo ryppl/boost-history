@@ -201,6 +201,7 @@ namespace hdstl {
         // that model the 'BackwardHds' concept, the type
         // 'hds_traits<HDS>::traversal_category' is convertible to this
         // 'backward_traversal_tag' type.
+    };
 
     struct bidirectional_traversal_tag : public backward_traversal_tag, public forward_traversal_tag {
         // A tag type for indicating a model of both 'ForwardHds' and

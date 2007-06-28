@@ -30,7 +30,7 @@
 ///--------
 //  - 'HDS'   A type that is a model of FacetHDSConcept
 //  - 'hds'   A non-modifiable instance of HDS
-//  - 'h'     Halfedge descriptor, of type 'hds_traits<HDS>::halfedge_descriptor'
+//  - 'h'     Halfedge descriptor,of type 'hds_traits<HDS>::halfedge_descriptor'
 //  - 'f'     Facet descriptor, of type 'hds_traits<HDS>::facet_descriptor'
 //
 ///Associated types

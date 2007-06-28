@@ -15,7 +15,7 @@
 // argument is a model of the HDS concept described on the page
 // [backwardhds].
 //
-//@CONCEPT: [backwardhdsconcept] Backward HDS concept
+//@CONCEPT: [backwardhds] Backward HDS concept
 //
 ///Definition
 ///----------
@@ -121,18 +121,21 @@
 //       h = prev_at_source(h, hds);
 //       h = prev_at_target(h, hds);
 //    }
-//    BackwardHDS hds;
-//    halfedge_descriptor h;
-//    halfedge_descriptor g;
+//    HDS hds;
+//    halfedge_descriptor h,g;
 // };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_BACKWARD_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_BACKWARD_HDS_CONCEPT_HPP 1
 
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
+
 namespace boost {
-namespace hdstl{
-namespace concepts{
+namespace hdstl {
+namespace concepts {
 
     template <class HDS> 
     struct BackwardHDSConcept {
@@ -148,12 +151,12 @@ namespace concepts{
         // inside a class definition body, should trigger a compile-time error
         // if the type HDS does not model the 'BackwardHDSConcept'.
 
-        // OPAQUE TYPES
+        // TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::backward_category backward_category;
 
-        // OPAQUE MANIPULATORS
+        // MANIPULATORS
         void constraints()
             // Check that the 'HDS' template parameter satisfies all the
             // constraints of 'BackwardHDSConcept' on page 
@@ -175,7 +178,7 @@ namespace concepts{
             const_constraints(hds);
         }
 
-        // OPAQUE ACCESSORS
+        // ACCESSORS
         void const_constraints(HDS const& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'BackwardHDSConcept'.
@@ -187,9 +190,8 @@ namespace concepts{
 
       private:
         // DATA
-        BackwardHDS hds;        // a halfedge data structure object
-        halfedge_descriptor h;  // a halfedge descriptor
-        halfedge_descriptor g;  // another halfedge descriptor
+        HDS hds;        // a halfedge data structure object
+        halfedge_descriptor h,g;  // halfedge descriptors
     };
 
 }  // close namespace concepts

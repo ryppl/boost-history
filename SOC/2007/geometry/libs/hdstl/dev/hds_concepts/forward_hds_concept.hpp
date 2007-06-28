@@ -13,9 +13,9 @@
 //..
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page
-// [forwardhdsconcept].
+// [forwardhds].
 //
-//@CONCEPT: [forwardhdsconcept] Forward HDS concept
+//@CONCEPT: [forwardhds] Forward HDS concept
 //
 ///Definition
 ///----------
@@ -124,7 +124,7 @@
 //        h = next_at_source(h, hds);
 //        h = next_at_target(h, hds);
 //     }
-//     ForwardHDS hds;
+//     HDS hds;
 //     halfedge_descriptor h;
 //     halfedge_descriptor g;
 //  };
@@ -133,9 +133,13 @@
 #ifndef BOOST_HDSTL_CONCEPTS_FORWARD_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_FORWARD_HDS_CONCEPT_HPP 1
 
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
+
 namespace boost {
-namespace hdstl{
-namespace concepts{
+namespace hdstl {
+namespace concepts {
 
     template <class HDS> 
     struct ForwardHDSConcept {
@@ -151,7 +155,7 @@ namespace concepts{
         // inside a class definition body, should trigger a compile-time error
         // if the type HDS does not model the 'ForwardHDSConcept'.
 
-        // OPAQUE TYPES
+        // TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::forward_category forward_category;
@@ -160,7 +164,7 @@ namespace concepts{
             // description of the 'ForwardHDS' concept on page 
             // [forwardhdsconcept].
 
-        //  OPAQUE MANIPULATORS
+        // MANIPULATORS
         void constraints()
             // Check that the 'HDS' template parameter satisfies all the
             // constraints of 'ForwardHDSConcept' on page 
@@ -183,7 +187,7 @@ namespace concepts{
             const_constraints(hds);
         }
 
-        // OPAQUE ACCESSORS
+        // ACCESSORS
         void const_constraints(HDS const& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'ForwardHDSConcept'.
