@@ -62,6 +62,7 @@ sub process_font {
         local $remainder = $3;
 
         # Process references
+        $textpart =~ s/\{\([^\}]*\)\}/$1/g;
         $textpart =~ s/\[([^\]]*)\]/\\ref $1/g;
 
         # Guard against template and comparisons
@@ -75,6 +76,7 @@ sub process_font {
         $textpart =~ s/\!([^!]*)\!/<b>$1<\/b>/g;
 
         # Process underline
+        $textpart =~ s/SEE_ALSO/SEEALSO/g;
         $textpart =~ s/_([^_]*)_/<u>$1<\/u>/g;
 
         # Process typewriter font
@@ -98,22 +100,35 @@ sub process_font {
     $content =~ s/\!([^!]*)\!/<b>$1<\/b>/g;
 
     # Process underline
+    $content =~ s/SEE_ALSO/SEEALSO/g;
     $content =~ s/_([^_]*)_/<u>$1<\/u>/g;
 
     return $output.$content;
 }
 
-my $finishedTopLevel = 0; # to avoid parsing later comments as if preamble
-my $conceptMode  = 0;     # serves to remember if a @CONCEPT command was parsed
-my $conceptLabel = "";    # and if so, the concept name
-my $conceptRef   = 0;     # numbers the section references
-my $classOpen    = 0;     # serves to know if we're within a class body
-my $className    = "";    # and if so, the class name
-my $templateName = "";    # and any template parameters (one line before the class def)
-my $groupOpen    = 0;     # serves to close a named group before opening another
+my $finishedTopLevel = 0;  # to avoid parsing later comments as if preamble
+my $conceptMode      = 0;  # serves to remember if a @CONCEPT command was parsed
+my $conceptLabel     = ""; # and if so, the concept name
+my $conceptRef       = 0;  # numbers the section references
+my $classOpen        = 0;  # serves to know if we're within a class body
+my $className        = ""; # and if so, the class name
+my $classClosePrefix = ""; # how many spaces before "};"
+my $templateName     = ""; # and any template parameters (one line before the class def)
+my $groupOpen        = 0;  # serves to close a named group before opening another
+my $opaqueFlag       = 0;  # serves to close an \endcond before opening another named group
 
 sub process_toplevel_comment_line {
     my $content = shift;
+
+    if ($content =~ m/\@MAINPAGE: (.*)/) {
+        print " * \\mainpage ".$1."\n";
+        return;
+    }
+
+    if ($content =~ m/\@RELATED: \[(.*)\] (.*)/) {
+        print " * \\page ".$1." ".$2."\n";
+        return;
+    }
 
     if ($content =~ m/\@CONCEPT: \[(.*)\] (.*)/) {
         print " * \\page ".$1." ".$2."\n";
@@ -160,6 +175,14 @@ sub process_toplevel_comment_line {
             print " * \\details ".$2."\n";
         } elsif ($1 eq "PURPOSE") {
             print " * \\brief ".$2."\n";
+        } elsif ($1 eq "CLASS") {
+            print " * \\par Class:\n";
+        } elsif ($1 eq "CLASSES") {
+            print " * \\par Classes:\n";
+        } elsif ($1 eq "SEEALSO") {
+            print " * \\par See also ".$2."\n";
+        } elsif ($1 eq "AUTHORS" || $1 eq "AUTHOR") {
+            print " * \\author ".$2."\n";
         } else {
             die("0x2: Unknown section comment".$1." at line ".$.."\n");
         }
@@ -186,9 +209,14 @@ sub process_class_comment_line {
         # Empty line, convert to @par
         print $prefix." *< \@par\n";
     }
-    elsif ($content =~ m/(TYPE|DATA|CREATOR|MANIP|ACCESS)/) {
+    elsif ($content =~ m/(OPAQUE|TYPE|DATA|CREATOR|MANIP|ACCESS)/) {
         if ($groupOpen) {
-            print $prefix."//\@\}\n";
+            if ($opaqueFlag) {
+                print $prefix."// \\endcond\n";
+                $opaqueFlag = 0;
+            } else {
+                print $prefix."//\@\}\n";
+            }
         }
         $groupOpen = 1;
         if ($content =~ m/TYPE/) {
@@ -206,6 +234,9 @@ sub process_class_comment_line {
         } elsif ($content =~ m/ACCESS/) {
             print $prefix."//\@\{\n".
                   $prefix.'/** @name Accessors'." */\n";
+        } elsif ($content =~ m/ACCESS/) {
+            print $prefix."//\\cond";
+            $opaqueFlag = 1;
         } else {
             die("0x2: Unknown group comment".$1." at line ".$.."\n");
         }
@@ -295,6 +326,7 @@ sub process_class_line {
                     $groupOpen = 0;
                 }
                 $classOpen = 0;
+                $classClosePrefix = $1;
             }
         }
     } else {
@@ -312,7 +344,7 @@ sub parse_class_code {
         # The following is a dirty hack - we read the end of line already
         # and now we still must exit the loop...
         if (0 == $classOpen) {
-            $classLine = "};\n";
+            $classLine = $classClosePrefix."};\n";
         } else {
             $classLine = <>;
         }

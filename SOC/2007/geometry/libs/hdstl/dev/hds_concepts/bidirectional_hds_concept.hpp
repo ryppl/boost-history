@@ -14,9 +14,9 @@
 //..
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page
-// [bidirectionalhds].
+// [bidirectionalhdsconcept].
 //
-//@CONCEPT: [bidirectionalhds] Bidirectional HDS concept
+//@CONCEPT: [bidirectionalhdsconcept] Bidirectional HDS concept
 //
 ///Definition
 ///-----------
@@ -100,6 +100,7 @@
 
 #include <boost/concepts.h>
 
+namespace boost {
 namespace hdstl{
 namespace concepts{
    
@@ -117,7 +118,7 @@ namespace concepts{
         // inside a class definition body, should trigger a compile-time error
         // if the type HDS does not model the 'BidirectionalHDSConcept'.
 
-        // TYPES
+        // OPAQUE TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::forward_category forward_category;
@@ -127,7 +128,7 @@ namespace concepts{
             // description of the 'BidirectionalHDS' concept on page 
             // [bidirectionalhdsconcept].
 
-        //MANIPULATORS
+        // OPAQUE MANIPULATORS
         void constraints() 
             // Check that the 'HDS' template parameter satisfies all the
             // constraints of 'BidirectionalHDSConcept' on page 
@@ -140,7 +141,7 @@ namespace concepts{
                                                  bidirectional_traversal_tag> >();  
         }
 
-        // ACCESSORS
+        // OPAQUE ACCESSORS
         void const_constraints(HDS const& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'BidirectionalHDSConcept'.
@@ -154,5 +155,6 @@ namespace concepts{
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

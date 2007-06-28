@@ -13,9 +13,9 @@
 //..
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page 
-// [facetlisthds].
+// [facetlisthdsconcept].
 //
-//@CONCEPT: [facetlisthds] Facet List HDS concept
+//@CONCEPT: [facetlisthdsconcept] Facet List HDS concept
 //
 ///Definition
 ///----------
@@ -123,6 +123,7 @@
 
 #include <boost/concepts.h>
 
+namespace boost {
 namespace hdstl{
 namespace concepts {
 
@@ -140,7 +141,7 @@ namespace concepts {
        // inside a class definition body, should trigger a compile-time error
        // if the type HDS does not model the 'FacetListHDSConcept'.
 
-       // TYPES
+       // OPAQUE TYPES
        typedef typename hds_traits<HDS>::facet_iterator  facet_iterator;
        typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor;
        typedef typename hds_traits<HDS>::size_type size_type;
@@ -149,7 +150,7 @@ namespace concepts {
        // description of the 'FacetListHDS' concept on page 
        // [facetlisthdsconcept].
 
-       //MANIPULATORS
+       // OPAQUE MANIPULATORS
        void constraints() 
            // Check that the 'HDS' template parameters satisfies all the
            // constraints of 'FacetListHDSConcept' on page 
@@ -169,7 +170,7 @@ namespace concepts {
            const_constraints(hds);
        }
 
-       // ACCESSORS
+       // OPAQUE ACCESSORS
        void const_constraints(HDS const& hds) 
            // Check that the non-modifiable 'HDS' template parameters
            // satisfies all the constraints of 'FacetListHDSConcept'.
@@ -192,5 +193,6 @@ namespace concepts {
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

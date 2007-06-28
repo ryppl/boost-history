@@ -12,9 +12,10 @@
 //  BOOST_CLASS_REQUIRE(HDS, boost::hdstl,FacetHDSConcept);
 //..
 // inside a class body, checks whether the type given as template
-// argument is a model of the HDS concept described on the page [facethds].
+// argument is a model of the HDS concept described on the page
+// [facethdsconcept].
 //
-//@CONCEPT: [facethds] Facet HDS concept
+//@CONCEPT: [facethdsconcept] Facet HDS concept
 //
 ///Definition
 ///----------
@@ -98,6 +99,7 @@
 
 #include <boost/concepts.h>
 
+namespace boost {
 namespace hdstl{
 namespace concepts {
 
@@ -115,13 +117,13 @@ namespace concepts {
        // inside a class definition body, should trigger a compile-time error
        // if the type HDS does not model the 'FacetHDSConcept'.
 
-       // TYPES
+       // OPAQUE TYPES
        typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor; 
            // The specialization of 'hds_traits<HDS>' must have these required
            // types, obeying the types requirements stated in the detailed
            // description of the 'FacetHDS' concept on page [facethdsconcept].
 
-       //MANIPULATORS
+       // OPAQUE MANIPULATORS
        void constraints() 
            // Check that the 'HDS' template parameters satisfies all the
            // constraints of 'FacetHDSConcept' on page [facethdsconcept].
@@ -138,7 +140,7 @@ namespace concepts {
            const_constraints(hds);
        }
 
-       // ACCESSORS
+       // OPAQUE ACCESSORS
        void const_constraints(HDS const& hds) 
            // Check that the non-modifiable 'HDS' template parameters
            // satisfies all the constraints of 'FacetHDSConcept'.
@@ -154,5 +156,6 @@ namespace concepts {
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

@@ -13,9 +13,9 @@
 //..
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page
-// [mutablebackwardhds].
+// [mutablebackwardhdsconcept].
 //
-//@CONCEPT: [mutablebackwardhds] Mutable Backward HDS concept
+//@CONCEPT: [mutablebackwardhdsconcept] Mutable Backward HDS concept
 //
 ///Definition
 ///----------
@@ -109,6 +109,7 @@
 
 #include <boost/concepts.h>
 
+namespace boost {
 namespace hdstl{
 namespace concepts{
 
@@ -126,7 +127,7 @@ namespace concepts{
         // inside a class definition body, should trigger a compile-time error
         // if the type HDS does not model the 'MutableBackwardHDSConcept'.
 
-        // TYPES
+        // OPAQUE TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::backward_category backward_category;
@@ -135,7 +136,7 @@ namespace concepts{
             // detailed description of the 'MutableBackwardHDS' concept on page
             // [mutablebackwardhdsconcept].
 
-        // MANIPULATORS
+        //  OPAQUE MANIPULATORS
         void constraints() 
             // Check that the 'HDS' template parameters satisfies all the
             // constraints of 'MutableBackwardHDSConcept' on page 
@@ -152,7 +153,7 @@ namespace concepts{
             const_constraints(hds);
         }
 
-        // ACCESSORS
+        // OPAQUE ACCESSORS
         void const_constraints(HDS const& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'MutableBackwardHDSConcept'.
@@ -167,5 +168,6 @@ namespace concepts{
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

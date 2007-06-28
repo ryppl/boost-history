@@ -12,9 +12,10 @@
 //  BOOST_CLASS_REQUIRE(HDS, boost::hdstl,VertexHDSConcept);
 //..
 // inside a class body, checks whether the type given as template
-// argument is a model of the HDS concept described on the page [vertexhds].
+// argument is a model of the HDS concept described on the page
+// [vertexhdsconcept].
 //
-//@CONCEPT: [vertexhds] Vertex HDS concept
+//@CONCEPT: [vertexhdsconcept] Vertex HDS concept
 //
 ///Definition
 ///----------
@@ -102,6 +103,7 @@
 
 #include <boost/concepts.h>
 
+namespace boost {
 namespace hdstl{
 namespace concepts {
 
@@ -119,13 +121,13 @@ namespace concepts {
         // inside a class definition body, should trigger a compile-time error
         // if the type HDS does not model the 'VertexHDSConcept'.
 
-        // TYPES
+        // OPAQUE TYPES
         typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
             // The specialization of 'hds_traits<HDS>' must have these required
             // types, obeying the types requirements stated in the detailed
             // description of the 'VertexHDS' concept on page [vertexhdsconcept].
 
-        //MANIPULATORS
+        // OPAQUE MANIPULATORS
         void constraints() 
             // Check that the 'HDS' template parameters satisfies all the
             // constraints of 'VertexHDSConcept' on page [vertexhdsconcept].
@@ -143,7 +145,7 @@ namespace concepts {
             const_constraints(hds);
         }
 
-        // ACCESSORS
+        // OPAQUE ACCESSORS
         void const_constraints(HDS const& hds) 
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'VertexHDSConcept'.
@@ -160,5 +162,6 @@ namespace concepts {
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

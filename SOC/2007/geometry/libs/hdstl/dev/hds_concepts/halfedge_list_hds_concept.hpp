@@ -13,9 +13,9 @@
 //..
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page 
-// [halfedgelisthds].
+// [halfedgelisthdsconcept].
 //
-//@CONCEPT: [halfedgelisthds] Halfedge List HDS concept
+//@CONCEPT: [halfedgelisthdsconcept] Halfedge List HDS concept
 //
 ///Definition
 ///----------
@@ -121,6 +121,7 @@
 
 #include <boost/concepts.h>
 
+namespace boost {
 namespace hdstl{
 namespace concepts {
 
@@ -138,7 +139,7 @@ namespace concepts {
        // inside a class definition body, should trigger a compile-time error
        // if the type HDS does not model the 'HalfedgeListHDSConcept'.
 
-       // TYPES
+       // OPAQUE TYPES
        typedef typename hds_traits<HDS>::halfedge_iterator  halfedge_iterator;
        typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor;
        typedef typename hds_traits<HDS>::halfedges_size_type halfedges_size_type;
@@ -147,7 +148,7 @@ namespace concepts {
        // description of the 'HalfedgeListHDS' concept on page 
        // [halfedgelisthdsconcept].
 
-       //MANIPULATORS
+       // OPAQUE MANIPULATORS
        void constraints() 
            // Check that the 'HDS' template parameters satisfies all the
            // constraints of 'HalfedgeListHDSConcept' on page 
@@ -164,7 +165,7 @@ namespace concepts {
            const_constraints(hds);
        }
 
-       // ACCESSORS
+       // OPAQUE ACCESSORS
        void const_constraints(HDS const& hds) 
            // Check that the non-modifiable 'HDS' template parameters
            // satisfies all the constraints of 'HalfedgeListHDSConcept'.
@@ -185,5 +186,6 @@ namespace concepts {
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

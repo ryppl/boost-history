@@ -13,9 +13,9 @@
 //..
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page 
-// [vertexlisthds].
+// [vertexlisthdsconcept].
 //
-//@CONCEPT: [vertexlisthds] Vertex List HDS concept
+//@CONCEPT: [vertexlisthdsconcept] Vertex List HDS concept
 //
 ///Definition
 ///----------
@@ -122,6 +122,7 @@
 
 #include <boost/concepts.h>
 
+namespace boost {
 namespace hdstl{
 namespace concepts {
 
@@ -139,7 +140,7 @@ namespace concepts {
        // inside a class definition body, should trigger a compile-time error
        // if the type HDS does not model the 'VertexListHDSConcept'.
 
-       // TYPES
+       // OPAQUE TYPES
        typedef typename hds_traits<HDS>::vertex_iterator  vertex_iterator;
        typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor;
        typedef typename hds_traits<HDS>::size_type size_type;
@@ -148,7 +149,7 @@ namespace concepts {
            // description of the 'VertexListHDS' concept on page 
            // [vertexlisthdsconcept].
 
-       //MANIPULATORS
+       // OPAQUE MANIPULATORS
        void constraints() 
            // Check that the 'HDS' template parameters satisfies all the
            // constraints of 'VertexListHDSConcept' on page 
@@ -166,7 +167,7 @@ namespace concepts {
            const_constraints(hds);
        }
 
-       // ACCESSORS
+       // OPAQUE ACCESSORS
        void const_constraints(HDS const& hds) 
            // Check that the non-modifiable 'HDS' template parameters
            // satisfies all the constraints of 'VertexListHDSConcept'.
@@ -188,5 +189,6 @@ namespace concepts {
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

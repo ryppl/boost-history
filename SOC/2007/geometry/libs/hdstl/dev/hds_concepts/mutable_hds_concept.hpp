@@ -15,7 +15,7 @@
 // argument is a model of the MutableHDS concept described on the page
 // [mutablehdsconcept].
 //
-//@CONCEPT: [mutablehdsconcept] Mutable HDS concept definition
+//@CONCEPT: [mutablehdsconcept] Mutable HDS concept
 //
 ///Definition
 ///----------
@@ -93,6 +93,7 @@
 
 #include <boost/concepts.h>
 
+namespace boost {
 namespace hdstl {
 namespace concepts {
 
@@ -111,7 +112,7 @@ namespace concepts {
         // inside a class definition body, should trigger a compile-time
         // error if the type 'HDS' does not model the 'MutableHDS' concept.
 
-        // TYPES
+        // OPAQUE TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor 
                                           halfedge_descriptor; 
             // The specialization of 'hds_traits<HDS>' must have these
@@ -119,7 +120,7 @@ namespace concepts {
             // detailed description of the 'MutableHDS' concept on page
             // [mutablehdsconcept].
 
-        // MANIPULATORS
+        //  OPAQUE MANIPULATORS
         void constraints() 
             // Check that the 'HDS' template parameters satisfies all the
             // constraints of 'MutableHDSConcept' on page [mutablehdsconcept].
@@ -132,7 +133,7 @@ namespace concepts {
             const_constraints(hds);
         }
 
-        // ACCESSORS
+        // OPAQUE ACCESSORS
         void const_constraints(HDS const& hds) 
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'MutableHDSConcept'.
@@ -147,5 +148,6 @@ namespace concepts {
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

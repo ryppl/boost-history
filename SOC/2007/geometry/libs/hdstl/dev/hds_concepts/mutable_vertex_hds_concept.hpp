@@ -13,9 +13,9 @@
 //..
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page 
-// [mutablevertexhds].
+// [mutablevertexhdsconcept].
 //
-//@CONCEPT: [mutablevertexhds] Mutable Vertex HDS concept
+//@CONCEPT: [mutablevertexhdsconcept] Mutable Vertex HDS concept
 //
 ///Definition
 ///----------
@@ -109,6 +109,7 @@
 
 #include <boost/concepts.h>
 
+namespace boost {
 namespace hdstl{
 namespace concepts {
 
@@ -126,14 +127,14 @@ namespace concepts {
         // inside a class definition body, should trigger a compile-time error
         // if the type HDS does not model the 'MutableVertexHDSConcept'.
 
-        // TYPES
+        // OPAQUE TYPES
         typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
             // The specialization of 'hds_traits<HDS>' must have these required
             // types, obeying the types requirements stated in the detailed
             // description of the 'MutableVertexHDS' concept on page 
             // [mutablevertexhdsconcept].
 
-        //MANIPULATORS
+        // OPAQUE MANIPULATORS
         void constraints() 
             // Check that the 'HDS' template parameters satisfies all the
             // constraints of 'MutableVertexHDSConcept' on page 
@@ -154,7 +155,7 @@ namespace concepts {
             const_constraints(hds);
         }
 
-        // ACCESSORS
+        // OPAQUE ACCESSORS
         void const_constraints(HDS const& hds) 
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'MutableVertexHDSConcept'.
@@ -170,5 +171,6 @@ namespace concepts {
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

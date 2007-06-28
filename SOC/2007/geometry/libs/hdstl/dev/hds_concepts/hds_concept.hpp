@@ -15,7 +15,7 @@
 // argument is a model of the HDS concept described on the page
 // [hdsconcept].
 //
-//@CONCEPT: [hdsconcept] HDS concept definition
+//@CONCEPT: [hdsconcept] HDS concept
 //
 ///Definition
 ///----------
@@ -113,6 +113,7 @@
 
 namespace boost {
 namespace hdstl {
+namespace concepts {
 
     template <class HDS> 
     struct HDSConcept {
@@ -128,13 +129,13 @@ namespace hdstl {
         // inside a class definition body, should trigger a compile-time
         // error if the type 'HDS' does not model the 'HDS' concept.
 
-        // TYPES
+        // OPAQUE TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
             // The specialization of 'hds_traits<HDS>' must have these required
             // types, obeying the types requirements stated in the detailed
             // description of the 'HDS' concept on page [hdsconcept].
 
-        // MANIPULATORS
+        // OPAQUE MANIPULATORS
         void constraints()
             // Check that the 'HDS' template parameters satisfies all the
             // constraints of 'HDSConcept' on page [hdsconcept].
@@ -149,7 +150,7 @@ namespace hdstl {
             const_constraints(hds);
         }
 
-        // ACCESSORS
+        // OPAQUE ACCESSORS
         void const_constraints(const HDS& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'HDSConcept'.
@@ -165,6 +166,7 @@ namespace hdstl {
         halfedge_descriptor h;   // a halfedge descriptor
     };
 
+}  // close namespace concepts
 }  // close namespace hdstl
 }  // close namespace boost
 

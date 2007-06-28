@@ -13,9 +13,9 @@
 //..
 // inside a class body, checks whether the type given as template
 // argument is a model of the HDS concept described on the page
-// [forwardhds].
+// [forwardhdsconcept].
 //
-//@CONCEPT: [forwardhds] Forward HDS concept
+//@CONCEPT: [forwardhdsconcept] Forward HDS concept
 //
 ///Definition
 ///----------
@@ -133,6 +133,7 @@
 #ifndef BOOST_HDSTL_CONCEPTS_FORWARD_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_FORWARD_HDS_CONCEPT_HPP 1
 
+namespace boost {
 namespace hdstl{
 namespace concepts{
 
@@ -150,7 +151,7 @@ namespace concepts{
         // inside a class definition body, should trigger a compile-time error
         // if the type HDS does not model the 'ForwardHDSConcept'.
 
-        // TYPES
+        // OPAQUE TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::forward_category forward_category;
@@ -159,7 +160,7 @@ namespace concepts{
             // description of the 'ForwardHDS' concept on page 
             // [forwardhdsconcept].
 
-        // MANIPULATORS
+        //  OPAQUE MANIPULATORS
         void constraints()
             // Check that the 'HDS' template parameter satisfies all the
             // constraints of 'ForwardHDSConcept' on page 
@@ -182,7 +183,7 @@ namespace concepts{
             const_constraints(hds);
         }
 
-        // ACCESSORS
+        // OPAQUE ACCESSORS
         void const_constraints(HDS const& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'ForwardHDSConcept'.
@@ -201,5 +202,6 @@ namespace concepts{
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif

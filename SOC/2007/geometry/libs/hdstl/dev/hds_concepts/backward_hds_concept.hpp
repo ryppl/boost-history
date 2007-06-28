@@ -15,7 +15,7 @@
 // argument is a model of the HDS concept described on the page
 // [backwardhds].
 //
-//@CONCEPT: [backwardhds] Backward HDS concept
+//@CONCEPT: [backwardhdsconcept] Backward HDS concept
 //
 ///Definition
 ///----------
@@ -130,6 +130,7 @@
 #ifndef BOOST_HDSTL_CONCEPTS_BACKWARD_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_BACKWARD_HDS_CONCEPT_HPP 1
 
+namespace boost {
 namespace hdstl{
 namespace concepts{
 
@@ -147,12 +148,12 @@ namespace concepts{
         // inside a class definition body, should trigger a compile-time error
         // if the type HDS does not model the 'BackwardHDSConcept'.
 
-        // TYPES
+        // OPAQUE TYPES
         typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::traversal_category traversal_category;
         typedef typename hds_traits<HDS>::backward_category backward_category;
 
-        // MANIPULATORS
+        // OPAQUE MANIPULATORS
         void constraints()
             // Check that the 'HDS' template parameter satisfies all the
             // constraints of 'BackwardHDSConcept' on page 
@@ -174,7 +175,7 @@ namespace concepts{
             const_constraints(hds);
         }
 
-        // ACCESSORS
+        // OPAQUE ACCESSORS
         void const_constraints(HDS const& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'BackwardHDSConcept'.
@@ -193,5 +194,6 @@ namespace concepts{
 
 }  // close namespace concepts
 }  // close namespace hdstl
+}  // close namespace boost
 
 #endif
