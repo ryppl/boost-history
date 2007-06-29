@@ -1,0 +1,206 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Integer Typedefs</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.72.0">
+<link rel="start" href="../../index.html" title="Boost.Act">
+<link rel="up" href="../interlocked_integer.html" title="Interlocked Integer">
+<link rel="prev" href="../interlocked_integer.html" title="Interlocked Integer">
+<link rel="next" href="../rationale.html" title="Rationale">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<div id="heading">
+<div id="heading-placard"></div>
+<div class="heading_navigation_box"></div>
+<div class="heading_search_box"></div>
+</div>
+<div class="spirit-nav">
+<a accesskey="p" href="../interlocked_integer.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../interlocked_integer.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../rationale.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div id="body"><div id="body-inner">
+<div id="content"><div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_act.interlocked_integer.integer_typedefs"></a><a href="integer_typedefs.html" title="Integer Typedefs">Integer
+      Typedefs</a></h3></div></div></div>
+<a name="boost_act.interlocked_integer.integer_typedefs.header"></a><h5>
+<a name="id502450"></a>
+        <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.header">Header</a>
+      </h5>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<a name="boost_act.interlocked_integer.integer_typedefs.exact_width_integer_types"></a><h5>
+<a name="id502559"></a>
+        <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.exact_width_integer_types">Exact-Width
+        Integer Types</a>
+      </h5>
+<p>
+        The typedef int#_t, with # replaced by the width, designates a signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type"> <code class="literal">Interlocked
+        Integer Type</code></a> of exactly # bits; int8_t denotes an 8-bit
+        signed integer type. Similarly, the typedef uint#_t designates and unsigned
+        integer type of exactly # bits.
+      </p>
+<p>
+        These types are optional. However, if an implementation provides integer
+        types with widths of 8, 16, 32, or 64 bits, it shall define the corresponding
+        typedef names.
+      </p>
+<p>
+        [Note It is important to note that these typedefs do not necessarily correspond
+        to built-in integer types. ]
+      </p>
+<a name="boost_act.interlocked_integer.integer_typedefs.minimum_width_integer_types"></a><h5>
+<a name="id502619"></a>
+        <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.minimum_width_integer_types">Minimum-Width
+        Integer Types</a>
+      </h5>
+<p>
+        The typedef int_least#_t, with # replaced by the width, designates a signed
+        <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+        <code class="literal">Interlocked Integer Type</code></a> type with a width of at
+        least # bits, such that no signed integer type with lesser size has at least
+        the specified width. Thus, int_least32_t denotes a signed integer type with
+        a width of at least 32 bits. Similarly, the typedef name uint_least#_t designates
+        an unsigned integer type with a width of at least # bits, such that no unsigned
+        integer type with lesser size has at least the specified width.
+      </p>
+<p>
+        Required minimum-width integer types:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          int_least8_t
+        </li>
+<li>
+          int_least16_t
+        </li>
+<li>
+          int_least32_t
+        </li>
+<li>
+          uint_least8_t
+        </li>
+<li>
+          uint_least16_t
+        </li>
+<li>
+          uint_least32_t
+        </li>
+</ul></div>
+<p>
+        All other minimum-width integer types are optional.
+      </p>
+<a name="boost_act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types"></a><h5>
+<a name="id502715"></a>
+        <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types">Fastest
+        Minimum-Width Integer Types</a>
+      </h5>
+<p>
+        The typedef int_fast#_t, with # replaced by the width, designates the fastest
+        signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+        <code class="literal">Interlocked Integer Type</code></a> type with a width of at
+        least # bits. Similarly, the typedef name uint_fast#_t designates the fastest
+        unsigned integer type with a width of at least # bits.
+      </p>
+<p>
+        There is no guarantee that these types are fastest for all purposes. In any
+        case, however, they satisf the signedness and width requirements.
+      </p>
+<p>
+        Required fastest minimum-width integer types:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          int_fast8_t
+        </li>
+<li>
+          int_fast16_t
+        </li>
+<li>
+          int_fast32_t
+        </li>
+<li>
+          uint_fast8_t
+        </li>
+<li>
+          uint_fast16_t
+        </li>
+<li>
+          uint_fast32_t
+        </li>
+</ul></div>
+<p>
+        All other fastest minimum-width integer types are optional.
+      </p>
+<a name="boost_act.interlocked_integer.integer_typedefs.greatest_width_integer_types"></a><h5>
+<a name="id502814"></a>
+        <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.greatest_width_integer_types">Greatest-Width
+        Integer Types</a>
+      </h5>
+<p>
+        The typedef intmax_t designates a signed integer type capable of representing
+        any value of any signed integer type.
+      </p>
+<p>
+        The typedef uintmax_t designates an unsigned <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+        <code class="literal">Interlocked Integer Type</code></a> capable of representing
+        any value of any unsigned <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+        <code class="literal">Interlocked Integer Type</code></a>.
+      </p>
+<p>
+        These types are required.
+      </p>
+<a name="boost_act.interlocked_integer.integer_typedefs.miscellaneous_integer_types"></a><h5>
+<a name="id502888"></a>
+        <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.miscellaneous_integer_types">Miscellaneous
+        Integer Types</a>
+      </h5>
+<p>
+        Along with the above types are interlocked versions of <code class="computeroutput"><span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span></code>
+        and <code class="computeroutput"><span class="special">::</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ptrdiff_t</span></code>.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          size_t
+        </li>
+<li>
+          ptrdiff_t
+        </li>
+</ul></div>
+<p>
+        As well as two <code class="computeroutput"><span class="keyword">bool</span></code> types:
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          bool_t
+        </li>
+<li>
+          bool_fast_t
+        </li>
+</ul></div>
+<p>
+        These types are required.
+      </p>
+</div></div>
+<div class="clear"></div>
+</div></div>
+<div class="spirit-nav">
+<a accesskey="p" href="../interlocked_integer.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../interlocked_integer.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../rationale.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" id="footer">
+<div id="footer-left">
+<div id="copyright"><p>Copyright © 2006 , 2007 Matthew Calabrese</p></div>
+<div id="license"><p>Distributed under the
+                  <a href="/LICENSE_1_0.txt" class="internal">Boost Software License, Version 1.0</a>.
+               </p></div>
+</div>
+<div id="footer-right"><div id="banners">
+<p id="banner-xhtml"><a href="http://validator.w3.org/check?uri=referer" class="external">XHTML 1.0</a></p>
+<p id="banner-css"><a href="http://jigsaw.w3.org/css-validator/check/referer" class="external">CSS</a></p>
+<p id="banner-sourceforge"><a href="http://sourceforge.net" class="external">SourceForge</a></p>
+</div></div>
+<div class="clear"></div>
+</div>
+</body>
+</html>
