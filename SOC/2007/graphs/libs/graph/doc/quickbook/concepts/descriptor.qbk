@@ -11,7 +11,7 @@ all graph types.
 
 [heading Refinement Of]
 [SgiDefaultConstructible], [SgiCopyConstructible], [SgiAssignable], [SgiEqualityComparable],
-[SgiLessThanComparable], and [NoConcept Hashable].
+and [SgiLessThanComparable].
 
 [heading Associated Types]
 There are no associated types of a Descriptor.
@@ -21,7 +21,8 @@ Beyond the requirements of the refined concepts, the descriptor does not require
 additional valid expressions.
 
 [heading Notes]
-Note that because both vertex and edge descriptors model the [SgiLessThanComparable] concept,
-they can be used in [SgiAssociativeContainer]s like `std::map` and `std::tr1::unordered_map`.
+Note that because both model the [SgiLessThanComparable] concept, they can be used as
+keys in any associative container modeling the [SgiAssociativeContainer] concepte
+(e.g., `std::map`, `std::set`, etc).
 
 [endsect]

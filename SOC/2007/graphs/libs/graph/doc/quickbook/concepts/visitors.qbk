@@ -16,11 +16,8 @@ instead have several methods that correspond to the various event points. Each
 algorithm has a different set of event points, which are described by the following
 visitor concepts:
 
-* BFS Visitor
-* DFS Visitor
-* Dijkstra Visitor
-* Bellman Ford Visitor
-* A* Visitor
-* Event Visitor
+[include visitor.qbk]
+[include bfs_visitor.qbk]
+[include dfs_visitor.qbk]
 
 [endsect]

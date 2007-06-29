@@ -136,7 +136,7 @@ There are only three parameters to the `undirected_graph` class.
 
 [h5 Model Of]
 [BoostIncidenceGraph], [BoostVertexListGraph], [BoostEdgeListGraph], [BoostAdjacencyGraph],
-[BoostMutableGraph], [BoostPropertyGraph], [BoostMutablePropertyGraph].
+[BoostMutableGraph], and [BoostPropertyGraph].
 
 Additionally, the `undirected_graph` class provides a non-constant time implementation
 of the [BoostAdjacencyMatrix] associated function `edge(u,v,g)`, but does not model
@@ -157,17 +157,21 @@ For convenience these types have been grouped by purpose.
         [`graph_traits<undirected_graph>::vertex_descriptor`]
         [
             The type for the vertex descriptors associated with the graph. The `vertex_descriptor`
-            models the following concepts: [BoostDescriptor].
+            models the [BoostDescriptor] and [NoConcept Hashable] concepts.
         ]
     ]
     [
         [`graph_traits<undirected_graph>::edge_descriptor`]
         [
             The type for the edge descriptors associated with the graph. The `edge_descriptor`
-            models the followign concepts: [BoostDescriptor].
+            models the [BoostDescriptor] and [NoConcept Hashable] concepts.
         ]
     ]
 ]
+
+Note that edge and vertex descriptors for the `unsigned_graph` can be used as keys for both
+[SgiSortedAssociativeContainer]s and [SgiHashedAssociativeContainer]s such as `std::map` and
+`std::tr1::unordered_map` respectively.
 
 [h5 Iterator Types]
 [table
@@ -725,5 +729,11 @@ set_property(const undirected_graph& g, GraphProperty, Value v)
         ]
     ]
 ]
+
+[h4 Rationale]
+Unlike most graph classes in Boost.Graph, the `undirected_graph` does not model the
+[BoostMutablePropertyGraph] concept. The reason for this is that it is relatively
+difficult (from a usability standpoint) to easily deduce the type to be passed as a
+property when adding vertices and edges - but especially vertices.
 
 [endsect]

@@ -15,6 +15,8 @@
 
 [section Algorithms]
 [section Core Algorithms]
+[include breadth_first_search.qbk]
+[include depth_first_search.qbk]
 [endsect]
 
 [section Shortest Path Algorithms]

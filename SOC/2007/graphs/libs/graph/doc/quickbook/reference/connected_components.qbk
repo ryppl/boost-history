@@ -6,7 +6,6 @@
  /]
 
 [section Connected Components]
-
  template <class Graph, class ComponentMap, class P, class T, class R>
  typename property_traits<ComponentMap>::value_type
  connected_components(const Graph &g, ComponentMap c,

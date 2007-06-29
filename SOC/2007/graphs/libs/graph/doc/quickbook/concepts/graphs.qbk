@@ -35,42 +35,42 @@ The notation used in the table is as follows.
 
 [table
     [[Expression] [Return Type or Description]]
-    [[[link boost_graph.concepts.graph_concepts.graph *Graph*]]]
+    [[*[BoostGraph]*]]
     [[`graph_traits<G>::vertex_descriptor`] [The type for vertex representative objects.]]
     [[`graph_traits<G>::edge_descriptor`] [The type for edge representative objects.]]
     [[`graph_traits<G>::directed_category`] [Graph is directed or undirected?]]
     [[`graph_traits<G>::edge_parallel_category`] [Graph allows parallel edges?]]
     [[`graph_traits<G>::traversal_category`] [The ways in which the vertices and edges can be traversed.]]
-    [[[link boost_graph.concepts.graph_concepts.incidence_graph *Incidence Graph*] refines Graph]]
+    [[*[BoostIncidenceGraph]* refines Graph]]
     [[`graph_traits<G>::degree_size_type`] [The integer type for vertex degree.]] 
     [[`graph_traits<G>::out_edge_iterator`] [Type for iterating over out edges.]]
     [[`out_edges(v,g)`] [`std::pair<out_edge_iterator, out_edge_iterator>`]]
     [[`out_degree(v,g)`] [`degree_size_type`]]
     [[`source(e,g)`] [`vertex_descriptor`]]
     [[`target(e,g)`] [`vertex_descriptor`]]
-    [[[link boost_graph.concepts.graph_concepts.bidirectional_graph *Bidirectional Graph*] refines IncidenceGraph]]
+    [[*[BoostBidirectional Graph]* refines IncidenceGraph]]
     [[`graph_traits<G>::in_edge_iterator`] [Type for iterating over in edges.]]
     [[`in_edges(v,g)`] [`std::pair<in_edge_iterator,in_edge_iterator>`]]
     [[`in_degree(v,g)`] [`degree_size_type`]]
     [[`degree(v,g)`] [`degree_size_type`]]
-    [[*AdjacencyGraph* refines Graph]]
+    [[*[BoostAdjacencyGraph]* refines Graph]]
     [[`graph_traits<G>::adjacency_iterator`] [Type for iterating over adjacent vertices.]]
     [[`adjacent_vertices(v,g)`] [`std::pair<adjacency_iterator,adjacency_iterator>`]]
-    [[*VertexListGraph* refines IncidenceGraph and AdjacencyGraph]]
+    [[*[BoostVertexListGraph]* refines Graph]]
     [[`graph_traits<G>::vertex_iterator`] [Type for iterating over vertices.]]
     [[`graph_traits<G>::vertices_size_type`] [Unsigned integer type for the number of vertices.]]
     [[`vertices(g)`] [`std::pair<vertex_iterator,vertex_iterator>`]]
     [[`num_vertices(g)`] [`vertices_size_type`]]
-    [[*EdgeListGraph* refines Graph]]
+    [[*[BoostEdgeListGraph]* refines Graph]]
     [[`graph_traits<G>::edge_iterator`] [Type for iterating over edges.]]
     [[`graph_traits<G>::edges_size_type`] [Unsigned integer type for the number of edges.]]
     [[`edges(g)`] [`std::pair<edge_iterator, edge_iterator>`]]
     [[`num_edges(g)`] [`edges_size_type`]]
     [[`source(e,g)`] [`vertex_descriptor`]]
     [[`target(e,g)`] [`vertex_descriptor`]]
-    [[*AdjacencyMatrix* refines Graph]]
+    [[*[BoostAdjacencyMatrix]* refines Graph]]
     [[`edge(u,v,g)`] [`std::pair<edge_descriptor,boo>`]]
-    [[*MutableGraph* refines Graph]]
+    [[*[BoostMutableGraph]* refines Graph]]
     [[`add_vertex(g)`] [`vertex_descriptor`]]
     [[`clear_vertex(v,g)`] [`void`]]
     [[`clear_out_edges(v,g)`] [`void`]]
@@ -82,31 +82,34 @@ The notation used in the table is as follows.
     [[`remove_edge_if(pred,g)`] [`void`]]
     [[`remove_out_edge_if(v,pred,g)`] [`void`]]
     [[`remove_in_edge_if(v,pred,g)`] [`void`]]
-    [[*MutablePropertyGraph* refines Graph]]
-    [[`add_vertex(vp,g)`] [`vertex_descriptor`]]
-    [[`add_edge(u,v,ep,g)`] [`std::pair<edge_descriptor,bool>`]]
-    [[*PropertyGraph* refines Graph]]
+    [[*[BoostPropertyGraph]* refines Graph]]
     [[`property_map<G,Property>::type`] [Type for a mutable property map.]]
     [[`property_map<G,Property>::const_type`] [Type for a non-mutable property map.]]
     [[`get(p,g)`] [Function to get a property map.]]
     [[`get(p,g,x)`] [Get the property value for vertex or edge `x`]]
     [[`put(p,g,x,v`)] [Set the property value for vertex or edge `x` to value `v`.]]
+    [[*[BoostMutablePropertyGraph]* refines Graph]]
+    [[`add_vertex(vp,g)`] [`vertex_descriptor`]]
+    [[`add_edge(u,v,ep,g)`] [`std::pair<edge_descriptor,bool>`]]
 ]
 
 [include descriptor.qbk]
 [include graph.qbk]
 [include incidence_graph.qbk]
 [include bidirectional_graph.qbk]
+[include adjacency_graph.qbk]
+[include vertex_list_graph.qbk]
+[include edge_list_graph.qbk]
+[include adjacency_matrix.qbk]
+[include mutable_graph.qbk]
+[include property_graph.qbk]
+[include mutable_property_graph.qbk]
 
-[*TODO]
-
-There are some functions missing like `get_property()` and `put/set_property()`.
-These occur in some documentation somewhere but are in no means pervasive, complete
-or accurate.
-
-It should also be worth pointing out that we can redefine the entire concept hierarchy
-based on a) vertex or edge operations, b) directed/undirected or c) simple or multigraphs.
-Basically, there are some interesting ways to conceptualize the Boost.Graph interface.
+[h3 Indexed Graphs]
+Although not explicitly documented (yet), there's a concept of a Vertex-Indexed graph
+that has some valid expressions related specifically to operations on vertex index
+property of the graph. The [boost_undirected_graph] class has some addiitonal methods
+that can also be ported.
 
 [h3 Undirected Graphs]
 

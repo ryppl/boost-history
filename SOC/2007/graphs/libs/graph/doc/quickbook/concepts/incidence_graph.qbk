@@ -10,10 +10,10 @@ The IncidenceGraph concept provides an interface for efficient access to the out
 (for directed graphs) or incident edges (for undirected graphs) of each vertex in
 the graph.
 
-[heading Refinement Of]
-[link boost_graph.concepts.graph_concepts.graph Graph]
+[h4 Refinement Of]
+[BootGraph]
 
-[heading Associated Types]
+[h4 Associated Types]
 [table
     [[Type] [Description]]
     [
@@ -41,7 +41,7 @@ the graph.
     ]
 ]
 
-[heading Valid Expressions]
+[h4 Valid Expressions]
 [table
     [[Expression] [Description]]
     [
@@ -83,5 +83,13 @@ the graph.
         ]
     ]
 ]
+
+[h4 Notes]
+For undirected graphs, the edge /(u,v)/ is the same as edge /(v,u)/, so without some extra
+guarantee an implementation would be free use any ordering for the pair of vertices in an
+out-edge. For example, if you call `out_edges(u, g)`, and `v` is one of the vertices adjacent
+to `u`, then the implementation would be free to return /(v,u)/ as an out-edge which would be
+non-intuitive and cause trouble for algorithms. Therefore, the extra requirement is added that
+the out-edge connecting `u` and `v` must be given as /(u,v)/ and not /(v,u)/.
 
 [endsect]
