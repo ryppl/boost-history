@@ -12,5 +12,7 @@
 #include <boost/act/interlocked/increment/increment.hpp>
 #include <boost/act/interlocked/increment/increment_acquire.hpp>
 #include <boost/act/interlocked/increment/increment_release.hpp>
+#include <boost/act/interlocked/increment/increment_acq_rel.hpp>
+#include <boost/act/interlocked/increment/increment_unordered.hpp>
 
 #endif

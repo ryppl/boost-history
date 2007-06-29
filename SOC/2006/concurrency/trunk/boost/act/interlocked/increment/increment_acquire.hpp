@@ -6,14 +6,13 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_ACQUIRE_HPP
-#define BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_ACQUIRE_HPP
+#ifndef BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_ACQ_REL_HPP
+#define BOOST_ACT_INTERLOCKED_INCREMENT_INCREMENT_ACQ_REL_HPP
 
 #include <boost/act/interlocked/detail/unary_forwarder.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER_INFO ( increment, acquire )
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER()
-
 
 #endif

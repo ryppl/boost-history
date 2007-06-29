@@ -6,17 +6,17 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_DECREMENT_DETAIL_DECREMENT_ACQUIRE_DEF_IMPL_HPP
-#define BOOST_ACT_INTERLOCKED_DECREMENT_DETAIL_DECREMENT_ACQUIRE_DEF_IMPL_HPP
+#ifndef BOOST_ACT_INTERLOCKED_DECREMENT_DETAIL_DECREMENT_UN_DEF_IMPL_HPP
+#define BOOST_ACT_INTERLOCKED_DECREMENT_DETAIL_DECREMENT_UN_DEF_IMPL_HPP
 
-#include <boost/act/interlocked/assign_if_was/assign_if_was_acquire.hpp>
+#include <boost/act/interlocked/assign_if_was/assign_if_was_unordered.hpp>
 #include <boost/act/interlocked/load.hpp>
 #include <boost/act/detail/prior.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
-struct decrement_acquire_default_impl
+struct decrement_unordered_default_impl
 {
   template< typename TargetType >
   static typename remove_cv< TargetType >::type execute( TargetType& target )
@@ -26,7 +26,7 @@ struct decrement_acquire_default_impl
     unqualified_type new_value;
 
     for( unqualified_type curr_value = load( target )
-       ;    ( new_value = assign_if_was< acquire >
+       ;    ( new_value = assign_if_was< unordered >
                           ( target
                           , act::detail::prior( curr_value )
                           , curr_value

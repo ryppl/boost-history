@@ -128,7 +128,7 @@ public:
     factory.template apply< value_type >( end_m - 1 );
 
     // Thread-safe incrememnt with release memory semantics.
-    interlocked::increment_release( curr_size_m );
+    interlocked::increment< interlocked::release >( curr_size_m );
   }
 
   void pop()
@@ -142,7 +142,7 @@ public:
     begin_m = next( begin_m );
 
     // Thread-safe decrement with release memory semantics.
-    interlocked::decrement_release( curr_size_m );
+    interlocked::decrement< interlocked::release >( curr_size_m );
   }
 
   optional< value_type > value_pop()

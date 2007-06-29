@@ -66,7 +66,8 @@ public:
 
     boost::thread::sleep( time_of_completion );
 
-    boost::act::interlocked::increment_acquire( target_m );
+    boost::act::interlocked::increment
+    < boost::act::interlocked::acquire >( target_m );
   }
 
   int operator ()( int value ) const

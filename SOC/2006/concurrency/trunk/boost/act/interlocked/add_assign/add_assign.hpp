@@ -36,7 +36,6 @@ add_assign( TargetType& destination, SourceType const& new_value )
   return interlocked::add_assign< acq_rel >( destination, new_value );
 }
 
-
 template< typename Semantics, typename TargetType, typename SourceType >
 typename lazy_enable_if
 <

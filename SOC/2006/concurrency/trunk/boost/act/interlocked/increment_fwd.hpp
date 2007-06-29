@@ -12,5 +12,7 @@
 #include <boost/act/interlocked/increment/increment_fwd.hpp>
 #include <boost/act/interlocked/increment/increment_acquire_fwd.hpp>
 #include <boost/act/interlocked/increment/increment_release_fwd.hpp>
+#include <boost/act/interlocked/increment/increment_acq_rel_fwd.hpp>
+#include <boost/act/interlocked/increment/increment_unordered_fwd.hpp>
 
 #endif

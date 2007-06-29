@@ -12,5 +12,7 @@
 #include <boost/act/interlocked/decrement/decrement.hpp>
 #include <boost/act/interlocked/decrement/decrement_acquire.hpp>
 #include <boost/act/interlocked/decrement/decrement_release.hpp>
+#include <boost/act/interlocked/decrement/decrement_acq_rel.hpp>
+#include <boost/act/interlocked/decrement/decrement_unordered.hpp>
 
 #endif

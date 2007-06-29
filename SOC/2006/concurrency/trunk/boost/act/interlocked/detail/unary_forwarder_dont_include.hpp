@@ -22,6 +22,8 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/act/interlocked/semantics.hpp>
 
 #include <boost/type_traits/remove_volatile.hpp>
 
@@ -36,18 +38,19 @@ BOOST_ACT_INTERLOCKED_DETAIL_UNARY_FORWARDER_INFO
 
 namespace boost { namespace act { namespace interlocked {
 
-template< typename TargetType >
+template< typename Semantics, typename TargetType >
 typename lazy_enable_if
 <
   mpl::and_
   <
-    detail::are_valid_store_style_params< TargetType >
+    is_same< Semantics, BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SEMANTICS >
+  , detail::are_valid_store_style_params< TargetType >
   , mpl::not_< detail::is_interlocked_bool< TargetType > >
   >
 , remove_cv< TargetType >
 >
 ::type
-BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_FULL_NAME( TargetType& target )
+BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SHORT_NAME( TargetType& target )
 {
   return detail::impl_meta
          <
