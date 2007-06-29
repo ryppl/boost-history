@@ -6,7 +6,7 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_CONFIG_INTERLOCKED_HAS_WAIT_FREE_HPP
-#define BOOST_ACT_CONFIG_INTERLOCKED_HAS_WAIT_FREE_HPP
+#ifndef BOOST_ACT_INTERLOCKED_HAS_WAIT_FREE_HPP
+#define BOOST_ACT_INTERLOCKED_HAS_WAIT_FREE_HPP
 
 #endif

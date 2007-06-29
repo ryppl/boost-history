@@ -11,7 +11,7 @@
 
 #include <boost/act/config/interlocked/has.hpp>
 
-#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( subtract_assign, acquire )
+#if BOOST_ACT_INTERLOCKED_HAS( subtract_assign, acquire )
 
 #include <boost/act/interlocked/detail/binary_forwarder.hpp>
 

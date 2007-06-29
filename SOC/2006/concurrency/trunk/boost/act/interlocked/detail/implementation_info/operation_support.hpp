@@ -281,8 +281,7 @@
 
     #if defined( _M_AMD64 ) || defined( _M_X64 ) // Intel 64
 
-      // ToDo: Remove this error -- just don't define support
-      #error No support for Intel 64 yet.
+      // No support yet!
 
     // Else: if IA64
     #elif defined( __INITIAL_POINTER_SIZE ) && ( __INITIAL_POINTER_SIZE == 64 )
@@ -303,8 +302,7 @@
 
     #else
 
-      // ToDo: Remove this error -- just don't define support
-      #error Unknown target architecture with Intel Compiler.
+      // No support yet!
 
     #endif
 
@@ -321,7 +319,23 @@
 
   #endif // End Compiler detection
 
-  #if WINVER < 0x0600 // Windows prior to vista
+  #define BOOST_ACT_INTERLOCKED_DETAIL_NONVISTA_HAS_OP_SUPPORT()               \
+          (     ( WINVER < 0x0600 )                                            \
+            &&  defined( BOOST_ACT_INTERLOCKED_DETAIL_LOAD_STYLE )             \
+            &&  defined( BOOST_ACT_INTERLOCKED_DETAIL_STORE_STYLE )            \
+            &&  defined( BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT )    \
+          )
+
+  #define BOOST_ACT_INTERLOCKED_DETAIL_VISTA_HAS_OP_SUPPORT()                  \
+          (     ( WINVER >= 0x0600 )                                           \
+            &&  defined( BOOST_ACT_INTERLOCKED_DETAIL_LOAD_STYLE )             \
+            &&  defined( BOOST_ACT_INTERLOCKED_DETAIL_STORE_STYLE )            \
+            &&  defined( BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT )    \
+            &&  defined( BOOST_ACT_INTERLOCKED_DETAIL_INTERLOCKED_SIZES )      \
+          )
+
+  // ToDo: Possibly change to check for 64-bit instead
+  #if BOOST_ACT_INTERLOCKED_DETAIL_NONVISTA_HAS_OP_SUPPORT() // Pre-vista
 
     // Note: Same name as vista windows on purpose
     // ToDo: Add assembly implementation when possible even though named
@@ -333,7 +347,7 @@
       (( assign_if_was, BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT ))    \
     )
 
-  #else // Windows Vista and higher
+  #elif BOOST_ACT_INTERLOCKED_DETAIL_VISTA_HAS_OP_SUPPORT() // Vista and up
 
     // Note: Same name as pre-vista windows on purpose
     #define BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT                     \
@@ -350,7 +364,7 @@
 
   #if defined( __x86_64__ ) // x86-64
 
-    #error To whoever reads this, please help support x86-64 on gcc!
+    // No support yet!
 
   #elif defined( __i386__ ) // x86
 
@@ -381,15 +395,15 @@
 
   #elif defined( __powerpc__ ) || defined( __ppc__ )
 
-    #error To whoever reads this, please help support powerpc on gcc!
+    // No support yet!
 
   #elif defined( __sparcv8 ) || defined( __sparcv9 )
 
-    #error To whoever reads this, please help support sparc on gcc!
+    // No support yet!
 
   #else
 
-    #error To whoever reads this, please help support gcc for... odd systems!
+    // No support yet!
 
   #endif
 
@@ -397,17 +411,17 @@
 
   #if defined( __POWERPC__ ) // powerpc
 
-    #error To whoever reads this, please help support powerpc on Metrowerks!
+    // No support yet!
 
   #else
 
-    #error To whoever reads this, please help support non-powerpc on Metrowerks!
+    // No support yet!
 
   #endif
 
 #else // Unknown system
 
-  #error To whoever reads this, please help support whatever wild and crazy system you are targetting!
+    // No support yet!
 
 #endif // End system checks
 

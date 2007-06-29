@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERLOCKED_HPP
-#define BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERLOCKED_HPP
+#ifndef BOOST_ACT_INTERLOCKED_HAS_INTERLOCKED_HPP
+#define BOOST_ACT_INTERLOCKED_HAS_INTERLOCKED_HPP
 
 #include <boost/act/interlocked/detail/implementation_info/operation_support.hpp>
 

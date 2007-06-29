@@ -11,7 +11,7 @@
 
 #include <boost/act/config/interlocked/has.hpp>
 
-#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign_if_was, release )
+#if BOOST_ACT_INTERLOCKED_HAS( assign_if_was, release )
 
 #include <boost/act/interlocked/semantics/release.hpp>
 #include <boost/utility/enable_if.hpp>

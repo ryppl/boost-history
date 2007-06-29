@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_CONFIG_INTERLOCKED_HAS_HPP
-#define BOOST_ACT_CONFIG_INTERLOCKED_HAS_HPP
+#ifndef BOOST_ACT_INTERLOCKED_HAS_HPP
+#define BOOST_ACT_INTERLOCKED_HAS_HPP
 
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -228,7 +228,7 @@ BOOST_PP_BITOR                                                                 \
 #define BOOST_ACT_CONFIG_DETAIL_HAS_LOAD( name, semantics )                    \
 BOOST_PP_CAT( BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_, semantics )()
 
-#define BOOST_ACT_CONFIG_INTERLOCKED_HAS_IMPL( name, semantics )               \
+#define BOOST_ACT_INTERLOCKED_HAS_IMPL( name, semantics )                      \
 BOOST_PP_IF                                                                    \
 ( BOOST_ACT_INTERLOCKED_DETAIL_IS_NAME( name, load )                           \
 , BOOST_ACT_CONFIG_DETAIL_HAS_LOAD                                             \
@@ -236,7 +236,7 @@ BOOST_PP_IF                                                                    \
 )                                                                              \
 ( name, semantics )
 
-#define BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERNAL( name, semantics )           \
+#define BOOST_ACT_INTERLOCKED_HAS_INTERNAL( name, semantics )                  \
 BOOST_PP_IF                                                                    \
 ( BOOST_ACT_INTERLOCKED_DETAIL_IS_NAME( name, load )                           \
 , BOOST_ACT_CONFIG_DETAIL_HAS_LOAD                                             \
@@ -244,15 +244,15 @@ BOOST_PP_IF                                                                    \
 )                                                                              \
 ( name, semantics )
 
-#define BOOST_ACT_CONFIG_INTERLOCKED_HAS_DEFAULT_INTERNAL( name, semantics )   \
-BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERNAL                                      \
+#define BOOST_ACT_INTERLOCKED_HAS_DEFAULT_INTERNAL( name, semantics )          \
+BOOST_ACT_INTERLOCKED_HAS_INTERNAL                                             \
 ( name, BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF( name ) )
 
-#define BOOST_ACT_CONFIG_INTERLOCKED_HAS( name, semantics )                    \
+#define BOOST_ACT_INTERLOCKED_HAS( name, semantics )                           \
 BOOST_PP_IF                                                                    \
 ( BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICS( semantics )                    \
-, BOOST_ACT_CONFIG_INTERLOCKED_HAS_DEFAULT_INTERNAL                            \
-, BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERNAL                                    \
+, BOOST_ACT_INTERLOCKED_HAS_DEFAULT_INTERNAL                                   \
+, BOOST_ACT_INTERLOCKED_HAS_INTERNAL                                           \
 )                                                                              \
 ( name, semantics )
 

@@ -11,7 +11,7 @@
 
 #include <boost/act/config/interlocked/has.hpp>
 
-#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( load, acquire )
+#if BOOST_ACT_INTERLOCKED_HAS( load, acquire )
 
 #include <boost/act/interlocked/semantics/acquire.hpp>
 #include <boost/utility/enable_if.hpp>

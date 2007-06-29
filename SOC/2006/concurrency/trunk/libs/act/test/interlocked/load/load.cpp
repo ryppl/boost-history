@@ -10,7 +10,7 @@
 
 #include <boost/act/config/interlocked/has.hpp>
 
-#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( load, _ )
+#if BOOST_ACT_INTERLOCKED_HAS( load, _ )
 
 #include "../store_load_helper.hpp"
 #include <boost/thread/barrier.hpp>
@@ -19,7 +19,7 @@
 
 int test_main( int, char *[] )
 {
-#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( load, _ )
+#if BOOST_ACT_INTERLOCKED_HAS( load, _ )
 
   test_store_load_no_threads( interlocked_load_get()
                                  , single_thread_basic_set()

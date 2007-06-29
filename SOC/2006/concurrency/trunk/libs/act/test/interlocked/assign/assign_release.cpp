@@ -10,7 +10,7 @@
 
 #include <boost/act/config/interlocked/has.hpp>
 
-#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign, release )
+#if BOOST_ACT_INTERLOCKED_HAS( assign, release )
 
 #include "../store_load_helper.hpp"
 #include <boost/thread/barrier.hpp>
@@ -34,7 +34,7 @@ struct interlocked_assign_release_set
 
 int test_main( int, char *[] )
 {
-#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign, release )
+#if BOOST_ACT_INTERLOCKED_HAS( assign, release )
   test_store_load_no_threads( single_thread_basic_get()
                             , interlocked_assign_release_set()
                             );
