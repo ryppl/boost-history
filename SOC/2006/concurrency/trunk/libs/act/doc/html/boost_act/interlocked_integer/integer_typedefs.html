@@ -24,22 +24,22 @@
 <a name="boost_act.interlocked_integer.integer_typedefs"></a><a href="integer_typedefs.html" title="Integer Typedefs">Integer
       Typedefs</a></h3></div></div></div>
 <a name="boost_act.interlocked_integer.integer_typedefs.header"></a><h5>
-<a name="id502450"></a>
+<a name="id502612"></a>
         <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.header">Header</a>
       </h5>
 <pre class="programlisting">
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 </pre>
 <a name="boost_act.interlocked_integer.integer_typedefs.exact_width_integer_types"></a><h5>
-<a name="id502559"></a>
+<a name="id502720"></a>
         <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.exact_width_integer_types">Exact-Width
         Integer Types</a>
       </h5>
 <p>
-        The typedef int#_t, with # replaced by the width, designates a signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type"> <code class="literal">Interlocked
-        Integer Type</code></a> of exactly # bits; int8_t denotes an 8-bit
-        signed integer type. Similarly, the typedef uint#_t designates and unsigned
-        integer type of exactly # bits.
+        The typedef int#_t, with # replaced by the width, designates a signed <a href="../concepts/interlocked_types/interlocked_integer_type.html" title="Interlocked Integer Type">
+        <code class="literal">Interlocked Integer Type</code></a> of exactly # bits; int8_t
+        denotes an 8-bit signed integer type. Similarly, the typedef uint#_t designates
+        and unsigned integer type of exactly # bits.
       </p>
 <p>
         These types are optional. However, if an implementation provides integer
@@ -51,13 +51,13 @@
         to built-in integer types. ]
       </p>
 <a name="boost_act.interlocked_integer.integer_typedefs.minimum_width_integer_types"></a><h5>
-<a name="id502619"></a>
+<a name="id502780"></a>
         <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.minimum_width_integer_types">Minimum-Width
         Integer Types</a>
       </h5>
 <p>
         The typedef int_least#_t, with # replaced by the width, designates a signed
-        <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+        <a href="../concepts/interlocked_types/interlocked_integer_type.html" title="Interlocked Integer Type">
         <code class="literal">Interlocked Integer Type</code></a> type with a width of at
         least # bits, such that no signed integer type with lesser size has at least
         the specified width. Thus, int_least32_t denotes a signed integer type with
@@ -92,13 +92,13 @@
         All other minimum-width integer types are optional.
       </p>
 <a name="boost_act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types"></a><h5>
-<a name="id502715"></a>
+<a name="id502874"></a>
         <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.fastest_minimum_width_integer_types">Fastest
         Minimum-Width Integer Types</a>
       </h5>
 <p>
         The typedef int_fast#_t, with # replaced by the width, designates the fastest
-        signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+        signed <a href="../concepts/interlocked_types/interlocked_integer_type.html" title="Interlocked Integer Type">
         <code class="literal">Interlocked Integer Type</code></a> type with a width of at
         least # bits. Similarly, the typedef name uint_fast#_t designates the fastest
         unsigned integer type with a width of at least # bits.
@@ -134,7 +134,7 @@
         All other fastest minimum-width integer types are optional.
       </p>
 <a name="boost_act.interlocked_integer.integer_typedefs.greatest_width_integer_types"></a><h5>
-<a name="id502814"></a>
+<a name="id502973"></a>
         <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.greatest_width_integer_types">Greatest-Width
         Integer Types</a>
       </h5>
@@ -143,16 +143,16 @@
         any value of any signed integer type.
       </p>
 <p>
-        The typedef uintmax_t designates an unsigned <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+        The typedef uintmax_t designates an unsigned <a href="../concepts/interlocked_types/interlocked_integer_type.html" title="Interlocked Integer Type">
         <code class="literal">Interlocked Integer Type</code></a> capable of representing
-        any value of any unsigned <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+        any value of any unsigned <a href="../concepts/interlocked_types/interlocked_integer_type.html" title="Interlocked Integer Type">
         <code class="literal">Interlocked Integer Type</code></a>.
       </p>
 <p>
         These types are required.
       </p>
 <a name="boost_act.interlocked_integer.integer_typedefs.miscellaneous_integer_types"></a><h5>
-<a name="id502888"></a>
+<a name="id503048"></a>
         <a href="integer_typedefs.html#boost_act.interlocked_integer.integer_typedefs.miscellaneous_integer_types">Miscellaneous
         Integer Types</a>
       </h5>
