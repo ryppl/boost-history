@@ -31,6 +31,7 @@
 #ifndef BOOST_HDSTL_HDS_CONCEPT_ARCHETYPE_HPP
 #define BOOST_HDSTL_HDS_CONCEPT_ARCHETYPE_HPP
 
+#include <boost/hdstl/hds_traits.hpp>
 #include <boost/concept_archetype.hpp>
 
 namespace boost {
@@ -49,6 +50,10 @@ struct hds_traits<HDSConcept_archetype> {
             boost::equality_comparable_archetype<
             boost::assignable_archetype<> > > > halfedge_descriptor;
         // Halfedge descriptor type for the 'HDSConcept' archetype.
+
+    enum { supports_facets   = false };
+    enum { supports_vertices = false };
+
 };
 
 class HDSConcept_archetype {
@@ -59,7 +64,7 @@ class HDSConcept_archetype {
     // 'HDS' concept.
 
     // PRIVATE TYPES
-    typedef typename hds_traits<HDSConcept_archetype
+    typedef hds_traits<HDSConcept_archetype
                                >::halfedge_descriptor halfedge_descriptor;
 
   public:
@@ -69,11 +74,13 @@ class HDSConcept_archetype {
 };
 
 // MANIPULATORS
-typename hds_traits<HDSConcept_archetype>::halfedge_descriptor
-HDSConcept_archetype::opposite(ForwardHDSConcept_archetype const& hds,
-                               halfedge_descriptor                h)
+inline
+hds_traits<HDSConcept_archetype>::halfedge_descriptor
+opposite(hds_traits<HDSConcept_archetype>::halfedge_descriptor h,
+         const HDSConcept_archetype&                           hds)
 {
-    return halfedge_descriptor();
+    (void)hds;  // eliminate unused variable warning
+    return h;
 }
 
 } // end namespace hdstl
