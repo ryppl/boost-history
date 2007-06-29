@@ -6,11 +6,20 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
+#include <boost/test/minimal.hpp>
+
+#include <boost/act/config/interlocked/has.hpp>
+
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( load, unordered )
+
 #include "../store_load_helper.hpp"
 #include <boost/thread/barrier.hpp>
 
+#endif
+
 int test_main( int, char *[] )
 {
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( load, _ )
   test_store_load_no_threads( interlocked_load_get()
                                  , single_thread_basic_set()
                                  );
@@ -27,6 +36,8 @@ int test_main( int, char *[] )
                                 , interlocked_store_set()
                                 );
   }
-
+#else
+  BOOST_FAIL( "load< unordered > not implemented on this system." );
+#endif
   return 0;
 }

@@ -6,6 +6,12 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
+#include <boost/test/minimal.hpp>
+
+#include <boost/act/config/interlocked/has.hpp>
+
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign, release )
+
 #include "../store_load_helper.hpp"
 #include <boost/thread/barrier.hpp>
 #include <boost/type_traits/remove_cv.hpp>
@@ -24,9 +30,11 @@ struct interlocked_assign_release_set
   }
 };
 
+#endif
+
 int test_main( int, char *[] )
 {
-
+#if BOOST_ACT_CONFIG_INTERLOCKED_HAS( assign, release )
   test_store_load_no_threads( single_thread_basic_get()
                             , interlocked_assign_release_set()
                             );
@@ -45,6 +53,8 @@ int test_main( int, char *[] )
   }
 
   brute_assign_test( interlocked_assign_release_set() );
-
+#else
+  BOOST_FAIL( "assign< release > not implemented on this system." );
+#endif
   return 0;
 }

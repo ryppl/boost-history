@@ -15,6 +15,43 @@
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/control/if.hpp>
 
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSacquire()   0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSrelease()   0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSacq_rel()   0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSunordered() 0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSdefault()   1
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSdefault_()  1
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICS_()         1
+
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_add_assign()      acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_assign()          acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_assign_if_was()   acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_bitand_assign()   acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_bitor_assign()    acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_compiler_fence()  acq_rel /*Change*/
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_compl_assign()    acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_decrement()       acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_divide_assign()   acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_fence()           acq_rel /*Change*/
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_increment()       acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_lshift_assign()   acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_mod_assign()      acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_modify()          acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_multiply_assign() acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_negate_assign()   acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_not_assign()      acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_load()            acquire
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_rshift_assign()   acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_store()           release
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_subtract_assign() acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_xor_assign()      acq_rel
+
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF( name )                             \
+BOOST_PP_CAT( BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_, name )()
+
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICS( semantics )              \
+BOOST_PP_CAT( BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICS, semantics )()
+
 #define BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_acq_rel()                    \
 BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( assign_if_was, acq_rel )
 
@@ -191,11 +228,31 @@ BOOST_PP_BITOR                                                                 \
 #define BOOST_ACT_CONFIG_DETAIL_HAS_LOAD( name, semantics )                    \
 BOOST_PP_CAT( BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_, semantics )()
 
-#define BOOST_ACT_CONFIG_INTERLOCKED_HAS( name, semantics )                    \
+#define BOOST_ACT_CONFIG_INTERLOCKED_HAS_IMPL( name, semantics )               \
 BOOST_PP_IF                                                                    \
 ( BOOST_ACT_INTERLOCKED_DETAIL_IS_NAME( name, load )                           \
 , BOOST_ACT_CONFIG_DETAIL_HAS_LOAD                                             \
 , BOOST_ACT_CONFIG_DETAIL_HAS_NONLOAD                                          \
+)                                                                              \
+( name, semantics )
+
+#define BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERNAL( name, semantics )           \
+BOOST_PP_IF                                                                    \
+( BOOST_ACT_INTERLOCKED_DETAIL_IS_NAME( name, load )                           \
+, BOOST_ACT_CONFIG_DETAIL_HAS_LOAD                                             \
+, BOOST_ACT_CONFIG_DETAIL_HAS_NONLOAD                                          \
+)                                                                              \
+( name, semantics )
+
+#define BOOST_ACT_CONFIG_INTERLOCKED_HAS_DEFAULT_INTERNAL( name, semantics )   \
+BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERNAL                                      \
+( name, BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF( name ) )
+
+#define BOOST_ACT_CONFIG_INTERLOCKED_HAS( name, semantics )                    \
+BOOST_PP_IF                                                                    \
+( BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICS( semantics )                    \
+, BOOST_ACT_CONFIG_INTERLOCKED_HAS_DEFAULT_INTERNAL                            \
+, BOOST_ACT_CONFIG_INTERLOCKED_HAS_INTERNAL                                    \
 )                                                                              \
 ( name, semantics )
 
