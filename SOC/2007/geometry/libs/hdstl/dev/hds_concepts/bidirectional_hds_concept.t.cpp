@@ -24,10 +24,10 @@ namespace hdstl1 {
         // This 'struct', intentionally defined in a namespace different from
         // 'hdstl', the 'hds_traits' specialization defined in the namespace
         // 'hdstl', and the supporting functions 'opposite', 'next_in_facet',
-        // 'next_at_source', and 'next_at_target' defined in the same
-        // namespace as this 'struct' to take advantage of ADL
-        // (argument-dependent lookup) provide an archetype for the 'ForwardHDS'
-        // concept.
+        // 'next_at_source', 'next_at_target', prev_in_facet', prev_at_source'
+        // and 'prev_at_target' defined in the same namespace as this 'struct'
+        // to take advantage of ADL (argument-dependent lookup) provide an
+        // archetype for the 'ForwardHDS' and 'BackwardHDS' concepts.
 
         typedef int halfedge_descriptor;
         typedef TT  traversal_category;

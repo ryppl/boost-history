@@ -1,0 +1,99 @@
+CXX=g++
+CXXFLAGS=-pedantic -W -Wall -I${BOOST} -I.
+
+LD=g++
+
+TARGET=dbg_exc_mt
+
+PACKAGE_OBJECTS=backward_hds_concept.o \
+        bidirectional_hds_concept.o \
+        facet_hds_concept.o \
+        forward_hds_concept.o \
+        hds_concept.o \
+        mutable_forward_hds_concept.o \
+        mutable_hds_concept.o \
+        vertex_hds_concept.o
+
+PACKAGE_LIBRARY=libhds_concepts.a
+
+TEST_DRIVERS=backward_hds_concept.t \
+        bidirectional_hds_concept.t \
+        facet_hds_concept.t \
+        forward_hds_concept.t \
+        hds_concept.t \
+        mutable_forward_hds_concept.t \
+        mutable_hds_concept.t \
+        vertex_hds_concept.t
+
+.SUFFIXES:
+.SUFFIXES: ${TARGET}.o .o .cpp .hpp
+
+all: package_library test
+
+
+### BUILDING PACKAGE LIBRARY AND DEPENDENCIES
+
+package_library: ${PACKAGE_OBJECTS}
+	ar -rv ${PACKAGE_LIBRARY} ${PACKAGE_OBJECTS}
+
+%.o: %.cpp %.h
+	${CXX} ${CXXFLAGS} ${CXXINCLUDES} -c -o $*.o $<
+
+backward_hds_concept.o: hds_concept.hpp
+bidirectional_hds_concept.o: forward_hds_concept.hpp \
+        backward_hds_concept.hpp hds_concept.hpp
+facet_hds_concept.o: hds_concept.hpp
+forward_hds_concept.o: hds_concept.hpp  
+hds_concept.o: 
+mutable_forward_hds_concept.o: forward_hds_concept.hpp \
+        hds_concept.hpp mutable_hds_concept.hpp
+mutable_hds_concept.o: hds_concept.hpp
+vertex_hds_concept.o: hds_concept.hpp
+
+
+### BUILDING TEST DRIVERS AND DEPENDENCIES OF TEST DRIVER
+
+test: ${TEST_DRIVERS}
+	for file in ${TEST_DRIVERS}; do echo "******* TESTING $$file *********"; ./$$file; done
+
+%.t: %.t.o %.o
+	${LD} ${LDFLAGS} -o $*.t $^
+
+backward_hds_concept.t.o: hds_concept.hpp
+bidirectional_hds_concept.t.o: forward_hds_concept.hpp \
+        backward_hds_concept.hpp hds_concept.hpp
+facet_hds_concept.t.o: hds_concept.hpp
+forward_hds_concept.t.o: hds_concept.hpp  
+hds_concept.t.o: 
+mutable_forward_hds_concept.t.o: forward_hds_concept.hpp \
+        hds_concept.hpp mutable_hds_concept.hpp
+mutable_hds_concept.t.o: hds_concept.hpp
+vertex_hds_concept.t.o: hds_concept.hpp
+
+%.t.o: %.t.cpp %.h
+	${CXX}  ${CXXFLAGS} ${CXXINCLUDES} -c -o $*.t.o $<
+
+backward_hds_concept.t: hds_concept.o
+bidirectional_hds_concept.t: forward_hds_concept.o \
+        backward_hds_concept.o hds_concept.o
+facet_hds_concept.t.o: hds_concept.o
+forward_hds_concept.t.o: hds_concept.o  
+hds_concept.t.o: 
+mutable_forward_hds_concept.t.o: forward_hds_concept.o \
+        hds_concept.o mutable_hds_concept.o
+mutable_hds_concept.t.o: hds_concept.o
+vertex_hds_concept.t.o: hds_concept.o
+
+
+## UTILITIES
+
+clean: testclean
+
+testclean:
+	- rm *.t.o
+	- rm *.t
+
+realclean:
+	- rm *.o
+	- rm ${PACKAGE_LIBRARY}
+

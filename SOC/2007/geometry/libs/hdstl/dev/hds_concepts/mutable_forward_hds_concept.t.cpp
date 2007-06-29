@@ -47,7 +47,7 @@ namespace hdstl1 {
     typename mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor
     next_in_facet(typename mutable_forward_hds_archetype<ForwardCategory>
                                                         ::halfedge_descriptor h,
-             const mutable_forward_hds_archetype<ForwardCategory>&)
+                  const mutable_forward_hds_archetype<ForwardCategory>&)
     {
         return h;
     }
@@ -56,7 +56,7 @@ namespace hdstl1 {
     typename mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor
     next_at_source(typename mutable_forward_hds_archetype<ForwardCategory>
                                                         ::halfedge_descriptor h,
-             const mutable_forward_hds_archetype<ForwardCategory>&)
+                  const mutable_forward_hds_archetype<ForwardCategory>&)
     {
         return h;
     }
@@ -65,7 +65,7 @@ namespace hdstl1 {
     typename mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor
     next_at_target(typename mutable_forward_hds_archetype<ForwardCategory>
                                                         ::halfedge_descriptor h,
-             const mutable_forward_hds_archetype<ForwardCategory>&)
+                  const mutable_forward_hds_archetype<ForwardCategory>&)
     {
         return h;
     }
@@ -104,14 +104,15 @@ namespace hdstl1 {
     typename mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor
     new_edge(mutable_forward_hds_archetype<ForwardCategory>&)
     {
-        return mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor();
+        return typename mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor();
     }
 
     template<typename ForwardCategory>
     void
     delete_edge(typename mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor,
-             mutable_forward_hds_archetype<ForwardCategory>&)
-    { }
+                mutable_forward_hds_archetype<ForwardCategory>&)
+    {
+    }
 
 }  // namespace hdstl
 
