@@ -274,13 +274,50 @@
 
     #endif // End architecture detection
 
-  #else // Else: Not MSVC
-    
+  #elif defined( __INTEL_COMPILER ) // Else: if intel compiler
+
+    #define BOOST_ACT_INTERLOCKED_DETAIL_LOAD_STYLE  volatile_load_acquire
+    #define BOOST_ACT_INTERLOCKED_DETAIL_STORE_STYLE volatile_store_release
+
+    #if defined( _M_AMD64 ) || defined( _M_X64 ) // Intel 64
+
+      // ToDo: Remove this error -- just don't define support
+      #error No support for Intel 64 yet.
+
+    // Else: if IA64
+    #elif defined( __INITIAL_POINTER_SIZE ) && ( __INITIAL_POINTER_SIZE == 64 )
+
+      #define BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT                 \
+              BOOST_ACT_INTERLOCKED_DETAIL_ITANIUM_RW_ORDERING_SUPPORT
+
+      #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                       \
+              BOOST_ACT_INTERLOCKED_DETAIL_ITANIUM_FENCE_SUPPORT
+
+    #elif defined( __QMSPP_ ) // Else: if x86
+
+      #define BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT                 \
+              BOOST_ACT_INTERLOCKED_DETAIL_X86_RW_ORDERING_SUPPORT
+
+      #define BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT                 \
+              BOOST_ACT_INTERLOCKED_DETAIL_X86_RW_ORDERING_SUPPORT
+
+    #else
+
+      // ToDo: Remove this error -- just don't define support
+      #error Unknown target architecture with Intel Compiler.
+
+    #endif
+
+  #else // Else: Default to basic Windows support
+
     #define BOOST_ACT_INTERLOCKED_DETAIL_LOAD_STYLE  volatile_load_unordered
     #define BOOST_ACT_INTERLOCKED_DETAIL_STORE_STYLE volatile_store_unordered
 
     #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                         \
             BOOST_ACT_INTERLOCKED_DETAIL_NO_FENCE_SUPPORT
+
+    #define BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT                   \
+            BOOST_ACT_INTERLOCKED_DETAIL_X86_RW_ORDERING_SUPPORT
 
   #endif // End Compiler detection
 
