@@ -59,7 +59,34 @@ class VertexHDSConcept_archetype : public HDSConcept_archetype {
     // PRIVATE TYPES
     typedef typename hds_traits<VertexHDSConcept_archetype
                                >::vertex_descriptor vertex_descriptor;
+
+    // NOT IMPLEMENTED
+    VertexHDSConcept_archetype();
+    VertexHDSConcept_archetype(const VertexHDSConcept_archetype&);
+
+  public:
+    // MANIPULATORS
+    vertex_descriptor
+    source(halfedge_descriptor, VertexHDSConcept_archetype const& hds) const;
+        // returns the source vertex descriptor of 'h' in 'hds'
+    
+    vertex_descriptor
+    target(halfedge_descriptor, VertexHDSConcept_archetype const& hds) const;
+        // returns the target vertex descriptor of 'h' in 'hds'
 };
+
+//MANIPULATORS
+typename hds_traits<VertexHDSConcept_archetype>::vertex_descriptor
+VertexHDSConcept_archetype::source(halfedge_descriptor, VertexHDSConcept_archetype const& hds) const
+{
+    return vertex_descriptor();
+}
+
+typename hds_traits<VertexHDSConcept_archetype>::vertex_descriptor
+VertexHDSConcept_archetype::target(halfedge_descriptor, VertexHDSConcept_archetype const& hds) const
+{
+    return vertex_descriptor();
+}
 
 } // end namespace hdstl
 } // end namespace boost

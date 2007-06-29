@@ -91,16 +91,19 @@
 //     }
 //     HDS hds;
 //     facet_descriptor f;
+//     halfedge_descriptor h;
 //  };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_FACET_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_FACET_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
 
 namespace boost {
-namespace hdstl{
+namespace hdstl {
 namespace concepts {
 
    template <class HDS> 
@@ -118,6 +121,8 @@ namespace concepts {
        // if the type HDS does not model the 'FacetHDSConcept'.
 
        // OPAQUE TYPES
+       typedef typename hds_traits<HDS>::halfedge_descriptor 
+                                                         halfedge_descriptor; 
        typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor; 
            // The specialization of 'hds_traits<HDS>' must have these required
            // types, obeying the types requirements stated in the detailed
@@ -129,14 +134,14 @@ namespace concepts {
            // constraints of 'FacetHDSConcept' on page [facethdsconcept].
        {
            using namespace boost;
-           function_requires<HDSConcept>();
+           function_requires<HDSConcept<HDS> >();
            function_requires<DefaultConstructibleConcept<facet_descriptor> >();
            function_requires<CopyConstructibleConcept<facet_descriptor> >();
            function_requires<EqualityComparableConcept<facet_descriptor> >();
            function_requires<AssignableConcept<facet_descriptor> >();
 
-	   BOOST_STATIC_ASSERT(hds_traits<HDS>::supports_facets);
-	   f = facet(h, hds);
+           BOOST_STATIC_ASSERT(hds_traits<HDS>::supports_facets);
+           f = facet(h, hds);
            const_constraints(hds);
        }
 
@@ -145,12 +150,13 @@ namespace concepts {
            // Check that the non-modifiable 'HDS' template parameters
            // satisfies all the constraints of 'FacetHDSConcept'.
        {
-	   f = facet(h, hds);
+           f = facet(h, hds);
        }
 
      private:
        //DATA
        HDS hds;             // a halfedge data structure object
+       halfedge_descriptor h;  // a halfedge descriptor
        facet_descriptor f;  // a modifiable facet descriptor
    };
 

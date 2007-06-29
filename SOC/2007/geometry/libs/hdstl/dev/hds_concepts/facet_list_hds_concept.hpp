@@ -112,8 +112,7 @@
 //    private:
 //      HDS hds;   
 //      facet_descriptor f;
-//      facet_iterator b;
-//      facet_iterator e;
+//      facet_iterator b,e;
 //      size_type n; 
 //  };
 //..
@@ -121,10 +120,13 @@
 #ifndef BOOST_HDSTL_CONCEPTS_FACET_LIST_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_FACET_LIST_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
+#include <boost/hdstl/hds_concepts/facet_hds_concept.hpp>
 
 namespace boost {
-namespace hdstl{
+namespace hdstl {
 namespace concepts {
 
    template <class HDS> 
@@ -157,10 +159,9 @@ namespace concepts {
            // [facetlisthdsconcept].
        {
            using namespace boost;
-           function_requires<HDSConcept>();
+           function_requires<HDSConcept<HDS> >();
            function_requires<FacetHDSConcept>();
-           function_requires<hdstl_detail::ForwardIteratorConcept<
-                                                           facet_iterator> >();
+           function_requires<ForwardIteratorConcept<facet_iterator> >();
            function_requires<ConvertibleConcept<size_type,int> >();
 
            b = facets_begin(hds);
@@ -185,8 +186,7 @@ namespace concepts {
        //DATA
        HDS hds;              // a halfedge data structure object
        facet_descriptor f;   // a facet descriptor
-       facet_iterator b;     // a facet iterator
-       facet_iterator e;     // a facet iterator 
+       facet_iterator b,e;   // facet iterators
        size_type n;          // facet size type
 
    };

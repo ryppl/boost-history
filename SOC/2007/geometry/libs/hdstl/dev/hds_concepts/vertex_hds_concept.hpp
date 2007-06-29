@@ -95,13 +95,16 @@
 //    }
 //    HDS hds;
 //    vertex_descriptor v;
+//    halfedge_descriptor h;
 // };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_VERTEX_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_VERTEX_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
 
 namespace boost {
 namespace hdstl{
@@ -122,6 +125,8 @@ namespace concepts {
         // if the type HDS does not model the 'VertexHDSConcept'.
 
         // OPAQUE TYPES
+        typedef typename hds_traits<HDS>::halfedge_descriptor 
+                                                        halfedge_descriptor; 
         typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
             // The specialization of 'hds_traits<HDS>' must have these required
             // types, obeying the types requirements stated in the detailed
@@ -158,6 +163,7 @@ namespace concepts {
         //DATA
         HDS hds;               // a halfedge data structure object
         vertex_descriptor v;   // a vertex descriptor
+        halfedge_descriptor h;   // a halfedge descriptor
    };
 
 }  // close namespace concepts

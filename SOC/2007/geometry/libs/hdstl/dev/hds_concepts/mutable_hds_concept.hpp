@@ -91,7 +91,9 @@
 #ifndef BOOST_HDSTL_CONCEPTS_MUTABLE_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_MUTABLE_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
 
 namespace boost {
 namespace hdstl {
@@ -130,14 +132,6 @@ namespace concepts {
 
             h = new_edge(hds);
             delete_edge(h, hds);
-            const_constraints(hds);
-        }
-
-        // OPAQUE ACCESSORS
-        void const_constraints(HDS const& hds) 
-            // Check that the non-modifiable 'HDS' template parameters
-            // satisfies all the constraints of 'MutableHDSConcept'.
-        {
         }
 
         private:

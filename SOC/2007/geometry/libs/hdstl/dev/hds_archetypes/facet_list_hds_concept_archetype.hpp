@@ -14,7 +14,7 @@
 //..
 //  template <>
 //  struct hds_traits<FacetListHDSConcept_archetype> {
-//      typedef hdstl_detail::MultiPassInputIteratorConcept<> facet_iterator;
+//      typedef hdstl_detail::ForwardIteratorConcept<> facet_iterator;
 //      typedef size_type                      size_type;
 //  };
 //  class FacetListHDSConcept_archetype : public HDSConcept_archetype, 
@@ -54,7 +54,7 @@ struct hds_traits<FacetListHDSConcept_archetype> {
     // and 'size_type' types.
     
     // TYPES
-    typedef hdstl_detail::MultiPassInputIteratorConcept<> facet_iterator;
+    typedef hdstl_detail::ForwardIteratorConcept<> facet_iterator;
         // Facet iterator type for the 'FacetListHDSConcept' archetype.
 
     typedef size_type                      size_type;
