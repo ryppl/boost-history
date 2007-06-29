@@ -9,10 +9,13 @@
 #ifndef BOOST_ACT_INTERLOCKED_MODIFY_MODIFY_HPP
 #define BOOST_ACT_INTERLOCKED_MODIFY_MODIFY_HPP
 
-#include <boost/act/interlocked/assign_if_was/assign_if_was.hpp>
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/act/interlocked/semantics/default.hpp>
+#include <boost/act/interlocked/semantics/acq_rel.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 
@@ -25,22 +28,21 @@ typename lazy_enable_if
 ::type
 modify( TargetType& destination, OperationType operation )
 {
-  typedef typename remove_cv< TargetType >::type unqualified_type;
-  unqualified_type new_value;
+  return modify< acq_rel >( destination, operation );
+}
 
-  for( unqualified_type curr_value = interlocked::load( target )
-     ;    ( new_value = interlocked::assign_if_was
-                        ( target
-                        , operation( curr_value )
-                        , curr_value
-                        )
-          )
-       != curr_value
-     ; curr_value = new_value
-     );
-
-  // Note: new_value is the old value here
-  return new_value;
+template< typename Semantics, typename TargetType, typename OperationType >
+typename lazy_enable_if
+<
+  mpl::and_< is_same< Semantics, default_ >
+           , detail::are_valid_store_style_params< TargetType >
+           >
+, remove_cv< TargetType >
+>
+::type
+modify( TargetType& destination, OperationType operation )
+{
+  return modify< acq_rel >( destination, operation );
 }
 
 } } }

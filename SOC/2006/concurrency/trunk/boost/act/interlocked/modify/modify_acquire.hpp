@@ -12,25 +12,31 @@
 #include <boost/act/interlocked/assign_if_was/assign_if_was_acquire.hpp>
 #include <boost/act/interlocked/detail/cas_support.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/act/interlocked/semantics/acquire.hpp>
+#include <boost/act/interlocked/load/load_acquire.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 
-template< typename TargetType, typename OperationType >
+template< typename Semantics, typename TargetType, typename OperationType >
 typename lazy_enable_if
 <
-  detail::are_valid_store_style_params< TargetType >
+  mpl::and_< is_same< Semantics, acquire >
+           , detail::are_valid_store_style_params< TargetType >
+           >
 , remove_cv< TargetType >
 >
 ::type
-modify_acquire( TargetType& destination, OperationType operation )
+modify( TargetType& destination, OperationType operation )
 {
   typedef typename remove_cv< TargetType >::type unqualified_type;
   unqualified_type new_value;
 
-  for( unqualified_type curr_value = interlocked::load( target )
-     ;    ( new_value = interlocked::assign_if_was_acquire
-                        ( target
+  for( unqualified_type curr_value = interlocked::load< acquire >( destination )
+     ;    ( new_value = interlocked::assign_if_was< acquire >
+                        ( destination
                         , operation( curr_value )
                         , curr_value
                         )

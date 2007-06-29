@@ -12,5 +12,7 @@
 #include <boost/act/interlocked/modify/modify.hpp>
 #include <boost/act/interlocked/modify/modify_acquire.hpp>
 #include <boost/act/interlocked/modify/modify_release.hpp>
+#include <boost/act/interlocked/modify/modify_acq_rel.hpp>
+#include <boost/act/interlocked/modify/modify_unordered.hpp>
 
 #endif

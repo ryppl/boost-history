@@ -37,11 +37,38 @@ BOOST_PP_TUPLE_ELEM( 3, 2                                                      \
 
 // ToDo: Change to only include appropriate versions of assign_if_was
 #include <boost/act/interlocked/assign_if_was.hpp>
-#include <boost/act/interlocked/load.hpp>
+#include <boost/act/interlocked/modify.hpp>
 
 #include <boost/type_traits/remove_cv.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
+
+template< typename OperandType >
+class BOOST_PP_CAT
+      (
+        BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
+      , _default_impl_fun_object
+      )
+{
+public:
+  explicit BOOST_PP_CAT
+           (
+             BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
+           , _default_impl_fun_object
+           )
+           ( OperandType operand_init )
+    : operand_m( operand_init ) {}
+public:
+  template< typename TargetType >
+  typename remove_cv< TargetType >::type
+  operator ()( TargetType const& target ) const
+  {
+    return static_cast< typename remove_cv< TargetType >::type >
+           ( target BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_OP operand_m );
+  }
+private:
+  OperandType operand_m;
+};
 
 // ToDo: Change to minimize memory barriers (don't always use full barrier form)
 struct BOOST_PP_CAT
@@ -52,26 +79,18 @@ struct BOOST_PP_CAT
 {
   template< typename TargetType, typename OperandType >
   static typename remove_cv< TargetType >::type
-  execute( TargetType& target, OperandType operand )
+  execute( TargetType& target, OperandType const& operand )
   {
-    typedef typename remove_cv< TargetType >::type unqualified_type;
-    unqualified_type new_value;
+    typedef typename remove_cv< OperandType >::type stored_operand_type;
 
-    for( unqualified_type curr_value = interlocked::load( target )
-       ;    ( new_value = interlocked::assign_if_was
-                          ( target
-                          , curr_value
-                            BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_OP
-                            operand
-                          , curr_value
-                          )
-            )
-         != curr_value
-       ; curr_value = new_value
-       );
-
-    // Note: new_value is the old value here
-    return new_value;
+    return modify< BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_SEMANTICS >
+           ( target, BOOST_PP_CAT
+                     (
+                       BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_FULL_NAME
+                     , _default_impl_fun_object
+                     )
+                     < stored_operand_type >( operand )
+           );
   }
 };
 

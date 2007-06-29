@@ -12,5 +12,7 @@
 #include <boost/act/interlocked/modify/modify_fwd.hpp>
 #include <boost/act/interlocked/modify/modify_acquire_fwd.hpp>
 #include <boost/act/interlocked/modify/modify_release_fwd.hpp>
+#include <boost/act/interlocked/modify/modify_acq_rel_fwd.hpp>
+#include <boost/act/interlocked/modify/modify_unordered_fwd.hpp>
 
 #endif
