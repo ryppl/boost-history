@@ -93,13 +93,9 @@
 //          set_next_in_facet(h, g, hds);
 //          set_next_at_source(h, g, hds);
 //          set_next_at_target(h, g, hds);
-//          const_constraints(hds);
-//      }
-//      void const_constraints(HDS const& hds)
-//      {
 //      }
 //    private:
-//      MutableForwardHDS hds;
+//      HDS hds;
 //      halfedge_descriptor h,g;
 //  };
 //..

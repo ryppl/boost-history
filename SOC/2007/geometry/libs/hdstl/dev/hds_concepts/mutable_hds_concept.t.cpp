@@ -44,7 +44,8 @@ namespace hdstl1 {
     void
     delete_edge(mutable_hds_archetype::halfedge_descriptor,
              mutable_hds_archetype&)
-    { }
+    { 
+    }
 
 }  // namespace hdstl
 

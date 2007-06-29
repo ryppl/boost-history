@@ -107,7 +107,10 @@
 #ifndef BOOST_HDSTL_CONCEPTS_MUTABLE_BACKWARD_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_MUTABLE_BACKWARD_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/backward_hds_concept.hpp>
+#include <boost/hdstl/hds_concepts/mutable_hds_concept.hpp>
 
 namespace boost {
 namespace hdstl{
@@ -150,19 +153,11 @@ namespace concepts{
             set_prev_in_facet(h, g, hds);
             set_prev_at_source(h, g, hds);
             set_prev_at_target(h, g, hds);
-            const_constraints(hds);
-        }
-
-        // OPAQUE ACCESSORS
-        void const_constraints(HDS const& hds)
-            // Check that the non-modifiable 'HDS' template parameters
-            // satisfies all the constraints of 'MutableBackwardHDSConcept'.
-        {
         }
 
       private:
         // DATA
-        MutableBackwardHDS hds; // a halfedge data structure object
+        HDS hds; // a halfedge data structure object
         halfedge_descriptor h,g;  // halfedge descriptors
     };
 

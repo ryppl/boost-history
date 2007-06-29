@@ -53,7 +53,7 @@
 ///--------------------
 // In addition to the expression semantics of the 'VertexHDS' and the
 // 'MutableHDS' concepts:
-//  - 'set_vertex(h, v, hds)'  sets the source vertex descriptor value of 'h' to 
+//  - 'set_vertex(h, v, hds)' sets the source vertex descriptor value of 'h' to 
 //    'v' for a single halfedge in the 'hds' data structure.
 //  - 'new_vertex(hds)' adds a new vertex 'v' to the 'hds' data structure.
 //    By this operation the vertex is added but no connections to the halfedges
@@ -81,11 +81,12 @@
 //..
 //  template <class HDS> 
 //  struct MutableVertexHDSConcept {
-//     typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
+//   typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+//   typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
 //     void constraints() {
 //        using namespace boost;
-//        function_requires<HDSConcept>();
-//        function_requires<VertexHDSConcept>();
+//        function_requires<MutableHDSConcept<HDS> >();
+//        function_requires<VertexHDSConcept<HDS>> >();
 //        function_requires<DefaultConstructibleConcept<vertex_descriptor> >();
 //        function_requires<CopyConstructibleConcept<vertex_descriptor> >();
 //        function_requires<EqualityComparableConcept<vertex_descriptor> >();
@@ -93,10 +94,7 @@
 //
 //        set_vertex(h, v, hds);
 //        v = new_vertex(hds);
-//        remove_vertex(h, v, hds);
-//        const_constraints(hds);
-//     }
-//     void const_constraints(HDS const& hds) {
+//        delete_vertex(v, hds);
 //     }
 //     HDS hds;
 //     halfedge_descriptor h;
@@ -107,7 +105,10 @@
 #ifndef BOOST_HDSTL_CONCEPTS_MUTABLE_VERTEX_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_MUTABLE_VERTEX_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/vertex_hds_concept.hpp>
+#include <boost/hdstl/hds_concepts/mutable_hds_concept.hpp>
 
 namespace boost {
 namespace hdstl{
@@ -128,6 +129,7 @@ namespace concepts {
         // if the type HDS does not model the 'MutableVertexHDSConcept'.
 
         // OPAQUE TYPES
+        typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
         typedef typename hds_traits<HDS>::vertex_descriptor vertex_descriptor; 
             // The specialization of 'hds_traits<HDS>' must have these required
             // types, obeying the types requirements stated in the detailed
@@ -141,8 +143,8 @@ namespace concepts {
             // [mutablevertexhdsconcept].
         {
             using namespace boost;
-            function_requires<HDSConcept>();
-            function_requires<VertexHDSConcept>();
+            function_requires<MutableHDSConcept<HDS> >();
+            function_requires<VertexHDSConcept<HDS> >();
             function_requires<DefaultConstructibleConcept<vertex_descriptor> >();
             function_requires<CopyConstructibleConcept<vertex_descriptor> >();
             function_requires<EqualityComparableConcept<vertex_descriptor> >();
@@ -150,21 +152,12 @@ namespace concepts {
 
             set_vertex(h, v, hds);
             v = new_vertex(hds);
-            remove_vertex(hds,v);
-
-            const_constraints(hds);
-        }
-
-        // OPAQUE ACCESSORS
-        void const_constraints(HDS const& hds) 
-            // Check that the non-modifiable 'HDS' template parameters
-            // satisfies all the constraints of 'MutableVertexHDSConcept'.
-        {
+            delete_vertex(v, hds);
         }
 
       private:
         //DATA
-        MutableVertexHDS hds;  // a halfedge data structure object
+        HDS hds;  // a halfedge data structure object
         halfedge_descriptor h; // a vertex descriptor
         vertex_descriptor v;   // a vertex descriptor
    };

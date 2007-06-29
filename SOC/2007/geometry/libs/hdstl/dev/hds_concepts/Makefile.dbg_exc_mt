@@ -1,5 +1,6 @@
 CXX=g++
-CXXFLAGS=-pedantic -W -Wall -I${BOOST} -I.
+CXXFLAGS=-pedantic -W -Wall  -I.
+#CXXFLAGS=-pedantic -W -Wall -I${BOOST} -I.
 
 LD=g++
 
@@ -11,7 +12,11 @@ PACKAGE_OBJECTS=backward_hds_concept.o \
         forward_hds_concept.o \
         hds_concept.o \
         mutable_forward_hds_concept.o \
+        mutable_backward_hds_concept.o \
+        mutable_bidirectional_hds_concept.o \
         mutable_hds_concept.o \
+        mutable_facet_hds_concept.o \
+        mutable_vertex_hds_concept.o \
         vertex_hds_concept.o
 
 PACKAGE_LIBRARY=libhds_concepts.a
@@ -22,7 +27,11 @@ TEST_DRIVERS=backward_hds_concept.t \
         forward_hds_concept.t \
         hds_concept.t \
         mutable_forward_hds_concept.t \
+        mutable_backward_hds_concept.t \
+        mutable_bidirectional_hds_concept.t \
         mutable_hds_concept.t \
+        mutable_facet_hds_concept.t \
+        mutable_vertex_hds_concept.t \
         vertex_hds_concept.t
 
 .SUFFIXES:
@@ -47,7 +56,16 @@ forward_hds_concept.o: hds_concept.hpp
 hds_concept.o: 
 mutable_forward_hds_concept.o: forward_hds_concept.hpp \
         hds_concept.hpp mutable_hds_concept.hpp
+mutable_backward_hds_concept.o: backward_hds_concept.hpp \
+        hds_concept.hpp mutable_hds_concept.hpp
+mutable_bidirectional_hds_concept.o: mutable_forward_hds_concept.hpp \
+        mutable_backward_hds_concept.hpp  hds_concept.hpp \
+		mutable_hds_concept.hpp
 mutable_hds_concept.o: hds_concept.hpp
+mutable_facet_hds_concept.o: facet_hds_concept.hpp \
+        mutable_hds_concept.hpp
+mutable_vertex_hds_concept.o: vertex_hds_concept.hpp \
+        mutable_hds_concept.hpp
 vertex_hds_concept.o: hds_concept.hpp
 
 
@@ -67,7 +85,16 @@ forward_hds_concept.t.o: hds_concept.hpp
 hds_concept.t.o: 
 mutable_forward_hds_concept.t.o: forward_hds_concept.hpp \
         hds_concept.hpp mutable_hds_concept.hpp
+mutable_backward_hds_concept.t.o: backward_hds_concept.hpp \
+        hds_concept.hpp mutable_hds_concept.hpp
+mutable_bidirectional_hds_concept.t.o: mutable_forward_hds_concept.hpp \
+        mutable_backward_hds_concept.hpp hds_concept.hpp \
+		mutable_hds_concept.hpp
 mutable_hds_concept.t.o: hds_concept.hpp
+mutable_facet_hds_concept.t.o: facet_hds_concept.hpp \
+        mutable_hds_concept.hpp
+mutable_vertex_hds_concept.t.o: vertex_hds_concept.hpp \
+        mutable_hds_concept.hpp
 vertex_hds_concept.t.o: hds_concept.hpp
 
 %.t.o: %.t.cpp %.h
@@ -81,7 +108,16 @@ forward_hds_concept.t.o: hds_concept.o
 hds_concept.t.o: 
 mutable_forward_hds_concept.t.o: forward_hds_concept.o \
         hds_concept.o mutable_hds_concept.o
+mutable_backward_hds_concept.t.o: backward_hds_concept.o \
+        hds_concept.o mutable_hds_concept.o
+mutable_bidirectional_hds_concept.t.o: mutable_forward_hds_concept.hpp \
+        mutable_backward_hds_concept.o  hds_concept.o \
+		mutable_hds_concept.o
 mutable_hds_concept.t.o: hds_concept.o
+mutable_facet_hds_concept.o: facet_hds_concept.o \
+        mutable_hds_concept.o
+mutable_vertex_hds_concept.o: vertex_hds_concept.o \
+        mutable_hds_concept.o
 vertex_hds_concept.t.o: hds_concept.o
 
 

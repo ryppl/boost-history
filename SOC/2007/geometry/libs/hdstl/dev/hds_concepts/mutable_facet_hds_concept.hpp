@@ -79,7 +79,8 @@
 //..
 //  template <class HDS> 
 //  struct MutableFacetHDSConcept {
-//     typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor; 
+//   typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
+//   typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor; 
 //     void constraints() {
 //        using namespace boost;
 //        function_requires<HDSConcept>();
@@ -103,7 +104,10 @@
 #ifndef BOOST_HDSTL_CONCEPTS_MUTABLE_FACET_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_MUTABLE_FACET_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/facet_hds_concept.hpp>
+#include <boost/hdstl/hds_concepts/mutable_hds_concept.hpp>
 
 namespace boost {
 namespace hdstl{
@@ -124,6 +128,7 @@ namespace concepts {
        // if the type HDS does not model the 'MutableFacetHDSConcept'.
 
        // OPAQUE TYPES
+       typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor; 
        typedef typename hds_traits<HDS>::facet_descriptor facet_descriptor; 
            // The specialization of 'hds_traits<HDS>' must have these required
            // types, obeying the types requirements stated in the detailed
@@ -137,7 +142,8 @@ namespace concepts {
            // [mutablefacethdsconcept].
        {
            using namespace boost;
-           function_requires<HDSConcept>();
+           function_requires<FacetHDSConcept<HDS> >();
+           function_requires<MutableHDSConcept<HDS> >();
            function_requires<DefaultConstructibleConcept<facet_descriptor> >();
            function_requires<CopyConstructibleConcept<facet_descriptor> >();
            function_requires<EqualityComparableConcept<facet_descriptor> >();
@@ -146,19 +152,11 @@ namespace concepts {
            set_facet(h, f, hds);
            f = new_facet(hds);
            delete_facet(f, hds);
-           const_constraints(hds);
-       }
-
-       // OPAQUE ACCESSORS
-       void const_constraints(HDS const& hds) 
-           // Check that the non-modifiable 'HDS' template parameters
-           // satisfies all the constraints of 'MutableFacetHDSConcept'.
-       {
        }
 
      private:
        //DATA
-       MutableFacetHDS hds;     // a halfedge data structure object
+       HDS hds;     // a halfedge data structure object
        halfedge_descriptor h;   // a halfedge descriptor
        facet_descriptor f;      // a facet descriptor
    };

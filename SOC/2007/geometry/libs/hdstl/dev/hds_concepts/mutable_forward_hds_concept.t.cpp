@@ -24,10 +24,9 @@ namespace hdstl1 {
         // This 'struct', intentionally defined in a namespace different from
         // 'hdstl', the 'hds_traits' specialization defined in the namespace
         // 'hdstl', and the supporting functions 'opposite', 'next_in_facet',
-        // 'next_at_source', and 'next_at_target' defined in the same
-        // namespace as this 'struct' to take advantage of ADL
-        // (argument-dependent lookup) provide an archetype for the 'MutableForwardHDS'
-        // concept.
+        // 'next_at_source', and 'next_at_target' defined in the same namespace
+        // as this 'struct' to take advantage of ADL (argument-dependent
+        // lookup) provide an archetype for the 'MutableForwardHDS' concept.
 
         typedef int halfedge_descriptor;
         typedef TT  traversal_category;
@@ -104,12 +103,14 @@ namespace hdstl1 {
     typename mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor
     new_edge(mutable_forward_hds_archetype<ForwardCategory>&)
     {
-        return typename mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor();
+        return typename mutable_forward_hds_archetype<ForwardCategory>
+                                                        ::halfedge_descriptor();
     }
 
     template<typename ForwardCategory>
     void
-    delete_edge(typename mutable_forward_hds_archetype<ForwardCategory>::halfedge_descriptor,
+    delete_edge(typename mutable_forward_hds_archetype<ForwardCategory>
+                                                          ::halfedge_descriptor,
                 mutable_forward_hds_archetype<ForwardCategory>&)
     {
     }
@@ -151,7 +152,8 @@ struct class_concept_requirements
 template <class HDS>
 bool concept_requirements()
 {
-    boost::function_requires<boost::hdstl::concepts::MutableForwardHDSConcept<HDS> >();
+    boost::function_requires<
+                     boost::hdstl::concepts::MutableForwardHDSConcept<HDS> >();
     class_concept_requirements<HDS>(); // force instantiation
     return true;
 }
@@ -159,10 +161,13 @@ bool concept_requirements()
 int test_main(int, char **)
 {
     BOOST_CHECK(( concept_requirements<
-         hdstl1::mutable_forward_hds_archetype<boost::hdstl::next_in_facet_tag> >() ));
+         hdstl1::mutable_forward_hds_archetype<
+                                        boost::hdstl::next_in_facet_tag> >() ));
     BOOST_CHECK(( concept_requirements<
-         hdstl1::mutable_forward_hds_archetype<boost::hdstl::next_at_source_tag> >() ));
+         hdstl1::mutable_forward_hds_archetype<
+                                       boost::hdstl::next_at_source_tag> >() ));
     BOOST_CHECK(( concept_requirements<
-         hdstl1::mutable_forward_hds_archetype<boost::hdstl::next_at_target_tag> >() ));
+         hdstl1::mutable_forward_hds_archetype<
+                                       boost::hdstl::next_at_target_tag> >() ));
     return 0;
 }

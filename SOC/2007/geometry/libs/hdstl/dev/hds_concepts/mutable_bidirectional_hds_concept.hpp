@@ -80,16 +80,18 @@
 //        function_requires<ConvertibleConcept<traversal_category,
 //                                           bidirectional_traversal_tag> >();  
 //     }
-//     void const_constraints(HDS const& hds) {
-//     }
-//     MutableBidirectionalHDS hds;
+//     HDS hds;
 //  };
 //..
 
 #ifndef BOOST_HDSTL_CONCEPTS_MUTABLE_BIDIRECTIONAL_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_MUTABLE_BIDIRECTIONAL_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/mutable_forward_hds_concept.hpp>
+#include <boost/hdstl/hds_concepts/mutable_backward_hds_concept.hpp>
+#include <boost/hdstl/hds_concepts/bidirectional_hds_concept.hpp>
 
 namespace boost {
 namespace hdstl{
@@ -133,17 +135,9 @@ namespace concepts{
                                                  bidirectional_traversal_tag> >();  
         }
 
-        // OPAQUE ACCESSORS
-        void const_constraints(HDS const& hds)
-            // Check that the non-modifiable 'HDS' template parameters
-            // satisfies all the constraints of 
-            // 'MutableBidirectionalHDSConcept'.
-        {
-        }
-
       private:
         //DATA
-        MutableBidirectionalHDS hds;     // a halfedge data structure object
+        HDS hds;     // a halfedge data structure object
    };
 
 }  // close namespace concepts
