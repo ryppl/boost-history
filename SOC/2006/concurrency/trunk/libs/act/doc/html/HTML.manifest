@@ -6,7 +6,8 @@ boost_act/compiler_setup.html
 boost_act/interlocked.html
 boost_act/interlocked/interlocked_concepts.html
 boost_act/interlocked/interlocked_concepts/interlocked_operation.html
-boost_act/interlocked/interlocked_concepts/interlocked_basic_type.html
+boost_act/interlocked/interlocked_concepts/interlocked_type.html
+boost_act/interlocked/interlocked_concepts/interlocked_natural_type.html
 boost_act/interlocked/interlocked_concepts/interlocked_arithmetic_type.html
 boost_act/interlocked/interlocked_concepts/interlocked_integer_type.html
 boost_act/rationale.html

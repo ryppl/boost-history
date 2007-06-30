@@ -2,8 +2,8 @@
 
 [heading Description]
 
-An [concept Interlocked Arithmetic Type] is an __interlocked_basic_type__ which
-supports common arithmetic operations.
+An [concept Interlocked Arithmetic Type] is an __interlocked_natural_type__
+which supports common arithmetic operations.
 
 [variablelist Notation
 [[`I`]            [An [concept Interlocked Arithmetic Type].]                  ]
@@ -13,15 +13,15 @@ supports common arithmetic operations.
 ]
 
 [heading Refinement of]
-__interlocked_type__
+__interlocked_natural_type__
 
 [heading Expression Requirements]
 
 In order to be considered a valid [concept Interlocked Arithmetic Type], given
 the variable definitions below, the following expressions must be well-formed
 and have the indicated effects, in addition to those requirements of
-__interlocked_basic_type__. [concept Interlocked Arithmetic Types] also support
-all operations specified in the C++ standard for arithmetic types. Such
+__interlocked_natural_type__. [concept Interlocked Arithmetic Types] also
+support all operations specified in the C++ standard for arithmetic types. Such
 operations do not imply memory barriers of any kind.
 
 [note
