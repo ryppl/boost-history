@@ -7,8 +7,6 @@
 
 [endsect]
 
-[include concepts/interlocked_type.qbk]
-
 [section Queue Concepts]
 
 [include concepts/pc_queue.qbk]

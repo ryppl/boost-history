@@ -1,0 +1,82 @@
+[section Interlocked Arithmetic Type]
+
+[heading Description]
+
+An [concept Interlocked Arithmetic Type] is an __interlocked_basic_type__ which
+supports common arithmetic operations.
+
+[variablelist Notation
+[[`I`]            [An [concept Interlocked Arithmetic Type].]                  ]
+[[`i`]            [A value of type `I`.]                                       ]
+[[`C1`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
+[[`c1`]           [A value of type `C1 const&`.]                               ]
+]
+
+[heading Refinement of]
+__interlocked_type__
+
+[heading Expression Requirements]
+
+In order to be considered a valid [concept Interlocked Arithmetic Type], given
+the variable definitions below, the following expressions must be well-formed
+and have the indicated effects, in addition to those requirements of
+__interlocked_basic_type__. [concept Interlocked Arithmetic Types] also support
+all operations specified in the C++ standard for arithmetic types. Such
+operations do not imply memory barriers of any kind.
+
+[note
+Each of the following operations is a valid __interlocked_operation__, therefore
+user-specified semantics may be applied. In addition to this, all operations
+listed below have a return type of `boost::remove_cv<IV>::type` and yield the
+value of target object prior to the operation being applied. Allowed
+user-specified semantics for these operations are `acquire`, `release`,
+`acq_rel`, `unordered`, and `default_`. If no semantics are explicitly specified
+or if `default_` semantics are specified, then the operation is performed with
+`acq_rel` semantics.
+]
+
+[table Interlocked Arithmetic Type Requirements
+[[Expression]                 [Operation (Returns Old Value)]                  ]
+[[`add_assign( i, c1 )`]      [`i += c1;`]                                     ]
+[[`decrement( i )`]           [`--i;`]                                         ]
+[[`divide_assign( i, c1 )`]   [`i /= c1;`]                                     ]
+[[`increment( i )`]           [`++i;`]                                         ]
+[[`multiply_assign( i, c1 )`] [`i *= c1;`]                                     ]
+[[`subtract_assign( i, c1 )`] [`i -= c1;`]                                     ]
+]
+
+[heading Headers]
+
+``
+  // Brings in all interlocked operations.
+  #include <boost/act/interlocked.hpp>
+  
+  // Only forward declarations.
+  #include <boost/act/interlocked_fwd.hpp>
+  
+  // increment headers.
+  #include <boost/act/interlocked/increment.hpp>
+  #include <boost/act/interlocked/increment/increment.hpp>
+  #include <boost/act/interlocked/increment/increment_acquire.hpp>
+  #include <boost/act/interlocked/increment/increment_release.hpp>
+  #include <boost/act/interlocked/increment/increment_acq_rel.hpp>
+  #include <boost/act/interlocked/increment/increment_unordered.hpp>
+  
+  
+  // Forward declarations.
+  #include <boost/act/interlocked/increment_fwd.hpp>
+  #include <boost/act/interlocked/increment/increment_fwd.hpp>
+  /* etc. */
+  
+  
+  // decrement headers.
+  #include <boost/act/interlocked/decrement.hpp>
+  #include <boost/act/interlocked/decrement/decrement.hpp>
+  /* etc. */
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // Headers for the remaining operations follow the same pattern as above. //
+  ////////////////////////////////////////////////////////////////////////////
+``
+
+[endsect]

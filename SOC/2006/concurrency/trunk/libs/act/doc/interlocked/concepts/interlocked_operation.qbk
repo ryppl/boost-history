@@ -1,0 +1,83 @@
+[section Interlocked Operation]
+
+An [concept Interlocked Operation] is a function which provides guarantees
+concerning order and visibility of read and write operations with respect to
+multiple threads, often with semantics which may be specified by users at the
+call site.
+
+In order to be considered a valid [concept Interlocked Operation], given
+the variable definitions below, the following expressions must be well-formed
+and have the indicated effects.
+
+[variablelist Notation
+[[[~name]][An       [concept Interlocked Operation].]                          ]
+[[`S`]              [A __semantic_type__.]                                     ]
+[[[~args]]          [The argument list (if any) for the
+                     [concept Interlocked Operation].
+                    ]                                                          ]
+]
+
+[def __op_call__                  name(args)   ]
+[def __op_call_sem__              name<S>(args)]
+
+[heading Expression Requirements]
+
+[table Interlocked Operation Requirements
+[[Expression]                             [Pre/Post-Condition]                 ]
+[[`__op_call__`]                          [Performs the operation with the
+                                           default semantics as specified for
+                                           that operation.
+                                          ]                                    ]
+[[`__op_call_sem__`]                      [Performs the operation with the
+                                           specified semantics.
+                                           [tablenote Not all
+                                            [concept Interlocked Operations]
+                                            support every __semantic_type__.
+                                            Refer to documentation for the
+                                            corresponding operation for exactly
+                                            which semantics are supported for
+                                            that operation. All
+                                            [concept Interlocked Operations]
+                                            must support the `default_`
+                                            __semantic_type__.
+                                           ]
+                                          ]                                    ]
+]
+
+[heading Semantic Type]
+
+While all [concept Interlocked Operations] specify certain guarantees by
+default, these may often be toggled to make an operation's ordering more or less
+constrained by passing a [concept Semantic Type] as an explicit template
+argument to the corresponding template. Not all [concept Interlocked Operations]
+support all [concept Semantic Types].
+
+[note
+If you are unsure as to which semantics you should use for a given situation, it
+is generally safest to use the default semantics of the corresponding
+[concept Interlocked Operation]. If efficiency is important for your
+application, you should prefer to use the least-restrictive semantics that you
+can without breaking allowable ordering of visibility between threads.
+]
+
+[table Semantic Types
+[[Type]       [Ordering Guarantee]                                             ]
+[[`unordered`][No ordering guarantee.]                                         ]
+[[`acquire`]  [The operation is made visible before all subsequent instructions.
+               `acquire` semantics are generally used for read or read-write
+               operations.
+              ]                                                                ]
+[[`release`]  [The operation is made visible after all prior instructions.
+               `release` semantics are generally used for write or read-write
+               operations.
+              ]                                                                ]
+[[`acq_rel`]  [Combines the ordering guarantees of both `acquire` and `release`.
+               `acq_rel` semantics are generally used for read-write operations
+               only.
+              ]                                                                ]
+[[`default_`] [Uses the default ordering guarantees as specified by the
+               corresponding [concept Interlocked Operation].
+              ]                                                                ]
+]
+
+[endsect]

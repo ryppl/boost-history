@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Integer</title><link rel="stylesheet" href="../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../index.html" title="Boost.Act" /><link rel="up" href="../index.html" title="Boost.Act" /><link rel="prev" href="concepts/queue_concepts/queue_policy.html" title="Queue Policy" /><link rel="next" href="interlocked_integer/integer_typedefs.html" title="Integer Typedefs" /><script type="text/javascript" src="../../../doc/javascript/main.js"></script>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked</title><link rel="stylesheet" href="../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../index.html" title="Boost.Act" /><link rel="up" href="../index.html" title="Boost.Act" /><link rel="prev" href="compiler_setup.html" title="Compiler Setup" /><link rel="next" href="interlocked/interlocked_concepts.html" title="Interlocked Concepts" /><script type="text/javascript" src="../../../doc/javascript/main.js"></script>
       <script type="text/javascript" > <!--
          boostscript.init( new Array(
             boostscript.nested_links,
@@ -56,7 +56,7 @@
     </div>
     <div class="spirit-nav">
       <div class="spirit-nav-icon">
-        <a accesskey="p" href="concepts/queue_concepts/queue_policy.html">
+        <a accesskey="p" href="compiler_setup.html">
           <div class="prev-icon"></div>
         </a>
       </div>
@@ -71,7 +71,7 @@
         </a>
       </div>
       <div class="spirit-nav-icon">
-        <a accesskey="n" href="interlocked_integer/integer_typedefs.html">
+        <a accesskey="n" href="interlocked/interlocked_concepts.html">
           <div class="next-icon"></div>
         </a>
       </div>
@@ -83,7 +83,7 @@
             <div class="titlepage">
               <div>
                 <div>
-                  <h2 class="title"><a id="boost_act.interlocked_integer"></a><a href="interlocked_integer.html" title="Interlocked Integer">Interlocked Integer</a></h2>
+                  <h2 class="title"><a id="boost_act.interlocked"></a><a href="interlocked.html" title="Interlocked">Interlocked</a></h2>
                 </div>
               </div>
             </div>
@@ -96,10 +96,38 @@
                   <dl>
                     <dt>
                       <span class="section">
-                        <a href="interlocked_integer/integer_typedefs.html">Integer
-      Typedefs</a>
+                        <a href="interlocked/interlocked_concepts.html">Interlocked
+      Concepts</a>
                       </span>
                     </dt>
+                    <dd>
+                      <dl>
+                        <dt>
+                          <span class="section">
+                            <a href="interlocked/interlocked_concepts/interlocked_operation.html">Interlocked
+        Operation</a>
+                          </span>
+                        </dt>
+                        <dt>
+                          <span class="section">
+                            <a href="interlocked/interlocked_concepts/interlocked_basic_type.html">Interlocked
+        Basic Type</a>
+                          </span>
+                        </dt>
+                        <dt>
+                          <span class="section">
+                            <a href="interlocked/interlocked_concepts/interlocked_arithmetic_type.html">Interlocked
+        Arithmetic Type</a>
+                          </span>
+                        </dt>
+                        <dt>
+                          <span class="section">
+                            <a href="interlocked/interlocked_concepts/interlocked_integer_type.html">Interlocked
+        Integer Type</a>
+                          </span>
+                        </dt>
+                      </dl>
+                    </dd>
                   </dl>
                 </div>
                 <div class="box-bottom-left"></div>
@@ -107,51 +135,6 @@
                 <div class="box-bottom"></div>
               </div>
             </div>
-            <a id="boost_act.interlocked_integer.header"></a>
-            <h4><a id="id465200"></a>
-      <a href="interlocked_integer.html#boost_act.interlocked_integer.header">Header</a>
-    </h4>
-            <div class="programlisting">
-              <div class="box-outer-wrapper">
-                <div class="box-top-left"></div>
-                <div class="box-top-right"></div>
-                <div class="box-top"></div>
-                <div class="box-inner-wrapper">
-                  <div class="style-switcher-box" id="id465217">
-      <script type="text/javascript" > <!--
-          boostscript.call( boostscript.style_switcher, 'insert_style_selector',
-             'id465217',
-             '../../../doc/style/html/syntax.xml',
-             '../../../doc/style/html'
-          );
-      //--></script>
-</div>
-                  <pre>
-<span class="comment">// Primary header (includes all other associated headers)
-</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-
-<span class="comment">// Secondary headers (for more fine-grained inclusion)
-</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">selection</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-</pre>
-                </div>
-                <div class="box-bottom-left"></div>
-                <div class="box-bottom-right"></div>
-                <div class="box-bottom"></div>
-              </div>
-            </div>
-            <a id="boost_act.interlocked_integer.description"></a>
-            <h4><a id="id465452"></a>
-      <a href="interlocked_integer.html#boost_act.interlocked_integer.description">Description</a>
-    </h4>
-            <p>
-      <code class="literal">Boost.Act</code> exposes several methods for retrieving types which
-      are models of <a href="concepts/interlocked_concepts.html" title="Interlocked Concepts"> <code class="literal">Interlocked
-      Type</code></a> including common typedefs and template metafunctions
-      similar to those found in <code class="literal">Boost.Integer</code>. The following types
-      and typedefs are all found in the <code class="computeroutput"><span class="special">::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">interlocked</span></code>
-      namespace.
-    </p>
           </div>
         </div>
         <div class="clear"></div>
@@ -159,7 +142,7 @@
     </div>
     <div class="spirit-nav">
       <div class="spirit-nav-icon">
-        <a accesskey="p" href="concepts/queue_concepts/queue_policy.html">
+        <a accesskey="p" href="compiler_setup.html">
           <div class="prev-icon"></div>
         </a>
       </div>
@@ -174,7 +157,7 @@
         </a>
       </div>
       <div class="spirit-nav-icon">
-        <a accesskey="n" href="interlocked_integer/integer_typedefs.html">
+        <a accesskey="n" href="interlocked/interlocked_concepts.html">
           <div class="next-icon"></div>
         </a>
       </div>

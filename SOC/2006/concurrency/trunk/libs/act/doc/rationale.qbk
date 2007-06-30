@@ -4,7 +4,7 @@ Boost.Act is a fairly large library and makes some controversial design
 decisions. This section is provided to briefly describe the rationale behind
 some of these decisions.
 
-[section Policy-Based Design]
+[heading Policy-Based Design]
 
 Boost.Act offers programmers customizability through two kinds of policies which
 control algorithm execution and active qualification implementation. These
@@ -39,9 +39,7 @@ unwanted behavior is being caused by multi-threading issues or if there is a
 more simple logical problem which exists at a higher-level in the algorithm's
 design.
 
-[endsect]
-
-[section Actions vs. Futures]
+[heading Actions vs. Futures]
 
 Another fairly controversial design decision is the absence of futures, or at
 least futures as they are commonly known. Rather than returning futures from
@@ -61,7 +59,5 @@ active-unqualified form of the result type using =inactive_value=, forcing a
 wait for the function to complete. This gives actions of Boost.Act a superset of
 the functionality provided by futures meaning that those who wish to use actions
 in a future-like manner may do so.
-
-[endsect]
 
 [endsect]

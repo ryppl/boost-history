@@ -1,0 +1,82 @@
+[section Interlocked Basic Type]
+
+[heading Description]
+
+An [concept Interlocked Basic Type] is a type whose instances support
+thread-safe `load` and `store` operations and which are often used in the
+implementation of lock-free code. In the current version of Boost.Act, only
+built-in types may be [concept Interlocked Basic Types], although this will
+likely change in future releases.
+
+[variablelist Notation
+[[`I`]            [An [concept Interlocked Basic Type].]                       ]
+[[`i`]            [A value of type `I&`.]                                      ]
+[[`C1`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
+[[`c1`]           [A value of type `C1 const&`.]                               ]
+[[`IU`]           [`remove_cv<I>::type`.]                                      ]
+]
+
+[heading Expression Requirements]
+
+In order to be considered a valid [concept Interlocked Type], the type must be
+/default constructible/, /copy-constructible/, and /copy-assignable/. These
+operations are not interlocked operations and do not guarantee a specific
+ordering of any kind.
+
+[note
+Each of the following operations is a valid __interlocked_operation__, therefore
+user-specified semantics may be applied. In addition to this, all operations
+listed below have a return type of `boost::remove_cv<IV>::type` and yield the
+value of target object prior to the operation being applied. Allowed
+user-specified semantics for these operations are `acquire`, `release`,
+`acq_rel`, `unordered`, and `default_`. If no semantics are explicitly specified
+or if `default_` semantics are specified, then the operation is performed with
+`acq_rel` semantics.
+]
+
+[table Interlocked Type Requirements
+[[Expression]           [Return Type][Pre/Post-Condition]                      ]
+[[`load( i )`]          [`IU`]       [Returns the value stored in `i`. This
+                                      function is an
+                                      __interlocked_operation__ and defaults to
+                                      `acquire` semantics. Allowable semantics
+                                      for this operation are `unordered` and
+                                      `acquire`.
+                                     ]                                         ]
+[[`store( i, c1 )`]     [`void`]     [Stores the value of `c1` to object `i`.
+                                      This function is an
+                                      __interlocked_operation__ and defaults to
+                                      `release` semantics. Allowable semantics
+                                      for this operation are `unordered` and
+                                      `release`.
+                                     ]                                         ]
+]
+
+[heading Headers]
+
+``
+  // Brings in all interlocked operations.
+  #include <boost/act/interlocked.hpp>
+  
+  // Only forward declarations.
+  #include <boost/act/interlocked_fwd.hpp>
+  
+  // load headers.
+  #include <boost/act/interlocked/load.hpp>
+  #include <boost/act/interlocked/load/load.hpp>
+  #include <boost/act/interlocked/load/load_acquire.hpp>
+  #include <boost/act/interlocked/load/load_unordered.hpp>
+  
+  // Forward declarations.
+  #include <boost/act/interlocked/load_fwd.hpp>
+  #include <boost/act/interlocked/load/load_fwd.hpp>
+  /* etc. */
+  
+  
+  // store headers.
+  #include <boost/act/interlocked/store.hpp>
+  #include <boost/act/interlocked/store/store.hpp>
+  /* etc. */
+``
+
+[endsect]
