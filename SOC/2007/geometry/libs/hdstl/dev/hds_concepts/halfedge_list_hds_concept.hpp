@@ -93,7 +93,7 @@
 //      void constraints() 
 //      {
 //          using namespace boost;
-//          function_requires<HDSConcept>();
+//          function_requires<HDSConcept<HDS> >();
 //          function_requires<DefaultConstructibleConcept<halfedge_descriptor> >();
 //          function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
 //          function_requires<EqualityComparableConcept<halfedge_descriptor> >();
@@ -119,7 +119,9 @@
 #ifndef BOOST_HDSTL_CONCEPTS_HALFEDGE_LIST_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_HALFEDGE_LIST_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
 
 namespace boost {
 namespace hdstl{
@@ -142,7 +144,7 @@ namespace concepts {
        // OPAQUE TYPES
        typedef typename hds_traits<HDS>::halfedge_iterator  halfedge_iterator;
        typedef typename hds_traits<HDS>::halfedge_descriptor halfedge_descriptor;
-       typedef typename hds_traits<HDS>::halfedges_size_type halfedges_size_type;
+       typedef typename hds_traits<HDS>::size_type size_type;
        // The specialization of 'hds_traits<HDS>' must have these required
        // types, obeying the types requirements stated in the detailed
        // description of the 'HalfedgeListHDS' concept on page 
@@ -155,13 +157,13 @@ namespace concepts {
            // [halfedgelisthdsconcept].
        {
            using namespace boost;
-           function_requires<HDSConcept>();
+           function_requires<HDSConcept<HDS> >();
            function_requires<DefaultConstructibleConcept<halfedge_descriptor> >();
            function_requires<CopyConstructibleConcept<halfedge_descriptor> >();
            function_requires<EqualityComparableConcept<halfedge_descriptor> >();
            function_requires<AssignableConcept<halfedge_descriptor> >();
            function_requires<ForwardIteratorConcept<halfedge_iterator> >();
-           function_requires<ConvertibleConcept<halfedge_size_type> >();
+           function_requires<ConvertibleConcept<size_type,int> >();
            const_constraints(hds);
        }
 

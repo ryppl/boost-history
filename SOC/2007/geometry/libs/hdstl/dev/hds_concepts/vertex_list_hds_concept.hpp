@@ -109,7 +109,7 @@
 //         n = num_vertices(hds);
 //     }
 //     private:
-//     VertexListHDS hds; 
+//     HDS hds; 
 //     vertex_descriptor v;
 //     vertex_iterator b;
 //     vertex_iterator e;
@@ -120,7 +120,10 @@
 #ifndef BOOST_HDSTL_CONCEPTS_VERTEX_LIST_HDS_CONCEPT_HPP
 #define BOOST_HDSTL_CONCEPTS_VERTEX_LIST_HDS_CONCEPT_HPP 1
 
-#include <boost/concepts.h>
+#include <boost/concept_check.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/hdstl/hds_concepts/hds_concept.hpp>
+#include <boost/hdstl/hds_concepts/vertex_hds_concept.hpp>
 
 namespace boost {
 namespace hdstl{

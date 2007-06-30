@@ -160,7 +160,7 @@ namespace concepts {
        {
            using namespace boost;
            function_requires<HDSConcept<HDS> >();
-           function_requires<FacetHDSConcept>();
+           function_requires<FacetHDSConcept<HDS> >();
            function_requires<ForwardIteratorConcept<facet_iterator> >();
            function_requires<ConvertibleConcept<size_type,int> >();
 
