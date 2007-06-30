@@ -22,7 +22,7 @@ way that one may switch between immediate, concurrent, lazy evaluation, or a
 user-provided evaluation strategy on a case-by-case basis with potentially no
 runtime cost to the application.
 
-[section Polymorphic Algorithms]
+[heading Polymorphic Algorithms]
 
 For the scope of this library, a polymorphic algorithm is considered to be an
 algorithm whose model of execution may vary depending on policies passed
@@ -40,9 +40,7 @@ the execution model of the algorithm. Along with the standard algorithms
 provided by the STL, other templates are also included for the sole purpose of
 the creation of user-defined polymorphic algorithms.
 
-[endsect]
-
-[section Algorithm Models]
+[heading Algorithm Models]
 
 By default, Boost.Act algorithms are performed in parallel whenever possible.
 Algorithm models are types which are used as policies to alter this behavior
@@ -52,9 +50,7 @@ calls to be made in a single thread. Users may also create their own algorithm
 models if the desired behavior is not provided by either of those included with
 the library.
 
-[endsect]
-
-[section Actions]
+[heading Actions]
 
 It is often desirable to be able to signal a function, perform other unrelated
 operations, and then eventually wait for the signaled function's completion. In
@@ -67,9 +63,7 @@ function's completion if you need the effects to have taken place prior to
 reaching a certain point in code. Actions also provide an indirect interface to
 the result of a signaled function.
 
-[endsect]
-
-[section Active Objects]
+[heading Active Objects]
 
 Much like we have a way of decoupling the signaling of a function from the
 actual invocation of that function, Boost.Act also provides a way to separate
@@ -80,15 +74,5 @@ serialized, it makes it easy to signal several functions which all deal with the
 same object without having to worry that one call may occur while another is
 executing, and with the guarantee that they are called in the same order as they
 were signaled.
-
-[endsect]
-
-[section Atomic Objects]
-
-Frequently when working with multithreaded applications, a need arises to access
-a single object from multiple threads. Atomic objects are objects whose
-associated operations may be safely called by any number of threads.
-
-[endsect]
 
 [endsect]

@@ -4,7 +4,7 @@
 documentation that follows details both features which are fully implemented and
 those which are partially. Because of this, =Boost.Act= is currently only
 recommended for testing and experimentation. Current compilers used during
-testing are Visual C++ 8.0, MinGW, and Intel 9.1.
+testing are Visual C++ 8.0, GCC 4.2, and Intel 10, all targeting x86.
 ]
 
 [endsect]

@@ -1,187 +1,43 @@
 [section Interlocked Arithmetic Type]
 
-An [concept Interlocked Arithmetic Type] is an __interlocked_type__ which
+An [concept Interlocked Arithmetic Type] is an __interlocked_basic_type__ which
 supports common arithmetic operations.
 
 In order to be considered a valid [concept Interlocked Arithmetic Type], given
 the variable definitions below, the following expressions must be well-formed
 and have the indicated effects, in addition to those requirements of
-__interlocked_type__. [concept Interlocked Arithmetic Types] also support
+__interlocked_basic_type__. [concept Interlocked Arithmetic Types] also support
 all operations specified in the C++ standard for arithmetic types. Such
 operations do not imply memory barriers of any kind.
 
+[note
+Each of the following operations is a valid __interlocked_operation__, therefore
+user-specified semantics may be applied. In addition to this, all operations
+listed below have a return type of `boost::remove_cv<IV>::type` and yield the
+value of target object prior to the operation being applied. Allowed
+user-specified semantics for these operations are `acquire`, `release`,
+`acq_rel`, `unordered`, and `default_`. If no semantics are explicitly specified
+or if `default_` semantics are specified, then the operation is performed with
+`acq_rel` semantics.
+]
+
 [variablelist Interlocked Arithmetic Type Descriptive Variable Definitions
 [[`I`]            [An [concept Interlocked Arithmetic Type].]                  ]
-[[`IV`]           [`I volatile`.]                                              ]
-[[`C1`]           [A type which is convertible to `IV`.]                       ]
-[[`iv`]           [Value of type `I volatile&`.]                               ]
-[[`c1`]           [Value of type `C1 const&`.]                                 ]
+[[`i`]            [A value of type `I`.]                                       ]
+[[`C1`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
+[[`c1`]           [A value of type `C1 const&`.]                               ]
 ]
 
 [heading Expression Requirements]
 
 [table Interlocked Arithmetic Type Requirements
-[[Expression]                         [Return Type][Pre/Post-Condition]        ]
-[[`increment( iv )`]     [`increment_result<IV>::type`]
-                                                   [Increments `iv` with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`increment_acquire( iv )`]
-                                      [`increment_result<IV>::type`]
-                                                   [Increments `iv` with
-                                                    /acquire/ memory semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`increment_release( iv )`]
-                                      [`increment_result<IV>::type`]
-                                                   [Increments `iv` with
-                                                    /release/ memory semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`decrement( iv )`]     [`decrement_result<IV>::type`]
-                                                   [Decrements `iv` with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`decrement_acquire( iv )`]
-                                      [`decrement_result<IV>::type`]
-                                                   [Decrements `iv` with
-                                                    /acquire/ memory semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`decrement_release( iv )`]
-                                      [`decrement_result<IV>::type`]
-                                                   [Decrements `iv` with
-                                                    /release/ memory semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`add_assign( iv, c1 )`][`add_assign_result<IV>::type`]
-                                                   [Adds `c1` to `iv` and stores
-                                                    the result in `iv` with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`add_assign_acquire( iv, c1 )`]
-                                      [`add_assign_result<IV>::type`]
-                                                   [Adds `c1` to `iv` and stores
-                                                    the result in `iv` with
-                                                    /acquire/ memory semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`add_assign_release( iv, c1 )`]
-                                      [`add_assign_result<IV>::type`]
-                                                   [Adds `c1` to `iv` and stores
-                                                    the result in `iv` with
-                                                    /release/ memory semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`subtract_assign( iv, c1 )`]
-                                      [`subtract_assign_result<IV>::type`]
-                                                   [Subtracts `c1` from `iv` and
-                                                    stores the result in `iv`
-                                                    with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`subtract_assign_acquire( iv, c1 )`]
-                                      [`subtract_assign_result<IV>::type`]
-                                                   [Subtracts `c1` from `iv` and
-                                                    stores the result in `iv`
-                                                    with /acquire/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`subtract_assign_release( iv, c1 )`]
-                                      [`subtract_assign_result<IV>::type`]
-                                                   [Subtracts `c1` from `iv` and
-                                                    stores the result in `iv`
-                                                    with /release/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`multiply_assign( iv, c1 )`][`multiply_assign_result<IV>::type`]
-                                                   [Multiplies `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`multiply_assign_acquire( iv, c1 )`]
-                                      [`multiply_assign_result<IV>::type`]
-                                                   [Multiplies `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with /acquire/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`multiply_assign_release( iv, c1 )`]
-                                      [`multiply_assign_result<IV>::type`]
-                                                   [Multiplies `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with /release/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`divide_assign( iv, c1 )`][`divide_assign_result<IV>::type`]
-                                                   [Divides `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`divide_assign_acquire( iv, c1 )`]
-                                      [`divide_assign_result<IV>::type`]
-                                                   [Divides `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with /acquire/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`divide_assign_release( iv, c1 )`]
-                                      [`divide_assign_result<IV>::type`]
-                                                   [Divides `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with /release/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
+[[Expression]                 [Atomic Operation (Returns Old Value)]           ]
+[[`increment( i )`]           [`i++;`]                                         ]
+[[`decrement( i )`]           [`i--;`]                                         ]
+[[`add_assign( i, c1 )`]      [`i += c1;`]                                     ]
+[[`subtract_assign( i, c1 )`] [`i -= c1;`]                                     ]
+[[`multiply_assign( i, c1 )`] [`i *= c1;`]                                     ]
+[[`divide_assign( i, c1 )`]   [`i /= c1;`]                                     ]
 ]
 
 [endsect]

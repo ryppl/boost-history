@@ -1,5 +1,6 @@
-[section Interlocked Types]
+[section Interlocked Concepts]
 
+[include interlocked_type/interlocked_operation.qbk]
 [include interlocked_type/interlocked_basic_type.qbk]
 [include interlocked_type/interlocked_arithmetic_type.qbk]
 [include interlocked_type/interlocked_integer_type.qbk]

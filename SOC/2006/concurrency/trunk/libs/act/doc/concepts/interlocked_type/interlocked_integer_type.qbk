@@ -11,195 +11,23 @@ support all operations specified in the C++ standard for integer types. Such
 operations do not imply memory barriers of any kind.
 
 [variablelist Interlocked Arithmetic Type Descriptive Variable Definitions
-[[`I`]            [An [concept Interlocked Integral Type].]                    ]
-[[`IV`]           [`I volatile`.]                                              ]
-[[`C1`]           [A type which is convertible to `IV`.]                       ]
-[[`iv`]           [Value of type `I volatile&`.]                               ]
-[[`c1`]           [Value of type `C1 const&`.]                                 ]
-[[`S`]            [An integral or [concept Interlocked Integer Type].]         ]
-[[`s`]            [A value of type `S const&`.]                                ]
+[[`I`]            [An [concept Interlocked Integer Type].]                     ]
+[[`i`]            [A value of type `I`.]                                       ]
+[[`C1`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
+[[`c1`]           [A value of type `C1 const&`.]                               ]
 ]
 
 [heading Expression Requirements]
 
-[table Interlocked Arithmetic Type Requirements
-[[Expression]                         [Return Type][Pre/Post-Condition]        ]
-[[`mod_assign( iv, c1 )`][`remove_cv<IV>::type`]
-                                                   [Mods `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`mod_assign_acquire( iv, c1 )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Mods `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with /acquire/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`mod_assign_release( iv, c1 )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Mods `iv` by `c1` and
-                                                    stores the result in `iv`
-                                                    with /release/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`and_assign( iv, c1 )`][`remove_cv<IV>::type`]
-                                                   [Ands `iv` with `c1` and
-                                                    stores the result in `iv`
-                                                    with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`and_assign_acquire( iv, c1 )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Ands `iv` with `c1` and
-                                                    stores the result in `iv`
-                                                    with /acquire/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`and_assign_release( iv, c1 )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Ands `iv` with `c1` and
-                                                    stores the result in `iv`
-                                                    with /release/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`or_assign( iv, c1 )`] [`remove_cv<IV>::type`]
-                                                   [Ors `iv` with `c1` and
-                                                    stores the result in `iv`
-                                                    with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`or_assign_acquire( iv, c1 )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Ors `iv` with `c1` and
-                                                    stores the result in `iv`
-                                                    with /acquire/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`or_assign_release( iv, c1 )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Ors `iv` with `c1` and
-                                                    stores the result in `iv`
-                                                    with /release/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`xor_assign( iv, c1 )`][`remove_cv<IV>::type`]
-                                                   [Xors `iv` with `c1` and
-                                                    stores the result in `iv`
-                                                    with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`xor_assign_acquire( iv, c1 )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Xors `iv` with `c1` and
-                                                    stores the result in `iv`
-                                                    with /acquire/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`xor_assign_release( iv, c1 )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Xors `iv` with `c1` and
-                                                    stores the result in `iv`
-                                                    with /release/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`lshift_assign( iv, s )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Left shifts `iv` by `s` and
-                                                    stores the result in `iv`
-                                                    with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`lshift_assign_acquire( iv, s )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Left shifts `iv` by `s` and
-                                                    stores the result in `iv`
-                                                    with /acquire/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`lshift_assign_release( iv, s )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Left shifts `iv` by `s` and
-                                                    stores the result in `iv`
-                                                    with /release/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`rshift_assign( iv, s )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Right shifts `iv` by `s`
-                                                    and stores the result in
-                                                    `iv` with a
-                                                    /full memory barrier/.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`rshift_assign_acquire( iv, s )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Right shifts `iv` by `s`
-                                                    and stores the result in
-                                                    `iv` with /acquire/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
-[[`rshift_assign_release( iv, s )`]
-                                      [`remove_cv<IV>::type`]
-                                                   [Right shifts `iv` by `s`
-                                                    and stores the result in
-                                                    `iv` with /release/ memory
-                                                    semantics.
-                                                    Returns the value of `iv`
-                                                    before the operation is
-                                                    performed.
-                                                   ]                           ]
+[table Interlocked Integer Type Requirements
+[[Expression]               [Atomic Operation (Returns Old Value)]             ]
+[[`bitand_assign( i, c1 )`] [`i &= c1;`]                                       ]
+[[`bitor_assign( i,  c1 )`] [`i |= c1;`]                                       ]
+[[`compl_assign( i )`]      [`i = ~i;`]                                        ]
+[[`lshift_assign( i, c1 )`] [`i <<= c1;`]                                      ]
+[[`mod_assign( i, c1 )`]    [`i %= c1;`]                                       ]
+[[`rshift_assign( i, c1 )`] [`i >>= c1;`]                                      ]
+[[`xor_assign( i, c1 )`]    [`i ^= c1;`]                                       ]
 ]
 
 [endsect]

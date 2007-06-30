@@ -6,98 +6,41 @@ implementation of lock-free code. In the current version of Boost.Act, only
 built-in types may be [concept Interlocked Basic Types], although this will
 likely change in future releases.
 
-In order to be considered a valid [concept Interlocked Type], given the
-variable definitions below, the following expressions must be well-formed and
-have the indicated effects.
+In order to be considered a valid [concept Interlocked Type], the type must be
+default co/nstructible/, /copy-constructible/, and /copy-assignable/. These
+operations are not interlocked operations and do not guarantee a specific
+ordering of any kind.
 
-[variablelist Interlocked Type Descriptive Variable Definitions
-[[`I`]            [An [concept Interlocked Type].]                             ]
-[[`IV`]           [`I volatile`.]                                              ]
-[[`C1`]           [A type which is convertible to `IV`.]                       ]
-[[`C2`]           [A type which is convertible to `IV`.]                       ]
-[[`iv`]           [Value of type `I volatile&`.]                               ]
-[[`c1`]           [Value of type `C1 const&`.]                                 ]
-[[`c2`]           [Value of type `C2 const&`.]                                 ]
+Given the variable definitions below, the following expressions must be
+well-formed and have the indicated effects in order for a type to be considered
+an [concept Interlocked Basic Type].
+
+[variablelist Interlocked Basic Type Descriptive Variable Definitions
+[[`I`]            [An [concept Interlocked Basic Type].]                       ]
+[[`i`]            [A value of type `I&`.]                                      ]
+[[`C1`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
+[[`c1`]           [A value of type `C1 const&`.]                               ]
+[[`IU`]           [['cv-unqualified] `I`.]                                     ]
 ]
 
 [heading Expression Requirements]
 
-[note In the following requirements, certain operations are listed as having
- /acquire/ memory semantics, /release/ memory semantics, or both. Operations
- with /acquire/ memory semantics imply that the memory operation being performed
- by the current thread will be visible before any other memory operations are
- attempted. Operations with /release/ memory semantics imply that the memory
- operation being performed by the current thread will be visible after all other
- memory operations have been completed. For brevity, functions and templates are
- listed without qualification although they actually exist in in the namespace
- `::boost::act::interlocked`.
-]
-
 [table Interlocked Type Requirements
-[[Expression]                         [Return Type][Pre/Post-Condition]        ]
-[[`I()`]                              []           [Constructs an instance of
-                                                    `I` with an unspecified
-                                                    initial value.
-                                                    [tablenote This is not an
-                                                    interlocked operation and
-                                                    does not imply a memory
-                                                    barrier of any kind.
-                                                    ]
-                                                   ]                           ]
-[[`I i = c1`]                         []           [Constructs an instance of
-                                                    `I` with `c1` as an initial
-                                                    value.
-                                                    [tablenote This is not an
-                                                    interlocked operation and
-                                                    does not imply a memory
-                                                    barrier of any kind.
-                                                    ]
-                                                   ]                           ]
-[[`iv = c1`]                          [`I&`]       [Stores the value of `c1`
-                                                    to object `i`.
-                                                    Returns a reference to `iv`.
-                                                    [tablenote This is not an
-                                                     interlocked operation and
-                                                     does not imply a memory
-                                                     barrier of any kind.
-                                                    ]
-                                                   ]                           ]
-[[`store< unordered >( iv, c1 )`]     [`void`]
-                                                   [Stores the value of `c1`
-                                                    to object `iv` with no
-                                                    ordering guarantees.
-                                                   ]                           ]
-[[`store< release >( iv, c1 )`]       [`void`]
-                                                   [Stores the value of `c1`
-                                                    to object `iv` with
-                                                    /release/ memory semantics.
-                                                   ]                           ]
-[[`store( iv, c1 )`]                  [`void`]
-                                                   [Effectively calls
-                                                    `store< release >( iv, cl )`
-                                                   ]                           ]
-[[`store< default_ >( iv, c1 )`]      [`void`]
-                                                   [Effectively calls
-                                                    `store< release >( iv, cl )`
-                                                   ]                           ]
-[[`load< unordered >( iv, c1 )`]      [`void`]
-                                                   [Stores the value of `c1`
-                                                    to object `iv` with no
-                                                    ordering guarantees.
-                                                   ]                           ]
-[[`load< acquire >( iv, c1 )`]        [`void`]
-                                                   [Stores the value of `c1`
-                                                    to object `iv` with
-                                                    /acquire/ memory semantics.
-                                                   ]                           ]
-[[`load( iv, c1 )`]                   [`void`]
-                                                   [Effectively calls
-                                                    `load< acquire >( iv, cl )`
-                                                   ]                           ]
-[[`load< default_ >( iv, c1 )`]       [`void`]
-                                                   [Effectively calls
-                                                    `load< acquire >( iv, cl )`
-                                                   ]                           ]
+[[Expression]           [Return Type][Pre/Post-Condition]                      ]
+[[`load( i )`]          [`IU`]       [Returns the value stored in `i`. This
+                                      function is an
+                                      __interlocked_operation__ and defaults to
+                                      `acquire` semantics. Allowable semantics
+                                      for this operation are `unordered` and
+                                      `acquire`.
+                                     ]                                         ]
+[[`store( i, c1 )`]     [`void`]     [Stores the value of `c1` to object `i`.
+                                      This function is an
+                                      __interlocked_operation__ and defaults to
+                                      `release` semantics. Allowable semantics
+                                      for this operation are `unordered` and
+                                      `release`.
+                                     ]                                         ]
 ]
 
 [endsect]

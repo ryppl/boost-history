@@ -36,7 +36,7 @@ have the indicated effects.
 [[`queue_policy::safe_queue< A,
                              V
                             ...`
-                            [~[link boost_act.queue_concepts.queue_policy.queue_policy_pc_queue_unordered_parameters Unordered Parameters]]
+                            [~[link boost_act.concepts.queue_concepts.queue_policy.queue_policy_pc_queue_unordered_parameters Unordered Parameters]]
                             `>::type`
  ]                               []           [A __pc_queue__ type which holds
                                                objects of type `V` and which has
