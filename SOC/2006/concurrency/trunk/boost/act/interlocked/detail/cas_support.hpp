@@ -108,7 +108,8 @@
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_read            2
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_release         3
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_write           3
-#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_acq_rel      4
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_acq_rel         4
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_none            5
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_COMPARE( data, elem )                     \
 BOOST_PP_EQUAL                                                                 \

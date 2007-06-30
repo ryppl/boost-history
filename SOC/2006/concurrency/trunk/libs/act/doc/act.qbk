@@ -36,8 +36,8 @@
 [def __threaded_worker_policy__      [link boost_act.concepts.threaded_worker_policy                  [concept Threaded Worker Policy]]]
 [def __threaded_worker__             [link boost_act.concepts.threaded_worker                         [concept Threaded Worker]]]
 
-[include brief_description.qbk]
 [include beta_warning.qbk]
+[include brief_description.qbk]
 [include introduction.qbk]
 [include compiler_setup.qbk]
 [include concepts.qbk]

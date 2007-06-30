@@ -88,11 +88,76 @@
                 </div>
               </div>
             </div>
+            <a id="boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.description"></a>
+            <h6><a id="id458755"></a>
+          <a href="interlocked_arithmetic_type.html#boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.description">Description</a>
+        </h6>
             <p>
           An <code class="literal">Interlocked Arithmetic Type</code> is an <a href="interlocked_basic_type.html" title="Interlocked Basic Type">
           <code class="literal">Interlocked Basic Type</code></a> which supports common
           arithmetic operations.
         </p>
+            <div class="variablelist">
+              <p class="title">
+                <b>Notation</b>
+              </p>
+              <dl>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">I</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            An <code class="literal">Interlocked Arithmetic Type</code>.
+          </dd>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">i</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            A value of type <code class="computeroutput"><span class="identifier">I</span></code>.
+          </dd>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">C1</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            A type which is convertible to <code class="computeroutput"><span class="identifier">remove_cv</span><span class="special">&lt;</span><span class="identifier">I</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&amp;</span></code>.
+          </dd>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">c1</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            A value of type <code class="computeroutput"><span class="identifier">C1</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
+          </dd>
+              </dl>
+            </div>
+            <a id="boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.refinement_of"></a>
+            <h6><a id="id458965"></a>
+          <a href="interlocked_arithmetic_type.html#boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.refinement_of">Refinement
+          of</a>
+        </h6>
+            <p>
+          <a href="../interlocked_concepts.html" title="Interlocked Concepts"> <code class="literal">Interlocked
+          Type</code></a>
+        </p>
+            <a id="boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.expression_requirements"></a>
+            <h6><a id="id459013"></a>
+          <a href="interlocked_arithmetic_type.html#boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.expression_requirements">Expression
+          Requirements</a>
+        </h6>
             <p>
           In order to be considered a valid <code class="literal">Interlocked Arithmetic Type</code>,
           given the variable definitions below, the following expressions must be
@@ -140,60 +205,8 @@
                 <div class="box-bottom"></div>
               </div>
             </div>
-            <div class="variablelist">
-              <p class="title">
-                <b>Interlocked Arithmetic Type Descriptive Variable Definitions</b>
-              </p>
-              <dl>
-                <dt>
-                  <span class="term">
-                    <code class="computeroutput">
-                      <span class="identifier">I</span>
-                    </code>
-                  </span>
-                </dt>
-                <dd>
-            An <code class="literal">Interlocked Arithmetic Type</code>.
-          </dd>
-                <dt>
-                  <span class="term">
-                    <code class="computeroutput">
-                      <span class="identifier">i</span>
-                    </code>
-                  </span>
-                </dt>
-                <dd>
-            A value of type <code class="computeroutput"><span class="identifier">I</span></code>.
-          </dd>
-                <dt>
-                  <span class="term">
-                    <code class="computeroutput">
-                      <span class="identifier">C1</span>
-                    </code>
-                  </span>
-                </dt>
-                <dd>
-            A type which is convertible to <code class="computeroutput"><span class="identifier">remove_cv</span><span class="special">&lt;</span><span class="identifier">I</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">&amp;</span></code>.
-          </dd>
-                <dt>
-                  <span class="term">
-                    <code class="computeroutput">
-                      <span class="identifier">c1</span>
-                    </code>
-                  </span>
-                </dt>
-                <dd>
-            A value of type <code class="computeroutput"><span class="identifier">C1</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
-          </dd>
-              </dl>
-            </div>
-            <a id="boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.expression_requirements"></a>
-            <h6><a id="id458325"></a>
-          <a href="interlocked_arithmetic_type.html#boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.expression_requirements">Expression
-          Requirements</a>
-        </h6>
             <div class="table">
-              <a id="id458344"></a>
+              <a id="id459222"></a>
               <p class="title">
                 <b>Table 7. Interlocked Arithmetic Type Requirements</b>
               </p>
@@ -212,38 +225,12 @@
               </th>
                       <th>
               <p>
-                Atomic Operation (Returns Old Value)
+                Operation (Returns Old Value)
               </p>
               </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">increment</span><span class="special">(</span>
-                <span class="identifier">i</span> <span class="special">)</span></code>
-              </p>
-              </td>
-                      <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">i</span><span class="special">++;</span></code>
-              </p>
-              </td>
-                    </tr>
-                    <tr>
-                      <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">decrement</span><span class="special">(</span>
-                <span class="identifier">i</span> <span class="special">)</span></code>
-              </p>
-              </td>
-                      <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">i</span><span class="special">--;</span></code>
-              </p>
-              </td>
-                    </tr>
                     <tr>
                       <td>
               <p>
@@ -262,15 +249,41 @@
                     <tr>
                       <td>
               <p>
-                <code class="computeroutput"><span class="identifier">subtract_assign</span><span class="special">(</span>
+                <code class="computeroutput"><span class="identifier">decrement</span><span class="special">(</span>
+                <span class="identifier">i</span> <span class="special">)</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="special">--</span><span class="identifier">i</span><span class="special">;</span></code>
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">divide_assign</span><span class="special">(</span>
                 <span class="identifier">i</span><span class="special">,</span>
                 <span class="identifier">c1</span> <span class="special">)</span></code>
               </p>
               </td>
                       <td>
               <p>
-                <code class="computeroutput"><span class="identifier">i</span> <span class="special">-=</span>
+                <code class="computeroutput"><span class="identifier">i</span> <span class="special">/=</span>
                 <span class="identifier">c1</span><span class="special">;</span></code>
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">increment</span><span class="special">(</span>
+                <span class="identifier">i</span> <span class="special">)</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="special">++</span><span class="identifier">i</span><span class="special">;</span></code>
               </p>
               </td>
                     </tr>
@@ -292,14 +305,14 @@
                     <tr>
                       <td>
               <p>
-                <code class="computeroutput"><span class="identifier">divide_assign</span><span class="special">(</span>
+                <code class="computeroutput"><span class="identifier">subtract_assign</span><span class="special">(</span>
                 <span class="identifier">i</span><span class="special">,</span>
                 <span class="identifier">c1</span> <span class="special">)</span></code>
               </p>
               </td>
                       <td>
               <p>
-                <code class="computeroutput"><span class="identifier">i</span> <span class="special">/=</span>
+                <code class="computeroutput"><span class="identifier">i</span> <span class="special">-=</span>
                 <span class="identifier">c1</span><span class="special">;</span></code>
               </p>
               </td>
@@ -309,6 +322,67 @@
               </div>
             </div>
             <br class="table-break" />
+            <a id="boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.headers"></a>
+            <h6><a id="id459737"></a>
+          <a href="interlocked_arithmetic_type.html#boost_act.concepts.interlocked_concepts.interlocked_arithmetic_type.headers">Headers</a>
+        </h6>
+            <p>
+          
+</p>
+            <div class="programlisting">
+              <div class="box-outer-wrapper">
+                <div class="box-top-left"></div>
+                <div class="box-top-right"></div>
+                <div class="box-top"></div>
+                <div class="box-inner-wrapper">
+                  <div class="style-switcher-box" id="id459758">
+      <script type="text/javascript" > <!--
+          boostscript.call( boostscript.style_switcher, 'insert_style_selector',
+             'id459758',
+             '../../../../../doc/style/html/syntax.xml',
+             '../../../../../doc/style/html'
+          );
+      //--></script>
+</div>
+                  <pre>
+<span class="comment">// Brings in all interlocked operations.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="comment">// Only forward declarations.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked_fwd</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="comment">// increment headers.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">increment</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">increment</span><span class="special">/</span><span class="identifier">increment</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">increment</span><span class="special">/</span><span class="identifier">increment_acquire</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">increment</span><span class="special">/</span><span class="identifier">increment_release</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">increment</span><span class="special">/</span><span class="identifier">increment_acq_rel</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">increment</span><span class="special">/</span><span class="identifier">increment_unordered</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+
+<span class="comment">// Forward declarations.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">increment_fwd</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">increment</span><span class="special">/</span><span class="identifier">increment_fwd</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="comment">/* etc. */</span>
+
+
+<span class="comment">// decrement headers.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">decrement</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">decrement</span><span class="special">/</span><span class="identifier">decrement</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="comment">/* etc. */</span>
+
+<span class="comment">////////////////////////////////////////////////////////////////////////////
+</span><span class="comment">// Headers for the remaining operations follow the same pattern as above. //
+</span><span class="comment">////////////////////////////////////////////////////////////////////////////
+</span></pre>
+                </div>
+                <div class="box-bottom-left"></div>
+                <div class="box-bottom-right"></div>
+                <div class="box-bottom"></div>
+              </div>
+            </div>
+            <p>
+        </p>
           </div>
         </div>
         <div class="clear"></div>

@@ -23,7 +23,6 @@ indicated effects.
 [[`C()`]          []           [Creates an instance using a default policy. A
                                 destructor is assumed.
                                ]                                               ]
-[[`C::value_type`][]           [The type of data which is processed.]          ]
 [[`c(d)`] [(unused)]           [Processes a copy of `d`. [tablenote Processing
                                 takes place in an implementation-defined thread
                                 of execution.]

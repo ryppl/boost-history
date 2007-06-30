@@ -22,6 +22,16 @@ way that one may switch between immediate, concurrent, lazy evaluation, or a
 user-provided evaluation strategy on a case-by-case basis with potentially no
 runtime cost to the application.
 
+[heading Interlocked Types]
+
+In order to be able to construct the high-level concepts presented in this
+library and to allow users to be able to portably and efficiently implement
+their own shared-memory datastructures and algorithms, portable low-level
+interaction must be made both possible and efficient. In =Boost.Act=, this is
+accomplished through the use of the low-level abstraction of an
+__interlocked_type__, which are types that support both thread-unsafe and
+thread-safe operations with semantics specified by the user at the call-site.
+
 [heading Polymorphic Algorithms]
 
 For the scope of this library, a polymorphic algorithm is considered to be an
@@ -55,13 +65,15 @@ the library.
 It is often desirable to be able to signal a function, perform other unrelated
 operations, and then eventually wait for the signaled function's completion. In
 order to provide such functionality, Boost.Act introduces the concept of an
-=action=.
+=action=, which is similar in many ways to a =future=.
 
 An =action= is a type which represents a signaled operation. With a stored
 =action=, you have access to that operation such that you may wait for the
 function's completion if you need the effects to have taken place prior to
-reaching a certain point in code. Actions also provide an indirect interface to
-the result of a signaled function.
+reaching a further point in code. Actions also provide an indirect interface to
+the result of a signaled function which allows you to queue operations that may
+act upon the result of the signalled function and which execute in the same
+thread as the original call.
 
 [heading Active Objects]
 
@@ -69,10 +81,9 @@ Much like we have a way of decoupling the signaling of a function from the
 actual invocation of that function, Boost.Act also provides a way to separate
 the signaling of intrinsic functions of a type from the invocation of such
 functions, yet guarantees the same order of execution of such functions relative
-to one another. Since the invocations of such functions are also implicitly
-serialized, it makes it easy to signal several functions which all deal with the
-same object without having to worry that one call may occur while another is
-executing, and with the guarantee that they are called in the same order as they
-were signaled.
+to one another. Since the invocations of such functions are serialized, it makes
+it easy to signal several functions which all deal with the same object without
+having to worry that one call may occur while another is executing, and with the
+guarantee that they are called in the same order as they were signaled.
 
 [endsect]

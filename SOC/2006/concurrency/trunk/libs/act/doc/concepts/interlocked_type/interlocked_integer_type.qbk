@@ -1,7 +1,21 @@
 [section Interlocked Integer Type]
 
+[heading Description]
+
 An [concept Interlocked Integer Type] is an __interlocked_arithmetic_type__
 which supports common integer operations.
+
+[variablelist Notation
+[[`I`]            [An [concept Interlocked Integer Type].]                     ]
+[[`i`]            [A value of type `I`.]                                       ]
+[[`C1`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
+[[`c1`]           [A value of type `C1 const&`.]                               ]
+]
+
+[heading Refinement of]
+__interlocked_arithmetic_type__
+
+[heading Expression Requirements]
 
 In order to be considered a valid [concept Interlocked Integer Type], given
 the variable definitions below, the following expressions must be well-formed
@@ -10,17 +24,19 @@ __interlocked_arithmetic_type__. [concept Interlocked Integer Types] also
 support all operations specified in the C++ standard for integer types. Such
 operations do not imply memory barriers of any kind.
 
-[variablelist Interlocked Arithmetic Type Descriptive Variable Definitions
-[[`I`]            [An [concept Interlocked Integer Type].]                     ]
-[[`i`]            [A value of type `I`.]                                       ]
-[[`C1`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
-[[`c1`]           [A value of type `C1 const&`.]                               ]
+[note
+Each of the following operations is a valid __interlocked_operation__, therefore
+user-specified semantics may be applied. In addition to this, all operations
+listed below have a return type of `boost::remove_cv<IV>::type` and yield the
+value of target object prior to the operation being applied. Allowed
+user-specified semantics for these operations are `acquire`, `release`,
+`acq_rel`, `unordered`, and `default_`. If no semantics are explicitly specified
+or if `default_` semantics are specified, then the operation is performed with
+`acq_rel` semantics.
 ]
 
-[heading Expression Requirements]
-
 [table Interlocked Integer Type Requirements
-[[Expression]               [Atomic Operation (Returns Old Value)]             ]
+[[Expression]               [Operation (Returns Old Value)]                    ]
 [[`bitand_assign( i, c1 )`] [`i &= c1;`]                                       ]
 [[`bitor_assign( i,  c1 )`] [`i |= c1;`]                                       ]
 [[`compl_assign( i )`]      [`i = ~i;`]                                        ]
@@ -29,5 +45,39 @@ operations do not imply memory barriers of any kind.
 [[`rshift_assign( i, c1 )`] [`i >>= c1;`]                                      ]
 [[`xor_assign( i, c1 )`]    [`i ^= c1;`]                                       ]
 ]
+
+[heading Headers]
+
+``
+  // Brings in all interlocked operations.
+  #include <boost/act/interlocked.hpp>
+  
+  // Only forward declarations.
+  #include <boost/act/interlocked_fwd.hpp>
+  
+  // bitand_assign headers.
+  #include <boost/act/interlocked/bitand_assign.hpp>
+  #include <boost/act/interlocked/bitand_assign/bitand_assign.hpp>
+  #include <boost/act/interlocked/bitand_assign/bitand_assign_acquire.hpp>
+  #include <boost/act/interlocked/bitand_assign/bitand_assign_release.hpp>
+  #include <boost/act/interlocked/bitand_assign/bitand_assign_acq_rel.hpp>
+  #include <boost/act/interlocked/bitand_assign/bitand_assign_unordered.hpp>
+  
+  
+  // Forward declarations.
+  #include <boost/act/interlocked/bitand_assign_fwd.hpp>
+  #include <boost/act/interlocked/bitand_assign/bitand_assign_fwd.hpp>
+  /* etc. */
+  
+  
+  // bitor_assign headers.
+  #include <boost/act/interlocked/bitor_assign.hpp>
+  #include <boost/act/interlocked/bitor_assign/bitor_assign.hpp>
+  /* etc. */
+  
+  ////////////////////////////////////////////////////////////////////////////
+  // Headers for the remaining operations follow the same pattern as above. //
+  ////////////////////////////////////////////////////////////////////////////
+``
 
 [endsect]

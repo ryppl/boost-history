@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Introduction</title><link rel="stylesheet" href="../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../index.html" title="Boost.Act" /><link rel="up" href="../index.html" title="Boost.Act" /><link rel="prev" href="beta_warning.html" title="Beta Warning" /><link rel="next" href="compiler_setup.html" title="Compiler Setup" /><script type="text/javascript" src="../../../doc/javascript/main.js"></script>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Introduction</title><link rel="stylesheet" href="../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../index.html" title="Boost.Act" /><link rel="up" href="../index.html" title="Boost.Act" /><link rel="prev" href="brief_description.html" title="Brief Description" /><link rel="next" href="compiler_setup.html" title="Compiler Setup" /><script type="text/javascript" src="../../../doc/javascript/main.js"></script>
       <script type="text/javascript" > <!--
          boostscript.init( new Array(
             boostscript.nested_links,
@@ -56,7 +56,7 @@
     </div>
     <div class="spirit-nav">
       <div class="spirit-nav-icon">
-        <a accesskey="p" href="beta_warning.html">
+        <a accesskey="p" href="brief_description.html">
           <div class="prev-icon"></div>
         </a>
       </div>
@@ -110,8 +110,21 @@
       between immediate, concurrent, lazy evaluation, or a user-provided evaluation
       strategy on a case-by-case basis with potentially no runtime cost to the application.
     </p>
-            <a id="boost_act.introduction.polymorphic_algorithms"></a>
+            <a id="boost_act.introduction.interlocked_types"></a>
             <h4><a id="id388726"></a>
+      <a href="introduction.html#boost_act.introduction.interlocked_types">Interlocked Types</a>
+    </h4>
+            <p>
+      In order to be able to construct the high-level concepts presented in this
+      library and to allow users to be able to portably and efficiently implement
+      their own shared-memory datastructures and algorithms, portable low-level interaction
+      must be made both possible and efficient. In <code class="literal">Boost.Act</code>,
+      this is accomplished through the use of the low-level abstraction of an <a href="concepts/interlocked_concepts.html" title="Interlocked Concepts"> <code class="literal">Interlocked Type</code></a>,
+      which are types that support both thread-unsafe and thread-safe operations
+      with semantics specified by the user at the call-site.
+    </p>
+            <a id="boost_act.introduction.polymorphic_algorithms"></a>
+            <h4><a id="id388783"></a>
       <a href="introduction.html#boost_act.introduction.polymorphic_algorithms">Polymorphic Algorithms</a>
     </h4>
             <p>
@@ -133,7 +146,7 @@
       of the creation of user-defined polymorphic algorithms.
     </p>
             <a id="boost_act.introduction.algorithm_models"></a>
-            <h4><a id="id388773"></a>
+            <h4><a id="id388832"></a>
       <a href="introduction.html#boost_act.introduction.algorithm_models">Algorithm Models</a>
     </h4>
             <p>
@@ -146,24 +159,26 @@
       library.
     </p>
             <a id="boost_act.introduction.actions"></a>
-            <h4><a id="id388798"></a>
+            <h4><a id="id388857"></a>
       <a href="introduction.html#boost_act.introduction.actions">Actions</a>
     </h4>
             <p>
       It is often desirable to be able to signal a function, perform other unrelated
       operations, and then eventually wait for the signaled function's completion.
       In order to provide such functionality, Boost.Act introduces the concept of
-      an <code class="literal">action</code>.
+      an <code class="literal">action</code>, which is similar in many ways to a <code class="literal">future</code>.
     </p>
             <p>
       An <code class="literal">action</code> is a type which represents a signaled operation.
       With a stored <code class="literal">action</code>, you have access to that operation
       such that you may wait for the function's completion if you need the effects
-      to have taken place prior to reaching a certain point in code. Actions also
-      provide an indirect interface to the result of a signaled function.
+      to have taken place prior to reaching a further point in code. Actions also
+      provide an indirect interface to the result of a signaled function which allows
+      you to queue operations that may act upon the result of the signalled function
+      and which execute in the same thread as the original call.
     </p>
             <a id="boost_act.introduction.active_objects"></a>
-            <h4><a id="id388856"></a>
+            <h4><a id="id390144"></a>
       <a href="introduction.html#boost_act.introduction.active_objects">Active Objects</a>
     </h4>
             <p>
@@ -171,11 +186,11 @@
       actual invocation of that function, Boost.Act also provides a way to separate
       the signaling of intrinsic functions of a type from the invocation of such
       functions, yet guarantees the same order of execution of such functions relative
-      to one another. Since the invocations of such functions are also implicitly
-      serialized, it makes it easy to signal several functions which all deal with
-      the same object without having to worry that one call may occur while another
-      is executing, and with the guarantee that they are called in the same order
-      as they were signaled.
+      to one another. Since the invocations of such functions are serialized, it
+      makes it easy to signal several functions which all deal with the same object
+      without having to worry that one call may occur while another is executing,
+      and with the guarantee that they are called in the same order as they were
+      signaled.
     </p>
           </div>
         </div>
@@ -184,7 +199,7 @@
     </div>
     <div class="spirit-nav">
       <div class="spirit-nav-icon">
-        <a accesskey="p" href="beta_warning.html">
+        <a accesskey="p" href="brief_description.html">
           <div class="prev-icon"></div>
         </a>
       </div>
