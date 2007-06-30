@@ -40,7 +40,6 @@ lib boost_langbinding
 	: <define>BOOST_LANGBINDING_SOURCE
       <link>shared:<define>BOOST_LANGBINDING_DYNAMIC_LIB=1
       <link>static:<define>BOOST_LANGBINDING_STATIC_LIB=1
-      <include>$(boost-root)
       <include>.
 
 	: debug release <link>static <link>shared
