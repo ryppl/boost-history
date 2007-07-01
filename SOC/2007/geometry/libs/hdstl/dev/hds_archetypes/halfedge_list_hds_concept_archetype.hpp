@@ -14,18 +14,22 @@
 //..
 //  template <>
 //  struct hds_traits<HalfedgeListHDSConcept_archetype> {
-//      typedef hdstl_detail::MultiPassInputIteratorConcept<> halfedge_iterator;
-//      typedef size_type                      size_type;
+//      typedef boost::default_constructible_archetype<
+//              boost::copy_constructible_archetype<
+//              boost::equality_comparable_archetype<
+//              boost::assignable_archetype<> > > > halfedge_descriptor;
+//      typedef boost::forward_iterator_archetype<halfedge_descriptor> 
+//                                                         halfedge_iterator;
+//      typedef int                      size_type;
+//      enum { supports_vertices = false };
+//      enum { supports_facets = false };
 //  };
 //  class HalfedgeListHDSConcept_archetype : public HDSConcept_archetype {
-//      typedef typename hds_traits<HalfedgeListHDSConcept_archetype
+//      typedef hds_traits<HalfedgeListHDSConcept_archetype
 //                                 >::halfedge_iterator halfedge_iterator;
-//      typedef typename hds_traits<HalfedgeHDSConcept_archetype
+//      typedef hds_traits<HalfedgeListHDSConcept_archetype
 //                                 >::halfedge_descriptor halfedge_descriptor;
-//      typedef typename hds_traits<HalfedgeListHDSConcept_archetype
-//                                 >::size_type size_type;
-//      HalfedgeListHDSConcept_archetype();
-//    HalfedgeListHDSConcept_archetype(const HalfedgeListHDSConcept_archetype&);
+//    typedef hds_traits<HalfedgeListHDSConcept_archetype>::size_type size_type;
 //    public:
 //      halfedge_iterator
 //      halfedges_begin(HalfedgeListHDSConcept_archetype const& hds) const;
@@ -39,7 +43,9 @@
 #ifndef BOOST_HDSTL_HALFEDGE_LIST_HDS_CONCEPT_ARCHETYPE_HPP
 #define BOOST_HDSTL_HALFEDGE_LIST_HDS_CONCEPT_ARCHETYPE_HPP
 
-#include <boost/hds_archetype/hds_concept_archetypes.hpp>
+#include <boost/hdstl/hds_archetypes/hds_concept_archetype.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/concept_archetype.hpp>
 
 namespace boost {
 namespace hdstl {
@@ -53,11 +59,21 @@ struct hds_traits<HalfedgeListHDSConcept_archetype> {
     // and 'size_type' types.
     
     // TYPES
-    typedef hdstl_detail::MultiPassInputIteratorConcept<> halfedge_iterator;
+    typedef boost::default_constructible_archetype<
+            boost::copy_constructible_archetype<
+            boost::equality_comparable_archetype<
+            boost::assignable_archetype<> > > > halfedge_descriptor;
+        // Halfedge descriptor type for the 'HalfedgeListHDSConcept' archetype.
+
+    typedef boost::forward_iterator_archetype<halfedge_descriptor> 
+                                                             halfedge_iterator;
         // Halfedge iterator type for the 'HalfedgeListHDSConcept' archetype.
 
-    typedef size_type                      size_type;
+    typedef int                      size_type;
         // Halfedge size type for the 'HalfedgeListHDSConcept' archetype.
+
+    enum { supports_vertices = false };
+    enum { supports_facets = false };
 };
 
 class HalfedgeListHDSConcept_archetype : public HDSConcept_archetype {
@@ -68,20 +84,15 @@ class HalfedgeListHDSConcept_archetype : public HDSConcept_archetype {
     // requirements.
 
     // PRIVATE TYPES
-    typedef typename hds_traits<HalfedgeListHDSConcept_archetype
+    typedef hds_traits<HalfedgeListHDSConcept_archetype
                                >::halfedge_iterator halfedge_iterator;
     
-    typedef typename hds_traits<HalfedgeHDSConcept_archetype
+    typedef hds_traits<HalfedgeListHDSConcept_archetype
                                >::halfedge_descriptor halfedge_descriptor;
-        //halfedge_descriptor from the HalfedgeHDSConcept used here.
+        //halfedge_descriptor from the HalfedgeListHDSConcept used here.
 
-    typedef typename hds_traits<HalfedgeListHDSConcept_archetype
-                               >::size_type size_type;
+    typedef hds_traits<HalfedgeListHDSConcept_archetype>::size_type size_type;
     
-    // NOT IMPLEMENTED
-    HalfedgeListHDSConcept_archetype();
-    HalfedgeListHDSConcept_archetype(const HalfedgeListHDSConcept_archetype&);
-
   public:
     // MANIPULATORS
     halfedge_iterator
@@ -100,25 +111,28 @@ class HalfedgeListHDSConcept_archetype : public HDSConcept_archetype {
 };
 
 // MANIPULATORS
-typename hds_traits<HalfedgeListHDSConcept_archetype>::halfedge_iterator
-HalfedgeListHDSConcept_archetype<>::halfedges_begin(
-                              HalfedgeListHDSConcept_archetype const& hds) const
+inline
+hds_traits<HalfedgeListHDSConcept_archetype>::halfedge_iterator
+halfedges_begin(HalfedgeListHDSConcept_archetype const& hds)
 {
-    return halfedge_iterator();
+    (void)hds;  // eliminate unused variable warning
+    return hds_traits<HalfedgeListHDSConcept_archetype>::halfedge_iterator();
 }
 
-typename hds_traits<HalfedgeListHDSConcept_archetype>::halfedge_iterator
-HalfedgeListHDSConcept_archetype<>::halfedges_end(
-                              HalfedgeListHDSConcept_archetype const& hds) const
+inline
+hds_traits<HalfedgeListHDSConcept_archetype>::halfedge_iterator
+halfedges_end(HalfedgeListHDSConcept_archetype const& hds)
 {
-    return halfedge_iterator();
+    (void)hds;  // eliminate unused variable warning
+    return hds_traits<HalfedgeListHDSConcept_archetype>::halfedge_iterator();
 }
 
-typename hds_traits<HalfedgeListHDSConcept_archetype>::size_type
-HalfedgeListHDSConcept_archetype<>::num_halfedges(
-                              HalfedgeListHDSConcept_archetype const& hds) const
+inline
+hds_traits<HalfedgeListHDSConcept_archetype>::size_type
+num_halfedges(HalfedgeListHDSConcept_archetype const& hds)
 {
-    return size_type();
+    (void)hds;  // eliminate unused variable warning
+    return 0;
 }
 
 } // end namespace hdstl

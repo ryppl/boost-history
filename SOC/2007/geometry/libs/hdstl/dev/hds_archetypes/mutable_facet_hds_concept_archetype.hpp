@@ -12,31 +12,44 @@
 ///Archetype class
 ///---------------
 //..
-//  class MutableFacetHDSConcept_archetype : public HDSConcept_archetype,
-//                                          public FacetHDSConcept_archetype {
-//      typedef typename hds_traits<FacetHDSConcept_archetype
+//  template<>
+//  struct hds_traits<MutableFacetHDSConcept_archetype> {
+//      typedef boost::default_constructible_archetype<
+//              boost::copy_constructible_archetype<
+//              boost::equality_comparable_archetype<
+//              boost::assignable_archetype<> > > > halfedge_descriptor;
+//      typedef boost::default_constructible_archetype<
+//              boost::copy_constructible_archetype<
+//              boost::equality_comparable_archetype<
+//              boost::assignable_archetype<> > > > facet_descriptor;
+//      enum {supports_vertices = false};
+//      enum {supports_facets = true};
+//  };
+//  class MutableFacetHDSConcept_archetype 
+//      : public MutableHDSConcept_archetype,
+//        public FacetHDSConcept_archetype {
+//      // PRIVATE TYPES
+//      typedef hds_traits<MutableFacetHDSConcept_archetype
 //                                 >::facet_descriptor facet_descriptor;
-//      typedef typename hds_traits<HDSConcept_archetype
+//      typedef hds_traits<MutableFacetHDSConcept_archetype
 //                                 >::halfedge_descriptor halfedge_descriptor;
-//      MutableFacetHDSConcept_archetype();
-//      MutableFacetHDSConcept_archetype(
-//                                    const MutableFacetHDSConcept_archetype&);
 //      public:
-//          void
-//          set_facet(MutableFacetHDSConcept_archetype& hds,
-//                      halfedge_descriptor h, facet_descriptor f);
-//          void
-//          add_facet(MutableFacetHDSConcept_archetype& hds,
-//                     facet_descriptor                   f);
-//          void
-//          remove_facet(MutableFacetHDSConcept_archetype& hds,
-//                        facet_descriptor                   f);
+//       void
+//       set_facet(halfedge_descriptor h, facet_descriptor f,
+//                                       MutableFacetHDSConcept_archetype& hds);
+//       facet_descriptor
+//       new_facet(MutableFacetHDSConcept_archetype& hds);
+//       void
+//      delete_facet(facet_descriptor f, MutableFacetHDSConcept_archetype& hds);
 //  };
 //..
 
 #ifndef BOOST_HDSTL_MUTABLE_FACET_HDS_CONCEPT_ARCHETYPE_HPP
 #define BOOST_HDSTL_MUTABLE_FACET_HDS_CONCEPT_ARCHETYPE_HPP
 
+#include <boost/hdstl/hds_archetypes/mutable_hds_concept_archetype.hpp>
+#include <boost/hdstl/hds_archetypes/facet_hds_concept_archetype.hpp>
+#include <boost/hdstl/hds_traits.hpp>
 #include <boost/concept_archetype.hpp>
 
 namespace boost {
@@ -44,8 +57,31 @@ namespace hdstl {
 
 class MutableFacetHDSConcept_archetype;  // forward declaration
 
-class MutableFacetHDSConcept_archetype : public HDSConcept_archetype,
-                                         public FacetHDSConcept_archetype {
+template<>
+struct hds_traits<MutableFacetHDSConcept_archetype> {
+    // This template specialization of 'hds_traits' for the
+    // 'MutableFacetHDSConcept_archetype' provides the 'facet_descriptor' type.
+
+    // TYPES
+    typedef boost::default_constructible_archetype<
+            boost::copy_constructible_archetype<
+            boost::equality_comparable_archetype<
+            boost::assignable_archetype<> > > > halfedge_descriptor;
+        // Halfedge descriptor type for the 'MutableFacetHDSConcept' archetype.
+
+    typedef boost::default_constructible_archetype<
+            boost::copy_constructible_archetype<
+            boost::equality_comparable_archetype<
+            boost::assignable_archetype<> > > > facet_descriptor;
+        // Facet descriptor type for the 'MutableFacetHDSConcept' archetype.
+
+    enum {supports_vertices = false};
+    enum {supports_facets = true};
+};
+
+class MutableFacetHDSConcept_archetype 
+    : public MutableHDSConcept_archetype,
+      public FacetHDSConcept_archetype {
     // This archetype class for the 'MutableFacetHDSConcept' class can be used
     // wherever a template parameter of a class or of a function template is
     // required to be a model of the 'MutableFacetHDS' concept, in order to
@@ -53,35 +89,29 @@ class MutableFacetHDSConcept_archetype : public HDSConcept_archetype,
     // than are stated in the 'MutableFacetHDS' concept.
 
     // PRIVATE TYPES
-    typedef typename hds_traits<FacetHDSConcept_archetype
+    typedef hds_traits<MutableFacetHDSConcept_archetype
                                >::facet_descriptor facet_descriptor;
     
-    typedef typename hds_traits<HDSConcept_archetype
+    typedef hds_traits<MutableFacetHDSConcept_archetype
                                >::halfedge_descriptor halfedge_descriptor;
     
-    // NOT IMPLEMENTED
-    MutableFacetHDSConcept_archetype();
-    MutableFacetHDSConcept_archetype(
-                                     const MutableFacetHDSConcept_archetype&);
     public:
         //MANIPULATORS
         void
-        set_facet(MutableFacetHDSConcept_archetype& hds,
-                    halfedge_descriptor h, facet_descriptor f);
+        set_facet(halfedge_descriptor h, facet_descriptor f,
+                                        MutableFacetHDSConcept_archetype& hds);
         // sets the source facet descriptor value of 'h' to 'v' for a single
         // halfedge in the 'hds' data structure.
         
-        void
-        add_facet(MutableFacetHDSConcept_archetype& hds,
-                   facet_descriptor                   f);
+        facet_descriptor
+        new_facet(MutableFacetHDSConcept_archetype& hds);
         // adds a new facet 'v' to the 'hds' data structure. By this operation
         // the facet is added but no connections to the halfedges are set. In
         // order to assign vertces to halfedges 'set_facet(hds,h,v)' operation
         // should be used.
 
         void
-        remove_facet(MutableFacetHDSConcept_archetype& hds,
-                      facet_descriptor                   f);
+        delete_facet(facet_descriptor f, MutableFacetHDSConcept_archetype& hds);
         //  removes the facet 'v' from the 'hds' data structure, by iterating
         //  in clockwise order around the facet and removing the connections
         //  with the halfedges.
@@ -90,23 +120,33 @@ class MutableFacetHDSConcept_archetype : public HDSConcept_archetype,
 
 //MANIPULATORS
 
+inline
 void
-MutableFacetHDSConcept_archetype::set_facet(
-                              MutableFacetHDSConcept_archetype& hds,
-                              halfedge_descriptor h, facet_descriptor f)
-{}
+set_facet(hds_traits<MutableFacetHDSConcept_archetype>::halfedge_descriptor h,
+             hds_traits<MutableFacetHDSConcept_archetype>::facet_descriptor f,
+                              MutableFacetHDSConcept_archetype& hds)
+{
+    (void)hds;  // eliminate unused variable warning
+    (void)h;  // eliminate unused variable warning
+    (void)f;  // eliminate unused variable warning
+}
 
-void
-MutableFacetHDSConcept_archetype::add_facet(
-                              MutableFacetHDSConcept_archetype& hds,
-                              facet_descriptor                    f)
-{}
+inline
+hds_traits<MutableFacetHDSConcept_archetype>::facet_descriptor
+new_facet(MutableFacetHDSConcept_archetype& hds)
+{
+    (void)hds;  // eliminate unused variable warning
+    return hds_traits<MutableFacetHDSConcept_archetype>::facet_descriptor();
+}
 
+inline
 void
-MutableFacetHDSConcept_archetype::remove_facet(
-                              MutableFacetHDSConcept_archetype& hds,
-                              facet_descriptor                    f)
-{}
+delete_facet(hds_traits<MutableFacetHDSConcept_archetype>::facet_descriptor f,
+                                         MutableFacetHDSConcept_archetype& hds)
+{
+    (void)hds;  // eliminate unused variable warning
+    (void)f;  // eliminate unused variable warning
+}
 
 } // end namespace hdstl
 } // end namespace boost

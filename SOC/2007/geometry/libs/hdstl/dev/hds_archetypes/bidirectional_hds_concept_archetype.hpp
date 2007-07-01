@@ -39,7 +39,10 @@
 #ifndef BOOST_HDSTL_BIDIRECTIONAL_HDS_CONCEPT_ARCHETYPE_HPP
 #define BOOST_HDSTL_BIDIRECTIONAL_HDS_CONCEPT_ARCHETYPE_HPP
 
-#include <boost/hds_archetype/hds_concept_archetypes.hpp>
+#include <boost/hdstl/hds_archetypes/forward_hds_concept_archetype.hpp>
+#include <boost/hdstl/hds_archetypes/backward_hds_concept_archetype.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/concept_archetype.hpp>
 
 namespace boost {
 namespace hdstl {
@@ -76,13 +79,16 @@ struct hds_traits<BidirectionalHDSConcept_archetype<ForwardCategory,
         // This type, convertible to one or more of 'prev_in_facet_tag',
         // 'prev_at_source_tag', or 'prev_at_target_tag', indicates which is
         // the primary accessor(s) for which the 'set_...' methods are defined.
+
+    enum{supports_vertices = false};
+    enum{supports_facets = false};
 };
 
 
 template <typename ForwardCategory, typename BackwardCategory>
 class BidirectionalHDSConcept_archetype 
-: public ForwardHDSConcept_archetype<ForwardCategory>, 
-         BackwardHDSConcept_archetype<BackwardCategory> {
+: virtual public ForwardHDSConcept_archetype<ForwardCategory>, 
+  virtual public BackwardHDSConcept_archetype<BackwardCategory> {
     // This class provides an exact implementation (no more, no less) of the
     // 'BidirectionalHDS' concept.  It can be used to instantiate class and
     // function templates that require their template arguments to be a model
@@ -90,12 +96,10 @@ class BidirectionalHDSConcept_archetype
     // requirements.
 
     // PRIVATE TYPES
-    typedef typename hds_traits<BidirectionalHDSConcept_archetype
-                               >::halfedge_descriptor halfedge_descriptor;
+    typedef typename hds_traits<BidirectionalHDSConcept_archetype<
+                      ForwardCategory, BackwardCategory> >::halfedge_descriptor
+                                                           halfedge_descriptor;
 
-    // NOT IMPLEMENTED
-    BidirectionalHDSConcept_archetype();
-    BidirectionalHDSConcept_archetype(const BidirectionalHDSConcept_archetype&);
 };
 
 } // end namespace hdstl

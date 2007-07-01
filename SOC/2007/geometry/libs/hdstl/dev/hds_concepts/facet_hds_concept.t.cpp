@@ -33,6 +33,7 @@ namespace hdstl1 {
     opposite(facet_hds_archetype::halfedge_descriptor h,  
                               const facet_hds_archetype&)
     {
+        (void)h;  // eliminate unused variable warning
         return h;
     }
     
@@ -40,6 +41,7 @@ namespace hdstl1 {
     facet(facet_hds_archetype::halfedge_descriptor h,  
                            const facet_hds_archetype&)
     {
+        (void)h;  // eliminate unused variable warning
         return facet_hds_archetype::facet_descriptor();
     }
 

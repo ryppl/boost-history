@@ -14,19 +14,27 @@
 //..
 //  template <>
 //  struct hds_traits<VertexListHDSConcept_archetype> {
-//      typedef hdstl_detail::MultiPassInputIteratorConcept<> vertex_iterator;
-//      typedef size_type                      size_type;
+//      typedef boost::default_constructible_archetype<
+//              boost::copy_constructible_archetype<
+//              boost::equality_comparable_archetype<
+//              boost::assignable_archetype<> > > > halfedge_descriptor;
+//      typedef boost::default_constructible_archetype<
+//              boost::copy_constructible_archetype<
+//              boost::equality_comparable_archetype<
+//              boost::assignable_archetype<> > > > vertex_descriptor;
+// typedef boost::forward_iterator_archetype<vertex_descriptor> vertex_iterator;
+//      typedef int size_type;
+//      enum { supports_vertices = true };
+//      enum { supports_facets = false };
 //  };
-//  class VertexListHDSConcept_archetype : public HDSConcept_archetype, 
-//                                        public VertexHDSConcept_archetype {
-//      typedef typename hds_traits<VertexListHDSConcept_archetype
+//  class VertexListHDSConcept_archetype : public VertexHDSConcept_archetype {
+//      typedef hds_traits<VertexListHDSConcept_archetype
 //                                 >::vertex_iterator vertex_iterator;
-//      typedef typename hds_traits<VertexHDSConcept_archetype
+//      typedef hds_traits<VertexHDSConcept_archetype
+//                                 >::halfedge_descriptor halfedge_descriptor;
+//      typedef hds_traits<VertexHDSConcept_archetype
 //                                 >::vertex_descriptor vertex_descriptor;
-//      typedef typename hds_traits<VertexListHDSConcept_archetype
-//                                 >::size_type size_type;
-//      VertexListHDSConcept_archetype();
-//      VertexListHDSConcept_archetype(const VertexListHDSConcept_archetype&);
+//      typedef hds_traits<VertexListHDSConcept_archetype>::size_type size_type;
 //    public:
 //      vertex_iterator
 //      vertices_begin(VertexListHDSConcept_archetype const& hds) const;
@@ -40,7 +48,9 @@
 #ifndef BOOST_HDSTL_VERTEX_LIST_HDS_CONCEPT_ARCHETYPE_HPP
 #define BOOST_HDSTL_VERTEX_LIST_HDS_CONCEPT_ARCHETYPE_HPP
 
-#include <boost/hds_archetype/hds_concept_archetypes.hpp>
+#include <boost/hdstl/hds_archetypes/vertex_hds_concept_archetype.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/concept_archetype.hpp>
 
 namespace boost {
 namespace hdstl {
@@ -54,16 +64,29 @@ struct hds_traits<VertexListHDSConcept_archetype> {
     // and 'size_type' types.
     
     // TYPES
-    typedef hdstl_detail::MultiPassInputIteratorConcept<> vertex_iterator;
+    typedef boost::default_constructible_archetype<
+            boost::copy_constructible_archetype<
+            boost::equality_comparable_archetype<
+            boost::assignable_archetype<> > > > halfedge_descriptor;
+        // Halfedge descriptor type for the 'VertexListHDSConcept' archetype.
+    
+    typedef boost::default_constructible_archetype<
+            boost::copy_constructible_archetype<
+            boost::equality_comparable_archetype<
+            boost::assignable_archetype<> > > > vertex_descriptor;
+        // Vertex descriptor type for the 'VertexHDSConcept' archetype.
+
+    typedef boost::forward_iterator_archetype<vertex_descriptor> vertex_iterator;
         // Vertex iterator type for the 'VertexListHDSConcept' archetype.
 
-    typedef size_type                      size_type;
+    typedef int size_type;
         // Vertex size type for the 'VertexListHDSConcept' archetype.
+    
+    enum { supports_vertices = true };
+    enum { supports_facets = false };
 };
 
-
-class VertexListHDSConcept_archetype : public HDSConcept_archetype, 
-                                      public VertexHDSConcept_archetype {
+class VertexListHDSConcept_archetype : public VertexHDSConcept_archetype {
     // This class provides an exact implementation (no more, no less) of the
     // 'VertexListHDS' concept.  It can be used to instantiate class and
     // function templates that require their template arguments to be a model
@@ -71,20 +94,18 @@ class VertexListHDSConcept_archetype : public HDSConcept_archetype,
     // requirements.
 
     // PRIVATE TYPES
-    typedef typename hds_traits<VertexListHDSConcept_archetype
+    typedef hds_traits<VertexListHDSConcept_archetype
                                >::vertex_iterator vertex_iterator;
     
-    typedef typename hds_traits<VertexHDSConcept_archetype
+    typedef hds_traits<VertexHDSConcept_archetype
+                               >::halfedge_descriptor halfedge_descriptor;
+
+    typedef hds_traits<VertexHDSConcept_archetype
                                >::vertex_descriptor vertex_descriptor;
         //vertex_descriptor from the VertexHDSConcept used here.
 
-    typedef typename hds_traits<VertexListHDSConcept_archetype
-                               >::size_type size_type;
+    typedef hds_traits<VertexListHDSConcept_archetype>::size_type size_type;
     
-    // NOT IMPLEMENTED
-    VertexListHDSConcept_archetype();
-    VertexListHDSConcept_archetype(const VertexListHDSConcept_archetype&);
-
   public:
     // MANIPULATORS
     vertex_iterator
@@ -103,25 +124,28 @@ class VertexListHDSConcept_archetype : public HDSConcept_archetype,
 };
 
 // MANIPULATORS
-typename hds_traits<VertexListHDSConcept_archetype>::vertex_iterator
-VertexListHDSConcept_archetype<>::vertices_begin(
-                               VertexListHDSConcept_archetype const& hds) const
+inline
+hds_traits<VertexListHDSConcept_archetype>::vertex_iterator
+vertices_begin(VertexListHDSConcept_archetype const& hds)
 {
-    return vertex_iterator();
+    (void)hds;  // eliminate unused variable warning
+    return hds_traits<VertexListHDSConcept_archetype>::vertex_iterator();
 }
 
-typename hds_traits<VertexListHDSConcept_archetype>::vertex_iterator
-VertexListHDSConcept_archetype<>::vertices_end(
-                               VertexListHDSConcept_archetype const& hds) const
+inline
+hds_traits<VertexListHDSConcept_archetype>::vertex_iterator
+vertices_end(VertexListHDSConcept_archetype const& hds)
 {
-    return vertex_iterator();
+    (void)hds;  // eliminate unused variable warning
+    return hds_traits<VertexListHDSConcept_archetype>::vertex_iterator();
 }
 
-typename hds_traits<VertexListHDSConcept_archetype>::size_type
-VertexListHDSConcept_archetype<>::num_vertices(
-                               VertexListHDSConcept_archetype const& hds) const
+inline
+hds_traits<VertexListHDSConcept_archetype>::size_type
+num_vertices(VertexListHDSConcept_archetype const& hds)
 {
-    return size_type();
+    (void)hds;  // eliminate unused variable warning
+    return 0;
 }
 
 } // end namespace hdstl

@@ -40,7 +40,9 @@
 #ifndef BOOST_HDSTL_FORWARD_HDS_CONCEPT_ARCHETYPE_HPP
 #define BOOST_HDSTL_FORWARD_HDS_CONCEPT_ARCHETYPE_HPP
 
-#include <boost/hds_archetype/hds_concept_archetypes.hpp>
+#include <boost/hdstl/hds_archetypes/hds_concept_archetype.hpp>
+#include <boost/hdstl/hds_traits.hpp>
+#include <boost/concept_archetype.hpp>
 
 namespace boost {
 namespace hdstl {
@@ -70,11 +72,14 @@ struct hds_traits<ForwardHDSConcept_archetype<ForwardCategory> > {
         // This type, convertible to one or more of 'next_in_facet_tag',
         // 'next_at_source_tag', or 'next_at_target_tag', indicates which is
         // the primary accessor(s) for which the 'set_...' methods are defined.
+    
+    enum {supports_vertices = false};
+    enum {supports_facets = false};
 };
 
 
 template <typename ForwardCategory>
-class ForwardHDSConcept_archetype : public HDSConcept_archetype {
+class ForwardHDSConcept_archetype : virtual public HDSConcept_archetype {
     // This class provides an exact implementation (no more, no less) of the
     // 'ForwardHDS' concept.  It can be used to instantiate class and function
     // templates that require their template arguments to be a model of this
@@ -82,61 +87,67 @@ class ForwardHDSConcept_archetype : public HDSConcept_archetype {
     // requirements.
 
     // PRIVATE TYPES
-    typedef typename hds_traits<ForwardHDSConcept_archetype
-                               >::halfedge_descriptor halfedge_descriptor;
-
-    // NOT IMPLEMENTED
-    ForwardHDSConcept_archetype();
-    ForwardHDSConcept_archetype(const ForwardHDSConcept_archetype&);
+    typedef typename hds_traits<ForwardHDSConcept_archetype<ForwardCategory> >
+                                      ::halfedge_descriptor halfedge_descriptor;
 
   public:
     // MANIPULATORS
     halfedge_descriptor
-    next_in_facet(ForwardHDSConcept_archetype const& hds,
-                  halfedge_descriptor                h) const;
+    next_in_facet(halfedge_descriptor h, 
+                   ForwardHDSConcept_archetype const& hds);
         // Return the halfedge following 'h' in the (counter-clockwise) facet
         // cycle of 'h' in 'hds'.
 
     halfedge_descriptor
-    next_at_source(ForwardHDSConcept_archetype const& hds,
-                   halfedge_descriptor                h) const;
+    next_at_source(halfedge_descriptor h, 
+                   ForwardHDSConcept_archetype const& hds);
         // Returns the halfedge following 'h' in the (clockwise) vertex
         // cycle of the source of 'h' in 'hds'.
 
      halfedge_descriptor
-     next_at_target(ForwardHDSConcept_archetype const& hds,
-                    halfedge_descriptor                h) const;
+     next_at_target(halfedge_descriptor h, 
+                    ForwardHDSConcept_archetype const& hds);
         // Returns the halfedge following 'h' in the (clockwise) vertex
         // cycle of the target of 'h' in 'hds'.
 };
 
 // MANIPULATORS
 template <typename ForwardCategory>
-typename hds_traits<ForwardHDSConcept_archetype>::halfedge_descriptor
-ForwardHDSConcept_archetype<ForwardCategory>::next_in_facet(
-                                        ForwardHDSConcept_archetype const& hds,
-                                        halfedge_descriptor                h)
+inline
+typename hds_traits<ForwardHDSConcept_archetype<ForwardCategory> >
+                                                         ::halfedge_descriptor
+next_in_facet(typename hds_traits<ForwardHDSConcept_archetype<
+              ForwardCategory> >::halfedge_descriptor                      h,
+              ForwardHDSConcept_archetype<ForwardCategory> const& hds)
 {
-    return halfedge_descriptor();
+    (void)hds;  // eliminate unused variable warning
+    return h;
 }
 
 template <typename ForwardCategory>
-typename hds_traits<ForwardHDSConcept_archetype>::halfedge_descriptor
-ForwardHDSConcept_archetype<ForwardCategory>::next_at_source(
-                                        ForwardHDSConcept_archetype const& hds,
-                                        halfedge_descriptor                h)
+inline
+typename hds_traits<ForwardHDSConcept_archetype<ForwardCategory> >
+                                                         ::halfedge_descriptor
+next_at_source(typename hds_traits<ForwardHDSConcept_archetype<
+              ForwardCategory> >::halfedge_descriptor                      h,
+              ForwardHDSConcept_archetype<ForwardCategory> const& hds)
 {
-    return halfedge_descriptor();
+    (void)hds;  // eliminate unused variable warning
+    return h;
 }
 
 template <typename ForwardCategory>
-typename hds_traits<ForwardHDSConcept_archetype>::halfedge_descriptor
-ForwardHDSConcept_archetype<ForwardCategory>::next_at_target(
-                                        ForwardHDSConcept_archetype const& hds,
-                                        halfedge_descriptor                h)
+inline
+typename hds_traits<ForwardHDSConcept_archetype<ForwardCategory> >
+                                                         ::halfedge_descriptor
+next_at_target(typename hds_traits<ForwardHDSConcept_archetype<
+              ForwardCategory> >::halfedge_descriptor                      h,
+              ForwardHDSConcept_archetype<ForwardCategory> const& hds)
 {
-    return halfedge_descriptor();
+    (void)hds;  // eliminate unused variable warning
+    return h;
 }
+
 
 } // end namespace hdstl
 } // end namespace boost

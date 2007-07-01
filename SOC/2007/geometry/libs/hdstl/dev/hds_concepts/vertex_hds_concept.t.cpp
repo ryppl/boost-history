@@ -40,6 +40,7 @@ namespace hdstl1 {
     source(vertex_hds_archetype::halfedge_descriptor h,
              const vertex_hds_archetype&)
     {
+        (void)h;  // eliminate unused variable warning
         return vertex_hds_archetype::vertex_descriptor();
     }
 
@@ -47,6 +48,7 @@ namespace hdstl1 {
     target(vertex_hds_archetype::halfedge_descriptor h,
              const vertex_hds_archetype&)
     {
+        (void)h;  // eliminate unused variable warning
         return vertex_hds_archetype::vertex_descriptor();
     }
 

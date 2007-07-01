@@ -72,8 +72,6 @@ namespace hdstl {
     {
         typedef hdstl1::halfedge_list_hds_archetype::halfedge_descriptor
                 halfedge_descriptor;
-        typedef hdstl1::halfedge_list_hds_archetype::halfedge_descriptor
-                halfedge_descriptor;
         typedef hdstl1::halfedge_list_hds_archetype::halfedge_iterator
                 halfedge_iterator;
         typedef hdstl1::halfedge_list_hds_archetype::size_type size_type;

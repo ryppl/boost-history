@@ -191,7 +191,7 @@ namespace concepts {
         void const_constraints(HDS const& hds)
             // Check that the non-modifiable 'HDS' template parameters
             // satisfies all the constraints of 'ForwardHDSConcept'.
-	{
+	    {
             h = next_in_facet(h, hds);
             h = next_at_source(h, hds);
             h = next_at_target(h, hds);
