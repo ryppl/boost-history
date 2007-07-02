@@ -25,6 +25,7 @@ project
     ;
 
 exe PlainOldApproach : plain_old_approach.cpp ;
+exe PlainOldApproachBF : plain_old_approach_bf.cpp ;
 exe MultipleCalls : multiple_calls.cpp ;
 exe MultipleLibraries : multiple_libraries.cpp ;
 lib PlainOldHelloWorldLib : hello_world_plain_old.cpp : <link>shared ;
