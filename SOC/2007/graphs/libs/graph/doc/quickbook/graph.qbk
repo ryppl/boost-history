@@ -76,6 +76,8 @@
 [template BoostVisitor[] [link boost_graph.concepts.visitor_concepts.visitor Visitor]]
 [template BoostBFSVisitor[] [link boost_graph.concepts.visitor_concepts.breadth_first_search_visitor BreadthFirstSearchVisitor]]
 [template BoostDFSVisitor[] [link boost_graph.concepts.visitor_concepts.depth_first_search_visitor DepthFirstSearchVisitor]]
+[template BoostEventVisitor[] [link boost_graph.concepts.visitor_concepts.event_visitor EventVisitor]]
+[template BoostEventVisitorList[] [link boost_graph.concepts.visitor_concepts.event_visitor_list EventVisitorList]]
 
 [/ Boost Reference Documentation]
 [template boost_undirected_graph[] [link boost_graph.reference_guide.graph_types.undirected_graph `undirected_graph`]]
@@ -83,11 +85,18 @@
 [template boost_adjacency_list[] [link boost_graph.reference_guide.graph_types.adjacency_list `adjacecncy_list`]]
 [template boost_edge_list[] [link boost_graph.reference_guide.graph_types.edge_list `edge_list`]]
 
+[template boost_null_visitor[] [link boost_graph.reference_guide.visitor_types.null_visitor `null_visitor`]]
 [template boost_bfs_visitor[] [link boost_graph.reference_guide.visitor_types.bfs_visitor `bfs_visitor`]]
 [template boost_dfs_visitor[] [link boost_graph.reference_guide.visitor_types.dfs_visitor `dfs_visitor`]]
+[template boost_predecessor_recorder[] [link boost.graph_reference_guide.event_visitors.predecessor_recorder `predecessor_recorder`]]
+[template boost_distance_recorder[] [link boost.graph_reference_guide.event_visitors.distance_recorder `distance_recorder`]]
+[template boost_time_stamper[] [link boost.graph_reference_guide.event_visitors.time_stamper `time_stamper`]]
+[template boost_property_writer[] [link boost.graph_reference_guide.event_visitors.property_writer `property_writer`]]
 
 [template boost_breadth_first_search[] [link boost_graph.reference_guide.algorithms.core_algorithms.breadth_first_search `breadth_first_search()`]]
 [template boost_depth_first_search[] [link boost_graph.reference_guide.algorithms.core_algorithms.depth_first_search `depth_first_search()`]]
+[template boost_dijkstra_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.dijkstra_shortest_paths `dijkstra_shortest_paths`]]
+[template boost_bellman_ford_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.bellman_ford_shortest_paths `bellman_ford_shortest_paths`]]
 
 [/ Contents ]
 [include introduction.qbk]

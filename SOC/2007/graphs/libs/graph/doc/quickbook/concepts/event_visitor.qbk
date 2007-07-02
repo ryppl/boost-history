@@ -5,51 +5,147 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Graph]
-The Graph concept contains a few requirements that are common to all the graph concepts.
-These include some associated types for vertex_descriptor, edge_descriptor, etc. One
-should note that a model of Graph is not required to be a model of Assignable, so algorithms
-should pass graph objects by reference (or `const` reference).
+[section Event Visitor]
+This concept defines the interface for single-event visitors. An EventVisitor has an
+/apply/ member function (`operator()`) which is invoked within the graph algorithm
+at the event-point specified by the `event_filter` typedef within the type modeling
+the EventVisitor concept. EventVisitors can be combined into an [BoostEventVistorList].
+
+The following is the list of event tags that can be invoked in Boost.Graph algorithms.
+Each tag corresponds to a member function of the visitor for an algorithm. For example,
+the [BoostBFSVisitor] of [boost_breadth_first_search] has a `cycle_edge()` member function.
+The corresponding tag is `on_cycle_edge`. The first argument in the event visitor's
+`operator()` must be either an edge or vertex depending on the event tag.
+
+[h4 Event Tags]
+[table
+    [[Type] [Description]]
+    [
+        [on_initialize_vertex]
+        [
+            An event tag corresponding to the initialization of a vertex. The parameter
+            type associated with this event is `vertex_descriptor`.
+        ]
+    ]
+    [
+        [on_start_vertex]
+        [
+            In algorithms that without explicit starting points, this event tag
+            corresponds to the selection of a starting vertex. The parameter
+            type associated with this event is `vertex_descriptor`.
+        ]
+    ]
+    [
+        [on_discover_vertex]
+        [
+            An event tag that corresponds to a vertex that is being used for
+            the first time. The parameter type associated with this event is
+            `vertex_descriptor`.
+        ]
+    ]
+    [
+        [on_examine_edge]
+        [
+            An event tag that corresponds to the examination of edges for recently
+            discovered vertices. The parameter type associated with this event
+            is `edge_descriptor`.
+        ]
+    ]
+    [
+        [on_tree_edge]
+        [
+            For algorithms whose iterations of a vertex set implicitly define a
+            tree (such as [boost_breadth_first_search] or [boost_depth_first_search]),
+            this event tag corresponds to the identification of an edge that acts
+            as an edge in the search tree. The parameter type associated with this
+            event is `edge_descriptor`.
+        ]
+    ]
+    [
+        [on_cycle_edge]
+        [
+            For algorithms capable of detecting cycles in graphs such as
+            [boost_depth_first_search], this event tag is associated with discovery
+            of an edge that creates a cycle within the graph. The parameter type
+            associated with this event is `edge_descriptor`.
+        ]
+    ]
+    [
+        [on_forward_or_cross_edge]
+        [
+            Forward and cross edges refer to types of edges that can be found by
+            different types of searches on graph (e.g., [boost_depth_first_search]).
+            This event tag corresponds to the identification of such an edge by
+            the algorithm. The parameter type associated with this event is
+            `edge_descriptor`.
+        ]
+    ]
+    [
+        [on_back_edge]
+        [
+            Back edges refer to types of edges that can be found by different types
+            of searches on a graph (e.g., [boost_breadth_first_search] and
+            [boost_depth_first_search]). This event tag corresponds to the identification
+            of such an edge by the algorithm. The parameter type associated with this
+            event is `edge_descriptor`.
+        ]
+    ]
+    [
+        [on_finish_vertex]
+        [
+            The inverse event of `on_discover_vertex`, this event tag corresponds to
+            the completion of an iteration of an algorithm that is operating on a
+            vertex. The parametet type associated with this event is `edge_descriptor`.
+        ]
+    ]
+    [
+        [on_edge_relaxed]
+        [
+            For algorithms implementing edge relaxation (e.g.,
+            [boost_dijkstra_shortest_paths]), this event corresponds to the case
+            where an edge is relaxed. The parameter type associated with this event
+            is `edge_descriptor`.
+        ]
+    ]
+    [
+        [on_edge_not_relaxed]
+        [
+            For algorithms implementing edge relaxation (e.g.,
+            [boost_dijkstra_shortest_paths]), this event corresponds to the case
+            where an edge is not relaxed. The parameter type associated with this
+            event is `edge_descriptor`.
+        ]
+    ]
+    [
+        [on_edge_minimized]
+        [
+            For algorithms implementing edge minimization (e.g.,
+            [boost_bellman_ford_shortest_paths]), this event corresponds to the case
+            where an edge is minimized. The parameter type associated with this event
+            is `edge_descriptor`.
+        ]
+    ]
+    [
+        [on_edge_not_minimized]
+        [
+            For algorithms implementing edge minimization (e.g.,
+            [boost_bellman_ford_shortest_paths]), this event corresponds to the case
+            where an edge is not minimized. The parameter type associated with this
+            event is `edge_descriptor`.
+        ]
+    ]
+]
+
+[h4 Refinement Of]
+[BoostVisitor]
 
 [h4 Associated Types]
 [table
     [[Type] [Description]]
     [
-        [`graph_traits<G>::vertex_descriptor`]
+        [`V::event_filter`]
         [
-            A vertex descriptor corresponds to a unique vertex in a graph. A vertex descriptor
-            must be DefaultConstructible, Assignable, and EqualityComparable. Vertex
-            descriptors are almost always passed by value.
-        ]
-    ]
-    [
-        [`graph_traits<G>::edge_descriptor`]
-        [
-            An edge descriptor corresponds to a unqie edge /(u,v)/ in a graph. An edge descriptor
-            must be DefaultConstructible, Assignable, and EqualityComparable. Edge descriptors
-            are almost always passed by value.
-        ]
-    ]
-    [
-        [`graph_traits<G>::directed_category`]
-        [
-            This type shall be convertible to `directed_tag` or `undirected_tag`.
-        ]
-    ]
-    [
-        [`graph_traits<G>::edge_parallel_category`]
-        [
-            This describes whether the graph class allows the insertion of parallel edges
-            (multiple edges between the same source and target vertices). The two tags are
-            `allow_parallel_edge_tag` and `disallow_parallel_edge_tag`.
-        ]
-    ]
-    [
-        [`graph_traits<G>::traversal_category`]
-        [
-            This describes the ways in which the vertices and edge of the graph can be visited.
-            The choices are `incidence_graph_tag`, `adjacency_graph_tag`, `bidirectional_graph_tag`,
-            `vertex_list_graph_tag`, `edge_list_graph_tag`, and `adjacency_matrix_tag`.
+            A tag to specify on which even the visitor should be invoked.
         ]
     ]
 ]
@@ -58,15 +154,22 @@ should pass graph objects by reference (or `const` reference).
 [table
     [[Expression] [Description]]
     [
-        [`graph_traits<G>::null_vertex()`]
+        [`vis(x,g)`]
         [
-            Returns a special `vertex_descriptor` which does not refer to any vertex for graphs
-            of type `G`. Note that default initialization of `vertex_descriptors` are /not/
-            guaranteed to be equal to then `null_vertex()`.
+            Invokes the `operator()` member function of an object `vis` of type
+            `V`. The parameter `x` is either a vertex or edge of the graph `g`. The
+            specific type of parameter depends on `V::event_filter`.
 
-            *Returns* `vertex_descriptor`
+            *Returns* `void`
         ]
     ]
 ]
+
+[h4 Models]
+* [boost_predecessor_recorder]
+* [boost_distance_recorder]
+* [boost_time_stamper]
+* [boost_property_writer]
+* [boost_null_visitor]
 
 [endsect]

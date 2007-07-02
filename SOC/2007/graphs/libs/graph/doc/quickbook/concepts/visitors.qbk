@@ -19,5 +19,6 @@ visitor concepts:
 [include visitor.qbk]
 [include bfs_visitor.qbk]
 [include dfs_visitor.qbk]
+[include event_visitor.qbk]
 
 [endsect]

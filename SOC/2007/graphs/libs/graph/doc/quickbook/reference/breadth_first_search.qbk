@@ -17,7 +17,7 @@
     breadth_first_search(Graph& g,
                         typename graph_traits<Graph>::vertex_descriptor s,
                         Buffer& q,
-                        Visitor v,
+                        Visitor vis,
                         bgl_named_params<P,T,R>& params = ``/defaults/``)
 
 The `breadth_first_search()` function performs a breadth-first traversal \[49\] of a directed or
