@@ -42,17 +42,21 @@ Try some superscrips and subscripts: x[super 2], x[sub i][super 3], [alpha][supe
 
 [section Basic Formatting Tests]
 
-[h4 Font Styles]
+[section Font Styles]
 
 Here we go with some inline formatting: 
 ['italic], [*bold], [_underline], [^teletype], [-strikethrough],
 we can combine styles as well: ['[*bold italic]], [_[^teletype with underline]].
 
-[h4 Replaceable Text]
+[endsect]
+
+[section Replaceable Text]
 
 Text that is intended to be user-replaceable is [~rendered like this].
 
-[h4 Quotations]
+[endsect]
+
+[section Quotations]
 
 Here we go: ["A question that sometimes drives me hazy: am I or are the others crazy?]--Einstein
 
@@ -63,23 +67,31 @@ Like all phrase elements, quotations may be nested. Example:
 ["Here's the rule for bargains: ["Do other men, for they would do you.] That's
 the true business precept.]
 
-[h4 Inline Code]
+[endsect]
+
+[section Inline Code]
 
 This text has inlined code `int main() { return 0; }`  in it. 
 The code should be syntax highlighted.
 
-[h4 Links]
+[endsect]
+
+[section Links]
 
 Try this: [@http://www.boost.org this is [*boost's] website....] it should
 be visible as a link.
 
-[h4 Footnotes]
+[endsect]
+
+[section Footnotes]
 
 Here's one [footnote A sample footnote].
 
 And here's another [footnote Another sample footnote].
 
-[h4 Lists]
+[endsect]
+
+[section Lists]
 
 A numbered list:
 
@@ -116,7 +128,9 @@ A mixture of the two:
             * 2.b.2.a
             * 2.b.2.b
 
-[h4 Code Blocks]
+[endsect]
+
+[section Code Blocks]
 
 These should be syntax highlighted:
 
@@ -380,7 +394,9 @@ get this wrong!
 
    } // namespace boost
 
-[h4 Preformatted text]
+[endsect]
+
+[section Preformatted text]
 
 Here's some sample program output:
 
@@ -412,13 +428,17 @@ Standard deviation 1 is less than standard deviation 2    REJECTED
 Standard deviation 1 is greater than standard deviation 2 REJECTED'''
 ]
 
-[h4 Blockquote]
+[endsect]
+
+[section Blockquote]
 
 Lets indent the next paragraph:
 
 [:Here we go!!!]
 
-[h4 Admonishments]
+[endsect]
+
+[section Admonishments]
 
 There are four admonishments supported by Docbook XML:
 
@@ -435,7 +455,9 @@ There are four admonishments supported by Docbook XML:
 They can contain more than one paragraph.
 ]
 
-[h4 Headings]
+[endsect]
+
+[section Headings]
 
 Now try rendering some heading styles:
 
@@ -460,7 +482,9 @@ These should be rendered in a manner similar to admonishments.
 They can contain more than one paragraph.
 ]
 
-[h4 Tables]
+[endsect]
+
+[section Tables]
 
 Here's a big table with code and other tricky things:
 
@@ -500,7 +524,9 @@ ibeta_inva, and ibeta_invb respectively.]]
 [[`estimate_beta`][`ibeta_invb(alpha, x, probability)`]]
 ]
 
-[h4 Variable Lists]
+[endsect]
+
+[section Variable Lists]
 
 [variablelist A Variable List
     [[term 1] [The definition of term 1]]
@@ -508,7 +534,9 @@ ibeta_inva, and ibeta_invb respectively.]]
     [[term 3] [The definition of term 3]]
 ]
 
-[h4 Callouts]
+[endsect]
+
+[section Callouts]
 
 [import stub.cpp]
 
@@ -519,6 +547,8 @@ Here's some code with left-placed callouts:
 And again with callouts placed exactly where we put them:
 
 [foo_bar]
+
+[endsect]
 
 [endsect]
 
@@ -540,3 +570,4 @@ Now try again with a sample SVG image:
 
 [include test_HTML4_symbols.qbk]
 
+[include remez.qbk]
