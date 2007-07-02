@@ -27,10 +27,10 @@ class functor
 protected:
 #ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
   typedef boost::function6<ReturnValue, Param1, Param2, Param3, 
-			   Param4, Param5, Param6> FunctionType;
+                           Param4, Param5, Param6> FunctionType;
 #else
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, 
-				      Param5, Param6);
+                                      Param5, Param6);
 #endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
   FunctionType func_;
 public:
@@ -40,7 +40,7 @@ public:
   {}
   functor(generic_function_ptr func)
     :func_(FunctionType((ReturnValue (*)(Param1, Param2, Param3, Param4, 
-					 Param5, Param6)) func))
+                                         Param5, Param6)) func))
   {}
   ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4, 
                          Param5 p5, Param6 p6)
@@ -56,7 +56,7 @@ class functor<ReturnValue, Param1, Param2, Param3, Param4, Param5>
 protected:
 #ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
   typedef boost::function5<ReturnValue, Param1, Param2, Param3, 
-			   Param4, Param5> FunctionType;
+                           Param4, Param5> FunctionType;
 #else
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, Param5);
 #endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
@@ -68,7 +68,7 @@ public:
   {}
   functor(generic_function_ptr func)
     :func_(FunctionType((ReturnValue (*)(Param1, Param2, Param3, 
-					 Param4, Param5)) func))
+                                         Param4, Param5)) func))
   {}
   ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5)
   {
@@ -83,7 +83,7 @@ class functor<ReturnValue, Param1, Param2, Param3, Param4>
 protected:
 #ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
   typedef boost::function4<ReturnValue, Param1, Param2, Param3, 
-			   Param4> FunctionType;
+                           Param4> FunctionType;
 #else
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4);
 #endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
@@ -95,7 +95,7 @@ public:
   {}
   functor(generic_function_ptr func)
     :func_(FunctionType((ReturnValue (*)(Param1, Param2, Param3, 
-					 Param4)) func))
+                                         Param4)) func))
   {}
   ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4)
   {
