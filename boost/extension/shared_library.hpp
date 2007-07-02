@@ -14,6 +14,9 @@
 #define BOOST_EXTENSION_LINKED_LIBRARY_HPP
 #include <boost/extension/impl/library_impl.hpp>
 
+#ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+#include <boost/function.hpp>
+#endif
 
 namespace boost{namespace extensions{
 template <class ReturnValue, class Param1 = void, class Param2 = void, 
@@ -22,8 +25,13 @@ template <class ReturnValue, class Param1 = void, class Param2 = void,
 class functor
 {
 protected:
+#ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+  typedef boost::function6<ReturnValue, Param1, Param2, Param3, 
+			   Param4, Param5, Param6> FunctionType;
+#else
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, 
-                                      Param5, Param6);
+				      Param5, Param6);
+#endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
   FunctionType func_;
 public:
   bool is_valid(){return func_ != 0;}
@@ -31,7 +39,8 @@ public:
     :func_(func)
   {}
   functor(generic_function_ptr func)
-    :func_(FunctionType(func))
+    :func_(FunctionType((ReturnValue (*)(Param1, Param2, Param3, Param4, 
+					 Param5, Param6)) func))
   {}
   ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4, 
                          Param5 p5, Param6 p6)
@@ -45,7 +54,12 @@ template <class ReturnValue, class Param1, class Param2, class Param3,
 class functor<ReturnValue, Param1, Param2, Param3, Param4, Param5>
 {
 protected:
+#ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+  typedef boost::function5<ReturnValue, Param1, Param2, Param3, 
+			   Param4, Param5> FunctionType;
+#else
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4, Param5);
+#endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
   FunctionType func_;
 public:
   bool is_valid(){return func_ != 0;}
@@ -53,7 +67,8 @@ public:
     :func_(func)
   {}
   functor(generic_function_ptr func)
-    :func_(FunctionType(func))
+    :func_(FunctionType((ReturnValue (*)(Param1, Param2, Param3, 
+					 Param4, Param5)) func))
   {}
   ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4, Param5 p5)
   {
@@ -66,7 +81,12 @@ template <class ReturnValue, class Param1, class Param2, class Param3,
 class functor<ReturnValue, Param1, Param2, Param3, Param4>
 {
 protected:
+#ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+  typedef boost::function4<ReturnValue, Param1, Param2, Param3, 
+			   Param4> FunctionType;
+#else
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3, Param4);
+#endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
   FunctionType func_;
 public:
   bool is_valid(){return func_ != 0;}
@@ -74,7 +94,8 @@ public:
     :func_(func)
   {}
   functor(generic_function_ptr func)
-    :func_(FunctionType(func))
+    :func_(FunctionType((ReturnValue (*)(Param1, Param2, Param3, 
+					 Param4)) func))
   {}
   ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3, Param4 p4)
   {
@@ -86,7 +107,11 @@ template <class ReturnValue, class Param1, class Param2, class Param3>
 class functor<ReturnValue, Param1, Param2, Param3>
 {
 protected:
+#ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+  typedef boost::function3<ReturnValue, Param1, Param2, Param3> FunctionType;
+#else
   typedef ReturnValue (*FunctionType)(Param1, Param2, Param3);
+#endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
   FunctionType func_;
 public:
   bool is_valid(){return func_ != 0;}
@@ -94,7 +119,7 @@ public:
     :func_(func)
   {}
   functor(generic_function_ptr func)
-    :func_(FunctionType(func))
+    :func_(FunctionType((ReturnValue (*)(Param1, Param2, Param3)) func))
   {}
   ReturnValue operator()(Param1 p1, Param2 p2, Param3 p3)
   {
@@ -106,7 +131,11 @@ template <class ReturnValue, class Param1, class Param2>
 class functor<ReturnValue, Param1, Param2>
 {
 protected:
+#ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+  typedef boost::function2<ReturnValue, Param1, Param2> FunctionType;
+#else
   typedef ReturnValue (*FunctionType)(Param1, Param2);
+#endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
   FunctionType func_;
 public:
   bool is_valid(){return func_ != 0;}
@@ -114,7 +143,7 @@ public:
     :func_(func)
   {}
   functor(generic_function_ptr func)
-    :func_(FunctionType(func))
+    :func_(FunctionType((ReturnValue (*)(Param1, Param2)) func))
   {}
   ReturnValue operator()(Param1 p1, Param2 p2)
   {
@@ -126,7 +155,12 @@ template <class ReturnValue, class Param1>
 class functor<ReturnValue, Param1>
 {
 protected:
+#ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+  typedef boost::function1<ReturnValue, Param1> FunctionType;
+#else
   typedef ReturnValue (*FunctionType)(Param1);
+#endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
+
   FunctionType func_;
 public:
   bool is_valid(){return func_ != 0;}
@@ -134,7 +168,7 @@ public:
     :func_(func)
   {}
   functor(generic_function_ptr func)
-    :func_(FunctionType(func))
+    :func_(FunctionType((ReturnValue (*)(Param1)) func))
   {}
   ReturnValue operator()(Param1 p1)
   {
@@ -146,7 +180,11 @@ template <class ReturnValue>
 class functor<ReturnValue>
 {
 protected:
+#ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+  typedef boost::function0<ReturnValue> FunctionType;
+#else
   typedef ReturnValue (*FunctionType)();
+#endif // BOOST_EXTENSION_USE_BOOST_FUNCTION
   FunctionType func_;
 public:
   bool is_valid(){return func_ != 0;}
@@ -154,7 +192,7 @@ public:
     :func_(func)
   {}
   functor(generic_function_ptr func)
-    :func_(FunctionType(func))
+    :func_(FunctionType((ReturnValue (*)()) func))
   {}
   ReturnValue operator()()
   {
