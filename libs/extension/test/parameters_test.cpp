@@ -16,7 +16,7 @@
 #define BOOST_TEST_DYN_LINK 1
 #include <boost/test/unit_test.hpp>
 
-#include "../examples/parameters/lots_of_parameters_interface.hpp"
+#include "../examples/parameters/lots_of_parameters_iface.hpp"
 
 
 using namespace boost::extensions;
