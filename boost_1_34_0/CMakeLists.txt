@@ -73,7 +73,11 @@ endif(MSVC)
 # The default set of library variants that we will be building
 boost_add_default_variant(RELEASE DEBUG)
 boost_add_default_variant(STATIC SHARED)
-boost_add_default_variant(SINGLE_THREADED MULTI_THREADED)
+if(MSVC)
+  boost_add_default_variant(MULTI_THREADED SINGLE_THREADED)
+else(MSVC)
+  boost_add_default_variant(SINGLE_THREADED MULTI_THREADED)
+endif(MSVC)
 boost_add_default_variant(DYNAMIC_RUNTIME STATIC_RUNTIME)
 
 # Extra features used by some libraries

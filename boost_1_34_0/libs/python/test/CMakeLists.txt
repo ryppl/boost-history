@@ -37,6 +37,9 @@ macro(bpl_test TESTNAME)
     
   # Run the test itself
   file(TO_NATIVE_PATH ${LIBRARY_OUTPUT_PATH} PYTHONPATH)
+  if(WIN32 AND NOT UNIX)
+    string(REPLACE "\\" "\\\\" PYTHONPATH ${PYTHONPATH})
+  endif(WIN32 AND NOT UNIX)
   add_test("${PROJECT_NAME}::${TESTNAME}"
     ${PYTHON_EXECUTABLE} 
     "${CMAKE_CURRENT_SOURCE_DIR}/pyrun.py" 

@@ -167,7 +167,7 @@ macro(boost_test_run testname)
       NO_INSTALL)
     if (THIS_EXE_OKAY)
       add_test("${PROJECT_NAME}::${testname}" 
-        ${EXECUTABLE_OUTPUT_PATH}/tests/${PROJECT_NAME}/${testname} 
+        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/tests/${PROJECT_NAME}/${testname} 
         ${THIS_EXE_ARGS})
     endif (THIS_EXE_OKAY)
   endif(BUILD_TESTING)
@@ -233,7 +233,7 @@ macro(boost_test_run_fail testname)
       NO_INSTALL)
     if (THIS_EXE_OKAY)
       add_test("${PROJECT_NAME}::${testname}" 
-        ${EXECUTABLE_OUTPUT_PATH}/tests/${PROJECT_NAME}/${testname} 
+        ${EXECUTABLE_OUTPUT_PATH}/${CMAKE_CFG_INTDIR}/tests/${PROJECT_NAME}/${testname} 
         ${THIS_EXE_ARGS})
       set_tests_properties("${PROJECT_NAME}::${testname}" 
         PROPERTIES WILL_FAIL TRUE)

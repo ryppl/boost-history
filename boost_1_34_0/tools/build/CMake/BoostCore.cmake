@@ -871,17 +871,17 @@ macro(boost_add_executable EXENAME)
       endif (NOT THIS_EXE_FOUND_FEATURE)
     endif (NOT THIS_EXE_REQUESTED_FROM_SET)
   endforeach(FEATURESET_STR ${BOOST_FEATURES})
-
+  
   # Propagate flags from each of the features
   if (THIS_EXE_OKAY)
     foreach (FEATURE ${THIS_EXE_VARIANT})
       # Add all of the flags for this feature
       set(THIS_EXE_COMPILE_FLAGS 
-        "${THIS_EXE_COMPILE_FLAGS} ${THIS_EXE_${FEATURE}_COMPILE_FLAGS} ${${FEATURE}_COMPILE_FLAGS}")
+          "${THIS_EXE_COMPILE_FLAGS} ${THIS_EXE_${FEATURE}_COMPILE_FLAGS} ${${FEATURE}_COMPILE_FLAGS}")
       set(THIS_EXE_LINK_FLAGS 
-        "${THIS_EXE_LINK_FLAGS} ${THIS_EXE_${FEATURE}_LINK_FLAGS} ${${FEATURE}_LINK_FLAGS}")
+          "${THIS_EXE_LINK_FLAGS} ${THIS_EXE_${FEATURE}_LINK_FLAGS} ${${FEATURE}_LINK_FLAGS} ${${FEATURE}_EXE_LINK_FLAGS}")
       set(THIS_EXE_LINK_LIBS 
-        ${THIS_EXE_LINK_LIBS} ${THIS_EXE_${FEATURE}_LINK_LIBS} ${${FEATURE}_LINK_LIBS})
+          ${THIS_EXE_LINK_LIBS} ${THIS_EXE_${FEATURE}_LINK_LIBS} ${${FEATURE}_LINK_LIBS})
     endforeach (FEATURE ${THIS_EXE_VARIANT})
 
     # Handle feature interactions
@@ -945,8 +945,8 @@ macro(boost_add_executable EXENAME)
         PROPERTIES
         COMPILE_FLAGS_DEBUG "${DEBUG_COMPILE_FLAGS} ${THIS_EXE_COMPILE_FLAGS}"
         COMPILE_FLAGS_RELEASE "${RELEASE_COMPILE_FLAGS} ${THIS_EXE_COMPILE_FLAGS}"
-        LINK_FLAGS_DEBUG "${DEBUG_LINK_FLAGS} ${THIS_EXE_LINK_FLAGS}"
-        LINK_FLAGS_RELEASE "${RELEASE_LINK_FLAGS} ${THIS_EXE_LINK_FLAGS}"
+        LINK_FLAGS_DEBUG "${DEBUG_LINK_FLAGS} ${DEBUG_EXE_LINK_FLAGS} ${THIS_EXE_LINK_FLAGS}"
+        LINK_FLAGS_RELEASE "${RELEASE_LINK_FLAGS} ${RELEASE_EXE_LINK_FLAGS} ${THIS_EXE_LINK_FLAGS}"
         )
     endif (THIS_EXE_DEBUG_AND_RELEASE)
 
@@ -960,11 +960,18 @@ macro(boost_add_executable EXENAME)
 
     # Link against the various libraries 
     if (THIS_EXE_DEBUG_AND_RELEASE)
-      target_link_libraries(${EXENAME} 
-        ${THIS_EXE_LINK_LIBS}
-        release ${THIS_EXE_RELEASE_ACTUAL_DEPENDS} ${THIS_EXE_RELEASE_LINK_LIBS} 
-        debug ${THIS_EXE_DEBUG_ACTUAL_DEPENDS} ${THIS_EXE_DEBUG_LINK_LIBS} 
-        )
+      # Configuration-agnostic libraries
+      target_link_libraries(${EXENAME} ${THIS_EXE_LINK_LIBS})
+      
+      # Link against libraries for "release" configuration
+      foreach(LIB ${THIS_EXE_RELEASE_ACTUAL_DEPENDS} ${THIS_EXE_RELEASE_LINK_LIBS})     
+        target_link_libraries(${EXENAME} optimized ${LIB})
+      endforeach(LIB ${THIS_EXE_RELEASE_ACTUAL_DEPENDS} ${THIS_EXE_RELEASE_LINK_LIBS})     
+        
+      # Link against libraries for "debug" configuration
+      foreach(LIB ${THIS_EXE_DEBUG_ACTUAL_DEPENDS} ${THIS_EXE_DEBUG_LINK_LIBS})     
+        target_link_libraries(${EXENAME} debug ${LIB})
+      endforeach(LIB ${THIS_EXE_DEBUG_ACTUAL_DEPENDS} ${THIS_EXE_DEBUG_LINK_LIBS})     
     else (THIS_EXE_DEBUG_AND_RELEASE)
       target_link_libraries(${EXENAME} 
         ${THIS_EXE_ACTUAL_DEPENDS} 
