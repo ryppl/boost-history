@@ -1,5 +1,5 @@
 [/ Boost.Extension - performance analysis ]
-[/ Copyright 2007 Jeremy Pack ]
+[/ Copyright 2007 Mariano G. Consoni ]
 [/ Distributed under the Boost Software License, Version 1.0. (See]
 [/ accompanying file LICENSE_1_0.txt or copy at ]
 [/ http://www.boost.org/LICENSE_1_0.txt) ]
@@ -7,6 +7,83 @@
 
 [section:performance_analysis Performance Analysis]
 
-Insert content here.
+In this section we will discuss the performance of the library. We'll focus 
+in the overhead added in comparison with [^ dlopen/dlclose] or 
+[^ LoadLibrary/CloseLibrary] approaches, describing three benchmarks
+and their results.
+
+Finally we will discuss a small benchmark comparing two ways of using the 
+library, depending or not of boost::function.
+
+[h1 First comparison]
+
+First, we wanted to know how much is the overhead of using Boost.Extension
+instead of direct operating system calls. 
+
+As you may know, Boost.Extension uses this system calls but of course has 
+some intermediate structures that allows the programmer a much more 
+friendlier use of the implementations. Of course any intermediate step in
+the process costs time, so we wanted to know how much that time is.
+
+Then we made a benchmark opening the same library with both approaches
+and calling a method of the exported interface. This is done a lot of times in
+order to be able to measure the times. This benchmark is implemented in
+[^ benchmarks/plain_old_approach.cpp ].
+
+For 1000 iterations results (in an AMD XP 2500) are:
+
+# [*Direct system calls]: 0.09 secs
+
+# [*Boost.Extension]: 0.33 secs
+
+So Boost.Extension is (aprox.) three times slower.
+
+
+[h1 Multiple calls and libraries]
+
+Having a first idea about the comparison we advanced with two new benchmarks.
+
+The first opens a library one time and then calls a method of the implementation
+multiple times. We wanted to see with this benchmark if the call overhead of 
+one individual method is different between both approaches. 
+
+Results are very similar, they vary from run to run so the overhead is minimum. 
+
+This benchmark is implemented in [^ benchmarks/multiple_class.hpp].
+
+The second addresses a different issue. The overhead of opening a library. In order to
+be measurable we had to open a lot of libraries (and then calls a method of each one). 
+To avoid generating a lot of code we just generated a library and copied it (using 
+[^ boost::filesystem]) with different names. We tested the code loading 500, 1.000 
+and 2.000 libraries.
+
+Results (for 500 libraries):
+
+# [*Direct system calls]: 0.07 secs
+
+# [*Boost.Extension]: 0.21 secs
+
+The difference is similar to the first example
+
+We can conclude that the overhead is mainly in the library loading part not in the calls.
+Moreover, we have done some profiling and discovered 
+that most of the overhead is spent in memory allocations caused by the use of 
+STL strings to identify the implementations. We are currently analyzing if this 
+overhead could be lowered.
+
+
+[h1 boost::function overhead]
+
+Besides the comparison of Boost.Extension vs. direct system calls we evaluated 
+different alternatives among features of the library.
+
+As our philosophy is to try to depend of the fewest libraries (including Boost 
+libraries) we present the option to use or not boost::function in Boost.Extension.
+
+In [^plain_old_approach_bf.cpp] we use our first benchmark to compare the usage
+of boost::function in the implementation of Boost.Extension.
+
+Results are that overhead is not noticeable.
+
 
 [endsect]
