@@ -1,16 +1,18 @@
-#include <vector>
-#include <deque>
+#include <map>
 #include <cmath>
 #include <boost/array.hpp>
 
-#include "svg_plot.hpp"
+#include "svg_1d_plot.hpp"
+#include "svg_2d_plot.hpp"
 
+using std::multimap;
+using std::deque;
+using boost::array;
 using namespace boost::svg;
-using namespace std;
 
 double f(double x)
 {
-    return (x*x)/2.;
+    return sqrt(x);
 }
 
 double g(double x)
@@ -25,30 +27,25 @@ double h(double x)
 
 int main()
 {
-  double start = 0, finish = 10;
 
-    vector<double> data1;
-    deque<double> data2;
-    boost::array<double, 10> data3;
+    double start = 0, finish = 10;
 
-    double inter = 3.1415926535 / 1.;
-    
-    int j=0;
-    for(double i = start; i <= finish; i += inter, ++j)
+    multimap<double, double> data;
+
+    svg_2d_plot my_plot;
+
+    for(double i=0; i<10; ++i)
     {
-        data1.push_back(f(i));
-        data2.push_back(g(i));
-        data3[j] = h(i);
+        data.insert(std::pair<double,double>(i,f(i)));
     }
-
-    svg_plot my_plot;
 
     // size/scale settings
     my_plot.set_image_size(500, 350)
-           .set_x_scale(-3, 10);
+           .set_x_scale(-1, 10)
+           .set_y_scale(-1, 5);
 
     // Text settings
-    my_plot.set_title("Oh My!")
+    my_plot.set_title("2D Graph Test")
            .set_title_font_size(29)
            .set_x_label_text("Time in Months");
 
@@ -57,33 +54,47 @@ int main()
            .set_legend(true)
            .set_plot_window(true)
            .set_x_label(true)
-           .set_x_major_labels(true);
+           .set_x_major_labels(true)
+           .set_y_major_labels(true);
 
     // color settings
     my_plot.set_background_color(svg_color(67, 111, 69))
            .set_legend_background_color(svg_color(207, 202,167))
            .set_plot_background_color(svg_color(136, 188, 126))
            .set_title_color(white)
+
            .set_x_axis_color(black)
+           .set_y_axis_color(black)
+
            .set_x_major_tick_color(black)
-           .set_x_minor_tick_color(black);
+           .set_y_major_tick_color(black)
+
+           .set_legend_border_color(svg_color(102, 102, 84))
+
+           .set_x_minor_tick_color(black)
+           .set_y_minor_tick_color(black);
 
     //axis settings
     my_plot.set_x_major_tick(2)
-           .set_x_num_minor_ticks(3)
+           .set_x_num_minor_ticks(2)
            .set_x_major_tick_length(14)
            .set_x_minor_tick_length(7)
-           .set_x_major_tick_width(1)
-           .set_x_minor_tick_width(1);
+           .set_x_major_tick_width(2)
+           .set_x_minor_tick_width(1)
+
+           .set_y_major_tick(3)
+           .set_y_num_minor_ticks(2)
+           .set_y_major_tick_length(20)
+           .set_y_minor_tick_length(10)
+           .set_y_major_tick_width(2)
+           .set_y_minor_tick_width(1);
 
     //legend settings
     my_plot.set_legend_title_font_size(15);
 
-    plot_range(my_plot, data2.begin(), data2.end(), "Lions",  blue);
-    plot_range(my_plot, data1.begin(), data1.end(), "Tigers", purple);
-    plot_range(my_plot, data3.begin(), data3.end(), "Bears",  red);
+    plot_range(my_plot, data.begin(), data.end(), "sqrt(x)",  blue);
 
-    my_plot.write("./test.svg");
+    my_plot.write("D:/test.svg");
 
     return 0;
 }

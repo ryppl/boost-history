@@ -89,6 +89,14 @@ struct svg_color
         rhs << "rgb(" << (unsigned int)r << "," << (unsigned int) g << ","
             << (unsigned int)b << ")" ;
     }
+
+    bool operator==(const svg_color& rhs)
+    {
+        if(r == rhs.r && g == rhs.g && b == rhs.b)
+            return true;
+
+        return false;
+    }
 };
 
 // -----------------------------------------------------------------
@@ -203,7 +211,7 @@ svg_color color_array[] =
     svg_color(107, 142, 35 ), // olivedrab
     svg_color(255, 165, 0  ), // orange
     svg_color(255, 69 , 0  ), // orangered
-    svg_color(218, 122, 214), // orchid
+    svg_color(218, 112, 214), // orchid
     svg_color(238, 232, 170), // palegoldenrod
     svg_color(152, 251, 152), // palegreen
     svg_color(175, 238, 238), // paleturquose
