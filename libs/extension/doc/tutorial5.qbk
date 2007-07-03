@@ -65,7 +65,7 @@ public:
 ``
 
 Apart from that we need some protocol information like the server address, port or modes. This data is needed for each protocol and
-each protocol maybe could have differente implementations with different servers or ports.
+each protocol maybe could have different implementations with different servers or ports.
 
 Of course our Info class is a perfect solution to store this data. But in this case as the information is needed for each protocol we could
 define a base class as the info class and then implement specific versions for each protocol (at least one, could be more for each protocol).
@@ -127,7 +127,7 @@ extern "C" void BOOST_EXTENSION_EXPORT_DECL extension_export_plugins(boost::exte
 }
 ``
 
-Finally let's use our implementation for an hypotetical connection:
+Finally let's use our implementation for an hypothetical connection:
 
 ``
 	std::list<factory< protocol, boost::shared_ptr<network_parameters> > >::iterator current_plugin = factory_list.begin();

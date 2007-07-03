@@ -109,7 +109,7 @@ Please note the following details:
 
 \n
 
-It is expected that at this point you can create your own classes with multi-argument contructors and use them via
+It is expected that at this point you can create your own classes with multi-argument constructors and use them via
 Boost.extensions without problems.
 
 [endsect]

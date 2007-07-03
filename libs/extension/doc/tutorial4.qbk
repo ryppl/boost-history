@@ -63,7 +63,7 @@ extern "C" void BOOST_EXTENSION_EXPORT_DECL extension_export_word(boost::extensi
 ``
 
 
-Also note that we are using the Info int to store some kind of "version", and then we could diferrentiate the classes
+Also note that we are using the Info int to store some kind of "version", and then we could differentiate the classes
 by its int (see Info class tutorial for more information on this).
 
 ``
@@ -100,7 +100,7 @@ We get the following output:
 [^hello world! | v2 hello world! v2 | v2 hello world! v2]]]]
 
 
-The first "hello world" is returned by the first version of the library, and the second and third retruned by the second version.
+The first "hello world" is returned by the first version of the library, and the second and third returned by the second version.
 
 Finally, we will show another example similar to the former but in this case we implement a different interface, same class
 name ('hello') but with different interface ('salute').

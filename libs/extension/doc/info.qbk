@@ -119,7 +119,7 @@ extern "C" void BOOST_EXTENSION_EXPORT_DECL extension_export_multilanguage_word(
 In the code we could see that add argument is a Info class instance. In this case is =word_description=
 which receives the language and word as arguments.
 
-Now we could start using that information in the main code. Rerieving Info class is easy, you should just call
+Now we could start using that information in the main code. Retrieving Info class is easy, you should just call
 =get_info()= method of the factory. 
 
 Let's see some code using the multilanguage hello world words:
