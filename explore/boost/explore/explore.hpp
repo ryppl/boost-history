@@ -15,8 +15,8 @@
 #define __EXPLORE_HPP_INCLUDED__
 
 #include <iostream>
-#include <map>
 #include <iterator>
+#include <boost/functional/detail/container_fwd.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -32,7 +32,6 @@
 #include <boost/range/const_iterator.hpp>
 #include <boost/range/functions.hpp>
 #include <boost/range/iterator_range.hpp>
-
 #include "iterator_range.hpp"
 
 
@@ -97,6 +96,44 @@ namespace explore {
     template< typename T>
     struct print_as_container< boost::iterator_range<T> > : true_ {};
 
+    //
+    // oh, what the heck. Let's overload for explore::iterator_range 
+    // as well, just in case somebody uses this one by accident for 
+    // the print function.
+    //
+    template< typename T>
+    struct print_as_container< explore::iterator_range<T> > : true_ {};
+
+
+    //
+    // make sure we use streaming for std containers
+    //
+    template <class T, class Allocator> 
+    struct print_as_container< std::deque< T, Allocator> > : true_ {};
+
+    template <class T, class Allocator> 
+    struct print_as_container< std::list<T, Allocator> > : true_ {};
+
+    template <class T, class Allocator> 
+    struct print_as_container< std::vector<T, Allocator> > : true_ {};
+
+    template <class Key, class T, class Compare, class Allocator> 
+    struct print_as_container< std::map<Key,T, Compare, Allocator> > : true_ {};
+
+    template <class Key, class T, class Compare, class Allocator> 
+    struct print_as_container< std::multimap<Key,T, Compare, Allocator> > : true_ {};
+
+    template <class Key, class Compare, class Allocator> 
+    struct print_as_container< std::set<Key, Compare, Allocator> > : true_ {};
+
+    template <class Key, class Compare, class Allocator> 
+    struct print_as_container< std::multiset<Key, Compare, Allocator> > : true_ {};
+
+    template <class T1, class T2>  
+    struct print_as_container< std::pair<T1,T2> > : true_ {};
+
+
+
 
     //
     // is_map metafunction, probably needs to be extended for 
@@ -126,6 +163,7 @@ namespace explore {
         template< typename T>
         struct print_as_container : explore::print_as_container<T> {};
     };
+
 
     //
     // Meta functions that are used by the default implementation of format
@@ -399,13 +437,13 @@ namespace explore {
     const format_type &format,
     const container_policy_type &policy)
     {
-        return print( explore::make_iterator_range(first, last), stream, format, policy );
+        return print( boost::make_iterator_range(first, last), stream, format, policy );
     }
 
     template<class InputIterator>
     std::ostream &print(InputIterator first, InputIterator last, std::ostream &stream = std::cout)
     {
-        return print( explore::make_iterator_range(first, last), stream );
+        return print( boost::make_iterator_range(first, last), stream );
     }
 
 
