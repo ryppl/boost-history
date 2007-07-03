@@ -12,10 +12,20 @@
 [include tutorial4.qbk]
 [include tutorial5.qbk]
 [include tutorial6.qbk]
-Only the first and second tutorials are currently complete. The first tutorial 
-is a basic hello world example. The second tutorial is a more complex example 
-involving multiple inheritance, virtual inheritance, and inheritance across 
-shared libraries.
+
+We have written five tutorials until now.
+
+The first tutorial is a basic hello world example. The second tutorial is a more 
+complex example involving multiple inheritance, virtual inheritance, and inheritance 
+across shared libraries.
+
+The third tutorial shows how to register classes with multi parameter constructors.
+The fourth tutorial is a about multiple library loading, with some strange cases
+like loading the same library many times and loading very similar classes.
+
+The fifth tutorial is an advanced example of using the Info class. You could see
+a basic example in the Info class section too.
+
 The tutorial code can be found in the examples folder. They all share the same
 Jamfile, but the Jamfile contents are separated out for each tutorial.
 [endsect]
