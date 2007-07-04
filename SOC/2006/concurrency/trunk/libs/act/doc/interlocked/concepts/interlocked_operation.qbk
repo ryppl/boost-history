@@ -1,5 +1,7 @@
 [section Interlocked Operation]
 
+[heading Description]
+
 An [concept Interlocked Operation] is a function which provides guarantees
 concerning order and visibility of read and write operations with respect to
 multiple threads, often with semantics which may be specified by users at the
@@ -52,7 +54,7 @@ constrained by passing a [concept Semantic Type] as an explicit template
 argument to the corresponding template. Not all [concept Interlocked Operations]
 support all [concept Semantic Types].
 
-[note
+[important
 If you are unsure as to which semantics you should use for a given situation, it
 is generally safest to use the default semantics of the corresponding
 [concept Interlocked Operation]. If efficiency is important for your
@@ -76,8 +78,44 @@ can without breaking allowable ordering of visibility between threads.
                only.
               ]                                                                ]
 [[`default_`] [Uses the default ordering guarantees as specified by the
-               corresponding [concept Interlocked Operation].
+               corresponding [concept Interlocked Operation]. This
+               [concept Semantic Type] must be supported by all
+               [concept Interlocked Operations].
               ]                                                                ]
 ]
+
+[note
+In a future release, another [concept Semantic Type] may be introduced called
+`thread_unsafe` which does not perform the operation atomically at all. This
+type would be a required semantic for all [concept Interlocked Operations], much
+like `default_`.
+]
+
+[heading Headers]
+
+In general, you should not have to include the following files in order to use
+[concept Interlocked Operations], since including the file for the operation
+implicitly includes the corresponding semantics. However, if you wish to create
+your own [concept Interlocked Operations], you would use the headers notated
+below to bring in the semantic types which are necessary for use with your
+operation.
+
+``
+  // Brings in all semantic types.
+  #include <boost/act/interlocked/semantics.hpp>
+  
+  // Fine-grained semantic headers.
+  #include <boost/act/interlocked/semantics/unordered.hpp>
+  #include <boost/act/interlocked/semantics/acquire.hpp>
+  #include <boost/act/interlocked/semantics/release.hpp>
+  #include <boost/act/interlocked/semantics/acq_rel.hpp>
+  #include <boost/act/interlocked/semantics/default.hpp>
+``
+
+[heading Example]
+
+[import ../../../example/multiply_assign.cpp]
+
+[multiply_assign]
 
 [endsect]

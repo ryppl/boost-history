@@ -57,17 +57,19 @@ or if `default_` semantics are specified, then the operation is performed with
   #include <boost/act/interlocked/assign/assign_acq_rel.hpp>
   #include <boost/act/interlocked/assign/assign_unordered.hpp>
   
-  
   // Forward declarations.
   #include <boost/act/interlocked/assign_fwd.hpp>
   #include <boost/act/interlocked/assign/assign_fwd.hpp>
   /* etc. */
-  
   
   // assign_if_was headers.
   #include <boost/act/interlocked/assign_if_was.hpp>
   #include <boost/act/interlocked/assign_if_was/assign_if_was.hpp>
   /* etc. */
 ``
+
+[heading Example]
+
+ToDo: Put a code example here.
 
 [endsect]

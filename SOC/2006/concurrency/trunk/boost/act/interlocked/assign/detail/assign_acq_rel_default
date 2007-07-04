@@ -1,0 +1,53 @@
+/*=============================================================================
+    Copyright (c) 2006, 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQ_REL_DEF_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_DETAIL_ASSIGN_ACQ_REL_DEF_HPP
+
+// Note: This file is only entered if there is assign_if_was< acq_rel > support
+
+#include <boost/type_traits/remove_volatile.hpp>
+#include <boost/act/interlocked/modify/modify_acq_rel.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+template< typename Type >
+struct assign_acq_rel_fun
+{
+public:
+  assign_acq_rel_fun( Type const& right_init ) : right_m( right_init ) {}
+public:
+  template< typename LeftType >
+  Type operator ()( LeftType& ) const
+  {
+    return right_m;
+  }
+private:
+  Type const& right_m;
+};
+
+template< typename Type >
+assign_acq_rel_fun< typename remove_volatile< Type >::type >
+make_assign_acq_rel_fun( Type const& right )
+{
+  return assign_acq_rel_fun< typename remove_volatile< Type >::type >( right );
+}
+
+struct assign_acq_rel_default_impl
+{
+  template< typename Type >
+  static typename remove_volatile< Type >::type
+  execute( Type& left, typename remove_volatile< Type >::type right )
+  {
+    return modify< acq_rel >( left, make_assign_acq_rel_fun( right ) );
+  }
+};
+
+} } } }
+
+#endif

@@ -10,4 +10,7 @@ boost_act/interlocked/interlocked_concepts/interlocked_type.html
 boost_act/interlocked/interlocked_concepts/interlocked_natural_type.html
 boost_act/interlocked/interlocked_concepts/interlocked_arithmetic_type.html
 boost_act/interlocked/interlocked_concepts/interlocked_integer_type.html
+boost_act/interlocked/interlocked_support.html
+boost_act/interlocked/interlocked_support/checking_support.html
+boost_act/interlocked/interlocked_support/extending_support.html
 boost_act/rationale.html

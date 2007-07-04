@@ -20,7 +20,7 @@
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/act/interlocked/increment/increment_acq_rel.hpp>
 
-#include <boost/act/interlocked/detail/cas_support.hpp>
+#include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 

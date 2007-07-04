@@ -78,11 +78,11 @@
 //     Where semantic_sequence is a sequence whose elements are each one of:
 //       acquire, meanining there is an implementation for acquire semantics
 //                    -or-
-//       release, meanining there is an one for release semantics
+//       release, meanining there is one for release semantics
 //                    -or-
-//       acq_rel, meanining there is one for full barrier semantics
+//       acq_rel, meanining there is one for combined acquire/release semantics
 //                    -or-
-//       unordered, meanining there is no specific ordering required
+//       unordered, meanining there is one for unordered semantics
 //
 //
 // Because of the heavy branching and use of macros that occur in practice, it

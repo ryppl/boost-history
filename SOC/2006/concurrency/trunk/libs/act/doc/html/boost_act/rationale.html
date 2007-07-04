@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Rationale</title><link rel="stylesheet" href="../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../index.html" title="Boost.Act" /><link rel="up" href="../index.html" title="Boost.Act" /><link rel="prev" href="interlocked/interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type" /><script type="text/javascript" src="../../../doc/javascript/main.js"></script>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Rationale</title><link rel="stylesheet" href="../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../index.html" title="Boost.Act" /><link rel="up" href="../index.html" title="Boost.Act" /><link rel="prev" href="interlocked/interlocked_support/extending_support.html" title="Extending Support" /><script type="text/javascript" src="../../../doc/javascript/main.js"></script>
       <script type="text/javascript" > <!--
          boostscript.init( new Array(
             boostscript.nested_links,
@@ -56,7 +56,7 @@
     </div>
     <div class="spirit-nav">
       <div class="spirit-nav-icon">
-        <a accesskey="p" href="interlocked/interlocked_concepts/interlocked_integer_type.html">
+        <a accesskey="p" href="interlocked/interlocked_support/extending_support.html">
           <div class="prev-icon"></div>
         </a>
       </div>
@@ -87,8 +87,51 @@
       This section is provided to briefly describe the rationale behind some of these
       decisions.
     </p>
+            <a id="boost_act.rationale.interlocked_operation_names"></a>
+            <h4><a id="id465290"></a>
+      <a href="rationale.html#boost_act.rationale.interlocked_operation_names">Interlocked
+      Operation Names</a>
+    </h4>
+            <p>
+      Those familiar with lock-free programming may have noticed that the "swap"
+      and "compare-and-swap" operations are named <code class="computeroutput"><span class="identifier">assign</span></code>
+      and <code class="computeroutput"><span class="identifier">assign_if_was</span></code> in <code class="literal">Boost.Act</code>
+      respectively. This was done for several reasons. Firstly, the term "swap"
+      already has a meaning in standard C++, and that is to swap the values of two
+      objects in memory. The "swap" operation when refering to lock-free
+      programming means to set the value of a variable and yield the old value. Rather
+      than keep this conflict in terms, it was decided that the term "assign"
+      was a more accurate name, since the operation is just an assignment which returns
+      the old value rather than a reference to the modified object.
+    </p>
+            <p>
+      Similarly, the "swap" in "compare-and-swap" is not the
+      traditional C++ "swap." What's more is, the name "compare-and-swap"
+      does not give a very clear order of arguments, and indeed, different implementations
+      often choose varying orders of those arguments. <code class="computeroutput"><span class="identifier">assign_if_was</span></code>,
+      on the other hand, has an argument order which can be determined much less
+      ambiguously from its name.
+    </p>
+            <p>
+      There are still some down-sides to the name choice, and that is that <code class="computeroutput"><span class="identifier">assign</span></code> and <code class="computeroutput"><span class="identifier">assign_if_was</span></code>,
+      along with the other <code class="literal">Interlocked Operations</code>, return the
+      old value of the object being modified, whereas in C++ a reference to the object
+      is generally returned (from which you may obtain the new value). For this reason,
+      there was a short period where the <code class="literal">Interlocked Operations</code>
+      all yielded objects with member functions <code class="computeroutput"><span class="identifier">old_value</span><span class="special">()</span></code> and <code class="computeroutput"><span class="identifier">new_value</span><span class="special">()</span></code> to make it very unlikely that the user assumes
+      the wrong meaning when reading or writing code. Problems with this approach
+      were that the object, which now had to contain both the old value and the argument
+      to the function call or the old value and the new value, was not completely
+      optimized away in at least one commonly used compiler, which is a problem considering
+      the primary use of such functions is for efficiency. As well, the need to call
+      <code class="computeroutput"><span class="identifier">old_value</span><span class="special">()</span></code>
+      and <code class="computeroutput"><span class="identifier">new_value</span><span class="special">()</span></code>
+      when accessing the result of the call made trivial code overly verbous. If
+      there are any objections, I would be glad to consider changing the library
+      around, especially if you have a desirable alternative.
+    </p>
             <a id="boost_act.rationale.policy_based_design"></a>
-            <h4><a id="id463318"></a>
+            <h4><a id="id465490"></a>
       <a href="rationale.html#boost_act.rationale.policy_based_design">Policy-Based Design</a>
     </h4>
             <p>
@@ -128,7 +171,7 @@
       design.
     </p>
             <a id="boost_act.rationale.actions_vs__futures"></a>
-            <h4><a id="id463412"></a>
+            <h4><a id="id465842"></a>
       <a href="rationale.html#boost_act.rationale.actions_vs__futures">Actions vs. Futures</a>
     </h4>
             <p>
@@ -158,7 +201,7 @@
     </div>
     <div class="spirit-nav">
       <div class="spirit-nav-icon">
-        <a accesskey="p" href="interlocked/interlocked_concepts/interlocked_integer_type.html">
+        <a accesskey="p" href="interlocked/interlocked_support/extending_support.html">
           <div class="prev-icon"></div>
         </a>
       </div>

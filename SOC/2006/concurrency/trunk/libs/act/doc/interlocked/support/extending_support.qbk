@@ -1,0 +1,25 @@
+[section Extending Support]
+
+In its current state, the interlocked portion of =Boost.Act= is only implemented
+for Windows and for GCC targetting x86. I unfortunately do no have the means to
+test other systems, so I must rely on the boost community to contribute. I have
+done all that I can to make porting the implementation to other systems as easy
+as possible. Most operations may be emulated in a lock-free manner based on
+other operations, namely via assign_if_was, and therefore the minimum amount of
+code required is fairly small. For details on exacly how to port to other
+systems and the exact way that default implementations are chosen, please see
+the documentation in the header
+`<boost/act/interlocked/detail/implementation_info/operation_support.hpp>`.
+
+In future updates, I plan to use =Boost.Wave= to create a table in this
+documentation which internally uses implementation header files to present
+exactly which compilers and architectures are supported and to what extent. This
+way, each rebuild of the documentation automatically syncs up with the
+implemenation to give an accurate view of support. This should make it much
+easier to see which operations are supported for your system as a user, and also
+should make it easier for implementors to determine if additions they make are
+correctly being picked (as running tests will merely tell you if the test was
+successful, not if a native implementation was used as opposed to one emulated
+with compare-and-swap).
+
+[endsect]

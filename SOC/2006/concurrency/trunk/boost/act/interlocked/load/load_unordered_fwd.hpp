@@ -13,6 +13,7 @@
 
 #if BOOST_ACT_INTERLOCKED_HAS( load, unordered )
 
+#include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 #include <boost/act/interlocked/semantics/unordered.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_volatile.hpp>

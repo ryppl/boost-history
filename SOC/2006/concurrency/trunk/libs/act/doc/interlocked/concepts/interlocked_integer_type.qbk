@@ -63,12 +63,10 @@ or if `default_` semantics are specified, then the operation is performed with
   #include <boost/act/interlocked/bitand_assign/bitand_assign_acq_rel.hpp>
   #include <boost/act/interlocked/bitand_assign/bitand_assign_unordered.hpp>
   
-  
   // Forward declarations.
   #include <boost/act/interlocked/bitand_assign_fwd.hpp>
   #include <boost/act/interlocked/bitand_assign/bitand_assign_fwd.hpp>
   /* etc. */
-  
   
   // bitor_assign headers.
   #include <boost/act/interlocked/bitor_assign.hpp>
@@ -79,5 +77,9 @@ or if `default_` semantics are specified, then the operation is performed with
   // Headers for the remaining operations follow the same pattern as above. //
   ////////////////////////////////////////////////////////////////////////////
 ``
+
+[heading Example]
+
+ToDo: Put a code example here.
 
 [endsect]

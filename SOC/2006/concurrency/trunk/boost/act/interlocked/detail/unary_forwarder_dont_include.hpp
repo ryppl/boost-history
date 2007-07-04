@@ -16,7 +16,7 @@
 #include <boost/type_traits/remove_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
-#include <boost/act/interlocked/detail/cas_support.hpp>
+#include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
 
 #include <boost/mpl/if.hpp>

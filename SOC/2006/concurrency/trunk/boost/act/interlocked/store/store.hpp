@@ -15,7 +15,7 @@
 
 #include <boost/utility/enable_if.hpp>
 
-#include <boost/act/interlocked/detail/cas_support.hpp>
+#include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 #include <boost/act/interlocked/store/store_release.hpp>
 
 namespace boost { namespace act { namespace interlocked {

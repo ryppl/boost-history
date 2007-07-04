@@ -1,0 +1,54 @@
+[section Checking Support]
+
+[heading Description]
+
+In practice, not all architectures and compilers can be made to support all of
+the interlocked portion of this library. While many common systems may support
+all of the functionality described in documentation, others may support none, or
+a certain subset. Because of this, it is important to be able to check at
+preprocessor time if certain functionality is supported, allowing the
+implementation to branch off accordingly. This can be accomplished by using the
+`BOOST_ACT_INTERLOCKED_HAS` macro.
+
+[variablelist Notation
+[[[~name]]          [The name of an __interlocked_operation__ in =Boost.Act=.] ]
+[[`S`]              [A __semantic_type__, as specified without qualification
+                     and with the exact name as listed in documentation
+                     (not a typedef name). As an exception, =default_=,
+                     =default=, and =_= may each be used when specifying default
+                     semantics.
+                    ]                                                          ]
+]
+
+[heading Expression Requirements]
+
+[table Interlocked Operation Requirements
+[[Expression]                             [Pre/Post-Condition]                 ]
+[[`BOOST_ACT_INTERLOCKED_HAS( name, S )`] [Yields the literal `1` if the
+                                           operation is supported or `0` if the
+                                           operation is not supported.
+                                          ]                                    ]
+]
+
+[heading Headers]
+
+``  
+  // Brings in the `BOOST_ACT_INTERLOCKED_HAS` macro.
+  #include <boost/act/config/interlocked/has.hpp>
+  
+  // Note: No semantic headers have to be included in order to use
+  //       BOOST_ACT_INTERLOCKED_HAS as it relies entirely on the preprocessor.
+  
+``
+
+[heading Example]
+
+ToDo: Put a code example here.
+
+[note
+In a future release, another macro, `BOOST_ACT_INTERLOCKED_HAS_LOCK_FREE` will
+likely be introduced, allowing one to check if an operation is supported
+natively without locking as opposed to being simulated with locks.
+]
+
+[endsect]

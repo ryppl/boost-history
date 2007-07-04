@@ -15,7 +15,6 @@
 #ifdef BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT
 
 #include <climits>
-#include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
 #include <boost/mpl/or.hpp>
@@ -71,8 +70,8 @@
 #else
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_IMPL_INFO                     \
-( ( assign,        ( acq_rel ) ) )                                          \
-( ( assign_if_was, ( acq_rel ) ) )                                          \
+( ( assign,        ( acq_rel ) ) )                                             \
+( ( assign_if_was, ( acq_rel ) ) )                                             \
 ( ( load,          ( acquire ) ) )                                             \
 ( ( store,         ( release ) ) )
 
@@ -176,7 +175,7 @@ BOOST_PP_EQUAL                                                                 \
       , BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_, semantics )   \
       )                                                                        \
     , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_IMPL_INFO                       \
-      ((0,(unordered)(acquire)(release)(acq_rel)))                          \
+      ((0,(unordered)(acquire)(release)(acq_rel)))                             \
     )                                                                          \
   )                                                                            \
 , 2                                                                            \
@@ -226,113 +225,6 @@ BOOST_PP_EQUAL                                                                 \
 ( BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_, name )              \
 , BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_, desired_name )      \
 )
-
-namespace boost { namespace act { namespace interlocked { namespace detail {
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_ARITHMETIC_PARAMS_BASE_MACRO(r,data,elem) \
-are_valid_arithmeticn_params< ( elem / CHAR_BIT )                              \
-                            , LeftOperand, RightOperand, ComparisonType        \
-                            >,
-#define BOOST_ACT_INTERLOCKED_DETAIL_ADDITIVE_PARAMS_BASE_MACRO(r,data,elem)   \
-are_valid_additiven_params< ( elem / CHAR_BIT )                                \
-                            , LeftOperand, RightOperand                        \
-                            >,
-
-// ToDo: remove_volatile for RightOperand and ComparisonType
-template< typename LeftOperand, typename RightOperand = LeftOperand const
-        , typename ComparisonType = LeftOperand const
-        >
-struct are_valid_arithmetic_params
-  : mpl::or_
-    <
-      BOOST_PP_SEQ_FOR_EACH
-      ( BOOST_ACT_INTERLOCKED_DETAIL_ARITHMETIC_PARAMS_BASE_MACRO
-      , ~
-      , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_SEQ
-      )
-      mpl::true_
-    >
-{
-};
-
-// ToDo: remove_volatile for RightOperand
-template< typename LeftOperand, typename RightOperand = LeftOperand const >
-struct are_valid_additive_params
-  : mpl::or_
-    <
-      BOOST_PP_SEQ_FOR_EACH
-      ( BOOST_ACT_INTERLOCKED_DETAIL_ADDITIVE_PARAMS_BASE_MACRO
-      , ~
-      , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_SEQ
-      )
-      mpl::true_
-    >
-{
-};
-
-// ToDo: remove_volatile for RightOperand and ComparisonType
-template< typename LeftOperand, typename RightOperand = LeftOperand const
-        , typename ComparisonType = LeftOperand const
-        >
-struct are_valid_store_style_params
-  : mpl::or_< are_valid_arithmetic_params< LeftOperand, RightOperand
-                                         , ComparisonType
-                                         >
-            , are_valid_pointer_params< LeftOperand, RightOperand
-                                      , ComparisonType
-                                      >
-            , are_valid_bool_params< LeftOperand, RightOperand
-                                   , ComparisonType
-                                   >
-            > {};
-
-#undef BOOST_ACT_INTERLOCKED_DETAIL_ADDITIVE_PARAMS_BASE_MACRO
-#undef BOOST_ACT_INTERLOCKED_DETAIL_ARITHMETIC_PARAMS_BASE_MACRO
-
-} } } }
-
-#else // Else: No CAS support defined
-
-#include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/always.hpp>
-#include <boost/mpl/apply.hpp>
-
-namespace boost { namespace act { namespace interlocked { namespace detail {
-
-template< typename LeftOperand, typename RightOperand = LeftOperand
-        , typename ComparisonType = LeftOperand
-        >
-struct are_valid_arithmetic_params
-  : mpl::false_
-{
-  BOOST_MPL_ASSERT_MSG
-  (
-    ( mpl::apply< mpl::always< mpl::false_ >, TargetType >::type::value )
-  , INTERLOCKED_OPERATIONS_NOT_DEFINED_FOR_THIS_SYSTEM
-  , ()
-  );
-};
-
-template< typename LeftOperand, typename RightOperand = LeftOperand
-        , typename ComparisonType = LeftOperand
-        >
-struct are_valid_store_style_params
-  : mpl::false_
-{
-
-  BOOST_MPL_ASSERT_MSG
-  (
-    ( mpl::apply< mpl::always< mpl::false_ >, TargetType >::type::value )
-  , INTERLOCKED_OPERATIONS_NOT_DEFINED_FOR_THIS_SYSTEM
-  , ()
-  );
-
-};
-
-
-} } } }
 
 #endif
 

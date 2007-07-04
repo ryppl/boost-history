@@ -18,7 +18,7 @@
 #include <boost/act/interlocked/semantics.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-#include <boost/act/interlocked/detail/cas_support.hpp>
+#include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/cat.hpp>

@@ -1,15 +1,15 @@
-[section Interlocked Basic Type]
+[section Interlocked Type]
 
 [heading Description]
 
-An [concept Interlocked Basic Type] is a type whose instances support
+An [concept Interlocked Type] is a type whose instances support
 thread-safe `load` and `store` operations and which are often used in the
 implementation of lock-free code. In the current version of Boost.Act, only
-built-in types may be [concept Interlocked Basic Types], although this will
+built-in types may be [concept Interlocked Types], although this will
 likely change in future releases.
 
 [variablelist Notation
-[[`I`]            [An [concept Interlocked Basic Type].]                       ]
+[[`I`]            [An [concept Interlocked Type].]                             ]
 [[`i`]            [A value of type `I&`.]                                      ]
 [[`C1`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
 [[`c1`]           [A value of type `C1 const&`.]                               ]
@@ -72,11 +72,14 @@ or if `default_` semantics are specified, then the operation is performed with
   #include <boost/act/interlocked/load/load_fwd.hpp>
   /* etc. */
   
-  
   // store headers.
   #include <boost/act/interlocked/store.hpp>
   #include <boost/act/interlocked/store/store.hpp>
   /* etc. */
 ``
+
+[heading Example]
+
+ToDo: Put a code example here.
 
 [endsect]
