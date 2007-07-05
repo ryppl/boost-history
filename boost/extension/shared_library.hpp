@@ -18,7 +18,81 @@
 #include <boost/function.hpp>
 #endif
 
+
+#ifdef BOOST_EXTENSION_USE_PP
+
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/if.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/repetition.hpp>
+
+#ifndef BOOST_EXTENSION_MAX_FUNCTOR_PARAMS
+#define BOOST_EXTENSION_MAX_FUNCTOR_PARAMS 6
+#endif
+
+/// functor template specialization macro.
+#define BOOST_EXTENSION_FUNCTOR_CLASS_PREFIX(Z, N, _) \
+template<class ReturnValue BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, \
+         class Param) > \
+class functor<ReturnValue BOOST_PP_COMMA_IF(N) \
+      BOOST_PP_ENUM_PARAMS(N, Param) > { \
+  protected:
+/**/
+
+#define BOOST_EXTENSION_FUNCTOR_CLASS_SUFFIX(Z, N, _) \
+    FunctionType func_; \
+  public: \
+    bool is_valid(){return func_ != 0;} \
+    functor(FunctionType func) \
+     : func_(func) {} \
+    functor(generic_function_ptr func) \
+     : func_(FunctionType((ReturnValue (*)(BOOST_PP_ENUM_PARAMS(N, \
+                                           Param))) func)) {} \
+    ReturnValue operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
+      return func_(BOOST_PP_ENUM_PARAMS(N, p)); \
+    } \
+};
+/**/
+
+
+#ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+
+#define BOOST_EXTENSION_FUNCTOR_CLASS(Z, N, _) \
+  BOOST_EXTENSION_FUNCTOR_CLASS_PREFIX(Z, N, _) \
+  typedef BOOST_PP_CAT(boost::function, N) \
+     <ReturnValue BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, Param) > \
+                                                           FunctionType; \
+  BOOST_EXTENSION_FUNCTOR_CLASS_SUFFIX(Z, N,  _)
+/**/
+
+#else
+
+#define BOOST_EXTENSION_FUNCTOR_CLASS(Z, N, _) \
+  BOOST_EXTENSION_FUNCTOR_CLASS_PREFIX(Z, N, _) \
+  typedef ReturnValue (*FunctionType)(BOOST_PP_ENUM_PARAMS(N, Param)); \
+  BOOST_EXTENSION_FUNCTOR_CLASS_SUFFIX(Z, N,  _)
+/**/
+
+#endif // ifdef BOOST_EXTENSION_USE_BOOST_FUNCTION
+#endif // ifdef BOOST_EXTENSION_USE_PP
+
+
+
 namespace boost{namespace extensions{
+
+#ifdef BOOST_EXTENSION_USE_PP
+
+/// Declaration of functor class template.
+template <class ReturnValue,
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), class Param, void)>
+    class functor;
+
+/// Functor template specializations.
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), BOOST_EXTENSION_FUNCTOR_CLASS, _)
+
+#undef BOOST_EXTENSION_FUNCTOR_CLASS
+#else
+
 template <class ReturnValue, class Param1 = void, class Param2 = void, 
           class Param3 = void, class Param4 = void, class Param5 = void, 
           class Param6 = void>
@@ -199,6 +273,9 @@ public:
     return func_();
   }
 };
+
+#endif // ifdef BOOST_EXTENSION_USE_PP
+
 
 class shared_library
 {
