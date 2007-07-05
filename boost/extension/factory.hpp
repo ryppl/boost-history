@@ -12,8 +12,95 @@
 
 #ifndef BOOST_EXTENSION_FACTORY_HPP
 #define BOOST_EXTENSION_FACTORY_HPP
+
 #include <string>
+
+#ifdef BOOST_EXTENSION_USE_PP
+
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/if.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/repetition.hpp>
+
+#ifndef BOOST_EXTENSION_MAX_FUNCTOR_PARAMS
+#define BOOST_EXTENSION_MAX_FUNCTOR_PARAMS 6
+#endif
+
+#endif
+
 namespace boost{namespace extensions{
+
+#ifdef BOOST_EXTENSION_USE_PP
+
+/// Declaration of functor class template.
+template <class Interface, class Info,
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC(\
+			                BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                                        class Param, void)> class factory;
+
+
+
+#define BOOST_EXTENSION_FACTORY_CLASS(Z, N, _) \
+template<class Interface, class Info BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, \
+         class Param) > \
+class factory<Interface, Info BOOST_PP_COMMA_IF(N) \
+              BOOST_PP_ENUM_PARAMS(N, Param) > { \
+  protected: \
+    class generic_factory_function \
+    { \
+      public: \
+        virtual ~generic_factory_function(){} \
+	    virtual Interface * operator()(BOOST_PP_ENUM_PARAMS(N, Param)) = 0; \
+            virtual generic_factory_function * copy() const = 0; \
+    }; \
+    template <class T> \
+    class factory_function : public generic_factory_function \
+    { \
+      public: \
+        virtual ~factory_function(){} \
+        virtual Interface * operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) \
+        { \
+          return new T(BOOST_PP_ENUM_PARAMS(N, p)); \
+        } \
+        virtual generic_factory_function * copy() const \
+        { \
+          return new factory_function<T>; \
+        } \
+    }; \
+    std::auto_ptr<generic_factory_function> factory_func_ptr_; \
+    Info info_; \
+  public: \
+    template <class Actual> \
+  void set_type_special(Actual *) { \
+    factory_func_ptr_.reset(new factory_function<Actual>()); \
+  } \
+  template <class Actual> \
+    void set_type(){ \
+      factory_func_ptr_ = new factory_function<Actual>(); \
+    } \
+    factory(Info info) :factory_func_ptr_(0), info_(info) {} \
+    factory(const factory & first) \
+      :factory_func_ptr_(first.factory_func_ptr_->copy()), info_(first.info_) {} \
+    Interface * operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) \
+    { \
+      return create(BOOST_PP_ENUM_PARAMS(N, p)); \
+    } \
+    Interface * create(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) \
+    { \
+      return (*factory_func_ptr_) (BOOST_PP_ENUM_PARAMS(N, p)); \
+    } \
+    Info & get_info(){return info_;} \
+};
+/**/
+
+
+/// Functor template specializations.
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                             BOOST_EXTENSION_FACTORY_CLASS, _)
+
+#undef BOOST_EXTENSION_FACTORY_CLASS
+#else
+
   template <class Interface, class Info, class Param1 = void, 
             class Param2 = void, class Param3 = void, class Param4 = void, 
             class Param5 = void, class Param6 = void>
@@ -349,5 +436,8 @@ public:
   ();}
   Info & get_info(){return info_;}
 };
+#endif // BOOST_EXTENSION_USE_PP
 }}
+
+
 #endif
