@@ -1,0 +1,365 @@
+[article CGI
+    [quickbook 1.5]
+    [version 0.01]
+    [id cgi]
+    [dirname the_document_dir]
+    [copyright 2007 Darren Garvey]
+    [purpose Thoughts about CGI implementation]
+    [authors [Garvey, Darren]]
+]
+
+[section Introduction]
+
+This library is an aid to writing portable CGI/FastCGI/SCGI programs. etc...
+
+[endsect]
+
+[section Design Notes]
+
+[section Concepts]
+
+[section Gateway]
+
+The purpose of the Gateway is to accept a connection and return it. For any particular protocol, there can be multiple types of valid connection (eg. FastCGI connections can be "any reliable full-duplex connection") so the Gateway simplifies the act of iterating through the different allowed (and supported) connection types and notifying the caller when one is established.
+
+[endsect]
+
+[endsect]
+
+[endsect]
+
+
+
+
+
+
+
+
+[section Old Stuff]
+
+[note There are many technicalities to the different protocols that aren't discussed in the SoC proposal, or even this document. Examples of these include issues about automatic parsing of CGI POST variables, security issues with external FastCGI 'servers' and different FastCGI process types (ie. Responder, Authorizer and Filter). Queries about issues like these can be brought up either through the boost mailing list or via personal email ( lists.drrngrvy '''[ @ ] gmail  [ . ]''' com ).]
+
+[section Links]
+
+These links relate to the Summer of Code proposal.
+
+[section References]
+
+'''[CGI]''' - version 1.1 - [@http://www.ietf.org/rfc/rfc3875] [br]
+(version 1.2 (draft '''[outdated/irrelevant?]''') - [@http://cgi-spec.golux.com/cgi-120-00a.html])
+
+'''[FCGI]''' - [@http://www.fastcgi.com/devkit/doc/fcgi-spec.html]
+
+'''[SCGI]''' - [@http://python.ca/scgi/protocol.txt]
+
+[endsect]
+
+[section Further Discussion]
+
+http://www.fastcgi.com - Links to documents about FastCGI, explaining rationale and performance benefits.
+
+http://cryp.to/libfastcgi - The only known FastCGI implementation specifically for C++. It is currently lacking IO facilities (+ a minor bug).
+
+[endsect]
+
+[endsect]
+
+[section Code Examples]
+
+These examples are just thoughts based on what I have already coded. They are likely to change based on input from boost mailing lists and further research, but not due to technical considerations.
+Note: `#include`s are expunged from the code below.
+
+[section Basic CGI Example]
+
+``
+int main(int, char**)
+{
+    cgi::request req;
+    req.status(200); // This would output "Status: 200 OK\r\n" for an nph file; a NOP otherwise    
+    req.header("Content-type: text/html");
+    req<< "Hello world";
+    return 0;
+}
+``
+[endsect]
+[section Simple FastCGI Example]
+
+Below are two alternatives to handle multiple requests sequentially within the same program. The function `cgi::request::accept()` is inspired by the FastCGI reference implementation, although alternatives might be `reset()` or `renew()`
+``
+int main(int, char**)
+{
+    cgi::fcgi_service service;
+
+    cgi::request req(&service);
+    do {
+        req.header("Content-type: text/plain");
+        req<< "Hello world";
+    } while( req.reset() );
+
+    return 0;
+}
+``
+An alternative to this, fitting closer to the FastCGI reference implementation might be the following:
+(NB.this approach would change the code slightly in the FastCGI example [link cgi.code_examples.realistic_fastcgi_example below])
+``
+int main(int, char**)
+{
+    cgi::fcgi_service service; // equivalent to cgi::basic_cgi_service<cgi::fcgi> service;
+
+    cgi::request req(&service, false); // false => don't load a request yet
+    while( req.accept() )
+    {
+        req.status(204); // would output "204 No Content\r\n" for SCGI
+                         // "Status: 204 No Content\r\n" for FastCGI
+                         // and would be a NOP for stdCGI
+        req.header("Content-type: text/plain");
+        req<< "Hello world";
+    }
+}
+``
+
+[endsect]
+[section Realistic FastCGI Example]
+
+The following is an example of a CGI program that exploits the benefits of handling many requests per program. This setup allows alot of flexibility in how responsive a process should be to incoming requests.
+``
+void sub_main( cgi::reqest& req )
+{
+    do {
+        req.header("Content-type: text/plain");
+        req<< "Hello, world";
+    } while( req.renew() );
+}
+
+class event_handler : public cgi::event_handler
+{
+    boost::thread_group work_threads_;
+    boost::mutex mutex_;
+    int available_threads_;
+public:
+    typedef boost::mutex::scoped_lock scoped_lock;
+
+    event_handler( int max_threads )
+    : available_threads_(max_threads)
+    { }
+
+    virtual ~event_handler()
+    {
+        work_threads_.join_all();
+    }
+
+    virtual void operator() ( cgi::event_type event, cgi::request* req, )
+    {
+        scoped_lock lk(&mutex_);
+        if( event == cgi::event_type::new_request && available_threads_ )
+        {
+            --available_threads_;
+            work_threads_.create_thread( boost::bind( &sub_main
+                                                    , boost::ref(*req)
+                                                    )
+                                       );
+        }
+        if( event == cgi::event_type::request_not_renewed ) // just a thought
+            /* this event_type would be sent when a request is closed without
+               being renewed. If this example was extended and the loop in
+               sub_main could be broken, that would imply destruction of a 
+               thread */
+            ++available_threads_;
+    }
+};
+
+int main(int, char**)
+{
+    event_handler listener(50);
+    cgi::fcgi_service service( listener );
+    return 0;
+}
+``
+
+The above shows how my FastCGI implementation currently uses an external event handler. Personally, I'd prefer to have an internal scheduler, which could make `main()` above become something like:
+
+``
+int main(int, char**)
+{
+    // ideally this would just be 'cgi::options' with no code generation for
+    // options that don't work with that particular flavour of service
+    // is this possible? worthwhile?
+    cgi::fcgi_options opt;
+     // up to 50 threads are spawned to handle new requests, assuming a thread
+    // isn't waiting for a new one
+    opt.set_option(cgi::max_threads, 50);
+    // if the max threads are in use and the queue size reaches this limit,
+    // start rejecting incoming requests by returning FCGI_OVERLOADED to the
+    // server
+    opt.set_option(cgi::max_queue_size, 30);
+    cgi::fcgi_service service( &sub_main, opt );
+    return 0;
+}
+``
+
+This would remove the need for the nasty-looking event handler, make the simplest "hello world" case more practicable and possibly make the code more portable by removing the need for applications to detect if threads are available. The reason I've kept the external event handler for now is that I'm still not sure that there are no cases where the added insight into the workings of the `fcgi_service` is needed. I'm not sure if it's still necessary though, and I like the cleaner, internal-handler approach better. (Thoughts, please?)
+
+What I'm wondering now:
+
+* Is the first approach better, or can the second approach (ie. dynamic options) plus an incremental check (from `main`) as to the status of the `fcgi_service` offer more flexibility?
+ * Essentially this boils down to: can every fringe case be handled with an option setting?
+* Rather than hard-coding the spawn/serve/reject rules in the second approach, would using an internal handler - which could be replaced by a user-defined handler - add significant/any overhead? Hmmm.
+
+[endsect]
+
+[section Simple SCGI example]
+
+The following is essentially the same as above, but using the SCGI protcol.
+``
+int main(int, char**)
+{
+    cgi::scgi_service service; // the only line changed
+    
+    cgi::request req(&service);
+    while( req.accept() )
+    {
+        req.status(206); // would output "206 Partial Content\r\n"
+        req.header("Content-type: text/plain");
+        std::cout(&req.rdbuf()); // this has to work too
+        std::cout<< "Hello world";
+    }
+}
+``
+[endsect]
+
+[endsect]
+
+[section Discussion]
+
+[section The `cgi::request` object]
+
+To clarify some of the discussion in the proposal, the referenced `request` object will likely be a 'bridge' object (correct nomenclature?) and could take the following form:
+
+``
+template<typename CGI_Service>
+class request : boost:noncopyable
+{
+    service_type* service_;
+    request_type* request_impl_;
+    bool std_cgi_;
+public:
+    typedef basic_cgi_service<CGI_Service>      service_type;
+    typedef basic_cgi_request<CGI_Service>      request_type;
+
+    request( service_type* service = NULL
+           , bool load_now = true )
+        : service_(service)
+        , std_cgi_(false)
+    {
+        if( !service )
+        {// default to standard CGI
+            std_cgi_ = true;
+            service_ = new basic_cgi_service<cgi>;
+        }
+        if( load_now )
+            request_impl_ = service_.yield_one(); // get a request from the request queue
+    }
+
+    ~request()
+    {
+        service_.end_request(request_impl_); // housekeeping
+        if( std_cgi_ ) delete service_;
+    }
+
+	int accept()
+	{
+		if( std_cgi_ ) return 0;
+		return service_.yield_one()
+
+    // ...
+};
+``
+[endsect]
+
+[section C++'s use as a CGI language]
+
+Some thoughts:
+
+* C++ is designed to aid large-scale developments, which modern web-based applications are a prime example of;
+* C++0x will likely bring with it facilities (such as regular expressions and threads) which make the language well suited to this domain;
+* An emerging trend (I use the term loosely) as web applications and language-binding technologies mature, is for components to be first developed using an RAD language like Python and later when the code settles for it to be ported to C++.  Access to a scalable C++ CGI library would aid and encourage this development style;
+* Given how widely practised and understood CGI programming is, with all the home-grown CGI libraries around, C++ should really have a robust CGI library with a standard API.
+
+[endsect]
+
+
+
+[section Justification for seperation of `cgi::service` and `cgi::request`]
+
+It is actually possible to create a library capable of dealing with CGI, FastCGI and SCGI protocols with the simple 'hello world' example below. The logic for doing so [link cgi.discussion.logic follows this section].
+``
+int main(int, char**)
+{
+    cgi::request q;
+    q.header("Content-type: text/plain");
+    q<< "Hello world";
+    return 0;
+}
+``
+This approach is poor C++ style for several reasons:
+
+* First - and most importantly - the assumption made to differentiate between FastCGI and SCGI is not guaranteed to always remain valid. In that case, the `service` and `request` objects would have to be separated, breaking any code using the library.
+* Second, it is guaranteed to provide suboptimal performance by clarifying program function at run-time when it could very simply be achieved at compile-time.
+* Thirdly, the syntax implies a closer tying of request and protocol service than an implementation is likely to provide: in reality, protocols will provide control mechanisms to the program which bear no relation to the processing request. Programmers should be able to distinguish between the two targets rather than making ambiguous-looking calls on a `request` object when it in fact bears no relation to that request.
+* Finally, separation provides flexibility. A `cgi::basic_cgi_service<>` object has to provide no more than a guarantee to interpret functions into a `cgi::basic_cgi_request<>` format - which will hopefully be very unrestrictive - in order to be useable. As an hypothetical example, a program using this library could potentially be a standalone HTTP server, as long as the '`http_service`' (eg. a `typedef` of `cgi::basic_cgi_service<cgi::http>`) handled everything, except for CGI requests, which it loads into an `http_request` and adds to the request queue. (I like this idea, although it's far beyond the scope of the proposal)
+
+A more subtle point is that some systems allow CGI variables to be sent via the command line. Since this is uncommon practice, the example above should work in the vast majority of cases. Since I consider taking over `main()` a no-go, this fringe case can easily be handled by a `cgi::service` whose constructor takes the program command line arguements.
+
+All but the first point are also justification for not just proposing a FastCGI-only library.
+
+[endsect]
+
+[section:logic Differentiating Between CGI, SCGI and FastCGI Automatically]
+
+Below is a brief explanation how the differences between these protocols could ['currently] be exploited to provide a library that can automagically guess which protocol it's being called with.
+
+Note: This is essentially a 'trick', which works on the basis of several (high-probability) assumptions. It's something I shrugged off for good reason before even attempting to implement it. It is here as a curiosity, so skip it if you're pressed for time.
+
+``
+// Guarantee: FCGI_LISTENSOCK_FILENO equals STDIN_FILENO
+if ( ! (getpeername(FCGI_LISTENSOCK_FILENO) == -1 && errno == ENOTCONN ) )
+    // we have a standard CGI object; end of guessing
+``
+
+# SCGI always reports the message length followed by a colon before the packet starts. This message length does not include the stdin characters.
+# Then CGI environment variables are passed through the socket (these add to the message length) with the format `NAME<00>VALUE<00>` where `<00>` is the NULL character.
+# A guarantee of SCGI is that variable `CONTENT_LENGTH` is set even if it is zero. There must also be a variable `SCGI` with a value of 1. That makes the shortest message length 24 - from `CONTENT_LENGTH<00>0<00>SCGI<00>1<00>`.
+This means that the first two characters sent to the program must be either "24" or numerically larger ("25", "26", etc.).
+# With FastCGI the first character is the version number, which is currently 1. The second character would have to be either 1 (`FCGI_BEGIN_REQUEST`) or 9 (`FCGI_GET_VALUES` - used by the server to query the program about its multiplexing capabilities: currently this isn't used by either apache, lighttpd or Zeus)
+# [*Now the theory starts getting speculative]
+# The SCGI protocol states that the server ['should] pass the standard CGI variables through the socket, this would push the message length (ie. the first two+ characters) well over 24.
+# The FastCGI 1.0 specification has been around for over a decade. The assumption here is that the number isn't likely to increment at a fast pace (probable, but crude)
+# Even if FastCGI 2.0 came out, the only possible failing scenario is if the server queries with FCGI_GET_VALUES: the SCGI equivalent arises with the minimum message described above with an environment variable whose name<00>value<00> combined length is 5, called via the POST method (ie. QUERY_STRING will probably not be set). This is unlikely (but possible) since REQUEST_METHOD is always likely to be set as either GET or POST, adding at least 19 to the message length value.
+
+Thus, this hypothetical all-inclusive library would probably function until the implementation of a FastCGI 4 - compatible server. Considering FastCGI 1.0 is still very poorly supported by servers, this is not exactly a 'jaws senario'. The guessing penalty would even become insignificant if the program ran for long enough. Heh, in the end, this just isn't C++, is it? Besides, a service capable of doing this could easily be implemented using the proposed framework.
+
+[endsect]
+
+[section To Do]
+
+* Signal handling (see [@http://www.fastcgi.com/docs/faq.html#Signals] for FastCGI-specific information; inquire about SCGI)
+* Change outputting for `cgi::fcgi_service` to use Boost.Iostreams (probably a `filtering_streambuf` so it can be added to a chain - in case a user wants to format output, for instance)
+* ...
+
+[endsect]
+
+[section Moving fcgi::service::event_handler into an internal one]
+
+Possible signals for the `event_handler` (and what they're likely to be used for), assuming efficiency wasn't an issue:
+
+* New request
+  * Taken by existing thread
+  * Not taken by existing thread (ie. spawn a new thread to handle it)
+* Request not renewed (aka. thread not reused/thread closed naturally)
+* Request aborted (FastCGI-specific, I think)
+
+[endsect]
+
+[endsect]
+
+[endsect]

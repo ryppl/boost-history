@@ -1,0 +1,7 @@
+
+import testing ;
+
+test-suite "cgi"
+	: # [ run test_1.cpp ]
+	;
+

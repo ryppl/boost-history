@@ -1,0 +1,10 @@
+
+project cgi
+  : requirements
+      <include>$(BOOST_ROOT)
+  : usage-requirements
+      <include>$(BOOST_ROOT)
+  #source-location = ../src
+  ;
+
+#SOURCES
