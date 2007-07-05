@@ -34,7 +34,7 @@ using boost::unit_test::test_suite;
 using namespace boost::signal_network;
 using namespace boost;
 
-class SignalFloatDoubler : public signet::filter<void (float, float)>
+class SignalFloatDoubler : public signals::filter<void (float, float)>
 {
 public:
 	void operator()(float val) {out(val, val*2);}
@@ -60,16 +60,16 @@ public:
 	}
 };
 
-class SignalMultiInheritedCollector : public signet::storage<void (float)>::unfused, public SignalVoidCounter, public SignalFloat2Collector
+class SignalMultiInheritedCollector : public signals::storage<void (float), signals::unfused>, public SignalVoidCounter, public SignalFloat2Collector
 {
 public:
-    SignalMultiInheritedCollector() : signet::storage<void (float)>::unfused(0) {}
+    SignalMultiInheritedCollector() : signals::storage<void (float), signals::unfused>(0) {}
 };
 
 void multi_num_args_inherited_test()
 {
-	signet::storage<void ()>::unfused banger;
-	signet::storage<void (float)>::unfused floater;
+	signals::storage<void (), signals::unfused> banger;
+	signals::storage<void (float), signals::unfused> floater;
 	floater(2.5f);
 	SignalFloatDuplicator duplicator;
 	SignalMultiInheritedCollector collector;
@@ -78,7 +78,7 @@ void multi_num_args_inherited_test()
 		| (SignalVoidCounter &) collector
 		|
 		(floater
-			| (signet::storage<void (float)>::unfused &) collector
+			| (signals::storage<void (float), signals::unfused> &) collector
 			| (duplicator >>= (SignalFloat2Collector &) collector));
 
 	banger();
@@ -93,12 +93,12 @@ void multi_num_args_inherited_test()
 
 void selector_test()
 {
-/*	signet::storage<void ()>::unfused banger;
-	signet::storage<void (float)>::unfused floater1, floater2;
+/*	signals::storage<void (), signals::unfused> banger;
+	signals::storage<void (float), signals::unfused> floater1, floater2;
 	floater1(1.0f);
 	floater2(2.0f);
-	signet::storage<void (float)>::unfused collector(0.0f);
-	signet::selector<2, void (float)> selector;
+	signals::storage<void (float), signals::unfused> collector(0.0f);
+	signals::selector<2, void (float)> selector;
 
 	banger >>= floater1 >>= selector.slot1();
 	banger >>= floater2 >>= selector.slot2();

@@ -3,24 +3,23 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/signal_network/mutex.hpp>
-#include <boost/signal_network/timed_generator.hpp>
-#include <boost/signal_network/counter.hpp>
-
-// for access to connection operators >>= and |
-using namespace boost::signal_network;
-using namespace boost;
+#include <boost/signal_network/component/mutex.hpp>
+#include <boost/signal_network/component/timed_generator.hpp>
+#include <boost/signal_network/component/counter.hpp>
+#include <boost/signal_network/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
+
+using namespace boost;
 
 int test_main(int, char* [])
 {
     {
         //[ test_mutex_unfused
-        signet::timed_generator<void ()>::unfused banger1;
-        signet::timed_generator<void ()>::unfused banger2;
-        signet::mutex<void ()>::unfused lock;
-        signet::counter<void ()>::unfused counter;
+        signals::timed_generator<void (), signals::unfused> banger1;
+        signals::timed_generator<void (), signals::unfused> banger2;
+        signals::mutex<void (), signals::unfused> lock;
+        signals::counter<void (), signals::unfused> counter;
         
         banger1 >>= lock >>= counter;
         banger2 >>= lock;
@@ -36,10 +35,10 @@ int test_main(int, char* [])
     }
     {
         //[ test_mutex_fused
-        signet::timed_generator<void ()> banger1;
-        signet::timed_generator<void ()> banger2;
-        signet::mutex<void ()> lock;
-        signet::counter<void ()> counter;
+        signals::timed_generator<void (), signals::fused> banger1;
+        signals::timed_generator<void (), signals::fused> banger2;
+        signals::mutex<void (), signals::fused> lock;
+        signals::counter<void (), signals::fused> counter;
 
         banger1 >>= lock >>= counter;
         banger2 >>= lock;

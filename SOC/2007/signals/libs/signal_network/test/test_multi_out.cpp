@@ -3,17 +3,16 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/signal_network/storage.hpp>
+#include <boost/signal_network/component/storage.hpp>
+#include <boost/signal_network/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
-// for access to connection operators >>= and |
-using namespace boost::signal_network;
 using namespace boost;
 
 //[ test_multi_out_classes
 
-class SignalOutIntFloat : public signet::filter<void (float)>
+class SignalOutIntFloat : public signals::filter<void (float), signals::unfused>
 {
 public:
     SignalOutIntFloat(float x) : x(x) {}
@@ -35,8 +34,8 @@ int test_main(int, char* [])
         //[ test_multi_out_unfused
 
         SignalOutIntFloat multi_out(2.5f);
-        signet::storage<void (float)>::unfused float_collector(0);
-        signet::storage<void (int)>::unfused int_collector(0);
+        signals::storage<void (float), signals::unfused> float_collector(0);
+        signals::storage<void (int), signals::unfused> int_collector(0);
 
         multi_out >>= float_collector;
         multi_out.out_int >>= int_collector;

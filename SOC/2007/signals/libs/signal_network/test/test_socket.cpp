@@ -4,19 +4,20 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/asio.hpp>
-#include <boost/test/included/test_exec_monitor.hpp>
 
-#include <boost/signal_network/socket_receiver.hpp>
-#include <boost/signal_network/socket_sender.hpp>
-#include <boost/signal_network/function.hpp>
+#include <boost/signal_network/component/socket_receiver.hpp>
+#include <boost/signal_network/component/socket_sender.hpp>
+#include <boost/signal_network/component/function.hpp>
+#include <boost/signal_network/connection.hpp>
+
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/condition.hpp>
 
+#include <boost/test/included/test_exec_monitor.hpp>
+
 //[ test_socket
 
-// for access to connection operators >>= and |
-using namespace boost::signal_network;
 using namespace boost;
 
 mutex mutex_;
@@ -39,15 +40,15 @@ void asio_server()
 	acceptor.accept(socket);
 
 	// instantiate the components - a float generator, a filter that adds 2, and a sender
-	signet::storage<void (float)>::unfused generator(1.0f);
-    signet::function<void (float), float(float)>::unfused add2(boost::bind(std::plus<float>(), _1, 2.0f));
-    signet::socket_sender<void (float)>::unfused sender(socket);
+	signals::storage<void (float), signals::unfused> generator(1.0f);
+    signals::function<void (float), float(float), signals::unfused> add2(boost::bind(std::plus<float>(), _1, 2.0f));
+    signals::socket_sender<void (float)> sender(socket);
 
 	// create the network
 	generator >>= add2 >>= sender;
 
 	// cause the generator to send it's stored value
-	generator();
+	generator.send();
 }
 
 int test_main(int, char* [])
@@ -63,8 +64,8 @@ int test_main(int, char* [])
 	socket.connect(endpoint_recv);
 
 	// instatiate the components
-    signet::socket_receiver<void (float)> receiver(socket);
-	signet::storage<void (float)>::unfused collector(0.0f);
+    signals::socket_receiver<void (float), signals::fused> receiver(socket);
+	signals::storage<void (float), signals::fused> collector(0.0f);
 
 	// set up the network
 	receiver >>= collector;

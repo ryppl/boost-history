@@ -3,29 +3,28 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/signal_network/storage.hpp>
-#include <boost/signal_network/counter.hpp>
+#include <boost/signal_network/component/storage.hpp>
+#include <boost/signal_network/component/counter.hpp>
+#include <boost/signal_network/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
-// for access to connection operators >>= and |
-using namespace boost::signal_network;
 using namespace boost;
 
 int test_main(int, char* [])
 {
     {
         //[ test_disconnect_unfused
-        signet::storage<void ()>::unfused banger;
+        signals::storage<void (), signals::unfused> banger;
         {
-            signet::counter<void ()>::unfused counter;
-            signet::storage<void (float)>::unfused floater;
+            signals::counter<void (), signals::unfused> counter;
+            signals::storage<void (float), signals::unfused> floater;
             floater(2.5f);
-            signet::storage<void (float)>::unfused collector(0.0f);
+            signals::storage<void (float), signals::unfused> collector(0.0f);
             
             banger
                 | counter
-                | (floater >>= collector);
+                | (floater >>= collector).send_slot();
             
             banger();
             BOOST_CHECK_EQUAL(counter.count(), 1);
@@ -39,7 +38,7 @@ int test_main(int, char* [])
 #endif
         BOOST_CHECK_EQUAL(banger.default_signal().num_slots(), 0u); 
         
-        signet::counter<void ()>::unfused counter;
+        signals::counter<void (), signals::unfused> counter;
         
         banger >>= counter;
         banger.disconnect_all_slots();

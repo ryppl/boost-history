@@ -3,19 +3,17 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/signal_network/counter.hpp>
-
-// for access to connection operators >>= and |
-using namespace boost::signal_network;
-using namespace boost;
+#include <boost/signal_network/component/counter.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
+
+using namespace boost;
 
 int test_main(int, char* [])
 {
     {
         //[ test_counter_unfused
-        signet::counter<void ()>::unfused counter;
+        signals::counter<void (), signals::unfused> counter;
         
         for (int i=0; i<33; i++)
             counter();
@@ -24,7 +22,7 @@ int test_main(int, char* [])
     }
     {
         //[ test_counter_fused
-        signet::counter<void ()> counter;
+        signals::counter<void (), signals::fused> counter;
         
         for (int i=0; i<33; i++)
             counter(boost::fusion::vector<>());

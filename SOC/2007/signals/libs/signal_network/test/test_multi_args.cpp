@@ -3,20 +3,21 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/signal_network/storage.hpp>
+#include <boost/signal_network/component/storage.hpp>
+#include <boost/signal_network/connection.hpp>
+
 #include <boost/optional.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
-// for access to connection operators >>= and |
-using namespace boost::signal_network;
 using namespace boost;
 
 //[ test_multi_args_class1
 
-class SignalFloatDuplicator : public signet::filter<void (float, float)>
+class SignalFloatDuplicator : public signals::filter<void (float, float), signals::unfused>
 {
 public:
+    typedef void result_type;
 	void operator()(float val) {out(val, val);}
 };
 
@@ -29,7 +30,9 @@ class SignalMultiCollector
 	optional<float> last, last1, last2;
 	int cnt;
 public:
-        SignalMultiCollector() : cnt(0) {}
+    typedef void result_type;
+    
+    SignalMultiCollector() : cnt(0) {}
 	void operator()()
 	{
 		cnt++;
@@ -67,8 +70,8 @@ int test_main(int, char* [])
 {
     {
         //[ test_multi_args_unfused
-        signet::storage<void ()>::unfused banger;
-        signet::storage<void (float)>::unfused floater;
+        signals::storage<void (), signals::unfused> banger;
+        signals::storage<void (float), signals::unfused> floater;
         floater(2.5f);
         SignalFloatDuplicator duplicator;
         SignalMultiCollector collector;
@@ -78,7 +81,7 @@ int test_main(int, char* [])
             |
             (floater
              | collector
-             | (duplicator >>= collector));
+             | (duplicator >>= collector)).send_slot();
         
         banger();
         BOOST_CHECK_EQUAL(collector.GetCount(), 1);

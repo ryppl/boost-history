@@ -3,16 +3,15 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/signal_network/storage.hpp>
+#include <boost/signal_network/component/storage.hpp>
+#include <boost/signal_network/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
-// for access to connection operators >>= and |
-using namespace boost::signal_network;
 using namespace boost;
 
 //[ test_pull_classes
-class PullDoubler : public signet::filter<float (), signet::unfused_out_signal>
+class PullDoubler : public signals::filter<float (), signals::unfused>
 {
 public:
     float operator()()
@@ -27,7 +26,7 @@ int test_main(int, char* [])
     {
         //[ test_pull_unfused
         
-        signet::storage<void(float)>::unfused generator(1.0f);
+        signals::storage<void(float), signals::unfused> generator(1.0f);
         PullDoubler doubler;
             
         doubler >>= generator.value_at_slot<0>();

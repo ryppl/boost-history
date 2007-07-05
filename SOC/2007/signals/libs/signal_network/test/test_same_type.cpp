@@ -3,27 +3,28 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/signal_network/storage.hpp>
-#include <boost/signal_network/counter.hpp>
+#include <boost/signal_network/component/storage.hpp>
+#include <boost/signal_network/component/counter.hpp>
+#include <boost/signal_network/connection.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
-// for access to connection operators >>= and |
-using namespace boost::signal_network;
 using namespace boost;
 
 //[ test_same_type_classes
 
-class Signal2VoidCounter : public signet::counter<void ()>::unfused
+class Signal2VoidCounter : public signals::counter<void (), signals::unfused>
 {
 public:
-	signet::counter<void ()>::unfused other;
+	signals::counter<void (), signals::unfused> other;
 }; // end class Signal2VoidCounter
 
 class Signal2VoidInputs
 {
 	int result;
 public:
+    typedef void result_type;
+    
 	Signal2VoidInputs() : result(0) {};
 	void operator()()
 	{
@@ -45,7 +46,7 @@ int test_main(int, char* [])
 {
     {
         //[ test_same_type_unfused
-        signet::storage<void ()>::unfused banger;
+        signals::storage<void (), signals::unfused> banger;
         Signal2VoidCounter counter;
         
         banger
@@ -60,7 +61,7 @@ int test_main(int, char* [])
         
         banger
             | inputs
-            | slot_selector<void ()> (inputs, &Signal2VoidInputs::AltInput);
+            | signals::make_slot_selector<void ()> (&Signal2VoidInputs::AltInput, inputs);
         
         banger();
         BOOST_CHECK_EQUAL(inputs.GetResult(), 11);

@@ -3,13 +3,13 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/signal_network/storage.hpp>
+#include <boost/signal_network/component/storage.hpp>
+#include <boost/signal_network/connection.hpp>
+
 #include <boost/optional.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
-// for access to connection operators >>= and |
-using namespace boost::signal_network;
 using namespace boost;
 
 //[ test_multi_type_classes
@@ -19,6 +19,8 @@ class SignalIntFloatCollector
     optional<int> last_int;
     optional<float> last_float;
 public:
+    typedef void result_type;
+    
     void operator()(int x)
     {
         last_int = x;
@@ -43,16 +45,16 @@ int test_main(int, char* [])
 {
     {
         //[ test_multi_type_unfused
-        signet::storage<void ()>::unfused banger;
-        signet::storage<void (int)>::unfused inter;
+        signals::storage<void (), signals::unfused> banger;
+        signals::storage<void (int), signals::unfused> inter;
         inter(2);
-        signet::storage<void (float)>::unfused floater;
+        signals::storage<void (float), signals::unfused> floater;
         floater(3.3f);
         SignalIntFloatCollector collector;
         
         banger
-            | (inter >>= collector)
-            | (floater >>= collector);
+            | (inter >>= collector).send_slot()
+            | (floater >>= collector).send_slot();
         
         banger();
         BOOST_CHECK_EQUAL(collector.GetLastInt(), optional<int>(2));
