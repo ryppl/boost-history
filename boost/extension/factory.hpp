@@ -35,7 +35,7 @@ namespace boost{namespace extensions{
 /// Declaration of functor class template.
 template <class Interface, class Info,
     BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC(\
-			                BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                                        BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
                                         class Param, void)> class factory;
 
 
@@ -50,7 +50,7 @@ class factory<Interface, Info BOOST_PP_COMMA_IF(N) \
     { \
       public: \
         virtual ~generic_factory_function(){} \
-	    virtual Interface * operator()(BOOST_PP_ENUM_PARAMS(N, Param)) = 0; \
+            virtual Interface * operator()(BOOST_PP_ENUM_PARAMS(N, Param)) = 0; \
             virtual generic_factory_function * copy() const = 0; \
     }; \
     template <class T> \
