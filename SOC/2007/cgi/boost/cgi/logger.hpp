@@ -1,33 +1,29 @@
-//                    -- reply.hpp --
+//                   -- logger.hpp --
 //
-//            Copyright (c) Darren Garvey 2007.
+//           Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_REPLY_HPP_INCLUDED__
-#define CGI_REPLY_HPP_INCLUDED__
-
-#include <ostream>
-
-#include "detail/buffer_ops.hpp"
+#ifndef CGI_LOGGER_HPP_INCLUDED__
+#define CGI_LOGGER_HPP_INCLUDED__
 
 namespace cgi {
 
-  /// The reply class: a helper for replying to requests
+  /// The logger class: a helper class for writing to requests log streams
   /**
-   * This simply initialises a cgi::ostream to write replies to a request.
+   * This simply initialises a cgi::ostream to write logging info to a request.
    *
-   * The logger class is analogous to this except this works on the request's
-   * standard output rather than the error output.
+   * The reply class is analogous to this except this works on the request's
+   * error output rather than the standard output.
    */
-  class reply
+  class logger
     : public ostream
   {
   public:
     /// Default constructor
-    explicit reply()
+    explicit logger()
     {
     }
 
@@ -36,7 +32,7 @@ namespace cgi {
      * Takes a buffer and uses it internally, does nothing with it on
      * destruction.
      */
-    reply(std::streambuf* buf)
+    logger(std::streambuf* buf)
       : ostream(buf)
     {
     }
@@ -51,16 +47,16 @@ namespace cgi {
      * </strike>
      */
     template<typename CommonGatewayRequest>
-    reply(CommonGatewayRequest& req)
+    logger(CommonGatewayRequest& req)
       : ostream(req)
     {
     }
 
-    ~reply()
+    ~logger()
     {
     }
   };
 
 } // namespace cgi
 
-#endif // CGI_REPLY_HPP_INCLUDED__
+#endif // CGI_LOGGER_HPP_INCLUDED__

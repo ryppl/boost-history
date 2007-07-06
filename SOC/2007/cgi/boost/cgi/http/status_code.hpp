@@ -6,73 +6,77 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_HTTP_STATUS_CODES_HPP__
-#define CGI_HTTP_STATUS_CODES_HPP__
+#ifndef CGI_HTTP_STATUS_CODE_HPP_INCLUDED__
+#define CGI_HTTP_STATUS_CODE_HPP_INCLUDED__
 
 namespace cgi {
  namespace http {
 
-    enum status_code
-    {
-      /// Success codes
-      ok                             = 200,
-      created
-      accepted,
-      non_authorative_information,
-      no_content,
-      reset_content,
-      partial_content,
-      multi_status,
+   /// Standard HTTP status codes
+   /**
+    * See http://tools.ietf.org/html/rfc2616#section-10
+    */
+   enum status_code
+   {
+     /// Success codes
+     ok                             = 200,
+     created
+     accepted,
+     non_authorative_information,
+     no_content,
+     reset_content,
+     partial_content,
+     multi_status,
 
-      /// Redirect codes
-      multiple_choices               = 300,
-      moved_permanently,
-      found,
-      see_other,
-      not_modified,
-      use_proxy,
-      switch_proxy,
-      temporary_redirect,
+     /// Redirect codes
+     multiple_choices               = 300,
+     moved_permanently,
+     found,
+     see_other,
+     not_modified,
+     use_proxy,
+     switch_proxy,
+     temporary_redirect,
 
-      /// Domain error codes
-      bad_request                    = 400,
-      unauthorized,
-      payment_required,
-      forbidden,
-      not_found,
-      method_not_allowed,
-      not_acceptable,
-      proxy_authentication_required,
-      request_timeout,
-      conflict,
-      gone,
-      length_required,
-      precondition_failed,
-      request_entity_too_large,
-      request_uri_too_long,
-      unsupported_media_type,
-      request_range_not_satisfiable,
-      expectation_failed,
-      unprocessable_entity           = 422,
-      locked,
-      failed_dependency,
-      unordered_collection,
-      upgrade_required,
-      retry_with                     = 449,
+     /// Domain error codes
+     bad_request                    = 400,
+     unauthorized,
+     payment_required,
+     forbidden,
+     not_found,
+     method_not_allowed,
+     not_acceptable,
+     proxy_authentication_required,
+     request_timeout,
+     conflict,
+     gone,
+     length_required,
+     precondition_failed,
+     request_entity_too_large,
+     request_uri_too_long,
+     unsupported_media_type,
+     request_range_not_satisfiable,
+     expectation_failed,
+     unprocessable_entity           = 422,
+     locked,
+     failed_dependency,
+     unordered_collection,
+     upgrade_required,
+     retry_with                     = 449,
 
-      /// Internal error codes
-      internal_server_error          = 500,
-      not_implemented,
-      bad_gateway,
-      service_unavailable,
-      gateway_timeout,
-      http_version_not_supported,
-      insufficient_storage,
-      bandwidth_limit_exceeded       = 509
-    };
+     /// Internal error codes
+     internal_server_error          = 500,
+     not_implemented,
+     bad_gateway,
+     service_unavailable,
+     gateway_timeout,
+     http_version_not_supported,
+     insufficient_storage,
+     bandwidth_limit_exceeded       = 509
+   };
 
  } // namespace http
 } // namespace cgi
 
-#endif // CGI_HTTP_STATUS_CODES_HPP__
+#endif // CGI_HTTP_STATUS_CODE_INCLUDED_HPP__
 

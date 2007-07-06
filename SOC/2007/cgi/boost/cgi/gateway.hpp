@@ -1,132 +1,155 @@
-#ifndef CGI_GATEWAY_HPP_INCLUDE__
-#define CGI_GATEWAY_HPP_INCLUDE__
+//                    -- gateway.hpp --
+//
+//            Copyright (c) Darren Garvey 2007.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+////////////////////////////////////////////////////////////////
+#ifndef CGI_GATEWAY_HPP_INCLUDED__
+#define CGI_GATEWAY_HPP_INCLUDED__
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
 namespace cgi {
 
-/// The gateway class manages connections
-/**
- * New connections are accepted through here, via a call to accept();
- * used/corrupted connections are closed via a call to stop(conn_ptr);
- * all connections are closed via a call to stop_all().
- *
- * If you want to use the gateway after a call to stop_all(), you must
- * call reset() and pass it the maximum number of connections the gateway
- * can take.
- */
-template< typename CommonGatewayService >
-class gateway
-{
-public:
-  typedef CommonGatewayService                           service_type;
-  typedef typename CommonGatewayService::protocol_type   protocol_type;
-  typedef connection<protocol_type>                      connection_type;
-  typedef boost::shared_ptr<connection_type>             conn_ptr;
-
-  /// Constructor
-  explicit gateway(service_type& service, int max_conns)
-    : service_(service)
-    , acceptor_(service.io_service())
-    , available_slots_(max_conns)
-  {
-    //accept();
-  }
-
-  /// Destructor
-  ~gateway()
-  {
-    stop_all();
-  }
-
-  /// Start an asychronous accept
+  /// The gateway class manages connections
   /**
-   * This returns false unless the connection is already established. This is
-   * true with standard CGI, for example, where the connection is simply a
-   * wrapper over standard input/output.
+   * New connections are accepted through here, via a call to accept();
+   * used/corrupted connections are closed via a call to stop(conn_ptr);
+   * all connections are closed via a call to stop_all().
    *
-   * If there is a need to differentiate between a fail and a 'waiting' accept
-   * then a tribool could be returned from here.
+   * If you want to use the gateway after a call to stop_all(), you must
+   * call reset() and pass it the maximum number of connections the gateway
+   * can take.
    */
-  bool accept()
+  template< typename CommonGatewayService >
+  class gateway
   {
-    if( available_slots_ > 0 )
-    {
-      conn_ptr nc(connection_type::create());
-      acceptor_.async_accept( nc->socket()
-                            , boost::bind( &cgi::gateway::handle_accept
-                                         , this, nc, boost::placeholders::error
-                                         )
-                            );
-    }
-    return false;
-  }
+  public:
+    typedef CommonGatewayService                                  service_type;
+    typedef typename CommonGatewayService::protocol_type         protocol_type;
+    typedef basic_protocol_service<protocol_type>        protocol_service_type;
+    typedef connection<protocol_type>                          connection_type;
+    typedef boost::shared_ptr<connection_base>                        conn_ptr;
 
-  void handle_accept(conn_ptr conn, boost::system::error_code& error)
-  {
-    if( !error )
+    /// Constructor
+    explicit gateway(protocol_service_type& pservice)
+      : service_(pservice)
+      //, acceptor_(pservice.io_service())
     {
-      start(conn);
       //accept();
     }
-  }
 
-  /// Cleanly start the connection
-  void start(conn_ptr cptr)
+    /// Destructor
+    ~gateway()
+    {
+      stop_all();
+    }
+
+    /// Start a sychronous accept
+    /**
+     * This returns false unless the connection is already established. This is
+     * true with standard CGI, for example, where the connection is simply a
+     * wrapper over standard input/output.
+     *
+     * If there is a need to differentiate between a fail and a 'waiting' accept
+     * then a tribool could be returned from here.
+     */
+    boost::system::error_code& accept(conn_ptr conn, boost::system::error_code& ec)
+    {
+      if( service_.accept(conn, ec) )
+      {
+        connections_.insert(conn);
+      }
+
+      
+      conn_ptr new_conn(connection_type::create());
+      acceptor_.accept(new_conn->socket()
+                      , boost::bind(&cgi::gateway::handle_accept
+                                   , this, new_conn
+                                   , boost::placeholders::error));
+      return false;
+    }
+
+    /// Start an asynchronous accept
+    template<typename Handler>
+    void async_accept(conn_ptr conn, Handler handler)
+    {
+      service_.async_accept(handler);
+    }
+
+    /// Cleanly start the connection
+    void start(conn_ptr cptr)
+    {
+      cptr->start();
+      connections_.insert(cptr);
+    }
+
+    /// Cleanly stop the connection
+    void stop(conn_ptr cptr)
+    {
+      cptr->stop();
+      connections_.erase(cptr);
+    }
+
+    /// Cleanly stop all connections
+    void stop_all()
+    {
+      std::for_each( connection_.begin(), connections_.end()
+                   , boost::bind(&gateway::stop, _1)
+                   );
+      connections_.clear();
+    }
+
+    /// Reset the gateway
+    /**
+     * All connections are gracefully closed and then the gateway is set up for
+     * reuse.
+     *
+     * @param max_connections the available slots is reset to this value
+     */
+    void reset(int max_connections)
+    {
+      stop_all();
+      available_slots_ = max_connections;
+    }
+
+  private:
+    service_type& service_;
+    std::set<conn_ptr> connections_;
+  };
+
+
+
+  template<>
+  class gateway<cgi_protocol_service>
   {
-    connections_.insert(cptr);
-    --available_slots_;
-    cptr->start();
-  }
+  public:
+	  gateway()
+	  {
+	  }
+  private:
+	  
+  };
 
-  /// Cleanly stop the connection
-  void stop(conn_ptr cptr)
+    /*
+  template<>
+  class gateway::acceptor<tags::fastcgi>
   {
-    connections_.erase(cptr);
-    ++available_slots_;
-    cptr->stop();
-  }
-
-  /// Cleanly stop all connections
-  void stop_all()
-  {
-    available_slots_ = 0; // make sure subsequent accept()s fail
-    std::for_each( connection_.begin(), connections_.end()
-                 , boost::bind(&gateway::stop, _1)
-                 );
-    available_slots_ = 0;
-    connections_.clear();
-  }
-
-  /// Reset the gateway
-  /**
-   * All connections are gracefully closed and then the gateway is set up for
-   * reuse.
-   *
-   * @param max_connections the available slots is reset to this value
-   */
-  void reset(int max_connections)
-  {
-    stop_all();
-    available_slots_ = max_connections;
-  }
-
-  /// Increment the number of allowed connection slots
-  void incr_slots(int slots = 1) { available_slots_ += slots; }
-  /// Decrement the number of allowed connection slots
-  void decr_slots(int slots = 1) { available_slots_ -= slots; }
-
-private:
-  service_type& service_;
-  acceptor<service_type> acceptor_;
-  int available_slots_;
-  std::set<conn_ptr> connections_;
-};
+  public:
+	  gateway::acceptor
+	  {
+	  }
+  private:
+	  boost::asio::ip::tcp::acceptor<
+  };
+    */
 
 } // namespace cgi
 
-#endif // CGI_GATEWAY_HPP_INCLUDE__
+#endif // CGI_GATEWAY_HPP_INCLUDED__
 
 /*
  * Notes:

@@ -27,8 +27,8 @@ namespace cgi {
      * Check if there is a waiting request in the queue. If not, accept a
      * connection, and associate it with the request.
      */
-    template<typename CGI_Request> boost::system::error_code&
-    accept(CGI_Request& request, boost::system::error_code& ec)
+    template<typename CommonGatewayRequest> boost::system::error_code&
+    accept(CommonGatewayRequest& request, boost::system::error_code& ec)
     {
       boost::thread::mutex::scoped_lock lk(io_service_.mutex_);
       if( !io_service_.request_queue_.empty() )

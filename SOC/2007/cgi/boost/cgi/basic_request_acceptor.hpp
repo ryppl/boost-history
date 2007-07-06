@@ -31,22 +31,22 @@ namespace cgi {
       service_.cancel();
     }
 
-    template<typename CGI_Request>
-    void accept(CGI_Request& request)
+    template<typename CommonGatewayRequest>
+    void accept(CommonGatewayRequest& request)
     {
       boost::system::error_code ec;
       service_.accept(request, ec);
       boost::throw_error(ec);
     }
 
-    template<typename CGI_Request> boost::system::error_code&
-    accept(CGI_Request& request, boost::system::error_code& ec)
+    template<typename CommonGatewayRequest> boost::system::error_code&
+    accept(CommonGatewayRequest& request, boost::system::error_code& ec)
     {
       return service_.accept(request, ec);
     }
 
-    template<typename CGI_Request, typename Handler>
-    void async_accept(CGI_Request& request, Handler handler)
+    template<typename CommonGatewayRequest, typename Handler>
+    void async_accept(CommonGatewayRequest& request, Handler handler)
     {
       service_.async_accept(request, handler);
     }
