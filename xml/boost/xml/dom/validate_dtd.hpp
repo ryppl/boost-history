@@ -49,7 +49,8 @@ std::vector<S> validator<S>::valid_elements(node_ptr<element<S> const> e,
   {
     int elements = xmlValidGetValidElements(node->prev, node,
 					    &*names.begin(), names.size());
-    if (elements < names.size())
+    // FIXME: check for errors.
+    if (static_cast<unsigned>(elements) < names.size())
     {
       names.resize(elements);
       break;

@@ -25,45 +25,10 @@ enum node_type
 namespace detail
 {
 
-char const *node_type_names[] =
-{
-  "internal node",
-  "element",
-  "attribute",
-  "text node",
-  "cdata block",
-  "processing instruction",
-  "comment"
-};
-
-
+extern char const *node_type_names[7];
 //. node_type_table maps libxml2 node types to node_type.
 //. Mask all node types not part of the public API.
-node_type node_type_table[] = 
-{
-  INTERNAL,
-  ELEMENT,   //XML_ELEMENT_NODE
-  ATTRIBUTE, //XML_ATTRIBUTE_NODE
-  TEXT,      //XML_TEXT_NODE
-  CDATA,     //XML_CDATA_SECTION_NODE
-  INTERNAL,  //XML_ENTITY_REF_NODE
-  INTERNAL,  //XML_ENTITY_NODE
-  PI,        //XML_PI_NODE
-  COMMENT,   //XML_COMMENT_NODE
-  INTERNAL,  //XML_DOCUMENT_NODE
-  INTERNAL,  //XML_DOCUMENT_TYPE_NODE
-  INTERNAL,  //XML_DOCUMENT_FRAG_NODE
-  INTERNAL,  //XML_NOTATION_NODE
-  INTERNAL,  //XML_HTML_DOCUMENT_NODE
-  INTERNAL,  //XML_DTD_NODE
-  INTERNAL,  //XML_ELEMENT_DECL
-  INTERNAL,  //XML_ATTRIBUTE_DECL
-  INTERNAL,  //XML_ENTITY_DECL
-  INTERNAL,  //XML_NAMESPACE_DECL
-  INTERNAL,  //XML_XINCLUDE_START
-  INTERNAL,  //XML_XINCLUDE_END
-  INTERNAL,  //XML_DOCB_DOCUMENT_NODE
-};
+extern node_type node_type_table[22];
 
 //. Helper types used for cast<>()
 template <typename N> struct target {};

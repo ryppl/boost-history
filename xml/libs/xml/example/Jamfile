@@ -1,0 +1,23 @@
+# Copyright 2007 Stefan Seefeld.
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+
+use-project /boost/xml : ../src ;
+
+lib libxml2 : : <name>xml2 <search>/usr/lib/ ;
+
+project : requirements
+          <include>/usr/include/libxml2
+          <include>../../..
+          <library>libxml2
+          <library>/boost/xml//boost_xml 
+        ;
+
+exe reader : reader.cpp ;
+exe dom : dom.cpp dom2.cpp ;
+exe config : config.cpp ;
+exe xinclude : xinclude.cpp ;
+exe traverse : traverse.cpp ;
+exe validate_dtd : validate_dtd.cpp ;

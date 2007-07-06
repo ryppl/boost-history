@@ -3,6 +3,6 @@
 "http://www.oasis-open.org/docbook/xml/4.0/docbookx.dtd">
 <book xmlns:xi="http://www.w3.org/2003/XInclude">
   <title>A book</title>
-  <xi:include href="chapter1.xml"/>
-  <xi:include href="chapter2.xml"/>
+  <xi:include href="xi-chapter1.xml"/>
+  <xi:include href="xi-chapter2.xml"/>
 </book>

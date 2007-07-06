@@ -1,3 +1,8 @@
+// Copyright 2007 Stefan Seefeld.
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
 #include <boost/xml/dom.hpp>
 #include "string.hpp"
 #include <iostream>
@@ -6,9 +11,9 @@ namespace dom = boost::xml::dom;
 
 int main(int argc, char **argv)
 {
-  if (argc != 2)
+  if (argc != 3)
   {
-    std::cerr << "Usage: example <xml-file>" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " <xml-file> <output>" << std::endl;
     return -1;
   }
   try
@@ -37,8 +42,8 @@ int main(int argc, char **argv)
  	std::cout << " " << (*i)->path() << std::endl;
       }
     }
-    std::cout << "writing modified document to 'book2.xml'..." << std::endl;
-    document->write_to_file("book2.xml");
+    std::cout << "writing modified document to 'xi-book2.xml'..." << std::endl;
+    document->write_to_file(argv[2]);
   }
   catch (const std::exception &e)
   {

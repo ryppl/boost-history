@@ -57,26 +57,17 @@ private:
   std::string error_msg_;
 };
 
-namespace detail
-{
-extern "C" void xml_error_callback(void *closure, xmlError *error)
-{
-  parser *p = reinterpret_cast<parser *>(closure);
-  p->error_callback(*error);
-}
-}
-
-parser::parser()
+inline parser::parser()
 {
   xmlSetStructuredErrorFunc(this, detail::xml_error_callback);
 }
 
-parser::~parser()
+inline parser::~parser()
 {
   xmlSetStructuredErrorFunc(0, 0);
 }
 
-void parser::error_callback(xmlError const &error)
+inline void parser::error_callback(xmlError const &error)
 {
   std::ostringstream oss;
   oss << "error in " 

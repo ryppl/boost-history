@@ -3,5 +3,5 @@
 "http://www.oasis-open.org/docbook/xml/4.0/docbookx.dtd">
 <chapter xmlns:xi="http://www.w3.org/2003/XInclude">
   <title>Another chapter</title>
-  <xi:include href="section1.xml"/>
+  <xi:include href="xi-section1.xml"/>
 </chapter>

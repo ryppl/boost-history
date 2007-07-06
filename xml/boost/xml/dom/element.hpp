@@ -118,7 +118,7 @@ inline node_ptr<attribute<S> const> element<S>::attribute(S const &name) const
   for(xmlAttr *attr = this->impl()->properties; attr; attr = attr->next)
   {
     if(xmlStrEqual(attr->name, n))
-      return dom::attribute<S>(attr);
+      return dom::attribute<S>((xmlNode *)attr);
   }
   return dom::attribute<S>(0);
 }
@@ -130,7 +130,7 @@ inline node_ptr<attribute<S> > element<S>::attribute(S const &name)
   for(xmlAttr *attr = this->impl()->properties; attr; attr = attr->next)
   {
     if(xmlStrEqual(attr->name, n))
-      return dom::attribute<S>(attr);
+      return dom::attribute<S>((xmlNode *)attr);
   }
   return dom::attribute<S>(0);
 }
@@ -331,7 +331,7 @@ template <typename S>
 typename element<S>::child_iterator 
 element<S>::find(node_ptr<node<S> const> n)
 {
-  xmlNode *child = impl(*n);
+  //  xmlNode *child = impl(*n);
   for (child_iterator i = begin_children(); i != end_children(); ++i)
     if (**i == *n) return i;
   return end_children();
