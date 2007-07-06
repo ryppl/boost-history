@@ -237,31 +237,6 @@ namespace cgi {
       req.set_status(http_status_);
     }
 
-    template<typename CommonGatewayRequest, typename Handler>
-    class send_handler
-    {
-    public:
-      send_handler(CommonGatewayRequest& req, http::status_code status
-                  , Handler handler)
-        : request_(req)
-        , http_status_(status)
-        , handler_(handler)
-      {
-      }
-
-      void operator()(boost::system::error_code ec)
-      {
-        if( !ec )
-        {
-          request_.set_status(http_status_);
-
-      }
-    private:
-      CommonGatewayRequest& request_;
-      int http_status_;
-      Handler handler_;
-    };
-
     /// Asynchronously send the data through the supplied request
     /**
      * Note: The data in the stream isn't cleared after this call.
@@ -269,9 +244,8 @@ namespace cgi {
     template<typename CommonGatewayRequest, typename Handler>
     void async_send(CommonGatewayRequest& req, Handler handler)
     {
-      req.async_write(ostream_.rdbuf(), destination_
-                     , send_handler<CommonGatewayRequest
-                                   , Handler>(req, http_status_, handler));
+      req.set_status(http_status_);
+      req.async_write(ostream_.rdbuf(), destination_, handler));
     }
 
     /// Get the buffer associated with the 
