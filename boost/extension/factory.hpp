@@ -41,7 +41,8 @@ template <class Interface, class Info,
 
 
 #define BOOST_EXTENSION_FACTORY_CLASS(Z, N, _) \
-template<class Interface, class Info BOOST_PP_COMMA_IF(N) BOOST_PP_ENUM_PARAMS(N, \
+template<class Interface, class Info BOOST_PP_COMMA_IF(N) \
+         BOOST_PP_ENUM_PARAMS(N, \
          class Param) > \
 class factory<Interface, Info BOOST_PP_COMMA_IF(N) \
               BOOST_PP_ENUM_PARAMS(N, Param) > { \
@@ -50,7 +51,7 @@ class factory<Interface, Info BOOST_PP_COMMA_IF(N) \
     { \
       public: \
         virtual ~generic_factory_function(){} \
-            virtual Interface * operator()(BOOST_PP_ENUM_PARAMS(N, Param)) = 0; \
+            virtual Interface * operator()(BOOST_PP_ENUM_PARAMS(N, Param)) = 0;\
             virtual generic_factory_function * copy() const = 0; \
     }; \
     template <class T> \
@@ -58,7 +59,7 @@ class factory<Interface, Info BOOST_PP_COMMA_IF(N) \
     { \
       public: \
         virtual ~factory_function(){} \
-        virtual Interface * operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) \
+        virtual Interface * operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p))\
         { \
           return new T(BOOST_PP_ENUM_PARAMS(N, p)); \
         } \
@@ -80,7 +81,7 @@ class factory<Interface, Info BOOST_PP_COMMA_IF(N) \
     } \
     factory(Info info) :factory_func_ptr_(0), info_(info) {} \
     factory(const factory & first) \
-      :factory_func_ptr_(first.factory_func_ptr_->copy()), info_(first.info_) {} \
+      :factory_func_ptr_(first.factory_func_ptr_->copy()), info_(first.info_){} \
     Interface * operator()(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) \
     { \
       return create(BOOST_PP_ENUM_PARAMS(N, p)); \
