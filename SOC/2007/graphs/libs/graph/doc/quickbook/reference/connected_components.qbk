@@ -6,10 +6,10 @@
  /]
 
 [section Connected Components]
- template <class Graph, class ComponentMap, class P, class T, class R>
- typename property_traits<ComponentMap>::value_type
- connected_components(const Graph &g, ComponentMap c,
-                      const bgl_named_params<P,T,R>& params = ``/defaults/``);
+    template <class Graph, class ComponentMap, class P, class T, class R>
+    typename property_traits<ComponentMap>::value_type
+    connected_components(const Graph &g, ComponentMap c,
+                        const bgl_named_params<P,T,R>& params = ``/defaults/``);
 
 
 The connected_components() functions compute the connected components of an undirected

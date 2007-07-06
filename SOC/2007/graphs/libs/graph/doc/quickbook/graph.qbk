@@ -80,6 +80,7 @@
 [template BoostEventVisitorList[] [link boost_graph.concepts.visitor_concepts.event_visitor_list EventVisitorList]]
 
 [/ Boost Reference Documentation]
+[template boost_graph_traits[] [link boost_graph.reference_guide.traits_classes.graph_traits `graph_traits`]]
 [template boost_undirected_graph[] [link boost_graph.reference_guide.graph_types.undirected_graph `undirected_graph`]]
 [template boost_directed_graph[] [link boost_graph.reference_guide.graph_types.directed_graph `directed_graph`]]
 [template boost_adjacency_list[] [link boost_graph.reference_guide.graph_types.adjacency_list `adjacecncy_list`]]
@@ -95,8 +96,9 @@
 
 [template boost_breadth_first_search[] [link boost_graph.reference_guide.algorithms.core_algorithms.breadth_first_search `breadth_first_search()`]]
 [template boost_depth_first_search[] [link boost_graph.reference_guide.algorithms.core_algorithms.depth_first_search `depth_first_search()`]]
-[template boost_dijkstra_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.dijkstra_shortest_paths `dijkstra_shortest_paths`]]
-[template boost_bellman_ford_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.bellman_ford_shortest_paths `bellman_ford_shortest_paths`]]
+[template boost_dijkstra_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.dijkstra_shortest_paths `dijkstra_shortest_paths()`]]
+[template boost_bellman_ford_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.bellman_ford_shortest_paths `bellman_ford_shortest_paths()`]]
+[template boost_connected_components[] [link boost_graph.reference_guide.algorithms.connectivity_algorithms.connected_components `connected_components()`]]
 
 [/ Contents ]
 [include introduction.qbk]

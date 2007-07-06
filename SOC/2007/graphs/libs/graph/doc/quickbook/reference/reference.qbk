@@ -13,6 +13,9 @@
 [include adjacency_list.qbk]
 [endsect]
 
+[section Traits Classes]
+[endsect]
+
 [section Algorithms]
 [section Core Algorithms]
 [include breadth_first_search.qbk]

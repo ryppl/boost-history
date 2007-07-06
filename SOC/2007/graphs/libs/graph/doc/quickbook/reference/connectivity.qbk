@@ -6,23 +6,98 @@
  /]
 
 [section Connectivity Measures]
+    size_t connectivity(
+        _graph,
+        _component_map,
+        _color_map = not_given(),
+        _vertex_index_map = not_given(),
+        _components = not_given())
 
-Reference for connectivity measures. Apparently, these are just going to be
-simple wrappers around connected_components or strong_components to provide
-some extra information. These might include:
+The `connectivity()` algorithm is essentially a wrapper around the
+[boost_connected_components] algorithm, but provides additional (and optional)
+functionality for working with connected components. The parameters are, with
+the exeption of `_components`, have the same purpose and requirements as
+documented in [boost_connected_components].
 
-* `is_connected()`, `is_strongly_connected()`
-* `largest_connected_component()`, `largest_strong_component()`
+If specified, the `_components` argument is populated with the vertices that
+appear in each component. This is to say for example, that all vertices in the
+`_component_map` with component id 0, will be placed into the vertex set
+at index 0 of the `_components` argument.
 
-We might extend these for biconnected components also. Essentially, these
-functions take the component map computed by the connectivity stuff as
-an input and produce results. If the connectivity map isn't provided,
-we could compute it on the fly.
+This function returns the number of connected components in the graph. Note
+that the graph is connected if and only if this function returns 1.
 
-[Examples]
+[h5 Where Defined]
+`boost/graph/connectivity.hpp`
 
-``
- connected_comp
-``
+[h5 Parameters]
+[table
+    [[Type] [Parameter] [Description]]
+    [
+        [required, in] [`_graph`]
+        [
+            The graph object for which the distribution will be computed. If
+            the `_distribution` or `_in_distribution` arguments are supplied
+            when calling this function then `_graph` must be a model of
+            [BoostBidirectionalGraph]. If only `_out_distribution` is supplied,
+            then `_graph` must be a model of [BoostIncidenceGraph].
+        ]
+    ]
+    [
+        [optional, out]
+        [
+            `_distribution`
+
+            `_out_distribution`
+
+            `_in_distribution`
+        ]
+        [
+            The distribution parameters maps instances of vertex degree to the
+            number of observed vertices in the graph with that degree.
+
+            These parameters must model both the [SgiSequence] and
+            [SgiRandomAccessContainer] concepts (e.g., `std::vector`). The index type of the
+            distribution must be the same as `degree_size_type`. The `value_type` must
+            be integral (preferably unsigned).
+
+            If not supplied, these parameters assume the default value of `not_given`,
+            implying that no computation is performed.
+        ]
+    ]
+    [
+        [optional, out]
+        [
+            `_histogram`
+
+            `_out_histogram`
+
+            `_in_histogram`
+        ]
+        [
+            The distribution parameters maps instances of vertex degree to the
+            number of observed vertices in the graph with that degree.
+
+            The histogram output parameter must be a model of both [SgiSequence]
+            and [SgiRandomAccessContainer] (e.g., `std::vector`). The index type of the
+            distribution must be the same as `degree_size_type`. Additionally `value_type`
+            must be a model of the [SgiBackInsertionSequence] (e.g., `std::vector`).
+
+            If not supplied, these parameters assume the default value of `not_given`,
+            implying that no computation is performed.
+        ]
+    ]
+]
+
+[h5 Return Value]
+This function returns the number of connected components.
+
+[h5 Complexity]
+
+[h5 Notes]
+
+[h5 Examples]
+
+[h5 Rationale]
 
 [endsect]

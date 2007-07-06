@@ -12,9 +12,6 @@
 #include <boost/graph/degree_distribution.hpp>
 #include <boost/graph/connectivity.hpp>
 
-#include <typeinfo>
-#include <cxxabi.h>
-
 #include "movies.hpp"
 
 using namespace std;

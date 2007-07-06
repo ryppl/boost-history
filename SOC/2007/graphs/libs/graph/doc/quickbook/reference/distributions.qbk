@@ -6,29 +6,22 @@
  /]
 
 [section Degree Distributions]
- template <class Graph, class Distribution>
- void degree_distribution(const Graph &g, Distribution& dist);
+    void degree_distribution(
+        _graph,
+        _distribution = not_given(),
+        _out_distribution = not_given(),
+        _in_distribution = not_given())
 
- template <class Graph, class Distribution>
- void in_degree_distribution(const Graph &g, Distribution& dist);
+    void degree_histogram(
+        _graph,
+        _histogram = not_given(),
+        _out_histogram = not_given(),
+        _in_histogram = not_given())
 
- template <class Graph, class Distribution>
- void out_degree_distribution(const Graph &g, Distribution& dist);
-
-
- template <class Graph, class Histogram>
- void degree_histogram(const Graph &g, Histogram& dist);
-
- template <class Graph, class Histogram>
- void in_degree_histogram(const Graph &g, Histogram& dist);
-
- template <class Graph, class Histogram>
- void out_degree_histogram(const Graph &g, Histogram& dist);
-
-The degree distribution functions compute distributions of the degrees
+The degree distribution function compute distributions of the degrees
 of vertices in a graph. A distribution is mapping of an observable property
 to the number of occurences of that property. In this context, the observable
-property is the degree of a vertex (or in- and out- degree), which are in
+property is the degree of a vertex (or in- and out-degree), which are in
 the range \[0, /max{degree(v)}/\] Where /max{degree(v)}/ is the maximum degree
 of any vertex in a graph /G/. Therefore, the output distribution is mapping
 of vertex degree to its number of occurences in a graph.
@@ -39,48 +32,81 @@ vertices, the histogram maps vertex degree to the /set of vertices/ that exhibit
 that degree. This is very useful if you want to quickly find all vertices with
 degree 0, or find the vertex with the highest degree.
 
-[heading Where Defined]
+In both of these functions, the computation of distribution or histogram
+depends on which optional parameters are passed to the function. If called as:
+
+    degree_distribution(g, _distribution = dist, _in_distribution = in_dist);
+
+The algorithm will compute both the degree destribution and in-degree distributions.
+Note that for undirected graphs, all three distributions or histograms will be
+identical.
+
+[h5 Where Defined]
 `boost/graph/degree_distribution.hpp`
 
-[heading Parameters]
+[h5 Parameters]
 [table
     [[Type] [Parameter] [Description]]
     [
-        [in] [`const Graph& g`]
+        [required, in] [`_graph`]
         [
-            The graph object for which the distribution will be computed. For
-            `degree_distributions()` and `in_degree_distribution()`, `g` must
-            be a model of a BidirectionalGraph. For `out_degree_distribution()`,
-            `g`, must model the IncidenceGraph concept.
+            The graph object for which the distribution will be computed. If
+            the `_distribution` or `_in_distribution` arguments are supplied
+            when calling this function then `_graph` must be a model of
+            [BoostBidirectionalGraph]. If only `_out_distribution` is supplied,
+            then `_graph` must be a model of [BoostIncidenceGraph].
         ]
     ]
     [
-        [out] [`Distribution& dist`]
+        [optional, out]
         [
-            The distribution parameter maps instances of degrees (numerically)
-            to the number of vertices in the graph that exhibit that degree.
+            `_distribution`
 
-            The distribution output parameter must be a model of both [SgiSequence]
-            and [SgiRandomAccessContainer] (e.g., `std::vector`). The index type of the
+            `_out_distribution`
+
+            `_in_distribution`
+        ]
+        [
+            The distribution parameters maps instances of vertex degree to the
+            number of observed vertices in the graph with that degree.
+
+            These parameters must model both the [SgiSequence] and
+            [SgiRandomAccessContainer] concepts (e.g., `std::vector`). The index type of the
             distribution must be the same as `degree_size_type`. The `value_type` must
             be integral (preferably unsigned).
+
+            If not supplied, these parameters assume the default value of `not_given`,
+            implying that no computation is performed.
         ]
     ]
     [
-        [out] [`Histogram& hist`]
+        [optional, out]
         [
-            The histogram parameter maps instances of degrees (numerically) to the
-            set of vertices that exhibit that degree.
+            `_histogram`
+
+            `_out_histogram`
+
+            `_in_histogram`
+        ]
+        [
+            The distribution parameters maps instances of vertex degree to the
+            number of observed vertices in the graph with that degree.
 
             The histogram output parameter must be a model of both [SgiSequence]
             and [SgiRandomAccessContainer] (e.g., `std::vector`). The index type of the
             distribution must be the same as `degree_size_type`. Additionally `value_type`
             must be a model of the [SgiBackInsertionSequence] (e.g., `std::vector`).
+
+            If not supplied, these parameters assume the default value of `not_given`,
+            implying that no computation is performed.
         ]
     ]
 ]
 
-[h4 Complexity]
+[h5 Return Value]
+Both functions return `void`.
+
+[h5 Complexity]
 The time complexity of all these functions is /O(V)/.
 
 The space complexity for the distributions functisons is /O(max{degree(v)})/ where
@@ -88,46 +114,62 @@ The space complexity for the distributions functisons is /O(max{degree(v)})/ whe
 
 The space complexity for the histogram functions is /O(V + max{degree(v)})/.
 
-[h4 Notes]
+[h5 Notes]
 Because a graph may be a multigraph, there is no determinable upper bound on the
 size of the distribution or histogram parameters. As such they are required to
 be dynamically resized during the execution of the algorithm.
 
-For the distribution parameter, we recommend `std::vector<size_t>`. This satisfies
-all the requirements. For the histogram, we recommend using a `std::vector<Sequence<Vertex> >`
-where `Sequence` is one of `std::list`, `std::vector`, `std::deque`, or `std::queue`. The
-choice doesn't make much difference except that a `std::list` will require more allocations,
-but a `std::vector` will require more space. Also, note that `std::list::size()` function is
-not required to run in constant-time. The `Vertex` type must be
-`graph_traits<Graph>::vertex_descriptor`.
+The recommended type for the distribution parameters is:
 
-If `dist` is the name of the output distribution after a call to `degree_distribution()`
-then the maximum degree is `dist.size() - 1`. The minimum degree corresponds to the index
-in `dist` with the first non-zero value.
+    std::vector<graph_traits<graph_type>::degree_size_type>
 
-[h4 Examples]
+where `graph_type` is the type of the `_graph` parameter. This satisfies the type
+requirements of the algorithms, and provides exceptional performance at the cost
+of extra memory overhead.
+
+The recommended type for the histogram parameters is:
+
+    std::vector<std::vector<graph_traits<graph_type>::vertex_descriptor> >
+
+Although this will consume more memory (due to the overhead of vector resizing),
+it may perform better than using `std::list` to store vertices of the same degree.
+This is because the `std::list::size()` function is not required to return in
+constant time.
+
+Note that if `dist` is the name of the output distribution after a call to
+`degree_distribution()` then the maximum degree is `dist.size() - 1`. The
+minimum degree corresponds to the index in `dist` with the first non-zero value.
+
+[h5 Examples]
 The first example show how to compute and print the degree distribution.
 
- undirected_graph<> g;
- // add vertices and edges to g
+    undirected_graph<> g;
+    // add vertices and edges to g
 
- std::vector<size_t> dist;
- degree_distribution(g, dist);
- copy(dist.begin(), dist.end(), ostream_iterator<size_t>(cout, " "));
-
+    std::vector<size_t> dist;
+    degree_distribution(g, dist);
+    copy(dist.begin(), dist.end(), ostream_iterator<size_t>(cout, " "));
 
 The following example shows how to access the vertex (or vertices) with the maximum
 degree by using the `degree_histogram()` algorithm. This prints the index of that
 vertex.
 
- undirected_graph<> g;
- // add vertice and edges to g
+    undirected_graph<> g;
+    // add vertice and edges to g
 
- typedef graph_traits<undirected_graph<> >::vertex_descriptor vertex_type;
- typedef std::vector<vertex_type> vertex_vector;
+    typedef graph_traits<undirected_graph<> >::vertex_descriptor vertex_type;
+    typedef std::vector<vertex_type> vertex_vector;
 
- std::vector<vertex_vector> hist;
- degree_histogram(g, hist);
- cout << get_vertex_index(hist.back().back()) << "\n";
+    std::vector<vertex_vector> hist;
+    degree_histogram(g, hist);
+    cout << get_vertex_index(hist.back().back()) << "\n";
+
+[h5 Rationale]
+The use of these functions varies somewhat from typical use of named parameters
+where default values are simply used to supply default information. Here, they
+are used to control functionality. It should also be noted that if no parameters
+are supplied, this algorithm still runs in linear time. However, there is no
+additional overhead for not supplying a parameter because operations on the
+`not_given` type are no-opped (they are instantiated as empty functions).
 
 [endsect]

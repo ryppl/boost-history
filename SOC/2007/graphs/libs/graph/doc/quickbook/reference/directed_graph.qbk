@@ -7,7 +7,12 @@
 
 [section Directed Graph]
 This section provides detailed information about the `directed_graph` class,
-its associated types, member functions and non-member interface.
+its associated types, member functions and non-member interface. A directed
+graph is one in which edges have distinct direction. Edges flow from a /source/
+vertex to a /target/ and are generally only traversed through the outgoing
+edges of a vertex. However, incoming edges are also accessible. The class
+provides a general purpose implementation of directed graphs and can be
+used with algorithms in the Boost Graph Library.
 
 [h4 Notation]
 The following notation is used in this documentation. The following type names
@@ -54,23 +59,24 @@ following types.
     [[`v`] [The value of a property (usually a template parameter)]]
 ]
 
-[h4 Vertex and Edge Storage]
-The `directed` graph class has four distinct storage compontents: one for each
-of vertices, edges, out-edges per vertex, and in-edges per vertex. Each of these
-storage components uses a `std::list`. This is important to remember when
-considering the performance of oeprations on these graphs.
-
-Note that mutating (modifying) edge operations on a graph must operate on three
-different lists. For example, adding an edge to the graph will insert the edge
-or descriptors into the edge list, the out-edge list of the source vertex, and
-the in-edge list of the target vertex. These lists are accessible via the
-`edges(g)`, `out_edges(v,g)`, and `in_edges(v,g)` respectively.
-
 [h4 Descriptor and Iterator Stability]
 With the `directed_graph` class, descriptors and iterators remain stable after
-most operations. This is to say that removing a vertex or edge will not invalidate
-descriptors and iterators to other vertices or edges except for the edge or
-vertex that was actually removed.
+all operations except descriptors and iterators to those edges or vertices being
+removed. Removing a vertex or edge will not invalidate descriptors or iterators
+referencing other vertices or edges.
+
+For example, consider the following code:
+
+    directed_graph<> g;
+    directed_graph<>::vertex_descriptor u = add_vertex(g);
+    directed_graph<>::vertex_descriptor v = add_vertex(g);
+    directed_graph<>::vertex_descriptor w = add_vertex(g);
+    remove_vertex(u);
+    add_edge(v, w, g);
+
+After running this program, the descriptor `u` will be invalid but `v` and `w` will
+still be valid so the call to `add_edge(v,w,g)` is also valid. Note that this
+property does not hold for all graph types.
 
 [h4 Vertex Indexing and Stability]
 The `directed_graph` class provides a built-in internal properties for vertex
@@ -80,6 +86,10 @@ that use vertex indices generally assume that they are in the range
 be in this continuous range until a vertex is removed from the graph. This is
 the only operation that invalidates vertex indices, but the vertices will need
 to be renumbered using the `renumber_vertex_indices()` function.
+
+The `remove_vertex_and_renumber_indices(vi,g)` function can be used to autmoatically
+renumber indices after removing the vertex referenced by the given iterator. Because
+this function runs in linear time, it should not be used for repeated removals.
 
 [h4 Template Parameters]
 There are three parameters to the `directed_graph` class.
@@ -103,14 +113,15 @@ There are three parameters to the `directed_graph` class.
 ]
 
 [h5 Model Of]
-VertexAndEdgeListGraph, MutablePropertyGraph, CopyConstructible, Assignable, and Serializable.
+[BoostIncidenceGraph], [BoostVertexListGraph], [BoostEdgeListGraph], [BoostAdjacencyGraph],
+[BoostMutableGraph], and [BoostPropertyGraph].
 
 [h5 Where Defined]
 `boost/graph/directed_graph.hpp`
 
 [h4 Associated Types]
 There are a number of useful types associated with the `directed_graph` class.
-Most of these are accessed through `graph_traits` or other template classes.
+Most of these are accessed through [boost_graph_traits] or other template classes.
 For convenience these types have been grouped by purpose.
 
 [h5 Descriptor Types]
@@ -119,16 +130,22 @@ For convenience these types have been grouped by purpose.
     [
         [`graph_traits<directed_graph>::vertex_descriptor`]
         [
-            The type for the vertex descriptors associated with the graph.
+            The type for the vertex descriptors associated with the graph. The `vertex_descriptor`
+            models the [BoostDescriptor] and [NoConcept Hashable] concepts.
         ]
     ]
     [
         [`graph_traits<directed_graph>::edge_descriptor`]
         [
-            The type for the edge descriptors associated with the graph.
+            The type for the edge descriptors associated with the graph. The `edge_descriptor`
+            models the [BoostDescriptor] and [NoConcept Hashable] concepts.
         ]
     ]
 ]
+
+Note that edge and vertex descriptors for the `unsigned_graph` can be used as keys for both
+[SgiSortedAssociativeContainer]s and [SgiHashedAssociativeContainer]s such as `std::map` and
+`std::tr1::unordered_map` respectively.
 
 [h5 Iterator Types]
 [table
@@ -137,35 +154,35 @@ For convenience these types have been grouped by purpose.
         [`graph_traits<directed_graph>::vertex_iterator`]
         [
             The type for iterators returned by `vertices()`. Verex iterators are
-            models of the `BidirectionalIterator` concept.
+            models of the [SgiBidirectionalIterator] concept.
         ]
     ]
     [
         [`graph_traits<directed_graph>::edge_iterator`]
         [
             The type for iterators returned by `edges()`. Edge iterators are
-            models of the `BidirectionalIterator` concept.
+            models of the [SgiBidirectionalIterator] concept.
         ]
     ]
     [
         [`graph_traits<directed_graph>::out_edge_iterator`]
         [
             The type for iterators returned by `out_edges()`. Out-edge iterators
-            are models of the `BidirectionalIterator` concept.
+            are models of the [SgiBidirectionalIterator] concept.
         ]
     ]
     [
         [`graph_traits<directed_graph>::in_edge_iterator`]
         [
             The type for iterators returned by `in_edges()`. In-edge iterators
-            are models of the `BidirectionalIterator` concept.
+            are models of the [SgiBidirectionalIterator] concept.
         ]
     ]
     [
         [`graph_traits<directed_graph>::adjacency_iterator`]
         [
             The type for iterators returned by `adjacent_vertices`. Adjacency
-            iterators are models of the `BidirectionalIterator` concept.
+            iterators are models of the [SgiBidirectionalIterator] concept.
         ]
     ]
 ]
@@ -752,5 +769,11 @@ set_property(const directed_graph& g, GraphProperty, Value v)
         ]
     ]
 ]
+
+[h4 Rationale]
+Unlike most graph classes in Boost.Graph, the `directed_graph` does not model the
+[BoostMutablePropertyGraph] concept. The reason for this is that it is relatively
+difficult from a usability standpoint to easily deduce the type to be passed as a
+property when adding vertices and edges - but especially vertices.
 
 [endsect]

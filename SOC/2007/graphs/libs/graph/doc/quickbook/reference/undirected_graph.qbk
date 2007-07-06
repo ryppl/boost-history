@@ -10,7 +10,7 @@ This section provides detailed information about the `undirected_graph` class,
 its associated types, member functions and non-member interface. An undirected graph
 is one in which edges have no direction - this is to say that edges can be "traveled"
 in both directions. This class provides general purpose implementation of undirected
-graphs and that can be used with algorithms in the Boost Graph Library.
+graphs and can be used with algorithms in the Boost Graph Library.
 
 [h4 Notation]
 The following notation is used in this documentation. The following type names

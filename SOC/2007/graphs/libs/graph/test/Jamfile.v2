@@ -23,3 +23,16 @@ exe misc
     : misc.cpp
     : <include>../../../
     ;
+
+exe components
+    : components.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
+
+exe distance
+    : distance.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
+
