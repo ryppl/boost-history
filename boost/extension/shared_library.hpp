@@ -84,11 +84,13 @@ namespace boost{namespace extensions{
 
 /// Declaration of functor class template.
 template <class ReturnValue,
-    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), class Param, void)>
+    BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC(\
+                  BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), class Param, void)>\
     class functor;
 
 /// Functor template specializations.
-BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), BOOST_EXTENSION_FUNCTOR_CLASS, _)
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                BOOST_EXTENSION_FUNCTOR_CLASS, _)
 
 #undef BOOST_EXTENSION_FUNCTOR_CLASS
 #else
@@ -291,6 +293,26 @@ public:
   bool open(){return (handle_ = load_shared_library(location_.c_str())) != 0;}
   bool close(){return close_shared_library(handle_);}  
 
+#ifdef BOOST_EXTENSION_USE_PP
+
+#define BOOST_EXTENSION_GET_FUNCTOR_METHOD(Z, N, _) \
+  template <class ReturnValue BOOST_PP_COMMA_IF(N) \
+            BOOST_PP_ENUM_PARAMS(N, class Param) > \
+  functor<ReturnValue BOOST_PP_COMMA_IF(N) \
+          BOOST_PP_ENUM_PARAMS(N, Param) > \
+  get_functor(const char * function_name) \
+  { \
+    return functor<ReturnValue BOOST_PP_COMMA_IF(N) \
+                   BOOST_PP_ENUM_PARAMS(N, Param)> \
+        (get_function(handle_, function_name)); \
+  } \
+  /**/
+
+  BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                  BOOST_EXTENSION_GET_FUNCTOR_METHOD, _)
+
+#undef BOOST_EXTENSION_GET_FUNCTOR_METHOD
+#else
   template <class ReturnValue>
   functor<ReturnValue>
     get_functor(const char * function_name)
@@ -344,6 +366,8 @@ public:
       Param6>
         (get_function(handle_, function_name));
   }
+#endif // BOOST_EXTENSION_USE_PP
+
 shared_library(const char * location, bool auto_close = false)
     :location_(location), handle_(0), auto_close_(auto_close){}
 };
