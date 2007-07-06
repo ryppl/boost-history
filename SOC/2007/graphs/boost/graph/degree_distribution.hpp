@@ -7,20 +7,11 @@
 #ifndef BOOST_GRAPH_DEGREE_DISTRIBUTION_HXX
 #define BOOST_GRAPH_DEGREE_DISTRIBUTION_HXX
 
-#include <boost/parameter.hpp>
+#include <boost/graph/named_parameters.hpp>
+#include <boost/graph/adjacency_list.hpp>
 
 namespace boost
 {
-    BOOST_PARAMETER_NAME(graph)
-    BOOST_PARAMETER_NAME(distribution)
-    BOOST_PARAMETER_NAME(in_distribution)
-    BOOST_PARAMETER_NAME(out_distribution)
-    BOOST_PARAMETER_NAME(histogram)
-    BOOST_PARAMETER_NAME(in_histogram)
-    BOOST_PARAMETER_NAME(out_histogram)
-
-    struct not_given {};
-
     // Helper functions for computing degree distributions, histograms. Note
     // that when passed a not_given argumemt, all of these operations are
     // no-ops. The effect is that the actual computations shouldn't add hidden
@@ -68,8 +59,8 @@ namespace boost
         { }
 
 
-        template <typename Dist, typename Graph>
-        inline void observe_degree(Dist& d, typename Graph::vertex_descriptor v, const Graph& g)
+        template <typename Hist, typename Graph>
+        inline void observe_degree(Hist& d, typename Graph::vertex_descriptor v, const Graph& g)
         { d[boost::degree(v, g)] += 1; }
 
         template <typename Graph>
@@ -77,8 +68,8 @@ namespace boost
         { }
 
 
-        template <typename Dist, typename Graph>
-        inline void observe_out_degree(Dist& d, typename Graph::vertex_descriptor v, const Graph& g)
+        template <typename Hist, typename Graph>
+        inline void observe_out_degree(Hist& d, typename Graph::vertex_descriptor v, const Graph& g)
         { d[boost::out_degree(v, g)] += 1; }
 
         template <typename Graph>
@@ -95,27 +86,27 @@ namespace boost
         { }
 
 
-        template <typename Dist, typename Graph>
-        inline void record_degree(Dist& d, typename Graph::vertex_descriptor v, const Graph& g)
-        { d[boost::degree(v, g)] += 1; }
+        template <typename Hist, typename Graph>
+        inline void record_degree(Hist& h, typename Graph::vertex_descriptor v, const Graph& g)
+        { h[boost::degree(v, g)].push_back(v); }
 
         template <typename Graph>
         inline void record_degree(not_given, typename Graph::vertex_descriptor v, const Graph& g)
         { }
 
 
-        template <typename Dist, typename Graph>
-        inline void record_out_degree(Dist& d, typename Graph::vertex_descriptor v, const Graph& g)
-        { d[boost::out_degree(v, g)] += 1; }
+        template <typename Hist, typename Graph>
+        inline void record_out_degree(Hist& h, typename Graph::vertex_descriptor v, const Graph& g)
+        { h[boost::out_degree(v, g)].push_back(v); }
 
         template <typename Graph>
         inline void record_out_degree(not_given, typename Graph::vertex_descriptor v, const Graph& g)
         { }
 
 
-        template <typename Dist, typename Graph>
-        inline void record_in_degree(Dist& d, typename Graph::vertex_descriptor v, const Graph& g)
-        { d[boost::in_degree(v, g)] += 1; }
+        template <typename Hist, typename Graph>
+        inline void record_in_degree(Hist& h, typename Graph::vertex_descriptor v, const Graph& g)
+        { h[boost::in_degree(v, g)].push_back(v); }
 
         template <typename Graph>
         inline void record_in_degree(not_given, typename Graph::vertex_descriptor v, const Graph& g)
@@ -129,14 +120,14 @@ namespace boost
         (optional
             (out(distribution), *, not_given())
             (out(in_distribution), *, not_given())
-            (out(out_distribution), *, not_given())
-            )
+            (out(out_distribution), *, not_given()))
         )
     {
         typename graph_type::vertex_iterator i, end;
 
         // part 1: find the max observable degrees for the graph so we
-        // only have to resize once.
+        // only have to resize once. note that this relaxes requirements on
+        // the distribution type - it just needs to be resizable.
         size_t max_d = 0, max_od = 0, max_id = 0;
         for(tie(i, end) = vertices(graph); i != end; ++i) {
             typename graph_type::vertex_descriptor v = *i;
@@ -156,8 +147,7 @@ namespace boost
         (optional
             (out(distribution), *, not_given())
             (out(out_distribution), *, not_given())
-            (out(in_distribution), *, not_given())
-            )
+            (out(in_distribution), *, not_given()))
         )
     {
         typename graph_type::vertex_iterator i, end;
@@ -177,31 +167,30 @@ namespace boost
         }
     }
 
-    // the actual degree_distribution function
+    // the actual degree_histogram function
     BOOST_PARAMETER_FUNCTION(
         (void), degree_histogram, tag,
         (required (graph, *))
         (optional
             (out(histogram), *, not_given())
             (out(out_histogram), *, not_given())
-            (out(in_histogram), *, not_given())
-            )
+            (out(in_histogram), *, not_given()))
         )
     {
         typename graph_type::vertex_iterator i, end;
 
         // part 1: initialize distributions
         initialize_distribution(graph,
-            _distribution = distribution,
-            _out_distribution = out_distribution,
-            _in_distribution = in_distribution);
+            _distribution = histogram,
+            _out_distribution = out_histogram,
+            _in_distribution = in_histogram);
 
         // part 2: record observed distributions
         for(tie(i, end) = vertices(graph); i != end; ++i) {
             typename graph_type::vertex_descriptor v = *i;
-            detail::record_degree(distribution, v, graph);
-            detail::record_out_degree(out_distribution, v, graph);
-            detail::record_in_degree(in_distribution, v, graph);
+            detail::record_degree(histogram, v, graph);
+            detail::record_out_degree(out_histogram, v, graph);
+            detail::record_in_degree(in_histogram, v, graph);
         }
     }
 }
