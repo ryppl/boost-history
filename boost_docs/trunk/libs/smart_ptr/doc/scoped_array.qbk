@@ -1,6 +1,16 @@
-[def __reset__ [link smart_ptr.reference.scoped_array.members.reset reset]
+[def __reset__ [link smart_ptr.reference.scoped_array.members.reset reset]]
+[def __element_type__ [link smart_ptr.reference.scoped_array.members.element_type element_type]]
+[def __ctor__ [link smart_ptr.reference.scoped_array.members.constructors scoped_array]]
+[def __destructor__ [link smart_ptr.reference.scoped_array.members.destructor ~scoped_array]]
+[def __operatorlbrb__ [link smart_ptr.reference.scoped_array.members.subscripting operator\[\]]]
+[def __get__ [link smart_ptr.reference.scoped_array.members.get]]
+[def __operatorconv__ [link smart_ptr.reference.scoped_array.members.conversions operator ['unspecified-bool-type]]]
+[def __swap__ [link smart_ptr.reference.scoped_array.members.swap swap]]
+[def __free_swap__ [link smart_ptr.reference.scoped_array.free_functions.swap swap]]
 
 [section:scoped_array scoped_array class template]
+
+[section Introduction]
 
 The __scoped_array__ class template stores a pointer to a dynamically allocated array. (Dynamically allocated arrays are allocated with the C++ [*new\[\]] expression.) The array pointed to is guaranteed to be deleted, either on destruction of the __scoped_array__, or via an explicit __reset__.
 
@@ -16,6 +26,8 @@ A [*std::vector] is an alternative to a __scoped_array__ that is a bit heavier d
 
 The class template is parameterized on [*T], the type of the object pointed to. [*T] must meet the smart pointer __common_requirements__.
 
+[endsect]
+
 [section Synopsis]
 
     namespace boost {
@@ -23,22 +35,22 @@ The class template is parameterized on [*T], the type of the object pointed to. 
       template<class T> class scoped_array : __noncopyable__ {
 
         public:
-          typedef T [@#element_type element_type];
+          typedef T __element_type__;
 
-          explicit [@#ctor scoped_array](T * p = 0); // never throws
-          [@#destructor ~scoped_array](); // never throws
+          explicit __ctor__(T * p = 0); // never throws
+          __destructor__(); // never throws
 
-          void [@#reset reset](T * p = 0); // never throws
+          void __reset__(T * p = 0); // never throws
 
-          T & [@#operator operator\[\]](std::ptrdiff_t i) const; // never throws
-          T * [@#get get]() const; // never throws
+          T & __operatorlbrb__(std::ptrdiff_t i) const; // never throws
+          T * __get__() const; // never throws
          
-          operator [@#conversions ['unspecified-bool-type]]() const; // never throws
+          __operatorconv__ () const; // never throws
 
-          void [@#swap swap](scoped_array & b); // never throws
+          void __swap__(__scoped_array__ & b); // never throws
       };
 
-      template<class T> void [@#free-swap swap](scoped_array<T> & a, scoped_array<T> & b); // never throws
+      template<class T> void __free_swap__(scoped_array<T> & a, scoped_array<T> & b); // never throws
 
     }
     
@@ -72,7 +84,7 @@ Deletes the array pointed to by the stored pointer and then stores a copy of p, 
 
 [heading subscripting]
 
-    T & operator\[\](std::ptrdiff_t i) const; // never throws
+    T & operator[](std::ptrdiff_t i) const; // never throws
 
 Returns a reference to element [*i] of the array pointed to by the stored pointer. Behavior is undefined and almost certainly undesirable if the stored pointer is 0, or if [*i] is less than 0 or is greater than or equal to the number of elements in the array.
 
@@ -84,9 +96,9 @@ Returns the stored pointer. [*T] need not be a complete type. See the smart poin
 
 [heading conversions]
 
-    operator ['unspecified-bool-type] () const; // never throws
+    operator ``['unspecified-bool-type]`` () const; // never throws
 
-Returns an unspecified value that, when used in boolean contexts, is equivalent to [^get() != 0].
+Returns an unspecified value that, when used in boolean contexts, is equivalent to `__get__() != 0`.
 
 [heading swap]
 
@@ -102,7 +114,7 @@ Exchanges the contents of the two smart pointers. [*T] need not be a complete ty
     
     template<class T> void swap(scoped_array<T> & a, scoped_array<T> & b); // never throws
 
-Equivalent to [*a.swap(b)]. Matches the interface of [*std::swap]. Provided as an aid to generic programming.
+Equivalent to `a.__swap__(b)`. Matches the interface of `*std::swap`. Provided as an aid to generic programming.
 
 Revised 09 January 2003
 

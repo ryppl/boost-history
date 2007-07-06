@@ -31,7 +31,7 @@
 [def __intrusive_ptr_hpp__ [@http://www.boost.org/boost/intrusive_ptr.hpp <boost/intrusive_ptr.hpp>]]
 
 [def __exception-specification__ [@http://www.boost.org/more/lib_guide.htm#Exception-specification exception-specification]]
-[def __noncopyable__ [@http://www.boost.org/doc/html/utility/utility.htm#Class_noncopyable noncopyable]]
+[def __noncopyable__ [@http://www.boost.org/libs/utility/utility.htm#Class_noncopyable noncopyable]]
 [def __auto_ptr__ [@http://en.wikipedia.org/wiki/Auto_ptr std::auto_ptr]]
 
 [import ../test/smart_ptr_test.cpp]
