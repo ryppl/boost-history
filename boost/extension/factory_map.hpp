@@ -19,6 +19,20 @@
 #include <boost/extension/extension.hpp>
 #include  <boost/extension/impl/typeinfo.hpp>
 
+#ifdef BOOST_EXTENSION_USE_PP
+
+#include <boost/preprocessor/arithmetic/inc.hpp>
+#include <boost/preprocessor/if.hpp>
+#include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/repetition.hpp>
+
+#ifndef BOOST_EXTENSION_MAX_FUNCTOR_PARAMS
+#define BOOST_EXTENSION_MAX_FUNCTOR_PARAMS 6
+#endif
+
+#endif
+
+
 namespace boost{namespace extensions{
 
 
@@ -63,6 +77,80 @@ public:
       delete it->second;
     //TODO - test for memory leaks.
   }
+#ifdef BOOST_EXTENSION_USE_PP
+
+#define BOOST_EXTENSION_FACTORY_MAP_OPERATOR_LIST(Z, N, _) \
+template<class Interface, class Info BOOST_PP_COMMA_IF(N) \
+         BOOST_PP_ENUM_PARAMS(N, \
+         class Param) > \
+operator std::list<factory<Interface, Info BOOST_PP_COMMA_IF(N)        \
+         BOOST_PP_ENUM_PARAMS(N, Param) > > & () { \
+  return this->get<Interface, Info BOOST_PP_COMMA_IF(N) \
+                   BOOST_PP_ENUM_PARAMS(N, Param) >(); \
+}
+/**/
+
+#define BOOST_EXTENSION_FACTORY_MAP_GET_METHOD(Z, N, _) \
+template <class Interface, class Info BOOST_PP_COMMA_IF(N) \
+          BOOST_PP_ENUM_PARAMS(N, class Param) > \
+std::list<factory<Interface, Info BOOST_PP_COMMA_IF(N) \
+          BOOST_PP_ENUM_PARAMS(N, Param) > > & get() \
+{ \
+  TypeInfo current_type = \
+    type_info_handler<TypeInfo, factory<Interface, Info BOOST_PP_COMMA_IF(N) \
+      BOOST_PP_ENUM_PARAMS(N, Param) > >::get_class_type(); \
+  typename FactoryMap::iterator it = factories_.find(current_type); \
+  if (it == factories_.end()) \
+  { \
+    factory_container<Interface, Info BOOST_PP_COMMA_IF(N) \
+      BOOST_PP_ENUM_PARAMS(N, Param) > * ret = \
+            new factory_container<Interface, Info BOOST_PP_COMMA_IF(N) \
+            BOOST_PP_ENUM_PARAMS(N, Param) >(); \
+    factories_[current_type] = ret; \
+    return *ret; \
+  } \
+  else \
+  { \
+    return static_cast<factory_container<Interface, Info BOOST_PP_COMMA_IF(N) \
+                       BOOST_PP_ENUM_PARAMS(N, Param) > &>(*(it->second)); \
+  } \
+}
+/**/
+
+
+#define BOOST_EXTENSION_FACTORY_MAP_ADD_METHOD(Z, N, _) \
+template <class Actual, class Interface, class Info BOOST_PP_COMMA_IF(N) \
+          BOOST_PP_ENUM_PARAMS(N, class Param) > \
+void add(Info info) \
+{ \
+  typedef std::list<factory<Interface, Info BOOST_PP_COMMA_IF(N) \
+                    BOOST_PP_ENUM_PARAMS(N, Param) > > ListType; \
+  ListType & s = this->get<Interface, Info BOOST_PP_COMMA_IF(N) \
+                           BOOST_PP_ENUM_PARAMS(N, Param) >(); \
+  factory<Interface, Info BOOST_PP_COMMA_IF(N) \
+          BOOST_PP_ENUM_PARAMS(N, Param) > f(info); \
+    f.set_type_special((Actual*)0); \
+    s.push_back(f); \
+}
+/**/
+
+
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                             BOOST_EXTENSION_FACTORY_MAP_OPERATOR_LIST, _)
+
+
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                             BOOST_EXTENSION_FACTORY_MAP_GET_METHOD, _)
+
+
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                             BOOST_EXTENSION_FACTORY_MAP_ADD_METHOD, _)
+
+
+#undef BOOST_EXTENSION_FACTORY_MAP_OPERATOR_LIST
+#undef BOOST_EXTENSION_FACTORY_MAP_GET_METHOD
+#undef BOOST_EXTENSION_FACTORY_MAP_ADD_METHOD
+#else
   template <class Interface, class Info>
 operator std::list<factory<Interface, Info> > & ()
   {return this->get<Interface, Info>();}
@@ -350,6 +438,7 @@ void add(Info info)
     s.push_back(f);
     //it->set_type<Actual>(); 
   }
+#endif // BOOST_EXTENSION_USE_PP
 };
 
 typedef basic_factory_map<default_type_info> factory_map;
