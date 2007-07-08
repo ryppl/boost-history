@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="svg_plot" name="SVG_Plot" dirname="svg_plot" last-revision="$Date: 2007/06/25 23:44:03 $"
+<article id="svg_plot" name="SVG_Plot" dirname="svg_plot" last-revision="$Date: 2007/07/08 20:44:43 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -20,6 +20,18 @@
     </articlepurpose>
   </articleinfo>
   <title>SVG_Plot</title>
+  <section id="svg_plot.preface">
+    <title> Preface</title>
+    <para>
+      Normally, the first task when dealing with numerical data is to plot it. Humans
+      have a fantastic capacity for visual understanding, and merely looking at data
+      oganized in one, two, or three dimensions allows us to see relations not otherwise
+      visible in a list of numbers. Computers, however, deal with information numerically,
+      and C++ and the STL do not offer a way to bridge that gap. This library allows
+      the user to easily plot data stored in STL containers with (hopefully!) minimal
+      intervention.
+    </para>
+  </section>
   <section id="svg_plot.intro">
     <title> Introduction</title>
     <para>
@@ -107,12 +119,515 @@
 
 <phrase role="comment">// Using a color constant
 </phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_line_color</phrase><phrase role="special">(</phrase><phrase role="identifier">saddlebrown</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">// Defining an RGB value from color constant. This is necessary in the plot() function
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_line_color</phrase><phrase role="special">(</phrase><phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="identifier">saddle_brown</phrase><phrase role="special">));</phrase>
 </programlisting>
       </para>
     </section>
   </section>
-  <section id="svg_plot.svg_public_interface">
-    <title>SVG Public Interface</title>
+  <section id="svg_plot.tutorial">
+    <title> Tutorial</title>
+    <section id="svg_plot.tutorial.tutorial_basic">
+      <title> Basic Example</title>
+      <para>
+        The minimal requirements for creating any image are as follows.
+      </para>
+      <itemizedlist>
+        <listitem>
+          You need a svg_plot of some form
+        </listitem>
+        <listitem>
+          You need to call the write() command
+        </listitem>
+      </itemizedlist>
+      <para>
+        That's it! However, just doing this won't give you anything useful. Let's
+        take a minimal example:
+      </para>
+      <section id="svg_plot.tutorial.tutorial_basic.tutorial_code_simple">
+        <title> Simple program</title>
+        <para>
+          
+<programlisting>
+<phrase role="preprocessor">#include</phrase>&nbsp;<phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">svg_plot</phrase><phrase role="special">/</phrase><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+<phrase role="preprocessor">#include</phrase>&nbsp;<phrase role="special">&lt;</phrase><phrase role="identifier">vector</phrase><phrase role="special">&gt;</phrase>
+
+<phrase role="keyword">using</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">;</phrase>
+<phrase role="keyword">using</phrase>&nbsp;<phrase role="keyword">namespace</phrase>&nbsp;<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">svg_plot</phrase><phrase role="special">;</phrase>
+
+<phrase role="keyword">int</phrase>&nbsp;<phrase role="identifier">main</phrase><phrase role="special">()</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="comment">// Snip
+</phrase>
+	<phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">&gt;</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">;</phrase>
+
+	<phrase role="comment">// initialize my_data here
+</phrase>
+	<phrase role="identifier">svg_1d_plot</phrase>&nbsp;<phrase role="identifier">my_plot</phrase><phrase role="special">;</phrase>
+
+	<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_title</phrase><phrase role="special">(</phrase><phrase role="string">&quot;My Graph&quot;</phrase><phrase role="special">)</phrase>
+	       <phrase role="special">.</phrase><phrase role="identifier">set_legend_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+	       <phrase role="special">.</phrase><phrase role="identifier">set_x_range</phrase><phrase role="special">(-</phrase><phrase role="number">1</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">11</phrase><phrase role="special">);</phrase>
+	
+	<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Race times&quot;</phrase><phrase role="special">);</phrase>
+
+	<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">write</phrase><phrase role="special">(</phrase><phrase role="string">&quot;my_file.svg&quot;</phrase><phrase role="special">);</phrase>
+	<phrase role="keyword">return</phrase>&nbsp;<phrase role="number">0</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+        </para>
+      </section>
+      <section id="svg_plot.tutorial.tutorial_basic.tutorial_simple_exam">
+        <title> Basic Example Breakdown</title>
+        <para>
+          Let's examine what this does.
+        </para>
+        <para>
+          
+<programlisting>
+<phrase role="identifier">svg_1d_plot</phrase>&nbsp;<phrase role="identifier">my_plot</phrase><phrase role="special">;</phrase>
+</programlisting>
+          initializes a new 1D plot. This also sets many of the values that the class
+          keeps track of with reasonable defaults.
+        </para>
+        <para>
+          
+<programlisting>
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_title</phrase><phrase role="special">(</phrase><phrase role="string">&quot;My Graph&quot;</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_legend_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_range</phrase><phrase role="special">(-</phrase><phrase role="number">1</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">11</phrase><phrase role="special">);</phrase>
+</programlisting>
+        </para>
+        <para>
+          All of the set methods are fairly self explanatory. The title, which will
+          appear at the top of the graph, will say &quot;My Graph&quot;. <code><phrase
+          role="identifier">set_legend_on</phrase><phrase role="special">(</phrase><phrase
+          role="keyword">true</phrase><phrase role="special">)</phrase></code> means
+          that the legend will show up. <code><phrase role="identifier">set_x_range</phrase><phrase
+          role="special">(-</phrase><phrase role="number">1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+          role="number">11</phrase><phrase role="special">)</phrase></code> means
+          that the range of values that will be printed is between -1 and 11, as
+          you can see in the above images.
+        </para>
+        <para>
+          This syntax may be unfamiliar. However, it works on the same principle
+          that the following code works: 
+<programlisting>
+<phrase role="identifier">a</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">b</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">c</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">d</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="number">3</phrase><phrase role="special">;</phrase>
+</programlisting>
+        </para>
+        <para>
+          You also may have seen it used this way: 
+<programlisting>
+<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="string">&quot;Hello&quot;</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="identifier">name</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+</programlisting>
+        </para>
+        <para>
+          Within all of the plot classes, chaining works the same way. The equivalent
+          code for the above is as follows:
+        </para>
+        <para>
+          
+<programlisting>
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_title</phrase><phrase role="special">(</phrase><phrase role="string">&quot;My Graph&quot;</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_legend_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_x_range</phrase><phrase role="special">(-</phrase><phrase role="number">1</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">11</phrase><phrase role="special">);</phrase>
+</programlisting>
+        </para>
+        <para>
+          In the long run, I think you will find that my choice helps organize the
+          code a little better!
+        </para>
+        <para>
+          
+<programlisting>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Race times&quot;</phrase><phrase role="special">);</phrase>
+</programlisting>
+        </para>
+        <para>
+          This draws <code><phrase role="identifier">my_data</phrase></code> to
+          <code><phrase role="identifier">my_plot</phrase></code>. As many containers
+          as you want can be drawn to my_plot. The name of the series is &quot;Race
+          times&quot;, and that text will show up in the legend. These are the three
+          required parameters for this function call. There are optional parameters,
+          as seen in the section Getting More Out Of The <code><phrase role="identifier">plot</phrase><phrase
+          role="special">()</phrase></code> Function, but most immediately beneficial
+          would be the ability to specify a color for your data point: 
+<programlisting>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Race Times&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">blue</phrase><phrase role="special">);</phrase>
+</programlisting>
+        </para>
+        <para>
+          is how you could accomplish this
+        </para>
+        <para>
+          
+<programlisting>
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">write</phrase><phrase role="special">(</phrase><phrase role="string">&quot;my_file.svg&quot;</phrase><phrase role="special">);</phrase>
+</programlisting>
+        </para>
+        <para>
+          This writes our plot to the file &quot;my_file.svg&quot;.
+        </para>
+      </section>
+    </section>
+    <section id="svg_plot.tutorial.plot_window">
+      <title> Using a Plot Window</title>
+      <para>
+        If the legend or the title is obscuring data, or you would merely like a
+        different choice for layout, you can opt to use a <literal>plot window</literal>.
+        To add it to a simple example:
+      </para>
+      <para>
+        
+<programlisting>
+<phrase role="preprocessor">#include</phrase>&nbsp;<phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">svg_plot</phrase><phrase role="special">/</phrase><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+<phrase role="preprocessor">#include</phrase>&nbsp;<phrase role="special">&lt;</phrase><phrase role="identifier">vector</phrase><phrase role="special">&gt;</phrase>
+
+<phrase role="keyword">using</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">;</phrase>
+<phrase role="keyword">using</phrase>&nbsp;<phrase role="keyword">namespace</phrase>&nbsp;<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">svg_plot</phrase><phrase role="special">;</phrase>
+
+<phrase role="comment">// Snip
+</phrase>
+<phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">&gt;</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">;</phrase>
+
+<phrase role="comment">// initialize my_data here
+</phrase>
+<phrase role="identifier">svg_1d_plot</phrase>&nbsp;<phrase role="identifier">my_plot</phrase><phrase role="special">;</phrase>
+
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_title</phrase><phrase role="special">(</phrase><phrase role="string">&quot;My Graph&quot;</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_legend_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_plot_window_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_range</phrase><phrase role="special">(-</phrase><phrase role="number">1</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">11</phrase><phrase role="special">);</phrase>
+
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Race times&quot;</phrase><phrase role="special">);</phrase>
+
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">write</phrase><phrase role="special">(</phrase><phrase role="string">&quot;my_file.svg&quot;</phrase><phrase role="special">);</phrase>
+</programlisting>
+      </para>
+      <para>
+        This produces the following image: (insert image)
+      </para>
+    </section>
+    <section id="svg_plot.tutorial.full_layout">
+      <title> Full Layout Example</title>
+      <para>
+        Boost.SVG_Plot is designed to avoid having to do much customization. However,
+        it is by no means a &quot;one size fits all&quot; solution. As such, there
+        is much that can be changed in the way of layout and design. An example follows:
+      </para>
+      <para>
+        
+<programlisting>
+<phrase role="identifier">svg_1d_plot</phrase>&nbsp;<phrase role="identifier">my_plot</phrase><phrase role="special">;</phrase>
+
+<phrase role="comment">// misc data
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_image_size</phrase><phrase role="special">(</phrase><phrase role="number">500</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">350</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_title</phrase><phrase role="special">(</phrase><phrase role="string">&quot;Race Results&quot;</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_title_font_size</phrase><phrase role="special">(</phrase><phrase role="number">20</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">// display commands
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_x_label_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_major_labels_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_major_grid_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_minor_grid_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_axis_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_legend_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_plot_window_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_title_on</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">// axis information
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_x_axis_width</phrase><phrase role="special">(</phrase><phrase role="number">2</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_label</phrase><phrase role="special">(</phrase><phrase role="string">&quot;Time in minutes&quot;</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_major_tick</phrase><phrase role="special">(</phrase><phrase role="number">5</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_num_minor_ticks</phrase><phrase role="special">(</phrase><phrase role="number">1</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_scale</phrase><phrase role="special">(-</phrase><phrase role="number">5</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">130</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">// plot the information
+</phrase><phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">ron_result</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Ron&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">orange</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">sally_result</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Sally&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">tim_result</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Tim&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">blue</phrase><phrase role="special">);</phrase>
+
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">write</phrase><phrase role="special">(</phrase><phrase role="string">&quot;race_results.svg&quot;</phrase><phrase role="special">);</phrase>
+</programlisting>
+      </para>
+      <para>
+        This produces the following image: (insert image)
+      </para>
+    </section>
+    <section id="svg_plot.tutorial.color">
+      <title> Color Customization</title>
+      <para>
+        The <literal>svg_plot</literal> classes support two major ways to define
+        colors. One is the use of colors in the RGB format. To specify a color in
+        the RGB format, you can use the following: <code><phrase role="identifier">svg_color</phrase><phrase
+        role="special">(</phrase><phrase role="number">123</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+        role="number">73</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">255</phrase><phrase
+        role="special">)</phrase></code>, to pick a random example.
+      </para>
+      <para>
+        The other way to define a color is to use the SVG standard's custom color
+        definitions, as defined <ulink url="http://www.w3.org/TR/SVG/types.html#ColorKeywords">here</ulink>
+      </para>
+      <para>
+        Here is an example using color customization:
+      </para>
+      <para>
+        
+<programlisting>
+<phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">&gt;</phrase>&nbsp;<phrase role="identifier">data1</phrase><phrase role="special">;</phrase>
+<phrase role="identifier">deque</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">&gt;</phrase>&nbsp;<phrase role="identifier">data2</phrase><phrase role="special">;</phrase>
+<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">array</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">10</phrase><phrase role="special">&gt;</phrase>&nbsp;<phrase role="identifier">data3</phrase><phrase role="special">;</phrase>
+
+<phrase role="identifier">svg_1d_plot</phrase>&nbsp;<phrase role="identifier">my_plot</phrase><phrase role="special">;</phrase>
+
+<phrase role="comment">// size/scale settings
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_image_size</phrase><phrase role="special">(</phrase><phrase role="number">500</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">350</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_scale</phrase><phrase role="special">(-</phrase><phrase role="number">3</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">10</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">// Text settings
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_title</phrase><phrase role="special">(</phrase><phrase role="string">&quot;Oh My!&quot;</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_title_font_size</phrase><phrase role="special">(</phrase><phrase role="number">29</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_label_text</phrase><phrase role="special">(</phrase><phrase role="string">&quot;Time in Months&quot;</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">// command settings
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_axis</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_legend</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_plot_window</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_label</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_major_labels</phrase><phrase role="special">(</phrase><phrase role="keyword">true</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">// color settings
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_background_color</phrase><phrase role="special">(</phrase><phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="number">67</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">111</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">69</phrase><phrase role="special">))</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_legend_background_color</phrase><phrase role="special">(</phrase><phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="number">207</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">202</phrase><phrase role="special">,</phrase><phrase role="number">167</phrase><phrase role="special">))</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_plot_background_color</phrase><phrase role="special">(</phrase><phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="number">136</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">188</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">126</phrase><phrase role="special">))</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_title_color</phrase><phrase role="special">(</phrase><phrase role="identifier">white</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_axis_color</phrase><phrase role="special">(</phrase><phrase role="identifier">black</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_major_tick_color</phrase><phrase role="special">(</phrase><phrase role="identifier">black</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_legend_border_color</phrase><phrase role="special">(</phrase><phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="number">102</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">102</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="number">84</phrase><phrase role="special">))</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_minor_tick_color</phrase><phrase role="special">(</phrase><phrase role="identifier">black</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">//axis settings
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_x_major_tick</phrase><phrase role="special">(</phrase><phrase role="number">2</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_num_minor_ticks</phrase><phrase role="special">(</phrase><phrase role="number">3</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_major_tick_length</phrase><phrase role="special">(</phrase><phrase role="number">14</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_minor_tick_length</phrase><phrase role="special">(</phrase><phrase role="number">7</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_major_tick_width</phrase><phrase role="special">(</phrase><phrase role="number">1</phrase><phrase role="special">)</phrase>
+       <phrase role="special">.</phrase><phrase role="identifier">set_x_minor_tick_width</phrase><phrase role="special">(</phrase><phrase role="number">1</phrase><phrase role="special">);</phrase>
+
+<phrase role="comment">//legend settings
+</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_legend_title_font_size</phrase><phrase role="special">(</phrase><phrase role="number">15</phrase><phrase role="special">);</phrase>
+
+<phrase role="identifier">plot_range</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">data2</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">(),</phrase>&nbsp;<phrase role="identifier">data2</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">(),</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">blue</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">plot_range</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">data1</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">(),</phrase>&nbsp;<phrase role="identifier">data1</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">(),</phrase>&nbsp;<phrase role="string">&quot;Tigers&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">purple</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">plot_range</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">data3</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">(),</phrase>&nbsp;<phrase role="identifier">data3</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">(),</phrase>&nbsp;<phrase role="string">&quot;Bears&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">);</phrase>
+
+<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">write</phrase><phrase role="special">(</phrase><phrase role="string">&quot;D:/1d_complex.svg&quot;</phrase><phrase role="special">);</phrase>
+
+</programlisting>
+      </para>
+      <para>
+        This produces the following output: (Insert image)
+      </para>
+    </section>
+    <section id="svg_plot.tutorial.defaults">
+      <title> Defaults</title>
+      <para>
+        You may have noticed that there are certain defaults that are true at the
+        beginning of the plotting. Here is a table of the defaults:
+      </para>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+          <phrase role="table-title">Default]</phrase>
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>object</entry><entry>Default value</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>Image size</entry><entry><code><phrase role="number">500</phrase>&nbsp;<phrase
+              role="identifier">by</phrase>&nbsp;<phrase role="number">300</phrase></code></entry>
+            </row>
+            <row>
+              <entry>X Axis Label</entry><entry><code><phrase role="string">&quot;&quot;</phrase><phrase
+              role="special">,</phrase>&nbsp;<phrase role="identifier">Off</phrase></code></entry>
+            </row>
+            <row>
+              <entry>X Range</entry><entry><code><phrase role="special">(-</phrase><phrase
+              role="number">10</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+              role="number">10</phrase><phrase role="special">)</phrase></code></entry>
+            </row>
+            <row>
+              <entry>Plot Window</entry><entry><code><phrase role="identifier">Off</phrase></code></entry>
+            </row>
+            <row>
+              <entry>Grid lines</entry><entry><code><phrase role="identifier">All</phrase>&nbsp;<phrase
+              role="identifier">off</phrase></code></entry>
+            </row>
+            <row>
+              <entry>Distance between major X ticks</entry><entry><code><phrase role="number">3</phrase>&nbsp;<phrase
+              role="identifier">units</phrase></code></entry>
+            </row>
+            <row>
+              <entry>Number of minor X ticks between each major X tick</entry><entry>2</entry>
+            </row>
+            <row>
+              <entry>Major tick length</entry><entry>20 pixels</entry>
+            </row>
+            <row>
+              <entry>Major tick width</entry><entry>2 pixels</entry>
+            </row>
+            <row>
+              <entry>Minor tick length</entry><entry>10 pixels</entry>
+            </row>
+            <row>
+              <entry>Minor tick width</entry><entry>2 pixels</entry>
+            </row>
+            <row>
+              <entry>Font size of the legend title</entry><entry>12</entry>
+            </row>
+            <row>
+              <entry>Font size of the X Label</entry><entry>12</entry>
+            </row>
+            <row>
+              <entry>Font size of the title</entry><entry>30</entry>
+            </row>
+            <row>
+              <entry>Image background</entry><entry>white</entry>
+            </row>
+            <row>
+              <entry>Plot window background</entry><entry>white</entry>
+            </row>
+            <row>
+              <entry>Legend background</entry><entry>white</entry>
+            </row>
+            <row>
+              <entry>All other colors</entry><entry>black</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+    <section id="svg_plot.tutorial.plot_function">
+      <title> Getting More Out Of The <code><phrase role="identifier">plot</phrase><phrase
+      role="special">()</phrase></code> Function</title>
+      <para>
+        The <code><phrase role="identifier">plot</phrase><phrase role="special">()</phrase></code>
+        function is defined using Boost.Parameter. As such, it supports a few extra
+        named parameters, as well as a deduced parameter.
+      </para>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+          <phrase role="table-title">Deduced parameter</phrase>
+        </bridgehead>
+        <tgroup cols="3">
+          <thead>
+            <row>
+              <entry>ID</entry><entry>Description</entry><entry>Default</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>_fill_color</entry><entry>This is the color that shows up inside
+              of the circle that is being drawn</entry><entry>white</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+          <phrase role="table-title">Named Parameters</phrase>
+        </bridgehead>
+        <tgroup cols="3">
+          <thead>
+            <row>
+              <entry>ID</entry><entry>Description</entry><entry>Default</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry>_stroke_color</entry><entry>The outline of the circle that is
+              being drawn</entry><entry>black</entry>
+            </row>
+            <row>
+              <entry>_x_functor</entry><entry>A pointer to a class that contains
+              a conversion function. You will not have to worry about this, unless
+              you are trying to accomplish stuff like plotting a vector of humans.
+              For example: 
+<programlisting>
+<phrase role="keyword">class</phrase>&nbsp;<phrase role="identifier">my_functor</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="identifier">typdef</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase role="identifier">result_type</phrase><phrase role="special">;</phrase>
+
+	<phrase role="keyword">double</phrase>&nbsp;<phrase role="identifier">convert</phrase><phrase role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase role="identifier">human</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase role="identifier">_hum</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">return</phrase>&nbsp;<phrase role="identifier">_hum</phrase><phrase role="special">.</phrase><phrase role="identifier">get_age</phrase><phrase role="special">();</phrase>
+	<phrase role="special">}</phrase>
+<phrase role="special">}</phrase>
+
+<phrase role="comment">// snip
+</phrase>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_x_functor</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">my_functor</phrase><phrase role="special">());</phrase>
+</programlisting>
+              </entry><entry><code><phrase role="identifier">null</phrase></code></entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+      <para>
+        Here are some examples of correct uses:
+      </para>
+      <anchor id="svg_plot.tutorial.plot_function.using_fill_and_stroke_colors" />
+      <bridgehead renderas="sect3">
+        Using fill and stroke colors
+      </bridgehead>
+      <para>
+        
+<programlisting>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_fill_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_stroke_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">black</phrase><phrase role="special">);</phrase>
+</programlisting>
+      </para>
+      <para>
+        This has the same effect as the following:
+      </para>
+      <para>
+        
+<programlisting>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">black</phrase><phrase role="special">);</phrase>
+</programlisting>
+      </para>
+      <para>
+        and also the same effect as: 
+<programlisting>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_stroke_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">black</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_fill_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">);</phrase>
+</programlisting>
+      </para>
+      <para>
+        Since _fill_color is a deduced parameter, when two svg_colors are used in
+        the same function call, they are always inferred in the following order:
+        (fill, stroke).
+      </para>
+      <anchor id="svg_plot.tutorial.plot_function.using_all_parameters" />
+      <bridgehead renderas="sect3">
+        Using all parameters
+      </bridgehead>
+      <para>
+        
+<programlisting>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase> 
+     <phrase role="identifier">_fill_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">,</phrase> 
+     <phrase role="identifier">_stroke_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">black</phrase><phrase role="special">,</phrase>
+     <phrase role="identifier">_x_functor</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">my_functor</phrase><phrase role="special">());</phrase>
+</programlisting>
+      </para>
+    </section>
+  </section>
+  <section id="svg_plot.svg_interface">
+    <title> SVG Public Interface</title>
     <informaltable frame="all">
       <bridgehead renderas="sect4">
         <phrase role="table-title">class svg</phrase>
@@ -233,8 +748,8 @@
       </tgroup>
     </informaltable>
   </section>
-  <section id="svg_plot.svg_graph_public_interface">
-    <title>svg_graph Public Interface</title>
+  <section id="svg_plot.svg_graph_interface">
+    <title> svg_graph Public Interface</title>
     <informaltable frame="all">
       <bridgehead renderas="sect4">
         <phrase role="table-title">Misc</phrase>
@@ -556,56 +1071,5 @@
         </tbody>
       </tgroup>
     </informaltable>
-  </section>
-  <section id="svg_plot.advanced">
-    <title> Advanced</title> <anchor id="svg_plot.advanced.chaining" />
-    <bridgehead renderas="sect3">
-      Chaining
-    </bridgehead>
-    <para>
-      If you would like to make the syntax more concise, the interface supports 'chaining'.
-      That is, the following code:
-    </para>
-    <para>
-      
-<programlisting>
-<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_legend_background_color</phrase><phrase role="special">(</phrase>&nbsp;<phrase role="identifier">whitesmoke</phrase>&nbsp;<phrase role="special">);</phrase>
-<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_legend_title_color</phrase><phrase role="special">(</phrase>&nbsp;<phrase role="identifier">red</phrase>&nbsp;<phrase role="special">);</phrase>
-</programlisting>
-    </para>
-    <para>
-      can be written as:
-    </para>
-    <para>
-      
-<programlisting>
-<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">set_legend_background_color</phrase><phrase role="special">(</phrase>&nbsp;<phrase role="identifier">whitesmoke</phrase>&nbsp;<phrase role="special">)</phrase>
-       <phrase role="special">.</phrase><phrase role="identifier">set_legend_title_color</phrase><phrase role="special">(</phrase>&nbsp;<phrase role="identifier">red</phrase>&nbsp;<phrase role="special">);</phrase>
-</programlisting>
-    </para>
-    <para>
-      This is done to allow the user more flexibility in how they group options.
-    </para>
-    <para>
-      This works because the header for each method is as follows:
-    </para>
-    <para>
-      
-<programlisting>
-<phrase role="identifier">svg_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase role="identifier">svg_plot</phrase><phrase role="special">::</phrase><phrase role="identifier">set_option</phrase><phrase role="special">(</phrase><phrase role="identifier">parameter</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">parameter</phrase><phrase role="special">);</phrase>
-</programlisting>
-    </para>
-    <para>
-      This is identical to the syntax behind chaining <code><phrase role="keyword">operator</phrase><phrase
-      role="special">=()]</phrase></code> and <code><phrase role="keyword">operator</phrase><phrase
-      role="special">&lt;&lt;()</phrase></code>.
-    </para>
-    <para>
-      
-<programlisting>
-<phrase role="keyword">int</phrase>&nbsp;<phrase role="identifier">a</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">b</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">c</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">d</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="number">0</phrase><phrase role="special">;</phrase>
-<phrase role="identifier">cout</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="string">&quot;Value a: &quot;</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="identifier">a</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
-</programlisting>
-    </para>
   </section>
 </article>

@@ -9,6 +9,9 @@
         [@http://www.boost.org/LICENSE_1_0.txt])
     ]
 ]
+[section:preface Preface]
+Normally, the first task when dealing with numerical data is to plot it. Humans have a fantastic capacity for visual understanding, and merely looking at data oganized in one, two, or three dimensions allows us to see relations not otherwise visible in a list of numbers. Computers, however, deal with information numerically, and C++ and the STL do not offer a way to bridge that gap. This library allows the user to easily plot data stored in STL containers with (hopefully!) minimal intervention.
+[endsect]
 
 [section:intro Introduction]
 This project is focused on using STL containers in order to graph data on a one-dimensional and two-dimensional (and if time allows, 3D!) plot. The plot would be written in an svg image, compliant with the W3C standard. The goals of the project are as follows:
@@ -22,7 +25,6 @@ This project is focused on using STL containers in order to graph data on a one-
 
 I have only a student's grasp of C++, so if you have a suggestion to help me with design or implementation, either leave them here or email me at jakevoytko (at) gmail (dot) com
 
-This page will hold examples of what I have implemented thus far, and what my program will be capable of in the future. More complete documentation will be live in a few days on my personal website. 
 [endsect]
 
 [section:color Colors]
@@ -43,6 +45,8 @@ introduces the possibility of rounding error, which I would like to avoid at
 all costs, so that the same image file displays the same way on any system 
 that correctly implements the SVG format.
 
+It is important to note that any integer value is accepted by the SVG standard, but negative values are rounded to 0, and positive values > 255 are rounded down to 255.
+
 Constants are defined in an enum, svg_color_constant, in alphabetical order.
 This facilitates quick lookup of their RGB values quickly in an array.
 
@@ -62,12 +66,328 @@ my_plot.set_line_color(my_color);
 
 // Using a color constant
 my_plot.set_line_color(saddlebrown);
+
+// Defining an RGB value from color constant. This is necessary in the plot() function
+my_plot.set_line_color(svg_color(saddle_brown));
 ``
 
 [endsect]
 [endsect]
 
-[section SVG Public Interface]
+
+[section:tutorial Tutorial]
+[section:tutorial_basic Basic Example]
+The minimal requirements for creating any image are as follows.
+
+* You need a one or two dimensional svg_plot
+* You need to call the write() command
+
+That's it! However, just doing this won't give you anything useful. The following can be considered a minimal example:
+
+[section:tutorial_code_simple Simple program]
+``
+#include <boost/svg_plot/svg_1d_plot.hpp>
+#include <vector>
+
+using std::vector;
+using namespace boost::svg_plot;
+
+int main()
+{
+	// Snip
+
+	vector<double> my_data;
+
+	// initialize my_data here
+
+	svg_1d_plot my_plot;
+
+	my_plot.set_title("My Graph")
+	       .set_legend_on(true)
+	       .set_x_range(-1, 11);
+	
+	plot(my_plot, my_data, "Race times");
+
+	my_plot.write("my_file.svg");
+	return 0;
+}
+``
+[endsect]
+[section:tutorial_simple_exam Basic Example Breakdown]
+Let's examine what this does. 
+
+``
+svg_1d_plot my_plot;
+`` 
+initializes a new 1D plot. This also sets many of the values that the class keeps track of with reasonable defaults.
+
+``
+my_plot.set_title("My Graph")
+       .set_legend_on(true)
+       .set_x_range(-1, 11);
+``
+
+All of the set methods are fairly self explanatory. The title, which will appear at the top of the graph, will say "My Graph". `set_legend_on(true)` means that the legend will show up. `set_x_range(-1, 11)` means that the range of values that will be printed is between -1 and 11, as you can see in the above images.
+
+This syntax may be unfamiliar. However, it works on the same principle that the following code works:
+``
+a = b = c = d = 3;
+``
+
+You have also seen it used to print to the console:
+``
+std::cout << "Hello" << name << std::endl;
+``
+
+Within all of the plot classes, chaining works the same way. The equivalent code for the above is as follows:
+
+``
+my_plot.set_title("My Graph");
+my_plot.set_legend_on(true);
+my_plot.set_x_range(-1, 11);
+``
+
+In the long run, I think you will find that my choice helps organize the code a little better! 
+
+
+``
+plot(my_plot, my_data, "Race times");
+``
+
+This draws `my_data` to `my_plot`. As many containers as you want can be drawn to my_plot. The name of the series is "Race times", and that text will show up in the legend. These are the three required parameters for this function call. There are optional parameters, as seen in the section Getting More Out Of The `plot()` Function, but most immediately beneficial would be the ability to specify a color for your data point:
+``
+plot(my_plot, my_data, "Race Times", blue);
+``
+
+is how you could accomplish this
+
+``
+my_plot.write("my_file.svg");
+``
+
+This writes our plot to the file "my_file.svg". 
+[endsect]
+[endsect]
+
+[section:plot_window Using a Plot Window]
+If the legend or the title is obscuring data, or you would merely like a different choice for layout, you can opt to use a [^plot window]. To add it to a simple example:
+
+``
+#include <boost/svg_plot/svg_1d_plot.hpp>
+#include <vector>
+
+using std::vector;
+using namespace boost::svg_plot;
+
+// Snip
+
+vector<double> my_data;
+
+// initialize my_data here
+
+svg_1d_plot my_plot;
+
+my_plot.set_title("My Graph")
+       .set_legend_on(true)
+       .set_plot_window_on(true)
+       .set_x_range(-1, 11);
+
+plot(my_plot, my_data, "Race times");
+
+my_plot.write("my_file.svg");
+``
+
+This produces the following image:
+(insert image)
+[endsect]
+[section:full_layout Full Layout Example]
+Boost.SVG_Plot is designed to avoid having to do much customization. However, it is by no means a "one size fits all" solution. As such, there is much that can be changed in the way of layout and design. An example follows:
+
+``
+svg_1d_plot my_plot;
+
+// misc data
+my_plot.set_image_size(500, 350)
+       .set_title("Race Results")
+       .set_title_font_size(20);
+
+// display commands
+my_plot.set_x_label_on(true)
+       .set_x_major_labels_on(true)
+       .set_x_major_grid_on(true)
+       .set_x_minor_grid_on(true)
+       .set_axis_on(true)
+       .set_legend_on(true)
+       .set_plot_window_on(true)
+       .set_title_on(true);
+
+// axis information
+my_plot.set_x_axis_width(2)
+       .set_x_label("Time in minutes")
+       .set_x_major_tick(5)
+       .set_x_num_minor_ticks(1)
+       .set_x_scale(-5, 130);
+
+// plot the information
+plot(my_plot, ron_result, "Ron", orange);
+plot(my_plot, sally_result, "Sally", red);
+plot(my_plot, tim_result, "Tim", blue);
+
+my_plot.write("race_results.svg");
+``
+
+This produces the following image:
+(insert image)
+[endsect]
+
+[section:color Color Customization]
+The [^svg_plot] classes support two major ways to define colors. One is the use of colors in the RGB format. To specify a color in the RGB format, you can use the following: `svg_color(123, 73, 255)`, to pick a random example. 
+
+The other way to define a color is to use the SVG standard's custom color definitions, as defined [@http://www.w3.org/TR/SVG/types.html#ColorKeywords here]
+
+Here is an example using color customization:
+
+``
+    vector<double> data1;
+    deque<double> data2;
+    boost::array<double, 10> data3;
+
+    svg_1d_plot my_plot;
+
+    // size/scale settings
+    my_plot.set_image_size(500, 350)
+           .set_x_scale(-3, 10);
+
+    // Text settings
+    my_plot.set_title("Oh My!")
+           .set_title_font_size(29)
+           .set_x_label_text("Time in Months");
+
+    // command settings
+    my_plot.set_axis(true)
+           .set_legend(true)
+           .set_plot_window(true)
+           .set_x_label(true)
+           .set_x_major_labels(true);
+
+    // color settings
+    my_plot.set_background_color(svg_color(67, 111, 69))
+           .set_legend_background_color(svg_color(207, 202,167))
+           .set_plot_background_color(svg_color(136, 188, 126))
+           .set_title_color(white)
+           .set_x_axis_color(black)
+           .set_x_major_tick_color(black)
+           .set_legend_border_color(svg_color(102, 102, 84))
+           .set_x_minor_tick_color(black);
+
+    //axis settings
+    my_plot.set_x_major_tick(2)
+           .set_x_num_minor_ticks(3)
+           .set_x_major_tick_length(14)
+           .set_x_minor_tick_length(7)
+           .set_x_major_tick_width(1)
+           .set_x_minor_tick_width(1);
+
+    //legend settings
+    my_plot.set_legend_title_font_size(15);
+
+    plot_range(my_plot, data2.begin(), data2.end(), "Lions",  blue);
+    plot_range(my_plot, data1.begin(), data1.end(), "Tigers", purple);
+    plot_range(my_plot, data3.begin(), data3.end(), "Bears",  red);
+
+    my_plot.write("D:/1d_complex.svg");
+
+``
+
+This produces the following output:
+(Insert image)
+[endsect]
+[section:defaults Defaults]
+You may have noticed that there are certain defaults that are true at the beginning of the plotting. Here is a table of the defaults:
+
+[table Default]
+	[[object] [Default value]]
+	[[Image size] [`500 by 300`]]
+	[[X Axis Label] [`"", Off`]]
+	[[X Range] [`(-10, 10)`]]
+	[[Plot Window] [`Off`]]
+	[[Grid lines] [`All off`]]
+	[[Distance between major X ticks] [`3 units`]]
+	[[Number of minor X ticks between each major X tick] [2]]
+	[[Major tick length] [20 pixels]]
+	[[Major tick width] [2 pixels]]
+	[[Minor tick length] [10 pixels]]
+	[[Minor tick width] [2 pixels]]
+	[[Font size of the legend title] [12]]
+	[[Font size of the X Label] [12]]
+	[[Font size of the title] [30]]
+	[[Image background] [white]]
+	[[Plot window background] [white]]
+	[[Legend background] [white]]
+	[[All other colors] [black]]]
+
+[endsect]
+
+[section:plot_function Getting More Out Of The `plot()` Function]
+The `plot()` function is defined using Boost.Parameter. As such, it supports a few extra named parameters, as well as a deduced parameter.
+
+[table Deduced parameter
+[[ID] [Description] [Default]]
+[[_fill_color] [This is the color that shows up inside of the circle that is being drawn] [white] ]]
+
+[table Named Parameters
+[[ID] [Description] [Default]]
+[[_stroke_color] [The outline of the circle that is being drawn] [black] ]
+[[_x_functor] [A pointer to a class that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a vector of humans. For example:
+``
+class my_functor
+{
+	typdef double result_type;
+
+	double convert(const human& _hum)
+	{
+		return _hum.get_age();
+	}
+}
+
+// snip
+
+plot(my_plot, my_data, "Lions", _x_functor = my_functor());
+``
+][`null`]]]
+
+Here are some examples of correct uses:
+[h3 Using fill and stroke colors]
+
+``
+plot(my_plot, my_data, "Lions", _fill_color = red, _stroke_color = black);
+``
+
+This has the same effect as the following:
+
+``
+plot(my_plot, my_data, "Lions", red, black);
+``
+
+and also the same effect as:
+``
+plot(my_plot, my_data, "Lions", _stroke_color = black,  _fill_color = red);
+``
+
+Since _fill_color is a deduced parameter, when two svg_colors are used in the same function call, they are always inferred in the following order: (fill, stroke).
+
+[h3 Using all parameters]
+``
+plot(my_plot, my_data, "Lions", 
+     _fill_color   = red, 
+     _stroke_color = black,
+     _x_functor    = my_functor());
+``
+
+[endsect]
+[endsect]
+
+[section:svg_interface SVG Public Interface]
 [table class svg
   [[Signature] [Description]]
   [[`svg()`] [Constructor]]
@@ -83,7 +403,7 @@ my_plot.set_line_color(saddlebrown);
   [[`svg& rect(double x1, double y1, double x2, double y2, g_element& elem)`] [Adds a point at (x, y) at g_element `elem`]]]
 [endsect]
 
-[section svg_graph Public Interface]
+[section:svg_graph_interface svg_graph Public Interface]
 [table Misc
   [[Signature] [Description]]
 [[``
@@ -141,41 +461,4 @@ void plot_range(std::vector<double>::const_iterator begin,
   [[`svg_plot& set_x_major_tick_width(unsigned int)`] [Sets the width (in pixels) of the major ticks on the x-axis] ]
   [[`svg_plot& set_x_minor_tick_width(unsigned int)`] [Sets the width (in pixels) of the minor ticks on the x-axis] ]
 ]
-[endsect]
-
-
-[section:advanced Advanced]
-[h3 Chaining]
-
-If you would like to make the syntax more concise, the interface supports 
-'chaining'. That is, the following code:
-
-``
-my_plot.set_legend_background_color( whitesmoke );
-my_plot.set_legend_title_color( red );
-``
-
-can be written as:
-
-``
-my_plot.set_legend_background_color( whitesmoke )
-       .set_legend_title_color( red );
-``
-
-This is done to allow the user more flexibility in how they group options.
-
-This works because the header for each method is as follows:
-
-``
-svg_plot& svg_plot::set_option(parameter, parameter);
-``
-
-This is identical to the syntax behind chaining `operator=()]` and 
-`operator<<()`.
-
-``
-	int a = b = c = d = 0;
-	cout << "Value a: " << a << endl;
-``
-
 [endsect]
