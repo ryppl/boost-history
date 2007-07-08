@@ -1,5 +1,5 @@
 [/ Boost.Extension - performance analysis ]
-[/ Copyright 2007 Mariano G. Consoni ]
+[/ Copyright 2007 Mariano G. Consoni and Jeremy Pack]
 [/ Distributed under the Boost Software License, Version 1.0. (See]
 [/ accompanying file LICENSE_1_0.txt or copy at ]
 [/ http://www.boost.org/LICENSE_1_0.txt) ]
@@ -8,22 +8,20 @@
 [section:performance_analysis Performance Analysis]
 
 In this section we will discuss the performance of the library. We'll focus 
-in the overhead added in comparison with [^ dlopen/dlclose] or 
+on the overhead added in comparison with [^ dlopen/dlclose] or 
 [^ LoadLibrary/CloseLibrary] approaches, describing three benchmarks
 and their results.
 
 Finally we will discuss a small benchmark comparing two ways of using the 
-library, depending or not of boost::function.
+library, using the optional boost::function.
 
 [h1 First comparison]
 
-First, we wanted to know how much is the overhead of using Boost.Extension
-instead of direct operating system calls. 
+The first benchmarks show how much overhead is incurred by using Boost.Extension
+instead of just using standard shared library opening and calling functions.
 
-As you may know, Boost.Extension uses this system calls but of course has 
-some intermediate structures that allows the programmer a much more 
-friendlier use of the implementations. Of course any intermediate step in
-the process costs time, so we wanted to know how much that time is.
+The extra work done by Boost.Extension is primarily for registering classes - this
+benchmark assumes that without Boost.Extension, no classes are registered.
 
 Then we made a benchmark opening the same library with both approaches
 and calling a method of the exported interface. This is done a lot of times in
@@ -68,9 +66,10 @@ The difference is similar to the first example
 We can conclude that the overhead is mainly in the library loading part not in the calls.
 Moreover, we have done some profiling and discovered 
 that most of the overhead is spent in memory allocations caused by the use of 
-STL strings to identify the implementations. We are currently analyzing if this 
-overhead could be lowered.
-
+STL strings to identify the implementations. There are various ways that this overhead
+can be eliminated. Strings are just the default type information stored, and this can
+be replaced with other types of unique identifiers. On some platforms (current OS X, for instance),
+this overhead can be avoided because of the way RTTI works across shared libraries.
 
 [h1 boost::function overhead]
 
@@ -83,7 +82,9 @@ libraries) we present the option to use or not boost::function in Boost.Extensio
 In [^plain_old_approach_bf.cpp] we use our first benchmark to compare the usage
 of boost::function in the implementation of Boost.Extension.
 
-Results are that overhead is not noticeable.
+Results are that overhead is not noticeable. Because of this, it is quite possible
+that we will remove the non-Boost.Function option completely, once we've analyzed
+how much of the rest of Boost would then be required for using Boost.Extension.
 
 
 [endsect]

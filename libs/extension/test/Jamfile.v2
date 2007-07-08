@@ -22,6 +22,7 @@ project
       <toolset>gcc:<find-static-library>boost_filesystem
       <toolset>gcc:<find-static-library>boost_unit_test_framework
       <toolset>gcc:<find-static-library>dl
+      <toolset>darwin:<define>DYLD_LIBRARY_PATH=../bin/
     :
     ;
 
@@ -31,12 +32,12 @@ test-suite extension_tests_all
   [ run zone_test.cpp ] 
   [ run construction.cpp ]
   [ run hello_world_test.cpp ]
-  [ run lib_caching_test.cpp ]
+ # [ run lib_caching_test.cpp ]
   [ run versions_test.cpp ]
   [ run parameters_test.cpp ]
   [ run multiple_inheritance_test.cpp ]
   [ run extension_test.cpp ]
   [ run counted_factory_test.cpp ]
-  [ run registry_test.cpp ]
+ # [ run registry_test.cpp ]
 : 
 ;
