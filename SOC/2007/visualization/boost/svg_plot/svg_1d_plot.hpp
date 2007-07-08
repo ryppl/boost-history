@@ -15,16 +15,16 @@
 #include <sstream>
 #include <iterator>
 
-#define BOOST_PARAMETER_MAX_ARITY 5
+#define BOOST_PARAMETER_MAX_ARITY 7
 
-#include "boost/parameter/preprocessor.hpp"
-#include "boost/parameter/name.hpp"
-#include "boost/iterator/transform_iterator.hpp"
-#include "boost/bind.hpp"
+#include <boost/parameter/preprocessor.hpp>
+#include <boost/parameter/name.hpp>
+#include <boost/iterator/transform_iterator.hpp>
+#include <boost/bind.hpp>
 
 #include "svg.hpp"
 #include "detail/svg_plot_instruction.hpp"
-#include "detail/svg_tag.hpp"
+
 
 namespace boost {
 namespace svg {
@@ -54,17 +54,9 @@ struct plot_point_style
     svg_color fill_color;
     int size;
 
-    plot_point_style(point_shape _shape, const svg_color& _stroke, 
-        const svg_color& _fill, int _size):
-        shape(_shape), stroke_color(_stroke), fill_color(_fill), size(_size)
-    {
-
-    }
-
-    plot_point_style(point_shape _shape, svg_color_constant _stroke, 
-        svg_color_constant _fill, int _size):
-        shape(_shape), stroke_color(constant_to_rgb(_stroke)), 
-            fill_color(constant_to_rgb(_fill)), size(_size)
+    plot_point_style(const svg_color& _fill, 
+        const svg_color& _stroke):
+        fill_color(_fill), stroke_color(_stroke)
     {
 
     }
@@ -276,13 +268,17 @@ public:
 
     // color information    
     svg_color get_background_color();
+    svg_color get_background_border_color();
     svg_color get_legend_background_color();
     svg_color get_legend_border_color();
     svg_color get_plot_background_color();    
     svg_color get_title_color();
     svg_color get_x_axis_color();
+    svg_color get_x_label_color();
     svg_color get_x_major_tick_color();
     svg_color get_x_minor_tick_color();
+    svg_color get_x_major_grid_color();
+    svg_color get_x_minor_grid_color();
 
     // axis information
     double get_x_min();
@@ -366,11 +362,11 @@ svg_1d_plot& svg_1d_plot::write(std::ostream& s_out)
 
     if(title_on)
     {
-        text_element title_elem(image.get_x_size()/2., (double)title_font_size, title);
+        text_element title(image.get_x_size()/2., title_font_size, title);
 
-        title_elem.set_alignment(center_align);
-        title_elem.set_font_size(title_font_size);
-        image.get_g_element(PLOT_TITLE).push_back(new text_element(title_elem));
+        title.set_alignment(center_align);
+        title.set_font_size(title_font_size);
+        image.get_g_element(PLOT_TITLE).push_back(new text_element(title));
     }
 
     x_axis = (plot_window_y2 + plot_window_y1)/2.;
@@ -459,7 +455,8 @@ svg_1d_plot& svg_1d_plot::write(std::ostream& s_out)
 BOOST_PARAMETER_NAME(my_plot)
 BOOST_PARAMETER_NAME(container)
 BOOST_PARAMETER_NAME(title)
-BOOST_PARAMETER_NAME(point_style)
+BOOST_PARAMETER_NAME(stroke_color)
+BOOST_PARAMETER_NAME(fill_color)
 BOOST_PARAMETER_NAME(x_functor)
 
 BOOST_PARAMETER_FUNCTION
@@ -472,9 +469,12 @@ BOOST_PARAMETER_FUNCTION
         (container, *)
         (title, (const std::string&))
     )
+    (optional
+        (stroke_color, (const svg_color&), svg_color(white))
+    )
     (deduced
         (optional
-            (point_style, (const plot_point_style&), plot_point_style(circle, white, black, 12))
+            (fill_color, (const svg_color&), svg_color(black))
             (x_functor, *, boost_default_convert())
         )
     )
@@ -486,7 +486,7 @@ BOOST_PARAMETER_FUNCTION
         boost::make_transform_iterator(container.begin(), x_functor),
         boost::make_transform_iterator(container.end(),   x_functor));
 
-    my_plot.plot(vect, title, point_style);  
+    my_plot.plot(vect, title, plot_point_style(fill_color, stroke_color));
 }
 
 // -----------------------------------------------------------------
@@ -1241,6 +1241,11 @@ svg_color svg_1d_plot::get_background_color()
     return image.get_g_element(PLOT_BACKGROUND).get_fill_color();
 }
 
+svg_color svg_1d_plot::get_background_border_color()
+{
+    return image.get_g_element(PLOT_BACKGROUND).get_stroke_color();
+}
+
 svg_color svg_1d_plot::get_legend_background_color()
 {
     return image.get_g_element(PLOT_LEGEND_BACKGROUND).get_fill_color();
@@ -1261,6 +1266,11 @@ svg_color svg_1d_plot::get_x_axis_color()
     return image.get_g_element(PLOT_X_AXIS).get_stroke_color();
 }
 
+svg_color svg_1d_plot::get_x_label_color()
+{
+    return image.get_g_element(PLOT_X_LABEL).get_fill_color();
+}
+
 svg_color svg_1d_plot::get_x_major_tick_color()
 {
     return image.get_g_element(PLOT_X_MAJOR_TICKS).get_stroke_color();
@@ -1269,6 +1279,16 @@ svg_color svg_1d_plot::get_x_major_tick_color()
 svg_color svg_1d_plot::get_x_minor_tick_color()
 {
     return image.get_g_element(PLOT_X_MINOR_TICKS).get_stroke_color();
+}
+
+svg_color svg_1d_plot::get_x_major_grid_color()
+{
+    return image.get_g_element(PLOT_X_MAJOR_GRID).get_stroke_color();
+}
+
+svg_color svg_1d_plot::get_x_minor_grid_color()
+{
+    return image.get_g_element(PLOT_X_MINOR_GRID).get_stroke_color();
 }
 
 // axis information
