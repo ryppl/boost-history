@@ -394,3 +394,4 @@ void clip_path_element::write(std::ostream& rhs)
 }
 
 #endif
+

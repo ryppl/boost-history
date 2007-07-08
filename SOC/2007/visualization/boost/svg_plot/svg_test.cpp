@@ -69,7 +69,7 @@ int main()
     plot(my_plot, data1, "sqrt(x)", plot_point_style(circle, black, blue, 12));
     plot(my_plot, data2, "Not sqrt(x)", dConvert());
 
-    my_plot.write("D:/test.svg");
+    my_plot.write("./test.svg");
 
     return 0;
 }

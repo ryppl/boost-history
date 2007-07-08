@@ -17,14 +17,14 @@
 
 #define BOOST_PARAMETER_MAX_ARITY 5
 
-#include <boost/parameter/preprocessor.hpp>
-#include <boost/parameter/name.hpp>
-#include <boost/iterator/transform_iterator.hpp>
-#include <boost/bind.hpp>
+#include "boost/parameter/preprocessor.hpp"
+#include "boost/parameter/name.hpp"
+#include "boost/iterator/transform_iterator.hpp"
+#include "boost/bind.hpp"
 
 #include "svg.hpp"
 #include "detail/svg_plot_instruction.hpp"
-
+#include "detail/svg_tag.hpp"
 
 namespace boost {
 namespace svg {
@@ -366,11 +366,11 @@ svg_1d_plot& svg_1d_plot::write(std::ostream& s_out)
 
     if(title_on)
     {
-        text_element title(image.get_x_size()/2., title_font_size, title);
+        text_element title_elem(image.get_x_size()/2., (double)title_font_size, title);
 
-        title.set_alignment(center_align);
-        title.set_font_size(title_font_size);
-        image.get_g_element(PLOT_TITLE).push_back(new text_element(title));
+        title_elem.set_alignment(center_align);
+        title_elem.set_font_size(title_font_size);
+        image.get_g_element(PLOT_TITLE).push_back(new text_element(title_elem));
     }
 
     x_axis = (plot_window_y2 + plot_window_y1)/2.;
