@@ -21,12 +21,13 @@
 
 #include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
+#include <boost/act/interlocked/integer/selection.hpp>
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 
-#include <boost/act/interlocked/detail/impl_meta.hpp>
+#include <boost/act/interlocked/assign_if_was/detail/unaligned_assign_if_was.hpp>
 
 #include <boost/act/interlocked/detail/impl.hpp>
 
@@ -36,6 +37,12 @@
 #include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
 
 namespace boost { namespace act { namespace interlocked {
+
+namespace detail
+{
+template< typename Semantics >
+struct unaligned_assign_if_was;
+}
 
 template< typename Semantics
         , typename TargetType, typename SourceType, typename ConditionType
@@ -57,8 +64,11 @@ assign_if_was( TargetType& destination, SourceType const& new_value
              , ConditionType const& expected_value
              )
 {
-  return detail::impl_meta< detail::assign_if_was_unordered_impl, TargetType >
-         ::execute( destination, new_value, expected_value );
+  return mpl::if_< detail::is_unaligned_interlocked< TargetType >
+                 , detail::unaligned_assign_if_was< Semantics >
+                 , detail::assign_if_was_unordered_impl
+                 >
+                 ::type::execute( destination, new_value, expected_value );
 }
 
 template< typename Semantics

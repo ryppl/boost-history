@@ -42,6 +42,9 @@ or if `default_` semantics are specified, then the operation is performed with
 [[`divide_assign( i, c1 )`]   [`i /= c1;`]                                     ]
 [[`increment( i )`]           [`++i;`]                                         ]
 [[`multiply_assign( i, c1 )`] [`i *= c1;`]                                     ]
+[[`negate_assign( i, c1 )`]   [`i = -c1;` (ToDo: Only make this valid for signed
+                                                 types)
+                                         ]                                     ]
 [[`subtract_assign( i, c1 )`] [`i -= c1;`]                                     ]
 ]
 

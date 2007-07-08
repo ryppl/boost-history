@@ -1,0 +1,6 @@
+[section Interlocked Integer Models]
+
+[include integer_models/typedefs.qbk]
+[include integer_models/metafunctions.qbk]
+
+[endsect]

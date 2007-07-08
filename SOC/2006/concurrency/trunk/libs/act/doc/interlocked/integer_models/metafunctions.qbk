@@ -1,0 +1,133 @@
+[section Interlocked Integer Metafunctions]
+
+[heading Description]
+
+The templates listed in this section are used to select an
+__interlocked_integer_type__ based on number of bits, min or max value, or
+to select a fast interlocked type based on the properties of another integer
+type. Use and operation is similar to that of the templates in
+`<boost/integer.hpp>` of the =Boost.Integer= library (/ToDo: insert link here/).
+
+[heading Header]
+
+``
+  // Include all of the Boost.Act interlocked integer models.
+  #include <boost/act/interlocked/integer.hpp>
+  
+  // Include just the information necessary for using the templates listed here,
+  #include <boost/act/interlocked/integer/selection.hpp>
+``
+
+[heading Synopsis]
+
+  // fast integers from least integers
+  template< typename LeastInt >
+  struct int_fast_t
+  {
+    typedef ``[~implementation_supplied]`` fast;
+  };
+  
+  // signed
+  template< int Bits >
+  struct int_t 
+  {
+    typedef ``[~implementation_supplied]``   least;
+    typedef int_fast_t< least >::fast fast;
+  };
+  
+  // unsigned
+  template< int Bits >
+  struct uint_t 
+  {
+    typedef ``[~implementation_supplied]``   least;
+    typedef int_fast_t< least >::fast fast;
+  };
+  
+  // signed
+  template< long MaxValue >
+  struct int_max_value_t 
+  {
+    typedef ``[~implementation_supplied]``   least;
+    typedef int_fast_t< least >::fast fast;
+  };
+  
+  // signed
+  template< long MinValue >
+  struct int_min_value_t 
+  {
+    typedef ``[~implementation_supplied]``   least;
+    typedef int_fast_t< least >::fast fast;
+  };
+  
+  // unsigned
+  template< unsigned long Value >
+  struct uint_value_t 
+  {
+    typedef ``[~implementation_supplied]``   least;
+    typedef int_fast_t< least >::fast fast;
+  };
+
+[heading Model of]
+
+Each type selected via these templates is an __interlocked_integer_type__.
+
+[variablelist Notation
+[[`I`]    [An integer type.]                                                   ]
+[[`bits`] [A compile-time constant `int` value.]                               ]
+[[`max`]  [A positive compile-time constant `long` value.]                     ]
+[[`min`]  [A negative compile-time constant `long` value.]                     ]
+[[`val`]  [A compile-time constant `unsigned long` value.]                     ]
+]
+
+[heading Expression Semantics]
+
+[table Interlocked Integer Metafunction Requirements
+[[Expression]                      [Pre/Post Condition]                        ]
+[[`int_fast_t< I >::fast`]         [A fast interlocked integer type meeting at
+                                   least the properties of `I`.
+                                   ]                                           ]
+[[`int_t< bits >::least`]          [The minimum sized signed
+                                   __interlocked_integer_type__ with at least
+                                   `bits` number of bits.
+                                   ]                                           ]
+[[`int_t< bits >::fast`]           [A fast signed __interlocked_integer_type__
+                                   with at least `bits` number of bits.
+                                   ]                                           ]
+[[`uint_t< bits >::least`]         [The minimum sized unsigned
+                                   __interlocked_integer_type__ with at least
+                                   `bits` number of bits.
+                                   ]                                           ]
+[[`uint_t< bits >::fast`]          [A fast unsigned __interlocked_integer_type__
+                                   with at least `bits` number of bits.
+                                   ]                                           ]
+[[`int_max_value_t< max >::least`] [The minimum sized signed
+                                   __interlocked_integer_type__ which can
+                                   represent a maximum value of `max`.
+                                   ]                                           ]
+[[`int_max_value_t< max >::fast`]  [A fast signed
+                                   __interlocked_integer_type__ which can
+                                   represent a maximum value of `max`.
+                                   ]                                           ]
+[[`int_min_value_t< min >::least`] [The minimum sized signed
+                                   __interlocked_integer_type__ which can
+                                   represent a minimum value of `min`.
+                                   ]                                           ]
+[[`int_min_value_t< min >::fast`]  [A fast signed
+                                   __interlocked_integer_type__ which can
+                                   represent a minimum value of `min`.
+                                   ]                                           ]
+[[`uint_value_t< val >::least`]    [The minimum sized unsigned
+                                   __interlocked_integer_type__ which can
+                                   represent the value `val`.
+                                   ]                                           ]
+[[`uint_value_t< val >::fast`]     [A fast unsigned
+                                   __interlocked_integer_type__ which can
+                                   represent the value `val`.
+                                   ]                                           ]
+]
+
+[heading Example]
+
+ToDo: Insert example here
+
+[endsect]

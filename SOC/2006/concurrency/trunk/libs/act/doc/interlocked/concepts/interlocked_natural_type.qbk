@@ -7,11 +7,13 @@ supports `assign` and `assign_if_was` operations (aka swap and cas).
 
 [variablelist Notation
 [[`I`]            [An [concept Interlocked Arithmetic Type].]                  ]
+[[`IU`]           [`remove_cv<I>::type`.]                                      ]
 [[`i`]            [A value of type `I`.]                                       ]
 [[`C1`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
 [[`c1`]           [A value of type `C1 const&`.]                               ]
 [[`C2`]           [A type which is convertible to `remove_cv<I>::type&`.]      ]
 [[`c2`]           [A value of type `C2 const&`.]                               ]
+[[`f`]            [A unary function object (expression requirements below).]   ]
 ]
 
 [heading Refinement of]
@@ -35,10 +37,11 @@ or if `default_` semantics are specified, then the operation is performed with
 `acq_rel` semantics.
 ]
 
-[table Interlocked Arithmetic Type Requirements
+[table Interlocked Natural Type Requirements
 [[Expression]                   [Operation (Returns Old Value)]                ]
 [[`assign( i, c1 )`]            [`i = c1;`]                                    ]
 [[`assign_if_was( i, c1, c2 )`] [`if( i == c2 ) i = c1;`]                      ]
+[[`modify( i, f )`]             [`i = f( i );`]                                ]
 ]
 
 [heading Headers]

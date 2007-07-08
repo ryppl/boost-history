@@ -19,6 +19,7 @@
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/is_signed.hpp>
+#include <boost/type_traits/alignment_of.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
@@ -35,22 +36,25 @@
 #include <boost/mpl/end.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/empty_base.hpp>
-#include <boost/preprocessor/seq/enum.hpp>
+#include <boost/mpl/modulus.hpp>
+#include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/filter_view.hpp>
-#include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
-//#include <boost/act/interlocked/type_traits/is_interlocked.hpp>
 #include <boost/mpl/size_t.hpp>
+#include <boost/mpl/sizeof.hpp>
+#include <boost/mpl/equal_to.hpp>
+#include <boost/preprocessor/seq/enum.hpp>
+#include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 
 namespace detail
 {
 #ifdef BOOST_NO_INT64_T
-typedef mpl::vector< signed char, short, int, long >
-        int_types_all;
+typedef mpl::vector< int_least8_t, int_least16_t, int_least32_t >
+        int_least_types_all;
 
-typedef mpl::vector< unsigned char, unsigned short, unsigned int
-                   , unsigned long > uint_types_all;
+typedef mpl::vector< uint_least8_t, uint_least16_t, uint_least32_t >
+        uint_least_types_all;
 
 typedef mpl::vector< int_fast8_t, int_fast16_t, int_fast32_t >
         int_fast_types_all;
@@ -58,11 +62,12 @@ typedef mpl::vector< int_fast8_t, int_fast16_t, int_fast32_t >
 typedef mpl::vector< uint_fast8_t, uint_fast16_t, uint_fast32_t >
         uint_fast_types_all;
 #else
-typedef mpl::vector< signed char, short, int, long, int64_t >
-        int_types_all;
+typedef mpl::vector< int_least8_t, int_least16_t, int_least32_t, int_least64_t >
+        int_least_types_all;
 
-typedef mpl::vector< unsigned char, unsigned short, unsigned int
-                   , unsigned long, uint64_t > uint_types_all;
+typedef mpl::vector< uint_least8_t, uint_least16_t
+                   , uint_least32_t, uint_least64_t
+                   > uint_least_types_all;
 
 typedef mpl::vector< int_fast8_t, int_fast16_t, int_fast32_t, int_fast64_t >
         int_fast_types_all;
@@ -99,16 +104,6 @@ public:
   typedef mpl::not_< is_same< it, end_it > > type;
 };
 
-typedef mpl::filter_view< int_types_all
-                        , type_is_native_interlocked_size< mpl::_1 >
-                        >
-                        int_types;
-
-typedef mpl::filter_view< uint_types_all
-                        , type_is_native_interlocked_size< mpl::_1 >
-                        >
-                        uint_types;
-
 typedef mpl::filter_view< int_fast_types_all
                         , type_is_native_interlocked_size< mpl::_1 >
                         >
@@ -123,82 +118,130 @@ template< typename Type, typename DesiredSize >
 struct int_type_is_at_least_size
   : mpl::bool_< ( sizeof( Type ) >= DesiredSize::value ) > {};
 
-template< typename TypeSequence, std::size_t LeastSize >
-struct int_type_selector
+template< typename Sequence, std::size_t Bytes >
+struct int_finder_t_impl
 {
 private:
   typedef typename mpl::find_if
-          < TypeSequence
-          , int_type_is_at_least_size< mpl::_1, mpl::size_t< LeastSize > >
+          < Sequence
+          , int_type_is_at_least_size< mpl::_1, mpl::size_t< Bytes > >
           >
           ::type it_to_type;
 
-  typedef typename mpl::end< TypeSequence >::type end;
-public:
-  typedef mpl::not_< is_same< it_to_type, end > > match;
+  typedef typename mpl::end< Sequence >::type end;
 
-  typedef typename mpl::eval_if
-          < match
-          , mpl::deref< it_to_type >
-          , mpl::identity< mpl::void_ >
-          >
-          ::type type;
-};
-
-template< bool Signed >
-struct int_type_sequence
-{
-  typedef typename mpl::if_c< Signed, int_types, uint_types >
-          ::type sequence;
-
-  typedef typename mpl::if_c< Signed
-                            , int_fast_types
-                            , uint_fast_types
-                            >
-                            ::type fast_sequence;
-};
-
-template< bool Signed, std::size_t Bytes, bool PreferFast >
-struct int_t_impl
-{
+  typedef is_same< it_to_type, end > no_match;
 private:
-  typedef typename int_type_sequence< Signed >::sequence      sequence;
-  typedef typename int_type_sequence< Signed >::fast_sequence fast_sequence;
-
-  typedef detail::int_type_selector< fast_sequence, Bytes >
-          fast_selector;
-
-  typedef detail::int_type_selector< sequence, Bytes >
-          small_selector;
-
-  typedef typename mpl::if_c< PreferFast, fast_selector, small_selector >
-          ::type pref_selector;
-
-  typedef typename mpl::if_c< PreferFast, small_selector, fast_selector >
-          ::type fall_selector;
-
-  typedef typename pref_selector::match pref_match;
-  typedef typename fall_selector::match fall_match;
-public:
-  typedef typename mpl::eval_if
-          < pref_match
-          , pref_selector
-          , mpl::eval_if< fall_match
-                        , fall_selector
-                        , mpl::identity< mpl::void_ >
-                        >
-          >
-          ::type type;
-private:
-  BOOST_MPL_ASSERT_MSG( ( mpl::not_< is_same< type, mpl::void_ > >::value )
+  BOOST_MPL_ASSERT_MSG( ( mpl::not_< no_match >::value )
                       , TYPE_HAS_NO_INTERLOCKED_SUPPORT
                       , ()
                       );
+public:
+  typedef typename mpl::eval_if
+          < no_match
+          , mpl::identity< mpl::void_ >
+          , mpl::deref< it_to_type >
+          >
+          ::type type;
 };
+
+template< bool Signed, std::size_t Bytes >
+struct int_fast_t_impl
+  : int_finder_t_impl< typename mpl::if_c< Signed
+                                         , int_fast_types
+                                         , uint_fast_types
+                                         >
+                                         ::type
+                     , Bytes
+                     > {};
+
+template< typename LeftType, typename RightType >
+struct alignment_is_multiple_of_alignment_of
+  : mpl::equal_to< mpl::modulus< alignment_of< LeftType >
+                               , alignment_of< RightType >
+                               >
+                 , mpl::size_t< 0 >
+                 > {};
+
+template< typename Type >
+struct has_aligned_relative_raw
+  : alignment_is_multiple_of_alignment_of
+    < typename int_fast_t_impl< is_signed< Type >::value, sizeof( Type ) >::type
+    , Type
+    > {};
+
+#define BOOST_ACT_INTERLOCKED_DETAIL_HAS_LEAST_TYPE_MACRO( r, type, elem )     \
+( ( sizeof( type ) * CHAR_BIT ) <= elem ) ||
+
+template< typename Type >
+struct has_aligned_relative
+  : mpl::and_
+    <
+      mpl::bool_< ( BOOST_PP_SEQ_FOR_EACH
+                    ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_LEAST_TYPE_MACRO
+                    , Type
+                    , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_SEQ
+                    )
+                    false
+                  )
+                >
+    , has_aligned_relative_raw< Type >
+    > {};
+
+#undef BOOST_ACT_INTERLOCKED_DETAIL_HAS_LEAST_TYPE_MACRO
+
+typedef mpl::filter_view< int_least_types_all
+                        , has_aligned_relative< mpl::_1 >
+                        >
+                        int_least_types;
+
+typedef mpl::filter_view< uint_least_types_all
+                        , has_aligned_relative< mpl::_1 >
+                        >
+                        uint_least_types;
+
+template< bool Signed, std::size_t Bytes >
+struct int_least_t_impl
+  : int_finder_t_impl< typename mpl::if_c< Signed
+                                         , int_least_types
+                                         , uint_least_types
+                                         >
+                                         ::type
+                     , Bytes
+                     > {};
+
+template< typename Type, typename Sequence >
+struct is_unaligned_interlocked_raw
+{
+private:
+  typedef typename mpl::find_if
+          < Sequence
+          , mpl::and_< mpl::equal_to< mpl::sizeof_< mpl::_1 >
+                                    , typename mpl::sizeof_< Type >::type
+                                    >
+                     , mpl::equal_to< alignment_of< mpl::_1 >
+                                    , alignment_of< Type >
+                                    >
+                     >
+          >
+          ::type it_to_type;
+public:
+  typedef is_same< it_to_type, typename mpl::end< Sequence >::type > type;
+};
+
+
+template< typename Type >
+struct is_unaligned_interlocked
+  : is_unaligned_interlocked_raw< Type, typename mpl::if_< is_signed< Type >
+                                                         , int_fast_types
+                                                         , uint_fast_types
+                                                         >
+                                                         ::type
+                                >
+                                ::type {};
 
 }
 
-//  fast integers from least integers
 template< typename LeastInt >
 struct int_fast_t
 {
@@ -208,11 +251,9 @@ private:
                       , ( LeastInt )
                       );
 public:
-  typedef typename detail::int_t_impl
-          <
-            is_signed< LeastInt >::value
+  typedef typename detail::int_fast_t_impl
+          < is_signed< LeastInt >::value
           , sizeof( LeastInt )
-          , true // Prefer fast over least
           >
           ::type fast;
 };
@@ -220,11 +261,9 @@ public:
 template< std::size_t Bits >
 struct int_t
 {
-  typedef typename detail::int_t_impl
-          <
-            true // Signed
+  typedef typename detail::int_least_t_impl
+          < true // true == Signed
           , ( Bits / CHAR_BIT )
-          , false // Prefer least over fast
           >
           ::type least;
 
@@ -234,11 +273,9 @@ struct int_t
 template< std::size_t Bits >
 struct uint_t
 {
-  typedef typename detail::int_t_impl
-          <
-            false // Unsigned
+  typedef typename detail::int_least_t_impl
+          < false // false == Unsigned
           , ( Bits / CHAR_BIT )
-          , false // Prefer least over fast
           >
           ::type least;
 
@@ -246,22 +283,6 @@ struct uint_t
 };
 
 /*
-//  signed
-template< int Bits >
-struct int_t 
-{
-  typedef typename boost::int_t< Bits >::least least;
-  typedef typename int_fast_t< least >::fast fast;
-};
-
-//  unsigned
-template< int Bits >
-struct uint_t 
-{
-  typedef typename boost::uint_t< Bits >::least least;
-  typedef typename int_fast_t< least >::fast fast;
-};
-
 //  signed
 template< long MaxValue >
 struct int_max_value_t 

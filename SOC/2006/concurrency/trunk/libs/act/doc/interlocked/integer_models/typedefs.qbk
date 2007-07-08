@@ -1,0 +1,45 @@
+[section Interlocked Integer Typedefs]
+
+[heading Description]
+
+Types listed in this section are each a compliant __interlocked_integer_type__
+whose sign, minimum size and performance requirements are specified by their
+name.
+
+[heading Header]
+
+  #include <boost/act/interlocked/integer.hpp>
+  
+  #include <boost/act/interlocked/integer/types.hpp>
+
+[heading Synopsis]
+
+  typedef ``[~unspecified-type]`` int_least8_t;
+  typedef ``[~unspecified-type]`` int_fast8_t;
+  typedef ``[~unspecified-type]`` uint_least8_t;
+  typedef ``[~unspecified-type]`` uint_fast8_t;
+  
+  typedef ``[~unspecified-type]`` int_least16_t;
+  typedef ``[~unspecified-type]`` int_fast16_t;
+  typedef ``[~unspecified-type]`` uint_least16_t;
+  typedef ``[~unspecified-type]`` uint_fast16_t;
+  
+  typedef ``[~unspecified-type]`` int_least32_t;
+  typedef ``[~unspecified-type]`` int_fast32_t;
+  typedef ``[~unspecified-type]`` uint_least32_t;
+  typedef ``[~unspecified-type]`` uint_fast32_t;
+  
+  typedef ``[~unspecified-type]`` int_least64_t;
+  typedef ``[~unspecified-type]`` int_fast64_t;
+  typedef ``[~unspecified-type]`` uint_least64_t;
+  typedef ``[~unspecified-type]`` uint_fast64_t;
+
+[heading Model of]
+
+Each type mentioned above is an __interlocked_integer_type__.
+
+[heading Example]
+
+ToDo: Insert example here
+
+[endsect]

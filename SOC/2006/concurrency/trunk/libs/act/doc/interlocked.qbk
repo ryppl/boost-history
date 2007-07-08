@@ -1,6 +1,7 @@
 [section Interlocked]
 
 [include interlocked/concepts.qbk]
+[include interlocked/integer_models.qbk]
 [include interlocked/support.qbk]
 
 [endsect]

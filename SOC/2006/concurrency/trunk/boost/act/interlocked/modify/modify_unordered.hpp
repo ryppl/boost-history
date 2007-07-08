@@ -32,21 +32,22 @@ typename lazy_enable_if
 modify( TargetType& destination, OperationType operation )
 {
   typedef typename remove_cv< TargetType >::type unqualified_type;
-  unqualified_type new_value;
+  unqualified_type old_value = interlocked::load< unordered >( destination ),
+                   expected_value;
 
-  for( unqualified_type curr_value = interlocked::load< unordered >(destination)
-     ;    ( new_value = interlocked::assign_if_was< unordered >
-                        ( destination
-                        , operation( curr_value )
-                        , curr_value
-                        )
-          )
-       != curr_value
-     ; curr_value = new_value
-     );
+  do
+  {
+    expected_value = old_value;
 
-  // Note: new_value is the old value here
-  return new_value;
+    old_value = interlocked::assign_if_was< unordered >
+                ( destination
+                , operation( expected_value )
+                , expected_value
+                );
+  }
+  while( old_value != expected_value );
+
+  return old_value;
 }
 
 } } }

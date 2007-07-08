@@ -115,6 +115,15 @@
                 <dt>
                   <span class="term">
                     <code class="computeroutput">
+                      <span class="identifier">IU</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd><code class="computeroutput"><span class="identifier">remove_cv</span><span class="special">&lt;</span><span class="identifier">I</span><span class="special">&gt;::</span><span class="identifier">type</span></code>.
+          </dd>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
                       <span class="identifier">i</span>
                     </code>
                   </span>
@@ -162,10 +171,20 @@
                 <dd>
             A value of type <code class="computeroutput"><span class="identifier">C2</span> <span class="keyword">const</span><span class="special">&amp;</span></code>.
           </dd>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">f</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            A unary function object (expression requirements below).
+          </dd>
               </dl>
             </div>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_natural_type.refinement_of"></a>
-            <h6><a id="id459177"></a>
+            <h6><a id="id459246"></a>
           <a href="interlocked_natural_type.html#boost_act.interlocked.interlocked_concepts.interlocked_natural_type.refinement_of">Refinement
           of</a>
         </h6>
@@ -174,7 +193,7 @@
           <code class="literal">Interlocked Type</code></a>
         </p>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_natural_type.expression_requirements"></a>
-            <h6><a id="id459226"></a>
+            <h6><a id="id459295"></a>
           <a href="interlocked_natural_type.html#boost_act.interlocked.interlocked_concepts.interlocked_natural_type.expression_requirements">Expression
           Requirements</a>
         </h6>
@@ -223,12 +242,12 @@
               </div>
             </div>
             <div class="table">
-              <a id="id459426"></a>
+              <a id="id459495"></a>
               <p class="title">
-                <b>Table 5. Interlocked Arithmetic Type Requirements</b>
+                <b>Table 5. Interlocked Natural Type Requirements</b>
               </p>
               <div class="table-contents">
-                <table class="table" summary="Interlocked Arithmetic Type Requirements">
+                <table class="table" summary="Interlocked Natural Type Requirements">
                   <colgroup>
                     <col />
                     <col />
@@ -282,13 +301,29 @@
               </p>
               </td>
                     </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">modify</span><span class="special">(</span>
+                <span class="identifier">i</span><span class="special">,</span>
+                <span class="identifier">f</span> <span class="special">)</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">i</span> <span class="special">=</span>
+                <span class="identifier">f</span><span class="special">(</span>
+                <span class="identifier">i</span> <span class="special">);</span></code>
+              </p>
+              </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
             </div>
             <br class="table-break" />
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_natural_type.headers"></a>
-            <h6><a id="id459691"></a>
+            <h6><a id="id459854"></a>
           <a href="interlocked_natural_type.html#boost_act.interlocked.interlocked_concepts.interlocked_natural_type.headers">Headers</a>
         </h6>
             <p>
@@ -300,10 +335,10 @@
                 <div class="box-top-right"></div>
                 <div class="box-top"></div>
                 <div class="box-inner-wrapper">
-                  <div class="style-switcher-box" id="id459712">
+                  <div class="style-switcher-box" id="id459876">
       <script type="text/javascript" > <!--
           boostscript.call( boostscript.style_switcher, 'insert_style_selector',
-             'id459712',
+             'id459876',
              '../../../../../doc/style/html/syntax.xml',
              '../../../../../doc/style/html'
           );
@@ -342,7 +377,7 @@
             <p>
         </p>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_natural_type.example"></a>
-            <h6><a id="id460498"></a>
+            <h6><a id="id460662"></a>
           <a href="interlocked_natural_type.html#boost_act.interlocked.interlocked_concepts.interlocked_natural_type.example">Example</a>
         </h6>
             <p>

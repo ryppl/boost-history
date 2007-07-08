@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Integer Metafunctions</title><link rel="stylesheet" href="../../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked_integer_models.html" title="Interlocked Integer Models" /><link rel="prev" href="interlocked_integer_typedefs.html" title="Interlocked Integer Typedefs" /><link rel="next" href="../interlocked_support.html" title="Interlocked Support" /><script type="text/javascript" src="../../../../../doc/javascript/main.js"></script>
+      <script type="text/javascript" > <!--
+         boostscript.init( new Array(
+            boostscript.nested_links,
+            boostscript.style_switcher,
+            boostscript.common
+         ),
+         '../../../../../doc/javascript'
+         );
+      //--></script>
+
+      <script type="text/javascript" > <!--
+          boostscript.call( boostscript.style_switcher, 'include_alternate_stylesheets',
+             '../../../../../doc/style/html/syntax.xml',
+             '../../../../../doc/style/html'
+          );
+      //--></script>
+<link rel="alternate stylesheet" type="text/css" title="Quickbook source" href="../../../../../doc/style/html/conversion/boostbook_to_quickbook.css" />
+      <script type="text/javascript" > <!--
+          boostscript.call( boostscript.style_switcher, 'load_user_stylesheet' );
+      //--></script>
+</head>
+  <body>
+    <div id="heading">
+      <div id="heading-placard"></div>
+      <div class="heading-navigation-box">
+        <div class="nested-links-select-box" id="chapters_select_box">
+      <script type="text/javascript" > <!--
+         boostscript.call( boostscript.nested_links, 'select_box',
+            'chapters_select_box',
+            '../../../../../doc/chapters.xml',
+            '../../../../../libs');
+      //--></script>
+</div>
+        <div class="nested-links-select-box" id="sections_select_box">
+      <script type="text/javascript" > <!--
+         boostscript.call( boostscript.nested_links, 'select_box',
+            'sections_select_box',
+            '../../../sections.xml',
+            '../../.././');
+      //--></script>
+</div>
+      </div>
+      <div class="search-box">
+        <form id="cref" action="http://google.com/cse">
+          <div class="search-box-label"></div>
+          <div>
+            <input type="hidden" name="cref" value="http://tinyurl.com/33np8c" />
+            <input class="search-box" type="text" name="q" id="q" size="40" maxlength="255" alt="Search Text" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="spirit-nav">
+      <div class="spirit-nav-icon">
+        <a accesskey="p" href="interlocked_integer_typedefs.html">
+          <div class="prev-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="u" href="../interlocked_integer_models.html">
+          <div class="up-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="h" href="../../../index.html">
+          <div class="home-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="n" href="../interlocked_support.html">
+          <div class="next-icon"></div>
+        </a>
+      </div>
+    </div>
+    <div id="body">
+      <div id="body-inner">
+        <div id="content">
+          <div class="section">
+            <div class="titlepage">
+              <div>
+                <div>
+                  <h4 class="title"><a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions"></a><a href="interlocked_integer_metafunctions.html" title="Interlocked Integer Metafunctions">Interlocked
+        Integer Metafunctions</a></h4>
+                </div>
+              </div>
+            </div>
+            <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.description"></a>
+            <h6><a id="id465586"></a>
+          <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.description">Description</a>
+        </h6>
+            <p>
+          The templates listed in this section are used to select an <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+          <code class="literal">Interlocked Integer Type</code></a> based on number of bits,
+          min or max value, or to select a fast interlocked type based on the properties
+          of another integer type. Use and operation is similar to that of the templates
+          in <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">integer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code> of the <code class="literal">Boost.Integer</code>
+          library (<span class="emphasis"><em>ToDo: insert link here</em></span>).
+        </p>
+            <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.header"></a>
+            <h6><a id="id465692"></a>
+          <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.header">Header</a>
+        </h6>
+            <p>
+          
+</p>
+            <div class="programlisting">
+              <div class="box-outer-wrapper">
+                <div class="box-top-left"></div>
+                <div class="box-top-right"></div>
+                <div class="box-top"></div>
+                <div class="box-inner-wrapper">
+                  <div class="style-switcher-box" id="id465714">
+      <script type="text/javascript" > <!--
+          boostscript.call( boostscript.style_switcher, 'insert_style_selector',
+             'id465714',
+             '../../../../../doc/style/html/syntax.xml',
+             '../../../../../doc/style/html'
+          );
+      //--></script>
+</div>
+                  <pre>
+<span class="comment">// Include all of the Boost.Act interlocked integer models.
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="comment">// Include just the information necessary for using the templates listed here,
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">selection</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+                </div>
+                <div class="box-bottom-left"></div>
+                <div class="box-bottom-right"></div>
+                <div class="box-bottom"></div>
+              </div>
+            </div>
+            <p>
+        </p>
+            <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.synopsis"></a>
+            <h6><a id="id465879"></a>
+          <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.synopsis">Synopsis</a>
+        </h6>
+            <div class="programlisting">
+              <div class="box-outer-wrapper">
+                <div class="box-top-left"></div>
+                <div class="box-top-right"></div>
+                <div class="box-top"></div>
+                <div class="box-inner-wrapper">
+                  <div class="style-switcher-box" id="id465899">
+      <script type="text/javascript" > <!--
+          boostscript.call( boostscript.style_switcher, 'insert_style_selector',
+             'id465899',
+             '../../../../../doc/style/html/syntax.xml',
+             '../../../../../doc/style/html'
+          );
+      //--></script>
+</div>
+                  <pre>
+<span class="comment">// fast integers from least integers
+</span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">LeastInt</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">int_fast_t</span>
+<span class="special">{</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em> <span class="identifier">fast</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="comment">// signed
+</span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="identifier">Bits</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">int_t</span> 
+<span class="special">{</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="comment">// unsigned
+</span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="identifier">Bits</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">uint_t</span> 
+<span class="special">{</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="comment">// signed
+</span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="identifier">MaxValue</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">int_max_value_t</span> 
+<span class="special">{</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="comment">// signed
+</span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="identifier">MinValue</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">int_min_value_t</span> 
+<span class="special">{</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="comment">// unsigned
+</span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="identifier">Value</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">uint_value_t</span> 
+<span class="special">{</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+                </div>
+                <div class="box-bottom-left"></div>
+                <div class="box-bottom-right"></div>
+                <div class="box-bottom"></div>
+              </div>
+            </div>
+            <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.model_of"></a>
+            <h6><a id="id466648"></a>
+          <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.model_of">Model
+          of</a>
+        </h6>
+            <p>
+          Each type selected via these templates is an <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+          <code class="literal">Interlocked Integer Type</code></a>.
+        </p>
+            <div class="variablelist">
+              <p class="title">
+                <b>Notation</b>
+              </p>
+              <dl>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">I</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            An integer type.
+          </dd>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">bits</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            A compile-time constant <code class="computeroutput"><span class="keyword">int</span></code>
+            value.
+          </dd>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">max</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            A positive compile-time constant <code class="computeroutput"><span class="keyword">long</span></code>
+            value.
+          </dd>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">min</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            A negative compile-time constant <code class="computeroutput"><span class="keyword">long</span></code>
+            value.
+          </dd>
+                <dt>
+                  <span class="term">
+                    <code class="computeroutput">
+                      <span class="identifier">val</span>
+                    </code>
+                  </span>
+                </dt>
+                <dd>
+            A compile-time constant <code class="computeroutput"><span class="keyword">unsigned</span>
+            <span class="keyword">long</span></code> value.
+          </dd>
+              </dl>
+            </div>
+            <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.expression_semantics"></a>
+            <h6><a id="id466861"></a>
+          <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.expression_semantics">Expression
+          Semantics</a>
+        </h6>
+            <div class="table">
+              <a id="id466880"></a>
+              <p class="title">
+                <b>Table 8. Interlocked Integer Metafunction Requirements</b>
+              </p>
+              <div class="table-contents">
+                <table class="table" summary="Interlocked Integer Metafunction Requirements">
+                  <colgroup>
+                    <col />
+                    <col />
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th>
+              <p>
+                Expression
+              </p>
+              </th>
+                      <th>
+              <p>
+                Pre/Post Condition
+              </p>
+              </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">int_fast_t</span><span class="special">&lt;</span>
+                <span class="identifier">I</span> <span class="special">&gt;::</span><span class="identifier">fast</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                A fast interlocked integer type meeting at least the properties of
+                <code class="computeroutput"><span class="identifier">I</span></code>.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">int_t</span><span class="special">&lt;</span>
+                <span class="identifier">bits</span> <span class="special">&gt;::</span><span class="identifier">least</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                The minimum sized signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> with at least
+                <code class="computeroutput"><span class="identifier">bits</span></code> number of bits.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">int_t</span><span class="special">&lt;</span>
+                <span class="identifier">bits</span> <span class="special">&gt;::</span><span class="identifier">fast</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                A fast signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> with at least
+                <code class="computeroutput"><span class="identifier">bits</span></code> number of bits.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">uint_t</span><span class="special">&lt;</span>
+                <span class="identifier">bits</span> <span class="special">&gt;::</span><span class="identifier">least</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                The minimum sized unsigned <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> with at least
+                <code class="computeroutput"><span class="identifier">bits</span></code> number of bits.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">uint_t</span><span class="special">&lt;</span>
+                <span class="identifier">bits</span> <span class="special">&gt;::</span><span class="identifier">fast</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                A fast unsigned <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> with at least
+                <code class="computeroutput"><span class="identifier">bits</span></code> number of bits.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">int_max_value_t</span><span class="special">&lt;</span>
+                <span class="identifier">max</span> <span class="special">&gt;::</span><span class="identifier">least</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                The minimum sized signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> which can represent
+                a maximum value of <code class="computeroutput"><span class="identifier">max</span></code>.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">int_max_value_t</span><span class="special">&lt;</span>
+                <span class="identifier">max</span> <span class="special">&gt;::</span><span class="identifier">fast</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                A fast signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> which can represent
+                a maximum value of <code class="computeroutput"><span class="identifier">max</span></code>.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">int_min_value_t</span><span class="special">&lt;</span>
+                <span class="identifier">min</span> <span class="special">&gt;::</span><span class="identifier">least</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                The minimum sized signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> which can represent
+                a minimum value of <code class="computeroutput"><span class="identifier">min</span></code>.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">int_min_value_t</span><span class="special">&lt;</span>
+                <span class="identifier">min</span> <span class="special">&gt;::</span><span class="identifier">fast</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                A fast signed <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> which can represent
+                a minimum value of <code class="computeroutput"><span class="identifier">min</span></code>.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">uint_value_t</span><span class="special">&lt;</span>
+                <span class="identifier">val</span> <span class="special">&gt;::</span><span class="identifier">least</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                The minimum sized unsigned <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> which can represent
+                the value <code class="computeroutput"><span class="identifier">val</span></code>.
+              </p>
+              </td>
+                    </tr>
+                    <tr>
+                      <td>
+              <p>
+                <code class="computeroutput"><span class="identifier">uint_value_t</span><span class="special">&lt;</span>
+                <span class="identifier">val</span> <span class="special">&gt;::</span><span class="identifier">fast</span></code>
+              </p>
+              </td>
+                      <td>
+              <p>
+                A fast unsigned <a href="../interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type">
+                <code class="literal">Interlocked Integer Type</code></a> which can represent
+                the value <code class="computeroutput"><span class="identifier">val</span></code>.
+              </p>
+              </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <br class="table-break" />
+            <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.example"></a>
+            <h6><a id="id467791"></a>
+          <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.example">Example</a>
+        </h6>
+            <p>
+          ToDo: Insert example here
+        </p>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div class="spirit-nav">
+      <div class="spirit-nav-icon">
+        <a accesskey="p" href="interlocked_integer_typedefs.html">
+          <div class="prev-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="u" href="../interlocked_integer_models.html">
+          <div class="up-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="h" href="../../../index.html">
+          <div class="home-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="n" href="../interlocked_support.html">
+          <div class="next-icon"></div>
+        </a>
+      </div>
+    </div>
+    <div id="footer">
+      <div id="footer-left">
+        <div id="copyright">
+          <p>Copyright © 2006 , 2007 Matthew Calabrese</p>
+        </div>
+        <div id="license">
+          <p>Distributed under the
+                  <a href="/LICENSE_1_0.txt" class="internal">Boost Software License, Version 1.0</a>.
+               </p>
+        </div>
+      </div>
+      <div id="footer-right">
+        <div id="banners">
+          <p id="banner-xhtml">
+            <a href="http://validator.w3.org/check?uri=referer" class="external">XHTML 1.0</a>
+          </p>
+          <p id="banner-css">
+            <a href="http://jigsaw.w3.org/css-validator/check/referer" class="external">CSS</a>
+          </p>
+          <p id="banner-sourceforge">
+            <a href="http://sourceforge.net" class="external">SourceForge</a>
+          </p>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </body>
+</html>

@@ -21,12 +21,12 @@
 
 #include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
+#include <boost/act/interlocked/integer/selection.hpp>
+#include <boost/act/interlocked/modify/modify_acquire.hpp>
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
-
-#include <boost/act/interlocked/detail/impl_meta.hpp>
 
 #include <boost/act/interlocked/detail/impl.hpp>
 
@@ -36,6 +36,39 @@
 #include BOOST_ACT_INTERLOCKED_DETAIL_IMPL_BEGIN()
 
 namespace boost { namespace act { namespace interlocked {
+
+namespace detail
+{
+
+template< typename OperandType >
+class assign_acquire_fun
+{
+public:
+  explicit assign_acquire_fun( OperandType const& operand_init )
+    : operand_m( operand_init ) {}
+
+  template< typename Type >
+  typename remove_cv< Type >::type operator ()( Type& ) const
+  {
+    return static_cast< typename remove_cv< Type >::type >( operand_m );
+  }
+private:
+  OperandType const& operand_m;
+};
+
+struct assign_acquire_unaligned
+{
+  template< typename TargetType, typename SourceType >
+  static typename remove_cv< TargetType >::type
+  execute( TargetType& destination, SourceType const& source )
+  {
+    return modify< acquire >( destination
+                            , assign_acquire_fun< SourceType >( source )
+                            );
+  }
+};
+
+}
 
 template< typename Semantics, typename TargetType, typename SourceType >
 typename lazy_enable_if
@@ -51,9 +84,11 @@ typename lazy_enable_if
 ::type
 assign( TargetType& destination, SourceType const& new_value )
 {
-  return detail::impl_meta< detail::assign_acquire_impl, TargetType >
-         ::execute( destination, new_value );
-
+  return mpl::if_< detail::is_unaligned_interlocked< TargetType >
+                 , detail::assign_acquire_unaligned
+                 , detail::assign_acquire_impl
+                 >
+                 ::type::execute( destination, new_value );
 }
 
 template< typename Semantics, typename TargetType, typename SourceType >

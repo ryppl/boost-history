@@ -20,6 +20,7 @@
 
 #include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
+#include <boost/act/interlocked/integer/selection.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/cat.hpp>
 
@@ -29,21 +30,31 @@
 
 #include <boost/act/interlocked/detail/impl_meta.hpp>
 
+#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_OP                       \
+BOOST_PP_TUPLE_ELEM                                                            \
+( 4, 2                                                                         \
+, BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO                           \
+)
+
 #define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_IS_ADDITIVE              \
 BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_AFFIX_             \
             , BOOST_PP_TUPLE_ELEM                                              \
-              ( 3, 2                                                           \
+              ( 4, 3                                                           \
               , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO             \
               )                                                                \
             )
 
+// ToDo: Change to include only appropriate semantic version
+#include <boost/act/interlocked/modify.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+
 #include <boost/act/interlocked/detail/forwarder.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_INFO                            \
-( BOOST_PP_TUPLE_ELEM( 3, 0                                                    \
+( BOOST_PP_TUPLE_ELEM( 4, 0                                                    \
                      , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO      \
                      )                                                         \
-, BOOST_PP_TUPLE_ELEM( 3, 1                                                    \
+, BOOST_PP_TUPLE_ELEM( 4, 1                                                    \
                      , BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO      \
                      )                                                         \
 )
@@ -51,6 +62,53 @@ BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_AFFIX_             \
 #include BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_BEGIN()
 
 namespace boost { namespace act { namespace interlocked {
+
+namespace detail
+{
+
+template< typename OperandType >
+class BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME
+                  , _unaligned_fun_object
+                  )
+{
+public:
+  explicit
+  BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME
+              , _unaligned_fun_object
+              )( OperandType const& operand_init )
+    : operand_m( operand_init ) {}
+  
+
+  template< typename LeftType >
+  typename remove_cv< LeftType >::type
+  operator ()( LeftType& left ) const
+  {
+    return left BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_OP operand_m;
+  }
+private:
+  OperandType const& operand_m;
+};
+
+struct BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME
+                   , _unaligned_impl
+                   )
+{
+  template< typename LeftType, typename OperandType >
+  static typename remove_cv< LeftType >::type
+  execute( LeftType& left, OperandType const& operand )
+  {
+    return modify< BOOST_ACT_INTERLOCKED_DETAIL_FORWARDER_SEMANTICS >
+           ( left
+           , BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_IMPL_FULL_NAME
+                         , _unaligned_fun_object
+                         )< OperandType >
+                         ( operand )
+           );
+  }
+};
+
+}
+
 
 template< typename Semantics, typename TargetType, typename OperandType >
 typename lazy_enable_if

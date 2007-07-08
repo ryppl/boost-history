@@ -21,12 +21,13 @@
 
 #include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 #include <boost/act/interlocked/integer/detail/interlocked_bool.hpp>
+#include <boost/act/interlocked/integer/selection.hpp>
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 
-#include <boost/act/interlocked/detail/impl_meta.hpp>
+#include <boost/act/interlocked/assign_if_was/detail/unaligned_assign_if_was.hpp>
 
 #include <boost/act/interlocked/detail/impl.hpp>
 
@@ -37,28 +38,10 @@
 
 namespace boost { namespace act { namespace interlocked {
 
-template< typename Semantics
-        , typename TargetType, typename SourceType, typename ConditionType
-        >
-typename lazy_enable_if
-<
-  mpl::and_
-  <
-    is_same< Semantics, acq_rel >
-  , detail::are_valid_store_style_params< TargetType, SourceType const
-                                         , ConditionType const
-                                         >
-  , mpl::not_< detail::is_interlocked_bool< TargetType > >
-  >
-, remove_cv< TargetType >
->
-::type
-assign_if_was( TargetType& destination, SourceType const& new_value
-             , ConditionType const& expected_value
-             )
+namespace detail
 {
-  return detail::impl_meta< detail::assign_if_was_acq_rel_impl, TargetType >
-         ::execute( destination, new_value, expected_value );
+template< typename Semantics >
+struct unaligned_assign_if_was;
 }
 
 template< typename Semantics
@@ -70,8 +53,35 @@ typename lazy_enable_if
   <
     is_same< Semantics, acq_rel >
   , detail::are_valid_store_style_params< TargetType, SourceType const
-                                       , ConditionType const
-                                       >
+                                        , ConditionType const
+                                        >
+  , mpl::not_< detail::is_interlocked_bool< TargetType > >
+  >
+, remove_cv< TargetType >
+>
+::type
+assign_if_was( TargetType& destination, SourceType const& new_value
+             , ConditionType const& expected_value
+             )
+{
+  return mpl::if_< detail::is_unaligned_interlocked< TargetType >
+                 , detail::unaligned_assign_if_was< Semantics >
+                 , detail::assign_if_was_acq_rel_impl
+                 >
+                 ::type::execute( destination, new_value, expected_value );
+}
+
+template< typename Semantics
+        , typename TargetType, typename SourceType, typename ConditionType
+        >
+typename lazy_enable_if
+<
+  mpl::and_
+  <
+    is_same< Semantics, acq_rel >
+  , detail::are_valid_store_style_params< TargetType, SourceType const
+                                        , ConditionType const
+                                        >
   , detail::is_interlocked_bool< TargetType >
   >
 , remove_cv< TargetType >

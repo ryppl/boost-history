@@ -12,7 +12,7 @@
 #include <boost/act/interlocked/detail/binary_forwarder.hpp>
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO                     \
-( add_assign, acquire, additive )
+( add_assign, acquire, +, additive )
 
 #include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER()
 
