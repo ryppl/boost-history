@@ -36,11 +36,11 @@ protected:
 
 public:
     svg();
-    
-    virtual ~svg();
 
     svg(const svg&);
     svg& operator=(const svg&);
+    
+    virtual ~svg();
 
     svg& image_size(unsigned int, unsigned int);
 
@@ -54,9 +54,13 @@ public:
     svg& line(double, double, double, double, g_element&); 
     
     svg& text(double, double, std::string);
+    svg& text(double, double, std::string, g_element&);
 
     svg& rect(double, double, double, double);
     svg& rect(double, double, double, double, g_element&);
+
+    svg& clip_path(const rect_element&, g_element&,
+                   const std::string&);
 
     g_element& add_g_element();
     g_element& add_g_element(g_element&);
@@ -70,11 +74,14 @@ public:
     unsigned int get_y_size();
 };
 
-// -----------------------------------------------------------------
-// -----------------------------------------------------------------
 svg::svg():x_size(200), y_size(200)
 {
 
+}
+
+svg::svg(const svg& rhs):x_size(rhs.x_size), y_size(rhs.y_size)
+{
+    
 }
 
 svg::~svg()
@@ -144,7 +151,7 @@ void svg::_write_document(std::ostream& s_out)
 // -----------------------------------------------------------------
 void svg::_write_header(std::ostream& s_out)
 {
-    s_out << "<?xml version=\"1.0\" standalone=\"no\"?>"
+    s_out  << "<?xml version=\"1.0\" standalone=\"no\"?>"
            << "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" "
            << "\"http://www.w3.org/graphics/svg/1.1/dtd/svg11.dtd\">"<<std::endl;
 }
@@ -185,8 +192,6 @@ svg& svg::point(double x, double y)
 
 // -----------------------------------------------------------------
 // Writes the information about lines to the document
-// TODO: Allow other line width
-// TODO: Allow other line colors
 // -----------------------------------------------------------------
 svg& svg::line(double x1, double y1, double x2, double y2)
 {
@@ -205,11 +210,17 @@ svg& svg::line(double x1, double y1, double x2, double y2,
 
 // -----------------------------------------------------------------
 // Writes the information about text to the document
-// TODO: allow different fonts and font sizes
 // -----------------------------------------------------------------
 svg& svg::text(double x, double y, std::string text)
 {
     document.push_back(new text_element(x, y, text));
+
+    return *this;
+}
+
+svg& svg::text(double x, double y, std::string text, g_element& location)
+{
+    location.push_back(new text_element(x, y, text));
 
     return *this;
 }
@@ -225,6 +236,15 @@ svg& svg::rect(double x1, double y1, double x2, double y2,
                 g_element& location)
 {
     location.push_back(new rect_element(x1, y1, x2, y2));
+
+    return *this;
+}
+
+svg& svg::clip_path(const rect_element& _rect, g_element& _g,
+                    const std::string& _id)
+{
+    document.push_back(new clip_path_element(_id,_rect));
+    _g.set_clip(_id);
 
     return *this;
 }

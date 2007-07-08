@@ -87,16 +87,47 @@ unsigned int svg_element::get_stroke_width()
 }
 
 // -----------------------------------------------------------------
+// Represents a single block of text
+// -----------------------------------------------------------------
+class rect_element: public svg_element
+{
+private:
+    double x, y, height, width;
+
+public:
+    rect_element(double, double, double, double);
+    void write(std::ostream&);
+};
+
+rect_element::rect_element(double _x, double _y, double _w, double _h)
+            :x(_x), y(_y), width(_w), height(_h)
+{
+    
+}
+
+void rect_element::write(std::ostream& rhs)
+{
+    rhs<<"<rect x=\""<<x<<"\""
+                <<" y=\""<<y<<"\" "
+                <<" width=\""<<width<<"\" "
+                <<" height=\""<<height<<"\"/>"
+                ;
+}
+
+
+// -----------------------------------------------------------------
 // The node element of our document tree
 // -----------------------------------------------------------------
-
 class g_element: public svg_element
 {
 private: 
     boost::ptr_vector<svg_element> children;
+    std::string clip_name;
+
+    bool use_clip;
     
 public:
-    
+    g_element();
     svg_element& operator[](unsigned int);
     size_t size();
 
@@ -108,7 +139,15 @@ public:
     void push_back(svg_element*);
 
     void clear();
+
+    void set_use_clip(bool);
+    void set_clip(const std::string&);
 };
+
+g_element::g_element():use_clip(false)
+{
+
+}
 
 svg_element& g_element::operator[](unsigned int i)
 {
@@ -123,7 +162,9 @@ size_t g_element::size()
 void g_element::write(std::ostream& rhs)
 {
     rhs << "<g ";
+
     style_info.write(rhs);
+
     rhs<< " >" << std::endl;
     
     for(unsigned int i=0; i<children.size(); ++i)
@@ -155,6 +196,17 @@ void g_element::push_back(svg_element* _g)
 void g_element::clear()
 {
     children.clear();
+}
+
+void g_element::set_use_clip(bool _use)
+{
+    use_clip = _use;
+}
+ 
+void g_element::set_clip(const std::string& _name)
+{
+    use_clip = true;
+    clip_name = _name;
 }
 
 // -----------------------------------------------------------------
@@ -312,35 +364,31 @@ std::string text_element::get_text()
     return text;
 }
 
-// -----------------------------------------------------------------
-// Represents a single block of text
-// -----------------------------------------------------------------
-class rect_element: public svg_element
+class clip_path_element: public svg_element
 {
 private:
-    double x, y, height, width;
+    std::string element_id;
+    rect_element rect;
 
 public:
-    rect_element(double, double, double, double);
+    clip_path_element(const std::string&, const rect_element&);
     void write(std::ostream&);
 };
 
-rect_element::rect_element(double _x, double _y, double _w, double _h)
-            :x(_x), y(_y), width(_w), height(_h)
+clip_path_element::clip_path_element(const std::string& _id, const rect_element& _rect):
+                  element_id(_id), rect(_rect)
 {
     
 }
 
-void rect_element::write(std::ostream& rhs)
+void clip_path_element::write(std::ostream& rhs)
 {
-    rhs<<"<rect x=\""<<x<<"\""
-                <<" y=\""<<y<<"\" "
-                <<" width=\""<<width<<"\" "
-                <<" height=\""<<height<<"\"/>"
-                ;
+    rhs << "<clip-path id=\"" << element_id << "\">" <<std::endl;
+
+    rect.write(rhs);
+
+    rhs<<std::endl<<"</clip-path>";
 }
-
-
 
 }
 }
