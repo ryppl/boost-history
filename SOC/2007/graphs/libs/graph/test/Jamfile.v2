@@ -36,3 +36,14 @@ exe distance
     : <include>../../../
     ;
 
+exe cluster
+    : cluster.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
+
+exe generate
+    : generate.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
