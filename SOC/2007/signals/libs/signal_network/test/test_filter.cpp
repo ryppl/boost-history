@@ -19,6 +19,7 @@ using namespace boost;
 class DoublerClass : public signals::filter<void (float), signals::unfused>
 {
 public:
+    typedef signals::filter<void (float), signals::unfused>::signal_type signal_type;
     template<typename FArgs>
     struct result
     {

@@ -23,14 +23,17 @@ struct receiver
 
 int test_main(int, char* [])
 {
-    boost::signal<void(int)> signal;
+    //[ test_connect
+
+    boost::signal<void(int)> p;
     receiver r;
     
-    connect(signal, r);
+    connect(p, r);
     
-    signal(3);
+    p(3);
     
     BOOST_CHECK_EQUAL(r.stored, 3);
-    
+
+    //]
     return 0;
 }

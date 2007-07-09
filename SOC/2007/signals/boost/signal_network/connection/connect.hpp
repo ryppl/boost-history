@@ -1,42 +1,67 @@
-#if !defined(SIGNAL_NETWORK_CONNECT_HPP)
-#if !defined(BOOST_PP_IS_ITERATING)
+// Copyright Stjepan Rajko 2007. Use, modification and
+// distribution is subject to the Boost Software License, Version
+// 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/preprocessor/iterate.hpp>
-#include <boost/preprocessor/enum_shifted_params.hpp>
-#include <boost/bind.hpp>
-
-#define SIGNAL_NETWORK_TEMPLATE_TYPENAMES typename T,
-#define SIGNAL_NETWORK_TEMPLATE_TYPENAMES_LIST T,
-
-namespace boost {
-    namespace signal_network {
-        namespace signet {
-            namespace detail {
-                
-                template<typename T, typename Signature, typename Combiner, typename Group, typename GroupCompare, int Arity>
-                struct connect_impl;
-                
-#define BOOST_PP_ITERATION_PARAMS_1 (3,(0,3,<boost/signal_network/detail/connect.hpp>))
-#include BOOST_PP_ITERATE()
-
-            } // namespace detail
-        } // namespace signet
-    } // namespace signal_network
-} // namespace boost
-
+#ifndef SIGNAL_NETWORK_CONNECT_HPP
 #define SIGNAL_NETWORK_CONNECT_HPP
-#else // defined(BOOST_PP_IS_ITERATING)
 
-template<typename T, typename Signature, typename Combiner, typename Group, typename GroupCompare>
-struct connect_impl<T, Signature, Combiner, Group, GroupCompare, BOOST_PP_ITERATION()>
+namespace boost { namespace signals {
+
+/** \brief A functor which connects two components. It must be specialized to support each component to be used with the library.
+*/
+template<typename Input, typename Output, typename Enable=void>
+struct connect_impl
+#ifdef DOXYGEN_DOCS_ONLY
 {
-    static void connect(boost::signal<Signature, Combiner, Group, GroupCompare> &signal, T &link)
-    {
-        signal.connect(boost::bind
-                       (static_cast<typename slot_type<T, Signature>::type>( &T::operator() ),
-                        boost::ref(link) BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
-                        BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_INC(BOOST_PP_ITERATION()),_)));
-    }
+    /** Connects input to output.
+    */
+    void operator()(Input &input, Output &output);
+    /** Connects input to output.
+    */
+    void operator()(Input &input, const Output &output);
+    /** Connects input to output.
+    */
+    void operator()(const Input &input, Output &output);
+    /** Connects input to output.
+    */
+    void operator()(const Input &input, const Output &output);
+}
+#endif
+    ;
+
+/** Connects two components using boost::signals::connect_impl.
+*/
+template<typename Input, typename Output>
+void connect(Input &input, Output &output)
+{
+    connect_impl<Input, Output>()(input, output);
 };
-#endif
-#endif
+
+/** Connects two components using boost::signals::connect_impl.
+*/
+template<typename Input, typename Output>
+void connect(Input &input, const Output &output)
+{
+    connect_impl<Input, Output>()(input, output);
+};
+
+/** Connects two components using boost::signals::connect_impl.
+*/
+template<typename Input, typename Output>
+void connect(const Input &input, Output &output)
+{
+    connect_impl<Input, Output>()(input, output);
+};
+
+/** Connects two components using boost::signals::connect_impl.
+*/
+template<typename Input, typename Output>
+void connect(const Input &input, const Output &output)
+{
+    connect_impl<Input, Output>()(input, output);
+};
+
+} } // namespace boost::signals
+
+#endif // SIGNAL_NETWORK_CONNECT_HPP

@@ -22,7 +22,7 @@ int test_main(int, char* [])
         
         banger
             // floater connects to collector, banger to floater.send_slot()
-            | (floater >>= collector).send_slot()
+            | (floater.send_slot() >>= collector)
             | counter; // and banger to counter
         
         banger();
@@ -39,7 +39,7 @@ int test_main(int, char* [])
         
         banger
             // floater connects to collector, banger to floater.send_slot()
-            | (floater >>= collector).send_slot()
+            | (floater.send_slot() >>= collector)
             | counter; // and banger to counter
         
         banger();

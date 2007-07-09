@@ -43,11 +43,11 @@ struct get_signal<T, typename boost::enable_if<is_filter<T> >::type >
     typename T::signal_type &operator()(const T &t) {return t.default_signal();}
 };
 
-template<class T>
-struct get_signature<T, typename boost::enable_if<is_filter<T> >::type>
+/*template<class T>
+struct get_signal_type<T, typename boost::enable_if<is_filter<T> >::type>
 {
-    typedef typename T::signature_type type;
-};
+    typedef typename T::signal_type type;
+};*/
 
 } } // namespace boost::signals
 

@@ -15,9 +15,9 @@ local root = [ path.native [ path.join [ path.pwd ] ../../.. ] ] ;
 xml signal_network_xml : signal_network.qbk ;
 doxygen signal_network_doxygen
    :
-      [ glob
-             ../../../boost/signal_network/*.hpp
-      ]
+      [ glob ../../../boost/signal_network/*.hpp ]
+      [ glob ../../../boost/signal_network/connection/*.hpp ]
+      [ glob ../../../boost/signal_network/component/*.hpp ]
    :
         <doxygen:param>TAB_SIZE=4
         <doxygen:param>EXAMPLE_PATH=../test
@@ -26,6 +26,7 @@ doxygen signal_network_doxygen
         <doxygen:param>STRIP_FROM_INC_PATH=$(root)
         <doxygen:param>EXTRACT_ALL=NO
         <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+        <doxygen:param>INHERIT_DOCS=YES
         <doxygen:param>EXTRACT_PRIVATE=NO
         <doxygen:param>ENABLE_PREPROCESSING=YES
         <doxygen:param>MACRO_EXPANSION=YES

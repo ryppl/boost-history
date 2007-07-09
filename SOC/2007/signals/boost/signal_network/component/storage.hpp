@@ -6,154 +6,188 @@
 #ifndef SIGNAL_NETWORK_GENERATOR_HPP
 #define SIGNAL_NETWORK_GENERATOR_HPP
 
-#include <boost/signal_network/detail/storable.hpp>
-#include <boost/signal_network/filter.hpp>
-#include <boost/type_traits.hpp>
-#include <boost/call_traits.hpp>
+#include <boost/signal_network/component/conditional_modifier.hpp>
+#include <boost/signal_network/component/detail/storable.hpp>
+#include <boost/signal_network/connection/slot_selector_map.hpp>
 
-#include <boost/function_types/parameter_types.hpp>
-#include <boost/fusion/sequence/intrinsic/at.hpp>
-#include <boost/fusion/sequence/adapted/mpl.hpp>
-#include <boost/fusion/functional/adapter/fused.hpp>
-#include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/same_traits.hpp>
-#include <boost/mpl/greater.hpp>
-#include <boost/fusion/support/is_sequence.hpp>
+#include <boost/fusion/sequence/container/vector.hpp>
+#include <boost/fusion/sequence/view/transform_view.hpp>
+#include <boost/fusion/sequence/container/map.hpp>
+#include <boost/type_traits/add_reference.hpp>
 
-#include <boost/signal_network/detail/unfused_typed_class.hpp>
+namespace boost { namespace signals {
 
-SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
+namespace detail
+{
+    struct make_ref
+    {
+        template<typename Sig>
+        struct result;
+        
+        template<typename T>
+        struct result<make_ref(T&)>
+            : boost::add_reference<T>
+        {};
+        
+        template<typename T>
+        typename boost::add_reference<T>::type operator()(T& t) const
+        {
+            return t;
+        }
+    };
+    
+    template <typename Signature>
+    class storage_modifier
+    {
+    public:
+        typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;
+        typedef typename detail::mpl_storable<parameter_types>::type storable_types;
+        typedef typename boost::fusion::result_of::as_vector<storable_types >::type storable_vector;
+
+        storage_modifier(bool opened=true) : opened(opened) {}
+        template<typename Seq>
+            storage_modifier(const Seq &seq, bool opened=true) : stored(seq), opened(opened) {}        
+
+        template<typename Sig>
+        struct result;
+
+        template<typename S, typename T1>
+        struct result<storage_modifier<S>(const T1 &)>
+        {
+            typedef boost::optional<const T1 &> type;
+        };
+        template<typename T1>
+        typename result<storage_modifier(const T1 &)>::type operator()(const T1 &t1)
+        {
+            stored = t1;
+            if (opened)
+                return t1;
+            else
+                return typename result<storage_modifier(const T1 &)>::type ();
+        }
+    protected:
+        storable_vector stored;
+        volatile bool opened;
+
+        template<typename Sig, typename OutSignal, typename Combiner, typename Group, typename GroupCompare>
+        friend class storage;
+    };
+}
 
 /** \brief Stores and transmits arguments received from a signal.
     \param Signature Signature of the signal sent.
 */
 template<typename Signature,
-    typename OutSignal=default_out_signal,
+    typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
     typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type>,
     typename Group = int,
-    typename GroupCompare = std::less<Group> >
-    class storage : public filter<Signature, typename OutSignal::default_normal_type, Combiner, Group, GroupCompare>
+    typename GroupCompare = std::less<Group>
+>
+class storage : public conditional_modifier<detail::storage_modifier<Signature>, Signature, OutSignal, Combiner, Group, GroupCompare>
 {
-#ifndef DOXYGEN_DOCS_ONLY
 protected:
-    typedef filter<Signature, typename OutSignal::default_normal_type, Combiner, Group, GroupCompare> base_type;
-    typedef storage<Signature, OutSignal, Combiner, Group, GroupCompare> this_type;
+    typedef conditional_modifier<detail::storage_modifier<Signature>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
 public:
+    typedef typename detail::storage_modifier<Signature>::parameter_types parameter_types;
 
-    typedef typename detail::mpl_storable<typename base_type::parameter_types>::type storable_types;
-    typedef typename boost::fusion::result_of::as_vector<storable_types >::type storable_vector;
-
-    typedef
-        boost::fusion::unfused_typed_class<storage<
-        Signature, typename OutSignal::default_unfused_type, Combiner, Group, GroupCompare>,
-        typename base_type::parameter_types> unfused;
-#endif
+    typedef typename detail::storage_modifier<Signature>::storable_types storable_types;
+    typedef typename detail::storage_modifier<Signature>::storable_vector storable_vector;
 
     /**	Initializes the stored parameter values using the provided sequence.
         \param[in] seq Sequence from which the stored parameter sequence is initialized from.
         */
     template<typename Seq>
-    storage(const Seq &seq) : stored(seq) {}
+        storage(const Seq &seq) : base_type(seq) {}
     /**	Initializes the stored parameter values using its default constructor.
         */    
     storage() {}
-
-    /**	Sends a signal containing the stored parameter values.
-        \return Return value of the sent signal.
-    */
-    typename base_type::signal_type::result_type operator()()
-    {
-        return base_type::fused_out(stored);
-    }
-    /**	Sends a signal containing the stored parameter values.
-        \return Return value of the sent signal.
-    */
-    typename base_type::signal_type::result_type operator()(const boost::fusion::vector<> &)
-    {
-        return base_type::fused_out(stored);
-    }
-
-#ifndef DOXYGEN_DOCS_ONLY
-    template<class Seq>
-    struct result : public boost::enable_if<typename boost::mpl::and_<
-        boost::fusion::traits::is_sequence<Seq>,
-        boost::mpl::greater<boost::fusion::result_of::size<Seq>, boost::mpl::int_<0> > >::type
-        > {};
-#endif
     
-    /**	Sets the stored parameter values using the provided sequence.
-        \param[in] seq Sequence to whose value the stored parameter sequence is assigned to.
-        
-        <b>Note:</b> Enabled only for fusion sequences of size >= 1.
-        */
-    template <class Seq>
-#ifndef DOXYGEN_DOCS_ONLY
-        typename boost::enable_if<typename boost::mpl::and_<
-        boost::fusion::traits::is_sequence<Seq>,
-        boost::mpl::greater<boost::fusion::result_of::size<Seq>, boost::mpl::int_<0> > >::type
-        >::type
-#else
-    void
-#endif
-    operator()(const Seq &seq)
-    {
-            stored = seq;
-    }
+    void open() {base_type::member.opened = true;}
+    void close() {base_type::member.opened = false;}
 
+    /**	Sends a signal containing the stored parameter values.
+        \return Return value of the sent signal.
+    */
+    typename base_type::signal_type::result_type send()
+    {
+        boost::fusion::transform_view<storable_vector, detail::make_ref>
+            view(base_type::modification.stored, detail::make_ref());
+        return base_type::fused_out(view);
+    }
+    /**	Sends a signal containing the stored parameter values.
+        \return Return value of the sent signal.
+    */
+    typename base_type::signal_type::result_type send(const boost::fusion::vector<> &)
+    {
+        return send();
+    }
     /** \return A reference to the fusion vector of stored parameter values.
     */
     const storable_vector &stored_vector()
     {
-        return stored;
+        return base_type::modification.stored;
     }
     /**	\return The stored value of parameter N using an optimizing cast.
     */
     template<int N>
     typename boost::fusion::result_of::at_c<storable_vector, N>::type at()
     {
-        return boost::fusion::at_c<N>(stored);
+        return boost::fusion::at_c<N>(base_type::modification.stored);
     }
     /** \return The stored value of parameter N typed exactly as it appears in the Signature.
     */
     template<int N>
-    typename boost::mpl::at_c<typename base_type::parameter_types, N>::type value_at()
+    typename boost::mpl::at_c<parameter_types, N>::type value_at()
     {
-        return boost::fusion::at_c<N>(stored);
+        return boost::fusion::at_c<N>(base_type::modification.stored);
     }
 
+    boost::fusion::map<
+        boost::fusion::pair<void(), slot_selector<void (), storage> >,
+        boost::fusion::pair<void(const boost::fusion::vector<> &),
+            slot_selector<void (const boost::fusion::vector<> &), storage> >
+    >
+    send_slot()
+    {
+        return     boost::fusion::map<
+        boost::fusion::pair<void(), slot_selector<void (), storage> >,
+        boost::fusion::pair<void(const boost::fusion::vector<> &),
+            slot_selector<void (const boost::fusion::vector<> &), storage> >
+        >        
+        (make_slot_selector<void ()> (&storage::send, *this),
+         make_slot_selector<void (const boost::fusion::vector<> &)> (&storage::send, *this));
+    }
     /** \return The slot selector for the related at function.
     */
     template<int N>
-        slot_selector_t
+        slot_selector
 #ifndef DOXYGEN_DOCS_ONLY
-        <this_type,
-        typename boost::fusion::result_of::at_c<storable_vector, N>::type ()>
+        <typename boost::fusion::result_of::at_c<storable_vector, N>::type (), storage>
 #endif
     at_slot()
     {
-        return boost::signal_network::slot_selector<
+        return make_slot_selector<
             typename boost::fusion::result_of::at_c<storable_vector, N>::type ()>
-            (*this, &this_type::template at<N>);
+            (&storage::template at<N>, *this);
     }
     /** \return The slot selector for the value_at function.
     */
     template<int N>
-   	slot_selector_t
+   	slot_selector
 #ifndef DOXYGEN_DOCS_ONLY
-        <this_type,
-        typename boost::mpl::at_c<typename base_type::parameter_types, N>::type ()>
+        <typename boost::mpl::at_c<parameter_types, N>::type (), storage>
 #endif
     value_at_slot()
 	{
-        return boost::signal_network::slot_selector<
-            typename boost::mpl::at_c<typename base_type::parameter_types, N>::type ()>
-            (*this, &this_type::template value_at<N>);
+        return make_slot_selector<
+            typename boost::mpl::at_c<parameter_types, N>::type ()>
+            (&storage::template value_at<N>, *this);
     }
 protected:
-    storable_vector stored;
+    storable_vector &stored() {return base_type::modification.stored;}
+
 };
 
-SIGNAL_NETWORK_CLOSE_SIGNET_NAMESPACE
-
+} } // namespace boost::signals
 
 #endif // SIGNAL_NETWORK_GENERATOR_HPP

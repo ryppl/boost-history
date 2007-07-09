@@ -6,7 +6,7 @@
 #ifndef SIGNAL_NETWORK_COMPONENT_TRAITS_HPP
 #define SIGNAL_NETWORK_COMPONENT_TRAITS_HPP
 
-#include <boost/type_traits/integral_constant.hpp>
+#include <boost/signal_network/detail/enable_if_defined.hpp>
 
 namespace boost { namespace signals {
 
@@ -16,11 +16,17 @@ struct is_component : public boost::false_type {};
 template<class T, typename Enable=void>
 struct get_signal;
 
+template<typename T, typename Enable=void>
+struct get_signal_type;
+
+template<typename T>
+struct get_signal_type<T, typename detail::enable_if_defined<typename T::signal_type>::type >
+{
+    typedef typename T::signal_type type;
+};
+
 template<typename T, typename Signature, typename Enable=void>
 struct get_slot;
-
-template<typename T, typename Enable=void>
-struct get_signature;
 
 } } // namespace boost::signals
 

@@ -54,8 +54,8 @@ int test_main(int, char* [])
     {
         //[ test_chain_fused
         signals::chain<void(float), FusedDoublerClass> doubling_chain(4, NULL);
-        signals::storage<void (float)> floater(1.0f);
-        signals::storage<void (float)> collector(0.0f);
+        signals::storage<void (float), signals::fused> floater(1.0f);
+        signals::storage<void (float), signals::fused> collector(0.0f);
         
         floater >>= doubling_chain >>= collector;
         floater.send();

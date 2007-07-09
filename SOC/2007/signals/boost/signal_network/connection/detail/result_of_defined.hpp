@@ -6,6 +6,8 @@
 #ifndef SIGNAL_NETWORK_RESULT_OF_DEFINED_HPP
 #define SIGNAL_NETWORK_RESULT_OF_DEFINED_HPP
 
+#include <boost/signal_network/detail/enable_if_defined.hpp>
+
 #include <boost/function_types/function_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
 #include <boost/function_types/result_type.hpp>
@@ -19,40 +21,18 @@
 namespace boost { namespace signals {
     
 namespace detail {
-    
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
 
-    template<typename T>
-    struct is_defined : public boost::true_type {};
-    
-    template<typename Signature, typename T>
-    struct replace_return_type : public
-        boost::function_types::function_type<
-            typename boost::mpl::push_front<
-                typename boost::function_types::parameter_types<Signature>::type,
-                T
-            >::type
-        > {};
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
 
     template<typename F, typename FArgs, typename Enable=void>
     struct result_defined : public boost::false_type {};
 
     template<typename F, typename FArgs>
-        struct result_defined<F, FArgs, typename enable_if<is_defined<typename F::template result<FArgs>::type > >::type>
+        struct result_defined<F, FArgs, typename detail::enable_if_defined<typename F::template result<FArgs>::type >::type>
         : public boost::true_type {};
 
     template<typename T, typename Enable=void>
     struct result_of_defined : public boost::false_type {};
-        
-/*    template<typename T>
-    struct result_of_defined<T, typename boost::enable_if<has_result_type<
-        typename boost::function_types::result_type<T>::type> >::type>
-        : public boost::true_type {};
-
-    template<typename T>
-    struct result_of_defined<T, typename boost::enable_if<result_defined<
-        typename boost::function_types::result_type<T>::type, T> >::type >
-        : public boost::true_type {};*/
 
     template<typename T>
     struct result_of_defined<T, typename boost::enable_if<typename
@@ -61,9 +41,7 @@ namespace detail {
             result_defined<typename boost::function_types::result_type<T>::type, T>
         >::type
     >::type>
-        : public boost::true_type {};
-    
-        
+        : public boost::true_type {};        
 
 } // namespace detail
 

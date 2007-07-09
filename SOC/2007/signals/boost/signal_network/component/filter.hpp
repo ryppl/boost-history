@@ -8,44 +8,50 @@
 #ifndef SIGNAL_NETWORK_FILTER_HPP
 #define SIGNAL_NETWORK_FILTER_HPP
 
-#include <boost/bind.hpp>
-#include <boost/signal_network/base.hpp>
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/signal_network/component/filter_base.hpp>
+
 #include <boost/fusion/functional/adapter/fused.hpp>
 #include <boost/fusion/sequence/conversion/as_vector.hpp>
+#include <boost/fusion/sequence/adapted/mpl.hpp>
 
-SIGNAL_NETWORK_OPEN_SIGNET_NAMESPACE
+#ifndef SIGNAL_NETWORK_DEFAULT_OUT
+#define SIGNAL_NETWORK_DEFAULT_OUT unfused
+#endif
+
+namespace boost { namespace signals {
+
+// the unfused, combined, and fused structs are used for specification of the filter class.
+// unfused and fused are also used for specification of provided components based on the filter class.
+// in the latter case, the filter_type member specifies the type of the underlying filter.
+
+/** \brief Used for specification of the filter class using an internal fused adaptor for an unfused output signal.
+*/
+struct combined {};
+
+/** \brief Used to specify unfused versions of provided components.
+    For the filter class, this means the filter will use an unfused output signal only,
+*/
+struct unfused
+{
+    typedef combined filter_type;
+};
+
+/** \brief Used to specify unfused versions of provided components.
+    For the filter class, this means the filter will use a fused output signal only.
+*/
+struct fused
+{
+    typedef fused filter_type;
+};
 
 ///	Provides a basis for filters (components that receive and send a signal).
 /**	\param Signature The signature of the signal being sent out.
 
-	Use this class as a base class for classes that produce a signal
-	of a particular signature.
+Use this class as a base class for classes that produce a signal
+of a particular signature.
 */
-struct combined_out_signal
-{
-    typedef combined_out_signal default_normal_type;
-    typedef combined_out_signal default_unfused_type;
-};
-struct unfused_out_signal
-{
-    typedef combined_out_signal default_normal_type;
-    typedef combined_out_signal default_unfused_type;
-};
-struct fused_out_signal
-{
-    typedef fused_out_signal default_normal_type;    
-    typedef fused_out_signal default_unfused_type;
-};
-
-struct default_out_signal
-{
-    typedef fused_out_signal default_normal_type;
-    typedef combined_out_signal default_unfused_type;
-};
-
 template<typename Signature,
-typename OutSignal=unfused_out_signal,
+typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
 typename Combiner = boost::last_value<typename boost::function_traits<Signature>::result_type>,
 typename Group = int,
 typename GroupCompare = std::less<Group>
@@ -55,7 +61,7 @@ class filter;
 /** \brief Unfused version of the filter class
 */
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-class filter<Signature, unfused_out_signal, Combiner, Group, GroupCompare> : public filter_base
+class filter<Signature, unfused, Combiner, Group, GroupCompare> : public filter_base
 {
 public:
     // the signature of the output signal
@@ -68,21 +74,21 @@ public:
     const filter &operator = (const filter &) {return *this;}
 
 	///	Returns the default out signal.
-	signal_type &default_signal()
+	signal_type &default_signal() const
 	{	return out; }
-	///	Disconnects all slots connected to the signet::filter.
+	///	Disconnects all slots connected to the signals::filter.
 	void disconnect_all_slots() {out.disconnect_all_slots();}
 protected:
-	signal_type out;
+	mutable signal_type out;
 }; // class filter
 
 /** \brief Combined version of the filter class
 */
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-class filter<Signature, combined_out_signal, Combiner, Group, GroupCompare>
-: public filter<Signature, unfused_out_signal, Combiner, Group, GroupCompare>
+class filter<Signature, combined, Combiner, Group, GroupCompare>
+: public filter<Signature, unfused, Combiner, Group, GroupCompare>
 {
-    typedef filter<Signature, unfused_out_signal, Combiner, Group, GroupCompare> base_type;
+    typedef filter<Signature, unfused, Combiner, Group, GroupCompare> base_type;
 public:
     filter() : fused_out(base_type::out) {}
 
@@ -101,7 +107,7 @@ protected:
 /** \brief Fused version of the filter class
 */
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-class filter<Signature, fused_out_signal, Combiner, Group, GroupCompare>
+class filter<Signature, fused, Combiner, Group, GroupCompare>
 : public filter_base
 {
 public:
@@ -116,15 +122,15 @@ public:
     typedef boost::signal<signature_type, Combiner, Group, GroupCompare> signal_type;
 
 	///	Returns the default out signal.
-	signal_type &default_signal()
+	signal_type &default_signal() const
 	{	return fused_out; }
-	///	Disconnects all slots connected to the signet::filter.
+	///	Disconnects all slots connected to the signals::filter.
 	void disconnect_all_slots() {fused_out.disconnect_all_slots();}
     
 protected:
-    signal_type fused_out;
+    mutable signal_type fused_out;
 }; // class filter
 
-SIGNAL_NETWORK_CLOSE_SIGNET_NAMESPACE
+} } // namespace boost::signals
 
 #endif // SIGNAL_NETWORK_FILTER_HPP

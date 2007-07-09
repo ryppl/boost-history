@@ -5,6 +5,8 @@
 
 #include <boost/signal_network/storage.hpp>
 
+#include <boost/fusion/sequence/generation/make_vector.hpp>
+
 // for access to connection operators >>= and |
 using namespace boost::signal_network;
 using namespace boost;
@@ -21,38 +23,36 @@ int main()
     std::vector<float> v(1);
     
 	// instantiate all of the components we need
-    signet::storage<void ()>::unfused banger;
-	signet::storage<void (std::vector<float> &)>::unfused floater;
-	signet::storage<void (std::vector<float> &)>::unfused collector;
+	signals::storage<void (std::vector<float> &, std::vector<float>), signals::unfused> floater;
+	signals::storage<void (std::vector<float> &, std::vector<float>), signals::unfused> collector;
     
 	// create the network
-	banger >>= floater >>= collector;
+	floater >>= collector;
     
     start = clock();
     for (int i=0; i<iter; i++)
     {
         v[0] = i;
-        floater(v);
-        banger();
+        floater(boost::fusion::make_vector(boost::ref(v), boost::ref(v)));
+        floater.send();
         assert(collector.at<0>()[0] == i);
     }
     finish = clock();
     std::cout << "unfused:" << double(finish - start) / CLOCKS_PER_SEC << std::endl;
     
-    boost::fusion::vector<const std::vector<float> &> fv(v);
+    boost::fusion::vector<std::vector<float> &> fv(boost::fusion::make_vector(boost::ref(v), boost::ref(v)));
     
-    signet::storage<void ()> fbanger;
-    signet::storage<void (std::vector<float> &)> ffloater;
-    signet::storage<void (std::vector<float> &)> fcollector;
+    signals::storage<void (std::vector<float> &)> ffloater;
+    signals::storage<void (std::vector<float> &)> fcollector;
     
-    fbanger >>= ffloater >>= fcollector;
+    ffloater >>= fcollector;
     
     start = clock();
     for (int i=0; i<iter; i++)
     {
         v[0] = i;
         ffloater(fv);
-        fbanger();
+        ffloater.send();
         assert(fcollector.at<0>()[0] == i);
     }
     finish = clock();

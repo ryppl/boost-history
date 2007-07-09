@@ -1,5 +1,64 @@
 [section:connections Connections]
 
+[section:connect connect function]
+
+[*See also]: [funcref boost::signals::connect connect function reference.]
+
+The __connect__ function is the fundamental connection-creating mechanism of
+the library.  Given a /producer/ `p` and /consumer/ `c` supported by the library,
+
+    connect(p, c);
+    
+will create a connection between the two.  The examples in this documentation typically
+use __operators__ to create connections.  The __operators__ use the __connect__ function
+directly, and can be replaced by invocations of __connect__ if preferred.
+
+The support for various types of components that are supported by __connect__ is currently
+divided in the following files:
+
+    #include <boost/signal_network/connection/signal.hpp>
+    
+will add support for `boost::signal` as a producer, and function objects for which `boost::result_of` is defined
+as consumers.
+
+    #include <boost/signal_network/connection/slot_selector.hpp>
+
+will add support for __slot_selector__ objects as signal consumers.  In addition, they can be used
+as signal producers if the underlying object is a signal producer.
+
+    #include <boost/signal_network/connection/slot_selector_map.hpp>
+    
+will add support for fusion maps from signatures to __slot_selector__ objects (and perhaps to any signal consumer,
+not tested yet) as signal consumers.  This can be used to pack multiple slots of an object together, and then make
+connections based on the appropriate signature (see the send_slot function of __storage__ as an example).
+In addition, fusion maps can be used as signal producers if the underlying object of the front element is a signal
+producer.
+
+[table connect example
+    [[unfused]]
+    [[[test_connect]]]
+]
+
+[endsect]
+
+[section:classes Classes]
+
+[section:slot_selector slot_selector]
+
+[*See also]: [classref boost::signals::slot_selector slot_selector class reference.]
+
+The __slot_selector__ class is used to refer to a particular member function of a particular object, and can be used
+can be used as a receiver.
+
+__slot_selector__ objects can be constructed using the [funcref boost::signals::make_slot_selector] function.
+See the [link signal_network.connections.examples.multiple_same  Multiple inputs of the same signature] example.
+
+[endsect]
+
+[endsect][/classes]
+
+[section:operators Operators]
+
 [section:chaining Chaining]
 
 Chaining of components can be done using `operator >>=`.
@@ -23,6 +82,10 @@ and `operator |`, with `operator |` being used for branching.
 ]
 
 [endsect][/branching]
+
+[endsect][/operators]
+
+[section Examples]
 
 [section:pull Pull-based networks]
 
@@ -119,5 +182,7 @@ The example uses the following classes:
 [test_multi_out_classes]
 
 [endsect][/multi_out]
+
+[endsect][/examples]
 
 [endsect][/connections]

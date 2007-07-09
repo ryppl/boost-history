@@ -26,14 +26,14 @@ namespace detail
     typename SIGNAL_NETWORK_GENERIC_TYPENAME2,
 #endif    
     typename Signature,
-    typename OutSignal=combined,
+    typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
     typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
     typename Group = int,
     typename GroupCompare = std::less<Group> >
-    class BOOST_PP_CAT(SIGNAL_NETWORK_GENERIC_CLASS,_impl) : public filter<Signature, typename OutSignal::combined_type, Combiner, Group, GroupCompare>
+    class BOOST_PP_CAT(SIGNAL_NETWORK_GENERIC_CLASS,_impl) : public filter<Signature, typename OutSignal::filter_type, Combiner, Group, GroupCompare>
 {
 protected:
-    typedef filter<Signature, typename OutSignal::combined_type, Combiner, Group, GroupCompare> base_type;
+    typedef filter<Signature, typename OutSignal::filter_type, Combiner, Group, GroupCompare> base_type;
 
 public:    
     SIGNAL_NETWORK_GENERIC_CLASS_IMPL() {}
@@ -66,7 +66,7 @@ typename SIGNAL_NETWORK_GENERIC_TYPENAME,
 typename SIGNAL_NETWORK_GENERIC_TYPENAME2,
 #endif
 typename Signature,
-typename OutSignal=combined,
+typename OutSignal=SIGNAL_NETWORK_DEFAULT_OUT,
 typename Combiner = boost::last_value<typename boost::function_types::result_type<Signature>::type>,
 typename Group = int,
 typename GroupCompare = std::less<Group> >

@@ -15,6 +15,8 @@
 
 namespace boost { namespace signals {
 
+/** \brief Reference to a class instance and pointer to a class member function.
+*/
 template<typename Signature, typename T>
 struct slot_selector
 {
@@ -28,26 +30,37 @@ struct slot_selector
 		: object(object), func(func) {}
 };
 
-///	Allows functions other than operator() to serve as signals::filter slots.
+/**	\brief Allows arbitrary member functions to serve as slots.
+*/
 template<typename Signature, typename T>
 slot_selector<Signature, T> make_slot_selector(typename detail::slot_type<Signature, T>::type func, T &object)
 {
 	return slot_selector<Signature, T>(func, object);
 }
 
+/// Support for slot_selector as an input component (producer).
 template<typename Signature, typename T>
 struct is_component<slot_selector<Signature, T> >
 : public boost::true_type {};
 
+/// Support for slot_selector as an input component (producer).
 template<typename Signature, typename T>
 struct get_signal<slot_selector<Signature, T> >
 {
-    typename T::signal_type &operator()(const slot_selector<Signature, T> &selector)
+    typename get_signal_type<T>::type &operator()(const slot_selector<Signature, T> &selector)
     {
         return selector.object.default_signal();
     }
 };
 
+/// Support for slot_selector as an input component (producer).
+template<typename Signature, typename T>
+struct get_signal_type<slot_selector<Signature, T> >
+{
+    typedef typename get_signal_type<T>::type type;
+};
+
+/// Support for slot_selector as an output component (consumer).
 template<typename Signature, typename T>
 struct get_slot<Signature, slot_selector<Signature, T> >
 {

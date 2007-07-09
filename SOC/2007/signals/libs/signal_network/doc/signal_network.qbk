@@ -11,6 +11,12 @@
     ]
 ]
 
+[def __connect__ [link signal_network.connections.connect connect]]
+[def __components__ [link signal_network.components components]]
+[def __operators__ [link signal_network.connections.operators operators]]
+
+[def __slot_selector__ [link signal_network.connections.classes.slot_selector slot_selector]]
+
 [def __filter__ [link signal_network.components.generic.filter filter]]
 [def __applicator__ [link signal_network.components.generic.applicator applicator]]
 [def __conditional__ [link signal_network.components.generic.conditional conditional]]
@@ -27,11 +33,7 @@
 
 [def __fusion__ [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
 
-[import ../test/test_filter.cpp]
-[import ../test/test_storage.cpp]
-[import ../test/test_function.cpp]
-[import ../test/test_chain.cpp]
-[import ../test/test_socket.cpp]
+[import ../test/test_connect.cpp]
 [import ../test/test_branching.cpp]
 [import ../test/test_pull.cpp]
 [import ../test/test_disconnect.cpp]
@@ -39,6 +41,12 @@
 [import ../test/test_multi_args.cpp]
 [import ../test/test_same_type.cpp]
 [import ../test/test_multi_out.cpp]
+
+[import ../test/test_filter.cpp]
+[import ../test/test_storage.cpp]
+[import ../test/test_function.cpp]
+[import ../test/test_chain.cpp]
+[import ../test/test_socket.cpp]
 
 The Signal Network library aims to facilitate the
 implementation and interconnection of objects into signal networks using Boost.Signals.
@@ -119,34 +127,38 @@ GSoC Development version (*latest*) \[located in the Boost sandbox /SOC/2007/sig
 
 Proposal for Boost / Google SoC version  \[[@signal_network.zip download]\]
 
-* finished the signet::socket_sender and signet::socket_receiver components
+* finished the signals::socket_sender and signals::socket_receiver components
 
 Draft proposal for Boost / Google SoC version
 
 * changed the file and namespace structure
 * implemented a file-iteration based mechanism for arity-dependent classes
 * changed the operators used
-* signal_link is now signet::filter and does not need to know it's descendant's type
-* implemented signet::junction, signet::selector, signet::storage, signet::timed_generator,
-  signet::mutex, signet::chain, signet::function classes
+* signal_link is now signals::filter and does not need to know it's descendant's type
+* implemented signals::junction, signals::selector, signals::storage, signals::timed_generator,
+  signals::mutex, signals::chain, signals::function classes
 
 Original request for interest version available as attachment to
 [@http://lists.boost.org/Archives/boost/2007/02/116869.php]
 
 [endsect]
 
+[include support.qbk]
+
 [include connections.qbk]
 
 [include components.qbk]
+
+[include rationale.qbk]
 
 [xinclude signal_network_doxygen.xml]
 
 [section:acknowledgements Acknowledgements]
 
+* Thanks to Douglas Gregor for making himself available as a mentor for this project, and for his support, suggestions and feedback.
 * Thanks to all the members of the Boost community who have expressed an interest in this library
   and contributed [link signal_network.discussion valuable feedback].
-* Thanks to Douglas Gregor for making himself available as a mentor for this project, and for his support, suggestions and feedback.
-* Thanks to Tobias Schwinger for a most valuable discussion on various [link signal_network.introduction.dataflow
+* Thanks to Tobias Schwinger for a most valuable discussion on various [link signal_network.introduction.generic_dataflow
   dataflow-oriented approaches and ideas].
 
 [endsect]

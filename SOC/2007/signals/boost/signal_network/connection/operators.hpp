@@ -10,17 +10,16 @@
 
 namespace boost { namespace signals {
 
-///	Connects a sequence of components using signals.
-/** This operator is identical to signals::filter::operator| (it connects the
+///	Connects two components (typically as a part of a chain of components).
+/** This operator is identical to signals::operator| (it connects the
 left component to the right component, and returns a reference to the left component),
 except it is evaluated right to left.  This makes it semantics more suitable for
-connecting a chain of connections.
+connecting a chain of components.
 */
-
 template<typename Input, typename Output>
 typename boost::enable_if<is_component<Input>, Input & >::type
 operator >>= (Input &input, Output &output) { connect(input, output); return input;}
-    
+
 template<typename Input, typename Output>
 typename boost::enable_if<is_component<Input>, Input & >::type
 operator >>= (Input &input, const Output &output) { connect(input, output); return input;}
@@ -33,8 +32,8 @@ template<typename Input, typename Output>
 typename boost::enable_if<is_component<Input>, const Input & >::type
 operator >>= (const Input &input, const Output &output) { connect(input, output); return input;}
     
-/// Allows branching in a component connection sequence.
-/** This operator is identical to signals::filter::operator>>=, (it connects the
+/// Connects two components (typically as a part of branching from a single component).
+/** This operator is identical to signals::operator>>=, (it connects the
 left component to the right component, and returns a reference to the left component)
 except it is evaluated left to right.  This makes its semantics more suitable for
 branching connections.
