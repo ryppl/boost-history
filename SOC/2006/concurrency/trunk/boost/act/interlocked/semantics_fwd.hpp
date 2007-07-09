@@ -9,10 +9,12 @@
 #ifndef BOOST_ACT_INTERLOCKED_SEMANTICS_FWD_HPP
 #define BOOST_ACT_INTERLOCKED_SEMANTICS_FWD_HPP
 
+#include <boost/act/interlocked/semantics/thread_unsafe_fwd.hpp>
+#include <boost/act/interlocked/semantics/unordered_fwd.hpp>
 #include <boost/act/interlocked/semantics/acquire_fwd.hpp>
 #include <boost/act/interlocked/semantics/release_fwd.hpp>
 #include <boost/act/interlocked/semantics/acq_rel_fwd.hpp>
-#include <boost/act/interlocked/semantics/unordered_fwd.hpp>
+#include <boost/act/interlocked/semantics/sequential_fwd.hpp>
 #include <boost/act/interlocked/semantics/default_fwd.hpp>
 
 #endif

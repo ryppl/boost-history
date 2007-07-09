@@ -24,47 +24,47 @@ type. Use and operation is similar to that of the templates in
   template< typename LeastInt >
   struct int_fast_t
   {
-    typedef ``[~implementation_supplied]`` fast;
+    typedef ``[~implementation-supplied]`` fast;
   };
   
   // signed
   template< int Bits >
   struct int_t 
   {
-    typedef ``[~implementation_supplied]``   least;
-    typedef int_fast_t< least >::fast fast;
+    typedef ``[~implementation-supplied]``   least;
+    typedef typename int_fast_t< least >::fast fast;
   };
   
   // unsigned
   template< int Bits >
   struct uint_t 
   {
-    typedef ``[~implementation_supplied]``   least;
-    typedef int_fast_t< least >::fast fast;
+    typedef ``[~implementation-supplied]``   least;
+    typedef typename int_fast_t< least >::fast fast;
   };
   
   // signed
   template< long MaxValue >
   struct int_max_value_t 
   {
-    typedef ``[~implementation_supplied]``   least;
-    typedef int_fast_t< least >::fast fast;
+    typedef ``[~implementation-supplied]``   least;
+    typedef typename int_fast_t< least >::fast fast;
   };
   
   // signed
   template< long MinValue >
   struct int_min_value_t 
   {
-    typedef ``[~implementation_supplied]``   least;
-    typedef int_fast_t< least >::fast fast;
+    typedef ``[~implementation-supplied]``   least;
+    typedef typename int_fast_t< least >::fast fast;
   };
   
   // unsigned
   template< unsigned long Value >
   struct uint_value_t 
   {
-    typedef ``[~implementation_supplied]``   least;
-    typedef int_fast_t< least >::fast fast;
+    typedef ``[~implementation-supplied]`` least;
+    typedef typename int_fast_t< least >::fast        fast;
   };
 
 [heading Model of]

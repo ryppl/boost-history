@@ -33,14 +33,14 @@ import testing ;
           [ run interlocked/add_assign/add_assign.cpp ]
           [ run interlocked/add_assign/add_assign_acquire.cpp ]
           [ run interlocked/add_assign/add_assign_release.cpp ]
-          #[ run interlocked/add_assign/add_assign_acq_rel.cpp ]
-          #[ run interlocked/add_assign/add_assign_unordered.cpp ]
+          [ run interlocked/add_assign/add_assign_acq_rel.cpp ]
+          [ run interlocked/add_assign/add_assign_unordered.cpp ]
 
           [ run interlocked/subtract_assign/subtract_assign.cpp ]
           [ run interlocked/subtract_assign/subtract_assign_acquire.cpp ]
           [ run interlocked/subtract_assign/subtract_assign_release.cpp ]
-          #[ run interlocked/subtract_assign/subtract_assign_acq_rel.cpp ]
-          #[ run interlocked/subtract_assign/subtract_assign_unordered.cpp ]
+          [ run interlocked/subtract_assign/subtract_assign_acq_rel.cpp ]
+          [ run interlocked/subtract_assign/subtract_assign_unordered.cpp ]
     ;
     
     test-suite act

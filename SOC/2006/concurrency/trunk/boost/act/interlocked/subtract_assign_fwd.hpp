@@ -12,6 +12,7 @@
 #include <boost/act/interlocked/subtract_assign/subtract_assign_fwd.hpp>
 #include <boost/act/interlocked/subtract_assign/subtract_assign_acquire_fwd.hpp>
 #include <boost/act/interlocked/subtract_assign/subtract_assign_release_fwd.hpp>
-#include <boost/act/interlocked/subtract_assign/subtract_assign_result_fwd.hpp>
+#include <boost/act/interlocked/subtract_assign/subtract_assign_acq_rel_fwd.hpp>
+#include <boost/act/interlocked/subtract_assign/subtract_assign_unordered_fwd.hpp>
 
 #endif

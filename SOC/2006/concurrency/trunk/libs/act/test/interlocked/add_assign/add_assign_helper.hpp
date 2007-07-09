@@ -14,9 +14,9 @@
 #include <boost/act/config/interlocked/has.hpp>
 
 #define BOOST_ACT_TEST_DETAIL_HAS_OPERATION()                                 \
-BOOST_ACT_INTERLOCKED_HAS( add_assign                                  \
-                                , BOOST_ACT_TEST_INTERLOCKED_SEMANTICS        \
-                                )
+BOOST_ACT_INTERLOCKED_HAS( add_assign                                         \
+                         , BOOST_ACT_TEST_INTERLOCKED_SEMANTICS               \
+                         )
 
 #include <boost/preprocessor/cat.hpp>
 
