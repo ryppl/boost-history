@@ -145,7 +145,7 @@ int test_main(int, char* [])
     BOOST_CHECK(constant_to_rgb(springgreen) == svg_color( 0, 255, 127));
     BOOST_CHECK(constant_to_rgb(steelblue) == svg_color( 70, 130, 180));
     
-    //need to specify boost::svg becuase tan is also a math function
+    //need to specify boost::svg because tan is also a math function
     BOOST_CHECK(constant_to_rgb(boost::svg::tan) == svg_color(210, 180, 140));
 
     BOOST_CHECK(constant_to_rgb(teal) == svg_color( 0, 128, 128));

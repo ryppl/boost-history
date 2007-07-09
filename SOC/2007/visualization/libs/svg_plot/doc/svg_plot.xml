@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="svg_plot" name="SVG_Plot" dirname="svg_plot" last-revision="$Date: 2007/07/08 20:44:43 $"
+<article id="svg_plot" name="SVG_Plot" dirname="svg_plot" last-revision="$Date: 2007/07/09 02:11:43 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -68,11 +68,6 @@
       with design or implementation, either leave them here or email me at jakevoytko
       (at) gmail (dot) com
     </para>
-    <para>
-      This page will hold examples of what I have implemented thus far, and what
-      my program will be capable of in the future. More complete documentation will
-      be live in a few days on my personal website.
-    </para>
   </section>
   <section id="svg_plot.color">
     <title> Colors</title>
@@ -96,6 +91,11 @@
         introduces the possibility of rounding error, which I would like to avoid
         at all costs, so that the same image file displays the same way on any system
         that correctly implements the SVG format.
+      </para>
+      <para>
+        It is important to note that any integer value is accepted by the SVG standard,
+        but negative values are rounded to 0, and positive values &gt; 255 are rounded
+        down to 255.
       </para>
       <para>
         Constants are defined in an enum, svg_color_constant, in alphabetical order.
@@ -135,15 +135,15 @@
       </para>
       <itemizedlist>
         <listitem>
-          You need a svg_plot of some form
+          You need a one or two dimensional svg_plot
         </listitem>
         <listitem>
           You need to call the write() command
         </listitem>
       </itemizedlist>
       <para>
-        That's it! However, just doing this won't give you anything useful. Let's
-        take a minimal example:
+        That's it! However, just doing this won't give you anything useful. The following
+        can be considered a minimal example:
       </para>
       <section id="svg_plot.tutorial.tutorial_basic.tutorial_code_simple">
         <title> Simple program</title>
@@ -176,6 +176,13 @@
 	<phrase role="keyword">return</phrase>&nbsp;<phrase role="number">0</phrase><phrase role="special">;</phrase>
 <phrase role="special">}</phrase>
 </programlisting>
+        </para>
+        <para>
+          <inlinemediaobject><imageobject><imagedata fileref="my_file.svg"></imagedata></imageobject>
+          <textobject>
+            <phrase>my_file</phrase>
+          </textobject>
+          </inlinemediaobject>
         </para>
       </section>
       <section id="svg_plot.tutorial.tutorial_basic.tutorial_simple_exam">
@@ -218,7 +225,7 @@
 </programlisting>
         </para>
         <para>
-          You also may have seen it used this way: 
+          You have also seen it used to print to the console: 
 <programlisting>
 <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="string">&quot;Hello&quot;</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="identifier">name</phrase>&nbsp;<phrase role="special">&lt;&lt;</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 </programlisting>
@@ -588,7 +595,7 @@
       <para>
         
 <programlisting>
-<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_fill_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_stroke_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">black</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_fill_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="identifier">red</phrase><phrase role="special">),</phrase>&nbsp;<phrase role="identifier">_stroke_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="identifier">black</phrase><phrase role="special">));</phrase>
 </programlisting>
       </para>
       <para>
@@ -597,13 +604,13 @@
       <para>
         
 <programlisting>
-<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">black</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="identifier">red</phrase><phrase role="special">),</phrase>&nbsp;<phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="identifier">black</phrase><phrase role="special">));</phrase>
 </programlisting>
       </para>
       <para>
         and also the same effect as: 
 <programlisting>
-<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_stroke_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">black</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_fill_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">);</phrase>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_stroke_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="identifier">black</phrase><phrase role="special">),</phrase>&nbsp;<phrase role="identifier">_fill_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="identifier">red</phrase><phrase role="special">));</phrase>
 </programlisting>
       </para>
       <para>
@@ -619,8 +626,8 @@
         
 <programlisting>
 <phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase> 
-     <phrase role="identifier">_fill_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">red</phrase><phrase role="special">,</phrase> 
-     <phrase role="identifier">_stroke_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">black</phrase><phrase role="special">,</phrase>
+     <phrase role="identifier">_fill_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="identifier">red</phrase><phrase role="special">),</phrase> 
+     <phrase role="identifier">_stroke_color</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">svg_color</phrase><phrase role="special">(</phrase><phrase role="identifier">black</phrase><phrase role="special">),</phrase>
      <phrase role="identifier">_x_functor</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">my_functor</phrase><phrase role="special">());</phrase>
 </programlisting>
       </para>

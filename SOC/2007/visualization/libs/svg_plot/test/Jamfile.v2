@@ -11,4 +11,5 @@ project
     ;
 
 run test_color_constant.cpp ;
-
+run test_color_persistance.cpp ;
+run test_color_consistency.cpp ;

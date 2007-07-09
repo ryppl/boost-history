@@ -362,11 +362,11 @@ svg_1d_plot& svg_1d_plot::write(std::ostream& s_out)
 
     if(title_on)
     {
-        text_element title(image.get_x_size()/2., title_font_size, title);
+        text_element my_title(image.get_x_size()/2., title_font_size, title);
 
-        title.set_alignment(center_align);
-        title.set_font_size(title_font_size);
-        image.get_g_element(PLOT_TITLE).push_back(new text_element(title));
+        my_title.set_alignment(center_align);
+        my_title.set_font_size(title_font_size);
+        image.get_g_element(PLOT_TITLE).push_back(new text_element(my_title));
     }
 
     x_axis = (plot_window_y2 + plot_window_y1)/2.;

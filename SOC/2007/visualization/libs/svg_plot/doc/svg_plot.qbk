@@ -9,6 +9,8 @@
         [@http://www.boost.org/LICENSE_1_0.txt])
     ]
 ]
+
+
 [section:preface Preface]
 Normally, the first task when dealing with numerical data is to plot it. Humans have a fantastic capacity for visual understanding, and merely looking at data oganized in one, two, or three dimensions allows us to see relations not otherwise visible in a list of numbers. Computers, however, deal with information numerically, and C++ and the STL do not offer a way to bridge that gap. This library allows the user to easily plot data stored in STL containers with (hopefully!) minimal intervention.
 [endsect]
@@ -112,6 +114,8 @@ int main()
 	return 0;
 }
 ``
+
+[$my_file.svg]
 [endsect]
 [section:tutorial_simple_exam Basic Example Breakdown]
 Let's examine what this does. 
@@ -360,18 +364,18 @@ Here are some examples of correct uses:
 [h3 Using fill and stroke colors]
 
 ``
-plot(my_plot, my_data, "Lions", _fill_color = red, _stroke_color = black);
+plot(my_plot, my_data, "Lions", _fill_color = svg_color(red), _stroke_color = svg_color(black));
 ``
 
 This has the same effect as the following:
 
 ``
-plot(my_plot, my_data, "Lions", red, black);
+plot(my_plot, my_data, "Lions", svg_color(red), svg_color(black));
 ``
 
 and also the same effect as:
 ``
-plot(my_plot, my_data, "Lions", _stroke_color = black,  _fill_color = red);
+plot(my_plot, my_data, "Lions", _stroke_color = svg_color(black),  _fill_color = svg_color(red));
 ``
 
 Since _fill_color is a deduced parameter, when two svg_colors are used in the same function call, they are always inferred in the following order: (fill, stroke).
@@ -379,8 +383,8 @@ Since _fill_color is a deduced parameter, when two svg_colors are used in the sa
 [h3 Using all parameters]
 ``
 plot(my_plot, my_data, "Lions", 
-     _fill_color   = red, 
-     _stroke_color = black,
+     _fill_color   = svg_color(red), 
+     _stroke_color = svg_color(black),
      _x_functor    = my_functor());
 ``
 
