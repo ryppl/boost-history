@@ -12,9 +12,30 @@
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/generators/options.hpp>
+#include <boost/graph/generators/cycle_graph.hpp>
+#include <boost/graph/generators/star_graph.hpp>
 
 namespace boost
 {
+    template <
+        class Graph,
+        class RandomAccessIterator,
+        class CycleDirection,
+        class SpokeDirection
+    >
+    inline void
+    induce_wheel_graph(Graph& g, size_t n,
+                       RandomAccessIterator iter,
+                       CycleDirection cycle,
+                       SpokeDirection spokes)
+    {
+        // this should be easy... induce S(n) with iter as the root
+        // of the star and then induce C(n - 1) with next(iter) as
+        // the start of the cycle
+        induce_star_graph(g, n, iter, spokes);
+        induce_cycle_graph(g, n - 1, iter + 1, cycle);
+    }
+
     template <
         class Graph,
         class RandomAccessContainer,
@@ -22,20 +43,15 @@ namespace boost
         class SpokeDirection
     >
     inline void
-    make_wheel_graph(Graph& g, size_t k,
+    make_wheel_graph(Graph& g, size_t n,
                      RandomAccessContainer& verts,
                      CycleDirection cycle,
                      SpokeDirection spokes)
     {
-        for(size_t i = 0; i < k; ++i) {
+        for(size_t i = 0; i < n; ++i) {
             verts[i] = add_vertex(g);
         }
-        for(size_t i = 1; i < k - 1; ++i) {
-            detail::connect_spoke_vertices(g, verts[0], verts[i], spokes);
-            detail::connect_cycle_vertices(g, verts[i], verts[i + 1], cycle);
-        }
-        detail::connect_spoke_vertices(g, verts[0], verts[k - 1], spokes);
-        detail::connect_cycle_vertices(g, verts[k - 1], verts[1], cycle);
+        induce_wheel_graph(g, n, &verts[0], cycle, spokes);
     }
 
     template <
@@ -44,22 +60,20 @@ namespace boost
         class SpokeDirection
     >
     inline void
-    make_wheel_graph(Graph& g, size_t k,
+    make_wheel_graph(Graph& g, size_t n,
                      CycleDirection cycle,
                      SpokeDirection spokes)
     {
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
-        std::vector<Vertex> verts(k);
-        make_wheel_graph(g, k, verts, cycle, spokes);
+        std::vector<Vertex> verts(n);
+        make_wheel_graph(g, n, verts, cycle, spokes);
     }
 
     template <class Graph>
     inline void
-    make_wheel_graph(Graph& g, size_t k)
+    make_wheel_graph(Graph& g, size_t n)
     {
-        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
-        std::vector<Vertex> verts(k);
-        make_wheel_graph(g, k, verts,
+        make_wheel_graph(g, n,
                          with_clockwise_cycle(),
                          with_outward_spokes());
     }

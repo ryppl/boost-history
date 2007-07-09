@@ -15,41 +15,46 @@
 
 namespace boost
 {
-    template <
-        class Graph,
-        class RandomAccessContainer,
-        class SpokeDirection
-    >
+    // As a variant, we could introduce S(m, n) where m is the number of radial
+    // vertices and n is the length of paths from the center to the periphery.
+
+    template <class Graph, class RandomAccessIterator, class SpokeDirection>
     inline void
-    make_star_graph(Graph& g, size_t k,
+    induce_star_graph(Graph& g, size_t n,
+                      RandomAccessIterator iter,
+                      SpokeDirection spokes)
+    {
+        for(size_t i = 1; i < n; ++i) {
+            detail::add_spoke_edge(g, *iter, *(iter + i), spokes);
+        }
+    }
+
+    template <class Graph, class RandomAccessContainer, class SpokeDirection>
+    inline void
+    make_star_graph(Graph& g, size_t n,
                     RandomAccessContainer& verts,
                     SpokeDirection spokes)
     {
-        for(size_t i = 0; i < k; ++i) {
+        for(size_t i = 0; i < n; ++i) {
             verts[i] = add_vertex(g);
         }
-        for(size_t i = 1; i < k - 1; ++i) {
-            detail::connect_spoke_vertices(g, verts[0], verts[i], spokes);
-        }
-        detail::connect_spoke_vertices(g, verts[0], verts[k - 1], spokes);
+        induce_star_graph(g, n, &verts[0], spokes);
     }
 
     template <class Graph, class SpokeDirection>
     inline void
-    make_star_graph(Graph& g, size_t k, SpokeDirection spokes)
+    make_star_graph(Graph& g, size_t n, SpokeDirection spokes)
     {
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
-        std::vector<Vertex> verts(k);
-        make_star_graph(g, k, verts, spokes);
+        std::vector<Vertex> verts(n);
+        make_star_graph(g, n, verts, spokes);
     }
 
     template <class Graph>
     inline void
-    make_star_graph(Graph& g, size_t k)
+    make_star_graph(Graph& g, size_t n)
     {
-        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
-        std::vector<Vertex> verts(k);
-        make_star_graph(g, k, verts, with_outward_spokes());
+        make_star_graph(g, n, with_outward_spokes());
     }
 }
 

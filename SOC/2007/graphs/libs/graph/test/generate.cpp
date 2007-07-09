@@ -18,12 +18,15 @@
 #include <boost/graph/generators/cycle_graph.hpp>
 #include <boost/graph/generators/star_graph.hpp>
 #include <boost/graph/generators/wheel_graph.hpp>
+#include <boost/graph/generators/prism_graph.hpp>
+#include <boost/graph/generators/web_graph.hpp>
 #include <boost/graph/graphviz.hpp>
 
 using namespace std;
 using namespace boost;
 
 static const int N = 10;
+static const int K = 2;
 
 template <class Graph, class Cycle, class Spoke>
 void test_complete(Cycle cycle, Spoke spoke)
@@ -58,12 +61,30 @@ void test_wheel(Cycle cycle, Spoke spoke)
 }
 
 template <class Graph, class Cycle, class Spoke>
+void test_prism(Cycle cycle, Spoke spoke)
+{
+    Graph g;
+    make_prism_graph(g, N, K, cycle, spoke);
+    write_graphviz(cout, g);
+}
+
+template <class Graph, class Cycle, class Spoke>
+void test_web(Cycle cycle, Spoke spoke)
+{
+    Graph g;
+    make_prism_graph(g, N, K, cycle, spoke);
+    write_graphviz(cout, g);
+}
+
+template <class Graph, class Cycle, class Spoke>
 void test(Cycle cycle, Spoke spoke)
 {
     test_complete<Graph>(cycle, spoke);
     test_cycle<Graph>(cycle, spoke);
     test_star<Graph>(cycle, spoke);
     test_wheel<Graph>(cycle, spoke);
+    test_prism<Graph>(cycle, spoke);
+    test_web<Graph>(cycle, spoke);
 }
 
 template <class Graph>

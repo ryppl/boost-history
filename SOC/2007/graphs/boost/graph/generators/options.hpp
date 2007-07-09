@@ -37,26 +37,26 @@ namespace boost
 
         template <typename Graph>
         inline void
-        connect_cycle_vertices(Graph& g,
-                               typename graph_traits<Graph>::vertex_descriptor u,
-                               typename graph_traits<Graph>::vertex_descriptor v,
-                               with_clockwise_cycle)
+        add_cycle_edge(Graph& g,
+                       typename graph_traits<Graph>::vertex_descriptor u,
+                       typename graph_traits<Graph>::vertex_descriptor v,
+                       with_clockwise_cycle)
         { add_edge(u, v, g); }
 
         template <typename Graph>
         inline void
-        connect_cycle_vertices(Graph& g,
-                               typename graph_traits<Graph>::vertex_descriptor u,
-                               typename graph_traits<Graph>::vertex_descriptor v,
-                               with_counterclockwise_cycle)
+        add_cycle_edge(Graph& g,
+                       typename graph_traits<Graph>::vertex_descriptor u,
+                       typename graph_traits<Graph>::vertex_descriptor v,
+                       with_counterclockwise_cycle)
         { add_edge(v, u, g); }
 
         template <typename Graph>
         inline void
-        connect_cycle_vertices(Graph& g,
-                               typename graph_traits<Graph>::vertex_descriptor u,
-                               typename graph_traits<Graph>::vertex_descriptor v,
-                               with_bidirected_cycle)
+        add_cycle_edge(Graph& g,
+                       typename graph_traits<Graph>::vertex_descriptor u,
+                       typename graph_traits<Graph>::vertex_descriptor v,
+                       with_bidirected_cycle)
         {
             add_edge(u, v, g);
             add_edge(v, u, g);
@@ -65,26 +65,26 @@ namespace boost
 
         template <typename Graph>
         inline void
-        connect_spoke_vertices(Graph& g,
-                               typename graph_traits<Graph>::vertex_descriptor u,
-                               typename graph_traits<Graph>::vertex_descriptor v,
-                               with_outward_spokes)
+        add_spoke_edge(Graph& g,
+                       typename graph_traits<Graph>::vertex_descriptor u,
+                       typename graph_traits<Graph>::vertex_descriptor v,
+                       with_outward_spokes)
         { add_edge(u, v, g); }
 
         template <typename Graph>
         inline void
-        connect_spoke_vertices(Graph& g,
-                               typename graph_traits<Graph>::vertex_descriptor u,
-                               typename graph_traits<Graph>::vertex_descriptor v,
-                               with_inward_spokes)
+        add_spoke_edge(Graph& g,
+                       typename graph_traits<Graph>::vertex_descriptor u,
+                       typename graph_traits<Graph>::vertex_descriptor v,
+                       with_inward_spokes)
         { add_edge(v, u, g); }
 
         template <typename Graph>
         inline void
-        connect_spoke_vertices(Graph& g,
-                               typename graph_traits<Graph>::vertex_descriptor u,
-                               typename graph_traits<Graph>::vertex_descriptor v,
-                               with_bidirected_spokes)
+        add_spoke_edge(Graph& g,
+                       typename graph_traits<Graph>::vertex_descriptor u,
+                       typename graph_traits<Graph>::vertex_descriptor v,
+                       with_bidirected_spokes)
         {
             add_edge(u, v, g);
             add_edge(v, u, g);

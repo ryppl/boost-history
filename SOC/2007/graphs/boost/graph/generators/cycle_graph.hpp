@@ -15,23 +15,33 @@
 
 namespace boost
 {
-    template <
-        class Graph,
-        class RandomAccessContainer,
-        class CycleDirection
-    >
+    template <typename Graph,class RandomAccessIterator, class CycleDirection>
     inline void
-    make_cycle_graph(Graph& g, size_t k,
+    induce_cycle_graph(Graph& g, size_t n,
+                       RandomAccessIterator iter,
+                       CycleDirection cycle)
+    {
+        typedef RandomAccessIterator iterator;
+
+        for(size_t i = 0; i < n - 1; ++i) {
+            iterator u = iter + i, v = next(u);
+            detail::add_cycle_edge(g, *u, *v, cycle);
+        }
+
+        // connect the last edge back to the beginning
+        detail::add_cycle_edge(g, *(iter + (n - 1)), *iter, cycle);
+    }
+
+    template <class Graph, class RandomAccessContainer, class CycleDirection>
+    inline void
+    make_cycle_graph(Graph& g, size_t n,
                      RandomAccessContainer& verts,
                      CycleDirection cycle)
     {
-        for(size_t i = 0; i < k; ++i) {
+        for(size_t i = 0; i < n; ++i) {
             verts[i] = add_vertex(g);
         }
-        for(size_t i = 0; i < k - 1; ++i) {
-            detail::connect_cycle_vertices(g, verts[i], verts[i + 1], cycle);
-        }
-        detail::connect_cycle_vertices(g, verts[k - 1], verts[0], cycle);
+        induce_cycle_graph(g, n, &verts[0], cycle);
     }
 
     template <class Graph, class CycleDirection>
