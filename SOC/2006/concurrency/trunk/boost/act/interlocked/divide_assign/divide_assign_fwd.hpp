@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================//
 
-#ifndef BOOST_ACT_INTERLOCKED_DIV_ASSIGN_DIV_ASSIGN_HPP
-#define BOOST_ACT_INTERLOCKED_DIV_ASSIGN_DIV_ASSIGN_HPP
+#ifndef BOOST_ACT_INTERLOCKED_DIV_ASSIGN_DIV_ASSIGN_FWD_HPP
+#define BOOST_ACT_INTERLOCKED_DIV_ASSIGN_DIV_ASSIGN_FWD_HPP
 
 #include <boost/act/config/interlocked/has.hpp>
 
@@ -17,10 +17,10 @@
 #include <boost/mpl/and.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-#include <boost/act/interlocked/divide_assign/divide_assign_acq_rel.hpp>
 
 #include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
+
+#include <boost/type_traits/remove_cv.hpp>
 
 namespace boost { namespace act { namespace interlocked {
 
@@ -31,24 +31,19 @@ typename lazy_enable_if
 , remove_cv< TargetType >
 >
 ::type
-divide_assign( TargetType& destination, SourceType const& new_value )
-{
-  return interlocked::divide_assign< acq_rel >( destination, new_value );
-}
+divide_assign( TargetType& destination, SourceType const& new_value );
 
 template< typename Semantics, typename TargetType, typename SourceType >
 typename lazy_enable_if
 <
   mpl::and_< is_same< Semantics, default_ >
-           , detail::are_valid_store_style_params< TargetType, SourceType const >
+           , detail::are_valid_store_style_params
+             < TargetType, SourceType const >
            >
 , remove_cv< TargetType >
 >
 ::type
-divide_assign( TargetType& destination, SourceType const& new_value )
-{
-  return interlocked::divide_assign< acq_rel >( destination, new_value );
-}
+divide_assign( TargetType& destination, SourceType const& new_value );
 
 } } }
 

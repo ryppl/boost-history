@@ -18,7 +18,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <boost/act/interlocked/detail/cas_support.hpp>
+#include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 
 #include <boost/type_traits/remove_cv.hpp>
 
