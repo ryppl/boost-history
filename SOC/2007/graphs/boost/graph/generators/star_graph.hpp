@@ -18,15 +18,19 @@ namespace boost
     // As a variant, we could introduce S(m, n) where m is the number of radial
     // vertices and n is the length of paths from the center to the periphery.
 
-    template <class Graph, class RandomAccessIterator, class SpokeDirection>
-    inline void
+    template <class Graph, class ForwardIterator, class SpokeDirection>
+    inline ForwardIterator
     induce_star_graph(Graph& g, size_t n,
-                      RandomAccessIterator iter,
+                      ForwardIterator iter,
                       SpokeDirection spokes)
     {
-        for(size_t i = 1; i < n; ++i) {
-            detail::add_spoke_edge(g, *iter, *(iter + i), spokes);
+        ForwardIterator center = iter++;
+        for(size_t i = 0; i < n - 1; ++i) {
+            detail::generate_edge(g, *center, *iter++, spokes);
         }
+
+        // return the center of the star
+        return center;
     }
 
     template <class Graph, class RandomAccessContainer, class SpokeDirection>

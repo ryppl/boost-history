@@ -9,27 +9,28 @@
 
 #include <vector>
 #include <boost/utility.hpp>
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/generators/options.hpp>
+#include <boost/graph/generators/path_graph.hpp>
 
 namespace boost
 {
-    template <typename Graph,class RandomAccessIterator, class CycleDirection>
-    inline void
+    template <typename Graph,class ForwardIterator, class CycleDirection>
+    inline ForwardIterator
     induce_cycle_graph(Graph& g, size_t n,
-                       RandomAccessIterator iter,
+                       ForwardIterator iter,
                        CycleDirection cycle)
     {
-        typedef RandomAccessIterator iterator;
+        typename detail::edge_gen_policy<CycleDirection>::creation_policy policy;
 
-        for(size_t i = 0; i < n - 1; ++i) {
-            iterator u = iter + i, v = next(u);
-            detail::add_cycle_edge(g, *u, *v, cycle);
-        }
+        // start by inducing a path, saving the last iterator in the chain
+        ForwardIterator last = induce_path_graph(g, n, iter, policy);
 
         // connect the last edge back to the beginning
-        detail::add_cycle_edge(g, *(iter + (n - 1)), *iter, cycle);
+        detail::generate_edge(g, *last, *iter, cycle);
+
+        // last element added to the cycle
+        return last;
     }
 
     template <class Graph, class RandomAccessContainer, class CycleDirection>

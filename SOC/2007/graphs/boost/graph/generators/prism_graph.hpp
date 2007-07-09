@@ -19,20 +19,22 @@ namespace boost
     // The specification of a prism graphs is usually G = Y(m,n) such that
     // G is n concentric cycles with m vertices each.
 
+    // TODO: is it possible to write a forward-only induce for this? Essentially,
+    // we can just walk over all (m*n) vertices and at various places run
+    // different algorithms?
+
     template <
         class Graph,
         class RandomAccessIterator,
         class CycleDirection,
         class SpokeDirection
     >
-    inline void
+    inline RandomAccessIterator
     induce_prism_graph(Graph& g, size_t m, size_t n,
                        RandomAccessIterator iter,
                        CycleDirection cycle,
                        SpokeDirection spokes)
     {
-        typedef RandomAccessIterator iterator;
-
         // start by inducing the n cycles on the graph
         for(size_t i = 0; i < n; ++i) {
             induce_cycle_graph(g, m, iter + (m * i), cycle);
@@ -42,11 +44,13 @@ namespace boost
         // concentric cycles
         for(size_t j = 0; j < n - 1; ++j) {
             for(size_t i = 0; i < m; ++i) {
-                iterator u = iter + i + m * j;
-                iterator v = iter + i + m * (j + 1);
-                detail::add_spoke_edge(g, *u, *v, spokes);
+                RandomAccessIterator u = iter + i + m * j;
+                RandomAccessIterator v = iter + i + m * (j + 1);
+                detail::generate_edge(g, *u, *v, spokes);
             }
         }
+
+        return iter;
     }
 
     template <

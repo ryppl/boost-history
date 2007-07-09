@@ -20,81 +20,127 @@
 #include <boost/graph/generators/wheel_graph.hpp>
 #include <boost/graph/generators/prism_graph.hpp>
 #include <boost/graph/generators/web_graph.hpp>
+#include <boost/graph/generators/path_graph.hpp>
 #include <boost/graph/graphviz.hpp>
 
 using namespace std;
 using namespace boost;
 
-static const int N = 10;
-static const int K = 2;
+static const int N = 3;
+static const int K = 3;
 
-template <class Graph, class Cycle, class Spoke>
-void test_complete(Cycle cycle, Spoke spoke)
+template <class Graph>
+void test_path()
 {
     Graph g;
-    make_complete_graph(g, N);
+    make_path_graph(g, N);
     write_graphviz(cout, g);
 }
 
-template <class Graph, class Cycle, class Spoke>
-void test_cycle(Cycle cycle, Spoke spoke)
+template <class Graph, class Direction>
+void test_path(Direction dir)
+{
+    Graph g;
+    make_path_graph(g, N, dir);
+    write_graphviz(cout, g);
+}
+
+
+
+template <class Graph>
+void test_cycle()
+{
+    Graph g;
+    make_cycle_graph(g, N);
+    write_graphviz(cout, g);
+}
+
+template <class Graph, class Cycle>
+void test_cycle(Cycle cycle)
 {
     Graph g;
     make_cycle_graph(g, N, cycle);
     write_graphviz(cout, g);
 }
 
-template <class Graph, class Cycle, class Spoke>
-void test_star(Cycle cycle, Spoke spoke)
-{
-    Graph g;
-    make_star_graph(g, N, spoke);
-    write_graphviz(cout, g);
-}
-
-template <class Graph, class Cycle, class Spoke>
-void test_wheel(Cycle cycle, Spoke spoke)
-{
-    Graph g;
-    make_wheel_graph(g, N, cycle, spoke);
-    write_graphviz(cout, g);
-}
-
-template <class Graph, class Cycle, class Spoke>
-void test_prism(Cycle cycle, Spoke spoke)
-{
-    Graph g;
-    make_prism_graph(g, N, K, cycle, spoke);
-    write_graphviz(cout, g);
-}
-
-template <class Graph, class Cycle, class Spoke>
-void test_web(Cycle cycle, Spoke spoke)
-{
-    Graph g;
-    make_prism_graph(g, N, K, cycle, spoke);
-    write_graphviz(cout, g);
-}
-
-template <class Graph, class Cycle, class Spoke>
-void test(Cycle cycle, Spoke spoke)
-{
-    test_complete<Graph>(cycle, spoke);
-    test_cycle<Graph>(cycle, spoke);
-    test_star<Graph>(cycle, spoke);
-    test_wheel<Graph>(cycle, spoke);
-    test_prism<Graph>(cycle, spoke);
-    test_web<Graph>(cycle, spoke);
-}
 
 template <class Graph>
-void test()
+void test_star()
 {
-    with_clockwise_cycle cycle;
-    with_outward_spokes spoke;
-    test<Graph>(cycle, spoke);
+    Graph g;
+    make_star_graph(g, N);
+    write_graphviz(cout, g);
 }
 
+template <class Graph, class Spoke>
+void test_star(Spoke spokes)
+{
+    Graph g;
+    make_star_graph(g, N, spokes);
+    write_graphviz(cout, g);
+}
+
+
+
+template <class Graph>
+void test_wheel()
+{
+    Graph g;
+    make_wheel_graph(g, N);
+    write_graphviz(cout, g);
+}
+
+template <class Graph, class Cycle, class Spoke>
+void test_wheel(Cycle cycle, Spoke spokes)
+{
+    Graph g;
+    make_wheel_graph(g, N, cycle, spokes);
+    write_graphviz(cout, g);
+}
+
+
+
+template <class Graph>
+void test_prism()
+{
+    Graph g;
+    make_prism_graph(g, N, K);
+    write_graphviz(cout, g);
+}
+
+template <class Graph, class Cycle, class Spoke>
+void test_prism(Cycle cycle, Spoke spokes)
+{
+    Graph g;
+    make_prism_graph(g, N, K, cycle, spokes);
+    write_graphviz(cout, g);
+}
+
+
+template <class Graph>
+void test_web()
+{
+    Graph g;
+    make_web_graph(g, N, K);
+    write_graphviz(cout, g);
+}
+
+template <class Graph, class Cycle, class Spoke>
+void test_web(Cycle cycle, Spoke spokes)
+{
+    Graph g;
+    make_web_graph(g, N, K, cycle, spokes);
+    write_graphviz(cout, g);
+}
+
+
+template <class Graph>
+void test_complete()
+{
+    Graph g;
+    make_complete_graph(g, N);
+    write_graphviz(cout, g);
+}
 
 int
 main(int argc, char *argv[])
@@ -102,15 +148,23 @@ main(int argc, char *argv[])
     typedef undirected_graph<> Graph;
     typedef directed_graph<> DiGraph;
 
-    with_clockwise_cycle clockwise;
-    with_counterclockwise_cycle counterclockwise;
-    with_bidirected_cycle bothwise;
+    /*
+    test_complete<Graph>();
+    test_path<Graph>();
+    test_cycle<Graph>();
+    test_star<Graph>();
+    test_wheel<Graph>();
+    test_prism<Graph>();
+    */
+    test_web<Graph>();
 
-    with_outward_spokes outward;
-    with_inward_spokes inward;
-    with_bidirected_spokes iospokes;
+    /*
+    test_path<DiGraph>(with_forward_edges());
+    test_path<DiGraph>(with_reverse_edges());
+    test_path<DiGraph>(with_bidirected_edges());
+    */
 
-    test<Graph>();
+    /*
     test<DiGraph>(clockwise, outward);
     test<DiGraph>(counterclockwise, outward);
     test<DiGraph>(bothwise, outward);
@@ -120,4 +174,5 @@ main(int argc, char *argv[])
     test<DiGraph>(clockwise, iospokes);
     test<DiGraph>(counterclockwise, iospokes);
     test<DiGraph>(bothwise, iospokes);
+    */
 }

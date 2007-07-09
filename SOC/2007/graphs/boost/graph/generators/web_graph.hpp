@@ -25,7 +25,7 @@ namespace boost
         class CycleDirection,
         class SpokeDirection
     >
-    inline void
+    inline RandomAccessIterator
     induce_web_graph(Graph& g, size_t m, size_t n,
                       RandomAccessIterator iter,
                       CycleDirection cycle,
@@ -40,8 +40,10 @@ namespace boost
         for(size_t i = 0; i < m; ++i) {
             iterator u = iter + i + m * (n - 1);
             iterator v = iter + i + m * (n);
-            detail::add_spoke_edge(g, *u, *v, spokes);
+            detail::generate_edge(g, *u, *v, spokes);
         }
+
+        return iter;
     }
 
 

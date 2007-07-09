@@ -19,13 +19,13 @@ namespace boost
 {
     template <
         class Graph,
-        class RandomAccessIterator,
+        class ForwardIterator,
         class CycleDirection,
         class SpokeDirection
     >
-    inline void
+    inline ForwardIterator
     induce_wheel_graph(Graph& g, size_t n,
-                       RandomAccessIterator iter,
+                       ForwardIterator iter,
                        CycleDirection cycle,
                        SpokeDirection spokes)
     {
@@ -33,7 +33,10 @@ namespace boost
         // of the star and then induce C(n - 1) with next(iter) as
         // the start of the cycle
         induce_star_graph(g, n, iter, spokes);
-        induce_cycle_graph(g, n - 1, iter + 1, cycle);
+        induce_cycle_graph(g, n - 1, next(iter), cycle);
+
+        // return the center of the wheel
+        return iter;
     }
 
     template <
