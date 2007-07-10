@@ -39,20 +39,24 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="Source Files"
+		<File
+			RelativePath="..\..\doc\components.qbk"
 			>
-			<File
-				RelativePath="..\..\doc\dox\signal_network.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\doc\signal_network.qbk"
-				>
-			</File>
-		</Filter>
+		</File>
+		<File
+			RelativePath="..\..\doc\connections.qbk"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\introduction.qbk"
+			>
+		</File>
 		<File
 			RelativePath="..\..\doc\Jamfile.v2"
+			>
+		</File>
+		<File
+			RelativePath="..\..\doc\signal_network.qbk"
 			>
 		</File>
 	</Files>

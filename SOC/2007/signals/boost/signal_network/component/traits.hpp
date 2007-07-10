@@ -25,7 +25,7 @@ struct get_signal_type<T, typename detail::enable_if_defined<typename T::signal_
     typedef typename T::signal_type type;
 };
 
-template<typename T, typename Signature, typename Enable=void>
+template<typename Signature, typename T, typename Enable=void>
 struct get_slot;
 
 } } // namespace boost::signals

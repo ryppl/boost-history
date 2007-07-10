@@ -8,7 +8,6 @@
 #include <boost/signal_network/connection.hpp>
 
 #include <boost/fusion/sequence/intrinsic/at.hpp>
-#include <boost/type_traits/is_object.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -19,9 +18,11 @@ using namespace boost;
 class DoublerClass : public signals::filter<void (float), signals::unfused>
 {
 public:
-    typedef signals::filter<void (float), signals::unfused>::signal_type signal_type;
     template<typename FArgs>
-    struct result
+    struct result;
+
+    template<typename F>
+    struct result<F(float)>
     {
         typedef void type;
     };
@@ -32,7 +33,15 @@ public:
 class FusedDoublerClass : public signals::filter<void (float), signals::fused>
 {
 public:
-    typedef void result_type;
+    template<typename FArgs>
+    struct result;
+
+    template<typename F>
+    struct result<F(const fusion::vector<float> &)>
+    {
+        typedef void type;
+    };
+
     void operator()(const fusion::vector<float> &x)
     {
         // this could be more general but I'm having problems with the general approach...

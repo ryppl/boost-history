@@ -17,6 +17,14 @@
 
 namespace boost { namespace signals {
 
+    template<typename Signature,
+    typename OutSignal,
+    typename Combiner,
+    typename Group,
+    typename GroupCompare
+>
+class storage;
+
 namespace detail
 {
     struct make_ref
@@ -35,7 +43,10 @@ namespace detail
             return t;
         }
     };
-    
+}
+// storage_modifier should be in the detail namespace, but MSVC complains when
+// making boost::signals::storage a friend.
+
     template <typename Signature>
     class storage_modifier
     {
@@ -65,6 +76,9 @@ namespace detail
             else
                 return typename result<storage_modifier(const T1 &)>::type ();
         }
+        const storable_vector &stored_vector() {return stored;}
+        void open() {opened = true;}
+        void close() {opened = false;}
     protected:
         storable_vector stored;
         volatile bool opened;
@@ -72,7 +86,7 @@ namespace detail
         template<typename Sig, typename OutSignal, typename Combiner, typename Group, typename GroupCompare>
         friend class storage;
     };
-}
+
 
 /** \brief Stores and transmits arguments received from a signal.
     \param Signature Signature of the signal sent.
@@ -83,15 +97,15 @@ template<typename Signature,
     typename Group = int,
     typename GroupCompare = std::less<Group>
 >
-class storage : public conditional_modifier<detail::storage_modifier<Signature>, Signature, OutSignal, Combiner, Group, GroupCompare>
+class storage : public conditional_modifier<storage_modifier<Signature>, Signature, OutSignal, Combiner, Group, GroupCompare>
 {
 protected:
-    typedef conditional_modifier<detail::storage_modifier<Signature>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
+    typedef conditional_modifier<storage_modifier<Signature>, Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
 public:
-    typedef typename detail::storage_modifier<Signature>::parameter_types parameter_types;
+    typedef typename storage_modifier<Signature>::parameter_types parameter_types;
 
-    typedef typename detail::storage_modifier<Signature>::storable_types storable_types;
-    typedef typename detail::storage_modifier<Signature>::storable_vector storable_vector;
+    typedef typename storage_modifier<Signature>::storable_types storable_types;
+    typedef typename storage_modifier<Signature>::storable_vector storable_vector;
 
     /**	Initializes the stored parameter values using the provided sequence.
         \param[in] seq Sequence from which the stored parameter sequence is initialized from.
@@ -102,8 +116,8 @@ public:
         */    
     storage() {}
     
-    void open() {base_type::member.opened = true;}
-    void close() {base_type::member.opened = false;}
+    void open() {base_type::member.open();}
+    void close() {base_type::member.close();}
 
     /**	Sends a signal containing the stored parameter values.
         \return Return value of the sent signal.
@@ -185,7 +199,6 @@ public:
     }
 protected:
     storable_vector &stored() {return base_type::modification.stored;}
-
 };
 
 } } // namespace boost::signals

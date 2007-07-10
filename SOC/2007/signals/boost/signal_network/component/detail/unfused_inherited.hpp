@@ -16,6 +16,7 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
+#include <boost/preprocessor/punctuation/paren_if.hpp>
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
@@ -35,16 +36,16 @@
 #include <boost/fusion/functional/adapter/detail/nullary_call_base.hpp>
 
 #include <boost/mpl/size.hpp>
-
+#include <boost/utility/result_of.hpp>
 
 namespace boost { namespace fusion
 {
 
-    template <class Function, class CSequence, class Sequence, typename Enable=void> class unfused_inherited;
+    template <class Function, class Sequence, typename Enable=void> class unfused_inherited;
 
     //----- ---- --- -- - -  -   -
 
-    #define  BOOST_PP_ITERATION_PARAMS_1 (3, (0,BOOST_FUSION_UNFUSED_TYPED_MAX_ARITY, <boost/signal_network/detail/unfused_inherited.hpp>))
+    #define  BOOST_PP_ITERATION_PARAMS_1 (3, (0,BOOST_FUSION_UNFUSED_TYPED_MAX_ARITY, <boost/signal_network/component/detail/unfused_inherited.hpp>))
     #include BOOST_PP_ITERATE() 
 }}
 
@@ -56,41 +57,62 @@ namespace boost { namespace fusion
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-# if BOOST_PP_ITERATION_DEPTH()== 2
+#define OPERATOR_ARGS BOOST_PP_ITERATION()
 
-#define CONSTRUCTOR_ARGS BOOST_PP_FRAME_ITERATION(1)
-#define OPERATOR_ARGS BOOST_PP_FRAME_ITERATION(2)
-
-        template <class Function, class CSequence, class Sequence>
-        class unfused_inherited<Function, CSequence, Sequence,
+        template <class Function, class Sequence>
+        class unfused_inherited<Function, Sequence,
             typename boost::enable_if<
-            boost::mpl::and_<
-                boost::mpl::equal_to<
-                    boost::fusion::result_of::size<CSequence>,
-                    boost::mpl::int_<CONSTRUCTOR_ARGS> >,
                 boost::mpl::equal_to<
                     boost::fusion::result_of::size<Sequence>,
                     boost::mpl::int_<OPERATOR_ARGS> >
-            >  >::type >
+            >::type >
     : public Function
     {
-        typedef typename result_of::as_vector<CSequence>::type carg_vector_t;
+    protected:
+        typedef Function base_type;
         typedef typename result_of::as_vector<Sequence>::type arg_vector_t;
 
     public:
         using Function::operator();
 
 #define M(z,i,s) \
-    typename result_of::value_at_c<s,i>::type a##i
-#define ADAPTED_ARGS(z,i,s) \
-    typename detail::call_param<typename result_of::value_at_c<s,i>::type>::type a##i
+        typename result_of::value_at_c<s,i>::type a##i
+#define MT(z,i,s) \
+        typename result_of::value_at_c<s,i>::type
 
-        unfused_inherited(BOOST_PP_ENUM(CONSTRUCTOR_ARGS,ADAPTED_ARGS,carg_vector_t))
-            : Function(BOOST_PP_ENUM_PARAMS(CONSTRUCTOR_ARGS,a))
+        unfused_inherited()
         { }
 
+        template<typename T1>
+        unfused_inherited(const T1 &t1)
+            : Function(t1)
+        { }
+        
+        template<typename T1>
+            unfused_inherited(T1 &t1)
+            : Function(t1)
+        { }
+
+        template<typename T1, typename T2>
+            unfused_inherited(const T1 &t1, const T2 &t2)
+            : Function(t1, t2)
+        { }
+
+/*        template<typename F, typename Enable=void>
+        struct result;*/
+        
+        template<typename F>
+        struct result//<F>
+            : public Function::template result<F> {};
+        
+        template<typename F>
+        struct result<F(BOOST_PP_ENUM(OPERATOR_ARGS,MT,arg_vector_t))>
+        {
+            typedef typename boost::result_of<Function(const arg_vector_t &)>::type type;
+        };
+
 #if OPERATOR_ARGS>0
-        inline typename Function::template result<arg_vector_t>::type
+        inline typename boost::result_of<Function(const arg_vector_t &)>::type
         operator()(BOOST_PP_ENUM(OPERATOR_ARGS,M,arg_vector_t)) const
         {
             arg_vector_t arg(BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a));
@@ -98,7 +120,7 @@ namespace boost { namespace fusion
         }
 
 #if !BOOST_WORKAROUND(BOOST_MSVC, < 1400)
-        void//inline typename Function::template result<arg_vector_t>::type 
+        inline typename boost::result_of<Function(const arg_vector_t &)>::type
         operator()(BOOST_PP_ENUM(OPERATOR_ARGS,M,arg_vector_t)) 
         {
             arg_vector_t arg(BOOST_PP_ENUM_PARAMS(OPERATOR_ARGS,a));
@@ -106,8 +128,8 @@ namespace boost { namespace fusion
         }
 #endif
 
-#else
-        inline typename Function::template result<arg_vector_t>::type
+#else // OPERATOR_ARGS==0
+        inline typename boost::result_of<Function(const arg_vector_t &)>::type
         operator()() const
         {
             arg_vector_t arg;
@@ -115,7 +137,7 @@ namespace boost { namespace fusion
         }
 
 #if !BOOST_WORKAROUND(BOOST_MSVC, < 1400)
-        inline typename Function::template result<arg_vector_t>::type 
+        inline typename boost::result_of<Function(const arg_vector_t &)>::type
         operator()() 
         {
             arg_vector_t arg;
@@ -123,22 +145,14 @@ namespace boost { namespace fusion
         }
 #endif
 
-#endif
+#endif // OPERATOR_ARGS>0
 
 #undef M
-#undef ADAPTED_ARGS
+#undef MT
 
     };
 
-#undef CONSTRUCTOR_ARGS
 #undef OPERATOR_ARGS
-
-#else
-
-#define  BOOST_PP_ITERATION_PARAMS_2 (3, (0,BOOST_FUSION_UNFUSED_TYPED_MAX_ARITY,<boost/signal_network/detail/unfused_inherited.hpp>))
-#include BOOST_PP_ITERATE()
-
-#endif
 
 #endif // defined(BOOST_PP_IS_ITERATING)
 #endif

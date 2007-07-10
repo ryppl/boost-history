@@ -6,6 +6,7 @@
 #include <boost/signal_network/connection/detail/result_of_defined.hpp>
 #include <boost/fusion/sequence/container/map.hpp>
 #include <boost/signal_network/component/junction.hpp>
+#include <boost/signal_network/component/storage.hpp>
 
 #include <boost/test/included/test_exec_monitor.hpp>
 
@@ -37,6 +38,17 @@ int test_main(int, char* [])
 //    bool value = signals::detail::result_of_defined<fusion::map<>(void)>::value;
     BOOST_CHECK(!signals::detail::result_of_defined<fusion::map<>(int)>::value);
     BOOST_CHECK(!signals::detail::result_of_defined<fusion::map<>()>::value);
+    typedef boost::fusion::map<
+        boost::fusion::pair<
+            void (void),
+            boost::signals::slot_selector<void (void),boost::signals::storage<void (float),boost::signals::unfused> >
+        >,
+        boost::fusion::pair<
+            void (const boost::fusion::vector<> &),
+            boost::signals::slot_selector<void (const boost::fusion::vector<> &),boost::signals::storage<void (float),boost::signals::unfused> >
+        >
+    > send_slot_map_type;
+    BOOST_CHECK(!signals::detail::result_of_defined<send_slot_map_type()>::value);
     BOOST_CHECK(!signals::detail::result_of_defined<nothing(int)>::value);
     BOOST_CHECK(!signals::detail::result_of_defined<nothing()>::value);
     BOOST_CHECK(signals::detail::result_of_defined<has_result_type(int)>::value);

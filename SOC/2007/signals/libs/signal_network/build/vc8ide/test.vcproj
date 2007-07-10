@@ -60,7 +60,7 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\..\test\Jamfile.v2"
+			RelativePath="..\..\test\test_bind_object.cpp"
 			>
 		</File>
 		<File
@@ -69,6 +69,10 @@
 		</File>
 		<File
 			RelativePath="..\..\test\test_chain.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\test\test_connect.cpp"
 			>
 		</File>
 		<File
@@ -113,6 +117,10 @@
 		</File>
 		<File
 			RelativePath="..\..\test\test_pull.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\test\test_result_of_defined.cpp"
 			>
 		</File>
 		<File
