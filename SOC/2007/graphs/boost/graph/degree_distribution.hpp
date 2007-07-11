@@ -20,34 +20,52 @@ namespace boost
     {
         template <typename Dist, typename Graph>
         inline void
-        max_degree(Dist&, typename Graph::degree_size_type& m, typename Graph::vertex_descriptor v, const Graph& g)
+        max_degree(Dist&,
+                   typename graph_traits<Graph>::degree_size_type& m,
+                   typename graph_traits<Graph>::vertex_descriptor v,
+                   const Graph& g)
         { m = max(m, boost::degree(v, g)); }
 
         template <typename Graph>
         inline void
-        max_degree(not_given, typename Graph::degree_size_type&, typename Graph::vertex_descriptor, const Graph&)
+        max_degree(not_given,
+                   typename graph_traits<Graph>::degree_size_type&,
+                   typename graph_traits<Graph>::vertex_descriptor,
+                   const Graph&)
         {}
 
 
         template <typename Dist, typename Graph>
         inline void
-        max_out_degree(Dist&, typename Graph::degree_size_type& m, typename Graph::vertex_descriptor v, const Graph& g)
+        max_out_degree(Dist&,
+                       typename graph_traits<Graph>::degree_size_type& m,
+                       typename graph_traits<Graph>::vertex_descriptor v,
+                       const Graph& g)
         { m = max(m, boost::out_degree(v, g)); }
 
         template <typename Graph>
         inline void
-        max_out_degree(not_given, typename Graph::degree_size_type&, typename Graph::vertex_descriptor, const Graph&)
+        max_out_degree(not_given,
+                       typename graph_traits<Graph>::degree_size_type&,
+                       typename graph_traits<Graph>::vertex_descriptor,
+                       const Graph&)
         {}
 
 
         template <typename Dist, typename Graph>
         inline void
-        max_in_degree(Dist&, typename Graph::degree_size_type& m, typename Graph::vertex_descriptor v, const Graph& g)
+        max_in_degree(Dist&,
+                      typename graph_traits<Graph>::degree_size_type& m,
+                      typename graph_traits<Graph>::vertex_descriptor v,
+                      const Graph& g)
         { m = max(m, boost::in_degree(v, g)); }
 
         template <typename Graph>
         inline void
-        max_in_degree(not_given, typename Graph::degree_size_type&, typename Graph::vertex_descriptor, const Graph&)
+        max_in_degree(not_given,
+                      typename graph_traits<Graph>::degree_size_type&,
+                      typename graph_traits<Graph>::vertex_descriptor,
+                      const Graph&)
         { }
 
 
@@ -60,56 +78,80 @@ namespace boost
 
 
         template <typename Hist, typename Graph>
-        inline void observe_degree(Hist& d, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void observe_degree(Hist& d,
+                                   typename graph_traits<Graph>::vertex_descriptor v,
+                                   const Graph& g)
         { d[boost::degree(v, g)] += 1; }
 
         template <typename Graph>
-        inline void observe_degree(not_given, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void observe_degree(not_given,
+                                   typename graph_traits<Graph>::vertex_descriptor v,
+                                   const Graph& g)
         { }
 
 
         template <typename Hist, typename Graph>
-        inline void observe_out_degree(Hist& d, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void observe_out_degree(Hist& d,
+                                       typename graph_traits<Graph>::vertex_descriptor v,
+                                       const Graph& g)
         { d[boost::out_degree(v, g)] += 1; }
 
         template <typename Graph>
-        inline void observe_out_degree(not_given, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void observe_out_degree(not_given,
+                                       typename graph_traits<Graph>::vertex_descriptor v,
+                                       const Graph& g)
         { }
 
 
         template <typename Dist, typename Graph>
-        inline void observe_in_degree(Dist& d, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void observe_in_degree(Dist& d,
+                                      typename graph_traits<Graph>::vertex_descriptor v,
+                                      const Graph& g)
         { d[boost::in_degree(v, g)] += 1; }
 
         template <typename Graph>
-        inline void observe_in_degree(not_given, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void observe_in_degree(not_given,
+                                      typename graph_traits<Graph>::vertex_descriptor v,
+                                      const Graph& g)
         { }
 
 
         template <typename Hist, typename Graph>
-        inline void record_degree(Hist& h, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void record_degree(Hist& h,
+                                  typename graph_traits<Graph>::vertex_descriptor v,
+                                  const Graph& g)
         { h[boost::degree(v, g)].push_back(v); }
 
         template <typename Graph>
-        inline void record_degree(not_given, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void record_degree(not_given,
+                                  typename graph_traits<Graph>::vertex_descriptor v,
+                                  const Graph& g)
         { }
 
 
         template <typename Hist, typename Graph>
-        inline void record_out_degree(Hist& h, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void record_out_degree(Hist& h,
+                                      typename graph_traits<Graph>::vertex_descriptor v,
+                                      const Graph& g)
         { h[boost::out_degree(v, g)].push_back(v); }
 
         template <typename Graph>
-        inline void record_out_degree(not_given, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void record_out_degree(not_given,
+                                      typename graph_traits<Graph>::vertex_descriptor v,
+                                      const Graph& g)
         { }
 
 
         template <typename Hist, typename Graph>
-        inline void record_in_degree(Hist& h, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void record_in_degree(Hist& h,
+                                     typename graph_traits<Graph>::vertex_descriptor v,
+                                     const Graph& g)
         { h[boost::in_degree(v, g)].push_back(v); }
 
         template <typename Graph>
-        inline void record_in_degree(not_given, typename Graph::vertex_descriptor v, const Graph& g)
+        inline void record_in_degree(not_given,
+                                     typename graph_traits<Graph>::vertex_descriptor v,
+                                     const Graph& g)
         { }
     }
 
@@ -119,11 +161,11 @@ namespace boost
         (required (graph, *))
         (optional
             (out(distribution), *, not_given())
-            (out(in_distribution), *, not_given())
-            (out(out_distribution), *, not_given()))
+            (out(out_distribution), *, not_given())
+            (out(in_distribution), *, not_given()))
         )
     {
-        typename graph_type::vertex_iterator i, end;
+        typename graph_traits<graph_type>::vertex_iterator i, end;
 
         // part 1: find the max observable degrees for the graph so we
         // only have to resize once. note that this relaxes requirements on
@@ -150,7 +192,7 @@ namespace boost
             (out(in_distribution), *, not_given()))
         )
     {
-        typename graph_type::vertex_iterator i, end;
+        typename graph_traits<graph_type>::vertex_iterator i, end;
 
         // part 1: initialize distributions
         initialize_distribution(graph,
@@ -177,7 +219,7 @@ namespace boost
             (out(in_histogram), *, not_given()))
         )
     {
-        typename graph_type::vertex_iterator i, end;
+        typename graph_traits<graph_type>::vertex_iterator i, end;
 
         // part 1: initialize distributions
         initialize_distribution(graph,
