@@ -36,7 +36,7 @@ can define a class with the BFS Visitor interface and pass and object of the cla
         [`vis.examine_vertex(v,g)`]
         [
             This is invoked on a vertex as it is popped from the queue. This happens immediately
-            before `examine_edge(v,g)` s invoked on each of the out-edges of vertex `u`.
+            before `examine_edge(v,g)` s invoked on each of the out-edges of vertex `v`.
 
             *Returns* `void`
         ]

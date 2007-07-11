@@ -6,6 +6,10 @@
  /]
 
 [section Undirected Graph]
+
+    template <class VertexProperties, class EdgeProperties, class GraphProperties>
+    class undirected_graph;
+
 This section provides detailed information about the `undirected_graph` class,
 its associated types, member functions and non-member interface. An undirected graph
 is one in which edges have no direction - this is to say that edges can be "traveled"
@@ -113,6 +117,10 @@ Developers of generic algoriths should be aware that, when generalizing an algor
 for both directed and undirected graphs, it is better to use the `out_degree(g)`
 function to access out-edges since it is guaranteed by every other graph class.
 
+[h5 Model Of]
+[BoostIncidenceGraph], [BoostVertexListGraph], [BoostEdgeListGraph], [BoostAdjacencyGraph],
+[BoostMutableGraph], and [BoostPropertyGraph].
+
 [h4 Template Parameters]
 There are only three parameters to the `undirected_graph` class.
 [table
@@ -134,15 +142,11 @@ There are only three parameters to the `undirected_graph` class.
     ]
 ]
 
-[h5 Model Of]
-[BoostIncidenceGraph], [BoostVertexListGraph], [BoostEdgeListGraph], [BoostAdjacencyGraph],
-[BoostMutableGraph], and [BoostPropertyGraph].
-
 Additionally, the `undirected_graph` class provides a non-constant time implementation
 of the [BoostAdjacencyMatrix] associated function `edge(u,v,g)`, but does not model
 the concept.
 
-[h5 Where Defined]
+[h4 Where Defined]
 `boost/graph/undirected_graph.hpp`
 
 [h4 Associated Types]

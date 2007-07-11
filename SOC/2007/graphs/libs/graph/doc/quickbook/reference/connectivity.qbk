@@ -15,8 +15,8 @@
 
 The `connectivity()` algorithm is essentially a wrapper around the
 [boost_connected_components] algorithm, but provides additional (and optional)
-functionality for working with connected components. The parameters are, with
-the exeption of `_components`, have the same purpose and requirements as
+functionality for working with connected components. The parameters have, with
+the exeption of `_components`, the same purpose and requirements as
 documented in [boost_connected_components].
 
 If specified, the `_components` argument is populated with the vertices that

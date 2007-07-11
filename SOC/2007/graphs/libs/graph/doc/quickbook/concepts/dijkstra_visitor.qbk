@@ -5,68 +5,83 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Graph]
-The Graph concept contains a few requirements that are common to all the graph concepts.
-These include some associated types for vertex_descriptor, edge_descriptor, etc. One
-should note that a model of Graph is not required to be a model of Assignable, so algorithms
-should pass graph objects by reference (or `const` reference).
+[section Dijkstra Visitor]
+This concept defines the visitor interface for [boost_dijkstra_shortest_paths] and related
+algorithms. The user can create a class that matches this interface, and then pass objects
+of the class into [boost_dijkstra_shortest_paths] to augment the actions taken during the
+search.
 
-[h4 Associated Types]
-[table
-    [[Type] [Description]]
-    [
-        [`graph_traits<G>::vertex_descriptor`]
-        [
-            A vertex descriptor corresponds to a unique vertex in a graph. A vertex descriptor
-            must be DefaultConstructible, Assignable, and EqualityComparable. Vertex
-            descriptors are almost always passed by value.
-        ]
-    ]
-    [
-        [`graph_traits<G>::edge_descriptor`]
-        [
-            An edge descriptor corresponds to a unqie edge /(u,v)/ in a graph. An edge descriptor
-            must be DefaultConstructible, Assignable, and EqualityComparable. Edge descriptors
-            are almost always passed by value.
-        ]
-    ]
-    [
-        [`graph_traits<G>::directed_category`]
-        [
-            This type shall be convertible to `directed_tag` or `undirected_tag`.
-        ]
-    ]
-    [
-        [`graph_traits<G>::edge_parallel_category`]
-        [
-            This describes whether the graph class allows the insertion of parallel edges
-            (multiple edges between the same source and target vertices). The two tags are
-            `allow_parallel_edge_tag` and `disallow_parallel_edge_tag`.
-        ]
-    ]
-    [
-        [`graph_traits<G>::traversal_category`]
-        [
-            This describes the ways in which the vertices and edge of the graph can be visited.
-            The choices are `incidence_graph_tag`, `adjacency_graph_tag`, `bidirectional_graph_tag`,
-            `vertex_list_graph_tag`, `edge_list_graph_tag`, and `adjacency_matrix_tag`.
-        ]
-    ]
-]
+[h4 Refinement Of]
+[BoostVisitor]
 
 [h4 Valid Expressions]
 [table
     [[Expression] [Description]]
     [
-        [`graph_traits<G>::null_vertex()`]
+        [`vis.initialize_vertex(v,g)`]
         [
-            Returns a special `vertex_descriptor` which does not refer to any vertex for graphs
-            of type `G`. Note that default initialization of `vertex_descriptors` are /not/
-            guaranteed to be equal to then `null_vertex()`.
+            This is invoked on every vertex of the graph before the start of the graph search.
 
-            *Returns* `vertex_descriptor`
+            *Returns* `void`
+        ]
+    ]
+    [
+        [`vis.discover_vertex(v,g)`]
+        [
+            This is invoked when a vertex is encountered for the first time. This happens immediately
+            before `examine_edge()` is invoked on each of the out-edges of `v`.
+
+            *Returns* `void`
+        ]
+    ]
+    [
+        [`vis.examine_vertex(v,g)`]
+        [
+            This is invoked on a vertex as it is popped from the queue. This happens immediately
+            before `examine_edge(v,g)` s invoked on each of the out-edges of vertex `v`.
+
+            *Returns* `void`
+        ]
+    ]
+    [
+        [`vis.examine_edge(v,g)`]
+        [
+            This is invoked on every out-edge of each vertex after it is discovered.
+
+            *Returns* `void`
+        ]
+    ]
+    [
+        [`vis.edge_relaxed(e,g)`]
+        [
+            If the relaxation predicate holds for this given edge then this method is invoked.
+            See [boost_dijkstra_shortest_paths] for more information on relaxation.
+
+            *Returns* `void`
+        ]
+    ]
+    [
+        [`vis.edge_not_relaxed(e,g)`]
+        [
+            If the relaxation predicate does not hold for this edge, then this method is invoked.
+            See [boost_dijkstra_shortest_paths] for more information on relaxation.
+
+            *Returns* `void`
+        ]
+    ]
+    [
+        [`vis.finish_vertex(v,g)`]
+        [
+            This is invoked on a vertex after all of its out edges have been added to the search
+            tree and all of the adjacent vertices have been discovered (but before their out edgs)
+            have been examined).
+
+            *Returns* `void`
         ]
     ]
 ]
+
+[h4 Models]
+* [boost_dijkstra_visitor]
 
 [endsect]

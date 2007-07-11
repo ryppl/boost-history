@@ -16,6 +16,13 @@
 [section Traits Classes]
 [endsect]
 
+[section Event Visitors]
+[include predecessor_recorder.qbk]
+[include distance_recorder.qbk]
+[include time_stamper.qbk]
+[include property_writer.qbk]
+[endsect]
+
 [section Algorithms]
 [section Core Algorithms]
 [include breadth_first_search.qbk]
