@@ -7,7 +7,7 @@
 //  
 //@SEE_ALSO: {hds_concepts.hpp}
 //
-//@DESCRIPTION: This file provide a single class template, 'halfedge_ds', which
+//@DESCRIPTION: This file provides a single class template, 'halfedge_ds', which
 // accepts many template parameters that can be used to govern its
 // implementation.  Most of these parameters can be chosen as selectors (see
 // 'hds_selectors' component).
