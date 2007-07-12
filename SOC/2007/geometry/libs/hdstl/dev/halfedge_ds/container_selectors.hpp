@@ -38,7 +38,7 @@
 //      std::string   familyName;
 //      int           securityLevel;
 //      Element(int uId, std::string name, int level)
-//      : userId(uId), familyName(name), selected(level) {}
+//      : userId(uId), familyName(name), securityLevel(level) {}
 //  };
 //  bool operator<(const Element& lhs, const Element& rhs) {
 //      return lhs.userId < rhs.userId;
@@ -55,8 +55,10 @@
 //
 //    public:
 //      // TYPES
-//      typedef typename container_gen<ContainerS>::type       container_type;
-//      typedef typename container_gen<ContainerS>::descriptor container_type;
+//      typedef container_gen<ContainerS, Element>       container_generator;
+//      typedef typename container_generator::type       container_type;
+//      typedef typename container_generator::descriptor descriptor;
+//      typedef typename container_generator::iterator   iterator;
 //
 //    private:
 //      // DATA
@@ -64,22 +66,20 @@
 //
 //    public:
 //      // CREATORS
-//      ElementCollection();
+//      ElementCollection() {}
 //          // Create an empty collection of 'Element' objects.
 //
-//      template <Iterator>
-//      ElementCollection(Iterator elementBegin, Iterator elementEnd);
+//      template <typename Iterator>
+//      ElementCollection(Iterator elementBegin, Iterator elementEnd)
 //          // Create a collection of 'Element' objects initially containing
 //          // the objects in the specified range '[elementBegin, elementEnd)'.
+//      : m_collection(elementBegin, elementEnd) {}
 //
 //      // MANIPULATORS
-//      iterator appendElement(Element const& object);
-//          // Append the specified 'object' to this collection.
-//
-//      iterator begin() { return m_collection.begin(); }
+//      iterator begin() { return container_generator::container_begin(m_collection); }
 //          // Return an iterator pointing to the beginning of this collection.
 //
-//      iterator end() { return m_collection.end(); }
+//      iterator end() { return container_generator::container_end(m_collection); }
 //          // Return an iterator pointing past the end of this collection.
 //
 //      container_type& theContainer() { return m_collection; }
@@ -93,23 +93,40 @@
 // We can now use the collection as follows.  First let us create the
 // individual elements:
 //..
-//  Element george(632, "Harrison",  +78);
-//  Element john  (834, "Lennon",    +255);
-//  Element paul  (432, "McCartney", +126);
-//  Element ringo (432, "Starr",     +123);
-//  Element theBeatles[] = { george, john, paul, ringo };
+//  int main() {
+//      Element george(632,  "Harrison",  +78);
+//      Element john  (834,  "Lennon",    +255);
+//      Element paul  (932,  "McCartney", +126);
+//      Element ringo (1432, "Starr",     +123);
+//      Element theBeatles[] = { george, john, paul, ringo };
 //..
 // We can use a collection as a searchable set:
 //..
-//  ElementCollection<setS> setCollection(theBeatles, theBeatles + 4);
-//  assert(setCollection.container().find(843) == setCollection.end());
-//  assert(setCollection.container()[834]->familyName == "Lennon");
+//      ElementCollection<setS> setCollection(theBeatles, theBeatles + 4);
+//      Element unknown(843, "Unkown",   +0);
+//      BOOST_CHECK(( setCollection.theContainer().find(unknown) == setCollection.end() ));
+//      BOOST_CHECK(( setCollection.theContainer().find(john)->familyName == "Lennon" ));
 //..
-// or as an indexed array:
+// and access the iterators of the collection (here identical to the
+// iterators of the container):
 //..
-//  ElementCollection<vecS> vectorCollection(theBeatles, theBeatles + 4);
-//  assert(setCollection.container()[1]->familyName == "Lennon");
-//  assert(setCollection.container()[3]->familyName == "Starr");
+//      BOOST_CHECK(( setCollection.begin()->familyName == "Harrison" ));
+//      BOOST_CHECK(( (--setCollection.end())->familyName == "Starr" ));
+//..
+// or we can use the collection as an indexed array:
+//..
+//      ElementCollection<vecS> vectorCollection(theBeatles, theBeatles + 4);
+//      BOOST_CHECK(( vectorCollection.theContainer()[1].familyName == "Lennon" ));
+//      BOOST_CHECK(( vectorCollection.theContainer()[3].familyName == "Starr" ));
+//..
+// and access the iterators of the collection (whose value type here is the
+// descriptor, not the same as the iterators of the container):
+//..
+//      BOOST_CHECK( *vectorCollection.begin() == 0 );
+//      BOOST_CHECK( *vectorCollection.end() == 4 );
+//
+//      return true;
+//  }
 //..
 
 #ifndef BOOST_HDSTL_CONTAINER_SELECTORS_HPP
