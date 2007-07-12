@@ -10,7 +10,6 @@
 // boost includes
 #include <boost/graph/named_parameters.hpp>
 #include <boost/graph/properties.hpp>
-#include <boost/graph/adjacency_list.hpp>
 
 namespace boost
 {
@@ -67,15 +66,25 @@ namespace boost
     mean_geodesic_distance(const Graph& g,
                            DistanceMap dist)
     {
-        return (double)detail::sum_distances(g, dist) / (double)num_vertices(g);
+        return double(detail::sum_distances(g, dist)) / double(num_vertices(g));
     }
+
+    /*
+    template <typename Graph, typename DistanceMap, typename T = double>
+    inline T
+    mean_geodesic_distance(const Graph& g,
+                           DistanceMap dist)
+    {
+        return T(detail::sum_distances(g, dist)) / T(num_vertices(g));
+    }
+    */
 
     template <typename Graph, typename DistanceMap>
     inline double
     closeness(const Graph& g,
               DistanceMap dist)
     {
-        return 1.0 / (double)detail::sum_distances(g, dist);
+        return double(1.0) / double(detail::sum_distances(g, dist));
     }
 
     // Can we abstract the computation of max on distances to max of
@@ -105,7 +114,7 @@ namespace boost
     void
     eccentricities(const Graph& g, DistanceMatrix& dist, EccentricityMap ecc)
     {
-        typename Graph::vertex_iterator i, j, end;
+        typename graph_traits<Graph>::vertex_iterator i, j, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
             // compute the max eccentricity "in-place"
             typename property_traits<EccentricityMap>::value_type& ei = ecc[*i];
@@ -122,7 +131,7 @@ namespace boost
         typedef typename property_traits<EccentricityMap>::value_type eccentricity;
 
         eccentricity ret = ecc[*vertices(g).first];
-        typename Graph::vertex_iterator i, end;
+        typename graph_traits<Graph>::vertex_iterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
             ret = std::min(ret, ecc[*i]);
         }
@@ -136,7 +145,7 @@ namespace boost
         typedef typename property_traits<EccentricityMap>::value_type eccentricity;
 
         eccentricity ret = ecc[*vertices(g).first];
-        typename Graph::vertex_iterator i, end;
+        typename graph_traits<Graph>::vertex_iterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
             ret = std::max(ret, ecc[*i]);
         }
@@ -147,20 +156,17 @@ namespace boost
     // some of the other properties (like eccentricities, radius, and
     // diameter).
 
-    namespace detail
+    template <typename Graph, typename EccentricityMap, typename Inserter>
+    inline void
+    radial_group(const Graph& g,
+                 EccentricityMap ecc,
+                 Inserter ins,
+                 typename property_traits<EccentricityMap>::value_type level)
     {
-        template <typename Graph, typename EccentricityMap, typename Inserter>
-        inline void
-        radial_grouping(const Graph& g,
-                        EccentricityMap ecc,
-                        Inserter ins,
-                        typename property_traits<EccentricityMap>::value_type level)
-        {
-            typename Graph::vertex_iterator i, end;
-            for(tie(i, end) = vertices(g); i != end; ++i) {
-                if(ecc[*i] == level) {
-                    *ins++ = *i;
-                }
+        typename Graph::vertex_iterator i, end;
+        for(tie(i, end) = vertices(g); i != end; ++i) {
+            if(ecc[*i] == level) {
+                *ins++ = *i;
             }
         }
     }
@@ -172,7 +178,7 @@ namespace boost
            EccentricityMap ecc,
            Inserter ins)
     {
-        return detail::radial_grouping(g, ecc, ins, r);
+        radial_group(g, ecc, ins, r);
     }
 
     template <typename Graph, typename EccentricityMap, typename Inserter>
@@ -181,7 +187,7 @@ namespace boost
            EccentricityMap ecc,
            Inserter ins)
     {
-        return detail::radial_grouping(g, ecc, ins, radius(g, ecc));
+        radial_group(g, ecc, ins, radius(g, ecc));
     }
 
 
@@ -192,7 +198,7 @@ namespace boost
               EccentricityMap ecc,
               Inserter ins)
     {
-        return detail::radial_grouping(g, ecc, ins, d);
+        radial_group(g, ecc, ins, d);
     }
 
     template <typename Graph, typename EccentricityMap, typename Inserter>
@@ -201,7 +207,7 @@ namespace boost
               EccentricityMap ecc,
               Inserter ins)
     {
-        return detail::radial_grouping(g, ecc, ins, diameter(g, ecc));
+        radial_group(g, ecc, ins, diameter(g, ecc));
     }
 }
 

@@ -8,7 +8,6 @@
 #define BOOST_GRAPH_DEGREE_DISTRIBUTION_HXX
 
 #include <boost/graph/named_parameters.hpp>
-#include <boost/graph/adjacency_list.hpp>
 
 namespace boost
 {
@@ -24,7 +23,7 @@ namespace boost
                    typename graph_traits<Graph>::degree_size_type& m,
                    typename graph_traits<Graph>::vertex_descriptor v,
                    const Graph& g)
-        { m = max(m, boost::degree(v, g)); }
+        { m = max(m, degree(v, g)); }
 
         template <typename Graph>
         inline void
@@ -41,7 +40,7 @@ namespace boost
                        typename graph_traits<Graph>::degree_size_type& m,
                        typename graph_traits<Graph>::vertex_descriptor v,
                        const Graph& g)
-        { m = max(m, boost::out_degree(v, g)); }
+        { m = max(m, out_degree(v, g)); }
 
         template <typename Graph>
         inline void
@@ -58,7 +57,7 @@ namespace boost
                       typename graph_traits<Graph>::degree_size_type& m,
                       typename graph_traits<Graph>::vertex_descriptor v,
                       const Graph& g)
-        { m = max(m, boost::in_degree(v, g)); }
+        { m = max(m, in_degree(v, g)); }
 
         template <typename Graph>
         inline void
@@ -81,7 +80,7 @@ namespace boost
         inline void observe_degree(Hist& d,
                                    typename graph_traits<Graph>::vertex_descriptor v,
                                    const Graph& g)
-        { d[boost::degree(v, g)] += 1; }
+        { d[degree(v, g)] += 1; }
 
         template <typename Graph>
         inline void observe_degree(not_given,
@@ -94,7 +93,7 @@ namespace boost
         inline void observe_out_degree(Hist& d,
                                        typename graph_traits<Graph>::vertex_descriptor v,
                                        const Graph& g)
-        { d[boost::out_degree(v, g)] += 1; }
+        { d[out_degree(v, g)] += 1; }
 
         template <typename Graph>
         inline void observe_out_degree(not_given,
@@ -107,7 +106,7 @@ namespace boost
         inline void observe_in_degree(Dist& d,
                                       typename graph_traits<Graph>::vertex_descriptor v,
                                       const Graph& g)
-        { d[boost::in_degree(v, g)] += 1; }
+        { d[in_degree(v, g)] += 1; }
 
         template <typename Graph>
         inline void observe_in_degree(not_given,
@@ -120,7 +119,7 @@ namespace boost
         inline void record_degree(Hist& h,
                                   typename graph_traits<Graph>::vertex_descriptor v,
                                   const Graph& g)
-        { h[boost::degree(v, g)].push_back(v); }
+        { h[degree(v, g)].push_back(v); }
 
         template <typename Graph>
         inline void record_degree(not_given,
@@ -133,7 +132,7 @@ namespace boost
         inline void record_out_degree(Hist& h,
                                       typename graph_traits<Graph>::vertex_descriptor v,
                                       const Graph& g)
-        { h[boost::out_degree(v, g)].push_back(v); }
+        { h[out_degree(v, g)].push_back(v); }
 
         template <typename Graph>
         inline void record_out_degree(not_given,
@@ -146,7 +145,7 @@ namespace boost
         inline void record_in_degree(Hist& h,
                                      typename graph_traits<Graph>::vertex_descriptor v,
                                      const Graph& g)
-        { h[boost::in_degree(v, g)].push_back(v); }
+        { h[in_degree(v, g)].push_back(v); }
 
         template <typename Graph>
         inline void record_in_degree(not_given,
