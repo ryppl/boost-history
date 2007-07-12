@@ -1,0 +1,43 @@
+[section Interlocked Cage]
+
+[heading Description]
+
+An [concept Interlocked Cage] is a template whose instantiations are types which
+manage the order of visibility of read and write operations that occur during
+their objects' lifetime, effectively providing those operations with potentially
+more restrictive ordering constraints. Semantics for such cages may be specified
+by the programmer at compile-time via explicit template arguments.
+
+[heading Concept of]
+
+* __interlocked_memory_cage__
+* __interlocked_compiler_cage__
+
+[variablelist Notation
+[[[~name]]          [An [concept Interlocked Cage].]                        ]
+[[`S1`]             [An __interlocked_semantic_type__.]                        ]
+[[`S2`]             [An __interlocked_semantic_type__.]                        ]
+[[`B`]              [A type which is an instantiation of `name` with or without
+                     additional /cv-qualification/.
+                    ]                                                          ]
+[[`b`]              [An object of type `B&`.]                                  ]
+]
+
+[heading Expression Requirements]
+
+[table Interlocked Operation Requirements
+[[Expression]                             [Pre/Post-Condition]                 ]
+[[`name<>()`]                             [Instantiates a cage with the
+                                           default semantics (`sequential`).
+                                          ]                                    ]
+[[`name<S1>()`]                           [Instantiates a cage with the
+                                           specified semantics.
+                                          ]                                    ]
+[[`name<S1,S2>()`]                        [Instantiates a cage with the
+                                           semantic requirements of `S1` which
+                                           are not already specified by `S2`.
+                                          ]                                    ]
+[[`b.~B()`]                               [Destroys the cage `b`.]          ]
+]
+
+[endsect]

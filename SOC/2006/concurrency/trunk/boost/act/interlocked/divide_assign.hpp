@@ -6,12 +6,13 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_SUBTRACT_ASSIGN_FWD_HPP
-#define BOOST_ACT_INTERLOCKED_SUBTRACT_ASSIGN_FWD_HPP
+#ifndef BOOST_ACT_INTERLOCKED_DIVIDE_ASSIGN_HPP
+#define BOOST_ACT_INTERLOCKED_DIVIDE_ASSIGN_HPP
 
-#include <boost/act/interlocked/subtract_assign/subtract_assign_fwd.hpp>
-#include <boost/act/interlocked/subtract_assign/subtract_assign_acquire_fwd.hpp>
-#include <boost/act/interlocked/subtract_assign/subtract_assign_release_fwd.hpp>
-#include <boost/act/interlocked/subtract_assign/subtract_assign_result_fwd.hpp>
+#include <boost/act/interlocked/divide_assign/divide_assign.hpp>
+#include <boost/act/interlocked/divide_assign/divide_assign_acquire.hpp>
+#include <boost/act/interlocked/divide_assign/divide_assign_release.hpp>
+#include <boost/act/interlocked/divide_assign/divide_assign_acq_rel.hpp>
+#include <boost/act/interlocked/divide_assign/divide_assign_unordered.hpp>
 
 #endif

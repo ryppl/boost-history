@@ -36,19 +36,11 @@ or if `default_` semantics are specified, then the operation is performed with
 
 [table Interlocked Type Requirements
 [[Expression]           [Return Type][Pre/Post-Condition]                      ]
-[[`load( i )`]          [`IU`]       [Returns the value stored in `i`. This
-                                      function is an
-                                      __interlocked_operation__ and defaults to
-                                      `acquire` semantics. Allowable semantics
-                                      for this operation are `unordered` and
-                                      `acquire`.
+[[`load( i )`]          [`IU`]       [Returns the value stored in `i`. `load` is
+                                      an __interlocked_operation__.
                                      ]                                         ]
 [[`store( i, c1 )`]     [`void`]     [Stores the value of `c1` to object `i`.
-                                      This function is an
-                                      __interlocked_operation__ and defaults to
-                                      `release` semantics. Allowable semantics
-                                      for this operation are `unordered` and
-                                      `release`.
+                                      `store` is an __interlocked_operation__.
                                      ]                                         ]
 ]
 
@@ -64,8 +56,12 @@ or if `default_` semantics are specified, then the operation is performed with
   // load headers.
   #include <boost/act/interlocked/load.hpp>
   #include <boost/act/interlocked/load/load.hpp>
-  #include <boost/act/interlocked/load/load_acquire.hpp>
+  #include <boost/act/interlocked/load/load_thread_unsafe.hpp>
   #include <boost/act/interlocked/load/load_unordered.hpp>
+  #include <boost/act/interlocked/load/load_acquire.hpp>
+  #include <boost/act/interlocked/load/load_release.hpp>
+  #include <boost/act/interlocked/load/load_acq_rel.hpp>
+  #include <boost/act/interlocked/load/load_sequential.hpp>
   
   // Forward declarations.
   #include <boost/act/interlocked/load_fwd.hpp>

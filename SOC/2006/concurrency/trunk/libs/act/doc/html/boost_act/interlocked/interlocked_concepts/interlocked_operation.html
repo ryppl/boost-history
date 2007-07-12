@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Operation</title><link rel="stylesheet" href="../../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked_concepts.html" title="Interlocked Concepts" /><link rel="prev" href="../interlocked_concepts.html" title="Interlocked Concepts" /><link rel="next" href="interlocked_type.html" title="Interlocked Type" /><script type="text/javascript" src="../../../../../doc/javascript/main.js"></script>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Operation</title><link rel="stylesheet" href="../../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked_concepts.html" title="Interlocked Concepts" /><link rel="prev" href="../interlocked_concepts.html" title="Interlocked Concepts" /><link rel="next" href="interlocked_cage.html" title="Interlocked Cage" /><script type="text/javascript" src="../../../../../doc/javascript/main.js"></script>
       <script type="text/javascript" > <!--
          boostscript.init( new Array(
             boostscript.nested_links,
@@ -71,7 +71,7 @@
         </a>
       </div>
       <div class="spirit-nav-icon">
-        <a accesskey="n" href="interlocked_type.html">
+        <a accesskey="n" href="interlocked_cage.html">
           <div class="next-icon"></div>
         </a>
       </div>
@@ -89,14 +89,15 @@
               </div>
             </div>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_operation.description"></a>
-            <h6><a id="id455469"></a>
+            <h6><a id="id455480"></a>
           <a href="interlocked_operation.html#boost_act.interlocked.interlocked_concepts.interlocked_operation.description">Description</a>
         </h6>
             <p>
-          An <code class="literal">Interlocked Operation</code> is a function which provides
-          guarantees concerning order and visibility of read and write operations
-          with respect to multiple threads, often with semantics which may be specified
-          by users at the call site.
+          An <code class="literal">Interlocked Operation</code> is a function template whose
+          instantiations provide guarantees about atomicity and order of visibility
+          of read and write operations with respect to multiple threads. Semantics
+          for such operations may be specified by the programmer at compile-time
+          via explicit template arguments.
         </p>
             <p>
           In order to be considered a valid <code class="literal">Interlocked Operation</code>,
@@ -126,8 +127,8 @@
                   </span>
                 </dt>
                 <dd>
-            A <a href="interlocked_operation.html#boost_act.interlocked.interlocked_concepts.interlocked_operation.semantic_type">
-            <code class="literal">Semantic Type</code></a>.
+            An <a href="interlocked_semantic_type.html" title="Interlocked Semantic Type">
+            <code class="literal">Interlocked Semantic Type</code></a>.
           </dd>
                 <dt>
                   <span class="term">
@@ -142,12 +143,12 @@
               </dl>
             </div>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_operation.expression_requirements"></a>
-            <h6><a id="id455609"></a>
+            <h6><a id="id455620"></a>
           <a href="interlocked_operation.html#boost_act.interlocked.interlocked_concepts.interlocked_operation.expression_requirements">Expression
           Requirements</a>
         </h6>
             <div class="table">
-              <a id="id455628"></a>
+              <a id="id455638"></a>
               <p class="title">
                 <b>Table 2. Interlocked Operation Requirements</b>
               </p>
@@ -181,7 +182,11 @@
                       <td>
               <p>
                 Performs the operation with the default semantics as specified for
-                that operation.
+                that operation. <span class="emphasis"><em>Note: Currently, all interlocked operations
+                in this library default to <code class="computeroutput"><span class="identifier">sequential</span></code>
+                semantics, which will likely become the required default for all
+                <code class="literal">Interlocked Operations</code> in future versions. --end
+                note</em></span>
               </p>
               </td>
                     </tr>
@@ -193,15 +198,7 @@
               </td>
                       <td>
               <p>
-                Performs the operation with the specified semantics. <span class="emphasis"><em>Note:
-                Not all <code class="literal">Interlocked Operations</code> support every
-                <a href="interlocked_operation.html#boost_act.interlocked.interlocked_concepts.interlocked_operation.semantic_type">
-                <code class="literal">Semantic Type</code></a>. Refer to documentation for
-                the corresponding operation for exactly which semantics are supported
-                for that operation. All <code class="literal">Interlocked Operations</code>
-                must support the <code class="computeroutput"><span class="identifier">default_</span></code>
-                <a href="interlocked_operation.html#boost_act.interlocked.interlocked_concepts.interlocked_operation.semantic_type">
-                <code class="literal">Semantic Type</code></a>. --end note</em></span>
+                Performs the operation with the specified semantics.
               </p>
               </td>
                     </tr>
@@ -210,237 +207,17 @@
               </div>
             </div>
             <br class="table-break" />
-            <a id="boost_act.interlocked.interlocked_concepts.interlocked_operation.semantic_type"></a>
-            <h6><a id="id455796"></a>
-          <a href="interlocked_operation.html#boost_act.interlocked.interlocked_concepts.interlocked_operation.semantic_type">Semantic
-          Type</a>
-        </h6>
-            <p>
-          While all <code class="literal">Interlocked Operations</code> specify certain guarantees
-          by default, these may often be toggled to make an operation's ordering
-          more or less constrained by passing a <code class="literal">Semantic Type</code>
-          as an explicit template argument to the corresponding template. Not all
-          <code class="literal">Interlocked Operations</code> support all <code class="literal">Semantic
-          Types</code>.
-        </p>
-            <div class="important">
-              <div class="box-outer-wrapper">
-                <div class="box-top-left"></div>
-                <div class="box-top-right"></div>
-                <div class="box-top"></div>
-                <div class="box-inner-wrapper">
-                  <div class="admonition-graphic">
-                    <div class="admonition-icon">
-                      <div class="important-icon"></div>
-                    </div>
-                  </div>
-                  <div class="admonition-body">
-                    <div class="admonition-title">Important</div>
-                    <div class="admonition-content">
-                      <p>
-            </p>
-                      <p>
-              If you are unsure as to which semantics you should use for a given
-              situation, it is generally safest to use the default semantics of the
-              corresponding <code class="literal">Interlocked Operation</code>. If efficiency
-              is important for your application, you should prefer to use the least-restrictive
-              semantics that you can without breaking allowable ordering of visibility
-              between threads.
-            </p>
-                      <p>
-          </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="box-bottom-left"></div>
-                <div class="box-bottom-right"></div>
-                <div class="box-bottom"></div>
-              </div>
-            </div>
-            <div class="table">
-              <a id="id455862"></a>
-              <p class="title">
-                <b>Table 3. Semantic Types</b>
-              </p>
-              <div class="table-contents">
-                <table class="table" summary="Semantic Types">
-                  <colgroup>
-                    <col />
-                    <col />
-                  </colgroup>
-                  <thead>
-                    <tr>
-                      <th>
-              <p>
-                Type
-              </p>
-              </th>
-                      <th>
-              <p>
-                Ordering Guarantee
-              </p>
-              </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">unordered</span></code>
-              </p>
-              </td>
-                      <td>
-              <p>
-                No ordering guarantee.
-              </p>
-              </td>
-                    </tr>
-                    <tr>
-                      <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">acquire</span></code>
-              </p>
-              </td>
-                      <td>
-              <p>
-                The operation is made visible before all subsequent instructions.
-                <code class="computeroutput"><span class="identifier">acquire</span></code> semantics
-                are generally used for read or read-write operations.
-              </p>
-              </td>
-                    </tr>
-                    <tr>
-                      <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">release</span></code>
-              </p>
-              </td>
-                      <td>
-              <p>
-                The operation is made visible after all prior instructions. <code class="computeroutput"><span class="identifier">release</span></code> semantics are generally
-                used for write or read-write operations.
-              </p>
-              </td>
-                    </tr>
-                    <tr>
-                      <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">acq_rel</span></code>
-              </p>
-              </td>
-                      <td>
-              <p>
-                Combines the ordering guarantees of both <code class="computeroutput"><span class="identifier">acquire</span></code>
-                and <code class="computeroutput"><span class="identifier">release</span></code>. <code class="computeroutput"><span class="identifier">acq_rel</span></code> semantics are generally
-                used for read-write operations only.
-              </p>
-              </td>
-                    </tr>
-                    <tr>
-                      <td>
-              <p>
-                <code class="computeroutput"><span class="identifier">default_</span></code>
-              </p>
-              </td>
-                      <td>
-              <p>
-                Uses the default ordering guarantees as specified by the corresponding
-                <code class="literal">Interlocked Operation</code>. This <code class="literal">Semantic
-                Type</code> must be supported by all <code class="literal">Interlocked Operations</code>.
-              </p>
-              </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <br class="table-break" />
-            <div class="note">
-              <div class="box-outer-wrapper">
-                <div class="box-top-left"></div>
-                <div class="box-top-right"></div>
-                <div class="box-top"></div>
-                <div class="box-inner-wrapper">
-                  <div class="admonition-graphic">
-                    <div class="admonition-icon">
-                      <div class="note-icon"></div>
-                    </div>
-                  </div>
-                  <div class="admonition-body">
-                    <div class="admonition-title">Note</div>
-                    <div class="admonition-content">
-                      <p>
-            </p>
-                      <p>
-              In a future release, another <code class="literal">Semantic Type</code> may be
-              introduced called <code class="computeroutput"><span class="identifier">thread_unsafe</span></code>
-              which does not perform the operation atomically at all. This type would
-              be a required semantic for all <code class="literal">Interlocked Operations</code>,
-              much like <code class="computeroutput"><span class="identifier">default_</span></code>.
-            </p>
-                      <p>
-          </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="box-bottom-left"></div>
-                <div class="box-bottom-right"></div>
-                <div class="box-bottom"></div>
-              </div>
-            </div>
-            <a id="boost_act.interlocked.interlocked_concepts.interlocked_operation.headers"></a>
-            <h6><a id="id456185"></a>
-          <a href="interlocked_operation.html#boost_act.interlocked.interlocked_concepts.interlocked_operation.headers">Headers</a>
-        </h6>
-            <p>
-          In general, you should not have to include the following files in order
-          to use <code class="literal">Interlocked Operations</code>, since including the file
-          for the operation implicitly includes the corresponding semantics. However,
-          if you wish to create your own <code class="literal">Interlocked Operations</code>,
-          you would use the headers notated below to bring in the semantic types
-          which are necessary for use with your operation.
-        </p>
-            <p>
-          
-</p>
-            <div class="programlisting">
-              <div class="box-outer-wrapper">
-                <div class="box-top-left"></div>
-                <div class="box-top-right"></div>
-                <div class="box-top"></div>
-                <div class="box-inner-wrapper">
-                  <div class="style-switcher-box" id="id456230">
-      <script type="text/javascript" > <!--
-          boostscript.call( boostscript.style_switcher, 'insert_style_selector',
-             'id456230',
-             '../../../../../doc/style/html/syntax.xml',
-             '../../../../../doc/style/html'
-          );
-      //--></script>
-</div>
-                  <pre>
-<span class="comment">// Brings in all semantic types.
-</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">semantics</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-
-<span class="comment">// Fine-grained semantic headers.
-</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">semantics</span><span class="special">/</span><span class="identifier">unordered</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">semantics</span><span class="special">/</span><span class="identifier">acquire</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">semantics</span><span class="special">/</span><span class="identifier">release</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">semantics</span><span class="special">/</span><span class="identifier">acq_rel</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">semantics</span><span class="special">/</span><span class="keyword">default</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-</pre>
-                </div>
-                <div class="box-bottom-left"></div>
-                <div class="box-bottom-right"></div>
-                <div class="box-bottom"></div>
-              </div>
-            </div>
-            <p>
-        </p>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_operation.example"></a>
-            <h6><a id="id456685"></a>
+            <h6><a id="id455770"></a>
           <a href="interlocked_operation.html#boost_act.interlocked.interlocked_concepts.interlocked_operation.example">Example</a>
         </h6>
+            <p>
+          The following example uses <code class="computeroutput"><span class="identifier">multiply_assign</span></code>,
+          which is a model of <code class="literal">Interlocked Operation</code> that multiplies
+          the first argument by the second argument and stores the result back into
+          the first argument. The result of the call is the value of the first argument
+          prior to the operation being performed.
+        </p>
             <p>
           </p>
             <p>
@@ -452,10 +229,10 @@
                 <div class="box-top-right"></div>
                 <div class="box-top"></div>
                 <div class="box-inner-wrapper">
-                  <div class="style-switcher-box" id="id456710">
+                  <div class="style-switcher-box" id="id455814">
       <script type="text/javascript" > <!--
           boostscript.call( boostscript.style_switcher, 'insert_style_selector',
-             'id456710',
+             'id455814',
              '../../../../../doc/style/html/syntax.xml',
              '../../../../../doc/style/html'
           );
@@ -537,7 +314,7 @@
         </a>
       </div>
       <div class="spirit-nav-icon">
-        <a accesskey="n" href="interlocked_type.html">
+        <a accesskey="n" href="interlocked_cage.html">
           <div class="next-icon"></div>
         </a>
       </div>

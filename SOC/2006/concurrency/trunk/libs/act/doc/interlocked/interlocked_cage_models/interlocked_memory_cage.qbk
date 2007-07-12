@@ -1,0 +1,68 @@
+[section Interlocked Memory Cage]
+
+[important The features described on this page are not yet implemented.]
+
+[heading Description]
+
+An __interlocked_cage__ whose instantiations and semantics apply to both
+compiler reordering of operations as well as order of visibility of operations
+with respect to other threads of execution. Internally, [concept Interlocked
+Memory Cages] often imply low-level memory and compiler barriers during
+construction and/or destruction and therefore should be used sparingly. When
+given the option, one should always prefer to directly apply semantics to their
+operation rather than use a cage. One common use would be to implement a
+user-defined interlocked operation with strict ordering requirements when the
+target system does not provide direct support for such semantics for that
+particular operation.
+
+[heading Model of]
+
+* __interlocked_cage__
+
+[heading Example]
+
+ToDo: Incorporate this into tests
+
+  #include <boost/act/interlocked/memory_cage/memory_cage_sequential.hpp>
+  #include <boost/act/interlocked/memory_cage/memory_cage_acq_rel.hpp>
+  #include <boost/act/interlocked/add_assign/add_assign_unordered.hpp>
+  #include <boost/act/interlocked/add_assign/add_assign_acquire.hpp>
+  #include <boost/act/interlocked/integer/types.hpp>
+  
+  int main()
+  {
+    using namespace boost::act::interlocked;
+  
+    int_fast32_t var = 0;
+    
+    /* ... */
+    
+    // The following block turns the contained unordered add_assign into an
+    // add_assign operation with sequential semantics.
+    {
+      memory_cage< sequential > cage;
+  
+      add_assign< unordered >( var, 4 );
+    }
+  
+    /* ... */
+  
+    // The following block turns the contained acquire add_assign into an
+    // add_assign operation with acq_rel semantics. The second template
+    // argument to fence along with the first effectively makes the type
+    // a fence with just release semantics. Since add_assign already
+    // specifies acquire semantics, the resulting operation correctly has
+    // acq_rel semantics without any potential redundant memory barriers.
+    // Leaving the second argument out would also work, but may generate
+    // less efficient code.
+    {
+      memory_cage< acq_rel, acquire > cage;
+  
+      add_assign< acquire >( var, 4 );
+    }
+  
+    // An add_assign operation with unordered semantics.
+    add_assign< unordered >( var, 4 );
+  }
+
+[endsect]

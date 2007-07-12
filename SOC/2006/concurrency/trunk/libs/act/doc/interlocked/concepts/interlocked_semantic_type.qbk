@@ -1,0 +1,13 @@
+[section Interlocked Semantic Type]
+
+[heading Description]
+
+An [concept Interlocked Semantic type] is a types which is used to specify
+atomicity and ordering guarantees when instantiating __interlocked_operations__
+and __interlocked_cages__.
+
+[heading Concept of]
+
+* __interlocked_semantic_models__
+
+[endsect]

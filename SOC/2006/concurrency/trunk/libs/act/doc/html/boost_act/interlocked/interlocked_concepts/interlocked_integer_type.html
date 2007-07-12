@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Integer Type</title><link rel="stylesheet" href="../../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked_concepts.html" title="Interlocked Concepts" /><link rel="prev" href="interlocked_arithmetic_type.html" title="Interlocked Arithmetic Type" /><link rel="next" href="../interlocked_integer_models.html" title="Interlocked Integer Models" /><script type="text/javascript" src="../../../../../doc/javascript/main.js"></script>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Integer Type</title><link rel="stylesheet" href="../../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked_concepts.html" title="Interlocked Concepts" /><link rel="prev" href="interlocked_arithmetic_type.html" title="Interlocked Arithmetic Type" /><link rel="next" href="../interlocked_semantic_models.html" title="Interlocked Semantic Models" /><script type="text/javascript" src="../../../../../doc/javascript/main.js"></script>
       <script type="text/javascript" > <!--
          boostscript.init( new Array(
             boostscript.nested_links,
@@ -71,7 +71,7 @@
         </a>
       </div>
       <div class="spirit-nav-icon">
-        <a accesskey="n" href="../interlocked_integer_models.html">
+        <a accesskey="n" href="../interlocked_semantic_models.html">
           <div class="next-icon"></div>
         </a>
       </div>
@@ -89,7 +89,7 @@
               </div>
             </div>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_integer_type.description"></a>
-            <h6><a id="id462765"></a>
+            <h6><a id="id462840"></a>
           <a href="interlocked_integer_type.html#boost_act.interlocked.interlocked_concepts.interlocked_integer_type.description">Description</a>
         </h6>
             <p>
@@ -145,7 +145,7 @@
               </dl>
             </div>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_integer_type.refinement_of"></a>
-            <h6><a id="id462985"></a>
+            <h6><a id="id463060"></a>
           <a href="interlocked_integer_type.html#boost_act.interlocked.interlocked_concepts.interlocked_integer_type.refinement_of">Refinement
           of</a>
         </h6>
@@ -154,7 +154,7 @@
           <code class="literal">Interlocked Arithmetic Type</code></a>
         </p>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_integer_type.expression_requirements"></a>
-            <h6><a id="id463033"></a>
+            <h6><a id="id463108"></a>
           <a href="interlocked_integer_type.html#boost_act.interlocked.interlocked_concepts.interlocked_integer_type.expression_requirements">Expression
           Requirements</a>
         </h6>
@@ -206,7 +206,7 @@
               </div>
             </div>
             <div class="table">
-              <a id="id463250"></a>
+              <a id="id463325"></a>
               <p class="title">
                 <b>Table 7. Interlocked Integer Type Requirements</b>
               </p>
@@ -341,22 +341,19 @@
             </div>
             <br class="table-break" />
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_integer_type.headers"></a>
-            <h6><a id="id463889"></a>
+            <h6><a id="id463964"></a>
           <a href="interlocked_integer_type.html#boost_act.interlocked.interlocked_concepts.interlocked_integer_type.headers">Headers</a>
         </h6>
-            <p>
-          
-</p>
             <div class="programlisting">
               <div class="box-outer-wrapper">
                 <div class="box-top-left"></div>
                 <div class="box-top-right"></div>
                 <div class="box-top"></div>
                 <div class="box-inner-wrapper">
-                  <div class="style-switcher-box" id="id463910">
+                  <div class="style-switcher-box" id="id463983">
       <script type="text/javascript" > <!--
           boostscript.call( boostscript.style_switcher, 'insert_style_selector',
-             'id463910',
+             'id463983',
              '../../../../../doc/style/html/syntax.xml',
              '../../../../../doc/style/html'
           );
@@ -372,10 +369,12 @@
 <span class="comment">// bitand_assign headers.
 </span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">/</span><span class="identifier">bitand_assign_thread_unsafe</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">/</span><span class="identifier">bitand_assign_unordered</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">/</span><span class="identifier">bitand_assign_acquire</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">/</span><span class="identifier">bitand_assign_release</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">/</span><span class="identifier">bitand_assign_acq_rel</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">/</span><span class="identifier">bitand_assign_unordered</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign</span><span class="special">/</span><span class="identifier">bitand_assign_sequential</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="comment">// Forward declarations.
 </span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitand_assign_fwd</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
@@ -386,21 +385,15 @@
 </span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitor_assign</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">bitor_assign</span><span class="special">/</span><span class="identifier">bitor_assign</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="comment">/* etc. */</span>
-
-<span class="comment">////////////////////////////////////////////////////////////////////////////
-</span><span class="comment">// Headers for the remaining operations follow the same pattern as above. //
-</span><span class="comment">////////////////////////////////////////////////////////////////////////////
-</span></pre>
+</pre>
                 </div>
                 <div class="box-bottom-left"></div>
                 <div class="box-bottom-right"></div>
                 <div class="box-bottom"></div>
               </div>
             </div>
-            <p>
-        </p>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_integer_type.example"></a>
-            <h6><a id="id464792"></a>
+            <h6><a id="id464991"></a>
           <a href="interlocked_integer_type.html#boost_act.interlocked.interlocked_concepts.interlocked_integer_type.example">Example</a>
         </h6>
             <p>
@@ -428,7 +421,7 @@
         </a>
       </div>
       <div class="spirit-nav-icon">
-        <a accesskey="n" href="../interlocked_integer_models.html">
+        <a accesskey="n" href="../interlocked_semantic_models.html">
           <div class="next-icon"></div>
         </a>
       </div>

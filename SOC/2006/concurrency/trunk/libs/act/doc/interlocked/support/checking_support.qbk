@@ -12,11 +12,11 @@ implementation to branch off accordingly. This can be accomplished by using the
 
 [variablelist Notation
 [[[~name]]          [The name of an __interlocked_operation__ in =Boost.Act=.] ]
-[[`S`]              [A __semantic_type__, as specified without qualification
-                     and with the exact name as listed in documentation
-                     (not a typedef name). As an exception, =default_=,
-                     =default=, and =_= may each be used when specifying default
-                     semantics.
+[[`S`]              [An __interlocked_semantic_type__, as specified without
+                     qualification and with the exact name as listed in
+                     documentation (not a typedef name). As an exception,
+                     =default_=, =default=, and =_= may each be used when
+                     specifying default semantics.
                     ]                                                          ]
 ]
 

@@ -1,0 +1,19 @@
+[section Interlocked Compiler Cage]
+
+[important The features described on this page are not yet implemented.]
+
+[heading Description]
+
+An __interlocked_cage__ whose instantiations and semantics apply to compiler
+reordering of operations only. Order of visibility of operations with respect to
+other threads of execution is not specified.
+
+[heading Model of]
+
+* __interlocked_cage__
+
+[heading Example]
+
+ToDo: Insert example here
+
+[endsect]

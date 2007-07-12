@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Memory Cage</title><link rel="stylesheet" href="../../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked_cage_models.html" title="Interlocked Cage Models" /><link rel="prev" href="../interlocked_cage_models.html" title="Interlocked Cage Models" /><link rel="next" href="interlocked_compiler_cage.html" title="Interlocked Compiler Cage" /><script type="text/javascript" src="../../../../../doc/javascript/main.js"></script>
+      <script type="text/javascript" > <!--
+         boostscript.init( new Array(
+            boostscript.nested_links,
+            boostscript.style_switcher,
+            boostscript.common
+         ),
+         '../../../../../doc/javascript'
+         );
+      //--></script>
+
+      <script type="text/javascript" > <!--
+          boostscript.call( boostscript.style_switcher, 'include_alternate_stylesheets',
+             '../../../../../doc/style/html/syntax.xml',
+             '../../../../../doc/style/html'
+          );
+      //--></script>
+<link rel="alternate stylesheet" type="text/css" title="Quickbook source" href="../../../../../doc/style/html/conversion/boostbook_to_quickbook.css" />
+      <script type="text/javascript" > <!--
+          boostscript.call( boostscript.style_switcher, 'load_user_stylesheet' );
+      //--></script>
+</head>
+  <body>
+    <div id="heading">
+      <div id="heading-placard"></div>
+      <div class="heading-navigation-box">
+        <div class="nested-links-select-box" id="chapters_select_box">
+      <script type="text/javascript" > <!--
+         boostscript.call( boostscript.nested_links, 'select_box',
+            'chapters_select_box',
+            '../../../../../doc/chapters.xml',
+            '../../../../../libs');
+      //--></script>
+</div>
+        <div class="nested-links-select-box" id="sections_select_box">
+      <script type="text/javascript" > <!--
+         boostscript.call( boostscript.nested_links, 'select_box',
+            'sections_select_box',
+            '../../../sections.xml',
+            '../../.././');
+      //--></script>
+</div>
+      </div>
+      <div class="search-box">
+        <form id="cref" action="http://google.com/cse">
+          <div class="search-box-label"></div>
+          <div>
+            <input type="hidden" name="cref" value="http://tinyurl.com/33np8c" />
+            <input class="search-box" type="text" name="q" id="q" size="40" maxlength="255" alt="Search Text" />
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="spirit-nav">
+      <div class="spirit-nav-icon">
+        <a accesskey="p" href="../interlocked_cage_models.html">
+          <div class="prev-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="u" href="../interlocked_cage_models.html">
+          <div class="up-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="h" href="../../../index.html">
+          <div class="home-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="n" href="interlocked_compiler_cage.html">
+          <div class="next-icon"></div>
+        </a>
+      </div>
+    </div>
+    <div id="body">
+      <div id="body-inner">
+        <div id="content">
+          <div class="section">
+            <div class="titlepage">
+              <div>
+                <div>
+                  <h4 class="title"><a id="boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage"></a><a href="interlocked_memory_cage.html" title="Interlocked Memory Cage">Interlocked
+        Memory Cage</a></h4>
+                </div>
+              </div>
+            </div>
+            <div class="important">
+              <div class="box-outer-wrapper">
+                <div class="box-top-left"></div>
+                <div class="box-top-right"></div>
+                <div class="box-top"></div>
+                <div class="box-inner-wrapper">
+                  <div class="admonition-graphic">
+                    <div class="admonition-icon">
+                      <div class="important-icon"></div>
+                    </div>
+                  </div>
+                  <div class="admonition-body">
+                    <div class="admonition-title">Important</div>
+                    <div class="admonition-content">
+                      <p>
+            </p>
+                      <p>
+              The features described on this page are not yet implemented.
+            </p>
+                      <p>
+          </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="box-bottom-left"></div>
+                <div class="box-bottom-right"></div>
+                <div class="box-bottom"></div>
+              </div>
+            </div>
+            <a id="boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.description"></a>
+            <h6><a id="id466283"></a>
+          <a href="interlocked_memory_cage.html#boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.description">Description</a>
+        </h6>
+            <p>
+          An <a href="../interlocked_concepts/interlocked_cage.html" title="Interlocked Cage">
+          <code class="literal">Interlocked Cage</code></a> whose instantiations and semantics
+          apply to both compiler reordering of operations as well as order of visibility
+          of operations with respect to other threads of execution. Internally,
+          <code class="literal">Interlocked Memory Cages</code> often imply low-level memory
+          and compiler barriers during construction and/or destruction and therefore
+          should be used sparingly. When given the option, one should always prefer
+          to directly apply semantics to their operation rather than use a cage.
+          One common use would be to implement a user-defined interlocked operation
+          with strict ordering requirements when the target system does not provide
+          direct support for such semantics for that particular operation.
+        </p>
+            <a id="boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.model_of"></a>
+            <h6><a id="id466351"></a>
+          <a href="interlocked_memory_cage.html#boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.model_of">Model
+          of</a>
+        </h6>
+            <div class="itemizedlist">
+              <ul>
+                <li>
+                  <a href="../interlocked_concepts/interlocked_cage.html" title="Interlocked Cage">
+            <code class="literal">Interlocked Cage</code></a>
+                </li>
+              </ul>
+            </div>
+            <a id="boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.example"></a>
+            <h6><a id="id466401"></a>
+          <a href="interlocked_memory_cage.html#boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.example">Example</a>
+        </h6>
+            <p>
+          ToDo: Incorporate this into tests
+        </p>
+            <div class="programlisting">
+              <div class="box-outer-wrapper">
+                <div class="box-top-left"></div>
+                <div class="box-top-right"></div>
+                <div class="box-top"></div>
+                <div class="box-inner-wrapper">
+                  <div class="style-switcher-box" id="id466427">
+      <script type="text/javascript" > <!--
+          boostscript.call( boostscript.style_switcher, 'insert_style_selector',
+             'id466427',
+             '../../../../../doc/style/html/syntax.xml',
+             '../../../../../doc/style/html'
+          );
+      //--></script>
+</div>
+                  <pre>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">memory_cage</span><span class="special">/</span><span class="identifier">memory_cage_sequential</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">memory_cage</span><span class="special">/</span><span class="identifier">memory_cage_acq_rel</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">add_assign</span><span class="special">/</span><span class="identifier">add_assign_unordered</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">add_assign</span><span class="special">/</span><span class="identifier">add_assign_acquire</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">act</span><span class="special">/</span><span class="identifier">interlocked</span><span class="special">/</span><span class="identifier">integer</span><span class="special">/</span><span class="identifier">types</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">act</span><span class="special">::</span><span class="identifier">interlocked</span><span class="special">;</span>
+
+  <span class="identifier">int_fast32_t</span> <span class="identifier">var</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+  
+  <span class="comment">/* ... */</span>
+  
+  <span class="comment">// The following block turns the contained unordered add_assign into an
+</span>  <span class="comment">// add_assign operation with sequential semantics.
+</span>  <span class="special">{</span>
+    <span class="identifier">memory_cage</span><span class="special">&lt;</span> <span class="identifier">sequential</span> <span class="special">&gt;</span> <span class="identifier">cage</span><span class="special">;</span>
+
+    <span class="identifier">add_assign</span><span class="special">&lt;</span> <span class="identifier">unordered</span> <span class="special">&gt;(</span> <span class="identifier">var</span><span class="special">,</span> <span class="number">4</span> <span class="special">);</span>
+  <span class="special">}</span>
+
+  <span class="comment">/* ... */</span>
+
+  <span class="comment">// The following block turns the contained acquire add_assign into an
+</span>  <span class="comment">// add_assign operation with acq_rel semantics. The second template
+</span>  <span class="comment">// argument to fence along with the first effectively makes the type
+</span>  <span class="comment">// a fence with just release semantics. Since add_assign already
+</span>  <span class="comment">// specifies acquire semantics, the resulting operation correctly has
+</span>  <span class="comment">// acq_rel semantics without any potential redundant memory barriers.
+</span>  <span class="comment">// Leaving the second argument out would also work, but may generate
+</span>  <span class="comment">// less efficient code.
+</span>  <span class="special">{</span>
+    <span class="identifier">memory_cage</span><span class="special">&lt;</span> <span class="identifier">acq_rel</span><span class="special">,</span> <span class="identifier">acquire</span> <span class="special">&gt;</span> <span class="identifier">cage</span><span class="special">;</span>
+
+    <span class="identifier">add_assign</span><span class="special">&lt;</span> <span class="identifier">acquire</span> <span class="special">&gt;(</span> <span class="identifier">var</span><span class="special">,</span> <span class="number">4</span> <span class="special">);</span>
+  <span class="special">}</span>
+
+  <span class="comment">// An add_assign operation with unordered semantics.
+</span>  <span class="identifier">add_assign</span><span class="special">&lt;</span> <span class="identifier">unordered</span> <span class="special">&gt;(</span> <span class="identifier">var</span><span class="special">,</span> <span class="number">4</span> <span class="special">);</span>
+<span class="special">}</span>
+</pre>
+                </div>
+                <div class="box-bottom-left"></div>
+                <div class="box-bottom-right"></div>
+                <div class="box-bottom"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+    </div>
+    <div class="spirit-nav">
+      <div class="spirit-nav-icon">
+        <a accesskey="p" href="../interlocked_cage_models.html">
+          <div class="prev-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="u" href="../interlocked_cage_models.html">
+          <div class="up-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="h" href="../../../index.html">
+          <div class="home-icon"></div>
+        </a>
+      </div>
+      <div class="spirit-nav-icon">
+        <a accesskey="n" href="interlocked_compiler_cage.html">
+          <div class="next-icon"></div>
+        </a>
+      </div>
+    </div>
+    <div id="footer">
+      <div id="footer-left">
+        <div id="copyright">
+          <p>Copyright © 2006 , 2007 Matthew Calabrese</p>
+        </div>
+        <div id="license">
+          <p>Distributed under the
+                  <a href="/LICENSE_1_0.txt" class="internal">Boost Software License, Version 1.0</a>.
+               </p>
+        </div>
+      </div>
+      <div id="footer-right">
+        <div id="banners">
+          <p id="banner-xhtml">
+            <a href="http://validator.w3.org/check?uri=referer" class="external">XHTML 1.0</a>
+          </p>
+          <p id="banner-css">
+            <a href="http://jigsaw.w3.org/css-validator/check/referer" class="external">CSS</a>
+          </p>
+          <p id="banner-sourceforge">
+            <a href="http://sourceforge.net" class="external">SourceForge</a>
+          </p>
+        </div>
+      </div>
+      <div class="clear"></div>
+    </div>
+  </body>
+</html>

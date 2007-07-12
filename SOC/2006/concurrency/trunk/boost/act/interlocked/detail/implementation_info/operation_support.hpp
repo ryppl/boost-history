@@ -149,6 +149,7 @@
 /*
     The following are useful macros to use later on after detection.
 */
+
 #define BOOST_ACT_INTERLOCKED_DETAIL_ITANIUM_RW_ORDERING_SUPPORT               \
         ( acq_rel )( acquire )( release )( unordered )
 

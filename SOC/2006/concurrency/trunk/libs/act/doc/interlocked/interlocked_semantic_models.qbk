@@ -1,0 +1,85 @@
+[section Interlocked Semantic Models]
+
+[important The `sequential` and `thread_unsafe` semantics described on this page
+ are not yet implemented.
+]
+
+[heading Description]
+
+The types detailed in this section are the __interlocked_semantic_types__ for
+use with __interlocked_operations__ and __interlocked_barriers__.
+
+[heading Model of]
+
+Each type mentioned above is an __interlocked_semantic_type__.
+
+[important
+If you are unsure as to which semantics you should use for a given situation, it
+is generally safest to use the default semantics of the corresponding operation.
+If efficiency is important for your application, you should prefer to use the
+least-restrictive semantics that you can without breaking allowable ordering of
+visibility between threads.
+]
+
+[table Semantic Types
+[[Type]            [Thread-Safe][Ordering Guarantee]                           ]
+[[`thread_unsafe`] [no]         [No atomicity or ordering with respect to
+                                 multiple threads.
+                                 [tablenote Useful for generic programming,
+                                  particular when the requirement for
+                                  thread-safety is dependent on a template
+                                  argument.
+                                 ]
+                                ]                                              ]
+[[`unordered`]     [yes]        [No ordering guarantee.]                       ]
+[[`acquire`]       [yes]        [Ensures that all subsequent operations in
+                                 program order are performed after all preceding
+                                 loads in program order.
+                                ]                                              ]
+[[`release`]       [yes]        [Ensures that all preceding operations in
+                                 program order are performed after all
+                                 subsequent stores in program order.
+                                ]                                              ]
+[[`acq_rel`]       [yes]        [Combines the semantics of `acquire` and
+                                 `release`.
+                                ]                                              ]
+[[`sequential`]    [yes]        [Ensures that all preceding operations in
+                                 program order are performed after all
+                                 subsequent operations in program order.
+                                ]                                              ]
+[[`default_`]      []           [Uses the default ordering guarantees as
+                                 specified by the corresponding operation.
+                                 [tablenote This will likely be removed as all
+                                  operations should now default to sequential.
+                                 ]
+                                ]                                              ]
+]
+
+[heading Headers]
+
+In general, you should not have to explicitly include the following files in
+order to use [concept Interlocked Operations] and [concept Interlocked
+Barriers], since including the file for the operation implicitly includes the
+corresponding semantics. However, if you wish to create your own operations, you
+would use the headers notated below to bring in the semantic types which are
+necessary.
+
+``
+  // Brings in all semantic types.
+  #include <boost/act/interlocked/semantics.hpp>
+  
+  // Fine-grained semantic headers.
+  #include <boost/act/interlocked/semantics/thread_unsafe.hpp>
+  #include <boost/act/interlocked/semantics/unordered.hpp>
+  #include <boost/act/interlocked/semantics/acquire.hpp>
+  #include <boost/act/interlocked/semantics/release.hpp>
+  #include <boost/act/interlocked/semantics/acq_rel.hpp>
+  #include <boost/act/interlocked/semantics/sequential.hpp>
+  #include <boost/act/interlocked/semantics/default.hpp>
+``
+
+[heading Example]
+
+ToDo: Add an example here.
+
+[endsect]

@@ -1,6 +1,8 @@
 [section Interlocked Concepts]
 
 [include concepts/interlocked_operation.qbk]
+[include concepts/interlocked_cage.qbk]
+[include concepts/interlocked_semantic_type.qbk]
 [include concepts/interlocked_type.qbk]
 [include concepts/interlocked_natural_type.qbk]
 [include concepts/interlocked_arithmetic_type.qbk]

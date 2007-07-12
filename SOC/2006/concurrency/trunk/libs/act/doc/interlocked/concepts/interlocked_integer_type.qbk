@@ -48,7 +48,6 @@ or if `default_` semantics are specified, then the operation is performed with
 
 [heading Headers]
 
-``
   // Brings in all interlocked operations.
   #include <boost/act/interlocked.hpp>
   
@@ -58,10 +57,12 @@ or if `default_` semantics are specified, then the operation is performed with
   // bitand_assign headers.
   #include <boost/act/interlocked/bitand_assign.hpp>
   #include <boost/act/interlocked/bitand_assign/bitand_assign.hpp>
+  #include <boost/act/interlocked/bitand_assign/bitand_assign_thread_unsafe.hpp>
+  #include <boost/act/interlocked/bitand_assign/bitand_assign_unordered.hpp>
   #include <boost/act/interlocked/bitand_assign/bitand_assign_acquire.hpp>
   #include <boost/act/interlocked/bitand_assign/bitand_assign_release.hpp>
   #include <boost/act/interlocked/bitand_assign/bitand_assign_acq_rel.hpp>
-  #include <boost/act/interlocked/bitand_assign/bitand_assign_unordered.hpp>
+  #include <boost/act/interlocked/bitand_assign/bitand_assign_sequential.hpp>
   
   // Forward declarations.
   #include <boost/act/interlocked/bitand_assign_fwd.hpp>
@@ -72,11 +73,7 @@ or if `default_` semantics are specified, then the operation is performed with
   #include <boost/act/interlocked/bitor_assign.hpp>
   #include <boost/act/interlocked/bitor_assign/bitor_assign.hpp>
   /* etc. */
-  
-  ////////////////////////////////////////////////////////////////////////////
-  // Headers for the remaining operations follow the same pattern as above. //
-  ////////////////////////////////////////////////////////////////////////////
-``
+
 
 [heading Example]
 

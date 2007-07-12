@@ -89,7 +89,7 @@
               </div>
             </div>
             <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.description"></a>
-            <h6><a id="id465586"></a>
+            <h6><a id="id468184"></a>
           <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.description">Description</a>
         </h6>
             <p>
@@ -101,7 +101,7 @@
           library (<span class="emphasis"><em>ToDo: insert link here</em></span>).
         </p>
             <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.header"></a>
-            <h6><a id="id465692"></a>
+            <h6><a id="id468290"></a>
           <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.header">Header</a>
         </h6>
             <p>
@@ -113,10 +113,10 @@
                 <div class="box-top-right"></div>
                 <div class="box-top"></div>
                 <div class="box-inner-wrapper">
-                  <div class="style-switcher-box" id="id465714">
+                  <div class="style-switcher-box" id="id468312">
       <script type="text/javascript" > <!--
           boostscript.call( boostscript.style_switcher, 'insert_style_selector',
-             'id465714',
+             'id468312',
              '../../../../../doc/style/html/syntax.xml',
              '../../../../../doc/style/html'
           );
@@ -138,7 +138,7 @@
             <p>
         </p>
             <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.synopsis"></a>
-            <h6><a id="id465879"></a>
+            <h6><a id="id468476"></a>
           <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.synopsis">Synopsis</a>
         </h6>
             <div class="programlisting">
@@ -147,10 +147,10 @@
                 <div class="box-top-right"></div>
                 <div class="box-top"></div>
                 <div class="box-inner-wrapper">
-                  <div class="style-switcher-box" id="id465899">
+                  <div class="style-switcher-box" id="id468496">
       <script type="text/javascript" > <!--
           boostscript.call( boostscript.style_switcher, 'insert_style_selector',
-             'id465899',
+             'id468496',
              '../../../../../doc/style/html/syntax.xml',
              '../../../../../doc/style/html'
           );
@@ -161,47 +161,47 @@
 </span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">LeastInt</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">int_fast_t</span>
 <span class="special">{</span>
-  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em> <span class="identifier">fast</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified-type</code></em> <span class="identifier">fast</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="comment">// signed
 </span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="identifier">Bits</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">int_t</span> 
 <span class="special">{</span>
-  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
-  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified-type</code></em>                   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="comment">// unsigned
 </span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="identifier">Bits</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">uint_t</span> 
 <span class="special">{</span>
-  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
-  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified-type</code></em>                   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="comment">// signed
 </span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="identifier">MaxValue</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">int_max_value_t</span> 
 <span class="special">{</span>
-  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
-  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified-type</code></em>                   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="comment">// signed
 </span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="identifier">MinValue</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">int_min_value_t</span> 
 <span class="special">{</span>
-  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
-  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified-type</code></em>                   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
 <span class="special">};</span>
 
 <span class="comment">// unsigned
 </span><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">unsigned</span> <span class="keyword">long</span> <span class="identifier">Value</span> <span class="special">&gt;</span>
 <span class="keyword">struct</span> <span class="identifier">uint_value_t</span> 
 <span class="special">{</span>
-  <span class="keyword">typedef</span> <em class="replaceable"><code>implementation_supplied</code></em>   <span class="identifier">least</span><span class="special">;</span>
-  <span class="keyword">typedef</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <em class="replaceable"><code>unspecified-type</code></em>                   <span class="identifier">least</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">int_fast_t</span><span class="special">&lt;</span> <span class="identifier">least</span> <span class="special">&gt;::</span><span class="identifier">fast</span> <span class="identifier">fast</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
                 </div>
@@ -211,7 +211,7 @@
               </div>
             </div>
             <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.model_of"></a>
-            <h6><a id="id466648"></a>
+            <h6><a id="id469278"></a>
           <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.model_of">Model
           of</a>
         </h6>
@@ -281,14 +281,14 @@
               </dl>
             </div>
             <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.expression_semantics"></a>
-            <h6><a id="id466861"></a>
+            <h6><a id="id469491"></a>
           <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.expression_semantics">Expression
           Semantics</a>
         </h6>
             <div class="table">
-              <a id="id466880"></a>
+              <a id="id469510"></a>
               <p class="title">
-                <b>Table 8. Interlocked Integer Metafunction Requirements</b>
+                <b>Table 9. Interlocked Integer Metafunction Requirements</b>
               </p>
               <div class="table-contents">
                 <table class="table" summary="Interlocked Integer Metafunction Requirements">
@@ -481,7 +481,7 @@
             </div>
             <br class="table-break" />
             <a id="boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.example"></a>
-            <h6><a id="id467791"></a>
+            <h6><a id="id470420"></a>
           <a href="interlocked_integer_metafunctions.html#boost_act.interlocked.interlocked_integer_models.interlocked_integer_metafunctions.example">Example</a>
         </h6>
             <p>

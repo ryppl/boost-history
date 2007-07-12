@@ -27,8 +27,8 @@ import testing ;
           [ run interlocked/assign_if_was/assign_if_was.cpp ]
           [ run interlocked/assign_if_was/assign_if_was_acquire.cpp ]
           [ run interlocked/assign_if_was/assign_if_was_release.cpp ]
-          #[ run interlocked/assign_if_was/assign_if_was_acq_rel.cpp ]
-          #[ run interlocked/assign_if_was/assign_if_was_unordered.cpp ]
+          [ run interlocked/assign_if_was/assign_if_was_acq_rel.cpp ]
+          [ run interlocked/assign_if_was/assign_if_was_unordered.cpp ]
 
           [ run interlocked/add_assign/add_assign.cpp ]
           [ run interlocked/add_assign/add_assign_acquire.cpp ]

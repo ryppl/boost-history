@@ -32,6 +32,46 @@ struct store_release_default_impl
 
 #else // Else: Custom interlocked store for this system (no default)
 
+#include <boost/act/config/interlocked/has.hpp>
+
+#if BOOST_ACT_INTERLOCKED_HAS( modify, release )
+
+#include <boost/type_traits/remove_cv.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+template< typename SourceType >
+class store_release_default_fun
+{
+public:
+  explicit store_release_default_fun( SourceType& source_init )
+    : source_m( source_init ) {}
+public:
+  template< typename TargetType >
+  typename remove_cv< TargetType >::type operator ()( TargetType& ) const
+  {
+    return static_cast< typename remove_cv< TargetType >::type >( source_m );
+  }
+private:
+  SourceType& source_m;
+};
+
+struct store_release_default_impl
+{
+  template< typename TargetType, typename SourceType >
+  static typename remove_cv< TargetType >::type
+  execute( TargetType& target, SourceType& source )
+  {
+    return modify< release >( target
+                            , store_release_default_fun< SourceType >( source )
+                            );
+  }
+};
+
+} } } }
+
+#else
+
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/always.hpp>
 #include <boost/mpl/apply.hpp>
@@ -54,6 +94,8 @@ struct store_release_default_impl
 };
 
 } } } }
+
+#endif
 
 #endif
 

@@ -31,6 +31,8 @@ struct load_unordered_default_impl
 
 #else // Else: Custom interlocked load for this system (no default)
 
+// ToDo: Change to default to assign_if_was if no custom load< acquire >
+
 #include <boost/act/interlocked/load/load_acquire.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 

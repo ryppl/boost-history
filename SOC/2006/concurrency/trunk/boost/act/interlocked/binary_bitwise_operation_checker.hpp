@@ -64,7 +64,7 @@ void brute_operation_result_checker( SingleThreadOperationType single_thread_op
                                    , OperationType operation
                                    )
 {
-  typedef boost::act::interlocked::uint_least8_t  uint_least8_t;
+  typedef boost::act::interlocked::uint_least8_t uint_least8_t;
 
   uint_least8_t test_var = 0;
 
