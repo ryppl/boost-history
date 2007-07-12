@@ -13,46 +13,48 @@
 
 namespace cgi {
 
-  template<typename Protocol>
+  template<typename RequestAcceptorService>
   class basic_request_acceptor
     : private boost::noncopyable
+    , public boost::asio::basic_io_object<RequestAcceptorService>
   {
   public:
     //  typedef impl_type;
-    typedef Protocol   protocol_type;
+    typedef RequestAcceptorService         service_type;
+    typedef service_type::protocol_type    protocol_type;
 
-    explicit basic_request_acceptor(basic_protocol_service<Protocol>& pserv)
-      : service_(pserv) 
+    explicit basic_request_acceptor(basic_protocol_service<protocol_type>& s)
+      : boost::asio::use_service<RequestAcceptorService>(s.io_service())
     {
     }
 
     ~basic_request_acceptor()
     {
-      service_.cancel();
+      this->service.cancel();
     }
 
     template<typename CommonGatewayRequest>
     void accept(CommonGatewayRequest& request)
     {
       boost::system::error_code ec;
-      service_.accept(request, ec);
+      this->service.accept(request, ec);
       boost::throw_error(ec);
     }
 
     template<typename CommonGatewayRequest> boost::system::error_code&
     accept(CommonGatewayRequest& request, boost::system::error_code& ec)
     {
-      return service_.accept(request, ec);
+      return this->service.accept(request, ec);
     }
 
     template<typename CommonGatewayRequest, typename Handler>
     void async_accept(CommonGatewayRequest& request, Handler handler)
     {
-      service_.async_accept(request, handler);
+      this->service.async_accept(request, handler);
     }
 
   private:
-    request_acceptor_service<protocol_type> service_;
+    service_type& service_;
   };
 
 

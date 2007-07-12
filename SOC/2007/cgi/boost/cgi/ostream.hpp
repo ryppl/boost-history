@@ -248,7 +248,7 @@ namespace cgi {
       req.async_write(ostream_.rdbuf(), destination_, handler));
     }
 
-    /// Get the buffer associated with the 
+    /// Get the buffer associated with the stream
     std::streambuf* rdbuf() const { return ostream_.rdbuf(); }
 
     void set_status(http::status_code& num) { http_status_ = num; }

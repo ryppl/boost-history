@@ -24,6 +24,7 @@ namespace cgi {
   public:
     /// Default constructor
     explicit logger()
+      : ostream(tags::stderr)
     {
     }
 
@@ -33,7 +34,7 @@ namespace cgi {
      * destruction.
      */
     logger(std::streambuf* buf)
-      : ostream(buf)
+      : ostream(buf, tags::stderr)
     {
     }
 
@@ -48,7 +49,7 @@ namespace cgi {
      */
     template<typename CommonGatewayRequest>
     logger(CommonGatewayRequest& req)
-      : ostream(req)
+      : ostream(req, tags::stderr)
     {
     }
 

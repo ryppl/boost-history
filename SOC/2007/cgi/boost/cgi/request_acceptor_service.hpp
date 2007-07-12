@@ -16,9 +16,22 @@ namespace cgi {
   {
   public:
     typedef Protocol protocol_type;
+    typedef basic_request<Protocol, ...>    implementation_type;
 
-    request_acceptor_service(basic_protocol_service<protocol_type>& pserv)
-      : pservice_(pserv)
+    explicit request_acceptor_service(basic_protocol_service<protocol_type>& s)
+      : pservice_(s)
+    {
+    }
+
+    void shutdown_service()
+    {
+    }
+
+    void construct(implementation_type& impl)
+    {
+    }
+
+    void destroy(implementation_type& impl)
     {
     }
 
@@ -27,7 +40,8 @@ namespace cgi {
      * Check if there is a waiting request in the queue. If not, accept a
      * connection, and associate it with the request.
      */
-    template<typename CommonGatewayRequest> boost::system::error_code&
+    template<typename CommonGatewayRequest>
+    boost::system::error_code&
     accept(CommonGatewayRequest& request, boost::system::error_code& ec)
     {
       boost::thread::mutex::scoped_lock lk(io_service_.mutex_);
@@ -45,8 +59,8 @@ namespace cgi {
     }
 
     /// Asynchronously accept a request
-    template<typename RequestService, typename Handler>
-    void async_accept( basic_request<RequestService>& request, Handler handler )
+    template<typename CommonGatewayRequest, typename Handler>
+    void async_accept(CommonGatewayRequest& request, Handler handler)
     {
       boost::thread::mutex::scoped_lock lk(io_service_.mutex_);
       if( !io_service_.request_queue_.empty() )
@@ -57,7 +71,7 @@ namespace cgi {
 	      return ec;
       }
       lk.unlock();
-      pservice_.gateway_.async_accept(&request.connection(), handler);
+      pservice_.gateway_.async_accept(request.connection(), handler);
     }
 
   private:

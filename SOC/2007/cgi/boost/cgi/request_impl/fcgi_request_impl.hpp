@@ -11,32 +11,45 @@
 
 namespace cgi {
 
-  /// Implementation for a FastCGI Responder request
-  class fcgi_responder_request_impl
+  /// Implementation for a FastCGI request
+  class fcgi_request_impl
   {
     fcgi_request() {} // private default constructor
   public:
-    fcgi_request(protocol_service_type& pserv)
+    typedef tags::fastcgi    protocol_type;
+
+    explicit fcgi_request_impl(protocol_service_type& pserv
+                              , const role_type& role = role_type::responder
+			      , boost::weak_ptr<connection_base> connection = NULL)
       : protocol_service_(pserv)
+      , role_(role)
+      , connection_(connection)
+      , data_read_(role_ == role_type::filter ? false : true)
+      , stdin_read_(role_ == role_type::authorizer ? true : false)
     {
     }
 
-    bool load(bool parse_stdin)
-    {
-    }
-
-    template<typename Handler>
-    void async_load(bool parse_stdin, Handler handler)
-    {
-    }
-
-    /// The role of the request; in this case a responder
-    static role_type& role() { return role_type::responder; }
-  private:
+  protected:
     protocol_service_type& protocol_service_;
+
+    /// The role the request plays
+    role_type role_;
+
+    map_type env_vars_;
+    map_type cookie_vars_;
+    map_type post_vars_;
+    map_type get_vars_;
+
+    std::string stdin_buffer_;
+    std::string data_buffer_;
 
     /// Finished reading from stdin buffer (ie. POST data)
     bool stdin_read_;
+
+    /// Finished reading from data buffer (for Filter requests)
+    bool data_read_;
+
+    friend class fcgi_service_impl;
   };
 
 } // namespace cgi

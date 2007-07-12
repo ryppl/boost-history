@@ -15,67 +15,74 @@ namespace cgi {
   class request_service
     : public boost::asio::io_service::service
   {
+    // The platform-specific implementation (only one for now)
+    typedef detail::request_traits<Protocol>::service_impl_type
+      service_impl_type;
+
   public:
+    typedef service_impl_type::impl_type                  impl_type;
+  
     typedef Protocol                                  protocol_type;
     typedef basic_protocol_service<Protocol>  protocol_service_type;
     typedef basic_request<Protocol>                    request_type;
     //typedef request_impl<Protocol>
 
 
-    request_service(io_service_type& ios)
-      : boost::asio::io_service::service(ios.io_service())
-      , io_service_(ios)
+    /// The unique service identifier
+    static boost::asio::io_service::id id;
+
+    request_service(protocol_service_type& ps)
+      : boost::asio::io_service::service(ps.io_service())
+      , service_impl_(boost::asio::use_service<service_impl_type>(ps.io_service()))
     {
+    }
+
+    void create(impl_type& impl)
+    {
+      service_impl_.create(impl);
+    }
+
+    void destroy(impl_type& impl)
+    {
+      service_impl_.destroy(impl);
     }
 
     void shutdown_service()
     {
+      service_impl_.shutdown_service();
+    }
+
+    impl_type null() const
+    {
+      return service_impl_.null();
     }
 
     //void construct
 
-    bool load()
+    boost::system::error_code& load(bool parse_stdin, boost::system::error_code& ec)
     {
+      return service_impl_.load(parse_stdin, ec);
     }
 
-    template<typename ProtocolService, typename Handler>
-    class load_handler
-    {
-    public:
-      load_handler(ProtocolService& ps, Handler handler)
-        : service_(ps)
-        , handler_(handler)
-      {
-      }
-
-      void operator()(boost::system::error_code& ec)
-      {
-        if( ec )
-          handler(ec);
-
-
-        //service_.dispatch(handler_(ec));
-      }
-
-    private:
-      ProtocolService& service_;
-      Handler handler_;
-    };
 
     template<typename Handler>
-    void async_load(Handler handler)
+    void async_load(impl_type& impl, bool parse_stdin, boost::system::error_code& ec
+                   , Handler handler)
     {
+      service_impl_.async_load(impl, parse_stdin, ec, handler);
     }
+
+    bool is_open(impl_type& impl);
+    {
+      return service_impl_.is_open(impl);
+    }
+
   private:
-    io_service_type& io_service_;
+    service_impl_type& service_impl_;
   };
 
-  template<>
-  class request_service<protocol::cgi>
-  {
-  public:
-
-  };
+  template<typename Protocol>
+  boost::asio::io_service::id request_service<Protocol>::id;
 
 } // namespace cgi
 

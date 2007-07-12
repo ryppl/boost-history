@@ -82,6 +82,13 @@ namespace cgi {
      * supported in production servers {{AFAIK}}
      */
     virtual role_type role() = 0;
+
+    /* SyncReadStream function */
+    template<typename MutableBufferSequence>
+    virtual std::size_t read_some(MutableBufferSequence) = 0;
+
+    template<typename MutableBufferSequence>
+    virtual std::size_t read_some(MutableBufferSequence, error_code&) = 0;
   };
 
 } // namespace cgi

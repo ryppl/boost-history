@@ -27,6 +27,8 @@ namespace cgi {
   class cgi_request_impl
   {
   public:
+    typedef std::map<std::string, std::string>    map_type;
+
     /// Constructor
     /**
      * Since this request type is synchronous, there is no need for an
@@ -34,79 +36,26 @@ namespace cgi {
      */
     template<typename ProtocolService>
     cgi_request_impl(ProtocolService& pserv)
-    {
-      load(false);
-    }
-
-    /// Synchronously read/parse the request meta-data
-    /**
-     * @param parse_stdin if true then STDIN data is also read/parsed
-     */
-    bool load(bool parse_stdin)
+      : stdin_read_(false)
+      , http_status_(http::status_code::ok)
+      , request_status_(request_status::unloaded)
     {
     }
 
-    /// Asynchronously read/parse the request meta-data
-    /**
-     * @param parse_stdin if true then STDIN data is also read/parsed
-     */
-    template<typename Handler>
-    void async_load(bool parse_stdin, Handler handler)
-    {
-      load(parse_stdin);
-      handler();
-    }
+  private:
+    friend class cgi_service_impl;
 
-    template<typename ConnectionPtr, typename MutableBufferSequence>
-    std::size_t read(ConnectionPtr conn, MutableBufferSequence buf)
-    {
-      return conn.read(buf);
-    }
+  protected:
+    map_type get_vars_;
+    map_type post_vars_;
+    map_type cookie_vars_;
 
-    template<typename ConnectionPtr, typename MutableBufferSequence
-            , typename Handler>
-    void async_read(ConnectionPtr conn, MutableBufferSequence buf
-                   , Handler handler)
-    {
-      conn.async_read(buf, handler);
-    }
+    bool stdin_read_;
 
-    template<typename ConnectionPtr, typename ConstBufferSequence>
-    std::size_t write(ConnectionPtr conn, ConstBufferSequence buf)
-    {
-      return conn.write(buf);
-    }
-
-    template<typename ConnectionPtr, typename ConstBufferSequence
-            , typename Handler>
-    void async_write(ConnectionPtr conn, ConstBufferSequence buf
-                    , Handler handler)
-    {
-      conn.async_write(buf, handler);
-    }
-
-    template<typename VarType> map_type& var() const;
-
-    template<typename VarType>
-    const std::string& var(const std::string& name) const
-    {
-      map_type& meta_data = var<VarType>();
-      if((map_type::iterator pos = meta_data.find(name))
-           != meta_data.end())
-      {
-        return *pos;
-      }
-      return std::string();
-
-      /* Alt:
-      if( meta_data.find(name) != meta_data.end() )
-        return meta_data[name];
-      return std::string();
-      **/
-    }
-
-    void* strand() const { return NULL; }
-    role_type role() const { return role_type::responder; }
+    http::status_code http_status_;
+    request_status request_status_;
+  };
+    
 
   private: // functions
     
