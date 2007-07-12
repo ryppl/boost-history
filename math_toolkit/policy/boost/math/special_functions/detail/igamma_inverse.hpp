@@ -292,8 +292,14 @@ struct gamma_p_inverse_func
       // Calculate P(x) - p and the first two derivates, or if the invert
       // flag is set, then Q(x) - q and it's derivatives.
       //
-      typedef typename lanczos::lanczos_traits<T>::value_type value_type;
-      typedef typename lanczos::lanczos_traits<T>::evaluation_type evaluation_type;
+      typedef typename policy::evaluation<T, Policy>::type value_type;
+      typedef typename lanczos::lanczos<T, Policy>::type evaluation_type;
+      typedef typename policy::normalise<
+         Policy, 
+         policy::promote_float<false>, 
+         policy::promote_double<false>, 
+         policy::discrete_quantile<>,
+         policy::assert_undefined<> >::type forwarding_policy;
 
       using namespace std;  // For ADL of std functions.
 
@@ -303,7 +309,7 @@ struct gamma_p_inverse_func
                static_cast<value_type>(a), 
                static_cast<value_type>(x), 
                true, invert,
-               Policy(), &ft));
+               forwarding_policy(), &ft));
       f1 = static_cast<T>(ft);
       T f2;
       T div = (a - x - 1) / x;

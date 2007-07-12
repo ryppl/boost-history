@@ -32,13 +32,17 @@ namespace boost
    typename tools::promote_args<RT1, RT2>::type 
          beta(RT1 a, RT2 b); // Beta function (2 arguments).
 
-   template <class RT1, class RT2, class RT3>
-   typename tools::promote_args<RT1, RT2, RT3>::type 
-         beta(RT1 a, RT2 b, RT3 x); // Beta function (3 arguments).
+   template <class RT1, class RT2, class A>
+   typename tools::promote_args<RT1, RT2, A>::type 
+         beta(RT1 a, RT2 b, A x); // Beta function (3 arguments).
 
    template <class RT1, class RT2, class RT3>
    typename tools::promote_args<RT1, RT2, RT3>::type 
          betac(RT1 a, RT2 b, RT3 x);
+
+   template <class RT1, class RT2, class RT3, class Policy>
+   inline typename tools::promote_args<RT1, RT2, RT3>::type 
+      beta(RT1 a, RT2 b, RT3 x, const Policy&);
 
    template <class RT1, class RT2, class RT3>
    typename tools::promote_args<RT1, RT2, RT3>::type 

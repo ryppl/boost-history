@@ -20,6 +20,7 @@
 #include <boost/limits.hpp>
 #include <boost/math/tools/real_cast.hpp>
 #include <boost/math/tools/precision.hpp>
+#include <boost/math/policy/policy.hpp>
 
 #include <ostream>
 #include <istream>
@@ -336,6 +337,21 @@ inline int digits<concepts::std_real_concept>(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(
 }
 
 } // namespace tools
+
+namespace policy{
+
+template <>
+inline int digits<concepts::std_real_concept, boost::math::policy::policy<> >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::std_real_concept))
+{ // Assume number of significand bits is same as long double,
+  // unless std::numeric_limits<T>::is_specialized to provide digits.
+   return tools::digits<long double>();
+}
+template <>
+inline int digits<concepts::std_real_concept, policy<detail::forwarding_arg1, detail::forwarding_arg2 > >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::std_real_concept))
+{ return digits<concepts::std_real_concept, policy<> >(); }
+
+
+}
 
 } // namespace math
 } // namespace boost

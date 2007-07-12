@@ -1,3 +1,7 @@
+//  Copyright John Maddock 2007.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_MATH_POLICY_ERROR_HANDLING_HPP
 #define BOOST_MATH_POLICY_ERROR_HANDLING_HPP
@@ -489,3 +493,4 @@ inline void check_series_iterations(const char* function, boost::uintmax_t max_i
 }} // namespaces boost/math
 
 #endif // BOOST_MATH_POLICY_ERROR_HANDLING_HPP
+

@@ -1286,9 +1286,9 @@ struct lanczos_traits<long double>
 
 typedef mpl::list<
    lanczos6m24, 
-   lanczos6, 
+/*   lanczos6, */
    lanczos13m53, 
-   lanczos13, 
+/*   lanczos13, */
    lanczos17m64, 
    lanczos24m113, 
    lanczos22, 

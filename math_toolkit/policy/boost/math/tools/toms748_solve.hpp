@@ -55,6 +55,17 @@ struct equal_ceil
    }
 };
 
+struct equal_nearest_integer
+{
+   equal_nearest_integer(){}
+   template <class T>
+   bool operator()(const T& a, const T& b)
+   {
+      using namespace std;
+      return floor(a + 0.5f) == floor(b + 0.5f);
+   }
+};
+
 namespace detail{
 
 template <class F, class T>
@@ -275,6 +286,17 @@ std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const
          "Parameters a and b out of order: a=%1%", a, pol);
    fa = fax;
    fb = fbx;
+
+   if(tol(a, b) || (fa == 0) || (fb == 0))
+   {
+      max_iter = 0;
+      if(fa == 0)
+         b = a;
+      else if(fb == 0)
+         a = b;
+      return std::make_pair(a, b);
+   }
+
    if(boost::math::sign(fa) * boost::math::sign(fb) > 0)
       policy::raise_domain_error(
          BOOST_CURRENT_FUNCTION, 
@@ -292,7 +314,7 @@ std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const
       --count;
       BOOST_MATH_INSTRUMENT_CODE(" a = " << a << " b = " << b);
 
-      if(count && (fa != 0))
+      if(count && (fa != 0) && !tol(a, b))
       {
          //
          // On the second step we take a quadratic interpolation:

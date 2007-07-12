@@ -1,3 +1,7 @@
+//  Copyright John Maddock 2007.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_MATH_POLICY_HPP
 #define BOOST_MATH_POLICY_HPP
@@ -55,6 +59,9 @@ namespace boost{ namespace math{ namespace policy{
 #endif
 #ifndef BOOST_MATH_DISCRETE_QUANTILE_POLICY
 #define BOOST_MATH_DISCRETE_QUANTILE_POLICY integer_outside
+#endif
+#ifndef BOOST_MATH_ASSERT_UNDEFINED_POLICY
+#define BOOST_MATH_ASSERT_UNDEFINED_POLICY true
 #endif
 
 #if !defined(__BORLANDC__)
@@ -155,6 +162,7 @@ BOOST_MATH_META_INT(error_policy_type, evaluation_error, BOOST_MATH_EVALUATION_E
 //
 BOOST_MATH_META_BOOL(promote_float, BOOST_MATH_PROMOTE_FLOAT_POLICY);
 BOOST_MATH_META_BOOL(promote_double, BOOST_MATH_PROMOTE_DOUBLE_POLICY);
+BOOST_MATH_META_BOOL(assert_undefined, BOOST_MATH_ASSERT_UNDEFINED_POLICY);
 //
 // Policy types for discrete quantiles:
 //
@@ -164,7 +172,8 @@ enum discrete_quantile_policy_type
    integer_outside,
    integer_inside,
    integer_below,
-   integer_above
+   integer_above,
+   integer_nearest
 };
 
 BOOST_MATH_META_INT(discrete_quantile_policy_type, discrete_quantile, BOOST_MATH_DISCRETE_QUANTILE_POLICY);
@@ -375,6 +384,10 @@ public:
    // Discrete quantiles:
    //
    typedef typename detail::find_arg<arg_list, is_discrete_quantile<mpl::_1>, discrete_quantile<> >::type discrete_quantile_type;
+   //
+   // Mathematically undefined properties:
+   //
+   typedef typename detail::find_arg<arg_list, is_assert_undefined<mpl::_1>, discrete_quantile<> >::type assert_undefined_type;
 };
 //
 // These full specializations are defined to reduce the amount of
@@ -399,6 +412,7 @@ public:
    typedef promote_float<> float_promote_type;
    typedef promote_double<> double_promote_type;
    typedef discrete_quantile<> discrete_quantile_type;
+   typedef assert_undefined<> assert_undefined_type;
 };
 
 template <>
@@ -419,6 +433,7 @@ public:
    typedef promote_float<false> float_promote_type;
    typedef promote_double<false> double_promote_type;
    typedef discrete_quantile<> discrete_quantile_type;
+   typedef assert_undefined<> assert_undefined_type;
 };
 
 template <class Policy, 
@@ -459,6 +474,10 @@ private:
    //
    typedef typename detail::find_arg<arg_list, is_discrete_quantile<mpl::_1>, typename Policy::discrete_quantile_type >::type discrete_quantile_type;
    //
+   // Mathematically undefined properties:
+   //
+   typedef typename detail::find_arg<arg_list, is_assert_undefined<mpl::_1>, discrete_quantile<> >::type assert_undefined_type;
+   //
    // Define a typelist of the policies:
    //
    typedef mpl::vector<
@@ -471,7 +490,8 @@ private:
       precision_type,
       float_promote_type,
       double_promote_type,
-      discrete_quantile_type > result_list;
+      discrete_quantile_type,
+      assert_undefined_type> result_list;
    //
    // Remove all the policies that are the same as the default:
    //
@@ -502,7 +522,7 @@ struct normalise<policy<>,
           promote_float<false>, 
           promote_double<false>, 
           discrete_quantile<>,
-          default_policy,
+          assert_undefined<>,
           default_policy,
           default_policy,
           default_policy,
@@ -621,8 +641,8 @@ struct precision
          ((::std::numeric_limits<Real>::digits <= precision_type::value) 
          || (Policy::precision_type::value <= 0)),
 #else
-         ((::std::numeric_limits<Real>::digits <= ::boost::math::policy::precision::precision_type::value) 
-         || (::boost::math::policy::precision::precision_type::value <= 0)),
+         ((::std::numeric_limits<Real>::digits <= ::boost::math::policy::precision<Real, Policy>::precision_type::value)
+         || (::boost::math::policy::precision<Real, Policy>::precision_type::value <= 0)),
 #endif
          // Default case, full precision for RealType:
          digits2< ::std::numeric_limits<Real>::digits>,
@@ -674,3 +694,4 @@ struct is_policy : public mpl::bool_< ::boost::math::policy::detail::is_policy_i
 }}} // namespaces
 
 #endif // BOOST_MATH_POLICY_HPP
+

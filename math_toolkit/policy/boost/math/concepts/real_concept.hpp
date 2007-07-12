@@ -351,6 +351,34 @@ inline int digits<concepts::real_concept, policy<> >(BOOST_EXPLICIT_TEMPLATE_TYP
    // and by Boost lexical cast and serialization causing loss of accuracy.
 }
 
+template <>
+inline int digits<concepts::real_concept, policy<detail::forwarding_arg1, detail::forwarding_arg2 > >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
+{ return digits<concepts::real_concept, policy<> >(); }
+
+template <>
+inline int digits<concepts::real_concept, policy<discrete_quantile<real> > >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
+{ return digits<concepts::real_concept, policy<> >(); }
+
+template <>
+inline int digits<concepts::real_concept, policy<discrete_quantile<integer_below> > >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
+{ return digits<concepts::real_concept, policy<> >(); }
+
+template <>
+inline int digits<concepts::real_concept, policy<discrete_quantile<integer_above> > >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
+{ return digits<concepts::real_concept, policy<> >(); }
+
+template <>
+inline int digits<concepts::real_concept, policy<discrete_quantile<integer_outside> > >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
+{ return digits<concepts::real_concept, policy<> >(); }
+
+template <>
+inline int digits<concepts::real_concept, policy<discrete_quantile<integer_inside> > >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
+{ return digits<concepts::real_concept, policy<> >(); }
+
+template <>
+inline int digits<concepts::real_concept, policy<discrete_quantile<integer_nearest> > >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
+{ return digits<concepts::real_concept, policy<> >(); }
+
 }
 
 } // namespace math

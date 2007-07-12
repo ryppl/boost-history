@@ -62,7 +62,7 @@ struct bessel_j_small_z_series_term
    {
       using namespace std;
       mult = x / 2;
-      term = pow(mult, v) / tgamma(v+1);
+      term = pow(mult, v) / boost::math::tgamma(v+1);
       mult *= -mult;
    }
    T operator()()
@@ -89,7 +89,7 @@ struct sph_bessel_j_small_z_series_term
    {
       using namespace std;
       mult = x / 2;
-      term = pow(mult, T(v)) / tgamma(v+1+T(0.5f));
+      term = pow(mult, T(v)) / boost::math::tgamma(v+1+T(0.5f));
       mult *= -mult;
    }
    T operator()()

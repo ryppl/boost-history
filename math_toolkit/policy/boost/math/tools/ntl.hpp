@@ -11,6 +11,7 @@
 #include <boost/math/tools/real_cast.hpp>
 #include <boost/math/tools/precision.hpp>
 #include <boost/math/constants/constants.hpp>
+#include <boost/math/policy/policy.hpp>
 
 namespace NTL
 {
@@ -176,6 +177,22 @@ inline NTL::RR epsilon<NTL::RR>(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(NTL::RR))
 }
 
 } // namespace tools
+
+namespace policy{
+
+template<>
+inline int digits<NTL::RR, boost::math::policy::policy<> >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(NTL::RR))
+{
+   return NTL::RR::precision();
+}
+
+template<>
+inline int digits<NTL::RR, boost::math::policy::policy<boost::math::policy::detail::forwarding_arg1, boost::math::policy::detail::forwarding_arg2> >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(NTL::RR))
+{
+   return NTL::RR::precision();
+}
+
+}
 
 //
 // The number of digits precision in RR can vary with each call

@@ -742,6 +742,12 @@ inline typename tools::promote_args<T>::type erf(T z, const Policy& pol)
    typedef typename tools::promote_args<T>::type result_type;
    typedef typename policy::evaluation<result_type, Policy>::type value_type;
    typedef typename policy::precision<result_type, Policy>::type precision_type;
+   typedef typename policy::normalise<
+      Policy, 
+      policy::promote_float<false>, 
+      policy::promote_double<false>, 
+      policy::discrete_quantile<>,
+      policy::assert_undefined<> >::type forwarding_policy;
 
    typedef typename mpl::if_<
       mpl::less_equal<precision_type, mpl::int_<0> >,
@@ -761,10 +767,10 @@ inline typename tools::promote_args<T>::type erf(T z, const Policy& pol)
       >::type
    >::type tag_type;
 
-   return tools::checked_narrowing_cast<result_type>(detail::erf_imp(
+   return policy::checked_narrowing_cast<result_type, forwarding_policy>(detail::erf_imp(
       static_cast<value_type>(z),
       false,
-      pol,
+      forwarding_policy(),
       tag_type()), "boost::math::erf<%1%>(%1%, %1%)");
 }
 
@@ -774,6 +780,12 @@ inline typename tools::promote_args<T>::type erfc(T z, const Policy& pol)
    typedef typename tools::promote_args<T>::type result_type;
    typedef typename policy::evaluation<result_type, Policy>::type value_type;
    typedef typename policy::precision<result_type, Policy>::type precision_type;
+   typedef typename policy::normalise<
+      Policy, 
+      policy::promote_float<false>, 
+      policy::promote_double<false>, 
+      policy::discrete_quantile<>,
+      policy::assert_undefined<> >::type forwarding_policy;
 
    typedef typename mpl::if_<
       mpl::less_equal<precision_type, mpl::int_<0> >,
@@ -793,10 +805,10 @@ inline typename tools::promote_args<T>::type erfc(T z, const Policy& pol)
       >::type
    >::type tag_type;
 
-   return tools::checked_narrowing_cast<result_type>(detail::erf_imp(
+   return policy::checked_narrowing_cast<result_type, forwarding_policy>(detail::erf_imp(
       static_cast<value_type>(z),
       true,
-      pol,
+      forwarding_policy(),
       tag_type()), "boost::math::erfc<%1%>(%1%, %1%)");
 }
 

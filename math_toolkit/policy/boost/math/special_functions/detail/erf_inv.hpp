@@ -365,11 +365,18 @@ typename tools::promote_args<T>::type erfc_inv(T z, const Policy& pol)
    // precision internally if it's appropriate:
    //
    typedef typename policy::evaluation<result_type, Policy>::type eval_type;
+   typedef typename policy::normalise<
+      Policy, 
+      policy::promote_float<false>, 
+      policy::promote_double<false>, 
+      policy::discrete_quantile<>,
+      policy::assert_undefined<> >::type forwarding_policy;
+
    //
    // And get the result, negating where required:
    //
-   return s * policy::checked_narrowing_cast<result_type, Policy>(
-      detail::erf_inv_imp(static_cast<eval_type>(p), static_cast<eval_type>(q), pol, static_cast<tag_type const*>(0)), function);
+   return s * policy::checked_narrowing_cast<result_type, forwarding_policy>(
+      detail::erf_inv_imp(static_cast<eval_type>(p), static_cast<eval_type>(q), forwarding_policy(), static_cast<tag_type const*>(0)), function);
 }
 
 template <class T, class Policy>
@@ -421,6 +428,12 @@ typename tools::promote_args<T>::type erf_inv(T z, const Policy& pol)
    // precision internally if it's appropriate:
    //
    typedef typename policy::evaluation<result_type, Policy>::type eval_type;
+   typedef typename policy::normalise<
+      Policy, 
+      policy::promote_float<false>, 
+      policy::promote_double<false>, 
+      policy::discrete_quantile<>,
+      policy::assert_undefined<> >::type forwarding_policy;
    //
    // Likewise use internal promotion, so we evaluate at a higher
    // precision internally if it's appropriate:
@@ -429,8 +442,8 @@ typename tools::promote_args<T>::type erf_inv(T z, const Policy& pol)
    //
    // And get the result, negating where required:
    //
-   return s * policy::checked_narrowing_cast<result_type, Policy>(
-      detail::erf_inv_imp(static_cast<eval_type>(p), static_cast<eval_type>(q), pol, static_cast<tag_type const*>(0)), function);
+   return s * policy::checked_narrowing_cast<result_type, forwarding_policy>(
+      detail::erf_inv_imp(static_cast<eval_type>(p), static_cast<eval_type>(q), forwarding_policy(), static_cast<tag_type const*>(0)), function);
 }
 
 template <class T>

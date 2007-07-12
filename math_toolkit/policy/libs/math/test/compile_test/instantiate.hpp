@@ -7,6 +7,10 @@
 #ifndef BOOST_LIBS_MATH_TEST_INSTANTIATE_HPP
 #define BOOST_LIBS_MATH_TEST_INSTANTIATE_HPP
 
+#ifndef BOOST_MATH_ASSERT_UNDEFINED_POLICY
+#  define BOOST_MATH_ASSERT_UNDEFINED_POLICY false
+#endif
+
 #include <boost/math/distributions/bernoulli.hpp>
 #include <boost/math/distributions/beta.hpp>
 #include <boost/math/distributions/binomial.hpp>

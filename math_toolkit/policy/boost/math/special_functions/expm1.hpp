@@ -191,6 +191,12 @@ inline typename tools::promote_args<T>::type expm1(T x, const Policy& pol)
    typedef typename tools::promote_args<T>::type result_type;
    typedef typename policy::evaluation<result_type, Policy>::type value_type;
    typedef typename policy::precision<result_type, Policy>::type precision_type;
+   typedef typename policy::normalise<
+      Policy, 
+      policy::promote_float<false>, 
+      policy::promote_double<false>, 
+      policy::discrete_quantile<>,
+      policy::assert_undefined<> >::type forwarding_policy;
 
    typedef typename mpl::if_c<
       ::std::numeric_limits<result_type>::is_specialized == 0,
@@ -210,9 +216,9 @@ inline typename tools::promote_args<T>::type expm1(T x, const Policy& pol)
       >::type
    >::type tag_type;
 
-   return tools::checked_narrowing_cast<result_type>(detail::expm1_imp(
+   return policy::checked_narrowing_cast<result_type, forwarding_policy>(detail::expm1_imp(
       static_cast<value_type>(x),
-      tag_type(), pol), BOOST_CURRENT_FUNCTION);
+      tag_type(), forwarding_policy()), BOOST_CURRENT_FUNCTION);
 }
 
 #ifdef expm1

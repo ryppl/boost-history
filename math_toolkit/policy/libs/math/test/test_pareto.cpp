@@ -264,9 +264,9 @@ int test_main(int, char* [])
   // Test range and support using double only,
   // because it supports numeric_limits max for pseudo-infinity.
   BOOST_CHECK_EQUAL(range(myp2).first, 0); // range 0 to +infinity
-  BOOST_CHECK_EQUAL(range(myp2).second, numeric_limits<double>::max());
+  BOOST_CHECK_EQUAL(range(myp2).second, (numeric_limits<double>::max)());
   BOOST_CHECK_EQUAL(support(myp2).first, myp2.location()); // support location to + infinity.
-  BOOST_CHECK_EQUAL(support(myp2).second, numeric_limits<double>::max());
+  BOOST_CHECK_EQUAL(support(myp2).second, (numeric_limits<double>::max)());
 
   // Check some bad parameters to the distribution.
 	BOOST_CHECK_THROW(boost::math::pareto mypm1(-1, 1), std::domain_error); // Using typedef

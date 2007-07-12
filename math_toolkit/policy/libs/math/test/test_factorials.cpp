@@ -9,6 +9,10 @@
 #  pragma warning(disable: 4996) // 'std::char_traits<char>::copy' was declared deprecated.
 #  pragma warning(disable: 4245) // int/unsigned int conversion
 #endif
+//
+// Return infinities not exceptions:
+//
+#define BOOST_MATH_OVERFLOW_ERROR_POLICY ignore_error
 
 #include <boost/math/concepts/real_concept.hpp>
 #include <boost/test/included/test_exec_monitor.hpp>
