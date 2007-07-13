@@ -6,6 +6,7 @@
  /]
 
 [section Connectivity Measures]
+
     size_t connectivity(
         _graph,
         _component_map,
@@ -13,8 +14,8 @@
         _vertex_index_map = not_given(),
         _components = not_given())
 
-The `connectivity()` algorithm is essentially a wrapper around the
-[boost_connected_components] algorithm, but provides additional (and optional)
+The `connectivity()` algorithm is a wrapper around the [boost_connected_components]
+algorithm, that provides some convenience for working with resultant concept maps.
 functionality for working with connected components. The parameters have, with
 the exeption of `_components`, the same purpose and requirements as
 documented in [boost_connected_components].

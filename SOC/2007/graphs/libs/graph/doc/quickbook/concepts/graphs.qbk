@@ -105,14 +105,130 @@ The notation used in the table is as follows.
 [include property_graph.qbk]
 [include mutable_property_graph.qbk]
 
+[h3 Pseudo-Concepts]
+The concepts above describe the type and functional requirements of graphs. However,
+these do not directly common concepts such as "directed graph" or "multigraph". As
+such, there are a number of pseudo-concepts with which we can also describe graph objects.
+
+[h4 Directed and Undirected Graphs]
+The interface that Boost.Graph provides for accessing and manipulating an undirected
+graph is the same as the interface for directed graphs described in the following
+sections, however there are some differences in the behaviour and semantics. For example,
+in a directed graph we can talk about out-edges and in-edges of a vertex. In an
+undirected graph there is no "in" and "out", there are just edges incident to a vertex.
+Nevertheless, in Boost.Graph we still use the `out_edges()` function (or `in_edges()`)
+to access the incident edges in an undirected graph. Similarly, an undirected edge has
+no "source" and "target" but merely an unordered pair of vertices, but we still use
+`source()` and `target()` to access these vertices. The reason Boost.Graph does not
+provide a separate interface for undirected graphs is that many algorithms on directed
+graphs also work on undirected graphs, and it would be inconvenient to have to duplicate
+the algorithms just because of an interface difference. When using undirected graphs
+just mentally disregard the directionality in the function names. The example below
+demonstrates using the `out_edges()`, `source()`, and `target()` with an undirected
+graph. The source code for this example and the following one can be found in
+`examples/undirected.cpp`.
+
+
+    const int V = 2;
+    typedef ... UndirectedGraph;
+    UndirectedGraph graph(V);
+
+    std::cout << "the edges incident to v: ";
+    boost::graph_traits<UndirectedGraph>::out_edge_iterator e, e_end;
+    boost::graph_traits<UndirectedGraph>::vertex_descriptor  s = vertex(0, graph);
+    for(tie(e, e_end) = out_edges(s, graph); e != e_end; ++e) {
+        std::cout << "(" << source(*e, graph)
+                  << "," << target(*e, graph)
+                  << ")" << endl;
+    }
+
+Even though the interface is the same for undirected graphs, there are some behavioral
+differences because edge equality is defined differently. In a directed graph,
+edge /(u,v)/ is never equal to edge /(v,u)/, but in an undirected graph they may
+be equal. If the undirected graph is a multigraph then /(u,v)/ and /(v,u)/ might be
+parallel edges. If the graph is not a multigraph then /(u,v)/ and /(v,u)/ must be the
+same edge.
+
+In the example below the edge equality test will return false for the directed graph
+and true for the undirected graph. The difference also affects the meaning of `add_edge()`.
+In the example below, if we had also written `add_add(v, u, graph)`, this would have
+added a parallel edge between `u` and `v` (provided the graph type allows parallel edges -
+which most do). The difference in edge equality also affects the association of edge
+properties. In the directed graph, the edges /(u,v)/ and /(v,u)/ can have distinct
+weight values, whereas in the undirected graph the weight of /(u,v)/ is the same as
+the weight of /(v,u)/ since they are the same edge.
+
+    typedef ... DirectedGraph;
+    typedef ... UndirectedGraph;
+
+    DirectedGraph digraph(V);
+    UndirectedGraph graph(V)
+
+    {
+        boost::graph_traits<DirectedGraph>::vertex_descriptor u, v;
+        u = vertex(0, digraph);
+        v = vertex(1, digraph);
+        add_edge(digraph, u, v, Weight(1.2));
+        add_edge(digraph, v, u, Weight(2.4));
+        boost::graph_traits<DirectedGraph>::edge_descriptor e1, e2;
+        bool found;
+        tie(e1, found) = edge(u, v, digraph);
+        tie(e2, found) = edge(v, u, digraph);
+        std::cout << "in a directed graph is ";
+        std::cout << "(u,v) == (v,u) ? " << (e1 == e2) << std::endl;
+
+        property_map<DirectedGraph, edge_weight_t>::type
+        weight = get(edge_weight, digraph);
+        cout << "weight[(u,v)] = " << get(weight, e1) << endl;
+        cout << "weight[(v,u)] = " << get(weight, e2) << endl;
+    }
+
+    {
+        boost::graph_traits<UndirectedGraph>::vertex_descriptor u, v;
+        u = vertex(0, graph);
+        v = vertex(1, graph);
+        add_edge(graph, u, v, Weight(3.1));
+        boost::graph_traits<UndirectedGraph>::edge_descriptor e1, e2;
+        bool found;
+        tie(e1, found) = edge(u, v, graph);
+        tie(e2, found) = edge(v, u, graph);
+        std::cout << "in an undirected graph is ";
+        std::cout << "(u,v) == (v,u) ? " << (e1 == e2) << std::endl;
+
+        property_map<UndirectedGraph, edge_weight_t>::type
+        weight = get(edge_weight, graph);
+        cout << "weight[(u,v)] = " << get(weight, e1) << endl;
+        cout << "weight[(v,u)] = " << get(weight, e2) << endl;
+    }
+
+The output is:
+
+[pre
+in a directed graph is (u,v) == (v,u) ? 0
+weight\[(u,v)\] = 1.2
+weight\[(v,u)\] = 2.4
+in an undirected graph is (u,v) == (v,u) ? 1
+weight\[(u,v)\] = 3.1
+weight\[(v,u)\] = 3.1
+]
+
+[h4 Multigraphs]
+A /multigraph/ is a graph (either directed or undirected) that has parallel edges
+between vertices. The Boost.Graph types are mostly unrestrictive about the addition
+of parallel edges, meaning that it is fairly easy to actually create multigraphs
+without any additional work.
+
+There are certain sets of graph types that do not allow the addition of parallel edges.
+Specifically, if the EdgeList and OutEdgeList of an [boost_adjacency_list] models an
+associative container, then the graph cannont be a multigraph.
+
+*Document this a little better*
+
 [h3 Indexed Graphs]
 Although not explicitly documented (yet), there's a concept of a Vertex-Indexed graph
 that has some valid expressions related specifically to operations on vertex index
 property of the graph. The [boost_undirected_graph] class has some addiitonal methods
 that can also be ported.
 
-[h3 Undirected Graphs]
-
-Lots of stuff here on undirected graphs...
 
 [endsect]

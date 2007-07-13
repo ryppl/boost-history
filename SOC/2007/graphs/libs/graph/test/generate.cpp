@@ -156,7 +156,9 @@ main(int argc, char *argv[])
     test_wheel<Graph>();
     test_prism<Graph>();
     */
-    test_web<Graph>();
+    // test_web<Graph>();
+
+    test_prism<DiGraph>(with_clockwise_cycle(), with_bidirected_spokes());
 
     /*
     test_path<DiGraph>(with_forward_edges());

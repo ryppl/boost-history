@@ -47,3 +47,15 @@ exe generate
     : <include>$BOOST_ROOT
     : <include>../../../
     ;
+
+exe exterior
+    : exterior.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
+
+exe cycle
+    : cycle.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;

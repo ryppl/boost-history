@@ -25,8 +25,9 @@ namespace boost
         // property vectors. Otherwise, the descriptor is generally a void-cast
         // pointer to the stored element.
 
-        // Edge descriptors are a little different. They may be required to
-        // be in associative maps.
+        // TODO: Edge descriptors are a little different. They may be required to
+        // be in associative maps regardless of actual type (maybe). There's not
+        // a single example of using exterior edge properties in Boost.Graph.
 
         template <typename Vertex, typename Value>
         struct choose_ext_vprop_container
@@ -66,6 +67,22 @@ namespace boost
             detail::choose_ext_vprop_map<Graph, container_type>::type
             map_type;
     };
+
+    // These functions are needed to abstract the initialization sequence.
+    // If you know the actual container type of your exerior property, then
+    // you skip these functions. If you don't and you're declaring these
+    // generically, then you _must_ use these to ensure correct initialiation
+    // of the property map.
+
+    template <typename Key, typename Value>
+    static inline std::tr1::unordered_map<Key, Value>&
+    make_property_map(std::tr1::unordered_map<Key, Value>& c)
+    { return c; }
+
+    template <typename Value>
+    static inline typename std::vector<Value>::iterator
+    make_property_map(std::vector<Value>& c)
+    { return c.begin(); }
 }
 
 #endif

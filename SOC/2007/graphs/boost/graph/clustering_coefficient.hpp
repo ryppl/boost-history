@@ -37,7 +37,8 @@ namespace boost
                     directed_tag)
 
         {
-            return (edge(u, v, g).second ? 1 : 0) + (edge(v, u, g).second ? 1 : 0);
+            return (edge(u, v, g).second ? 1 : 0) +
+                   (edge(v, u, g).second ? 1 : 0);
         }
 
         // This template matches undirectedS
@@ -66,6 +67,9 @@ namespace boost
         size_t ret = detail::num_possible_edges(g, k, cat);
         return ret;
     }
+
+    // This is seriously flawed for directed graphs...
+    // Adjacenct vertices correspond to out degrees.
 
     template <typename Graph>
     inline size_t
