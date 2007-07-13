@@ -181,7 +181,7 @@ inline T raise_overflow_error(
            const char* message, 
            const  ::boost::math::policy::overflow_error< ::boost::math::policy::throw_on_error>&)
 {
-   raise_error<std::overflow_error, T>(function, message);
+   raise_error<std::overflow_error, T>(function, message ? message : "numeric overflow");
    // we never get here:
    return std::numeric_limits<T>::has_infinity ? std::numeric_limits<T>::infinity() : boost::math::tools::max_value<T>();
 }
@@ -224,7 +224,7 @@ inline T raise_underflow_error(
            const char* message, 
            const  ::boost::math::policy::underflow_error< ::boost::math::policy::throw_on_error>&)
 {
-   raise_error<std::underflow_error, T>(function, message);
+   raise_error<std::underflow_error, T>(function, message ? message : "numeric underflow");
    // we never get here:
    return 0;
 }
@@ -268,7 +268,7 @@ inline T raise_denorm_error(
            const T& val,
            const  ::boost::math::policy::denorm_error< ::boost::math::policy::throw_on_error>&)
 {
-   raise_error<std::underflow_error, T>(function, message);
+   raise_error<std::underflow_error, T>(function, message ? message : "denormalised result");
    // we never get here:
    return 0;
 }
