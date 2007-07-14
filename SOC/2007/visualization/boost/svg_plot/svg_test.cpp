@@ -1,14 +1,12 @@
 #include <vector>
 #include <cmath>
-#include <boost/array.hpp>
-#include <boost/bind.hpp>
 #include <map>
 
+#include "svg_2d_plot.hpp"
 #include "svg_1d_plot.hpp"
 
 using std::multimap;
-using std::deque;
-using boost::array;
+using std::vector;
 using namespace boost::svg;
 
 double f(double x)
@@ -40,36 +38,52 @@ public:
 
 int main()
 {
-    std::vector<double> data1;
-    std::vector<int> data2;
+    std::map<double, double> data1;
+    std::map<double, double> data2;
+    std::vector<double> data3;
 
-    svg_1d_plot my_plot;
+    svg_2d_plot my_2d_plot;
+    svg_1d_plot my_1d_plot;
 
-    for(double i=0; i<10; ++i)
+    for(double i=0; i<10; i+=1)
     {
-        data1.push_back(f(i));
-        data2.push_back((int)i-5);
+        data1[i - 5.] = f(i);
+        data2[i] = i - 5.;
+        data3.push_back(h(i) - 10.);
     }
 
     // size/scale settings
-    my_plot.set_image_size(500, 350);
+    my_2d_plot.set_image_size(500, 350);
 
-    my_plot.set_title("Hello, operator")
-           .set_plot_window_on(false)
+    my_2d_plot.set_title("Hello, operator")
+           .set_plot_window_on(true)
            .set_legend_on(true);
 
-    my_plot.set_title_on(true)
+    my_2d_plot.set_title_on(true)
            .set_x_label_on(true)
            .set_x_label("sqrt(x)")
-           .set_background_border_color(yellow)
            .set_x_major_grid_on(false);
 
-    my_plot.set_x_label_color(orange);
+    my_1d_plot.set_image_size(500, 350);
 
-    plot(my_plot, data1, "sqrt(x)", plot_point_style(circle, black, blue, 12));
-    plot(my_plot, data2, "Not sqrt(x)", dConvert());
+    my_1d_plot.set_title("Hello, operator")
+           .set_plot_window_on(true)
+           .set_legend_on(true);
 
-    my_plot.write("./test.svg");
+    my_1d_plot.set_title_on(true)
+           .set_x_label_on(true)
+           .set_x_label("sqrt(x)")
+           .set_x_major_grid_on(false);
+
+    plot_2d(my_2d_plot, data1, "sqrt(x)");
+
+    plot_2d(my_2d_plot, data2, "Not sqrt(x)", 
+        _size = 10);
+    
+    plot(my_1d_plot, data3, "1D Plot");
+
+    my_1d_plot.write("D:/test1d.svg");
+    my_2d_plot.write("D:/test2d.svg");
 
     return 0;
 }

@@ -7,8 +7,8 @@
 
 // ----------------------------------------------------------------- 
 
-#ifndef _SVG_PLOT_INSTRUCTION_HPP
-#define _SVG_PLOT_INSTRUCTION_HPP
+#ifndef _BOOST_SVG_SVG_PLOT_INSTRUCTION_HPP
+#define _BOOST_SVG_SVG_PLOT_INSTRUCTION_HPP
 
 #include <iterator>
 #include "svg_style.hpp"

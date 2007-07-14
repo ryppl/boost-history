@@ -6,10 +6,10 @@
 
 // ----------------------------------------------------------------- 
 
-#ifndef _SVG_STYLE_HPP
-#define _SVG_STYLE_HPP
+#ifndef _BOOST_SVG_SVG_STYLE_HPP
+#define _BOOST_SVG_SVG_STYLE_HPP
 
-#include <map>
+#include <ostream>
 
 namespace boost {
 namespace svg {
@@ -92,10 +92,7 @@ struct svg_color
 
     bool operator==(const svg_color& rhs)
     {
-        if(r == rhs.r && g == rhs.g && b == rhs.b)
-            return true;
-
-        return false;
+        return r == rhs.r && g == rhs.g && b == rhs.b;
     }
 };
 
@@ -283,85 +280,96 @@ private:
     unsigned int stroke_width;
     
 public:
-    svg_style();
-    svg_style(const svg_color&, const svg_color&);
+    svg_style():fill_color(svg_color(0, 0, 0)), 
+        stroke_color(svg_color(0, 0, 0)), stroke_width(0)
+    {
 
-    void set_fill_color(const svg_color&);
-    void set_stroke_color(const svg_color&);
+    }
+
+    svg_style(const svg_color& _fill, const svg_color& _stroke,
+                     unsigned int _width = 0):
+                     fill_color(_fill), stroke_color(_stroke), 
+                     stroke_width(_width)
+    {
+
+    }
     
-    void set_stroke_width(unsigned int);
-    void write(std::ostream&);
+    // setters
+    svg_style& set_fill_color(const svg_color& _col)
+    { 
+        fill_color   = _col;  
+        return *this;
+    }
 
-    svg_color get_fill_color();
-    svg_color get_stroke_color();
+    svg_style& set_stroke_color(const svg_color& _col) 
+    { 
+        stroke_color = _col;
+        return *this;
+    }
 
-    unsigned int get_stroke_width();
+    svg_style& set_stroke_width(unsigned int _width)   
+    { 
+        stroke_width = _width;
+        return *this;
+    }
+
+    // getters
+    svg_color get_fill_color()      { return svg_color(fill_color);      };
+    svg_color get_stroke_color()    { return svg_color(stroke_color);    };
+    unsigned int get_stroke_width() { return stroke_width;               };
+
+    
+    void svg_style::write(std::ostream& rhs)
+    {
+        rhs << "stroke=\"";
+        stroke_color.write(rhs);
+        rhs << "\" fill=\"";
+        fill_color.write(rhs);
+        rhs<<"\" ";
+
+        if(stroke_width > 0)
+        {
+            rhs << "stroke-width=\""
+                << stroke_width
+                << "\" ";
+        }
+    }
 };
 
-// -----------------------------------------------------------------
-// Black seems to me to be as good a default as any
-// -----------------------------------------------------------------
-svg_style::svg_style():fill_color(svg_color(0, 0, 0)), 
-    stroke_color(svg_color(0, 0, 0)), stroke_width(0)
+enum plot_doc_structure{PLOT_BACKGROUND, PLOT_PLOT_BACKGROUND, 
+    PLOT_X_MINOR_GRID, PLOT_X_MAJOR_GRID, PLOT_Y_AXIS, PLOT_X_AXIS, 
+    PLOT_Y_MINOR_TICKS, PLOT_X_MINOR_TICKS, PLOT_Y_MAJOR_TICKS, 
+    PLOT_X_MAJOR_TICKS, PLOT_PLOT_LABELS, PLOT_PLOT_LINES, PLOT_PLOT_POINTS, 
+    PLOT_LEGEND_BACKGROUND, PLOT_LEGEND_POINTS, PLOT_LEGEND_TEXT,
+    PLOT_Y_LABEL, PLOT_X_LABEL, PLOT_TITLE, SVG_PLOT_DOC_CHILDREN};
+
+enum point_shape{none, circle, square, point};
+
+struct plot_point_style
 {
+    point_shape shape;
+    svg_color stroke_color;
+    svg_color fill_color;
+    int size;
 
-}
-
-
-// -----------------------------------------------------------------
-// For changing the defaults for the colors
-// -----------------------------------------------------------------
-svg_style::svg_style(const svg_color& _fill, const svg_color& _stroke)
-:fill_color(_fill), stroke_color(_stroke), stroke_width(0)
-{
-
-}
-
-void svg_style::set_stroke_color(const svg_color& rhs)
-{
-    stroke_color = rhs;
-}
-
-void svg_style::set_fill_color(const svg_color& rhs)
-{
-    fill_color = rhs;
-}
-
-void svg_style::set_stroke_width(unsigned int _width)
-{
-    stroke_width = _width;
-}
-
-svg_color svg_style::get_fill_color()
-{
-    return svg_color(fill_color);
-}
-
-svg_color svg_style::get_stroke_color()
-{
-    return svg_color(stroke_color);
-}
-
-unsigned int svg_style::get_stroke_width()
-{
-    return stroke_width;
-}
-
-void svg_style::write(std::ostream& rhs)
-{
-    rhs << "stroke=\"";
-    stroke_color.write(rhs);
-    rhs << "\" fill=\"";
-    fill_color.write(rhs);
-    rhs<<"\" ";
-
-    if(stroke_width > 0)
+    plot_point_style(const svg_color& _fill, 
+        const svg_color& _stroke, int _size = 10, point_shape _shape = circle):
+        fill_color(_fill), stroke_color(_stroke), size(_size), shape(_shape)
     {
-        rhs << "stroke-width=\""
-            << stroke_width
-            << "\" ";
+
     }
-}
+};
+
+struct plot_line_style
+{
+    svg_color color;
+    bool line_on;
+
+    plot_line_style(const svg_color& _col, bool _on):
+        color(_col), line_on(_on)
+    {
+    }
+};
 
 }//svg
 }//boost
