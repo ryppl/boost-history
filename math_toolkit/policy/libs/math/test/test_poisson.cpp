@@ -432,7 +432,7 @@ void test_spots(RealType)
      typedef policy<discrete_quantile<integer_outside> > P4;
      typedef policy<discrete_quantile<integer_inside> > P5;
      typedef policy<discrete_quantile<integer_nearest> > P6;
-     RealType tol = boost::math::tools::epsilon<RealType>() * 10;
+     RealType tol = boost::math::tools::epsilon<RealType>() * 20;
      if(!boost::is_floating_point<RealType>::value)
         tol *= 7;
      //
