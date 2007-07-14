@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Semantic Models</title><link rel="stylesheet" href="../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked.html" title="Interlocked" /><link rel="prev" href="interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type" /><link rel="next" href="interlocked_cage_models.html" title="Interlocked Cage Models" /><script type="text/javascript" src="../../../../doc/javascript/main.js"></script>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Semantic Models</title><link rel="stylesheet" href="../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked.html" title="Interlocked" /><link rel="prev" href="interlocked_concepts/interlocked_integer_type.html" title="Interlocked Integer Type" /><link rel="next" href="interlocked_fence_models.html" title="Interlocked Fence Models" /><script type="text/javascript" src="../../../../doc/javascript/main.js"></script>
       <script type="text/javascript" > <!--
          boostscript.init( new Array(
             boostscript.nested_links,
@@ -71,7 +71,7 @@
         </a>
       </div>
       <div class="spirit-nav-icon">
-        <a accesskey="n" href="interlocked_cage_models.html">
+        <a accesskey="n" href="interlocked_fence_models.html">
           <div class="next-icon"></div>
         </a>
       </div>
@@ -88,47 +88,19 @@
                 </div>
               </div>
             </div>
-            <div class="important">
-              <div class="box-outer-wrapper">
-                <div class="box-top-left"></div>
-                <div class="box-top-right"></div>
-                <div class="box-top"></div>
-                <div class="box-inner-wrapper">
-                  <div class="admonition-graphic">
-                    <div class="admonition-icon">
-                      <div class="important-icon"></div>
-                    </div>
-                  </div>
-                  <div class="admonition-body">
-                    <div class="admonition-title">Important</div>
-                    <div class="admonition-content">
-                      <p>
-          </p>
-                      <p>
-            The <code class="computeroutput"><span class="identifier">sequential</span></code> and <code class="computeroutput"><span class="identifier">thread_unsafe</span></code> semantics described on
-            this page are not yet implemented.
-          </p>
-                      <p>
-        </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="box-bottom-left"></div>
-                <div class="box-bottom-right"></div>
-                <div class="box-bottom"></div>
-              </div>
-            </div>
             <a id="boost_act.interlocked.interlocked_semantic_models.description"></a>
-            <h5><a id="id465080"></a>
+            <h5><a id="id464610"></a>
         <a href="interlocked_semantic_models.html#boost_act.interlocked.interlocked_semantic_models.description">Description</a>
       </h5>
             <p>
         The types detailed in this section are the <a href="interlocked_concepts/interlocked_semantic_type.html" title="Interlocked Semantic Type">
         <code class="literal">Interlocked Semantic Types</code></a> for use with <a href="interlocked_concepts/interlocked_operation.html" title="Interlocked Operation">
-        <code class="literal">Interlocked Operations</code></a> and __interlocked<span class="underline">barriers</span>_.
+        <code class="literal">Interlocked Operations</code></a>, <a href="interlocked_concepts/interlocked_cage.html" title="Interlocked Cage">
+        <code class="literal">Interlocked Cages</code></a>, and <a href="interlocked_concepts/interlocked_fence.html" title="Interlocked Fence">
+        <code class="literal">Interlocked Fences</code></a>.
       </p>
             <a id="boost_act.interlocked.interlocked_semantic_models.model_of"></a>
-            <h5><a id="id465148"></a>
+            <h5><a id="id464700"></a>
         <a href="interlocked_semantic_models.html#boost_act.interlocked.interlocked_semantic_models.model_of">Model
         of</a>
       </h5>
@@ -170,7 +142,7 @@
               </div>
             </div>
             <div class="table">
-              <a id="id465203"></a>
+              <a id="id464755"></a>
               <p class="title">
                 <b>Table 8. Semantic Types</b>
               </p>
@@ -333,7 +305,7 @@
             </div>
             <br class="table-break" />
             <a id="boost_act.interlocked.interlocked_semantic_models.headers"></a>
-            <h5><a id="id465553"></a>
+            <h5><a id="id465105"></a>
         <a href="interlocked_semantic_models.html#boost_act.interlocked.interlocked_semantic_models.headers">Headers</a>
       </h5>
             <p>
@@ -353,10 +325,10 @@
                 <div class="box-top-right"></div>
                 <div class="box-top"></div>
                 <div class="box-inner-wrapper">
-                  <div class="style-switcher-box" id="id465598">
+                  <div class="style-switcher-box" id="id465150">
       <script type="text/javascript" > <!--
           boostscript.call( boostscript.style_switcher, 'insert_style_selector',
-             'id465598',
+             'id465150',
              '../../../../doc/style/html/syntax.xml',
              '../../../../doc/style/html'
           );
@@ -384,7 +356,7 @@
             <p>
       </p>
             <a id="boost_act.interlocked.interlocked_semantic_models.example"></a>
-            <h5><a id="id466197"></a>
+            <h5><a id="id465750"></a>
         <a href="interlocked_semantic_models.html#boost_act.interlocked.interlocked_semantic_models.example">Example</a>
       </h5>
             <p>
@@ -412,7 +384,7 @@
         </a>
       </div>
       <div class="spirit-nav-icon">
-        <a accesskey="n" href="interlocked_cage_models.html">
+        <a accesskey="n" href="interlocked_fence_models.html">
           <div class="next-icon"></div>
         </a>
       </div>

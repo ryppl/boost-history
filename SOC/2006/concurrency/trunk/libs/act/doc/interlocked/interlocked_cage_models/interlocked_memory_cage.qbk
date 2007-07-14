@@ -6,14 +6,12 @@
 
 An __interlocked_cage__ whose instantiations and semantics apply to both
 compiler reordering of operations as well as order of visibility of operations
-with respect to other threads of execution. Internally, [concept Interlocked
-Memory Cages] often imply low-level memory and compiler barriers during
-construction and/or destruction and therefore should be used sparingly. When
-given the option, one should always prefer to directly apply semantics to their
-operation rather than use a cage. One common use would be to implement a
-user-defined interlocked operation with strict ordering requirements when the
-target system does not provide direct support for such semantics for that
-particular operation.
+with respect to other threads of execution.
+
+[note In most cases, you should avoid explicit cages and should instead favor
+ the use of __interlocked_operations__ with proper semantics as they may allow
+ for more optimized code generation and are generally less prone to error.
+]
 
 [heading Model of]
 

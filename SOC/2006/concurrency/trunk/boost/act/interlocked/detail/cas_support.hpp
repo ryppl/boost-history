@@ -70,8 +70,8 @@
 #else
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_IMPL_INFO                     \
-( ( assign,        ( acq_rel ) ) )                                             \
-( ( assign_if_was, ( acq_rel ) ) )                                             \
+( ( assign,        ( sequential ) ) )                                          \
+( ( assign_if_was, ( sequential ) ) )                                          \
 ( ( load,          ( acquire ) ) )                                             \
 ( ( store,         ( release ) ) )
 
@@ -102,6 +102,7 @@
 #define BOOST_ACT_INTERLOCKED_DETAIL_FUNCTION_ID_xor_assign      22
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_0               0
+#define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_thread_unsafe   1
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_unordered       1
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_acquire         2
 #define BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_read            2
@@ -176,7 +177,7 @@ BOOST_PP_EQUAL                                                                 \
       , BOOST_PP_CAT( BOOST_ACT_INTERLOCKED_DETAIL_SEMANTIC_ID_, semantics )   \
       )                                                                        \
     , BOOST_ACT_INTERLOCKED_DETAIL_CAS_SUPPORT_IMPL_INFO                       \
-      ((0,(unordered)(acquire)(release)(acq_rel)))                             \
+      ((0,(thread_unsafe)(unordered)(acquire)(release)(acq_rel)(sequential)))  \
     )                                                                          \
   )                                                                            \
 , 2                                                                            \

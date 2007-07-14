@@ -1,11 +1,9 @@
 index.html
 boost_act/beta_warning.html
-boost_act/brief_description.html
-boost_act/introduction.html
-boost_act/compiler_setup.html
 boost_act/interlocked.html
 boost_act/interlocked/interlocked_concepts.html
 boost_act/interlocked/interlocked_concepts/interlocked_operation.html
+boost_act/interlocked/interlocked_concepts/interlocked_fence.html
 boost_act/interlocked/interlocked_concepts/interlocked_cage.html
 boost_act/interlocked/interlocked_concepts/interlocked_semantic_type.html
 boost_act/interlocked/interlocked_concepts/interlocked_type.html
@@ -13,6 +11,9 @@ boost_act/interlocked/interlocked_concepts/interlocked_natural_type.html
 boost_act/interlocked/interlocked_concepts/interlocked_arithmetic_type.html
 boost_act/interlocked/interlocked_concepts/interlocked_integer_type.html
 boost_act/interlocked/interlocked_semantic_models.html
+boost_act/interlocked/interlocked_fence_models.html
+boost_act/interlocked/interlocked_fence_models/interlocked_memory_fence.html
+boost_act/interlocked/interlocked_fence_models/interlocked_compiler_fence.html
 boost_act/interlocked/interlocked_cage_models.html
 boost_act/interlocked/interlocked_cage_models/interlocked_memory_cage.html
 boost_act/interlocked/interlocked_cage_models/interlocked_compiler_cage.html

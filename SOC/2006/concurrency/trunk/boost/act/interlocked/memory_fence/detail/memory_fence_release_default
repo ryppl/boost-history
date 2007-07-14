@@ -1,23 +1,26 @@
 /*=============================================================================
-    Copyright (c) 2006, 2007 Matthew Calabrese
+    Copyright (c) 2007 Matthew Calabrese
 
     Use, modification and distribution is subject to the Boost Software
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_FENCE_DETAIL_FENCE_VISTA_HPP
-#define BOOST_ACT_INTERLOCKED_FENCE_DETAIL_FENCE_VISTA_HPP
+#ifndef BOOST_ACT_INTERLOCKED_MEM_FENCE_DETAIL_MEM_FENCE_REL_DEF_IMPL_HPP
+#define BOOST_ACT_INTERLOCKED_MEM_FENCE_DETAIL_MEM_FENCE_REL_DEF_IMPL_HPP
 
-// ToDo: Don't include windows.h
-#include <windows.h>
+#include <boost/act/interlocked/memory_fence/memory_fence_acq_rel.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
-inline void fence_impl()
+struct memory_fence_release_default_impl
 {
-  MemoryBarrier();
-}
+  // ToDo: Use store or load acquire when not dependenton explicit barriers.
+  static void execute()
+  {
+    interlocked::memory_fence< acq_rel >();
+  }
+};
 
 } } } }
 

@@ -26,16 +26,12 @@ assign_if_was< acquire >
 #define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_UN_IMPL                     \
 assign_if_was< release >
 
-#elif BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( assign_if_was, acq_rel )
+#else
 
 #include <boost/act/interlocked/assign_if_was/assign_if_was_acq_rel.hpp>
 
 #define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_UN_IMPL                     \
 assign_if_was< acq_rel >
-
-#else
-
-#error assign_if_was_unordered_default was improperly included.
 
 #endif
 

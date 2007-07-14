@@ -1,0 +1,23 @@
+[section Interlocked Memory Fence]
+
+[heading Description]
+
+An __interlocked_fence__ whose instantiations and semantics apply to both
+compiler reordering of operations as well as order of visibility of operations
+with respect to other threads of execution.
+
+[note In most cases, you should avoid explicit fences and should instead favor
+ the use of __interlocked_operations__ with proper semantics or
+ __interlocked_memory_cages__ as they may allow for more optimized code
+ generation and are generally less prone to error.
+]
+
+[heading Model of]
+
+* __interlocked_fence__
+
+[heading Example]
+
+ToDo: Make an example
+
+[endsect]

@@ -1,0 +1,6 @@
+[section Interlocked Fence Models]
+
+[include interlocked_fence_models/interlocked_memory_fence.qbk]
+[include interlocked_fence_models/interlocked_compiler_fence.qbk]
+
+[endsect]

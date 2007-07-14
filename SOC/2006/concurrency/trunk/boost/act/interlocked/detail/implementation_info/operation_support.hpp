@@ -96,9 +96,9 @@
         , custom_store_release                                                 \
         , (( load,         ( unordered ) ))                                    \
           (( store,        ( release )( unordered ) ))                         \
-          (( assign,       ( acq_rel )( acquire )( release )( unordered ) ))\
-          (( assign_if_was,( acq_rel ) ))                                   \
-          (( add_assign,   ( acq_rel ) ))                                   \
+          (( assign,       ( acq_rel )( acquire )( release )( unordered ) ))   \
+          (( assign_if_was,( acq_rel ) ))                                      \
+          (( add_assign,   ( acq_rel ) ))                                      \
         )
 */
 
@@ -151,37 +151,23 @@
 */
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_ITANIUM_RW_ORDERING_SUPPORT               \
-        ( acq_rel )( acquire )( release )( unordered )
+        ( sequential )( acq_rel )( acquire )( release )( unordered )
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_ITANIUM_LOAD_ORDERING_SUPPORT             \
-        ( acq_rel )( acquire )( unordered )
+        ( sequential )( acq_rel )( acquire )( unordered )
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_ITANIUM_STORE_ORDERING_SUPPORT            \
-        ( acq_rel )( release )( unordered )
+        ( sequential )( acq_rel )( release )( unordered )
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_X86_RW_ORDERING_SUPPORT                   \
-        ( acq_rel )
+        ( sequential )
 
+// ToDo: Change to acquire
 #define BOOST_ACT_INTERLOCKED_DETAIL_X86_LOAD_ORDERING_SUPPORT                 \
-        ( acquire )
+        ( sequential )
 
 #define BOOST_ACT_INTERLOCKED_DETAIL_X86_STORE_ORDERING_SUPPORT                \
-        ( release )
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_NO_FENCE_SUPPORT                          \
-        ( none )
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_X86_FENCE_SUPPORT                         \
-        BOOST_ACT_INTERLOCKED_DETAIL_NO_FENCE_SUPPORT
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_SSE_FENCE_SUPPORT                         \
-        ( write )
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_SSE2_FENCE_SUPPORT                        \
-        ( full )( read )( write )
-
-#define BOOST_ACT_INTERLOCKED_DETAIL_ITANIUM_FENCE_SUPPORT                     \
-        ( full )( read )( write )
+        ( sequential )
 
 /******************************************************************************/
 /******************************************************************************/
@@ -251,23 +237,6 @@
       #define BOOST_ACT_INTERLOCKED_DETAIL_STORE_ORDERING_SUPPORT              \
               BOOST_ACT_INTERLOCKED_DETAIL_X86_STORE_ORDERING_SUPPORT
 
-      #if _M_IX86_FP >= 2 // SSE2 generation is enabled
-
-        #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                     \
-                BOOST_ACT_INTERLOCKED_DETAIL_SSE2_FENCE_SUPPORT
-
-      #elif _M_IX86_FP >= 1 // Else, if SSE generation is enabled
-
-        #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                     \
-                BOOST_ACT_INTERLOCKED_DETAIL_SSE_FENCE_SUPPORT
-
-      #else // Else, SSE generation not enabled
-
-        #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                     \
-                BOOST_ACT_INTERLOCKED_DETAIL_X86_FENCE_SUPPORT
-
-      #endif // End detailed SSE support checks
-
     #else // Else, SSE generation not enabled
 
       #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                       \
@@ -290,13 +259,7 @@
       #define BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT                 \
               BOOST_ACT_INTERLOCKED_DETAIL_ITANIUM_RW_ORDERING_SUPPORT
 
-      #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                       \
-              BOOST_ACT_INTERLOCKED_DETAIL_ITANIUM_FENCE_SUPPORT
-
     #elif defined( __QMSPP_ ) // Else: if x86
-
-      #define BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT                 \
-              BOOST_ACT_INTERLOCKED_DETAIL_X86_RW_ORDERING_SUPPORT
 
       #define BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT                 \
               BOOST_ACT_INTERLOCKED_DETAIL_X86_RW_ORDERING_SUPPORT
@@ -334,10 +297,10 @@
             &&  defined( BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT )    \
             &&  defined( BOOST_ACT_INTERLOCKED_DETAIL_INTERLOCKED_SIZES )      \
           )
-
+/*
   // ToDo: Possibly change to check for 64-bit instead
   #if BOOST_ACT_INTERLOCKED_DETAIL_NONVISTA_HAS_OP_SUPPORT() // Pre-vista
-
+*/
     // Note: Same name as vista windows on purpose
     // ToDo: Add assembly implementation when possible even though named
     //       versions are not available (including 64-bit support).
@@ -347,7 +310,7 @@
     , (( assign,        BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT ))    \
       (( assign_if_was, BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT ))    \
     )
-
+/*
   #elif BOOST_ACT_INTERLOCKED_DETAIL_VISTA_HAS_OP_SUPPORT() // Vista and up
 
     // Note: Same name as pre-vista windows on purpose
@@ -358,8 +321,8 @@
     , (( assign,        BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT ))    \
       (( assign_if_was, BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT ))    \
     )
-
   #endif // End WINVER checks
+*/
 
 #elif defined( __GNUC__ ) // GCC
 
@@ -370,23 +333,6 @@
   #elif defined( __i386__ ) // x86
 
     #define BOOST_ACT_INTERLOCKED_DETAIL_RW_ORDERING_SUPPORT ( acq_rel )
-
-    #ifdef __SSE2__ // SSE2 support
-
-      #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                       \
-              BOOST_ACT_INTERLOCKED_DETAIL_SSE2_FENCE_SUPPORT
-
-    #elif defined( __SSE__ ) // SSE support
-
-      #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                       \
-              BOOST_ACT_INTERLOCKED_DETAIL_SSE_FENCE_SUPPORT
-
-    #else // Else: Neither SSE nor SSE2 support
-
-      #define BOOST_ACT_INTERLOCKED_DETAIL_FENCE_SUPPORT                       \
-              BOOST_ACT_INTERLOCKED_DETAIL_X86_FENCE_SUPPORT
-
-    #endif // End SSE detection
 
     #define BOOST_ACT_INTERLOCKED_DETAIL_OPERATION_SUPPORT                     \
     ( gcc_x86, (32), volatile_load_acquire, volatile_store_release             \

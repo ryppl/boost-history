@@ -11,14 +11,14 @@
 
 #include <boost/act/config/interlocked/has.hpp>
 
-#if BOOST_ACT_INTERLOCKED_HAS( assign, acq_rel )
+#if BOOST_ACT_INTERLOCKED_HAS( assign, sequential )
 
 #include <boost/act/interlocked/semantics/default.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/remove_cv.hpp>
-#include <boost/act/interlocked/assign/assign_acq_rel.hpp>
+#include <boost/act/interlocked/assign/assign_sequential.hpp>
 
 #include <boost/act/interlocked/detail/interlocked_operand_validators.hpp>
 
@@ -33,7 +33,7 @@ typename lazy_enable_if
 ::type
 assign( TargetType& destination, SourceType const& new_value )
 {
-  return interlocked::assign< acq_rel >( destination, new_value );
+  return interlocked::assign< sequential >( destination, new_value );
 }
 
 template< typename Semantics, typename TargetType, typename SourceType >
@@ -48,7 +48,7 @@ typename lazy_enable_if
 ::type
 assign( TargetType& destination, SourceType const& new_value )
 {
-  return interlocked::assign< acq_rel >( destination, new_value );
+  return interlocked::assign< sequential >( destination, new_value );
 }
 
 } } }

@@ -10,8 +10,10 @@
 #define BOOST_ACT_INTERLOCKED_ASSIGN_HPP
 
 #include <boost/act/interlocked/assign/assign.hpp>
+#include <boost/act/interlocked/assign/assign_unordered.hpp>
 #include <boost/act/interlocked/assign/assign_acquire.hpp>
 #include <boost/act/interlocked/assign/assign_release.hpp>
-#include <boost/act/interlocked/assign/assign_unordered.hpp>
+#include <boost/act/interlocked/assign/assign_acq_rel.hpp>
+#include <boost/act/interlocked/assign/assign_sequential.hpp>
 
 #endif

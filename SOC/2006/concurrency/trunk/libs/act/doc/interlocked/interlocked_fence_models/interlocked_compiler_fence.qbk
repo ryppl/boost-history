@@ -1,0 +1,19 @@
+[section Interlocked Compiler Fence]
+
+[important The features described on this page are not yet implemented.]
+
+[heading Description]
+
+An __interlocked_fence__ whose instantiations and semantics apply to
+compiler reordering of operations only. Order of visibility of operations with
+respect to other threads of execution is not specified.
+
+[heading Model of]
+
+* __interlocked_fence__
+
+[heading Example]
+
+ToDo: Make an example
+
+[endsect]

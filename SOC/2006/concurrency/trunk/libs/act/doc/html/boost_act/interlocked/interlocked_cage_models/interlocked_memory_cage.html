@@ -118,24 +118,50 @@
               </div>
             </div>
             <a id="boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.description"></a>
-            <h6><a id="id466283"></a>
+            <h6><a id="id466230"></a>
           <a href="interlocked_memory_cage.html#boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.description">Description</a>
         </h6>
             <p>
           An <a href="../interlocked_concepts/interlocked_cage.html" title="Interlocked Cage">
           <code class="literal">Interlocked Cage</code></a> whose instantiations and semantics
           apply to both compiler reordering of operations as well as order of visibility
-          of operations with respect to other threads of execution. Internally,
-          <code class="literal">Interlocked Memory Cages</code> often imply low-level memory
-          and compiler barriers during construction and/or destruction and therefore
-          should be used sparingly. When given the option, one should always prefer
-          to directly apply semantics to their operation rather than use a cage.
-          One common use would be to implement a user-defined interlocked operation
-          with strict ordering requirements when the target system does not provide
-          direct support for such semantics for that particular operation.
+          of operations with respect to other threads of execution.
         </p>
+            <div class="note">
+              <div class="box-outer-wrapper">
+                <div class="box-top-left"></div>
+                <div class="box-top-right"></div>
+                <div class="box-top"></div>
+                <div class="box-inner-wrapper">
+                  <div class="admonition-graphic">
+                    <div class="admonition-icon">
+                      <div class="note-icon"></div>
+                    </div>
+                  </div>
+                  <div class="admonition-body">
+                    <div class="admonition-title">Note</div>
+                    <div class="admonition-content">
+                      <p>
+            </p>
+                      <p>
+              In most cases, you should avoid explicit cages and should instead favor
+              the use of <a href="../interlocked_concepts/interlocked_operation.html" title="Interlocked Operation">
+              <code class="literal">Interlocked Operations</code></a> with proper semantics
+              as they may allow for more optimized code generation and are generally
+              less prone to error.
+            </p>
+                      <p>
+          </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="box-bottom-left"></div>
+                <div class="box-bottom-right"></div>
+                <div class="box-bottom"></div>
+              </div>
+            </div>
             <a id="boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.model_of"></a>
-            <h6><a id="id466351"></a>
+            <h6><a id="id466310"></a>
           <a href="interlocked_memory_cage.html#boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.model_of">Model
           of</a>
         </h6>
@@ -148,7 +174,7 @@
               </ul>
             </div>
             <a id="boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.example"></a>
-            <h6><a id="id466401"></a>
+            <h6><a id="id466360"></a>
           <a href="interlocked_memory_cage.html#boost_act.interlocked.interlocked_cage_models.interlocked_memory_cage.example">Example</a>
         </h6>
             <p>
@@ -160,10 +186,10 @@
                 <div class="box-top-right"></div>
                 <div class="box-top"></div>
                 <div class="box-inner-wrapper">
-                  <div class="style-switcher-box" id="id466427">
+                  <div class="style-switcher-box" id="id466385">
       <script type="text/javascript" > <!--
           boostscript.call( boostscript.style_switcher, 'insert_style_selector',
-             'id466427',
+             'id466385',
              '../../../../../doc/style/html/syntax.xml',
              '../../../../../doc/style/html'
           );

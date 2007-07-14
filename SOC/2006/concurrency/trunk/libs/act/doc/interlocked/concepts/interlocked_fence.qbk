@@ -1,0 +1,33 @@
+[section Interlocked Fence]
+
+[heading Description]
+
+An [concept Interlocked Fence] is a template whose instantiations are functions
+which, when called, imply memory and/or compiler barriers to guarantee order and
+visibility of unordered or partially ordered operations relative to the
+call-site. Semantics may be specified by the programmer at compile-time via
+explicit template arguments.
+
+[heading Concept of]
+
+* __interlocked_memory_fence__
+* __interlocked_compiler_fence__
+
+[variablelist Notation
+[[[~name]]          [An [concept Interlocked Fence].]                          ]
+[[`S`]              [An __interlocked_semantic_type__.]                        ]
+]
+
+[heading Expression Requirements]
+
+[table Interlocked Operation Requirements
+[[Expression]                             [Pre/Post-Condition]                 ]
+[[`name()`]                               [Creates a fence with default
+                                           semantics (`sequential`).
+                                          ]                                    ]
+[[`name<S>()`]                            [Creates a fence with the specified
+                                           semantics.
+                                          ]                                    ]
+]
+
+[endsect]

@@ -55,10 +55,12 @@ or if `default_` semantics are specified, then the operation is performed with
   
   // assign headers.
   #include <boost/act/interlocked/assign.hpp>
+  #include <boost/act/interlocked/assign/assign_thread_unsafe.hpp>
+  #include <boost/act/interlocked/assign/assign_unordered.hpp>
   #include <boost/act/interlocked/assign/assign_acquire.hpp>
   #include <boost/act/interlocked/assign/assign_release.hpp>
   #include <boost/act/interlocked/assign/assign_acq_rel.hpp>
-  #include <boost/act/interlocked/assign/assign_unordered.hpp>
+  #include <boost/act/interlocked/assign/assign_sequential.hpp>
   
   // Forward declarations.
   #include <boost/act/interlocked/assign_fwd.hpp>

@@ -1,5 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2006, 2007 Matthew Calabrese
+    Copyright (c) 2007 Matthew Calabrese
 
     Use, modification and distribution is subject to the Boost Software
     License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -92,7 +92,7 @@ public:
     BOOST_ACT_DETAIL_CALL( clear, order, ( flag_m ) )
   }
 private:
-  interlocked::flag_fast_t flag_m;
+  interlocked::int_fast8_t flag_m;
 }
 
 inline bool atomic_flag_test_and_set( volatile atomic_flag* target )

@@ -3,10 +3,9 @@
 [heading Description]
 
 An [concept Interlocked Cage] is a template whose instantiations are types which
-manage the order of visibility of read and write operations that occur during
-their objects' lifetime, effectively providing those operations with potentially
-more restrictive ordering constraints. Semantics for such cages may be specified
-by the programmer at compile-time via explicit template arguments.
+manage the order of read and write operations with respect to construction and
+destruction of the cage. Semantics may be specified by the programmer at
+compile-time via explicit template arguments.
 
 [heading Concept of]
 
@@ -17,10 +16,10 @@ by the programmer at compile-time via explicit template arguments.
 [[[~name]]          [An [concept Interlocked Cage].]                        ]
 [[`S1`]             [An __interlocked_semantic_type__.]                        ]
 [[`S2`]             [An __interlocked_semantic_type__.]                        ]
-[[`B`]              [A type which is an instantiation of `name` with or without
+[[`C`]              [A type which is an instantiation of `name` with or without
                      additional /cv-qualification/.
                     ]                                                          ]
-[[`b`]              [An object of type `B&`.]                                  ]
+[[`c`]              [An object of type `C&`.]                                  ]
 ]
 
 [heading Expression Requirements]
@@ -37,7 +36,7 @@ by the programmer at compile-time via explicit template arguments.
                                            semantic requirements of `S1` which
                                            are not already specified by `S2`.
                                           ]                                    ]
-[[`b.~B()`]                               [Destroys the cage `b`.]          ]
+[[`c.~C()`]                               [Destroys the cage `c`.]          ]
 ]
 
 [endsect]

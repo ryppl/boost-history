@@ -1,0 +1,59 @@
+/*=============================================================================
+    Copyright (c) 2006, 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef BOOST_ACT_INTERLOCKED_STORE_DETAIL_STORE_SEQUENTIAL_DEFAULT_IMPL_HPP
+#define BOOST_ACT_INTERLOCKED_STORE_DETAIL_STORE_SEQUENTIAL_DEFAULT_IMPL_HPP
+
+#include <boost/act/config/interlocked/has.hpp>
+
+// ToDo: Possibly prefer memory barrier
+#if BOOST_ACT_INTERLOCKED_HAS( assign, sequential )
+
+#include <boost/act/interlocked/assign/assign_sequential.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct store_sequential_default_impl
+{
+  template< typename TargetType, typename SourceType >
+  void execute( TargetType& target, SourceType& source )
+  {
+    return assign< sequential >( target, source );
+  }
+};
+
+} } } }
+
+#else
+
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/always.hpp>
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/bool.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct store_sequential_default_impl
+{
+  template< typename TargetType, typename SourceType >
+  static void execute( TargetType&, SourceType& )
+  {
+    BOOST_MPL_ASSERT_MSG
+    (
+      ( mpl::apply< mpl::always< mpl::false_ >, TargetType >::type::value )
+    , NO_DEFAULT_INTERLOCKED_STORE_SEQUENTIAL_IMPLEMENTATION_FOR_THIS_SYSTEM
+    , ()
+    );
+  }
+};
+
+} } } }
+
+#endif
+
+#endif

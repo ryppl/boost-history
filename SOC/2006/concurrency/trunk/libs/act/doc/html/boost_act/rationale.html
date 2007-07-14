@@ -88,111 +88,42 @@
       decisions.
     </p>
             <a id="boost_act.rationale.interlocked_operation_names"></a>
-            <h4><a id="id471168"></a>
+            <h4><a id="id471129"></a>
       <a href="rationale.html#boost_act.rationale.interlocked_operation_names">Interlocked
       Operation Names</a>
     </h4>
             <p>
-      Those familiar with lock-free programming may have noticed that the "swap"
-      and "compare-and-swap" operations are named <code class="computeroutput"><span class="identifier">assign</span></code>
-      and <code class="computeroutput"><span class="identifier">assign_if_was</span></code> in <code class="literal">Boost.Act</code>
-      respectively. This was done for several reasons. Firstly, the term "swap"
-      already has a meaning in standard C++, and that is to swap the values of two
-      objects in memory. The "swap" operation when refering to lock-free
-      programming means to set the value of a variable and yield the old value. Rather
-      than keep this conflict in terms, it was decided that the term "assign"
-      was a more accurate name, since the operation is just an assignment which returns
-      the old value rather than a reference to the modified object.
+      Those familiar with lock-free programming may have noticed that the traditional
+      "swap" and "compare-and-swap" operations are named <code class="computeroutput"><span class="identifier">assign</span></code> and <code class="computeroutput"><span class="identifier">assign_if_was</span></code>
+      in <code class="literal">Boost.Act</code> respectively. This was done for several reasons.
+      Firstly, the term "swap" already has a meaning in standard C++, and
+      that is to swap the values of two objects in memory. The "swap" operation
+      when refering to lock-free programming means to set the value of a variable
+      and yield the old value. Note that this is very different from an atomic std::swap.
+      Rather than keep this conflict in terms, it was decided that the term "assign"
+      was a more accurate name, despite the fact that it is generally refered to
+      as "swap," since the operation is actually just an atomic assignment
+      which returns the old value rather than a reference to the modified object.
     </p>
             <p>
       Similarly, the "swap" in "compare-and-swap" is not the
-      traditional C++ "swap." What's more is, the name "compare-and-swap"
+      traditional C++ "swap" and is again more of an assignment operation
+      which just yields the old value. What's more is, the name "compare-and-swap"
       does not give a very clear order of arguments, and indeed, different implementations
       often choose varying orders of those arguments. <code class="computeroutput"><span class="identifier">assign_if_was</span></code>,
       on the other hand, has an argument order which can be determined much less
-      ambiguously from its name.
+      ambiguously from its name and the operation that is implied is much more clear
+      from the name.
     </p>
             <p>
       There are still some down-sides to the name choice, and that is that <code class="computeroutput"><span class="identifier">assign</span></code> and <code class="computeroutput"><span class="identifier">assign_if_was</span></code>,
       along with the other <code class="literal">Interlocked Operations</code>, return the
       old value of the object being modified, whereas in C++ a reference to the object
-      is generally returned (from which you may obtain the new value). For this reason,
-      there was a short period where the <code class="literal">Interlocked Operations</code>
-      all yielded objects with member functions <code class="computeroutput"><span class="identifier">old_value</span><span class="special">()</span></code> and <code class="computeroutput"><span class="identifier">new_value</span><span class="special">()</span></code> to make it very unlikely that the user assumes
-      the wrong meaning when reading or writing code. Problems with this approach
-      were that the object, which now had to contain both the old value and the argument
-      to the function call or the old value and the new value, was not completely
-      optimized away in at least one commonly used compiler, which is a problem considering
-      the primary use of such functions is for efficiency. As well, the need to call
-      <code class="computeroutput"><span class="identifier">old_value</span><span class="special">()</span></code>
-      and <code class="computeroutput"><span class="identifier">new_value</span><span class="special">()</span></code>
-      when accessing the result of the call made trivial code overly verbous. If
-      there are any objections, I would be glad to consider changing the library
-      around, especially if you have a desirable alternative.
-    </p>
-            <a id="boost_act.rationale.policy_based_design"></a>
-            <h4><a id="id471368"></a>
-      <a href="rationale.html#boost_act.rationale.policy_based_design">Policy-Based Design</a>
-    </h4>
-            <p>
-      Boost.Act offers programmers customizability through two kinds of policies
-      which control algorithm execution and active qualification implementation.
-      These policies allow one to adjust whether algorithms run in parallel when
-      possible or always serially, and allow one to adjust whether active types create
-      their own thread or operate in the master thread. Default policies used can
-      be overriden at a global level or individually at points of instantiation.
-      The reason this may be considered controversial is that some may argue that
-      the use of policies here adds needless complexity at little gain. <span class="emphasis"><em>In
-      short, why not just use the STL in cases where algorithms need to be run serially
-      and why not just not use active objects in places where you do not need your
-      object to exist in its own thread?</em></span>
-    </p>
-            <p>
-      The reasons for choosing policies stem mostly from the fact that they provide
-      an easy way to switch execution models for arbitrary amounts of code with very
-      few changes to the code using the library. Reasons one may wish to switch policies
-      at the call-site range from reasons of optimization to reasons of debugging.
-      In terms of optimization, using active objects and parallel algorithms may
-      have a negative impact on performance in single-core systems, therefore the
-      ability to toggle the execution model by merely changing the default policy
-      used allows a programmer to target both single-core and multicore processors
-      by simply rebuilding after changing the policy being used. In theory, using
-      policies which target single-core sytems can be optimized to the same code
-      as a project which avoided the abstraction entirely.
-    </p>
-            <p>
-      As an example of switching policies for debugging, single-threaded algorithms
-      can often be more simple to debug than multi-threaded algorithms. If a bug
-      is narrowed down to a single algorithm which runs in parallel, one may easily
-      switch execution for that call to be serial, making it much easier to step
-      through in order to find the problem. This also helps in figuring out if certain
-      unwanted behavior is being caused by multi-threading issues or if there is
-      a more simple logical problem which exists at a higher-level in the algorithm's
-      design.
-    </p>
-            <a id="boost_act.rationale.actions_vs__futures"></a>
-            <h4><a id="id471720"></a>
-      <a href="rationale.html#boost_act.rationale.actions_vs__futures">Actions vs. Futures</a>
-    </h4>
-            <p>
-      Another fairly controversial design decision is the absence of futures, or
-      at least futures as they are commonly known. Rather than returning futures
-      from asynchronous function calls and function calls queued on active objects,
-      <code class="literal">actions</code> are yielded which represent the running function
-      and provide an indirect interface to an instance of the active qualified form
-      of the return type. This choice was made for a variety of reasons. First and
-      foremost, this allows a programmer to work with the results of such function
-      calls without losing concurrency by default, as functions upon them are queued
-      rather than performed immediately after implicitly or explicitly forcing the
-      function to complete. The traditional blocking form of futures, while can potentially
-      be implemented in such a way that is [slightly] more optimized for single-core
-      processors, implies an unnecessary loss of concurrency and becomes less efficient
-      if multiple cores are available. Still, the traditional behavior of futures
-      can be forced through actions by simply copying the active result to an active-unqualified
-      form of the result type using <code class="literal">inactive_value</code>, forcing a
-      wait for the function to complete. This gives actions of Boost.Act a superset
-      of the functionality provided by futures meaning that those who wish to use
-      actions in a future-like manner may do so.
+      is generally returned (from which you may obtain the new value). Because of
+      this, in future releases the names may be changed to have the traditional "fetch<span class="underline">and</span>" prefix, or possibly the return type will
+      just be changed to an object with an "old_value()" member function,
+      such that the function name itself is not verbous, and you only have to be
+      explicit when you require the return value.
     </p>
           </div>
         </div>

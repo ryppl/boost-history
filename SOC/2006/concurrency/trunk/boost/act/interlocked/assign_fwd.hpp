@@ -10,8 +10,10 @@
 #define BOOST_ACT_INTERLOCKED_ASSIGN_FWD_HPP
 
 #include <boost/act/interlocked/assign/assign_fwd.hpp>
+#include <boost/act/interlocked/assign/assign_unordered_fwd.hpp>
 #include <boost/act/interlocked/assign/assign_acquire_fwd.hpp>
 #include <boost/act/interlocked/assign/assign_release_fwd.hpp>
-#include <boost/act/interlocked/assign/assign_unordered_fwd.hpp>
+#include <boost/act/interlocked/assign/assign_acq_rel_fwd.hpp>
+#include <boost/act/interlocked/assign/assign_sequential_fwd.hpp>
 
 #endif

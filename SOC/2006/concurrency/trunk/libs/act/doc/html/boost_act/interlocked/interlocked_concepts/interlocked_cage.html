@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Cage</title><link rel="stylesheet" href="../../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked_concepts.html" title="Interlocked Concepts" /><link rel="prev" href="interlocked_operation.html" title="Interlocked Operation" /><link rel="next" href="interlocked_semantic_type.html" title="Interlocked Semantic Type" /><script type="text/javascript" src="../../../../../doc/javascript/main.js"></script>
+  <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><title>Interlocked Cage</title><link rel="stylesheet" href="../../../../../doc/style/html/main.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.72.0" /><link rel="start" href="../../../index.html" title="Boost.Act" /><link rel="up" href="../interlocked_concepts.html" title="Interlocked Concepts" /><link rel="prev" href="interlocked_fence.html" title="Interlocked Fence" /><link rel="next" href="interlocked_semantic_type.html" title="Interlocked Semantic Type" /><script type="text/javascript" src="../../../../../doc/javascript/main.js"></script>
       <script type="text/javascript" > <!--
          boostscript.init( new Array(
             boostscript.nested_links,
@@ -56,7 +56,7 @@
     </div>
     <div class="spirit-nav">
       <div class="spirit-nav-icon">
-        <a accesskey="p" href="interlocked_operation.html">
+        <a accesskey="p" href="interlocked_fence.html">
           <div class="prev-icon"></div>
         </a>
       </div>
@@ -89,19 +89,17 @@
               </div>
             </div>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_cage.description"></a>
-            <h6><a id="id456351"></a>
+            <h6><a id="id455779"></a>
           <a href="interlocked_cage.html#boost_act.interlocked.interlocked_concepts.interlocked_cage.description">Description</a>
         </h6>
             <p>
           An <code class="literal">Interlocked Cage</code> is a template whose instantiations
-          are types which manage the order of visibility of read and write operations
-          that occur during their objects' lifetime, effectively providing those
-          operations with potentially more restrictive ordering constraints. Semantics
-          for such cages may be specified by the programmer at compile-time via explicit
-          template arguments.
+          are types which manage the order of read and write operations with respect
+          to construction and destruction of the cage. Semantics may be specified
+          by the programmer at compile-time via explicit template arguments.
         </p>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_cage.concept_of"></a>
-            <h6><a id="id456396"></a>
+            <h6><a id="id455822"></a>
           <a href="interlocked_cage.html#boost_act.interlocked.interlocked_concepts.interlocked_cage.concept_of">Concept
           of</a>
         </h6>
@@ -109,11 +107,11 @@
               <ul>
                 <li>
                   <a href="../interlocked_cage_models/interlocked_memory_cage.html" title="Interlocked Memory Cage">
-            <code class="literal">Interlocked Memory Cage</code></a>
+            <code class="literal"><span class="bold"><strong>Interlocked Memory Cage</strong></span></code></a>
                 </li>
                 <li>
                   <a href="../interlocked_cage_models/interlocked_compiler_cage.html" title="Interlocked Compiler Cage">
-            <code class="literal">Interlocked Compiler Cage</code></a>
+            <code class="literal"><span class="bold"><strong>Interlocked Compiler Cage</strong></span></code></a>
                 </li>
               </ul>
             </div>
@@ -157,7 +155,7 @@
                 <dt>
                   <span class="term">
                     <code class="computeroutput">
-                      <span class="identifier">B</span>
+                      <span class="identifier">C</span>
                     </code>
                   </span>
                 </dt>
@@ -168,22 +166,22 @@
                 <dt>
                   <span class="term">
                     <code class="computeroutput">
-                      <span class="identifier">b</span>
+                      <span class="identifier">c</span>
                     </code>
                   </span>
                 </dt>
                 <dd>
-            An object of type <code class="computeroutput"><span class="identifier">B</span><span class="special">&amp;</span></code>.
+            An object of type <code class="computeroutput"><span class="identifier">C</span><span class="special">&amp;</span></code>.
           </dd>
               </dl>
             </div>
             <a id="boost_act.interlocked.interlocked_concepts.interlocked_cage.expression_requirements"></a>
-            <h6><a id="id456633"></a>
+            <h6><a id="id456064"></a>
           <a href="interlocked_cage.html#boost_act.interlocked.interlocked_concepts.interlocked_cage.expression_requirements">Expression
           Requirements</a>
         </h6>
             <div class="table">
-              <a id="id456651"></a>
+              <a id="id456082"></a>
               <p class="title">
                 <b>Table 3. Interlocked Operation Requirements</b>
               </p>
@@ -248,12 +246,12 @@
                     <tr>
                       <td>
               <p>
-                <code class="computeroutput"><span class="identifier">b</span><span class="special">.~</span><span class="identifier">B</span><span class="special">()</span></code>
+                <code class="computeroutput"><span class="identifier">c</span><span class="special">.~</span><span class="identifier">C</span><span class="special">()</span></code>
               </p>
               </td>
                       <td>
               <p>
-                Destroys the cage <code class="computeroutput"><span class="identifier">b</span></code>.
+                Destroys the cage <code class="computeroutput"><span class="identifier">c</span></code>.
               </p>
               </td>
                     </tr>
@@ -269,7 +267,7 @@
     </div>
     <div class="spirit-nav">
       <div class="spirit-nav-icon">
-        <a accesskey="p" href="interlocked_operation.html">
+        <a accesskey="p" href="interlocked_fence.html">
           <div class="prev-icon"></div>
         </a>
       </div>

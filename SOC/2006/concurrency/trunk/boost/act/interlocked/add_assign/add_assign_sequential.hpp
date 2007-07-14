@@ -6,13 +6,14 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_FENCE_DETAIL_FENCE_VC_X86_HPP
-#define BOOST_ACT_INTERLOCKED_FENCE_DETAIL_FENCE_VC_X86_HPP
+#ifndef BOOST_ACT_INTERLOCKED_ADD_ASSIGN_ADD_ASSIGN_SEQUENTIAL_HPP
+#define BOOST_ACT_INTERLOCKED_ADD_ASSIGN_ADD_ASSIGN_SEQUENTIAL_HPP
 
-namespace boost { namespace act { namespace interlocked { namespace detail {
+#include <boost/act/interlocked/detail/binary_forwarder.hpp>
 
-inline void fence_impl() { __asm mfence }
+#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER_INFO                     \
+( add_assign, sequential, +, additive )
 
-} } } }
+#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_FORWARDER()
 
 #endif

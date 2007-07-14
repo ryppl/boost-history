@@ -6,38 +6,37 @@ some of these decisions.
 
 [heading Interlocked Operation Names]
 
-Those familiar with lock-free programming may have noticed that the
+Those familiar with lock-free programming may have noticed that the traditional
 "swap" and "compare-and-swap" operations are named `assign` and `assign_if_was`
 in =Boost.Act= respectively. This was done for several reasons. Firstly, the
 term "swap" already has a meaning in standard C++, and that is to swap the
 values of two objects in memory. The "swap" operation when refering to lock-free
-programming means to set the value of a variable and yield the old value. Rather
-than keep this conflict in terms, it was decided that the term "assign" was a
-more accurate name, since the operation is just an assignment which returns the
-old value rather than a reference to the modified object. 
+programming means to set the value of a variable and yield the old value. Note
+that this is very different from an atomic std::swap. Rather than keep this
+conflict in terms, it was decided that the term "assign" was a more accurate
+name, despite the fact that it is generally refered to as "swap," since the
+operation is actually just an atomic assignment which returns the old value
+rather than a reference to the modified object. 
 
-Similarly, the "swap" in "compare-and-swap" is not the traditional C++ "swap."
+Similarly, the "swap" in "compare-and-swap" is not the traditional C++ "swap"
+and is again more of an assignment operation which just yields the old value.
 What's more is, the name "compare-and-swap" does not give a very clear order of
 arguments, and indeed, different implementations often choose varying orders of
 those arguments. `assign_if_was`, on the other hand, has an argument order which
-can be determined much less ambiguously from its name.
+can be determined much less ambiguously from its name and the operation that is
+implied is much more clear from the name.
 
 There are still some down-sides to the name choice, and that is that `assign`
 and `assign_if_was`, along with the other [concept Interlocked Operations],
 return the old value of the object being modified, whereas in C++ a reference to
-the object is generally returned (from which you may obtain the new value). For
-this reason, there was a short period where the [concept Interlocked Operations]
-all yielded objects with member functions `old_value()` and `new_value()` to
-make it very unlikely that the user assumes the wrong meaning when reading or
-writing code. Problems with this approach were that the object, which now had to
-contain both the old value and the argument to the function call or the old
-value and the new value, was not completely optimized away in at least one
-commonly used compiler, which is a problem considering the primary use of such
-functions is for efficiency. As well, the need to call `old_value()` and
-`new_value()` when accessing the result of the call made trivial code overly
-verbous. If there are any objections, I would be glad to consider changing the
-library around, especially if you have a desirable alternative.
+the object is generally returned (from which you may obtain the new value).
+Because of this, in future releases the names may be changed to have the
+traditional "fetch_and_" prefix, or possibly the return type will just be
+changed to an object with an "old_value()" member function, such that the
+function name itself is not verbous, and you only have to be explicit when you
+require the return value.
 
+[/
 [heading Policy-Based Design]
 
 Boost.Act offers programmers customizability through two kinds of policies which
@@ -93,5 +92,5 @@ active-unqualified form of the result type using =inactive_value=, forcing a
 wait for the function to complete. This gives actions of Boost.Act a superset of
 the functionality provided by futures meaning that those who wish to use actions
 in a future-like manner may do so.
-
+]
 [endsect]

@@ -11,7 +11,7 @@
 
 #include <boost/act/config/interlocked/has.hpp>
 
-#if BOOST_ACT_INTERLOCKED_HAS( assign, acq_rel )
+#if BOOST_ACT_INTERLOCKED_HAS( assign, sequential )
 
 #include <boost/act/interlocked/semantics/default.hpp>
 #include <boost/mpl/and.hpp>

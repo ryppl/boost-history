@@ -15,36 +15,42 @@
 #include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/control/if.hpp>
 
-#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSacquire()   0
-#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSrelease()   0
-#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSacq_rel()   0
-#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSunordered() 0
-#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSdefault()   1
-#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSdefault_()  1
-#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICS_()         1
+// ToDo: Fence detection here is completely wrong -- fix it!
+//       Store and load are wrong
+//       Create support check for thread_unsafe (always yield 1)
 
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_add_assign()      acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_assign()          acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_assign_if_was()   acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_bitand_assign()   acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_bitor_assign()    acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_compiler_fence()  acq_rel /*Change*/
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_compl_assign()    acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_decrement()       acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_divide_assign()   acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_fence()           acq_rel /*Change*/
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_increment()       acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_lshift_assign()   acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_mod_assign()      acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_modify()          acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_multiply_assign() acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_negate_assign()   acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_not_assign()      acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_load()            acquire
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_rshift_assign()   acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_store()           release
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_subtract_assign() acq_rel
-#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_xor_assign()      acq_rel
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSthread_unsafe() 0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSunordered()     0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSacquire()       0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSrelease()       0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSacq_rel()       0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSsequential()    0
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSdefault()       1
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICSdefault_()      1
+#define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICS_()             1
+
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_add_assign()      sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_assign()          sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_assign_if_was()   sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_bitand_assign()   sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_bitor_assign()    sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_compiler_fence()  sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_compl_assign()    sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_decrement()       sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_divide_assign()   sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_memory_fence()    sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_increment()       sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_lshift_assign()   sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_mod_assign()      sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_modify()          sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_multiply_assign() sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_negate_assign()   sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_not_assign()      sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_load()            sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_rshift_assign()   sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_store()           sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_subtract_assign() sequential
+#define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_xor_assign()      sequential
 
 #define BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF( name )                             \
 BOOST_PP_CAT( BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_, name )()
@@ -52,8 +58,14 @@ BOOST_PP_CAT( BOOST_ACT_CONFIG_DETAIL_DEFAULT_OF_, name )()
 #define BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICS( semantics )              \
 BOOST_PP_CAT( BOOST_ACT_CONFIG_DETAIL_IS_DEFAULT_SEMANTICS, semantics )()
 
+#define BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_sequential()                 \
+BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( assign_if_was, sequential )
+
 #define BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_acq_rel()                    \
-BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( assign_if_was, acq_rel )
+BOOST_PP_BITOR                                                                 \
+( BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( assign_if_was, acq_rel )       \
+, BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_sequential()                       \
+)
 
 #define BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_acquire()                    \
 BOOST_PP_BITOR                                                                 \
@@ -82,12 +94,18 @@ BOOST_PP_CAT( BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_, semantics )()
 #define BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_DUMMY( name, semantics )     \
 BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS( semantics )
 
+#define BOOST_ACT_CONFIG_DETAIL_HAS_AIW_DERIVABLE_sequential( name )           \
+BOOST_PP_BITOR                                                                 \
+( BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( name, sequential )             \
+, BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_sequential()                       \
+)
+
 #define BOOST_ACT_CONFIG_DETAIL_HAS_AIW_DERIVABLE_acq_rel( name )              \
 BOOST_PP_BITOR                                                                 \
 ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( name, acq_rel )                \
 , BOOST_PP_BITOR                                                               \
-  ( BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_acquire()                        \
-  , BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_release()                        \
+  ( BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_acq_rel()                        \
+  , BOOST_ACT_CONFIG_DETAIL_HAS_AIW_DERIVABLE_sequential( name )               \
   )                                                                            \
 )
 
@@ -184,18 +202,37 @@ BOOST_PP_IF                                                                    \
 )                                                                              \
 ( name, semantics )
 
+#define BOOST_ACT_CONFIG_DETAIL_HAS_STORE_sequential()                         \
+BOOST_PP_BITOR                                                                 \
+( BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( store, sequential )            \
+, BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_sequential()                       \
+)
+
+#define BOOST_ACT_CONFIG_DETAIL_HAS_STORE_acq_rel() 0
+
+#define BOOST_ACT_CONFIG_DETAIL_HAS_STORE_acquire() 0
+
 #define BOOST_ACT_CONFIG_DETAIL_HAS_STORE_release()                            \
 BOOST_PP_BITOR                                                                 \
 ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_STORE_RELEASE                      \
-, BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( store, release )               \
+, BOOST_PP_BITOR                                                               \
+  ( BOOST_PP_BITOR                                                             \
+    ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( store, release )           \
+    , BOOST_ACT_CONFIG_DETAIL_HAS_STORE_sequential()                           \
+    )                                                                          \
+  , BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_release()                        \
+  )                                                                            \
 )
 
 #define BOOST_ACT_CONFIG_DETAIL_HAS_STORE_unordered()                          \
 BOOST_PP_BITOR                                                                 \
 ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_STORE_UNORDERED                    \
 , BOOST_PP_BITOR                                                               \
-  ( BOOST_ACT_CONFIG_DETAIL_HAS_STORE_release()                                \
-  , BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( store, unordered )           \
+  ( BOOST_PP_BITOR                                                             \
+    ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( store, unordered )         \
+    , BOOST_ACT_CONFIG_DETAIL_HAS_STORE_release()                              \
+    )                                                                          \
+  , BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_unordered()                      \
   )                                                                            \
 )
 
@@ -210,18 +247,37 @@ BOOST_PP_IF                                                                    \
 )                                                                              \
 ( name, semantics )
 
+#define BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_sequential()                          \
+BOOST_PP_BITOR                                                                 \
+( BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( load, sequential )             \
+, BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_sequential()                       \
+)
+
+#define BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_acq_rel() 0
+
 #define BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_acquire()                             \
 BOOST_PP_BITOR                                                                 \
 ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_LOAD_ACQUIRE                       \
-, BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( load, acquire )                \
+, BOOST_PP_BITOR                                                               \
+  ( BOOST_PP_BITOR                                                             \
+    ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( load, acquire )            \
+    , BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_sequential()                            \
+    )                                                                          \
+  , BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_acquire()                        \
+  )                                                                            \
 )
+
+#define BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_release() 0
 
 #define BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_unordered()                           \
 BOOST_PP_BITOR                                                                 \
 ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_VOLATILE_LOAD_UNORDERED                     \
 , BOOST_PP_BITOR                                                               \
-  ( BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_acquire()                                 \
-  , BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( load, unordered )            \
+  ( BOOST_PP_BITOR                                                             \
+    ( BOOST_ACT_INTERLOCKED_DETAIL_HAS_CUSTOM_IMPL( load, unordered )          \
+    , BOOST_ACT_CONFIG_DETAIL_HAS_LOAD_acquire()                               \
+    )                                                                          \
+  , BOOST_ACT_CONFIG_DETAIL_HAS_ASSIGN_IF_WAS_unordered()                      \
   )                                                                            \
 )
 

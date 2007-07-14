@@ -1,0 +1,88 @@
+/*=============================================================================
+    Copyright (c) 2006, 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_ASSIGN_IF_WAS_SEQ_WIN_HPP
+#define BOOST_ACT_INTERLOCKED_ASSIGN_IF_WAS_DETAIL_ASSIGN_IF_WAS_SEQ_WIN_HPP
+
+#include <boost/detail/interlocked.hpp>
+
+#include <boost/utility/enable_if.hpp>
+
+#include <windows.h> // ToDo: Remove (forward declare functions)
+
+#include <boost/type_traits/remove_cv.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct assign_if_was_sequential_impl
+{
+  template< typename Type >
+  static
+  typename lazy_enable_if_c
+  <
+    ( sizeof( Type ) == 4 )
+  , remove_cv< Type >
+  >
+  ::type
+  execute( Type& left, typename remove_cv< Type >::type right
+         , typename remove_cv< Type >::type old
+         )
+  {
+    typedef typename remove_cv< Type >::type unqualified_type;
+
+    MemoryBarrier();
+
+    LONG const result = BOOST_INTERLOCKED_COMPARE_EXCHANGE
+                        ( reinterpret_cast< LONG volatile* >( &left )
+                        , reinterpret_cast< LONG const& >( right )
+                        , reinterpret_cast< LONG const& >( old )
+                        );
+                        
+    MemoryBarrier();
+        
+    return reinterpret_cast< unqualified_type const& >( result );
+  }
+  
+#ifdef _M_IA64
+
+  template< typename Type >
+  static
+  typename lazy_enable_if_c
+  <
+    ( sizeof( Type ) == 8 )
+  , remove_cv< Type >
+  >
+  ::type
+  execute( Type& left, typename remove_cv< Type >::type right
+         , typename remove_cv< Type >::type old
+         )
+  {
+    typedef typename remove_cv< Type >::type unqualified_type;
+
+    MemoryBarrier();
+    
+    unqualified_type const result
+      = static_cast< unqualified_type >
+        (
+          InterlockedCompareExchange64
+          ( reinterpret_cast< LONGLONG volatile* >( &left )
+          , reinterpret_cast< LONGLONG const& >( right )
+          , reinterpret_cast< LONGLONG const& >( old )
+          )
+        );
+        
+    MemoryBarrier();
+  }
+
+#endif
+
+};
+
+} } } }
+
+#endif

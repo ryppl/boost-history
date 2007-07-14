@@ -1,0 +1,76 @@
+/*=============================================================================
+    Copyright (c) 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef BOOST_ACT_INTERLOCKED_MEMORY_FENCE_DETAIL_MEM_FENCE_SEQ_DEFAULT_HPP
+#define BOOST_ACT_INTERLOCKED_MEMORY_FENCE_DETAIL_MEM_FENCE_SEQ_DEFAULT_HPP
+
+#include <boost/act/config/interlocked/has.hpp>
+#include <boost/act/config/interlocked/types.hpp>
+
+// ToDo: Change the order that these are selected without creating a loop
+#if BOOST_ACT_INTERLOCKED_HAS( assign_if_was, sequential )
+
+#include <boost/act/interlocked/assign_if_was/assign_if_was_sequential.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct memory_fence_sequential_default_impl
+{
+  static void execute()
+  {
+    int_fast8_t dummy;
+    
+    assign_if_was< sequential >( dummy, 0, 0 );
+  }
+};
+
+} } } }
+
+#elif BOOST_ACT_INTERLOCKED_HAS( assign, sequential )
+
+#include <boost/act/interlocked/assign/assign_sequential.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct memory_fence_sequential_default_impl
+{
+  static void execute()
+  {
+    int_fast8_t dummy;
+    
+    assign< sequential >( dummy, 0 );
+  }
+};
+
+} } } }
+
+#elif BOOST_ACT_INTERLOCKED_HAS( store, sequential )
+
+#include <boost/act/interlocked/store/store_sequential.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct memory_fence_sequential_default_impl
+{
+  static void execute()
+  {
+    int_fast8_t dummy;
+    
+    store< sequential >( dummy, 0 );
+  }
+};
+
+} } } }
+
+#else
+
+#error You found the gold at the end of the rainbow! rivorus_katarni@yahoo.com
+
+#endif
+
+#endif

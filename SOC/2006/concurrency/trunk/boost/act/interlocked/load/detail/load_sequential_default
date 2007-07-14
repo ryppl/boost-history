@@ -1,0 +1,32 @@
+/*=============================================================================
+    Copyright (c) 2006, 2007 Matthew Calabrese
+
+    Use, modification and distribution is subject to the Boost Software
+    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#ifndef BOOST_ACT_INTERLOCKED_LOAD_DETAIL_LOAD_SEQUENTIAL_DEFAULT_IMPL_HPP
+#define BOOST_ACT_INTERLOCKED_LOAD_DETAIL_LOAD_SEQUENTIAL_DEFAULT_IMPL_HPP
+
+#include <boost/act/interlocked/assign_if_was/assign_if_was_sequential.hpp>
+#include <boost/type_traits/remove_cv.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct load_sequential_default_impl
+{
+  template< typename TargetType >
+  static typename remove_cv< TargetType >::type execute( TargetType& target )
+  {
+    // ToDo: Change so that it doesn't rely on const_cast (use a memory cage)
+    return interlocked::assign_if_was< sequential >
+           ( const_cast< typename remove_cv< TargetType >::type& >( target )
+           , 0, 0
+           );
+  }
+};
+
+} } } }
+
+#endif

@@ -17,10 +17,10 @@
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
 template< typename Type >
-struct assign_acq_rel_fun
+struct assign_acq_rel_def_fun
 {
 public:
-  assign_acq_rel_fun( Type const& right_init ) : right_m( right_init ) {}
+  assign_acq_rel_def_fun( Type const& right_init ) : right_m( right_init ) {}
 public:
   template< typename LeftType >
   Type operator ()( LeftType& ) const
@@ -32,10 +32,11 @@ private:
 };
 
 template< typename Type >
-assign_acq_rel_fun< typename remove_volatile< Type >::type >
+assign_acq_rel_def_fun< typename remove_volatile< Type >::type >
 make_assign_acq_rel_fun( Type const& right )
 {
-  return assign_acq_rel_fun< typename remove_volatile< Type >::type >( right );
+  return assign_acq_rel_def_fun< typename remove_volatile< Type >::type >
+         ( right );
 }
 
 struct assign_acq_rel_default_impl

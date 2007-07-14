@@ -29,10 +29,26 @@ struct store_unordered_default_impl
 
 } } } }
 
-#else // Else: Custom interlocked store for this system (no default)
+#elif BOOST_ACT_INTERLOCKED_HAS( assign, unordered )
+
+#include <boost/act/interlocked/assign/assign_unordered.hpp>
+
+namespace boost { namespace act { namespace interlocked { namespace detail {
+
+struct store_unordered_default_impl
+{
+  template< typename TargetType, typename SourceType >
+  void execute( TargetType& target, SourceType& source )
+  {
+    assign< unordered >( target, source );
+  }
+};
+
+} } } }
+
+#else
 
 #include <boost/act/interlocked/store/store_release.hpp>
-#include <boost/type_traits/remove_cv.hpp>
 
 namespace boost { namespace act { namespace interlocked { namespace detail {
 
@@ -42,7 +58,7 @@ struct store_unordered_default_impl
   static typename remove_cv< TargetType >::type execute( TargetType& target )
   {
     // ToDo: Look ahead for store_release_support and produce error here
-    return interlocked::store< release >( target );
+    interlocked::store< release >( target );
   }
 };
 

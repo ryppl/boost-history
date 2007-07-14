@@ -6,19 +6,14 @@
     http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_ACT_INTERLOCKED_COMPILER_FENCE_DETAIL_COMPILER_FENCE_LD_VISTA_HPP
-#define BOOST_ACT_INTERLOCKED_COMPILER_FENCE_DETAIL_COMPILER_FENCE_LD_VISTA_HPP
+#ifndef BOOST_ACT_INTERLOCKED_BITAND_ASSIGN_DETAIL_BITAND_ASSIGN_UN_DEFAULT_HPP
+#define BOOST_ACT_INTERLOCKED_BITAND_ASSIGN_DETAIL_BITAND_ASSIGN_UN_DEFAULT_HPP
 
-// ToDo: Don't include windows.h
-#include <windows.h>
+#include <boost/act/interlocked/detail/binary_default.hpp>
 
-namespace boost { namespace act { namespace interlocked { namespace detail {
+#define BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT_INFO                       \
+( bitand_assign, unordered, & )
 
-inline void compiler_fence_load_impl()
-{
-  _ReadBarrier();
-}
-
-} } } }
+#include BOOST_ACT_INTERLOCKED_DETAIL_BINARY_DEFAULT()
 
 #endif

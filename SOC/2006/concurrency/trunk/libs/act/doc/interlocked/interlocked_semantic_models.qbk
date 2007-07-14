@@ -1,13 +1,10 @@
 [section Interlocked Semantic Models]
 
-[important The `sequential` and `thread_unsafe` semantics described on this page
- are not yet implemented.
-]
-
 [heading Description]
 
 The types detailed in this section are the __interlocked_semantic_types__ for
-use with __interlocked_operations__ and __interlocked_barriers__.
+use with __interlocked_operations__, __interlocked_cages__, and
+__interlocked_fences__.
 
 [heading Model of]
 

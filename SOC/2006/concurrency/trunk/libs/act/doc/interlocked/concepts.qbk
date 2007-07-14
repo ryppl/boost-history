@@ -1,6 +1,7 @@
 [section Interlocked Concepts]
 
 [include concepts/interlocked_operation.qbk]
+[include concepts/interlocked_fence.qbk]
 [include concepts/interlocked_cage.qbk]
 [include concepts/interlocked_semantic_type.qbk]
 [include concepts/interlocked_type.qbk]

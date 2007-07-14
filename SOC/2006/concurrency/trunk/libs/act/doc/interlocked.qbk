@@ -2,6 +2,7 @@
 
 [include interlocked/concepts.qbk]
 [include interlocked/interlocked_semantic_models.qbk]
+[include interlocked/interlocked_fence_models.qbk]
 [include interlocked/interlocked_cage_models.qbk]
 [include interlocked/integer_models.qbk]
 [include interlocked/support.qbk]
