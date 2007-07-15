@@ -162,7 +162,7 @@ private:
 public:
 
 // see documentation for default settings rationale
-svg_1d_plot(): x_label("X Axis"), x_min(-10), x_max(10), 
+svg_1d_plot(): x_label("X Axis"), title("Plot of data"), x_min(-10), x_max(10), 
                       legend_on(false), title_on(true),
                       axis_on(true), plot_window_on(false), x_label_on(false),
                       x_major_grid_on(false), x_minor_grid_on(false),

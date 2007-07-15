@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="svg_plot" name="SVG_Plot" dirname="svg_plot" last-revision="$Date: 2007/07/09 02:11:43 $"
+<article id="svg_plot" name="SVG_Plot" dirname="svg_plot" last-revision="$Date: 2007/07/14 20:09:55 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -439,81 +439,119 @@
       </para>
     </section>
     <section id="svg_plot.tutorial.defaults">
-      <title> Defaults</title>
+      <title> <code><phrase role="identifier">svg_1d_plot</phrase></code> Defaults</title>
       <para>
         You may have noticed that there are certain defaults that are true at the
         beginning of the plotting. Here is a table of the defaults:
       </para>
       <informaltable frame="all">
         <bridgehead renderas="sect4">
-          <phrase role="table-title">Default]</phrase>
+          <phrase role="table-title">Default Values]</phrase>
         </bridgehead>
-        <tgroup cols="2">
+        <tgroup cols="3">
           <thead>
             <row>
-              <entry>object</entry><entry>Default value</entry>
+              <entry>object</entry><entry>Default value</entry><entry>Rationale</entry>
             </row>
           </thead>
           <tbody>
             <row>
               <entry>Image size</entry><entry><code><phrase role="number">500</phrase>&nbsp;<phrase
-              role="identifier">by</phrase>&nbsp;<phrase role="number">300</phrase></code></entry>
+              role="identifier">by</phrase>&nbsp;<phrase role="number">350</phrase></code></entry><entry>Details
+              discernable. The image is easily viewable by those using 800x600 monitors</entry>
             </row>
             <row>
-              <entry>X Axis Label</entry><entry><code><phrase role="string">&quot;&quot;</phrase><phrase
-              role="special">,</phrase>&nbsp;<phrase role="identifier">Off</phrase></code></entry>
+              <entry>X Axis Label</entry><entry><code><phrase role="string">&quot;X
+              Axis&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">Off</phrase></code></entry><entry>&quot;X
+              Axis&quot; is the label because something should display were the user
+              to turn on the X axis label without setting text, and this is the most
+              informative</entry>
             </row>
             <row>
               <entry>X Range</entry><entry><code><phrase role="special">(-</phrase><phrase
               role="number">10</phrase><phrase role="special">,</phrase>&nbsp;<phrase
-              role="number">10</phrase><phrase role="special">)</phrase></code></entry>
+              role="number">10</phrase><phrase role="special">)</phrase></code></entry><entry>Traditional
+              plot viewport</entry>
             </row>
             <row>
-              <entry>Plot Window</entry><entry><code><phrase role="identifier">Off</phrase></code></entry>
+              <entry>Axis</entry><entry>On</entry><entry>Most graphs include an axis
+              of some kindl</entry>
+            </row>
+            <row>
+              <entry>Legend</entry><entry><code><phrase role="identifier">Off</phrase></code></entry><entry>The
+              goal of the defaults is to provide the cleanest possible plot as a
+              default. Not including the legend meets this goal. If there is a public
+              outcry, I can change this.</entry>
+            </row>
+            <row>
+              <entry>Title</entry><entry>On, &quot;Plot of data&quot;</entry><entry>The
+              title is on because this is one of the most basic elements of a graph.
+              The title is set to a default because when <code><phrase role="identifier">title_on</phrase>&nbsp;<phrase
+              role="special">==</phrase>&nbsp;<phrase role="keyword">true</phrase></code>,
+              something should display</entry>
+            </row>
+            <row>
+              <entry>Plot Window</entry><entry><code><phrase role="identifier">Off</phrase></code></entry><entry>Initially
+              off because it is the simplest case. I will change this if there is
+              an outcry</entry>
             </row>
             <row>
               <entry>Grid lines</entry><entry><code><phrase role="identifier">All</phrase>&nbsp;<phrase
-              role="identifier">off</phrase></code></entry>
+              role="identifier">off</phrase></code></entry><entry>Grid lines are
+              a user's personal choice, so I default with the simpler model</entry>
             </row>
             <row>
               <entry>Distance between major X ticks</entry><entry><code><phrase role="number">3</phrase>&nbsp;<phrase
-              role="identifier">units</phrase></code></entry>
+              role="identifier">units</phrase></code></entry><entry>Reasonably fits
+              into a plot window</entry>
             </row>
             <row>
-              <entry>Number of minor X ticks between each major X tick</entry><entry>2</entry>
+              <entry>Number of minor X ticks between each major X tick</entry><entry>2</entry><entry>This
+              allows the minor ticks to appear on the integers</entry>
             </row>
             <row>
-              <entry>Major tick length</entry><entry>20 pixels</entry>
+              <entry>Major tick length</entry><entry>20 pixels</entry><entry>Tasteful
+              default when paired with the window size. This also makes the major
+              ticks easily distinguishable from the minor ticks</entry>
             </row>
             <row>
-              <entry>Major tick width</entry><entry>2 pixels</entry>
+              <entry>Major tick width</entry><entry>2 pixels</entry><entry>Major
+              ticks are more obvious than minor ticks</entry>
             </row>
             <row>
-              <entry>Minor tick length</entry><entry>10 pixels</entry>
+              <entry>Minor tick length</entry><entry>10 pixels</entry><entry>Tasteful
+              default when compared with the size of the grid. This makes the minor
+              ticks less obvious than the major ticks</entry>
             </row>
             <row>
-              <entry>Minor tick width</entry><entry>2 pixels</entry>
+              <entry>Minor tick width</entry><entry>1 pixel</entry><entry>This makes
+              the minor tick less obvious than the major ticks</entry>
             </row>
             <row>
-              <entry>Font size of the legend title</entry><entry>12</entry>
+              <entry>Font size of the legend title</entry><entry>12</entry><entry>Reasonable
+              when paired with the image size</entry>
             </row>
             <row>
-              <entry>Font size of the X Label</entry><entry>12</entry>
+              <entry>Font size of the X Label</entry><entry>12</entry><entry>Reasonable
+              when paired with the image size</entry>
             </row>
             <row>
-              <entry>Font size of the title</entry><entry>30</entry>
+              <entry>Font size of the title</entry><entry>30</entry><entry>Makes
+              the title stand out</entry>
             </row>
             <row>
-              <entry>Image background</entry><entry>white</entry>
+              <entry>Image background</entry><entry>white</entry><entry>K.I.S.S.
+              Coloring will be highly dependent on user needs.</entry>
             </row>
             <row>
-              <entry>Plot window background</entry><entry>white</entry>
+              <entry>Plot window background</entry><entry>white</entry><entry>As
+              above</entry>
             </row>
             <row>
-              <entry>Legend background</entry><entry>white</entry>
+              <entry>Legend background</entry><entry>white</entry><entry>As above</entry>
             </row>
             <row>
-              <entry>All other colors</entry><entry>black</entry>
+              <entry>All other colors</entry><entry>black</entry><entry>As above</entry>
             </row>
           </tbody>
         </tgroup>
@@ -639,15 +677,16 @@
       <bridgehead renderas="sect4">
         <phrase role="table-title">class svg</phrase>
       </bridgehead>
-      <tgroup cols="2">
+      <tgroup cols="3">
         <thead>
           <row>
-            <entry>Signature</entry><entry>Description</entry>
+            <entry>Signature</entry><entry>Description</entry><entry>Notes</entry>
           </row>
         </thead>
         <tbody>
           <row>
-            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">()</phrase></code></entry><entry>Constructor</entry>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">()</phrase></code></entry><entry>Constructor</entry><entry>The
+            default image size is (400, 400)</entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
@@ -655,7 +694,17 @@
             role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
             role="special">,</phrase>&nbsp;<phrase role="keyword">unsigned</phrase>&nbsp;<phrase
             role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the size of the image produced, in pixels</entry>
+            the size of the image produced, in pixels</entry><entry></entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">get_x_size</phrase><phrase role="special">()</phrase></code></entry><entry>Returns
+            the width of the image</entry><entry></entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">get_y_size</phrase><phrase role="special">()</phrase></code></entry><entry>Returns
+            the height of the image</entry><entry></entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
@@ -663,32 +712,34 @@
             role="keyword">const</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase
             role="special">::</phrase><phrase role="identifier">string</phrase><phrase
             role="special">&amp;)</phrase></code></entry><entry>Writes the document
-            to the file represented by the argument</entry>
+            to the file represented by the argument</entry><entry>Opens the file
+            stream itself and tries to call <code><phrase role="identifier">write</phrase><phrase
+            role="special">(</phrase><phrase role="identifier">std</phrase><phrase
+            role="special">::</phrase><phrase role="identifier">ostream</phrase><phrase
+            role="special">&amp;)</phrase></code>. Throws <code><phrase role="identifier">std</phrase><phrase
+            role="special">::</phrase><phrase role="identifier">runtime_exception</phrase></code>
+            if it can not open the file.</entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
             role="identifier">write</phrase><phrase role="special">(</phrase><phrase
             role="identifier">std</phrase><phrase role="special">::</phrase><phrase
             role="identifier">ostream</phrase><phrase role="special">&amp;)</phrase></code></entry><entry>Writes
-            the document to the stream represented by the argument</entry>
+            the document to the stream represented by the argument</entry><entry></entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">point</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
-            role="identifier">y</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
-            a point at (x,y) in the root level of the document</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">point</phrase><phrase role="special">(</phrase><phrase
+            role="identifier">circle</phrase><phrase role="special">(</phrase><phrase
             role="keyword">double</phrase>&nbsp;<phrase role="identifier">x</phrase><phrase
             role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
             role="identifier">y</phrase><phrase role="special">,</phrase>&nbsp;<phrase
-            role="identifier">g_element</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">elem</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
-            a point at (x, y) at g_element <code><phrase role="identifier">elem</phrase></code></entry>
+            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase>&nbsp;<phrase
+            role="identifier">radius</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase
+            role="number">5</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
+            a point at (x,y) in the root level of the document</entry><entry>If the
+            user is calling the circle method, odds are they would prefer a real
+            circle instead of a degenerate circle (a point). 5 is as good a defaul
+            as any other.</entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
@@ -699,20 +750,7 @@
             role="keyword">double</phrase>&nbsp;<phrase role="identifier">x2</phrase><phrase
             role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
             role="identifier">y2</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
-            a line from (x1,y1) to (x2,y2) in the root level of the document</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">line</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x1</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
-            role="identifier">y1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
-            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x2</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
-            role="identifier">y2</phrase><phrase role="special">,</phrase>&nbsp;<phrase
-            role="identifier">g_element</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">elem</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
-            a point at (x, y) at g_element <code><phrase role="identifier">elem</phrase></code></entry>
+            a line from (x1,y1) to (x2,y2) in the root level of the document</entry><entry></entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
@@ -724,7 +762,7 @@
             role="identifier">string</phrase>&nbsp;<phrase role="identifier">text</phrase><phrase
             role="special">)</phrase></code></entry><entry>Adds text <code><phrase
             role="identifier">text</phrase></code> at (x,y) in the root level of
-            the document</entry>
+            the document</entry><entry></entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
@@ -736,20 +774,42 @@
             role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
             role="identifier">height</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
             a rectangle at point (x1, y1) that has width <code><phrase role="identifier">width</phrase></code>
-            and height <code><phrase role="identifier">height</phrase></code></entry>
+            and height <code><phrase role="identifier">height</phrase></code></entry><entry></entry>
           </row>
           <row>
             <entry><code><phrase role="identifier">svg</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">rect</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x1</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
-            role="identifier">y1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
-            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x2</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
-            role="identifier">y2</phrase><phrase role="special">,</phrase>&nbsp;<phrase
-            role="identifier">g_element</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">elem</phrase><phrase role="special">)</phrase></code></entry><entry>Adds
-            a point at (x, y) at g_element <code><phrase role="identifier">elem</phrase></code></entry>
+            role="identifier">clip_path</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">const</phrase>&nbsp;<phrase role="identifier">rect_element</phrase><phrase
+            role="special">&amp;,</phrase>&nbsp;<phrase role="identifier">g_element</phrase><phrase
+            role="special">&amp;,</phrase>&nbsp;<phrase role="keyword">const</phrase>&nbsp;<phrase
+            role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+            role="identifier">string</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">id</phrase><phrase role="special">)</phrase></code></entry><entry>Prevents
+            the g_element in the argument from drawing outside of the rectangle in
+            the argument. The string is provided to identify the clip.</entry><entry>Currently
+            unsupported</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">g_element</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">add_g_element</phrase><phrase role="special">()</phrase></code></entry><entry>Adds
+            a g_element at the root of the document tree. Acts as a <code><phrase
+            role="identifier">push_back</phrase><phrase role="special">()</phrase></code></entry><entry>Returns
+            the <code><phrase role="identifier">g_element</phrase></code> that is
+            pushed back. This allows you to do something like the following: <code><phrase
+            role="identifier">image</phrase><phrase role="special">.</phrase><phrase
+            role="identifier">add_g_element</phrase><phrase role="special">().</phrase><phrase
+            role="identifier">line</phrase><phrase role="special">(/**/).</phrase><phrase
+            role="identifier">line</phrase><phrase role="special">(/**/).</phrase><phrase
+            role="identifier">rect</phrase><phrase role="special">(/**/);</phrase>&nbsp;</code>
+            Which adds two lines and a rectangle to the g_element that was just created.</entry>
+          </row>
+          <row>
+            <entry><code><phrase role="identifier">g_element</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
+            role="identifier">get_g_element</phrase><phrase role="special">(</phrase><phrase
+            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Gets
+            the g_element at the index specified</entry><entry>Gives a runtime error
+            if you specify an index that does not contain a <code><phrase role="identifier">g_element</phrase></code>.
+            This will be addressed</entry>
           </row>
         </tbody>
       </tgroup>

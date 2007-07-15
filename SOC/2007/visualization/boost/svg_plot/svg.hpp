@@ -58,7 +58,7 @@ private:
 
 public:
 
-    svg::svg():x_size(200), y_size(200)
+    svg::svg():x_size(400), y_size(400)
     {
 
     }
@@ -66,11 +66,6 @@ public:
     svg::svg(const svg& rhs):x_size(rhs.x_size), y_size(rhs.y_size)
     {
         
-    }
-
-    svg::~svg()
-    {
-
     }
 
     svg& write(const std::string& _file)
@@ -117,7 +112,7 @@ public:
         return *this;
     }
 
-    svg& circle(double x, double y, int radius = 5)
+    svg& circle(double x, double y, unsigned int radius = 5)
     {
         document.push_back(new circle_element(x, y, radius));
         return *this;

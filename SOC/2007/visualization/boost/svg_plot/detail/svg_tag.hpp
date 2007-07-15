@@ -334,12 +334,12 @@ public:
         return *this;
     }
 
-    g_element& add_g_element(g_element& _g)
+    g_element& add_g_element()
     {
         return _g.add_g_element();
     }
 
-    g_element& get_g_element(int i, g_element& _g)
+    g_element& get_g_element(int i)
     {
         return _g.g_tag(i);
     }
