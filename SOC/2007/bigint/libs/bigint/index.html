@@ -151,7 +151,7 @@ cryptography-related applications, there is a need for so called "arbitrary
 precision numbers" - those are the numbers which have precision limited only by
 amount of available memory.</p>
 
-<p>Note that due to the lack of hardware support for abitrary precision integers,
+<p>Note that due to the lack of hardware support for arbitrary precision integers,
 any operations that can be performed with them are slower than the corresponding
 operations for native (C++ built-in) types; therefore they should not be treated
 as a complete replacement for existing types, but rather as a possibility to trade
@@ -167,7 +167,7 @@ library, <a href="http://gmplib.org/">GNU MP</a>.</p>
 <p>The library is intended to be highly extensible and encourages developers to create
 their own implementation that would close the gap between 'portable' and 'gmp' implementations
 in terms of performance; a set of correctness and performance tests is provided to
-easen the development of such implementations.</p>
+ease the development of such implementations.</p>
 
 <h2><a name="Background">Background</a></h2>
 
@@ -312,10 +312,10 @@ towards zero. Here are some examples to clarify the concept:
     <li>60 / 15 == 4. 60 is exactly divisible by 15, no truncation takes place.</li>
     <li>-60 / 15 == -4. -60 is exactly divisible by 15, no truncation takes place.</li>
     <li>60 / -15 == -4. 60 is exactly divisible by -15, no truncation takes place.</li>
-    <li>3 / 2 == 1. 3 is not exatly divisible by 2; the quotient of real number division is 1.5, it is truncated to 1.</li>
-    <li>-3 / 2 == -1. -3 is not exatly divisible by 2; the quotient of real number division is -1.5, it is truncated to -1.</li>
-    <li>3 / -2 == -1. 3 is not exatly divisible by -2; the quotient of real number division is -1.5, it is truncated to -1.</li>
-    <li>-3 / -2 == 1. -3 is not exatly divisible by -2; the quotient of real number division is 1.5, it is truncated to 1.</li>
+    <li>3 / 2 == 1. 3 is not exactly divisible by 2; the quotient of real number division is 1.5, it is truncated to 1.</li>
+    <li>-3 / 2 == -1. -3 is not exactly divisible by 2; the quotient of real number division is -1.5, it is truncated to -1.</li>
+    <li>3 / -2 == -1. 3 is not exactly divisible by -2; the quotient of real number division is -1.5, it is truncated to -1.</li>
+    <li>-3 / -2 == 1. -3 is not exactly divisible by -2; the quotient of real number division is 1.5, it is truncated to 1.</li>
     </ul>
 </li>
 <li>Modulo operation (% and %=) is implemented in terms of truncated division; this means, that if a / b == c, then a % b == a - b * c. This means that:
@@ -347,7 +347,7 @@ Here are some examples to clarify the concept:
     &gt;&gt;   &gt;&gt;=
 </pre>
 
-<p>These function operate with a bit representation of numbers. Note that though there are no strict requirements for
+<p>These functions operate with a bit representation of numbers. Note that though there are no strict requirements for
 storage of <b>bigint</b> implementations, bitwise operators are guaranteed to operate with the following representation:
 positive numbers are represented as a sequence of bits, most significant bit is first, least significant bit is last, the
 sequence of bits is equal to the representation of the number in binary number system; zero is represented as a single bit 0;
@@ -390,7 +390,7 @@ behave for build-in integer types.</p>
 <p>There is a conversion operator to an unspecified Boolean type (most likely a
 member pointer). This operator converts a <b>bigint</b> to <code>false</code> if it
 represents zero, and <code>true</code> otherwise. This conversion allows a
-rational for use as the first argument of operator <code>?:</code>; as either
+bigint for use as the first argument of operator <code>?:</code>; as either
 argument of operators <code>&amp;&amp;</code> or <code>||</code> without
 forfeiting short-circuit evaluation; as a condition for a <code>do</code>,
 <code>if</code>, <code>while</code>, or <code>for</code> statement; and as a
@@ -446,7 +446,7 @@ This function is similar to standard <code>div</code> function for integers.</p>
 <h3><a name="Serialization">Serialization</a></h3>
 
 <p><b>bigint</b> has built-in support for serialization via Boost.Serialization library. You need to include a separate header,
-&lt;boost/bigint/bigint_serialize.hpp&gt;, then you can use <b>bigint</b> values. The storage format is the decimal string
+&lt;boost/bigint/bigint_serialize.hpp&gt;, and then you can serialize <b>bigint</b> values to all archives. The storage format is the decimal string
 representation, though this is an implementation detail and may change in future.</p>
 
 <h2><a name="Performance">Performance</a></h2>
@@ -487,7 +487,7 @@ arguments, and M means maximum of the lengths of both value and function argumen
 
 <p>Most implementations of <b>bigint</b> allocate memory for various uses (both temporary
 memory and memory for value storage); therefore any <b>bigint</b> function (except <b>bigint</b>
-destructor) may throw a <code>std::bad_alloc</code> exceptions. There are no other possible
+destructor) may throw a <code>std::bad_alloc</code> exception. There are no other possible
 exceptions.</p>
 
 <h2><a name="References">References</a></h2>
