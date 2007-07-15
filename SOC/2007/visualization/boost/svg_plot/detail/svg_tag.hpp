@@ -298,6 +298,7 @@ public:
     g_element& add_g_element()
     {
         children.push_back(new g_element);
+        
         return *(static_cast<g_element*>(&children[children.size()-1]));
     }
 
@@ -334,14 +335,9 @@ public:
         return *this;
     }
 
-    g_element& add_g_element()
-    {
-        return _g.add_g_element();
-    }
-
     g_element& get_g_element(int i)
     {
-        return _g.g_tag(i);
+        return *(static_cast<g_element*>(&children[i]));
     }
 
     g_element& rect(double x1, double y1, double x2, double y2)

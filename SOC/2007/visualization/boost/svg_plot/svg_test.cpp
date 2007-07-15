@@ -78,7 +78,10 @@ int main()
     plot_2d(my_2d_plot, data1, "sqrt(x)");
 
     plot_2d(my_2d_plot, data2, "Not sqrt(x)", 
-        _size = 10);
+        _size = 10,
+        _point_style = square,
+        _stroke_color = hotpink,
+        _fill_color = yellow);
     
     plot(my_1d_plot, data3, "1D Plot");
 

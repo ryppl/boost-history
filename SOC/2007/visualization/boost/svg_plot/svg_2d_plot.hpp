@@ -215,7 +215,6 @@ private:
                 }
             }
         }
-
     }
 
     void _draw_axis()
@@ -437,7 +436,13 @@ svg_2d_plot& write(std::ostream& s_out)
 
             _transform_point(x, y);
             
-            _draw_plot_point(x, y, g_ptr, series[i].point_style);
+            if(x > plot_window_x1 
+            && x < plot_window_x2
+            && y > plot_window_y1 
+            && y < plot_window_y2)
+            {
+               _draw_plot_point(x, y, g_ptr, series[i].point_style);
+            }
         }
     }
 

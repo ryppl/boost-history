@@ -172,36 +172,6 @@ protected:
         }
     }
 
-    void _draw_axis()
-    {
-        double x1(0.), y1(0.), y2(derived().image.get_y_size());
-
-        _transform_point(x1, y1);
-        
-        y1 = 0.;
-
-        //draw origin. Make sure it is in the window
-        if(x1 > derived().plot_window_x1 && x1 < derived().plot_window_x2)
-        {
-            if(!derived().plot_window_on)
-            {
-                if(derived().title_on)
-                {
-                    y1 += derived().title_font_size * 1.5;
-                }
-
-                if(derived().x_label_on)
-                {
-                    y2 -= derived().x_label_font_size * 1.5;
-                }
-            }
-
-            derived().image.get_g_element(PLOT_X_AXIS).line(x1, y1, x1, y2);
-        }
-
-        _draw_x_axis();
-    }
-
     // -----------------------------------------------------------------
     // When writing to multiple documents, the contents of the plot
     // may change significantly between. Rather than figuring out what
@@ -379,23 +349,18 @@ protected:
     void _draw_plot_point(double _x, double _y, 
                           g_element& g_ptr, const plot_point_style& _sty)
     {
-        if(_x > derived().plot_window_x1 
-        && _x < derived().plot_window_x2
-        && _y > derived().plot_window_y1 
-        && _y < derived().plot_window_y2)
-        {
-            int size = _sty.size;
-            double half_size = size / 2.;
 
-            switch(_sty.shape)
-            {
-                case circle:
-                    g_ptr.circle(_x, _y, half_size);
-                    break;
-                case square:
-                    g_ptr.rect(_x - half_size, _y - half_size, size, size);
-                    break;
-            }
+        int size = _sty.size;
+        double half_size = size / 2.;
+
+        switch(_sty.shape)
+        {
+            case circle:
+                g_ptr.circle(_x, _y, half_size);
+                break;
+            case square:
+                g_ptr.rect(_x - half_size, _y - half_size, size, size);
+                break;
         }
     }
 

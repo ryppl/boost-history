@@ -219,6 +219,40 @@ svg_1d_plot& write(const std::string& _str)
     return *this;
 }
 
+void _draw_axis()
+{
+    double x(0.), y1(0.), y2(image.get_y_size());
+
+    _transform_x(x);
+    
+    y1 = 0.;
+
+    //draw origin. Make sure it is in the window
+    if(x > plot_window_x1 && x < plot_window_x2)
+    {
+        if(!plot_window_on)
+        {
+            if(title_on)
+            {
+                y1 += title_font_size * 1.5;
+            }
+            if(x_label_on)
+            {
+                y2 -= x_label_font_size * 1.5;
+            }
+        }
+
+        else
+        {
+            y1 = plot_window_y1;
+            y2 = plot_window_y2;
+        }
+
+        image.get_g_element(PLOT_X_AXIS).line(x, y1, x, y2);
+    }
+    _draw_x_axis();
+}
+
 //refactor a little
 svg_1d_plot& write(std::ostream& s_out)
 {
@@ -265,10 +299,16 @@ svg_1d_plot& write(std::ostream& s_out)
         {
             x = series[i].series[j];
             _transform_x(x);
-            _draw_plot_point(x, y, g_ptr, series[i].point_style);
+
+            if(x > plot_window_x1 
+            && x < plot_window_x2
+            && y > plot_window_y1 
+            && y < plot_window_y2)
+            {
+                _draw_plot_point(x, y, g_ptr, series[i].point_style);
+            }
         }
     }
-
     image.write(s_out);
 
     return (svg_1d_plot&)*this;
