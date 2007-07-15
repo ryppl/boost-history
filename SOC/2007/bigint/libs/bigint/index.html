@@ -1,0 +1,526 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Big Integer Library</title>
+</head>
+<body>
+<h1><img src="../../boost.png" alt="boost.png (6897 bytes)"
+     align="middle" width="277" height="86">
+Big Integers</h1>
+
+<h2><a name="Contents">Contents</a></h2>
+
+<ol>
+    <li><a href="#Class_bigint_synopsis">Class bigint synopsis</a></li>
+    <li><a href="#Rationale">Rationale</a></li>
+    <li><a href="#Background">Background</a></li>
+    <li><a href="#Interface">Interface</a>
+    <ul>
+	<li><a href="#Choosing_implementation">Choosing the implementation</a></li>
+	<li><a href="#Constructors">Constructors</a></li>
+	<li><a href="#Arithmetic_operations">Arithmetic operations</a></li>
+	<li><a href="#Bitwise_operations">Bitwise operations</a></li>
+	<li><a href="#Input_and_Output">Input and Output</a></li>
+	<li><a href="#Conversions">Conversions</a></li>
+	<li><a href="#Other_functions">Other functions</a></li>
+	<li><a href="#Serialization">Serialization</a></li>
+    </ul></li>
+    <li><a href="#Performance">Performance</a></li>
+    <li><a href="#Exceptions">Exceptions</a></li>
+    <li><a href="#Internal_representation">Internal representation</a></li>
+    <li><a href="#Design_notes">Design notes</a>
+    <ul>
+	<li><a href="#Minimal_Implementation">Minimal Implementation</a></li>
+	<li><a href="#Limited-range_integer_types">Limited-range integer types</a></li>
+	<li><a href="#Conversion_from_floating_point">Conversion from floating point</a></li>
+	<li><a href="#Absolute_Value">Absolute Value</a></li>
+    </ul></li>
+    <li><a href="#References">References</a></li>
+    <li><a href="#History_and_Acknowledgements">History and Acknowledgements</a></li>
+</ol>
+
+<h2><a name="Class_bigint_synopsis">Class bigint synopsis</a></h2>
+<pre>
+#include &lt;boost/bigint/bigint.hpp&gt;
+
+namespace boost {
+template &lt;typename I&gt; class bigint_base
+{
+    typedef <em>implementation-defined</em> bool_type;
+
+public:
+    // Constructors
+    bigint_base();                           // Zero
+    bigint_base(int number);
+    bigint_base(unsigned int number);
+    bigint_base(int64_t number);
+    bigint_base(uint64_t number);
+
+    // String constructors for variable digit base; default is decimal
+    explicit bigint_base(const char* str, int base = 10);
+    explicit bigint_base(const wchar_t* str, int base = 10);
+    explicit bigint_base(const std::string&amp; str, int base = 10);
+    explicit bigint_base(const std::wstring&amp; str, int base = 10);
+
+    // Arithmetic operators
+    const bigint_base&amp; operator+=(const bigint_base&amp; other);
+    const bigint_base&amp; operator-=(const bigint_base&amp; other);
+    const bigint_base&amp; operator*=(const bigint_base&amp; other);
+    const bigint_base&amp; operator/=(const bigint_base&amp; other);
+    const bigint_base&amp; operator%=(const bigint_base&amp; other);
+
+    // Arithmetic operators
+    friend bigint_base operator+(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bigint_base operator-(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bigint_base operator*(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bigint_base operator/(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bigint_base operator%(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+
+    // Bitwise logical operators
+    const bigint_base&amp; operator|=(const bigint_base&amp; other);
+    const bigint_base&amp; operator&amp;=(const bigint_base&amp; other);
+    const bigint_base&amp; operator^=(const bigint_base&amp; other);
+    
+    // Bitwise logical operators
+    friend bigint_base operator|(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bigint_base operator&amp;(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bigint_base operator^(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+
+    // Shift operators
+    const bigint_base&amp; operator&lt;&lt;=(uint64_t other);
+    const bigint_base&amp; operator&gt;&gt;=(uint64_t other);
+
+    // Shift operators
+    friend bigint_base operator&lt;&lt;(const bigint_base&amp; lhs, boost::uint64_t rhs);
+    friend bigint_base operator&gt;&gt;(const bigint_base&amp; lhs, boost::uint64_t rhs);
+
+    // Increment and decrement; both prefix and postfix forms are supported
+    const bigint_base&amp; operator++();
+    bigint_base operator++(int);
+    const bigint_base&amp; operator--();
+    bigint_base operator--(int);
+    
+    // Unary operators
+    bigint_base operator+() const;
+    bigint_base operator-() const;
+    bigint_base operator~() const;
+
+    // Bool conversions
+    operator bool_type() const;
+    bool operator!() const;
+
+    // String conversion for variable digit base; default is decimal
+    std::string str(int base = 10) const;
+    std::wstring wstr(int base = 10) const;
+
+    // Converting from bigint to any primitive integer type, including 64-bit ones
+    template &lt;typename T&gt; bool can_convert_to() const;
+    template &lt;typename T&gt; T to_number() const;
+
+    // Comparison operators
+    friend bool operator&lt;(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bool operator&lt;=(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bool operator&gt;(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bool operator&gt;=(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bool operator==(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+    friend bool operator!=(const bigint_base&amp; lhs, const bigint_base&amp; rhs);
+
+    // Free functions
+    friend bigint_base abs(const bigint_base&amp; value);
+    friend bigint_base pow(const bigint_base&lt;I&gt;&amp; lhs, boost::uint64_t rhs);
+    friend bigint_base div(const bigint_base&amp; lhs, const bigint_base&amp; rhs, bigint_base&amp; remainder);
+    friend bigint_base sqrt(const bigint_base&amp; lhs);
+
+    // Stream input/output
+    template &lt;typename T, typename Tr&gt; friend std::basic_ostream&lt;T, Tr&gt;&amp; operator&lt;&lt;(std::basic_ostream&lt;T, Tr&gt;&amp; lhs, const bigint_base&amp; rhs);
+    template &lt;typename T, typename Tr&gt; friend std::basic_istream&lt;T, Tr&gt;&amp; operator&gt;&gt;(std::basic_istream&lt;T, Tr&gt;&amp; lhs, bigint_base&amp; rhs);
+};
+
+} // namespace boost
+
+typedef bigint_base&lt;<em>implementation-defined</em>&gt; bigint;
+</pre>
+
+<h2><a name="Rationale">Rationale</a></h2>
+
+<p>Standard C++ without third-party libraries offers support for several integer
+types, though all of them have limited range of values. This range is enough
+for majority of applications, but in some cases, which include scientific and
+cryptography-related applications, there is a need for so called "arbitrary
+precision numbers" - those are the numbers which have precision limited only by
+amount of available memory.</p>
+
+<p>Note that due to the lack of hardware support for abitrary precision integers,
+any operations that can be performed with them are slower than the corresponding
+operations for native (C++ built-in) types; therefore they should not be treated
+as a complete replacement for existing types, but rather as a possibility to trade
+performance for precision.</p>
+
+<p>There are several different third-party libraries available, they have different
+performance/portability characteristics; this library provides a numeric type
+<b>bigint</b>, strictly defines the set of operations that can be performed and their
+behavior, provides a portable (albeit slow) implementation of said operations; and
+also provides a implementation which uses the fastest available arbitrary precision
+library, <a href="http://gmplib.org/">GNU MP</a>.</p>
+
+<p>The library is intended to be highly extensible and encourages developers to create
+their own implementation that would close the gap between 'portable' and 'gmp' implementations
+in terms of performance; a set of correctness and performance tests is provided to
+easen the development of such implementations.</p>
+
+<h2><a name="Background">Background</a></h2>
+
+<p>The <b>bigint</b> number class provides an implementation of integer concept. The representation
+is always exact, and there are no overflows/underflows; all operations except division by zero,
+evaluating remainder from the division by zero or evaluating square root of negative number are
+perfectly defined, and give the value that does not depend on implementation. Everything except
+the visible behavior - including in-memory representation, operations performance/memory complexity -
+depends on the implementations. Implementation authors are encouraged to provide information about
+memory requirements and performance complexities (the table for two existing implementations is
+present in this documentation) to help the user of the library choose the implementation that will
+suite his or her needs best of all.</p>
+
+<p><b>bigint</b> class is designed so that it is compatible with the built-in integer types in the
+largest extent possible; this means that all arithmetical and logical types available are available
+for <b>bigint</b> class; <b>bigint</b> is implicitly constructible from integer types so that integer
+types can be used where compiler is expecting <b>bigint</b> - both in operators and functions; some
+of integer functions present in C++ standard are also redefined for <b>bigint</b>.</p>
+
+<h2><a name="Interface">Interface</a></h2>
+
+<h3><a name="Choosing_implementation">Choosing the implementation</a></h3>
+
+<p>The bigint library consists of two distinct parts - the interface class <b>bigint_base</b>, and a set
+of implementation classes. <b>bigint_base</b> is a templated class with a single template parameter - the
+actual implementation. There is a convenience typedef, <b>bigint</b>, which equals to <b>bigint_base</b>,
+parametrized by the most advanced implementation available. As library provides only two implementations
+by default, <b>bigint</b> is equal to GMP-based implementation if the define BOOST_BIGINT_HAS_GMP_SUPPORT
+is set in <i>boost_config.hpp</i> file; otherwise <b>bigint</b> uses the portable implementation.</p>
+
+<p>In most cases users should just use <b>bigint</b>, but if they have a need to use the specific implementation,
+they can use it like this:
+
+<pre>
+	#include "header_with_specific_implementation_class.hpp"
+
+	typedef boost::bigint_base&lt;specific_implementation_class&gt; bigint_special;
+
+	bigint_special a = 1, b = a * (a - 4);
+</pre>
+
+<font color="#ff0000">As this can change and bigint_base can be parametrized by both implementation and storage class
+in future, this section has to be revised before the project ends</font>
+</p>
+
+<h3><a name="Constructors">Constructors</a></h3>
+
+<p><b>bigint</b> class has three types of constructors: default constructor, constructors from built-in integer types, and
+constructors from strings.</p>
+
+<p>Default constructor initializes <b>bigint</b> class instance to zero; note that as <b>bigint</b> class is an implementation
+of integer concept, there is no such distinction between positive and negative zero.</p>
+
+<p>Integer constructors initialize <b>bigint</b> from build-in integer types; the result of constructor is that <b>bigint</b>
+instance contains the exact representation of the passed value. Note that these constructors are <em>not</em> declared as explicit;
+this means that you can freely use values of build-in integer types where you have to use <b>bigint</b>; for example, this is
+correct:
+
+<pre>
+    int a = 10;
+    boost::bigint b = 3;
+    boost::bigint c = b + a;
+    boost::bigint d = c / 49;
+</pre>
+
+<font color="#ff0000"><b>bigint</b> relies on the presence of 64-bit integer support, but this may change in the future</font>
+</p>
+
+<p>String constructors initialize <b>bigint</b> from string in the certain format. Strings can be wide, and you can pass either
+a <b>std::string</b>/<b>std::wstring</b> or the pointer to the null-terminated character sequence. The accepted number format
+is as follows:</p>
+
+<pre>
+[spaces][sign][digits]
+</pre>
+
+<p>'spaces' is a group of whitespace symbols (as detected by ::isspace/::iswspace CRT functions), there can be zero or more symbols
+in it.</p>
+
+<p>'sign' is either an empty string, '+' or '-' symbol. '+' sign is ignored, '-' sets the number to the negative one (string "-3" will
+initialize <b>bigint</b> instance to -3, string "+3" will initialize it to 3).</p>
+
+<p>'digits' is a group of digits belonging to the character set of the base that is passed to the constructor; base is a number
+that is greater or equal to 2 and less or equal to 36; bases outside of allowed range lead to undefined results <font color="#ff0000">
+perhaps we should change that and initialize number to 0 if base is &lt; 2 or &gt; 36?</font>. For bases less or equal than 10,
+the character set of digits from 0 to (base-1) is used. For bases greater than 10, the character set consists of digits from 0
+to 9, and then the letters from 'A' (ASCII character 'A') to the last needed letter for the set to reach the needed size. Letters are not case sensitive.
+Letter 'A' corresponds to digit 10, letter 'B' corresponds to digit 11 and so on. Letter 'Z' (if applicable - this is an allowed
+letter only for base = 36) corresponds to digit 35.</p>
+
+<p>The group of digits is interpreted as a number that is written from the most significant digit to the least significant one;
+there can be an arbitrary number of zero digits ('0') preceding the group.
+
+<p>Examples:
+<ul>
+<li>For base 2, only characters '0' and '1' can be used. String "1100" in base 2 corresponds to the number 12 (decimal).</li>
+<li>For base 10, any digit characters can be used. String "1234" in base 10 corresponds to the number 1234 (decimal).</li>
+<li>For base 16, any digit characters can be used. Additionally characters 'A'-'F' and 'a'-'f' can be used. String "Ff4a" in base 16 corresponds to the number 65354 (decimal). Note that letter case is irrelevant.</li>
+<li>For base 36, any digit characters can be used. Additionally characters 'A'-'Z' and 'a'-'z' can be used. String "ZZ" in base 36 corresponds to the number 1295 (decimal).</li>
+</ul>
+</p>
+
+<p>If the input string has characters that are not allowed in the input string, the first such character
+and <em>all</em> consecutive characters (including allowed ones) are ignored.
+If there are no digit characters before the first discarded characters, the number is initialized to 0 (for example,
+passing "-A23" as an input string and 10 as base will initialize the number to 0, as it will ignore all characters
+from 'A' onward, including 'A').</p>
+
+<h3><a name="Arithmetic_operations">Arithmetic operations</a></h3>
+
+<p>All of the standard numeric operators are defined for the <b>bigint</b> class. These include:</p>
+
+<pre>
+    +    +=
+    -    -=
+    *    *=
+    /    /=
+    %    %=
+    ++   --    (both prefix and postfix)
+    ==   !=
+    &lt;    &gt;
+    &lt;=   &gt;=
+    + (unary)
+    - (unary)
+</pre>
+
+<p>They have the same semantics as the standard ones.</p>
+
+<p>Some things that have to be noted:</p>
+
+<ul>
+<li>Division by zero (and taking remainder from the division by zero, i.e. i % 0) generates division by zero for the built-in
+<b>int</b> type; therefore, division by zero results in undefined behavior.</li>
+<li>Operations never produce an overflow/underflow and the result is perfectly accurate.</li>
+<li>The result of +, +=, -, -=, *, *=, ++, --, &lt;, &lt;=, &gt;, &gt;=, ==, !=, unary + and unary - operators is exactly the
+same as the result of corresponding operations for the mathematical integer concept.</li>
+<li>Division operation (/ and /=) results in so called truncated division; this means that if the dividend is not exactly
+divisible by the divisor, the result is equal to the result of real number division which is later truncated to the integer
+number which has the absolute value which is less than that of the real number quotient. Such truncation is also called rounding
+towards zero. Here are some examples to clarify the concept:
+    <ul>
+    <li>60 / 15 == 4. 60 is exactly divisible by 15, no truncation takes place.</li>
+    <li>-60 / 15 == -4. -60 is exactly divisible by 15, no truncation takes place.</li>
+    <li>60 / -15 == -4. 60 is exactly divisible by -15, no truncation takes place.</li>
+    <li>3 / 2 == 1. 3 is not exatly divisible by 2; the quotient of real number division is 1.5, it is truncated to 1.</li>
+    <li>-3 / 2 == -1. -3 is not exatly divisible by 2; the quotient of real number division is -1.5, it is truncated to -1.</li>
+    <li>3 / -2 == -1. 3 is not exatly divisible by -2; the quotient of real number division is -1.5, it is truncated to -1.</li>
+    <li>-3 / -2 == 1. -3 is not exatly divisible by -2; the quotient of real number division is 1.5, it is truncated to 1.</li>
+    </ul>
+</li>
+<li>Modulo operation (% and %=) is implemented in terms of truncated division; this means, that if a / b == c, then a % b == a - b * c. This means that:
+	<ul>
+	<li>Modulo by zero results in undefined behavior</li>
+	<li>If a is exactly divisible by b, a % b == 0</li>
+	<li>Otherwise, the sign of a % b is always equal to the sign of a.
+	</ul>
+Here are some examples to clarify the concept:
+	<ul>
+	<li>34 % 5 == 4. 34 / 5 == 6 (see above for the description of truncating division), 34 % 5 == 34 - (6 * 5) == 4.</li>
+	<li>34 % -5 == 4. 34 / -5 == -6, 34 % -5 == 34 - (-6 * -5) == 4.</li>
+	<li>-34 % 5 == -4. -34 / 5 == -6, -34 % 5 == -34 - (-6 * 5) == -4.</li>
+	<li>-34 % -5 == -4. -34 / -5 == 6, -34 % -5 == -34 - (6 * -5) == -4.</li>
+	</ul>
+</li>
+</ul>
+
+<h3><a name="Bitwise_operations">Bitwise operations</a></h3>
+
+<p>All of the standard bitwise operators are defined for the <b>bigint</b> class. These include:</p>
+
+<pre>
+    &amp;    &amp;=
+    |    |=
+    ^    ^=
+    ~ (unary)
+    &lt;&lt;   &lt;&lt;=
+    &gt;&gt;   &gt;&gt;=
+</pre>
+
+<p>These function operate with a bit representation of numbers. Note that though there are no strict requirements for
+storage of <b>bigint</b> implementations, bitwise operators are guaranteed to operate with the following representation:
+positive numbers are represented as a sequence of bits, most significant bit is first, least significant bit is last, the
+sequence of bits is equal to the representation of the number in binary number system; zero is represented as a single bit 0;
+negative numbers are represented as 2-complement of their absolute value (note that this means that negative number have an
+infinite number of 1s at the beginning; for the purpose of bitwise operations we assume that positive numbers have an infinite
+number of 0s at the beginning).</p>
+
+<p>Given such representation, the result of each bit operation is defined as the number representation of a bit sequence, which
+is constructed from two bit sequences of operands (to be precise, of two bit sequences, which are bit representation of the operands),
+or of a bit sequence of a single operand in case of unary operator, by applying the bitwise operator to those sequences.</p>
+
+<p>Examples to clarify the concept:
+<ul>
+<li>3 & 6 == 11b & 110b == 10b == 2</li>
+<li>3 | 6 == 11b | 110b == 111b == 7</li>
+<li>3 ^ 6 == 11b ^ 110b == 101b == 5</li>
+<li>-3 & 6 == -(11b) & 110b == 1....1101b & 0....0110b == 0....0100b == 100b == 4</li>
+<li>-3 | 6 == -(11b) & 110b == 1....1101b | 0....0110b == 1....1111b == -(1b) == -1</li>
+<li>-3 ^ 6 == -(11b) & 110b == 1....1101b ^ 0....0110b == 1....1011b == -(101b) == -5</li>
+<li>~(-3) == ~(-(11b)) == ~1....1101b == 0....0010b == 2</li>
+<li>-3 << 2 == -(11b) << 2 == 1....1101b << 2 == 1....110100b == -(1100b) == -12</li>
+<li>-3 >> 2 == -(11b) >> 2 == 1....1101b >> 2 == 1....11b == -(1b) == -1</li>
+</ul>
+</p>
+
+<p>Note that shift operators can't shift more than for 2^64 digits; this is beyond the limit of memory anyway (2^64 bits means
+2^61 bytes for storage, which is equal to 2^31 Gb of data) and is not going to change.</p>
+
+<h3><a name="Input_and_Output">Input and Output</a></h3>
+
+<p>Input and output operators <tt>&lt;&lt;</tt> and <tt>&gt;&gt;</tt>
+are provided. They meet all flags and locale requirements (that is, you
+can use <code>showpos, oct, hex</code> and other flags, decimal separators
+are also supported. Input operator stops at the first unrecognized character.
+In short, input and output operators behave exactly as you would expect them to
+behave for build-in integer types.</p>
+
+<h3><a name="Conversions">Conversions</a></h3>
+
+<p>There is a conversion operator to an unspecified Boolean type (most likely a
+member pointer). This operator converts a <b>bigint</b> to <code>false</code> if it
+represents zero, and <code>true</code> otherwise. This conversion allows a
+rational for use as the first argument of operator <code>?:</code>; as either
+argument of operators <code>&amp;&amp;</code> or <code>||</code> without
+forfeiting short-circuit evaluation; as a condition for a <code>do</code>,
+<code>if</code>, <code>while</code>, or <code>for</code> statement; and as a
+conditional declaration for <code>if</code>, <code>while</code>, or
+<code>for</code> statements. The nature of the type used, and that any names
+for that nature are kept private, should prevent any inappropriate non-boolean
+use like numeric or pointer operations or as a <code>switch</code> condition.</p>
+
+<p>Note: the provided <code>operator!</code> is not strictly necessary from the point of C++ standard,
+and is a workaround for some compilers.</p>
+
+<p><b>bigint</b> values can be converted to strings of arbitrary base (provided it
+meets the conditions 2 &lt;= base &lt;= 36). The output string consists of sign
+(a symbol '-' present only if the value is negative) and of a sequence of characters
+that represent digits. This sequence consists of the same characters that can
+occur in the string passed to the string constructors of bigint; the description
+of the values and their meaning can be seen in the <a href="#Constructors">Constructors</a>
+section. No unnecessary zeroes or whitespace characters are added to the output string
+(if the value is equal to 0, the string "0" is returned); all letter symbols are
+lowercase. Generally, the following always holds true:
+
+<pre>
+	bigint(value.str()) == value
+</pre>
+</p>
+
+<p>While <b>bigint</b> provides storage and operations for numbers of arbitrary precision,
+sometimes the stored values fit into C++ built-in integer types, and sometimes there's a need
+to convert from <b>bigint</b> to one of those types. You can check whether such conversion is
+possible via <code>can_convert_to</code> function, and convert <b>bigint</b> to a value of built-in
+integer type via <code>to_number</code> function. Note that if <code>value.can_convert_to<T>()</code>
+is <code>false</code>, the result of <code>value.convert_to<T>()</code> is undefined. If <code>value.can_convert_to<T>()</code>
+is <code>true</code>, the following always holds true:
+
+<pre>
+	bigint(value.convert_to<T>()) == value
+</pre>
+
+These functions work only for types which have traits in <code>std::numeric_limits</code>, and do not have to work for types
+which are longer than 64 bit even if such types are natively supported.</p>
+
+<h3><a name="Other_functions">Other functions</a></h3>
+
+<p><code>abs</code> function returns an absolute value of passed parameter.</p>
+
+<p><code>pow</code> function returns the passed parameter raised to the specified power. Negative powers are naturally not supported. pow(0, 0) == 1.</p>
+
+<p><code>div</code> function returns both quotient and remainder for the division. The division is a truncated one; for further reference, see section <a href="#Arithmetic_operations">Arithmetic operations</a>.
+This function is similar to standard <code>div</code> function for integers.</p>
+
+<p><code>sqrt</code> function computes a square root of the passed parameter. Passing a negative value to <code>sqrt</code> results in undefined behavior.</p>
+
+<h3><a name="Serialization">Serialization</a></h3>
+
+<p><b>bigint</b> has built-in support for serialization via Boost.Serialization library. You need to include a separate header,
+&lt;boost/bigint/bigint_serialize.hpp&gt;, then you can use <b>bigint</b> values. The storage format is the decimal string
+representation, though this is an implementation detail and may change in future.</p>
+
+<h2><a name="Performance">Performance</a></h2>
+
+<p>While different <b>bigint</b> implementations have different performance characteristics, developers are encouraged to
+provide a table with summary performance of implemented methods. Such table for existing implementations exists here.
+N means the length of the value itself (applicable only for methods), A1, A2, etc. mean length of the function
+arguments, and M means maximum of the lengths of both value and function arguments (M = max(N, A1, A2, ...)).</p>
+
+<p>'Length' means number of bits for integer arguments and number of characters for strings.</p>
+
+<table><tr><th>Function(s)</th><th>'gmp' implementation</th></tr>
+<tr><td>default ctor</td><td>O(1)</td></tr>
+<tr><td>integer ctors</td><td>O(1)</td></tr>
+<tr><td>string ctors</td><td>O(A1) <font color="#ff0000">check</font></td></tr>
+<tr><td>+, -, +=, -=</td><td>O(M)</td></tr>
+<tr><td>*, *=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
+<tr><td>/, /=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
+<tr><td>%, %=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
+<tr><td>&amp;, &amp;=, |, |=, ^, ^=</td><td>O(M)</td></tr>
+<tr><td>&lt;&lt;, &gt;&gt;</td><td>O(max(A1, 2<sup>A2</sup>)) <font color="#808080"> NB. O(2<sup>A2</sup>) is equal to O(shift amount)</font></td></tr>
+<tr><td>&lt;&lt;=, &gt;&gt;=</td><td>O(max(N, 2<sup>A1</sup>)) <font color="#808080"> NB. O(2<sup>A1</sup>) is equal to O(shift amount)</font></td></tr>
+<tr><td>++, --</td><td>O(N)</td></tr>
+<tr><td>+, -</td><td>O(1)</td></tr>
+<tr><td>~</td><td>O(N)</td></tr>
+<tr><td>bool conversions</td><td>O(1)</td></tr>
+<tr><td>string conversions</td><td>O(N) <font color="#ff0000">check</font></td></tr>
+<tr><td>can_convert_to</td><td>O(1)</font></td></tr>
+<tr><td>to_number</td><td>O(N)</font></td></tr>
+<tr><td>comparison operators</td><td>O(M)</font></td></tr>
+<tr><td>abs</td><td>O(M)</font></td></tr>
+<tr><td>pow</td><td>O(A1 * A2) <font color="#ff0000">check</font></td></tr>
+<tr><td>div</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
+<tr><td>sqrt</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
+</table>
+
+<h2><a name="Exceptions">Exceptions</a></h2>
+
+<p>Most implementations of <b>bigint</b> allocate memory for various uses (both temporary
+memory and memory for value storage); therefore any <b>bigint</b> function (except <b>bigint</b>
+destructor) may throw a <code>std::bad_alloc</code> exceptions. There are no other possible
+exceptions.</p>
+
+<h2><a name="References">References</a></h2>
+<ul>
+<li>The bigint header itself: <a href="../../boost/bigint/bigint.hpp">bigint.hpp</a></li>
+<li>Some example code: <a href="example.cpp">example.cpp</a></li>
+<li>The regression tests: <a href="test/">test/</a></li>
+</ul>
+
+<h2><a name="History_and_Acknowledgements">History and Acknowledgements</a></h2>
+
+<p>The library was implemented by me (Arseny Kapoulkine) as a Boost project for
+Google Summer of Code.</p>
+
+<p>Jeff Garland helped with different design and implementation-related things
+during the project.</p>
+
+<p>Jarrad Waterloo reminded me of some issues in the initial design that were
+overlooked (64-bit integer support, various bases for string conversion</p>
+
+<p>Phil Endecott reminded me to take special care of negative numbers in implementation
+and documentation of bitwise operators.</p>
+
+<p>I shamelessly stole small parts of Boost.Rational documentation (and based
+the whole structure of this file on it), which was written by Paul Moore and
+Daryle Walker.</p>
+
+<p>Revised June 16, 2007</p>
+
+<p>&copy; Copyright Arseny Kapoulkine 2007. Permission to
+copy, use, modify, sell and distribute this document is granted provided this
+copyright notice appears in all copies. This document is provided &quot;as
+is&quot; without express or implied warranty, and with no claim as to its
+suitability for any purpose.</p>
+</body>
+</html>

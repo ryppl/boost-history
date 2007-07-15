@@ -13,8 +13,8 @@ Feature name									Deadline		Status
 1. Bigint interface (header)					21 May			Awaiting resolution
 2. GMP implementation							21 May			Awaiting resolution
 3. Correctness tests							7 June			In progress
-4. Documentation								21 June			N/A
-5. Performance tests							7 July			N/A
+4. Documentation								21 June			In progress
+5. Performance tests							7 July			In progress
 4. Interface for storage						14 July			N/A
 5. Storage implementation						14 July			N/A
 6. Default implementation						30 July			N/A
@@ -175,8 +175,8 @@ all limb allocation will be done by bigint library). Temporary storage allocatio
 functions to GMP and having them throw an exception is not a generic solution, because GMP is not exception safe. However, it
 may be a solution IF own allocation is performed - depends on where allocations are done - needs further investigation.
 
-Alternatively, only parts of GMP that actually are thread safe may be rewritten (if they do not include system layer (mpn), of
-course).
+Alternatively, only parts of GMP that actually are not exception safe may be rewritten (if they do not include system layer
+(mpn), of course).
 
 -----------------------------------------------
 Extra features:
@@ -187,3 +187,4 @@ Extra features:
 - getting several bits from an integer (say, 7 bits from 4859-th one). Perhaps, assigning several bits.
 - conversion from/to floating point (float, double, long double)
 - other styles of division (for now there's only truncating; floor and/or ceil perhaps?) & modulo
+- bigint relies on the presence of boost::uint64_t and therefore will not compile if there's no 64-bit integer support

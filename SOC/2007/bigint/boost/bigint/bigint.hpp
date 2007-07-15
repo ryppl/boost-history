@@ -126,7 +126,7 @@ public:
 		return *this;
 	}
 	
-	const bigint_base& operator>>=(boost::uint64_t other)
+	const bigint_base& operator>>=(uint64_t other)
 	{
 		impl.rshift(impl, other);
 		return *this;
