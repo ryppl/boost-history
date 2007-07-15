@@ -125,6 +125,17 @@ public:
       return m_null;
    }
 
+   const_reference operator[](const string_type& ref_name) const
+   {
+      std::map<string_type, int>::iterator ref = p_name_map->find(ref_name);
+      if (ref != p_name_map->end())
+      {
+         int sub = ref->second + 2;
+         return m_subs[sub];
+      }
+      return m_null;
+   }
+
    const_reference prefix() const
    {
       return (*this)[-1];
@@ -286,13 +297,17 @@ public:
          set_first(i);
    }
    void BOOST_REGEX_CALL maybe_assign(const match_results<BidiIterator, Allocator>& m);
-
+public:
+   void set_name_map(const shared_ptr<std::map<string_type, int> > p_names)
+   {
+      p_name_map = p_names;
+   }
 
 private:
    vector_type            m_subs; // subexpressions
    BidiIterator   m_base; // where the search started from
    sub_match<BidiIterator> m_null; // a null match
-   shared_ptr<std::map<const char_type*, int> > p_capture_names;
+   shared_ptr<std::map<string_type, int> > p_name_map; //map from names to integer index
 };
 
 template <class BidiIterator, class Allocator>
