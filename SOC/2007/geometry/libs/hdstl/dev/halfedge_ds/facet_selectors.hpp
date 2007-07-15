@@ -148,6 +148,8 @@
 #ifndef BOOST_HDSTL_FACET_SELECTORS_HPP
 #define BOOST_HDSTL_FACET_SELECTORS_HPP 1
 
+#include <boost/hdstl/halfedge_ds/container_selectors.hpp>
+
 namespace boost {
 namespace hdstl {
 
@@ -174,7 +176,7 @@ struct facetS {
 
     enum { has_facet_links = HasFacetLink };
         // A boolean enumeration that tells whether the stored halfedge should
-        // contain a link to one of the halfedges in its fact cycle or not.
+        // contain a link to one of the halfedges in its facet cycle or not.
 };
 
                  // ------------------
@@ -214,36 +216,36 @@ struct stored_facet<Base, false, HalfedgeDescriptor> : public Base {
                  // class facet_gen
                  // ---------------
 
-template <typename HalfedgeDescriptor, typename FacetBase>
+template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
 struct facet_gen {
     // This 'struct' implements a facet generator.  The general definition does
     // nothing.
 };
 
 // SPECIALIZATIONS
-template <typename FacetS, typename HalfedgeDescriptor = void, typename FacetBase = void>
-struct facet_gen<facetS<ContainerS, HasFacetLink>, HalfedgeDescriptor, FacetBase> {
+template <typename ContainerS, bool HasFacetLink, 
+          typename HalfedgeDescriptor, typename FacetBase>
+struct facet_gen<facetS<ContainerS,HasFacetLink>, HalfedgeDescriptor, FacetBase> {
     // This specialization of a facet generator for 'facetS' takes a facet selector
     // and a halfedge descriptor, and uses the 'container_selectors' component
     // to define a suitable base for the 'halfedge_ds_gen' that implements all
     // the functionality of the 'halfedge_ds' related to the facets.
 
     // TYPES
-    typedef container_gen<ContainerS>           ContainerGen;
-        // The container generator for this facet generator.
-
-    typedef stored_facet<FacetBase, HasfacetLink, HalfedgeDescriptor>
+    typedef stored_facet<FacetBase, HasFacetLink, HalfedgeDescriptor>
                                                 facet_type;
         // The stored facet type for this facet generator.
+    
+    typedef container_gen<ContainerS, facet_type>    ContainerGen;
+        // The container generator for this facet generator.
 
-    typedef typename container_gen<ContainerS, facet_type>::type
-                                                container_type;
+    typedef typename ContainerGen::type            container_type;
         // The facet container type for this facet generator.
 
-    typedef typename container_type::descriptor facet_descriptor;
+    typedef typename ContainerGen::descriptor facet_descriptor;
         // The facet descriptor type for this facet generator.
 
-    typedef typename container_type::iterator   facet_iterator;
+    typedef typename ContainerGen::iterator   facet_iterator;
         // The facet iterator type for this facet generator.
 
     // DATA
@@ -257,7 +259,7 @@ typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::iterator
 facets_begin(facet_gen<FacetS, HalfedgeDescriptor, FacetBase> const& hds) {
     typedef typename facet_gen<FacetS,
                                HalfedgeDescriptor,
-                               FacetBase>::container_gen_type ContainerGen;
+                               FacetBase>::ContainerGen ContainerGen;
     return ContainerGen::container_begin(hds.m_container);
 }
 
@@ -266,13 +268,13 @@ typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::iterator
 facets_end(facet_gen<FacetS, HalfedgeDescriptor, FacetBase> const& hds) {
     typedef typename facet_gen<FacetS,
                                HalfedgeDescriptor,
-                               FacetBase>::container_gen_type ContainerGen;
+                               FacetBase>::ContainerGen ContainerGen;
     return ContainerGen::container_end(hds.m_container);
 }
 
 template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
-typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::size_type;
-facets_end(facet_gen<FacetS, HalfedgeDescriptor, FacetBase> const& hds) {
+typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::size_type
+num_facets(facet_gen<FacetS, HalfedgeDescriptor, FacetBase> const& hds) {
     return hds.m_container.size();
 }
 

@@ -11,7 +11,7 @@
 // signatures.  Finally, verify that the usage example compiles and executes
 // without errors, when assert is replaced by BOOST_CHECK.
 
-#include <boost/hdstl/halfedge_ds/container_selectors.hpp>
+#include <boost/hdstl/halfedge_ds/facet_selectors.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -23,30 +23,7 @@ using namespace boost::hdstl;
 using namespace std;
 
 // ===========================================================================
-//                              SELECTOR CLASSES
-// ===========================================================================
-
-template <typename FacetS>
-bool selector_requirements(FacetS const&) {
-    return false;
-}
-
-bool selector_requirements(noFacetS const&) {
-    return true;
-}
-
-template <typename Base, typename HalfedgeDescriptor>
-bool selector_requirements(facetS<Base, false, HalfedgeDescriptor> const&) {
-    return true;
-}
-
-template <typename Base, typename HalfedgeDescriptor>
-bool selector_requirements(facetS<Base, true, HalfedgeDescriptor> const&) {
-    return true;
-}
-
-// ===========================================================================
-//                              CLASS CONTAINER_GEN
+//                              SELECTION CLASSES
 // ===========================================================================
 
 template <typename FacetS>
@@ -54,34 +31,42 @@ bool selection_requirements(FacetS const&) {
     return false;
 }
 
-template <typename Base, typename HalfedgeDescriptor>
-bool selector_requirements(facetS<Base, false, HalfedgeDescriptor> const&f) {
+bool selection_requirements(noFacetS const&) {
     return true;
 }
 
-template <typename Base, typename HalfedgeDescriptor>
-bool selector_requirements(facetS<Base, true, HalfedgeDescriptor> const&) {
+template <typename Base>
+bool selection_requirements(facetS<Base, false> const&) {
     return true;
 }
 
-template <class ContainerGen, typename ValueType, typename FacetS>
-bool container_gen_requirements() {
-    ValueType array[] = { 0, 1, 2, 3 };
-    typename ContainerGen::type container(array, array + 4);
+template <typename Base>
+bool selection_requirements(facetS<Base, true> const&) {
+    return true;
+}
+
+// ===========================================================================
+//                              CLASS FACET_GEN
+// ===========================================================================
+
+template <typename FacetGen>
+bool facet_gen_requirements() {
     
-    BOOST_CHECK(( selection_requirements(FacetS(), container) ));
-
     // Types must exist.
-    typedef typename ContainerGen::descriptor descriptor;
-    typedef typename ContainerGen::iterator   iterator;
+    typedef typename FacetGen::facet_descriptor facet_descriptor;
+    typedef typename FacetGen::facet_iterator   facet_iterator;
+    typedef typename FacetGen::facet_type   facet_type;
+    typedef typename FacetGen::container_type   container_type;
 
+    facet_type array[] = { 0, 1, 2, 3 };
+    container_type container(array, array + 4);
+    
     // Value type of iterator must be a descriptor.
-    iterator begin = ContainerGen::container_begin(container);
-    descriptor theBegin = *begin;
+    facet_iterator begin = ContainerGen.container_begin(container);
+    facet_descriptor theBegin = *begin;
 
     return true;
 }
-
 // ===========================================================================
 //                              USAGE EXAMPLE
 // ===========================================================================
@@ -154,6 +139,8 @@ bool container_gen_requirements() {
 // individual elements:
 //..
     bool usageExample() {
+    
+
         Element george(632,  "Harrison",  +78);
         Element john  (834,  "Lennon",    +255);
         Element paul  (932,  "McCartney", +126);
@@ -195,21 +182,15 @@ bool container_gen_requirements() {
 
 int test_main(int, char **)
 {
-    #if 0
-    BOOST_CHECK(( selector_requirements(hashS()) ));
-    #endif
-    BOOST_CHECK(( selector_requirements(listS()) ));
-    BOOST_CHECK(( selector_requirements(setS()) ));
-    BOOST_CHECK(( selector_requirements(vecS()) ));
-
-    #if 0
-    BOOST_CHECK(( selection_requirements<container_gen<hashS, int>, hashS>() ));
-    #endif
-    BOOST_CHECK(( container_gen_requirements<container_gen<listS, int>, int, listS>() ));
-    BOOST_CHECK(( container_gen_requirements<container_gen<setS, int>, int, setS>() ));
-    BOOST_CHECK(( container_gen_requirements<container_gen<vecS, int>, int, vecS>() ));
-
-    BOOST_CHECK(( usageExample() ));
+    BOOST_CHECK(( selection_requirements(noFacetS()) ));
+    BOOST_CHECK(( selection_requirements(facetS<listS,true>()) ));
+    BOOST_CHECK(( selection_requirements(facetS<listS,false>()) ));
+    
+    BOOST_CHECK(( selection_requirements(facetS<vecS,true>()) ));
+    BOOST_CHECK(( selection_requirements(facetS<vecS,false>()) ));
+    //BOOST_CHECK(( facet_gen_requirements<facet_gen<facetS<vecS,false>, int, void> >() ));
+   
+    //BOOST_CHECK(( usageExample() ));
     
     return 0;
 }

@@ -143,12 +143,6 @@
 namespace boost {
 namespace hdstl {
 
-template <typename Selector, typename ValueType>
-struct container_gen {
-    // This 'struct', properly specialized for the specified 'Selector', gives
-    // various traits of the container of the specified 'ValueType' suitable by
-    // the 'halfedge_ds' implementation.
-};
 
 /*
 struct hashS {
@@ -178,6 +172,14 @@ struct slistS {
 struct vecS {
     // This tag 'struct' is used by 'container_gen' to select the
     // specialization that uses the 'std::vector' container.
+};
+
+
+template <typename Selector, typename ValueType>
+struct container_gen {
+    // This 'struct', properly specialized for the specified 'Selector', gives
+    // various traits of the container of the specified 'ValueType' suitable by
+    // the 'halfedge_ds' implementation.
 };
 
 // SPECIALIZATIONS
@@ -260,7 +262,6 @@ struct container_gen<hashS, ValueType> {
     }
 };
 #endif
-
 template <typename ValueType>
 struct container_gen<listS, ValueType> {
     // This specialization of 'container_gen' selects the 'std::list'
@@ -382,7 +383,7 @@ struct container_gen<vecS, ValueType> {
 
     // TYPES
     typedef std::vector<ValueType> type;
-        // The container type, here a 'std::list'.
+        // The container type, here a 'std::vector'.
 
     typedef typename std::vector<ValueType>::size_type  descriptor;
         // Type used to describe an element in the collection of elements
