@@ -11,9 +11,21 @@
 
 namespace cgi {
 
+  /// The generic service class for basic_request<>s
+  /**
+   * Note: If the protocol is an asynchronous protocol, which means it requires
+   * access to a boost::asio::io_service instance, then this class becomes a
+   * model of the Service concept (**LINK**) and must only use the constructor
+   * which takes a ProtocolService (**LINK**). If the protocol isn't async then
+   * the class can be used without a ProtocolService.
+   */
   template<typename Protocol>
   class request_service
-    : public boost::asio::io_service::service
+    : public boost::enable_if<is_async<request_traits<Protocol
+                                                     >::service_impl_type
+                                      >::value
+                             , detail::service_base<request_service>
+                             >::type
   {
     // The platform-specific implementation (only one for now)
     typedef detail::request_traits<Protocol>::service_impl_type
@@ -29,7 +41,7 @@ namespace cgi {
 
 
     /// The unique service identifier
-    static boost::asio::io_service::id id;
+    //static boost::asio::io_service::id id;
 
     request_service(protocol_service_type& ps)
       : boost::asio::io_service::service(ps.io_service())
@@ -80,9 +92,6 @@ namespace cgi {
   private:
     service_impl_type& service_impl_;
   };
-
-  template<typename Protocol>
-  boost::asio::io_service::id request_service<Protocol>::id;
 
 } // namespace cgi
 

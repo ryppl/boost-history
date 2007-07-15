@@ -143,7 +143,7 @@ namespace cgi {
 
     void close(int http_status, int program_status)
     {
-
+      service_.close(http_status, program_status);
     }
 
     /// Reject the request with a standard '500 Internal Server Error' error

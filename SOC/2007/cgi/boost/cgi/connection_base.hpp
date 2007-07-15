@@ -30,6 +30,9 @@ namespace cgi {
 
     template<typename ConstBufferSequence, typename Handler>
     virtual void async_write(ConstBufferSequence, Handler) = 0;
+
+  protected:
+    ~connection_base() { }
   };
 
 } // namespace cgi

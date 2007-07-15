@@ -34,6 +34,11 @@ namespace cgi {
     boost::asio::ip::tcp::socket sock_;
   };
 
+  template<typename ProtocolService = detail::fcgi_service>
+  struct tcp_connection
+  {
+    typedef basic_connection<tags::tcp_socket, ProtocolService>    type;
+  };
 
 } // namespace cgi
 

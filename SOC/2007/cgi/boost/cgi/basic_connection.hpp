@@ -16,14 +16,15 @@
 
 namespace cgi {
 
-  template<typename ProtocolService, typename ConnectionType>
+  template< typename ConnectionType, typename ProtocolService>
   class basic_connection
   : connection_base
   //, connection_wrapper<ConnectionType>
   {
   public:
-    typedef connection_impl<ProtocolService::protocol_type>  impl_type;
-    typedef boost::shared_ptr<conection_base>                pointer;
+    typedef connection_impl<ConnectionType
+                           , ProtocolService::protocol_type>  impl_type;
+    typedef boost::shared_ptr<conection_base>                 pointer;
 
     explicit basic_connection(protocol_service_type& ps)
       : impl_(ps)

@@ -12,16 +12,14 @@
 namespace cgi {
 
  template<typename ProtocolService>
-  class basic_connection<tags::stdio_async>
+  class basic_connection<tags::stdio_async, ProtocolService>
     : public connection_base
+    , public basic_connection<ProtocolService, tags::stdio>
   {
   public:
-    typedef ProtocolService   protocol_service_type;
-
     basic_connection(protocol_service_type& ps)
       : protocol_service_(ps)
-      , in_(std::cin)
-      , out_(std::cout)
+      , basic_connection<tags::stdio, ProtocolService>()
     {
     }
 
@@ -51,9 +49,13 @@ namespace cgi {
       
   private:
     protocol_service_type& protocol_service_;
-    std::istream& in_;
-    std::ostream& out_;
   };
+
+  template<typename ProtocolService = detail::async_cgi_service>
+  struct async_stdio_connection
+  {
+    typedef basic_connection<tags::async_cgi, ProtocolService>    type;
+  };      
 
 } // namespace cgi
 

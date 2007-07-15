@@ -10,13 +10,15 @@
 #define CGI_CGI_REQUEST_IMPL_HPP_INCLUDED__
 
 #include <map>
+#include <string>
 #include <boost/noncopyable.hpp>
 
-namespace cgi {
- namespace detail {
-    typename std::map<std::string,std::string>    map_type;
- } // namespace detail
+#include "http/status_code.hpp"
+#include
 
+// Make this ProtocolService-independent
+
+namespace cgi {
 
   /// Implementation for a standard CGI request
   /**
@@ -55,18 +57,6 @@ namespace cgi {
     http::status_code http_status_;
     request_status request_status_;
   };
-    
-
-  private: // functions
-    
-
-  private: // variables
-    //map_type env_map_;
-    map_type http_map_;
-    map_type cookie_map_;
-    map_type get_map_;
-    map_type post_map_;
-  };
 
   template<> inline const std::string&
   cgi_request_impl::var<tags::ENV>(const std::string& name)
@@ -89,8 +79,8 @@ namespace cgi {
   //  throw std::logic_error("Can't get all environment vars as a map_type&");
   //}
 
-  template<> inline cgi_request_impl::map_type&
-  cgi_request_impl::var<tags::HTTP>() { return http_map_; }
+  //template<> inline cgi_request_impl::map_type&
+  //cgi_request_impl::var<tags::HTTP>() { return http_map_; }
 
   template<> inline cgi_request_impl::map_type&
   cgi_request_impl::var<tags::COOKIE>() { return cookie_map_; }

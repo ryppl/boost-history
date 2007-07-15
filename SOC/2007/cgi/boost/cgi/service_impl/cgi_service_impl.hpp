@@ -1,5 +1,15 @@
+//              -- cgi_service_impl.hpp --
+//
+//           Copyright (c) Darren Garvey 2007.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+////////////////////////////////////////////////////////////////
 #ifndef CGI_CGI_SERVICE_IMPL_HPP_INCLUDED__
 #define CGI_CGI_SERVICE_IMPL_HPP_INCLUDED__
+
+#include "detail/extract_params.hpp"
 
 namespace cgi {
 
@@ -33,17 +43,17 @@ namespace cgi {
     /**
      * @param parse_stdin if true then STDIN data is also read/parsed
      */
-    boost::system::error_code& load(boost::system::error_code& ec
-                                   , bool parse_stdin)
+    boost::system::error_code
+    load(boost::system::error_code& ec, bool parse_stdin)
     {
       std::string request_method = meta_get("REQUEST_METHOD");
       if (request_method == "GET")
         if (parse_get_vars(ec))
-	      return ec;
+	        return ec;
       else
       if (request_method == "POST" && parse_stdin)
-	    if (parse_post_vars(ec))
-	      return ec;
+	      if (parse_post_vars(ec))
+	        return ec;
 
       parse_cookie_vars(ec);
       return ec;
@@ -63,7 +73,6 @@ namespace cgi {
     {
       return impl.connection_->write_some(buf, ec);
     }
-
 
     //template<typename VarType> map_type& var(impl_type&) const;
 
@@ -152,23 +161,22 @@ namespace cgi {
     }
 
   protected:
-    boost::system::error_code& parse_get_vars(impl_type& impl
-											 , boost::system::error_code& ec)
+    /// Read and parse the cgi GET meta variables
+    boost::system::error_code&
+    parse_get_vars(impl_type& impl, boost::system::error_code& ec)
     {
-      // Make sure this function hasn't already been called
-      BOOST_ASSERT( impl.get_vars_.empty() );
-
-      extract_params(meta_env("QUERY_STRING")
-                    , impl.get_vars_
-                    , boost::char_separator<char>
-                        ("", "=&", boost::keep_empty_tokens)
-                    , ec);
+      detail::extract_params(meta_env("QUERY_STRING")
+                            , impl.get_vars_
+                            , boost::char_separator<char>
+                                ("", "=&", boost::keep_empty_tokens)
+                            , ec);
 
       return ec;
     }
 
-    boost::system::error_code& parse_cookie_vars(impl_type& impl
-												, boost::system::error_code& ec)
+    /// Read and parse the HTTP_COOKIE meta variable
+    boost::system::error_code
+    parse_cookie_vars(impl_type& impl, boost::system::error_code& ec)
     {
       // Make sure this function hasn't already been called
       BOOST_ASSERT( impl.cookie_vars_.empty() );
@@ -177,17 +185,18 @@ namespace cgi {
       if (vars.empty())
         return ec;
 
-      extract_params(meta_env("HTTP_COOKIE")
-                    , impl.cookie_vars_
-                    , boost::char_separator<char>
-                        ("", "=&", boost::keep_empty_tokens)
-                    , ec);
+      detail::extract_params(meta_env("HTTP_COOKIE")
+                            , impl.cookie_vars_
+                            , boost::char_separator<char>
+                                ("", "=&", boost::keep_empty_tokens)
+                            , ec);
 
       return ec;
     }
 
-    boost::system::error_code& parse_post_vars(impl_type& impl
-											  , boost::system::error_code& ec)
+    /// Read and parse the cgi POST meta variables (greedily)
+    boost::system::error_code
+    parse_post_vars(impl_type& impl, boost::system::error_code& ec)
     {
       // Make sure this function hasn't already been called
       BOOST_ASSERT( impl.cookie_vars_.empty() );
@@ -201,8 +210,9 @@ namespace cgi {
       return ec;
     }
 
-    boost::system::error_code& parse_one_post_var(impl_type& impl
-                                                 , boost::system::error_code& ec)
+    /// Read and parse a single cgi POST meta variable (greedily)
+    boost::system::error_code
+    parse_one_post_var(impl_type& impl, boost::system::error_code& ec)
     {
 #     error "Not implemented"
       return ec;

@@ -9,12 +9,13 @@
 #ifndef CGI_FCGI_REQUEST_IMPL_HPP_INCLUDED__
 #define CGI_FCGI_REQUEST_IMPL_HPP_INCLUDED__
 
+// Make this ProtocolService-independent
+
 namespace cgi {
 
   /// Implementation for a FastCGI request
   class fcgi_request_impl
   {
-    fcgi_request() {} // private default constructor
   public:
     typedef tags::fastcgi    protocol_type;
 
@@ -41,7 +42,7 @@ namespace cgi {
     map_type get_vars_;
 
     std::string stdin_buffer_;
-    std::string data_buffer_;
+    std::string data_buffer_; // only needed for request_type::filter (not hugely important)
 
     /// Finished reading from stdin buffer (ie. POST data)
     bool stdin_read_;
@@ -49,6 +50,8 @@ namespace cgi {
     /// Finished reading from data buffer (for Filter requests)
     bool data_read_;
 
+  private:
+    fcgi_request() // private default constructor
     friend class fcgi_service_impl;
   };
 

@@ -1,3 +1,11 @@
+//           -- async_cgi_service_impl.hpp --
+//
+//           Copyright (c) Darren Garvey 2007.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+////////////////////////////////////////////////////////////////
 #ifndef CGI_ASYNC_CGI_SERVICE_IMPL_HPP_INCLUDED__
 #define CGI_ASYNC_CGI_SERVICE_IMPL_HPP_INCLUDED__
 
@@ -34,19 +42,20 @@ namespace cgi {
     {
     public:
       load_handler(impl_type& impl, bool parse_stdin, Handler handler)
-	: impl_(impl)
-	, service_(impl.service_)
-	, work_(service.io_service())
-	, parse_stdin_(parse_stdin)
-	, handler_(handler)
+	      : impl_(impl)
+	      , service_(impl.service_)
+	      , work_(service.io_service())
+	      , parse_stdin_(parse_stdin)
+	      , handler_(handler)
       {
       }
 
-      void operator()(const boost::system::error_code& error)
+      void operator()()
       {
-	if (error)
-	  service_.post(boost::bind(&Handler, handler_, error));
-	
+        boost::system::error_code ec
+          = cgi_service_impl::load(impl_, ec, handler_);
+
+	      service_.post(boost::bind(&Handler, handler_, ec));
       }
     private:
       protocol_service_type& service_;

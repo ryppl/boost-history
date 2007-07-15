@@ -12,7 +12,7 @@
 namespace cgi {
 
   template<typename ProtocolService>
-  class basic_connection<tags::stdio>
+  class basic_connection<tags::stdio, ProtocolService>
     : public connection_base
   {
   public:
@@ -31,7 +31,8 @@ namespace cgi {
     }
 
     template<typename MutableBufferSequence>
-    std::size_t read_some(MutableBufferSequence buf, boost::system::error_code& ec)
+    std::size_t read_some(MutableBufferSequence buf
+                         , boost::system::error_code& ec)
     {
       if( buf.data() != in_.rdbuf() )
         return in_.read(buf.data(), buf.size());
@@ -39,17 +40,22 @@ namespace cgi {
     }
 
     template<typename ConstBufferSequence>
-    std::size_t write_some(ConstBufferSequence& buf, boost::system::error_code& ec)
+    std::size_t write_some(ConstBufferSequence& buf
+                          , boost::system::error_code& ec)
     {
       return out_.write(buf.data(), buf.size());
     }
       
-  private:
+  protected:
     std::istream& in_;
     std::ostream& out_;
   };
-
-  typedef basic_connection<tags::stdio>    stdio_connection;
+  
+  template<typename ProtocolService = detail::cgi_service>
+  struct stdio_connection
+  {
+    typedef basic_connection<tags::stdio, ProtocolService>    type;
+  };
 
 } // namespace cgi
 
