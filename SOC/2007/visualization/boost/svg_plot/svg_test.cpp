@@ -85,8 +85,8 @@ int main()
     
     plot(my_1d_plot, data3, "1D Plot");
 
-    my_1d_plot.write("D:/test1d.svg");
-    my_2d_plot.write("D:/test2d.svg");
+    my_1d_plot.write("./test1d.svg");
+    my_2d_plot.write("./test2d.svg");
 
     return 0;
 }

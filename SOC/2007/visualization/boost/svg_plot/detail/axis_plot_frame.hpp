@@ -12,7 +12,7 @@
 
 #include <string>
 #include "svg_style.hpp"
-#include "detail/svg_tag.hpp"
+#include "svg_tag.hpp"
 
 namespace boost{
 namespace svg{

@@ -125,6 +125,39 @@ private:
         y_shift = plot_window_y1 - (plot_window_y1-plot_window_y2)/2.;
     }
 
+void _draw_axis()
+{
+    double x(0.), y1(0.), y2(image.get_y_size());
+
+    _transform_x(x);
+    
+    y1 = 0.;
+
+    //draw origin. Make sure it is in the window
+    if(x > plot_window_x1 && x < plot_window_x2)
+    {
+        if(!plot_window_on)
+        {
+            if(title_on)
+            {
+                y1 += title_font_size * 1.5;
+            }
+            if(x_label_on)
+            {
+                y2 -= x_label_font_size * 1.5;
+            }
+        }
+
+        else
+        {
+            y1 = plot_window_y1;
+            y2 = plot_window_y2;
+        }
+
+        image.get_g_element(PLOT_X_AXIS).line(x, y1, x, y2);
+    }
+    _draw_x_axis();
+}
     void _calculate_plot_window()
     {
         x_axis = (plot_window_y2 + plot_window_y1)/2.;
@@ -219,41 +252,6 @@ svg_1d_plot& write(const std::string& _str)
     return *this;
 }
 
-void _draw_axis()
-{
-    double x(0.), y1(0.), y2(image.get_y_size());
-
-    _transform_x(x);
-    
-    y1 = 0.;
-
-    //draw origin. Make sure it is in the window
-    if(x > plot_window_x1 && x < plot_window_x2)
-    {
-        if(!plot_window_on)
-        {
-            if(title_on)
-            {
-                y1 += title_font_size * 1.5;
-            }
-            if(x_label_on)
-            {
-                y2 -= x_label_font_size * 1.5;
-            }
-        }
-
-        else
-        {
-            y1 = plot_window_y1;
-            y2 = plot_window_y2;
-        }
-
-        image.get_g_element(PLOT_X_AXIS).line(x, y1, x, y2);
-    }
-    _draw_x_axis();
-}
-
-//refactor a little
 svg_1d_plot& write(std::ostream& s_out)
 {
     // removes all elements that will show up in a subsequent draw
@@ -314,9 +312,6 @@ svg_1d_plot& write(std::ostream& s_out)
     return (svg_1d_plot&)*this;
 }
 
-// -----------------------------------------------------------------
-// Actually draw data to the plot. Default color information
-// -----------------------------------------------------------------
 void plot(const std::vector<double>& _ctr,
                             const std::string& _title,
                             const plot_point_style& _style)
@@ -326,21 +321,13 @@ void plot(const std::vector<double>& _ctr,
                                      _style));
 }
 
-// -----------------------------------------------------------------
-// Miscellaneous setter methods: those with no clear, definable home
-// in another category
-//
-// set_image_size()
-// set_title()
-// set_title_font_size()
-// set_legend_title_font_size()
-// -----------------------------------------------------------------
-
 }; // end svg_1d_plot
 
 // -----------------------------------------------------------------
 // Parameter names for plot() function
 // -----------------------------------------------------------------
+
+// These should be moved to their own namespace
 
 #ifndef BOOST_SVG_BOOST_PARAMETER_NAMES
 #define BOOST_SVG_BOOST_PARAMETER_NAMES
@@ -370,11 +357,11 @@ BOOST_PARAMETER_FUNCTION
         (stroke_color, (const svg_color&), svg_color(white))
         (point_style, (point_shape), circle)
         (size, (int), 10)
+        (x_functor, *, boost_default_convert())
     )
     (deduced
         (optional
             (fill_color, (const svg_color&), svg_color(black))
-            (x_functor, *, boost_default_convert())
         )
     )
 )
