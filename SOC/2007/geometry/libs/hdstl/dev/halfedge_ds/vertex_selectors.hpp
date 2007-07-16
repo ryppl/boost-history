@@ -5,17 +5,16 @@
 //@CLASSES:
 //        'vertexS': defines configuration options for vertex storage and access
 //  'stored_vertex': defines the storage for a given vertex configuration
-//     'vertex_gen': defines the stored type and accessors for a vertex 
-//                   configuration
+//     'vertex_gen': defines the stored type and accessors for a vertex configuration
 //
 //@SEE_ALSO: {hds_concepts.hpp, halfedge_ds.hpp}
 //
 //@DESCRIPTION: This file provides the 'vertexS' selector class for
 //configurations related to vertex properties. These selector types are
 //suitable to use for the 'VertexS' template parameter to the 'halfedge_ds' 
-//class tempalte. Currently there are two vertex selectors:
+//class template. Currently there are two vertex selectors:
 //
-//  - 'noVertexS': means that there should be no facets in the corresponding
+//  - 'noVertexS': means that there should be no vertices in the corresponding
 //    'hafedge_ds' data structure.
 //
 //  - 'vertexS<ContainerS, HasVertexLink, VertexType>': (where 'ContainerS' can
@@ -42,7 +41,7 @@
 // vertex needs to know:
 // - whether halfedge_ds should store a link to source or target vertex.
 // - whether it stores a vertex link or not.
-// - the halfedge descriptor:  in order to store the vertex link.  Since it is
+// - the halfedge descriptor: in order to store the vertex link.  Since it is
 //   not needed when the vertex stores no vertex link, we make it integer in 
 //   that case.
 // - any extra properties that need to get contained by the vertex as member. We
@@ -77,7 +76,7 @@
 //      }
 //  };
 //..
-// We use base_vertexS to select the vertex access method. Base class defines
+// We use 'base_vertexS' to select the vertex access method. Base class defines
 // nothing.
 //..
 //  template <typename VertexType>
@@ -136,7 +135,7 @@
 //                                                       HalfedgeDescriptor> {
 //      // This specialization is a vertex generator for 'vertexS' that takes a 
 //      // vertex selector, vertex type selector , halfedge descriptor and uses 
-//      // the container_selectors compenent to define a suitable base for the
+//      // the container_selectors component to define a suitable base for the
 //      // 'halfedge_ds_gen' that implements all the functionality of the
 //      // 'halfedge_ds' related to vertices.
 //      
@@ -196,6 +195,10 @@
 namespace boost {
 namespace hdstl {
 
+                   // =======================
+                   // vertex selector classes
+                   // =======================
+
 struct sourceS {
     // A selector that tells the 'halfedge_ds' that each halfedge should keep 
     // a pointer to its source vertex.
@@ -254,10 +257,9 @@ struct vertexS
     enum { has_vertex_links = HasVertexLink };
 };
 
-
-                 // ------------------
+                 // ==================
                  // class stored_facet
-                 // ------------------
+                 // ==================
 
 template <bool HasVertexLink = false, typename HalfedgeDescriptor = int>
 struct stored_vertex {
@@ -282,9 +284,9 @@ struct stored_vertex<false, HalfedgeDescriptor> {
     stored_vertex(HalfedgeDescriptor = 0) {
     }
 };
-                 // ---------------
+                 // ================
                  // class vertex_gen
-                 // ---------------
+                 // ================
 
 template <typename VertexS, typename HalfedgeDescriptor>
 struct vertex_gen {

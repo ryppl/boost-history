@@ -153,9 +153,9 @@
 namespace boost {
 namespace hdstl {
 
-                 // ---------------------------
+                 // ===========================
                  // classes noFacetS and facetS
-                 // ---------------------------
+                 // ===========================
 
 struct noFacetS {
     // A selector that tells the 'halfedge_ds' that it should not store facets.
@@ -179,9 +179,9 @@ struct facetS {
         // contain a link to one of the halfedges in its facet cycle or not.
 };
 
-                 // ------------------
+                 // ==================
                  // class stored_facet
-                 // ------------------
+                 // ==================
 
 template <typename Base,
           bool HasFacetLink = false, 
@@ -212,9 +212,9 @@ struct stored_facet<Base, false, HalfedgeDescriptor> : public Base {
     : Base(base) {}
 };
 
-                 // ---------------
+                 // ===============
                  // class facet_gen
-                 // ---------------
+                 // ===============
 
 template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
 struct facet_gen {
