@@ -6,11 +6,12 @@ LD=g++
 
 TARGET=dbg_exc_mt
 
-PACKAGE_OBJECTS=container_selectors.o facet_selectors.o
+PACKAGE_OBJECTS=container_selectors.o facet_selectors.o \
+	vertex_selectors.o halfedge_selectors.o
 
 PACKAGE_LIBRARY=libhalfedge_ds.a
 
-TEST_DRIVERS=container_selectors.t facet_selectors.t
+TEST_DRIVERS=container_selectors.t facet_selectors.t 
 
 .SUFFIXES:
 .SUFFIXES: ${TARGET}.o .o .cpp .hpp
@@ -30,6 +31,9 @@ container_selectors.o:
 
 facet_selectors.o: 
 
+vertex_selectors.o: 
+
+halfedge_selectors.o: 
 
 ### BUILDING TEST DRIVERS AND DEPENDENCIES OF TEST DRIVER
 
@@ -43,12 +47,14 @@ container_selectors.t.o:
 
 facet_selectors.t.o:
 
+
 %.t.o: %.t.cpp %.hpp
 	${CXX}  ${CXXFLAGS} ${CXXINCLUDES} -c -o $*.t.o $<
 
 container_selectors.t:
 
 facet_selectors.t:
+
 
 
 ## UTILITIES
