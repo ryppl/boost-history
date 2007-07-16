@@ -186,30 +186,71 @@ struct facetS {
 template <typename Base,
           bool HasFacetLink = false, 
           typename HalfedgeDescriptor = int>
-struct stored_facet : public Base {
-    // This 'struct' implements a stored facet, deriving from the
-    // parameterized 'Base', and adding a facet link if 'HasFacetLink' is
+struct stored_facet {
+    // This 'struct' implements a stored facet, from the
+    // parameterized 'Base' (if not void), and adding a facet link if 'HasFacetLink' is
     // true.
+
+    // DATA
+    HalfedgeDescriptor m_facetLink;
+    Base m_base;
+
+    // CREATORS
+    stored_facet(Base const& base, HalfedgeDescriptor facetLink = 0)
+    : m_facetLink(facetLink)
+    , m_base(base) {}
+
+    // MANIPULATORS
+    Base& base() { return m_base; }
+
+    // ACCESSORS
+    const Base& base() const { return m_base; }
+};
+
+template <typename Base, typename HalfedgeDescriptor>
+struct stored_facet<Base, false, HalfedgeDescriptor> {
+    // This partial specialization implements a stored facet, deriving from the
+    // parameterized 'Base', but without storing a facet link although its
+    // constructor accepts a null facet link for uniformity of the
+    // interface with the general definition.
+
+    // DATA
+    Base m_base;
+
+    // CREATORS
+    stored_facet(Base const& base, HalfedgeDescriptor = 0)
+    : m_base(base) {}
+
+    // MANIPULATORS
+    Base& base() { return m_base; }
+
+    // ACCESSORS
+    const Base& base() const { return m_base; }
+};
+
+template <bool HasFacetLink,
+          typename HalfedgeDescriptor>
+struct stored_facet<void, HasFacetLink, HalfedgeDescriptor> {
+    // This 'struct' implements a stored facet, with a 'void' base, adding a
+    // facet link if 'HasFacetLink' is true.
 
     // DATA
     HalfedgeDescriptor m_facetLink;
 
     // CREATORS
-    stored_facet(Base const& base, HalfedgeDescriptor facetLink)
-    : Base(base)
-    , m_facetLink(facetLink) {}
+    stored_facet(HalfedgeDescriptor facetLink)
+    : m_facetLink(facetLink) {}
 };
 
-template <typename Base, typename HalfedgeDescriptor>
-struct stored_facet<Base, false, HalfedgeDescriptor> : public Base {
+template <typename HalfedgeDescriptor>
+struct stored_facet<void, false, HalfedgeDescriptor> {
     // This partial specialization implements a stored facet, deriving from the
     // parameterized 'Base', but without storing a facet link although its
     // constructor accepts a null facet link for uniformity of the
     // interface with the general definition.
 
     // CREATORS
-    stored_facet(Base const& base, HalfedgeDescriptor = 0)
-    : Base(base) {}
+    stored_facet(HalfedgeDescriptor = 0) {}
 };
 
                  // ===============
@@ -232,20 +273,23 @@ struct facet_gen<facetS<ContainerS,HasFacetLink>, HalfedgeDescriptor, FacetBase>
     // the functionality of the 'halfedge_ds' related to the facets.
 
     // TYPES
+    typedef facetS<ContainerS,HasFacetLink>       facet_selector;
+        // The facet selector.
+
     typedef stored_facet<FacetBase, HasFacetLink, HalfedgeDescriptor>
                                                 facet_type;
         // The stored facet type for this facet generator.
     
-    typedef container_gen<ContainerS, facet_type>    ContainerGen;
+    typedef container_gen<ContainerS, facet_type> ContainerGen;
         // The container generator for this facet generator.
 
-    typedef typename ContainerGen::type            container_type;
+    typedef typename ContainerGen::type           container_type;
         // The facet container type for this facet generator.
 
-    typedef typename ContainerGen::descriptor facet_descriptor;
+    typedef typename ContainerGen::descriptor     facet_descriptor;
         // The facet descriptor type for this facet generator.
 
-    typedef typename ContainerGen::iterator   facet_iterator;
+    typedef typename ContainerGen::iterator       facet_iterator;
         // The facet iterator type for this facet generator.
 
     // DATA
@@ -276,6 +320,14 @@ template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
 typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::size_type
 num_facets(facet_gen<FacetS, HalfedgeDescriptor, FacetBase> const& hds) {
     return hds.m_container.size();
+}
+
+template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
+HalfedgeDescriptor
+halfedge(typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::facet_descriptor const& f,
+         facet_gen<FacetS, HalfedgeDescriptor, FacetBase> const& hds) {
+    return facet_gen<FacetS, HalfedgeDescriptor, FacetBase>
+                         ::ContainerGen::value(f, hds.m_container).m_facetLink;
 }
 
 } // namespace hdstl

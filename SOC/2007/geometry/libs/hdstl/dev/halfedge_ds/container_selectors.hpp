@@ -143,6 +143,9 @@
 namespace boost {
 namespace hdstl {
 
+                   // ===================
+                   // container selectors
+                   // ===================
 
 /*
 struct hashS {
@@ -174,6 +177,10 @@ struct vecS {
     // specialization that uses the 'std::vector' container.
 };
 
+
+                   // ===================
+                   // class container_gen
+                   // ===================
 
 template <typename Selector, typename ValueType>
 struct container_gen {
@@ -260,8 +267,17 @@ struct container_gen<hashS, ValueType> {
     {
         return /* not known */;
     }
+
+    static ValueType& value(descriptor x, type& container)
+            // This utility returns the value associated with the specified
+            // descriptor 'x' of the specified 'container'.
+    {
+        (void)container;  // avoid unused variable warning
+        return *x;
+    }
 };
 #endif
+
 template <typename ValueType>
 struct container_gen<listS, ValueType> {
     // This specialization of 'container_gen' selects the 'std::list'
@@ -317,6 +333,14 @@ struct container_gen<listS, ValueType> {
         // specified 'container'.
     {
         return container.end();
+    }
+
+    static ValueType& value(descriptor x, type& container)
+            // This utility returns the value associated with the specified
+            // descriptor 'x' of the specified 'container'.
+    {
+        (void)container;  // avoid unused variable warning
+        return *x;
     }
 };
 
@@ -375,6 +399,14 @@ struct container_gen<setS, ValueType> {
         // specified 'container'.
     {
         return container.end();
+    }
+
+    static ValueType& value(descriptor x, type& container)
+            // This utility returns the value associated with the specified
+            // descriptor 'x' of the specified 'container'.
+    {
+        (void)container;  // avoid unused variable warning
+        return *x;
     }
 };
 
@@ -435,6 +467,13 @@ struct container_gen<vecS, ValueType> {
         // specified 'container'.
     {
         return iterator(&container, container.end());
+    }
+
+    static ValueType& value(descriptor x, type& container)
+            // This utility returns the value associated with the specified
+            // descriptor 'x' of the specified 'container'.
+    {
+        return container[x];
     }
 };
 
