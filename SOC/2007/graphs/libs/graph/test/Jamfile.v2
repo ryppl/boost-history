@@ -59,3 +59,9 @@ exe cycle
     : <include>$BOOST_ROOT
     : <include>../../../
     ;
+
+exe clique
+    : clique.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
