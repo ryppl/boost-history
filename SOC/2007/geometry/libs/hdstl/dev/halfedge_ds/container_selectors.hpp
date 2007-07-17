@@ -199,6 +199,9 @@ struct container_gen<hashS, ValueType> {
     // TYPES
     typedef std::tr1::hash_set<ValueType> type;
         // The container type, here a 'std::tr1::hash_set'.
+    
+    typedef typename std::tr1::hash_set<ValueType>::size_type size_type;
+        // The container size type.
 
     typedef ValueType* descriptor;
         // Type used to describe an element in the collection of elements
@@ -286,6 +289,9 @@ struct container_gen<listS, ValueType> {
     // TYPES
     typedef std::list<ValueType> type;
         // The container type, here a 'std::list'.
+    
+    typedef typename std::list<ValueType>::size_type size_type;
+        // The container size type.
 
     typedef ValueType* descriptor;
         // Type used to describe an element in the collection of elements
@@ -353,6 +359,9 @@ struct container_gen<setS, ValueType> {
     typedef std::set<ValueType> type;
         // The container type, here a 'std::set'.
 
+    typedef typename std::set<ValueType>::size_type size_type;
+        // The container size type.
+
     typedef const ValueType* descriptor;
         // Type used to describe an element in the collection of elements
         // present in a given container.
@@ -375,14 +384,14 @@ struct container_gen<setS, ValueType> {
             // Return the descriptor of the element pointed to by this
             // iterator.
         {
-            return &(*base_type());
+            return &(*base_type(*this));
         }
         // ACCESSORS
         const ValueType* operator*() const
             // Return the descriptor of the element pointed to by this
             // iterator.
         {
-            return &(*base_type());
+            return &(*base_type(*this));
         }
     };
 
@@ -416,6 +425,9 @@ struct container_gen<vecS, ValueType> {
     // TYPES
     typedef std::vector<ValueType> type;
         // The container type, here a 'std::vector'.
+
+    typedef typename std::vector<ValueType>::size_type size_type;
+        // The container size type.
 
     typedef typename std::vector<ValueType>::size_type  descriptor;
         // Type used to describe an element in the collection of elements

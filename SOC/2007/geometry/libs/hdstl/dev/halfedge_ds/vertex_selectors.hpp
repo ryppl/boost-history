@@ -226,7 +226,7 @@ struct base_vertexS<sourceS>{
     // TYPES
     enum { type = true };
     enum { is_source = true };
-    enum { is_target = false };
+    enum { is_target = !is_source };
 };
 
 template<>
@@ -236,8 +236,8 @@ struct base_vertexS<targetS>{
 
     // TYPES
     enum { type = false };
-    enum { is_source = false };
     enum { is_target = true };
+    enum { is_source = !is_target };
 };
 
 template <typename ContainerS, bool HasVertexLink=false, 
@@ -257,38 +257,85 @@ struct vertexS
     enum { has_vertex_links = HasVertexLink };
 };
 
-                 // ==================
-                 // class stored_facet
-                 // ==================
+                 // ===================
+                 // class stored_vertex
+                 // ===================
 
-template <bool HasVertexLink = false, typename HalfedgeDescriptor = int>
+template <typename Base, 
+          bool HasVertexLink = false,                                   
+          typename HalfedgeDescriptor = int>
 struct stored_vertex {
-    // This struct implements a stored vertex with a vertex link if
-    // 'HasVertexLink' is true
+    // This struct implements a stored vertex from the parameterized 'Base'
+    // (if not void), and adds a vertex link if 'HasVertexLink' is true
 
     //DATA
     HalfedgeDescriptor m_vertexLink;
+    Base m_base;
 
     //CREATORS
-    stored_vertex(HalfedgeDescriptor vertexLink) : m_vertexLink(vertexLink){
-    }
+    stored_vertex(Base const& base, HalfedgeDescriptor vertexLink) 
+    : m_vertexLink(vertexLink),
+    , m_base(base){}
+
+    //MANIPULATORS
+    Base& base() { return m_base; }
+
+    //ACCESSORS
+    const Base& base() const { return m_base; }
+};
+
+template <typename Base, typename HalfedgeDescriptor>
+struct stored_vertex<Base, false, HalfedgeDescriptor> {
+    // This partial specialization implements a stored vertex, deriving from
+    // the parameterized 'Base', but without storing a vertex link although its
+    // constuctor accepts a null vertex link for uniformity of the interface
+    // with the general definition.
+    
+    //DATA
+    Base m_base;
+
+    // CREATORS
+    stored_vertex(Base const& base, HalfedgeDescriptor = 0)
+    : m_base(base) {}
+
+    //MANIPULATORS
+    Base& base() { return m_base; }
+
+    //ACCESSORS
+    const Base& base() const { return m_base; }
+};
+
+template <bool HasVertexLink,
+          typename HalfedgeDescriptor>
+struct stored_vertex<void, HasVertexLink, HalfedgeDescriptor> {
+    // This 'struct' implements a stored vertex, with a 'void' base, adding a
+    // vertex link if 'HasVertexLink' is true.
+
+    // DATA
+    HalfedgeDescriptor m_vertexLink;
+
+    // CREATORS
+    stored_vertex(HalfedgeDescriptor vertexLink)
+    : m_vertexLink(vertexLink) {}
 };
 
 template <typename HalfedgeDescriptor>
-struct stored_vertex<false, HalfedgeDescriptor> {
-    // This partial specialization implements a stored vertex without storing
-    // a vertex link although its constuctoe accepts a null vertex link for 
-    // uniformity of the interface with the general definition.
+struct stored_vertex<void, false, HalfedgeDescriptor> {
+    // This partial specialization implements a stored vertex, with a 'void' 
+    // base, but without storing a vertex link although its
+    // constructor accepts a null vertex link for uniformity of the
+    // interface with the general definition.
 
     // CREATORS
-    stored_vertex(HalfedgeDescriptor = 0) {
-    }
+    stored_vertex(HalfedgeDescriptor = 0) {}
 };
+
+
                  // ================
                  // class vertex_gen
                  // ================
 
-template <typename VertexS, typename HalfedgeDescriptor>
+template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
 struct vertex_gen {
     // This struct implements a vertex generator. The generel definition does
     // nothing.
@@ -296,9 +343,9 @@ struct vertex_gen {
 
 //SPECIALIZATIONS
 template <typename ContainerS, bool HasVertexLink, typename VertexType, 
-          typename HalfedgeDescriptor>
+          typename HalfedgeDescriptor, typename VertexBase>
 struct vertex_gen<vertexS<ContainerS, HasVertexLink, VertexType>, 
-                                                          HalfedgeDescriptor> {
+                                              HalfedgeDescriptor, VertexBase> {
     // This specialization is a vertex generator for 'vertexS' that takes a 
     // vertex selector, vertex type selector , halfedge descriptor and uses 
     // the container_selectors compenent to define a suitable base for the
@@ -306,7 +353,8 @@ struct vertex_gen<vertexS<ContainerS, HasVertexLink, VertexType>,
     // 'halfedge_ds' related to vertices.
     
     // TYPES
-    typedef stored_vertex<HasVertexLink, HalfedgeDescriptor> vertex_type;
+    typedef stored_vertex<VertexBase,HasVertexLink, HalfedgeDescriptor> 
+                                                           vertex_type;
         // The stored vertex type for this vertex generator.
 
     typedef container_gen<ContainerS, vertex_type>  ContainerGen;
@@ -328,27 +376,37 @@ struct vertex_gen<vertexS<ContainerS, HasVertexLink, VertexType>,
 };
 
 // FREE FUNCTIONS
-template <typename VertexS, typename HalfedgeDescriptor>
-typename vertex_gen<VertexS, HalfedgeDescriptor>::iterator
-vertices_begin(vertex_gen<VertexS, HalfedgeDescriptor> const& hds) {
-    typedef typename vertex_gen<VertexS,
-                               HalfedgeDescriptor>::ContainerGen ContainerGen;
+template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
+typename vertex_gen<VertexS, HalfedgeDescriptor,VertexBase>::iterator
+vertices_begin(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase> const& hds) {
+    typedef typename vertex_gen<VertexS, HalfedgeDescriptor, 
+                                        VertexBase>::ContainerGen ContainerGen;
     return ContainerGen::container_begin(hds.m_container);
 }
 
-template <typename VertexS, typename HalfedgeDescriptor>
-typename vertex_gen<VertexS, HalfedgeDescriptor>::iterator
-vertices_end(vertex_gen<VertexS, HalfedgeDescriptor> const& hds) {
-    typedef typename vertex_gen<VertexS,
-                               HalfedgeDescriptor>::ContainerGen ContainerGen;
+template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
+typename vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>::iterator
+vertices_end(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase> const& hds) {
+    typedef typename vertex_gen<VertexS, HalfedgeDescriptor, 
+                                        VertexBase>::ContainerGen ContainerGen;
     return ContainerGen::container_end(hds.m_container);
 }
 
-template <typename VertexS, typename HalfedgeDescriptor>
-typename vertex_gen<VertexS, HalfedgeDescriptor>::size_type
-num_vertices(vertex_gen<VertexS, HalfedgeDescriptor> const& hds) {
+template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
+typename vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>::size_type
+num_vertices(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase> const& hds) {
     return hds.m_container.size();
 }
+
+template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
+HalfedgeDescriptor
+halfedge(typename vertex_gen<VertexS, HalfedgeDescriptor, 
+                                      VertexBase>::vertex_descriptor const& v,
+              vertex_gen<VertexS, HalfedgeDescriptor, VertexBase> const& hds) {
+    return vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>
+                      ::ContainerGen::value(v, hds.m_container).m_vertexLink;
+}
+
 
 } // namespace hdstl
 } // namespace boost
