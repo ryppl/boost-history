@@ -58,12 +58,12 @@ private:
 
 public:
 
-    svg::svg():x_size(400), y_size(400)
+    svg():x_size(400), y_size(400)
     {
 
     }
 
-    svg::svg(const svg& rhs):x_size(rhs.x_size), y_size(rhs.y_size)
+    svg(const svg& rhs):x_size(rhs.x_size), y_size(rhs.y_size)
     {
         
     }

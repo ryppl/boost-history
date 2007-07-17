@@ -695,7 +695,7 @@ public:
 
     unsigned int get_image_x_size()
     {
-        return derived()image.get_x_size();
+        return derived().image.get_x_size();
     }
 
     unsigned int get_image_y_size()

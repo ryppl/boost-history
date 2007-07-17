@@ -319,7 +319,7 @@ public:
     unsigned int get_stroke_width() { return stroke_width;               };
 
     
-    void svg_style::write(std::ostream& rhs)
+    void write(std::ostream& rhs)
     {
         rhs << "stroke=\"";
         stroke_color.write(rhs);

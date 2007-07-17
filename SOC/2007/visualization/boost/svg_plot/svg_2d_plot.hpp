@@ -57,7 +57,7 @@ struct svg_2d_plot_series
 class svg_2d_plot: public axis_plot_frame<svg_2d_plot>
 {
 private:
-    friend axis_plot_frame<svg_2d_plot>;
+    friend class axis_plot_frame<svg_2d_plot>;
     
     double x_scale, x_shift;
     double y_scale, y_shift;
