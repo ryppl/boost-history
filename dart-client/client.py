@@ -1,5 +1,11 @@
 #!/usr/bin/env python
-
+#
+#  Copyright (C) 2007 Troy Straszheim <troy@resophonic.com>
+#
+#  Distributed under the Boost Software License, Version 1.0.
+#  See accompanying file LICENSE_1_0.txt or copy at
+#    http://www.boost.org/LICENSE_1_0.txt
+#
 #
 #  Continuous/nightly testing script.
 #
@@ -22,7 +28,6 @@ import os.path
 import time
 import subprocess
 from datetime import datetime, timedelta
-from xml.dom.minidom import parseString
 
 configfile = "conf.py"
 
@@ -35,38 +40,24 @@ configfile = "conf.py"
 # last_start:     time this test was last started. 
 #
 class Build:
-    def __init__(self, id_, build_variant_, ctest_variant_, revision_):
+    def dir(self):
+        return os.path.join(self.id, self.build_variant, self.ctest_variant)
+
+    def srcdir(self):
+        return os.path.join(self.dir(), "src")
+    
+    def builddir(self):
+        return os.path.join(self.dir(), "build")
+
+    def __str__(self):
+        return self.id + "/" + self.build_variant + "/" + self.ctest_variant + " last_start @ " + str(self.last_start)
+
+    def __init__(self, id_, build_variant_, ctest_variant_):
         self.id = id_
         self.build_variant = build_variant_
         self.ctest_variant = ctest_variant_
-        self.revision = revision_
         self.last_start = datetime.now()
-
-    def __str__(self):
-        return self.id + "/" + self.build_variant + "/" + self.ctest_variant + " r" + str(self.revision) + " last_start @ " + str(self.last_start)
-
-#
-# Get current svn revision number of srcdir
-#
-def svn_status_revision(srcdir):
-    output = subprocess.Popen([svn, "info", "--xml", srcdir], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
-    dom = parseString(output)
-    rev = dom.getElementsByTagName("commit")[0].getAttribute("revision")
-    return rev
-
-#
-# svn update "srcdir" to revision "revision"
-#
-def svn_update(srcdir, revision):
-    try:
-        retcode = subprocess.call([svn, "update", "-r", revision, srcdir])
-        if retcode < 0:
-            print >>sys.stderr, "Child was terminated by signal ", -retcode
-        else:
-            print >>sys.stderr, "Child returned", retcode
-    except OSError, e:
-        print >> sys.stderr, "Execution failed:", e
-
+        
 #
 # svn checkout "url" to local directory "srcdir"
 #
@@ -85,7 +76,7 @@ def svn_checkout(url, srcdir):
 # as reported by the *_dt functions in the config file.
 #
 def nextbuild(builds):
-    nextbuild = Build('none', 'none', 'none', -1)
+    nextbuild = Build('none', 'none', 'none')
     nextbuild_deltat = timedelta.min
 
     for b in builds:
@@ -101,16 +92,11 @@ def nextbuild(builds):
 def initbuilds():
     builds = []
     for id in urls:
-        srcdir = os.path.join(topdir, prefix, id, "src")
-        try:
-            rev = svn_status_revision(srcdir)
-        except:
-            rev = -1
         for bv in build_variants:
             for cv in ctest_variants:
-                build = Build(id, bv, cv, rev)
+                build = Build(id, bv, cv)
                 builds.append(build)
-                print "Initialized build " + str(build)
+                print ">>> info: Build " + str(build)
     return builds
 
 #
@@ -131,71 +117,103 @@ def read_conf():
         exit(1)
 
 #
+# take path to build/src directory and return absolute path
+#
+def absolute_path(p):
+    return os.path.join(topdir, prefix, p)
+
+#
 # run cmake (but not make) for each build directory
 #
 def initialize_builds(argv):
+    """
+    Configures each build with cmake."""
     print "Making build directories..."
     for build in initbuilds():
-        buildpath = os.path.join(topdir,prefix, build.id, build.build_variant, build.ctest_variant)
-        srcpath = os.path.join(topdir, prefix, build.id, "src")
+        buildpath = absolute_path(build.builddir())
+        srcpath = absolute_path(build.srcdir())
         try:
             if not os.path.isdir(buildpath):
                 os.makedirs(buildpath)
                 print ">>> Initializing " + buildpath
         except Exception, e:
-            print "Directory %s exists, not creating (%s)" % (buildpath, e)
+            print "Directory %s exists, not creating (%s)" % (buildpath, str(e))
         os.chdir(buildpath)
         cmd = cmake + " " + " ".join(build_variants[build.build_variant]) + " " + srcpath
         print ">>> Executing " + cmd
         os.system(cmd)
     
 #
+# clean prefix and all subdirectores
+#
+def clean(argv):
+    """
+    Wipes prefix directory.""" 
+    print "Obliterating [prefix] directories"
+    for root, dirs, files in os.walk(prefix, topdown=False):
+        for name in files:
+            os.remove(os.path.join(root, name))
+        for name in dirs:
+            print "- ", os.path.join(root, name)
+            os.rmdir(os.path.join(root, name))
+#
 # Create the necessary directories for the various build/test variants
 # and checkout the source, but don't run cmake.
 #
 def checkout(argv):
-    builds = initbuilds()
-    for id, url in urls.items():
-        srcdir = os.path.join(topdir,prefix,id,"src")
+    """
+    Runs svn checkout for each build/variant."""
+    for build in initbuilds():
+        srcdir = absolute_path(build.srcdir())
         try:
             os.mkdir(srcdir)
         except:
-            print "Directory %s exists, not creating." % id
+            print "Directory %s exists, not creating." % build.id
             
-        print "Checking out " + id
-        svn_checkout(url, srcdir)
+        print "Checking out " + build.id
+        svn_checkout(urls[build.id], srcdir)
 
 #
 #  Do the builds in an infinite loop.
 #
 def run(args):
+    """
+    Runs ctest over all builds/variants in a loop."""
     builds = initbuilds()
     while True:
         build = nextbuild(builds)
         print ">>> Starting " + str(build)
-        srcdir = os.path.join(topdir, prefix, build.id, "src")
-        if build.revision != -1:
-            print ">>> Updating " + srcdir + " to " + str(build.revision)
-            svn_update(srcdir, build.revision)
+        srcdir = absolute_path(build.srcdir())
         build.last_start = datetime.now()
-        os.chdir(os.path.join(topdir, prefix, build.id, build.build_variant, build.ctest_variant))
+        os.chdir(absolute_path(build.builddir()))
         cmd = ctest + " " + " ".join(ctest_variants[build.ctest_variant][0])
         os.system(cmd)
-        rev = svn_status_revision(srcdir)
-        build.revision = rev
-        print ">>> Finished %s/%s/%s, now at r%s" % (build.id, build.build_variant, build.ctest_variant, build.revision)
         print ">>> Sleeping %s seconds..." % interbuild_sleep
         time.sleep(interbuild_sleep)
 
-def srcdir_path(build):
-    return os.path.join(topdir, prefix, build.id, "src")
 #
-#  eh.
+#  Do everything required to get up and running, clean.
 #
+def bootstrap(argv):
+    """
+    Does everything from scratch.  Wipes the source directory, checks
+    out the source, initializes each build, runs ctest in a loop."""
+    clean(argv)
+    checkout(argv)
+    initialize_builds(argv)
+    run(argv)
+
 def help(argv):
-    print "Usage:\n\n  " + argv[0] + " (checkout|run)\n\ncheckout:  checks out source and sets up build environment.  Do this first.\nrun:       run regression tests in a loop.\n\n"
-    sys.exit(1)
-    
+    """
+    Prints this help."""
+    print "Usage:\n%s <command>" % argv[0]
+    print "See file %s for specific configuration." % configfile
+    print "Available commands:"
+    for (name, fn) in action_mapping.iteritems():
+        print "  %s: %s" % (name, fn.__doc__)
+#
+# The main routine
+#
 topdir = '?'
 def main(argv):
     globals()['topdir'] = os.getcwd()
@@ -211,12 +229,17 @@ def main(argv):
 # map command-line strings to functions
 #
 action_mapping = {
+    'help' : help,
     'checkout' : checkout,
+    'clean' : clean,
+    'bootstrap' : bootstrap,
     'initialize_builds' : initialize_builds,
     'run' : run,
-    'help' : help,
     }
 
+#
+# standard python main-hook.
+#
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         help(sys.argv)

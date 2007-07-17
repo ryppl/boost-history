@@ -1,7 +1,15 @@
 #
+#  Copyright (C) 2007 Troy Straszheim <troy@resophonic.com>
+#
+#  Distributed under the Boost Software License, Version 1.0.
+#  See accompanying file LICENSE_1_0.txt or copy at
+#    http://www.boost.org/LICENSE_1_0.txt
+#
+#
+#
 #  Name of local directory that will contain build output
 #
-prefix = 'prefix'
+prefix = 'work'
 
 #
 #  Wait 1 minute between builds
@@ -10,14 +18,16 @@ prefix = 'prefix'
 interbuild_sleep = 60
 
 #
-#  Association tag => url  of things to build/test
+#  Association source_tag => url of things to build/test.  The tags will be used as
+#  local directory names.
 #
 boost_svn = 'http://svn.boost.org/svn/boost/sandbox-branches/boost-cmake/boost_1_34_0'
 test_svn = 'http://svn.resophonic.com/pub/ctest-tiny'
 urls = { 'boost_1_34_0' : boost_svn }
 
 #
-#  Variants to build/test:  map of tag => [cmake_arguments]  
+#  Variants to build/test:  map of boost_variant_tag => [cmake_arguments]
+#  The boost_variant_tag will be used a as local directory name.
 #
 all_args = ['-DBUILD_TESTING:BOOL=ON']
 build_variants = {
@@ -54,7 +64,7 @@ def continuous_dt(t):
     return current_time - t
 
 #
-# Association of ctest variants to build: tag => ([ctest_args], delta_fn)
+# Association of ctest variants to build: ctest_variant_tag => ([ctest_args], delta_fn)
 #
 # Where delta_fn returns the amount of time between now and its
 # argument.  The build with the longest delta_t will be built next.
@@ -62,20 +72,22 @@ def continuous_dt(t):
 # (and therefore will not be built) when the actual dt is less than some
 # threshold.
 #
+# Each ctest_variant_tag will be used as a local directory name.
+#
 ctest_variants = { 
     'continuous' : (['-D', 'Continuous'], continuous_dt),
     'nightly' : (['-D', 'Nightly'], nightly_dt)
     }
 
 #
-# CUSTOMIZE THESE
+# You may need to customize these for your platform.  These are
+# typical settings on unix.  
 #
-# Typical settings on unix.  
-#
-ctest = "ctest"
-cmake = "cmake"
-svn   = "svn"
+ctest = "ctest"  # path to ctest binary
+cmake = "cmake"  # path to cmake binary
+svn   = "svn"    # path to svn 
 
+#
 # Typical settings on windows:
 #
 # The escaped doublequotes around the name of the executables are necessary.
