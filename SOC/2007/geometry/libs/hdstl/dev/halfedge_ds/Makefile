@@ -11,7 +11,8 @@ PACKAGE_OBJECTS=container_selectors.o facet_selectors.o \
 
 PACKAGE_LIBRARY=libhalfedge_ds.a
 
-TEST_DRIVERS=container_selectors.t facet_selectors.t 
+TEST_DRIVERS=container_selectors.t facet_selectors.t \
+	vertex_selectors.t
 
 .SUFFIXES:
 .SUFFIXES: ${TARGET}.o .o .cpp .hpp
@@ -47,6 +48,7 @@ container_selectors.t.o:
 
 facet_selectors.t.o:
 
+vertex_selectors.t.o: 
 
 %.t.o: %.t.cpp %.hpp
 	${CXX}  ${CXXFLAGS} ${CXXINCLUDES} -c -o $*.t.o $<
@@ -55,6 +57,7 @@ container_selectors.t:
 
 facet_selectors.t:
 
+vertex_selectors.t: 
 
 
 ## UTILITIES

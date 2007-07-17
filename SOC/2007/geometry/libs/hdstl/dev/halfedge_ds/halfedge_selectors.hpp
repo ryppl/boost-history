@@ -12,15 +12,8 @@
 //@DESCRIPTION: This file provides the 'stored_halfedge',
 // and the helper classes, which accepts many template parameters that can be
 // used to govern its implementation.  These parameters can be chosen using the
-// 'Config' class members (see 'halfedge_ds' component). Currently the
-// helper classes are as follows:
-//
-//  - 'opposite_helper':  class for configuring opposite access methods
-//  - 'vertex_helper':    class for configuring vertex access methods
-//  - 'facet_helper':     class for configuring facet access methods
-//  - 'traversal_helper': class for configuring traversal methods
-//  
-//  and the selectors are as follows:
+// 'Config' class members (see 'halfedge_ds' component). Currently the 
+// selectors are as follows:
 //
 //  - 'forwardS':  defines configuration options for forward access
 //  - 'backwardS':  defines configuration options for backward access
@@ -32,17 +25,6 @@
 //    'opposite_helper', 'vertex_helper', 'facet_helper', 'traversal_helper'.
 //    Based on the configurations of these classes, members are added or omited
 //    from 'stored_halfedge' for optimization purposes.
-//  - 'vertex_helper' If vertices are supported in the 'halfedge_ds', this class
-//    defines 'source' or 'target' members, based on the configuration
-//    options. If vertices are not supported, this class does not define a 
-//    vertex access member.
-//  - 'facet_helper' If facets are supported in the 'halfedge_ds', this class
-//    defines facet members, based on the configuration
-//    options. If facets are not supported, this class does not define a 
-//    facet access member.
-//  - 'traversal_helper' Based on the traversal configuration, this class
-//    defines 'm_next', 'm_prev' or both traversal access members.
-
 
 #ifndef BOOST_HDSTL_HALFEDGE_SELECTORS_HPP
 #define BOOST_HDSTL_HALFEDGE_SELECTORS_HPP 1

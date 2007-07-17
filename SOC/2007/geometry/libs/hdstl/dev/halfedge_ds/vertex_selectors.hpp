@@ -274,7 +274,7 @@ struct stored_vertex {
 
     //CREATORS
     stored_vertex(Base const& base, HalfedgeDescriptor vertexLink) 
-    : m_vertexLink(vertexLink),
+    : m_vertexLink(vertexLink)
     , m_base(base){}
 
     //MANIPULATORS
@@ -353,6 +353,9 @@ struct vertex_gen<vertexS<ContainerS, HasVertexLink, VertexType>,
     // 'halfedge_ds' related to vertices.
     
     // TYPES
+    typedef vertexS<ContainerS,HasVertexLink>       vertex_selector;
+        // The vertex selector.
+    
     typedef stored_vertex<VertexBase,HasVertexLink, HalfedgeDescriptor> 
                                                            vertex_type;
         // The stored vertex type for this vertex generator.
@@ -362,6 +365,9 @@ struct vertex_gen<vertexS<ContainerS, HasVertexLink, VertexType>,
 
     typedef typename ContainerGen::type             container_type;
         // The vertex container type for this vertex generator.
+    
+    typedef typename ContainerGen::size_type        size_type;
+        // The vertex container size type for this vertex generator.
 
     typedef typename ContainerGen::descriptor       vertex_descriptor;
         // The vertex descriptor type for this vertex generator.
@@ -377,16 +383,16 @@ struct vertex_gen<vertexS<ContainerS, HasVertexLink, VertexType>,
 
 // FREE FUNCTIONS
 template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
-typename vertex_gen<VertexS, HalfedgeDescriptor,VertexBase>::iterator
-vertices_begin(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase> const& hds) {
+typename vertex_gen<VertexS, HalfedgeDescriptor,VertexBase>::vertex_iterator
+vertices_begin(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>& hds) {
     typedef typename vertex_gen<VertexS, HalfedgeDescriptor, 
                                         VertexBase>::ContainerGen ContainerGen;
     return ContainerGen::container_begin(hds.m_container);
 }
 
 template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
-typename vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>::iterator
-vertices_end(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase> const& hds) {
+typename vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>::vertex_iterator
+vertices_end(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>& hds) {
     typedef typename vertex_gen<VertexS, HalfedgeDescriptor, 
                                         VertexBase>::ContainerGen ContainerGen;
     return ContainerGen::container_end(hds.m_container);
@@ -394,7 +400,7 @@ vertices_end(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase> const& hds) {
 
 template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
 typename vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>::size_type
-num_vertices(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase> const& hds) {
+num_vertices(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>& hds) {
     return hds.m_container.size();
 }
 
