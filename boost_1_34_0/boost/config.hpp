@@ -1,5 +1,6 @@
+//
 //  Boost config.hpp configuration header file  ------------------------------//
-
+//
 //  (C) Copyright John Maddock 2002. 
 //  Use, modification and distribution are subject to the 
 //  Boost Software License, Version 1.0. (See accompanying file 
