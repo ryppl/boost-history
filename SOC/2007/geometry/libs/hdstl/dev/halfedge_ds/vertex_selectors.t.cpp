@@ -56,7 +56,7 @@ bool selection_requirements(vertexS<Selector, true, targetS> const&) {
 }
 
 // ===========================================================================
-//                              CLASS FACET_GEN
+//                              CLASS VERTEX_GEN
 // ===========================================================================
 
 template<typename VertexGen>

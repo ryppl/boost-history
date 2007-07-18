@@ -254,7 +254,7 @@ struct vertexS
         // A selector (see the compenent 'container_selector') for the type of
         // container that will be used to store the vertices.
 
-    enum { has_vertex_links = HasVertexLink };
+    enum { has_vertex_link = HasVertexLink };
 };
 
                  // ===================

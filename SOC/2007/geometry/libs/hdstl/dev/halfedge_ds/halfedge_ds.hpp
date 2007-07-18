@@ -47,7 +47,6 @@ struct halfedge_ds_gen {
                         typename HalfedgeS::container_selector, vecS>::value };
         enum { is_forward = HalfedgeS::is_forward };
         enum { is_backward = HalfedgeS::is_backward };
-        enum { is_bidir = HalfedgeS::is_bidir };
         typedef typename HalfedgeS::tag traversal_tag;
             // halfedge config
 
@@ -63,30 +62,72 @@ struct halfedge_ds_gen {
     };
 };
 
-//template<typename Selector, typename HalfedgeDescriptor>
-//struct opposite_helper {
-//    inline static
-//    HalfedgeDescriptor&
-//    opposite(HalfedgeDescriptor& h)
-//    {
-//        // halfedges come in pairs, point to each other as
-//        // opposite. If halfedges stored in a list, use the
-//        // opposite pointer.
-//        return h->opposite_;
-//    }
-//};
-//
-//template<typename HalfedgeDescriptor>
-//struct opposite_helper<vecS, HalfedgeDescriptor> {
-//    inline static
-//    HalfedgeDescriptor&
-//    opposite(HalfedgeDescriptor& h)
-//    {
-//        // halfedges come in pairs, point to each other as
-//        // opposite. If halfedges stored in a vector:
-//        return h^1;
-//    }
-//};
+template <typename HalfedgeS>
+struct halfedge_ds_gen<HalfedgeS, noVertexS, noFacetS> {
+    struct config {
+        
+        enum { halfedge_has_opposite_member =  !meta_is_same<
+                        typename HalfedgeS::container_selector, vecS>::value };
+        enum { is_forward = HalfedgeS::is_forward };
+        enum { is_backward = HalfedgeS::is_backward };
+        typedef typename HalfedgeS::tag traversal_tag;
+            // halfedge config
+        
+        enum { halfedge_supports_vertices = false };
+        enum { is_source = false }; // has no meaning here, 
+                                    // but vertex_helper in stored_halfedge 
+                                    // requires it defined even for noVertexS.
+        enum { is_target = false }; // has no meaning here 
+        
+        enum { halfedge_supports_facets = false };
+    };
+};
+
+template <typename HalfedgeS, typename FacetS>
+struct halfedge_ds_gen<HalfedgeS, noVertexS, FacetS> {
+    struct config {
+        
+        enum { halfedge_has_opposite_member =  !meta_is_same<
+                        typename HalfedgeS::container_selector, vecS>::value };
+        enum { is_forward = HalfedgeS::is_forward };
+        enum { is_backward = HalfedgeS::is_backward };
+        typedef typename HalfedgeS::tag traversal_tag;
+            // halfedge config
+
+        enum { halfedge_supports_vertices = false };
+        enum { is_source = false }; // has no meaning here, 
+                                    // but vertex_helper in stored_halfedge 
+                                    // requires it defined even for noVertexS.
+        enum { is_target = false }; // has no meaning here 
+        
+        enum { halfedge_supports_facets= !meta_is_same<FacetS,noFacetS>::value}; 
+            // facet config
+    };
+};
+
+template <typename HalfedgeS, typename VertexS>
+struct halfedge_ds_gen<HalfedgeS, VertexS, noFacetS> {
+    struct config {
+        
+        enum { halfedge_has_opposite_member =  !meta_is_same<
+                        typename HalfedgeS::container_selector, vecS>::value };
+        enum { is_forward = HalfedgeS::is_forward };
+        enum { is_backward = HalfedgeS::is_backward };
+        typedef typename HalfedgeS::tag traversal_tag;
+            // halfedge config
+
+        enum { halfedge_supports_vertices = !meta_is_same<
+                                                 VertexS,noVertexS>::value }; 
+        enum { is_source = VertexS::is_source };
+        enum { is_target = VertexS::is_target };
+        enum { has_vertex_link = VertexS::has_vertex_link };
+            // vertex config
+        
+        enum { halfedge_supports_facets= false }; 
+            // facet config
+    };
+};
+
 
 //template <typename HalfedgeS = halfedgeS<vecS, forwardS<next_in_facet_tag> >,
 //          typename VertexS = vertexS<vecS, vertexLinkS, sourceS>,
