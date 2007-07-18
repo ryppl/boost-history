@@ -27,7 +27,7 @@ using namespace std;
 using namespace boost;
 
 static const int N = 3;
-static const int K = 3;
+static const int K = 2;
 
 template <class Graph>
 void test_path()
@@ -148,6 +148,9 @@ main(int argc, char *argv[])
     typedef undirected_graph<> Graph;
     typedef directed_graph<> DiGraph;
 
+    with_clockwise_cycle clock;
+    with_bidirected_spokes spokes;
+
     /*
     test_complete<Graph>();
     test_path<Graph>();
@@ -158,7 +161,7 @@ main(int argc, char *argv[])
     */
     // test_web<Graph>();
 
-    test_prism<DiGraph>(with_clockwise_cycle(), with_bidirected_spokes());
+    test_prism<DiGraph>(clock, spokes);
 
     /*
     test_path<DiGraph>(with_forward_edges());

@@ -92,20 +92,6 @@ namespace boost
         { }
     };
 
-    struct cycle_counter
-        : public cycle_visitor
-    {
-        cycle_counter(std::size_t& num)
-            : m_num(num)
-        { }
-
-        template <class Path, class Graph>
-        inline void cycle(const Path& p, Graph& g)
-        { ++m_num; }
-
-        size_t& m_num;
-    };
-
     namespace detail
     {
         template <typename Graph, typename Path>
@@ -142,48 +128,108 @@ namespace boost
                       const Path& p,
                       const ClosedMatrix& m)
         {
-            // for undirected graphs, we're actually going to follow the
-            // original algorithm and disallow back-tracking over the
-            // undirected edge.
-            return get(vertex_index, g, v) < get(vertex_index, g, u) ||
+            // notice the vth index must be greater than the first index of
+            // path in order for it to be considered.
+
+            return get(vertex_index, g, p.front()) > get(vertex_index, g, v) ||
                    is_in_path(g, v, p) ||
                    is_path_closed(g, u, v, m);
         }
 
-        template <typename Graph, typename Path, typename ClosedMatrix>
-        inline typename graph_traits<Graph>::vertex_descriptor
-        extend_path(const Graph& g, Path& p, ClosedMatrix& closed)
+        template <
+            typename Graph,
+            typename Path,
+            typename ClosedMatrix>
+        inline bool
+        can_extend_path(const Graph& g,
+                        typename graph_traits<Graph>::edge_descriptor e,
+                        const Path& p,
+                        const ClosedMatrix& m)
         {
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
-            typedef typename graph_traits<Graph>::adjacency_iterator AdjacencyIterator;
 
-            // basically, p is a sequence of vertex descriptors.
-            // we want to find an adjacent vertex that the path
-            // can extend over.
+            // get the vertices in question
+            Vertex
+                u = source(e, g),
+                v = target(e, g);
+
+            // conditions for allowing a traversal along this edge are:
+            // 1. the index of v must be greater than that at which the
+            //    the path is rooted (p.front()).
+            // 2. the vertex v cannot already be in the path
+            // 3. the vertex v cannot be closed to the vertex u
+
+            bool indices = get(vertex_index, g, p.front()) < get(vertex_index, g, v);
+            bool path = !is_in_path(g, v, p);
+            bool closed = !is_path_closed(g, u, v, m);
+            return indices && path && closed;
+        }
+
+        template <
+            typename Graph,
+            typename Path>
+        inline bool
+        can_wrap_path(const Graph& g,
+                      const Path& p)
+        {
+            typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+            typedef typename graph_traits<Graph>::out_edge_iterator OutIterator;
+
+            // iterate over the out-edges of the back, looking for the
+            // front of the path. also, we can't travel along the same
+            // edge that we did on the way here.
+            Vertex
+                u = p.back(),
+                v = p.front();
+            OutIterator i, end;
+            for(tie(i, end) = out_edges(u, g); i != end; ++i) {
+                if((target(*i, g) == v)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        template <
+            typename Graph,
+            typename Path,
+            typename ClosedMatrix>
+        inline typename graph_traits<Graph>::vertex_descriptor
+        extend_path(const Graph& g,
+                    Path& p,
+                    ClosedMatrix& closed)
+        {
+            typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+            typedef typename graph_traits<Graph>::edge_descriptor Edge;
+            typedef typename graph_traits<Graph>::out_edge_iterator OutIterator;
 
             // get the current vertex
             Vertex u = p.back();
             Vertex ret = graph_traits<Graph>::null_vertex();
 
-            AdjacencyIterator i, end;
-            for(tie(i, end) = adjacent_vertices(u, g); i != end; ++i) {
-                Vertex v = *i;
-                if(ignore_vertex(g, u, v, p, closed)) {
-                    continue;
-                }
+            // AdjacencyIterator i, end;
+            OutIterator i, end;
+            for(tie(i, end) = out_edges(u, g); i != end; ++i) {
+                Vertex v = target(*i, g);
 
-                // if we get here, we've actually satisfied the loop
-                // so we can just break and return
-                p.push_back(v);
-                ret = v;
-                break;
+                // if we can actually extend along this edge,
+                // then that's what we want to do
+                if(can_extend_path(g, *i, p, closed)) {
+                    p.push_back(v);         // add the vertex to the path
+                    ret = v;
+                    break;
+                }
             }
             return ret;
         }
 
-        template <typename Graph, typename Path, typename ClosedMatrix>
+        template <typename Graph,
+                  typename Path,
+                  typename ClosedMatrix>
         inline bool
-        exhaust_paths(const Graph& g, Path& p, ClosedMatrix& closed)
+        exhaust_paths(const Graph& g,
+                      Path& p,
+                      ClosedMatrix& closed)
         {
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
 
@@ -209,6 +255,59 @@ namespace boost
                 return false;
             }
         }
+
+        template <typename Graph, typename Visitor>
+        inline void
+        visit_cycles_at_vertex(const Graph& g,
+                               typename graph_traits<Graph>::vertex_descriptor v,
+                               Visitor vis,
+                               std::size_t maxlen,
+                               std::size_t minlen)
+        {
+            typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+            typedef typename graph_traits<Graph>::edge_descriptor Edge;
+
+            typedef std::vector<Vertex> Path;
+            typedef std::vector<Vertex> VertexList;
+            typedef std::vector<VertexList> ClosedMatrix;
+
+            // this is an added type that helps us determine traversability
+            // for paths in undirected graphs. Specifically, when we consider
+            // traversability, we have to ensure that the move to the next
+            // vertex does not walk down the same path as this vertex.
+
+            const Vertex null = graph_traits<Graph>::null_vertex();
+
+            // The path is the sequence of vertices
+            Path p;
+            ClosedMatrix closed(num_vertices(g), VertexList());
+
+            // each path investigation starts at the ith vertex
+            p.push_back(v);
+            vis.start_vertex(v, g);
+
+            while(1) {
+                // extend the path until we've reached the end or the
+                // maxlen-sized cycle
+                Vertex j = null;
+                while(((j = detail::extend_path(g, p, closed)) != null)
+                      && (p.size() < maxlen))
+                    ; // empty loop
+
+                // if we're done extending the path and there's an edge
+                // connecting the back to the front, then we should have
+                // a cycle.
+                if(can_wrap_path(g, p) && p.size() > minlen) {
+                    vis.cycle(p, g);
+                }
+
+                if(!detail::exhaust_paths(g, p, closed)) {
+                    break;
+                }
+            }
+
+            vis.finish_vertex(v, g);
+        }
     }
 
     // TODO: I may need to templatize the path type - it would add a little extra
@@ -219,76 +318,14 @@ namespace boost
     visit_cycles(const Graph& g,
                  Visitor vis,
                  std::size_t maxlen = std::numeric_limits<std::size_t>::max(),
-                 std::size_t minlen = 3)
+                 std::size_t minlen = 2)
     {
-        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
         typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
-        typedef std::vector<Vertex> Path;
-        typedef std::vector<Vertex> VertexList;
-        typedef std::vector<VertexList> ClosedMatrix;
-
-        // closed contains the list of vertices that are "closed" to a vertex. this
-        // is a kind of strange half-mapped matrix. rows are indexed by vertex, but
-        // the columns are not - they simply store the list of vertices that are
-        // closed to the vertex represented by the row.
-
-        const Vertex null = graph_traits<Graph>::null_vertex();
 
         VertexIterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            Path p;
-            ClosedMatrix closed(num_vertices(g), VertexList());
-            p.push_back(*i);
-
-            vis.start_vertex(*i, g);
-
-            while(1) {
-                // extend the path until we've reached the end or the maximum
-                // sized cycle
-                Vertex j = null;
-                while(((j = detail::extend_path(g, p, closed)) != null)
-                       && (p.size() < maxlen))
-                    ; // empty loop
-
-                // at this point, we need to see if there's a cycle
-                if(edge(p.back(), p.front(), g).second) {
-                    if(p.size() >= minlen) {
-                        vis.cycle(p, g);
-                    }
-                }
-
-                if(!detail::exhaust_paths(g, p, closed)) {
-                    break;
-                }
-            }
-
-            vis.finish_vertex(*i, g);
+            detail::visit_cycles_at_vertex(g, *i, vis, maxlen, minlen);
         }
-    }
-
-    template <typename Graph>
-    inline size_t
-    count_cycles(const Graph& g,
-                 std::size_t maxlen = std::numeric_limits<std::size_t>::max(),
-                 std::size_t minlen = 3)
-    {
-        size_t ret = 0;
-        visit_triangles(g, cycle_counter(ret), maxlen, minlen);
-        return ret;
-    }
-
-    template <typename Graph, typename Visitor>
-    inline void
-    visit_triangles(const Graph& g, Visitor vis)
-    { visit_cycles(g, vis, 3, 3); }
-
-    template <typename Graph>
-    inline size_t
-    count_triangles(const Graph& g)
-    {
-        size_t ret = 0;
-        visit_triangles(g, cycle_counter(ret));
-        return ret;
     }
 }
 
