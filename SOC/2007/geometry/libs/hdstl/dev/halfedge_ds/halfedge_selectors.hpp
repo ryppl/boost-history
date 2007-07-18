@@ -178,10 +178,6 @@ struct stored_halfedge
     // - having a facet descriptor
     // All the selections are done in the ..._helper<> functions and these
     // functions form a base for the stored_halfedge.
-
-    // CREATORS
-    stored_halfedge() {} 
-
 };
 
                    // ==================
@@ -202,7 +198,7 @@ struct halfedge_gen<halfedgeS<ContainerS,TraversalS>, HalfedgeDescriptor,
     typedef halfedgeS<ContainerS,TraversalS>            halfedge_selector;
 
     typedef stored_halfedge<HalfedgeDescriptor, VertexDescriptor, 
-                                        FacetDescriptor, Config> halfedge_type;
+                               FacetDescriptor, Config> halfedge_type;
         // The stored halfedge type for this halfedge generator.
 
     typedef container_gen<ContainerS, halfedge_type>    ContainerGen;
@@ -211,7 +207,7 @@ struct halfedge_gen<halfedgeS<ContainerS,TraversalS>, HalfedgeDescriptor,
     typedef typename ContainerGen::type                 container_type;
         // The halfedge container type for this halfedge generator.
 
-    typedef typename ContainerGen::size_type                 size_type;
+    typedef typename ContainerGen::size_type            size_type;
         // The halfedge container size type for this halfedge generator.
     
     typedef typename ContainerGen::descriptor           halfedge_descriptor;
