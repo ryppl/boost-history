@@ -1,0 +1,16 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+Utility concepts include concepts that can be applied to almost
+any data type (both built-in and user-defined).
+
+[inlcude default_constructible.qbk]
+[include copy_constructible.qbk]
+[inlcude assignable.qbk]
+
+[include equality_comparable.qbk]
+[include less_than_comparable.qbk]
