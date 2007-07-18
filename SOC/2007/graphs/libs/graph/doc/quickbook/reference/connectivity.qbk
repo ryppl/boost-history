@@ -9,10 +9,10 @@
 
     size_t connectivity(
         _graph,
-        _component_map,
-        _color_map = not_given(),
-        _vertex_index_map = not_given(),
-        _components = not_given())
+        _components,
+        _component_map = ``['not given]``,
+        _color_map = ``['not given]``,
+        _vertex_index_map = get(vertex_index, _graph));
 
 The `connectivity()` algorithm is a wrapper around the [boost_connected_components]
 algorithm, that provides some convenience for working with resultant concept maps.
@@ -25,8 +25,23 @@ appear in each component. This is to say for example, that all vertices in the
 `_component_map` with component id 0, will be placed into the vertex set
 at index 0 of the `_components` argument.
 
-This function returns the number of connected components in the graph. Note
-that the graph is connected if and only if this function returns 1.
+This function returns the number of connected components in the graph. The graph
+is connected if and only if this function returns exactly 1.
+
+There are two distinct methods for calling this function: with or without the
+`_component_map` parameter. If the `_component_map` /is not/ given, then the
+algorithm must first compute the connected components of `_graph`. In this case,
+the user may need to supply the `_vertex_index_map` or an alternate `_color_map`.
+
+If the _component_map /is/ given, then the algorithm assumes that connected
+components have already been assigned in the `_component_map`. The `_color_map`
+and `_vertex_index_map` parameters are effectively ignored in this case.
+
+[note
+First, this hasn't been tested very will for directed graphs. In fact, testing
+will probably result in the creation of `strong_connecity` which forwards the
+call to `strong_connected_components`.
+]
 
 [h5 Where Defined]
 `boost/graph/connectivity.hpp`
@@ -45,60 +60,94 @@ that the graph is connected if and only if this function returns 1.
         ]
     ]
     [
-        [optional, out]
+        [required, out] [`_components`]
         [
-            `_distribution`
-
-            `_out_distribution`
-
-            `_in_distribution`
-        ]
-        [
-            The distribution parameters maps instances of vertex degree to the
-            number of observed vertices in the graph with that degree.
-
-            These parameters must model both the [SgiSequence] and
-            [SgiRandomAccessContainer] concepts (e.g., `std::vector`). The index type of the
-            distribution must be the same as `degree_size_type`. The `value_type` must
-            be integral (preferably unsigned).
-
-            If not supplied, these parameters assume the default value of `not_given`,
-            implying that no computation is performed.
+            The components parameter provides storage for the assignment of
+            vertices to components. The `_components` parameter must be a
+            model of [SgiRandomAccessContainer] whose index type must be convertible
+            to the graphs `vertices_size_type`, and whose `value_type` must be
+            a model of [SgiBackInsertionSequence]. In turn, the `value_type` of
+            this [SgiBackInsertionSequence] must be the `vertex_descriptor` type
+            of `_graph`.
         ]
     ]
     [
-        [optional, out]
+        [optional, in] [`_component_map`]
         [
-            `_histogram`
+            The component map that represents the assignment of vertices to
+            distinct components in the graph. The `_component_map` must be
+            a model of [BoostReadablePropertyMap]. the `value_type` should be
+            integral, preferably the same as `vertices_size_type` for the
+            graph. The `key_type` must be the graph's `vertex_descriptor`.
 
-            `_out_histogram`
-
-            `_in_histogram`
+            *Default* /not given/
         ]
+    ]
+    [
+        [optional, in] [`_color_map`]
         [
-            The distribution parameters maps instances of vertex degree to the
-            number of observed vertices in the graph with that degree.
+            This is used by the [boost_connected_components] algorithm to keep
+            track of its progress through the graph. The type of `ColorMap` must
+            be a model of [BoostReadWritePropertyMap], it's `key_type` must be
+            the `vertex_descriptor` type of `_graph` and its `value_type` must
+            be a model of [BoostColorValue].
 
-            The histogram output parameter must be a model of both [SgiSequence]
-            and [SgiRandomAccessContainer] (e.g., `std::vector`). The index type of the
-            distribution must be the same as `degree_size_type`. Additionally `value_type`
-            must be a model of the [SgiBackInsertionSequence] (e.g., `std::vector`).
+            *Default* /not given/
+        ]
+    ]
+    [
+        [optional, in] [`_vertex_index_map`]
+        [
+            This maps each vertex to an integer in the range \[0, `num_vertices(g)`).
+            This parameter is necessary only _graph does not have built-in vertices
+            and/or a correct ordering on them.
 
-            If not supplied, these parameters assume the default value of `not_given`,
-            implying that no computation is performed.
+            *Default* `get(vertex_index, g)`
         ]
     ]
 ]
 
 [h5 Return Value]
-This function returns the number of connected components.
+This function returns the number of connected components. When the return value of
+this function is equal to `1`, then the graph is a single connected component.
 
 [h5 Complexity]
-
-[h5 Notes]
+This function has time complexity /O(V)/, and space complexity /O(V)/ since each
+vertex is assigned to a component in the _components_vector.
 
 [h5 Examples]
 
-[h5 Rationale]
+[note These are going to be expanded...]
+
+When a component map is not provided:
+
+    typedef undirected_graph<> Graph;
+    typedef graph_traits<Graph>::vertex_descriptor Vertex;
+    typedef vector<Vertex> Component;
+    typedef vector<Component> ComponentList;
+
+    Graph g;
+    // build a graph
+
+    ComponentList components;
+    connected_components(g, components);
+
+    size_t c = 0;
+    BOOST_FOREACH(Component comp, components) {
+        cout << "component: " << c++ << ": ";
+        BOOST_FOREACH(Vertex v, comp) {
+            cout << get(vertex_index, g, v) << " ";
+        }
+        cout << "\n";
+    }
+
+If the component map /is/ available...
+
+    // write some code to that effect.
+
+[h5 Details]
+The signature of this function may change in the future to include a new parameter, `_number`,
+which indicates the number of components computed by [boost_connected_components]. This
+introduces a new calling "profile" that would bypass the computation of the number of components.
 
 [endsect]

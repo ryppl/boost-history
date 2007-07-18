@@ -9,6 +9,7 @@
  / This file contains Boost-defined concepts
  /]
 
+
 [template BoostMultiPassInputIterator[] [@http://www.boost.org/libs/utility/MultiPassInputIterator.html MultipPassInputIterator]]
 
 [template BoostReadablePropertyMap[] [@http://www.boost.org/libs/property_map/ReadablePropertyMap.html ReadablePropertyMap]]
@@ -35,3 +36,6 @@
 [template BoostAStarVisitor[] [link boost_graph.concepts.visitor_concepts.a_star_visitor A\*Visitor]]
 [template BoostEventVisitor[] [link boost_graph.concepts.visitor_concepts.event_visitor EventVisitor]]
 [template BoostEventVisitorList[] [link boost_graph.concepts.visitor_concepts.event_visitor_list EventVisitorList]]
+
+[/ A bunch of miscellaneus concepts]
+[template BoostColorValue[] [link boost_graph.concepts.miscellaneous_concepts.color_value ColorValue]]

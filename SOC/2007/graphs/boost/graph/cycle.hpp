@@ -62,21 +62,6 @@ namespace boost
     //             address = {New York, NY, USA},
     //         }
 
-    // TODO: The algorithm, as presented, suffers from a number of disappoinments (not
-    // just being slow. It only really works on the most simple directed and undirected
-    // graphs. Because of the requirement on increasingly large vertex indices, the
-    // algorithm will never follow bidirected or reflexive edges. This failure causes
-    // the algorithm to miss a number cycles that end up bridging those reflexive
-    // humps.
-    //
-    // An interesting tradeoff would be to remove the test for increasing indices
-    // in detail::ignore_vertex(), causing the algorithm to visit every permutation
-    // of each cycle - that actually hits them all. Some extra work could be done
-    // mapping permuations into combinations - if you really want to.
-    //
-    // However, I should point out that this never miscomputes triangles - which
-    // is what I'd intended it for.
-
     struct cycle_visitor
     {
         template <class Vertex, class Graph>
@@ -309,9 +294,6 @@ namespace boost
             vis.finish_vertex(v, g);
         }
     }
-
-    // TODO: I may need to templatize the path type - it would add a little extra
-    // flexibility, but I'm not certain its a great idea.
 
     template <typename Graph, typename Visitor>
     inline void

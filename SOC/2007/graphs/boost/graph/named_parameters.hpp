@@ -7,7 +7,9 @@
 #ifndef BOOST_GRAPH_NAMED_PARAMETERS_HPP
 #define BOOST_GRAPH_NAMED_PARAMETERS_HPP
 
-// boost includes
+// TODO: There's a problem with Boost.Parameter library - it just
+// doesn't like > 5 parameters.
+
 #include <boost/parameter.hpp>
 
 namespace boost
@@ -22,7 +24,7 @@ namespace boost
     BOOST_PARAMETER_NAME(in_histogram)
     BOOST_PARAMETER_NAME(out_histogram)
     BOOST_PARAMETER_NAME(components)
-    BOOST_PARAMETER_NAME(is_connected)
+    BOOST_PARAMETER_NAME(number)
 
     // various map-type parameters
     BOOST_PARAMETER_NAME(distance_map)

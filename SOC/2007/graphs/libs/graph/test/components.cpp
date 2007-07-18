@@ -10,16 +10,17 @@
 #include <vector>
 #include <map>
 #include <tr1/unordered_map>
-#include <typeinfo>
-#include <cxxabi.h>
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/undirected_graph.hpp>
+#include <boost/graph/exterior_property.hpp>
 #include <boost/graph/connectivity.hpp>
+#include <boost/foreach.hpp>
+
+#define for_each BOOST_FOREACH
 
 using namespace std;
 using namespace boost;
-using namespace __cxxabiv1;
 
 template <typename Graph>
 void build_graph(Graph& g)
@@ -41,83 +42,92 @@ void build_graph(Graph& g)
     add_edge(v[2], v[0], g);
 
     add_edge(v[3], v[4], g);
-    // add_edge(v[0], v[4], g); // this makes it fully connected
 };
 
-void test_1()
+template <typename Graph>
+void test_external()
 {
-    typedef adjacency_list<vecS, vecS, undirectedS> Graph;
-    Graph g;
-    build_graph(g);
+    typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
 
-    vector<int> comps(num_vertices(g));
-    connectivity(g, &comps[0]);
-}
-
-void test_2()
-{
-    typedef adjacency_list<vecS, vecS, undirectedS> Graph;
-    Graph g;
-    build_graph(g);
-
-    vector<int> comps(num_vertices(g));
-    vector<default_color_type> colors(num_vertices(g));
-    connectivity(g, &comps[0],
-                           _color_map = &colors[0]);
-}
-
-void test_3()
-{
-    typedef adjacency_list<listS, listS, undirectedS> Graph;
-    typedef map<Graph::vertex_descriptor, int> IndexMap;
-    typedef map<Graph::vertex_descriptor, int> CompMap;
-    typedef associative_property_map<IndexMap> IndexProperties;
-    typedef associative_property_map<CompMap> CompProperties;
+    typedef exterior_vertex_property<Graph, size_t> ComponentProperty;
+    typedef typename ComponentProperty::container_type ComponentContainer;
+    typedef typename ComponentProperty::map_type ComponentMap;
 
     Graph g;
     build_graph(g);
 
-    IndexMap indices;
-    CompMap comps;
 
-    int x = 0;
-    Graph::vertex_iterator i, end;
-    for(tie(i, end) = vertices(g); i != end; ++i) {
-        indices[*i] = x++;
-    }
+    ComponentContainer comps(num_vertices(g));
+    ComponentMap comps_map(make_property_map(comps));
 
-    CompProperties comp_map(comps);
-    IndexProperties index_map(indices);
-    connectivity(g, comp_map,
-                           _vertex_index_map = index_map);
-}
+    connected_components(g, comps_map);
 
-void test_4()
-{
-    typedef undirected_graph<> Graph;
-    typedef tr1::unordered_map<Graph::vertex_descriptor, int> CompMap;
-    typedef associative_property_map<CompMap> CompProperties;
-    typedef std::vector<std::vector<Graph::vertex_descriptor> > Components;
+    typedef std::vector<Vertex> VertexList;
+    typedef std::vector<VertexList> Component;
+    Component components;
+    connectivity(
+        _graph = g,
+        _components = components,
+        _component_map = comps_map);
 
-    Graph g;
-    build_graph(g);
-
-    CompMap comps;
-    CompProperties comp_map(comps);
-    Components ccomps;
-    connectivity(g, comp_map, _components = ccomps);
-
-    for(size_t i = 0; i < ccomps.size(); ++i) {
-        cout << i << ": " << ccomps[i].size() << "\n";
+    size_t c = 0;
+    for_each(VertexList& vl, components) {
+        cout << "component " << c++ << ": ";
+        for_each(Vertex v, vl) {
+            cout << get(vertex_index, g, v) << " ";
+        }
+        cout << endl;
     }
 }
 
+template <typename Graph>
+void test_internal()
+{
+    typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+
+    typedef exterior_vertex_property<Graph, size_t> ComponentProperty;
+    typedef typename ComponentProperty::container_type ComponentContainer;
+    typedef typename ComponentProperty::map_type ComponentMap;
+
+    Graph g;
+    build_graph(g);
+
+    typedef std::vector<Vertex> VertexList;
+    typedef std::vector<VertexList> Component;
+    Component components;
+    connectivity(_graph = g, _components = components);
+
+    size_t c = 0;
+    for_each(VertexList& vl, components) {
+        cout << "component " << c++ << ": ";
+        for_each(Vertex v, vl) {
+            cout << get(vertex_index, g, v) << " ";
+        }
+        cout << endl;
+    }
+}
 
 int
 main(int argc, char *argv[])
 {
-    test_1();
-    test_2();
-    test_3();
-    test_4();
+    typedef adjacency_list<vecS, vecS, undirectedS> AdjacencyList;
+    typedef undirected_graph<> Graph;
+
+    std::cout << "*** adjacency_list<vecS, vecS> (external) ***\n";
+    test_external<AdjacencyList>();
+    std::cout << "\n\n";
+
+    std::cout << "*** undirected_graph<> (external) ***\n";
+    test_external<Graph>();
+    std::cout << "\n\n";
+
+    std::cout << "*** adjacency_list<vecS, vecS> (internal) ***\n";
+    test_external<AdjacencyList>();
+    std::cout << "\n\n";
+
+    std::cout << "*** undirected_graph<> (internal) ***\n";
+    test_external<Graph>();
+    std::cout << "\n\n";
+
+    return 0;
 }

@@ -74,11 +74,11 @@ namespace boost
                 typename Container,     // candidates/not type
                 typename Visitor
         >
-        void extend(const Graph& g,
-                    Clique& clique,
-                    Container& cands,
-                    Container& nots,
-                    Visitor vis)
+        void extend_clique(const Graph& g,
+                           Clique& clique,
+                           Container& cands,
+                           Container& nots,
+                           Visitor vis)
         {
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
 
@@ -147,7 +147,7 @@ namespace boost
                 }
                 else {
                     // recurse to explore the new candidates
-                    extend(g, clique, new_cands, new_nots, vis);
+                    extend_clique(g, clique, new_cands, new_nots, vis);
                 }
 
                 // we're done with this vertex, so we need to move it
@@ -174,7 +174,7 @@ namespace boost
         VertexSet cands(i, end);    // start with all vertices as candidates
         VertexSet nots;             // start with no vertices visited
         Clique clique;              // the first clique is an empty vertex set
-        detail::extend(g, clique, cands, nots, vis);
+        detail::extend_clique(g, clique, cands, nots, vis);
     }
 }
 

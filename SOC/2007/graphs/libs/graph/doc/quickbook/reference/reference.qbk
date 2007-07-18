@@ -11,9 +11,18 @@
 [include undirected_graph.qbk]
 [include directed_graph.qbk]
 [include adjacency_list.qbk]
+[include edge_list.qbk]
 [endsect]
 
 [section Traits Classes]
+[endsect]
+
+[section Event Visitor List Adaptors]
+[include bfs_visitor.qbk]
+[include dfs_visitor.qbk]
+[include dijkstra_visitor.qbk]
+[include bellman_visitor.qbk]
+[include astar_visitor.qbk]
 [endsect]
 
 [section Event Visitors]
@@ -52,6 +61,7 @@
 
 [section Graph Measures]
 [include distributions.qbk]
+[include distance.qbk]
 [endsect]
 [endsect]
 
