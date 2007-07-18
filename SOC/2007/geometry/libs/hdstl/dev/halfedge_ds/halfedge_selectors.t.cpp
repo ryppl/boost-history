@@ -65,7 +65,8 @@ struct halfedge_config {
     // This halfedge_config to identically replace the halfedge_ds_gen::config
     // and reproduced here for test purposes only. Note that this tests are 
     // not for the config class, but the halfedge_selectors, so config will
-    // be tested in its own package
+    // be tested in its own package.
+
     enum {
         halfedge_has_opposite_member = !meta_is_same<
                         typename HalfedgeS::container_selector, vecS>::value,
@@ -140,12 +141,9 @@ bool halfedge_gen_requirements_void() {
     // Construct a halfedge_gen object whose container contains array.  Verify
     // that halfedges_begin(), halfedges_end(), and num_halfedges() work.
 
-    container_type temp_con(array,array+4);
+    container_type halfedges(array, array+4);
     HalfedgeGen halfedgeGen;
-    halfedgeGen.m_container = temp_con;
-    BOOST_CHECK(( num_halfedges(halfedgeGen) == 4 ));
-    BOOST_CHECK(( opposite(static_cast<halfedge_descriptor>(*halfedges_begin(halfedgeGen)), halfedgeGen) == 2));
-    //std::cout << static_cast<halfedge_descriptor>(*++halfedges_begin(halfedgeGen)) << endl;
+    halfedgeGen.m_container = halfedges;
 
     return true;
 }
@@ -170,10 +168,12 @@ bool halfedge_gen_requirements() {
     container_type temp_con(array,array+4);
     HalfedgeGen halfedgeGen;
     halfedgeGen.m_container = temp_con;
-    BOOST_CHECK(( num_halfedges(halfedgeGen) == 4 ));
+    BOOST_CHECK(( halfedgeGen.m_container.size() == 4 ));
 
-    BOOST_CHECK(( halfedges_begin(halfedgeGen)->m_halfedgeLink == 1 ));
-    BOOST_CHECK(( (--halfedges_end(halfedgeGen))->m_halfedgeLink == 4 ));
+    BOOST_CHECK(( HalfedgeGen::value(*halfedgeGen.m_container.begin(), 
+                                     halfedgeGen)->m_halfedgeLink == 1 ));
+    BOOST_CHECK(( HalfedgeGen::value(*(--(halfedgeGen.m_container.begin())),
+                                     halfedgeGen)->m_halfedgeLink == 4 ));
 
 
     return true;
@@ -189,233 +189,173 @@ bool halfedge_gen_requirements() {
 //                              BOOST TEST APPARATUS
 // ===========================================================================
 
-//template <typename ContainerS>
+template <typename ContainerS>
 bool test_container_selector()
 {
-    BOOST_CHECK(( selection_requirements(halfedgeS<listS,
+    BOOST_CHECK(( selection_requirements(halfedgeS<ContainerS,
                                             forwardS<next_in_facet_tag> >()) ));
-    BOOST_CHECK(( selection_requirements(halfedgeS<listS,
+    BOOST_CHECK(( selection_requirements(halfedgeS<ContainerS,
                                            forwardS<next_at_source_tag> >()) ));
-    BOOST_CHECK(( selection_requirements(halfedgeS<listS,
+    BOOST_CHECK(( selection_requirements(halfedgeS<ContainerS,
                                            forwardS<next_at_target_tag> >()) ));
     
-    BOOST_CHECK(( selection_requirements(halfedgeS<listS,
+    BOOST_CHECK(( selection_requirements(halfedgeS<ContainerS,
                                            backwardS<prev_in_facet_tag> >()) ));
-    BOOST_CHECK(( selection_requirements(halfedgeS<listS,
+    BOOST_CHECK(( selection_requirements(halfedgeS<ContainerS,
                                           backwardS<prev_at_source_tag> >()) ));
-    BOOST_CHECK(( selection_requirements(halfedgeS<listS,
+    BOOST_CHECK(( selection_requirements(halfedgeS<ContainerS,
                                           backwardS<prev_at_target_tag> >()) ));
     
-    BOOST_CHECK(( selection_requirements(halfedgeS<listS,
+    BOOST_CHECK(( selection_requirements(halfedgeS<ContainerS,
                            bidirS<next_in_facet_tag, prev_in_facet_tag> >()) ));
-    BOOST_CHECK(( selection_requirements(halfedgeS<listS,
+    BOOST_CHECK(( selection_requirements(halfedgeS<ContainerS,
                          bidirS<next_at_source_tag, prev_at_source_tag> >()) ));
-    BOOST_CHECK(( selection_requirements(halfedgeS<listS,
+    BOOST_CHECK(( selection_requirements(halfedgeS<ContainerS,
                          bidirS<next_at_target_tag, prev_at_target_tag> >()) ));
 
+    // Check 'forwardS'.
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                    halfedge_gen<
+                      halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                        int, int, int, 
+                        halfedge_config<
+                           halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                        noVertexS, noFacetS> > 
+                  >() ));
     BOOST_CHECK(( halfedge_gen_requirements_void<
                   halfedge_gen<
-                  halfedgeS<vecS, forwardS<next_in_facet_tag> >, 
+                  halfedgeS<ContainerS, forwardS<next_at_source_tag> >, 
                   int, int, int, 
                   halfedge_config<
-                  halfedgeS<vecS, forwardS<next_in_facet_tag> >, 
+                  halfedgeS<ContainerS, forwardS<next_at_source_tag> >, 
                   noVertexS, noFacetS> > 
                   >() ));
-//  BOOST_CHECK(( halfedge_gen_requirements_void<
-//                halfedge_gen<
-//                halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                int, int, int, 
-//                halfedge_config<
-//                halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                noVertexS, noFacetS> > 
-//                >() ));
-                    // ==============
-                    // check forwardS
-                    // ==============
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  noVertexS, noFacetS> > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, forwardS<next_at_source_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, forwardS<next_at_source_tag> >, 
-//                  noVertexS, noFacetS> > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, forwardS<next_at_target_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, forwardS<next_at_target_tag> >, 
-//                  noVertexS, noFacetS> > 
-//                  >() ));
-//                    
-//                    // ===============
-//                    // check backwardS
-//                    // ===============
-//
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, backwardS<prev_in_facet_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, backwardS<prev_in_facet_tag> >, 
-//                  noVertexS, noFacetS> > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, backwardS<prev_at_source_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, backwardS<prev_at_source_tag> >, 
-//                  noVertexS, noFacetS> > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, backwardS<prev_at_target_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, backwardS<prev_at_target_tag> >, 
-//                  noVertexS, noFacetS> > 
-//                  >() ));
-//                    
-//                    // ============
-//                    // check bidirS
-//                    // ============
-//
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                    halfedge_gen<
-//                      halfedgeS<listS, bidirS<next_in_facet_tag,
-//                                              prev_in_facet_tag> >, 
-//                      int, int, int, 
-//                      halfedge_config<
-//                        halfedgeS<listS, bidirS<next_in_facet_tag,
-//                                                prev_in_facet_tag> >, 
-//                      noVertexS, noFacetS> > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                    halfedgeS<listS, bidirS<next_at_source_tag,
-//                                            prev_at_source_tag> >, 
-//                    int, int, int, 
-//                    halfedge_config<
-//                    halfedgeS<listS, bidirS<next_at_source_tag,
-//                                            prev_at_source_tag> >, 
-//                    noVertexS, noFacetS> > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, bidirS<next_at_target_tag,
-//                                          prev_at_target_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, bidirS<next_at_target_tag,
-//                                          prev_at_target_tag> >, 
-//                  noVertexS, noFacetS> > 
-//                  >() ));
-//                    
-//                    // =============
-//                    // check vertexS
-//                    // =============
-//    
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  vertexS<listS,false,sourceS>, noFacetS> > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  vertexS<listS,false,targetS>, noFacetS> > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  vertexS<listS,true,sourceS>, noFacetS> > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  vertexS<listS,true,targetS>, noFacetS> > 
-//                  >() ));
-//    
-//                    // ============
-//                    // check facetS
-//                    // ============
-//    
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  noVertexS, facetS<listS,true> > > 
-//                  >() ));
-//    BOOST_CHECK(( halfedge_gen_requirements_void<
-//                  halfedge_gen<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  int, int, int, 
-//                  halfedge_config<
-//                  halfedgeS<listS, forwardS<next_in_facet_tag> >, 
-//                  noVertexS, facetS<listS,false> > > 
-//                  >() ));
-/*
-    BOOST_CHECK(( halfedge_gen_requirements_noHalfedgeLink<
-                          halfedge_gen<halfedgeS<listS,false>, int, int>, int >() ));
-    BOOST_CHECK(( halfedge_gen_requirements<
-                          halfedge_gen<halfedgeS<listS,true>, int, int>, int >() ));
-   
-    // BOOST_CHECK(( halfedge_gen_requirements<
-    //           halfedge_gen<halfedgeS<listS,false>, int, custom_halfedge_base> >() ));
-
-    // BOOST_CHECK(( halfedge_gen_requirements<
-    //           halfedge_gen<halfedgeS<listS,true>, int, custom_halfedge_base> >() ));
-    
-    BOOST_CHECK(( selection_requirements(halfedgeS<vecS,true>()) ));
-    BOOST_CHECK(( selection_requirements(halfedgeS<vecS,false>()) ));
-    
-    BOOST_CHECK(( halfedge_gen_requirements_void_noHalfedgeLink<
-                              halfedge_gen<halfedgeS<vecS,false>, int, void> >() ));
     BOOST_CHECK(( halfedge_gen_requirements_void<
-                              halfedge_gen<halfedgeS<vecS,true>, int, void> >() ));
+                  halfedge_gen<
+                  halfedgeS<ContainerS, forwardS<next_at_target_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, forwardS<next_at_target_tag> >, 
+                  noVertexS, noFacetS> > 
+                  >() ));
+                    
+    // Check 'backwardS'.
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, backwardS<prev_in_facet_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, backwardS<prev_in_facet_tag> >, 
+                  noVertexS, noFacetS> > 
+                  >() ));
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, backwardS<prev_at_source_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, backwardS<prev_at_source_tag> >, 
+                  noVertexS, noFacetS> > 
+                  >() ));
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, backwardS<prev_at_target_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, backwardS<prev_at_target_tag> >, 
+                  noVertexS, noFacetS> > 
+                  >() ));
+                    
+    // Check 'bidirS'.
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                    halfedge_gen<
+                      halfedgeS<ContainerS, bidirS<next_in_facet_tag,
+                                              prev_in_facet_tag> >, 
+                      int, int, int, 
+                      halfedge_config<
+                        halfedgeS<ContainerS, bidirS<next_in_facet_tag,
+                                                prev_in_facet_tag> >, 
+                      noVertexS, noFacetS> > 
+                  >() ));
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                    halfedgeS<ContainerS, bidirS<next_at_source_tag,
+                                            prev_at_source_tag> >, 
+                    int, int, int, 
+                    halfedge_config<
+                    halfedgeS<ContainerS, bidirS<next_at_source_tag,
+                                            prev_at_source_tag> >, 
+                    noVertexS, noFacetS> > 
+                  >() ));
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, bidirS<next_at_target_tag,
+                                          prev_at_target_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, bidirS<next_at_target_tag,
+                                          prev_at_target_tag> >, 
+                  noVertexS, noFacetS> > 
+                  >() ));
+                    
+    // Check 'vertexS'.
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  vertexS<ContainerS,false,sourceS>, noFacetS> > 
+                  >() ));
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  vertexS<ContainerS,false,targetS>, noFacetS> > 
+                  >() ));
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  vertexS<ContainerS,true,sourceS>, noFacetS> > 
+                  >() ));
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  vertexS<ContainerS,true,targetS>, noFacetS> > 
+                  >() ));
+    
+    // Check 'facetS'.
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  noVertexS, facetS<ContainerS,true> > > 
+                  >() ));
+    BOOST_CHECK(( halfedge_gen_requirements_void<
+                  halfedge_gen<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  int, int, int, 
+                  halfedge_config<
+                  halfedgeS<ContainerS, forwardS<next_in_facet_tag> >, 
+                  noVertexS, facetS<ContainerS,false> > > 
+                  >() ));
 
-    BOOST_CHECK(( halfedge_gen_requirements_noHalfedgeLink<
-                          halfedge_gen<halfedgeS<vecS,false>, int, int>, int >() ));
-    BOOST_CHECK(( halfedge_gen_requirements<
-                          halfedge_gen<halfedgeS<vecS,true>, int, int>, int >() ));
-
-    // BOOST_CHECK(( halfedge_gen_requirements<
-    //            halfedge_gen<halfedgeS<vecS,false>, int, custom_halfedge_base> >() ));
-    // BOOST_CHECK(( halfedge_gen_requirements<
-    //             halfedge_gen<halfedgeS<vecS,true>, int, custom_halfedge_base> >() ));
-    //BOOST_CHECK(( usageExample() ));
-  */  
     return true;
 }
 
 int test_main(int, char**)
 {
-//    BOOST_CHECK(( test_container_selector<listS>() ));
-//    BOOST_CHECK(( test_container_selector<vecS>() ));
-    BOOST_CHECK(( test_container_selector() ));
+    BOOST_CHECK(( test_container_selector<listS>() ));
+    BOOST_CHECK(( test_container_selector<vecS>() ));
+    // BOOST_CHECK(( test_container_selector() ));
     return 0;
 }
