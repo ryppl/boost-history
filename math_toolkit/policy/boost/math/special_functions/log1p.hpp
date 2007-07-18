@@ -256,7 +256,7 @@ inline typename tools::promote_args<T>::type
 #else
    T result = boost::math::tools::sum_series(s, policy::digits<T, Policy>(), max_iter);
 #endif
-   tools::check_series_iterations(function, max_iter);
+   policy::check_series_iterations(function, max_iter, pol);
    return result;
 }
 

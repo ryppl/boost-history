@@ -7,7 +7,6 @@
 #define BOOST_MATH_SF_DIGAMMA_HPP
 
 #include <boost/math/tools/rational.hpp>
-#include <boost/math/tools/evaluation_type.hpp>
 #include <boost/math/tools/promotion.hpp>
 #include <boost/math/policy/error_handling.hpp>
 #include <boost/math/constants/constants.hpp>

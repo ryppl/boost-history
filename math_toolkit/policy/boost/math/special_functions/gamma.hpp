@@ -23,7 +23,7 @@
 #include <boost/math/tools/precision.hpp>
 #include <boost/math/tools/real_cast.hpp>
 #include <boost/math/tools/promotion.hpp>
-#include <boost/math/tools/error_handling.hpp>
+#include <boost/math/policy/error_handling.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/special_functions/math_fwd.hpp>
 #include <boost/math/special_functions/log1p.hpp>
@@ -474,7 +474,7 @@ inline T tgammap1m1_imp(T dz, Policy const& pol,
    // more bits from our most precise lgamma rational approximation, 
    // then use that instead:
    //
-   if((dz > -0.5) && (dz < 2) && (ldexp(1.0, boost::math::tools::digits<T>()) * fabs(result) < 1e34))
+   if((dz > -0.5) && (dz < 2) && (ldexp(1.0, boost::math::policy::digits<T, Policy>()) * fabs(result) < 1e34))
    {
       result = tgammap1m1_imp(dz, pol, boost::math::lanczos::lanczos24m113());
    }
@@ -776,10 +776,11 @@ template <class T, class Policy>
 T gamma_incomplete_imp(T a, T x, bool normalised, bool invert, 
                        const Policy& pol, T* p_derivative)
 {
+   static const char* function = "boost::math::gamma_p<%1%>(%1%, %1%)";
    if(a <= 0)
-      tools::domain_error<T>(BOOST_CURRENT_FUNCTION, "Argument a to the incomplete gamma function must be greater than zero (got a=%1%).", a);
+      policy::raise_domain_error<T>(function, "Argument a to the incomplete gamma function must be greater than zero (got a=%1%).", a, pol);
    if(x < 0)
-      tools::domain_error<T>(BOOST_CURRENT_FUNCTION, "Argument x to the incomplete gamma function must be >= 0 (got x=%1%).", x);
+      policy::raise_domain_error<T>(function, "Argument x to the incomplete gamma function must be >= 0 (got x=%1%).", x, pol);
 
    using namespace std;
 
@@ -875,7 +876,7 @@ T gamma_incomplete_imp(T a, T x, bool normalised, bool invert,
       if(normalised && std::numeric_limits<T>::is_specialized && (a > 20))
       {
          T sigma = fabs((x-a)/a);
-         if((a > 200) && (tools::digits<T>() <= 113))
+         if((a > 200) && (policy::digits<T, Policy>() <= 113))
          {
             //
             // This limit is chosen so that we use Temme's expansion
@@ -888,7 +889,7 @@ T gamma_incomplete_imp(T a, T x, bool normalised, bool invert,
             if(20 / a > sigma * sigma)
                use_temme = true;
          }
-         else if(tools::digits<T>() <= 64)
+         else if(policy::digits<T, Policy>() <= 64)
          {
             // Note in this zone we can't use Temme's expansion for 
             // types longer than an 80-bit real:

@@ -83,7 +83,7 @@ T expm1_imp(T x, const mpl::int_<0>&, const Policy& pol)
    T zero = 0;
    T result = tools::sum_series(s, policy::digits<T, Policy>(), max_iter, zero);
 #endif
-   policy::check_series_iterations(BOOST_CURRENT_FUNCTION, max_iter, pol);
+   policy::check_series_iterations("boost::math::expm1<%1%>(%1%)", max_iter, pol);
    return result;
 }
 
@@ -218,7 +218,7 @@ inline typename tools::promote_args<T>::type expm1(T x, const Policy& pol)
 
    return policy::checked_narrowing_cast<result_type, forwarding_policy>(detail::expm1_imp(
       static_cast<value_type>(x),
-      tag_type(), forwarding_policy()), BOOST_CURRENT_FUNCTION);
+      tag_type(), forwarding_policy()), "boost::math::expm1<%1%>(%1%)");
 }
 
 #ifdef expm1

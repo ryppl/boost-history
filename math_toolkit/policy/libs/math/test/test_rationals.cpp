@@ -8,6 +8,7 @@
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/array.hpp>
 #include <boost/math/tools/rational.hpp>
+#include <iostream>
 
 #include "test_rational.hpp"
 

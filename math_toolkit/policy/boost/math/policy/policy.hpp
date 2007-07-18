@@ -20,6 +20,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/math/tools/config.hpp>
+#include <limits>
 
 namespace boost{ namespace math{ namespace policy{
 
@@ -378,8 +379,8 @@ public:
    //
    // Internal promotion:
    //
-   typedef typename detail::find_arg<arg_list, is_promote_float<mpl::_1>, promote_float<> >::type float_promote_type;
-   typedef typename detail::find_arg<arg_list, is_promote_double<mpl::_1>, promote_double<> >::type double_promote_type;
+   typedef typename detail::find_arg<arg_list, is_promote_float<mpl::_1>, promote_float<> >::type promote_float_type;
+   typedef typename detail::find_arg<arg_list, is_promote_double<mpl::_1>, promote_double<> >::type promote_double_type;
    //
    // Discrete quantiles:
    //
@@ -409,8 +410,8 @@ public:
 #else
    typedef detail::precision<digits10<>, digits2<> >::type precision_type;
 #endif
-   typedef promote_float<> float_promote_type;
-   typedef promote_double<> double_promote_type;
+   typedef promote_float<> promote_float_type;
+   typedef promote_double<> promote_double_type;
    typedef discrete_quantile<> discrete_quantile_type;
    typedef assert_undefined<> assert_undefined_type;
 };
@@ -430,8 +431,8 @@ public:
 #else
    typedef detail::precision<digits10<>, digits2<> >::type precision_type;
 #endif
-   typedef promote_float<false> float_promote_type;
-   typedef promote_double<false> double_promote_type;
+   typedef promote_float<false> promote_float_type;
+   typedef promote_double<false> promote_double_type;
    typedef discrete_quantile<> discrete_quantile_type;
    typedef assert_undefined<> assert_undefined_type;
 };
@@ -467,8 +468,8 @@ private:
    //
    // Internal promotion:
    //
-   typedef typename detail::find_arg<arg_list, is_promote_float<mpl::_1>, typename Policy::float_promote_type >::type float_promote_type;
-   typedef typename detail::find_arg<arg_list, is_promote_double<mpl::_1>, typename Policy::double_promote_type >::type double_promote_type;
+   typedef typename detail::find_arg<arg_list, is_promote_float<mpl::_1>, typename Policy::promote_float_type >::type promote_float_type;
+   typedef typename detail::find_arg<arg_list, is_promote_double<mpl::_1>, typename Policy::promote_double_type >::type promote_double_type;
    //
    // Discrete quantiles:
    //
@@ -488,8 +489,8 @@ private:
       denorm_error_type,
       evaluation_error_type,
       precision_type,
-      float_promote_type,
-      double_promote_type,
+      promote_float_type,
+      promote_double_type,
       discrete_quantile_type,
       assert_undefined_type> result_list;
    //
@@ -619,13 +620,13 @@ struct evaluation
 template <class Policy>
 struct evaluation<float, Policy>
 {
-   typedef typename mpl::if_<typename Policy::float_promote_type, double, float>::type type;
+   typedef typename mpl::if_<typename Policy::promote_float_type, double, float>::type type;
 };
 
 template <class Policy>
 struct evaluation<double, Policy>
 {
-   typedef typename mpl::if_<typename Policy::double_promote_type, long double, double>::type type;
+   typedef typename mpl::if_<typename Policy::promote_double_type, long double, double>::type type;
 };
 
 template <class Real, class Policy>

@@ -10,7 +10,6 @@
 #include <boost/mpl/if.hpp>
 #include <boost/limits.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/math/tools/evaluation_type.hpp>
 #include <boost/math/tools/rational.hpp>
 #include <boost/math/policy/policy.hpp>
 #include <boost/mpl/less_equal.hpp>
@@ -1183,34 +1182,6 @@ struct lanczos24m113 : public mpl::int_<113>
 //
 struct undefined_lanczos : public mpl::int_<INT_MAX - 1> { };
 
-//
-// lanczos_traits, specialise this to point tgamma etc to
-// the necessary data for type T:
-//
-template <class T>
-struct lanczos_traits
-{
-   typedef T value_type;
-   // typedef undefined_lanczos evaluation_type;
-   typedef typename mpl::if_c<
-      (std::numeric_limits<T>::is_specialized == 0)
-      || (std::numeric_limits<T>::digits > 113),
-      undefined_lanczos,
-      typename mpl::if_c<
-         std::numeric_limits<T>::digits <= 24,
-         lanczos6m24,
-         typename mpl::if_c<
-            std::numeric_limits<T>::digits <= 53,
-            lanczos13m53,
-            typename mpl::if_c<
-               std::numeric_limits<T>::digits <= 64,
-               lanczos17m64,
-               lanczos24m113
-            >::type
-         >::type
-      >::type
-   >::type evaluation_type;
-};
 #if 0
 #ifndef BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
 #define BOOST_MATH_FLT_DIGITS ::std::numeric_limits<float>::digits
@@ -1222,67 +1193,6 @@ struct lanczos_traits
 #define BOOST_MATH_LDBL_DIGITS LDBL_MANT_DIG
 #endif
 #endif
-template<>
-struct lanczos_traits<float>
-{
-   typedef boost::math::tools::evaluation<float>::type value_type;
-   typedef boost::mpl::if_c<
-      BOOST_MATH_DBL_DIGITS >= 40,
-      lanczos6, lanczos6m24>::type evaluation_type;
-};
-
-template<>
-struct lanczos_traits<double>
-{
-   typedef boost::math::tools::evaluation<double>::type value_type;
-#ifdef BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
-   typedef boost::mpl::if_c<
-      BOOST_MATH_DBL_DIGITS >= 100,
-      lanczos13,
-      boost::mpl::if_c<
-         BOOST_MATH_DBL_DIGITS >= 64,
-         lanczos17m64,
-         boost::mpl::if_c<
-            BOOST_MATH_DBL_DIGITS >= 53,
-            lanczos13m53,
-            lanczos6m24>::type
-         >::type
-      >::type evaluation_type;
-#else
-   typedef boost::mpl::if_c<
-      BOOST_MATH_LDBL_DIGITS >= 100,
-      lanczos13,
-      boost::mpl::if_c<
-         BOOST_MATH_LDBL_DIGITS >= 64,
-         lanczos17m64,
-         boost::mpl::if_c<
-            BOOST_MATH_DBL_DIGITS >= 53,
-            lanczos13m53,
-            lanczos6m24>::type
-         >::type
-      >::type evaluation_type;
-#endif
-};
-
-template<>
-struct lanczos_traits<long double>
-{
-   typedef long double value_type;
-   typedef
-      boost::mpl::if_c<
-         (BOOST_MATH_LDBL_DIGITS < 52),
-            lanczos6m24,
-         boost::mpl::if_c<
-            (BOOST_MATH_LDBL_DIGITS < 55),
-            lanczos13m53,
-            boost::mpl::if_c<
-               (BOOST_MATH_LDBL_DIGITS < 65),
-               lanczos17m64,
-               lanczos24m113
-            >::type
-         >::type
-      >::type evaluation_type;
-};
 
 typedef mpl::list<
    lanczos6m24, 

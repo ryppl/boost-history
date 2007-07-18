@@ -3,6 +3,7 @@
 #define BOOST_MATH_TEST_RATIONAL_HPP
 
 #include <boost/math/tools/rational.hpp>
+#include <boost/math/tools/precision.hpp>
 
 template <class T, class U>
 void do_test_spots(T, U)

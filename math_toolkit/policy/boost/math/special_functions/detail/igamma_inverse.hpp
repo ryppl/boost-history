@@ -9,7 +9,7 @@
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/special_functions/sign.hpp>
 #include <boost/math/tools/roots.hpp>
-#include <boost/math/tools/error_handling.hpp>
+#include <boost/math/policy/error_handling.hpp>
 
 namespace boost{ namespace math{
 
@@ -404,9 +404,9 @@ T gamma_q_inv_imp(T a, T q, const Policy& pol)
    // large convergence is slow, so we'll bump it up to full 
    // precision to prevent premature termination of the root-finding routine.
    //
-   unsigned digits = (tools::digits<T>() * 2) / 3;
+   unsigned digits = (policy::digits<T, Policy>() * 2) / 3;
    if((a < 0.125) && (fabs(gamma_p_derivative(a, guess, pol)) > 1 / sqrt(tools::epsilon<T>())))
-      digits = tools::digits<T>();
+      digits = policy::digits<T, Policy>();
    //
    // Go ahead and iterate:
    //

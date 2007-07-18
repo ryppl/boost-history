@@ -10,7 +10,7 @@
 #include <boost/math/tools/config.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/tools/roots.hpp>
-#include <boost/math/tools/error_handling.hpp>
+#include <boost/math/policy/error_handling.hpp>
 
 namespace boost{ namespace math{
 
@@ -128,7 +128,7 @@ T erf_imp(T z, bool invert, const Policy& pol, const Tag& t)
       detail::erf_asympt_series_t<T> s(z);
       boost::uintmax_t max_iter = BOOST_MATH_MAX_ITER;
       result = boost::math::tools::sum_series(s, policy::digits<T, Policy>(), max_iter, 1);
-      tools::check_series_iterations("boost::math::erf<%1%>(%1%, %1%)", max_iter);
+      policy::check_series_iterations("boost::math::erf<%1%>(%1%, %1%)", max_iter, pol);
    }
    else
    {

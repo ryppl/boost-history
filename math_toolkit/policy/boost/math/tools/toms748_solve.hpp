@@ -273,6 +273,8 @@ std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const
    //
    using namespace std;  // For ADL of std math functions
 
+   static const char* function = "boost::math::tools::toms748_solve<%1%>";
+
    boost::uintmax_t count = max_iter;
    T a, b, fa, fb, c, u, fu, a0, b0, d, fd, e, fe;
    static const T mu = 0.5f;
@@ -282,7 +284,7 @@ std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const
    b = bx;
    if(a >= b)
       policy::raise_domain_error(
-         BOOST_CURRENT_FUNCTION, 
+         function, 
          "Parameters a and b out of order: a=%1%", a, pol);
    fa = fax;
    fb = fbx;
@@ -299,7 +301,7 @@ std::pair<T, T> toms748_solve(F f, const T& ax, const T& bx, const T& fax, const
 
    if(boost::math::sign(fa) * boost::math::sign(fb) > 0)
       policy::raise_domain_error(
-         BOOST_CURRENT_FUNCTION, 
+         function, 
          "Parameters a and b do not bracket the root: a=%1%", a, pol);
    // dummy value for fd, e and fe:
    fe = e = fd = 1e5F;
@@ -461,6 +463,7 @@ template <class F, class T, class Tol, class Policy>
 std::pair<T, T> bracket_and_solve_root(F f, const T& guess, const T& factor, bool rising, Tol tol, boost::uintmax_t& max_iter, const Policy& pol)
 {
    using namespace std;
+   static const char* function = "boost::math::tools::bracket_and_solve_root<%1%>";
    //
    // Set up inital brackets:
    //
@@ -482,7 +485,7 @@ std::pair<T, T> bracket_and_solve_root(F f, const T& guess, const T& factor, boo
       while(sign(fb) == sign(fa))
       {
          if(count == 0)
-            policy::raise_evaluation_error(BOOST_CURRENT_FUNCTION, "Unable to bracket root, last nearest value was %1%", b, pol);
+            policy::raise_evaluation_error(function, "Unable to bracket root, last nearest value was %1%", b, pol);
          a = b;
          fa = fb;
          b *= factor;
@@ -507,7 +510,7 @@ std::pair<T, T> bracket_and_solve_root(F f, const T& guess, const T& factor, boo
             return a > 0 ? std::make_pair(T(0), T(a)) : std::make_pair(T(a), T(0)); 
          }
          if(count == 0)
-            policy::raise_evaluation_error(BOOST_CURRENT_FUNCTION, "Unable to bracket root, last nearest value was %1%", a, pol);
+            policy::raise_evaluation_error(function, "Unable to bracket root, last nearest value was %1%", a, pol);
          b = a;
          fb = fa;
          a /= factor;

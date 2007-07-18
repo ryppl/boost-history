@@ -523,7 +523,6 @@ namespace boost
         // P = I[1-p]( n-k, k+1).
         //   = 1 - I[p](k + 1, n - k)
 
-        using boost::math::tools::domain_error;
         using namespace std; // for ADL of std functions
 
         RealType n = dist.trials();
@@ -596,7 +595,6 @@ namespace boost
         // Q = 1 -I[1-p]( n-k, k+1).
         //   = I[p](k + 1, n - k)
 
-        using boost::math::tools::domain_error;
         using namespace std; // for ADL of std functions
 
         RealType const& k = c.param;

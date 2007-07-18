@@ -321,7 +321,6 @@ namespace boost
       // Probability that there are EXACTLY k occurrences (or arrivals).
       BOOST_FPU_EXCEPTION_GUARD
 
-      using boost::math::tools::domain_error;
       using namespace std; // for ADL of std functions.
 
       RealType mean = dist.mean();

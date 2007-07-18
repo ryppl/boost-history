@@ -1,9 +1,9 @@
 #ifndef BOOST_MATH_TOOLS_CONFIG_HPP
 #define BOOST_MATH_TOOLS_CONFIG_HPP
 
-#include <boost/math/tools/error_handling.hpp>
 #include <boost/cstdint.hpp> // for boost::uintmax_t
 #include <boost/config.hpp>
+#include <algorithm>  // for min and max
 
 #define BOOST_MATH_MAX_ITER 1000000
 
@@ -62,14 +62,6 @@ template <class T>
 inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d)
 {
    return (std::max)((std::max)(a, b), (std::max)(c, d));
-}
-
-inline void check_series_iterations(const char* function, boost::uintmax_t max_iter)
-{
-   if(max_iter >= BOOST_MATH_MAX_ITER)
-      tools::logic_error<boost::uintmax_t>(
-         function,
-         "Series evaluation exceeded %1% iterations, giving up now.", max_iter);
 }
 
 } // namespace tools

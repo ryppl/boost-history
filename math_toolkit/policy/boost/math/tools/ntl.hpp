@@ -314,7 +314,7 @@ namespace NTL{
          NTL::RR(std::asin(boost::math::tools::real_cast<double>(z))), 
          NTL::RR(-boost::math::constants::pi<NTL::RR>()/2),
          NTL::RR(boost::math::constants::pi<NTL::RR>()/2),
-         boost::math::tools::digits<NTL::RR>());
+         boost::math::policy::digits<NTL::RR, policy::policy<> >());
    }
 
    struct acos_root
@@ -340,7 +340,7 @@ namespace NTL{
          NTL::RR(std::acos(boost::math::tools::real_cast<double>(z))), 
          NTL::RR(-boost::math::constants::pi<NTL::RR>()/2),
          NTL::RR(boost::math::constants::pi<NTL::RR>()/2),
-         boost::math::tools::digits<NTL::RR>());
+         boost::math::policy::digits<NTL::RR, policy::policy<> >());
    }
 
    struct atan_root
@@ -367,7 +367,7 @@ namespace NTL{
          NTL::RR(std::atan(boost::math::tools::real_cast<double>(z))), 
          -boost::math::constants::pi<NTL::RR>()/2,
          boost::math::constants::pi<NTL::RR>()/2,
-         boost::math::tools::digits<NTL::RR>());
+         boost::math::policy::digits<NTL::RR, policy::policy<> >());
    }
 
    inline NTL::RR sinh(NTL::RR z)

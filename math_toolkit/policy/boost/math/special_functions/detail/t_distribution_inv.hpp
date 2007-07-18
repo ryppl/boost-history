@@ -197,7 +197,7 @@ T inverse_students_t(T df, T u, T v, const Policy& pol, bool* pexact = 0)
       // we have integer degrees of freedom, try for the special
       // cases first:
       //
-      T tolerance = ldexp(1.0f, (2 * tools::digits<T>()) / 3);
+      T tolerance = ldexp(1.0f, (2 * policy::digits<T, Policy>()) / 3);
 
       switch(boost::math::tools::real_cast<int>(df))
       {

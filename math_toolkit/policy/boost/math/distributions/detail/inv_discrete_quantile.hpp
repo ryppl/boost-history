@@ -83,6 +83,8 @@ typename Dist::value_type
    typedef typename Dist::value_type value_type;
    typedef typename Dist::policy_type policy_type;
 
+   static const char* function = "boost::math::do_inverse_discrete_quantile<%1%>";
+
    using namespace std;
 
    distribution_quantile_finder<Dist> f(dist, p, q);
@@ -209,7 +211,7 @@ typename Dist::value_type
          while(sign(fb) == sign(fa))
          {
             if(count == 0)
-               policy::raise_evaluation_error(BOOST_CURRENT_FUNCTION, "Unable to bracket root, last nearest value was %1%", b, policy_type());
+               policy::raise_evaluation_error(function, "Unable to bracket root, last nearest value was %1%", b, policy_type());
             a = b;
             fa = fb;
             b *= multiplier;
@@ -236,7 +238,7 @@ typename Dist::value_type
                return 0;
             }
             if(count == 0)
-               policy::raise_evaluation_error(BOOST_CURRENT_FUNCTION, "Unable to bracket root, last nearest value was %1%", a, policy_type());
+               policy::raise_evaluation_error(function, "Unable to bracket root, last nearest value was %1%", a, policy_type());
             b = a;
             fb = fa;
             a /= multiplier;

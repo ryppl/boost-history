@@ -3,6 +3,7 @@
 #include <boost/test/test_exec_monitor.hpp>
 #include <boost/array.hpp>
 #include <boost/math/tools/rational.hpp>
+#include <iostream>
 
 #include "test_rational.hpp"
 

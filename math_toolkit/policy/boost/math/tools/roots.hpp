@@ -96,14 +96,15 @@ std::pair<T, T> bisect(F f, T min, T max, Tol tol, boost::uintmax_t& max_iter, c
    //
    // Error checking:
    //
+   static const char* function = "boost::math::tools::bisect<%1%>";
    if(min >= max)
    {
-      policy::raise_evaluation_error(BOOST_CURRENT_FUNCTION, 
+      policy::raise_evaluation_error(function, 
          "Arguments in wrong order in boost::math::tools::bisect (first arg=%1%)", min, pol);
    }
    if(fmin * fmax >= 0)
    {
-      policy::raise_evaluation_error(BOOST_CURRENT_FUNCTION, 
+      policy::raise_evaluation_error(function, 
          "No change of sign in boost::math::tools::bisect, either there is no root to find, or there are multiple roots in the interval (f(min) = %1%).", fmin, pol);
    }
 

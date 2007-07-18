@@ -323,18 +323,6 @@ inline concepts::real_concept epsilon(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts
    return tools::epsilon<long double>();
 }
 
-template <>
-inline int digits<concepts::real_concept>(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
-{ // Assume number of significand bits is same as long double,
-  // unless std::numeric_limits<T>::is_specialized to provide digits.
-   return tools::digits<long double>();
-   // Note that if numeric_limits real concept is NOT specialized to provide digits10
-   // (or max_digits10) then the default precision of 6 decimal digits will be used
-   // by Boost test (giving misleading error messages like
-   // "difference between {9.79796} and {9.79796} exceeds 5.42101e-19%"
-   // and by Boost lexical cast and serialization causing loss of accuracy.
-}
-
 } // namespace tools
 
 namespace policy{
@@ -343,7 +331,7 @@ template <>
 inline int digits<concepts::real_concept, policy<> >(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
 { // Assume number of significand bits is same as long double,
   // unless std::numeric_limits<T>::is_specialized to provide digits.
-   return tools::digits<long double>();
+   return boost::math::policy::digits<long double, boost::math::policy::policy<> >();
    // Note that if numeric_limits real concept is NOT specialized to provide digits10
    // (or max_digits10) then the default precision of 6 decimal digits will be used
    // by Boost test (giving misleading error messages like

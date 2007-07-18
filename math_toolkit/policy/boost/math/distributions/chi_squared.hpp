@@ -292,7 +292,7 @@ RealType chi_squared_distribution<RealType, Policy>::estimate_degrees_of_freedom
    RealType error_result;
    if(false == detail::check_probability(
          function, alpha, &error_result, Policy())
-         && detail::check_probability(BOOST_CURRENT_FUNCTION, beta, &error_result, Policy()))
+         && detail::check_probability(function, beta, &error_result, Policy()))
       return error_result;
 
    if(hint <= 0)

@@ -11,8 +11,11 @@
 #include <string>
 #include <cerrno>
 #include <cmath>
+#include <stdexcept>
+#include <boost/math/tools/config.hpp>
 #include <boost/math/policy/policy.hpp>
 #include <boost/math/tools/precision.hpp>
+#include <boost/cstdint.hpp>
 #ifdef BOOST_MSVC
 #  pragma warning(push) // Quiet warnings in boost/format.hpp
 #  pragma warning(disable: 4996) // _SCL_SECURE_NO_DEPRECATE
@@ -81,7 +84,7 @@ void raise_error(const char* function, const char* message, const T& val)
   msg += ": ";
   msg += message;
 
-  int prec = 2 + (tools::digits<T>() * 30103UL) / 100000UL;
+  int prec = 2 + (boost::math::policy::digits<T, boost::math::policy::policy<> >() * 30103UL) / 100000UL;
   msg = (boost::format(msg) % boost::io::group(std::setprecision(prec), val)).str();
 
   E e(msg);

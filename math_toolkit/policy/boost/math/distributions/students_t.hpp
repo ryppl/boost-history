@@ -186,7 +186,7 @@ inline RealType quantile(const students_t_distribution<RealType, Policy>& dist, 
    RealType t, x, y;
    x = ibeta_inv(degrees_of_freedom / 2, RealType(0.5), 2 * probability, &y);
    if(degrees_of_freedom * y > tools::max_value<RealType>() * x)
-      t = tools::overflow_error<RealType>(BOOST_CURRENT_FUNCTION);
+      t = tools::overflow_error<RealType>(function);
    else
       t = sqrt(degrees_of_freedom * y / x);
    //
