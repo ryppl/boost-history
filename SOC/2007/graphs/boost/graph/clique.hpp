@@ -10,10 +10,55 @@
 namespace boost
 {
 
-    // I'm basically reimplementing the networkX version of the
-    // algorithm since it's a little more clear than the published
-    // version. It also appears to operate on a non-matrix structure
-    // which makes the translation a little easier.
+    // The algorithm implemented in this paper is based on the so-called
+    // Algorithm 457, published as:
+    //
+    //     @article{362367,
+    //         author = {Coen Bron and Joep Kerbosch},
+    //         title = {Algorithm 457: finding all cliques of an undirected graph},
+    //         journal = {Communications of the ACM},
+    //         volume = {16},
+    //         number = {9},
+    //         year = {1973},
+    //         issn = {0001-0782},
+    //         pages = {575--577},
+    //         doi = {http://doi.acm.org/10.1145/362342.362367},
+    //             publisher = {ACM Press},
+    //             address = {New York, NY, USA},
+    //         }
+    //
+    // Sort of. This implementation is adapted from the 1st version of the
+    // algorithm and does not implement the candidate selection optimization
+    // described as published - it could, it just doesn't yet.
+    //
+    // The algorithm is given as proportional to (3.14)^(n/3) power. This is
+    // not the same as O(...), but based on time measures and approximation.
+    //
+    // Unfortunately, this implementation may be less efficient on non-
+    // AdjacencyMatrix modeled graphs due to the non-constant implementation
+    // of the edge(u,v,g) functions.
+    //
+    // TODO: It might be worthwhile to provide functionality for passing
+    // a connectivity matrix to improve the efficiency of those lookups
+    // when needed. This could simply be passed as a BooleanMatrix
+    // s.t. edge(u,v,B) returns true or false. This could easily be
+    // abstracted for adjacency matricies.
+    //
+    // The following paper is interesting for a number of reasons. First,
+    // it lists a number of other such algorithms and second, it describes
+    // a new algorithm (that does not appear to require the edge(u,v,g)
+    // function and appears fairly efficient. It is probably worth investigating.
+    //
+    //      @article{DBLP:journals/tcs/TomitaTT06,
+    //          author = {Etsuji Tomita and Akira Tanaka and Haruhisa Takahashi},
+    //          title = {The worst-case time complexity for generating all maximal cliques and computational experiments},
+    //          journal = {Theor. Comput. Sci.},
+    //          volume = {363},
+    //          number = {1},
+    //          year = {2006},
+    //          pages = {28-42}
+    //          ee = {http://dx.doi.org/10.1016/j.tcs.2006.06.015}
+    //  }
 
     struct clique_visitor
     {
@@ -26,20 +71,20 @@ namespace boost
     {
         template <typename Graph>
         inline bool
-        is_clique_connected(const Graph& g,
-                            typename graph_traits<Graph>::vertex_descriptor u,
-                            typename graph_traits<Graph>::vertex_descriptor v,
-                            typename graph_traits<Graph>::undirected_category)
+        is_connected(const Graph& g,
+                     typename graph_traits<Graph>::vertex_descriptor u,
+                     typename graph_traits<Graph>::vertex_descriptor v,
+                     typename graph_traits<Graph>::undirected_category)
         {
             return edge(u, v, g).second;
         }
 
         template <typename Graph>
         inline bool
-        is_clique_connected(const Graph& g,
-                            typename graph_traits<Graph>::vertex_descriptor u,
-                            typename graph_traits<Graph>::vertex_descriptor v,
-                            typename graph_traits<Graph>::directed_category)
+        is_connected(const Graph& g,
+                     typename graph_traits<Graph>::vertex_descriptor u,
+                     typename graph_traits<Graph>::vertex_descriptor v,
+                     typename graph_traits<Graph>::directed_category)
         {
             // Note that this could alternate between using an or to determine
             // full connectivity. I believe that this should produce strongly
@@ -49,7 +94,7 @@ namespace boost
             //
             // TODO: use this, the other, or allow switching based on a user-
             // define strategy.
-            return edge(u, v, g).second || edge(v, u, g).second;
+            return edge(u, v, g).second && edge(v, u, g).second;
         }
 
         template <typename Graph, typename Container>
@@ -62,7 +107,7 @@ namespace boost
             typename graph_traits<Graph>::directed_category cat;
             typename Container::const_iterator i, end = in.end();
             for(i = in.begin(); i != end; ++i) {
-                if(is_clique_connected(g, v, *i, cat)) {
+                if(is_connected(g, v, *i, cat)) {
                     out.push_back(*i);
                 }
             }
