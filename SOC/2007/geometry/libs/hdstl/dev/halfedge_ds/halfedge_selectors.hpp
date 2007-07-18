@@ -30,7 +30,7 @@
 #define BOOST_HDSTL_HALFEDGE_SELECTORS_HPP 1
 
 #include <boost/hdstl/hds_traits.hpp>
-#include <boost/hdstl/halfedge_ds/halfedge_ds.hpp>
+#include <boost/hdstl/halfedge_ds/container_selectors.hpp>
 
 namespace boost {
 namespace hdstl {
@@ -190,7 +190,7 @@ struct halfedge_gen {
 };
 
 // SPECIALIZATIONS
-template <typename ContainerS, typename TraversalS,typename HalfedgeDescriptor, 
+template <typename ContainerS, typename TraversalS, typename HalfedgeDescriptor, 
           typename VertexDescriptor, typename FacetDescriptor, typename Config>
 struct halfedge_gen<halfedgeS<ContainerS,TraversalS>, HalfedgeDescriptor,
                     VertexDescriptor, FacetDescriptor, Config> {

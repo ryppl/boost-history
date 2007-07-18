@@ -302,7 +302,8 @@ struct facet_gen<facetS<ContainerS,HasFacetLink>, HalfedgeDescriptor, FacetBase>
 // FREE FUNCTIONS
 template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
 typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::facet_iterator
-facets_begin(facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds) {
+facets_begin(facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds)
+{
     typedef typename facet_gen<FacetS,
                                HalfedgeDescriptor,
                                FacetBase>::ContainerGen ContainerGen;
@@ -311,7 +312,8 @@ facets_begin(facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds) {
 
 template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
 typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::facet_iterator
-facets_end(facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds) {
+facets_end(facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds)
+{
     typedef typename facet_gen<FacetS,
                                HalfedgeDescriptor,
                                FacetBase>::ContainerGen ContainerGen;
@@ -320,19 +322,21 @@ facets_end(facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds) {
 
 template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
 typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::size_type
-num_facets(facet_gen<FacetS, HalfedgeDescriptor, FacetBase> const& hds) {
+num_facets(facet_gen<FacetS, HalfedgeDescriptor, FacetBase> const& hds)
+{
     return hds.m_container.size();
 }
 
 template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
 HalfedgeDescriptor
-halfedge(typename facet_gen<FacetS, HalfedgeDescriptor, 
+halfedge(typename facet_gen<FacetS,
+                            HalfedgeDescriptor,
                             FacetBase>::facet_descriptor const& f,
-                facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds) {
-    return facet_gen<FacetS, HalfedgeDescriptor, FacetBase>
-                         ::ContainerGen::value(f, hds.m_container).m_facetLink;
+         facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds)
+{
+    return facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::ContainerGen
+                                       ::value(f, hds.m_container).m_facetLink;
 }
-
 
 } // namespace hdstl
 } // namespace boost

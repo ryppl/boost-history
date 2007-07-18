@@ -52,7 +52,7 @@ num_halfedges(halfedge_gen<HalfedgeS, HalfedgeDescriptor, VertexDescriptor,
 
 template<typename HalfedgeS, typename HalfedgeDescriptor>
 struct opposite_function_helper {
-    inline static
+    static
     HalfedgeDescriptor&
     opposite(HalfedgeDescriptor& h)
     {
@@ -65,7 +65,7 @@ struct opposite_function_helper {
 
 template<typename HalfedgeDescriptor, typename TraversalS>
 struct opposite_function_helper<halfedgeS<vecS,TraversalS>, HalfedgeDescriptor> {
-    inline static
+    static
     HalfedgeDescriptor&
     opposite(HalfedgeDescriptor& h)
     {

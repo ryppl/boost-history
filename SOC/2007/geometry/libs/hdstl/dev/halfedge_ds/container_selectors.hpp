@@ -220,6 +220,12 @@ struct container_gen<hashS, ValueType> {
 
         typedef typename std::tr1::hash_set<ValueType>::iterator base_type;
       public:
+        // TYPES
+        typedef ValueType*                            value_type;
+        typedef value_type&                           reference;
+        typedef value_type*                           pointer;
+        typedef typename base_type::difference_type   difference_type;
+        typedef typename base_type::iterator_category iterator_category;
         // CREATORS
         iterator() {}
             // Create an unitialized iterator.
@@ -227,14 +233,14 @@ struct container_gen<hashS, ValueType> {
             // Create an iterator pointing to the same element as the specified
             // 'it' iterator in the specified 'container'.
         // MANIPULATORS
-        ValueType* operator*()
+        value_type operator*()
             // Return the descriptor of the element pointed to by this
             // iterator.
         {
             return &(*base_type());
         }
         // ACCESSORS
-        ValueType* operator*() const
+        value_type operator*() const
             // Return the descriptor of the element pointed to by this
             // iterator.
         {
@@ -284,7 +290,9 @@ struct container_gen<hashS, ValueType> {
 template <typename ValueType>
 struct container_gen<listS, ValueType> {
     // This specialization of 'container_gen' selects the 'std::list'
-    // container.
+    // container.  It offers a descriptor type that is simply a pointer to a
+    // value, and an iterator type that is a list iterator but whose value type
+    // is instead a descriptor.
 
     // TYPES
     typedef std::list<ValueType> type;
@@ -304,6 +312,12 @@ struct container_gen<listS, ValueType> {
 
         typedef typename std::list<ValueType>::iterator base_type;
       public:
+        // TYPES
+        typedef ValueType*                            value_type;
+        typedef value_type                            reference;
+        typedef value_type*                           pointer;
+        typedef typename base_type::difference_type   difference_type;
+        typedef typename base_type::iterator_category iterator_category;
         // CREATORS
         iterator() {}
             // Create an unitialized iterator.
@@ -311,18 +325,20 @@ struct container_gen<listS, ValueType> {
             // Create an iterator pointing to the same element as the specified
             // 'it' iterator in the specified 'container'.
         // MANIPULATORS
-        ValueType* operator*()
-            // Return the descriptor of the element pointed to by this
+        iterator& operator++() { ++static_cast<base_type&>(*this); return *this; }
+        iterator& operator--() { --static_cast<base_type&>(*this); return *this; }
+        reference operator*()
+            // Return the modifiable descriptor of the element pointed to by this
             // iterator.
         {
-            return &(*base_type());
+            return &(*base_type(*this));
         }
         // ACCESSORS
-        ValueType* operator*() const
+        value_type operator*() const
             // Return the descriptor of the element pointed to by this
             // iterator.
         {
-            return &(*base_type());
+            return &(*base_type(*this));
         }
     };
 
@@ -373,6 +389,12 @@ struct container_gen<setS, ValueType> {
 
         typedef typename std::set<ValueType>::iterator base_type;
       public:
+        // TYPES
+        typedef const ValueType*                      value_type;
+        typedef value_type                            reference;
+        typedef value_type*                           pointer;
+        typedef typename base_type::difference_type   difference_type;
+        typedef typename base_type::iterator_category iterator_category;
         // CREATORS
         iterator() {}
             // Create an unitialized iterator.
@@ -380,14 +402,16 @@ struct container_gen<setS, ValueType> {
             // Create an iterator pointing to the same element as the specified
             // 'it' iterator in the specified 'container'.
         // MANIPULATORS
-        const ValueType* operator*()
-            // Return the descriptor of the element pointed to by this
+        iterator& operator++() { ++static_cast<base_type&>(*this); return *this; }
+        iterator& operator--() { --static_cast<base_type&>(*this); return *this; }
+        reference operator*()
+            // Return the non-modifiable descriptor of the element pointed to by this
             // iterator.
         {
             return &(*base_type(*this));
         }
         // ACCESSORS
-        const ValueType* operator*() const
+        value_type operator*() const
             // Return the descriptor of the element pointed to by this
             // iterator.
         {
@@ -410,7 +434,7 @@ struct container_gen<setS, ValueType> {
         return container.end();
     }
 
-    static ValueType& value(descriptor x, type& container)
+    static const ValueType& value(descriptor x, type& container)
             // This utility returns the value associated with the specified
             // descriptor 'x' of the specified 'container'.
     {
@@ -433,6 +457,29 @@ struct container_gen<vecS, ValueType> {
         // Type used to describe an element in the collection of elements
         // present in a given container.
 
+    struct descriptor_proxy {
+        // This type is a proxy for a descriptor reference.
+
+        // TYPES
+        typedef typename std::vector<ValueType>::iterator  base_type;
+        typedef typename std::vector<ValueType>::size_type value_type;
+        // DATA 
+        base_type m_begin;
+        value_type m_offset;
+        // CREATORS
+        descriptor_proxy(base_type begin, value_type offset)
+        : m_begin(begin), m_offset(offset) {}
+        // MANIPULATORS
+        descriptor_proxy& operator=(value_type x) {
+            *(m_begin+m_offset) = m_begin+x;
+            return *this;
+        }
+        // ACCESSORS
+        operator value_type() const {
+            return m_offset;
+        }
+    };
+
     struct iterator : public std::vector<ValueType>::iterator {
         // Iterator type over a given container.  Note: the value type must be
         // a descriptor, so we cannot use a 'std::vector:iterator'.  Instead,
@@ -442,6 +489,12 @@ struct container_gen<vecS, ValueType> {
         // DATA
         std::vector<ValueType> *m_container;
       public:
+        // TYPES
+        typedef typename std::vector<ValueType>::size_type value_type;
+        typedef descriptor_proxy                           reference;
+        typedef value_type*                                pointer;
+        typedef typename base_type::difference_type        difference_type;
+        typedef typename base_type::iterator_category      iterator_category;
         // CREATORS
         iterator()
             // Create an unitialized iterator.
@@ -451,14 +504,15 @@ struct container_gen<vecS, ValueType> {
             // 'it' iterator in the specified 'container'.
         : base_type(it), m_container(container) {}
         // MANIPULATORS
-        typename std::vector<ValueType>::size_type operator*()
-            // Return the descriptor of the element pointed to by this
+        reference operator*()
+            // Return a modifiable descriptor of the element pointed to by this
             // iterator.
         {
-            return base_type(*this) - m_container->begin();
+            return descriptor_proxy(m_container->begin(),
+                                    base_type(*this) - m_container->begin());
         }
         // ACCESSORS
-        typename std::vector<ValueType>::size_type operator*() const
+        value_type operator*() const
             // Return the descriptor of the element pointed to by this
             // iterator.
         {

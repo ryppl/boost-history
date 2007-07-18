@@ -95,6 +95,12 @@ bool container_gen_requirements() {
     iterator begin = ContainerGen::container_begin(container);
     descriptor theBegin = *begin;
 
+    // Descriptor must hold correct value:
+    BOOST_CHECK(( ContainerGen::value(theBegin, container) == 0 ));
+    BOOST_CHECK(( ContainerGen::value(*++begin, container) == 1 ));
+    BOOST_CHECK(( ContainerGen::value(*++begin, container) == 2 ));
+    BOOST_CHECK(( ContainerGen::value(*++begin, container) == 3 ));
+
     return true;
 }
 
