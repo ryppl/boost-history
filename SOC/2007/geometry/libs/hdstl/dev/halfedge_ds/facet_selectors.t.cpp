@@ -190,15 +190,15 @@ int test_main(int, char **)
     BOOST_CHECK(( selection_requirements(facetS<listS,true>()) ));
     BOOST_CHECK(( selection_requirements(facetS<listS,false>()) ));
     
-    BOOST_CHECK(( facet_gen_requirements_void_noFacetLink<
-                              facet_gen<facetS<listS,false>, int, void> >() ));
-    BOOST_CHECK(( facet_gen_requirements_void<
-                              facet_gen<facetS<listS,true>, int, void> >() ));
+//  BOOST_CHECK(( facet_gen_requirements_void_noFacetLink<
+//                            facet_gen<facetS<listS,false>, int, void> >() ));
+//  BOOST_CHECK(( facet_gen_requirements_void<
+//                            facet_gen<facetS<listS,true>, int, void> >() ));
 
-    BOOST_CHECK(( facet_gen_requirements_noFacetLink<
-                          facet_gen<facetS<listS,false>, int, int>, int >() ));
-    BOOST_CHECK(( facet_gen_requirements<
-                          facet_gen<facetS<listS,true>, int, int>, int >() ));
+//  BOOST_CHECK(( facet_gen_requirements_noFacetLink<
+//                        facet_gen<facetS<listS,false>, int, int>, int >() ));
+//  BOOST_CHECK(( facet_gen_requirements<
+//                          facet_gen<facetS<listS,true>, int, int>, int >() ));
    
     // BOOST_CHECK(( facet_gen_requirements<
     //           facet_gen<facetS<listS,false>, int, custom_facet_base> >() ));

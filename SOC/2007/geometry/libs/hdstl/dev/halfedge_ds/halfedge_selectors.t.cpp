@@ -16,6 +16,7 @@
 #include <boost/hdstl/halfedge_ds/facet_selectors.hpp>
 #include <boost/hdstl/halfedge_ds/halfedge_functions.hpp>
 #include <boost/hdstl/halfedge_ds/vertex_selectors.hpp>
+#include <boost/hdstl/halfedge_ds/meta_functions.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -61,15 +62,60 @@ bool selection_requirements(halfedgeS<Selector,
 
 template <typename HalfedgeS, typename VertexS, typename FacetS>
 struct halfedge_config {
+    // This halfedge_config to identically replace the halfedge_ds_gen::config
+    // and reproduced here for test purposes only. Note that this tests are 
+    // not for the config class, but the halfedge_selectors, so config will
+    // be tested in its own package
     enum {
-        halfedge_has_opposite_member = false,
+        halfedge_has_opposite_member = !meta_is_same<
+                        typename HalfedgeS::container_selector, vecS>::value,
+        is_forward = HalfedgeS::is_forward,
+        is_backward = HalfedgeS::is_backward,
+        halfedge_supports_vertices = !meta_is_same<VertexS,noVertexS>::value,
+        is_source = VertexS::is_source,
+        halfedge_supports_facets = !meta_is_same<FacetS,noFacetS>::value
+    };
+};
+
+template <typename HalfedgeS>
+struct halfedge_config<HalfedgeS, noVertexS, noFacetS> {
+    enum {
+        halfedge_has_opposite_member = !meta_is_same<
+                        typename HalfedgeS::container_selector, vecS>::value,
+        is_forward = HalfedgeS::is_forward,
+        is_backward = HalfedgeS::is_backward,
         halfedge_supports_vertices = false,
-        is_forward = false,
-        is_backward = false,
         is_source = false,
         halfedge_supports_facets = false
     };
 };
+
+template <typename HalfedgeS, typename FacetS>
+struct halfedge_config<HalfedgeS, noVertexS, FacetS> {
+    enum {
+        halfedge_has_opposite_member = !meta_is_same<
+                        typename HalfedgeS::container_selector, vecS>::value,
+        is_forward = HalfedgeS::is_forward,
+        is_backward = HalfedgeS::is_backward,
+        halfedge_supports_vertices = false,
+        is_source = false,
+        halfedge_supports_facets = !meta_is_same<FacetS,noFacetS>::value
+    };
+};
+
+template <typename HalfedgeS, typename VertexS>
+struct halfedge_config<HalfedgeS, VertexS, noFacetS> {
+    enum {
+        halfedge_has_opposite_member = !meta_is_same<
+                        typename HalfedgeS::container_selector, vecS>::value,
+        is_forward = HalfedgeS::is_forward,
+        is_backward = HalfedgeS::is_backward,
+        halfedge_supports_vertices = !meta_is_same<VertexS,noVertexS>::value,
+        is_source = VertexS::is_source,
+        halfedge_supports_facets = false
+    };
+};
+
 
 template <typename HalfedgeGen>
 bool halfedge_gen_requirements_void() {
