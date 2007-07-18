@@ -106,7 +106,6 @@ bool vertex_gen_requirements_void() {
     // Verify that vertices_begin(), vertices_end(), and num_vertices() work.
     // Access the vertices and, if the has_vertex_links is set, check that the
     // halfedge() works.
-    // ... TODO
     container_type temp_con(array,array+4);
     VertexGen vertexGen;
     vertexGen.m_container = temp_con;
@@ -114,8 +113,8 @@ bool vertex_gen_requirements_void() {
     BOOST_CHECK(( vertices_begin(vertexGen)->m_vertexLink == 1 ));
     BOOST_CHECK(( (--vertices_end(vertexGen))->m_vertexLink == 4 ));
 
-    //BOOST_CHECK(( halfedge(*vertices_begin(vertexGen), vertexGen) == 1 ));
-    //BOOST_CHECK(( halfedge(*(--vertices_end(vertexGen)), vertexGen) == 4 ));
+    BOOST_CHECK(( halfedge(*vertices_begin(vertexGen), vertexGen) == 1 ));
+    BOOST_CHECK(( halfedge(*(--vertices_end(vertexGen)), vertexGen) == 4 ));
     return true;
 }
 
@@ -165,7 +164,6 @@ bool vertex_gen_requirements() {
     vertex_type array[] = { fa, fb, fc, fd };  (void) array;
     
     // Same checks as before:
-    //BOOST_CHECK(( vertex_gen_requirements_void<VertexGen>() ));
     container_type temp_con(array,array+4);
     VertexGen vertexGen;
     vertexGen.m_container = temp_con;
@@ -174,8 +172,8 @@ bool vertex_gen_requirements() {
     BOOST_CHECK(( vertices_begin(vertexGen)->m_vertexLink == 1 ));
     BOOST_CHECK(( (--vertices_end(vertexGen))->m_vertexLink == 4 ));
 
-    //BOOST_CHECK(( halfedge(*vertices_begin(vertexGen), vertexGen) == 1 ));
-    //BOOST_CHECK(( halfedge(*(--vertices_end(vertexGen)), vertexGen) == 4 ));
+    BOOST_CHECK(( halfedge(*vertices_begin(vertexGen), vertexGen) == 1 ));
+    BOOST_CHECK(( halfedge(*(--vertices_end(vertexGen)), vertexGen) == 4 ));
     
     // Plus: get the base back from the vertices and making sure it matches.
     BOOST_CHECK(( vertices_begin(vertexGen)->base() == 1 ));

@@ -101,6 +101,15 @@ bool container_gen_requirements() {
     BOOST_CHECK(( ContainerGen::value(*++begin, container) == 2 ));
     BOOST_CHECK(( ContainerGen::value(*++begin, container) == 3 ));
 
+    // Value type of iterator must be a descriptor.
+    iterator end = ContainerGen::container_end(container);
+    descriptor theEnd = *--end;
+
+    // Descriptor must hold correct value:
+    BOOST_CHECK(( ContainerGen::value(theEnd, container) == 3 ));
+    BOOST_CHECK(( ContainerGen::value(*--end, container) == 2 ));
+    BOOST_CHECK(( ContainerGen::value(*--end, container) == 1 ));
+    BOOST_CHECK(( ContainerGen::value(*--end, container) == 0 ));
     return true;
 }
 

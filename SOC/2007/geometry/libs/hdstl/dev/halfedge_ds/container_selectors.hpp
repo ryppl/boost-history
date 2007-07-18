@@ -504,6 +504,8 @@ struct container_gen<vecS, ValueType> {
             // 'it' iterator in the specified 'container'.
         : base_type(it), m_container(container) {}
         // MANIPULATORS
+        iterator& operator++() { ++static_cast<base_type&>(*this); return *this; }
+        iterator& operator--() { --static_cast<base_type&>(*this); return *this; }
         reference operator*()
             // Return a modifiable descriptor of the element pointed to by this
             // iterator.
@@ -512,11 +514,12 @@ struct container_gen<vecS, ValueType> {
                                     base_type(*this) - m_container->begin());
         }
         // ACCESSORS
-        value_type operator*() const
+        reference operator*()  const
             // Return the descriptor of the element pointed to by this
             // iterator.
         {
-            return base_type(*this) - m_container->begin();
+            return descriptor_proxy(m_container->begin(),
+                                    base_type(*this) - m_container->begin());
         }
     };
 

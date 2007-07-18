@@ -30,11 +30,12 @@ package_library: ${PACKAGE_OBJECTS}
 
 container_selectors.o: 
 
-facet_selectors.o: 
+facet_selectors.o:  container_selectors.hpp
 
-vertex_selectors.o: 
+vertex_selectors.o: container_selectors.hpp
 
-halfedge_selectors.o: 
+halfedge_selectors.o: halfedge_functions.hpp \
+		container_selectors.hpp
 
 ### BUILDING TEST DRIVERS AND DEPENDENCIES OF TEST DRIVER
 
@@ -44,24 +45,24 @@ test: ${TEST_DRIVERS}
 %.t: %.t.o %.o
 	${LD} ${LDFLAGS} -o $*.t $^
 
-container_selectors.t.o:
+container_selectors.t.o: 
 
-facet_selectors.t.o:
+facet_selectors.t.o: container_selectors.hpp
 
-vertex_selectors.t.o: 
+vertex_selectors.t.o: container_selectors.hpp
 
-halfedge_selectors.t.o: 
+halfedge_selectors.t.o: halfedge_functions.hpp container_selectors.hpp
 
 %.t.o: %.t.cpp %.hpp
 	${CXX}  ${CXXFLAGS} ${CXXINCLUDES} -c -o $*.t.o $<
 
-container_selectors.t:
+container_selectors.t: 
 
-facet_selectors.t:
+facet_selectors.t: container_selectors.o
 
-vertex_selectors.t: 
+vertex_selectors.t: container_selectors.o 
 
-halfedge_selectors.t: 
+halfedge_selectors.t: container_selectors.o 
 
 ## UTILITIES
 

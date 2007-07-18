@@ -96,7 +96,6 @@ bool facet_gen_requirements_void() {
     // Verify that facets_begin(), facets_end(), and num_facets() work.
     // Access the facets and, if the has_facet_links is set, check that the
     // halfedge() works.
-    // ... TODO
     container_type temp_con(array,array+4);
     FacetGen facetGen;
     facetGen.m_container = temp_con;
@@ -104,8 +103,8 @@ bool facet_gen_requirements_void() {
     BOOST_CHECK(( facets_begin(facetGen)->m_facetLink == 1 ));
     BOOST_CHECK(( (--facets_end(facetGen))->m_facetLink == 4 ));
 
-    //BOOST_CHECK(( halfedge(*facets_begin(facetGen), facetGen) == 1 ));
-    //BOOST_CHECK(( halfedge(*(--facets_end(facetGen)), facetGen) == 4 ));
+    BOOST_CHECK(( halfedge(*facets_begin(facetGen), facetGen) == 1 ));
+    BOOST_CHECK(( halfedge(*--facets_end(facetGen), facetGen) == 4 ));
     return true;
 }
 
@@ -125,7 +124,6 @@ bool facet_gen_requirements_noFacetLink() {
     facet_type array[] = { fa, fb, fc, fd };  (void) array;
     
     // Same checks as before:
-    //BOOST_CHECK(( facet_gen_requirements_void_noFacetLink<FacetGen>() ));
     container_type temp_con(array,array+4);
     FacetGen facetGen;
     facetGen.m_container = temp_con;
@@ -155,7 +153,6 @@ bool facet_gen_requirements() {
     facet_type array[] = { fa, fb, fc, fd };  (void) array;
     
     // Same checks as before:
-    // BOOST_CHECK(( facet_gen_requirements_void<FacetGen>() ));
     container_type temp_con(array,array+4);
     FacetGen facetGen;
     facetGen.m_container = temp_con;
@@ -163,9 +160,9 @@ bool facet_gen_requirements() {
 
     BOOST_CHECK(( facets_begin(facetGen)->m_facetLink == 1 ));
     BOOST_CHECK(( (--facets_end(facetGen))->m_facetLink == 4 ));
-
+    
     BOOST_CHECK(( halfedge(*facets_begin(facetGen), facetGen) == 1 ));
-    // BOOST_CHECK(( halfedge(*(--facets_end(facetGen)), facetGen) == 4 ));
+    BOOST_CHECK(( halfedge(*--facets_end(facetGen), facetGen) == 4 ));
     
     // Plus: get the base back from the facets and making sure it matches.
     BOOST_CHECK(( facets_begin(facetGen)->base() == 1 ));
@@ -190,15 +187,15 @@ int test_main(int, char **)
     BOOST_CHECK(( selection_requirements(facetS<listS,true>()) ));
     BOOST_CHECK(( selection_requirements(facetS<listS,false>()) ));
     
-//  BOOST_CHECK(( facet_gen_requirements_void_noFacetLink<
-//                            facet_gen<facetS<listS,false>, int, void> >() ));
-//  BOOST_CHECK(( facet_gen_requirements_void<
-//                            facet_gen<facetS<listS,true>, int, void> >() ));
+    BOOST_CHECK(( facet_gen_requirements_void_noFacetLink<
+                              facet_gen<facetS<listS,false>, int, void> >() ));
+    BOOST_CHECK(( facet_gen_requirements_void<
+                              facet_gen<facetS<listS,true>, int, void> >() ));
 
-//  BOOST_CHECK(( facet_gen_requirements_noFacetLink<
-//                        facet_gen<facetS<listS,false>, int, int>, int >() ));
-//  BOOST_CHECK(( facet_gen_requirements<
-//                          facet_gen<facetS<listS,true>, int, int>, int >() ));
+    BOOST_CHECK(( facet_gen_requirements_noFacetLink<
+                          facet_gen<facetS<listS,false>, int, int>, int >() ));
+    BOOST_CHECK(( facet_gen_requirements<
+                            facet_gen<facetS<listS,true>, int, int>, int >() ));
    
     // BOOST_CHECK(( facet_gen_requirements<
     //           facet_gen<facetS<listS,false>, int, custom_facet_base> >() ));

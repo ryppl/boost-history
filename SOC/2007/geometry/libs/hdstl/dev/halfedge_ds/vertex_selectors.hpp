@@ -408,7 +408,7 @@ template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
 HalfedgeDescriptor
 halfedge(typename vertex_gen<VertexS, HalfedgeDescriptor, 
                                       VertexBase>::vertex_descriptor const& v,
-              vertex_gen<VertexS, HalfedgeDescriptor, VertexBase> const& hds) {
+              vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>& hds) {
     return vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>
                       ::ContainerGen::value(v, hds.m_container).m_vertexLink;
 }

@@ -77,16 +77,16 @@ struct opposite_function_helper<halfedgeS<vecS,TraversalS>, HalfedgeDescriptor> 
 
 template <typename HalfedgeS, typename HalfedgeDescriptor, 
           typename VertexDescriptor, typename FacetDescriptor, typename Config>
-HalfedgeDescriptor&
+HalfedgeDescriptor
 opposite(HalfedgeDescriptor& h, halfedge_gen<HalfedgeS, HalfedgeDescriptor, 
                                 VertexDescriptor, FacetDescriptor, Config>& hds)
 {
     
-    typedef typename halfedge_gen<HalfedgeS, HalfedgeDescriptor,
-                                  VertexDescriptor,FacetDescriptor, Config>
-                                  ::halfedge_selector halfedge_selector;
-    return opposite_function_helper<halfedge_selector,HalfedgeDescriptor>
-                                   ::opposite(h);
+//  typedef typename halfedge_gen<HalfedgeS, HalfedgeDescriptor,
+//                                VertexDescriptor,FacetDescriptor, Config>
+//                                ::halfedge_selector halfedge_selector;
+//  return opposite_function_helper<halfedge_selector,HalfedgeDescriptor>
+//                                 ::opposite(h);
 }
 
 

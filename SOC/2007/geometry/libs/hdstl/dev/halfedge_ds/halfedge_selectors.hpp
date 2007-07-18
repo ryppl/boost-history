@@ -184,7 +184,7 @@ struct stored_halfedge
                    // class halfedge_gen
                    // ==================
 
-template <typename HalfedgeS, typename HalfedgeDescriptor, 
+template <typename HalfedgeS, typename HalfedgeDescriptor,
           typename VertexDescriptor, typename FacetDescriptor, typename Config>
 struct halfedge_gen {
 };
@@ -192,10 +192,11 @@ struct halfedge_gen {
 // SPECIALIZATIONS
 template <typename ContainerS, typename TraversalS, typename HalfedgeDescriptor, 
           typename VertexDescriptor, typename FacetDescriptor, typename Config>
-struct halfedge_gen<halfedgeS<ContainerS,TraversalS>, HalfedgeDescriptor,
+struct halfedge_gen<halfedgeS<ContainerS,TraversalS>, HalfedgeDescriptor, 
                     VertexDescriptor, FacetDescriptor, Config> {
     // TYPES
     typedef halfedgeS<ContainerS,TraversalS>            halfedge_selector;
+    
 
     typedef stored_halfedge<HalfedgeDescriptor, VertexDescriptor, 
                                FacetDescriptor, Config> halfedge_type;
@@ -210,11 +211,12 @@ struct halfedge_gen<halfedgeS<ContainerS,TraversalS>, HalfedgeDescriptor,
     typedef typename ContainerGen::size_type            size_type;
         // The halfedge container size type for this halfedge generator.
     
+    typedef typename ContainerGen::iterator             halfedge_iterator;
+        // The halfedge iterator type for this halfedge generator.
+    
     typedef typename ContainerGen::descriptor           halfedge_descriptor;
         // The halfedge descriptor type for this halfedge generator.
 
-    typedef typename ContainerGen::iterator             halfedge_iterator;
-        // The halfedge iterator type for this halfedge generator.
 
     // DATA
     container_type m_container;
