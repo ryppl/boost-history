@@ -26,6 +26,21 @@
 [template super[x] '''<superscript>'''[x]'''</superscript>''']
 [template sub[x] '''<subscript>'''[x]'''</subscripts>''']
 
+[template figure[path caption]
+'''
+<mediaobject>
+    <imageobject>
+        <imagedata fileref="'''[path]'''" align="center"/>
+    </imageobject>
+    <caption>
+        <para style="text-align: center">'''[caption]'''</para>
+    </caption>
+</mediaobject>
+'''
+]
+
+
+
 [include sgi_concepts.qbk]
 [include boost_concepts.qbk]
 [include boost_reference.qbk]

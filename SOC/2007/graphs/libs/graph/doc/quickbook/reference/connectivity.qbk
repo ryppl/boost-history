@@ -10,6 +10,7 @@
     template <
         typename Graph,
         typename Components,
+        typename SizeType,
         typename ComponentMap,
         typename ColorMap,
         typename VertexIndexMap
@@ -18,6 +19,7 @@
     connectivity(
         const Graph& _graph,
         Components& _components,
+        SizeType _number = 0,
         ComponentMap _component_map = ``['nothing]``,
         ColorMap _color_map = ``['nothing]``,
         VertexIndexMap _vertex_index_map = get(vertex_index, _graph));
@@ -40,7 +42,10 @@ To help illustrate the structure and contents of the `_components` parameter,
 suppose, that after running [boost_connected_components], a graph is decomposed
 into two components.
 
-[$images/reference/connected_components_after.png]
+[figure
+    images/reference/connected_components_after.png
+    Figure 1. Components found after running [boost_connected_components]
+]
 
 Assume that we have stored each vertex into a vector, `v`, such that `v[i]`
 denotes the ['i[super th]] vertex in the graph above. The `_component_map` used
@@ -69,8 +74,12 @@ Calling the [boost_connectivity] function in this way will not provide access
 to a `_component_map` for the graph.
 
 If the _component_map /is/ given, then the algorithm assumes that connected
-components have already been assigned in the `_component_map`. The `_color_map`
-and `_vertex_index_map` parameters are effectively ignored in this case.
+components have already been assigned in the `_component_map`. In this case,
+`_color_map` and `_vertex_index_map` parameters are effectively ignored. Additionally
+the caller may pass the `_number` parameter to the function. If /not/ passed,
+the computation is required to determine the number of components in the graph
+by examining the `_component_map`. Passing `_number` as the return value of
+[boost_connected_components] allows this operation to be bypassed.
 
 [note
 This hasn't been tested very will for directed graphs. In fact, testing
@@ -104,6 +113,16 @@ call to `strong_connected_components`.
             a model of [SgiBackInsertionSequence]. In turn, the `value_type` of
             this [SgiBackInsertionSequence] must be the `vertex_descriptor` type
             of `_graph`.
+        ]
+    ]
+    [
+        [optional, in] [`SizeType _number`]
+        [
+            This is the number of components in the graph as returned by a
+            prior call to [boost_connected_components]. The SizeType must
+            be convertible to the `vertices_size_type` of `Graph`.
+
+            *Default* /not given/
         ]
     ]
     [
