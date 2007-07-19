@@ -59,6 +59,9 @@ struct halfedge_ds_gen {
         
         enum { halfedge_supports_facets= !meta_is_same<FacetS,noFacetS>::value}; 
             // facet config
+
+        typedef typename boost::ct_if<halfedge_has_opposite_member,
+              halfedge_ptr, std::size_t>::type halfedge_descriptor;
     };
 };
 
@@ -80,6 +83,9 @@ struct halfedge_ds_gen<HalfedgeS, noVertexS, noFacetS> {
         enum { is_target = false }; // has no meaning here 
         
         enum { halfedge_supports_facets = false };
+        
+        typedef typename boost::ct_if<halfedge_has_opposite_member,
+              halfedge_ptr, std::size_t>::type halfedge_descriptor;
     };
 };
 
@@ -102,6 +108,9 @@ struct halfedge_ds_gen<HalfedgeS, noVertexS, FacetS> {
         
         enum { halfedge_supports_facets= !meta_is_same<FacetS,noFacetS>::value}; 
             // facet config
+        
+        typedef typename boost::ct_if<halfedge_has_opposite_member,
+              halfedge_ptr, std::size_t>::type halfedge_descriptor;
     };
 };
 
@@ -125,6 +134,9 @@ struct halfedge_ds_gen<HalfedgeS, VertexS, noFacetS> {
         
         enum { halfedge_supports_facets= false }; 
             // facet config
+        
+        typedef typename boost::ct_if<halfedge_has_opposite_member,
+              halfedge_ptr, std::size_t>::type halfedge_descriptor;
     };
 };
 
