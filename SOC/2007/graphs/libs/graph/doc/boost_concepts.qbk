@@ -1,0 +1,41 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[/
+ / This file contains Boost-defined concepts
+ /]
+
+
+[template BoostMultiPassInputIterator[] [@http://www.boost.org/libs/utility/MultiPassInputIterator.html MultipPassInputIterator]]
+
+[template BoostReadablePropertyMap[] [@http://www.boost.org/libs/property_map/ReadablePropertyMap.html ReadablePropertyMap]]
+[template BoostWritablePropertyMap[] [@http://www.boost.org/libs/property_map/WritablePropertyMap.html WritablePropertyMap]]
+[template BoostReadWritePropertyMap[] [@http://www.boost.org/libs/property_map/ReadWritePropertyMap.html ReadWritePropertyMap]]
+
+[template BoostDescriptor[] [link boost_graph.concepts.graph_concepts.descriptor Descriptor]]
+[template BoostGraph[] [link boost_graph.concepts.graph_concepts.graph Graph]]
+[template BoostIncidenceGraph[] [link boost_graph.concepts.graph_concepts.incidence_graph IncidenceGraph]]
+[template BoostBidirectionalGraph[] [link boost_graph.concepts.graph_concepts.bidirectional_graph BidirectionalGraph]]
+[template BoostVertexListGraph[] [link boost_graph.concepts.graph_concepts.vertex_list_graph VertexListGraph]]
+[template BoostEdgeListGraph[] [link boost_graph.concepts.graph_concepts.edge_list_graph EdgeListGraph]]
+[template BoostAdjacencyGraph[] [link boost_graph.concepts.graph_concepts.adjacency_graph AdjacencyGraph]]
+[template BoostAdjacencyMatrix[] [link boost_graph.concepts.graph_concepts.adjacency_matrix AdjacencyMatrix]]
+[template BoostMutableGraph[] [link boost_graph.concepts.graph_concepts.mutable_graph MutableGraph]]
+[template BoostPropertyGraph[] [link boost_graph.concepts.graph_concepts.property_graph PropertyGraph]]
+[template BoostMutablePropertyGraph[] [link boost_graph.concepts.graph_concepts.mutable_property_graph MutablePropertyGraph]]
+
+[template BoostVisitor[] [link boost_graph.concepts.visitor_concepts.visitor Visitor]]
+[template BoostBFSVisitor[] [link boost_graph.concepts.visitor_concepts.breadth_first_search_visitor BreadthFirstSearchVisitor]]
+[template BoostDFSVisitor[] [link boost_graph.concepts.visitor_concepts.depth_first_search_visitor DepthFirstSearchVisitor]]
+[template BoostDijkstraVisitor[] [link boost_graph.concepts.visitor_concepts.dijksta_visitor DijkstraVisitor]]
+[template BoostBellmanfordVisitor[] [link boost_graph.concepts.visitor_concepts.bellmanford_visitor BellmanFordVisitor]]
+[template BoostAStarVisitor[] [link boost_graph.concepts.visitor_concepts.a_star_visitor A\*Visitor]]
+[template BoostEventVisitor[] [link boost_graph.concepts.visitor_concepts.event_visitor EventVisitor]]
+[template BoostEventVisitorList[] [link boost_graph.concepts.visitor_concepts.event_visitor_list EventVisitorList]]
+
+[/ A bunch of miscellaneus concepts]
+[template BoostColorValue[] [link boost_graph.concepts.miscellaneous_concepts.color_value ColorValue]]
