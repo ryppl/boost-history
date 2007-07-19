@@ -7,12 +7,12 @@ LD=g++
 TARGET=dbg_exc_mt
 
 PACKAGE_OBJECTS=container_selectors.o facet_selectors.o \
-	vertex_selectors.o halfedge_selectors.o
+	vertex_selectors.o halfedge_selectors.o halfedge_functions.o
 
 PACKAGE_LIBRARY=libhalfedge_ds.a
 
 TEST_DRIVERS=container_selectors.t facet_selectors.t \
-	vertex_selectors.t halfedge_selectors.t
+	vertex_selectors.t halfedge_selectors.t halfedge_functions.t
 
 .SUFFIXES:
 .SUFFIXES: ${TARGET}.o .o .cpp .hpp
@@ -34,8 +34,10 @@ facet_selectors.o:  container_selectors.hpp
 
 vertex_selectors.o: container_selectors.hpp
 
-halfedge_selectors.o: halfedge_functions.hpp \
-		container_selectors.hpp
+halfedge_selectors.o: container_selectors.hpp
+
+halfedge_functions.o: halfedge_functions.hpp \
+                      halfedge_selectors.hpp container_selectors.hpp
 
 ### BUILDING TEST DRIVERS AND DEPENDENCIES OF TEST DRIVER
 
@@ -51,7 +53,10 @@ facet_selectors.t.o: container_selectors.hpp
 
 vertex_selectors.t.o: container_selectors.hpp
 
-halfedge_selectors.t.o: halfedge_functions.hpp container_selectors.hpp
+halfedge_selectors.t.o: container_selectors.hpp
+
+halfedge_functions.t.o: halfedge_functions.hpp \
+                      halfedge_selectors.hpp container_selectors.hpp
 
 %.t.o: %.t.cpp %.hpp
 	${CXX}  ${CXXFLAGS} ${CXXINCLUDES} -c -o $*.t.o $<
@@ -63,6 +68,8 @@ facet_selectors.t: container_selectors.o
 vertex_selectors.t: container_selectors.o 
 
 halfedge_selectors.t: container_selectors.o 
+
+halfedge_functions.t.o: halfedge_selectors.o container_selectors.o
 
 ## UTILITIES
 

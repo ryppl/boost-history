@@ -14,7 +14,6 @@
 #include <boost/hdstl/halfedge_ds/halfedge_selectors.hpp>
 
 #include <boost/hdstl/halfedge_ds/facet_selectors.hpp>
-#include <boost/hdstl/halfedge_ds/halfedge_functions.hpp>
 #include <boost/hdstl/halfedge_ds/vertex_selectors.hpp>
 #include <boost/hdstl/halfedge_ds/meta_functions.hpp>
 #include <boost/pending/ct_if.hpp>
