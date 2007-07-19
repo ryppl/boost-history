@@ -17,8 +17,6 @@
 #include <boost/graph/connectivity.hpp>
 #include <boost/foreach.hpp>
 
-#define for_each BOOST_FOREACH
-
 using namespace std;
 using namespace boost;
 
@@ -60,20 +58,21 @@ void test_external()
     ComponentContainer comps(num_vertices(g));
     ComponentMap comps_map(make_property_map(comps));
 
-    connected_components(g, comps_map);
+    size_t n = connected_components(g, comps_map);
 
-    typedef std::vector<Vertex> VertexList;
-    typedef std::vector<VertexList> Component;
+    typedef vector<Vertex> VertexList;
+    typedef vector<VertexList> Component;
     Component components;
     connectivity(
         _graph = g,
         _components = components,
+        _number = n,
         _component_map = comps_map);
 
     size_t c = 0;
-    for_each(VertexList& vl, components) {
+    BOOST_FOREACH(VertexList& vl, components) {
         cout << "component " << c++ << ": ";
-        for_each(Vertex v, vl) {
+        BOOST_FOREACH(Vertex v, vl) {
             cout << get(vertex_index, g, v) << " ";
         }
         cout << endl;
@@ -92,15 +91,15 @@ void test_internal()
     Graph g;
     build_graph(g);
 
-    typedef std::vector<Vertex> VertexList;
-    typedef std::vector<VertexList> Component;
+    typedef vector<Vertex> VertexList;
+    typedef vector<VertexList> Component;
     Component components;
     connectivity(_graph = g, _components = components);
 
     size_t c = 0;
-    for_each(VertexList& vl, components) {
+    BOOST_FOREACH(VertexList& vl, components) {
         cout << "component " << c++ << ": ";
-        for_each(Vertex v, vl) {
+        BOOST_FOREACH(Vertex v, vl) {
             cout << get(vertex_index, g, v) << " ";
         }
         cout << endl;
