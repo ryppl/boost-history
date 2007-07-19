@@ -12,6 +12,7 @@
 // without errors, when assert is replaced by BOOST_CHECK.
 
 #include <boost/hdstl/halfedge_ds/container_selectors.hpp>
+#include <boost/hdstl/halfedge_ds/meta_functions.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -33,19 +34,31 @@ bool selector_requirements(ContainerS const&) {
 
 #if 0
 bool selector_requirements(boost::hdstl::hashS const&) {
+    BOOST_CHECK(( meta_is_same<container_gen<hashS>::selector,
+                               listS>::value ));
+    // TODO Other checks
     return true;
 }
 #endif
 
 bool selector_requirements(listS const&) {
+    BOOST_CHECK(( meta_is_same<container_gen<listS, int>::selector,
+                               listS>::value ));
+    // TODO Other checks
     return true;
 }
 
 bool selector_requirements(setS const&) {
+    BOOST_CHECK(( meta_is_same<container_gen<setS, int>::selector,
+                               setS>::value ));
+    // TODO Other checks
     return true;
 }
 
 bool selector_requirements(vecS const&) {
+    BOOST_CHECK(( meta_is_same<container_gen<vecS, int>::selector,
+                               vecS>::value ));
+    // TODO Other checks
     return true;
 }
 

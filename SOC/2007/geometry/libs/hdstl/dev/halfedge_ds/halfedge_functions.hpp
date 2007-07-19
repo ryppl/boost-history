@@ -19,47 +19,39 @@ namespace boost {
 namespace hdstl {
 
 // FREE FUNCTIONS
-template <typename HalfedgeS, 
-          typename VertexDescriptor, typename FacetDescriptor, typename Config>
-typename halfedge_gen<HalfedgeS,  VertexDescriptor, 
-                                   FacetDescriptor, Config>::halfedge_iterator
-halfedges_begin(halfedge_gen<HalfedgeS,  VertexDescriptor, 
-                                         FacetDescriptor, Config>& hds) {
-    typedef typename halfedge_gen<HalfedgeS, 
-          VertexDescriptor,FacetDescriptor, Config>::ContainerGen ContainerGen;
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+typename halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>::halfedge_iterator
+halfedges_begin(halfedge_gen<HalfedgeS,  VertexDescriptor, FacetDescriptor, Config>& hds)
+{
+    typedef typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>
+                ::ContainerGen ContainerGen;
     return ContainerGen::container_begin(hds.m_container);
 }
 
-template <typename HalfedgeS,  
-          typename VertexDescriptor, typename FacetDescriptor, typename Config>
-typename halfedge_gen<HalfedgeS, VertexDescriptor, 
-                                    FacetDescriptor, Config>::halfedge_iterator
-halfedges_end(halfedge_gen<HalfedgeS, VertexDescriptor, 
-                                         FacetDescriptor, Config>& hds) {
-    typedef typename halfedge_gen<HalfedgeS, 
-          VertexDescriptor,FacetDescriptor, Config>::ContainerGen ContainerGen;
+template <typename HalfedgeS,  typename VertexDescriptor, typename FacetDescriptor, typename Config>
+typename halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>::halfedge_iterator
+halfedges_end(halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+{
+    typedef typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>
+                ::ContainerGen ContainerGen;
     return ContainerGen::container_end(hds.m_container);
 }
 
-template <typename HalfedgeS, 
-          typename VertexDescriptor, typename FacetDescriptor, typename Config>
-typename halfedge_gen<HalfedgeS,  VertexDescriptor, 
-                                    FacetDescriptor, Config>::size_type
-num_halfedges(halfedge_gen<HalfedgeS,  VertexDescriptor, 
-                                         FacetDescriptor, Config>& hds) {
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+typename halfedge_gen<HalfedgeS,  VertexDescriptor, FacetDescriptor, Config>::size_type
+num_halfedges(halfedge_gen<HalfedgeS,  VertexDescriptor, FacetDescriptor, Config>& hds)
+{
     return hds.m_container.size();
 }
 
+// \cond
 template<typename HalfedgeS, typename HalfedgeDescriptor>
 struct opposite_function_helper {
     static
     HalfedgeDescriptor
     opposite(HalfedgeDescriptor h)
     {
-        // halfedges come in pairs, point to each other as
-        // opposite. If halfedges stored in a list, use the
-        // opposite pointer.
-        return h->m_opposite;
+        return static_cast<HalfedgeDescriptor>(h->m_opposite);
     }
 };
 
@@ -69,27 +61,27 @@ struct opposite_function_helper<halfedgeS<vecS,TraversalS>, HalfedgeDescriptor> 
     HalfedgeDescriptor
     opposite(HalfedgeDescriptor h)
     {
-        // halfedges come in pairs, point to each other as
-        // opposite. If halfedges stored in a vector:
         return h^1;
     }
 };
+// \endcond
 
-template <typename HalfedgeS,  
-          typename VertexDescriptor, typename FacetDescriptor, typename Config>
+template <typename HalfedgeS,  typename VertexDescriptor, typename FacetDescriptor,
+          typename Config>
 typename Config::halfedge_descriptor
-opposite(typename Config::halfedge_descriptor h, halfedge_gen<HalfedgeS, 
-                                VertexDescriptor, FacetDescriptor, Config>& hds)
+opposite(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
+         const halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>&)
 {
-    
     typedef typename halfedge_gen<HalfedgeS, 
-                                  VertexDescriptor,FacetDescriptor, Config>
-                                  ::halfedge_selector halfedge_selector;
+                                  VertexDescriptor,FacetDescriptor, Config
+                                 >::halfedge_selector halfedge_selector;
+    typedef typename halfedge_gen<HalfedgeS, 
+                                  VertexDescriptor,FacetDescriptor, Config
+                                 >::halfedge_descriptor halfedge_descriptor;
     return opposite_function_helper<halfedge_selector,
-                                    typename Config::halfedge_descriptor>
-                                    ::opposite(h);
+                                    halfedge_descriptor
+                                   >::opposite(h);
 }
-
 
 } // namespace hdstl
 } // namespace boost

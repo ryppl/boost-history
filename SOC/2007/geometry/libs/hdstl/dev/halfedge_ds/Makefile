@@ -1,6 +1,5 @@
 CXX=g++
-CXXFLAGS=-pedantic -W -Wall  -I.
-# CXXFLAGS=-pedantic -W -Wall -I${BOOST} -I.
+CXXFLAGS=-pedantic -W -Wall -I.
 
 LD=g++
 

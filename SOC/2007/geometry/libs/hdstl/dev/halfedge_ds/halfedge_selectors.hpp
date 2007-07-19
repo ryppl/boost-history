@@ -214,6 +214,9 @@ struct halfedge_gen<halfedgeS<ContainerS,TraversalS>,
     typedef typename ContainerGen::iterator             halfedge_iterator;
         // The halfedge iterator type for this halfedge generator.
     
+    typedef typename ContainerGen::descriptor           halfedge_descriptor;
+        // The halfedge descriptor type for this halfedge generator.
+    
     typedef Config                                      config;
 
     // DATA

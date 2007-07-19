@@ -197,6 +197,9 @@ struct container_gen<hashS, ValueType> {
     // container.
 
     // TYPES
+    typedef hashS selector;
+        // The container selector, here a 'hashS'.
+
     typedef std::tr1::hash_set<ValueType> type;
         // The container type, here a 'std::tr1::hash_set'.
     
@@ -295,6 +298,9 @@ struct container_gen<listS, ValueType> {
     // is instead a descriptor.
 
     // TYPES
+    typedef listS selector;
+        // The container selector, here a 'listS'.
+
     typedef std::list<ValueType> type;
         // The container type, here a 'std::list'.
     
@@ -334,6 +340,10 @@ struct container_gen<listS, ValueType> {
             return &(*base_type(*this));
         }
         // ACCESSORS
+        bool operator==(iterator rhs)
+        {
+            return base_type(*this) == base_type(rhs);
+        }
         value_type operator*() const
             // Return the descriptor of the element pointed to by this
             // iterator.
@@ -372,6 +382,9 @@ struct container_gen<setS, ValueType> {
     // container.
 
     // TYPES
+    typedef setS selector;
+        // The container selector, here a 'setS'.
+
     typedef std::set<ValueType> type;
         // The container type, here a 'std::set'.
 
@@ -411,6 +424,10 @@ struct container_gen<setS, ValueType> {
             return &(*base_type(*this));
         }
         // ACCESSORS
+        bool operator==(iterator rhs)
+        {
+            return base_type(*this) == base_type(rhs);
+        }
         value_type operator*() const
             // Return the descriptor of the element pointed to by this
             // iterator.
@@ -447,6 +464,9 @@ template <typename ValueType>
 struct container_gen<vecS, ValueType> {
 
     // TYPES
+    typedef vecS selector;
+        // The container selector, here a 'vecS'.
+
     typedef std::vector<ValueType> type;
         // The container type, here a 'std::vector'.
 
@@ -514,6 +534,10 @@ struct container_gen<vecS, ValueType> {
                                     base_type(*this) - m_container->begin());
         }
         // ACCESSORS
+        bool operator==(iterator rhs)
+        {
+            return base_type(*this) == base_type(rhs);
+        }
         reference operator*()  const
             // Return the descriptor of the element pointed to by this
             // iterator.
