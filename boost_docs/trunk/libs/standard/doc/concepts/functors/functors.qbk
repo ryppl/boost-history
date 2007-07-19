@@ -1,0 +1,24 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[include generator.qbk]
+[include unary_function.qbk]
+[include binary_function.qbk]
+[include adaptable_generator.qbk]
+[include adaptable_unary_function.qbk]
+[include adaptable_binary_function.qbk]
+
+[section Predicates]
+[include predicate.qbk]
+[include binary_predicate.qbk]
+[include adaptable_predicate.qbk]
+[include adaptable_binary_predicate.qbk]
+[include strict_weak_ordering.qbk]
+[endsect]
+
+[include monoid_operation.qbk]
+[include random_number_generator.qbk]

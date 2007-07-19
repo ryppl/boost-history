@@ -8,9 +8,9 @@
 Utility concepts include concepts that can be applied to almost
 any data type (both built-in and user-defined).
 
-[inlcude default_constructible.qbk]
+[include default_constructible.qbk]
 [include copy_constructible.qbk]
-[inlcude assignable.qbk]
+[include assignable.qbk]
 
 [include equality_comparable.qbk]
 [include less_than_comparable.qbk]

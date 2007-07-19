@@ -8,13 +8,27 @@
 [section Concepts]
 
 [section Utilities]
-[include utilities/utilities.qbk
+[include utilities/utilities.qbk]
 [endsect]
 
 [section Containers]
+[include containers/containers.qbk]
 [endsect]
 
 [section Iterators]
+[include iterators/iterators.qbk]
+[endsect]
+
+[section Functors]
+[include functors/functors.qbk]
+[endsect]
+
+[section Streams]
+[note
+Curiously, there is not concept documentation for streams - at least none that
+I've ever seen. It might be a nice  excercise to provide concept documents for
+stream types (e.g. InputStreamable and OutputStreamable).
+]
 [endsect]
 
 [endsect]
