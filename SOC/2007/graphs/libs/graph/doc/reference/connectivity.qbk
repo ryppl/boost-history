@@ -199,9 +199,4 @@ If the component map /is/ available...
 
     // write some code to that effect.
 
-[h5 Details]
-The signature of this function may change in the future to include a new parameter, `_number`,
-which indicates the number of components computed by [boost_connected_components]. This
-introduces a new calling "profile" that would bypass the computation of the number of components.
-
 [endsect]

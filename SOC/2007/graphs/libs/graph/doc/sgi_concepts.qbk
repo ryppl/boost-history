@@ -38,4 +38,5 @@
 [template SgiBidirectionalIterator[] [@http://www.sgi.com/tech/stl/BidirectionalIterator.html BidirectionalIterator]]
 [template SgiRandomAccessIterator[] [@http://www.sgi.com/tech/stl/RandomAccessIterator.html RandomAccessIterator]]
 
-[template SgPredicate[] [@http://www.sgi.com/tech/stl/Predicate.html Predicate]]
+[template SgiPredicate[] [@http://www.sgi.com/tech/stl/Predicate.html Predicate]]
+[template SgiMonoid[] [@http://www.sgi.com/tech/stl/Monoid.html Monoid]]

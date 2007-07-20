@@ -9,6 +9,7 @@
 
 // boost includes
 #include <boost/graph/named_parameters.hpp>
+#include <boost/graph/exterior_property.hpp>
 #include <boost/graph/properties.hpp>
 
 namespace boost
@@ -27,7 +28,6 @@ namespace boost
             return ret;
         }
     }
-
 
     // These measures operate on the first vertex given. This is to say that
     // closeness(g, v, dist) will return the closeness of the vertex v with
@@ -51,14 +51,13 @@ namespace boost
     // distance map or matrix while the other computes it on the fly by trying
     // to guess an algorithm to use.
 
-
     template <typename Graph, typename DistanceMap>
     inline typename property_traits<DistanceMap>::value_type
     geodesic_distance(const Graph& g,
                       typename graph_traits<Graph>::vertex_descriptor v,
                       DistanceMap dist)
     {
-        return dist[get(vertex_index, g, v)];
+        return dist[v];
     }
 
     template <typename Graph, typename DistanceMap>
@@ -101,11 +100,6 @@ namespace boost
     {
         return dummy(1) / double(detail::sum_distances(g, dist));
     }
-
-    // Can we abstract the computation of max on distances to max of
-    // something else that we can put into a distance map? For example,
-    // this is the max of geodesics... What if we wanted some other
-    // operator?
 
     // Note that the DistanceMap::value_type must be constructible
     // as 0 - basically indicating an acceptable default value.

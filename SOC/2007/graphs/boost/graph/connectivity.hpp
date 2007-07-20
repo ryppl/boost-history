@@ -139,14 +139,12 @@ namespace boost
             (graph, *)
             (out(components), *))
         (optional
-            // (number, std::size_t, 0)
+            (number, (std::size_t), 0)
             (component_map, *, parameter::void_())
             (out(color_map), *, parameter::void_())
             (vertex_index_map, *, get(vertex_index, graph)))
         )
     {
-        typename graph_traits<graph_type>::vertices_size_type number(0);
-
         // step 1, get the components (maybe), returning the number
         return detail::fetch_connected_components(graph,
                 components,

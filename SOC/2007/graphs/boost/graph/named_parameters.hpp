@@ -7,8 +7,16 @@
 #ifndef BOOST_GRAPH_NAMED_PARAMETERS_HPP
 #define BOOST_GRAPH_NAMED_PARAMETERS_HPP
 
-// TODO: There's a problem with Boost.Parameter library - it just
-// doesn't like > 5 parameters.
+#ifndef BOOST_GRAPH_REQUIRED_PARAMA_ARITY
+#  define BOOST_GRAPH_REQUIRED_PARAM_ARITY 10
+#endif
+
+#if defined(BOOST_PARAMETER_MAX_ARITY) && \
+    (BOOST_PARAMETER_MAX_ARIT < BOOST_GRAPH_REQUIRED_PARAM_ARITY)
+#  warning "BOOST_PARAMETER_MAX_ARITY is too small for Boost.Graph"
+#else
+#  define BOOST_PARAMETER_MAX_ARITY BOOST_GRAPH_REQUIRED_PARAM_ARITY
+#endif
 
 #include <boost/parameter.hpp>
 

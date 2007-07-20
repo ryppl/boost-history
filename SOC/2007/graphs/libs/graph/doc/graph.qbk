@@ -23,8 +23,8 @@
 ]
 
 [/ Templates /]
-[template super[x] '''<superscript>'''[x]'''</superscript>''']
-[template sub[x] '''<subscript>'''[x]'''</subscripts>''']
+[template super[x]'''<superscript>'''[x]'''</superscript>''']
+[template sub[x]'''<subscript>'''[x]'''</subscript>''']
 
 [template figure[path caption]
 '''
@@ -33,7 +33,7 @@
         <imagedata fileref="'''[path]'''" align="center"/>
     </imageobject>
     <caption>
-        <para style="text-align: center">'''[caption]'''</para>
+        <para>'''[caption]'''</para>
     </caption>
 </mediaobject>
 '''
