@@ -6,7 +6,24 @@
  /]
 
 [section Measures of Distances]
+This section contains references for a suite of functions related to the
+distance metrics on a graph.
 
+    template <typename Graph, typename DistanceMap>
+    typename property_traits<DistanceMap>::value_type
+    geodesic_distance(const Graph& g,
+                      typename graph_traits<Graph>::vertex_descriptor v,
+                      DistanceMap dist)
+
+    template <typename Graph, typename DistanceMap>
+    inline double
+    mean_geodesic_distance(const Graph& g, DistanceMap dist)
+
+    template <typename Graph, typename DistanceMap, typename T>
+    T
+    mean_geodesic_distance(const Graph& g,
+                           DistanceMap dist,
+                           const T& dummy)
 
 
 [endsect]

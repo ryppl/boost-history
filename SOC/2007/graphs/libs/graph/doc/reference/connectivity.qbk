@@ -44,7 +44,7 @@ into two components.
 
 [figure
     images/reference/connected_components_after.png
-    Figure 1. Components found after running [boost_connected_components]
+    [*Figure 1.] Components found after running [boost_connected_components]
 ]
 
 Assume that we have stored each vertex into a vector, `v`, such that `v[i]`
@@ -94,7 +94,7 @@ call to `strong_connected_components`.
 [table
     [[Type] [Parameter] [Description]]
     [
-        [required, in] [`Graph _graph`]
+        [required, in] [`const Graph& _graph`]
         [
             The graph object for which the distribution will be computed. If
             the `_distribution` or `_in_distribution` arguments are supplied
@@ -104,7 +104,7 @@ call to `strong_connected_components`.
         ]
     ]
     [
-        [required, out] [`Components _components`]
+        [required, out] [`Components& _components`]
         [
             The components parameter provides storage for the assignment of
             vertices to components. The `ComponentMap` parameter must be a
