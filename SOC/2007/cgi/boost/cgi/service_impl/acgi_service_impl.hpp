@@ -52,14 +52,6 @@ namespace cgi {
     void shutdown_service()
     {
     }
-
-    void construct(implementation_type& impl)
-    {
-    }
-
-    void destroy(implementation_type& impl)
-    {
-    }
   };
 
 } // namespace cgi

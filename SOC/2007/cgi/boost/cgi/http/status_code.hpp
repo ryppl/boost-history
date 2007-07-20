@@ -18,6 +18,11 @@ namespace cgi {
     */
    enum status_code
    {
+     /// Informational codes
+     continue_                      = 100, // note the trailing underscore
+     switching_protocols,
+     processing,
+
      /// Success codes
      ok                             = 200,
      created,
@@ -78,5 +83,5 @@ namespace cgi {
  } // namespace http
 } // namespace cgi
 
-#endif // CGI_HTTP_STATUS_CODE_INCLUDED_HPP__
+#endif // CGI_HTTP_STATUS_CODE_HPP_INCLUDED__
 
