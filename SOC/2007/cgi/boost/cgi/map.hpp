@@ -6,8 +6,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_HPP_INCLUDED__
-#define CGI_HPP_INCLUDED__
+#ifndef CGI_MAP_HPP_INCLUDED__
+#define CGI_MAP_HPP_INCLUDED__
 
 #include <map>
 #include <string>
@@ -18,4 +18,4 @@ namespace cgi {
 
 } // namespace cgi
 
-#endif // CGI_HPP_INCLUDED__
+#endif // CGI_MAP_HPP_INCLUDED__

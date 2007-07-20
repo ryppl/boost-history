@@ -12,5 +12,7 @@
 // #include all headers except for cgi/cgi.hpp, cgi/fcgi.hpp, cgi/scgi.hpp
 
 #include "cgi/basic_request.hpp"
+#include "cgi/request.hpp"
+#include "cgi/reply.hpp"
 
 #endif // CGI_HPP_INCLUDED__

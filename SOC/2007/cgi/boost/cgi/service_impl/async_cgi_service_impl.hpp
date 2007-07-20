@@ -1,6 +1,6 @@
 //           -- async_cgi_service_impl.hpp --
 //
-//           Copyright (c) Darren Garvey 2007.
+//            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -9,11 +9,14 @@
 #ifndef CGI_ASYNC_CGI_SERVICE_IMPL_HPP_INCLUDED__
 #define CGI_ASYNC_CGI_SERVICE_IMPL_HPP_INCLUDED__
 
+#include "../request_impl/async_cgi_request_impl.hpp"
+#include "cgi_service_impl.hpp"
+
 namespace cgi {
 
   class async_cgi_service_impl
     : public boost::asio::io_service::service
-    , public cgi_service_impl<async_cgi_request_impl>
+    , public cgi_service_impl_base<async_cgi_request_impl>
   {
   public:
     typedef tags::async_cgi                         protocol_type;

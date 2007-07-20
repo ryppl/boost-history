@@ -12,38 +12,72 @@
 #include <istream>
 #include <ostream>
 #include <boost/asio.hpp>
+
+#include "tags.hpp"
 #include "connection_base.hpp"
+//#include "connections/async_stdio_connection_impl.hpp"
 
 namespace cgi {
 
-  template< typename ConnectionType, typename ProtocolService>
-  class basic_connection
-  : connection_base
+  template<typename ConnectionType>
+  class basic_connection;
+
+/*
+    : public connection_base
   //, connection_wrapper<ConnectionType>
   {
   public:
-    typedef connection_impl<ConnectionType
-                           , ProtocolService::protocol_type>  impl_type;
-    typedef boost::shared_ptr<conection_base>                 pointer;
+  //  typedef ConnectionType  impl_type;
+  //  //typedef boost::shared_ptr<conection_base>                 pointer;
 
-    explicit basic_connection(protocol_service_type& ps)
-      : impl_(ps)
-    {
-    }
+  //  explicit basic_connection(protocol_service_type& ps)
+  //    : impl_(ps)
+  //  {
+  //  }
 
-    static pointer create()
-    {
-      return new basic_connection<protocol_service_type
-                                 , connection_type>(impl_.protocol_service());
-    }
+  //  static pointer create()
+  //  {
+  //    return new basic_connection<protocol_service_type
+  //                               , connection_type>(impl_.protocol_service());
+  //  }
 
-  private:
-    impl_type impl_;
+  //private:
+  //  impl_type impl_;
   };
 
+*/
 
-  typedef basic_connection<tags::tcp>      tcp_connection;
+  //  template<typename ProtocolService>
+  //class async_stdio_connection_impl;
+
+  //template<typename ProtocolService>
+  //class stdio_connection_impl;
+
+
+  //#include "connections/stdio_connection_impl.hpp"
+
+  //template<typename ProtocolService>
+  // class basic_connection<tags::stdio, ProtocolService>
+  //  : public stdio_connection_impl<ProtocolService>
+  //{
+  //};
+
+  //typedef basic_connection<tags::stdio, stdio_connection
+
+
+  //#include "connections/async_stdio_connection_impl.hpp"
+
+  //template<typename ProtocolService>
+  //class basic_connection<tags::async_stdio, ProtocolService>
+  //  : public async_stdio_connection_impl<ProtocolService>
+  //{
+  //};
+
+  //typedef basic_connection<tags::tcp>      tcp_connection;
   //typedef basic_connection<tags::pipe>     pipe_connection; // not implemented
+//#include "connections/stdio_connection.hpp"
+//#include "connections/async_stdio_connection.hpp"
+//#include "connections/tcp_connection.hpp"
 
 
 } // namespace cgi

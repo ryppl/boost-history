@@ -19,7 +19,7 @@ namespace cgi {
   public:
     typedef Protocol                              protocol_type;
     typedef ProtocolService                     io_service_type;
-    typedef boost::shared_ptr<connection_base>         conn_ptr;
+    typedef boost::shared_ptr<connection_type>         conn_ptr;
 
 
     gateway_service(io_service_type& ios)
@@ -27,53 +27,56 @@ namespace cgi {
     {
     }
 
-
-    boost::system::error_code&
-    accept_impl(conn_ptr conn, boost::system::error_code& ec)
+    void stop(impl_type& impl)
     {
-      boost::asio::acceptor(
-    }
 
-    boost::system::error_code&
-    accept(conn_ptr conn, boost::system::error_code& ec)
-    {
-      conn = create_connection();
 
-      if( accept_impl(conn, ec) )
-      {
-        io_service_.connections_.insert(conn);
-        return ec;
-      }
+    //boost::system::error_code&
+    //accept(impl_type& impl, conn_ptr conn, boost::system::error_code& ec)
+    //{
+    //  boost::asio::acceptor(
+    //}
 
-      // else change the current connection type held by the service, and try again
-      // (when implemented by asio & server front-ends)
-      // for now just set an error and return
-      ec = boost::system::system_error(666);
-      return ec;
-    }
+    //boost::system::error_code&
+    //accept(conn_ptr conn, boost::system::error_code& ec)
+    //{
+    //  conn = create_connection();
 
-    template<typename Handler>
-    class accept_handler
-    {
-    public:
-      accept_handler(Handler handler)
-        : handler_(handler)
-      {
-      }
+    //  if( accept_impl(conn, ec) )
+    //  {
+    //    io_service_.connections_.insert(conn);
+    //    return ec;
+    //  }
 
-      void operator()(const boost::system::error_code& ec)
-      {
-        handler_(ec);
-      }
+    //  // else change the current connection type held by the service, and try again
+    //  // (when implemented by asio & server front-ends)
+    //  // for now just set an error and return
+    //  ec = boost::system::system_error(666);
+    //  return ec;
+    //}
 
-    private:
-      Handler handler_;
-    };
+    //template<typename Handler>
+    //class accept_handler
+    //{
+    //public:
+    //  accept_handler(Handler handler)
+    //    : handler_(handler)
+    //  {
+    //  }
 
-    template<typename Handler>
-    void async_accept(Handler handler)
-    {
-    }    
+    //  void operator()(const boost::system::error_code& ec)
+    //  {
+    //    handler_(ec);
+    //  }
+
+    //private:
+    //  Handler handler_;
+    //};
+
+    //template<typename Handler>
+    //void async_accept(Handler handler)
+    //{
+    //}    
 
   private:
 

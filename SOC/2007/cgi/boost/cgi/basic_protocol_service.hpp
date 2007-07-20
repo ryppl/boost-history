@@ -10,10 +10,15 @@
 #define CGI_BASIC_PROTOCOL_SERVICE_HPP_INCLUDED__
 
 #include <set>
+#include <queue>
+#include <boost/shared_ptr.hpp>
 #include <boost/asio/io_service.hpp>
 
+#include "io_service_provider.hpp"
 #include "basic_gateway.hpp"
-#include "connection.hpp"
+//#include "basic_connection_fwd.hpp"
+#include "basic_acceptor_fwd.hpp"
+#include "basic_request_fwd.hpp"
 
 namespace cgi {
 
@@ -22,86 +27,88 @@ namespace cgi {
    * Holds the request queue and the connection queue.
    * It is also a wrapper around asio::io_service
    */
-  template<typename Protocol, typename TypeTraits = type_traits<Protocol> >
+  template<typename Protocol, int IoServiceCount, typename PoolingPolicy>
   class basic_protocol_service
+    //: public protocol_traits<Protocol> // do this!
   {
   public:
-    typedef basic_gateway<Protocol>   gateway_type;
-    typedef basic_acceptor<Protocol> acceptor_type;
-    typedef basic_request<Protocol>   request_type;
+    typedef Protocol                         protocol_type;
+    typedef io_service_provider<IoServiceCount, PoolingPolicy>       
+                                             ios_provider_type;
+    //typedef protocol_traits<Protocol>      traits;
+    //typedef typename traits::gateway_type  gateway_type;
+    typedef basic_gateway<Protocol>          gateway_type;
+    typedef basic_request<Protocol>          request_type;
+    typedef boost::shared_ptr<request_type>  request_ptr;
+    typedef basic_acceptor<Protocol>         acceptor_type;
 
 
-    basic_protocol_service()
-      : io_service_()
-      , mutex_()
-      , gateway_(this)
+    basic_protocol_service(int pool_size_hint = 0)
+      : ios_provider_(pool_size_hint)
+//    , mutex_()
+      , gateway_(*this)
+    {
+    }
+
+    basic_protocol_service(boost::asio::io_service& io_service)
+      : ios_provider_(io_service)
+//    , mutex_()
+      , gateway_(*this)
     {
     }
 
     ~basic_protocol_service()
     {
-      gateway_.stop_all();
+      gateway_.stop();
     }
 
     void run()
     {
-      io_service_.run();
+      ios_provider_.run();
     }
 
     void stop()
     {
-      gateway_.stop_all();
-      io_service_.stop();
+      gateway_.stop();
+      ios_provider_.stop();
     }
 
+    /// Return an available io_service from the IoServiceProvider
     boost::asio::io_service& io_service()
     {
-      return io_service_;
+      return ios_provider_.io_service();
     }
 
+    /// Post the handler through an available io_service
     template<typename Handler>
     void post(Handler handler)
     {
-      io_service_.post(handler);
+      ios_provider_.io_service().post(handler);
     }
 
+    /// Dispatch a handler through an available io_service
     template<typename Handler>
     void dispatch(Handler handler)
     {
-      io_service_.dispatch(handler);
+      ios_provider_.io_service().dispatch(handler);
     }
-
-  /*
-    void add_request(request_ptr new_request)
-    {
-      boost::thread::mutex::scoped_lock lk(mutex_);
-      requests_.push_back(new_request);
-    }
-
-    bool del_request(request_ptr request)
-    {
-      boost::thread::mutex::scoped_lock lk(mutex_);
-      if( !requests_.find(request) == requests_.end() )
-        return false;
-  **/
 
   private:
-    boost::asio::io_service io_service_;
-    boost::thread::mutex mutex_;
-    boost::thread::condition condition_;
+    ios_provider_type ios_provider_;
+//  boost::thread::mutex mutex_;
+//  boost::thread::condition condition_;
 
     /// A strand is used for guaranteeing handlers are dispatched sequentially
-    boost::asio::strand strand_;
+//  boost::asio::strand strand_;
 
-    std::set<request_type::pointer> request_set_;
-    std::queue<request_type::pointer> request_queue_;
-    //std::set<connection_ptr> connections_;
+    std::set<request_ptr> request_set_;
+    std::queue<request_ptr> request_queue_;
+
     gateway_type gateway_;
-    
-    friend class gateway_type;
-    friend class gateway_service<protocol_type>;
-    friend class acceptor_type;
-    friend class request_type;
+
+    friend class basic_gateway<protocol_type>;//gateway_type;
+    friend class basic_acceptor<protocol_type>;//class acceptor_type;
+    friend class basic_request<protocol_type>;//typename request_type;
   };
 
 } // namespace cgi

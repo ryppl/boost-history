@@ -1,6 +1,6 @@
 //               -- request_service.hpp --
 //
-//           Copyright (c) Darren Garvey 2007.
+//            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -8,6 +8,15 @@
 ////////////////////////////////////////////////////////////////
 #ifndef CGI_REQUEST_SERVICE_HPP_INCLUDED
 #define CGI_REQUEST_SERVICE_HPP_INCLUDED
+
+#include <boost/utility/enable_if.hpp>
+
+//#include "is_async.hpp"
+#include "io_service.hpp"
+#include "detail/protocol_traits.hpp"
+#include "basic_protocol_service_fwd.hpp"
+#include "detail/service_base.hpp"
+//#include "service_selector.hpp"
 
 namespace cgi {
 
@@ -21,37 +30,47 @@ namespace cgi {
    */
   template<typename Protocol>
   class request_service
-    : public boost::enable_if<is_async<request_traits<Protocol
-                                                     >::service_impl_type
-                                      >::value
-                             , detail::service_base<request_service>
-                             >::type
+  //: public service_selector<Protocol>
+    : public detail::service_base<request_service<Protocol> >
+    //boost::enable_if<is_async<protocol_traits<Protocol
+    //                                                 >::service_impl_type
+    //                                  >::value
+    //                         , detail::service_base<request_service>
+    //                         >::type
   {
     // The platform-specific implementation (only one for now)
-    typedef detail::request_traits<Protocol>::service_impl_type
+    typedef typename detail::protocol_traits<Protocol>::service_impl_type
       service_impl_type;
 
   public:
-    typedef service_impl_type::impl_type                  impl_type;
-  
+    typedef typename service_impl_type::impl_type     impl_type;
+
     typedef Protocol                                  protocol_type;
     typedef basic_protocol_service<Protocol>  protocol_service_type;
-    typedef basic_request<Protocol>                    request_type;
-    //typedef request_impl<Protocol>
-
 
     /// The unique service identifier
     //static boost::asio::io_service::id id;
+    //explicit request_service()
+    //{
+    //}
+
+    request_service(io_service& ios)
+      : detail::service_base<request_service<Protocol> >(ios)
+      //: boost::asio::io_service::service(ps.io_service())
+      , service_impl_(boost::asio::use_service<service_impl_type>(ios))
+    {
+    }
 
     request_service(protocol_service_type& ps)
-      : boost::asio::io_service::service(ps.io_service())
+      : detail::service_base<request_service<Protocol> >(ps.io_service())
+      //: boost::asio::io_service::service(ps.io_service())
       , service_impl_(boost::asio::use_service<service_impl_type>(ps.io_service()))
     {
     }
 
-    void create(impl_type& impl)
+    void construct(impl_type& impl)
     {
-      service_impl_.create(impl);
+      service_impl_.construct(impl);
     }
 
     void destroy(impl_type& impl)
@@ -71,9 +90,10 @@ namespace cgi {
 
     //void construct
 
-    boost::system::error_code& load(bool parse_stdin, boost::system::error_code& ec)
+    boost::system::error_code& load(impl_type& impl, bool parse_stdin
+                                   , boost::system::error_code& ec)
     {
-      return service_impl_.load(parse_stdin, ec);
+      return service_impl_.load(impl, parse_stdin, ec);
     }
 
 
@@ -84,12 +104,15 @@ namespace cgi {
       service_impl_.async_load(impl, parse_stdin, ec, handler);
     }
 
-    bool is_open(impl_type& impl);
+    bool is_open(impl_type& impl)
     {
       return service_impl_.is_open(impl);
     }
 
   private:
+    //typename boost::mpl::if_<typename is_async<protocol_type>::value
+    //                , boost::add_reference<service_impl_type>
+    //                , service_impl_type>::type
     service_impl_type& service_impl_;
   };
 

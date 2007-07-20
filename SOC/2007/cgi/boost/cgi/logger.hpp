@@ -1,6 +1,6 @@
 //                   -- logger.hpp --
 //
-//           Copyright (c) Darren Garvey 2007.
+//            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -8,6 +8,8 @@
 ////////////////////////////////////////////////////////////////
 #ifndef CGI_LOGGER_HPP_INCLUDED__
 #define CGI_LOGGER_HPP_INCLUDED__
+
+#include "request_ostream.hpp"
 
 namespace cgi {
 
@@ -19,12 +21,12 @@ namespace cgi {
    * error output rather than the standard output.
    */
   class logger
-    : public ostream
+    : public request_ostream
   {
   public:
     /// Default constructor
     explicit logger()
-      : ostream(tags::stderr)
+      : request_ostream(tags::stderr)
     {
     }
 
@@ -34,7 +36,7 @@ namespace cgi {
      * destruction.
      */
     logger(std::streambuf* buf)
-      : ostream(buf, tags::stderr)
+      : request_ostream(buf, tags::stderr)
     {
     }
 
@@ -49,7 +51,7 @@ namespace cgi {
      */
     template<typename CommonGatewayRequest>
     logger(CommonGatewayRequest& req)
-      : ostream(req, tags::stderr)
+      : request_ostream(req, tags::stderr)
     {
     }
 

@@ -1,6 +1,6 @@
 //              -- cgi_request_impl.hpp --
 //
-//           Copyright (c) Darren Garvey 2007.
+//            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
@@ -12,13 +12,23 @@
 #include <map>
 #include <string>
 #include <boost/noncopyable.hpp>
+#include <boost/shared_ptr.hpp>
 
-#include "http/status_code.hpp"
-#include
+#include "../http/status_code.hpp"
+#include "../connections/stdio.hpp"
+#include "../role_type.hpp"
+#include "../status_type.hpp"
+#include "../map.hpp"
+#include "cgi_request_impl_base.hpp"
 
 // Make this ProtocolService-independent
 
 namespace cgi {
+
+  // Forward declaration
+  //template<typename>
+  class cgi_service_impl;
+
 
   /// Implementation for a standard CGI request
   /**
@@ -27,10 +37,9 @@ namespace cgi {
    * restricted but if someone really wants to copy the data, then they can.
    */
   class cgi_request_impl
+    : public cgi_request_impl_base<cgi_request_impl, stdio_connection>
   {
   public:
-    typedef std::map<std::string, std::string>    map_type;
-
     /// Constructor
     /**
      * Since this request type is synchronous, there is no need for an
@@ -38,31 +47,24 @@ namespace cgi {
      */
     template<typename ProtocolService>
     cgi_request_impl(ProtocolService& pserv)
-      : stdin_read_(false)
-      , http_status_(http::status_code::ok)
-      , request_status_(request_status::unloaded)
+      : cgi_request_impl_base<cgi_request_impl, stdio_connection>(pserv)
     {
     }
 
-  private:
-    friend class cgi_service_impl;
+    cgi_request_impl()
+      : cgi_request_impl_base<cgi_request_impl, stdio_connection>()
+    {
+    }
 
   protected:
-    map_type get_vars_;
-    map_type post_vars_;
-    map_type cookie_vars_;
-
-    bool stdin_read_;
-
-    http::status_code http_status_;
-    request_status request_status_;
+    friend class cgi_service_impl;//<cgi_request_impl>;
   };
 
-  template<> inline const std::string&
-  cgi_request_impl::var<tags::ENV>(const std::string& name)
-  {
-    return ::getenv(name);
-  }
+  //template<> inline const std::string&
+  //cgi_request_impl::var<tags::ENV>(const std::string& name)
+  //{
+  //  return ::getenv(name.c_str());
+  //}
 
   /// Get a request map of all the environment meta-variables (slow)
   /**
@@ -82,14 +84,14 @@ namespace cgi {
   //template<> inline cgi_request_impl::map_type&
   //cgi_request_impl::var<tags::HTTP>() { return http_map_; }
 
-  template<> inline cgi_request_impl::map_type&
-  cgi_request_impl::var<tags::COOKIE>() { return cookie_map_; }
+  //template<> inline cgi_request_impl::map_type&
+  //cgi_request_impl::var<tags::COOKIE>() { return cookie_map_; }
 
-  template<> inline cgi_request_impl::map_type&
-  cgi_request_impl::var<tags::GET>() { return get_map_; }
+  //template<> inline cgi_request_impl::map_type&
+  //cgi_request_impl::var<tags::GET>() { return get_map_; }
 
-  template<> inline cgi_request_impl::map_type&
-  cgi_request_impl::var<tags::POST>() { return post_map_; }
+  //template<> inline cgi_request_impl::map_type&
+  //cgi_request_impl::var<tags::POST>() { return post_map_; }
 
 } // namespace cgi
 

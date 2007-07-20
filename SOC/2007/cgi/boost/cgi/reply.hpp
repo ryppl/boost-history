@@ -11,7 +11,7 @@
 
 #include <ostream>
 
-#include "detail/buffer_ops.hpp"
+#include "request_ostream.hpp"
 
 namespace cgi {
 
@@ -23,7 +23,7 @@ namespace cgi {
    * standard output rather than the error output.
    */
   class reply
-    : public ostream
+    : public request_ostream
   {
   public:
     /// Default constructor
@@ -37,7 +37,7 @@ namespace cgi {
      * destruction.
      */
     reply(std::streambuf* buf)
-      : ostream(buf)
+      : request_ostream(buf)
     {
     }
 
@@ -52,7 +52,7 @@ namespace cgi {
      */
     template<typename CommonGatewayRequest>
     reply(CommonGatewayRequest& req)
-      : ostream(req)
+      : request_ostream(req)
     {
     }
 

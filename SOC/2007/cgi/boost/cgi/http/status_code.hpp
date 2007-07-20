@@ -20,7 +20,7 @@ namespace cgi {
    {
      /// Success codes
      ok                             = 200,
-     created
+     created,
      accepted,
      non_authorative_information,
      no_content,

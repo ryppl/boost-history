@@ -1,4 +1,4 @@
-//                    -- ostream.hpp --
+//                -- request_ostream.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,8 +6,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_OSTREAM_HPP_INCLUDED__
-#define CGI_OSTREAM_HPP_INCLUDED__
+#ifndef CGI_REQUEST_OSTREAM_HPP_INCLUDED__
+#define CGI_REQUEST_OSTREAM_HPP_INCLUDED__
 
 /*********************************
 ISSUES:
@@ -31,10 +31,30 @@ that.
 *********************************/
 
 #include <ostream>
+//#include <streambuf>
+#include <boost/assert.hpp>
+#include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/system/error_code.hpp>
 
-#include "detail/take_buffer.hpp"
+#include "streambuf.hpp"
+#include "buffer.hpp"
+#include "write.hpp"
+#include "tags.hpp"
+#include "data_sink.hpp"
+#include "request_base.hpp"
+#include "http/status_code.hpp"
+//#include "detail/take_buffer.hpp"
 
 namespace cgi {
+
+  class request_ostream;
+
+ namespace detail {
+
+
+ } // namespace detail
+
 
   /// The ostream class: a stream interface for writing to requests
   /**
@@ -43,14 +63,17 @@ namespace cgi {
    *
    * This is a generalisation of the cgi::reply and cgi::logger classes.
    */
-  class ostream
+  class request_ostream
     // derive from std::ostream? (yes, basically)
   {
   public:
     /// Default constructor
-    explicit ostream(int destination = tags::stdout)
+    explicit request_ostream(http::status_code sc = http::ok)
       : request_(NULL)
-      , destination_(destination)
+      , buffer_(new cgi::streambuf())
+      , ostream_(buffer_.get())
+      , http_status_(sc)
+//    , destination_(destination)
     {
     }
 
@@ -59,10 +82,11 @@ namespace cgi {
      * Takes the buffer and uses it internally, does nothing with it on
      * destruction.
      */
-    ostream(std::streambuf* buf, int destination = tags::stdout)
-      : ostream_(buf)
-      , request_(NULL)
-      , destination_(destination)
+    request_ostream(cgi::streambuf* buf, http::status_code sc = http::ok)
+      : request_(NULL)
+      , ostream_(buf)
+      , http_status_(sc)
+//    , destination_(destination)
     {
     }
 
@@ -75,16 +99,18 @@ namespace cgi {
      * </strike>
      */
     template<typename CommonGatewayRequest>
-    ostream(CommonGatewayRequest& req, int destination = tags::stdout)
-      : ostream_(detail::take_buffer(req))
-      , request_(&req)
-      , destination_(destination)
+    request_ostream(CommonGatewayRequest& req, http::status_code sc = http::ok)
+      : request_(&req)
+      , buffer_(new cgi::streambuf())
+      , ostream_(buffer_.get()) //detail::take_buffer(req))
+      , http_status_(sc)
+//    , destination_(destination)
     {
     }
 
-    ~ostream()
+    ~request_ostream()
     {
-      if( request_ ) send();
+      if (request_) send();
     }
 
     void clear()
@@ -95,18 +121,20 @@ namespace cgi {
     // provide this too?
     std::size_t write(const char* str, std::size_t len)
     {
-      return ostream_.write(str, len);
+      ostream_.write(str, len);
+      return len;
     }
 
     std::size_t write(const std::string& str)
     {
-      return ostream_.write(str);
+      return write(str.c_str(), str.size());
     }
 
     template<typename MutableBufferSequence>
     std::size_t write(MutableBufferSequence& buf)
     {
-      return ostream_.write(buf.data(), buf.size());
+      ostream_.write(buf.data(), buf.size());
+      return buf.size();
     }
 
     /// Synchronously flush the data to the current request
@@ -128,7 +156,8 @@ namespace cgi {
     template<typename CommonGatewayRequest>
     void flush(CommonGatewayRequest& req)
     {
-      req.write(ostream_.rdbuf());
+      cgi::write(req, *ostream_.rdbuf());
+      // the above function will throw on an error
       clear();
     }
 
@@ -139,9 +168,9 @@ namespace cgi {
      */
     template<typename CommonGatewayRequest>
     boost::system::error_code& flush(CommonGatewayRequest& req
-                                   , boost::system::error_code& ec)
+                                    , boost::system::error_code& ec)
     {
-      if(!req.write(ostream_.rdbuf(), ec))
+      if(!cgi::write(req, *ostream_.rdbuf(), ec))
         clear();
       return ec;
     }
@@ -150,7 +179,7 @@ namespace cgi {
     class flush_handler
     {
     public:
-      flush_handler(ostream& os, Handler handler)
+      flush_handler(request_ostream& os, Handler handler)
         : ostream_(os)
         , handler_(handler)
       {
@@ -158,12 +187,12 @@ namespace cgi {
 
       void operator()(boost::system::error_code& ec)
       {
-        if( !ec )
+        if(!ec)
           ostream_.clear();
-        handler(ec);
+        handler_(ec);
       }
     private:
-      ostream& ostream_;
+      request_ostream& ostream_;
       Handler handler_;
     };
 
@@ -175,8 +204,8 @@ namespace cgi {
     template<typename CommonGatewayRequest, typename Handler>
     void async_flush(CommonGatewayRequest& req, Handler handler)
     {
-      req.async_write(ostream_.rdbuf()
-                     , flush_handler<Handler>(*this, handler
+      cgi::async_write(req, cgi::buffer(*ostream_.rdbuf())
+                       , cgi::request_ostream::flush_handler<Handler>(*this, handler
                                              , boost::arg<1>)));
     }
 
@@ -206,7 +235,7 @@ namespace cgi {
     boost::system::error_code& send(boost::system::error_code& ec)
     {
       BOOST_ASSERT(request_ != NULL);
-      if(!send(*request_, destination_, ec))
+      if(!send(*request_, ec))
         request_ = NULL;
       return ec;
     }
@@ -220,7 +249,7 @@ namespace cgi {
     template<typename CommonGatewayRequest>
     void send(CommonGatewayRequest& req)
     {
-      req.write(ostream_.rdbuf(), destination_);
+      cgi::write(req, *ostream_.rdbuf(),  data_sink::stdout());
       req.set_status(http_status_);
     }
 
@@ -233,8 +262,9 @@ namespace cgi {
     boost::system::error_code& send(CommonGatewayRequest& req
                                    , boost::system::error_code& ec)
     {
-      req.write(ostream_.rdbuf(), destination_, ec);
+      cgi::write(req, *ostream_.rdbuf(), ec, data_sink::stdout());
       req.set_status(http_status_);
+      return ec;
     }
 
     /// Asynchronously send the data through the supplied request
@@ -245,34 +275,54 @@ namespace cgi {
     void async_send(CommonGatewayRequest& req, Handler handler)
     {
       req.set_status(http_status_);
-      req.async_write(ostream_.rdbuf(), destination_, handler));
+      cgi::async_write(req, *ostream_.rdbuf(), handler, data_sink::stdout()));
     }
 
     /// Get the buffer associated with the stream
-    std::streambuf* rdbuf() const { return ostream_.rdbuf(); }
+    boost::shared_ptr<cgi::streambuf> rdbuf() const
+    {
+      return ostream_.rdbuf();
+    }
 
     void set_status(http::status_code& num) { http_status_ = num; }
-    http::status_code& get_status() const { return http_status_; }
+    http::status_code& get_status() const
+    {
+      return http_status_;
+    }
+
+    request_base* request() const
+    {
+      return request_;
+    }
+
+//    int destination() const
+//    {
+//      return destination_;
+//    }
 
   private:
-    http::status_code http_status_;
-    std::ostream ostream_;
-    int destination_;
-
     /// The request associated with the ostream; can be NULL
     request_base* request_;
 
-    friend template<typename T> ostream& operator<<(ostream&, const T&);
+    boost::shared_ptr<cgi::streambuf> buffer_;
+    std::ostream ostream_;
+//  std::type_info destination_;//data_sink destination_;
+    http::status_code http_status_;
+
+    template<typename T>
+    friend request_ostream& operator<<(request_ostream&, const T&);
   };
 
-    /// Operator<< overload for basic outputting ability
-    template<typename T>
-    ostream& operator<<(ostream& rep, const T& t)
-    {
-      ostream_<< t;
-      return rep;
-    }
+
+
+  /// Operator<< overload for basic outputting ability
+  template<typename T>
+  request_ostream& operator<<(request_ostream& os, const T& t)
+  {
+    os<< t;
+    return os;
+  }
 
 } // namespace cgi
 
-#endif // CGI_OSTREAM_HPP_INCLUDED__
+#endif // CGI_REQUEST_OSTREAM_HPP_INCLUDED__

@@ -1,6 +1,8 @@
 #ifndef CGI_REQUEST_BASE_HPP_INCLUDE_
 #define CGI_REQUEST_BASE_HPP_INCLUDE_
 
+//#include "role_type.hpp"
+
 namespace cgi {
 
   /// ABC that defines the basic interface for cgi::basic_cgi_request<>s
@@ -11,8 +13,6 @@ namespace cgi {
   class request_base
   {
   public:
-    virtual ~request() { }
-
     /// Notify the server that the request has been handled
     /**
      * Under normal circumstances {{ideally}}, this won't be called internally
@@ -25,10 +25,10 @@ namespace cgi {
      * denote success, anything else an error, however the number will
      * generally be ignored by the server.
      */
-    virtual void end( int return_code ) = 0;
+    //virtual void end( int return_code ) = 0;
 
     /// Returns the number of bytes available in the read buffer
-    virtual std::size_t available() = 0;
+    //virtual std::size_t available() = 0;
 
     /// Get the streambuf associated with the request
     /**
@@ -41,7 +41,7 @@ namespace cgi {
      *
      * {{should this return an asio::streambuf instead?}}
      */
-    virtual std::streambuf* rdbuf() = 0;
+    //virtual std::streambuf* rdbuf() = 0;
 
     /// Flush the output buffer now
     /**
@@ -52,7 +52,7 @@ namespace cgi {
      * @note If something goes awry after calling this, the user will
      * be left with half a reply, rather than a (cleaner) error page.
      */
-    virtual void flush() = 0;
+    //virtual void flush() = 0;
 
     /// Write a message to the error output
     /**
@@ -65,7 +65,7 @@ namespace cgi {
      * log file, although there is no guarantee that other platforms will
      * recognise it.
      */
-    virtual void log( const std::string& error_message ) = 0;
+    //virtual void log( const std::string& error_message ) = 0;
 
     /// Get the role of the current request
     /**
@@ -81,14 +81,20 @@ namespace cgi {
      * expected to 'filter' and then return to the server. This is poorly
      * supported in production servers {{AFAIK}}
      */
-    virtual role_type role() = 0;
+    //virtual role_type role() = 0;
 
     /* SyncReadStream function */
-    template<typename MutableBufferSequence>
-    virtual std::size_t read_some(MutableBufferSequence) = 0;
+    //template<typename MutableBufferSequence>
+    //virtual std::size_t read_some(MutableBufferSequence) = 0;
 
-    template<typename MutableBufferSequence>
-    virtual std::size_t read_some(MutableBufferSequence, error_code&) = 0;
+    //template<typename MutableBufferSequence>
+    //virtual std::size_t read_some(MutableBufferSequence, error_code&) = 0;
+
+  protected:
+    /// Prevent deletion through this type
+    ~request_base()
+    {
+    }
   };
 
 } // namespace cgi

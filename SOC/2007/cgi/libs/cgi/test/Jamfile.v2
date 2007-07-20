@@ -1,7 +1,21 @@
 
 import testing ;
 
-test-suite "cgi"
-	: # [ run test_1.cpp ]
-	;
+test-suite cgi
+  :
+    [ compile compile/stdio_connection.cpp       ]
+    [ compile compile/async_stdio_connection.cpp ]
+    [ compile compile/tcp_connection.cpp         ]
+    [ compile compile/cgi_service.cpp            ]
+#    [ compile compile/fcgi_service.cpp ]
+	[ compile compile/is_async_test.cpp          ]
+    [ compile compile/cgi_request.cpp            ]
+    [ compile compile/acgi_request.cpp           ]
+    [ compile compile/reply.cpp                  ]
+
+#   [ run run/stdio_connection.cpp ]
+  :
+    <include>$(BOOST_ROOT)
+    <include>"../../../"
+  ;
 

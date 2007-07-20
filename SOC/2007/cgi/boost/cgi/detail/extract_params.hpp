@@ -9,6 +9,12 @@
 #ifndef CGI_DETAIL_EXTRACT_PARAMS_HPP_INCLUDED__
 #define CGI_DETAIL_EXTRACT_PARAMS_HPP_INCLUDED__
 
+#include <string>
+#include <boost/tokenizer.hpp>
+#include <boost/system/error_code.hpp>
+
+#include "url_decode.hpp"
+
 namespace cgi {
  namespace detail {
 
@@ -19,15 +25,15 @@ namespace cgi {
                                             , boost::system::error_code& ec)
    {
      if( input.empty() )
-       return boost::system::error_code(34, boost::system::errno_ecat);
+       return ec = boost::system::error_code(34, boost::system::errno_ecat);
      
-	 typedef boost::tokenizer<Separator>    tokenizer;
+	 typedef typename boost::tokenizer<Separator>    tokenizer;
      
-     tokenizer toker(input, sep);
+     tokenizer toker(input, separator);
 
      std::string name, current_token;
 
-     for(tokenizer::iterator iter = toker.begin()
+     for(typename tokenizer::iterator iter = toker.begin()
         ; iter != toker.end()
         ; ++iter)
      {
@@ -42,7 +48,7 @@ namespace cgi {
        }else
        if( *iter == "&" )
        {
-         impl_.get_vars_[name] = current_token;
+         destination[name] = current_token;
          current_token.clear();
          name.clear();
        }else
@@ -51,7 +57,9 @@ namespace cgi {
        }
      }
      if( !name.empty() )
-       impl_.get_vars_[name] = current_token;
+       destination[name] = current_token;
+
+     return ec;
    }
 
  } // namespace detail
