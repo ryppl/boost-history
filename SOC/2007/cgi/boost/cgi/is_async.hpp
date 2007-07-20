@@ -17,7 +17,7 @@ namespace cgi {
 
   template<typename Protocol>
   struct is_async
-    : boost::mpl::bool_<true>
+    : boost::mpl::bool_<true>::type
   {
   };
 

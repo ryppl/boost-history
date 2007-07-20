@@ -1,4 +1,4 @@
-//             -- cgi_protocol_service.hpp --
+//                  -- status_type.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,13 +6,20 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_CGI_PROTOCOL_SERVICE_HPP_INCLUDED__
-#define CGI_CGI_PROTOCOL_SERVICE_HPP_INCLUDED__
+#ifndef CGI_STATUS_TYPE_HPP_INCLUDED__
+#define CGI_STATUS_TYPE_HPP_INCLUDED__
 
 namespace cgi {
 
-  typedef basic_protocol_service<tags::async_cgi> service;
+  enum status_type
+    { null
+    , unloaded
+    , loaded
+    , ok
+    , aborted
+    , ended
+    };
 
 } // namespace cgi
 
-#endif // CGI_CGI_PROTOCOL_SERVICE_HPP_INCLUDED__
+#endif // CGI_STATUS_TYPE_HPP_INCLUDED__
