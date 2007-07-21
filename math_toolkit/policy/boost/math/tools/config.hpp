@@ -5,6 +5,8 @@
 #include <boost/config.hpp>
 #include <algorithm>  // for min and max
 
+#include <boost/math/tools/user.hpp>
+
 #define BOOST_MATH_MAX_ITER 1000000
 
 #if defined(__CYGWIN__) || defined(__FreeBSD__)
@@ -105,5 +107,6 @@ inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d)
 #endif
 
 #endif // BOOST_MATH_TOOLS_CONFIG_HPP
+
 
 
