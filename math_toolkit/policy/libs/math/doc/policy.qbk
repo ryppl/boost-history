@@ -712,6 +712,108 @@ And for a quantile of a distribution to approximately 25-bit precision:
 
 [endsect]
 
+[section Changing the Policy Defaults]
+
+If you want to alter the defaults for any of 
+the policies then you can do so by defining various macros in
+boost/math/tools/user.hpp:
+
+[h5 BOOST_MATH_DOMAIN_ERROR_POLICY]
+
+Defines what happens when a domain error occurs, if not defined then
+defaults to `throw_on_error`, but can be set to any of the enumerated
+actions for error handing: `throw_on_error`, `errno_on_error`, 
+`ignore_error` or `user_error`.
+
+[h5 BOOST_MATH_POLE_ERROR_POLICY]
+
+Defines what happens when a pole error occurs, if not defined then
+defaults to `throw_on_error`, but can be set to any of the enumerated
+actions for error handing: `throw_on_error`, `errno_on_error`, 
+`ignore_error` or `user_error`.
+
+[h5 BOOST_MATH_OVERFLOW_ERROR_POLICY]
+
+Defines what happens when an overflow error occurs, if not defined then
+defaults to `throw_on_error`, but can be set to any of the enumerated
+actions for error handing: `throw_on_error`, `errno_on_error`, 
+`ignore_error` or `user_error`.
+
+
+[h5 BOOST_MATH_EVALUATION_ERROR_POLICY]
+
+Defines what happens when an internal evaluation error occurs, if not defined then
+defaults to `throw_on_error`, but can be set to any of the enumerated
+actions for error handing: `throw_on_error`, `errno_on_error`, 
+`ignore_error` or `user_error`.
+
+[h5 BOOST_MATH_UNDERFLOW_ERROR_POLICY]
+
+Defines what happens when an overflow error occurs, if not defined then
+defaults to `ignore_error`, but can be set to any of the enumerated
+actions for error handing: `throw_on_error`, `errno_on_error`, 
+`ignore_error` or `user_error`.
+
+[h5 BOOST_MATH_DENORM_ERROR_POLICY]
+
+Defines what happens when a denormalisation error occurs, if not defined then
+defaults to `ignore_error`, but can be set to any of the enumerated
+actions for error handing: `throw_on_error`, `errno_on_error`, 
+`ignore_error` or `user_error`.
+
+[h5 BOOST_MATH_DIGITS10_POLICY]
+
+Defines how many decimal digits to use in internal computations: 
+defaults to `0` - meaning use all available digits - but can be set
+to some other decimal value.  Since setting this is likely to have
+a substantial impact on accuracy, it's not generally recomended
+that you change this from the default.
+
+[h5 BOOST_MATH_PROMOTE_FLOAT_POLICY]
+
+Determines whether `float` types get promoted to `double`
+internally to ensure maximum precision in the result, defaults
+to `true`, but can be set to `false` to turn promotion of
+`float`'s off.
+
+[h5 BOOST_MATH_PROMOTE_DOUBLE_POLICY]
+
+Determines whether `double` types get promoted to `long double`
+internally to ensure maximum precision in the result, defaults
+to `true`, but can be set to `false` to turn promotion of
+`double`'s off.
+
+[h5 BOOST_MATH_DISCRETE_QUANTILE_POLICY]
+
+Determines how disrete quantiles return their results: either
+as an integer, or as a real value, can be set to one of the
+enumerated values: `real`, `integer_outside`, `integer_inside`,
+`integer_below`, `integer_above`, `integer_nearest`.  Defaults to
+`integer_outside`.
+
+[h5 BOOST_MATH_ASSERT_UNDEFINED_POLICY]
+
+Determines whether functions that are mathematically undefined
+for a specific distribution compile or raise a static (i.e. compile-time)
+assertion.  Defaults to `true`: meaning that any mathematically
+undefined function will not compile.  When set to `false` then the function
+will compile but return the result of a domain error: this can be useful
+for some generic code, that needs to work with all distributions and determine
+at runtime whether or not a particular property is well defined.
+
+[h5 Example]
+
+Suppose we want overflow errors to set errno and return an infinity,
+discrete quantiles to return a real-valued result (rather than round to
+integer), and for mathematically undefined functions to compile, but return
+a domain error. Then we could add the following to boost/math/tools/user.hpp:
+
+   #define BOOST_MATH_OVERFLOW_ERROR_POLICY errno_on_error
+   #define BOOST_MATH_DISCRETE_QUANTILE_POLICY real
+   #define BOOST_MATH_ASSERT_UNDEFINED_POLICY false
+
+[endsect]
+
 [endsect]
 
 [endsect]
