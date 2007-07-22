@@ -92,7 +92,7 @@ namespace boost { namespace detail {
 			data->_mp_size = size;
 		}
 		
-		template <typename Ch> void assign_str(const Ch* str, int base)
+		template <typename Ch> void _assign_str(const Ch* str, int base)
 		{
 			assert(base >= 2 && base <= 36);
 			
@@ -127,7 +127,7 @@ namespace boost { namespace detail {
 			while (*str == Ch('0')) ++str;
 			
 			// is there anything left?
-			if (!str)
+			if (!*str)
 			{
 				assign(0);
 				return;
@@ -162,12 +162,12 @@ namespace boost { namespace detail {
 
 		void assign(const char* str, int base)
 		{
-			assign_str(str, base);
+			_assign_str(str, base);
 		}
 		
 		void assign(const wchar_t* str, int base)
 		{
-			assign_str(str, base);
+			_assign_str(str, base);
 		}
 
 		void add(const bigint_gmp_implementation& lhs, const bigint_gmp_implementation& rhs)

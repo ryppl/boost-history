@@ -248,12 +248,12 @@ public:
 	// conversion to numeric types (including 64 bit)
 	template <typename T> bool can_convert_to() const
 	{
-		return impl.can_convert_to<T>();
+		return impl.template can_convert_to<T>();
 	}
 	
 	template <typename T> T to_number() const
 	{
-		return impl.to_number<T>();
+		return impl.template to_number<T>();
 	}
 
 	// - basic arithmetic operations (addition, subtraction, multiplication, division)
@@ -650,7 +650,6 @@ public:
 		else return lhs;
 	}
 };
-
 } // namespace boost
 
 // Do we have GMP?
@@ -666,8 +665,14 @@ typedef bigint_base<detail::bigint_gmp_implementation> bigint;
 
 #else
 
-// The default implementation should be here, but there's none yet
-#error "No default implementation for now"
+#include <boost/bigint/bigint_default.hpp>
+#include <boost/bigint/bigint_storage_vector.hpp>
+
+namespace boost {
+
+typedef bigint_base<detail::bigint_default_implementation<detail::bigint_storage_vector> > bigint;
+
+} // namespace boost
 
 #endif
 

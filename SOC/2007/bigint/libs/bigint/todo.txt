@@ -15,9 +15,9 @@ Feature name									Deadline		Status
 3. Correctness tests							7 June			In progress
 4. Documentation								21 June			In progress
 5. Performance tests							7 July			In progress
-4. Interface for storage						14 July			N/A
-5. Storage implementation						14 July			N/A
-6. Default implementation						30 July			N/A
+6. Interface for storage						14 July			In progress
+7. Storage implementation						14 July			In progress
+8. Default implementation						30 July			In progress
 
 Note that perhaps some features will be completed before the deadline and probably some features will not make the deadline,
 and instead be finished several days later. So the list is by no means static.
@@ -164,6 +164,84 @@ Status: implemented
 
 * Is it possible to test cases when bigint must cause illegal operations (division by zero, sqrt(negative number))?
 Status: investigated; there is no portable way
+
+4. Documentation
+
+- do we have to change the current behaviour for string conversions for bases outside [2, 36]?
+Status: needs investigating & implementing
+
+- provide accurate information for 'Performance' table
+
+5. Performance tests
+
+6. Interface for storage
+
+- refactor
+Status: needs implementing
+
+- do we need push_back?
+Status: needs investigation
+
+- perhaps move bool negative to storage?
+Status: needs investigation
+
+7. Storage implementation
+
+- implement all functionality for vector-based interface as set by interface requirements
+Status: needs implementing
+
+- implement stack based fixed capacity storage; add corresponding tests
+Status: needs implementing
+
+8. Default implementation
+
++ conversion from string with different bases (2-36, use 26 letters + 10 digits)
+Status: implemented
+
++ wide string support
+Status: implemented conversion to both strings and wide strings
+
++ proper 64-bit support for converting to bigint
+Status: implemented
+
++ proper converting to numbers (including 64-bit)
+Status: implemented
+
++ comparison operators
+Status: implemented
+
++ abs function
+Status: implemented
+
++ unary operators (+, -, ~, ++, --)
+Status: implemented
+
++ linear arithmetic operators (+, -)
+Status: implemented
+
++ bitwise operators (&, |, ^)
+Status: implemented
+
++ multiplication (*)
+Status: implemented
+
+- bitwise shifts (<<, >>)
+Status: needs implementing
+
+- division (/, %, div function)
+Status: needs implementing
+
+- sqrt function
+Status: needs implementing
+
+- pow function
+Status: needs implementing
+
+- make implementation parametrizable by config structure, make a default structure
+Status: needs implementing
+
+- add limb=unsigned char, limb=unsigned short tests
+Status: needs implementing
 
 -----------------------------------------------
 
