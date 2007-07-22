@@ -10,12 +10,22 @@
 #ifndef _SVG_TAG_HPP
 #define _SVG_TAG_HPP
 
+#if defined (BOOST_MSVC)
+#  pragma warning(push)
+#  pragma warning(disable: 4127) // "conditional expression is constant."
+#  pragma warning(disable: 4512) // "assignment operator could not be generated."
+#  pragma warning(disable: 4100) // "'boost_parameter_enabler_argument' : unreferenced formal parameter"
+#endif
+
+#include <boost/ptr_container/ptr_container.hpp>
+#include "../svg_style.hpp"
+
 #include <sstream>
 #include <string>
-#include <boost/ptr_container/ptr_container.hpp>
-#include <boost/noncopyable.hpp>
 
-#include "svg_style.hpp"
+#if defined (BOOST_MSVC)
+#  pragma warning(pop)
+#endif
 
 namespace boost {
 namespace svg {
@@ -35,17 +45,21 @@ class svg_element
 {
 protected:
     svg_style style_info;
+    std::string id_name;
 
 public:
-    virtual void write(std::ostream&) = 0;
+    virtual void write(std::ostream& rhs) = 0;
 
-    ~svg_element()
+    virtual ~svg_element()
     {
 
     }
 
-   svg_style& get_style_info(){ return style_info; }
-   const svg_style& get_style_info() const{ return style_info; }
+   svg_style& style(){ return style_info; }
+   const svg_style& style() const{ return style_info; }
+
+   void id(const std::string& _id) { id_name = _id; }
+   std::string id( ) { return std::string(id_name); }
 };
 
 // -----------------------------------------------------------------
@@ -129,93 +143,92 @@ enum text_style{left_align, right_align, center_align};
 class text_element: public svg_element
 {
 private:
-    double x, y;
-    int font_size;
-    std::string text;
-    text_style alignment;
+    double x_coord, y_coord;
+    int size;
+    std::string txt;
+    text_style align;
 
 public:
-    void set_alignment(text_style _a)
+    void alignment(text_style _a)
     {
-        alignment = _a;
+        align = _a;
     }
 
-    int get_font_size()
+    int font_size()
     {
-        return font_size;
+        return size;
     }
 
-    double set_x(double _x)
+    double x(double _x)
     {
-        x = _x;
+        x_coord = _x;
     }
 
-    double set_y(double _y)
+    double y(double _y)
     {
-        y = _y;
+        y_coord = _y;
     }
 
-    text_element(double _x, double _y, std::string _text)
-            :x(_x), y(_y), text(_text), alignment(left_align), font_size(12)
+    text_element(double _x, double _y, std::string _text, int _size = 12, 
+                 text_style _align = center_align)
+                 :x_coord(_x), y_coord(_y), txt(_text), size(_size), align(_align)
     {
         
     }
 
     void write(std::ostream& rhs)
     {
-        std::string align;
+        std::string output;
 
-        switch(alignment)
+        switch(align)
         {
         case left_align:
-            align = "start";
+            output = "start";
             break;
 
         case right_align:
-            align = "end";
+            output = "end";
             break;
 
         case center_align:
-            align = "middle";
+            output = "middle";
             break;
 
         default:
-            align = "";
+            output = "";
             break;
         }
 
-        rhs << "<text x=\"" << x << "\""
-            <<" y=\""<<y<<"\" ";
+        rhs << "<text x=\"" << x_coord << "\""
+            <<" y=\"" << y_coord << "\" ";
         
-        if(align != "")
+        if(output != "")
         {
-            rhs << "text-anchor=\""<<align<<"\" ";
+            rhs << "text-anchor=\"" << output << "\" ";
         }
 
-        rhs <<" font-family=\"verdana\"";
+        rhs << " font-family=\"verdana\"";
 
-        if(font_size == 0)
+        if(size == 0)
         {
-            rhs <<" font-size=\"12\">";
+            rhs << " font-size=\"12\">";
         }
 
         else
         {
-            rhs <<" font-size=\""<<font_size<<"\">";
+            rhs << " font-size=\"" << size << "\">";
         }
 
-        rhs << text
+        rhs << txt
             <<" </text>";
     }
 
-    void set_font_size(unsigned int _size)
-    {
-        font_size = _size;
-    }
+    void font_size(unsigned int _size){ size = _size; }
+    void text(const std::string& _txt) { txt = _txt; }
 
-    std::string get_text()
+    std::string text()
     {
-        return text;
+        return txt;
     }
 };
 
@@ -244,20 +257,314 @@ public:
 };
 
 
+struct path_point
+{
+    bool relative;
+    
+    virtual void write(std::ostream& rhs) = 0;
+
+    virtual ~path_point()
+    {
+
+    }
+
+    path_point(bool _rel): relative(_rel)
+    {
+
+    }
+};
+
+struct m_path: public path_point
+{
+    double x, y;
+    
+    void write(std::ostream& o_str)
+    {
+        if(relative)
+        {
+            o_str<<"m";
+        }
+
+        else
+        {
+            o_str<<"M";
+        }
+
+        o_str<<x<<" "<<y<<" ";
+    }
+
+    m_path(double _x, double _y, bool _rel = false):
+            x(_x), y(_y), path_point(_rel)
+    {   
+    }
+};
+
+struct z_path: public path_point
+{
+    void write(std::ostream& o_str)
+    {
+        o_str<<"Z ";
+    }
+
+    z_path():path_point(false){}
+};
+
+struct l_path: public path_point
+{
+    double x, y;
+    
+    void write(std::ostream& o_str)
+    {
+        if(relative)
+        {
+            o_str<<"l";
+        }
+
+        else
+        {
+            o_str<<"L";
+        }
+
+        o_str<<x<<" "<<y<<" ";
+    }
+
+    l_path(double _x, double _y, bool _rel = false):
+            x(_x), y(_y), path_point(_rel)
+    {   
+    }
+};
+
+struct h_path: public path_point
+{
+    double x;
+    
+    void write(std::ostream& o_str)
+    {
+        if(relative)
+        {
+            o_str<<"h";
+        }
+
+        else
+        {
+            o_str<<"H";
+        }
+
+        o_str<<x<<" ";
+    }
+
+    h_path(double _x, bool _rel = false):
+            x(_x), path_point(_rel)
+    {
+    }
+};
+
+struct v_path: public path_point
+{
+    double y;
+    
+    void write(std::ostream& o_str)
+    {
+        if(relative)
+        {
+            o_str<<"v";
+        }
+
+        else
+        {
+            o_str<<"V";
+        }
+
+        o_str<<y<<" ";
+    }
+
+    v_path(double _y, bool _rel = false):
+            y(_y), path_point(_rel)
+    {       
+    }
+};
+
+struct c_path: public path_point
+{
+    double x1, y1, x2, y2, x, y;
+    
+    void write(std::ostream& o_str)
+    {
+        if(relative)
+        {
+            o_str<<"c";
+        }
+
+        else
+        {
+            o_str<<"C";
+        }
+
+        o_str<<x1<<" "<<y1<<" "
+             <<x2<<" "<<y2<<" "
+             <<x<<" "<<y<<" ";
+    }
+
+    c_path(double _x1, double _y1, double _x2, double _y2, 
+           double _x, double _y, bool _rel = false):
+           x1(_x1), y1(_y1), x2(_x2), y2(_y2), x(_x), y(_y), path_point(_rel)
+    {
+        
+    }
+};
+
+struct q_path: public path_point
+{
+    double x1, y1, x, y;
+    
+    void write(std::ostream& o_str)
+    {
+        if(relative)
+        {
+            o_str<<"q";
+        }
+
+        else
+        {
+            o_str<<"Q";
+        }
+
+        o_str<<x1<<" "<<y1<<" "
+             <<x<<" "<<y<<" ";
+    }
+
+    q_path(double _x1, double _y1,
+           double _x, double _y, bool _rel = false):
+           x1(_x1), y1(_y1), x(_x), y(_y), path_point(_rel)
+    {
+        
+    }
+};
+
+class path_element: public svg_element
+{
+private:
+    ptr_vector<path_point> path;
+public:
+    
+    path_element(const path_element& rhs)//:path(rhs.path.release())
+    {
+        path = (const_cast<path_element&>(rhs)).path.release();
+    }
+
+    path_element() { }
+
+    path_element& m(double x, double y)
+    {
+        path.push_back(new m_path(x, y, true));
+        return *this;
+    }
+
+    path_element& M(double x, double y)
+    {
+        path.push_back(new m_path(x, y, false));
+        return *this;
+    }
+
+    path_element& z()
+    {
+        path.push_back(new z_path());
+        return *this;
+    }
+
+    path_element& l(double x, double y)
+    {
+        path.push_back(new l_path(x, y, true));
+        return *this;
+    }
+
+    path_element& L(double x, double y)
+    {
+        path.push_back(new l_path(x, y, false));
+        return *this;
+    }
+
+    path_element& h(double x)
+    {
+        path.push_back(new h_path(x, true));
+        return *this;
+    }
+
+    path_element& H(double x)
+    {
+        path.push_back(new h_path(x, false));
+        return *this;
+    }
+
+    path_element& v(double y)
+    {
+        path.push_back(new v_path(y, true));
+        return *this;
+    }
+
+    path_element& V(double y)
+    {
+        path.push_back(new v_path(y, false));
+        return *this;
+    }
+
+    path_element& c(double x1, double y1, double x2, double y2, double x, double y)
+    {
+        path.push_back(new c_path(x1, y1, x2, y2, x, y, true));
+        return *this;
+    }
+
+    path_element& C(double x1, double y1, double x2, double y2, double x, double y)
+    {
+        path.push_back(new c_path(x1, y1, x2, y2, x, y, false));
+        return *this;
+    }
+
+    path_element& q(double x1, double y1, double x, double y)
+    {
+        path.push_back(new q_path(x1, y1, x, y, true));
+        return *this;
+    }
+    
+    path_element& Q(double x1, double y1, double x, double y)
+    {
+        path.push_back(new q_path(x1, y1, x, y, false));
+        return *this;
+    }
+
+    void write(std::ostream& o_str)
+    {
+        o_str<<"<path d=\"";
+           
+        for(ptr_vector<path_point>::iterator i = path.begin();
+            i!=path.end();
+            ++i)
+        {
+            (*i).write(o_str);
+        }
+        o_str<<"\" ";
+        
+        style_info.write(o_str);
+
+        o_str<<"/>";
+    }
+};
+
+
 // -----------------------------------------------------------------
 // The node element of our document tree
 // -----------------------------------------------------------------
 class g_element: public svg_element
 {
 private: 
-    boost::ptr_vector<svg_element> children;
+    ptr_vector<svg_element> children;
     std::string clip_name;
 
-    bool use_clip;
+    bool clip_on;
     
 public:
 
-    g_element():use_clip(false)
+    g_element():clip_on(false)
     {
 
     }
@@ -312,14 +619,14 @@ public:
         children.clear();
     }
 
-    void set_use_clip(bool _use)
+    void use_clip(bool _use)
     {
-        use_clip = _use;
+        clip_on = _use;
     }
      
-    void set_clip(const std::string& _name)
+    void clip(const std::string& _name)
     {
-        use_clip = true;
+        clip_on = true;
         clip_name = _name;
     }
 
@@ -352,6 +659,12 @@ public:
         children.push_back(new line_element(x1, y1, x2, y2));
 
         return *this;
+    }
+
+    path_element& path()
+    {
+        children.push_back(new path_element());
+        return *(static_cast<path_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 };
 

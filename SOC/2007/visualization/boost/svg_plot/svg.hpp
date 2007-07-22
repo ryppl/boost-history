@@ -15,7 +15,7 @@
 #include <exception>
 
 #include "detail/svg_tag.hpp"
-#include "detail/svg_style.hpp"
+#include "svg_style.hpp"
 
 namespace boost {
 namespace svg {
@@ -144,12 +144,18 @@ public:
 
         return *this;
     }
+    
+    path_element& path()
+    {
+        document.push_back(new path_element());
+        return *(static_cast<path_element*>(&(document[(unsigned int)(document.size()-1)])));
+    }
 
     svg& clip_path(const rect_element& _rect, g_element& _g,
                         const std::string& _id)
     {
         document.push_back(new clip_path_element(_id,_rect));
-        _g.set_clip(_id);
+        _g.clip(_id);
 
         return *this;
     }

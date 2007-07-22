@@ -1,14 +1,41 @@
 // svg_1d_plot.hpp
 
 // Copyright (C) Jacob Voytko 2007
+// Copyright Paul A. Bristow 2007
+// Added disable warning 4180 in Boost.Parameter.
 //
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
 
-// ----------------------------------------------------------------- 
+// -----------------------------------------------------------------
 
 #ifndef _BOOST_SVG_SVG_1D_PLOT_HPP
 #define _BOOST_SVG_SVG_1D_PLOT_HPP
+
+#define BOOST_PARAMETER_MAX_ARITY 11
+
+#include <boost/bind.hpp>
+
+#if defined (BOOST_MSVC)
+#  pragma warning (push)
+#  pragma warning (disable: 4512) // "assignment operator could not be generated."
+#  pragma warning (disable: 4180) // qualifier applied to function type has no meaning; ignored
+#endif
+
+// See also pbristow trac ticket #1097 complaining about this ;-)
+// trailing const qualifiers are said to be meaningless.
+
+#include <boost/parameter/preprocessor.hpp>
+#include <boost/parameter/name.hpp>
+#include <boost/iterator/transform_iterator.hpp>
+
+#include "svg.hpp"
+#include "svg_style.hpp"
+#include "detail/axis_plot_frame.hpp"
+
+#if defined (BOOST_MSVC)
+#  pragma warning(pop)
+#endif
 
 #include <vector>
 #include <ostream>
@@ -17,19 +44,40 @@
 #include <string>
 #include <exception>
 
-#define BOOST_PARAMETER_MAX_ARITY 10
-
-#include <boost/parameter/preprocessor.hpp>
-#include <boost/parameter/name.hpp>
-#include <boost/iterator/transform_iterator.hpp>
-#include <boost/bind.hpp>
-
-#include "svg.hpp"
-#include "detail/svg_style.hpp"
-#include "detail/axis_plot_frame.hpp"
 
 namespace boost {
 namespace svg {
+
+
+// -----------------------------------------------------------------
+// Parameter names for plot() function
+// -----------------------------------------------------------------
+
+    
+#if defined (BOOST_MSVC)
+#  pragma warning(push)
+#  pragma warning (disable: 4512) // "assignment operator could not be generated."
+#  pragma warning (disable: 4180) // qualifier applied to function type has no meaning; ignored
+#endif
+
+
+#ifndef BOOST_SVG_BOOST_PARAMETER_NAMES
+#define BOOST_SVG_BOOST_PARAMETER_NAMES
+
+BOOST_PARAMETER_NAME(my_plot)
+BOOST_PARAMETER_NAME(container)
+BOOST_PARAMETER_NAME(title)
+BOOST_PARAMETER_NAME(stroke_color)
+BOOST_PARAMETER_NAME(fill_color)
+BOOST_PARAMETER_NAME(point_style)
+BOOST_PARAMETER_NAME(size)
+BOOST_PARAMETER_NAME(x_functor)
+
+#endif
+
+#if defined (BOOST_MSVC)
+#  pragma warning(pop)
+#endif
 
 // -----------------------------------------------------------------
 // This functor allows any data convertible to doubles to be plotted
@@ -57,56 +105,58 @@ struct svg_plot_series
     std::vector<double> series;
     std::string title;
     plot_point_style point_style;
-
-    svg_plot_series(std::vector<double> _ctr, const std::string& _title,
+    
+    template <class T>
+    svg_plot_series(T _begin, T _end, const std::string& _title,
                     const plot_point_style& _style):
-                    series(_ctr), title(_title), point_style(_style)
+                    series(_begin, _end), title(_title), point_style(_style)
     {
     }
 };
 
-class svg_1d_plot: public axis_plot_frame<svg_1d_plot>
+class svg_1d_plot: public detail::axis_plot_frame<svg_1d_plot>
 {
 protected:
     // stored so as to avoid rewriting style information constantly
     svg image;
 
+    text_element title_info;
+    text_element x_label_info;
+
     // border information for the plot window. Initially will be set 
     // to the width and height of the graph
-    int plot_window_x1, plot_window_y1,
-        plot_window_x2, plot_window_y2;
+    int plot_x1, plot_y1,
+        plot_x2, plot_y2;
 
                  // axis information
-    unsigned int x_major_tick_length,  x_major_tick_width,
-                 x_minor_tick_length,  x_minor_tick_width,
-                 x_label_font_size,    x_num_minor_ticks,
+    unsigned int x_major_length,  x_major_width,
+                 x_minor_length,  x_minor_width, x_num_minor,
 
                  // misc information
-                 legend_title_font_size, title_font_size; 
+                 legend_title_size; 
     
-    // used for text displayed on the graph
-    std::string  x_label, title;
-
     // double axis information. y_axis stored as one point because this 
     // is a 1D graph
     double       x_min,  x_max;
     double       x_axis;
     
-    double       x_major_tick;
+    double       x_major;
 
     // Yes/no questions
-    bool x_major_labels_on;
-    bool x_major_grid_on;
-    bool x_minor_grid_on;
-    bool x_label_on;
+    bool use_x_major_labels;
+    bool use_x_major_grid;
+    bool use_x_minor_grid;
+    bool use_x_label;
 
-    bool title_on;
-    bool legend_on;
-    bool axis_on;
-    bool plot_window_on;
+    bool use_title;
+    bool use_legend;
+    bool use_plot_window;
+    bool use_x_external_style;
+    bool show_x_axis_lines;
+    bool show_y_axis_lines;
 
 private:
-    friend class axis_plot_frame<svg_1d_plot>;
+    friend class detail::axis_plot_frame<svg_1d_plot>;
 
     // where we will be storing the data points for transformation
     std::vector<svg_plot_series> series;
@@ -117,117 +167,184 @@ private:
     
     void _calculate_transform()
     {
-        x_scale = (plot_window_x2-plot_window_x1)/(x_max-x_min);
-        x_shift = plot_window_x1 - (x_min *(plot_window_x2-plot_window_x1)/
+        x_scale = (plot_x2-plot_x1)/(x_max-x_min);
+        x_shift = plot_x1 - (x_min *(plot_x2-plot_x1)/
                                    (x_max-x_min));
 
         y_scale = 1.;
-        y_shift = plot_window_y1 - (plot_window_y1-plot_window_y2)/2.;
+        y_shift = plot_y1 - (plot_y1-plot_y2)/2.;
     }
 
-void _draw_axis()
-{
-    double x(0.), y1(0.), y2(image.get_y_size());
-
-    _transform_x(x);
-    
-    y1 = 0.;
-
-    //draw origin. Make sure it is in the window
-    if(x > plot_window_x1 && x < plot_window_x2)
+    void _draw_axis()
     {
-        if(!plot_window_on)
-        {
-            if(title_on)
-            {
-                y1 += title_font_size * 1.5;
-            }
-            if(x_label_on)
-            {
-                y2 -= x_label_font_size * 1.5;
-            }
-        }
+        double x(0.), y1(0.), y2(image.get_y_size());
 
-        else
-        {
-            y1 = plot_window_y1;
-            y2 = plot_window_y2;
-        }
+        _transform_x(x);
+        
+        y1 = 0.;
 
-        image.get_g_element(PLOT_X_AXIS).line(x, y1, x, y2);
+        //draw origin. Make sure it is in the window
+        if(x > plot_x1 && x < plot_x2 && show_y_axis_lines)
+        {
+            if(!use_plot_window)
+            {
+                if(use_title)
+                {
+                    y1 += title_info.font_size() * 1.5;
+                }
+                if(use_x_label)
+                {
+                    y2 -= x_label_info.font_size() * 1.5;
+                }
+            }
+
+            else
+            {
+                y1 = plot_y1;
+                y2 = plot_y2;
+            }
+
+            image.get_g_element(detail::PLOT_X_AXIS).line(x, y1, x, y2);
+        }
+        _draw_x_axis();
     }
-    _draw_x_axis();
-}
+
     void _calculate_plot_window()
     {
-        x_axis = (plot_window_y2 + plot_window_y1)/2.;
+        x_axis = (plot_y2 + plot_y1)/2.;
 
-        plot_window_x1 = plot_window_y1 = 0;
-        plot_window_x2 = image.get_x_size();
-        plot_window_y2 = image.get_y_size();
+        plot_x1 = plot_y1 = 0;
+        plot_x2 = image.get_x_size();
+        plot_y2 = image.get_y_size();
 
-        if(plot_window_on)
+        if(use_plot_window)
         {
-            plot_window_x1+=5;
-            plot_window_x2-=5;
-            plot_window_y1+=5;
-            plot_window_y2-=5;
+            plot_x1+=5;
+            plot_x2-=5;
+            plot_y1+=5;
+            plot_y2-=5;
 
-            if(legend_on)
+            if(use_legend)
             {
-                plot_window_x2 -= 155;
+                plot_x2 -= 155;
             }
 
-            if(x_label_on)
+            if(use_x_label)
             {
-                plot_window_y2 -= 20;
+                plot_y2 -= 20;
             }
 
             //for the title. Will take into account font size soon
-            plot_window_y1 +=40;
+            plot_y1 +=40;
 
-            image.get_g_element(PLOT_PLOT_BACKGROUND).push_back(
-                    new rect_element(plot_window_x1, plot_window_y1, 
-                            (plot_window_x2-plot_window_x1), plot_window_y2-plot_window_y1));
+            image.get_g_element(detail::PLOT_PLOT_BACKGROUND).push_back(
+                    new rect_element(plot_x1, plot_y1, 
+                            (plot_x2-plot_x1), plot_y2-plot_y1));
+        }
+    }
+
+    void _update_image()
+    {
+
+        // removes all elements that will show up in a subsequent draw
+        _clear_all();
+
+        // draw background
+        image.get_g_element(detail::PLOT_BACKGROUND).push_back(
+                     new rect_element(0, 0, image.get_x_size(), 
+                     image.get_y_size()));
+
+        _draw_title();
+        _calculate_plot_window();
+        _calculate_transform();
+
+        if(x_axis)
+        {
+            _draw_axis();
+        }
+
+        if(use_legend)
+        {
+            _draw_legend();
+        }
+
+        if(use_x_label)
+        {
+            _draw_x_label();
+        }
+
+        double x(0), y(0);
+
+        _transform_y(y);
+            
+        //draw points
+        for(unsigned int i=0; i<series.size(); ++i)
+        {
+            g_element& g_ptr = image.get_g_element(detail::PLOT_PLOT_POINTS).add_g_element();
+
+            g_ptr.style().fill_color(series[i].point_style.fill_color);
+            g_ptr.style().stroke_color(series[i].point_style.stroke_color);
+
+            for(unsigned int j=0; j<series[i].series.size(); ++j)
+            {
+                x = series[i].series[j];
+                _transform_x(x);
+
+                if(x > plot_x1 
+                && x < plot_x2
+                && y > plot_y1 
+                && y < plot_y2)
+                {
+                    _draw_plot_point(x, y, g_ptr, series[i].point_style);
+                }
+            }
         }
     }
 
 public:
 
 // see documentation for default settings rationale
-svg_1d_plot(): x_label("X Axis"), title("Plot of data"), x_min(-10), x_max(10), 
-                      legend_on(false), title_on(true),
-                      axis_on(true), plot_window_on(false), x_label_on(false),
-                      x_major_grid_on(false), x_minor_grid_on(false),
-                      x_major_tick(3), x_minor_tick_length(10), 
-                      x_major_tick_length(20), x_num_minor_ticks(2), 
-                      legend_title_font_size(12), x_label_font_size(12),
-                      title_font_size(30), x_scale(1.), x_shift(0),
+svg_1d_plot():        title_info(0, 0, "Plot of data", 30),
+                      x_label_info(0, 0, "X Axis", 12),
+                      x_min(-10), x_max(10), 
+                      use_legend(false), use_title(true),
+                      use_plot_window(false), use_x_label(false),
+                      use_x_major_grid(false), use_x_minor_grid(false),
+                      use_x_external_style(false), show_x_axis_lines(true),
+                      show_y_axis_lines(true),
+                      x_major(3), x_minor_length(10), 
+                      x_major_length(20), x_num_minor(2), 
+                      legend_title_size(12),
+                      x_scale(1.), x_shift(0),
                       y_scale(1.), y_shift(0)
 {
-    set_image_size(500, 350);
+    image_size(500, 350);
 
     //build the document tree.. add children of the root node
-    for(int i=0; i<SVG_PLOT_DOC_CHILDREN; ++i)
+    for(int i=0; i<detail::SVG_PLOT_DOC_CHILDREN; ++i)
     {
         image.add_g_element();
     }
 
     // set color defaults
-    image.get_g_element(PLOT_BACKGROUND)
-        .get_style_info().set_fill_color(white);
+    image.get_g_element(detail::PLOT_BACKGROUND)
+        .style().fill_color(white);
 
-    image.get_g_element(PLOT_PLOT_BACKGROUND)
-        .get_style_info().set_fill_color(white);
+    image.get_g_element(detail::PLOT_Y_AXIS)
+        .style().stroke_color(black);
 
-    image.get_g_element(PLOT_LEGEND_BACKGROUND)
-        .get_style_info().set_fill_color(white);
+    image.get_g_element(detail::PLOT_X_AXIS)
+        .style().stroke_color(black);
 
-    image.get_g_element(PLOT_X_MAJOR_TICKS)
-        .get_style_info().set_stroke_width(2);
+    image.get_g_element(detail::PLOT_X_MINOR_TICKS)
+        .style().stroke_color(black);
 
-    image.get_g_element(PLOT_X_MINOR_TICKS)
-        .get_style_info().set_stroke_width(1);
+    image.get_g_element(detail::PLOT_X_MAJOR_TICKS)
+        .style().stroke_color(black).stroke_width(2);
+
+    image.get_g_element(detail::PLOT_X_MINOR_TICKS)
+        .style().stroke_width(1);
+
 }
 
 // -----------------------------------------------------------------
@@ -254,102 +371,24 @@ svg_1d_plot& write(const std::string& _str)
 
 svg_1d_plot& write(std::ostream& s_out)
 {
-    // removes all elements that will show up in a subsequent draw
-    _clear_all();
+    _update_image();
 
-    // draw background
-    image.get_g_element(PLOT_BACKGROUND).push_back(
-                 new rect_element(0, 0, image.get_x_size(), 
-                 image.get_y_size()));
-
-    _draw_title();
-    _calculate_plot_window();
-    _calculate_transform();
-
-    if(axis_on)
-    {
-        _draw_axis();
-    }
-
-    if(legend_on)
-    {
-        _draw_legend();
-    }
-
-    if(x_label_on)
-    {
-        _draw_x_label();
-    }
-
-    double x(0), y(0);
-
-    _transform_y(y);
-        
-    //draw points
-    for(unsigned int i=0; i<series.size(); ++i)
-    {
-        g_element& g_ptr = image.get_g_element(PLOT_PLOT_POINTS).add_g_element();
-
-        g_ptr.get_style_info().set_fill_color(series[i].point_style.fill_color);
-        g_ptr.get_style_info().set_stroke_color(series[i].point_style.stroke_color);
-
-        for(unsigned int j=0; j<series[i].series.size(); ++j)
-        {
-            x = series[i].series[j];
-            _transform_x(x);
-
-            if(x > plot_window_x1 
-            && x < plot_window_x2
-            && y > plot_window_y1 
-            && y < plot_window_y2)
-            {
-                _draw_plot_point(x, y, g_ptr, series[i].point_style);
-            }
-        }
-    }
     image.write(s_out);
 
     return (svg_1d_plot&)*this;
 }
 
-void plot(const std::vector<double>& _ctr,
-                            const std::string& _title,
-                            const plot_point_style& _style)
-{
-    series.push_back(svg_plot_series(_ctr, 
-                                     _title, 
-                                     _style));
-}
-
-}; // end svg_1d_plot
-
-// -----------------------------------------------------------------
-// Parameter names for plot() function
-// -----------------------------------------------------------------
-
-// These should be moved to their own namespace
-
-#ifndef BOOST_SVG_BOOST_PARAMETER_NAMES
-#define BOOST_SVG_BOOST_PARAMETER_NAMES
-
-BOOST_PARAMETER_NAME(my_plot)
-BOOST_PARAMETER_NAME(container)
-BOOST_PARAMETER_NAME(title)
-BOOST_PARAMETER_NAME(stroke_color)
-BOOST_PARAMETER_NAME(fill_color)
-BOOST_PARAMETER_NAME(point_style)
-BOOST_PARAMETER_NAME(size)
-BOOST_PARAMETER_NAME(x_functor)
-
+#if defined (BOOST_MSVC)
+#  pragma warning(push)
+#  pragma warning (disable: 4100) // 'args' : unreferenced formal parameter
 #endif
 
-BOOST_PARAMETER_FUNCTION
+BOOST_PARAMETER_MEMBER_FUNCTION
 (
     (void),
     plot,
     tag,
     (required 
-        (in_out(my_plot), (svg_1d_plot&))
         (container, *)
         (title, (const std::string&))
     )
@@ -366,18 +405,22 @@ BOOST_PARAMETER_FUNCTION
     )
 )
 {
-    std::vector<double> vect(container.size());
-
-    vect.insert(vect.begin(), 
+    series.push_back(svg_plot_series(
         boost::make_transform_iterator(container.begin(), x_functor),
-        boost::make_transform_iterator(container.end(),   x_functor));
-
-    my_plot.plot(vect, title, 
-           plot_point_style(fill_color, stroke_color, size, point_style));
+        boost::make_transform_iterator(container.end(),   x_functor), 
+        title, 
+        plot_point_style(fill_color, stroke_color, size, point_style)
+    ));
 }
 
+#if defined (BOOST_MSVC)
+#  pragma warning(pop)
+#endif
+
+}; // end svg_1d_plot
 
 }
 }
+
 
 #endif

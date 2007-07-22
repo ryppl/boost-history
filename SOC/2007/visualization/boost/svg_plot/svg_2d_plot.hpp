@@ -10,7 +10,28 @@
 #ifndef _BOOST_SVG_SVG_2D_PLOT_HPP
 #define _BOOST_SVG_SVG_2D_PLOT_HPP
 
-#define BOOST_PARAMETER_MAX_ARITY 10
+#define BOOST_PARAMETER_MAX_ARITY 11
+
+#include <boost/bind.hpp>
+
+#if defined (BOOST_MSVC)
+#  pragma warning(push)
+#  pragma warning(disable: 4512) // "assignment operator could not be generated."
+#  pragma warning(disable: 4127) // "conditional expression is constant."
+#  pragma warning(disable: 4100) // "'boost_parameter_enabler_argument' : unreferenced formal parameter"
+#endif
+
+#include <boost/parameter/preprocessor.hpp>
+#include <boost/parameter/name.hpp>
+#include <boost/iterator/transform_iterator.hpp>
+
+#include "svg_style.hpp"
+#include "detail/axis_plot_frame.hpp"
+#include "svg.hpp"
+
+#if defined (BOOST_MSVC)
+#  pragma warning(pop)
+#endif
 
 #include <map>
 #include <string>
@@ -20,18 +41,39 @@
 #include <iterator>
 #include <exception>
 
-#include <boost/parameter/preprocessor.hpp>
-#include <boost/parameter/name.hpp>
-#include <boost/iterator/transform_iterator.hpp>
-#include <boost/bind.hpp>
-
-#include "detail/svg_style.hpp"
-#include "detail/axis_plot_frame.hpp"
-
-#include "svg.hpp"
 
 namespace boost {
 namespace svg {
+
+    
+#ifndef BOOST_SVG_BOOST_PARAMETER_NAMES
+#define BOOST_SVG_BOOST_PARAMETER_NAMES
+
+BOOST_PARAMETER_NAME(my_plot)
+BOOST_PARAMETER_NAME(container)
+BOOST_PARAMETER_NAME(title)
+BOOST_PARAMETER_NAME(stroke_color)
+BOOST_PARAMETER_NAME(fill_color)
+BOOST_PARAMETER_NAME(point_style)
+BOOST_PARAMETER_NAME(x_functor)
+BOOST_PARAMETER_NAME(size)
+#endif
+
+BOOST_PARAMETER_NAME(line_on)
+BOOST_PARAMETER_NAME(line_color)
+BOOST_PARAMETER_NAME(area_fill_color)
+
+class boost_default_2d_convert
+{
+public:
+    typedef std::pair<double, double> result_type;
+
+    template <class T, class U>
+    std::pair<double, double> operator()(const std::pair<T, U>& a) const
+    {
+        return std::pair<double, double>((double)(a.first), (double)(a.second));
+    }
+};
 
 struct svg_2d_plot_series
 {
@@ -40,8 +82,9 @@ struct svg_2d_plot_series
     plot_point_style point_style;
     plot_line_style line_style;
 
-    svg_2d_plot_series(std::multimap<double, double>::const_iterator _begin, 
-                       std::multimap<double, double>::const_iterator _end,
+    template <class T>
+    svg_2d_plot_series(T _begin, 
+                       T _end,
                        std::string _title,
                        const plot_point_style& _point,
                        const plot_line_style& _line):
@@ -54,10 +97,10 @@ struct svg_2d_plot_series
     }
 };
 
-class svg_2d_plot: public axis_plot_frame<svg_2d_plot>
+class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
 {
 private:
-    friend class axis_plot_frame<svg_2d_plot>;
+    friend class detail::axis_plot_frame<svg_2d_plot>;
     
     double x_scale, x_shift;
     double y_scale, y_shift;
@@ -65,38 +108,43 @@ private:
     // stored so as to avoid rewriting style information constantly
     svg image;
 
+    text_element title_info;
+    text_element x_label_info;
+
     // border information for the plot window. Initially will be set to the width
     // and height of the graph
-    int plot_window_x1;
-    int plot_window_x2; 
-    int plot_window_y1; 
-    int plot_window_y2;
-
-    // used for text displayed on the graph
-    std::string  x_label, title;
+    int plot_x1;
+    int plot_x2; 
+    int plot_y1; 
+    int plot_y2;
 
     // axis information. y_axis stored as one point because this is a 1D graph
     double       x_min,  x_max;
     double       x_axis;
     
-    double       x_major_tick;
+    double       x_major;
 
-    unsigned int x_major_tick_length,  x_major_tick_width,
-                 x_minor_tick_length, x_minor_tick_width;
-    unsigned int x_num_minor_ticks;
-    unsigned int legend_title_font_size, title_font_size, 
-                 x_label_font_size;
+    unsigned int x_major_length,  x_major_width,
+                 x_minor_length, x_minor_width;
+    unsigned int x_num_minor;
+    unsigned int legend_title_size;
 
     // Yes/no questions
-    bool x_major_labels_on;
-    bool x_major_grid_on;
-    bool x_minor_grid_on;
-    bool x_label_on;
+    bool use_x_major_labels;
+    bool use_x_major_grid;
+    bool use_x_minor_grid;
+    bool use_x_label;
 
-    bool title_on;
-    bool legend_on;
-    bool axis_on;
-    bool plot_window_on;
+    bool use_title;
+    bool use_legend;
+    bool use_axis;
+    bool use_plot_window;
+    bool use_x_external_style;
+    bool use_y_external_style;
+    bool show_x_axis_lines;
+    bool show_y_axis_lines;
+    bool use_y_major_grid;
+    bool use_y_minor_grid;
 
     // where we will be storing the data points for transformation
     std::vector<svg_2d_plot_series> series;
@@ -107,113 +155,195 @@ private:
     // axis information
     double       y_min,  y_max;
 
-    double       y_major_tick, y_axis;
+    double       y_major, y_axis;
 
-    unsigned int y_major_tick_length,  y_minor_tick_length,
-                 y_num_minor_ticks;
+    unsigned int y_major_length,  y_minor_length,
+                 y_num_minor;
 
-    bool y_label_on;
-    bool y_major_labels_on;
+    bool use_y_label;
+    bool use_y_major_labels;
 
-    void _draw_y_axis()
+    
+    void _draw_y_minor_ticks(double j, path_element& tick_path,
+                             path_element& grid_path)
     {
-        double x1(0.), x2(0.), y1(0.), y2(0.);
-
-        // draw the axis line
-        _transform_x(x1 );
-
-        y_axis = x1;
-
-        image.get_g_element(PLOT_Y_AXIS).line(y_axis, plot_window_y1, y_axis, plot_window_y2);
-
-        // draw the ticks on the positive side
-        for(double i = 0; i < y_max; i += y_major_tick)
+        double y1(0.), x1(0.), x2(image.get_y_size());
+        
+        // draw the grid if needed
+        if(use_y_minor_grid)
         {
-            //draw minor ticks
-            for(double j=i+(y_major_tick / (y_num_minor_ticks+1)); 
-                j<i+y_major_tick; 
-                j+=y_major_tick / (y_num_minor_ticks+1))
+            _transform_y(y1 = j);
+
+            if(!use_plot_window)
             {
-                x1 = y_axis + y_minor_tick_length/2.;
-                x2 = y_axis - y_minor_tick_length/2.;
-
-                y1=j;
-
-                _transform_y(y1);
-
-                //make sure that we are drawing inside of the allowed window
-                if(y1 > plot_window_y1)
+                // spacing for labels
+                if(use_legend)
                 {
-                    image.get_g_element(PLOT_Y_MINOR_TICKS).line(x1, y1, x2, y1);
+                    x1 -= 155;
+                }
+
+                if(use_y_label)
+                {
+                    x2 -= 12 * 1.5;
                 }
             }
 
-            //draw major tick
-            y1=i;
-            _transform_point(x1, y1);
-            _transform_point(x2, y2);
-
-            //make sure that we are drawing inside of the allowed window
-            if(y1 > plot_window_y1)
+            if(y1 < plot_y2 && y1 > plot_y1)
             {
-                x1 = y_axis + y_major_tick_length/2;
-                x2 = y_axis - y_major_tick_length/2;
-
-                image.get_g_element(PLOT_Y_MAJOR_TICKS).line(x1, y1, x2, y1);
-                
-                if(y_major_labels_on && i != 0)
-                {
-                    std::stringstream fmt;
-                    fmt<<i;
-
-                    image.text(x1, y1 + (2 + x_major_tick_length/2), fmt.str());
-                }
+                grid_path.M(x1, y1).L(x2, y1);
             }
         }
 
-        // draw the ticks on the negative side
-        for(double i = 0; i > y_min; i -= y_major_tick)
+        double y_tick_length = y_minor_length / 2.;
+
+        if(use_y_external_style)
         {
-            //draw minor ticks
-            for(double j=i-(y_major_tick / (y_num_minor_ticks+1)); 
-                j>i-y_major_tick; 
-                j-=y_major_tick / (y_num_minor_ticks+1))
+            x1 = plot_x1;
+            x2 = plot_x1 - y_tick_length / 2.;
+        }
+
+        else
+        {
+            x1 = y_axis + y_tick_length / 2.;
+            x2 = y_axis - y_tick_length / 2.;
+        }
+        y1=j;
+
+        _transform_y(y1);
+
+        //make sure that we are drawing inside of the allowed window
+        if(y1 < plot_y2 && y1 > plot_y1)
+        {
+            tick_path.M(x1, y1).L(x2, y1);
+        }
+    }
+
+    void _draw_y_major_ticks(double i, path_element& tick_path, path_element& grid_path)
+    {
+        double y1(i), x1(0.), x2(image.get_y_size());
+
+        if(use_y_major_grid)
+        {
+            _transform_y(y1 = i);
+
+            if(!use_plot_window)
             {
-                x1 = y_axis + y_minor_tick_length/2.;
-                x2 = y_axis - y_minor_tick_length/2.;
-
-                y1=j;
-
-                _transform_y(y1);
-
-                //make sure that we are drawing inside of the allowed window
-                if(y1 < plot_window_y2)
+                if(use_title)
                 {
-                    image.get_g_element(PLOT_Y_MINOR_TICKS).line(x1, y1, x2, y1);
+                    x1 += title_info.font_size() * 1.5;
+                }
+
+                if(use_y_label)
+                {
+                    x2 -= 12 * 1.5;
                 }
             }
 
-            //draw major tick
-            y1=i;
-            _transform_point(x1, y1);
-            _transform_point(x2, y2);
-
-            //make sure that we are drawing inside of the allowed window
-            if(y1 < plot_window_y2)
+            if(y1 < plot_y2 && y1 > plot_y1)
             {
-                x1 = y_axis + y_major_tick_length/2;
-                x2 = y_axis - y_major_tick_length/2;
-
-                image.get_g_element(PLOT_Y_MAJOR_TICKS).line(x1, y1, x2, y1);
-                
-                if(y_major_labels_on && i != 0)
-                {
-                    std::stringstream fmt;
-                    fmt<<i;
-
-                    image.text(x1, y1 + (2 + x_major_tick_length/2), fmt.str());
-                }
+                grid_path.M(x1, y1).L(x2, y1);
             }
+        }
+
+        //draw major tick
+        y1=i;
+
+        _transform_y(y1);
+
+        //make sure that we are drawing inside of the allowed window
+        if(y1 < plot_y2 && y1 > plot_y1)
+        {
+            double y_tick_length = y_major_length / 2.;
+            
+            if(use_y_external_style)
+            {
+                x1 = plot_x1;
+                x2 = plot_x1 - y_tick_length/2.;
+            }
+
+            else
+            {
+                x1 = y_axis + y_tick_length/2.;
+                x2 = y_axis - y_tick_length/2.;
+            }
+            
+            tick_path.M(x1, y1).L(x2, y1);
+
+            if(use_y_major_labels && i != 0)
+            {
+                std::stringstream fmt;
+                fmt<<i;
+
+                if(use_y_external_style)
+                {
+                    x1 -= y_major_length;
+                }
+
+                else
+                {
+                    x1 += (2 + y_major_length/2);
+                }
+
+                image.get_g_element(detail::PLOT_PLOT_LABELS).text(x1, 
+                    y1, fmt.str());
+            }
+        }
+    }
+
+    void _draw_y_axis()
+    {
+        double x1(0.);
+
+        // draw the axis line
+        _transform_x(x1);
+        image.get_g_element(detail::PLOT_Y_AXIS).line(x1, plot_y1, x1, plot_y2);
+
+        y_axis = x1;
+
+        path_element& minor_tick_path = 
+            image.get_g_element(detail::PLOT_Y_MINOR_TICKS).path();
+
+        path_element& major_tick_path = 
+            image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).path();
+
+        path_element& minor_grid_path =
+            image.get_g_element(detail::PLOT_Y_MINOR_GRID).path();
+
+        path_element& major_grid_path =
+            image.get_g_element(detail::PLOT_Y_MAJOR_GRID).path();
+
+        if(show_y_axis_lines)
+        {
+            image.get_g_element(detail::PLOT_Y_AXIS).
+                line(plot_y1, x_axis, plot_x2, x_axis);
+        }
+
+        // y_minor_jump is the interval between minor ticks.
+        double y_minor_jump = y_major/((double)(y_num_minor + 1.) );
+
+        // draw the ticks on the positive side
+        for(double i = 0; i < y_max; i += y_major)
+        {
+            for(double j = i + y_minor_jump; 
+                       j < i + y_major; 
+                       j += y_minor_jump)
+            {
+                _draw_y_minor_ticks(j, minor_tick_path, minor_grid_path);
+            }
+
+            _draw_y_major_ticks(i, major_tick_path, major_grid_path);
+        }
+
+        // draw the ticks on the negative side
+        for(double i = 0; i > y_min; i -= y_major)
+        {
+            // draw minor ticks
+            for(double j=i; j>i-y_major; j-=y_major / (y_num_minor+1))
+            {
+                _draw_y_minor_ticks(j, minor_tick_path, minor_grid_path);
+            }
+
+            _draw_y_major_ticks(i, major_tick_path, major_grid_path);
         }
     }
 
@@ -225,13 +355,13 @@ private:
 
     void _draw_y_label()
     {
-    /*    text_element to_use((plot_window_x2 + plot_window_x1) / 2., image.get_y_size() - 8, x_label);
+    /*    text_element to_use((plot_x2 + plot_x1) / 2., image.get_y_size() - 8, x_label);
 
-        to_use.set_font_size(12);
-        to_use.set_alignment(center_align);
+        to_use.font_size(12);
+        to_use.alignment(center_align);
 
-        image.get_g_element(PLOT_X_LABEL).set_stroke_color(white);
-        image.get_g_element(PLOT_X_LABEL).set_fill_color(white);
+        image.get_g_element(PLOT_X_LABEL).stroke_color(white);
+        image.get_g_element(PLOT_X_LABEL).fill_color(white);
 
 
         image.get_g_element(PLOT_X_LABEL).push_back(new text_element(to_use));
@@ -241,96 +371,199 @@ private:
     
     void _calculate_transform()
     {
-        x_scale = (plot_window_x2-plot_window_x1)/(x_max-x_min);
-        x_shift = plot_window_x1 - 
-                               (x_min *(plot_window_x2-plot_window_x1)/(x_max-x_min));
+        x_scale = (plot_x2 - plot_x1) / (x_max - x_min);
+        x_shift = plot_x1 - x_min *(plot_x2-plot_x1)/(x_max-x_min);
      	
- 	    y_scale = -(plot_window_y2-plot_window_y1)/(y_max-y_min);
- 	    y_shift = plot_window_y1 - 
-                  (y_max *(plot_window_y1-plot_window_y2)/(y_max-y_min));
+ 	    y_scale = -(plot_y2-plot_y1)/(y_max-y_min);
+
+ 	    y_shift = plot_y1 - (y_max *(plot_y1-plot_y2)/(y_max-y_min));
     }
 
     void _calculate_plot_window()
     {
-        int x_size = image.get_x_size();
-        int y_size = image.get_y_size();
-       
-        plot_window_x1 = plot_window_y1 = 0;
-        plot_window_x2 = image.get_x_size();
-        plot_window_y2 = image.get_y_size();
+        plot_x1 = plot_y1 = 0;
+
+        plot_x2 = image.get_x_size();
+        plot_y2 = image.get_y_size();
 
 
-        if(x_label_on)
+        if(use_x_label)
         {
-            plot_window_y2 -= (int)(x_label_font_size * 1.5);
+            plot_y2 -= (int)(x_label_info.font_size() * 1.5);
         }
 
-        if(y_label_on)
+        if(use_y_label)
         {
-            plot_window_x1 += 20;
+            plot_x1 += 20;
         }
 
-        if(title_on)
+        if(use_title)
         {
-            plot_window_y1 += (int)(title_font_size * 1.5);
+            plot_y1 += (int)(title_info.font_size() * 1.5);
         }
 
-        if(plot_window_on)
+        if(use_plot_window)
         {
             // give the plot window a natural bit of padding
-            plot_window_x1+=5;
-            plot_window_x2-=5;
-            plot_window_y1+=5;
-            plot_window_y2-=5;
+            plot_x1+=5;
+            plot_x2-=5;
+            plot_y1+=5;
+            plot_y2-=5;
 
             
-            if(legend_on)
+            if(use_legend)
             {
-                plot_window_x2 -= 155;
+                plot_x2 -= 155;
             }
 
-            image.get_g_element(PLOT_PLOT_BACKGROUND).push_back(
-                    new rect_element(plot_window_x1, plot_window_y1, 
-                            (plot_window_x2-plot_window_x1), plot_window_y2-plot_window_y1));
+            if(use_y_external_style)
+            {
+                plot_x1 += 
+                    y_major_length > y_minor_length ?
+                    y_major_length :
+                    y_minor_length ;
+            }
+
+            if(use_x_external_style)
+            {
+                plot_y2 -=
+                    x_major_length > x_minor_length ?
+                    x_major_length :
+                    x_minor_length ;
+            }
+
+            image.get_g_element(detail::PLOT_PLOT_BACKGROUND).push_back(
+                    new rect_element(plot_x1, plot_y1, 
+                            (plot_x2-plot_x1), plot_y2-plot_y1));
         }
     }
 
     void _draw_plot_lines()
     {
-        double prev_x, prev_y;
+        double prev_x, prev_y, temp_x(0.), temp_y(0.);
      
         for(unsigned int i = 0; i < series.size(); ++i)
         {
-            g_element& g_ptr = image.get_g_element(PLOT_PLOT_LINES).add_g_element();
+            g_element& g_ptr = image.get_g_element(detail::PLOT_PLOT_LINES).add_g_element();
 
-            g_ptr.get_style_info().set_stroke_color(series[i].line_style.color)
-                                  .set_fill_color(series[i].line_style.color);
+            g_ptr.style().stroke_color(series[i].line_style.color);
+
+            path_element& path = g_ptr.path();
 
             if(series[i].series.size() > 1)
             {
                 std::multimap<double, double>::const_iterator j = series[i].series.begin();
                 prev_x = (*j).first;
-                prev_y = (*j).second;
+                prev_y = 0.;
 
-                _transform_x(prev_x);
-                _transform_y(prev_y);
+                // If we have to fill the area under the plot, we first have to
+                // move from the X-axis to the first point.
 
+                _transform_point(prev_x, prev_y);
+
+                if(series[i].line_style.area_fill != blank)
+                {
+                    path.style().fill_color(series[i].line_style.area_fill);
+                    path.M(prev_x, prev_y);
+                }
+
+                
+                _transform_y(prev_y = (*j).second);
+
+                if(series[i].line_style.area_fill != blank)
+                {
+                    path.style().fill_color(series[i].line_style.area_fill);
+                    path.L(prev_x, prev_y);
+                }
+
+                else
+                {
+                    path.M(prev_x, prev_y);
+                }
                 ++j;
 
                 for(; j != series[i].series.end(); ++j)
                 {
-                    double temp_x((*j).first);
-                    double temp_y((*j).second);
+                    temp_x = (*j).first;
+                    temp_y = (*j).second;
 
-                    _transform_x(temp_x);
-                    _transform_y(temp_y);
+                    _transform_point(temp_x, temp_y);
 
-                    g_ptr.push_back(
-                        new line_element(prev_x, prev_y, 
-                                         temp_x, temp_y));
+                    path.L(temp_x, temp_y);
                     
+                    if(series[i].line_style.area_fill == blank)
+                    {
+                        path.M(temp_x, temp_y);
+                    }
+
                     prev_x = temp_x;
                     prev_y = temp_y;
+                }
+
+                if(series[i].line_style.area_fill != blank)
+                {
+                    _transform_y(temp_y = 0.);
+                    path.L(temp_x, temp_y).z();
+                }
+            }
+        }
+    }
+
+    void _update_image()
+    {
+        _clear_all();
+
+        // draw background
+        image.get_g_element(detail::PLOT_BACKGROUND).push_back(
+                     new rect_element(0, 0, image.get_x_size(), 
+                     image.get_y_size()));
+
+        _draw_title();
+        _calculate_plot_window();
+        _calculate_transform();
+
+        if(use_axis)
+        {
+            _draw_y_axis();
+            _draw_x_axis();
+        }
+
+        if(use_legend)
+        {
+            _draw_legend();
+        }
+
+        if(use_x_label)
+        {
+            _draw_x_label();
+        }
+
+        // draw lines
+
+        _draw_plot_lines();
+
+        // draw points
+        double x(0.), y(0.);
+        for(unsigned int i=0; i<series.size(); ++i)
+        {
+            g_element& g_ptr = image.get_g_element(detail::PLOT_PLOT_POINTS).add_g_element();
+            
+            g_ptr.style()
+                 .fill_color(series[i].point_style.fill_color)
+                 .stroke_color(series[i].point_style.stroke_color);
+
+            for(std::multimap<double,double>::const_iterator j = series[i].series.begin(); 
+                j!=series[i].series.end(); ++j)
+            {
+                x = j->first;
+                y = j->second;
+
+                _transform_point(x, y);
+                
+                if(x > plot_x1  && x < plot_x2
+                && y > plot_y1  && y < plot_y2)
+                {
+                   _draw_plot_point(x, y, g_ptr, series[i].point_style);
                 }
             }
         }
@@ -338,36 +571,69 @@ private:
 
 public:
 
-svg_2d_plot(): x_label(""), title("Plot of data"), y_label(""), x_min(-10), x_max(10), 
+svg_2d_plot():        title_info(0, 0, "Plot of data", 30),
+                      x_label_info(0, 0, "X Axis", 12),
+                      x_min(-10), x_max(10), 
                       y_min(-10), y_max(10), 
-                      x_major_tick(3), x_num_minor_ticks(2), 
-                      y_major_tick(3), y_label_on(false),
-                      x_minor_tick_length(10), x_major_tick_length(20),
-                      x_major_tick_width(2), x_minor_tick_width(1),
-                      y_minor_tick_length(10), y_num_minor_ticks(2), 
-                      y_major_tick_length(20), legend_title_font_size(12),
-                      title_font_size(30), x_label_font_size(12), 
-                      x_major_labels_on(true), x_major_grid_on(false),
-                      x_minor_grid_on(false), x_label_on(false),
-                      title_on(true), legend_on(false), axis_on(true),
-                      plot_window_on(false), y_major_labels_on(false)
+                      x_major(3), x_num_minor(2), 
+                      y_major(3), use_y_label(false),
+                      x_minor_length(10), x_major_length(20),
+                      x_major_width(2), x_minor_width(1),
+                      y_minor_length(10), y_num_minor(2), 
+                      y_major_length(20), legend_title_size(12),
+                      use_x_major_labels(true), use_x_major_grid(false),
+                      use_x_minor_grid(false), use_x_label(false),
+                      use_title(true), use_legend(false), use_axis(true),
+                      use_plot_window(false), use_y_major_labels(false), 
+                      use_x_external_style(false), use_y_external_style(false),
+                      show_x_axis_lines(true), show_y_axis_lines(true),
+                      use_y_major_grid(false), use_y_minor_grid(false)
 
 {
-    set_image_size(500, 350);
+    image_size(500, 350);
 
     //build the document tree.. add children of the root node
-    for(int i=0; i<SVG_PLOT_DOC_CHILDREN; ++i)
+    for(int i=0; i<detail::SVG_PLOT_DOC_CHILDREN; ++i)
     {
         image.add_g_element();
     }
 
     // set color defaults
-    image.get_g_element(PLOT_BACKGROUND).get_style_info().set_fill_color(white);
-    image.get_g_element(PLOT_PLOT_BACKGROUND).get_style_info().set_fill_color(white);
-    image.get_g_element(PLOT_LEGEND_BACKGROUND).get_style_info().set_fill_color(white);
+    image.get_g_element(detail::PLOT_BACKGROUND)
+        .style().fill_color(white);
 
-    image.get_g_element(PLOT_X_MAJOR_TICKS).get_style_info().set_stroke_width(2);
-    image.get_g_element(PLOT_X_MINOR_TICKS).get_style_info().set_stroke_width(1);
+    image.get_g_element(detail::PLOT_Y_AXIS)
+        .style().stroke_color(black);
+
+    image.get_g_element(detail::PLOT_X_AXIS)
+        .style().stroke_color(black);
+
+    image.get_g_element(detail::PLOT_X_MINOR_TICKS)
+        .style().stroke_color(black);
+
+    image.get_g_element(detail::PLOT_X_MAJOR_TICKS)
+        .style().stroke_color(black);
+
+    image.get_g_element(detail::PLOT_X_MAJOR_TICKS)
+        .style().stroke_width(2);
+
+    image.get_g_element(detail::PLOT_X_MINOR_TICKS)
+        .style().stroke_width(1);
+
+    image.get_g_element(detail::PLOT_Y_MINOR_TICKS)
+        .style().stroke_color(black);
+
+    image.get_g_element(detail::PLOT_Y_MAJOR_TICKS)
+        .style().stroke_color(black);
+
+    image.get_g_element(detail::PLOT_Y_MAJOR_TICKS)
+        .style().stroke_width(2);
+
+    image.get_g_element(detail::PLOT_Y_MINOR_TICKS)
+        .style().stroke_width(1);
+
+    image.get_g_element(detail::PLOT_X_MAJOR_TICKS).style().stroke_width(2);
+    image.get_g_element(detail::PLOT_X_MINOR_TICKS).style().stroke_width(1);
 }
 
 
@@ -387,230 +653,71 @@ svg_2d_plot& write(const std::string& _str)
 
 svg_2d_plot& write(std::ostream& s_out)
 {
-    _clear_all();
-
-    // draw background
-    image.get_g_element(PLOT_BACKGROUND).push_back(
-                 new rect_element(0, 0, image.get_x_size(), 
-                 image.get_y_size()));
-
-    _draw_title();
-    _calculate_plot_window();
-    _calculate_transform();
-
-    if(axis_on)
-    {
-        _draw_y_axis();
-        _draw_x_axis();
-    }
-
-    if(legend_on)
-    {
-        _draw_legend();
-    }
-
-    if(x_label_on)
-    {
-        _draw_x_label();
-    }
-
-    // draw lines
-
-    _draw_plot_lines();
-
-    // draw points
-    double x(0.), y(0.);
-    for(unsigned int i=0; i<series.size(); ++i)
-    {
-        g_element& g_ptr = image.get_g_element(PLOT_PLOT_POINTS).add_g_element();
-        
-        g_ptr.get_style_info()
-             .set_fill_color(series[i].point_style.fill_color)
-             .set_stroke_color(series[i].point_style.stroke_color);
-
-        for(std::multimap<double,double>::const_iterator j = series[i].series.begin(); 
-            j!=series[i].series.end(); ++j)
-        {
-            x = j->first;
-            y = j->second;
-
-            _transform_point(x, y);
-            
-            if(x > plot_window_x1 
-            && x < plot_window_x2
-            && y > plot_window_y1 
-            && y < plot_window_y2)
-            {
-               _draw_plot_point(x, y, g_ptr, series[i].point_style);
-            }
-        }
-    }
+    _update_image();
 
     image.write(s_out);
 
     return *this;
 }
 
-// -----------------------------------------------------------------
-// Actually draw data to the plot. Default color information
-// -----------------------------------------------------------------
-void plot(std::multimap<double, double> cont,
-                            const std::string& _str,
-                            const plot_point_style& point_style,
-                            const plot_line_style& line_style)
+svg_2d_plot& y_name_on(bool _cmd)
 {
-    series.push_back(svg_2d_plot_series(cont.begin(), cont.end(), 
-                    _str, point_style, line_style));
-}
-
-// -----------------------------------------------------------------
-// Miscellaneous setter methods: those with no clear, definable home
-// in another category
-//
-// set_image_size():      sets image size in pixels. (x,y) corresponds 
-//                        to point at lower right of graph
-//
-// set_title():           adds the text _title to the top of the screen
-//
-// set_title_font_size(): uses an internal variable to save state, to
-//                        avoid crashes when the title hasn't been
-//                        set yet
-//
-// set_legend_title_font_size(): As above
-// -----------------------------------------------------------------
-
-
-// -----------------------------------------------------------------
-// Commands: Answers to yes or no questions (Example: Show the legend?)
-//
-// set_axis_on(): Whether or not the axis will show
-//
-// set_legend_on(): Whether or not the legend will show
-//
-// set_plot_window_on(): Whether or not the plot will be full screen or
-// 		      in its own contained window
-//
-// set_x_label_on(): Wrapper for 1d function
-//
-// set_y_label_on(): Sets the label for the y-axis
-//
-// set_x_major_labels_on(): Wrapper for 1d function
-//
-// set_y_major_labels_on(): Determines whether or not y axis major labels
-//                       will be shown
-// -----------------------------------------------------------------
-
-
-svg_2d_plot& set_y_label_on(bool _cmd)
-{
-    y_label_on = _cmd;
-
+    use_y_label = _cmd;
     return *this;
 }
 
-svg_2d_plot& set_y_major_labels_on(bool _cmd)
+svg_2d_plot& y_major_labels_on(bool _cmd)
 {
-    y_major_labels_on = _cmd;
-
+    use_y_major_labels = _cmd;
     return *this;
 }
 
-// -----------------------------------------------------------------
-// Color settings: Customization of colors found in the plot
-//
-// set_title_color(): 	   Sets the color of the plot title
-//
-// set_background_color(): Sets the color of the background. This is
-// 			   not the same as the plot window background
-//
-// set_legend_background_color():
-// 			   Sets the background color of the legend
-//
-// set_plot_background_color():
-// 			   Sets the background color of the plot area.
-// 			   If plot_window_on is not set true, this
-// 			   does not show
-//
-// set_axis_color():	   Color of the x axis + origin
-//
-// set_x_major_tick_color(): Sets the color of the major ticks on
-// 			     the x-axis
-//
-// set_x_minor_tick_color(): As above, but for minor ticks
-// -----------------------------------------------------------------
 
-svg_2d_plot& set_y_axis_color(svg_color_constant _col)
+svg_2d_plot& y_axis_color(svg_color_constant _col)
 {
-    set_y_axis_color(constant_to_rgb(_col));
+    y_axis_color(constant_to_rgb(_col));
 
     return (svg_2d_plot&)*this;
 }
 
-svg_2d_plot& set_y_axis_color(const svg_color& _col)
+svg_2d_plot& y_axis_color(const svg_color& _col)
 {
-    image.get_g_element(PLOT_Y_AXIS)
-            .get_style_info().set_fill_color(_col);
+    image.get_g_element(detail::PLOT_Y_AXIS)
+            .style().fill_color(_col);
 
-    image.get_g_element(PLOT_Y_AXIS)
-            .get_style_info().set_stroke_color(_col);
+    image.get_g_element(detail::PLOT_Y_AXIS)
+            .style().stroke_color(_col);
 
     return *this;
 }
 
-svg_2d_plot& set_y_major_tick_color(const svg_color& _col)
+svg_2d_plot& y_major_tick_color(const svg_color& _col)
 {
-    image.get_g_element(PLOT_Y_MAJOR_TICKS).get_style_info().set_stroke_color(_col);
-    image.get_g_element(PLOT_Y_MAJOR_TICKS).get_style_info().set_fill_color(_col);
+    image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color(_col);
+    image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().fill_color(_col);
     return *this;
 }
 
-svg_2d_plot& set_y_major_tick_color(svg_color_constant _col)
+svg_2d_plot& y_major_tick_color(svg_color_constant _col)
 {
-    set_y_major_tick_color(constant_to_rgb(_col));
+    y_major_tick_color(constant_to_rgb(_col));
     return *this;
 }
 
-svg_2d_plot& set_y_minor_tick_color(const svg_color& _col)
+svg_2d_plot& y_minor_tick_color(const svg_color& _col)
 {
-    image.get_g_element(PLOT_Y_MINOR_TICKS).get_style_info().set_stroke_color(_col);
-    image.get_g_element(PLOT_Y_MINOR_TICKS).get_style_info().set_fill_color(_col);
+    image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(_col);
+    image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().fill_color(_col);
     return *this;
 }
 
-svg_2d_plot& set_y_minor_tick_color(svg_color_constant _col)
+svg_2d_plot& y_minor_tick_color(svg_color_constant _col)
 {
-    set_y_minor_tick_color(constant_to_rgb(_col));
+    y_minor_tick_color(constant_to_rgb(_col));
     return *this;
 }
 
-// -----------------------------------------------------------------
-// Axis information: Settings for customization of axis information
-//
-// set_x_scale(): sets the left and right max values for the x axis
-//
-// set_x_axis_width(): The width of the x axis
-//
-// set_x_major_tick(): The distance between the ticks of the x_axis
-//
-// set_x_major_tick_length(): How long each tick will be
-//
-// set_x_minor_tick_length(): How long each tick will be
-//
-// set_x_num_minor_ticks(): The number of minor ticks between each
-// 			    major tick
-//
-// set_x_label(): Labelling for the x-axis
-//
-// set_x_major_tick_width(): Stroke width for major ticks
-// 
-// set_x_minor_tick_width(): Stroke width for minor ticks
-//
-// All functions defined for x above are also defined for y
-// -----------------------------------------------------------------
-
-//y functions
-
-svg_2d_plot& set_y_scale(double y1, double y2)
+svg_2d_plot& y_range(double y1, double y2)
 {
     y_min = y1;
     y_max = y2;
@@ -623,124 +730,129 @@ svg_2d_plot& set_y_scale(double y1, double y2)
     return *this;
 }
 
-svg_2d_plot& set_y_axis_width(unsigned int _width)
+svg_2d_plot& y_axis_width(unsigned int _width)
 {
-    image.get_g_element(PLOT_Y_AXIS).get_style_info().set_stroke_width(_width);
+    image.get_g_element(detail::PLOT_Y_AXIS).style().stroke_width(_width);
 
     return *this;
 }
 
-svg_2d_plot& set_y_major_tick(double _inter)
+svg_2d_plot& y_major_interval(double _inter)
 {
-    y_major_tick = _inter;
+    y_major = _inter;
 
     return *this;
 }
 
-svg_2d_plot& set_y_major_tick_length(unsigned int _length)
+svg_2d_plot& y_major_tick_length(unsigned int _length)
 {
-    y_major_tick_length = _length;
+    y_major_length = _length;
     return *this;
 }
 
-svg_2d_plot& set_y_minor_tick_length(unsigned int _length)
+svg_2d_plot& y_minor_tick_length(unsigned int _length)
 {
-    y_minor_tick_length = _length;
+    y_minor_length = _length;
     return *this;
 }
 
-svg_2d_plot& set_y_num_minor_ticks(unsigned int _num)
+svg_2d_plot& y_num_minor_ticks(unsigned int _num)
 {
-    y_num_minor_ticks = _num;
+    y_num_minor = _num;
     return *this;
 }
 
-svg_2d_plot& set_y_label(const std::string& _str)
+svg_2d_plot& y_name(const std::string& _str)
 {
     y_label = _str;
+    return *this;
+}
+
+svg_2d_plot& y_major_tick_width(unsigned int _width)
+{
+    image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().stroke_width(_width);
 
     return *this;
 }
 
-svg_2d_plot& set_y_major_tick_width(unsigned int _width)
+svg_2d_plot& y_minor_tick_width(unsigned int _width)
 {
-    image.get_g_element(PLOT_Y_MAJOR_TICKS).get_style_info().set_stroke_width(_width);
+    image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_width(_width);
 
     return *this;
 }
 
-svg_2d_plot& set_y_minor_tick_width(unsigned int _width)
+svg_2d_plot& axis_external_style(bool _is)
 {
-    image.get_g_element(PLOT_Y_MINOR_TICKS).get_style_info().set_stroke_width(_width);
+    use_x_external_style = _is;
+    use_y_external_style = _is;
+    return *this;
+}
+
+svg_2d_plot& x_external_style_on(bool _is)
+{
+    use_x_external_style = _is;
 
     return *this;
 }
 
-};
-
-class boost_default_2d_convert
+svg_2d_plot& y_external_style_on(bool _is)
 {
-public:
-    typedef std::pair<double, double> result_type;
+    use_y_external_style = _is;
+    return *this;
+}
 
-    template <class T, class U>
-    std::pair<double, double> operator()(const std::pair<T, U>& a) const
-    {
-        return std::pair<double, double>((double)(a.first), (double)(a.second));
-    }
-};
-
-#ifndef BOOST_SVG_BOOST_PARAMETER_NAMES
-#define BOOST_SVG_BOOST_PARAMETER_NAMES
-
-BOOST_PARAMETER_NAME(my_plot)
-BOOST_PARAMETER_NAME(container)
-BOOST_PARAMETER_NAME(title)
-BOOST_PARAMETER_NAME(stroke_color)
-BOOST_PARAMETER_NAME(fill_color)
-BOOST_PARAMETER_NAME(point_style)
-BOOST_PARAMETER_NAME(x_functor)
-BOOST_PARAMETER_NAME(size)
+#if defined (BOOST_MSVC)
+#  pragma warning(push)
+#  pragma warning(disable: 4100) // "'boost_parameter_enabler_argument' : unreferenced formal parameter"
 #endif
 
-BOOST_PARAMETER_NAME(line_on)
-BOOST_PARAMETER_NAME(line_color)
-
-BOOST_PARAMETER_FUNCTION
+BOOST_PARAMETER_MEMBER_FUNCTION
 (
     (void),
     plot_2d,
     tag,
     (required 
-        (in_out(my_plot), (svg_2d_plot&))
         (container, *)
         (title, (const std::string&))
     )
     (optional
-        (stroke_color, (const svg_color&), svg_color(white))
+        (stroke_color, (const svg_color&), black)
         (point_style, (point_shape), circle)
         (size, (int), 10)
         (line_on, (bool), true)
-        (line_color, (const svg_color&), svg_color(black))
+        (line_color, (const svg_color&), black)
+        (area_fill_color, (svg_color_constant), blank)
     )
     (deduced
         (optional
-            (fill_color, (const svg_color&), svg_color(black))
+            (fill_color, (const svg_color&), white)
             (x_functor, *, boost_default_2d_convert())
         )
     )
 )
 {
-    std::multimap<double, double> cont;
+    plot_line_style line_style(line_color, line_on);
 
-    cont.insert(
-        boost::make_transform_iterator(container.begin(), x_functor),
-        boost::make_transform_iterator(container.end(),   x_functor));
+    if(area_fill_color != none)
+    {
+        line_style.area_fill=area_fill_color;
+    }
 
-    my_plot.plot(cont, title, 
+    series.push_back(
+        svg_2d_plot_series(
+        boost::make_transform_iterator(container.begin(), x_functor), 
+        boost::make_transform_iterator(container.end(),   x_functor), 
+        title, 
         plot_point_style(fill_color, stroke_color, size, point_style),
-        plot_line_style(line_color, line_on));
+        line_style
+        ));
 }
+};
+
+#if defined (BOOST_MSVC)
+#  pragma warning(pop)
+#endif
 
 }
 }
