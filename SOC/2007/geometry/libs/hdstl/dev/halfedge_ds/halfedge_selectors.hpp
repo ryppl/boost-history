@@ -196,7 +196,7 @@ struct halfedge_gen<halfedgeS<ContainerS,TraversalS>,
                     VertexDescriptor, FacetDescriptor, Config> {
     // TYPES
     typedef halfedgeS<ContainerS,TraversalS>            halfedge_selector;
-
+    
     typedef stored_halfedge<typename Config::halfedge_descriptor, 
                             VertexDescriptor, FacetDescriptor, 
                             Config> halfedge_type;
