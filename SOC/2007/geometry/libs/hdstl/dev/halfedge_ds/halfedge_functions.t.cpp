@@ -118,6 +118,17 @@ void set_next_helper(HalfedgeGen& H, HalfedgeDescriptor h, HalfedgeDescriptor g,
     H.m_container[h].m_next = g;
 }
 
+template <typename HalfedgeGen, typename HalfedgeDescriptor, typename ContainerS>
+void set_prev_helper(HalfedgeGen& H, HalfedgeDescriptor h, HalfedgeDescriptor g, ContainerS const&) {
+    (void) H;
+    h->m_prev = g;
+}
+
+template <typename HalfedgeGen,typename HalfedgeDescriptor>
+void set_prev_helper(HalfedgeGen& H, HalfedgeDescriptor h, HalfedgeDescriptor g, vecS const&) {
+    H.m_container[h].m_prev = g;
+}
+
 template <typename HalfedgeGen>
 bool halfedge_next_in_facet_test() {
     
@@ -193,9 +204,6 @@ bool halfedge_next_in_facet_test() {
     BOOST_CHECK(( next_in_facet(hc, halfedgeGen) == he));
     BOOST_CHECK(( next_at_source(hc, halfedgeGen) == hg));
     BOOST_CHECK(( next_at_target(hc, halfedgeGen) == hf));
-    //BOOST_CHECK(( prev_in_facet(hc, halfedgeGen) == ha));
-    //BOOST_CHECK(( prev_at_source<next_in_facet_tag>(hc, halfedgeGen) == hg));
-    //BOOST_CHECK(( prev_at_target<next_in_facet_tag>(hc, halfedgeGen) == hf));
     
     return true;
 }
@@ -256,16 +264,16 @@ bool halfedge_next_at_source_test() {
     }
 
     halfedge_iterator begin = halfedges_begin(halfedgeGen);
-    //halfedge_descriptor ha = *begin;
+    halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
     halfedge_descriptor hc = *(++begin);
     halfedge_descriptor hd = *(++begin);
     halfedge_descriptor he = *(++begin);
     halfedge_descriptor hf = *(++begin);
     halfedge_descriptor hg = *(++begin);
-    //halfedge_descriptor hh = *(++begin);
+    halfedge_descriptor hh = *(++begin);
     halfedge_descriptor hi = *(++begin);
-    //halfedge_descriptor hj = *(++begin);
+    halfedge_descriptor hj = *(++begin);
     set_next_helper(halfedgeGen, hc, hg, container_selector());
     set_next_helper(halfedgeGen, hg, hb, container_selector());
     set_next_helper(halfedgeGen, hd, he, container_selector());
@@ -275,10 +283,10 @@ bool halfedge_next_at_source_test() {
     BOOST_CHECK(( next_in_facet(hc, halfedgeGen) == he));
     BOOST_CHECK(( next_at_source(hc, halfedgeGen) == hg));
     BOOST_CHECK(( next_at_target(hc, halfedgeGen) == hf));
-    //BOOST_CHECK(( prev_in_facet(hc, halfedgeGen) == ha));
-    //BOOST_CHECK(( prev_at_source<next_in_facet_tag>(hc, halfedgeGen) == hg));
-    //BOOST_CHECK(( prev_at_target<next_in_facet_tag>(hc, halfedgeGen) == hf));
-    
+    (void) ha;
+    (void) hh;
+    (void) hj;
+
     return true;
 }
 
@@ -359,13 +367,250 @@ bool halfedge_next_at_target_test() {
     BOOST_CHECK(( next_at_target(hc, halfedgeGen) == hf));
     (void) hb;
     (void) hi;
-    //BOOST_CHECK(( prev_in_facet(hc, halfedgeGen) == ha));
-    //BOOST_CHECK(( prev_at_source<next_in_facet_tag>(hc, halfedgeGen) == hg));
-    //BOOST_CHECK(( prev_at_target<next_in_facet_tag>(hc, halfedgeGen) == hf));
     
     return true;
 }
 
+template <typename HalfedgeGen>
+bool halfedge_prev_in_facet_test() {
+    
+    // Types must exist.
+    typedef typename HalfedgeGen::halfedge_selector      halfedge_selector;
+    typedef typename HalfedgeGen::halfedge_descriptor    halfedge_descriptor;
+    typedef typename HalfedgeGen::halfedge_iterator      halfedge_iterator;
+    typedef typename HalfedgeGen::halfedge_type          halfedge_type;
+    typedef typename HalfedgeGen::ContainerGen           container_gen;
+    typedef typename HalfedgeGen::ContainerGen::selector container_selector;
+    typedef typename HalfedgeGen::container_type         container_type;
+
+    halfedge_type fa;
+    halfedge_type fb;
+    halfedge_type fc;
+    halfedge_type fd;
+    halfedge_type fe;
+    halfedge_type ff;
+    halfedge_type fg;
+    halfedge_type fh;
+    halfedge_type fi;
+    halfedge_type fj;
+    halfedge_type array[] = { fa, fb, fc, fd, fe, ff, fg, fh, fi, fj};  
+    
+    // Construct a halfedge_gen object whose container contains array.  Verify
+    // that halfedges_begin(), halfedges_end(), and num_halfedges() work.
+
+    container_type halfedges(array, array+10);
+    HalfedgeGen halfedgeGen;
+    halfedgeGen.m_container = halfedges;
+
+    { 
+        typename container_type::iterator begin = halfedgeGen.m_container.begin();
+        halfedge_type& ha = *begin;
+        halfedge_type& hb = *(++begin);
+        halfedge_type& hc = *(++begin);
+        halfedge_type& hd = *(++begin);
+        halfedge_type& he = *(++begin);
+        halfedge_type& hf = *(++begin);
+        halfedge_type& hg = *(++begin);
+        halfedge_type& hh = *(++begin);
+        halfedge_type& hi = *(++begin);
+        halfedge_type& hj = *(++begin);
+        set_opposite_helper(ha, &hb, container_selector());
+        set_opposite_helper(hb, &ha, container_selector());
+        set_opposite_helper(hc, &hd, container_selector());
+        set_opposite_helper(hd, &hc, container_selector());
+        set_opposite_helper(he, &hf, container_selector());
+        set_opposite_helper(hf, &he, container_selector());
+        set_opposite_helper(hg, &hh, container_selector());
+        set_opposite_helper(hh, &hg, container_selector());
+        set_opposite_helper(hi, &hj, container_selector());
+        set_opposite_helper(hj, &hi, container_selector());
+    }
+
+    halfedge_iterator begin = halfedges_begin(halfedgeGen);
+    halfedge_descriptor ha = *begin;
+    halfedge_descriptor hb = *(++begin);
+    halfedge_descriptor hc = *(++begin);
+    halfedge_descriptor hd = *(++begin);
+    halfedge_descriptor he = *(++begin);
+    halfedge_descriptor hf = *(++begin);
+    halfedge_descriptor hg = *(++begin);
+    halfedge_descriptor hh = *(++begin);
+    halfedge_descriptor hi = *(++begin);
+    halfedge_descriptor hj = *(++begin);
+    set_prev_helper(halfedgeGen, hc, ha, container_selector());
+    set_prev_helper(halfedgeGen, he, hc, container_selector());
+    set_prev_helper(halfedgeGen, hb, hh, container_selector());
+    set_prev_helper(halfedgeGen, hi, hf, container_selector());
+    set_prev_helper(halfedgeGen, hg, hd, container_selector());
+    set_prev_helper(halfedgeGen, hd, hj, container_selector());
+    BOOST_CHECK(( prev_in_facet(hc, halfedgeGen) == ha));
+    BOOST_CHECK(( prev_at_source(hc, halfedgeGen) == hb));
+    BOOST_CHECK(( prev_at_target(hc, halfedgeGen) == hj));
+    
+    return true;
+}
+
+template <typename HalfedgeGen>
+bool halfedge_prev_at_source_test() {
+    
+    // Types must exist.
+    typedef typename HalfedgeGen::halfedge_selector      halfedge_selector;
+    typedef typename HalfedgeGen::halfedge_descriptor    halfedge_descriptor;
+    typedef typename HalfedgeGen::halfedge_iterator      halfedge_iterator;
+    typedef typename HalfedgeGen::halfedge_type          halfedge_type;
+    typedef typename HalfedgeGen::ContainerGen           container_gen;
+    typedef typename HalfedgeGen::ContainerGen::selector container_selector;
+    typedef typename HalfedgeGen::container_type         container_type;
+
+    halfedge_type fa;
+    halfedge_type fb;
+    halfedge_type fc;
+    halfedge_type fd;
+    halfedge_type fe;
+    halfedge_type ff;
+    halfedge_type fg;
+    halfedge_type fh;
+    halfedge_type fi;
+    halfedge_type fj;
+    halfedge_type array[] = { fa, fb, fc, fd, fe, ff, fg, fh, fi, fj};  
+    
+    // Construct a halfedge_gen object whose container contains array.  Verify
+    // that halfedges_begin(), halfedges_end(), and num_halfedges() work.
+
+    container_type halfedges(array, array+10);
+    HalfedgeGen halfedgeGen;
+    halfedgeGen.m_container = halfedges;
+
+    { 
+        typename container_type::iterator begin = halfedgeGen.m_container.begin();
+        halfedge_type& ha = *begin;
+        halfedge_type& hb = *(++begin);
+        halfedge_type& hc = *(++begin);
+        halfedge_type& hd = *(++begin);
+        halfedge_type& he = *(++begin);
+        halfedge_type& hf = *(++begin);
+        halfedge_type& hg = *(++begin);
+        halfedge_type& hh = *(++begin);
+        halfedge_type& hi = *(++begin);
+        halfedge_type& hj = *(++begin);
+        set_opposite_helper(ha, &hb, container_selector());
+        set_opposite_helper(hb, &ha, container_selector());
+        set_opposite_helper(hc, &hd, container_selector());
+        set_opposite_helper(hd, &hc, container_selector());
+        set_opposite_helper(he, &hf, container_selector());
+        set_opposite_helper(hf, &he, container_selector());
+        set_opposite_helper(hg, &hh, container_selector());
+        set_opposite_helper(hh, &hg, container_selector());
+        set_opposite_helper(hi, &hj, container_selector());
+        set_opposite_helper(hj, &hi, container_selector());
+    }
+
+    halfedge_iterator begin = halfedges_begin(halfedgeGen);
+    halfedge_descriptor ha = *begin;
+    halfedge_descriptor hb = *(++begin);
+    halfedge_descriptor hc = *(++begin);
+    halfedge_descriptor hd = *(++begin);
+    halfedge_descriptor he = *(++begin);
+    halfedge_descriptor hf = *(++begin);
+    halfedge_descriptor hg = *(++begin);
+    halfedge_descriptor hh = *(++begin);
+    halfedge_descriptor hi = *(++begin);
+    halfedge_descriptor hj = *(++begin);
+    set_prev_helper(halfedgeGen, hc, hb, container_selector());
+    set_prev_helper(halfedgeGen, hg, hc, container_selector());
+    set_prev_helper(halfedgeGen, hb, hg, container_selector());
+    set_prev_helper(halfedgeGen, he, hd, container_selector());
+    set_prev_helper(halfedgeGen, hi, he, container_selector());
+    set_prev_helper(halfedgeGen, hd, hi, container_selector());
+    BOOST_CHECK(( prev_in_facet(hc, halfedgeGen) == ha));
+    BOOST_CHECK(( prev_at_source(hc, halfedgeGen) == hb));
+    BOOST_CHECK(( prev_at_target(hc, halfedgeGen) == hj));
+    (void) hf;
+    (void) hh;
+    return true;
+}
+
+template <typename HalfedgeGen>
+bool halfedge_prev_at_target_test() {
+    
+    // Types must exist.
+    typedef typename HalfedgeGen::halfedge_selector      halfedge_selector;
+    typedef typename HalfedgeGen::halfedge_descriptor    halfedge_descriptor;
+    typedef typename HalfedgeGen::halfedge_iterator      halfedge_iterator;
+    typedef typename HalfedgeGen::halfedge_type          halfedge_type;
+    typedef typename HalfedgeGen::ContainerGen           container_gen;
+    typedef typename HalfedgeGen::ContainerGen::selector container_selector;
+    typedef typename HalfedgeGen::container_type         container_type;
+
+    halfedge_type fa;
+    halfedge_type fb;
+    halfedge_type fc;
+    halfedge_type fd;
+    halfedge_type fe;
+    halfedge_type ff;
+    halfedge_type fg;
+    halfedge_type fh;
+    halfedge_type fi;
+    halfedge_type fj;
+    halfedge_type array[] = { fa, fb, fc, fd, fe, ff, fg, fh, fi, fj};  
+    
+    // Construct a halfedge_gen object whose container contains array.  Verify
+    // that halfedges_begin(), halfedges_end(), and num_halfedges() work.
+
+    container_type halfedges(array, array+10);
+    HalfedgeGen halfedgeGen;
+    halfedgeGen.m_container = halfedges;
+
+    { 
+        typename container_type::iterator begin = halfedgeGen.m_container.begin();
+        halfedge_type& ha = *begin;
+        halfedge_type& hb = *(++begin);
+        halfedge_type& hc = *(++begin);
+        halfedge_type& hd = *(++begin);
+        halfedge_type& he = *(++begin);
+        halfedge_type& hf = *(++begin);
+        halfedge_type& hg = *(++begin);
+        halfedge_type& hh = *(++begin);
+        halfedge_type& hi = *(++begin);
+        halfedge_type& hj = *(++begin);
+        set_opposite_helper(ha, &hb, container_selector());
+        set_opposite_helper(hb, &ha, container_selector());
+        set_opposite_helper(hc, &hd, container_selector());
+        set_opposite_helper(hd, &hc, container_selector());
+        set_opposite_helper(he, &hf, container_selector());
+        set_opposite_helper(hf, &he, container_selector());
+        set_opposite_helper(hg, &hh, container_selector());
+        set_opposite_helper(hh, &hg, container_selector());
+        set_opposite_helper(hi, &hj, container_selector());
+        set_opposite_helper(hj, &hi, container_selector());
+    }
+
+    halfedge_iterator begin = halfedges_begin(halfedgeGen);
+    halfedge_descriptor ha = *begin;
+    halfedge_descriptor hb = *(++begin);
+    halfedge_descriptor hc = *(++begin);
+    halfedge_descriptor hd = *(++begin);
+    halfedge_descriptor he = *(++begin);
+    halfedge_descriptor hf = *(++begin);
+    halfedge_descriptor hg = *(++begin);
+    halfedge_descriptor hh = *(++begin);
+    halfedge_descriptor hi = *(++begin);
+    halfedge_descriptor hj = *(++begin);
+    set_prev_helper(halfedgeGen, hc, hj, container_selector());
+    set_prev_helper(halfedgeGen, hd, ha, container_selector());
+    set_prev_helper(halfedgeGen, ha, hh, container_selector());
+    set_prev_helper(halfedgeGen, hh, hd, container_selector());
+    set_prev_helper(halfedgeGen, hf, hc, container_selector());
+    set_prev_helper(halfedgeGen, hj, hf, container_selector());
+    BOOST_CHECK(( prev_in_facet(hc, halfedgeGen) == ha));
+    BOOST_CHECK(( prev_at_source(hc, halfedgeGen) == hb));
+    BOOST_CHECK(( prev_at_target(hc, halfedgeGen) == hj));
+    (void) he;
+    (void) hg;
+    (void) hi;
+    
+    return true;
+}
 
 template <typename HalfedgeGen>
 bool halfedge_functions_requirements() {
@@ -618,6 +863,31 @@ bool test_container_selector()
                       int, int, 
                       halfedge_config<
                         halfedgeS<ContainerS, forwardS<next_at_target_tag> >, 
+                        noVertexS, noFacetS> > 
+                  >() ));
+    // Check prev_... functions 
+    BOOST_CHECK(( halfedge_prev_in_facet_test<
+                    halfedge_gen<
+                      halfedgeS<ContainerS, backwardS<prev_in_facet_tag> >, 
+                      int, int, 
+                      halfedge_config<
+                        halfedgeS<ContainerS, backwardS<prev_in_facet_tag> >, 
+                        noVertexS, noFacetS> > 
+                  >() ));
+    BOOST_CHECK(( halfedge_prev_at_source_test<
+                    halfedge_gen<
+                      halfedgeS<ContainerS, backwardS<prev_at_source_tag> >, 
+                      int, int, 
+                      halfedge_config<
+                        halfedgeS<ContainerS, backwardS<prev_at_source_tag> >, 
+                        noVertexS, noFacetS> > 
+                >() ));
+    BOOST_CHECK(( halfedge_prev_at_target_test<
+                    halfedge_gen<
+                      halfedgeS<ContainerS, backwardS<prev_at_target_tag> >, 
+                      int, int, 
+                      halfedge_config<
+                        halfedgeS<ContainerS, backwardS<prev_at_target_tag> >, 
                         noVertexS, noFacetS> > 
                   >() ));
     return true;

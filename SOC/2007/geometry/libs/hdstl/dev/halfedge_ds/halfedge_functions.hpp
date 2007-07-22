@@ -266,133 +266,162 @@ next_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor
     return next_at_target_helper<halfedgeGen, halfedge_descriptor, typename HalfedgeS::next_tag>::next_at_target(h,hds);
 }
 
-template<typename HalfedgeDescriptor, typename Tag = prev_in_facet_tag>
+template<typename HalfedgeGen, typename HalfedgeDescriptor, typename Tag = prev_in_facet_tag>
 struct prev_in_facet_helper{
     static
     HalfedgeDescriptor
-    prev_in_facet(HalfedgeDescriptor h)
+    prev_in_facet(HalfedgeDescriptor h, HalfedgeGen& hds)
     {
-        return static_cast<HalfedgeDescriptor>(h->m_prev);
+        typedef typename HalfedgeGen::ContainerGen containerGen;
+        return static_cast<HalfedgeDescriptor>(containerGen::value(h,hds.m_container).m_prev);
     }
 };
 
-template<typename HalfedgeDescriptor>
-struct prev_in_facet_helper<HalfedgeDescriptor, prev_at_source_tag>{
+template<typename HalfedgeGen, typename HalfedgeDescriptor>
+struct prev_in_facet_helper<HalfedgeGen, HalfedgeDescriptor, prev_at_source_tag>{
     static
     HalfedgeDescriptor
-    prev_in_facet(HalfedgeDescriptor h)
+    prev_in_facet(HalfedgeDescriptor h, HalfedgeGen& hds)
     {
-        return static_cast<HalfedgeDescriptor>(static_cast<HalfedgeDescriptor>(h->m_prev)->m_opposite);
+        typedef typename HalfedgeGen::ContainerGen containerGen;
+        return static_cast<HalfedgeDescriptor>(opposite(
+                   static_cast<HalfedgeDescriptor>(containerGen::value(h,hds.m_container).m_prev)
+                         , hds));
     }
 };
 
-template<typename HalfedgeDescriptor>
-struct prev_in_facet_helper<HalfedgeDescriptor, prev_at_target_tag>{
+template<typename HalfedgeGen, typename HalfedgeDescriptor>
+struct prev_in_facet_helper<HalfedgeGen, HalfedgeDescriptor, prev_at_target_tag>{
     static
     HalfedgeDescriptor
-    prev_in_facet(HalfedgeDescriptor h)
+    prev_in_facet(HalfedgeDescriptor h, HalfedgeGen& hds)
     {
-        return static_cast<HalfedgeDescriptor>(static_cast<HalfedgeDescriptor>(h->m_opposite)->m_prev);
+        typedef typename HalfedgeGen::ContainerGen containerGen;
+        return static_cast<HalfedgeDescriptor>(containerGen::value(
+                   static_cast<HalfedgeDescriptor>(opposite(h, hds))
+                         ,hds.m_container).m_prev);
     }
 };
 
-template<typename HalfedgeDescriptor, typename Tag = prev_at_source_tag>
+template<typename HalfedgeGen, typename HalfedgeDescriptor, typename Tag = prev_at_source_tag>
 struct prev_at_source_helper{
     static
     HalfedgeDescriptor
-    prev_at_source(HalfedgeDescriptor h)
+    prev_at_source(HalfedgeDescriptor h, HalfedgeGen& hds)
     {
-        return static_cast<HalfedgeDescriptor>(h->m_prev);
+        typedef typename HalfedgeGen::ContainerGen containerGen;
+        return static_cast<HalfedgeDescriptor>(containerGen::value(h,hds.m_container).m_prev);
     }
 };
 
-template<typename HalfedgeDescriptor>
-struct prev_at_source_helper<HalfedgeDescriptor, prev_in_facet_tag>{
+template<typename HalfedgeGen, typename HalfedgeDescriptor>
+struct prev_at_source_helper<HalfedgeGen, HalfedgeDescriptor, prev_in_facet_tag>{
     static
     HalfedgeDescriptor
-    prev_at_source(HalfedgeDescriptor h)
+    prev_at_source(HalfedgeDescriptor h, HalfedgeGen& hds)
     {
-        return static_cast<HalfedgeDescriptor>(static_cast<HalfedgeDescriptor>(h->m_prev)->m_opposite);
+        typedef typename HalfedgeGen::ContainerGen containerGen;
+        return static_cast<HalfedgeDescriptor>(opposite(
+                   static_cast<HalfedgeDescriptor>(containerGen::value(h,hds.m_container).m_prev)
+                         , hds));
     }
 };
 
-template<typename HalfedgeDescriptor>
-struct prev_at_source_helper<HalfedgeDescriptor, prev_at_target_tag>{
+template<typename HalfedgeGen, typename HalfedgeDescriptor>
+struct prev_at_source_helper<HalfedgeGen, HalfedgeDescriptor, prev_at_target_tag>{
     static
     HalfedgeDescriptor
-    prev_at_source(HalfedgeDescriptor h)
+    prev_at_source(HalfedgeDescriptor h, HalfedgeGen& hds)
     {
-        return static_cast<HalfedgeDescriptor>(
-                   static_cast<HalfedgeDescriptor>(
-                       static_cast<HalfedgeDescriptor>(h->m_opposite)->m_prev)->m_opposite);
+        typedef typename HalfedgeGen::ContainerGen containerGen;
+        return static_cast<HalfedgeDescriptor>(opposite(
+                    static_cast<HalfedgeDescriptor>(containerGen::value(
+                        static_cast<HalfedgeDescriptor>(opposite(h, hds))
+                            ,hds.m_container).m_prev)
+                                , hds));
     }
 };
 
-template<typename HalfedgeDescriptor, typename Tag = prev_at_target_tag>
+template<typename HalfedgeGen, typename HalfedgeDescriptor, typename Tag = prev_at_target_tag>
 struct prev_at_target_helper{
     static
     HalfedgeDescriptor
-    prev_at_target(HalfedgeDescriptor h)
+    prev_at_target(HalfedgeDescriptor h, HalfedgeGen& hds)
     {
-        return static_cast<HalfedgeDescriptor>(h->m_prev);
+        typedef typename HalfedgeGen::ContainerGen containerGen;
+        return static_cast<HalfedgeDescriptor>(containerGen::value(h,hds.m_container).m_prev);
     }
 };
 
-template<typename HalfedgeDescriptor>
-struct prev_at_target_helper<HalfedgeDescriptor, prev_in_facet_tag>{
+template<typename HalfedgeGen, typename HalfedgeDescriptor>
+struct prev_at_target_helper<HalfedgeGen, HalfedgeDescriptor, prev_in_facet_tag>{
     static
     HalfedgeDescriptor
-    prev_at_target(HalfedgeDescriptor h)
+    prev_at_target(HalfedgeDescriptor h, HalfedgeGen& hds)
     {
-        return static_cast<HalfedgeDescriptor>(static_cast<HalfedgeDescriptor>(h->m_opposite)->m_prev);
+        typedef typename HalfedgeGen::ContainerGen containerGen;
+        return static_cast<HalfedgeDescriptor>(containerGen::value(
+                   static_cast<HalfedgeDescriptor>(opposite(h, hds))
+                         ,hds.m_container).m_prev);
     }
 };
 
-template<typename HalfedgeDescriptor>
-struct prev_at_target_helper<HalfedgeDescriptor, prev_at_source_tag>{
+template<typename HalfedgeGen, typename HalfedgeDescriptor>
+struct prev_at_target_helper<HalfedgeGen, HalfedgeDescriptor, prev_at_source_tag>{
     static
     HalfedgeDescriptor
-    prev_at_target(HalfedgeDescriptor h)
+    prev_at_target(HalfedgeDescriptor h, HalfedgeGen& hds)
     {
-        return static_cast<HalfedgeDescriptor>(
-                  static_cast<HalfedgeDescriptor>(
-                     static_cast<HalfedgeDescriptor>(h->m_opposite)->m_prev)->m_opposite);
+        typedef typename HalfedgeGen::ContainerGen containerGen;
+        return static_cast<HalfedgeDescriptor>(opposite(
+                    static_cast<HalfedgeDescriptor>(containerGen::value(
+                        static_cast<HalfedgeDescriptor>(opposite(h, hds))
+                            ,hds.m_container).m_prev)
+                                , hds));
     }
 };
 
 template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
 typename Config::halfedge_descriptor
 prev_in_facet(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
-              halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>&)
+               halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
 {
     typedef typename halfedge_gen<HalfedgeS, 
                                   VertexDescriptor,FacetDescriptor, Config
                                  >::halfedge_descriptor halfedge_descriptor;
-    return prev_in_facet_helper<halfedge_descriptor, typename HalfedgeS::prev_tag>::prev_in_facet(h);
+    typedef  halfedge_gen<HalfedgeS, 
+                                  VertexDescriptor,FacetDescriptor, Config> halfedgeGen;
+
+    return prev_in_facet_helper<halfedgeGen, halfedge_descriptor, typename HalfedgeS::prev_tag>::prev_in_facet(h, hds);
 }
 
 template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
 typename Config::halfedge_descriptor
 prev_at_source(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
-               halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>&)
+               halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
 {
     typedef typename halfedge_gen<HalfedgeS, 
                                   VertexDescriptor,FacetDescriptor, Config
                                  >::halfedge_descriptor halfedge_descriptor;
-    return prev_at_source_helper<halfedge_descriptor, typename HalfedgeS::prev_tag>::prev_at_source(h);
+    typedef  halfedge_gen<HalfedgeS, 
+                                  VertexDescriptor,FacetDescriptor, Config> halfedgeGen;
+
+    return prev_at_source_helper<halfedgeGen, halfedge_descriptor, typename HalfedgeS::prev_tag>::prev_at_source(h,hds);
 }
 
 template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
 typename Config::halfedge_descriptor
 prev_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
-               halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>&)
+               halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
 {
     typedef typename halfedge_gen<HalfedgeS, 
                                   VertexDescriptor,FacetDescriptor, Config
                                  >::halfedge_descriptor halfedge_descriptor;
-    return prev_at_target_helper<halfedge_descriptor, typename HalfedgeS::prev_tag>::prev_at_target(h);
-}
+    typedef  halfedge_gen<HalfedgeS, 
+                                  VertexDescriptor,FacetDescriptor, Config> halfedgeGen;
 
+    return prev_at_target_helper<halfedgeGen, halfedge_descriptor, typename HalfedgeS::prev_tag>::prev_at_target(h,hds);
+}
 
 } // namespace hdstl
 } // namespace boost
