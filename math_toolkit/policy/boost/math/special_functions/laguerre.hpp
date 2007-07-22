@@ -14,28 +14,6 @@
 namespace boost{
 namespace math{
 
-//
-// Some forward declarations:
-//
-template <class T, class Policy>
-typename tools::promote_args<T>::type 
-   laguerre(unsigned n, unsigned m, T x, const Policy&);
-
-
-template <class T1, class T2>
-struct laguerre_result
-{
-   typedef typename mpl::if_<
-      policy::is_policy<T2>,
-      typename tools::promote_args<T1>::type,
-      typename tools::promote_args<T2>::type
-   >::type type;
-};
-
-template <class T1, class T2>
-typename laguerre_result<T1, T2>::type 
-   laguerre(unsigned n, T1 m, T2 x);
-
 // Recurrance relation for Laguerre polynomials:
 template <class T1, class T2, class T3>
 inline typename tools::promote_args<T1, T2, T3>::type  

@@ -27,32 +27,6 @@ namespace boost{ namespace math{
 
 namespace detail{
 
-typedef mpl::int_<0> bessel_no_int_tag;      // No integer optimisation possible.
-typedef mpl::int_<1> bessel_maybe_int_tag;   // Maybe integer optimisation.
-typedef mpl::int_<2> bessel_int_tag;         // Definite integer optimistaion.
-
-template <class T1, class T2, class Policy>
-struct bessel_traits
-{
-   typedef typename tools::promote_args<
-      T1, T2
-   >::type result_type;
-
-   typedef typename policy::precision<result_type, Policy>::type precision_type;
-
-   typedef typename mpl::if_<
-      mpl::or_<
-         mpl::less_equal<precision_type, mpl::int_<0> >,
-         mpl::greater<precision_type, mpl::int_<64> > >,
-      bessel_no_int_tag,
-      typename mpl::if_<
-         is_integral<T1>,
-         bessel_int_tag,
-         bessel_maybe_int_tag
-      >::type
-   >::type optimisation_tag;
-};
-
 template <class T, class Policy>
 struct bessel_j_small_z_series_term
 {

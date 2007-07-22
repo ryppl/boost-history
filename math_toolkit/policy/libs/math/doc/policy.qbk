@@ -814,6 +814,93 @@ a domain error. Then we could add the following to boost/math/tools/user.hpp:
 
 [endsect]
 
+[section:namespace_pol Setting Polices at Namespace Scope]
+
+Sometimes what you really want to do is bring all the special functions,
+or all the distributions into a specific namespace-scope, along with
+a specific policy to use with them.  There are two macros defined to
+assist with that:
+
+   BOOST_MATH_DECLARE_SPECIAL_FUNCTIONS(Policy)
+
+and:
+
+   BOOST_MATH_DECLARE_DISTRIBUTIONS(Type, Policy)
+   
+You can use either of these macros after including any special function
+or distribution header.  For example:
+
+   #include <boost/math/special_functions/gamma.hpp>
+   
+   namespace myspace{
+   
+   using namespace boost::math::policy;
+   
+   // Define a policy that does not throw on overflow:
+   typedef policy<overflow_error<errno_on_error> > my_policy;
+
+   // Define the special functions in this scope to use the policy:   
+   BOOST_MATH_DECLARE_SPECIAL_FUNCTIONS(my_policy)
+   
+   }
+   
+   //
+   // Now we can use myspace::tgamma etc.
+   // They will automatically use "my_policy":
+   //
+   double t = myspace::tgamma(30.0); // will not throw on overflow
+
+In this example, using BOOST_MATH_DECLARE_SPECIAL_FUNCTIONS results in
+a set of thin inline forwarding functions being defined:
+
+   template <class T>
+   inline T tgamma(T a){ return ::boost::math::tgamma(a, mypolicy()); }
+   
+   template <class T>
+   inline T lgamma(T a) ( return ::boost::math::lgamma(a, mypolicy()); }
+   
+and so on.  Note that a forwarding function is defined for all the special
+functions, however, unless you include the specific header for the special
+function you use (or boost/math/special_functions.hpp), you will get 
+linker errors from undefined functions.
+
+We can do the same thing with the distributions, but this time we need to
+specify the floating point type to use:
+
+   #include <boost/math/distributions/cauchy.hpp>
+   
+   namespace myspace{
+   
+   using namespace boost::math::policy;
+   
+   // Define a policy to use, in this case we want all the distribution
+   // accessor functions to compile, even if they are mathematically
+   // undefined:
+   typedef policy<assert_undefined<false> > my_policy;
+   
+   BOOST_MATH_DECLARE_DISTRIBUTIONS(double, my_policy)
+   
+   }
+   
+   //
+   // Now we can use myspace::cauchy etc, which will use policy
+   // myspace::mypolicy:
+   //
+   // This compiles but raises a domain error at runtime:
+   //
+   double d = mean(myspace::cauchy()); 
+   
+In this example the result of BOOST_MATH_DECLARE_DISTRIBUTIONS is to
+declare a typedef for each distribution like this:
+
+   typedef boost::math::cauchy_distribution<double, my_policy> cauchy;
+   tyepdef boost::math::gamma_distribution<double, my_policy> gamma;
+   
+and so on.  The name given to each typedef is the name of the distribution
+with the "_distribution" suffix removed.
+
+[endsect]
+
 [endsect]
 
 [endsect]

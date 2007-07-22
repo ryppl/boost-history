@@ -328,7 +328,7 @@ namespace boost
         return result;
       }
       using namespace std;
-      return dist.location() * pow(2, (1/dist.shape()));
+      return dist.location() * pow(RealType(2), (1/dist.shape()));
     } // median
 
     template <class RealType, class Policy>
