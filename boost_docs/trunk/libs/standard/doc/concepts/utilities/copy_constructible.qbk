@@ -6,5 +6,42 @@
  /]
 
 [section Copy Constructible]
+A type `T` is said to be /copy constructible/ if one instance `t` can be 
+constructed with the value of another instance `u`. The type of `u` must
+be `T` or `const T`. A type that is copy constructible has either a 
+compiler-generated or user-defined copy constructor.
+
+[heading Notation]
+[table
+	[[Expression] [Description]]
+	[[T] [A copy-constructible type.]]
+	[[t] [An instance of type `T`.]]
+	[[u] [An instance of type 'const T`.]]
+]
+
+[heading Requirements]
+[table
+	[[Expression] [Return Type] [Requirements]]
+	[
+		[`T t(u)`]
+		[]
+		[`t` is equivalent to `u`]
+	]
+	[
+		[`t.~T()`]
+		[]
+		[`t` is destructed.]
+	]
+	[
+		[`&t`]
+		[`T*`]
+		[Denotes the address of `t`.]
+	]
+]
+
+Taking the address of an instance with `const` type yields a
+`const` pointer. Let `U` be the type `const T` and `u` an instance
+of `U`. The return type of `&u` is `U*`, which by substitution is
+the same as `const T*`.
 
 [endsect]

@@ -7,18 +7,25 @@
 
 [section Default Constructible]
 A type `T` is said to be /default constructible/ if it can be instantiated
-without initializing it to any particular value.
+without initializing it to any particular value. A type with that is default
+constructible has either a compiler-generated or user-defined constructor
+that can be called without arguments.
 
-Some types modeling this concept may choose to define a default value or
-state, but this required.
+Non-trivial default constructors may specify a default value or state for
+an object, but such values are not required by this concept.
 
 [heading Requirements]
 [table
 	[[Expression] [Return Type] [Requirements]]
 	[
-		[`Type `x]
+		[`T x`]
 		[]
-		[`x` is an instance of T.]
+		[`x` is an instance of `T`.]
+	]
+	[
+		[`T()`]
+		[An instance of `T` is constructed.]
+		[]
 	]
 ]
 

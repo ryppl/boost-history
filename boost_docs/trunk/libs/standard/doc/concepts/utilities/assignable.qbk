@@ -7,7 +7,8 @@
 
 [section Assignable]
 A type `T` is said to be /assignable/ if the value of one instance, `u`, can be copied
-to the value of another, `t`. Note that the type of `u` may be `T` or `const T`.
+to the value of another, `t` through an assignment expression. Note that the type of
+`u` must be `T` or `const T`.
 
 This concept sets no requirements nor makes provision for assignment when the type
 of `u` is not `T` or `const T`. This simply states that instances of a type, that models
