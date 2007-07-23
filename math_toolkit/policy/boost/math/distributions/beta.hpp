@@ -24,6 +24,7 @@
 #ifndef BOOST_MATH_DIST_BETA_HPP
 #define BOOST_MATH_DIST_BETA_HPP
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/special_functions/beta.hpp> // for beta.
 #include <boost/math/distributions/complement.hpp> // complements.
 #include <boost/math/distributions/detail/common_error_handling.hpp> // error checks

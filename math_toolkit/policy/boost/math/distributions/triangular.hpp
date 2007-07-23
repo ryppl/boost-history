@@ -10,6 +10,7 @@
 // http://mathworld.wolfram.com/TriangularDistribution.html
 // http://en.wikipedia.org/wiki/Triangular_distribution
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/special_functions/expm1.hpp>
 #include <boost/math/distributions/detail/common_error_handling.hpp>
 #include <boost/math/distributions/complement.hpp>

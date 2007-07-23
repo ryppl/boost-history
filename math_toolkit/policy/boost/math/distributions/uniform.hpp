@@ -15,6 +15,7 @@
 // http://documents.wolfram.com/calculationcenter/v2/Functions/ListsMatrices/Statistics/UniformDistribution.html
 // http://en.wikipedia.org/wiki/Uniform_distribution_%28continuous%29
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/distributions/detail/common_error_handling.hpp>
 #include <boost/math/distributions/complement.hpp>
 

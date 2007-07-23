@@ -8,6 +8,7 @@
 #ifndef BOOST_MATH_DISTRIBUTIONS_FISHER_F_HPP
 #define BOOST_MATH_DISTRIBUTIONS_FISHER_F_HPP
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/special_functions/beta.hpp> // for incomplete beta.
 #include <boost/math/distributions/complement.hpp> // complements
 #include <boost/math/distributions/detail/common_error_handling.hpp> // error checks

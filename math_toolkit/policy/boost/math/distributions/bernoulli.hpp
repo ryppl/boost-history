@@ -27,6 +27,7 @@
 #ifndef BOOST_MATH_SPECIAL_BERNOULLI_HPP
 #define BOOST_MATH_SPECIAL_BERNOULLI_HPP
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/tools/config.hpp>
 #include <boost/math/distributions/complement.hpp> // complements
 #include <boost/math/distributions/detail/common_error_handling.hpp> // error checks

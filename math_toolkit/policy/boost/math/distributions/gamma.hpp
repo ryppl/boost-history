@@ -10,6 +10,7 @@
 // http://mathworld.wolfram.com/GammaDistribution.html
 // http://en.wikipedia.org/wiki/Gamma_distribution
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/special_functions/gamma.hpp>
 #include <boost/math/distributions/detail/common_error_handling.hpp>
 #include <boost/math/distributions/complement.hpp>

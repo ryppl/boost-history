@@ -6,6 +6,7 @@
 #ifndef BOOST_STATS_CAUCHY_HPP
 #define BOOST_STATS_CAUCHY_HPP
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/distributions/complement.hpp>
 #include <boost/math/distributions/detail/common_error_handling.hpp>

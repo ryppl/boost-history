@@ -10,6 +10,7 @@
 // http://mathworld.wolfram.com/LogNormalDistribution.html
 // http://en.wikipedia.org/wiki/Lognormal_distribution
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/distributions/normal.hpp>
 #include <boost/math/special_functions/expm1.hpp>
 #include <boost/math/distributions/detail/common_error_handling.hpp>

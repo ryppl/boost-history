@@ -6,6 +6,7 @@
 #ifndef BOOST_STATS_rayleigh_HPP
 #define BOOST_STATS_rayleigh_HPP
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/special_functions/log1p.hpp>
 #include <boost/math/special_functions/expm1.hpp>

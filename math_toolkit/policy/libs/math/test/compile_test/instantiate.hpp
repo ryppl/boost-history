@@ -24,6 +24,12 @@ BOOST_MATH_DECLARE_SPECIAL_FUNCTIONS(test_policy)
 
 }
 
+namespace dist_test{
+
+BOOST_MATH_DECLARE_DISTRIBUTIONS(double, test_policy)
+
+}
+
 template <class RealType>
 void instantiate(RealType)
 {
@@ -70,6 +76,26 @@ void instantiate(RealType)
    function_requires<DistributionConcept<triangular_distribution<RealType, test_policy> > >();
    function_requires<DistributionConcept<uniform_distribution<RealType, test_policy> > >();
    function_requires<DistributionConcept<weibull_distribution<RealType, test_policy> > >();
+
+   function_requires<DistributionConcept<dist_test::bernoulli > >();
+   function_requires<DistributionConcept<dist_test::beta > >();
+   function_requires<DistributionConcept<dist_test::binomial > >();
+   function_requires<DistributionConcept<dist_test::cauchy > >();
+   function_requires<DistributionConcept<dist_test::chi_squared > >();
+   function_requires<DistributionConcept<dist_test::exponential > >();
+   function_requires<DistributionConcept<dist_test::extreme_value > >();
+   function_requires<DistributionConcept<dist_test::fisher_f > >();
+   function_requires<DistributionConcept<dist_test::gamma > >();
+   function_requires<DistributionConcept<dist_test::lognormal > >();
+   function_requires<DistributionConcept<dist_test::negative_binomial > >();
+   function_requires<DistributionConcept<dist_test::normal > >();
+   function_requires<DistributionConcept<dist_test::rayleigh > >();
+   function_requires<DistributionConcept<dist_test::pareto > >();
+   function_requires<DistributionConcept<dist_test::poisson > >();
+   function_requires<DistributionConcept<dist_test::students_t > >();
+   function_requires<DistributionConcept<dist_test::triangular > >();
+   function_requires<DistributionConcept<dist_test::uniform > >();
+   function_requires<DistributionConcept<dist_test::weibull > >();
 
    int i;
    RealType v1(0.5), v2(0.5), v3(0.5);

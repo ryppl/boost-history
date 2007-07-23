@@ -10,6 +10,7 @@
 // http://en.wikipedia.org/wiki/Student%27s_t_distribution
 // http://www.itl.nist.gov/div898/handbook/eda/section3/eda3664.htm
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/special_functions/beta.hpp> // for ibeta(a, b, x).
 #include <boost/math/distributions/complement.hpp>
 #include <boost/math/distributions/detail/common_error_handling.hpp>

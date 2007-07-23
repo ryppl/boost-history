@@ -14,6 +14,7 @@
 // From MathWorld--A Wolfram Web Resource.
 // http://mathworld.wolfram.com/ParetoDistribution.html
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/distributions/complement.hpp>
 #include <boost/math/distributions/detail/common_error_handling.hpp>
 #include <boost/math/special_functions/powm1.hpp>

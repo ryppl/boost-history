@@ -39,6 +39,7 @@
 #ifndef BOOST_MATH_SPECIAL_NEGATIVE_BINOMIAL_HPP
 #define BOOST_MATH_SPECIAL_NEGATIVE_BINOMIAL_HPP
 
+#include <boost/math/distributions/fwd.hpp>
 #include <boost/math/special_functions/beta.hpp> // for ibeta(a, b, x) == Ix(a, b).
 #include <boost/math/distributions/complement.hpp> // complement.
 #include <boost/math/distributions/detail/common_error_handling.hpp> // error checks domain_error & logic_error.

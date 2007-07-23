@@ -24,6 +24,8 @@
 #include <boost/mpl/comparison.hpp>
 #include <complex>
 
+#define BOOST_NO_MACRO_EXPAND /**/
+
 namespace boost
 {
 	namespace math
