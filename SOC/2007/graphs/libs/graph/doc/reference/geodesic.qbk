@@ -14,7 +14,7 @@
                       DistanceMap dist)
 
     template <typename Graph, typename DistanceMap>
-    inline double
+    double
     mean_geodesic_distance(const Graph& g, DistanceMap dist)
 
     template <typename Graph, typename DistanceMap, typename T>
@@ -29,23 +29,23 @@ that these functions /do not/ compute these paths or record their distances.
 Boost.Graph provides two shortest paths algorithms: [boost_dijkstra_shortest_paths]
 and [boost_bellman_ford_shortest_paths]. Optionally, if the target graph is
 an unweighted, undirected graph, shortest paths can be recorded using
-[boost_breadh_first_search]. Each of these algorithms takes as an input a
+[boost_breadth_first_search]. Each of these algorithms takes as an input a
 vertex for which the shortest distances are being computed. The output of
 each of these algorithms is a `DistanceMap`, which is (in turn) used as the
 input of these functions. Note then, that these functions compute measures
 of the vertex for which `dist` was computed.
 
-The `geodesic_distance(g,dist)` function returns the length of the shortest path
+The `geodesic_distance()` function returns the length of the shortest path
 between two vertices. The source vertex is that for which the `DistanceMap`
 was computed and the target vertex, `v`, is supplied as a parameter. This
 function is an alias for:
 
     dist[v];
 
-The `mean_geodesic_distance(g,dist,T())` functions return the (arithmatic) mean
+The `mean_geodesic_distance()` functions return the (arithmatic) mean
 of the geodesic distances between a vertex and all others in the graph. The
-vertex for which this is computed is that for which the `DistanceMap` was
-originally computed. The mean geodesic distance is implemeted as:
+vertex for which this is computed is that for which `dist` originally \
+computed. The mean geodesic distance is implemeted as:
 
 [$images/eq/mean_geodesic.png]
 
@@ -71,11 +71,7 @@ also infinite.
     [
         [required, in] [`const Graph& g`]
         [
-            The graph object for which the distribution will be computed. If
-            the `_distribution` or `_in_distribution` arguments are supplied
-            when calling this function then `_graph` must be a model of
-            [BoostBidirectionalGraph]. If only `_out_distribution` is supplied,
-            then `_graph` must be a model of [BoostIncidenceGraph].
+            The graph object for which the distribution will be computed.
         ]
     ]
     [
@@ -121,16 +117,16 @@ of an infinite value.
 ]
 
 [h5 Return Value]
-The `geodesic_distance(g,v,dist)` function returns the distance of the shortest
+The `geodesic_distance()` function returns the distance of the shortest
 path to `v`.
 
-The `mean_geodesic_distance(g,dist)` function returns the (arithmatic) mean of
+The `mean_geodesic_distance()` function returns the (arithmatic) mean of
 the shortest distances to all other vertices.
 
 [h5 Complexity]
-The `geodesic_distance(g,v,dist)` has O(1) time complexity.
+The `geodesic_distance()` function has /O(1)/ time complexity.
 
-The `mean_geodesic_distance(g,dist)` has O(n) time complexity.
+The `mean_geodesic_distance()` function has /O(n)/ time complexity.
 
 [h5 Examples]
 This example computes shows the construction of a simple undirected graph and

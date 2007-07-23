@@ -1,0 +1,113 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Closeness]
+
+    template <typename Graph, typename DistanceMap>
+    property_traits<DistanceMap>::value_type
+    closeness(const Graph&g, DistanceMap dist)
+
+    template <typename Graph, typename DistanceMap, typename T>
+    T
+    closeness(const Graph& g, DistanceMap dist, const T& dummy)
+
+These functions compute the /closeness/ of vertices in a graph. The /closeness/
+of a vertex is defined as the reciprocal of the sum of /geodesic distances/
+(shortest paths) to all other vertices in the graph as given by the formula:
+
+[$images/eq/closeness.png]
+
+where ['d[sub G](u,v)] is the shortest path from /u/ to /v/. It is important to
+note that these functions /do not/ compute these paths or record their distances
+
+Boost.Graph provides two shortest paths algorithms: [boost_dijkstra_shortest_paths]
+and [boost_bellman_ford_shortest_paths]. Optionally, if the target graph is
+an unweighted, undirected graph, shortest paths can be recorded using
+[boost_breadth_first_search]. Each of these algorithms takes as an input a
+vertex for which the shortest distances are being computed. The output of
+each of these algorithms is a `DistanceMap`, which is (in turn) used as the
+input of these functions. Note then, that these functions compute measures
+of the vertex for which the `DistanceMap` was computed.
+
+The `closeness()` functions return the closeness of the geodesic distances
+between a vertex and all others in the graph. The vertex for which this is computed
+is that for which `dist` was originally computed.
+
+The default (first) variant of this function computes and returns the
+closeness as a `double`. The second variant allows the average and return
+type to be computed as a user-defined type by passing a dummy instance.
+This is useful if the `value_type` of `DistanceMap` is a user-defined or
+otherwise non-trivial.
+
+If the graph is unconnected, then the closeness between any two vertices
+is zero.
+
+[heading Where Defined]
+`boost/graph/distance.hpp`
+
+[heading Parameters]
+
+[table
+    [[Type] [Parameter] [Description]]
+    [
+        [required, in] [`const Graph& g`]
+        [
+            The graph object for which the distribution will be computed.
+        ]
+    ]
+    [
+        [required, in] [`vertex_descriptor v`]
+        [
+            The target vertex to which the geodisic distance is returned. The
+            source vertex is made implicit by the `DistanceMap`.
+        ]
+    ]
+    [
+        [required, in] [`DistanceMap dist`]
+        [
+            The `dist` parameter provides the distances of the shortest paths
+            from one source vertex to all others in the graph. The `DistanceMap`
+            must be a model of [BoostReadWritePropertyMap], they `key_type` must
+            be the `vertex_descriptor` of `Graph`.
+        ]
+    ]
+    [
+        [required, in] [`const T& dummy`]
+        [
+            An unused instance of the type returned by the `mean_geodesic_distance()`
+            function. If specified, the measure will be computed as an average of
+            this type. This type must essentially be numeric, as it is required to
+            a) support division, b) be initialized with an integer type, and c)
+            have a default of 0.
+        ]
+    ]
+]
+
+[note
+The requirements on `T` indicate a particularly interesting problem because
+division is basically [SgiMonoid] operation - which is probably one of the
+more esoteric concepts in the STL. Curiously, the `identity_element()` operation
+which is an SGI extension and apparently not part of the actual standard.
+
+The correct implemention of `detail::sum_distances()` should take a monoid
+type and use `identity_element(f)` for initializaiton and `f` for the combination.
+]
+
+[h5 Return Value]
+The `closeness()` function returns the closeness of the vertex for which
+`dist` was computed. The closeness is defined in the formula above.
+
+[h5 Complexity]
+The `closeness()` function has /O(n)/ time complexity.
+
+[h5 Examples]
+[note
+Write some examples...
+]
+
+
+[endsect]
