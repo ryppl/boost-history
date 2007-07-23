@@ -423,6 +423,185 @@ prev_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor
     return prev_at_target_helper<halfedgeGen, halfedge_descriptor, typename HalfedgeS::prev_tag>::prev_at_target(h,hds);
 }
 
+template<typename HalfedgeGen, typename HalfedgeDescriptor, typename ContainerS, typename ThisTag, typename Tag>
+struct set_next_helper{
+    static void
+    set_next(HalfedgeDescriptor h, HalfedgeDescriptor g, HalfedgeGen& hds)
+    {
+        // This Tag and Tag do not match, 
+        // What you are trying to do is  setting the next tag 
+        // with a different function than it is supposed to 
+        // be used.
+        // Compile time error should follow.
+    }
+};
+
+template<typename HalfedgeGen, typename HalfedgeDescriptor, typename Tag>
+struct set_next_helper<HalfedgeGen, HalfedgeDescriptor, vecS, Tag, Tag>{
+    static void
+    set_next(HalfedgeDescriptor h, HalfedgeDescriptor g, HalfedgeGen& hds)
+    {
+        hds.m_container[h].m_next = g;
+    }
+};
+
+template<typename HalfedgeGen, typename HalfedgeDescriptor, typename ContainerS, typename Tag>
+struct set_next_helper<HalfedgeGen, HalfedgeDescriptor, ContainerS, Tag, Tag>{
+    static void
+    set_next(HalfedgeDescriptor h, HalfedgeDescriptor g, HalfedgeGen& hds)
+    {
+        (void) hds;
+        h->m_next = g;
+    }
+};
+
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+void
+set_next_in_facet(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
+                  typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
+                  halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+{
+    typedef typename halfedge_gen<HalfedgeS,
+                                  VertexDescriptor,FacetDescriptor, Config
+                                 >::halfedge_descriptor halfedge_descriptor;
+    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+
+    typedef typename halfedgeGen::halfedge_selector::container_selector containerS;
+
+    typedef next_in_facet_tag this_tag;
+
+    set_next_helper<halfedgeGen, halfedge_descriptor, containerS, this_tag, typename HalfedgeS::next_tag>
+                    ::set_next(h, g, hds);
+}
+
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+void
+set_next_at_source(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
+                  typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
+                  halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+{
+    typedef typename halfedge_gen<HalfedgeS,
+                                  VertexDescriptor,FacetDescriptor, Config
+                                 >::halfedge_descriptor halfedge_descriptor;
+    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+
+    typedef typename halfedgeGen::halfedge_selector::container_selector containerS;
+
+    typedef next_at_source_tag this_tag;
+
+    set_next_helper<halfedgeGen, halfedge_descriptor, containerS, this_tag, typename HalfedgeS::next_tag>
+                    ::set_next(h, g, hds);
+}
+
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+void
+set_next_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
+                  typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
+                  halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+{
+    typedef typename halfedge_gen<HalfedgeS,
+                                  VertexDescriptor,FacetDescriptor, Config
+                                 >::halfedge_descriptor halfedge_descriptor;
+    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+
+    typedef typename halfedgeGen::halfedge_selector::container_selector containerS;
+
+    typedef next_at_target_tag this_tag;
+
+    set_next_helper<halfedgeGen, halfedge_descriptor, containerS, this_tag, typename HalfedgeS::next_tag>
+                    ::set_next(h, g, hds);
+}
+
+template<typename HalfedgeGen, typename HalfedgeDescriptor, typename ContainerS, typename ThisTag, typename Tag>
+struct set_prev_helper{
+    static void
+    set_prev(HalfedgeDescriptor h, HalfedgeDescriptor g, HalfedgeGen& hds)
+    {
+        // This Tag and Tag do not match, 
+        // What you are trying to do is  setting the prev tag 
+        // with a different function than it is supposed to 
+        // be used.
+        // Compile time error should follow.
+    }
+};
+
+template<typename HalfedgeGen, typename HalfedgeDescriptor, typename Tag>
+struct set_prev_helper<HalfedgeGen, HalfedgeDescriptor, vecS, Tag, Tag>{
+    static void
+    set_prev(HalfedgeDescriptor h, HalfedgeDescriptor g, HalfedgeGen& hds)
+    {
+        hds.m_container[h].m_prev = g;
+    }
+};
+
+template<typename HalfedgeGen, typename HalfedgeDescriptor, typename ContainerS, typename Tag>
+struct set_prev_helper<HalfedgeGen, HalfedgeDescriptor, ContainerS, Tag, Tag>{
+    static void
+    set_prev(HalfedgeDescriptor h, HalfedgeDescriptor g, HalfedgeGen& hds)
+    {
+        (void) hds;
+        h->m_prev = g;
+    }
+};
+
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+void
+set_prev_in_facet(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
+                  typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
+                  halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+{
+    typedef typename halfedge_gen<HalfedgeS,
+                                  VertexDescriptor,FacetDescriptor, Config
+                                 >::halfedge_descriptor halfedge_descriptor;
+    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+
+    typedef typename halfedgeGen::halfedge_selector::container_selector containerS;
+
+    typedef prev_in_facet_tag this_tag;
+
+    set_prev_helper<halfedgeGen, halfedge_descriptor, containerS, this_tag, typename HalfedgeS::prev_tag>
+                    ::set_prev(h, g, hds);
+}
+
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+void
+set_prev_at_source(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
+                  typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
+                  halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+{
+    typedef typename halfedge_gen<HalfedgeS,
+                                  VertexDescriptor,FacetDescriptor, Config
+                                 >::halfedge_descriptor halfedge_descriptor;
+    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+
+    typedef typename halfedgeGen::halfedge_selector::container_selector containerS;
+
+    typedef prev_at_source_tag this_tag;
+
+    set_prev_helper<halfedgeGen, halfedge_descriptor, containerS, this_tag, typename HalfedgeS::prev_tag>
+                    ::set_prev(h, g, hds);
+}
+
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+void
+set_prev_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
+                  typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
+                  halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+{
+    typedef typename halfedge_gen<HalfedgeS,
+                                  VertexDescriptor,FacetDescriptor, Config
+                                 >::halfedge_descriptor halfedge_descriptor;
+    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+
+    typedef typename halfedgeGen::halfedge_selector::container_selector containerS;
+
+    typedef prev_at_target_tag this_tag;
+
+    set_prev_helper<halfedgeGen, halfedge_descriptor, containerS, this_tag, typename HalfedgeS::prev_tag>
+                    ::set_prev(h, g, hds);
+}
+
+
 } // namespace hdstl
 } // namespace boost
 
