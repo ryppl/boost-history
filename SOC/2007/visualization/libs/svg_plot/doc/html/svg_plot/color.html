@@ -1,0 +1,103 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Colors</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../index.html" title="SVG_Plot">
+<link rel="up" href="../index.html" title="SVG_Plot">
+<link rel="prev" href="intro.html" title=" Introduction">
+<link rel="next" href="tutorial.html" title=" Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="intro.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="svg_plot.color"></a> Colors</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="color.html#svg_plot.color.color_intro"> Introduction</a></span></dt>
+<dt><span class="section"><a href="color.html#svg_plot.color.color_internals"> Internals and Rationale</a></span></dt>
+<dt><span class="section"><a href="color.html#svg_plot.color.color_usage"> Usage</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.color.color_intro"></a> Introduction</h3></div></div></div>
+<p>
+        The project supports any color definable by the RGB interface, as well as
+        a number of constants that are named by the SVG standard.
+      </p>
+<p>
+        <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords" target="_top">Here</a>
+        is a link to the SVG color constants that my program supports
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.color.color_internals"></a> Internals and Rationale</h3></div></div></div>
+<p>
+        All color information is stored in RGB format in a svg_struct. The rationale
+        for storing information in RGB format is because it is precise and is always
+        representable the exact same way. Storing as a floating point percentage
+        introduces the possibility of rounding error, which I would like to avoid
+        at all costs. The same image file will always display the same way on any
+        system that correctly implements the SVG format.
+      </p>
+<p>
+        It is important to note that any integer value is accepted by the SVG standard,
+        but negative values are rounded to 0, and positive values &gt; 255 are rounded
+        down to 255.
+      </p>
+<p>
+        Constants are defined in an enum, <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>,
+        in alphabetical order. This facilitates quick lookup of their RGB values
+        quickly in an array.
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.color.color_usage"></a> Usage</h3></div></div></div>
+<p>
+        To use an example, set_title_color(), here are the two different ways we
+        could set the line color, one using RGB values, and the other using the constant.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="comment">// Using a new RGB value
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_title_color</span><span class="special">(</span><span class="identifier">svg_color</span><span class="special">(</span><span class="number">139</span><span class="special">,</span> <span class="number">69</span><span class="special">,</span> <span class="number">19</span><span class="special">));</span>
+
+<span class="comment">// Using an existing RGB value
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_title_color</span><span class="special">(</span><span class="identifier">my_color</span><span class="special">);</span>
+
+<span class="comment">// Using a color constant
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_title_color</span><span class="special">(</span><span class="identifier">saddlebrown</span><span class="special">);</span>
+
+<span class="comment">// Defining an RGB value from color constant. This is not required anywhere but in the plot() function
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_title_color</span><span class="special">(</span><span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">saddle_brown</span><span class="special">));</span>
+<span class="identifier">onstructor</span><span class="special">]</span> </pre>
+<p>
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="intro.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,691 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Tutorial</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../index.html" title="SVG_Plot">
+<link rel="up" href="../index.html" title="SVG_Plot">
+<link rel="prev" href="color.html" title=" Colors">
+<link rel="next" href="svg_interface.html" title=" SVG Public Interface">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="color.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_interface.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="svg_plot.tutorial"></a> Tutorial</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#svg_plot.tutorial.tutorial_basic"> Basic Example</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#svg_plot.tutorial.plot_window"> Using a Plot Window</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#svg_plot.tutorial.full_layout"> Full Layout Example</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#svg_plot.tutorial.color"> Color Customization</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#svg_plot.tutorial.defaults"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Defaults</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#svg_plot.tutorial.plot_function"> Getting More Out Of The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code> Function</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.tutorial.tutorial_basic"></a> Basic Example</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#svg_plot.tutorial.tutorial_basic.tutorial_code_simple"> Simple program</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#svg_plot.tutorial.tutorial_basic.tutorial_simple_exam"> Basic Example Breakdown</a></span></dt>
+</dl></div>
+<p>
+        The minimal requirements for creating any image are as follows.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          You need a one or two dimensional svg_plot
+        </li>
+<li>
+          You need to call the write() command
+        </li>
+</ul></div>
+<p>
+        That's it! However, just doing this won't give you anything useful. The following
+        can be considered a minimal example:
+      </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="svg_plot.tutorial.tutorial_basic.tutorial_code_simple"></a> Simple program</h4></div></div></div>
+<p>
+          
+</p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">svg_plot</span><span class="special">/</span><span class="identifier">svg_1d_plot</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg_plot</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="comment">// Snip
+</span>
+	<span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">my_data</span><span class="special">;</span>
+
+	<span class="comment">// initialize my_data here
+</span>
+	<span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
+
+	<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_title</span><span class="special">(</span><span class="string">"My Graph"</span><span class="special">)</span>
+	       <span class="special">.</span><span class="identifier">set_legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+	       <span class="special">.</span><span class="identifier">set_x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
+	
+	<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Race times"</span><span class="special">);</span>
+
+	<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"my_file.svg"</span><span class="special">);</span>
+	<span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+<span class="identifier">umber</span>#<span class="special">&gt;</span><span class="number">69</span><span class="special">&lt;/</span><span class="identifier">phrase</span><span class="special">&gt;&lt;</span><span class="identifier">phrase</span> </pre>
+<p>
+        </p>
+<p>
+          <span class="inlinemediaobject"><img src="../my_file.svg" alt="my_file"></span>
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="svg_plot.tutorial.tutorial_basic.tutorial_simple_exam"></a> Basic Example Breakdown</h4></div></div></div>
+<p>
+          Let's examine what this does.
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting">
+<span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
+<span class="identifier">s</span> </pre>
+<p>
+          initializes a new 1D plot. This also sets many of the values that the class
+          keeps track of with reasonable defaults.
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_title</span><span class="special">(</span><span class="string">"My Graph"</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
+####</pre>
+<p>
+        </p>
+<p>
+          All of the set methods are fairly self explanatory. The title, which will
+          appear at the top of the graph, will say "My Graph". <code class="computeroutput"><span class="identifier">set_legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> means
+          that the legend will show up. <code class="computeroutput"><span class="identifier">set_x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">)</span></code> means
+          that the range of values that will be printed is between -1 and 11, as
+          you can see in the above images.
+        </p>
+<p>
+          This syntax may be unfamiliar. However, it works on the same principle
+          that the following code works: 
+</p>
+<pre class="programlisting">
+<span class="identifier">a</span> <span class="special">=</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+#<span class="special">*</span></pre>
+<p>
+        </p>
+<p>
+          You have also seen it used to print to the console: 
+</p>
+<pre class="programlisting">
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Hello"</span> <span class="special">&lt;&lt;</span> <span class="identifier">name</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+##</pre>
+<p>
+        </p>
+<p>
+          Within all of the plot classes, chaining works the same way. The equivalent
+          code for the above is as follows:
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_title</span><span class="special">(</span><span class="string">"My Graph"</span><span class="special">);</span>
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
+<span class="identifier">bove</span></pre>
+<p>
+        </p>
+<p>
+          In the long run, I think you will find that my choice helps organize the
+          code a little better!
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting">
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Race times"</span><span class="special">);</span>
+<span class="identifier">dP</span></pre>
+<p>
+        </p>
+<p>
+          This draws <code class="computeroutput"><span class="identifier">my_data</span></code> to
+          <code class="computeroutput"><span class="identifier">my_plot</span></code>. As many containers
+          as you want can be drawn to my_plot. The name of the series is "Race
+          times", and that text will show up in the legend. These are the three
+          required parameters for this function call. There are optional parameters,
+          as seen in the section Getting More Out Of The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code> Function, but most immediately beneficial
+          would be the ability to specify a color for your data point: 
+</p>
+<pre class="programlisting">
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Race Times"</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">);</span>
+##</pre>
+<p>
+        </p>
+<p>
+          is how you could accomplish this
+        </p>
+<p>
+          
+</p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"my_file.svg"</span><span class="special">);</span>
+<span class="identifier">s</span>#</pre>
+<p>
+        </p>
+<p>
+          This writes our plot to the file "my_file.svg".
+        </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.tutorial.plot_window"></a> Using a Plot Window</h3></div></div></div>
+<p>
+        If the legend or the title is obscuring data, or you would merely like a
+        different choice for layout, you can opt to use a <code class="literal">plot window</code>.
+        To add it to a simple example:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">svg_plot</span><span class="special">/</span><span class="identifier">svg_1d_plot</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
+
+<span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">;</span>
+<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg_plot</span><span class="special">;</span>
+
+<span class="comment">// Snip
+</span>
+<span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">my_data</span><span class="special">;</span>
+
+<span class="comment">// initialize my_data here
+</span>
+<span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
+
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_title</span><span class="special">(</span><span class="string">"My Graph"</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_plot_window_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
+
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Race times"</span><span class="special">);</span>
+
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"my_file.svg"</span><span class="special">);</span>
+####<span class="special">)(</span><span class="identifier">l</span>#<span class="special">*</span>###<span class="special">)(</span><span class="identifier">l</span>#<span class="special">*</span>######</pre>
+<p>
+      </p>
+<p>
+        This produces the following image: (insert image)
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.tutorial.full_layout"></a> Full Layout Example</h3></div></div></div>
+<p>
+        Boost.SVG_Plot is designed to avoid having to do much customization. However,
+        it is by no means a "one size fits all" solution. As such, there
+        is much that can be changed in the way of layout and design. An example follows:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
+
+<span class="comment">// misc data
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_image_size</span><span class="special">(</span><span class="number">500</span><span class="special">,</span> <span class="number">350</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_title</span><span class="special">(</span><span class="string">"Race Results"</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_title_font_size</span><span class="special">(</span><span class="number">20</span><span class="special">);</span>
+
+<span class="comment">// display commands
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_x_label_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_major_labels_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_major_grid_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_minor_grid_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_axis_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_plot_window_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_title_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
+
+<span class="comment">// axis information
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_x_axis_width</span><span class="special">(</span><span class="number">2</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_label</span><span class="special">(</span><span class="string">"Time in minutes"</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_major_tick</span><span class="special">(</span><span class="number">5</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_num_minor_ticks</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_scale</span><span class="special">(-</span><span class="number">5</span><span class="special">,</span> <span class="number">130</span><span class="special">);</span>
+
+<span class="comment">// plot the information
+</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">ron_result</span><span class="special">,</span> <span class="string">"Ron"</span><span class="special">,</span> <span class="identifier">orange</span><span class="special">);</span>
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">sally_result</span><span class="special">,</span> <span class="string">"Sally"</span><span class="special">,</span> <span class="identifier">red</span><span class="special">);</span>
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">tim_result</span><span class="special">,</span> <span class="string">"Tim"</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">);</span>
+
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"race_results.svg"</span><span class="special">);</span>
+<span class="special">&gt;</span> <span class="special">&lt;</span><span class="identifier">phrase</span> <span class="identifier">role</span><span class="special">=</span><span class="string">"identifier"</span><span class="special">&gt;</span><span class="identifier">my_</span></pre>
+<p>
+      </p>
+<p>
+        This produces the following image: (insert image)
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.tutorial.color"></a> Color Customization</h3></div></div></div>
+<p>
+        The <code class="literal">svg_plot</code> classes support two major ways to define
+        colors. One is the use of colors in the RGB format. To specify a color in
+        the RGB format, you can use the following: <code class="computeroutput"><span class="identifier">svg_color</span><span class="special">(</span><span class="number">123</span><span class="special">,</span> <span class="number">73</span><span class="special">,</span> <span class="number">255</span><span class="special">)</span></code>, to pick a random example.
+      </p>
+<p>
+        The other way to define a color is to use the SVG standard's custom color
+        definitions, as defined <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords" target="_top">here</a>
+      </p>
+<p>
+        Here is an example using color customization:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">data1</span><span class="special">;</span>
+<span class="identifier">deque</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">data2</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="number">10</span><span class="special">&gt;</span> <span class="identifier">data3</span><span class="special">;</span>
+
+<span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
+
+<span class="comment">// size/scale settings
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_image_size</span><span class="special">(</span><span class="number">500</span><span class="special">,</span> <span class="number">350</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_scale</span><span class="special">(-</span><span class="number">3</span><span class="special">,</span> <span class="number">10</span><span class="special">);</span>
+
+<span class="comment">// Text settings
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_title</span><span class="special">(</span><span class="string">"Oh My!"</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_title_font_size</span><span class="special">(</span><span class="number">29</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_label_text</span><span class="special">(</span><span class="string">"Time in Months"</span><span class="special">);</span>
+
+<span class="comment">// command settings
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_axis</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_legend</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_plot_window</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_label</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_major_labels</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
+
+<span class="comment">// color settings
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_background_color</span><span class="special">(</span><span class="identifier">svg_color</span><span class="special">(</span><span class="number">67</span><span class="special">,</span> <span class="number">111</span><span class="special">,</span> <span class="number">69</span><span class="special">))</span>
+       <span class="special">.</span><span class="identifier">set_legend_background_color</span><span class="special">(</span><span class="identifier">svg_color</span><span class="special">(</span><span class="number">207</span><span class="special">,</span> <span class="number">202</span><span class="special">,</span><span class="number">167</span><span class="special">))</span>
+       <span class="special">.</span><span class="identifier">set_plot_background_color</span><span class="special">(</span><span class="identifier">svg_color</span><span class="special">(</span><span class="number">136</span><span class="special">,</span> <span class="number">188</span><span class="special">,</span> <span class="number">126</span><span class="special">))</span>
+       <span class="special">.</span><span class="identifier">set_title_color</span><span class="special">(</span><span class="identifier">white</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_axis_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_major_tick_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_legend_border_color</span><span class="special">(</span><span class="identifier">svg_color</span><span class="special">(</span><span class="number">102</span><span class="special">,</span> <span class="number">102</span><span class="special">,</span> <span class="number">84</span><span class="special">))</span>
+       <span class="special">.</span><span class="identifier">set_x_minor_tick_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">);</span>
+
+<span class="comment">//axis settings
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_x_major_tick</span><span class="special">(</span><span class="number">2</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_num_minor_ticks</span><span class="special">(</span><span class="number">3</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_major_tick_length</span><span class="special">(</span><span class="number">14</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_minor_tick_length</span><span class="special">(</span><span class="number">7</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_major_tick_width</span><span class="special">(</span><span class="number">1</span><span class="special">)</span>
+       <span class="special">.</span><span class="identifier">set_x_minor_tick_width</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+
+<span class="comment">//legend settings
+</span><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">set_legend_title_font_size</span><span class="special">(</span><span class="number">15</span><span class="special">);</span>
+
+<span class="identifier">plot_range</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">data2</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">data2</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="string">"Lions"</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">);</span>
+<span class="identifier">plot_range</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">data1</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">data1</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="string">"Tigers"</span><span class="special">,</span> <span class="identifier">purple</span><span class="special">);</span>
+<span class="identifier">plot_range</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">data3</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">data3</span><span class="special">.</span><span class="identifier">end</span><span class="special">(),</span> <span class="string">"Bears"</span><span class="special">,</span> <span class="identifier">red</span><span class="special">);</span>
+
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"D:/1d_complex.svg"</span><span class="special">);</span>
+<span class="identifier">ntifier</span><span class="string">"&gt;set_title&lt;/phrase&gt;&lt;phrase role="</span><span class="identifier">spec</span></pre>
+<p>
+        This produces the following output: (Insert image)
+      </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.tutorial.defaults"></a> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Defaults</h3></div></div></div>
+<p>
+        You may have noticed that there are certain defaults that are true at the
+        beginning of the plotting. Here is a table of the defaults:
+      </p>
+<div class="informaltable">
+<h4>
+<a name="id333537"></a>
+          <span class="table-title">Default Values]</span>
+        </h4>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>object</th>
+<th>Default value</th>
+<th>Rationale</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Axis</td>
+<td>On</td>
+<td>Most graphs include an axis
+              of some kindl</td>
+</tr>
+<tr>
+<td>Distance between major X ticks</td>
+<td><code class="computeroutput"><span class="number">3</span> <span class="identifier">units</span></code></td>
+<td>Reasonably fits
+              into a plot window</td>
+</tr>
+<tr>
+<td>Font size of the legend title</td>
+<td>12</td>
+<td>Reasonable
+              when paired with the image size</td>
+</tr>
+<tr>
+<td>Font size of the X Label</td>
+<td>12</td>
+<td>Reasonable
+              when paired with the image size</td>
+</tr>
+<tr>
+<td>Font size of the title</td>
+<td>30</td>
+<td>Makes
+              the title stand out</td>
+</tr>
+<tr>
+<td>Grid lines</td>
+<td><code class="computeroutput"><span class="identifier">All</span> <span class="identifier">off</span></code></td>
+<td>Grid lines are
+              a user's personal choice, so I default with the simpler model</td>
+</tr>
+<tr>
+<td>Image background</td>
+<td>white</td>
+<td>K.I.S.S.
+              Coloring will be highly dependent on user needs.</td>
+</tr>
+<tr>
+<td>Image size</td>
+<td><code class="computeroutput"><span class="number">500</span> <span class="identifier">by</span> <span class="number">350</span></code></td>
+<td>Details
+              discernable. The image is easily viewable by those using 800x600 monitors</td>
+</tr>
+<tr>
+<td>Legend</td>
+<td><code class="computeroutput"><span class="identifier">Off</span></code></td>
+<td>The
+              goal of the defaults is to provide the cleanest possible plot as a
+              default. Not including the legend meets this goal. If there is a public
+              outcry, I can change this.</td>
+</tr>
+<tr>
+<td>Major tick length</td>
+<td>20 pixels</td>
+<td>Tasteful
+              default when paired with the window size. This also makes the major
+              ticks easily distinguishable from the minor ticks</td>
+</tr>
+<tr>
+<td>Major tick width</td>
+<td>2 pixels</td>
+<td>Major
+              ticks are more obvious than minor ticks</td>
+</tr>
+<tr>
+<td>Minor tick length</td>
+<td>10 pixels</td>
+<td>Tasteful
+              default when compared with the size of the grid. This makes the minor
+              ticks less obvious than the major ticks</td>
+</tr>
+<tr>
+<td>Minor tick width</td>
+<td>1 pixel</td>
+<td>This makes
+              the minor tick less obvious than the major ticks</td>
+</tr>
+<tr>
+<td>Number of minor X ticks between each major X tick</td>
+<td>2</td>
+<td>This
+              allows the minor ticks to appear on the integers</td>
+</tr>
+<tr>
+<td>Plot Window</td>
+<td><code class="computeroutput"><span class="identifier">Off</span></code></td>
+<td>Initially
+              off because it is the simplest case. I will change this if there is
+              an outcry</td>
+</tr>
+<tr>
+<td>Title</td>
+<td>On, "Plot of data"</td>
+<td>The
+              title is on because this is one of the most basic elements of a graph.
+              The title is set to a default because when <code class="computeroutput"><span class="identifier">title_on</span> <span class="special">==</span> <span class="keyword">true</span></code>,
+              something should display</td>
+</tr>
+<tr>
+<td>X Axis Label</td>
+<td><code class="computeroutput"><span class="string">"X
+              Axis"</span><span class="special">,</span> <span class="identifier">Off</span></code></td>
+<td>"X
+              Axis" is the label because something should display were the user
+              to turn on the X axis label without setting text, and this is the most
+              informative</td>
+</tr>
+<tr>
+<td>X Range</td>
+<td><code class="computeroutput"><span class="special">(-</span><span class="number">10</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span></code></td>
+<td>Traditional
+              plot viewport</td>
+</tr>
+<tr>
+<td>Plot window background</td>
+<td>white</td>
+<td>K.I.S.S.
+              Coloring will be highly dependent on user needs</td>
+</tr>
+<tr>
+<td>Legend background</td>
+<td>white</td>
+<td>K.I.S.S.
+              Coloring will be highly dependent on user needs</td>
+</tr>
+<tr>
+<td>All other colors</td>
+<td>black</td>
+<td>K.I.S.S.
+              Coloring will be highly dependent on user needs</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.tutorial.plot_function"></a> Getting More Out Of The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code> Function</h3></div></div></div>
+<p>
+        The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
+        function is defined using Boost.Parameter. As such, it supports a few extra
+        named parameters, as well as a deduced parameter.
+      </p>
+<div class="informaltable">
+<h4>
+<a name="id333992"></a>
+          <span class="table-title">Deduced parameter</span>
+        </h4>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>ID</th>
+<th>Description</th>
+<th>Default</th>
+</tr></thead>
+<tbody><tr>
+<td>_fill_color</td>
+<td>This is the color that shows up inside
+              of the circle that is being drawn</td>
+<td>white</td>
+</tr></tbody>
+</table>
+</div>
+<div class="informaltable">
+<h4>
+<a name="id334043"></a>
+          <span class="table-title">Optional Parameters</span>
+        </h4>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>ID</th>
+<th>Description</th>
+<th>Default</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>_stroke_color</td>
+<td>The outline of the circle that is
+              being drawn</td>
+<td>black</td>
+</tr>
+<tr>
+<td>_point_style</td>
+<td>This is the shape of the point. Options
+              currently are between <code class="literal">none</code>, <code class="literal">circle</code>,
+              and <code class="literal">square</code>.</td>
+<td>circle</td>
+</tr>
+<tr>
+<td>size</td>
+<td>This is the height/width of the circle and
+              square.</td>
+<td>10</td>
+</tr>
+<tr>
+<td>_x_functor</td>
+<td>A pointer to a class that contains
+              a conversion function. You will not have to worry about this, unless
+              you are trying to accomplish stuff like plotting a vector of humans.
+              For example: 
+<pre xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="table-programlisting">
+<span class="keyword">class</span> <span class="identifier">my_functor</span>
+<span class="special">{</span>
+	<span class="identifier">typdef</span> <span class="keyword">double</span> <span class="identifier">result_type</span><span class="special">;</span>
+
+	<span class="keyword">double</span> <span class="identifier">convert</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">human</span><span class="special">&amp;</span> <span class="identifier">_hum</span><span class="special">)</span>
+	<span class="special">{</span>
+		<span class="keyword">return</span> <span class="identifier">_hum</span><span class="special">.</span><span class="identifier">get_age</span><span class="special">();</span>
+	<span class="special">}</span>
+<span class="special">}</span>
+
+<span class="comment">// snip
+</span>
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> <span class="identifier">_x_functor</span> <span class="special">=</span> <span class="identifier">my_functor</span><span class="special">());</span>
+<span class="identifier">ow</span><span class="special">&gt;&lt;</span><span class="identifier">entry</span><span class="special">&gt;</span><span class="identifier">Imag</span></pre>
+              </td>
+<td> <code class="computeroutput"><span class="identifier">boost_default_convert</span></code>
+              is sufficient in all cases where the data stored in the container can
+              be directly casted to a double</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+        Here are some examples of correct uses:
+      </p>
+<a name="svg_plot.tutorial.plot_function.using_fill_and_stroke_colors"></a><h3>
+<a name="id334385"></a>
+        Using fill and stroke colors
+      </h3>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> <span class="identifier">_fill_color</span> <span class="special">=</span> <span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">red</span><span class="special">),</span> <span class="identifier">_stroke_color</span> <span class="special">=</span> <span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">));</span>
+<span class="identifier">ip</span></pre>
+<p>
+      </p>
+<p>
+        This has the same effect as the following:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> <span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">red</span><span class="special">),</span> <span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">));</span>
+#<span class="special">*</span></pre>
+<p>
+      </p>
+<p>
+        and also the same effect as: 
+</p>
+<pre class="programlisting">
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> <span class="identifier">_stroke_color</span> <span class="special">=</span> <span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">),</span> <span class="identifier">_fill_color</span> <span class="special">=</span> <span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">red</span><span class="special">));</span>
+<span class="identifier">l</span>#</pre>
+<p>
+      </p>
+<p>
+        Since _fill_color is a deduced parameter, when two svg_colors are used in
+        the same function call, they are always inferred in the following order:
+        (fill, stroke).
+      </p>
+<a name="svg_plot.tutorial.plot_function.using_all_parameters"></a><h3>
+<a name="id334729"></a>
+        Using all parameters
+      </h3>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> 
+     <span class="identifier">_fill_color</span> <span class="special">=</span> <span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">red</span><span class="special">),</span> 
+     <span class="identifier">_stroke_color</span> <span class="special">=</span> <span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">),</span>
+     <span class="identifier">_x_functor</span> <span class="special">=</span> <span class="identifier">my_functor</span><span class="special">());</span>
+<span class="special">(</span><span class="identifier">fill</span></pre>
+<p>
+      </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="color.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_interface.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

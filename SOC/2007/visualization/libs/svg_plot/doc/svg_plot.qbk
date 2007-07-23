@@ -300,9 +300,7 @@ Here is an example using color customization:
     plot_range(my_plot, data3.begin(), data3.end(), "Bears",  red);
 
     my_plot.write("D:/1d_complex.svg");
-
 ``
-
 This produces the following output:
 (Insert image)
 [endsect]
@@ -364,21 +362,7 @@ class my_functor
 plot(my_plot, my_data, "Lions", _x_functor = my_functor());
 ``
 ][
-``
-class boost_default_convert
-{
-public:
-    typedef double result_type;
-
-    template <class T>
-    double operator()(T val) const
-    {
-        return (double)val;
-    }
-};
-``
-
-The above functor is sufficient in all cases where the data stored in the container can be directly casted to a double]]]
+`boost_default_convert` is sufficient in all cases where the data stored in the container can be directly casted to a double]]]
 
 Here are some examples of correct uses:
 [h3 Using fill and stroke colors]
@@ -434,23 +418,18 @@ Which adds two lines and a rectangle to the g_element that was just created.]]
 [section:svg_1d_plot_interface `svg_1d_plot` Public Interface]
 [table Misc
   [[Signature] [Description]]
-[[``
-void plot_range(std::vector<double>::const_iterator begin,
-                std::vector<double>::const_iterator end,
-                std::string text)
-``] [Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. If you are looking for the generic version, you can find it below.]]
-  [[``
-void plot(const std::vector<double>& _ctr,
-                            const std::string&,
-                            const plot_point_style&)
-``] [Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. The point color for this series is going to be `col`. If you are looking for the generic version, you can find it below.]]
+[[ `void plot_range(std::vector<double>::const_iterator begin, 
+std::vector<double>::const_iterator end, std::string text);`]
+ [Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. If you are looking for the generic version, you can find it below.]]
+  [[`void plot(const std::vector<double>& _ctr, const std::string&, const plot_point_style&)`]
+ [Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. The point color for this series is going to be `col`. If you are looking for the generic version, you can find it below.]]
   [[`svg_1d_plot()`] [See the defaults section for further details]]
   [[`svg_1d_plot& set_image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels]]
   [[`svg_1d_plot& set_title(const std::string&)`] [Sets the string to be used for the title]]
   [[`svg_1d_plot& set_title_font_size(unsigned int)`] [Sets the font size for the title]]
-  [[`svg_1d_plot& set_legend_title_font_size(unsigned int)`] [Sets the font size for the legend title]]]
-  [[`svg_1d_plot& write(const std::string&)] [Writes the plot to the file passed as a parameter]]
-  [[`svg_1d_plot& write(ostream&)] [Writes the plot to a stream passed as a parameter]]
+  [[`svg_1d_plot& set_legend_title_font_size(unsigned int)`] [Sets the font size for the legend title]]
+  [[`svg_1d_plot& write(const std::string&)`] [Writes the plot to the file passed as a parameter]]
+  [[`svg_1d_plot& write(ostream&)`] [Writes the plot to a stream passed as a parameter]]]
 
 [table Commands
   [[Signature] [Description]]
@@ -509,17 +488,12 @@ void plot(const std::vector<double>& _ctr,
 [section:svg_2d_plot_interface `svg_2d_plot` Public Interface]
 [table Misc
   [[Signature] [Description]]
-[[``
-void plot_range(std::vector<double>::const_iterator begin,
-                std::vector<double>::const_iterator end,
-                std::string text)
-``] [Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. If you are looking for the generic version, you can find it below.]]
-  [[``
-void plot_range(std::vector<double>::const_iterator begin,
-                std::vector<double>::const_iterator end,
-                std::string text,
-                svg_color_constant col)
-``] [Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. The point color for this series is going to be `col`. If you are looking for the generic version, you can find it below.]]
+[[` void plot_range(std::vector<double>::const_iterator begin, 
+std::vector<double>::const_iterator end, std::string text)`]
+[Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. If you are looking for the generic version, you can find it below.]]
+  [[` void plot_range(std::vector<double>::const_iterator begin, std::vector<double>::const_iterator end, 
+std::string text, svg_color_constant col)`]
+[Plots a vector<double> from begin() to end(). It adds the text `text` to the legend. The point color for this series is going to be `col`. If you are looking for the generic version, you can find it below.]]
   [[`svg_2d_plot()`] [See the defaults section for further details]]
   [[`svg_2d_plot& set_image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels]]
   [[`svg_2d_plot& set_title(const std::string&)`] [Sets the string to be used for the title]]
@@ -535,7 +509,7 @@ void plot_range(std::vector<double>::const_iterator begin,
   [[`svg_2d_plot& set_x_label_on(bool)`] [Sets whether or not the X axis label will show]]
   [[`svg_2d_plot& set_x_major_grid_on(bool)`] [Determines whether or not the major grid on the X axis will be displayed]]
   [[`svg_2d_plot& set_x_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the x axis]]
-  [[`svg_2d_plot& set_x_minor_grid_on(bool)`] [Determines whether or not the minor grid on the X axis will be displayed]]]
+  [[`svg_2d_plot& set_x_minor_grid_on(bool)`] [Determines whether or not the minor grid on the X axis will be displayed]]
   [[`svg_2d_plot& set_y_label_on(bool)`] [Sets whether or not the Y axis label will show]]
   [[`svg_2d_plot& set_y_major_grid_on(bool)`] [Determines whether or not the major grid on the Y axis will be displayed]]
   [[`svg_2d_plot& set_y_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the Y axis]]

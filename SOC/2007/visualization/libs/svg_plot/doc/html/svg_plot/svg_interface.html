@@ -1,0 +1,151 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> SVG Public Interface</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../index.html" title="SVG_Plot">
+<link rel="up" href="../index.html" title="SVG_Plot">
+<link rel="prev" href="tutorial.html" title=" Tutorial">
+<link rel="next" href="svg_1d_plot_interface.html" title=" svg_1d_plot Public Interface">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.htm">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_1d_plot_interface.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="svg_plot.svg_interface"></a> SVG Public Interface</h2></div></div></div>
+<div class="informaltable">
+<h4>
+<a name="id334891"></a>
+        <span class="table-title">class svg</span>
+      </h4>
+<table class="table">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Signature</th>
+<th>Description</th>
+<th>Notes</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">()</span></code></td>
+<td>Constructor</td>
+<td>The
+            default image size is (400, 400)</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">image_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code></td>
+<td>Sets
+            the size of the image produced, in pixels</td>
+<td> </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">get_x_size</span><span class="special">()</span></code></td>
+<td>Returns
+            the width of the image</td>
+<td> </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">get_y_size</span><span class="special">()</span></code></td>
+<td>Returns
+            the height of the image</td>
+<td> </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">write</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code></td>
+<td>Writes the document
+            to the file represented by the argument</td>
+<td>Opens the file
+            stream itself and tries to call <code class="computeroutput"><span class="identifier">write</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;)</span></code>. Throws <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_exception</span></code>
+            if it can not open the file.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">write</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;)</span></code></td>
+<td>Writes
+            the document to the stream represented by the argument</td>
+<td> </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">circle</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">radius</span> <span class="special">=</span> <span class="number">5</span><span class="special">)</span></code></td>
+<td>Adds
+            a point at (x,y) in the root level of the document</td>
+<td>If the
+            user is calling the circle method, odds are they would prefer a real
+            circle instead of a degenerate circle (a point). 5 is as good a defaul
+            as any other.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">line</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x2</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y2</span><span class="special">)</span></code></td>
+<td>Adds
+            a line from (x1,y1) to (x2,y2) in the root level of the document</td>
+<td> </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">text</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">text</span><span class="special">)</span></code></td>
+<td>Adds text <code class="computeroutput"><span class="identifier">text</span></code> at (x,y) in the root level of
+            the document</td>
+<td> </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">rect</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">width</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">height</span><span class="special">)</span></code></td>
+<td>Adds
+            a rectangle at point (x1, y1) that has width <code class="computeroutput"><span class="identifier">width</span></code>
+            and height <code class="computeroutput"><span class="identifier">height</span></code>
+</td>
+<td> </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">svg</span><span class="special">&amp;</span> <span class="identifier">clip_path</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">rect_element</span><span class="special">&amp;,</span> <span class="identifier">g_element</span><span class="special">&amp;,</span> <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">id</span><span class="special">)</span></code></td>
+<td>Prevents
+            the g_element in the argument from drawing outside of the rectangle in
+            the argument. The string is provided to identify the clip.</td>
+<td>Currently
+            unsupported</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">g_element</span><span class="special">&amp;</span> <span class="identifier">add_g_element</span><span class="special">()</span></code></td>
+<td>Adds
+            a g_element at the root of the document tree. Acts as a <code class="computeroutput"><span class="identifier">push_back</span><span class="special">()</span></code>
+</td>
+<td>Returns
+            the <code class="computeroutput"><span class="identifier">g_element</span></code> that is
+            pushed back. This allows you to do something like the following: <code class="computeroutput"><span class="identifier">image</span><span class="special">.</span><span class="identifier">add_g_element</span><span class="special">().</span><span class="identifier">line</span><span class="special">(/**/).</span><span class="identifier">line</span><span class="special">(/**/).</span><span class="identifier">rect</span><span class="special">(/**/);</span> </code>
+            Which adds two lines and a rectangle to the g_element that was just created.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><span class="identifier">g_element</span><span class="special">&amp;</span> <span class="identifier">get_g_element</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code></td>
+<td>Gets
+            the g_element at the index specified</td>
+<td>Gives a runtime error
+            if you specify an index that does not contain a <code class="computeroutput"><span class="identifier">g_element</span></code>.
+            This will be addressed</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_1d_plot_interface.html"><img src="../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
