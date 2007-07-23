@@ -659,7 +659,7 @@ namespace boost
 \
    template <class T1, class T2, class T3, class T4>\
    inline typename boost::math::tools::promote_args<T1, T2, T3, T4>::type \
-   ibetac_inv(T1 a, T2 b, T3 q, T4* py){ return ::boost::math::ibeta_inv(a, b, q, py, Policy()); }\
+   ibetac_inv(T1 a, T2 b, T3 q, T4* py){ return ::boost::math::ibetac_inv(a, b, q, py, Policy()); }\
 \
    template <class RT1, class RT2, class RT3>\
    inline typename boost::math::tools::promote_args<RT1, RT2, RT3>::type \
@@ -675,11 +675,11 @@ namespace boost
 \
    template <class T1, class T2, class T3>\
    inline typename boost::math::tools::promote_args<T1, T2, T3>::type \
-   ibetac_invb(T1 a, T2 b, T3 q){ return ::boost::math::ibeta_invb(a, b, q, Policy()); }\
+   ibetac_invb(T1 a, T2 b, T3 q){ return ::boost::math::ibetac_invb(a, b, q, Policy()); }\
 \
    template <class RT1, class RT2, class RT3>\
    inline typename boost::math::tools::promote_args<RT1, RT2, RT3>::type \
-   ibetac_inv(RT1 a, RT2 b, RT3 q){ return ::boost::math::ibeta_inv(a, b, q, Policy()); }\
+   ibetac_inv(RT1 a, RT2 b, RT3 q){ return ::boost::math::ibetac_inv(a, b, q, Policy()); }\
 \
    template <class RT1, class RT2, class RT3>\
    inline typename boost::math::tools::promote_args<RT1, RT2, RT3>::type \

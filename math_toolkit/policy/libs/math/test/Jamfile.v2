@@ -70,6 +70,7 @@ run test_triangular.cpp ;
 run test_uniform.cpp ;
 run test_weibull.cpp ;
 run test_policy.cpp ;
+run test_policy_sf.cpp ;
 
 run test_bessel_j.cpp ;
 run test_bessel_y.cpp ;
@@ -143,6 +144,7 @@ compile  compile_test/tools_stats_inc_test.cpp ;
 compile  compile_test/tools_test_data_inc_test.cpp ;
 compile  compile_test/tools_test_inc_test.cpp ;
 compile  compile_test/tools_toms748_solve_inc_test.cpp ;
+
 
 
 
