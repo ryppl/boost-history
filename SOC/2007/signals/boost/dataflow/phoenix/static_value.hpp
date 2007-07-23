@@ -7,6 +7,7 @@
 #ifndef BOOST_DATAFLOW_PHOENIX_STATIC_VALUE_HPP
 #define BOOST_DATAFLOW_PHOENIX_STATIC_VALUE_HPP
 
+#include <boost/mpl/int.hpp>
 #include <boost/spirit/phoenix/core/actor.hpp>
 
 namespace boost { namespace phoenix {
@@ -28,6 +29,9 @@ struct static_value
         return T();
     }
 };
+
+template<int N>
+struct int_ : static_value<boost::mpl::int_<N> > {};
 
 } } // namespace boost::phoenix
 

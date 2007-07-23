@@ -9,13 +9,14 @@
 #include <boost/dataflow/phoenix/support.hpp>
 
 namespace boost { namespace phoenix {
-        
+
     template<typename T, typename Function> 
     class producer : public Function
     {
     public:
         typedef boost::dataflow::phoenix_producer producer_category;
         typedef T produced_type;
+        typedef T value_type;
         
         producer(const Function &f) : Function(f) {}
         producer() {}
@@ -25,19 +26,50 @@ namespace boost { namespace phoenix {
             value = Function::operator()();
         }
 
+        template<typename T1>
+        void operator()(T1 &t1)
+        {
+            value = Function::operator()(t1);
+        }
+
         T value;
     };
     
+    template<typename T, typename Function>
+    const producer<T, Function> *operator&(const producer<T, Function> &op2)
+    {
+        return boost::addressof(op2);
+    }
+
+    template<typename T, typename Function>
+    producer<T, Function> *operator&(producer<T, Function> &op2)
+    {
+        return boost::addressof(op2);
+    }
+
+    template<typename T, typename Function>
+    volatile producer<T, Function> *operator&(volatile producer<T, Function> &op2)
+    {
+        return boost::addressof(op2);
+    }
+
+    template<typename T, typename Function>
+    const volatile producer<T, Function> *operator&(const volatile producer<T, Function> &op2)
+    {
+        return boost::addressof(op2);
+    }
+    
     template<typename T, typename Function> 
-    class producer2
+    class static_producer
     {
     public:
         typedef boost::dataflow::phoenix_producer producer_category;
         typedef T produced_type;
+        typedef T value_type;
         
         void operator()()
         {
-            value = Function()();
+            value = Function::operator()();
         }
         
         template<typename T1>
@@ -47,9 +79,8 @@ namespace boost { namespace phoenix {
         }
         
         T value;
-        
-        operator T&(){return value;}
     };
+    
 
 } } // namespace boost::phoenix
 

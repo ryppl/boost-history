@@ -11,7 +11,7 @@ project
       <define>BOOST_ALL_NO_LIB=1
     ;
 
-# exe example : example.cpp ;
+exe example : example.cpp ;
 # exe timing_example : timing_example.cpp ;
 # exe edit_distance : edit_distance.cpp ;
 exe fibonacci : fibonacci.cpp ;

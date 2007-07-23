@@ -145,11 +145,11 @@ void relative_link_fibonacci(int n)
     // each element of the vector contains relative links to the
     // previous two elements
     typedef std::vector<
-            phoenix::producer2<fib_type, BOOST_TYPEOF(prev2 + prev1) >
+            phoenix::static_producer<fib_type, BOOST_TYPEOF(prev2 + prev1) >
         > cells_type;
     
-    std::cout << sizeof(phoenix::producer2<fib_type, BOOST_TYPEOF(prev2 + prev1)>) << std::endl;
-
+    std::cout << sizeof(phoenix::static_producer<fib_type, BOOST_TYPEOF(prev2 + prev1)>) << std::endl;
+                        
     cells_type cells(n);
     
     {
@@ -180,7 +180,7 @@ void sane_fibonacci(int n)
 int main (int argc, char * const argv[])
 {
     // never mind the overflow
-    int len = 50000000;
+    int len = 5000000;
     
     // display the cell sizes and times...
     // most of the time comes from memory access (cell size)

@@ -1,85 +1,81 @@
-// Copyright Stjepan Rajko 2007. Use, modification and
-// distribution is subject to the Boost Software License, Version
-// 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+// Copyright 2007 Stjepan Rajko.
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-//#include <boost/signal_network/function.hpp>
-//#include <boost/signal_network/storage.hpp>
+#include <boost/dataflow/phoenix/support.hpp>
+#include <boost/spirit/phoenix/operator/self.hpp>
+#include <boost/spirit/phoenix/core/composite.hpp>
+#include <boost/spirit/phoenix/core/compose.hpp>
+#include <boost/spirit/phoenix/detail/type_deduction.hpp>
+#include <boost/spirit/phoenix/operator/detail/unary_eval.hpp>
+#include <boost/spirit/phoenix/operator/detail/unary_compose.hpp>
+#include <boost/spirit/phoenix/operator/detail/binary_eval.hpp>
+#include <boost/spirit/phoenix/operator/detail/binary_compose.hpp>
 
-#include <boost/fusion/sequence/container/map.hpp>
-#include <iostream>
+#include <boost/utility/addressof.hpp>
 
 #include <boost/fusion/sequence/container/vector.hpp>
-#include <boost/fusion/sequence/view/transform_view.hpp>
-#include <boost/fusion/sequence/intrinsic.hpp>
-#include <boost/fusion/sequence/io.hpp>
+#include <boost/spirit/phoenix/core.hpp>
+#include <boost/typeof/typeof.hpp>
 
-#include <boost/type_traits/add_reference.hpp>
+#include <iostream>
+#include <vector>
 
-namespace fusion = boost::fusion;
-
-//using namespace boost;
-
-float DoublerFunc(float x)
+template<typename T>
+class wrapper : public T
 {
-	return x*2;
-}
-
-namespace dataflow
-{
-    template<typename X>
-    struct print;
+    public:
+    void operator()()
+    {
+    }
+    
 };
 
-namespace dataflow
+template<typename T>
+wrapper<T> *operator & (wrapper<T> &t)
 {
-    template<>
-    struct print<int>
-    {
-        void operator()(int x)
-        {
-            std::cout << x << std::endl;
-        }
-    };
+    return boost::addressof(t);
 }
 
-namespace specific
+struct test
 {
-    struct print : public dataflow::print<int> {};
-}
+};
 
-int main(int, char* [])
+struct test2 : public test {int x;};
+
+struct test3
 {
-    specific::print()(3);
+    int x;
+    test t;
+};
+
+using namespace boost;
+
+int main()
+{
+    test t;
+    test2 t2;
+    test3 t3;
     
-    /*
-    signals::storage<void (), signals::unfused> banger;
-    signals::function<void (float), float(float), signals::unfused> double_fun1(&DoublerFunc);
-    signals::function<void (float), float(float), signals::unfused> double_fun2(&DoublerFunc);
-    signals::storage<void (float), signals::unfused> floater(1.0f);
-    signals::storage<void (float), signals::unfused> collector(0.0f);*/
+    std::cout << sizeof(test) << std::endl;
+    std::cout << sizeof(test2) << std::endl;
+    std::cout << sizeof(test3) << std::endl;
+
+    std::cout << sizeof(t) << std::endl;
+    std::cout << sizeof(t2) << std::endl;
+    std::cout << sizeof(t3) << std::endl;
     
-/*	floater >>= double_fun1 >>= double_fun2 >>= collector;
-	floater.send();
+    fusion::vector<int, int> vec;
+    fusion::vector2<int, int> vec2;
     
-    assert(collector.at<0>() == 4.0f);
+    std::cout << sizeof(vec) << std::endl;
+    std::cout << sizeof(vec2) << std::endl;    
     
-    floater.disconnect_all_slots();*/
+    wrapper<BOOST_TYPEOF(phoenix::arg_names::arg1)> wrap;
+    std::cout << sizeof(wrap) << std::endl;
     
-/*    banger >>= boost::fusion::at_key<void()> (floater.send_slot());
-    typedef 
-    boost::fusion::map<
-    boost::fusion::pair<void(), slot_selector_t<signals::storage<void (float), signals::unfused>, void()> >,
-    boost::fusion::pair<void(const boost::fusion::vector<> &), slot_selector_t<signals::storage<void (float), signals::unfused>, void (const boost::fusion::vector<> &)> >
-        > map_type;
-    
-    map_type m = floater.send_slot();
-    
-//    int x = default_slot<map_type, void()>()(m);
-    floater >>= collector;
-//    banger.send();
-    floater.send();
-    assert(collector.at<0>() == 1.0f);*/
-    
-    return 0;
-} // int main(int, char* [])
+    //std::vector<BOOST_TYPEOF(phoenix::arg_names::arg1)> unwrap_vec(100);
+    std::vector<wrapper<BOOST_TYPEOF(phoenix::arg_names::arg1)> > wrap_vec(100);
+    (*wrap_vec.begin())();
+}
