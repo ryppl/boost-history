@@ -6,57 +6,166 @@
  /]
 
 [section Default Constructible]
-A type `T` is said to be /default constructible/ if it can be instantiated
-without initializing it to any particular value. A type with that is default
+A type `T` is /default constructible/ if objects of type `T` can be constructed
+without providing any arguments to a constructor. A type that is default
 constructible has either a compiler-generated or user-defined constructor
-that can be called without arguments.
-
-Non-trivial default constructors may specify a default value or state for
-an object, but such values are not required by this concept.
+that can be called without arguments. [StdDefaultConstructible] types may or
+may not initilize objects to a default value or state depending on the the
+type itself and the syntax used for construction. Objects that are not initialized
+to a default value have indeterminate value (i.e., uninitialized).
 
 [heading Notation]
 [table
     [[Expression] [Description]]
     [[T] [A [StdDefaultConstructible] type.]]
-    [[t] [An instance of `T`.]]
+    [[t] [An object of type `T`.]]
 ]
 
 [heading Requirements]
 [table
-    [[Expression] [Return Type] [Requirements]]
+    [[Name] [Expression] [Result Type] [Description]]
     [
-        [`T t`]
+        [Default Constructor]
+        [`T t;`]
         []
-        [`t` is an instance of `T`.]
+        [
+            *Semantics:* `t` is declared as an object of type `T` and may or may not
+            initialized to a default value[footnote This syntax leaves fundamental
+            types unitialized while class types are default-initialized.].
+        ]
     ]
     [
+        [Default Constructor]
         [`T()`]
-        []
-        [An instance of `T` is constructed.]
+        [`T`]
+        [
+            *Semantics:* Creates object of type `T` is initialized to a default
+            value[footnote This syntax will zero-initialize scalar and other
+            fundamental types and default-initialize others.].
+        ]
     ]
 ]
 
+[heading Notes]
+In addition to requiring default cosntructability, there is an implicit requirement
+on destructability. A locally declared automatic variable of [StdDefaultConstructible]
+type `T` will eventually go out of scope, requiring `T`'s destructor to be called. If the
+destructor is not public, then this `T` cannot model the [StdDefaultConstructible] concept.
+
+If the default constructor of a class type `T` is `private`, then the `T` does not
+model the [StdDefaultConstructible] concept.
+
+[note
+*TODO:* There could be some discussion about default constructabiltiy and arrays,
+and its use in the `new` expressions.
+]
+
+[heading Examples]
+All fundamental types in C++ are [StdDefaultConstructible] but may not have default
+values, depending on how they are constructed.
+
+    // Declare an uninitialized integer x. Reading the value of x before
+    // assigning it a value may result in a compiler warning (if compiled with
+    // appropriate warning levels).
+    int x;
+
+    // Create a (temporary) floating point value with a default value. Using
+    // this default constructor form causes the value to be zero-initialized
+    // so the output will be 0.
+    std::cout << float() << std::endl;
+
+Types in the standard library are also [StdDefaultConstructible]. Most of these are
+initialized to default values when constructed.
+
+    // Declare a 0-length vector of integers. Because std::vector is a
+    // user-defined, this declaration invokes the default constructor.
+    std::vector<int> v;
+
+    // Create an empty string. Because the default construtor of the
+    // std::string string class initializes an empty string object this will
+    // not print anything.
+    std::cout << string() << std::endl;
+
+Creating user-defined types that are [StdDefaultConstructible] can be done in two
+ways: explicitly providing a default constructor or allowing the compiler to generate
+it. The following examples shows two [StdDefaultConstructible] implementations of
+the same class.
+
+    // Define a default-constructible type by explicitly defining a default
+    // constructor. Here, both member variables x and y will be default-
+    // initialized since the member list initializer explicitly invokes
+    // their default constructors.
+    struct default_initialized_point
+    {
+        int x, y;
+
+        point() : x(), y()
+        { }
+    };
+
+    // Define a default-constructible type by allowing the compiler to
+    // generate it. In this instance, x and y are not default-initialized
+    // since the default constructors are not explicitly called. The compiler
+    // does not generate the default cosntructor in the class above.
+    struct uninitialized_point
+    {
+        int x, y;
+    };
+
+    // Create both types of the points. These are default-constructed, but only
+    // a is default-initialized.
+    default_initialized_point a;
+    unitialized_point b;
+
+    // This will print 0,0.
+    std::cout << a.x << "," << a.y << std::endl;
+
+    // This may print garbage.
+    std::cout << b.x << "," << b.y << std::endl;
+
+A type `T` is required to be [StdDefaultConstructible] within a template when an
+object of type `T` is declared or when the default constructor of `T` is invoked to
+create an object.
+
+    // This function requires T to be default-constructible because it declares
+    // a local variable of type T.
+    template <typename T>
+    void require_default_constructible()
+    {
+        T empty;
+        // unspecified...
+    }
+
+    // This function requires T to b default-constructible because it
+    // explicilty invokes T's default constructor to print the default value.
+    template <typename T>
+    void print_default_value()
+    {
+        std::cout << T() << std::endl;
+    }
+
 [heading C++0x]
-The `DefaultConstructible` concept is made explicit in the next version of C++. It
+The [StdDefaultConstructible] concept is made explicit in the next version of C++. It
 is refined from the Destructible and `Constructible` concepts, which allows
 construction from any number of arguments. It is given as:
 
+    // T is required to have a public destructor.
     auto concept Destructible<typename T>
     {
         T::~T();
     };
 
+    // This concept requires that T be constructible with a variable number
+    // of arguments. Constructible types are required to be Desctructible.
     auto concept Constructible<typename T, typename... Args>
         : Destructible<T>
     {
         T::T(Args...);
     };
 
+    // This concept requires that T be Constructible with no arguments.
     auto concept DefaultConstructible<typename T>
         : Constructible<T>
     {};
-
-This effectively requires the that T have a constructor that takes no arguments, hence
-a default constructor.
 
 [endsect]
