@@ -1205,6 +1205,40 @@ bool halfedge_set_prev_at_target_test() {
     return true;
 }
 
+template <typename HalfedgeGen>
+bool halfedge_add_edge_test() {
+    
+    // Types must exist.
+    typedef typename HalfedgeGen::halfedge_selector      halfedge_selector;
+    typedef typename HalfedgeGen::halfedge_descriptor    halfedge_descriptor;
+    typedef typename HalfedgeGen::halfedge_iterator      halfedge_iterator;
+    typedef typename HalfedgeGen::halfedge_type          halfedge_type;
+    typedef typename HalfedgeGen::ContainerGen           container_gen;
+    typedef typename HalfedgeGen::ContainerGen::selector container_selector;
+    typedef typename HalfedgeGen::container_type         container_type;
+
+     
+    // Construct a halfedge_gen object, add hh and hg halfedge pair and
+    // test that they are added properly.
+
+    HalfedgeGen halfedgeGen;
+    halfedge_descriptor hg = static_cast<halfedge_descriptor>(new_edge(halfedgeGen));
+
+    halfedge_iterator begin = halfedges_begin(halfedgeGen);
+    halfedge_descriptor hh = *begin;
+    BOOST_CHECK(( opposite(hh, halfedgeGen) == hg));
+    BOOST_CHECK(( opposite(hg, halfedgeGen) == hh));
+    
+    halfedge_descriptor hi = static_cast<halfedge_descriptor>(new_edge(halfedgeGen));
+    halfedge_iterator end = --halfedges_end(halfedgeGen);
+    halfedge_descriptor hj = *--end;
+    BOOST_CHECK(( opposite(hh, halfedgeGen) == hg));
+    BOOST_CHECK(( opposite(hg, halfedgeGen) == hh));
+    BOOST_CHECK(( opposite(hi, halfedgeGen) == hj));
+    BOOST_CHECK(( opposite(hj, halfedgeGen) == hi));
+    
+    return true;
+}
 // ===========================================================================
 //                              USAGE EXAMPLE
 // ===========================================================================
@@ -1581,7 +1615,16 @@ bool test_container_selector()
                                                      prev_at_target_tag> >, 
                         noVertexS, noFacetS> > 
                   >() ));
-
+    
+    // add_edge test
+    BOOST_CHECK(( halfedge_add_edge_test<
+                    halfedge_gen<
+                      halfedgeS<ContainerS, forwardS<next_at_target_tag> >, 
+                      int, int, 
+                      halfedge_config<
+                        halfedgeS<ContainerS, forwardS<next_at_target_tag> >, 
+                        noVertexS, noFacetS> > 
+                  >() ));
     return true;
 }
 

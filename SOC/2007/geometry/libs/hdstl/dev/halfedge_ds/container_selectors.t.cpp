@@ -126,6 +126,41 @@ bool container_gen_requirements() {
     return true;
 }
 
+template <class ContainerGen, typename ValueType, typename ContainerS>
+bool container_gen_mutable_requirements() {
+    // Types must exist.
+    typedef typename ContainerGen::descriptor descriptor;
+    typedef typename ContainerGen::iterator   iterator;
+    
+    typename ContainerGen::type container;
+    ValueType array[] = { 0, 1, 2, 3 };
+    descriptor h0 = *ContainerGen::container_add(array[0], container);   
+    descriptor h1 = *ContainerGen::container_add(array[1], container);   
+    descriptor h2 = *ContainerGen::container_add(array[2], container);   
+    descriptor h3 = *ContainerGen::container_add(array[3], container);   
+    (void) h0; (void) h1; (void) h2; (void) h3;
+    
+    // Value type of iterator must be a descriptor.
+    iterator begin = ContainerGen::container_begin(container);
+    descriptor theBegin = *begin;
+
+    // Descriptor must hold correct value:
+    BOOST_CHECK(( ContainerGen::value(theBegin, container) == 0 ));
+    BOOST_CHECK(( ContainerGen::value(*++begin, container) == 1 ));
+    BOOST_CHECK(( ContainerGen::value(*++begin, container) == 2 ));
+    BOOST_CHECK(( ContainerGen::value(*++begin, container) == 3 ));
+
+    // Value type of iterator must be a descriptor.
+    iterator end = ContainerGen::container_end(container);
+    descriptor theEnd = *--end;
+
+    // Descriptor must hold correct value:
+    BOOST_CHECK(( ContainerGen::value(theEnd, container) == 3 ));
+    BOOST_CHECK(( ContainerGen::value(*--end, container) == 2 ));
+    BOOST_CHECK(( ContainerGen::value(*--end, container) == 1 ));
+    BOOST_CHECK(( ContainerGen::value(*--end, container) == 0 ));
+    return true;
+}
 // ===========================================================================
 //                              USAGE EXAMPLE
 // ===========================================================================
@@ -252,6 +287,10 @@ int test_main(int, char **)
     BOOST_CHECK(( container_gen_requirements<container_gen<listS, int>, int, listS>() ));
     BOOST_CHECK(( container_gen_requirements<container_gen<setS, int>, int, setS>() ));
     BOOST_CHECK(( container_gen_requirements<container_gen<vecS, int>, int, vecS>() ));
+
+    BOOST_CHECK(( container_gen_mutable_requirements<container_gen<listS, int>, int, listS>() ));
+    BOOST_CHECK(( container_gen_mutable_requirements<container_gen<setS, int>, int, setS>() ));
+    BOOST_CHECK(( container_gen_mutable_requirements<container_gen<vecS, int>, int, vecS>() ));
 
     BOOST_CHECK(( usageExample() ));
     

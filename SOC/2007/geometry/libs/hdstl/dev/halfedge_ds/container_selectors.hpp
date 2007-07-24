@@ -367,6 +367,15 @@ struct container_gen<listS, ValueType> {
         return container.end();
     }
 
+    static iterator container_add(ValueType& x, type& container)
+        // This utility adds an element at the end of the 
+        // specified 'container', and returns an iterator 
+        // pointing to that element.
+    {
+        container.push_back(x);
+        return --container_end(container);
+    }
+
     static ValueType& value(descriptor x, type& container)
             // This utility returns the value associated with the specified
             // descriptor 'x' of the specified 'container'.
@@ -449,6 +458,13 @@ struct container_gen<setS, ValueType> {
         // specified 'container'.
     {
         return container.end();
+    }
+
+    static iterator container_add(ValueType& x, type& container)
+        // This utility adds an element at the  
+        // specified 'container'.
+    {
+        return (container.insert(x)).first;
     }
 
     static const ValueType& value(descriptor x, type& container)
@@ -556,10 +572,18 @@ struct container_gen<vecS, ValueType> {
     }
 
     static iterator container_end(type& container)
-        // This utility returns an iterator to the beginning of the 
+        // This utility returns an iterator to the end of the 
         // specified 'container'.
     {
         return iterator(&container, container.end());
+    }
+
+    static iterator container_add(ValueType x, type& container)
+        // This utility adds an element at the end of the 
+        // specified 'container'.
+    {
+        container.push_back(x);
+        return --container_end(container);
     }
 
     static ValueType& value(descriptor x, type& container)

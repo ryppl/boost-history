@@ -27,6 +27,16 @@
 //  -  prev_at_target: returns a halfedge descriptor to the halfedge preceeding 
 //                     the given halfedge around the target vertex, when halfedges 
 //                     are ordered around a given vertex in clockwise order
+//  - set_next_in_facet: sets 'g' as the halfedge succeeding 'h' in 
+//                     the adjacent facet cycle, when facet cycles are oriented in 
+//                     counter-clockwise order.
+//  - set_next_at_source: sets 'g' as the halfedge succeeding 'h' 
+//                     around the source vertex of 'h', when halfedges are ordered 
+//                     around a given vertex in clockwise order.
+//  - set_next_at_target: sets 'g' as the halfedge succeeding 'h' 
+//                     around the target vertex of 'h', when halfedges are ordered 
+//                     around a given vertex in clockwise order.
+//
 //  
 ///Definitions
 //------------
@@ -109,6 +119,7 @@ opposite(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Conf
                                    >::opposite(h);
 }
 
+// \cond
 template<typename HalfedgeGen, typename HalfedgeDescriptor, typename Tag = next_in_facet_tag>
 struct next_in_facet_helper{
     static
@@ -223,6 +234,7 @@ struct next_at_target_helper<HalfedgeGen, HalfedgeDescriptor, next_at_source_tag
                                 , hds));
     }
 };
+// \endcond
 
 template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
 typename Config::halfedge_descriptor
@@ -266,6 +278,7 @@ next_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor
     return next_at_target_helper<halfedgeGen, halfedge_descriptor, typename HalfedgeS::next_tag>::next_at_target(h,hds);
 }
 
+// \cond
 template<typename HalfedgeGen, typename HalfedgeDescriptor, typename Tag = prev_in_facet_tag>
 struct prev_in_facet_helper{
     static
@@ -380,6 +393,7 @@ struct prev_at_target_helper<HalfedgeGen, HalfedgeDescriptor, prev_at_source_tag
                                 , hds));
     }
 };
+// \endcond
 
 template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
 typename Config::halfedge_descriptor
@@ -423,6 +437,7 @@ prev_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor
     return prev_at_target_helper<halfedgeGen, halfedge_descriptor, typename HalfedgeS::prev_tag>::prev_at_target(h,hds);
 }
 
+// \cond
 template<typename HalfedgeGen, typename HalfedgeDescriptor, typename ContainerS, typename ThisTag, typename Tag>
 struct set_next_helper{
     static void
@@ -454,6 +469,7 @@ struct set_next_helper<HalfedgeGen, HalfedgeDescriptor, ContainerS, Tag, Tag>{
         h->m_next = g;
     }
 };
+// \endcond
 
 template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
 void
@@ -512,6 +528,7 @@ set_next_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescri
                     ::set_next(h, g, hds);
 }
 
+// \cond
 template<typename HalfedgeGen, typename HalfedgeDescriptor, typename ContainerS, typename ThisTag, typename Tag>
 struct set_prev_helper{
     static void
@@ -543,6 +560,7 @@ struct set_prev_helper<HalfedgeGen, HalfedgeDescriptor, ContainerS, Tag, Tag>{
         h->m_prev = g;
     }
 };
+// \endcond
 
 template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
 void
@@ -600,6 +618,47 @@ set_prev_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescri
     set_prev_helper<halfedgeGen, halfedge_descriptor, containerS, this_tag, typename HalfedgeS::prev_tag>
                     ::set_prev(h, g, hds);
 }
+
+// \cond
+template<typename HalfedgeDescriptor, typename ContainerS>
+struct set_opposite_pair_helper{
+    static void
+    set_opposite(HalfedgeDescriptor& h, HalfedgeDescriptor& g)
+    {
+        h->m_opposite = g;
+        g->m_opposite = h;
+    }
+};
+
+template<typename HalfedgeDescriptor>
+struct set_opposite_pair_helper<HalfedgeDescriptor, vecS> {
+    static void
+    set_opposite(HalfedgeDescriptor& , HalfedgeDescriptor&) 
+    {
+        // nothing to do
+    }
+};
+// \endcond
+
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+typename Config::halfedge_descriptor
+new_edge(halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+{
+    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+    typedef typename halfedgeGen::halfedge_descriptor halfedge_descriptor;
+    typedef typename halfedgeGen::halfedge_type halfedge_type;
+    typedef typename halfedgeGen::ContainerGen ContainerGen;
+    
+    typedef typename halfedgeGen::halfedge_selector::container_selector containerS;
+    
+    halfedge_type half_h;
+    halfedge_type half_g;
+    halfedge_descriptor h = *ContainerGen::container_add(half_h, hds.m_container);
+    halfedge_descriptor g = *ContainerGen::container_add(half_g, hds.m_container);
+    set_opposite_pair_helper<halfedge_descriptor, containerS>::set_opposite(h,g);
+    return g;
+}
+
 
 
 } // namespace hdstl
