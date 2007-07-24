@@ -25,7 +25,7 @@ namespace cgi {
                                             , boost::system::error_code& ec)
    {
      if( input.empty() )
-       return ec = boost::system::error_code(34, boost::system::errno_ecat);
+       return ec;// = boost::system::error_code(34, boost::system::errno_ecat);
      
 	 typedef typename boost::tokenizer<Separator>    tokenizer;
      

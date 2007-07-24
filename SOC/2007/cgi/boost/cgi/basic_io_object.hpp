@@ -14,12 +14,18 @@
 
 namespace cgi {
 
-  template<typename Service, bool UseIoService = true>
+  template<typename Service>
   class basic_io_object
     : private boost::noncopyable
   {
   public:
     typedef Service                        service_type;
+
+    cgi::io_service& io_service()
+    {
+      return service.io_service();
+    }
+
   private:
     typedef typename Service::impl_type    impl_type;
 
@@ -39,8 +45,9 @@ namespace cgi {
     service_type& service;
   };
 
+  /*
   template<typename Service>
-  class basic_io_object<Service, false>
+  class basic_io_object<Service, false> 
     : private boost::noncopyable
   {
   public:
@@ -61,6 +68,7 @@ namespace cgi {
     impl_type impl;
     service_type service;
   };
+  */
 
 } // namespace cgi
 

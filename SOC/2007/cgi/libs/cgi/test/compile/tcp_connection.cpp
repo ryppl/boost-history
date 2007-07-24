@@ -1,4 +1,4 @@
-#include "boost/cgi/connections/tcp.hpp"
+#include "boost/cgi/connections/tcp_socket.hpp"
 
 int main()
 {

@@ -10,9 +10,13 @@
 #define CGI_DATA_SOURCE_HPP_INCLUDED__
 
 namespace cgi {
+
+  enum source
+  { stdin_ };
+
  namespace data_source {
 
-   struct stdin {};
+   //struct stdin_ {};
 
  } // namespace data_source
 } // namespace cgi

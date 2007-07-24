@@ -18,6 +18,7 @@
 #include "../detail/service_base.hpp"
 #include "../io_service.hpp"
 #include "../detail/extract_params.hpp"
+#include "../connections/async_stdio.hpp"
 
 namespace cgi {
 
@@ -52,6 +53,15 @@ namespace cgi {
     void shutdown_service()
     {
     }
+    void construct(implementation_type& impl)
+    {
+      impl.connection_ = async_stdio_connection::create(io_service());
+    }
+
+    void destroy(implementation_type& impl)
+    {
+    }
+
   };
 
 } // namespace cgi

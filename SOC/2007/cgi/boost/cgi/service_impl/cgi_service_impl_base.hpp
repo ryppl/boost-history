@@ -1,8 +1,11 @@
 #ifndef CGI_CGI_SERVICE_IMPL_BASE_HPP_INCLUDED__
 #define CGI_CGI_SERVICE_IMPL_BASE_HPP_INCLUDED__
 
+#include "../detail/push_options.hpp"
+
 #include <string>
 #include <cstdlib>
+#include <iostream>
 #include <boost/assert.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/system/error_code.hpp>
@@ -10,6 +13,7 @@
 #include "../map.hpp"
 #include "../role_type.hpp"
 #include "../detail/extract_params.hpp"
+//#include "../connections/stdio.hpp"
 
 namespace cgi {
 
@@ -17,6 +21,9 @@ namespace cgi {
 
 
  } // namespace detail
+
+  using std::cerr;
+  using std::endl;
 
 
   template<typename RequestImplType>
@@ -35,14 +42,6 @@ namespace cgi {
     {
     }
 
-    void construct(implementation_type& impl)
-    {
-    }
-
-    void destroy(implementation_type& impl)
-    {
-    }
-
     /// Synchronously read/parse the request meta-data
     /**
      * @param parse_stdin if true then STDIN data is also read/parsed
@@ -51,7 +50,7 @@ namespace cgi {
     load(implementation_type& impl, bool parse_stdin
         , boost::system::error_code& ec)
     {
-      std::string request_method = meta_get(impl, "REQUEST_METHOD", ec);
+      const std::string& request_method = meta_env(impl, "REQUEST_METHOD", ec);
       if (request_method == "GET")
         if (parse_get_vars(impl, ec))
 	      return ec;
@@ -64,25 +63,25 @@ namespace cgi {
       return ec;
     }
 
-    template<typename ConnectionPtr, typename MutableBufferSequence>
+    template<typename MutableBufferSequence>
     std::size_t read_some(implementation_type& impl, const MutableBufferSequence& buf
                          , boost::system::error_code& ec)
     {
-      std::size_t s = impl.connection_->read_some(buf, ec);
+      std::size_t s = impl.connection()->read_some(buf, ec);
       return s;
     }
 
-    template<typename ConnectionPtr, typename ConstBufferSequence>
+    template<typename ConstBufferSequence>
     std::size_t write_some(implementation_type& impl, const ConstBufferSequence& buf
                           , boost::system::error_code& ec)
     {
-      return impl.connection_->write_some(buf, ec);
+      return impl.connection()->write_some(buf, ec);
     }
 
     //template<typename VarType> map_type& var(implementation_type&) const;
 
     std::string var(map_type& meta_data, const std::string& name
-                   , boost::system::error_code& ec) const
+                   , boost::system::error_code& ec)
     {
       /* Alt:
       if ((typename map_type::iterator pos = meta_data.find(name))
@@ -99,12 +98,12 @@ namespace cgi {
     }
 
 	std::string meta_get(implementation_type& impl, const std::string& name
-                        , boost::system::error_code& ec) const
+                        , boost::system::error_code& ec)
     {
       return var(impl.get_vars_, name, ec);
     }
 
-    map_type& meta_get(implementation_type& impl) const
+    map_type& meta_get(implementation_type& impl)
     {
       return impl.get_vars_;
     }
@@ -134,7 +133,7 @@ namespace cgi {
       return val;
     }
 
-    map_type& meta_post(implementation_type& impl) const
+    map_type& meta_post(implementation_type& impl)
     {
       return impl.post_vars_;
     }
@@ -142,12 +141,12 @@ namespace cgi {
 
     /// Find the cookie meta-variable matching name
     std::string meta_cookie(implementation_type& impl, const std::string& name
-                           , boost::system::error_code& ec) const
+                           , boost::system::error_code& ec)
     {
       return var(impl.cookie_vars_, name, ec);
     }
 
-    map_type& meta_cookie(implementation_type& impl) const
+    map_type& meta_cookie(implementation_type& impl)
     {
       return impl.cookie_vars_;
     }
@@ -157,11 +156,12 @@ namespace cgi {
     std::string meta_env(implementation_type& impl, const std::string& name
                         , boost::system::error_code& ec)
     {
-      return ::getenv(name.c_str());
+      const char* c = ::getenv(name.c_str());
+      return c ? c : impl.null_str_;
     }
 
 
-    role_type get_role(implementation_type& impl) const
+    role_type get_role(implementation_type& impl)
     {
       return responder;
     }
@@ -187,7 +187,7 @@ namespace cgi {
     parse_cookie_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       // Make sure this function hasn't already been called
-      BOOST_ASSERT( impl.cookie_vars_.empty() );
+      //BOOST_ASSERT( impl.cookie_vars_.empty() );
 
       std::string vars = meta_env(impl, "HTTP_COOKIE", ec);
       if (vars.empty())
@@ -208,7 +208,7 @@ namespace cgi {
     parse_post_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       // Make sure this function hasn't already been called
-      BOOST_ASSERT( impl.cookie_vars_.empty() );
+      //BOOST_ASSERT( impl.post_vars_.empty() );
 	  
       //#     error "Not implemented"
 
@@ -230,5 +230,7 @@ namespace cgi {
   };
 
 } // namespace cgi
+
+#include "../detail/pop_options.hpp"
 
 #endif // CGI_CGI_SERVICE_IMPL_HPP_INCLUDED__

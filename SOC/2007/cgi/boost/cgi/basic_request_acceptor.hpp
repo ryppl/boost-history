@@ -9,14 +9,18 @@
 #ifndef CGI_BASIC_REQUEST_ACCEPTOR_HPP_INCLUDED__
 #define CGI_BASIC_REQUEST_ACCEPTOR_HPP_INCLUDED__
 
-#include <boost/system.hpp>
+#include <boost/noncopyable.hpp>
+#include <boost/system/error_code.hpp>
+
+#include "basic_io_object.hpp"
+#include "is_async.hpp"
 
 namespace cgi {
 
   template<typename RequestAcceptorService>
   class basic_request_acceptor
     : private boost::noncopyable
-    , public boost::asio::basic_io_object<RequestAcceptorService>
+    , public basic_io_object<RequestAcceptorService, is_async<RequestAcceptorService::protocol_type>::value>
   {
   public:
     //  typedef impl_type;

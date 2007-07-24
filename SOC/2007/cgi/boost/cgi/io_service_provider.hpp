@@ -10,6 +10,8 @@
 #define CGI_IO_SERVICE_PROVIDER_HPP_INCLUDED__
 
 
+#include "detail/push_options.hpp"
+
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
@@ -209,5 +211,7 @@ namespace cgi {
   };
 
 } // namespace cgi
+
+#include "detail/pop_options.hpp"
 
 #endif // CGI_IO_SERVICE_PROVIDER_HPP_INCLUDED__

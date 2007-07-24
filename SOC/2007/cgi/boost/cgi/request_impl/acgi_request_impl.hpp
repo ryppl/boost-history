@@ -14,6 +14,10 @@
 #include "../connections/async_stdio.hpp"
 
 // Make this ProtocolService-independent
+/*
+ * Should the request_impl extract an io_service from the protocol_service
+ * on construction, so that
+ */
 
 namespace cgi {
 
@@ -32,7 +36,6 @@ namespace cgi {
     }
 
   protected:
-    //acgi_request_impl(); // private default constructor
     friend class acgi_service_impl;
   };
 

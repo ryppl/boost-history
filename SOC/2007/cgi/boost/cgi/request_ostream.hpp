@@ -30,6 +30,8 @@ first. That would also mean the ostream class is of more use than it is now.
 that.
 *********************************/
 
+#include "detail/push_options.hpp"
+
 #include <ostream>
 //#include <streambuf>
 #include <boost/assert.hpp>
@@ -43,6 +45,7 @@ that.
 #include "tags.hpp"
 #include "data_sink.hpp"
 #include "request_base.hpp"
+#include "basic_request.hpp"
 #include "http/status_code.hpp"
 //#include "detail/take_buffer.hpp"
 
@@ -68,9 +71,9 @@ namespace cgi {
   {
   public:
     /// Default constructor
-    explicit request_ostream(http::status_code sc = http::ok)
-      : request_(NULL)
-      , buffer_(new cgi::streambuf())
+    request_ostream(http::status_code sc = http::ok)
+      : /*request_(NULL)
+      , */buffer_(new cgi::streambuf())
       , ostream_(buffer_.get())
       , http_status_(sc)
 //    , destination_(destination)
@@ -82,9 +85,9 @@ namespace cgi {
      * Takes the buffer and uses it internally, does nothing with it on
      * destruction.
      */
-    request_ostream(cgi::streambuf* buf, http::status_code sc = http::ok)
-      : request_(NULL)
-      , ostream_(buf)
+    request_ostream(std::streambuf* buf, http::status_code sc = http::ok)
+      : /*request_(NULL)
+      , */ostream_(buf)
       , http_status_(sc)
 //    , destination_(destination)
     {
@@ -98,19 +101,19 @@ namespace cgi {
      * CommonGatewayRequest) to use internally.
      * </strike>
      */
-    template<typename CommonGatewayRequest>
-    request_ostream(CommonGatewayRequest& req, http::status_code sc = http::ok)
-      : request_(&req)
-      , buffer_(new cgi::streambuf())
-      , ostream_(buffer_.get()) //detail::take_buffer(req))
-      , http_status_(sc)
-//    , destination_(destination)
-    {
-    }
+//    template<typename CommonGatewayRequest>
+//    request_ostream(CommonGatewayRequest& req, http::status_code sc = http::ok)
+//      : request_(&req)
+//      , buffer_(new cgi::streambuf())
+//      , ostream_(buffer_.get()) //detail::take_buffer(req))
+//      , http_status_(sc)
+////    , destination_(destination)
+//    {
+//    }
 
     ~request_ostream()
     {
-      if (request_) send();
+      //if (request_) send();
     }
 
     void clear()
@@ -141,11 +144,11 @@ namespace cgi {
     /**
      * If there is no error, the buffer is cleared.
      */
-    void flush()
-    {
-      BOOST_ASSERT(request_ != NULL);
-      flush(*request_);
-    }
+    //void flush()
+    //{
+    //  BOOST_ASSERT(request_ != NULL);
+    //  flush(*request_);
+    //}
 
     /// Synchronously flush the data to the supplied request
     /**
@@ -156,7 +159,7 @@ namespace cgi {
     template<typename CommonGatewayRequest>
     void flush(CommonGatewayRequest& req)
     {
-      cgi::write(req, *ostream_.rdbuf());
+      cgi::write(req, cgi::buffer(*ostream_.rdbuf()));
       // the above function will throw on an error
       clear();
     }
@@ -218,12 +221,12 @@ namespace cgi {
      * twice without an arguement (unless you add another request - something
      * not possible yet).
      */
-    void send()
-    {
-      BOOST_ASSERT(request_ != NULL);
-      send(*request_);
-      request_ = NULL;
-    }
+    //void send()
+    //{
+    //  BOOST_ASSERT(request_ != NULL);
+    //  send(*request_);
+    //  request_ = NULL;
+    //}
 
     /// Synchronously send the reply to the default request
     /**
@@ -232,13 +235,13 @@ namespace cgi {
      * can't be called twice without an arguement (unless you add another
      * request - something not possible yet).
      */
-    boost::system::error_code& send(boost::system::error_code& ec)
-    {
-      BOOST_ASSERT(request_ != NULL);
-      if(!send(*request_, ec))
-        request_ = NULL;
-      return ec;
-    }
+    //boost::system::error_code& send(boost::system::error_code& ec)
+    //{
+    //  BOOST_ASSERT(request_ != NULL);
+    //  if(!send(*request_, ec))
+    //    request_ = NULL;
+    //  return ec;
+    //}
 
     /// Synchronously send the data via the supplied request
     /**
@@ -249,7 +252,7 @@ namespace cgi {
     template<typename CommonGatewayRequest>
     void send(CommonGatewayRequest& req)
     {
-      cgi::write(req, *ostream_.rdbuf(),  data_sink::stdout());
+      cgi::write(req, *ostream_.rdbuf(), stdout_);
       req.set_status(http_status_);
     }
 
@@ -279,21 +282,22 @@ namespace cgi {
     }
 
     /// Get the buffer associated with the stream
-    boost::shared_ptr<cgi::streambuf> rdbuf() const
+    cgi::streambuf* rdbuf() const
     {
-      return ostream_.rdbuf();
+      return static_cast<cgi::streambuf*>(ostream_.rdbuf());
     }
 
     void set_status(http::status_code& num) { http_status_ = num; }
-    http::status_code& get_status() const
+
+    http::status_code& get_status()
     {
       return http_status_;
     }
 
-    request_base* request() const
-    {
-      return request_;
-    }
+    //request_base* request() const
+    //{
+    //  return request_;
+    //}
 
 //    int destination() const
 //    {
@@ -302,7 +306,7 @@ namespace cgi {
 
   private:
     /// The request associated with the ostream; can be NULL
-    request_base* request_;
+    //request_base* request_;
 
     boost::shared_ptr<cgi::streambuf> buffer_;
     std::ostream ostream_;
@@ -324,5 +328,7 @@ namespace cgi {
   }
 
 } // namespace cgi
+
+#include "detail/pop_options.hpp"
 
 #endif // CGI_REQUEST_OSTREAM_HPP_INCLUDED__

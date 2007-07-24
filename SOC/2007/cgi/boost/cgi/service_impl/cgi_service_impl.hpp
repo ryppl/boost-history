@@ -21,6 +21,7 @@
 #include "cgi_service_impl_base.hpp"
 #include "../detail/extract_params.hpp"
 #include "../request_impl/cgi_request_impl.hpp"
+#include "../connections/stdio.hpp"
 
 namespace cgi {
 
@@ -43,6 +44,15 @@ namespace cgi {
     template<typename T>
     cgi_service_impl(T&)
       : cgi_service_impl_base<cgi_request_impl>()
+    {
+    }
+
+    void construct(implementation_type& impl)
+    {
+      impl.connection_ = stdio_connection::create();
+    }
+
+    void destroy(implementation_type& impl)
     {
     }
   };

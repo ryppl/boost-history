@@ -6,8 +6,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_CGI_HPP_INCLUDED__
-#define CGI_CGI_HPP_INCLUDED__
+#ifndef CGI_CGI_CGI_HPP_INCLUDED__
+#define CGI_CGI_CGI_HPP_INCLUDED__
 
 // #include all protocol-independent headers only. Protocol-specific
 // headers can just include this after other headers.
@@ -17,10 +17,10 @@
 #include "../io_service.hpp"
 #include "../streambuf.hpp"
 #include "../basic_request.hpp"
-#include "../basic_request_acceptor.hpp"
-#include "../reply.hpp"
-#include "../logger.hpp"
+//#include "../basic_request_acceptor.hpp"
+//#include "../reply.hpp"
+//#include "../logger.hpp"
 #include "../read.hpp"
 #include "../write.hpp"
 
-#endif // CGI_CGI_HPP_INCLUDED__
+#endif // CGI_CGI_CGI_HPP_INCLUDED__

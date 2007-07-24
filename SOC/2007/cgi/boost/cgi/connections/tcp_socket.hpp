@@ -9,6 +9,8 @@
 #ifndef CGI_TCP_CONNECTION_HPP_INCLUDED__
 #define CGI_TCP_CONNECTION_HPP_INCLUDED__
 
+#include "../detail/push_options.hpp"
+
 #include "../basic_connection.hpp"
 #include "../connection_base.hpp"
 #include "../tags.hpp"
@@ -78,5 +80,7 @@ namespace cgi {
   //};
 
 } // namespace cgi
+
+#include "../detail/pop_options.hpp"
 
 #endif // CGI_TCP_CONNECTION_HPP_INCLUDED__

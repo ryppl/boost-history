@@ -9,30 +9,35 @@
 #ifndef CGI_BASIC_REQUEST_HPP_INCLUDED__
 #define CGI_BASIC_REQUEST_HPP_INCLUDED__
 
+#include "detail/push_options.hpp"
+
 #include <iostream>
 #include <boost/noncopyable.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/assert.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/asio/io_service.hpp>
+#include <boost/asio/basic_io_object.hpp>
 
 #include "detail/throw_error.hpp"
 #include "detail/protocol_traits.hpp"
 #include "request_base.hpp"
 #include "role_type.hpp"
-#include "data_source.hpp"
 #include "data_sink.hpp"
 #include "status_type.hpp"
 #include "is_async.hpp"
-#include "basic_io_object.hpp"
 #include "connection_base.hpp"
 #include "http/status_code.hpp"
 #include "request_service.hpp"
 #include "basic_protocol_service_fwd.hpp"
 #include "basic_request_fwd.hpp"
+#include "basic_sync_io_object.hpp"
+#include "basic_io_object.hpp"
 
 namespace cgi {
 
+  //using boost::asio::basic_io_object;
   /*
   enum status_type
     { ok
@@ -72,7 +77,10 @@ namespace cgi {
           , typename Allocator>
   class basic_request
     : public request_base
-    , public basic_io_object<Service, is_async<Protocol>::value>
+    , public boost::mpl::if_c<is_async<Protocol>::value
+                             , basic_io_object<Service>
+                             , basic_sync_io_object<Service>
+                             >::type
   {
   public:
     typedef basic_request<Protocol, Service, Role
@@ -89,7 +97,7 @@ namespace cgi {
 
     // Throws
     basic_request(bool load_now = true, bool parse_post = true)
-      : basic_io_object<Service, false>()
+      : basic_sync_io_object<Service>()
     {
       if (load_now) load(parse_post);//this->service.load(this->impl, true, ec);
     }
@@ -97,14 +105,14 @@ namespace cgi {
     basic_request(boost::system::error_code& ec
                  , const bool load_now = true
                  , const bool parse_post = true)
-      : basic_io_object<Service, false>()
+      : basic_sync_io_object<Service>()
     {
       if (load_now) load(ec, parse_post);//this->service.load(this->impl, true, ec);
     }
       
     basic_request(protocol_service_type& s, const bool load_now = false
                  , const bool parse_post = false)
-      : basic_io_object<Service, true>(s.io_service())
+      : basic_io_object<Service>(s.io_service())
     {
       if (load_now) load(parse_post);//this->service.load(this->impl, false, ec);
     }
@@ -112,7 +120,7 @@ namespace cgi {
     basic_request(protocol_service_type& s
                  , boost::system::error_code& ec
                  , const bool load_now = false, const bool parse_post = false)
-      : basic_io_object<Service, true>(s.io_service())
+      : basic_io_object<Service>(s.io_service())
     {
       if(load_now) load(ec, parse_post);//this->service.load(this->impl, false, ec);
     }
@@ -172,11 +180,7 @@ namespace cgi {
       //BOOST_ASSERT( request_status_ != status_type::ended );
 
       this->service.set_status(this->impl, http_status);
-      //http_status_ = http_status;
-      //program_status_ = program_status;
       this->service.end(this->impl, http_status);
-      //io_service_.dispatch(set_status(status_type::ended));
-      //this->impl.end_request(this, status_code);
     }
 
     void close(int http_status, int program_status)
@@ -191,10 +195,21 @@ namespace cgi {
       this->service.end(this->impl, http::internal_server_error);
     }
 
+    void set_source(cgi::sink dest = reply)
+    {
+      boost::system::error_code ec;
+      this->service(this->impl, dest, ec);
+      detail::throw_error(ec);
+    }
+
+    void set_source(cgi::sink dest, boost::system::error_code& ec)
+    {
+      this->service(this->impl, dest, ec);
+    }
+
     /// Read some data from the request
-    template<typename MutableBufferSequence, typename Source>
-    std::size_t read_some(const MutableBufferSequence& buf
-                         , Source source = data_source::stdin())
+    template<typename MutableBufferSequence/*, typename Source*/>
+    std::size_t read_some(const MutableBufferSequence& buf)
     {
       boost::system::error_code ec;
       std::size_t s = this->service.read_some(this->impl, buf, ec);
@@ -202,17 +217,15 @@ namespace cgi {
       return s;
     }
 
-    template<typename MutableBufferSequence, typename Source>
+    template<typename MutableBufferSequence/*, typename Source*/>
     std::size_t read_some(const MutableBufferSequence& buf
-                         , boost::system::error_code& ec
-                         , Source source = data_source::stdin())
+                         , boost::system::error_code& ec)
     {
       return this->service.read_some(this->impl, buf, ec);
     }
 
-    template<typename ConstBufferSequence, typename Sink>
-    std::size_t write_some(const ConstBufferSequence& buf
-                          , Sink dest = data_sink::stdout())
+    template<typename ConstBufferSequence/*, typename Sink*/>
+    std::size_t write_some(const ConstBufferSequence& buf)
     {
       boost::system::error_code ec;
       std::size_t s = this->service.write_some(this->impl, buf, ec);
@@ -220,10 +233,9 @@ namespace cgi {
       return s;
     }
 
-    template<typename ConstBufferSequence, typename Sink>
+    template<typename ConstBufferSequence/*, typename Sink*/>
     std::size_t write_some(const ConstBufferSequence& buf
-                          , boost::system::error_code& ec
-                          , Sink dest = data_sink::stdout())
+                          , boost::system::error_code& ec)
     {
       return this->service.write_some(this->impl, buf, ec);
     }
@@ -244,9 +256,16 @@ namespace cgi {
 **/
 
     /// Find the get meta-variable matching name
-    std::string meta_get(const std::string& name) const
+    std::string meta_get(const std::string& name)
     {
-      return this->service.meta_get(this->impl, name);
+      boost::system::error_code ec;
+      return this->service.meta_get(this->impl, name, ec);
+      detail::throw_error(ec);
+    }
+
+    std::string meta_get(const std::string& name, boost::system::error_code& ec)
+    {
+      return this->service.meta_get(this->impl, name, ec);
     }
 
     /// Find the post meta-variable matching name
@@ -257,17 +276,25 @@ namespace cgi {
      */
     std::string meta_post(const std::string& name, bool greedy = true)
     {
-      return this->service.meta_post(this->impl, name, greedy);
+      boost::system::error_code ec;
+      return this->service.meta_post(this->impl, name, ec, greedy);
+      detail::throw_error(ec);
+    }
+
+    std::string meta_post(const std::string& name, boost::system::error_code& ec
+                          , bool greedy = true)
+    {
+      return this->service.meta_post(this->impl, name, ec, greedy);
     }
 
     /// Find the cookie meta-variable matching name
-    std::string meta_cookie(const std::string& name) const
+    std::string meta_cookie(const std::string& name)
     {
       return this->service.meta_cookie(this->impl, name);
     }
 
     /// Find the environment meta-variable matching name
-    std::string meta_env(const std::string& name) const
+    std::string meta_env(const std::string& name)
     {
       return this->service.meta_env(this->impl, name);
     }
@@ -286,7 +313,7 @@ namespace cgi {
      * provide a meta_var_all() function which is greedy; the
      * ugly/long name there to discourage use.
      */
-    std::string meta_var(const std::string& name, bool greedy = false) const
+    std::string meta_var(const std::string& name, bool greedy = false)
     {
       return this->service.meta_var(this->impl, name, greedy);
       std::string request_method( meta_env("REQUEST_METHOD") );
@@ -413,6 +440,12 @@ namespace cgi {
       return this->service.is_open(this->impl);
     }
 
+    /// Set a user cookie
+    void set_cookie(const std::string& name, const std::string& value)
+    {
+      return this->service.set_cookie(this->impl, name, value);
+    }
+
   private:
     //connection_ptr conn_;
     //service_type& service;
@@ -500,6 +533,8 @@ namespace cgi {
   //};
 
 } // namespace cgi
+
+#include "detail/pop_options.hpp"
 
 #endif // CGI_BASIC_REQUEST_HPP_INCLUDED__
 

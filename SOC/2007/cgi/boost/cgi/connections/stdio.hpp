@@ -12,11 +12,14 @@
 #include <iostream>
 #include <istream>
 #include <ostream>
+#include <string>
 #include <boost/system/error_code.hpp>
+#include <boost/asio.hpp>
 
 #include "../basic_connection_fwd.hpp"
 #include "../tags.hpp"
 #include "../connection_base.hpp"
+#include "../data_sink.hpp"
 //#include "../io_service.hpp"
 
 namespace cgi {
@@ -26,6 +29,8 @@ namespace cgi {
     : public connection_base
   {
   public:
+    typedef boost::shared_ptr<basic_connection<tags::stdio> >  pointer;
+
     basic_connection()
       : in_(std::cin)
       , out_(std::cout)
@@ -41,12 +46,18 @@ namespace cgi {
     {
     }
 
+    static pointer create()
+    {
+      return pointer(new basic_connection<tags::stdio>());
+    }
+
     template<typename MutableBufferSequence>
     std::size_t read_some(MutableBufferSequence buf
-                         , boost::system::error_code& ec)
+                         , boost::system::error_code& ec
+                         , cgi::sink origin)
     {
       if( buf.data() != in_.rdbuf() )
-        return in_.read(buf.data(), buf.size());
+        return in_.read(buf.begin(), buf.size());
       return buf.size();
     }
 
@@ -54,7 +65,17 @@ namespace cgi {
     std::size_t write_some(ConstBufferSequence& buf
                           , boost::system::error_code& ec)
     {
-      return out_.write(buf.data(), buf.size());
+      std::size_t bytes_transferred(0);
+      for(typename ConstBufferSequence::const_iterator i = buf.begin()
+         ; i != buf.end(); ++i)
+      {
+        std::size_t buf_len = boost::asio::buffer_size(*i);
+        std::string s(boost::asio::buffer_cast<const char*>(*i)
+                     , buf_len);
+        bytes_transferred += buf_len;
+        out_.write(s.c_str(), buf_len);
+      }
+      return bytes_transferred;
     }
 
   protected:

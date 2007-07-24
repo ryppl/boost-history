@@ -9,6 +9,8 @@
 #ifndef CGI_REPLY_HPP_INCLUDED__
 #define CGI_REPLY_HPP_INCLUDED__
 
+#include "detail/push_options.hpp"
+
 #include <ostream>
 
 #include "request_ostream.hpp"
@@ -62,5 +64,7 @@ namespace cgi {
   };
 
 } // namespace cgi
+
+#include "detail/pop_options.hpp"
 
 #endif // CGI_REPLY_HPP_INCLUDED__

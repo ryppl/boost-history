@@ -49,11 +49,13 @@ namespace cgi {
       : stdin_parsed_(false)
       , http_status_(http::ok)
       , request_status_(unloaded)
-      , connection_()
+                         //      , connection_(new )
     {
     }
 
   protected:
+    conn_ptr connection() { return connection_; }
+
     friend class cgi_service_impl_base<RequestImpl>;
 
     map_type get_vars_;

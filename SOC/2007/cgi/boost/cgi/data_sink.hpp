@@ -10,10 +10,18 @@
 #define CGI_DATA_SINK_HPP_INCLUDED__
 
 namespace cgi {
+
+  enum sink
+  { stdout_
+  , stderr_
+  , reply
+  , log
+  , reply_log = reply | log };
+
  namespace data_sink {
 
-   struct stdout {};
-   struct stderr {};
+   //struct stdout_ {};
+   //struct stderr_ {};
 
  } // namespace data_sink
 } // namespace cgi

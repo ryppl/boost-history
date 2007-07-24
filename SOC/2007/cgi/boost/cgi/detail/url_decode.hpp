@@ -33,10 +33,10 @@ namespace cgi {
    /// URL-decode a string
    std::string url_decode( const std::string& str )
    {
-	 std::string ret;
+     std::string ret;
 
-	 for( unsigned int i=0; i < str.size(); i++ )
-	 {
+     for( unsigned int i=0; i < str.size(); i++ )
+     {
 	   switch( str[i] )
        {
          case ' ':

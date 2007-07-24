@@ -36,6 +36,11 @@ namespace cgi {
     {
     }
 
+    static pointer create(cgi::io_service& ios)
+    {
+      return pointer(new basic_connection<tags::async_stdio>(ios));
+    }
+
     template<typename ConnectionPtr, typename MutableBufferSequence
             , typename Handler>
     class read_handler

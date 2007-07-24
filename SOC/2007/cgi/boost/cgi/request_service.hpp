@@ -9,6 +9,8 @@
 #ifndef CGI_REQUEST_SERVICE_HPP_INCLUDED
 #define CGI_REQUEST_SERVICE_HPP_INCLUDED
 
+#include "detail/push_options.hpp"
+
 #include <boost/utility/enable_if.hpp>
 
 //#include "is_async.hpp"
@@ -54,7 +56,7 @@ namespace cgi {
     //{
     //}
 
-    request_service(io_service& ios)
+    request_service(cgi::io_service& ios)
       : detail::service_base<request_service<Protocol> >(ios)
       //: boost::asio::io_service::service(ps.io_service())
       , service_impl_(boost::asio::use_service<service_impl_type>(ios))
@@ -109,6 +111,35 @@ namespace cgi {
       return service_impl_.is_open(impl);
     }
 
+    template<typename ConstBufferSequence>
+    std::size_t write_some(impl_type& impl, const ConstBufferSequence& buf)
+    {
+      boost::system::error_code ec;
+      return service_impl_.write_some(impl, buf, ec);
+      detail::throw_error(ec);
+    }
+
+    template<typename ConstBufferSequence>
+    std::size_t write_some(impl_type& impl, const ConstBufferSequence& buf
+                          , boost::system::error_code& ec)
+    {
+      return service_impl_.write_some(impl, buf, ec);
+    }
+
+    template<typename MutableBufferSequence>
+    std::size_t read_some(impl_type& impl, MutableBufferSequence buf)
+    {
+      boost::system::error_code ec;
+      return service_impl_.read_some(impl, buf, ec);
+      detail::throw_error(ec);
+    }
+
+    template<typename MutableBufferSequence>
+    std::size_t read_some(impl_type& impl, MutableBufferSequence buf
+                          , boost::system::error_code& ec)
+    {
+      return service_impl_.read_some(impl, buf, ec);
+    }
   private:
     //typename boost::mpl::if_<typename is_async<protocol_type>::value
     //                , boost::add_reference<service_impl_type>
@@ -117,5 +148,7 @@ namespace cgi {
   };
 
 } // namespace cgi
+
+#include "detail/pop_options.hpp"
 
 #endif // CGI_REQUEST_SERVICE_HPP_INCLUDED
