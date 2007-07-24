@@ -13,7 +13,7 @@
 //  can be cause buffer overruns or other possible security issues if misused.
 //  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
 //  But the wording of the warning is misleading and unsettling, there are no
-//  portable alternative functions, and VC++ 8.0's own libraries use the
+//  portable altersystem functions, and VC++ 8.0's own libraries use the
 //  functions in question. So turn off the warnings.
 #define _CRT_SECURE_NO_DEPRECATE
 #define _SCL_SECURE_NO_DEPRECATE
@@ -49,13 +49,13 @@ using namespace boost::system;
 namespace
 {
 
-  struct native_to_posix_t
+  struct system_to_posix_t
   { 
-    int native_value;
+    int system_value;
     boost::system::posix_errno posix_value;
   };
 
-  const native_to_posix_t native_to_posix[] = 
+  const system_to_posix_t system_to_posix[] = 
   {
 
 #ifdef BOOST_POSIX_API
@@ -146,7 +146,7 @@ namespace
 
 #else
 
-  //  Windows native -> posix_errno decode table  ----------------------------//  
+  //  Windows system -> posix_errno decode table  ----------------------------//  
 
     // see WinError.h comments for descriptions of errors
     
@@ -201,206 +201,36 @@ namespace
 
   //  standard error categories  -------------------------------------------//
 
-  class posix_error_category : public error_category
+  class system_error_category : public error_category
   {
   public:
     const std::string &   name() const;
     posix_errno           posix( int ev ) const;
-    std::string           message( int ev ) const;
-    wstring_t_workaround  wmessage( int ev ) const;
   };
 
-  class native_error_category : public error_category
+  const system_error_category system_category_const;
+
+  //  system_error_category implementation  --------------------------------// 
+
+  const std::string & system_error_category::name() const
   {
-  public:
-    const std::string &   name() const;
-    posix_errno           posix( int ev ) const;
-    std::string           message( int ev ) const;
-    wstring_t_workaround  wmessage( int ev ) const;
-  };
-
-  const posix_error_category posix_category_const;
-  const native_error_category native_category_const;
-
-  //  posix_error_category implementation  ---------------------------------//
-
-  const std::string & posix_error_category::name() const
-  {
-    static const std::string s( "POSIX" );
+    static const std::string s( "system" );
     return s;
   }
 
-  posix_errno posix_error_category::posix( int ev ) const
+  posix_errno system_error_category::posix( int ev ) const
   {
-    return static_cast<posix_errno>(ev);
-  }
-
-  std::string posix_error_category::message( int ev ) const
-  {
-  // strerror_r is preferred because it is always thread safe,
-  // however, we fallback to strerror in certain cases because:
-  //   -- Windows doesn't provide strerror_r.
-  //   -- HP and Sundo provide strerror_r on newer systems, but there is
-  //      no way to tell if is available at runtime and in any case their
-  //      versions of strerror are thread safe anyhow.
-  //   -- Linux only sometimes provides strerror_r.
-  //   -- Tru64 provides strerror_r only when compiled -pthread.
-  //   -- VMS doesn't provide strerror_r, but on this platform, strerror is
-  //      thread safe.
-  # if defined(BOOST_WINDOWS_API) || defined(__hpux) || defined(__sun)\
-     || (defined(__linux) && (!defined(__USE_XOPEN2K) || defined(BOOST_SYSTEM_USE_STRERROR)))\
-     || (defined(__osf__) && !defined(_REENTRANT))\
-     || (defined(__vms))
-      const char * c_str = std::strerror( ev );
-      return std::string( c_str ? c_str : "invalid_argument" );
-  # else
-      char buf[64];
-      char * bp = buf;
-      std::size_t sz = sizeof(buf);
-  #  if defined(__CYGWIN__) || defined(__USE_GNU)
-      // Oddball version of strerror_r
-      const char * c_str = strerror_r( ev, bp, sz );
-      return std::string( c_str ? c_str : "invalid_argument" );
-  #  else
-      // POSIX version of strerror_r
-      int result;
-      for (;;)
-      {
-        // strerror_r returns 0 on success, otherwise ERANGE if buffer too small,
-        // invalid_argument if ev not a valid error number
-        if ( (result = strerror_r( ev, bp, sz )) == 0 )
-          break;
-        else
-        {
-  #  if defined(__linux)
-          // Linux strerror_r returns -1 on error, with error number in errno
-          result = errno;
-  #  endif
-          if ( result !=  ERANGE ) break;
-        if ( sz > sizeof(buf) ) std::free( bp );
-        sz *= 2;
-        if ( (bp = static_cast<char*>(std::malloc( sz ))) == 0 )
-          return std::string( "ENOMEM" );
-        }
-      }
-      try
-      {
-      std::string msg( ( result == invalid_argument ) ? "invalid_argument" : bp );
-      if ( sz > sizeof(buf) ) std::free( bp );
-        sz = 0;
-      return msg;
-      }
-      catch(...)
-      {
-        if ( sz > sizeof(buf) ) std::free( bp );
-        throw;
-      }
-  #  endif
-  # endif
-  }
-
-  wstring_t_workaround posix_error_category::wmessage( int ev ) const
-  {
-    std::string str = message( ev );
-    wstring_t_workaround wstr;
-
-    for (std::size_t i = 0; i < str.size(); ++i )
-      { wstr += static_cast<wchar_t>(str[i]); }
-    return wstr;
-  }
-
-  //  native_error_category implementation  --------------------------------// 
-
-  const std::string & native_error_category::name() const
-  {
-    static const std::string s( "native" );
-    return s;
-  }
-
-  posix_errno native_error_category::posix( int ev ) const
-  {
-    const native_to_posix_t * cur = native_to_posix;
+    const system_to_posix_t * cur = system_to_posix;
     do
     {
-      if ( ev == cur->native_value )
+      if ( ev == cur->system_value )
         return cur->posix_value;
       ++cur;
-    } while ( cur != native_to_posix
-      + sizeof(native_to_posix)/sizeof(native_to_posix_t) );
-    return boost::system::other;
+    } while ( cur != system_to_posix
+      + sizeof(system_to_posix)/sizeof(system_to_posix_t) );
+    return boost::system::no_posix_equivalent;
   }
 
-# if !defined( BOOST_WINDOWS_API )
-
-  std::string native_error_category::message( boost::int_least32_t ev ) const
-  {
-    return posix_category.message( ev );
-  }
-
-  wstring_t_workaround native_error_category::wmessage( boost::int_least32_t ev ) const
-  {
-    return posix_category.wmessage( ev );
-  }
-# else
-// TODO:
-  
-//Some quick notes on the implementation (sorry for the noise if
-//someone has already mentioned them):
-//
-//- The ::LocalFree() usage isn't exception safe.
-//
-//See:
-//
-//<http://boost.cvs.sourceforge.net/boost/boost/boost/asio/system_exception.hpp?revision=1.1&view=markup>
-//
-//in the implementation of what() for an example.
-//
-//Cheers,
-//Chris
-  std::string native_error_category::message( int ev ) const
-  {
-    LPVOID lpMsgBuf;
-    ::FormatMessageA( 
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-        FORMAT_MESSAGE_FROM_SYSTEM | 
-        FORMAT_MESSAGE_IGNORE_INSERTS,
-        NULL,
-        ev,
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-        (LPSTR) &lpMsgBuf,
-        0,
-        NULL 
-    );
-    std::string str( static_cast<LPCSTR>(lpMsgBuf) );
-    ::LocalFree( lpMsgBuf ); // free the buffer
-    while ( str.size()
-      && (str[str.size()-1] == '\n' || str[str.size()-1] == '\r') )
-        str.erase( str.size()-1 );
-    return str;
-  }
-
-  wstring_t_workaround native_error_category::wmessage( int ev ) const
-  {
-    LPVOID lpMsgBuf;
-    ::FormatMessageW( 
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-        FORMAT_MESSAGE_FROM_SYSTEM | 
-        FORMAT_MESSAGE_IGNORE_INSERTS,
-        NULL,
-        ev,
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
-        (LPWSTR) &lpMsgBuf,
-        0,
-        NULL 
-    );
-    wstring_t_workaround str( static_cast<LPCWSTR>(lpMsgBuf) );
-    ::LocalFree( lpMsgBuf ); // free the buffer
-    while ( str.size()
-      && (str[str.size()-1] == L'\n' || str[str.size()-1] == L'\r') )
-        str.erase( str.size()-1 );
-    return str;
-  }
-# endif
 
 } // unnamed namespace
 
@@ -408,7 +238,6 @@ namespace boost
 {
   namespace system
   {
-    BOOST_SYSTEM_DECL const error_category & posix_category = posix_category_const;
-    BOOST_SYSTEM_DECL const error_category & native_category = native_category_const;
+    BOOST_SYSTEM_DECL const error_category & system_category = system_category_const;
   } // namespace system
 } // namespace boost

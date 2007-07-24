@@ -21,6 +21,9 @@
 
 #include <boost/cerrno.hpp> // we don't like doing this, but it appears
                             // unavoidable to implement posix_errno.
+# ifdef BOOST_WINDOWS
+#   include <winerror.h>
+# endif
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -28,11 +31,6 @@ namespace boost
 {
   namespace system
   {
-# ifndef BOOST_NO_STD_WSTRING  // workaround Cygwin's lack of wstring_t
-    typedef std::wstring wstring_t_workaround;
-# else
-    typedef std::basic_string<wchar_t> wstring_t_workaround;
-# endif
 
     class error_code;
 
@@ -99,7 +97,6 @@ namespace boost
       operation_not_permitted = EPERM,
       operation_not_supported = EOPNOTSUPP,
       operation_would_block = EWOULDBLOCK,
-      other = EOTHER,
       owner_dead = EOWNERDEAD,
       permission_denied = EACCES,
       protocol_error = EPROTO,
@@ -117,7 +114,9 @@ namespace boost
       too_many_links = EMLINK,
       too_many_synbolic_link_levels = ELOOP,
       value_too_large = EOVERFLOW,
-      wrong_protocol_type = EPROTOTYPE
+      wrong_protocol_type = EPROTOTYPE,
+
+      no_posix_equivalent = -1 // TODO: is this a safe value?
     };
 
     //  class error_category  ------------------------------------------------//
@@ -128,8 +127,6 @@ namespace boost
       virtual ~error_category(){}
       virtual const std::string & name() const = 0;
       virtual posix_errno posix( int ev) const = 0;
-      virtual std::string message( int ev ) const = 0;
-      virtual wstring_t_workaround wmessage( int ev) const = 0;
 
       bool operator==(const error_category & rhs) const { return this == &rhs; }
       bool operator!=(const error_category & rhs) const { return !(*this == rhs); }
@@ -139,10 +136,9 @@ namespace boost
       }
     };
 
-    //  predefined error categories  -----------------------------------------//
+    //  predefined system_category  ------------------------------------------//
 
-    BOOST_SYSTEM_DECL extern const error_category & posix_category;
-    BOOST_SYSTEM_DECL extern const error_category & native_category;
+    BOOST_SYSTEM_DECL extern const error_category & system_category;
 
     //  class error_code  ----------------------------------------------------//
 
@@ -157,9 +153,11 @@ namespace boost
     public:
 
       // constructors:
-      error_code()                                      : m_val(0), m_cat(&posix_category) {}
+      error_code()                                      : m_val(0), m_cat(&system_category) {}
       error_code( int val, const error_category & cat ) : m_val(val), m_cat(&cat) {}
-      explicit error_code( posix_errno val )            : m_val(val), m_cat(&posix_category) {}
+
+      template<typename Enum>
+        error_code(Enum val) { *this = make_error_code(val); }
 
       // modifiers:
       void assign( int val, const error_category & cat )
@@ -168,25 +166,23 @@ namespace boost
         m_cat = &cat;
       }
                                              
-      error_code & operator=( posix_errno val )
+      template<typename Enum>
+        error_code & operator=( Enum val )
       { 
-        m_val = val;
-        m_cat = &posix_category;
+        *this = make_error_code(val);
         return *this;
       }
 
       void clear()
       {
         m_val = 0;
-        m_cat = &posix_category;
+        m_cat = &system_category;
       }
 
       // observers:
       int                     value() const         { return m_val; }
       const error_category &  category() const      { return *m_cat; }
       posix_errno             posix() const         { return m_cat->posix(value()); }        
-      std::string             message() const       { return m_cat->message(value()); }
-      wstring_t_workaround    wmessage() const      { return m_cat->wmessage(value()); }
 
       typedef void (*unspecified_bool_type)();
       static void unspecified_bool_true() {}
@@ -226,10 +222,7 @@ namespace boost
 
     //  non-member functions  ------------------------------------------------//
 
-    inline bool operator==(const error_code & ec, posix_errno en) { return ec.posix() == en; }
-    inline bool operator==(posix_errno en, const error_code & ec) { return ec.posix() == en; }
-    inline bool operator!=(const error_code & ec, posix_errno en) { return ec.posix() != en; }
-    inline bool operator!=(posix_errno en, const error_code & ec) { return ec.posix() != en; }
+    // TODO: both of these may move elsewhere, but the LWG hasn't spoken yet.
 
     template <class charT, class traits>
     inline std::basic_ostream<charT,traits>&
@@ -247,6 +240,55 @@ namespace boost
               [ec.category().name().size()-1]) << 16)
             : 0);
     }
+
+    //  implementation specific interfaces  ----------------------------------//
+
+#ifndef BOOST_WINDOWS
+  // POSIX-based Operating System:
+
+  inline error_code make_error_code(posix_errno e)
+    { return error_code(e,system_category); }
+
+  // TODO: Add code for system specific categories here.
+
+#else
+  // Windows:
+  namespace windows
+  {
+    enum error
+    {
+      // These names and values are based on Windows winerror.h
+      invalid_function = ERROR_INVALID_FUNCTION,
+      file_not_found = ERROR_FILE_NOT_FOUND,
+      path_not_found = ERROR_PATH_NOT_FOUND,
+      too_many_open_files = ERROR_TOO_MANY_OPEN_FILES,
+      access_denied = ERROR_ACCESS_DENIED,
+      invalid_handle = ERROR_INVALID_HANDLE,
+      arena_trashed = ERROR_ARENA_TRASHED,
+      not_enough_memory = ERROR_NOT_ENOUGH_MEMORY,
+      invalid_block = ERROR_INVALID_BLOCK,
+      bad_environment = ERROR_BAD_ENVIRONMENT,
+      bad_format = ERROR_BAD_FORMAT,
+      invalid_access = ERROR_INVALID_ACCESS,
+      outofmemory = ERROR_OUTOFMEMORY,
+      invalid_drive = ERROR_INVALID_DRIVE,
+      current_directory = ERROR_CURRENT_DIRECTORY,
+      not_same_device = ERROR_NOT_SAME_DEVICE,
+      no_more_files = ERROR_NO_MORE_FILES,
+      write_protect = ERROR_WRITE_PROTECT,
+      bad_unit = ERROR_BAD_UNIT,
+      not_ready = ERROR_NOT_READY,
+      bad_command = ERROR_BAD_COMMAND
+
+      // TODO: add more Windows errors
+    };
+  }
+
+  inline error_code make_error_code(windows::error e)
+    { return error_code(e,system_category); }
+
+#endif
+
 
   } // namespace system
 } // namespace boost
