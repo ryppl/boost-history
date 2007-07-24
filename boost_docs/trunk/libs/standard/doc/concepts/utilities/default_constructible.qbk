@@ -14,19 +14,49 @@ that can be called without arguments.
 Non-trivial default constructors may specify a default value or state for
 an object, but such values are not required by this concept.
 
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[T] [A [StdDefaultConstructible] type.]]
+    [[t] [An instance of `T`.]]
+]
+
 [heading Requirements]
 [table
-	[[Expression] [Return Type] [Requirements]]
-	[
-		[`T x`]
-		[]
-		[`x` is an instance of `T`.]
-	]
-	[
-		[`T()`]
-		[An instance of `T` is constructed.]
-		[]
-	]
+    [[Expression] [Return Type] [Requirements]]
+    [
+        [`T t`]
+        []
+        [`t` is an instance of `T`.]
+    ]
+    [
+        [`T()`]
+        []
+        [An instance of `T` is constructed.]
+    ]
 ]
+
+[heading C++0x]
+The `DefaultConstructible` concept is made explicit in the next version of C++. It
+is refined from the Destructible and `Constructible` concepts, which allows
+construction from any number of arguments. It is given as:
+
+    auto concept Destructible<typename T>
+    {
+        T::~T();
+    };
+
+    auto concept Constructible<typename T, typename... Args>
+        : Destructible<T>
+    {
+        T::T(Args...);
+    };
+
+    auto concept DefaultConstructible<typename T>
+        : Constructible<T>
+    {};
+
+This effectively requires the that T have a constructor that takes no arguments, hence
+a default constructor.
 
 [endsect]

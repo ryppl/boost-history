@@ -10,7 +10,7 @@
     [id standard]
     [dirname standard]
     [purpose
-        The Standard Template Library Concept and Reference documentation
+        The Standard Template Library Concept and Reference Documentation
     ]
     [license
             Distributed under the Boost Software License, Version 1.0.
@@ -20,11 +20,11 @@
 ]
 
 [/ Quick Reference Templates /]
-[template StdDefaultConstructible[] [link standard.concepts.utilities.default_constructible ['DefaultConstructible]]]
-[template StdCopyConstructible[] [link standard.concepts.utilities.copy_constructible ['CopyConstructible]]]
-[template StdAssignable[] [link standard.concepts.utilities.assignable ['Assignable]]]
-[template EqualityComparable[] [link standard.concepts.utilities.equality_comparable ['EqualityComparable]]]
-[template LessThanComparable[] [link standard.concepts.utilities.less_than_comparable ['LessThanComparable]]]
+[template StdDefaultConstructible[] [link standard.concepts.utilities.default_constructible [^DefaultConstructible]]]
+[template StdCopyConstructible[] [link standard.concepts.utilities.copy_constructible [^CopyConstructible]]]
+[template StdAssignable[] [link standard.concepts.utilities.assignable [^Assignable]]]
+[template StdEqualityComparable[] [link standard.concepts.utilities.equality_comparable [^EqualityComparable]]]
+[template StdLessThanComparable[] [link standard.concepts.utilities.less_than_comparable [^LessThanComparable]]]
 
 [/ Contents ]
 [include concepts/concepts.qbk]

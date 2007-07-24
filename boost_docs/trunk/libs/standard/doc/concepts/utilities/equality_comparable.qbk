@@ -6,5 +6,62 @@
  /]
 
 [section Equality Comparable]
+A type `T` is said to be /equality comparable/ if it defines an /equivalence relation/
+and can be compared using the equality comparison operator (`==`). An equivalence
+relation is a binary relation between any two instances of `T` that denotes them as
+being "equivalent". Note that the meaning of equivalent depends on the type.
+Equivalence relations are required to be /reflexive/, /symmetric/, and /transitive/.
+Equality comparability also introduces the notion of /identity/ for instances of a
+type. This states that an instance of a [StdEqualityComparable] is equivalent
+to itself.
+
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[T] [An [StdEqualityComparable] type.]]
+    [[`t`, `u`, `v`] [Instances of `T`.]]
+]
+
+[heading Requirements]
+[table
+    [[Expression] [Return Type] [Requirements]]
+    [
+        [`t == u`]
+        [Convertible to `bool`.]
+        [If `t` and `u` are equivalent, the return value is convertible to `true`.]
+    ]
+    [
+        [`t != u`]
+        [Convertible to `bool`.]
+        [If `t` and `v` are not equivalent, the return value is convertible to `false`]
+    ]
+]
+
+Note that inequality operator (`!=`) can be trivially implemented if the equality operator
+(`==`) is defined for a type as:
+
+    bool operator !=(const T& t, const T& v) { return !(t == v); }
+
+[heading Invariants]
+The following properties must hold for all models of [StdEqualityComparable].
+
+[table
+    [[Property] [Semantics]]
+    [[Reflexivity] [`t == t` is true.]]
+    [[Symmetry] [`t == u` implies `u == t`.]]
+    [[Transitivity] [`t == u` and `u == v` implies `t == v`.]]
+    [[Identity] [`&t == &u` implies `t == u`.]]
+]
+
+[heading C++0x]
+The `EqualityComparable` concept in C++0x does not impose the /identity/ property on
+the equality comparable relation. This concept also provides a default implementation
+of the inequality (`!=`) operator. It is given as:
+
+    auto concept EqualityComparable<typename T, typename U = T>
+    {
+        bool operator (const T&, const U&);
+        bool operator !=(const T& t, const U& u) { return !(t == u); }
+    }
 
 [endsect]

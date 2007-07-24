@@ -13,35 +13,64 @@ compiler-generated or user-defined copy constructor.
 
 [heading Notation]
 [table
-	[[Expression] [Description]]
-	[[T] [A copy-constructible type.]]
-	[[t] [An instance of type `T`.]]
-	[[u] [An instance of type 'const T`.]]
+    [[Expression] [Description]]
+    [[T] [A [StdCopyConstructible] type.]]
+    [[t] [An instance of type `T`.]]
+    [[u] [An instance of type 'const `T`.]]
 ]
 
 [heading Requirements]
 [table
-	[[Expression] [Return Type] [Requirements]]
-	[
-		[`T t(u)`]
-		[]
-		[`t` is equivalent to `u`]
-	]
-	[
-		[`t.~T()`]
-		[]
-		[`t` is destructed.]
-	]
-	[
-		[`&t`]
-		[`T*`]
-		[Denotes the address of `t`.]
-	]
+    [[Expression] [Return Type] [Requirements]]
+    [
+        [`T t(u)`]
+        []
+        [`t` is an instance of `T` and is equivalent to `u`.]
+    ]
+    [
+        [`T(u)`]
+        []
+        [An instance of `T` is constructed that is equivalent to `u`.]
+    ]
+    [
+        [`t.~T()`]
+        []
+        [`t` is destructed.]
+    ]
+    [
+        [`&t`]
+        [`T*`]
+        [Denotes the address of `t`.]
+    ]
 ]
 
 Taking the address of an instance with `const` type yields a
 `const` pointer. Let `U` be the type `const T` and `u` an instance
 of `U`. The return type of `&u` is `U*`, which by substitution is
 the same as `const T*`.
+
+[heading C++0x]
+In the next version of the C++ language, the destructible and addressable
+requirements are removed from this concept and made explicit elsewhere. The
+`CopyConstructible` concept is refined from the concepts for `Destructible`
+and `MoveConstructible` as follows:
+
+    auto concept Destructible<typename T>
+    {
+        T::~T();
+    };
+
+    auto concept MoveConstructible<typename T>
+        : Destructible<T>
+    {
+        T::T(T&&);
+    };
+
+    auto concept CopyConstructible<typename T>
+        : MoveConstructible<T>
+    {
+        T::T(const T&);
+    };
+
 
 [endsect]
