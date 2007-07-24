@@ -66,9 +66,9 @@ exe clique
     : <include>../../../
     ;
 
-exe parameter
-    : parameter.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
+# exe parameter
+#    : parameter.cpp
+#    : <include>$BOOST_ROOT
+#    : <include>../../../
+#    ;
 
