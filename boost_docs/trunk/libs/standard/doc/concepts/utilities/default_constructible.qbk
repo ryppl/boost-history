@@ -57,7 +57,8 @@ model the [StdDefaultConstructible] concept.
 
 [note
 *TODO:* There could be some discussion about default constructabiltiy and arrays,
-and its use in the `new` expressions.
+and its use in the `new` expressions. Maybe we should make `Constructible` and
+`Destructible` real concepts (with this level of documentation).
 ]
 
 [heading Examples]
