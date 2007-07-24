@@ -16,12 +16,6 @@
 #include <boost/cerrno.hpp>
 
 
-# ifndef BOOST_NO_STD_WSTRING  // workaround Cygwin's lack of wstring_t
-    typedef std::wstring wstring_t;
-# else
-    typedef std::basic_string<wchar_t> wstring_t;
-# endif
-
 //  ------------------------------------------------------------------------  //
 
 //  header asio.hpp
@@ -33,23 +27,16 @@ namespace boost
 {
   namespace asio
   {
-    // asio declares have its own error_category:
-    class asio_error_category : public boost::system::error_category
-    {
-    public:
-      const std::string &         name() const;
-      boost::system::posix_errno  posix( int ev ) const;
-      std::string                 message( int ev ) const;
-      wstring_t                   wmessage( int ev ) const;
-    };
-    extern asio_error_category asio_error;
+    // asio has its own error_category:
+    extern const boost::system::error_category & asio_error_category;
     
-    namespace error
+    enum error
     {
-      extern boost::system::error_code boo_boo;
-    }
+      boo_boo = BOO_BOO
+    };
 
-    void boo_boo( boost::system::error_code & ec );
+    inline boost::system::error_code make_error_code(error e)
+      { return boost::system::error_code(e,asio_error_category); }
   }
 }
 
@@ -57,45 +44,32 @@ namespace boost
 
 //  implementation file asio.cpp:
 
+//  #include <asio.hpp>
+
 namespace boost
 {
   namespace asio
   {
-    asio_error_category asio_error;
+    class asio_error_category_imp : public boost::system::error_category
+    {
+    public:
+      const std::string & name() const
+      {
+        static std::string s( "asio" );
+        return s;
+      }
 
-    const std::string & asio_error_category::name() const
-    {
-      static std::string s( "asio" );
-      return s;
-    }
-    boost::system::posix_errno
-      asio_error_category::posix( int ev ) const
-    {
-      return ev == BOO_BOO
-        ? boost::system::io_error
-        : boost::system::other;
-    }
+      boost::system::posix_errno  posix( int ev ) const
+      {
+        return ev == BOO_BOO
+          ? boost::system::io_error
+          : boost::system::no_posix_equivalent;
+      }
+    };
 
-    std::string asio_error_category::message( int ev ) const
-    {
-      return std::string( "Barf" );
-    }
-
-    wstring_t asio_error_category::wmessage( int ev ) const
-    {
-      return wstring_t( L"Barf" );
-    }
-
-    namespace error
-    {
-      boost::system::error_code boo_boo( BOO_BOO, asio_error );
-    }
-
-    //  function sets ec arg to boo_boo
-    void boo_boo( boost::system::error_code & ec )
-    {
-      ec = error::boo_boo;
-    }
+    const asio_error_category_imp asio_error_category_const;
+    const boost::system::error_category & asio_error_category
+      = asio_error_category_const;
   }
 }
 
@@ -109,16 +83,18 @@ namespace boost
 
 int test_main( int, char *[] )
 {
-  boost::system::error_code ec;
-  boost::asio::boo_boo( ec );
+  boost::system::error_code ec( boost::asio::boo_boo );
 
   BOOST_CHECK( ec );
-  BOOST_CHECK( ec == boost::asio::error::boo_boo );
+  BOOST_CHECK( ec == boost::asio::boo_boo );
   BOOST_CHECK( ec.value() == BOO_BOO );
-  BOOST_CHECK( ec.category() == boost::asio::asio_error );
+  BOOST_CHECK( ec.value() == boost::asio::boo_boo );
+  BOOST_CHECK( ec.category() == boost::asio::asio_error_category );
 
   BOOST_CHECK( ec.posix() == boost::system::io_error );
-  BOOST_CHECK( ec.message() == "Barf" );
-  BOOST_CHECK( ec.wmessage() == L"Barf" );
+
+  boost::system::error_code ec2( boost::asio::boo_boo+1,
+    boost::asio::asio_error_category );
+  BOOST_CHECK( ec2.posix() == boost::system::no_posix_equivalent );
   return 0;
 }
