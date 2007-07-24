@@ -63,6 +63,7 @@
 [include distributions.qbk]
 [include geodesic.qbk]
 [include closeness.qbk]
+[include eccentricity.qbk]
 [endsect]
 [endsect]
 

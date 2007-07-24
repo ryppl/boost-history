@@ -71,7 +71,8 @@ also infinite.
     [
         [required, in] [`const Graph& g`]
         [
-            The graph object for which the distribution will be computed.
+            The graph object for which the measure will be computed. The
+            `Graph` type is required to be a model of [BoostVertexListGraph].
         ]
     ]
     [
@@ -126,7 +127,7 @@ the shortest distances to all other vertices.
 [h5 Complexity]
 The `geodesic_distance()` function has /O(1)/ time complexity.
 
-The `mean_geodesic_distance()` function has /O(n)/ time complexity.
+The `mean_geodesic_distance()` function has /O(V)/ time complexity.
 
 [h5 Examples]
 This example computes shows the construction of a simple undirected graph and

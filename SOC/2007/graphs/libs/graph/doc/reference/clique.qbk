@@ -1,0 +1,68 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Clique]
+
+    struct clique_visitor
+    {
+        template <typename VertexSet>
+        void clique(VertexSet)
+        { }
+    };
+
+    template <typename Graph, typename Visitor>
+    void
+    bron_kerbosch_visit_cliques(const Graph& g, Visitor vis)
+
+These functions find all /cliques/ (maximal fully connected subgraphs) of the
+given graph, invoking a visitor when each clique is found. See the
+
+The `bron_kerbosch_visit_cliques()` function is intended for use with undirected
+graphs, but will work for directed graphs as well at added cost. In order for a
+directed clique to exist, each vertex /u/ must be connected to /v/ and /v/ must
+be connected to /u/.
+
+[heading Where Defined]
+`boost/graph/clique.hpp`
+
+[heading Parameters]
+
+[table
+    [[Type] [Parameter] [Description]]
+    [
+        [required, in] [`const Graph& g`]
+        [
+            The graph for which cliques are being visited. The `Graph` type must
+            /approximate/ the [BoostAdjacencyMatrix] in that it must implement
+            the `edge(u,v,g)` function. It is not, however, required to return
+            in constant time. Note that most graph types provide this function,
+            including [boost_adjacency_list], [boost_undirected_graph], and
+            [boost_directed_graph].
+        ]
+    ]
+    [
+        [required, in] [`Visitor vis`]
+        [
+            The visitor object to the algorithm. This `Visitor` class must
+            model the `CliqueVisitor` class.
+        ]
+    ]
+]
+
+[h5 Return Value]
+This function does not return a value.
+
+[h5 Complexity]
+The complexity of this function was originally approximated as being proportional to
+/O(3.14[super V])/. No strict upper bound is reported. If the `Graph` type
+approximates the [BoostAdjacencyMatrix] concept, then the algorithm will perform
+slower by a factor of V.
+
+[h5 Examples]
+
+
+[endsect]

@@ -56,7 +56,8 @@ is zero.
     [
         [required, in] [`const Graph& g`]
         [
-            The graph object for which the distribution will be computed.
+            The graph object for which the measure will be computed. The
+            `Graph` type is required to be a model of [BoostVertexListGraph].
         ]
     ]
     [
@@ -87,26 +88,70 @@ is zero.
     ]
 ]
 
-[note
-The requirements on `T` indicate a particularly interesting problem because
-division is basically [SgiMonoid] operation - which is probably one of the
-more esoteric concepts in the STL. Curiously, the `identity_element()` operation
-which is an SGI extension and apparently not part of the actual standard.
-
-The correct implemention of `detail::sum_distances()` should take a monoid
-type and use `identity_element(f)` for initializaiton and `f` for the combination.
-]
-
 [h5 Return Value]
 The `closeness()` function returns the closeness of the vertex for which
 `dist` was computed. The closeness is defined in the formula above.
 
 [h5 Complexity]
-The `closeness()` function has /O(n)/ time complexity.
+The `closeness()` function has /O(V)/ time complexity.
 
 [h5 Examples]
-[note
-Write some examples...
+This example computes shows the construction of a simple undirected graph and
+illustrates how to compute the `closeness()` for a vertex.
+
+[figure
+    images/reference/geodesic.png
+    [*Figure 1.] A simple undirected, unweighted graph.
+]
+
+This graph can be constructed programmatically as:
+
+    typedef undirected_graph<> Graph;
+    typedef graph_traits<Graph>::vertex_descriptor Vertex;
+
+    // Instantiate the graph and vector of vertices.
+    Graph g;
+    vector<Vertex> v(10);
+
+    // Add vertices to the graph, recording their descriptors into
+    // the vertex vector.
+    for(size_t i = 0; i < 10; ++i) {
+        v[i] = add_vertex(g);
+    }
+
+    // Connect the vertices by adding edges to the graph. This builds
+    // the graph shown in Figure 1.
+    add_edge(v[0], v[1], g);  add_edge(v[1], v[2], g);
+    add_edge(v[1], v[3], g);  add_edge(v[2], v[4], g);
+    add_edge(v[3], v[5], g);  add_edge(v[4], v[6], g);
+    add_edge(v[4], v[7], g);  add_edge(v[4], v[8], g);
+    add_edge(v[5], v[8], g);  add_edge(v[6], v[9], g);
+    add_edge(v[7], v[9], g);  add_edge(v[8], v[9], g);
+
+    // Initialize an exterior property for recording the distances
+    // to every vertex in the graph.
+    typedef exterior_property<Graph, int> DistanceProperty;
+    typedef DistanceProperty::container_type DistanceContainer;
+    typedef DistanceProperty::map_type DistanceMap;
+    DistanceContainer distances(10);
+    DistanceMap dist(make_property_map(dists));
+
+    // Initialize the distance to-self of vertex 0 and run a breadth-first
+    // search on the graph to compute the distance of the shortest path
+    // from vertex 0 to all others.
+    dist[v[0]] = 0;
+    breadth_first_search(g, v[0],
+            visitor(make_bfs_visitor(record_distances(dist, on_tree_edge())))
+        );
+
+Computing the `closeness()` for vertex 0 is trivial.
+
+    cout << "closeness == " << closeness(g, dist) << end;
+
+The output of this program is roughly:
+
+[pre
+mean geodesic distance == 0.035
 ]
 
 
