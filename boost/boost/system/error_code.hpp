@@ -253,9 +253,9 @@ namespace boost
 
 #else
   // Windows:
-  namespace windows
+  namespace system
   {
-    enum error
+    enum windows_error
     {
       // These names and values are based on Windows winerror.h
       invalid_function = ERROR_INVALID_FUNCTION,
@@ -278,13 +278,46 @@ namespace boost
       write_protect = ERROR_WRITE_PROTECT,
       bad_unit = ERROR_BAD_UNIT,
       not_ready = ERROR_NOT_READY,
-      bad_command = ERROR_BAD_COMMAND
+      bad_command = ERROR_BAD_COMMAND,
+      crc = ERROR_CRC,
+      bad_length = ERROR_BAD_LENGTH,
+      seek = ERROR_SEEK,
+      not_dos_disk = ERROR_NOT_DOS_DISK,
+      sector_not_found = ERROR_SECTOR_NOT_FOUND,
+      out_of_paper = ERROR_OUT_OF_PAPER,
+      write_fault = ERROR_WRITE_FAULT,
+      read_fault = ERROR_READ_FAULT,
+      gen_failure = ERROR_GEN_FAILURE,
+      sharing_violation = ERROR_SHARING_VIOLATION,
+      lock_violation = ERROR_LOCK_VIOLATION,
+      wrong_disk = ERROR_WRONG_DISK,
+      sharing_buffer_exceeded = ERROR_SHARING_BUFFER_EXCEEDED,
+      handle_eof = ERROR_HANDLE_EOF,
+      handle_disk_full= ERROR_HANDLE_DISK_FULL,
+      rem_not_list = ERROR_REM_NOT_LIST,
+      dup_name = ERROR_DUP_NAME,
+      bad_net_path = ERROR_BAD_NETPATH,
+      network_busy = ERROR_NETWORK_BUSY,
+      // ...
+      file_exists = ERROR_FILE_EXISTS,
+      cannot_make = ERROR_CANNOT_MAKE,
+      // ...
+      broken_pipe = ERROR_BROKEN_PIPE,
+      open_failed = ERROR_OPEN_FAILED,
+      buffer_overflow = ERROR_BUFFER_OVERFLOW,
+      disk_full= ERROR_DISK_FULL,
+      // ...
+      lock_failed = ERROR_LOCK_FAILED,
+      busy = ERROR_BUSY,
+      cancel_violation = ERROR_CANCEL_VIOLATION,
+      already_exists = ERROR_ALREADY_EXISTS
+      // ...
 
       // TODO: add more Windows errors
     };
   }
 
-  inline error_code make_error_code(windows::error e)
+  inline error_code make_error_code(system::windows_error e)
     { return error_code(e,system_category); }
 
 #endif
