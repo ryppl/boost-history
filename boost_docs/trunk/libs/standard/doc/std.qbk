@@ -20,6 +20,7 @@
 ]
 
 [/ Quick Reference Templates /]
+[template StdDestructible[] [link standards.concepts.utilities.destructible [^Destructible]]]
 [template StdDefaultConstructible[] [link standard.concepts.utilities.default_constructible [^DefaultConstructible]]]
 [template StdCopyConstructible[] [link standard.concepts.utilities.copy_constructible [^CopyConstructible]]]
 [template StdAssignable[] [link standard.concepts.utilities.assignable [^Assignable]]]

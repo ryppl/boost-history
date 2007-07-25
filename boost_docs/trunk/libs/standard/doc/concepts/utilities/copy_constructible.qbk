@@ -12,6 +12,9 @@ compiler-generated or user-defined copy constructor that accepts a single
 argument: a `const` reference to `T`. After construction, a constructed
 object is equivalent to the object passed as an argument.
 
+[heading Refinement of]
+[StdDestructible]
+
 [heading Notation]
 The following expressions are used within this document:
 [table
