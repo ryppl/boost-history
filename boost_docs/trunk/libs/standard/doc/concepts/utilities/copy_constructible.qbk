@@ -68,13 +68,8 @@ requirements are removed from this concept and made explicit elsewhere. The
 `CopyConstructible` concept is refined from the concepts for `Destructible`
 and `MoveConstructible` as follows:
 
-    auto concept Destructible<typename T>
-    {
-        T::~T();
-    };
-
     auto concept MoveConstructible<typename T>
-        : Destructible<T>
+        :``[StdDestructible]``<T>
     {
         T::T(T&&);
     };
@@ -84,6 +79,5 @@ and `MoveConstructible` as follows:
     {
         T::T(const T&);
     };
-
 
 [endsect]
