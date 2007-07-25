@@ -14,6 +14,9 @@ may not initilize objects to a default value or state depending on the the
 type itself and the syntax used for construction. Objects that are not initialized
 to a default value have indeterminate value (i.e., uninitialized).
 
+[heading Refinement of]
+[StdDestructible]
+
 [heading Notation]
 The folllowing expressions are used in this document:
 [table
@@ -151,16 +154,10 @@ The [StdDefaultConstructible] concept is made explicit in the next version of C+
 is refined from the Destructible and `Constructible` concepts, which allows
 construction from any number of arguments. It is given as:
 
-    // T is required to have a public destructor.
-    auto concept Destructible<typename T>
-    {
-        T::~T();
-    };
-
     // This concept requires that T be constructible with a variable number
     // of arguments. Constructible types are required to be Desctructible.
     auto concept Constructible<typename T, typename... Args>
-        : Destructible<T>
+        : ``[StdDestructible]``<T>
     {
         T::T(Args...);
     };
