@@ -5,7 +5,7 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Copy Constructible]
+[section Destructible]
 A type `T` is /destructible/ if it has a public destructor. The
 destructor can be either compiler-generated or user-defined.
 
