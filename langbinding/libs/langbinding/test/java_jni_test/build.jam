@@ -1,0 +1,69 @@
+# Copyright Rene Rivera 2007.
+#
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
+
+# Usage:
+#
+#   bjam [options | properties | targets]
+#
+# Options:
+#
+#   --boost=<BOOST>         The directotory of a Boost source tree.
+#                           Default; BOOST env var (if found)
+#                           Default; ../boost (if found)
+#
+#   --boost-build=<BOOST_BUILD>
+#                           The directory for the Boost.Build v2 files.
+#                           Default; BOOST_BUILD_PATH env var (if found)
+#                           Default; BOOST_BUILD env var (if found)
+#                           Default; <BOOST>/tools/build/v2 (if found)
+
+#~ If we have the Boost sources we can use the project...
+
+if [ GLOB $(BOOST) : [ modules.peek project : JAMFILE ] ]
+{
+    use-project /boost : $(BOOST) ;
+}
+
+path-constant JDK : "C:/Program Files/Java/jdk1.5.0_06" ;
+
+lib boost_A
+    :
+        native/boost/A.cpp
+    :
+        <include>"$(JDK)/include"
+        <include>"$(JDK)/include/win32"
+    ;
+
+install stub
+    :
+        boost_A
+    ;
+
+make native_boost_A_class
+    :   native/boost/A.java
+    :   @javac
+    :   <dependency>stub
+    ;
+make stub_boost_A_class
+    :   stub/boost/A.java
+    :   @javac
+    :   <dependency>stub
+    ;
+make stub_boost_B_class
+    :   stub/boost/B.java
+    :   @javac
+    :   <dependency>stub_boost_A_class
+    ;
+
+rule javac ( targets * : sources * : properties * )
+{
+    JAVAC on $(<) = $(JDK)/bin/javac ;
+}
+
+actions javac
+{
+    "$(JAVAC)" -classpath "$(>[1]:P)/.." -d "$(>[1]:P)/.." "$(>[1])"
+}
