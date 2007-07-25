@@ -607,7 +607,7 @@ struct set_next_helper
     // 'set_next_at_target' methods should cause an error.
 {
     static void
-    set_next(HalfedgeDescriptor h, HalfedgeDescriptor g, HalfedgeGen& hds)
+    set_next(HalfedgeDescriptor, HalfedgeDescriptor, HalfedgeGen&)
     {
         // ThisTag and Tag do not match, 
         // What you are trying to do is  setting the next tag 
