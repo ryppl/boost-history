@@ -9,15 +9,16 @@
 
     template <typename Graph, typename Visitor>
     void
-    bron_kerbosch_visit_cliques(const Graph& g, Visitor vis)
+    tiernan_visit_cycles(const Graph& g, Visitor vis)
 
-These functions find all /cliques/ (maximal fully connected subgraphs) of the
-given graph, invoking a visitor when each clique is found.
+These functions find all /cycles/ within of the given graph, invoking a visitor
+when each clique is found.
 
-The `bron_kerbosch_visit_cliques()` function is intended for use with undirected
-graphs, but will work for directed graphs as well at added cost. In order for a
-directed clique to exist, each vertex /u/ must be connected to /v/ and /v/ must
-be connected to /u/.
+The `tiernan_visit_cycles()` function is designed to work on directed graph, but
+works for undirected graphs as well. When running on undirected graphs, however,
+the algorithm treats each edge connecting two vertices /(u,v)/ as if it were
+two edges /(u,v)/ and /(v,u)/. As result the algorithm will report cycles in
+both directions.
 
 [heading Where Defined]
 `boost/graph/clique.hpp`
@@ -50,10 +51,9 @@ be connected to /u/.
 This function does not return a value.
 
 [h5 Complexity]
-The complexity of this function was originally approximated as being proportional to
-/O(3.14[super V])/. No strict upper bound is reported. If the `Graph` type
-approximates the [BoostAdjacencyMatrix] concept, then the algorithm will perform
-slower by a factor of V.
+No complexity has been reported for this algorithm, but it is expected to
+run in /O(P(g))/ where /P(g)/ is the number of distinct simple paths in the
+graph /g/ (which can be very large).
 
 [h5 Examples]
 

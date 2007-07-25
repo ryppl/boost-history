@@ -269,7 +269,6 @@ namespace boost
 
             // each path investigation starts at the ith vertex
             p.push_back(v);
-            vis.start_vertex(v, g);
 
             while(1) {
                 // extend the path until we've reached the end or the
@@ -290,17 +289,15 @@ namespace boost
                     break;
                 }
             }
-
-            vis.finish_vertex(v, g);
         }
     }
 
     template <typename Graph, typename Visitor>
     inline void
-    visit_cycles(const Graph& g,
-                 Visitor vis,
-                 std::size_t maxlen = std::numeric_limits<std::size_t>::max(),
-                 std::size_t minlen = 2)
+    tiernan_visit_cycles(const Graph& g,
+                         Visitor vis,
+                         std::size_t maxlen = std::numeric_limits<std::size_t>::max(),
+                         std::size_t minlen = 2)
     {
         typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
 

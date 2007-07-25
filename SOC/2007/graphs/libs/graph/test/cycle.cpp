@@ -107,10 +107,10 @@ void test()
     make_complete_graph(g, 4);
 
     size_t count = 0;
-    visit_cycles(g, count_cycles(count));
+    tiernan_visit_cycles(g, count_cycles(count));
     std::cout << "number of cycles: " << count << "\n";
 
-    visit_cycles(g, print_cycles(cout));
+    tiernan_visit_cycles(g, print_cycles(cout));
 }
 
 

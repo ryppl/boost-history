@@ -30,6 +30,7 @@ For the following sections, we use the following notional convents:
     [[vis] [An object of type V]]
 ]
 
+[include utility.qbk]
 [include graphs.qbk]
 [include visitors.qbk]
 

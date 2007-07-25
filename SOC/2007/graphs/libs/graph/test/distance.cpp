@@ -112,6 +112,7 @@ void test_1()
 
         cout << "* dists: "; dump_distance_map(g, dists);
         cout << "* mean geo: " << mean_geodesic_distance(g, dists) << "\n";
+        cout << "* mean geo: " << mean_geodesic_distance<float>(g, dists) << "\n";
         cout << "* closeness: " << closeness(g, dists) << "\n";
         cout << "* eccentricity: " << eccentricity(g, dists) << "\n";
     }

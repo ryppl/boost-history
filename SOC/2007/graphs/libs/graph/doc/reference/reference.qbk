@@ -15,6 +15,7 @@
 [endsect]
 
 [section Traits Classes]
+[include exterior_vertex_property.qbk]
 [endsect]
 
 [section Event Visitor List Adaptors]
@@ -48,6 +49,11 @@
 [include connected_components.qbk]
 [include strong_components.qbk]
 [include connectivity.qbk]
+[endsect]
+
+[section Subgraph Finding Algorithms]
+[include clique.qbk]
+[include cycle.qbk]
 [endsect]
 
 [section Maximum Flow Algorithms]

@@ -1,26 +1,31 @@
 
 exe properties
-	: properties.cpp
-	: <include>../../../
-	;
+    : properties.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
 
 exe mutable
-	: mutable.cpp
-	: <include>../../../
-	;
+    : mutable.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
 
 exe index
-	: index.cpp
-	: <include>../../../
-	;
+    : index.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
 
 exe range
-	: range.cpp
-	: <include>../../../
-	;
+    : range.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
 
 exe misc
     : misc.cpp
+    : <include>$BOOST_ROOT
     : <include>../../../
     ;
 
@@ -65,10 +70,3 @@ exe clique
     : <include>$BOOST_ROOT
     : <include>../../../
     ;
-
-# exe parameter
-#    : parameter.cpp
-#    : <include>$BOOST_ROOT
-#    : <include>../../../
-#    ;
-

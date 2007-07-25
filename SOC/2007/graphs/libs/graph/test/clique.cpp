@@ -76,7 +76,7 @@ void test()
     // make_prism_graph(g, 3, 2);
     make_complete_graph(g, 5);
 
-    visit_cliques(g, clique_printer<ostream>(cout));
+    bron_kerbosch_visit_cliques(g, clique_printer<ostream>(cout));
 }
 
 

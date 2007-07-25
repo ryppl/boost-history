@@ -71,20 +71,20 @@ namespace boost
     {
         template <typename Graph>
         inline bool
-        is_connected(const Graph& g,
-                     typename graph_traits<Graph>::vertex_descriptor u,
-                     typename graph_traits<Graph>::vertex_descriptor v,
-                     typename graph_traits<Graph>::undirected_category)
+        is_connected_to_clique(const Graph& g,
+                               typename graph_traits<Graph>::vertex_descriptor u,
+                               typename graph_traits<Graph>::vertex_descriptor v,
+                               typename graph_traits<Graph>::undirected_category)
         {
             return edge(u, v, g).second;
         }
 
         template <typename Graph>
         inline bool
-        is_connected(const Graph& g,
-                     typename graph_traits<Graph>::vertex_descriptor u,
-                     typename graph_traits<Graph>::vertex_descriptor v,
-                     typename graph_traits<Graph>::directed_category)
+        is_connected_to_clique(const Graph& g,
+                               typename graph_traits<Graph>::vertex_descriptor u,
+                               typename graph_traits<Graph>::vertex_descriptor v,
+                               typename graph_traits<Graph>::directed_category)
         {
             // Note that this could alternate between using an or to determine
             // full connectivity. I believe that this should produce strongly
@@ -107,7 +107,7 @@ namespace boost
             typename graph_traits<Graph>::directed_category cat;
             typename Container::const_iterator i, end = in.end();
             for(i = in.begin(); i != end; ++i) {
-                if(is_connected(g, v, *i, cat)) {
+                if(is_connected_to_clique(g, v, *i, cat)) {
                     out.push_back(*i);
                 }
             }
@@ -206,7 +206,7 @@ namespace boost
 
     template <typename Graph, typename Visitor>
     inline void
-    visit_cliques(const Graph& g, Visitor vis)
+    bron_kerbosch_visit_cliques(const Graph& g, Visitor vis)
     {
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
         typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;

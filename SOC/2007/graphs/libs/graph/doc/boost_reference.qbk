@@ -35,3 +35,5 @@
 
 
 [template boost_connected_components[] [link boost_graph.reference_guide.algorithms.connectivity_algorithms.connected_components [^connected_components()]]]
+
+[template boost_exterior_vertex_property[] [link boost_graph.reference_guide.algorithms.connectivity_algorithms.connected_components [^connected_components()]]]

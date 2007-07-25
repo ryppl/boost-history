@@ -31,9 +31,13 @@ and [boost_bellman_ford_shortest_paths]. Optionally, if the target graph is
 an unweighted, undirected graph, shortest paths can be recorded using
 [boost_breadth_first_search]. Each of these algorithms takes as an input a
 vertex for which the shortest distances are being computed. The output of
-each of these algorithms is a `DistanceMap`, which is (in turn) used as the
-input of these functions. Note then, that these functions compute measures
-of the vertex for which `dist` was computed.
+each of these shortest paths algorithms is a `DistanceMap`, which is used as the
+input to the geodesic distance functions. Note then, that these functions compute
+measures of the vertex for which `dist` was computed.
+
+[note
+Get rid of `geodesic_distance()`.
+]
 
 The `geodesic_distance()` function returns the length of the shortest path
 between two vertices. The source vertex is that for which the `DistanceMap`
@@ -44,7 +48,7 @@ function is an alias for:
 
 The `mean_geodesic_distance()` functions return the (arithmatic) mean
 of the geodesic distances between a vertex and all others in the graph. The
-vertex for which this is computed is that for which `dist` originally \
+vertex for which this is computed is that for which `dist` originally
 computed. The mean geodesic distance is implemeted as:
 
 [$images/eq/mean_geodesic.png]

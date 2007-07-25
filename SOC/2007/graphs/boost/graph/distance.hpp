@@ -71,6 +71,7 @@ namespace boost
     // Arbitrary numeric version uses T as some numeric type.
     // T must be constructible from degree_size_type and
     // DistanceMap::value_type. Note that above T == double.
+    /*
     template <typename Graph, typename DistanceMap, typename T>
     inline T
     mean_geodesic_distance(const Graph& g,
@@ -79,7 +80,15 @@ namespace boost
     {
         return T(detail::sum_distances(g, dist)) / T(num_vertices(g));
     }
+    */
 
+    template <typename T, typename Graph, typename DistanceMap>
+    inline T
+    mean_geodesic_distance(const Graph& g,
+                           DistanceMap dist)
+    {
+        return T(detail::sum_distances(g, dist)) / T(num_vertices(g));
+    }
 
     template <typename Graph, typename DistanceMap>
     inline double

@@ -21,7 +21,10 @@ visitor concepts:
 [include dfs_visitor.qbk]
 [include dijkstra_visitor.qbk]
 [include bellman_ford_visitor.qbk]
+[include clique_visitor.qbk]
+[include cycle_visitor.qbk]
 [include event_visitor.qbk]
 [include event_visitor_list.qbk]
+
 
 [endsect]
