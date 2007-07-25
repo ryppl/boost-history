@@ -12,6 +12,9 @@ compiler-generated or user-defined copy constructor that accepts a single
 argument: a `const` reference to `T`. After construction, a constructed
 object is equivalent to the object passed as an argument.
 
+Two objects `t` and `u` are equivalent if the expression `t == u` returns
+`true`.
+
 [heading Refinement of]
 [StdDestructible]
 
@@ -29,7 +32,10 @@ The following expressions are used within this document:
     [[Name] [Expression] [Result Type] [Description]]
     [
         [Copy Constructor]
-        [`T t(u)`]
+        [
+                `T t(u);`
+                `T t = u;`
+        ]
         []
         [
                 *Semantics:* `t` is declared as an object of type `T`.
@@ -48,6 +54,13 @@ The following expressions are used within this document:
         ]
     ]
 ]
+
+[heading Notes]
+A type that explicitly defines a private copy constructor is not
+[StdCopyConstructible]. These types are also called non-copyable types.
+
+[heading Examples]
+
 
 [heading C++0x]
 In the next version of the C++ language, the destructible and addressable

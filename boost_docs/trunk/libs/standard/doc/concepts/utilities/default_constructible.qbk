@@ -157,7 +157,7 @@ construction from any number of arguments. It is given as:
     // This concept requires that T be constructible with a variable number
     // of arguments. Constructible types are required to be Desctructible.
     auto concept Constructible<typename T, typename... Args>
-        : ``[StdDestructible]``<T>
+        :``[StdDestructible]``<T>
     {
         T::T(Args...);
     };

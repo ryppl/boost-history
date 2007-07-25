@@ -13,7 +13,7 @@ destructor can be either compiler-generated or user-defined.
 The following expressions are used within this document:
 [table
     [[Expression] [Description]]
-    [[T] [A [StdCopyConstructible] type.]]
+    [[T] [A [StdDestructible] type.]]
     [[t] [An object of type `T`.]]
 ]
 
