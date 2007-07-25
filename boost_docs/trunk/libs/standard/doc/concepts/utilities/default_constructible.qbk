@@ -15,10 +15,11 @@ type itself and the syntax used for construction. Objects that are not initializ
 to a default value have indeterminate value (i.e., uninitialized).
 
 [heading Notation]
+The folllowing expressions are used in this document:
 [table
     [[Expression] [Description]]
     [[T] [A [StdDefaultConstructible] type.]]
-    [[t] [An object of type `T`.]]
+    [[x] [An object of type `T`.]]
 ]
 
 [heading Requirements]
@@ -26,10 +27,10 @@ to a default value have indeterminate value (i.e., uninitialized).
     [[Name] [Expression] [Result Type] [Description]]
     [
         [Default Constructor]
-        [`T t;`]
+        [`T x;`]
         []
         [
-            *Semantics:* `t` is declared as an object of type `T` and may or may not
+            *Semantics:* `x` is declared as an object of type `T` and may or may not
             initialized to a default value[footnote This syntax leaves fundamental
             types unitialized while class types are default-initialized.].
         ]

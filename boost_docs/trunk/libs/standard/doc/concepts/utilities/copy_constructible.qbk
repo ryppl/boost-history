@@ -6,48 +6,45 @@
  /]
 
 [section Copy Constructible]
-A type `T` is said to be /copy constructible/ if one instance `t` can be 
-constructed with the value of another instance `u`. The type of `u` must
-be `T` or `const T`. A type that is copy constructible has either a 
-compiler-generated or user-defined copy constructor.
+A type `T` is /copy constructible/ if it is possible to create copies
+of that type. `T` is only copy constructible if it has either a
+compiler-generated or user-defined copy constructor that accepts a single
+argument: a `const` reference to `T`. After construction, a constructed
+object is equivalent to the object passed as an argument.
 
 [heading Notation]
+The following expressions are used within this document:
 [table
     [[Expression] [Description]]
     [[T] [A [StdCopyConstructible] type.]]
-    [[t] [An instance of type `T`.]]
-    [[u] [An instance of type 'const `T`.]]
+    [[t] [An object of type `T`.]]
+    [[u] [An object of type `T` or `const T`]]
 ]
 
 [heading Requirements]
 [table
-    [[Expression] [Return Type] [Requirements]]
+    [[Name] [Expression] [Result Type] [Description]]
     [
+        [Copy Constructor]
         [`T t(u)`]
         []
-        [`t` is an instance of `T` and is equivalent to `u`.]
+        [
+                *Semantics:* `t` is declared as an object of type `T`.
+
+                *Postcondition:* `t` is equivalent to `u`.
+        ]
     ]
     [
+        [Copy Constructor]
         [`T(u)`]
-        []
-        [An instance of `T` is constructed that is equivalent to `u`.]
-    ]
-    [
-        [`t.~T()`]
-        []
-        [`t` is destructed.]
-    ]
-    [
-        [`&t`]
-        [`T*`]
-        [Denotes the address of `t`.]
+        [`T`]
+        [
+                *Semantics:* Creates an object of type `T`.
+
+                *Postcondition:* `t` is equivalent to `u`.
+        ]
     ]
 ]
-
-Taking the address of an instance with `const` type yields a
-`const` pointer. Let `U` be the type `const T` and `u` an instance
-of `U`. The return type of `&u` is `U*`, which by substitution is
-the same as `const T*`.
 
 [heading C++0x]
 In the next version of the C++ language, the destructible and addressable
