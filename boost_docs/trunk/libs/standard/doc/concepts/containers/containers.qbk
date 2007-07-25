@@ -26,8 +26,7 @@ are those whose elements are stored in an strict linear order.
 [endsect]
 
 [section Associative Containers]
-This section contains definitions of associative containers. Associative containers
-store elements in association with a key value.
+This section contains definitions of sequential and associative containers.
 
 [note
 This section currently omits hashed associative containers. These concepts need

@@ -27,6 +27,14 @@
 [template StdEqualityComparable[] [link standard.concepts.utilities.equality_comparable [^EqualityComparable]]]
 [template StdLessThanComparable[] [link standard.concepts.utilities.less_than_comparable [^LessThanComparable]]]
 
+[template StdContainer[] [link standard.concepts.containers.general_concepts.container [^Container]]]
+
+[template StdInputIterator[] [link standard.concepts.iterators.input_iterator [^InputIterator]]]
+[template StdOutputIterator[] [link standard.concepts.iterators.output_iterator [^OutputIterator]]]
+[template StdForwardIterator[] [link standard.concepts.iterators.forward_iterator [^ForwardIterator]]]
+[template StdBidirectionalIterator[] [link standard.concepts.iterators.bidirectional_iterator [^BidirectionalIterator]]]
+[template StdRandomAccessIterator[] [link standard.concepts.iterators.random_access_iterator [^RandomAccessIterator]]]
+
 [/ Contents ]
 [include concepts/concepts.qbk]
 [include reference/reference.qbk]

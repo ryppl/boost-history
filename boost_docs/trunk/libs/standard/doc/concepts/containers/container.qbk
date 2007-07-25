@@ -6,12 +6,76 @@
  /]
 
 [section Container]
+A type `C` is a /container/ if an object of type `C` is capble of storing other 
+objects. Types modeling the container concept are associated with an /iterator/,
+a type of object that can be used to iterate over the elements of the container.
+
+The elements of a container are not guaranteed to be stored in any particular
+order, nor is the order of visitation guaranteed to be the same between 
+iterations. 
 
 [heading Refinement Of]
 [StdAssignable]
 
-[heading 
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[`C`] [An object or type [StdContainer] - a container]]
+    [[`T`] [An object stored by `C`]]
+]
 
-[heading Notes]
+[heading Associated Types]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Value Type]
+        [`C::value_type`]
+        [`T`]
+        [
+            *Semantics:* The type of the stored object or value.
+            
+            *Requirements:* `T` must model the [StdAssignable] concept.
+        ]
+    ]
+    [
+        [Reference Type]
+        [`C::reference`]
+        [lvalue of `T`]
+        [
+            *Semantics:* A reference type to the stored value type.
+        ]
+    ]
+    [
+        [Const Reference Type]
+        [`C::connst_reference`]
+        [`const` lvalue of `T`]
+        [
+            *Semantics:* A `const` reference type to the stored value type.
+        ]
+    ]
+    [
+        [Iterator Type]
+        [`C::iterator`]
+        [iterator type pointing to `T`]
+        [
+            *Semantics:* The type of object used to iterate over elements of `C`.
+            The iterator type is convertible to the const iterator type. 
+            
+            *Requirements:* The iterator type may not be a model of the 
+            [StdOutputIterator] concept.
+        ]
+    ]
+    [
+        [Const Iterator Type]
+        [`C::const_iterator`]
+        [iterator type pointing to `const T`]
+        [
+            *Semantics:* The type of object used to iterate over elements of `C`. 
+            
+            *Requirements:* The iterator type may not be a model of the 
+            [StdOutputIterator] concept.
+        ]
+    ]
+]
 
 [endsect]
