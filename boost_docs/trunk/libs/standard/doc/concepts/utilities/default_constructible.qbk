@@ -51,19 +51,8 @@ The folllowing expressions are used in this document:
 ]
 
 [heading Notes]
-In addition to requiring default cosntructability, there is an implicit requirement
-on destructability. A locally declared automatic variable of [StdDefaultConstructible]
-type `T` will eventually go out of scope, requiring `T`'s destructor to be called. If the
-destructor is not public, then this `T` cannot model the [StdDefaultConstructible] concept.
-
 If the default constructor of a class type `T` is `private`, then the `T` does not
 model the [StdDefaultConstructible] concept.
-
-[note
-*TODO:* There could be some discussion about default constructabiltiy and arrays,
-and its use in the `new` expressions. Maybe we should make `Constructible` and
-`Destructible` real concepts (with this level of documentation).
-]
 
 [heading Examples]
 All fundamental types in C++ are [StdDefaultConstructible] but may not have default
