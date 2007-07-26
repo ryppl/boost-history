@@ -13,7 +13,7 @@
 //  can be cause buffer overruns or other possible security issues if misused.
 //  See http://msdn.microsoft.com/msdnmag/issues/05/05/SafeCandC/default.aspx
 //  But the wording of the warning is misleading and unsettling, there are no
-//  portable altersystem functions, and VC++ 8.0's own libraries use the
+//  portable alternative functions, and VC++ 8.0's own libraries use the
 //  functions in question. So turn off the warnings.
 #define _CRT_SECURE_NO_DEPRECATE
 #define _SCL_SECURE_NO_DEPRECATE
@@ -30,12 +30,9 @@
 #include <cassert>
 
 using namespace boost::system;
+using namespace boost::system::posix;
 
 #include <cstring> // for strerror/strerror_r
-
-# ifdef BOOST_NO_STDC_NAMESPACE
-    namespace std { using ::strerror; }
-# endif
 
 # if defined( BOOST_WINDOWS_API )
 #   include "windows.h"
@@ -52,7 +49,7 @@ namespace
   struct system_to_posix_t
   { 
     int system_value;
-    boost::system::posix_errno posix_value;
+    boost::system::posix::posix_errno posix_value;
   };
 
   const system_to_posix_t system_to_posix[] = 
@@ -205,7 +202,7 @@ namespace
   {
   public:
     const std::string &   name() const;
-    posix_errno           posix( int ev ) const;
+    posix::posix_errno    posix( int ev ) const;
   };
 
   const system_error_category system_category_const;
@@ -228,9 +225,8 @@ namespace
       ++cur;
     } while ( cur != system_to_posix
       + sizeof(system_to_posix)/sizeof(system_to_posix_t) );
-    return boost::system::no_posix_equivalent;
+    return boost::system::posix::no_posix_equivalent;
   }
-
 
 } // unnamed namespace
 
@@ -238,6 +234,7 @@ namespace boost
 {
   namespace system
   {
-    BOOST_SYSTEM_DECL const error_category & system_category = system_category_const;
+    BOOST_SYSTEM_DECL const error_category & system_category
+      = system_category_const;
   } // namespace system
 } // namespace boost

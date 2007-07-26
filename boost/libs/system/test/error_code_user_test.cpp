@@ -59,11 +59,11 @@ namespace boost
         return s;
       }
 
-      boost::system::posix_errno  posix( int ev ) const
+      boost::system::posix::posix_errno  posix( int ev ) const
       {
         return ev == BOO_BOO
-          ? boost::system::io_error
-          : boost::system::no_posix_equivalent;
+          ? boost::system::posix::io_error
+          : boost::system::posix::no_posix_equivalent;
       }
     };
 
@@ -91,10 +91,10 @@ int test_main( int, char *[] )
   BOOST_CHECK( ec.value() == boost::asio::boo_boo );
   BOOST_CHECK( ec.category() == boost::asio::asio_error_category );
 
-  BOOST_CHECK( ec.posix() == boost::system::io_error );
+  BOOST_CHECK( ec.posix() == boost::system::posix::io_error );
 
   boost::system::error_code ec2( boost::asio::boo_boo+1,
     boost::asio::asio_error_category );
-  BOOST_CHECK( ec2.posix() == boost::system::no_posix_equivalent );
+  BOOST_CHECK( ec2.posix() == boost::system::posix::no_posix_equivalent );
   return 0;
 }
