@@ -9,7 +9,7 @@ In order to be considered a valid [concept Interlocked Operation], given
 the variable definitions below, the following expressions must be well-formed
 and have the indicated effects.
 
-[variablelist Interlocked Operation Definitions
+[variablelist Notation
 [[[~name]][An       [concept Interlocked Operation].]                          ]
 [[`S`]              [A __semantic_type__.]                                     ]
 [[[~args]]          [The argument list (if any) for the

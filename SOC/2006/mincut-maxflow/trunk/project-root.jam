@@ -1,5 +1,0 @@
-using testing ;
-project mincut-maxflow
-	: requirements <include>. 
-	: default-build release
-    ;

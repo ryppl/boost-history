@@ -1,4 +1,0 @@
-namespace Lib {
-// empty
-}
-
