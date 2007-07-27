@@ -59,6 +59,10 @@
 namespace boost {
 namespace hdstl {
 
+                   // ====================
+                   // HalfedgeList Concept
+                   // ====================
+
 // FREE FUNCTIONS
 template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
 typename halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>::halfedge_iterator
@@ -91,6 +95,10 @@ num_halfedges(halfedge_gen<HalfedgeS,  VertexDescriptor, FacetDescriptor, Config
 {
     return hds.m_container.size();
 }
+
+                   // ===========
+                   // HDS Concept
+                   // ===========
 
 // \cond
 namespace detail {
@@ -148,6 +156,10 @@ opposite(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Conf
                                     halfedge_descriptor
                                    >::opposite(h);
 }
+
+                   // ==================
+                   // ForwardHDS Concept
+                   // ==================
 
 // \cond
 namespace detail {
@@ -372,6 +384,10 @@ next_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor
                                         >::next_at_target(h,hds);
 }
 
+                   // ==================
+                   // BackwardHDS Concept
+                   // ==================
+
 // \cond
 namespace detail {
 
@@ -595,6 +611,10 @@ prev_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor
                                         >::prev_at_target(h,hds);
 }
 
+                   // =========================
+                   // MutableForwardHDS Concept
+                   // =========================
+
 // \cond
 namespace detail {
 
@@ -711,6 +731,10 @@ set_next_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescri
     detail::set_next_helper<halfedgeGen, halfedge_descriptor, containerS, this_tag, typename HalfedgeS::next_tag>
                     ::set_next(h, g, hds);
 }
+
+                   // ==========================
+                   // MutableBackwardHDS Concept
+                   // ==========================
 
 // \cond
 namespace detail {
@@ -829,6 +853,10 @@ set_prev_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescri
                     ::set_prev(h, g, hds);
 }
 
+                   // ==================
+                   // MutableHDS Concept
+                   // ==================
+
 // \cond
 namespace detail {
 
@@ -883,6 +911,21 @@ new_edge(halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds
     return g;
 }
 
+//template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+//void
+//delete_edge(typename halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>::halfedge_descriptor h,
+//            halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+//    // Remove the halfedge with descriptor 'h' from 'hds'
+//{
+//    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+//    typedef typename halfedgeGen::halfedge_descriptor halfedge_descriptor;
+//    typedef typename halfedgeGen::halfedge_type halfedge_type;
+//    typedef typename halfedgeGen::ContainerGen ContainerGen;
+//    
+//    typedef typename halfedgeGen::halfedge_selector::container_selector containerS;
+//    
+//    ContainerGen::container_remove(*&h, hds.m_container);
+//}
 
 
 } // namespace hdstl

@@ -833,7 +833,9 @@ bool halfedge_add_edge_test() {
     BOOST_CHECK(( opposite(hg, halfedgeGen) == hh));
     BOOST_CHECK(( opposite(hi, halfedgeGen) == hj));
     BOOST_CHECK(( opposite(hj, halfedgeGen) == hi));
-    
+
+    //delete_edge(hi, halfedgeGen);    
+
     return true;
 }
 // ===========================================================================
@@ -1088,16 +1090,16 @@ template<typename ContainerS, typename FacetS>
 bool test_vertex_all()
 {
     BOOST_CHECK(( test_traversal_all<ContainerS, noVertexS, FacetS>() ));
-    BOOST_CHECK(( test_traversal_all<ContainerS, vertexS<ContainerS,true,sourceS>, FacetS>() ));
-    BOOST_CHECK(( test_traversal_all<ContainerS, vertexS<ContainerS,false,sourceS>, FacetS>() ));
-    BOOST_CHECK(( test_traversal_all<ContainerS, vertexS<ContainerS,true,targetS>, FacetS>() ));
-    BOOST_CHECK(( test_traversal_all<ContainerS, vertexS<ContainerS,false,targetS>, FacetS>() ));
+    //BOOST_CHECK(( test_traversal_all<ContainerS, vertexS<ContainerS,true,sourceS>, FacetS>() ));
+    //BOOST_CHECK(( test_traversal_all<ContainerS, vertexS<ContainerS,false,sourceS>, FacetS>() ));
+    //BOOST_CHECK(( test_traversal_all<ContainerS, vertexS<ContainerS,true,targetS>, FacetS>() ));
+    //BOOST_CHECK(( test_traversal_all<ContainerS, vertexS<ContainerS,false,targetS>, FacetS>() ));
     
     BOOST_CHECK(( test_set_functions_all<ContainerS, noVertexS, FacetS>() ));
-    BOOST_CHECK(( test_set_functions_all<ContainerS, vertexS<ContainerS,true,sourceS>, FacetS>() ));
-    BOOST_CHECK(( test_set_functions_all<ContainerS, vertexS<ContainerS,false,sourceS>, FacetS>() ));
-    BOOST_CHECK(( test_set_functions_all<ContainerS, vertexS<ContainerS,true,targetS>, FacetS>() ));
-    BOOST_CHECK(( test_set_functions_all<ContainerS, vertexS<ContainerS,false,targetS>, FacetS>() ));
+    //BOOST_CHECK(( test_set_functions_all<ContainerS, vertexS<ContainerS,true,sourceS>, FacetS>() ));
+    //BOOST_CHECK(( test_set_functions_all<ContainerS, vertexS<ContainerS,false,sourceS>, FacetS>() ));
+    //BOOST_CHECK(( test_set_functions_all<ContainerS, vertexS<ContainerS,true,targetS>, FacetS>() ));
+    //BOOST_CHECK(( test_set_functions_all<ContainerS, vertexS<ContainerS,false,targetS>, FacetS>() ));
     return true;
 }
 
@@ -1112,9 +1114,9 @@ template<typename ContainerS>
 bool test_all()
 {
     BOOST_CHECK(( test_vertex_all<ContainerS, noFacetS>() ));
-    BOOST_CHECK(( test_vertex_all<ContainerS, facetS<ContainerS,false> >() ));
-    BOOST_CHECK(( test_vertex_all<ContainerS, facetS<ContainerS,true > >() ));
-    
+    //BOOST_CHECK(( test_vertex_all<ContainerS, facetS<ContainerS,false> >() ));
+    //BOOST_CHECK(( test_vertex_all<ContainerS, facetS<ContainerS,true > >() ));
+    //
     BOOST_CHECK(( test_edge_all<ContainerS, noVertexS, noFacetS>() ));
     return true;
 }

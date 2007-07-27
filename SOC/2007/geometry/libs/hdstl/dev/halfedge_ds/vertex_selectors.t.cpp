@@ -1,15 +1,13 @@
 //vertex_selectors.hpp   -*- C++ -*-
 //
-//@OVERVIEW:  The component under test is a selector class.  We
-// must make sure that all selectors are suitably defined and that the
-// selection is done properly.
+//@OVERVIEW:  The components under test are the stored_vertex and vertex_gen 
+//classes.  We must make sure that all selectors are suitably defined and 
+//that the selection is done properly.
 //
 //@TEST_PLAN: First create an instance of all the selectors (to make sure they
 // exist, and verify that there are no more than tested).  Then instantiate the
-// 'container_gen<VertexS,ValueType>' for a given value type and all
-// selectors, and verify that its members have the expected types and
-// signatures.  Finally, verify that the usage example compiles and executes
-// without errors, when assert is replaced by BOOST_CHECK.
+// 'vertex_gen' for all selector values, with base vertex classes and without 
+// base vertex classes and verify that each combination compiles and works.
 
 #include <boost/hdstl/halfedge_ds/vertex_selectors.hpp>
 

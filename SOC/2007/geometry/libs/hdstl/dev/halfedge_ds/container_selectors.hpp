@@ -376,6 +376,13 @@ struct container_gen<listS, ValueType> {
         return --container_end(container);
     }
 
+    static void container_remove(iterator it, type& container)
+        // This utility removes the element with specified iterator
+        // 'it' from the specified 'container'.
+    {
+        container.erase(it);
+    }
+
     static ValueType& value(descriptor x, type& container)
             // This utility returns the value associated with the specified
             // descriptor 'x' of the specified 'container'.
@@ -465,6 +472,13 @@ struct container_gen<setS, ValueType> {
         // specified 'container'.
     {
         return (container.insert(x)).first;
+    }
+    
+    static void container_remove(iterator it, type& container)
+        // This utility removes the element with specified iterator
+        // 'it' from the specified 'container'.
+    {
+        container.erase(it);
     }
 
     static const ValueType& value(descriptor x, type& container)
@@ -584,6 +598,13 @@ struct container_gen<vecS, ValueType> {
     {
         container.push_back(x);
         return --container_end(container);
+    }
+    
+    static void container_remove(iterator it, type& container)
+        // This utility removes the element with specified iterator
+        // 'it' from the specified 'container'.
+    {
+        container.erase(it);
     }
 
     static ValueType& value(descriptor x, type& container)

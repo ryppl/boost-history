@@ -1,15 +1,13 @@
 //facet_selectors.hpp   -*- C++ -*-
 //
-//@OVERVIEW:  The component under test is a selector class.  We
-// must make sure that all selectors are suitably defined and that the
-// selection is done properly.
+//@OVERVIEW:  The components under test are the stored_facet and facet_gen 
+//classes.  We must make sure that all selectors are suitably defined and 
+//that the selection is done properly.
 //
 //@TEST_PLAN: First create an instance of all the selectors (to make sure they
 // exist, and verify that there are no more than tested).  Then instantiate the
-// 'container_gen<FacetS,ValueType>' for a given value type and all
-// selectors, and verify that its members have the expected types and
-// signatures.  Finally, verify that the usage example compiles and executes
-// without errors, when assert is replaced by BOOST_CHECK.
+// 'facet_gen' for all selector values, with base facet classes and without 
+// base facet classes and verify that each combination compiles and works.
 
 #include <boost/hdstl/halfedge_ds/facet_selectors.hpp>
 
