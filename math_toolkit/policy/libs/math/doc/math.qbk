@@ -9,7 +9,7 @@
     ]
     [authors [Maddock, John], [Bristow, Paul A.], [Holin, Hubert], [Zhang, Xiaogang]]
     [category math]
-    [/last-revision $Date$]
+    [/last-revision $Date: 2007-07-20 13:49:05 -0400 (Fri, 20 Jul 2007) $]
 ]
 
 [include HTML4_symbols.qbk]

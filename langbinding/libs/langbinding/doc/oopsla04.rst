@@ -5,7 +5,7 @@
 :Author: David Abrahams, Daniel Wallin
 :Contact: dave@boost-consulting.com, dalwan01@student.umu.se
 :organization: `Boost Consulting`_
-:date: $Date$
+:date: $Date: 2004-10-16 02:23:48 -0500 (Sat, 16 Oct 2004) $
 :copyright: Copyright David Abrahams and Daniel Wallin 2004.
   Distributed under the Boost Software License, Version 1.0. (See
   accompanying file LICENSE_1_0.txt or copy at

@@ -37,7 +37,7 @@
  name="fields_visitor" 
  dirname="fields_visitor" 
  id="fields_visitor" 
- last-revision="$Date$" 
+ last-revision="$Date: 2006-01-11 11:41:42 -0500 (Wed, 11 Jan 2006) $" 
  xmlns:xi="http://www.w3.org/2001/XInclude"
 >
 <title>boost/fields_visitor User's Guide</title>

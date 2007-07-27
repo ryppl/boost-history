@@ -8,8 +8,8 @@
 # See http://www.boost.org/libs/mpl for documentation.
 
 # $Source$
-# $Date$
-# $Revision$
+# $Date: 2005-08-16 15:53:34 -0500 (Tue, 16 Aug 2005) $
+# $Revision: 2684 $
 
 # ChangeLog:
 #   2005-08-16 Larry Evans

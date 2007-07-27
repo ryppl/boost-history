@@ -10,7 +10,7 @@ Distributed under the Boost Software License, Version 1.0.
 >
 
 <library name = "Output Formatters" dirname = "outfmt" id = "outfmt"
-   last-revision = "$Date$"
+   last-revision = "$Date: 2004-09-11 07:11:46 -0500 (Sat, 11 Sep 2004) $"
    xmlns:xi = "http://www.w3.org/2003/XInclude"
 >
    <title>Output Formatters</title>

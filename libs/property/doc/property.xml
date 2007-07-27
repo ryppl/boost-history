@@ -5,7 +5,7 @@
 >
 
 <library name = "Property" dirname = "property" id = "prop"
-   last-revision = "$Date$"
+   last-revision = "$Date: 2004-11-16 14:32:44 -0500 (Tue, 16 Nov 2004) $"
    xmlns:xi = "http://www.w3.org/2003/XInclude"
 >
 <title>C++ Properties</title>
