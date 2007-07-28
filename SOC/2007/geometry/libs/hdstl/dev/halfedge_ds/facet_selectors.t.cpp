@@ -71,6 +71,10 @@ bool facet_gen_requirements_void_noFacetLink() {
     FacetGen facetGen;
     facetGen.m_container = temp_con;
     BOOST_CHECK(( num_facets(facetGen) == 4 ));
+    
+    facet_descriptor fn = new_facet(facetGen);
+    (void) fn;
+    BOOST_CHECK(( num_facets(facetGen) == 5 ));
     return true;
 }
 
@@ -103,6 +107,12 @@ bool facet_gen_requirements_void() {
 
     BOOST_CHECK(( halfedge(*facets_begin(facetGen), facetGen) == 1 ));
     BOOST_CHECK(( halfedge(*--facets_end(facetGen), facetGen) == 4 ));
+
+    facet_descriptor fn = new_facet(facetGen);
+    (void) fn;
+    BOOST_CHECK(( num_facets(facetGen) == 5 ));
+    
+
     return true;
 }
 
@@ -131,6 +141,9 @@ bool facet_gen_requirements_noFacetLink() {
     BOOST_CHECK(( facets_begin(facetGen)->base() == 1 ));
     BOOST_CHECK(( (--facets_end(facetGen))->base() == 4 ));
 
+    facet_descriptor fn = new_facet(facetGen);
+    (void) fn;
+    BOOST_CHECK(( num_facets(facetGen) == 5 ));
 
     return true;
 }
@@ -166,6 +179,9 @@ bool facet_gen_requirements() {
     BOOST_CHECK(( facets_begin(facetGen)->base() == 1 ));
     BOOST_CHECK(( (--facets_end(facetGen))->base() == 4 ));
 
+    facet_descriptor fn = new_facet(facetGen);
+    (void) fn;
+    BOOST_CHECK(( num_facets(facetGen) == 5 ));
     return true;
 }
 

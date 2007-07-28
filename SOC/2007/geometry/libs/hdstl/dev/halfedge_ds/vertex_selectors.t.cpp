@@ -81,6 +81,10 @@ bool vertex_gen_requirements_void_noVertexLink() {
     VertexGen vertexGen;
     vertexGen.m_container = temp_con;
     BOOST_CHECK(( num_vertices(vertexGen) == 4 ));
+    
+    vertex_descriptor vn = new_vertex(vertexGen);
+    (void) vn;
+    BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
     return true;
 }
 
@@ -113,6 +117,11 @@ bool vertex_gen_requirements_void() {
 
     BOOST_CHECK(( halfedge(*vertices_begin(vertexGen), vertexGen) == 1 ));
     BOOST_CHECK(( halfedge(*(--vertices_end(vertexGen)), vertexGen) == 4 ));
+    
+    vertex_descriptor vn = new_vertex(vertexGen);
+    (void) vn;
+    BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
+    
     return true;
 }
 
@@ -142,6 +151,10 @@ bool vertex_gen_requirements_noVertexLink() {
     BOOST_CHECK(( vertices_begin(vertexGen)->base() == 1 ));
     BOOST_CHECK(( (--vertices_end(vertexGen))->base() == 4 ));
 
+    
+    vertex_descriptor vn = new_vertex(vertexGen);
+    (void) vn;
+    BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
 
     return true;
 }
@@ -177,6 +190,10 @@ bool vertex_gen_requirements() {
     BOOST_CHECK(( vertices_begin(vertexGen)->base() == 1 ));
     BOOST_CHECK(( (--vertices_end(vertexGen))->base() == 4 ));
 
+    
+    vertex_descriptor vn = new_vertex(vertexGen);
+    (void) vn;
+    BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
     return true;
 }
 
