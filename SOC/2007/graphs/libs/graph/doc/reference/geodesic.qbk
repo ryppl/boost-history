@@ -8,68 +8,97 @@
 [section Geodesic Distances]
 
     template <typename Graph, typename DistanceMap>
-    typename property_traits<DistanceMap>::value_type
-    geodesic_distance(const Graph& g,
-                      typename graph_traits<Graph>::vertex_descriptor v,
-                      DistanceMap dist)
+    double mean_geodesic(const Graph& g, DistanceMap dist)
+
+    template <typename T, typename Graph, typename DistanceMap>
+    T mean_geodesic(const Graph& g, DistanceMap dist)
+
+    template <typename T,
+              typename Graph,
+              typename DistanceMap,
+              typename DistanceType,
+              typename Combinator>
+    T mean_geodesic(
+        const Graph& g,
+        DistanceMap dist,
+        Combinator combine,
+        DistanceType zero,
+        DistanceType infinity = std::numeric_limits<T>::max())
+
+
 
     template <typename Graph, typename DistanceMap>
-    double
-    mean_geodesic_distance(const Graph& g, DistanceMap dist)
+    double closeness(const Graph& g, DistanceMap dist)
 
-    template <typename Graph, typename DistanceMap, typename T>
-    T
-    mean_geodesic_distance(const Graph& g, DistanceMap dist, const T& dummy)
+    template <typename T, typename Graph, typename DistanceMap>
+    T closeness(const Graph& g, DistanceMap dist)
+
+    template <typename T,
+              typename Graph,
+              typename DistanceMap,
+              typename DistanceType,
+              typename Combinator>
+    T closeness(
+        const Graph& g,
+        DistanceMap dist,
+        Combinator combine,
+        DistanceType zero,
+        DistanceType infinity = std::numeric_limits<T>::max())
+
 
 These functions compute values based on the /geodesic distance/ between
 vertices. The /geodesic distance/ between vertices /u/ and /v/ is defined
-as the shortest-length path between such vertices. It is important to note
-that these functions /do not/ compute these paths or record their distances.
+as the shortest-length path between such vertices. The shortest path can
+be defined in terms of the sum of edge, weights, the sum of vertex weights,
+or simply the number of "hops". It is important to notethat these functions
+/do not/ compute the paths or record their distances. Instead, they rely upon
+a previous computation.
 
 Boost.Graph provides two shortest paths algorithms: [boost_dijkstra_shortest_paths]
 and [boost_bellman_ford_shortest_paths]. Optionally, if the target graph is
-an unweighted, undirected graph, shortest paths can be recorded using
+an unweighted, undirected graph the shortest paths can be recorded using
 [boost_breadth_first_search]. Each of these algorithms takes as an input a
 vertex for which the shortest distances are being computed. The output of
 each of these shortest paths algorithms is a `DistanceMap`, which is used as the
 input to the geodesic distance functions. Note then, that these functions compute
 measures of the vertex for which `dist` was computed.
 
-[note
-Get rid of `geodesic_distance()`.
-]
-
-The `geodesic_distance()` function returns the length of the shortest path
-between two vertices. The source vertex is that for which the `DistanceMap`
-was computed and the target vertex, `v`, is supplied as a parameter. This
-function is an alias for:
-
-    dist[v];
-
-The `mean_geodesic_distance()` functions return the (arithmatic) mean
-of the geodesic distances between a vertex and all others in the graph. The
-vertex for which this is computed is that for which `dist` originally
-computed. The mean geodesic distance is implemeted as:
+The `mean_geodesic()` functions return the (arithmatic) mean of the geodesic
+distances between a vertex and all others in the graph. Intuitively, this gives
+the average distance from one vertex to every other. Vertices with low mean
+geodesic distance are more central to the graph. The `mean_geodesic()` for
+a vertex is given as:
 
 [$images/eq/mean_geodesic.png]
 
-where ['d[sub G](u, v)] is the geodesic distance (shortest path) from /u/ to /v/.
+The `closeness()` functions effectively return the inverse (reciprocal) of the
+`mean_geodesic()` for a vertex. It is given as:
 
-The default (first) variant of this function computes and returns the
-average as a `double`. The second variant allows the average and return
-type to be computed as a user-defined type by passing a dummy instance.
-This is useful if the `value_type` of `DistanceMap` is a user-defined or
-otherwise non-trivial.
+[$images/eq/closeness.png]
 
-Note that the geodesic distance between two unconnected vertices is infinite.
-This implies that the mean geodesic distance for an unconnected graph is
-also infinite.
+In both of these formulas, /n/ is the number of vertices in the graph `G` and
+['d[sub G](u, v)] is the geodesic distance (shortest path) from /u/ to /v/. If
+/v/ is not reachable from /u/, then the distance between /u/ and /v/ is infinite.
+This implies that the `mean_geodesic()` for `u` is infinite and the `closeness()`
+is 0.
+
+There are three variants of these two sets of functions, allowing increasing
+genericity of usage.
+
+The first variant of this function computes and returns the average as a
+`double`. The second variant allows the average and return type to be computed
+as a user-defined type by passing a dummy instance. This is useful if the
+`value_type` of `DistanceMap` is a user-defined, but otherwise acts as a numeric
+type. The third variant allows the user to specify the type, the combination
+function for computing the sum, and the default values of 0 and infinity. This
+is useful when the computation is performed on a discrete or non-numeric type.
+Note that in this variant, the default value of `zero` must be explicitly
+passed as an argument.
 
 [heading Where Defined]
 `boost/graph/distance.hpp`
 
 [heading Parameters]
-
 [table
     [[Type] [Parameter] [Description]]
     [
@@ -77,13 +106,6 @@ also infinite.
         [
             The graph object for which the measure will be computed. The
             `Graph` type is required to be a model of [BoostVertexListGraph].
-        ]
-    ]
-    [
-        [required, in] [`vertex_descriptor v`]
-        [
-            The target vertex to which the geodisic distance is returned. The
-            source vertex is made implicit by the `DistanceMap`.
         ]
     ]
     [
@@ -96,42 +118,54 @@ also infinite.
         ]
     ]
     [
-        [required, in] [`const T& dummy`]
+        [optional, in] [`T`]
         [
-            An unused instance of the type returned by the `mean_geodesic_distance()`
-            function. If specified, the measure will be computed as an average of
-            this type. This type must essentially be numeric, as it is required to
-            a) support division, b) be initialized with an integer type, and c)
-            have a default of 0.
+            If used, the `T` template parameter must be explicitly given as a
+            template argument when invoking these functions. The type `T` must
+            be a `Regular` type (default and copy constructible, assignable).
+            Additionally, it must be `Divisible` and constructible from both
+            `vertices_size_type` of `Graph` and the `value_type` of `DistanceMap`.
+            Numeric types satisfy these requirements.
+        ]
+    ]
+    [
+        [optional, in] [`Combinator combine`]
+        [
+            The `combine` parameter is a binary functor that is invoked to combine
+            distance values in the `DistanceMap`. The argument types and return
+            type of the function must be the same as the `value_type` of the
+            `DistanceMap`.
+
+            *Default:* `std::plus<T>()`
+        ]
+    ]
+    [
+        [optional, in] [`DistanceType zero`]
+        [
+            The `zero` parameter is used as an initial value for the combination
+            of distances in these computations. Distance must be the same type
+            as the `value_type` of the `DistanceMap` parameter.
+
+            *Defaults:* `DistanceType()` (for numeric types, this is 0).
+        ]
+    ]
+    [
+        [optional, in] [`T infinity`]
+        [
+            The `infinity` parameter is used to indicate a value of `T` that
+            acts as an infinite value in these computations. Distance must be the
+            same type as the `value_type` of the `DistanceMap` parameter. Note that
+            if the shortest paths are computed using [boost_dijkstra_shortest_paths],
+            and the `inf` parameter is used, this must be the same value.
+
+            *Default:* `std::numeric_limits<DistanceType>::max()`
         ]
     ]
 ]
 
-[note
-The requirements on `T` indicate a particularly interesting problem because
-division is basically [SgiMonoid] operation - which is probably one of the
-more esoteric concepts in the STL. Curiously, the `identity_element()` operation
-which is an SGI extension and apparently not part of the actual standard.
-
-The correct implemention of `detail::sum_distances()` should take a monoid
-type and use `identity_element(f)` for initializaiton and `f` for the combination.
-
-There's also a sort of strange requirement that we need some testable notion
-of infinite. So, `T` is apparently some monoidic type that also has the notion
-of an infinite value.
-]
-
-[h5 Return Value]
-The `geodesic_distance()` function returns the distance of the shortest
-path to `v`.
-
-The `mean_geodesic_distance()` function returns the (arithmatic) mean of
-the shortest distances to all other vertices.
-
 [h5 Complexity]
-The `geodesic_distance()` function has /O(1)/ time complexity.
-
-The `mean_geodesic_distance()` function has /O(V)/ time complexity.
+The `mean_geodesic()` and `closeness()` functions are linear with respect to
+`num_vertices(g)`.
 
 [h5 Examples]
 This example computes shows the construction of a simple undirected graph and
@@ -187,26 +221,14 @@ We can print the geodesic distance from vertex 0 to each of the other vertices, 
 its mean geodesic distance.
 
     Graph::vertex_iterator i, end;
-    for(tie(i, end) = vertices(g); i != end; ++i) {
-        cout << "geodesic distance to v[" << get(vertex_index, g, *i) << "] == "
-             <<  geodesic_distance(g, *i, dist) << endl;
-    }
-    cout << "mean geodesic distance == " << mean_geodesic_distance(g, dist) << end;
+    cout << "mean geodesic == " << mean_geodesic(g, dist) << end;
+    cout << "closeness == " << closeness(g, dist) << end;
 
 The output of this program is:
 
 [pre
-geodesic distance to v\[0\] == 0
-geodesic distance to v\[1\] == 1
-geodesic distance to v\[2\] == 2
-geodesic distance to v\[3\] == 2
-geodesic distance to v\[4\] == 3
-geodesic distance to v\[5\] == 3
-geodesic distance to v\[6\] == 4
-geodesic distance to v\[7\] == 4
-geodesic distance to v\[8\] == 4
-geodesic distance to v\[9\] == 5
-mean geodesic distance == 2.8
+mean geodesic == 2.8
+closeness == .35
 ]
 
 [endsect]

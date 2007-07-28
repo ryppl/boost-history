@@ -56,7 +56,7 @@ void test_external()
 
 
     ComponentContainer comps(num_vertices(g));
-    ComponentMap comps_map(make_property_map(comps));
+    ComponentMap comps_map(comps);
 
     size_t n = connected_components(g, comps_map);
 

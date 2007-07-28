@@ -10,23 +10,28 @@
 #include <vector>
 #include <map>
 #include <tr1/unordered_map>
+#include <cxxabi.h>
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/undirected_graph.hpp>
+#include <boost/graph/directed_graph.hpp>
+#include <boost/graph/exterior_property.hpp>
+
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/johnson_all_pairs_shortest.hpp>
 #include <boost/graph/floyd_warshall_shortest.hpp>
 #include <boost/graph/distance.hpp>
+#include <boost/graph/geodesic.hpp>
 
 using namespace std;
 using namespace boost;
 
-struct VertexProperty
+struct VertexProp
 {
     int dummy;
 };
 
-struct EdgeProperty
+struct EdgeProp
 {
     int weight;
 };
@@ -61,189 +66,91 @@ void build_graph(Graph& g)
     g[e[4]].weight = 1;
 };
 
-template <typename Graph, typename DistanceMap>
-void dump_distance_map(const Graph& g, DistanceMap dists)
+template <typename Graph, typename PropertyMap>
+void print_map(const Graph& g, PropertyMap pm)
 {
     typename Graph::vertex_iterator i, end;
+    cout << "{ ";
     for(tie(i, end) = vertices(g); i != end; ++i) {
-        cout << dists[*i] << " ";
+        cout << pm[*i] << " ";
     }
-    cout << "\n";
+    cout << "}\n";
 }
 
-template <typename Graph, typename DistanceMatrix>
-void dump_distance_matrix(const Graph& g, DistanceMatrix dists)
+template <typename Graph, typename Matrix>
+void print_matrix(const Graph& g, Matrix m)
 {
+    cout << "[\n";
     typename Graph::vertex_iterator i, j, end;
     for(tie(i, end) = vertices(g); i != end; ++i) {
-        for(j = vertices(g).first; j != end; ++j) {
-            cout << dists[*i][*j] << " ";
-        }
-        cout << "\n";
+        print_map(g, m[*i]);
     }
+    cout << "]\n";
 }
 
-void test_1()
+template <typename Graph>
+void test()
 {
-    // because this is defined w/vecS's, we don't have to work very
-    // hard on property maps
+    typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+    typedef typename graph_traits<Graph>::edge_descriptor Edge;
 
-    typedef adjacency_list<vecS, vecS, undirectedS, VertexProperty, EdgeProperty> Graph;
-    typedef Graph::vertex_descriptor Vertex;
-    typedef property_map<Graph, int EdgeProperty::*>::type WeightPropertyMap;
-    typedef vector<int> DistanceMap;
-    typedef iterator_property_map<DistanceMap::iterator,
-        property_map<Graph, vertex_index_t>::type> DistancePropertyMap;
+
+    typedef exterior_vertex_property<Graph, int> DistanceProperty;
+    typedef typename DistanceProperty::container_type DistanceContainer;
+    typedef typename DistanceProperty::map_type DistanceMap;
+    typedef typename property_map<Graph, int EdgeProp::*>::type WeightMap;
 
     Graph g;
     build_graph(g);
 
-    Vertex v = *vertices(g).first;
-    WeightPropertyMap weights = get(&EdgeProperty::weight, g);
-
-    cout << "\nadjacency_list<vecS, vecS...>\n";
+    // single-vertex computations
     {
-        DistanceMap distances(num_vertices(g));
-        DistancePropertyMap dists(distances.begin());
+        DistanceContainer distances(num_vertices(g));
+        DistanceMap dists(distances);
+        WeightMap weights = get(&EdgeProp::weight, g);
 
-        dijkstra_shortest_paths(g, v,
+        dijkstra_shortest_paths(g, *vertices(g).first,
             weight_map(weights).
             distance_map(dists));
 
-        cout << "* dists: "; dump_distance_map(g, dists);
-        cout << "* mean geo: " << mean_geodesic_distance(g, dists) << "\n";
-        cout << "* mean geo: " << mean_geodesic_distance<float>(g, dists) << "\n";
-        cout << "* closeness: " << closeness(g, dists) << "\n";
-        cout << "* eccentricity: " << eccentricity(g, dists) << "\n";
+        double total_geo = total_geodesic_distance(g, dists);
+        double mean_geo = mean_geodesic_distance(g, dists);
+        double inverse_geo = inverse_geodesic_distance(g, dists);
+        double close = closeness(g, dists);
+
+        cout << "* geodesics: "; print_map(g, dists);
+        cout << "* total geo: " << total_geo << "\n";
+        cout << "* mean geo: " << mean_geo << "\n";
+        cout << "* inv geo: " << inverse_geo << "\n";
+        cout << "* closeness: " << close << "\n";
     }
 
+
+    // all-vertices computation
     {
-        typedef vector<DistanceMap> DistanceMatrix;
+        typedef typename DistanceProperty::matrix_type DistanceMatrix;
 
-        DistanceMatrix dists(num_vertices(g), DistanceMap(num_vertices(g)));
+        WeightMap weights = get(&EdgeProp::weight, g);
+        DistanceMatrix dists(num_vertices(g));
 
-        // compute all shortest paths
+        // compute all shortest paths so we can run some other stuff
         floyd_warshall_all_pairs_shortest_paths(g, dists,
                 weight_map(weights));
 
-        // use the distances in all-pairs to compute eccentricities
-        // for each vertex
-        DistanceMap eccentrics(num_vertices(g));
-        DistancePropertyMap eccs(eccentrics.begin());
-        eccentricities(g, dists, eccs);
+        print_matrix(g, dists);
 
-        cout << "* dists:\n"; dump_distance_matrix(g, dists);
-        cout << "* eccs: "; dump_distance_map(g, eccs);
-        cout << "* radius: " << radius(g, eccs) << "\n";
-        cout << "* diameter: " << diameter(g, eccs) << "\n";
-
-        vector<Vertex> cent;
-        center(g, eccs, back_inserter(cent));
-        cout << "center: ";
-        for(size_t x = 0; x < cent.size(); ++x) {
-            Vertex v = cent[x];
-            cout << get(vertex_index, g, v) << " ";
-        }
-        cout << "\n";
-
-        vector<Vertex> peri;
-        periphery(g, eccs, back_inserter(peri));
-        cout << "periphery: ";
-        for(size_t x = 0; x < peri.size(); ++x) {
-            Vertex v = peri[x];
-            cout << get(vertex_index, g, v) << " ";
-        }
-        cout << "\n";
     }
 }
-
-void test_2()
-{
-}
-
-void test_3()
-{
-    typedef undirected_graph<VertexProperty, EdgeProperty> Graph;
-    typedef Graph::vertex_descriptor Vertex;
-
-    typedef property_map<Graph, int EdgeProperty::*>::type WeightPropertyMap;
-
-    typedef tr1::unordered_map<Vertex, int> DistanceMap;
-    typedef associative_property_map<DistanceMap> DistancePropertyMap;
-
-    Graph g;
-    build_graph(g);
-
-    Vertex v = *vertices(g).first;
-    WeightPropertyMap weights = get(&EdgeProperty::weight, g);
-
-    cout << "\nundirected_graph<...>\n";
-    {
-        DistanceMap distances(num_vertices(g));
-        DistancePropertyMap dists(distances);
-
-        // compute shortest paths
-        dijkstra_shortest_paths(g, v,
-            weight_map(weights).
-            distance_map(dists)
-            );
-
-        cout << "* dists: "; dump_distance_map(g, dists);
-        cout << "* mean geo: " << mean_geodesic_distance(g, dists) << "\n";
-        cout << "* closeness: " << closeness(g, dists) << "\n";
-        cout << "* eccentricity: " << eccentricity(g, dists) << "\n";
-    }
-
-    {
-        typedef tr1::unordered_map<Vertex, DistanceMap> DistanceMatrix;
-
-        DistanceMatrix dists(num_vertices(g));
-        Graph::vertex_iterator i, end;
-        for(tie(i, end) = vertices(g); i != end; ++i) {
-            dists[*i].rehash(num_vertices(g));
-        }
-
-        // compute all shortest paths
-        floyd_warshall_all_pairs_shortest_paths(g, dists,
-            weight_map(weights));
-
-        // use the distances in all-pairs to compute eccentricities
-        // for each vertex
-        DistanceMap eccentrics(num_vertices(g));
-        DistancePropertyMap eccs(eccentrics);
-        eccentricities(g, dists, eccs);
-
-        int r, d;
-        cout << "* dists:\n"; dump_distance_matrix(g, dists);
-        cout << "* eccs: "; dump_distance_map(g, eccs);
-        cout << "* radius: " << (r = radius(g, eccs)) << "\n";
-        cout << "* diameter: " << (d = diameter(g, eccs)) << "\n";
-
-        vector<Vertex> cent;
-        center(g, eccs, back_inserter(cent));
-        cout << "center: ";
-        for(size_t x = 0; x < cent.size(); ++x) {
-            Vertex v = cent[x];
-            cout << get(vertex_index, g, v) << " ";
-        }
-        cout << "\n";
-
-        vector<Vertex> peri;
-        periphery(g, eccs, back_inserter(peri));
-        cout << "periphery: ";
-        for(size_t x = 0; x < peri.size(); ++x) {
-            Vertex v = peri[x];
-            cout << get(vertex_index, g, v) << " ";
-        }
-        cout << "\n";
-    }
-}
-
 
 int
 main(int argc, char *argv[])
 {
-    test_1();
-    // test_2();
-    test_3();
+    typedef undirected_graph<VertexProp, EdgeProp> Graph;
+    typedef adjacency_list<vecS, vecS, undirectedS, VertexProp, EdgeProp> AdjList;
+
+    cout << "\n*** undirected_graph<> *** \n";
+    test<Graph>();
+
+    cout << "\n*** adjacency_list<> *** \n";
+    test<AdjList>();
 }

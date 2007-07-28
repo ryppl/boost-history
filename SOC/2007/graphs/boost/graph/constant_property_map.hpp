@@ -41,7 +41,7 @@ namespace boost
             : m_value(copy.m_value)
         { }
 
-        inline reference operator[](const key_type& v) const
+        inline reference operator [](const key_type& v) const
         { return m_value; }
 
         Type m_value;

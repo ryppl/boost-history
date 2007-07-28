@@ -40,7 +40,10 @@ namespace boost
     BOOST_PARAMETER_NAME(color_map)
     BOOST_PARAMETER_NAME(vertex_index_map)
 
-    struct not_given {};
+    // miscellaneous
+    BOOST_PARAMETER_NAME(combine)
+    BOOST_PARAMETER_NAME(distance_numbers)
+    BOOST_PARAMETER_NAME(output_numbers)
 }
 
 #endif
