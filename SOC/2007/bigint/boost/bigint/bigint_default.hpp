@@ -755,7 +755,12 @@ namespace boost { namespace detail {
 				return;
 			}
 
-			data.resize(lhs.data.size() + rhs / limb_bit_number);
+			if (rhs / limb_bit_number > (static_cast<boost::uint64_t>(1) << (sizeof(size_t) * 8)))
+			{
+				throw std::bad_alloc();
+			}
+
+			data.resize(lhs.data.size() + static_cast<size_t>(rhs / limb_bit_number));
 
 			limb_t* di = data.begin() + rhs / limb_bit_number;
 
@@ -790,7 +795,7 @@ namespace boost { namespace detail {
 				return;
 			}
 
-			data.resize(lhs.data.size() - rhs / limb_bit_number);
+			data.resize(lhs.data.size() - static_cast<size_t>(rhs / limb_bit_number));
 				
 			limb_t* di = data.begin();
 
