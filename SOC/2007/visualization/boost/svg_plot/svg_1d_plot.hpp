@@ -234,6 +234,14 @@ private:
                 plot_y2 -= 20;
             }
 
+            if(use_x_external_style)
+            {
+                plot_y2 -=
+                    x_major_length > x_minor_length ?
+                    x_major_length :
+                    x_minor_length ;
+            }
+
             //for the title. Will take into account font size soon
             plot_y1 +=40;
 
@@ -409,7 +417,7 @@ BOOST_PARAMETER_MEMBER_FUNCTION
         boost::make_transform_iterator(container.begin(), x_functor),
         boost::make_transform_iterator(container.end(),   x_functor), 
         title, 
-        plot_point_style(fill_color, stroke_color, size, point_style)
+        plot_point_style(stroke_color, fill_color, size, point_style)
     ));
 }
 

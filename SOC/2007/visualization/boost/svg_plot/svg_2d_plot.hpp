@@ -174,21 +174,18 @@ private:
         {
             _transform_y(y1 = j);
 
-            if(!use_plot_window)
+            if(!use_plot_window && use_y_label)
             {
-                // spacing for labels
-                if(use_legend)
-                {
-                    x1 -= 155;
-                }
-
-                if(use_y_label)
-                {
-                    x2 -= 12 * 1.5;
-                }
+                x2 -= 12 * 1.5;
+            }
+        
+            else
+            {
+                x1 = plot_x1 + 1;
+                x2 = plot_x2 - 1;
             }
 
-            if(y1 < plot_y2 && y1 > plot_y1)
+            if(y1 > plot_y1)
             {
                 grid_path.M(x1, y1).L(x2, y1);
             }
@@ -226,23 +223,18 @@ private:
         {
             _transform_y(y1 = i);
 
-            if(!use_plot_window)
+            if(!use_plot_window && use_y_label)
             {
-                if(use_title)
-                {
-                    x1 += title_info.font_size() * 1.5;
-                }
-
-                if(use_y_label)
-                {
-                    x2 -= 12 * 1.5;
-                }
+                x1 += 12 * 1.5;
             }
 
-            if(y1 < plot_y2 && y1 > plot_y1)
+            else
             {
-                grid_path.M(x1, y1).L(x2, y1);
+                x1 = plot_x1 + 1;
+                x2 = plot_x2 - 1;
             }
+            
+            grid_path.M(x1, y1).L(x2, y1);
         }
 
         //draw major tick
@@ -324,8 +316,8 @@ private:
         // draw the ticks on the positive side
         for(double i = 0; i < y_max; i += y_major)
         {
-            for(double j = i + y_minor_jump; 
-                       j < i + y_major; 
+            for(double j = i + y_minor_jump;
+                       j < i + y_major;
                        j += y_minor_jump)
             {
                 _draw_y_minor_ticks(j, minor_tick_path, minor_grid_path);
@@ -672,14 +664,6 @@ svg_2d_plot& y_major_labels_on(bool _cmd)
     return *this;
 }
 
-
-svg_2d_plot& y_axis_color(svg_color_constant _col)
-{
-    y_axis_color(constant_to_rgb(_col));
-
-    return (svg_2d_plot&)*this;
-}
-
 svg_2d_plot& y_axis_color(const svg_color& _col)
 {
     image.get_g_element(detail::PLOT_Y_AXIS)
@@ -691,29 +675,27 @@ svg_2d_plot& y_axis_color(const svg_color& _col)
     return *this;
 }
 
-svg_2d_plot& y_major_tick_color(const svg_color& _col)
+svg_2d_plot& y_major_grid_color(const svg_color& _col)
 {
-    image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color(_col);
-    image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().fill_color(_col);
+    image.get_g_element(detail::PLOT_Y_MAJOR_GRID).style().stroke_color(_col);
     return *this;
 }
 
-svg_2d_plot& y_major_tick_color(svg_color_constant _col)
+svg_2d_plot& y_minor_grid_color(const svg_color& _col)
 {
-    y_major_tick_color(constant_to_rgb(_col));
+    image.get_g_element(detail::PLOT_Y_MINOR_GRID).style().stroke_color(_col);
+    return *this;
+}
+
+svg_2d_plot& y_major_tick_color(const svg_color& _col)
+{
+    image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color(_col);
     return *this;
 }
 
 svg_2d_plot& y_minor_tick_color(const svg_color& _col)
 {
     image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(_col);
-    image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().fill_color(_col);
-    return *this;
-}
-
-svg_2d_plot& y_minor_tick_color(svg_color_constant _col)
-{
-    y_minor_tick_color(constant_to_rgb(_col));
     return *this;
 }
 
@@ -802,6 +784,18 @@ svg_2d_plot& y_external_style_on(bool _is)
     return *this;
 }
 
+svg_2d_plot& y_major_grid_on(bool _is)
+{
+    use_y_major_grid = _is;
+    return *this;
+}
+
+svg_2d_plot& y_minor_grid_on(bool _is)
+{
+    use_y_minor_grid = _is;
+    return *this;
+}
+
 #if defined (BOOST_MSVC)
 #  pragma warning(push)
 #  pragma warning(disable: 4100) // "'boost_parameter_enabler_argument' : unreferenced formal parameter"
@@ -810,25 +804,21 @@ svg_2d_plot& y_external_style_on(bool _is)
 BOOST_PARAMETER_MEMBER_FUNCTION
 (
     (void),
-    plot_2d,
+    plot,
     tag,
     (required 
         (container, *)
         (title, (const std::string&))
     )
     (optional
+        (fill_color, (const svg_color&), white)
         (stroke_color, (const svg_color&), black)
+        (line_color, (const svg_color&), black)
+        (area_fill_color, (svg_color_constant), blank)
         (point_style, (point_shape), circle)
         (size, (int), 10)
         (line_on, (bool), true)
-        (line_color, (const svg_color&), black)
-        (area_fill_color, (svg_color_constant), blank)
-    )
-    (deduced
-        (optional
-            (fill_color, (const svg_color&), white)
-            (x_functor, *, boost_default_2d_convert())
-        )
+        (x_functor, *, boost_default_2d_convert())
     )
 )
 {

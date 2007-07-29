@@ -12,6 +12,7 @@
 
 #include <string>
 #include "../svg_style.hpp"
+#include "../svg.hpp"
 #include "svg_tag.hpp"
 
 namespace boost{
@@ -66,10 +67,14 @@ protected:
                 }
             }
 
-            if(x1 < derived().plot_x2 && x1 > derived().plot_x1)
+            else
             {
-                grid_path.M(x1, y1).L(x1, y2);
+                y1 = derived().plot_y1 + 1;
+                y2 = derived().plot_y2 - 1;
             }
+
+            grid_path.M(x1, y1).L(x1, y2);
+
         }
 
         double x_tick_length = derived().x_minor_length / 2.;
@@ -117,10 +122,13 @@ protected:
                 }
             }
 
-            if(x1 < derived().plot_x2 && x1 > derived().plot_x1)
+            else
             {
-                grid_path.M(x1, y1).L(x1, y2);
+                y1 = derived().plot_y1;
+                y2 = derived().plot_y2;
             }
+            grid_path.M(x1, y1).L(x1, y2);
+
         }
 
         //draw major tick
@@ -437,13 +445,13 @@ public:
 
     Derived& title_font_size(unsigned int _size)
     {
-        derived().title_info.font_size() = _size;
+        derived().title_info.font_size(_size);
         return derived();
     }
 
     Derived& legend_title_font_size(unsigned int _size)
     {
-        derived().legend_title_font_size = _size;
+        derived().legend_title_size = _size;
         return derived();
     }
 
@@ -473,6 +481,12 @@ public:
         return derived();
     }
 
+    Derived& x_external_style_on(bool _cmd)
+    {
+        derived().use_x_external_style = _cmd;
+        return derived();
+    }
+
     Derived& x_label_on(bool _cmd)
     {
         derived().use_x_label = _cmd;
@@ -481,7 +495,7 @@ public:
 
     Derived& x_major_labels_on(bool _cmd)
     {
-        derived().x_major_labels_on = _cmd;
+        derived().use_x_major_labels = _cmd;
         return derived();
     }
 
@@ -533,22 +547,10 @@ public:
     // x_minor_tick_color()
     // -----------------------------------------------------------------
 
-    Derived& title_color(svg_color_constant _col)
-    {
-        title_color(constant_to_rgb(_col));
-        return derived();
-    }
-
     Derived& title_color(const svg_color& _col)
     {
         derived().image.get_g_element(PLOT_TITLE).style().stroke_color(_col);
         derived().image.get_g_element(PLOT_TITLE).style().fill_color(_col);
-        return derived();
-    }
-
-    Derived& background_color(svg_color_constant _col)
-    {
-        background_color(constant_to_rgb(_col));
         return derived();
     }
 
@@ -558,33 +560,16 @@ public:
         return derived();
     }
 
-    Derived& legend_background_color(svg_color_constant _col)
-    {
-        legend_background_color(constant_to_rgb(_col));
-        return derived();
-    }
-
     Derived& legend_background_color(const svg_color& _col)
     {
         derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().fill_color(_col);
         return derived();
     }
 
-    Derived& legend_border_color(svg_color_constant _col)
-    {
-        legend_border_color(constant_to_rgb(_col));
-        return derived();
-    }
 
     Derived& legend_border_color(const svg_color& _col)
     {
         derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().stroke_color(_col);
-        return derived();
-    }
-
-    Derived& background_border_color(svg_color_constant _col)
-    {
-        derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_color(_col);
         return derived();
     }
 
@@ -594,21 +579,9 @@ public:
         return derived();
     }
 
-    Derived& plot_background_color(svg_color_constant _col)
-    {
-        derived().image.get_g_element(PLOT_PLOT_BACKGROUND).style().fill_color(_col);
-        return derived();
-    }
-
     Derived& plot_background_color(const svg_color& _col)
     {
         derived().image.get_g_element(PLOT_PLOT_BACKGROUND).style().fill_color(_col);
-        return derived();
-    }
-
-    Derived& x_axis_color(svg_color_constant _col)
-    {
-        x_axis_color(constant_to_rgb(_col));
         return derived();
     }
 
@@ -626,65 +599,30 @@ public:
     Derived& x_major_tick_color(const svg_color& _col)
     {
         derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_color(_col);
-        derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().fill_color(_col);
-        return derived();
-    }
-
-    Derived& x_major_tick_color(svg_color_constant _col)
-    {
-        x_major_tick_color(constant_to_rgb(_col));
         return derived();
     }
 
     Derived& x_label_color(const svg_color& _col)
     {
         derived().image.get_g_element(PLOT_X_LABEL).style().stroke_color(_col);
-        derived().image.get_g_element(PLOT_X_LABEL).style().fill_color(_col);
-        return derived();
-    }
-
-    Derived& x_label_color(svg_color_constant _col)
-    {
-        x_label_color(constant_to_rgb(_col));
         return derived();
     }
 
     Derived& x_minor_tick_color(const svg_color& _col)
     {
         derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_color(_col);
-        derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().fill_color(_col);
-        return derived();
-    }
-
-    Derived& x_minor_tick_color(svg_color_constant _col)
-    {
-        x_minor_tick_color(constant_to_rgb(_col));
         return derived();
     }
 
     Derived& x_major_grid_color(const svg_color& _col)
     {
         derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_color(_col);
-        derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().fill_color(_col);
-        return derived();
-    }
-
-    Derived& x_major_grid_color(svg_color_constant _col)
-    {
-        x_major_grid_color(constant_to_rgb(_col));
         return derived();
     }
 
     Derived& x_minor_grid_color(const svg_color& _col)
     {
         derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_color(_col);
-        derived().image.get_g_element(PLOT_X_MINOR_GRID).style().fill_color(_col);
-        return derived();
-    }
-
-    Derived& x_minor_grid_color(svg_color_constant _col)
-    {
-        x_minor_grid_color(constant_to_rgb(_col));
         return derived();
     }
 
@@ -716,13 +654,13 @@ public:
 
     Derived& x_major_tick(double _inter)
     {
-        derived().x_major_tick = _inter;
+        derived().x_major = _inter;
         return derived();
     }
 
     Derived& x_major_tick_length(unsigned int _length)
     {
-        derived().x_major_tick_length = _length;
+        derived().x_major_length = _length;
         return derived();
     }
 
@@ -734,7 +672,7 @@ public:
 
     Derived& x_minor_tick_length(unsigned int _length)
     {
-        derived().x_minor_tick_length = _length;
+        derived().x_minor_length = _length;
         return derived();
     }
 
@@ -746,11 +684,11 @@ public:
 
     Derived& x_num_minor_ticks(unsigned int _num)
     {
-        derived().x_num_minor_ticks = _num;
+        derived().x_num_minor = _num;
         return derived();
     }
 
-    Derived& x_scale(double x1, double x2)
+    Derived& x_range(double x1, double x2)
     {
         if(x2 <= x1)
         {
@@ -800,7 +738,7 @@ public:
 
     bool get_x_major_labels()
     {
-        return derived().x_major_labels_on;
+        return derived().use_x_major_labels;
     }
 
     // color information    
@@ -882,22 +820,22 @@ public:
 
     double get_x_major_tick()
     {
-        return derived().x_major_tick;
+        return derived().x_major;
     }
 
     unsigned int get_x_major_tick_length()
     {
-        return derived().x_major_tick_length;
+        return derived().x_major_length;
     }
 
     unsigned int get_x_minor_tick_length()
     {
-        return derived().x_minor_tick_length;
+        return derived().x_minor_length;
     }
 
     unsigned int get_x_num_minor_ticks()
     {
-        return derived().x_num_minor_ticks;
+        return derived().x_num_minor;
     }  
 
     unsigned int get_x_major_tick_width()
