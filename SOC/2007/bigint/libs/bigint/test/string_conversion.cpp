@@ -86,7 +86,10 @@ template <typename I> void test()
 		{-10, "ABCDEF", 0, 0},
 		{-10, "\xff", 0, 0},
 		// handling non-ASCII symbols
-		{-36, "sa3mx\xa3\xb3", 47500521, 0}
+		{-36, "sa3mx\xa3\xb3", 47500521, 0},
+
+		// check full alphabet
+		{36, "abcdefghijklmnopqrstuvwxyz1234567890", 0, "30483235087530204251026473460499750369628113087340027780"}
 	};
 
 	for (size_t i = 0; i < ARRAY_SIZE(entries); ++i)
@@ -114,9 +117,13 @@ template <typename I> void test()
 
 int test_main(int argc, char* argv[])
 {
-  test<boost::detail::bigint_gmp_implementation>();
-  test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_vector> >();
-  test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_fixed<1024>::type> >();
+	test<boost::detail::bigint_gmp_implementation>();
+	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_vector, 8> >();
+	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_vector, 16> >();
+	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_vector, 32> >();
+	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_fixed<1024>::type, 8> >();
+	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_fixed<1024>::type, 16> >();
+	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_fixed<1024>::type, 32> >();
 
-  return 0;
+	return 0;
 }

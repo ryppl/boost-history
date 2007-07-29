@@ -450,29 +450,29 @@ arguments, and M means maximum of the lengths of both value and function argumen
 
 <p>'Length' means number of bits for integer arguments and number of characters for strings.</p>
 
-<table><tr><th>Function(s)</th><th>'gmp' implementation</th></tr>
-<tr><td>default ctor</td><td>O(1)</td></tr>
-<tr><td>integer ctors</td><td>O(1)</td></tr>
-<tr><td>string ctors</td><td>O(A1) <font color="#ff0000">check</font></td></tr>
-<tr><td>+, -, +=, -=</td><td>O(M)</td></tr>
-<tr><td>*, *=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
-<tr><td>/, /=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
-<tr><td>%, %=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
-<tr><td>&amp;, &amp;=, |, |=, ^, ^=</td><td>O(M)</td></tr>
-<tr><td>&lt;&lt;, &gt;&gt;</td><td>O(max(A1, 2<sup>A2</sup>)) <font color="#808080"> NB. O(2<sup>A2</sup>) is equal to O(shift amount)</font></td></tr>
-<tr><td>&lt;&lt;=, &gt;&gt;=</td><td>O(max(N, 2<sup>A1</sup>)) <font color="#808080"> NB. O(2<sup>A1</sup>) is equal to O(shift amount)</font></td></tr>
-<tr><td>++, --</td><td>O(N)</td></tr>
-<tr><td>+, -</td><td>O(1)</td></tr>
-<tr><td>~</td><td>O(N)</td></tr>
-<tr><td>bool conversions</td><td>O(1)</td></tr>
-<tr><td>string conversions</td><td>O(N) <font color="#ff0000">check</font></td></tr>
-<tr><td>can_convert_to</td><td>O(1)</font></td></tr>
-<tr><td>to_number</td><td>O(N)</font></td></tr>
-<tr><td>comparison operators</td><td>O(M)</font></td></tr>
-<tr><td>abs</td><td>O(M)</font></td></tr>
-<tr><td>pow</td><td>O(A1 * A2) <font color="#ff0000">check</font></td></tr>
-<tr><td>div</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
-<tr><td>sqrt</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td></tr>
+<table><tr><th>Function(s)</th><th>'gmp' implementation</th><th>'default' implementation</th></tr>
+<tr><td>default ctor</td><td>O(1)</td><td>O(1)</td></tr>
+<tr><td>integer ctors</td><td>O(1)</td><td>O(1)</td></tr>
+<tr><td>string ctors</td><td>O(A1) <font color="#ff0000">check</font></td><td>O(A1<sup>2</sup>)</td></tr>
+<tr><td>+, -, +=, -=</td><td>O(M)</td><td>O(M)</td></tr>
+<tr><td>*, *=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>O(M<sup>2</sup>)</td></tr>
+<tr><td>/, /=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>O(M<sup>2</sup>)</td></tr>
+<tr><td>%, %=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>O(M<sup>2</sup>)</td></tr>
+<tr><td>&amp;, &amp;=, |, |=, ^, ^=</td><td>O(M)</td><td>O(M)</td></tr>
+<tr><td>&lt;&lt;, &gt;&gt;</td><td>O(max(A1, 2<sup>A2</sup>)) <font color="#808080"> NB. O(2<sup>A2</sup>) is equal to O(shift amount)</font></td><td>O(max(A1, 2<sup>A2</sup>))</td></tr>
+<tr><td>&lt;&lt;=, &gt;&gt;=</td><td>O(max(N, 2<sup>A1</sup>)) <font color="#808080"> NB. O(2<sup>A1</sup>) is equal to O(shift amount)</font></td><td>O(max(N, 2<sup>A1</sup>))</td></tr>
+<tr><td>++, --</td><td>O(N)</td><td>O(N)</td></tr>
+<tr><td>+, -</td><td>O(1)</td><td>O(1)</td></tr>
+<tr><td>~</td><td>O(N)</td><td>O(N)</td></tr>
+<tr><td>bool conversions</td><td>O(1)</td><td>O(1)</td></tr>
+<tr><td>string conversions</td><td>O(N) <font color="#ff0000">check</font></td><td>O(N<sup>2</sup>)</td></tr>
+<tr><td>can_convert_to</td><td>O(1)</font></td><td>O(1)</td></tr>
+<tr><td>to_number</td><td>O(N)</font></td><td>O(N)</td></tr>
+<tr><td>comparison operators</td><td>O(M)</td><td>O(M)</td></tr>
+<tr><td>abs</td><td>O(1)</font></td><td>O(1)</td></tr>
+<tr><td>pow</td><td>O(A1 * A2) <font color="#ff0000">check</font></td><td>???</td></tr>
+<tr><td>div</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>O(M<sup>2</sup>)</tr>
+<tr><td>sqrt</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>???</td></tr>
 </table>
 
 <h2><a name="Exceptions">Exceptions</a></h2>
@@ -506,6 +506,8 @@ and documentation of bitwise operators.</p>
 <p>I shamelessly stole small parts of Boost.Rational documentation (and based
 the whole structure of this file on it), which was written by Paul Moore and
 Daryle Walker.</p>
+
+<p>I shamelessly stole some data for unit tests from Big Integer Libary by Richard Peters.</p>
 
 <p>Revised June 16, 2007</p>
 

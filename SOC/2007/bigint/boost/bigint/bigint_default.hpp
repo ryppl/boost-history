@@ -17,14 +17,36 @@
 #include <boost/bigint/bigint_util.hpp>
 
 namespace boost { namespace detail {
-	// Default implementation
-	template <template <class> class Storage> struct bigint_default_implementation
-	{
-		typedef unsigned int limb_t;
-		typedef boost::uint64_t limb2_t;
+	template <size_t N> struct bigint_default_implementation_config;
 
-		enum { limb_bit_number = sizeof(limb_t) * 8 };
-	#define limb_max std::numeric_limits<limb_t>::max()
+	template <> struct bigint_default_implementation_config<8>
+	{
+		typedef boost::uint8_t first;
+		typedef boost::uint16_t second;
+	};
+
+	template <> struct bigint_default_implementation_config<16>
+	{
+		typedef boost::uint16_t first;
+		typedef boost::uint32_t second;
+	};
+
+	template <> struct bigint_default_implementation_config<32>
+	{
+		typedef boost::uint32_t first;
+		typedef boost::uint64_t second;
+	};
+
+	// Default implementation
+	template <template <class> class Storage, size_t limb_bit_number = 32> struct bigint_default_implementation
+	{
+		typedef typename bigint_default_implementation_config<limb_bit_number>::first limb_t;
+		typedef typename bigint_default_implementation_config<limb_bit_number>::second limb2_t;
+
+		static limb_t limb_max()
+		{
+			return std::numeric_limits<limb_t>::max();
+		}
 
 		Storage<limb_t> data;
 		bool negative;
@@ -60,12 +82,12 @@ namespace boost { namespace detail {
 			if (number != 0)
 			{
 				data.resize(1);
-				data[0] = static_cast<limb_t>(number & limb_max);
+				data[0] = static_cast<limb_t>(number & limb_max());
 
 				size = 1;
 			}
 
-			if (number > limb_max)
+			if (number > limb_max())
 			{
 				data.resize(64 / limb_bit_number); // we know that limb_bit_number is 2^n
 				
@@ -73,7 +95,7 @@ namespace boost { namespace detail {
 				
 				while (number > 0)
 				{
-					data[size++] = static_cast<limb_t>(number & limb_max);
+					data[size++] = static_cast<limb_t>(number & limb_max());
 					number >>= limb_bit_number;
 				}
 			}
@@ -91,7 +113,7 @@ namespace boost { namespace detail {
 			{
 				limb2_t result = static_cast<limb2_t>(*i) * a + carry;
 
-				*i = static_cast<limb_t>(result & limb_max);
+				*i = static_cast<limb_t>(result & limb_max());
 
 				carry = static_cast<limb_t>(result >> limb_bit_number);
 			}
@@ -187,7 +209,7 @@ namespace boost { namespace detail {
 			{
 				limb2_t result = static_cast<limb2_t>(*li) + *ri + carry;
 
-				*i++ = static_cast<limb_t>(result & limb_max);
+				*i++ = static_cast<limb_t>(result & limb_max());
 
 				carry = static_cast<limb_t>(result >> limb_bit_number);
 			}
@@ -196,7 +218,7 @@ namespace boost { namespace detail {
 			{
 				limb2_t result = static_cast<limb2_t>(*li) + carry;
 
-				*i++ = static_cast<limb_t>(result & limb_max);
+				*i++ = static_cast<limb_t>(result & limb_max());
 
 				carry = static_cast<limb_t>(result >> limb_bit_number);
 			}
@@ -205,7 +227,7 @@ namespace boost { namespace detail {
 			{
 				limb2_t result = static_cast<limb2_t>(*ri) + carry;
 
-				*i++ = static_cast<limb_t>(result & limb_max);
+				*i++ = static_cast<limb_t>(result & limb_max());
 
 				carry = static_cast<limb_t>(result >> limb_bit_number);
 			}
@@ -266,7 +288,7 @@ namespace boost { namespace detail {
 
 				if (result > *li)
 				{
-					result = static_cast<limb2_t>(limb_max) + 1 + *li - result;
+					result = static_cast<limb2_t>(limb_max()) + 1 + *li - result;
 					borrow = 1;
 				}
 				else
@@ -275,7 +297,7 @@ namespace boost { namespace detail {
 					borrow = 0;
 				}
 
-				*i++ = static_cast<limb_t>(result & limb_max);
+				*i++ = static_cast<limb_t>(result & limb_max());
 			}
 
 			for (; li != li_end; ++li)
@@ -284,7 +306,7 @@ namespace boost { namespace detail {
 
 				if (result > *li)
 				{
-					result = static_cast<limb2_t>(limb_max) + 1 + *li - result;
+					result = static_cast<limb2_t>(limb_max()) + 1 + *li - result;
 					borrow = 1;
 				}
 				else
@@ -293,7 +315,7 @@ namespace boost { namespace detail {
 					borrow = 0;
 				}
 
-				*i++ = static_cast<limb_t>(result & limb_max);
+				*i++ = static_cast<limb_t>(result & limb_max());
 			}
 
 			for (; ri != ri_end; ++ri)
@@ -302,7 +324,7 @@ namespace boost { namespace detail {
 
 				if (result > 0)
 				{
-					result = static_cast<limb2_t>(limb_max) + 1 - result;
+					result = static_cast<limb2_t>(limb_max()) + 1 - result;
 					borrow = 1;
 				}
 				else
@@ -310,7 +332,7 @@ namespace boost { namespace detail {
 					borrow = 0;
 				}
 
-				*i++ = static_cast<limb_t>(result & limb_max);
+				*i++ = static_cast<limb_t>(result & limb_max());
 			}
 
 			if (borrow != 0)
@@ -318,7 +340,7 @@ namespace boost { namespace detail {
 				// we borrowed 2^number of bits in our number - we have to subtract it
 				// for this we need to complement all limbs to 2, and add 1 to the last limb.
 				for (limb_t* j = data.begin(); j != data.end(); ++j)
-					*j = limb_max- *j;
+					*j = limb_max()- *j;
 			
 				data[0]++;
 			}
@@ -393,7 +415,7 @@ namespace boost { namespace detail {
 				{
 					limb2_t result = static_cast<limb2_t>(*li) * *ri + *ci + carry;
 
-					*ci++ = static_cast<limb_t>(result & limb_max);
+					*ci++ = static_cast<limb_t>(result & limb_max());
 
 					carry = static_cast<limb_t>(result >> limb_bit_number);
 				}
@@ -402,7 +424,7 @@ namespace boost { namespace detail {
 				{
 					limb2_t result = static_cast<limb2_t>(*ci) + carry;
 					
-					*ci++ = static_cast<limb_t>(result & limb_max);
+					*ci++ = static_cast<limb_t>(result & limb_max());
 
 					carry = static_cast<limb_t>(result >> limb_bit_number);
 				}
@@ -413,24 +435,163 @@ namespace boost { namespace detail {
 			negative = lhs.negative ? !rhs.negative : rhs.negative;
 		}
 
+		void _div_unsigned(const bigint_default_implementation& lhs, const bigint_default_implementation& rhs, bigint_default_implementation& r)
+		{
+			if (rhs.data.empty())
+			{
+				volatile int i = 0;
+				i /= i;
+				return;
+			}
+			
+			if (lhs.data.empty())
+			{
+				r.assign(0);
+				assign(0);
+				return;
+			}
+
+			if (this == &r)
+			{
+				bigint_default_implementation rem;
+				_div_unsigned(lhs, rhs, rem);
+				r = rem;
+				return;
+			}
+
+			bigint_default_implementation x(lhs);
+			x.negative = false;
+
+			bigint_default_implementation y(rhs);
+			y.negative = false;
+
+			// without this our estimates for qd become very bad
+			limb_t d = static_cast<limb_t>((static_cast<limb2_t>(limb_max()) + 1) / (static_cast<limb_t>(y.data[y.data.size() - 1]) + 1));
+			x._mul_add(d, 0);
+			y._mul_add(d, 0);
+
+			data.resize(x.data.size());
+			r.data.resize(0);
+
+			limb_t* p = data.end();
+			limb_t* i = x.data.end();
+			
+			do
+			{
+				--i;
+				--p;
+
+				// xx = r * (limb_max() + 1) + x[i]
+				bigint_default_implementation xx;
+				xx.data.resize(r.data.size() + 1);
+				xx.data[0] = *i;
+
+				limb_t* xx_data = xx.data.begin() + 1;
+				for (const limb_t* ri = r.data.begin(); ri != r.data.end(); ++ri)
+					*xx_data++ = *ri;
+
+				if (xx.data.size() < y.data.size())
+				{
+					*p = 0;
+					r = xx;
+				}
+				else if (xx.data.size() == y.data.size())
+				{
+					bigint_default_implementation z;
+					z.sub(xx, y);
+
+					if (z.negative)
+					{
+						*p = 0;
+						r = xx;
+					}
+					else
+					{
+						*p = 1;
+						r = z;
+					}
+				}
+				else
+				{
+					// Guess a value for q [Knuth, vol.2, section 4.3.1]
+					limb_t qd;
+					
+					if (xx.data[xx.data.size()-1] >= y.data[y.data.size()-1])
+						qd = limb_max();
+					else
+						qd = static_cast<limb_t>(
+							((static_cast<limb2_t>(limb_max()) + 1) * xx.data[xx.data.size()-1] + xx.data[xx.data.size()-2])
+							/ y.data[y.data.size()-1]
+							);
+
+					bigint_default_implementation rs = y;
+					rs._mul_add(qd, 0);
+					rs.sub(xx, rs);
+					
+					// rs = xx - qd * y
+					
+					if (!rs.negative)
+					{
+						while (rs.compare(y) >= 0)
+						{
+							++qd;
+							rs.sub(rs, y);
+						}
+					}
+					else
+					{
+						while (rs.negative)
+						{
+							--qd;
+							rs.add(rs, y);
+						}
+					}
+					
+					*p = static_cast<limb_t>(qd);
+					r = rs;
+				}
+    		}
+    		while (i != x.data.begin());
+
+    		_normalize();
+
+    		if (!r.data.empty() && d > 1)
+    		{
+    			r._div_rem(d);
+    		}
+    		
+		}
+
 		void div(const bigint_default_implementation& lhs, const bigint_default_implementation& rhs)
 		{
+			bool neg = lhs.negative ? !rhs.negative : rhs.negative;
+			bigint_default_implementation r;
+			_div_unsigned(lhs, rhs, r);
+			negative = data.empty() ? false : neg;
 		}
 
 		void mod(const bigint_default_implementation& lhs, const bigint_default_implementation& rhs)
 		{
+			bool neg = lhs.negative;
+			bigint_default_implementation q;
+			q._div_unsigned(lhs, rhs, *this);
+			negative = data.empty() ? false : neg;
 		}
 
-		template <bool complement> limb_t _convert(limb_t limb)
+		// carry = 0 or carry = 1
+		template <bool complement> limb_t _convert(limb_t limb, limb_t& carry)
 		{
-			return complement ? limb_max - limb : limb;
+			if (complement)
+			{
+				limb2_t r = static_cast<limb2_t>(limb_max() - limb) + carry;
+				
+				carry = static_cast<limb_t>(r >> limb_bit_number);
+				return static_cast<limb_t>(r & limb_max());
+			}
+			else
+				return limb;
 		}
 		
-		template <bool complement> limb_t _convert_first(limb_t limb)
-		{
-			return complement ? limb_max - limb + 1 : limb;
-		}
-
 		template <bool lhs_neg, bool rhs_neg> void _or_(const bigint_default_implementation& lhs, const bigint_default_implementation& rhs)
 		{
 			const bool neg = lhs_neg || rhs_neg; // sign bit is or-ed
@@ -448,26 +609,21 @@ namespace boost { namespace detail {
 			
 			limb_t* i = data.begin();
 
-			if (li != li_end && ri != ri_end)
-			{
-				*i++ = _convert_first<neg>(_convert_first<lhs_neg>(*li) | _convert_first<rhs_neg>(*ri));
-				++li;
-				++ri;
-			}
-
+			limb_t carry = 1, lcarry = 1, rcarry = 1;
+			
 			for (; li != li_end && ri != ri_end; ++li, ++ri)
 			{
-				*i++ = _convert<neg>(_convert<lhs_neg>(*li) | _convert<rhs_neg>(*ri));
+				*i++ = _convert<neg>(_convert<lhs_neg>(*li, lcarry) | _convert<rhs_neg>(*ri, rcarry), carry);
 			}
 
 			for (; li != li_end; ++li)
 			{
-				*i++ = _convert<neg>(_convert<lhs_neg>(*li) | _convert<rhs_neg>(0)); // or with rhs sign bit
+				*i++ = _convert<neg>(_convert<lhs_neg>(*li, lcarry) | _convert<rhs_neg>(0, rcarry), carry); // or with rhs sign bit
 			}
 
 			for (; ri != ri_end; ++ri)
 			{
-				*i++ = _convert<neg>(_convert<lhs_neg>(0) | _convert<rhs_neg>(*ri)); // or with lhs sign bit
+				*i++ = _convert<neg>(_convert<lhs_neg>(0, lcarry) | _convert<rhs_neg>(*ri, rcarry), carry); // or with lhs sign bit
 			}
 
 			_normalize();
@@ -498,26 +654,21 @@ namespace boost { namespace detail {
 			
 			limb_t* i = data.begin();
 
-			if (li != li_end && ri != ri_end)
-			{
-				*i++ = _convert_first<neg>(_convert_first<lhs_neg>(*li) & _convert_first<rhs_neg>(*ri));
-				++li;
-				++ri;
-			}
+			limb_t carry = 1, lcarry = 1, rcarry = 1;
 
 			for (; li != li_end && ri != ri_end; ++li, ++ri)
 			{
-				*i++ = _convert<neg>(_convert<lhs_neg>(*li) & _convert<rhs_neg>(*ri));
+				*i++ = _convert<neg>(_convert<lhs_neg>(*li, lcarry) & _convert<rhs_neg>(*ri, rcarry), carry);
 			}
 
 			for (; li != li_end; ++li)
 			{
-				*i++ = _convert<neg>(_convert<lhs_neg>(*li) & _convert<rhs_neg>(0)); // and with rhs sign bit
+				*i++ = _convert<neg>(_convert<lhs_neg>(*li, lcarry) & _convert<rhs_neg>(0, rcarry), carry); // and with rhs sign bit
 			}
 
 			for (; ri != ri_end; ++ri)
 			{
-				*i++ = _convert<neg>(_convert<lhs_neg>(0) & _convert<rhs_neg>(*ri)); // and with lhs sign bit
+				*i++ = _convert<neg>(_convert<lhs_neg>(0, lcarry) & _convert<rhs_neg>(*ri, rcarry), carry); // and with lhs sign bit
 			}
 
 			_normalize();
@@ -548,26 +699,21 @@ namespace boost { namespace detail {
 			
 			limb_t* i = data.begin();
 
-			if (li != li_end && ri != ri_end)
-			{
-				*i++ = _convert_first<neg>(_convert_first<lhs_neg>(*li) ^ _convert_first<rhs_neg>(*ri));
-				++li;
-				++ri;
-			}
+			limb_t carry = 1, lcarry = 1, rcarry = 1;
 
 			for (; li != li_end && ri != ri_end; ++li, ++ri)
 			{
-				*i++ = _convert<neg>(_convert<lhs_neg>(*li) ^ _convert<rhs_neg>(*ri));
+				*i++ = _convert<neg>(_convert<lhs_neg>(*li, lcarry) ^ _convert<rhs_neg>(*ri, rcarry), carry);
 			}
 
 			for (; li != li_end; ++li)
 			{
-				*i++ = _convert<neg>(_convert<lhs_neg>(*li) ^ _convert<rhs_neg>(0)); // xor with rhs sign bit
+				*i++ = _convert<neg>(_convert<lhs_neg>(*li, lcarry) ^ _convert<rhs_neg>(0, rcarry), carry); // xor with rhs sign bit
 			}
 
 			for (; ri != ri_end; ++ri)
 			{
-				*i++ = _convert<neg>(_convert<lhs_neg>(0) ^ _convert<rhs_neg>(*ri)); // xor with lhs sign bit
+				*i++ = _convert<neg>(_convert<lhs_neg>(0, lcarry) ^ _convert<rhs_neg>(*ri, rcarry), carry); // xor with lhs sign bit
 			}
 
 			_normalize();
@@ -597,10 +743,94 @@ namespace boost { namespace detail {
 
 		void lshift(const bigint_default_implementation& lhs, boost::uint64_t rhs)
 		{
+			if (this == &lhs)
+			{
+				bigint_default_implementation copy = lhs;
+				return lshift(copy, rhs);
+			}
+
+			if (lhs.data.empty())
+			{
+				assign(0);
+				return;
+			}
+
+			data.resize(lhs.data.size() + rhs / limb_bit_number);
+
+			limb_t* di = data.begin() + rhs / limb_bit_number;
+
+			for (limb_t* i = data.begin(); i != di; ++i)
+				*i = 0;
+				
+			for (const limb_t* li = lhs.data.begin(); li != lhs.data.end(); ++li)
+				*di++ = *li;
+		
+			_mul_add(1 << (rhs % limb_bit_number), 0);
+
+			negative = lhs.negative;
 		}
 
 		void rshift(const bigint_default_implementation& lhs, boost::uint64_t rhs)
 		{
+			if (this == &lhs)
+			{
+				bigint_default_implementation copy = lhs;
+				return rshift(copy, rhs);
+			}
+
+			if (lhs.data.empty())
+			{
+				assign(0);
+				return;
+			}
+
+			if (rhs / limb_bit_number > lhs.data.size())
+			{
+				assign(lhs.negative ? -1 : 0);
+				return;
+			}
+
+			data.resize(lhs.data.size() - rhs / limb_bit_number);
+				
+			limb_t* di = data.begin();
+
+			for (const limb_t* li = lhs.data.begin() + rhs / limb_bit_number; li != lhs.data.end(); ++li)
+				*di++ = *li;
+				
+			limb_t r = _div_rem(1 << (rhs % limb_bit_number));
+
+			if (lhs.negative)
+			{
+				// if the result is zero, add sign bit
+				if (data.empty())
+				{
+					assign(-1);
+					return;
+				}
+
+				negative = true;
+
+				// we need to correct the result if there was a remainder
+				bool correct = (r != 0);
+
+				if (!correct)
+				{
+					const limb_t* li_end = lhs.data.begin() + rhs / limb_bit_number;
+					
+					for (const limb_t* li = lhs.data.begin(); li != li_end; ++li)
+						if (*li != 0)
+						{
+							correct = true;
+							break;
+						}
+				}
+
+				if (correct) dec();
+			}
+			else
+			{
+				negative = false;
+			}
 		}
 
 		void inc()
@@ -693,10 +923,28 @@ namespace boost { namespace detail {
 				Ch('u'), Ch('v'), Ch('w'), Ch('x'), Ch('y'), Ch('z')
 			};
 
+			limb_t base_power = base;
+			size_t count = 1;
+
+			while (static_cast<limb2_t>(base_power) * base <= limb_max())
+			{
+				base_power *= base;
+				++count;
+			}
+
 			while (!copy.data.empty())
 			{
-				result += digit_char_tab[copy._div_rem(static_cast<limb_t>(base))];
+				limb_t r = copy._div_rem(base_power);
+
+				for (size_t i = 0; i < count; ++i)
+				{
+					result += digit_char_tab[r % base];
+					r /= base;
+				}
 			}
+
+			while (result.size() > 1 && result[result.size() - 1] == '0')
+				result.erase(result.size() - 1);
 
 			if (negative) result += '-';
 
@@ -775,14 +1023,104 @@ namespace boost { namespace detail {
 		
 		void pow(const bigint_default_implementation& lhs, boost::uint64_t rhs)
 		{
+			if (lhs.data.empty())
+			{
+				assign(rhs == 0 ? 1 : 0);
+				return;
+			}
+
+			if (lhs.data.size() == 1 && lhs.data[0] == 1)
+			{
+				assign(lhs.negative ? (rhs % 2 ? -1 : 1) : 1);
+				return;
+			}
+
+			assign(1);
+
+			boost::uint64_t pot = 1;
+
+			// Find largest power of two that is >= rhs
+			while (pot < rhs && (pot << 1) != 0)
+				pot <<= 1;
+ 
+			// Now pot is the highest bit of rhs
+			if (pot > rhs)
+				pot >>= 1;
+
+			while (pot > 0)
+			{
+				mul(*this, *this);
+				
+				if ((rhs & pot) != 0)
+				{
+					mul(*this, lhs);
+				}
+  
+				pot >>= 1;
+			}
 		}
 		
 		void div(const bigint_default_implementation& lhs, const bigint_default_implementation& rhs, bigint_default_implementation& remainder)
 		{
+			bool q_neg = lhs.negative ? !rhs.negative : rhs.negative;
+			bool r_neg = lhs.negative;
+			_div_unsigned(lhs, rhs, remainder);
+			negative = data.empty() ? false : q_neg;
+			remainder.negative = remainder.data.empty() ? false : r_neg;
 		}
 		
 		void sqrt(const bigint_default_implementation& lhs)
 		{
+			if (lhs.negative)
+			{
+				volatile int i = 0;
+				i /= i;
+				return;
+			}
+
+			if (lhs.data.empty())
+			{
+				assign(0);
+				return;
+			}
+
+			bigint_default_implementation a; // approximation
+			a.data.resize((lhs.data.size() + 1) / 2);
+			
+			for (limb_t* i = a.data.begin(); i != a.data.end(); ++i)
+				*i = 0;
+		
+			a.data[a.data.size() - 1] = lhs.data[lhs.data.size() - 1] / 2;
+			
+			if (a.data[a.data.size() - 1] == 0)
+				a.data[a.data.size() - 1] = 1;
+		
+			// iterate
+			for (;;)
+			{
+				bigint_default_implementation ia;
+				ia.div(lhs, a);
+				
+				bigint_default_implementation na;
+				na.add(ia, a);
+				na._div_rem(2);
+				// na = (lhs / a + a) / 2
+
+				// if |ia-a|=1, then na = min(ia, a), and it's our result
+				if (na.compare(a) == 0)	// a = na
+				{
+					*this = na;
+					return;
+				}
+				
+				if (na.compare(ia) == 0) // a = ia
+				{
+					*this = na;
+					return;
+				}
+
+				a = na;
+			}
 		}
 	};
 } }  // namespace boost::detail

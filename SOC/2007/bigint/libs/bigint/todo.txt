@@ -225,23 +225,29 @@ Status: implemented
 + multiplication (*)
 Status: implemented
 
-- bitwise shifts (<<, >>)
-Status: needs implementing
++ bitwise shifts (<<, >>)
+Status: implemented
 
-- division (/, %, div function)
-Status: needs implementing
++ pow function
+Status: implemented
 
-- sqrt function
-Status: needs implementing
++ sqrt function
+Status: implemented
 
-- pow function
-Status: needs implementing
++ division (/, %, div function)
+Status: implemented
 
-- make implementation parametrizable by config structure, make a default structure
-Status: needs implementing
++ make implementation parametrizable by config structure, make a default structure
+Status: implemented
 
-- add limb=unsigned char, limb=unsigned short tests
-Status: needs implementing
++ add limb=unsigned char, limb=unsigned short tests
+Status: implemented
+
++ fix bug with bitwise operations for negative numbers
+Status: fixed
+
++ optimize string conversion
+Status: implemented; 6x speedup for fibonacci(10^6)
 
 -----------------------------------------------
 
@@ -255,6 +261,9 @@ may be a solution IF own allocation is performed - depends on where allocations 
 
 Alternatively, only parts of GMP that actually are not exception safe may be rewritten (if they do not include system layer
 (mpn), of course).
+
+28.07.07. Further research showed that limb allocation in system layer (mpn) occurs for multiplication (Toom-3 and FFT),
+string <-> number conversions, division, sqrt, and perhaps somewhere else :(
 
 -----------------------------------------------
 Extra features:
