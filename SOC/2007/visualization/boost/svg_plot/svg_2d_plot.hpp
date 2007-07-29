@@ -10,7 +10,7 @@
 #ifndef _BOOST_SVG_SVG_2D_PLOT_HPP
 #define _BOOST_SVG_SVG_2D_PLOT_HPP
 
-#define BOOST_PARAMETER_MAX_ARITY 11
+#define BOOST_PARAMETER_MAX_ARITY 12
 
 #include <boost/bind.hpp>
 
@@ -60,6 +60,7 @@ BOOST_PARAMETER_NAME(size)
 #endif
 
 BOOST_PARAMETER_NAME(line_on)
+BOOST_PARAMETER_NAME(bezier_on)
 BOOST_PARAMETER_NAME(line_color)
 BOOST_PARAMETER_NAME(area_fill_color)
 
@@ -430,73 +431,145 @@ private:
         }
     }
 
+    void _transform_pair(std::pair<double, double>& pt)
+    {
+        _transform_point(pt.first, pt.second);
+    }
+
+    void _draw_bezier_lines(const svg_2d_plot_series& series)
+    {
+        g_element& g_ptr = image.get_g_element(detail::PLOT_PLOT_LINES)
+                                .add_g_element();
+
+        g_ptr.style().stroke_color(series.line_style.color);
+        path_element& path = g_ptr.path();
+
+        std::pair<double, double> n_minus_2, n_minus_1, n;
+        std::pair<double, double> fwd_vtr, back_vtr;
+
+        if(series.series.size() > 2)
+        {
+            std::multimap<double,double>::const_iterator iter = series.series.begin();
+
+            n_minus_1 = *(iter++);
+            n = *(iter++);
+
+            _transform_pair(n_minus_1);
+            _transform_pair(n);
+    
+            path.M(n_minus_1.first, n_minus_1.second);
+
+            for(; iter != series.series.end(); ++iter)
+            {
+                n_minus_2 = n_minus_1;
+                n_minus_1 = n;
+                n = *iter;
+
+                _transform_pair(n);
+
+                back_vtr.first = ((n_minus_1.first - n.first) + 
+                                 (n_minus_2.first - n_minus_1.first)) * .2;
+
+                back_vtr.second = ((n_minus_1.second - n.second) +
+                                  (n_minus_2.second - n_minus_1.second)) * .2;
+
+                path.S(n_minus_1.first + back_vtr.first, n_minus_1.second + back_vtr.second,
+                       n_minus_1.first, n_minus_1.second);
+            }
+
+            back_vtr.first = 0;
+            back_vtr.second = (n.second - n_minus_1.second)*.2;
+
+            path.S(n.first + back_vtr.first, n.second + back_vtr.second,
+                   n.first, n.second);
+        }
+
+        else
+        {
+            _draw_straight_lines(series);
+        }
+        
+    }
+
+    void _draw_straight_lines(const svg_2d_plot_series& series)
+    {
+        double prev_x, prev_y, temp_x(0.), temp_y;
+
+        g_element& g_ptr = image.get_g_element(detail::PLOT_PLOT_LINES).add_g_element();
+
+        g_ptr.style().stroke_color(series.line_style.color);
+
+        path_element& path = g_ptr.path();
+
+        if(series.series.size() > 1)
+        {
+            std::multimap<double, double>::const_iterator j = series.series.begin();
+            prev_x = (*j).first;
+            prev_y = 0.;
+
+            // If we have to fill the area under the plot, we first have to
+            // move from the X-axis to the first point.
+
+            _transform_point(prev_x, prev_y);
+
+            if(series.line_style.area_fill != blank)
+            {
+                path.style().fill_color(series.line_style.area_fill);
+                path.M(prev_x, prev_y);
+            }
+
+            _transform_y(prev_y = (*j).second);
+
+            if(series.line_style.area_fill != blank)
+            {
+                path.style().fill_color(series.line_style.area_fill);
+                path.L(prev_x, prev_y);
+            }
+
+            else
+            {
+                path.M(prev_x, prev_y);
+            }
+            ++j;
+
+            for(; j != series.series.end(); ++j)
+            {
+                temp_x = (*j).first;
+                temp_y = (*j).second;
+
+                _transform_point(temp_x, temp_y);
+
+                path.L(temp_x, temp_y);
+                
+                if(series.line_style.area_fill == blank)
+                {
+                    path.M(temp_x, temp_y);
+                }
+
+                prev_x = temp_x;
+                prev_y = temp_y;
+            }
+
+            if(series.line_style.area_fill != blank)
+            {
+                _transform_y(temp_y = 0.);
+                path.L(temp_x, temp_y).z();
+            }
+        }
+    }
+
     void _draw_plot_lines()
     {
-        double prev_x, prev_y, temp_x(0.), temp_y(0.);
-     
         for(unsigned int i = 0; i < series.size(); ++i)
         {
-            g_element& g_ptr = image.get_g_element(detail::PLOT_PLOT_LINES).add_g_element();
-
-            g_ptr.style().stroke_color(series[i].line_style.color);
-
-            path_element& path = g_ptr.path();
-
-            if(series[i].series.size() > 1)
+            if(series[i].line_style.bezier_on)
             {
-                std::multimap<double, double>::const_iterator j = series[i].series.begin();
-                prev_x = (*j).first;
-                prev_y = 0.;
+                _draw_bezier_lines(series[i]);
+            }
 
-                // If we have to fill the area under the plot, we first have to
-                // move from the X-axis to the first point.
-
-                _transform_point(prev_x, prev_y);
-
-                if(series[i].line_style.area_fill != blank)
-                {
-                    path.style().fill_color(series[i].line_style.area_fill);
-                    path.M(prev_x, prev_y);
-                }
-
-                
-                _transform_y(prev_y = (*j).second);
-
-                if(series[i].line_style.area_fill != blank)
-                {
-                    path.style().fill_color(series[i].line_style.area_fill);
-                    path.L(prev_x, prev_y);
-                }
-
-                else
-                {
-                    path.M(prev_x, prev_y);
-                }
-                ++j;
-
-                for(; j != series[i].series.end(); ++j)
-                {
-                    temp_x = (*j).first;
-                    temp_y = (*j).second;
-
-                    _transform_point(temp_x, temp_y);
-
-                    path.L(temp_x, temp_y);
-                    
-                    if(series[i].line_style.area_fill == blank)
-                    {
-                        path.M(temp_x, temp_y);
-                    }
-
-                    prev_x = temp_x;
-                    prev_y = temp_y;
-                }
-
-                if(series[i].line_style.area_fill != blank)
-                {
-                    _transform_y(temp_y = 0.);
-                    path.L(temp_x, temp_y).z();
-                }
+            else
+            {
+                _draw_straight_lines(series[i]);
             }
         }
     }
@@ -818,11 +891,12 @@ BOOST_PARAMETER_MEMBER_FUNCTION
         (point_style, (point_shape), circle)
         (size, (int), 10)
         (line_on, (bool), true)
+        (bezier_on, (bool), false)
         (x_functor, *, boost_default_2d_convert())
     )
 )
 {
-    plot_line_style line_style(line_color, line_on);
+    plot_line_style line_style(line_color, line_on, bezier_on);
 
     if(area_fill_color != none)
     {

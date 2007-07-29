@@ -12,7 +12,7 @@
 #ifndef _BOOST_SVG_SVG_1D_PLOT_HPP
 #define _BOOST_SVG_SVG_1D_PLOT_HPP
 
-#define BOOST_PARAMETER_MAX_ARITY 11
+#define BOOST_PARAMETER_MAX_ARITY 12
 
 #include <boost/bind.hpp>
 

@@ -39,9 +39,10 @@ struct plot_line_style
     svg_color_constant area_fill;
 
     bool line_on;
+    bool bezier_on;
 
-    plot_line_style(const svg_color& _col, bool _on):
-        color(_col), line_on(_on), area_fill(blank)
+    plot_line_style(const svg_color& _col, bool _on, bool _bezier_on = false):
+        color(_col), line_on(_on), area_fill(blank), bezier_on(_bezier_on)
     {
     }
 };

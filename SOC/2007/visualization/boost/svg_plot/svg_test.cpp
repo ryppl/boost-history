@@ -10,17 +10,17 @@ using std::vector;
 
 double f(double x)
 {
-    return sqrt(x);
+    return sin(x);
 }
 
 double g(double x)
 {
-    return -2 + x*x;
+    return cos(x);
 }
 
 double h(double x)
 {
-    return 2*x;
+    return tan(x);
 }
 
 
@@ -45,25 +45,30 @@ int main()
     svg_2d_plot my_2d_plot;
     svg_1d_plot my_1d_plot;
 
-    for(double i=0; i<10; i+=1)
+    double pi = 3.1415926535;
+  
+    for(double i=0; i<10; i+=pi/4.)
     {
-        data1[i - 5.] = f(i);
+        data1[i] = f(i);
         data2[i] = g(i);
-        data3.push_back(h(i) - 10.);
+        data3.push_back(h(i));
     }
 
     // size/scale settings
     my_2d_plot.image_size(500, 350);
 
     my_2d_plot.title("Hello, operator")
-           .plot_window_on(true)
-           .legend_on(true);
+           .plot_window_on(true);
 
     my_2d_plot.title_on(true)
            .x_label_on(true)
            .y_major_labels_on(true)
            .x_label("sqrt(x)")
-           .x_major_grid_on(false);
+           .x_major_grid_on(false)
+           .y_range(-1.1, 1.1)
+           .x_range(-.5, 10.5)
+           .y_major_interval(1)
+           .x_major_interval(pi/2.);
 //           .y_external_style_on(true)
 //           .x_external_style_on(true);
 
@@ -77,17 +82,17 @@ int main()
            .x_label_on(true)
            .x_label("sqrt(x)");
 
-    my_2d_plot.plot_2d(data1, "sqrt(x)");
+    my_2d_plot.plot(data1, "sqrt(x)", _bezier_on = true, _size = 5);
 
-    my_2d_plot.plot_2d(data2, "Not sqrt(x)", 
+    my_2d_plot.plot(data2, "Not sqrt(x)", 
         _size = 6,
         _point_style = square,
         _stroke_color = hotpink,
         _line_color = black,
         _fill_color = yellow,
-        _area_fill_color = red);
+        _bezier_on = true);
     
-    my_1d_plot.plot(data3, "1D Plot");
+//    my_2d_plot.plot(data3, "1D Plot", _bezier_on = true, _size = 5);
 
     my_1d_plot.write("./test1d.svg");
     my_2d_plot.write("./test2d.svg");

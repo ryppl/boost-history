@@ -652,7 +652,7 @@ public:
         return derived();
     }
 
-    Derived& x_major_tick(double _inter)
+    Derived& x_major_interval(double _inter)
     {
         derived().x_major = _inter;
         return derived();

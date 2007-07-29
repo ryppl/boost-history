@@ -441,6 +441,60 @@ struct q_path: public path_point
     }
 };
 
+struct s_path: public path_point
+{
+    double x1, y1, x, y;
+    
+    void write(std::ostream& o_str)
+    {
+        if(relative)
+        {
+            o_str<<"s";
+        }
+
+        else
+        {
+            o_str<<"S";
+        }
+
+        o_str<<x1<<" "<<y1<<" "
+             <<x<<" "<<y<<" ";
+    }
+
+    s_path(double _x1, double _y1,
+           double _x, double _y, bool _rel = false):
+           x1(_x1), y1(_y1), x(_x), y(_y), path_point(_rel)
+    {
+        
+    }
+};
+
+struct t_path: public path_point
+{
+    double x, y;
+    
+    void write(std::ostream& o_str)
+    {
+        if(relative)
+        {
+            o_str<<"t";
+        }
+
+        else
+        {
+            o_str<<"T";
+        }
+
+        o_str<<x<<" "<<y<<" ";
+    }
+
+    t_path(double _x, double _y, bool _rel = false):
+           x(_x), y(_y), path_point(_rel)
+    {
+        
+    }
+};
+
 class path_element: public svg_element
 {
 private:
@@ -532,6 +586,30 @@ public:
         return *this;
     }
 
+    path_element& s(double x1, double y1, double x, double y)
+    {
+        path.push_back(new s_path(x1, y1, x, y, true));
+        return *this;
+    }
+    
+    path_element& S(double x1, double y1, double x, double y)
+    {
+        path.push_back(new s_path(x1, y1, x, y, false));
+        return *this;
+    }
+
+    path_element& t(double x, double y)
+    {
+        path.push_back(new t_path(x, y, true));
+        return *this;
+    }
+
+    path_element& T(double x, double y)
+    {
+        path.push_back(new t_path(x, y, false));
+        return *this;
+    }
+
     void write(std::ostream& o_str)
     {
         o_str<<"<path d=\"";
@@ -546,7 +624,7 @@ public:
         
         style_info.write(o_str);
 
-        o_str<<"/>";
+        o_str<<"fill = \"none\" />";
     }
 };
 
