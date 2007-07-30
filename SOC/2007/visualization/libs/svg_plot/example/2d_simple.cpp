@@ -33,6 +33,6 @@ int main()
 	my_plot.plot(map1, "Series 1", blue);
 	my_plot.plot(map2, "Series 2", orange);
 
-    my_plot.write("D:\\simple_2d.svg");
+    my_plot.write("./simple_2d.svg");
 	return 0;
 }

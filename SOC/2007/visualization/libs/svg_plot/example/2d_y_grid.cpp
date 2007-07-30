@@ -41,6 +41,6 @@ int main()
 	my_plot.plot(map1, "Series 1", blue);
 	my_plot.plot(map2, "Series 2", orange);
 
-    my_plot.write("D:\\2d_y_grid.svg");
+    my_plot.write("./2d_y_grid.svg");
 	return 0;
 }

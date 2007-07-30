@@ -56,7 +56,7 @@ int main()
            .y_major_grid_color(black);
 
 	//X axis settings.
-	my_plot.x_major_tick(2)
+	my_plot.x_major_interval(2)
 	       .x_major_tick_length(14)
 	       .x_major_tick_width(1)
 	       .x_minor_tick_length(7)
@@ -73,7 +73,7 @@ int main()
 	my_plot.plot(data1, "Sqrt(x)",  _point_style = none,
         _area_fill_color = red);
 
-    my_plot.write("D:\\2d_area_fill.svg");
+    my_plot.write("./2d_area_fill.svg");
 
 	return 0;
 }

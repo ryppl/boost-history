@@ -43,6 +43,6 @@ int main()
 	my_plot.plot(elaine_times, "Elaine", orange);
 
     // Write to file.
-    my_plot.write("D:\\1d_x_grid.svg");
+    my_plot.write("./1d_x_grid.svg");
 	return 0;
 }

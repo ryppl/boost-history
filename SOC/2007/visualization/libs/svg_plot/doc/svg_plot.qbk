@@ -218,7 +218,7 @@ all costs.
 [endsect][/section:tutorial_1d_code_example]
 
 [section:1d_simple_image Image]
-[$images/simple.png]
+[$images/1d_simple.png]
 [endsect][/section:1d_simple_image]
 
 [section:tutorial_syntax_explanation A note on syntax]
@@ -259,7 +259,7 @@ All of the setter methods are fairly self-explanatory. To walk through it once,
 
 * the title, which will appear at the top of the graph, will say "Race Times". 
 * `legend_on(true)` means that the legend will show up. 
-* `x_range(-1, 11)` means that the axis displayed will be between -1 and 11, as you can see in the above images.
+* `x_range(-1, 11)` means that the axis displayed will be between -1 and 11, as you can see in the above image.
 	
 	my_plot.plot(my_data, "Race times");
 
@@ -388,7 +388,7 @@ To style it, you would use the following calls:
 
 This will produce something like the following image:
 
-(Insert image)
+[$images/1d_x_grid.png]
 
 [endsect] [/section:x_axis_grid_lines]
 
@@ -401,7 +401,7 @@ For an alternate way to display a regular axis, you can use an external style:
 The axis is still styled using the normal methods. The following is an 
 example of the style that you can produce with this.
 
-(insert image here)
+[$images/1d_x_external.png]
 
 [important If the axis is turned off, `x_external_style_on(true)` will not 
 turn the axis back on. To do that, you must call `axis_on(true)`]
@@ -573,14 +573,14 @@ This writes our plot to the file "simple_2d.svg".
 		my_plot.plot(data3, "-1 + 2x",  red,
 			     _point_style = square);
 	
-		my_plot.write("1d_complex.svg");
+		my_plot.write("2d_full.svg");
 	
 		return 0;
 	}
 
 This produces the following output:
 
-[$images/2d_complex.png]
+[$images/2d_full.png]
 
 A little bit of color customization goes a long way!
 
@@ -603,7 +603,7 @@ To style it, you would use the following calls:
 
 This will produce something like the following image:
 
-(Insert image)
+[$images/2d_y_grid.png]
 
 [endsect][/section:y_grid_lines Y Axis Grid Lines]
 [section:external_y_axis External Y Axis Style]
@@ -611,11 +611,6 @@ This will produce something like the following image:
 For an alternate way to display a regular axis, you can use an external style:
 
 	my_plot.y_external_style_on(true);
-
-The axis is still styled using the normal methods. The following is an 
-example of the style that you can produce with this.
-
-(insert image here)
 
 [important If the axis is turned off, `y_external_style_on(true)` will not 
 turn the axis back on. To do that, you must call `axis_on(true)`]
@@ -633,9 +628,23 @@ When there is a call to the plot() method, define `_area_fill_color`
 
 This produces the following image:
 
-(Insert image here!)
+[$images/2d_area_fill.png]
 
 [endsect] [/section:external_y_axis]
+
+[section:curve_interpolation Curve Interpolation]
+
+If you would like an interpolated curve shown over your data, simply use the following command:
+
+	my_plot.plot(data, "Series 1", _bezier_curve = "true");
+
+This produces something like the following images:
+
+[$images/2d_bezier.png]
+
+[warning The `_bezier_curve` feature is still very much in its infancy. If you play nice with it, it will play nice with you, but it is still buggy. Do not use this feature with curves that have a limit (`-NaN`, for example), or with data that has high irregularity in X-Axis spacing (a clump of points between (0, 1) on the X axis, with the next one at 100 on the X axis, for example)]
+
+[endsect] [/curve_interpolation]
 [endsect] [/2d_special Tutorial: 2D Special Features]
 
 [section:plot_defaults Defaults]

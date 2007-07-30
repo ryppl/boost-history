@@ -30,6 +30,6 @@ int main()
     my_plot.plot(dan_times, "Dan", blue);
 	my_plot.plot(elaine_times, "Elaine", orange);
 
-    my_plot.write("D:\\1d_simple.svg");
+    my_plot.write("./1d_simple.svg");
 	return 0;
 }

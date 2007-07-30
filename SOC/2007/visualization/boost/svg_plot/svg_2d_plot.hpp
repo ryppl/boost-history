@@ -69,10 +69,23 @@ class boost_default_2d_convert
 public:
     typedef std::pair<double, double> result_type;
 
+    double i;
+
+    double start(double _i) 
+    {
+        i = _i;
+    }
+
     template <class T, class U>
     std::pair<double, double> operator()(const std::pair<T, U>& a) const
     {
         return std::pair<double, double>((double)(a.first), (double)(a.second));
+    }
+
+    template <class T>
+    std::pair<double, double> operator()(T val) const
+    {
+        return std::pair<double, double>(i, (double)val);
     }
 };
 
@@ -898,7 +911,7 @@ BOOST_PARAMETER_MEMBER_FUNCTION
 {
     plot_line_style line_style(line_color, line_on, bezier_on);
 
-    if(area_fill_color != none)
+    if(area_fill_color != blank)
     {
         line_style.area_fill=area_fill_color;
     }

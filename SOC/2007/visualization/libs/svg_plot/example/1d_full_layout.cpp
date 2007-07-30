@@ -67,7 +67,7 @@ int main()
 	       .title_color(white);
 
 	//axis settings
-	my_plot.x_major_tick(2)
+	my_plot.x_major_interval(2)
 	       .x_major_tick_length(14)
 	       .x_major_tick_width(1)
 	       .x_minor_tick_length(7)
@@ -81,7 +81,7 @@ int main()
 	my_plot.plot(data2, "Tigers", orange);
 	my_plot.plot(data3, "Bears",  red);
 
-    my_plot.write("D:\\1d_complex.svg");
+    my_plot.write("./1d_complex.svg");
 
 	return 0;
 }

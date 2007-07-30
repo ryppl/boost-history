@@ -29,6 +29,7 @@
 <dt><span class="section"><a href="2d_special.html#svg_plot.2d_special.y_grid_lines"> Y Axis Grid Lines</a></span></dt>
 <dt><span class="section"><a href="2d_special.html#svg_plot.2d_special.external_y_axis"> External Y Axis Style</a></span></dt>
 <dt><span class="section"><a href="2d_special.html#svg_plot.2d_special.fill_axis_plot"> Fill the area between the plot and the axis</a></span></dt>
+<dt><span class="section"><a href="2d_special.html#svg_plot.2d_special.curve_interpolation"> Curve Interpolation</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -52,7 +53,7 @@
         This will produce something like the following image:
       </p>
 <p>
-        (Insert image)
+        <span class="inlinemediaobject"><img src="../images/2d_y_grid.png" alt="2d_y_grid"></span>
       </p>
 </div>
 <div class="section" lang="en">
@@ -64,13 +65,6 @@
 <pre class="programlisting">
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">y_external_style_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
 </pre>
-<p>
-        The axis is still styled using the normal methods. The following is an example
-        of the style that you can produce with this.
-      </p>
-<p>
-        (insert image here)
-      </p>
 <div class="important"><table border="0" summary="Important">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../images/important.png"></td>
@@ -98,8 +92,40 @@
         This produces the following image:
       </p>
 <p>
-        (Insert image here!)
+        <span class="inlinemediaobject"><img src="../images/2d_area_fill.png" alt="2d_area_fill"></span>
       </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.2d_special.curve_interpolation"></a> Curve Interpolation</h3></div></div></div>
+<p>
+        If you would like an interpolated curve shown over your data, simply use
+        the following command:
+      </p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">data</span><span class="special">,</span> <span class="string">"Series 1"</span><span class="special">,</span> <span class="identifier">_bezier_curve</span> <span class="special">=</span> <span class="string">"true"</span><span class="special">);</span>
+</pre>
+<p>
+        This produces something like the following images:
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../images/2d_bezier.png" alt="2d_bezier"></span>
+      </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td colspan="2" align="left" valign="top"><p>
+          The <code class="computeroutput"><span class="identifier">_bezier_curve</span></code> feature
+          is still very much in its infancy. If you play nice with it, it will play
+          nice with you, but it is still buggy. Do not use this feature with curves
+          that have a limit (<code class="computeroutput"><span class="special">-</span><span class="identifier">NaN</span></code>,
+          for example), or with data that has high irregularity in X-Axis spacing
+          (a clump of points between (0, 1) on the X axis, with the next one at 100
+          on the X axis, for example)
+        </p></td></tr>
+</table></div>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

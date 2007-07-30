@@ -63,7 +63,7 @@ int main()
 	       .title_color(white);
 
 	//X axis settings.
-	my_plot.x_major_tick(2)
+	my_plot.x_major_interval(2)
 	       .x_major_tick_length(14)
 	       .x_major_tick_width(1)
 	       .x_minor_tick_length(7)
@@ -82,7 +82,7 @@ int main()
 	my_plot.plot(data3, "-1 + 2x",  yellow,
 		     _point_style = square, _size = 5);
 
-    my_plot.write("D:\\2d_full.svg");
+    my_plot.write("./2d_full.svg");
 
 	return 0;
 }
