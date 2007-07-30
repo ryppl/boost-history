@@ -20,10 +20,7 @@
 #include <stdexcept>
 
 #include <boost/cerrno.hpp> // we don't like doing this, but it appears
-                            // unavoidable to implement posix_errno.
-# ifdef BOOST_WINDOWS_API
-#   include <winerror.h>
-# endif
+                            // unavoidable to portably implement posix_errno.
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -132,6 +129,7 @@ namespace boost
       virtual ~error_category(){}
       virtual const std::string & name() const = 0;
       virtual posix::posix_errno posix( int ev) const = 0;
+      virtual std::string message( int ev ) const = 0;
 
       bool operator==(const error_category & rhs) const { return this == &rhs; }
       bool operator!=(const error_category & rhs) const { return !(*this == rhs); }
@@ -141,8 +139,9 @@ namespace boost
       }
     };
 
-    //  predefined system_category  ------------------------------------------//
+    //  predefined error categories  -----------------------------------------//
 
+    BOOST_SYSTEM_DECL extern const error_category & posix_category;
     BOOST_SYSTEM_DECL extern const error_category & system_category;
 
     //  class error_code  ----------------------------------------------------//
@@ -158,7 +157,7 @@ namespace boost
     public:
 
       // constructors:
-      error_code()                                      : m_val(0), m_cat(&system_category) {}
+      error_code()                                      : m_val(0), m_cat(&posix_category) {}
       error_code( int val, const error_category & cat ) : m_val(val), m_cat(&cat) {}
 
       template<typename Enum>
@@ -181,13 +180,14 @@ namespace boost
       void clear()
       {
         m_val = 0;
-        m_cat = &system_category;
+        m_cat = &posix_category;
       }
 
       // observers:
-      int                     value() const         { return m_val; }
-      const error_category &  category() const      { return *m_cat; }
-      posix::posix_errno      posix() const         { return m_cat->posix(value()); }        
+      int                     value() const    { return m_val; }
+      const error_category &  category() const { return *m_cat; }
+      posix::posix_errno      posix() const    { return m_cat->posix(value()); }
+      std::string             message() const  { return m_cat->message(value()); }
 
       typedef void (*unspecified_bool_type)();
       static void unspecified_bool_true() {}
@@ -205,27 +205,28 @@ namespace boost
       // relationals:
       bool operator==( const error_code & rhs ) const
       {
-        return value() == rhs.value() && category() == rhs.category();
+        if ( category() == rhs.category() ) return value() == rhs.value();
+        return (category() == posix_category || rhs.category() == posix_category)
+          && posix() == rhs.posix();
       }
+
       bool operator!=( const error_code & rhs ) const
       {
         return !(*this == rhs);
       }
-      bool operator<( const error_code & rhs ) const
-      {
-        return category() < rhs.category() 
-          || ( category() == rhs.category() && value() < rhs.value() );
-      }
-      bool operator<=( const error_code & rhs ) const { return *this == rhs || *this < rhs; }
-      bool operator> ( const error_code & rhs ) const { return !(*this <= rhs); }
-      bool operator>=( const error_code & rhs ) const { return !(*this < rhs); }
 
     private:
       int                     m_val;
       const error_category *  m_cat;
     };
 
+
     //  non-member functions  ------------------------------------------------//
+
+    //  posix::posix_errno make_error_code:
+    inline error_code make_error_code( posix::posix_errno e )
+      { return error_code( e, posix_category ); }
+
 
     // TODO: both of these may move elsewhere, but the LWG hasn't spoken yet.
 
@@ -245,113 +246,6 @@ namespace boost
               [ec.category().name().size()-1]) << 16)
             : 0);
     }
-
-    //  implementation specific interfaces  ----------------------------------//
-
-#ifdef BOOST_POSIX_API
-  // POSIX-based Operating System:
-
-  inline error_code make_error_code(posix::posix_errno e)
-    { return error_code(e,system_category); }
-
-  namespace sys
-  {
-    enum other_error
-    {
-      // POSIX-like operating systems typically extend the POSIX errno.h macros.
-      // These names and values are based on Cygwin sys/errno.h.
-      // It isn't clear exactly which added errors we want to support, so for
-      // now we just provide a few to ensure the mechanism works.
-      // Users can always fall back on the macros.
-#   ifdef DEADLOCK
-      deadlock = DEADLOCK,
-#   endif
-#   ifdef ENONET
-      no_net = ENONET,
-#   endif
-#   ifdef ENOPKG
-      no_package = ENOPKG,
-#   endif
-#   ifdef ENOSHARE
-      no_share = ENOSHARE,
-#   endif
-    };
-  }
-
-  inline error_code make_error_code(sys::other_error e)
-    { return error_code(e,system_category); }
-
-#else
-  // Windows:
-  namespace sys
-  {
-    enum windows_error
-    {
-      // These names and values are based on Windows winerror.h
-      invalid_function = ERROR_INVALID_FUNCTION,
-      file_not_found = ERROR_FILE_NOT_FOUND,
-      path_not_found = ERROR_PATH_NOT_FOUND,
-      too_many_open_files = ERROR_TOO_MANY_OPEN_FILES,
-      access_denied = ERROR_ACCESS_DENIED,
-      invalid_handle = ERROR_INVALID_HANDLE,
-      arena_trashed = ERROR_ARENA_TRASHED,
-      not_enough_memory = ERROR_NOT_ENOUGH_MEMORY,
-      invalid_block = ERROR_INVALID_BLOCK,
-      bad_environment = ERROR_BAD_ENVIRONMENT,
-      bad_format = ERROR_BAD_FORMAT,
-      invalid_access = ERROR_INVALID_ACCESS,
-      outofmemory = ERROR_OUTOFMEMORY,
-      invalid_drive = ERROR_INVALID_DRIVE,
-      current_directory = ERROR_CURRENT_DIRECTORY,
-      not_same_device = ERROR_NOT_SAME_DEVICE,
-      no_more_files = ERROR_NO_MORE_FILES,
-      write_protect = ERROR_WRITE_PROTECT,
-      bad_unit = ERROR_BAD_UNIT,
-      not_ready = ERROR_NOT_READY,
-      bad_command = ERROR_BAD_COMMAND,
-      crc = ERROR_CRC,
-      bad_length = ERROR_BAD_LENGTH,
-      seek = ERROR_SEEK,
-      not_dos_disk = ERROR_NOT_DOS_DISK,
-      sector_not_found = ERROR_SECTOR_NOT_FOUND,
-      out_of_paper = ERROR_OUT_OF_PAPER,
-      write_fault = ERROR_WRITE_FAULT,
-      read_fault = ERROR_READ_FAULT,
-      gen_failure = ERROR_GEN_FAILURE,
-      sharing_violation = ERROR_SHARING_VIOLATION,
-      lock_violation = ERROR_LOCK_VIOLATION,
-      wrong_disk = ERROR_WRONG_DISK,
-      sharing_buffer_exceeded = ERROR_SHARING_BUFFER_EXCEEDED,
-      handle_eof = ERROR_HANDLE_EOF,
-      handle_disk_full= ERROR_HANDLE_DISK_FULL,
-      rem_not_list = ERROR_REM_NOT_LIST,
-      dup_name = ERROR_DUP_NAME,
-      bad_net_path = ERROR_BAD_NETPATH,
-      network_busy = ERROR_NETWORK_BUSY,
-      // ...
-      file_exists = ERROR_FILE_EXISTS,
-      cannot_make = ERROR_CANNOT_MAKE,
-      // ...
-      broken_pipe = ERROR_BROKEN_PIPE,
-      open_failed = ERROR_OPEN_FAILED,
-      buffer_overflow = ERROR_BUFFER_OVERFLOW,
-      disk_full= ERROR_DISK_FULL,
-      // ...
-      lock_failed = ERROR_LOCK_FAILED,
-      busy = ERROR_BUSY,
-      cancel_violation = ERROR_CANCEL_VIOLATION,
-      already_exists = ERROR_ALREADY_EXISTS
-      // ...
-
-      // TODO: add more Windows errors
-    };
-  }
-
-  inline error_code make_error_code(sys::windows_error e)
-    { return error_code(e,system_category); }
-
-#endif
-
 
   } // namespace system
 } // namespace boost

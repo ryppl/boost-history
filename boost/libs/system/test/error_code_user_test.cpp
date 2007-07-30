@@ -10,11 +10,10 @@
 //  ------------------------------------------------------------------------  //
 //  This code demonstrates creation and use of a new category of error codes.
 
-//  The motivation was a Boost posting by Christopher Kohlhoff on June 28, 2006.
+//  Motivation was a Boost posting by Christopher Kohlhoff on June 28, 2006.
 
 #include <boost/system/error_code.hpp>
 #include <boost/cerrno.hpp>
-
 
 //  ------------------------------------------------------------------------  //
 
@@ -65,12 +64,29 @@ namespace boost
           ? boost::system::posix::io_error
           : boost::system::posix::no_posix_equivalent;
       }
+      
+      std::string message( int ev ) const
+      {
+        return std::string("boo hoo");
+      }
     };
 
     const asio_error_category_imp asio_error_category_const;
+
     const boost::system::error_category & asio_error_category
       = asio_error_category_const;
   }
+}
+
+//  ------------------------------------------------------------------------  //
+
+//  user function that just passes through a code from the C-runtime
+
+#include <cstdio>
+
+boost::system::error_code always_fail()
+{
+  return boost::system::error_code( 1, boost::system::system_category );
 }
 
 //  ------------------------------------------------------------------------  //
@@ -92,9 +108,16 @@ int test_main( int, char *[] )
   BOOST_CHECK( ec.category() == boost::asio::asio_error_category );
 
   BOOST_CHECK( ec.posix() == boost::system::posix::io_error );
+  BOOST_CHECK( ec == boost::system::posix::io_error );
 
   boost::system::error_code ec2( boost::asio::boo_boo+1,
     boost::asio::asio_error_category );
   BOOST_CHECK( ec2.posix() == boost::system::posix::no_posix_equivalent );
+
+  ec = always_fail();
+  BOOST_CHECK( ec );
+  BOOST_CHECK( ec.value() == 1 );
+  BOOST_CHECK( ec.category() == boost::system::system_category );
+
   return 0;
 }

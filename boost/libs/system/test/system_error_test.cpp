@@ -61,16 +61,6 @@ int test_main( int, char *[] )
   system_error se_1_nm( 1, system_category, "" ); 
   system_error se_1u_m( uvalue, system_category, "se_1u_m" );
 
-# ifdef BOOST_POSIX_API
-    system_error se_2_m( boost::system::posix::address_in_use, "foobar" );
-    BOOST_CHECK( se_2_m.code() == boost::system::posix::address_in_use );
-# else
-  system_error se_2_m( boost::system::sys::lock_violation, "foobar" );
-    BOOST_CHECK( se_2_m.code() == boost::system::sys::lock_violation );
-# endif
-    BOOST_CHECK( std::string("foobar") == se_2_m.what() );
-    std::cout << "*" << se_2_m.what() << "*\n";
-
   TEST( se_0_m, 0, "se_0_m" );
   TEST( se_1_m, 1, "se_1_m: Operation not permitted" );
   TEST( se_0_nm, 0, "" );
