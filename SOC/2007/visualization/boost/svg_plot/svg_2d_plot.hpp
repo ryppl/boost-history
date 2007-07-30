@@ -905,10 +905,15 @@ BOOST_PARAMETER_MEMBER_FUNCTION
         (size, (int), 10)
         (line_on, (bool), true)
         (bezier_on, (bool), false)
-        (x_functor, *, boost_default_2d_convert())
+        (in_out(x_functor), *, boost_default_2d_convert())
     )
 )
 {
+    // This line has the error in GCC. Also, operator() in boost_default_2d_convert
+    // has been changed so that the value of i is not updated. I would like
+    // the start to be set, as well as i to update in operator().
+    x_functor.start(1.);
+
     plot_line_style line_style(line_color, line_on, bezier_on);
 
     if(area_fill_color != blank)
