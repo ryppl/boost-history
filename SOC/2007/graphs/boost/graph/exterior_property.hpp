@@ -130,8 +130,8 @@ namespace boost
         {
             typedef typename graph_traits<Graph>::vertices_size_type size_type;
             typedef typename graph_traits<Graph>::vertex_descriptor key_type;
-            typedef Value value_type;
 
+            typedef Value value_type;
             typedef std::tr1::unordered_map<key_type, value_type> container_type;
             typedef std::tr1::unordered_map<key_type, container_type> matrix_type;
 
@@ -189,6 +189,7 @@ namespace boost
         typedef detail::hash_property_map_adapter<Graph, container_type> map_type;
     };
 
+
     template <typename Graph, typename Value>
     struct exterior_vertex_property
     {
@@ -204,6 +205,15 @@ namespace boost
         typedef typename traits_type::container_type container_type;
         typedef typename traits_type::matrix_type matrix_type;
         typedef typename traits_type::map_type map_type;
+    };
+
+    template <typename Matrix>
+    struct property_matrix_traits
+    {
+        typedef typename Matrix::matrix_type matrix_type;
+        typedef typename Matrix::container_type container_type;
+        typedef typename Matrix::value_type value_type;
+        typedef typename Matrix::key_type key_type;
     };
 }
 
