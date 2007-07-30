@@ -1,14 +1,14 @@
 //  boost/system/error_code.hpp  ---------------------------------------------//
 
-//  Copyright Beman Dawes 2006
+//  Copyright Beman Dawes 2006, 2007
 
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-//  See library home page at http://www.boost.org/libs/filesystem
+//  See library home page at http://www.boost.org/libs/system
 
-#ifndef BOOST_SYSTEM_ERROR_CODE_HPP
-#define BOOST_SYSTEM_ERROR_CODE_HPP
+#ifndef BOOST_ERROR_CODE_HPP
+#define BOOST_ERROR_CODE_HPP
 
 #include <boost/system/config.hpp>
 #include <boost/cstdint.hpp>
@@ -19,8 +19,8 @@
 #include <string>
 #include <stdexcept>
 
-#include <boost/cerrno.hpp> // we don't like doing this, but it appears
-                            // unavoidable to portably implement posix_errno.
+// TODO: undef these macros if no already defined
+#include <boost/cerrno.hpp> 
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -252,6 +252,6 @@ namespace boost
 
 #include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
-#endif // BOOST_SYSTEM_ERROR_CODE_HPP
+#endif // BOOST_ERROR_CODE_HPP
 
 
