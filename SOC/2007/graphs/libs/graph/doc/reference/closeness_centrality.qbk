@@ -5,45 +5,25 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Geodesic Distances]
+[section Closeness Centrality]
+This section describes the closeness centrality framework - group of functions
+related to computing measures based on the geodesic distances of vertices. There
+are four related measures:
+* Total geodesic distance
+* Mean geodesic distances
+* Inverse geodesic distance
+* Closeness
 
-    template <typename Graph, typename DistanceMap>
-    double mean_geodesic(const Graph& g, DistanceMap dist)
 
-    template <typename T, typename Graph, typename DistanceMap>
-    T mean_geodesic(const Graph& g, DistanceMap dist)
-
-    template <typename T,
-              typename Graph,
+    template <typename Graph,
               typename DistanceMap,
-              typename DistanceType,
+              typename Measure,
               typename Combinator>
-    T mean_geodesic(
-        const Graph& g,
-        DistanceMap dist,
-        Combinator combine,
-        DistanceType zero,
-        DistanceType infinity = std::numeric_limits<T>::max())
-
-
-
-    template <typename Graph, typename DistanceMap>
-    double closeness(const Graph& g, DistanceMap dist)
-
-    template <typename T, typename Graph, typename DistanceMap>
-    T closeness(const Graph& g, DistanceMap dist)
-
-    template <typename T,
-              typename Graph,
-              typename DistanceMap,
-              typename DistanceType,
-              typename Combinator>
-    T closeness(
-        const Graph& g,
-        DistanceMap dist,
-        Combinator combine,
-        DistanceType zero,
-        DistanceType infinity = std::numeric_limits<T>::max())
+    inline typename Measure::result_type
+    closeness_centrality(const Graph& g,
+                         DistanceMap dist,
+                         Measure measure,
+                         Combinator combine)
 
 
 These functions compute values based on the /geodesic distance/ between

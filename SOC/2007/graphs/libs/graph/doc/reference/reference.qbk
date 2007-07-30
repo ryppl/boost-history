@@ -67,8 +67,7 @@
 
 [section Graph Measures]
 [include distributions.qbk]
-[include geodesic.qbk]
-[include closeness.qbk]
+[include closeness_centrality.qbk]
 [include eccentricity.qbk]
 [endsect]
 [endsect]
