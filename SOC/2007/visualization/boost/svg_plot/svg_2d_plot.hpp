@@ -59,8 +59,8 @@ BOOST_PARAMETER_NAME(x_functor)
 BOOST_PARAMETER_NAME(size)
 #endif
 
-BOOST_PARAMETER_NAME(line_on)
 BOOST_PARAMETER_NAME(bezier_on)
+BOOST_PARAMETER_NAME(line_on)
 BOOST_PARAMETER_NAME(line_color)
 BOOST_PARAMETER_NAME(area_fill_color)
 
@@ -71,7 +71,7 @@ public:
 
     double i;
 
-    double start(double _i) 
+    double start(double _i)
     {
         i = _i;
     }
@@ -83,9 +83,9 @@ public:
     }
 
     template <class T>
-    std::pair<double, double> operator()(T val) const
+    std::pair<double, double> operator()(T a)
     {
-        return std::pair<double, double>(i, (double)val);
+        return std::pair<double, double>(i++, (double)a);
     }
 };
 
@@ -459,6 +459,16 @@ private:
 
         std::pair<double, double> n_minus_2, n_minus_1, n;
         std::pair<double, double> fwd_vtr, back_vtr;
+
+        if(series.line_style.area_fill == blank)
+        {
+                path._fill = false;
+        }
+
+        else
+        {
+            path.style().fill_color(series.line_style.area_fill);
+        }
 
         if(series.series.size() > 2)
         {
@@ -905,21 +915,18 @@ BOOST_PARAMETER_MEMBER_FUNCTION
         (size, (int), 10)
         (line_on, (bool), true)
         (bezier_on, (bool), false)
-        (in_out(x_functor), *, boost_default_2d_convert())
+        (x_functor, *, boost_default_2d_convert())
     )
 )
 {
     // This line has the error in GCC. Also, operator() in boost_default_2d_convert
     // has been changed so that the value of i is not updated. I would like
     // the start to be set, as well as i to update in operator().
-    x_functor.start(1.);
+    // x_functor.start(1.);
 
     plot_line_style line_style(line_color, line_on, bezier_on);
 
-    if(area_fill_color != blank)
-    {
-        line_style.area_fill=area_fill_color;
-    }
+    line_style.area_fill=area_fill_color;
 
     series.push_back(
         svg_2d_plot_series(
@@ -935,6 +942,7 @@ BOOST_PARAMETER_MEMBER_FUNCTION
 #if defined (BOOST_MSVC)
 #  pragma warning(pop)
 #endif
+
 
 }
 }

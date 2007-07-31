@@ -82,15 +82,15 @@ int main()
            .x_label_on(true)
            .x_label("sqrt(x)");
 
-    my_2d_plot.plot(data1, "sqrt(x)", _bezier_on = true, _size = 5);
+    //my_2d_plot.plot(data1, "sqrt(x)", _bezier_on = true, _size = 5);
 
     my_2d_plot.plot(data2, "Not sqrt(x)", 
+        _bezier_on = true,
         _size = 6,
         _point_style = square,
         _stroke_color = hotpink,
         _line_color = black,
-        _fill_color = yellow,
-        _bezier_on = true);
+        _fill_color = yellow);
     
 //    my_2d_plot.plot(data3, "1D Plot", _bezier_on = true, _size = 5);
 

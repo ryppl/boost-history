@@ -500,13 +500,14 @@ class path_element: public svg_element
 private:
     ptr_vector<path_point> path;
 public:
-    
+    bool _fill;
+
     path_element(const path_element& rhs)//:path(rhs.path.release())
     {
         path = (const_cast<path_element&>(rhs)).path.release();
     }
 
-    path_element() { }
+    path_element(): _fill(true) { }
 
     path_element& m(double x, double y)
     {
@@ -624,7 +625,12 @@ public:
         
         style_info.write(o_str);
 
-        o_str<<"fill = \"none\" />";
+        if(!_fill)
+        {
+            o_str << "fill = \"none\"";
+        }
+
+        o_str<<"/>";
     }
 };
 
