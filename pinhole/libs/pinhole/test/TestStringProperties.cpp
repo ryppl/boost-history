@@ -72,7 +72,6 @@ BOOST_AUTO_TEST_CASE( TestStringPropertyType )
     BOOST_CHECK( typeid(double) != testGroup.get_type_info(PROPERTY_STRING_2) );
     BOOST_CHECK( typeid(std::string) == testGroup.get_type_info(PROPERTY_STRING_2) );
 
-	const StringEditor *pEditor = dynamic_cast<const StringEditor*>(testGroup.get_metadata( PROPERTY_STRING_2 ));
 	BOOST_CHECK( testGroup.get_metadata(PROPERTY_STRING_2)->getEditorPropertyType() == StringType );
 }
 
