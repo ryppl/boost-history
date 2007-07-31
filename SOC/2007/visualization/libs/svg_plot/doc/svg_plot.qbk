@@ -19,7 +19,7 @@
 	  reference, as well as show how the program can be used
 	* "Tutorial: Special" shows other features/options that the headers
 	  provide to the user.
-* The pages labelled "____ Public Interface" give reference information for 
+* The pages labelled "* Public Interface" give reference information for 
 their respective subjects. You can find all public methods (and data members, 
 when structs are concerned) in these sections.
 * If you have a feature request, or if it appears that my implementation
@@ -33,8 +33,10 @@ dev list, or email me at jakevoytko (at) gmail (dot) com
 above.]
 [tip These blocks contain information that you may find helpful while coding.]
 [important These contain information that is imperative to understanding a 
-concept. Failure to follow these blocks will result in confusion. Read all of 
-these you find.]
+concept. Failure to follow these blocks will likely result in undesired behavior. 
+Read all of these you find.]
+[warning It is imperative that you follow these. Failure to do so will lead to 
+incorrect, and likely undesired, results in the plot]
 
 And the first admonishment I will use is as follows:
 
@@ -81,10 +83,12 @@ before you email me with requests.
 * Allow an *external stylesheet* to be loaded to style the graph. External
 stylesheets will allow a standard and easy way to style the document
 so that users don't have to come up with their own home-grown solutions.
-* Allow function *pointers* to specify functions as input. A use case where the
+* Allow *function pointers* to specify functions as input. A use case where the
 user wants to just see what [^sin(x)] looks like is easily imaginable.
 * *Radian coordinate system*.
-* Implementation of *SVG's DOM*. This will make the SVG class useful.
+* Implementation of *SVG's DOM*. This will make the SVG class useful for other things than solely making graphs!
+* *Automatic scaling* of the axis
+* Allow *2D plots of 1D containers*. Currently I am having trouble with having functors that update state interact with `make_transform_iterator`, and have omitted the feature.
 * Allow *other image formats*. This is certainly an after-GSoC project, as 
 there are many inherent difficulties with this part. The solution that I am
 currently playing with is allowing the user to pass a functor that traverses
@@ -96,6 +100,7 @@ method of doing this, I will begin a discussion on the Boost dev list.
 write the program initially, but it would be more efficient if the program could
 keep track of what has been changed and what hasn't, so that it may be more
 efficient if lots of images are being produced.
+* Allow the user to provide a function object for generating *custom axis labels* (For example, months instead of integer representations of months) 
 * *Logarithmic Axis*
 * *Clipping* of the plot window, so that graph lines do not get drawn outside of the plot.
 * *Histogram*
@@ -343,7 +348,7 @@ This writes our plot to the file "simple.svg".
 		       .title_color(white);
 	
 		//axis settings
-		my_plot.x_major_tick(2)
+		my_plot.x_major_interval(2)
 		       .x_major_tick_length(14)
 		       .x_major_tick_width(1)
 		       .x_minor_tick_length(7)
@@ -549,7 +554,7 @@ This writes our plot to the file "simple_2d.svg".
 		       .title_color(white);
 	
 		//X axis settings.
-		my_plot.x_major_tick(2)
+		my_plot.x_major_interval(2)
 		       .x_major_tick_length(14)
 		       .x_major_tick_width(1)
 		       .x_minor_tick_length(7)
@@ -642,7 +647,7 @@ This produces something like the following images:
 
 [$images/2d_bezier.png]
 
-[warning The `_bezier_curve` feature is still very much in its infancy. If you play nice with it, it will play nice with you, but it is still buggy. Do not use this feature with curves that have a limit (`-NaN`, for example), or with data that has high irregularity in X-Axis spacing (a clump of points between (0, 1) on the X axis, with the next one at 100 on the X axis, for example)]
+[warning The `_bezier_curve` feature is still very much in its infancy. If you play nice with it, it will play nice with you, but it still displays undesired behavior in extreme circumstances. Do not use this feature with curves that have a limit (`-NaN`, for example), or with data that has high irregularity in X-Axis spacing (a clump of points between (0, 1) on the X axis, with the next one at 100 on the X axis, for example)]
 
 [endsect] [/curve_interpolation]
 [endsect] [/2d_special Tutorial: 2D Special Features]
@@ -749,7 +754,8 @@ I'm open to suggestions for how to improve this process.
 [endsect][/section:svg_interface]
 
 [section:svg_1d_plot_interface `svg_1d_plot` Public Interface]
-[table Misc
+[section:svg_1d_inter_misc Miscellaneous Functions]
+[table 
   [[Signature] [Description]]
   [[`svg_1d_plot()`] [See the defaults section for further details]]
   [[`svg_1d_plot& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels]]
@@ -758,21 +764,26 @@ I'm open to suggestions for how to improve this process.
   [[`svg_1d_plot& title_font_size(unsigned int)`] [Sets the font size for the title]]
   [[`svg_1d_plot& write(const std::string&)`] [Writes the plot to the file passed as a parameter]]
   [[`svg_1d_plot& write(ostream&)`] [Writes the plot to a stream passed as a parameter]]]
+[endsect][/section:svg_1d_inter_misc]
 
-[table Commands
+[section:1d_inter_commands Commands]
+[table
   [[Signature] [Description]]
   [[`svg_1d_plot& axis_on(bool)`] [Sets whether the axis is on or off]]
   [[`svg_1d_plot& legend_on(bool)`] [Sets whether the legend is on or off]]
   [[`svg_1d_plot& plot_window_on(bool)`] [Sets whether the plot will be displayed in its own window, or will be "full screen" in the image]]
   [[`svg_1d_plot& title_on(bool)`] [Determines whether or not the image title is displayed]]
   [[`svg_1d_plot& x_axis_on(bool)`] [Determines whether or not the X axis is displayed]]
+  [[`svg_1d_plot& x_external_style_on(bool)`] [Determines whether or not the axis is inside or outside of the plot. Defaults to `false`]]
   [[`svg_1d_plot& x_label_on(bool)`] [Sets whether or not the x axis label will show]]
   [[`svg_1d_plot& x_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the x axis]]
   [[`svg_1d_plot& x_major_grid_on(bool)`] [Determines whether or not the major grid on the X axis will be displayed]]
   [[`svg_1d_plot& x_minor_grid_on(bool)`] [Determines whether or not the minor grid on the X axis will be displayed]]
   [[`svg_1d_plot& y_axis_on(bool)`] [Determines whether or not the Y axis is displayed]]]
+[endsect][/section:1d_inter_commands]
 
-[table Color Information
+[section:1d_inter_color Color Information]
+[table
   [[Signature] [Description]]
   [[`svg_1d_plot& background_border_color(const svg_color &col)`] [Set the background border color for the legend as `col`, an RGB color]]
   [[`svg_1d_plot& background_color(const svg_color &col)`] [Set the background color for the whole image]]
@@ -787,19 +798,22 @@ I'm open to suggestions for how to improve this process.
   [[`svg_1d_plot& x_minor_grid_color(const svg_color &col)`] [Sets the color of the minor grid of the x-axis]]
   [[`svg_1d_plot& x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the x-axis]]
   ]
+[endsect][/section:1d_inter_color]
 
-[table Axis Information
+[section:1d_inter_axis_information Axis Information]
+[table
   [[Signature] [Description]]
   [[`svg_1d_plot& x_axis_width(unsigned int)`] [Sets the stroke width of the x-axis] ]
   [[`svg_1d_plot& x_label(const std::string&)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must run `x_label_on(true)` for that guarantee] ]
-  [[`svg_1d_plot& x_major_tick(double)`] [Sets the distance (in Cartesian units) between ticks on the x-axis] ]
+  [[`svg_1d_plot& x_major_interval(double)`] [Sets the distance (in Cartesian units) between ticks on the x-axis] ]
   [[`svg_1d_plot& x_major_tick_length(int)`] [Sets the length (in pixels) of the x-axis major ticks] ]
   [[`svg_1d_plot& x_major_tick_width(unsigned int)`] [Sets the width (in pixels) of the major ticks on the x-axis] ]
-  [[`svg_1d_plot& x_major_tick_length(int)`] [Sets the length (in pixels) of the x-axis minor tick lengths] ]
+  [[`svg_1d_plot& x_minor_tick_length(int)`] [Sets the length (in pixels) of the x-axis minor tick lengths] ]
   [[`svg_1d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (in pixels) of the minor ticks on the x-axis] ]
   [[`svg_1d_plot& x_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick] ]
   [[`svg_1d_plot& x_range(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2<=x1 ] ]
 ]
+[endsect][/section:1d_inter_axis_information]
 
 [section:1d_plot_function The `plot()` Method]
 The `plot()` method is defined using Boost.Parameter. As such, it supports a 
@@ -820,7 +834,7 @@ being drawn] [white] ]]
 [[_stroke_color] [`svg_color`] [The outline of the circle that is being drawn] [black] ]
 [[_point_style] [`point_shape`] [This is the shape of the point. Options currently are between [^none], [^circle], and [^square].] [circle]]
 [[_size] [`unsigned int`] [This is the height/width of the circle and square.] [10]]
-[[_functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a vector of humans. For example:
+[[_x_functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a vector of humans. For example:
 ``
 class my_functor
 {
@@ -834,7 +848,7 @@ class my_functor
 
 // snip
 
-plot(my_plot, my_data, "Lions", _functor = my_functor());
+plot(my_plot, my_data, "Lions", _x_functor = my_functor());
 ``
 ][
 `boost_default_convert` is sufficient in all cases where the data stored in 
@@ -864,15 +878,18 @@ stroke).
 [endsect][/svg_1d_plot_interface]
 
 [section:svg_2d_plot_interface `svg_2d_plot` Public Interface]
-[table Misc
+[section:2d_inter_misc Miscellaneous]
+[table 
   [[Signature] [Description]]
   [[`svg_2d_plot()`] [See the defaults section for further details]]
   [[`svg_2d_plot& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels]]
   [[`svg_2d_plot& title(const std::string&)`] [Sets the string to be used for the title]]
   [[`svg_2d_plot& title_font_size(unsigned int)`] [Sets the font size for the title]]
   [[`svg_2d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title]]]
+[endsect][/section:2d_inter_misc]
 
-[table Commands
+[section:2d_inter_commands Commands]
+[table
   [[Signature] [Description]]
   [[`svg_2d_plot& axis_on(bool)`] [Sets whether the axis is on or off]]
   [[`svg_2d_plot& legend_on(bool)`] [Sets whether the legend is on or off]]
@@ -886,8 +903,10 @@ stroke).
   [[`svg_2d_plot& y_major_grid_on(bool)`] [Determines whether or not the major grid on the Y axis will be displayed]]
   [[`svg_2d_plot& y_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the Y axis]]
   [[`svg_2d_plot& y_minor_grid_on(bool)`] [Determines whether or not the minor grid on the Y axis will be displayed]]]
+[endsect][/section:2d_inter_commands]
 
-[table Color Information
+[section:2d_inter_color]
+[table
   [[Signature] [Description]]
   [[`svg_2d_plot& title_color(const svg_color &col)`] [Set the title color]]
   [[`svg_2d_plot& background_color(const svg_color &col)`] [Set the background color for the whole image]]
@@ -906,16 +925,18 @@ stroke).
   [[`svg_2d_plot& y_major_grid_color(const svg_color &col)`] [Sets the color of the grid that runs perpindicular to the Y axis]]
   [[`svg_2d_plot& y_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the Y-axis]]
   ]
+[endsect][/section:2d_inter_color]
 
-[table Axis Information
+[section:2d_inter_axis Axis Information]
+[table
   [[Signature] [Description]]
   [[`svg_2d_plot& x_axis_width(unsigned int)`] [Sets the stroke width of the x-axis] ]
   [[`svg_2d_plot& x_label(const std::string&)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must run `x_label(true)` for that guarantee] ]
-  [[`svg_2d_plot& x_major_tick(double)`] [Sets the distance (in Cartesian units) between ticks on the x-axis] ]
+  [[`svg_2d_plot& x_major_interval(double)`] [Sets the distance (in Cartesian units) between ticks on the x-axis] ]
   [[`svg_2d_plot& x_major_tick_length(int)`] [Sets the length (in pixels) of the x-axis major ticks] ]
   [[`svg_2d_plot& x_major_tick_width(unsigned int)`] [Sets the width (in pixels) of the major ticks on the x-axis] ]
   [[`svg_2d_plot& x_minor_tick(unsigned int)`] [Sets the length (in pixels) of the x-axis minor ticks] ]
-  [[`svg_2d_plot& x_major_tick_length(int)`] [Sets the length (in pixels) of the x-axis minor tick lengths] ]
+  [[`svg_2d_plot& x_minor_tick_length(int)`] [Sets the length (in pixels) of the x-axis minor tick lengths] ]
   [[`svg_2d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (in pixels) of the minor ticks on the x-axis] ]
   [[`svg_2d_plot& x_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick] ]
   [[`svg_2d_plot& x_range(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2<=x1 ] ]
@@ -930,6 +951,7 @@ stroke).
   [[`svg_2d_plot& y_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick] ]
   [[`svg_2d_plot& y_scale(double y1, double y2)`] [Sets the scale of the Y axis from y1 to y2. Throws an exception if y2<=y1 ] ]
 ]
+[endsect][/section:2d_inter_axis]
 
 (Note: Getters omitted for now)
 
@@ -949,22 +971,21 @@ being drawn] [white] ]]
 
 [table Optional Parameters
 [[ID] [Type] [Description] [Default]]
+[[_bezier_on] [`bool`] [ This determines whether or not Bézier curve interpolation will be applied to the plot lines. It is important to note that the curve interpolation is still in its infancy, and should only be used with reasonably nice data sets]]
 [[_line_on] [`bool`] [ This determines whether or not there are lines drawn between data points.] [false]]
 [[_line_color] [`bool`] [ This determines the color of the lines between data points ] [black ]]
 [[_area_fill_color] [`svg_color`][Defining this enables the "Fill Area Under Axis" feature. the color you define will be the fill color between a line and the area under the axis. This only takes effect if `_line_on = true` is called.]]
 [[_stroke_color] [`svg_color`] [The outline of the circle that is being drawn] [black] ]
 [[_point_style] [`point_shape`] [This is the shape of the point. Options currently are between [^none], [^circle], and [^square].] [circle]]
 [[_size] [`unsigned int`] [This is the height/width of the circle and square.] [10]]
-[[_functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a vector of humans. For example:
+[[_x_functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a vector of humans. For example:
 ``
 class my_functor
 {
 	typdef pair<double, double> result_type;
-	static double i = 0;
 
-	pair<double, double> operator()(const human& _hum)
+	pair<double, double> operator()(const human& _hum) const
 	{
-		i+=1.;
 		return pair<double, double>(i, _hum.age());
 	}
 }

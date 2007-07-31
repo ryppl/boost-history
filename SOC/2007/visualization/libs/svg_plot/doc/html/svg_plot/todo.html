@@ -38,7 +38,7 @@
         home-grown solutions.
       </li>
 <li>
-        Allow function <span class="bold"><strong>pointers</strong></span> to specify functions
+        Allow <span class="bold"><strong>function pointers</strong></span> to specify functions
         as input. A use case where the user wants to just see what <code class="literal">sin(x)</code>
         looks like is easily imaginable.
       </li>
@@ -47,7 +47,16 @@
       </li>
 <li>
         Implementation of <span class="bold"><strong>SVG's DOM</strong></span>. This will make
-        the SVG class useful.
+        the SVG class useful for other things than solely making graphs!
+      </li>
+<li>
+<span class="bold"><strong>Automatic scaling</strong></span> of the axis
+      </li>
+<li>
+        Allow <span class="bold"><strong>2D plots of 1D containers</strong></span>. Currently
+        I am having trouble with having functors that update state interact with
+        <code class="computeroutput"><span class="identifier">make_transform_iterator</span></code>,
+        and have omitted the feature.
       </li>
 <li>
         Allow <span class="bold"><strong>other image formats</strong></span>. This is certainly
@@ -64,6 +73,11 @@
         This is the easiest way to write the program initially, but it would be more
         efficient if the program could keep track of what has been changed and what
         hasn't, so that it may be more efficient if lots of images are being produced.
+      </li>
+<li>
+        Allow the user to provide a function object for generating <span class="bold"><strong>custom
+        axis labels</strong></span> (For example, months instead of integer representations
+        of months)
       </li>
 <li><span class="bold"><strong>Logarithmic Axis</strong></span></li>
 <li>

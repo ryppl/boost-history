@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
-<article id="svg_plot" name="SVG_Plot" dirname="svg_plot" last-revision="$Date: 2007/07/29 22:30:51 $"
+<article id="svg_plot" name="SVG_Plot" dirname="svg_plot" last-revision="$Date: 2007/07/31 01:11:42 $"
  xmlns:xi="http://www.w3.org/2001/XInclude">
   <articleinfo>
     <author>
@@ -41,10 +41,9 @@
         </itemizedlist>
       </listitem>
       <listitem>
-        The pages labelled &quot;<emphasis role="underline">_</emphasis>_ Public
-        Interface&quot; give reference information for their respective subjects.
-        You can find all public methods (and data members, when structs are concerned)
-        in these sections.
+        The pages labelled &quot;* Public Interface&quot; give reference information
+        for their respective subjects. You can find all public methods (and data
+        members, when structs are concerned) in these sections.
       </listitem>
       <listitem>
         If you have a feature request, or if it appears that my implementation is
@@ -69,10 +68,16 @@
       <important>
         <para>
           These contain information that is imperative to understanding a concept.
-          Failure to follow these blocks will result in confusion. Read all of these
-          you find.
+          Failure to follow these blocks will likely result in undesired behavior.
+          Read all of these you find.
         </para>
       </important>
+      <warning>
+        <para>
+          It is imperative that you follow these. Failure to do so will lead to incorrect,
+          and likely undesired, results in the plot
+        </para>
+      </warning>
       <para>
         And the first admonishment I will use is as follows:
       </para>
@@ -142,7 +147,7 @@
         home-grown solutions.
       </listitem>
       <listitem>
-        Allow function <emphasis role="bold">pointers</emphasis> to specify functions
+        Allow <emphasis role="bold">function pointers</emphasis> to specify functions
         as input. A use case where the user wants to just see what <literal>sin(x)</literal>
         looks like is easily imaginable.
       </listitem>
@@ -151,7 +156,16 @@
       </listitem>
       <listitem>
         Implementation of <emphasis role="bold">SVG's DOM</emphasis>. This will make
-        the SVG class useful.
+        the SVG class useful for other things than solely making graphs!
+      </listitem>
+      <listitem>
+        <emphasis role="bold">Automatic scaling</emphasis> of the axis
+      </listitem>
+      <listitem>
+        Allow <emphasis role="bold">2D plots of 1D containers</emphasis>. Currently
+        I am having trouble with having functors that update state interact with
+        <code><phrase role="identifier">make_transform_iterator</phrase></code>,
+        and have omitted the feature.
       </listitem>
       <listitem>
         Allow <emphasis role="bold">other image formats</emphasis>. This is certainly
@@ -168,6 +182,11 @@
         This is the easiest way to write the program initially, but it would be more
         efficient if the program could keep track of what has been changed and what
         hasn't, so that it may be more efficient if lots of images are being produced.
+      </listitem>
+      <listitem>
+        Allow the user to provide a function object for generating <emphasis role="bold">custom
+        axis labels</emphasis> (For example, months instead of integer representations
+        of months)
       </listitem>
       <listitem>
         <emphasis role="bold">Logarithmic Axis</emphasis>
@@ -501,7 +520,7 @@
 	       <phrase role="special">.</phrase><phrase role="identifier">title_color</phrase><phrase role="special">(</phrase><phrase role="identifier">white</phrase><phrase role="special">);</phrase>
 
 	<phrase role="comment">//axis settings
-</phrase>	<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">x_major_tick</phrase><phrase role="special">(</phrase><phrase role="number">2</phrase><phrase role="special">)</phrase>
+</phrase>	<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">x_major_interval</phrase><phrase role="special">(</phrase><phrase role="number">2</phrase><phrase role="special">)</phrase>
 	       <phrase role="special">.</phrase><phrase role="identifier">x_major_tick_length</phrase><phrase role="special">(</phrase><phrase role="number">14</phrase><phrase role="special">)</phrase>
 	       <phrase role="special">.</phrase><phrase role="identifier">x_major_tick_width</phrase><phrase role="special">(</phrase><phrase role="number">1</phrase><phrase role="special">)</phrase>
 	       <phrase role="special">.</phrase><phrase role="identifier">x_minor_tick_length</phrase><phrase role="special">(</phrase><phrase role="number">7</phrase><phrase role="special">)</phrase>
@@ -781,7 +800,7 @@
 	       <phrase role="special">.</phrase><phrase role="identifier">title_color</phrase><phrase role="special">(</phrase><phrase role="identifier">white</phrase><phrase role="special">);</phrase>
 
 	<phrase role="comment">//X axis settings.
-</phrase>	<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">x_major_tick</phrase><phrase role="special">(</phrase><phrase role="number">2</phrase><phrase role="special">)</phrase>
+</phrase>	<phrase role="identifier">my_plot</phrase><phrase role="special">.</phrase><phrase role="identifier">x_major_interval</phrase><phrase role="special">(</phrase><phrase role="number">2</phrase><phrase role="special">)</phrase>
 	       <phrase role="special">.</phrase><phrase role="identifier">x_major_tick_length</phrase><phrase role="special">(</phrase><phrase role="number">14</phrase><phrase role="special">)</phrase>
 	       <phrase role="special">.</phrase><phrase role="identifier">x_major_tick_width</phrase><phrase role="special">(</phrase><phrase role="number">1</phrase><phrase role="special">)</phrase>
 	       <phrase role="special">.</phrase><phrase role="identifier">x_minor_tick_length</phrase><phrase role="special">(</phrase><phrase role="number">7</phrase><phrase role="special">)</phrase>
@@ -922,11 +941,11 @@
         <para>
           The <code><phrase role="identifier">_bezier_curve</phrase></code> feature
           is still very much in its infancy. If you play nice with it, it will play
-          nice with you, but it is still buggy. Do not use this feature with curves
-          that have a limit (<code><phrase role="special">-</phrase><phrase role="identifier">NaN</phrase></code>,
-          for example), or with data that has high irregularity in X-Axis spacing
-          (a clump of points between (0, 1) on the X axis, with the next one at 100
-          on the X axis, for example)
+          nice with you, but it still displays undesired behavior in extreme circumstances.
+          Do not use this feature with curves that have a limit (<code><phrase role="special">-</phrase><phrase
+          role="identifier">NaN</phrase></code>, for example), or with data that
+          has high irregularity in X-Axis spacing (a clump of points between (0,
+          1) on the X axis, with the next one at 100 on the X axis, for example)
         </para>
       </warning>
     </section>
@@ -1369,334 +1388,369 @@
   </section>
   <section id="svg_plot.svg_1d_plot_interface">
     <title> <code><phrase role="identifier">svg_1d_plot</phrase></code> Public Interface</title>
-    <informaltable frame="all">
-      <bridgehead renderas="sect4">
-        <phrase role="table-title">Misc</phrase>
-      </bridgehead>
-      <tgroup cols="2">
-        <thead>
-          <row>
-            <entry>Signature</entry><entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">()</phrase></code></entry><entry>See
-            the defaults section for further details</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">image_size</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">unsigned</phrase>&nbsp;<phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the size of the image produced, in pixels</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">legend_title_font_size</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the font size for
-            the legend title</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">title</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase
-            role="special">::</phrase><phrase role="identifier">string</phrase><phrase
-            role="special">&amp;)</phrase></code></entry><entry>Sets the string to
-            be used for the title</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">title_font_size</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the font size for
-            the title</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">write</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase
-            role="special">::</phrase><phrase role="identifier">string</phrase><phrase
-            role="special">&amp;)</phrase></code></entry><entry>Writes the plot to
-            the file passed as a parameter</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">write</phrase><phrase role="special">(</phrase><phrase
-            role="identifier">ostream</phrase><phrase role="special">&amp;)</phrase></code></entry><entry>Writes
-            the plot to a stream passed as a parameter</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
-    <informaltable frame="all">
-      <bridgehead renderas="sect4">
-        <phrase role="table-title">Commands</phrase>
-      </bridgehead>
-      <tgroup cols="2">
-        <thead>
-          <row>
-            <entry>Signature</entry><entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">axis_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            whether the axis is on or off</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">legend_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            whether the legend is on or off</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">plot_window_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            whether the plot will be displayed in its own window, or will be &quot;full
-            screen&quot; in the image</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">title_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the image title is displayed</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_axis_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the X axis is displayed</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_label_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            whether or not the x axis label will show</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_labels_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>sets
-            whether or not the major ticks will be labelled on the x axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_grid_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the major grid on the X axis will be displayed</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_minor_grid_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the minor grid on the X axis will be displayed</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_axis_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the Y axis is displayed</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
-    <informaltable frame="all">
-      <bridgehead renderas="sect4">
-        <phrase role="table-title">Color Information</phrase>
-      </bridgehead>
-      <tgroup cols="2">
-        <thead>
-          <row>
-            <entry>Signature</entry><entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">background_border_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the background border
-            color for the legend as <code><phrase role="identifier">col</phrase></code>,
-            an RGB color</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">background_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the background color
-            for the whole image</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">legend_background_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the background color
-            for the legend as <code><phrase role="identifier">col</phrase></code>,
-            an RGB color</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">legend_border_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the border color for
-            the legend as <code><phrase role="identifier">col</phrase></code>, an
-            RGB color</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">plot_background_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the color of the plot
-            area. Note: this only goes into effect if plot_area(true) has been called</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">title_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the title color</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_axis_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            lines that form the axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_label_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            labels that go along the X axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_grid_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            grid that runs perpindicular to the X axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            major ticks of the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_minor_grid_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            minor grid of the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_minor_tick_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            minor ticks of the x-axis</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
-    <informaltable frame="all">
-      <bridgehead renderas="sect4">
-        <phrase role="table-title">Axis Information</phrase>
-      </bridgehead>
-      <tgroup cols="2">
-        <thead>
-          <row>
-            <entry>Signature</entry><entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_axis_width</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the stroke width
-            of the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_label</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase
-            role="special">::</phrase><phrase role="identifier">string</phrase><phrase
-            role="special">&amp;)</phrase></code></entry><entry>Sets the label of
-            the x-axis. This does not guarantee that it will be shown. You must run
-            <code><phrase role="identifier">x_label_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">true</phrase><phrase role="special">)</phrase></code>
-            for that guarantee</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">double</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the distance (in Cartesian units) between ticks on the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick_length</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the length (in pixels) of the x-axis major ticks</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick_width</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the width (in pixels)
-            of the major ticks on the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick_length</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the length (in pixels) of the x-axis minor tick lengths</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_minor_tick_width</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the width (in pixels)
-            of the minor ticks on the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_num_minor_ticks</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the number of minor ticks between each major tick</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_range</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x1</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
-            role="identifier">x2</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the scale of the x axis from x1 to x2. Throws an exception if x2&lt;=x1
-            </entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
+    <section id="svg_plot.svg_1d_plot_interface.svg_1d_inter_misc">
+      <title> Miscellaneous Functions</title>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Signature</entry><entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">()</phrase></code></entry><entry>See the defaults section
+              for further details</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">image_size</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+              role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the size of the
+              image produced, in pixels</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">legend_title_font_size</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the font size for the legend title</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">title</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">string</phrase><phrase role="special">&amp;)</phrase></code></entry><entry>Sets
+              the string to be used for the title</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">title_font_size</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the font size for the title</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">write</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">string</phrase><phrase role="special">&amp;)</phrase></code></entry><entry>Writes
+              the plot to the file passed as a parameter</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">write</phrase><phrase
+              role="special">(</phrase><phrase role="identifier">ostream</phrase><phrase
+              role="special">&amp;)</phrase></code></entry><entry>Writes the plot
+              to a stream passed as a parameter</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+    <section id="svg_plot.svg_1d_plot_interface.1d_inter_commands">
+      <title> Commands</title>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Signature</entry><entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">axis_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets whether the axis
+              is on or off</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">legend_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets whether the legend
+              is on or off</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">plot_window_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets whether the plot
+              will be displayed in its own window, or will be &quot;full screen&quot;
+              in the image</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">title_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the image title is displayed</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_axis_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the X axis is displayed</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_external_style_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the axis is inside or outside of the plot. Defaults to <code><phrase
+              role="keyword">false</phrase></code></entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_label_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets whether or not
+              the x axis label will show</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_labels_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>sets whether or not
+              the major ticks will be labelled on the x axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_grid_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the major grid on the X axis will be displayed</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_grid_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the minor grid on the X axis will be displayed</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_axis_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the Y axis is displayed</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+    <section id="svg_plot.svg_1d_plot_interface.1d_inter_color">
+      <title> Color Information</title>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Signature</entry><entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">background_border_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the background border color for the legend as <code><phrase role="identifier">col</phrase></code>,
+              an RGB color</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">background_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the background color for the whole image</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">legend_background_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the background color for the legend as <code><phrase role="identifier">col</phrase></code>,
+              an RGB color</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">legend_border_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the border color for the legend as <code><phrase role="identifier">col</phrase></code>,
+              an RGB color</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">plot_background_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the color of the plot area. Note: this only goes into effect if plot_area(true)
+              has been called</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">title_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the title color</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_axis_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the lines that form the axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_label_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the labels that go along the X axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_grid_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the grid that runs perpindicular to the X axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_tick_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the major ticks of the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_grid_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the minor grid of the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_tick_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the minor ticks of the x-axis</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+    <section id="svg_plot.svg_1d_plot_interface.1d_inter_axis_information">
+      <title> Axis Information</title>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Signature</entry><entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_axis_width</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the stroke width of the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_label</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">string</phrase><phrase role="special">&amp;)</phrase></code></entry><entry>Sets
+              the label of the x-axis. This does not guarantee that it will be shown.
+              You must run <code><phrase role="identifier">x_label_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">true</phrase><phrase
+              role="special">)</phrase></code> for that guarantee</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_interval</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">double</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the distance (in
+              Cartesian units) between ticks on the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_tick_length</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the length (in
+              pixels) of the x-axis major ticks</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_tick_width</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the width (in pixels) of the major ticks on the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_tick_length</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the length (in
+              pixels) of the x-axis minor tick lengths</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_tick_width</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the width (in pixels) of the minor ticks on the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_num_minor_ticks</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the number of minor
+              ticks between each major tick</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_1d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_range</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">double</phrase>&nbsp;<phrase
+              role="identifier">x1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+              role="keyword">double</phrase>&nbsp;<phrase role="identifier">x2</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the scale of the
+              x axis from x1 to x2. Throws an exception if x2&lt;=x1 </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
     <section id="svg_plot.svg_1d_plot_interface.1d_plot_function">
       <title> The <code><phrase role="identifier">plot</phrase><phrase role="special">()</phrase></code>
       Method</title>
@@ -1772,7 +1826,7 @@
               of the circle and square.</entry><entry>10</entry>
             </row>
             <row>
-              <entry>_functor</entry><entry>*</entry><entry>A class or that contains
+              <entry>_x_functor</entry><entry>*</entry><entry>A class or that contains
               a conversion function. You will not have to worry about this, unless
               you are trying to accomplish stuff like plotting a vector of humans.
               For example: 
@@ -1789,7 +1843,7 @@
 
 <phrase role="comment">// snip
 </phrase>
-<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_functor</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">my_functor</phrase><phrase role="special">());</phrase>
+<phrase role="identifier">plot</phrase><phrase role="special">(</phrase><phrase role="identifier">my_plot</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">my_data</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="string">&quot;Lions&quot;</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_x_functor</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="identifier">my_functor</phrase><phrase role="special">());</phrase>
 </programlisting>
               </entry><entry> <code><phrase role="identifier">boost_default_convert</phrase></code>
               is sufficient in all cases where the data stored in the container can
@@ -1837,443 +1891,475 @@
   </section>
   <section id="svg_plot.svg_2d_plot_interface">
     <title> <code><phrase role="identifier">svg_2d_plot</phrase></code> Public Interface</title>
-    <informaltable frame="all">
-      <bridgehead renderas="sect4">
-        <phrase role="table-title">Misc</phrase>
-      </bridgehead>
-      <tgroup cols="2">
-        <thead>
-          <row>
-            <entry>Signature</entry><entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">()</phrase></code></entry><entry>See
-            the defaults section for further details</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">image_size</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">unsigned</phrase>&nbsp;<phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the size of the image produced, in pixels</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">title</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase
-            role="special">::</phrase><phrase role="identifier">string</phrase><phrase
-            role="special">&amp;)</phrase></code></entry><entry>Sets the string to
-            be used for the title</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">title_font_size</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the font size for
-            the title</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">legend_title_font_size</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the font size for
-            the legend title</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
-    <informaltable frame="all">
-      <bridgehead renderas="sect4">
-        <phrase role="table-title">Commands</phrase>
-      </bridgehead>
-      <tgroup cols="2">
-        <thead>
-          <row>
-            <entry>Signature</entry><entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">axis_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            whether the axis is on or off</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">legend_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            whether the legend is on or off</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">plot_window_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            whether the plot will be displayed in its own window, or will be &quot;full
-            screen&quot; in the image</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">title_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the image title is displayed</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_label_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            whether or not the X axis label will show</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_grid_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the major grid on the X axis will be displayed</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_labels_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>sets
-            whether or not the major ticks will be labelled on the x axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_minor_grid_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the minor grid on the X axis will be displayed</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_label_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            whether or not the Y axis label will show</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_major_grid_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the major grid on the Y axis will be displayed</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_major_labels_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>sets
-            whether or not the major ticks will be labelled on the Y axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_minor_grid_on</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">bool</phrase><phrase role="special">)</phrase></code></entry><entry>Determines
-            whether or not the minor grid on the Y axis will be displayed</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
-    <informaltable frame="all">
-      <bridgehead renderas="sect4">
-        <phrase role="table-title">Color Information</phrase>
-      </bridgehead>
-      <tgroup cols="2">
-        <thead>
-          <row>
-            <entry>Signature</entry><entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">title_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the title color</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">background_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the background color
-            for the whole image</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">legend_background_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the background color
-            for the legend as <code><phrase role="identifier">col</phrase></code>,
-            an RGB color</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">legend_border_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the border color for
-            the legend as <code><phrase role="identifier">col</phrase></code>, an
-            RGB color</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">background_border_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the background border
-            color for the legend as <code><phrase role="identifier">col</phrase></code>,
-            an RGB color</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">plot_background_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Set the color of the plot
-            area. Note: this only goes into effect if plot_area(true) has been called</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_axis_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            lines that form the axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_label_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            labels that go along the X axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            major ticks of the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_grid_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            grid that runs perpindicular to the X axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_minor_tick_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            minor ticks of the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_axis_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            lines that form the Y axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_label_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            labels that go along the X axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_major_tick_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            major ticks of the Y-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_major_grid_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            grid that runs perpindicular to the Y axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_minor_tick_color</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">svg_color</phrase>&nbsp;<phrase
-            role="special">&amp;</phrase><phrase role="identifier">col</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the color of the
-            minor ticks of the Y-axis</entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
-    <informaltable frame="all">
-      <bridgehead renderas="sect4">
-        <phrase role="table-title">Axis Information</phrase>
-      </bridgehead>
-      <tgroup cols="2">
-        <thead>
-          <row>
-            <entry>Signature</entry><entry>Description</entry>
-          </row>
-        </thead>
-        <tbody>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_axis_width</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the stroke width
-            of the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_label</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase
-            role="special">::</phrase><phrase role="identifier">string</phrase><phrase
-            role="special">&amp;)</phrase></code></entry><entry>Sets the label of
-            the x-axis. This does not guarantee that it will be shown. You must run
-            <code><phrase role="identifier">x_label</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">true</phrase><phrase role="special">)</phrase></code>
-            for that guarantee</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">double</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the distance (in Cartesian units) between ticks on the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick_length</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the length (in pixels) of the x-axis major ticks</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick_width</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the width (in pixels)
-            of the major ticks on the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_minor_tick</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the length (in pixels)
-            of the x-axis minor ticks</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_major_tick_length</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the length (in pixels) of the x-axis minor tick lengths</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_minor_tick_width</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the width (in pixels)
-            of the minor ticks on the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_num_minor_ticks</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the number of minor ticks between each major tick</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">x_range</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">double</phrase>&nbsp;<phrase role="identifier">x1</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
-            role="identifier">x2</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the scale of the x axis from x1 to x2. Throws an exception if x2&lt;=x1
-            </entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_axis_width</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the stroke width
-            of the x-axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_label</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">const</phrase>&nbsp;<phrase role="identifier">std</phrase><phrase
-            role="special">::</phrase><phrase role="identifier">string</phrase><phrase
-            role="special">&amp;)</phrase></code></entry><entry>Sets the label of
-            the x-axis. This does not guarantee that it will be shown. You must run
-            <code><phrase role="identifier">x_label</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">true</phrase><phrase role="special">)</phrase></code>
-            for that guarantee</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_major_tick</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">double</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the distance (in Cartesian units) between ticks on the Y axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_major_tick_length</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the length (in pixels) of the Y axis major ticks</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_major_tick_width</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the width (in pixels)
-            of the major ticks on the Y axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_minor_tick</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the length (in pixels)
-            of the Y axis minor ticks</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_major_tick_length</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the length (in pixels) of the Y axis minor tick lengths</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_minor_tick_width</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
-            role="special">)</phrase></code></entry><entry>Sets the width (in pixels)
-            of the minor ticks on the Y axis</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_num_minor_ticks</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the number of minor ticks between each major tick</entry>
-          </row>
-          <row>
-            <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase
-            role="identifier">y_scale</phrase><phrase role="special">(</phrase><phrase
-            role="keyword">double</phrase>&nbsp;<phrase role="identifier">y1</phrase><phrase
-            role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase
-            role="identifier">y2</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
-            the scale of the Y axis from y1 to y2. Throws an exception if y2&lt;=y1
-            </entry>
-          </row>
-        </tbody>
-      </tgroup>
-    </informaltable>
+    <section id="svg_plot.svg_2d_plot_interface.2d_inter_misc">
+      <title> Miscellaneous</title>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Signature</entry><entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">()</phrase></code></entry><entry>See the defaults section
+              for further details</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">image_size</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+              role="keyword">unsigned</phrase>&nbsp;<phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the size of the
+              image produced, in pixels</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">title</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">string</phrase><phrase role="special">&amp;)</phrase></code></entry><entry>Sets
+              the string to be used for the title</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">title_font_size</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the font size for the title</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">legend_title_font_size</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the font size for the legend title</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+    <section id="svg_plot.svg_2d_plot_interface.2d_inter_commands">
+      <title> Commands</title>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Signature</entry><entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">axis_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets whether the axis
+              is on or off</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">legend_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets whether the legend
+              is on or off</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">plot_window_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets whether the plot
+              will be displayed in its own window, or will be &quot;full screen&quot;
+              in the image</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">title_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the image title is displayed</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_label_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets whether or not
+              the X axis label will show</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_grid_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the major grid on the X axis will be displayed</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_labels_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>sets whether or not
+              the major ticks will be labelled on the x axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_grid_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the minor grid on the X axis will be displayed</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_label_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets whether or not
+              the Y axis label will show</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_major_grid_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the major grid on the Y axis will be displayed</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_major_labels_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>sets whether or not
+              the major ticks will be labelled on the Y axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_minor_grid_on</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">bool</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Determines whether or
+              not the minor grid on the Y axis will be displayed</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+    <section id="svg_plot.svg_2d_plot_interface.2d_inter_color">
+      <title></title>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Signature</entry><entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">title_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the title color</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">background_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the background color for the whole image</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">legend_background_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the background color for the legend as <code><phrase role="identifier">col</phrase></code>,
+              an RGB color</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">legend_border_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the border color for the legend as <code><phrase role="identifier">col</phrase></code>,
+              an RGB color</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">background_border_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the background border color for the legend as <code><phrase role="identifier">col</phrase></code>,
+              an RGB color</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">plot_background_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Set
+              the color of the plot area. Note: this only goes into effect if plot_area(true)
+              has been called</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_axis_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the lines that form the axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_label_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the labels that go along the X axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_tick_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the major ticks of the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_grid_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the grid that runs perpindicular to the X axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_tick_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the minor ticks of the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_axis_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the lines that form the Y axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_label_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the labels that go along the X axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_major_tick_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the major ticks of the Y-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_major_grid_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the grid that runs perpindicular to the Y axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_minor_tick_color</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">svg_color</phrase>&nbsp;<phrase role="special">&amp;</phrase><phrase
+              role="identifier">col</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the color of the minor ticks of the Y-axis</entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+    <section id="svg_plot.svg_2d_plot_interface.2d_inter_axis">
+      <title> Axis Information</title>
+      <informaltable frame="all">
+        <bridgehead renderas="sect4">
+        </bridgehead>
+        <tgroup cols="2">
+          <thead>
+            <row>
+              <entry>Signature</entry><entry>Description</entry>
+            </row>
+          </thead>
+          <tbody>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_axis_width</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the stroke width of the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_label</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">string</phrase><phrase role="special">&amp;)</phrase></code></entry><entry>Sets
+              the label of the x-axis. This does not guarantee that it will be shown.
+              You must run <code><phrase role="identifier">x_label</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">true</phrase><phrase
+              role="special">)</phrase></code> for that guarantee</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_interval</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">double</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the distance (in
+              Cartesian units) between ticks on the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_tick_length</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the length (in
+              pixels) of the x-axis major ticks</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_major_tick_width</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the width (in pixels) of the major ticks on the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_tick</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the length (in pixels) of the x-axis minor ticks</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_tick_length</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the length (in
+              pixels) of the x-axis minor tick lengths</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_minor_tick_width</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the width (in pixels) of the minor ticks on the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_num_minor_ticks</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the number of minor
+              ticks between each major tick</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">x_range</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">double</phrase>&nbsp;<phrase
+              role="identifier">x1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+              role="keyword">double</phrase>&nbsp;<phrase role="identifier">x2</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the scale of the
+              x axis from x1 to x2. Throws an exception if x2&lt;=x1 </entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_axis_width</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the stroke width of the x-axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_label</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase
+              role="identifier">std</phrase><phrase role="special">::</phrase><phrase
+              role="identifier">string</phrase><phrase role="special">&amp;)</phrase></code></entry><entry>Sets
+              the label of the x-axis. This does not guarantee that it will be shown.
+              You must run <code><phrase role="identifier">x_label</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">true</phrase><phrase
+              role="special">)</phrase></code> for that guarantee</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_major_tick</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">double</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the distance (in
+              Cartesian units) between ticks on the Y axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_major_tick_length</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the length (in
+              pixels) of the Y axis major ticks</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_major_tick_width</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the width (in pixels) of the major ticks on the Y axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_minor_tick</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the length (in pixels) of the Y axis minor ticks</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_major_tick_length</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the length (in
+              pixels) of the Y axis minor tick lengths</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_minor_tick_width</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">unsigned</phrase>&nbsp;<phrase
+              role="keyword">int</phrase><phrase role="special">)</phrase></code></entry><entry>Sets
+              the width (in pixels) of the minor ticks on the Y axis</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_num_minor_ticks</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">int</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the number of minor
+              ticks between each major tick</entry>
+            </row>
+            <row>
+              <entry><code><phrase role="identifier">svg_2d_plot</phrase><phrase
+              role="special">&amp;</phrase>&nbsp;<phrase role="identifier">y_scale</phrase><phrase
+              role="special">(</phrase><phrase role="keyword">double</phrase>&nbsp;<phrase
+              role="identifier">y1</phrase><phrase role="special">,</phrase>&nbsp;<phrase
+              role="keyword">double</phrase>&nbsp;<phrase role="identifier">y2</phrase><phrase
+              role="special">)</phrase></code></entry><entry>Sets the scale of the
+              Y axis from y1 to y2. Throws an exception if y2&lt;=y1 </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
     <para>
       (Note: Getters omitted for now)
     </para>
@@ -2338,6 +2424,13 @@
           </thead>
           <tbody>
             <row>
+              <entry>_bezier_on</entry><entry><code><phrase role="keyword">bool</phrase></code></entry><entry>
+              This determines whether or not Bézier curve interpolation will be
+              applied to the plot lines. It is important to note that the curve interpolation
+              is still in its infancy, and should only be used with reasonably nice
+              data sets</entry>
+            </row>
+            <row>
               <entry>_line_on</entry><entry><code><phrase role="keyword">bool</phrase></code></entry><entry>
               This determines whether or not there are lines drawn between data points.</entry><entry>false</entry>
             </row>
@@ -2369,7 +2462,7 @@
               of the circle and square.</entry><entry>10</entry>
             </row>
             <row>
-              <entry>_functor</entry><entry>*</entry><entry>A class or that contains
+              <entry>_x_functor</entry><entry>*</entry><entry>A class or that contains
               a conversion function. You will not have to worry about this, unless
               you are trying to accomplish stuff like plotting a vector of humans.
               For example: 
@@ -2377,11 +2470,9 @@
 <phrase role="keyword">class</phrase>&nbsp;<phrase role="identifier">my_functor</phrase>
 <phrase role="special">{</phrase>
 	<phrase role="identifier">typdef</phrase>&nbsp;<phrase role="identifier">pair</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase><phrase role="special">&gt;</phrase>&nbsp;<phrase role="identifier">result_type</phrase><phrase role="special">;</phrase>
-	<phrase role="keyword">static</phrase>&nbsp;<phrase role="keyword">double</phrase>&nbsp;<phrase role="identifier">i</phrase>&nbsp;<phrase role="special">=</phrase>&nbsp;<phrase role="number">0</phrase><phrase role="special">;</phrase>
 
-	<phrase role="identifier">pair</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase><phrase role="special">&gt;</phrase>&nbsp;<phrase role="keyword">operator</phrase><phrase role="special">()(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase role="identifier">human</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase role="identifier">_hum</phrase><phrase role="special">)</phrase>
+	<phrase role="identifier">pair</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase><phrase role="special">&gt;</phrase>&nbsp;<phrase role="keyword">operator</phrase><phrase role="special">()(</phrase><phrase role="keyword">const</phrase>&nbsp;<phrase role="identifier">human</phrase><phrase role="special">&amp;</phrase>&nbsp;<phrase role="identifier">_hum</phrase><phrase role="special">)</phrase>&nbsp;<phrase role="keyword">const</phrase>
 	<phrase role="special">{</phrase>
-		<phrase role="identifier">i</phrase><phrase role="special">+=</phrase><phrase role="number">1.</phrase><phrase role="special">;</phrase>
 		<phrase role="keyword">return</phrase>&nbsp;<phrase role="identifier">pair</phrase><phrase role="special">&lt;</phrase><phrase role="keyword">double</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="keyword">double</phrase><phrase role="special">&gt;(</phrase><phrase role="identifier">i</phrase><phrase role="special">,</phrase>&nbsp;<phrase role="identifier">_hum</phrase><phrase role="special">.</phrase><phrase role="identifier">age</phrase><phrase role="special">());</phrase>
 	<phrase role="special">}</phrase>
 <phrase role="special">}</phrase>
