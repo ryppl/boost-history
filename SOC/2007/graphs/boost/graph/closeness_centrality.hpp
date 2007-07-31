@@ -4,8 +4,8 @@
 // Boost Software License, Version 1.0 (See accompanying file
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GRAPH_GEODESIC_HPP
-#define BOOST_GRAPH_GEODESIC_HPP
+#ifndef BOOST_GRAPH_CLOSENESS_CENTRALITY_HPP
+#define BOOST_GRAPH_CLISENESS_CENTRALITY_HPP
 
 #include <limits>
 
