@@ -119,13 +119,13 @@ iterations.
     ]
     [
         [Destructor]
-        [c.~C();]
+        [`c.~C()`]
         [`void`]
         [
             The destructor of every element in `c` is called and any memory
             allocated by the container is deallocated.
             
-            *Complexity:* Linear in the c.size()`.
+            *Complexity:* Linear in `c.size()`.
         ]
     ]
     [
