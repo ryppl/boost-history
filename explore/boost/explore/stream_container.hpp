@@ -105,11 +105,11 @@ namespace explore
             explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_end(end, depth);
         }
 
-        // function ptr object for setitemw
+        // function ptr object for setrows
         //template<typename Elem>
-        void setitemwFn(std::ios_base& ostr, std::streamsize sz, std::size_t depth)
+        void setrowsFn(std::ios_base& ostr, std::size_t sz, std::size_t depth)
         {
-            explore::get_stream_state<container_stream_state<char> >(ostr)->set_itemw(sz, depth);
+            explore::get_stream_state<container_stream_state<char> >(ostr)->set_rows(sz, depth);
         }
     }
 
@@ -124,8 +124,17 @@ namespace explore
         // starting delimiter
         ostr << state->start(depth);
 
+        std::size_t rows = state->rows();
+
+        std::size_t cur_row = 0;
         while( first != last )
         {
+            if( rows && cur_row++ == rows )
+            {
+                ostr << std::endl;
+                cur_row = 1;
+            }
+
             // value
             f(ostr, *first, state);
             if( ++first != last )
@@ -270,9 +279,9 @@ namespace explore
         return detail::manipfunc<const Elem*>(&detail::assoc_endFn, end, depth);
     }
 
-    detail::manipfunc<std::streamsize> setitemw(std::streamsize sz, std::size_t depth = 0)
+    detail::manipfunc<size_t> setrows(std::size_t sz, std::size_t depth = 0)
     {
-        return detail::manipfunc<std::streamsize>(detail::setitemwFn, sz, depth);
+        return detail::manipfunc<std::size_t>(detail::setrowsFn, sz, depth);
     }
 
     // manipulator

@@ -42,7 +42,7 @@ namespace explore
         typedef std::vector<str_typ, std::allocator<str_typ> > cont_typ;
 
         container_stream_state()
-            : m_depth(0), m_itemw(0)
+            : m_depth(0), m_rows(0)
         {
             init<Elem>();
         }
@@ -66,7 +66,7 @@ namespace explore
         const str_typ& assoc_separator(std::size_t index = 0) const { return at(m_assoc_separator, index); }
         const str_typ& assoc_start(std::size_t index = 0) const { return at(m_assoc_start, index); }
         const str_typ& assoc_end(std::size_t index = 0) const { return at(m_assoc_end, index); }
-        std::streamsize itemw() const { return m_itemw; }
+        std::size_t rows() const { return m_rows; }
 
         // write
         void set_separator(const str_typ& str, std::size_t index = 0) { at(m_separator, index) = str; }
@@ -75,7 +75,7 @@ namespace explore
         void set_assoc_separator(const str_typ& str, std::size_t index = 0) { at(m_assoc_separator, index) = str; }
         void set_assoc_start(const str_typ& str, std::size_t index = 0) { at(m_assoc_start, index) = str; }
         void set_assoc_end(const str_typ& str, std::size_t index = 0) { at(m_assoc_end, index) = str; }
-        void set_itemw(std::streamsize itemw, std::size_t index = 0) { m_itemw = itemw; }
+        void set_rows(std::size_t rows, std::size_t index = 0) { m_rows = rows; }
 
         std::size_t depth() const
         {
@@ -94,9 +94,10 @@ namespace explore
         cont_typ m_assoc_end;
         std::size_t m_depth;
 
-        std::streamsize m_itemw;
+        std::size_t m_rows;
 
-        void init(cont_typ& c, str_typ val)
+        template<typename T>
+        void init(cont_typ& c, const T& val)
         {
             c.resize(1);
             c[0] = val;
