@@ -129,18 +129,19 @@ namespace explore
         std::size_t cur_row = 0;
         while( first != last )
         {
-            if( rows && cur_row++ == rows )
-            {
-                ostr << std::endl;
-                cur_row = 1;
-            }
-
             // value
             f(ostr, *first, state);
+
             if( ++first != last )
             {
                 // separation delimiter
                 ostr << state->separator(depth);
+
+                if( rows && ++cur_row == rows )
+                {
+                    ostr << '\n';
+                    cur_row = 0;
+                }
             }
         }
 
@@ -279,7 +280,7 @@ namespace explore
         return detail::manipfunc<const Elem*>(&detail::assoc_endFn, end, depth);
     }
 
-    detail::manipfunc<size_t> setrows(std::size_t sz, std::size_t depth = 0)
+    detail::manipfunc<std::size_t> setrows(std::size_t sz, std::size_t depth = 0)
     {
         return detail::manipfunc<std::size_t>(detail::setrowsFn, sz, depth);
     }
