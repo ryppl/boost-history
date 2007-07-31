@@ -316,7 +316,7 @@ namespace
 
 # if !defined( BOOST_WINDOWS_API )
 
-  std::string native_error_category::message( boost::int_least32_t ev ) const
+  std::string system_error_category::message( boost::int_least32_t ev ) const
   {
     return posix_category.message( ev );
   }
