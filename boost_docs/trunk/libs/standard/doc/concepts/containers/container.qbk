@@ -21,7 +21,7 @@ iterations.
 [table
     [[Expression] [Description]]
     [[`C`] [A type that models the [StdContainer] concept.]]
-    [[`c`] [An object of type `C`.]]
+    [[`c`, `d`] [Objects of type `C`.]]
     [[`T`] [An object stored by `C`.]]
 ]
 
@@ -94,6 +94,38 @@ iterations.
             Construct a new contaiiner of type `C`.
             
             *Postcondition:* The created container has `size() == 0`.
+            
+            *Complexity:* Constant.
+        ]
+    ]
+    [
+        [Default Constructor]
+        [
+            C c(d);
+            
+            C c = d;
+            
+            C(d)
+        ]
+        []
+        [
+            Construct a new container of type `C` with a copy of the contents
+            of container `d`.
+            
+            *Postcondition:* The constructed container is equivalent to `d`,
+            
+            *Complexity:* Linear in `d.size()`.
+        ]
+    ]
+    [
+        [Destructor]
+        [c.~C();]
+        [`void`]
+        [
+            The destructor of every element in `c` is called and any memory
+            allocated by the container is deallocated.
+            
+            *Complexity:* Linear in the c.size()`.
         ]
     ]
     [
@@ -109,10 +141,12 @@ iterations.
             
             *Postcondition:* If `c` is not empty, `c.begin()` is dereferenceable.
             Otherwise, it is past the end.
+            
+            *Complexity:* Constant.
         ]
     ]
     [
-        [Beginning of Range]
+        [End of Range]
         [`c.end()`]
         [
             `iterator` if `c` is mutable.
@@ -123,6 +157,8 @@ iterations.
             Returns an iterator pointing past the end of the container..
             
             *Postcondition:* `c.end()` is past the edn of the array.
+            
+            *Complexity:* Constant.
         ]
     ]
 ]
