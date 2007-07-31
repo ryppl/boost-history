@@ -36,7 +36,7 @@ boost::system::error_code my_mkdir( const std::string & path )
 {
   return boost::system::error_code(
 #   ifdef BOOST_POSIX_API
-      ::mkdir( path.c_str() ) == 0 ? 0 : errno,
+      ::mkdir( path.c_str(), S_IRWXU|S_IRWXG|S_IROTH|S_IXOTH ) == 0 ? 0 : errno,
 #   else
       ::CreateDirectoryA( path.c_str(), 0 ) != 0 ? 0 : ::GetLastError(),
 #   endif
