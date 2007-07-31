@@ -35,6 +35,12 @@ exe components
     : <include>../../../
     ;
 
+exe degree_centrality
+    : degree_centrality.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
+
 exe distance
     : distance.cpp
     : <include>$BOOST_ROOT

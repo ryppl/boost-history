@@ -21,7 +21,7 @@
 #include <boost/graph/johnson_all_pairs_shortest.hpp>
 #include <boost/graph/floyd_warshall_shortest.hpp>
 #include <boost/graph/distance.hpp>
-#include <boost/graph/geodesic.hpp>
+#include <boost/graph/closeness_centrality.hpp>
 
 using namespace std;
 using namespace boost;
@@ -139,6 +139,37 @@ void test()
 
         print_matrix(g, dists);
 
+        typedef exterior_vertex_property<Graph, float> ClosenessProperty;
+        typedef typename ClosenessProperty::container_type ClosenessContainer;
+        typedef typename ClosenessProperty::map_type ClosenessMap;
+
+        {
+            ClosenessContainer c(num_vertices(g));
+            ClosenessMap m(c);
+            all_total_geodesic_distances(g, dists, m);
+            std::cout << "all total geodesics: "; print_map(g, m);
+        }
+
+        {
+            ClosenessContainer c(num_vertices(g));
+            ClosenessMap m(c);
+            all_mean_geodesic_distances(g, dists, m);
+            std::cout << "all mean geodesics: "; print_map(g, m);
+        }
+
+        {
+            ClosenessContainer c(num_vertices(g));
+            ClosenessMap m(c);
+            all_inverse_geodesic_distances(g, dists, m);
+            std::cout << "all inverse geodesics: "; print_map(g, m);
+        }
+
+        {
+            ClosenessContainer c(num_vertices(g));
+            ClosenessMap m(c);
+            all_closenesses(g, dists, m);
+            std::cout << "all closenesses: "; print_map(g, m);
+        }
     }
 }
 
