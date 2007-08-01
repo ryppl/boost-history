@@ -243,11 +243,11 @@ namespace boost
 
         template <typename Graph, typename Visitor>
         inline void
-        visit_cycles_at_vertex(const Graph& g,
-                               typename graph_traits<Graph>::vertex_descriptor v,
-                               Visitor vis,
-                               std::size_t maxlen,
-                               std::size_t minlen)
+        all_cycles_at_vertex(const Graph& g,
+                             typename graph_traits<Graph>::vertex_descriptor v,
+                             Visitor vis,
+                             std::size_t maxlen,
+                             std::size_t minlen)
         {
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
             typedef typename graph_traits<Graph>::edge_descriptor Edge;
@@ -294,17 +294,23 @@ namespace boost
 
     template <typename Graph, typename Visitor>
     inline void
-    tiernan_visit_cycles(const Graph& g,
-                         Visitor vis,
-                         std::size_t maxlen = std::numeric_limits<std::size_t>::max(),
-                         std::size_t minlen = 2)
+    tiernan_all_cycles(const Graph& g, Visitor vis,
+                       std::size_t maxlen,
+                       std::size_t minlen)
     {
         typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
 
         VertexIterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            detail::visit_cycles_at_vertex(g, *i, vis, maxlen, minlen);
+            detail::all_cycles_at_vertex(g, *i, vis, maxlen, minlen);
         }
+    }
+
+    template <typename Graph, typename Visitor>
+    inline void
+    tiernan_all_cycles(const Graph& g, Visitor vis)
+    {
+        tiernan_all_cycles(g, vis, 2, std::numeric_limits<std::size_t>::max());
     }
 }
 

@@ -12,7 +12,7 @@ namespace boost
     template <typename Graph>
     struct degree_centrality_measure
     {
-        typedef typename graph_traits<Graph>::degree_size_type value_type;
+        typedef typename graph_traits<Graph>::degree_size_type degree_type;
         typedef typename graph_traits<Graph>::vertex_descriptor vertex_type;
     };
 
@@ -21,25 +21,12 @@ namespace boost
         : public degree_centrality_measure<Graph>
     {
         typedef degree_centrality_measure<Graph> base_type;
-        typedef typename base_type::value_type value_type;
+        typedef typename base_type::degree_type degree_type;
         typedef typename base_type::vertex_type vertex_type;
 
-        inline value_type operator ()(const Graph& g, vertex_type v)
+        inline degree_type operator ()(vertex_type v, const Graph& g)
         {
-            typename graph_traits<Graph>::directed_category cat;
-            return this->get_degree(g, v, cat);
-        }
-
-    private:
-        inline value_type
-        get_degree(const Graph& g, vertex_type v, undirected_tag)
-        {
-            return degree(v, g);
-        }
-
-        inline value_type
-        get_degree(const Graph& g, vertex_type v, directed_tag)
-        {
+            // This defaults to degree() for undirected graphs
             return out_degree(v, g);
         }
     };
@@ -53,12 +40,12 @@ namespace boost
 
 
     template <typename Graph, typename Measure>
-    inline typename graph_traits<Graph>::degree_size_type
+    inline typename Measure::degree_type
     vertex_degree_centrality(const Graph& g,
                              typename graph_traits<Graph>::vertex_descriptor v,
                              Measure measure)
     {
-        return measure(g, v);
+        return measure(v, g);
     }
 
     template <typename Graph>
@@ -72,9 +59,10 @@ namespace boost
 
 
     template <typename Graph, typename CentralityMap, typename Measure>
-    void degree_centrality(const Graph& g,
-                           CentralityMap cent,
-                           Measure measure)
+    inline void
+    degree_centrality(const Graph& g,
+                      CentralityMap cent,
+                      Measure measure)
     {
         typename graph_traits<Graph>::vertex_iterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
@@ -83,12 +71,11 @@ namespace boost
     }
 
     template <typename Graph, typename CentralityMap>
-    void degree_centrality(const Graph& g,
-                           CentralityMap cent)
+    inline void degree_centrality(const Graph& g,
+                                  CentralityMap cent)
     {
         degree_centrality(g, cent, measure_basic_degree_centrality(g));
     }
-
 }
 
 #endif

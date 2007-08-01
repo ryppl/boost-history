@@ -119,8 +119,8 @@ namespace boost
               typename Measure>
     inline void
     closeness_centrality(const Graph& g,
-                         DistanceMatrix& dist,
-                         CentralityMap& cent,
+                         const DistanceMatrix& dist,
+                         CentralityMap cent,
                          Measure measure)
     {
         typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
@@ -136,8 +136,8 @@ namespace boost
               typename CentralityMap>
     inline void
     closeness_centrality(const Graph& g,
-                         DistanceMatrix& dist,
-                         CentralityMap& cent)
+                         const DistanceMatrix& dist,
+                         CentralityMap cent)
     {
         typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
         typedef typename exterior_vertex_property<Graph, Distance>::map_type DistanceMap;

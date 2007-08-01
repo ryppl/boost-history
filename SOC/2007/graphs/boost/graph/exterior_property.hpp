@@ -121,7 +121,10 @@ namespace boost
             inline typename matrix_type::reference operator [](key_type k)
             { return m_matrix[k]; }
 
-            matrix_type m_matrix;
+            inline typename matrix_type::reference operator [](key_type k) const
+            { return m_matrix[k]; }
+
+            mutable matrix_type m_matrix;
         };
 
         // There's a strange side-effect using the []'s of a hashtable in
@@ -153,6 +156,9 @@ namespace boost
             }
 
             inline typename matrix_type::mapped_type& operator [](key_type k)
+            { return m_matrix[k]; }
+
+            inline typename matrix_type::mapped_type& operator [](key_type k) const
             { return m_matrix[k]; }
 
             mutable matrix_type m_matrix;

@@ -20,14 +20,14 @@ namespace boost
         typedef geodesic_measure<Graph, DistanceType, ResultType> base_type;
         typedef typename base_type::distance_type distance_type;
         typedef typename base_type::result_type result_type;
-        typedef typename base_type::size_type size_type;
 
-        result_type operator ()(distance_type d, size_type n)
+        result_type operator ()(distance_type d, const Graph& g)
         {
             typedef result_type T;
             return
                 (d == base_type::infinite_distance()) ?
-                    base_type::infinite_result() : T(d) / T(n);
+                    base_type::infinite_result() :
+                    T(d) / T(num_vertices(g));
         }
     };
 
@@ -46,19 +46,23 @@ namespace boost
     }
 
 
-    template <typename Graph, typename DistanceType, typename ResultType>
+    // This is a little different because it's expected that the result type
+    // should (must?) be the same as the distance type. There's a type of
+    // transitivity in this thinking... If the average of distances has type
+    // X then the average of x's should also be type X.
+    template <typename Graph, typename DistanceType>
     struct mean_graph_distance_measure
-        : public geodesic_measure<Graph, DistanceType, ResultType>
+        : public geodesic_measure<Graph, DistanceType, DistanceType>
     {
-        typedef geodesic_measure<Graph, DistanceType, ResultType> base_type;
+        typedef geodesic_measure<Graph, DistanceType, DistanceType> base_type;
         typedef typename base_type::distance_type distance_type;
         typedef typename base_type::result_type result_type;
         typedef typename base_type::size_type size_type;
 
-        inline result_type operator ()(distance_type d, size_type n)
+        inline result_type operator ()(distance_type d, const Graph& g)
         {
             typename graph_traits<Graph>::directed_category cat;
-            return this->average(d, n, cat);
+            return this->average(d, num_vertices(g), cat);
         }
 
     private:
@@ -86,16 +90,13 @@ namespace boost
         }
     };
 
-    template <typename Distance, typename Result, typename Graph>
-    inline mean_graph_distance_measure<Graph, Distance, Result>
-    measure_mean_graph_distance(const Graph& g)
-    { return mean_graph_distance_measure<Graph, Distance, Result>(); }
-
-    template <typename T, typename Graph, typename DistanceMap>
-    inline mean_graph_distance_measure<Graph, typename property_traits<DistanceMap>::value_type, T>
-    measure_mean_graph_distance(const Graph& g, DistanceMap dist)
-    { return mean_graph_distance_measure<Graph, typename property_traits<DistanceMap>::value_type, T>(); }
-
+    template <typename Graph, typename DistanceMap>
+    inline mean_graph_distance_measure<Graph, typename property_traits<DistanceMap>::value_type>
+    measure_graph_mean_geodesic(const Graph& g, DistanceMap dist)
+    {
+        typedef typename property_traits<DistanceMap>::value_type T;
+        return mean_graph_distance_measure<Graph, T>();
+    }
 
     template <typename Graph,
               typename DistanceMap,
@@ -111,7 +112,7 @@ namespace boost
         typedef typename Measure::distance_values DistanceValues;
         Distance n = detail::combine_distances(g, dist, combine,
                                                DistanceValues());
-        return measure(n, num_vertices(g));
+        return measure(n, g);
     }
 
     template <typename Graph,
@@ -147,11 +148,10 @@ namespace boost
               typename Measure>
     inline void
     mean_geodesic(const Graph& g,
-                  DistanceMatrix& dist,
-                  GeodesicMap& geo,
+                  const DistanceMatrix& dist,
+                  GeodesicMap geo,
                   Measure measure)
     {
-        typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
         typename graph_traits<Graph>::vertex_iterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
             geo[*i] = vertex_mean_geodesic(g, dist[*i], measure);
@@ -163,8 +163,8 @@ namespace boost
               typename GeodesicMap>
     inline void
     mean_geodesic(const Graph& g,
-                  DistanceMatrix& dist,
-                  GeodesicMap& geo)
+                  const DistanceMatrix& dist,
+                  GeodesicMap geo)
     {
         typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
         typedef typename exterior_vertex_property<Graph, Distance>::map_type DistanceMap;
@@ -173,48 +173,21 @@ namespace boost
                       measure_mean_geodesic<Result>(g, DistanceMap()));
     }
 
-    template <typename Graph,
-              typename DistanceMatrix,
-              typename Measure>
+
+    template <typename Graph, typename GeodesicMap, typename Measure>
     inline typename Measure::result_type
-    graph_mean_geodesic(const Graph& g,
-                        DistanceMatrix& dist,
-                        Measure measure)
+    graph_mean_geodesic(const Graph& g, GeodesicMap geo, Measure measure)
     {
         typedef typename Measure::result_type T;
-        typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
-        typedef typename exterior_vertex_property<Graph, Distance>::map_type DistanceMap;
-        typedef typename exterior_vertex_property<Graph, T>::container_type GeoContainer;
-        typedef typename exterior_vertex_property<Graph, T>::map_type GeoMap;
-
-        // get all mean geos
-        GeoContainer geodesics(num_vertices(g));
-        GeoMap geo(geodesics);
-        mean_geodesic(g, dist, geo,
-                      measure_mean_geodesic(g, DistanceMap()));
-
-        // re-combine these as new distances
-        T sum = detail::combine_distances(g, geo,
-                                          std::plus<T>(),
-                                          numeric_values<T>());
-        return measure(sum, num_vertices(g));
+        T sum = detail::combine_distances(g, geo, std::plus<T>(), numeric_values<T>());
+        return measure(sum, g);
     }
 
-    template <typename T, typename Graph, typename DistanceMatrix>
-    inline T
-    graph_mean_geodesic(const Graph& g,
-                        DistanceMatrix& dist)
+    template <typename Graph, typename GeodesicMap>
+    inline typename property_traits<GeodesicMap>::value_type
+    graph_mean_geodesic(const Graph& g, GeodesicMap geo)
     {
-        return
-            graph_mean_geodesic(g, dist, measure_mean_graph_distance<T, T>(g));
-    }
-
-    template <typename Graph, typename DistanceMatrix>
-    inline float
-    graph_mean_geodesic(const Graph& g,
-                        DistanceMatrix& dist)
-    {
-        return graph_mean_geodesic<float>(g, dist);
+        return graph_mean_geodesic(g, geo, measure_graph_mean_geodesic(g, geo));
     }
 }
 

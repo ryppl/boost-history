@@ -206,7 +206,7 @@ namespace boost
 
     template <typename Graph, typename Visitor>
     inline void
-    bron_kerbosch_visit_cliques(const Graph& g, Visitor vis)
+    bron_kerbosch_all_cliques(const Graph& g, Visitor vis)
     {
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
         typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
