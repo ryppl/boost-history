@@ -6,209 +6,161 @@
  /]
 
 [section Closeness Centrality]
-This section describes the closeness centrality framework - group of functions
-related to computing measures based on the geodesic distances of vertices. There
-are four related measures:
-* Total geodesic distance
-* Mean geodesic distances
-* Inverse geodesic distance
-* Closeness
 
+    template <typename Graph, typename DistanceMatrix, typename ClosenessMap>
+    void closeness_centrality(const Graph& g,
+                              DistanceMatrix& dist,
+                              ClosenessMap& close)
 
     template <typename Graph,
-              typename DistanceMap,
-              typename Measure,
-              typename Combinator>
-    inline typename Measure::result_type
-    closeness_centrality(const Graph& g,
-                         DistanceMap dist,
-                         Measure measure,
-                         Combinator combine)
+              typename DistanceMatrix,
+              typename ClosenessMap,
+              typename Measure>
+    void closeness_centrality(const Graph& g,
+                              DistanceMatrix& dist,
+                              ClosenessMap& close,
+                              Measure measure)
 
 
-These functions compute values based on the /geodesic distance/ between
-vertices. The /geodesic distance/ between vertices /u/ and /v/ is defined
-as the shortest-length path between such vertices. The shortest path can
-be defined in terms of the sum of edge, weights, the sum of vertex weights,
-or simply the number of "hops". It is important to notethat these functions
-/do not/ compute the paths or record their distances. Instead, they rely upon
-a previous computation.
+    template <typename Graph, typename DistanceMap>
+    float vertex_closeness_centrality(const Graph& g, DistanceMap dist)
 
-Boost.Graph provides two shortest paths algorithms: [boost_dijkstra_shortest_paths]
-and [boost_bellman_ford_shortest_paths]. Optionally, if the target graph is
-an unweighted, undirected graph the shortest paths can be recorded using
-[boost_breadth_first_search]. Each of these algorithms takes as an input a
-vertex for which the shortest distances are being computed. The output of
-each of these shortest paths algorithms is a `DistanceMap`, which is used as the
-input to the geodesic distance functions. Note then, that these functions compute
-measures of the vertex for which `dist` was computed.
+    template <typename ResultType, typename Graph, typename DistanceMap>
+    ResultType vertex_closeness_centrality(const Graph& g, DistanceMap dist)
 
-The `mean_geodesic()` functions return the (arithmatic) mean of the geodesic
-distances between a vertex and all others in the graph. Intuitively, this gives
-the average distance from one vertex to every other. Vertices with low mean
-geodesic distance are more central to the graph. The `mean_geodesic()` for
-a vertex is given as:
+    template <typename Graph, typename DistanceMap, typename Measure>
+    typename Measure::result_type
+    vertex_closeness_centrality(const Graph& g, DistanceMap dist, Measure measure)
 
-[$images/eq/mean_geodesic.png]
-
-The `closeness()` functions effectively return the inverse (reciprocal) of the
-`mean_geodesic()` for a vertex. It is given as:
+The /closeness centrality/ measure is commonly used in social network analysis to
+identify vertices (also called actors) that are "close" to all others. To phrase
+differently, actors that are "closer" to all others have a greater reach, making
+them more influential in the network. The closeness measure is defined as the inverse
+as the sum of all geodesic distances (lengths of shortest path) from one vertex
+to all others. Formally it is given as:
 
 [$images/eq/closeness.png]
 
-In both of these formulas, /n/ is the number of vertices in the graph `G` and
-['d[sub G](u, v)] is the geodesic distance (shortest path) from /u/ to /v/. If
-/v/ is not reachable from /u/, then the distance between /u/ and /v/ is infinite.
-This implies that the `mean_geodesic()` for `u` is infinite and the `closeness()`
-is 0.
+Where /d(u,v)/ is the shortest path (geodesic distance) from /u/ to /v/.
+Note that if any vertex in the graph is unreachable from any other, then the
+graph is unconnected, and the distance between those two unonnected vertices
+is infinite. This imlplies that the closeness of every vertex in an unconnected
+(and undirected) graph is zero. This is not necessarily the case for directed
+graphs.
 
-There are three variants of these two sets of functions, allowing increasing
-genericity of usage.
+It is also important to note the relationship between /closeness/, /farness/
+and /mean geodesic distance/. Specifcially, /farness/ is the inverse of
+/closeness/ (or the other way around) and indicates how far an actor is from
+all others in the graph. The /mean geodesic distance/ is the average /farness/
+of a vertex.
 
-The first variant of this function computes and returns the average as a
-`double`. The second variant allows the average and return type to be computed
-as a user-defined type by passing a dummy instance. This is useful if the
-`value_type` of `DistanceMap` is a user-defined, but otherwise acts as a numeric
-type. The third variant allows the user to specify the type, the combination
-function for computing the sum, and the default values of 0 and infinity. This
-is useful when the computation is performed on a discrete or non-numeric type.
-Note that in this variant, the default value of `zero` must be explicitly
-passed as an argument.
+This module defines a flexible framework for computing the closeness centrality
+of vertices in a graph for previously computed geodesics by providing two generic
+functions. The first function, `closeness_centrality()` computes the closeness of
+each vertex in a graph given a matrix containing the distances between vertices.
+This matrix can be computed as the output of an "all pairs shortest path" algorithm,
+or as the result of many breadth first searches (if the graph is unweighted).
+
+The second function, `vertex_closeness_centrality()` can be used to compute the
+closeness of a single vertex. This function requires a distance map that contains
+the distance from one vertex (the source) to all others in the graph. This
+distance map can be computed as the result of a "shortest paths" algorithm or
+recording distances from a breadth-first search.
+
+This framework also allows for a specialization of the measure through the use
+of a function object. This measure defaults to the reciprocal in the equation
+above, but can be easily redefined to perform alternative computations or, in
+the case of non-trivial types, re-define the notion of reciprocal.
 
 [heading Where Defined]
-`boost/graph/distance.hpp`
+`boost/graph/closeness_centrality.hpp`
 
 [heading Parameters]
 [table
     [[Type] [Parameter] [Description]]
     [
+        [template] [`ResultType`]
+        [
+            The `ResultType` template parmeter explitly specifies the the
+            return type of the `closeness()` function. If not
+            given, the return type is `float`.
+
+            *Requirements:* The return type is required to model the
+            [BoostNumericValue] concept.
+        ]
+    ]
+    [
         [required, in] [`const Graph& g`]
         [
-            The graph object for which the measure will be computed. The
-            `Graph` type is required to be a model of [BoostVertexListGraph].
+            The graph for which vertex measures are being comptued.
+
+            *Requirements:* The `Graph` type must be a model of the
+            [BoostVertexListGraph] concept.
         ]
     ]
     [
         [required, in] [`DistanceMap dist`]
         [
-            The `dist` parameter provides the distances of the shortest paths
-            from one source vertex to all others in the graph. The `DistanceMap`
-            must be a model of [BoostReadWritePropertyMap], they `key_type` must
-            be the `vertex_descriptor` of `Graph`.
-        ]
-    ]
-    [
-        [optional, in] [`T`]
-        [
-            If used, the `T` template parameter must be explicitly given as a
-            template argument when invoking these functions. The type `T` must
-            be a `Regular` type (default and copy constructible, assignable).
-            Additionally, it must be `Divisible` and constructible from both
-            `vertices_size_type` of `Graph` and the `value_type` of `DistanceMap`.
-            Numeric types satisfy these requirements.
-        ]
-    ]
-    [
-        [optional, in] [`Combinator combine`]
-        [
-            The `combine` parameter is a binary functor that is invoked to combine
-            distance values in the `DistanceMap`. The argument types and return
-            type of the function must be the same as the `value_type` of the
-            `DistanceMap`.
+            The `dist` parameter provides, given a vertex /v/, the shortest
+            distance from another vertex /u/. The distance map is computed for
+            the vertex /u/, and the distance from /u/ to itself should be 0
+            (i.e., `dist[u] == 0`).
 
-            *Default:* `std::plus<T>()`
+            *Requirements:* `DistanceMap` must be a model of [BoostReadablePropertyMap].
+            The `key_type` of the distance map must be the same as the `vertex_descriptor`
+            of the `Graph` parameter. The `value_type` is required to be a model of
+            [BoostNumericValue].
         ]
     ]
     [
-        [optional, in] [`DistanceType zero`]
+        [required, in] [`DistanceMatrix dist`]
         [
-            The `zero` parameter is used as an initial value for the combination
-            of distances in these computations. Distance must be the same type
-            as the `value_type` of the `DistanceMap` parameter.
+            The `dist` parameter provides, given vertices /u/ and /v/, the
+            length of the shortest path between the two vertices. Note that the
+            distance between a vertex and itself should be 0 (i.e., `dist[u][u] == 0`).
 
-            *Defaults:* `DistanceType()` (for numeric types, this is 0).
+            *Requirements:* `DistanceMatrix` must be a model of [BoostPropertyMatrix].
+            The `key_type` of the distance matrixc must be the same as the
+            `vertex_descriptor` of the `Graph` parameter. The `value_type` is
+            required to be a model of [BoostNumericValue].
         ]
     ]
     [
-        [optional, in] [`T infinity`]
+        [required, out] [`ClosenessMap close`]
         [
-            The `infinity` parameter is used to indicate a value of `T` that
-            acts as an infinite value in these computations. Distance must be the
-            same type as the `value_type` of the `DistanceMap` parameter. Note that
-            if the shortest paths are computed using [boost_dijkstra_shortest_paths],
-            and the `inf` parameter is used, this must be the same value.
+            The `close` parameter stores the output of the computed closeness (or
+            distance) for each vertex in `g`.
 
-            *Default:* `std::numeric_limits<DistanceType>::max()`
+            *Requirements:* The type of `close` must be model the
+            [BoostPropertyMap] and [BoostWritablePropertyMap] concepts. The `key_type`
+            of the property map must be the same as the `vertex_descriptor` of
+            the `Graph` type, and the `value_type` must be a model of [BoostNumericValue].
+        ]
+    ]
+    [
+        [optional, in] [`Measure measure`]
+        [
+            The 'measure' parameter is an instance of a closeness measure that
+            performs the final operation (the reciprocal) for this computation.
+
+            *Requirements:* The `Measure` type must be a model of the [BoostDistanceMeasure]
+            concept.
         ]
     ]
 ]
 
-[h5 Complexity]
-The `mean_geodesic()` and `closeness()` functions are linear with respect to
-`num_vertices(g)`.
+[heading Return]
+The `vertex_closeness_centrality()` function returns the closeness of a vertex.
+If the source vertex is not connected to one other in the graph, this value is 0.
 
-[h5 Examples]
-This example computes shows the construction of a simple undirected graph and
-illustrates the computation of shortest distances and the use of the `geodesic_distance()`
-and `mean_geodesic_distance()` functions. Consider the following graph:
+[heading Complexity]
+The `closenesss_centrality()` function is ['O(n[super 2])] where /n/ is the
+number of vertices in the graph.
 
-[figure
-    images/reference/geodesic.png
-    [*Figure 1.] A simple undirected, unweighted graph.
-]
+The `vertex_closeness_centrality()` function is linear with respect to the number
+of vertices in the graph.
 
-This graph can be constructed programmatically as:
-
-    typedef undirected_graph<> Graph;
-    typedef graph_traits<Graph>::vertex_descriptor Vertex;
-
-    // Instantiate the graph and vector of vertices.
-    Graph g;
-    vector<Vertex> v(10);
-
-    // Add vertices to the graph, recording their descriptors into
-    // the vertex vector.
-    for(size_t i = 0; i < 10; ++i) {
-        v[i] = add_vertex(g);
-    }
-
-    // Connect the vertices by adding edges to the graph. This builds
-    // the graph shown in Figure 1.
-    add_edge(v[0], v[1], g);  add_edge(v[1], v[2], g);
-    add_edge(v[1], v[3], g);  add_edge(v[2], v[4], g);
-    add_edge(v[3], v[5], g);  add_edge(v[4], v[6], g);
-    add_edge(v[4], v[7], g);  add_edge(v[4], v[8], g);
-    add_edge(v[5], v[8], g);  add_edge(v[6], v[9], g);
-    add_edge(v[7], v[9], g);  add_edge(v[8], v[9], g);
-
-    // Initialize an exterior property for recording the distances
-    // to every vertex in the graph.
-    typedef exterior_property<Graph, int> DistanceProperty;
-    typedef DistanceProperty::container_type DistanceContainer;
-    typedef DistanceProperty::map_type DistanceMap;
-    DistanceContainer distances(10);
-    DistanceMap dist(make_property_map(dists));
-
-    // Initialize the distance to-self of vertex 0 and run a breadth-first
-    // search on the graph to compute the distance of the shortest path
-    // from vertex 0 to all others.
-    dist[v[0]] = 0;
-    breadth_first_search(g, v[0],
-            visitor(make_bfs_visitor(record_distances(dist, on_tree_edge())))
-        );
-
-We can print the geodesic distance from vertex 0 to each of the other vertices, and
-its mean geodesic distance.
-
-    Graph::vertex_iterator i, end;
-    cout << "mean geodesic == " << mean_geodesic(g, dist) << end;
-    cout << "closeness == " << closeness(g, dist) << end;
-
-The output of this program is:
-
-[pre
-mean geodesic == 2.8
-closeness == .35
-]
+[heading Example]
+Write an example.
 
 [endsect]

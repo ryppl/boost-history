@@ -93,7 +93,6 @@ The notation used in the table is as follows.
     [[`add_edge(u,v,ep,g)`] [`std::pair<edge_descriptor,bool>`]]
 ]
 
-[include descriptor.qbk]
 [include graph.qbk]
 [include incidence_graph.qbk]
 [include bidirectional_graph.qbk]

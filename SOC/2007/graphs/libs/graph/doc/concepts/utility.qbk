@@ -5,10 +5,14 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Concepts]
+[section General Concepts]
 This section describes utlity graph concepts - those that do not necessarily
 pertain explicitly to graphs or visitors for algorithms.
 
-[include exterior_property.qbk]
+[include descriptor.qbk]
+[include numeric_value.qbk]
+[include property_map.qbk]
+[include property_matrix.qbk]
+[include distance_measure.qbk]
 
 [endsect]

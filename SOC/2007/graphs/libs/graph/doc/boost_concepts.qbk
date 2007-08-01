@@ -17,7 +17,7 @@
 [template BoostWritablePropertyMap[] [@http://www.boost.org/libs/property_map/WritablePropertyMap.html WritablePropertyMap]]
 [template BoostReadWritePropertyMap[] [@http://www.boost.org/libs/property_map/ReadWritePropertyMap.html ReadWritePropertyMap]]
 
-[template BoostDescriptor[] [link boost_graph.concepts.graph_concepts.descriptor Descriptor]]
+
 [template BoostGraph[] [link boost_graph.concepts.graph_concepts.graph Graph]]
 [template BoostIncidenceGraph[] [link boost_graph.concepts.graph_concepts.incidence_graph IncidenceGraph]]
 [template BoostBidirectionalGraph[] [link boost_graph.concepts.graph_concepts.bidirectional_graph BidirectionalGraph]]
@@ -42,4 +42,8 @@
 
 [/ A bunch of miscellaneus concepts]
 [template BoostColorValue[] [link boost_graph.concepts.miscellaneous_concepts.color_value ColorValue]]
-[template BoostExteriorProperty[] [link boost_graph.concepts.utility.exterior_property [^ExteriorProperty]]]
+[template BoostDescriptor[] [link boost_graph.concepts.graph_concepts.descriptor [^Descriptor]]]
+[template BoostNumericValue[] [link boost_graph.concepts.general_concepts.numeric_value [^NumericValue]]]
+[template BoostPropertyMap[] [link boost_graph.concepts.general_concepts.property_map [^PropertyMap]]]
+[template BoostPropertyMatrix[] [link boost_graph.concepts.general_concepts.property_matrix [^PropertyMatrix]]]
+[template BoostDistanceMeasure[] [link boost_graph.concepts.general_concepts.distance_measure [^DistanceMeasure]]]

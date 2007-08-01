@@ -1,0 +1,100 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Property Map]
+The [BoostPropertyMap] concept provides additional requirements for other Boost
+property map objects. Specifically, this concept requires that property maps
+be constructed in a syntactically similar manner.
+
+[note
+Of the two most common property maps (iterator and associative), only the
+associative property map can satisfy these requirements. The only way to guarantee
+that generically cretead exterior property maps are correctly adapted to their
+underlying containers is to declare them using the [boost_exterior_vertex_property]
+or [boost_exterior_edge_property] types.
+]
+
+[heading Refinement Of]
+[BoostReadWritePropertyMap]
+
+[heading Notation]
+The following expressions are used within this document:
+[table
+    [[Expression] [Description]]
+    [[M] [A type modeling the [BoostPropertyMap] concept.]]
+    [[m] [An object of type `M`.]]
+    [[c] [An object whose type models the [SgiContainer] concept.]]
+    [[k] [A key to the property map.]]
+]
+
+[heading Expressions]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Default Constructor]
+        [
+            `M m`
+
+            `M()`
+        ]
+        []
+        [
+            Construct a property map `m` with no underlying container.
+            This constructor is mainly used to convey type information to
+            generic functions since it cannot function without the container.
+
+            *Postconditions:* `m[k]` is invalid.
+        ]
+    ]
+    [
+        [Container Contructor]
+        [
+            `M m(c);`
+
+            `M m = c;`
+
+            `M(c)`
+        ]
+        []
+        [
+            Construct a property map `m` over the container `c`.
+        ]
+    ]
+]
+
+[heading Notes]
+This concept is imoprtant for two reasons. First, it provides a common way
+of declaring and constructing property maps, especially when using the exterior
+property declartive facilities. Second, it provides a mechanism for "slicing"
+a [BoostPropertyMatrix] using row access. The following example shows how
+both features can be used in a template function:
+
+    template<typename Graph>
+    void shortest_paths(const Graph&)
+    {
+        // Define some useful types
+        typedef typename exterior_vertex_property<Graph, int> Property;
+        typedef typename Property::matrix_type Matrix;
+        typedef typename Property::map_type Map;
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+
+        // Get the first vertex for later
+        Vertex u = *vertices(g).first;
+
+        // Construct a matrix and a map on the first row
+        Matrix matrix(num_vertices(g));
+        Map map = matrix[u];    // Note: map[v] == matrix[u][v]
+
+        // Run a shortest paths algorithm.
+        dijkstra_shortest_paths(g, matrix);
+
+        BOOST_ASSERT(matrix[u][u] == 0);        // distance to self == 0
+        BOOST_ASSERT(map[u] == 0);              // same as above
+        BOOST_ASSERT(matrix[u][u] == map[u]);   // just making sure
+    }
+
+[endsect]

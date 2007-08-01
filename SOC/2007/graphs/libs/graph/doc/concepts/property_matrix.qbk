@@ -1,0 +1,137 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Property Matrix]
+The [BoostPropertyMatrix] concept requires types that model it to allow
+two-dimensional array-like access to its values using descriptor objects. Types
+that model this concepts are typically nested containers that use the vertex
+or edge desctipors of a graph to access the elements of the matrix.
+
+Note that the term "matrix" can be misleading since types that model this
+concept are not required to have a "square" structure. The term "matrix" applies
+to the use of double-indexing to access its elements (i.e., m[u][v]).
+
+[note
+The two most common possible models of this type (nested vectors and unordered maps)
+cannot model this concept due to initialization requirements. The best way to
+ensure that a matrix models this type is to use the [boost_exterior_vertex_property]
+or [boost_exterior_edge_property] types.
+]
+
+[heading Notation]
+The following expressions are used within this document:
+[table
+    [[Expression] [Description]]
+    [[M] [A type modeling the [BoostPropertyMatrix] concept.]]
+    [[m] [An object of type `M`]]
+    [[n] [An unsigned integer]]
+]
+
+[heading Associated Types]
+[table
+    [[Name] [Type] [Description]]
+    [
+        [Key Type]
+        [`property_matrix_traits<M>::key_type`]
+        [
+            The type of key used to index values in the matrix.
+
+            *Requirements:* The `key_type` must be a model of a [BoostDescriptor]
+            and be the same type as either the `vertex_descriptor` or `edge_descriptor`
+            of the graph for which the matrix is declared.
+        ]
+    ]
+    [
+        [Value Type]
+        [`property_matrix_traits<M>::value_type`]
+        [
+            The type of values contained by the matrix.
+
+            *Requirements:* The `value_type` must be default construtible.
+        ]
+    ]
+    [
+        [Container Type]
+        [`property_matrix_traits<M>::container_type`]
+        [
+            The nested container that implements storage of the value type.
+
+            *Requirements:* The `container_type` is a [SgiContainer] such that
+            the `value_type` of the container is the same as the `value_type`
+            of the matrix. The container must be [NoConcept Idexable] with the
+            index type being the same as the `key_type` of the matrix.
+        ]
+    ]
+    [
+        [Matrix Type]
+        [`property_matrix_traits<M>::matrix_type`]
+        [
+            The type of the matrix.
+
+            *Requirements:* The `matrix_type` must be the same type as `M`.
+        ]
+    ]
+]
+
+[heading Expressions]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Fill Contructor]
+        []
+        [
+            `M m(n)`
+
+            `M(n)`
+        ]
+        [
+            Contstruct the matrix with `n` elements. After construction,
+            accessing elements with the range defined by the square matrix
+            is guaranteed to succeed.
+
+            *Postcondition:* `m[k][k]` is valid if `k` is mapped to an element
+            within the matrix.
+        ]
+    ]
+    [
+        [Element Access]
+        [
+            `property_matrix_traits<M>::value_type&`
+            `const property_matrix_traits<M>::value_type&`
+        ]
+        [`m[u][v]`]
+        [
+            Returns the element corresponding to the pair `u`, `v` in the
+            matrix.
+
+            *Requirements:* The keys `u` and `v` must be the same as the `key_type`
+            for the matrix.
+
+            *Preconditions:* The keys `u` and `v` must be valid vertex or edge
+            descriptors of the graph to which the matrix applies.
+        ]
+    ]
+    [
+        [Row Access]
+        [
+            `property_matrix_traits<M>::container_type&`
+            `const property_matrix_traits<M>::container_type&`
+        ]
+        [`m[u]`]
+        [
+            Returns the row (or nested container) associated with the key `u`.
+
+            *Requirements:* The key `u` must be the same as the `key_type`
+            for the matrix.
+
+            *Preconditions:* The key `u` must be valid vertex or edge descriptor
+            of the graph to which the matrix applies.
+        ]
+    ]
+]
+
+[endsect]

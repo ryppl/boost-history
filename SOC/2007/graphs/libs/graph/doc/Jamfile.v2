@@ -21,7 +21,7 @@ boostbook standalone
         # How far down sections get TOC's
         <xsl:param>toc.section.depth=10
         # Max depth in each TOC:
-        <xsl:param>toc.max.depth=4
+        <xsl:param>toc.max.depth=3
         # How far down we go with TOC's
         <xsl:param>generate.section.toc.level=10
         # Logo location:

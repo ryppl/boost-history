@@ -1,0 +1,208 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Mean Geodesic]
+
+    template <typename Graph, typename DistanceMatrix, typename GeodesicMap>
+    void mean_geodesic(const Graph& g, DistanceMatrix& dist, GeodesicMap& geo)
+
+    template <typename Graph,
+              typename DistanceMatrix,
+              typename GeodesicMap,
+              typename Measure>
+    void mean_geodesic(const Graph& g,
+                       DistanceMatrix& dist,
+                       ClosenessMap& close,
+                       Measure measure)
+
+
+    template <typename Graph, typename DistanceMap>
+    float vertex_mean_geodesic(const Graph& g, DistanceMap dist)
+
+    template <typename ResultType, typename Graph, typename DistanceMap>
+    ResultType vertex_mean_geodesic(const Graph& g, DistanceMap dist)
+
+    template <typename Graph, typename DistanceMap, typename Measure>
+    typename Measure::result_type
+    vertex_mean_geodesic(const Graph& g, DistanceMap dist, Measure measure)
+
+
+    template <typename Graph, typename DistanceMatrix>
+    float graph_mean_geodesic(const Graph& g, DistanceMatrix& dist)
+
+    template <typename ResultType, typename Graph, typename DistanceMatrix>
+    ResultType graph_mean_geodesic(const Graph& g, DistanceMatrix& dist)
+
+    template <typename Graph, typename DistanceMatrix, typename Measure>
+    typename Measure::result_type
+    graph_mean_geodesic(const Graph& g, DistanceMatrix& dist, Measure measure)
+
+The /mean geodesic distance/ measure is commonly used in large network analysis
+to quantify the /small world/ phenomonon. If the mean geodesic distance is small
+in relation to the graph (e.g., 6), then all vertices are (on average) only 6
+steps or hops away from any other. The mean geodesic distance of a vertex is
+computed over the shortest paths between vertices. Formally, it is given as:
+
+[$images/eq/mean_geodesic.png]
+
+Where /d(u,v)/ is the shortest path (geodesic distance) from /u/ to /v/.
+Note that if any vertex in the graph is unreachable from any other, then the
+graph is unconnected, and the distance between those two unonnected vertices
+is infinite. This imlplies that the closeness of every vertex in an unconnected
+(and undirected) graph is also infinite. This is not necessarily the case for
+directed graphs.
+
+The mean geodesic distance for the entire graph is essentially the average of
+mean geodesic distances of every vertex in the graph. There are alternative
+means of computing this average (e.g,. in the case of simple graphs), but
+differences in the results are negligible for large graphs. If any vertex has
+infinite mean geodesic distance, then the graph also has infinite mean geodesic
+distance.
+
+It is also important to note the relationship between /mean geodesic distance/,
+/farness/, and /closeness/. The /farness/ of a vertex is the sum of its goedesic
+distances to all other vertices (mean geodesic distances * number of vertices),
+and /closeness/ is the inverse of
+
+This module defines a flexible framework for computing the mean geodesic distance
+of vertices in a graph for previously computed geodesics by providing thrtee generic
+functions. The first function, `mean_geodesic()` computes the average distance of
+each vertex in a graph from a matrix containing the distances between vertices.
+This matrix can be computed as the output of an "all pairs shortest path" algorithm,
+or as the result of many breadth first searches (if the graph is unweighted).
+
+The second function, `vertex_mean_geodesic()` can be used to compute the
+closeness of a single vertex. This function requires a distance map that contains
+the distance from one vertex (the source) to all others in the graph. This
+distance map can be computed as the result of a "shortest paths" algorithm or
+recording distances from a breadth-first search.
+
+The third function, `graph_mean_geodesic()` computes a single mean geodesic
+distance for the graph by averaging the mean geodesic distance for each vertex
+in a distance matrix. This average is computed differently for both directed
+and undirected graphs. For undirected graphs, the mean geodesic distance is
+computed as:
+
+[$images/eq/mean_geodesic_undirected.png]
+
+Intuitively, this is the average distance over all possible edges in the graph.
+For directed graphs the mean geodesic distance is computed as:
+
+[$images/eq/mean_geodesic_directed.png]
+
+This framework also allows for a specialization of measures used to compute
+these values. This framework employs two distinct measures. The first is used
+to compute the mean geodesic distance of a single vertex. By default this simply
+divides the sum of distances by the number of vertices. The second measure is
+used to compute the mean geodesic distance for the entire graph. This provides
+the factors in the algorithms given above.
+
+Note that for small graphs, the default choice of divisors in computations may
+seem inappropriate. For example, most simple networks preclude the possibility
+of self-loops and so the average can be computed over /n/ - 1 vertices. However,
+for large graphs, this difference is negligible.
+
+[heading Where Defined]
+`boost/graph/closeness_centrality.hpp`
+
+[heading Parameters]
+[table
+    [[Type] [Parameter] [Description]]
+    [
+        [template] [`ResultType`]
+        [
+            The `ResultType` template parmeter explitly specifies the the
+            return type of the `closeness()` function. If not
+            given, the return type is `float`.
+
+            *Requirements:* The return type is required to model the
+            [BoostNumericValue] concept.
+        ]
+    ]
+    [
+        [required, in] [`const Graph& g`]
+        [
+            The graph for which vertex measures are being comptued.
+
+            *Requirements:* The `Graph` type must be a model of the
+            [BoostVertexListGraph] concepts.
+        ]
+    ]
+    [
+        [required, in] [`DistanceMap dist`]
+        [
+            The `dist` parameter provides, given a vertex /v/, the shortest
+            distance from another vertex /u/. The distance map is computed for
+            the vertex /u/, and the distance from /u/ to itself should be 0
+            (i.e., `dist[u] == 0`).
+
+            *Requirements:* `DistanceMap` must be a model of [BoostReadablePropertyMap].
+            The `key_type` of the distance map must be the same as the `vertex_descriptor`
+            of the `Graph` parameter. The `value_type` is required to be a model of
+            [BoostNumericValue].
+        ]
+    ]
+    [
+        [required, in] [`DistanceMatrix dist`]
+        [
+            The `dist` parameter provides, given vertices /u/ and /v/, the
+            length of the shortest path between the two vertices. Note that the
+            distance between a vertex and itself should be 0 (i.e., `dist[u][u] == 0`).
+
+            *Requirements:* `DistanceMatrix` must be a model of [BoostPropertyMatrix].
+            The `key_type` of the distance matrixc must be the same as the
+            `vertex_descriptor` of the `Graph` parameter. The `value_type` is
+            required to be a model of [BoostNumericValue].
+        ]
+    ]
+    [
+        [required, out] [`ClosenessMap close`]
+        [
+            The `close` parameter stores the output of the computed distance for
+            each vertex in `g`.
+
+            *Requirements:* The type of `close` must be model the
+            [BoostPropertyMap] and [BoostWritablePropertyMap] concepts. The `key_type`
+            of the property map must be the same as the `vertex_descriptor` of
+            the `Graph` type, and the `value_type` must be a model of [BoostNumericValue].
+        ]
+    ]
+    [
+        [optional, in] [`Measure measure`]
+        [
+            The 'measure' parameter is an instance of a measure type that performs
+            the "averaging" operation in this computation. For the `mean_geodesic()`
+            functions, this measure is responsible for computing the average distance
+            over the graph. For the `graph_mean_geodesic()` function, this measure
+            is responsible for averaging the averages.
+
+            *Requirements:* The `Measure` type must be a model of the [BoostDistanceMeasure]
+            concept.
+        ]
+    ]
+]
+
+[heading Return]
+The `vertex_mean_geodesic()` function returns the average of geodesic distances
+to other vertices from a source. If the source vertex is not connected to one other
+in the graph, this value is infinite.
+
+The `graph_mean_geodesic()` function returns the mean geodesic distance for the
+entire graph - a common measure of the small world property. If the graph is
+unconnected, the mean geodesic distance is infinite.
+
+[heading Complexity]
+The `mean_geodesic()` and `graph_mean_geodesic()` functions are ['O(n[super 2])]
+where /n/ is the number of vertices in the graph.
+
+The `vertex_mean_geodesic()` function is linear with respect to the number
+of vertices in the graph.
+
+[heading Example]
+Write an example.
+
+[endsect]

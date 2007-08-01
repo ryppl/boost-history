@@ -1,7 +1,11 @@
 
 src = \
-	closeness.tex \
-	mean_geodesic.tex
+	total_geodesic.tex \
+	mean_geodesic.tex \
+	mean_geodesic_undirected.tex \
+	mean_geodesic_directed.tex \
+	inverse_geodesic.tex \
+	closeness.tex
 dvi = $(src:%.tex=%.dvi)
 ps = $(src:%.tex=%.ps)
 png = $(src:%.tex=%.png)

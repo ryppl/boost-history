@@ -32,8 +32,11 @@
 [/ Path algorithms /]
 [template boost_dijkstra_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.dijkstra_shortest_paths [^dijkstra_shortest_paths()]]]
 [template boost_bellman_ford_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.bellman_ford_shortest_paths [^bellman_ford_shortest_paths()]]]
+[template boost_floyd_warshall_all_pairs_shortest_paths[] [link boost_graph [^floyd_warshall_all_pairs_shortest_paths]]]
+
 
 
 [template boost_connected_components[] [link boost_graph.reference_guide.algorithms.connectivity_algorithms.connected_components [^connected_components()]]]
 
 [template boost_exterior_vertex_property[] [link boost_graph.reference_guide.algorithms.connectivity_algorithms.connected_components [^connected_components()]]]
+[template boost_exterior_edge_property[] [link boost_graph.reference_guide.algorithms.connectivity_algorithms.connected_components [^connected_components()]]]
