@@ -41,8 +41,14 @@ exe degree_centrality
     : <include>../../../
     ;
 
-exe distance
-    : distance.cpp
+exe closeness_centrality
+    : closeness_centrality.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
+
+exe mean_geodesic
+    : mean_geodesic.cpp
     : <include>$BOOST_ROOT
     : <include>../../../
     ;

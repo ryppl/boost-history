@@ -8,7 +8,6 @@
 #include <iterator>
 #include <algorithm>
 #include <vector>
-#include <map>
 #include <tr1/unordered_map>
 
 #include <boost/graph/undirected_graph.hpp>
@@ -59,7 +58,6 @@ void test()
 {
     typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
     typedef typename graph_traits<Graph>::edge_descriptor Edge;
-
 
     typedef exterior_vertex_property<Graph, unsigned> CentralityProperty;
     typedef typename CentralityProperty::container_type CentralityContainer;
