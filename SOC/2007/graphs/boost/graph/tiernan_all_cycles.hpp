@@ -295,8 +295,8 @@ namespace boost
     template <typename Graph, typename Visitor>
     inline void
     tiernan_all_cycles(const Graph& g, Visitor vis,
-                       std::size_t maxlen,
-                       std::size_t minlen)
+                       std::size_t minlen,
+                       std::size_t maxlen)
     {
         typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
 
