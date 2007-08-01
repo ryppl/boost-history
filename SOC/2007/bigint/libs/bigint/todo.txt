@@ -165,6 +165,12 @@ Status: implemented
 * Is it possible to test cases when bigint must cause illegal operations (division by zero, sqrt(negative number))?
 Status: investigated; there is no portable way
 
+- fix number_conversion test for gcc
+Status: needs fixing
+
+- fix stream test for gcc (locale name)
+Status: needs fixing
+
 4. Documentation
 
 - do we have to change the current behaviour for string conversions for bases outside [2, 36]?
