@@ -12,11 +12,9 @@
 
 [template BoostMultiPassInputIterator[] [@http://www.boost.org/libs/utility/MultiPassInputIterator.html MultipPassInputIterator]]
 
-
 [template BoostReadablePropertyMap[] [@http://www.boost.org/libs/property_map/ReadablePropertyMap.html ReadablePropertyMap]]
 [template BoostWritablePropertyMap[] [@http://www.boost.org/libs/property_map/WritablePropertyMap.html WritablePropertyMap]]
 [template BoostReadWritePropertyMap[] [@http://www.boost.org/libs/property_map/ReadWritePropertyMap.html ReadWritePropertyMap]]
-
 
 [template BoostGraph[] [link boost_graph.concepts.graph_concepts.graph Graph]]
 [template BoostIncidenceGraph[] [link boost_graph.concepts.graph_concepts.incidence_graph IncidenceGraph]]
@@ -46,4 +44,5 @@
 [template BoostNumericValue[] [link boost_graph.concepts.general_concepts.numeric_value [^NumericValue]]]
 [template BoostPropertyMap[] [link boost_graph.concepts.general_concepts.property_map [^PropertyMap]]]
 [template BoostPropertyMatrix[] [link boost_graph.concepts.general_concepts.property_matrix [^PropertyMatrix]]]
+[template BoostDegreeMeasure[] [link boost_graph.concepts.general_concepts.degree_measure [^DegreeMeasure]]]
 [template BoostDistanceMeasure[] [link boost_graph.concepts.general_concepts.distance_measure [^DistanceMeasure]]]

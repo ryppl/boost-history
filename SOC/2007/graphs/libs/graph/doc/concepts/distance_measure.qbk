@@ -16,7 +16,8 @@ The following expressions are used within this document:
     [[M] [A type modeling the [BoostDistanceMeasure] concept.]]
     [[m] [An object of type `M`.]]
     [[d] [An object of type `M::distance_type`.]]
-    [[g] [An object whose type models the [BoostGraph] concept.]]
+    [[G] [A type modeling the [BoostGraph] concept.]]
+    [[g] [An object of type `G`.]]
 ]
 
 [heading Associated Types]
@@ -26,7 +27,10 @@ The following expressions are used within this document:
         [Distance Type]
         [`M::distance_type`]
         [
-            The type used to measure distances in graphs.
+            The type used to measure distances in graphs. The `distance_type`
+            is typically derived from the value type of a distance map or
+            the edge-weight type of a graph type `G`. However, this is not
+            required.
 
             *Requirements:* The `distance_type` must be a model of the
             [BoostNumericValue] concept.

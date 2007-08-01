@@ -107,7 +107,7 @@ of self-loops and so the average can be computed over /n/ - 1 vertices. However,
 for large graphs, this difference is negligible.
 
 [heading Where Defined]
-`boost/graph/closeness_centrality.hpp`
+`boost/graph/mean_geodesic.hpp`
 
 [heading Parameters]
 [table
