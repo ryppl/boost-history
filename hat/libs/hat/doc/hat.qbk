@@ -1,0 +1,46 @@
+
+[library Hat
+    [quickbook 1.4]
+    [version 0.01e-10]
+    [authors [Walker, Daryle]]
+    [copyright 2007 Daryle Walker]
+    [purpose Doing nothing.]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+Welcome to the Hat!  One day, it will perhaps be called
+Boost.Hat. Until then, feel free to use it to do nothing.
+
+[warning Hat is not an official Boost library.]
+
+[section:introduction Introduction]
+
+User, this is Hat.  Hat, this is the user.  Be nice to each other.
+
+[section:start Getting Started]
+
+The Hat is located in the hat directory of the boost sandbox.
+
+
+You might also want to look at the [link hat.reference reference].
+
+
+[endsect]
+
+[endsect]
+
+[xinclude hat_doxygen.xml]
+
+[section:license License]
+
+Copyright 2007 Daryle Walker.
+Distributed under the Boost Software License, Version 1.0. (See
+accompanying file LICENSE_1_0.txt or copy at
+[@http://www.boost.org/LICENSE_1_0.txt])
+
+
+[endsect]
