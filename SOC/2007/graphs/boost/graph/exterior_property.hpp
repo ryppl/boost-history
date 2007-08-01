@@ -44,6 +44,10 @@ namespace boost
             typedef typename map_type::reference reference;
             typedef typename map_type::category category;
 
+            inline vector_property_map_adapter()
+                : m_map()
+            { }
+
             inline vector_property_map_adapter(Container& c)
                 : m_map(c.begin())
             { }
@@ -53,7 +57,7 @@ namespace boost
             { }
 
             inline reference operator [](const key_type& k) const
-            { return m_map[k]; }
+            { return m_map[k];  }
 
             map_type m_map;
         };
@@ -70,6 +74,10 @@ namespace boost
             typedef typename map_type::value_type value_type;
             typedef typename map_type::reference reference;
             typedef typename map_type::category category;
+
+            inline hash_property_map_adapter()
+                : m_map()
+            { }
 
             inline hash_property_map_adapter(Container& c)
                 : m_map(c)
