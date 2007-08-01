@@ -8,15 +8,15 @@
 [section Mean Geodesic]
 
     template <typename Graph, typename DistanceMatrix, typename GeodesicMap>
-    void mean_geodesic(const Graph& g, DistanceMatrix& dist, GeodesicMap& geo)
+    void mean_geodesic(const Graph& g, const DistanceMatrix& dist, GeodesicMap geo)
 
     template <typename Graph,
               typename DistanceMatrix,
               typename GeodesicMap,
               typename Measure>
     void mean_geodesic(const Graph& g,
-                       DistanceMatrix& dist,
-                       ClosenessMap& close,
+                       const DistanceMatrix& dist,
+                       ClosenessMap close,
                        Measure measure)
 
 
@@ -31,15 +31,14 @@
     vertex_mean_geodesic(const Graph& g, DistanceMap dist, Measure measure)
 
 
-    template <typename Graph, typename DistanceMatrix>
-    float graph_mean_geodesic(const Graph& g, DistanceMatrix& dist)
-
-    template <typename ResultType, typename Graph, typename DistanceMatrix>
-    ResultType graph_mean_geodesic(const Graph& g, DistanceMatrix& dist)
-
-    template <typename Graph, typename DistanceMatrix, typename Measure>
+    template <typename Graph, typename GeodesicMap, typename Measure>
     typename Measure::result_type
-    graph_mean_geodesic(const Graph& g, DistanceMatrix& dist, Measure measure)
+    graph_mean_geodesic(const Graph& g, GeodesicMap geo, Measure measure)
+
+    template <typename Graph, typename GeodesicMap>
+    typename property_traits<GeodesicMap>::value_type
+    graph_mean_geodesic(const Graph& g, GeodesicMap geo)
+
 
 The /mean geodesic distance/ measure is commonly used in large network analysis
 to quantify the /small world/ phenomonon. If the mean geodesic distance is small
@@ -82,10 +81,10 @@ distance map can be computed as the result of a "shortest paths" algorithm or
 recording distances from a breadth-first search.
 
 The third function, `graph_mean_geodesic()` computes a single mean geodesic
-distance for the graph by averaging the mean geodesic distance for each vertex
-in a distance matrix. This average is computed differently for both directed
-and undirected graphs. For undirected graphs, the mean geodesic distance is
-computed as:
+distance for the graph by averaging the mean geodesic distances of each vertex
+in the geodesic distance map. This average is computed differently for both
+directed and undirected graphs. For undirected graphs, the mean geodesic distance
+is computed as:
 
 [$images/eq/mean_geodesic_undirected.png]
 
@@ -135,10 +134,10 @@ for large graphs, this difference is negligible.
     [
         [required, in] [`DistanceMap dist`]
         [
-            The `dist` parameter provides, given a vertex /v/, the shortest
-            distance from another vertex /u/. The distance map is computed for
-            the vertex /u/, and the distance from /u/ to itself should be 0
-            (i.e., `dist[u] == 0`).
+            Given a vertex `v`, the `dist` parameter provides the length of the
+            shortest path between a vertex `u` and `v`. The vertex `u` is the
+            vertex for which the distance map was initially computed. The
+            distance from /u/ to itself should be zero (i.e., `dist[u] == 0`).
 
             *Requirements:* `DistanceMap` must be a model of [BoostReadablePropertyMap].
             The `key_type` of the distance map must be the same as the `vertex_descriptor`
@@ -147,10 +146,10 @@ for large graphs, this difference is negligible.
         ]
     ]
     [
-        [required, in] [`DistanceMatrix dist`]
+        [required, in] [`const DistanceMatrix dist`]
         [
-            The `dist` parameter provides, given vertices /u/ and /v/, the
-            length of the shortest path between the two vertices. Note that the
+            Given vertices /u/ and /v/, the `dist` parameter provides the length
+            of the shortest path between the two vertices. Note that the
             distance between a vertex and itself should be 0 (i.e., `dist[u][u] == 0`).
 
             *Requirements:* `DistanceMatrix` must be a model of [BoostPropertyMatrix].
@@ -160,15 +159,19 @@ for large graphs, this difference is negligible.
         ]
     ]
     [
-        [required, out] [`ClosenessMap close`]
+        [required, both] [`GeodesicMap geo`]
         [
-            The `close` parameter stores the output of the computed distance for
-            each vertex in `g`.
+            When used with the `mean_geodesic()` function, the `geo` parameter stores
+            the computed mean geodesic distances for each vertex pair in the matrix.
+            When used with the `graph_mean_geodesic()` function, the parameter provides
+            the input required to compute the mean distance for the graph.
 
-            *Requirements:* The type of `close` must be model the
-            [BoostPropertyMap] and [BoostWritablePropertyMap] concepts. The `key_type`
-            of the property map must be the same as the `vertex_descriptor` of
-            the `Graph` type, and the `value_type` must be a model of [BoostNumericValue].
+            *Requirements:* As an input parameter, the `GeodesicMap` type is required
+            to model the [BoostReadablePropertyMap] concept. As an output parameter,
+            it is required to model the [BoostWritablePropertyMap] concept. The
+            `key_type` of this parameter must be the `vertex_descriptor` of the
+            `Graph`, and the `value_type` must be a model of the [BoostNumericValue]
+            concept.
         ]
     ]
     [

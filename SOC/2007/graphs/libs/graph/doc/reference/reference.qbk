@@ -34,42 +34,44 @@
 [endsect]
 
 [section Algorithms]
-[section Core Algorithms]
+[section Fundamental]
 [include breadth_first_search.qbk]
 [include depth_first_search.qbk]
 [endsect]
 
-[section Shortest Path Algorithms]
+[section Shortest Paths]
 [endsect]
 
-[section Minimum Spanning Tree Algorithms]
+[section Minimum Spanning Tree]
 [endsect]
 
-[section Connectivity Algorithms]
+[section Connectivity]
 [include connected_components.qbk]
 [include strong_components.qbk]
 [include connectivity.qbk]
 [endsect]
 
-[section Subgraph Finding Algorithms]
+[section Subgraph Finding]
 [include clique.qbk]
 [include cycle.qbk]
 [endsect]
 
-[section Maximum Flow Algorithms]
+[section Maximum Flow]
 [endsect]
 
-[section Sparse Matrix Ordering Algorithms]
+[section Sparse Matrix Ordering]
 [endsect]
 
-[section Layout Algorithms]
+[section Layout]
 [endsect]
 
-[section Graph Measures]
+[section Measures]
 [include degree_centrality.qbk]
 [include closeness_centrality.qbk]
 [include mean_geodesic.qbk]
 [include eccentricity.qbk]
+[include radius.qbk]
+[include diameter.qbk]
 [endsect]
 [endsect]
 

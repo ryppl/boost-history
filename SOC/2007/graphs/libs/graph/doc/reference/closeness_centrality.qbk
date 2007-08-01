@@ -9,16 +9,16 @@
 
     template <typename Graph, typename DistanceMatrix, typename ClosenessMap>
     void closeness_centrality(const Graph& g,
-                              DistanceMatrix& dist,
-                              ClosenessMap& close)
+                              const DistanceMatrix& dist,
+                              ClosenessMap close)
 
     template <typename Graph,
               typename DistanceMatrix,
               typename ClosenessMap,
               typename Measure>
     void closeness_centrality(const Graph& g,
-                              DistanceMatrix& dist,
-                              ClosenessMap& close,
+                              const DistanceMatrix& dist,
+                              ClosenessMap close,
                               Measure measure)
 
 
@@ -101,10 +101,10 @@ the case of non-trivial types, re-define the notion of reciprocal.
     [
         [required, in] [`DistanceMap dist`]
         [
-            The `dist` parameter provides, given a vertex /v/, the shortest
-            distance from another vertex /u/. The distance map is computed for
-            the vertex /u/, and the distance from /u/ to itself should be 0
-            (i.e., `dist[u] == 0`).
+            Given a vertex `v`, the `dist` parameter provides the length of the
+            shortest path between a vertex `u` and `v`. The vertex `u` is the
+            vertex for which the distance map was initially computed. The
+            distance from /u/ to itself should be zero (i.e., `dist[u] == 0`).
 
             *Requirements:* `DistanceMap` must be a model of [BoostReadablePropertyMap].
             The `key_type` of the distance map must be the same as the `vertex_descriptor`
@@ -113,10 +113,10 @@ the case of non-trivial types, re-define the notion of reciprocal.
         ]
     ]
     [
-        [required, in] [`DistanceMatrix dist`]
+        [required, in] [`const DistanceMatrix& dist`]
         [
-            The `dist` parameter provides, given vertices /u/ and /v/, the
-            length of the shortest path between the two vertices. Note that the
+            Given vertices /u/ and /v/, the `dist` parameter provides the length
+            of the shortest path between the two vertices. Note that the
             distance between a vertex and itself should be 0 (i.e., `dist[u][u] == 0`).
 
             *Requirements:* `DistanceMatrix` must be a model of [BoostPropertyMatrix].

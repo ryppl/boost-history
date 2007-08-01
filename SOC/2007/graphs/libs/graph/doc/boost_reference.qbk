@@ -25,18 +25,65 @@
 [template boost_time_stamper[] [link boost_graph.reference_guide.event_visitors.time_stamper [^time_stamper]]]
 [template boost_property_writer[] [link boost_graph.reference_guide.event_visitors.property_writer [^property_writer]]]
 
-[/ Core algorithms /]
-[template boost_breadth_first_search[] [link boost_graph.reference_guide.algorithms.core_algorithms.breadth_first_search [^breadth_first_search()]]]
-[template boost_depth_first_search[] [link boost_graph.reference_guide.algorithms.core_algorithms.depth_first_search [^depth_first_search()]]]
+[/ Fundamental /]
+[template boost_breadth_first_search[] [link
+    boost_graph.reference_guide.algorithms.fundamental.breadth_first_search
+    [^breadth_first_search()]]]
+[template boost_depth_first_search[] [link
+    boost_graph.reference_guide.algorithms.fundamental.depth_first_search
+    [^depth_first_search()]]]
 
-[/ Path algorithms /]
-[template boost_dijkstra_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.dijkstra_shortest_paths [^dijkstra_shortest_paths()]]]
-[template boost_bellman_ford_shortest_paths[] [link boost_graph.reference_guide.algorithms.shortest_path_algorithms.bellman_ford_shortest_paths [^bellman_ford_shortest_paths()]]]
-[template boost_floyd_warshall_all_pairs_shortest_paths[] [link boost_graph [^floyd_warshall_all_pairs_shortest_paths]]]
+[/ Shortest Path /]
+[template boost_dijkstra_shortest_paths[] [link
+    boost_graph.reference_guide.algorithms.shortest_paths.dijkstra_shortest_paths
+    [^dijkstra_shortest_paths()]]]
+[template boost_bellman_ford_shortest_paths[] [link
+    boost_graph.reference_guide.algorithms.shortest_paths.bellman_ford_shortest_paths
+    [^bellman_ford_shortest_paths()]]]
+[template boost_floyd_warshall_all_pairs_shortest_paths[] [link
+    boost_graph.reference_guide.algorithms.shortest_paths.floyd_warshall_all_pairs_shortest_paths
+    [^floyd_warshall_all_pairs_shortest_paths()]]]
+
+[/ Connectivity /]
+[template boost_connected_components[] [link
+    boost_graph.reference_guide.algorithms.connectivity.connected_components
+    [^connected_components()]]]
+[template boost_strong_connected_components[] [link
+    boost_graph.reference_guide.algorithms.connectivity.strongly_connected_components
+    [^strongly_connected_components]]]
+
+[/ Subgraph/ ]
+[template boost_bron_kerbosch_visit_cliques[] [link
+    boost_graph.reference_guide.algorithms.subgraph.bron_kerbosch_find_cliques
+    [^bron_kerbosch_find_cliques()]]]
+[template boost_tiernan_find_cycles[] [link
+    boost_graph.reference_guide.algorithms.subgraph.tiernan_find_cycles
+    [^tiernan_find_cycles()]]]
+
+[/ Measures /]
+[template boost_degree_centrality[] [link
+    boost_graph.reference_guide.algorithms.graph_measures.degree_centrality
+    [^degree_centrality()]]]
+[template boost_closeness_centrality[] [link
+    boost_graph.reference_guide.algorithms.graph_measures.closeness_centrality
+    [^closeness_centrality()]]]
+[template boost_mean_geodesic[] [link
+    boost_graph.reference_guide.algorithms.graph_measures.mean_geodesic
+    [^mean_geodesic()]]]
+[template boost_eccentricity[] [link
+    boost_graph.reference_guide.algorithms.graph_measures.eccentricity
+    [^eccentricity()]]]
+[template boost_graph_radius[] [link
+    boost_graph.reference_guide.algorithms.graph_measures.raidus
+    [^radius()]]]
+[template boost_graph_diameter[] [link
+    boost_graph.reference_guide.algorithms.graph_measures.diameter
+    [^diameter()]]]
 
 
-
-[template boost_connected_components[] [link boost_graph.reference_guide.algorithms.connectivity_algorithms.connected_components [^connected_components()]]]
-
-[template boost_exterior_vertex_property[] [link boost_graph.reference_guide.algorithms.connectivity_algorithms.connected_components [^connected_components()]]]
-[template boost_exterior_edge_property[] [link boost_graph.reference_guide.algorithms.connectivity_algorithms.connected_components [^connected_components()]]]
+[template boost_exterior_vertex_property[] [link
+    boost_graph
+    [^exterior_vertex_property]]]
+[template boost_exterior_edge_property[] [link
+    boost_graph
+    [^exterior_edge_property]]]

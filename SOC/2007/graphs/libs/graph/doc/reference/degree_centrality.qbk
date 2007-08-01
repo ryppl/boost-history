@@ -5,166 +5,115 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Degree Distributions]
+[section Degree Centrality]
 
-    template <typename Graph, typename Histogram>
-    void degree_histogram(
-        const Graph& _graph,
-        Histogram& _histogram = ``['nothing]``,
-        Histogram& _out_histogram = ``['nothing]``,
-        Histogram& _in_histogram = ``['nothing]``)
+    template <typename Graph, typename CentralityMap>
+    void degree_centrality(const Graph& g, CentralityMap cent)
 
-The degree histogram function computes /histograms/ of the degrees
-of vertices in a graph. A histogram is table that records the frequency
-of occurence of some event. With regards to this function, the computed
-histograms record the occurence of each degree of vertices in the graph.
+    template <typename Graph, typename CentralityMap, typename Measure>
+    void degree_centrality(const Graph& g, CentralityMap cent, Measure measure)
 
-Specifically, each `_histogram` parameter describes a sequence of possible
-vertex-degrees in the graph and his size \[0, /max{degree(v,g)} + 1}\] where
-/max{degree(v,g)}/ is the maximum degree of any vertex in `_graph`. In this
-sequence, the ['i[super th]] element corresponds to the number of vertices
-in `_graph` with degree /i/.
+    template <typename Graph>
+    typename graph_traits<Graph>::degree_size_type
+    vertex_degree_centrality(const Graph& g,
+                             typename graph_traits<Graph>::vertex_descriptor v)
 
-[figure
-    images/reference/distributions_undirected.png
-    [*Figure 1.] A simple undirected graph.
-]
+    template <typename Graph, typename Measure>
+    typename Measure::degree_type
+    vertex_degree_centrality(const Graph& g,
+                             typename graph_traits<Graph>::vertex_descriptor v,
+                             Measure measure)
 
-Consider the example in Figure 1. The assignment of frequencies (number of
-vertices with degree /i/) in the histogram will be:
+The /degree centrality/ measure is used in social network analysis to help
+determine which vertices (or more specifically actors) are the most central
+or important to the network. Degree centrality is computed over the number of
+connections that a vertex has. For undirected graphs, the degree centrality of
+a vertex is typically equivalent to its degree. For directed graphs the out-degree
+is measured for its degree centrality.
 
-    _histogram[0] == 0;
-    _histogram[1] == 1; // vertex 0
-    _histogram[2] == 0;
-    _histogram[3] == 5; // vertices 1, 2, 3, 4, 5
+There are related two interpretations of degree centrality for directed graphs.
+When this measure is computed over the out-degree of a vertex, the measure is
+sometimes called /influence/. When the in-degree is considered, the measure is
+called /prestige/.
 
-For directed graphs, it is also possible to compute histograms for both the in-
-and out-degrees of the vertices of a graph.
+This module provides two generic functions for measuring degree centrality.
+The first function, `degree_centrality()` computes this measure for each vertex
+in the graph, assigning the values to an output property map.
 
-[figure
-    images/reference/distributions_directed.png
-    [*Figure 2.] A simple directed graph.
-]
+The second funtion, `vertex_degree_centrality()` computes this measure for
+a single vertex, returning the value to the caller.
 
-For Figure 2, the in- and out-degree distributions will be:
-
-    _in_histogram[0] == 1;      _out_histogram[0] == 0;
-    _in_histogram[1] == 2;      _out_histogram[1] == 4;
-    _in_histogram[2] == 3;      _out_histogram[2] == 2;
-
-Note that the cumulative degree histogram for an directed graph is the
-same as it would be if we treated edges as undirected. The cumulative
-histogram for the graph in Figure 2 is:
-
-    _histogram[0] == 1;
-    _histogram[0] == 0;
-    _histogram[0] == 5;
-
-Note that computing the in- or -out degree for an undirected graph will yield
-the same histogram as the cumulative.
-
-[note
-The /histogram/ is different than a /distribution/, which is commonly used as a
-synonym for /probability distribution/. The probability of a histogram
-can be computed by dividing each element of the `_histogram` by the number
-of vertices in the graph.
-]
-
-In both of these functions, the computation of histograms depends on the
-parameters passed to the function. For example, if called as:
-
-    degree_distribution(g, _histogram = hist, _in_histogram = in_hist);
-
-The algorithm will compute both the degree histogram and in-degree histogram,
-but not the out-degree histogram. If not arguments are supplied, the algorithm
-performs no computations (but does so in linear time).
+These functions can be specialized throught the use of alternate /measure/
+functors. These funtors are called to actually compute the degree centraltiy
+of a vertex. For exmaple, it is possible to redefine the detault notion of
+degree centrality for a directed graph to return /prestige/ instead of /influence/.
 
 [heading Where Defined]
-`boost/graph/degree_distribution.hpp`
+`boost/graph/degree_centrality.hpp`
 
 [heading Parameters]
 [table
     [[Type] [Parameter] [Description]]
     [
-        [required, in] [`const Graph& _graph`]
+        [required, in] [`const Graph& graph`]
         [
-            The graph object for which the distribution will be computed. If
-            the `_distribution` or `_in_distribution` arguments are supplied
-            when calling this function then `_graph` must be a model of
-            [BoostBidirectionalGraph]. If only `_out_distribution` is supplied,
-            then `_graph` must be a model of [BoostIncidenceGraph].
+            The graph object for which the degree centralities will be computed.
+
+            *Requirements:* The `Graph` type must be a model of the
+            [BoostIncidenceGraph] concept.
         ]
     ]
     [
-        [optional, out]
+        [required, in] [`vertex_descriptor v`]
         [
-            Histogram& `_histogram`
-
-            Histogram& `_out_histogram`
-
-            Histogram& `_in_histogram`
+            The vertex descriptor for which the degree centrality is computed.
         ]
+    ]
+    [
+        [required, out] [`CentralityMap cent`]
         [
-            The distribution parameters maps instances of vertex degree to the
-            number of observed vertices in the graph with that degree.
+            The property map that contains the degree centralities of all vertices
+            in a graph after calling the `degree_centrality()` function.
 
-            These parameters must model both the [SgiSequence] and
-            [SgiRandomAccessContainer] concepts (e.g., `std::vector`). The index type of the
-            distribution must be the same as `degree_size_type`. The `value_type` must
-            be integral (preferably unsigned).
+            *Requirements:* The `CentralityMap` type must be a model of the
+            [BoostWritablePropertyMap] concept. The `key_type` of the map must
+            be the same as the `vertex_descriptor` of the `Graph` type. If the
+            `measure` parameter is given in the call, then the `value_type`
+            of `CentralityMap` must be the same as `Measure::degree_type`.
+            Otherwise, the `value_type` must be the same as the `degree_size_type`
+            of the graph.
+        ]
+    ]
+    [
+        [optional, in] [`Measure measure`]
+        [
+            The `measure` parameter allows the caller to override the default
+            computation of degree centrality for a vertex.
 
-            If not supplied, these parameters assume the default value of `not_given`,
-            implying that no computation is performed.
+            *Requirements:* The `Measure` type must be a model of the
+            [BoostDegreeMeasure] concept. The `degree_type` of `Measure` must
+            be the same as the `value_type` of the `CentralityMap` type.
         ]
     ]
 ]
 
-[h5 Return Value]
-This function does not return a value.
+[heading Return Value]
+The `vertex_degree_centrality()` function returns the centrality of a vertex.
+If no `measure` parameter is given, the return type is the same as the
+`degree_size_type` of the `Graph`. Otherwise, it is the `degree_type` of
+the `Measure`.
 
-[h5 Complexity]
-The time complexity of all these functions is /O(V)/.
+[heading Complexity]
+The default measure is a constant-time function. Replacing the default measure
+with a non-constant-time function will affect the complexity of the computations.
 
-[h5 Notes]
-Because a graph may be a multigraph, there is no determinable upper bound on the
-size of the histogram parameters. As such they are required to be dynamically resized
-during the execution of the algorithm.
+The `degree_centrality()` function is ['O(n * O(measure))]. This is linear by
+default.
 
-The recommended type for the distribution parameters is:
+The `vertex_degree_centrality()` is ['O(O(measure))]. This is constant by
+default.
 
-    std::vector<graph_traits<Graph>::degree_size_type>
-
-Note that if `dist` is the name of the output distribution after a call to
-`degree_distribution()` then the maximum degree is `dist.size() - 1`. The
-minimum degree corresponds to the index in `dist` with the first non-zero value.
-
-[h5 Examples]
-[note
-    Expand these a bit... Perhaps show computations based on the previous.
-]
-
-The first example show how to compute and print the degree distribution.
-
-    undirected_graph<> g;
-    // add vertices and edges to g
-
-    std::vector<size_t> dist;
-    degree_distribution(g, dist);
-    copy(dist.begin(), dist.end(), ostream_iterator<size_t>(cout, " "));
-
-The following example shows how to access the vertex (or vertices) with the maximum
-degree by using the `degree_histogram()` algorithm. This prints the index of that
-vertex.
-
-    undirected_graph<> g;
-    // add vertice and edges to g
-
-    typedef graph_traits<undirected_graph<> >::vertex_descriptor vertex_type;
-    typedef std::vector<vertex_type> vertex_vector;
-
-    std::vector<vertex_vector> hist;
-    degree_histogram(g, hist);
-    cout << get_vertex_index(hist.back().back()) << "\n";
-
+[heading Example]
+Write an example.
 
 [endsect]

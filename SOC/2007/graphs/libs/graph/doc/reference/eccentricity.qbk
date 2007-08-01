@@ -8,133 +8,102 @@
 [section Eccentricity]
 
     template <typename Graph, typename DistanceMap>
-    property_traits<DistanceMap>::value_type
-    eccentricity(const Graph&g, DistanceMap dist)
+    typename property_traits<DistanceMap>::value_type
+    vertex_eccentricity(const Graph& g, GeodesicMap dist)
 
-This function computes the /eccentricity/ of a vertex in a graph. The eccentricity
-of a vertex is defined as the maximum geodesic distance (shortest paths) to any
-other vertex in the graph. It is important to note that these functions
-/do not/ compute these paths or record their distances
+    template <typename Graph, typename DistanceMatrix, typename EccentricityMap>
+    void eccentricity(const Graph& g, const DistanceMatrix& dist, EccentricityMap ecc)
 
-Boost.Graph provides two shortest paths algorithms: [boost_dijkstra_shortest_paths]
-and [boost_bellman_ford_shortest_paths]. Optionally, if the target graph is
-an unweighted, undirected graph, shortest paths can be recorded using
-[boost_breadth_first_search]. Each of these algorithms takes as an input a
-vertex for which the shortest distances are being computed. The output of
-each of these algorithms is a `DistanceMap`, which is (in turn) used as the
-input of these functions. Note then, that these functions compute measures
-of the vertex for which the `DistanceMap` was computed.
+The /eccentricity/ of a vertex is the maximum geodesic distance to any other
+vertex in the graph. Intuitively, Vertices with low eccentricity can reach all
+other vertices in the graph more quickly than vertices with high eccentricity.
+Eccentricity values are used to help compute the [boost_graph_radius] and
+[boost_graph_diameter]. These values can be used in turn, to identify the
+[boost_gaph_center] and [boost_graph_periperhy] subgraphs.
 
-If the graph is unconnected, then the eccentricity of any vertex will be
-infinite.
+Note that for any vertex in a graph that is not connected to another, its
+eccentricity is defined to be infinite.
+
+This module provide two generic functions. The first function, `eccentricity()`
+computes this values for all vertices in the graph given a matrix that provides
+the shortest paths between all pairs of vertices. This matrix can be computed
+as the output of an all-pairs shortest paths algorithm (e.g.,
+[boost_floyd_warshall_all_pairs_shortest_paths]) or repeated application of a
+breadth-first search. The output of this function is stored in a property map.
+
+The second function, `vertex_eccentricity()` computes the eccentricty of a
+single vertex given the shortest paths to every other vertex in the graph. The
+distance map can be computed using a shortest paths algorithms (e.g.,
+[boost_dijkstra_shortest_paths] or a breadth-first search. The output of this
+function is returned to the caller.
 
 [heading Where Defined]
-`boost/graph/distance.hpp`
+`boost/graph/eccentricity.hpp`
 
 [heading Parameters]
-
 [table
     [[Type] [Parameter] [Description]]
     [
         [required, in] [`const Graph& g`]
         [
-            The graph object for which the measure will be computed. The
-            `Graph` type is required to be a model of [BoostVertexListGraph].
-        ]
-    ]
-    [
-        [required, in] [`vertex_descriptor v`]
-        [
-            The target vertex to which the geodisic distance is returned. The
-            source vertex is made implicit by the `DistanceMap`.
+            The graph for which the eccentricity measures are being comptued.
+
+            *Requirements:* The `Graph` type must be a model of the
+            [BoostVertexListGraph] concepts.
         ]
     ]
     [
         [required, in] [`DistanceMap dist`]
         [
-            The `dist` parameter provides the distances of the shortest paths
-            from one source vertex to all others in the graph. The `DistanceMap`
-            must be a model of [BoostReadWritePropertyMap], they `key_type` must
-            be the `vertex_descriptor` of `Graph`.
+            Given a vertex `v`, the `dist` parameter provides the length of the
+            shortest path between a vertex `u` and `v`. The vertex `u` is the
+            vertex for which the distance map was initially computed. The
+            distance from /u/ to itself should be zero (i.e., `dist[u] == 0`).
+
+            *Requirements:* `DistanceMap` must be a model of [BoostReadablePropertyMap].
+            The `key_type` of the distance map must be the same as the `vertex_descriptor`
+            of the `Graph` parameter. The `value_type` is required to be a model of
+            [BoostNumericValue].
         ]
     ]
     [
-        [required, in] [`const T& dummy`]
+        [required, in] [`const DistanceMatrix& dist`]
         [
-            An unused instance of the type returned by the `mean_geodesic_distance()`
-            function. If specified, the measure will be computed as an average of
-            this type. This type must essentially be numeric, as it is required to
-            a) support division, b) be initialized with an integer type, and c)
-            have a default of 0.
+            Given vertices /u/ and /v/, the `dist` parameter provides the length
+            of the shortest path between the two vertices. Note that the
+            distance between a vertex and itself should be 0 (i.e., `dist[u][u] == 0`).
+
+            *Requirements:* `DistanceMatrix` must be a model of [BoostPropertyMatrix].
+            The `key_type` of the distance matrixc must be the same as the
+            `vertex_descriptor` of the `Graph` parameter. The `value_type` is
+            required to be a model of [BoostNumericValue].
+        ]
+    ]
+    [
+        [required, out] [`EccentricityMap ecc`]
+        [
+            The `ecc` parameter stores the computed results of the `eccentricity()`
+            function for each vertex in the graph.
+
+            *Requirements:* The `EccentricityMap` type must be a model of the
+            [BoostReadablePropertyMap] type. The `key_type` of the property map
+            must be the `vertex_descriptor` of the `Graph`. The `value_type`
+            must be the same as the `value_type` of the distance matrix.
         ]
     ]
 ]
 
-[h5 Return Value]
-The `eccentricity()` function returns the closeness of the vertex for which
-`dist` was computed.
+[heading Return Value]
+The `vertex_eccentricity()` function returns the eccentricity of the vertex.
+If the graph is unconnected, this returns the infinite value of the distance
+map's `value_type`.
 
-[h5 Complexity]
-The `eccentricity()` function has /O(V)/ time complexity.
+[heading Complexity]
+The `eccentricity()` function has /O(n^2)/ time complexity.
 
-[h5 Examples]
-This example computes shows the construction of a simple undirected graph and
-illustrates how to compute the `eccentricity()` for a vertex.
+The `vertex_eccentricity()` is linear.
 
-[figure
-    images/reference/geodesic.png
-    [*Figure 1.] A simple undirected, unweighted graph.
-]
-
-This graph can be constructed programmatically as:
-
-    typedef undirected_graph<> Graph;
-    typedef graph_traits<Graph>::vertex_descriptor Vertex;
-
-    // Instantiate the graph and vector of vertices.
-    Graph g;
-    vector<Vertex> v(10);
-
-    // Add vertices to the graph, recording their descriptors into
-    // the vertex vector.
-    for(size_t i = 0; i < 10; ++i) {
-        v[i] = add_vertex(g);
-    }
-
-    // Connect the vertices by adding edges to the graph. This builds
-    // the graph shown in Figure 1.
-    add_edge(v[0], v[1], g);  add_edge(v[1], v[2], g);
-    add_edge(v[1], v[3], g);  add_edge(v[2], v[4], g);
-    add_edge(v[3], v[5], g);  add_edge(v[4], v[6], g);
-    add_edge(v[4], v[7], g);  add_edge(v[4], v[8], g);
-    add_edge(v[5], v[8], g);  add_edge(v[6], v[9], g);
-    add_edge(v[7], v[9], g);  add_edge(v[8], v[9], g);
-
-    // Initialize an exterior property for recording the distances
-    // to every vertex in the graph.
-    typedef exterior_property<Graph, int> DistanceProperty;
-    typedef DistanceProperty::container_type DistanceContainer;
-    typedef DistanceProperty::map_type DistanceMap;
-    DistanceContainer distances(10);
-    DistanceMap dist(make_property_map(dists));
-
-    // Initialize the distance to-self of vertex 0 and run a breadth-first
-    // search on the graph to compute the distance of the shortest path
-    // from vertex 0 to all others.
-    dist[v[0]] = 0;
-    breadth_first_search(g, v[0],
-            visitor(make_bfs_visitor(record_distances(dist, on_tree_edge())))
-        );
-
-Computing the `eccentricity()` for vertex 0 is trivial.
-
-    cout << "eccentricity == " << eccentricity(g, dist) << end;
-
-The output of this program is:
-
-[pre
-mean geodesic distance == 5
-]
-
+[heading Examples]
+Write an example.
 
 [endsect]
