@@ -39,21 +39,21 @@
 [include depth_first_search.qbk]
 [endsect]
 
-[section Shortest Paths]
-[endsect]
-
-[section Minimum Spanning Tree]
-[endsect]
-
 [section Connectivity]
 [include connected_components.qbk]
 [include strong_components.qbk]
 [include connectivity.qbk]
 [endsect]
 
-[section Subgraph Finding]
-[include clique.qbk]
-[include cycle.qbk]
+[section Shortest Paths]
+[endsect]
+
+[section Minimum Spanning Tree]
+[endsect]
+
+[section Subgraph]
+[include bron_kerbosch_clique.qbk]
+[include tiernan_cycle.qbk]
 [endsect]
 
 [section Maximum Flow]
