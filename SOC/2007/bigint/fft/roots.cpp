@@ -75,10 +75,39 @@ int main(int argc, char** argv)
 		powers[i] = power;
 	}
 
-	std::cout << std::endl;
+	// convolution's element is N * base^2 at max, where N is size of each vector (provided we do N * N -> 2N multiplication)
+	unsigned __int64 modulus = static_cast<unsigned __int64>(primes[0]) * primes[1];
+
+	modulus /= base;
+	modulus /= base;
+
+	// now modulus is upper bound for N; round it down to 2^k
+
+	unsigned int maxN = 1;
+	while (maxN * 2 <= modulus) maxN *= 2;
+
+	std::cout << "// fft_max_N * base^2 should be less than " << primes[0] << " * " << primes[1] << " = " << static_cast<unsigned __int64>(primes[0]) * primes[1];
+	std::cout << " (base = " << base << ")\n";
 
 	unsigned int power_base = std::min(powers[0], powers[1]);
 	unsigned int power = 1 << power_base;
+
+	std::cout << "// fft_max_N should be greater or equal than 2^" << power_base << " = " << power << " due to primes structure" << std::endl;
+
+	if (power > maxN)
+	{
+		while (power > maxN)
+		{
+			--power_base;
+			power /= 2;
+		}
+	}
+	else
+	{
+		maxN = power;
+	}
+
+	std::cout << "const unsigned int fft_max_N = " << maxN << ";\n\n";
 
 	unsigned int roots[2];
 
