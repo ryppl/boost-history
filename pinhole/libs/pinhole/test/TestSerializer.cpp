@@ -1,8 +1,14 @@
 #pragma once
 
+#define BOOST_TEST_MODULE PinholeLib
+#include <boost/test/unit_test.hpp>
 #include "TestClassesAndConstants.h"
 #include <boost/pinhole/PropertySerializer.h>
 #include <fstream>
+
+// I can hide these two line if I don't do everything in headers
+boost::shared_ptr<property_manager> property_manager::m_instance(new property_manager);
+event_source* event_source::m_instance = 0;
 
 #define FILE_PATH "C:\\TestOutput.xml"
 
@@ -77,31 +83,31 @@ BOOST_AUTO_TEST_CASE( TestSerializer_Deserializer )
 
     // Setup changes in root object
 
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_FLOAT_1), "2.45");
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_INT_1), "365");
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_FLOAT_1), "2.45");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_INT_1), "365");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
 
-    pRootGroup->set_as_string(PROPERTY_FLOAT_1, "3.33");
-    pRootGroup->set_as_string(PROPERTY_INT_1, "567");
-    pRootGroup->set_as_string(PROPERTY_STRING_2, "a different string");
+    pRootGroup->testGroup.set_as_string(PROPERTY_FLOAT_1, "3.33");
+    pRootGroup->testGroup.set_as_string(PROPERTY_INT_1, "567");
+    pRootGroup->testGroup.set_as_string(PROPERTY_STRING_2, "a different string");
 
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_FLOAT_1), "3.33");
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_INT_1), "567");
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_STRING_2), "a different string");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_FLOAT_1), "3.33");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_INT_1), "567");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_STRING_2), "a different string");
 
     // Setup changes in child object
 
-    BOOST_CHECK_EQUAL( childGroup.get_as_string(PROPERTY_FLOAT_1), "2.45");
-    BOOST_CHECK_EQUAL( childGroup.get_as_string(PROPERTY_INT_1), "365");
-    BOOST_CHECK_EQUAL( childGroup.get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
+    BOOST_CHECK_EQUAL( childGroup.testGroup.get_as_string(PROPERTY_FLOAT_1), "2.45");
+    BOOST_CHECK_EQUAL( childGroup.testGroup.get_as_string(PROPERTY_INT_1), "365");
+    BOOST_CHECK_EQUAL( childGroup.testGroup.get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
 
-    childGroup.set_as_string(PROPERTY_FLOAT_1, "3.33");
-    childGroup.set_as_string(PROPERTY_INT_1, "567");
-    childGroup.set_as_string(PROPERTY_STRING_2, "a different string");
+    childGroup.testGroup.set_as_string(PROPERTY_FLOAT_1, "3.33");
+    childGroup.testGroup.set_as_string(PROPERTY_INT_1, "567");
+    childGroup.testGroup.set_as_string(PROPERTY_STRING_2, "a different string");
 
-    BOOST_CHECK_EQUAL( childGroup.get_as_string(PROPERTY_FLOAT_1), "3.33");
-    BOOST_CHECK_EQUAL( childGroup.get_as_string(PROPERTY_INT_1), "567");
-    BOOST_CHECK_EQUAL( childGroup.get_as_string(PROPERTY_STRING_2), "a different string");
+    BOOST_CHECK_EQUAL( childGroup.testGroup.get_as_string(PROPERTY_FLOAT_1), "3.33");
+    BOOST_CHECK_EQUAL( childGroup.testGroup.get_as_string(PROPERTY_INT_1), "567");
+    BOOST_CHECK_EQUAL( childGroup.testGroup.get_as_string(PROPERTY_STRING_2), "a different string");
 
     // Deserialize
 
@@ -109,13 +115,13 @@ BOOST_AUTO_TEST_CASE( TestSerializer_Deserializer )
 
     // Validate everything is reset
 
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_FLOAT_1), "2.45");
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_INT_1), "365");
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_FLOAT_1), "2.45");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_INT_1), "365");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
 
-    BOOST_CHECK_EQUAL( childGroup.get_as_string(PROPERTY_FLOAT_1), "2.45");
-    BOOST_CHECK_EQUAL( childGroup.get_as_string(PROPERTY_INT_1), "365");
-    BOOST_CHECK_EQUAL( childGroup.get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
+    BOOST_CHECK_EQUAL( childGroup.testGroup.get_as_string(PROPERTY_FLOAT_1), "2.45");
+    BOOST_CHECK_EQUAL( childGroup.testGroup.get_as_string(PROPERTY_INT_1), "365");
+    BOOST_CHECK_EQUAL( childGroup.testGroup.get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
 
     CoUninitialize();
 }
@@ -135,21 +141,21 @@ BOOST_AUTO_TEST_CASE( TestSerializer_DeserializerWherePathEqualsMultipleGroups )
 
     // Setup changes in root object
 
-    pRootGroup->set_as_string(PROPERTY_FLOAT_1, "3.33");
-    pRootGroup->set_as_string(PROPERTY_INT_1, "567");
-    pRootGroup->set_as_string(PROPERTY_STRING_2, "a different string");
+    pRootGroup->testGroup.set_as_string(PROPERTY_FLOAT_1, "3.33");
+    pRootGroup->testGroup.set_as_string(PROPERTY_INT_1, "567");
+    pRootGroup->testGroup.set_as_string(PROPERTY_STRING_2, "a different string");
 
     // Setup changes in child object1
 
-    childGroup1.set_as_string(PROPERTY_FLOAT_1, "3.33");
-    childGroup1.set_as_string(PROPERTY_INT_1, "567");
-    childGroup1.set_as_string(PROPERTY_STRING_2, "a different string");
+    childGroup1.testGroup.set_as_string(PROPERTY_FLOAT_1, "3.33");
+    childGroup1.testGroup.set_as_string(PROPERTY_INT_1, "567");
+    childGroup1.testGroup.set_as_string(PROPERTY_STRING_2, "a different string");
 
     // Setup changes in child object2
 
-    childGroup2.set_as_string(PROPERTY_FLOAT_1, "3.33");
-    childGroup2.set_as_string(PROPERTY_INT_1, "567");
-    childGroup2.set_as_string(PROPERTY_STRING_2, "a different string");
+    childGroup2.testGroup.set_as_string(PROPERTY_FLOAT_1, "3.33");
+    childGroup2.testGroup.set_as_string(PROPERTY_INT_1, "567");
+    childGroup2.testGroup.set_as_string(PROPERTY_STRING_2, "a different string");
 
     // Deserialize
 
@@ -158,17 +164,17 @@ BOOST_AUTO_TEST_CASE( TestSerializer_DeserializerWherePathEqualsMultipleGroups )
     // Validate that only the root item has reset. This is because the child groups
     // have matching paths and are thus ignored in deserialization.
 
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_FLOAT_1), "2.45");
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_INT_1), "365");
-    BOOST_CHECK_EQUAL( pRootGroup->get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_FLOAT_1), "2.45");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_INT_1), "365");
+    BOOST_CHECK_EQUAL( pRootGroup->testGroup.get_as_string(PROPERTY_STRING_2), "BOOST_AUTO_TEST_CASE value");
 
-    BOOST_CHECK_EQUAL( childGroup1.get_as_string(PROPERTY_FLOAT_1), "3.33");
-    BOOST_CHECK_EQUAL( childGroup1.get_as_string(PROPERTY_INT_1), "567");
-    BOOST_CHECK_EQUAL( childGroup1.get_as_string(PROPERTY_STRING_2), "a different string");
+    BOOST_CHECK_EQUAL( childGroup1.testGroup.get_as_string(PROPERTY_FLOAT_1), "3.33");
+    BOOST_CHECK_EQUAL( childGroup1.testGroup.get_as_string(PROPERTY_INT_1), "567");
+    BOOST_CHECK_EQUAL( childGroup1.testGroup.get_as_string(PROPERTY_STRING_2), "a different string");
 
-    BOOST_CHECK_EQUAL( childGroup2.get_as_string(PROPERTY_FLOAT_1), "3.33");
-    BOOST_CHECK_EQUAL( childGroup2.get_as_string(PROPERTY_INT_1), "567");
-    BOOST_CHECK_EQUAL( childGroup2.get_as_string(PROPERTY_STRING_2), "a different string");
+    BOOST_CHECK_EQUAL( childGroup2.testGroup.get_as_string(PROPERTY_FLOAT_1), "3.33");
+    BOOST_CHECK_EQUAL( childGroup2.testGroup.get_as_string(PROPERTY_INT_1), "567");
+    BOOST_CHECK_EQUAL( childGroup2.testGroup.get_as_string(PROPERTY_STRING_2), "a different string");
 
     CoUninitialize();
 }

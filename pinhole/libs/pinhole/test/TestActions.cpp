@@ -1,4 +1,4 @@
-// Boost.Print library
+// Boost.Pinhole library
 
 // Copyright Jared McIntyre 2007. Use, modification and
 // distribution is subject to the Boost Software License, Version
@@ -7,6 +7,8 @@
 
 // For more information, see http://www.boost.org
 
+#define BOOST_TEST_MODULE PinholeLib
+#include <boost/test/unit_test.hpp>
 #include "TestClassesAndConstants.h"
 
 BOOST_AUTO_TEST_CASE( TestActionsFixture, TestTriggerAction )

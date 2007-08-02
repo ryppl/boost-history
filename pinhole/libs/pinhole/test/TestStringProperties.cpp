@@ -1,4 +1,4 @@
-// Boost.Print library
+// Boost.Pinhole library
 
 // Copyright Jared McIntyre 2007. Use, modification and
 // distribution is subject to the Boost Software License, Version
@@ -7,9 +7,9 @@
 
 // For more information, see http://www.boost.org
 
-#include "TestClassesAndConstants.h"
-
+#define BOOST_TEST_MODULE PinholeLib
 #include <boost/test/unit_test.hpp>
+#include "TestClassesAndConstants.h"
 
 // I can hide these two line if I don't do everything in headers
 boost::shared_ptr<property_manager> property_manager::m_instance(new property_manager);
@@ -33,17 +33,7 @@ BOOST_AUTO_TEST_CASE( TestNoSetterStringFail )
 {
     TestPropertyGroup testGroup;
     
-    bool bWasExceptionThrown = false;
-    try
-    {
-        testGroup.set_as_string(PROPERTY_STRING_1, PROPERTY_STRING_1_VALUE);
-    }
-    catch( boost::bad_function_call )
-    {
-        bWasExceptionThrown = true;
-    }
-    
-    BOOST_CHECK_EQUAL( bWasExceptionThrown, true );
+    BOOST_CHECK_THROW( testGroup.set_as_string(PROPERTY_STRING_1, PROPERTY_STRING_1_VALUE), boost::bad_function_call );
 }
 
 BOOST_AUTO_TEST_CASE( TestSetGetString )
@@ -72,6 +62,8 @@ BOOST_AUTO_TEST_CASE( TestStringPropertyType )
     BOOST_CHECK( typeid(double) != testGroup.get_type_info(PROPERTY_STRING_2) );
     BOOST_CHECK( typeid(std::string) == testGroup.get_type_info(PROPERTY_STRING_2) );
 
+	const StringEditor *pEditor = dynamic_cast<const StringEditor*>(testGroup.get_metadata( PROPERTY_STRING_2 ));
+	BOOST_CHECK( pEditor != NULL );
 	BOOST_CHECK( testGroup.get_metadata(PROPERTY_STRING_2)->getEditorPropertyType() == StringType );
 }
 

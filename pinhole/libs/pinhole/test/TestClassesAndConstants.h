@@ -1,4 +1,4 @@
-// Boost.Print library
+// Boost.Pinhole library
 
 // Copyright Jared McIntyre 2007. Use, modification and
 // distribution is subject to the Boost Software License, Version
@@ -367,6 +367,36 @@ public:
         add_property<double>(PROPERTY_DOUBLE_VAR, "PropertyDoubleVar description", BOOST_SETTER_VAR(m_dVarDouble), BOOST_GETTER_VAR(m_dVarDouble), new BoolEditor());
 	}
 
+	void add_category( const std::string &category_name )
+	{
+		property_group::add_category( category_name );
+	}
+
+	
+	template<typename Value_Type>
+	void add_property( std::string name, 
+					   std::string description,
+					   boost::function<void (const Value_Type&)> setter, 
+					   boost::function<Value_Type ()> getter )
+	{
+		property_group::add_property( name, description, setter, getter );
+	}
+
+	template<typename Value_Type>
+	void add_property( std::string name, 
+					   std::string description,
+					   boost::function<void (const Value_Type&)> setter, 
+					   boost::function<Value_Type ()> getter,
+					   Editor *pEditor )
+	{
+		property_group::add_property( name, description, setter, getter, pEditor );
+	}
+	
+	void clear_properties()
+	{
+		m_properties.clear();
+	}
+
 	float GetFloat() const{return( m_fFloat1 );}
 	void SetFloat( float fValue ){m_fFloat1 = fValue;}
 	double GetDouble() const{return( m_dDouble );}
@@ -481,6 +511,11 @@ public:
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
 #endif
+	
+	void clear_actions()
+	{
+		m_actions.clear();
+	}
 
 	void Action1(){bTriggeredAction1 = true;}
 	void Action2(){bTriggeredAction2 = true;}
