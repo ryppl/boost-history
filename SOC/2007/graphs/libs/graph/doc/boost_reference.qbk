@@ -54,11 +54,11 @@
 
 [/ Subgraph/ ]
 [template boost_bron_kerbosch_visit_cliques[] [link
-    boost_graph.reference_guide.algorithms.subgraph.bron_kerbosch_find_cliques
-    [^bron_kerbosch_find_cliques()]]]
+    boost_graph.reference_guide.algorithms.subgraph.bron_kerbosch_all_cliques
+    [^bron_kerbosch_all_cliques()]]]
 [template boost_tiernan_find_cycles[] [link
-    boost_graph.reference_guide.algorithms.subgraph.tiernan_find_cycles
-    [^tiernan_find_cycles()]]]
+    boost_graph.reference_guide.algorithms.subgraph.tiernan_all_cycles
+    [^tiernan_all_cycles()]]]
 
 [/ Measures /]
 [template boost_degree_centrality[] [link

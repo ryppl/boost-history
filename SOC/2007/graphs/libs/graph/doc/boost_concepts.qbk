@@ -16,16 +16,38 @@
 [template BoostWritablePropertyMap[] [@http://www.boost.org/libs/property_map/WritablePropertyMap.html WritablePropertyMap]]
 [template BoostReadWritePropertyMap[] [@http://www.boost.org/libs/property_map/ReadWritePropertyMap.html ReadWritePropertyMap]]
 
-[template BoostGraph[] [link boost_graph.concepts.graph_concepts.graph Graph]]
-[template BoostIncidenceGraph[] [link boost_graph.concepts.graph_concepts.incidence_graph IncidenceGraph]]
-[template BoostBidirectionalGraph[] [link boost_graph.concepts.graph_concepts.bidirectional_graph BidirectionalGraph]]
-[template BoostVertexListGraph[] [link boost_graph.concepts.graph_concepts.vertex_list_graph VertexListGraph]]
-[template BoostEdgeListGraph[] [link boost_graph.concepts.graph_concepts.edge_list_graph EdgeListGraph]]
-[template BoostAdjacencyGraph[] [link boost_graph.concepts.graph_concepts.adjacency_graph AdjacencyGraph]]
-[template BoostAdjacencyMatrix[] [link boost_graph.concepts.graph_concepts.adjacency_matrix AdjacencyMatrix]]
-[template BoostMutableGraph[] [link boost_graph.concepts.graph_concepts.mutable_graph MutableGraph]]
-[template BoostPropertyGraph[] [link boost_graph.concepts.graph_concepts.property_graph PropertyGraph]]
-[template BoostMutablePropertyGraph[] [link boost_graph.concepts.graph_concepts.mutable_property_graph MutablePropertyGraph]]
+[template BoostGraph[] [link boost_graph.concepts.graph_concepts.graph [^Graph]]]
+[template BoostIncidenceGraph[] [link
+    boost_graph.concepts.graph_concepts.incidence_graph
+    [^IncidenceGraph]]]
+[template BoostBidirectionalGraph[] [link
+    boost_graph.concepts.graph_concepts.bidirectional_graph
+    [^BidirectionalGraph]]]
+[template BoostVertexListGraph[] [link
+    boost_graph.concepts.graph_concepts.vertex_list_graph
+    [^VertexListGraph]]]
+[template BoostEdgeListGraph[] [link
+    boost_graph.concepts.graph_concepts.edge_list_graph
+    [^EdgeListGraph]]]
+[template BoostAdjacencyGraph[] [link
+    boost_graph.concepts.graph_concepts.adjacency_graph
+    [^AdjacencyGraph]]]
+[template BoostAdjacencyMatrix[] [link
+    boost_graph.concepts.graph_concepts.adjacency_matrix
+    [^AdjacencyMatrix]]]
+[template BoostMutableGraph[] [link
+    boost_graph.concepts.graph_concepts.mutable_graph
+    [^MutableGraph]]]
+[template BoostPropertyGraph[] [link
+    boost_graph.concepts.graph_concepts.property_graph
+    [^PropertyGraph]]]
+[template BoostMutablePropertyGraph[] [link
+    boost_graph.concepts.graph_concepts.mutable_property_graph
+    [^MutablePropertyGraph]]]
+
+[template BoostVertexIndexGraph[] [link
+    boost_graph.concepts.graph_concepts
+    [^VertexIndexGraph]]]
 
 [template BoostVisitor[] [link boost_graph.concepts.visitor_concepts.visitor Visitor]]
 [template BoostBFSVisitor[] [link boost_graph.concepts.visitor_concepts.breadth_first_search_visitor BreadthFirstSearchVisitor]]

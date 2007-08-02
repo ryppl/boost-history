@@ -21,8 +21,8 @@ algorithms and are invoked when a clique is found within a graph.
         [`vis.clique(vs,g)`]
         [`void`]
         [
-            *Semantics:* The `clique()` member function of the visitor is invoked
-            when a fully connected subgraph is identified in the graph `g`.
+            The `clique()` member function of the visitor is invoked when a fully
+            connected subgraph is identified in the graph `g`.
 
              *Requirements:* `g` is an object whose type `G` is a refinement of the
             [BoostGraph] concept.
@@ -47,8 +47,7 @@ This concept is defined as:
 
         template<Container VertexSet>
             requires SameType<VertexSet::value_type, graph_type::vertex_descriptor>
-        void
-        T::clique(const VertexSet&, graph_type&);
+        void T::clique(const VertexSet&, graph_type&);
     };
 
 [endsect]

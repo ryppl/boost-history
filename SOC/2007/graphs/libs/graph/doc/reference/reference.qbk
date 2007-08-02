@@ -42,7 +42,6 @@
 [section Connectivity]
 [include connected_components.qbk]
 [include strong_components.qbk]
-[include connectivity.qbk]
 [endsect]
 
 [section Shortest Paths]
@@ -52,8 +51,12 @@
 [endsect]
 
 [section Subgraph]
-[include bron_kerbosch_clique.qbk]
-[include tiernan_cycle.qbk]
+This section contains algorithms that implement count or enumerate subgraphs.
+Note that this section can be further subdivided based on the types of subgraphs
+being found. For exammple, there could be a section on finding cliques and a
+section on finding cycles.
+[include bron_kerbosch_all_cliques.qbk]
+[include tiernan_all_cycles.qbk]
 [endsect]
 
 [section Maximum Flow]

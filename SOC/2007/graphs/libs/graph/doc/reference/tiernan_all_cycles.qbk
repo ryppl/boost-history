@@ -5,44 +5,68 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Clique]
+[section Tiernan All Cycles]
 
     template <typename Graph, typename Visitor>
-    void
-    tiernan_visit_cycles(const Graph& g, Visitor vis)
+    inline void tiernan_all_cycles(const Graph& g, Visitor vis)
+
+    template <typename Graph, typename Visitor>
+    void tiernan_all_cycles(const Graph& g, Visitor vis, std::size_t maxlen)
+
+    template <typename Graph, typename Visitor>
+    void tiernan_all_cycles(const Graph& g,
+                            Visitor vis,
+                            std::size_t minlen,
+                            std::size_t maxlen)
 
 These functions find all /cycles/ within of the given graph, invoking a visitor
-when each clique is found.
+when each cycle is found. A cycle is a path (a sequence of connected vertices)
+within a graph whose tail (the last vertex in the path) is connected to its
+head (the first vertex in the path).
 
-The `tiernan_visit_cycles()` function is designed to work on directed graph, but
+There are three variants of this algorithm. The first will simply find and visit
+all cycles in the target graph. The second variant allows the caller to specify
+an upper bound on the length of cycles visited. The third variant allows the
+user to specify both upper and lower bounds on the lengths of paths being visited.
+The minimum cycle length must be at least two.
+
+The `tiernan_all_cycles()` function is designed to work on directed graph, but
 works for undirected graphs as well. When running on undirected graphs, however,
 the algorithm treats each edge connecting two vertices /(u,v)/ as if it were
 two edges /(u,v)/ and /(v,u)/. As result the algorithm will report cycles in
 both directions.
 
+Note that the default minimum cycle length differs between directeed and undirected
+graphs. For directed graphs, the algorithm allows the discovery and visitation
+of length-two cycles. For undirected graphs, the default minimum cycle length is
+three. This prevents the algorithm from visiting every pair of connected vertices
+in an undirected graph.
+
 [heading Where Defined]
-`boost/graph/clique.hpp`
+`boost/graph/tiernan_all_cycles.hpp`
 
 [heading Parameters]
-
 [table
     [[Type] [Parameter] [Description]]
     [
         [required, in] [`const Graph& g`]
         [
-            The graph for which cliques are being visited. The `Graph` type must
-            /approximate/ the [BoostAdjacencyMatrix] in that it must implement
-            the `edge(u,v,g)` function. It is not, however, required to return
-            in constant time. Note that most graph types provide this function,
-            including [boost_adjacency_list], [boost_undirected_graph], and
-            [boost_directed_graph].
+            The graph for which cliques are being visited.
+
+            *Preconditions:* The indices of vertices in the graph must be
+            in the range \[0, `num_vertices(g)`).
+
+            *Requirements:* The `Graph` type must be a model of the
+            [BoostIncidenceGraph] and [BoostVertexIndexGraph] concepts.
         ]
     ]
     [
         [required, in] [`Visitor vis`]
         [
-            The visitor object to the algorithm. This `Visitor` class must
-            model the [BoostCliqueVisitor] class.
+            The visitor object to the algorithm.
+
+            *Requirements:* This `Visitor` class must model the
+            [BoostCliqueVisitor] class.
         ]
     ]
 ]
@@ -51,11 +75,16 @@ both directions.
 This function does not return a value.
 
 [h5 Complexity]
-No complexity has been reported for this algorithm, but it is expected to
-run in /O(P(g))/ where /P(g)/ is the number of distinct simple paths in the
-graph /g/ (which can be very large).
+This function has a (loose) upper bound of ['O(2[sup n])] where /n/ is the
+number of vertices in /g/. This bound is derived from the powerset of vertices
+in /g/ and does not account for origin or directionality of edges connecting
+those vertices. If you consider the paths in a triangle {1, 2, 3} and {3, 2, 1}
+to be different cycles within a graph, then this bound potentially be much greater.
+
+From a practical standpoint, most (i.e., nearly all) real graphs will never approach
+a number of paths even remotely close to this number.
 
 [h5 Examples]
-
+Write an example.
 
 [endsect]

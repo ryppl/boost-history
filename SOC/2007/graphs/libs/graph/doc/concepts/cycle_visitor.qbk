@@ -21,19 +21,18 @@ algorithms and are invoked when a cycle is found within a graph.
         [`vis.cycle(vs,g)`]
         [`void`]
         [
-            *Semantics:* The `cycle()` member function of the visitor is invoked
-            when a cycle is identified in the graph `g`.
+            The `vis.cycle()` member function of the visitor is invoked when a
+            cycle is identified in the graph `g`. The vertices in `vs` are arranged
+            such that first vertex is connected to the second, and that is connected
+            to the third, etc. The `back()` vertex is connected to the `front()`
+            to form a cycle.
 
-            *Requirements:* `g` is an object whose type `G` is a refinement of the
+            *Requirements:* `g` is an object whose type `G` is a model of the
             [BoostGraph] concept.
 
-            *Requirements:* `vs` is an object whose type `VS` is a refinement of the
-            [SgiSequence] concept. The `value_type` of `VS` must be the `vertex_descriptor`
-            of `G`.
-
-            *Precondition:* The vertices in `vs` are arranged such that first vertex
-            is connected to the second, and that is connected to the third, etc. The
-            last vertex is connected to the the first.
+            *Requirements:* `vs` is an object whose type `VertexSet` is a model
+            of the [SgiContainer] concept. The `value_type` of `VS` must be the
+            the same as the `vertex_descriptor` of `G`.
         ]
     ]
 ]
@@ -41,12 +40,14 @@ algorithms and are invoked when a cycle is found within a graph.
 [heading C++0x]
 This concept is defined as:
 
-    concept CycleVisitor<typename T>
+    concept CliqueVisitor<typename T>
     {
-        typename graph_type;
-        typename vertex_set_type;
+        Graph graph_type;
 
-        T::cycle(const vertex_set_type&, graph_type&);
+        template<Container VertexSet>
+            requires SameType<VertexSet::value_type, graph_type::vertex_descriptor>
+        void T::cycle(const VertexSet&, graph_type&);
     };
+
 
 [endsect]
