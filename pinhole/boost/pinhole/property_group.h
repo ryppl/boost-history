@@ -31,7 +31,11 @@
 #endif
 
 #define BOOST_SETTER(c) boost::bind(c, this, _1)
-#define BOOST_GETTER(c) boost::bind(c, this)
+#if defined(BOOST_MSVC) && (_MSC_VER > 1310)
+    #define BOOST_GETTER(c) boost::bind(boost::mem_fn(c), this)
+#else
+    #define BOOST_SETTER(c) boost::bind(c, this, _1)
+#endif
 #define BOOST_ACTION(c) boost::bind(c, this)
 
 namespace boost { namespace pinhole
