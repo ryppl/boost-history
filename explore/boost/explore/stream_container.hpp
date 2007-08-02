@@ -131,7 +131,7 @@ namespace explore
         // starting delimiter
         ostr << state->start(depth);
 
-        std::size_t rows = state->rows();
+        std::size_t rows = state->rows(depth);
 
         std::size_t cur_row = 0;
         while( first != last )

@@ -39,10 +39,11 @@ namespace explore
     struct container_stream_state
     {
         typedef std::basic_string<Elem> str_typ;
-        typedef std::vector<str_typ, std::allocator<str_typ> > cont_typ;
+        typedef std::vector<str_typ, std::allocator<str_typ> > str_cont_typ;
+        typedef std::vector<std::size_t, std::allocator<std::size_t> > size_cont_typ;
 
         container_stream_state()
-            : m_depth(0), m_rows(0), m_itemwidth(0)
+            : m_depth(0)
         {
             init<Elem>();
         }
@@ -51,12 +52,15 @@ namespace explore
         template<typename El>
         void init()
         {
+            // called not only to initialize, but to reset the state.
             init(m_separator, detail::init_separator<El>());
             init(m_start, detail::init_start<El>());
             init(m_end, detail::init_end<El>());
             init(m_assoc_separator, detail::init_assoc_separator<El>());
             init(m_assoc_start, detail::init_assoc_start<El>());
             init(m_assoc_end, detail::init_assoc_end<El>());
+            m_rows.resize(1, 0);
+            m_itemwidth.resize(1, 0);
         }
 
         // read
@@ -66,8 +70,8 @@ namespace explore
         const str_typ& assoc_separator(std::size_t index = 0) const { return at(m_assoc_separator, index); }
         const str_typ& assoc_start(std::size_t index = 0) const { return at(m_assoc_start, index); }
         const str_typ& assoc_end(std::size_t index = 0) const { return at(m_assoc_end, index); }
-        std::size_t rows() const { return m_rows; }
-        std::size_t itemwidth() const { return m_itemwidth; }
+        std::size_t rows(std::size_t index = 0) const { return at(m_rows, index); }
+        std::size_t itemwidth(std::size_t index = 0) const { return at(m_itemwidth, index); }
 
         // write
         void set_separator(const str_typ& str, std::size_t index = 0) { at(m_separator, index) = str; }
@@ -76,8 +80,8 @@ namespace explore
         void set_assoc_separator(const str_typ& str, std::size_t index = 0) { at(m_assoc_separator, index) = str; }
         void set_assoc_start(const str_typ& str, std::size_t index = 0) { at(m_assoc_start, index) = str; }
         void set_assoc_end(const str_typ& str, std::size_t index = 0) { at(m_assoc_end, index) = str; }
-        void set_rows(std::size_t rows, std::size_t index = 0) { m_rows = rows; }
-        void set_itemwidth(std::size_t iw, std::size_t index = 0) { m_itemwidth = iw; }
+        void set_rows(std::size_t rows, std::size_t index = 0) { at(m_rows, index) = rows; }
+        void set_itemwidth(std::size_t iw, std::size_t index = 0) { at(m_itemwidth, index) = iw; }
 
         std::size_t depth() const
         {
@@ -88,33 +92,35 @@ namespace explore
     private:
         friend struct detail::depth_guard<Elem>;
 
-        cont_typ m_separator;
-        cont_typ m_start;
-        cont_typ m_end;
-        cont_typ m_assoc_separator;
-        cont_typ m_assoc_start;
-        cont_typ m_assoc_end;
+        str_cont_typ m_separator;
+        str_cont_typ m_start;
+        str_cont_typ m_end;
+        str_cont_typ m_assoc_separator;
+        str_cont_typ m_assoc_start;
+        str_cont_typ m_assoc_end;
         std::size_t m_depth;
 
-        std::size_t m_rows;
-        std::size_t m_itemwidth;
+        size_cont_typ m_rows;
+        size_cont_typ m_itemwidth;
 
         template<typename T>
-        void init(cont_typ& c, const T& val)
+        void init(str_cont_typ& c, const T& val)
         {
             c.resize(1);
             c[0] = val;
         }
 
         // read
-        const str_typ& at(const cont_typ& c, std::size_t index) const
+        template<typename T>
+        const T& at(const std::vector<T>& c, std::size_t index) const
         {
             // return the highest item if it does not exist at the given index
             return c[std::min(index, c.size() - 1)];
         }
 
         // write
-        str_typ& at(cont_typ& c, std::size_t index)
+        template<typename T>
+        T& at(std::vector<T>& c, std::size_t index)
         {
             if( c.size() <= index )
             {
