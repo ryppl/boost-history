@@ -13,7 +13,7 @@
 
 #include <boost/graph/undirected_graph.hpp>
 #include <boost/graph/directed_graph.hpp>
-#include <boost/graph/clique.hpp>
+#include <boost/graph/bron_kerbosch_all_cliques.hpp>
 #include <boost/graph/generators/prism_graph.hpp>
 #include <boost/graph/generators/complete_graph.hpp>
 
@@ -74,11 +74,10 @@ void test()
 
     // build_graph(g);
     // make_prism_graph(g, 3, 2);
-    make_complete_graph(g, 5);
+    make_complete_graph(g, 4);
 
-    bron_kerbosch_visit_cliques(g, clique_printer<ostream>(cout));
+    bron_kerbosch_all_cliques(g, clique_printer<ostream>(cout));
 }
-
 
 int
 main(int argc, char *argv[])

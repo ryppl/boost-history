@@ -13,7 +13,7 @@
 
 #include <boost/graph/undirected_graph.hpp>
 #include <boost/graph/directed_graph.hpp>
-#include <boost/graph/cycle.hpp>
+#include <boost/graph/tiernan_all_cycles.hpp>
 #include <boost/graph/generators/cycle_graph.hpp>
 #include <boost/graph/generators/prism_graph.hpp>
 #include <boost/graph/generators/complete_graph.hpp>
@@ -103,14 +103,14 @@ void test()
 {
     Graph g;
     // build_graph(g);
-    // make_prism_graph(g, 3, 2);
-    make_complete_graph(g, 4);
+    make_prism_graph(g, 3, 2);
+    // make_complete_graph(g, 4, with_clockwise_cycle());
 
     size_t count = 0;
-    tiernan_visit_cycles(g, count_cycles(count));
+    tiernan_all_cycles(g, count_cycles(count));
     std::cout << "number of cycles: " << count << "\n";
 
-    tiernan_visit_cycles(g, print_cycles(cout));
+    tiernan_all_cycles(g, print_cycles(cout));
 }
 
 

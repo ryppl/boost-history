@@ -53,6 +53,12 @@ exe mean_geodesic
     : <include>../../../
     ;
 
+exe eccentricity
+    : eccentricity.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
+
 exe cluster
     : cluster.cpp
     : <include>$BOOST_ROOT

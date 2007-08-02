@@ -43,44 +43,32 @@ void build_graph(Graph& g)
     add_edge(v[4], v[0], g);
 };
 
-
-void test_1()
+template <typename Graph>
+void test()
 {
-    typedef undirected_graph<> Graph;
-
     Graph g;
     build_graph(g);
 
-    Graph::vertex_iterator i, end;
+    typename graph_traits<Graph>::vertex_iterator i, end;
     for(tie(i, end) = vertices(g); i != end; ++i) {
-        cerr << get_vertex_index(*i, g) << "\n";
-        cerr << "  triples: " << num_centered_triples(g, *i) << "\n";
-        cerr << "  triangles: " << num_centered_triangles(g, *i) << "\n";
-        cerr << "  coef: " << clustering_coefficient(g, *i) << "\n\n";
+        unsigned id = get(vertex_index, g, *i);
+        size_t r = vertex_num_routes(g, *i);
+        size_t t = vertex_num_triangles(g, *i);
+        float coef = vertex_clustering_coefficient(g, *i);
+        std::cout << id << " {" << r << " " << t << " " << coef << "}\n";
     }
-    cerr << "cc: " << clustering_coefficient(g) << "\n";
-}
-
-void test_2()
-{
-    typedef directed_graph<> Graph;
-
-    Graph g;
-    build_graph(g);
-
-    Graph::vertex_iterator i, end;
-    for(tie(i, end) = vertices(g); i != end; ++i) {
-        cerr << get_vertex_index(*i, g) << "\n";
-        cerr << "  triples: " << num_centered_triples(g, *i) << "\n";
-        cerr << "  triangles: " << num_centered_triangles(g, *i) << "\n";
-        cerr << "  coef: " << clustering_coefficient(g, *i) << "\n\n";
-    }
-    cerr << "cc: " << clustering_coefficient(g) << "\n";
+    cerr << "  cc: " << graph_clustering_coefficient(g) << "\n";
 }
 
 int
 main(int argc, char *argv[])
 {
-    test_1();
-    test_2();
+    typedef undirected_graph<> Graph;
+    typedef directed_graph<> Digraph;
+
+    std::cout << "*** undirected_graph<> ***\n";
+    test<Graph>();
+
+    std::cout << "*** directed_graph<> ***\n";
+    test<Digraph>();
 }

@@ -17,7 +17,9 @@
 
 #include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/floyd_warshall_shortest.hpp>
-#include <boost/graph/geodesic_distance.hpp>
+#include <boost/graph/eccentricity.hpp>
+#include <boost/graph/radius.hpp>
+#include <boost/graph/diameter.hpp>
 
 using namespace std;
 using namespace boost;
@@ -100,12 +102,14 @@ void print_map(const Graph& g, PropertyMap pm)
 template <typename Graph, typename Matrix>
 void print_matrix(const Graph& g, Matrix m)
 {
-    cout << "[\n";
+    cout << "{ ";
     typename Graph::vertex_iterator i, j, end;
     for(tie(i, end) = vertices(g); i != end; ++i) {
+        if(i != vertices(g).first) {
+            cout << "  ";
+        }
         print_map(g, m[*i]);
     }
-    cout << "]\n";
 }
 
 template <typename Graph>
@@ -114,9 +118,9 @@ void test()
     typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
     typedef typename graph_traits<Graph>::edge_descriptor Edge;
 
-    typedef exterior_vertex_property<Graph, float> GeodesicProperty;
-    typedef typename GeodesicProperty::container_type GeodesicContainer;
-    typedef typename GeodesicProperty::map_type GeodesicMap;
+    typedef exterior_vertex_property<Graph, int> EccentricityProperty;
+    typedef typename EccentricityProperty::container_type EccentricityContainer;
+    typedef typename EccentricityProperty::map_type EccentricityMap;
 
     typedef exterior_vertex_property<Graph, int> DistanceProperty;
     typedef typename DistanceProperty::matrix_type DistanceMatrix;
@@ -126,18 +130,19 @@ void test()
     Graph g;
     build_graph(g);
 
-    GeodesicContainer geodesics(num_vertices(g));
-    GeodesicMap geo(geodesics);
+    EccentricityContainer eccs(num_vertices(g));
+    EccentricityMap ecc(eccs);
     DistanceMatrix dist(num_vertices(g));
     WeightMap weights(get(&EdgeProp::weight, g));
 
     floyd_warshall_all_pairs_shortest_paths(g, dist, weight_map(weights));
-    mean_geodesic(g, dist, geo);
+    eccentricity(g, dist, ecc);
 
     print_matrix(g, dist);
-    print_map(g, geo);
+    print_map(g, ecc);
 
-    std::cout << "mgeo: " << make_numeric(graph_mean_geodesic(g, geo)) << "\n";
+    std::cout << "radius: " << make_numeric(graph_radius(g, ecc)) << "\n";
+    std::cout << "diameter: " << make_numeric(graph_diameter(g, ecc)) << "\n";
 }
 
 int
