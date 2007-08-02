@@ -30,6 +30,7 @@ namespace boost
   {
 
     class error_code;
+    bool equivalent( const error_code & lhs, const error_code & rhs );
 
     namespace posix
     {
@@ -129,6 +130,7 @@ namespace boost
       virtual ~error_category(){}
       virtual const std::string & name() const = 0;
       virtual posix::posix_errno posix( int ev) const = 0;
+      virtual error_code generic_error_code( int ev) const = 0;
       virtual std::string message( int ev ) const = 0;
 
       bool operator==(const error_category & rhs) const { return this == &rhs; }
@@ -187,6 +189,7 @@ namespace boost
       int                     value() const    { return m_val; }
       const error_category &  category() const { return *m_cat; }
       posix::posix_errno      posix() const    { return m_cat->posix(value()); }
+      error_code              generic_error_code() const  { return m_cat->generic_error_code(value()); }
       std::string             message() const  { return m_cat->message(value()); }
 
       typedef void (*unspecified_bool_type)();
@@ -206,8 +209,7 @@ namespace boost
       bool operator==( const error_code & rhs ) const
       {
         if ( category() == rhs.category() ) return value() == rhs.value();
-        return (category() == posix_category || rhs.category() == posix_category)
-          && posix() == rhs.posix();
+        return equivalent( *this, rhs );
       }
 
       bool operator!=( const error_code & rhs ) const
@@ -222,6 +224,17 @@ namespace boost
 
 
     //  non-member functions  ------------------------------------------------//
+
+    //  the more symmetrical non-member syntax is preferred
+    inline bool equal( const error_code & lhs, const error_code & rhs )
+    {
+      return lhs.category() == rhs.category() && lhs.value() == rhs.value();
+    }
+                
+    inline bool equivalent( const error_code & lhs, const error_code & rhs )
+    {
+      return equal( lhs.generic_error_code(), rhs.generic_error_code() );
+    }
 
     //  posix::posix_errno make_error_code:
     inline error_code make_error_code( posix::posix_errno e )
