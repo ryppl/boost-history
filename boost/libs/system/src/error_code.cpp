@@ -203,6 +203,7 @@ namespace
   public:
     const std::string &   name() const;
     posix::posix_errno    posix( int ev ) const;
+    error_code            generic_error_code( int ev ) const;
     std::string           message( int ev ) const;
   };
 
@@ -211,6 +212,7 @@ namespace
   public:
     const std::string &   name() const;
     posix::posix_errno    posix( int ev ) const;
+    error_code            generic_error_code( int ev ) const;
     std::string           message( int ev ) const;
   };
 
@@ -228,6 +230,11 @@ namespace
   posix_errno posix_error_category::posix( int ev ) const
   {
     return static_cast<posix_errno>(ev);
+  }
+
+  error_code posix_error_category::generic_error_code( int ev ) const
+  {
+    return error_code( ev, posix_category );
   }
 
   std::string posix_error_category::message( int ev ) const
@@ -312,6 +319,11 @@ namespace
     } while ( cur != system_to_posix
       + sizeof(system_to_posix)/sizeof(system_to_posix_t) );
     return boost::system::posix::no_posix_equivalent;
+  }
+
+  error_code system_error_category::generic_error_code( int ev ) const
+  {
+    return error_code( posix(ev), posix_category );
   }
 
 # if !defined( BOOST_WINDOWS_API )
