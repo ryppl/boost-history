@@ -19,8 +19,9 @@ namespace explore
     struct stream_normal_value
     {
         template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>*)
+        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state)
         {
+            ostr.width(state->itemwidth());
             ostr << val;
         }
     };

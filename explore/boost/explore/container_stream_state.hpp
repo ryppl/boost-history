@@ -42,7 +42,7 @@ namespace explore
         typedef std::vector<str_typ, std::allocator<str_typ> > cont_typ;
 
         container_stream_state()
-            : m_depth(0), m_rows(0)
+            : m_depth(0), m_rows(0), m_itemwidth(0)
         {
             init<Elem>();
         }
@@ -67,6 +67,7 @@ namespace explore
         const str_typ& assoc_start(std::size_t index = 0) const { return at(m_assoc_start, index); }
         const str_typ& assoc_end(std::size_t index = 0) const { return at(m_assoc_end, index); }
         std::size_t rows() const { return m_rows; }
+        std::size_t itemwidth() const { return m_itemwidth; }
 
         // write
         void set_separator(const str_typ& str, std::size_t index = 0) { at(m_separator, index) = str; }
@@ -76,6 +77,7 @@ namespace explore
         void set_assoc_start(const str_typ& str, std::size_t index = 0) { at(m_assoc_start, index) = str; }
         void set_assoc_end(const str_typ& str, std::size_t index = 0) { at(m_assoc_end, index) = str; }
         void set_rows(std::size_t rows, std::size_t index = 0) { m_rows = rows; }
+        void set_itemwidth(std::size_t iw, std::size_t index = 0) { m_itemwidth = iw; }
 
         std::size_t depth() const
         {
@@ -95,6 +97,7 @@ namespace explore
         std::size_t m_depth;
 
         std::size_t m_rows;
+        std::size_t m_itemwidth;
 
         template<typename T>
         void init(cont_typ& c, const T& val)

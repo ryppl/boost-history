@@ -111,6 +111,13 @@ namespace explore
         {
             explore::get_stream_state<container_stream_state<char> >(ostr)->set_rows(sz, depth);
         }
+
+        // function ptr object for setrows
+        //template<typename Elem>
+        void setitemwidthFn(std::ios_base& ostr, std::size_t sz, std::size_t depth)
+        {
+            explore::get_stream_state<container_stream_state<char> >(ostr)->set_itemwidth(sz, depth);
+        }
     }
 
     template<typename Elem, typename Tr, typename FwdIter, typename F>
@@ -283,6 +290,11 @@ namespace explore
     detail::manipfunc<std::size_t> setrows(std::size_t sz, std::size_t depth = 0)
     {
         return detail::manipfunc<std::size_t>(detail::setrowsFn, sz, depth);
+    }
+
+    detail::manipfunc<std::size_t> setitemwidth(std::size_t sz, std::size_t depth = 0)
+    {
+        return detail::manipfunc<std::size_t>(detail::setitemwidthFn, sz, depth);
     }
 
     // manipulator
