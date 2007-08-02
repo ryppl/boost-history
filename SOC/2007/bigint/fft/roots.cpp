@@ -35,9 +35,23 @@ unsigned int pow(unsigned int base, unsigned int power, unsigned int prime)
 
 int main(int argc, char** argv)
 {
-	if (argc < 3) return 0;
+	const unsigned int base = 65536;
 
-	unsigned int primes[2] = {atoi(argv[1]), atoi(argv[2])};
+	if (argc < 3)
+	{
+		std::cout << "#error You should pass 2 prime numbers here" << std::endl;
+		return 0;
+	}
+
+	unsigned int primes[2] = {_atoi64(argv[1]), _atoi64(argv[2])};
+
+	if (primes[0] > 2147483647 || primes[1] > 2147483647)
+	{
+		std::cout << "#error FFT code relies on all numbers to fit in 31 bits, your primes are too big" << std::endl;
+		return 0;
+	}
+
+	if (primes[0] > primes[1]) std::swap(primes[0], primes[1]);
 
 	std::cout << "static const unsigned int fft_primes[] = {" << primes[0] << ", " << primes[1] << "};\n\n";
 
