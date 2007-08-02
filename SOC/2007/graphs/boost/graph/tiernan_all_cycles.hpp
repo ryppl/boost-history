@@ -43,8 +43,8 @@ namespace boost
     // Oh... and there's explicit control structures - not just gotos.
     //
     // The problem is definitely NP-complete, an an unbounded implementation of this
-    // will probably run for quite a while (i.e.) on a large graph. The conclusions
-    // of this paper alkso reference a Paton algorithm for undirected graphs as being
+    // will probably run for quite a while on a large graph. The conclusions
+    // of this paper also reference a Paton algorithm for undirected graphs as being
     // much more efficient (apparently based on spanning trees). Although not implemented,
     // it can be found here:
     //
@@ -81,9 +81,9 @@ namespace boost
     {
         template <typename Graph, typename Path>
         inline bool
-        is_in_path(const Graph&,
-                   typename graph_traits<Graph>::vertex_descriptor v,
-                   const Path& p)
+        is_vertex_in_path(const Graph&,
+                          typename graph_traits<Graph>::vertex_descriptor v,
+                          const Path& p)
         {
             return (std::find(p.begin(), p.end(), v) != p.end());
         }
@@ -107,25 +107,6 @@ namespace boost
 
         template <typename Graph, typename Path, typename ClosedMatrix>
         inline bool
-        ignore_vertex(const Graph& g,
-                      typename graph_traits<Graph>::vertex_descriptor u,
-                      typename graph_traits<Graph>::vertex_descriptor v,
-                      const Path& p,
-                      const ClosedMatrix& m)
-        {
-            // notice the vth index must be greater than the first index of
-            // path in order for it to be considered.
-
-            return get(vertex_index, g, p.front()) > get(vertex_index, g, v) ||
-                   is_in_path(g, v, p) ||
-                   is_path_closed(g, u, v, m);
-        }
-
-        template <
-            typename Graph,
-            typename Path,
-            typename ClosedMatrix>
-        inline bool
         can_extend_path(const Graph& g,
                         typename graph_traits<Graph>::edge_descriptor e,
                         const Path& p,
@@ -145,24 +126,22 @@ namespace boost
             // 3. the vertex v cannot be closed to the vertex u
 
             bool indices = get(vertex_index, g, p.front()) < get(vertex_index, g, v);
-            bool path = !is_in_path(g, v, p);
+            bool path = !is_vertex_in_path(g, v, p);
             bool closed = !is_path_closed(g, u, v, m);
             return indices && path && closed;
         }
 
-        template <
-            typename Graph,
-            typename Path>
+        template <typename Graph, typename Path>
         inline bool
-        can_wrap_path(const Graph& g,
-                      const Path& p)
+        can_wrap_path(const Graph& g, const Path& p)
         {
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
             typedef typename graph_traits<Graph>::out_edge_iterator OutIterator;
 
             // iterate over the out-edges of the back, looking for the
             // front of the path. also, we can't travel along the same
-            // edge that we did on the way here.
+            // edge that we did on the way here, but we don't quite have the
+            // stringent requirements that we do in can_extend_path().
             Vertex
                 u = p.back(),
                 v = p.front();
@@ -175,8 +154,7 @@ namespace boost
             return false;
         }
 
-        template <
-            typename Graph,
+        template <typename Graph,
             typename Path,
             typename ClosedMatrix>
         inline typename graph_traits<Graph>::vertex_descriptor
@@ -208,13 +186,9 @@ namespace boost
             return ret;
         }
 
-        template <typename Graph,
-                  typename Path,
-                  typename ClosedMatrix>
+        template <typename Graph, typename Path, typename ClosedMatrix>
         inline bool
-        exhaust_paths(const Graph& g,
-                      Path& p,
-                      ClosedMatrix& closed)
+        exhaust_paths(const Graph& g, Path& p, ClosedMatrix& closed)
         {
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
 
@@ -241,31 +215,21 @@ namespace boost
             }
         }
 
-        template <typename Graph, typename Visitor>
+        template <typename Graph, typename Vertex, typename Visitor>
         inline void
-        all_cycles_at_vertex(const Graph& g,
-                             typename graph_traits<Graph>::vertex_descriptor v,
-                             Visitor vis,
-                             std::size_t maxlen,
-                             std::size_t minlen)
+        all_cycles_from_vertex(const Graph& g,
+                               Vertex v,
+                               Visitor vis,
+                               std::size_t minlen,
+                               std::size_t maxlen)
         {
-            typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
-            typedef typename graph_traits<Graph>::edge_descriptor Edge;
-
             typedef std::vector<Vertex> Path;
             typedef std::vector<Vertex> VertexList;
             typedef std::vector<VertexList> ClosedMatrix;
 
-            // this is an added type that helps us determine traversability
-            // for paths in undirected graphs. Specifically, when we consider
-            // traversability, we have to ensure that the move to the next
-            // vertex does not walk down the same path as this vertex.
-
-            const Vertex null = graph_traits<Graph>::null_vertex();
-
-            // The path is the sequence of vertices
             Path p;
             ClosedMatrix closed(num_vertices(g), VertexList());
+            const Vertex null = graph_traits<Graph>::null_vertex();
 
             // each path investigation starts at the ith vertex
             p.push_back(v);
@@ -275,13 +239,13 @@ namespace boost
                 // maxlen-sized cycle
                 Vertex j = null;
                 while(((j = detail::extend_path(g, p, closed)) != null)
-                      && (p.size() < maxlen))
+                        && (p.size() < maxlen))
                     ; // empty loop
 
                 // if we're done extending the path and there's an edge
                 // connecting the back to the front, then we should have
                 // a cycle.
-                if(can_wrap_path(g, p) && p.size() > minlen) {
+                if(detail::can_wrap_path(g, p) && p.size() >= minlen) {
                     vis.cycle(p, g);
                 }
 
@@ -290,11 +254,16 @@ namespace boost
                 }
             }
         }
+
+
+        template <typename D> struct min_cycles { enum { value = 2 }; };
+        template <> struct min_cycles<undirected_tag> { enum { value = 3 }; };
     }
 
     template <typename Graph, typename Visitor>
     inline void
-    tiernan_all_cycles(const Graph& g, Visitor vis,
+    tiernan_all_cycles(const Graph& g,
+                       Visitor vis,
                        std::size_t minlen,
                        std::size_t maxlen)
     {
@@ -302,15 +271,26 @@ namespace boost
 
         VertexIterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            detail::all_cycles_at_vertex(g, *i, vis, maxlen, minlen);
+            detail::all_cycles_from_vertex(g, *i, vis, minlen, maxlen);
         }
+    }
+
+    template <typename Graph, typename Visitor>
+    inline void
+    tiernan_all_cycles(const Graph& g, Visitor vis, std::size_t maxlen)
+    {
+        typedef typename graph_traits<Graph>::directed_category Dir;
+        tiernan_all_cycles(g, vis, detail::min_cycles<Dir>::value, maxlen);
     }
 
     template <typename Graph, typename Visitor>
     inline void
     tiernan_all_cycles(const Graph& g, Visitor vis)
     {
-        tiernan_all_cycles(g, vis, 2, std::numeric_limits<std::size_t>::max());
+        typedef typename graph_traits<Graph>::directed_category Dir;
+        tiernan_all_cycles(g, vis,
+                           detail::min_cycles<Dir>::value,
+                           std::numeric_limits<std::size_t>::max());
     }
 }
 

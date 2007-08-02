@@ -15,22 +15,24 @@ namespace boost
     namespace detail
     {
         template <class Graph>
-        inline size_t
-        num_possible_edges(const Graph& g, size_t k, directed_tag)
+        inline typename graph_traits<Graph>::degree_size_type
+        possible_edges(const Graph& g, std::size_t k, directed_tag)
         {
-            return k * (k - 1);
+            typedef typename graph_traits<Graph>::degree_size_type T;
+            return T(k) * (T(k) - 1);
         }
 
         template <class Graph>
-        inline size_t
-        num_possible_edges(const Graph& g, size_t k, undirected_tag)
+        inline typename graph_traits<Graph>::degree_size_type
+        possible_edges(const Graph& g, size_t k, undirected_tag)
         {
-            return k * (k - 1) / 2;
+            // dirty little trick...
+            return possible_edges(g, k, directed_tag()) / 2;
         }
 
         // This template matches directedS and bidirectionalS.
         template <class Graph>
-        inline size_t
+        inline typename graph_traits<Graph>::degree_size_type
         count_edges(const Graph& g,
                     typename Graph::vertex_descriptor u,
                     typename Graph::vertex_descriptor v,
@@ -43,7 +45,7 @@ namespace boost
 
         // This template matches undirectedS
         template <class Graph>
-        inline size_t
+        inline typename graph_traits<Graph>::degree_size_type
         count_edges(const Graph& g,
                     typename Graph::vertex_descriptor u,
                     typename Graph::vertex_descriptor v,
@@ -53,30 +55,23 @@ namespace boost
         }
     }
 
-    template <typename Graph>
-    inline size_t
-    num_centered_triples(const Graph& g,
-                        typename Graph::vertex_descriptor v)
+    template <typename Graph, typename Vertex>
+    inline typename graph_traits<Graph>::degree_size_type
+    vertex_num_routes(const Graph& g, Vertex v)
     {
-        // find all of the adjacent vertices
         typename graph_traits<Graph>::directed_category cat;
         typename graph_traits<Graph>::adjacency_iterator i, end;
         tie(i, end) = adjacent_vertices(v, g);
-        size_t k = std::distance(i, end);
-
-        size_t ret = detail::num_possible_edges(g, k, cat);
-        return ret;
+        std::size_t k = std::distance(i, end);
+        return detail::possible_edges(g, k, cat);
     }
 
-    // This is seriously flawed for directed graphs...
-    // Adjacenct vertices correspond to out degrees.
-
-    template <typename Graph>
-    inline size_t
-    num_centered_triangles(const Graph& g,
-                           typename Graph::vertex_descriptor v)
+    template <typename Graph, typename Vertex>
+    inline typename graph_traits<Graph>::degree_size_type
+    vertex_num_triangles(const Graph& g, Vertex v)
     {
-        size_t count = 0;
+        typedef typename graph_traits<Graph>::degree_size_type T;
+        T count = 0;
         typename graph_traits<Graph>::directed_category cat;
         typename graph_traits<Graph>::adjacency_iterator i, j, end;
         for(tie(i, end) = adjacent_vertices(v, g); i != end; ++i) {
@@ -87,29 +82,50 @@ namespace boost
         return count;
     }
 
-    template <typename Graph>
-    double
-    clustering_coefficient(const Graph& g,
-                           typename Graph::vertex_descriptor v)
+    template <typename T, typename Graph, typename Vertex>
+    inline T
+    vertex_clustering_coefficient(const Graph& g, Vertex v)
     {
-        double ret = 0.0;
-        double triples = (double)num_centered_triples(g, v);
-        if(triples > 0.0) {
-            ret = (double)num_centered_triangles(g, v) / triples;
+        T zero(0);
+        T routes = T(vertex_num_routes(g, v));
+        return (routes > zero) ?
+            T(vertex_num_triangles(g, v)) / routes : zero;
+    }
+
+    template <typename Graph, typename Vertex>
+    inline float
+    vertex_clustering_coefficient(const Graph& g, Vertex v)
+    {
+        return vertex_clustering_coefficient<float>(g, v);
+    }
+
+    template <typename Graph, typename ClusteringMap>
+    inline void
+    clustering_coefficient(const Graph& g, ClusteringMap cluster)
+    {
+        typename graph_traits<Graph>::vertex_iterator i, end;
+        for(tie(i, end) = vertices(g); i != end; ++i) {
+            cluster[*i] = vertex_clustering_coefficient<T>(g, *i);
         }
-        return ret;
+    }
+
+    template <typename T, typename Graph>
+    inline T
+    graph_clustering_coefficient(const Graph& g)
+    {
+        T cc(0);
+        typename graph_traits<Graph>::vertex_iterator i, end;
+        for(tie(i, end) = vertices(g); i != end; ++i) {
+            cc += vertex_clustering_coefficient<T>(g, *i);
+        }
+        return cc / T(num_vertices(g));
     }
 
     template <typename Graph>
-    double
-    clustering_coefficient(const Graph& g)
+    inline float
+    graph_clustering_coefficient(const Graph& g)
     {
-        double cc = 0.0;
-        typename Graph::vertex_iterator i, end;
-        for(tie(i, end) = vertices(g); i != end; ++i) {
-            cc += clustering_coefficient(g, *i);
-        }
-        return cc / (double)num_vertices(g);
+        return graph_clustering_coefficient<float>(g);
     }
 }
 

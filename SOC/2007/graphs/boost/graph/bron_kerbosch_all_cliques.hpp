@@ -7,6 +7,8 @@
 #ifndef BOOST_GRAPH_CLIQUE_HXX
 #define BOOST_GRAPH_CLIQUE_HXX
 
+#include <limits>
+
 namespace boost
 {
 
@@ -86,14 +88,11 @@ namespace boost
                                typename graph_traits<Graph>::vertex_descriptor v,
                                typename graph_traits<Graph>::directed_category)
         {
-            // Note that this could alternate between using an or to determine
+            // Note that this could alternate between using an || to determine
             // full connectivity. I believe that this should produce strongly
             // connected components. Note that using && instead of || will
             // change the results to a fully connected subgraph (i.e., symmetric
             // edges between all vertices s.t., if a->b, then b->a.
-            //
-            // TODO: use this, the other, or allow switching based on a user-
-            // define strategy.
             return edge(u, v, g).second && edge(v, u, g).second;
         }
 
@@ -113,12 +112,10 @@ namespace boost
             }
         }
 
-        template <
-                typename Graph,
-                typename Clique,        // compsub type
-                typename Container,     // candidates/not type
-                typename Visitor
-        >
+        template <typename Graph,
+                  typename Clique,        // compsub type
+                  typename Container,     // candidates/not type
+                  typename Visitor>
         void extend_clique(const Graph& g,
                            Clique& clique,
                            Container& cands,
@@ -165,7 +162,7 @@ namespace boost
             // as a counter, but i'm jot really sure i followed it.
 
             // otherwise, iterate over candidates and and test
-            // for maxmim cliquiness.
+            // for maxmimal cliquiness.
             typename Container::iterator i, j, end = cands.end();
             for(i = cands.begin(); i != cands.end(); ) {
                 Vertex candidate = *i;
@@ -202,7 +199,6 @@ namespace boost
             }
         }
     }
-
 
     template <typename Graph, typename Visitor>
     inline void
