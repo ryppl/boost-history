@@ -334,9 +334,16 @@ template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescripto
 typename Config::halfedge_descriptor
 next_in_facet(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // returns a halfedge descriptor to the halfedge succeeding the given halfedge in the adjacent facet cycle, when
-    // facet cycles are oriented in counter-clockwise order. Uses the 'HalfedgeS::next_tag' to determine
-    // the primary way the next links are set, and does conversion using the helper classes if necessary.
+    // Return a descriptor to the halfedge succeeding the specified halfedge 'h' in the adjacent facet cycle, when facet
+    // cycles are ordered in counter-clockwise order.  The nested 'next_tag' type in the template parameter 'HalfedgeS'
+    // determines the primary forward link used to deduce the 'next_at_source' link, according to the following table:
+    //..
+    //  next_tag             primary link     return value
+    //  --------             ------------     ------------
+    //  next_in_facet_tag    next_in_facet    next_in_facet(h)
+    //  next_at_source_tag   next_at_source   next_at_source(opposite(h))
+    //  next_at_target_tag   next_at_target   opposite(next_at_target(h))
+    //..
 {
     typedef typename halfedge_gen<HalfedgeS, 
                                   VertexDescriptor,FacetDescriptor, Config
@@ -352,9 +359,18 @@ template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescripto
 typename Config::halfedge_descriptor
 next_at_source(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // returns a halfedge descriptor to the halfedge succeeding the given halfedge around the source vertex, when
-    // halfedges are ordered around a given vertex in clockwise order. Uses the 'HalfedgeS::next_tag' to determine
-    // the primary way the next links are set, and does conversion using the helper classes if necessary.
+    // Return a descriptor to the halfedge succeeding the specified halfedge 'h'
+    // around its source vertex, when halfedges are ordered around a given
+    // source vertex in clockwise order.  The nested 'next_tag' type in the
+    // template parameter 'HalfedgeS' determines the primary forward link used
+    // to deduce the 'next_at_source' link, according to the following table:
+    //..
+    //  next_tag             primary link     return value
+    //  --------             ------------     ------------
+    //  next_in_facet_tag    next_in_facet    next_in_facet(opposite(h))
+    //  next_at_source_tag   next_at_source   next_at_source(h)
+    //  next_at_target_tag   next_at_target   opposite(next_at_target(opposite(h)))
+    //..
 {
     typedef typename halfedge_gen<HalfedgeS, 
                                   VertexDescriptor,FacetDescriptor, Config
@@ -370,9 +386,18 @@ template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescripto
 typename Config::halfedge_descriptor
 next_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // returns a halfedge descriptor to the halfedge succeeding the given halfedge around the target vertex, when
-    // halfedges are ordered around a given vertex in clockwise order. Uses the 'HalfedgeS::next_tag' to determine
-    // the primary way the next links are set, and does conversion using the helper classes if necessary.
+    // Return a descriptor to the halfedge succeeding the specified halfedge 'h'
+    // around its target vertex, when halfedges are ordered around a given
+    // target vertex in clockwise order.  The nested 'next_tag' type in the
+    // template parameter 'HalfedgeS' determines the primary forward link used
+    // to deduce the 'next_at_target' link, according to the following table:
+    //..
+    //  next_tag             primary link     return value
+    //  --------             ------------     ------------
+    //  next_in_facet_tag    next_in_facet    opposite(next_in_facet(h))
+    //  next_at_source_tag   next_at_source   opposite(next_at_source(opposite(h)))
+    //  next_at_target_tag   next_at_target   next_at_target(h)
+    //..
 {
     typedef typename halfedge_gen<HalfedgeS, 
                                   VertexDescriptor,FacetDescriptor, Config
@@ -561,9 +586,18 @@ template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescripto
 typename Config::halfedge_descriptor
 prev_in_facet(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // returns a halfedge descriptor to the halfedge preceeding the given halfedge in the adjacent facet cycle, when
-    // facet cycles are oriented in counter-clockwise order. Uses the 'HalfedgeS::prev_tag' to determine
-    // the primary way the prev links are set, and does conversion using the helper classes if necessary.
+    // Return a descriptor to the halfedge preceeding the specified halfedge 'h'
+    // in the adjacent facet cycle, when facet cycles are oriented in 
+    // counter-clockwise order.  The nested 'prev_tag' type in the
+    // template parameter 'HalfedgeS' determines the primary backward link used
+    // to deduce the 'prev_at_source' link, according to the following table:
+    //..
+    //  prev_tag             primary link     return value
+    //  --------             ------------     ------------
+    //  prev_in_facet_tag    prev_in_facet    prev_in_facet(h)
+    //  prev_at_source_tag   prev_at_source   opposite(prev_at_source(h))
+    //  prev_at_target_tag   prev_at_target   prev_at_target(opposite(h))
+    //..
 {
     typedef typename halfedge_gen<HalfedgeS, 
                                   VertexDescriptor,FacetDescriptor, Config
@@ -579,9 +613,18 @@ template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescripto
 typename Config::halfedge_descriptor
 prev_at_source(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // returns a halfedge descriptor to the halfedge preceeding the given halfedge around the source vertex, when
-    // halfedges are ordered around a given vertex in clockwise order. Uses the 'HalfedgeS::prev_tag' to determine
-    // the primary way the prev links are set, and does conversion using the helper classes if necessary.
+    // Return a descriptor to the halfedge preceding the specified halfedge 'h'
+    // around its source vertex, when halfedges are ordered around a given
+    // source vertex in clockwise order.  The nested 'prev_tag' type in the
+    // template parameter 'HalfedgeS' determines the primary backward link used
+    // to deduce the 'prev_at_source' link, according to the following table:
+    //..
+    //  prev_tag             primary link     return value
+    //  --------             ------------     ------------
+    //  prev_in_facet_tag    prev_in_facet    opposite(prev_in_facet(h))
+    //  prev_at_source_tag   prev_at_source   prev_at_source(h)
+    //  prev_at_target_tag   prev_at_target   opposite(prev_at_target(opposite(h)))
+    //..
 {
     typedef typename halfedge_gen<HalfedgeS, 
                                   VertexDescriptor,FacetDescriptor, Config
@@ -597,9 +640,18 @@ template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescripto
 typename Config::halfedge_descriptor
 prev_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // returns a halfedge descriptor to the halfedge preceeding the given halfedge around the target vertex, when
-    // halfedges are ordered around a given vertex in clockwise order. Uses the 'HalfedgeS::prev_tag' to determine
-    // the primary way the prev links are set, and does conversion using the helper classes if necessary.
+    // Return a descriptor to the halfedge preceding the specified halfedge 'h'
+    // around its target vertex, when halfedges are ordered around a given
+    // target vertex in clockwise order.  The nested 'prev_tag' type in the
+    // template parameter 'HalfedgeS' determines the primary backward link used
+    // to deduce the 'prev_at_target' link, according to the following table:
+    //..
+    //  prev_tag             primary link     return value
+    //  --------             ------------     ------------
+    //  prev_in_facet_tag    prev_in_facet    prev_in_facet(opposite(h))
+    //  prev_at_source_tag   prev_at_source   prev_at_source(h)
+    //  prev_at_target_tag   prev_at_target   opposite(prev_at_target(opposite(h)))
+    //..
 {
     typedef typename halfedge_gen<HalfedgeS, 
                                   VertexDescriptor,FacetDescriptor, Config
@@ -668,10 +720,10 @@ void
 set_next_in_facet(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                   typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
                   halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // sets 'g' as the halfedge succeeding 'h' in the adjacent facet cycle, when facet cycles are oriented in
-    // counter-clockwise order. The helper functions do selections based on containerS and the 'Halfedge::next_tag'.
-    // Also the 'this_tag' and the 'Halfedge::next_tag' should match for properly setting the next link. Otherwise
-    // compile time error will follow.
+    // Set halfedge 'g' as the halfedge succeeding 'h' in the adjacent facet cycle, when facet cycles are oriented in
+    // counter-clockwise order. This function only works on data structure 'hds' which has set its primary forward 
+    // link as 'next_in_facet' defined by the the nested 'next_tag' in template parameter 'HalfedgeS'.
+    // Otherwise compile time error will follow.
 {
     typedef typename halfedge_gen<HalfedgeS,
                                   VertexDescriptor,FacetDescriptor, Config
@@ -691,10 +743,10 @@ void
 set_next_at_source(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                   typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
                   halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // sets 'g' as the halfedge succeeding 'h' around the source vertex of 'h', when halfedges are ordered around a
-    // given vertex in clockwise order. The helper functions do selections based on containerS and the
-    // 'Halfedge::next_tag'.  Also the 'this_tag' and the 'Halfedge::next_tag' should match for properly setting the
-    // next link. Otherwise compile time error will follow.
+    // Set halfedge 'g' as the halfedge succeeding 'h' around the source vertex of 'h', when halfedges are ordered
+    // around a given vertex in clockwise order. This function only works on data structure 'hds' which has set its
+    // primary forward link as 'next_at_source' defined by the the nested 'next_tag' in template parameter 'HalfedgeS'.
+    // Otherwise compile time error will follow.
 {
     typedef typename halfedge_gen<HalfedgeS,
                                   VertexDescriptor,FacetDescriptor, Config
@@ -714,10 +766,10 @@ void
 set_next_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                   typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
                   halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // sets 'g' as the halfedge succeeding 'h' around the target vertex of 'h', when halfedges are ordered around a
-    // given vertex in clockwise order. The helper functions do selections based on containerS and the
-    // 'Halfedge::next_tag'.  Also the 'this_tag' and the 'Halfedge::next_tag' should match for properly setting the
-    // next link. Otherwise compile time error will follow.
+    // Set halfedge 'g' as the halfedge succeeding 'h' around the target vertex of 'h', when halfedges are ordered
+    // around a given vertex in clockwise order. This function only works on data structure 'hds' which has set its
+    // primary forward link as 'next_at_target' defined by the the nested 'next_tag' in template parameter 'HalfedgeS'.
+    // Otherwise compile time error will follow.
 {
     typedef typename halfedge_gen<HalfedgeS,
                                   VertexDescriptor,FacetDescriptor, Config
@@ -789,10 +841,10 @@ void
 set_prev_in_facet(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                   typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
                   halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // sets 'g' as the halfedge preceeding 'h' in the adjacent facet cycle, when facet cycles are oriented in
-    // counter-clockwise order. The helper functions do selections based on containerS and the 'Halfedge::prev_tag'.
-    // Also the 'this_tag' and the 'Halfedge::prev_tag' should match for properly setting the prev link. Otherwise
-    // compile time error will follow.
+    // Set halfedge 'g' as the halfedge preceeding 'h' in the adjacent facet cycle, when facet cycles are oriented in
+    // counter-clockwise order. This function only works on data structure 'hds' which has set its primary backward 
+    // link as 'prev_in_facet' defined by the the nested 'prev_tag' in template parameter 'HalfedgeS'.
+    // Otherwise compile time error will follow.
 {
     typedef typename halfedge_gen<HalfedgeS,
                                   VertexDescriptor,FacetDescriptor, Config
@@ -812,10 +864,10 @@ void
 set_prev_at_source(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                   typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
                   halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // sets 'g' as the halfedge preceeding 'h' around the source vertex of 'h', when halfedges are ordered around a
-    // given vertex in clockwise order. The helper functions do selections based on containerS and the
-    // 'Halfedge::prev_tag'.  Also the 'this_tag' and the 'Halfedge::prev_tag' should match for properly setting the
-    // prev link. Otherwise compile time error will follow.
+    // Set halfedge 'g' as the halfedge preceeding 'h' around the source vertex of 'h', when halfedges are ordered
+    // around a given vertex in clockwise order. This function only works on data structure 'hds' which has set its
+    // primary backward link as 'prev_at_source' defined by the the nested 'prev_tag' in template parameter 'HalfedgeS'.
+    // Otherwise compile time error will follow.
 {
     typedef typename halfedge_gen<HalfedgeS,
                                   VertexDescriptor,FacetDescriptor, Config
@@ -835,10 +887,10 @@ void
 set_prev_at_target(typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor h,
                   typename halfedge_gen<HalfedgeS, VertexDescriptor,FacetDescriptor, Config>::halfedge_descriptor g,
                   halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-    // sets 'g' as the halfedge preceeding 'h' around the target vertex of 'h', when halfedges are ordered around a
-    // given vertex in clockwise order. The helper functions do selections based on containerS and the
-    // 'Halfedge::prev_tag'.  Also the 'this_tag' and the 'Halfedge::prev_tag' should match for properly setting the
-    // prev link. Otherwise compile time error will follow.
+    // Set halfedge 'g' as the halfedge preceeding 'h' around the target vertex of 'h', when halfedges are ordered
+    // around a given vertex in clockwise order. This function only works on data structure 'hds' which has set its
+    // primary backward link as 'prev_at_target' defined by the the nested 'prev_tag' in template parameter 'HalfedgeS'.
+    // Otherwise compile time error will follow.
 {
     typedef typename halfedge_gen<HalfedgeS,
                                   VertexDescriptor,FacetDescriptor, Config

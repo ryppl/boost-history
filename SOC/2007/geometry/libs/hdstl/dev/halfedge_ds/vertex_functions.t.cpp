@@ -9,7 +9,7 @@
 // 'vertex_gen' for all selector values, with base vertex classes and without 
 // base vertex classes and verify that each combination compiles and works.
 
-#include <boost/hdstl/halfedge_ds/vertex_selectors.hpp>
+#include <boost/hdstl/halfedge_ds/vertex_functions.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -66,7 +66,6 @@ bool vertex_gen_requirements_void_noVertexLink() {
     typedef typename VertexGen::vertex_iterator   vertex_iterator;
     typedef typename VertexGen::vertex_type       vertex_type;
     typedef typename VertexGen::container_type   container_type;
-    typedef typename VertexGen::ContainerGen     container_gen;
 
     vertex_type fa;
     vertex_type fb;
@@ -81,14 +80,11 @@ bool vertex_gen_requirements_void_noVertexLink() {
     container_type temp_con(array,array+4);
     VertexGen vertexGen;
     vertexGen.m_container = temp_con;
+    BOOST_CHECK(( num_vertices(vertexGen) == 4 ));
     
-    BOOST_CHECK(( vertexGen.m_container.size() == 4 ));
-    
-    vertex_iterator   vertexs_begin     = container_gen::container_begin(vertexGen.m_container); 
-    vertex_descriptor first_vertex      = *vertexs_begin;
-    vertex_type&      first_vertex_ref  = container_gen::value(first_vertex, vertexGen.m_container);
-    
-    BOOST_CHECK(( &first_vertex_ref == &(*vertexGen.m_container.begin())));
+    vertex_descriptor vn = new_vertex(vertexGen);
+    (void) vn;
+    BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
     return true;
 }
 
@@ -101,7 +97,6 @@ bool vertex_gen_requirements_void() {
     typedef typename VertexGen::vertex_iterator   vertex_iterator;
     typedef typename VertexGen::vertex_type       vertex_type;
     typedef typename VertexGen::container_type   container_type;
-    typedef typename VertexGen::ContainerGen     container_gen;
 
     vertex_type fa(1);
     vertex_type fb(2);
@@ -116,17 +111,16 @@ bool vertex_gen_requirements_void() {
     container_type temp_con(array,array+4);
     VertexGen vertexGen;
     vertexGen.m_container = temp_con;
-    
-    BOOST_CHECK(( vertexGen.m_container.size() == 4 ));
+    BOOST_CHECK(( num_vertices(vertexGen) == 4 ));
+    BOOST_CHECK(( vertices_begin(vertexGen)->m_vertexLink == 1 ));
+    BOOST_CHECK(( (--vertices_end(vertexGen))->m_vertexLink == 4 ));
 
-    vertex_iterator   vertices_begin     = container_gen::container_begin(vertexGen.m_container); 
-    vertex_iterator   vertices_end       = --container_gen::container_end(vertexGen.m_container); 
-    vertex_descriptor first_vertex      = *vertices_begin;
-    vertex_type&      first_vertex_ref  = container_gen::value(first_vertex, vertexGen.m_container);
+    BOOST_CHECK(( halfedge(*vertices_begin(vertexGen), vertexGen) == 1 ));
+    BOOST_CHECK(( halfedge(*(--vertices_end(vertexGen)), vertexGen) == 4 ));
     
-    BOOST_CHECK(( &first_vertex_ref == &(*vertexGen.m_container.begin())));
-    BOOST_CHECK(( vertices_begin->m_vertexLink == 1 ));
-    BOOST_CHECK(( vertices_end->m_vertexLink == 4 ));
+    vertex_descriptor vn = new_vertex(vertexGen);
+    (void) vn;
+    BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
     
     return true;
 }
@@ -139,7 +133,6 @@ bool vertex_gen_requirements_noVertexLink() {
     typedef typename VertexGen::vertex_iterator   vertex_iterator;
     typedef typename VertexGen::vertex_type       vertex_type;
     typedef typename VertexGen::container_type   container_type;
-    typedef typename VertexGen::ContainerGen     container_gen;
 
     vertex_type fa(Base(1));
     vertex_type fb(Base(2));
@@ -152,19 +145,16 @@ bool vertex_gen_requirements_noVertexLink() {
     container_type temp_con(array,array+4);
     VertexGen vertexGen;
     vertexGen.m_container = temp_con;
-    
-    BOOST_CHECK(( vertexGen.m_container.size() == 4 ));
+    BOOST_CHECK(( num_vertices(vertexGen) == 4 ));
 
-    vertex_iterator   vertices_begin     = container_gen::container_begin(vertexGen.m_container); 
-    vertex_iterator   vertices_end       = --container_gen::container_end(vertexGen.m_container); 
-    vertex_descriptor first_vertex      = *vertices_begin;
-    vertex_type&      first_vertex_ref  = container_gen::value(first_vertex, vertexGen.m_container);
-    
-    BOOST_CHECK(( &first_vertex_ref == &(*vertexGen.m_container.begin())));
-    
     // Plus: get the base back from the vertices and making sure it matches.
-    BOOST_CHECK(( vertices_begin->base() == 1 ));
-    BOOST_CHECK(( vertices_end->base() == 4 ));
+    BOOST_CHECK(( vertices_begin(vertexGen)->base() == 1 ));
+    BOOST_CHECK(( (--vertices_end(vertexGen))->base() == 4 ));
+
+    
+    vertex_descriptor vn = new_vertex(vertexGen);
+    (void) vn;
+    BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
 
     return true;
 }
@@ -177,7 +167,6 @@ bool vertex_gen_requirements() {
     typedef typename VertexGen::vertex_iterator   vertex_iterator;
     typedef typename VertexGen::vertex_type       vertex_type;
     typedef typename VertexGen::container_type   container_type;
-    typedef typename VertexGen::ContainerGen     container_gen;
 
     vertex_type fa(1, Base(1));
     vertex_type fb(2, Base(2));
@@ -189,22 +178,22 @@ bool vertex_gen_requirements() {
     container_type temp_con(array,array+4);
     VertexGen vertexGen;
     vertexGen.m_container = temp_con;
-    
-    BOOST_CHECK(( vertexGen.m_container.size() == 4 ));
+    BOOST_CHECK(( num_vertices(vertexGen) == 4 ));
 
-    vertex_iterator   vertices_begin     = container_gen::container_begin(vertexGen.m_container); 
-    vertex_iterator   vertices_end       = --container_gen::container_end(vertexGen.m_container); 
-    vertex_descriptor first_vertex      = *vertices_begin;
-    vertex_type&      first_vertex_ref  = container_gen::value(first_vertex, vertexGen.m_container);
-    
-    BOOST_CHECK(( &first_vertex_ref == &(*vertexGen.m_container.begin())));
-    BOOST_CHECK(( vertices_begin->m_vertexLink == 1 ));
-    BOOST_CHECK(( vertices_end->m_vertexLink == 4 ));
+    BOOST_CHECK(( vertices_begin(vertexGen)->m_vertexLink == 1 ));
+    BOOST_CHECK(( (--vertices_end(vertexGen))->m_vertexLink == 4 ));
+
+    BOOST_CHECK(( halfedge(*vertices_begin(vertexGen), vertexGen) == 1 ));
+    BOOST_CHECK(( halfedge(*(--vertices_end(vertexGen)), vertexGen) == 4 ));
     
     // Plus: get the base back from the vertices and making sure it matches.
-    BOOST_CHECK(( vertices_begin->base() == 1 ));
-    BOOST_CHECK(( vertices_end->base() == 4 ));
+    BOOST_CHECK(( vertices_begin(vertexGen)->base() == 1 ));
+    BOOST_CHECK(( (--vertices_end(vertexGen))->base() == 4 ));
 
+    
+    vertex_descriptor vn = new_vertex(vertexGen);
+    (void) vn;
+    BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
     return true;
 }
 

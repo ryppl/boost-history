@@ -1,4 +1,4 @@
-//facet_selectors.t.cpp   -*- C++ -*-
+//facet_selectors.hpp   -*- C++ -*-
 //
 //@OVERVIEW:  The components under test are the stored_facet and facet_gen 
 //classes.  We must make sure that all selectors are suitably defined and 
@@ -10,6 +10,7 @@
 // base facet classes and verify that each combination compiles and works.
 
 #include <boost/hdstl/halfedge_ds/facet_selectors.hpp>
+#include <boost/hdstl/halfedge_ds/facet_functions.hpp>
 
 #include <boost/test/minimal.hpp>
 
@@ -56,7 +57,6 @@ bool facet_gen_requirements_void_noFacetLink() {
     typedef typename FacetGen::facet_iterator   facet_iterator;
     typedef typename FacetGen::facet_type       facet_type;
     typedef typename FacetGen::container_type   container_type;
-    typedef typename FacetGen::ContainerGen     container_gen;
 
     facet_type fa;
     facet_type fb;
@@ -65,18 +65,17 @@ bool facet_gen_requirements_void_noFacetLink() {
     facet_type array[] = { fa, fb, fc, fd };  
     
     // Construct a facet_gen object whose container contains array.
-    // Verify that facets_begin, facets_end work.
-    container_type facets(array,array+4);
+    // Verify that facets_begin(), facets_end(), and num_facets() work.
+    // Access the facets and, if the has_facet_links is set, check that the
+    // halfedge() works.
+    container_type temp_con(array,array+4);
     FacetGen facetGen;
-    facetGen.m_container = facets;
+    facetGen.m_container = temp_con;
+    BOOST_CHECK(( num_facets(facetGen) == 4 ));
     
-    BOOST_CHECK(( facetGen.m_container.size() == 4 ));
-    
-    facet_iterator   facets_begin     = container_gen::container_begin(facetGen.m_container); 
-    facet_descriptor first_facet      = *facets_begin;
-    facet_type&      first_facet_ref  = container_gen::value(first_facet, facetGen.m_container);
-    
-    BOOST_CHECK(( &first_facet_ref == &(*facetGen.m_container.begin())));
+    facet_descriptor fn = new_facet(facetGen);
+    (void) fn;
+    BOOST_CHECK(( num_facets(facetGen) == 5 ));
     return true;
 }
 
@@ -89,7 +88,6 @@ bool facet_gen_requirements_void() {
     typedef typename FacetGen::facet_iterator   facet_iterator;
     typedef typename FacetGen::facet_type       facet_type;
     typedef typename FacetGen::container_type   container_type;
-    typedef typename FacetGen::ContainerGen     container_gen;
 
     facet_type fa(1);
     facet_type fb(2);
@@ -98,22 +96,24 @@ bool facet_gen_requirements_void() {
     facet_type array[] = { fa, fb, fc, fd };  
     
     // Construct a facet_gen object whose container contains array.
-    // Verify that facets_begin, facets_end  work.
+    // Verify that facets_begin(), facets_end(), and num_facets() work.
+    // Access the facets and, if the has_facet_links is set, check that the
+    // halfedge() works.
     container_type temp_con(array,array+4);
     FacetGen facetGen;
     facetGen.m_container = temp_con;
-    
-    BOOST_CHECK(( facetGen.m_container.size() == 4 ));
+    BOOST_CHECK(( num_facets(facetGen) == 4 ));
+    BOOST_CHECK(( facets_begin(facetGen)->m_facetLink == 1 ));
+    BOOST_CHECK(( (--facets_end(facetGen))->m_facetLink == 4 ));
 
-    facet_iterator   facets_begin     = container_gen::container_begin(facetGen.m_container); 
-    facet_iterator   facets_end       = --container_gen::container_end(facetGen.m_container); 
-    facet_descriptor first_facet      = *facets_begin;
-    facet_type&      first_facet_ref  = container_gen::value(first_facet, facetGen.m_container);
+    BOOST_CHECK(( halfedge(*facets_begin(facetGen), facetGen) == 1 ));
+    BOOST_CHECK(( halfedge(*--facets_end(facetGen), facetGen) == 4 ));
+
+    facet_descriptor fn = new_facet(facetGen);
+    (void) fn;
+    BOOST_CHECK(( num_facets(facetGen) == 5 ));
     
-    BOOST_CHECK(( &first_facet_ref == &(*facetGen.m_container.begin())));
-    BOOST_CHECK(( facets_begin->m_facetLink == 1 ));
-    BOOST_CHECK(( facets_end->m_facetLink == 4 ));
-    
+
     return true;
 }
 
@@ -125,7 +125,6 @@ bool facet_gen_requirements_noFacetLink() {
     typedef typename FacetGen::facet_iterator   facet_iterator;
     typedef typename FacetGen::facet_type       facet_type;
     typedef typename FacetGen::container_type   container_type;
-    typedef typename FacetGen::ContainerGen     container_gen;
 
     facet_type fa(Base(1));
     facet_type fb(Base(2));
@@ -137,19 +136,15 @@ bool facet_gen_requirements_noFacetLink() {
     container_type temp_con(array,array+4);
     FacetGen facetGen;
     facetGen.m_container = temp_con;
+    BOOST_CHECK(( num_facets(facetGen) == 4 ));
 
-    BOOST_CHECK(( facetGen.m_container.size() == 4 ));
-
-    facet_iterator   facets_begin     = container_gen::container_begin(facetGen.m_container); 
-    facet_iterator   facets_end       = --container_gen::container_end(facetGen.m_container); 
-    facet_descriptor first_facet      = *facets_begin;
-    facet_type&      first_facet_ref  = container_gen::value(first_facet, facetGen.m_container);
-    
-    BOOST_CHECK(( &first_facet_ref == &(*facetGen.m_container.begin())));
-    
     // Plus: get the base back from the facets and making sure it matches.
-    BOOST_CHECK(( facets_begin->base() == 1 ));
-    BOOST_CHECK(( facets_end->base() == 4 ));
+    BOOST_CHECK(( facets_begin(facetGen)->base() == 1 ));
+    BOOST_CHECK(( (--facets_end(facetGen))->base() == 4 ));
+
+    facet_descriptor fn = new_facet(facetGen);
+    (void) fn;
+    BOOST_CHECK(( num_facets(facetGen) == 5 ));
 
     return true;
 }
@@ -162,7 +157,6 @@ bool facet_gen_requirements() {
     typedef typename FacetGen::facet_iterator   facet_iterator;
     typedef typename FacetGen::facet_type       facet_type;
     typedef typename FacetGen::container_type   container_type;
-    typedef typename FacetGen::ContainerGen     container_gen;
 
     facet_type fa(1, Base(1));
     facet_type fb(2, Base(2));
@@ -174,22 +168,21 @@ bool facet_gen_requirements() {
     container_type temp_con(array,array+4);
     FacetGen facetGen;
     facetGen.m_container = temp_con;
-    
-    BOOST_CHECK(( facetGen.m_container.size() == 4 ));
+    BOOST_CHECK(( num_facets(facetGen) == 4 ));
 
-    facet_iterator   facets_begin     = container_gen::container_begin(facetGen.m_container); 
-    facet_iterator   facets_end       = --container_gen::container_end(facetGen.m_container); 
-    facet_descriptor first_facet      = *facets_begin;
-    facet_type&      first_facet_ref  = container_gen::value(first_facet, facetGen.m_container);
+    BOOST_CHECK(( facets_begin(facetGen)->m_facetLink == 1 ));
+    BOOST_CHECK(( (--facets_end(facetGen))->m_facetLink == 4 ));
     
-    BOOST_CHECK(( &first_facet_ref == &(*facetGen.m_container.begin())));
-    BOOST_CHECK(( facets_begin->m_facetLink == 1 ));
-    BOOST_CHECK(( facets_end->m_facetLink == 4 ));
+    BOOST_CHECK(( halfedge(*facets_begin(facetGen), facetGen) == 1 ));
+    BOOST_CHECK(( halfedge(*--facets_end(facetGen), facetGen) == 4 ));
     
     // Plus: get the base back from the facets and making sure it matches.
-    BOOST_CHECK(( facets_begin->base() == 1 ));
-    BOOST_CHECK(( facets_end->base() == 4 ));
+    BOOST_CHECK(( facets_begin(facetGen)->base() == 1 ));
+    BOOST_CHECK(( (--facets_end(facetGen))->base() == 4 ));
 
+    facet_descriptor fn = new_facet(facetGen);
+    (void) fn;
+    BOOST_CHECK(( num_facets(facetGen) == 5 ));
     return true;
 }
 

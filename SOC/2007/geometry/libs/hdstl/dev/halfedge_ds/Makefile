@@ -6,12 +6,14 @@ LD=g++
 TARGET=dbg_exc_mt
 
 PACKAGE_OBJECTS=container_selectors.o facet_selectors.o \
-	vertex_selectors.o halfedge_selectors.o halfedge_functions.o
+	facet_functions.o vertex_selectors.o vertex_functions.o \
+	halfedge_selectors.o halfedge_functions.o
 
 PACKAGE_LIBRARY=libhalfedge_ds.a
 
 TEST_DRIVERS=container_selectors.t facet_selectors.t \
-	vertex_selectors.t halfedge_selectors.t halfedge_functions.t
+	facet_functions.t vertex_selectors.t vertex_functions.t \
+	halfedge_selectors.t halfedge_functions.t
 
 .SUFFIXES:
 .SUFFIXES: ${TARGET}.o .o .cpp .hpp
@@ -31,7 +33,11 @@ container_selectors.o:
 
 facet_selectors.o:  container_selectors.hpp
 
+facet_functions.o:  facet_selectors.hpp
+
 vertex_selectors.o: container_selectors.hpp
+
+vertex_functions.o: vertex_selectors.hpp
 
 halfedge_selectors.o: container_selectors.hpp
 
@@ -50,7 +56,11 @@ container_selectors.t.o:
 
 facet_selectors.t.o: container_selectors.hpp
 
+facet_functions.t.o:  facet_selectors.hpp
+
 vertex_selectors.t.o: container_selectors.hpp
+
+vertex_functions.t.o: vertex_selectors.hpp
 
 halfedge_selectors.t.o: container_selectors.hpp
 
@@ -64,7 +74,11 @@ container_selectors.t:
 
 facet_selectors.t: container_selectors.o
 
+facet_functions.t:  facet_selectors.o
+
 vertex_selectors.t: container_selectors.o 
+
+vertex_functions.t: vertex_selectors.o
 
 halfedge_selectors.t: container_selectors.o 
 
@@ -72,13 +86,13 @@ halfedge_functions.t.o: halfedge_selectors.o container_selectors.o
 
 ## UTILITIES
 
-clean: testclean
+clean: realclean testclean
 
 testclean:
 	- rm *.t.o
 	- rm *.t
 
-realclean: clean
+realclean: 
 	- rm *.o
 	- rm ${PACKAGE_LIBRARY}
 
