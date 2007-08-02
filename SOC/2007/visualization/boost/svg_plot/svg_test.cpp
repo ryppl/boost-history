@@ -4,6 +4,8 @@
 #include <vector>
 #include <cmath>
 #include <map>
+#include <iostream>
+#include <limits>
 
 using std::multimap;
 using std::vector;
@@ -35,6 +37,8 @@ public:
     }
 };
 
+using namespace std;
+
 int main()
 {
     using namespace boost::svg;
@@ -47,13 +51,15 @@ int main()
 
     double pi = 3.1415926535;
   
-    for(double i=0; i<10; i+=pi/4.)
+    data2[1.5] = std::numeric_limits<double>::infinity();
+    for(double i=0; i<10; i+=pi/8.)
     {
-        data1[i] = f(i);
+        //data1[i] = f(i);
         data2[i] = g(i);
-        data3.push_back(h(i));
+        //data3.push_back(h(i));
     }
 
+    cout<<"Done with first part"<<endl;
     // size/scale settings
     my_2d_plot.image_size(500, 350);
 
@@ -85,7 +91,7 @@ int main()
     //my_2d_plot.plot(data1, "sqrt(x)", _bezier_on = true, _size = 5);
 
     my_2d_plot.plot(data2, "Not sqrt(x)", 
-        _bezier_on = true,
+        _area_fill_color = orange,
         _size = 6,
         _point_style = square,
         _stroke_color = hotpink,

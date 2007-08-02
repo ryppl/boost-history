@@ -14,6 +14,7 @@
 #include "../svg_style.hpp"
 #include "../svg.hpp"
 #include "svg_tag.hpp"
+#include "numeric_limits_handling.hpp"
 
 namespace boost{
 namespace svg{
@@ -31,6 +32,8 @@ protected:
     {
         x = derived().x_scale* x + derived().x_shift;
         y = derived().y_scale* y + derived().y_shift;
+
+        _adjust_limits(x, y);
     }
 
     void _transform_x(double &x)
@@ -174,6 +177,11 @@ protected:
                     y1, fmt.str());
             }
         }
+    }
+
+    void limit_style( )
+    {
+
     }
 
     void _draw_x_axis()
@@ -408,10 +416,37 @@ protected:
         derived().image.get_g_element(PLOT_X_LABEL).push_back(new text_element(to_use));
     }
 
+    void _adjust_limits(double& _x, double& _y)
+    {
+        if(detail::limit_max(_x))
+        {
+            _x = derived().plot_x2;
+        }
+        if(detail::limit_max(_y))
+        {
+            _y = derived().plot_y1;
+        }
+        if(detail::limit_min(_x))
+        {
+            _x = derived().plot_x1;
+        }
+        if(detail::limit_min(_y))
+        {
+            _y = derived().plot_y1;
+        }
+        if(detail::limit_NaN(_x))
+        {
+            _x = 0;
+        }
+        if(detail::limit_NaN(_y))
+        {
+            _y = 0;
+        }
+    }
+
     void _draw_plot_point(double _x, double _y, 
                           g_element& g_ptr, const plot_point_style& _sty)
     {
-
         int size = _sty.size;
         double half_size = size / 2.;
 
