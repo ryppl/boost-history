@@ -1,4 +1,4 @@
-// Boost.Print library
+// Boost.Explore library
 
 // Copyright Jeffrey Faust 2007. Use, modification and
 // distribution is subject to the Boost Software License, Version
@@ -12,12 +12,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include "../../../boost/explore.hpp"
-
-BOOST_AUTO_TEST_CASE( basic_columnate_print_test )
-{
-    //BOOST_FAIL("Test not implemented");
-}
+#include <boost/explore.hpp>
 
 struct columnated_format
 {

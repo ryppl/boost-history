@@ -1,0 +1,43 @@
+# Boost.Explore Library
+
+# Copyright Jared McIntyre 2007. Use, modification and
+# distribution is subject to the Boost Software License, Version
+# 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+# For more information, see http://www.boost.org
+
+# bring in rules for testing
+import testing ;
+
+project
+    : source-location .
+    : requirements
+    ;
+{
+  test-suite explore_print
+    :
+  [ run simple_types.cpp  ]
+  [ run c_array.cpp  ]
+  [ run user_defined_container.cpp  ]
+
+  [ run std_vector.cpp   ]
+  [ run std_deque.cpp   ]
+  [ run std_list.cpp   ]
+  [ run std_map.cpp   ]
+  [ run std_set.cpp   ]
+  [ run std_pair.cpp   ]
+
+  [ run boost_array.cpp   ]
+  [ run boost_tuple.cpp ]
+  [ run boost_variant.cpp ]
+
+  [ run boost_range.cpp ]
+
+  [ run custom_format_simple.cpp ]
+  [ run html_table_output.cpp ]
+  [ run multi_dim_test.cpp ]
+
+  [ run columnated.cpp ]
+ ;
+}

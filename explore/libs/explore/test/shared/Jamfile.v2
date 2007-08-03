@@ -7,6 +7,16 @@
 
 # For more information, see http://www.boost.org
 
-build-project shared//explore_shared_components ;
-build-project print//explore_print ;
-build-project stream//explore_stream ;
+# bring in rules for testing
+import testing ;
+
+project
+    : source-location .
+    : requirements
+    ;
+{
+  test-suite explore_shared_components
+    :
+  [ run is_assoc_iter.cpp ]
+ ;
+}

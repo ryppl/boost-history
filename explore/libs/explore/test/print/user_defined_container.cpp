@@ -1,4 +1,4 @@
-// Boost.Print library
+// Boost.Explore library
 
 // Copyright Jared McIntyre 2007. Use, modification and
 // distribution is subject to the Boost Software License, Version
@@ -11,8 +11,7 @@
 #include <boost/test/unit_test.hpp>
 #include <sstream>
 #include <vector>
-#include "../../../boost/explore/explore.hpp"
-#include "../../../boost/explore/stream_container.hpp"
+#include <boost/explore.hpp>
 
 class user_vector
 {
@@ -49,15 +48,6 @@ BOOST_AUTO_TEST_CASE( user_defined_print_test )
 
     user_vector v;
     explore::print(v, str_out);
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
-}
-
-BOOST_AUTO_TEST_CASE( user_defined_stream_test )
-{
-    std::stringstream str_out;
-
-    user_vector v;
-    str_out << v;
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
 }
 

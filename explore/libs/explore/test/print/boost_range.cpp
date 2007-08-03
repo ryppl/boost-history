@@ -1,4 +1,4 @@
-// Boost.Print library
+// Boost.Explore library
 
 // Copyright Jared McIntyre 2007. Use, modification and
 // distribution is subject to the Boost Software License, Version
@@ -12,9 +12,7 @@
 #include <sstream>
 #include <vector>
 #include <boost/range/iterator_range.hpp>
-#include "../../../boost/explore/stream_container.hpp"
-#include "../../../boost/explore/explore.hpp"
-#include "../../../boost/explore/iterator_range.hpp"
+#include <boost/explore.hpp>
 
 BOOST_AUTO_TEST_CASE( boost_range_print_test )
 {
@@ -43,35 +41,5 @@ BOOST_AUTO_TEST_CASE( boost_range_print_test )
 
     str_out.str("");
     explore::print(boost::make_iterator_range(vi.rbegin(), vi.rend()), str_out);
-    BOOST_CHECK_EQUAL(str_out.str(), "[3, 2, 1]");
-}
-
-BOOST_AUTO_TEST_CASE( boost_range_stream_test )
-{
-    std::stringstream str_out;
-
-    std::vector<int> vi;
-    str_out << explore::make_iterator_range(vi);
-    BOOST_CHECK_EQUAL(str_out.str(), "[]");
-
-    str_out.str("");
-
-    vi.push_back(1);
-    str_out << explore::make_iterator_range(vi);
-    BOOST_CHECK_EQUAL(str_out.str(), "[1]");
-
-    str_out.str("");
-
-    vi.push_back(2);
-    vi.push_back(3);
-    str_out << explore::make_iterator_range(vi);
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
-
-    str_out.str("");
-    str_out << explore::make_iterator_range(vi.begin()+2, vi.end());
-    BOOST_CHECK_EQUAL(str_out.str(), "[3]");
-
-    str_out.str("");
-    str_out << explore::make_iterator_range(vi.rbegin(), vi.rend());
     BOOST_CHECK_EQUAL(str_out.str(), "[3, 2, 1]");
 }
