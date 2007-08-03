@@ -6,7 +6,7 @@
 #ifndef SIGNAL_NETWORK_FILTER_BASE_HPP
 #define SIGNAL_NETWORK_FILTER_BASE_HPP
 
-#include <boost/dataflow/signal/component/traits.hpp>
+#include <boost/dataflow/signal/support.hpp>
 
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -24,30 +24,46 @@ class filter_base
 #ifdef SIGNAL_NETWORK_TRACKABLE
 : public boost::signals::trackable
 #endif
-{};
+{
+public:
+    typedef boost::dataflow::signal_producer producer_category;
+    typedef boost::dataflow::signal_consumer consumer_category;
+};
 
+} }
+
+namespace boost { namespace dataflow {
+    
+namespace extension {
+
+namespace signals {
+    
 template<class T, typename Enable=void>
 struct is_filter : public boost::false_type { };
 
 template<class T>
-struct is_filter<T, typename boost::enable_if<boost::is_base_of<filter_base, T> >::type >
+struct is_filter<T, typename boost::enable_if<boost::is_base_of<boost::signals::filter_base, T> >::type >
     : public boost::true_type { };
 
-template<class T>
+/*template<class T>
 struct is_component<T, typename boost::enable_if<is_filter<T> >::type >
-    : public boost::true_type { };
-
+    : public boost::true_type { };*/
+        
 template<class T>
 struct get_signal<T, typename boost::enable_if<is_filter<T> >::type >
 {
     typename T::signal_type &operator()(const T &t) {return t.default_signal();}
 };
 
-/*template<class T>
-struct get_signal_type<T, typename boost::enable_if<is_filter<T> >::type>
+template<class T>
+struct get_signal_type<T, typename boost::enable_if<is_filter<T> >::type >
 {
     typedef typename T::signal_type type;
-};*/
+};
+
+}
+
+}
 
 } } // namespace boost::signals
 

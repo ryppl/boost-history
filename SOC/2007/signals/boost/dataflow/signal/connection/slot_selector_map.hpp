@@ -5,7 +5,7 @@
 
 #ifndef SIGNAL_NETWORK_SLOT_SELECTOR_MAP_HPP
 #define SIGNAL_NETWORK_SLOT_SELECTOR_MAP_HPP
-
+/*
 #include <boost/dataflow/signal/connection/slot_selector.hpp>
 
 #include <boost/fusion/support/is_sequence.hpp>
@@ -14,10 +14,17 @@
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 
-namespace boost { namespace signals {
+namespace boost { namespace dataflow {
 
-/** Support for fusion maps of consumer components.
-*/
+template<typename T>
+struct producer_category_of<T, typename boost::enable_if<boost::fusion::traits::is_sequence<T> >::type>
+{
+    typedef signal_producer type;
+};
+    
+namespace extension { namespace signals {
+
+// Support for fusion maps of consumer components.
 template<typename Signature, typename T>
 struct get_slot<Signature, T, typename boost::enable_if<boost::fusion::traits::is_sequence<T> >::type> // this should be is_map
 {
@@ -28,12 +35,7 @@ struct get_slot<Signature, T, typename boost::enable_if<boost::fusion::traits::i
     }
 };
 
-/// Support for fusion maps as a producer component (it will try to use the first component).
-template<typename T>
-struct is_component<T, typename boost::enable_if<boost::fusion::traits::is_sequence<T> >::type>
-    : public boost::true_type {};
-
-/// Support for slot_selector as an input component (producer).
+// Support for slot_selector as an input component (producer).
 template<typename T>
 struct get_signal_type<T, typename boost::enable_if<boost::fusion::traits::is_sequence<T> >::type>
 {
@@ -45,7 +47,7 @@ struct get_signal_type<T, typename boost::enable_if<boost::fusion::traits::is_se
         >::type type;
 };
 
-/// Support for slot_selector as an input component (producer).
+// Support for slot_selector as an input component (producer).
 template<typename T>
 struct get_signal<T, typename boost::enable_if<boost::fusion::traits::is_sequence<T> >::type>
 {
@@ -58,8 +60,8 @@ struct get_signal<T, typename boost::enable_if<boost::fusion::traits::is_sequenc
     }
 };
 
-
+    } }
 
 } } // namespace boost::signals
-
+*/
 #endif // SIGNAL_NETWORK_SLOT_SELECTOR_MAP_HPP

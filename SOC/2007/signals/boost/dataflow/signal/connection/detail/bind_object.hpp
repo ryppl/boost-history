@@ -17,7 +17,7 @@
 #include <boost/function.hpp>
 
 namespace boost { namespace signals {
-
+        
 namespace detail {
         
     template<typename Signature, typename T, int Arity>
@@ -40,13 +40,13 @@ namespace detail {
 template<typename Signature, typename T>
 struct bind_object_impl<Signature, T, BOOST_PP_ITERATION()>
 {
-    boost::function<Signature> operator()(typename boost::signals::detail::slot_type<Signature, T>::type mem_fn, T &object)
+    boost::function<Signature> operator()(typename slot_type<Signature, T>::type mem_fn, T &object)
     {
         return boost::bind(mem_fn, boost::ref(object)
                         BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
                         BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_INC(BOOST_PP_ITERATION()),_));
     }
-    boost::function<Signature> operator()(typename boost::signals::detail::slot_type<Signature, T>::type mem_fn, const T &object)
+    boost::function<Signature> operator()(typename slot_type<Signature, T>::type mem_fn, const T &object)
     {
         return boost::bind(mem_fn, boost::ref(object)
                            BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())

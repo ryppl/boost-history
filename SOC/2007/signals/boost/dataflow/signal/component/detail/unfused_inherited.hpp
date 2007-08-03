@@ -32,8 +32,8 @@
 #include <boost/fusion/algorithm/transformation/pop_back.hpp>
 
 #include <boost/fusion/functional/adapter/limits.hpp>
-#include <boost/fusion/functional/adapter/detail/has_type.hpp>
-#include <boost/fusion/functional/adapter/detail/nullary_call_base.hpp>
+//#include <boost/fusion/functional/adapter/detail/has_type.hpp>
+//#include <boost/fusion/functional/adapter/detail/nullary_call_base.hpp>
 
 #include <boost/mpl/size.hpp>
 #include <boost/utility/result_of.hpp>

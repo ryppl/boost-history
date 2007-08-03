@@ -1,0 +1,297 @@
+[section:components Components]
+
+[section:generic Generic]
+
+[section:filter filter]
+[*See also]: [classref boost::signals::filter filter class reference.]
+
+[heading Model of]
+
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+
+[heading Description]
+
+The [filter] class is provided as a base class for in / out components.
+It provides support for Dataflow connection operators and functions,
+and provides a default output signal.  Here is an example of a simple class
+which inherits [filter]:
+
+[test_filter_classes]
+
+The type of the output signal (in the above example, `unfused_out_signal`)
+is specified as the second template parameter.
+There are three options:
+
+* `unfused_out_signal` provides an unfused output signal named `out`.
+* `fused_out_signal` provides a fused output signal named `fused_out`.
+* `combined_out_signal` provides an unfused output signal named `out`,
+  and a fused adapter for the signal named `fused_out`.
+  This is useful for components which wish to use fusion internally but output
+  an unfused signal.
+
+A component developed on top of the [filter] class can then be used in the
+appropriate network.  Here is an example which uses the class defined above:
+
+[table filter-based class use example
+    [[fused][unfused]]
+    [[[test_filter_fused]][[test_filter_unfused]]]
+]
+
+[endsect][/filter]
+
+[section:applicator applicator]
+[*See also]: [classref boost::signals::applicator applicator class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [applicator] class applies a specified function object to a member variable
+of a specified type whenever it receives a signal.
+The signal is always forwarded.
+
+Examples of applicators:
+
+* [counter]
+
+[endsect][/applicator]
+
+[section:conditional conditional]
+[*See also]: [classref boost::signals::conditional conditional class reference.]
+
+The [conditional] class applies a specified function object to a member variable
+of a specified type whenever it receives a signal.
+The signal is forwarded if the function object returns true.
+
+Examples of conditionals:
+
+* [junction]
+
+[endsect][/conditional]
+
+[section:instantiator instantiator]
+[*See also]: [classref boost::signals::instantiator instantiator class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [instantiator] class instantiates a specified type from a member variable
+of a specified type whenever it receives a signal.
+The signal is always forwarded.
+
+Examples of applicators:
+
+* [mutex]
+
+[endsect][/instantiator]
+
+[section:modifier modifier]
+[*See also]: [classref boost::signals::modifier modifier class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [modifier] class instantiates a member function object of specified
+type Member. It applies the member function object
+to each incoming signal, and sends the returned value.
+
+Examples of modifiers:
+
+* [function]
+
+[endsect][/modifier]
+
+[endsect][/generic]
+
+[section:properties Signal Properties]
+[section:storage storage]
+[*See also]: [classref boost::signals::storage storage class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [storage] class can store the parameters it receives from a signal,
+as well as transmit the stored parameter values through its own signal.
+
+[table storage class use example
+    [[fused][unfused]]
+    [[[test_storage_fused]][[test_storage_unfused]]]
+]
+[endsect][/storage]
+
+[section:counter counter]
+[*See also]: [classref boost::signals::counter counter class reference.]
+
+The [counter] class counts the number of passing signals.  Each time it
+receives a signal, it will increment an internal
+counter and forward the signal.
+
+[import ../test/test_counter.cpp]
+[table counter class use example
+    [[fused][unfused]]
+    [[[test_counter_fused]][[test_counter_unfused]]]
+]
+
+[endsect][/counter]
+[endsect][/properties]
+
+[section:flow Signal Flow]
+[section:junction junction]
+[*See also]: [classref boost::signals::junction junction class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [junction] class can be used to bring in multiple signals, and forward
+them all to the same set of output signals.
+
+[import ../test/test_junction.cpp]
+[table storage class use example
+    [[fused][unfused]]
+    [[[test_junction_fused]][[test_junction_unfused]]]
+]
+[endsect][/junction]
+
+[section:mutex mutex]
+[*See also]: [classref boost::signals::mutex mutex class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [mutex] class locks an internal mutex when it receives a signal, and then forwards the signal.
+[mutex] is an __instantiator__ with the Instantiation boost::mutex::scoped_lock and Member boost::mutex.
+
+[import ../test/test_mutex.cpp]
+[table mutex class use example
+    [[fused][unfused]]
+    [[[test_mutex_fused]][[test_mutex_unfused]]]
+]
+[endsect][/mutex]
+
+[endsect][/flow]
+
+[section:adapters Adapters]
+[section:function function]
+[*See also]: [classref boost::signals::function function class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [function] class can be used to apply a function to an incoming signal and output the result.
+[function] is a __modifier__ with the Modifier set to an adapter for the provided function.
+
+[table function class use example
+    [[fused][unfused]]
+    [[[test_function_fused]][[test_function_unfused]]]
+]
+
+[endsect][/function]
+
+[endsect][/adapters]
+
+[section:topologies Topologies]
+
+[section:chain chain]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [SignalProducerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [chain] class chains together multiple copies of the same component.
+
+[table function class use example
+    [[fused][unfused]]
+    [[[test_chain_fused]][[test_chain_unfused]]]
+]
+
+The example above uses the following classes:
+
+[test_chain_classes]
+
+[endsect][/chain]
+
+[endsect][/topologies]
+
+[section:network Network]
+
+[section:socket_sender socket_sender]
+[*See also]: [classref boost::signals::socket_sender socket_sender class reference.]
+
+[heading Model of]
+* [SignalConsumerConcept]
+* [ConnectableConcept] to any [SignalProducerConcept] type `P` where 
+  `Signature` matches `P`'s produced type.
+  
+[heading Description]
+
+The [socket_sender] class can be used to bridge a signal network accross multiple computers via a
+network connection.  Any signal going to the [socket_sender] will be serialized and sent over a provided
+socket.  A [socket_receiver] can be used on the other end to unserialize the signal and forward it.
+
+Example:
+
+[test_socket]
+
+[endsect][/socket_sender]
+
+[section:socket_receiver socket_receiver]
+
+[*See also]: [classref boost::signals::socket_receiver socket_receiver class reference.]
+
+[heading Model of]
+* [SignalProducerConcept]
+  
+[heading Description]
+
+The [socket_receiver] class can be used to bridge a signal network accross multiple computers via a
+network connection.  Any signal going to the [socket_sender] will be serialized and sent over a provided
+socket.  A [socket_receiver] can be used on the other end to unserialize the signal and forward it.
+
+Example:
+
+[test_socket]
+
+[endsect][/socket_receiver]
+
+[endsect][/network]
+
+[endsect][/components]

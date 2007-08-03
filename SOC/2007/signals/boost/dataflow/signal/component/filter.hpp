@@ -64,6 +64,9 @@ template<typename Signature, typename Combiner, typename Group, typename GroupCo
 class filter<Signature, unfused, Combiner, Group, GroupCompare> : public filter_base
 {
 public:
+    //typedef Signature produced_type;
+    //typedef boost::dataflow::signal_producer producer_category;
+    
     // the signature of the output signal
 	typedef Signature signature_type;
     // the type of the signal
@@ -120,6 +123,8 @@ public:
     typedef typename Combiner::result_type signature_type (const parameter_vector &);
     typedef typename Combiner::result_type fused_signature_type (const parameter_vector &);
     typedef boost::signal<signature_type, Combiner, Group, GroupCompare> signal_type;
+
+//    typedef typename Combiner::result_type produced_type (const parameter_vector &);
 
 	///	Returns the default out signal.
 	signal_type &default_signal() const

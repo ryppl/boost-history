@@ -1,0 +1,188 @@
+[section:connections Connections]
+
+[section:connect connect function]
+
+[*See also]: [funcref boost::signals::connect connect function reference.]
+
+The [connect] function is the fundamental connection-creating mechanism of
+the library.  Given a /producer/ `p` and /consumer/ `c` supported by the library,
+
+    connect(p,c);
+    
+will create a connection between the two.  The examples in this documentation typically
+use [operators] to create connections.  The __operators__ use the __connect__ function
+directly, and can be replaced by invocations of [connect] if preferred.
+
+The support for various types of components that are supported by [connect] is currently
+divided in the following files:
+
+    #include <boost/signal_network/connection/signal.hpp>
+    
+will add support for `boost::signal` as a producer, and function objects for which `boost::result_of` is defined
+as consumers.
+
+    #include <boost/signal_network/connection/slot_selector.hpp>
+
+will add support for [slot_selector] objects as signal consumers.  In addition, they can be used
+as signal producers if the underlying object is a signal producer.
+
+    #include <boost/signal_network/connection/slot_selector_map.hpp>
+    
+will add support for fusion maps from signatures to [slot_selector] objects (and perhaps to any signal consumer,
+not tested yet) as signal consumers.  This can be used to pack multiple slots of an object together, and then make
+connections based on the appropriate signature (see the send_slot function of [storage] as an example).
+In addition, fusion maps can be used as signal producers if the underlying object of the front element is a signal
+producer.
+
+[table connect example
+    [[unfused]]
+    [[[test_connect]]]
+]
+
+[endsect]
+
+[section:classes Classes]
+
+[section:slot_selector slot_selector]
+
+[*See also]: [classref boost::signals::slot_selector slot_selector class reference.]
+
+The [slot_selector] class is used to refer to a particular member function of a particular object, and can be used
+can be used as a receiver.
+
+[slot_selector] objects can be constructed using the [funcref boost::signals::make_slot_selector] function.
+See the [link dataflow.connections.examples.multiple_same  Multiple inputs of the same signature] example.
+
+[endsect]
+
+[endsect][/classes]
+
+[section:operators Operators]
+
+[section:chaining Chaining]
+
+Chaining of components can be done using `operator >>=`.
+
+[table chaining example
+    [[fused][unfused]]
+    [[[test_storage_fused]][[test_storage_unfused]]]
+]
+
+[endsect][/chaining]
+
+[section:branching Branching]
+
+More complex connections can also be made relatively easily using
+both `operator >>=`
+and `operator |`, with `operator |` being used for branching.
+
+[table branching example
+    [[fused][unfused]]
+    [[[test_branching_fused]][[test_branching_unfused]]]
+]
+
+[endsect][/branching]
+
+[endsect][/operators]
+
+[section Examples]
+
+[section:pull Pull-based networks]
+
+The [DataflowSignals] module was built with push-based networks in
+mind (the data producer sends data through a signal), but it can also
+be used for pull-based networks (the data consumer requests data through
+a signal).
+
+The following example illustrates this:
+
+[table pull-based network example
+    [[fused][unfused]]
+    [[[/test_pull_fused]][[test_pull_unfused]]]
+]
+
+The example uses the following classes:
+
+[test_pull_classes]
+
+[endsect][/pull]
+
+[section:disconnect Disconnecting]
+
+Connections can be terminated in two ways.  One is through the "trackable"
+mechanism of Boost.Signals, which will automatically destroy connections
+to a trackable object when the object is destroyed.  The other
+way is through the disconnect_all_slots method of the signal sender.
+
+[table disconnect example
+    [[fused][unfused]]
+    [[[/test_disconnect_fused]][[test_disconnect_unfused]]]
+]
+
+[endsect][/disconnect]
+
+[section:multiple_different Multiple slots of different signatures]
+
+It is simple to have an object provide multiple slots through operator() functions
+of different signatures.  The following class does so through providing unary slots
+of different types:
+
+[test_multi_type_classes]
+
+[/The following class, on the other hand, uses slots of different number of arguments:
+
+[test_multi_type_classes]]
+
+In such cases, where the operator() functions differ in their signature,
+standard connection operators will work out the correct connection:
+
+[table multiple slots example
+    [[fused][unfused]]
+    [[[/test_multi_args_unfused]][[test_multi_args_unfused]]]
+]
+
+[endsect][/multiple_different]
+
+[section:multiple_same Multiple inputs of the same signature]
+
+In some cases, a class may want to receive multiple signals of the same
+signature.  [/For example, the following class can receive a void() signal
+through its inherited operator() function, as well as through the
+operator() function of member "other":
+
+[test_same_type_class1]]
+
+For example, the following class could receive void() signals both
+through operator() and through AltInput:
+
+[test_same_type_classes]
+
+The following example shows how to connect signals to all of the above slots.
+For the class Signal2VoidInputs, this is accomplished using the
+slot_selector function:
+
+[table multiple slots example
+    [[fused][unfused]]
+    [[[/test_same_type_fused]][[test_same_type_unfused]]]
+]
+
+[endsect][/multiple_same]
+
+[section:multi_out Multiple outputs]
+
+Multiple outputs can be achieved by introducing additional signals in the class.
+
+[table multiple outs example
+    [[fused][unfused]]
+    [[[/test_multi_out_fused]][[test_multi_out_unfused]]]
+]
+
+The example uses the following classes:
+
+[test_multi_out_classes]
+
+[endsect][/multi_out]
+
+[endsect][/examples]
+
+[endsect][/connections]

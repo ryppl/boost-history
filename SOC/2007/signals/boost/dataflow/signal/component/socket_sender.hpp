@@ -62,6 +62,7 @@ class socket_sender : public boost::fusion::unfused_inherited<
         typename boost::function_types::parameter_types<Signature>::type>
         base_type;
 public:
+    typedef boost::dataflow::signal_consumer consumer_category;
     socket_sender(asio::ip::tcp::socket & socket) : base_type(socket)
     { }
 };

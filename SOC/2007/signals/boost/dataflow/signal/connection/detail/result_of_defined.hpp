@@ -6,7 +6,7 @@
 #ifndef SIGNAL_NETWORK_RESULT_OF_DEFINED_HPP
 #define SIGNAL_NETWORK_RESULT_OF_DEFINED_HPP
 
-#include <boost/dataflow/signal/detail/enable_if_defined.hpp>
+#include <boost/dataflow/detail/enable_if_defined.hpp>
 
 #include <boost/function_types/function_type.hpp>
 #include <boost/function_types/parameter_types.hpp>
@@ -19,7 +19,7 @@
 #include <boost/type_traits/integral_constant.hpp>
 
 namespace boost { namespace signals {
-    
+        
 namespace detail {
 
 //    BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
@@ -27,14 +27,14 @@ namespace detail {
     struct has_result_type : public boost::false_type {};
         
     template<typename T>
-    struct has_result_type<T, typename detail::enable_if_defined<typename T::result_type>::type>
+    struct has_result_type<T, typename boost::dataflow::detail::enable_if_defined<typename T::result_type>::type>
         : public boost::true_type {};
 
     template<typename F, typename FArgs, typename Enable=void>
     struct result_defined : public boost::false_type {};
 
     template<typename F, typename FArgs>
-        struct result_defined<F, FArgs, typename detail::enable_if_defined<typename F::template result<FArgs>::type >::type>
+        struct result_defined<F, FArgs, typename boost::dataflow::detail::enable_if_defined<typename F::template result<FArgs>::type >::type>
         : public boost::true_type {};
 
     template<typename T, typename Enable=void>

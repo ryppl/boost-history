@@ -36,7 +36,7 @@ namespace detail
         boost::fusion::fused<boost::function<FunctionSignature> const &> fused_func;
     };
 }
-/** \brief Converts a function into a Signal Network filter.
+/** \brief Converts a function into a [DataflowSignals] filter.
 \param Signature Signature of the function to be converted.
 
 The signals::function object will receive signals of signature void(<i>function arguments</i>),

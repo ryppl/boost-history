@@ -1,0 +1,378 @@
+[section:introduction Introduction]
+
+[section:dataflow Dataflow programming in C++ - motivation and advantages]
+
+The [WikiDataflow] programming paradigm is based on interconnected
+/components/ which process passing /data/.  Basically, data is treated
+as something that originates from a source, flows through a number of
+processing components that manipulate it (e.g., by changing it,
+duplicating, etc.), and arrives at some final destination.  As such,
+the dataflow paradigm is most suitable when developing applications that
+are themselves focused on the "flow" of data.
+
+Perhaps the most readily available examples of a
+dataflow-oriented applications come from the realm of real-time
+[@http://en.wikipedia.org/wiki/Signal_processing signal processing],
+e.g. a video signal processor which perhaps starts with a video input,
+modifies it through a number of processing components (video filters),
+and finally outputs it to a video display.
+
+[heading A motivating example]
+
+Let's take a simple real-time camera-input-displayed-on-the-screen application.
+Suppose there are three parts to the application - getting each image frame
+from the camera, processing the image in some way,
+and displaying it on the screen. To see how we might arrive at
+a dataflow-oriented implementation of this application,
+let's first begin with an imperative approach.  Such an implementation might
+be structured as follows:
+
+[$dataflow1.png]
+
+Basically, the main program loop is a series of instructions which does
+this particular job.  To take this a step further in the dataflow direction,
+we note that video input libraries often provide callback
+functionality which will deliver a video stream as a sequence of
+image frames given at the appropriate frame rate.
+With this in mind, we do the following:
+
+# implement a function which takes an image as input.
+ # the function first invokes the image processing library function that
+   modifies the image as appropriate
+ # the function then invokes the GUI library function that displays the image
+# register the function as a callback with the camera library
+# the main program loop can relax and have some coffee.
+
+The situation now looks something like this:
+
+[$dataflow2.png]
+
+So now, the image library is acting as a data/signal producer - it
+generates images at a certain frame rate.  And the function we
+implemented seems to be a signal consumer which can take an image,
+process it, and display it on the screen.  
+
+This now employs the basic elements of the dataflow paradigm, but we could
+take it even further.  Instead of just having two components, one image
+signal generator and one signal consumer, how about this:
+
+# implement a component which accepts an input image signal,
+  modifies the image as appropriate, and then outputs
+  a signal with the modified image
+# implement a component which receives an imput image signal and displays
+  it on the screen
+# connect the camera library input stream to the first component
+# connect the first component to the second component
+# the main program loop can relax and have some tea, or even take a nap.
+
+The big picture now looks like the following:
+
+[$dataflow3.png]
+
+To give you a sense of how you would do something like this using the Dataflow
+library, we will present a slightly simplified example using [DataflowSignals].
+Instead of processing images, we will just process numbers - but the dataflow
+parts of the code are pretty much the same:
+
+[simple_example]
+
+A sample run produces:
+
+[pre
+
+0.213436
+-0.49558
+1.57538
+-1.0592
+1.83927
+1.88577
+0.604675
+...
+
+]
+
+...not quite image processing, but you get the (dataflow) point :-)
+
+[heading Advantages]
+
+There are already many programming paradigms supported by C++ (either directly or through
+additional libraries), so let's examine what the advantages of the the dataflow paradigm might be.
+
+First of all, [*dataflow programming is not exclusive of other paradigms], so adopting the dataflow paradigm
+does not hinder the use of other techniques.  In fact, in C++ it can't - since the components
+themselves need to be implemented somehow, and we can't recursively define them
+forever as finer and finer dataflow diagrams, the dataflow paradigm relies on other
+programming techniques to do the underlying work.  Also, dataflow does not need
+be used for the entire application implementation.  You can always use it
+for only those parts of the application it is appropriate for, and 
+"extend your fingers" from other parts of the program in order
+to insert data into the dataflow, catch it on the other end, probe and adjust the components, etc.
+You can think of it as working with electronic components and changing the connections, turning knobs,
+flipping switches, or hanging over a circuit board and tinkering with it using, say, a multimeter and a
+5V lead (just do it with care).
+
+Second, [*dataflow promotes some good programming practices].  When developing processing components,
+we have only the incoming data to deal with - with no requirements on where it is coming from.  Hence,
+the developed components tend to be quite versatile and reusable.  In the above example, the image
+processing component can be used with any image data generator - there is nothing inside the component
+that says "get the image from the camera", or "get the image from this type of data source (where the
+type is either a base class or a concept)".  It just does it's thing, no matter where the data is coming
+from.
+
+Third, when used in the right context, [*dataflow programming makes development and maintenance
+very intuitive].  In the image processing example, say you don't want to process the image any more. You can
+just connect the camera signal directly to the screen display and cut out
+the image processing component.  Someone gives you a new video signal generator component you'd like to use as input
+instead of the camera?  Just plug it in. Literally.
+
+Fourth, [*dataflow-oriented programs can be divided between threads, processors, or computers more easily],
+because the data dependencies are much more visible.  In the image processing example, say you have
+the display on a different computer. You can just pass the connection to it through a network socket.
+With the data flow clearly specified, it is much easier to distribute the work either manually or
+even automatically (although the Dataflow library at the moment offers no such automatic functionality).
+
+Finally, [*we are not to far from the advantages of a [@http://en.wikipedia.org/wiki/Visual_programming_language
+visual programming language]], since the components and the connections have a natural graphical representation.
+With a visaul development environment, programming becomes as easy as connecting components with connections
+(again, the Dataflow library provides no visual programming functionality).
+
+[heading Go with the flow?]
+
+If you are interested in exploring the dataflow concept further using
+the Dataflow library, see
+
+* Dataflow library [organization] for a high level overview of the library.
+* The [signals_quickstart] section of the [DataflowSignals] module, for
+  further usage examples.
+
+[endsect][/dataflow]
+
+[section:organization Organization and namespace use]
+
+The Dataflow library (originally called Signal Network) started as a way to
+facilitate dataflow programming by providing components and connections which
+allow large-scale use of Boost.Signals as a mechanism to
+model the transfer of data between processing components.
+However, during the planning, design and development
+of the library, it became apparent that:
+
+* There are a lot of good ways to move data around, [BoostSignals] being one of
+  them.
+* There are generic properties of dataflow programs which do not depend on the
+  data transport mechanism,
+  and can be exploited to develop mechanism-independent dataflow code.
+
+Hence, the Signal Network library has been redesigned into a generic Dataflow
+library, and offers individual mechanism-specific modules - [DataflowSignals]
+and [DataflowPhoenix].
+
+[heading Dataflow library organization]
+
+The design of the Dataflow library looks like this:
+
+[xinclude dataflow_table.xml]
+
+The layers are a bottom-up hierarchy, with dependencies
+only on layers underneath.
+The /support/ layer provides the necessary generic traits and functions
+required for generic code to work with mechanism-specific
+components.  Each type of mechanism or component must specialize the elements
+of the support layer to work with the mechanism\/component.
+
+The /connect/ layer provides the generic connect function, which is then used by
+the /operators/ and the envisioned /blueprint/ layer.  Each mechanism might
+have its own /mechanism-specific/ layer, on top of which a mechanism-specific
+/component/ can be implemented.  As long as the support layer is implemented
+for the mechanism/component, the component should
+work seamlesly with the rest of the dataflow library.
+
+Essentially, the support layer is a very minimal layer implementing a generic
+and extensible intrusive directed graph framework.  The blueprint layer could
+be implemented as a BGL graph over a hierarchy of classes with a common
+interface (implemented using a base class with virtual methods) which provides
+serialization, instantiation, and (if applicable)
+execution capability for an entire network.
+
+[heading Namespace use]
+
+Since the Dataflow library provides both a generic layer, as well as
+mechanism-specific implementations, its elements are scattered over multiple
+namespaces.
+
+The fundamental user-oriented generic elements, such as `is_producer`,
+`producer_category_of` etc., are located in the `boost::dataflow` namespace.
+Function objects which must be specialized for different data trasport
+mechanisms, such as `connect_impl`, are in the `boost::dataflow::extension`
+namespace.
+
+On the other hand, individual data transport mechanism implementations
+are located in the namespace of the data transport mechanism.  For example,
+all of the [DataflowSignals] components are in the `boost::signals` namespace,
+and all of the [DataflowPhoenix] components are in the `boost::phoenix`
+namespace.  Furthermore, free functions such as `connect` and `invoke` are
+imported into the mechanism's namespace, so that they can be used via ADL.
+
+All of the examples shown in this documentation are assuming the use of
+
+    using namespace boost;
+
+[endsect][/organization]
+
+[section:mechanisms Implemented data transport mechanisms]
+
+There are two modules of the Dataflow library which implement different
+data transport mechanisms. [DataflowSignals] uses [BoostSignals],
+and [DataflowPhoenix] uses object pointers, with support for
+[BoostPhoenix] actors specifying how the data is processed.
+
+[section:signals Dataflow.Signals - based on Boost.Signals]
+
+[/The Signal Network library relies on moving the data via function parameters and return values.
+Here, the Boost.Signals library is used to model these individual data channels which couple
+the data transfer and the computational component invocation.  This is one possible dataflow-oriented
+approach.
+
+Each of these approaches has different properties.  In the signal-based approach, the knowledge of the
+network is local - each component knows about where its signals are going, but it knows nothing
+of where the signals arriving at its own slots are coming from.  Unless we record how the network was
+constructed, there is no "big picture" of what the complete network looks like.  Similarly,
+the network is executed autonomously - the components invoke one another when appropriate, and
+no external control mechanism is required.]
+
+
+[BoostSignals] is an excellent building block for dataflow networks,
+as it provides support for all of the essential elements -
+data transport through parameters and return values, combining
+return values from multiple signal calls, component invocation,
+and reconfigurability through connection and disconnection.
+
+The [DataflowSignals] module uses [BoostSignals] as
+the data transport mechanism in dataflow networks.
+In addition, it provides two major elements that facilitate the
+building of large signals-based dataflow networks:
+
+* The [connect] function and its associated operators which can be
+  used to easily connect different kinds of components.
+* A number of generic and specific components which can be extended
+  and customized for use in particular dataflow networks.
+
+[endsect]
+
+[section:phoenix Dataflow.Phoenix - based on pointers and Boost.Phoenix2]
+
+The [DataflowPhoenix] module uses ordinary object pointers to establish
+a flow of data.  It has been named after the Phoenix library because
+it is convenient to describe the operations on the data using Phoenix
+actors.
+
+This module is in early experimental stages, and has little documentation.
+If you are interested, take a look at the fibonacci.cpp example, which
+implements various extravagant versions of a Fibonacci sequence generator:
+
+[example_fibonacci]
+
+[endsect]
+
+[endsect][/mechanisms]
+
+[section:pin Comparison with a pin-based approach, proposed by Tobias Schwinger]
+
+In the early stages of the design of the then called Signal Network
+library, Tobias Schwinger discussed with me his ideas of an alternative
+implementation of a dataflow library.  In his approach, there would be
+a separation between the processing components, and components whose purpose
+was to transport data.  The processing components would have one or more /pins/,
+and connecting the pins of two processing components together would mean
+pointing them to the same data transport component.
+
+There was a lot of envisioned configurability of the connections made this way
+- the pins at each processing component could be in, out, or in/out, and links
+created by connecting two pins could be categorized as push, pull, push/pull,
+and would also have support for update tracking and trigger modes.  The
+framework would provide support for the data transport components and link/pin
+management, and would also be in charge of invoking the components (which
+could be done in an optimized way, depending on what parts of the network
+need to be updated).
+
+While the pin-based approach is substantially different than the signal-based
+approach I was concentrating on at the time, it was clear that both of these
+approaches had their own advantages, and that each could be a useful dataflow
+framework in its own regard.  Hence, during the development of the Signal
+Network library, I tried to isolate the common properties of dataflow
+frameworks, in hopes that the signal-based approach could live under the
+same roof as something like the pin-based approach.
+Eventually, I started implementing the [DataflowPhoenix] module,
+partly because I wanted something that contrasted the signal-based approach so
+that I could isolate the truly mechanism-independent dataflow concepts, and
+partly because the underlying pointer based connections in [DataflowPhoenix]
+were a step closer to Tobias' ideas of the pin-based frameworks.
+
+With the Dataflow library in place, which came after merging the Signal Network
+library with the new generic-oriented [DataflowPhoenix], it is now
+a little clearer how the pin-based approach that Tobias proposed could
+be adapted into the generic Dataflow framework.
+Instead of a direct
+connection from a data-producing component to a data-consuming component,
+as is now typically done in both of the Dataflow modules,
+there would be a connection from a data-producing component's pin
+to a data transport component, and again a connection from the data transport
+component to to the pin of the data-consuming component.
+The processing components would be [InvocableConcept], while each data transport
+component would be both a [ProducerConcept] and a [ConsumerConcept].
+
+There are, of course, a lot of other issues to solve, and a lot of ways in
+which the Dataflow generic support layer might need to grow to accomodate
+the pin-based implementation, but perhaps in the end it will show that the
+signal-based approach and the pin-based approach are not too different, and
+perhaps even compatible or convertible between each other.
+
+[/In the pin-based approach, the situation is reversed.  There is a "big picture" of what the complete
+network looks like, and the network control mechanism uses this information to decide when a component
+should be invoked and to manage the data shared between the components via pins.  Global
+knowledge of the network can be used for better optimization, serialization, etc.  However, it may
+come at the price of some intrusiveness to the computation components.]
+
+[endsect]
+
+[section:use When to use]
+
+While the [link dataflow.introduction.dataflow dataflow] section hopefully
+convinced you that there are circumstances in which a dataflow approach is 
+useful, please keep in mind that there are many circumstances in which this
+is not the case.
+
+First, a dataflow approach really only makes sense when the underlying task is
+really about the flow of data through the components that process it.
+If you can't sketch a concise data flow diagram which truly represents
+the application, the dataflow approach might not be the best option.
+For example, if you are implementing a complicated algorithm which is really
+about the sequence of instructions that need to be executed on the data
+(rather than the data going through well-defined and self-contained
+processing components), you probably should't use the Dataflow library.
+If you are working on an audio or video processing application,
+maybe you should.
+
+Second, the data transport mechanism you choose should reflect the needs of
+the applications closely.  Most of the functionality that the library supports
+at this moment is regarding run-time configurable connections.  If you don't
+need that functionality, you might be wasting resources ([DataflowPhoenix]
+offers some functionality related to compile-time connectability in its
+iterator_relative connections, but that is yet to trickle out into the library
+as a whole).
+
+When using signals as the data transport mechanism, remember that every signal
+sent results in a function call, and if the processing
+components are so minute that the cost of the function
+calls overtakes the cost of the processing,
+using [DataflowSignals] will cause a significant performance hit.  A similar
+situation occurs with [DataflowPhoenix], where each consumer must be invoked.
+
+To sum up, consider using the Dataflow library when:
+
+* The application can be modeled well through the flow of data; and
+* The cost of the processing shadows the cost of the function calls, and any
+  unnecessary overhead caused by any connections that need to be stored.
+
+[endsect]
+
+[endsect][/introduction]

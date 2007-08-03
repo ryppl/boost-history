@@ -3,17 +3,18 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SIGNAL_NETWORK_GENERATOR_HPP
-#define SIGNAL_NETWORK_GENERATOR_HPP
+#ifndef BOOST_DATAFLOW_SIGNALS_COMPONENT_STORAGE_HPP
+#define BOOST_DATAFLOW_SIGNALS_COMPONENT_STORAGE_HPP
 
 #include <boost/dataflow/signal/component/conditional_modifier.hpp>
 #include <boost/dataflow/signal/component/detail/storable.hpp>
-#include <boost/dataflow/signal/connection/slot_selector_map.hpp>
+#include <boost/dataflow/signal/connection/slot_selector.hpp>
+#include <boost/dataflow/connection/consumer_map.hpp>
 
 #include <boost/fusion/sequence/container/vector.hpp>
 #include <boost/fusion/sequence/view/transform_view.hpp>
 #include <boost/fusion/sequence/container/map.hpp>
-#include <boost/type_traits/add_reference.hpp>
+#include <boost/dataflow/detail/make_ref.hpp>
 
 namespace boost { namespace signals {
 
@@ -25,24 +26,13 @@ namespace boost { namespace signals {
 >
 class storage;
 
+namespace tag
+{
+    struct storage_invocable;
+}
+
 namespace detail
 {
-    struct make_ref
-    {
-        template<typename Sig>
-        struct result;
-        
-        template<typename T>
-        struct result<make_ref(T&)>
-            : boost::add_reference<T>
-        {};
-        
-        template<typename T>
-        typename boost::add_reference<T>::type operator()(T& t) const
-        {
-            return t;
-        }
-    };
 }
 // storage_modifier should be in the detail namespace, but MSVC complains when
 // making boost::signals::storage a friend.
@@ -106,6 +96,8 @@ public:
 
     typedef typename storage_modifier<Signature>::storable_types storable_types;
     typedef typename storage_modifier<Signature>::storable_vector storable_vector;
+    
+    typedef tag::storage_invocable invocable_category;
 
     /**	Initializes the stored parameter values using the provided sequence.
         \param[in] seq Sequence from which the stored parameter sequence is initialized from.
@@ -124,8 +116,8 @@ public:
     */
     typename base_type::signal_type::result_type send()
     {
-        boost::fusion::transform_view<storable_vector, detail::make_ref>
-            view(base_type::modification.stored, detail::make_ref());
+        boost::fusion::transform_view<storable_vector, boost::dataflow::detail::make_ref>
+            view(base_type::modification.stored, boost::dataflow::detail::make_ref());
         return base_type::fused_out(view);
     }
     /**	Sends a signal containing the stored parameter values.
@@ -156,14 +148,14 @@ public:
         return boost::fusion::at_c<N>(base_type::modification.stored);
     }
 
-    boost::fusion::map<
+    boost::dataflow::consumer_map<boost::fusion::map<
         boost::fusion::pair<void(), slot_selector<void (), storage> >,
         boost::fusion::pair<void(const boost::fusion::vector<> &),
-            slot_selector<void (const boost::fusion::vector<> &), storage> >
+            slot_selector<void (const boost::fusion::vector<> &), storage> > >
     >
     send_slot()
     {
-        return     boost::fusion::map<
+        return boost::fusion::map<
         boost::fusion::pair<void(), slot_selector<void (), storage> >,
         boost::fusion::pair<void(const boost::fusion::vector<> &),
             slot_selector<void (const boost::fusion::vector<> &), storage> >
@@ -203,4 +195,31 @@ protected:
 
 } } // namespace boost::signals
 
-#endif // SIGNAL_NETWORK_GENERATOR_HPP
+
+namespace boost { namespace dataflow {
+
+namespace extension {
+    
+    template<>
+    struct invoke_impl<boost::signals::tag::storage_invocable>
+    {
+        template<typename Invocable>
+        struct apply
+        {
+            static void call(Invocable &invocable)
+            {
+                invocable.send();
+            }
+            static void call(const Invocable &invocable)
+            {
+                invocable.send();
+            }
+        };
+    };
+    
+}
+
+} } // namespace boost::dataflow
+    
+
+#endif // BOOST_DATAFLOW_SIGNALS_COMPONENT_STORAGE_HPP

@@ -21,12 +21,20 @@ template<typename Signature,
     >
 class timed_generator : public storage<Signature, OutSignal, Combiner, Group, GroupCompare>
 {
+    typedef storage<Signature, OutSignal, Combiner, Group, GroupCompare> base_type;
 public:    
 	/// Default constructor.  Starts the thread, but signals won't be sent until the enable() function is called.
 	timed_generator() : terminating(false), enabled(false)
 	{
 		thread_object = new boost::thread(boost::bind(&timed_generator::thread_function, boost::ref(*this)));
 	}
+    /// Forwarding constructor for underlying storage
+    template<typename T>
+	timed_generator(const T &t) : base_type(t), terminating(false), enabled(false)
+    {
+		thread_object = new boost::thread(boost::bind(&timed_generator::thread_function, boost::ref(*this)));
+    }
+
 	/// Sets the object to send the stored value at specified time intervals.
 	/** \param[in] interval Sets the time interval (in seconds) at which the signal is sent.
 		\param[in] signal_count The signal will be sent signal_count times, or indefinitelly if signal_count==0.
@@ -86,7 +94,7 @@ private:
 			boost::thread::sleep(xt);
 
 			if (terminating) break;
-			(*this)();
+			base_type::send();
 			if (count)
 				if (--count==0)
 					disable();
