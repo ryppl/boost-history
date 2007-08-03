@@ -17,7 +17,7 @@ double f(double x)
 
 double g(double x)
 {
-    return cos(x);
+    return 2*cos(x);
 }
 
 double h(double x)
@@ -51,12 +51,9 @@ int main()
 
     double pi = 3.1415926535;
   
-    data2[1.5] = std::numeric_limits<double>::infinity();
     for(double i=0; i<10; i+=pi/8.)
     {
-        //data1[i] = f(i);
         data2[i] = g(i);
-        //data3.push_back(h(i));
     }
 
     cout<<"Done with first part"<<endl;

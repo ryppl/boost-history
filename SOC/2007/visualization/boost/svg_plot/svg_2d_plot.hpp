@@ -166,6 +166,8 @@ private:
     // strings having to do with labels
     std::string  y_label;
 
+    std::string plot_window_clip;
+
     // axis information
     double       y_min,  y_max;
 
@@ -669,6 +671,7 @@ svg_2d_plot():        title_info(0, 0, "Plot of data", 30),
                       x_major_width(2), x_minor_width(1),
                       y_minor_length(10), y_num_minor(2), 
                       y_major_length(20), legend_title_size(12),
+                      plot_window_clip("__clip_window"),
                       use_x_major_labels(true), use_x_major_grid(false),
                       use_x_minor_grid(false), use_x_label(false),
                       use_title(true), use_legend(false), use_axis(true),
