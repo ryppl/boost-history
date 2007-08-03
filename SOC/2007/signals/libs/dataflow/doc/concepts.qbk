@@ -1,0 +1,323 @@
+[section Concepts]
+
+To explore generic dataflow in C++, let us begin by examining where the flow of
+data happens in C++.  Rather informally, we can divide things as follows:
+
+* on one hand, there is data (variables, objects, etc...)
+* on the other, there are computational elements (functions, methods, etc...)
+
+Data can then be processed by the computational
+elements by applying the elements to the data in some appropriate way.
+There are several ways of providing data to the computational elements:
+
+* by placing it in a location where the computational element will read it
+* by passing it as a parameter in a call
+* (a combination of the above) by passing the location of the data as a
+parameter in a call
+
+Similarly, there are several ways of getting data out of a computational element:
+
+* the element makes a function call that carries the data as a parameter
+* the element places a value somewhere where it can be read
+* the element returns it as a return value
+
+With the above in mind, let's informally introduce a few concepts related to dataflow
+programming:
+
+[heading Components]
+
+We will call the fundamental processing elements of a dataflow program
+/components/, which have two categories:
+
+* /producers/, which produce data; and
+* /consumers/, which consume data.
+
+Depending on the data-transport mechanism used, a producer could be anything
+that produces / provides data:  a POD variable, an object of a class type, or
+a function that returns a value.  Similarly, a consumer could be anything
+that consumes data - a function that takes an argument, a functor, etc.
+
+Producers and consumers are captured more formally by the [ProducerConcept]
+and [ConsumerConcept] concepts.
+
+[heading Connections]
+
+To establish a flow of data in a dataflow program, we typically /connect/
+producers and consumers using some type of /connection/. In C++, this is usually
+done through a pointer-like mechanism.  For example, a boost::signal can be used
+by a producer to dissiminate data to multiple consumers which have been
+connected to the signal. Or, a consumer class might have a pointer to a variable
+which it collects data from.
+
+Connectability is captured more formally by the [ConnectableConcept] concept.
+
+[/
+[heading Push and pull]
+
+Components can be further categorized according to where the connection lies,
+and what it points to.  If the producer contains the connection(s) which point
+to the consumer(s) (say, a `boost::signal<void (int)>`), the producer is called a
+/push producer/.  If the consumer contains the connection(s) which point to the
+producer(s), the consumer is called a /pull consumer/.  A connection
+between a push producer and a (non-pull) consumer is a /push connection/,
+and a connection between a pull consumer and a (non-push) producer is a
+/pull connection/.
+
+Sometimes things get a little fuzzy - for example, a function
+call can be used to transmit data through the arguments from the caller to the
+callee.  However, the callee can transmit data back to the caller by returning
+it.  Hence, an object which contains a boost::signal could be both a push
+producer (which sends data through the signal argument) and a pull consumer
+(which receives data through the signal return type).  If both directions
+are being used to transmit data, a connection like this is called a /push and
+pull connection/.
+
+It is also possible that the producer points to the consumer and vice versa.
+In this case, the connection is called a /bidirectional connection/.]
+
+[heading Invocation]
+
+Another important thing to note is that there is a separation between providing
+the data to a component, and invoking the component.  In some cases, the two
+happen simoultaneously (when the data is passed and returned via a function
+call), while in others invoking the computational element can happen
+separately from providing the data (at least from a modeling perspective).
+An example of the latter is a consumer which uses data stored in
+a particular location. We can place the data in that location much before
+invoking the consumer.
+
+We will call /invoking/ a component (producer or consumer) the action of
+causing it to consume data from connected producers, and producing data
+for connected consumers.
+
+Invocation is captured more formally by the [InvocableConcept] concept.
+
+[/An invocation is /forwarding/
+if it causes the invoked producer to also invoke the consumer, or if it causes
+the invoked consumer to invoke the producer.]
+
+[section Producer]
+
+A type `P` is a ['[ProducerConcept]] if it defines a producer category, 
+a produced type, and specifies whether it is invocable.
+To be useful, a [ProducerConcept] should likely be
+[ConnectableConcept] to at least one [ConsumerConcept].  Also, at least
+one component of a connected network should be [InvocableConcept].
+
+[heading Refinements]
+* [PhoenixProducerConcept]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[P] [A Producer type.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Producer Category]
+        [`producer_category_of<P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            *Semantics:* The category of the producer, used for tag forwarding.
+        ]
+    ]
+    [
+        [Produced Type]
+        [`produced_type_of<P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            *Semantics:* The type of data produced by the producer.
+            [footnote This might
+            mean different things for different producer categories - for
+            example, a SignalProducer uses function types, whereas
+            a PhoenixProducer uses object types.].
+        ]
+    ]
+    [
+        [Producer Trait]
+        [`is_producer<P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [mpl::true_ or boost::true_type]
+        [
+            *Semantics:* A trait encapsulating adherence to the Producer
+            concept.
+        ]
+    ]
+    [
+        [Invocable]
+        [`is_invocable<P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Boolean metafunction]
+        [
+            *Semantics:* A producer must specify if it is [InvocableConcept].
+        ]
+    ]
+]
+
+[heading Notes]
+
+To define a new [ProducerConcept] class type, it is sufficient to define
+member typedefs `producer_category` and `produced_type`.
+
+[heading Examples]
+
+[endsect][/producer]
+
+[section Consumer]
+
+A type `T` is a /consumer/ if it defines a consumer category.
+To be useful, a [ConsumerConcept] should likely be
+[ConnectableConcept] to at least one [ProducerConcept].  Also, at least
+one component of a connected network should be [InvocableConcept].
+
+[heading Refinements]
+* [PhoenixConsumerConcept]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[C] [A Consumer type.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Consumer Category]
+        [`consumer_category_of<C>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            *Semantics:* The category of the producer, used for tag forwarding.
+        ]
+    ]
+    [
+        [Consumer Trait]
+        [`is_consumer<C>::type`
+         [footnote `namespace boost::dataflow`]]
+        [mpl::true_ or boost::true_type]
+        [
+            *Semantics:* A trait encapsulating adherence to the Producer
+            concept.
+        ]
+    ]
+[/    [
+        [Consumed Types]
+        [`consumed_types_of<P>::type`]
+        [`mpl::set<any-type-list>`]
+        [
+            *Semantics:* The types of data consumed by the consumer.
+            [footnote The types inside the `mpl::set` might
+            mean different things for different consumer categories - for
+            example, a SignalProducer uses function types, whereas
+            a PhoenixProducer uses object types.].
+        ]
+    ] ]
+]
+
+[heading Notes]
+
+To define a new [ConsumerConcept] class type, it is sufficient to define
+member typedefs `consumer_category` and `consumed_types`.
+
+[heading Examples]
+
+[endsect][/consumer]
+
+[section Invocable]
+
+A type `T` is /invocable/ if it can be invoked to consume its inputs and/or
+produce its outputs.
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[C] [An [InvocableConcept] type.]]
+    [[c] [An object of type `P`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Invocation]
+        [`invoke(c)`
+         [footnote `namespace boost::dataflow`,
+         `namespace boost::signals`, `namespace boost::phoenix`]]
+        [Any type]
+        [
+            *Semantics:* The component consumes data from connected producers,
+            and makes produced data available to connected consumers.
+            [footnote: This does not imply that it invokes any connected
+            producers or consumers.].
+        ]
+    ]
+    [
+        [Invocable]
+        [`is_invocable<P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [mpl::true_ or boost::true_type]
+        [
+            *Semantics:* A trait encapsulating adherence to the
+            [InvocableConcept] concept.
+        ]
+    ]
+]
+
+[endsect][/invocable]
+
+[section Connectable]
+
+A [ProducerConcept] `P` and [ConsumerConcept] `C` are /connectable/ if they
+can be connected via the `connect` function.  Typically, this means that
+they use the same underlying data transport mechanism, and produce / consume
+the same data type.
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[P] [A [ProducerConcept] type.]]
+    [[C] [A [ConsumerConcept] type.
+     [footnote `P` and `C` are [ConnectableConcept]]
+    [[p] [An object of type P.]]
+    [[c] [An object of type C.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Connect]
+        [`connect(p,c)`]
+        [Any type]
+        [
+            *Semantics:* Creates a permanent connection between the producer
+            and consumer.
+            [footnote: This does not (yet) specify what happens to other
+            existing connections out of `p` of into `c`.  They may or may
+            not get modified of erased.].
+        ]
+    ]
+[/    [
+        [Compatible]
+        [`mpl::has_key<consumed_types_of<C>::type, produced_type_of<P>::type>`]
+        [`mpl::true_`]
+        [
+            *Semantics:* In order for two components to be connectable,
+            the produced type must be an element of the consumed types.
+        ]
+    ] ]
+]
+
+[endsect][/connectable]
+
+[endsect][/concepts]
