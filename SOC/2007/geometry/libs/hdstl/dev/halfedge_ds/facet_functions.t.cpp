@@ -74,8 +74,16 @@ bool facet_gen_requirements_void_noFacetLink() {
     BOOST_CHECK(( num_facets(facetGen) == 4 ));
     
     facet_descriptor fn = new_facet(facetGen);
-    (void) fn;
     BOOST_CHECK(( num_facets(facetGen) == 5 ));
+   
+    // test delete with descriptor
+    delete_facet(fn, facetGen);
+    BOOST_CHECK(( num_facets(facetGen) == 4 ));
+    
+    // test delete with iterator
+    delete_facet(facets_begin(facetGen), facetGen);
+    BOOST_CHECK(( num_facets(facetGen) == 3 ));
+
     return true;
 }
 
@@ -113,6 +121,13 @@ bool facet_gen_requirements_void() {
     (void) fn;
     BOOST_CHECK(( num_facets(facetGen) == 5 ));
     
+    // test delete with descriptor
+    delete_facet(fn, facetGen);
+    BOOST_CHECK(( num_facets(facetGen) == 4 ));
+    
+    // test delete with iterator
+    delete_facet(facets_begin(facetGen), facetGen);
+    BOOST_CHECK(( num_facets(facetGen) == 3 ));
 
     return true;
 }
@@ -145,6 +160,14 @@ bool facet_gen_requirements_noFacetLink() {
     facet_descriptor fn = new_facet(facetGen);
     (void) fn;
     BOOST_CHECK(( num_facets(facetGen) == 5 ));
+
+    // test delete with descriptor
+    delete_facet(fn, facetGen);
+    BOOST_CHECK(( num_facets(facetGen) == 4 ));
+    
+    // test delete with iterator
+    delete_facet(facets_begin(facetGen), facetGen);
+    BOOST_CHECK(( num_facets(facetGen) == 3 ));
 
     return true;
 }
@@ -183,6 +206,15 @@ bool facet_gen_requirements() {
     facet_descriptor fn = new_facet(facetGen);
     (void) fn;
     BOOST_CHECK(( num_facets(facetGen) == 5 ));
+    
+    // test delete with descriptor
+    delete_facet(fn, facetGen);
+    BOOST_CHECK(( num_facets(facetGen) == 4 ));
+    
+    // test delete with iterator
+    delete_facet(facets_begin(facetGen), facetGen);
+    BOOST_CHECK(( num_facets(facetGen) == 3 ));
+
     return true;
 }
 

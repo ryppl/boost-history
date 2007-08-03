@@ -12,7 +12,7 @@
 // Use the set_next_helper_test and set_prev_helper_test functions to
 // test next_.._.. and prev_.._.. functions.
 // Use next_.._.. and prev_.._.. functions to test set functions.
-// Test add_edge function.
+// Test add_remove_edge function.
 // Perform the above mentioned tests for each combination of template selectors.
 //
 // The set functions and the set helper functions set up the halfedges as follows 
@@ -803,7 +803,7 @@ bool halfedge_set_prev_test(prev_at_target_tag const&) {
 }
 
 template <typename HalfedgeGen>
-bool halfedge_add_edge_test() {
+bool halfedge_add_remove_edge_test() {
     
     // Types must exist.
     typedef typename HalfedgeGen::halfedge_selector      halfedge_selector;
@@ -834,7 +834,11 @@ bool halfedge_add_edge_test() {
     BOOST_CHECK(( opposite(hi, halfedgeGen) == hj));
     BOOST_CHECK(( opposite(hj, halfedgeGen) == hi));
 
-    //delete_edge(hi, halfedgeGen);    
+    delete_edge(hi, halfedgeGen);    
+    BOOST_CHECK(( num_halfedges(halfedgeGen) == 2));
+    delete_edge(halfedges_begin(halfedgeGen), halfedgeGen);
+    BOOST_CHECK(( num_halfedges(halfedgeGen) == 0));
+
 
     return true;
 }
@@ -934,8 +938,8 @@ template <typename ContainerS, typename TraversalS, typename VertexS, typename F
 bool test_edge_functions()
 {
     
-    // add_edge test
-    BOOST_CHECK(( halfedge_add_edge_test<
+    // add_remove_edge test
+    BOOST_CHECK(( halfedge_add_remove_edge_test<
                     halfedge_gen<
                       halfedgeS<ContainerS, TraversalS>, 
                       int, int, 

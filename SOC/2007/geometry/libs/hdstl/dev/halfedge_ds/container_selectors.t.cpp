@@ -161,21 +161,21 @@ bool container_gen_mutable_requirements() {
     BOOST_CHECK(( ContainerGen::value(*--end, container) == 0 ));
 
     //remove the elements from container
-    //begin = ContainerGen::container_begin(container);
-    //theBegin = *begin;
-    //BOOST_CHECK(( container.size() == 4 ));
-    ////ContainerGen::container_remove(static_cast<iterator>(*&h0), container);
-    //ContainerGen::container_remove(begin, container);
-    //BOOST_CHECK(( container.size() == 3 ));
-    //begin = ContainerGen::container_begin(container);
-    //ContainerGen::container_remove(begin, container);
-    //BOOST_CHECK(( container.size() == 2 ));
-    //begin = ContainerGen::container_begin(container);
-    //ContainerGen::container_remove(begin, container);
-    //BOOST_CHECK(( container.size() == 1 ));
-    //begin = ContainerGen::container_begin(container);
-    //ContainerGen::container_remove(begin, container);
-    //BOOST_CHECK(( container.empty() ));
+    begin = ContainerGen::container_begin(container);
+    theBegin = *begin;
+    BOOST_CHECK(( container.size() == 4 ));
+    //ContainerGen::container_remove(static_cast<iterator>(*&h0), container);
+    ContainerGen::container_remove(begin, container);
+    BOOST_CHECK(( container.size() == 3 ));
+    begin = ContainerGen::container_begin(container);
+    ContainerGen::container_remove(begin, container);
+    BOOST_CHECK(( container.size() == 2 ));
+    begin = ContainerGen::container_begin(container);
+    ContainerGen::container_remove(begin, container);
+    BOOST_CHECK(( container.size() == 1 ));
+    begin = ContainerGen::container_begin(container);
+    ContainerGen::container_remove(begin, container);
+    BOOST_CHECK(( container.empty() ));
 
     return true;
 }

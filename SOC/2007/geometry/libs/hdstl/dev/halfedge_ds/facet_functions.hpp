@@ -113,6 +113,28 @@ new_facet(facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds)
     return *ContainerGen::container_add(facet_f, hds.m_container);
 }
 
+template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
+void
+delete_facet(typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::facet_descriptor f,
+             facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds)
+    // Delete the facet 'f' from the 'hds'.
+{
+    typedef typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::ContainerGen ContainerGen;
+    
+    ContainerGen::container_remove(f, hds.m_container);
+}
+
+template <typename FacetS, typename HalfedgeDescriptor, typename FacetBase>
+void
+delete_facet(typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::facet_iterator f,
+             facet_gen<FacetS, HalfedgeDescriptor, FacetBase>& hds)
+    // Delete the facet pointed by the iterator 'f' from the 'hds'.
+{
+    typedef typename facet_gen<FacetS, HalfedgeDescriptor, FacetBase>::ContainerGen ContainerGen;
+    
+    ContainerGen::container_remove(f, hds.m_container);
+}
+
 } // namespace hdstl
 } // namespace boost
 

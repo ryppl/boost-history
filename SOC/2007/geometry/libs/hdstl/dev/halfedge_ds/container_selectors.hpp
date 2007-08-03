@@ -382,6 +382,18 @@ struct container_gen<listS, ValueType> {
     {
         container.erase(it);
     }
+    
+    static void container_remove(descriptor x, type& container)
+        // This utility removes the element with specified descriptor
+        // 'x' from the specified 'container'.
+    {
+        for (iterator it = container.begin(); it!=container.end(); ++it){
+            if (*it == x){
+                container.erase(it);
+                break;
+            }
+        }
+    }
 
     static ValueType& value(descriptor x, type& container)
             // This utility returns the value associated with the specified
@@ -479,6 +491,13 @@ struct container_gen<setS, ValueType> {
         // 'it' from the specified 'container'.
     {
         container.erase(it);
+    }
+
+    static void container_remove(descriptor x, type& container)
+        // This utility removes the element with specified descriptor
+        // 'x' from the specified 'container'.
+    {
+        container.erase(container.find(x));
     }
 
     static const ValueType& value(descriptor x, type& container)
@@ -600,6 +619,13 @@ struct container_gen<vecS, ValueType> {
         return --container_end(container);
     }
     
+    static void container_remove(descriptor x, type& container)
+        // This utility removes the element with specified descriptor
+        // 'x' from the specified 'container'.
+    {
+        container.erase(container.begin()+x);
+    }
+
     static void container_remove(iterator it, type& container)
         // This utility removes the element with specified iterator
         // 'it' from the specified 'container'.

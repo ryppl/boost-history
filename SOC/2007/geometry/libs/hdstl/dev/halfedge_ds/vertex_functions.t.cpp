@@ -85,6 +85,15 @@ bool vertex_gen_requirements_void_noVertexLink() {
     vertex_descriptor vn = new_vertex(vertexGen);
     (void) vn;
     BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
+    
+    // test delete with descriptor
+    delete_vertex(vn, vertexGen);
+    BOOST_CHECK(( num_vertices(vertexGen) == 4 ));
+    
+    // test delete with iterator
+    delete_vertex(vertices_begin(vertexGen), vertexGen);
+    BOOST_CHECK(( num_vertices(vertexGen) == 3 ));
+
     return true;
 }
 
@@ -122,6 +131,14 @@ bool vertex_gen_requirements_void() {
     (void) vn;
     BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
     
+    // test delete with descriptor
+    delete_vertex(vn, vertexGen);
+    BOOST_CHECK(( num_vertices(vertexGen) == 4 ));
+    
+    // test delete with iterator
+    delete_vertex(vertices_begin(vertexGen), vertexGen);
+    BOOST_CHECK(( num_vertices(vertexGen) == 3 ));
+
     return true;
 }
 
@@ -155,6 +172,14 @@ bool vertex_gen_requirements_noVertexLink() {
     vertex_descriptor vn = new_vertex(vertexGen);
     (void) vn;
     BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
+
+    // test delete with descriptor
+    delete_vertex(vn, vertexGen);
+    BOOST_CHECK(( num_vertices(vertexGen) == 4 ));
+    
+    // test delete with iterator
+    delete_vertex(vertices_begin(vertexGen), vertexGen);
+    BOOST_CHECK(( num_vertices(vertexGen) == 3 ));
 
     return true;
 }
@@ -194,6 +219,15 @@ bool vertex_gen_requirements() {
     vertex_descriptor vn = new_vertex(vertexGen);
     (void) vn;
     BOOST_CHECK(( num_vertices(vertexGen) == 5 ));
+    
+    // test delete with descriptor
+    delete_vertex(vn, vertexGen);
+    BOOST_CHECK(( num_vertices(vertexGen) == 4 ));
+    
+    // test delete with iterator
+    delete_vertex(vertices_begin(vertexGen), vertexGen);
+    BOOST_CHECK(( num_vertices(vertexGen) == 3 ));
+
     return true;
 }
 

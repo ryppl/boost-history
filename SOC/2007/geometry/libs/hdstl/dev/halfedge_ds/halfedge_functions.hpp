@@ -47,6 +47,8 @@
 //                     around a given vertex in clockwise order.
 //  -        add_edge: creates two halfedges and adds them to 'hds' as an opposite
 //                     pair
+//  -     delete_edge: removes the given halfedge 'h' and its opposite pair from 
+//                     the 'hds' data structure
 //
 //@SEE_ALSO: {hds_concepts.hpp, container_selectors.hpp, halfedge_selectors.hpp}
 
@@ -963,22 +965,35 @@ new_edge(halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds
     return g;
 }
 
-//template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
-//void
-//delete_edge(typename halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>::halfedge_descriptor h,
-//            halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
-//    // Remove the halfedge with descriptor 'h' from 'hds'
-//{
-//    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
-//    typedef typename halfedgeGen::halfedge_descriptor halfedge_descriptor;
-//    typedef typename halfedgeGen::halfedge_type halfedge_type;
-//    typedef typename halfedgeGen::ContainerGen ContainerGen;
-//    
-//    typedef typename halfedgeGen::halfedge_selector::container_selector containerS;
-//    
-//    ContainerGen::container_remove(*&h, hds.m_container);
-//}
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+void
+delete_edge(typename halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>::halfedge_descriptor h,
+            halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+    // Remove the halfedge with descriptor 'h' and its opposite from 'hds'
+{
+    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+    typedef typename halfedgeGen::halfedge_descriptor halfedge_descriptor;
+    typedef typename halfedgeGen::ContainerGen ContainerGen;
+    
+    halfedge_descriptor g = static_cast<halfedge_descriptor>(opposite(h, hds));
+    ContainerGen::container_remove(h, hds.m_container); 
+    ContainerGen::container_remove(g, hds.m_container);
+}
 
+template <typename HalfedgeS, typename VertexDescriptor, typename FacetDescriptor, typename Config>
+void
+delete_edge(typename halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>::halfedge_iterator h,
+            halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config>& hds)
+    // Remove the halfedge pointed by the iterator 'h' and its opposite from 'hds'
+{
+    typedef halfedge_gen<HalfedgeS, VertexDescriptor, FacetDescriptor, Config> halfedgeGen;
+    typedef typename halfedgeGen::halfedge_descriptor halfedge_descriptor;
+    typedef typename halfedgeGen::ContainerGen ContainerGen;
+    
+    halfedge_descriptor g = static_cast<halfedge_descriptor>(opposite(*h, hds));
+    ContainerGen::container_remove(h, hds.m_container); // delete with iterator
+    ContainerGen::container_remove(g, hds.m_container); // delete with descriptor
+}
 
 } // namespace hdstl
 } // namespace boost

@@ -150,6 +150,28 @@ new_vertex(vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>& hds)
     return *ContainerGen::container_add(vertex_f, hds.m_container);
 }
 
+template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
+void
+delete_vertex(typename vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>::vertex_descriptor v,
+              vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>& hds)
+    // Delete the vertex 'v' from the 'hds'.
+{
+    typedef typename vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>::ContainerGen ContainerGen;
+    
+    ContainerGen::container_remove(v, hds.m_container);
+}
+
+template <typename VertexS, typename HalfedgeDescriptor, typename VertexBase>
+void
+delete_vertex(typename vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>::vertex_iterator v,
+              vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>& hds)
+    // Delete the vertex pointed by the iterator 'v' from the 'hds'.
+{
+    typedef typename vertex_gen<VertexS, HalfedgeDescriptor, VertexBase>::ContainerGen ContainerGen;
+    
+    ContainerGen::container_remove(v, hds.m_container);
+}
+
 } // namespace hdstl
 } // namespace boost
 
