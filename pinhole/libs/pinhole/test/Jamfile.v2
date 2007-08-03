@@ -21,7 +21,7 @@ project
   test-suite pinhole
     : 
   [ run TestPropertyGroups.cpp  ]
-  #[ run TestPropertyGroupWrapper.cpp  ]
+  [ run TestPropertyGroupWrapper.cpp  ]
   
   [ run TestBoolProperties.cpp  ]
   [ run TestDoubleProperties.cpp  ]
@@ -29,7 +29,7 @@ project
   [ run TestIntegerProperties.cpp  ]
   [ run TestStringProperties.cpp  ]
   
-  #[ run TestActions.cpp  ]
+  [ run TestActions.cpp  ]
   
   #[ run TestSerializer.cpp  ]
  ;

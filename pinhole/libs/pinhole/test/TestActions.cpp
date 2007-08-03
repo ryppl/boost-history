@@ -11,28 +11,38 @@
 #include <boost/test/unit_test.hpp>
 #include "TestClassesAndConstants.h"
 
-BOOST_AUTO_TEST_CASE( TestActionsFixture, TestTriggerAction )
-{
-	BOOST_CHECK_EQUAL(bTriggeredAction1, false);
-	Trigger(ACTION_1);
-	BOOST_CHECK_EQUAL(bTriggeredAction1, true);
+// I can hide these two line if I don't do everything in headers
+boost::shared_ptr<property_manager> property_manager::m_instance(new property_manager);
+event_source* event_source::m_instance = 0;
 
-	BOOST_CHECK_EQUAL(bTriggeredAction2, false);
-	Trigger(ACTION_2);
-	BOOST_CHECK_EQUAL(bTriggeredAction2, true);
+BOOST_AUTO_TEST_CASE( TestTriggerAction )
+{
+	TestActionsFixture testFixture;
+	
+	BOOST_CHECK_EQUAL(testFixture.bTriggeredAction1, false);
+	testFixture.trigger(ACTION_1);
+	BOOST_CHECK_EQUAL(testFixture.bTriggeredAction1, true);
+
+	BOOST_CHECK_EQUAL(testFixture.bTriggeredAction2, false);
+	testFixture.trigger(ACTION_2);
+	BOOST_CHECK_EQUAL(testFixture.bTriggeredAction2, true);
 }
 
-BOOST_AUTO_TEST_CASE( TestActionsFixture, TestNonExistentAction )
+BOOST_AUTO_TEST_CASE( TestNonExistentAction )
 {
-	CHECK_THROW( Trigger("NonExistent Action"), std::out_of_range );
+	TestActionsFixture testFixture;
+	
+	BOOST_CHECK_THROW( testFixture.trigger("NonExistent Action"), std::out_of_range );
 }
 
-BOOST_AUTO_TEST_CASE( TestActionsFixture, TestGetActionCollection )
+BOOST_AUTO_TEST_CASE( TestGetActionCollection )
 {
-    property_group::action_iterator itr    = action_begin();
-    property_group::action_iterator itrEnd = action_end();
+	TestActionsFixture testFixture;
+	
+    property_group::action_iterator itr    = testFixture.action_begin();
+    property_group::action_iterator itrEnd = testFixture.action_end();
 
-    BOOST_CHECK_EQUAL( action_count(), 2 );
+    BOOST_CHECK_EQUAL( testFixture.action_count(), 2u );
     BOOST_CHECK_EQUAL( *itr, ACTION_1 );
     ++itr;
     BOOST_CHECK_EQUAL( *itr, ACTION_2 );
