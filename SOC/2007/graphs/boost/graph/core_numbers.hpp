@@ -28,8 +28,16 @@ namespace boost {
     // numbers of a weighted graph.
     //
     // The linear algorithm comes from:
-    // Vladimir Batagelj and Matjaz Zaversnik, "An O(m) Algorithm for Cores
-    // Decomposition of Networks."  Sept. 1 2002.
+    //      @article{DBLP:journals/corr/cs-DS-0310049,
+    //          author = {Vladimir Batagelj and Matjaz Zaversnik},
+    //          title     = {An O(m) Algorithm for Cores Decomposition of Networks},
+    //          journal   = {The Computing Research Repository (CoRR)},
+    //          volume    = {cs.DS/0310049},
+    //          year      = {2003},
+    //          ee        = {http://arxiv.org/abs/cs.DS/0310049},
+    //          bibsource = {DBLP, http://dblp.uni-trier.de}
+    //      }
+
     namespace detail
     {
 
