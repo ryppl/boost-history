@@ -8,7 +8,7 @@
 docs = template.options.get('docs')
                      
 template.append_content("""
-[library $template_Library$
+[article $template_Library$
     [quickbook 1.4]
     [version 0.01e-10]
     [authors $template_authors_reversed$]

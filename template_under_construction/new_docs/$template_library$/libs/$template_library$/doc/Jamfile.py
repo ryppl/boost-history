@@ -33,9 +33,6 @@ for root, dirs, files in results.walk(
             template.replace_name(os.path.join(os.path.join('../../..',
             root), '*.hpp').replace('\\','/')))
 
-if docs=='qb+doxy':
-    doxy_source_files.append('dox/*.hpp')
-
 if doxygen:
     template.append_content("""
 doxygen $template_library$_doxygen
@@ -57,11 +54,6 @@ doxygen $template_library$_doxygen
         <doxygen:param>INCLUDE_PATH=../../..
         <doxygen:param>PREDEFINED=DOXYGEN_DOCS_ONLY""")
 
-    if docs=='qb+doxy':
-        template.append_content("""
-        <doxygen:param>GENERATE_HTML=YES
-        <doxygen:param>HTML_OUTPUT=$(loc)/html/doxygen
-        <doxygen:param>HTML_STYLESHEET=$(loc)/html/boostbook_doxygen.css""")
     template.append_content("""
    ;
 """)
@@ -76,17 +68,19 @@ if (doxygen):
 
 template.append_content("""
     :
+        # pull in the online .css and images
+        <xsl:param>project.root=http://beta.boost.org/development
+        # without the next line, build complains
+        <xsl:param>annotation.support=1
+        # pulled this from the doc_test Jamfile
+        <xsl:param>quickbook.source.style.show="'true'"
+
         <xsl:param>chunk.first.sections=1
         <xsl:param>chunk.section.depth=3
         <xsl:param>toc.section.depth=3
         <xsl:param>toc.max.depth=3
         <xsl:param>generate.section.toc.level=3
 """)
-
-if htmlfiles=='global':
-    template.append_content('<xsl:param>boost.root=http://www.boost.org\n')
-elif htmlfiles!='local':
-    template.append_content('<xsl:param>boost.root=' + htmlfiles + '\n')
 
 template.append_content(
 """    ;

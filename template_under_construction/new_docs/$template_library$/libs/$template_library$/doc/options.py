@@ -7,9 +7,3 @@
 
 docs = template.options.get('docs')
 htmlfiles = template.options.get('htmlfiles', None, 'local')
-
-if docs != 'qb+doxy':
-    template.ignore_subdirectory('dox')
-
-if htmlfiles!='local':
-    template.ignore('$template_library$/libs/$template_library$/doc/html/images')
