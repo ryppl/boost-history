@@ -46,6 +46,8 @@ class svg_element
 protected:
     svg_style style_info;
     std::string id_name;
+	std::string class_name;
+	std::string clip_name;
 
 public:
     virtual void write(std::ostream& rhs) = 0;
@@ -55,11 +57,35 @@ public:
 
     }
 
+	void write_elements(std::ostream& rhs)
+	{
+		if(id_name.size())
+		{
+			rhs << " id=\"" << id_name << "\"";
+		}
+
+		if(class_name.size())
+		{
+			rhs << " class=\"" << class_name << "\"";
+		}
+
+		if(clip_name.size())
+		{
+			rhs << " clip-path=\"" << id_name << "\" ";
+		}
+	}
+
    svg_style& style(){ return style_info; }
    const svg_style& style() const{ return style_info; }
 
    void id(const std::string& _id) { id_name = _id; }
-   std::string id( ) { return std::string(id_name); }
+   std::string id( ) { return id_name; }
+
+   void clip(const std::string& _name){ clip_name = _name; }
+   std::string clip( ) { return clip_name; }
+
+   void xml_class(const std::string& _class) { class_name = _class; }
+   std::string xml_class() { return class_name; }
 };
 
 // -----------------------------------------------------------------
@@ -80,7 +106,9 @@ public:
 
     void write(std::ostream& rhs)
     {
-        rhs<<"<rect x=\""<<x<<"\""
+        rhs<<"<rect";
+		write_elements(rhs);
+		rhs<<"x=\""<<x<<"\""
                     <<" y=\""<<y<<"\" "
                     <<" width=\""<<width<<"\" "
                     <<" height=\""<<height<<"\"/>"
@@ -105,7 +133,9 @@ public:
 
     void write(std::ostream& rhs)
     {
-        rhs<<"<circle cx=\""
+        rhs<<"<circle";
+		write_elements(rhs);
+		rhs<<"cx=\""
            <<x<<"\" cy=\""
            <<y<<"\" r=\""
            <<radius<<"\"/>";
@@ -130,7 +160,9 @@ public:
 
     void write(std::ostream& rhs)
     {
-        rhs<<"<line x1=\""<<x1<<"\" y1=\""<<y1<<"\" x2=\""<<x2<<"\" y2=\""
+        rhs<<"<line ";
+		write_elements(rhs);
+		rhs<<"x1=\""<<x1<<"\" y1=\""<<y1<<"\" x2=\""<<x2<<"\" y2=\""
             <<y2<<"\"/>";
     }
 };
@@ -199,7 +231,9 @@ public:
             break;
         }
 
-        rhs << "<text x=\"" << x_coord << "\""
+        rhs << "<text ";
+		write_elements(rhs);
+		rhs<<"x=\"" << x_coord << "\""
             <<" y=\"" << y_coord << "\" ";
         
         if(output != "")
@@ -613,7 +647,9 @@ public:
 
     void write(std::ostream& o_str)
     {
-        o_str<<"<path d=\"";
+        o_str<<"<path ";
+		write_elements(o_str);
+		o_str<<"d=\"";
            
         for(ptr_vector<path_point>::iterator i = path.begin();
             i!=path.end();
@@ -642,16 +678,8 @@ class g_element: public svg_element
 {
 private: 
     ptr_vector<svg_element> children;
-    std::string clip_name;
-
-    bool clip_on;
     
 public:
-
-    g_element():clip_on(false)
-    {
-
-    }
 
     svg_element& operator[](unsigned int i)
     {
@@ -667,6 +695,7 @@ public:
     {
         rhs << "<g ";
 
+		write_elements(rhs);
         style_info.write(rhs);
 
         rhs<< " >" << std::endl;
@@ -701,17 +730,6 @@ public:
     void clear()
     {
         children.clear();
-    }
-
-    void use_clip(bool _use)
-    {
-        clip_on = _use;
-    }
-     
-    void clip(const std::string& _name)
-    {
-        clip_on = true;
-        clip_name = _name;
     }
 
     g_element& circle(double x, double y, double radius = 5.)

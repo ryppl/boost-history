@@ -13,6 +13,7 @@
 #include <ostream>
 #include <fstream>
 #include <exception>
+#include <vector>
 
 #include "detail/svg_tag.hpp"
 #include "svg_style.hpp"
@@ -28,6 +29,8 @@ protected:
     
     g_element document;
 
+	std::vector<clip_path_element> clip_paths;
+
 private:
 
     // -----------------------------------------------------------------
@@ -35,15 +38,17 @@ private:
     // -----------------------------------------------------------------
     void _write_document(std::ostream& s_out)
     {
-        //Write color information
-
-        //Write all visual elements
+        //Write clip paths
+		for(size_t i=0; i<clip_paths.size(); ++i)
+        {
+            clip_paths[ (unsigned int)i ].write(s_out);
+        }
+        
+		//Write all visual elements
         for(size_t i=0; i<document.size(); ++i)
         {
             document[ (unsigned int)i ].write(s_out);
         }
-
-        //end g tag
     }
 
     // -----------------------------------------------------------------
