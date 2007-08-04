@@ -1,0 +1,42 @@
+[/
+ / Copyright (c) 2007 Darren Garvey
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Tutorial]
+
+[tip Have you read __reading_the_docs__?]
+
+Except for when using CGI synchronously, a typical program will have two fundamental parts:
+
+[/handling a client request generally involves the following stages:]
+
+[variablelist
+  [
+    [Gathering requests]
+    [  [link __accepting__ Accepting] requests;
+     [link __loading__ Loading] and parsing request meta-data;
+    ]
+  ]
+  [
+    [Handling requests]
+    [  Using the [link __meta_data__ meta-data];
+[link __writing__ Writing] a reply;
+[link boost.cgi.user_guide.handling_requests.wrapping_up Wrapping up];
+    ]
+  ]
+] [/variablelist]
+
+
+[include tutorial/accepting.qbk]
+
+[include tutorial/loading.qbk]
+
+[include tutorial/meta_data.qbk]
+
+[include wrapping_up.qbk]
+
+
+[endsect]

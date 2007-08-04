@@ -1,0 +1,24 @@
+[/
+ / Copyright (c) 2007 Darren Garvey
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section:building Building Programs]
+
+For now the library is header-only (dependency on Boost.System?) so you can use the library by just including one of the following headers:
+
+``
+#include <boost/cgi.hpp> // include all header files
+
+#include <boost/cgi/cgi.hpp> // include all headers required for (sync) CGI usage
+
+#include <boost/cgi/acgi.hpp> // include all headers required for aCGI usage
+
+#include <boost/cgi/fcgi.hpp> // include all headers required for FastCGI usage
+
+#include <boost/cgi/scgi.hpp> // include all headers required for SCGI usage
+``
+
+[endsect]

@@ -1,0 +1,14 @@
+[/
+ / Copyright (c) 2007 Darren Garvey
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Preface]
+
+Boost.CGI is a library to aid the creation of scalable CGI programs in Standard C++. This library rests on top of and should appear familiar to users of Boost.Asio. Currently the __cgi__, [-__scgi__ and __fcgi__] protocols are supported.
+
+[include acknowledgements.qbk]
+
+[endsect]

@@ -1,0 +1,27 @@
+#             Copyright (c) 2007 Darren Garvey
+#
+# Distributed under the Boost Software License, Version 1.0.
+#     (See accompanying file LICENSE_1_0.txt or copy 
+#        at http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+
+
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+
+project boost/cgi/examples/acgi
+#  : build-dir ../bin.v2
+  ;
+
+SOURCES = main ;
+
+exe acgi
+  :
+    $(SOURCES).cpp
+  :
+    <include>$(BOOST_ROOT)
+    <include>"../../../../"
+    <library>../../util/system//boost_system
+    <define>BOOST_ALL_NO_LIB=1
+    <toolset>gcc:<linkflags>-lpthread
+  ;
