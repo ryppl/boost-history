@@ -13,4 +13,7 @@
 // Define it if GMP implementation is present
 #define BOOST_BIGINT_HAS_GMP_SUPPORT
 
+// Define if platfom has native 64-bit integer support
+// #define BOOST_BIGINT_HAS_NATIVE_INT64
+
 #endif // BOOST_BIGINT_BIGINT_CONFIG_HPP

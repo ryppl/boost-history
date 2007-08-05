@@ -15,28 +15,11 @@
 #include <boost/scoped_array.hpp>
 
 #include <boost/bigint/bigint_util.hpp>
+#include <boost/bigint/bigint_default_config.hpp>
+
+#include <boost/bigint/bigint_fft_multiplicator.hpp>
 
 namespace boost { namespace detail {
-	template <size_t N> struct bigint_default_implementation_config;
-
-	template <> struct bigint_default_implementation_config<8>
-	{
-		typedef boost::uint8_t first;
-		typedef boost::uint16_t second;
-	};
-
-	template <> struct bigint_default_implementation_config<16>
-	{
-		typedef boost::uint16_t first;
-		typedef boost::uint32_t second;
-	};
-
-	template <> struct bigint_default_implementation_config<32>
-	{
-		typedef boost::uint32_t first;
-		typedef boost::uint64_t second;
-	};
-
 	// Default implementation
 	template <template <class> class Storage, size_t limb_bit_number = 32> struct bigint_default_implementation
 	{
@@ -340,7 +323,7 @@ namespace boost { namespace detail {
 				// we borrowed 2^number of bits in our number - we have to subtract it
 				// for this we need to complement all limbs to 2, and add 1 to the last limb.
 				for (limb_t* j = data.begin(); j != data.end(); ++j)
-					*j = limb_max()- *j;
+					*j = limb_max() - *j;
 			
 				data[0]++;
 			}
@@ -384,14 +367,8 @@ namespace boost { namespace detail {
 			}
 		}
 
-		void mul(const bigint_default_implementation& lhs, const bigint_default_implementation& rhs)
+		void _mul_unsigned_basecase(const bigint_default_implementation& lhs, const bigint_default_implementation& rhs)
 		{
-			if (lhs.is_zero() || rhs.is_zero())
-			{
-				assign(0);
-				return;
-			}
-
 			if (this == &lhs || this == &rhs)
 			{
 				bigint_default_implementation copy;
@@ -431,6 +408,33 @@ namespace boost { namespace detail {
 			}
 
 			_normalize();
+		}
+
+		void _mul_unsigned_fft(const bigint_default_implementation& lhs, const bigint_default_implementation& rhs)
+		{
+			size_t lhs_size = lhs.data.size();
+			size_t rhs_size = rhs.data.size();
+
+			data.resize(lhs_size + rhs_size);
+
+			if (&lhs != &rhs)
+				bigint_fft_multiplicator<limb_bit_number>::mul(data.begin(), lhs.data.begin(), lhs_size, rhs.data.begin(), rhs_size);
+			else
+				bigint_fft_multiplicator<limb_bit_number>::sqr(data.begin(), lhs.data.begin(), lhs_size);
+
+			_normalize();
+		}
+
+		void mul(const bigint_default_implementation& lhs, const bigint_default_implementation& rhs)
+		{
+			if (lhs.is_zero() || rhs.is_zero())
+			{
+				assign(0);
+				return;
+			}
+			
+			// _mul_unsigned_basecase(lhs, rhs);
+			_mul_unsigned_fft(lhs, rhs);
 			
 			negative = lhs.negative ? !rhs.negative : rhs.negative;
 		}

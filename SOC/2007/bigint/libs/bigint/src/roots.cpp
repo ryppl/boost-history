@@ -1,3 +1,12 @@
+/* Boost roots.cpp header file
+ *
+ * Copyright 2007 Arseny Kapoulkine
+ *
+ * Distributed under the Boost Software License, Version 1.0.
+ * (See accompanying file LICENSE_1_0.txt or
+ * copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+
 #include <iostream>
 #include <algorithm>
 #include <vector>
@@ -43,7 +52,7 @@ int main(int argc, char** argv)
 		return 0;
 	}
 
-	unsigned int primes[2] = {_atoi64(argv[1]), _atoi64(argv[2])};
+	unsigned int primes[2] = {static_cast<unsigned int>(_atoi64(argv[1])), static_cast<unsigned int>(_atoi64(argv[2]))};
 
 	if (primes[0] > 2147483647 || primes[1] > 2147483647)
 	{
@@ -53,7 +62,7 @@ int main(int argc, char** argv)
 
 	if (primes[0] > primes[1]) std::swap(primes[0], primes[1]);
 
-	std::cout << "static const unsigned int fft_primes[] = {" << primes[0] << ", " << primes[1] << "};\n\n";
+	std::cout << "static const uint32_t fft_primes[] = {" << primes[0] << ", " << primes[1] << "};\n\n";
 
 	unsigned int powers[2];
 
@@ -107,7 +116,7 @@ int main(int argc, char** argv)
 		maxN = power;
 	}
 
-	std::cout << "const unsigned int fft_max_N = " << maxN << ";\n\n";
+	std::cout << "const size_t fft_max_N = " << maxN << ";\n\n";
 
 	unsigned int roots[2];
 
@@ -165,13 +174,13 @@ int main(int argc, char** argv)
 			}
 		}
 
-		std::cout << "static const unsigned int fft_" << (inv ? "inv_" : "") << "primitive_roots[2][" << power_base + 1 << "] =\n{\n";
+		std::cout << "static const uint32_t fft_" << (inv ? "inv_" : "") << "primitive_roots[2][" << power_base + 1 << "] =\n{\n";
 
 		for (int i = 0; i < 2; ++i)
 		{
 			std::cout << "\t{";
 
-			for (int j = 0; j <= power_base; ++j)
+			for (unsigned int j = 0; j <= power_base; ++j)
 				std::cout << all_roots[i][j] << (j == power_base ? "" : ", ");
 	
 			std::cout << "}" << ("," + (i == 1)) << "\n";
@@ -180,13 +189,13 @@ int main(int argc, char** argv)
 		std::cout << "};\n\n";
 	}
 	
-	std::cout << "static const unsigned int fft_inv_N[2][" << power_base + 1 << "] =\n{\n";
+	std::cout << "static const uint32_t fft_inv_N[2][" << power_base + 1 << "] =\n{\n";
 	for (int i = 0; i < 2; ++i)
 	{
 		std::cout << "\t{";
 
-		for (int j = 0; j <= power_base; ++j)
-			std::cout << pow(1 << (unsigned int)j, primes[i] - 2, primes[i]) << (j == power_base ? "" : ", ");
+		for (unsigned int j = 0; j <= power_base; ++j)
+			std::cout << pow(1 << j, primes[i] - 2, primes[i]) << (j == power_base ? "" : ", ");
 	
 		std::cout << "}" << ("," + (i == 1)) << "\n";
 	}
@@ -194,5 +203,5 @@ int main(int argc, char** argv)
 	
 	unsigned int inv_p0_mod_p1 =  pow(primes[0], primes[1] - 2, primes[1]);
 
-	std::cout << "const unsigned int fft_inv_p0_mod_p1 = " << inv_p0_mod_p1 << ";\n";
+	std::cout << "const uint32_t fft_inv_p0_mod_p1 = " << inv_p0_mod_p1 << ";\n";
 }
