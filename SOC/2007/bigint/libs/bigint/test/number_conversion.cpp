@@ -117,8 +117,10 @@ template <typename I> void test()
 		values[ARRAY_SIZE(values) - 1] += 4294967295u;
 
 		// testing unit tests
-		BOOST_CHECK(values[0] < 0 && values[0] - 1 > 0); // underflow
-		BOOST_CHECK(values[ARRAY_SIZE(values) - 1] > 0 && values[ARRAY_SIZE(values) - 1] + 1 < 0); // overflow
+		BOOST_CHECK(values[0] < 0);
+		BOOST_CHECK(values[0] - 1 > 0); // underflow
+		BOOST_CHECK(values[ARRAY_SIZE(values) - 1] > 0);
+		BOOST_CHECK(values[ARRAY_SIZE(values) - 1] + 1 < 0); // overflow
 		BOOST_CHECK_EQUAL(values[0] - 1, values[ARRAY_SIZE(values) - 1]);
 		
 		// large values
@@ -141,7 +143,7 @@ template <typename I> void test()
 		values[ARRAY_SIZE(values) - 1] += 4294967295u;
 
 		// testing unit tests
-		BOOST_CHECK_EQUAL(values[ARRAY_SIZE(values) - 1] + 1, 0); // overflow
+		BOOST_CHECK_EQUAL(values[ARRAY_SIZE(values) - 1] + 1, static_cast<boost::uint64_t>(0)); // overflow
 		
 		// large values
 		test_number_ctors<I>(values, ARRAY_SIZE(values));
