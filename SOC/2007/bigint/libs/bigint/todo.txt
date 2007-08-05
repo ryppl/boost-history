@@ -17,7 +17,8 @@ Feature name									Deadline		Status
 5. Performance tests							7 July			In progress
 6. Interface for storage						14 July			In progress
 7. Storage implementation						14 July			In progress
-8. Default implementation						30 July			In progress
+8. Default implementation						30 July			Awaiting resolution
+9. Advanced algorithms							N/A				In progress
 
 Note that perhaps some features will be completed before the deadline and probably some features will not make the deadline,
 and instead be finished several days later. So the list is by no means static.
@@ -193,10 +194,10 @@ Status: needs investigation
 
 7. Storage implementation
 
-- implement all functionality for vector-based interface as set by interface requirements
-Status: needs implementing
++ implement stack based fixed capacity storage; add corresponding tests
+Status: implemented
 
-- implement stack based fixed capacity storage; add corresponding tests
+- implement all functionality for vector-based interface as set by interface requirements
 Status: needs implementing
 
 8. Default implementation
@@ -254,6 +255,20 @@ Status: fixed
 
 + optimize string conversion
 Status: implemented; 6x speedup for fibonacci(10^6)
+
+9. Advanced algorithms
+
+- check modmul with either existing test or some other way
+Status: needs checking
+
+- perhaps support FFT with 3 primes for base = 2^32?
+Status: needs investigation
+
+- faster division algorithm (divide&conquer?)
+Status: needs implementing
+
+- faster number->string conversion
+Status: needs implementing
 
 -----------------------------------------------
 
