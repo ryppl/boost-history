@@ -13,7 +13,10 @@
 
 #include <boost/bigint/bigint.hpp>
 
-#include <boost/bigint/bigint_gmp.hpp>
+#ifdef BOOST_BIGINT_HAS_GMP_SUPPORT
+#	include <boost/bigint/bigint_gmp.hpp>
+#endif
+
 #include <boost/bigint/bigint_default.hpp>
 #include <boost/bigint/bigint_storage_vector.hpp>
 #include <boost/bigint/bigint_storage_fixed.hpp>
@@ -147,10 +150,14 @@ template <typename I> void test()
 
 int test_main(int argc, char* argv[])
 {
+#ifdef BOOST_BIGINT_HAS_GMP_SUPPORT
 	test<boost::detail::bigint_gmp_implementation>();
+#endif
+
 	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_vector, 8> >();
 	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_vector, 16> >();
 	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_vector, 32> >();
+
 	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_fixed<1024>::type, 8> >();
 	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_fixed<1024>::type, 16> >();
 	test<boost::detail::bigint_default_implementation<boost::detail::bigint_storage_fixed<1024>::type, 32> >();

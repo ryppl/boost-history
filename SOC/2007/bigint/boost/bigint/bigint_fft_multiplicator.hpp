@@ -318,6 +318,7 @@ template <size_t limb_bit_number = 32> struct bigint_fft_multiplicator
 
 		// fix N depending on limb_type
 		N = N * sizeof(limb_t) / sizeof(uint16_t);
+		if (N == 0) N = 1;
 
 		// destination size
 		N *= 2;
@@ -372,6 +373,7 @@ template <size_t limb_bit_number = 32> struct bigint_fft_multiplicator
 
 		// fix N depending on limb_type
 		N = N * sizeof(limb_t) / sizeof(uint16_t);
+		if (N == 0) N = 1;
 
 		// destination size
 		N *= 2;
