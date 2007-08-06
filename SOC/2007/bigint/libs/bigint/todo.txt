@@ -12,7 +12,7 @@ Feature name									Deadline		Status
 ------------									--------		------
 1. Bigint interface (header)					21 May			Awaiting resolution
 2. GMP implementation							21 May			Awaiting resolution
-3. Correctness tests							7 June			In progress
+3. Correctness tests							7 June			Awaiting resolution
 4. Documentation								21 June			In progress
 5. Performance tests							7 July			In progress
 6. Interface for storage						14 July			In progress
