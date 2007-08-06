@@ -21,8 +21,6 @@
 #include <boost/bigint/bigint_storage_vector.hpp>
 #include <boost/bigint/bigint_storage_fixed.hpp>
 
-#pragma comment(lib, "libgmp-3.lib")
-
 #define ARRAY_SIZE(array) sizeof(array) / sizeof(array[0])
 
 template <typename I> void test()

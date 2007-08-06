@@ -1,0 +1,23 @@
+##############################################################################
+# Copyright 2007 Arseny Kapoulkine
+# Distributed under the Boost Software License, Version 1.0. (See accompany-
+# ing file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+##############################################################################
+
+import testing ;
+
+{
+  test-suite bigint
+   :
+   [ run ../test/number_conversion.cpp gmp//gmp : : : : ]
+   [ run ../test/string_conversion.cpp gmp//gmp : : : : ]
+   [ run ../test/can_convert_to.cpp gmp//gmp : : : : ]
+   [ run ../test/arithmetics.cpp gmp//gmp : : : : ]
+   [ run ../test/comparison.cpp gmp//gmp : : : : ]
+   [ run ../test/unary.cpp gmp//gmp : : : : ]
+   [ run ../test/stream.cpp gmp//gmp : : : : ]
+   [ run ../test/serialization.cpp ../../serialization/build//boost_serialization gmp//gmp : : : : ]
+   [ run ../test/functions.cpp gmp//gmp : : : : ]
+   ;
+}
+

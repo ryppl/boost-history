@@ -27,8 +27,6 @@
 #include <boost/archive/xml_iarchive.hpp>
 #include <boost/archive/xml_oarchive.hpp>
 
-#pragma comment(lib, "libgmp-3.lib")
-
 template <typename I> void test_number(const char* value)
 {
 	typedef boost::bigint_base<I> number;

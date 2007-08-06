@@ -23,8 +23,6 @@
 
 #include <string>
 
-#pragma comment(lib, "libgmp-3.lib")
-
 // This macro is not quite good, but - it's ok for our needs
 #define ARRAY_SIZE(array) sizeof(array) / sizeof(array[0])
 

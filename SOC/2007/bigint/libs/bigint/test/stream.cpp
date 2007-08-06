@@ -24,8 +24,6 @@
 #include <string>
 #include <sstream>
 
-#pragma comment(lib, "libgmp-3.lib")
-
 template <typename T, typename Tr> std::basic_ios<T, Tr>& setfillch(std::basic_ios<T, Tr>& s)
 {
 	s.fill('_');
