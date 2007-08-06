@@ -80,10 +80,9 @@ namespace boost
                                 Measure measure,
                                 Combinator combine)
     {
-        typedef typename Measure::distance_type Distance;
-        typedef typename Measure::distance_values DistanceValues;
-        Distance n = detail::combine_distances(g, dist, combine,
-                                               DistanceValues());
+        typedef typename property_traits<DistanceMap>::value_type Distance;
+        typedef numeric_values<Distance> DistanceValues;
+        Distance n = detail::combine_distances(g, dist, combine, DistanceValues());
         return measure(n, num_vertices(g));
     }
 
@@ -95,7 +94,7 @@ namespace boost
                                 DistanceMap dist,
                                 Measure measure)
     {
-        typedef typename Measure::distance_type Distance;
+        typedef typename property_traits<DistanceMap>::value_type Distance;
         return vertex_closeness_centrality(g, dist, measure, std::plus<Distance>());
     }
 
@@ -124,10 +123,11 @@ namespace boost
                          Measure measure)
     {
         typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
+        typedef typename exterior_vertex_property<Graph, Distance>::map_type DistanceMap;
 
         typename graph_traits<Graph>::vertex_iterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            cent[*i] = vertex_closeness_centrality(g, dist[*i], measure);
+            cent[*i] = vertex_closeness_centrality(g, DistanceMap(dist[*i]), measure);
         }
     }
 
@@ -142,8 +142,7 @@ namespace boost
         typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
         typedef typename exterior_vertex_property<Graph, Distance>::map_type DistanceMap;
         typedef typename property_traits<CentralityMap>::value_type Result;
-        closeness_centrality(g, dist, cent,
-                             measure_closeness<Result>(g, DistanceMap()));
+        closeness_centrality(g, dist, cent, measure_closeness<Result>(g, DistanceMap()));
     }
 }
 

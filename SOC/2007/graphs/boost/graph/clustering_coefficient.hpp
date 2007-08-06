@@ -103,6 +103,7 @@ namespace boost
     inline void
     clustering_coefficient(const Graph& g, ClusteringMap cluster)
     {
+        typedef typename property_traits<ClusteringMap>::value_type T;
         typename graph_traits<Graph>::vertex_iterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
             cluster[*i] = vertex_clustering_coefficient<T>(g, *i);
