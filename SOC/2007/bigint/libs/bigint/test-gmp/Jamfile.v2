@@ -9,15 +9,14 @@ import testing ;
 {
   test-suite bigint
    :
-   [ run ../test/number_conversion.cpp gmp//gmp : : : : ]
-   [ run ../test/string_conversion.cpp gmp//gmp : : : : ]
-   [ run ../test/can_convert_to.cpp gmp//gmp : : : : ]
-   [ run ../test/arithmetics.cpp gmp//gmp : : : : ]
-   [ run ../test/comparison.cpp gmp//gmp : : : : ]
-   [ run ../test/unary.cpp gmp//gmp : : : : ]
-   [ run ../test/stream.cpp gmp//gmp : : : : ]
-   [ run ../test/serialization.cpp ../../serialization/build//boost_serialization gmp//gmp : : : : ]
-   [ run ../test/functions.cpp gmp//gmp : : : : ]
+   [ run ../test/number_conversion.cpp gmp//gmp : <define>BOOST_BIGINT_HAS_GMP_SUPPORT : : : ]
+   [ run ../test/string_conversion.cpp gmp//gmp : <define>BOOST_BIGINT_HAS_GMP_SUPPORT : : : ]
+   [ run ../test/can_convert_to.cpp gmp//gmp : <define>BOOST_BIGINT_HAS_GMP_SUPPORT : : : ]
+   [ run ../test/arithmetics.cpp gmp//gmp : <define>BOOST_BIGINT_HAS_GMP_SUPPORT : : : ]
+   [ run ../test/comparison.cpp gmp//gmp : <define>BOOST_BIGINT_HAS_GMP_SUPPORT : : : ]
+   [ run ../test/unary.cpp gmp//gmp : <define>BOOST_BIGINT_HAS_GMP_SUPPORT : : : ]
+   [ run ../test/stream.cpp gmp//gmp : <define>BOOST_BIGINT_HAS_GMP_SUPPORT : : : ]
+   [ run ../test/serialization.cpp ../../serialization/build//boost_serialization gmp//gmp : <define>BOOST_BIGINT_HAS_GMP_SUPPORT : : : ]
+   [ run ../test/functions.cpp gmp//gmp : <define>BOOST_BIGINT_HAS_GMP_SUPPORT : : : ]
    ;
 }
-
