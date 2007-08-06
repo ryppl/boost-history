@@ -169,8 +169,8 @@ Status: investigated; there is no portable way
 + fix number_conversion test for gcc
 Status: fixed
 
-- fix stream test for gcc (locale name)
-Status: needs fixing
++ fix stream test for gcc (locale name)
+Status: fixed
 
 4. Documentation
 
