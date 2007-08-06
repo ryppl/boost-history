@@ -97,7 +97,7 @@ void test()
 
     {
         DistanceContainer dc(num_vertices(g));
-        DistanceMap dm(dc);
+        DistanceMap dm(dc, g);
 
         breadth_first_search(g, *vertices(g).first,
             visitor(make_bfs_visitor(record_distances(dm, on_tree_edge())))
@@ -109,7 +109,7 @@ void test()
         typedef typename property_map<Graph, int EdgeProp::*>::type WeightMap;
         typedef typename DistanceProperty::matrix_type DistanceMatrix;
 
-        DistanceMatrix dx(num_vertices(g));
+        DistanceMatrix dx(num_vertices(g), g);
         WeightMap wm(get(&EdgeProp::weight, g));
 
         floyd_warshall_all_pairs_shortest_paths(g, dx,

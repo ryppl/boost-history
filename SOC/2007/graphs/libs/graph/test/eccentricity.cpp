@@ -131,8 +131,8 @@ void test()
     build_graph(g);
 
     EccentricityContainer eccs(num_vertices(g));
-    EccentricityMap ecc(eccs);
-    DistanceMatrix dist(num_vertices(g));
+    EccentricityMap ecc(eccs, g);
+    DistanceMatrix dist(num_vertices(g), g);
     WeightMap weights(get(&EdgeProp::weight, g));
 
     floyd_warshall_all_pairs_shortest_paths(g, dist, weight_map(weights));

@@ -88,3 +88,15 @@ exe clique
     : <include>$BOOST_ROOT
     : <include>../../../
     ;
+
+exe mapping
+    : mapping.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;
+
+exe k_pairs
+    : k_pairs.cpp
+    : <include>$BOOST_ROOT
+    : <include>../../../
+    ;

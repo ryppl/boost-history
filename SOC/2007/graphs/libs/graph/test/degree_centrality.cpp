@@ -67,7 +67,7 @@ void test()
     build_graph(g);
 
     CentralityContainer centralities(num_vertices(g));
-    CentralityMap cents(centralities);
+    CentralityMap cents(centralities, g);
     degree_centrality(g, cents);
 
     print_map(g, cents);
