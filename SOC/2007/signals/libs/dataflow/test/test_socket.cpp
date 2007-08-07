@@ -29,6 +29,8 @@ asio::io_service io_service;
 // its final signal through the socket.
 void asio_server()
 {
+    using namespace boost::dataflow::operators;
+
 	// set up the socket
 	asio::ip::tcp::acceptor acceptor(io_service, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 1097));
 	asio::ip::tcp::socket socket(io_service);
@@ -53,6 +55,8 @@ void asio_server()
 
 int test_main(int, char* [])
 {
+    using namespace boost::dataflow::operators;
+
 	// start the server in a separate thread
 	boost::mutex::scoped_lock lock(mutex_);
 	boost::thread t(asio_server);

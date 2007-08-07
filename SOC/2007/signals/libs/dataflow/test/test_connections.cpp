@@ -33,6 +33,7 @@ using boost::unit_test::test_suite;
 // for access to connection operators >>= and |
 using namespace boost::signal_network;
 using namespace boost;
+using namespace boost::dataflow::operators;
 
 class SignalFloatDoubler : public signals::filter<void (float, float)>
 {

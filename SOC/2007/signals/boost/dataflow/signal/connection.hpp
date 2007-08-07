@@ -11,11 +11,4 @@
 #include <boost/dataflow/signal/connection/slot_selector.hpp>
 #include <boost/dataflow/signal/connection/slot_selector_map.hpp>
 
-namespace boost { namespace signals {
-    
-    using boost::dataflow::operators::operator>>=;
-    using boost::dataflow::operators::operator|;
-
-} }
-
 #endif

@@ -1,0 +1,96 @@
+[section Concepts]
+
+[section PhoenixProducer]
+
+A [ProducerConcept] type `P` is a ['[PhoenixProducerConcept]] if it uses
+the underlying pointer based data transport mechanism.  It is
+[ConnectableConcept] with a compatible [PhoenixConsumerConcept].
+
+[heading Refinement of]
+* [ProducerConcept]
+* [InvocableConcept]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[P] [A [PhoenixProducerConcept] type.]]
+    [[C] [A [PhoenixConsumerConcept] type [ConnectableConcept] to `P`.]]
+    [[PCategory] [The producer category of `P`.]]
+    [[p] [An object of type `P`.]]
+    [[c] [An object of type `C`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Connect]
+        [`connect(p,c)`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            *Semantics:* Connects `p` to `c`.  This overwrites any previous
+            connection coming out of `p`.
+        ]
+    ]
+    [
+        [Get Address]
+        [`get_address<PCategory>::apply<P>::call(p)`
+         [footnote `namespace boost::dataflow::extension::phoenix`]]
+        [[^produced_type_of<P>::type'''&nbsp;'''*]]
+        [
+            *Semantics:* Retrieves the address of the data produced by `p`.
+            Used by the implementation of `connect` for the pointer based data
+            transport mechanism.
+        ]
+    ]
+    [
+        [Get Value]
+        [`get_value<PCategory>::apply<P>::call(p)`
+         [footnote `namespace boost::dataflow::extension::phoenix`]]
+        [implicitly convertible to `produced_type_of<P>::type`]
+        [
+            *Semantics:* Retrieves the data produced by `p`.
+        ]
+    ]
+]
+
+[endsect][/phoenixproducer]
+
+[section PhoenixConsumer]
+
+A type `T` is a ['[PhoenixConsumerConcept]] if it uses the underlying pointer-based
+data transport mechanism.  I.e., it is [ConnectableConcept] to a
+[PhoenixProducerConcept] of compatible produced type.
+
+[heading Refinement of]
+* [ConsumerConcept]
+* [ConnectableConcept] with [PhoenixProducerConcept] of compatible produced type.
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[C] [A [PhoenixConsumerConcept] type.]]
+    [[P] [A [PhoenixProducerConcept] type of compatible produced type.]]
+    [[CCategory] [The consumer category of `C`.]]
+    [[c] [An object of type `C`.]]
+    [[p] [An object of type `P`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Phoenix Connectable]
+        [
+            *Semantics:* Connects `p` to `c`.  This overwrites any previous
+            connection coming out of `p`.
+        ]
+    ]
+]
+
+[endsect][/phoenixconsumer]
+
+[endsect][/concepts]

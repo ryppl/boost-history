@@ -1,0 +1,189 @@
+[section Introduction]
+
+[section:fusion DataflowSignals and Boost.Fusion]
+
+The components in the [DataflowSignals] module are implemented using [fusion].  To use the
+[DataflowSignals] module, you might benefit from the following if you're not familiar with fusion.
+
+[heading Fused vs. unfused]
+A simple C++ function object might look something like this:
+
+    struct f
+    {
+        int operator()(int arg1, int &arg2, const std::string &arg3)
+        {
+            ...
+        }
+    }
+
+The thing to note here is that there are three arguments (of types `int`, `int &`, and `const std::string &`
+respectively), and that when the function object is invoked, they are passed separately:
+
+    int x;
+    std::string s;
+    f()(1, x, s);
+    
+In the terminology of [fusion], this function object is /unfused/.  This is in contrast to a /fused/
+fuction object, which might look like this:
+
+    struct fused_f
+    {
+        int operator()(fusion::vector<int, int &, const std::string &> &args)
+        {
+            ...
+        }
+    }
+
+Basically, the difference is that the three arguments from the unfused version are now sent in a single
+fusion container.  The benefit is that no matter how many "unfused" arguments there are, there is
+always a single "fused" argument.  Hence, writing templates that deal with a variable number of arguments
+becomes a lot simpler.
+
+[heading [DataflowSignals] provides both fused and unfused components]
+
+While writing the generic components provided in the [DataflowSignals] module benefits from using
+[fusion], your particular use case might not.  For this reason, every component provided
+by the [DataflowSignals] module:
+
+* can receive both fused and unfused signals
+* has both a version that sends fused signals and a version that sends unfused signals.
+
+The type of sent signal is provided as a template argument to the class, and the default value can be set
+by defining `SIGNAL_NETWORK_DEFAULT_OUT` to either `unfused` or `fused` before including a sinal
+network component.
+
+For example,
+
+    signals::storage<int (int, int &, const std::string &>), signals::unfused> unfused_storage;
+    signals::storage<int (int, int &, const std::string &>), signals::fused> fused_storage;
+
+In the above case, `unfused_storage` is similar to `f` above, and can be used as a slot
+for signals which carry regular, unfused arguments.
+On the other hand, `fused_storage` acts as a function object similar to `fused_f` above.
+Hence, it can be used as a slot for signals which carry a fusion container as an argument.
+
+[heading Examples often show both versions]
+
+The examples shown in this documentation often show both a fused and unfused
+version.  In the vast majority of cases, when all of the components used are
+library-provided components, the fused and unfused examples are identical
+except for the specifications that the components should be fused or unfused.
+
+The biggest differences come into play when the examples
+include user-implemented components - implementing a fused component can
+be slightly (or greatly) different from implementing an unfused component.
+
+[endsect][/fusion]
+
+[section Quick Start]
+
+[note If you are not familiar with [BoostFusion], you may want to read the 
+[link dataflow.introduction.fusion Dataflow.Signals and Boost.Fusion] section
+first.]
+
+[DataflowSignals] provides many common building block components for a
+signal-based dataflow network.  The most basic is [storage], which
+can be used to store a value received through a signal, send it on, 
+and/or retreive it.
+
+By default, components in the library use `operator()` to receive a signal.
+For example, when a [storage] object receives a signal through its `operator()`
+(i.e., its `operator()` gets called), it will store the value of the arguments,
+and depending on its state it might forward the signal onward.  When the
+[storage] object's `send()` function is called (or the object is invoked via
+the `invoke()` function), the stored values will be sent to any connected
+consumers.
+
+The value stored inside a [storage] object
+can be retrieved via the [memberref boost::signals::storage::at() at()] method.
+
+Using a few [storage] objects, it is easy to
+create a simple network using
+[funcref boost::dataflow::operator>>=() operator>>=]:
+	
+[table storage class use example
+    [[fused][unfused]]
+    [[[test_storage_fused]][[test_storage_unfused]]]
+]
+
+[heading Creating your own signal receiver (slot)]
+
+The easiest way to create your own signal receiver which can be used with the
+[DataflowSignals] library is to create a class with `operator()` of the signal
+signature you wish to receive.
+
+For example, consider the signature `void()`.  This is the signature
+of a function that returns void and takes no arguments.
+A class that can receive signals of such a signature would be
+defined as follows:
+
+    class SignalVoidCounter
+    {
+        int cnt;
+    public:
+        // For now, we must also declare the consumer category and result type.
+        // This requirement will go away.
+        typedef dataflow::signal_consumer consumer_category;
+        typedef void result_type;
+        
+        SignalVoidCounter() : cnt(0) {}
+        void operator()()
+        {
+            cnt++; // whenever a void() signal is received, increase the counter
+        }
+        int GetCount()
+        {
+            return cnt;
+        }
+    }; // end class SignalVoidCounter
+
+The above class does something really simple - it receives signals of
+signature `void()`, and counts how many it has received. While this
+functionality is actually covered by the library component [counter],
+it's a good introductory example.
+
+If you read the section about [link dataflow.introduction.fusion Boost.Fusion],
+you will find out that the [DataflowSignals] library works with both
+/fused/ and /unfused/ signals.  If you wanted the above to work with
+fused signals, all you would need to do is add or substitute the following
+`operator()`:
+
+    void operator()(const fusion::vector<> &)
+    {
+        cnt++; // whenever a void() signal is received, increase the counter
+    }
+
+You can now introduce this component into a signal network:
+
+[table storage class use example
+    [[fused][unfused]]
+    [[``
+        SignalVoidCounter counter;
+        signals::storage<void(), signals::unfused> storage;
+        
+        storage >>= counter;
+        for (int i=0; i<33; i++)
+            invoke(storage);
+        
+        assert(counter.GetCount());
+    ``][``
+        SignalVoidCounter counter;
+        signals::storage<void(), signals::fused> storage;
+        
+        storage >>= counter;
+        for (int i=0; i<33; i++)
+            invoke(storage);
+        
+        assert(counter.GetCount());
+    ``]]
+]
+
+To proceed, you may want to look at
+
+* Provided [DataflowSignals] module [link dataflow.components components].
+* Creating your own in/out components using the [filter] class.
+* Using the [link dataflow.connections connection operators] to make connections.
+
+[endsect][/start]
+
+[endsect][/introduction]

@@ -179,19 +179,33 @@ required for generic code to work with mechanism-specific
 components.  Each type of mechanism or component must specialize the elements
 of the support layer to work with the mechanism\/component.
 
-The /connect/ layer provides the generic connect function, which is then used by
-the /operators/ and the envisioned /blueprint/ layer.  Each mechanism might
-have its own /mechanism-specific/ layer, on top of which a mechanism-specific
-/component/ can be implemented.  As long as the support layer is implemented
+Directly based on the support layer, we have functions like /connect/ and
+/invoke/, which can be used to manipulate generic and mechanism-specific
+components that the library supports.  /Operators/ are based on /connect/.
+
+There is also a planned /blueprint/ layer (not implemented yet), which
+would provide generic components that are used to provide a "big picture"
+of a dataflow network.  A blueprint component corresponds to an actual,
+component - but whereas the actual component takes care of the work, the
+blueprint component serves as a factory and serializer of the component.
+Hence, a dataflow network blueprint, made out of blueprint components, could
+be used to serialize or instantiate the underlying dataflow network made out
+of actual components.  The blueprint layer is likely to be implemented using
+virtual-based polymorphism and the Boost Graph library.
+
+The library also offers a few generic components, which can be used
+to group other components together: [producer_group], [consumer_group],
+and [consumer_map].
+
+The rest of the library is in the mechanism-specific modules [DataflowSignals]
+and [DataflowPhoenix], each of which provide their own support layer, on
+top of which their components are implemented.
+
+As long as the support layer is implemented
 for the mechanism/component, the component should
 work seamlesly with the rest of the dataflow library.
-
 Essentially, the support layer is a very minimal layer implementing a generic
-and extensible intrusive directed graph framework.  The blueprint layer could
-be implemented as a BGL graph over a hierarchy of classes with a common
-interface (implemented using a base class with virtual methods) which provides
-serialization, instantiation, and (if applicable)
-execution capability for an entire network.
+and extensible intrusive directed graph framework.
 
 [heading Namespace use]
 
@@ -203,7 +217,7 @@ The fundamental user-oriented generic elements, such as `is_producer`,
 `producer_category_of` etc., are located in the `boost::dataflow` namespace.
 Function objects which must be specialized for different data trasport
 mechanisms, such as `connect_impl`, are in the `boost::dataflow::extension`
-namespace.
+namespace.  The connection operators are in `boost::dataflow::operators`.
 
 On the other hand, individual data transport mechanism implementations
 are located in the namespace of the data transport mechanism.  For example,
@@ -215,6 +229,10 @@ imported into the mechanism's namespace, so that they can be used via ADL.
 All of the examples shown in this documentation are assuming the use of
 
     using namespace boost;
+
+[note Since there are multiple namespaces used, the documentation will
+explicitly state the namespace of documented elements wherever it is
+convenient.]
 
 [endsect][/organization]
 
@@ -248,10 +266,13 @@ and reconfigurability through connection and disconnection.
 
 The [DataflowSignals] module uses [BoostSignals] as
 the data transport mechanism in dataflow networks.
-In addition, it provides two major elements that facilitate the
+In addition, it provides two major contributions that facilitate the
 building of large signals-based dataflow networks:
 
-* The [connect] function and its associated operators which can be
+* Support for a number of types of components (functors, filters,
+  member function slot selection), which can be used with
+  the generic Dataflow functionality - such as the [connect] function and its
+  associated operators which can be
   used to easily connect different kinds of components.
 * A number of generic and specific components which can be extended
   and customized for use in particular dataflow networks.

@@ -9,6 +9,7 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
+using namespace boost::dataflow::operators;
 
 //[ test_pull_classes
 class PullDoubler : public signals::filter<float (), signals::unfused>

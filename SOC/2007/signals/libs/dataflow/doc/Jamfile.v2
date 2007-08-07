@@ -34,11 +34,6 @@ doxygen dataflow_doxygen
         <doxygen:param>SEARCH_INCLUDES=YES
         <doxygen:param>INCLUDE_PATH=../../..
         <doxygen:param>PREDEFINED=DOXYGEN_DOCS_ONLY
-        <doxygen:param>GENERATE_HTML=YES
-        <doxygen:param>HTML_OUTPUT=$(loc)/html/doxygen
-        <doxygen:param>HTML_STYLESHEET=$(loc)/html/boostbook_doxygen.css
-        <doxygen:param>HTML_HEADER=$(loc)/dox/html_header.html
-        <doxygen:param>HTML_FOOTER=$(loc)/dox/html_footer.html
    ;
 
 boostbook standalone

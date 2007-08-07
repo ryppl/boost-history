@@ -4,8 +4,8 @@
 
 [include signals/concepts.qbk]
 
-[include connections.qbk]
+[include signals/connections.qbk]
 
-[include components.qbk]
+[include signals/components.qbk]
 
 [endsect]

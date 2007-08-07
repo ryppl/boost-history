@@ -1,0 +1,105 @@
+[section Concepts]
+
+[section SignalProducer]
+
+A [ProducerConcept] type `P` is a ['[SignalProducerConcept]] if it uses
+the boost::signal based data transport mechanism.
+
+[heading Refinement of]
+* [ProducerConcept]
+* [ConnectableConcept] with [SignalConsumerConcept] of compatible consumed type.
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[P] [A [SignalProducerConcept] type.]]
+    [[C] [A [SignalConsumerConcept] type with compatible consumed type.]]
+    [[p] [An object of type `p`.]]
+    [[c] [An object of type `c`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Connect]
+        [`connect(p,c)`]
+        [Any type]
+        [
+            *Semantics:* Connects `p` to `c`. Any previous
+            connection coming out of `p` are left in tact.
+        ]
+    ]
+    [
+        [Signal Type]
+        [`get_signal_type<P>::type`
+         [footnote `namespace boost::dataflow::extension::signals`]]
+        [`boost::signal` type]
+        [
+            *Semantics:* The type of signal storing the outgoing connections.
+        ]
+    ]
+    [
+        [Signal]
+        [`get_signal(p)`
+         [footnote `namespace boost::dataflow::extension::signals`]]
+        [`get_signal_type<P>::type &`]
+        [
+            *Semantics:* Reference to the signal storing the outgoing connections.
+        ]
+    ]
+]
+
+[heading Notes]
+
+To define a new [ProducerConcept] class type, it is sufficient to define
+member typedefs `producer_category` and `signal_type`, and specialize
+the `get_signal` template.
+
+[endsect][/signalproducer]
+
+[section SignalConsumer]
+
+A type `T` is a ['[SignalConsumerConcept]] if it uses the boost::signal based
+data transport mechanism.  I.e., it is [ConnectableConcept] to 
+
+[heading Refinement of]
+* [ConsumerConcept]
+* [ConnectableConcept] with [SignalProducerConcept] of compatible produced type.
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[P] [A [SignalProducerConcept] type.]]
+    [[C] [A [SignalConsumerConcept] type s.t. .]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Signal Connectable]
+        [`connect(p,c)`]
+        [Any type]
+        [
+            *Semantics:* Connects p to c.  This overwrites any previous
+            connection coming out of p.
+        ]
+    ]
+    [
+        [Slot]
+        [`get_slot(c)`]
+        [`boost::function` type]
+        [
+            *Semantics:* Returns the `boost::function` referring to the
+            consumer's slot (function / member function that accepts the
+            data).
+        ]
+    ]
+]
+
+[endsect][/signalconsumer]
+
+[endsect]
