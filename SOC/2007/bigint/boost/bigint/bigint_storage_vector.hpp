@@ -55,12 +55,49 @@ public:
 
 	const T& operator[](size_t index) const
 	{
-		return begin()[index];
+		BOOST_ASSERT(index < data.size());
+		return data[index];
 	}
 
 	T& operator[](size_t index)
 	{
-		return begin()[index];
+		BOOST_ASSERT(index < data.size());
+		return data[index];
+	}
+
+	void push_back(const T& value)
+	{
+		data.push_back(value);
+	}
+
+	void pop_back()
+	{
+		BOOST_ASSERT(!data.empty());
+		data.pop_back();
+	}
+
+	const T& front() const
+	{
+		BOOST_ASSERT(!data.empty());
+		return data.front();
+	}
+	
+	T& front()
+	{
+		BOOST_ASSERT(!data.empty());
+		return data.front();
+	}
+
+	const T& back() const
+	{
+		BOOST_ASSERT(!data.empty());
+		return data.back();
+	}
+	
+	T& back()
+	{
+		BOOST_ASSERT(!data.empty());
+		return data.back();
 	}
 };
 } }  // namespace boost::detail

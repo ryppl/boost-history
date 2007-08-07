@@ -20,14 +20,14 @@ template <size_t N> struct bigint_storage_fixed
 		T data[N / sizeof(T)];
 		size_t count;
 	
-	public:
-	    type(): count(0)
-	    {
-	    }
-
 	    size_t _max_size()
 	    {
 	    	return (N / sizeof(T));
+	    }
+
+	public:
+	    type(): count(0)
+	    {
 	    }
 		
 		void resize(size_t size)
@@ -69,12 +69,50 @@ template <size_t N> struct bigint_storage_fixed
 
 		const T& operator[](size_t index) const
 		{
-			return begin()[index];
+			BOOST_ASSERT(index < count);
+			return data[index];
 		}
 
 		T& operator[](size_t index)
 		{
-			return begin()[index];
+			BOOST_ASSERT(index < count);
+			return data[index];
+		}
+	
+		void push_back(const T& value)
+		{
+			if (count >= _max_size()) throw std::bad_alloc();
+			data[count++] = value;
+		}
+
+		void pop_back()
+		{
+			BOOST_ASSERT(count != 0);
+			--count;
+		}
+
+		const T& front() const
+		{
+			BOOST_ASSERT(count != 0);
+			return data[0];
+		}
+	
+		T& front()
+		{
+			BOOST_ASSERT(count != 0);
+			return data[0];
+		}
+	
+		const T& back() const
+		{
+			BOOST_ASSERT(count != 0);
+			return data[count - 1];
+		}
+		
+		T& back()
+		{
+			BOOST_ASSERT(count != 0);
+			return data[count - 1];
 		}
 	};
 };

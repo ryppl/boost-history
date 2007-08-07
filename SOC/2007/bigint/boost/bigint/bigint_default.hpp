@@ -101,11 +101,7 @@ namespace boost { namespace detail {
 				carry = static_cast<limb_t>(result >> limb_bit_number);
 			}
 
-			if (carry != 0)
-			{
-				data.resize(data.size() + 1);
-				data[data.size()-1] = carry;
-			}
+			if (carry != 0) data.push_back(carry);
 		}
 
 		template <typename Ch> void _assign_str(const Ch* str, int base)
@@ -221,7 +217,7 @@ namespace boost { namespace detail {
 			}
 			else
 			{
-				data.resize(data.size() - 1);
+				data.pop_back();
 			}
 		}
 
@@ -520,12 +516,12 @@ namespace boost { namespace detail {
 					// Guess a value for q [Knuth, vol.2, section 4.3.1]
 					limb_t qd;
 					
-					if (xx.data[xx.data.size()-1] >= y.data[y.data.size()-1])
+					if (xx.data.back() >= y.data.back())
 						qd = limb_max();
 					else
 						qd = static_cast<limb_t>(
-							((static_cast<limb2_t>(limb_max()) + 1) * xx.data[xx.data.size()-1] + xx.data[xx.data.size()-2])
-							/ y.data[y.data.size()-1]
+							((static_cast<limb2_t>(limb_max()) + 1) * xx.data.back() + xx.data[xx.data.size()-2])
+							/ y.data.back()
 							);
 
 					bigint_default_implementation rs = y;
@@ -909,7 +905,7 @@ namespace boost { namespace detail {
 			}
 			while (i != data.begin());
 
-			if (*(data.end() - 1) == 0) data.resize(data.size() - 1);
+			if (data.back() == 0) data.pop_back();
 
 			return remainder;
 		}
@@ -1099,10 +1095,9 @@ namespace boost { namespace detail {
 			for (limb_t* i = a.data.begin(); i != a.data.end(); ++i)
 				*i = 0;
 		
-			a.data[a.data.size() - 1] = lhs.data[lhs.data.size() - 1] / 2;
+			a.data.back() = lhs.data.back() / 2;
 			
-			if (a.data[a.data.size() - 1] == 0)
-				a.data[a.data.size() - 1] = 1;
+			if (a.data.back() == 0) a.data.back() = 1;
 		
 			// iterate
 			for (;;)
