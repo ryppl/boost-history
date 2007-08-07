@@ -183,11 +183,11 @@ Status: needs investigating & implementing
 
 6. Interface for storage
 
-- refactor
-Status: needs implementing
++ do we need push_back?
+Status: implemented
 
-- do we need push_back?
-Status: needs investigation
++ refactor
+Status: implemented
 
 - perhaps move bool negative to storage?
 Status: needs investigation
