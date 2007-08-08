@@ -62,11 +62,45 @@
 namespace boost {
 namespace hdstl {
 
-template <typename HDS>
-HDS::halfedge_descriptor
-create_lens(typename HDS::facet_descriptor f1, typename HDS::facet_descriptor f2
-          , typename HDS::vertex_descriptor v1, typename HDS::vertex_descriptor v2
-          , typename HDS::halfedge_descriptor h, HDS& hds)
+template <typename HalfedgeGen>
+typename HalfedgeGen::halfedge_descriptor
+create_lens(typename HalfedgeGen::facet_descriptor f1, typename HalfedgeGen::facet_descriptor f2
+          , typename HalfedgeGen::vertex_descriptor v1, typename HalfedgeGen::vertex_descriptor v2
+          , typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds)
+{
+    set_next(h, opposite(h, hds), hds);
+    set_next(opposite(h, hds), h, hds);
+    set_vertex(h, v1, hds);
+    set_vertex(opposite(h), v2, hds);
+    set_facet(h, f1, hds);
+    set_facet(opposite(h), v2, hds);
+}
+
+template <typename HalfedgeGen>
+typename HalfedgeGen::halfedge_descriptor
+create_lens(typename HalfedgeGen::vertex_descriptor v1, typename HalfedgeGen::vertex_descriptor v2
+          , typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds)
+{
+    set_next(h, opposite(h, hds), hds);
+    set_next(opposite(h, hds), h, hds);
+    set_vertex(h, v1, hds);
+    set_vertex(opposite(h), v2, hds);
+}
+
+template <typename HalfedgeGen>
+typename HalfedgeGen::halfedge_descriptor
+create_lens(typename HalfedgeGen::facet_descriptor f1, typename HalfedgeGen::facet_descriptor f2
+          , typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds)
+{
+    set_next(h, opposite(h, hds), hds);
+    set_next(opposite(h, hds), h, hds);
+    set_facet(h, f1, hds);
+    set_facet(opposite(h), v2, hds);
+}
+
+template <typename HalfedgeGen>
+typename HalfedgeGen::halfedge_descriptor
+create_lens(HalfedgeGen& hds)
 {
 
 }

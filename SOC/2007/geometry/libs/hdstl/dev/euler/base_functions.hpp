@@ -6,7 +6,9 @@
 // The base functions are the building blocks for the Euler operators defined in 'euler_operators.hpp'.
 // The list of these functions are as follows:
 //
-//  -  stitch_cycle: Sets the next and prev links of the given two halfedges 'h' and 'g' based on the configuration
+//  -   stitch_next: Sets the next link of the given two halfedges 'h' and 'g' based on the configuration
+//                   of data structure 'hds'. 
+//  -   stitch_prev: Sets the next link of the given two halfedges 'h' and 'g' based on the configuration
 //                   of data structure 'hds'. 
 //  - stitch_vertex: Sets the vertex 'v' as the 'source' or the 'target' vertex of halfedge 'h' and defines a vertex
 //                   link from the halfedge 'h' to vertex 'v' if the vertex links are defined in 'hds'
@@ -89,58 +91,25 @@ struct stitch_cycle_helper<HalfedgeGen, prev_at_target_tag>
     }
 };
 
-template <typename HalfedgeGen, bool IsForward=true, bool IsBackward=false>
-struct stitch_cycle_dir_helper
-    // Helper for forward HDS, uses the nested 'next_tag' to identify the primary accessor and selects
-    // the set functions for the appropriate accessor.
-{
-    static void
-    stitch_cycle_dir(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, 
-                                                                                          HalfedgeGen& hds)
-    {
-        stitch_cycle_helper<HalfedgeGen, typename HalfedgeGen::halfedge_selector::next_tag>::stitch(h,g,hds);
-    }
-};
-
-template <typename HalfedgeGen>
-struct stitch_cycle_dir_helper<HalfedgeGen, false, true>
-    // Helper for backward HDS, uses the nested 'prev_tag' to identify the primary accessor and selects
-    // the set functions for the appropriate accessor.
-{
-    static void
-    stitch_cycle_dir(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, 
-                                                                                          HalfedgeGen& hds)
-    {
-        stitch_cycle_helper<HalfedgeGen, typename HalfedgeGen::halfedge_selector::prev_tag>::stitch(h,g,hds);
-    }
-};
-
-template <typename HalfedgeGen>
-struct stitch_cycle_dir_helper<HalfedgeGen, true, true>
-    // Helper for bidirectional HDS, uses the nested 'next_tag' and 'prev_tag' to identify the primary accessors 
-    // and selects the set functions for the appropriate accessors.
-{
-    static void
-    stitch_cycle_dir(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, 
-                                                                                          HalfedgeGen& hds)
-    {
-        stitch_cycle_helper<HalfedgeGen, typename HalfedgeGen::halfedge_selector::next_tag>::stitch(h,g,hds);
-        stitch_cycle_helper<HalfedgeGen, typename HalfedgeGen::halfedge_selector::prev_tag>::stitch(h,g,hds);
-    }
-};
-
 } // end namespace detail
 // \endcond
 
 template <typename HalfedgeGen>
 void
-stitch_cycle(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
-    // Sets the appropriate accessor relations between h and g, based on the configuration of the 'hds'
+stitch_next(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
+    // Sets the appropriate forward accessor relations between h and g, based on the configuration of the 'hds'
 {
-    typedef typename HalfedgeGen::halfedge_selector halfedge_selector;
-    detail::stitch_cycle_dir_helper<HalfedgeGen, halfedge_selector::is_forward,
-                                                 halfedge_selector::is_backward
-                                                 >::stitch_cycle_dir(h,g,hds);
+    typedef typename HalfedgeGen::halfedge_selector::next_tag tag;
+    detail::stitch_cycle_helper<HalfedgeGen, tag>::stitch(h,g,hds);
+}
+
+template <typename HalfedgeGen>
+void
+stitch_prev(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
+    // Sets the appropriate backward accessor relations between h and g, based on the configuration of the 'hds'
+{
+    typedef typename HalfedgeGen::halfedge_selector::prev_tag tag;
+    detail::stitch_cycle_helper<HalfedgeGen, tag>::stitch(h,g,hds);
 }
 
 // \cond

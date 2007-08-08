@@ -128,7 +128,7 @@ bool halfedge_set_next_test(TagS const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_cycle(ha, hb, halfedgeGen);
+    stitch_next(ha, hb, halfedgeGen);
     
     BOOST_CHECK(( next_in_facet(ha, halfedgeGen) == hb )); 
     return true;
@@ -148,7 +148,7 @@ bool halfedge_set_next_test(next_at_source_tag const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_cycle(ha, hb, halfedgeGen);
+    stitch_next(ha, hb, halfedgeGen);
     
     BOOST_CHECK(( next_at_source(ha, halfedgeGen) == hb )); 
 
@@ -169,7 +169,7 @@ bool halfedge_set_next_test(next_at_target_tag const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_cycle(ha, hb, halfedgeGen);
+    stitch_next(ha, hb, halfedgeGen);
     
     BOOST_CHECK(( next_at_target(ha, halfedgeGen) == hb )); 
 
@@ -190,7 +190,7 @@ bool halfedge_set_prev_test(TagS const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_cycle(ha, hb, halfedgeGen);
+    stitch_prev(ha, hb, halfedgeGen);
     
     BOOST_CHECK(( prev_in_facet(ha, halfedgeGen) == hb )); 
 
@@ -211,7 +211,7 @@ bool halfedge_set_prev_test(prev_at_source_tag const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_cycle(ha, hb, halfedgeGen);
+    stitch_prev(ha, hb, halfedgeGen);
     
     BOOST_CHECK(( prev_at_source(ha, halfedgeGen) == hb )); 
 
@@ -232,7 +232,7 @@ bool halfedge_set_prev_test(prev_at_target_tag const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_cycle(ha, hb, halfedgeGen);
+    stitch_prev(ha, hb, halfedgeGen);
     
     BOOST_CHECK(( prev_at_target(ha, halfedgeGen) == hb )); 
 
