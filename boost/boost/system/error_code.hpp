@@ -129,16 +129,12 @@ namespace boost
     public:
       virtual ~error_category(){}
       virtual const std::string & name() const = 0;
-      virtual posix::posix_errno posix( int ev) const = 0;
-      virtual error_code generic_error_code( int ev) const = 0;
+      virtual error_code generic_error_code( int ev) const;
       virtual std::string message( int ev ) const = 0;
 
       bool operator==(const error_category & rhs) const { return this == &rhs; }
       bool operator!=(const error_category & rhs) const { return !(*this == rhs); }
-      bool operator<( const error_category & rhs ) const
-      {
-        return name() < rhs.name(); 
-      }
+      bool operator<( const error_category & rhs ) const{ return name() < rhs.name(); }
     };
 
     //  predefined error categories  -----------------------------------------//
@@ -159,7 +155,7 @@ namespace boost
     public:
 
       // constructors:
-      error_code()                                      : m_val(0), m_cat(&posix_category) {}
+      error_code() : m_val(0), m_cat(&posix_category) {}
       error_code( int val, const error_category & cat ) : m_val(val), m_cat(&cat) {}
 
       template<typename Enum>
@@ -188,7 +184,6 @@ namespace boost
       // observers:
       int                     value() const    { return m_val; }
       const error_category &  category() const { return *m_cat; }
-      posix::posix_errno      posix() const    { return m_cat->posix(value()); }
       error_code              generic_error_code() const  { return m_cat->generic_error_code(value()); }
       std::string             message() const  { return m_cat->message(value()); }
 
@@ -206,35 +201,40 @@ namespace boost
       }
 
       // relationals:
-      bool operator==( const error_code & rhs ) const
+      inline friend bool same( const error_code & lhs,
+                               const error_code & rhs )
+        //  the more symmetrical non-member syntax is preferred
       {
-        if ( category() == rhs.category() ) return value() == rhs.value();
-        return equivalent( *this, rhs );
+        return lhs.m_cat == rhs.m_cat && lhs.m_val == rhs.m_val;
+      }
+                  
+      inline friend bool operator==( const error_code & lhs,
+                                     const error_code & rhs )
+      {
+        if ( lhs.m_cat == rhs.m_cat ) return lhs.m_val == rhs.m_val;
+        return same( lhs, rhs.generic_error_code() )
+            || same( lhs.generic_error_code(), rhs );
+        // Rationale: As in the language proper, a single automatic conversion
+        // is acceptable, but two automatic conversions are not. Thus
+        // return same (lhs.generic_error_code(), rhs.generic_error_code()) is
+        // not an acceptable implementation as it performs two conversions.
       }
 
-      bool operator!=( const error_code & rhs ) const
+      inline friend bool operator!=( const error_code & lhs,
+                                     const error_code & rhs )
       {
-        return !(*this == rhs);
+        return !(lhs == rhs);
       }
 
     private:
       int                     m_val;
       const error_category *  m_cat;
+
     };
 
 
     //  non-member functions  ------------------------------------------------//
 
-    //  the more symmetrical non-member syntax is preferred
-    inline bool equal( const error_code & lhs, const error_code & rhs )
-    {
-      return lhs.category() == rhs.category() && lhs.value() == rhs.value();
-    }
-                
-    inline bool equivalent( const error_code & lhs, const error_code & rhs )
-    {
-      return equal( lhs.generic_error_code(), rhs.generic_error_code() );
-    }
 
     //  posix::posix_errno make_error_code:
     inline error_code make_error_code( posix::posix_errno e )
@@ -259,6 +259,14 @@ namespace boost
               [ec.category().name().size()-1]) << 16)
             : 0);
     }
+
+    //  error_category::generic_error_code  ----------------------------------//
+    //    implemented here now that error_code is a complete type
+    inline error_code error_category::generic_error_code( int ev) const
+    { 
+      return error_code( ev, *this );
+    }
+
 
   } // namespace system
 } // namespace boost

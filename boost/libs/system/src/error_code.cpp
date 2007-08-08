@@ -202,8 +202,6 @@ namespace
   {
   public:
     const std::string &   name() const;
-    posix::posix_errno    posix( int ev ) const;
-    error_code            generic_error_code( int ev ) const;
     std::string           message( int ev ) const;
   };
 
@@ -225,16 +223,6 @@ namespace
   {
     static const std::string s( "POSIX" );
     return s;
-  }
-
-  posix_errno posix_error_category::posix( int ev ) const
-  {
-    return static_cast<posix_errno>(ev);
-  }
-
-  error_code posix_error_category::generic_error_code( int ev ) const
-  {
-    return error_code( ev, posix_category );
   }
 
   std::string posix_error_category::message( int ev ) const
