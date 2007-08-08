@@ -15,21 +15,19 @@ namespace boost
 {
     struct undirected_graph_tag {};
 
-    template <
-        typename VertexProperty = no_property,
-        typename EdgeProperty = no_property,
-        typename GraphProperty = no_property
-    >
+    template <typename VertexProperty = no_property,
+              typename EdgeProperty = no_property,
+              typename GraphProperty = no_property>
     class undirected_graph
     {
         typedef property<vertex_index_t, unsigned, VertexProperty> vertex_property;
-
+        typedef property<edge_index_t, unsigned, EdgeProperty> edge_property;
     public:
         typedef adjacency_list<listS,
                     listS,
                     undirectedS,
                     vertex_property,
-                    EdgeProperty,
+                    edge_property,
                     GraphProperty,
                     listS> graph_type;
 
@@ -71,12 +69,14 @@ namespace boost
         typedef typename graph_type::traversal_category traversal_category;
 
         typedef unsigned vertex_index_type;
+        typedef unsigned edge_index_type;
 
         inline undirected_graph(const GraphProperty& p = GraphProperty())
             : m_graph(p)
             , m_num_vertices(0)
             , m_num_edges(0)
             , m_max_vertex_index(0)
+            , m_max_edge_index(0)
         {}
 
         inline undirected_graph(const undirected_graph& x)
@@ -84,23 +84,25 @@ namespace boost
             , m_num_vertices(x.m_num_vertices)
             , m_num_edges(x.m_num_edges)
             , m_max_vertex_index(x.m_max_vertex_index)
+            , m_max_edge_index(x.m_max_edge_index)
         {}
 
         inline undirected_graph(vertices_size_type n,
-                    const GraphProperty& p = GraphProperty())
+                                const GraphProperty& p = GraphProperty())
             : m_graph(n, p)
             , m_num_vertices(n)
             , m_num_edges(0)
             , m_max_vertex_index(n)
+            , m_max_edge_index(0)
         {}
 
         inline undirected_graph& operator =(const undirected_graph& g)
         {
             if(&g != this) {
-            m_graph = g.m_graph;
-            m_num_vertices = g.m_num_vertices;
-            m_num_edges = g.m_num_edges;
-            m_max_vertex_index = g.m_max_vertex_index;
+                m_graph = g.m_graph;
+                m_num_vertices = g.m_num_vertices;
+                m_num_edges = g.m_num_edges;
+                m_max_vertex_index = g.m_max_vertex_index;
             }
             return *this;
         }
@@ -149,7 +151,9 @@ namespace boost
         {
             std::pair<edge_descriptor, bool> ret = boost::add_edge(u, v, m_graph);
             if(ret.second) {
+                boost::put(edge_index, m_graph, ret.first, m_max_edge_index);
                 ++m_num_edges;
+                ++m_max_edge_index;
             }
             return ret;
         }
@@ -193,14 +197,43 @@ namespace boost
             m_max_vertex_index = renumber_vertex_indices(i, i_end, 0);
         }
 
-        inline void remove_vertex_and_renumber_indices(vertex_iterator i)
+        inline void
+        remove_vertex_and_renumber_indices(vertex_iterator i)
         {
-            vertex_iterator j = next(i), j_end = vertices(m_graph).second;
+            vertex_iterator j = next(i), end = vertices(m_graph).second;
             vertex_index_type n = get(vertex_index, m_graph, *i);
 
             // remove the offending vertex and renumber everything after
             remove_vertex(*i);
-            m_max_vertex_index = renumber_vertex_indices(j, j_end, n);
+            m_max_vertex_index = renumber_vertex_indices(j, end, n);
+        }
+
+
+        inline edge_index_type max_edge_index() const
+        { return m_max_edge_index; }
+
+        inline void renumber_edge_indices()
+        {
+            edge_iterator i, end;
+            tie(i, end) = edges(m_graph);
+            m_max_edge_index = renumber_edge_indices(i, end, 0);
+        }
+
+        inline void
+        remove_edge_and_renumber_indices(edge_iterator i)
+        {
+            edge_iterator j = next(i), end = edges(m_graph.second);
+            edge_index_type n = get(edge_index, m_graph, *i);
+
+            // remove the edge and renumber everything after it
+            remove_edge(*i);
+            m_max_edge_index = renumber_edge_indices(j, end, n);
+        }
+
+        inline void renumber_indices()
+        {
+            renumber_vertex_indices();
+            renumber_edge_indices();
         }
 
         // bundled property support
@@ -225,12 +258,25 @@ namespace boost
     private:
         inline vertices_size_type
         renumber_vertex_indices(vertex_iterator i,
-                                vertex_iterator i_end,
+                                vertex_iterator end,
                                 vertices_size_type n)
         {
-            typename property_map<graph_type, vertex_index_t>::type
-                    indices = get(vertex_index, m_graph);
-            for( ; i != i_end; ++i) {
+            typedef typename property_map<graph_type, vertex_index_t>::type IndexMap;
+            IndexMap indices = get(vertex_index, m_graph);
+            for( ; i != end; ++i) {
+                indices[*i] = n++;
+            }
+            return n;
+        }
+
+        inline edges_size_type
+        renumber_edge_indices(edge_iterator i,
+                              edge_iterator end,
+                              edges_size_type n)
+        {
+            typedef typename property_map<graph_type, edge_index_t>::type IndexMap;
+            IndexMap indices = get(edge_index, m_graph);
+            for( ; i != end; ++i) {
                 indices[*i] = n++;
             }
             return n;
@@ -240,6 +286,7 @@ namespace boost
         vertices_size_type m_num_vertices;
         edges_size_type m_num_edges;
         vertex_index_type m_max_vertex_index;
+        edge_index_type m_max_edge_index;
     };
 
     // IncidenceGraph concepts
@@ -612,36 +659,62 @@ namespace boost
     }
 #endif
 
+    // Vertex index management
+
     template <class VP, class EP, class GP>
     inline typename undirected_graph<VP,EP,GP>::vertex_index_type
     get_vertex_index(typename undirected_graph<VP,EP,GP>::vertex_descriptor v,
-            const undirected_graph<VP,EP,GP>& g)
-    {
-        return get(vertex_index, g, v);
-    }
+                     const undirected_graph<VP,EP,GP>& g)
+    { return get(vertex_index, g, v); }
 
     template <class VP, class EP, class GP>
     typename undirected_graph<VP,EP,GP>::vertex_index_type
     max_vertex_index(const undirected_graph<VP,EP,GP>& g)
-    {
-        return g.max_vertex_index();
-    }
+    { return g.max_vertex_index(); }
 
     template <class VP, class EP, class GP>
-    void
+    inline void
     renumber_vertex_indices(undirected_graph<VP,EP,GP>& g)
+    { g.renumber_vertex_indices(); }
+
+    template <class VP, class EP, class GP>
+    inline void
+    remove_vertex_and_renumber_indices(typename undirected_graph<VP,EP,GP>::vertex_iterator i,
+                                       undirected_graph<VP,EP,GP>& g)
+    { g.remove_vertex_and_renumber_indices(i); }
+
+
+    // Edge index management
+
+    template <class VP, class EP, class GP>
+    inline typename undirected_graph<VP,EP,GP>::edge_index_type
+    get_edge_index(typename undirected_graph<VP,EP,GP>::edge_descriptor v,
+                   const undirected_graph<VP,EP,GP>& g)
+    { return get(edge_index, g, v); }
+
+    template <class VP, class EP, class GP>
+    typename undirected_graph<VP,EP,GP>::edge_index_type
+    max_edge_index(const undirected_graph<VP,EP,GP>& g)
+    { return g.max_edge_index(); }
+
+    template <class VP, class EP, class GP>
+    inline void
+    renumber_edge_indices(undirected_graph<VP,EP,GP>& g)
     {
-        g.renumber_vertex_indices();
+        g.renumber_edge_indices();
     }
 
     template <class VP, class EP, class GP>
     inline void
-    remove_vertex_and_renumber_indices(
-        typename undirected_graph<VP,EP,GP>::vertex_iterator i,
-        undirected_graph<VP,EP,GP>& g)
-    {
-        g.remove_vertex_and_renumber_indices(i);
-    }
+    remove_edge_and_renumber_indices(typename undirected_graph<VP,EP,GP>::edge_iterator i,
+                                     undirected_graph<VP,EP,GP>& g)
+    { g.remove_edge_and_renumber_indices(i); }
+
+    // Index management
+    template <class VP, class EP, class GP>
+    inline void
+    renumber_indices(undirected_graph<VP,EP,GP>& g)
+    { g.renumber_indices(); }
 }
 
 #endif

@@ -49,24 +49,48 @@ namespace boost
         };
     }
 
+    template <typename Graph, typename Key, typename Value>
+    struct exterior_property
+    {
+        typedef Key key_type;
+        typedef Value value_type;
+        typedef std::vector<Value> container_type;
+        typedef detail::vector_matrix<Graph, Key, Value> matrix_type;
+        typedef container_property_map<Graph, container_type, Key> map_type;
+
+    private:
+        exterior_property() { }
+        exterior_property(const exterior_property&) { }
+    };
+
     template <typename Graph, typename Value>
     struct exterior_vertex_property
     {
-        typedef typename graph_traits<Graph>::vertex_descriptor key_type;
-        typedef Value value_type;
-        typedef std::vector<Value> container_type;
-        typedef detail::vector_matrix<Graph, key_type, Value> matrix_type;
-        typedef container_property_map<Graph, container_type, key_type> map_type;
+        typedef exterior_property<
+                Graph,
+                typename graph_traits<Graph>::vertex_descriptor,
+                Value
+            > property_type;
+        typedef typename property_type::key_type key_type;
+        typedef typename property_type::value_type value_type;
+        typedef typename property_type::container_type container_type;
+        typedef typename property_type::matrix_type matrix_type;
+        typedef typename property_type::map_type map_type;
     };
 
     template <typename Graph, typename Value>
     struct exterior_edge_property
     {
-        typedef typename graph_traits<Graph>::edge_descriptor key_type;
-        typedef Value value_type;
-        typedef std::vector<Value> container_type;
-        typedef detail::vector_matrix<Graph, key_type, Value> matrix_type;
-        typedef container_property_map<Graph, container_type, key_type> map_type;
+        typedef exterior_property<
+                Graph,
+                typename graph_traits<Graph>::edge_descriptor,
+                Value
+            > property_type;
+        typedef typename property_type::key_type key_type;
+        typedef typename property_type::value_type value_type;
+        typedef typename property_type::container_type container_type;
+        typedef typename property_type::matrix_type matrix_type;
+        typedef typename property_type::map_type map_type;
     };
 
     template <typename Matrix>
