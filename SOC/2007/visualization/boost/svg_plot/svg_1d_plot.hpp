@@ -124,7 +124,7 @@ struct svg_plot_series
         {
             temp = *i;
 
-            if(is_limit(temp))
+            if(detail::is_limit(temp))
             {
                 series_limits.push_back(temp);
             }

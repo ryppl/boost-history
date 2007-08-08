@@ -10,6 +10,7 @@
 #define _BOOST_SVG_NUMERIC_LIMITS_HANDLING_DETAIL_HPP
 
 #include <limits>
+#include <cmath>
 
 namespace boost{
 namespace svg{

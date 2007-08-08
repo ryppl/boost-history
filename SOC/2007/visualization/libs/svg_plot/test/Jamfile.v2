@@ -5,11 +5,12 @@
 
 import testing ;
 
+#change to BOOST_ROOT
 project
     : requirements
       <include>../../..
+      <include>$BOOST_ROOT
     ;
 
-run test_color_constant.cpp ;
-run test_color_persistance.cpp ;
-run test_color_consistency.cpp ;
+run 1d_color_consistency.cpp ;
+run 2d_color_consistency.cpp ;

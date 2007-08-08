@@ -455,6 +455,7 @@ protected:
             case square:
                 g_ptr.rect(_x - half_size, _y - half_size, size, size);
                 break;
+            default: break;
         }
     }
 
@@ -776,62 +777,62 @@ public:
     // color information    
     svg_color get_title_color()
     {
-        return derived().image.get_g_element(PLOT_TITLE).style().get_fill_color();
+        return derived().image.get_g_element(PLOT_TITLE).style().fill_color();
     }
 
     svg_color get_background_color()
     {
-        return derived().image.get_g_element(PLOT_BACKGROUND).style().get_fill_color();
+        return derived().image.get_g_element(PLOT_BACKGROUND).style().fill_color();
     }
 
     svg_color get_background_border_color()
     {
-        return derived().image.get_g_element(PLOT_BACKGROUND).style().get_stroke_color();
+        return derived().image.get_g_element(PLOT_BACKGROUND).style().stroke_color();
     }
 
     svg_color get_legend_background_color()
     {
-        return derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().get_fill_color();
+        return derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().fill_color();
     }
 
     svg_color get_legend_border_color()
     {
-        return derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().get_stroke_color();
+        return derived().image.get_g_element(PLOT_LEGEND_BACKGROUND).style().stroke_color();
     }
 
     svg_color get_plot_background_color()
     {
-        return derived().image.get_g_element(PLOT_PLOT_BACKGROUND).style().get_fill_color();
+        return derived().image.get_g_element(PLOT_PLOT_BACKGROUND).style().fill_color();
     }   
 
     svg_color get_x_axis_color()
     {
-        return derived().image.get_g_element(PLOT_X_AXIS).style().get_stroke_color();
+        return derived().image.get_g_element(PLOT_X_AXIS).style().stroke_color();
     }
 
     svg_color get_x_label_color()
     {
-        return derived().image.get_g_element(PLOT_X_LABEL).style().get_fill_color();
+        return derived().image.get_g_element(PLOT_X_LABEL).style().stroke_color();
     }
 
     svg_color get_x_major_tick_color()
     {
-        return derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().get_stroke_color();
+        return derived().image.get_g_element(PLOT_X_MAJOR_TICKS).style().stroke_color();
     }
 
     svg_color get_x_minor_tick_color()
     {
-        return derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().get_stroke_color();
+        return derived().image.get_g_element(PLOT_X_MINOR_TICKS).style().stroke_color();
     }
 
     svg_color get_x_major_grid_color()
     {
-        return derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().get_stroke_color();
+        return derived().image.get_g_element(PLOT_X_MAJOR_GRID).style().stroke_color();
     }
 
     svg_color get_x_minor_grid_color()
     {
-        return derived().image.get_g_element(PLOT_X_MINOR_GRID).style().get_stroke_color();
+        return derived().image.get_g_element(PLOT_X_MINOR_GRID).style().stroke_color();
     }
 
     // axis information

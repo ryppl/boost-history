@@ -72,7 +72,7 @@ public:
 
     double i;
 
-    double start(double _i)
+    void start(double _i)
     {
         i = _i;
     }
@@ -946,6 +946,35 @@ svg_2d_plot& y_minor_grid_on(bool _is)
     return *this;
 }
 
+svg_color get_y_axis_color()
+{
+    return image.get_g_element(detail::PLOT_Y_AXIS).style().stroke_color();
+}
+
+svg_color get_y_label_color()
+{
+    return image.get_g_element(detail::PLOT_Y_LABEL).style().stroke_color();
+}
+
+svg_color get_y_major_tick_color()
+{
+    return image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color();
+}
+
+svg_color get_y_minor_tick_color()
+{
+    return image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_color();
+}
+
+svg_color get_y_major_grid_color()
+{
+    return image.get_g_element(detail::PLOT_Y_MAJOR_GRID).style().stroke_color();
+}
+
+svg_color get_y_minor_grid_color()
+{
+    return image.get_g_element(detail::PLOT_Y_MINOR_GRID).style().stroke_color();
+}
 #if defined (BOOST_MSVC)
 #  pragma warning(push)
 #  pragma warning(disable: 4100) // "'boost_parameter_enabler_argument' : unreferenced formal parameter"
