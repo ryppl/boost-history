@@ -4,7 +4,6 @@
 #include <vector>
 #include <cmath>
 #include <map>
-#include <iostream>
 #include <limits>
 
 using std::multimap;
@@ -25,7 +24,6 @@ double h(double x)
     return tan(x);
 }
 
-
 class dConvert
 {
 public:
@@ -36,8 +34,6 @@ public:
         return (double)a;
     }
 };
-
-using namespace std;
 
 int main()
 {
@@ -50,13 +46,16 @@ int main()
     svg_1d_plot my_1d_plot;
 
     double pi = 3.1415926535;
-  
+
+    data2[.5] = std::numeric_limits<double>::max();
+    data2[1.3] = std::numeric_limits<double>::infinity();
+    data2[2] = std::numeric_limits<double>::quiet_NaN();
+
     for(double i=0; i<10; i+=pi/8.)
     {
         data2[i] = g(i);
     }
 
-    cout<<"Done with first part"<<endl;
     // size/scale settings
     my_2d_plot.image_size(500, 350);
 

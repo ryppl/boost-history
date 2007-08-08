@@ -57,7 +57,7 @@ protected:
 
         if(clip_name.size())
         {
-            s_out << " clip-path=\"url(#" << id_name << ")\"";
+            s_out << " clip-path=\"url(#" << clip_name << ")\"";
         }
     }
 
@@ -75,7 +75,7 @@ public:
    void id(const std::string& _id) { id_name = _id; }
    std::string id( ) { return id_name; }
 
-   void clip_id(const std::string& _id) { id_name = _id; }
+   void clip_id(const std::string& _id) { clip_name = _id; }
    std::string clip_id() { return clip_name; }
 };
 
@@ -268,11 +268,11 @@ public:
 
     void write(std::ostream& rhs)
     {
-        rhs << "<clip-path id=\"" << element_id << "\">" <<std::endl;
+        rhs << "<clipPath id=\"" << element_id << "\">" <<std::endl;
 
         rect.write(rhs);
 
-        rhs<<std::endl<<"</clip-path>";
+        rhs<<std::endl<<"</clipPath>";
     }
 };
 

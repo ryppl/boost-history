@@ -48,11 +48,9 @@
 namespace boost {
 namespace svg {
 
-
 // -----------------------------------------------------------------
 // Parameter names for plot() function
 // -----------------------------------------------------------------
-
     
 #if defined (BOOST_MSVC)
 #  pragma warning(push)
@@ -103,14 +101,39 @@ public:
 struct svg_plot_series
 {
     std::vector<double> series;
+    std::vector<double> series_limits;
+
     std::string title;
     plot_point_style point_style;
     
+
+    // -------------------------------------------------------------
+    // Scan each data point between the iterators that are passed, 
+    // sorting them into the correcet std::veector
+    // -------------------------------------------------------------
     template <class T>
     svg_plot_series(T _begin, T _end, const std::string& _title,
                     const plot_point_style& _style):
-                    series(_begin, _end), title(_title), point_style(_style)
+                    title(_title), point_style(_style)
     {
+        double temp;
+
+        for(T i = _begin;
+            i != _end;
+            ++i)
+        {
+            temp = *i;
+
+            if(is_limit(temp))
+            {
+                series_limits.push_back(temp);
+            }
+
+            else
+            {
+                series.push_back(temp);
+            }
+        }
     }
 };
 
@@ -350,9 +373,11 @@ svg_1d_plot():        title_info(0, 0, "Plot of data", 30),
     image.get_g_element(detail::PLOT_X_MAJOR_TICKS)
         .style().stroke_color(black).stroke_width(2);
 
+    image.get_g_element(detail::PLOT_LIMIT_POINTS)
+        .style().stroke_color(lightgray).fill_color(whitesmoke);
+
     image.get_g_element(detail::PLOT_X_MINOR_TICKS)
         .style().stroke_width(1);
-
 }
 
 // -----------------------------------------------------------------

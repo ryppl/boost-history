@@ -179,11 +179,6 @@ protected:
         }
     }
 
-    void limit_style( )
-    {
-
-    }
-
     void _draw_x_axis()
     {
         double y1(0.);
@@ -437,10 +432,12 @@ protected:
         if(detail::limit_NaN(_x))
         {
             _x = 0;
+            _transform_x(_x);
         }
         if(detail::limit_NaN(_y))
         {
             _y = 0;
+            _transform_y(_y);
         }
     }
 

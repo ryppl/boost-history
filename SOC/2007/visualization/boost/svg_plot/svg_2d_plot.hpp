@@ -27,6 +27,7 @@
 
 #include "svg_style.hpp"
 #include "detail/axis_plot_frame.hpp"
+#include "detail/numeric_limits_handling.hpp"
 #include "svg.hpp"
 
 #if defined (BOOST_MSVC)
@@ -92,6 +93,8 @@ public:
 struct svg_2d_plot_series
 {
     std::multimap<double, double> series;
+    std::multimap<double, double> series_limits;
+
     std::string title;
     plot_point_style point_style;
     plot_line_style line_style;
@@ -102,12 +105,24 @@ struct svg_2d_plot_series
                        std::string _title,
                        const plot_point_style& _point,
                        const plot_line_style& _line):
-                       series(_begin,_end),
                        title(_title),
                        point_style(_point),
                        line_style(_line)
     {
+        for(T i = _begin;
+            i != _end;
+            ++i)
+        {
+            if(detail::pair_is_limit(*i))
+            {
+                series_limits.insert(*i);
+            }
 
+            else
+            {
+                series.insert(*i);
+            }
+        }              
     }
 };
 
@@ -320,11 +335,11 @@ private:
         path_element& major_grid_path =
             image.get_g_element(detail::PLOT_Y_MAJOR_GRID).path();
 
-        if(show_y_axis_lines)
-        {
-            image.get_g_element(detail::PLOT_Y_AXIS).
-                line(plot_y1, x_axis, plot_x2, x_axis);
-        }
+        //if(show_y_axis_lines)
+        //{
+            //image.get_g_element(detail::PLOT_Y_AXIS).
+            //    line(plot_y1, x_axis, plot_x2, x_axis);
+        //}
 
         // y_minor_jump is the interval between minor ticks.
         double y_minor_jump = y_major/((double)(y_num_minor + 1.) );
@@ -456,6 +471,8 @@ private:
         g_element& g_ptr = image.get_g_element(detail::PLOT_PLOT_LINES)
                                 .add_g_element();
 
+        g_ptr.clip_id(plot_window_clip);
+
         g_ptr.style().stroke_color(series.line_style.color);
         path_element& path = g_ptr.path();
 
@@ -521,6 +538,8 @@ private:
         double prev_x, prev_y, temp_x(0.), temp_y;
 
         g_element& g_ptr = image.get_g_element(detail::PLOT_PLOT_LINES).add_g_element();
+
+        g_ptr.clip_id(plot_window_clip);
 
         g_ptr.style().stroke_color(series.line_style.color);
 
@@ -603,7 +622,7 @@ private:
     {
         _clear_all();
 
-        // draw background
+        // Draw background.
         image.get_g_element(detail::PLOT_BACKGROUND).push_back(
                      new rect_element(0, 0, image.get_x_size(), 
                      image.get_y_size()));
@@ -611,6 +630,14 @@ private:
         _draw_title();
         _calculate_plot_window();
         _calculate_transform();
+
+        // Define the clip path for the plot window.
+        // We don't want to allow overlap of the plot window lines, thus the
+        // minor adjustments.
+
+        image.clip_path(rect_element(plot_x1 + 1, plot_y1 + 1, 
+                                     plot_x2 - plot_x1 - 2, plot_y2 - plot_y1 - 2),
+                        plot_window_clip);
 
         if(use_axis)
         {
@@ -628,11 +655,11 @@ private:
             _draw_x_label();
         }
 
-        // draw lines
+        // Draw lines between non-limit points
 
         _draw_plot_lines();
 
-        // draw points
+        // Draw non-limit points.
         double x(0.), y(0.);
         for(unsigned int i=0; i<series.size(); ++i)
         {
@@ -655,6 +682,23 @@ private:
                 {
                    _draw_plot_point(x, y, g_ptr, series[i].point_style);
                 }
+            }
+        }
+
+        // Draw limit points.
+        for(unsigned int i=0; i<series.size(); ++i)
+        {
+            g_element& g_ptr = image.get_g_element(detail::PLOT_LIMIT_POINTS);
+            
+            for(std::multimap<double,double>::const_iterator j = series[i].series_limits.begin(); 
+                j!=series[i].series_limits.end(); ++j)
+            {
+                x = j->first;
+                y = j->second;
+
+                _transform_point(x, y);
+                
+                _draw_plot_point(x, y, g_ptr, plot_point_style(blank, blank, 10, circle));
             }
         }
     }
@@ -692,6 +736,9 @@ svg_2d_plot():        title_info(0, 0, "Plot of data", 30),
     // set color defaults
     image.get_g_element(detail::PLOT_BACKGROUND)
         .style().fill_color(white);
+
+    image.get_g_element(detail::PLOT_LIMIT_POINTS)
+        .style().stroke_color(lightgray).fill_color(whitesmoke);
 
     image.get_g_element(detail::PLOT_Y_AXIS)
         .style().stroke_color(black);

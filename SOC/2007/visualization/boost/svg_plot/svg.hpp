@@ -156,11 +156,9 @@ public:
         return *(static_cast<path_element*>(&(document[(unsigned int)(document.size()-1)])));
     }
 
-    svg& clip_path(const rect_element& _rect, g_element& _g,
-                        const std::string& _id)
+    svg& clip_path(const rect_element& _rect, const std::string& _id)
     {
-        document.push_back(new clip_path_element(_id,_rect));
-        _g.clip(_id);
+        clip_paths.push_back(clip_path_element(_id,_rect));
 
         return *this;
     }

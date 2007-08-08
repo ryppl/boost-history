@@ -15,23 +15,35 @@ namespace boost{
 namespace svg{
 namespace detail{
 
-bool limit_max(double a)
+inline bool limit_max(double a)
 {
     return (a == std::numeric_limits<double>::max()
          || a == std::numeric_limits<double>::infinity());
 }
 
-bool limit_min(double a)
+inline bool limit_min(double a)
 {
     return (a == std::numeric_limits<double>::min()
         || a == -std::numeric_limits<double>::infinity()
         || a == std::numeric_limits<double>::denorm_min());
 }
 
-bool limit_NaN(double a)
+inline bool limit_NaN(double a)
 {
-    return (a == std::numeric_limits<double>::quiet_NaN()
-        || a == std::numeric_limits<double>::signaling_NaN());
+    // Ternary operator used to remove warning of performance of casting
+    // int to bool.
+    return _isnan(a) ? true : false;
+}
+
+inline bool is_limit(double a)
+{
+    return limit_max(a) || limit_min(a) || limit_NaN(a);
+}
+
+inline bool pair_is_limit(std::pair<double, double> a)
+{
+        return limit_max(a.first) || limit_min(a.first) || limit_NaN(a.first)
+        || limit_max(a.second) || limit_min(a.second) || limit_NaN(a.second);
 }
 
 }
