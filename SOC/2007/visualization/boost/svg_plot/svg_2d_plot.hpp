@@ -604,18 +604,22 @@ private:
 
     void _draw_plot_lines()
     {
-        for(unsigned int i = 0; i < series.size(); ++i)
-        {
-            if(series[i].line_style.bezier_on)
-            {
-                _draw_bezier_lines(series[i]);
-            }
 
-            else
+        for(unsigned int i = 0; i < series.size(); ++i)
+        {        
+            if(series[i].line_style.line_on)
             {
-                _draw_straight_lines(series[i]);
+                if(series[i].line_style.bezier_on)
+                {
+                    _draw_bezier_lines(series[i]);
+                }
+
+                else
+                {
+                    _draw_straight_lines(series[i]);
+                }  
             }
-        }
+        }      
     }
 
     void _update_image()
