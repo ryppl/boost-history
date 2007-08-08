@@ -7,7 +7,8 @@
 <link rel="start" href="../index.html" title="SVG_Plot">
 <link rel="up" href="../index.html" title="SVG_Plot">
 <link rel="prev" href="todo.html" title=" To Do List">
-<link rel="next" href="tutorial_code_1d_simple.html" title=" Tutorial: 1D Simple Program">
+<link rel="next" href="tutorial_code_1d_simple.html" title=" Tutorial: 1D Simple
+    Program">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%">
@@ -24,13 +25,17 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="svg_plot.color"></a> Colors</h2></div></div></div>
+<a name="svg_plot.color"></a><a href="color.html" title=" Colors"> Colors</a>
+</h2></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="color.html#svg_plot.color.color_interface"> <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
       Interface</a></span></dt>
-<dt><span class="section"><a href="color.html#svg_plot.color.svg_color_constant_example"> Example of using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a></span></dt>
-<dt><span class="section"><a href="color.html#svg_plot.color.rgb_interface"> <code class="computeroutput"><span class="identifier">svg_color</span></code> interface</a></span></dt>
-<dt><span class="section"><a href="color.html#svg_plot.color.svg_color_example"> Example of using <code class="computeroutput"><span class="identifier">svg_color</span></code></a></span></dt>
+<dt><span class="section"><a href="color.html#svg_plot.color.svg_color_constant_example"> Example of
+      using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a></span></dt>
+<dt><span class="section"><a href="color.html#svg_plot.color.rgb_interface"> <code class="computeroutput"><span class="identifier">svg_color</span></code>
+      interface</a></span></dt>
+<dt><span class="section"><a href="color.html#svg_plot.color.svg_color_example"> Example of using
+      <code class="computeroutput"><span class="identifier">svg_color</span></code></a></span></dt>
 <dt><span class="section"><a href="color.html#svg_plot.color.color_internals"> Internals and Rationale</a></span></dt>
 </dl></div>
 <p>
@@ -40,8 +45,10 @@
     </p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.color.color_interface"></a> <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
-      Interface</h3></div></div></div>
+<a name="svg_plot.color.color_interface"></a><a href="color.html#svg_plot.color.color_interface" title=" svg_color_constant
+      Interface"> <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
+      Interface</a>
+</h3></div></div></div>
 <p>
         <code class="computeroutput"><span class="identifier">svg_color_constant</span></code> is simply
         an enumerated list. The colors are defined <a href="http://www.w3.org/TR/SVG/types.html#ColorKeywords" target="_top">here</a>.
@@ -53,7 +60,9 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.color.svg_color_constant_example"></a> Example of using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
+<a name="svg_plot.color.svg_color_constant_example"></a><a href="color.html#svg_plot.color.svg_color_constant_example" title=" Example of
+      using svg_color_constant"> Example of
+      using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
 </h3></div></div></div>
 <pre class="programlisting">
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
@@ -72,26 +81,33 @@
 </tr>
 <tr><td colspan="2" align="left" valign="top">
 <p>
-          <code class="computeroutput"><span class="identifier">svg_color</span></code> has a constructor
-          for <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>,
-          so you can use a <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
-          in place of a <code class="computeroutput"><span class="identifier">svg_color</span></code>
-          and it will be implicitly converted. However, there is not currently an
-          <code class="computeroutput"><span class="identifier">svg_color</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span><span class="identifier">svg_color_constant</span><span class="special">)</span></code>
-          overload, so 
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">svg_color</span></code> has a constructor
+            for <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>,
+            so you can use a <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
+            in place of a <code class="computeroutput"><span class="identifier">svg_color</span></code>
+            and it will be implicitly converted. However, there is not currently
+            an <code class="computeroutput"><span class="identifier">svg_color</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span><span class="identifier">svg_color_constant</span><span class="special">)</span></code>
+            overload, so 
 </p>
 <pre class="programlisting">
-<span class="identifier">svg_color</span> <span class="identifier">my_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">;</span>
+<span class="identifier">svg_color</span> <span class="identifier">my_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">;</span>
 </pre>
 <p>
-          does not work.
+            does not work.
+          </p>
+<p>
         </p>
 </td></tr>
 </table></div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.color.rgb_interface"></a> <code class="computeroutput"><span class="identifier">svg_color</span></code> interface</h3></div></div></div>
+<a name="svg_plot.color.rgb_interface"></a><a href="color.html#svg_plot.color.rgb_interface" title=" svg_color
+      interface"> <code class="computeroutput"><span class="identifier">svg_color</span></code>
+      interface</a>
+</h3></div></div></div>
 <p>
         You can define a <code class="computeroutput"><span class="identifier">svg_color</span></code>
         using two different constructors
@@ -108,15 +124,23 @@
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../images/important.png"></td>
 <th align="left">Important</th>
 </tr>
-<tr><td colspan="2" align="left" valign="top"><p>
-          Any integer value is accepted by the SVG standard, but negative values
-          are rounded to 0, and positive values &gt; 255 are rounded down to 255.
-        </p></td></tr>
+<tr><td colspan="2" align="left" valign="top">
+<p>
+          </p>
+<p>
+            Any integer value is accepted by the SVG standard, but negative values
+            are rounded to 0, and positive values &gt; 255 are rounded down to 255.
+          </p>
+<p>
+        </p>
+</td></tr>
 </table></div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.color.svg_color_example"></a> Example of using <code class="computeroutput"><span class="identifier">svg_color</span></code>
+<a name="svg_plot.color.svg_color_example"></a><a href="color.html#svg_plot.color.svg_color_example" title=" Example of using
+      svg_color"> Example of using
+      <code class="computeroutput"><span class="identifier">svg_color</span></code></a>
 </h3></div></div></div>
 <pre class="programlisting">
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
@@ -131,17 +155,24 @@
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../images/note.png"></td>
 <th align="left">Note</th>
 </tr>
-<tr><td colspan="2" align="left" valign="top"><p>
-          <code class="computeroutput"><span class="identifier">svg_color</span></code>'s constructor
-          takes in three integer values. The SVG 1.1 standard allows any integer
-          to represent an RGB value, with values less than 0 and greater than 255
-          being rounded to their respective min and max.
-        </p></td></tr>
+<tr><td colspan="2" align="left" valign="top">
+<p>
+          </p>
+<p>
+            <code class="computeroutput"><span class="identifier">svg_color</span></code>'s constructor
+            takes in three integer values. The SVG 1.1 standard allows any integer
+            to represent an RGB value, with values less than 0 and greater than 255
+            being rounded to their respective min and max.
+          </p>
+<p>
+        </p>
+</td></tr>
 </table></div>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.color.color_internals"></a> Internals and Rationale</h3></div></div></div>
+<a name="svg_plot.color.color_internals"></a><a href="color.html#svg_plot.color.color_internals" title=" Internals and Rationale"> Internals and Rationale</a>
+</h3></div></div></div>
 <p>
         Constants are defined in an enum, <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>,
         in alphabetical order. This facilitates quick lookup of their RGB values

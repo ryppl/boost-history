@@ -32,7 +32,11 @@ inline bool limit_NaN(double a)
 {
     // Ternary operator used to remove warning of performance of casting
     // int to bool.
+#if defined (BOOST_MSVC)
     return _isnan(a) ? true : false;
+#else
+    return std::fpclassify(a) == FP_NAN;
+#endif
 }
 
 inline bool is_limit(double a)

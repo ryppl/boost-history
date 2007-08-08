@@ -105,6 +105,7 @@ efficient if lots of images are being produced.
 * *Clipping* of the plot window, so that graph lines do not get drawn outside of the plot.
 * *Histogram*
 * *Box-and-whisker*
+* *Modify line methods* to deal with numerical limits (such as -NaN)
 
 [endsect] [/section:todo To Do]
 
@@ -652,6 +653,53 @@ This produces something like the following images:
 [endsect] [/curve_interpolation]
 [endsect] [/2d_special Tutorial: 2D Special Features]
 
+[section:behavior Behavior]
+[section:behavior_limits Numerical Limits]
+All limits that are dealt with are double precision floating point limits. 
+Limits are noticed upon the call to the `plot()` method. Currently, the line
+interpolation algorithms do not take limits into account, so behavior may 
+be incorrect for such plots as `1 / x`. Limits are drawn as a circle with
+`_stroke_color = lightgray` and `_fill_color = whitesmoke`.
+This will become customizable.
+
+[section:behavior_NaN NaN]
+Any double precision floating point numbers that return a nonzero value for the
+function `_isnan(double)` is considered to be a NaN value. When plotted, the
+number will appear in the user-defined coordinates as 0.
+[endsect][/section:behavior_NaN NaN]
+
+[section:behavior_infinity Infinity]
+
+Any double precision floating point number that is equal to either of the 
+following is considered to be Infinity:
+
+	std::numeric_limits<double>::max()
+	std::numeric_limits<double>::infinity()
+
+When plotted, these values will appear at the top of your plot window. If
+the plot window is not turned on, these points will appear at the top of
+the graph.
+[endsect][/section:behavior_infinity]
+[section:behavior_neg_infinity Negative Infinity]
+
+Any double precision floating point number that is equal to either of the 
+following is considered to be Negative Infinity:
+
+	std::numeric_limits<double>::min()
+	-std::numeric_limits<double>::infinity()
+	std::numeric_limits<double>::denorm_min()
+
+When plotted, these values will appear at the bottom of your plot window. If
+the plot window is not turned on, these points will appear at the bottom of
+the graph.
+[endsect][/section:behavior_infinity]
+
+Here is an example of numeric limit handling in action:
+
+[$images/2d_limit.png]
+[endsect][/section:behavior_limits Numerical Limits]
+[endsect][/section:behavior Behavior]
+
 [section:plot_defaults Defaults]
 
 [section:1d_defaults `svg_1d_plot` Defaults]
@@ -905,7 +953,7 @@ stroke).
   [[`svg_2d_plot& y_minor_grid_on(bool)`] [Determines whether or not the minor grid on the Y axis will be displayed]]]
 [endsect][/section:2d_inter_commands]
 
-[section:2d_inter_color]
+[section:2d_inter_color Color]
 [table
   [[Signature] [Description]]
   [[`svg_2d_plot& title_color(const svg_color &col)`] [Set the title color]]

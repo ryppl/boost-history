@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../index.html" title="SVG_Plot">
 <link rel="up" href="../index.html" title="SVG_Plot">
-<link rel="prev" href="2d_special.html" title=" Tutorial: 2D Special Features">
+<link rel="prev" href="behavior.html" title=" Behavior">
 <link rel="next" href="svg_interface.html" title=" SVG Public Interface">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,195 +20,476 @@
 </table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="2d_special.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_interface.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="behavior.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_interface.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="svg_plot.plot_defaults"></a> Defaults</h2></div></div></div>
+<a name="svg_plot.plot_defaults"></a><a href="plot_defaults.html" title=" Defaults"> Defaults</a>
+</h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="plot_defaults.html#svg_plot.plot_defaults.1d_defaults"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Defaults</a></span></dt>
-<dt><span class="section"><a href="plot_defaults.html#svg_plot.plot_defaults.2d_defaults"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Defaults</a></span></dt>
+<dt><span class="section"><a href="plot_defaults.html#svg_plot.plot_defaults.1d_defaults"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code>
+      Defaults</a></span></dt>
+<dt><span class="section"><a href="plot_defaults.html#svg_plot.plot_defaults.2d_defaults"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code>
+      Defaults</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.plot_defaults.1d_defaults"></a> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Defaults</h3></div></div></div>
+<a name="svg_plot.plot_defaults.1d_defaults"></a><a href="plot_defaults.html#svg_plot.plot_defaults.1d_defaults" title=" svg_1d_plot
+      Defaults"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code>
+      Defaults</a>
+</h3></div></div></div>
 <p>
         You may have noticed that there are certain defaults that are true at the
         beginning of the plotting. Here is a table of the defaults:
       </p>
-<div class="informaltable">
-<h4>
-<a name="id337510"></a>
-          <span class="table-title">Default Values</span>
-        </h4>
-<table class="table">
+<div class="table">
+<a name="id338249"></a><p class="title"><b>Table 1. Default Values</b></p>
+<table class="table" summary="Default Values">
 <colgroup>
 <col>
 <col>
 <col>
 </colgroup>
 <thead><tr>
-<th>object</th>
-<th>Default value</th>
-<th>Rationale</th>
+<th>
+            <p>
+              object
+            </p>
+            </th>
+<th>
+            <p>
+              Default value
+            </p>
+            </th>
+<th>
+            <p>
+              Rationale
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
-<td>All colors not defined in this table</td>
-<td>black</td>
-<td>K.I.S.S.
-              Coloring will be highly dependent on user needs</td>
-</tr>
-<tr>
-<td>Axis</td>
-<td>On, internal style</td>
-<td>Most graphs
-              include an axis of some kind. The internal axis style is used because
-              this seems to be the default behavior in many textbooks I have owned.</td>
-</tr>
-<tr>
-<td>Distance between major X ticks</td>
-<td><code class="computeroutput"><span class="number">3</span> <span class="identifier">units</span></code></td>
-<td>Reasonably fits
-              into a plot window</td>
-</tr>
-<tr>
-<td>Font size of the legend title</td>
-<td>12</td>
-<td>Reasonable
-              when paired with the image size</td>
-</tr>
-<tr>
-<td>Font size of the X Label</td>
-<td>12</td>
-<td>Reasonable
-              when paired with the image size</td>
-</tr>
-<tr>
-<td>Font size of the title</td>
-<td>30</td>
-<td>Makes
-              the title stand out</td>
-</tr>
-<tr>
-<td>Grid lines</td>
-<td><code class="computeroutput"><span class="identifier">All</span> <span class="identifier">off</span></code></td>
-<td>Grid lines are
-              a user's personal choice, so I default with the simpler model</td>
-</tr>
-<tr>
-<td>Image background</td>
-<td>white</td>
-<td>K.I.S.S.
-              Coloring will be highly dependent on user needs.</td>
-</tr>
-<tr>
-<td>Image size</td>
-<td><code class="computeroutput"><span class="number">500</span> <span class="identifier">by</span> <span class="number">350</span></code></td>
-<td>Details
-              discernable. The image is easily viewable by those using 800x600 monitors</td>
-</tr>
-<tr>
-<td>Legend</td>
-<td><code class="computeroutput"><span class="identifier">Off</span></code></td>
-<td>The
-              goal of the defaults is to provide the cleanest possible plot as a
-              default. Excluding the legend meets this goal. If there is a public
-              outcry, I can change this.</td>
-</tr>
-<tr>
-<td>Legend background</td>
-<td>white</td>
-<td>K.I.S.S.
-              Coloring will be highly dependent on user needs</td>
-</tr>
-<tr>
-<td>Major tick length</td>
-<td>20 pixels</td>
-<td>Tasteful
-              default when paired with the window size. This also makes the major
-              ticks easily distinguishable from the minor ticks</td>
-</tr>
-<tr>
-<td>Major tick width</td>
-<td>2 pixels</td>
-<td>Major
-              ticks are more obvious than minor ticks</td>
-</tr>
-<tr>
-<td>Minor tick length</td>
-<td>10 pixels</td>
-<td>Tasteful
-              default when compared with the size of the grid. This makes the minor
-              ticks less obvious than the major ticks</td>
-</tr>
-<tr>
-<td>Minor tick width</td>
-<td>1 pixel</td>
-<td>This makes
-              the minor tick less obvious than the major ticks</td>
-</tr>
-<tr>
-<td>Number of minor X ticks between each major X tick</td>
-<td>2</td>
-<td>This
-              allows the minor ticks to appear on the integers</td>
-</tr>
-<tr>
-<td>Plot Window</td>
-<td><code class="computeroutput"><span class="identifier">Off</span></code></td>
-<td>Initially
-              off because it is the simplest case. I will change this if there is
-              an outcry</td>
-</tr>
-<tr>
-<td>Plot window background</td>
-<td>white</td>
-<td>K.I.S.S.
-              Coloring will be highly dependent on user needs</td>
-</tr>
-<tr>
-<td>Title</td>
-<td>On, <code class="computeroutput"><span class="string">"Plot
-              of data"</span></code>
-</td>
-<td>The title is on because
-              this is one of the most basic elements of a graph. The title is set
-              to a default because when <code class="computeroutput"><span class="identifier">title_on</span> <span class="special">==</span> <span class="keyword">true</span></code>,
-              something should display</td>
-</tr>
-<tr>
-<td>Title size</td>
-<td><code class="computeroutput"><span class="number">30</span></code></td>
-<td>This
-              is clearly visible in a variety of image sizes</td>
-</tr>
-<tr>
-<td>X Axis Label</td>
 <td>
-<code class="computeroutput"><span class="string">"X
-              Axis"</span></code>, Off</td>
-<td>"X Axis" is
-              the label because something should display were the user to turn on
-              the X axis label without setting text, and this is the most informative</td>
+            <p>
+              All colors not defined in this table
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+<td>
+            <p>
+              K.I.S.S. Coloring will be highly dependent on user needs
+            </p>
+            </td>
 </tr>
 <tr>
-<td>X Axis Label Size</td>
-<td><code class="computeroutput"><span class="number">12</span></code></td>
-<td>This
-              is a reasonable size at the default image size</td>
+<td>
+            <p>
+              Axis
+            </p>
+            </td>
+<td>
+            <p>
+              On, internal style
+            </p>
+            </td>
+<td>
+            <p>
+              Most graphs include an axis of some kind. The internal axis style is
+              used because this seems to be the default behavior in many textbooks
+              I have owned.
+            </p>
+            </td>
 </tr>
 <tr>
-<td>X Grid (Major and Minor)</td>
-<td>Off</td>
-<td>Turned
-              off in the interest of providing simple, clean plots</td>
+<td>
+            <p>
+              Distance between major X ticks
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="number">3</span> <span class="identifier">units</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Reasonably fits into a plot window
+            </p>
+            </td>
 </tr>
 <tr>
-<td>X Range</td>
-<td><code class="computeroutput"><span class="special">(-</span><span class="number">10</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span></code></td>
-<td>Traditional
-              plot viewport</td>
+<td>
+            <p>
+              Font size of the legend title
+            </p>
+            </td>
+<td>
+            <p>
+              12
+            </p>
+            </td>
+<td>
+            <p>
+              Reasonable when paired with the image size
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Font size of the X Label
+            </p>
+            </td>
+<td>
+            <p>
+              12
+            </p>
+            </td>
+<td>
+            <p>
+              Reasonable when paired with the image size
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Font size of the title
+            </p>
+            </td>
+<td>
+            <p>
+              30
+            </p>
+            </td>
+<td>
+            <p>
+              Makes the title stand out
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Grid lines
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">All</span> <span class="identifier">off</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Grid lines are a user's personal choice, so I default with the simpler
+              model
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Image background
+            </p>
+            </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
+<td>
+            <p>
+              K.I.S.S. Coloring will be highly dependent on user needs.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Image size
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="number">500</span> <span class="identifier">by</span>
+              <span class="number">350</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Details discernable. The image is easily viewable by those using 800x600
+              monitors
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Legend
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">Off</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              The goal of the defaults is to provide the cleanest possible plot as
+              a default. Excluding the legend meets this goal. If there is a public
+              outcry, I can change this.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Legend background
+            </p>
+            </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
+<td>
+            <p>
+              K.I.S.S. Coloring will be highly dependent on user needs
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Major tick length
+            </p>
+            </td>
+<td>
+            <p>
+              20 pixels
+            </p>
+            </td>
+<td>
+            <p>
+              Tasteful default when paired with the window size. This also makes
+              the major ticks easily distinguishable from the minor ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Major tick width
+            </p>
+            </td>
+<td>
+            <p>
+              2 pixels
+            </p>
+            </td>
+<td>
+            <p>
+              Major ticks are more obvious than minor ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Minor tick length
+            </p>
+            </td>
+<td>
+            <p>
+              10 pixels
+            </p>
+            </td>
+<td>
+            <p>
+              Tasteful default when compared with the size of the grid. This makes
+              the minor ticks less obvious than the major ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Minor tick width
+            </p>
+            </td>
+<td>
+            <p>
+              1 pixel
+            </p>
+            </td>
+<td>
+            <p>
+              This makes the minor tick less obvious than the major ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Number of minor X ticks between each major X tick
+            </p>
+            </td>
+<td>
+            <p>
+              2
+            </p>
+            </td>
+<td>
+            <p>
+              This allows the minor ticks to appear on the integers
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Plot Window
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">Off</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Initially off because it is the simplest case. I will change this if
+              there is an outcry
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Plot window background
+            </p>
+            </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
+<td>
+            <p>
+              K.I.S.S. Coloring will be highly dependent on user needs
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Title
+            </p>
+            </td>
+<td>
+            <p>
+              On, <code class="computeroutput"><span class="string">"Plot of data"</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              The title is on because this is one of the most basic elements of a
+              graph. The title is set to a default because when <code class="computeroutput"><span class="identifier">title_on</span>
+              <span class="special">==</span> <span class="keyword">true</span></code>,
+              something should display
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Title size
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="number">30</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This is clearly visible in a variety of image sizes
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              X Axis Label
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="string">"X Axis"</span></code>, Off
+            </p>
+            </td>
+<td>
+            <p>
+              "X Axis" is the label because something should display were
+              the user to turn on the X axis label without setting text, and this
+              is the most informative
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              X Axis Label Size
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="number">12</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This is a reasonable size at the default image size
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              X Grid (Major and Minor)
+            </p>
+            </td>
+<td>
+            <p>
+              Off
+            </p>
+            </td>
+<td>
+            <p>
+              Turned off in the interest of providing simple, clean plots
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              X Range
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="special">(-</span><span class="number">10</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Traditional plot viewport
+            </p>
+            </td>
 </tr>
 </tbody>
 </table>
@@ -216,211 +497,532 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.plot_defaults.2d_defaults"></a> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Defaults</h3></div></div></div>
+<a name="svg_plot.plot_defaults.2d_defaults"></a><a href="plot_defaults.html#svg_plot.plot_defaults.2d_defaults" title=" svg_2d_plot
+      Defaults"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code>
+      Defaults</a>
+</h3></div></div></div>
 <p>
         You may have noticed that there are certain defaults that are true at the
         beginning of the plotting. Here is a table of the defaults:
       </p>
-<div class="informaltable">
-<h4>
-<a name="id337996"></a>
-          <span class="table-title">Default Values</span>
-        </h4>
-<table class="table">
+<div class="table">
+<a name="id339003"></a><p class="title"><b>Table 2. Default Values</b></p>
+<table class="table" summary="Default Values">
 <colgroup>
 <col>
 <col>
 <col>
 </colgroup>
 <thead><tr>
-<th>object</th>
-<th>Default value</th>
-<th>Rationale</th>
+<th>
+            <p>
+              object
+            </p>
+            </th>
+<th>
+            <p>
+              Default value
+            </p>
+            </th>
+<th>
+            <p>
+              Rationale
+            </p>
+            </th>
 </tr></thead>
 <tbody>
 <tr>
-<td>All colors not defined in this table</td>
-<td>black</td>
-<td>K.I.S.S.
-              Coloring will be highly dependent on user needs</td>
-</tr>
-<tr>
-<td>Axis</td>
-<td>On, internal style</td>
-<td>Most graphs
-              include an axis of some kind. The internal axis style is used because
-              this seems to be the default behavior in many textbooks I have owned.</td>
-</tr>
-<tr>
-<td>Distance between major X ticks</td>
-<td><code class="computeroutput"><span class="number">3</span> <span class="identifier">units</span></code></td>
-<td>Reasonably fits
-              into a plot window</td>
-</tr>
-<tr>
-<td>Font size of the legend title</td>
-<td>12</td>
-<td>Reasonable
-              when paired with the image size</td>
-</tr>
-<tr>
-<td>Font size of the X Label</td>
-<td>12</td>
-<td>Reasonable
-              when paired with the image size</td>
-</tr>
-<tr>
-<td>Font size of the title</td>
-<td>30</td>
-<td>Makes
-              the title stand out</td>
-</tr>
-<tr>
-<td>Grid lines</td>
-<td><code class="computeroutput"><span class="identifier">All</span> <span class="identifier">off</span></code></td>
-<td>Grid lines are
-              a user's personal choice, so I default with the simpler model</td>
-</tr>
-<tr>
-<td>Image background</td>
-<td>white</td>
-<td>K.I.S.S.
-              Coloring will be highly dependent on user needs.</td>
-</tr>
-<tr>
-<td>Image size</td>
-<td><code class="computeroutput"><span class="number">500</span> <span class="identifier">by</span> <span class="number">350</span></code></td>
-<td>Details
-              discernable. The image is easily viewable by those using 800x600 monitors</td>
-</tr>
-<tr>
-<td>Legend</td>
-<td><code class="computeroutput"><span class="identifier">Off</span></code></td>
-<td>The
-              goal of the defaults is to provide the cleanest possible plot as a
-              default. Excluding the legend meets this goal. If there is a public
-              outcry, I can change this.</td>
-</tr>
-<tr>
-<td>Legend background</td>
-<td>white</td>
-<td>K.I.S.S.
-              Coloring will be highly dependent on user needs</td>
-</tr>
-<tr>
-<td>Major tick length</td>
-<td>20 pixels</td>
-<td>Tasteful
-              default when paired with the window size. This also makes the major
-              ticks easily distinguishable from the minor ticks</td>
-</tr>
-<tr>
-<td>Major tick width</td>
-<td>2 pixels</td>
-<td>Major
-              ticks are more obvious than minor ticks</td>
-</tr>
-<tr>
-<td>Minor tick length</td>
-<td>10 pixels</td>
-<td>Tasteful
-              default when compared with the size of the grid. This makes the minor
-              ticks less obvious than the major ticks</td>
-</tr>
-<tr>
-<td>Minor tick width</td>
-<td>1 pixel</td>
-<td>This makes
-              the minor tick less obvious than the major ticks</td>
-</tr>
-<tr>
-<td>Number of minor X ticks between each major X tick</td>
-<td>2</td>
-<td>This
-              allows the minor ticks to appear on the integers</td>
-</tr>
-<tr>
-<td>Plot Window</td>
-<td><code class="computeroutput"><span class="identifier">Off</span></code></td>
-<td>Initially
-              off because it is the simplest case. I will change this if there is
-              an outcry</td>
-</tr>
-<tr>
-<td>Plot window background</td>
-<td>white</td>
-<td>K.I.S.S.
-              Coloring will be highly dependent on user needs</td>
-</tr>
-<tr>
-<td>Title</td>
-<td>On, <code class="computeroutput"><span class="string">"Plot
-              of data"</span></code>
-</td>
-<td>The title is on because
-              this is one of the most basic elements of a graph. The title is set
-              to a default because when <code class="computeroutput"><span class="identifier">title_on</span> <span class="special">==</span> <span class="keyword">true</span></code>,
-              something should display</td>
-</tr>
-<tr>
-<td>Title size</td>
-<td><code class="computeroutput"><span class="number">30</span></code></td>
-<td>This
-              is clearly visible in a variety of image sizes</td>
-</tr>
-<tr>
-<td>X Axis Label</td>
 <td>
-<code class="computeroutput"><span class="string">"X
-              Axis"</span></code>, Off</td>
-<td>"X Axis" is
-              the label because something should display were the user to turn on
-              the X axis label without setting text, and this is the most informative</td>
-</tr>
-<tr>
-<td>X Axis Label Size</td>
-<td><code class="computeroutput"><span class="number">12</span></code></td>
-<td>This
-              is a reasonable size at the default image size</td>
-</tr>
-<tr>
-<td>X Grid (Major and Minor)</td>
-<td>Off</td>
-<td>Turned
-              off in the interest of providing simple, clean plots</td>
-</tr>
-<tr>
-<td>X Range</td>
-<td><code class="computeroutput"><span class="special">(-</span><span class="number">10</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span></code></td>
-<td>Traditional
-              plot viewport</td>
-</tr>
-<tr>
-<td>Y Axis Label</td>
+            <p>
+              All colors not defined in this table
+            </p>
+            </td>
 <td>
-<code class="computeroutput"><span class="string">"Y
-              Axis"</span></code>, Off</td>
-<td>"Y Axis" is
-              the label because something should display were the user to turn on
-              the X axis label without setting text, and this is the most informative</td>
+            <p>
+              black
+            </p>
+            </td>
+<td>
+            <p>
+              K.I.S.S. Coloring will be highly dependent on user needs
+            </p>
+            </td>
 </tr>
 <tr>
-<td>Y Axis Label Size</td>
-<td><code class="computeroutput"><span class="number">12</span></code></td>
-<td>This
-              is a reasonable size at the default image size</td>
+<td>
+            <p>
+              Axis
+            </p>
+            </td>
+<td>
+            <p>
+              On, internal style
+            </p>
+            </td>
+<td>
+            <p>
+              Most graphs include an axis of some kind. The internal axis style is
+              used because this seems to be the default behavior in many textbooks
+              I have owned.
+            </p>
+            </td>
 </tr>
 <tr>
-<td>Y Grid (Major and Minor)</td>
-<td>Off</td>
-<td>Turned
-              off in the interest of providing simple, clean plots</td>
+<td>
+            <p>
+              Distance between major X ticks
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="number">3</span> <span class="identifier">units</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Reasonably fits into a plot window
+            </p>
+            </td>
 </tr>
 <tr>
-<td>Y Range</td>
-<td><code class="computeroutput"><span class="special">(-</span><span class="number">10</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span></code></td>
-<td>Traditional
-              plot viewport</td>
+<td>
+            <p>
+              Font size of the legend title
+            </p>
+            </td>
+<td>
+            <p>
+              12
+            </p>
+            </td>
+<td>
+            <p>
+              Reasonable when paired with the image size
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Font size of the X Label
+            </p>
+            </td>
+<td>
+            <p>
+              12
+            </p>
+            </td>
+<td>
+            <p>
+              Reasonable when paired with the image size
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Font size of the title
+            </p>
+            </td>
+<td>
+            <p>
+              30
+            </p>
+            </td>
+<td>
+            <p>
+              Makes the title stand out
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Grid lines
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">All</span> <span class="identifier">off</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Grid lines are a user's personal choice, so I default with the simpler
+              model
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Image background
+            </p>
+            </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
+<td>
+            <p>
+              K.I.S.S. Coloring will be highly dependent on user needs.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Image size
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="number">500</span> <span class="identifier">by</span>
+              <span class="number">350</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Details discernable. The image is easily viewable by those using 800x600
+              monitors
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Legend
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">Off</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              The goal of the defaults is to provide the cleanest possible plot as
+              a default. Excluding the legend meets this goal. If there is a public
+              outcry, I can change this.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Legend background
+            </p>
+            </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
+<td>
+            <p>
+              K.I.S.S. Coloring will be highly dependent on user needs
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Major tick length
+            </p>
+            </td>
+<td>
+            <p>
+              20 pixels
+            </p>
+            </td>
+<td>
+            <p>
+              Tasteful default when paired with the window size. This also makes
+              the major ticks easily distinguishable from the minor ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Major tick width
+            </p>
+            </td>
+<td>
+            <p>
+              2 pixels
+            </p>
+            </td>
+<td>
+            <p>
+              Major ticks are more obvious than minor ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Minor tick length
+            </p>
+            </td>
+<td>
+            <p>
+              10 pixels
+            </p>
+            </td>
+<td>
+            <p>
+              Tasteful default when compared with the size of the grid. This makes
+              the minor ticks less obvious than the major ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Minor tick width
+            </p>
+            </td>
+<td>
+            <p>
+              1 pixel
+            </p>
+            </td>
+<td>
+            <p>
+              This makes the minor tick less obvious than the major ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Number of minor X ticks between each major X tick
+            </p>
+            </td>
+<td>
+            <p>
+              2
+            </p>
+            </td>
+<td>
+            <p>
+              This allows the minor ticks to appear on the integers
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Plot Window
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">Off</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Initially off because it is the simplest case. I will change this if
+              there is an outcry
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Plot window background
+            </p>
+            </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
+<td>
+            <p>
+              K.I.S.S. Coloring will be highly dependent on user needs
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Title
+            </p>
+            </td>
+<td>
+            <p>
+              On, <code class="computeroutput"><span class="string">"Plot of data"</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              The title is on because this is one of the most basic elements of a
+              graph. The title is set to a default because when <code class="computeroutput"><span class="identifier">title_on</span>
+              <span class="special">==</span> <span class="keyword">true</span></code>,
+              something should display
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Title size
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="number">30</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This is clearly visible in a variety of image sizes
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              X Axis Label
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="string">"X Axis"</span></code>, Off
+            </p>
+            </td>
+<td>
+            <p>
+              "X Axis" is the label because something should display were
+              the user to turn on the X axis label without setting text, and this
+              is the most informative
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              X Axis Label Size
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="number">12</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This is a reasonable size at the default image size
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              X Grid (Major and Minor)
+            </p>
+            </td>
+<td>
+            <p>
+              Off
+            </p>
+            </td>
+<td>
+            <p>
+              Turned off in the interest of providing simple, clean plots
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              X Range
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="special">(-</span><span class="number">10</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Traditional plot viewport
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Y Axis Label
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="string">"Y Axis"</span></code>, Off
+            </p>
+            </td>
+<td>
+            <p>
+              "Y Axis" is the label because something should display were
+              the user to turn on the X axis label without setting text, and this
+              is the most informative
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Y Axis Label Size
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="number">12</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This is a reasonable size at the default image size
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Y Grid (Major and Minor)
+            </p>
+            </td>
+<td>
+            <p>
+              Off
+            </p>
+            </td>
+<td>
+            <p>
+              Turned off in the interest of providing simple, clean plots
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              Y Range
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="special">(-</span><span class="number">10</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Traditional plot viewport
+            </p>
+            </td>
 </tr>
 </tbody>
 </table>
@@ -433,7 +1035,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="2d_special.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_interface.html"><img src="../images/next.png" alt="Next"></a>
+<a accesskey="p" href="behavior.html"><img src="../images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../images/home.png" alt="Home"></a><a accesskey="n" href="svg_interface.html"><img src="../images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
