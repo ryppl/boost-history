@@ -20,6 +20,12 @@
 #include <cstdio>
 #include <boost/test/minimal.hpp>
 
+//  Although using directives are not the best programming practice, testing
+//  with a boost::system using directive increases use scenario coverage.
+//  There also appears to be a bug in Microsoft VC++ 8.0 that is worked
+//  around by this using directive.
+using namespace boost::system;
+
 #ifdef BOOST_POSIX_API
 # include <sys/stat.h>
 #else
@@ -103,11 +109,13 @@ namespace boost
         return s;
       }
 
-      boost::system::posix::posix_errno  posix( int ev ) const
+      boost::system::error_code generic_error_code( int ev ) const
       {
-        return ev == boo_boo
-          ? boost::system::posix::io_error
-          : boost::system::posix::no_posix_equivalent;
+        return boost::system::error_code(
+          ev == boo_boo
+            ? boost::system::posix::io_error
+            : boost::system::posix::no_posix_equivalent,
+          boost::system::posix_category );
       }
       
       std::string message( int ev ) const
@@ -159,11 +167,13 @@ namespace lib4
       return s;
     }
 
-    boost::system::posix::posix_errno  posix( int ev ) const
+    boost::system::error_code generic_error_code( int ev ) const
     {
-      return ev == boo_boo.value()
-        ? boost::system::posix::io_error
-        : boost::system::posix::no_posix_equivalent;
+      return boost::system::error_code(
+        ev == boo_boo.value()
+          ? boost::system::posix::io_error
+          : boost::system::posix::no_posix_equivalent,
+        boost::system::posix_category );
     }
     
     std::string message( int ev ) const
@@ -218,12 +228,11 @@ int test_main( int, char *[] )
   BOOST_CHECK( ec.value() == boost::lib3::boo_boo );
   BOOST_CHECK( ec.category() == boost::lib3::lib3_error_category );
 
-  BOOST_CHECK( ec.posix() == boost::system::posix::io_error );
   BOOST_CHECK( ec == boost::system::posix::io_error );
 
   boost::system::error_code ec3( boost::lib3::boo_boo+100,
     boost::lib3::lib3_error_category );
-  BOOST_CHECK( ec3.posix() == boost::system::posix::no_posix_equivalent );
+  BOOST_CHECK( ec3 == boost::system::posix::no_posix_equivalent );
 
   // Library 4 tests:
 
@@ -235,12 +244,11 @@ int test_main( int, char *[] )
   BOOST_CHECK( ec.value() == lib4::boo_boo.value() );
   BOOST_CHECK( ec.category() == lib4::lib4_error_category );
 
-  BOOST_CHECK( ec.posix() == boost::system::posix::io_error );
   BOOST_CHECK( ec == boost::system::posix::io_error );
 
   boost::system::error_code ec4( lib4::boo_boo.value()+100,
     lib4::lib4_error_category );
-  BOOST_CHECK( ec4.posix() == boost::system::posix::no_posix_equivalent );
+  BOOST_CHECK( ec4 == boost::system::posix::no_posix_equivalent );
 
 
   return 0;
