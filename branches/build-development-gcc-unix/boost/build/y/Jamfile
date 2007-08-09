@@ -1,4 +1,0 @@
-subproject y ;
-
-unit-test y : y.cpp <lib>../top : <include>.. ;
-unit-test foo : foo.cpp ;
