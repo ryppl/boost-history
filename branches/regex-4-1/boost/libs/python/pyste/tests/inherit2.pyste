@@ -1,3 +1,0 @@
-header = AllFromHeader('inherit2.h')
-exclude(header.A)
-exclude(header.C)
