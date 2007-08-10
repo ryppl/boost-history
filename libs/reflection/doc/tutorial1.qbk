@@ -1,0 +1,132 @@
+[/ Boost.Reflection - first tutorial ]
+[/ Copyright 2007 Mariano G. Consoni ]
+[/ Distributed under the Boost Software License, Version 1.0. (See]
+[/ accompanying file LICENSE_1_0.txt or copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ See http://www.boost.org/ for latest version. ]
+
+
+[section:tutorial01 Tutorial 1]
+
+Let's create a car class. This will later be our reflected class.
+
+``
+class car {
+private:
+  std::string name_;
+  bool started_;
+
+public:
+  car(std::string car_name) : name_(car_name), started_(false) {}
+
+  bool start(void) { 
+    std::cout << name_ << " started." << std::endl; 
+    started_ = true;
+    return true;
+  }
+
+  bool turn(float angle)
+  {
+    if(started_) {
+      std::cout << "Turning " << name_ << " "<< angle << " degrees." 
+		<< std::endl;
+      return true;
+    } else {
+      std::cout << "Cannot turn before starting the engine of " 
+		<< name_ << "." << std::endl;
+      return false;
+    }
+  }
+  virtual ~car(void) {}
+}; 
+``
+
+It has methods for starting the engine and turning the car. Note that you can't
+turn before starting the engine (it has state).
+
+Now we will create the reflection for this class. Let's note that we don't have
+to add any MACRO to the original header file.
+
+``
+  boost::extension::reflection<car, std::string> car_reflection("A Car!");
+``
+
+With this instruction we create a reflection. The template parameters describe
+the reflected class and the type that we will use to store additional data (the
+Info class). The parameter of the constructor is an instance of this class, in
+this case we use it to store a short description.
+
+Now that we have created the reflection (i.e. the place where we will store
+the meta-information of the class) we can start to add the methods.
+
+``
+  car_reflection.add<int, bool>(&car::start, 3);
+  car_reflection.add<std::string, bool, float, 
+    std::string>(&car::turn, "turn", "turn_angle");
+``
+
+We are adding here the two methods. First we add the start method. The template
+parameters indicate that we will identify this method by an int (3 in this case) and
+that the return type is bool. We also have to provide a pointer to the method.
+
+Then we add the second method. It's described by an string ("turn" in this case),
+and it returns a bool. Also we say that it receives a float and it's described
+by a string ("turn_angle").
+
+Having the methods stored in our reflection we can now see how to call them. We have
+two ways.
+
+First, let's define one instance to use the reflection on:
+
+``
+  car porsche_911("Porsche 911");
+``
+
+The simplest one is the following:
+
+``
+  car_reflection.call<int, bool>(&porsche_911, 3);
+``
+
+We just invoke the "call" method of the reflection. We provide the instance
+and the description of the method. Let's see how to use it when the method has
+parameters:
+
+``
+  car_reflection.call<std::string, bool, 
+    float, std::string>(&porsche_911, "turn", .5f);
+``
+
+Now we have to define with template arguments the way that we describe the method
+and the parameters. Also we have to provide the instance, the method description and
+the value of the parameter.
+
+Of course, this approach is a bit limited, because we have to provide a lot of 
+information to call the actual method. 
+
+Using meta-level programming we are trying to achieve a flexibility that 
+could be mined with that requeriments. Simply we don't have such information 
+most of the time. Because of that we implemented a second way to call methods.
+
+First we define a parameter_map. We will store there the possible parameters. Note
+that we're defining an unneeded parameter. It'll be simply ignored.
+
+``
+  boost::extension::parameter_map pm;
+  pm.add<float, std::string>(.15f, "turn_angle");
+  pm.add<int, std::string>(50, "aceleration");
+``
+
+Then we use this parameter_map to call the method and provide the needed
+parameters. In this way we just have to know the method ID.
+
+For example in the case of turn we could now call it with:
+
+``
+  car_reflection.call<std::string>("turn", &porsche_911, pm);
+``
+
+This are the basic functionalities of the library that allows the programmer
+to generate the meta-class layer and use them dynamically at run-time.
+
+[endsect]

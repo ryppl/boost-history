@@ -1,0 +1,27 @@
+# Boost.Reflection - documentation Jamfile
+#
+# Copyright 2007 Mariano G. Consoni, Jeremy Pack
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+#
+# See http://www.boost.org/ for latest version.
+#
+
+using quickbook ;
+xml reflection : reflection.qbk : : :  
+         <xsl:param>toc.max.depth=5
+         <xsl:param>toc.section.depth=5
+        <xsl:param>chunk.section.depth=5 ;
+boostbook standalone
+    :
+        reflection
+    :
+      <xsl:param>generate.section.toc.level=3
+        <xsl:param>chunk.first.sections=1
+        <xsl:param>admon.graphics=1
+
+    ;
+
+install html : ../../../../src/sandbox/doc/html/boostbook.css ;
+install ../ : ../../../../src/sandbox/boost.png ;

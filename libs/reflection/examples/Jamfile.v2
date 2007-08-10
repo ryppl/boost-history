@@ -1,0 +1,39 @@
+# Boost.Extension - examples Jamfile
+#
+# Copyright 2007 Jeremy Pack
+# Distributed under the Boost Software License, Version 1.0. (See
+# accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+#
+# See http://www.boost.org/ for latest version.
+#
+
+import type : change-generated-target-suffix ;
+import type : change-generated-target-prefix ;
+type.change-generated-target-suffix SHARED_LIB : : extension ;
+type.change-generated-target-prefix SHARED_LIB : : lib ;
+import os ;
+
+local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
+project 
+    : requirements
+      <include>../../../
+      <include>$(BOOST_ROOT)
+      <include>../../../../src/sandbox/
+      <toolset>gcc:<find-static-library>dl
+      <toolset>gcc:<find-static-library>readline
+      <toolset>gcc:<find-static-library>boost_regex-gcc41-mt
+      <toolset>gcc:<linkflags>"-Wl,-rpath,'$ORIGIN'"
+      <toolset>darwin:<define>DYLD_LIBRARY_PATH=./
+    :
+    ;
+
+# basic example
+exe reflection : main.cpp ;
+
+# interpreter prototype
+exe interpreter : interpreter/interpreter.cpp ;
+
+# extension integration example
+exe extension-reflection : extension/extension.cpp ;
+lib car_lib : extension/car_lib.cpp : <link>shared ;

@@ -1,0 +1,27 @@
+[/ Boost.Reflection - intro ]
+[/ Copyright 2007 Mariano G. Consoni, Jeremy Pack ]
+[/ Distributed under the Boost Software License, Version 1.0. (See]
+[/ accompanying file LICENSE_1_0.txt or copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ See http://www.boost.org/ for latest version. ]
+
+[section:introduction Introduction]
+
+Reflection is the ability of a computer program to observe its structure and
+possibly modify it. Our library tries to achieve that objective, easing the 
+development of this kind of programs and releasing the programmer of the
+task of constructing a meta-level layer describing the classes and methods.
+
+In short, Boost.Reflection has a set of classes that allows the programmer to
+store information about their C++ classes and methods, and use (call) them
+using run-time identifiers. For example, we can create a class, attach some
+meta-level information and then use run-time strings to select the method that
+we want to call.
+
+Unfortunately, the library is not fully developed yet. It only has the basic
+functionalities and it's not much than an interesting prototype on the subject.
+
+The documentation is, also, completely incomplete. Sorry. Look at tutorial #1 for 
+examples of basic usage.
+
+[endsect]
