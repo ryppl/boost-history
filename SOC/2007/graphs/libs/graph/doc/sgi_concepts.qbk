@@ -40,3 +40,5 @@
 
 [template SgiPredicate[] [@http://www.sgi.com/tech/stl/Predicate.html Predicate]]
 [template SgiMonoid[] [@http://www.sgi.com/tech/stl/Monoid.html Monoid]]
+
+[template StdIndexable[] [link boostgraph [^Indexable]]]

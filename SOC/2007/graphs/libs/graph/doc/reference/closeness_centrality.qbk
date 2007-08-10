@@ -58,8 +58,9 @@ This module defines a flexible framework for computing the closeness centrality
 of vertices in a graph for previously computed geodesics by providing two generic
 functions. The first function, `closeness_centrality()` computes the closeness of
 each vertex in a graph given a matrix containing the distances between vertices.
-This matrix can be computed as the output of an "all pairs shortest path" algorithm,
-or as the result of many breadth first searches (if the graph is unweighted).
+This matrix can be computed as the output of an "all pairs shortest path" algorithm
+(e.g, [boost_floyd_warshall_all_pairs_shortest_paths] or [boost_johnson_all_pairs_shortest_paths])
+or as the result of a [boost_breadth_first_search] (if the graph is unweighted).
 
 The second function, `vertex_closeness_centrality()` can be used to compute the
 closeness of a single vertex. This function requires a distance map that contains

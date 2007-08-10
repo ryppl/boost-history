@@ -39,8 +39,6 @@
 '''
 ]
 
-
-
 [include sgi_concepts.qbk]
 [include boost_concepts.qbk]
 [include boost_reference.qbk]

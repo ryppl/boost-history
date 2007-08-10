@@ -29,7 +29,7 @@ The following expressions are used within this document:
         [
             The result type of the computation. Note that unlike
             `graph_traits<G>::degree_size_type`, the `degree_type` is not
-            required to be numerice.
+            required to be numeric.
         ]
     ]
 ]
@@ -47,5 +47,16 @@ The following expressions are used within this document:
         ]
     ]
 ]
+
+[heading C++0x]
+
+    concept DegreeMeasure<M>
+    {
+        typename Graph;
+        typename Vertex;
+        typename M::degree_type;
+
+        degree_type M::operator(Vertex v, const Graph& g)
+    };
 
 [endsect]

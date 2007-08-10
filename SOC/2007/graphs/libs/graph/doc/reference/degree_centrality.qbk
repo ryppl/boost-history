@@ -8,33 +8,55 @@
 [section Degree Centrality]
 
     template <typename Graph, typename CentralityMap>
-    void degree_centrality(const Graph& g, CentralityMap cent)
+    void degree_centrality(const Graph& g, CentralityMap cent);
 
     template <typename Graph, typename CentralityMap, typename Measure>
-    void degree_centrality(const Graph& g, CentralityMap cent, Measure measure)
+    void degree_centrality(const Graph& g, CentralityMap cent, Measure measure);
 
-    template <typename Graph>
+    template <typename Graph, typename Vertex>
     typename graph_traits<Graph>::degree_size_type
-    vertex_degree_centrality(const Graph& g,
-                             typename graph_traits<Graph>::vertex_descriptor v)
+    vertex_degree_centrality(const Graph& g, Vertex v);
 
-    template <typename Graph, typename Measure>
+    template <typename Graph, typename Vertex, typename Measure>
     typename Measure::degree_type
-    vertex_degree_centrality(const Graph& g,
-                             typename graph_traits<Graph>::vertex_descriptor v,
-                             Measure measure)
+    vertex_degree_centrality(const Graph& g, Vertex v, Measure measure);
 
 The /degree centrality/ measure is used in social network analysis to help
 determine which vertices (or more specifically actors) are the most central
-or important to the network. Degree centrality is computed over the number of
-connections that a vertex has. For undirected graphs, the degree centrality of
-a vertex is typically equivalent to its degree. For directed graphs the out-degree
-is measured for its degree centrality.
+or important to a network. Degree centrality of a vertex is computed over the number
+of connections (adjacent vertices) of that vertex. This definition varies for
+undirected and directed graphs. For undirected graphs, the degree centrality of a
+vertex is equivalent to its degree. For directed graphs it is equivalent to either
+its in- or out-degree.
 
-There are related two interpretations of degree centrality for directed graphs.
-When this measure is computed over the out-degree of a vertex, the measure is
-sometimes called /influence/. When the in-degree is considered, the measure is
-called /prestige/.
+Consider the social network represented by an undirected graph in Figure 1.
+
+[figure
+    images/reference/social_network.png
+    *Figure 1.* A network of friends.
+]
+
+This graph depicts a set of friends and their relationships (friendship, dating, etc.)
+The degree centrality of each person in this graph is their number of friends.
+Here, Frank has the highest degree centrality (five friends each), whereas Laurie
+has the lowest degree centrality since she has only one friend.
+
+For directed graphs, there are related two interpretations of degree centrality.
+When degree centrality is measured over the out-degree of a vertex, it is called
+/influence/. When the in-degree is measured, the measure is called /prestige/.
+Consider the information network represented by the directed graph in Figure 2.
+
+[figure
+    images/reference/information_network.png
+    *Figure 2.* A network of informational websites.
+]
+
+This graph represents links between information websites, presumably regarding a
+specific topic. The most influential (out-degree centrality) is blogger with
+three outgoing links while wikipedia is the least influential. The most prestigous
+(in-degree centrality) is wikipedia with five incoming references. The least
+prestigous websites are myspace, blogger, and blogspot each of which have no
+incoming links.
 
 This module provides two generic functions for measuring degree centrality.
 The first function, `degree_centrality()` computes this measure for each vertex
@@ -43,10 +65,21 @@ in the graph, assigning the values to an output property map.
 The second funtion, `vertex_degree_centrality()` computes this measure for
 a single vertex, returning the value to the caller.
 
-These functions can be specialized throught the use of alternate /measure/
-functors. These funtors are called to actually compute the degree centraltiy
-of a vertex. For exmaple, it is possible to redefine the detault notion of
-degree centrality for a directed graph to return /prestige/ instead of /influence/.
+These functions can be specialized throught the use of different /measure/
+functors. These funtors are called to compute the degree centraltiy of a vertex
+within the computational framework. This module provides the two default measures
+for /influence/ and /prestige/ and functions to help instantiate them. Custom
+measures can also be easily implemented and used.
+
+    template <typename Graph> struct influence_measure;
+    template <typename Graph> influence_measure<Graph> measure_influence(const Graph&);
+
+    template <typename Graph> struct prestige_measure;
+    template <typename Graph> prestige_measure<Graph> measure_prestige(const Graph&);
+
+The `influence_measure` returns the out-degre of a vertex and provides the
+default computation for degree centrality of both directed and undirected
+graphs. The `prestige_measure` returns the in-degree of a vertex.
 
 [heading Where Defined]
 `boost/graph/degree_centrality.hpp`
@@ -59,14 +92,20 @@ degree centrality for a directed graph to return /prestige/ instead of /influenc
         [
             The graph object for which the degree centralities will be computed.
 
-            *Requirements:* The `Graph` type must be a model of the
-            [BoostIncidenceGraph] concept.
+            *Requirements:* The `Graph` type must be a model of the [BoostIncidenceGraph]
+            concept. If the `Measure` parameter is given as `prestige_measure`,
+            then the graph must be a model of the [BoostBidirectionalGraph] concept.
+            For the `degree_centrality()` functions, the Graph must also model
+            the [BoostVertexListGraph] concept.
         ]
     ]
     [
-        [required, in] [`vertex_descriptor v`]
+        [required, in] [`Vertex v`]
         [
             The vertex descriptor for which the degree centrality is computed.
+
+            *Requirements:* The `Vertex` type must be the same as the `vertex_descriptor`
+            of the `Graph` parameter.
         ]
     ]
     [
@@ -104,16 +143,120 @@ If no `measure` parameter is given, the return type is the same as the
 the `Measure`.
 
 [heading Complexity]
-The default measure is a constant-time function. Replacing the default measure
-with a non-constant-time function will affect the complexity of the computations.
+The `degree_centrality()` function returns in /O(n*O(M))/ where /n/ is the
+number of vertices in the graph and /M/ is a measure of a vertex. This is
+linear for both the `influence_measure` and `prestige_measure`.
 
-The `degree_centrality()` function is ['O(n * O(measure))]. This is linear by
-default.
+The `vertex_degree_centrality()` returns in /O(M)/ where /M/ is a measure of
+a vertex. This is constant for both the `influence_measure` and `prestige_measure`.
 
-The `vertex_degree_centrality()` is ['O(O(measure))]. This is constant by
-default.
+The complexity of the `influence_measure` and `prestige_measure` functions are
+both constant time.
 
-[heading Example]
-Write an example.
+[heading Example (Degree Centrality)]
+[import ../../examples/degree_centrality.cpp]
+
+This example reads a graph from standard input (in a simple edge-list format),
+computes the degree-centrality of each vertex, and prints them to standard
+output. The edge-list format is simply a comma-delimited listing of vertex pairs.
+For example:
+
+[pre
+Scott,Bill
+Frank,Anne
+]
+
+To make typing easier, we define some aliases for the types used in this program
+in the global scope. Specifically, we define names for the graph and vertex types,
+types used to record the centralities of a social network, and a mapping of name
+to vertex (which is used to help build the graph).
+[declare_social_network]
+Note that the value type of the centrality property is `size_t` (an unsigned
+integer). This type must be the same as the `degree_size_type` of `Graph`, which
+is required to be an unsigned integer.
+
+The graph and a `VertexMap` object are declared in the main program as:
+[setup_social_network]
+The graph object `g` is the data structure which this program will construct
+and measure. The vertex map `verts` is used to ensure that vertices are uniquely
+associated with a name in the social network.
+
+The program starts by reading the input and buiding the graph.
+[build_social_network]
+This snippet uses the `add_named_vertex()` to ensure that each vertex added
+to the graph corresponds to exactly one name in the input data. The `add_named_vertex()`
+function is not part of the Boost.Graph library, but provided as a helper function
+for many of these examples. See ... for its implementation.
+
+The program can now measure the degree centrality of the graph or social network.
+[measure_social_network]
+The `CentralityContainer` is the underlying container for the abstract `CentralityMap`
+accessor. It is constructed to be the same size as the number of vertices in the
+graph, and the centrality map is constructed over the container with respect to the
+graph `g`. The `degree_centrality()` function is called to populate the centrality
+map with measured values.
+
+Finally, we iterate over the vertices, printing the degree centrality of each
+person in the network.
+[print_social_network]
+
+If given the `social_network.graph` file as input, the program will produce the
+following output:
+
+[pre
+Scott: 4
+Jill: 2
+Mary: 2
+Bill: 2
+Josh: 2
+Frank: 5
+Laurie: 1
+Anne: 2
+Howard: 2
+]
+
+[heading Example (Influence and Prestige)]
+[import ../../examples/influence_prestige.cpp]
+
+This example is nearly identical to the previous in that it computes the degree
+centrality over vertices in a graph. However, this example constructs a directed
+graph and computes both influence and prestige.
+
+In this example, the only type definition that varies from the previous is that
+of the graph itself. Specifically, we declare this as a direted graph to help
+capture the semantics of information flow.
+
+    typedef directed_graph<Person> Graph;
+
+Even the code that builds the graph is identical. Since the graph is directed, however,
+the order in which vertices are listed determine directionality of the edge. For
+example, a vertex pair given as "=myspace,slashdot=" in the input file will generate
+an edge from the vertex named =myspace= to that named =slashdot=.
+
+Computing the influence and prestige requires the allocation of two property maps,
+and two calls to the `degree_centrality()` function. The calls to `measure_influence()`
+and `measure_prestige()` create temporary measure functions that are responsible
+for those values respectively.
+[measure_information_network]
+Note that the `measure_influence()` call can be ommitted to compute the influence
+of vertices. If not given, `degree_centrality()` and `vertex_degree_centrality()`
+will compute influence by default.
+
+Finally, print the results for each vertex in the graph.
+[print_information_network]
+
+If given the `information_network.graph` file as input, the program will produce
+the following output where the second column is influence and the third is prestige:
+
+[pre
+myspace         1       0
+digg            2       2
+blogger         3       0
+slahsdot        0       1
+wikipedia       0       5
+slashdot        2       2
+blogspot        2       0
+bbc             1       1
+]
 
 [endsect]

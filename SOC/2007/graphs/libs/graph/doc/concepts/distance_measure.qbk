@@ -56,10 +56,23 @@ The following expressions are used within this document:
         [`m(d, g)`]
         [`M::result_type`]
         [
-            Invoke the measure on the sum of distances `d`, with respect
+            Invoke the measure on the sum distance `d`, with respect
             to the graph `g`. This returns the result as type `result_type`.
+            Note that in many computations `d` is given as the sum of distances
+            from one vertex to all others in the graph and may be infinite.
         ]
     ]
 ]
+
+[heading C++0x]
+
+    concept DistanceMeasure<M>
+    {
+        typename Graph;
+        typename M::distance_type;
+        typename M::result_type;
+
+        result_type M::operator(distance_type, const Graph&);
+    };
 
 [endsect]

@@ -22,7 +22,7 @@ additional valid expressions.
 
 [heading Notes]
 Note that because both model the [SgiLessThanComparable] concept, they can be used as
-keys in any associative container modeling the [SgiAssociativeContainer] concepte
+keys in any associative container modeling the [SgiAssociativeContainer] concept
 (e.g., `std::map`, `std::set`, etc).
 
 [endsect]

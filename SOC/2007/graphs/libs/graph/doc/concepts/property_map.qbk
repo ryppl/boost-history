@@ -6,17 +6,9 @@
  /]
 
 [section Property Map]
-The [BoostPropertyMap] concept provides additional requirements for other Boost
-property map objects. Specifically, this concept requires that property maps
-be constructed in a syntactically similar manner.
-
-[note
-Of the two most common property maps (iterator and associative), only the
-associative property map can satisfy these requirements. The only way to guarantee
-that generically cretead exterior property maps are correctly adapted to their
-underlying containers is to declare them using the [boost_exterior_vertex_property]
-or [boost_exterior_edge_property] types.
-]
+The [BoostPropertyMap] concept is a refinement of the concepts in the Boost.PropertyMap
+library this concept requires that property maps modeling this concept are required
+to be constructed with a graph object.
 
 [heading Refinement Of]
 [BoostReadWritePropertyMap]
@@ -27,8 +19,9 @@ The following expressions are used within this document:
     [[Expression] [Description]]
     [[M] [A type modeling the [BoostPropertyMap] concept.]]
     [[m] [An object of type `M`.]]
-    [[c] [An object whose type models the [SgiContainer] concept.]]
-    [[k] [A key to the property map.]]
+    [[c] [An object whose type models the [SgiRandomAccessContainer] concept.]]
+    [[k] [An object of the property map's `key_type`.]]
+    [[x] [An object of the property map's `value_type`.]]
 ]
 
 [heading Expressions]
@@ -47,54 +40,67 @@ The following expressions are used within this document:
             This constructor is mainly used to convey type information to
             generic functions since it cannot function without the container.
 
-            *Postconditions:* `m[k]` is invalid.
+            *Postconditions:* `m[k]`, `get(m, k)`, and `put(m, k, x)` have
+            undefined behavior (i.e., are likely to crash the program).
         ]
     ]
     [
-        [Container Contructor]
+        [Property Graph Constructor]
         [
-            `M m(c);`
+            `M m(c, g);`
 
-            `M m = c;`
-
-            `M(c)`
+            `M(c, g)`
         ]
         []
         [
-            Construct a property map `m` over the container `c`.
+            Construct a property map `m` over the container `c` with reference
+            to the graph `g`.
+
+            *Requirements*: The container type of `c` must be a model of the
+            [SgiRandomAccessContainer] concept.
+
+            *Postconditions:* if `k` is a valid vertex or edge descriptor of `g`
+            then `m[k]`, `get(m, k)`, and `put(m, k, x)` are all valid operations,
+            that either return or set the value `x` associated with the key `k`.
+
+            *Complexity:* The property map is constructed in constant time.
         ]
     ]
 ]
 
 [heading Notes]
-This concept is imoprtant for two reasons. First, it provides a common way
-of declaring and constructing property maps, especially when using the exterior
-property declartive facilities. Second, it provides a mechanism for "slicing"
-a [BoostPropertyMatrix] using row access. The following example shows how
-both features can be used in a template function:
+This concept exists primarily to help enforce best practice for declaring and
+using exterior properties. Note that none of the property maps implemented
+in the Boost.PropertyMap library satisfy the requirements of this concept.
+The only type that does satisfy these requirements is the `map_type` of the
+[boost_exterior_property] template.
 
-    template<typename Graph>
-    void shortest_paths(const Graph&)
-    {
-        // Define some useful types
-        typedef typename exterior_vertex_property<Graph, int> Property;
-        typedef typename Property::matrix_type Matrix;
-        typedef typename Property::map_type Map;
-        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+This concept is generally not used to impose requirements on property maps
+passed to generic graph algorithms.
 
-        // Get the first vertex for later
-        Vertex u = *vertices(g).first;
+Also note that because the container `c` over which the property map is constructed
+must be a model of the [SgiRandomAccessContainer] type. This is a fairly stringent
+requirement, but if satisfied (e.g., via a `std::vector`) implies the property
+map implements constant-time property access.
 
-        // Construct a matrix and a map on the first row
-        Matrix matrix(num_vertices(g));
-        Map map = matrix[u];    // Note: map[v] == matrix[u][v]
+[heading Example]
 
-        // Run a shortest paths algorithm.
-        dijkstra_shortest_paths(g, matrix);
+    typedef undirected_graph<> Graph;
+    typedef graph_traits<Graph>::vertex_descriptor Vertex;
 
-        BOOST_ASSERT(matrix[u][u] == 0);        // distance to self == 0
-        BOOST_ASSERT(map[u] == 0);              // same as above
-        BOOST_ASSERT(matrix[u][u] == map[u]);   // just making sure
-    }
+    Graph g;
+    // add vertices and edges
+
+    typedef exterior_property<Graph, Vertex, std::size_t> DistanceProperty;
+    typedef DistanceProperty::container_type DistanceContainer;
+    typedef DistanceProperty::map_type DistanceMap;
+
+    DistanceContainer distances(num_verticse(g), 0);
+    DistanceMap dm(distances, g);
+
+    Vertex v = *vertices(g).first;
+    put(dm, v, 3);  // set v's distance to 3
+    get(dm, v);     // returns 3
+    dm[v];          // same as above, returns 3
 
 [endsect]
