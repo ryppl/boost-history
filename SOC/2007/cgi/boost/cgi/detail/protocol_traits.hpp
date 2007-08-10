@@ -10,6 +10,7 @@
 #define CGI_REQUEST_TRAITS_HPP_INCLUDED__
 
 #include "../tags.hpp"
+#include "../basic_request_fwd.hpp"
 #include "../basic_connection_fwd.hpp"
 
 namespace cgi {
@@ -42,6 +43,14 @@ namespace cgi {
   class scgi_gateway_service;
   template<typename> class gateway_service;
 
+  class acgi_acceptor_service;
+  class scgi_acceptor_service;
+  class fcgi_acceptor_service;
+
+  class cgi_request_service;
+  class acgi_request_service;
+  class fcgi_request_service;
+  class scgi_request_service;
 
  namespace detail {
 
@@ -54,6 +63,10 @@ namespace cgi {
     struct protocol_traits<tags::cgi>
     {
       typedef cgi_request_impl                       impl_type;
+      typedef cgi_request_service                    request_service_type;
+      typedef basic_protocol_service<tags::cgi>      protocol_service_type;
+      typedef basic_request<request_service_type, protocol_service_type>
+                                                     request_type; 
       typedef cgi_service_impl                       service_impl_type;
       typedef basic_connection<tags::stdio>          connection_type;
 //    typedef cgi_gateway_impl                       gateway_impl_type;
@@ -64,6 +77,10 @@ namespace cgi {
     struct protocol_traits<tags::async_cgi>
     {
       typedef async_cgi_request_impl                 impl_type;
+      typedef acgi_request_service                   request_service_type;
+      typedef basic_protocol_service<tags::acgi>     protocol_service_type;
+      typedef basic_request<request_service_type, protocol_service_type>
+                                                     request_type; 
       typedef async_cgi_service_impl                 service_impl_type;
       typedef basic_connection<tags::async_stdio>    connection_type;
       typedef async_cgi_gateway_impl                 gateway_impl_type;
@@ -74,7 +91,12 @@ namespace cgi {
     struct protocol_traits<tags::acgi>
     //  : protocol_traits<tags::async_cgi>
     {
+      typedef protocol_traits<tags::acgi>            type;
       typedef acgi_request_impl                      impl_type;
+      typedef acgi_request_service                   request_service_type;
+      typedef basic_protocol_service<tags::acgi>     protocol_service_type;
+      typedef basic_request<request_service_type, protocol_service_type>
+                                                     request_type; 
       typedef acgi_service_impl                      service_impl_type;
       typedef basic_connection<tags::async_stdio>    connection_type;
       typedef acgi_gateway_impl                      gateway_impl_type;
@@ -85,6 +107,10 @@ namespace cgi {
     struct protocol_traits<tags::fcgi>
     {
       typedef fcgi_request_impl                      impl_type;
+      typedef fcgi_request_service                   request_service_type;
+      typedef basic_protocol_service<tags::fcgi>     protocol_service_type;
+      typedef basic_request<request_service_type, protocol_service_type>
+                                                     request_type; 
       typedef fcgi_service_impl                      service_impl_type;
       typedef basic_connection<tags::tcp_socket>     connection_type;
       typedef fcgi_gateway_impl                      gateway_impl_type;
@@ -95,7 +121,12 @@ namespace cgi {
     struct protocol_traits<tags::scgi>
     {
       typedef scgi_request_impl                      impl_type;
+      typedef scgi_request_service                   request_service_type;
+      typedef basic_protocol_service<tags::scgi>     protocol_service_type;
+      typedef basic_request<request_service_type, protocol_service_type>
+                                                     request_type; 
       typedef scgi_service_impl                      service_impl_type;
+      typedef scgi_acceptor_service                  acceptor_service_impl;
       typedef basic_connection<tags::tcp_socket>     connection_type;
       typedef scgi_gateway_impl                      gateway_impl_type;
       typedef scgi_gateway_service                   gateway_service_type;

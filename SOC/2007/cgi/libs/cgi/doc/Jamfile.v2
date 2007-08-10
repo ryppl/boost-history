@@ -3,15 +3,9 @@
 # subject to the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-<<<<<<< .mine
-project cgi/doc
-  : build-dir ../../../../bin.v2
-  ;
-=======
-project cgi/doc
-  : build-dir ../../bin.v2
-  ;
->>>>>>> .r38435
+#project boost/bwomcgi/doc
+#  : build-dir ../../../bin.v2
+#  ;
 
 import boostbook : boostbook ;
 import quickbook ;
@@ -49,8 +43,8 @@ boostbook standalone
     <xsl:param>boost.libraries=/usr/local/src/boost/libs/libraries.htm
     <xsl:param>boost.images=http://beta.boost.org/images
 #    <xsl:param>toc.max.depth=10
-#    <xsl:param>toc.section.depth=10
-    <xsl:param>chunk.section.depth=4
+    <xsl:param>toc.section.depth=3
+    <xsl:param>chunk.section.depth=2
 	;
 
 #install html

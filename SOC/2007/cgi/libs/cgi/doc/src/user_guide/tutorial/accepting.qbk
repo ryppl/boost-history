@@ -13,7 +13,7 @@ Accepting requests is considered distinct to the [link __loading__ loading] stag
 
 All you need do is create an `*_acceptor` by passing an instance of a __ProtocolService__ to its constructor. The following member functions are available:
 
-[table xcgi_acceptor member functions
+[table [/xcgi_acceptor member functions]
   [[Function signature] [Purpose]]
   [
     [`void accept(xcgi_request& empty_request)`]

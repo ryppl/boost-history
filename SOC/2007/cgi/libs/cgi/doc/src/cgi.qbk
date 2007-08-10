@@ -30,6 +30,7 @@
 [def __naming conventions__ [link boost.cgi.intro.naming_conventions naming conventions]]
 
 [def __tutorial__           [link boost.cgi.tutorial tutorial]]
+[def __reference__          [link /doc/html/cgi/reference.html reference]]
 
 [/
 [def __Service__ #link#to#service#concept#description#]
@@ -62,6 +63,8 @@ This section of the docs is for all users of the library. For details about the 
 [include user_guide/protocols.qbk]
 
 [include user_guide/tutorial.qbk]
+
+[include user_guide/examples.qbk]
 
 [endsect]
 

@@ -9,16 +9,21 @@ import os ;
 
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
-project boost/cgi/examples
-  : build-dir ../../../bin.v2
-  ;
+#project boost/cgi/examples
+#  : build-dir ../../../bin.v2
+#  ;
 
 
 install examples
   : # the sources
-    cgi
+    easy_cgi
     acgi
     reply
   : <location>/var/www/cgi-bin
   ;
-    
+
+install scgi
+  : # the sources
+    scgi
+  : <location>/var/www/scgi-bin
+  ;

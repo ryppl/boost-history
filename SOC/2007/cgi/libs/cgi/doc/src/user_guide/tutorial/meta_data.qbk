@@ -16,10 +16,10 @@ There are five member functions of `basic_request<>` that provide access to the 
 
 [table Meta-data accessor functions
   [[Function signature] [Purpose]]
-  [[`std::string meta_env(const std::string& name)`] [Takes the name of the environment variable wanted and returns the value associated with it.]]
-  [[`std::string meta_get(const std::string& name)`][Takes the name of the CGI GET variable and returns the value associated with it (if any).]]
-  [[`std::string meta_post(const std::string& name, bool greedy = true)`][Takes the name of the CGI POST variable and returns the value associated with it (if any). If `greedy == true` - which it is by default - then more data is read from the request if required until all of the POST data (ie. stdin) has been read.
-]]
+  [[`std::string meta_env(const std::string&)`] [Takes the name of the environment variable wanted and returns the value associated with it.]]
+  [[`std::string meta_get(const std::string&)`][Takes the name of the __GET__ variable and returns the value associated with it (if any).]]
+  [[`std::string meta_post(const std::string&, bool greedy = true)`][Takes the name of the __POST__ variable and returns the value associated with it (if any). If `greedy == true` - which it is by default - then more data is read from the request if required until all of the POST data has been read.]]
+  [[`std::string meta_form(const std::string&, bool greedy = true)`][Takes the name of either a __GET__ or __POST__ variable and returns the value associated with it (if any). If `greedy == true` - which it is by default - then more data is read from the request as required until all of the POST data has been read.]]
   [[`std::string meta_cookie(const std::string& name)`][Takes the name of the cookie variable and returns the value associated with it (if any).]]
   [[`std::string meta_var(const std::string& name, bool greedy = true)`][Takes the name of [*any] meta-variable and returns the value associated with it (if any). If `greedy == true` - which it is by default - then more data is read from the request if required until either the requested variable is found or all of the POST data has been read, which ever comes first.
 ]]

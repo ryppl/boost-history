@@ -195,7 +195,7 @@ namespace cgi {
       this->service.end(this->impl, http::internal_server_error);
     }
 
-    void set_source(cgi::sink dest = reply)
+    void set_source(cgi::sink dest = stdout_)
     {
       boost::system::error_code ec;
       this->service(this->impl, dest, ec);
@@ -288,9 +288,9 @@ namespace cgi {
     }
 
     /// Find the cookie meta-variable matching name
-    std::string meta_cookie(const std::string& name)
+    std::string cookie(const std::string& name)
     {
-      return this->service.meta_cookie(this->impl, name);
+      return this->service.cookie(this->impl, name);
     }
 
     /// Find the environment meta-variable matching name
@@ -328,7 +328,7 @@ namespace cgi {
           return tmp;
       }
 
-      tmp = meta_cookie(name);
+      tmp = cookie(name);
       if (!tmp.empty())
 	      return tmp;
 
@@ -441,6 +441,12 @@ namespace cgi {
     }
 
     /// Set a user cookie
+    /**
+     * Note: this must be called before you have finished outputting
+     * the reply headers or it will just appear as normal data
+     *
+     * ** Is this actually necessary? **
+     */
     void set_cookie(const std::string& name, const std::string& value)
     {
       return this->service.set_cookie(this->impl, name, value);

@@ -9,12 +9,8 @@ import os ;
 
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
-project boost/cgi/examples/cgi
-#  : build-dir ../bin.v2
-  ;
 
-
-exe cgi
+exe easy_cgi
   :
     main.cpp
   :
