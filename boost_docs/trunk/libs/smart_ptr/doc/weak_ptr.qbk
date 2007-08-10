@@ -1,0 +1,295 @@
+[section:weak_ptr weak_ptr class template]
+
+[def __const_pointer_cast__ [link smart_ptr.reference.weak_ptr.members.const_pointer_cast const_pointer_cast]]
+[def __dynamic_pointer_cast__ [link smart_ptr.reference.weak_ptr.members.dynamic_pointer_cast dynamic_pointer_cast]]
+[def __ctor__ [link smart_ptr.reference.weak_ptr.members.constructors weak_ptr]]
+[def __destructor__ [link smart_ptr.reference.weak_ptr.members.destructor ~weak_ptr]]
+[def __element_type__ [link smart_ptr.reference.weak_ptr.members.element_type element_type]]
+[def __free_swap__ [link smart_ptr.reference.weak_ptr.free_functions.swap swap]]
+[def __get__ [link smart_ptr.reference.weak_ptr.members.get get]]
+[def __get_deleter__ [link smart_ptr.reference.weak_ptr.members.get_deleter get_deleter]]
+[def __get_pointer__ [link smart_ptr.reference.weak_ptr.members.get_pointer get_pointer]]
+[def __operatorstar__ [link smart_ptr.reference.weak_ptr.members.indirection operator*]]
+[def __operatorarrow__ [link smart_ptr.reference.weak_ptr.members.indirection operator->]]
+[def __operatorconv__ [link smart_ptr.reference.weak_ptr.members.conversions operator ['unspecified-bool-type]]]
+[def __operator_indexing__ [link smart_ptr.reference.weak_ptr.members.indexing operator\[\]]]
+[def __operator_assign__ [link smart_ptr.reference.weak_ptr.members.assignment operator=]] 
+[def __operator_insertion__ [link smart_ptr.reference.weak_ptr.members.operator_insertion operator<<]]
+[def __operator_eq__ [link smart_ptr.reference.weak_ptr.members.comparison operator==]]
+[def __operator_ne__ [link smart_ptr.reference.weak_ptr.members.comparison operator!=]]
+[def __operator_lt__ [link smart_ptr.reference.weak_ptr.members.comparison operator<]]
+[def __reset__ [link smart_ptr.reference.weak_ptr.members.reset reset]]
+[def __unique__ [link smart_ptr.reference.weak_ptr.members.unique unique]]
+[def __use_count__ [link smart_ptr.reference.weak_ptr.members.use_count use_count]]
+[def __static_pointer_cast__ [link smart_ptr.reference.weak_ptr.members.static_pointer_cast static_pointer_cast]]
+[def __swap__ [link smart_ptr.reference.weak_ptr.members.swap swap]]
+
+[def __expired__ [link smart_ptr.reference.weak_ptr.members.expired expired]]
+[def __lock__ [link smart_ptr.reference.weak_ptr.members.lock lock]]
+
+[section Introduction]
+
+The [*weak_ptr] class template stores a "weak reference" to an object that's already managed by a __shared_ptr__. To access the object, a weak_ptr can be converted to a shared_ptr using [@shared_ptr.htm#constructors the shared_ptr constructor] or the member function [@#lock lock]. When the last __shared_ptr__ to the object goes away and the object is deleted, the attempt to obtain a shared_ptr from the [*weak_ptr] instances that refer to the deleted object will fail: the constructor will throw an exception of type boost::bad_weak_ptr, and weak_ptr::lock will return an empty shared_ptr.
+
+Every [*weak_ptr] meets the [*CopyConstructible] and [*Assignable] requirements of the C++ Standard Library, and so can be used in standard library containers. Comparison operators are supplied so that [*weak_ptr] works with the standard library's associative containers.
+
+weak_ptr operations never throw exceptions.
+
+The class template is parameterized on [*T], the type of the object pointed to.
+
+Compared to shared_ptr, weak_ptr provides a very limited subset of operations since accessing its stored pointer is often dangerous in multithreaded programs, and sometimes unsafe even within a single thread (that is, it may invoke undefined behavior.) Pretend for a moment that [*weak_ptr] has a [*get] member function that returns a raw pointer, and consider this innocent piece of code:
+
+    shared_ptr<int> p(new int(5));
+    weak_ptr<int> q(p);
+
+    // some time later
+
+    if(int * r = q.get())
+    {
+        // use *r
+    }
+
+Imagine that after the if, but immediately before r is used, another thread executes the statement [^p.reset()]. Now r is a dangling pointer.
+
+The solution to this problem is to create a temporary shared_ptr from q:
+
+    shared_ptr<int> p(new int(5));
+    weak_ptr<int> q(p);
+
+    // some time later
+
+    if(shared_ptr<int> r = q.[@#lock lock]())
+    {
+        // use *r
+    }
+
+Now r holds a reference to the object that was pointed by q. Even if [^p.reset()] is executed in another thread, the object will stay alive until r goes out of scope or is reset. By obtaining a shared_ptr to the object, we have effectively locked it against destruction.
+
+[endsect]
+
+[section Synopsis]
+
+    namespace boost {
+
+      template<class T> class weak_ptr {
+
+        public:
+          typedef T __element_type__;
+
+          __ctor__();
+
+          template<class Y> __ctor__(shared_ptr<Y> const & r);
+          __ctor__(weak_ptr const & r);
+          template<class Y> __ctor__(weak_ptr<Y> const & r);
+
+          __destructor__();
+
+          weak_ptr & __operator_assign__(weak_ptr const & r);
+          template<class Y> weak_ptr & __operator_assign__(weak_ptr<Y> const & r);
+          template<class Y> weak_ptr & __operator_assign__(shared_ptr<Y> const & r);
+
+          long __use_count__() const;
+          bool __expired__() const;
+          shared_ptr<T> __lock__() const;
+
+          void __reset__();
+          void __swap__(weak_ptr<T> & b);
+      };
+
+      template<class T, class U>
+        bool __operator_lt__(weak_ptr<T> const & a, weak_ptr<U> const & b);
+
+      template<class T>
+        void __free_swap__(weak_ptr<T> & a, weak_ptr<T> & b);
+    }
+
+[endsect]
+
+[section Members]
+
+[heading element_type]
+
+    typedef T element_type;
+
+[: 
+
+Provides the type of the template parameter T.
+]
+
+[heading constructors]
+
+    weak_ptr();
+
+[: 
+
+[*Effects:] Constructs an empty [*weak_ptr].
+
+[*Postconditions:] [^use_count() == 0].
+
+[*Throws:] nothing.
+]
+
+    template<class Y> weak_ptr(shared_ptr<Y> const & r);
+    weak_ptr(weak_ptr const & r);
+    template<class Y> weak_ptr(weak_ptr<Y> const & r);
+
+[: 
+
+[*Effects:] If r is empty, constructs an empty weak_ptr; otherwise, constructs a [*weak_ptr] that shares ownership with r as if by storing a copy of the pointer stored in [*r].
+
+[*Postconditions:] [^use_count() == r.use_count()].
+
+[*Throws:] nothing.
+]
+
+[heading destructor]
+
+    ~weak_ptr();
+
+[: 
+
+[*Effects:] Destroys this [*weak_ptr] but has no effect on the object its stored pointer points to.
+
+[*Throws:] nothing.
+]
+
+[heading assignment]
+
+    weak_ptr & operator=(weak_ptr const & r);
+    template<class Y> weak_ptr & operator=(weak_ptr<Y> const & r);
+    template<class Y> weak_ptr & operator=(shared_ptr<Y> const & r);
+
+[: 
+
+[*Effects:] Equivalent to [^weak_ptr(r).swap(*this)].
+
+[*Throws:] nothing.
+
+[*Notes:] The implementation is free to meet the effects (and the implied guarantees) via different means, without creating a temporary.
+]
+
+[heading use_count]
+
+    long use_count() const;
+
+[: 
+
+[*Returns:] 0 if *this is empty; otherwise, the number of __shared_ptr__ objects that share ownership with *this.
+
+[*Throws:] nothing.
+
+[*Notes:] [^use_count()] is not necessarily efficient. Use only for debugging and testing purposes, not for production code.
+]
+
+[heading expired]
+
+    bool expired() const;
+
+[: 
+
+[*Returns:] [^use_count() == 0].
+
+[*Throws:] nothing.
+
+[*Notes:] [^expired()] may be faster than [^use_count()].
+]
+
+[heading lock]
+
+    shared_ptr<T> lock() const;
+
+[: 
+
+[*Returns:] [^expired()? shared_ptr<T>(): shared_ptr<T>(*this)].
+
+[*Throws:] nothing.
+]
+
+[heading reset]
+
+    void reset();
+
+[: 
+
+[*Effects:] Equivalent to [^weak_ptr().swap(*this)].
+]
+
+[heading swap]
+
+    void swap(weak_ptr & b);
+
+[: 
+
+[*Effects:] Exchanges the contents of the two smart pointers.
+
+[*Throws:] nothing.
+
+]
+
+[endsect]
+
+[section Free Functions]
+
+[heading comparison]
+
+    template<class T, class U>
+      bool operator<(weak_ptr<T> const & a, weak_ptr<U> const & b);
+
+[: 
+
+[*Returns:] an unspecified value such that
+* [*operator<] is a strict weak ordering as described in section 25.3 [^\[lib.alg.sorting\]] of the C++ standard; 
+* under the equivalence relation defined by operator<, [^!(a < b) && !(b < a)], two weak_ptr instances are equivalent if and only if they share ownership or are both empty.
+
+[*Throws:] nothing.
+
+[*Notes:] Allows weak_ptr objects to be used as keys in associative containers.
+]
+
+[heading swap]
+
+    template<class T>
+      void swap(weak_ptr<T> & a, weak_ptr<T> & b)
+
+[: 
+
+[*Effects:] Equivalent to [^a.swap(b)].
+
+[*Throws:] nothing.
+
+[*Notes:] Matches the interface of [*std::swap]. Provided as an aid to generic programming.
+]
+
+[endsect]
+
+[section Frequently Asked Questions]
+
+[*Q.] Can an object create a weak_ptr to itself in its constructor?
+
+[*A.] No. A weak_ptr can only be created from a shared_ptr, and at object construction time no shared_ptr to the object exists yet. Even if you could create a temporary shared_ptr to this, it would go out of scope at the end of the constructor, and all weak_ptr instances would instantly expire.
+
+The solution is to make the constructor private, and supply a factory function that returns a shared_ptr:
+
+    class X
+    {
+    private:
+
+        X();
+
+    public:
+
+        static shared_ptr<X> create()
+        {
+            shared_ptr<X> px(new X);
+            // create weak pointers from px here
+            return px;
+        }
+    };
+
+[endsect]
+
+$Date: 2007/06/06 16:39:52 $
+
+Copyright 1999 Greg Colvin and Beman Dawes. Copyright 2002 Darin Adler. Copyright 2002-2005 Peter Dimov. Distributed under the Boost Software License, Version 1.0. See accompanying file [@../../LICENSE_1_0.txt LICENSE_1_0.txt] or copy at [@http://www.boost.org/LICENSE_1_0.txt http://www.boost.org/LICENSE_1_0.txt].
+
+[endsect][/weak_ptr]

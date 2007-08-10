@@ -1,0 +1,199 @@
+[section:shared_array shared_array class template]
+
+[def __const_pointer_cast__ [link smart_ptr.reference.shared_array.members.const_pointer_cast const_pointer_cast]]
+[def __dynamic_pointer_cast__ [link smart_ptr.reference.shared_array.members.dynamic_pointer_cast dynamic_pointer_cast]]
+[def __ctor__ [link smart_ptr.reference.shared_array.members.constructors shared_array]]
+[def __destructor__ [link smart_ptr.reference.shared_array.members.destructor ~shared_array]]
+[def __element_type__ [link smart_ptr.reference.shared_array.members.element_type element_type]]
+[def __free_swap__ [link smart_ptr.reference.shared_array.free_functions.swap swap]]
+[def __get__ [link smart_ptr.reference.shared_array.members.get get]]
+[def __get_deleter__ [link smart_ptr.reference.shared_array.members.get_deleter get_deleter]]
+[def __get_pointer__ [link smart_ptr.reference.shared_array.members.get_pointer get_pointer]]
+[def __operatorstar__ [link smart_ptr.reference.shared_array.members.indirection operator*]]
+[def __operatorarrow__ [link smart_ptr.reference.shared_array.members.indirection operator->]]
+[def __operatorconv__ [link smart_ptr.reference.shared_array.members.conversions operator ['unspecified-bool-type]]]
+[def __operator_indexing__ [link smart_ptr.reference.shared_array.members.indexing operator\[\]]]
+[def __operator_assign__ [link smart_ptr.reference.shared_array.members.assignment operator=]] 
+[def __operator_insertion__ [link smart_ptr.reference.shared_array.members.operator_insertion operator<<]]
+[def __operator_eq__ [link smart_ptr.reference.shared_array.members.comparison operator==]]
+[def __operator_ne__ [link smart_ptr.reference.shared_array.members.comparison operator!=]]
+[def __operator_lt__ [link smart_ptr.reference.shared_array.members.comparison operator<]]
+[def __reset__ [link smart_ptr.reference.shared_array.members.reset reset]]
+[def __unique__ [link smart_ptr.reference.shared_array.members.unique unique]]
+[def __use_count__ [link smart_ptr.reference.shared_array.members.use_count use_count]]
+[def __static_pointer_cast__ [link smart_ptr.reference.shared_array.members.static_pointer_cast static_pointer_cast]]
+[def __swap__ [link smart_ptr.reference.shared_array.members.swap swap]]
+
+[section Introduction]
+
+The __shared_array__ class template stores a pointer to a dynamically allocated array. (Dynamically allocated array are allocated with the C++ [*new[]] expression.) The object pointed to is guaranteed to be deleted when the last __shared_array__ pointing to it is destroyed or reset.
+
+Every __shared_array__ meets the [*CopyConstructible] and [*Assignable] requirements of the C++ Standard Library, and so can be used in standard library containers. Comparison operators are supplied so that __shared_array__ works with the standard library's associative containers.
+
+Normally, a __shared_array__ cannot correctly hold a pointer to an object that has been allocated with the non-array form of new. See __shared_ptr__ for that usage.
+
+Because the implementation uses reference counting, cycles of __shared_array__ instances will not be reclaimed. For example, if [*main()] holds a __shared_array__ to [*A], which directly or indirectly holds a __shared_array__ back to [*A], [*A]'s use count will be 2. Destruction of the original __shared_array__ will leave [*A] dangling with a use count of 1.
+
+A __shared_ptr__ to a [*std::vector] is an alternative to a __shared_array__ that is a bit heavier duty but far more flexible.
+
+The class template is parameterized on [*T], the type of the object pointed to. [*T] must meet the smart pointer __common_requirements__.
+
+[endsect]
+
+[section Synopsis]
+
+    namespace boost {
+
+      template<class T> class shared_array {
+
+        public:
+          typedef T __element_type__;
+
+          explicit __ctor__(T * p = 0);
+          template<class D> __ctor__(T * p, D d);
+          __destructor__(); // never throws
+
+          __ctor__(shared_array const & r); // never throws
+
+          shared_array & __operator_assign__(shared_array const & r); // never throws
+
+          void __reset__(T * p = 0);
+          template<class D> void __reset__(T * p, D d);
+
+          T & __operator_indexing__(std::ptrdiff_t i) const() const; // never throws
+          T * __get__() const; // never throws
+
+          bool __unique__() const; // never throws
+          long __use_count__() const; // never throws
+
+          __operatorconv__() const; // never throws
+
+          void __swap__(shared_array<T> & b); // never throws
+      };
+
+      template<class T>
+        bool __operator_eq__(shared_array<T> const & a, shared_array<T> const & b); // never throws
+      template<class T>
+        bool __operator_ne__(shared_array<T> const & a, shared_array<T> const & b); // never throws
+      template<class T>
+        bool __operator_lt__(shared_array<T> const & a, shared_array<T> const & b); // never throws
+
+      template<class T> void __free_swap__(shared_array<T> & a, shared_array<T> & b); // never throws
+
+    }
+
+[endsect]
+
+[section Members]
+
+[heading element_type]
+
+    typedef T element_type;
+
+Provides the type of the stored pointer.
+[heading constructors]
+
+    explicit shared_array(T * p = 0);
+
+Constructs a __shared_array__, storing a copy of [*p], which must be a pointer to an array that was allocated via a C++ [*new[]] expression or be 0. Afterwards, the __use_count__ is 1 (even if p == 0; see [@#destructor ~shared_array]). The only exception which may be thrown by this constructor is [*std::bad_alloc]. If an exception is thrown, [*delete[] p] is called.
+
+
+    template<class D> shared_array(T * p, D d);
+
+Constructs a __shared_array__, storing a copy of [*p] and of [*d]. Afterwards, the __use_count__ is 1. [*D]'s copy constructor and destructor must not throw. When the the time comes to delete the array pointed to by [*p], the object [*d] is used in the statement [*d(p)]. Invoking the object [*d] with parameter [*p] in this way must not throw. The only exception which may be thrown by this constructor is [*std::bad_alloc]. If an exception is thrown, [*d(p)] is called.
+
+    shared_array(shared_array const & r); // never throws
+
+Constructs a __shared_array__, as if by storing a copy of the pointer stored in [*r]. Afterwards, the __use_count__ for all copies is 1 more than the initial use count.
+
+[heading destructor]
+
+    ~shared_array(); // never throws
+
+Decrements the __use_count__. Then, if the use count is 0, deletes the array pointed to by the stored pointer. Note that [*delete[]] on a pointer with a value of 0 is harmless. [*T] need not be a complete type. The guarantee that this does not throw exceptions depends on the requirement that the deleted object's destructor does not throw exceptions. See the smart pointer __common_requirements__.
+
+[heading assignment]
+
+    shared_array & operator=(shared_array const & r); // never throws
+
+Constructs a new __shared_array__ as described [@#constructors above], then replaces this __shared_array__ with the new one, destroying the replaced object.
+
+[heading reset]
+
+    void reset(T * p = 0);
+
+Constructs a new __shared_array__ as described [@#constructors above], then replaces this __shared_array__ with the new one, destroying the replaced object. The only exception which may be thrown is [*std::bad_alloc]. If an exception is thrown, [*delete[] p] is called.
+
+    template<class D> void reset(T * p, D d);
+
+Constructs a new __shared_array__ as described [@#constructors above], then replaces this __shared_array__ with the new one, destroying the replaced object. [*D]'s copy constructor must not throw. The only exception which may be thrown is [*std::bad_alloc]. If an exception is thrown, [*d(p)] is called.
+
+[heading indexing]
+
+    T & operator[](std::ptrdiff_t i) const; // never throws
+
+Returns a reference to element [*i] of the array pointed to by the stored pointer. Behavior is undefined and almost certainly undesirable if the stored pointer is 0, or if [*i] is less than 0 or is greater than or equal to the number of elements in the array.
+
+[heading get]
+
+    T * get() const; // never throws
+
+Returns the stored pointer. [*T] need not be a complete type. See the smart pointer __common_requirements__.
+
+[heading unique]
+
+    bool unique() const; // never throws
+
+Returns true if no other __shared_array__ is sharing ownership of the stored pointer, false otherwise. [*T] need not be a complete type. See the smart pointer __common_requirements__.
+
+[heading use_count]
+
+    long use_count() const; // never throws
+
+Returns the number of __shared_array__ objects sharing ownership of the stored pointer. [*T] need not be a complete type. See the smart pointer __common_requirements__.
+
+Because [*use_count] is not necessarily efficient to implement for implementations of __shared_array__ that do not use an explicit reference count, it might be removed from some future version. Thus it should be used for debugging purposes only, and not production code.
+
+[heading conversions]
+
+    operator ['unspecified-bool-type] () const; // never throws
+
+Returns an unspecified value that, when used in boolean contexts, is equivalent to [^get() != 0].
+
+[heading swap]
+
+    void swap(shared_ptr & b); // never throws
+
+Exchanges the contents of the two smart pointers. [*T] need not be a complete type. See the smart pointer __common_requirements__.
+
+[endsect]
+
+[section Free Functions]
+
+[heading comparison]
+
+    template<class T>
+      bool operator==(shared_array<T> const & a, shared_array<T> const & b); // never throws
+    template<class T>
+      bool operator!=(shared_array<T> const & a, shared_array<T> const & b); // never throws
+    template<class T>
+      bool operator<(shared_array<T> const & a, shared_array<T> const & b); // never throws
+
+Compares the stored pointers of the two smart pointers. [*T] need not be a complete type. See the smart pointer __common_requirements__.
+
+The [*operator<] overload is provided to define an ordering so that __shared_array__ objects can be used in associative containers such as [*std::map]. The implementation uses [*std::less<T *>] to perform the comparison. This ensures that the comparison is handled correctly, since the standard mandates that relational operations on pointers are unspecified (5.9 [expr.rel] paragraph 2) but [*std::less<>] on pointers is well-defined (20.3.3 [lib.comparisons] paragraph 8).
+
+[heading swap]
+
+    template<class T>
+      void swap(shared_array<T> & a, shared_array<T> & b) // never throws
+
+Equivalent to [*a.swap(b)]. Matches the interface of [*std::swap]. Provided as an aid to generic programming.
+
+[endsect]
+
+Revised 09 January 2003
+
+Copyright 1999 Greg Colvin and Beman Dawes. Copyright 2002 Darin Adler. Copyright 2002-2005 Peter Dimov. Distributed under the Boost Software License, Version 1.0. See accompanying file [@../../LICENSE_1_0.txt LICENSE_1_0.txt] or copy at [@http://www.boost.org/LICENSE_1_0.txt http://www.boost.org/LICENSE_1_0.txt].
+
+[endsect][/shared_array]

@@ -1,0 +1,195 @@
+[def __reset__ [link smart_ptr.reference.scoped_ptr.members.reset reset]]
+[def __element_type__ [link smart_ptr.reference.scoped_ptr.members.element_type element_type]]
+[def __ctor__ [link smart_ptr.reference.scoped_ptr.members.constructors scoped_ptr]]
+[def __destructor__ [link smart_ptr.reference.scoped_ptr.members.destructor ~scoped_ptr]]
+[def __operatorlbrb__ [link smart_ptr.reference.scoped_ptr.members.subscripting operator\[\]]]
+[def __operatorstar__ [link smart_ptr.reference.scoped_ptr.members.indirection operator*]]
+[def __operatorarrow__ [link smart_ptr.reference.scoped_ptr.members.indirection operator->]]
+[def __get__ [link smart_ptr.reference.scoped_ptr.members.get get]]
+[def __operatorconv__ [link smart_ptr.reference.scoped_ptr.members.conversions operator ['unspecified-bool-type]]]
+[def __swap__ [link smart_ptr.reference.scoped_ptr.members.swap swap]]
+[def __free_swap__ [link smart_ptr.reference.scoped_ptr.free_functions.swap swap]]
+
+[def __example__ [link smart_ptr.reference.scoped_ptr.example example]]
+
+[section:scoped_ptr scoped_ptr class template]
+
+[section Introduction]
+
+The __scoped_ptr__ class template stores a pointer to a dynamically allocated object. (Dynamically allocated objects are allocated with the C++ [*new] expression.) The object pointed to is guaranteed to be deleted, either on destruction of the __scoped_ptr__, or via an explicit __reset__. See the __example__.
+
+The __scoped_ptr__ template is a simple solution for simple needs. It supplies a basic "resource acquisition is initialization" facility, without shared-ownership or transfer-of-ownership semantics. Both its name and enforcement of semantics (by being __noncopyable__) signal its intent to retain ownership solely within the current scope. Because it is __noncopyable__, it is safer than __shared_ptr__ or [*std::auto_ptr] for pointers which should not be copied.
+
+Because __scoped_ptr__ is simple, in its usual implementation every operation is as fast as for a built-in pointer and it has no more space overhead that a built-in pointer.
+
+scoped_ptr cannot be used in C++ Standard Library containers. Use __shared_ptr__ if you need a smart pointer that can.
+
+scoped_ptr cannot correctly hold a pointer to a dynamically allocated array. See __scoped_array__ for that usage.
+
+The class template is parameterized on [*T], the type of the object pointed to. [*T] must meet the smart pointer __common_requirements__.
+
+[endsect]
+
+[section Synopsis]
+
+    namespace boost {
+
+      template<class T> class scoped_ptr : __noncopyable__ {
+
+       public:
+         typedef T __element_type__;
+
+         explicit __ctor__(T * p = 0); // never throws
+         __destructor__(); // never throws
+
+         void __reset__(T * p = 0); // never throws
+
+         T & __operatorstar__() const; // never throws
+         T * __operatorarrow__() const; // never throws
+         T * __get__() const; // never throws
+         
+         __operatorconv__() const; // never throws
+
+         void __swap__(scoped_ptr & b); // never throws
+      };
+
+      template<class T> void __free_swap__(scoped_ptr<T> & a, scoped_ptr<T> & b); // never throws
+
+    }
+
+[endsect]
+
+[section Members]
+
+[heading element_type]
+
+    typedef T element_type;
+
+Provides the type of the stored pointer.
+
+[heading constructors]
+
+    explicit scoped_ptr(T * p = 0); // never throws
+
+Constructs a __scoped_ptr__, storing a copy of [*p], which must have been allocated via a C++ [*new] expression or be 0. [*T] is not required be a complete type. See the smart pointer __common_requirements__.
+
+[heading destructor]
+
+    ~scoped_ptr(); // never throws
+
+Destroys the object pointed to by the stored pointer, if any, as if by using [^delete this->get()].
+
+The guarantee that this does not throw exceptions depends on the requirement that the deleted object's destructor does not throw exceptions. See the smart pointer __common_requirements__.
+
+[heading reset]
+
+    void reset(T * p = 0); // never throws
+
+Deletes the object pointed to by the stored pointer and then stores a copy of p, which must have been allocated via a C++ [*new] expression or be 0. The guarantee that this does not throw exceptions depends on the requirement that the deleted object's destructor does not throw exceptions. See the smart pointer __common_requirements__.
+
+[heading indirection]
+
+    T & operator*() const; // never throws
+
+Returns a reference to the object pointed to by the stored pointer. Behavior is undefined if the stored pointer is 0.
+
+    T * operator->() const; // never throws
+
+Returns the stored pointer. Behavior is undefined if the stored pointer is 0.
+
+[heading get]
+
+    T * get() const; // never throws
+
+Returns the stored pointer. [*T] need not be a complete type. See the smart pointer __common_requirements__.
+
+[heading conversions]
+
+    operator ``['unspecified-bool-type]`` () const; // never throws
+
+Returns an unspecified value that, when used in boolean contexts, is equivalent to [^get() != 0].
+
+[heading swap]
+
+    void swap(scoped_ptr & b); // never throws
+
+Exchanges the contents of the two smart pointers. [*T] need not be a complete type. See the smart pointer __common_requirements__.
+
+[endsect]
+
+[section Free Functions]
+
+[heading swap]
+
+    template<class T> void swap(scoped_ptr<T> & a, scoped_ptr<T> & b); // never throws
+
+Equivalent to [*a.swap(b)]. Matches the interface of [*std::swap]. Provided as an aid to generic programming.
+
+[endsect]
+
+[section Example]
+
+Here's an example that uses __scoped_ptr__.
+
+    #include <boost/scoped_ptr.hpp>
+    #include <iostream>
+
+    struct Shoe { ~Shoe() { std::cout << "Buckle my shoe\n"; } };
+
+    class MyClass {
+        boost::scoped_ptr<int> ptr;
+      public:
+        MyClass() : ptr(new int) { *ptr = 0; }
+        int add_one() { return ++*ptr; }
+    };
+
+    int main()
+    {
+        boost::scoped_ptr<Shoe> x(new Shoe);
+        MyClass my_instance;
+        std::cout << my_instance.add_one() << '\n';
+        std::cout << my_instance.add_one() << '\n';
+    }
+
+The example program produces the beginning of a child's nursery rhyme:
+
+[pre 
+    1
+    2
+    Buckle my shoe
+]
+
+[endsect]
+
+[section Rationale]
+
+The primary reason to use __scoped_ptr__ rather than [*auto_ptr] is to let readers of your code know that you intend "resource acquisition is initialization" to be applied only for the current scope, and have no intent to transfer ownership.
+
+A secondary reason to use __scoped_ptr__ is to prevent a later maintenance programmer from adding a function that transfers ownership by returning the [*auto_ptr], because the maintenance programmer saw [*auto_ptr], and assumed ownership could safely be transferred.
+
+Think of [*bool] vs [*int]. We all know that under the covers [*bool] is usually just an [*int]. Indeed, some argued against including [*bool] in the C++ standard because of that. But by coding [*bool] rather than [*int], you tell your readers what your intent is. Same with __scoped_ptr__; by using it you are signaling intent.
+
+It has been suggested that [*scoped_ptr<T>] is equivalent to [*std::auto_ptr<T> const]. Ed Brey pointed out, however, that __reset__ will not work on a [*std::auto_ptr<T> const.]
+
+[endsect]
+
+[section Handle/Body Idiom]
+
+One common usage of __scoped_ptr__ is to implement a handle/body (also called pimpl) idiom which avoids exposing the body (implementation) in the header file.
+
+The [@example/scoped_ptr_example_test.cpp scoped_ptr_example_test.cpp] sample program includes a header file, [@example/scoped_ptr_example.hpp scoped_ptr_example.hpp], which uses a [*scoped_ptr<>] to an incomplete type to hide the implementation. The instantiation of member functions which require a complete type occurs in the [@example/scoped_ptr_example.cpp scoped_ptr_example.cpp] implementation file.
+
+[endsect]
+
+[section Frequently Asked Questions]
+
+[*Q]. Why doesn't __scoped_ptr__ have a release() member?
+[*A]. When reading source code, it is valuable to be able to draw conclusions about program behavior based on the types being used. If scoped_ptr had a release() member, it would become possible to transfer ownership of the held pointer, weakening its role as a way of limiting resource lifetime to a given context. Use std::auto_ptr where transfer of ownership is required. (supplied by Dave Abrahams)
+
+[endsect]
+
+Revised 09 January 2003
+
+Copyright 1999 Greg Colvin and Beman Dawes. Copyright 2002 Darin Adler. Copyright 2002-2005 Peter Dimov. Distributed under the Boost Software License, Version 1.0. See accompanying file [@../../LICENSE_1_0.txt LICENSE_1_0.txt] or copy at [@http://www.boost.org/LICENSE_1_0.txt http://www.boost.org/LICENSE_1_0.txt].
+
+[endsect][/scoped_ptr]
