@@ -33,7 +33,7 @@ template <size_t limb_bit_number = 32> struct bigint_fft_multiplicator
 		return static_cast<uint32_t>(static_cast<uint64_t>(a) * b % prime);
 	#else
 		int r = a * b - prime * static_cast<uint32_t>(inv_prime * static_cast<int>(a) * b);
-		r = (r < 0 ? r + prime : r);
+		r = (r < 0 ? r + prime : r > prime ? r - prime : r);
 		BOOST_ASSERT(static_cast<uint32_t>(r) == static_cast<uint32_t>(static_cast<uint64_t>(a) * b % prime));
 		return r;
 	#endif
