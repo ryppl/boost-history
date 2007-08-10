@@ -93,6 +93,10 @@ namespace boost
         typedef typename property_type::map_type map_type;
     };
 
+
+    // TODO: Rewrite a property matrix in terms of a property map (i.e., the
+    // matrix is separate from map). map of maps.
+
     template <typename Matrix>
     struct property_matrix_traits
     {
@@ -100,6 +104,7 @@ namespace boost
         typedef typename Matrix::container_type container_type;
         typedef typename Matrix::value_type value_type;
         typedef typename Matrix::key_type key_type;
+        typedef typename Matrix::map_type map_type;
     };
 }
 

@@ -50,7 +50,7 @@ namespace boost
             { return get(edge_index, g); }
 
             static value_type index(key_type k, const Graph& g)
-            { return get(vertex_index, g, k); }
+            { return get(edge_index, g, k); }
         };
 
         template <typename Graph, typename Key>
