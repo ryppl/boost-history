@@ -1,0 +1,10 @@
+
+project
+    : requirements
+        <include>../../../
+        <include>$BOOST_ROOT
+    ;
+
+exe degree_centrality : degree_centrality.cpp ;
+
+exe influence_prestige : influence_prestige.cpp ;
