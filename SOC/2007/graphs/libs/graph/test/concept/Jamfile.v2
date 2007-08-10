@@ -1,0 +1,12 @@
+
+import testing ;
+
+project
+    : requirements
+        <include>../../../../
+        <include>$BOOST_ROOT
+    ;
+
+test-suite graph_test :
+    [ compile degree_centrality_check.cpp ]
+    ;
