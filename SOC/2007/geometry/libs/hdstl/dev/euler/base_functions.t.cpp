@@ -10,8 +10,7 @@
 #include <boost/hdstl/halfedge_ds/halfedge_selectors.hpp>
 #include <boost/hdstl/halfedge_ds/facet_functions.hpp>
 #include <boost/hdstl/halfedge_ds/vertex_functions.hpp>
-#include <boost/hdstl/halfedge_ds/meta_functions.hpp>
-#include <boost/pending/ct_if.hpp>
+#include <boost/hdstl/halfedge_ds/halfedge_ds.hpp>
 #include <boost/test/minimal.hpp>
 
 #include <set>
@@ -24,73 +23,6 @@ using namespace std;
 // ===========================================================================
 //                              CLASS HALFEDGE_GEN
 // ===========================================================================
-
-typedef void* halfedge_ptr;
-
-template <typename HalfedgeS, typename VertexS, typename FacetS>
-struct halfedge_config {
-    // This halfedge_config to identically replace the halfedge_ds_gen::config
-    // and reproduced here for test purposes only. Note that this tests are 
-    // not for the config class, but the halfedge_selectors, so config will
-    // be tested in its own package.
-
-    enum {
-        halfedge_has_opposite_member = !meta_is_same<
-                        typename HalfedgeS::container_selector, vecS>::value,
-        is_forward = HalfedgeS::is_forward,
-        is_backward = HalfedgeS::is_backward,
-        halfedge_supports_vertices = !meta_is_same<VertexS,noVertexS>::value,
-        is_source = VertexS::is_source,
-        halfedge_supports_facets = !meta_is_same<FacetS,noFacetS>::value
-    };
-    typedef typename boost::ct_if<halfedge_has_opposite_member,
-                  halfedge_ptr, std::size_t>::type halfedge_descriptor;
-};
-
-template <typename HalfedgeS>
-struct halfedge_config<HalfedgeS, noVertexS, noFacetS> {
-    enum {
-        halfedge_has_opposite_member = !meta_is_same<
-                        typename HalfedgeS::container_selector, vecS>::value,
-        is_forward = HalfedgeS::is_forward,
-        is_backward = HalfedgeS::is_backward,
-        halfedge_supports_vertices = false,
-        is_source = false,
-        halfedge_supports_facets = false
-    };
-    typedef typename boost::ct_if<halfedge_has_opposite_member,
-                  halfedge_ptr, std::size_t>::type halfedge_descriptor;
-};
-
-template <typename HalfedgeS, typename FacetS>
-struct halfedge_config<HalfedgeS, noVertexS, FacetS> {
-    enum {
-        halfedge_has_opposite_member = !meta_is_same<
-                        typename HalfedgeS::container_selector, vecS>::value,
-        is_forward = HalfedgeS::is_forward,
-        is_backward = HalfedgeS::is_backward,
-        halfedge_supports_vertices = false,
-        is_source = false,
-        halfedge_supports_facets = !meta_is_same<FacetS,noFacetS>::value
-    };
-    typedef typename boost::ct_if<halfedge_has_opposite_member,
-                  halfedge_ptr, std::size_t>::type halfedge_descriptor;
-};
-
-template <typename HalfedgeS, typename VertexS>
-struct halfedge_config<HalfedgeS, VertexS, noFacetS> {
-    enum {
-        halfedge_has_opposite_member = !meta_is_same<
-                        typename HalfedgeS::container_selector, vecS>::value,
-        is_forward = HalfedgeS::is_forward,
-        is_backward = HalfedgeS::is_backward,
-        halfedge_supports_vertices = !meta_is_same<VertexS,noVertexS>::value,
-        is_source = VertexS::is_source,
-        halfedge_supports_facets = false
-    };
-    typedef typename boost::ct_if<halfedge_has_opposite_member,
-                  halfedge_ptr, std::size_t>::type halfedge_descriptor;
-};
 
 template <typename HalfedgeGen>
 void create_hds(HalfedgeGen& halfedgeGen){
@@ -128,9 +60,13 @@ bool halfedge_set_next_test(TagS const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_next(ha, hb, halfedgeGen);
+    stitch_next_in_facet(ha, hb, halfedgeGen, next_in_facet_tag());
+    stitch_next_at_source(ha, hb, halfedgeGen, next_in_facet_tag());
+    stitch_next_at_target(ha, hb, halfedgeGen, next_in_facet_tag());
     
     BOOST_CHECK(( next_in_facet(ha, halfedgeGen) == hb )); 
+    BOOST_CHECK(( get_next_in_facet(ha, halfedgeGen, next_in_facet_tag()) == hb )); 
+
     return true;
 }
 
@@ -148,7 +84,9 @@ bool halfedge_set_next_test(next_at_source_tag const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_next(ha, hb, halfedgeGen);
+    stitch_next_in_facet(ha, hb, halfedgeGen, next_at_source_tag());
+    stitch_next_at_source(ha, hb, halfedgeGen, next_at_source_tag());
+    stitch_next_at_target(ha, hb, halfedgeGen, next_at_source_tag());
     
     BOOST_CHECK(( next_at_source(ha, halfedgeGen) == hb )); 
 
@@ -169,7 +107,9 @@ bool halfedge_set_next_test(next_at_target_tag const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_next(ha, hb, halfedgeGen);
+    stitch_next_in_facet(ha, hb, halfedgeGen, next_at_target_tag());
+    stitch_next_at_source(ha, hb, halfedgeGen, next_at_target_tag());
+    stitch_next_at_target(ha, hb, halfedgeGen, next_at_target_tag());
     
     BOOST_CHECK(( next_at_target(ha, halfedgeGen) == hb )); 
 
@@ -190,9 +130,12 @@ bool halfedge_set_prev_test(TagS const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_prev(ha, hb, halfedgeGen);
+    stitch_prev_in_facet(ha, hb, halfedgeGen, prev_in_facet_tag());
+    stitch_prev_at_source(ha, hb, halfedgeGen, prev_in_facet_tag());
+    stitch_prev_at_target(ha, hb, halfedgeGen, prev_in_facet_tag());
     
     BOOST_CHECK(( prev_in_facet(ha, halfedgeGen) == hb )); 
+    BOOST_CHECK(( get_prev_in_facet(ha, halfedgeGen, prev_in_facet_tag()) == hb )); 
 
     return true;
 }
@@ -211,7 +154,9 @@ bool halfedge_set_prev_test(prev_at_source_tag const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_prev(ha, hb, halfedgeGen);
+    stitch_prev_in_facet(ha, hb, halfedgeGen, prev_at_source_tag());
+    stitch_prev_at_source(ha, hb, halfedgeGen, prev_at_source_tag());
+    stitch_prev_at_target(ha, hb, halfedgeGen, prev_at_source_tag());
     
     BOOST_CHECK(( prev_at_source(ha, halfedgeGen) == hb )); 
 
@@ -232,7 +177,9 @@ bool halfedge_set_prev_test(prev_at_target_tag const&) {
     halfedge_descriptor ha = *begin;
     halfedge_descriptor hb = *(++begin);
 
-    stitch_prev(ha, hb, halfedgeGen);
+    stitch_prev_in_facet(ha, hb, halfedgeGen, prev_at_target_tag());
+    stitch_prev_at_source(ha, hb, halfedgeGen, prev_at_target_tag());
+    stitch_prev_at_target(ha, hb, halfedgeGen, prev_at_target_tag());
     
     BOOST_CHECK(( prev_at_target(ha, halfedgeGen) == hb )); 
 
@@ -253,9 +200,9 @@ bool test_set_next_functions()
                     halfedge_gen<
                       halfedgeS<ContainerS, TraversalS>, 
                       int, int, 
-                      halfedge_config<
+                      typename halfedge_ds_gen<
                         halfedgeS<ContainerS, TraversalS>, 
-                        VertexS, FacetS> > 
+                        VertexS, FacetS>::config> 
                   >(next_tag()) ));
    return true;
 }
@@ -270,9 +217,9 @@ bool test_set_prev_functions()
                     halfedge_gen<
                       halfedgeS<ContainerS, TraversalS>, 
                       int, int, 
-                      halfedge_config<
+                      typename halfedge_ds_gen<
                         halfedgeS<ContainerS, TraversalS>, 
-                        VertexS, FacetS> > 
+                        VertexS, FacetS>::config> 
                   >(prev_tag()) ));
     return true;
 }

@@ -28,88 +28,171 @@
 namespace boost {
 namespace hdstl {
 
-// \cond
-namespace detail {
 
-template<typename HalfedgeGen, typename Tag=next_in_facet_tag>
-struct stitch_cycle_helper
-{
-    static void
-    stitch(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
-    {
-        set_next_in_facet(h,g,hds);
-    }
-};
-
-template<typename HalfedgeGen>
-struct stitch_cycle_helper<HalfedgeGen, prev_in_facet_tag>
-{
-    static void
-    stitch(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
-    {
-        set_prev_in_facet(h,g,hds);
-    }
-};
-
-template<typename HalfedgeGen>
-struct stitch_cycle_helper<HalfedgeGen, next_at_source_tag>
-{
-    static void
-    stitch(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
-    {
-        set_next_at_source(h,g,hds);
-    }
-};
-
-template<typename HalfedgeGen>
-struct stitch_cycle_helper<HalfedgeGen, prev_at_source_tag>
-{
-    static void
-    stitch(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
-    {
-        set_prev_at_source(h,g,hds);
-    }
-};
-
-template<typename HalfedgeGen>
-struct stitch_cycle_helper<HalfedgeGen, next_at_target_tag>
-{
-    static void
-    stitch(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
-    {
-        set_next_at_target(h,g,hds);
-    }
-};
-
-template<typename HalfedgeGen>
-struct stitch_cycle_helper<HalfedgeGen, prev_at_target_tag>
-{
-    static void
-    stitch(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
-    {
-        set_prev_at_target(h,g,hds);
-    }
-};
-
-} // end namespace detail
-// \endcond
-
-template <typename HalfedgeGen>
+template <typename HalfedgeGen, typename Tag>
 void
-stitch_next(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
-    // Sets the appropriate forward accessor relations between h and g, based on the configuration of the 'hds'
+stitch_next_in_facet(typename HalfedgeGen::halfedge_descriptor , typename HalfedgeGen::halfedge_descriptor 
+                , HalfedgeGen& , Tag const& )
 {
-    typedef typename HalfedgeGen::halfedge_selector::next_tag tag;
-    detail::stitch_cycle_helper<HalfedgeGen, tag>::stitch(h,g,hds);
+    // No-op
 }
 
 template <typename HalfedgeGen>
 void
-stitch_prev(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g, HalfedgeGen& hds)
-    // Sets the appropriate backward accessor relations between h and g, based on the configuration of the 'hds'
+stitch_next_in_facet(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g
+                , HalfedgeGen& hds,  next_in_facet_tag const&)
 {
-    typedef typename HalfedgeGen::halfedge_selector::prev_tag tag;
-    detail::stitch_cycle_helper<HalfedgeGen, tag>::stitch(h,g,hds);
+    set_next_in_facet(h,g,hds);
+}
+
+template <typename HalfedgeGen, typename Tag>
+void
+stitch_prev_in_facet(typename HalfedgeGen::halfedge_descriptor , typename HalfedgeGen::halfedge_descriptor 
+                , HalfedgeGen& , Tag const& )
+{
+    // No-op
+}
+
+template <typename HalfedgeGen>
+void
+stitch_prev_in_facet(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g
+                , HalfedgeGen& hds,  prev_in_facet_tag const&)
+{
+    set_prev_in_facet(h,g,hds);
+}
+
+template <typename HalfedgeGen, typename Tag>
+void
+stitch_next_at_source(typename HalfedgeGen::halfedge_descriptor , typename HalfedgeGen::halfedge_descriptor 
+               , HalfedgeGen& , Tag const& )
+{
+    // No-op
+}
+
+template <typename HalfedgeGen>
+void
+stitch_next_at_source(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g
+                 , HalfedgeGen& hds,  next_at_source_tag const&)
+{
+    set_next_at_source(h,g,hds);
+}
+
+template <typename HalfedgeGen, typename Tag>
+void
+stitch_prev_at_source(typename HalfedgeGen::halfedge_descriptor , typename HalfedgeGen::halfedge_descriptor 
+               , HalfedgeGen& , Tag const& )
+{
+    // No-op
+}
+
+template <typename HalfedgeGen>
+void
+stitch_prev_at_source(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g
+                 , HalfedgeGen& hds,  prev_at_source_tag const&)
+{
+    set_prev_at_source(h,g,hds);
+}
+
+template <typename HalfedgeGen, typename Tag>
+void
+stitch_next_at_target(typename HalfedgeGen::halfedge_descriptor , typename HalfedgeGen::halfedge_descriptor 
+               , HalfedgeGen& , Tag const& )
+{
+    // No-op
+}
+
+template <typename HalfedgeGen>
+void
+stitch_next_at_target(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g
+                 , HalfedgeGen& hds,  next_at_target_tag const&)
+{
+    set_next_at_target(h,g,hds);
+}
+
+template <typename HalfedgeGen, typename Tag>
+void
+stitch_prev_at_target(typename HalfedgeGen::halfedge_descriptor , typename HalfedgeGen::halfedge_descriptor 
+               , HalfedgeGen& , Tag const& )
+{
+    // No-op
+}
+
+template <typename HalfedgeGen>
+void
+stitch_prev_at_target(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descriptor g
+                 , HalfedgeGen& hds,  prev_at_target_tag const&)
+{
+    set_prev_at_target(h,g,hds);
+}
+
+template <typename HalfedgeGen, typename ForwardCategory>
+typename HalfedgeGen::halfedge_descriptor
+get_next_in_facet(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, ForwardCategory const&)
+{
+    return static_cast<typename HalfedgeGen::halfedge_descriptor>(next_in_facet(h, hds));
+}
+
+template <typename HalfedgeGen>
+typename HalfedgeGen::halfedge_descriptor
+get_next_in_facet(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, empty_tag const&)
+{
+    // No-op
+}
+
+template <typename HalfedgeGen, typename BackwardCategory>
+typename HalfedgeGen::halfedge_descriptor
+get_prev_in_facet(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, BackwardCategory const&)
+{
+    return static_cast<typename HalfedgeGen::halfedge_descriptor>(prev_in_facet(h, hds));
+}
+
+template <typename HalfedgeGen>
+typename HalfedgeGen::halfedge_descriptor
+get_prev_in_facet(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, empty_tag const&)
+{
+    // No-op
+}
+
+template <typename HalfedgeGen, typename FacetS>
+typename HalfedgeGen::facet_descriptor
+get_facet(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, FacetS const&)
+{
+    return facet(h, hds);
+}
+
+template <typename HalfedgeGen>
+typename HalfedgeGen::facet_descriptor
+get_facet(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, noFacetS const&)
+{
+    // No-op
+}
+
+template <typename HalfedgeGen, typename Type>
+typename HalfedgeGen::vertex_descriptor
+get_source(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, Type const&)
+{
+    // No-op
+}
+
+template <typename HalfedgeGen>
+typename HalfedgeGen::vertex_descriptor
+get_source(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, sourceS const&)
+{
+    return source(h, hds);
+}
+
+template <typename HalfedgeGen, typename Type>
+typename HalfedgeGen::vertex_descriptor
+get_target(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, Type const&)
+{
+    // No-op
+}
+
+template <typename HalfedgeGen>
+typename HalfedgeGen::vertex_descriptor
+get_target(typename HalfedgeGen::halfedge_descriptor h, HalfedgeGen& hds, targetS const&)
+{
+    return target(h, hds);
 }
 
 // \cond
@@ -202,6 +285,59 @@ stitch_vertex(typename HalfedgeGen::halfedge_descriptor h, typename VertexGen::v
                                 >::stitch(h,v,hds,vds);
 }
 
+template <typename HalfedgeGen>
+void
+splice(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descritor g
+     , typename HalfedgeGen::halfedge_descriptor i, typename HalfedgeGen::halfedge_descritor j, HalfedgeGen& hds)
+{
+    typedef typename HalfedgeGen::halfedge_selector::next_tag next_tag;
+    typedef typename HalfedgeGen::halfedge_selector::prev_tag prev_tag; 
+
+    stitch_next_in_facet(h, j, hds, next_tag());                    
+    stitch_prev_in_facet(j, h, hds, prev_tag());
+    
+    stitch_next_in_facet(i, g, hds, next_tag());                    
+    stitch_prev_in_facet(g, i, hds, prev_tag());
+    
+    stitch_next_at_source(opposite(h, hds), j, hds, next_tag()); 
+    stitch_prev_at_source(j, opposite(h, hds), hds, prev_tag());
+    
+    stitch_next_at_source(opposite(i, hds), g, hds, next_tag());    
+    stitch_prev_at_source(g, opposite(i, hds), hds, prev_tag());
+    
+    stitch_next_at_target(h, opposite(j, hds), hds, next_tag());    
+    stitch_prev_at_target(opposite(j, hds), h, hds, prev_tag());
+    
+    stitch_next_at_target(i, opposite(g, hds), hds, next_tag());    
+    stitch_prev_at_target(opposite(g, hds), i, hds, prev_tag());
+}
+
+template <typename HalfedgeGen>
+void
+detach(typename HalfedgeGen::halfedge_descriptor h, typename HalfedgeGen::halfedge_descritor g
+     , typename HalfedgeGen::halfedge_descriptor i, typename HalfedgeGen::halfedge_descritor j, HalfedgeGen& hds)
+{
+    typedef typename HalfedgeGen::halfedge_selector::next_tag next_tag;
+    typedef typename HalfedgeGen::halfedge_selector::prev_tag prev_tag; 
+
+    stitch_next_in_facet(h, g, hds, next_tag());                    
+    stitch_prev_in_facet(g, h, hds, prev_tag());
+    
+    stitch_next_in_facet(i, j, hds, next_tag());                    
+    stitch_prev_in_facet(j, i, hds, prev_tag());
+    
+    stitch_next_at_source(opposite(h, hds), g, hds, next_tag());    
+    stitch_prev_at_source(g, opposite(h, hds), hds, prev_tag());
+    
+    stitch_next_at_source(opposite(i, hds), j, hds, next_tag());    
+    stitch_prev_at_source(j, opposite(i, hds), hds, prev_tag());
+    
+    stitch_next_at_target(h, opposite(g, hds), hds, next_tag());    
+    stitch_prev_at_target(opposite(g, hds), h, hds, prev_tag());
+    
+    stitch_next_at_target(i, opposite(j, hds), hds, next_tag());    
+    stitch_prev_at_target(opposite(j, hds), i, hds, prev_tag());
+}
 } // end namespace hdstl
 } // end namespace boost
 

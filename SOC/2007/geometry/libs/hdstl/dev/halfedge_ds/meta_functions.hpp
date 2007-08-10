@@ -1,3 +1,7 @@
+
+#ifndef BOOST_HDSTL_META_FUNCTIONS_HPP
+#define BOOST_HDSTL_META_FUNCTIONS_HPP 1
+
 struct true_type {};
 struct false_type{};
 
@@ -13,3 +17,4 @@ struct meta_is_same<T,T> {
     typedef true_type type;
 };
 
+#endif

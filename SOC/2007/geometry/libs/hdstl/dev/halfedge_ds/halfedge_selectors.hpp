@@ -37,12 +37,14 @@ namespace hdstl {
 
                    // =========================
                    // halfedge selector classes
-                   // =========================
+                  // =========================
+struct empty_tag {};
 
 template <typename ForwardCategory>
 struct forwardS {
     typedef forward_traversal_tag tag;
     typedef ForwardCategory next_tag;
+    typedef empty_tag prev_tag;
     enum { is_forward = true };
     enum { is_backward = false };
 };
@@ -51,6 +53,7 @@ template <typename BackwardCategory>
 struct backwardS {
     typedef backward_traversal_tag tag;
     typedef BackwardCategory prev_tag;
+    typedef empty_tag next_tag;
     enum { is_forward = false };
     enum { is_backward = true };
 };

@@ -191,6 +191,7 @@ struct noVertexS {
 template <typename VertexType>
 struct base_vertexS {
     // A selector that specializes whether source or target vertices are stored.
+    typedef noVertexS t_type;
 };
 
 template<>
@@ -202,6 +203,7 @@ struct base_vertexS<sourceS>{
     enum { type = true };
     enum { is_source = true };
     enum { is_target = !is_source };
+    typedef sourceS t_type;
 };
 
 template<>
@@ -213,6 +215,7 @@ struct base_vertexS<targetS>{
     enum { type = false };
     enum { is_target = true };
     enum { is_source = !is_target };
+    typedef targetS t_target;
 };
 
 template <typename ContainerS, bool HasVertexLink=false, 
