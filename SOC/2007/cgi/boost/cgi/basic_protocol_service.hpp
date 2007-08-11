@@ -13,12 +13,14 @@
 #include <queue>
 #include <boost/shared_ptr.hpp>
 #include <boost/asio/io_service.hpp>
+#include <boost/asio/strand.hpp>
 
 #include "io_service_provider.hpp"
-#include "basic_gateway.hpp"
+//#include "basic_gateway.hpp"
 //#include "basic_connection_fwd.hpp"
-#include "basic_acceptor_fwd.hpp"
+//#include "basic_acceptor_fwd.hpp"
 #include "basic_request_fwd.hpp"
+#include "detail/protocol_traits.hpp"
 
 namespace cgi {
 
@@ -27,53 +29,82 @@ namespace cgi {
    * Holds the request queue and the connection queue.
    * It is also a wrapper around asio::io_service
    */
-  template<typename Protocol, int IoServiceCount, typename PoolingPolicy>
+  template<typename Protocol, typename IoServiceProvider>
   class basic_protocol_service
     //: public protocol_traits<Protocol> // do this!
   {
   public:
-    typedef Protocol                         protocol_type;
-    typedef io_service_provider<IoServiceCount, PoolingPolicy>       
-                                             ios_provider_type;
-    //typedef protocol_traits<Protocol>      traits;
-    //typedef typename traits::gateway_type  gateway_type;
-    typedef basic_gateway<Protocol>          gateway_type;
-    typedef basic_request<Protocol>          request_type;
-    typedef boost::shared_ptr<request_type>  request_ptr;
-    typedef basic_acceptor<Protocol>         acceptor_type;
+    typedef Protocol                          protocol_type;
+    typedef IoServiceProvider                 ios_provider_type;
+    typedef typename detail::protocol_traits<Protocol>::type traits;
+    typedef typename traits::request_type     request_type;
+    //typedef typename traits::gateway_type   gateway_type;
+    //typedef basic_gateway<Protocol>           gateway_type;
+    //typedef basic_request<Protocol>         request_type;
+    typedef typename boost::shared_ptr<request_type>   request_ptr;
+    //typedef basic_acceptor<Protocol>          acceptor_type;
 
 
-    basic_protocol_service(int pool_size_hint = 0)
+    basic_protocol_service(int pool_size_hint = 1)
       : ios_provider_(pool_size_hint)
-//    , mutex_()
-      , gateway_(*this)
+                          //, strand_(ios_provider_.io_service())
+                          //, gateway_(*this)
     {
     }
 
-    basic_protocol_service(boost::asio::io_service& io_service)
-      : ios_provider_(io_service)
-//    , mutex_()
-      , gateway_(*this)
+    basic_protocol_service(boost::asio::io_service& ios)
+      : ios_provider_(ios)
+                          //, strand_(ios)
+                          //, gateway_(*this)
     {
     }
 
     ~basic_protocol_service()
     {
-      gateway_.stop();
+      //gateway_.stop();
     }
 
+    /// Run all the io_services contained by this service
+    /**
+     * This is equivalent to calling run() on each of the io_services held by
+     * ios_provider_
+     */
     void run()
     {
       ios_provider_.run();
     }
 
+    /// Stop all the io_services contained by this service
+    /**
+     * This is equivalent to calling stop() on each of the io_services held by
+     * ios_provider_
+     */
     void stop()
     {
-      gateway_.stop();
+      //gateway_.stop();
       ios_provider_.stop();
     }
 
+    /// Reset all the io_services contained by this service
+    /**
+     * This deletes the request queue(s), aborts all running requests and then
+     * calls reset() on each of the io_services held by ios_provider_. There is
+     * no guarantee that requests will terminate immediately.
+     */
+    void reset()
+    {
+      request_queue_.clear();
+      std::for_each(request_set_.begin(), request_set_.end()
+                    , boost::bind(&request_type::abort, boost::ref(*_1)));
+      request_set_.clear();
+      ios_provider_.reset();
+    }
+
     /// Return an available io_service from the IoServiceProvider
+    /**
+     * The order in which the underlying io_services are returned is determined
+     * by what policy the IoServiceProvider uses.
+     */
     boost::asio::io_service& io_service()
     {
       return ios_provider_.io_service();
@@ -95,20 +126,19 @@ namespace cgi {
 
   private:
     ios_provider_type ios_provider_;
-//  boost::thread::mutex mutex_;
-//  boost::thread::condition condition_;
 
     /// A strand is used for guaranteeing handlers are dispatched sequentially
-//  boost::asio::strand strand_;
+    //boost::asio::strand strand_;
+
 
     std::set<request_ptr> request_set_;
     std::queue<request_ptr> request_queue_;
 
-    gateway_type gateway_;
+    //gateway_type gateway_;
 
-    friend class basic_gateway<protocol_type>;//gateway_type;
-    friend class basic_acceptor<protocol_type>;//class acceptor_type;
-    friend class basic_request<protocol_type>;//typename request_type;
+    //friend class basic_gateway<protocol_type>;//gateway_type;
+    //friend class basic_acceptor<protocol_type>;//class acceptor_type;
+    friend class traits::request_type;//typename request_type;
   };
 
 } // namespace cgi
