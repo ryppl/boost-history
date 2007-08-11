@@ -120,6 +120,7 @@ void test()
 
     typedef exterior_vertex_property<Graph, int> DistanceProperty;
     typedef typename DistanceProperty::matrix_type DistanceMatrix;
+    typedef typename DistanceProperty::matrix_map_type DistanceMatrixMap;
 
     typedef typename property_map<Graph, int EdgeProp::*>::type WeightMap;
 
@@ -127,17 +128,20 @@ void test()
     build_graph(g);
 
     GeodesicContainer geodesics(num_vertices(g));
-    GeodesicMap geo(geodesics, g);
-    DistanceMatrix dist(num_vertices(g), g);
-    WeightMap weights(get(&EdgeProp::weight, g));
+    GeodesicMap gm(geodesics, g);
 
-    floyd_warshall_all_pairs_shortest_paths(g, dist, weight_map(weights));
-    mean_geodesic(g, dist, geo);
+    DistanceMatrix dist(num_vertices(g));
+    DistanceMatrixMap dm(dist, g);
 
-    print_matrix(g, dist);
-    print_map(g, geo);
+    WeightMap wm(get(&EdgeProp::weight, g));
 
-    std::cout << "mgeo: " << make_numeric(graph_mean_geodesic(g, geo)) << "\n";
+    floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
+    mean_geodesic(g, dm, gm);
+
+    print_matrix(g, dm);
+    print_map(g, gm);
+
+    std::cout << "mgeo: " << make_numeric(graph_mean_geodesic(g, gm)) << "\n";
 }
 
 int

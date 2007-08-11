@@ -16,6 +16,11 @@
 using namespace std;
 using namespace boost;
 
+// I think I see how this is done. Basically, there's an initial search
+// for a baseline path from every vertex to v. A second search can be
+// used to build heaps that record the off-path distance between the source
+// the off-path vertex and the target. Or something like that. I'm not sure.
+
 typedef property<edge_index_t, unsigned> EdgeIndex;
 
 struct path_visitor
@@ -250,7 +255,6 @@ eppstein_k_shortest_paths(const Graph& g, Vertex src, Vertex dst, size_t k,
     EdgeIterator i, end;
     for(tie(i, end) = edges(g); i != end; ++i) {
         elm[*i] = lost_distance(g, *i, dm, wm);
-        cout << print_edge(*i, g) << " : " << elm[*i] << "\n";
     }
 
     // this becomes one of the shortest paths...

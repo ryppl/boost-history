@@ -108,18 +108,19 @@ void test()
     {
         typedef typename property_map<Graph, int EdgeProp::*>::type WeightMap;
         typedef typename DistanceProperty::matrix_type DistanceMatrix;
+        typedef typename DistanceProperty::matrix_map_type DistanceMatrixMap;
 
-        DistanceMatrix dx(num_vertices(g), g);
+        DistanceMatrix dist(num_vertices(g));
+        DistanceMatrixMap dm(dist, g);
         WeightMap wm(get(&EdgeProp::weight, g));
 
-        floyd_warshall_all_pairs_shortest_paths(g, dx,
-                weight_map(wm));
+        floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
 
         VertexIterator i, j, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
             for(j = vertices(g).first; j != end; ++j) {
                 Vertex u = *i, v = *j;
-                std::cout << dx[u][v] << " ";
+                std::cout << dm[u][v] << " ";
             }
             std::cout << "\n";
         }
@@ -128,9 +129,9 @@ void test()
         // a new property map... Good stuff.
         std::cout << "slice:\n";
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            DistanceMap dm(dx[*i]);
+            DistanceMap d(dm[*i]);
             for(tie(j, end) = vertices(g); j != end; ++j) {
-                std::cout << dm[*j] << " ";
+                std::cout << d[*j] << " ";
             }
             std::cout << "\n";
         }

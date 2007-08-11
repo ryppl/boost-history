@@ -1,102 +1,42 @@
 
-exe properties
-    : properties.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
+import testing ;
+
+project
+    : requirements
+        <include>../../../
+        <include>$BOOST_ROOT
     ;
 
-exe mutable
-    : mutable.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
+test-suite graph_test :
+    [ run constant_property_map.cpp ]
+    [ run degree_centrality.cpp ]
+    [ run closeness_centrality.cpp ]
     ;
 
-exe index
-    : index.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe range
-    : range.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe misc
-    : misc.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe components
-    : components.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe degree_centrality
-    : degree_centrality.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe closeness_centrality
-    : closeness_centrality.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe mean_geodesic
-    : mean_geodesic.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe eccentricity
-    : eccentricity.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe cluster
-    : cluster.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe generate
-    : generate.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe exterior
-    : exterior.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe cycle
-    : cycle.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe clique
-    : clique.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe mapping
-    : mapping.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
-
-exe k_pairs
-    : k_pairs.cpp
-    : <include>$BOOST_ROOT
-    : <include>../../../
-    ;
+# exe properties : properties.cpp ;
+#
+# exe mutable : mutable.cpp ;
+#
+# exe index : index.cpp ;
+#
+# exe range : range.cpp ;
+#
+# exe misc : misc.cpp ;
+#
+# exe components : components.cpp ;
+#
+# exe mean_geodesic : mean_geodesic.cpp ;
+#
+# exe eccentricity : eccentricity.cpp ;
+#
+# exe cluster : cluster.cpp ;
+#
+# exe generate : generate.cpp ;
+#
+# exe exterior : exterior.cpp ;
+#
+# exe cycle : cycle.cpp ;
+#
+# exe clique : clique.cpp ;
+#
+# exe mapping : mapping.cpp ;

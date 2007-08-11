@@ -13,7 +13,6 @@
 #include <boost/graph/constant_property_map.hpp>
 #include <boost/graph/floyd_warshall_shortest.hpp>
 #include <boost/graph/closeness_centrality.hpp>
-#include "io.hpp"
 
 using namespace std;
 using namespace boost;

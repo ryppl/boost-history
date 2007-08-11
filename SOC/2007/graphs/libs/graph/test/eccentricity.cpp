@@ -124,6 +124,7 @@ void test()
 
     typedef exterior_vertex_property<Graph, int> DistanceProperty;
     typedef typename DistanceProperty::matrix_type DistanceMatrix;
+    typedef typename DistanceProperty::matrix_map_type DistanceMatrixMap;
 
     typedef typename property_map<Graph, int EdgeProp::*>::type WeightMap;
 
@@ -131,18 +132,21 @@ void test()
     build_graph(g);
 
     EccentricityContainer eccs(num_vertices(g));
-    EccentricityMap ecc(eccs, g);
-    DistanceMatrix dist(num_vertices(g), g);
-    WeightMap weights(get(&EdgeProp::weight, g));
+    EccentricityMap em(eccs, g);
 
-    floyd_warshall_all_pairs_shortest_paths(g, dist, weight_map(weights));
-    eccentricity(g, dist, ecc);
+    DistanceMatrix dist(num_vertices(g));
+    DistanceMatrixMap dm(dist, g);
 
-    print_matrix(g, dist);
-    print_map(g, ecc);
+    WeightMap wm(get(&EdgeProp::weight, g));
 
-    std::cout << "radius: " << make_numeric(graph_radius(g, ecc)) << "\n";
-    std::cout << "diameter: " << make_numeric(graph_diameter(g, ecc)) << "\n";
+    floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
+    eccentricity(g, dm, em);
+
+    print_matrix(g, dm);
+    print_map(g, em);
+
+    std::cout << "radius: " << make_numeric(graph_radius(g, em)) << "\n";
+    std::cout << "diameter: " << make_numeric(graph_diameter(g, em)) << "\n";
 }
 
 int
