@@ -4,13 +4,38 @@
 // Boost Software License, Version 1.0 (See accompanying file
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GRAPH_DETAIL_COMBINE_DISTANCES_GRAPH_HPP
-#define BOOST_GRAPH_DETAIL_COMBINE_DISTANCES_GRAPH_HPP
+#ifndef BOOST_GRAPH_DETAIL_GEODESIC_HPP
+#define BOOST_GRAPH_DETAIL_GEODESIC_HPP
 
 #include <functional>
+#include <boost/graph/new_graph_concepts.hpp>
+#include <boost/graph/numeric_values.hpp>
 
 namespace boost
 {
+    // This is a very good discussion on centrality measures. While I can't
+    // say that this has been the motivating factor for the design and
+    // implementation of ths centrality framework, it does provide a single
+    // point of reference for defining things like degree and closeness
+    // centrality. Plus, the bibliography seems fairly complete.
+    //
+    //     @article{citeulike:1144245,
+    //         author = {Borgatti, Stephen  P.  and Everett, Martin  G. },
+    //         citeulike-article-id = {1144245},
+    //         doi = {10.1016/j.socnet.2005.11.005},
+    //         journal = {Social Networks},
+    //         month = {October},
+    //         number = {4},
+    //         pages = {466--484},
+    //         priority = {0},
+    //         title = {A Graph-theoretic perspective on centrality},
+    //         url = {http://dx.doi.org/10.1016/j.socnet.2005.11.005},
+    //             volume = {28},
+    //             year = {2006}
+    //         }
+    //     }
+
+
     namespace detail
     {
         // Note that this assumes T == property_traits<DistanceMap>::value_type
@@ -18,20 +43,28 @@ namespace boost
         template <typename Graph,
                   typename DistanceMap,
                   typename Combinator,
-                  typename DistanceNumbers>
-        inline typename DistanceNumbers::value_type
+                  typename Distance>
+        inline Distance
         combine_distances(const Graph& g,
                           DistanceMap dist,
                           Combinator combine,
-                          DistanceNumbers distnum)
+                          Distance init)
         {
+            function_requires< VertexListGraphConcept<Graph> >();
+            typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+            typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
+            function_requires< ReadablePropertyMapConcept<DistanceMap,Vertex> >();
+            function_requires< NumericValueConcept<Distance> >();
+            typedef numeric_values<Distance> DistanceNumbers;
+            function_requires< AdaptableBinaryFunction<Combinator,Distance,Distance,Distance> >();
+
             // If there's ever an infinite distance, then we simply
             // return infinity.
-            typename DistanceNumbers::value_type ret(DistanceNumbers::zero());
-            typename graph_traits<Graph>::vertex_iterator i, end;
+            Distance ret = init;
+            VertexIterator i, end;
             for(tie(i, end) = vertices(g); i != end; ++i) {
-                if(dist[*i] != DistanceNumbers::infinity()) {
-                    ret = combine(ret, dist[*i]);
+                if(get(dist, *i) != DistanceNumbers::infinity()) {
+                    ret = combine(ret, get(dist, *i));
                 }
                 else {
                     ret = DistanceNumbers::infinity();
@@ -50,6 +83,45 @@ namespace boost
             T operator ()(T x, T y) const
             { return std::max(x, y); }
         };
+
+        // Another helper, like maximize() to help abstract functional
+        // concepts. This is trivially instantiated for builtin numeric
+        // types, but should be specialized for those types that have
+        // discrete notions of reciprocals.
+        template <typename T>
+        struct reciprocal : public std::unary_function<T, T>
+        {
+            typedef std::unary_function<T, T> function_type;
+            typedef typename function_type::result_type result_type;
+            typedef typename function_type::argument_type argument_type;
+            T operator ()(T t)
+            { return T(1) / t; }
+        };
     }
+
+    // This type defines the basic facilities used for computing values
+    // based on the geodesic distances between vertices. Examples include
+    // closeness centrality and mean geodesic distance.
+    template <typename Graph,
+              typename DistanceType,
+              typename ResultType>
+    struct geodesic_measure
+    {
+        typedef DistanceType distance_type;
+        typedef ResultType result_type;
+        typedef typename graph_traits<Graph>::vertices_size_type size_type;
+
+        typedef numeric_values<distance_type> distance_values;
+        typedef numeric_values<result_type> result_values;
+
+        static inline distance_type infinite_distance()
+        { return distance_values::infinity(); }
+
+        static inline result_type infinite_result()
+        { return result_values::infinity(); }
+
+        static inline result_type zero_result()
+        { return result_values::zero(); }
+    };
 }
 #endif
