@@ -110,8 +110,7 @@ namespace boost
     {
         typedef typename Measure::distance_type Distance;
         typedef typename Measure::distance_values DistanceValues;
-        Distance n = detail::combine_distances(g, dist, combine,
-                                               DistanceValues());
+        Distance n = detail::combine_distances(g, dist, combine, Distance(0));
         return measure(n, g);
     }
 
@@ -166,8 +165,8 @@ namespace boost
                   const DistanceMatrix& dist,
                   GeodesicMap geo)
     {
-        typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
-        typedef typename exterior_vertex_property<Graph, Distance>::map_type DistanceMap;
+        typedef typename property_traits<DistanceMatrix>::value_type DistanceMap;
+        typedef typename property_traits<DistanceMap>::value_type Distance;
         typedef typename property_traits<GeodesicMap>::value_type Result;
         mean_geodesic(g, dist, geo,
                       measure_mean_geodesic<Result>(g, DistanceMap()));
@@ -179,7 +178,7 @@ namespace boost
     graph_mean_geodesic(const Graph& g, GeodesicMap geo, Measure measure)
     {
         typedef typename Measure::result_type T;
-        T sum = detail::combine_distances(g, geo, std::plus<T>(), numeric_values<T>());
+        T sum = detail::combine_distances(g, geo, std::plus<T>(), T(0));
         return measure(sum, g);
     }
 

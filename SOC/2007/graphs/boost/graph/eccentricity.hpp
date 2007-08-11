@@ -21,7 +21,7 @@ namespace boost
     {
         typedef typename property_traits<DistanceMap>::value_type Distance;
         return detail::combine_distances(g, dist, combine,
-                                         numeric_values<Distance>());
+                                         Distance(0));
     }
 
     template <typename Graph, typename DistanceMap>
@@ -36,8 +36,9 @@ namespace boost
     inline void
     eccentricity(const Graph& g, const DistanceMatrix& dist, EccentricityMap ecc)
     {
-        typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
-        typedef typename exterior_vertex_property<Graph, Distance>::map_type DistanceMap;
+        typedef typename property_traits<DistanceMatrix>::value_type DistanceMap;
+        typedef typename property_traits<DistanceMap>::value_type Distance;
+
         typename graph_traits<Graph>::vertex_iterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
             ecc[*i] = vertex_eccentricity(g, DistanceMap(dist[*i]));

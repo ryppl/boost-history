@@ -18,15 +18,15 @@ namespace boost
     // The key is pretty much anything it doesn't matter. The
     // value has to be default and copy constructible.
 
-    template <typename Key, typename Type>
+    template <typename Key, typename Value>
     struct constant_property_map
         : public boost::put_get_helper<
-                const Type&,
-                constant_property_map<Key, Type> >
+                const Value&,
+                constant_property_map<Key, Value> >
     {
         typedef Key key_type;
-        typedef Type value_type;
-        typedef const Type& reference;
+        typedef Value value_type;
+        typedef const Value& reference;
         typedef boost::readable_property_map_tag category;
 
         constant_property_map()
@@ -44,14 +44,14 @@ namespace boost
         inline reference operator [](const key_type& v) const
         { return m_value; }
 
-        Type m_value;
+        value_type m_value;
     };
 
-    template <typename Key, typename Type>
-    inline constant_property_map<Key, Type>
-    make_constant_property(const Type& value)
+    template <typename Key, typename Value>
+    inline constant_property_map<Key, Value>
+    make_constant_property(const Value& value)
     {
-        return constant_property_map<Key, Type>(value);
+        return constant_property_map<Key, Value>(value);
     }
 }
 

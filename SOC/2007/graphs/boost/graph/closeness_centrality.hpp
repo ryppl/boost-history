@@ -14,19 +14,22 @@ namespace boost
 {
     template <
             typename Graph,
-            typename DistanceNumbers,
-            typename ResultNumbers,
-            typename Reciprocal = detail::reciprocal<typename ResultNumbers::value_type>
+            typename DistanceType,
+            typename ResultType,
+            typename Reciprocal = detail::reciprocal<ResultType>
         >
     struct closeness_measure
-        : public geodesic_measure<Graph, DistanceNumbers, ResultNumbers>
+        : public geodesic_measure<Graph, DistanceType, ResultType>
     {
-        typedef geodesic_measure< Graph, DistanceNumbers, ResultNumbers> base_type;
+        typedef geodesic_measure< Graph, DistanceType, ResultType> base_type;
         typedef typename base_type::distance_type distance_type;
         typedef typename base_type::result_type result_type;
 
         result_type operator ()(distance_type d, const Graph&)
         {
+            function_requires< NumericValueConcept<DistanceType> >();
+            function_requires< NumericValueConcept<ResultType> >();
+            function_requires< AdaptableUnaryFunctionConcept<Reciprocal,ResultType,ResultType> >();
             Reciprocal r;
             return
                 (d == base_type::infinite_distance()) ?
@@ -80,10 +83,19 @@ namespace boost
                                 Measure measure,
                                 Combinator combine)
     {
+        function_requires< VertexListGraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        function_requires< ReadablePropertyMapConcept<DistanceMap,Vertex> >();
         typedef typename property_traits<DistanceMap>::value_type Distance;
-        typedef numeric_values<Distance> DistanceValues;
-        Distance n = detail::combine_distances(g, dist, combine, DistanceValues());
-        return measure(n, num_vertices(g));
+        function_requires< NumericValueConcept<Distance> >();
+        function_requires< DistanceMeasureConcept<Measure,Graph> >();
+
+        // NOTE: we could further reduce the requirements on this function
+        // by removing the call to num_vertices() and passing that as a
+        // parameter.
+
+        Distance n = detail::combine_distances(g, dist, combine, Distance(0));
+        return measure(n, g);
     }
 
     template <typename Graph,
@@ -94,7 +106,11 @@ namespace boost
                                 DistanceMap dist,
                                 Measure measure)
     {
+        function_requires< GraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        function_requires< ReadablePropertyMapConcept<DistanceMap,Vertex> >();
         typedef typename property_traits<DistanceMap>::value_type Distance;
+
         return vertex_closeness_centrality(g, dist, measure, std::plus<Distance>());
     }
 
@@ -122,12 +138,20 @@ namespace boost
                          CentralityMap cent,
                          Measure measure)
     {
-        typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
-        typedef typename exterior_vertex_property<Graph, Distance>::map_type DistanceMap;
+        function_requires< VertexListGraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        function_requires< ReadablePropertyMapConcept<DistanceMatrix,Vertex> >();
+        typedef typename property_traits<DistanceMatrix>::value_type DistanceMap;
+        function_requires< ReadablePropertyMapConcept<DistanceMap,Vertex> >();
+        function_requires< WritablePropertyMapConcept<CentralityMap,Vertex> >();
+        typedef typename property_traits<DistanceMap>::value_type Distance;
+        typedef typename property_traits<CentralityMap>::value_type Centrality;
 
         typename graph_traits<Graph>::vertex_iterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            cent[*i] = vertex_closeness_centrality(g, DistanceMap(dist[*i]), measure);
+            DistanceMap dm = get(dist, *i);
+            Centrality c = vertex_closeness_centrality(g, dm, measure);
+            put(cent, *i, c);
         }
     }
 
@@ -139,9 +163,14 @@ namespace boost
                          const DistanceMatrix& dist,
                          CentralityMap cent)
     {
-        typedef typename property_matrix_traits<DistanceMatrix>::value_type Distance;
-        typedef typename exterior_vertex_property<Graph, Distance>::map_type DistanceMap;
+        function_requires< GraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        function_requires< ReadablePropertyMapConcept<DistanceMatrix,Vertex> >();
+        typedef typename property_traits<DistanceMatrix>::value_type DistanceMap;
+        function_requires< ReadablePropertyMapConcept<DistanceMap,Vertex> >();
+        typedef typename property_traits<DistanceMap>::value_type Distance;
         typedef typename property_traits<CentralityMap>::value_type Result;
+
         closeness_centrality(g, dist, cent, measure_closeness<Result>(g, DistanceMap()));
     }
 }

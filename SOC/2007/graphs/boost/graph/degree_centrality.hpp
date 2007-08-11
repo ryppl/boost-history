@@ -14,8 +14,6 @@ namespace boost
     template <typename Graph>
     struct degree_centrality_measure
     {
-        BOOST_CLASS_REQUIRE(Graph, boost, IncidenceGraphConcept);
-
         typedef typename graph_traits<Graph>::degree_size_type degree_type;
         typedef typename graph_traits<Graph>::vertex_descriptor vertex_type;
     };
@@ -24,14 +22,15 @@ namespace boost
     struct influence_measure
         : public degree_centrality_measure<Graph>
     {
-        BOOST_CLASS_REQUIRE(Graph, boost, IncidenceGraphConcept);
-
         typedef degree_centrality_measure<Graph> base_type;
         typedef typename base_type::degree_type degree_type;
         typedef typename base_type::vertex_type vertex_type;
 
         inline degree_type operator ()(vertex_type v, const Graph& g)
-        { return out_degree(v, g); }
+        {
+            function_requires< IncidenceGraphConcept<Graph> >();
+            return out_degree(v, g);
+        }
     };
 
     template <typename Graph>
@@ -44,14 +43,15 @@ namespace boost
     struct prestige_measure
         : public degree_centrality_measure<Graph>
     {
-        BOOST_CLASS_REQUIRE(Graph, boost, BidirectionalGraphConcept);
-
         typedef degree_centrality_measure<Graph> base_type;
         typedef typename base_type::degree_type degree_type;
         typedef typename base_type::vertex_type vertex_type;
 
         inline degree_type operator ()(vertex_type v, const Graph& g)
-        { return in_degree(v, g); }
+        {
+            function_requires< BidirectionalGraphConcept<Graph> >();
+            return in_degree(v, g);
+        }
     };
 
     template <typename Graph>
@@ -86,9 +86,15 @@ namespace boost
                       Measure measure)
     {
         function_requires< VertexListGraphConcept<Graph> >();
-        typename graph_traits<Graph>::vertex_iterator i, end;
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
+        function_requires< WritablePropertyMapConcept<CentralityMap,Vertex> >();
+        typedef typename property_traits<CentralityMap>::value_type Centrality;
+
+        VertexIterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            put(cent, *i, vertex_degree_centrality(g, *i, measure));
+            Centrality c = vertex_degree_centrality(g, *i, measure);
+            put(cent, *i, c);
         }
     }
 
