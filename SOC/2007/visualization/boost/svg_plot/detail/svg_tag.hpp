@@ -168,6 +168,7 @@ private:
     int size;
     std::string txt;
     text_style align;
+    int rotation;
 
 public:
     void alignment(text_style _a)
@@ -175,9 +176,19 @@ public:
         align = _a;
     }
 
-    int font_size()
+    int font_size() const
     {
         return size;
+    }
+
+    void rotate(int val)
+    {
+        rotation = val;
+    }
+
+    int rotate() const
+    {
+        return rotation;
     }
 
     double x(double _x)
@@ -191,8 +202,9 @@ public:
     }
 
     text_element(double _x, double _y, std::string _text, int _size = 12, 
-                 text_style _align = center_align)
+                 text_style _align = center_align, int _rotation = 0)
                  :x_coord(_x), y_coord(_y), txt(_text), size(_size), align(_align)
+                 , rotation(_rotation)
     {
         
     }
@@ -228,6 +240,14 @@ public:
             rhs << "text-anchor=\"" << output << "\" ";
         }
 
+        if(rotation != 0)
+        {
+            rhs << "transform = \"rotate("
+                << rotation << " "
+                << x_coord << " "
+                << y_coord << " )\" ";
+        }
+
         rhs << " font-family=\"verdana\"";
 
         if(size == 0)
@@ -244,7 +264,7 @@ public:
             <<" </text>";
     }
 
-    void font_size(unsigned int _size){ size = _size; }
+    void font_size(unsigned int _size) { size = _size; }
     void text(const std::string& _txt) { txt = _txt; }
 
     std::string text()
@@ -731,9 +751,12 @@ public:
         return *this;
     }
 
-    g_element& text(double x, double y, std::string text)
+    g_element& text(double x, double y, const std::string& text, 
+        int text_size = 12,
+        text_style align = center_align, int rotation = 0)
     {
-        children.push_back(new text_element(x, y, text));
+        children.push_back(new text_element(x, y, text, text_size, 
+                                           align, rotation));
         return *this;
     }
 

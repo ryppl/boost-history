@@ -136,9 +136,12 @@ public:
     // -----------------------------------------------------------------
     // Writes the information about text to the document
     // -----------------------------------------------------------------
-    svg& text(double x, double y, std::string text)
+    svg& text(double x, double y, const std::string& text, 
+        int text_size = 12, text_style align = center_align, 
+        int rotation = 0)
     {
-        document.push_back(new text_element(x, y, text));
+        document.push_back(new text_element(x, y, text, text_size, align, 
+                                            rotation));
 
         return *this;
     }

@@ -32,6 +32,7 @@
 #include "svg.hpp"
 #include "svg_style.hpp"
 #include "detail/axis_plot_frame.hpp"
+#include "detail/functors.hpp"
 
 #if defined (BOOST_MSVC)
 #  pragma warning(pop)
@@ -77,20 +78,7 @@ BOOST_PARAMETER_NAME(x_functor)
 #  pragma warning(pop)
 #endif
 
-// -----------------------------------------------------------------
-// This functor allows any data convertible to doubles to be plotted
-// -----------------------------------------------------------------
-class boost_default_convert
-{
-public:
-    typedef double result_type;
 
-    template <class T>
-    double operator()(T val) const
-    {
-        return (double)val;
-    }
-};
 
 // -----------------------------------------------------------------
 // This allows us to store plot state locally in svg_plot. We don't
@@ -429,7 +417,7 @@ BOOST_PARAMETER_MEMBER_FUNCTION
         (stroke_color, (const svg_color&), svg_color(white))
         (point_style, (point_shape), circle)
         (size, (int), 10)
-        (x_functor, *, boost_default_convert())
+        (x_functor, *, detail::boost_default_convert())
     )
     (deduced
         (optional

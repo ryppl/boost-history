@@ -388,16 +388,13 @@ protected:
 
     void _draw_title()
     {
-        if(derived().use_title)
-        {
-            text_element title(derived().image.get_x_size()/2., 
-                               derived().title_info.font_size(), 
-                               derived().title_info.text());
+        text_element title(derived().image.get_x_size()/2., 
+                           derived().title_info.font_size(), 
+                           derived().title_info.text());
 
-            title.alignment(center_align);
-            title.font_size(derived().title_info.font_size());
-            derived().image.get_g_element(PLOT_TITLE).push_back(new text_element(title));
-        }
+        title.alignment(center_align);
+        title.font_size(derived().title_info.font_size());
+        derived().image.get_g_element(PLOT_TITLE).push_back(new text_element(title));
     }
 
     void _draw_x_label()
@@ -455,7 +452,6 @@ protected:
             case square:
                 g_ptr.rect(_x - half_size, _y - half_size, size, size);
                 break;
-            default: break;
         }
     }
 
@@ -777,7 +773,7 @@ public:
     // color information    
     svg_color get_title_color()
     {
-        return derived().image.get_g_element(PLOT_TITLE).style().fill_color();
+        return derived().image.get_g_element(PLOT_TITLE).style().stroke_color();
     }
 
     svg_color get_background_color()
@@ -812,7 +808,7 @@ public:
 
     svg_color get_x_label_color()
     {
-        return derived().image.get_g_element(PLOT_X_LABEL).style().stroke_color();
+        return derived().image.get_g_element(PLOT_X_LABEL).style().fill_color();
     }
 
     svg_color get_x_major_tick_color()

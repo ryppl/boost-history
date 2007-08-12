@@ -72,6 +72,11 @@ public:
 
     }
 
+    // getters
+    svg_color fill_color()      const     { return svg_color(fill);   }
+    svg_color stroke_color()    const     { return svg_color(stroke); }
+    unsigned int stroke_width() const     { return width;             }
+
     svg_style(const svg_color& _fill, const svg_color& _stroke,
                      unsigned int _width = 0):
                      fill(_fill), stroke(_stroke), 
@@ -102,12 +107,6 @@ public:
         width_on = true;
         return *this;
     }
-
-    // getters
-    svg_color fill_color()      { return svg_color(fill);      }
-    svg_color stroke_color()    { return svg_color(stroke);    }
-    unsigned int stroke_width() { return width;               }
-
     
     void write(std::ostream& rhs)
     {

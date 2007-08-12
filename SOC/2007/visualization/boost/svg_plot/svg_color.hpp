@@ -68,8 +68,9 @@ void constant_to_rgb(svg_color_constant _c, unsigned char &r,
 struct svg_color
 {
     unsigned char r, g, b;
+    bool blank;
 
-    svg_color(int _r, int _g, int _b)
+    svg_color(int _r, int _g, int _b): blank(false)
     {
         _r = ( _r < 0 ) ? 0 : _r;
         _g = ( _g < 0 ) ? 0 : _g;
@@ -80,15 +81,27 @@ struct svg_color
         b = (unsigned char)(( _b > 255 ) ? 255 : _b);
     }
 
-    svg_color(svg_color_constant _col)
+    svg_color(bool _is):blank(_is)
+    {
+    }
+
+    svg_color(svg_color_constant _col):blank(false)
     {
         constant_to_rgb(_col, r, g, b);
     }
 
     void write(std::ostream& rhs)
     {
-        rhs << "rgb(" << (unsigned int)r << "," << (unsigned int) g << ","
-            << (unsigned int)b << ")" ;
+        if(!blank)
+        {
+            rhs << "rgb(" << (unsigned int)r << "," << (unsigned int) g << ","
+                << (unsigned int)b << ")" ;
+        }
+
+        else
+        {
+            rhs <<"none";
+        }
     }
 
     bool operator==(const svg_color& rhs)
@@ -247,6 +260,7 @@ svg_color color_array[] =
     svg_color(245, 245, 245), // whitesmoke
     svg_color(255, 255, 0  ), // yellow
     svg_color(154, 205, 50 ), // yellowgreen
+    svg_color(false)          // blank
 };
 
 void constant_to_rgb(svg_color_constant _c, unsigned char &r, 
@@ -254,9 +268,12 @@ void constant_to_rgb(svg_color_constant _c, unsigned char &r,
 {
     svg_color temp(color_array[_c]);
 
-    r = temp.r;
-    g = temp.g;
-    b = temp.b;
+    if(!temp.blank)
+    {
+        r = temp.r;
+        g = temp.g;
+        b = temp.b;
+    }
 }
 
 svg_color constant_to_rgb(svg_color_constant _c)

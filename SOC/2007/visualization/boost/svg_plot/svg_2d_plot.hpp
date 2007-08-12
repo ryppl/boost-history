@@ -28,6 +28,7 @@
 #include "svg_style.hpp"
 #include "detail/axis_plot_frame.hpp"
 #include "detail/numeric_limits_handling.hpp"
+#include "detail/functors.hpp"
 #include "svg.hpp"
 
 #if defined (BOOST_MSVC)
@@ -64,31 +65,6 @@ BOOST_PARAMETER_NAME(bezier_on)
 BOOST_PARAMETER_NAME(line_on)
 BOOST_PARAMETER_NAME(line_color)
 BOOST_PARAMETER_NAME(area_fill_color)
-
-class boost_default_2d_convert
-{
-public:
-    typedef std::pair<double, double> result_type;
-
-    double i;
-
-    void start(double _i)
-    {
-        i = _i;
-    }
-
-    template <class T, class U>
-    std::pair<double, double> operator()(const std::pair<T, U>& a) const
-    {
-        return std::pair<double, double>((double)(a.first), (double)(a.second));
-    }
-
-    template <class T>
-    std::pair<double, double> operator()(T a)
-    {
-        return std::pair<double, double>(i++, (double)a);
-    }
-};
 
 struct svg_2d_plot_series
 {
@@ -604,22 +580,18 @@ private:
 
     void _draw_plot_lines()
     {
-
         for(unsigned int i = 0; i < series.size(); ++i)
-        {        
-            if(series[i].line_style.line_on)
+        {
+            if(series[i].line_style.bezier_on)
             {
-                if(series[i].line_style.bezier_on)
-                {
-                    _draw_bezier_lines(series[i]);
-                }
-
-                else
-                {
-                    _draw_straight_lines(series[i]);
-                }  
+                _draw_bezier_lines(series[i]);
             }
-        }      
+
+            else
+            {
+                _draw_straight_lines(series[i]);
+            }
+        }
     }
 
     void _update_image()
@@ -946,35 +918,6 @@ svg_2d_plot& y_minor_grid_on(bool _is)
     return *this;
 }
 
-svg_color get_y_axis_color()
-{
-    return image.get_g_element(detail::PLOT_Y_AXIS).style().stroke_color();
-}
-
-svg_color get_y_label_color()
-{
-    return image.get_g_element(detail::PLOT_Y_LABEL).style().stroke_color();
-}
-
-svg_color get_y_major_tick_color()
-{
-    return image.get_g_element(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color();
-}
-
-svg_color get_y_minor_tick_color()
-{
-    return image.get_g_element(detail::PLOT_Y_MINOR_TICKS).style().stroke_color();
-}
-
-svg_color get_y_major_grid_color()
-{
-    return image.get_g_element(detail::PLOT_Y_MAJOR_GRID).style().stroke_color();
-}
-
-svg_color get_y_minor_grid_color()
-{
-    return image.get_g_element(detail::PLOT_Y_MINOR_GRID).style().stroke_color();
-}
 #if defined (BOOST_MSVC)
 #  pragma warning(push)
 #  pragma warning(disable: 4100) // "'boost_parameter_enabler_argument' : unreferenced formal parameter"
@@ -998,7 +941,7 @@ BOOST_PARAMETER_MEMBER_FUNCTION
         (size, (int), 10)
         (line_on, (bool), true)
         (bezier_on, (bool), false)
-        (x_functor, *, boost_default_2d_convert())
+        (x_functor, *, detail::boost_default_2d_convert())
     )
 )
 {
