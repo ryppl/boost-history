@@ -7,52 +7,77 @@
 
 [section Closeness Centrality]
 
-    template <typename Graph, typename DistanceMatrix, typename ClosenessMap>
+    template <typename Graph, typename DistanceMatrixMap, typename ClosenessMap>
     void closeness_centrality(const Graph& g,
-                              const DistanceMatrix& dist,
-                              ClosenessMap close)
+                              DistanceMatrixMap dm,
+                              ClosenessMap cm)
 
-    template <typename Graph,
-              typename DistanceMatrix,
-              typename ClosenessMap,
-              typename Measure>
+    template <typename Graph, typename DistanceMatrixMap, typename ClosenessMap, typename Measure>
     void closeness_centrality(const Graph& g,
-                              const DistanceMatrix& dist,
-                              ClosenessMap close,
-                              Measure measure)
+                              DistanceMatrixMap dm,
+                              ClosenessMap cm,
+                              Measure m)
 
 
     template <typename Graph, typename DistanceMap>
-    float vertex_closeness_centrality(const Graph& g, DistanceMap dist)
+    float vertex_closeness_centrality(const Graph& g, DistanceMap dm)
 
     template <typename ResultType, typename Graph, typename DistanceMap>
-    ResultType vertex_closeness_centrality(const Graph& g, DistanceMap dist)
+    ResultType vertex_closeness_centrality(const Graph& g, DistanceMap dm)
 
     template <typename Graph, typename DistanceMap, typename Measure>
     typename Measure::result_type
-    vertex_closeness_centrality(const Graph& g, DistanceMap dist, Measure measure)
+    vertex_closeness_centrality(const Graph& g, DistanceMap dm, Measure m)
 
-The /closeness centrality/ measure is commonly used in social network analysis to
-identify vertices (also called actors) that are "close" to all others. To phrase
-differently, actors that are "closer" to all others have a greater reach, making
-them more influential in the network. The closeness measure is defined as the inverse
-as the sum of all geodesic distances (lengths of shortest path) from one vertex
-to all others. Formally it is given as:
+The /closeness centrality/ measure is commonly used in network analysis to identify
+vertices (also called actors) that are "close" to all others. To phrase differently,
+actors that are "closer" to all others have a greater reach, making them more
+influential in the network. The closeness measure is defined as the inverse of the
+sum of all geodesic distances (lengths of shortest path) from one vertex to all
+others. Closeness is formally given as:
 
 [$images/eq/closeness.png]
 
 Where /d(u,v)/ is the shortest path (geodesic distance) from /u/ to /v/.
-Note that if any vertex in the graph is unreachable from any other, then the
-graph is unconnected, and the distance between those two unonnected vertices
-is infinite. This imlplies that the closeness of every vertex in an unconnected
-(and undirected) graph is zero. This is not necessarily the case for directed
-graphs.
+Note that if any vertex in the graph is unreachable from any other, then distance
+between those two unonnected vertices is infinite. This imlplies that the closeness
+of that vertex is zero. If an undirected graph has unconnected components, then
+all vertices will have a closeness of zero. This is not necessarily true for
+directed graphs.
 
-It is also important to note the relationship between /closeness/, /farness/
-and /mean geodesic distance/. Specifcially, /farness/ is the inverse of
-/closeness/ (or the other way around) and indicates how far an actor is from
-all others in the graph. The /mean geodesic distance/ is the average /farness/
-of a vertex.
+Consider the following social network represented by an undirected graph in
+Figure 1.
+
+[figure
+    images/reference/social_network.png
+    *Figure 1.* A network of friends.
+]
+
+Computing the closeness for each person in the graph, we find that Frank is the
+most central person in the network, with a closeness centrality of approximiately
+0.091 (1/11). We also find that Jill, Mary, and Laurie are the least central
+people in the network (with closeness centralities of .056 or 1/18).
+
+The same measure can also be applied to directed graphs, but has dubious meaning
+if the graph is not /strongly connected/. Consider the communication networks
+between the friends listed above. For this graph, we connect two people /a/ and
+/b/ if /a/ sends a text message to /b/ (for example).
+
+[figure
+    images/reference/comm_network.png
+    *Figure 2.* Communications between friends.
+]
+
+In this network, Frank is once again the most central (with a closeness centrality
+of 0.067) because he is "closer" to each of the various communication cycles in the
+network. Laurie is the furthest removed, with a closeness centrality of .028.
+
+In these examples, distance is defined as the number of "hops" in the shortest path
+from one vertex to another. It should be noted, however, that distance can also be
+represented as the sum of edge-weights on the shortest path between the two vertices.
+The definition of distance for this measure is outside the scope of this computation.
+This is to say that distance is defined and computed before closeness centrality
+can be computed.
 
 This module defines a flexible framework for computing the closeness centrality
 of vertices in a graph for previously computed geodesics by providing two generic
@@ -65,8 +90,9 @@ or as the result of a [boost_breadth_first_search] (if the graph is unweighted).
 The second function, `vertex_closeness_centrality()` can be used to compute the
 closeness of a single vertex. This function requires a distance map that contains
 the distance from one vertex (the source) to all others in the graph. This
-distance map can be computed as the result of a "shortest paths" algorithm or
-recording distances from a breadth-first search.
+distance map can be computed as the result of a "shortest paths" algorithm (e.g.,
+[boost_dijkstra_shortest_paths], [boost_bellman_ford_shortest_paths], or
+[boost_dag_shortest_paths]), or recording distances from a [boost_breadth_first_search].
 
 This framework also allows for a specialization of the measure through the use
 of a function object. This measure defaults to the reciprocal in the equation
@@ -100,12 +126,11 @@ the case of non-trivial types, re-define the notion of reciprocal.
         ]
     ]
     [
-        [required, in] [`DistanceMap dist`]
+        [required, in] [`DistanceMap dm`]
         [
-            Given a vertex `v`, the `dist` parameter provides the length of the
+            Given a vertex `v`, the `dm` parameter provides the length of the
             shortest path between a vertex `u` and `v`. The vertex `u` is the
-            vertex for which the distance map was initially computed. The
-            distance from /u/ to itself should be zero (i.e., `dist[u] == 0`).
+            vertex for which the distance map was initially computed.
 
             *Requirements:* `DistanceMap` must be a model of [BoostReadablePropertyMap].
             The `key_type` of the distance map must be the same as the `vertex_descriptor`
@@ -114,28 +139,29 @@ the case of non-trivial types, re-define the notion of reciprocal.
         ]
     ]
     [
-        [required, in] [`const DistanceMatrix& dist`]
+        [required, in] [`DistanceMatrixMap dm`]
         [
-            Given vertices /u/ and /v/, the `dist` parameter provides the length
+            Given vertices /u/ and /v/, the `dm` parameter provides the length
             of the shortest path between the two vertices. Note that the
-            distance between a vertex and itself should be 0 (i.e., `dist[u][u] == 0`).
+            distance between a vertex and itself should be 0 (i.e., `dm[u][u] == 0`).
 
-            *Requirements:* `DistanceMatrix` must be a model of [BoostPropertyMatrix].
-            The `key_type` of the distance matrixc must be the same as the
-            `vertex_descriptor` of the `Graph` parameter. The `value_type` is
-            required to be a model of [BoostNumericValue].
+            *Requirements:* `DistanceMatrixMap` must be a model of [BoostReadablePropertyMap].
+            The `key_type` of the distance matrixc must be the same as the `vertex_descriptor`
+            of the `Graph` parameter. The `value_type` must be a [BoostReadWritePropertyMap]
+            whose `key_type` is also the `vertex_descriptor` of the `Graph` and
+            whose `value_type` is a model of [BoostNumericValue].
         ]
     ]
     [
-        [required, out] [`ClosenessMap close`]
+        [required, out] [`ClosenessMap cm`]
         [
-            The `close` parameter stores the output of the computed closeness (or
+            The cm parameter stores the output of the computed closeness (or
             distance) for each vertex in `g`.
 
-            *Requirements:* The type of `close` must be model the
-            [BoostPropertyMap] and [BoostWritablePropertyMap] concepts. The `key_type`
-            of the property map must be the same as the `vertex_descriptor` of
-            the `Graph` type, and the `value_type` must be a model of [BoostNumericValue].
+            *Requirements:* The type of `close` must be model the [BoostWritablePropertyMap]
+            concepts. The `key_type` of the property map must be the same as the
+            `vertex_descriptor` of the `Graph`, and the `value_type` must be a model
+            of [BoostNumericValue].
         ]
     ]
     [
@@ -145,23 +171,151 @@ the case of non-trivial types, re-define the notion of reciprocal.
             performs the final operation (the reciprocal) for this computation.
 
             *Requirements:* The `Measure` type must be a model of the [BoostDistanceMeasure]
-            concept.
+            concept. The `distance_type` must be the same type as the `value_type`
+            of the `DistanceMap` or `DistanceMatrixMap`. The `result_type` of the
+            `Measure` must model the [BoostNumericValue] concept.
         ]
     ]
 ]
 
 [heading Return]
 The `vertex_closeness_centrality()` function returns the closeness of a vertex.
-If the source vertex is not connected to one other in the graph, this value is 0.
+If the source vertex is disconnected from any vertices in the graph, this value is 0.
 
 [heading Complexity]
-The `closenesss_centrality()` function is ['O(n[super 2])] where /n/ is the
-number of vertices in the graph.
+The `closenesss_centrality()` function returns in ['O(n[super 2]*O(M))] where /n/
+is the number of vertices in the graph and /M/ is the complexity of the given distance
+measure. This is ['O(n[super 2])] by default
 
-The `vertex_closeness_centrality()` function is linear with respect to the number
-of vertices in the graph.
+The `vertex_closeness_centrality()` function returns in ['O(n*O(M))]. This is
+linear by default.
 
-[heading Example]
-Write an example.
+[heading Example (Closeness Centrality)]
+This example computes the closeness centrality for all vertices (people) a social
+network such as the one pictured in Figure 1. The program also sorts the vertices by
+their corresponding closeness in descending order. This example includes the
+following files:
+
+* [^examples/closeness_centrality.hpp]
+* [^examples/social_network.hpp]
+* [^examples/helper.hpp]
+
+First, we define the graph and its associated types.
+[social_network_types]
+Here, we use the `Actor` to store an actor name with each vertex. We also define a
+number of related property types.
+
+Since this program will call
+[boost_floyd_warshall_all_pairs_shortest_paths] to compute distances between
+vertices, we need a matrix to store the distances.
+[distance_matrix_types]
+
+We also need a property map
+that assigns weights to each edge. Since our graph is unweighted, we can use
+the [boost_constant_property_map] to return a constant value for each edge.
+[constant_weight_map_types]
+
+We also need an output property map to store the closeness centrality for each
+vertex.
+[closeness_map_types]
+
+In the main program, we instantiate the graph and an extra `std::map` that we
+use during graph construction.
+
+[setup_social_network]
+
+The graph is read from standard input. This process uses the `add_named_vertex()`
+function, which is not part of the Boost.Graph library but defined in the file
+`examples/helper.hpp`.
+
+[build_social_network]
+
+The next step is to compute the distance. This is done using the
+[boost_floyd_warshall_all_pairs_shortest_paths] function. This could also be done
+using [boost_johnson_all_pairs_shortest_paths]. This is done by first constructing
+a matrix to hold the distance values, and a property map over the matrix. Additionally,
+we use a [boost_constant_property_map] to return the value `1` for all edge weights.
+Both the distance matrix and edge-weight maps are used as inputs to the distance
+algorithm.
+[compute_constant_distances]
+
+After computing the distance, we can use the resulting distance matrix to compute
+the property maps for each vertex. This is done by constructing a container for
+the closeness values and a property map accessor for it. The previously computed
+distance map and closeness map are passed as inputs to the computation.
+[compute_closeness]
+
+In the next step, we sort the vertices of the graph into the given vector. For
+this sort, we use the values in the property map as the sort keys. The resulting
+vector will contain the vertices of the graph in descending order of closeness.
+The `sort_vertices()` function is given in the `helper.hpp` file.
+[closeness_sort_vertices]
+
+Finally, we iterate over the sorted vector of vertices and print them to standard
+output.
+[print_sorted_closeness]
+
+If this program is given the `social_network.graph` file as input, the output
+will be:
+
+[pre
+Frank          0.0909091
+Scott          0.0833333
+Josh           0.0625
+Bill           0.0588235
+Anne           0.0588235
+Howard         0.0588235
+Jill           0.0555556
+Mary           0.0555556
+Laurie         0.0555556
+]
+
+Note that this program can be easily modified to work on directed graphs. In the
+file `social_network.hpp`, simply replace `typedef undirected_graph<Actor> ...` to
+`typedef directed_graph<Actor> ...`.
+
+[heading Example (Normalized Closeness)]
+In some literature, closeness is defined as the number of vertices divided by the
+sum of distances, or more formally.
+
+[$images/eq/norm_closeness.png]
+
+Where /n/ is the number of vertices in the graph. While this example demonstrates
+the implementation of a [BoostDistanceMeasure], the resulting value can be also
+obtained by multiplying the default result by the number of vertices in the graph.
+This example uses the following files:
+
+* [^examples/norm_closeness.hpp]
+* [^examples/social_network.hpp]
+* [^examples/helper.hpp]
+
+Defining the a distance measure that models the [BoostDistanceMeasure] type is
+fairly simple, and is similar to providing custom function objects for algorithms
+in the Standard Library. Our custom measure is defined as:
+[normalized_closeness_measure]
+
+Using this measure requires that we instantiate it. Since we did not provide
+any convenience functions for instantiating the type, it must be explicitly
+declared before its use. The distance and result types are given as `int` and
+`float` respectively. Once constructed, it is simply passed to the computation
+as an argument.
+[compute_normalized_closeness]
+
+If given the same social network as input, the output of this program will be:
+
+[pre
+Frank          0.818182
+Scott          0.75
+Josh           0.5625
+Bill           0.529412
+Anne           0.529412
+Howard         0.529412
+Jill           0.5
+Mary           0.5
+Laurie         0.5
+]
+
+It is relatively easy to verify that each of these values is nine times the values
+given in the previous example.
 
 [endsect]

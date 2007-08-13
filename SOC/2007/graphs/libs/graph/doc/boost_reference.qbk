@@ -9,6 +9,11 @@
  / This file contains references to Boost.Graph reference docs
  /]
 
+
+[template boost_constant_property_map[] [link
+    boost_graph
+    [^constant_property_map]]]
+
 [/ Graph traits and types /]
 [template boost_graph_traits[] [link boost_graph.reference_guide.traits_classes.graph_traits [^graph_traits]]]
 [template boost_undirected_graph[] [link boost_graph.reference_guide.graph_types.undirected_graph [^undirected_graph]]]
@@ -43,6 +48,9 @@
 [template boost_floyd_warshall_all_pairs_shortest_paths[] [link
     boost_graph.reference_guide.algorithms.shortest_paths.floyd_warshall_all_pairs_shortest_paths
     [^floyd_warshall_all_pairs_shortest_paths()]]]
+[template boost_johnson_all_pairs_shortest_paths[] [link
+    boost_graph.reference_guide.algorithms.shortest_paths.johnson_all_pairs_shortest_paths
+    [^johnson_all_pairs_shortest_paths()]]]
 
 [/ Connectivity /]
 [template boost_connected_components[] [link
@@ -87,3 +95,11 @@
 [template boost_exterior_edge_property[] [link
     boost_graph
     [^exterior_edge_property]]]
+
+[/ Import lots of examples to build code templates]
+[import ../examples/social_network.hpp]
+[import ../examples/flow_network.hpp]
+[import ../examples/degree_centrality.cpp]
+[import ../examples/influence_prestige.cpp]
+[import ../examples/closeness_centrality.cpp]
+[import ../examples/norm_closeness_centrality.cpp]
