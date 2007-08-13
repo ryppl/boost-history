@@ -1,0 +1,59 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Assignable]
+A type `T` is /assignable/ if an object of type `T` can be assigned
+the value of another object `u` using the assignment operator. The type
+of `u` is either `T` or `const T`. A type `T` is assignable if it has 
+a compiler-generated or user-defined assignment operator. After the 
+assignment the object `t` is equivalent to `u`.
+
+[note
+This type of assignment is properly referred to as /copy assignment/
+since, after the copy operation since both assignment operators and
+constructors can be provided for types that are not `T` or `const T`.
+]
+
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[T] [An [StdAssignable] type.]]
+    [[t] [An instance of type `T`.]]
+    [[u] [An instance of type 'const `T`.]]
+]
+
+[heading Requirements]
+[table
+    [[Expression] [Return Type] [Post-condition]]
+    [
+        [`t = u`]
+        [`T&`]
+        [
+            Assigns the object `u` to the object `t`.
+
+            *Requirements:* The type of `u` is either `T` or `const T`.
+
+            *Postconditions:* `t` is equivalent to `u`.
+        ]
+    ]
+]
+
+[heading Examples]
+A type `T` is required to be [StdAssignable] when an object of type `T` is
+assigned to an object of type `T` or `const T`.
+
+    // This function requires T to be ``[StdAssignable]`` because it assigns
+    // an object of type `T` to the value of another object of the same type.
+    // If T is not assignable, calling this function will result in a compiler
+    // error.
+    template <typename T>
+    void assign(T& t, const T& u)
+    {
+        t = u;
+    }
+
+[endsect]

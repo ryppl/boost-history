@@ -6,11 +6,12 @@
  /]
 
 [section Copy Constructible]
-A type `T` is /copy constructible/ if it is possible to create copies of an
-object that type using a copy constructor. `T` is only copy constructible 
-if it has either a compiler-generated or user-defined copy constructor that 
-accepts a single argument: a `const` reference to `T`. After construction, 
-a constructed object is equivalent to the object passed as an argument.
+A type `T` is /copy constructible/ if it an object `t` of type `T` can
+be constructed as a copy of another object `u`. The type of `u` is either 
+`T` or `const T`. A type `T` is only copy constructible if it has either a 
+compiler-generated or user-defined copy constructor that accepts a single 
+argument: a `const` reference to `T`. After copy construction, the 
+constructed object is equivalent to the object passed as an argument.
 
 [note
 Two objects `t` and `u` are equivalent if the expression `t == u` returns
@@ -26,7 +27,7 @@ The following expressions are used within this document:
     [[Expression] [Description]]
     [[T] [A [StdCopyConstructible] type.]]
     [[t] [An object of type `T`.]]
-    [[u] [An object of type `T` or `const T`]]
+    [[u] [An object of type `T` or `const T`.]]
 ]
 
 [heading Requirements]
@@ -35,7 +36,7 @@ The following expressions are used within this document:
     [
         [Copy Constructor]
         [
-                `T t(u);` [br/]
+                `T t(u);`[br/]
                 `T t = u;`
         ]
         []
@@ -68,14 +69,24 @@ A type `T` is required to be [StdCopyConstructible] when an object of type `T`
 is when the copy constructor of `T` is invoked passing another object of
 type `T` as an argument.
 
-    // This function requires `T` to be copy constructible because it declares
-    // an object of type T constructed with the value of u. If T is not
-    // ``[StdCopyConstructible]``, calling this function will result in a
-    // compiler error.
+    // This function requires T to be ``[StdCopyConstructible]`` because 
+    // it declares an object of type T constructed with the value of u. If 
+    // T is not ``[StdCopyConstructible]``, calling this function will 
+    // result in a compiler error.
     template <typename T>
     void copy_declare(const T& u)
     {
         T t(u);
+    }
+    
+    // This function requires T to be ``[StdCopyConstructible]`` because
+    // it explitcly constructs a copy of an object of the same type. If
+    // T is not ``[StdCopyConstructible]``, then calling this function will
+    // result in a compiler error.
+    template <typename T>
+    T copy_construct(const T& u)
+    {
+        return T(u);
     }
 
 [endsect]

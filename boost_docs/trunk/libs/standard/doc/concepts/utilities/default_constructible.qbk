@@ -64,8 +64,8 @@ declared or when the default constructor of `T` is invoked without arguments.
 
     // This functions requires T to be ``[StdDefaultConstructible]`` because it
     // declares an object of type T without providing any arguments to the default
-    // constructor. If T is not default constructible, calling this function will
-    // result in a compiler error.
+    // constructor. If T is not ``[StdDefaultConstructible]``, calling this function
+    // will result in a compiler error.
     template <typename T>
     void default_declare()
     {
@@ -74,8 +74,8 @@ declared or when the default constructor of `T` is invoked without arguments.
 
     // This function requires T to be ``[StdDefaultConstructible]`` because it
     // explicitly invokes a constructor of T wihtout any arguments. If T is not
-    // default constructible, calling this function will result in a compiler
-    // error.
+    // ``[StdDefaultConstructible]``, calling this function will result in a 
+    // compiler error.
     template <typename T>
     T default_construct()
     {
