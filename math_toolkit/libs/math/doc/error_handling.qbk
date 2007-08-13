@@ -1,0 +1,204 @@
+[section:error_handling Error Handling]
+
+[def __format [@../../libs/format/index.html Boost.Format]]
+
+[h4 synopsis]
+
+Several __error_policy are provided to allow fine-grained control of the behaviour
+when arguments are passed for which values cannot be computed, for example,
+causing overflow, underflow, at a pole, or when accurate evaluation proves impossible.
+Defaults behaviour is provided that should be suitable for most applications.
+To provide ultimate control a user-defined error policy also can be implemented
+to provide specific __user_error_handling.
+
+The functions in this header are designed to be user-replaceable error
+handlers that define how errors are handled by the special functions
+in this library. See __user_error_handling.
+
+There are also some pre-processor macro defines that can be used to
+__changing_policy_defaults changing policies defaults.
+
+The various kind of errors are described in more detail below.
+
+[h4 Example - using the macro BOOST_MATH_DOMAIN_ERROR_POLICY]
+
+[/import ../../example/error_handling_example.cpp] [/ already imported so use a link instead.]
+[/error_handling_example]
+
+An example is at the Policy tutorial in
+[link math_toolkit.policy.pol_tutorial.changing_policy_defaults Changing the Policy Defaults].
+
+Full source code of this typical example of passing a 'bad' argument
+(negative degrees of freedom) to Student's t distribution 
+is at [@../../example/error_handling_example.cpp error_handling_example.cpp].
+
+[#domain_error][h4 Domain Errors]
+
+When a special function is passed an argument that is outside the range
+of values for which that function is defined, then the function returns
+the result of:
+
+   boost::math::tools::domain_error<T>(FunctionName, Message, Val);
+   
+Where
+`T` is the floating-point type passed to the function, `FunctionName` is the 
+name of the function, `Message` is an error message describing the problem, 
+and Val is the value that was out of range.
+
+The default policy behaviour of this function is to throw a 
+std::domain_error C++ exception.  But if the policy is to ignore
+the error, or set global ::errno, then a NaN will be returned.
+
+This behaviour is chosen to assist compatibility with the behaviour of 
+['ISO/IEC 9899:1999 Programming languages - C]
+and with the
+[@www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1836.pdf Draft Technical Report on C++ Library Extensions, 2005-06-24, section 5.2.1, paragraph 6]:
+
+[:['"Each of the functions declared above shall return a NaN (Not a Number)
+if any argument value is a NaN, but it shall not report a domain error.
+Otherwise, each of the functions declared above shall report a domain error
+for just those argument values for which:]]
+
+[:['"the function description's Returns clause explicitly specifies a domain, and those arguments fall outside the specified domain; or]
+
+['"the corresponding mathematical function value has a non-zero imaginary component; or]
+
+['"the corresponding mathematical function is not mathematically defined.]]
+
+[:['"Note 2: A mathematical function is mathematically defined
+for a given set of argument values if it is explicitly defined
+for that set of argument values or
+if its limiting value exists and does not depend on the direction of approach."]]
+
+Note that in order to support information-rich error messages when throwing
+exceptions, `Message` must contain
+a __format recognised format specifier: the argument `Val` is inserted into
+the error message according to the specifier used.
+
+For example if `Message` contains a "%1%" then it is replaced by the value of
+`Val` to the full precision of T, where as "%.3g" would contain the value of
+`Val` to 3 digits.  See the __format documentation for more details.
+
+[#pole_error][h4 Evaluation at a pole]
+
+When a special function is passed an argument that is at a pole
+without a well defined residual value, then the function returns
+the result of:
+
+   boost::math::tools::pole_error<T>(FunctionName, Message, Val);
+   
+Where
+`T` is the floating point type passed to the function, `FunctionName` is the 
+name of the function, `Message` is an error message describing the problem, 
+and `Val` is the value of the argument that is at a pole.
+
+The default behaviour of this function is to throw a std::domain_error exception.
+But __error_policy can be used to change this, for example to ignore_error
+and return NaN.
+
+Note that in order to support information-rich error messages when throwing
+exceptions, `Message` must contain
+a __format recognised format specifier: the argument `val` is inserted into
+the error message according to the specifier used.
+
+For example if `Message` contains a "%1%" then it is replaced by the value of
+`val` to the full precision of T, where as "%.3g" would contain the value of
+`val` to 3 digits.  See the __format documentation for more details.
+
+[#overflow_error][h4 Numeric Overflow]
+
+When the result of a special function is too large to fit in the argument
+floating-point type, then the function returns the result of:
+
+   boost::math::tools::overflow_error<T>(FunctionName, Message);
+   
+Where
+`T` is the floating-point type passed to the function, `FunctionName` is the 
+name of the function, and `Message` is an error message describing the problem.
+
+The default policy for this function is that `std::overflow_error` 
+C++ exception is thrown. But if, for example, an ignore_error policy 
+is used, then returns `std::numeric_limits<T>::infinity()`.
+However if the type `T` doesn't support infinities,
+the maximum value for the type is returned.
+
+[#underflow_error][h4 Numeric Underflow]
+
+If the result of a special function is known to be non-zero, but the
+calculated result underflows to zero, then the function returns the result of:
+
+   boost::math::tools::underflow_error<T>(FunctionName, Message);
+   
+Where
+`T` is the floating point type passed to the function, `FunctionName` is the 
+name of the function, and `Message` is an error message describing the problem.
+
+The default version of this function throws an `std::underflow_error` 
+C++ exception.  But with another policy, like ignore_error, returns zero.
+
+[#denorm_error][h4 Denormalisation Errors]
+
+If the result of a special function is a denormalised value /z/ then the function
+returns the result of:
+
+   boost::math::tools::denorm_error<T>(z, FunctionName, Message);
+   
+Where
+`T` is the floating point type passed to the function, `FunctionName` is the 
+name of the function, and `Message` is an error message describing the problem.
+
+The default version of this function throws an `std::underflow_error` 
+C++ exception.  But with another policy, like ignore_error, returns /z/. 
+
+[#evaluation_error][h4 Evaluation Errors]
+
+When a special function calculates a result that is known to be erroneous,
+or where the result is incalculable then it calls:
+
+   boost::math::tools::evaluation_error<T>(FunctionName, Message, Val);
+   
+Where
+`T` is the floating point type passed to the function, `FunctionName` is the 
+name of the function, `Message` is an error message describing the problem,
+and `Val` is the erroneous value.
+
+The default behaviour of this function is to throw a `std::evaluation_error`.
+
+Note that in order to support information rich error messages when throwing
+exceptions, `Message` must contain
+a __format recognised format specifier: the argument `val` is inserted into
+the error message according to the specifier used.
+
+For example if `Message` contains a "%1%" then it is replaced by the value of
+`val` to the full precision of T, where as "%.3g" would contain the value of
+`val` to 3 digits.  See the __format documentation for more details.
+
+[#checked_narrowing_cast][h4 Errors from typecasts]
+
+Many special functions evaluate their results at a higher precision
+than their arguments in order to ensure full machine precision in 
+the result: for example, a function passed a float argument may evaluate
+its result using double precision internally.  Many of the errors listed
+above may therefore occur not during evaluation, but when converting 
+the result to the narrower result type.  The function:
+
+   template <class T, class U>
+   T checked_narrowing_cast(U const& val, const char* function);
+   
+Is used to perform these conversions, and will call the error handlers
+listed above on [link overflow_error overflow], 
+[link underflow_error underflow] or [link denorm_error denormalisation].
+
+Obviously if T and U are the same type or if T is at least as wide as U, 
+then no checks are performed.
+
+[endsect][/section:error_handling Error Handling]
+
+[/ 
+  Copyright 2006 John Maddock and Paul A. Bristow.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
