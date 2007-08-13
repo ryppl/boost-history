@@ -9,8 +9,8 @@
 
 #include <iostream>
 #include <iomanip>
-
-#include <boost/graph/degree_centrality.hpp>
+#include <boost/graph/floyd_warshall_shortest.hpp>
+#include <boost/graph/closeness_centrality.hpp>
 
 using namespace std;
 using namespace boost;
@@ -18,13 +18,10 @@ using namespace boost;
 int
 main(int argc, char *argv[])
 {
-    //[setup_social_network
     Graph g;
     map<string, Vertex> verts;
-    //]
 
     // Read in and build the graph
-    //[build_social_network
     for(string line; getline(cin, line); ) {
         if(line.empty()) continue;
         size_t index = line.find_first_of(',');
@@ -35,20 +32,31 @@ main(int argc, char *argv[])
         Vertex v = add_named_vertex(g, second, verts);
         add_edge(u, v, g);
     }
+
+    //[compute_constant_distances
+    DistanceMatrix distances(num_vertices(g));
+    DistanceMatrixMap dm(distances, g);
+    WeightMap wm(1);
+    floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
     //]
 
     // Compute the degree centrality for graph
-    //[measure_social_network
-    CentralityContainer cents(num_vertices(g));
-    CentralityMap cm(cents, g);
-    degree_centrality(g, cm);
+    //[compute_closeness
+    ClosenessContainer cents(num_vertices(g));
+    ClosenessMap cm(cents, g);
+    closeness_centrality(g, dm, cm);
+    //]
+
+    //[closeness_sort_vertices
+    vector<Vertex> sorted(num_vertices(g));
+    sort_vertices(sorted, g, cm);
     //]
 
     // Print the degree centrality of each vertex
-    //[print_social_network
-    graph_traits<Graph>::vertex_iterator i, end;
-    for(tie(i, end) = vertices(g); i != end; ++i) {
-        cout << setiosflags(ios::left) << setw(12)
+    //[print_sorted_closeness
+    vector<Vertex>::iterator i, end = sorted.end();
+    for(i = sorted.begin(); i != end; ++i) {
+        cout << setw(12) << setiosflags(ios::left)
              << g[*i].name << cm[*i] << "\n";
     }
     //]

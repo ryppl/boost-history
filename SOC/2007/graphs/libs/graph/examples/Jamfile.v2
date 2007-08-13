@@ -6,5 +6,6 @@ project
     ;
 
 exe degree_centrality : degree_centrality.cpp ;
-
 exe influence_prestige : influence_prestige.cpp ;
+exe closeness_centrality : closeness_centrality.cpp ;
+exe norm_closeness : norm_closeness.cpp ;
