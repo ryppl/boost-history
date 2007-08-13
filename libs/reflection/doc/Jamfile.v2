@@ -23,5 +23,5 @@ boostbook standalone
 
     ;
 
-install html : ../../../../src/sandbox/doc/html/boostbook.css ;
-install ../ : ../../../../src/sandbox/boost.png ;
+install html : ../boostbook.css ;
+install ../ : ../boost.png ;

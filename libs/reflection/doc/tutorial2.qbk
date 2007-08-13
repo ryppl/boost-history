@@ -1,0 +1,99 @@
+[/ Boost.Reflection - boost.extension tutorial ]
+[/ Copyright 2007 Mariano G. Consoni ]
+[/ Distributed under the Boost Software License, Version 1.0. (See]
+[/ accompanying file LICENSE_1_0.txt or copy at ]
+[/ http://www.boost.org/LICENSE_1_0.txt) ]
+[/ See http://www.boost.org/ for latest version. ]
+
+
+[section:tutorial02 Tutorial 2]
+
+In this tutorial we show how Boost.Extension could be integrated with
+Boost.Reflection. This relationship is important because
+we can load different factories with Boost.Extension (from dynamic link
+libraries) and then reflect its instances using Boost.Reflection.
+
+This example is based in the first tutorial , specially in the Reflection 
+part. So it's preferred that the reader is familiarized with that
+tutorial, and of course has a basic understanding of Boost.Extension.
+
+First, we create a Boost.Extension based in our car interface. It 
+defines two derived classes, and has the export declaration. 
+
+``
+class suv : public car
+{
+public:
+	suv(const std::string name) : car(name) {}
+	virtual std::string get_type(void) { return "It's a SUV."; }
+	virtual ~suv(void) {}
+};
+
+class compact : public car
+{
+public:
+	compact(const std::string name) : car(name) {}
+	virtual std::string get_type(void) { return "It's a compact."; }
+	virtual ~compact(void) {}
+};
+``
+
+``
+extern "C" 
+void BOOST_EXTENSION_EXPORT_DECL 
+extension_export_car(boost::extensions::factory_map & fm)
+{
+  fm.add<suv, car, std::string, std::string>("SUV");
+  fm.add<compact, car, std::string, std::string>("Compact");
+}
+``
+
+We compile it as a dynamic link library that will be loaded from the
+main program. 
+
+Having the library we could start our main program. We'll define our
+reflection (creating it and adding methods) and them we'll cycle
+the factories, create some instances and use our reflection to
+call methods.
+
+Let's define the reflection, very similar to the one in tutorial 1:
+
+``
+  boost::extension::reflection<car, std::string> car_reflection("A Car!");
+  car_reflection.add<int, bool>(&car::start, 3);
+  car_reflection.add<std::string, bool, float, 
+    std::string>(&car::turn, "turn", "turn_angle");
+``
+
+Now we load the dynamic link library:
+
+``
+  load_single_library(fm, "libcar_lib.extension", 
+		      "extension_export_car");
+  std::list<factory<car, std::string, std::string> > & factory_list = 
+	  fm.get<car, std::string, std::string>();  
+``
+
+Now, the interesting part. We iterate the factories searching for
+a Compacts factory. When we find it we create an instance, and then
+we use our car reflection to call the 3 method (start).
+
+``
+  for (std::list<factory<car, std::string, std::string> >
+	 ::iterator current_car = factory_list.begin(); 
+       current_car != factory_list.end(); 
+       ++current_car)
+  {
+    if(current_car->get_info() == "Compact") {
+       car *beetle(current_car->create("VW New Beetle"));
+       car_reflection.call<int, bool>(beetle, 3);
+       delete beetle;
+    }
+  }
+``
+
+In this way you can load instance factories dynamically, and then
+use your reflections to access your methods.
+
+
+[endsect]
