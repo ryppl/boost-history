@@ -10,4 +10,5 @@ graph {
     Howard -- Anne;
     Frank -- Howard;
     Josh -- Frank;
+    Laurie -- Mary;
 };

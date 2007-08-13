@@ -1,4 +1,6 @@
 
+GVFLAGS = -Gnodesep=.5 -Tpng
+
 dot_src = \
 	connected_components_before.dot \
 	connected_components_after.dot \
@@ -7,27 +9,28 @@ dot_src = \
 circo_src = \
 	distribution_undirected.circo \
 	distribution_directed.circo
-neato_src = \
-	social_network.neato
+fdp_src = \
+	social_network.fdp
 
 dot_png = $(dot_src:%.dot=%.png)
 circo_png = $(circo_src:%.circo=%.png)
-neato_png = $(neato_src:%.neato=%.png)
+fdp_png = $(fdp_src:%.fdp=%.png)
 
 %.png: %.dot
-	dot -Tpng $< > $@
+	dot $(GVFLAGS) -o $@ $<
 	convert $@ -resize 80% $@
 
 %.png: %.circo
-	circo -Tpng $< > $@
+	circo $(GVFLAGS) -o $@ $<
 	convert $@ -resize 80% $@
 
-%.png: %.neato
-	neato -Tpng $< > $@
+%.png: %.fdp
+	fdp $(GVFLAGS) -o $@ $<
 	convert $@ -resize 80% $@
 
-all: $(dot_png) $(circo_png) $(neato_png)
+all: $(dot_png) $(circo_png) $(fdp_png)
 
 clean:
 	rm -rf $(dot_png)
 	rm -rf $(circo_png)
+	rm -rf $(fdp_png)
