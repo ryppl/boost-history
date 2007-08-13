@@ -12,11 +12,10 @@
 
 namespace boost
 {
-    template <
-            typename Graph,
-            typename DistanceType,
-            typename ResultType,
-            typename Reciprocal = detail::reciprocal<ResultType>
+    template <typename Graph,
+              typename DistanceType,
+              typename ResultType,
+              typename Reciprocal = detail::reciprocal<ResultType>
         >
     struct closeness_measure
         : public geodesic_measure<Graph, DistanceType, ResultType>
@@ -30,11 +29,11 @@ namespace boost
             function_requires< NumericValueConcept<DistanceType> >();
             function_requires< NumericValueConcept<ResultType> >();
             function_requires< AdaptableUnaryFunctionConcept<Reciprocal,ResultType,ResultType> >();
-            Reciprocal r;
             return
                 (d == base_type::infinite_distance()) ?
-                    base_type::zero_result() : r(result_type(d));
+                    base_type::zero_result() : rec(result_type(d));
         }
+        Reciprocal rec;
     };
 
     template <typename Graph, typename DistanceMap>
@@ -129,19 +128,19 @@ namespace boost
     }
 
     template <typename Graph,
-              typename DistanceMatrix,
+              typename DistanceMatrixMap,
               typename CentralityMap,
               typename Measure>
     inline void
     closeness_centrality(const Graph& g,
-                         const DistanceMatrix& dist,
+                         const DistanceMatrixMap& dist,
                          CentralityMap cent,
                          Measure measure)
     {
         function_requires< VertexListGraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
-        function_requires< ReadablePropertyMapConcept<DistanceMatrix,Vertex> >();
-        typedef typename property_traits<DistanceMatrix>::value_type DistanceMap;
+        function_requires< ReadablePropertyMapConcept<DistanceMatrixMap,Vertex> >();
+        typedef typename property_traits<DistanceMatrixMap>::value_type DistanceMap;
         function_requires< ReadablePropertyMapConcept<DistanceMap,Vertex> >();
         function_requires< WritablePropertyMapConcept<CentralityMap,Vertex> >();
         typedef typename property_traits<DistanceMap>::value_type Distance;
@@ -156,17 +155,17 @@ namespace boost
     }
 
     template <typename Graph,
-              typename DistanceMatrix,
+              typename DistanceMatrixMap,
               typename CentralityMap>
     inline void
     closeness_centrality(const Graph& g,
-                         const DistanceMatrix& dist,
+                         const DistanceMatrixMap& dist,
                          CentralityMap cent)
     {
         function_requires< GraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
-        function_requires< ReadablePropertyMapConcept<DistanceMatrix,Vertex> >();
-        typedef typename property_traits<DistanceMatrix>::value_type DistanceMap;
+        function_requires< ReadablePropertyMapConcept<DistanceMatrixMap,Vertex> >();
+        typedef typename property_traits<DistanceMatrixMap>::value_type DistanceMap;
         function_requires< ReadablePropertyMapConcept<DistanceMap,Vertex> >();
         typedef typename property_traits<DistanceMap>::value_type Distance;
         typedef typename property_traits<CentralityMap>::value_type Result;
