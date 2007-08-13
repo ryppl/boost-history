@@ -1,0 +1,88 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Default Constructible]
+A type `T` is /default constructible/ if objects of type `T` can be constructed
+without providing any arguments to a constructor. A type that is default
+constructible has either a compiler-generated or user-defined constructor
+that can be called without arguments. 
+
+[note
+[StdDefaultConstructible] types may or may not initilize objects to a default value 
+or state depending on the type itself and the syntax used for construction. Objects 
+that are not initialized to a default are /uninitialized. Reading from or otherwise
+using uninitialized objects often results in undefined behavior.
+]
+
+[heading Refinement of]
+[StdDestructible]
+
+[heading Notation]
+The folllowing expressions are used in this document:
+[table
+    [[Expression] [Description]]
+    [[T] [A [StdDefaultConstructible] type.]]
+    [[x] [An object of type `T`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Default Constructor]
+        [`T x;`]
+        []
+        [
+            The object `x` is constructed as an object of type `T` and may or may not
+            initialized to a default value[footnote This syntax leaves fundamental
+            types unitialized while class types are default-initialized.].
+        ]
+    ]
+    [
+        [Default Constructor]
+        [`T()`]
+        [`T`]
+        [
+            Constructs an object of type `T` and is initializes it to its default
+            value[footnote This syntax will zero-initialize scalar and other
+            fundamental types and default-initialize others.].
+        ]
+    ]
+]
+
+[heading Notes]
+If the default constructor of a class type `T` is `private`, then the `T` does not
+model the [StdDefaultConstructible] concept.
+
+[heading Examples]
+A type `T` is required to be [StdDefaultConstructible] when an object of type `T` is
+declared or when the default constructor of `T` is invoked without arguments.
+
+    // This functions requires T to be ``[StdDefaultConstructible]`` because it
+    // declares an object of type T without providing any arguments to the default
+    // constructor. If T is not default constructible, calling this function will
+    // result in a compiler error.
+    template <typename T>
+    void default_declare()
+    {
+        T x;
+    }
+
+    // This function requires T to be ``[StdDefaultConstructible]`` because it
+    // explicitly invokes a constructor of T wihtout any arguments. If T is not
+    // default constructible, calling this function will result in a compiler
+    // error.
+    template <typename T>
+    T default_construct()
+    {
+        return T();
+    }
+
+[heading Models]
+All fundamental types such as `bool`, `int`, and `float` are [StdDefaultConstructible].
+
+[endsect]

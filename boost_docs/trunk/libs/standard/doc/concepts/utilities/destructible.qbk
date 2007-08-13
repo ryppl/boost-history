@@ -1,0 +1,54 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Destructible]
+A type `T` is /destructible/ if it has a public destructor. The
+destructor can be either compiler-generated or user-defined.
+
+[heading Notation]
+The following expressions are used within this document:
+[table
+    [[Expression] [Description]]
+    [[T] [A [StdDestructible] type.]]
+    [[t] [An object of type `T`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Destructor]
+        [`t.~T()`]
+        []
+        [
+                The destructor of `t` is called, destroying the object.
+
+                *Exceptions:* Destructors must not throw exceptions.
+        ]
+    ]
+]
+
+[heading Notes]
+A class that provides a user-defined, `private` or `protected` destructor
+is not [StdDestructible].
+
+[heading Examples]
+In practice, there are non-[StdDestructible] types are infrequent. Any type
+whose objects are statically or locally declared is required to be model the
+[StdDestructible] concept. Any type whose objects are `delete`d are also required
+to be [StdDestructible].
+
+    // This function requires T to be ``[StdDestructible]`` because it
+    // explicitly invokes the destructor. If T is not destructible,
+    // calling this function will result in a compiler error.
+    template <typename T>
+    void destruct(T& t)
+    {
+        t.~T();
+    }
+
+[endsect]
