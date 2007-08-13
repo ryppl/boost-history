@@ -5,7 +5,8 @@ src = \
 	mean_geodesic_undirected.tex \
 	mean_geodesic_directed.tex \
 	inverse_geodesic.tex \
-	closeness.tex
+	closeness.tex \
+	norm_closeness.tex
 dvi = $(src:%.tex=%.dvi)
 ps = $(src:%.tex=%.ps)
 png = $(src:%.tex=%.png)
