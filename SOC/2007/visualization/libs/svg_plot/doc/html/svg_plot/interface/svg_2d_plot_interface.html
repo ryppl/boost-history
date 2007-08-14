@@ -1,0 +1,1237 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> svg_2d_plot Public Interface</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../interface.html" title=" Interface">
+<link rel="prev" href="svg_1d_plot_interface.html" title=" svg_1d_plot Public Interface">
+<link rel="next" href="svg_boxplot_interface.html" title=" svg_boxplot Public Interface">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="svg_1d_plot_interface.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../interface.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="svg_boxplot_interface.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.interface.svg_2d_plot_interface"></a><a href="svg_2d_plot_interface.html" title=" svg_2d_plot Public Interface"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Public Interface</a>
+</h3></div></div></div>
+<div class="table">
+<a name="id345648"></a><p class="title"><b>Table 11. Miscellaneous</b></p>
+<table class="table" summary="Miscellaneous">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Signature
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              See the defaults section for further details
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">image_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">unsigned</span>
+              <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the size of the image produced, in pixels
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">title</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the string to be used for the title
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">title_font_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the font size for the title
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">legend_title_font_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the font size for the legend title
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table">
+<a name="id345955"></a><p class="title"><b>Table 12. Commands</b></p>
+<table class="table" summary="Commands">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Signature
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">axis_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets whether the axis is on or off
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets whether the legend is on or off
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">plot_window_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets whether the plot will be displayed in its own window, or will
+              be "full screen" in the image
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">title_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Determines whether or not the image title is displayed
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets whether or not the X axis label will show
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_grid_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Determines whether or not the major grid on the X axis will be displayed
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_labels_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              sets whether or not the major ticks will be labelled on the x axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_minor_grid_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Determines whether or not the minor grid on the X axis will be displayed
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets whether or not the Y axis label will show
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_grid_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Determines whether or not the major grid on the Y axis will be displayed
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_labels_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              sets whether or not the major ticks will be labelled on the Y axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_minor_grid_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Determines whether or not the minor grid on the Y axis will be displayed
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table">
+<a name="id346575"></a><p class="title"><b>Table 13. Colors</b></p>
+<table class="table" summary="Colors">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Signature
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">title_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the title color
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">background_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the background color for the whole image
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">legend_background_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the background color for the legend as <code class="computeroutput"><span class="identifier">col</span></code>,
+              an RGB color
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">legend_border_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the border color for the legend as <code class="computeroutput"><span class="identifier">col</span></code>,
+              an RGB color
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">background_border_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the background border color for the legend as <code class="computeroutput"><span class="identifier">col</span></code>,
+              an RGB color
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">plot_background_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the color of the plot area. Note: this only goes into effect if
+              plot_area(true) has been called
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_axis_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the lines that form the axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the labels that go along the X axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_tick_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the major ticks of the x-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_grid_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the grid that runs perpindicular to the X axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_minor_tick_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the minor ticks of the x-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_axis_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the lines that form the Y axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the labels that go along the X axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_tick_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the major ticks of the Y-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_grid_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the grid that runs perpindicular to the Y axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_minor_tick_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the minor ticks of the Y-axis
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table">
+<a name="id347672"></a><p class="title"><b>Table 14. Axis Information</b></p>
+<table class="table" summary="Axis Information">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Signature
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_axis_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the stroke width of the x-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the label of the x-axis. This does not guarantee that it will
+              be shown. You must run <code class="computeroutput"><span class="identifier">x_label</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> for that guarantee
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_interval</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the distance (in Cartesian units) between ticks on the x-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_tick_length</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the x-axis major ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_major_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width (in pixels) of the major ticks on the x-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_minor_tick</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the x-axis minor ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_minor_tick_length</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the x-axis minor tick lengths
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_minor_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width (in pixels) of the minor ticks on the x-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_num_minor_ticks</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the number of minor ticks between each major tick
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">x_range</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">x1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">x2</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the scale of the x axis from x1 to x2. Throws an exception if
+              x2&lt;=x1
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_axis_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the stroke width of the x-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the label of the x-axis. This does not guarantee that it will
+              be shown. You must run <code class="computeroutput"><span class="identifier">x_label</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> for that guarantee
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_tick</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the distance (in Cartesian units) between ticks on the Y axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_tick_length</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the Y axis major ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width (in pixels) of the major ticks on the Y axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_minor_tick</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the Y axis minor ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_tick_length</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the Y axis minor tick lengths
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_minor_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width (in pixels) of the minor ticks on the Y axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_num_minor_ticks</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the number of minor ticks between each major tick
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_2d_plot</span><span class="special">&amp;</span>
+              <span class="identifier">y_scale</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">y1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y2</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the scale of the Y axis from y1 to y2. Throws an exception if
+              y2&lt;=y1
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+        (Note: Getters omitted for now)
+      </p>
+<p>
+        [header The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
+        Method] The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
+        method is defined using Boost.Parameter. As such, it supports a few extra
+        named parameters, as well as a deduced parameter.
+      </p>
+<div class="table">
+<a name="id348879"></a><p class="title"><b>Table 15. Required parameter</b></p>
+<table class="table" summary="Required parameter">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              ID
+            </p>
+            </th>
+<th>
+            <p>
+              Type (* is a wildcard)
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              _container
+            </p>
+            </td>
+<td>
+            <p>
+              *
+            </p>
+            </td>
+<td>
+            <p>
+              Any object that can return an iterator with begin() and end()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              _title
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              The name of this series
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table">
+<a name="id348982"></a><p class="title"><b>Table 16. Deduced parameter</b></p>
+<table class="table" summary="Deduced parameter">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              ID
+            </p>
+            </th>
+<th>
+            <p>
+              Type
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
+</tr></thead>
+<tbody><tr>
+<td>
+            <p>
+              _fill_color
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_color</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This is the color that shows up inside of the circle that is being
+              drawn
+            </p>
+            </td>
+<td>
+            <p>
+              white
+            </p>
+            </td>
+</tr></tbody>
+</table>
+</div>
+<div class="table">
+<a name="id349066"></a><p class="title"><b>Table 17. Optional Parameters</b></p>
+<table class="table" summary="Optional Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              ID
+            </p>
+            </th>
+<th>
+            <p>
+              Type
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              _bezier_on
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This determines whether or not Bézier curve interpolation will be
+              applied to the plot lines. It is important to note that the curve interpolation
+              is still in its infancy, and should only be used with reasonably nice
+              data sets
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              _line_on
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This determines whether or not there are lines drawn between data points.
+            </p>
+            </td>
+<td>
+            <p>
+              false
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              _line_color
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">bool</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This determines the color of the lines between data points
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              _area_fill_color
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_color</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Defining this enables the "Fill Area Under Axis" feature.
+              the color you define will be the fill color between a line and the
+              area under the axis. This only takes effect if <code class="computeroutput"><span class="identifier">_line_on</span>
+              <span class="special">=</span> <span class="keyword">true</span></code>
+              is called.
+            </p>
+            </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+            <p>
+              _stroke_color
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_color</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              The outline of the circle that is being drawn
+            </p>
+            </td>
+<td>
+            <p>
+              black
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              _point_style
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">point_shape</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This is the shape of the point. Options currently are between <code class="literal">none</code>,
+              <code class="literal">circle</code>, and <code class="literal">square</code>.
+            </p>
+            </td>
+<td>
+            <p>
+              circle
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              _size
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">unsigned</span> <span class="keyword">int</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              This is the height/width of the circle and square.
+            </p>
+            </td>
+<td>
+            <p>
+              10
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              _x_functor
+            </p>
+            </td>
+<td>
+            <p>
+              *
+            </p>
+            </td>
+<td>
+            <p>
+              A class or that contains a conversion function. You will not have to
+              worry about this, unless you are trying to accomplish stuff like plotting
+              a vector of humans. For example: 
+</p>
+<pre class="programlisting">
+<span class="keyword">class</span> <span class="identifier">my_functor</span>
+<span class="special">{</span>
+	<span class="identifier">typdef</span> <span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">result_type</span><span class="special">;</span>
+
+	<span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">human</span><span class="special">&amp;</span> <span class="identifier">_hum</span><span class="special">)</span> <span class="keyword">const</span>
+	<span class="special">{</span>
+		<span class="keyword">return</span> <span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;(</span><span class="identifier">i</span><span class="special">,</span> <span class="identifier">_hum</span><span class="special">.</span><span class="identifier">age</span><span class="special">());</span>
+	<span class="special">}</span>
+<span class="special">}</span>
+
+<span class="comment">// snip
+</span>
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_plot</span><span class="special">,</span> <span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> <span class="identifier">_x_functor</span> <span class="special">=</span> <span class="identifier">my_functor</span><span class="special">());</span>
+</pre>
+<p>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">boost_default_2d_convert</span></code>
+              (the default) is sufficient in all cases where the data stored in the
+              container can be directly casted to a double
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+        Here are some examples of correct uses:
+      </p>
+<a name="svg_plot.interface.svg_2d_plot_interface.using_fill_and_stroke_colors"></a><h3>
+<a name="id349742"></a>
+        <a href="svg_2d_plot_interface.html#svg_plot.interface.svg_2d_plot_interface.using_fill_and_stroke_colors">Using
+        fill and stroke colors</a>
+      </h3>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> 
+<span class="identifier">_fill_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">,</span> 
+<span class="identifier">_stroke_color</span> <span class="special">=</span> <span class="identifier">black</span><span class="special">);</span>
+</pre>
+<p>
+        This has the same effect as the following:
+      </p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> <span class="identifier">red</span><span class="special">,</span> <span class="identifier">black</span><span class="special">);</span>
+</pre>
+<p>
+        and also the same effect as:
+      </p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> 
+<span class="identifier">_stroke_color</span> <span class="special">=</span> <span class="identifier">black</span><span class="special">,</span>  
+<span class="identifier">_fill_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">);</span>
+</pre>
+<p>
+        Since _fill_color is a deduced parameter, when two svg_colors are used in
+        the same function call, they are always inferred in the following order:
+        (fill, stroke).
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="svg_1d_plot_interface.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../interface.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="svg_boxplot_interface.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

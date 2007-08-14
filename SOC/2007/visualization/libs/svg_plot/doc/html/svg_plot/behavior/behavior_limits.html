@@ -1,0 +1,95 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Numerical Limits</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../behavior.html" title=" Behavior">
+<link rel="prev" href="../behavior.html" title=" Behavior">
+<link rel="next" href="../plot_defaults.html" title=" Defaults">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../behavior.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../behavior.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../plot_defaults.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.behavior.behavior_limits"></a><a href="behavior_limits.html" title=" Numerical Limits"> Numerical Limits</a>
+</h3></div></div></div>
+<p>
+        All limits that are dealt with are double precision floating point limits.
+        Limits are noticed upon the call to the <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code> method. Currently, the line interpolation
+        algorithms do not take limits into account, so behavior may be incorrect
+        for such plots as <code class="computeroutput"><span class="number">1</span> <span class="special">/</span>
+        <span class="identifier">x</span></code>. Limits are drawn as a circle
+        with <code class="computeroutput"><span class="identifier">_stroke_color</span> <span class="special">=</span>
+        <span class="identifier">lightgray</span></code> and <code class="computeroutput"><span class="identifier">_fill_color</span>
+        <span class="special">=</span> <span class="identifier">whitesmoke</span></code>.
+        This will become customizable.
+      </p>
+<p>
+        [header NaN] Any double precision floating point numbers that return a nonzero
+        value for the function <code class="computeroutput"><span class="identifier">_isnan</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
+        is considered to be a NaN value. When plotted, the number will appear in
+        the user-defined coordinates as 0.
+      </p>
+<p>
+        [header Infinity]
+      </p>
+<p>
+        Any double precision floating point number that is equal to either of the
+        following is considered to be Infinity:
+      </p>
+<pre class="programlisting">
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">max</span><span class="special">()</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">infinity</span><span class="special">()</span>
+</pre>
+<p>
+        When plotted, these values will appear at the top of your plot window. If
+        the plot window is not turned on, these points will appear at the top of
+        the graph.
+      </p>
+<p>
+        [header Negative Infinity]
+      </p>
+<p>
+        Any double precision floating point number that is equal to either of the
+        following is considered to be Negative Infinity:
+      </p>
+<pre class="programlisting">
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">min</span><span class="special">()</span>
+<span class="special">-</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">infinity</span><span class="special">()</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">denorm_min</span><span class="special">()</span>
+</pre>
+<p>
+        When plotted, these values will appear at the bottom of your plot window.
+        If the plot window is not turned on, these points will appear at the bottom
+        of the graph.
+      </p>
+<p>
+        Here is an example of numeric limit handling in action:
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../images/2d_limit.png" alt="2d_limit"></span>
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../behavior.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../behavior.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../plot_defaults.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

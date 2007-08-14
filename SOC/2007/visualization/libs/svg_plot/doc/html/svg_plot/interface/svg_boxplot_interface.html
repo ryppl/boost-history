@@ -1,0 +1,904 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> svg_boxplot Public Interface</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../interface.html" title=" Interface">
+<link rel="prev" href="svg_2d_plot_interface.html" title=" svg_2d_plot Public Interface">
+<link rel="next" href="../acknowledgements.html" title=" Acknowledgements">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="svg_2d_plot_interface.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../interface.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../acknowledgements.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.interface.svg_boxplot_interface"></a><a href="svg_boxplot_interface.html" title=" svg_boxplot Public Interface"> <code class="computeroutput"><span class="identifier">svg_boxplot</span></code> Public Interface</a>
+</h3></div></div></div>
+<div class="table">
+<a name="id350020"></a><p class="title"><b>Table 18. Miscellaneous</b></p>
+<table class="table" summary="Miscellaneous">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Signature
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">()</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              See the defaults section for further details
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">image_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">unsigned</span>
+              <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the size of the image produced, in pixels
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">title</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the string to be used for the title
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">title_size</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the font size for the title
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table">
+<a name="id350272"></a><p class="title"><b>Table 19. Commands</b></p>
+<table class="table" summary="Commands">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Signature
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">title_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Determines whether or not the image title is displayed
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets whether or not the X axis label will show
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">x_labels_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              sets whether or not the major ticks will be labelled on the x axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets whether or not the Y axis label will show
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_labels_on</span><span class="special">(</span><span class="keyword">bool</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              sets whether or not the major ticks will be labelled on the Y axis
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table">
+<a name="id350551"></a><p class="title"><b>Table 20. Colors</b></p>
+<table class="table" summary="Colors">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Signature
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">title_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the title color
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">background_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the background color for the whole image
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">background_border_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the background border color for the legend as <code class="computeroutput"><span class="identifier">col</span></code>,
+              an RGB color
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">plot_background_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Set the color of the plot area. Note: this only goes into effect if
+              plot_area(true) has been called
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the labels that go along the X axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">x_tick_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the major ticks of the x-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the labels that go along the X axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_tick_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the major ticks of the Y-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_minor_tick_color</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">svg_color</span>
+              <span class="special">&amp;</span><span class="identifier">col</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the color of the minor ticks of the Y-axis
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table">
+<a name="id351178"></a><p class="title"><b>Table 21. Axis Information</b></p>
+<table class="table" summary="Axis Information">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Signature
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">x_label</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the label of the x-axis. This does not guarantee that it will
+              be shown. You must run <code class="computeroutput"><span class="identifier">x_label</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> for that guarantee
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">x_tick_length</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the x-axis ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">x_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width (in pixels) of the major ticks on the x-axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_label</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the label of the x-axis. This does not guarantee that it will
+              be shown. You must run <code class="computeroutput"><span class="identifier">x_label</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> for that guarantee
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_interval</span><span class="special">(</span><span class="keyword">double</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the distance (in Cartesian units) between ticks on the Y axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_tick_length</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the Y axis major ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width (in pixels) of the major ticks on the Y axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_num_minor_tick</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the Y axis minor ticks
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_major_tick_length</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the length (in pixels) of the Y axis minor tick lengths
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_minor_tick_width</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the width (in pixels) of the minor ticks on the Y axis
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_num_minor_ticks</span><span class="special">(</span><span class="keyword">int</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the number of minor ticks between each major tick
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_boxplot</span><span class="special">&amp;</span>
+              <span class="identifier">y_range</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">y1</span><span class="special">,</span> <span class="keyword">double</span> <span class="identifier">y2</span><span class="special">)</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Sets the scale of the Y axis from y1 to y2. Throws an exception if
+              y2&lt;=y1
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+        (Note: Getters omitted for now)
+      </p>
+<a name="svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h4>
+<a name="id351928"></a>
+        <a href="svg_boxplot_interface.html#svg_plot.interface.svg_boxplot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
+        <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
+        Method</a>
+      </h4>
+<p>
+        The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
+        method is defined using Boost.Parameter. As such, it supports a few extra
+        named parameters, as well as a deduced parameter.
+      </p>
+<div class="table">
+<a name="id351975"></a><p class="title"><b>Table 22. Required parameter</b></p>
+<table class="table" summary="Required parameter">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              ID
+            </p>
+            </th>
+<th>
+            <p>
+              Type (* is a wildcard)
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              ctr
+            </p>
+            </td>
+<td>
+            <p>
+              *
+            </p>
+            </td>
+<td>
+            <p>
+              Any object that can return an iterator with begin() and end()
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              name
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              The name of this series
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="table">
+<a name="id352078"></a><p class="title"><b>Table 23. Optional Parameters</b></p>
+<table class="table" summary="Optional Parameters">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              ID
+            </p>
+            </th>
+<th>
+            <p>
+              Type
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+<th>
+            <p>
+              Default
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              box_style
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">svg_style</span><span class="special">&amp;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Styles the box of the boxplot
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_style</span><span class="special">(</span><span class="identifier">white</span><span class="special">,</span>
+              <span class="identifier">black</span><span class="special">,</span>
+              <span class="number">1</span><span class="special">)</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              median_style
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">svg_style</span><span class="special">&amp;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Styles the median of the boxplot
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_style</span><span class="special">(</span><span class="identifier">white</span><span class="special">,</span>
+              <span class="identifier">black</span><span class="special">,</span>
+              <span class="number">1</span><span class="special">)</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              axis_style
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">svg_style</span><span class="special">&amp;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Styles the data range line (the line going through the middle
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_style</span><span class="special">(</span><span class="identifier">white</span><span class="special">,</span>
+              <span class="identifier">black</span><span class="special">,</span>
+              <span class="number">1</span><span class="special">)</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              min_whisker_style
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">svg_style</span><span class="special">&amp;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Styles the lower whisker
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_style</span><span class="special">(</span><span class="identifier">white</span><span class="special">,</span>
+              <span class="identifier">black</span><span class="special">,</span>
+              <span class="number">1</span><span class="special">)</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              max_whisker_style
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">svg_style</span><span class="special">&amp;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Styles the upper whisker
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">svg_style</span><span class="special">(</span><span class="identifier">white</span><span class="special">,</span>
+              <span class="identifier">black</span><span class="special">,</span>
+              <span class="number">1</span><span class="special">)</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              mild_outlier_style
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">plot_point_style</span><span class="special">&amp;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Styles outliers within 3 Inter-Quartile Ranges (IQRs) of the edges
+              of the box
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">plot_point_style</span><span class="special">(</span><span class="identifier">black</span><span class="special">,</span>
+              <span class="identifier">black</span><span class="special">,</span>
+              <span class="number">0</span><span class="special">)</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              ext_outlier_style
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="keyword">const</span> <span class="identifier">plot_point_style</span><span class="special">&amp;</span></code>
+            </p>
+            </td>
+<td>
+            <p>
+              Styles outliers more than 3 IQRs away from the box.
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">plot_point_style</span><span class="special">(</span><span class="identifier">white</span><span class="special">,</span>
+              <span class="identifier">black</span><span class="special">,</span>
+              <span class="number">1</span><span class="special">)</span></code>
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              whisker_length
+            </p>
+            </td>
+<td>
+            <p>
+              unsigned int
+            </p>
+            </td>
+<td>
+            <p>
+              Determines how long the whiskers at the end of the data range line
+              will be
+            </p>
+            </td>
+<td>
+            <p>
+              30
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              box_width
+            </p>
+            </td>
+<td>
+            <p>
+              unsigned int
+            </p>
+            </td>
+<td>
+            <p>
+              Determines the width of the box
+            </p>
+            </td>
+<td>
+            <p>
+              60
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              functor
+            </p>
+            </td>
+<td>
+            <p>
+              *
+            </p>
+            </td>
+<td>
+            <p>
+              A class or that contains a conversion function. You will not have to
+              worry about this, unless you are trying to accomplish stuff like plotting
+              a vector of humans. For example: 
+</p>
+<pre class="programlisting">
+<span class="keyword">class</span> <span class="identifier">my_functor</span>
+<span class="special">{</span>
+	<span class="identifier">typdef</span> <span class="keyword">double</span> <span class="identifier">result_type</span><span class="special">;</span>
+
+	<span class="keyword">double</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">human</span><span class="special">&amp;</span> <span class="identifier">_hum</span><span class="special">)</span> <span class="keyword">const</span>
+	<span class="special">{</span>
+		<span class="keyword">return</span> <span class="keyword">double</span><span class="special">(</span><span class="identifier">_hum</span><span class="special">.</span><span class="identifier">age</span><span class="special">());</span>
+	<span class="special">}</span>
+<span class="special">}</span>
+
+<span class="comment">// snip
+</span>
+<span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">,</span> <span class="identifier">functor</span> <span class="special">=</span> <span class="identifier">my_functor</span><span class="special">());</span>
+</pre>
+<p>
+            </p>
+            </td>
+<td>
+            <p>
+              <code class="computeroutput"><span class="identifier">boost_default_convert</span></code>
+              (the default) is sufficient in all cases where the data stored in the
+              container can be directly casted to a double
+            </p>
+            </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="svg_2d_plot_interface.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../interface.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../acknowledgements.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
