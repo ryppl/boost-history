@@ -23,9 +23,5 @@
 
 [include introduction.qbk]
 [include tutorials.qbk]
-[/ include factories.qbk]
-[/ include shared_libraries.qbk]
-[/ include info.qbk]
-[/ include performance_analysis.qbk]
-[/ include appendices.qbk]
+[include interpreter.qbk]
 
