@@ -15,16 +15,10 @@ main(int argc, char *argv[])
 {
     {
         typedef descriptor_archetype Vertex;
-        typedef incidence_graph_archetype<
-                Vertex,
-                undirected_tag,
-                allow_parallel_edge_tag
-            > IncidenceGraph;
         typedef vertex_list_graph_archetype<
                 Vertex,
                 undirected_tag,
-                allow_parallel_edge_tag,
-                IncidenceGraph
+                allow_parallel_edge_tag
             > Graph;
         typedef writable_property_map_archetype<Vertex, float> CentralityMap;
         typedef readable_property_map_archetype<Vertex, size_t> DistanceMap;
