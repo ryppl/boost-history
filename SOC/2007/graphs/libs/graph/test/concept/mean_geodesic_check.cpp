@@ -5,7 +5,7 @@
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 #include "archetypes.hpp"
-#include <boost/graph/closeness_centrality.hpp>
+#include <boost/graph/geodesic_distance.hpp>
 
 using namespace std;
 using namespace boost;
@@ -36,8 +36,8 @@ main(int argc, char *argv[])
         DistanceMatrix dm;
         Measure m;
 
-        closeness_centrality(g, dm, cm);
-        closeness_centrality(g, dm, cm, m);
+        mean_geodesic(g, dm, cm);
+        mean_geodesic(g, dm, cm, m);
     }
 
     return 0;

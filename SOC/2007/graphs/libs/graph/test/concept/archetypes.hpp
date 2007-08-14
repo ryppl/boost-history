@@ -26,90 +26,23 @@ namespace boost
         descriptor_archetype(detail::dummy_constructor) { }
     };
 
-    // Apparently, the Boost.Graph library doesn't have a bidirectional
-    // archetype - kind of a strange oversight. This is actually derived
-    // from incidence graph archetype in order have access to its
-    // archetypical functions and members
-    template <typename Vertex,
-              typename Directed,
-              typename Parallel,
-              typename Base = detail::null_graph_archetype >
-    struct bidirectional_graph_archetype : public Base
+    template <typename Graph>
+    struct degree_measure_archetype
     {
-        struct traversal_category
-            : public bidirectional_graph_tag
-            , public Base::traversal_category
-        { };
-
-        typedef descriptor_archetype vertex_descriptor;
-        typedef descriptor_archetype edge_descriptor;
-
-        typedef unsigned int degree_size_type;
-        typedef unsigned int vertices_size_type;
-        typedef unsigned int edges_size_type;
-
-        typedef input_iterator_archetype<edge_descriptor> out_edge_iterator;
-        typedef input_iterator_archetype<edge_descriptor> in_edge_iterator;
-
-        typedef Directed directed_category;
-        typedef Parallel edge_parallel_category;
-
-        typedef void adjacency_iterator;
-        typedef void vertex_iterator;
-        typedef void edge_iterator;
+        typedef typename graph_traits<Graph>::degree_size_type degree_type;
+        typedef typename graph_traits<Graph>::vertex_descriptor vertex_type;
+        degree_type operator ()(vertex_type, const Graph&)
+        { return degree_type(); }
     };
 
-    /*
-    template <typename V, typename D, typename P, typename B>
-    typename bidirectional_graph_archetype<V,D,P,B>::vertex_descriptor
-    source(typename bidirectional_graph_archetype<V,D,P,B>::edge_descriptor,
-           const bidirectional_graph_archetype<V,D,P,B>&)
+    template <typename Graph, typename Distance, typename Result>
+    struct distance_measure_archetype
     {
-        return V(static_object<detail::dummy_constructor>::get());
-    }
-
-    template <typename V, typename D, typename P, typename B>
-    typename bidirectional_graph_archetype<V,D,P,B>::vertex_descriptor
-    target(typename bidirectional_graph_archetype<V,D,P,B>::edge_descriptor,
-           const bidirectional_graph_archetype<V,D,P,B>&)
-    {
-        return V(static_object<detail::dummy_constructor>::get());
-    }
-
-    template <typename V, typename D, typename P, typename B>
-    std::pair<typename bidirectional_graph_archetype<V,D,P,B>::out_edge_iterator,
-    typename bidirectional_graph_archetype<V,D,P,B>::out_edge_iterator>
-    out_edges(typename bidirectional_graph_archetype<V,D,P,B>::vertex_descriptor,
-              const bidirectional_graph_archetype<V,D,P,B>&)
-    {
-        typedef typename bidirectional_graph_archetype<V,D,P,B>::out_edge_iterator Iter;
-        return std::make_pair(Iter(), Iter());
-    }
-
-    template <typename V, typename D, typename P, typename B>
-    typename bidirectional_graph_archetype<V,D,P,B>::degree_size_type
-    out_degree(typename bidirectional_graph_archetype<V,D,P,B>::vertex_descriptor,
-               const bidirectional_graph_archetype<V,D,P,B>&)
-    { return 0; }
-    */
-
-    template <typename V, typename D, typename P, typename B>
-    std::pair<typename bidirectional_graph_archetype<V,D,P,B>::in_edge_iterator,
-    typename bidirectional_graph_archetype<V,D,P,B>::in_edge_iterator>
-    in_edges(typename bidirectional_graph_archetype<V,D,P,B>::vertex_descriptor,
-             const bidirectional_graph_archetype<V,D,P,B>&)
-    {
-        typedef typename incidence_graph_archetype<V,D,P,B>::in_edge_iterator Iter;
-        return std::make_pair(Iter(), Iter());
-    }
-
-    template <typename V, typename D, typename P, typename B>
-    typename bidirectional_graph_archetype<V,D,P,B>::degree_size_type
-    in_degree(typename bidirectional_graph_archetype<V,D,P,B>::vertex_desriptior,
-              const bidirectional_graph_archetype<V,D,P,B>&)
-    {
-        return 0;
-    }
+        typedef Distance distance_type;
+        typedef Result result_type;
+        result_type operator ()(distance_type, const Graph&)
+        { return result_type(); }
+    };
 }
 
 #endif

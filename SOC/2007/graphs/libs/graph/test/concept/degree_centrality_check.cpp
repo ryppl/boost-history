@@ -39,6 +39,7 @@ main(int argc, char *argv[])
     // how to test this. Even If I build one, it won't compile very
     // easily.
     {
+        /*
         typedef descriptor_archetype Vertex;
         typedef bidirectional_graph_archetype<
                 Vertex,
@@ -52,6 +53,7 @@ main(int argc, char *argv[])
                 BidirectionalGraph
             > graph_type;
         typedef read_write_property_map_archetype<Vertex, size_t> CentralityMap;
+        */
 
         // These don't actually work - apparently, it's not very easy
         // to generate archetypes across concept hierarchies and have
