@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="index.html" title="SVG_Plot">
-<link rel="next" href="svg_plot/todo.html" title=" To Do List">
+<link rel="next" href="svg_plot/howtouse.html" title=" How To Use This Documentation">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%">
@@ -17,7 +17,7 @@
 <td align="center"><a href="../../more/index.htm">More</a></td>
 </table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="svg_plot/todo.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="svg_plot/howtouse.html"><img src="images/next.png" alt="Next"></a></div>
 <div class="article" lang="en">
 <div class="titlepage">
 <div>
@@ -28,7 +28,7 @@
 </h3></div></div></div>
 <div><p class="copyright">Copyright © 2007 Jake Voytko</p></div>
 <div><div class="legalnotice">
-<a name="id321345"></a><p>
+<a name="id290256"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -39,286 +39,60 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl>
-<dt><span class="section"><a href="index.html#svg_plot.howtouse"> How To Use This Documentation</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="index.html#svg_plot.howtouse.admonishments"> Admonishments</a></span></dt>
-<dt><span class="section"><a href="index.html#svg_plot.howtouse.preface"> Preface</a></span></dt>
-</dl></dd>
+<dt><span class="section"><a href="svg_plot/howtouse.html"> How To Use This Documentation</a></span></dt>
 <dt><span class="section"><a href="svg_plot/todo.html"> To Do List</a></span></dt>
 <dt><span class="section"><a href="svg_plot/color.html"> Colors</a></span></dt>
+<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple.html"> Tutorial: 1D</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/color.html#svg_plot.color.color_interface"> <code class="computeroutput"><span class="identifier">svg_color_constant</span></code>
-      Interface</a></span></dt>
-<dt><span class="section"><a href="svg_plot/color.html#svg_plot.color.svg_color_constant_example"> Example of
-      using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a></span></dt>
-<dt><span class="section"><a href="svg_plot/color.html#svg_plot.color.rgb_interface"> <code class="computeroutput"><span class="identifier">svg_color</span></code>
-      interface</a></span></dt>
-<dt><span class="section"><a href="svg_plot/color.html#svg_plot.color.svg_color_example"> Example of using
-      <code class="computeroutput"><span class="identifier">svg_color</span></code></a></span></dt>
-<dt><span class="section"><a href="svg_plot/color.html#svg_plot.color.color_internals"> Internals and Rationale</a></span></dt>
+<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/tutorial_code_1d_example.html">
+      Simple Example</a></span></dt>
+<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/full_1d_layout.html"> Tutorial:
+      1D Full Layout Example</a></span></dt>
+<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/1d_special.html"> Tutorial:
+      1D Special Features</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple.html"> Tutorial: 1D Simple
-    Program</a></span></dt>
+<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple.html"> Tutorial: 2D</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example">
-      Code Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple.html#svg_plot.tutorial_code_1d_simple.1d_simple_image"> Image</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple.html#svg_plot.tutorial_code_1d_simple.tutorial_syntax_explanation">
-      A note on syntax</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple.html#svg_plot.tutorial_code_1d_simple.tutorial_simple_exam">
-      Basic Example Breakdown</a></span></dt>
-</dl></dd>
-<dt><span class="section"><a href="svg_plot/full_1d_layout.html"> Tutorial: 1D Full Layout Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/1d_special.html"> Tutorial: 1D Special Features</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="svg_plot/1d_special.html#svg_plot.1d_special.x_axis_grid"> X Axis Grid Lines</a></span></dt>
-<dt><span class="section"><a href="svg_plot/1d_special.html#svg_plot.1d_special.x_axis_external_style"> X Axis External
-      Style</a></span></dt>
-</dl></dd>
-<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple.html"> Tutorial: Simple 2D
-    Program</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple.html#svg_plot.tutorial_2d_code_simple.2d_simple_code_example">
+<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple/2d_simple_code_example.html">
       Simple Code Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple.html#svg_plot.tutorial_2d_code_simple.2d_simple_image"> Simple
-      Image</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple.html#svg_plot.tutorial_2d_code_simple.tutorial_simple_exam">
-      Basic Example Breakdown</a></span></dt>
+<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple/full_2d_layout.html"> Tutorial:
+      Full Layout Example</a></span></dt>
+<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple/2d_special.html"> Tutorial:
+      2D Special Features</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="svg_plot/full_2d_layout.html"> Tutorial: Full Layout Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/2d_special.html"> Tutorial: 2D Special Features</a></span></dt>
+<dt><span class="section"><a href="svg_plot/svg_boxplot_tutorial.html"> Boxplot</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/2d_special.html#svg_plot.2d_special.y_grid_lines"> Y Axis Grid Lines</a></span></dt>
-<dt><span class="section"><a href="svg_plot/2d_special.html#svg_plot.2d_special.external_y_axis"> External Y Axis
-      Style</a></span></dt>
-<dt><span class="section"><a href="svg_plot/2d_special.html#svg_plot.2d_special.fill_axis_plot"> Fill the area between
-      the plot and the axis</a></span></dt>
-<dt><span class="section"><a href="svg_plot/2d_special.html#svg_plot.2d_special.curve_interpolation"> Curve Interpolation</a></span></dt>
+<dt><span class="section"><a href="svg_plot/svg_boxplot_tutorial/svg_boxplot_tutorial_simple.html">
+      Simple Example</a></span></dt>
+<dt><span class="section"><a href="svg_plot/svg_boxplot_tutorial/svg_boxplot_tutorial_full_layout.html">
+      Full Layout</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="svg_plot/behavior.html"> Behavior</a></span></dt>
-<dd><dl><dt><span class="section"><a href="svg_plot/behavior.html#svg_plot.behavior.behavior_limits"> Numerical Limits</a></span></dt></dl></dd>
+<dd><dl><dt><span class="section"><a href="svg_plot/behavior/behavior_limits.html"> Numerical Limits</a></span></dt></dl></dd>
 <dt><span class="section"><a href="svg_plot/plot_defaults.html"> Defaults</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/plot_defaults.html#svg_plot.plot_defaults.1d_defaults"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code>
+<dt><span class="section"><a href="svg_plot/plot_defaults/1d_defaults.html"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code>
       Defaults</a></span></dt>
-<dt><span class="section"><a href="svg_plot/plot_defaults.html#svg_plot.plot_defaults.2d_defaults"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code>
+<dt><span class="section"><a href="svg_plot/plot_defaults/2d_defaults.html"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code>
       Defaults</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="svg_plot/svg_interface.html"> SVG Public Interface</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_1d_plot_interface.html"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code>
-    Public Interface</a></span></dt>
+<dt><span class="section"><a href="svg_plot/interface.html"> Interface</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/svg_1d_plot_interface.html#svg_plot.svg_1d_plot_interface.svg_1d_inter_misc"> Miscellaneous
-      Functions</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_1d_plot_interface.html#svg_plot.svg_1d_plot_interface.1d_inter_commands"> Commands</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_1d_plot_interface.html#svg_plot.svg_1d_plot_interface.1d_inter_color"> Color
-      Information</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_1d_plot_interface.html#svg_plot.svg_1d_plot_interface.1d_inter_axis_information">
-      Axis Information</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_1d_plot_interface.html#svg_plot.svg_1d_plot_interface.1d_plot_function"> The
-      <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
-      Method</a></span></dt>
-</dl></dd>
-<dt><span class="section"><a href="svg_plot/svg_2d_plot_interface.html"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code>
-    Public Interface</a></span></dt>
-<dd><dl>
-<dt><span class="section"><a href="svg_plot/svg_2d_plot_interface.html#svg_plot.svg_2d_plot_interface.2d_inter_misc"> Miscellaneous</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_2d_plot_interface.html#svg_plot.svg_2d_plot_interface.2d_inter_commands"> Commands</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_2d_plot_interface.html#svg_plot.svg_2d_plot_interface.2d_inter_color"> Color</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_2d_plot_interface.html#svg_plot.svg_2d_plot_interface.2d_inter_axis"> Axis Information</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_2d_plot_interface.html#svg_plot.svg_2d_plot_interface.plot_function"> The <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code> Method</a></span></dt>
+<dt><span class="section"><a href="svg_plot/interface/svg_interface.html"> <code class="computeroutput"><span class="identifier">svg</span></code>
+      Public Interface</a></span></dt>
+<dt><span class="section"><a href="svg_plot/interface/svg_1d_plot_interface.html"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Public Interface</a></span></dt>
+<dt><span class="section"><a href="svg_plot/interface/svg_2d_plot_interface.html"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Public Interface</a></span></dt>
+<dt><span class="section"><a href="svg_plot/interface/svg_boxplot_interface.html"> <code class="computeroutput"><span class="identifier">svg_boxplot</span></code> Public Interface</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="svg_plot/acknowledgements.html"> Acknowledgements</a></span></dt>
 </dl>
 </div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="svg_plot.howtouse"></a><a href="index.html#svg_plot.howtouse" title=" How To Use This Documentation"> How To Use This Documentation</a>
-</h2></div></div></div>
-<div class="toc"><dl>
-<dt><span class="section"><a href="index.html#svg_plot.howtouse.admonishments"> Admonishments</a></span></dt>
-<dt><span class="section"><a href="index.html#svg_plot.howtouse.preface"> Preface</a></span></dt>
-</dl></div>
-<div class="itemizedlist"><ul type="disc">
-<li>
-        Tutorial pages are intended for those who do not know how to use the program.
-        <div class="itemizedlist"><ul type="circle">
-<li>
-            The pages that begin with the tag "Tutorial: Simple" are for
-            absolute beginners.
-          </li>
-<li>
-            "Tutorial: Full" should give the intermediate user a good reference,
-            as well as show how the program can be used
-          </li>
-<li>
-            "Tutorial: Special" shows other features/options that the headers
-            provide to the user.
-          </li>
-</ul></div>
-</li>
-<li>
-        The pages labelled "* Public Interface" give reference information
-        for their respective subjects. You can find all public methods (and data
-        members, when structs are concerned) in these sections.
-      </li>
-<li>
-        If you have a feature request, or if it appears that my implementation is
-        in error, please check the <a href="svg_plot/todo.html" target="_top">To Do</a>
-        page first, as well as the area's respective rationale section, if it exists.
-        If I you do not find your idea/complaint, please reach me either through
-        the Boost dev list, or email me at jakevoytko (at) gmail (dot) com
-      </li>
-</ul></div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.howtouse.admonishments"></a><a href="index.html#svg_plot.howtouse.admonishments" title=" Admonishments"> Admonishments</a>
-</h3></div></div></div>
-<div class="note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td colspan="2" align="left" valign="top">
-<p>
-          </p>
-<p>
-            These blocks typically go into more detail about an explanation given
-            above.
-          </p>
-<p>
-        </p>
-</td></tr>
-</table></div>
-<div class="tip"><table border="0" summary="Tip">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/tip.png"></td>
-<th align="left">Tip</th>
-</tr>
-<tr><td colspan="2" align="left" valign="top">
-<p>
-          </p>
-<p>
-            These blocks contain information that you may find helpful while coding.
-          </p>
-<p>
-        </p>
-</td></tr>
-</table></div>
-<div class="important"><table border="0" summary="Important">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="images/important.png"></td>
-<th align="left">Important</th>
-</tr>
-<tr><td colspan="2" align="left" valign="top">
-<p>
-          </p>
-<p>
-            These contain information that is imperative to understanding a concept.
-            Failure to follow these blocks will likely result in undesired behavior.
-            Read all of these you find.
-          </p>
-<p>
-        </p>
-</td></tr>
-</table></div>
-<div class="warning"><table border="0" summary="Warning">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="images/warning.png"></td>
-<th align="left">Warning</th>
-</tr>
-<tr><td colspan="2" align="left" valign="top">
-<p>
-          </p>
-<p>
-            It is imperative that you follow these. Failure to do so will lead to
-            incorrect, and likely undesired, results in the plot
-          </p>
-<p>
-        </p>
-</td></tr>
-</table></div>
-<p>
-        And the first admonishment I will use is as follows:
-      </p>
-<div class="important"><table border="0" summary="Important">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="images/important.png"></td>
-<th align="left">Important</th>
-</tr>
-<tr><td colspan="2" align="left" valign="top">
-<p>
-          </p>
-<p>
-            This is not currently a Boost library. It is a GSoC project whose mentor
-            organization is Boost.
-          </p>
-<p>
-        </p>
-</td></tr>
-</table></div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.howtouse.preface"></a><a href="index.html#svg_plot.howtouse.preface" title=" Preface"> Preface</a>
-</h3></div></div></div>
-<p>
-        The first task when dealing with numerical data is to plot it. Humans have
-        a fantastic capacity for visual understanding, and merely looking at data
-        organized in one, two, or three dimensions allows us to see relations not
-        otherwise visible in a list of numbers. Computers, however, deal with information
-        numerically, and C++ and the STL do not currently offer a way to bridge the
-        gap. This library allows the user to easily plot data stored in STL containers
-        with (hopefully!) minimal intervention.
-      </p>
-<p>
-        This project is focused on using STL containers in order to graph data on
-        a one-dimensional and two-dimensional (and if time allows, 3D!) plot. The
-        plot will currently be written in an SVG image, compliant with the <a href="http://www.w3.org/TR/SVG11/W3C" target="_top">standard</a>. The goals of the project
-        are as follows:
-      </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-          To let users produce a simple plot with minimal intervention by using sane
-          defaults
-        </li>
-<li>
-          To allow users to easily customize plots to their heart's content
-        </li>
-<li>
-          To allow the user to talk to the plot classes using coordinate units rather
-          than pixels or other arbitrary measures
-        </li>
-<li>
-          To create the backbone of a <code class="computeroutput"><span class="identifier">svg</span></code>
-          class that can be extended to fully support the standard
-        </li>
-</ul></div>
-<div class="note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td colspan="2" align="left" valign="top">
-<p>
-          </p>
-<p>
-            I have only a student's grasp of C++, so if you have a suggestion to
-            help me with design or implementation, email me at jakevoytko (at) gmail
-            (dot) com
-          </p>
-<p>
-        </p>
-</td></tr>
-</table></div>
-</div>
-</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><small><p>Last revised: August 08, 2007 at 20:04:42 GMT</p></small></td>
+<td align="left"><small><p>Last revised: August 14, 2007 at 01:54:52 GMT</p></small></td>
 <td align="right"><small></small></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="svg_plot/todo.html"><img src="images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="svg_plot/howtouse.html"><img src="images/next.png" alt="Next"></a></div>
 </body>
 </html>

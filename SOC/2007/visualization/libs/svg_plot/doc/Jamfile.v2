@@ -1,0 +1,20 @@
+#   Copyright (c) 2002 Douglas Gregor <doug.gregor -at- gmail.com>
+  
+#   Distributed under the Boost Software License, Version 1.0.
+#   (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+
+project boost/doc ;
+import boostbook : boostbook ;
+
+boostbook function-doc : svg_plot.xml 
+ : <xsl:param>project.root=http://beta.boost.org/development
+   <xsl:param>annotation.support=1
+   <xsl:param>quickbook.source.style.show="'true'"
+   <xsl:param>chunk.first.sections=2
+   <xsl:param>chunk.section.depth=10
+   <xsl:param>toc.section.depth=3
+   <xsl:param>toc.max.depth=3
+   <xsl:param>generate.section.toc.level=4
+ ;
+
