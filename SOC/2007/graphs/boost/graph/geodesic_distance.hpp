@@ -13,7 +13,10 @@
 namespace boost
 {
 
-    template <typename Graph, typename DistanceType, typename ResultType>
+    template <typename Graph,
+              typename DistanceType,
+              typename ResultType,
+              typename Divides = std::divides<ResultType> >
     struct mean_geodesic_measure
         : public geodesic_measure<Graph, DistanceType, ResultType>
     {
@@ -23,12 +26,17 @@ namespace boost
 
         result_type operator ()(distance_type d, const Graph& g)
         {
-            typedef result_type T;
+            function_requires< VertexListGraphConcept<Graph> >();
+            function_requires< NumericValueConcept<DistanceType> >();
+            function_requires< NumericValueConcept<ResultType> >();
+            function_requires< AdaptableBinaryFunctionConcept<Divides,ResultType,ResultType,ResultType> >();
+
             return
                 (d == base_type::infinite_distance()) ?
                     base_type::infinite_result() :
-                    T(d) / T(num_vertices(g));
+                    div(result_type(d), result_type(num_vertices(g)));
         }
+        Divides div;
     };
 
     template <typename Graph, typename DistanceMap>
@@ -50,6 +58,9 @@ namespace boost
     // should (must?) be the same as the distance type. There's a type of
     // transitivity in this thinking... If the average of distances has type
     // X then the average of x's should also be type X.
+    //
+    // This type is a little under-genericized... It needs generic parameters
+    // for addition and division.
     template <typename Graph, typename DistanceType>
     struct mean_graph_distance_measure
         : public geodesic_measure<Graph, DistanceType, DistanceType>
@@ -61,7 +72,10 @@ namespace boost
 
         inline result_type operator ()(distance_type d, const Graph& g)
         {
+            function_requires< VertexListGraphConcept<Graph> >();
             typename graph_traits<Graph>::directed_category cat;
+            function_requires< NumericValueConcept<DistanceType> >();
+
             return this->average(d, num_vertices(g), cat);
         }
 
@@ -108,8 +122,9 @@ namespace boost
                          Measure measure,
                          Combinator combine)
     {
+        function_requires< DistanceMeasureConcept<Measure,Graph> >();
         typedef typename Measure::distance_type Distance;
-        typedef typename Measure::distance_values DistanceValues;
+
         Distance n = detail::combine_distances(g, dist, combine, Distance(0));
         return measure(n, g);
     }
@@ -122,6 +137,7 @@ namespace boost
                          DistanceMap dist,
                          Measure measure)
     {
+        function_requires< DistanceMeasureConcept<Measure,Graph> >();
         typedef typename Measure::distance_type Distance;
         return vertex_mean_geodesic(g, dist, measure, std::plus<Distance>());
     }
@@ -142,32 +158,47 @@ namespace boost
 
 
     template <typename Graph,
-              typename DistanceMatrix,
+              typename DistanceMatrixMap,
               typename GeodesicMap,
               typename Measure>
     inline void
     mean_geodesic(const Graph& g,
-                  const DistanceMatrix& dist,
+                  const DistanceMatrixMap& dist,
                   GeodesicMap geo,
                   Measure measure)
     {
-        typename graph_traits<Graph>::vertex_iterator i, end;
+        function_requires< VertexListGraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
+        function_requires< ReadablePropertyMapConcept<DistanceMatrixMap,Vertex> >();
+        typedef typename property_traits<DistanceMatrixMap>::value_type DistanceMap;
+        function_requires< DistanceMeasureConcept<Measure,Graph> >();
+        typedef typename Measure::result_type Result;
+        function_requires< WritablePropertyMapConcept<GeodesicMap,Vertex> >();
+
+        VertexIterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            geo[*i] = vertex_mean_geodesic(g, dist[*i], measure);
+            DistanceMap dm = get(dist, *i);
+            Result r = vertex_mean_geodesic(g, dm, measure);
+            put(geo, *i, r);
         }
     }
 
     template <typename Graph,
-              typename DistanceMatrix,
+              typename DistanceMatrixMap,
               typename GeodesicMap>
     inline void
     mean_geodesic(const Graph& g,
-                  const DistanceMatrix& dist,
+                  const DistanceMatrixMap& dist,
                   GeodesicMap geo)
     {
-        typedef typename property_traits<DistanceMatrix>::value_type DistanceMap;
-        typedef typename property_traits<DistanceMap>::value_type Distance;
+        function_requires< GraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        function_requires< ReadablePropertyMapConcept<DistanceMatrixMap,Vertex> >();
+        typedef typename property_traits<DistanceMatrixMap>::value_type DistanceMap;
+        function_requires< WritablePropertyMapConcept<GeodesicMap,Vertex> >();
         typedef typename property_traits<GeodesicMap>::value_type Result;
+
         mean_geodesic(g, dist, geo,
                       measure_mean_geodesic<Result>(g, DistanceMap()));
     }
@@ -177,8 +208,10 @@ namespace boost
     inline typename Measure::result_type
     graph_mean_geodesic(const Graph& g, GeodesicMap geo, Measure measure)
     {
-        typedef typename Measure::result_type T;
-        T sum = detail::combine_distances(g, geo, std::plus<T>(), T(0));
+        function_requires< DistanceMeasureConcept<Measure,Graph> >();
+        typedef typename Measure::result_type Result;
+
+        Result sum = detail::combine_distances(g, geo, std::plus<Result>(), Result(0));
         return measure(sum, g);
     }
 
