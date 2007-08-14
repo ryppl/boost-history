@@ -2,8 +2,7 @@
 src = \
 	total_geodesic.tex \
 	mean_geodesic.tex \
-	mean_geodesic_undirected.tex \
-	mean_geodesic_directed.tex \
+	graph_mean_geodesic.tex \
 	inverse_geodesic.tex \
 	closeness.tex \
 	norm_closeness.tex
