@@ -650,9 +650,27 @@ svg_boxplot& write(std::ostream& s_out)
     return *this;
 }
 
+svg_boxplot& title_on(bool _cmd)
+{
+    use_title = _cmd;
+    return *this;
+}
+
 svg_boxplot& y_label_on(bool _cmd)
 {
     use_y_label = _cmd;
+    return *this;
+}
+
+svg_boxplot& x_label_on(bool _cmd)
+{
+    use_x_label = _cmd;
+    return *this;
+}
+
+svg_boxplot& y_major_labels_on(bool _cmd)
+{
+    use_y_major_labels = _cmd;
     return *this;
 }
 
@@ -726,6 +744,12 @@ svg_boxplot& y_range(double y1, double y2)
 svg_boxplot& y_label(const std::string& _str)
 {
     y_label_info.text(_str);
+    return *this;
+}
+
+svg_boxplot& image_size(unsigned int x, unsigned int y)
+{
+    image.image_size(x, y);
     return *this;
 }
 
