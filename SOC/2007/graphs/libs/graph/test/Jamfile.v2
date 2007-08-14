@@ -11,6 +11,7 @@ test-suite graph_test :
     [ run constant_property_map.cpp ]
     [ run degree_centrality.cpp ]
     [ run closeness_centrality.cpp ]
+    [ run mean_geodesic.cpp ]
     ;
 
 # exe properties : properties.cpp ;
@@ -24,8 +25,6 @@ test-suite graph_test :
 # exe misc : misc.cpp ;
 #
 # exe components : components.cpp ;
-#
-# exe mean_geodesic : mean_geodesic.cpp ;
 #
 # exe eccentricity : eccentricity.cpp ;
 #
