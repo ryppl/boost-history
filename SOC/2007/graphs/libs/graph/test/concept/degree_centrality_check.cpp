@@ -27,12 +27,14 @@ main(int argc, char *argv[])
                 IncidenceGraph
             > Graph;
         typedef writable_property_map_archetype<Vertex, size_t> CentralityMap;
+        typedef degree_measure_archetype<Graph> Measure;
 
         Graph& g = static_object<Graph>::get();
         CentralityMap cm;
+        Measure m;
 
         degree_centrality(g, cm);
-        degree_centrality(g, cm, measure_influence(g));
+        degree_centrality(g, cm, m);
     }
 
     // There isn't a bidirectional graph archetype so I don't really know
