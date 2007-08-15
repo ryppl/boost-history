@@ -81,12 +81,12 @@ void test_undirected()
 
     float geo = graph_mean_geodesic(g, cm);
 
-    BOOST_ASSERT(cm[v[0]] == float(5)/5);
-    BOOST_ASSERT(cm[v[1]] == float(7)/5);
-    BOOST_ASSERT(cm[v[2]] == float(7)/5);
-    BOOST_ASSERT(cm[v[3]] == float(9)/5);
-    BOOST_ASSERT(cm[v[4]] == float(6)/5);
-    BOOST_ASSERT(geo == float(34)/15);
+    BOOST_ASSERT(cm[v[0]] == float(5)/4);
+    BOOST_ASSERT(cm[v[1]] == float(7)/4);
+    BOOST_ASSERT(cm[v[2]] == float(7)/4);
+    BOOST_ASSERT(cm[v[3]] == float(9)/4);
+    BOOST_ASSERT(cm[v[4]] == float(6)/4);
+    BOOST_ASSERT(geo == float(34)/20);
 }
 
 template <typename Graph>
@@ -125,7 +125,7 @@ void test_directed()
     BOOST_ASSERT(cm[v[0]] == inf);
     BOOST_ASSERT(cm[v[1]] == inf);
     BOOST_ASSERT(cm[v[2]] == inf);
-    BOOST_ASSERT(cm[v[3]] == float(10)/5);
+    BOOST_ASSERT(cm[v[3]] == float(10)/4);
     BOOST_ASSERT(cm[v[4]] == inf);
     BOOST_ASSERT(geo == inf);
 }

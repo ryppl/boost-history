@@ -5,115 +5,51 @@
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 #include <iostream>
-#include <iterator>
-#include <algorithm>
-#include <vector>
-#include <tr1/unordered_map>
 
-#include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/undirected_graph.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/exterior_property.hpp>
+#include <boost/graph/constant_property_map.hpp>
 
-#include <boost/graph/dijkstra_shortest_paths.hpp>
 #include <boost/graph/floyd_warshall_shortest.hpp>
 #include <boost/graph/eccentricity.hpp>
-#include <boost/graph/radius.hpp>
-#include <boost/graph/diameter.hpp>
+#include "io.hpp"
 
 using namespace std;
 using namespace boost;
 
-template <typename T>
-struct numeric
-{
-    numeric(T x) : value(x) { }
-    T value;
-};
+// number of vertices in the graph
+static const unsigned N = 5;
 
-template <typename Value>
-numeric<Value>
-make_numeric(Value x)
-{ return numeric<Value>(x); }
-
-template <typename Value>
-ostream& operator <<(ostream& os, const numeric<Value>& x)
+template <typename Graph>
+struct vertex_vector
 {
-    if(x.value == numeric_values<Value>::infinity()) {
-        os << "i";
-    }
-    else {
-        os << x.value;
-    }
-    return os;
-}
-
-struct VertexProp
-{
-    int dummy;
-};
-
-struct EdgeProp
-{
-    int weight;
+    typedef graph_traits<Graph> traits;
+    typedef vector<typename traits::vertex_descriptor> type;
 };
 
 template <typename Graph>
-void build_graph(Graph& g)
+void build_graph(Graph& g,
+                 typename vertex_vector<Graph>::type& v)
 {
-    typedef typename Graph::vertex_descriptor Vertex;
-    typedef typename Graph::edge_descriptor Edge;
+    typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
 
-    static const unsigned N = 5;
-    vector<Vertex> v(N);
-    vector<Edge> e;
-
-    // add some vertices
+    // add vertices
     for(size_t i = 0; i < N; ++i) {
-        // v[i] = add_vertex(g);
         v[i] = add_vertex(g);
     }
 
-    // add some edges (with weights)
-    e.push_back(add_edge(v[0], v[1], g).first);
-    e.push_back(add_edge(v[1], v[2], g).first);
-    e.push_back(add_edge(v[2], v[0], g).first);
-    e.push_back(add_edge(v[3], v[4], g).first);
-    e.push_back(add_edge(v[4], v[0], g).first);
-
-    g[e[0]].weight = 1;
-    g[e[1]].weight = 1;
-    g[e[2]].weight = 1;
-    g[e[3]].weight = 1;
-    g[e[4]].weight = 1;
+    // add edges
+    add_edge(v[0], v[1], g);
+    add_edge(v[1], v[2], g);
+    add_edge(v[2], v[0], g);
+    add_edge(v[3], v[4], g);
+    add_edge(v[4], v[0], g);
 };
 
-template <typename Graph, typename PropertyMap>
-void print_map(const Graph& g, PropertyMap pm)
-{
-    typename Graph::vertex_iterator i, end;
-    cout << "{ ";
-    for(tie(i, end) = vertices(g); i != end; ++i) {
-        cout << make_numeric(pm[*i]) << " ";
-    }
-    cout << "}\n";
-}
-
-template <typename Graph, typename Matrix>
-void print_matrix(const Graph& g, Matrix m)
-{
-    cout << "{ ";
-    typename Graph::vertex_iterator i, j, end;
-    for(tie(i, end) = vertices(g); i != end; ++i) {
-        if(i != vertices(g).first) {
-            cout << "  ";
-        }
-        print_map(g, m[*i]);
-    }
-}
 
 template <typename Graph>
-void test()
+void test_undirected()
 {
     typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
     typedef typename graph_traits<Graph>::edge_descriptor Edge;
@@ -126,38 +62,84 @@ void test()
     typedef typename DistanceProperty::matrix_type DistanceMatrix;
     typedef typename DistanceProperty::matrix_map_type DistanceMatrixMap;
 
-    typedef typename property_map<Graph, int EdgeProp::*>::type WeightMap;
+    typedef constant_property_map<Edge, int> WeightMap;
 
     Graph g;
-    build_graph(g);
+    vector<Vertex> v(N);
+    build_graph(g, v);
 
     EccentricityContainer eccs(num_vertices(g));
+    DistanceMatrix distances(num_vertices(g));
+
     EccentricityMap em(eccs, g);
+    DistanceMatrixMap dm(distances, g);
 
-    DistanceMatrix dist(num_vertices(g));
-    DistanceMatrixMap dm(dist, g);
-
-    WeightMap wm(get(&EdgeProp::weight, g));
+    WeightMap wm(1);
 
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
     eccentricity(g, dm, em);
+    int radius = graph_radius(g, em);
+    int diameter = graph_diameter(g, em);
 
-    print_matrix(g, dm);
-    print_map(g, em);
-
-    std::cout << "radius: " << make_numeric(graph_radius(g, em)) << "\n";
-    std::cout << "diameter: " << make_numeric(graph_diameter(g, em)) << "\n";
+    BOOST_ASSERT(em[v[0]] == 2);
+    BOOST_ASSERT(em[v[1]] == 3);
+    BOOST_ASSERT(em[v[2]] == 3);
+    BOOST_ASSERT(em[v[3]] == 3);
+    BOOST_ASSERT(em[v[4]] == 2);
+    BOOST_ASSERT(radius == 2);
+    BOOST_ASSERT(diameter == 3);
 }
+
+template <typename Graph>
+void test_directed()
+{
+    typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+    typedef typename graph_traits<Graph>::edge_descriptor Edge;
+
+    typedef exterior_vertex_property<Graph, int> EccentricityProperty;
+    typedef typename EccentricityProperty::container_type EccentricityContainer;
+    typedef typename EccentricityProperty::map_type EccentricityMap;
+
+    typedef exterior_vertex_property<Graph, int> DistanceProperty;
+    typedef typename DistanceProperty::matrix_type DistanceMatrix;
+    typedef typename DistanceProperty::matrix_map_type DistanceMatrixMap;
+
+    typedef constant_property_map<Edge, int> WeightMap;
+
+    Graph g;
+    vector<Vertex> v(N);
+    build_graph(g, v);
+
+    EccentricityContainer eccs(num_vertices(g));
+    DistanceMatrix distances(num_vertices(g));
+
+    EccentricityMap em(eccs, g);
+    DistanceMatrixMap dm(distances, g);
+
+    WeightMap wm(1);
+
+    floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
+    eccentricity(g, dm, em);
+    int radius = graph_radius(g, em);
+    int diameter = graph_diameter(g, em);
+
+    int inf = numeric_values<int>::infinity();
+    BOOST_ASSERT(em[v[0]] == inf);
+    BOOST_ASSERT(em[v[1]] == inf);
+    BOOST_ASSERT(em[v[2]] == inf);
+    BOOST_ASSERT(em[v[3]] == 4);
+    BOOST_ASSERT(em[v[4]] == inf);
+    BOOST_ASSERT(radius == 4);
+    BOOST_ASSERT(diameter == inf);
+}
+
 
 int
 main(int argc, char *argv[])
 {
-    typedef undirected_graph<VertexProp, EdgeProp> Graph;
-    typedef directed_graph<VertexProp, EdgeProp> Digraph;
+    typedef undirected_graph<> Graph;
+    typedef directed_graph<> Digraph;
 
-    cout << "\n*** undirected_graph<> *** \n";
-    test<Graph>();
-
-    cout << "\n*** directed_graph<> *** \n";
-    test<Digraph>();
+    test_undirected<Graph>();
+    test_directed<Digraph>();
 }

@@ -12,6 +12,7 @@ test-suite graph_test :
     [ run degree_centrality.cpp ]
     [ run closeness_centrality.cpp ]
     [ run mean_geodesic.cpp ]
+    [ run eccentricity.cpp ]
     ;
 
 # exe properties : properties.cpp ;
@@ -26,7 +27,6 @@ test-suite graph_test :
 #
 # exe components : components.cpp ;
 #
-# exe eccentricity : eccentricity.cpp ;
 #
 # exe cluster : cluster.cpp ;
 #
