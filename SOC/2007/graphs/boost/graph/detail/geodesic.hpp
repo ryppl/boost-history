@@ -58,13 +58,16 @@ namespace boost
             typedef numeric_values<Distance> DistanceNumbers;
             function_requires< AdaptableBinaryFunction<Combinator,Distance,Distance,Distance> >();
 
-            // If there's ever an infinite distance, then we simply
-            // return infinity.
+            // If there's ever an infinite distance, then we simply return
+            // infinity. Note that this /will/ include the a non-zero
+            // distance-to-self in the combined values. However, this is usually
+            // zero, so it shouldn't be too problematic.
             Distance ret = init;
             VertexIterator i, end;
             for(tie(i, end) = vertices(g); i != end; ++i) {
-                if(get(dist, *i) != DistanceNumbers::infinity()) {
-                    ret = combine(ret, get(dist, *i));
+                Vertex v = *i;
+                if(get(dist, v) != DistanceNumbers::infinity()) {
+                    ret = combine(ret, get(dist, v));
                 }
                 else {
                     ret = DistanceNumbers::infinity();

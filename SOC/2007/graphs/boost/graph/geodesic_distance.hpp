@@ -34,7 +34,7 @@ namespace boost
             return
                 (d == base_type::infinite_distance()) ?
                     base_type::infinite_result() :
-                    div(result_type(d), result_type(num_vertices(g)));
+                    div(result_type(d), result_type(num_vertices(g) - 1));
         }
         Divides div;
     };
@@ -53,7 +53,6 @@ namespace boost
         return mean_geodesic_measure<Graph, typename property_traits<DistanceMap>::value_type, T>();
     }
 
-
     // This is a little different because it's expected that the result type
     // should (must?) be the same as the distance type. There's a type of
     // transitivity in this thinking... If the average of distances has type
@@ -68,38 +67,17 @@ namespace boost
         typedef geodesic_measure<Graph, DistanceType, DistanceType> base_type;
         typedef typename base_type::distance_type distance_type;
         typedef typename base_type::result_type result_type;
-        typedef typename base_type::size_type size_type;
 
         inline result_type operator ()(distance_type d, const Graph& g)
         {
             function_requires< VertexListGraphConcept<Graph> >();
-            typename graph_traits<Graph>::directed_category cat;
             function_requires< NumericValueConcept<DistanceType> >();
 
-            return this->average(d, num_vertices(g), cat);
-        }
-
-    private:
-        inline result_type
-        average(distance_type d, size_type n, undirected_tag)
-        {
             if(d == base_type::infinite_distance()) {
                 return base_type::infinite_result();
             }
             else {
-                result_type f = (result_type(n) + 1) / result_type(2);
-                return d / f;
-            }
-        }
-
-        inline result_type
-        average(distance_type d, size_type n, directed_tag)
-        {
-            if(d == base_type::infinite_distance()) {
-                return base_type::infinite_result();
-            }
-            else {
-                return result_type(d) / result_type(n);
+                return d / result_type(num_vertices(g));
             }
         }
     };
