@@ -64,7 +64,7 @@ namespace
     { EINVAL, invalid_argument },
 
     // rest are alphabetical for easy maintenance
-    { 0, no_error }, 
+    { 0, success }, 
     { E2BIG, argument_list_too_long },
     { EADDRINUSE, address_in_use },
     { EADDRNOTAVAIL, address_not_available },
@@ -152,7 +152,7 @@ namespace
     { ERROR_PATH_NOT_FOUND, no_such_file_or_directory },
 
     // rest are alphabetical for easy maintenance
-    { 0, no_error }, 
+    { 0, success }, 
     { ERROR_ACCESS_DENIED, permission_denied },
     { ERROR_ALREADY_EXISTS, file_exists },
     { ERROR_BAD_UNIT, no_such_device },
@@ -210,7 +210,7 @@ namespace
   public:
     const std::string &   name() const;
     posix::posix_errno    posix( int ev ) const;
-    error_code            generic_error_code( int ev ) const;
+    error_code            portable_error_code( int ev ) const;
     std::string           message( int ev ) const;
   };
 
@@ -309,14 +309,14 @@ namespace
     return boost::system::posix::no_posix_equivalent;
   }
 
-  error_code system_error_category::generic_error_code( int ev ) const
+  error_code system_error_category::portable_error_code( int ev ) const
   {
     return error_code( posix(ev), posix_category );
   }
 
 # if !defined( BOOST_WINDOWS_API )
 
-  std::string system_error_category::message( boost::int_least32_t ev ) const
+  std::string system_error_category::message( int ev ) const
   {
     return posix_category.message( ev );
   }
@@ -358,15 +358,19 @@ namespace
     return str;
   }
 # endif
+
 } // unnamed namespace
 
 namespace boost
 {
   namespace system
   {
+
     BOOST_SYSTEM_DECL const error_category & posix_category
       = posix_category_const;
+
     BOOST_SYSTEM_DECL const error_category & system_category
       = system_category_const;
+
   } // namespace system
 } // namespace boost

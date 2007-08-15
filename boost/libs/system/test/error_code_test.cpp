@@ -22,7 +22,7 @@
 #include <boost/system/error_code.hpp>
 #include <iostream>
 #include <sstream>
-#include <cerrno>
+#include <boost/cerrno.hpp>
 
 //  Although using directives are not the best programming practice, testing
 //  with a boost::system using directive increases use scenario coverage.
@@ -30,7 +30,6 @@ using namespace boost::system;
 
 # if defined( BOOST_WINDOWS_API )
 #   include "winerror.h"
-#   include <boost/cerrno.hpp>
 #   define BOOST_ACCESS_ERROR_MACRO ERROR_ACCESS_DENIED
 # elif defined( BOOST_POSIX_API )
 #   define BOOST_ACCESS_ERROR_MACRO EACCES
@@ -57,25 +56,26 @@ namespace
 
 int test_main( int, char ** )
 {
+  std::cout << "General tests...\n";
   // unit tests:
   error_code ec;
   error_code gec;
   BOOST_CHECK( !ec );
   BOOST_CHECK( ec.value() == 0 );
-  gec = ec.generic_error_code();
+  gec = ec.portable_error_code();
   BOOST_CHECK( gec.value() == 0 );
   BOOST_CHECK( gec.category() == posix_category );
-  BOOST_CHECK( ec == posix::no_error );
+  BOOST_CHECK( ec == posix::success );
   BOOST_CHECK( ec.category() == posix_category );
   BOOST_CHECK( ec.category().name() == "POSIX" );
 
   error_code ec_0_system( 0, system_category );
   BOOST_CHECK( !ec_0_system );
   BOOST_CHECK( ec_0_system.value() == 0 );
-  gec = ec_0_system.generic_error_code();
+  gec = ec_0_system.portable_error_code();
   BOOST_CHECK( gec.value() == 0 );
   BOOST_CHECK( gec.category() == posix_category );
-  BOOST_CHECK( ec_0_system == posix::no_error );
+  BOOST_CHECK( ec_0_system == posix::success );
   BOOST_CHECK( ec_0_system.category() == system_category );
   BOOST_CHECK( ec_0_system.category().name() == "system" );
   check_ostream( ec_0_system, "system:0" );
@@ -93,7 +93,7 @@ int test_main( int, char ** )
   ec = error_code( BOOST_ACCESS_ERROR_MACRO, system_category );
   BOOST_CHECK( ec );
   BOOST_CHECK( ec.value() == BOOST_ACCESS_ERROR_MACRO );
-  gec = ec.generic_error_code();
+  gec = ec.portable_error_code();
   BOOST_CHECK( gec.value() == static_cast<int>(posix::permission_denied) );
   BOOST_CHECK( gec.category() == posix_category );
   BOOST_CHECK( same( gec, error_code( posix::permission_denied, posix_category ) ) );
@@ -104,39 +104,67 @@ int test_main( int, char ** )
   BOOST_CHECK( ec.category().name() == "system" );
 
 #ifdef BOOST_WINDOWS_API
+  std::cout << "Windows tests...\n";
   // these tests probe the Windows posix decoder
   //   test the first entry in the decoder table:
   ec = error_code( ERROR_FILE_NOT_FOUND, system_category );
   BOOST_CHECK( ec.value() == ERROR_FILE_NOT_FOUND );
   BOOST_CHECK( ec == posix::no_such_file_or_directory );
-  BOOST_CHECK( ec.generic_error_code().value() == posix::no_such_file_or_directory );
+  BOOST_CHECK( ec.portable_error_code().value() == posix::no_such_file_or_directory );
 
   //   test the second entry in the decoder table:
   ec = error_code( ERROR_PATH_NOT_FOUND, system_category );
   BOOST_CHECK( ec.value() == ERROR_PATH_NOT_FOUND );
   BOOST_CHECK( ec == posix::no_such_file_or_directory );
-  BOOST_CHECK( ec.generic_error_code().value() == posix::no_such_file_or_directory );
+  BOOST_CHECK( ec.portable_error_code().value() == posix::no_such_file_or_directory );
 
   //   test the third entry in the decoder table:
   ec = error_code( ERROR_ACCESS_DENIED, system_category );
   BOOST_CHECK( ec.value() == ERROR_ACCESS_DENIED );
   BOOST_CHECK( ec == posix::permission_denied );
-  BOOST_CHECK( ec.generic_error_code().value() == posix::permission_denied );
+  BOOST_CHECK( ec.portable_error_code().value() == posix::permission_denied );
 
   //   test the last regular entry in the decoder table:
   ec = error_code( ERROR_WRITE_PROTECT, system_category );
   BOOST_CHECK( ec.value() == ERROR_WRITE_PROTECT );
   BOOST_CHECK( ec == posix::permission_denied );
-  BOOST_CHECK( ec.generic_error_code().value() == posix::permission_denied );
+  BOOST_CHECK( ec.portable_error_code().value() == posix::permission_denied );
 
   //   test not-in-table condition:
   ec = error_code( 1234567890, system_category );
   BOOST_CHECK( ec.value() == 1234567890 );
   BOOST_CHECK( ec == posix::no_posix_equivalent );
-  BOOST_CHECK( ec.generic_error_code().value() == posix::no_posix_equivalent );
+  BOOST_CHECK( ec.portable_error_code().value() == posix::no_posix_equivalent );
 
-#else
-  // TODO: write some POSIX tests
+#else // POSIX
+
+  std::cout << "POSIX tests...\n";
+  ec = error_code( EACCES, system_category );
+  BOOST_CHECK( ec == error_code( posix::permission_denied, system_category ) );
+  BOOST_CHECK( error_code( posix::permission_denied, system_category ) == ec );
+  BOOST_CHECK( ec == posix::permission_denied );
+  BOOST_CHECK( posix::permission_denied == ec );
+
+# ifdef __CYGWIN__
+
+  std::cout << "Cygwin tests...\n";
+  ec = cygwin::no_package;
+  BOOST_CHECK( ec == cygwin::no_package );
+  BOOST_CHECK( ec == error_code( ENOPKG, system_category ) );
+  BOOST_CHECK( ec == error_code( cygwin::no_package, system_category ) );
+  BOOST_CHECK( ec == posix::no_posix_equivalent );
+
+# elif defined(linux) || defined(__linux) || defined(__linux__)
+
+  std::cout << "Linux tests...\n";
+  ec = lnx::dot_dot_error;
+  BOOST_CHECK( ec == lnx::dot_dot_error );
+  BOOST_CHECK( ec == error_code( EDOTDOT, system_category ) );
+  BOOST_CHECK( ec == error_code( lnx::dot_dot_error, system_category ) );
+  BOOST_CHECK( ec == posix::no_posix_equivalent );
+
+# endif
+
 #endif
   
   return 0;

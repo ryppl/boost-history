@@ -20,12 +20,6 @@
 #include <cstdio>
 #include <boost/test/minimal.hpp>
 
-//  Although using directives are not the best programming practice, testing
-//  with a boost::system using directive increases use scenario coverage.
-//  There also appears to be a bug in Microsoft VC++ 8.0 that is worked
-//  around by this using directive.
-using namespace boost::system;
-
 #ifdef BOOST_POSIX_API
 # include <sys/stat.h>
 #else
@@ -109,7 +103,7 @@ namespace boost
         return s;
       }
 
-      boost::system::error_code generic_error_code( int ev ) const
+      boost::system::error_code portable_error_code( int ev ) const
       {
         return boost::system::error_code(
           ev == boo_boo
@@ -167,7 +161,7 @@ namespace lib4
       return s;
     }
 
-    boost::system::error_code generic_error_code( int ev ) const
+    boost::system::error_code portable_error_code( int ev ) const
     {
       return boost::system::error_code(
         ev == boo_boo.value()
@@ -193,6 +187,139 @@ namespace lib4
   const boost::system::error_code big_boo_boo( 789, lib4_error_category );
 
 }
+
+//  ------------------------------------------------------------------------  //
+
+// Chris Kolhoff's Test3, modified to work with error_code.hpp
+
+// Test3
+// =====
+// Define error classes to check for success, permission_denied and
+// out_of_memory, but add additional mappings for a user-defined error category.
+//
+
+namespace stdx = boost::system;
+
+namespace test3 {
+
+  enum user_err
+  {
+    user_success = 0,
+    user_permission_denied,
+    user_out_of_memory
+  };
+
+  class user_error_category_imp : public boost::system::error_category
+  {
+  public:
+    const std::string & name() const
+    {
+      static std::string s( "test3" );
+      return s;
+    }
+
+    stdx::error_code portable_error_code( int ev ) const
+    {
+      switch (ev)
+      {
+        case user_success:
+          return stdx::error_code(stdx::posix::success, stdx::posix_category);
+        case user_permission_denied:
+          return stdx::error_code(stdx::posix::permission_denied, stdx::posix_category);
+        case user_out_of_memory:
+          return stdx::error_code(stdx::posix::not_enough_memory, stdx::posix_category);
+        default:
+          break;
+      }
+      return stdx::error_code(stdx::posix::no_posix_equivalent, stdx::posix_category);
+    }
+    
+  };
+
+  const user_error_category_imp user_error_category_const;
+
+  const stdx::error_category & user_error_category
+    = user_error_category_const;
+
+  inline stdx::error_code make_error_code(user_err e)
+  {
+    return stdx::error_code(e, user_error_category);
+  }
+
+  // test code
+
+  void check_success(const stdx::error_code& ec, bool expect)
+  {
+    BOOST_CHECK( (ec == stdx::posix::success) == expect );
+    if (ec == stdx::posix::success)
+      std::cout << "yes... " << (expect ? "ok" : "fail") << '\n';
+    else
+      std::cout << "no...  " << (expect ? "fail" : "ok") << '\n';
+  }
+
+  void check_permission_denied(const stdx::error_code& ec, bool expect)
+  {
+    BOOST_CHECK( (ec == stdx::posix::permission_denied) == expect );
+    if (ec ==  stdx::posix::permission_denied)
+      std::cout << "yes... " << (expect ? "ok" : "fail") << '\n';
+    else
+      std::cout << "no...  " << (expect ? "fail" : "ok") << '\n';
+  }
+
+  void check_out_of_memory(const stdx::error_code& ec, bool expect)
+  {
+    BOOST_CHECK( (ec == stdx::posix::not_enough_memory) == expect );
+    if (ec ==  stdx::posix::not_enough_memory)
+      std::cout << "yes... " << (expect ? "ok" : "fail") << '\n';
+    else
+      std::cout << "no...  " << (expect ? "fail" : "ok") << '\n';
+  }
+
+  void run()
+  {
+    printf("Test3\n");
+    printf("=====\n");
+    stdx::error_code ec;
+    check_success(ec, true);
+    check_success(stdx::posix::success, true);
+    check_success(stdx::posix::permission_denied, false);
+    check_success(stdx::posix::not_enough_memory, false);
+    check_success(user_success, true);
+    check_success(user_permission_denied, false);
+    check_success(user_out_of_memory, false);
+    check_permission_denied(ec, false);
+    check_permission_denied(stdx::posix::success, false);
+    check_permission_denied(stdx::posix::permission_denied, true);
+    check_permission_denied(stdx::posix::not_enough_memory, false);
+    check_permission_denied(user_success, false);
+    check_permission_denied(user_permission_denied, true);
+    check_permission_denied(user_out_of_memory, false);
+    check_out_of_memory(ec, false);
+    check_out_of_memory(stdx::posix::success, false);
+    check_out_of_memory(stdx::posix::permission_denied, false);
+    check_out_of_memory(stdx::posix::not_enough_memory, true);
+    check_out_of_memory(user_success, false);
+    check_out_of_memory(user_permission_denied, false);
+    check_out_of_memory(user_out_of_memory, true);
+
+# ifdef BOOST_WINDOWS_API
+    check_success(stdx::windows::success, true);
+    check_success(stdx::windows::access_denied, false);
+    check_success(stdx::windows::not_enough_memory, false);
+    check_permission_denied(stdx::windows::success, false);
+    check_permission_denied(stdx::windows::access_denied, true);
+    check_permission_denied(stdx::windows::not_enough_memory, false);
+    check_out_of_memory(stdx::windows::success, false);
+    check_out_of_memory(stdx::windows::access_denied, false);
+    check_out_of_memory(stdx::windows::not_enough_memory, true);
+# endif
+
+    printf("\n");
+  }
+
+} // namespace test3
+
+
 
 //  ------------------------------------------------------------------------  //
 
@@ -250,6 +377,9 @@ int test_main( int, char *[] )
     lib4::lib4_error_category );
   BOOST_CHECK( ec4 == boost::system::posix::no_posix_equivalent );
 
+  // Test 3
+
+  test3::run();
 
   return 0;
 }

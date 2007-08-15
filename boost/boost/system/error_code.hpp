@@ -19,8 +19,12 @@
 #include <string>
 #include <stdexcept>
 
-// TODO: undef these macros if no already defined
+// TODO: undef these macros if not already defined
 #include <boost/cerrno.hpp> 
+
+# ifdef BOOST_WINDOWS_API
+#   include <winerror.h>
+# endif
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -30,14 +34,13 @@ namespace boost
   {
 
     class error_code;
-    bool equivalent( const error_code & lhs, const error_code & rhs );
 
     namespace posix
     {
 
       enum posix_errno
       {
-        no_error = 0,
+        success = 0,
         address_family_not_supported = EAFNOSUPPORT,
         address_in_use = EADDRINUSE,
         address_not_available = EADDRNOTAVAIL,
@@ -128,9 +131,9 @@ namespace boost
     {
     public:
       virtual ~error_category(){}
-      virtual const std::string & name() const = 0;
-      virtual error_code generic_error_code( int ev) const;
-      virtual std::string message( int ev ) const = 0;
+      virtual const std::string & name() const;  // see implementation note below
+      virtual std::string message( int ev ) const;   // see implementation note below
+      virtual error_code portable_error_code( int ev) const;
 
       bool operator==(const error_category & rhs) const { return this == &rhs; }
       bool operator!=(const error_category & rhs) const { return !(*this == rhs); }
@@ -184,7 +187,7 @@ namespace boost
       // observers:
       int                     value() const    { return m_val; }
       const error_category &  category() const { return *m_cat; }
-      error_code              generic_error_code() const  { return m_cat->generic_error_code(value()); }
+      error_code              portable_error_code() const  { return m_cat->portable_error_code(value()); }
       std::string             message() const  { return m_cat->message(value()); }
 
       typedef void (*unspecified_bool_type)();
@@ -212,11 +215,11 @@ namespace boost
                                      const error_code & rhs )
       {
         if ( lhs.m_cat == rhs.m_cat ) return lhs.m_val == rhs.m_val;
-        return same( lhs, rhs.generic_error_code() )
-            || same( lhs.generic_error_code(), rhs );
+        return same( lhs, rhs.portable_error_code() )
+            || same( lhs.portable_error_code(), rhs );
         // Rationale: As in the language proper, a single automatic conversion
         // is acceptable, but two automatic conversions are not. Thus
-        // return same (lhs.generic_error_code(), rhs.generic_error_code()) is
+        // return same (lhs.portable_error_code(), rhs.portable_error_code()) is
         // not an acceptable implementation as it performs two conversions.
       }
 
@@ -260,13 +263,224 @@ namespace boost
             : 0);
     }
 
-    //  error_category::generic_error_code  ----------------------------------//
-    //    implemented here now that error_code is a complete type
-    inline error_code error_category::generic_error_code( int ev) const
+
+    //  error_category implementation  ---------------------------------------//
+
+    //   error_code is a complete type at this point
+    inline error_code error_category::portable_error_code( int ev) const
     { 
       return error_code( ev, *this );
     }
 
+    //  error_category implementation note: VC++ 8.0 objects to name() and
+    //  message() being pure virtual functions. Thus these implementations.
+    inline const std::string & error_category::name() const
+    { 
+      static std::string s("error: should never be called");
+      return s;
+    }
+    inline std::string error_category::message( int ev ) const
+    { 
+      static std::string s("error: should never be called");
+      return s;
+    }
+
+    //  ----------------------------------------------------------------------//
+
+    //  Operating system specific interfaces  --------------------------------//
+
+
+    //  The interface is divided into general and system-specific portions to
+    //  meet these requirements:
+    //
+    //  * Code calling an operating system API can create an error_code with
+    //    a single category (system_category), even for POSIX-like operating
+    //    systems that return some POSIX errno values and some native errno
+    //    values. This code should not have to pay the cost of distinguishing
+    //    between categories, since it is not yet know if that is needed.
+    //
+    //  * Users wishing to write system-specific code should have enums for
+    //    at least the common error cases.
+    //
+    //  * System specific code should fail at compile time if moved to another
+    //    operating system.
+
+#ifdef BOOST_POSIX_API
+
+    //  POSIX-based systems  -------------------------------------------------//
+
+    //  To construct an error_code after a API error:
+    //
+    //      error_code( errno, system_category )
+
+    //  User code should use the portable "posix" enums for POSIX errors; this
+    //  allows such code to be portable to non-POSIX systems. For the non-POSIX
+    //  errno values that POSIX-based systems typically provide in addition to 
+    //  POSIX values, use the system specific enums below.
+
+# ifdef __CYGWIN__
+
+    namespace cygwin
+    {
+      enum cygwin_error
+      {
+        no_net = ENONET,
+        no_package = ENOPKG,
+        no_share = ENOSHARE,
+      };
+    }  // namespace cygwin
+
+    inline error_code make_error_code(cygwin::cygwin_error e)
+      { return error_code( e, system_category ); }
+
+# elif defined(linux) || defined(__linux) || defined(__linux__)
+
+    namespace lnx  // linux obvious name prempted by its use as predefined macro
+    {
+      enum linux_error
+      {
+        advertise_error = EADV,
+        bad_exchange = EBADE,
+        bad_file_number = EBADFD,
+        bad_font_format = EBFONT,
+        bad_request_code = EBADRQC,
+        bad_request_descriptor = EBADR,
+        bad_slot = EBADSLT,
+        channel_range = ECHRNG,
+        communication_error = ECOMM,
+        dot_dot_error = EDOTDOT,
+        exchange_full = EXFULL,
+        host_down = EHOSTDOWN,
+        is_named_file_type= EISNAM,
+        key_expired = EKEYEXPIRED,
+        key_rejected = EKEYREJECTED,
+        key_revoked = EKEYREVOKED,
+        level2_halt= EL2HLT,
+        level2_no_syncronized= EL2NSYNC,
+        level3_halt = EL3HLT,
+        level3_reset = EL3RST,
+        link_range = ELNRNG,
+        medium_type = EMEDIUMTYPE,
+        no_anode= ENOANO,
+        no_block_device = ENOTBLK,
+        no_csi = ENOCSI,
+        no_key = ENOKEY,
+        no_medium = ENOMEDIUM,
+        no_network = ENONET,
+        no_package = ENOPKG,
+        not_avail = ENAVAIL,
+        not_named_file_type= ENOTNAM,
+        not_recoverable = ENOTRECOVERABLE,
+        not_unique = ENOTUNIQ,
+        owner_dead = EOWNERDEAD,
+        protocol_no_supported = EPFNOSUPPORT,
+        remote_address_changed = EREMCHG,
+        remote_io_error = EREMOTEIO,
+        remote_object = EREMOTE,
+        restart_needed = ERESTART,
+        shared_library_access = ELIBACC,
+        shared_library_bad = ELIBBAD,
+        shared_library_execute = ELIBEXEC,
+        shared_library_max_ = ELIBMAX,
+        shared_library_section= ELIBSCN,
+        shutdown = ESHUTDOWN,
+        socket_type_not_supported = ESOCKTNOSUPPORT,
+        srmount_error = ESRMNT,
+        stream_pipe_error = ESTRPIPE,
+        too_many_references = ETOOMANYREFS,
+        too_many_users = EUSERS,
+        unattached = EUNATCH,
+        unclean = EUCLEAN,
+      };
+    }  // namespace lnx
+
+    inline error_code make_error_code(lnx::linux_error e)
+      { return error_code( e, system_category ); }
+
+# endif
+
+    //  TODO: Add more POSIX-based operating systems here
+
+
+#elif defined(BOOST_WINDOWS_API)
+
+    //  Microsoft Windows  ---------------------------------------------------//
+
+    //  To construct an error_code after a API error:
+    //
+    //      error_code( ::GetLastError(), system_category )
+
+    namespace windows
+    {
+      enum windows_error
+      {
+        success = 0,
+        // These names and values are based on Windows winerror.h
+        invalid_function = ERROR_INVALID_FUNCTION,
+        file_not_found = ERROR_FILE_NOT_FOUND,
+        path_not_found = ERROR_PATH_NOT_FOUND,
+        too_many_open_files = ERROR_TOO_MANY_OPEN_FILES,
+        access_denied = ERROR_ACCESS_DENIED,
+        invalid_handle = ERROR_INVALID_HANDLE,
+        arena_trashed = ERROR_ARENA_TRASHED,
+        not_enough_memory = ERROR_NOT_ENOUGH_MEMORY,
+        invalid_block = ERROR_INVALID_BLOCK,
+        bad_environment = ERROR_BAD_ENVIRONMENT,
+        bad_format = ERROR_BAD_FORMAT,
+        invalid_access = ERROR_INVALID_ACCESS,
+        outofmemory = ERROR_OUTOFMEMORY,
+        invalid_drive = ERROR_INVALID_DRIVE,
+        current_directory = ERROR_CURRENT_DIRECTORY,
+        not_same_device = ERROR_NOT_SAME_DEVICE,
+        no_more_files = ERROR_NO_MORE_FILES,
+        write_protect = ERROR_WRITE_PROTECT,
+        bad_unit = ERROR_BAD_UNIT,
+        not_ready = ERROR_NOT_READY,
+        bad_command = ERROR_BAD_COMMAND,
+        crc = ERROR_CRC,
+        bad_length = ERROR_BAD_LENGTH,
+        seek = ERROR_SEEK,
+        not_dos_disk = ERROR_NOT_DOS_DISK,
+        sector_not_found = ERROR_SECTOR_NOT_FOUND,
+        out_of_paper = ERROR_OUT_OF_PAPER,
+        write_fault = ERROR_WRITE_FAULT,
+        read_fault = ERROR_READ_FAULT,
+        gen_failure = ERROR_GEN_FAILURE,
+        sharing_violation = ERROR_SHARING_VIOLATION,
+        lock_violation = ERROR_LOCK_VIOLATION,
+        wrong_disk = ERROR_WRONG_DISK,
+        sharing_buffer_exceeded = ERROR_SHARING_BUFFER_EXCEEDED,
+        handle_eof = ERROR_HANDLE_EOF,
+        handle_disk_full= ERROR_HANDLE_DISK_FULL,
+        rem_not_list = ERROR_REM_NOT_LIST,
+        dup_name = ERROR_DUP_NAME,
+        bad_net_path = ERROR_BAD_NETPATH,
+        network_busy = ERROR_NETWORK_BUSY,
+        // ...
+        file_exists = ERROR_FILE_EXISTS,
+        cannot_make = ERROR_CANNOT_MAKE,
+        // ...
+        broken_pipe = ERROR_BROKEN_PIPE,
+        open_failed = ERROR_OPEN_FAILED,
+        buffer_overflow = ERROR_BUFFER_OVERFLOW,
+        disk_full= ERROR_DISK_FULL,
+        // ...
+        lock_failed = ERROR_LOCK_FAILED,
+        busy = ERROR_BUSY,
+        cancel_violation = ERROR_CANCEL_VIOLATION,
+        already_exists = ERROR_ALREADY_EXISTS
+        // ...
+
+        // TODO: add more Windows errors
+      };
+    }  // namespace windows
+
+    inline error_code make_error_code(windows::windows_error e)
+      { return error_code( e, system_category ); }
+
+#else
+#  error BOOST_POSIX_API or BOOST_WINDOWS_API must be defined
+#endif
 
   } // namespace system
 } // namespace boost
