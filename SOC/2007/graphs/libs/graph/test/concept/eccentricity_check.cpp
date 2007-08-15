@@ -30,6 +30,7 @@ main(int argc, char *argv[])
     eccentricity(g, dm, em);
     graph_radius(g, em);
     graph_diameter(g, em);
+    graph_radius_and_diameter(g, em);
 
     return 0;
 }
