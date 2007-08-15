@@ -33,12 +33,13 @@
 <ol>
 
   <li>Make sure the bug isn't already fixed in the latest sources. The most 
-  recent version of everything on the Boost web site is available from
-  the <a href="http://www.boost.org/more/getting_started.html#CVS">boost public
-  CVS repository</a>.<br>
+  recent version of everything on the Boost web site is available from the 
+  <a href="http://svn.boost.org/trac/boost/wiki/BoostSubversion">
+  boost public SVN repository</a>.
+<br>
 <br>
  </li>
-  <li>If you are a Boost user, or a Boost developer that doesn't have a CVS 
+  <li>If you are a Boost user, or a Boost developer that doesn't have a SVN 
   write access: <br>
 <br>
  <ol>
@@ -55,12 +56,12 @@
  </li>
     <li>If you have a proposed patch to the code, post it along with your bug 
     report, preferably in the <em>unified diffs</em> format (<code>cvs diff -du</code>);
-     if you can, send a patch relative to the current CVS state. A canonical
+     if you can, send a patch relative to the current SVN state. A canonical
 example of creating a patch file follows (let's assume that you've found
 a bug in the file <code>intentional_bug.hpp</code>:<br>
 <br>
         <ol>
-          <li>Download the latest version of <code>intentional_bug.hpp</code> from CVS.</li>
+          <li>Download the latest version of <code>intentional_bug.hpp</code> from SVN.</li>
           <li>Make sure that the bug is still present in the code.</li>
           <li>Copy the file <code>intentional_bug.hpp</code> to a file called <code>intentional_bug.hpp.orig</code>.</li>
           <li>Apply your changes to <code>intentional_bug.hpp</code>.</li>
@@ -76,13 +77,13 @@ in the subject if you're submitting to the <a href="http://www.boost.org/more/ma
 
   </ol>
   </li>
-  <li>If you are a Boost developer, and you have a CVS write access: <br>
+  <li>If you are a Boost developer, and you have a SVN write access: <br>
 <br>
  <ol>
     <li>If the bug is trivial (e.g. misspelled name, missed <code>typename</code>, 
     etc.), and you are willing to make a fix, either make your changes locally 
     and contact the library author(s)/maintainer(s) about it, or go ahead and 
-    check the fix into CVS, but post a notification about it to the
+    check the fix into SVN, but post a notification about it to the
     <a href="http://www.boost.org/more/mailing_lists.htm#main">boost mailing 
     list</a> (if the author is not very active on the list, you also might want 
     to consider <code>cc</code>'ing him as well); <br>
@@ -93,7 +94,7 @@ in the subject if you're submitting to the <a href="http://www.boost.org/more/ma
     will respond promptly and take care of the problem; <br>
 <br>
  </li>
-    <li>Otherwise, create a temporary branch in CVS, make your changes there, and 
+    <li>Otherwise, create a temporary branch in SVN, make your changes there, and 
     ask the library author(s)/maintainer(s) to review them; if they are ok with 
     the new code, either you or they can integrate the fixes into the main 
     trunk. </li>
