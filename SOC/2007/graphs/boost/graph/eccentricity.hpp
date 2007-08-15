@@ -106,7 +106,7 @@ namespace boost
     template <typename Graph, typename EccentricityMap>
     inline std::pair<typename property_traits<EccentricityMap>::value_type,
                      typename property_traits<EccentricityMap>::value_type>
-    graph_radius_and_diameter(const Graph& g, EccentricityMap ecc)
+    graph_radius_diameter(const Graph& g, EccentricityMap ecc)
     {
         function_requires< VertexListGraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
