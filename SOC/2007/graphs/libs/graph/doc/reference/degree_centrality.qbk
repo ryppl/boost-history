@@ -8,18 +8,18 @@
 [section Degree Centrality]
 
     template <typename Graph, typename CentralityMap>
-    void degree_centrality(const Graph& g, CentralityMap cent);
+    void degree_centrality(const Graph& g, CentralityMap cent)
 
     template <typename Graph, typename CentralityMap, typename Measure>
-    void degree_centrality(const Graph& g, CentralityMap cent, Measure measure);
+    void degree_centrality(const Graph& g, CentralityMap cent, Measure measure)
 
     template <typename Graph, typename Vertex>
     typename graph_traits<Graph>::degree_size_type
-    vertex_degree_centrality(const Graph& g, Vertex v);
+    vertex_degree_centrality(const Graph& g, Vertex v)
 
     template <typename Graph, typename Vertex, typename Measure>
     typename Measure::degree_type
-    vertex_degree_centrality(const Graph& g, Vertex v, Measure measure);
+    vertex_degree_centrality(const Graph& g, Vertex v, Measure measure)
 
 The /degree centrality/ measure is used in social network analysis to help
 determine which vertices (or more specifically actors) are the most central

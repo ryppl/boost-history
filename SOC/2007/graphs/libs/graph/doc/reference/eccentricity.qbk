@@ -9,33 +9,69 @@
 
     template <typename Graph, typename DistanceMap>
     typename property_traits<DistanceMap>::value_type
-    vertex_eccentricity(const Graph& g, GeodesicMap dist)
+    vertex_eccentricity(const Graph& g, DistanceMap dm)
 
-    template <typename Graph, typename DistanceMatrix, typename EccentricityMap>
-    void eccentricity(const Graph& g, const DistanceMatrix& dist, EccentricityMap ecc)
+    template <typename Graph, typename DistanceMatrixMap, typename EccentricityMap>
+    void eccentricity(const Graph& g, DistanceMatrixMap dm, EccentricityMap em)
 
-The /eccentricity/ of a vertex is the maximum geodesic distance to any other
-vertex in the graph. Intuitively, Vertices with low eccentricity can reach all
-other vertices in the graph more quickly than vertices with high eccentricity.
-Eccentricity values are used to help compute the [boost_graph_radius] and
-[boost_graph_diameter]. These values can be used in turn, to identify the
-[boost_gaph_center] and [boost_graph_periperhy] subgraphs.
 
-Note that for any vertex in a graph that is not connected to another, its
-eccentricity is defined to be infinite.
+    template <typename Graph, typename EccentricityMap>
+    inline typename property_traits<EccentricityMap>::value_type
+    graph_radius(const Graph& g, EccentricityMap ecc)
 
-This module provide two generic functions. The first function, `eccentricity()`
-computes this values for all vertices in the graph given a matrix that provides
-the shortest paths between all pairs of vertices. This matrix can be computed
-as the output of an all-pairs shortest paths algorithm (e.g.,
-[boost_floyd_warshall_all_pairs_shortest_paths]) or repeated application of a
-breadth-first search. The output of this function is stored in a property map.
+
+    template <typename Graph, typename EccentricityMap>
+    inline typename property_traits<EccentricityMap>::value_type
+    graph_diameter(const Graph& g, EccentricityMap ecc)
+
+    template <typename Graph, typename EccentricityMap>
+    inline std::pair<typename property_traits<EccentricityMap>::value_type,
+                     typename property_traits<EccentricityMap>::value_type>
+    graph_radius_diameter(const Graph& g, EccentricityMap ecc)
+
+The /eccentricity/ of a vertex is the maximum geodesic distance (shortest path) from
+that vertex to any other vertex in the graph. Intuitively, vertices with low
+eccentricity can reach all other vertices in the graph more "quickly" than vertices
+with high eccentricity. Eccentricity values are used to help compute the /radius/ and
+/diameter/.
+
+Note that if vertex /u/ is disconnected from any other vertex /v/ the distance from
+/u/ to /v/ is infinite. This implies the eccentricity of /v/ is infinite as well.
+If any vertex in a graph has infinite eccentricity, the graph also has an infinite
+diameter.
+
+Consider the following social network represented by an undirected, unweighted
+graph.
+
+[figure
+    images/reference/social_network.png
+    *Figure 1.* A network of friends
+]
+
+Because the graph is small and relatively well, connected the eccentricies are
+exaclty 2 or 3 for all vertices. The radius (the smaller of these numbers)
+is 2, and the diameter is 3.
+
+This module provide a set of generic functions for computing eccentricities and
+related measures. The first function, `eccentricity()` computes this values for all
+vertices in the graph, given a matrix that provides the shortest paths between all
+pairs of vertices. This matrix can be computed as the output of an "all-pairs shortest
+paths "algorithm (e.g., [boost_floyd_warshall_all_pairs_shortest_paths]) or repeated
+application of a [boost_breadth_first_search] (if the graph is unweighted). The
+output of this function is stored in the eccentricity property map.
 
 The second function, `vertex_eccentricity()` computes the eccentricty of a
 single vertex given the shortest paths to every other vertex in the graph. The
-distance map can be computed using a shortest paths algorithms (e.g.,
-[boost_dijkstra_shortest_paths] or a breadth-first search. The output of this
-function is returned to the caller.
+distance map can be computed using a shortest paths algorithms (e.g., [boost_dijkstra_shortest_paths]
+or a [boost_breadth_first_search]. The output of this function is returned to the
+caller.
+
+This module also provides a set of functions for computing the related measures
+of a graph's radius and diameter. These functions take as input, the previously
+computed eccentricity values output by the `eccentricity()` function, and return
+the computed value to the caller. The `graph_radius_and_diameter()` function
+combines both computations to a single iteratation and returns the values as a
+pair. The `first` value in the pair is the radius and the `second` is the diameter.
 
 [heading Where Defined]
 `boost/graph/eccentricity.hpp`
@@ -53,12 +89,11 @@ function is returned to the caller.
         ]
     ]
     [
-        [required, in] [`DistanceMap dist`]
+        [required, in] [`DistanceMap dm`]
         [
-            Given a vertex `v`, the `dist` parameter provides the length of the
+            Given a vertex `v`, the `dm` parameter provides the length of the
             shortest path between a vertex `u` and `v`. The vertex `u` is the
-            vertex for which the distance map was initially computed. The
-            distance from /u/ to itself should be zero (i.e., `dist[u] == 0`).
+            vertex for which the distance map was initially computed.
 
             *Requirements:* `DistanceMap` must be a model of [BoostReadablePropertyMap].
             The `key_type` of the distance map must be the same as the `vertex_descriptor`
@@ -67,28 +102,36 @@ function is returned to the caller.
         ]
     ]
     [
-        [required, in] [`const DistanceMatrix& dist`]
+        [required, in] [`DistanceMatrixMap dm`]
         [
-            Given vertices /u/ and /v/, the `dist` parameter provides the length
+            Given vertices /u/ and /v/, the `dm` parameter provides the length
             of the shortest path between the two vertices. Note that the
-            distance between a vertex and itself should be 0 (i.e., `dist[u][u] == 0`).
+            distance between a vertex and itself should be 0 (i.e., `dm[u][u] == 0`).
 
-            *Requirements:* `DistanceMatrix` must be a model of [BoostPropertyMatrix].
-            The `key_type` of the distance matrixc must be the same as the
-            `vertex_descriptor` of the `Graph` parameter. The `value_type` is
-            required to be a model of [BoostNumericValue].
+            *Requirements:* `DistanceMatrixMap` must be a model of [BoostReadablePropertyMap].
+            The `key_type` of the distance matrixc must be the same as the `vertex_descriptor`
+            of the `Graph` parameter. The `value_type` must be a [BoostReadWritePropertyMap]
+            whose `key_type` is also the `vertex_descriptor` of the `Graph` and
+            whose `value_type` is a model of [BoostNumericValue].
         ]
     ]
     [
-        [required, out] [`EccentricityMap ecc`]
+        [required, out] [`EccentricityMap em`]
         [
-            The `ecc` parameter stores the computed results of the `eccentricity()`
-            function for each vertex in the graph.
+            When used with the `eccentricity()` function, the `em` parameter stores
+            the eccentricity of each vertex in the graph. When used with the
+            `radius()` or `diameter()` functions, `em` provides the input to compute
+            the given graph property.
 
-            *Requirements:* The `EccentricityMap` type must be a model of the
-            [BoostReadablePropertyMap] type. The `key_type` of the property map
-            must be the `vertex_descriptor` of the `Graph`. The `value_type`
-            must be the same as the `value_type` of the distance matrix.
+            [*Requirements - [^eccentricity()]:] The `EccentricityMap` must be a model
+            of the [BoostWritablePropertyMap] concept.
+
+            [*Requirements - [^graph_radius()]/[^graph_diameter()]:] The `EccentricityMap` must
+            be a model of the [BoostReadablePropertyMap] concept.
+
+            *Requirements:* The `key_type` of the property map must be the `vertex_descriptor`
+            of the `Graph` parameter. The `value_type` must be the same type as the
+            `value_type` of the `DistanceMatrixMap` parameter.
         ]
     ]
 ]
@@ -98,12 +141,89 @@ The `vertex_eccentricity()` function returns the eccentricity of the vertex.
 If the graph is unconnected, this returns the infinite value of the distance
 map's `value_type`.
 
-[heading Complexity]
-The `eccentricity()` function has /O(n^2)/ time complexity.
+The `graph_radius()` and `graph_diameter()` functions return their respective measures.
+The return type of these functions is the same as the `value_type` of the `EccentricityMap`
+parameter.
 
-The `vertex_eccentricity()` is linear.
+The `graph_radius_diameter()` funtion returns a pair containing both the radius (`first`)
+and diameter (`second`) of the graph. The types of these values are the same as the
+`value_type` of the `EccentricityMap`.
+
+[heading Complexity]
+The `eccentricity()` function returns in ['O(n[super 2])] where /n/ is the number
+of vertices in the graph.
+
+The `vertex_eccentricity()` is linear with respect to the number of vertices in
+the graph.
+
+The `graph_diameter()`, `graph_radius()`, and `graph_radius_diameter()` function are
+all linear with respect to the number of vertices in the graph.
 
 [heading Examples]
-Write an example.
+This example computes the eccentricities for all vertices in a graph, and the radius
+and diameter of the graph itself. This example includes the following files:
+
+* [^examples/closeness_centrality.hpp]
+* [^examples/social_network.hpp]
+* [^examples/helper.hpp]
+
+First, we define the graph and its associated types.
+[social_network_types]
+Here, we use the `Actor` to store an actor name with each vertex. We also need to
+define a number of related property types to support property maps for the algorithms
+called in the program.
+
+Since this program will call [boost_floyd_warshall_all_pairs_shortest_paths] to
+compute distances between vertices, we need a matrix to store the distances.
+[distance_matrix_types]
+
+We also need a property map that assigns weights to each edge. Since our graph is
+unweighted, we can use the [boost_constant_property_map] to return a constant value
+for each edge. [constant_weight_map_types]
+
+We also need an output property map to store the eccentricities of each vertex.
+[eccentricity_map_types]
+
+In the main program, we instantiate the graph and an extra `std::map` that we
+use during graph construction.
+[setup_social_network]
+
+The graph is read from standard input. This process uses the `add_named_vertex()`
+function, which is not part of the Boost.Graph library but defined in the file
+`examples/helper.hpp`.
+[build_social_network]
+
+The next step is to compute the distance. This is done using the
+[boost_floyd_warshall_all_pairs_shortest_paths] function. This could also be done
+using [boost_johnson_all_pairs_shortest_paths]. This is done by first constructing
+a matrix to hold the distance values, and a property map over the matrix. Additionally,
+we use a [boost_constant_property_map] to return the value `1` for all edge weights.
+Both the distance matrix and edge-weight maps are used as inputs to the distance
+algorithm.
+[compute_constant_distances]
+
+After computing the distance, we can use the resulting distance matrix to compute
+the eccentricity of each vertex. This is done by constructing a container for
+the eccentricity values and a property map accessor for it. The previously computed
+distance map and eccentricity map are passed as inputs to the computation. The
+eccentricity map is also used as an input to the `graph_radius()` and `graph_diameter()`
+functions.
+[compute_eccentricity]
+
+If the input graph is large, it would be better to compute the radius and diameter
+in a single call. The last two lines above could be repaced with:
+
+    int radius, diameter;
+    tie(radius, diameter) = graph_radius_diameter(g, em);
+
+Finally, we can print the radius and diameter of the graph.
+[print_radius_diameter]
+
+If given the `social_network.graph` file as input, the output will be:
+
+[pre
+radius    2
+diameter  3
+]
 
 [endsect]

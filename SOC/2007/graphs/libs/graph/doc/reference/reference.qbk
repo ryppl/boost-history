@@ -71,10 +71,9 @@ section on finding cycles.
 [section Measures]
 [include degree_centrality.qbk]
 [include closeness_centrality.qbk]
+[include betweenness_centrality.qbk]
 [include mean_geodesic.qbk]
 [include eccentricity.qbk]
-[include radius.qbk]
-[include diameter.qbk]
 [endsect]
 [endsect]
 

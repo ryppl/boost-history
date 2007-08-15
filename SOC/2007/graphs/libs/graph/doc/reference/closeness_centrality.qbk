@@ -34,11 +34,12 @@ vertices (also called actors) that are "close" to all others. To phrase differen
 actors that are "closer" to all others have a greater reach, making them more
 influential in the network. The closeness measure is defined as the inverse of the
 sum of all geodesic distances (lengths of shortest path) from one vertex to all
-others. Closeness is formally given as:
+others (excluding itself). Closeness is computed as:
 
 [$images/eq/closeness.png]
 
-Where /d(u,v)/ is the shortest path (geodesic distance) from /u/ to /v/.
+Where /d(u,v)/ is the shortest path (geodesic distance) from /u/ to /v/. Note that
+the distance of /(u,u)/ is neither
 Note that if any vertex in the graph is unreachable from any other, then distance
 between those two unonnected vertices is infinite. This imlplies that the closeness
 of that vertex is zero. If an undirected graph has unconnected components, then
@@ -202,18 +203,17 @@ following files:
 
 First, we define the graph and its associated types.
 [social_network_types]
-Here, we use the `Actor` to store an actor name with each vertex. We also define a
-number of related property types.
+Here, we use the `Actor` to store an actor name with each vertex. We also need to
+define a number of related property types to support property maps for the algorithms
+called in the program.
 
-Since this program will call
-[boost_floyd_warshall_all_pairs_shortest_paths] to compute distances between
-vertices, we need a matrix to store the distances.
+Since this program will call [boost_floyd_warshall_all_pairs_shortest_paths] to
+compute distances between vertices, we need a matrix to store the distances.
 [distance_matrix_types]
 
-We also need a property map
-that assigns weights to each edge. Since our graph is unweighted, we can use
-the [boost_constant_property_map] to return a constant value for each edge.
-[constant_weight_map_types]
+We also need a property map that assigns weights to each edge. Since our graph is
+unweighted, we can use the [boost_constant_property_map] to return a constant value
+for each edge. [constant_weight_map_types]
 
 We also need an output property map to store the closeness centrality for each
 vertex.
@@ -221,13 +221,11 @@ vertex.
 
 In the main program, we instantiate the graph and an extra `std::map` that we
 use during graph construction.
-
 [setup_social_network]
 
 The graph is read from standard input. This process uses the `add_named_vertex()`
 function, which is not part of the Boost.Graph library but defined in the file
 `examples/helper.hpp`.
-
 [build_social_network]
 
 The next step is to compute the distance. This is done using the
@@ -243,7 +241,7 @@ After computing the distance, we can use the resulting distance matrix to comput
 the property maps for each vertex. This is done by constructing a container for
 the closeness values and a property map accessor for it. The previously computed
 distance map and closeness map are passed as inputs to the computation.
-[compute_closeness]
+[compute_closeness_centrality]
 
 In the next step, we sort the vertices of the graph into the given vector. For
 this sort, we use the values in the property map as the sort keys. The resulting
@@ -285,7 +283,7 @@ the implementation of a [BoostDistanceMeasure], the resulting value can be also
 obtained by multiplying the default result by the number of vertices in the graph.
 This example uses the following files:
 
-* [^examples/norm_closeness.hpp]
+* [^examples/norm_closeness_centrality.hpp]
 * [^examples/social_network.hpp]
 * [^examples/helper.hpp]
 
