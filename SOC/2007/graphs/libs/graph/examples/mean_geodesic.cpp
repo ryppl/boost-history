@@ -10,7 +10,7 @@
 #include <iostream>
 #include <iomanip>
 #include <boost/graph/floyd_warshall_shortest.hpp>
-#include <boost/graph/closeness_centrality.hpp>
+#include <boost/graph/geodesic_distance.hpp>
 
 using namespace std;
 using namespace boost;
@@ -33,33 +33,28 @@ main(int argc, char *argv[])
         add_edge(u, v, g);
     }
 
-    //[compute_constant_distances
     DistanceMatrix distances(num_vertices(g));
     DistanceMatrixMap dm(distances, g);
     WeightMap wm(1);
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
-    //]
 
     // Compute the degree centrality for graph
-    //[compute_closeness_centrality
-    ClosenessContainer cents(num_vertices(g));
-    ClosenessMap cm(cents, g);
-    closeness_centrality(g, dm, cm);
+    //[compute_mean_geodesics
+    GeodesicContainer geodesics(num_vertices(g));
+    GeodesicMap gm(geodesics, g);
+    mean_geodesic(g, dm, gm);
+    float geo = graph_mean_geodesic(g, gm);
     //]
 
-    //[closeness_sort_vertices
-    vector<Vertex> sorted(num_vertices(g));
-    sort_vertices(sorted, g, cm);
-    //]
-
-    // Print the degree centrality of each vertex
-    //[print_sorted_closeness
-    vector<Vertex>::iterator i, end = sorted.end();
-    for(i = sorted.begin(); i != end; ++i) {
-        cout << setw(12) << setiosflags(ios::left)
-             << g[*i].name << cm[*i] << "\n";
+    graph_traits<Graph>::vertex_iterator i, end;
+    for(tie(i, end) = vertices(g); i != end; ++i) {
+        cout << g[*i].name << " : " << get(gm, *i) << "\n";
     }
+
+    //[print_graph_mean_geodesic
+    cout << "mean geodesic distance: " << geo << endl;
     //]
+
 
     return 0;
 }

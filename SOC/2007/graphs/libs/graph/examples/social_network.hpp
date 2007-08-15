@@ -47,4 +47,16 @@ typedef ClosenessProperty::container_type ClosenessContainer;
 typedef ClosenessProperty::map_type ClosenessMap;
 //]
 
+//[geodesic_map_types
+typedef boost::exterior_vertex_property<Graph, float> GeodesicProperty;
+typedef GeodesicProperty::container_type GeodesicContainer;
+typedef GeodesicProperty::map_type GeodesicMap;
+//]
+
+//[eccentricity_map_types
+typedef boost::exterior_vertex_property<Graph, int> EccentricityProperty;
+typedef EccentricityProperty::container_type EccentricityContainer;
+typedef EccentricityProperty::map_type EccentricityMap;
+//]
+
 #endif
