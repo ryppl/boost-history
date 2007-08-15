@@ -1,11 +1,12 @@
 
 src = \
-	total_geodesic.tex \
 	mean_geodesic.tex \
 	graph_mean_geodesic.tex \
-	inverse_geodesic.tex \
 	closeness.tex \
-	norm_closeness.tex
+	norm_closeness.tex \
+	betweenness.tex \
+	relative_betweenness.tex \
+	central_point_dominance.tex
 dvi = $(src:%.tex=%.dvi)
 ps = $(src:%.tex=%.ps)
 png = $(src:%.tex=%.png)
