@@ -11,8 +11,6 @@ pertain explicitly to graphs or visitors for algorithms.
 
 [include descriptor.qbk]
 [include numeric_value.qbk]
-[include property_map.qbk]
-[include property_matrix.qbk]
 [include degree_measure.qbk]
 [include distance_measure.qbk]
 
