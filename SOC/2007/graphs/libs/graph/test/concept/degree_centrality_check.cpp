@@ -37,6 +37,23 @@ main(int argc, char *argv[])
         degree_centrality(g, cm, m);
     }
 
+    {
+        typedef descriptor_archetype Vertex;
+        typedef incidence_graph_archetype<
+                Vertex,
+                undirected_tag,
+                allow_parallel_edge_tag
+            > Graph;
+        typedef degree_measure_archetype<Graph> Measure;
+
+        Graph& g = static_object<Graph>::get();
+        Vertex v = static_object<Vertex>::get();
+        Measure m;
+
+        vertex_degree_centrality(g, v);
+        vertex_degree_centrality(g, v, m);
+    }
+
     // There isn't a bidirectional graph archetype so I don't really know
     // how to test this. Even If I build one, it won't compile very
     // easily.
