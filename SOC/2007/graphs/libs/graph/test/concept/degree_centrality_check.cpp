@@ -14,22 +14,20 @@ int
 main(int argc, char *argv[])
 {
     {
-        typedef descriptor_archetype Vertex;
         typedef incidence_graph_archetype<
-                Vertex,
                 undirected_tag,
                 allow_parallel_edge_tag
             > IncidenceGraph;
         typedef vertex_list_graph_archetype<
-                Vertex,
                 undirected_tag,
                 allow_parallel_edge_tag,
                 IncidenceGraph
-            > Graph;
+            > VertexListGraph;
+        typedef VertexListGraph::vertex_descriptor Vertex;
         typedef writable_property_map_archetype<Vertex, size_t> CentralityMap;
-        typedef degree_measure_archetype<Graph> Measure;
+        typedef degree_measure_archetype<VertexListGraph> Measure;
 
-        Graph& g = static_object<Graph>::get();
+        VertexListGraph& g = static_object<VertexListGraph>::get();
         CentralityMap cm;
         Measure m;
 
@@ -38,15 +36,37 @@ main(int argc, char *argv[])
     }
 
     {
-        typedef descriptor_archetype Vertex;
+        typedef vertex_list_graph_archetype<
+                directed_tag,
+                allow_parallel_edge_tag
+            > VertexListGraph;
+        typedef bidirectional_graph_archetype<
+                directed_tag,
+                allow_parallel_edge_tag,
+                VertexListGraph
+            > BidirectionalGraph;
+        typedef BidirectionalGraph::vertex_descriptor Vertex;
+        typedef read_write_property_map_archetype<Vertex, size_t> CentralityMap;
+        typedef degree_measure_archetype<BidirectionalGraph> Measure;
+
+        BidirectionalGraph& g = static_object<BidirectionalGraph>::get();
+        CentralityMap cm;
+        Measure m;
+
+        degree_centrality(g, cm, measure_influence(g));
+        degree_centrality(g, cm, measure_prestige(g));
+        degree_centrality(g, cm, m);
+    }
+
+    {
         typedef incidence_graph_archetype<
-                Vertex,
                 undirected_tag,
                 allow_parallel_edge_tag
-            > Graph;
-        typedef degree_measure_archetype<Graph> Measure;
+            > IncidenceGraph;
+        typedef IncidenceGraph::vertex_descriptor Vertex;
+        typedef degree_measure_archetype<IncidenceGraph> Measure;
 
-        Graph& g = static_object<Graph>::get();
+        IncidenceGraph& g = static_object<IncidenceGraph>::get();
         Vertex v = static_object<Vertex>::get();
         Measure m;
 
@@ -54,36 +74,21 @@ main(int argc, char *argv[])
         vertex_degree_centrality(g, v, m);
     }
 
-    // There isn't a bidirectional graph archetype so I don't really know
-    // how to test this. Even If I build one, it won't compile very
-    // easily.
     {
-        /*
-        typedef descriptor_archetype Vertex;
         typedef bidirectional_graph_archetype<
-                Vertex,
-                directed_tag,
+                undirected_tag,
                 allow_parallel_edge_tag
             > BidirectionalGraph;
-        typedef vertex_list_graph_archetype<
-                Vertex,
-                directed_tag,
-                allow_parallel_edge_tag,
-                BidirectionalGraph
-            > graph_type;
-        typedef read_write_property_map_archetype<Vertex, size_t> CentralityMap;
-        */
+        typedef BidirectionalGraph::vertex_descriptor Vertex;
+        typedef degree_measure_archetype<BidirectionalGraph> Measure;
 
-        // These don't actually work - apparently, it's not very easy
-        // to generate archetypes across concept hierarchies and have
-        // them concept-checked very easily.
+        BidirectionalGraph& g = static_object<BidirectionalGraph>::get();
+        Vertex v = static_object<Vertex>::get();
+        Measure m;
 
-        // graph_type& g = static_object<graph_type>::get();
-        // centrality_map_type cm;
-
-        // degree_centrality(g, cm);
-        // degree_centrality(g, cm, measure_prestige(g));
+        vertex_degree_centrality(g, v, measure_influence(g));
+        vertex_degree_centrality(g, v, measure_prestige(g));
+        vertex_degree_centrality(g, v, m);
     }
-
     return 0;
 }

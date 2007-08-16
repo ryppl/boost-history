@@ -8,6 +8,7 @@ project
     ;
 
 test-suite graph_test :
+    [ compile test_new_archetypes.cpp ]
     [ compile degree_centrality_check.cpp ]
     [ compile closeness_centrality_check.cpp ]
     [ compile mean_geodesic_check.cpp ]

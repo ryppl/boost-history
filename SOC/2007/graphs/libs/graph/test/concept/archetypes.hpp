@@ -8,24 +8,10 @@
 #ifndef BOOST_GRAPH_CONCEPT_CHECK_ARCHETYPES_HPP
 #define BOOST_GRAPH_CONCEPT_CHECK_ARCHETYPES_HPP
 
-#include <utility>
-#include <boost/graph/properties.hpp>
-#include <boost/graph/graph_traits.hpp>
-#include <boost/graph/graph_archetypes.hpp>
+#include "new_archetypes.hpp"
 
 namespace boost
 {
-    struct descriptor_archetype
-        : public
-            default_constructible_archetype<
-                copy_constructible_archetype<
-                    sgi_assignable_archetype<
-                        equality_comparable_archetype<> > > >
-    {
-        descriptor_archetype() { }
-        descriptor_archetype(detail::dummy_constructor) { }
-    };
-
     template <typename Graph>
     struct degree_measure_archetype
     {
