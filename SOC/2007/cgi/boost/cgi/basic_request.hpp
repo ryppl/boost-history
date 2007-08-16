@@ -130,7 +130,10 @@ namespace cgi {
     }
 
     /// Set a cookie
-    void set_cookie
+    void set_cookie(const std::string& name, const std::string& val)
+    {
+      this->service.set_cookie(this->impl, name, val);
+    }
 
     /// Synchronously read/parse the request meta-data
     /**
@@ -526,11 +529,6 @@ namespace cgi {
     void set_status(http::status_code status)
     {
       this->service.set_http_status(this->impl, status);
-    }
-
-    bool is_open()
-    {
-      return this->service.is_open(this->impl);
     }
 
     /// Set a user cookie
