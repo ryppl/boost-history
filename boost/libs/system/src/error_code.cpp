@@ -355,6 +355,8 @@ namespace
     while ( str.size()
       && (str[str.size()-1] == '\n' || str[str.size()-1] == '\r') )
         str.erase( str.size()-1 );
+    if ( str.size() && str[str.size()-1] == '.' ) 
+      { str.erase( str.size()-1 ); }
     return str;
   }
 # endif
