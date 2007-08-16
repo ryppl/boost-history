@@ -16,15 +16,17 @@ Except for when using CGI synchronously, a typical program will have two fundame
 [variablelist
   [
     [Gathering requests]
-    [  [link __accepting__ Accepting] requests;
+    [
+     [link __accepting__ Accepting] requests;
      [link __loading__ Loading] and parsing request meta-data;
     ]
   ]
   [
     [Handling requests]
-    [  Using the [link __meta_data__ meta-data];
-[link __writing__ Writing] a reply;
-[link boost.cgi.user_guide.handling_requests.wrapping_up Wrapping up];
+    [
+     Using the [link __meta_data__ meta-data];
+     [link __writing__ Writing] a reply;
+     [link boost.cgi.user_guide.handling_requests.wrapping_up Wrapping up];
     ]
   ]
 ] [/variablelist]

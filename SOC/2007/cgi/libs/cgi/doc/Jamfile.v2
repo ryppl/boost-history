@@ -3,7 +3,7 @@
 # subject to the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-project boost_cgi_doc
+project boost_cgi
   : build-dir ../../../bin.v2
   ;
 
@@ -42,7 +42,7 @@ boostbook standalone
     <xsl:param>boost.root=/usr/local/src/boost
     <xsl:param>boost.libraries=/usr/local/src/boost/libs/libraries.htm
     <xsl:param>boost.images=http://beta.boost.org/images
-#    <xsl:param>toc.max.depth=10
+    <xsl:param>toc.max.depth=0
     <xsl:param>toc.section.depth=3
     <xsl:param>chunk.section.depth=2
 	;

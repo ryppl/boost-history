@@ -8,7 +8,7 @@
 [library CGI
     [quickbook 1.3]
     [version 0.01]
-    [id boost.blam.cgi]
+    [id boost.cgi]
     [dirname the_document_dir]
     [copyright 2007 Darren Garvey]
     [purpose Thoughts about CGI implementation]
@@ -52,11 +52,11 @@
 
 [include preface.qbk]
 
+[include introduction.qbk]
+
 [section User Guide]
 
 This section of the docs is for all users of the library. For details about the internals of the library see either the __sources__ or the __reference__ section.
-
-[include introduction.qbk]
 
 [include user_guide/getting_started.qbk]
 
@@ -76,3 +76,5 @@ This section of the docs is for all users of the library. For details about the 
 [include reference.qbk]
 
 [/include acknowledgements.qbk]
+
+[include future_development.qbk]

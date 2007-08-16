@@ -13,14 +13,9 @@
 #include <map>
 #include <boost/system/error_code.hpp>
 
-//#include "../detail/extract_params.hpp"
-//#include "../role_type.hpp"
-//#include "../http/status_code.hpp"
-//#include "../map.hpp"
-//#include "../request_impl/cgi_request_impl.hpp"
-#include "../service_impl/cgi_service_impl_base.hpp"
+#include "cgi_request_impl.hpp"
+#include "../detail/cgi_service_impl_base.hpp"
 #include "../detail/extract_params.hpp"
-#include "../request_impl/cgi_request_impl.hpp"
 #include "../connections/stdio.hpp"
 
 namespace cgi {

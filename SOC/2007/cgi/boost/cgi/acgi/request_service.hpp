@@ -14,7 +14,7 @@
 #include "../io_service.hpp"
 #include "../map.hpp"
 #include "../request_impl/acgi_request_impl.hpp"
-#include "cgi_service_impl_base.hpp"
+#include "../detail/cgi_service_impl_base.hpp"
 #include "../detail/service_base.hpp"
 #include "../io_service.hpp"
 #include "../detail/extract_params.hpp"

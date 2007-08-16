@@ -43,13 +43,25 @@ You should probably just read it in order. Simple enough, no?
 
 [section Naming Conventions]
 
+[table
+  [[Library 'tag'] [Underlying Protocol] [`typedef`s]]
+  [[][][request][service][acceptor]]
+  [[tags::cgi][CGI][cgi_request][cgi_service][cgi_acceptor]]
+  [[tags::fcgi][FastCGI][fcgi_request][fcgi_service][fcgi_acceptor]]
+]
+
 CGI       -> cgi
-async CGI -> acgi
+
+asynchronous CGI/aCGI acgi
+
 FastCGI   -> fcgi
+
 SCGI      -> scgi
 
 *_request
+
 *_acceptor
+
 *_service
 
 [endsect]
