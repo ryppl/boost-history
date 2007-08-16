@@ -3,7 +3,7 @@ src = \
 	mean_geodesic.tex \
 	graph_mean_geodesic.tex \
 	closeness.tex \
-	norm_closeness.tex \
+	scaled_closeness.tex \
 	betweenness.tex \
 	relative_betweenness.tex \
 	central_point_dominance.tex
