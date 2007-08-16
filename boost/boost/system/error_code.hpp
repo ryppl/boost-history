@@ -235,14 +235,7 @@ namespace boost
 
     };
 
-
     //  non-member functions  ------------------------------------------------//
-
-
-    //  posix::posix_errno make_error_code:
-    inline error_code make_error_code( posix::posix_errno e )
-      { return error_code( e, posix_category ); }
-
 
     // TODO: both of these may move elsewhere, but the LWG hasn't spoken yet.
 
@@ -263,6 +256,10 @@ namespace boost
             : 0);
     }
 
+    //  make_error_code for posix::posix_errno  ------------------------------//
+
+    inline error_code make_error_code( posix::posix_errno e )
+      { return error_code( e, posix_category ); }
 
     //  error_category implementation  ---------------------------------------//
 
