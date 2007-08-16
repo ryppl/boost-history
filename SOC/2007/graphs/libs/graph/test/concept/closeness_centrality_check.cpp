@@ -14,12 +14,11 @@ int
 main(int argc, char *argv[])
 {
     {
-        typedef descriptor_archetype Vertex;
         typedef vertex_list_graph_archetype<
-                Vertex,
                 undirected_tag,
                 allow_parallel_edge_tag
             > Graph;
+        typedef Graph::vertex_descriptor Vertex;
         typedef writable_property_map_archetype<Vertex, float> CentralityMap;
         typedef readable_property_map_archetype<Vertex, size_t> DistanceMap;
         typedef readable_property_map_archetype<Vertex, DistanceMap> DistanceMatrix;
@@ -32,6 +31,23 @@ main(int argc, char *argv[])
 
         closeness_centrality(g, dm, cm);
         closeness_centrality(g, dm, cm, m);
+    }
+
+    {
+        typedef vertex_list_graph_archetype<
+                undirected_tag,
+                allow_parallel_edge_tag
+            > Graph;
+        typedef Graph::vertex_descriptor Vertex;
+        typedef readable_property_map_archetype<Vertex, size_t> DistanceMap;
+        typedef distance_measure_archetype<Graph, size_t, float> Measure;
+
+        Graph& g = static_object<Graph>::get();
+        DistanceMap dm;
+        Measure m;
+
+        vertex_closeness_centrality(g, dm);
+        vertex_closeness_centrality(g, dm, m);
     }
 
     return 0;

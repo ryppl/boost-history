@@ -22,12 +22,12 @@ main(int argc, char *argv[])
                 undirected_tag,
                 allow_parallel_edge_tag,
                 IncidenceGraph
-            > VertexListGraph;
-        typedef VertexListGraph::vertex_descriptor Vertex;
+            > Graph;
+        typedef Graph::vertex_descriptor Vertex;
         typedef writable_property_map_archetype<Vertex, size_t> CentralityMap;
-        typedef degree_measure_archetype<VertexListGraph> Measure;
+        typedef degree_measure_archetype<Graph> Measure;
 
-        VertexListGraph& g = static_object<VertexListGraph>::get();
+        Graph& g = static_object<Graph>::get();
         CentralityMap cm;
         Measure m;
 
@@ -44,12 +44,12 @@ main(int argc, char *argv[])
                 directed_tag,
                 allow_parallel_edge_tag,
                 VertexListGraph
-            > BidirectionalGraph;
-        typedef BidirectionalGraph::vertex_descriptor Vertex;
+                        > Graph;
+        typedef Graph::vertex_descriptor Vertex;
         typedef read_write_property_map_archetype<Vertex, size_t> CentralityMap;
-        typedef degree_measure_archetype<BidirectionalGraph> Measure;
+        typedef degree_measure_archetype<Graph> Measure;
 
-        BidirectionalGraph& g = static_object<BidirectionalGraph>::get();
+        Graph& g = static_object<Graph>::get();
         CentralityMap cm;
         Measure m;
 
@@ -62,11 +62,11 @@ main(int argc, char *argv[])
         typedef incidence_graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > IncidenceGraph;
-        typedef IncidenceGraph::vertex_descriptor Vertex;
-        typedef degree_measure_archetype<IncidenceGraph> Measure;
+                        > Graph;
+        typedef Graph::vertex_descriptor Vertex;
+        typedef degree_measure_archetype<Graph> Measure;
 
-        IncidenceGraph& g = static_object<IncidenceGraph>::get();
+        Graph& g = static_object<Graph>::get();
         Vertex v = static_object<Vertex>::get();
         Measure m;
 
@@ -78,11 +78,11 @@ main(int argc, char *argv[])
         typedef bidirectional_graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > BidirectionalGraph;
-        typedef BidirectionalGraph::vertex_descriptor Vertex;
-        typedef degree_measure_archetype<BidirectionalGraph> Measure;
+                        > Graph;
+        typedef Graph::vertex_descriptor Vertex;
+        typedef degree_measure_archetype<Graph> Measure;
 
-        BidirectionalGraph& g = static_object<BidirectionalGraph>::get();
+        Graph& g = static_object<Graph>::get();
         Vertex v = static_object<Vertex>::get();
         Measure m;
 
@@ -90,5 +90,6 @@ main(int argc, char *argv[])
         vertex_degree_centrality(g, v, measure_prestige(g));
         vertex_degree_centrality(g, v, m);
     }
+
     return 0;
 }
