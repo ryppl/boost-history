@@ -44,7 +44,7 @@ main(int argc, char *argv[])
                 directed_tag,
                 allow_parallel_edge_tag,
                 VertexListGraph
-                        > Graph;
+            > Graph;
         typedef Graph::vertex_descriptor Vertex;
         typedef read_write_property_map_archetype<Vertex, size_t> CentralityMap;
         typedef degree_measure_archetype<Graph> Measure;
@@ -62,7 +62,7 @@ main(int argc, char *argv[])
         typedef incidence_graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-                        > Graph;
+            > Graph;
         typedef Graph::vertex_descriptor Vertex;
         typedef degree_measure_archetype<Graph> Measure;
 
@@ -78,7 +78,7 @@ main(int argc, char *argv[])
         typedef bidirectional_graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-                        > Graph;
+            > Graph;
         typedef Graph::vertex_descriptor Vertex;
         typedef degree_measure_archetype<Graph> Measure;
 
