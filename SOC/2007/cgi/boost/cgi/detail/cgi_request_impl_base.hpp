@@ -14,11 +14,11 @@
 #include <boost/noncopyable.hpp>
 #include <boost/shared_ptr.hpp>
 
-#include "../http/status_code.hpp"
-#include "../connections/stdio.hpp"
-#include "../role_type.hpp"
-#include "../status_type.hpp"
-#include "../map.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/connections/stdio.hpp"
+#include "boost/cgi/role_type.hpp"
+#include "boost/cgi/status_type.hpp"
+#include "boost/cgi/map.hpp"
 //#include
 
 // Make this ProtocolService-independent
@@ -53,9 +53,8 @@ namespace cgi {
     {
     }
 
-    conn_ptr connection() { return connection_; }
-
   protected:
+    conn_ptr connection() { return connection_; }
 
     friend class cgi_service_impl_base<RequestImpl>;
 

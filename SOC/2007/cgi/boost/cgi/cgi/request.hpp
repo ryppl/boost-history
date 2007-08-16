@@ -10,10 +10,10 @@
 #define CGI_CGI_REQUEST_HPP_INCLUDED__
 
 #include "request_service.hpp"
-#include "../tags.hpp"
-#include "../basic_request_fwd.hpp"
-#include "../request_impl/cgi_request_impl.hpp"
-#include "../basic_request.hpp"
+#include "boost/cgi/tags.hpp"
+#include "boost/cgi/basic_request_fwd.hpp"
+#include "boost/cgi/cgi/cgi_request_impl.hpp"
+#include "boost/cgi/basic_request.hpp"
 
 namespace cgi {
 

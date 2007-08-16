@@ -7,13 +7,13 @@
 
 [section Preface]
 
-[section Overview]
+[: [*['All science is either Physics, or stamp collecting.]] [br] -- Ernest Rutherford.]
+
+[h3 Overview]
 
 Boost.CGI is a library for writing CGI programs in Standard C++. It can be used to write anything from simple 'adming scripts' to full-fledged, scalable applications. This library rests on top of and should appear familiar to users of Boost.Asio. Currently the __cgi__, [-__scgi__ and __fcgi__] protocols are supported.
 
-[endsect]
-
-[section Motivation]
+[h3 Motivation]
 
 C++ isn't a particularly common choice for CGI programming, although it is a powerful one and can be used to produce maintainable and uncompromisingly efficient applications with any feature possible in any other language.
 
@@ -32,43 +32,24 @@ A complete discussion about the benefits of CGI programming in C++ is beyond the
 * C++ rarely misses out on access to new technologies: for instance, if a new RDBMS came out tomorrow, it would almost certainly ship with a C/C++ API. The same would not be true for most other languages.
 
 
+In these days of 'Web 2.0' - with web applications becoming increasingly complex and responsive (ie. asynchronous, vis-à-vis AJAX) all the while being required to scale boundlessly - the benefits of C++ begin to show.
 
-In these days of 'Web 2.0' - with web applications becoming increasingly complex and responsive (ie. asynchronous, vis-à-vis AJAX) all while being required to scale boundlessly - the benefits of C++ begin to appear.
+[h3 How to use this manual]
 
-[endsect]
-
-[section How to use this manual]
-
-You should probably just read it in order. Simple enough, no?
-
-[section Naming Conventions]
-
-[table
-  [[Library 'tag'] [Underlying Protocol] [`typedef`s]]
-  [[][][request][service][acceptor]]
-  [[tags::cgi][CGI][cgi_request][cgi_service][cgi_acceptor]]
-  [[tags::fcgi][FastCGI][fcgi_request][fcgi_service][fcgi_acceptor]]
+[note
+At the moment, the Boost [@http://www.boost.org/more/lib_guide.htm#Guidelines style guidelines] aren't honoured properly or consistently. Please ignore this for now, as the ambiguity is intentional and is simple enough to rectify.
 ]
 
-CGI       -> cgi
+Start with the introduction, then the tutorial. You can skip the 'scripting' section, as that is a quickstart and the information in it is repeated throughout the rest of the manual. The doxygen header reference is very ugly for now and is going to be heavily reworked and reorganised.
 
-asynchronous CGI/aCGI acgi
+[h4 Naming Conventions]
 
-FastCGI   -> fcgi
+[h5 Macros]
 
-SCGI      -> scgi
+Macros are prefixed with `BOOST_CGI_*`
 
-*_request
+[h5 Code snippets]
 
-*_acceptor
-
-*_service
-
-[endsect]
-
-
-[endsect]
-
-
+As you are probably used to, it is assumed that code snippets in this manual have the correct `#include`s and "`using namespace cgi;`" prepended to them. Information about the correct headers to include can be found [link __headers__ here].
 
 [endsect]

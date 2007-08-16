@@ -6,7 +6,7 @@
  /]
 
 [library CGI
-    [quickbook 1.3]
+    [quickbook 1.4]
     [version 0.01]
     [id boost.cgi]
     [dirname the_document_dir]
@@ -32,49 +32,41 @@
 [def __tutorial__           [link boost.cgi.tutorial tutorial]]
 [def __reference__          [link /doc/html/cgi/reference.html reference]]
 
-[/
-[def __Service__ #link#to#service#concept#description#]
+[def __GET__  `GET` ]
+[def __POST__ `POST`]
+[def __HEAD__ `HEAD`]
+[def __PUT__  `PUT` ]
 
-[def __boost_thread__ #link#to#boost#thread#docs#]
-[def __IoService__ #link#to#io#service#docs#]
-[def __protocol__ #link#to#protocol#section# boost.user_guide.protocols]
-[def __ProtocolService__ boost.reference.concepts.protocol_service]
-[def __io_service__ #link#to#doxygen#reference#]
-[def __async_write__
-     __async_read__
-     __async_write_some__
-     __async_read_some__
-]
-]
-[def __accepting__ boost.cgi.user_guide.tutorial.accepting]
-[def __loading__   boost.cgi.user_guide.tutorial.loading]
+
+[def __Service__ [@http://asio.sourceforge.net/boost_asio_0_3_8/libs/asio/doc/html/boost_asio/reference/Service.html Service]]
+
+[/def __boost_thread__ #link#to#boost#thread#docs#]
+[/def __IoService__ #link#to#io#service#docs#]
+[/def __protocol__ #link#to#protocol#section# boost.user_guide.protocols]
+[/def __ProtocolService__ boost.reference.concepts.protocol_service]
+[/def __io_service__ #link#to#doxygen#reference#]
+[/def __async_write__]
+[/     __async_read__]
+[/     __async_write_some__]
+[/     __async_read_some__]
+
+[/ 'ug' is the id of the User's Guide section]
+[/ 'gs' is the id of the Getting Started section, which is in the User's Guide]
+[/ 'tut' is the id of the Tutorial, which is in the User's Guide]
+
+[def __headers__   boost.cgi.ug.gs.headers]
+[def __accepting__ boost.cgi.ug.tut.accepting]
+[def __loading__   boost.cgi.ug.tut.loading]
 
 
 [include preface.qbk]
 
 [include introduction.qbk]
 
-[section User Guide]
-
-This section of the docs is for all users of the library. For details about the internals of the library see either the __sources__ or the __reference__ section.
-
-[include user_guide/getting_started.qbk]
-
-[include user_guide/protocols.qbk]
-
-[include user_guide/tutorial.qbk]
-
-[include user_guide/examples.qbk]
-
-[endsect]
-
+[include user_guide.qbk]
 
 [xinclude ../cgi_dox.boostbook]
 
-[/xinclude ../output.boostbook]
-
-[include reference.qbk]
+[include future_development.qbk]
 
 [/include acknowledgements.qbk]
-
-[include future_development.qbk]

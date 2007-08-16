@@ -13,12 +13,12 @@ After a request has been accepted, it must also be 'loaded'. Before being loaded
   [[Function signature] [Purpose]]
   [
     [`void basic_request<>::load(bool parse_stdin = true)`]
-    [Loads the request meta-data into internal `cgi::map`s. If `parse_stdin == true`, which it is by default, CGI POST data is also read and parsed. If an error occurs, an exception is thrown.]
+    [Loads the request meta-data into internal `cgi::map`s.[br][br]If `parse_stdin == true`, which it is by default, CGI POST data is also read and parsed. If an error occurs, an exception is thrown.]
   ]
   [
     [`boost::system::error_code&
     basic_request<>::load(boost::system::error_code& ec, bool parse_stdin = true)`]
-    [Loads the request meta-data into internal `cgi::map`s. If `parse_stdin == true`, which it is by default, CGI POST data is also read and parsed. If an error occurs, ec is set to the value of the error such that `!ec == false`.]
+    [Loads the request meta-data into internal `cgi::map`s.[br][br]If `parse_stdin == true`, which it is by default, CGI POST data is also read and parsed. If an error occurs, ec is set to the value of the error such that `!ec == false`.]
   ]
   [
     [`void basic_request<>::async_load(bool parse_stdin, Handler handler)`]
@@ -26,7 +26,7 @@ After a request has been accepted, it must also be 'loaded'. Before being loaded
   ]
 ] [/table]
 
-What the call does is aquire the request environment data as necessary and parse the CGI GET and HTTP_COOKIE variables. Also, if `parse_stdin == true` and the request method is POST, the CGI POST data will be read and parsed.
+What the call does is aquire the request environment data as necessary and parse the CGI __GET__ and `"HTTP_COOKIE"` variables. Also, if `parse_stdin == true` and the request method is POST, the CGI __POST__ data will be read and parsed.
 
 [h5 CGI example]
 

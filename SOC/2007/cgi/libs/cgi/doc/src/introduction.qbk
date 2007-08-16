@@ -7,6 +7,22 @@
 
 [section:intro Introduction]
 
+``
+#include <boost/cgi/cgi.hpp>
+using namespace cgi;
+
+int main(int, char**)
+{
+  request req;
+  reply rep;
+
+  rep<< "Hello there, Universe. "
+     << "Oh wait, no, it's you " << req.meta_form("name")
+     << ", isn't it?!";
+  rep.send(req);
+}
+``
+
 This CGI library reasonably high-level library for web programming. Herein the controller portion of the Model-View-Controller idiom is implemented. The intricacies of dealing with the widely varying specifications of CGI, FastCGI and SCGI are abstracted into three main sub-parts:
 
 * Accepting,
@@ -23,7 +39,7 @@ If a program's purpose is to serve the wider world, it should be written with sc
 Even though a `cgi::srequest` is set up differently to asynchronous request types, the alternative `cgi::request` (or the explicit form `cgi::acgi_request`) can be used in exactly the same way as FastCGI and SCGI requests. This symmetry makes migrating code between different protocols trivial (see [link __interoperability__ interoperability] for more) and aids debugging of server configuration issues.
 ]
 
-FastCGI and SCGI both remove this restriction and there is support for them - of widely varying quality and completeness (see [link __server_support__ here])- in most HTTP servers. These protocols add an extra layer to your CGI programs, as you now must manage the request queue.
+FastCGI and SCGI both remove this restriction and there is support for them - of widely varying quality and completeness (see [link __server_support__ here]) - in most HTTP servers. These protocols add an extra layer to your CGI programs, as you now must manage the request queue.
 
 In return for the added complexity, your programs become complete servers, capable of handling arbitrary numbers of requests during each invocation (assuming they don't crash!): Database connections can be kept open between requests; ready-parsed XML files can be cached; processing of a client request can even be continued in the case of the client crashing - the reply can be cached and returned to them when they return - saving precious CPU cycles.
 

@@ -7,13 +7,13 @@
 
 [section:accepting Accepting Requests]
 
-A `basic_request_acceptor<>` is responsible for accepting requests. There are __common_typedef__s for ease of use, as with `basic_request<>`s. A program written for SCGI or FastCGI will generally have one acceptor running in a loop. A `cgi_request` cannot be used with an acceptor, but acgi_request`s will work fine: ie. only the first accept will succeed.
+A `basic_request_acceptor<>` is responsible for accepting requests. There are [link __naming_conventions__ common typedefs] for ease of use, as with `basic_request<>`s. A program written for SCGI or FastCGI will generally have one acceptor running in a loop. A `cgi_request` cannot be used with an acceptor, but an `acgi_request` will work fine: ie. only the first accept will succeed.
 
 Accepting requests is considered distinct to the [link __loading__ loading] stage for several reasons, the most significant of which is to allow for multiplexing protocols like FastCGI work with the library.
 
-All you need do is create an `*_acceptor` by passing an instance of a __ProtocolService__ to its constructor. The following member functions are available:
+All you need do is create an `*_acceptor` by passing an instance of a __ProtocolService__ to its constructor. The following member functions are available (take xcgi to imply one of fcgi/scgi/acgi):
 
-[table [/xcgi_acceptor member functions]
+[table
   [[Function signature] [Purpose]]
   [
     [`void accept(xcgi_request& empty_request)`]

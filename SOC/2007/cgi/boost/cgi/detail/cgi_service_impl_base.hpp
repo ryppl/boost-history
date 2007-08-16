@@ -10,9 +10,9 @@
 #include <boost/tokenizer.hpp>
 #include <boost/system/error_code.hpp>
 
-#include "../map.hpp"
-#include "../role_type.hpp"
-#include "../detail/extract_params.hpp"
+#include "boost/cgi/map.hpp"
+#include "boost/cgi/role_type.hpp"
+#include "boost/cgi/detail/extract_params.hpp"
 //#include "../connections/stdio.hpp"
 
 namespace cgi {

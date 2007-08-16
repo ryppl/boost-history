@@ -30,7 +30,7 @@ Synchronous and asynchronous CGI support are considered distinct within the libr
 
 The distinction between CGI and aCGI is that aCGI uses __asio__'s io_service to perform asynchronous operations - whereas CGI does not provide such operations - and is also more complicated to use. A distinction has been made with the sole purpose of lowering the entry barrier to the library and to provide a means of migrating programs over to use this library.
 
-[h4:differences Differences Between CGI and aCGI Programs]
+[h4 Differences Between CGI and aCGI Programs]
 
     ['See also: __hello_world__]
 
@@ -115,8 +115,8 @@ Although far less optimized than FastCGI, SCGI is still a large step up from CGI
 [section:comparison Feature Comparison]
 
 [table
-    [[                        ] [Protocol                     ]]
-    [[Feature                 ] [CGI] [aCGI] [FastCGI] [SCGI  ]]
+    [[Feature                 ] [Protocol                     ]]
+    [[                        ] [CGI] [aCGI] [FastCGI] [SCGI  ]]
     [[Requires io_service     ] [No ] [Yes ] [Yes    ] [Yes   ]]
     [[Is natively asynchronous] [No ] [No  ] [Yes    ] [Yes   ]]
     [[Has native error stream ] [Yes] [Yes ] [Yes    ] [Shared]]

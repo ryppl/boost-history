@@ -11,10 +11,10 @@ Boost.CGI is a header-only library (for now), but it relies on [link __boost_sys
 
 [/h5 What you need:]
 
-Boost-related elements can be downloaded from the Boost download site at sourceforge, [@http://sf.net/project/showfiles.php?group_id=7586 located here].
-
 [note
-"invoking `bjam`" implies calling "`bjam --toolset=<your_toolset>`", where "`<your_toolset>`" is one of [@http://www.boost.org/doc/html/bbv2/reference.html#bbv2.reference.tools.compilers these]. More information can be found [link __boost_getting_started__ here] (these are general instructions for building Boost [*and] configuring `bjam`. Following these instructions will also 'tick' the first two requirements below.
+* Boost-related elements can be downloaded from the Boost download site at sourceforge, here: http://sf.net/project/showfiles.php?group_id=7586
+
+* "invoking `bjam`" implies calling "`bjam --toolset=`[link __toolsets__ one_of_these]". More information can be found [link __boost_getting_started__ here] (these are general instructions for building Boost [*and] configuring `bjam`. Following these instructions will also 'tick' the first two requirements below.
 ]
 
 [table What you need
@@ -27,9 +27,11 @@ Boost-related elements can be downloaded from the Boost download site at sourcef
   [
    [Boost.System]
    [No]
-   [1. Download the latest Boost distro, 'boost'.[br][br]
-   2. Set the environment variable BOOST_ROOT on your system to the download location.
-   3. Go to the directory BOOST_ROOT and invoke `bjam` (see above). This should finish without any fails.]
+   [* Download the latest Boost distro, 'boost'.
+
+   * Set the environment variable BOOST_ROOT on your system to the download location.
+
+   * Go to the directory BOOST_ROOT and invoke `bjam` (see above). This should finish without any fails.]
   ]
   [
    [Documentation]

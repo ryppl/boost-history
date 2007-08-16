@@ -9,9 +9,9 @@
 #ifndef CGI_REQUEST_TRAITS_HPP_INCLUDED__
 #define CGI_REQUEST_TRAITS_HPP_INCLUDED__
 
-#include "../tags.hpp"
-#include "../basic_request_fwd.hpp"
-#include "../basic_connection_fwd.hpp"
+#include "boost/cgi/tags.hpp"
+#include "boost/cgi/basic_request_fwd.hpp"
+#include "boost/cgi/basic_connection_fwd.hpp"
 
 namespace cgi {
 

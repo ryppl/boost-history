@@ -11,10 +11,9 @@
 
 #include "request_impl.hpp"
 #include "request_service.hpp"
-#include "../tags.hpp"
-#include "../basic_request_fwd.hpp"
-#include "../request_impl/acgi_request_impl.hpp"
-//#include "../service_impl/acgi_service_impl.hpp"
+#include "boost/cgi/tags.hpp"
+#include "boost/cgi/basic_request_fwd.hpp"
+#include "boost/cgi/acgi/request_impl.hpp"
 
 namespace cgi {
 

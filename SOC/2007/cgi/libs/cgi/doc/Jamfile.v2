@@ -43,8 +43,8 @@ boostbook standalone
     <xsl:param>boost.libraries=/usr/local/src/boost/libs/libraries.htm
     <xsl:param>boost.images=http://beta.boost.org/images
     <xsl:param>toc.max.depth=0
-    <xsl:param>toc.section.depth=3
-    <xsl:param>chunk.section.depth=2
+    <xsl:param>toc.section.depth=2
+    <xsl:param>chunk.section.depth=10
 	;
 
 #install html

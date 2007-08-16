@@ -12,15 +12,15 @@
 // #include all protocol-independent headers only. Protocol-specific
 // headers can just include this after other headers.
 
-#include "../buffer.hpp"
-#include "../map.hpp"
-#include "../io_service.hpp"
-#include "../streambuf.hpp"
-#include "../basic_request.hpp"
-//#include "../basic_request_acceptor.hpp"
-#include "../reply.hpp"
-//#include "../logger.hpp"
-#include "../read.hpp"
-#include "../write.hpp"
+#include "boost/cgi/buffer.hpp"
+#include "boost/cgi/map.hpp"
+#include "boost/cgi/io_service.hpp"
+#include "boost/cgi/streambuf.hpp"
+#include "boost/cgi/basic_request.hpp"
+//#include "boost/cgi/basic_request_acceptor.hpp"
+#include "boost/cgi/reply.hpp"
+//#include "boost/cgi/logger.hpp"
+#include "boost/cgi/read.hpp"
+#include "boost/cgi/write.hpp"
 
 #endif // CGI_CGI_CGI_HPP_INCLUDED__

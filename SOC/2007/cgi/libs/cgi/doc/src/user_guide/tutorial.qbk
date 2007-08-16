@@ -5,32 +5,25 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section Tutorial]
-
-[tip Have you read __reading_the_docs__?]
+[section:tut Tutorial]
 
 Except for when using CGI synchronously, a typical program will have two fundamental parts:
 
 [/handling a client request generally involves the following stages:]
 
-[variablelist
-  [
-    [Gathering requests]
-    [
-     [link __accepting__ Accepting] requests;
-     [link __loading__ Loading] and parsing request meta-data;
-    ]
-  ]
-  [
-    [Handling requests]
-    [
-     Using the [link __meta_data__ meta-data];
-     [link __writing__ Writing] a reply;
-     [link boost.cgi.user_guide.handling_requests.wrapping_up Wrapping up];
-    ]
-  ]
-] [/variablelist]
+[h4 Gathering requests]
 
+* [link __accepting__ Accepting] requests;
+
+* [link __loading__ Loading] and parsing request meta-data;
+
+[h4 Handling requests]
+
+* Using the [link __meta_data__ meta-data];
+
+* [link __writing__ Writing] a reply;
+
+* [link boost.cgi.ug.handling_requests.wrapping_up Wrapping up];
 
 [include tutorial/accepting.qbk]
 
