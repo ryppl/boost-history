@@ -9,9 +9,6 @@ import os ;
 
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
-#project boost/cgi/examples/acgi
-#  : build-dir ../bin.v2
-#  ;
 
 SOURCES = main ;
 

@@ -93,10 +93,9 @@ namespace cgi {
 
 
     template<typename Handler>
-    void async_load(impl_type& impl, bool parse_stdin, boost::system::error_code& ec
-                   , Handler handler)
+    void async_load(impl_type& impl, bool parse_stdin, Handler handler)
     {
-      service_impl_.async_load(impl, parse_stdin, ec, handler);
+      service_impl_.async_load(impl, parse_stdin, handler);
     }
 
     bool is_open(impl_type& impl)

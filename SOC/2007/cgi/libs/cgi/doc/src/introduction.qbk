@@ -7,6 +7,24 @@
 
 [section:intro Introduction]
 
+This CGI library reasonably high-level library for web programming. In the Model-View-Controller idiom, herein is implemented the controller portion. The intricacies of dealing with the widely varying specifications of CGI, FastCGI and SCGI are abstracted into three main sub-parts:
 
+* Accepting,
+
+* Loading, and
+
+* Handling
+
+This is all described in more detail in the [link __tutorial__ tutorial].
+
+If a program's purpose is to serve the wider world, it should be written with scalability in mind. The `cgi::srequest` (the 's' is for 'synchronous' - ie. asynchronous operations cannot be used with it) that the [link __quickstart__ quickstart] introduces is simple to use and ideal for shorter, light-use programs, such as admin scripts. However when it comes to heavily used web applications CGI has an inherent limitation: there must be a complete heavyweight process for each client.
+
+FastCGI and SCGI both remove this restriction and there is support for them - of widely varying quality and completeness (see [link __server_support__ here])- in most HTTP servers. These protocols add an extra layer to your CGI programs, as you now must manage the request queue.
+
+Parsing of request meta-data can be done at any point in the program, or not at all. Reading and parsing of data is referred to as '[link __loading__ loading]' and this follows '[link __accepting__ accepting]' a request.
+
+Fortunately, this layer can be largely isolated from the rest of your program logic and development of both can continue in parallel. The two parts share a [link __Service__ service], such as a `cgi::fcgi_service` (similar in use to an [link __asio_io_service__ asio::io_service] for those familiar with [link __asio__ Boost.Asio]).
+
+The [link __examples__ examples] are divided like this.
 
 [endsect]

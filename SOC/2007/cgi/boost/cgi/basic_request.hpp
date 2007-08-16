@@ -95,7 +95,7 @@ namespace cgi {
     {
       if (load_now) load(ec, parse_post);//this->service.load(this->impl, true, ec);
     }
-      
+
     basic_request(protocol_service_type& s, const bool load_now = false
                  , const bool parse_post = false)
       : basic_io_object<Service>(s.io_service())
@@ -123,6 +123,15 @@ namespace cgi {
       return this->service.is_open(this->impl);
     }
 
+    /// Set a header
+    void set_header(const std::string& name, const std::string& val)
+    {
+      this->service.set_header(this->impl, name, val);
+    }
+
+    /// Set a cookie
+    void set_cookie
+
     /// Synchronously read/parse the request meta-data
     /**
      * Note: 'loading' including reading/parsing STDIN if parse_stdin == true
@@ -137,11 +146,11 @@ namespace cgi {
 
     // Error-code semantics
     boost::system::error_code& load(boost::system::error_code& ec
-				                   , bool parse_stdin = false)
+                                   , bool parse_stdin = false)
     {
       return this->service.load(this->impl, parse_stdin, ec);
     }
-    
+
 
     /// Asynchronously read/parse the request meta-data
     /**
@@ -224,6 +233,10 @@ namespace cgi {
     }
 
     /// Write some data to the client
+    /**
+     * Note: on the first write, the header block is closed (with a blank
+     * line).
+     */
     template<typename ConstBufferSequence/*, typename Sink*/>
     std::size_t write_some(const ConstBufferSequence& buf)
     {
@@ -234,6 +247,10 @@ namespace cgi {
     }
 
     /// Write some data to the client
+    /**
+     * Note: on the first write, the header block is closed (with a blank
+     * line).
+     */
     template<typename ConstBufferSequence/*, typename Sink*/>
     std::size_t write_some(const ConstBufferSequence& buf
                           , boost::system::error_code& ec)

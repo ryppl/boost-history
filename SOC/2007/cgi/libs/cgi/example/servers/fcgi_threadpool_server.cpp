@@ -15,7 +15,7 @@ namespace cgi {
     typedef cgi::fcgi_acceptor                        acceptor_type;
     typedef boost::function<int (cgi::fcgi_request&)> handler_type;
 
-    /// Constructor
+    /// Constructor (could use Boost.Parameter)
     fcgi_threadpool_server(int num_threads, const handler_type& handler)
       : service_()
       , acceptor_(service_)
@@ -27,6 +27,9 @@ namespace cgi {
     }
 
     /// Run the io_service(s) that service_ uses
+    /**
+     * This call will block until all of the service_'s work has been completed.
+     */
     void run()
     {
       for (int i = num_threads_; i != 0; i++)
@@ -37,22 +40,28 @@ namespace cgi {
       thread_group_.join_all();
     }
 
+    /// Stop the server
+    /**
+     * All outstanding async operations will be cancelled when the acceptor
+     * is closed. The server should not be used again until after a call to
+     * `reset`.
+     */
     void stop()
     {
-      acceptor_.cancel();
       acceptor_.close();
     }
 
+    /// Start an async accept on a new request object
     void start_accept()
     {
-      request_type::pointer new_request(new request_type(service_));
-      acceptor_.async_accept(new_request
-                            , boost::bind(&type::accept_handler
+      request_type::pointer new_request = request_type::create(service_);
+      acceptor_.async_accept(*new_request
+                            , boost::bind(&type::handle_accept
                                          , shared_from_this(), new_request
                                          , boost::arg<1>));
     }
 
-    /// If no errors, asynchronously load the request and call start_accept() again
+    /// Asynchronously load the request and call `start_accept` again
     void handle_accept(request_type::pointer req, boost::system::error_code& ec)
     {
       if (!ec)

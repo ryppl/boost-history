@@ -34,15 +34,19 @@ namespace cgi {
     //: public protocol_traits<Protocol> // do this!
   {
   public:
-    typedef Protocol                          protocol_type;
-    typedef IoServiceProvider                 ios_provider_type;
+    typedef Protocol                                         protocol_type;
+    typedef IoServiceProvider                                ios_provider_type;
     typedef typename detail::protocol_traits<Protocol>::type traits;
-    typedef typename traits::request_type     request_type;
-    //typedef typename traits::gateway_type   gateway_type;
-    //typedef basic_gateway<Protocol>           gateway_type;
-    //typedef basic_request<Protocol>         request_type;
-    typedef typename boost::shared_ptr<request_type>   request_ptr;
-    //typedef basic_acceptor<Protocol>          acceptor_type;
+    typedef typename traits::request_type                    request_type;
+    typedef typename boost::shared_ptr<request_type>         request_ptr;
+    typedef std::set<request_type::pointer>                  set_type;
+      //typename boost::mpl::if_<
+      //  boost::is_same<protocol_type, tags::acgi>::value
+      //  , request_type::pointer
+      //  , std::set<request_type::pointer>
+      //  >::type
+      
+    typedef std::queue<request_type::pointer>                queue_type;
 
 
     basic_protocol_service(int pool_size_hint = 1)
@@ -131,8 +135,8 @@ namespace cgi {
     //boost::asio::strand strand_;
 
 
-    std::set<request_ptr> request_set_;
-    std::queue<request_ptr> request_queue_;
+    set_type request_set_;
+    queue_type request_queue_;
 
     //gateway_type gateway_;
 
