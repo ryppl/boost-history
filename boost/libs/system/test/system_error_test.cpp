@@ -39,13 +39,13 @@ namespace
   {
     std::cout << "test " << desc << "\n what() returns \"" << ex.what() << "\"\n";
     BOOST_CHECK( ex.code().value() == v );
-//    BOOST_CHECK( ex.code().category() == posix_category );
-//# ifdef BOOST_WINDOWS_API
-//    BOOST_CHECK( std::string( ex.what() ) == str );
-//    if ( std::string( ex.what() ) != str )
-//      std::cout << "expected \"" << str << "\", but what() returned \""
-//        << ex.what() << "\"\n";
-//# endif
+    BOOST_CHECK( ex.code().category() == system_category );
+# ifdef BOOST_WINDOWS_API
+    BOOST_CHECK( std::string( ex.what() ) == str );
+    if ( std::string( ex.what() ) != str )
+      std::cout << "expected \"" << str << "\", but what() returned \""
+        << ex.what() << "\"\n";
+# endif
   }
 
   const boost::uint_least32_t uvalue = 1u;
@@ -62,10 +62,10 @@ int test_main( int, char *[] )
   system_error se_1u_m( uvalue, system_category, "se_1u_m" );
 
   TEST( se_0_m, 0, "se_0_m" );
-  TEST( se_1_m, 1, "se_1_m: Operation not permitted" );
+  TEST( se_1_m, 1, "se_1_m: Incorrect function" );
   TEST( se_0_nm, 0, "" );
-  TEST( se_1_nm, 1, "Operation not permitted" );
-  TEST( se_1u_m, 1, "se_1u_m: Operation not permitted" );
+  TEST( se_1_nm, 1, "Incorrect function" );
+  TEST( se_1u_m, 1, "se_1u_m: Incorrect function" );
 
 
   return 0;
