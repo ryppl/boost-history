@@ -8,25 +8,5 @@
 [section:intro Introduction]
 
 
-[section:reading_the_docs Structure of the Documentation]
-
-[tip Hopefully after reading this you'll be able to get through the docs and use the library quicker.]
-
-
-[endsect]
-
-[section Naming Conventions]
-
-CGI       -> cgi
-async CGI -> acgi
-FastCGI   -> fcgi
-SCGI      -> scgi
-
-*_request
-*_acceptor
-*_service
-
-[endsect]
-
 
 [endsect]

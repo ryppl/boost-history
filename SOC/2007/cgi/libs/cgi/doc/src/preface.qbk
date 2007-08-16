@@ -7,8 +7,56 @@
 
 [section Preface]
 
-Boost.CGI is a library to aid the creation of scalable CGI programs in Standard C++. This library rests on top of and should appear familiar to users of Boost.Asio. Currently the __cgi__, [-__scgi__ and __fcgi__] protocols are supported.
+[section Overview]
 
-[include acknowledgements.qbk]
+Boost.CGI is a library for writing CGI programs in Standard C++. It can be used to write anything from simple 'adming scripts' to full-fledged, scalable applications. This library rests on top of and should appear familiar to users of Boost.Asio. Currently the __cgi__, [-__scgi__ and __fcgi__] protocols are supported.
+
+[endsect]
+
+[section Motivation]
+
+C++ isn't a particularly common choice for CGI programming, although it is a powerful one and can be used to produce maintainable and uncompromisingly efficient applications with any feature possible in any other language.
+
+A complete discussion about the benefits of CGI programming in C++ is beyond the scope of this document, but here is a short list:
+
+* Having a binary application is inherently more secure than scripting languages in the situation where an error causes the application, rather than the output to be returned to the client. See http://www.w3.org/Security/Faq/wwwsf4.html for more.
+
+* C++ has a very large and professional user base, providing a wealth of expertise and experience.
+
+* Billions of lines of C++ code can be reused to reduce development/testing times.
+
+* In places where RAD (rapid application development) is of the utmost importance, scripting languages can still be used, for instance by using [link __boost_python__ Boost.Python] - though it could be argued that C++ and RAD are not mutually exclusive.
+
+* C++ is ['fast]. You can rest assured that the language will never be a bottleneck in your applications.
+
+* C++ rarely misses out on access to new technologies: for instance, if a new RDBMS came out tomorrow, it would almost certainly ship with a C/C++ API. The same would not be true for most other languages.
+
+
+
+In these days of 'Web 2.0' - with web applications becoming increasingly complex and responsive (ie. asynchronous, vis-à-vis AJAX) all while being required to scale boundlessly - the benefits of C++ begin to appear.
+
+[endsect]
+
+[section How to use this manual]
+
+You should probably just read it in order. Simple enough, no?
+
+[section Naming Conventions]
+
+CGI       -> cgi
+async CGI -> acgi
+FastCGI   -> fcgi
+SCGI      -> scgi
+
+*_request
+*_acceptor
+*_service
+
+[endsect]
+
+
+[endsect]
+
+
 
 [endsect]
