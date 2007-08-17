@@ -9,11 +9,11 @@
 A type `T` is /default constructible/ if objects of type `T` can be constructed
 without providing any arguments to a constructor. A type that is default
 constructible has either a compiler-generated or user-defined constructor
-that can be called without arguments. 
+that can be called without arguments.
 
 [note
-[StdDefaultConstructible] types may or may not initilize objects to a default value 
-or state depending on the type itself and the syntax used for construction. Objects 
+[StdDefaultConstructible] types may or may not initilize objects to a default value
+or state depending on the type itself and the syntax used for construction. Objects
 that are not initialized to a default are /uninitialized. Reading from or otherwise
 using uninitialized objects often results in undefined behavior.
 ]
@@ -62,27 +62,28 @@ model the [StdDefaultConstructible] concept.
 A type `T` is required to be [StdDefaultConstructible] when an object of type `T` is
 declared or when the default constructor of `T` is invoked without arguments.
 
-    // This functions requires T to be ``[StdDefaultConstructible]`` because it
-    // declares an object of type T without providing any arguments to the default
-    // constructor. If T is not ``[StdDefaultConstructible]``, calling this function
-    // will result in a compiler error.
+    // Declaring a variable without explicitly calling a constructor requires a
+    // T to be DefaultConstructible.
     template <typename T>
     void default_declare()
     {
         T x;
     }
 
-    // This function requires T to be ``[StdDefaultConstructible]`` because it
-    // explicitly invokes a constructor of T wihtout any arguments. If T is not
-    // ``[StdDefaultConstructible]``, calling this function will result in a 
-    // compiler error.
+    // Explcitly invoking the default constructor (or a constructor that can
+    // be invoked without arguments) requires T to be DefaultConstructible.
     template <typename T>
     T default_construct()
     {
         return T();
     }
 
-[heading Models]
-All fundamental types such as `bool`, `int`, and `float` are [StdDefaultConstructible].
+    // Allocating a new object of type T, invoking the default constructor
+    // requires T to be DefaultConstructible.
+    template <typename T>
+    T* dynamic_default_construct()
+    {
+        return new T(); // This is equivalent to "new T"
+    }
 
 [endsect]

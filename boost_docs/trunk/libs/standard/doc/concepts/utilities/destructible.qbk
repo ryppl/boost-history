@@ -6,8 +6,8 @@
  /]
 
 [section Destructible]
-A type `T` is /destructible/ if it has a public destructor. The
-destructor can be either compiler-generated or user-defined.
+A type `T` is /destructible/ if it has a public destructor. The destructor can
+be either compiler-generated or user-defined.
 
 [heading Notation]
 The following expressions are used within this document:
@@ -42,13 +42,29 @@ whose objects are statically or locally declared is required to be model the
 [StdDestructible] concept. Any type whose objects are `delete`d are also required
 to be [StdDestructible].
 
-    // This function requires T to be ``[StdDestructible]`` because it
-    // explicitly invokes the destructor. If T is not destructible,
-    // calling this function will result in a compiler error.
+    // An object of type T that goes out of scope is required to be
+    // Destructible. Note that this function also requires T to be
+    // DefaultConstructible.
     template <typename T>
-    void destruct(T& t)
+    void implicit_destruct()
+    {
+        T t;
+    } // Destructor is called here
+
+    // Invoking the desctructor of an object of type T requires the type to be
+    // Destructible.
+    template <typename T>
+    void explicit_destruct(T& t)
     {
         t.~T();
+    }
+
+    // Deleting a dynamically allocated object of type T requires the type to be
+    // Destructible.
+    template <typename T>
+    void dynamic_destruct(T* t)
+    {
+        delete t;
     }
 
 [endsect]

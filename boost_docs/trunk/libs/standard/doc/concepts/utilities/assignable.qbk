@@ -8,14 +8,17 @@
 [section Assignable]
 A type `T` is /assignable/ if an object of type `T` can be assigned
 the value of another object `u` using the assignment operator. The type
-of `u` is either `T` or `const T`. A type `T` is assignable if it has 
-a compiler-generated or user-defined assignment operator. After the 
+of `u` is either `T` or `const T`. A type `T` is assignable if it has
+a compiler-generated or user-defined assignment operator. After the
 assignment the object `t` is equivalent to `u`.
 
+This type of assignment is properly referred to as /copy assignment/ since both
+assignment operators and constructors can be provided for types that are not
+`T` or `const T`, and those operators do not have copy semantics.
+
 [note
-This type of assignment is properly referred to as /copy assignment/
-since, after the copy operation since both assignment operators and
-constructors can be provided for types that are not `T` or `const T`.
+Two objects `t` and `u` are equivalent if the expression `t == u` returns
+`true`. See [StdEqualityComparable] for more information.
 ]
 
 [heading Notation]
@@ -23,7 +26,7 @@ constructors can be provided for types that are not `T` or `const T`.
     [[Expression] [Description]]
     [[T] [An [StdAssignable] type.]]
     [[t] [An instance of type `T`.]]
-    [[u] [An instance of type 'const `T`.]]
+    [[u] [An instance of type `T` or const `T`.]]
 ]
 
 [heading Requirements]
@@ -46,10 +49,7 @@ constructors can be provided for types that are not `T` or `const T`.
 A type `T` is required to be [StdAssignable] when an object of type `T` is
 assigned to an object of type `T` or `const T`.
 
-    // This function requires T to be ``[StdAssignable]`` because it assigns
-    // an object of type `T` to the value of another object of the same type.
-    // If T is not assignable, calling this function will result in a compiler
-    // error.
+    // The assignment of the object t to the value u requires T to be Assignable.
     template <typename T>
     void assign(T& t, const T& u)
     {
