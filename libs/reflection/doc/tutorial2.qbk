@@ -24,17 +24,17 @@ defines two derived classes, and has the export declaration.
 class suv : public car
 {
 public:
-	suv(const std::string name) : car(name) {}
-	virtual std::string get_type(void) { return "It's a SUV."; }
-	virtual ~suv(void) {}
+        suv(const std::string name) : car(name) {}
+        virtual std::string get_type(void) { return "It's a SUV."; }
+        virtual ~suv(void) {}
 };
 
 class compact : public car
 {
 public:
-	compact(const std::string name) : car(name) {}
-	virtual std::string get_type(void) { return "It's a compact."; }
-	virtual ~compact(void) {}
+        compact(const std::string name) : car(name) {}
+        virtual std::string get_type(void) { return "It's a compact."; }
+        virtual ~compact(void) {}
 };
 ``
 
@@ -69,9 +69,9 @@ Now we load the dynamic link library:
 
 ``
   load_single_library(fm, "libcar_lib.extension", 
-		      "extension_export_car");
+                      "extension_export_car");
   std::list<factory<car, std::string, std::string> > & factory_list = 
-	  fm.get<car, std::string, std::string>();  
+          fm.get<car, std::string, std::string>();  
 ``
 
 Now, the interesting part. We iterate the factories searching for
@@ -80,7 +80,7 @@ we use our car reflection to call the 3 method (start).
 
 ``
   for (std::list<factory<car, std::string, std::string> >
-	 ::iterator current_car = factory_list.begin(); 
+         ::iterator current_car = factory_list.begin(); 
        current_car != factory_list.end(); 
        ++current_car)
   {

@@ -26,7 +26,8 @@ Anyway this features are limited to one interface (car interface) and also
 constrainted by the number of parameters (mostly because of pattern matching
 issues).
 
-To show the current syntax we think that the best is to show an example session.
+To show the current syntax we think that the best is to show an example 
+session.
 
 In this session we create some instances and call the car::start method. Also
 we show what happens when we predicated over unknown instances.
@@ -68,6 +69,7 @@ in a instance variable called beetle.
 
 
 Of course this interpreter is very limited, but it shows the potential of
-Boost.Reflection to develop software that use the meta-information of its structure.
+Boost.Reflection to develop software that use the meta-information of its 
+structure.
 
 [endsect]
