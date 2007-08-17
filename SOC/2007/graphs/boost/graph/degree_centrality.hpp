@@ -62,9 +62,7 @@ namespace boost
 
     template <typename Graph, typename Vertex, typename Measure>
     inline typename Measure::degree_type
-    vertex_degree_centrality(const Graph& g,
-                             Vertex v,
-                             Measure measure)
+    degree_centrality(const Graph& g, Vertex v, Measure measure)
     {
         function_requires< DegreeMeasureConcept<Measure, Graph> >();
         return measure(v, g);
@@ -72,18 +70,34 @@ namespace boost
 
     template <typename Graph, typename Vertex>
     inline typename graph_traits<Graph>::degree_size_type
-    vertex_degree_centrality(const Graph& g,
-                             Vertex v)
+    degree_centrality(const Graph& g, Vertex v)
     {
-        return vertex_degree_centrality(g, v, measure_influence(g));
+        return degree_centrality(g, v, measure_influence(g));
+    }
+
+
+    // These are just alias functions, intended to provide a more
+    // "semantic" interface.
+
+    template <typename Graph, typename Vertex>
+    inline typename graph_traits<Graph>::degree_size_type
+    influence(const Graph& g, Vertex v)
+    {
+        return degree_centrality(g, v, measure_influence(g));
+    }
+
+
+    template <typename Graph, typename Vertex>
+    inline typename graph_traits<Graph>::degree_size_type
+    prestige(const Graph& g, Vertex v)
+    {
+        return degree_centrality(g, v, measure_prestige(g));
     }
 
 
     template <typename Graph, typename CentralityMap, typename Measure>
     inline void
-    degree_centrality(const Graph& g,
-                      CentralityMap cent,
-                      Measure measure)
+    all_degree_centralities(const Graph& g, CentralityMap cent, Measure measure)
     {
         function_requires< VertexListGraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
@@ -93,16 +107,31 @@ namespace boost
 
         VertexIterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            Centrality c = vertex_degree_centrality(g, *i, measure);
+            Centrality c = degree_centrality(g, *i, measure);
             put(cent, *i, c);
         }
     }
 
     template <typename Graph, typename CentralityMap>
-    inline void degree_centrality(const Graph& g,
-                                  CentralityMap cent)
+    inline void all_degree_centralities(const Graph& g, CentralityMap cent)
     {
-        degree_centrality(g, cent, measure_influence(g));
+        all_degree_centralities(g, cent, measure_influence(g));
+    }
+
+    // More helper functions for computing influence and prestige.
+    // I hate the names of these functions, but influence and prestige
+    // don't pluralize too well.
+
+    template <typename Graph, typename CentralityMap>
+    inline void all_influence_values(const Graph& g, CentralityMap cent)
+    {
+        all_degree_centralities(g, cent, measure_influence(g));
+    }
+
+    template <typename Graph, typename CentralityMap>
+    inline void all_prestige_values(const Graph& g, CentralityMap cent)
+    {
+        all_degree_centralities(g, cent, measure_prestige(g));
     }
 }
 

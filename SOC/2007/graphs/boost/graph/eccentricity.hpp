@@ -16,9 +16,7 @@ namespace boost
               typename DistanceMap,
               typename Combinator>
     inline typename property_traits<DistanceMap>::value_type
-    vertex_eccentricity(const Graph& g,
-                        DistanceMap dist,
-                        Combinator combine)
+    eccentricity(const Graph& g, DistanceMap dist, Combinator combine)
     {
         function_requires< GraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
@@ -30,19 +28,20 @@ namespace boost
 
     template <typename Graph, typename DistanceMap>
     inline typename property_traits<DistanceMap>::value_type
-    vertex_eccentricity(const Graph& g, DistanceMap dist)
+    eccentricity(const Graph& g, DistanceMap dist)
     {
         function_requires< GraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
         function_requires< ReadablePropertyMapConcept<DistanceMap,Vertex> >();
         typedef typename property_traits<DistanceMap>::value_type Distance;
 
-        return vertex_eccentricity(g, dist, detail::maximize<Distance>());
+        return eccentricity(g, dist, detail::maximize<Distance>());
     }
 
     template <typename Graph, typename DistanceMatrix, typename EccentricityMap>
-    inline void
-    eccentricity(const Graph& g, const DistanceMatrix& dist, EccentricityMap ecc)
+    inline std::pair<typename property_traits<EccentricityMap>::value_type,
+                     typename property_traits<EccentricityMap>::value_type>
+    all_eccentricities(const Graph& g, const DistanceMatrix& dist, EccentricityMap ecc)
     {
         function_requires< VertexListGraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
@@ -52,18 +51,27 @@ namespace boost
         function_requires< WritablePropertyMapConcept<EccentricityMap,Vertex> >();
         typedef typename property_traits<EccentricityMap>::value_type Eccentricity;
 
+        Eccentricity
+                r = numeric_values<Eccentricity>::infinity(),
+                d = numeric_values<Eccentricity>::zero();
         VertexIterator i, end;
+        tie(i, end) = vertices(g);
         for(tie(i, end) = vertices(g); i != end; ++i) {
             DistanceMap dm = get(dist, *i);
-            Eccentricity e = vertex_eccentricity(g, dm);
+            Eccentricity e = eccentricity(g, dm);
             put(ecc, *i, e);
+
+            // track the radius and diameter at the same time
+            r = std::min(r, e);
+            d = std::max(d, e);
         }
+        return make_pair(r, d);
     }
 
 
     template <typename Graph, typename EccentricityMap>
     inline typename property_traits<EccentricityMap>::value_type
-    graph_radius(const Graph& g, EccentricityMap ecc)
+    radius(const Graph& g, EccentricityMap ecc)
     {
         function_requires< VertexListGraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
@@ -84,7 +92,7 @@ namespace boost
 
     template <typename Graph, typename EccentricityMap>
     inline typename property_traits<EccentricityMap>::value_type
-    graph_diameter(const Graph& g, EccentricityMap ecc)
+    diameter(const Graph& g, EccentricityMap ecc)
     {
         function_requires< VertexListGraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
@@ -106,7 +114,7 @@ namespace boost
     template <typename Graph, typename EccentricityMap>
     inline std::pair<typename property_traits<EccentricityMap>::value_type,
                      typename property_traits<EccentricityMap>::value_type>
-    graph_radius_diameter(const Graph& g, EccentricityMap ecc)
+    radius_diameter(const Graph& g, EccentricityMap ecc)
     {
         function_requires< VertexListGraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
