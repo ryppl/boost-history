@@ -105,7 +105,7 @@ Of course, this approach is a bit limited, because we have to provide a lot of
 information to call the actual method. 
 
 Using meta-level programming we are trying to achieve a flexibility that 
-could be mined with that requeriments. Simply we don't have such information 
+could be mined with that requirements. Simply we don't have such information 
 most of the time. Because of that we implemented a second way to call methods.
 
 First we define a parameter_map. We will store there the possible parameters. 
@@ -114,7 +114,7 @@ Note that we're defining an unneeded parameter. It'll be simply ignored.
 ``
   boost::extension::parameter_map pm;
   pm.add<float, std::string>(.15f, "turn_angle");
-  pm.add<int, std::string>(50, "aceleration");
+  pm.add<int, std::string>(50, "acceleration");
 ``
 
 Then we use this parameter_map to call the method and provide the needed

@@ -23,7 +23,7 @@ understand its uncompleteness, but now it has the following features:
 # Method call with parameters.
 
 Anyway this features are limited to one interface (car interface) and also
-constrainted by the number of parameters (mostly because of pattern matching
+constrained by the number of parameters (mostly because of pattern matching
 issues).
 
 To show the current syntax we think that the best is to show an example 
