@@ -77,17 +77,17 @@ void test_undirected()
     WeightMap wm(1);
 
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
-    eccentricity(g, dm, em);
-    int radius = graph_radius(g, em);
-    int diameter = graph_diameter(g, em);
+    all_eccentricities(g, dm, em);
+    int rad = radius(g, em);
+    int dia = diameter(g, em);
 
     BOOST_ASSERT(em[v[0]] == 2);
     BOOST_ASSERT(em[v[1]] == 3);
     BOOST_ASSERT(em[v[2]] == 3);
     BOOST_ASSERT(em[v[3]] == 3);
     BOOST_ASSERT(em[v[4]] == 2);
-    BOOST_ASSERT(radius == 2);
-    BOOST_ASSERT(diameter == 3);
+    BOOST_ASSERT(rad == 2);
+    BOOST_ASSERT(dia == 3);
 }
 
 template <typename Graph>
@@ -119,9 +119,9 @@ void test_directed()
     WeightMap wm(1);
 
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
-    eccentricity(g, dm, em);
-    int radius = graph_radius(g, em);
-    int diameter = graph_diameter(g, em);
+    all_eccentricities(g, dm, em);
+    int rad = radius(g, em);
+    int dia = diameter(g, em);
 
     int inf = numeric_values<int>::infinity();
     BOOST_ASSERT(em[v[0]] == inf);
@@ -129,8 +129,8 @@ void test_directed()
     BOOST_ASSERT(em[v[2]] == inf);
     BOOST_ASSERT(em[v[3]] == 4);
     BOOST_ASSERT(em[v[4]] == inf);
-    BOOST_ASSERT(radius == 4);
-    BOOST_ASSERT(diameter == inf);
+    BOOST_ASSERT(rad == 4);
+    BOOST_ASSERT(dia == inf);
 }
 
 

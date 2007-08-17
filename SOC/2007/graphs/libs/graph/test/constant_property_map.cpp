@@ -9,10 +9,7 @@
 
 #include <boost/graph/undirected_graph.hpp>
 #include <boost/graph/directed_graph.hpp>
-#include <boost/graph/exterior_property.hpp>
 #include <boost/graph/constant_property_map.hpp>
-#include <boost/graph/floyd_warshall_shortest.hpp>
-#include <boost/graph/closeness_centrality.hpp>
 
 using namespace std;
 using namespace boost;

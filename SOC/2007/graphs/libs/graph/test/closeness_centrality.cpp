@@ -77,7 +77,7 @@ void test_undirected()
     WeightMap wm(1);
 
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
-    closeness_centrality(g, dm, cm);
+    all_closeness_centralities(g, dm, cm);
 
     BOOST_ASSERT(cm[v[0]] == float(1)/5);
     BOOST_ASSERT(cm[v[1]] == float(1)/7);
@@ -115,7 +115,7 @@ void test_directed()
     WeightMap wm(1);
 
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
-    closeness_centrality(g, dm, cm);
+    all_closeness_centralities(g, dm, cm);
 
     BOOST_ASSERT(cm[v[0]] == float(0));
     BOOST_ASSERT(cm[v[1]] == float(0));
@@ -123,7 +123,6 @@ void test_directed()
     BOOST_ASSERT(cm[v[3]] == float(1)/10);
     BOOST_ASSERT(cm[v[4]] == float(0));
 }
-
 
 int
 main(int argc, char *argv[])

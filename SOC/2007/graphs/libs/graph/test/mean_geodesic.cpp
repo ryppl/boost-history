@@ -77,16 +77,16 @@ void test_undirected()
     WeightMap wm(1);
 
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
-    mean_geodesic(g, dm, cm);
-
-    float geo = graph_mean_geodesic(g, cm);
+    float geo1 = all_mean_geodesics(g, dm, cm);
+    float geo2 = small_world_distance(g, cm);
 
     BOOST_ASSERT(cm[v[0]] == float(5)/4);
     BOOST_ASSERT(cm[v[1]] == float(7)/4);
     BOOST_ASSERT(cm[v[2]] == float(7)/4);
     BOOST_ASSERT(cm[v[3]] == float(9)/4);
     BOOST_ASSERT(cm[v[4]] == float(6)/4);
-    BOOST_ASSERT(geo == float(34)/20);
+    BOOST_ASSERT(geo1 == float(34)/20);
+    BOOST_ASSERT(geo1 == geo2);
 }
 
 template <typename Graph>
@@ -118,8 +118,8 @@ void test_directed()
     WeightMap wm(1);
 
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
-    mean_geodesic(g, dm, cm);
-    float geo = graph_mean_geodesic(g, cm);
+    float geo1 = all_mean_geodesics(g, dm, cm);
+    float geo2 = small_world_distance(g, cm);
 
     float inf = numeric_values<float>::infinity();
     BOOST_ASSERT(cm[v[0]] == inf);
@@ -127,7 +127,8 @@ void test_directed()
     BOOST_ASSERT(cm[v[2]] == inf);
     BOOST_ASSERT(cm[v[3]] == float(10)/4);
     BOOST_ASSERT(cm[v[4]] == inf);
-    BOOST_ASSERT(geo == inf);
+    BOOST_ASSERT(geo1 == inf);
+    BOOST_ASSERT(geo1 == geo2);
 }
 
 

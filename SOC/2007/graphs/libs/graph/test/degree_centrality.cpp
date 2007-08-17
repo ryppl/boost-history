@@ -52,7 +52,7 @@ void test_undirected()
 
     CentralityContainer cents(num_vertices(g));
     CentralityMap cm(cents, g);
-    degree_centrality(g, cm);
+    all_degree_centralities(g, cm);
 
     BOOST_ASSERT(cm[v[0]] == 3);
     BOOST_ASSERT(cm[v[1]] == 2);
@@ -77,7 +77,7 @@ void test_influence()
 
     CentralityContainer cents(num_vertices(g));
     CentralityMap cm(cents, g);
-    degree_centrality(g, cm, measure_influence(g));
+    all_influence_values(g, cm);
 
     BOOST_ASSERT(cm[v[0]] == 1);
     BOOST_ASSERT(cm[v[1]] == 1);
@@ -102,7 +102,7 @@ void test_prestige()
 
     CentralityContainer cents(num_vertices(g));
     CentralityMap cm(cents, g);
-    degree_centrality(g, cm, measure_prestige(g));
+    all_prestige_values(g, cm);
 
     BOOST_ASSERT(cm[v[0]] == 2);
     BOOST_ASSERT(cm[v[1]] == 1);
