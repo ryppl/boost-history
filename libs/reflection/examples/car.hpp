@@ -1,5 +1,5 @@
 /*
- * Boost.Reflection / prototype example (car int)
+ * Boost.Reflection / basic example (car interface)
  *
  * (C) Copyright Mariano G. Consoni 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -30,11 +30,11 @@ public:
   {
     if(started_) {
       std::cout << "Turning " << name_ << " "<< angle << " degrees." 
-		<< std::endl;
+                << std::endl;
       return true;
     } else {
       std::cout << "Cannot turn before starting the engine of " 
-		<< name_ << "." << std::endl;
+                << name_ << "." << std::endl;
       return false;
     }
   }
@@ -43,10 +43,10 @@ public:
   {
     if(started_) {
       std::cout << "Accelerating " << name_ << " "<< qty << " m/h." 
-		<< std::endl;
+                << std::endl;
     } else {
       std::cout << "Cannot accelerate before starting the engine of " 
-		<< name_ << "." << std::endl;
+                << name_ << "." << std::endl;
     }
   }
 

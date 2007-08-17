@@ -22,7 +22,7 @@ project
       <include>../../../../src/sandbox/
       <toolset>gcc:<find-static-library>dl
       <toolset>gcc:<find-static-library>readline
-      <toolset>gcc:<find-static-library>boost_regex-gcc41-mt
+      <toolset>gcc:<find-static-library>boost_regex-gcc-mt
       <toolset>gcc:<linkflags>"-Wl,-rpath,'$ORIGIN'"
       <toolset>darwin:<define>DYLD_LIBRARY_PATH=./
     :

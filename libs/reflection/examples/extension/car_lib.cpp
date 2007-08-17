@@ -1,7 +1,7 @@
 /*
- * Boost.Extension / hello world implementations
+ * Boost.Extension / car library implementations
  *
- * (C) Copyright Jeremy Pack 2007
+ * (C) Copyright Mariano G. Consoni 2007
  * Distributed under the Boost Software License, Version 1.0. (See
  * accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -15,17 +15,17 @@
 class suv : public car
 {
 public:
-	suv(const std::string name) : car(name) {}
-	virtual std::string get_type(void) { return "It's a SUV."; }
-	virtual ~suv(void) {}
+        suv(const std::string name) : car(name) {}
+        virtual std::string get_type(void) { return "It's a SUV."; }
+        virtual ~suv(void) {}
 };
 
 class compact : public car
 {
 public:
-	compact(const std::string name) : car(name) {}
-	virtual std::string get_type(void) { return "It's a compact."; }
-	virtual ~compact(void) {}
+        compact(const std::string name) : car(name) {}
+        virtual std::string get_type(void) { return "It's a compact."; }
+        virtual ~compact(void) {}
 };
 
 

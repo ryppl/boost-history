@@ -30,7 +30,7 @@
 
 
 typedef std::list<boost::extensions::factory<car, std::string, 
-					     std::string> > factory_list;
+                                             std::string> > factory_list;
 
 
 /// this map stores the instanced variables
@@ -38,7 +38,8 @@ std::map<std::string, car *> context;
 
 /// parse and execute a command
 void parse_command(const std::string &line, factory_list &f,
-		   boost::extension::reflection<car, std::string> &car_reflection)
+                   boost::extension::reflection<car, 
+                   std::string> &car_reflection)
 {
   boost::regex re, call_re;
   boost::cmatch matches, call_matches;
@@ -50,7 +51,7 @@ void parse_command(const std::string &line, factory_list &f,
     re = creation_pattern;
   } catch (boost::regex_error& e) {
     std::cout << creation_pattern << " is not a valid regular expression: \""
-	      << e.what() << "\"" << std::endl;
+              << e.what() << "\"" << std::endl;
     return;
   }
 
@@ -58,7 +59,7 @@ void parse_command(const std::string &line, factory_list &f,
     call_re = call_pattern;
   } catch (boost::regex_error& e) {
     std::cout << call_pattern << " is not a valid regular expression: \""
-	      << e.what() << "\"" << std::endl;
+              << e.what() << "\"" << std::endl;
     return;
   }
 
@@ -71,16 +72,16 @@ void parse_command(const std::string &line, factory_list &f,
       std::string parameter1(matches[3].first, matches[3].second);
 
       for (std::list<boost::extensions::factory<car, std::string, 
-	     std::string> >::iterator current_car = f.begin(); 
-	   current_car != f.end(); 
-	   ++current_car) {
- 	if(current_car->get_info() == method) {
-	  // FIXME: free
- 	  car *created_car(current_car->create(parameter1));
-	  context[instance] = created_car;
-	  
-	  std::cout << "Instance [" << instance << "] created." << std::endl;
- 	}
+             std::string> >::iterator current_car = f.begin(); 
+           current_car != f.end(); 
+           ++current_car) {
+         if(current_car->get_info() == method) {
+          // FIXME: free
+           car *created_car(current_car->create(parameter1));
+          context[instance] = created_car;
+          
+          std::cout << "Instance [" << instance << "] created." << std::endl;
+         }
       }
     }
     return;
@@ -95,18 +96,18 @@ void parse_command(const std::string &line, factory_list &f,
 
       std::map<std::string, car *>::iterator m = context.find(instance);
       if(m != context.end()) {
-	std::cout << "  --> " 
-		  << car_reflection.call<std::string, bool>(m->second, method) 
-		  << std::endl;
+        std::cout << "  --> " 
+                  << car_reflection.call<std::string, bool>(m->second, method)
+                  << std::endl;
       } else {
-	std::cout << "Instance " << instance << " not found." << std::endl;
+        std::cout << "Instance " << instance << " not found." << std::endl;
       }
     }
     return;
   }
 
   std::cout << "The command \"" << line << "\" is invalid." 
-	    << std::endl;
+            << std::endl;
 
 }
 
@@ -117,18 +118,18 @@ int main(void)
 
   factory_map fm;
   load_single_library(fm, "libcar_lib.extension", 
-		      "extension_export_car");
+                      "extension_export_car");
   std::list<factory<car, std::string, std::string> > & car_factory_list = 
-	  fm.get<car, std::string, std::string>();  
+          fm.get<car, std::string, std::string>();  
   if(car_factory_list.size() < 2) {
     std::cout << "Error - the classes were not found (" 
-	      << car_factory_list.size() << ").\n";
+              << car_factory_list.size() << ").\n";
     std::exit(-1);
   }
  
   std::cout << std::endl 
-	    << " Boost.Reflection example - Prototype C++ interpreter."
-	    << std::endl << std::endl;
+            << " Boost.Reflection example - Prototype C++ interpreter."
+            << std::endl << std::endl;
 
   boost::extension::reflection<car, std::string> car_reflection("A Car!");
   car_reflection.add<std::string, bool>(&car::start, "start");
@@ -141,7 +142,7 @@ int main(void)
     std::cout << "> ";
     std::cin >> line;
 
-#ifdef USE_READLINE		
+#ifdef USE_READLINE                
     char *line_chrptr = readline("> ");
     std::string line(line_chrptr);
     if(line.length() != 0) {
@@ -151,7 +152,7 @@ int main(void)
 
     parse_command(line, car_factory_list, car_reflection);
 
-#ifdef USE_READLINE		  		
+#ifdef USE_READLINE                                  
     free(line_chrptr);
 #endif
   }

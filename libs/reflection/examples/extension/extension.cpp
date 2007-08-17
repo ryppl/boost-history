@@ -38,20 +38,20 @@ int main(void)
 
   // load the car library
   load_single_library(fm, "libcar_lib.extension", 
-		      "extension_export_car");
+                      "extension_export_car");
   std::list<factory<car, std::string, std::string> > & factory_list = 
-	  fm.get<car, std::string, std::string>();  
+          fm.get<car, std::string, std::string>();  
 
   // check if the factories loaded fine
   if(factory_list.size() < 2) {
     std::cout << "Error - the classes were not found (" 
-	      << factory_list.size() << ").\n";
+              << factory_list.size() << ").\n";
     return -1;
   }
 
   // create some instances and call the method "3" (start)
   for (std::list<factory<car, std::string, std::string> >
-	 ::iterator current_car = factory_list.begin(); 
+         ::iterator current_car = factory_list.begin(); 
        current_car != factory_list.end(); 
        ++current_car)
   {
