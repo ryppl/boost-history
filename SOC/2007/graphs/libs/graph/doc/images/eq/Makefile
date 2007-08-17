@@ -1,7 +1,7 @@
 
 src = \
 	mean_geodesic.tex \
-	graph_mean_geodesic.tex \
+	small_world.tex \
 	closeness.tex \
 	scaled_closeness.tex \
 	betweenness.tex \
