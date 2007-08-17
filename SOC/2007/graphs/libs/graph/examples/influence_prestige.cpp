@@ -20,7 +20,7 @@ using namespace boost;
 // The Actor type stores the name of each vertex in the graph.
 struct Actor
 {
-    std::string name;
+    string name;
 };
 
 // Declare the graph type and its vertex and edge types.
@@ -45,12 +45,12 @@ main(int argc, char *argv[])
     // Compute the influence for the graph.
     CentralityContainer influence(num_vertices(g));
     CentralityMap im(influence, g);
-    degree_centrality(g, im, measure_influence(g));
+    all_influence_values(g, im);
 
     // Compute the influence for the graph.
     CentralityContainer prestige(num_vertices(g));
     CentralityMap pm(prestige, g);
-    degree_centrality(g, pm, measure_prestige(g));
+    all_prestige_values(g, pm);
 
     // Print the degree centrality of each vertex
     graph_traits<Graph>::vertex_iterator i, end;

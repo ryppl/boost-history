@@ -21,7 +21,7 @@ using namespace boost;
 // The Actor type stores the name of each vertex in the graph.
 struct Actor
 {
-    std::string name;
+    string name;
 };
 
 // Declare the graph type and its vertex and edge types.
@@ -60,10 +60,10 @@ main(int argc, char *argv[])
     WeightMap wm(1);
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
 
-    // Compute the degree centrality for graph
+    // Compute the closeness centrality for graph.
     ClosenessContainer cents(num_vertices(g));
     ClosenessMap cm(cents, g);
-    closeness_centrality(g, dm, cm);
+    all_closeness_centralities(g, dm, cm);
 
     // Print the closeness centrality of each vertex.
     graph_traits<Graph>::vertex_iterator i, end;

@@ -21,7 +21,7 @@ using namespace boost;
 // The Actor type stores the name of each vertex in the graph.
 struct Actor
 {
-    std::string name;
+    string name;
 };
 
 // Declare the graph type and its vertex and edge types.
@@ -45,7 +45,6 @@ typedef exterior_vertex_property<Graph, float> GeodesicProperty;
 typedef GeodesicProperty::container_type GeodesicContainer;
 typedef GeodesicProperty::map_type GeodesicMap;
 
-
 int
 main(int argc, char *argv[])
 {
@@ -62,14 +61,11 @@ main(int argc, char *argv[])
     floyd_warshall_all_pairs_shortest_paths(g, dm, weight_map(wm));
 
     // Compute the mean geodesic distances for each vertex in
-    // the graph.
+    // the graph and get the average mean geodesic distace (the
+    // so-called small-world distance) as a result.
     GeodesicContainer geodesics(num_vertices(g));
     GeodesicMap gm(geodesics, g);
-    mean_geodesic(g, dm, gm);
-
-    // Using the previously computed mean geodesic distances, compute
-    // the mean geodesic distance for the entire graph.
-    float geo = graph_mean_geodesic(g, gm);
+    float sw = all_mean_geodesics(g, dm, gm);
 
     // Print the mean geodesic distance of each vertex and finally,
     // the graph itself.
@@ -78,7 +74,7 @@ main(int argc, char *argv[])
         cout << setw(12) << setiosflags(ios::left)
              << g[*i].name << get(gm, *i) << endl;
     }
-    cout << "mean geodesic distance: " << geo << endl;
+    cout << "small world distance: " << sw << endl;
 
 
     return 0;

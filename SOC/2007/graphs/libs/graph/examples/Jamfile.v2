@@ -10,4 +10,5 @@ exe influence_prestige : influence_prestige.cpp ;
 exe closeness_centrality : closeness_centrality.cpp ;
 exe scaled_closeness_centrality : scaled_closeness_centrality.cpp ;
 exe mean_geodesic : mean_geodesic.cpp ;
+exe inclusive_mean_geodesic : inclusive_mean_geodesic.cpp ;
 exe eccentricity : eccentricity.cpp ;

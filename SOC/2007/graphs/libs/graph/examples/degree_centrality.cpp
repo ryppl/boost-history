@@ -45,7 +45,7 @@ main(int argc, char *argv[])
     // Compute the degree centrality for graph.
     CentralityContainer cents(num_vertices(g));
     CentralityMap cm(cents, g);
-    degree_centrality(g, cm);
+    all_degree_centralities(g, cm);
 
     // Print the degree centrality of each vertex.
     graph_traits<Graph>::vertex_iterator i, end;
