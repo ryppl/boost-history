@@ -1,5 +1,5 @@
 /*
- * Boost.Reflection / first prototype - paramater map for calls
+ * Boost.Reflection / paramater map (store parameter information for calls)
  *
  * (C) Copyright Mariano G. Consoni 2007
  * Distributed under the Boost Software License, Version 1.0. (See

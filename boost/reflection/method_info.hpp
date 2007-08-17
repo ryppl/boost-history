@@ -1,5 +1,5 @@
 /*
- * Boost.Reflection / first prototype - stored information for methods
+ * Boost.Reflection / method information storage
  *
  * (C) Copyright Mariano G. Consoni 2007
  * Distributed under the Boost Software License, Version 1.0. (See

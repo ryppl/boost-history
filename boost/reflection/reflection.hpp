@@ -1,5 +1,5 @@
 /*
- * Boost.Reflection / first prototype
+ * Boost.Reflection / main header
  *
  * (C) Copyright Mariano G. Consoni 2007
  * Distributed under the Boost Software License, Version 1.0. (See
@@ -11,7 +11,7 @@
 
 // TODO:
 //  . implement calls with parameter maps
-
+//  . fix FIXMEs
 
 #ifndef BOOST_EXTENSION_REFLECTION_HPP
 #define BOOST_EXTENSION_REFLECTION_HPP
@@ -275,7 +275,8 @@ BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
 
         for(; it != methods_.end(); ++it) {
           method_container<MethodID, MethodReturnValue> *mc = 
-            dynamic_cast< method_container<MethodID, MethodReturnValue> *>(*it);
+            dynamic_cast< method_container<MethodID, 
+                        MethodReturnValue> *>(*it);
 
           if(mc == NULL) {
             // if the cast failed it means that this element of the list
@@ -435,7 +436,7 @@ BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
         // iterate each parameter and search for it in the parameter map
       }
 
-      Info &get_info(void) const { return info_; }
+      Info &get_info(void) { return info_; }
 
     private:
       Info info_;
