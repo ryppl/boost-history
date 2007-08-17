@@ -4,62 +4,64 @@
 // Boost Software License, Version 1.0 (See accompanying file
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
+//[influence_prestige_example
 #include <iostream>
 #include <iomanip>
-#include <string>
-#include <vector>
-#include <map>
 
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/exterior_property.hpp>
 #include <boost/graph/degree_centrality.hpp>
 
-#include "flow_network.hpp"
 #include "helper.hpp"
 
 using namespace std;
 using namespace boost;
 
+// The Actor type stores the name of each vertex in the graph.
+struct Actor
+{
+    std::string name;
+};
+
+// Declare the graph type and its vertex and edge types.
+typedef directed_graph<Actor> Graph;
+typedef graph_traits<Graph>::vertex_descriptor Vertex;
+typedef graph_traits<Graph>::edge_descriptor Edge;
+
+// Declare a container type for influence and prestige (both
+// of which are degree centralities) and its corresponding
+// property map.
+typedef exterior_vertex_property<Graph, unsigned> CentralityProperty;
+typedef CentralityProperty::container_type CentralityContainer;
+typedef CentralityProperty::map_type CentralityMap;
+
 int
 main(int argc, char *argv[])
 {
+    // Create the graph and read it from standard input.
     Graph g;
-    map<string, Vertex> verts;
+    read_graph(g, cin);
 
-    // Read in and build the graph
-    for(string line; getline(cin, line); ) {
-        if(line.empty()) continue;
-        size_t index = line.find_first_of(',');
-        string first(line, 0, index);
-        string second(line, index + 1);
-
-        Vertex u = add_named_vertex(g, first, verts);
-        Vertex v = add_named_vertex(g, second, verts);
-        add_edge(u, v, g);
-    }
-
-    // Compute the influence and prestige for the graph
-    //[compute_influence_prestige
+    // Compute the influence for the graph.
     CentralityContainer influence(num_vertices(g));
     CentralityMap im(influence, g);
     degree_centrality(g, im, measure_influence(g));
 
+    // Compute the influence for the graph.
     CentralityContainer prestige(num_vertices(g));
     CentralityMap pm(prestige, g);
     degree_centrality(g, pm, measure_prestige(g));
-    //]
 
     // Print the degree centrality of each vertex
-    //[print_influence_prestige
     graph_traits<Graph>::vertex_iterator i, end;
     for(tie(i, end) = vertices(g); i != end; ++i) {
         Vertex v = *i;
         cout << setiosflags(ios::left) << setw(12)
              << g[v].name << "\t"
              << im[v] << "\t"
-             << pm[v] << "\n";
+             << pm[v] << endl;
     }
-    //]
 
     return 0;
 }
+//]

@@ -7,9 +7,10 @@
 #ifndef BOOST_GRAPH_EXAMPLE_HELPER_HPP
 #define BOOST_GRAPH_EXAMPLE_HELPER_HPP
 
+#include <string>
+#include <map>
 #include <algorithm>
 
-//[add_named_vertex
 template <typename Graph, typename VertexMap>
 typename boost::graph_traits<Graph>::vertex_descriptor
 add_named_vertex(Graph& g, const std::string& name, VertexMap& vm)
@@ -35,7 +36,29 @@ add_named_vertex(Graph& g, const std::string& name, VertexMap& vm)
     }
     return v;
 }
-//]
+
+template <typename Graph, typename InputStream>
+inline std::map<
+        std::string,
+        typename boost::graph_traits<Graph>::vertex_descriptor>
+read_graph(Graph& g, InputStream& is)
+{
+    typedef typename boost::graph_traits<Graph>::vertex_descriptor Vertex;
+    std::map<std::string, Vertex> verts;
+    for(std::string line; std::getline(is, line); ) {
+        if(line.empty()) continue;
+        std::size_t index = line.find_first_of(',');
+        std::string first(line, 0, index);
+        std::string second(line, index + 1);
+
+        Vertex u = add_named_vertex(g, first, verts);
+        Vertex v = add_named_vertex(g, second, verts);
+        add_edge(u, v, g);
+    }
+    return verts;
+}
+
+
 
 //[property_comparator
 template <typename PropertyMap>

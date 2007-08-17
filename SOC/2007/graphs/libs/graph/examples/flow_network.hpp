@@ -14,7 +14,6 @@
 #include <boost/graph/exterior_property.hpp>
 #include <boost/graph/constant_property_map.hpp>
 
-//[flow_network_types
 struct Actor
 {
     std::string name;
@@ -23,7 +22,6 @@ struct Actor
 typedef boost::directed_graph<Actor> Graph;
 typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;
 typedef boost::graph_traits<Graph>::edge_descriptor Edge;
-//]
 
 typedef boost::exterior_vertex_property<Graph, int> DistanceProperty;
 typedef DistanceProperty::matrix_type DistanceMatrix;
