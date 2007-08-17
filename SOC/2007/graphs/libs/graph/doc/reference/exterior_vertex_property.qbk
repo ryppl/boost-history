@@ -22,12 +22,12 @@ for graphs.
 The following expressions are used in this document:
 [table
     [[Expression] [Description]]
-    [[`G`] [A graph type modeling a refinement of the [BoostGraph] concept.]]
+    [[`G`] [A graph type modeling a refinement of the [Graph] concept.]]
     [[`V`] [A value type that models the [SgiAssignable] concept.]]
 ]
 
 [heading Model Of]
-[BoostExteriorProperty]
+[ExteriorProperty]
 
 [heading Template Parameters]
 [table
@@ -39,7 +39,7 @@ The following expressions are used in this document:
             is being declared.
 
             *Requirements:* `Graph` must model a refinement of the the
-            [BoostGraph] concept.
+            [Graph] concept.
         ]
     ]
     [

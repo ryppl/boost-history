@@ -6,17 +6,17 @@
  /]
 
 [section Distance Measure]
-The [BoostDistanceMeasure] concept defines requirements for function objects
+The [DistanceMeasure] concept defines requirements for function objects
 that are used in computations of distances.
 
 [heading Notation]
 The following expressions are used within this document:
 [table
     [[Expression] [Description]]
-    [[M] [A type modeling the [BoostDistanceMeasure] concept.]]
+    [[M] [A type modeling the [DistanceMeasure] concept.]]
     [[m] [An object of type `M`.]]
     [[d] [An object of type `M::distance_type`.]]
-    [[G] [A type modeling the [BoostGraph] concept.]]
+    [[G] [A type modeling the [Graph] concept.]]
     [[g] [An object of type `G`.]]
 ]
 
@@ -33,7 +33,7 @@ The following expressions are used within this document:
             required.
 
             *Requirements:* The `distance_type` must be a model of the
-            [BoostNumericValue] concept.
+            [NumericValue] concept.
         ]
     ]
     [
@@ -43,7 +43,7 @@ The following expressions are used within this document:
             The type being computed as the measure.
 
             *Requirements:* The `result_type` must be a model of the
-            [BoostNumericValue] concept.
+            [NumericValue] concept.
         ]
     ]
 ]

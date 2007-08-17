@@ -39,10 +39,10 @@ within the algorithm. This provides a mechanism for adapting the generic DFS alg
 to the many situations in which it can be used. In the pseudo-code below, the event
 points for DFS are indicated in by the triangles and labels on the right. The user-defined
 actions must be provided in the form of a visitor object, that is, an object whose type
-meets the requirements for a [BoostDFSVisitor]. In the pseudo-code we show the algorithm
+meets the requirements for a [DFSVisitor]. In the pseudo-code we show the algorithm
 computing predecessors /p/, discovery time /d/ and finish time /t/. By default, the
 `depth_first_search()` function does not compute these properties, however there are
-pre-defined visitors such as [boost_predecessor_recorder] and [boost_time_stamper] that
+pre-defined visitors such as [predecessor_recorder] and [time_stamper] that
 can be used to do this.
 
 [pre
@@ -90,8 +90,8 @@ DFS-VISIT(G, u)
     [
         [in] [`Graph& g`]
         [
-            A directed or undirected graph. The graph type must be a model of [BoostVertexListGraph]
-            and [BoostIncidenceGraph].
+            A directed or undirected graph. The graph type must be a model of [VertexListGraph]
+            and [IncidenceGraph].
         ]
     ]
     [
@@ -110,7 +110,7 @@ DFS-VISIT(G, u)
         [in] [`visitor(Visitor vis)`]
         [
             A visitor object that is inovked inside the algorithm at event points specified by the
-            [BoostDFSVisitor]. The `vis` object must be model the [BoostDFSVisitor] concept.
+            [DFSVisitor]. The `vis` object must be model the [DFSVisitor] concept.
 
             *Default* `bfs_visitor<null_visitor>`.
         ]

@@ -12,7 +12,7 @@ out-edge is an adjacent vertex). Both concepts are provided because in some cont
 concern for the vertices, whereas in other contexts the edges are also important.
 
 [h4 Refinement Of]
-[BoostGraph]
+[Graph]
 
 [h4 Associated Types]
 [table
@@ -28,7 +28,7 @@ concern for the vertices, whereas in other contexts the edges are also important
         [
             An adjacency iterator for a vertex v provides access to the vertices adjacent to v.
             As such, the value type of an adjacency iterator is the vertex descriptor type of its
-            graph. An adjacency iterator must meet the requirements of [BoostMultiPassInputIterator].
+            graph. An adjacency iterator must meet the requirements of [MultiPassInputIterator].
         ]
     ]
 ]
@@ -51,7 +51,7 @@ concern for the vertices, whereas in other contexts the edges are also important
 The `adjacent_vertices(v,g)` function must return in constant time.
 
 [h4 Design Rationale]
-The AdjacencyGraph concept is somewhat frivolous since [BoostIncidenceGraph] really covers the same
+The AdjacencyGraph concept is somewhat frivolous since [IncidenceGraph] really covers the same
 functionality (and more). The AdjacencyGraph concept exists because there are situations when
 `adjacent_vertices()` is more convenient to use than `out_edges()`. If you are constructing a graph
 class and do not want to put in the extra work of creating an adjacency iterator, have no fear. There

@@ -6,16 +6,16 @@
  /]
 
 [section Degree Measure]
-The [BoostDegreeMeasure] concept defines requirements for function objects
+The [DegreeMeasure] concept defines requirements for function objects
 that are used in computations on the degree of a vertex.
 
 [heading Notation]
 The following expressions are used within this document:
 [table
     [[Expression] [Description]]
-    [[M] [A type modeling the [BoostDegreeMeasure] concept.]]
+    [[M] [A type modeling the [DegreeMeasure] concept.]]
     [[m] [An object of type `M`.]]
-    [[G] [A type modeling the [BoostGraph] concept.]]
+    [[G] [A type modeling the [Graph] concept.]]
     [[g] [An object of type `G`.]]
     [[v] [An object of type `graph_traits<G>::vertex_descriptor`.]]
 ]

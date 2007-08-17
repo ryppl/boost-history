@@ -118,8 +118,8 @@ for both directed and undirected graphs, it is better to use the `out_degree(g)`
 function to access out-edges since it is guaranteed by every other graph class.
 
 [h5 Model Of]
-[BoostIncidenceGraph], [BoostVertexListGraph], [BoostEdgeListGraph], [BoostAdjacencyGraph],
-[BoostMutableGraph], and [BoostPropertyGraph].
+[IncidenceGraph], [VertexListGraph], [EdgeListGraph], [AdjacencyGraph],
+[MutableGraph], and [PropertyGraph].
 
 [h4 Template Parameters]
 There are only three parameters to the `undirected_graph` class.
@@ -143,7 +143,7 @@ There are only three parameters to the `undirected_graph` class.
 ]
 
 Additionally, the `undirected_graph` class provides a non-constant time implementation
-of the [BoostAdjacencyMatrix] associated function `edge(u,v,g)`, but does not model
+of the [AdjacencyMatrix] associated function `edge(u,v,g)`, but does not model
 the concept.
 
 [h4 Where Defined]
@@ -161,14 +161,14 @@ For convenience these types have been grouped by purpose.
         [`graph_traits<undirected_graph>::vertex_descriptor`]
         [
             The type for the vertex descriptors associated with the graph. The `vertex_descriptor`
-            models the [BoostDescriptor] and [NoConcept Hashable] concepts.
+            models the [Descriptor] and [NoConcept Hashable] concepts.
         ]
     ]
     [
         [`graph_traits<undirected_graph>::edge_descriptor`]
         [
             The type for the edge descriptors associated with the graph. The `edge_descriptor`
-            models the [BoostDescriptor] and [NoConcept Hashable] concepts.
+            models the [Descriptor] and [NoConcept Hashable] concepts.
         ]
     ]
 ]
@@ -736,7 +736,7 @@ set_property(const undirected_graph& g, GraphProperty, Value v)
 
 [h4 Rationale]
 Unlike most graph classes in Boost.Graph, the `undirected_graph` does not model the
-[BoostMutablePropertyGraph] concept. The reason for this is that it is relatively
+[MutablePropertyGraph] concept. The reason for this is that it is relatively
 difficult (from a usability standpoint) to easily deduce the type to be passed as a
 property when adding vertices and edges - but especially vertices.
 

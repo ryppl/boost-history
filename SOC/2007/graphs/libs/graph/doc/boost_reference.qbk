@@ -10,98 +10,113 @@
  /]
 
 
-[template boost_constant_property_map[] [link
-    boost_graph
+[template constant_property_map[] [link
+    graph
     [^constant_property_map]]]
 
 [/ Graph traits and types /]
-[template boost_graph_traits[] [link boost_graph.reference_guide.traits_classes.graph_traits [^graph_traits]]]
-[template boost_undirected_graph[] [link boost_graph.reference_guide.graph_types.undirected_graph [^undirected_graph]]]
-[template boost_directed_graph[] [link boost_graph.reference_guide.graph_types.directed_graph [^directed_graph]]]
-[template boost_adjacency_list[] [link boost_graph.reference_guide.graph_types.adjacency_list [^adjacecncy_list]]]
-[template boost_edge_list[] [link boost_graph.reference_guide.graph_types.edge_list [^edge_list]]]
+[template graph_traits[] [link boost_graph.reference.traits_classes.graph_traits [^graph_traits]]]
+[template undirected_graph[] [link boost_graph.reference.graph_types.undirected_graph [^undirected_graph]]]
+[template directed_graph[] [link boost_graph.reference.graph_types.directed_graph [^directed_graph]]]
+[template adjacency_list[] [link boost_graph.reference.graph_types.adjacency_list [^adjacecncy_list]]]
+[template edge_list[] [link boost_graph.reference.graph_types.edge_list [^edge_list]]]
 
 [/ Visitor types /]
-[template boost_null_visitor[] [link boost_graph.reference_guide.visitor_types.null_visitor [^null_visitor]]]
-[template boost_bfs_visitor[] [link boost_graph.reference_guide.visitor_types.bfs_visitor [^bfs_visitor]]]
-[template boost_dfs_visitor[] [link boost_graph.reference_guide.visitor_types.dfs_visitor [^dfs_visitor]]]
-[template boost_predecessor_recorder[] [link boost_graph.reference_guide.event_visitors.predecessor_recorder [^predecessor_recorder]]]
-[template boost_distance_recorder[] [link boost_graph.reference_guide.event_visitors.distance_recorder [^distance_recorder]]]
-[template boost_time_stamper[] [link boost_graph.reference_guide.event_visitors.time_stamper [^time_stamper]]]
-[template boost_property_writer[] [link boost_graph.reference_guide.event_visitors.property_writer [^property_writer]]]
+[template null_visitor[] [link boost_graph.reference.visitor_types.null_visitor [^null_visitor]]]
+[template bfs_visitor[] [link boost_graph.reference.visitor_types.bfs_visitor [^bfs_visitor]]]
+[template dfs_visitor[] [link boost_graph.reference.visitor_types.dfs_visitor [^dfs_visitor]]]
+[template predecessor_recorder[] [link boost_graph.reference.event_visitors.predecessor_recorder [^predecessor_recorder]]]
+[template distance_recorder[] [link boost_graph.reference.event_visitors.distance_recorder [^distance_recorder]]]
+[template time_stamper[] [link boost_graph.reference.event_visitors.time_stamper [^time_stamper]]]
+[template property_writer[] [link boost_graph.reference.event_visitors.property_writer [^property_writer]]]
 
 [/ Fundamental /]
-[template boost_breadth_first_search[] [link
-    boost_graph.reference_guide.algorithms.fundamental.breadth_first_search
+[template breadth_first_search[] [link
+    boost_graph.reference.algorithms.fundamental.breadth_first_search
     [^breadth_first_search()]]]
-[template boost_depth_first_search[] [link
-    boost_graph.reference_guide.algorithms.fundamental.depth_first_search
+[template depth_first_search[] [link
+    boost_graph.reference.algorithms.fundamental.depth_first_search
     [^depth_first_search()]]]
 
 [/ Shortest Path /]
-[template boost_dijkstra_shortest_paths[] [link
-    boost_graph.reference_guide.algorithms.shortest_paths.dijkstra_shortest_paths
+[template dijkstra_shortest_paths[] [link
+    boost_graph.reference.algorithms.shortest_paths.dijkstra_shortest_paths
     [^dijkstra_shortest_paths()]]]
-[template boost_bellman_ford_shortest_paths[] [link
-    boost_graph.reference_guide.algorithms.shortest_paths.bellman_ford_shortest_paths
+[template bellman_ford_shortest_paths[] [link
+    boost_graph.reference.algorithms.shortest_paths.bellman_ford_shortest_paths
     [^bellman_ford_shortest_paths()]]]
-[template boost_floyd_warshall_all_pairs_shortest_paths[] [link
-    boost_graph.reference_guide.algorithms.shortest_paths.floyd_warshall_all_pairs_shortest_paths
+[template floyd_warshall_all_pairs_shortest_paths[] [link
+    boost_graph.reference.algorithms.shortest_paths.floyd_warshall_all_pairs_shortest_paths
     [^floyd_warshall_all_pairs_shortest_paths()]]]
-[template boost_johnson_all_pairs_shortest_paths[] [link
-    boost_graph.reference_guide.algorithms.shortest_paths.johnson_all_pairs_shortest_paths
+[template johnson_all_pairs_shortest_paths[] [link
+    boost_graph.reference.algorithms.shortest_paths.johnson_all_pairs_shortest_paths
     [^johnson_all_pairs_shortest_paths()]]]
 
 [/ Connectivity /]
-[template boost_connected_components[] [link
-    boost_graph.reference_guide.algorithms.connectivity.connected_components
+[template connected_components[] [link
+    boost_graph.reference.algorithms.connectivity.connected_components
     [^connected_components()]]]
-[template boost_strong_connected_components[] [link
-    boost_graph.reference_guide.algorithms.connectivity.strongly_connected_components
+[template strong_connected_components[] [link
+    boost_graph.reference.algorithms.connectivity.strongly_connected_components
     [^strongly_connected_components]]]
 
 [/ Subgraph/ ]
-[template boost_bron_kerbosch_visit_cliques[] [link
-    boost_graph.reference_guide.algorithms.subgraph.bron_kerbosch_all_cliques
+[template bron_kerbosch_visit_cliques[] [link
+    boost_graph.reference.algorithms.subgraph.bron_kerbosch_all_cliques
     [^bron_kerbosch_all_cliques()]]]
-[template boost_tiernan_find_cycles[] [link
-    boost_graph.reference_guide.algorithms.subgraph.tiernan_all_cycles
+[template tiernan_find_cycles[] [link
+    boost_graph.reference.algorithms.subgraph.tiernan_all_cycles
     [^tiernan_all_cycles()]]]
 
 [/ Measures /]
-[template boost_degree_centrality[] [link
-    boost_graph.reference_guide.algorithms.graph_measures.degree_centrality
+[template degree_centrality[] [link
+    boost_graph.reference.algorithms.measures.degree_centrality.__degree_centrality__
     [^degree_centrality()]]]
-[template boost_closeness_centrality[] [link
-    boost_graph.reference_guide.algorithms.graph_measures.closeness_centrality
+[template all_degree_centralities[] [link
+    boost_graph.reference.algorithms.measures.degree_centrality.__all_degree_centralities___
+    [^all_degree_centralities()]]]
+[template closeness_centrality[] [link
+    boost_graph.reference.algorithms.measures.closeness_centrality.__closeness_centrality___
     [^closeness_centrality()]]]
-[template boost_mean_geodesic[] [link
-    boost_graph.reference_guide.algorithms.graph_measures.mean_geodesic
+[template all_closeness_centralities[] [link
+    boost_graph.reference.algorithms.measures.closeness_centrality.__all_closeness_centralities___
+    [^all_closeness_centralities()]]]
+[template mean_geodesic[] [link
+    boost_graph.reference.algorithms.measures.mean_geodesic.__mean_geodesic___
     [^mean_geodesic()]]]
-[template boost_eccentricity[] [link
-    boost_graph.reference_guide.algorithms.graph_measures.eccentricity
+[template all_mean_geodesics[] [link
+    boost_graph.reference.algorithms.measures.mean_geodesic.__all_mean_geodesics___
+    [^all_mean_geodesics()]]]
+[template small_world_distance[] [link
+    boost_graph.reference.algorithms.measures.mean_geodesic.__small_world_distance___
+    [^small_world_distance()]]]
+
+[template eccentricity[] [link
+    boost_graph.reference.algorithms.measures.eccentricity.__eccentricity___
     [^eccentricity()]]]
-[template boost_graph_radius[] [link
-    boost_graph.reference_guide.algorithms.graph_measures.eccentricity
+[template eccentricities[] [link
+    boost_graph.reference.algorithms.measures.eccentricity.__eccentricities___
+    [^eccentricities()]]]
+[template radius[] [link
+    boost_graph.reference.algorithms.measures.eccentricity.__radius___
     [^radius()]]]
-[template boost_graph_diameter[] [link
-    boost_graph.reference_guide.algorithms.graph_measures.eccentricity
+[template diameter[] [link
+    boost_graph.reference.algorithms.measures.eccentricity.__diameter___
     [^diameter()]]]
 
 
-[template boost_exterior_vertex_property[] [link
-    boost_graph
+[template exterior_vertex_property[] [link
+    graph
     [^exterior_vertex_property]]]
-[template boost_exterior_edge_property[] [link
-    boost_graph
+[template exterior_edge_property[] [link
+    graph
     [^exterior_edge_property]]]
 
 [/ Import lots of examples to build code templates]
-[import ../examples/social_network.hpp]
-[import ../examples/flow_network.hpp]
 [import ../examples/degree_centrality.cpp]
 [import ../examples/influence_prestige.cpp]
 [import ../examples/closeness_centrality.cpp]
-[import ../examples/norm_closeness_centrality.cpp]
+[import ../examples/scaled_closeness_centrality.cpp]
 [import ../examples/mean_geodesic.cpp]
+[import ../examples/inclusive_mean_geodesic.cpp]
 [import ../examples/eccentricity.cpp]

@@ -14,7 +14,7 @@ For the following sections, we use the following notional convents:
 
 [table
     [[Object] [Type]]
-    [[G] [A type that is a model of a [BoostGraph] (or refinement thereof)]]
+    [[G] [A type that is a model of a [Graph] (or refinement thereof)]]
     [[g] [An object of type G]]
     [[u,v] [Objects of type `graph_traits<G>::vertex_descriptor`]]
     [[e] [An object of type `graph_traits<G>::edge_descriptor`]]
@@ -26,7 +26,7 @@ For the following sections, we use the following notional convents:
     [[p] [An object of type Property]]
     [[Predicate] [A function that, given an argument, returns true or false]]
     [[pred] [An object of type [SgiPredicate]]]
-    [[V] [A type that is a model of a [BoostVisitor] (or refinement thereof)]]
+    [[V] [A type that is a model of a [Visitor] (or refinement thereof)]]
     [[vis] [An object of type V]]
 ]
 

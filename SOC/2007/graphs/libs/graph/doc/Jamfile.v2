@@ -15,15 +15,20 @@ boostbook standalone
         # Use graphics not text for navigation:
         <xsl:param>navig.graphics=1
         # How far down we chunk nested sections, basically all of them:
-        <xsl:param>chunk.section.depth=10
+        # Setting this to 4 will put all reference functions into the
+        # same page... and make all external links to those pages bounce
+        # to the top of them.
+        <xsl:param>chunk.section.depth=5
         # Don't put the first section on the same page as the TOC:
         <xsl:param>chunk.first.sections=1
         # How far down sections get TOC's
-        <xsl:param>toc.section.depth=10
+        <xsl:param>toc.section.depth=5
         # Max depth in each TOC:
+        # I could increase this, but that makes the top-level ToC
+        # extremely long.
         <xsl:param>toc.max.depth=3
         # How far down we go with TOC's
-        <xsl:param>generate.section.toc.level=10
+        <xsl:param>generate.section.toc.level=5
         # Logo location:
         <xsl:param>boost.logo=../boost.png
         <xsl:param>annotation.support=1

@@ -6,13 +6,13 @@
  /]
 
 [section Bellman Ford Visitor]
-This concept defines the visitor interface for [boost_bellman_ford_shortest_paths]. Users
+This concept defines the visitor interface for [bellman_ford_shortest_paths]. Users
 can define a class with the Bellman Ford Visitor interface and pass and object of the
-class to [boost_bellman_ford_shortest_paths], thereby augmenting the actions taken during the
+class to [bellman_ford_shortest_paths], thereby augmenting the actions taken during the
 graph search.
 
 [h4 Refinement Of]
-[BoostVisitor]
+[Visitor]
 
 [h4 Valid Expressions]
 [table
@@ -29,7 +29,7 @@ graph search.
         [`vis.edge_relaxed(e,g)`]
         [
             If the relaxation predicate holds for this given edge then this method is invoked.
-            See [boost_dijkstra_shortest_paths] for more information on relaxation.
+            See [dijkstra_shortest_paths] for more information on relaxation.
 
             *Returns* `void`
         ]
@@ -38,7 +38,7 @@ graph search.
         [`vis.edge_not_relaxed(e,g)`]
         [
             If the relaxation predicate does not hold for this edge, then this method is invoked.
-            See [boost_dijkstra_shortest_paths] for more information on relaxation.
+            See [dijkstra_shortest_paths] for more information on relaxation.
 
             *Returns* `void`
         ]
@@ -65,6 +65,6 @@ graph search.
 ]
 
 [h4 Models]
-* [boost_bellman_ford_visitor]
+* [bellman_ford_visitor]
 
 [endsect]

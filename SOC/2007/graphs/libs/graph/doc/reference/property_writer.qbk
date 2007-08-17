@@ -10,16 +10,16 @@
     template <class PropertyMap, class OutputIterator, class EventTag>
     class property_writer;
 
-This is an [BoostEventVisitor] that can be used to output the property of a vertex
+This is an [EventVisitor] that can be used to output the property of a vertex
 or edge at some event-point within an algorithm.
 
-The [boost_property_writer] class can be used with graph algorithms by wrapping it with
-the algorithm specific adaptor, such as [boost_bfs_visitor] and [boost_dfs_visitor].
+The [property_writer] class can be used with graph algorithms by wrapping it with
+the algorithm specific adaptor, such as [bfs_visitor] and [dfs_visitor].
 Also, this event visitor can be combined with other event visitors using `std::pair` to
-form an [BoostEventVisitorList].
+form an [EventVisitorList].
 
 [h4 Model Of]
-[BoostEventVisitor]
+[EventVisitor]
 
 [h4 Where Defined]
 `boost/graph/visitors.hpp`
@@ -30,7 +30,7 @@ form an [BoostEventVisitorList].
     [
         [`PropertyMap`]
         [
-            A [BoostReadablePropertyMap] where the `key_type` is of type `vertex_descriptor`
+            A [ReadablePropertyMap] where the `key_type` is of type `vertex_descriptor`
             of `edge_descriptor` (depending on the event tag) and the `value_type` type is
             of the property is convertible to the `value_type` of the `OutputIterator`.
         ]
@@ -95,7 +95,7 @@ stamp_times(Property pa, OutputIterator out, EventTag)
 ``
         ]
         [
-            A convenience function for creating [boost_property_writer] instances.
+            A convenience function for creating [property_writer] instances.
         ]
     ]
 ]

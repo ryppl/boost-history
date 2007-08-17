@@ -6,13 +6,13 @@
  /]
 
 [section Dijkstra Visitor]
-This concept defines the visitor interface for [boost_dijkstra_shortest_paths] and related
+This concept defines the visitor interface for [dijkstra_shortest_paths] and related
 algorithms. The user can create a class that matches this interface, and then pass objects
-of the class into [boost_dijkstra_shortest_paths] to augment the actions taken during the
+of the class into [dijkstra_shortest_paths] to augment the actions taken during the
 search.
 
 [h4 Refinement Of]
-[BoostVisitor]
+[Visitor]
 
 [h4 Valid Expressions]
 [table
@@ -55,7 +55,7 @@ search.
         [`vis.edge_relaxed(e,g)`]
         [
             If the relaxation predicate holds for this given edge then this method is invoked.
-            See [boost_dijkstra_shortest_paths] for more information on relaxation.
+            See [dijkstra_shortest_paths] for more information on relaxation.
 
             *Returns* `void`
         ]
@@ -64,7 +64,7 @@ search.
         [`vis.edge_not_relaxed(e,g)`]
         [
             If the relaxation predicate does not hold for this edge, then this method is invoked.
-            See [boost_dijkstra_shortest_paths] for more information on relaxation.
+            See [dijkstra_shortest_paths] for more information on relaxation.
 
             *Returns* `void`
         ]
@@ -82,6 +82,6 @@ search.
 ]
 
 [h4 Models]
-* [boost_dijkstra_visitor]
+* [dijkstra_visitor]
 
 [endsect]

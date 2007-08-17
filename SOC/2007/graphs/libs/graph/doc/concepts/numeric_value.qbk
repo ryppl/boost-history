@@ -6,7 +6,7 @@
  /]
 
 [section Numeric Value]
-The [BoostNumericValue] concept describes requirements for a type to behave
+The [NumericValue] concept describes requirements for a type to behave
 as if it were numeric. This concept is generally used by algorithms that
 typically operate on numeric types, but can be specialized to operate on
 user-defined numerics or discrete types that emulate numerics.
@@ -30,7 +30,7 @@ infinite and zero states.
 The following expressions are used within this document:
 [table
     [[Expression] [Description]]
-    [[N] [A type modeling the [BoostNumericValue] concept.]]
+    [[N] [A type modeling the [NumericValue] concept.]]
 ]
 
 [heading Associated Types]
@@ -42,7 +42,7 @@ The following expressions are used within this document:
         [
             The underlying type of the numeric value.
 
-            *Requirements:* `N` is a [BoostNumericValue], and the `value_type`
+            *Requirements:* `N` is a [NumericValue], and the `value_type`
             and `N` must be the same type.
         ]
     ]
@@ -73,8 +73,5 @@ The following expressions are used within this document:
         ]
     ]
 ]
-
-[heading Models]
-[boost_numeric_value]
 
 [endsect]

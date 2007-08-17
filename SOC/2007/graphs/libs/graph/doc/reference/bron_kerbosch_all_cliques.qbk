@@ -37,11 +37,11 @@ be connected to /u/.
             *Preconditions:* The indices of vertices in the graph must be
             in the range \[0, `num_vertices(g)`).
 
-            *Requirements:* The `Graph` type must be a model of the [BoostAdjacencyMatrix],
-            [BoostIncidenceGraph] concept and the [BoostVertexIndexGraph]
+            *Requirements:* The `Graph` type must be a model of the [AdjacencyMatrix],
+            [IncidenceGraph] concept and the [VertexIndexGraph]
             concepts[footnote Any `Graph` typen that implements the `edge()`
             function will satisfy the expression requirements for the
-            [BoostAdjacencyMatrix], but may incur additional overhead due non-constant
+            [AdjacencyMatrix], but may incur additional overhead due non-constant
             implementations.].
         ]
     ]
@@ -51,7 +51,7 @@ be connected to /u/.
             The visitor object to the algorithm.
 
             *Requirements:* This `Visitor` class must model the
-            [BoostCliqueVisitor] class.
+            [CliqueVisitor] class.
         ]
     ]
 ]
@@ -65,10 +65,10 @@ combinations of subsets of vertices as cliques (i.e., the powerset of vertices).
 The original publication, however, approximates the runtime of the algorithm as
 being proportional to ['O(3.14[super n])].
 
-Graphs that do not meet the constant-time requirements of the [BoostAdjacencyMatrix]
+Graphs that do not meet the constant-time requirements of the [AdjacencyMatrix]
 concept will incur additional runtime costs during execution (usually by a small linear
-factor). Examples of such graphs include the [boost_undirected_graph],
-[boost_directed_graph], and the [boost_adjacency_list] classes.
+factor). Examples of such graphs include the [undirected_graph],
+[directed_graph], and the [adjacency_list] classes.
 
 [h5 Examples]
 

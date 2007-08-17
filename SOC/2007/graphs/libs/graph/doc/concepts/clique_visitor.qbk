@@ -11,7 +11,7 @@ of clique-detection algorithms. Objects of this type are passed to these
 algorithms and are invoked when a clique is found within a graph.
 
 [heading Refinement Of]
-[BoostVisitor]
+[Visitor]
 
 [heading Expressions]
 [table
@@ -25,7 +25,7 @@ algorithms and are invoked when a clique is found within a graph.
             connected subgraph is identified in the graph `g`.
 
              *Requirements:* `g` is an object whose type `G` is a refinement of the
-            [BoostGraph] concept.
+            [Graph] concept.
 
             *Requirements:* `vs` is an object whose type `VS` is a refinement of the
             [SgiContainer] concept. The `value_type` of `VS` must be the `vertex_descriptor`

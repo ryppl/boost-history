@@ -12,7 +12,7 @@ use this concept. However there are algorithms not yet implemented such as Floyd
 would require this concept.
 
 [h4 Refinement Of]
-[BoostGraph]
+[Graph]
 
 [h4 Associated Types]
 [table
@@ -43,8 +43,8 @@ would require this concept.
 The `edge(u,v,g)` function must return in constant time.
 
 [h4 Notes]
-A number of graph classes (notably [boost_undirected_graph], [boost_directed_graph] and
-[boost_adjacency_list]) provide non-constant time implementations of this interface. Although
+A number of graph classes (notably [undirected_graph], [directed_graph] and
+[adjacency_list]) provide non-constant time implementations of this interface. Although
 the function exists, none of these classes are documented as modeling this concept.
 
 [endsect]

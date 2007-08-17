@@ -10,17 +10,17 @@
     template <class TimeMap, class TimeT, class EventTag>
     class time_stamper;
 
-This is an [BoostEventVisitor] that can be used to "stamp" a time at some event-point
+This is an [EventVisitor] that can be used to "stamp" a time at some event-point
 within an algorithm. An example of this is recording the discover or finish time of
 a vertex during a graph search.
 
-The [boost_time_stamper] class can be used with graph algorithms by wrapping it with
-the algorithm specific adaptor, such as [boost_bfs_visitor] and [boost_dfs_visitor]. Also,
+The [time_stamper] class can be used with graph algorithms by wrapping it with
+the algorithm specific adaptor, such as [bfs_visitor] and [dfs_visitor]. Also,
 this event visitor can be combined with other event visitors using `std::pair` to
-form an [BoostEventVisitorList].
+form an [EventVisitorList].
 
 [h4 Model Of]
-[BoostEventVisitor]
+[EventVisitor]
 
 [h4 Where Defined]
 `boost/graph/visitors.hpp`
@@ -31,7 +31,7 @@ form an [BoostEventVisitorList].
     [
         [`TimeMap`]
         [
-            A [BoostWritablePropertyMap] where the key type is of type `vertex_descriptor`
+            A [WritablePropertyMap] where the key type is of type `vertex_descriptor`
             of `edge_descriptor` (depending on the event tag) and `TimeT` must be convertible
             to the value type.
         ]
@@ -96,7 +96,7 @@ stamp_times(TimeMap pa, TimeT& t, EventTag)
 ``
         ]
         [
-            A convenience function for creating [boost_time_stamper] instances.
+            A convenience function for creating [time_stamper] instances.
         ]
     ]
 ]

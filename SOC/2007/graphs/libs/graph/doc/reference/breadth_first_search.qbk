@@ -76,8 +76,8 @@ BFS(G, s)
     [
         [in] [`Graph& g`]
         [
-            A directed or undirected graph. The graph type must be a model of [BoostVertexListGraph]
-            and [BoostIncidenceGraph].
+            A directed or undirected graph. The graph type must be a model of [VertexListGraph]
+            and [IncidenceGraph].
         ]
     ]
     [
@@ -96,7 +96,7 @@ BFS(G, s)
         [in] [`visitor(Visitor vis)`]
         [
             A visitor object that is inovked inside the algorithm at event points specified by the
-            [BoostBFSVisitor]. The `vis` object must be model the [BoostBFSVisitor] concept.
+            [BFSVisitor]. The `vis` object must be model the [BFSVisitor] concept.
 
             *Default* `bfs_visitor<null_visitor>`.
         ]

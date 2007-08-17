@@ -113,15 +113,15 @@ There are three parameters to the `directed_graph` class.
 ]
 
 [h5 Model Of]
-[BoostIncidenceGraph], [BoostVertexListGraph], [BoostEdgeListGraph], [BoostAdjacencyGraph],
-[BoostMutableGraph], and [BoostPropertyGraph].
+[IncidenceGraph], [VertexListGraph], [EdgeListGraph], [AdjacencyGraph],
+[MutableGraph], and [PropertyGraph].
 
 [h5 Where Defined]
 `boost/graph/directed_graph.hpp`
 
 [h4 Associated Types]
 There are a number of useful types associated with the `directed_graph` class.
-Most of these are accessed through [boost_graph_traits] or other template classes.
+Most of these are accessed through [graph_traits] or other template classes.
 For convenience these types have been grouped by purpose.
 
 [h5 Descriptor Types]
@@ -131,14 +131,14 @@ For convenience these types have been grouped by purpose.
         [`graph_traits<directed_graph>::vertex_descriptor`]
         [
             The type for the vertex descriptors associated with the graph. The `vertex_descriptor`
-            models the [BoostDescriptor] and [NoConcept Hashable] concepts.
+            models the [Descriptor] and [NoConcept Hashable] concepts.
         ]
     ]
     [
         [`graph_traits<directed_graph>::edge_descriptor`]
         [
             The type for the edge descriptors associated with the graph. The `edge_descriptor`
-            models the [BoostDescriptor] and [NoConcept Hashable] concepts.
+            models the [Descriptor] and [NoConcept Hashable] concepts.
         ]
     ]
 ]
@@ -772,7 +772,7 @@ set_property(const directed_graph& g, GraphProperty, Value v)
 
 [h4 Rationale]
 Unlike most graph classes in Boost.Graph, the `directed_graph` does not model the
-[BoostMutablePropertyGraph] concept. The reason for this is that it is relatively
+[MutablePropertyGraph] concept. The reason for this is that it is relatively
 difficult from a usability standpoint to easily deduce the type to be passed as a
 property when adding vertices and edges - but especially vertices.
 

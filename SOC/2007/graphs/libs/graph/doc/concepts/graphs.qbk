@@ -35,42 +35,42 @@ The notation used in the table is as follows.
 
 [table
     [[Expression] [Return Type or Description]]
-    [[[*[BoostGraph]]]]
+    [[[*[Graph]]]]
     [[`graph_traits<G>::vertex_descriptor`] [The type for vertex representative objects.]]
     [[`graph_traits<G>::edge_descriptor`] [The type for edge representative objects.]]
     [[`graph_traits<G>::directed_category`] [Graph is directed or undirected?]]
     [[`graph_traits<G>::edge_parallel_category`] [Graph allows parallel edges?]]
     [[`graph_traits<G>::traversal_category`] [The ways in which the vertices and edges can be traversed.]]
-    [[[*[BoostIncidenceGraph]]]]
+    [[[*[IncidenceGraph]]]]
     [[`graph_traits<G>::degree_size_type`] [The integer type for vertex degree.]]
     [[`graph_traits<G>::out_edge_iterator`] [Type for iterating over out edges.]]
     [[`out_edges(v,g)`] [`std::pair<out_edge_iterator, out_edge_iterator>`]]
     [[`out_degree(v,g)`] [`degree_size_type`]]
     [[`source(e,g)`] [`vertex_descriptor`]]
     [[`target(e,g)`] [`vertex_descriptor`]]
-    [[[*[BoostBidirectionalGraph]]]]
+    [[[*[BidirectionalGraph]]]]
     [[`graph_traits<G>::in_edge_iterator`] [Type for iterating over in edges.]]
     [[`in_edges(v,g)`] [`std::pair<in_edge_iterator,in_edge_iterator>`]]
     [[`in_degree(v,g)`] [`degree_size_type`]]
     [[`degree(v,g)`] [`degree_size_type`]]
-    [[[*[BoostAdjacencyGraph]]]]
+    [[[*[AdjacencyGraph]]]]
     [[`graph_traits<G>::adjacency_iterator`] [Type for iterating over adjacent vertices.]]
     [[`adjacent_vertices(v,g)`] [`std::pair<adjacency_iterator,adjacency_iterator>`]]
-    [[[*[BoostVertexListGraph]]]]
+    [[[*[VertexListGraph]]]]
     [[`graph_traits<G>::vertex_iterator`] [Type for iterating over vertices.]]
     [[`graph_traits<G>::vertices_size_type`] [Unsigned integer type for the number of vertices.]]
     [[`vertices(g)`] [`std::pair<vertex_iterator,vertex_iterator>`]]
     [[`num_vertices(g)`] [`vertices_size_type`]]
-    [[[*[BoostEdgeListGraph]]]]
+    [[[*[EdgeListGraph]]]]
     [[`graph_traits<G>::edge_iterator`] [Type for iterating over edges.]]
     [[`graph_traits<G>::edges_size_type`] [Unsigned integer type for the number of edges.]]
     [[`edges(g)`] [`std::pair<edge_iterator, edge_iterator>`]]
     [[`num_edges(g)`] [`edges_size_type`]]
     [[`source(e,g)`] [`vertex_descriptor`]]
     [[`target(e,g)`] [`vertex_descriptor`]]
-    [[[*[BoostAdjacencyMatrix]]]]
+    [[[*[AdjacencyMatrix]]]]
     [[`edge(u,v,g)`] [`std::pair<edge_descriptor,boo>`]]
-    [[[*[BoostMutableGraph]]]]
+    [[[*[MutableGraph]]]]
     [[`add_vertex(g)`] [`vertex_descriptor`]]
     [[`clear_vertex(v,g)`] [`void`]]
     [[`clear_out_edges(v,g)`] [`void`]]
@@ -82,13 +82,13 @@ The notation used in the table is as follows.
     [[`remove_edge_if(pred,g)`] [`void`]]
     [[`remove_out_edge_if(v,pred,g)`] [`void`]]
     [[`remove_in_edge_if(v,pred,g)`] [`void`]]
-    [[[*[BoostPropertyGraph]]]]
+    [[[*[PropertyGraph]]]]
     [[`property_map<G,Property>::type`] [Type for a mutable property map.]]
     [[`property_map<G,Property>::const_type`] [Type for a non-mutable property map.]]
     [[`get(p,g)`] [Function to get a property map.]]
     [[`get(p,g,x)`] [Get the property value for vertex or edge `x`]]
     [[`put(p,g,x,v`)] [Set the property value for vertex or edge `x` to value `v`.]]
-    [[[*[BoostMutablePropertyGraph]]]]
+    [[[*[MutablePropertyGraph]]]]
     [[`add_vertex(vp,g)`] [`vertex_descriptor`]]
     [[`add_edge(u,v,ep,g)`] [`std::pair<edge_descriptor,bool>`]]
 ]
@@ -218,7 +218,7 @@ of parallel edges, meaning that it is fairly easy to actually create multigraphs
 without any additional work.
 
 There are certain sets of graph types that do not allow the addition of parallel edges.
-Specifically, if the EdgeList and OutEdgeList of an [boost_adjacency_list] models an
+Specifically, if the EdgeList and OutEdgeList of an [adjacency_list] models an
 associative container, then the graph cannont be a multigraph.
 
 *Document this a little better*
@@ -226,7 +226,7 @@ associative container, then the graph cannont be a multigraph.
 [h3 Indexed Graphs]
 Although not explicitly documented (yet), there's a concept of a Vertex-Indexed graph
 that has some valid expressions related specifically to operations on vertex index
-property of the graph. The [boost_undirected_graph] class has some addiitonal methods
+property of the graph. The [undirected_graph] class has some addiitonal methods
 that can also be ported.
 
 

@@ -1,4 +1,4 @@
-[/
+b[/
  / Copyright (c) 2007 Andrew Sutton
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -9,7 +9,7 @@
 A MutableGraph can be changed via the addition or removal of edges and vertices.
 
 [h4 Refinement Of]
-[BoostGraph]
+[Graph]
 
 [h4 Valid Expressions]
 [table
@@ -123,7 +123,7 @@ A MutableGraph can be changed via the addition or removal of edges and vertices.
         [`remove_edge(ei,g)`]
         [
             Remove the edge pointed to by the edge iterator `ei` from the graph. This expression is only required
-            when `g` also models [BoostIncidenceGraph].
+            when `g` also models [IncidenceGraph].
 
             *Returns* `void`
 
@@ -167,8 +167,8 @@ to prevent the addition of parallel edges (which is a "feature" of some graph ty
 * Edge removal is guaranteed to be /O(E)/.
 
 [h4 Models]
-* [boost_undirected_graph]
-* [boost_directed_graph]
-* [boost_adjacency_list]
+* [undirected_graph]
+* [directed_graph]
+* [adjacency_list]
 
 [endsect]

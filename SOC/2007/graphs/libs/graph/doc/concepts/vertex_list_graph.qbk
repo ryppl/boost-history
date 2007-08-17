@@ -6,11 +6,11 @@
  /]
 
 [section Vertex List Graph]
-The VertexListGraph concept refines the [BoostGraph] concept, and adds the requirement
+The VertexListGraph concept refines the [Graph] concept, and adds the requirement
 for efficient traversal of all the vertices in a graph.
 
 [h4 Refinement Of]
-[BoostGraph]
+[Graph]
 
 [h4 Associated Types]
 [table
@@ -25,7 +25,7 @@ for efficient traversal of all the vertices in a graph.
         [`graph_traits<G>::vertex_iterator`]
         [
             A vertex iterator (obtained via vertices(g)) provides access to all of the vertices in
-            a graph. A vertex iterator type must meet the requirements of [BoostMultiPassInputIterator].
+            a graph. A vertex iterator type must meet the requirements of [MultiPassInputIterator].
             The value type of the vertex iterator must be the vertex descriptor of the graph.
         ]
     ]
@@ -63,7 +63,7 @@ The `vertices(g)` function must return in constant time.
 
 [h4 Design Rationale]
 One issue in the design of this concept is whether to include the refinement from the
-[BoostIncidenceGraph] and [BoostAdjacencyGraph] concepts. The ability to traverse the vertices
+[IncidenceGraph] and [AdjacencyGraph] concepts. The ability to traverse the vertices
 of a graph is orthogonal to traversing out-edges, so it would make sense to have a VertexListGraph
 concept that only includes vertex traversal. However, such a concept would no longer really be a
 graph, but would just be a set, and the STL already has concepts for dealing with such things.

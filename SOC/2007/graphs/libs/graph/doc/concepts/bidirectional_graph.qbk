@@ -14,7 +14,7 @@ the in_edges() and out_edges() functions are the same, they both return the edge
 the vertex.
 
 [heading Refinement Of]
-[BoostIncidenceGraph]
+[IncidenceGraph]
 
 [h4 Associated Types]
 [table
@@ -61,9 +61,9 @@ the vertex.
 ]
 
 [h4 Models]
-* [boost_undirected_graph]
-* [boost_directed_graph]
-* [boost_adjacency_list] with the `Directed` template parameter as `bidirectionalS` or
+* [undirected_graph]
+* [directed_graph]
+* [adjacency_list] with the `Directed` template parameter as `bidirectionalS` or
 `undirectedS`.
 
 [h4 Complexity Guarantees]

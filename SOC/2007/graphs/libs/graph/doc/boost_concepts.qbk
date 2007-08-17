@@ -10,61 +10,62 @@
  /]
 
 
-[template BoostMultiPassInputIterator[] [@http://www.boost.org/libs/utility/MultiPassInputIterator.html MultipPassInputIterator]]
+[template MultiPassInputIterator[] [@http://www.boost.org/libs/utility/MultiPassInputIterator.html MultipPassInputIterator]]
 
-[template BoostReadablePropertyMap[] [@http://www.boost.org/libs/property_map/ReadablePropertyMap.html ReadablePropertyMap]]
-[template BoostWritablePropertyMap[] [@http://www.boost.org/libs/property_map/WritablePropertyMap.html WritablePropertyMap]]
-[template BoostReadWritePropertyMap[] [@http://www.boost.org/libs/property_map/ReadWritePropertyMap.html ReadWritePropertyMap]]
+[template ReadablePropertyMap[] [@http://www.boost.org/libs/property_map/ReadablePropertyMap.html [^ReadablePropertyMap]]]
+[template WritablePropertyMap[] [@http://www.boost.org/libs/property_map/WritablePropertyMap.html [^WritablePropertyMap]]]
+[template ReadWritePropertyMap[] [@http://www.boost.org/libs/property_map/ReadWritePropertyMap.html [^ReadWritePropertyMap]]]
 
-[template BoostGraph[] [link boost_graph.concepts.graph_concepts.graph [^Graph]]]
-[template BoostIncidenceGraph[] [link
+
+[template Graph[] [link boost_graph.concepts.graph_concepts.graph [^Graph]]]
+[template IncidenceGraph[] [link
     boost_graph.concepts.graph_concepts.incidence_graph
     [^IncidenceGraph]]]
-[template BoostBidirectionalGraph[] [link
+[template BidirectionalGraph[] [link
     boost_graph.concepts.graph_concepts.bidirectional_graph
     [^BidirectionalGraph]]]
-[template BoostVertexListGraph[] [link
+[template VertexListGraph[] [link
     boost_graph.concepts.graph_concepts.vertex_list_graph
     [^VertexListGraph]]]
-[template BoostEdgeListGraph[] [link
+[template EdgeListGraph[] [link
     boost_graph.concepts.graph_concepts.edge_list_graph
     [^EdgeListGraph]]]
-[template BoostAdjacencyGraph[] [link
+[template AdjacencyGraph[] [link
     boost_graph.concepts.graph_concepts.adjacency_graph
     [^AdjacencyGraph]]]
-[template BoostAdjacencyMatrix[] [link
+[template AdjacencyMatrix[] [link
     boost_graph.concepts.graph_concepts.adjacency_matrix
     [^AdjacencyMatrix]]]
-[template BoostMutableGraph[] [link
+[template MutableGraph[] [link
     boost_graph.concepts.graph_concepts.mutable_graph
     [^MutableGraph]]]
-[template BoostPropertyGraph[] [link
+[template PropertyGraph[] [link
     boost_graph.concepts.graph_concepts.property_graph
     [^PropertyGraph]]]
-[template BoostMutablePropertyGraph[] [link
+[template MutablePropertyGraph[] [link
     boost_graph.concepts.graph_concepts.mutable_property_graph
     [^MutablePropertyGraph]]]
 
-[template BoostVertexIndexGraph[] [link
+[template VertexIndexGraph[] [link
     boost_graph.concepts.graph_concepts
     [^VertexIndexGraph]]]
 
-[template BoostVisitor[] [link boost_graph.concepts.visitor_concepts.visitor Visitor]]
-[template BoostBFSVisitor[] [link boost_graph.concepts.visitor_concepts.breadth_first_search_visitor BreadthFirstSearchVisitor]]
-[template BoostDFSVisitor[] [link boost_graph.concepts.visitor_concepts.depth_first_search_visitor DepthFirstSearchVisitor]]
-[template BoostDijkstraVisitor[] [link boost_graph.concepts.visitor_concepts.dijksta_visitor DijkstraVisitor]]
-[template BoostBellmanfordVisitor[] [link boost_graph.concepts.visitor_concepts.bellmanford_visitor BellmanFordVisitor]]
-[template BoostAStarVisitor[] [link boost_graph.concepts.visitor_concepts.a_star_visitor A\*Visitor]]
-[template BoostCliqueVisitor[] [link boost_graph.concepts.visitor_concepts.clique_visitor [^CliqueVisitor]]]
-[template BoostCycleVisitor[] [link boost_graph.concepts.visitor_concepts.cycle_visitor [^CycleVisitor]]]
-[template BoostEventVisitor[] [link boost_graph.concepts.visitor_concepts.event_visitor EventVisitor]]
-[template BoostEventVisitorList[] [link boost_graph.concepts.visitor_concepts.event_visitor_list EventVisitorList]]
+[template Visitor[] [link boost_graph.concepts.visitor_concepts.visitor Visitor]]
+[template BFSVisitor[] [link boost_graph.concepts.visitor_concepts.breadth_first_search_visitor BreadthFirstSearchVisitor]]
+[template DFSVisitor[] [link boost_graph.concepts.visitor_concepts.depth_first_search_visitor DepthFirstSearchVisitor]]
+[template DijkstraVisitor[] [link boost_graph.concepts.visitor_concepts.dijksta_visitor DijkstraVisitor]]
+[template BellmanfordVisitor[] [link boost_graph.concepts.visitor_concepts.bellmanford_visitor BellmanFordVisitor]]
+[template AStarVisitor[] [link boost_graph.concepts.visitor_concepts.a_star_visitor A\*Visitor]]
+[template CliqueVisitor[] [link boost_graph.concepts.visitor_concepts.clique_visitor [^CliqueVisitor]]]
+[template CycleVisitor[] [link boost_graph.concepts.visitor_concepts.cycle_visitor [^CycleVisitor]]]
+[template EventVisitor[] [link boost_graph.concepts.visitor_concepts.event_visitor EventVisitor]]
+[template EventVisitorList[] [link boost_graph.concepts.visitor_concepts.event_visitor_list EventVisitorList]]
 
 [/ A bunch of miscellaneus concepts]
-[template BoostColorValue[] [link boost_graph.concepts.miscellaneous_concepts.color_value ColorValue]]
-[template BoostDescriptor[] [link boost_graph.concepts.graph_concepts.descriptor [^Descriptor]]]
-[template BoostNumericValue[] [link boost_graph.concepts.general_concepts.numeric_value [^NumericValue]]]
-[template BoostPropertyMap[] [link boost_graph.concepts.general_concepts.property_map [^PropertyMap]]]
-[template BoostPropertyMatrix[] [link boost_graph.concepts.general_concepts.property_matrix [^PropertyMatrix]]]
-[template BoostDegreeMeasure[] [link boost_graph.concepts.general_concepts.degree_measure [^DegreeMeasure]]]
-[template BoostDistanceMeasure[] [link boost_graph.concepts.general_concepts.distance_measure [^DistanceMeasure]]]
+[template ColorValue[] [link boost_graph.concepts.miscellaneous_concepts.color_value ColorValue]]
+[template Descriptor[] [link boost_graph.concepts.graph_concepts.descriptor [^Descriptor]]]
+[template NumericValue[] [link boost_graph.concepts.general_concepts.numeric_value [^NumericValue]]]
+[template PropertyMap[] [link boost_graph.concepts.general_concepts.property_map [^PropertyMap]]]
+[template PropertyMatrix[] [link boost_graph.concepts.general_concepts.property_matrix [^PropertyMatrix]]]
+[template DegreeMeasure[] [link boost_graph.concepts.general_concepts.degree_measure [^DegreeMeasure]]]
+[template DistanceMeasure[] [link boost_graph.concepts.general_concepts.distance_measure [^DistanceMeasure]]]

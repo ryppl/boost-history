@@ -13,7 +13,7 @@ returns a property map object and also the value corresponding to a vertex or ed
 indicated property.
 
 [h4 Refinement Of]
-[BoostGraph]
+[Graph]
 
 [h4 Associated Types]
 [table
@@ -22,7 +22,7 @@ indicated property.
         [`property_map<G, Property>::type`]
         [
             The type of the property map for the property specified by `Property`. This type must
-            be a model of [BoostReadWritePropertyMap] with a key type the same as the graph's
+            be a model of [ReadWritePropertyMap] with a key type the same as the graph's
             `vertex_descriptor` or `edge_descriptor` types.
         ]
     ]
@@ -30,7 +30,7 @@ indicated property.
         [`property_map<G, Property>::const_type`]
         [
             The type of the property map for the property specified by `Property`. This type must
-            be a model of [BoostReadablePropertyMap] with a key type the same as the graph\'s
+            be a model of [ReadablePropertyMap] with a key type the same as the graph\'s
             `vertex_descriptor` or `edge_descriptor` types.
         ]
     ]

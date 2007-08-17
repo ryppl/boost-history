@@ -10,15 +10,15 @@
     template <class PredecessorMap, class EventTag>
     class predecessor_recorder;
 
-This is an [BoostEventVisitor] that records the predecessor (or parent) of a vertex in
+This is an [EventVisitor] that records the predecessor (or parent) of a vertex in
 a predecessor property map. This is particularly useful in graph search algorithms where
 recording the predecessors is an efficient way to encode the search tree that was traversed
 during the search. The predecessor recorder is typically used with the `on_tree_edge` or
 `on_relax_edge events`, and cannot be used with vertex events.
 
-[boost_predecessor_recorder] can be used with graph algorithms by wrapping it with the
-algorithm specific adaptor, such as [boost_bfs_visitor] and [boost_dfs_visitor]. Also, this
-event visitor can be combined with other event visitors using `std::pair` to form an [BoostEventVisitorList].
+[predecessor_recorder] can be used with graph algorithms by wrapping it with the
+algorithm specific adaptor, such as [bfs_visitor] and [dfs_visitor]. Also, this
+event visitor can be combined with other event visitors using `std::pair` to form an [EventVisitorList].
 
 Algorithms such as Dijkstra's and breadth-first search will not assign a predecessor
 to the source vertex (which is the root of the search tree). Often times it is useful to
@@ -28,7 +28,7 @@ that creates a forest (multiple search trees), it is useful to intialize the pre
 of every vertex to itself, so that all the root nodes can be distinguished.
 
 [h4 Model Of]
-[BoostEventVisitor]
+[EventVisitor]
 
 [h4 Where Defined]
 `boost/graph/visitors.hpp`
@@ -39,7 +39,7 @@ of every vertex to itself, so that all the root nodes can be distinguished.
     [
         [`PredecessorMap`]
         [
-            A [BoostWritablePropertyMap] where the key type and value type are  of type
+            A [WritablePropertyMap] where the key type and value type are  of type
             `vertex_descriptor`.
         ]
     ]
@@ -95,7 +95,7 @@ record_predecessors(PredecessorMap pa, EventTag)
 ``
         ]
         [
-            A convenience function for creating [boost_predecessor_recorder] instances.
+            A convenience function for creating [predecessor_recorder] instances.
         ]
     ]
 ]

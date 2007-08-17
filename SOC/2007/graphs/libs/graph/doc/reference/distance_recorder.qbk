@@ -10,19 +10,19 @@
     template <class DistanceMap, class EventTag>
     class distance_recorder;
 
-This is an [BoostEventVisitor] that records the distance of a vertex (using a property
+This is an [EventVisitor] that records the distance of a vertex (using a property
 map) from some source vertex during a graph search. When applied to edge /e = (u,v)/,
 the distance of /v/ is recorded to be one more than the distance of /u/. The distance
 recorder is typically used with the `on_tree_edge` or `on_relax_edge` events, and cannot
 be used with vertex events.
 
-The [boost_distance_recorder] class can be used with graph algorithms by wrapping it with
-the algorithm specific adaptor, such as [boost_bfs_visitor] and [boost_dfs_visitor]. Also,
+The [distance_recorder] class can be used with graph algorithms by wrapping it with
+the algorithm specific adaptor, such as [bfs_visitor] and [dfs_visitor]. Also,
 this event visitor can be combined with other event visitors using `std::pair` to form
-an [BoostEventVisitorList].
+an [EventVisitorList].
 
 [h4 Model Of]
-[BoostEventVisitor]
+[EventVisitor]
 
 [h4 Where Defined]
 `boost/graph/visitors.hpp`
@@ -33,7 +33,7 @@ an [BoostEventVisitorList].
     [
         [`DistanceMap`]
         [
-            A [BoostWritablePropertyMap] where the key type is of type `vertex_descriptor`
+            A [WritablePropertyMap] where the key type is of type `vertex_descriptor`
             and the value type is numeric (usually an integer or the same type as the
             edge weight).
         ]
@@ -91,7 +91,7 @@ record_distances(DistanceMap pa, EventTag)
 ``
         ]
         [
-            A convenience function for creating [boost_distance_recorder] instances.
+            A convenience function for creating [distance_recorder] instances.
         ]
     ]
 ]

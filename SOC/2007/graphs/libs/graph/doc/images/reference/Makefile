@@ -5,7 +5,7 @@ dot_src = \
 	connected_components_before.dot \
 	connected_components_after.dot \
 	geodesic.dot \
-	information_network.dot
+	info_network.dot
 circo_src = \
 	distribution_undirected.circo \
 	distribution_directed.circo

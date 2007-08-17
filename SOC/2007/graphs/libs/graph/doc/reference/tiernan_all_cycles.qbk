@@ -57,7 +57,7 @@ in an undirected graph.
             in the range \[0, `num_vertices(g)`).
 
             *Requirements:* The `Graph` type must be a model of the
-            [BoostIncidenceGraph] and [BoostVertexIndexGraph] concepts.
+            [IncidenceGraph] and [VertexIndexGraph] concepts.
         ]
     ]
     [
@@ -66,7 +66,7 @@ in an undirected graph.
             The visitor object to the algorithm.
 
             *Requirements:* This `Visitor` class must model the
-            [BoostCliqueVisitor] class.
+            [CliqueVisitor] class.
         ]
     ]
 ]

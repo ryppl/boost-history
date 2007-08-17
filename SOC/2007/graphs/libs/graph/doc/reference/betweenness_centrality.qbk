@@ -69,9 +69,9 @@ centrality and related measures.
             The graph for which the betweenness centrality of vertices or edges
             is being computed.
 
-            *Requirements:* The `Graph` type must be a model of the [BoostVertexListGraph]
-            and [BoostIncidenceGraph] concepts. If the `EdgeCentralityMap` parameter
-            is present, this parameter type must also model the [BoostEdgeListGraph].
+            *Requirements:* The `Graph` type must be a model of the [VertexListGraph]
+            and [IncidenceGraph] concepts. If the `EdgeCentralityMap` parameter
+            is present, this parameter type must also model the [EdgeListGraph].
         ]
     ]
     [
@@ -90,10 +90,10 @@ centrality and related measures.
             shortest path between a vertex `u` and `v`. The vertex `u` is the
             vertex for which the distance map was initially computed.
 
-            *Requirements:* `DistanceMap` must be a model of [BoostReadablePropertyMap].
+            *Requirements:* `DistanceMap` must be a model of [ReadablePropertyMap].
             The `key_type` of the distance map must be the same as the `vertex_descriptor`
             of the `Graph` parameter. The `value_type` is required to be a model of
-            [BoostNumericValue].
+            [NumericValue].
         ]
     ]
     [
@@ -103,11 +103,11 @@ centrality and related measures.
             of the shortest path between the two vertices. Note that the
             distance between a vertex and itself should be 0 (i.e., `dm[u][u] == 0`).
 
-            *Requirements:* `DistanceMatrixMap` must be a model of [BoostReadablePropertyMap].
+            *Requirements:* `DistanceMatrixMap` must be a model of [ReadablePropertyMap].
             The `key_type` of the distance matrixc must be the same as the `vertex_descriptor`
-            of the `Graph` parameter. The `value_type` must be a [BoostReadWritePropertyMap]
+            of the `Graph` parameter. The `value_type` must be a [ReadWritePropertyMap]
             whose `key_type` is also the `vertex_descriptor` of the `Graph` and
-            whose `value_type` is a model of [BoostNumericValue].
+            whose `value_type` is a model of [NumericValue].
         ]
     ]
     [
@@ -116,10 +116,10 @@ centrality and related measures.
             The cm parameter stores the output of the computed closeness (or
             distance) for each vertex in `g`.
 
-            *Requirements:* The type of `close` must be model the [BoostWritablePropertyMap]
+            *Requirements:* The type of `close` must be model the [WritablePropertyMap]
             concepts. The `key_type` of the property map must be the same as the
             `vertex_descriptor` of the `Graph`, and the `value_type` must be a model
-            of [BoostNumericValue].
+            of [NumericValue].
         ]
     ]
     [
@@ -128,10 +128,10 @@ centrality and related measures.
             The 'measure' parameter is an instance of a closeness measure that
             performs the final operation (the reciprocal) for this computation.
 
-            *Requirements:* The `Measure` type must be a model of the [BoostDistanceMeasure]
+            *Requirements:* The `Measure` type must be a model of the [DistanceMeasure]
             concept. The `distance_type` must be the same type as the `value_type`
             of the `DistanceMap` or `DistanceMatrixMap`. The `result_type` of the
-            `Measure` must model the [BoostNumericValue] concept.
+            `Measure` must model the [NumericValue] concept.
         ]
     ]
 ]
