@@ -9,60 +9,65 @@
 A type `T` is /equality comparable/ if it defines an /equivalence relation/ and
 can be compared using the equality comparison operator (`==`). An equivalence
 relation is a binary relation between any two objects of type `T` that denotes
-them as being "equivalent". Note that the meaning of equivalent depends on the type.
+them as being "equivalent". The specific meaning of "equivalent" depends on the 
+semantics of the type modeling this concept.
 
-Equivalence relations are required to be /reflexive/, /symmetric/, and /transitive/.
-Equality comparability also introduces the notion of /identity/ for instances of a
-type. This states that an instance of a [StdEqualityComparable] is equivalent
-to itself.
+Equivalence relations exhibit the following properties:
+
+* [*Reflexivity] `x == x`.
+* [*Symmetry] If `x == y` then `y == x`.
+* [*Transitivity] If `x == y` and `y == z` then `x == z`.
 
 [heading Notation]
 [table
     [[Expression] [Description]]
     [[T] [An [StdEqualityComparable] type.]]
-    [[`t`, `u`, `v`] [Instances of `T`.]]
+    [[`t`, `u`, `v`] [Objects of type `T`.]]
 ]
 
 [heading Requirements]
 [table
-    [[Expression] [Return Type] [Requirements]]
+    [[Name] [Expression] [Result Type] [Description]]
     [
+        [Equality Comparision]
         [`t == u`]
-        [Convertible to `bool`.]
-        [If `t` and `u` are equivalent, the return value is convertible to `true`.]
+        [Convertible to `bool`]
+        [
+            Returns `true` or a value covertible to `true` if the object
+            `t` is equivalent to `u`.
+        ]
     ]
     [
+        [Inequality Comparision]
         [`t != u`]
-        [Convertible to `bool`.]
-        [If `t` and `v` are not equivalent, the return value is convertible to `false`]
+        [Convertible to `bool`]
+        [
+            Returns `true` or a value covertible to `true` if the object
+            `t` is not equivalent to `u`. Note that `t != u` is equivalent
+             to `!(t == u)`.
+        ]
     ]
 ]
 
-Note that inequality operator (`!=`) can be trivially implemented if the equality operator
-(`==`) is defined for a type as:
+[heading Examples]
+A type `T` is required to be [StdEqualityComparable] when an object of type `T` is
+compared to another object of type `T` using the `==` operator.
 
-    bool operator !=(const T& t, const T& v) { return !(t == v); }
-
-[heading Invariants]
-The following properties must hold for all models of [StdEqualityComparable].
-
-[table
-    [[Property] [Semantics]]
-    [[Reflexivity] [`t == t` is true.]]
-    [[Symmetry] [`t == u` implies `u == t`.]]
-    [[Transitivity] [`t == u` and `u == v` implies `t == v`.]]
-    [[Identity] [`&t == &u` implies `t == u`.]]
-]
-
-[heading C++0x]
-The `EqualityComparable` concept in C++0x does not impose the /identity/ property on
-the equality comparable relation. This concept also provides a default implementation
-of the inequality (`!=`) operator. It is given as:
-
-    auto concept EqualityComparable<typename T, typename U = T>
+    // Using the equality comparison operator to compare two objects of type T
+    // requires that type to be EqualityComparable.
+    template <typename T>
+    bool equality_compare(const T& t, const T& u)
     {
-        bool operator (const T&, const U&);
-        bool operator !=(const T& t, const U& u) { return !(t == u); }
+        return t == u;
+    }
+    
+    // Using the inequality comparison operator to compare two objects of type T
+    // requires that type to be EqualityComparable since inequality can be
+    // implemented in terms of equality.
+    template <typename T>
+    bool inequality_compare(const T& t, const T& u)
+    {
+        return t != u;
     }
 
 [endsect]
