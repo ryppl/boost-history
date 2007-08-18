@@ -5,27 +5,23 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section:ug User's Guide]
-
-This section of the docs is for all users of the library. For details about the internals of the library see either the __sources__ or the __reference__ section.
-
 [section:gs Getting Started]
 
-This section of the documentation is probably best read before the __tutorial__. In a nutshell, this is a quick and dirty run-through of how to get and install the library [-and configure your server].
+This section of the documentation is probably best read before the [link __tutorial__ tutorial]. In a nutshell, this is a quick and dirty run-through of how to get and install the library [-and configure your server].
 
-[include user_guide/building.qbk]
+[include:building user_guide/building.qbk]
 
-[include user_guide/server_configuration.qbk]
+[include:server_config user_guide/server_configuration.qbk]
 
-[include user_guide/server_support.qbk]
-
-[endsect]
-
-[include user_guide/protocols.qbk]
-
-[include user_guide/tutorial.qbk]
-
-[include user_guide/examples.qbk]
-
+[include:headers user_guide/headers.qbk]
 
 [endsect]
+
+[/include:protocols user_guide/protocols.qbk]
+
+[/include:tutorial user_guide/tutorial.qbk]
+
+[/include:examples user_guide/examples.qbk]
+
+
+[/endsect]

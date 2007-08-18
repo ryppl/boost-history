@@ -25,10 +25,23 @@ Purely to illustrate what each protocol offers, consider this list:
 Synchronous and asynchronous CGI support are considered distinct within the library for now (*more*), so the latter is referred to explicitly as aCGI. SimpleCGI is generally shortened to SCGI while FastCGI is used verbatim.
 ]
 
+[section:comparison Feature Comparison]
+
+[table
+    [[Feature                     ] [Protocol                     ]]
+    [[                            ] [CGI] [aCGI] [FastCGI] [SCGI  ]]
+    [[Requires __ProtocolService__] [No ] [Yes ] [Yes    ] [Yes   ]]
+    [[Is natively asynchronous    ] [No ] [No  ] [Yes    ] [Yes   ]]
+    [[Has native error stream     ] [Yes] [Yes ] [Yes    ] [Shared]]
+]
+
+[endsect] [/ comparison]
+
+
 
 [section:cgi CGI and aCGI]
 
-The distinction between CGI and aCGI is that aCGI uses __asio__'s io_service to perform asynchronous operations - whereas CGI does not provide such operations - and is also more complicated to use. A distinction has been made with the sole purpose of lowering the entry barrier to the library and to provide a means of migrating programs over to use this library.
+The distinction between CGI and aCGI is that aCGI uses __asio__'s `io_service` to perform asynchronous operations - whereas CGI does not provide such operations - and is also more complicated to setup. A distinction has been made with the sole purpose of lowering the entry barrier to the library and to provide a means of migrating programs over to use this library. There is also currently a small speed gain to be had by not constructing an `io_service` when it isn't needed.
 
 [h4 Differences Between CGI and aCGI Programs]
 
@@ -106,23 +119,8 @@ SCGI is a more recent protocol than FastCGI and is essentially a halfway house b
 
 SCGI uses a connection-per-request approach. Environment data is sent first and the CGI POST data follows. All data sent back to the server over the connection is forwarded as is to the client. The connection is closed after the request has been handled.
 
-Although far less optimized than FastCGI, SCGI is still a large step up from CGI
-
+Although far less optimized than FastCGI, SCGI is still a significant step up from CGI.
 
 [endsect] [/ scgi]
-
-
-[section:comparison Feature Comparison]
-
-[table
-    [[Feature                 ] [Protocol                     ]]
-    [[                        ] [CGI] [aCGI] [FastCGI] [SCGI  ]]
-    [[Requires io_service     ] [No ] [Yes ] [Yes    ] [Yes   ]]
-    [[Is natively asynchronous] [No ] [No  ] [Yes    ] [Yes   ]]
-    [[Has native error stream ] [Yes] [Yes ] [Yes    ] [Shared]]
-]
-
-[endsect] [/ comparison]
-
 
 [endsect] [/ protocols]

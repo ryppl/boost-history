@@ -7,18 +7,22 @@
 
 [section:loading Loading Requests]
 
-After a request has been accepted, it must also be 'loaded'. Before being loaded the request is in an undefined state and in general it is unsafe to try to do anything except read from/write to the client. For CGI, the request's constructor calls load implicitly (this is optional behaviour [footnote]), in most other situations, one of the following functions are used:
+After a request has been accepted, it must also be 'loaded'. Before being loaded the request is in an undefined state and in general it is unsafe to call any `meta_*` function. For CGI, the request's constructor calls load implicitly (this is optional behaviour [footnote]), in most other situations, one of the following functions are used:
 
 [table
   [[Function signature] [Purpose]]
   [
     [`void basic_request<>::load(bool parse_stdin = true)`]
-    [Loads the request meta-data into internal `cgi::map`s.[br][br]If `parse_stdin == true`, which it is by default, CGI POST data is also read and parsed. If an error occurs, an exception is thrown.]
+    [Loads the request meta-data into internal `cgi::map`s.
+
+    If `parse_stdin == true`, which it is by default, CGI POST data is also read and parsed. If an error occurs, an exception is thrown.]
   ]
   [
     [`boost::system::error_code&
     basic_request<>::load(boost::system::error_code& ec, bool parse_stdin = true)`]
-    [Loads the request meta-data into internal `cgi::map`s.[br][br]If `parse_stdin == true`, which it is by default, CGI POST data is also read and parsed. If an error occurs, ec is set to the value of the error such that `!ec == false`.]
+    [Loads the request meta-data into internal `cgi::map`s.
+
+    If `parse_stdin == true`, which it is by default, CGI POST data is also read and parsed. If an error occurs, ec is set to the value of the error such that `!ec == false`.]
   ]
   [
     [`void basic_request<>::async_load(bool parse_stdin, Handler handler)`]

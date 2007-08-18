@@ -124,15 +124,29 @@ namespace cgi {
     }
 
     /// Set a header
-    void set_header(const std::string& name, const std::string& val)
+    void set_header(const std::string& name, const std::string& val
+                   , const std::string& expires)
     {
-      this->service.set_header(this->impl, name, val);
+      this->service.set_header(this->impl, name, val, expires);
     }
 
     /// Set a cookie
     void set_cookie(const std::string& name, const std::string& val)
     {
       this->service.set_cookie(this->impl, name, val);
+    }
+
+    /// Delete a cookie
+    void del_cookie(const std::string& name)
+    {
+      this->service.set_cookie(this->impl, name, val
+                              , "Mon, 01-Jan-1945 00:00:01 GMT");
+    }
+
+    /// Delete all cookies
+    void del_cookies()
+    {
+      this->service.del_cookies();
     }
 
     /// Synchronously read/parse the request meta-data

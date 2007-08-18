@@ -17,7 +17,9 @@ Due to configuration issues, this isn't functional yet.
 
 [h4 FastCGI support.]
 
-Complete FastCGI support is essential to any modern CGI library.
+FastCGI support is essential to any modern CGI library. There is currently ['no] known FastCGI library for C or C++ that aims to implement the complete [@http://www.fastcgi.com/devkit/doc/fcgi-spec.html FastCGI 1.0] specification.
+
+There are a couple of issues that have yet to be worked out, but in general the new framework is known to 'fit' with all the details of FastCGI and lends itself to an efficient implementation (hopefully).
 
 [h4 Access to error output streams]
 
@@ -46,8 +48,64 @@ Another advantage is that a macro can be provided to turn on/off implicit conver
 
 Yet another possibility, is that a member function `as<>` can be provided as a shortcut to `boost::lexical_cast<>`. This could greatly improve readability of web programs, where lexical casting is very common and may make programs overly verbose.
 
+Compare:
+``
+cgi::request req;
+cgi::reply rep;
+
+cgi::map::iterator iter = req.meta_form().find("number");
+if (iter != cgi::map::iterator::end())
+{
+  rep<< "You picked no numbers...";
+}
+else
+{
+  int sum(0);
+  rep<< "Your numbers are: ";
+  for(; iter != cgi::map::iterator::end(); ++iter)
+  {
+    rep<< iter->second << " ";
+    sum +=  boost::lexical_cast<int>(iter->second);
+  }
+
+  rep<< std::endl
+     << "Your numbers add up to: " << sum;
+}
+
+rep.send(req);
+``
+to:
+``
+cgi::request req;
+cgi::reply rep;
+
+cgi::param parm = req.meta_form("number");
+if (parm.empty())
+{
+  rep<< "You picked no numbers...";
+}
+else
+{
+  int sum(0);
+  for(; parm != parm.end(); ++parm)
+  {
+    rep<< parm << " ";
+    sum += parm.as<int>());
+  }
+
+  rep<< std::endl
+     << "Your numbers add up to: " << sum;
+}
+
+rep.send(req);
+``
+
 [h4 Concept Documentation]
 
 Even though this library introduces very few new concepts, they are not currently documented. Links to Boost.Asio's concept documentation is also required (essentially as part of a reworking of the doxygen reference section).
+
+[/h4 Support for wide characters]
+
+[/The library generally works on octets, but there should be some way to ]
 
 [endsect]

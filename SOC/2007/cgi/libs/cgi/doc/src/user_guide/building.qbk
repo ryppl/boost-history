@@ -27,9 +27,11 @@ Boost-related elements can be downloaded from the Boost download site at sourcef
   [
    [Boost.System]
    [No]
-   [1. Download the latest Boost distro, 'boost'.[br][br]
+   [1. Download the latest Boost distro, 'boost'.
+
    2. Set the environment variable BOOST_ROOT on your system to the download location.
-   3. Go to the directory BOOST_ROOT and invoke `bjam` (see above). This should finish without any fails.]
+
+   3. Go to the directory BOOST_ROOT and invoke `bjam` (see above), passing it `--with-system install` on the command line. This should finish without any fails.]
   ]
   [
    [Documentation]

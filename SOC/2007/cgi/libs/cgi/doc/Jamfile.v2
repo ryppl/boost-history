@@ -25,9 +25,9 @@ doxygen cgi_dox
     [ glob ../../../boost/cgi/request_impl/*.hpp ]
     [ glob ../../../boost/cgi/request_service/*.hpp ]
   :
-    <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+    <doxygen:param>HIDE_UNDOC_MEMBERS=NO
     <doxygen:param>EXTRACT_PRIVATE=NO
-    <doxygen:param>EXTRACT_ALL=YES
+    #<doxygen:param>EXTRACT_ALL=YES
     <doxygen:param>SEARCH_INCLUDES=YES
     <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
   ;
@@ -39,12 +39,20 @@ boostbook standalone
     cgi_xml
     cgi_dox
   :
-    <xsl:param>boost.root=/usr/local/src/boost
+    <xsl:param>boost.root=/usr/local/src/cgi/svn.boost.org/
     <xsl:param>boost.libraries=/usr/local/src/boost/libs/libraries.htm
-    <xsl:param>boost.images=http://beta.boost.org/images
-    <xsl:param>toc.max.depth=0
+#    <xsl:param>boost.images=http://beta.boost.org/images
+    # the depth (of sub-pages) the TOC shows
+    <xsl:param>toc.max.depth=1
+
+    # 
     <xsl:param>toc.section.depth=2
-    <xsl:param>chunk.section.depth=10
+
+    # how many sections are on the first page
+    <xsl:param>chunk.first.sections=1
+
+    # To chunk (together) or not to chunk (divide)
+    <xsl:param>chunk.section.depth=1 # chunk
 	;
 
 #install html

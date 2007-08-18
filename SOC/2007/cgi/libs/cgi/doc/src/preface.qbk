@@ -7,11 +7,13 @@
 
 [section Preface]
 
-[: [*['All science is either Physics, or stamp collecting.]] [br] -- Ernest Rutherford.]
+[: [*['All science is either Physics, or stamp collecting.]]
+
+-- Ernest Rutherford.]
 
 [h3 Overview]
 
-Boost.CGI is a library for writing CGI programs in Standard C++. It can be used to write anything from simple 'adming scripts' to full-fledged, scalable applications. This library rests on top of and should appear familiar to users of Boost.Asio. Currently the __cgi__, [-__scgi__ and __fcgi__] protocols are supported.
+Boost.CGI is a library for writing CGI programs in Standard C++. It can be used to write anything from simple 'adming scripts' to full-fledged, scalable applications. This library rests on top of and should appear familiar to users of Boost.Asio, a cross-platform networking library in boost-style C++. Currently the __cgi__, [-__scgi__ and __fcgi__] protocols are supported, within a framework that should allow code to be reused with as-yet-unwritten protocols without any real modification.
 
 [h3 Motivation]
 
@@ -51,5 +53,11 @@ Macros are prefixed with `BOOST_CGI_*`
 [h5 Code snippets]
 
 As you are probably used to, it is assumed that code snippets in this manual have the correct `#include`s and "`using namespace cgi;`" prepended to them. Information about the correct headers to include can be found [link __headers__ here].
+
+[h3 Comments and Support]
+
+Use cases, example requests, puzzles and problems should be sent to the mailing list:
+
+* ''' &#99;&#103;&#105;-&#116;&#97;&#108;&#107;&#32;&#64;&#32;&#108;&#105;&#115;&#116;&#115;&#46;&#115;&#102;&#32;&#92;&#46;\&#32;n&#101;&#116;''', or thereabouts.
 
 [endsect]
