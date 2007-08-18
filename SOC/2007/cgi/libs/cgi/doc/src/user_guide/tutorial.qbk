@@ -35,6 +35,8 @@ Except for when using CGI synchronously, a typical program will have two fundame
 
 [include:accepting tutorial/accepting.qbk]
 
+[include:loading tutorial/loading.qbk]
+
 [include:wrapping_up wrapping_up.qbk]
 
 
