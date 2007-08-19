@@ -626,6 +626,11 @@ svg_boxplot():        title_info(0, 0, "Plot of data", 30),
     image.get_g_element(boxplot::MILD_OUTLIERS).style().stroke_color(black).fill_color(black);
 }
 
+svg_boxplot& load_stylesheet(const std::string& file)
+{
+    image.load_stylesheet(file);
+    return *this;
+}
 
 svg_boxplot& write(const std::string& _str)
 {
@@ -674,9 +679,9 @@ svg_boxplot& y_major_labels_on(bool _cmd)
     return *this;
 }
 
-svg_boxplot& y_major_labels_on(bool _cmd)
+svg_boxplot& x_labels_on(bool _cmd)
 {
-    use_y_major_labels = _cmd;
+    use_x_major_labels = _cmd;
     return *this;
 }
 

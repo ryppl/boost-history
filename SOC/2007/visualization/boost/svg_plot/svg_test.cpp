@@ -1,7 +1,9 @@
+#include "svg_1d_plot.hpp"
 #include "svg_boxplot.hpp"
 
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 using std::multimap;
 using std::vector;
@@ -16,16 +18,20 @@ double f(double x)
     return 40 + 25 * sin(x * 50);
 }
 
+using std::cout;
+using std::cin;
+
 int main()
 {
     using namespace boost::svg;
     std::vector<double> data1, data2;
 
     svg_boxplot my_plot;
+    svg_1d_plot my_1d_plot;
 
-    my_plot.background_border_color(black)
-           .y_range(0, 150)
-           .y_major_interval(20)
+    my_1d_plot.load_stylesheet("D:\\style.css");
+
+    my_1d_plot.background_border_color(black)
            .title("Boxplots of Common Functions");
     
     for(double i=.1; i < 10; i+=.1)
@@ -34,10 +40,10 @@ int main()
         data2.push_back(f(i));
     }
 
-    my_plot.plot(data1, "[50 / x]");
-    my_plot.plot(data2, "[40 + 25 * sin(50x)]");
+    my_1d_plot.plot(data1, "[50 / x]");
+    my_1d_plot.plot(data2, "[40 + 25 * sin(50x)]");
 
-    my_plot.write("D:\\boxplot_test.svg");
+    my_1d_plot.write("D:\\1d_test.svg");
 
     return 0;
 }

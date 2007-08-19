@@ -78,8 +78,6 @@ BOOST_PARAMETER_NAME(x_functor)
 #  pragma warning(pop)
 #endif
 
-
-
 // -----------------------------------------------------------------
 // This allows us to store plot state locally in svg_plot. We don't
 // store it in "svg" because transforming the points after they are
@@ -320,6 +318,14 @@ private:
         }
     }
 
+    void _set_ids()
+    {
+        for(int i=0; i<detail::SVG_PLOT_DOC_CHILDREN; ++i)
+        {
+            image.get_g_element(i).id(detail::_document_ids[i]);
+        }
+    }
+
 public:
 
 // see documentation for default settings rationale
@@ -366,6 +372,8 @@ svg_1d_plot():        title_info(0, 0, "Plot of data", 30),
 
     image.get_g_element(detail::PLOT_X_MINOR_TICKS)
         .style().stroke_width(1);
+
+    _set_ids();
 }
 
 // -----------------------------------------------------------------

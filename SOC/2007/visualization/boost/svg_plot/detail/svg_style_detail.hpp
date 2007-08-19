@@ -9,6 +9,8 @@
 #ifndef _BOOST_SVG_SVG_STYLE_DETAIL_HPP
 #define _BOOST_SVG_SVG_STYLE_DETAIL_HPP
 
+#include <string>
+
 namespace boost{
 namespace svg{
 namespace detail{
@@ -22,7 +24,17 @@ enum plot_doc_structure{PLOT_BACKGROUND, PLOT_PLOT_BACKGROUND,
     PLOT_LEGEND_BACKGROUND, PLOT_LEGEND_POINTS, PLOT_LEGEND_TEXT,
     PLOT_TITLE, SVG_PLOT_DOC_CHILDREN};
 
+std::string _document_ids[]= 
+{
+    "background", "plotBackground", "yMinorGrid", "yMajorGrid", 
+    "xMinorGrid", "xMajorGrid", "yAxis", "xAxis", "yMinorTicks",
+    "xMinorTicks", "yMajorTicks", "xMajorTicks", "plotLabels",
+    "yLabel", "xLabel", "plotLines", "plotPoints", "limitPoints",
+    "legendBackground", "legendPoints", "legendText", "title"
+};
+    
 }
+
 }
 }
 #endif

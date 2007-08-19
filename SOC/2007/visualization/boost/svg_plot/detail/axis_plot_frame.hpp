@@ -730,6 +730,12 @@ public:
         return derived();
     }
 
+    Derived& load_stylesheet(const std::string& file)
+    {
+        derived().image.load_stylesheet(file);
+        return derived();
+    }
+
     unsigned int get_image_x_size()
     {
         return derived().image.get_x_size();

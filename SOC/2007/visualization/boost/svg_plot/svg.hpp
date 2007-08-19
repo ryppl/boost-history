@@ -10,11 +10,13 @@
 #ifndef _BOOST_SVG_SVG_HPP
 #define _BOOST_SVG_SVG_HPP
 
+#include <string>
 #include <ostream>
 #include <fstream>
 #include <exception>
 #include <vector>
 
+#include "stylesheet.hpp"
 #include "detail/svg_tag.hpp"
 #include "svg_style.hpp"
 
@@ -30,6 +32,8 @@ protected:
     g_element document;
 
 	std::vector<clip_path_element> clip_paths;
+
+    std::string css;
 
 private:
 
@@ -61,16 +65,20 @@ private:
                << "\"http://www.w3.org/graphics/svg/1.1/dtd/svg11.dtd\">"<<std::endl;
     }
 
+    void _write_css(std::ostream& s_out)
+    {
+        s_out << "<defs><style type=\"text/css\"><![CDATA[" << css
+            << "]]></style></defs>" << std::endl;
+    }
+
 public:
 
     svg():x_size(400), y_size(400)
     {
-
     }
 
     svg(const svg& rhs):x_size(rhs.x_size), y_size(rhs.y_size)
     {
-        
     }
 
     svg& write(const std::string& _file)
@@ -96,6 +104,8 @@ public:
         _s_out<<"<svg width=\""<<x_size<<"\" height =\"" 
                         <<y_size<<"\" version=\"1.1\""
                         <<" xmlns=\"http://www.w3.org/2000/svg\">"<<std::endl;
+
+        _write_css(_s_out);
 
         _write_document(_s_out);
 
@@ -184,6 +194,34 @@ public:
     unsigned int get_y_size()
     {
         return y_size;
+    }
+
+    svg& load_stylesheet(const std::string& input)
+    {
+        std::ifstream if_str(input.c_str());
+
+        if(if_str.fail())
+        {
+            throw std::runtime_error("Error opening file " + input);
+        }
+
+        if(!validate_stylesheet(if_str))
+        {
+            throw std::runtime_error("Error loading stylesheet");
+        }
+
+        if_str.clear();
+        if_str.seekg(0);
+
+        std::string tmp;
+
+        css = "";
+        while(std::getline(if_str, tmp))
+        {
+            css += tmp;
+        }
+
+        return *this;
     }
 }; // end class svg
 
