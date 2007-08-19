@@ -90,7 +90,13 @@ template <typename I> void test()
 		{-36, "sa3mx\xa3\xb3", 47500521, 0},
 
 		// check full alphabet
-		{36, "abcdefghijklmnopqrstuvwxyz1234567890", 0, "30483235087530204251026473460499750369628113087340027780"}
+		{36, "abcdefghijklmnopqrstuvwxyz1234567890", 0, "30483235087530204251026473460499750369628113087340027780"},
+		
+		// out-of-range bases produce 0 as conversion result
+		{1, "0", 0, 0},
+		{37, "0", 0, 0},
+		{0, "0", 0, 0},
+		{38491, "0", 0, 0}
 	};
 
 	for (size_t i = 0; i < ARRAY_SIZE(entries); ++i)
