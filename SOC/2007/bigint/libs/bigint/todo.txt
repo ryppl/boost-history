@@ -13,10 +13,10 @@ Feature name									Deadline		Status
 1. Bigint interface (header)					21 May			Awaiting resolution
 2. GMP implementation							21 May			Awaiting resolution
 3. Correctness tests							7 June			Awaiting resolution
-4. Documentation								21 June			In progress
-5. Performance tests							7 July			In progress
-6. Interface for storage						14 July			In progress
-7. Storage implementation						14 July			In progress
+4. Documentation								21 June			Awaiting resolution
+5. Performance tests							7 July			Awaiting resolution
+6. Interface for storage						14 July			Awaiting resolution
+7. Storage implementation						14 July			Awaiting resolution
 8. Default implementation						30 July			Awaiting resolution
 9. Advanced algorithms							N/A				In progress
 
@@ -71,6 +71,12 @@ Status: investigated. oct/dec/hex, skipws, correctly handle (check) separators, 
 
 + stream input support with all needed modifiers and other things
 Status: implemented
+
++ fix const correctness issues
+Status: fixed
+
++ fix == 0 and != 0 issue
+Status: fixed
 
 2. GMP implementation
 
@@ -174,12 +180,37 @@ Status: fixed
 
 4. Documentation
 
-- do we have to change the current behaviour for string conversions for bases outside [2, 36]?
-Status: needs investigating & implementing
++ do we have to change the current behaviour for string conversions for bases outside [2, 36]?
+Status: now returns zero
 
-- provide accurate information for 'Performance' table
++ provide accurate information for 'Performance' table
+Status: implemented
+
++ document the shortcoming of GMP implementation related to memory allocation failure
+Status: implemented
 
 5. Performance tests
+
++ establish a framework (mask for tests, mask for implementation, output types (csv, html table), list all tests/implementations
+Status: implemented
+
++ basic arithmetics tests (+, -) - small and large operands
+Status: implemented
+
++ basic arithmetics tests (*, /, %) - small, medium and large operands
+Status: implemented (except for large operands for / and % - current default implementation is too slow)
+
++ basic arithmetics tests (bitwise ops, shifts) - small and large operands
+Status: implemented
+
++ sqrt test
+Status: implemented
+
++ string conversion tests
+Status: implemented
+
++ complex tests (gcd, fibonacci, isprime, something else?)
+Status: implemented
 
 6. Interface for storage
 
@@ -189,16 +220,16 @@ Status: implemented
 + refactor
 Status: implemented
 
-- perhaps move bool negative to storage?
-Status: needs investigation
++ perhaps move bool negative to storage?
+Status: no
 
 7. Storage implementation
 
 + implement stack based fixed capacity storage; add corresponding tests
 Status: implemented
 
-- implement all functionality for vector-based interface as set by interface requirements
-Status: needs implementing
++ implement all functionality for vector-based interface as set by interface requirements
+Status: done
 
 8. Default implementation
 
@@ -256,10 +287,16 @@ Status: fixed
 + optimize string conversion
 Status: implemented; 6x speedup for fibonacci(10^6)
 
++ optimize bitshifts in case of exact shift count (shift count is divisible by limb bit count)
+Status: implemented
+
 9. Advanced algorithms
 
-- check modmul with either existing test or some other way
-Status: needs checking
++ check modmul with either existing test or some other way
+Status: checked & fixed
+
++ choose either FFT or basecase method, depending on the input size
+Status: implemented
 
 - perhaps support FFT with 3 primes for base = 2^32?
 Status: needs investigation
@@ -286,11 +323,30 @@ Alternatively, only parts of GMP that actually are not exception safe may be rew
 28.07.07. Further research showed that limb allocation in system layer (mpn) occurs for multiplication (Toom-3 and FFT),
 string <-> number conversions, division, sqrt, and perhaps somewhere else :(
 
+18.08.07. This is obviously a shortcoming of GMP (and this is documented in GMP manual). It is quite hard to solve correctly -
+the only viable way is to make own allocation functions that store all allocations in some container, and have a "rollback"
+function which purges all allocations; then all gmp implementation functions have to be wrapped with a code like this:
+
+allocator.init_storing_mode(); // here we set storing mode to on
+
+if (setjmp(allocator.jmpbuf))
+{
+	allocator.purge();
+}
+else
+{
+	... (do some stuff, allocator has longjmp if allocation fails)
+}
+
+allocator.reset_storing_mode(); // here we clear array with pointers and set storing mode to off
+
+This is not threadsafe, has performance overhead, has a lot of code overhead, and is generally a PITA - therefore the decision
+is made to not do anything about the problem, and just document it as a shortcoming of GMP implementation.
+
 -----------------------------------------------
 Extra features:
 
 - expression templates for base class (should be done so that this does not affect any implementation)
-- advanced algorithms for default implementation
 - make GMP work with arbitrary storage strategy (and perhaps enforce supporting arbitrary strategy in future implementations)
 - getting several bits from an integer (say, 7 bits from 4859-th one). Perhaps, assigning several bits.
 - conversion from/to floating point (float, double, long double)

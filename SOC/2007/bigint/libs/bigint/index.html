@@ -201,8 +201,6 @@ they can use it like this:
 	bigint_special a = 1, b = a * (a - 4);
 </pre>
 
-<font color="#ff0000">As this can change and bigint_base can be parametrized by both implementation and storage class
-in future, this section has to be revised before the project ends</font>
 </p>
 
 <h3><a name="Constructors">Constructors</a></h3>
@@ -225,7 +223,7 @@ correct:
     boost::bigint d = c / 49;
 </pre>
 
-<font color="#ff0000"><b>bigint</b> relies on the presence of 64-bit integer support, but this may change in the future</font>
+<b>bigint</b> relies on the presence of 64-bit integer support, but this may change in the future.
 </p>
 
 <p>String constructors initialize <b>bigint</b> from string in the certain format. Strings can be wide, and you can pass either
@@ -243,8 +241,8 @@ in it.</p>
 initialize <b>bigint</b> instance to -3, string "+3" will initialize it to 3).</p>
 
 <p>'digits' is a group of digits belonging to the character set of the base that is passed to the constructor; base is a number
-that is greater or equal to 2 and less or equal to 36; bases outside of allowed range lead to undefined results <font color="#ff0000">
-perhaps we should change that and initialize number to 0 if base is &lt; 2 or &gt; 36?</font>. For bases less or equal than 10,
+that is greater or equal to 2 and less or equal to 36; specifying base outside of allowed range leads to initializing bigint to
+zero. For bases less or equal than 10,
 the character set of digits from 0 to (base-1) is used. For bases greater than 10, the character set consists of digits from 0
 to 9, and then the letters from 'A' (ASCII character 'A') to the last needed letter for the set to reach the needed size. Letters are not case sensitive.
 Letter 'A' corresponds to digit 10, letter 'B' corresponds to digit 11 and so on. Letter 'Z' (if applicable - this is an allowed
@@ -453,11 +451,11 @@ arguments, and M means maximum of the lengths of both value and function argumen
 <table><tr><th>Function(s)</th><th>'gmp' implementation</th><th>'default' implementation</th></tr>
 <tr><td>default ctor</td><td>O(1)</td><td>O(1)</td></tr>
 <tr><td>integer ctors</td><td>O(1)</td><td>O(1)</td></tr>
-<tr><td>string ctors</td><td>O(A1) <font color="#ff0000">check</font></td><td>O(A1<sup>2</sup>)</td></tr>
+<tr><td>string ctors</td><td>O(A1<sup>2</sup>) for small A1, sub-quadratic algorithm for large A1</td><td>O(A1<sup>2</sup>)</td></tr>
 <tr><td>+, -, +=, -=</td><td>O(M)</td><td>O(M)</td></tr>
-<tr><td>*, *=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>O(M<sup>2</sup>)</td></tr>
-<tr><td>/, /=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>O(M<sup>2</sup>)</td></tr>
-<tr><td>%, %=</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>O(M<sup>2</sup>)</td></tr>
+<tr><td>*, *=</td><td>O(M<sup>2</sup>), O(M<sup>1.585</sup>), O(M<sup>1.465</sup>) or O(M<sup>k / (k-1)</sup>)<br>(k<sub>max</sub>=10, complexity is O(M<sup>1.111</sup>) for very large M), depending on M</td><td>O(M<sup>2</sup>) for small M, O(M*logM) for large M</td></tr>
+<tr><td>/, /=</td><td>O(M<sup>2</sup>) for small M, O(M<sup>k / (k-1)</sup>*logM) (k<sub>max</sub>=10) for large M</td><td>O(M<sup>2</sup>)</td></tr>
+<tr><td>%, %=</td><td>O(M<sup>2</sup>) for small M, O(M<sup>k / (k-1)</sup>*logM) (k<sub>max</sub>=10) for large M</td><td>O(M<sup>2</sup>)</td></tr>
 <tr><td>&amp;, &amp;=, |, |=, ^, ^=</td><td>O(M)</td><td>O(M)</td></tr>
 <tr><td>&lt;&lt;, &gt;&gt;</td><td>O(max(A1, 2<sup>A2</sup>)) <font color="#808080"> NB. O(2<sup>A2</sup>) is equal to O(shift amount)</font></td><td>O(max(A1, 2<sup>A2</sup>))</td></tr>
 <tr><td>&lt;&lt;=, &gt;&gt;=</td><td>O(max(N, 2<sup>A1</sup>)) <font color="#808080"> NB. O(2<sup>A1</sup>) is equal to O(shift amount)</font></td><td>O(max(N, 2<sup>A1</sup>))</td></tr>
@@ -465,14 +463,12 @@ arguments, and M means maximum of the lengths of both value and function argumen
 <tr><td>+, -</td><td>O(1)</td><td>O(1)</td></tr>
 <tr><td>~</td><td>O(N)</td><td>O(N)</td></tr>
 <tr><td>bool conversions</td><td>O(1)</td><td>O(1)</td></tr>
-<tr><td>string conversions</td><td>O(N) <font color="#ff0000">check</font></td><td>O(N<sup>2</sup>)</td></tr>
+<tr><td>string conversions</td><td>O(N<sup>2</sup>) for small N, sub-quadratic algorithm for large N</td><td>O(N<sup>2</sup>)</td></tr>
 <tr><td>can_convert_to</td><td>O(1)</font></td><td>O(1)</td></tr>
 <tr><td>to_number</td><td>O(N)</font></td><td>O(N)</td></tr>
 <tr><td>comparison operators</td><td>O(M)</td><td>O(M)</td></tr>
 <tr><td>abs</td><td>O(1)</font></td><td>O(1)</td></tr>
-<tr><td>pow</td><td>O(A1 * A2) <font color="#ff0000">check</font></td><td>???</td></tr>
-<tr><td>div</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>O(M<sup>2</sup>)</tr>
-<tr><td>sqrt</td><td><= O(M<sup>2</sup>) <font color="#ff0000">provide more precise info</font></td><td>???</td></tr>
+<tr><td>div</td><td>O(M<sup>2</sup>) for small M, O(M<sup>k / (k-1)</sup>*logM) (k<sub>max</sub>=10) for large M</td><td>O(M<sup>2</sup>)</td></tr>
 </table>
 
 <h2><a name="Exceptions">Exceptions</a></h2>
@@ -481,6 +477,17 @@ arguments, and M means maximum of the lengths of both value and function argumen
 memory and memory for value storage); therefore any <b>bigint</b> function (except <b>bigint</b>
 destructor) may throw a <code>std::bad_alloc</code> exception. There are no other possible
 exceptions.</p>
+
+<p>Note: the GMP-based implementation has a shortcoming - GMP does not have a proper error handling strategy for memory
+allocations; therefore, any failing allocation aborts the program execution. There is no proper solution for this problem
+(available solutions either mean rewriting huge parts of GMP, which is hard, uses the knowledge of the GMP implementation
+details, that may change in future, and does not completely solve the problem (because of temporary allocations in mpn),
+or writing some complex allocator with rollbacking abilities, which means writing not thread safe code, some performance
+overhead, lots of changes to existing codebase, etc.), so the decision has been made to leave it as is and just document this
+shortcoming - hopefully, either the performance characteristics of other implementations will soon asymptotically match GMPs
+ones (so that the performance will differ only by a constant factor), or appropriate error handling will be introduced to GMP
+(this is in a list of "projects suitable for volunteers" (see projects.html in GMP documentation)).
+
 
 <h2><a name="References">References</a></h2>
 <ul>
@@ -509,7 +516,7 @@ Daryle Walker.</p>
 
 <p>I shamelessly stole some data for unit tests from Big Integer Libary by Richard Peters.</p>
 
-<p>Revised June 16, 2007</p>
+<p>Revised August 18, 2007</p>
 
 <p>&copy; Copyright Arseny Kapoulkine 2007. Permission to
 copy, use, modify, sell and distribute this document is granted provided this
