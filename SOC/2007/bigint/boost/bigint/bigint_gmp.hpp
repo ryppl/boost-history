@@ -94,7 +94,7 @@ namespace boost { namespace detail {
 		
 		template <typename Ch> void _assign_str(const Ch* str, int base)
 		{
-			assert(base >= 2 && base <= 36);
+			if (base < 2 && base > 36) return assign(0);
 			
 			// skip whitespace
 			while (detail::bigint::isspace(*str)) ++str;
@@ -281,7 +281,7 @@ namespace boost { namespace detail {
 
 		std::string str(int base) const
 		{
-			assert(base >= 2 && base <= 36);
+			if (base < 2 || base > 36) return std::string(1, '0');
 			
 			size_t s_size = mpz_sizeinbase(data, base) + (mpz_sgn(data) < 0);
 			scoped_array<char> s(new char[s_size + 1]);
@@ -293,7 +293,7 @@ namespace boost { namespace detail {
 		
 		std::wstring wstr(int base) const
 		{
-			assert(base >= 2 && base <= 36);
+			if (base < 2 || base > 36) return std::wstring(1, wchar_t('0'));
 			
 			size_t s_size = mpz_sizeinbase(data, base) + (mpz_sgn(data) < 0);
 			scoped_array<char> s(new char[s_size + 1]);

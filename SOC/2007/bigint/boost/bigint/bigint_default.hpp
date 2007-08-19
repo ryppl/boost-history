@@ -106,7 +106,7 @@ namespace boost { namespace detail {
 
 		template <typename Ch> void _assign_str(const Ch* str, int base)
 		{
-			assert(base >= 2 && base <= 36);
+			if (base < 2 && base > 36) return assign(0);
 			
 			// skip whitespace
 			while (detail::bigint::isspace(*str)) ++str;
@@ -253,7 +253,7 @@ namespace boost { namespace detail {
 			size_t ri_size = rhs.data.size();
 			
 			data.resize((std::max)(lhs.data.size(), rhs.data.size()));
-
+			
 			const limb_t* li = lhs.data.begin();
 			const limb_t* li_end = li + li_size;
 			const limb_t* ri = rhs.data.begin();
@@ -428,9 +428,41 @@ namespace boost { namespace detail {
 				assign(0);
 				return;
 			}
-			
-			// _mul_unsigned_basecase(lhs, rhs);
-			_mul_unsigned_fft(lhs, rhs);
+
+			// Some research revealed that:
+
+			// 1. For limb counts below 512, basecase is always faster
+			if (lhs.data.size() <= 512 || rhs.data.size() <= 512)
+				_mul_unsigned_basecase(lhs, rhs);
+			else
+			{
+				// if cost of 1x1 multiply is 1
+				uint64_t basecase_cost = static_cast<uint64_t>(lhs.data.size()) * rhs.data.size();
+				// ... the cost of 1 step of FFT (if the asymptotical performance is N*logN) is about 32
+
+				// find FFT (uint16) size
+				size_t max_size = (std::max)(lhs.data.size(), rhs.data.size());
+
+				// round up to the nearest power of two
+				size_t N = 1;
+				while (N < max_size) N *= 2;
+
+				// fix N depending on limb_type
+				N = N * sizeof(limb_t) / sizeof(uint16_t);
+				if (N == 0) N = 1;
+
+				// destination size
+				N *= 2;
+
+				size_t logN = bigint_fft_multiplicator<limb_bit_number>::log2(N);
+
+				uint64_t fft_cost = static_cast<uint64_t>(N) * logN * 32;
+
+				if (basecase_cost < fft_cost)
+					_mul_unsigned_basecase(lhs, rhs);
+				else
+					_mul_unsigned_fft(lhs, rhs);
+			}
 			
 			negative = lhs.negative ? !rhs.negative : rhs.negative;
 		}
@@ -466,7 +498,7 @@ namespace boost { namespace detail {
 			y.negative = false;
 
 			// without this our estimates for qd become very bad
-			limb_t d = static_cast<limb_t>((static_cast<limb2_t>(limb_max()) + 1) / (static_cast<limb_t>(y.data[y.data.size() - 1]) + 1));
+			limb_t d = static_cast<limb_t>((static_cast<limb2_t>(limb_max()) + 1) / (static_cast<limb2_t>(y.data.back()) + 1));
 			x._mul_add(d, 0);
 			y._mul_add(d, 0);
 
@@ -524,31 +556,30 @@ namespace boost { namespace detail {
 							/ y.data.back()
 							);
 
-					bigint_default_implementation rs = y;
-					rs._mul_add(qd, 0);
-					rs.sub(xx, rs);
+					r = y;
+					r._mul_add(qd, 0);
+					r.sub(xx, r);
 					
-					// rs = xx - qd * y
+					// r = xx - qd * y
 					
-					if (!rs.negative)
+					if (!r.negative)
 					{
-						while (rs.compare(y) >= 0)
+						while (r.compare(y) >= 0)
 						{
 							++qd;
-							rs.sub(rs, y);
+							r.sub(r, y);
 						}
 					}
 					else
 					{
-						while (rs.negative)
+						while (r.negative)
 						{
 							--qd;
-							rs.add(rs, y);
+							r.add(r, y);
 						}
 					}
 					
 					*p = static_cast<limb_t>(qd);
-					r = rs;
 				}
     		}
     		while (i != x.data.begin());
@@ -770,7 +801,7 @@ namespace boost { namespace detail {
 			for (const limb_t* li = lhs.data.begin(); li != lhs.data.end(); ++li)
 				*di++ = *li;
 		
-			_mul_add(1 << (rhs % limb_bit_number), 0);
+			if (rhs % limb_bit_number != 0) _mul_add(1 << (rhs % limb_bit_number), 0);
 
 			negative = lhs.negative;
 		}
@@ -802,7 +833,7 @@ namespace boost { namespace detail {
 			for (const limb_t* li = lhs.data.begin() + rhs / limb_bit_number; li != lhs.data.end(); ++li)
 				*di++ = *li;
 				
-			limb_t r = _div_rem(1 << (rhs % limb_bit_number));
+			limb_t r = (rhs % limb_bit_number != 0 ? _div_rem(1 << (rhs % limb_bit_number)) : 0);
 
 			if (lhs.negative)
 			{
@@ -912,7 +943,7 @@ namespace boost { namespace detail {
 
 		template <typename Ch> std::basic_string<Ch> _to_str(int base) const
 		{
-			assert(base >= 2 && base <= 36);
+			if (base < 2 || base > 36) return std::basic_string<Ch>(1, Ch('0'));
 
 			if (data.empty()) return std::basic_string<Ch>(1, Ch('0'));
 

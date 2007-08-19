@@ -138,7 +138,7 @@ public:
 		return *this;
 	}
 	
-	bigint_base operator++(int)
+	bigint_base operator++(int) const
 	{
 		bigint_base old = *this;
 		impl.inc();
@@ -151,7 +151,7 @@ public:
 		return *this;
 	}
 	
-	bigint_base operator--(int)
+	bigint_base operator--(int) const
 	{
 		bigint_base old = *this;
 		impl.dec();
@@ -256,6 +256,50 @@ public:
 		return impl.template to_number<T>();
 	}
 
+	bool operator<(const bigint_base& rhs) const
+	{
+		return impl.compare(rhs.impl) < 0;
+	}
+
+	bool operator<=(const bigint_base& rhs) const
+	{
+		return impl.compare(rhs.impl) <= 0;
+	}
+
+	bool operator>(const bigint_base& rhs) const
+	{
+		return impl.compare(rhs.impl) > 0;
+	}
+	
+	bool operator>=(const bigint_base& rhs) const
+	{
+		return impl.compare(rhs.impl) >= 0;
+	}
+	
+	bool operator==(const bigint_base& rhs) const
+	{
+		return impl.compare(rhs.impl) == 0;
+	}
+	
+	// workaround for bigint == 0 (safe bool conversion :-/)
+	bool operator==(int rhs) const
+	{
+		bigint_base n = rhs;
+		return *this == n;
+	}
+
+	bool operator!=(const bigint_base& rhs) const
+	{
+		return impl.compare(rhs.impl) != 0;
+	}
+
+	// workaround for bigint != 0 (safe bool conversion :-/)
+	bool operator!=(int rhs) const
+	{
+		bigint_base n = rhs;
+		return *this != n;
+	}
+
 	// - basic arithmetic operations (addition, subtraction, multiplication, division)
 	friend bigint_base operator+(const bigint_base& lhs, const bigint_base& rhs)
 	{
@@ -328,36 +372,6 @@ public:
 		bigint_base<I> result;
 		result.impl.rshift(lhs.impl, rhs);
 		return result;
-	}
-	
-	friend bool operator<(const bigint_base& lhs, const bigint_base& rhs)
-	{
-		return lhs.impl.compare(rhs.impl) < 0;
-	}
-
-	friend bool operator<=(const bigint_base& lhs, const bigint_base& rhs)
-	{
-		return lhs.impl.compare(rhs.impl) <= 0;
-	}
-
-	friend bool operator>(const bigint_base& lhs, const bigint_base& rhs)
-	{
-		return lhs.impl.compare(rhs.impl) > 0;
-	}
-	
-	friend bool operator>=(const bigint_base& lhs, const bigint_base& rhs)
-	{
-		return lhs.impl.compare(rhs.impl) >= 0;
-	}
-	
-	friend bool operator==(const bigint_base& lhs, const bigint_base& rhs)
-	{
-		return lhs.impl.compare(rhs.impl) == 0;
-	}
-	
-	friend bool operator!=(const bigint_base& lhs, const bigint_base& rhs)
-	{
-		return lhs.impl.compare(rhs.impl) != 0;
 	}
 	
 	friend bigint_base abs(const bigint_base& value)
