@@ -1,0 +1,7 @@
+This is a test message to check that I can upload files to the boost sandbox.
+
+I am also checking that my MIME type settings are correct based on the information located here http://svn.boost.org/trac/boost/wiki/BoostSubversion
+
+Thanks,
+
+Peter (user pjfoley)
