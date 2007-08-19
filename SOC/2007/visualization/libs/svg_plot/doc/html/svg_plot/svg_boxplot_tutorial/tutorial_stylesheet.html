@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Stylesheet
+      Tutorial</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
+<link rel="start" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../svg_boxplot_tutorial.html" title=" Tutorial: Boxplot">
+<link rel="prev" href="svg_boxplot_tutorial_full_layout.html" title="
+      Full Layout">
+<link rel="next" href="../behavior.html" title=" Behavior">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%">
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="svg_boxplot_tutorial_full_layout.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../svg_boxplot_tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../behavior.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="svg_plot.svg_boxplot_tutorial.tutorial_stylesheet"></a><a href="tutorial_stylesheet.html" title=" Stylesheet
+      Tutorial"> Stylesheet
+      Tutorial</a>
+</h3></div></div></div>
+<p>
+        To include a stylesheet into a program with any plot, simply use the <code class="computeroutput"><span class="identifier">load_stylesheet</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&amp;</span> <span class="identifier">filename</span><span class="special">)</span></code> method to load an external stylesheet. To
+        load the file ./style.css, for instance, we would call:
+      </p>
+<pre class="programlisting">
+<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">load_stylesheet</span><span class="special">(</span><span class="string">"./style.css"</span><span class="special">);</span>
+</pre>
+<p>
+        There are a few instances when a <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">runtime_error</span></code>
+        exception may be thrown.
+      </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          If the filename is incorrect
+        </li>
+<li>
+          If the file does not pass the parsing phase
+        </li>
+</ul></div>
+<a name="svg_plot.svg_boxplot_tutorial.tutorial_stylesheet.using_the_stylesheet"></a><h4>
+<a name="id339172"></a>
+        <a href="tutorial_stylesheet.html#svg_plot.svg_boxplot_tutorial.tutorial_stylesheet.using_the_stylesheet">Using
+        the stylesheet</a>
+      </h4>
+<p>
+        Here is the output file for the simple 1D example, used before:
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../images/1d_simple.png" alt="1d_simple"></span>
+      </p>
+<p>
+        Here it is with a simple stylesheet applied (from $PROJECT_ROOT/libs/svg_plot/example/style.css):
+      </p>
+<p>
+        <span class="inlinemediaobject"><img src="../../images/1d_simple_stylesheet.png" alt="1d_simple_stylesheet"></span>
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Jake Voytko</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="svg_boxplot_tutorial_full_layout.html"><img src="../../images/prev.png" alt="Prev"></a><a accesskey="u" href="../svg_boxplot_tutorial.html"><img src="../../images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../images/home.png" alt="Home"></a><a accesskey="n" href="../behavior.html"><img src="../../images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -571,7 +571,7 @@ A little bit of color customization goes a long way!
 
 [section:2d_special Tutorial: 2D Special Features]
 
-[header Y Axis Grid Lines]
+[heading Y Axis Grid Lines]
 
 If you would like grid lines that go across the graph, you can make the
 following call to `svg_1d_plot`:
@@ -588,7 +588,7 @@ This will produce something like the following image:
 
 [$images/2d_y_grid.png]
 
-[header External Y Axis Style]
+[heading External Y Axis Style]
 
 For an alternate way to display a regular axis, you can use an external style:
 
@@ -598,7 +598,7 @@ For an alternate way to display a regular axis, you can use an external style:
 turn the axis back on. To do that, you must call `axis_on(true)`]
 
 
-[header Fill the area between the plot and the axis]
+[heading Fill the area between the plot and the axis]
 
 When there is a call to the plot() method, define `_area_fill_color`
 
@@ -611,7 +611,7 @@ This produces the following image:
 
 [$images/2d_area_fill.png]
 
-[header Curve Interpolation]
+[heading Curve Interpolation]
 
 If you would like an interpolated curve shown over your data, simply use the following command:
 
@@ -625,7 +625,7 @@ This produces something like the following images:
 
 [endsect] [/2d_special Tutorial: 2D Special Features]
 [endsect] [/2d_tutorial]
-[section:svg_boxplot_tutorial Boxplot]
+[section:svg_boxplot_tutorial Tutorial: Boxplot]
 [section:svg_boxplot_tutorial_simple Simple Example]
 
 	// Functions we are using to simulate distributions.
@@ -725,8 +725,31 @@ my_plot.write("boxplot_simple.svg");
 [endsect][/section:svg_boxplot_tutorial_simple]
 [section:svg_boxplot_tutorial_full_layout Full Layout]
 
-[endsect]
-[endsect] [/svg_boxplot_tutorial Boxplot]
+[endsect][/svg_boxplot_tutorial Boxplot]
+
+[endsect][/section:tutorial]
+[section:tutorial_stylesheet Stylesheet Tutorial]
+
+To include a stylesheet into a program with any plot, simply use the `load_stylesheet(const std::string& filename)` method to load an external stylesheet. To load the file ./style.css, for instance, we would call:
+
+	my_plot.load_stylesheet("./style.css");
+
+There are a few instances when a `std::runtime_error` exception may be thrown.
+
+* If the filename is incorrect
+* If the file does not pass the parsing phase
+
+[heading Using the stylesheet]
+Here is the output file for the simple 1D example, used before:
+
+[$images/1d_simple.png]
+
+Here it is with a simple stylesheet applied (from $PROJECT_ROOT/libs/svg_plot/example/style.css):
+
+[caution When the user will have the option to convert the graph to another image format, the stylesheets will be ignored. These would provide the user with an even more complex function object that they would need to implement. If you provide a stylesheet, make sure you know what will not be converted. (Currently, that is everything in the stylesheets)]
+[$images/1d_simple_style.png]
+
+[endsect][/stylesheet tutorial]
 [section:behavior Behavior]
 [section:behavior_limits Numerical Limits]
 All limits that are dealt with are double precision floating point limits. 
@@ -736,12 +759,12 @@ be incorrect for such plots as `1 / x`. Limits are drawn as a circle with
 `_stroke_color = lightgray` and `_fill_color = whitesmoke`.
 This will become customizable.
 
-[header NaN]
+[heading NaN]
 Any double precision floating point numbers that return a nonzero value for the
 function `_isnan(double)` is considered to be a NaN value. When plotted, the
 number will appear in the user-defined coordinates as 0.
 
-[header Infinity]
+[heading Infinity]
 
 Any double precision floating point number that is equal to either of the 
 following is considered to be Infinity:
@@ -753,7 +776,7 @@ When plotted, these values will appear at the top of your plot window. If
 the plot window is not turned on, these points will appear at the top of
 the graph.
 
-[header Negative Infinity]
+[heading Negative Infinity]
 
 Any double precision floating point number that is equal to either of the 
 following is considered to be Negative Infinity:
@@ -770,6 +793,56 @@ Here is an example of numeric limit handling in action:
 
 [$images/2d_limit.png]
 [endsect][/section:numerical_limits]
+[section:behavior_stylesheets Stylesheets]
+Stylesheets currently have only a single way of being used with the program: they are parsed by the `svg` class, and if the stylesheet parses correctly, they are loaded directly into the SVG file. I recognize that it may also be desired to link to an external stylesheet, but this presents a few problems.
+
+* Both of the files now need to be transported with the produced document
+* Any user-provided function object that is used to convert between image formats now suddenly needs to be able to load the image format from an external source.
+
+When the image converter portion of the project is completed, the image format function object will not be forced to deal with CSS. This is primarily a practical matter, and keeps simple an already difficult task. This will not preclude a method that extracts appropriate data from the CSS file and calls the appropriate functions. For example, if the user provides the following:
+
+	#Background
+	{
+		fill : #FFF;
+		stroke : #041010 ; 
+	}
+
+why shouldn't 
+
+	my_plot.background_color(black);
+	my_plot.background_border_color(svg_color(4, 16, 16));
+
+be called?
+
+[caution Please note that the language that is accepted by the parser is actually stricter than the real CSS standard allows for. Following GSoC, the parser will be reimplemented to reflect the parser suggested by the CSS standard. All identifiers (class, ID, or otherwise), must be the only identifier on the line. The following is not accepted:
+``
+rect, circle
+{
+	fill : #00FF00;
+	stroke : #000000;
+}
+``
+
+But the following is:
+
+``
+rect
+{
+	fill : #00FF00;
+	stroke : #00FF00;
+}
+
+circle
+{
+	fill : #00FF00;
+	stroke : #00FF00;
+}
+``
+
+None of the power of CSS is compromised (or at least, I hope not), but it becomes more verbose.
+][/caution]
+
+[endsect][/section:behavior_stylesheets]
 [endsect][/section:behavior Behavior]
 
 [section:plot_defaults Defaults]
@@ -1059,7 +1132,7 @@ stroke).
 
 (Note: Getters omitted for now)
 
-[header The `plot()` Method]
+[heading The `plot()` Method]
 The `plot()` method is defined using Boost.Parameter. As such, it supports a 
 few extra named parameters, as well as a deduced parameter.
 
