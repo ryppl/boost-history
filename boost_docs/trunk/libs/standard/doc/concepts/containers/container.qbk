@@ -85,13 +85,12 @@ iterations.
     [
         [Default Constructor]
         [
-            C c;
-            
+            C c;[br]
             C()
         ]
         []
         [
-            Construct a new contaiiner of type `C`.
+            Construct a new container of type `C` with no sotred elements.
             
             *Postcondition:* The created container has `size() == 0`.
             
@@ -101,10 +100,8 @@ iterations.
     [
         [Default Constructor]
         [
-            C c(d);
-            
-            C c = d;
-            
+            C c(d);[br]
+            C c = d;[br]
             C(d)
         ]
         []
@@ -112,7 +109,8 @@ iterations.
             Construct a new container of type `C` with a copy of the contents
             of container `d`.
             
-            *Postcondition:* The constructed container is equivalent to `d`,
+            *Postcondition:* The constructed container `c` is equivalent to `d`,
+            containing a copy of each of `d`'s elements.
             
             *Complexity:* Linear in `d.size()`.
         ]
@@ -132,8 +130,7 @@ iterations.
         [Beginning of Range]
         [`c.begin()`]
         [
-            `iterator` if `c` is mutable.
-            
+            `iterator` if `c` is mutable.[br]
             `const_iterator if `c` is `const`.
         ]
         [
@@ -142,25 +139,85 @@ iterations.
             *Postcondition:* If `c` is not empty, `c.begin()` is dereferenceable.
             Otherwise, it is past the end.
             
-            *Complexity:* Constant.
+            *Complexity:* Amortized constant.
         ]
     ]
     [
         [End of Range]
         [`c.end()`]
         [
-            `iterator` if `c` is mutable.
-            
+            `iterator` if `c` is mutable.[br]
             `const_iterator if `c` is `const`.
         ]
         [
-            Returns an iterator pointing past the end of the container..
+            Returns an iterator pointing past the end of the container.
             
             *Postcondition:* `c.end()` is past the edn of the array.
             
-            *Complexity:* Constant.
+            *Complexity:* Amortized constant.
+        ]
+    ]
+    [
+        [Size]
+        [`c.size()`]
+        [
+            `size_type`
+        ]
+        [
+            Returns the size of the container `c`, frequently meaning the number
+            of elements stored in the container.
+            
+            *Postcondition:* `c.size() >= 0` and `c.size() <= `c.max_size()`.
+            
+            *Complexity:* Lineaar in `c.size()`.
+        ]
+    ]
+    [
+        [Maximum Size]
+        [`c.max_size()`]
+        [
+            `size_type`
+        ]
+        [
+            Returns the largest possible size of the container, also the
+            maximum number of elements that `c` can store.
+            
+            *Postcondition:* `c.max_size() >= 0` and `c.max_size() >= c.size()`.
+            
+            *Complexity:* Amortized constant.
+        ]
+    ]
+    [
+        [Empty]
+        [`c.empty()`]
+        [
+            Convertible to `bool`.
+        ]
+        [
+            Returns `true` if the container `c` is empty, also equivalent to
+            `c.size() == 0`.
+            
+            *Complexity:* Amortized constant.
+        ]
+    ]
+    [
+        [Swap]
+        [`c.empty(d)`]
+        []
+        [
+            Swap the contents of container `c` with `d`.
+            
+            *Requirements:* `d` must be of type `C`.
         ]
     ]
 ]
+
+[heading Examples]
+
+    template <typename C>
+    typename C::size_type container_size()
+    {
+        return c.size();
+    }
 
 [endsect]
