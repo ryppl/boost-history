@@ -30,12 +30,12 @@ int main()
   cgi::acgi_request req(service);
   req.load();
 
-  std::cout<< "checking in";
+  std::cerr<< "checking in";
 
   std::string buf("Content-type: text/html\r\n\r\nHello there, Universe.");
   cgi::write(req, cgi::buffer(buf.c_str(), buf.size()));
 
-  std::cout<< "checking reply";
+  std::cerr<< "checking reply";
 
   cgi::reply rep;
 

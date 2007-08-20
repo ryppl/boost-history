@@ -45,6 +45,7 @@ namespace cgi {
 
     void construct(implementation_type& impl)
     {
+      std::cerr<< "making connection";
       impl.connection() = implementation_type::connection_type::create();
     }
 

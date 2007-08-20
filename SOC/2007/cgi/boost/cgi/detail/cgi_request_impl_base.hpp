@@ -60,7 +60,7 @@ namespace cgi {
     bool stdin_parsed() { return stdin_parsed_; }
     http::status_code& http_status() { return http_status_; }
 
-    conn_ptr connection() { return connection_; }
+    conn_ptr& connection() { return connection_; }
     std::string& null_str() { return null_str_; }
 
   protected:

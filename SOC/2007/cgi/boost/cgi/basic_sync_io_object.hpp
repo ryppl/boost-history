@@ -25,7 +25,7 @@ namespace cgi {
   protected:
     explicit basic_sync_io_object()
     {
-      std::cout<< "Hello";
+      std::cerr<< "Hello";
       service.construct(impl);
     }
 

@@ -7,6 +7,8 @@ int main()
   try{
   cgi::cgi_request req;
 
+  std::cerr<< "About to write header";
+
   std::string buf("Content-type: text/html\r\n\r\nHello there, universe!");
   boost::system::error_code ec;
 
