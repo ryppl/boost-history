@@ -29,8 +29,8 @@ main(int argc, char *argv[])
         DistanceMatrix dm;
         Measure m;
 
-        closeness_centrality(g, dm, cm);
-        closeness_centrality(g, dm, cm, m);
+        all_closeness_centralities(g, dm, cm);
+        all_closeness_centralities(g, dm, cm, m);
     }
 
     {
@@ -46,8 +46,8 @@ main(int argc, char *argv[])
         DistanceMap dm;
         Measure m;
 
-        vertex_closeness_centrality(g, dm);
-        vertex_closeness_centrality(g, dm, m);
+        closeness_centrality(g, dm);
+        closeness_centrality(g, dm, m);
     }
 
     return 0;

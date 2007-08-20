@@ -5,6 +5,7 @@
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 #include "new_archetypes.hpp"
+#include "archetypes.hpp"
 #include <boost/graph/graph_traits.hpp>
 
 using namespace std;
@@ -303,6 +304,48 @@ main(int argc, char *argv[])
 
         // This causes a compiler error if uncommented (as it should!)
         // put(vertex_index, g, v, size_t());
+    }
+
+    // test the enigmatic index graph archetypes
+    {
+        typedef graph_archetype<
+                undirected_tag,
+                allow_parallel_edge_tag
+            > Graph;
+        typedef vertex_index_graph_archetype<
+                Graph
+            > VertexIndexGraph;
+        typedef graph_traits<VertexIndexGraph>::vertex_descriptor Vertex;
+        typedef VertexIndexGraph::vertex_index_type Index;
+        typedef property_map<VertexIndexGraph, vertex_index_t>::type IndexMap;
+
+        VertexIndexGraph& g = static_object<VertexIndexGraph>::get();
+        IndexMap m = get(vertex_index, g);
+        Index x = get(vertex_index, g, Vertex());
+        renumber_vertex_indices(g);
+        ignore_unused_variable_warning(m);
+        ignore_unused_variable_warning(x);
+    }
+
+    // test the enigmatic index graph archetypes
+    {
+        typedef graph_archetype<
+                undirected_tag,
+                allow_parallel_edge_tag
+            > Graph;
+        typedef edge_index_graph_archetype<
+                Graph
+            > EdgeIndexGraph;
+        typedef graph_traits<EdgeIndexGraph>::vertex_descriptor Vertex;
+        typedef EdgeIndexGraph::edge_index_type Index;
+        typedef property_map<EdgeIndexGraph, edge_index_t>::type IndexMap;
+
+        EdgeIndexGraph& g = static_object<EdgeIndexGraph>::get();
+        IndexMap m = get(edge_index, g);
+        Index x = get(edge_index, g, Vertex());
+        renumber_edge_indices(g);
+        ignore_unused_variable_warning(m);
+        ignore_unused_variable_warning(x);
     }
 
     return 0;

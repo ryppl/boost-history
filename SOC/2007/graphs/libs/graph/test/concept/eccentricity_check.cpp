@@ -27,7 +27,7 @@ main(int argc, char *argv[])
         EccentricityMap em;
         DistanceMatrix dm;
 
-        eccentricity(g, dm, em);
+        all_eccentricities(g, dm, em);
     }
 
     {
@@ -41,7 +41,7 @@ main(int argc, char *argv[])
         Graph& g = static_object<Graph>::get();
         DistanceMap dm;
 
-        vertex_eccentricity(g, dm);
+        eccentricity(g, dm);
     }
 
     {
@@ -55,9 +55,9 @@ main(int argc, char *argv[])
         Graph& g = static_object<Graph>::get();
         EccentricityMap em;
 
-        graph_radius(g, em);
-        graph_diameter(g, em);
-        graph_radius_diameter(g, em);
+        radius(g, em);
+        diameter(g, em);
+        radius_and_diameter(g, em);
     }
 
     return 0;

@@ -29,8 +29,8 @@ main(int argc, char *argv[])
         DistanceMatrix dm;
         Measure m;
 
-        mean_geodesic(g, dm, cm);
-        mean_geodesic(g, dm, cm, m);
+        all_mean_geodesics(g, dm, cm);
+        all_mean_geodesics(g, dm, cm, m);
     }
 
     {
@@ -46,8 +46,8 @@ main(int argc, char *argv[])
         DistanceMap dm;
         Measure m;
 
-        vertex_mean_geodesic(g, dm);
-        vertex_mean_geodesic(g, dm, m);
+        mean_geodesic(g, dm);
+        mean_geodesic(g, dm, m);
     }
 
     {
@@ -63,8 +63,8 @@ main(int argc, char *argv[])
         CentralityMap cm;
         Measure m;
 
-        graph_mean_geodesic(g, cm);
-        graph_mean_geodesic(g, cm, m);
+        small_world_distance(g, cm);
+        small_world_distance(g, cm, m);
     }
 
     return 0;

@@ -67,6 +67,7 @@ namespace boost
         : public regular_archetype<>
     {
         descriptor_archetype() { }
+        descriptor_archetype(const descriptor_archetype&) { }
         descriptor_archetype(detail::dummy_constructor) { }
     };
 

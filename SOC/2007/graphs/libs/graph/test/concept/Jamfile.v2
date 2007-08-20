@@ -13,4 +13,5 @@ test-suite graph_test :
     [ compile closeness_centrality_check.cpp ]
     [ compile mean_geodesic_check.cpp ]
     [ compile eccentricity_check.cpp ]
+    [ compile tiernan_all_cycles.cpp ]
     ;

@@ -31,8 +31,8 @@ main(int argc, char *argv[])
         CentralityMap cm;
         Measure m;
 
-        degree_centrality(g, cm);
-        degree_centrality(g, cm, m);
+        all_degree_centralities(g, cm);
+        all_degree_centralities(g, cm, m);
     }
 
     {
@@ -53,9 +53,9 @@ main(int argc, char *argv[])
         CentralityMap cm;
         Measure m;
 
-        degree_centrality(g, cm, measure_influence(g));
-        degree_centrality(g, cm, measure_prestige(g));
-        degree_centrality(g, cm, m);
+        all_influence_values(g, cm);
+        all_prestige_values(g, cm);
+        all_degree_centralities(g, cm, m);
     }
 
     {
@@ -70,8 +70,8 @@ main(int argc, char *argv[])
         Vertex v = static_object<Vertex>::get();
         Measure m;
 
-        vertex_degree_centrality(g, v);
-        vertex_degree_centrality(g, v, m);
+        degree_centrality(g, v);
+        degree_centrality(g, v, m);
     }
 
     {
@@ -86,9 +86,9 @@ main(int argc, char *argv[])
         Vertex v = static_object<Vertex>::get();
         Measure m;
 
-        vertex_degree_centrality(g, v, measure_influence(g));
-        vertex_degree_centrality(g, v, measure_prestige(g));
-        vertex_degree_centrality(g, v, m);
+        influence(g, v);
+        prestige(g, v);
+        degree_centrality(g, v, m);
     }
 
     return 0;

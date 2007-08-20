@@ -12,6 +12,41 @@
 
 namespace boost
 {
+    // VertexIndexGraph
+    template <typename GraphArchetype>
+    struct vertex_index_graph_archetype
+        : public property_graph_archetype<GraphArchetype, vertex_index_t, unsigned>
+    {
+        typedef unsigned vertex_index_type;
+        typedef property_graph_archetype<GraphArchetype, vertex_index_t, vertex_index_type> BaseType;
+        typedef typename BaseType::vertex_property_type vertex_property_type;
+        typedef void edge_property_type;
+        typedef typename BaseType::graph_tag graph_tag;
+    };
+
+    template <typename G>
+    void
+    renumber_vertex_indices(vertex_index_graph_archetype<G>&)
+    { }
+
+    // EdgeIndexGraph
+    template <typename GraphArchetype>
+    struct edge_index_graph_archetype
+        : public property_graph_archetype<GraphArchetype, edge_index_t, unsigned>
+    {
+        typedef unsigned edge_index_type;
+        typedef property_graph_archetype<GraphArchetype, edge_index_t, edge_index_type> BaseType;
+        typedef void vertex_property_type;
+        typedef typename BaseType::edge_property_type edge_property_type;
+        typedef typename BaseType::graph_tag graph_tag;
+    };
+
+    template <typename G>
+    void
+    renumber_edge_indices(edge_index_graph_archetype<G>&)
+    { }
+
+    // DegreeMeasure
     template <typename Graph>
     struct degree_measure_archetype
     {
@@ -28,6 +63,21 @@ namespace boost
         typedef Result result_type;
         result_type operator ()(distance_type, const Graph&)
         { return result_type(); }
+    };
+
+    struct cycle_visitor_archetype
+    {
+        template <typename Path, typename Graph>
+        void cycle(const Path&, Graph&)
+        { }
+    };
+
+    template <typename Graph>
+    struct clique_visitor_archetype
+    {
+        template <typename VertexSet>
+        void clique(const VertexSet&, Graph&)
+        { }
     };
 }
 
