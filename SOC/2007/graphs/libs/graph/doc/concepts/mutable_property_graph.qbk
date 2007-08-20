@@ -6,11 +6,11 @@
  /]
 
 [section Mutable Property Graph]
-A MutablePropertyGraph is a [BoostMutableGraph] with properties attached internally to the
+A MutablePropertyGraph is a [MutableGraph] with properties attached internally to the
 vertices and edges. When adding vertices and edges the value of the properties can be given.
 
 [h4 Refinement Of]
-[BoostMutableGraph] and [BoostPropertyGraph]
+[MutableGraph] and [PropertyGraph]
 
 [h4 Associated Types]
 [table

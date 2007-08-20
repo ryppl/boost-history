@@ -104,12 +104,12 @@ The notation used in the table is as follows.
 [include property_graph.qbk]
 [include mutable_property_graph.qbk]
 
-[h3 Pseudo-Concepts]
+[heading Pseudo-Concepts]
 The concepts above describe the type and functional requirements of graphs. However,
 these do not directly common concepts such as "directed graph" or "multigraph". As
 such, there are a number of pseudo-concepts with which we can also describe graph objects.
 
-[h4 Directed and Undirected Graphs]
+[heading Directed and Undirected Graphs]
 The interface that Boost.Graph provides for accessing and manipulating an undirected
 graph is the same as the interface for directed graphs described in the following
 sections, however there are some differences in the behaviour and semantics. For example,
@@ -211,7 +211,7 @@ weight\[(u,v)\] = 3.1
 weight\[(v,u)\] = 3.1
 ]
 
-[h4 Multigraphs]
+[heading Multigraphs]
 A /multigraph/ is a graph (either directed or undirected) that has parallel edges
 between vertices. The Boost.Graph types are mostly unrestrictive about the addition
 of parallel edges, meaning that it is fairly easy to actually create multigraphs
@@ -221,13 +221,21 @@ There are certain sets of graph types that do not allow the addition of parallel
 Specifically, if the EdgeList and OutEdgeList of an [adjacency_list] models an
 associative container, then the graph cannont be a multigraph.
 
-*Document this a little better*
+[heading Indexed Graphs]
+Indexed graph provide a specific property, an index, for verticese, edges or both.
+Many algorithms require vertex or edge indices for "fast" property acces, often
+declaring exterior properties as `vector`s and using the indices as random access
+iterators to access those properties. These concepts effectively require that
+indices are accessible as interior properties of the graph.
 
-[h3 Indexed Graphs]
-Although not explicitly documented (yet), there's a concept of a Vertex-Indexed graph
-that has some valid expressions related specifically to operations on vertex index
-property of the graph. The [undirected_graph] class has some addiitonal methods
-that can also be ported.
+These concepts are provided to help describe interface requirements for algorithms
+that allow indices to be provided as an exterior property map. With these concepts,
+requirements (and interfaces) can be written more disticntly for algorithms that accept
+indexed graphs, and those that require adaptation through exterior properties.
 
+There are two indexed graph concepts: [VertexIndexGraph] and [EdgeIndexGraph].
+
+[include vertex_index_graph.qbk]
+[include edge_index_graph.qbk]
 
 [endsect]
