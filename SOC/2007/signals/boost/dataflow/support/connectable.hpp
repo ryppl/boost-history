@@ -35,8 +35,10 @@ inline void connect(Producer &producer, Consumer &consumer)
     extension::connect_impl<
         typename producer_category_of<Producer>::type,
         typename consumer_category_of<Consumer>::type>
-            ::template apply<Producer,Consumer>
-                ::call(producer,consumer);
+            ::template apply<
+                typename get_proxied_producer_type<Producer>::type,
+                Consumer
+            >::call(get_proxied_producer(producer),consumer);
 }
 
 template<typename Producer, typename Consumer>
@@ -45,8 +47,10 @@ inline void connect(const Producer &producer, Consumer &consumer)
     extension::connect_impl<
         typename producer_category_of<Producer>::type,
         typename consumer_category_of<Consumer>::type>
-            ::template apply<Producer,Consumer>
-                ::call(producer,consumer);
+            ::template apply<
+                typename get_proxied_producer_type<Producer>::type,
+                Consumer
+            >::call(get_proxied_producer(producer),consumer);
 }
 
 template<typename Producer, typename Consumer>
@@ -55,8 +59,10 @@ inline void connect(Producer &producer, const Consumer &consumer)
     extension::connect_impl<
         typename producer_category_of<Producer>::type,
         typename consumer_category_of<Consumer>::type>
-            ::template apply<Producer,Consumer>
-                ::call(producer,consumer);
+            ::template apply<
+                typename get_proxied_producer_type<Producer>::type,
+                Consumer
+            >::call(get_proxied_producer(producer),consumer);
 }
 
 template<typename Producer, typename Consumer>
@@ -65,8 +71,10 @@ inline void connect(const Producer &producer, const Consumer &consumer)
     extension::connect_impl<
         typename producer_category_of<Producer>::type,
         typename consumer_category_of<Consumer>::type>
-            ::template apply<Producer,Consumer>
-            ::call(producer,consumer);
+            ::template apply<
+                typename get_proxied_producer_type<Producer>::type,
+                Consumer
+            >::call(get_proxied_producer(producer),consumer);
 }
 
 } } // namespace boost::dataflow

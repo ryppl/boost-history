@@ -22,14 +22,19 @@ struct slot_selector
 {
     typedef Signature signature_type;
     typedef T class_type;
-    typedef typename boost::dataflow::signal_consumer consumer_category;
-    typedef typename boost::dataflow::signal_producer producer_category;
+    typedef boost::dataflow::signal_consumer consumer_category;
+    typedef T proxy_producer_for;
+    typedef boost::dataflow::mutable_proxy_producer proxy_producer_category;
+
     
 	T &object;
 	typename detail::slot_type<Signature, T>::type func;
     
 	slot_selector(typename detail::slot_type<Signature, T>::type func, T &object)
 		: object(object), func(func) {}
+
+    typename boost::dataflow::get_proxied_producer_type<T>::type &get_proxied_producer() const
+    {   return boost::dataflow::get_proxied_producer(object);  }
 };
 
 /**	\brief Allows arbitrary member functions to serve as slots.

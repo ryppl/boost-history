@@ -26,8 +26,9 @@ class filter_base
 #endif
 {
 public:
-    typedef boost::dataflow::signal_producer producer_category;
+//    typedef boost::dataflow::signal_producer producer_category;
     typedef boost::dataflow::signal_consumer consumer_category;
+    typedef boost::dataflow::mutable_proxy_producer proxy_producer_category;
 };
 
 } }
@@ -48,7 +49,7 @@ struct is_filter<T, typename boost::enable_if<boost::is_base_of<boost::signals::
 /*template<class T>
 struct is_component<T, typename boost::enable_if<is_filter<T> >::type >
     : public boost::true_type { };*/
-        
+
 template<class T>
 struct get_signal<T, typename boost::enable_if<is_filter<T> >::type >
 {

@@ -15,6 +15,7 @@
 [template ConsumerConcept[] [link dataflow.concepts.consumer [^Consumer]]]
 [template InvocableConcept[] [link dataflow.concepts.invocable [^Invocable]]]
 [template ConnectableConcept[] [link dataflow.concepts.connectable [^Connectable]]]
+[template ProxyProducerConcept[] [link dataflow.concepts.proxyproducer [^ProxyProducer]]]
 [template SignalProducerConcept[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
 [template SignalConsumerConcept[] [link dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
 [template PhoenixProducerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]

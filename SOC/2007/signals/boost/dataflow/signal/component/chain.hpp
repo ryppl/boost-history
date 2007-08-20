@@ -27,6 +27,7 @@ namespace detail
 public:
         typedef typename T::signal_type signal_type;
         typedef typename T::signature_type signature_type;
+        typedef T proxy_producer_for;
     
         chain_impl(size_t copies, T *component=NULL)
         {
@@ -51,6 +52,10 @@ public:
         typename T::signal_type &default_signal() const
         {
             return components[size-1].default_signal();
+        }
+        typename boost::dataflow::get_proxied_producer_type<proxy_producer_for>::type &get_proxied_producer() const
+        {
+            return boost::dataflow::get_proxied_producer(components[size-1]);
         }
     private:
         void initialize(size_t copies, T *component=NULL)

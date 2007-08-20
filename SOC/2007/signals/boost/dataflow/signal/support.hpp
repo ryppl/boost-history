@@ -3,15 +3,14 @@
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef SIGNAL_NETWORK_CONNECTION_SIGNAL_HPP
-#define SIGNAL_NETWORK_CONNECTION_SIGNAL_HPP
+#ifndef SIGNAL_NETWORK_SIGNAL_SUPPORT_HPP
+#define SIGNAL_NETWORK_SIGNAL_SUPPORT_HPP
 
-#include <boost/dataflow/signal/connection/connect.hpp>
+#include <boost/dataflow/support.hpp>
 #include <boost/dataflow/signal/connection/detail/bind_object.hpp>
 #include <boost/dataflow/signal/connection/detail/result_of_defined.hpp>
 #include <boost/dataflow/signal/connection/detail/replace_return_type.hpp>
-#include <boost/dataflow/signal/detail/enable_if_defined.hpp>
-#include <boost/dataflow/signal/component/traits.hpp>
+#include <boost/dataflow/detail/enable_if_defined.hpp>
 #include <boost/signal.hpp>
 
 #include <boost/mpl/aux_/has_type.hpp>
@@ -30,70 +29,146 @@ namespace detail
         typedef Signature type;
     };
 }
+
+} }
+
+namespace boost { namespace dataflow {
+
+struct signal_producer {};
+struct signal_consumer {};
+
+template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
+struct producer_category_of<boost::signal<Signature, Combiner, Group, GroupCompare> >
+{
+    typedef signal_producer type;
+};
+
+/*template<typename T>
+struct consumer_type_of<T, */
+
+namespace extension
+{
+    namespace signals
+    {
+        template<class T, typename Enable=void>
+        struct get_signal;
+        
+        template<typename T, typename Enable=void>
+        struct get_signal_type;
+        
+        template<typename Signature, typename T, typename Enable=void>
+        struct get_slot;
+        
+        /** \brief Support for boost::signal.
+            */
+        template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
+        struct get_signal<boost::signal<Signature, Combiner, Group, GroupCompare> >
+        {
+            boost::signal<Signature, Combiner, Group, GroupCompare> & operator()
+            (boost::signal<Signature, Combiner, Group, GroupCompare> &s) {return s;}
+        };
+        
+        /** \brief Support for boost::signal.
+            */
+        template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
+        struct get_signal_type<boost::signal<Signature, Combiner, Group, GroupCompare> >
+        {
+            typedef boost::signal<Signature, Combiner, Group, GroupCompare> type;
+        };
+        
+        /** \brief Support for function objects that for which boost::result_of is defined.
+            */
+        template<typename Signature, typename T>
+        struct get_slot<Signature, T, typename boost::enable_if<boost::signals::detail::result_of_defined<
+        typename boost::signals::detail::replace_return_type<Signature, T>::type > >::type>
+        {
+            boost::function<Signature> operator()(T &object)
+            {
+                return boost::signals::detail::bind_object<Signature, T>()
+                (static_cast<typename boost::signals::detail::slot_type<Signature, T>::type>(&T::operator()), object);
+            }
+            boost::function<Signature> operator()(const T &object)
+            {
+                return boost::signals::detail::bind_object<Signature, T>()
+                (static_cast<typename boost::signals::detail::slot_type<Signature, T>::type>(&T::operator()), object);
+            }
+        };
+        
+        /** \brief Support for function objects that for which boost::result_of is defined.
+            */
+/*        template<typename T>
+        struct consumer_category_of<T, boost::enable_if<boost::signals::detail::result_of_defined<
+        typename boost::signals::detail::replace_return_type<Signature, T>::type > >::type>
+        {
+            typedef boost::dataflow::signal_consumer type;
+        };*/
+    }
     
-/** \brief Support for components using the signal data transport mechanism.
-*/
-template<typename Input, typename Output>
-struct connect_impl<Input, Output>
-{
-    void operator()(Input &input, Output &output)
+    template<typename ProducerTag, typename ConsumerTag>
+    struct connect_impl<ProducerTag, ConsumerTag,
+        typename boost::enable_if<boost::mpl::and_<
+            boost::is_base_of<signal_producer, ProducerTag>,
+            boost::is_base_of<signal_consumer, ConsumerTag>
+        > >::type >
     {
-        get_signal<Input>()(input).connect(get_slot<typename detail::get_signature<typename get_signal_type<Input>::type>::type, Output>()(output));
-    }
-    void operator()(Input &input, const Output &output)
-    {
-        get_signal<Input>()(input).connect(get_slot<typename detail::get_signature<typename get_signal_type<Input>::type>::type, Output>()(output));
-    }
-    void operator()(const Input &input, Output &output)
-    {
-        get_signal<Input>()(input).connect(get_slot<typename detail::get_signature<typename get_signal_type<Input>::type>::type, Output>()(output));
-    }
-    void operator()(const Input &input, const Output &output)
-    {
-        get_signal<Input>()(input).connect(get_slot<typename detail::get_signature<typename get_signal_type<Input>::type>::type, Output>()(output));
-    }
-};
+        template<typename Producer, typename Consumer>
+        struct apply
+        {
+            static void call(const Producer &producer, const Consumer &consumer)
+            {
+                signals::get_signal<Producer>()(producer).connect(
+                     signals::get_slot<typename dataflow::produced_type_of<
+                         Producer>::type, Consumer>()(consumer));
+            }
+            static void call(const Producer &producer, Consumer &consumer)
+            {
+                signals::get_signal<Producer>()(producer).connect(
+                     signals::get_slot<typename dataflow::produced_type_of<
+                         Producer>::type, Consumer>()(consumer));
+           }
+            static void call(Producer &producer, const Consumer &consumer)
+            {
+                signals::get_signal<Producer>()(producer).connect(
+                     signals::get_slot<typename dataflow::produced_type_of<
+                         Producer>::type, Consumer>()(consumer));
+            }
+            static void call(Producer &producer, Consumer &consumer)
+            {
+                signals::get_signal<Producer>()(producer).connect(
+                     signals::get_slot<typename dataflow::produced_type_of<
+                         Producer>::type, Consumer>()(consumer));
+            }
+        };
+    };
+}
 
-/** \brief Support for boost::signal.
-*/
+/*
+template<typename T>
+struct produced_type_of<
+    T,
+    typename boost::enable_if<
+        boost::is_base_of<
+            signal_producer,
+            typename producer_category_of<T>::type
+        >
+    >::type >
+{
+    typedef typename boost::signals::detail::get_signature<typename extension::signals::get_signal_type<T>::type>::type type;
+};*/
+
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-struct is_component<boost::signal<Signature, Combiner, Group, GroupCompare> >
-    : public boost::true_type {};
-
-/** \brief Support for boost::signal.
-*/
-template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-struct get_signal<boost::signal<Signature, Combiner, Group, GroupCompare> >
+struct produced_type_of<
+    boost::signal<Signature, Combiner, Group, GroupCompare> >
 {
-    boost::signal<Signature, Combiner, Group, GroupCompare> & operator()
-        (boost::signal<Signature, Combiner, Group, GroupCompare> &s) {return s;}
+    typedef Signature type;
 };
 
-/** \brief Support for boost::signal.
-*/
-template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-struct get_signal_type<boost::signal<Signature, Combiner, Group, GroupCompare> >
-{
-    typedef boost::signal<Signature, Combiner, Group, GroupCompare> type;
-};
+} } // namespace boost::dataflow
 
-/** \brief Support for function objects that for which boost::result_of is defined.
-*/
-template<typename Signature, typename T>
-struct get_slot<Signature, T, typename boost::enable_if<detail::result_of_defined<
-    typename detail::replace_return_type<Signature, T>::type > >::type>
-{
-    boost::function<Signature> operator()(T &object)
-    {
-        return detail::bind_object<Signature, T>()
-            (static_cast<typename detail::slot_type<Signature, T>::type>(&T::operator()), object);
-    }
-    boost::function<Signature> operator()(const T &object)
-    {
-        return detail::bind_object<Signature, T>()
-            (static_cast<typename detail::slot_type<Signature, T>::type>(&T::operator()), object);
-    }
-};
+namespace boost { namespace signals {
+    
+    using boost::dataflow::connect;
+    
+} } // namespace boost::phoenix
 
-} } // namespace boost::signals
-#endif // SIGNAL_NETWORK_CONNECTION_SIGNAL_HPP
+#endif // SIGNAL_NETWORK_SIGNAL_SUPPORT_HPP

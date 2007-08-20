@@ -8,6 +8,7 @@
 
 #include <boost/dataflow/support.hpp>
 
+#include <boost/mpl/not.hpp>
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
 #include <boost/fusion/sequence/container/vector.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
@@ -15,8 +16,9 @@
 #include <boost/fusion/sequence/generation/vector_tie.hpp>
 #include <boost/fusion/sequence/view/zip_view.hpp>
 #include <boost/fusion/support/is_sequence.hpp>
+#include <boost/type_traits/remove_const.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/result_of.hpp>
-#include <boost/mpl/not.hpp>
 
 namespace boost { namespace dataflow {
 
@@ -27,11 +29,22 @@ struct consumer_map : public T
 {
     consumer_map(const T& t) : T(t) {}
     typedef fusion_map_consumer consumer_category;
-    typedef fusion_map_consumer producer_category;
+    typedef
+        typename boost::remove_const<
+            typename boost::remove_reference<
+                typename boost::fusion::result_of::front<T>::type
+            >::type
+        >::type::second_type proxy_producer_for;
+    typedef mutable_proxy_producer proxy_producer_category;
+
+    typename get_proxied_producer_type<proxy_producer_for>::type &get_proxied_producer() const
+    {
+        return boost::dataflow::get_proxied_producer(boost::fusion::front(*this).second);
+    }
 };
 
 namespace extension
-{   
+{
     // component >>= map
     template<typename ProducerTag, typename ConsumerTag>
     struct connect_impl<ProducerTag, ConsumerTag,

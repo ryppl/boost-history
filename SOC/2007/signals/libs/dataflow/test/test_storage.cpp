@@ -20,6 +20,13 @@ int test_main(int, char* [])
         signals::storage<void (float), signals::unfused> floater(2.5f);
         signals::storage<void (float), signals::unfused> collector(0.0f);
 
+        typedef dataflow::proxied_producer_of<typeof(floater.send_slot())> test;
+        typedef dataflow::is_proxy_producer<typeof(floater.send_slot())> test2;
+        typedef dataflow::is_producer<typeof(floater.send_slot())> test3;
+        
+        BOOST_STATIC_ASSERT(test2::value);
+        BOOST_STATIC_ASSERT(test3::value);
+        
         // create the network (banger to floater.send, floater to collector)
         banger >>= floater.send_slot() >>= collector;
 
