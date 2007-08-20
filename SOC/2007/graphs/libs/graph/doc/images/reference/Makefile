@@ -8,7 +8,9 @@ dot_src = \
 	info_network.dot
 circo_src = \
 	distribution_undirected.circo \
-	distribution_directed.circo
+	distribution_directed.circo \
+	triangle.circo \
+	prism_3_2.circo
 fdp_src = \
 	social_network.fdp
 neato_src = \
