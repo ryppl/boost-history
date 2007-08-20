@@ -34,6 +34,9 @@ main(int argc, char *argv[])
         CycleVisitor v;
 
         tiernan_all_cycles(g, v);
+        tiernan_girth(g);
+        tiernan_circumference(g);
+        tiernan_girth_and_circumference(g);
     }
 
     return 0;
