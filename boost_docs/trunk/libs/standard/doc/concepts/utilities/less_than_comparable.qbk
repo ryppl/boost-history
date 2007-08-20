@@ -1,0 +1,130 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Less Than Comparable]
+A type `T` is /less than comparable/ if objects of type `T` can be compared using
+the less-than comparison operator (`<`) and that ccmparison defines a /strict
+weak ordering/. A strict weak ordering over a type `T` is a binary relation between
+objects of type `T` that denotes their /order/, or which objects preceed others
+when enumerating.
+
+Strict weak orderings have the following properties:
+
+* [*Irreflexivity] `t < t` is always `false`.
+* [*Antisymmetry] If `t < u` is `true`, then `u < t` is `false`.
+* [*Transitivity] If `t < u` and `u < v` are `true`, then `t < v` is `true`.
+
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[T] [An [StdLessThanComparable] type.]]
+    [[`t`, `u`, `v`] [Objects of type `T`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Less-Than Comparision]
+        [`t < u`]
+        [Convertible to `bool`]
+        [
+            Returns `true` or a value covertible to `true` if the object
+            `t` is strictly less than `u`.
+        ]
+    ]
+    [
+        [Less-Than or Equal-To Comparision]
+        [`t <= u`]
+        [Convertible to `bool`]
+        [
+            Returns `true` or a value covertible to `true` if the object
+            `t` is less than or equivalent to `u`.
+        ]
+    ]
+    [
+        [Greater-Than Comparision]
+        [`t > u`]
+        [Convertible to `bool`]
+        [
+            Returns `true` or a value covertible to `true` if the object
+            `t` is strictly greater than `u`.
+        ]
+    ]
+    [
+        [Greater-Than or Equal-To Comparision]
+        [`t >= u`]
+        [Convertible to `bool`]
+        [
+            Returns `true` or a value covertible to `true` if the object
+            `t` is greater than or equivalent to `u`.
+        ]
+    ]
+]
+
+[heading Notes]
+If a type `T` provides a less-than comparison operator (`<`), then the
+greater-than (`>`), less-than or equal-to comparison (`<=`), and the
+greater-than or equal-to (`>=`) operators can be implemented as:
+
+    bool operator >(const T& t, const T& u)
+    {
+        return u < t;
+    }
+    
+    bool operator <=(const T& t, const T& u)
+    {
+        return !(u < t);
+    }
+    
+    bool operator >=(const T& t, const T& u)
+    {
+        return !(t < u);
+    }
+    
+[heading Examples]
+A type `T` is required to be [StdLessthanComparable] when an object of type `T` is
+compared to another object of type `T` using the less-than comparison (`<`), the
+greater-than comparison (`>`), the less-than or equal-to comparison (`<=`), or
+the greater-than or equal-to (`>=`) operators.
+
+    // Using the less-than comparison operator to compare two objects of
+    // type T requires T to be LessThanComparable.
+    template <typename T>
+    bool less_than_compare(cont T& t, const T& u)
+    {
+        return t < u;
+    }
+
+    // Using the greater-than comparison operator to compare two objects of
+    // type T requires T to be LessThanComparable since that comparison can be 
+    // derived from the less-than comparison.
+    template <typename T>
+    bool greater_than_compare(cont T& t, const T& u)
+    {
+        return t > u;
+    }
+
+    // Using the less-than or equal-to comparison operator to compare two objects 
+    // of type T requires T to be LessThanComparable since that comparison can be 
+    // derived from the less-than comparison.
+    template <typename T>
+    bool less_than_or_equal_to_compare(cont T& t, const T& u)
+    {
+        return t <= u;
+    }
+
+    // Using the greater-than or equal-to comparison operator to compare two 
+    // objects of type T requires T to be LessThanComparable since that comparison 
+    // can be derived from the less-than comparison.
+    template <typename T>
+    bool greater_than_or_equal_to_compare(cont T& t, const T& u)
+    {
+        return t >= u;
+    }
+
+[endsect]

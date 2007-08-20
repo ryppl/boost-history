@@ -6,17 +6,18 @@
  /]
 
 [section Equality Comparable]
-A type `T` is /equality comparable/ if it defines an /equivalence relation/ and
-can be compared using the equality comparison operator (`==`). An equivalence
-relation is a binary relation between any two objects of type `T` that denotes
-them as being "equivalent". The specific meaning of "equivalent" depends on the 
-semantics of the type modeling this concept.
+A type `T` is /equality comparable/ objects of type `T` can be compared using
+the equality comparison operator (`==`) and that comparison defines an /equivalence 
+relation/. An equivalence relation over type a `T` is a binary relation between any 
+two objects of type `T` that denotes them as being "equivalent". The specific 
+meaning of the term "equivalent" depends on the semantics of the type modeling this 
+concept.
 
-Equivalence relations exhibit the following properties:
+Equivalence relations have the following properties:
 
-* [*Reflexivity] `x == x`.
-* [*Symmetry] If `x == y` then `y == x`.
-* [*Transitivity] If `x == y` and `y == z` then `x == z`.
+* [*Reflexivity] `t == t` is always `true`.
+* [*Symmetry] If `t == u` is `true`, then `u == t` is `true`.
+* [*Transitivity] If `t == u` and `u == v` are `true`, then `t == v` is `true`.
 
 [heading Notation]
 [table
@@ -49,9 +50,19 @@ Equivalence relations exhibit the following properties:
     ]
 ]
 
+[heading Notes]
+If an type `T` provides an equivalence comparison operator (`==`) then, the
+inequality comparison operator (`!=`) can be implemented as:
+
+    bool operator !=(const T& t, const T& u)
+    {
+        return !(t == u);
+    }
+
 [heading Examples]
 A type `T` is required to be [StdEqualityComparable] when an object of type `T` is
-compared to another object of type `T` using the `==` operator.
+compared to another object of type `T` using either the equality comparison (`==`) 
+or the inequality comparison (`!=`) operator.
 
     // Using the equality comparison operator to compare two objects of type T
     // requires that type to be EqualityComparable.
