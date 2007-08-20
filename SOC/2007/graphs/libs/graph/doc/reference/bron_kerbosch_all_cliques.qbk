@@ -6,25 +6,33 @@
  /]
 
 [section Bron Kerbosch All Cliques]
+[template ex_bron_kerbosch_printing_cliques[] [link
+    boost_graph.reference.algorithms.subgraph.bron_kerbosch_all_cliques.examples.printing_cliques
+    Printing Cliques Example]]
 
-    template <typename Graph, typename Visitor>
-    void bron_kerbosch_all_cliques(const Graph& g, Visitor vis)
-
+[heading Overview]
 This algorithm finds all /cliques/ of the given graph, invoking a visitor when
 each clique is found. A clique is a maximally connected subgraph meaning that
 each pair of vertices in the clique are connected to each other.
 
 For directed graphs, a /directed clique/ is similarly defined. For each pair
-of vertices /u/ and /v/ in the directed clique, there are edges /(u,v)/ and
-/(v,u)/ that connect them.
+of vertices /u/ and /v/ in a directed clique, there are edges /(u,v)/ and /(v,u)/
+that connect them.
 
-The `bron_kerbosch_all_cliques()` algorithm was originally written for undirected
-graphs, but will work for directed graphs as well at added cost. In order for a
-directed clique to exist, each vertex /u/ must be connected to /v/ and /v/ must
-be connected to /u/.
+The Bron-Kerbosch algorithm was originally developed to operate over adjacency
+matrices of undirected graphs. It will, however, work equally well for directed
+graphs given the previous definition at a constant increase in cost. However,
+using this algorithm with an adjaceny list occurs significant overhead due to
+the use of edge lookups.
 
-[heading Where Defined]
-`boost/graph/bron_kerbosch_all_cliques.hpp`
+The Bron-Kerbosch algorithm was originally developed for undirected graphs, but
+will work for directed graphs as well (possibly at added cost).
+
+[section [^bron_kerbosch_all_cliques()]]
+    #include <boost/graph/bron_kerbosch_all_cliques.hpp>
+
+    template <typename Graph, typename Visitor>
+    void bron_kerbosch_all_cliques(const Graph& g, Visitor vis)
 
 [heading Parameters]
 [table
@@ -56,11 +64,8 @@ be connected to /u/.
     ]
 ]
 
-[h5 Return Value]
-This function does not return a value.
-
 [h5 Complexity]
-This problem has a loose upper bound of ['O(2[sup n])] if one considers all possible
+This problem has a loose upper bound of ['O(2[super n])] if one considers all possible
 combinations of subsets of vertices as cliques (i.e., the powerset of vertices).
 The original publication, however, approximates the runtime of the algorithm as
 being proportional to ['O(3.14[super n])].
@@ -69,8 +74,13 @@ Graphs that do not meet the constant-time requirements of the [AdjacencyMatrix]
 concept will incur additional runtime costs during execution (usually by a small linear
 factor). Examples of such graphs include the [undirected_graph],
 [directed_graph], and the [adjacency_list] classes.
+[endsect]
 
-[h5 Examples]
 
+[section Examples]
+[heading Printing Cliques]
+Write Me!
+
+[endsect]
 
 [endsect]

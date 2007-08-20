@@ -242,15 +242,15 @@ The `diameter()` function returns in  linear time with respect to the number
 of vertices in the graph.
 [endsect]
 
-[section [^radius_diameter()]]
+[section [^radius_and_diameter()]]
     #include <boost/graph/eccentricity.hpp>
 
     template <typename Graph, typename EccentricityMap>
     std::pair<typename property_traits<EccentricityMap>::value_type,
               typename property_traits<EccentricityMap>::value_type>
-    radius_diameter(const Graph& g, EccentricityMap ecc)
+    radius_and_diameter(const Graph& g, EccentricityMap ecc)
 
-The `radius_diameter()` function returns both the radius and diameter of the
+The `radius_and_diameter()` function returns both the radius and diameter of the
 graph as a pair such that the `first` element of the pair is the radius and the
 `second` element is the diameter. These values are  computed from the eccentricities
 that have been previously computed using the [eccentricity] function.
@@ -282,12 +282,12 @@ that have been previously computed using the [eccentricity] function.
 ]
 
 [heading Return Value]
-The `radius_diameter()` funtion returns a pair containing both the radius (`first`)
+The `radius_and_diameter()` funtion returns a pair containing both the radius (`first`)
 and diameter (`second`) of the graph. The types of these values are the same as the
 `value_type` of the `EccentricityMap`.
 
 [heading Complexity]
-The `radius_diameter()` returns in linear time with respect to the number of vertices
+The `radius_radius_diameter()` returns in linear time with respect to the number of vertices
 in the graph.
 [endsect]
 

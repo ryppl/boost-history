@@ -45,10 +45,12 @@
 [template MutablePropertyGraph[] [link
     boost_graph.concepts.graph_concepts.mutable_property_graph
     [^MutablePropertyGraph]]]
-
 [template VertexIndexGraph[] [link
-    boost_graph.concepts.graph_concepts
+    boost_graph.concepts.graph_concepts.vertex_index_graph
     [^VertexIndexGraph]]]
+[template EdgeIndexGraph[] [link
+    boost_graph.concepts.graph_concepts.edge_index_graph
+    [^EdgeIndexGraph]]]
 
 [template Visitor[] [link boost_graph.concepts.visitor_concepts.visitor Visitor]]
 [template BFSVisitor[] [link boost_graph.concepts.visitor_concepts.breadth_first_search_visitor BreadthFirstSearchVisitor]]

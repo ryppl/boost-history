@@ -11,7 +11,7 @@
  /]
 
 [/ Missing documentation /]
-[template NoConcept[x] [x]]
+[template NoConcept[x] [^[x]]]
 
 [template SgiAssignable[] [@http://www.sgi.com/tech/stl/Assignable.html Assignable]]
 [template SgiDefaultConstructible[] [@http://www.sgi.com/tech/stl/DefaultConstructible.html DefaultConstructible]]

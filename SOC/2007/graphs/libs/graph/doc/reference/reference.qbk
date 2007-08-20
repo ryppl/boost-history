@@ -34,6 +34,7 @@
 [endsect]
 
 [section Algorithms]
+
 [section Fundamental]
 [include breadth_first_search.qbk]
 [include depth_first_search.qbk]
@@ -51,12 +52,8 @@
 [endsect]
 
 [section Subgraph]
-This section contains algorithms that implement count or enumerate subgraphs.
-Note that this section can be further subdivided based on the types of subgraphs
-being found. For exammple, there could be a section on finding cliques and a
-section on finding cycles.
-[include bron_kerbosch_all_cliques.qbk]
 [include tiernan_all_cycles.qbk]
+[include bron_kerbosch_all_cliques.qbk]
 [endsect]
 
 [section Maximum Flow]
@@ -74,7 +71,8 @@ section on finding cycles.
 [include betweenness_centrality.qbk]
 [include mean_geodesic.qbk]
 [include eccentricity.qbk]
-[endsect]
-[endsect]
+[endsect] [/Measures]
 
-[endsect]
+[endsect] [/Algorithms]
+
+[endsect] [/Reference]

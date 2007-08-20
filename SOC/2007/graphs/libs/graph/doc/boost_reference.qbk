@@ -64,13 +64,24 @@
 [template bron_kerbosch_visit_cliques[] [link
     boost_graph.reference.algorithms.subgraph.bron_kerbosch_all_cliques
     [^bron_kerbosch_all_cliques()]]]
-[template tiernan_find_cycles[] [link
-    boost_graph.reference.algorithms.subgraph.tiernan_all_cycles
+
+[template tiernan_all_cycles[] [link
+    boost_graph.reference.algorithms.subgraph.tiernan_all_cycles.__tiernan_all_cycles___
     [^tiernan_all_cycles()]]]
+[template tiernan_girth[] [link
+    boost_graph.reference.algorithms.subgraph.tiernan_all_cycles.__tiernan_girth___
+    [^tiernan_girth()]]]
+[template tiernan_circumference[] [link
+    boost_graph.reference.algorithms.subgraph.tiernan_all_cycles.__tiernan_circumference___
+    [^tiernan_circumference()]]]
+[template tiernan_girth_and_circumference[] [link
+    boost_graph.reference.algorithms.subgraph.tiernan_all_cycles.__tiernan_girth_and_circumference___
+    [^tiernan_girth_and_circumference()]]]
+
 
 [/ Measures /]
 [template degree_centrality[] [link
-    boost_graph.reference.algorithms.measures.degree_centrality.__degree_centrality__
+    boost_graph.reference.algorithms.measures.degree_centrality.__degree_centrality___
     [^degree_centrality()]]]
 [template all_degree_centralities[] [link
     boost_graph.reference.algorithms.measures.degree_centrality.__all_degree_centralities___
@@ -103,6 +114,9 @@
 [template diameter[] [link
     boost_graph.reference.algorithms.measures.eccentricity.__diameter___
     [^diameter()]]]
+[template radius_and_diameter[] [link
+    boost_graph.reference.algorithms.measures.eccentricity.__radius_and_diameter___
+    [^radius_and_diameter()]]]
 
 
 [template exterior_vertex_property[] [link
@@ -120,3 +134,5 @@
 [import ../examples/mean_geodesic.cpp]
 [import ../examples/inclusive_mean_geodesic.cpp]
 [import ../examples/eccentricity.cpp]
+[import ../examples/tiernan_print_cycles.cpp]
+[import ../examples/tiernan_girth_circumference.cpp]
