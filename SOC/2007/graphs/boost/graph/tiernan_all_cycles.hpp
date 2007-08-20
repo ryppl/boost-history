@@ -8,10 +8,10 @@
 #define BOOST_GRAPH_CYCLE_HXX
 
 #include <vector>
-#include <limits>
 
-#include <boost/utility.hpp>
+#include <boost/graph/new_graph_concepts.hpp>
 #include <boost/graph/graph_traits.hpp>
+#include <boost/graph/properties.hpp>
 
 namespace boost
 {
@@ -64,17 +64,26 @@ namespace boost
 
     struct cycle_visitor
     {
-        template <class Vertex, class Graph>
-        inline void start_vertex(Vertex v, Graph& g)
+        template <typename Path, typename Graph>
+        inline void cycle(const Path& p, const Graph& g)
+        { }
+    };
+
+    struct min_max_cycle_visitor
+    {
+        min_max_cycle_visitor(std::size_t& min, std::size_t& max)
+            : minimum(min), maximum(max)
         { }
 
-        template <class Vertex, class Graph>
-        inline void finish_vertex(Vertex v, Graph& g)
-        { }
-
-        template <class Path, class Graph>
-        inline void cycle(const Path& p, Graph& g)
-        { }
+        template <typename Path, typename Graph>
+        inline void cycle(const Path& p, const Graph& g)
+        {
+            std::size_t len = p.size();
+            minimum = std::min(minimum, len);
+            maximum = std::max(maximum, len);
+        }
+        std::size_t& minimum;
+        std::size_t& maximum;
     };
 
     namespace detail
@@ -112,6 +121,8 @@ namespace boost
                         const Path& p,
                         const ClosedMatrix& m)
         {
+            function_requires< IncidenceGraphConcept<Graph> >();
+            function_requires< VertexIndexGraphConcept<Graph> >();
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
 
             // get the vertices in question
@@ -135,6 +146,7 @@ namespace boost
         inline bool
         can_wrap_path(const Graph& g, const Path& p)
         {
+            function_requires< IncidenceGraphConcept<Graph> >();
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
             typedef typename graph_traits<Graph>::out_edge_iterator OutIterator;
 
@@ -162,6 +174,7 @@ namespace boost
                     Path& p,
                     ClosedMatrix& closed)
         {
+            function_requires< IncidenceGraphConcept<Graph> >();
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
             typedef typename graph_traits<Graph>::edge_descriptor Edge;
             typedef typename graph_traits<Graph>::out_edge_iterator OutIterator;
@@ -190,6 +203,7 @@ namespace boost
         inline bool
         exhaust_paths(const Graph& g, Path& p, ClosedMatrix& closed)
         {
+            function_requires< GraphConcept<Graph> >();
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
 
             // if there's more than one vertex in the path, this closes
@@ -215,21 +229,24 @@ namespace boost
             }
         }
 
-        template <typename Graph, typename Vertex, typename Visitor>
+        template <typename Graph, typename Visitor>
         inline void
         all_cycles_from_vertex(const Graph& g,
-                               Vertex v,
+                               typename graph_traits<Graph>::vertex_descriptor v,
                                Visitor vis,
                                std::size_t minlen,
                                std::size_t maxlen)
         {
+            function_requires< VertexListGraphConcept<Graph> >();
+            typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
             typedef std::vector<Vertex> Path;
+            function_requires< CycleVisitorConcept<Visitor,Path,Graph> >();
             typedef std::vector<Vertex> VertexList;
             typedef std::vector<VertexList> ClosedMatrix;
 
             Path p;
             ClosedMatrix closed(num_vertices(g), VertexList());
-            const Vertex null = graph_traits<Graph>::null_vertex();
+            Vertex null = graph_traits<Graph>::null_vertex();
 
             // each path investigation starts at the ith vertex
             p.push_back(v);
@@ -267,6 +284,7 @@ namespace boost
                        std::size_t minlen,
                        std::size_t maxlen)
     {
+        function_requires< VertexListGraphConcept<Graph> >();
         typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
 
         VertexIterator i, end;
@@ -291,6 +309,36 @@ namespace boost
         tiernan_all_cycles(g, vis,
                            detail::min_cycles<Dir>::value,
                            std::numeric_limits<std::size_t>::max());
+    }
+
+    template <typename Graph>
+    inline std::pair<std::size_t, std::size_t>
+    tiernan_girth_and_circumference(const Graph& g)
+    {
+        std::size_t
+            min = std::numeric_limits<std::size_t>::max(),
+            max = 0;
+        min_max_cycle_visitor vis(min, max);
+        tiernan_all_cycles(g, vis);
+
+        // if this is the case, the graph is acyclic...
+        if(max == 0) max = min;
+
+        return std::make_pair(min, max);
+    }
+
+    template <typename Graph>
+    inline std::size_t
+    tiernan_girth(const Graph& g)
+    {
+        return tiernan_girth_and_circumference(g).first;
+    }
+
+    template <typename Graph>
+    inline std::size_t
+    tiernan_circumference(const Graph& g)
+    {
+        return tiernan_girth_and_circumference(g).second;
     }
 }
 
