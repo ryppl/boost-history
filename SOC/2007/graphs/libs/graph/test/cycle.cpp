@@ -93,9 +93,11 @@ void build_graph(Graph& g)
     add_edge(v[1], v[2], g);
     add_edge(v[2], v[0], g);
 
+    /*
     add_edge(v[0], v[3], g);
     add_edge(v[3], v[4], g);
     add_edge(v[4], v[0], g);
+    */
 };
 
 template <typename Graph>
@@ -103,7 +105,7 @@ void test()
 {
     Graph g;
     // build_graph(g);
-    make_prism_graph(g, 3, 2);
+    make_prism_graph(g, 3, 2, with_clockwise_cycle(), with_bidirected_spokes());
     // make_complete_graph(g, 4, with_clockwise_cycle());
 
     size_t count = 0;

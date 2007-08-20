@@ -34,7 +34,7 @@ test-suite graph_test :
 #
 # exe exterior : exterior.cpp ;
 #
-# exe cycle : cycle.cpp ;
+exe cycle : cycle.cpp ;
 #
 # exe clique : clique.cpp ;
 #
