@@ -56,8 +56,9 @@ namespace cgi {
 
       void operator()()
       {
-        std::size_t bytes_read = cptr_->read_some(buf_, ec_);
-        handler_(boost::system::error_code(), bytes_read);
+        boost::system::error_code ec;
+        std::size_t bytes_read = cptr_->read_some(buf_, ec);
+        handler_(ec, bytes_read);
       }
 
     private:
@@ -67,7 +68,7 @@ namespace cgi {
     };
 
     template<typename MutableBufferSequence, typename Handler>
-    void async_read_some(MutableBufferSequence buf, Handler handler)
+    void async_read_some(const MutableBufferSequence& buf, Handler handler)
     {
       io_service_.post(read_handler<pointer, MutableBufferSequence, Handler>
                          (shared_from_this(), buf, handler));
@@ -88,8 +89,9 @@ namespace cgi {
 
       void operator()()
       {
-        std::size_t bytes_written = cptr_->write_some(buf_, ec_);
-        handler_(boost::system::error_code(), bytes_written);
+        boost::system::error_code ec;
+        std::size_t bytes_written = cptr_->write_some(buf_, ec);
+        handler_(ec, bytes_written);
       }
 
     private:
@@ -99,7 +101,7 @@ namespace cgi {
     };
 
     template<typename ConstBufferSequence, typename Handler>
-    void async_write_some(ConstBufferSequence& buf, Handler handler)
+    void async_write_some(const ConstBufferSequence& buf, Handler handler)
     {
       io_service_.post(write_handler<pointer, ConstBufferSequence, Handler>
                          (shared_from_this(), buf, handler));

@@ -62,28 +62,32 @@ namespace cgi {
    * whole library much simpler to do it this way.
    */
   template<typename RequestService
-          , role_type Role
           , typename ProtocolService
+          , role_type Role
           , typename Allocator>
   class basic_request
     : public request_base
-    , public boost::mpl::if_c<is_async<Protocol>::value
-                             , basic_io_object<Service>
-                             , basic_sync_io_object<Service>
+    , public boost::mpl::if_c<is_async<typename RequestService::protocol_type>::value
+                             , basic_io_object<RequestService>
+                             , basic_sync_io_object<RequestService>
                              >::type
   {
   public:
-    typedef basic_request<RequestService, Role
-                         , ProtocolService, Allocator >  type;
+    typedef basic_request<RequestService, ProtocolService
+                         , Role, Allocator >  type;
     typedef RequestService                               service_type;
-    typedef service_type::protocol_type                  protocol_type;
+    typedef typename service_type::protocol_type         protocol_type;
+    typedef typename boost::mpl::if_c<is_async<typename RequestService::protocol_type>::value
+                             , basic_io_object<RequestService>
+                             , basic_sync_io_object<RequestService>
+                             >::type                     base_type;
     typedef ProtocolService                              protocol_service_type;
     typedef boost::shared_ptr<type>                      pointer;
 
 
     // Throws
     basic_request(bool load_now = true, bool parse_post = true)
-      : basic_sync_io_object<Service>()
+      : basic_sync_io_object<service_type>()
     {
       if (load_now) load(parse_post);//this->service.load(this->impl, true, ec);
     }
@@ -91,14 +95,14 @@ namespace cgi {
     basic_request(boost::system::error_code& ec
                  , const bool load_now = true
                  , const bool parse_post = true)
-      : basic_sync_io_object<Service>()
+      : basic_sync_io_object<service_type>()
     {
       if (load_now) load(ec, parse_post);//this->service.load(this->impl, true, ec);
     }
 
     basic_request(protocol_service_type& s, const bool load_now = false
                  , const bool parse_post = false)
-      : basic_io_object<Service>(s.io_service())
+      : basic_io_object<service_type>(s.io_service())
     {
       if (load_now) load(parse_post);//this->service.load(this->impl, false, ec);
     }
@@ -106,7 +110,7 @@ namespace cgi {
     basic_request(protocol_service_type& s
                  , boost::system::error_code& ec
                  , const bool load_now = false, const bool parse_post = false)
-      : basic_io_object<Service>(s.io_service())
+      : basic_io_object<service_type>(s.io_service())
     {
       if(load_now) load(ec, parse_post);//this->service.load(this->impl, false, ec);
     }
@@ -131,16 +135,16 @@ namespace cgi {
     }
 
     /// Set a cookie
-    void set_cookie(const std::string& name, const std::string& val)
+    void set_cookie(const std::string& name, const std::string& val
+                   , const std::string& expires = "")
     {
-      this->service.set_cookie(this->impl, name, val);
+      this->service.set_cookie(this->impl, name, val, expires);
     }
 
     /// Delete a cookie
     void del_cookie(const std::string& name)
     {
-      this->service.set_cookie(this->impl, name, val
-                              , "Mon, 01-Jan-1945 00:00:01 GMT");
+      this->service.del_cookie(this->impl, name);
     }
 
     /// Delete all cookies
@@ -197,14 +201,14 @@ namespace cgi {
       //BOOST_ASSERT( request_status_ != status_type::ended );
 
       //this->service.set_status(this->impl, http_status);
-      return this->service.end(this->impl, http_status, program_status);
+      return this->service.close(this->impl, http_status, program_status);
     }
 
     /// Reject the request with a standard '500 Internal Server Error' error
     int reject()
     {
       this->service.set_status(this->impl, aborted);
-      return this->service.end(this->impl, http::internal_server_error);
+      return this->service.close(this->impl, http::internal_server_error);
     }
 
     /// Set the output for the request
@@ -275,6 +279,12 @@ namespace cgi {
       return this->service.write_some(this->impl, buf, ec);
     }
 
+    /// Get a `cgi::map&` corresponding to all of the GET variables
+    cgi::map& meta_get()
+    {
+      return this->service.meta_get(this->impl);
+    }
+
     /// Find the get meta-variable matching name
     /**
      * @throws `boost::system::system_error` if an error occurred. This may
@@ -298,6 +308,12 @@ namespace cgi {
     std::string meta_get(const std::string& name, boost::system::error_code& ec)
     {
       return this->service.meta_get(this->impl, name, ec);
+    }
+
+    /// Get a `cgi::map&` corresponding to all of the POST variables
+    cgi::map& meta_post()
+    {
+      return this->service.meta_post(this->impl);
     }
 
     /// Find the post meta-variable matching name
@@ -329,6 +345,12 @@ namespace cgi {
       return this->service.meta_post(this->impl, name, ec, greedy);
     }
 
+    /// Get a `cgi::map&` corresponding to all of the form variables
+    cgi::map& meta_form()
+    {
+      return this->service.meta_form(this->impl);
+    }
+
     /// Find the form variable matching name
     /**
      * Depending on the request's request_method, either the GET or the POST
@@ -355,6 +377,12 @@ namespace cgi {
                          , bool greedy = true)
     {
       return this->service.meta_form(this->impl, name, ec, greedy);
+    }
+
+    /// Get a `cgi::map&` corresponding to all of the HTTP_COOKIE variables
+    cgi::map& meta_cookie()
+    {
+      return this->service.meta_cookie(this->impl);
     }
 
     /// Find the cookie meta-variable matching name

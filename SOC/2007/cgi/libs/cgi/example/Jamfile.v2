@@ -13,7 +13,7 @@ local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
 install examples
   : # the sources
-    easy_cgi
+    ecgi
     acgi
     #reply
   : <location>/var/www/cgi-bin

@@ -13,7 +13,7 @@
 #include <map>
 #include <boost/system/error_code.hpp>
 
-#include "cgi_request_impl.hpp"
+#include "request_impl.hpp"
 #include "../detail/cgi_service_impl_base.hpp"
 #include "../detail/extract_params.hpp"
 #include "../connections/stdio.hpp"
@@ -45,7 +45,7 @@ namespace cgi {
 
     void construct(implementation_type& impl)
     {
-      impl.connection() = stdio_connection::create();
+      impl.connection() = implementation_type::connection_type::create();
     }
 
     void destroy(implementation_type& impl)

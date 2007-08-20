@@ -26,16 +26,20 @@ private:
 
 int main()
 {
-  cgi::cgi_service service;
+  cgi::acgi_service service;
   cgi::acgi_request req(service);
   req.load();
 
-  std::string buf("Content-type:text/html\r\n\r\nHello there, Universe.");
+  std::cout<< "checking in";
+
+  std::string buf("Content-type: text/html\r\n\r\nHello there, Universe.");
   cgi::write(req, cgi::buffer(buf.c_str(), buf.size()));
+
+  std::cout<< "checking reply";
 
   cgi::reply rep;
 
-  rep<< "<br />Yuppers.";
+  rep<< "Content-type: <br />Yuppers.";
 
   rep<< "<form method='POST'>"
         "<input name='name' type='text' value='"
@@ -44,6 +48,8 @@ int main()
         "<input type='submit'></input>"
         "</form>"
     ;
+
+  rep.send(req);
 
 
 

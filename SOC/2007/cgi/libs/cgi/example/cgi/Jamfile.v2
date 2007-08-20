@@ -6,11 +6,14 @@
 
 import os ;
 
+project boost/cgi/example/cgi
+  : build-dir ../../../../bin.v2
+  ;
 
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
 
-exe easy_cgi
+exe ecgi
   :
     main.cpp
   :
@@ -19,4 +22,9 @@ exe easy_cgi
     <library>../../util/system//boost_system
     <define>BOOST_ALL_NO_LIB=1
     <toolset>gcc:<linkflags>-lpthread
+  ;
+
+install _
+  : ecgi
+  : <location>/var/www/cgi-bin
   ;

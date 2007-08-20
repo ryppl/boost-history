@@ -21,13 +21,13 @@ namespace cgi {
   class acgi_service_impl;
 
   class acgi_request_impl
-    : public cgi_request_impl_base<acgi_request_impl, async_stdio_connection>
+    : public cgi_request_impl_base<async_stdio_connection>
   {
   public:
-    typedef cgi_service    protocol_service_type;
+    typedef acgi_service    protocol_service_type;
 
     acgi_request_impl()
-      : cgi_request_impl_base<acgi_request_impl, connection_type>()
+      : cgi_request_impl_base<async_stdio_connection>()
     {
     }
 

@@ -36,7 +36,7 @@ namespace cgi {
    * copied around. Since basic_request is noncopyable, basic copying will be
    * restricted but if someone really wants to copy the data, then they can.
    */
-  template<typename RequestImpl, typename Connection>
+  template<typename Connection>
   class cgi_request_impl_base
   {
   public:
@@ -53,10 +53,20 @@ namespace cgi {
     {
     }
 
-  protected:
-    conn_ptr connection() { return connection_; }
+    map_type& get_vars() { return get_vars_; }
+    map_type& post_vars() { return post_vars_; }
+    map_type& cookie_vars() { return cookie_vars_; }
 
-    friend class cgi_service_impl_base<RequestImpl>;
+    bool stdin_parsed() { return stdin_parsed_; }
+    http::status_code& http_status() { return http_status_; }
+
+    conn_ptr connection() { return connection_; }
+    std::string& null_str() { return null_str_; }
+
+  protected:
+    //conn_ptr connection() { return connection_; }
+
+    //friend class cgi_service_impl_base<RequestImpl>;
 
     map_type get_vars_;
     map_type post_vars_;

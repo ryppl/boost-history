@@ -39,15 +39,14 @@ namespace cgi {
     typedef typename detail::protocol_traits<Protocol>::type traits;
     typedef typename traits::request_type                    request_type;
     typedef typename boost::shared_ptr<request_type>         request_ptr;
-    typedef std::set<request_type::pointer>                  set_type;
+    typedef std::set<typename request_type::pointer>         set_type;
       //typename boost::mpl::if_<
       //  boost::is_same<protocol_type, tags::acgi>::value
       //  , request_type::pointer
       //  , std::set<request_type::pointer>
       //  >::type
-      
-    typedef std::queue<request_type::pointer>                queue_type;
 
+    typedef std::queue<typename request_type::pointer>       queue_type;
 
     basic_protocol_service(int pool_size_hint = 1)
       : ios_provider_(pool_size_hint)

@@ -31,7 +31,7 @@ namespace cgi {
   {
   public:
     typedef RequestImplType    implementation_type;
-    typedef ::cgi::map         map_type;
+    typedef cgi::map           map_type;
 
     cgi_service_impl_base()
     {
@@ -40,6 +40,17 @@ namespace cgi {
     template<typename T>
     cgi_service_impl_base(T&)
     {
+    }
+
+    bool is_open(implementation_type& impl)
+    {
+      return true;
+    }
+
+    int close(implementation_type& impl, http::status_code&, int status)
+    {
+      //impl.set_status(aborted);
+      return status;
     }
 
     /// Synchronously read/parse the request meta-data
@@ -111,12 +122,12 @@ namespace cgi {
 	std::string meta_get(implementation_type& impl, const std::string& name
                         , boost::system::error_code& ec)
     {
-      return var(impl.get_vars_, name, ec);
+      return var(impl.get_vars(), name, ec);
     }
 
     map_type& meta_get(implementation_type& impl)
     {
-      return impl.get_vars_;
+      return impl.get_vars();
     }
 
     /// Find the post meta-variable matching name
@@ -135,7 +146,7 @@ namespace cgi {
                          , boost::system::error_code& ec
                          , bool greedy = true)
     {
-      const std::string& val = var(impl.post_vars_, name, ec);
+      const std::string& val = var(impl.post_vars(), name, ec);
       if (val.empty() && greedy && !ec)
       {
 
@@ -146,7 +157,7 @@ namespace cgi {
 
     map_type& meta_post(implementation_type& impl)
     {
-      return impl.post_vars_;
+      return impl.post_vars();
     }
 
 
@@ -154,12 +165,12 @@ namespace cgi {
     std::string cookie(implementation_type& impl, const std::string& name
                       , boost::system::error_code& ec)
     {
-      return var(impl.cookie_vars_, name, ec);
+      return var(impl.cookie_vars(), name, ec);
     }
 
     map_type& meta_cookie(implementation_type& impl)
     {
-      return impl.cookie_vars_;
+      return impl.cookie_vars();
     }
 
 
@@ -168,7 +179,7 @@ namespace cgi {
                         , boost::system::error_code& ec)
     {
       const char* c = ::getenv(name.c_str());
-      return c ? c : impl.null_str_;
+      return c ? c : impl.null_str();
     }
 
 
@@ -184,7 +195,7 @@ namespace cgi {
     parse_get_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       detail::extract_params(meta_env(impl, "QUERY_STRING", ec)
-                    , impl.get_vars_
+                    , impl.get_vars()
                     , boost::char_separator<char>
                         ("", "=&", boost::keep_empty_tokens)
                     , ec);
@@ -205,7 +216,7 @@ namespace cgi {
         return ec;
 
       detail::extract_params(meta_env(impl, "HTTP_COOKIE", ec)
-                            , impl.cookie_vars_
+                            , impl.cookie_vars()
                             , boost::char_separator<char>
                                 ("", "=&", boost::keep_empty_tokens)
                             , ec);
@@ -223,7 +234,7 @@ namespace cgi {
 	  
       //#     error "Not implemented"
 
-      if (impl.stdin_parsed_)
+      if (impl.stdin_parsed())
       {
       }
 

@@ -9,16 +9,14 @@
 #ifndef CGI_ACGI_SERVICE_IMPL_HPP_INCLUDED__
 #define CGI_ACGI_SERVICE_IMPL_HPP_INCLUDED__
 
-#include <boost/asio/io_service.hpp>
-#include "../tags.hpp"
-#include "../io_service.hpp"
-#include "../map.hpp"
-#include "../request_impl/acgi_request_impl.hpp"
-#include "../detail/cgi_service_impl_base.hpp"
-#include "../detail/service_base.hpp"
-#include "../io_service.hpp"
-#include "../detail/extract_params.hpp"
-#include "../connections/async_stdio.hpp"
+#include "request_impl.hpp"
+#include "boost/cgi/tags.hpp"
+#include "boost/cgi/io_service.hpp"
+#include "boost/cgi/map.hpp"
+#include "boost/cgi/detail/cgi_service_impl_base.hpp"
+#include "boost/cgi/detail/service_base.hpp"
+#include "boost/cgi/detail/extract_params.hpp"
+#include "boost/cgi/connections/async_stdio.hpp"
 
 namespace cgi {
 
@@ -33,13 +31,13 @@ namespace cgi {
     typedef acgi_request_impl           impl_type;
     typedef cgi::map                    map_type;
     typedef tags::acgi                  protocol_type;
-    typedef cgi_service                 protocol_service_type;
+    typedef acgi_service                protocol_service_type;
 
     /// The unique service identifier
     //    static boost::asio::io_service::id id;
 
     acgi_request_service(cgi::io_service& ios)
-      : detail::service_base<acgi_service_impl>(ios)
+      : detail::service_base<acgi_request_service>(ios)
     {
     }
 
@@ -48,7 +46,7 @@ namespace cgi {
     }
     void construct(implementation_type& impl)
     {
-      impl.connection_ = async_stdio_connection::create(io_service());
+      impl.connection() = async_stdio_connection::create(io_service());
     }
 
     void destroy(implementation_type& impl)
