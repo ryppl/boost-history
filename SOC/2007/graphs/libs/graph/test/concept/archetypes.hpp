@@ -68,15 +68,14 @@ namespace boost
     struct cycle_visitor_archetype
     {
         template <typename Path, typename Graph>
-        void cycle(const Path&, Graph&)
+        void cycle(const Path&, const Graph&)
         { }
     };
 
-    template <typename Graph>
     struct clique_visitor_archetype
     {
-        template <typename VertexSet>
-        void clique(const VertexSet&, Graph&)
+        template <typename VertexSet, typename Graph>
+        void clique(const VertexSet&, const Graph&)
         { }
     };
 }

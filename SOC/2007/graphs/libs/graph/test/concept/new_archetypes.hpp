@@ -253,6 +253,29 @@ namespace boost
 
 
     //
+    // AdjacencyMatrix
+    //
+    template <typename Directed,
+              typename Parallel,
+              typename Base = detail::null_graph_archetype >
+    struct adjacency_matrix_archetype
+        : public graph_archetype<Directed, Parallel, Base>
+    {
+        // apparently, this type doesn't contribuet a graph tag to the
+        // traversal category. Fine by me...
+    };
+
+    template <typename D, typename P, typename B>
+    std::pair<typename adjacency_matrix_archetype<D,P,B>::edge_descriptor, bool>
+    edge(typename adjacency_matrix_archetype<D,P,B>::vertex_descriptor u,
+         typename adjacency_matrix_archetype<D,P,B>::vertex_descriptor v,
+         const adjacency_matrix_archetype<D,P,B>& g)
+    {
+        typedef typename adjacency_matrix_archetype<D,P,B>::edge_descriptor Edge;
+        return std::make_pair(Edge(), true);
+    }
+
+    //
     // ProprertyGraph
     //
     // I don't know how this works for bundled properties. I might need to
