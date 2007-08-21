@@ -4,11 +4,11 @@
 // Boost Software License, Version 1.0 (See accompanying file
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-//[code_bron_kerbosch_clique_number
+//[tiernan_girth_circumference
 #include <iostream>
 
-#include <boost/graph/undirected_graph.hpp>
-#include <boost/graph/bron_kerbosch_all_cliques.hpp>
+#include <boost/graph/directed_graph.hpp>
+#include <boost/graph/tiernan_all_cycles.hpp>
 
 #include "helper.hpp"
 
@@ -16,7 +16,7 @@ using namespace std;
 using namespace boost;
 
 // Declare the graph type and its vertex and edge types.
-typedef undirected_graph<> Graph;
+typedef directed_graph<> Graph;
 typedef graph_traits<Graph>::vertex_descriptor Vertex;
 typedef graph_traits<Graph>::edge_descriptor Edge;
 
@@ -27,9 +27,13 @@ main(int argc, char *argv[])
     Graph g;
     read_graph(g, cin);
 
-    // Use the Bron-Kerbosch algorithm to find all cliques, and
-    size_t c = bron_kerbosch_clique_number(g);
-    cout << "clique number: " << c << endl;
+    // Compute the girth and circumference simulataneously
+    size_t girth, circ;
+    tie(girth, circ) = tiernan_girth_and_circumference(g);
+
+    // Print the result
+    cout << "girth: " << girth << endl;
+    cout << "circumference: " << circ << endl;
 
     return 0;
 }
