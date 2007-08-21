@@ -77,7 +77,7 @@ namespace boost
             , m_num_edges(0)
             , m_max_vertex_index(0)
             , m_max_edge_index(0)
-        {}
+        { }
 
         inline undirected_graph(const undirected_graph& x)
             : m_graph(x)
@@ -85,7 +85,7 @@ namespace boost
             , m_num_edges(x.m_num_edges)
             , m_max_vertex_index(x.m_max_vertex_index)
             , m_max_edge_index(x.m_max_edge_index)
-        {}
+        { }
 
         inline undirected_graph(vertices_size_type n,
                                 const GraphProperty& p = GraphProperty())
@@ -94,7 +94,24 @@ namespace boost
             , m_num_edges(0)
             , m_max_vertex_index(n)
             , m_max_edge_index(0)
-        {}
+        { }
+
+        template <typename EdgeIterator>
+        inline undirected_graph(EdgeIterator f,
+                                EdgeIterator l,
+                                vertices_size_type n,
+                                edges_size_type m = 0,
+                                const GraphProperty& p = GraphProperty())
+            : m_graph(f, l, n, m, p)
+            , m_num_vertices(n)
+            , m_num_edges(0)
+            , m_max_vertex_index(n)
+            , m_max_edge_index(0)
+        {
+            // Can't always guarantee that the number of edges is actually
+            // m if distance(f, l) != m (or is undefined).
+            m_num_edges = m_max_edge_index = boost::num_edges(m_graph);
+        }
 
         inline undirected_graph& operator =(const undirected_graph& g)
         {
@@ -254,6 +271,22 @@ namespace boost
         // Graph concepts
         static inline vertex_descriptor null_vertex()
         { return graph_type::null_vertex(); }
+
+        inline void clear()
+        {
+            m_graph.clear();
+            m_num_vertices = m_max_vertex_index = 0;
+            m_num_edges = m_max_edge_index = 0;
+        }
+
+        inline void swap(undirected_graph& g)
+        {
+            m_graph.swap(g);
+            std::swap(m_num_vertices, g.m_num_vertices);
+            std::swap(m_max_vertex_index, g.m_max_vertex_index);
+            std::swap(m_num_edges, g.m_num_edges);
+            std::swap(m_max_edge_index, g.m_max_edge_index);
+        }
 
     private:
         inline vertices_size_type

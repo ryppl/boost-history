@@ -86,6 +86,10 @@ namespace boost
         std::size_t& maximum;
     };
 
+    inline min_max_cycle_visitor
+    find_min_max_cycle(std::size_t& min, std::size_t& max)
+    { return min_max_cycle_visitor(min, max); }
+
     namespace detail
     {
         template <typename Graph, typename Path>
@@ -318,8 +322,7 @@ namespace boost
         std::size_t
             min = std::numeric_limits<std::size_t>::max(),
             max = 0;
-        min_max_cycle_visitor vis(min, max);
-        tiernan_all_cycles(g, vis);
+        tiernan_all_cycles(g, find_min_max_cycle(min, max));
 
         // if this is the case, the graph is acyclic...
         if(max == 0) max = min;

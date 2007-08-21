@@ -7,7 +7,10 @@
 #ifndef BOOST_GRAPH_CLIQUE_HXX
 #define BOOST_GRAPH_CLIQUE_HXX
 
-#include <limits>
+#include <vector>
+#include <deque>
+
+#include <boost/graph/new_graph_concepts.hpp>
 
 namespace boost
 {
@@ -60,7 +63,7 @@ namespace boost
     //          year = {2006},
     //          pages = {28-42}
     //          ee = {http://dx.doi.org/10.1016/j.tcs.2006.06.015}
-    //  }
+    //      }
 
     struct clique_visitor
     {
@@ -68,6 +71,23 @@ namespace boost
         void clique(const VertexSet&, Graph&)
         { }
     };
+
+    struct max_clique_visitor
+    {
+        max_clique_visitor(std::size_t& max)
+            : maximum(max)
+        { }
+
+        template <typename Clique, typename Graph>
+        inline void clique(const Clique& p, const Graph& g)
+        {
+            maximum = std::max(maximum, p.size());
+        }
+        std::size_t& maximum;
+    };
+
+    inline max_clique_visitor find_max_clique(std::size_t& max)
+    { return max_clique_visitor(max); }
 
     namespace detail
     {
@@ -78,6 +98,8 @@ namespace boost
                                typename graph_traits<Graph>::vertex_descriptor v,
                                typename graph_traits<Graph>::undirected_category)
         {
+            function_requires< AdjacencyMatrixConcept<Graph> >();
+
             return edge(u, v, g).second;
         }
 
@@ -88,6 +110,7 @@ namespace boost
                                typename graph_traits<Graph>::vertex_descriptor v,
                                typename graph_traits<Graph>::directed_category)
         {
+            function_requires< AdjacencyMatrixConcept<Graph> >();
             // Note that this could alternate between using an || to determine
             // full connectivity. I believe that this should produce strongly
             // connected components. Note that using && instead of || will
@@ -103,6 +126,8 @@ namespace boost
                                     const Container& in,
                                     Container& out)
         {
+            function_requires< GraphConcept<Graph> >();
+
             typename graph_traits<Graph>::directed_category cat;
             typename Container::const_iterator i, end = in.end();
             for(i = in.begin(); i != end; ++i) {
@@ -120,13 +145,17 @@ namespace boost
                            Clique& clique,
                            Container& cands,
                            Container& nots,
-                           Visitor vis)
+                           Visitor vis,
+                           std::size_t min)
         {
+            function_requires< GraphConcept<Graph> >();
+            function_requires< CliqueVisitorConcept<Visitor,Clique,Graph> >();
             typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
 
+            // Is there vertex in nots that is connected to all vertices
+            // in the candidate set? If so, no clique can ever be found.
+            // This could be broken out into a separate function.
             {
-                // is there vertex in nots that is connected to all vertices
-                // in the candidate set? if so, no clique can ever be found.
                 typename Container::iterator ni, nend = nots.end();
                 typename Container::iterator ci, cend = cands.end();
                 for(ni = nots.begin(); ni != nend; ++ni) {
@@ -161,6 +190,10 @@ namespace boost
             // there's some other stuff about using the number of disconnects
             // as a counter, but i'm jot really sure i followed it.
 
+            // TODO: If we min-sized cliques to visit, then theoretically, we
+            // should be able to stop recursing if the clique falls below that
+            // size - maybe?
+
             // otherwise, iterate over candidates and and test
             // for maxmimal cliquiness.
             typename Container::iterator i, j, end = cands.end();
@@ -168,8 +201,8 @@ namespace boost
                 Vertex candidate = *i;
 
                 // add the candidate to the clique (keeping the iterator!)
-                typename Clique::iterator ci =
-                        clique.insert(clique.end(), candidate);
+                // typename Clique::iterator ci = clique.insert(clique.end(), candidate);
+                clique.push_back(candidate);
 
                 // remove it from the candidate set
                 i = cands.erase(i);
@@ -184,38 +217,66 @@ namespace boost
 
                 if(new_cands.empty() && new_nots.empty()) {
                     // our current clique is maximal since there's nothing
-                    // that's connected that we haven't already visited
-                    vis.clique(clique, g);
+                    // that's connected that we haven't already visited. If
+                    // the clique is below our radar, then we won't visit it.
+                    if(clique.size() >= min) {
+                        vis.clique(clique, g);
+                    }
                 }
                 else {
                     // recurse to explore the new candidates
-                    extend_clique(g, clique, new_cands, new_nots, vis);
+                    extend_clique(g, clique, new_cands, new_nots, vis, min);
                 }
 
                 // we're done with this vertex, so we need to move it
                 // to the nots, and remove the candidate from the clique.
                 nots.push_back(candidate);
-                clique.erase(ci);
+                clique.pop_back();
             }
         }
     }
 
     template <typename Graph, typename Visitor>
     inline void
-    bron_kerbosch_all_cliques(const Graph& g, Visitor vis)
+    bron_kerbosch_all_cliques(const Graph& g, Visitor vis, std::size_t min)
     {
+        function_requires< IncidenceGraphConcept<Graph> >();
+        function_requires< VertexListGraphConcept<Graph> >();
+        function_requires< VertexIndexGraphConcept<Graph> >();
+        function_requires< AdjacencyMatrixConcept<Graph> >(); // Structural requirement only
         typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
         typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
         typedef std::vector<Vertex> VertexSet;
-        typedef std::list<Vertex> Clique;
+        typedef std::deque<Vertex> Clique;
+        function_requires< CliqueVisitorConcept<Visitor,Clique,Graph> >();
+
+        // NOTE: We're using a deque to implement the clique, because it provides
+        // constant inserts and removals at the end and also a constant size.
 
         VertexIterator i, end;
         tie(i, end) = vertices(g);
-
         VertexSet cands(i, end);    // start with all vertices as candidates
         VertexSet nots;             // start with no vertices visited
+
         Clique clique;              // the first clique is an empty vertex set
-        detail::extend_clique(g, clique, cands, nots, vis);
+        detail::extend_clique(g, clique, cands, nots, vis, min);
+    }
+
+    template <typename Graph, typename Visitor>
+    inline void
+    bron_kerbosch_all_cliques(const Graph& g, Visitor vis)
+    {
+        // Default is 2 since a single vertex isn't connected to anything.
+        bron_kerbosch_all_cliques(g, vis, 2);
+    }
+
+    template <typename Graph>
+    inline std::size_t
+    bron_kerbosch_clique_number(const Graph& g)
+    {
+        std::size_t ret = 0;
+        bron_kerbosch_all_cliques(g, find_max_clique(ret));
+        return ret;
     }
 }
 

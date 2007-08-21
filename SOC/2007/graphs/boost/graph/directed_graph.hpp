@@ -13,7 +13,7 @@
 
 namespace boost
 {
-    struct directed_graph_tag {};
+    struct directed_graph_tag { };
 
     template <
         typename VertexProperty = no_property,
@@ -80,7 +80,7 @@ namespace boost
             , m_num_edges(0)
             , m_max_vertex_index(0)
             , m_max_edge_index(0)
-        {}
+        { }
 
         inline directed_graph(const directed_graph& x)
             : m_graph(x)
@@ -88,7 +88,7 @@ namespace boost
             , m_num_edges(x.m_num_edges)
             , m_max_vertex_index(x.m_max_vertex_index)
             , m_max_edge_index(x.m_max_edge_index)
-        {}
+        { }
 
         inline directed_graph(vertices_size_type n,
                     const GraphProperty& p = GraphProperty())
@@ -97,7 +97,24 @@ namespace boost
             , m_num_edges(0)
             , m_max_vertex_index(n)
             , m_max_edge_index(0)
-        {}
+        { }
+
+        template <typename EdgeIterator>
+        inline directed_graph(EdgeIterator f,
+                              EdgeIterator l,
+                              vertices_size_type n,
+                              edges_size_type m = 0,
+                              const GraphProperty& p = GraphProperty())
+            : m_graph(f, l, n, m, p)
+            , m_num_vertices(n)
+            , m_num_edges(0)
+            , m_max_vertex_index(n)
+            , m_max_edge_index(0)
+        {
+            // Can't always guarantee that the number of edges is actually
+            // m if distance(f, l) != m (or is undefined).
+            m_num_edges = m_max_edge_index = boost::num_edges(m_graph);
+        }
 
         inline directed_graph& operator =(const directed_graph& g)
         {
@@ -221,19 +238,26 @@ namespace boost
         renumber_edge_indices()
         {
             edge_iterator i, end;
-            tie(i, end) = vertices(m_graph);
+            tie(i, end) = edges(m_graph);
             m_max_edge_index = renumber_edge_indices(i, end, 0);
         }
 
         inline void
         remove_edge_and_renumber_indices(edge_iterator i)
         {
-            edge_iterator j = next(i), end = vertices(m_graph).second;
+            edge_iterator j = next(i), end = edges(m_graph).second;
             edge_index_type n = get(edge_index, m_graph, *i);
 
             // remove the offending edge and renumber everything after
             remove_edge(*i);
             m_max_edge_index = renumber_edge_indices(j, end, n);
+        }
+
+        inline void
+        renumber_indices()
+        {
+            renumber_vertex_indices();
+            renumber_edge_indices();
         }
 
         // bundled property support
@@ -254,6 +278,22 @@ namespace boost
         // Graph concepts
         static inline vertex_descriptor null_vertex()
         { return graph_type::null_vertex(); }
+
+        inline void clear()
+        {
+            m_graph.clear();
+            m_num_vertices = m_max_vertex_index = 0;
+            m_num_edges = m_max_edge_index = 0;
+        }
+
+        inline void swap(directed_graph& g)
+        {
+            m_graph.swap(g);
+            std::swap(m_num_vertices, g.m_num_vertices);
+            std::swap(m_max_vertex_index, g.m_max_vertex_index);
+            std::swap(m_num_edges, g.m_num_edges);
+            std::swap(m_max_edge_index, g.m_max_edge_index);
+        }
 
     private:
         inline vertices_size_type
@@ -686,6 +726,12 @@ namespace boost
     remove_edge_and_renumber_indices(typename directed_graph<VP,EP,GP>::edge_iterator i,
                                      directed_graph<VP,EP,GP>& g)
     { g.remove_edge_and_renumber_indices(i); }
+
+    // Index management
+    template <class VP, class EP, class GP>
+    inline void
+    renumber_indices(directed_graph<VP,EP,GP>& g)
+    { g.renumber_indices(); }
 }
 
 #endif
