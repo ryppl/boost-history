@@ -37,6 +37,6 @@ test-suite graph_test :
 #
 
 #
-exe clique : clique.cpp ;
+exe bron_kerbosch_all_cliques : bron_kerbosch_allclique.cpp ;
 #
 # exe mapping : mapping.cpp ;
