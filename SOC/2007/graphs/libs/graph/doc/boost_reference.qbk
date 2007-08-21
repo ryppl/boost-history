@@ -78,6 +78,13 @@
     boost_graph.reference.algorithms.subgraph.tiernan_all_cycles.__tiernan_girth_and_circumference___
     [^tiernan_girth_and_circumference()]]]
 
+[template bron_kerbosch_all_cliques[] [link
+    boost_graph.reference.algorithms.subgraph.bron_kerbosch_all_cliques.__bron_kerbosch_all_cliques___
+    [^bron_kerbosch_all_cliques()]]]
+[template bron_kerbosch_clique_number[] [link
+    boost_graph.reference.algorithms.subgraph.bron_kerbosch_all_cliques.__bron_kerbosch_clique_number___
+    [^bron_kerbosch_clique_number()]]]
+
 
 [/ Measures /]
 [template degree_centrality[] [link
@@ -136,3 +143,5 @@
 [import ../examples/eccentricity.cpp]
 [import ../examples/tiernan_print_cycles.cpp]
 [import ../examples/tiernan_girth_circumference.cpp]
+[import ../examples/bron_kerbosch_print_cliques.cpp]
+[import ../examples/bron_kerbosch_clique_number.cpp]

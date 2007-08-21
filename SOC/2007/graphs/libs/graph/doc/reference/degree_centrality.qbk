@@ -123,6 +123,86 @@ or the measure is given as `influence_measure` or `prestige_measure`, this funct
 returns in constant time.
 [endsect]
 
+[section [^influence()]]
+    template <typename Graph, typename Vertex>
+    typename graph_traits<Graph>::degree_size_type
+    influence(const Graph& g, Vertex v);
+
+The `influence()` function the influence of the vertex to the caller. The influence
+of a vertex is the same as its out-degree.
+
+[heading Parameters]
+[table
+    [[Type] [Parameter] [Description]]
+    [
+        [required, in] [`const Graph& graph`]
+        [
+            The graph object for which the degree centralities will be computed.
+
+            *Requirements:* The `Graph` type must be a model of the [IncidenceGraph]
+            concept. If the `Measure` parameter is given as `prestige_measure`,
+            then the graph must be a model of the [BidirectionalGraph] concept.
+        ]
+    ]
+    [
+        [required, in] [`Vertex v`]
+        [
+            The vertex descriptor for which the degree centrality is computed.
+
+            *Requirements:* The `Vertex` type must be the same as the `vertex_descriptor`
+            of the `Graph` parameter.
+        ]
+    ]
+]
+
+[heading Return Value]
+The `influence()` function returns the influence of the vertex, which is the same
+as its out-degree.
+
+[heading Complexity]
+The `influence()` function returns in constant time.
+[endsect]
+
+[section [^prestige()]]
+    template <typename Graph, typename Vertex>
+    typename graph_traits<Graph>::degree_size_type
+    prestige(const Graph& g, Vertex v);
+
+The `prestige()` function the prestige of the vertex to the caller. The prestige
+of a vertex is the same as its in-degree.
+
+[heading Parameters]
+[table
+    [[Type] [Parameter] [Description]]
+    [
+        [required, in] [`const Graph& graph`]
+        [
+            The graph object for which the degree centralities will be computed.
+
+            *Requirements:* The `Graph` type must be a model of the [IncidenceGraph]
+            concept. If the `Measure` parameter is given as `prestige_measure`,
+            then the graph must be a model of the [BidirectionalGraph] concept.
+        ]
+    ]
+    [
+        [required, in] [`Vertex v`]
+        [
+            The vertex descriptor for which the degree centrality is computed.
+
+            *Requirements:* The `Vertex` type must be the same as the `vertex_descriptor`
+            of the `Graph` parameter.
+        ]
+    ]
+]
+
+[heading Return Value]
+The `prestige()` function returns the influence of the vertex, which is the same
+as its out-degree.
+
+[heading Complexity]
+The `prestige()` returns in constant time.
+[endsect]
+
 [section [^all_degree_centralities()]]
     #include <boost/graph/degree_centrality.hpp>
 
@@ -187,46 +267,6 @@ is not specified or is `influence_measure` or `prestige_measure`, this function
 returns in linear time.
 [endsect]
 
-[section [^influence()]]
-    template <typename Graph, typename Vertex>
-    typename graph_traits<Graph>::degree_size_type
-    influence(const Graph& g, Vertex v);
-
-The `influence()` function the influence of the vertex to the caller. The influence
-of a vertex is the same as its out-degree.
-
-[heading Parameters]
-[table
-    [[Type] [Parameter] [Description]]
-    [
-        [required, in] [`const Graph& graph`]
-        [
-            The graph object for which the degree centralities will be computed.
-
-            *Requirements:* The `Graph` type must be a model of the [IncidenceGraph]
-            concept. If the `Measure` parameter is given as `prestige_measure`,
-            then the graph must be a model of the [BidirectionalGraph] concept.
-        ]
-    ]
-    [
-        [required, in] [`Vertex v`]
-        [
-            The vertex descriptor for which the degree centrality is computed.
-
-            *Requirements:* The `Vertex` type must be the same as the `vertex_descriptor`
-            of the `Graph` parameter.
-        ]
-    ]
-]
-
-[heading Return Value]
-The `influence()` function returns the influence of the vertex, which is the same
-as its out-degree.
-
-[heading Complexity]
-The `influence()` function returns in constant time.
-[endsect]
-
 [section [^all_influence_values()]]
     #include <boost/graph/degree_centrality.hpp>
 
@@ -271,46 +311,6 @@ graph, assigning the values to an output property map.
 [heading Complexity]
 The `all_influence_values()` function returns linear time with respect to the
 number of vertices in the graph.
-[endsect]
-
-[section [^prestige()]]
-    template <typename Graph, typename Vertex>
-    typename graph_traits<Graph>::degree_size_type
-    prestige(const Graph& g, Vertex v);
-
-The `prestige()` function the prestige of the vertex to the caller. The prestige
-of a vertex is the same as its in-degree.
-
-[heading Parameters]
-[table
-    [[Type] [Parameter] [Description]]
-    [
-        [required, in] [`const Graph& graph`]
-        [
-            The graph object for which the degree centralities will be computed.
-
-            *Requirements:* The `Graph` type must be a model of the [IncidenceGraph]
-            concept. If the `Measure` parameter is given as `prestige_measure`,
-            then the graph must be a model of the [BidirectionalGraph] concept.
-        ]
-    ]
-    [
-        [required, in] [`Vertex v`]
-        [
-            The vertex descriptor for which the degree centrality is computed.
-
-            *Requirements:* The `Vertex` type must be the same as the `vertex_descriptor`
-            of the `Graph` parameter.
-        ]
-    ]
-]
-
-[heading Return Value]
-The `prestige()` function returns the influence of the vertex, which is the same
-as its out-degree.
-
-[heading Complexity]
-The `prestige()` returns in constant time.
 [endsect]
 
 [section [^all_prestige_values()]]

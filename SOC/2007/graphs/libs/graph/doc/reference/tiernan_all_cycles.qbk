@@ -10,8 +10,8 @@
     boost_graph.reference.algorithms.subgraph.tiernan_all_cycles.examples.printing_cycles
     Printing Cycles Example]]
 [template ex_tiernan_girth_circumference[] [link
-    boost_graph.reference.algorithms.subgraph.tiernan_all_cycles.examples.printing_cycles
-    Printing Cycles Example]]
+    boost_graph.reference.algorithms.subgraph.tiernan_all_cycles.examples.girth_and_circumference
+    Girth and Circumference Example]]
 
 [heading Overview]
 This function uses the Tiernan algorithm to find all /cycles/ within a given graph,
@@ -63,6 +63,7 @@ There are two properties of a graph that are derived from knowing a graphs cycle
 /girth/ and /circumference/. The girth of a graph is defined as the minimum-length
 cycle in the graph, and the circumference is defined as the largest-length cycle.
 This module provides functions for computing these values using Tiernan's algorithm.
+See the [ex_tiernan_girth_circumference] for details.
 
 [section [^tiernan_all_cycles()]]
     #include <boost/graph/tiernan_all_cycles.hpp>
