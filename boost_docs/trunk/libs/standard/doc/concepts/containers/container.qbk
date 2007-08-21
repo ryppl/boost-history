@@ -22,7 +22,7 @@ iterations.
     [[Expression] [Description]]
     [[`C`] [A type that models the [StdContainer] concept.]]
     [[`c`, `d`] [Objects of type `C`.]]
-    [[`T`] [An object stored by `C`.]]
+    [[`T`] [The type of an object stored by `C`.]]
 ]
 
 [heading Associated Types]
@@ -62,8 +62,8 @@ iterations.
             The type of object used to iterate over elements of `C`.
             The iterator type is convertible to the const iterator type. 
             
-            *Requirements:* The iterator type may not be a model of the 
-            [StdOutputIterator] concept.
+            *Requirements:* This type models any [StdIterator] concept except
+            [StdOutputIterator].
         ]
     ]
     [
@@ -73,8 +73,8 @@ iterations.
         [
             The type of object used to iterate over elements of `C`.
             
-            *Requirements:* The iterator type may not be a model of the 
-            [StdOutputIterator] concept.
+            *Requirements:* This type models any [StdIterator] concept except
+            [StdOutputIterator].
         ]
     ]
 ]
@@ -213,11 +213,31 @@ iterations.
 ]
 
 [heading Examples]
+A type `C` is required to be a container if it explicitly refers to any of
+its associated types or calls any of its member functions.
 
+    // Accessing the size of a container of type C requires that type
+    // to model the Container concept.
     template <typename C>
-    typename C::size_type container_size()
+    typename C::size_type container_size(const C& c)
     {
         return c.size();
     }
-
+    
+    // Accessing the begin() and end() iterator ranges of a container
+    // of type C requires that type to model the Container concept.
+    template <typename C>
+    std::pair<C::iterator, C::iterator> container_range(C& c)
+    {
+        return std::make_pair(c.begin(), c.end());
+    }
+    
+    // Testing whether a container of type C is empty() requires
+    // that type to model the Container concept.
+    template <typename C>
+    bool container_empty(const C& c)
+    {
+        return c.empty();
+    }
+    
 [endsect]
