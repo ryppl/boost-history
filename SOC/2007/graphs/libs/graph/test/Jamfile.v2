@@ -14,6 +14,7 @@ test-suite graph_test :
     [ run mean_geodesic.cpp ]
     [ run eccentricity.cpp ]
     [ run tiernan_all_cycles.cpp ]
+    [ run bron_kerbosch_all_cliques.cpp ]
     ;
 
 # exe properties : properties.cpp ;
@@ -28,15 +29,10 @@ test-suite graph_test :
 #
 # exe components : components.cpp ;
 #
-#
 # exe cluster : cluster.cpp ;
 #
 # exe generate : generate.cpp ;
 #
 # exe exterior : exterior.cpp ;
-#
 
-#
-exe bron_kerbosch_all_cliques : bron_kerbosch_allclique.cpp ;
-#
-# exe mapping : mapping.cpp ;
+

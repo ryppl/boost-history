@@ -5,116 +5,65 @@
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
 #include <iostream>
-#include <iterator>
-#include <algorithm>
-#include <vector>
-#include <map>
-#include <tr1/unordered_map>
 
+#include <boost/graph/graph_utility.hpp>
 #include <boost/graph/undirected_graph.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/tiernan_all_cycles.hpp>
-#include <boost/graph/generators/cycle_graph.hpp>
-#include <boost/graph/generators/prism_graph.hpp>
-#include <boost/graph/generators/complete_graph.hpp>
+#include <boost/graph/erdos_renyi_generator.hpp>
+
+#include <boost/random/linear_congruential.hpp>
 
 using namespace std;
 using namespace boost;
 
-template <typename OStream>
-struct cycle_printer
-    : public cycle_visitor
+struct cycle_validator
 {
-    cycle_printer(OStream& os)
-        : m_os(os)
+    cycle_validator(size_t& c)
+        : cycles(c)
     { }
 
     template <typename Path, typename Graph>
     void cycle(const Path& p, const Graph& g)
     {
-        m_os << "cycle: ";
-        typename Path::const_iterator i, end = p.end();
-        for(i = p.begin(); i != end; ++i) {
-            m_os << get(vertex_index, g, *i) << " ";
+        ++cycles;
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        typedef typename graph_traits<Graph>::edge_descriptor Edge;
+        // Check to make sure that each of the vertices in the path
+        // is truly connected and that the back is connected to the
+        // front - it's not validating that we find all paths, just
+        // that the paths are valid.
+        typename Path::const_iterator i, j, last = prior(p.end());
+        for(i = p.begin(); i != last; ++i) {
+            j = next(i);
+            BOOST_ASSERT(edge(*i, *j, g).second);
         }
-        m_os << "\n";
+        BOOST_ASSERT(edge(p.back(), p.front(), g).second);
     }
 
-    OStream&    m_os;
-};
-
-template <typename SizeType>
-struct cycle_counter
-    : public cycle_visitor
-{
-    cycle_counter(SizeType& count)
-        : m_count(count)
-    { }
-
-    template <typename Path, typename Graph>
-    void cycle(const Path& p, const Graph& g)
-    {
-        ++m_count;
-    }
-
-    SizeType&   m_count;
-};
-
-template <typename Stream>
-inline cycle_printer<Stream>
-print_cycles(Stream& os)
-{
-    return cycle_printer<Stream>(os);
-}
-
-template <typename SizeType>
-inline cycle_counter<SizeType>
-count_cycles(SizeType& count)
-{
-    return cycle_counter<SizeType>(count);
-}
-
-template <typename Graph>
-void build_graph(Graph& g)
-{
-    typedef typename Graph::vertex_descriptor Vertex;
-    typedef typename Graph::edge_descriptor Edge;
-
-    static const unsigned N = 5;
-    vector<Vertex> v(N);
-
-    // add some vertices
-    for(size_t i = 0; i < N; ++i) {
-        v[i] = add_vertex(g);
-    }
-
-    // add some edges (with weights)
-    add_edge(v[0], v[1], g);
-    add_edge(v[1], v[2], g);
-    add_edge(v[2], v[0], g);
-
-    /*
-    add_edge(v[0], v[3], g);
-    add_edge(v[3], v[4], g);
-    add_edge(v[4], v[0], g);
-    */
+    size_t& cycles;
 };
 
 template <typename Graph>
 void test()
 {
-    Graph g;
-    // build_graph(g);
-    make_prism_graph(g, 3, 2, with_clockwise_cycle(), with_bidirected_spokes());
-    // make_complete_graph(g, 4, with_clockwise_cycle());
+    typedef erdos_renyi_iterator<boost::minstd_rand, Graph> er;
 
-    size_t count = 0;
-    tiernan_all_cycles(g, count_cycles(count));
-    std::cout << "number of cycles: " << count << "\n";
+    // Generate random graphs with 15 vertices and 15% probability
+    // of edge connection.
+    static const size_t N = 20;
+    static const float P = 0.1;
+    boost::minstd_rand rng;
 
-    tiernan_all_cycles(g, print_cycles(cout));
+    Graph g(er(rng, N, P), er(), N);
+    renumber_indices(g);
+    print_edges(g, get(vertex_index, g));
+
+    size_t cycles = 0;
+    cycle_validator vis(cycles);
+    tiernan_all_cycles(g, vis);
+    cout << "# cycles: " << vis.cycles << "\n";
 }
-
 
 int
 main(int argc, char *argv[])

@@ -11,72 +11,55 @@
 #include <map>
 #include <tr1/unordered_map>
 
+#include <boost/graph/graph_utility.hpp>
 #include <boost/graph/undirected_graph.hpp>
 #include <boost/graph/directed_graph.hpp>
 #include <boost/graph/bron_kerbosch_all_cliques.hpp>
-#include <boost/graph/generators/prism_graph.hpp>
-#include <boost/graph/generators/complete_graph.hpp>
+#include <boost/graph/erdos_renyi_generator.hpp>
+
+#include <boost/random/linear_congruential.hpp>
 
 using namespace std;
 using namespace boost;
 
-template <typename OutStream>
-struct clique_printer : public clique_visitor
+struct clique_validator
 {
-    clique_printer(OutStream& os)
-        : mOs(os)
+    clique_validator()
     { }
 
-    template <typename VertexSet, typename Graph>
+    template <typename Clique, typename Graph>
     inline void
-    clique(const VertexSet& vs, Graph& g)
+    clique(const Clique& c, Graph& g)
     {
-        mOs << "clique: ";
-        typename VertexSet::const_iterator i, end = vs.end();
-        for(i = vs.begin(); i != end; ++i) {
-            mOs << get(vertex_index, g, *i) << " ";
+        // Simply assert that each vertex in the clique is connected
+        // to all others in the clique.
+        typename Clique::const_iterator i, j, end = c.end();
+        for(i = c.begin(); i != end; ++i) {
+            for(j = c.begin(); j != end; ++j) {
+                if(i != j) {
+                    BOOST_ASSERT(edge(*i, *j, g).second);
+                }
+            }
         }
-        mOs << std::endl;
     }
-
-    OutStream& mOs;
-};
-
-template <typename Graph>
-void build_graph(Graph& g)
-{
-    typedef typename Graph::vertex_descriptor Vertex;
-    typedef typename Graph::edge_descriptor Edge;
-
-    static const unsigned N = 5;
-    vector<Vertex> v(N);
-
-    // add some vertices
-    for(size_t i = 0; i < N; ++i) {
-        // v[i] = add_vertex(g);
-        v[i] = add_vertex(g);
-    }
-
-    // add some edges (with weights)
-    add_edge(v[0], v[1], g);
-    add_edge(v[1], v[2], g);
-    add_edge(v[2], v[0], g);
-
-    add_edge(v[0], v[3], g);
-    add_edge(v[3], v[4], g);
-    add_edge(v[4], v[0], g);
 };
 
 template <typename Graph>
 void test()
 {
-    Graph g;
+    typedef erdos_renyi_iterator<boost::minstd_rand, Graph> er;
 
-    // build_graph(g);
-    // make_prism_graph(g, 3, 2);
-    make_complete_graph(g, 4);
+    // Generate random graphs with 15 vertices and 15% probability
+    // of edge connection.
+    static const size_t N = 20;
+    static const float P = 0.1;
 
-    bron_kerbosch_all_cliques(g, clique_printer<ostream>(cout));
+    boost::minstd_rand rng;
+    Graph g(er(rng, N, P), er(), N);
+    renumber_indices(g);
+    print_edges(g, get(vertex_index, g));
+
+    bron_kerbosch_all_cliques(g, clique_validator());
 }
 
 int
@@ -85,9 +68,9 @@ main(int argc, char *argv[])
     typedef undirected_graph<> Graph;
     typedef directed_graph<> DiGraph;
 
-    cout << "*** undirected ***\n";
+    std::cout << "*** undirected ***\n";
     test<Graph>();
 
-    cout << "*** directed ***\n";
+    std::cout << "*** directed ***\n";
     test<DiGraph>();
 }
