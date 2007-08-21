@@ -62,13 +62,11 @@ namespace cgi {
         , boost::system::error_code& ec)
     {
       const std::string& request_method = meta_env(impl, "REQUEST_METHOD", ec);
-      if (request_method == "GET")
-        if (parse_get_vars(impl, ec))
-	      return ec;
+      if (request_method == "GET" && parse_get_vars(impl, ec))
+        return ec;
       else
-      if (request_method == "POST" && parse_stdin)
-        if (parse_post_vars(impl, ec))
-	      return ec;
+      if (request_method == "POST" && parse_stdin && parse_post_vars(impl, ec))
+        return ec;
 
       parse_cookie_vars(impl, ec);
       return ec;
@@ -119,7 +117,7 @@ namespace cgi {
       return "";
     }
 
-	std::string meta_get(implementation_type& impl, const std::string& name
+    std::string meta_get(implementation_type& impl, const std::string& name
                         , boost::system::error_code& ec)
     {
       return var(impl.get_vars(), name, ec);
@@ -188,6 +186,11 @@ namespace cgi {
       return responder;
     }
 
+    /// Set the http status (this does nothing for aCGI)
+    void set_status(implementation_type& impl, http::status_code&)
+    {
+    }
+
   protected:
     /// Read and parse the cgi GET meta variables
     template<typename RequestImpl>
@@ -195,10 +198,10 @@ namespace cgi {
     parse_get_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       detail::extract_params(meta_env(impl, "QUERY_STRING", ec)
-                    , impl.get_vars()
-                    , boost::char_separator<char>
-                        ("", "=&", boost::keep_empty_tokens)
-                    , ec);
+                            , impl.get_vars()
+                            , boost::char_separator<char>
+                                ("", "=&", boost::keep_empty_tokens)
+                            , ec);
 
       return ec;
     }
@@ -230,13 +233,57 @@ namespace cgi {
     parse_post_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       // Make sure this function hasn't already been called
-      //BOOST_ASSERT( impl.post_vars_.empty() );
-	  
-      //#     error "Not implemented"
+      std::cerr<< "blah";
+      BOOST_ASSERT (!impl.stdin_parsed());
+      std::cerr<< "wom";
+      std::cerr.flush();
+      std::istream& is(std::cin);
+      char ch;
+      std::string name;
+      std::string str;
+      cgi::map& post_map(impl.post_vars());
 
-      if (impl.stdin_parsed())
+      const char* a = ::getenv("content_length");
+      if (a) str = a;
+      else std::cerr<< "no content-length";
+
+      std::cerr<< "content length = ";
+      //var(impl.get_vars(), "CONTENT_LENGTH", ec);
+      std::cerr.flush();
+
+      while( is.get(ch) )
       {
+          std::cerr<< "; ch=" << ch << "; ";
+          switch(ch)
+          {
+          case '%': // unencode a hex character sequence
+              // note: function params are resolved in an undefined order!
+              str += detail::url_decode(is);
+              break;
+          case '+':
+              str += ' ';
+              break;
+          case ' ':
+              continue;
+          case '=': // the name is complete, now get the corresponding value
+              name = str;
+              str.clear();
+              break;
+          case '&': // we now have the name/value pair, so save it
+              post_map[name] = str;
+              str.clear();
+              name.clear();
+             break;
+          default:
+              str += ch;
+          }
+          //LOG<< "name=" << name << "; str=" << str << std::endl;
       }
+      // save the last param (it won't have a trailing &)
+      if( !name.empty() )
+          post_map[name] = str;//.empty() ? "" : str;
+
+
 
       return ec;
     }

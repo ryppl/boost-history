@@ -14,7 +14,7 @@
 A request [*must] be [link __loading__ loaded] before the meta-data can be accessed. The ['only] exception to this rule is calling `meta_env()` on CGI and aCGI request objects. These are (essentially) equivalent to a call to [@http://tinyurl.com/3cqrd5 `::getenv()`] and will always work. However, exploit this 'feature' cautiously as it won't work with FastCGI or SCGI requests.
 ]
 
-There are six member functions of `basic_request<>` that provide access to the meta-variables associated to that request.
+In all, there are twelve member functions of [classref cgi::basic_request `basic_request<>`] that provide access to the meta-variables associated to that request. Six of those return a `cgi::map` which you may use like a `std::map` to search through the complete list of variables.
 
 [table Meta-variable accessor functions
   [[Function signature] [Purpose]]

@@ -28,26 +28,23 @@ int main()
 {
   cgi::acgi_service service;
   cgi::acgi_request req(service);
-  req.load();
-
-  std::cerr<< "checking in";
+  req.load(true);
 
   std::string buf("Content-type: text/html\r\n\r\nHello there, Universe.");
   cgi::write(req, cgi::buffer(buf.c_str(), buf.size()));
 
-  std::cerr<< "checking reply";
-
   cgi::reply rep;
 
-  rep<< "Content-type: <br />Yuppers.";
+  rep<< "<br />What's your name?<br />";
+  std::cerr<< std::endl << "name = " << req.meta_form("name") << std::endl;
+  std::cerr.flush();
 
   rep<< "<form method='POST'>"
         "<input name='name' type='text' value='"
-     << req.meta_get("name")
+     << req.meta_form("name")
      << "'></input>"
         "<input type='submit'></input>"
-        "</form>"
-    ;
+        "</form>";
 
   rep.send(req);
 
@@ -67,7 +64,7 @@ int main()
   }
   */
 
-  rep.flush(req);
+  //rep.flush(req);
 
   return 0;
 }

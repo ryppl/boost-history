@@ -77,10 +77,6 @@ namespace cgi {
                          , Role, Allocator >  type;
     typedef RequestService                               service_type;
     typedef typename service_type::protocol_type         protocol_type;
-    typedef typename boost::mpl::if_c<is_async<typename RequestService::protocol_type>::value
-                             , basic_io_object<RequestService>
-                             , basic_sync_io_object<RequestService>
-                             >::type                     base_type;
     typedef ProtocolService                              protocol_service_type;
     typedef boost::shared_ptr<type>                      pointer;
 
@@ -363,7 +359,7 @@ namespace cgi {
     std::string meta_form(const std::string& name, bool greedy = true)
     {
       boost::system::error_code ec;
-      std::string ret = this->service.meta_form(this->impl, name, ec, greedy);
+      std::string ret = meta_form(name, ec, greedy);
       detail::throw_error(ec);
       return ret;
     }
@@ -376,7 +372,14 @@ namespace cgi {
     std::string meta_form(const std::string& name, boost::system::error_code& ec
                          , bool greedy = true)
     {
-      return this->service.meta_form(this->impl, name, ec, greedy);
+      std::string rm(request_method());
+      if (rm == "GET")
+        return this->service.meta_get(this->impl, name, ec);
+      else
+      if (rm == "POST")
+        return this->service.meta_post(this->impl, name, ec, greedy);
+      else
+        return "";
     }
 
     /// Get a `cgi::map&` corresponding to all of the HTTP_COOKIE variables
@@ -487,55 +490,55 @@ namespace cgi {
 
     // Some helper functions for the basic CGI 1.1 meta-variables
     std::string auth_type()
-    { return this->service.meta_env(this->impl, "AUTH_TYPE"); }
+    { return meta_env("AUTH_TYPE"); }
 
     std::string content_length()
-    { return this->service.meta_env(this->impl, "CONTENT_LENGTH"); }
+    { return meta_env("CONTENT_LENGTH"); }
 
     std::string content_type()
-    { return this->service.meta_env(this->impl, "CONTENT_TYPE"); }
+    { return meta_env("CONTENT_TYPE"); }
 
     std::string gateway_interface()
-    { return this->service.meta_env(this->impl, "GATEWAY_INTERFACE"); }
+    { return meta_env("GATEWAY_INTERFACE"); }
 
     std::string path_info()
-    { return this->service.meta_env(this->impl, "PATH_INFO"); }
+    { return meta_env("PATH_INFO"); }
 
     std::string path_translated()
-    { return this->service.meta_env(this->impl, "PATH_TRANSLATED"); }
+    { return meta_env("PATH_TRANSLATED"); }
 
     std::string query_string()
-    { return this->service.meta_env(this->impl, "QUERY_STRING"); }
+    { return meta_env("QUERY_STRING"); }
 
     std::string remote_addr()
-    { return this->service.meta_env(this->impl, "REMOTE_ADDR"); }
+    { return meta_env("REMOTE_ADDR"); }
 
     std::string remote_host()
-    { return this->service.meta_env(this->impl, "REMOTE_HOST"); }
+    { return meta_env("REMOTE_HOST"); }
 
     std::string remote_ident()
-    { return this->service.meta_env(this->impl, "REMOTE_IDENT"); }
+    { return meta_env("REMOTE_IDENT"); }
 
     std::string remote_user()
-    { return this->service.meta_env(this->impl, "REMOTE_USER"); }
+    { return meta_env("REMOTE_USER"); }
 
     std::string request_method()
-    { return this->service.meta_env(this->impl, "REQUEST_METHOD"); }
+    { return meta_env("REQUEST_METHOD"); }
 
     std::string script_name()
-    { return this->service.meta_env(this->impl, "SCRIPT_NAME"); }
+    { return meta_env("SCRIPT_NAME"); }
 
     std::string server_name()
-    { return this->service.meta_env(this->impl, "SERVER_NAME"); }
+    { return meta_env("SERVER_NAME"); }
 
     std::string server_port()
-    { return this->service.meta_env(this->impl, "SERVER_PORT"); }
+    { return meta_env("SERVER_PORT"); }
 
     std::string server_protocol()
-    { return this->service.meta_env(this->impl, "SERVER_PROTOCOL"); }
+    { return meta_env("SERVER_PROTOCOL"); }
 
     std::string server_software()
-    { return this->service.meta_env(this->impl, "SERVER_SOFTWARE"); }
+    { return meta_env("SERVER_SOFTWARE"); }
 
 
     /// The role that the request is playing
@@ -570,7 +573,7 @@ namespace cgi {
 
     void set_status(http::status_code status)
     {
-      this->service.set_http_status(this->impl, status);
+      this->service.set_status(this->impl, status);
     }
 
     /// Set a user cookie
