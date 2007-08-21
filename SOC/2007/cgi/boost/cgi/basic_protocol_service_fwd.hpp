@@ -14,8 +14,10 @@
 
 namespace cgi {
 
-  template<typename Protocol, int IoServiceCount = 1
-           , typename PoolingPolicy = tags::round_robin>
+  template<
+    typename Protocol,
+    typename IoServiceProvider = io_service_provider<>
+  >
   class basic_protocol_service;
 
 } // namespace cgi
