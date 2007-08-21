@@ -13,6 +13,7 @@ test-suite graph_test :
     [ run closeness_centrality.cpp ]
     [ run mean_geodesic.cpp ]
     [ run eccentricity.cpp ]
+    [ run tiernan_all_cycles.cpp ]
     ;
 
 # exe properties : properties.cpp ;
@@ -34,8 +35,8 @@ test-suite graph_test :
 #
 # exe exterior : exterior.cpp ;
 #
-exe cycle : cycle.cpp ;
+
 #
-# exe clique : clique.cpp ;
+exe clique : clique.cpp ;
 #
 # exe mapping : mapping.cpp ;
