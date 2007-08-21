@@ -9,18 +9,19 @@
 #ifndef CGI_IO_SERVICE_PROVIDER_HPP_INCLUDED__
 #define CGI_IO_SERVICE_PROVIDER_HPP_INCLUDED__
 
-
-#include "detail/push_options.hpp"
-
+#include <list>
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
-#include <boost/asio/io_service.hpp>
+//#include <boost/asio/io_service.hpp>
 //#include <boost/asio/strand.hpp>
 
 #include "tags.hpp"
+#include "io_service.hpp"
+#include "detail/push_options.hpp"
+
 
 namespace cgi {
 
@@ -39,37 +40,91 @@ namespace cgi {
    * each call to io_service() can get an io_service, call io_service::run() on
    * it and then return it.
    */
-  template<int IoServiceCount, typename Policy = tags::round_robin>
+  template<typename PoolingPolicy>
   class io_service_provider
     : private boost::noncopyable
   {
   public:
     io_service_provider(int)
-    //      : pos_(0)
-    //  , io_services_()
-    //  , strand_(io_services_[0])
+      : io_service_()
     {
     }
 
-    //    void run()
-    //{
-      // boost::shared_ptr<boost:thread>
-      //  thread(boost::bind(
-    //}
+    io_service_provider()
+      : io_service_()
+    {
+    }
 
-    // NOT THREAD-SAFE (but should be)
-    //boost::asio::io_service& io_service()
-    //{
-    // return io_services_[pos_++];
-    //}
+    cgi::io_service& io_service()
+    {
+      return io_service_;
+    }
+
+    void run()
+    {
+      io_service_.run();
+    }
+
+    void stop()
+    {
+      io_service_.stop();
+    }
+
+    void reset()
+    {
+      io_service_.reset();
+    }
   private:
-    //int pos_;
-    //boost::asio::io_service io_services_[IoServiceCount];
-    //boost::asio::io_service::work works_[IoServiceCount];
-    //boost::asio::io_service::strand strand_;
+    cgi::io_service io_service_;
   };
 
 
+  /*
+  template<>
+  class io_service_provider<tags::service_pool>
+  {
+  public:
+    typedef std::list<cgi::io_service> impl_type;
+
+    io_service_provider(int pool_size)
+      : io_services_(pool_size)
+      , current_(io_services_.begin())
+    {
+    }
+
+    cgi::io_service& io_service()
+    {
+      return boost::ref(*current_++);
+    }
+
+    void run()
+    {
+      std::for_each(io_services_.begin(), io_services_.end()
+                    , boost::bind(&cgi::io_service::run, boost::ref(_1)));
+    }
+
+    void stop()
+    {
+      std::for_each(io_services_.begin(), io_services_.end()
+                    , boost::bind(&cgi::io_service::stop, boost::ref(_1)));
+    }
+
+    void reset()
+    {
+      std::for_each(io_services_.begin(), io_services_.end()
+                    , boost::bind(&cgi::io_service::reset, boost::ref(_1)));
+    }
+
+    impl_type& impl()
+    {
+      return io_services_;
+    }
+
+  private:
+    impl_type io_services_;
+    impl_type::iterator current_;
+  };
+  */
 
   /// Specialization for multi-queue/single-io_service strategy
   /**
@@ -112,7 +167,7 @@ namespace cgi {
   };
 ********************************/
 
-
+      /*
   /// Specialization for io_service-per-queue strategy
   template<typename Policy>
   class io_service_provider<1, Policy>//tags::>
@@ -209,6 +264,7 @@ namespace cgi {
 
     //boost::asio::io_service::strand strand_;
   };
+      */
 
 } // namespace cgi
 

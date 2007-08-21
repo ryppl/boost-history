@@ -9,9 +9,11 @@
 #ifndef CGI_IO_SERVICE_PROVIDER_FWD_HPP_INCLUDED__
 #define CGI_IO_SERVICE_PROVIDER_FWD_HPP_INCLUDED__
 
+#include "tags.hpp"
+
 namespace cgi {
 
-  template<int, typename>
+  template<typename = tags::single_service>
   class io_service_provider;
 
 } // namespace cgi

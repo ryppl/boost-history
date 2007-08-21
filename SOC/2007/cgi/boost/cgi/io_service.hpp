@@ -13,7 +13,7 @@
 
 namespace cgi {
 
-  using boost::asio::io_service;
+  typedef boost::asio::io_service io_service;
 
 } // namespace cgi
 
