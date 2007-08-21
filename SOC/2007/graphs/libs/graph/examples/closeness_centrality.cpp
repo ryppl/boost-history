@@ -29,6 +29,10 @@ typedef undirected_graph<Actor> Graph;
 typedef graph_traits<Graph>::vertex_descriptor Vertex;
 typedef graph_traits<Graph>::edge_descriptor Edge;
 
+// The name map provides an abstract accessor for the names of
+// each vertex. This is used during graph creation.
+typedef property_map<Graph, string Actor::*>::type NameMap;
+
 // Declare a matrix type and its corresponding property map that
 // will contain the distances between each pair of vertices.
 typedef exterior_vertex_property<Graph, int> DistanceProperty;
@@ -48,9 +52,13 @@ typedef ClosenessProperty::map_type ClosenessMap;
 int
 main(int argc, char *argv[])
 {
-    // Create the graph and read it from standard input.
+    // Create the graph and a property map that provides access to[
+    // tha actor names.
     Graph g;
-    read_graph(g, cin);
+    NameMap nm(get(&Actor::name, g));
+
+    // Read the graph from standard input.
+    read_graph(g, nm, cin);
 
     // Compute the distances between all pairs of vertices using
     // the Floyd-Warshall algorithm. Note that the weight map is

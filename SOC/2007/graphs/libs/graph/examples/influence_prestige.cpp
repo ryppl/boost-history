@@ -28,6 +28,10 @@ typedef directed_graph<Actor> Graph;
 typedef graph_traits<Graph>::vertex_descriptor Vertex;
 typedef graph_traits<Graph>::edge_descriptor Edge;
 
+// The name map provides an abstract accessor for the names of
+// each vertex. This is used during graph creation.
+typedef property_map<Graph, string Actor::*>::type NameMap;
+
 // Declare a container type for influence and prestige (both
 // of which are degree centralities) and its corresponding
 // property map.
@@ -38,9 +42,13 @@ typedef CentralityProperty::map_type CentralityMap;
 int
 main(int argc, char *argv[])
 {
-    // Create the graph and read it from standard input.
+    // Create the graph and a property map that provides
+    // access to the actor names.
     Graph g;
-    read_graph(g, cin);
+    NameMap nm(get(&Actor::name, g));
+
+    // Read the graph from standard input.
+    read_graph(g, nm, cin);
 
     // Compute the influence for the graph.
     CentralityContainer influence(num_vertices(g));

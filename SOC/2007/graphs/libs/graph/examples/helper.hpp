@@ -12,9 +12,11 @@
 #include <map>
 #include <algorithm>
 
-template <typename Graph, typename VertexMap>
+#include <boost/graph/null_property_map.hpp>
+
+template <typename Graph, typename NameMap, typename VertexMap>
 typename boost::graph_traits<Graph>::vertex_descriptor
-add_named_vertex(Graph& g, const std::string& name, VertexMap& vm)
+add_named_vertex(Graph& g, NameMap nm, const std::string& name, VertexMap& vm)
 {
     typedef typename boost::graph_traits<Graph>::vertex_descriptor Vertex;
     typedef typename VertexMap::iterator Iterator;
@@ -24,23 +26,22 @@ add_named_vertex(Graph& g, const std::string& name, VertexMap& vm)
     bool inserted;
     tie(iter, inserted) = vm.insert(make_pair(name, Vertex()));
     if(inserted) {
-        // The name was unique so we need to add a vertex to the
-        // graph and associate it with this name.
+        // The name was unique so we need to add a vertex to the graph
         v = add_vertex(g);
-        g[v].name = name;
         iter->second = v;
+        put(nm, v, name);      // store the name in the name map
     }
     else {
-        // We had alread inserted this name so we can return
-        // the associated vertex.
+        // We had alread inserted this name so we can return the
+        // associated vertex.
         v = iter->second;
     }
     return v;
 }
 
-template <typename Graph, typename InputStream>
+template <typename Graph, typename NameMap, typename InputStream>
 inline std::map<std::string, typename boost::graph_traits<Graph>::vertex_descriptor>
-read_graph(Graph& g, InputStream& is)
+read_graph(Graph& g, NameMap nm, InputStream& is)
 {
     typedef typename boost::graph_traits<Graph>::vertex_descriptor Vertex;
     std::map<std::string, Vertex> verts;
@@ -50,16 +51,25 @@ read_graph(Graph& g, InputStream& is)
         std::string first(line, 0, index);
         std::string second(line, index + 1);
 
-        Vertex u = add_named_vertex(g, first, verts);
-        Vertex v = add_named_vertex(g, second, verts);
+        Vertex u = add_named_vertex(g, nm, first, verts);
+        Vertex v = add_named_vertex(g, nm, second, verts);
         add_edge(u, v, g);
     }
     return verts;
 }
 
-template <typename Graph, typename WeightMap, typename InputStream>
+template <typename Graph, typename InputStream>
 inline std::map<std::string, typename boost::graph_traits<Graph>::vertex_descriptor>
-read_weighted_graph(Graph& g, WeightMap wm, InputStream& is)
+read_graph(Graph& g, InputStream& is)
+{
+    typedef typename boost::graph_traits<Graph>::vertex_descriptor Vertex;
+    typedef boost::null_property_map<Vertex, std::string> NameMap;
+    return read_graph(g, NameMap(), is);
+}
+
+template <typename Graph, typename NameMap, typename WeightMap, typename InputStream>
+inline std::map<std::string, typename boost::graph_traits<Graph>::vertex_descriptor>
+read_weighted_graph(Graph& g, NameMap nm, WeightMap wm, InputStream& is)
 {
     typedef typename boost::graph_traits<Graph>::vertex_descriptor Vertex;
     typedef typename boost::graph_traits<Graph>::edge_descriptor Edge;
@@ -78,8 +88,8 @@ read_weighted_graph(Graph& g, WeightMap wm, InputStream& is)
         ss >> p;
 
         // add the vertices to the graph
-        Vertex u = add_named_vertex(g, first, verts);
-        Vertex v = add_named_vertex(g, second, verts);
+        Vertex u = add_named_vertex(g, nm, first, verts);
+        Vertex v = add_named_vertex(g, nm, second, verts);
 
         // add the edge and set the weight
         Edge e = add_edge(u, v, g).first;
@@ -89,38 +99,15 @@ read_weighted_graph(Graph& g, WeightMap wm, InputStream& is)
 }
 
 
-//[property_comparator
-template <typename PropertyMap>
-struct property_greater
+template <typename Graph, typename WeightMap, typename InputStream>
+inline std::map<std::string, typename boost::graph_traits<Graph>::vertex_descriptor>
+read_weighted_graph(Graph& g, WeightMap wm, InputStream& is)
 {
-    typedef typename boost::property_traits<PropertyMap>::key_type Key;
-    property_greater(PropertyMap pm)
-        : m_prop(pm)
-    { }
+    typedef typename boost::graph_traits<Graph>::vertex_descriptor Vertex;
+    typedef boost::null_property_map<Vertex, std::string> NameMap;
 
-    bool operator ()(Key a, Key b) const
-    {
-        return get(m_prop, a) > get(m_prop, b);
-    }
-
-    PropertyMap m_prop;
-};
-//]
-
-//[sort_vertices
-template <typename VertexVector, typename Graph, typename PropertyMap>
-void
-sort_vertices(VertexVector& v, const Graph& g, PropertyMap pm)
-{
-    BOOST_ASSERT(v.size() == num_vertices(g));
-    size_t x = 0;
-    typename boost::graph_traits<Graph>::vertex_iterator i, end;
-    for(boost::tie(i, end) = boost::vertices(g); i != end; ++i) {
-        v[x++] = *i;
-    }
-
-    std::sort(v.begin(), v.end(), property_greater<PropertyMap>(pm));
+    return read_weighted_graph(g, NameMap(), wm, is);
 }
-//]
+
 
 #endif

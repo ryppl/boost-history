@@ -61,6 +61,10 @@ typedef directed_graph<WebPage, Link> Graph;
 typedef graph_traits<Graph>::vertex_descriptor Vertex;
 typedef graph_traits<Graph>::edge_descriptor Edge;
 
+// The name map provides an abstract accessor for the names of
+// each vertex. This is used during graph creation.
+typedef property_map<Graph, string WebPage::*>::type NameMap;
+
 // Declare a matrix type and its corresponding property map that
 // will contain the distances between each pair of vertices.
 typedef exterior_vertex_property<Graph, float> DistanceProperty;
@@ -84,13 +88,15 @@ static float inclusive_geodesics(const Graph&, DistanceMatrixMap, GeodesicMap);
 int
 main(int argc, char *argv[])
 {
-    // Create the graph and the weight map as an accessor to
-    // the edge weights (or probabilities in this case).
+    // Create the graph, a name map that providse abstract access
+    // to the web page names, and the weight map as an accessor to
+    // the edge weights (or probabilities).
     Graph g;
-    WeightMap wm(&g, &Link::probability);
+    NameMap nm(get(&WebPage::name, g));
+    WeightMap wm(get(&Link::probability, g));
 
     // Read the weighted graph from standard input.
-    read_weighted_graph(g, wm, cin);
+    read_weighted_graph(g, nm, wm, cin);
 
     // Compute the distances between all pairs of vertices using
     // the Floyd-Warshall algorithm. The weight map was created
