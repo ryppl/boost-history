@@ -1,6 +1,7 @@
 //  boost/system/error_code.hpp  ---------------------------------------------//
 
 //  Copyright Beman Dawes 2006, 2007
+//  Copyright Christoper Kohlhoff 2007
 
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -15,6 +16,7 @@
 #include <boost/assert.hpp>
 #include <boost/operators.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <ostream>
 #include <string>
 #include <stdexcept>
@@ -34,6 +36,17 @@ namespace boost
   {
 
     class error_code;
+    class error_condition;
+
+    //  "Concept" helpers  ---------------------------------------------------//
+
+    template< class T >
+    struct is_error_code_enum { static const bool value = false; };
+
+    template< class T >
+    struct is_error_condition_enum { static const bool value = false; };
+
+    //  portable error_conditions  -------------------------------------------//
 
     namespace posix
     {
@@ -125,6 +138,9 @@ namespace boost
 
     } // namespace posix
 
+    template<> struct is_error_condition_enum<posix::posix_errno>
+      { static const bool value = true; };
+
     //  class error_category  ------------------------------------------------//
 
     class error_category : public noncopyable
@@ -133,7 +149,9 @@ namespace boost
       virtual ~error_category(){}
       virtual const std::string & name() const;  // see implementation note below
       virtual std::string message( int ev ) const;   // see implementation note below
-      virtual error_code portable_error_code( int ev) const;
+      virtual error_condition default_error_condition( int ev ) const;
+      virtual bool equivalent( int code, const error_condition & condition ) const;
+      virtual bool equivalent( const error_code & code, int condition ) const;
 
       bool operator==(const error_category & rhs) const { return this == &rhs; }
       bool operator!=(const error_category & rhs) const { return !(*this == rhs); }
@@ -145,36 +163,42 @@ namespace boost
     BOOST_SYSTEM_DECL extern const error_category & posix_category;
     BOOST_SYSTEM_DECL extern const error_category & system_category;
 
-    //  class error_code  ----------------------------------------------------//
+    //  deprecated synonyms
+    BOOST_SYSTEM_DECL extern const error_category & errno_ecat;  // posix_category
+    BOOST_SYSTEM_DECL extern const error_category & native_ecat; // system_category
 
-    //  We want error_code to be a value type that can be copied without slicing
-    //  and without requiring heap allocation, but we also want it to have
-    //  polymorphic behavior based on the error category. This is achieved by
-    //  abstract base class error_category supplying the polymorphic behavior,
-    //  and error_code containing a pointer to an object of a type derived
-    //  from error_category.
-    class BOOST_SYSTEM_DECL error_code
+    //  class error_condition  -----------------------------------------------//
+
+    //  error_conditions are portable, error_codes are system or lib specific
+
+    class error_condition
     {
     public:
 
       // constructors:
-      error_code() : m_val(0), m_cat(&posix_category) {}
-      error_code( int val, const error_category & cat ) : m_val(val), m_cat(&cat) {}
+      error_condition() : m_val(0), m_cat(&posix_category) {}
+      error_condition( int val, const error_category & cat ) : m_val(val), m_cat(&cat) {}
 
-      template<typename Enum>
-        error_code(Enum val) { *this = make_error_code(val); }
+      template <class ConditionEnum>
+        error_condition(ConditionEnum e,
+          typename boost::enable_if<is_error_condition_enum<ConditionEnum> >::type* = 0)
+      {
+        *this = make_error_condition(e);
+      }
 
       // modifiers:
+
       void assign( int val, const error_category & cat )
       { 
         m_val = val;
         m_cat = &cat;
       }
                                              
-      template<typename Enum>
-        error_code & operator=( Enum val )
+      template<typename ConditionEnum>
+        typename boost::enable_if<is_error_condition_enum<ConditionEnum>, error_condition>::type &
+          operator=( ConditionEnum val )
       { 
-        *this = make_error_code(val);
+        *this = make_error_condition(val);
         return *this;
       }
 
@@ -187,7 +211,6 @@ namespace boost
       // observers:
       int                     value() const    { return m_val; }
       const error_category &  category() const { return *m_cat; }
-      error_code              portable_error_code() const  { return m_cat->portable_error_code(value()); }
       std::string             message() const  { return m_cat->message(value()); }
 
       typedef void (*unspecified_bool_type)();
@@ -204,32 +227,93 @@ namespace boost
       }
 
       // relationals:
-      inline friend bool same( const error_code & lhs,
-                               const error_code & rhs )
-        //  the more symmetrical non-member syntax is preferred
+      //  the more symmetrical non-member syntax allows enum
+      //  conversions work for both rhs and lhs.
+      inline friend bool operator==( const error_condition & lhs,
+                                     const error_condition & rhs )
       {
         return lhs.m_cat == rhs.m_cat && lhs.m_val == rhs.m_val;
       }
                   
+    private:
+      int                     m_val;
+      const error_category *  m_cat;
+
+    };
+
+    //  class error_code  ----------------------------------------------------//
+
+    //  We want error_code to be a value type that can be copied without slicing
+    //  and without requiring heap allocation, but we also want it to have
+    //  polymorphic behavior based on the error category. This is achieved by
+    //  abstract base class error_category supplying the polymorphic behavior,
+    //  and error_code containing a pointer to an object of a type derived
+    //  from error_category.
+    class error_code
+    {
+    public:
+
+      // constructors:
+      error_code() : m_val(0), m_cat(&system_category) {}
+      error_code( int val, const error_category & cat ) : m_val(val), m_cat(&cat) {}
+
+      template <class CodeEnum>
+        error_code(CodeEnum e,
+          typename boost::enable_if<is_error_code_enum<CodeEnum> >::type* = 0)
+      {
+        *this = make_error_code(e);
+      }
+
+      // modifiers:
+      void assign( int val, const error_category & cat )
+      { 
+        m_val = val;
+        m_cat = &cat;
+      }
+                                             
+      template<typename CodeEnum>
+        typename boost::enable_if<is_error_code_enum<CodeEnum>, error_code>::type &
+          operator=( CodeEnum val )
+      { 
+        *this = make_error_code(val);
+        return *this;
+      }
+
+      void clear()
+      {
+        m_val = 0;
+        m_cat = &system_category;
+      }
+
+      // observers:
+      int                     value() const    { return m_val; }
+      const error_category &  category() const { return *m_cat; }
+      error_condition         default_error_condition() const  { return m_cat->default_error_condition(value()); }
+      std::string             message() const  { return m_cat->message(value()); }
+
+      typedef void (*unspecified_bool_type)();
+      static void unspecified_bool_true() {}
+
+      operator unspecified_bool_type() const  // true if error
+      { 
+        return m_val == 0 ? 0 : unspecified_bool_true;
+      }
+
+      bool operator!() const  // true if no error
+      {
+        return m_val == 0;
+      }
+
+      // relationals:
       inline friend bool operator==( const error_code & lhs,
                                      const error_code & rhs )
+        //  the more symmetrical non-member syntax allows enum
+        //  conversions work for both rhs and lhs.
       {
-        if ( lhs.m_cat == rhs.m_cat ) return lhs.m_val == rhs.m_val;
-        return same( lhs, rhs.portable_error_code() )
-            || same( lhs.portable_error_code(), rhs );
-        // Rationale: As in the language proper, a single automatic conversion
-        // is acceptable, but two automatic conversions are not. Thus
-        // return same (lhs.portable_error_code(), rhs.portable_error_code()) is
-        // not an acceptable implementation as it performs two conversions.
+        return lhs.m_cat == rhs.m_cat && lhs.m_val == rhs.m_val;
       }
-
-      inline friend bool operator!=( const error_code & lhs,
-                                     const error_code & rhs )
-      {
-        return !(lhs == rhs);
-      }
-
-    private:
+                  
+      private:
       int                     m_val;
       const error_category *  m_cat;
 
@@ -237,6 +321,44 @@ namespace boost
 
     //  non-member functions  ------------------------------------------------//
 
+    inline bool operator!=( const error_code & lhs,
+                            const error_code & rhs )
+    {
+      return !(lhs == rhs);
+    }
+
+    inline bool operator!=( const error_condition & lhs,
+                            const error_condition & rhs )
+    {
+      return !(lhs == rhs);
+    }
+
+    inline bool operator==( const error_code & lhs,
+                            const error_condition & rhs )
+    {
+      return lhs.category().equivalent( lhs.value(), rhs )
+        || rhs.category().equivalent( lhs, rhs.value() );
+    }
+                
+    inline bool operator!=( const error_code & lhs,
+                            const error_condition & rhs )
+    {
+      return !(lhs == rhs);
+    }
+                
+    inline bool operator==( const error_condition & lhs,
+                            const error_code & rhs )
+    {
+      return lhs.category().equivalent( rhs, lhs.value() )
+        || rhs.category().equivalent( rhs.value(), lhs );
+    }
+                
+    inline bool operator!=( const error_condition & lhs,
+                            const error_code & rhs )
+    {
+      return !(lhs == rhs);
+    }
+                  
     // TODO: both of these may move elsewhere, but the LWG hasn't spoken yet.
 
     template <class charT, class traits>
@@ -256,17 +378,33 @@ namespace boost
             : 0);
     }
 
-    //  make_error_code for posix::posix_errno  ------------------------------//
+    //  make_* functions for posix::posix_errno  -----------------------------//
 
+    //  explicit conversion:
     inline error_code make_error_code( posix::posix_errno e )
       { return error_code( e, posix_category ); }
 
-    //  error_category implementation  ---------------------------------------//
+    //  implicit conversion:
+    inline error_condition make_error_condition( posix::posix_errno e )
+      { return error_condition( e, posix_category ); }
 
-    //   error_code is a complete type at this point
-    inline error_code error_category::portable_error_code( int ev) const
+    //  error_category default implementation  -------------------------------//
+
+    inline error_condition error_category::default_error_condition( int ev ) const
     { 
-      return error_code( ev, *this );
+      return error_condition( ev, *this );
+    }
+
+    inline bool error_category::equivalent( int code,
+      const error_condition & condition ) const
+    {
+      return default_error_condition( code ) == condition;
+    }
+
+    inline bool error_category::equivalent( const error_code & code,
+      int condition ) const
+    {
+      return *this == code.category() && code.value() == condition;
     }
 
     //  error_category implementation note: VC++ 8.0 objects to name() and
@@ -276,6 +414,7 @@ namespace boost
       static std::string s("error: should never be called");
       return s;
     }
+
     inline std::string error_category::message( int ev ) const
     { 
       static std::string s("error: should never be called");
@@ -319,7 +458,7 @@ namespace boost
 
     namespace cygwin
     {
-      enum cygwin_error
+      enum cygwin_errno
       {
         no_net = ENONET,
         no_package = ENOPKG,
@@ -327,12 +466,15 @@ namespace boost
       };
     }  // namespace cygwin
 
-    inline error_code make_error_code(cygwin::cygwin_error e)
+    template<> struct is_error_code_enum<cygwin::cygwin_errno>
+      { static const bool value = true; };
+
+    inline error_code make_error_code(cygwin::cygwin_errno e)
       { return error_code( e, system_category ); }
 
 # elif defined(linux) || defined(__linux) || defined(__linux__)
 
-    namespace lnx  // linux obvious name prempted by its use as predefined macro
+    namespace lnx  // linux obvious name preempted by its use as predefined macro
     {
       enum linux_error
       {
@@ -390,6 +532,9 @@ namespace boost
         unclean = EUCLEAN,
       };
     }  // namespace lnx
+
+    template<> struct is_error_code_enum<lnx::linux_errno>
+      { static const bool value = true; };
 
     inline error_code make_error_code(lnx::linux_error e)
       { return error_code( e, system_category ); }
@@ -471,6 +616,9 @@ namespace boost
         // TODO: add more Windows errors
       };
     }  // namespace windows
+
+    template<> struct is_error_code_enum<windows::windows_error>
+      { static const bool value = true; };
 
     inline error_code make_error_code(windows::windows_error e)
       { return error_code( e, system_category ); }

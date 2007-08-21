@@ -210,8 +210,8 @@ namespace
   public:
     const std::string &   name() const;
     posix::posix_errno    posix( int ev ) const;
-    error_code            portable_error_code( int ev ) const;
     std::string           message( int ev ) const;
+    error_condition       default_error_condition( int ev ) const;
   };
 
   const posix_error_category posix_category_const;
@@ -309,9 +309,9 @@ namespace
     return boost::system::posix::no_posix_equivalent;
   }
 
-  error_code system_error_category::portable_error_code( int ev ) const
+  error_condition system_error_category::default_error_condition( int ev ) const
   {
-    return error_code( posix(ev), posix_category );
+    return error_condition( posix(ev), posix_category );
   }
 
 # if !defined( BOOST_WINDOWS_API )
@@ -372,6 +372,13 @@ namespace boost
       = posix_category_const;
 
     BOOST_SYSTEM_DECL const error_category & system_category
+      = system_category_const;
+
+    // deprecated synonyms
+    BOOST_SYSTEM_DECL const error_category & errno_ecat
+      = posix_category_const;
+
+    BOOST_SYSTEM_DECL const error_category & native_ecat
       = system_category_const;
 
   } // namespace system

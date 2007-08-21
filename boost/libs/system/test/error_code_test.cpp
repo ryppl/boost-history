@@ -56,25 +56,26 @@ namespace
 
 int test_main( int, char ** )
 {
+
   std::cout << "General tests...\n";
   // unit tests:
   error_code ec;
-  error_code gec;
+  error_condition dec;
   BOOST_CHECK( !ec );
   BOOST_CHECK( ec.value() == 0 );
-  gec = ec.portable_error_code();
-  BOOST_CHECK( gec.value() == 0 );
-  BOOST_CHECK( gec.category() == posix_category );
+  dec = ec.default_error_condition();
+  BOOST_CHECK( dec.value() == 0 );
+  BOOST_CHECK( dec.category() == posix_category );
   BOOST_CHECK( ec == posix::success );
-  BOOST_CHECK( ec.category() == posix_category );
-  BOOST_CHECK( ec.category().name() == "POSIX" );
+  BOOST_CHECK( ec.category() == system_category );
+  BOOST_CHECK( ec.category().name() == "system" );
 
   error_code ec_0_system( 0, system_category );
   BOOST_CHECK( !ec_0_system );
   BOOST_CHECK( ec_0_system.value() == 0 );
-  gec = ec_0_system.portable_error_code();
-  BOOST_CHECK( gec.value() == 0 );
-  BOOST_CHECK( gec.category() == posix_category );
+  dec = ec_0_system.default_error_condition();
+  BOOST_CHECK( dec.value() == 0 );
+  BOOST_CHECK( dec.category() == posix_category );
   BOOST_CHECK( ec_0_system == posix::success );
   BOOST_CHECK( ec_0_system.category() == system_category );
   BOOST_CHECK( ec_0_system.category().name() == "system" );
@@ -93,15 +94,30 @@ int test_main( int, char ** )
   ec = error_code( BOOST_ACCESS_ERROR_MACRO, system_category );
   BOOST_CHECK( ec );
   BOOST_CHECK( ec.value() == BOOST_ACCESS_ERROR_MACRO );
-  gec = ec.portable_error_code();
-  BOOST_CHECK( gec.value() == static_cast<int>(posix::permission_denied) );
-  BOOST_CHECK( gec.category() == posix_category );
-  BOOST_CHECK( same( gec, error_code( posix::permission_denied, posix_category ) ) );
-  BOOST_CHECK( gec == posix::permission_denied );
-  BOOST_CHECK( posix::permission_denied == gec );
+  dec = ec.default_error_condition();
+  BOOST_CHECK( dec.value() == static_cast<int>(posix::permission_denied) );
+  BOOST_CHECK( dec.category() == posix_category );
+  BOOST_CHECK( dec == error_condition( posix::permission_denied, posix_category ) );
+  BOOST_CHECK( dec == posix::permission_denied );
+  BOOST_CHECK( posix::permission_denied == dec );
   BOOST_CHECK( ec == posix::permission_denied );
   BOOST_CHECK( ec.category() == system_category );
   BOOST_CHECK( ec.category().name() == "system" );
+
+  // test the explicit make_error_code conversion for posix
+  ec = make_error_code( posix::bad_message );
+  BOOST_CHECK( ec );
+  BOOST_CHECK( ec == posix::bad_message );
+  BOOST_CHECK( posix::bad_message == ec );
+  BOOST_CHECK( ec != posix::permission_denied );
+  BOOST_CHECK( posix::permission_denied != ec );
+  BOOST_CHECK( ec.category() == posix_category );
+
+  // test the deprecated predefined error_category synonyms
+  BOOST_CHECK( &system_category == &native_ecat );
+  BOOST_CHECK( &posix_category == &errno_ecat );
+  BOOST_CHECK( system_category == native_ecat );
+  BOOST_CHECK( posix_category == errno_ecat );
 
 #ifdef BOOST_WINDOWS_API
   std::cout << "Windows tests...\n";
@@ -110,31 +126,31 @@ int test_main( int, char ** )
   ec = error_code( ERROR_FILE_NOT_FOUND, system_category );
   BOOST_CHECK( ec.value() == ERROR_FILE_NOT_FOUND );
   BOOST_CHECK( ec == posix::no_such_file_or_directory );
-  BOOST_CHECK( ec.portable_error_code().value() == posix::no_such_file_or_directory );
+  BOOST_CHECK( ec.default_error_condition().value() == posix::no_such_file_or_directory );
 
   //   test the second entry in the decoder table:
   ec = error_code( ERROR_PATH_NOT_FOUND, system_category );
   BOOST_CHECK( ec.value() == ERROR_PATH_NOT_FOUND );
   BOOST_CHECK( ec == posix::no_such_file_or_directory );
-  BOOST_CHECK( ec.portable_error_code().value() == posix::no_such_file_or_directory );
+  BOOST_CHECK( ec.default_error_condition().value() == posix::no_such_file_or_directory );
 
   //   test the third entry in the decoder table:
   ec = error_code( ERROR_ACCESS_DENIED, system_category );
   BOOST_CHECK( ec.value() == ERROR_ACCESS_DENIED );
   BOOST_CHECK( ec == posix::permission_denied );
-  BOOST_CHECK( ec.portable_error_code().value() == posix::permission_denied );
+  BOOST_CHECK( ec.default_error_condition().value() == posix::permission_denied );
 
   //   test the last regular entry in the decoder table:
   ec = error_code( ERROR_WRITE_PROTECT, system_category );
   BOOST_CHECK( ec.value() == ERROR_WRITE_PROTECT );
   BOOST_CHECK( ec == posix::permission_denied );
-  BOOST_CHECK( ec.portable_error_code().value() == posix::permission_denied );
+  BOOST_CHECK( ec.default_error_condition().value() == posix::permission_denied );
 
   //   test not-in-table condition:
   ec = error_code( 1234567890, system_category );
   BOOST_CHECK( ec.value() == 1234567890 );
   BOOST_CHECK( ec == posix::no_posix_equivalent );
-  BOOST_CHECK( ec.portable_error_code().value() == posix::no_posix_equivalent );
+  BOOST_CHECK( ec.default_error_condition().value() == posix::no_posix_equivalent );
 
 #else // POSIX
 
