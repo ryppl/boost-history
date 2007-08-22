@@ -71,6 +71,7 @@
 [include betweenness_centrality.qbk]
 [include mean_geodesic.qbk]
 [include eccentricity.qbk]
+[include clustering_coefficient.qbk]
 [endsect] [/Measures]
 
 [endsect] [/Algorithms]

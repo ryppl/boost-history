@@ -71,10 +71,10 @@ on a directed graph will double the performance penalty (which is generally negl
 
             *Requirements:* The `Graph` type must be a model of the [AdjacencyMatrix],
             [IncidenceGraph] concept and the [VertexIndexGraph]
-            concepts[footnote Any `Graph` typen that implements the `edge()`
+            concepts[footnote Any `Graph` type that implements the `edge()`
             function will satisfy the expression requirements for the
             [AdjacencyMatrix], but may incur additional overhead due non-constant
-            implementations.].
+            time complexity.].
         ]
     ]
     [
@@ -136,7 +136,7 @@ clique in a graph - its clique number.
             concepts[footnote Any `Graph` typen that implements the `edge()`
             function will satisfy the expression requirements for the
             [AdjacencyMatrix], but may incur additional overhead due non-constant
-            implementations.].
+            time complexity.].
         ]
     ]
 ]
