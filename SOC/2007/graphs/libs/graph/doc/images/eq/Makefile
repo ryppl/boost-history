@@ -6,7 +6,11 @@ src = \
 	scaled_closeness.tex \
 	betweenness.tex \
 	relative_betweenness.tex \
-	central_point_dominance.tex
+	central_point_dominance.tex \
+	num_paths_directed.tex \
+	num_paths_undirected.tex \
+	num_triangles.tex \
+	clustering_coef.tex
 dvi = $(src:%.tex=%.dvi)
 ps = $(src:%.tex=%.ps)
 png = $(src:%.tex=%.png)
@@ -23,6 +27,10 @@ log = $(src:%.tex=%.log)
 	latex --interaction=nonstopmode $<
 
 all: $(png)
+	make clean-aux
 
 clean:
 	rm -f $(png) $(ps) $(dvi) $(aux) $(log)
+
+clean-aux:
+	rm -rf $(aux) $(log) $(dvi)
