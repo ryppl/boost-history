@@ -9,6 +9,7 @@
 
 #include <boost/utility.hpp>
 #include <boost/graph/graph_traits.hpp>
+#include <boost/graph/new_graph_concepts.hpp>
 
 namespace boost
 {
@@ -18,6 +19,7 @@ namespace boost
         inline typename graph_traits<Graph>::degree_size_type
         possible_edges(const Graph& g, std::size_t k, directed_tag)
         {
+            function_requires< GraphConcept<Graph> >();
             typedef typename graph_traits<Graph>::degree_size_type T;
             return T(k) * (T(k) - 1);
         }
@@ -39,6 +41,7 @@ namespace boost
                     directed_tag)
 
         {
+            function_requires< AdjacencyMatrixConcept<Graph> >();
             return (edge(u, v, g).second ? 1 : 0) +
                    (edge(v, u, g).second ? 1 : 0);
         }
@@ -51,32 +54,46 @@ namespace boost
                     typename Graph::vertex_descriptor v,
                     undirected_tag)
         {
+            function_requires< AdjacencyMatrixConcept<Graph> >();
             return edge(u, v, g).second ? 1 : 0;
         }
     }
 
     template <typename Graph, typename Vertex>
     inline typename graph_traits<Graph>::degree_size_type
-    vertex_num_routes(const Graph& g, Vertex v)
+    num_paths_through_vertex(const Graph& g, Vertex v)
     {
-        typename graph_traits<Graph>::directed_category cat;
-        typename graph_traits<Graph>::adjacency_iterator i, end;
+        function_requires< AdjacencyGraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::directed_category Directed;
+        typedef typename graph_traits<Graph>::adjacency_iterator AdjacencyIterator;
+
+        // TODO: There should actually be a set of neighborhood functions
+        // for things like this (num_neighbors() would be great).
+
+        AdjacencyIterator i, end;
         tie(i, end) = adjacent_vertices(v, g);
         std::size_t k = std::distance(i, end);
-        return detail::possible_edges(g, k, cat);
+        return detail::possible_edges(g, k, Directed());
     }
 
     template <typename Graph, typename Vertex>
     inline typename graph_traits<Graph>::degree_size_type
-    vertex_num_triangles(const Graph& g, Vertex v)
+    num_triangles_on_vertex(const Graph& g, Vertex v)
     {
-        typedef typename graph_traits<Graph>::degree_size_type T;
-        T count = 0;
-        typename graph_traits<Graph>::directed_category cat;
-        typename graph_traits<Graph>::adjacency_iterator i, j, end;
+        function_requires< IncidenceGraphConcept<Graph> >();
+        function_requires< AdjacencyGraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::degree_size_type Degree;
+        typedef typename graph_traits<Graph>::directed_category Directed;
+        typedef typename graph_traits<Graph>::adjacency_iterator AdjacencyIterator;
+
+        // TODO: I might be able to reduce the requirement from adjacency graph
+        // to incidence graph by using out edges.
+
+        Degree count(0);
+        AdjacencyIterator i, j, end;
         for(tie(i, end) = adjacent_vertices(v, g); i != end; ++i) {
             for(j = next(i); j != end; ++j) {
-                count += detail::count_edges(g, *i, *j, cat);
+                count += detail::count_edges(g, *i, *j, Directed());
             }
         }
         return count;
@@ -84,49 +101,57 @@ namespace boost
 
     template <typename T, typename Graph, typename Vertex>
     inline T
-    vertex_clustering_coefficient(const Graph& g, Vertex v)
+    clustering_coefficient(const Graph& g, Vertex v)
     {
         T zero(0);
-        T routes = T(vertex_num_routes(g, v));
+        T routes = T(num_paths_through_vertex(g, v));
         return (routes > zero) ?
-            T(vertex_num_triangles(g, v)) / routes : zero;
+            T(num_triangles_on_vertex(g, v)) / routes : zero;
     }
 
     template <typename Graph, typename Vertex>
     inline float
-    vertex_clustering_coefficient(const Graph& g, Vertex v)
+    clustering_coefficient(const Graph& g, Vertex v)
     {
-        return vertex_clustering_coefficient<float>(g, v);
+        return clustering_coefficient<float>(g, v);
     }
 
     template <typename Graph, typename ClusteringMap>
-    inline void
-    clustering_coefficient(const Graph& g, ClusteringMap cluster)
+    inline typename property_traits<ClusteringMap>::value_type
+    all_clustering_coefficients(const Graph& g, ClusteringMap cm)
     {
-        typedef typename property_traits<ClusteringMap>::value_type T;
-        typename graph_traits<Graph>::vertex_iterator i, end;
+        function_requires< VertexListGraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
+        function_requires< WritablePropertyMapConcept<ClusteringMap,Vertex> >();
+        typedef typename property_traits<ClusteringMap>::value_type Coefficient;
+
+        Coefficient sum(0);
+        VertexIterator i, end;
         for(tie(i, end) = vertices(g); i != end; ++i) {
-            cluster[*i] = vertex_clustering_coefficient<T>(g, *i);
+            Coefficient cc = clustering_coefficient<Coefficient>(g, *i);
+            put(cm, *i, cc);
+            sum += cc;
         }
+        return sum / Coefficient(num_vertices(g));
     }
 
-    template <typename T, typename Graph>
-    inline T
-    graph_clustering_coefficient(const Graph& g)
+    template <typename Graph, typename ClusteringMap>
+    inline typename property_traits<ClusteringMap>::value_type
+    mean_clustering_coefficient(const Graph& g, ClusteringMap cm)
     {
-        T cc(0);
-        typename graph_traits<Graph>::vertex_iterator i, end;
-        for(tie(i, end) = vertices(g); i != end; ++i) {
-            cc += vertex_clustering_coefficient<T>(g, *i);
-        }
-        return cc / T(num_vertices(g));
-    }
+        function_requires< VertexListGraphConcept<Graph> >();
+        typedef typename graph_traits<Graph>::vertex_descriptor Vertex;
+        typedef typename graph_traits<Graph>::vertex_iterator VertexIterator;
+        function_requires< ReadablePropertyMapConcept<ClusteringMap,Vertex> >();
+        typedef typename property_traits<ClusteringMap>::value_type Coefficient;
 
-    template <typename Graph>
-    inline float
-    graph_clustering_coefficient(const Graph& g)
-    {
-        return graph_clustering_coefficient<float>(g);
+        Coefficient cc(0);
+        VertexIterator i, end;
+        for(tie(i, end) = vertices(g); i != end; ++i) {
+            cc += get(cm, *i);
+        }
+        return cc / Coefficient(num_vertices(g));
     }
 }
 
