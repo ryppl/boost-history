@@ -17,7 +17,6 @@
 using namespace std;
 using namespace boost;
 
-// useful types
 // number of vertices in the graph
 static const unsigned N = 5;
 

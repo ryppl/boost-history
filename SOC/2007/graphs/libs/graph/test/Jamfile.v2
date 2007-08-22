@@ -29,7 +29,7 @@ test-suite graph_test :
 #
 # exe components : components.cpp ;
 #
-# exe cluster : cluster.cpp ;
+exe clustering_coefficient : clustering_coefficient.cpp ;
 #
 # exe generate : generate.cpp ;
 #
