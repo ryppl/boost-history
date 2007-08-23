@@ -78,8 +78,8 @@ namespace boost { namespace pinhole
         
     public:
         typedef multimap<string, property_group*> category_to_property_group_map;
-        typedef map_value_iterator<property_group*, category_to_property_group_map::iterator> iterator;
-        typedef map_value_iterator<property_group*, category_to_property_group_map::const_iterator> const_iterator;
+        typedef map_value_iterator<category_to_property_group_map::iterator> iterator;
+        typedef map_value_iterator<category_to_property_group_map::const_iterator> const_iterator;
         
         static property_manager* instance()
         {
@@ -113,7 +113,7 @@ namespace boost { namespace pinhole
     public:
         virtual ~property_manager()
         {
-            category_to_property_group_map::iterator itr    = m_property_group_collection.begin();
+            category_to_property_group_map::iterator itr     = m_property_group_collection.begin();
             category_to_property_group_map::iterator itr_end = m_property_group_collection.end();
             for( ; itr != itr_end; ++itr )
             {
@@ -127,8 +127,8 @@ namespace boost { namespace pinhole
          */
         iterator begin()
         {
-            return make_map_value_iterator<property_group*>( m_property_group_collection.lower_bound("All"),
-                                                             m_property_group_collection.upper_bound("All") );
+            return iterator( m_property_group_collection.lower_bound("All"),
+                             m_property_group_collection.upper_bound("All") );
         }
         
         /**
@@ -136,8 +136,8 @@ namespace boost { namespace pinhole
          */
         const_iterator begin() const
         {
-            return make_map_value_iterator<property_group*>( m_property_group_collection.lower_bound("All"),
-                                                             m_property_group_collection.upper_bound("All") );
+            return const_iterator( m_property_group_collection.lower_bound("All"),
+                                   m_property_group_collection.upper_bound("All") );
         }
         
         /**
@@ -145,7 +145,7 @@ namespace boost { namespace pinhole
          */
         iterator end()
         {
-            return make_map_value_iterator<property_group*>( m_property_group_collection.upper_bound("All") );
+            return iterator( m_property_group_collection.upper_bound("All") );
         }
         
         /**
@@ -153,7 +153,7 @@ namespace boost { namespace pinhole
          */
         const_iterator end() const
         {
-            return make_map_value_iterator<property_group*>( m_property_group_collection.upper_bound("All") );
+            return const_iterator( m_property_group_collection.upper_bound("All") );
         }
         
         /**
@@ -169,7 +169,7 @@ namespace boost { namespace pinhole
          */
         iterator begin(const string& strCategory)
         {
-            return make_map_value_iterator<property_group*>( m_property_group_collection.lower_bound(strCategory) );
+            return iterator( m_property_group_collection.lower_bound(strCategory) );
         }
         
         /**
@@ -177,7 +177,7 @@ namespace boost { namespace pinhole
          */
         const_iterator begin(const string& strCategory) const
         {
-            return make_map_value_iterator<property_group*>( m_property_group_collection.lower_bound(strCategory) );
+            return const_iterator( m_property_group_collection.lower_bound(strCategory) );
         }
         
         /**
@@ -185,7 +185,7 @@ namespace boost { namespace pinhole
          */
         iterator end(const string& strCategory)
         {
-            return make_map_value_iterator<property_group*>( m_property_group_collection.upper_bound(strCategory) );
+            return iterator( m_property_group_collection.upper_bound(strCategory) );
         }
         
         /**
@@ -193,7 +193,7 @@ namespace boost { namespace pinhole
          */
         const_iterator end(const string& strCategory) const
         {
-            return make_map_value_iterator<property_group*>( m_property_group_collection.upper_bound(strCategory) );
+            return  const_iterator( m_property_group_collection.upper_bound(strCategory) );
         }
         
         /**

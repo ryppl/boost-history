@@ -244,15 +244,15 @@ namespace boost { namespace pinhole
         /** @name Properties */
         //@{
             typedef property_collection::size_type prop_size_type;
-            typedef map_key_iterator<std::string, property_collection::iterator> prop_iterator;
-            typedef map_key_iterator<std::string, property_collection::const_iterator> const_prop_iterator;
+            typedef map_key_iterator<property_collection::iterator> prop_iterator;
+            typedef map_key_iterator<property_collection::const_iterator> const_prop_iterator;
 
             /**
              * Retrieves an iterator pointing to the name of the first property.
              */
             prop_iterator prop_begin()
             {
-                return make_map_key_iterator<string>( m_properties.begin() );
+                return prop_iterator( m_properties.begin() );
             }
 
             /**
@@ -260,7 +260,7 @@ namespace boost { namespace pinhole
              */
             const_prop_iterator prop_begin() const
             {
-                return make_map_key_iterator<string>( m_properties.begin() );
+                return const_prop_iterator( m_properties.begin() );
             }
 
             /**
@@ -268,7 +268,7 @@ namespace boost { namespace pinhole
              */
             prop_iterator prop_end()
             {
-                return make_map_key_iterator<string>( m_properties.end() );
+                return prop_iterator( m_properties.end() );
             }
 
             /**
@@ -276,7 +276,7 @@ namespace boost { namespace pinhole
              */
             const_prop_iterator prop_end() const
             {
-                return make_map_key_iterator<string>( m_properties.end() );
+                return const_prop_iterator( m_properties.end() );
             }
 
             /**
@@ -490,15 +490,15 @@ namespace boost { namespace pinhole
         /** @name Actions */
         //@{
             typedef action_collection::size_type action_size_type;
-            typedef map_key_iterator<std::string, action_collection::iterator> action_iterator;
-            typedef map_key_iterator<std::string, action_collection::const_iterator> const_action_iterator;
+            typedef map_key_iterator<action_collection::iterator> action_iterator;
+            typedef map_key_iterator<action_collection::const_iterator> const_action_iterator;
 
             /**
              * Retrieves an iterator pointing to the name of the first property.
              */
             action_iterator action_begin()
             {
-                return make_map_key_iterator<string>( m_actions.begin() );
+                return action_iterator( m_actions.begin() );
             }
 
             /**
@@ -506,7 +506,7 @@ namespace boost { namespace pinhole
              */
             const_action_iterator action_begin() const
             {
-                return make_map_key_iterator<string>( m_actions.begin() );
+                return const_action_iterator( m_actions.begin() );
             }
 
             /**
@@ -514,7 +514,7 @@ namespace boost { namespace pinhole
              */
             action_iterator action_end()
             {
-                return make_map_key_iterator<string>( m_actions.end() );
+                return action_iterator( m_actions.end() );
             }
 
             /**
@@ -522,7 +522,7 @@ namespace boost { namespace pinhole
              */
             const_action_iterator action_end() const
             {
-                return make_map_key_iterator<string>( m_actions.end() );
+                return const_action_iterator( m_actions.end() );
             }
 
             /**
