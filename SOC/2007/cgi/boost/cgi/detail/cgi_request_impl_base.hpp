@@ -42,32 +42,34 @@ namespace cgi {
   public:
     typedef ::cgi::map                         map_type;
     typedef Connection                         connection_type;
-    typedef boost::shared_ptr<connection_type> conn_ptr;
+    typedef typename connection_type::pointer  conn_ptr;
 
     /// Constructor
     cgi_request_impl_base()
       : stdin_parsed_(false)
       , http_status_(http::ok)
       , request_status_(unloaded)
-                         //      , connection_(new )
     {
     }
 
-    map_type& get_vars() { return get_vars_; }
-    map_type& post_vars() { return post_vars_; }
-    map_type& cookie_vars() { return cookie_vars_; }
+    map_type& env_vars()             { return env_vars_;       }
+    map_type& get_vars()             { return get_vars_;       }
+    map_type& post_vars()            { return post_vars_;      }
+    map_type& cookie_vars()          { return cookie_vars_;    }
 
-    bool stdin_parsed() { return stdin_parsed_; }
-    http::status_code& http_status() { return http_status_; }
+    bool& stdin_parsed()              { return stdin_parsed_;   }
+    http::status_code& http_status() { return http_status_;    }
+    status_type& status()            { return request_status_; }
 
-    conn_ptr& connection() { return connection_; }
-    std::string& null_str() { return null_str_; }
+    conn_ptr& connection()           { return connection_;     }
+    std::string& null_str()          { return null_str_;       }
 
   protected:
     //conn_ptr connection() { return connection_; }
 
     //friend class cgi_service_impl_base<RequestImpl>;
 
+    map_type env_vars_;
     map_type get_vars_;
     map_type post_vars_;
     map_type cookie_vars_;

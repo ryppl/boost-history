@@ -12,7 +12,9 @@
 
 #include "boost/cgi/map.hpp"
 #include "boost/cgi/role_type.hpp"
+#include "boost/cgi/status_type.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
+#include "boost/cgi/detail/save_environment.hpp"
 //#include "../connections/stdio.hpp"
 
 namespace cgi {
@@ -42,14 +44,28 @@ namespace cgi {
     {
     }
 
+    /// Return if the request is still open
+    /**
+     * For CGI, this always returns true. However, in the case that a
+     * "Location: xxx" header is sent and the header is terminated, the
+     * request can be taken to be 'closed'.
+     */
     bool is_open(implementation_type& impl)
     {
-      return true;
+      return impl.status() >= aborted;
     }
 
-    int close(implementation_type& impl, http::status_code&, int status)
+    /// Return the connection associated with the request
+    typename implementation_type::connection_type&
+    client(implementation_type& impl)
     {
-      //impl.set_status(aborted);
+      return *impl.connection();
+    }
+
+    int close(implementation_type& impl, http::status_code& http_s, int status)
+    {
+      impl.status() = closed;
+      impl.http_status() = http_s;
       return status;
     }
 
@@ -61,14 +77,20 @@ namespace cgi {
     load(implementation_type& impl, bool parse_stdin
         , boost::system::error_code& ec)
     {
-      const std::string& request_method = meta_env(impl, "REQUEST_METHOD", ec);
-      if (request_method == "GET" && parse_get_vars(impl, ec))
-        return ec;
+      detail::save_environment(impl.env_vars());
+      const std::string& request_method = impl.env_vars()["REQUEST_METHOD"];
+      if (request_method == "GET")
+        parse_get_vars(impl, ec);
       else
-      if (request_method == "POST" && parse_stdin && parse_post_vars(impl, ec))
-        return ec;
+      if (request_method == "POST" && parse_stdin)
+        parse_post_vars(impl, ec);
+
+      if (ec) return ec;
 
       parse_cookie_vars(impl, ec);
+      impl.status() = loaded;
+      BOOST_ASSERT(impl.status() >= loaded);
+
       return ec;
     }
 
@@ -89,42 +111,22 @@ namespace cgi {
       return impl.connection()->write_some(buf, ec);
     }
 
-    //template<typename VarType> map_type& var(implementation_type&) const;
-
-    std::string var(map_type& meta_data, const std::string& name
+    std::string& var(map_type& meta_data, const std::string& name
                    , boost::system::error_code& ec)
     {
-      /* Alt:
-      if ((typename map_type::iterator pos = meta_data.find(name))
-             != meta_data.end())
-      {
-        return pos->second;
-      }
-      return std::string();
-      *********
-      for(typename map_type::iterator iter = meta_data.begin()
-         ; iter != meta_data.end()
-         ; ++iter)
-      {
-        if( iter->first == name )
-          return iter->second;
-      }
-      return "";
-      **/
-
-      if( meta_data.find(name) != meta_data.end() )
-        return meta_data[name];
-      return "";
+      return meta_data[name];
     }
 
     std::string meta_get(implementation_type& impl, const std::string& name
                         , boost::system::error_code& ec)
     {
+      BOOST_ASSERT(impl.status() >= loaded);
       return var(impl.get_vars(), name, ec);
     }
 
     map_type& meta_get(implementation_type& impl)
     {
+      BOOST_ASSERT(impl.status() >= loaded);
       return impl.get_vars();
     }
 
@@ -144,6 +146,7 @@ namespace cgi {
                          , boost::system::error_code& ec
                          , bool greedy = true)
     {
+      BOOST_ASSERT(impl.status() >= loaded);
       const std::string& val = var(impl.post_vars(), name, ec);
       if (val.empty() && greedy && !ec)
       {
@@ -155,6 +158,7 @@ namespace cgi {
 
     map_type& meta_post(implementation_type& impl)
     {
+      BOOST_ASSERT(impl.status() >= loaded);
       return impl.post_vars();
     }
 
@@ -163,11 +167,13 @@ namespace cgi {
     std::string cookie(implementation_type& impl, const std::string& name
                       , boost::system::error_code& ec)
     {
+      BOOST_ASSERT(impl.status() >= loaded);
       return var(impl.cookie_vars(), name, ec);
     }
 
     map_type& meta_cookie(implementation_type& impl)
     {
+      BOOST_ASSERT(impl.status() >= loaded);
       return impl.cookie_vars();
     }
 
@@ -176,8 +182,15 @@ namespace cgi {
     std::string meta_env(implementation_type& impl, const std::string& name
                         , boost::system::error_code& ec)
     {
+      BOOST_ASSERT(impl.status() >= loaded);
       const char* c = ::getenv(name.c_str());
       return c ? c : impl.null_str();
+    }
+
+    map_type& meta_env(implementation_type& impl)
+    {
+      BOOST_ASSERT(impl.status() >= loaded);
+      return impl.env_vars();
     }
 
 
@@ -197,8 +210,14 @@ namespace cgi {
     boost::system::error_code&
     parse_get_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
-      detail::extract_params(meta_env(impl, "QUERY_STRING", ec)
-                            , impl.get_vars()
+      // Make sure the request is in a pre-loaded state
+      BOOST_ASSERT (impl.status() <= unloaded);
+
+      std::string& vars = impl.env_vars()["QUERY_STRING"];
+      if (vars.empty())
+        return ec;
+
+      detail::extract_params(vars, impl.get_vars()
                             , boost::char_separator<char>
                                 ("", "=&", boost::keep_empty_tokens)
                             , ec);
@@ -211,15 +230,14 @@ namespace cgi {
     boost::system::error_code&
     parse_cookie_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
-      // Make sure this function hasn't already been called
-      //BOOST_ASSERT( impl.cookie_vars_.empty() );
+      // Make sure the request is in a pre-loaded state
+      BOOST_ASSERT (impl.status() <= unloaded);
 
-      std::string vars = meta_env(impl, "HTTP_COOKIE", ec);
+      std::string& vars(impl.env_vars()["HTTP_COOKIE"]);
       if (vars.empty())
         return ec;
 
-      detail::extract_params(meta_env(impl, "HTTP_COOKIE", ec)
-                            , impl.cookie_vars()
+      detail::extract_params(vars, impl.cookie_vars()
                             , boost::char_separator<char>
                                 ("", "=&", boost::keep_empty_tokens)
                             , ec);
@@ -233,10 +251,8 @@ namespace cgi {
     parse_post_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
       // Make sure this function hasn't already been called
-      std::cerr<< "blah";
       BOOST_ASSERT (!impl.stdin_parsed());
-      std::cerr<< "wom";
-      std::cerr.flush();
+
       std::istream& is(std::cin);
       char ch;
       std::string name;
@@ -277,7 +293,6 @@ namespace cgi {
           default:
               str += ch;
           }
-          //LOG<< "name=" << name << "; str=" << str << std::endl;
       }
       // save the last param (it won't have a trailing &)
       if( !name.empty() )

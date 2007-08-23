@@ -18,7 +18,7 @@
 #include "boost/cgi/streambuf.hpp"
 #include "boost/cgi/basic_request.hpp"
 //#include "boost/cgi/basic_request_acceptor.hpp"
-#include "boost/cgi/reply.hpp"
+#include "boost/cgi/response.hpp"
 //#include "boost/cgi/logger.hpp"
 #include "boost/cgi/read.hpp"
 #include "boost/cgi/write.hpp"
