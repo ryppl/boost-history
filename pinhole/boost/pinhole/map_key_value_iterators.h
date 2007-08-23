@@ -44,7 +44,7 @@ namespace boost { namespace pinhole
         
     public:
         map_key_iterator() :
-        map_key_iterator::iterator_adaptor_() { }
+            map_key_iterator::iterator_adaptor_() { }
         
         explicit map_key_iterator( Iterator x, Iterator end = Iterator()) :
             map_key_iterator::iterator_adaptor_(x) { }
@@ -67,7 +67,7 @@ namespace boost { namespace pinhole
     
     /** Factory for creating map_key_iterator iterators. */
     template <class Iterator>
-        map_key_iterator<Iterator>
+    map_key_iterator<Iterator>
         make_map_key_iterator(Iterator x, Iterator end = Iterator())
     {
             return map_key_iterator<Iterator>(x,end);
@@ -93,10 +93,10 @@ namespace boost { namespace pinhole
         
     public:
         map_value_iterator() :
-        map_value_iterator::iterator_adaptor_() { }
+            map_value_iterator::iterator_adaptor_() { }
         
         map_value_iterator( Iterator x, Iterator end = Iterator()) :
-        map_value_iterator::iterator_adaptor_(x) { }
+            map_value_iterator::iterator_adaptor_(x) { }
         
         template <class other_iterator>
         map_value_iterator(
@@ -116,7 +116,7 @@ namespace boost { namespace pinhole
     
     /** Factory for creating map_value_iterator iterators. */
     template <class Iterator>
-        map_value_iterator<Iterator>
+    map_value_iterator<Iterator>
         make_map_value_iterator(Iterator x, Iterator end = Iterator())
     {
             return map_value_iterator<Iterator>(x,end);
