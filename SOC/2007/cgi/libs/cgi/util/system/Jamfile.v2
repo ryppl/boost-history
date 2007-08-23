@@ -3,4 +3,5 @@
 lib boost_system
   :
   : <file>/usr/local/lib/libboost_system.a
+    #<toolset>gcc:<file>/usr/local/lib/libboost_system.a
   ;

@@ -20,7 +20,9 @@ exe ecgi
     <include>$(BOOST_ROOT)
     <include>"../../../../"
     <library>../../util/system//boost_system
+    #<library>l:/usr/local/lib/libboost_system.a
     <define>BOOST_ALL_NO_LIB=1
+    <define>_CRT_SECURE_NO_DEPRECIATE=1
     <toolset>gcc:<linkflags>-lpthread
   ;
 

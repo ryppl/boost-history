@@ -1,4 +1,4 @@
-#include <boost/cgi/cgi/cgi_request.hpp>
+#include <boost/cgi/cgi.hpp>
 
 int main()
 {

@@ -23,6 +23,7 @@ test-suite cgi_test_suite
 #   [ run run/cgi_request.cpp                    ]
   :
     <include>$(BOOST_ROOT)
-    <include>$(BOOST_CGI_ROOT)
+#    <include>$(BOOST_CGI_ROOT)
+    <include>/usr/local/src/cgi/svn.boost.org/
   ;
 
