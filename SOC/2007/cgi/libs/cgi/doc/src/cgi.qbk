@@ -20,6 +20,8 @@
     ]
 ]
 
+[def __this__    ["FSCGI"]] [/ name of the library]
+
 [def __cgi__     [@http://en.wikipedia.org/wiki/Common_Gateway_Interface CGI]]
 [def __scgi__    [@http://en.wikipedia.org/wiki/Simple_Common_Gateway_Interface SCGI]]
 [def __fcgi__    [@http://en.wikipedia.org/wiki/FastCGI FastCGI]]
@@ -63,7 +65,7 @@
 [def __loading__   boost.cgi.ug.tutorial.loading]
 
 [important
-This manual does [*not] document a library that is a part of __Boost__. The major part of it has been developed this summer as part of the Google Summer of Code, '[@http://code.google.com/soc GSoC07]'. Everything from here on in is alpha-grade, some bits more than others; [link boost.cgi.preface.comments_and_support comments] are welcome.
+This manual does [*not] document a library that is a part of __Boost__. The major part of it has been developed this summer as part of the Google Summer of Code, '[@http://code.google.com/soc GSoC07]'. Everything from here on in is alpha-grade, some bits more than others; [link boost.cgi.preface.comments_and_support comments and bug reports] are welcome.
 
 These documents are either hosted at [@http://sourceforge.net/projects/cgi/ sourceforge], or at [@http://svn.boost.org/svn/boost/browser/sandbox/SOC/2007/cgi svn.boost.org]. For free!
 ]

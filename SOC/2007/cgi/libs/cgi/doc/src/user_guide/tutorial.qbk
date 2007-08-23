@@ -7,7 +7,7 @@
 
 [section Tutorial]
 
-As mentioned in the [link __intro__ introduction], there are two ways of using this library: for 'scripting' and everything else.
+As mentioned in the [link __intro__ introduction], there are two ways of using this library: for 'scripting' and for 'everything else'.
 
 The thing that differentiates 'scripts' from everything else is the [link __ProtocolService__ ProtocolService] (this is similar in use to an [link __asio_io_service__ `io_service`] for those familiar with __asio__).
 

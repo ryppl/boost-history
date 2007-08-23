@@ -7,7 +7,7 @@
 
 [section Building]
 
-Boost.CGI is a header-only library (for now), but it relies on [link __boost_system__ Boost.System], which for now must be built.
+__this__ is a header-only library, but it relies on [link __boost_system__ Boost.System], which must be built.
 
 [/h5 What you need:]
 
@@ -22,7 +22,7 @@ Boost-related elements can be downloaded from the Boost download site at sourcef
   [
    [Boost.Jam - `bjam`]
    [No]
-   [Download 'boost-jam' (precomiled versions are highly recommended) and make it accessible by putting it somewhere pointed to by your system's PATH.]
+   [Download 'boost-jam' (precomiled versions are highly recommended) and make it accessible to your system's PATH.]
   ]
   [
    [Boost.System]
@@ -31,7 +31,7 @@ Boost-related elements can be downloaded from the Boost download site at sourcef
 
    2. Set the environment variable BOOST_ROOT on your system to the download location.
 
-   3. Go to the directory BOOST_ROOT and invoke `bjam` (see above), passing it `--with-system install` on the command line. This should finish without any fails.]
+   3. Go to the directory BOOST_ROOT and invoke `bjam` (see above), passing it `--with-system --layout=system install` on the command line. This should finish without any fails.]
   ]
   [
    [Documentation]
@@ -46,7 +46,7 @@ Boost-related elements can be downloaded from the Boost download site at sourcef
   [
    [Examples]
    [Yes]
-   [The examples are a useful guide to uses of the library. They are also useful for testing your server configuration. They can all be found in the lib/cgi/example directory. Invoking `bjam` in the example directory should build all examples whereas invoking `bjam` in each sub-directory will build only the example contained therein.]
+   [There are some examples provided with the library in the `libs/cgi/example` directory. They are useful for testing your server configuration, which can be notoriously tricky. They can all be found in the lib/cgi/example directory. Invoking `bjam` in the example directory should build all examples whereas invoking `bjam` in each sub-directory will build only the example contained therein.]
   ]
 ]
 

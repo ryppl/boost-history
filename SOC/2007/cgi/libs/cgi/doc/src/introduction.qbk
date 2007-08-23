@@ -14,12 +14,12 @@ using namespace cgi;
 int main(int, char**)
 {
   request req;
-  reply rep;
+  response resp;
 
-  rep<< "Hello there, Universe. "
-     << "Oh wait, no, it's you " << req.meta_form("name")
-     << ", isn't it?!";
-  rep.send(req);
+  resp<< "Hello there, Universe. "
+      << "Oh wait, it's just you, " << req.form_("name")
+      << ", isn't it?!";
+  resp.send(req);
 }
 ``
 
@@ -37,7 +37,7 @@ If a program's purpose is to serve the wider world, it should be written with sc
 
 The __FastCGI__ and __SCGI__ protocols are essentially reworkings of CGI which remove this restriction. They offer other advantages too, the support of which - of widely varying quality and completeness ([-more [link __server_support__ here]]) - comes for most HTTP servers. These protocols add an extra layer to your CGI programs, as you now must manage the request queue.
 
-In return for the added complexity, your programs become complete servers, capable of handling arbitrary numbers of requests during each invocation (assuming they don't crash!). This gives you the freedom to keep database connections open between requests, or cache ready-parsed responses, for example. Processing of a client request can even be continued in the case of the client crashing - the reply can then be stored and given to them when they return - saving precious CPU cycles.
+In return for the added complexity, your programs become complete servers, capable of handling arbitrary numbers of requests during each invocation (assuming they don't crash!). This gives you the freedom to keep database connections open between requests, or cache ready-parsed responses, for example. Processing of a client request can even be continued in the case of the client crashing - the `response` can then be stored and given to them when they return - saving precious CPU cycles.
 
 It might sound like a handful but, fortunately, management of the request queue can be largely isolated from the handling of each request. That means that after you have set up a 'server' (ie. something that gathers requests), requests can be handled in the same way as they would be with a conventional CGI program.
 

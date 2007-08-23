@@ -11,6 +11,10 @@
 
 The protocols supported by this library are CGI (synchronous and asynchronous), FastCGI (aka. FCGI) and SCGI (aka. SimpleCGI).
 
+[note
+Synchronous and asynchronous CGI support are considered distinct within the library for now (*more*), so the latter is referred to explicitly as aCGI. SimpleCGI is generally shortened to SCGI while FastCGI is used verbatim.
+]
+
 Purely to illustrate what each protocol offers, consider this list:
 
 * CGI is for short programs that won't be run very often, or those that will be used by only a very small number of clients, such as admin 'scripts'. Here, having a long-running process might be wasteful.
@@ -20,10 +24,6 @@ Purely to illustrate what each protocol offers, consider this list:
 * FastCGI is especially targetted to programs that are likely to serve lots of clients. Asynchronous operations come 'for free' with FastCGI. On some platforms however - even 10 years after the specification was published [footnote See [@http://www.fastcgi.com/devkit/doc/fcgi-spec.html FastCGI 1.0], published 29 April 1996] - FastCGI support in many servers is sub-standard (see __server_support__).
 
 * SCGI is essential where server-side support for FastCGI is either buggy (as it is with Apache + mod_fastcgi: use mod_fcgid instead if possible) or missing. 
-
-[note
-Synchronous and asynchronous CGI support are considered distinct within the library for now (*more*), so the latter is referred to explicitly as aCGI. SimpleCGI is generally shortened to SCGI while FastCGI is used verbatim.
-]
 
 [section:comparison Feature Comparison]
 
@@ -47,14 +47,16 @@ The distinction between CGI and aCGI is that aCGI uses __asio__'s `io_service` t
 
     ['See also: __hello_world__]
 
-The first use of an `cgi::acgi_request` (or the shortcut `cgi::arequest`) shows the main difference:
+The two skeleton programs below illustrate the main differences between a `cgi::acgi::request` and a `cgi::cgi::request`:
 
 ``
 #include <cgi/cgi.hpp>
 
+using namespace cgi::cgi;
+
 int main()
 {
-    cgi::request req;
+    request req;
 
     // use the request here
 
@@ -64,20 +66,21 @@ int main()
 compares to:
 ``
 #include <cgi/acgi.hpp>
+#include <boost/ref.hpp>
 #include <boost/thread.hpp> // see __boost_thread__
+
+using namespace cgi::acgi;
 
 int main()
 {
     // a __Service__ is needed to handle asynchronous operations
-    cgi::cgi_service service;
+    service srv;
 
-    // possibly use an asynchronous acceptor here (see below)
-
-    // create a thread for async operations to be run in
-    boost::thread thread(boost::bind(&cgi::cgi_service::run, service));
+    // create a background thread for async operations to be run in
+    boost::thread thread(boost::bind(&service::run, boost::ref(srv)));
 
     // create a request from the cgi_service
-    cgi::arequest req(service);
+    request req(srv);
 
     // use the request here
     // ...
@@ -89,21 +92,15 @@ int main()
 }
 ``
 
-As is obvious, the main difference of CGI over aCGI is that a `cgi::request` (or the more explicit `cgi::cgi_request`) doesn't use a `cgi::io_service`, so CGI
-
-exists purely within the library and may become transparent in the future. In other words, both methods will work in the same way, with CGI acting as a shortcut to using aCGI.
-
 [endsect]
 
 [section:fcgi FastCGI]
 
 FastCGI is a binary protocol that works very differently to CGI ['internally] and has many advantages. In bullet-point form, FastCGI programs:
 
-* are servers in themselves: they can persist indefinitely and can - at least in principle - handle any number of simultaneous requests.
+* Are servers in themselves: they can persist indefinitely and can - at least in principle - handle any number of simultaneous requests. This can be used to great effect to all but eliminate program initialisation time, which usually prove to be a major bottleneck in short-run applications (such as AJAX scripts);
 
-* communicate with an HTTP server with TCP sockets __ref_pipe_support__. 
-
-One such advantage as allowing a single program handle an arbitrary number of requests, in any order, without having to stop and start between each.
+* Communicate with an HTTP server with TCP sockets __ref_pipe_support__. FastCGI daemons can run under different user id's to the server, have different access privileges or even run in remote locations.
 
 [h4 How it Works]
 

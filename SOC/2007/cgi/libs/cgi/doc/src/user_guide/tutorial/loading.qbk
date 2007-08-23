@@ -7,7 +7,7 @@
 
 [section:loading Loading Requests]
 
-After a request has been accepted, it must also be 'loaded'. Before being loaded the request is in an undefined state and in general it is unsafe to call any `meta_*` function. For CGI, the request's constructor calls load implicitly (this is optional behaviour [footnote]), in most other situations, one of the following functions are used:
+After a request has been accepted, it should also be 'loaded'. Before being loaded the request is in an undefined state and it is unsafe to access any data associated with the request - although you may still read/write with the request. For CGI, the request's constructor calls load implicitly (this is optional behaviour [footnote You may pass `false` to the request's constructor. Note that the constructor options will become more explicit in the future.]), in most other situations, one of the following functions are used:
 
 [table
   [[Function signature] [Purpose]]
@@ -30,7 +30,7 @@ After a request has been accepted, it must also be 'loaded'. Before being loaded
   ]
 ] [/table]
 
-What the call does is aquire the request environment data as necessary and parse the CGI __GET__ and `"HTTP_COOKIE"` variables. Also, if `parse_stdin == true` and the request method is POST, the CGI __POST__ data will be read and parsed.
+What the call does is acquire the request environment data as necessary and parse the CGI __GET__ and `"HTTP_COOKIE"` variables. Also, if `parse_stdin == true` and the request method is POST, the CGI __POST__ data will be read and parsed.
 
 [h5 CGI example]
 
@@ -39,8 +39,10 @@ What the call does is aquire the request environment data as necessary and parse
 
 int main()
 {
+  using namespace cgi::cgi;
+
   // Delay loading the request data
-  cgi::request req(false);
+  request req(false);
 
   // ...
 
@@ -64,22 +66,25 @@ int main()
 
 int main()
 {
-  // create a ProtocolService
-  cgi::scgi_service service;
+  using namespace cgi::scgi;
 
-  // create an acceptor
-  cgi::scgi_acceptor acceptor(service);
+  // Create a ProtocolService
+  service service;
 
-  // make an empty request
-  cgi::scgi_request req(service);
+  // Create an acceptor
+  acceptor acceptor(service);
+
+  // Make an empty request
+  request req(service);
 
   boost::system::error_code ec;
-  // accept a request
+  // Accept a request
   acceptor.accept(req, ec);
 
   if (!ec)
   {
-    // a request was accepted ok
+    // A request was accepted ok, now parse all variables, including POST data
+    req.load(true);
   }
 
   return 0;
@@ -88,7 +93,6 @@ int main()
 
 [h5 Asynchronous SCGI example]
 
-
 ``
 #include <boost/cgi/scgi.hpp>
 #include <boost/bind.hpp>
@@ -96,79 +100,83 @@ int main()
 #include <boost/system/error_code.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
+using namespace cgi::scgi;
 
-void sub_main(scgi_request::pointer req)
+void sub_main(request::pointer req)
 {
-  // handle the request in here, as you would expect to
+  // handle the request in here, as you would any type of CGI request
 }
 
-class scgi_server
-  : public boost::enable_shared_from_this
+class Server
+  : public ``[@http://www.boost.org/libs/smart_ptr/enable_shared_from_this.html `boost::enable_shared_from_this`]``
 {
 public:
-  scgi_server(scgi_service& service)
-    : service_(service)
-    , acceptor_(service)
+  Server(service& _srv)
+    : service_(_srv)
+    , acceptor_(_srv)
   {
     async_accept();
   }
 
   void async_accept()
   {
-    scgi_request::pointer new_request(scgi_request::create(service_));
+    request::pointer new_request(request::create(service_));
     acceptor_.async_accept(new_request
-                          , boost::bind(&scgi_server::handle_accept
+                          , boost::bind(&Server::handle_accept
                                        , shared_from_this()
                                        , new_request
                                        , boost::arg<1>));
   }
 
-  void handle_accept(scgi_request::pointer request, boost::system::error_code& ec)
+  void handle_accept(request::pointer request, boost::system::error_code& ec)
   {
     if (!ec)
     {
       // request was accepted ok; load it asynchronously (parsing POST data)
-      request->async_load(true, boost::bind(&scgi_server::handle_load
+      request->async_load(true, boost::bind(&Server::handle_load
                                            , shared_from_this()
                                            , request
                                            , boost::arg<1>));
     }
   }
 
-  void handle_load(scgi_request::pointer request, boost::system::error_code& ec)
+  void handle_load(request::pointer request, boost::system::error_code& ec)
   {
     if (!ec)
     {
-      // the request loaded ok; handle it asynchronously and accept another request
+      // The request loaded ok;
+      // handle it asynchronously and accept another request.
       service_.post(boost::bind(&sub_main, request));
 
       async_accept();
     }
   }
 private:
-  scgi_service& service_;
-  scgi_acceptor acceptor_;
+  service& service_;
+  acceptor acceptor_;
 };
 
 int main()
 {
-  // create a ProtocolService
-  cgi::scgi_service service;
+  // Create a ProtocolService
+  service _service;
 
-  // create a server to accept and load requests
-  scgi_server server(service);
+  // Create a server to accept and load requests
+  server _server(_service);
 
-  // create 5 background threads to run async operations *and* calls to sub_main
-  // that are invoked through scgi_service::post(). Essentially this means the
-  // program can handle at least 5 simultaneous requests: if asynchronous reads/
-  // writes are used then more requests may be being handled at any one time
+  // Create 5 background threads to run async operations *and* calls to
+  // `sub_main` that are invoked through `service::post()`. Essentially this
+  // means the program can handle at least 5 simultaneous requests: if
+  // asynchronous reads/writes are used then more requests may be being handled
+  // at any one time.
   boost::thread_group threads;
   for(int i=5; i; i--)
   {
-    threads.create_thread(boost::bind(&scgi_service::run, service));
+    threads.create_thread(boost::bind(&service::run, _service));
   }
 
-  // make sure the program doesn't return until all threads are finished working
+  // Make sure the program doesn't return until all threads are finished
+  // working.
   threads.join_all();
 
   return 0;
