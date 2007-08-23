@@ -18,12 +18,20 @@
 #include "gateway_service/acgi_gateway_service.hpp"
 
 // Include headers common to all protocols
-#include "detail/common_headers.hpp"
+#include "boost/cgi/detail/common_headers.hpp"
 
 namespace cgi {
 #ifndef CGI_NO_IMPLICIT_TYPEDEFS
-  typedef acgi_request request;
+  //typedef acgi_request request;
 #endif
+ namespace acgi {
+
+   typedef acgi_request request;
+   typedef acgi_service service;
+   //typedef acgi_acceptor acceptor;
+   using namespace cgi;
+
+ } // namespace acgi
 } // namespace cgi
 
 #endif // CGI_ACGI_HPP_INCLUDED__

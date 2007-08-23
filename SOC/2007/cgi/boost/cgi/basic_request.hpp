@@ -79,6 +79,7 @@ namespace cgi {
     typedef typename service_type::protocol_type         protocol_type;
     typedef ProtocolService                              protocol_service_type;
     typedef boost::shared_ptr<type>                      pointer;
+    typedef typename RequestService::implementation_type implementation_type;
 
 
     // Throws
@@ -207,6 +208,12 @@ namespace cgi {
       return this->service.close(this->impl, http::internal_server_error);
     }
 
+    /// Abort a request
+    void abort()
+    {
+      this->service.set_status(this->impl, aborted);
+    }
+
     /// Set the output for the request
     /**
      * Not Implemented Yet ******************
@@ -276,7 +283,7 @@ namespace cgi {
     }
 
     /// Get a `cgi::map&` corresponding to all of the GET variables
-    cgi::map& meta_get()
+    cgi::map& get_()
     {
       return this->service.meta_get(this->impl);
     }
@@ -287,7 +294,7 @@ namespace cgi {
      * fail with `cgi::error::request_aborted` if the request has been aborted
      * by the client.
      */
-    std::string meta_get(const std::string& name)
+    std::string get_(const std::string& name)
     {
       boost::system::error_code ec;
       std::string ret = this->service.meta_get(this->impl, name, ec);
@@ -301,13 +308,13 @@ namespace cgi {
      * fail with `ec == cgi::error::request_aborted` if the request has been
      * aborted by the client.
      */
-    std::string meta_get(const std::string& name, boost::system::error_code& ec)
+    std::string get_(const std::string& name, boost::system::error_code& ec)
     {
       return this->service.meta_get(this->impl, name, ec);
     }
 
     /// Get a `cgi::map&` corresponding to all of the POST variables
-    cgi::map& meta_post()
+    cgi::map& post_()
     {
       return this->service.meta_post(this->impl);
     }
@@ -322,7 +329,7 @@ namespace cgi {
      * fail with `cgi::error::request_aborted` if the request has been aborted
      * by the client.
      */
-    std::string meta_post(const std::string& name, bool greedy = true)
+    std::string post_(const std::string& name, bool greedy = true)
     {
       boost::system::error_code ec;
       std::string ret = this->service.meta_post(this->impl, name, ec, greedy);
@@ -335,14 +342,14 @@ namespace cgi {
      * fail with `ec == cgi::error::request_aborted` if the request has been
      * aborted by the client.
      */
-    std::string meta_post(const std::string& name, boost::system::error_code& ec
+    std::string post_(const std::string& name, boost::system::error_code& ec
                           , bool greedy = true)
     {
       return this->service.meta_post(this->impl, name, ec, greedy);
     }
 
     /// Get a `cgi::map&` corresponding to all of the form variables
-    cgi::map& meta_form()
+    cgi::map& form_()
     {
       return this->service.meta_form(this->impl);
     }
@@ -356,10 +363,10 @@ namespace cgi {
      * fail with `cgi::error::request_aborted` if the request has been aborted
      * by the client.
      */
-    std::string meta_form(const std::string& name, bool greedy = true)
+    std::string form_(const std::string& name, bool greedy = true)
     {
       boost::system::error_code ec;
-      std::string ret = meta_form(name, ec, greedy);
+      std::string ret = form_(name, ec, greedy);
       detail::throw_error(ec);
       return ret;
     }
@@ -369,7 +376,7 @@ namespace cgi {
      * fail with `ec == cgi::error::request_aborted` if the request has been
      * aborted by the client.
      */
-    std::string meta_form(const std::string& name, boost::system::error_code& ec
+    std::string form_(const std::string& name, boost::system::error_code& ec
                          , bool greedy = true)
     {
       std::string rm(request_method());
@@ -383,7 +390,7 @@ namespace cgi {
     }
 
     /// Get a `cgi::map&` corresponding to all of the HTTP_COOKIE variables
-    cgi::map& meta_cookie()
+    cgi::map& cookie_()
     {
       return this->service.meta_cookie(this->impl);
     }
@@ -394,7 +401,7 @@ namespace cgi {
      * fail with `cgi::error::request_aborted` if the request has been aborted
      * by the client.
      */
-    std::string cookie(const std::string& name)
+    std::string cookie_(const std::string& name)
     {
       boost::system::error_code ec;
       std::string ret = this->service.cookie(this->impl, name, ec);
@@ -408,9 +415,15 @@ namespace cgi {
      * fail with `ec == cgi::error::request_aborted` if the request has been
      * aborted by the client.
      */
-    std::string cookie(const std::string& name, boost::system::error_code& ec)
+    std::string cookie_(const std::string& name, boost::system::error_code& ec)
     {
       return this->service.cookie(this->impl, name, ec);
+    }
+
+    /// Get a `cgi::map&` corresponding to all of the environment variables
+    cgi::map& env_()
+    {
+      return this->service.meta_env(this->impl);
     }
 
     /// Find the environment meta-variable matching name
@@ -419,7 +432,7 @@ namespace cgi {
      * fail with `cgi::error::request_aborted` if the request has been aborted
      * by the client.
      */
-    std::string meta_env(const std::string& name)
+    std::string env_(const std::string& name)
     {
       boost::system::error_code ec;
       std::string ret = this->service.meta_env(this->impl, name, ec);
@@ -433,7 +446,7 @@ namespace cgi {
      * fail with `ec == cgi::error::request_aborted` if the request has been
      * aborted by the client.
      */
-    std::string meta_env(const std::string& name, boost::system::error_code& ec)
+    std::string env_(const std::string& name, boost::system::error_code& ec)
     {
       return this->service.meta_env(this->impl, name, ec);
     }
@@ -452,93 +465,93 @@ namespace cgi {
      * provide a meta_var_all() function which is greedy; the
      * ugly/long name there to discourage use.
      */
-    std::string meta_var(const std::string& name, bool greedy = false)
+    std::string var_(const std::string& name, bool greedy = false)
     {
       boost::system::error_code ec;
-      std::string ret = meta_var(name, ec, greedy);
+      std::string ret = var_(name, ec, greedy);
       return this->service.meta_var(this->impl, name, greedy);
-      std::string request_method( meta_env("REQUEST_METHOD") );
+      std::string request_method( env_("REQUEST_METHOD") );
 
       std::string tmp;
 
       // If it's not a POST request search meta_get first (to save time)
       if (request_method.empty() || request_method == "GET")
       {
-        tmp = meta_get(name);
+        tmp = get_(name);
         if (!tmp.empty())
           return tmp;
       }
 
-      tmp = cookie(name);
+      tmp = cookie_(name);
       if (!tmp.empty())
 	      return tmp;
 
-      tmp = meta_env(name);
+      tmp = env_(name);
       if (!tmp.empty())
 	      return tmp;
 
       if (!request_method.empty() && request_method == "POST")
       {
-        tmp = meta_post(name);
+        tmp = post_(name);
         if (!tmp.empty())
           return tmp;
       }
 
-      tmp = meta_get(name);
+      tmp = get_(name);
       return tmp.empty() ? "" : tmp;
     }
 
     // Some helper functions for the basic CGI 1.1 meta-variables
     std::string auth_type()
-    { return meta_env("AUTH_TYPE"); }
+    { return env_("AUTH_TYPE"); }
 
     std::string content_length()
-    { return meta_env("CONTENT_LENGTH"); }
+    { return env_("CONTENT_LENGTH"); }
 
     std::string content_type()
-    { return meta_env("CONTENT_TYPE"); }
+    { return env_("CONTENT_TYPE"); }
 
     std::string gateway_interface()
-    { return meta_env("GATEWAY_INTERFACE"); }
+    { return env_("GATEWAY_INTERFACE"); }
 
     std::string path_info()
-    { return meta_env("PATH_INFO"); }
+    { return env_("PATH_INFO"); }
 
     std::string path_translated()
-    { return meta_env("PATH_TRANSLATED"); }
+    { return env_("PATH_TRANSLATED"); }
 
     std::string query_string()
-    { return meta_env("QUERY_STRING"); }
+    { return env_("QUERY_STRING"); }
 
     std::string remote_addr()
-    { return meta_env("REMOTE_ADDR"); }
+    { return env_("REMOTE_ADDR"); }
 
     std::string remote_host()
-    { return meta_env("REMOTE_HOST"); }
+    { return env_("REMOTE_HOST"); }
 
     std::string remote_ident()
-    { return meta_env("REMOTE_IDENT"); }
+    { return env_("REMOTE_IDENT"); }
 
     std::string remote_user()
-    { return meta_env("REMOTE_USER"); }
+    { return env_("REMOTE_USER"); }
 
     std::string request_method()
-    { return meta_env("REQUEST_METHOD"); }
+    { return env_("REQUEST_METHOD"); }
 
     std::string script_name()
-    { return meta_env("SCRIPT_NAME"); }
+    { return env_("SCRIPT_NAME"); }
 
     std::string server_name()
-    { return meta_env("SERVER_NAME"); }
+    { return env_("SERVER_NAME"); }
 
     std::string server_port()
-    { return meta_env("SERVER_PORT"); }
+    { return env_("SERVER_PORT"); }
 
     std::string server_protocol()
-    { return meta_env("SERVER_PROTOCOL"); }
+    { return env_("SERVER_PROTOCOL"); }
 
     std::string server_software()
-    { return meta_env("SERVER_SOFTWARE"); }
+    { return env_("SERVER_SOFTWARE"); }
 
 
     /// The role that the request is playing
@@ -574,6 +587,13 @@ namespace cgi {
     void set_status(http::status_code status)
     {
       this->service.set_status(this->impl, status);
+    }
+
+    /// Get the client connection associated with the request
+    typename implementation_type::connection_type&
+    client()
+    {
+      return this->service.client(this->impl);
     }
 
     /// Set a user cookie

@@ -80,6 +80,7 @@ namespace cgi {
       : buffer_(new cgi::streambuf())
       , ostream_(buffer_.get())
       , http_status_(sc)
+      , headers_sent_(false)
     {
     }
 
@@ -162,6 +163,11 @@ namespace cgi {
     template<typename CommonGatewayRequest>
     void flush(CommonGatewayRequest& req)
     {
+      if (!headers_sent_)
+      {
+        ostream_<< "Content-type: text/plain\r\n\r\n";
+        headers_sent_ = true;
+      }
       cgi::write(req, headers_);
       cgi::write(req, rdbuf()->data());
       // the above function will throw on an error
@@ -177,6 +183,11 @@ namespace cgi {
     boost::system::error_code& flush(CommonGatewayRequest& req
                                     , boost::system::error_code& ec)
     {
+      if (!headers_sent_)
+      {
+        ostream_<< "Content-type: text/plain\r\n\r\n";
+        headers_sent_ = true;
+      }
       if(!cgi::write(req, rdbuf()->data(), ec))
         clear();
       return ec;
@@ -211,6 +222,11 @@ namespace cgi {
     template<typename CommonGatewayRequest, typename Handler>
     void async_flush(CommonGatewayRequest& req, Handler handler)
     {
+      if (!headers_sent_)
+      {
+        ostream_<< "Content-type: text/plain\r\n\r\n";
+        headers_sent_ = true;
+      }
       cgi::async_write(req, rdbuf()->data()
                       , flush_handler<Handler>
                           (*this, handler, boost::arg<1>()));
@@ -256,7 +272,12 @@ namespace cgi {
     template<typename CommonGatewayRequest>
     void send(CommonGatewayRequest& req)
     {
-      cgi::write(req, rdbuf()->data());
+      if (!headers_sent_)
+      {
+        ostream_<< "Content-type: text/plain\r\n\r\n";
+        headers_sent_ = true;
+      }
+      cgi::write(req.client(), rdbuf()->data());
       req.set_status(http_status_);
     }
 
@@ -269,7 +290,12 @@ namespace cgi {
     boost::system::error_code& send(CommonGatewayRequest& req
                                    , boost::system::error_code& ec)
     {
-      cgi::write(req, rdbuf()->data(), ec);
+      if (!headers_sent_)
+      {
+        ostream_<< "Content-type: text/plain\r\n\r\n";
+        headers_sent_ = true;
+      }
+      cgi::write(req.client(), rdbuf()->data(), ec);
       req.set_status(http_status_);
       return ec;
     }
@@ -282,6 +308,11 @@ namespace cgi {
     void async_send(CommonGatewayRequest& req, Handler handler)
     {
       req.set_status(http_status_);
+      if (!headers_sent_)
+      {
+        ostream_<< "Content-type: text/plain\r\n\r\n";
+        headers_sent_ = true;
+      }
       cgi::async_write(req, rdbuf()->data(), handler);
     }
 
@@ -291,7 +322,7 @@ namespace cgi {
       return static_cast<cgi::streambuf*>(ostream_.rdbuf());
     }
 
-    void set_status(http::status_code& num)
+    void set_status(const http::status_code& num)
     {
       http_status_ = num;
     }
@@ -306,6 +337,7 @@ namespace cgi {
     boost::shared_ptr<cgi::streambuf> buffer_;
     std::ostream ostream_;
     http::status_code http_status_;
+    bool headers_sent_;
 
     template<typename T>
     friend request_ostream& operator<<(request_ostream&, const T&);

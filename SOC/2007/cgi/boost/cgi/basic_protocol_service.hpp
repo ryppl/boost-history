@@ -97,8 +97,8 @@ namespace cgi {
     void reset()
     {
       request_queue_.clear();
-      std::for_each(request_set_.begin(), request_set_.end()
-                    , boost::bind(&request_type::abort, boost::ref(*_1)));
+      //std::for_each(request_set_.begin(), request_set_.end()
+      //              , boost::bind(&request_type::abort, boost::arg<1>()));
       request_set_.clear();
       ios_provider_.reset();
     }
