@@ -17,7 +17,7 @@ namespace boost
     struct vertex_index_graph_archetype
         : public property_graph_archetype<GraphArchetype, vertex_index_t, unsigned>
     {
-        typedef unsigned vertex_index_type;
+        typedef unsigned int vertex_index_type;
         typedef property_graph_archetype<GraphArchetype, vertex_index_t, vertex_index_type> BaseType;
         typedef typename BaseType::vertex_property_type vertex_property_type;
         typedef void edge_property_type;
@@ -34,7 +34,7 @@ namespace boost
     struct edge_index_graph_archetype
         : public property_graph_archetype<GraphArchetype, edge_index_t, unsigned>
     {
-        typedef unsigned edge_index_type;
+        typedef unsigned int edge_index_type;
         typedef property_graph_archetype<GraphArchetype, edge_index_t, edge_index_type> BaseType;
         typedef void vertex_property_type;
         typedef typename BaseType::edge_property_type edge_property_type;

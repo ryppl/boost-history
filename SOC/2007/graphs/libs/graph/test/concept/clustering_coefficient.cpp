@@ -15,26 +15,29 @@ using namespace boost;
 int
 main(int argc, char *argv[])
 {
+    typedef graph_archetype<
+            undirected_tag,
+            allow_parallel_edge_tag
+        > Graph;
     {
-        typedef vertex_list_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag
-            > VertexListGraph;
-        typedef incidence_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag,
-                VertexListGraph
-            > IncidenceGraph;
-        typedef adjacency_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag,
-                IncidenceGraph
-            > AdjacencyGraph;
-        typedef adjacency_matrix_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag,
-                AdjacencyGraph
-            > AdjacencyMatrix;
+        typedef vertex_list_graph_archetype<Graph> VertexListGraph;
+        typedef incidence_graph_archetype<VertexListGraph> IncidenceGraph;
+        typedef adjacency_graph_archetype<IncidenceGraph> AdjacencyGraph;
+        typedef adjacency_matrix_archetype<AdjacencyGraph> AdjacencyMatrix;
+        typedef graph_traits<AdjacencyMatrix>::vertex_descriptor Vertex;
+        typedef writable_property_map_archetype<Vertex, float> ClusteringMap;
+
+        AdjacencyMatrix& g = static_object<AdjacencyMatrix>::get();
+        Vertex v = static_object<Vertex>::get();
+        ClusteringMap cm;
+
+        all_clustering_coefficients(g, cm);
+    }
+
+    {
+        typedef incidence_graph_archetype<Graph> IncidenceGraph;
+        typedef adjacency_graph_archetype<IncidenceGraph> AdjacencyGraph;
+        typedef adjacency_matrix_archetype<AdjacencyGraph> AdjacencyMatrix;
         typedef graph_traits<AdjacencyMatrix>::vertex_descriptor Vertex;
         typedef writable_property_map_archetype<Vertex, float> ClusteringMap;
 
@@ -45,14 +48,10 @@ main(int argc, char *argv[])
         num_paths_through_vertex(g, v);
         num_triangles_on_vertex(g, v);
         clustering_coefficient(g, v);
-        all_clustering_coefficients(g, cm);
     }
 
     {
-        typedef vertex_list_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag
-            > VertexListGraph;
+        typedef vertex_list_graph_archetype<Graph> VertexListGraph;
         typedef graph_traits<VertexListGraph>::vertex_descriptor Vertex;
         typedef readable_property_map_archetype<Vertex, float> ClusteringMap;
 

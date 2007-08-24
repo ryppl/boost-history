@@ -71,6 +71,12 @@ namespace boost
         descriptor_archetype(detail::dummy_constructor) { }
     };
 
+    // NOTE: working with this stuff is kind of strange because the ordering
+    // of template parameters changes from the graph archetype to its refinements.
+    // Essentially, aggregate types derive their directionality and parallelism
+    // through the graph archetype using default parameters. However, the graph
+    // archetype requires those to be made explicit.
+
     //
     // Graph
     //
@@ -93,14 +99,14 @@ namespace boost
     //
     // IncidenceGraph
     //
-    template <typename Directed,
-              typename Parallel,
-              typename Base = detail::null_graph_archetype>
+    template <typename Base = detail::null_graph_archetype,
+              typename Directed = typename Base::directed_category,
+              typename Parallel = typename Base::edge_parallel_category>
     struct incidence_graph_archetype
-        : public graph_archetype<Directed, Parallel, Base>
+        : public graph_archetype<Directed,Parallel,Base>
     {
         typedef graph_archetype<Directed,Parallel,Base> BaseType;
-        typedef unsigned degree_size_type;
+        typedef unsigned int degree_size_type;
         typedef input_iterator_archetype<typename BaseType::edge_descriptor> out_edge_iterator;
         struct traversal_category : incidence_graph_tag, Base::traversal_category { };
     };
@@ -142,13 +148,15 @@ namespace boost
     //
     // BidirectionalGraph
     //
-    template <typename Directed,
-              typename Parallel,
-              typename Base = detail::null_graph_archetype>
+    // Note that this derives from incidience graph rather than just graph.
+    // This is how concepts get refined.
+    template <typename Base = detail::null_graph_archetype,
+              typename Directed = typename Base::directed_category,
+              typename Parallel = typename Base::edge_parallel_category>
     struct bidirectional_graph_archetype
-        : public incidence_graph_archetype<Directed, Parallel, Base>
+        : public incidence_graph_archetype<Base,Directed,Parallel>
     {
-        typedef incidence_graph_archetype<Directed,Parallel,Base> BaseType;
+        typedef incidence_graph_archetype<Base,Directed,Parallel> BaseType;
         typedef input_iterator_archetype<typename BaseType::edge_descriptor> in_edge_iterator;
         struct traversal_category : bidirectional_graph_tag, Base::traversal_category { };
     };
@@ -172,11 +180,11 @@ namespace boost
     //
     // AdjacencyGraph
     //
-    template <typename Directed,
-              typename Parallel,
-              typename Base = detail::null_graph_archetype>
+    template <typename Base = detail::null_graph_archetype,
+              typename Directed = typename Base::directed_category,
+              typename Parallel = typename Base::edge_parallel_category>
     struct adjacency_graph_archetype
-        : public graph_archetype<Directed, Parallel, Base>
+        : public graph_archetype<Directed,Parallel,Base>
     {
         typedef graph_archetype<Directed,Parallel,Base> BaseType;
         typedef input_iterator_archetype<typename BaseType::vertex_descriptor> adjacency_iterator;
@@ -196,14 +204,14 @@ namespace boost
     //
     // VertexListGraph
     //
-    template <typename Directed,
-              typename Parallel,
-              typename Base = detail::null_graph_archetype >
+    template <typename Base = detail::null_graph_archetype,
+              typename Directed = typename Base::directed_category,
+              typename Parallel = typename Base::edge_parallel_category>
     struct vertex_list_graph_archetype
-        : public graph_archetype<Directed, Parallel, Base>
+        : public graph_archetype<Directed,Parallel,Base>
     {
         typedef graph_archetype<Directed,Parallel,Base> BaseType;
-        typedef unsigned vertices_size_type;
+        typedef unsigned int vertices_size_type;
         typedef input_iterator_archetype<typename BaseType::vertex_descriptor> vertex_iterator;
         struct traversal_category : public vertex_list_graph_tag, Base::traversal_category { };
     };
@@ -225,14 +233,14 @@ namespace boost
     //
     // EdgeListGraph
     //
-    template <typename Directed,
-              typename Parallel,
-              typename Base = detail::null_graph_archetype >
+    template <typename Base = detail::null_graph_archetype,
+              typename Directed = typename Base::directed_category,
+              typename Parallel = typename Base::edge_parallel_category>
     struct edge_list_graph_archetype
-        : public graph_archetype<Directed, Parallel, Base>
+        : public graph_archetype<Directed,Parallel,Base>
     {
         typedef graph_archetype<Directed,Parallel,Base> BaseType;
-        typedef unsigned edges_size_type;
+        typedef unsigned int edges_size_type;
         typedef input_iterator_archetype<typename BaseType::edge_descriptor> edge_iterator;
         struct traversal_category : public edge_list_graph_tag, Base::traversal_category { };
     };
@@ -255,11 +263,11 @@ namespace boost
     //
     // AdjacencyMatrix
     //
-    template <typename Directed,
-              typename Parallel,
-              typename Base = detail::null_graph_archetype >
+    template <typename Base = detail::null_graph_archetype,
+              typename Directed = typename Base::directed_category,
+              typename Parallel = typename Base::edge_parallel_category>
     struct adjacency_matrix_archetype
-        : public graph_archetype<Directed, Parallel, Base>
+        : public graph_archetype<Directed,Parallel,Base>
     {
         // apparently, this type doesn't contribuet a graph tag to the
         // traversal category. Fine by me...
@@ -276,7 +284,7 @@ namespace boost
     }
 
     //
-    // ProprertyGraph
+    // PropertyGraph
     //
     // I don't know how this works for bundled properties. I might need to
     // build a separate archetype for building bundled properties - and it
@@ -361,5 +369,4 @@ namespace boost
     }
 }
 
-
-#endif // BOOST_GRAPH_ARCHETYPES_HPP
+#endif

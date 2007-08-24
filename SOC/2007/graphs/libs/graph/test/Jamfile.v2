@@ -7,6 +7,8 @@ project
         <include>$BOOST_ROOT
     ;
 
+build-project concept ;
+
 test-suite graph_test :
     [ run constant_property_map.cpp ]
     [ run degree_centrality.cpp ]
@@ -15,24 +17,6 @@ test-suite graph_test :
     [ run eccentricity.cpp ]
     [ run tiernan_all_cycles.cpp ]
     [ run bron_kerbosch_all_cliques.cpp ]
+    [ run clustering_coefficient.cpp ]
     ;
-
-# exe properties : properties.cpp ;
-#
-# exe mutable : mutable.cpp ;
-#
-# exe index : index.cpp ;
-#
-# exe range : range.cpp ;
-#
-# exe misc : misc.cpp ;
-#
-# exe components : components.cpp ;
-#
-exe clustering_coefficient : clustering_coefficient.cpp ;
-#
-# exe generate : generate.cpp ;
-#
-# exe exterior : exterior.cpp ;
-
 

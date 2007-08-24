@@ -15,19 +15,14 @@ using namespace boost;
 int
 main(int argc, char *argv[])
 {
+    typedef graph_archetype<
+            undirected_tag,
+            allow_parallel_edge_tag
+        > Graph;
     {
-        typedef incidence_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag
-            > IncidenceGraph;
-        typedef vertex_list_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag,
-                IncidenceGraph
-            > VertexListGraph;
-        typedef vertex_index_graph_archetype<
-                VertexListGraph
-            > VertexIndexGraph;
+        typedef incidence_graph_archetype<Graph> IncidenceGraph;
+        typedef vertex_list_graph_archetype<IncidenceGraph> VertexListGraph;
+        typedef vertex_index_graph_archetype<VertexListGraph> VertexIndexGraph;
         typedef cycle_visitor_archetype CycleVisitor;
 
         VertexIndexGraph& g = static_object<VertexIndexGraph>::get();

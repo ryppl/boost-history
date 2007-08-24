@@ -26,6 +26,11 @@ bool is_vertex_list(const vertex_list_graph_tag&)
 bool is_edge_list(const edge_list_graph_tag&)
 { return true; }
 
+// NOTE: The rule for instantiating archetypes is as follows: Always start
+// by instantiating the graph archetype with definite directionality and
+// edge parallelism. Any other archetypes simply compose that. See below for
+// examples.
+
 int
 main(int argc, char *argv[])
 {
@@ -46,10 +51,11 @@ main(int argc, char *argv[])
 
     // an incidence graph allows access to the out-edges of a vertex
     {
-        typedef incidence_graph_archetype<
+        typedef graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > IncidenceGraph;
+            > Graph;
+        typedef incidence_graph_archetype<Graph> IncidenceGraph;
         typedef IncidenceGraph::vertex_descriptor Vertex;
         typedef IncidenceGraph::edge_descriptor Edge;
         typedef IncidenceGraph::directed_category Directed;
@@ -70,10 +76,11 @@ main(int argc, char *argv[])
 
     // bidirectional graphs provide accesst to both the out and in edges
     {
-        typedef bidirectional_graph_archetype<
+        typedef graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > BidirectionalGraph;
+            > Graph;
+        typedef bidirectional_graph_archetype<Graph> BidirectionalGraph;
         typedef BidirectionalGraph::vertex_descriptor Vertex;
         typedef BidirectionalGraph::edge_descriptor Edge;
         typedef BidirectionalGraph::directed_category Directed;
@@ -99,10 +106,11 @@ main(int argc, char *argv[])
     // This instantiates the non-compound adjacency list archetype
     // It shouldn't be implementing any of the other graph concepts
     {
-        typedef adjacency_graph_archetype<
+        typedef graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > AdjacencyGraph;
+            > Graph;
+        typedef adjacency_graph_archetype<Graph> AdjacencyGraph;
         typedef AdjacencyGraph::vertex_descriptor Vertex;
         typedef AdjacencyGraph::edge_descriptor Edge;
         typedef AdjacencyGraph::directed_category Directed;
@@ -119,15 +127,12 @@ main(int argc, char *argv[])
     // Make a bidirectional adjacency list (this is like part of a
     // bidirected graph).
     {
-        typedef bidirectional_graph_archetype<
+        typedef graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > BidirectionalGraph;
-        typedef adjacency_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag,
-                BidirectionalGraph
-            > AdjacencyGraph;
+            > Graph;
+        typedef bidirectional_graph_archetype<Graph> BidirectionalGraph;
+        typedef adjacency_graph_archetype<BidirectionalGraph> AdjacencyGraph;
         typedef AdjacencyGraph::traversal_category Traversal;
         typedef AdjacencyGraph::vertex_descriptor Vertex;
         typedef AdjacencyGraph::edge_descriptor Edge;
@@ -149,11 +154,12 @@ main(int argc, char *argv[])
     }
 
     // test a solo vertex list graph
-    {
-        typedef vertex_list_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag
-            > VertexListGraph;
+   {
+       typedef graph_archetype<
+               undirected_tag,
+               allow_parallel_edge_tag
+            > Graph;
+        typedef vertex_list_graph_archetype<Graph> VertexListGraph;
         typedef VertexListGraph::vertex_descriptor Vertex;
         typedef VertexListGraph::edge_descriptor Edge;
         typedef VertexListGraph::directed_category Directed;
@@ -171,15 +177,12 @@ main(int argc, char *argv[])
     // test an incident vertex list graph (common requirements for a
     // number of measures).
     {
-        typedef incidence_graph_archetype<
+        typedef graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > IncidenceGraph;
-        typedef vertex_list_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag,
-                IncidenceGraph
-            > VertexListGraph;
+            > Graph;
+        typedef incidence_graph_archetype<Graph> IncidenceGraph;
+        typedef vertex_list_graph_archetype<IncidenceGraph> VertexListGraph;
         typedef VertexListGraph::vertex_descriptor Vertex;
         typedef VertexListGraph::edge_descriptor Edge;
         typedef VertexListGraph::directed_category Directed;
@@ -203,10 +206,11 @@ main(int argc, char *argv[])
 
     // test a solo edge list graph
     {
-        typedef edge_list_graph_archetype<
+        typedef graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > EdgeListGraph;
+            > Graph;
+        typedef edge_list_graph_archetype<Graph> EdgeListGraph;
         typedef EdgeListGraph::vertex_descriptor Vertex;
         typedef EdgeListGraph::edge_descriptor Edge;
         typedef EdgeListGraph::directed_category Directed;
@@ -223,20 +227,13 @@ main(int argc, char *argv[])
 
     // test a bidirected, vertex/edge list graph
     {
-        typedef bidirectional_graph_archetype<
+        typedef graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > BidirectionalGraph;
-        typedef edge_list_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag,
-                BidirectionalGraph
-            > EdgeListGraph;
-        typedef vertex_list_graph_archetype<
-                undirected_tag,
-                allow_parallel_edge_tag,
-                EdgeListGraph
-            > VertexListGraph;
+            > Graph;
+        typedef bidirectional_graph_archetype<Graph> BidirectionalGraph;
+        typedef edge_list_graph_archetype<BidirectionalGraph> EdgeListGraph;
+        typedef vertex_list_graph_archetype<EdgeListGraph> VertexListGraph;
         typedef VertexListGraph::vertex_descriptor Vertex;
         typedef VertexListGraph::edge_descriptor Edge;
         typedef VertexListGraph::directed_category Directed;
@@ -266,10 +263,11 @@ main(int argc, char *argv[])
 
     // test a mutable property graph
     {
-        typedef bidirectional_graph_archetype <
+        typedef graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > BidirectionalGraph;
+            > Graph;
+        typedef bidirectional_graph_archetype <Graph> BidirectionalGraph;
         typedef property_graph_archetype <
                 BidirectionalGraph,
                 vertex_index_t,     // the property type
@@ -286,10 +284,11 @@ main(int argc, char *argv[])
 
     // test a mutable property graph
     {
-        typedef bidirectional_graph_archetype <
+        typedef graph_archetype<
                 undirected_tag,
                 allow_parallel_edge_tag
-            > BidirectionalGraph;
+            > Graph;
+        typedef bidirectional_graph_archetype <Graph> BidirectionalGraph;
         typedef property_graph_archetype <
                 BidirectionalGraph,
                 vertex_index_t,     // the property type
@@ -312,9 +311,7 @@ main(int argc, char *argv[])
                 undirected_tag,
                 allow_parallel_edge_tag
             > Graph;
-        typedef vertex_index_graph_archetype<
-                Graph
-            > VertexIndexGraph;
+        typedef vertex_index_graph_archetype<Graph> VertexIndexGraph;
         typedef graph_traits<VertexIndexGraph>::vertex_descriptor Vertex;
         typedef VertexIndexGraph::vertex_index_type Index;
         typedef property_map<VertexIndexGraph, vertex_index_t>::type IndexMap;
@@ -333,9 +330,7 @@ main(int argc, char *argv[])
                 undirected_tag,
                 allow_parallel_edge_tag
             > Graph;
-        typedef edge_index_graph_archetype<
-                Graph
-            > EdgeIndexGraph;
+        typedef edge_index_graph_archetype<Graph> EdgeIndexGraph;
         typedef graph_traits<EdgeIndexGraph>::vertex_descriptor Vertex;
         typedef EdgeIndexGraph::edge_index_type Index;
         typedef property_map<EdgeIndexGraph, edge_index_t>::type IndexMap;
