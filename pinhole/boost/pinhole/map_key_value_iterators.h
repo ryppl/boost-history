@@ -15,7 +15,7 @@
 #include <boost/iterator.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/iterator_categories.hpp>
-
+#include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/static_assert.hpp>
 #if defined(BOOST_MSVC)
