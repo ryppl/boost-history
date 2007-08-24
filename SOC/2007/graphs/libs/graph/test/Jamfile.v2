@@ -1,0 +1,14 @@
+
+project
+    : requirements
+        <include>../../../
+        <include>$BOOST_ROOT
+    ;
+
+# Tests are explicitly separated into either runtime (unit) tests
+# or compile-time (concept and constraint) tests. This is just an
+# organizational decision since types and algorithms are subject
+# to both types of tests.
+
+build-project runtime ;
+build-project compile ;
