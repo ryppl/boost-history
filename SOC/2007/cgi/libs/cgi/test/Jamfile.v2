@@ -1,29 +1,13 @@
-import os ;
+# 'Do' all relevant tests.
 
-local BOOST_CGI_ROOT = [ os.environ BOOST_CGI_ROOT ] ;
-
-import testing ;
-
-test-suite cgi_test_suite
-  :
-#    [ compile compile/stdio_connection.cpp       ]
-#    [ compile compile/async_stdio_connection.cpp ]
-#    [ compile compile/tcp_connection.cpp         ]
-#    [ compile compile/cgi_service.cpp            ]
-#   [ compile compile/fcgi_service.cpp           ]
-#    [ compile compile/is_async_test.cpp          ]
-    [ compile compile/cgi_request.cpp            ]
-#    [ compile compile/acgi_request.cpp           ]
-
-#    [ compile compile/reply.cpp                  ]
-
-#    [ compile compile/cgi_header_check.cpp       ]
-
-#   [ run run/stdio_connection.cpp               ]
-#   [ run run/cgi_request.cpp                    ]
-  :
-    <include>$(BOOST_ROOT)
-#    <include>$(BOOST_CGI_ROOT)
-    <include>/usr/local/src/cgi/svn.boost.org/
+project
+  : requirements
+      <include>$(BOOST_ROOT)
+      <include>../../../
+  : build-dir
+      ../../../bin.v2
   ;
 
+build-project compile ;
+build-project run ;
+build-project compile_fail ;

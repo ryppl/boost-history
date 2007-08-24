@@ -1,0 +1,19 @@
+# These tests should compile without error
+
+import testing ;
+
+test-suite compile_test_suite
+  :
+    [ compile stdio_connection.cpp       ]
+    [ compile async_stdio_connection.cpp ]
+    [ compile tcp_connection.cpp         ]
+    [ compile cgi_service.cpp            ]
+#   [ compile fcgi_service.cpp           ]
+    [ compile is_async_test.cpp          ]
+    [ compile cgi_request.cpp            ]
+    [ compile acgi_request.cpp           ]
+
+    [ compile response.cpp                  ]
+
+    [ compile cgi_header_check.cpp       ]
+  ;

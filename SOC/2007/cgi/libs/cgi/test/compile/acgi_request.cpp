@@ -1,11 +1,11 @@
 //#include "boost/cgi/io_service.hpp"
-#include "boost/cgi/cgi/cgi_service.hpp"
-#include "boost/cgi/cgi/acgi_request.hpp"
+#include <boost/cgi/acgi.hpp>
+//#include "boost/cgi/cgi/acgi_request.hpp"
 
 int main()
 {
-  cgi::acgi_service service;
-  cgi::acgi_request req(service);
+  cgi::acgi::service service;
+  cgi::acgi::request req(service);
 
   return 0;
 }
