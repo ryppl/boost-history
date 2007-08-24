@@ -99,9 +99,9 @@ class TestPropertyChildGroup : public property_group
 public:
 	TestPropertyChildGroup( property_group *pParentGroup) : property_group( PROPERTY_GROUP_CHILD_NAME, pParentGroup )
 	{
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyChildGroup::SetFloat), BOOST_GETTER(&TestPropertyChildGroup::GetFloat), new FloatEditor());
-		add_property<int>(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyChildGroup::SetInt), BOOST_GETTER(&TestPropertyChildGroup::GetInt), new IntegerEditor());
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyChildGroup::SetPropertyString2), BOOST_GETTER(&TestPropertyChildGroup::GetPropertyString2), new StringEditor());
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyChildGroup::SetFloat), BOOST_GETTER(&TestPropertyChildGroup::GetFloat), new FloatEditor());
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyChildGroup::SetInt), BOOST_GETTER(&TestPropertyChildGroup::GetInt), new IntegerEditor());
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyChildGroup::SetPropertyString2), BOOST_GETTER(&TestPropertyChildGroup::GetPropertyString2), new StringEditor());
 	}
 
 	float GetFloat() const{return( m_fFloat1 );}
@@ -127,16 +127,16 @@ public:
 	{
         m_bVarBool = false;
 
-		add_property<string>(PROPERTY_STRING_1,  "PropertyString1 description", BOOST_SETTER_NONE, BOOST_GETTER(&TestPropertyGroup::GetPropertyString1), new StringEditor());
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup::SetFloat), BOOST_GETTER(&TestPropertyGroup::GetFloat), new FloatEditor());
-		add_property<int>(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup::SetInt), BOOST_GETTER(&TestPropertyGroup::GetInt), new IntegerEditor());
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup::GetPropertyString2), new StringEditor());
-		add_property<bool>(PROPERTY_BOOL,  "PropertyBool description", BOOST_SETTER(&TestPropertyGroup::SetBool), BOOST_GETTER(&TestPropertyGroup::GetBool), new BoolEditor());
+		add_property(PROPERTY_STRING_1,  "PropertyString1 description", BOOST_SETTER_NONE, BOOST_GETTER(&TestPropertyGroup::GetPropertyString1), new StringEditor());
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup::SetFloat), BOOST_GETTER(&TestPropertyGroup::GetFloat), new FloatEditor());
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup::SetInt), BOOST_GETTER(&TestPropertyGroup::GetInt), new IntegerEditor());
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup::GetPropertyString2), new StringEditor());
+		add_property(PROPERTY_BOOL,  "PropertyBool description", BOOST_SETTER(&TestPropertyGroup::SetBool), BOOST_GETTER(&TestPropertyGroup::GetBool), new BoolEditor());
         
-        add_property<float>(PROPERTY_FLOAT_1_VAR, "PropertyFloatVar description", BOOST_SETTER_VAR(m_fVarFloat1), BOOST_GETTER_VAR(m_fVarFloat1), new FloatEditor());
-        add_property<int>(PROPERTY_INT_1_VAR, "PropertyIntVar description", BOOST_SETTER_VAR(m_iVarInt1), BOOST_GETTER_VAR(m_iVarInt1), new IntegerEditor());
-        add_property<string>(PROPERTY_STRING_2_VAR, "PropertyStringVar description", BOOST_SETTER_VAR(m_strVarString2), BOOST_GETTER_VAR(m_strVarString2), new StringEditor());
-        add_property<bool>(PROPERTY_BOOL_VAR, "PropertyBoolVar description", BOOST_SETTER_VAR(m_bVarBool), BOOST_GETTER_VAR(m_bVarBool), new BoolEditor());
+        add_property(PROPERTY_FLOAT_1_VAR, "PropertyFloatVar description", BOOST_SETTER_VAR(m_fVarFloat1), BOOST_GETTER_VAR(m_fVarFloat1), new FloatEditor());
+        add_property(PROPERTY_INT_1_VAR, "PropertyIntVar description", BOOST_SETTER_VAR(m_iVarInt1), BOOST_GETTER_VAR(m_iVarInt1), new IntegerEditor());
+        add_property(PROPERTY_STRING_2_VAR, "PropertyStringVar description", BOOST_SETTER_VAR(m_strVarString2), BOOST_GETTER_VAR(m_strVarString2), new StringEditor());
+        add_property(PROPERTY_BOOL_VAR, "PropertyBoolVar description", BOOST_SETTER_VAR(m_bVarBool), BOOST_GETTER_VAR(m_bVarBool), new BoolEditor());
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
@@ -172,9 +172,9 @@ class TestPropertyGroup_1 : public property_group
 public:
 	TestPropertyGroup_1() : property_group( PROPERTY_GROUP_NAME, NULL )
 	{
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_1::SetFloat), BOOST_GETTER(&TestPropertyGroup_1::GetFloat), new FloatEditor() );
-		add_property<int>(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_1::SetInt), BOOST_GETTER(&TestPropertyGroup_1::GetInt), new IntegerEditor());
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_1::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_1::GetPropertyString2), new StringEditor() );
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_1::SetFloat), BOOST_GETTER(&TestPropertyGroup_1::GetFloat), new FloatEditor() );
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_1::SetInt), BOOST_GETTER(&TestPropertyGroup_1::GetInt), new IntegerEditor());
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_1::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_1::GetPropertyString2), new StringEditor() );
 	}
 
 private:
@@ -200,9 +200,9 @@ class TestPropertyGroup_2 : public property_group
 public:
 	TestPropertyGroup_2() : property_group( PROPERTY_GROUP_NAME, NULL )
 	{
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_2::SetFloat), BOOST_GETTER(&TestPropertyGroup_2::GetFloat), new FloatEditor() );
-		add_property<int>(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_2::SetInt), BOOST_GETTER(&TestPropertyGroup_2::GetInt), new IntegerEditor() );
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_2::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_2::GetPropertyString2), new StringEditor() );
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_2::SetFloat), BOOST_GETTER(&TestPropertyGroup_2::GetFloat), new FloatEditor() );
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_2::SetInt), BOOST_GETTER(&TestPropertyGroup_2::GetInt), new IntegerEditor() );
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_2::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_2::GetPropertyString2), new StringEditor() );
 	}
 
 private:
@@ -226,9 +226,9 @@ class TestPropertyChildGroup_1 : public property_group
 public:
 	TestPropertyChildGroup_1( property_group *pParentGroup) : property_group( PROPERTY_GROUP_CHILD_NAME, pParentGroup )
 	{
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyChildGroup_1::SetFloat), BOOST_GETTER(&TestPropertyChildGroup_1::GetFloat), new FloatEditor());
-		add_property<int>(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyChildGroup_1::SetInt), BOOST_GETTER(&TestPropertyChildGroup_1::GetInt), new IntegerEditor() );
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyChildGroup_1::SetPropertyString2), BOOST_GETTER(&TestPropertyChildGroup_1::GetPropertyString2), new StringEditor());
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyChildGroup_1::SetFloat), BOOST_GETTER(&TestPropertyChildGroup_1::GetFloat), new FloatEditor());
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyChildGroup_1::SetInt), BOOST_GETTER(&TestPropertyChildGroup_1::GetInt), new IntegerEditor() );
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyChildGroup_1::SetPropertyString2), BOOST_GETTER(&TestPropertyChildGroup_1::GetPropertyString2), new StringEditor());
 	}
 
 private:
@@ -253,10 +253,10 @@ public:
 #endif
 	TestPropertyGroup_3() : property_group( PROPERTY_GROUP_NAME, NULL ), m_child1( this ), m_child2( this )
 	{
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_3::SetFloat), BOOST_GETTER(&TestPropertyGroup_3::GetFloat), new FloatEditor() );
-		add_property<int>(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_3::SetInt), BOOST_GETTER(&TestPropertyGroup_3::GetInt), new IntegerEditor());
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_3::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_3::GetPropertyString2), new StringEditor());
-		add_property<bool>(PROPERTY_BOOL,  "PropertyBool description", BOOST_SETTER(&TestPropertyGroup_3::SetBool), BOOST_GETTER(&TestPropertyGroup_3::GetBool), new BoolEditor());
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_3::SetFloat), BOOST_GETTER(&TestPropertyGroup_3::GetFloat), new FloatEditor() );
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_3::SetInt), BOOST_GETTER(&TestPropertyGroup_3::GetInt), new IntegerEditor());
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_3::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_3::GetPropertyString2), new StringEditor());
+		add_property(PROPERTY_BOOL,  "PropertyBool description", BOOST_SETTER(&TestPropertyGroup_3::SetBool), BOOST_GETTER(&TestPropertyGroup_3::GetBool), new BoolEditor());
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
@@ -314,12 +314,12 @@ public:
 #endif
 	TestPropertyGroup_4() : property_group( PROPERTY_GROUP_NAME, NULL ), m_child1( this ), m_child2( this )
 	{
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_4::SetFloat), BOOST_GETTER(&TestPropertyGroup_4::GetFloat), new FloatEditor() );
-		add_property<float>(PROPERTY_FLOAT_2,  "PropertyFloat2 description", BOOST_SETTER(&TestPropertyGroup_4::SetFloat2), BOOST_GETTER(&TestPropertyGroup_4::GetFloat2), new FloatEditor(FLOAT_LOW, FLOAT_HIGH, FLOAT_INCREMENT, Tracker ) );
-		add_property<int>(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_4::SetInt), BOOST_GETTER(&TestPropertyGroup_4::GetInt), new IntegerEditor(INT_LOW, INT_HIGH, INT_INCREMENT, DropDown));
-		add_property<int>(PROPERTY_INT_2, "PropertyInt2 description", BOOST_SETTER(&TestPropertyGroup_4::SetInt), BOOST_GETTER(&TestPropertyGroup_4::GetInt), new IntegerEditor());
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_4::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_4::GetPropertyString2), new StringEditor());
-		add_property<bool>(PROPERTY_BOOL,  "PropertyBool description", BOOST_SETTER(&TestPropertyGroup_4::SetBool), BOOST_GETTER(&TestPropertyGroup_4::GetBool), new BoolEditor());
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_4::SetFloat), BOOST_GETTER(&TestPropertyGroup_4::GetFloat), new FloatEditor() );
+		add_property(PROPERTY_FLOAT_2,  "PropertyFloat2 description", BOOST_SETTER(&TestPropertyGroup_4::SetFloat2), BOOST_GETTER(&TestPropertyGroup_4::GetFloat2), new FloatEditor(FLOAT_LOW, FLOAT_HIGH, FLOAT_INCREMENT, Tracker ) );
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_4::SetInt), BOOST_GETTER(&TestPropertyGroup_4::GetInt), new IntegerEditor(INT_LOW, INT_HIGH, INT_INCREMENT, DropDown));
+		add_property(PROPERTY_INT_2, "PropertyInt2 description", BOOST_SETTER(&TestPropertyGroup_4::SetInt), BOOST_GETTER(&TestPropertyGroup_4::GetInt), new IntegerEditor());
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_4::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_4::GetPropertyString2), new StringEditor());
+		add_property(PROPERTY_BOOL,  "PropertyBool description", BOOST_SETTER(&TestPropertyGroup_4::SetBool), BOOST_GETTER(&TestPropertyGroup_4::GetBool), new BoolEditor());
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
@@ -357,14 +357,14 @@ class TestPropertyGroup_5 : public property_group
 public:
 	TestPropertyGroup_5() : property_group( PROPERTY_GROUP_NAME, NULL )
 	{
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_5::SetFloat), BOOST_GETTER(&TestPropertyGroup_5::GetFloat), new FloatEditor() );
-		add_property<int>(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_5::SetInt), BOOST_GETTER(&TestPropertyGroup_5::GetInt), NULL);
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_5::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_5::GetPropertyString2), new StringEditor() );
-		add_property<bool>(PROPERTY_BOOL,  "PropertyBool description", BOOST_SETTER(&TestPropertyGroup_5::SetBool), BOOST_GETTER(&TestPropertyGroup_5::GetBool), new BoolEditor());
-		add_property<double>(PROPERTY_DOUBLE,  "PropertyDouble description", BOOST_SETTER(&TestPropertyGroup_5::SetDouble), BOOST_GETTER(&TestPropertyGroup_5::GetDouble), new DoubleEditor() );
-		add_property<double>(PROPERTY_DOUBLE_2,  "PropertyDouble2 description", BOOST_SETTER(&TestPropertyGroup_5::SetDouble2), BOOST_GETTER(&TestPropertyGroup_5::GetDouble2), new DoubleEditor(DOUBLE_LOW, DOUBLE_HIGH, DOUBLE_INCREMENT, Tracker) );
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertyGroup_5::SetFloat), BOOST_GETTER(&TestPropertyGroup_5::GetFloat), new FloatEditor() );
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertyGroup_5::SetInt), BOOST_GETTER(&TestPropertyGroup_5::GetInt), NULL);
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertyGroup_5::SetPropertyString2), BOOST_GETTER(&TestPropertyGroup_5::GetPropertyString2), new StringEditor() );
+		add_property(PROPERTY_BOOL,  "PropertyBool description", BOOST_SETTER(&TestPropertyGroup_5::SetBool), BOOST_GETTER(&TestPropertyGroup_5::GetBool), new BoolEditor());
+		add_property(PROPERTY_DOUBLE,  "PropertyDouble description", BOOST_SETTER(&TestPropertyGroup_5::SetDouble), BOOST_GETTER(&TestPropertyGroup_5::GetDouble), new DoubleEditor() );
+		add_property(PROPERTY_DOUBLE_2,  "PropertyDouble2 description", BOOST_SETTER(&TestPropertyGroup_5::SetDouble2), BOOST_GETTER(&TestPropertyGroup_5::GetDouble2), new DoubleEditor(DOUBLE_LOW, DOUBLE_HIGH, DOUBLE_INCREMENT, Tracker) );
 
-        add_property<double>(PROPERTY_DOUBLE_VAR, "PropertyDoubleVar description", BOOST_SETTER_VAR(m_dVarDouble), BOOST_GETTER_VAR(m_dVarDouble), new BoolEditor());
+        add_property(PROPERTY_DOUBLE_VAR, "PropertyDoubleVar description", BOOST_SETTER_VAR(m_dVarDouble), BOOST_GETTER_VAR(m_dVarDouble), new BoolEditor());
 	}
 
 	void add_category( const std::string &category_name )
@@ -373,20 +373,20 @@ public:
 	}
 
 	
-	template<typename Value_Type>
+	template<typename Setter, typename Getter>
 	void add_property( std::string name, 
 					   std::string description,
-					   boost::function<void (const Value_Type&)> setter, 
-					   boost::function<Value_Type ()> getter )
+					   Setter setter, 
+					   Getter getter )
 	{
 		property_group::add_property( name, description, setter, getter );
 	}
 
-	template<typename Value_Type>
+	template<typename Setter, typename Getter>
 	void add_property( std::string name, 
 					   std::string description,
-					   boost::function<void (const Value_Type&)> setter, 
-					   boost::function<Value_Type ()> getter,
+					   Setter setter, 
+					   Getter getter,
 					   Editor *pEditor )
 	{
 		property_group::add_property( name, description, setter, getter, pEditor );
@@ -430,18 +430,12 @@ public:
 #endif
 	TestAutoGeneratedDesigners() : property_group( PROPERTY_GROUP_NAME, NULL )
 	{
-		add_property<string>(PROPERTY_STRING_1,  "PropertyString1 description",
-			                BOOST_SETTER_NONE, BOOST_GETTER(&TestAutoGeneratedDesigners::GetPropertyString1));
-		add_property<float> (PROPERTY_FLOAT_1,  "PropertyFloat1 description",
-			                BOOST_SETTER(&TestAutoGeneratedDesigners::SetFloat), BOOST_GETTER(&TestAutoGeneratedDesigners::GetFloat));
-		add_property<int>   (PROPERTY_INT_1, "PropertyInt1 description",
-			                BOOST_SETTER(&TestAutoGeneratedDesigners::SetInt), BOOST_GETTER(&TestAutoGeneratedDesigners::GetInt));
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description",
-			                BOOST_SETTER(&TestAutoGeneratedDesigners::SetPropertyString2), BOOST_GETTER(&TestAutoGeneratedDesigners::GetPropertyString2));
-		add_property<bool>  (PROPERTY_BOOL,  "PropertyBool description",
-			                BOOST_SETTER(&TestAutoGeneratedDesigners::SetBool), BOOST_GETTER(&TestAutoGeneratedDesigners::GetBool));
-		add_property<double>(PROPERTY_DOUBLE,  "PropertyFloat1 description",
-			                BOOST_SETTER(&TestAutoGeneratedDesigners::SetDouble), BOOST_GETTER(&TestAutoGeneratedDesigners::GetDouble));
+		add_property(PROPERTY_STRING_1,  "PropertyString1 description", BOOST_SETTER_NONE, BOOST_GETTER(&TestAutoGeneratedDesigners::GetPropertyString1));
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestAutoGeneratedDesigners::SetFloat), BOOST_GETTER(&TestAutoGeneratedDesigners::GetFloat));
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestAutoGeneratedDesigners::SetInt), BOOST_GETTER(&TestAutoGeneratedDesigners::GetInt));
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestAutoGeneratedDesigners::SetPropertyString2), BOOST_GETTER(&TestAutoGeneratedDesigners::GetPropertyString2));
+		add_property(PROPERTY_BOOL,  "PropertyBool description", BOOST_SETTER(&TestAutoGeneratedDesigners::SetBool), BOOST_GETTER(&TestAutoGeneratedDesigners::GetBool));
+		add_property(PROPERTY_DOUBLE,  "PropertyFloat1 description", BOOST_SETTER(&TestAutoGeneratedDesigners::SetDouble), BOOST_GETTER(&TestAutoGeneratedDesigners::GetDouble));
 
 	}
 #if defined(BOOST_MSVC)
@@ -473,7 +467,7 @@ class TestUpDownGroup : public property_group
 public:
 	TestUpDownGroup() : property_group( PROPERTY_GROUP_NAME, NULL )
 	{
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestUpDownGroup::SetFloat), BOOST_GETTER(&TestUpDownGroup::GetFloat), new FloatEditor(-1000,1000,1,UpDown) );
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestUpDownGroup::SetFloat), BOOST_GETTER(&TestUpDownGroup::GetFloat), new FloatEditor(-1000,1000,1,UpDown) );
 	}
 
 private:
@@ -533,10 +527,10 @@ public:
 	    m_iInt1      = 365;
 	    m_strString2 = "test value";
 
-        add_property<string>(PROPERTY_NAME,  "Name", BOOST_SETTER_NONE, BOOST_GETTER(&TestPropertySerializer::GetName), new FloatEditor());
-		add_property<float>(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertySerializer::SetFloat), BOOST_GETTER(&TestPropertySerializer::GetFloat), new FloatEditor());
-		add_property<int>(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertySerializer::SetInt), BOOST_GETTER(&TestPropertySerializer::GetInt), new IntegerEditor() );
-		add_property<string>(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertySerializer::SetPropertyString2), BOOST_GETTER(&TestPropertySerializer::GetPropertyString2), new StringEditor());
+        add_property(PROPERTY_NAME,  "Name", BOOST_SETTER_NONE, BOOST_GETTER(&TestPropertySerializer::GetName), new FloatEditor());
+		add_property(PROPERTY_FLOAT_1,  "PropertyFloat1 description", BOOST_SETTER(&TestPropertySerializer::SetFloat), BOOST_GETTER(&TestPropertySerializer::GetFloat), new FloatEditor());
+		add_property(PROPERTY_INT_1, "PropertyInt1 description", BOOST_SETTER(&TestPropertySerializer::SetInt), BOOST_GETTER(&TestPropertySerializer::GetInt), new IntegerEditor() );
+		add_property(PROPERTY_STRING_2,  "PropertyString2 description", BOOST_SETTER(&TestPropertySerializer::SetPropertyString2), BOOST_GETTER(&TestPropertySerializer::GetPropertyString2), new StringEditor());
 	}
 
 private:

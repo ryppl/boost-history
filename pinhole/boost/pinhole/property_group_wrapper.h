@@ -37,13 +37,13 @@ namespace boost { namespace pinhole
          * @param setter The function used to set the property.
          * @param getter The function used to get the property.
          */
-        template<typename Value_Type>
+        template<typename Setter, typename Getter>
         void add_property( std::string name, 
                            std::string description,
-                           boost::function<void (const Value_Type&)> setter, 
-                           boost::function<Value_Type ()> getter )
+                           Setter setter, 
+                           Getter getter )
         {
-            property_group::add_property<Value_Type>( name, description,setter, getter );
+            property_group::add_property( name, description, setter, getter );
         }
 
         /**
@@ -55,15 +55,15 @@ namespace boost { namespace pinhole
          * @param pEditor A pointer to the editor to be used with this property, or null
          *                if there isn't one.
          */
-        template<typename Value_Type>
+        template<typename Setter, typename Getter>
         void add_property( std::string name, 
                            std::string description,
-                           boost::function<void (const Value_Type&)> setter, 
-                           boost::function<Value_Type ()> getter,
+                           Setter setter, 
+                           Getter getter,
                            Editor *pEditor )
         {
             
-            property_group::add_property<Value_Type>( name, description,setter, getter, pEditor );
+            property_group::add_property( name, description, setter, getter, pEditor );
         }
 
         /**

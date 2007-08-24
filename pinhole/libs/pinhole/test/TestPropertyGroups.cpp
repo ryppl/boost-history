@@ -301,3 +301,5 @@ BOOST_AUTO_TEST_CASE( TestIsReadOnly )
 	BOOST_CHECK_EQUAL( testGroup.is_read_only(PROPERTY_STRING_1), true );
 	BOOST_CHECK_EQUAL( testGroup.is_read_only(PROPERTY_FLOAT_1), false );
 }
+
+// test throw on readonly set

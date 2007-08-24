@@ -86,8 +86,11 @@ namespace boost { namespace pinhole
 
     #define BOOST_GETTER_VAR(c) property_system_var_getter_builder(c)
 
-    #define BOOST_SETTER_NONE NULL
-    #define BOOST_GETTER_NONE NULL
+    struct no_setter_struct {};
+    struct no_getter_struct {};
+    
+    #define BOOST_SETTER_NONE no_setter_struct()
+    #define BOOST_GETTER_NONE no_getter_struct()
 
     class property_group;
 
@@ -559,61 +562,91 @@ namespace boost { namespace pinhole
         //@}
 
     protected:
-
+        
         /**
          * Adds a property to the property list.
-         * @param The name of the property.
+         * @param name The name of the property.
          * @param description A brief description of the property for the user interface.
          * @param setter The function used to set the property.
          * @param getter The function used to get the property.
          */
-        template<typename Value_Type>
+        template<typename Setter, typename Getter>
         void add_property( std::string name, 
                            std::string description,
-                           boost::function<void (const Value_Type&)> setter, 
-                           boost::function<Value_Type ()> getter )
+                           Setter setter,
+                           Getter getter)
         {
-            typedef typename detail::EditorTypeFinder<Value_Type>::type editor_type;
-
-            // You are using a Value_Type that does not have a default editor defined. Use once
-            // of the add_property functions where you explicitly define the editor or editor type.
-            BOOST_STATIC_ASSERT((false == boost::is_same<editor_type, boost::mpl::void_>::value));
-
-            add_property<Value_Type>( name, description, setter, getter, new editor_type() );
+            internal_add_property< typename Getter::result_type >( name, description, setter, getter);
         }
-
+        
         /**
          * Adds a property to the property list.
-         * @param The name of the property.
+         * @param name The name of the property.
+         * @param description A brief description of the property for the user interface.
+         * @param setter The function used to set the property.
+         * @param getter The function used to get the property.
+         */
+        template<typename Getter>
+        void add_property( std::string name, 
+                           std::string description,
+                           no_setter_struct setter,
+                           Getter getter)
+        {
+            internal_add_property< typename Getter::result_type >( name, description, NULL, getter);
+        }
+            
+        /**
+         * Adds a property to the property list.
+         * @param name The name of the property.
+         * @param description A brief description of the property for the user interface.
+         * @param setter The function used to set the property.
+         * @param getter The function used to get the property.
+         */
+        template<typename Setter, typename Getter>
+        void add_property( std::string name, 
+                           std::string description,
+                           Setter setter,
+                           no_getter_struct getter)
+        {
+            internal_add_property< typename Setter::argument_type >( name, description, setter, NULL);
+        }
+    
+        /**
+         * Adds a property to the property list.
+         * @param name The name of the property.
          * @param description A brief description of the property for the user interface.
          * @param setter The function used to set the property.
          * @param getter The function used to get the property.
          * @param pEditor A pointer to the editor to be used with this property, or null
          *                if there isn't one.
          */
-        template<typename Value_Type>
-        void add_property( std::string name, 
-                           std::string description,
-                           boost::function<void (const Value_Type&)> setter, 
-                           boost::function<Value_Type ()> getter,
+        template< typename Setter, typename Getter>
+        void add_property( string name,
+                           string description,
+                           Setter setter,
+                           Getter getter,
                            Editor *pEditor )
         {
-            // If you get an error here, then the type you are using for the property likely doesn't have a proper operator<< for it
-            detail::property_info<Value_Type> *prop = new detail::property_info<Value_Type>();
+            internal_add_property< typename Getter::result_type >( name, description, setter, getter, pEditor);
+        }
 
-            prop->m_name        = name;
-            prop->m_description = description;
-            if( BOOST_SETTER_NONE != setter )
-            {
-                prop->setter  = setter;
-            }
-            if( BOOST_GETTER_NONE != getter )
-            {
-                prop->getter  = getter;
-            }
-            prop->m_editor  = pEditor;
-
-            m_properties.insert( std::make_pair(name, prop) );
+        /**
+         * Adds a property to the property list.
+         * @param name The name of the property.
+         * @param description A brief description of the property for the user interface.
+         * @param setter The function used to set the property.
+         * @param getter The function used to get the property.
+         * @param pEditor A pointer to the editor to be used with this property, or null
+         *                if there isn't one.
+         */
+        template< typename Getter>
+        void add_property( string name,
+                           string description,
+                           no_setter_struct,
+                           Getter getter,
+                           Editor *pEditor )
+        {
+            internal_add_property< typename Getter::result_type >( name, description, NULL, getter, pEditor);
         }
 
         /**
@@ -664,6 +697,46 @@ namespace boost { namespace pinhole
 
     private:
         property_group();
+            
+        template<typename Value_Type>
+        void internal_add_property( const std::string &name, 
+                                    const std::string &description,
+                                    boost::function<void (const Value_Type&)> setter, 
+                                    boost::function<Value_Type ()> getter )
+        {
+            typedef typename detail::EditorTypeFinder<Value_Type>::type editor_type;
+
+            // You are using a Value_Type that does not have a default editor defined. Use once
+            // of the add_property functions where you explicitly define the editor or editor type.
+            BOOST_STATIC_ASSERT((false == boost::is_same<editor_type, boost::mpl::void_>::value));
+
+            internal_add_property<Value_Type>( name, description, setter, getter, new editor_type() );
+        }
+
+        template<typename Value_Type>
+        void internal_add_property( const std::string &name, 
+                                    const std::string &description,
+                                    boost::function<void (const Value_Type&)> setter, 
+                                    boost::function<Value_Type ()> getter,
+                                    Editor *pEditor )
+        {
+            // If you get an error here, then the type you are using for the property likely doesn't have a proper operator<< for it
+            detail::property_info<Value_Type> *prop = new detail::property_info<Value_Type>();
+
+            prop->m_name        = name;
+            prop->m_description = description;
+            if( NULL != setter )
+            {
+            prop->setter  = setter;
+            }
+            if( NULL != getter )
+            {
+            prop->getter  = getter;
+            }
+            prop->m_editor  = pEditor;
+
+            m_properties.insert( std::make_pair(name, prop) );
+        }
 
         void add_child(property_group* pChild)
         {
