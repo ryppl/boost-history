@@ -16,12 +16,23 @@ this concept must also provide functions that allow them to re-index the vertice
 [heading Refinement Of]
 [MutablePropertyGraph]
 
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[`G`] [A type that models the [Graph] concept.]]
+    [[`g`] [An object of type `G`.]]
+    [
+        [`P`]
+        [A synonym for `property_map<G,vertex_index_t>`.]
+    ]
+]
+
 [heading Associated Types]
 [table
     [[Name] [Expression] [Result Type] [Description]]
     [
         [Vertex Index Type]
-        [`G::vertex_index_type`]
+        [`property_traits<P::const_type>::value_type`]
         [An unsigned integer type]
         [
             The unsigned integral type representing vertex indices.
@@ -32,7 +43,7 @@ this concept must also provide functions that allow them to re-index the vertice
     [
         [Vertex Index Property Type]
         [
-            `property_map<G,vertex_index_t>::type`
+            `P::type`
         ]
         [A mutable property map]
         [
@@ -47,7 +58,7 @@ this concept must also provide functions that allow them to re-index the vertice
     [
         [Vertex Index Property Type]
         [
-            `property_map<G,vertex_index_t>::const_type`
+            `P::const_type`
         ]
         [ A `const` property map]
         [
@@ -67,12 +78,14 @@ this concept must also provide functions that allow them to re-index the vertice
         [Vertex Index Property]
         [`get(vertex_index,g)`]
         [
-            `property_map<G,vertex_index_t>::type` or[br]
-            `property_map<G,vertex_index_t>::const_type`
+            `P::type` or[br]
+            `P::const_type`
         ]
         [
             Returns the property map that provides read/write access to the
             vertex indices of the graph.
+
+            *Complexity:* Constant.
         ]
     ]
     [
