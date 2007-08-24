@@ -1,0 +1,19 @@
+
+import testing ;
+
+project
+    : requirements
+        <include>../../../../
+        <include>$BOOST_ROOT
+    ;
+
+test-suite graph_test :
+    [ compile test_new_archetypes.cpp ]
+    [ compile degree_centrality.cpp ]
+    [ compile closeness_centrality.cpp ]
+    [ compile mean_geodesic.cpp ]
+    [ compile eccentricity.cpp ]
+    [ compile clustering_coefficient.cpp ]
+    [ compile tiernan_all_cycles.cpp ]
+    [ compile bron_kerbosch_all_cliques.cpp ]
+    ;
