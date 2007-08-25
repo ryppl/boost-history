@@ -3,6 +3,14 @@
 
 #include <boost/cgi/fcgi.hpp>
 
+/************************************
+NOTE: this doesn't work for now, because FastCGI support isn't
+      built in yet.
+
+      This is what a FastCGI program should look like though.
+
+      The request will be handled in `sub_main`
+*************************************/
 
 namespace cgi {
 

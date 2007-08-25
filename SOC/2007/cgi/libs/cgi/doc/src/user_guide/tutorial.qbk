@@ -25,7 +25,7 @@ Except for when using CGI synchronously, a typical program will have two fundame
 
 * [link __meta_data__ Accessing the data] associated with a request;
 
-* [link __writing__ Writing] a reply;
+* [link __writing__ Writing] a response;
 
 * [link __wrapping_up__ Wrapping up];
 

@@ -1,7 +1,7 @@
 #include <string>
 #include <boost/system/error_code.hpp>
 //#include "../../../../boost/cgi/basic_protocol_service_fwd.hpp"
-#include "../../../../boost/cgi/cgi.hpp"
+#include <boost/cgi/cgi.hpp>
 
 int main()
 {

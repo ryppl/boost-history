@@ -24,6 +24,11 @@
 //   cgi::acgi::request& req_;
 // };
 
+/**
+ * The following example has a few simple stages.
+ * It is best understood by compiling and testing it, and then looking at
+ * the source code.
+ */
 
 int main()
 {
@@ -40,7 +45,8 @@ int main()
   if (req.get_("reset") == "true")
   {
     resp<< cookie("name")
-        << location(req.script_name())
+        << location("acgi")
+        << content_type("text/plain")
         << header();
     resp.send(req);
     return 0;
@@ -58,14 +64,14 @@ int main()
     return 0;
   }
 
-  // Now we'll check if they sent us a name
+  // Now we'll check if they sent us a name in a form
   name = req.form_("name");
   if (!name.empty())
   {
     resp<< header("Content-type", "text/html")
         << cookie("name", name)
         << header() // terminate the headers
-        << "Hello there, " << name;
+        << "Hello there, " << "<a href=''>" << name << "</a>";
     resp.send(req);
     return 0;
   }

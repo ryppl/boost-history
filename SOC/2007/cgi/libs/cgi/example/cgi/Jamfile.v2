@@ -18,7 +18,7 @@ exe ecgi
     main.cpp
   :
     <include>$(BOOST_ROOT)
-    <include>"../../../../"
+    <include>../../../../
     <library>../../util/system//boost_system
     #<library>l:/usr/local/lib/libboost_system.a
     <define>BOOST_ALL_NO_LIB=1
@@ -26,7 +26,11 @@ exe ecgi
     <toolset>gcc:<linkflags>-lpthread
   ;
 
-install _
-  : ecgi
-  : <location>/var/www/cgi-bin
-  ;
+# uncomment this if you want to test the example on your machine
+#install _
+#  : ecgi
+#  : # this is where the compiled executable will be copied
+#    # set this to your server's /cgi-bin/
+#    <location>/var/www/cgi-bin
+#  ;
+

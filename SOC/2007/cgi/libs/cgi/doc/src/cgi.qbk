@@ -64,6 +64,11 @@
 [def __accepting__ boost.cgi.ug.tutorial.accepting]
 [def __loading__   boost.cgi.ug.tutorial.loading]
 
+[/def __hog__ []]
+[template rfc[number]
+[@http://www.ietf.com/rfc/rfc[number] RFC[number]]
+]
+
 [important
 This manual does [*not] document a library that is a part of __Boost__. The major part of it has been developed this summer as part of the Google Summer of Code, '[@http://code.google.com/soc GSoC07]'. Everything from here on in is alpha-grade, some bits more than others; [link boost.cgi.preface.comments_and_support comments and bug reports] are welcome.
 
