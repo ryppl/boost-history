@@ -4,16 +4,23 @@ import testing ;
 
 test-suite compile_test_suite
   :
+    # connections
     [ compile stdio_connection.cpp       ]
     [ compile async_stdio_connection.cpp ]
     [ compile tcp_connection.cpp         ]
-    [ compile cgi_service.cpp            ]
+    
+    # services
+    [ compile acgi_service.cpp           ]
 #   [ compile fcgi_service.cpp           ]
-    [ compile is_async_test.cpp          ]
+
+    # requests
     [ compile cgi_request.cpp            ]
     [ compile acgi_request.cpp           ]
 
-    [ compile response.cpp                  ]
-
+    # response
+    [ compile response.cpp               ]
+    
+    # misc tests
     [ compile cgi_header_check.cpp       ]
+    [ compile is_async_test.cpp          ]
   ;

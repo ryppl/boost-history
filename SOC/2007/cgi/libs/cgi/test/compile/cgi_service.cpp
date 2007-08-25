@@ -2,7 +2,7 @@
 
 int main()
 {
-  cgi::acgi_service s;
+  cgi::acgi::service s;
 
   return 0;
 }
