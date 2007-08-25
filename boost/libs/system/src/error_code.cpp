@@ -35,7 +35,7 @@ using namespace boost::system::posix;
 #include <cstring> // for strerror/strerror_r
 
 # if defined( BOOST_WINDOWS_API )
-#   include "windows.h"
+#   include <windows.h>
 #   ifndef ERROR_INCORRECT_SIZE
 #    define ERROR_INCORRECT_SIZE ERROR_BAD_ARGUMENTS
 #   endif
