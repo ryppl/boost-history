@@ -15,7 +15,7 @@
 #include <boost/asio/detail/push_options.hpp>
 
 #include <boost/asio/io_service.hpp>
-#include "service_id.hpp"
+#include "boost/cgi/service_id.hpp"
 
 namespace cgi {
  namespace detail {

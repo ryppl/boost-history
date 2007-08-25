@@ -14,8 +14,8 @@
 #include <cstdlib>
 #include "boost/cgi/map.hpp"
 
- // The process' environment
- extern char** environ;
+// The process' environment
+extern char** environ;
 
 namespace cgi {
  namespace detail {
