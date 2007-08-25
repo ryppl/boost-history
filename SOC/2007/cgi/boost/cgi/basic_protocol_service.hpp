@@ -15,12 +15,10 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
 
-#include "io_service_provider.hpp"
-//#include "basic_gateway.hpp"
-//#include "basic_connection_fwd.hpp"
-//#include "basic_acceptor_fwd.hpp"
-#include "basic_request_fwd.hpp"
-#include "detail/protocol_traits.hpp"
+#include "boost/cgi/tags.hpp"
+#include "boost/cgi/io_service_provider.hpp"
+#include "boost/cgi/basic_request_fwd.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
 
 namespace cgi {
 
@@ -39,14 +37,14 @@ namespace cgi {
     typedef typename detail::protocol_traits<Protocol>::type traits;
     typedef typename traits::request_type                    request_type;
     typedef typename boost::shared_ptr<request_type>         request_ptr;
-    typedef std::set<typename request_type::pointer>         set_type;
+    typedef std::set<request_ptr>                            set_type;
       //typename boost::mpl::if_<
       //  boost::is_same<protocol_type, tags::acgi>::value
       //  , request_type::pointer
       //  , std::set<request_type::pointer>
       //  >::type
 
-    typedef std::queue<typename request_type::pointer>       queue_type;
+    typedef std::queue<request_ptr>                          queue_type;
 
     basic_protocol_service(int pool_size_hint = 1)
       : ios_provider_(pool_size_hint)
@@ -141,7 +139,7 @@ namespace cgi {
 
     //friend class basic_gateway<protocol_type>;//gateway_type;
     //friend class basic_acceptor<protocol_type>;//class acceptor_type;
-    friend class traits::request_type;//typename request_type;
+    friend typename traits::request_type;//typename request_type;
   };
 
 } // namespace cgi

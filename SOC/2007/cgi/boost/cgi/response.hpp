@@ -83,11 +83,11 @@ namespace cgi {
     // Note: the 'set-cookie' isn't part of the cookie object since
     // the cookie can also be set after the headers have been sent.
     // See http://tinyurl.com/33znkj
-    resp<< "Set-cookie: " << c.content << ";";
+    resp<< "Set-cookie: " << c.content << "; ";
     if (!c.expires.empty())
-      resp<< c.expires << ";";
+      resp<< c.expires << "; ";
     if (!c.path.empty())
-      resp<< c.path << ";";
+      resp<< c.path << "; ";
     return resp<< "\r\n";
   }
 

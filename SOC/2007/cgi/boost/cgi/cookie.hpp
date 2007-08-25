@@ -18,6 +18,11 @@ namespace cgi {
    * Either set the parameters in the constructor, or set them directly.
    * Note: If you want to set the parameters individually, remember that each
    * parameter must NOT have a trailing semi-colon!
+   *
+   * TODO
+   * - Add 'domain' attribute
+   * - Add 'HttpOnly' attribute
+   * - Data should be URL-encoded
    */
   struct cookie
   {

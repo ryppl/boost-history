@@ -34,6 +34,7 @@
 #include "basic_request_fwd.hpp"
 #include "basic_sync_io_object.hpp"
 #include "basic_io_object.hpp"
+#include "map.hpp"
 
 namespace cgi {
 

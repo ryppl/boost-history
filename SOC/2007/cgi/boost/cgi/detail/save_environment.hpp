@@ -11,6 +11,7 @@
 
 #include <string>
 #include <cstdlib>
+#include "boost/cgi/map.hpp"
 
 namespace cgi {
  namespace detail {

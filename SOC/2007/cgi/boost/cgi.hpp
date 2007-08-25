@@ -12,7 +12,13 @@
 // #include all headers except for cgi/cgi.hpp, cgi/fcgi.hpp, cgi/scgi.hpp
 
 #include "cgi/basic_request.hpp"
-#include "cgi/request.hpp"
-#include "cgi/reply.hpp"
+#include "cgi/response.hpp"
+#include "cgi/map.hpp"
+#include "cgi/basic_protocol_service.hpp"
+#include "cgi/cookie.hpp"
+#include "cgi/header.hpp"
+#include "cgi/io_service.hpp"
+#include "cgi/basic_connection.hpp"
+#include "cgi/io_service_provider.hpp"
 
 #endif // CGI_HPP_INCLUDED__
