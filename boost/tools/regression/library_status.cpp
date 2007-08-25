@@ -89,8 +89,6 @@ namespace
     struct col_node {
         int rows, cols;
         bool is_leaf_directory;
-//        std::string m_name;
-//        std::set<col_node> m_subcolumns;
         typedef std::map<const std::string, col_node> subcolumns_t;
         subcolumns_t m_subcolumns;
         bool operator<(const col_node &cn) const;
@@ -98,13 +96,8 @@ namespace
             is_leaf_directory(false)
         {}
         std::pair<int, int> get_spans();
-//        typedef std::set<col_node>::const_iterator const_iterator;
     };
-#if 0
-    bool col_node::operator<(const col_node &cn) const {
-        return m_name < cn.m_name;
-    }
-#endif
+
     std::pair<int, int> col_node::get_spans(){
         rows = 1;
         cols = 0;
