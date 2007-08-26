@@ -15,6 +15,7 @@
 #include "boost/cgi/map.hpp"
 
 // The process' environment
+// MSVC8 could do with this having a _CRTIMP at the start of it.
 extern char** environ;
 
 namespace cgi {
@@ -26,7 +27,7 @@ namespace cgi {
     *            environment.
     */
    void save_environment(std::map<std::string,std::string>& env_map
-                        , char** env = ::environ)
+                        , char** env = environ)
    {
      for(; *env; ++env)
      {

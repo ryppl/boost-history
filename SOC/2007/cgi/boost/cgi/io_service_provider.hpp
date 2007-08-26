@@ -16,9 +16,9 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
 
-#include "boost/cgi/tags.hpp"
 #include "boost/cgi/io_service.hpp"
 #include "boost/cgi/detail/push_options.hpp"
+#include "boost/cgi/io_service_provider_fwd.hpp"
 
 
 namespace cgi {
@@ -53,7 +53,7 @@ namespace cgi {
     {
     }
 
-    ::cgi::io_service& io_service()
+    cgi::io_service& get_io_service()
     {
       return io_service_;
     }
@@ -73,7 +73,7 @@ namespace cgi {
       io_service_.reset();
     }
   private:
-    ::cgi::io_service io_service_;
+    cgi::io_service io_service_;
   };
 
 

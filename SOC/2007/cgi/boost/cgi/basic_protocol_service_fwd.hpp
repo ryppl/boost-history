@@ -9,8 +9,7 @@
 #ifndef CGI_BASIC_PROTOCOL_SERVICE_FWD_HPP_INCLUDED__
 #define CGI_BASIC_PROTOCOL_SERVICE_FWD_HPP_INCLUDED__
 
-#include "boost/cgi/tags.hpp"
-#include "boost/cgi/io_service_provider_fwd.hpp"
+#include "boost/cgi/io_service_provider.hpp"
 
 namespace cgi {
 

@@ -12,10 +12,9 @@
 #include <set>
 #include <queue>
 #include <boost/shared_ptr.hpp>
-#include <boost/asio/io_service.hpp>
 #include <boost/asio/strand.hpp>
 
-#include "boost/cgi/tags.hpp"
+#include "boost/cgi/io_service.hpp"
 #include "boost/cgi/io_service_provider.hpp"
 #include "boost/cgi/basic_request_fwd.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
@@ -106,23 +105,23 @@ namespace cgi {
      * The order in which the underlying io_services are returned is determined
      * by what policy the IoServiceProvider uses.
      */
-    boost::asio::io_service& io_service()
+    ::cgi::io_service& io_service()
     {
-      return ios_provider_.io_service();
+      return ios_provider_.get_io_service();
     }
 
     /// Post the handler through an available io_service
     template<typename Handler>
     void post(Handler handler)
     {
-      ios_provider_.io_service().post(handler);
+      ios_provider_.get_io_service().post(handler);
     }
 
     /// Dispatch a handler through an available io_service
     template<typename Handler>
     void dispatch(Handler handler)
     {
-      ios_provider_.io_service().dispatch(handler);
+      ios_provider_.get_io_service().dispatch(handler);
     }
 
   private:
@@ -130,7 +129,6 @@ namespace cgi {
 
     /// A strand is used for guaranteeing handlers are dispatched sequentially
     //boost::asio::strand strand_;
-
 
     set_type request_set_;
     queue_type request_queue_;
