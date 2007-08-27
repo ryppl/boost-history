@@ -13,6 +13,7 @@
 #include <queue>
 #include <boost/shared_ptr.hpp>
 #include <boost/asio/strand.hpp>
+#include <boost/detail/workaround.hpp>
 
 #include "boost/cgi/io_service.hpp"
 #include "boost/cgi/io_service_provider.hpp"
@@ -137,7 +138,12 @@ namespace cgi {
 
     //friend class basic_gateway<protocol_type>;//gateway_type;
     //friend class basic_acceptor<protocol_type>;//class acceptor_type;
+#if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400))
     friend typename traits::request_type;//typename request_type;
+#else
+    friend class traits::request_type;
+#endif
+    //friend class request_type;
   };
 
 } // namespace cgi
