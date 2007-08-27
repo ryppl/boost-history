@@ -1,0 +1,26 @@
+ACKNOWLEDGEMENT
+
+The majority of the Scalable Vector Graphic (SVG) images contained within this folder are sourced from the Tango Desktop Project (http://tango.freedesktop.org/).  For additional icons or updated versions of these icons visit the Tango Desktop Project's website.
+
+For details on which author created each SVG image please refer to the metadata contained within the SVG file.
+
+
+TANGO DESKTOP PROJECT LICENSE
+
+The Tango Desktop Project’s SVG images are licensed under the Creative Commons Attribution-ShareAlike 2.5 license (http://creativecommons.org/licenses/by-sa/2.5/).  A copy of the Tango projects license file is included (TANGO_COPYING_LICENSE) in this directory.
+
+For an exact list of which files are covered by this license please see “TANGO DESKTOP PROJECT SVG IMAGE LIST” below.
+
+For details on which author created each SVG image please refer to the metadata contained within the SVG file.
+
+
+BOOST SOFTWARE LICENSE
+
+All other files (except the files listed in “TANGO DESKTOP PROJECT SVG IMAGE LIST” below) are covered by the Boost Software License (http://www.boost.org/LICENSE_1_0.txt).
+
+
+TANGO DESKTOP PROJECT SVG IMAGE LIST
+
+The images sourced from the Tango Desktop Project are:  go-bottom.svg, go-down.svg, go-first.svg, go-home.svg, go-jump.svg, go-last.svg, go-next.svg, go-previous.svg, go-top.svg, go-up.svg, dialog-information.svg (renamed tip.svg) and accessories-text-editor.svg (renamed note.svg).
+
+The images considered to be derivative work of the Tango Desktop Project’s icons are:  caution.svg, danger.svg, important.svg, caution_bw.svg, danger_bw.svg, important_bw.svg, note_bw.svg and tip_bw.svg.
