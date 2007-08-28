@@ -15,7 +15,7 @@
 #include "boost/cgi/map.hpp"
 
 // The process' environment
-// MSVC8 could do with this having a _CRTIMP at the start of it.
+// MSVC warns of 'inconsistent dll linkage' here...
 extern char** environ;
 
 namespace cgi {

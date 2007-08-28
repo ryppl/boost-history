@@ -9,7 +9,7 @@
 #ifndef CGI_BASIC_REQUEST_HPP_INCLUDED__
 #define CGI_BASIC_REQUEST_HPP_INCLUDED__
 
-#include "detail/push_options.hpp"
+#include "boost/cgi/detail/push_options.hpp"
 
 #include <iostream>
 #include <boost/noncopyable.hpp>
@@ -20,21 +20,21 @@
 #include <boost/asio/io_service.hpp>
 #include <boost/asio/basic_io_object.hpp>
 
-#include "detail/throw_error.hpp"
-#include "detail/protocol_traits.hpp"
-#include "request_base.hpp"
-#include "role_type.hpp"
-#include "data_sink.hpp"
-#include "status_type.hpp"
-#include "is_async.hpp"
-#include "connection_base.hpp"
-#include "http/status_code.hpp"
-#include "request_service.hpp"
-#include "basic_protocol_service_fwd.hpp"
-#include "basic_request_fwd.hpp"
-#include "basic_sync_io_object.hpp"
-#include "basic_io_object.hpp"
-#include "map.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
+#include "boost/cgi/request_base.hpp"
+#include "boost/cgi/role_type.hpp"
+#include "boost/cgi/data_sink.hpp"
+#include "boost/cgi/status_type.hpp"
+#include "boost/cgi/is_async.hpp"
+#include "boost/cgi/connection_base.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/request_service.hpp"
+#include "boost/cgi/basic_protocol_service_fwd.hpp"
+#include "boost/cgi/basic_request_fwd.hpp"
+#include "boost/cgi/basic_sync_io_object.hpp"
+#include "boost/cgi/basic_io_object.hpp"
+#include "boost/cgi/map.hpp"
 
 namespace cgi {
 
@@ -612,12 +612,12 @@ namespace cgi {
 
 } // namespace cgi
 
-#include "detail/pop_options.hpp"
+#include "boost/cgi/detail/pop_options.hpp"
 
 #endif // CGI_BASIC_REQUEST_HPP_INCLUDED__
 
 /*
-NOTES:
+NOTES::future_plans:
 * When a request is aborted (eg. when the client closes the connection)
   the library can call an abort_handler() function stored in the request.
   - The user should supply an abort_handler-derived function if they want
