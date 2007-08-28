@@ -181,6 +181,12 @@
 #define LAPACK_ZHBEV FORTRAN_ID( zhbev )
 
 
+/********************************************/
+/* eigenproblems for tridiagonal matrices */ 
+
+#define LAPACK_SSTEQR FORTRAN_ID( ssteqr )
+#define LAPACK_DSTEQR FORTRAN_ID( dsteqr )
+
 
 /********************************************/
 /* QR factorization */
@@ -196,6 +202,9 @@
 #define LAPACK_DORMQR FORTRAN_ID( dormqr )
 #define LAPACK_CUNMQR FORTRAN_ID( cunmqr )
 #define LAPACK_ZUNMQR FORTRAN_ID( zunmqr )
+
+#define LAPACK_SSYTRD FORTRAN_ID( ssytrd )
+#define LAPACK_DSYTRD FORTRAN_ID( dsytrd )
 
 
 /********************************************/

@@ -365,26 +365,41 @@ extern "C" {
 		     int* ifst, const int * ilst, int* info );
 
 
+  /* Hermitian tridiagonal matrices */
+  
+  void LAPACK_SSTEQR( char const* compz, int const* n, float* d, float* E, float* z, int const* ldz, float* work, int* info ) ;
+  void LAPACK_DSTEQR( char const* compz, int const* n, double* d, double* E, double* z, int const* ldz, double* work, int* info ) ;
+
   /* Hermitian banded matrices */
   
   void LAPACK_SSBEV( char const* jobz, char const* uplo, int const* n,
                      int const* kd, float* ab, int const* ldab, float* w,
-                     float* z, int const* ldz, float* work, int const* info );
+                     float* z, int const* ldz, float* work, int* info );
 
   void LAPACK_DSBEV( char const* jobz, char const* uplo, int const* n,
                      int const* kd, double* ab, int const* ldab, double* w,
-                     double* z, int const* ldz, double* work, int const* info );
+                     double* z, int const* ldz, double* work, int* info );
 
   void LAPACK_CHBEV( char const* jobz, char const* uplo, int const* n,
                      int const* kd, fcomplex_t* ab, int const* ldab, float* w,
                      fcomplex_t* z, int const* ldz, fcomplex_t* work,
-                     float* rwork, int const* info );
+                     float* rwork, int* info );
 
   void LAPACK_ZHBEV( char const* jobz, char const* uplo, int const* n,
                      int const* kd, dcomplex_t* ab, int const* ldab, double* w,
                      dcomplex_t* z, int const* ldz, dcomplex_t* work,
-                     double* rwork, int const* info );
+                     double* rwork, int* info );
 
+
+  /*********************************************************************/
+  /*       Auxiliary routines for eigenvalue problems                  */
+  /*********************************************************************/
+
+  void LAPACK_SSYTRD( char const* uplo, int const* n, float* a, int const* lda, float* d,
+                      float* e, float* tau, float* work, int const* lwork, int* INFO ) ;
+
+  void LAPACK_DSYTRD( char const* uplo, int const* n, double* a, int const* lda, double* d,
+                      double* e, double* tau, double* work, int const* lwork, int* INFO ) ;
 
   /*********************************************************************/
   /*                             SVD                                   */
