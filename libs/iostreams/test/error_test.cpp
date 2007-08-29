@@ -120,6 +120,8 @@ void test_write(std::iostream& stream)
 {
     char data[10] = {0};
     stream.write(data, 10);
+        //force use of streambuf
+    stream.flush();
 }
 
 void test_seekg(std::iostream& stream)
