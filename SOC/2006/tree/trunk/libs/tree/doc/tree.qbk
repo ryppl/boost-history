@@ -51,9 +51,10 @@ hierarchies or xml files).
 [section Download]
 
 This library's current state is only available via [@http://subversion.tigris.org/ svn] from the
-Boost repository for Google Summer of Code 2006(tm) at
-[@https://www.boost-consulting.com/svn/main/boost/soc/2006]. The source code can be 
-browsed online at [@https://boost-consulting.com/trac/soc/browser/boost/soc/2006/tree]. \n
+Boost Sandbox repository at [@https://svn.boost.org/svn/boost/sandbox/SOC/2006/tree]
+(This obsoletes the old Boost Consulting repository for Google Summer of Code 2006(tm) at
+https://www.boost-consulting.com/svn/main/boost/soc/2006.) The source code can be 
+browsed online at [@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2006/tree]. \n
 A [@http://boost-consulting.com/vault/index.php?action=downloadfile&filename=tree-soc2006.zip&directory=Containers& snapshot]
  of the final GSoC 2006 state (kindly provided by René Rivera) can be found at the 
 [@http://boost-consulting.com/vault/ Boost Vault].
@@ -67,9 +68,9 @@ TR2 Proposal text: [@n2101.html Tree Structures and Related Concepts for the C++
 
 [section Acknowledgements]
 
-This library originated in [@http://code.google.com/soc/boost/appinfo.html?csaid=E17EA7C7C537C131 one]
-out of [@http://code.google.com/soc/boost/about.html ten] [@http://www.boost.org/ Boost] projects 
-sponsored by [@http://www.google.com Google] during their [@http://code.google.com/soc Summer of Code 2006]. 
+This library originated in [@http://code.google.com/soc/2006/boost/appinfo.html?csaid=E17EA7C7C537C131 one]
+out of [@http://code.google.com/soc/2006/boost/about.html ten] [@http://www.boost.org/ Boost] projects 
+sponsored by [@http://www.google.com Google] during their [@http://code.google.com/soc/2006 Summer of Code 2006]. 
 It was mentored by [@http://www.boost.org/people/rene_rivera.htm René Rivera]. \n
 Kudos to DHL for forwarding my second check from rainy Vienna airport, Austria (30 minutes ride from 
 my place) on to Dubai, UAE, so it could catch some sun first.
@@ -92,8 +93,8 @@ Einführung (Oldenbourg, 2004) (German translation of Introduction to Algorithms
 
 [endsect] [/Introduction]
 
-[include tutorial.qbk]
 [include overview.qbk]
+[include tutorial.qbk]
 [include concepts.qbk]
 [include glossary.qbk]
 [include ../../../TODO]

@@ -48,6 +48,7 @@ void for_each_recursive(Cursor s, Op& f)
  * postorder. @p f must not modify the order of the sequence.
  * If @p f has a return value it is ignored.
  */
+//[postorder_for_each
 template <class Cursor, class Op>
 Op for_each(Cursor s, Op f)
 {
@@ -59,6 +60,7 @@ Op for_each(Cursor s, Op f)
 	f(*subtree);
 	return f;
 }
+//]
 
 /**
  * @brief	First element of a MultiwayTree in postorder traversal
