@@ -1,7 +1,7 @@
 /*
  * Boost.Reflection / basic unit test
  *
- * (C) Copyright Mariano G. Consoni 2007
+ * (C) Copyright Mariano G. Consoni and Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
  * accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -18,50 +18,82 @@
 #define BOOST_TEST_MAIN
 #define BOOST_TEST_DYN_LINK 1
 #include <boost/test/unit_test.hpp>
+#include <boost/reflection/reflector.hpp>
 
-#include "../examples/car.hpp"
-#include <boost/reflection/reflection.hpp>
-
-
-BOOST_AUTO_TEST_CASE(basic_example)
+class car {
+public:
+  int start() {
+    return 3;
+  }
+};
+BOOST_AUTO_TEST_CASE(argless)
 {
-
-  /* Here we declare that we are reflecting out a Car. The second
-     template parameter declares that we will describe this reflection
-     using a string. Any arbitrary type could be used here. */
-  boost::extension::reflection<car, std::string> car_reflection("A Car!");
-  BOOST_CHECK_EQUAL( car_reflection.get_info(), "A Car!" );
-
-  /* Here we add two methods to the reflection. The library must
-     correctly parse and remember the parameters and return type of these
-     methods. Here, we elect to describe the first method using a number
-     and the second using a string. For the second method, the library
-     knows now that it is a function of Car called turn that takes a float
-     named "turn_angle". */ 
-  car_reflection.add<int, bool>(&car::start, 3);
-  car_reflection.add<std::string, bool, float, 
-    std::string>(&car::turn, "turn", "turn_angle");
-
-  // create some instances to use our reflection
-  car porsche_911("Porsche 911");
-  car ferrari_f40("Ferrari F40");
-
-  // call methods
-  bool porsche_start = car_reflection.call<int, bool>(&porsche_911, 3);
-  BOOST_CHECK_EQUAL( porsche_start, true );
-
-  bool porsche_turn = car_reflection.call<std::string, bool, 
-    float, std::string>(&porsche_911, "turn", .5f);
-  BOOST_CHECK_EQUAL( porsche_turn, true );
-
-  bool ferrari_turn = car_reflection.call<std::string, bool, 
-    float, std::string>(&ferrari_f40, "turn", .10f);
-  BOOST_CHECK_EQUAL( ferrari_turn, false );
-
-  // prepare the parameter map for a call
-  boost::extension::parameter_map pm;
-  pm.add<float, std::string>(.15f, "turn_angle");
-  pm.add<int, std::string>(50, "aceleration");
-
-  // TODO: call and test result
+  boost::reflections::reflection car_reflection;
+  boost::reflections::reflector<car> car_reflector(&car_reflection);
+  car_reflector.reflect_constructor();
+  car_reflector.reflect<int>(&car::start, "start");
+//  Check for argless constructor
+  BOOST_CHECK(car_reflection.get_constructor().valid());
+  boost::reflections::instance car_instance = 
+    car_reflection.get_constructor().call();
+  BOOST_CHECK(car_reflection.get_function<int>("start").valid());
+  //  Make sure it doesn't have this undeclared method
+  BOOST_CHECK(!car_reflection.get_function<int>("stop").valid());
+  BOOST_CHECK_EQUAL
+    (car_reflection.get_function<int>("start").call(car_instance), 3);
+  boost::reflections::function<int> f =
+    car_reflection.get_function<int>("start");
+  BOOST_CHECK_EQUAL(f(car_instance), 3);
 }
+class porsche : protected car {
+public:
+  porsche(int year) : year_(year) {
+  }
+  int get_year() {
+    return year_; 
+  }
+  void start(float speed) {
+  }
+private:
+  int year_;
+};
+BOOST_AUTO_TEST_CASE(single_arg)
+{
+  /*
+  boost::reflections::reflector<porsche> * car_reflector =
+    new boost::reflections::reflector<porsche>();
+  boost::reflections::reflection car_reflection(car_reflector);
+  car_reflector->reflect_constructor<int>();
+  car_reflector->reflect(&car::start, "start");
+  //  Check for argless constructor
+  BOOST_CHECK(car_reflection.has_constructor<int>());
+  BOOST_CHECK(!car_reflection.has_constructor());
+  boost::reflections::instance car_instance = car_reflection.construct(1987);
+  BOOST_CHECK(car_reflection.has_method<void, float>("start"));
+  //  Make sure it doesn't have this undeclared method
+  BOOST_CHECK(!car_reflection.has_method("stop"));
+  car_reflection.call(car_instance, "start");
+  BOOST_CHECK_EQUAL(car_reflection.call(car_instance, "get_year"), 1987);
+  */
+}
+porsche * get_porsche(float year) {
+  return new porsche(static_cast<int>(year)); 
+}
+BOOST_AUTO_TEST_CASE(single_arg_factory)
+{
+  /*
+  boost::reflections::reflector<porsche> * car_reflector =
+  new boost::reflections::reflector<porsche>();
+  boost::reflections::reflection car_reflection(car_reflector);
+  car_reflector->reflect_constructor<int>();
+  car_reflector->reflect_factory<float>(&get_porsche, "get_porsche");
+  car_reflector->reflect(&car::start, "start");
+  //  Check for argless constructor
+  BOOST_CHECK(car_reflection.has_constructor());
+  boost::reflections::instance car_instance = car_reflection.construct();
+  BOOST_CHECK(car_reflection.has_method("start"));
+  //  Make sure it doesn't have this undeclared method
+  BOOST_CHECK(!car_reflection.has_method("stop"));
+  car_reflector.call(car_reflection, "start");*/
+}
+
