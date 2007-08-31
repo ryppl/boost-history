@@ -6,21 +6,21 @@
  /]
 
 [section Container]
-A type `C` is a /container/ if an object of type `C` is capble of storing other 
+A type `C` is a /container/ if an object of type `C` is capble of storing other
 objects. Types modeling the container concept are associated with an /iterator/,
 a type of object that can be used to iterate over the elements of the container.
 
 The elements of a container are not guaranteed to be stored in any particular
-order, nor is the order of visitation guaranteed to be the same between 
-iterations. 
+order, nor is the order of visitation guaranteed to be the same between
+iterations.
 
 [heading Refinement Of]
-[StdAssignable]
+[Assignable]
 
 [heading Notation]
 [table
     [[Expression] [Description]]
-    [[`C`] [A type that models the [StdContainer] concept.]]
+    [[`C`] [A type that models the [Container] concept.]]
     [[`c`, `d`] [Objects of type `C`.]]
     [[`T`] [The type of an object stored by `C`.]]
 ]
@@ -34,8 +34,8 @@ iterations.
         [`T`]
         [
             The type of the stored object or value.
-            
-            *Requirements:* `T` must model the [StdAssignable] concept.
+
+            *Requirements:* `T` must model the [Assignable] concept.
         ]
     ]
     [
@@ -48,7 +48,7 @@ iterations.
     ]
     [
         [Const Reference Type]
-        [`C::connst_reference`]
+        [`C::const_reference`]
         [`const` lvalue of `T`]
         [
             A `const` reference type to the stored value type.
@@ -57,24 +57,24 @@ iterations.
     [
         [Iterator Type]
         [`C::iterator`]
-        [iterator type pointing to `T`]
+        [iterator pointing to objects of type `T`]
         [
             The type of object used to iterate over elements of `C`.
-            The iterator type is convertible to the const iterator type. 
-            
-            *Requirements:* This type models any [StdIterator] concept except
-            [StdOutputIterator].
+            The iterator type is convertible to the const iterator type.
+
+            *Requirements:* This type models any [Iterator] concept except
+            [OutputIterator].
         ]
     ]
     [
         [Const Iterator Type]
         [`C::const_iterator`]
-        [iterator type pointing to `const T`]
+        [iterator pointing to objects of type `const T`]
         [
             The type of object used to iterate over elements of `C`.
-            
-            *Requirements:* This type models any [StdIterator] concept except
-            [StdOutputIterator].
+
+            *Requirements:* This type models any [Iterator] concept except
+            [OutputIterator].
         ]
     ]
 ]
@@ -91,9 +91,9 @@ iterations.
         []
         [
             Construct a new container of type `C` with no sotred elements.
-            
+
             *Postcondition:* The created container has `size() == 0`.
-            
+
             *Complexity:* Constant.
         ]
     ]
@@ -108,10 +108,10 @@ iterations.
         [
             Construct a new container of type `C` with a copy of the contents
             of container `d`.
-            
+
             *Postcondition:* The constructed container `c` is equivalent to `d`,
             containing a copy of each of `d`'s elements.
-            
+
             *Complexity:* Linear in `d.size()`.
         ]
     ]
@@ -122,7 +122,7 @@ iterations.
         [
             The destructor of every element in `c` is called and any memory
             allocated by the container is deallocated.
-            
+
             *Complexity:* Linear in `c.size()`.
         ]
     ]
@@ -130,15 +130,15 @@ iterations.
         [Beginning of Range]
         [`c.begin()`]
         [
-            `iterator` if `c` is mutable.[br]
-            `const_iterator if `c` is `const`.
+            `C::iterator` if `c` is mutable.[br]
+            `C::const_iterator` if `c` is `const`.
         ]
         [
             Returns an iterator pointing to the first element in the container.
-            
+
             *Postcondition:* If `c` is not empty, `c.begin()` is dereferenceable.
             Otherwise, it is past the end.
-            
+
             *Complexity:* Amortized constant.
         ]
     ]
@@ -146,57 +146,51 @@ iterations.
         [End of Range]
         [`c.end()`]
         [
-            `iterator` if `c` is mutable.[br]
-            `const_iterator if `c` is `const`.
+            `C::iterator` if `c` is mutable.[br]
+            `C::const_iterator` if `c` is `const`.
         ]
         [
             Returns an iterator pointing past the end of the container.
-            
-            *Postcondition:* `c.end()` is past the edn of the array.
-            
+
+            *Postcondition:* `c.end()` is past the end of the container.
+
             *Complexity:* Amortized constant.
         ]
     ]
     [
         [Size]
         [`c.size()`]
-        [
-            `size_type`
-        ]
+        [`C::size_type`]
         [
             Returns the size of the container `c`, frequently meaning the number
             of elements stored in the container.
-            
-            *Postcondition:* `c.size() >= 0` and `c.size() <= `c.max_size()`.
-            
-            *Complexity:* Lineaar in `c.size()`.
+
+            *Postcondition:* `c.size() >= 0` and `c.size() <= c.max_size()`.
+
+            *Complexity:* Linear in `c.size()`.
         ]
     ]
     [
         [Maximum Size]
         [`c.max_size()`]
-        [
-            `size_type`
-        ]
+        [`size_type`]
         [
             Returns the largest possible size of the container, also the
             maximum number of elements that `c` can store.
-            
+
             *Postcondition:* `c.max_size() >= 0` and `c.max_size() >= c.size()`.
-            
+
             *Complexity:* Amortized constant.
         ]
     ]
     [
         [Empty]
         [`c.empty()`]
-        [
-            Convertible to `bool`.
-        ]
+        [Convertible to `bool`.]
         [
             Returns `true` if the container `c` is empty, also equivalent to
             `c.size() == 0`.
-            
+
             *Complexity:* Amortized constant.
         ]
     ]
@@ -206,7 +200,7 @@ iterations.
         []
         [
             Swap the contents of container `c` with `d`.
-            
+
             *Requirements:* `d` must be of type `C`.
         ]
     ]
@@ -223,7 +217,7 @@ its associated types or calls any of its member functions.
     {
         return c.size();
     }
-    
+
     // Accessing the begin() and end() iterator ranges of a container
     // of type C requires that type to model the Container concept.
     template <typename C>
@@ -231,7 +225,7 @@ its associated types or calls any of its member functions.
     {
         return std::make_pair(c.begin(), c.end());
     }
-    
+
     // Testing whether a container of type C is empty() requires
     // that type to model the Container concept.
     template <typename C>
@@ -239,5 +233,5 @@ its associated types or calls any of its member functions.
     {
         return c.empty();
     }
-    
+
 [endsect]

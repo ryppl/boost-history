@@ -1,0 +1,120 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Reversible Container]
+A type `C` is a /reversible container/ if an object of type `C` is a [ForwardContainer]
+that allows backwards iteration through the container.
+
+The iterators of a [ReversibleContainer] model the [BidirectionalIterators] concept.
+Containers modeling this concept support "multipass" algorithsm and allow multiple
+iterators into the same container to be active at the same time.
+
+[heading Refinement Of]
+[ForwardContainer]
+
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[`C`] [A type that models the [ReversibleContainer] concept.]]
+    [[`c`, `d`] [Objects of type `C`.]]
+    [[`T`] [The type of an object stored by `C`.]]
+]
+
+[heading Associated Types]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Reverse Iterator]
+        [`C::reverse_iterator`]
+        [iterator pointing to objects of type `T`]
+        [
+            An adaptor over the container's `iterator` type that allows it to
+            iterate backwards over the elements in the container.
+
+            *Requirements:* This type models any [Iterator] concept except
+            [OutputIterator].
+        ]
+    ]
+    [
+        [Reverse Iterator]
+        [`C::const_reverse_iterator`]
+        [iterator pointing to objects of type `const T`]
+        [
+            An adaptor over the container's `const_iterator` type that allows it to
+            iterate backwards over the elements in the container.
+
+            *Requirements:* This type models any [Iterator] concept except
+            [OutputIterator].
+        ]
+    ]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Beginning of Range]
+        [`c.rbegin()`]
+        [
+            `C::reverse_iterator` if `c` is mutable.[br]
+            `C::const_reverse_iterator` if `c` is `const`.
+        ]
+        [
+            Returns an iterator pointing to the first element in the container.
+
+            *Postcondition:* If `c` is not empty, `c.rbegin()` is dereferenceable.
+            Otherwise, it is past the end.
+
+            *Complexity:* Amortized constant.
+        ]
+    ]
+    [
+        [End of Range]
+        [`c.rend()`]
+        [
+            `C::iterator` if `c` is mutable.[br]
+            `C::const_iterator` if `c` is `const`.
+        ]
+        [
+            Returns an iterator pointing past the end of the container.
+
+            *Postcondition:* `c.rend()` is past the end of the container.
+
+            *Complexity:* Amortized constant.
+        ]
+    ]
+]
+
+[heading Invariants]
+[table
+    [[Name] [Description]]
+    [
+        [Valid Range]
+        [
+            \[`c.rbegin()`, `c.rend()`) is a valid range.
+        ]
+    ]
+    [
+        [Equivalence of Ranges]
+        [
+            The distance from `c.begin()` to `c.end()` is the same as the distance
+            from `c.rbegin()` to `c.rend()`.
+        ]
+    ]
+]
+
+[heading Examples]
+
+    // Asserts that the forward and reverse iterator ranges of a container
+    // are the same distance.
+    template <typename C>
+    void equivalent_ranges(const C& c)
+    {
+        assert(distance(c.begin(), c.end) == distance(c.rbegin(), c.rend()));
+    }
+
+[endsect]

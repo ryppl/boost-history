@@ -6,20 +6,24 @@
  /]
 
 [section Forward Container]
-A type `C` is a /forward container/ if an object of type `C` is a [StdContainer]
+A type `C` is a /forward container/ if an object of type `C` is a [Container]
 that stores its objects in a definite order, and the order of objects do not
 spontaneously change from iteration to iteration. The definite ordering of objects
 within the forward container allows the definition of equality and lexicographical
-ordering (if the contained type is [StdEqualityComparable] and [StdLessThanComparable]
+ordering (if the contained type is [EqualityComparable] and [LessThanComparable]
 respectively).
 
+The iterators of a [ForwardContainer] model the [ForwardIterator] concept. Containers
+modeling this concept support "multipass" algorithsm and allow multiple iterators
+into the same container to be active at the same time.
+
 [heading Refinement Of]
-[StdEqualityComparable], [StdLessThanComparable], [StdContainer]
+[EqualityComparable], [LessThanComparable], [Container]
 
 [heading Notation]
 [table
     [[Expression] [Description]]
-    [[`C`] [A type that models the [StdContainer] concept.]]
+    [[`C`] [A type that models the [ForwardContainer] concept.]]
     [[`c`, `d`] [Objects of type `C`.]]
     [[`T`] [The type of an object stored by `C`.]]
 ]
@@ -29,30 +33,26 @@ respectively).
     [[Name] [Expression] [Result Type] [Description]]
     [
         [Equality Comparison]
-        [
-            `c == d`
-        ]
+        [`c == d`]
         [Convertible to `bool`]
         [
             Returns `true` if the container `c` is element-wise equivalent
             to `d`.
-            
-            *Requirements:* The type of stored objects `T` is [StdEqualityComparable].
-            
+
+            *Requirements:* The type of stored objects `T` is [EqualityComparable].
+
             *Complexity:* Linear in `c.size()`.
         ]
     ]
     [
         [Less-Than Comparison]
-        [
-            `c < d`
-        ]
+        [`c < d`]
         [Convertible to `bool`]
         [
             Returns `true` if the container `c` is element-wise less-than `d`.
-            
-            *Requirements:* The type of stored objects `T` is [StdLessThanComparable].
-            
+
+            *Requirements:* The type of stored objects `T` is [LessThanComparable].
+
             *Complexity:* Linear in `c.size()`.
         ]
     ]

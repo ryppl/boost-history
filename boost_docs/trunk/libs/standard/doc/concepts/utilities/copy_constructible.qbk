@@ -15,17 +15,17 @@ constructed object is equivalent to the object passed as an argument.
 
 [note
 Two objects `t` and `u` are equivalent if the expression `t == u` returns
-`true`. See [StdEqualityComparable] for more information.
+`true`. See [EqualityComparable] for more information.
 ]
 
 [heading Refinement of]
-[StdDestructible]
+[Destructible]
 
 [heading Notation]
 The following expressions are used within this document:
 [table
     [[Expression] [Description]]
-    [[T] [A [StdCopyConstructible] type.]]
+    [[T] [A [CopyConstructible] type.]]
     [[t] [An object of type `T`.]]
     [[u] [An object of type `T` or `const T`.]]
 ]
@@ -66,10 +66,10 @@ The following expressions are used within this document:
 
 [heading Notes]
 A type that explicitly defines a private copy constructor is not
-[StdCopyConstructible]. These types are called non-copyable types.
+[CopyConstructible]. These types are called non-copyable types.
 
 [heading Examples]
-A type `T` is required to be [StdCopyConstructible] when an object of type `T`
+A type `T` is required to be [CopyConstructible] when an object of type `T`
 is when the copy constructor of `T` is invoked passing another object of
 type `T` as an argument.
 

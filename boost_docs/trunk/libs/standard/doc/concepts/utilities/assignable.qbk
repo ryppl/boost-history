@@ -18,13 +18,13 @@ assignment operators and constructors can be provided for types that are not
 
 [note
 Two objects `t` and `u` are equivalent if the expression `t == u` returns
-`true`. See [StdEqualityComparable] for more information.
+`true`. See [EqualityComparable] for more information.
 ]
 
 [heading Notation]
 [table
     [[Expression] [Description]]
-    [[T] [An [StdAssignable] type.]]
+    [[T] [An [Assignable] type.]]
     [[t] [An instance of type `T`.]]
     [[u] [An instance of type `T` or const `T`.]]
 ]
@@ -46,7 +46,7 @@ Two objects `t` and `u` are equivalent if the expression `t == u` returns
 ]
 
 [heading Examples]
-A type `T` is required to be [StdAssignable] when an object of type `T` is
+A type `T` is required to be [Assignable] when an object of type `T` is
 assigned to an object of type `T` or `const T`.
 
     // The assignment of the object t to the value u requires T to be Assignable.

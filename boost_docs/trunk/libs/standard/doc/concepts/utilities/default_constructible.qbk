@@ -12,7 +12,7 @@ constructible has either a compiler-generated or user-defined constructor
 that can be called without arguments.
 
 [note
-[StdDefaultConstructible] types may or may not initilize objects to a default value
+[StdDefaultConstructible] types may or may not initialize objects to a default value
 or state depending on the type itself and the syntax used for construction. Objects
 that are not initialized to a default are /uninitialized. Reading from or otherwise
 using uninitialized objects often results in undefined behavior.
@@ -22,7 +22,7 @@ using uninitialized objects often results in undefined behavior.
 [StdDestructible]
 
 [heading Notation]
-The folllowing expressions are used in this document:
+The following expressions are used in this document:
 [table
     [[Expression] [Description]]
     [[T] [A [StdDefaultConstructible] type.]]
@@ -39,7 +39,7 @@ The folllowing expressions are used in this document:
         [
             The object `x` is constructed as an object of type `T` and may or may not
             initialized to a default value[footnote This syntax leaves fundamental
-            types unitialized while class types are default-initialized.].
+            types uninitialized while class types are default-initialized.].
         ]
     ]
     [

@@ -21,7 +21,7 @@ Strict weak orderings have the following properties:
 [heading Notation]
 [table
     [[Expression] [Description]]
-    [[T] [An [StdLessThanComparable] type.]]
+    [[T] [An [LessThanComparable] type.]]
     [[`t`, `u`, `v`] [Objects of type `T`.]]
 ]
 
@@ -75,19 +75,19 @@ greater-than or equal-to (`>=`) operators can be implemented as:
     {
         return u < t;
     }
-    
+
     bool operator <=(const T& t, const T& u)
     {
         return !(u < t);
     }
-    
+
     bool operator >=(const T& t, const T& u)
     {
         return !(t < u);
     }
-    
+
 [heading Examples]
-A type `T` is required to be [StdLessthanComparable] when an object of type `T` is
+A type `T` is required to be [LessthanComparable] when an object of type `T` is
 compared to another object of type `T` using the less-than comparison (`<`), the
 greater-than comparison (`>`), the less-than or equal-to comparison (`<=`), or
 the greater-than or equal-to (`>=`) operators.
@@ -101,7 +101,7 @@ the greater-than or equal-to (`>=`) operators.
     }
 
     // Using the greater-than comparison operator to compare two objects of
-    // type T requires T to be LessThanComparable since that comparison can be 
+    // type T requires T to be LessThanComparable since that comparison can be
     // derived from the less-than comparison.
     template <typename T>
     bool greater_than_compare(cont T& t, const T& u)
@@ -109,8 +109,8 @@ the greater-than or equal-to (`>=`) operators.
         return t > u;
     }
 
-    // Using the less-than or equal-to comparison operator to compare two objects 
-    // of type T requires T to be LessThanComparable since that comparison can be 
+    // Using the less-than or equal-to comparison operator to compare two objects
+    // of type T requires T to be LessThanComparable since that comparison can be
     // derived from the less-than comparison.
     template <typename T>
     bool less_than_or_equal_to_compare(cont T& t, const T& u)
@@ -118,8 +118,8 @@ the greater-than or equal-to (`>=`) operators.
         return t <= u;
     }
 
-    // Using the greater-than or equal-to comparison operator to compare two 
-    // objects of type T requires T to be LessThanComparable since that comparison 
+    // Using the greater-than or equal-to comparison operator to compare two
+    // objects of type T requires T to be LessThanComparable since that comparison
     // can be derived from the less-than comparison.
     template <typename T>
     bool greater_than_or_equal_to_compare(cont T& t, const T& u)

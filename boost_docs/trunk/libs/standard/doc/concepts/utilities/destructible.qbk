@@ -13,7 +13,7 @@ be either compiler-generated or user-defined.
 The following expressions are used within this document:
 [table
     [[Expression] [Description]]
-    [[T] [A [StdDestructible] type.]]
+    [[T] [A [Destructible] type.]]
     [[t] [An object of type `T`.]]
 ]
 
@@ -34,13 +34,13 @@ The following expressions are used within this document:
 
 [heading Notes]
 A class that provides a user-defined, `private` or `protected` destructor
-is not [StdDestructible].
+is not [Destructible].
 
 [heading Examples]
-In practice, there are non-[StdDestructible] types are infrequent. Any type
+In practice, there are non-[Destructible] types are infrequent. Any type
 whose objects are statically or locally declared is required to be model the
-[StdDestructible] concept. Any type whose objects are `delete`d are also required
-to be [StdDestructible].
+[Destructible] concept. Any type whose objects are `delete`d are also required
+to be [Destructible].
 
     // An object of type T that goes out of scope is required to be
     // Destructible. Note that this function also requires T to be

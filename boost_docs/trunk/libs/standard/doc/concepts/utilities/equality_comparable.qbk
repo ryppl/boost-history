@@ -7,10 +7,10 @@
 
 [section Equality Comparable]
 A type `T` is /equality comparable/ objects of type `T` can be compared using
-the equality comparison operator (`==`) and that comparison defines an /equivalence 
-relation/. An equivalence relation over type a `T` is a binary relation between any 
-two objects of type `T` that denotes them as being "equivalent". The specific 
-meaning of the term "equivalent" depends on the semantics of the type modeling this 
+the equality comparison operator (`==`) and that comparison defines an /equivalence
+relation/. An equivalence relation over type a `T` is a binary relation between any
+two objects of type `T` that denotes them as being "equivalent". The specific
+meaning of the term "equivalent" depends on the semantics of the type modeling this
 concept.
 
 Equivalence relations have the following properties:
@@ -22,7 +22,7 @@ Equivalence relations have the following properties:
 [heading Notation]
 [table
     [[Expression] [Description]]
-    [[T] [An [StdEqualityComparable] type.]]
+    [[T] [An [EqualityComparable] type.]]
     [[`t`, `u`, `v`] [Objects of type `T`.]]
 ]
 
@@ -60,8 +60,8 @@ inequality comparison operator (`!=`) can be implemented as:
     }
 
 [heading Examples]
-A type `T` is required to be [StdEqualityComparable] when an object of type `T` is
-compared to another object of type `T` using either the equality comparison (`==`) 
+A type `T` is required to be [EqualityComparable] when an object of type `T` is
+compared to another object of type `T` using either the equality comparison (`==`)
 or the inequality comparison (`!=`) operator.
 
     // Using the equality comparison operator to compare two objects of type T
@@ -71,7 +71,7 @@ or the inequality comparison (`!=`) operator.
     {
         return t == u;
     }
-    
+
     // Using the inequality comparison operator to compare two objects of type T
     // requires that type to be EqualityComparable since inequality can be
     // implemented in terms of equality.
