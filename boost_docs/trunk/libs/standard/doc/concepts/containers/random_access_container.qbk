@@ -1,0 +1,60 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Random Access Container]
+A type `C` is a /random access container/ if an object of type `C` is a [ReversibleContainer]
+that provides amortized constant time access to any element it contains.
+
+The iterators of a [RandomAccessContainer] model the [RandomAccessIterator] concept.
+
+[heading Refinement Of]
+[ReversibleContainer]
+
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[`C`] [A type that models the [RandomAccessContainer] concept.]]
+    [[`c`, `d`] [Objects of type `C`.]]
+    [[`T`] [The type of an object stored by `C`.]]
+    [[`n`] [An object convertible to type `C::size_type`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Element Access]
+        [`c[n]`]
+        [
+            `C::reference` if `c` is mutable[br]
+            `C::const_reference` otherwise.
+        ]
+        [
+            Returns the `n`[super th] element from the beginning of the contaner.
+
+            *Requirements:* `n` is convertible to `C::size_type`.
+
+            *Complexity:* Amortized constant.
+        ]
+    ]
+]
+
+[heading Invariants]
+[table
+    [[Name] [Description]]
+    [
+        [Element Access]
+        [
+            The element `c[n]` is the same as that obtained by incrementing `a.begin()`
+            `n` times and dereferencing the resulting iterator.
+        ]
+    ]
+]
+
+[heading Examples]
+
+[endsect]

@@ -9,7 +9,7 @@
 A type `C` is a /reversible container/ if an object of type `C` is a [ForwardContainer]
 that allows backwards iteration through the container.
 
-The iterators of a [ReversibleContainer] model the [BidirectionalIterators] concept.
+The iterators of a [ReversibleContainer] model the [BidirectionalIterator] concept.
 Containers modeling this concept support "multipass" algorithsm and allow multiple
 iterators into the same container to be active at the same time.
 
@@ -108,13 +108,5 @@ iterators into the same container to be active at the same time.
 ]
 
 [heading Examples]
-
-    // Asserts that the forward and reverse iterator ranges of a container
-    // are the same distance.
-    template <typename C>
-    void equivalent_ranges(const C& c)
-    {
-        assert(distance(c.begin(), c.end) == distance(c.rbegin(), c.rend()));
-    }
 
 [endsect]

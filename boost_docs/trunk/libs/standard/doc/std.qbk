@@ -19,21 +19,7 @@
     ]
 ]
 
-[/ Quick Reference Templates /]
-[template Destructible[] [link standards.concepts.utilities.destructible [^Destructible]]]
-[template DefaultConstructible[] [link standard.concepts.utilities.default_constructible [^DefaultConstructible]]]
-[template CopyConstructible[] [link standard.concepts.utilities.copy_constructible [^CopyConstructible]]]
-[template Assignable[] [link standard.concepts.utilities.assignable [^Assignable]]]
-[template EqualityComparable[] [link standard.concepts.utilities.equality_comparable [^EqualityComparable]]]
-[template LessThanComparable[] [link standard.concepts.utilities.less_than_comparable [^LessThanComparable]]]
-
-[template Container[] [link standard.concepts.containers.general_concepts.container [^Container]]]
-
-[template InputIterator[] [link standard.concepts.iterators.input_iterator [^InputIterator]]]
-[template OutputIterator[] [link standard.concepts.iterators.output_iterator [^OutputIterator]]]
-[template ForwardIterator[] [link standard.concepts.iterators.forward_iterator [^ForwardIterator]]]
-[template BidirectionalIterator[] [link standard.concepts.iterators.bidirectional_iterator [^BidirectionalIterator]]]
-[template RandomAccessIterator[] [link standard.concepts.iterators.random_access_iterator [^RandomAccessIterator]]]
+[include templates.qbk]
 
 [/ Contents ]
 [include concepts/concepts.qbk]

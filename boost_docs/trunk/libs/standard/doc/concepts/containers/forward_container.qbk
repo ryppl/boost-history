@@ -58,6 +58,19 @@ into the same container to be active at the same time.
     ]
 ]
 
+[heading Invariants]
+[table
+    [[Name] [Description]]
+    [
+        [Ordering]
+        [
+            Subsequent iterations through the elements of a [ForwardContainer] will access
+            its elements in the same order, providing there have been no intervening mutative
+            operations (i.e., insertions or erasures).
+        ]
+    ]
+]
+
 [heading Examples]
 
 [endsect]

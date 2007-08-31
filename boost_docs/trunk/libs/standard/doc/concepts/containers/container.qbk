@@ -206,6 +206,31 @@ iterations.
     ]
 ]
 
+[heading Invariants]
+[table
+    [[Name] [Description]]
+    [
+        [Valid Range]
+        [
+            \[`c.begin()`, `c.end()`) is a valid range.
+        ]
+    ]
+    [
+        [Range Size]
+        [
+            `c.size()` is the same as the distance from `a.begin()` to `a.end()`.
+        ]
+    ]
+    [
+        [Completeness]
+        [
+            Iterating over the elements in the range \[c.begin(), c.end()) will iterate
+            over every element contained by `c`.
+        ]
+    ]
+]
+
+
 [heading Examples]
 A type `C` is required to be a container if it explicitly refers to any of
 its associated types or calls any of its member functions.

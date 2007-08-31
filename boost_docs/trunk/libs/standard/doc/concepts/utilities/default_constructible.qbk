@@ -12,20 +12,20 @@ constructible has either a compiler-generated or user-defined constructor
 that can be called without arguments.
 
 [note
-[StdDefaultConstructible] types may or may not initialize objects to a default value
+[DefaultConstructible] types may or may not initialize objects to a default value
 or state depending on the type itself and the syntax used for construction. Objects
 that are not initialized to a default are /uninitialized. Reading from or otherwise
 using uninitialized objects often results in undefined behavior.
 ]
 
 [heading Refinement of]
-[StdDestructible]
+[Destructible]
 
 [heading Notation]
 The following expressions are used in this document:
 [table
     [[Expression] [Description]]
-    [[T] [A [StdDefaultConstructible] type.]]
+    [[T] [A [DefaultConstructible] type.]]
     [[x] [An object of type `T`.]]
 ]
 
@@ -56,10 +56,10 @@ The following expressions are used in this document:
 
 [heading Notes]
 If the default constructor of a class type `T` is `private`, then the `T` does not
-model the [StdDefaultConstructible] concept.
+model the [DefaultConstructible] concept.
 
 [heading Examples]
-A type `T` is required to be [StdDefaultConstructible] when an object of type `T` is
+A type `T` is required to be [DefaultConstructible] when an object of type `T` is
 declared or when the default constructor of `T` is invoked without arguments.
 
     // Declaring a variable without explicitly calling a constructor requires a
