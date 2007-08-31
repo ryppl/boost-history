@@ -1,7 +1,7 @@
 /*
  * Boost.Reflection / main header
  *
- * (C) Copyright Mariano G. Consoni 2007
+ * (C) Copyright Mariano G. Consoni and Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
  * accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -9,57 +9,238 @@
  * See http://www.boost.org/ for latest version.
  */
 
-// TODO:
-//  . implement calls with parameter maps
-//  . fix FIXMEs
-
 #ifndef BOOST_EXTENSION_REFLECTION_HPP
 #define BOOST_EXTENSION_REFLECTION_HPP
-
-#include <boost/function.hpp>
-
-#include <list>
-
-
-#ifdef BOOST_EXTENSION_USE_PP
-
-#include <boost/preprocessor/arithmetic/inc.hpp>
-#include <boost/preprocessor/if.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/preprocessor/repetition.hpp>
-
-#ifndef BOOST_EXTENSION_MAX_FUNCTOR_PARAMS
-#define BOOST_EXTENSION_MAX_FUNCTOR_PARAMS 2
-#endif
-
-#endif
-
-#include "method_info.hpp"
-#include "parameter_map.hpp"
+#include <map>
+#include <boost/extension/impl/typeinfo.hpp>
+#include <boost/reflection/constructor.hpp>
+#include <boost/reflection/factory.hpp>
+#include <boost/reflection/function.hpp>
 
 
+namespace boost {namespace reflections {
 
-namespace boost { 
-  namespace extension {
+typedef void (*FunctionPtr)();
+template<class Info, class TypeInfo>
+struct basic_function_info {
+  TypeInfo type_info_;
+  Info info_;
+  basic_function_info(TypeInfo t, Info i) : type_info_(t), info_(i)
+  {
+  }
+  basic_function_info(const basic_function_info & s) 
+    : type_info_(s.type_info_), info_(s.info_) {}
+  basic_function_info & operator=(basic_function_info & s) {
+    type_info_ = s.type_info_;
+    info_ = s.info_;
+  }
+  friend inline bool operator<(const basic_function_info & t,
+                               const basic_function_info & s) {
+    return t.type_info_ < s.type_info_ ||
+    (t.type_info_ == s.type_info_ &&
+     t.info_ < s.info_);
+  }
+};
+template <class Info = std::string, 
+          class TypeInfo = extensions::default_type_info>
+class basic_reflection
+{
+public:
+  template <class Q, class R, class S>
+  friend class reflector;
+  constructor get_constructor() {
+    TypeInfo t = extensions::type_info_handler<TypeInfo,
+    instance (*)()>::get_class_type();
+    typename std::map<TypeInfo, FunctionPtr>::iterator it = 
+      constructors_.find(t);
+    if (it == constructors_.end()) {
+      return constructor();
+    } else {
+      return reinterpret_cast<instance (*)()>(it->second);
+    }
+  }
+  template <class ReturnValue>
+  function<ReturnValue> get_function(Info info) {
+    function_info f(extensions::type_info_handler<TypeInfo,
+                    ReturnValue (*)()>::get_class_type(), info);
+    std::cout << "\nGetting: " << f.type_info_;
+    typename std::map<function_info, 
+      std::pair<MemberFunctionPtr, 
+      FunctionPtr> >::iterator it = 
+      functions_.find(f);
+    if (it == functions_.end()) {
+      return function<ReturnValue>();
+    } else {
+      return function<ReturnValue>
+      (reinterpret_cast<ReturnValue (*)(void *, MemberFunctionPtr)>
+       (it->second.second), it->second.first);
+    }
+  }
+private:
+  typedef basic_function_info<Info, TypeInfo> function_info;
+  std::map<TypeInfo, FunctionPtr> constructors_;
+  std::map<function_info, 
+    std::pair<MemberFunctionPtr, FunctionPtr> > functions_;
+};
+typedef basic_reflection<> reflection;
+}}
 
-    template<class Implementation, class Info>
+#if 0
+    template<class Info>
     class reflection
     {
     public:
       reflection(Info info) : info_(info) {}
-
       class generic_method_container
       {
       public:
+        template <class ReturnValue, class Param1, class Param2, class Param3,
+                  class Param4, class Param5, class Param6>
+        ReturnValue call(Param1 p1, Param2 p2, Param3 p3, Param4 p4,
+                         Param5 p5, Param6 p6) {
+          ReturnValue val;
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2),
+                       static_cast<void*>(&p3),
+                       static_cast<void*>(&p4),
+                       static_cast<void*>(&p5),
+                       static_cast<void*>(&p6));
+          get_return_value(static_cast<void*>(&val));
+          return val;
+        }
+        template <class Param1, class Param2, class Param3,
+                  class Param4, class Param5, class Param6>
+        void call_void(Param1 p1, Param2 p2, Param3 p3, Param4 p4,
+                         Param5 p5, Param6 p6) {
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2),
+                       static_cast<void*>(&p3),
+                       static_cast<void*>(&p4),
+                       static_cast<void*>(&p5),
+                       static_cast<void*>(&p6));
+        }
+        template <class ReturnValue, class Param1, class Param2, class Param3,
+        class Param4, class Param5>
+        ReturnValue call(Param1 p1, Param2 p2, Param3 p3, Param4 p4,
+                         Param5 p5) {
+          ReturnValue val;
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2),
+                       static_cast<void*>(&p3),
+                       static_cast<void*>(&p4),
+                       static_cast<void*>(&p5));
+          get_return_value(static_cast<void*>(&val));
+          return val;
+        }
+        template <class Param1, class Param2, class Param3,
+        class Param4, class Param5>
+        void call_void(Param1 p1, Param2 p2, Param3 p3, Param4 p4,
+                       Param5 p5) {
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2),
+                       static_cast<void*>(&p3),
+                       static_cast<void*>(&p4),
+                       static_cast<void*>(&p5));
+        }
+        template <class ReturnValue, class Param1, class Param2, class Param3,
+                  class Param4>
+        ReturnValue call(Param1 p1, Param2 p2, Param3 p3, Param4 p4) {
+          ReturnValue val;
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2),
+                       static_cast<void*>(&p3),
+                       static_cast<void*>(&p4));
+          get_return_value(static_cast<void*>(&val));
+          return val;
+        }
+        template <class Param1, class Param2, class Param3,
+                  class Param4>
+        void call_void(Param1 p1, Param2 p2, Param3 p3, Param4 p4) {
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2),
+                       static_cast<void*>(&p3),
+                       static_cast<void*>(&p4));
+        }
+        template <class ReturnValue, class Param1, class Param2, class Param3>
+        ReturnValue call(Param1 p1, Param2 p2, Param3 p3) {
+          ReturnValue val;
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2),
+                       static_cast<void*>(&p3));
+          get_return_value(static_cast<void*>(&val));
+          return val;
+        }
+        template <class Param1, class Param2, class Param3>
+        void call_void(Param1 p1, Param2 p2, Param3 p3) {
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2),
+                       static_cast<void*>(&p3));
+        }
+        template <class ReturnValue, class Param1, class Param2>
+        ReturnValue call(Param1 p1, Param2 p2) {
+          ReturnValue val;
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2));
+          get_return_value(static_cast<void*>(&val));
+          return val;
+        }
+        template <class Param1, class Param2>
+        void call_void(Param1 p1, Param2 p2) {
+          call_virtual(static_cast<void*>(&p1),
+                       static_cast<void*>(&p2));
+        }
+        template <class ReturnValue, class Param1>
+        ReturnValue call(Param1 p1) {
+          ReturnValue val;
+          call_virtual(static_cast<void*>(&p1));
+          get_return_value(static_cast<void*>(&val));
+          return val;
+        }
+        template <class Param1>
+        void call_void(Param1 p1) {
+          call_virtual(static_cast<void*>(&p1));
+        }
+        template <class ReturnValue>
+        ReturnValue call() {
+          ReturnValue val;
+          call_virtual();
+          get_return_value(static_cast<void*>(&val));
+          return val;
+        }
+        void call_void() {
+          call_virtual();
+        }
+        
         virtual ~generic_method_container(){}
+      protected:
+        virtual void get_return_value(void * val) = 0;
+        virtual void call_virtual(void * p1 = 0, void * p2 = 0, void * p3 = 0, 
+                                  void * p4 = 0, void * p5 = 0, void * p6 = 0) 
+                                  = 0;
       };
-
-
-      template <class MethodID, class MethodReturnValue,
+      template <class Object, class ReturnValue, class Param1 = void,
+                class Param2 = void, class Param3 = void, 
+                class Param4 = void, class Param5 = void,
+                class Param6 = void>
+        class method_container : public virtual_method_container {
+      public:
+          virtual void get_return_value(void * val) {
+            *static_cast<ReturnValue*>(val) = return_value_;
+          }
+          virtual void call_virtual(void * p1 = 0, void * p2 = 0,
+                                    void * p3 = 0, void * p4 = 0,
+                                    void * p5 = 0, void * p6 = 0) {
+            
+          }
+      private:
+        ReturnValue 
+        ReturnValue return_value_;
+      };
+      /*template <class MethodID, class MethodReturnValue,
                 class MethodParam0 = void, class MethodParamID0 = void, 
-                class MethodParam1 = void, class MethodParamID1 = void>
+                class MethodParam1 = void, class MethodParamID1 = void>*/
 
-      class method_container
+      /*class method_container
         : public std::list<method_info<Implementation, MethodID,
                                        MethodReturnValue, 
                                        MethodParam0, MethodParamID0, 
@@ -69,7 +250,7 @@ namespace boost {
           public:
             method_container() {}
             virtual ~method_container(){}
-      };
+      };*/
 
 
       typedef std::list<generic_method_container *> MethodList;
@@ -444,5 +625,5 @@ BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
 
   } // extension
 } // boost
-
+#endif
 #endif // BOOST_EXTENSION_REFLECTION_HPP
