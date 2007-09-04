@@ -1,0 +1,33 @@
+* Broke the property_map.hpp header file into separate headers.
+    The purpose of this was to make its contents more visible to developers.
+    As it is now, the library is fairly inaccessible - which is compounded by
+    the fact that this library is almost always wrapped for specific
+    applications like Boost.Graph.
+
+* Rewrote the concept classes to use BOOST_concept code.
+    This brings it up to date with the Sgi and Boost.Graph concepts.
+
+* Renamed make_assoc_property_map() to make_associative_property_map().
+    I'm a big fan of long identifiers.
+
+* Renamed ref_property_map to reference_property_map.
+    Again... Just making the name longer and more explicit. I don't think that
+    this is actually used anywhere so it shouldn't affect too much code.
+
+* Ported constant_property_map from SoC code.
+    Also upgraded this to use put_get_helper.
+
+* Templated the identity_property_map.
+    There's no real reason why this shouldn't be templated (except perhaps
+    brevity). Making this property map generic should be a value add, since the
+    non-template version (w/size_t's) is just a specific instance.
+
+    Removed the ability to put() an identity value. I don't know if this is
+    going to have any large impact on Boost.Graph, but it may. So far, it looks
+    like the uses of this class (in all of Boost), are read-only. It might be
+    worth removing lvalue access and non-const get()s.
+
+* Rewrote the dummy_property_map.
+    This looks a lot nicer if the key and value type are explicitly given.
+    The general behavior is a) to return an arbitrary value and b) ignore any
+    writes.
