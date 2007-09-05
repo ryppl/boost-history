@@ -1,0 +1,153 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Tutorial 2</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.68.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Reflection 1.0">
+<link rel="up" href="../tutorials.html" title="Tutorials">
+<link rel="prev" href="tutorial01.html" title=" Tutorial 1">
+<link rel="next" href="../interpreter.html" title=" Interpreter prototype">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.htm">Home</a></td>
+<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td align="center"><a href="../../../../people/people.htm">People</a></td>
+<td align="center"><a href="../../../../more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial01.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorials.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../interpreter.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_reflection.tutorials.tutorial02"></a><a href="tutorial02.html" title=" Tutorial 2"> Tutorial 2</a></h3></div></div></div>
+<p>
+        In this tutorial we show how Boost.Extension could be integrated with Boost.Reflection.
+        This relationship is important because we can load different factories with
+        Boost.Extension (from dynamic link libraries) and then reflect its instances
+        using Boost.Reflection.
+      </p>
+<p>
+        This example is based in the first tutorial , specially in the Reflection
+        part. So it's preferred that the reader is familiarized with that tutorial,
+        and of course has a basic understanding of Boost.Extension.
+      </p>
+<p>
+        First, we create a Boost.Extension based in our car interface. It defines
+        two derived classes, and has the export declaration.
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="keyword">class</span> <span class="identifier">suv</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">car</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+        <span class="identifier">suv</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">name</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">car</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span> <span class="special">{}</span>
+        <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">get_type</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"It's a SUV."</span><span class="special">;</span> <span class="special">}</span>
+        <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">suv</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">compact</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">car</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+        <span class="identifier">compact</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">name</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">car</span><span class="special">(</span><span class="identifier">name</span><span class="special">)</span> <span class="special">{}</span>
+        <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">get_type</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{</span> <span class="keyword">return</span> <span class="string">"It's a compact."</span><span class="special">;</span> <span class="special">}</span>
+        <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">compact</span><span class="special">(</span><span class="keyword">void</span><span class="special">)</span> <span class="special">{}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="keyword">extern</span> <span class="string">"C"</span> 
+<span class="keyword">void</span> <span class="identifier">BOOST_EXTENSION_EXPORT_DECL</span> 
+<span class="identifier">extension_export_car</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">extensions</span><span class="special">::</span><span class="identifier">factory_map</span> <span class="special">&amp;</span> <span class="identifier">fm</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span><span class="identifier">suv</span><span class="special">,</span> <span class="identifier">car</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(</span><span class="string">"SUV"</span><span class="special">);</span>
+  <span class="identifier">fm</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span><span class="identifier">compact</span><span class="special">,</span> <span class="identifier">car</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(</span><span class="string">"Compact"</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        We compile it as a dynamic link library that will be loaded from the main
+        program.
+      </p>
+<p>
+        Having the library we could start our main program. We'll define our reflection
+        (creating it and adding methods) and them we'll cycle the factories, create
+        some instances and use our reflection to call methods.
+      </p>
+<p>
+        Let's define the reflection, very similar to the one in tutorial 1:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">extension</span><span class="special">::</span><span class="identifier">reflection</span><span class="special">&lt;</span><span class="identifier">car</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="identifier">car_reflection</span><span class="special">(</span><span class="string">"A Car!"</span><span class="special">);</span>
+<span class="identifier">car_reflection</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">&gt;(&amp;</span><span class="identifier">car</span><span class="special">::</span><span class="identifier">start</span><span class="special">,</span> <span class="number">3</span><span class="special">);</span>
+<span class="identifier">car_reflection</span><span class="special">.</span><span class="identifier">add</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">,</span> <span class="keyword">float</span><span class="special">,</span> 
+  <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(&amp;</span><span class="identifier">car</span><span class="special">::</span><span class="identifier">turn</span><span class="special">,</span> <span class="string">"turn"</span><span class="special">,</span> <span class="string">"turn_angle"</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        Now we load the dynamic link library:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="identifier">load_single_library</span><span class="special">(</span><span class="identifier">fm</span><span class="special">,</span> <span class="string">"libcar_lib.extension"</span><span class="special">,</span> 
+                    <span class="string">"extension_export_car"</span><span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">car</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">factory_list</span> <span class="special">=</span> 
+        <span class="identifier">fm</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="identifier">car</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;();</span>  
+</pre>
+<p>
+      </p>
+<p>
+        Now, the interesting part. We iterate the factories searching for a Compacts
+        factory. When we find it we create an instance, and then we use our car reflection
+        to call the 3 method (start).
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting">
+<span class="keyword">for</span> <span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">factory</span><span class="special">&lt;</span><span class="identifier">car</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+       <span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">current_car</span> <span class="special">=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> 
+     <span class="identifier">current_car</span> <span class="special">!=</span> <span class="identifier">factory_list</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> 
+     <span class="special">++</span><span class="identifier">current_car</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="keyword">if</span><span class="special">(</span><span class="identifier">current_car</span><span class="special">-&gt;</span><span class="identifier">get_info</span><span class="special">()</span> <span class="special">==</span> <span class="string">"Compact"</span><span class="special">)</span> <span class="special">{</span>
+     <span class="identifier">car</span> <span class="special">*</span><span class="identifier">beetle</span><span class="special">(</span><span class="identifier">current_car</span><span class="special">-&gt;</span><span class="identifier">create</span><span class="special">(</span><span class="string">"VW New Beetle"</span><span class="special">));</span>
+     <span class="identifier">car_reflection</span><span class="special">.</span><span class="identifier">call</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">bool</span><span class="special">&gt;(</span><span class="identifier">beetle</span><span class="special">,</span> <span class="number">3</span><span class="special">);</span>
+     <span class="keyword">delete</span> <span class="identifier">beetle</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<p>
+        In this way you can load instance factories dynamically, and then use your
+        reflections to access your methods.
+      </p>
+</div>
+<table width="100%"><tr>
+<td align="left"></td>
+<td align="right"><small>Copyright © 2007 Mariano G. Consoni, Jeremy Pack</small></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial01.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorials.html"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../interpreter.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

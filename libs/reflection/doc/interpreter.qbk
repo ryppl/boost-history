@@ -35,7 +35,7 @@ we show what happens when we predicated over unknown instances.
 Let's see the session:
 
 [table 
-[[[^Boost.Reflection example - Prototype C++ interpreter.\n
+^Boost.Reflection example - Prototype C++ interpreter.\n
 \n
 > beetle=Compact(VWBeetle)\n
 Instance [beetle] created.\n
@@ -52,7 +52,7 @@ Instance [Cherokee] created.\n
 GrandCherokee started.\n
  --> 1\n
 > Ch.start()\n
-Instance Ch not found.\n]]]]
+Instance Ch not found.\n]
 
 In this session you could see:
 
