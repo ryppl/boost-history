@@ -14,5 +14,11 @@ project
 
 test-suite property-map-test :
     [ compile identity.cpp ]
-    [ compile compile.cpp ]
+    [ compile iterator_property_map.cpp ]
+    [ compile associative_property_map.cpp ]
+    [ compile reference_property_map.cpp ]
+    [ compile constant_property_map.cpp ]
+    [ compile identity_property_map.cpp ]
+    [ compile dummy_property_map.cpp ]
+    [ compile dynamic_property_map.cpp ]
     ;
