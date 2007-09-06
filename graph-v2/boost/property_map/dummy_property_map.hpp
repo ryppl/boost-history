@@ -1,5 +1,5 @@
 // (C) Copyright Jeremy Siek 1999-2001.
-// (C) Andrew Sutton 2007
+// (C) Copyright Andrew Sutton 2007
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -35,6 +35,12 @@ namespace boost { namespace property_map {
         typedef Value& reference;
         typedef read_write_property_map_tag category;
     };
+
+    // This function is provided for completeness, but just retuns the
+    // default value of the value type.
+    template <typename Key, typename Value>
+    void get(const dummy_property_map<Key, Value>& pm, const Key&)
+    { return Value(); }
 
     template <typename Key, typename Value>
     void put(dummy_property_map<Key, Value>& pm, const Key&, const Value&)

@@ -1,5 +1,5 @@
 // (C) Copyright Jeremy Siek 1999-2001.
-// (C) Andrew Sutton 2007
+// (C) Copyright Andrew Sutton 2007
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -32,9 +32,6 @@ namespace boost { namespace property_map {
         typedef const Value& reference;
         typedef readable_property_map_tag category;
 
-        inline value_type& operator[](key_type& v) const
-        { return v; }
-
         inline const value_type& operator[](const key_type& v) const
         { return v; }
     };
@@ -44,10 +41,12 @@ namespace boost { namespace property_map {
     get(const identity_property_map<Value>& pm, const Value& v)
     { return v; }
 
+    // The put() for an identity is a no-op. It makes more sense than
+    // assigning v to k.
     template <typename Value>
-    inline Value&
-    get(const identity_property_map<Value>& pm, Value& v)
-    { return v; }
+    inline void
+    put(identity_property_map<Value>& pm, Value& k, Value& v)
+    { }
 
 } }
 

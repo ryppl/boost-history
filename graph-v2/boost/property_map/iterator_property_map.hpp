@@ -1,5 +1,5 @@
 // (C) Copyright Jeremy Siek 1999-2001.
-// (C) Andrew Sutton 2007
+// (C) Copyright Andrew Sutton 2007
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -66,11 +66,8 @@ namespace boost { namespace property_map {
             , index(id)
         { }
 
-        inline Reference operator[](key_type k) const
-        {
-            // If get(index, k) == i, return the ith offset past iter.
-            return *(iter + get(index, k)) ;
-        }
+        inline reference operator[](const key_type& k) const
+        { return *(iter + get(index, k)); }
 
     protected:
         RandomAccessIterator iter;
@@ -144,7 +141,7 @@ namespace boost { namespace property_map {
         inline safe_iterator_property_map()
         { }
 
-        inline Reference operator[](key_type k) const
+        inline Reference operator[](const key_type& k) const
         {
             BOOST_ASSERT(get(index, k) < num);
             return *(iter + get(index, k)) ;

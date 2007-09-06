@@ -1,5 +1,5 @@
 // (C) Copyright Jeremy Siek 1999-2001.
-// (C) Andrew Sutton 2007
+// (C) Copyright Andrew Sutton 2007
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -38,6 +38,11 @@ namespace boost { namespace property_map {
     {
         return pm.value;
     }
+
+    template <typename Key, typename Value>
+    inline void
+    put(constant_property_map<Key, Value>& pm, const Key&, const Value&)
+    { }
 
 
     // A generator function for creating const reference property maps.
