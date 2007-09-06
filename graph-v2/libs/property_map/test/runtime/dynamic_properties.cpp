@@ -1,136 +1,152 @@
+// (C) Copyright The Trustees of Indiana University 2005
+// (C) Copyright Andrew Sutton 2007
 
-// Copyright 2005 The Trustees of Indiana University.
-
-// Use, modification and distribution is subject to the Boost Software 
+// Use, modification and distribution is subject to the Boost Software
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
+
+//  Authors: Ronald Garcia
+//           Andrew Sutton
+
+#include <iostream>
+#include <string>
+#include <map>
+
+#include <boost/config.hpp>
+#include <boost/test/minimal.hpp>
+#include <boost/property_map/property_traits.hpp>
+#include <boost/property_map/associative_property_map.hpp>
+#include <boost/property_map/dynamic_property_map.hpp>
 
 //
 // dynamic_properties_test.cpp - test cases for the dynamic property maps.
 //
 
-//  Author: Ronald Garcia
-#include <boost/config.hpp>
 
-// For Borland, act like BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS is defined
-#if defined (__BORLANDC__) && (__BORLANDC__ <= 0x570) && !defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS)
-#  define BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
-#endif
-
-#include <boost/test/minimal.hpp>
-#include <boost/dynamic_property_map.hpp>
-#include <boost/property_map.hpp>
-#include <map>
-#include <iostream>
-#include <string>
+using namespace std;
+using namespace boost;
+using namespace property_map;
 
 // generate a dynamic_property_map that maps strings to strings
 // WARNING: This code leaks memory.  For testing purposes only!
 // WARNING: This code uses library internals. For testing purposes only!
-std::auto_ptr<boost::dynamic_property_map>
-string2string_gen(const std::string& name,
-                  const boost::any&,
-                  const boost::any&) {
-  typedef std::map<std::string,std::string> map_t;
-  typedef
-    boost::associative_property_map< std::map<std::string, std::string> >
-    property_t;
+auto_ptr<dynamic_property_map>
+string2string_gen(const string& name, const any&, const any&)
+{
+    typedef map<string, string> Map;
+    typedef associative_property_map< map<string, string> > PropertyMap;
+    typedef property_map::detail::dynamic_property_map_adaptor<PropertyMap> PropertyAdaptor;
 
+    Map* mymap = new Map(); // hint: leaky memory here!
 
-  map_t* mymap = new map_t(); // hint: leaky memory here!
+    // build the property map and adpat it for dynamic properties...
+    PropertyMap property_map(*mymap);
+    auto_ptr<dynamic_property_map> pm(new PropertyAdaptor(property_map));
 
-  property_t property_map(*mymap);
-
-  std::auto_ptr<boost::dynamic_property_map> pm(
-    new
-    boost::detail::dynamic_property_map_adaptor<property_t>(property_map));
-
-  return pm;
+    return pm;
 }
 
+void
+test_put_get(dynamic_properties& properties)
+{
+    // This is a series of put and get tests for a given set of dynamic
+    // properties.
 
-int test_main(int,char**) {
-
-  // build property maps using associative_property_map
-
-  std::map<std::string, int> string2int;
-  std::map<double,std::string> double2string;
-  boost::associative_property_map< std::map<std::string, int> >
-    int_map(string2int);
-  boost::associative_property_map< std::map<double, std::string> >
-    dbl_map(double2string);
-
-
-  // add key-value information
-  string2int["one"] = 1;
-  string2int["five"] = 5;
-  
-  double2string[5.3] = "five point three";
-  double2string[3.14] = "pi";
- 
- 
-  // build and populate dynamic interface
-  boost::dynamic_properties properties;
-  properties.property("int",int_map);
-  properties.property("double",dbl_map);
-  
-  using boost::get;
-  using boost::put;
-  using boost::type;
-  // Get tests
-  {
-    BOOST_CHECK(get("int",properties,std::string("one")) == "1");
+    // Get tests
+    {
+        BOOST_CHECK(get("int", properties,string("one")) == "1");
 #ifndef BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
-    BOOST_CHECK(boost::get<int>("int",properties,std::string("one")) == 1);
+        BOOST_CHECK(get<int>("int", properties,string("one")) == 1);
 #endif
-    BOOST_CHECK(get("int",properties,std::string("one"), type<int>()) == 1);
-    BOOST_CHECK(get("double",properties,5.3) == "five point three");
-  }
+        BOOST_CHECK(get("int", properties, string("one"), type<int>()) == 1);
+        BOOST_CHECK(get("double", properties, 5.3) == "five point three");
+    }
 
-  // Put tests
-  {
-    put("int",properties,std::string("five"),6);
-    BOOST_CHECK(get("int",properties,std::string("five")) == "6");
-    put("int",properties,std::string("five"),std::string("5"));
+    // Put tests
+    {
+        put("int", properties, string("five"), 6);
+        BOOST_CHECK(get("int", properties, string("five")) == "6");
+        put("int", properties, string("five"), string("5"));
 #ifndef BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
-    BOOST_CHECK(get<int>("int",properties,std::string("five")) == 5);
+        BOOST_CHECK(get<int>("int", properties, string("five")) == 5);
 #endif
-    BOOST_CHECK(get("int",properties,std::string("five"),type<int>()) == 5);
-    put("double",properties,3.14,std::string("3.14159"));
-    BOOST_CHECK(get("double",properties,3.14) == "3.14159");
-    put("double",properties,3.14,std::string("pi"));
+        BOOST_CHECK(get("int", properties, string("five"), type<int>()) == 5);
+        put("double", properties, 3.14, string("3.14159"));
+        BOOST_CHECK(get("double", properties, 3.14) == "3.14159");
+        put("double", properties, 3.14, string("pi"));
 #ifndef BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS
-    BOOST_CHECK(get<std::string>("double",properties,3.14) == "pi");
+        BOOST_CHECK(get<string>("double", properties, 3.14) == "pi");
 #endif
-    BOOST_CHECK(get("double",properties,3.14,type<std::string>()) == "pi");
-  }
+        BOOST_CHECK(get("double", properties, 3.14, type<string>()) == "pi");
+    }
+}
 
-  // Nonexistent property
-  {
-    try {
-      get("nope",properties,3.14);
-      BOOST_ERROR("No exception thrown.");
-    } catch (boost::dynamic_get_failure&) { }
+int test_main(int,char**)
+{
+    typedef map<string, int> StringIntMap;
+    typedef map<double, string> DoubleStringMap;
 
-    try {
-      put("nada",properties,3.14,std::string("3.14159"));
-      BOOST_ERROR("No exception thrown.");
-    } catch (boost::property_not_found&) { }
-  }
+    // build property maps using associative_property_map
+    StringIntMap string2int;
+    DoubleStringMap double2string;
+    associative_property_map< StringIntMap > imap(string2int);
+    associative_property_map< DoubleStringMap > dmap(double2string);
 
-  // Nonexistent property gets generated
-  {
-    boost::dynamic_properties props(&string2string_gen);
-    put("nada",props,std::string("3.14"),std::string("pi"));
-    BOOST_CHECK(get("nada",props,std::string("3.14"))  == "pi");
-  }
+    // add key-value information
+    string2int["one"] = 1;
+    string2int["five"] = 5;
+    double2string[5.3] = "five point three";
+    double2string[3.14] = "pi";
 
-  // Use the ignore_other_properties generator
-  {
-    boost::dynamic_properties props(&boost::ignore_other_properties);
-    bool value = put("nada",props,std::string("3.14"),std::string("pi"));
-    BOOST_CHECK(value == false);
-  }
- 
-  return boost::exit_success;
+
+    // build and populate dynamic interface
+    dynamic_properties properties;
+    properties.property("int", imap);
+    properties.property("double", dmap);
+
+    test_put_get(properties);
+
+    // Nonexistent property
+    {
+        try {
+            get("nope", properties, 3.14);
+            BOOST_ERROR("No exception thrown.");
+        }
+        catch (dynamic_get_failure&)
+        { }
+
+        try {
+            put("nada", properties, 3.14, string("3.14159"));
+            BOOST_ERROR("No exception thrown.");
+        }
+        catch (property_not_found&)
+        { }
+    }
+
+    // Nonexistent property gets generated
+    // This ensures that a put() to a named property that hasn't been
+    // previously added to the dynamic properties actually gets added when
+    // the value is put. How does this get added? The string2string_gen
+    // function is called to add the map.
+    {
+        dynamic_properties props(&string2string_gen);
+        put("nada", props, string("3.14"), string("pi"));
+        BOOST_CHECK(get("nada", props, string("3.14")) == "pi");
+    }
+
+    // Use the ignore_other_properties generator
+    {
+        dynamic_properties props(&ignore_other_properties);
+        bool value = put("nada",props,string("3.14"),string("pi"));
+        BOOST_CHECK(value == false);
+    }
+
+    // Copy test. This addresses Ticket #954, about the correct copying
+    // of dynamic_properties.
+    {
+        dynamic_properties dp1(properties);
+    }
+
+
+  return exit_success;
 }
