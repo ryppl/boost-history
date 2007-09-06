@@ -40,6 +40,9 @@
     The general behavior is a) to return an arbitrary value and b) ignore any
     writes.
 
+    Explicitly added a get() that returns the value_type() when invoked. This
+    makes it work with dynamic_properties.
+
 * Moved dynamic_property_map.hpp into the property_map library.
     Made a couple of small changes - mostly cosmetic. Removed backwards
     compatible support for GCC 2.95 (had to do with proper scoping).
@@ -49,3 +52,6 @@
     property maps - if it's read only, we can't instantiate the adaptor class.
     As such, many of the property maps that wouldn't normally support put or
     get functions, actually have them - even if they don't do anything.
+
+    Fixed #954 - added a copy constructor to the dynamic_properties. Also added
+    a virtual constructor to dynamic_property_map to support the operation.
