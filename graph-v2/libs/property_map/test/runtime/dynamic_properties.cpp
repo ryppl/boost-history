@@ -145,6 +145,7 @@ int test_main(int,char**)
     // of dynamic_properties.
     {
         dynamic_properties dp1(properties);
+        test_put_get(dp1);
     }
 
 
