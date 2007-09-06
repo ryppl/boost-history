@@ -9,6 +9,7 @@
 #define BOOST_PROPERTY_MAP_ITERATOR_PROPERTY_MAP_HPP
 
 #include <boost/assert.hpp>
+#include <boost/utility.hpp>
 #include <boost/detail/iterator.hpp>
 #include <boost/property_map/property_traits.hpp>
 #include <boost/property_map/concepts.hpp>
@@ -37,17 +38,25 @@ namespace boost { namespace property_map {
     // imap[key] returns a reference to the ith object past iter. The implication
     // here is that the indices of objects are generally required to be in the
     // range [0, n).
+    //
+    //
+    // ANS: Relaxed the iterator requirements on the iterator map. This is now
+    // allowed to support any forward iterator (e.g., list<>::iterator) as
+    // the basis for offsetting indices. Essentially, this allows us to build
+    // iterator maps over nearly any container type. Note that only random access
+    // iterators support constant time get() and put() functions. Otherwise,
+    // these functions are (painfully) linear.
     template <
-        class RandomAccessIterator,
+        class Iterator,
         class IndexMap,
-        class Type = typename boost::detail::iterator_traits<RandomAccessIterator>::value_type,
-        class Reference = typename boost::detail::iterator_traits<RandomAccessIterator>::reference
+        class Type = typename boost::detail::iterator_traits<Iterator>::value_type,
+        class Reference = typename boost::detail::iterator_traits<Iterator>::reference
     >
     class iterator_property_map
         : public put_get_helper<
                 Reference,
                 iterator_property_map<
-                        RandomAccessIterator,
+                        Iterator,
                         IndexMap,
                         Type,
                         Reference
@@ -60,17 +69,17 @@ namespace boost { namespace property_map {
         typedef Reference reference;
         typedef lvalue_property_map_tag category;
 
-        inline iterator_property_map(RandomAccessIterator cc = RandomAccessIterator(),
+        inline iterator_property_map(Iterator it = Iterator(),
                                      const IndexMap& id = IndexMap())
-            : iter(cc)
+            : iter(it)
             , index(id)
         { }
 
         inline reference operator[](const key_type& k) const
-        { return *(iter + get(index, k)); }
+        { return *(next(iter, get(index, k))); }
 
     protected:
-        RandomAccessIterator iter;
+        Iterator iter;
         IndexMap index;
     };
 
@@ -81,22 +90,20 @@ namespace boost { namespace property_map {
     // NOTE: The requirement that IndexMap model the ReadablePropertyMap concept
     // is somewhat "recursive" since it both defines and the key type for the
     // property map being constructed and provides its type for the function.
-    template <class RandomAccessIterator, class IndexMap>
+    template <class Iterator, class IndexMap>
     inline iterator_property_map<
-            RandomAccessIterator,
-            IndexMap,
-            typename boost::detail::iterator_traits<RandomAccessIterator>::value_type,
-            typename boost::detail::iterator_traits<RandomAccessIterator>::reference
+            Iterator, IndexMap,
+            typename boost::detail::iterator_traits<Iterator>::value_type,
+            typename boost::detail::iterator_traits<Iterator>::reference
         >
-    make_iterator_property_map(RandomAccessIterator iter, IndexMap id)
+    make_iterator_property_map(Iterator iter, IndexMap id)
     {
-        function_requires< RandomAccessIteratorConcept<RandomAccessIterator> >();
+        function_requires< ForwardIteratorConcept<Iterator> >();
         function_requires< ReadablePropertyMapConcept<IndexMap, typename property_traits<IndexMap>::key_type> >();
         typedef iterator_property_map<
-                RandomAccessIterator,
-                IndexMap,
-                typename boost::detail::iterator_traits<RandomAccessIterator>::value_type,
-                typename boost::detail::iterator_traits<RandomAccessIterator>::reference
+                Iterator, IndexMap,
+                typename boost::detail::iterator_traits<Iterator>::value_type,
+                typename boost::detail::iterator_traits<Iterator>::reference
             > PropertyMap;
         return PropertyMap(iter, id);
     }
@@ -108,16 +115,16 @@ namespace boost { namespace property_map {
     // that index types are unsigned.
 
     template <
-        class RandomAccessIterator,
+        class Iterator,
         class IndexMap,
-        class Type = typename boost::detail::iterator_traits<RandomAccessIterator>::value_type,
-        class Reference = typename boost::detail::iterator_traits<RandomAccessIterator>::reference
+        class Type = typename boost::detail::iterator_traits<Iterator>::value_type,
+        class Reference = typename boost::detail::iterator_traits<Iterator>::reference
     >
     class safe_iterator_property_map
         : public put_get_helper<
                 Reference,
                 iterator_property_map<
-                        RandomAccessIterator,
+                        Iterator,
                         IndexMap,
                         Type,
                         Reference
@@ -130,7 +137,7 @@ namespace boost { namespace property_map {
         typedef Reference reference;
         typedef lvalue_property_map_tag category;
 
-        inline safe_iterator_property_map(RandomAccessIterator first,
+        inline safe_iterator_property_map(Iterator first,
                                           std::size_t n = 0,
                                           const IndexMap& id = IndexMap())
             : iter(first)
@@ -154,28 +161,26 @@ namespace boost { namespace property_map {
     protected:
         typedef typename property_traits<IndexMap>::value_type Index;
 
-        RandomAccessIterator iter;
+        Iterator iter;
         Index num;
         IndexMap index;
     };
 
     // A generator function for creating safe iterator property maps.
-    template <class RandomAccessIterator, class IndexMap>
+    template <class Iterator, class IndexMap>
     inline safe_iterator_property_map<
-            RandomAccessIterator,
-            IndexMap,
-            typename boost::detail::iterator_traits<RandomAccessIterator>::value_type,
-            typename boost::detail::iterator_traits<RandomAccessIterator>::reference
+            Iterator, IndexMap,
+            typename boost::detail::iterator_traits<Iterator>::value_type,
+            typename boost::detail::iterator_traits<Iterator>::reference
         >
-    make_safe_iterator_property_map(RandomAccessIterator iter, std::size_t n, IndexMap id)
+    make_safe_iterator_property_map(Iterator iter, std::size_t n, IndexMap id)
     {
-        function_requires< RandomAccessIteratorConcept<RandomAccessIterator> >();
+        function_requires< ForwardIteratorConcept<Iterator> >();
         function_requires< ReadablePropertyMapConcept<IndexMap, typename property_traits<IndexMap>::key_type> >();
         typedef safe_iterator_property_map<
-                RandomAccessIterator,
-                IndexMap,
-                typename boost::detail::iterator_traits<RandomAccessIterator>::value_type,
-                typename boost::detail::iterator_traits<RandomAccessIterator>::reference
+                Iterator, IndexMap,
+                typename boost::detail::iterator_traits<Iterator>::value_type,
+                typename boost::detail::iterator_traits<Iterator>::reference
             > PropertyMap;
 
         return PropertyMap(iter, n, id);
