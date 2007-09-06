@@ -1,16 +1,20 @@
-# Function library
-
-# Copyright (C) 2005 Trustees of Indiana University
+# (C) Copyright Trustees of Indiana University 2005
+# (C) Copyright Andrew Sutton 2007
 #
 # Author: Douglas Gregor
+#         Andrew Sutton
 #
-# Use, modification and distribution is subject to the Boost Software License, 
-# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at 
-# http://www.boost.org/LICENSE_1_0.txt) 
-
+# Use, modification and distribution is subject to the Boost Software License,
+# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+#
 # For more information, see http://www.boost.org/
 
-test-suite property_map
-  : [ compile property_map_cc.cpp ]
-    [ run     dynamic_properties_test.cpp ]
-  ;
+project
+    : requirements
+        <include>../../../
+        <include>$BOOST_ROOT
+    ;
+
+# build-project runtime ;
+build-project compile ;
