@@ -1,4 +1,4 @@
-// (C) Andrew Sutton 2007
+// (C) Copyright Andrew Sutton 2007
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
@@ -13,6 +13,7 @@
 #include <boost/property_map/constant_property_map.hpp>
 #include <boost/property_map/identity_property_map.hpp>
 #include <boost/property_map/dummy_property_map.hpp>
+#include <boost/property_map/dynamic_property_map.hpp>
 
 int main()
 {
@@ -93,5 +94,16 @@ int main()
 
         DummyMap dmap;
         put(dmap, k, v);
+    }
+
+    {
+        // construct a couple different property maps
+        constant_property_map<Key, Value> cmap(v);
+        reference_property_map<Key, Value> rmap(v);
+
+        dynamic_properties dp;
+        dp.property("constant", cmap);
+        // dp.property("reference", rmap);
+
     }
 }
