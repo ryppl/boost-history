@@ -1,0 +1,52 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[/ The copyright is a little funky...
+   It should have one or more distinct lines. /]
+[article Boost.Property_Map
+    [quickbook 1.4]
+    [authors [Siek, Jeremy], [Lee, Lie-Quan], [Lumsdaine, Andrew], [Sutton, Andrew]]
+    [copyright 2000 2001 Jeremy Siek, Lie-Quan Lee, Andrew Lumsdaine]
+    [copyright 2007 Andrew Sutton]
+    [category property_map]
+    [id property_map]
+    [dirname property_map]
+    [purpose
+        Abstract concepts and classes for mapping key objects to their
+        corresponding values.
+    ]
+    [license
+            Distributed under the Boost Software License, Version 1.0.
+            (See accompanying file LICENSE_1_0.txt or copy at
+            [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/ Templates for helping with bibliography stuff /]
+[template bibref[id abbr] '''<link linkend="boost_property_map.bib.'''[id]'''">['''[abbr]''']</link>''']
+[template bibent[id abbr] '''
+<link id="boost_property_map.bib.'''[id]'''" linkend="boost_property_map.bib.'''[id]'''">
+    ['''[abbr]''']
+</link>''']
+
+[/ Quick-link templates /]
+[template ReadablePropertyMap[] [link
+    boost_property_map.concepts.readable_property_map
+    [^ReadablePropertyMap]]]
+[template WritablePropertyMap[] [link
+    boost_property_map.concepts.writable_property_map
+    [^WritablePropertyMap]]]
+[template ReadWritePropertyMap[] [link
+    boost_property_map.concepts.readwrite_property_map
+    [^ReadWritePropertyMap]]]
+[template LvaluePropertyMap[] [link
+    boost_property_map.concepts.lvalue_property_map
+    [^LvaluePropertyMap]]]
+
+[include introduction.qbk]
+[include concepts.qbk]
+[include bibliography.qbk]

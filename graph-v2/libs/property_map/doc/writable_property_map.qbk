@@ -1,0 +1,70 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Writable Property Map]
+A [WritablePropertyMap] has the capability of setting a value object associated
+with the given key via the `put()` function.
+
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[`PropMap`] [A type that models the [WritablePropertyMap] concept.]]
+    [[`Key`] [The type of keys used to access values in the `PropMap`.]]
+    [[`Value`] [The type of values accessed using the `PropMap`.]]
+    [[`pm`] [An object of type `PropMap`.]]
+    [[`k`] [An object of type `Key`.]]
+    [[`v`] [An object of type `Value`.]]
+]
+
+[heading Associated Types]
+[table
+    [[Type] [Description]]
+    [
+        [`property_traits<PropMap>::value_type`]
+        [
+            The type of values accessed through the `PropMap`.
+        ]
+    ]
+    [
+        [`property_traits<PropMap>::reference`]
+        [
+            A type convertible to `value_type`. This is usually either a `const`
+            or non-`const` reference to `value_type`, but can also be the same
+            as `value_type`.
+        ]
+    ]
+    [
+        [`property_traits<PropMap>::key_type`]
+        [
+            The type of key object used to access values in the `PropMap`.
+        ]
+    ]
+    [
+        [`property_traits<PropMap>::category`]
+        [
+            The category of the property map.
+
+            *Requirements:* Must be convertible to `writable_property_tag`.
+        ]
+    ]
+]
+
+[heading Valid Expressions]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Put Property Value]
+        [`put(pm, k, v)`]
+        []
+        [
+            Assign the object `v` to the value associated with key `k` using the
+            property map `pm`. The type of `v` (`Value`) is convertible to `value_type`.
+        ]
+    ]
+]
+
+[endsect]

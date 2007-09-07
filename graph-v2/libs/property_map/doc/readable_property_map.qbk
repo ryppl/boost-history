@@ -1,0 +1,89 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Readable Property Map]
+A [ReadablePropertyMap] provides read access to a value object associated with a
+given key via a call to the `get()` function. The `get()` function returns an
+non-mutable value (either a copy of the value or a `const` reference).
+
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[`PropMap`] [A type that models the [ReadablePropertyMap] concept.]]
+    [[`Key`] [The type of keys used to access values in the `PropMap`.]]
+    [[`pm`] [An object of type `PropMap`.]]
+    [[`k`] [An object of type `Key`.]]
+]
+
+[heading Associated Types]
+[table
+    [[Name] [Type] [Description]]
+    [
+        [Value Type]
+        [`property_traits<PropMap>::value_type`]
+        [
+            The type of values accessed through the `PropMap`.
+        ]
+    ]
+    [
+        [Reference Type]
+        [`property_traits<PropMap>::reference`]
+        [
+            A type convertible to `value_type`. This is usually either a `const`
+            or non-`const` reference to `value_type`, but can also be the same
+            as `value_type`.
+        ]
+    ]
+    [
+        [Key Type]
+        [`property_traits<PropMap>::key_type`]
+        [
+            The type of key object used to access values in the `PropMap`.
+        ]
+    ]
+    [
+        [Property Map Category]
+        [`property_traits<PropMap>::category`]
+        [
+            The category of the property map.
+
+            *Requirements:* Must be convertible to `readable_property_tag`.
+        ]
+    ]
+]
+
+[heading Valid Expressions]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Get Property Value]
+        [`get(pm, k)`]
+        [`property_traits<PropMap>::reference`]
+        [
+            Look up the value associated with the key `k` using the property map
+            `pm`.
+        ]
+    ]
+]
+
+[heading Notes]
+Depending on the type modeling this concept, the return value of the `get()` function
+can be either a reference (`const` or otherwise) or a copy of the value. This depends
+on the semantics of the source that the property map is abstracting. If the underlying
+data source is a container that stores the objects being accessed via the `get()`
+function, then the return type is more likely to be by reference. Moreover, the
+property map that return a reference are also more likely to model the
+[LvaluePropertyMap] concept also. Property maps that /generate/ values (i.e., the
+values cannot be stored in memory) will return copies of those values.
+
+[heading Design Notes]
+At various times the name "read-only" was considered for this concept. However, that
+name is inappropriate because concepts are inherently positive, not negative. This
+becomes obvious when we define the [ReadWritePropertyMap], which refines both the
+[ReadablePropertyMap] and the [WritablePropertyMap] concept. It would not make much
+sense to combine "read-only" and "write-only" concepts.
+[endsect]

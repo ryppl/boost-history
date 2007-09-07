@@ -1,0 +1,19 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Bibliography]
+
+[bibent stl Helwett-Packard'1994] Hewlett-Packard Company.
+[@http://www.sgi.com/tech/stl/ ['Standard Template Library Programmer's Guide]].
+1994.
+
+[bibent boost_concept_check Siek'2000] Siek, Jeremy, and Lumsdaine, Andrew.
+[@http://www.boost.org/libs/concept_check/ ['The Boost Concept Check Library]].
+2000.
+
+
+[endsect]

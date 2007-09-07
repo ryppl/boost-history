@@ -1,0 +1,35 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section ReadWrite Property Map]
+A [ReadWritePropertyMap] can be used to read property values via the `get()`
+function and can be used to write property values via the `put()` function.
+
+[heading Refinement Of]
+[ReadablePropertyMap], [WritablePropertyMap]
+
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[`PropMap`] [A type that models the [ReadWritePropertyMap] concept.]]
+]
+
+[heading Associated Types]
+[table
+    [[Name] [Type] [Description]]
+    [
+        [Property Map Category]
+        [`property_traits<PropMap>::category`]
+        [
+            The category of the property map.
+
+            *Requirements:* Must be convertible to `readwrite_property_tag`.
+        ]
+    ]
+]
+
+[endsect]

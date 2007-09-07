@@ -1,0 +1,64 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Lvalue Property Map]
+The [LvaluePropertyMap] provides an interface for accessing a reference to a value
+object (as opposed to a copy). An [LvaluePropertyMap] can be /mutable/ or /non-mutable/.
+The mutable [LvaluePropertyMap] returns a reference whereas the non-mutable returns
+a `const` reference. Types that model this concept may also provide both mutable
+and non-mutable accessors.
+
+[heading Notation]
+[table
+    [[Expression] [Description]]
+    [[`PropMap`] [A type that models the [ReadablePropertyMap] concept.]]
+    [[`Key`] [The type of keys used to access values in the `PropMap`.]]
+    [[`Value`] [The type of values accessed using the `PropMap`.]]
+    [[`pm`] [An object of type `PropMap`.]]
+    [[`k`] [An object of type `Key`.]]
+    [[`v`] [An object of type `Value`.]]
+]
+
+[heading Associated Types]
+[table
+    [[Name] [Type] [Description]]
+    [
+        [Reference Type]
+        [`property_traits<PropMap>::reference`]
+        [
+            A reference to `value_type`.
+
+            *Requirements:* This must be either a reference or a `const` reference.
+            It must not be the same type as the `value_type`.
+        ]
+    ]
+    [
+        [Property Map Category]
+        [`property_traits<PropMap>::category`]
+        [
+            The category of the property map.
+
+            *Requirements:* Must be convertible to `lvalue_property_tag`.
+        ]
+    ]
+]
+
+[heading Valid Expressions]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Access Property Value]
+        [`pm[k]`]
+        [`property_traits<PropMap>::reference`]
+        [
+            Get a refernce to the value associated with the key `k` using the
+            property map `pm`. The reference can be mutable or non-mutable.
+        ]
+    ]
+]
+
+[endsect]

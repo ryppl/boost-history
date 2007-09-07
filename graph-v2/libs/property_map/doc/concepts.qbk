@@ -1,0 +1,114 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Concepts]
+
+[section Overview]
+The property map interface consists of a set of concepts (see definition of /concept/
+in [bibref boost_concept_check Siek'2000] and [bibref stl Hewlett-Packard'1994])
+that define a syntax for mapping key objects to corresponding value objects. Since
+the property map operations are global functions (actually they don't have to be
+global, but they are always called unqualified and may be found via argument dependent
+lookup), it is possible to overload the map functions such that nearly arbitrary
+property map types and key types can be used. The interface for property maps consists
+of three functions: `get()`, `put()`, and `operator[]`. The following concrete example
+from `example1.cpp` shows how the three functions could be used to access the addresses
+associated with various people. We use a separate function template here to highlight
+the parts of the program that use the property map concept interface. In the `main()`
+function we use `std::map` and `boost::associative_property_map`, but it would have been
+OK to use any type (including a custom type that you create) that fulfills the property
+map requirements.
+
+[import ../example/example1.cpp]
+
+[code_example_1]
+
+For each property map object there is a set of valid keys for which the mapping
+to value objects is defined. Invoking a property map function on an invalid key
+results in undefined behavior. The property map concepts do not specify how this
+set of valid keys is created or modified. A function that uses a property map must
+specify the expected set of valid keys in its preconditions.
+
+The need for property maps came out of the design of the Boost.Graph library, whose
+algorithms needed an interface for accessing properties attached to vertices and
+edges in a graph. In this context the vertex and edge descriptors are the key type
+of the property maps.
+
+Several categories of property maps provide different access capabilities:
+
+[variablelist Property Map Concepts
+    [
+        [[ReadablePropertyMap]]
+        [
+            The associated property data can be read using `get()`.
+        ]
+    ]
+    [
+        [[WritablePropertyMap]]
+        [
+            The associated property can be written using `put()`.
+        ]
+    ]
+    [
+        [[ReadWritePropertyMap]]
+        [
+            The associated property can both be written and read using `get()`
+            and `put()`.
+        ]
+    ]
+    [
+        [[LvaluePropertyMap]]
+        [
+            The associated property is actually represented in memory and it is
+            possible to get a reference to it. The property maps in the lvalue
+            category also support the requirements for read/write property maps.
+        ]
+    ]
+]
+
+There is a separate concept defined for each of the four property map categories.
+These property map concepts are listed below, with links to the documentation
+for each of them.
+
+[heading Category Tags]
+There is a tag struct for each of the categories of property maps, which is defined
+in the header `<boost/property_map/property_traits.hpp>`.
+
+    struct readable_property_map_tag { };
+
+    struct writable_property_map_tag { };
+
+    struct read_write_property_map_tag :
+        public readable_property_map_tag,
+        public writable_property_map_tag { };
+
+    struct lvalue_property_map_tag :
+        public read_write_property_map_tag { };
+
+[heading Property Traits]
+Similar to the `std::iterator_traits` class of the STL, there is a `boost::property_traits`
+class that can be used to deduce the types associated with a property map type: the key
+and value types, and the property map category. There is a specialization of
+`boost::property_traits` so that pointers can be used as property map objects.
+
+    template <typename PropertyMap>
+    struct property_traits {
+        typedef typename PropertyMap::key_type key_type;
+        typedef typename PropertyMap::value_type value_type;
+        typedef typename PropertyMap::category category;
+    };
+
+In addition, the property map functions are overloaded for pointers. These traits
+classes and functions are defined in `<boost/property_traits.hpp>`.
+[endsect]
+
+[include readable_property_map.qbk]
+[include writable_property_map.qbk]
+[include readwrite_property_map.qbk]
+[include lvalue_property_map.qbk]
+
+[endsect]
