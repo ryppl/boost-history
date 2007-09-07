@@ -22,6 +22,11 @@
 
     Added a no-op put() to make it work with dynamic_properties.
 
+* Relaxed iterator requirements for the iterator property map.
+    This lets us use any forward container (or array) as the basis of an
+    iterator property map. However, using non-random access iterators will
+    incur a serious performance penalty (constant to linear).
+
 * Templated the identity_property_map.
     There's no real reason why this shouldn't be templated (except perhaps
     brevity). Making this property map generic should be a value add, since the

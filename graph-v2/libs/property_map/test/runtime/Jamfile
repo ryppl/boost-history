@@ -14,8 +14,8 @@ project
         <include>../../../../
     ;
 
-# test-suite property-map-test :
-#     [ run dynamic_properties.cpp ]
-#     ;
+test-suite property-map-test :
+    [ run dynamic_properties.cpp ]
+    ;
 
-exe dynamic_properties : dynamic_properties.cpp ;
+exe iterator_property_map : iterator_property_map.cpp ;
