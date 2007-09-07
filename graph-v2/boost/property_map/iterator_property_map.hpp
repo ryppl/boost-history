@@ -90,7 +90,7 @@ namespace boost { namespace property_map {
     // NOTE: The requirement that IndexMap model the ReadablePropertyMap concept
     // is somewhat "recursive" since it both defines and the key type for the
     // property map being constructed and provides its type for the function.
-    template <class Iterator, class IndexMap>
+    template <typename Iterator, typename IndexMap>
     inline iterator_property_map<
             Iterator, IndexMap,
             typename boost::detail::iterator_traits<Iterator>::value_type,

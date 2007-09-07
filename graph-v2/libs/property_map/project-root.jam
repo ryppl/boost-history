@@ -1,0 +1,66 @@
+#
+#   Copyright (c) 2006 João Abecasis
+#
+#   Distributed under the Boost Software License, Version 1.0. (See
+#   accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#
+
+##
+##  IMPORTANT NOTE: This file MUST NOT be copied over a boost installation
+##
+
+path-constant top : . ;
+
+import modules ;
+import path ;
+
+local boost-root = [ modules.peek : BOOST_ROOT ] ;
+local graph-header-include = $(top)/../.. ;
+
+# Try to find the boost-root. This is the top-level of the Boost source
+# directory and is used to reference most of the other libs.
+if ! $(boost-root)
+{
+    local boost-search-dirs = [ modules.peek : BOOST_BUILD_PATH ] ;
+
+    for local dir in $(boost-search-dirs)
+    {
+        if [ path.glob $(dir)/../../../ : boost/version.hpp ]
+        {
+            boost-root += $(dir)/../../../ ;
+        }
+    }
+
+    if $(boost-root)
+    {
+        boost-root = [ path.make $(boost-root[1]) ] ;
+    }
+    else
+    {
+        ECHO "Warning: couldn't find BOOST_ROOT in" $(boost-root) ;
+    }
+}
+
+## This is how we can alias other directories in the Boost distribution.
+# use-project /boost/regex : $(boost-root)/libs/regex/build ;
+# use-project /boost/unit_test : $(boost-root)/libs/test/build ;
+
+## Specifies some project-level globals for all subdirs in this
+## directory. Note that the buid-dir puts all of the build files
+## in the bin.v2 directory (for all subdirs!)
+# project math-toolkit
+#     : requirements
+#       <include>$(boost-root)
+#       <include>$(math-header-include)
+#   :   #   build everything in ./bin.v2
+#       build-dir bin.v2
+#   ;
+
+
+
+
+
+
+
+

@@ -47,6 +47,26 @@
     boost_property_map.concepts.lvalue_property_map
     [^LvaluePropertyMap]]]
 
+[template identity_property_map[] [link
+    boost_property_map.reference.identity_property_map
+    [^identity_property_map]]]
+[template constant_property_map[] [link
+    boost_property_map.reference.constant_property_map
+    [^constant_property_map]]]
+[template reference_property_map[] [link
+    boost_property_map.reference.reference_property_map
+    [^reference_property_map]]]
+[template dummy_property_map[] [link
+    boost_property_map.reference.dummy_property_map
+    [^dummy_property_map]]]
+[template associative_property_map[] [link
+    boost_property_map.reference.associative_property_map
+    [^associative_property_map]]]
+[template iterator_property_map[] [link
+    boost_property_map.reference.iterator_property_map
+    [^iterator_property_map]]]
+
 [include introduction.qbk]
 [include concepts.qbk]
+[include reference.qbk]
 [include bibliography.qbk]

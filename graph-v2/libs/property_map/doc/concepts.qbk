@@ -43,22 +43,15 @@ Several categories of property maps provide different access capabilities:
 [variablelist Property Map Concepts
     [
         [[ReadablePropertyMap]]
-        [
-            The associated property data can be read using `get()`.
-        ]
+        [The associated property data can be read using `get()`.]
     ]
     [
         [[WritablePropertyMap]]
-        [
-            The associated property can be written using `put()`.
-        ]
+        [The associated property can be written using `put()`.]
     ]
     [
         [[ReadWritePropertyMap]]
-        [
-            The associated property can both be written and read using `get()`
-            and `put()`.
-        ]
+        [The associated property can both be written and read using `get()` and `put()`.]
     ]
     [
         [[LvaluePropertyMap]]

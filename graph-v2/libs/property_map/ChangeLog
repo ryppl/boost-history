@@ -60,3 +60,8 @@
 
     Fixed #954 - added a copy constructor to the dynamic_properties. Also added
     a virtual constructor to dynamic_property_map to support the operation.
+
+* Thoughts about vector_property_map...
+    This class needs to go. It doesn't follow the same pattern as other property
+    maps because it embeds its own vector within it. Property maps /abstract/ and
+    /decouple/ the read/write concepts, they shouldn't wrap them.

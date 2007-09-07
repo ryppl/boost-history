@@ -37,7 +37,7 @@ namespace boost { namespace property_map {
     };
 
     template <typename Value>
-    inline const Value&
+    inline typename property_traits< identity_property_map<Value> >::reference
     get(const identity_property_map<Value>& pm, const Value& v)
     { return v; }
 

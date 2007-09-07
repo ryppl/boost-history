@@ -1,0 +1,51 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Reference]
+
+The Boost.Property_Map library provides a number of built-in implementations
+of various property maps. These are general purpose property maps that can be
+used off-the-shelf. They are:
+
+[table
+    [[Property Map] [Description]]
+    [
+        [[identity_property_map]]
+        [For any key, returns the given key as the requested value.]
+    ]
+    [
+        [[constant_property_map]]
+        [For all keys, returns the same value that the property map was initially construted with.]
+    ]
+    [
+        [[reference_property_map]]
+        [
+            For all keys, returns a reference to the same object. For any key, putting a
+            value, changes the value being returned.
+        ]
+    ]
+    [
+        [[dummy_property_map]]
+        [For all keys, putting a value does nothing.]
+    ]
+    [
+        [[associative_property_map]]
+        [A property map built over unique pair-associative containers such as `std::map`.]
+    ]
+    [
+        [[iterator_property_map]]
+        [
+            A property map built over forward containers that uses another property
+            map (an index) to provide an offset past iterator over which the map
+            was constructed.
+        ]
+    ]
+]
+
+[include identity_property_map.qbk]
+
+[endsect]

@@ -1,0 +1,100 @@
+[/
+ / Copyright (c) 2007 Andrew Sutton
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Identity Property Map]
+
+    #include <boost/property_map/identity_property_map.hpp>
+
+    template <typename Value>
+    struct identity_property_map { ... };
+
+This property map applies the identity function to its key type, returning each
+the given key as the requested value.
+
+[heading Model Of]
+[ReadablePropertyMap]
+
+[heading Associated Types]
+[table
+    [[Associated Type] [Type]]
+    [
+        [Value Type]
+        [`property_traits<PropMap>::value_type`]
+        [
+            `Value`
+        ]
+    ]
+    [
+        [Reference Type]
+        [`property_traits<PropMap>::reference`]
+        [
+            `const Value&`.
+        ]
+    ]
+    [
+        [Key Type]
+        [`property_traits<PropMap>::key_type`]
+        [
+            `Value`
+        ]
+    ]
+    [
+        [Property Map Category]
+        [`property_traits<PropMap>::category`]
+        [
+            `readable_property_map_tag`
+        ]
+    ]
+]
+
+[heading Non-Member Functions]
+[table
+    [[Name] [Member] [Description]]
+    [
+        [Get Property Value]
+        [
+``
+template <typename Value>
+typename property_traits< identity_property_map<Value> >::reference
+get(const identity_property_map<Value>&, const Value&);
+``
+        ]
+        [
+            Return the identity of the given value, which is the value itself.
+        ]
+    ]
+]
+
+[heading Examples]
+This example shows the use of the `identity_property_map` to support an
+`iterator_property_map`. Specifically, the identity map provides a `get()` function
+that returns the indices into a vector. These indices are transformed into offsets
+from the beginning of the vector, to return the requested value.
+
+[import ../example/iterator_property_map.cpp]
+
+[code_iterator_property_map]
+
+The output of this program is:
+
+[pre
+Smith, Bob
+Thompson, Fred
+]
+
+[heading Design Notes]
+This class was originally written explicitly for unsigned integers, but was later
+made generic to a) be more generic and b) correctly identify the types used in
+association with the get() function.
+
+Although not documented here, this class also implements the syntactic requirements
+for the [WritablePropertyMap] and [LvaluePropertyMap] concepts. However, using
+`put()` with an `identity_property_map` does nothing, and the `operator[]` accessor
+returns the key as a non-mutable value. Preferred usage of this class is through
+the `get()` function.
+
+[endsect]

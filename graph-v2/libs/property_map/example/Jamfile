@@ -1,0 +1,16 @@
+# (C) Copyright Andrew Sutton 2007
+#
+# Use, modification and distribution is subject to the Boost Software License,
+# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+project
+    : requirements
+        <include>../../../
+        <include>$BOOST_ROOT
+    ;
+
+exe example1 : example1.cpp ;
+exe example2 : example2.cpp ;
+exe example3 : example3.cpp ;
+exe iterator_property_map : iterator_property_map.cpp ;

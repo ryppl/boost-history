@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <boost/property_map/archetypes.hpp>
+#include <boost/property_map/identity_property_map.hpp>
 #include <boost/property_map/iterator_property_map.hpp>
 
 int main()
@@ -21,10 +22,10 @@ int main()
     // It has something to do with the fact that the key type of the
     // index map has to be addable to the iterator type of the underling
     // vector. Bizarre.
-    typedef null_archetype<> Key;
+    typedef unsigned Key;
     typedef unsigned Value;
     typedef vector<Value> Vector;
-    typedef readable_property_map_archetype<Key, Value> IndexMap;
+    typedef identity_property_map<Key> IndexMap;
     typedef iterator_property_map<Vector::iterator, IndexMap> IteratorMap;
 
     Key& k = static_object<Key>::get();
