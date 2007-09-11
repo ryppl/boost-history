@@ -1,6 +1,6 @@
 //
-// win_event.hpp
-// ~~~~~~~~~~~~~
+// win_tss_ptr.hpp
+// ~~~~~~~~~~~~~~~
 //
 // Copyright (c) 2003-2007 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
@@ -8,8 +8,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_ASIO_DETAIL_WIN_EVENT_HPP
-#define BOOST_ASIO_DETAIL_WIN_EVENT_HPP
+#ifndef BOOST_ASIO_DETAIL_WIN_TSS_PTR_HPP
+#define BOOST_ASIO_DETAIL_WIN_TSS_PTR_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
@@ -29,7 +29,6 @@
 #include <boost/asio/detail/socket_types.hpp>
 
 #include <boost/asio/detail/push_options.hpp>
-#include <boost/assert.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/asio/detail/pop_options.hpp>
 
@@ -37,61 +36,48 @@ namespace boost {
 namespace asio {
 namespace detail {
 
-class win_event
+template <typename T>
+class win_tss_ptr
   : private noncopyable
 {
 public:
   // Constructor.
-  win_event()
-    : event_(::CreateEvent(0, true, false, 0))
+  win_tss_ptr()
   {
-    if (!event_)
+    tss_key_ = ::TlsAlloc();
+    if (tss_key_ == TLS_OUT_OF_INDEXES)
     {
       DWORD last_error = ::GetLastError();
       boost::system::system_error e(
           boost::system::error_code(last_error,
             boost::asio::error::system_category),
-          "event");
+          "tss");
       boost::throw_exception(e);
     }
   }
 
   // Destructor.
-  ~win_event()
+  ~win_tss_ptr()
   {
-    ::CloseHandle(event_);
+    ::TlsFree(tss_key_);
   }
 
-  // Signal the event.
-  template <typename Lock>
-  void signal(Lock& lock)
+  // Get the value.
+  operator T*() const
   {
-    BOOST_ASSERT(lock.locked());
-    (void)lock;
-    ::SetEvent(event_);
+    return static_cast<T*>(::TlsGetValue(tss_key_));
   }
 
-  // Reset the event.
-  template <typename Lock>
-  void clear(Lock& lock)
+  // Set the value.
+  void operator=(T* value)
   {
-    BOOST_ASSERT(lock.locked());
-    (void)lock;
-    ::ResetEvent(event_);
-  }
-
-  // Wait for the event to become signalled.
-  template <typename Lock>
-  void wait(Lock& lock)
-  {
-    BOOST_ASSERT(lock.locked());
-    lock.unlock();
-    ::WaitForSingleObject(event_, INFINITE);
-    lock.lock();
+    ::TlsSetValue(tss_key_, value);
   }
 
 private:
-  HANDLE event_;
+  // Thread-specific storage to allow unlocked access to determine whether a
+  // thread is a member of the pool.
+  DWORD tss_key_;
 };
 
 } // namespace detail
@@ -102,4 +88,4 @@ private:
 
 #include <boost/asio/detail/pop_options.hpp>
 
-#endif // BOOST_ASIO_DETAIL_WIN_EVENT_HPP
+#endif // BOOST_ASIO_DETAIL_WIN_TSS_PTR_HPP

@@ -1,6 +1,6 @@
 //
-// win_event.hpp
-// ~~~~~~~~~~~~~
+// win_thread.hpp
+// ~~~~~~~~~~~~~~
 //
 // Copyright (c) 2003-2007 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
@@ -8,8 +8,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_ASIO_DETAIL_WIN_EVENT_HPP
-#define BOOST_ASIO_DETAIL_WIN_EVENT_HPP
+#ifndef BOOST_ASIO_DETAIL_WIN_THREAD_HPP
+#define BOOST_ASIO_DETAIL_WIN_THREAD_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
@@ -29,70 +29,92 @@
 #include <boost/asio/detail/socket_types.hpp>
 
 #include <boost/asio/detail/push_options.hpp>
-#include <boost/assert.hpp>
 #include <boost/throw_exception.hpp>
+#include <memory>
+#include <process.h>
 #include <boost/asio/detail/pop_options.hpp>
 
 namespace boost {
 namespace asio {
 namespace detail {
 
-class win_event
+unsigned int __stdcall win_thread_function(void* arg);
+
+class win_thread
   : private noncopyable
 {
 public:
   // Constructor.
-  win_event()
-    : event_(::CreateEvent(0, true, false, 0))
+  template <typename Function>
+  win_thread(Function f)
   {
-    if (!event_)
+    std::auto_ptr<func_base> arg(new func<Function>(f));
+    unsigned int thread_id = 0;
+    thread_ = reinterpret_cast<HANDLE>(::_beginthreadex(0, 0,
+          win_thread_function, arg.get(), 0, &thread_id));
+    if (!thread_)
     {
       DWORD last_error = ::GetLastError();
       boost::system::system_error e(
           boost::system::error_code(last_error,
             boost::asio::error::system_category),
-          "event");
+          "thread");
       boost::throw_exception(e);
     }
+    arg.release();
   }
 
   // Destructor.
-  ~win_event()
+  ~win_thread()
   {
-    ::CloseHandle(event_);
+    ::CloseHandle(thread_);
   }
 
-  // Signal the event.
-  template <typename Lock>
-  void signal(Lock& lock)
+  // Wait for the thread to exit.
+  void join()
   {
-    BOOST_ASSERT(lock.locked());
-    (void)lock;
-    ::SetEvent(event_);
-  }
-
-  // Reset the event.
-  template <typename Lock>
-  void clear(Lock& lock)
-  {
-    BOOST_ASSERT(lock.locked());
-    (void)lock;
-    ::ResetEvent(event_);
-  }
-
-  // Wait for the event to become signalled.
-  template <typename Lock>
-  void wait(Lock& lock)
-  {
-    BOOST_ASSERT(lock.locked());
-    lock.unlock();
-    ::WaitForSingleObject(event_, INFINITE);
-    lock.lock();
+    ::WaitForSingleObject(thread_, INFINITE);
   }
 
 private:
-  HANDLE event_;
+  friend unsigned int __stdcall win_thread_function(void* arg);
+
+  class func_base
+  {
+  public:
+    virtual ~func_base() {}
+    virtual void run() = 0;
+  };
+
+  template <typename Function>
+  class func
+    : public func_base
+  {
+  public:
+    func(Function f)
+      : f_(f)
+    {
+    }
+
+    virtual void run()
+    {
+      f_();
+    }
+
+  private:
+    Function f_;
+  };
+
+  ::HANDLE thread_;
 };
+
+inline unsigned int __stdcall win_thread_function(void* arg)
+{
+  std::auto_ptr<win_thread::func_base> func(
+      static_cast<win_thread::func_base*>(arg));
+  func->run();
+  return 0;
+}
 
 } // namespace detail
 } // namespace asio
@@ -102,4 +124,4 @@ private:
 
 #include <boost/asio/detail/pop_options.hpp>
 
-#endif // BOOST_ASIO_DETAIL_WIN_EVENT_HPP
+#endif // BOOST_ASIO_DETAIL_WIN_THREAD_HPP

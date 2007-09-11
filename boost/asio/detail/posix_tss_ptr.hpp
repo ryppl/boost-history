@@ -1,6 +1,6 @@
 //
-// posix_mutex.hpp
-// ~~~~~~~~~~~~~~~
+// posix_tss_ptr.hpp
+// ~~~~~~~~~~~~~~~~~
 //
 // Copyright (c) 2003-2007 Christopher M. Kohlhoff (chris at kohlhoff dot com)
 //
@@ -8,8 +8,8 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_ASIO_DETAIL_POSIX_MUTEX_HPP
-#define BOOST_ASIO_DETAIL_POSIX_MUTEX_HPP
+#ifndef BOOST_ASIO_DETAIL_POSIX_TSS_PTR_HPP
+#define BOOST_ASIO_DETAIL_POSIX_TSS_PTR_HPP
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1200)
 # pragma once
@@ -31,68 +31,51 @@
 
 #include <boost/asio/error.hpp>
 #include <boost/asio/detail/noncopyable.hpp>
-#include <boost/asio/detail/scoped_lock.hpp>
 
 namespace boost {
 namespace asio {
 namespace detail {
 
-class posix_event;
-
-class posix_mutex
+template <typename T>
+class posix_tss_ptr
   : private noncopyable
 {
 public:
-  typedef boost::asio::detail::scoped_lock<posix_mutex> scoped_lock;
-
   // Constructor.
-  posix_mutex()
+  posix_tss_ptr()
   {
-    int error = ::pthread_mutex_init(&mutex_, 0);
+    int error = ::pthread_key_create(&tss_key_, 0);
     if (error != 0)
     {
       boost::system::system_error e(
           boost::system::error_code(error, boost::asio::error::system_category),
-          "mutex");
+          "tss");
       boost::throw_exception(e);
     }
   }
 
   // Destructor.
-  ~posix_mutex()
+  ~posix_tss_ptr()
   {
-    ::pthread_mutex_destroy(&mutex_);
+    ::pthread_key_delete(tss_key_);
   }
 
-  // Lock the mutex.
-  void lock()
+  // Get the value.
+  operator T*() const
   {
-    int error = ::pthread_mutex_lock(&mutex_);
-    if (error != 0)
-    {
-      boost::system::system_error e(
-          boost::system::error_code(error, boost::asio::error::system_category),
-          "mutex");
-      boost::throw_exception(e);
-    }
+    return static_cast<T*>(::pthread_getspecific(tss_key_));
   }
 
-  // Unlock the mutex.
-  void unlock()
+  // Set the value.
+  void operator=(T* value)
   {
-    int error = ::pthread_mutex_unlock(&mutex_);
-    if (error != 0)
-    {
-      boost::system::system_error e(
-          boost::system::error_code(error, boost::asio::error::system_category),
-          "mutex");
-      boost::throw_exception(e);
-    }
+    ::pthread_setspecific(tss_key_, value);
   }
 
 private:
-  friend class posix_event;
-  ::pthread_mutex_t mutex_;
+  // Thread-specific storage to allow unlocked access to determine whether a
+  // thread is a member of the pool.
+  pthread_key_t tss_key_;
 };
 
 } // namespace detail
@@ -103,4 +86,4 @@ private:
 
 #include <boost/asio/detail/pop_options.hpp>
 
-#endif // BOOST_ASIO_DETAIL_POSIX_MUTEX_HPP
+#endif // BOOST_ASIO_DETAIL_POSIX_TSS_PTR_HPP
