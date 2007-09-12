@@ -18,8 +18,6 @@ project
       <include>$(BOOST_ROOT)
       <define>BOOST_TEST_NO_AUTO_LINK=1
       <toolset>gcc:<define>BOOST_TEST_DYN_LINK
-      <toolset>gcc:<find-static-library>boost_filesystem
-      <toolset>gcc:<find-static-library>boost_unit_test_framework
       <toolset>gcc:<find-static-library>dl
       <toolset>darwin:<define>DYLD_LIBRARY_PATH=../bin/
     :
