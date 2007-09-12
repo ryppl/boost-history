@@ -1,11 +1,11 @@
 /*
  * Copyright Jeremy Pack 2007
  * Distributed under the Boost Software License, Version 1.0. (See
-                                                               * accompanying file LICENSE_1_0.txt or copy at
-                                                               * http://www.boost.org/LICENSE_1_0.txt)
-                                                               *
-                                                               * See http://www.boost.org/ for latest version.
-                                                               */
+ * accompanying file LICENSE_1_0.txt or copy at
+ * http://www.boost.org/LICENSE_1_0.txt)
+ *
+ * See http://www.boost.org/ for latest version.
+ */
 
 #ifndef BOOST_EXTENSION_INSTANCE_HPP
 #define BOOST_EXTENSION_INSTANCE_HPP
@@ -38,7 +38,10 @@ public:
     return *this;
   }
 private:
-  template <class ReturnValue>
+  template <class ReturnValue
+  BOOST_PP_COMMA_IF(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS)
+  BOOST_PP_ENUM_PARAMS(BOOST_PP_INC
+  (BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), class Param)>
   friend class function;
   mutable void * val_;
   void (*destructor_)(void *);

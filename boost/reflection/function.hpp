@@ -15,54 +15,47 @@
 namespace boost {namespace reflections {
 
 typedef void (instance::*MemberFunctionPtr)();
-template <class ReturnValue>
-class function {
-public:
-  function(ReturnValue (*func)(void *, MemberFunctionPtr) = 0,
-           MemberFunctionPtr member_function = 0) 
-  : func_(func),
-    member_function_(member_function) {
-  }
-  ReturnValue call(instance & inst) {
-    return (*func_)(inst.val_, member_function_);
-  }
-  ReturnValue operator()(instance & inst) {
-    return (*func_)(inst.val_, member_function_); 
-  }
-  bool valid() {
-    return member_function_ != 0 && func_ != 0;
-  }
-private:
-  ReturnValue (*func_)(void *, MemberFunctionPtr);
-  MemberFunctionPtr member_function_;
+template <class ReturnValue = void 
+          BOOST_PP_COMMA_IF(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS)
+          BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_PP_INC
+          (BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), class Param, void)>
+class function;
+  
+#define BOOST_REFLECTION_FUNCTION_CLASS(Z, N, _) \
+template <class ReturnValue  BOOST_PP_COMMA_IF(N) \
+  BOOST_PP_ENUM_PARAMS(N, class Param)> \
+class function<ReturnValue BOOST_PP_COMMA_IF(N) \
+               BOOST_PP_ENUM_PARAMS(N, Param)> { \
+public: \
+  function(ReturnValue (*func)(void *, MemberFunctionPtr \
+                        BOOST_PP_COMMA_IF(N) \
+                        BOOST_PP_ENUM_PARAMS(N, Param)) = 0, \
+           MemberFunctionPtr member_function = 0) \
+  : func_(func), \
+    member_function_(member_function) { \
+  } \
+  ReturnValue call(instance & inst BOOST_PP_COMMA_IF(N) \
+                   BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
+    return (*func_)(inst.val_, member_function_ BOOST_PP_COMMA_IF(N) \
+                    BOOST_PP_ENUM_PARAMS(N, p)); \
+  } \
+  ReturnValue operator()(instance & inst BOOST_PP_COMMA_IF(N) \
+                         BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
+    return (*func_)(inst.val_, member_function_ BOOST_PP_COMMA_IF(N) \
+                    BOOST_PP_ENUM_PARAMS(N, p)); \
+  } \
+  bool valid() { \
+    return member_function_ != 0 && func_ != 0; \
+  } \
+private: \
+  ReturnValue (*func_)(void *, MemberFunctionPtr \
+                       BOOST_PP_COMMA_IF(N) \
+                       BOOST_PP_ENUM_PARAMS(N, Param)); \
+  MemberFunctionPtr member_function_; \
 };
-/*template <class T>
-class generic_function {
-  virtual ~generic_function() {}
-  virtual void call(void ** params) = 0;
-};
-template <class T, class ReturnValue = void>
-class function : public generic_function<T> {
-public:
-  function(ReturnValue (T::*func)())
-  : func_(func) {}
-  virtual void call(T * obj, void ** params) {
-    *static_cast<ReturnValue*>(params[0]) =
-    (obj->*func_)();
-  }
-private:
-  ReturnValue (T::*func_)();
-};
-template <class T>
-class function<T, void> : public generic_function<T> {
-public:
-  function(void (T::*func)())
-  : func_(func) {}
-  virtual void call(T * obj, void ** params) {
-    (obj->*func_)();
-  }
-private:
-  void (T::*func_)();
-};  */
+
+
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                BOOST_REFLECTION_FUNCTION_CLASS, _)
 }}
 #endif
