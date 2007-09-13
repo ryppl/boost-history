@@ -25,7 +25,8 @@ using namespace boost::extensions;
 BOOST_AUTO_TEST_CASE(parameters_example)
 {
   // check if the library can be loaded
-  shared_library l((std::string("libParametersLib") + ".extension").c_str());
+  shared_library l((std::string("../bin/libParametersLib")
+                    + ".extension").c_str());
   BOOST_CHECK_EQUAL( l.open(), true );
 
   // check if the factory can return the functor

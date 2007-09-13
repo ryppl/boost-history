@@ -43,17 +43,18 @@ BOOST_AUTO_TEST_CASE(multiple_inheritance_example)
   // less descriptive
 
   // check if the libraries can be loaded
-  shared_library libVehicle((std::string("libVehicle") 
+  shared_library libVehicle((std::string("../bin/libVehicle") 
                              + ".extension").c_str());
-  shared_library libCar((std::string("libCar") + ".extension").c_str());
-  shared_library libComputer((std::string("libComputer") 
+  shared_library libCar((std::string("../bin/libCar") + ".extension").c_str());
+  shared_library libComputer((std::string("../bin/libComputer") 
                               + ".extension").c_str());
-  shared_library libBoat((std::string("libBoat") + ".extension").c_str());
-  shared_library libFlyingCar((std::string("libFlyingCar") 
+  shared_library libBoat((std::string("../bin/libBoat") + ".extension").c_str());
+  shared_library libFlyingCar((std::string("../bin/libFlyingCar") 
                                + ".extension").c_str());
-  shared_library libCarOfTheFuture((std::string("libCarOfTheFuture") 
+  shared_library libCarOfTheFuture((std::string("../bin/libCarOfTheFuture") 
                                     + ".extension").c_str());
-  shared_library libPlane((std::string("libPlane") + ".extension").c_str());
+  shared_library libPlane((std::string("../bin/libPlane")
+                           + ".extension").c_str());
   BOOST_CHECK_EQUAL( libVehicle.open(), true );
   BOOST_CHECK_EQUAL( libCar.open(), true );
   BOOST_CHECK_EQUAL( libComputer.open(), true );

@@ -24,7 +24,9 @@ namespace boost {namespace reflections {
   BOOST_PP_ENUM_PARAMS(N, class Param)> \
 void reflect_constructor() { \
   add_constructor<ParamFirst BOOST_PP_COMMA_IF(N) \
-  BOOST_PP_ENUM_PARAMS(N, Param)>(&construct); \
+  BOOST_PP_ENUM_PARAMS(N, Param)>(&construct<T, ParamFirst \
+                                  BOOST_PP_COMMA_IF(N) \
+                                  BOOST_PP_ENUM_PARAMS(N, Param)>); \
 }
 #define BOOST_REFLECTION_REFLECTOR_REFLECT_FUNCTION(Z, N, _) \
 template <class ReturnValue BOOST_PP_COMMA_IF(N) \
@@ -36,7 +38,7 @@ void reflect(ReturnValue (T::*func)(BOOST_PP_ENUM_PARAMS(N, Param)), \
                     ::get_class_type(), info); \
   ReturnValue (*f2)(void *, MemberFunctionPtr BOOST_PP_COMMA_IF(N) \
       BOOST_PP_ENUM_PARAMS(N, Param)) = \
-      &call_member<ReturnValue BOOST_PP_COMMA_IF(N) \
+      &call_member<T, ReturnValue BOOST_PP_COMMA_IF(N) \
                    BOOST_PP_ENUM_PARAMS(N, Param)>; \
   std::pair<MemberFunctionPtr, FunctionPtr> \
     p(reinterpret_cast<MemberFunctionPtr>(func), \
@@ -58,16 +60,14 @@ void add_constructor(instance (*func)(ParamFirst BOOST_PP_COMMA_IF(N) \
       reinterpret_cast<FunctionPtr>(func))); \
 }
 #define BOOST_REFLECTION_REFLECTOR_CONSTRUCT_FUNCTION(Z, N, _) \
-template <class ParamFirst BOOST_PP_COMMA_IF(N) \
+template <class T BOOST_PP_COMMA_IF(N) \
           BOOST_PP_ENUM_PARAMS(N, class Param)> \
-static instance construct(ParamFirst pf BOOST_PP_COMMA_IF(N) \
-                          BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
-  return instance(static_cast<void*>(new T(pf BOOST_PP_COMMA_IF(N) \
-                                           BOOST_PP_ENUM_PARAMS(N, p))), \
-                  &destruct); \
+instance construct(BOOST_PP_ENUM_BINARY_PARAMS(N, Param, p)) { \
+  return instance(static_cast<void*>(new T(BOOST_PP_ENUM_PARAMS(N, p))), \
+                  &destruct<T>); \
 }
 #define BOOST_REFLECTION_REFLECTOR_CALL_MEMBER_FUNCTION(Z, N, _) \
-template <class ReturnValue BOOST_PP_COMMA_IF(N) \
+template <class T, class ReturnValue BOOST_PP_COMMA_IF(N) \
           BOOST_PP_ENUM_PARAMS(N, class Param)> \
 static ReturnValue call_member(void * val, \
                                MemberFunctionPtr member_function \
@@ -79,6 +79,16 @@ static ReturnValue call_member(void * val, \
       (member_function); \
   return (actual->*func)(BOOST_PP_ENUM_PARAMS(N, p)); \
 }
+template <class T>
+void destruct(void * val) {
+  delete static_cast<T*>(val); 
+}
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                BOOST_REFLECTION_REFLECTOR_CONSTRUCT_FUNCTION, _)
+BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
+                BOOST_REFLECTION_REFLECTOR_CALL_MEMBER_FUNCTION, _)
+
+
 
 template <class T, class Info = std::string,
           class TypeInfo = extensions::default_type_info>
@@ -92,7 +102,7 @@ public:
   }
   typedef basic_function_info<Info, TypeInfo> function_info;
   void reflect_constructor() {
-    add_constructor(&construct);
+    add_constructor(&construct<T>);
   }
   BOOST_PP_REPEAT(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS, \
                   BOOST_REFLECTION_REFLECTOR_REFLECT_CONSTRUCTOR_FUNCTION, _)
@@ -118,24 +128,6 @@ private:
   }
   BOOST_PP_REPEAT(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS, \
     BOOST_REFLECTION_REFLECTOR_ADD_CONSTRUCTOR_FUNCTION, _)
-  static instance construct() {
-    return instance(static_cast<void*>(new T()), &destruct); 
-  }
-  BOOST_PP_REPEAT(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS, \
-    BOOST_REFLECTION_REFLECTOR_CONSTRUCT_FUNCTION, _)
- /* template <class ReturnValue>
-  static ReturnValue call_member(void * val,
-                                 MemberFunctionPtr member_function) {
-    T * actual = static_cast<T*>(val);
-    ReturnValue (T::*func)() = 
-      reinterpret_cast<ReturnValue (T::*)()>(member_function);
-    return (actual->*func)();
-  }*/
-  BOOST_PP_REPEAT(BOOST_PP_INC(BOOST_EXTENSION_MAX_FUNCTOR_PARAMS), \
-    BOOST_REFLECTION_REFLECTOR_CALL_MEMBER_FUNCTION, _)
-  static void destruct(void * val) {
-    delete static_cast<T*>(val); 
-  }
   basic_reflection<Info, TypeInfo> * reflection_;
 };
 #undef BOOST_REFLECTION_REFLECTOR_REFLECT_CONSTRUCTOR_FUNCTION
