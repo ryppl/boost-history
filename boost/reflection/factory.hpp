@@ -7,8 +7,8 @@
  * See http://www.boost.org/ for latest version.
  */
 
-#ifndef BOOST_EXTENSION_FACTORY_HPP
-#define BOOST_EXTENSION_FACTORY_HPP
+#ifndef BOOST_REFLECTION_FACTORY_HPP
+#define BOOST_REFLECTION_FACTORY_HPP
 #include <boost/reflection/generic_constructor.hpp>
 namespace boost {namespace reflections {
 template <class T>
