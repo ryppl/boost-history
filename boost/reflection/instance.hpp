@@ -9,6 +9,8 @@
 
 #ifndef BOOST_EXTENSION_INSTANCE_HPP
 #define BOOST_EXTENSION_INSTANCE_HPP
+
+#include <boost/extension/common.hpp>
 namespace boost {namespace reflections {
 class instance {
 public:

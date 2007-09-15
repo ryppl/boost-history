@@ -15,52 +15,31 @@
 #include <boost/extension/factory_map.hpp>
 #include <boost/extension/shared_library.hpp>
 #include <boost/extension/convenience.hpp>
-
-#include <iostream>
-
-#define BOOST_EXTENSION_USE_PP 1
-
-#include "../car.hpp"
 #include <boost/reflection/reflection.hpp>
-
+#include <iostream>
 
 int main(void)
 {
+  
+  std::map<std::string, boost::reflections::reflection> reflection_map;
+  boost::extensions::shared_library lib("libCarLib.extension");
+  lib.open();
+  lib.get<void, std::map<std::string, 
+    boost::reflections::reflection> &>
+    ("extension_export_car")(reflection_map);
   // Let's create the reflection and add the methods
-  boost::extension::reflection<car, std::string> car_reflection("A Car!");
-  car_reflection.add<int, bool>(&car::start, 3);
-  car_reflection.add<std::string, bool, float, 
-    std::string>(&car::turn, "turn", "turn_angle");
-
-  // extension tests
-  using namespace boost::extensions;
-  factory_map fm;
-
-  // load the car library
-  load_single_library(fm, "libcar_lib.extension", 
-                      "extension_export_car");
-  std::list<factory<car, std::string, std::string> > & factory_list = 
-          fm.get<car, std::string, std::string>();  
-
-  // check if the factories loaded fine
-  if(factory_list.size() < 2) {
-    std::cout << "Error - the classes were not found (" 
-              << factory_list.size() << ").\n";
-    return -1;
-  }
-
-  // create some instances and call the method "3" (start)
-  for (std::list<factory<car, std::string, std::string> >
-         ::iterator current_car = factory_list.begin(); 
-       current_car != factory_list.end(); 
-       ++current_car)
-  {
-    if(current_car->get_info() == "Compact") {
-       car *beetle(current_car->create("VW New Beetle"));
-       car_reflection.call<int, bool>(beetle, 3);
-       delete beetle;
-    }
-  }
-
-  return 0;
+  boost::reflections::reflection & first_reflection =
+    reflection_map["suv"];
+  boost::reflections::reflection & second_reflection =
+    reflection_map["compact"];
+  boost::reflections::instance first_instance =
+    first_reflection.get_constructor<const char *>()("First Instance");
+  boost::reflections::instance second_instance =
+    second_reflection.get_constructor<const char *>()("Second Instance");
+  std::cout <<
+    first_reflection.get_function<const char *>("get_type")(first_instance)
+    << std::endl;
+  std::cout <<
+    second_reflection.get_function<const char *>("get_type")(second_instance)
+    << std::endl;
 }

@@ -35,7 +35,7 @@ private:
 };
 using namespace boost::reflections;
 BOOST_AUTO_TEST_CASE(argless)
-{/*
+{
   reflection car_reflection;
   reflector<car> car_reflector(&car_reflection);
   car_reflector.reflect_constructor<float>();
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(argless)
   BOOST_CHECK_EQUAL
     (car_reflection.get_function<float>("get_cost")
      .call(car_instance), 10.0f);
-  function<int> f2 =
+  function<float> f2 =
     car_reflection.get_function<float>("get_cost");
-  BOOST_CHECK_EQUAL(f2(car_instance), 10.0f);*/
+  BOOST_CHECK_EQUAL(f2(car_instance), 10.0f);
 }
