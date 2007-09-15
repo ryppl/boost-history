@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title> Factories</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.68.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension 1.0">
 <link rel="up" href="../index.html" title="Chapter 1. Boost.Extension 1.0">
 <link rel="prev" href="tutorials/tutorial06.html" title=" Tutorial 6">
@@ -24,13 +24,49 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost_extension.factories"></a><a href="factories.html" title=" Factories"> Factories</a></h2></div></div></div>
+<a name="boost_extension.factories"></a> Factories</h2></div></div></div>
 <p>
-      Factories are generated automatically. In the future, this section will contain
-      more information about methods.
+      In normal usage, a <code class="computeroutput"><span class="identifier">factory</span></code>
+      is initialized in a shared library, then returned to an application with a
+      reference to a function that can be used to create the given implementation
+      of the <code class="computeroutput"><span class="identifier">factory</span></code> interface.
+    </p>
+<p>
+      A factory has the following template options:
+    </p>
+<p>
+      <code class="computeroutput"><span class="identifier">factory</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">ARGS</span><span class="special">&gt;</span></code>
+    </p>
+<p>
+      Where <code class="computeroutput"><span class="identifier">T</span></code> is the interface that
+      it returns, and <code class="computeroutput"><span class="identifier">ARGS</span></code> is a variable
+      length list of the argument types to the factory function. The maximum possible
+      length of the arglist is set by <code class="computeroutput"><span class="identifier">BOOST_EXTENSION_MAX_FUNCTOR_PARAMS</span></code>,
+      which defaults to six.
+    </p>
+<p>
+      The functions available in <code class="computeroutput"><span class="identifier">factory</span></code>
+      are:
+    </p>
+<a name="boost_extension.factories.void_set_lt_d_gt___"></a><h3>
+<a name="id934360"></a>
+      void set&lt;D&gt;()
+    </h3>
+<p>
+      The <code class="computeroutput"><span class="identifier">set</span></code> function takes a template
+      argument describing the class that will be created by this factory, and that
+      implements the <code class="computeroutput"><span class="identifier">T</span></code> interface.
+      This function may be called multiple times, to change the factory function.
+    </p>
+<a name="boost_extension.factories.bool_is_valid__"></a><h3>
+<a name="id934400"></a>
+      bool is_valid()
+    </h3>
+<p>
+      If set has been called, this returns true. Otherwise, it returns false.
     </p>
 </div>
-<table width="100%"><tr>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><small>Copyright © 2007 Jeremy Pack, Mariano G. Consoni</small></td>
 </tr></table>

@@ -60,14 +60,6 @@ public:
         virtual ~Jabber(void) {}
 };
 
-inline bool operator<(const boost::shared_ptr<network_parameters> & first,
-                      const boost::shared_ptr<network_parameters> & second) {
-  int comp = strcmp(first->hostname(), second->hostname());
-  if (!comp) {
-    return strcmp(first->port(), second->port()) < 0;
-  }
-  else return comp < 0;
-}
 
 extern "C" void BOOST_EXTENSION_EXPORT_DECL 
 extension_export_plugins(boost::extensions::factory_map & fm)

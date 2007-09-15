@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title> Introduction</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.68.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension 1.0">
 <link rel="up" href="../index.html" title="Chapter 1. Boost.Extension 1.0">
 <link rel="prev" href="../index.html" title="Chapter 1. Boost.Extension 1.0">
@@ -24,43 +24,38 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost_extension.introduction"></a><a href="introduction.html" title=" Introduction"> Introduction</a></h2></div></div></div>
-<p>
-      Wrappers for loading classes from linked libraries to extend the functionality
-      of a program. Created to ease the creation of plugins.
-    </p>
+<a name="boost_extension.introduction"></a> Introduction</h2></div></div></div>
 <p>
       The Boost.Extension library has been developed to ease the development of plugins
-      and similar extensions to software. Classes can be made available from linked
-      libraries and loaded automatically by the application.
+      and similar extensions to software. Classes can be made available from shared
+      libraries and loaded by the application.
     </p>
 <p>
-      The documentation is completely incomplete. Sorry. Look at tutorial #1 for
-      examples of basic usage, and tutorial #2 for examples of advanced usage.
+      The documentation is mostly complete.
     </p>
 <p>
       Note the following:
     </p>
-<div class="orderedlist"><ol type="1">
+<div class="itemizedlist"><ul type="disc">
 <li>
         Multiple and virtual inheritance are supported
       </li>
 <li>
-        No macros are currently used (besides those required by Windows for exported
-        functions)
+        Library users do not need to use any macros (besides those required by Windows
+        for exported functions)
       </li>
 <li>
         Only one external function required per shared library to export classes
       </li>
 <li>
-        RTTI is used by default, but it is possible to use user-defined type identifications.
+        RTTI is used by default, but it is possible to use user-defined type identification
       </li>
 <li>
         Classes do not need to be modified to be loadable
       </li>
-</ol></div>
+</ul></div>
 </div>
-<table width="100%"><tr>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><small>Copyright © 2007 Jeremy Pack, Mariano G. Consoni</small></td>
 </tr></table>

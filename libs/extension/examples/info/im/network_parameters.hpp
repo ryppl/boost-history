@@ -11,6 +11,7 @@
 
 #include <string>
 #include <iostream>
+#include <boost/shared_ptr.hpp>
 
 // interface for the parameters of each plugin
 class network_parameters
@@ -53,3 +54,12 @@ class Jabber_network_parameters : public network_parameters
 
   virtual ~Jabber_network_parameters() {}
 };
+
+inline bool operator<(const boost::shared_ptr<network_parameters> & first,
+                      const boost::shared_ptr<network_parameters> & second) {
+  int comp = strcmp(first->hostname(), second->hostname());
+  if (!comp) {
+    return strcmp(first->port(), second->port()) < 0;
+  }
+  else return comp < 0;
+}

@@ -43,7 +43,9 @@ int main()
       // Using auto_ptr to avoid needing delete. Using smart_ptrs 
       // is recommended.
       // Note that this has a zero argument constructor - currently 
-      // constructors with up to six arguments can be used.
+      // constructors with up to six arguments can be used by
+      // default - define BOOST_EXTENSION_MAX_FUNCTOR_PARAMS to a
+      // a larger value if needed.
       std::auto_ptr<word> word_ptr(current_word->second.create());
       std::cout << word_ptr->get_val() << " is " 
                 << current_word->first.english_translation 

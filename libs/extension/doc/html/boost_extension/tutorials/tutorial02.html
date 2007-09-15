@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title> Tutorial 2</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.68.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../../index.html" title="Chapter 1. Boost.Extension 1.0">
 <link rel="up" href="../tutorials.html" title="Tutorials">
 <link rel="prev" href="tutorial01.html" title=" Tutorial 1">
@@ -24,7 +24,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_extension.tutorials.tutorial02"></a><a href="tutorial02.html" title=" Tutorial 2"> Tutorial 2</a></h3></div></div></div>
+<a name="boost_extension.tutorials.tutorial02"></a> Tutorial 2</h3></div></div></div>
 <p>
         This tutorial shows more advanced class loading. The example described here
         is contrived, and such a convoluted design is not used as an example of good
@@ -76,10 +76,10 @@
         
 </p>
 <pre class="programlisting">
-<span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="special">;</span>
-<span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="special">;</span>
-<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">extension</span> <span class="special">;</span>
-<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">lib</span> <span class="special">;</span>
+<span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="special">;</span>
+<span class="identifier">import</span> <span class="identifier">type</span> <span class="special">:</span> <span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="special">;</span>
+<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">suffix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">extension</span> <span class="special">;</span>
+<span class="identifier">type</span><span class="special">.</span><span class="identifier">change</span><span class="special">-</span><span class="identifier">generated</span><span class="special">-</span><span class="identifier">target</span><span class="special">-</span><span class="identifier">prefix</span> <span class="identifier">SHARED_LIB</span> <span class="special">:</span> <span class="special">:</span> <span class="identifier">lib</span> <span class="special">;</span>
 </pre>
 <p>
       </p>
@@ -91,8 +91,8 @@
         
 </p>
 <pre class="programlisting">
-<span class="identifier">lib</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">vehicle</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">Car</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">vehicle</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">Car</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
 </pre>
 <p>
       </p>
@@ -107,21 +107,22 @@
         
 </p>
 <pre class="programlisting">
-<span class="identifier">lib</span> <span class="identifier">Plane</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">plane</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">Boat</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">boat</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">Computer</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">computer</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">FlyingCar</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">flying_car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
-<span class="identifier">lib</span> <span class="identifier">CarOfTheFuture</span> <span class="special">:</span> 
+<span class="identifier">lib</span> <span class="identifier">Plane</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">plane</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">Boat</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">boat</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Vehicle</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">Computer</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">computer</span><span class="special">.</span><span class="identifier">cpp</span> <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">FlyingCar</span> <span class="special">:</span> <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">flying_car</span><span class="special">.</span><span class="identifier">cpp</span> <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span>
+              <span class="special">:</span> <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> <span class="special">;</span>
+<span class="identifier">lib</span> <span class="identifier">CarOfTheFuture</span> <span class="special">:</span> 
   <span class="identifier">multiple_inheritance</span><span class="special">/</span><span class="identifier">car_of_the_future</span><span class="special">.</span><span class="identifier">cpp</span> 
-  <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span> 
-  <span class="identifier">FlyingCar</span> <span class="identifier">Computer</span> <span class="identifier">Boat</span> 
+  <span class="identifier">Plane</span> <span class="identifier">Car</span> <span class="identifier">Vehicle</span> 
+  <span class="identifier">FlyingCar</span> <span class="identifier">Computer</span> <span class="identifier">Boat</span> 
   <span class="special">:</span> 
   <span class="special">&lt;</span><span class="identifier">link</span><span class="special">&gt;</span><span class="identifier">shared</span> 
 <span class="special">;</span>
 
-<span class="identifier">install</span> <span class="special">../</span><span class="identifier">bin</span> <span class="special">:</span> 
-  <span class="identifier">HelloWorld</span> <span class="identifier">HelloWorldLib</span> <span class="identifier">Vehicle</span> <span class="identifier">Boat</span> <span class="identifier">FlyingCar</span> 
-  <span class="identifier">CarOfTheFuture</span> <span class="identifier">MultipleInheritance</span> 
+<span class="identifier">install</span> <span class="special">../</span><span class="identifier">bin</span> <span class="special">:</span> 
+  <span class="identifier">HelloWorld</span> <span class="identifier">HelloWorldLib</span> <span class="identifier">Vehicle</span> <span class="identifier">Boat</span> <span class="identifier">FlyingCar</span> 
+  <span class="identifier">CarOfTheFuture</span> <span class="identifier">MultipleInheritance</span> 
   <span class="special">:</span>
   <span class="special">;</span>
 </pre>
@@ -143,27 +144,27 @@
         
 </p>
 <pre class="programlisting">
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_FLYING_CAR_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_BOAT_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
-<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_COMPUTER_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
-<span class="preprocessor">#include</span> <span class="string">"flying_car.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"boat.hpp"</span>
-<span class="preprocessor">#include</span> <span class="string">"computer.hpp"</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">typeinfo</span><span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">BOOST_EXTENSION_CAR_OF_THE_FUTURE_DECL</span> 
-  <span class="identifier">car_of_the_future</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">flying_car</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">boat</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">computer</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_FLYING_CAR_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_BOAT_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_EXTENSION_COMPUTER_DECL</span> <span class="identifier">BOOST_EXTENSION_IMPORT_DECL</span>
+<span class="preprocessor">#include</span> <span class="string">"flying_car.hpp"</span>
+<span class="preprocessor">#include</span> <span class="string">"boat.hpp"</span>
+<span class="preprocessor">#include</span> <span class="string">"computer.hpp"</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">typeinfo</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">BOOST_EXTENSION_CAR_OF_THE_FUTURE_DECL</span> 
+  <span class="identifier">car_of_the_future</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">flying_car</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">boat</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">computer</span>
 <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
-  <span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nCreated a Car of the Future"</span><span class="special">;}</span>
-  <span class="special">~</span><span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nDestroyed a Car of the Future"</span><span class="special">;}</span>
-  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">list_capabilities</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
+  <span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nCreated a Car of the Future"</span><span class="special">;}</span>
+  <span class="special">~</span><span class="identifier">car_of_the_future</span><span class="special">(</span><span class="keyword">void</span><span class="special">){</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"\nDestroyed a Car of the Future"</span><span class="special">;}</span>
+  <span class="keyword">virtual</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">list_capabilities</span><span class="special">(</span><span class="keyword">void</span><span class="special">);</span>
 <span class="special">};</span>
 </pre>
 <p>
       </p>
 </div>
-<table width="100%"><tr>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><small>Copyright © 2007 Jeremy Pack, Mariano G. Consoni</small></td>
 </tr></table>

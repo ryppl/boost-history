@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title> Shared Libraries</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.68.1">
+<meta name="generator" content="DocBook XSL Stylesheets V1.67.2">
 <link rel="start" href="../index.html" title="Chapter 1. Boost.Extension 1.0">
 <link rel="up" href="../index.html" title="Chapter 1. Boost.Extension 1.0">
 <link rel="prev" href="factories.html" title=" Factories">
@@ -24,12 +24,85 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="boost_extension.shared_libraries"></a><a href="shared_libraries.html" title=" Shared Libraries"> Shared Libraries</a></h2></div></div></div>
+<a name="boost_extension.shared_libraries"></a> Shared Libraries</h2></div></div></div>
 <p>
-      Content not yet created.
+      A <code class="computeroutput"><span class="identifier">shared_library</span></code> refers to
+      a loadable module, the type of which depends on the platform:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        Windows: .dll
+      </li>
+<li>
+        Most Linux or Unix: .so
+      </li>
+<li>
+        Mac OS X: .dylib or .bundle (See <a href="../">Appendix C</a>)
+      </li>
+</ul></div>
+<a name="boost_extension.shared_libraries._code__phrase_role__identifier__shared_library__phrase__phrase_role__special_____phrase__phrase_role__keyword__const__phrase__nbsp__phrase_role__keyword__char__phrase__nbsp__phrase_role__special_____phrase__nbsp__phrase_role__identifier__location__phrase__phrase_role__special_____phrase__nbsp__phrase_role__keyword__bool__phrase__nbsp__phrase_role__identifier__auto_close__phrase__nbsp__phrase_role__special_____phrase__nbsp__phrase_role__keyword__false__phrase__phrase_role__special_____phrase___code_"></a><h4>
+<a name="id934465"></a>
+      <code class="computeroutput"><span class="identifier">shared_library</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">location</span><span class="special">,</span> <span class="keyword">bool</span> <span class="identifier">auto_close</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">)</span></code>
+    </h4>
+<p>
+      <code class="computeroutput"><span class="identifier">location</span></code> is the relative path
+      of the shared library to laod, and <code class="computeroutput"><span class="identifier">auto_close</span></code>
+      sets whether or not the library will be automatically closed when the <code class="computeroutput"><span class="identifier">shared_library</span></code> is destroyed. This function
+      does not open the library.
+    </p>
+<a name="boost_extension.shared_libraries._code__phrase_role__keyword__bool__phrase__nbsp__phrase_role__identifier__open__phrase__phrase_role__special______phrase___code_"></a><h4>
+<a name="id934592"></a>
+      <code class="computeroutput"><span class="keyword">bool</span> <span class="identifier">open</span><span class="special">()</span></code>
+    </h4>
+<p>
+      Returns true if the library is opened successfully.
+    </p>
+<a name="boost_extension.shared_libraries._code__phrase_role__keyword__bool__phrase__nbsp__phrase_role__identifier__is_open__phrase__phrase_role__special______phrase___code_"></a><h4>
+<a name="id934636"></a>
+      <code class="computeroutput"><span class="keyword">bool</span> <span class="identifier">is_open</span><span class="special">()</span></code>
+    </h4>
+<p>
+      Returns true if the library is open.
+    </p>
+<a name="boost_extension.shared_libraries._code__phrase_role__keyword__void__phrase__nbsp__phrase_role__identifier__close__phrase__phrase_role__special______phrase___code_"></a><h4>
+<a name="id934679"></a>
+      <code class="computeroutput"><span class="keyword">void</span> <span class="identifier">close</span><span class="special">()</span></code>
+    </h4>
+<p>
+      Close the library. Note that an OS specific shared library usually keeps a
+      reference count, meaning that calling this function will just decrease the
+      reference count. If the reference count drops to 0, the library will be ready
+      to actually closed - though the platform is not required to actually close
+      the library even then. As such, this function can sometimes give a performance
+      boost, by freeing up RAM, but will often do nothing.
+    </p>
+<a name="boost_extension.shared_libraries._code__phrase_role__identifier__returnvalue__phrase__nbsp__phrase_role__special______phrase__phrase_role__identifier__get__phrase__phrase_role__special_____phrase__phrase_role__keyword__const__phrase__nbsp__phrase_role__keyword__char__phrase__nbsp__phrase_role__special_____phrase__nbsp__phrase_role__identifier__name__phrase__phrase_role__special_______phrase__phrase_role__identifier__args__phrase__phrase_role__special_____phrase___code_"></a><h4>
+<a name="id934725"></a>
+      <code class="computeroutput"><span class="identifier">ReturnValue</span> <span class="special">(*</span><span class="identifier">get</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">name</span><span class="special">))(</span><span class="identifier">ARGS</span><span class="special">)</span></code>
+    </h4>
+<p>
+      This function returns a pointer to a function in a dll with <code class="computeroutput"><span class="identifier">name</span></code>.
+      Note that a C++ function needs to have <code class="computeroutput"><span class="keyword">extern</span> <span class="string">"C"</span></code> before it in order for this to
+      work. To get a function like this: 
+</p>
+<pre class="programlisting">
+<span class="keyword">extern</span> <span class="string">"C"</span>
+<span class="keyword">int</span> <span class="identifier">get_value</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*</span> <span class="identifier">name</span><span class="special">)</span> <span class="special">{</span>
+  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      You would call: 
+</p>
+<pre class="programlisting">
+<span class="identifier">mySharedLibrary</span><span class="special">.</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">const</span> <span class="keyword">char</span> <span class="special">*&gt;(</span><span class="string">"get_value"</span><span class="special">);</span>
+</pre>
+<p>
+      [note It is recommended that you use Boost.Function to capture the return values
+      of <code class="computeroutput"><span class="identifier">get</span></code>, but not required.]
     </p>
 </div>
-<table width="100%"><tr>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
 <td align="right"><small>Copyright © 2007 Jeremy Pack, Mariano G. Consoni</small></td>
 </tr></table>
