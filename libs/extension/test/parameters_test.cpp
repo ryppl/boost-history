@@ -19,14 +19,19 @@
 
 #include "../examples/parameters/lots_of_parameters_iface.hpp"
 
+#if defined(MSC_VER) || defined(WIN32)
+#define BOOST_EXTENSION_DIR_START "..\bin\"
+#else
+#define BOOST_EXTENSION_DIR_START "../bin/"
+#endif
 
 using namespace boost::extensions;
 
 BOOST_AUTO_TEST_CASE(parameters_example)
 {
   // check if the library can be loaded
-  shared_library l((std::string("../bin/libParametersLib")
-                    + ".extension").c_str());
+  shared_library l((std::string(BOOST_EXTENSION_DIR_START) +
+                   "libParametersLib.extension").c_str());
   BOOST_CHECK_EQUAL( l.open(), true );
 
   // check if the factory can return the functor
