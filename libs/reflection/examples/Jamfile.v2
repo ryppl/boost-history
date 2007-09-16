@@ -20,7 +20,7 @@ project
       <include>../../../
       <include>$(BOOST_ROOT)
       <include>../../../../src/sandbox/
-      <toolset>gcc:<find-static-library>dl
+      <toolset>gcc:<find-shared-library>dl
       <toolset>gcc:<linkflags>"-Wl,-rpath,'$ORIGIN'"
       <toolset>darwin:<define>DYLD_LIBRARY_PATH=./
     :
