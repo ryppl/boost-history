@@ -3,8 +3,8 @@
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_DATAFLOW_CONNECTION_CONSUMER_MAP_HPP
-#define BOOST_DATAFLOW_CONNECTION_CONSUMER_MAP_HPP
+#ifndef BOOST_DATAFLOW_CONNECTION_PRODUCER_MAP_HPP
+#define BOOST_DATAFLOW_CONNECTION_PRODUCER_MAP_HPP
 
 #include <boost/dataflow/support.hpp>
 
@@ -19,39 +19,39 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/result_of.hpp>
+#include <boost/call_traits.hpp>
 
 namespace boost { namespace dataflow {
 
-struct fusion_map_consumer;
+struct fusion_map_producer;
 
 template<class T>
-struct consumer_map : public T
+struct producer_map : public T
 {
-    consumer_map(const T& t) : T(t) {}
-    typedef fusion_map_consumer consumer_category;
+    producer_map(const T& t) : T(t) {}
+    typedef fusion_map_producer producer_category;
     typedef
         typename boost::remove_const<
             typename boost::remove_reference<
                 typename boost::fusion::result_of::front<T>::type
             >::type
-        >::type::second_type proxy_producer_for;
-    typedef mutable_proxy_producer proxy_producer_category;
+        >::type::second_type proxy_consumer_for;
+    typedef mutable_proxy_consumer proxy_consumer_category;
 
-    typename get_proxied_producer_type<proxy_producer_for>::type &get_proxied_producer() const
+    typename boost::call_traits<typename get_proxied_consumer_type<proxy_consumer_for>::type>::reference get_proxied_consumer() const
     {
-        return boost::dataflow::get_proxied_producer(boost::fusion::front(*this).second);
+        return boost::dataflow::get_proxied_consumer(boost::fusion::front(*this).second);
     }
 };
 
 namespace extension
 {
-    // component >>= consumer_map
+    // component >>= coxsumer_map
     template<typename ProducerTag, typename ConsumerTag>
     struct connect_impl<ProducerTag, ConsumerTag,
-        typename boost::enable_if<//boost::mpl::and_<
-            //is_producer<ProducerTag>,
-            boost::is_base_of<fusion_map_consumer, ConsumerTag>
-        /*>*/ >::type >
+        typename boost::enable_if<
+            boost::is_base_of<fusion_map_producer, ProducerTag>
+        >::type >
     {
         template<typename Producer, typename Consumer>
         struct apply
@@ -59,34 +59,34 @@ namespace extension
             static void call(const Producer &producer, const Consumer &consumer)
             {
                 connect(
-                    producer,
                     boost::fusion::at_key<
-                        typename produced_type_of<Producer>::type
-                    >(consumer));
+                        typename consumed_type_of<Consumer>::type
+                    >(producer),
+                    consumer);
             }
             static void call(const Producer &producer, Consumer &consumer)
             {
                 connect(
-                    producer,
                     boost::fusion::at_key<
-                        typename produced_type_of<Producer>::type
-                    >(consumer));
+                        typename consumed_type_of<Consumer>::type
+                    >(producer),
+                    consumer);
             }
             static void call(Producer &producer, const Consumer &consumer)
             {
                 connect(
-                    producer,
                     boost::fusion::at_key<
-                        typename produced_type_of<Producer>::type
-                    >(consumer));
+                        typename consumed_type_of<Consumer>::type
+                    >(producer),
+                    consumer);
             }
             static void call(Producer &producer, Consumer &consumer)
             {
                 connect(
-                    producer,
                     boost::fusion::at_key<
-                        typename produced_type_of<Producer>::type
-                    >(consumer));
+                        typename consumed_type_of<Consumer>::type
+                    >(producer),
+                    consumer);
             } 
         };
     };
@@ -94,6 +94,6 @@ namespace extension
     
 } } // namespace boost::dataflow
 
-#endif // BOOST_DATAFLOW_CONNECTION_CONSUMER_MAP_HPP
+#endif // BOOST_DATAFLOW_CONNECTION_PRODUCER_MAP_HPP
 
 

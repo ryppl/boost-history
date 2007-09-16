@@ -16,6 +16,7 @@ xml dataflow_xml : dataflow.qbk ;
 doxygen dataflow_doxygen
    :
       [ glob ../../../boost/dataflow/support.hpp ]
+      [ glob ../../../boost/dataflow/support/*.hpp ]
       [ glob ../../../boost/dataflow/signal/*.hpp ]
       [ glob ../../../boost/dataflow/signal/connection/*.hpp ]
       [ glob ../../../boost/dataflow/signal/component/*.hpp ]

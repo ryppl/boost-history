@@ -6,6 +6,9 @@
 #ifndef BOOST_DATAFLOW_SUPPORT_CONNECTABLE_HPP
 #define BOOST_DATAFLOW_SUPPORT_CONNECTABLE_HPP
 
+#include <boost/dataflow/support/proxy_producer.hpp>
+#include <boost/dataflow/support/proxy_consumer.hpp>
+
 #include <boost/static_assert.hpp>
 
 
@@ -37,8 +40,9 @@ inline void connect(Producer &producer, Consumer &consumer)
         typename consumer_category_of<Consumer>::type>
             ::template apply<
                 typename get_proxied_producer_type<Producer>::type,
-                Consumer
-            >::call(get_proxied_producer(producer),consumer);
+                typename get_proxied_consumer_type<Consumer>::type
+            >::call(get_proxied_producer(producer),
+                    get_proxied_consumer(consumer));
 }
 
 template<typename Producer, typename Consumer>
@@ -49,8 +53,9 @@ inline void connect(const Producer &producer, Consumer &consumer)
         typename consumer_category_of<Consumer>::type>
             ::template apply<
                 typename get_proxied_producer_type<Producer>::type,
-                Consumer
-            >::call(get_proxied_producer(producer),consumer);
+                typename get_proxied_consumer_type<Consumer>::type
+            >::call(get_proxied_producer(producer),
+                    get_proxied_consumer(consumer));
 }
 
 template<typename Producer, typename Consumer>
@@ -61,8 +66,9 @@ inline void connect(Producer &producer, const Consumer &consumer)
         typename consumer_category_of<Consumer>::type>
             ::template apply<
                 typename get_proxied_producer_type<Producer>::type,
-                Consumer
-            >::call(get_proxied_producer(producer),consumer);
+                typename get_proxied_consumer_type<Consumer>::type
+            >::call(get_proxied_producer(producer),
+                    get_proxied_consumer(consumer));
 }
 
 template<typename Producer, typename Consumer>
@@ -73,8 +79,9 @@ inline void connect(const Producer &producer, const Consumer &consumer)
         typename consumer_category_of<Consumer>::type>
             ::template apply<
                 typename get_proxied_producer_type<Producer>::type,
-                Consumer
-            >::call(get_proxied_producer(producer),consumer);
+                typename get_proxied_consumer_type<Consumer>::type
+            >::call(get_proxied_producer(producer),
+                    get_proxied_consumer(consumer));
 }
 
 } } // namespace boost::dataflow

@@ -3,8 +3,9 @@
 # accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
 
+build-project VTK ;
 
-project
+project dataflow/test
     : requirements
       <include>../../..
       <library>/boost/signals//boost_signals/<link>static
@@ -13,7 +14,7 @@ project
 
 exe example : example.cpp ;
 # exe timing_example : timing_example.cpp ;
-exe edit_distance : edit_distance.cpp ;
-exe fibonacci : fibonacci.cpp ;
-exe simple_example : simple_example.cpp /boost/thread//boost_thread/<link>static ;
+#exe edit_distance : edit_distance.cpp ;
+#exe fibonacci : fibonacci.cpp ;
+#exe simple_example : simple_example.cpp /boost/thread//boost_thread/<link>static ;
 

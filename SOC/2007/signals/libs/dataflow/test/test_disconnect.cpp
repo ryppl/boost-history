@@ -37,7 +37,7 @@ int test_main(int, char* [])
         // unfortunatelly, this call hangs on MSVC!
         // banger();
 #endif
-        BOOST_CHECK_EQUAL(banger.default_signal().num_slots(), 0u); 
+        BOOST_CHECK_EQUAL(banger.get_proxied_producer().num_slots(), 0u); 
         
         signals::counter<void (), signals::unfused> counter;
         

@@ -64,23 +64,19 @@ template<typename Signature, typename Combiner, typename Group, typename GroupCo
 class filter<Signature, unfused, Combiner, Group, GroupCompare> : public filter_base
 {
 public:
-    //typedef Signature produced_type;
-    //typedef boost::dataflow::signal_producer producer_category;
-    typedef boost::signal<Signature, Combiner, Group, GroupCompare> proxy_producer_for;
+    // the type of the signal
+    typedef boost::signal<Signature, Combiner, Group, GroupCompare> signal_type;
+    typedef signal_type proxy_producer_for;
     
     // the signature of the output signal
 	typedef Signature signature_type;
-    // the type of the signal
-	typedef boost::signal<Signature, Combiner, Group, GroupCompare> signal_type;
 
 	filter(const filter &) {}
 	filter(){}
     const filter &operator = (const filter &) {return *this;}
 
 	///	Returns the default out signal.
-	signal_type &default_signal() const
-	{	return out; }
-  	signal_type &get_proxied_producer() const
+  	proxy_producer_for &get_proxied_producer() const
 	{	return out; }
 
 	///	Disconnects all slots connected to the signals::filter.
@@ -126,16 +122,11 @@ public:
     typedef typename boost::fusion::result_of::as_vector<parameter_types>::type parameter_vector;
     typedef typename Combiner::result_type signature_type (const parameter_vector &);
     typedef typename Combiner::result_type fused_signature_type (const parameter_vector &);
-    typedef boost::signal<signature_type, Combiner, Group, GroupCompare> proxy_producer_for;
     typedef boost::signal<signature_type, Combiner, Group, GroupCompare> signal_type;
-
-//    typedef typename Combiner::result_type produced_type (const parameter_vector &);
+    typedef signal_type proxy_producer_for;
 
 	///	Returns the default out signal.
-	signal_type &default_signal() const
-	{	return fused_out; }
-	///	Returns the default out signal.
-	signal_type &get_proxied_producer() const
+	proxy_producer_for &get_proxied_producer() const
 	{	return fused_out; }
 	///	Disconnects all slots connected to the signals::filter.
 	void disconnect_all_slots() {fused_out.disconnect_all_slots();}
