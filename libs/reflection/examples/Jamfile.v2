@@ -36,4 +36,4 @@ project
 exe extension-reflection : extension/extension.cpp ;
 lib car_lib : extension/car_lib.cpp : <link>shared ;
 
-install ../bin/ : car_lib extension-reflection ;
+install ../test/ : car_lib extension-reflection ;

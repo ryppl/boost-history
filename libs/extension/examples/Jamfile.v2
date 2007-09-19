@@ -69,7 +69,7 @@ stage ../stage :
  # RegistryExample
   ;
 
-install ../bin : 
+install ../test : 
   HelloWorld HelloWorldLib 
   Parameters ParametersLib
   MultilanguageWord MultilanguageHelloWorld

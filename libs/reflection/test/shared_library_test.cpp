@@ -24,16 +24,11 @@
 #include <boost/reflection/reflection.hpp>
 #include <iostream>
 #include <boost/function.hpp>
-#if defined(MSC_VER) || defined(WIN32)
-#define BOOST_EXTENSION_DIR_START "..\bin\"
-#else
-#define BOOST_EXTENSION_DIR_START "../bin/"
-#endif
 
 BOOST_AUTO_TEST_CASE(shared_library_basic_test) {
   std::map<std::string, boost::reflections::reflection> reflection_map;
   boost::extensions::shared_library lib
-    ((std::string(BOOST_EXTENSION_DIR_START) + "libcar_lib.extension").c_str());
+    ("libcar_lib.extension");
   BOOST_CHECK(lib.open());
   lib.get<void, std::map<std::string, 
     boost::reflections::reflection> &>

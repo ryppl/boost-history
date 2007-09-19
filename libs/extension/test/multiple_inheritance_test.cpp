@@ -27,11 +27,6 @@
 #define BOOST_TEST_DYN_LINK 1
 #include <boost/test/unit_test.hpp>
 
-#if defined(MSC_VER) || defined(WIN32)
-#define BOOST_EXTENSION_DIR_START "..\bin\"
-#else
-#define BOOST_EXTENSION_DIR_START "../bin/"
-#endif
 
 using namespace boost::extensions;
 
@@ -47,20 +42,13 @@ BOOST_AUTO_TEST_CASE(multiple_inheritance_example)
   // less descriptive
 
   // check if the libraries can be loaded
-  shared_library libVehicle((std::string(BOOST_EXTENSION_DIR_START) +
-                             "libVehicle.extension").c_str());
-  shared_library libCar((std::string(BOOST_EXTENSION_DIR_START) +
-                         "libCar.extension").c_str());
-  shared_library libComputer((std::string(BOOST_EXTENSION_DIR_START) +
-                              "libComputer.extension").c_str());
-  shared_library libBoat((std::string(BOOST_EXTENSION_DIR_START) +
-                          "libBoat.extension").c_str());
-  shared_library libFlyingCar((std::string(BOOST_EXTENSION_DIR_START) +
-                               "libFlyingCar.extension").c_str());
-  shared_library libCarOfTheFuture((std::string(BOOST_EXTENSION_DIR_START) +
-                                    "libCarOfTheFuture.extension").c_str());
-  shared_library libPlane((std::string(BOOST_EXTENSION_DIR_START) +
-                           "libPlane.extension").c_str());
+  shared_library libVehicle("libVehicle.extension");
+  shared_library libCar("libCar.extension");
+  shared_library libComputer("libComputer.extension");
+  shared_library libBoat("libBoat.extension");
+  shared_library libFlyingCar("libFlyingCar.extension");
+  shared_library libCarOfTheFuture("libCarOfTheFuture.extension");
+  shared_library libPlane("libPlane.extension");
   BOOST_CHECK_EQUAL( libVehicle.open(), true );
   BOOST_CHECK_EQUAL( libCar.open(), true );
   BOOST_CHECK_EQUAL( libComputer.open(), true );
