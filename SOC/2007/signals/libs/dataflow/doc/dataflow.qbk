@@ -3,7 +3,8 @@
     [version 0.1]
     [authors [Rajko, Stjepan]]
     [copyright 2007 Stjepan Rajko]
-    [purpose Operators and Components for signal-based networks.]
+    [purpose Generic dataflow lirary providing support for data producers,
+        consumers, and connections.]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,8 +12,11 @@
     ]
 ]
 
+[template ProducerCategoryConcept[] [link dataflow.concepts.producercategory [^ProducerCategory]]]
 [template ProducerConcept[] [link dataflow.concepts.producer [^Producer]]]
 [template ConsumerConcept[] [link dataflow.concepts.consumer [^Consumer]]]
+[template SingleTypeProducer[] [link dataflow.concepts.singletypeproducer [^SingleTypeProducer]]]
+[template SingleTypeConsumer[] [link dataflow.concepts.singletypeconsumer [^SingleTypeConsumer]]]
 [template InvocableConcept[] [link dataflow.concepts.invocable [^Invocable]]]
 [template ConnectableConcept[] [link dataflow.concepts.connectable [^Connectable]]]
 [template ProxyProducerConcept[] [link dataflow.concepts.proxyproducer [^ProxyProducer]]]
@@ -52,26 +56,33 @@
 
 [template fusion[] [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
 [template BoostFusion[] [@http://spirit.sourceforge.net/dl_more/fusion_v2/libs/fusion/doc/html/index.html Boost.Fusion]]
+[template BoostIostreams[] [@http://www.boost.org/libs/iostreams/doc/index.html]]
 [template BoostSignals[] [@http://www.boost.org/doc/html/signals.html Boost.Signals]]
 [template BoostPhoenix2[] [@http://spirit.sourceforge.net/ Boost.Phoenix2]]
 [template BoostPhoenix[] [@http://spirit.sourceforge.net/ Boost.Phoenix]]
 [template WikiDataflow[] [@http://en.wikipedia.org/wiki/Dataflow_language dataflow]]
+[template VTK[] [@http://www.vtk.org/ VTK]]
 
-[import ../test/test_connect.cpp]
-[import ../test/test_branching.cpp]
-[import ../test/test_pull.cpp]
-[import ../test/test_disconnect.cpp]
-[import ../test/test_multi_type.cpp]
-[import ../test/test_multi_args.cpp]
-[import ../test/test_same_type.cpp]
-[import ../test/test_multi_out.cpp]
 
-[import ../test/test_filter.cpp]
-[import ../test/test_storage.cpp]
-[import ../test/test_counter.cpp]
-[import ../test/test_function.cpp]
-[import ../test/test_chain.cpp]
-[import ../test/test_socket.cpp]
+[import ../test/signals/test_connect.cpp]
+[import ../test/signals/test_branching.cpp]
+[import ../test/signals/test_pull.cpp]
+[import ../test/signals/test_disconnect.cpp]
+[import ../test/signals/test_multi_type.cpp]
+[import ../test/signals/test_multi_args.cpp]
+[import ../test/signals/test_same_type.cpp]
+[import ../test/signals/test_multi_out.cpp]
+
+[import ../test/signals/test_filter.cpp]
+[import ../test/signals/test_storage.cpp]
+[import ../test/signals/test_counter.cpp]
+[import ../test/signals/test_function.cpp]
+[import ../test/signals/test_chain.cpp]
+[import ../test/signals/test_socket.cpp]
+
+[import ../test/signals/test_junction.cpp]
+[import ../test/signals/test_mutex.cpp]
+
 
 [import ../example/fibonacci.cpp]
 [import ../example/simple_example.cpp]

@@ -61,13 +61,13 @@ class filter;
 /** \brief Unfused version of the filter class
 */
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-class filter<Signature, unfused, Combiner, Group, GroupCompare> : public filter_base
+class filter<Signature, unfused, Combiner, Group, GroupCompare>
+    : public filter_base<boost::signal<Signature, Combiner, Group, GroupCompare> >
 {
 public:
     // the type of the signal
     typedef boost::signal<Signature, Combiner, Group, GroupCompare> signal_type;
-    typedef signal_type proxy_producer_for;
-    
+
     // the signature of the output signal
 	typedef Signature signature_type;
 
@@ -76,7 +76,7 @@ public:
     const filter &operator = (const filter &) {return *this;}
 
 	///	Returns the default out signal.
-  	proxy_producer_for &get_proxied_producer() const
+  	signal_type &get_proxied_producer() const
 	{	return out; }
 
 	///	Disconnects all slots connected to the signals::filter.
@@ -107,11 +107,24 @@ protected:
     boost::fusion::fused<typename base_type::signal_type const &> fused_out;
 }; // class filter
 
+namespace detail
+{
+    template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
+    struct fused_signal_type
+    {
+        typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;
+        typedef typename boost::fusion::result_of::as_vector<parameter_types>::type parameter_vector;
+        typedef typename Combiner::result_type signature_type (const parameter_vector &);
+        typedef typename Combiner::result_type fused_signature_type (const parameter_vector &);
+        typedef boost::signal<signature_type, Combiner, Group, GroupCompare> signal_type;
+    };
+}
+
 /** \brief Fused version of the filter class
 */
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
 class filter<Signature, fused, Combiner, Group, GroupCompare>
-: public filter_base
+: public filter_base<typename detail::fused_signal_type<Signature, Combiner, Group, GroupCompare>::signal_type>
 {
 public:
 	filter(const filter &) {}

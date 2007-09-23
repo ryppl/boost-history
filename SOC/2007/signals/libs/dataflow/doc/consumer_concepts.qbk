@@ -1,0 +1,93 @@
+
+
+[section ConsumerCategory]
+
+A ['[ConsumerCategoryConcept]] specifies the traits of a [ConsumerConcept].
+
+[heading Notation]
+[variablelist
+    [[CC] [A ConsumerCategory type.]]
+    [[C] [A [ConsumerConcept] type of producer category `CC`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Connections Stored]
+        [`CC::connections_stored`]
+        [connections_none, connections_one, connections_many]
+        [
+            The number of incoming connections that `C` can store.
+        ]
+    ]
+]
+
+[heading Notes]
+
+[heading Examples]
+
+[endsect][/consumercategory]
+
+
+[section Consumer]
+
+A type `T` is a /consumer/ if it defines a consumer category.
+To be useful, a [ConsumerConcept] should likely be
+[ConnectableConcept] to at least one [ProducerConcept].  Also, at least
+one component of a connected network should be [InvocableConcept].
+
+[heading Refinements]
+* [PhoenixConsumerConcept]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[C] [A Consumer type.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Consumer Category]
+        [`consumer_category_of<C>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            *Semantics:* The category of the producer, used for tag forwarding.
+        ]
+    ]
+    [
+        [Consumer Trait]
+        [`is_consumer<C>::type`
+         [footnote `namespace boost::dataflow`]]
+        [mpl::true_ or boost::true_type]
+        [
+            *Semantics:* A trait encapsulating adherence to the Producer
+            concept.
+        ]
+    ]
+[/    [
+        [Consumed Types]
+        [`consumed_types_of<P>::type`]
+        [`mpl::set<any-type-list>`]
+        [
+            *Semantics:* The types of data consumed by the consumer.
+            [footnote The types inside the `mpl::set` might
+            mean different things for different consumer categories - for
+            example, a SignalProducer uses function types, whereas
+            a PhoenixProducer uses object types.].
+        ]
+    ] ]
+]
+
+[heading Notes]
+
+To define a new [ConsumerConcept] class type, it is sufficient to define
+member typedefs `consumer_category` and `consumed_types`.
+
+[heading Examples]
+
+[endsect][/consumer]

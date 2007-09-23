@@ -130,8 +130,8 @@ Examples of modifiers:
   
 [heading Description]
 
-The [storage] class can store the parameters it receives from a signal,
-as well as transmit the stored parameter values through its own signal.
+The [storage] class can store the arguments it receives from a signal,
+as well as transmit the stored argument values through its own signal.
 
 [table storage class use example
     [[fused][unfused]]
@@ -146,7 +146,6 @@ The [counter] class counts the number of passing signals.  Each time it
 receives a signal, it will increment an internal
 counter and forward the signal.
 
-[import ../test/test_counter.cpp]
 [table counter class use example
     [[fused][unfused]]
     [[[test_counter_fused]][[test_counter_unfused]]]
@@ -170,7 +169,6 @@ counter and forward the signal.
 The [junction] class can be used to bring in multiple signals, and forward
 them all to the same set of output signals.
 
-[import ../test/test_junction.cpp]
 [table storage class use example
     [[fused][unfused]]
     [[[test_junction_fused]][[test_junction_unfused]]]
@@ -191,7 +189,6 @@ them all to the same set of output signals.
 The [mutex] class locks an internal mutex when it receives a signal, and then forwards the signal.
 [mutex] is an __instantiator__ with the Instantiation boost::mutex::scoped_lock and Member boost::mutex.
 
-[import ../test/test_mutex.cpp]
 [table mutex class use example
     [[fused][unfused]]
     [[[test_mutex_fused]][[test_mutex_unfused]]]

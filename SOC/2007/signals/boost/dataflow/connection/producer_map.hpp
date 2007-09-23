@@ -23,32 +23,36 @@
 
 namespace boost { namespace dataflow {
 
-struct fusion_map_producer;
+struct fusion_map_producer {};
 
 template<class T>
 struct producer_map : public T
 {
     producer_map(const T& t) : T(t) {}
-    typedef fusion_map_producer producer_category;
-    typedef
-        typename boost::remove_const<
-            typename boost::remove_reference<
-                typename boost::fusion::result_of::front<T>::type
-            >::type
-        >::type::second_type proxy_consumer_for;
-    typedef mutable_proxy_consumer proxy_consumer_category;
-
-    typename boost::call_traits<typename get_proxied_consumer_type<proxy_consumer_for>::type>::reference get_proxied_consumer() const
+    template<typename Mechanism>
+    struct dataflow
     {
-        return boost::dataflow::get_proxied_consumer(boost::fusion::front(*this).second);
-    }
+        typedef fusion_map_producer producer_category;
+        typedef
+            typename boost::remove_const<
+                typename boost::remove_reference<
+                    typename boost::fusion::result_of::front<T>::type
+                >::type
+            >::type::second_type proxy_consumer_for;
+        typedef mutable_proxy_consumer proxy_consumer_category;
+        
+        static typename boost::call_traits<typename get_proxied_consumer_type<Mechanism, proxy_consumer_for>::type>::reference get_proxied_consumer(const T &t)
+        {
+            return boost::dataflow::get_proxied_consumer(boost::fusion::front(t).second);
+        }
+    };
 };
 
 namespace extension
 {
     // component >>= coxsumer_map
-    template<typename ProducerTag, typename ConsumerTag>
-    struct connect_impl<ProducerTag, ConsumerTag,
+    template<typename Mechanism, typename ProducerTag, typename ConsumerTag>
+    struct connect_impl<Mechanism, ProducerTag, ConsumerTag,
         typename boost::enable_if<
             boost::is_base_of<fusion_map_producer, ProducerTag>
         >::type >
@@ -60,7 +64,7 @@ namespace extension
             {
                 connect(
                     boost::fusion::at_key<
-                        typename consumed_type_of<Consumer>::type
+                        typename consumed_type_of<Mechanism, Consumer>::type
                     >(producer),
                     consumer);
             }
@@ -68,7 +72,7 @@ namespace extension
             {
                 connect(
                     boost::fusion::at_key<
-                        typename consumed_type_of<Consumer>::type
+                        typename consumed_type_of<Mechanism, Consumer>::type
                     >(producer),
                     consumer);
             }
@@ -76,7 +80,7 @@ namespace extension
             {
                 connect(
                     boost::fusion::at_key<
-                        typename consumed_type_of<Consumer>::type
+                        typename consumed_type_of<Mechanism, Consumer>::type
                     >(producer),
                     consumer);
             }
@@ -84,7 +88,7 @@ namespace extension
             {
                 connect(
                     boost::fusion::at_key<
-                        typename consumed_type_of<Consumer>::type
+                        typename consumed_type_of<Mechanism, Consumer>::type
                     >(producer),
                     consumer);
             } 

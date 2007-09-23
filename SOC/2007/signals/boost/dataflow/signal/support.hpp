@@ -30,21 +30,19 @@ namespace detail
     };
 }
 
-} }
+} } // namespace boost::signals
 
 namespace boost { namespace dataflow {
 
 struct signal_producer {};
 struct signal_consumer {};
+struct signals_mechanism;
 
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
-struct producer_category_of<boost::signal<Signature, Combiner, Group, GroupCompare> >
+struct producer_category_of<signals_mechanism, boost::signal<Signature, Combiner, Group, GroupCompare> >
 {
     typedef signal_producer type;
 };
-
-/*template<typename T>
-struct consumer_type_of<T, */
 
 namespace extension
 {
@@ -96,8 +94,8 @@ namespace extension
         
         /** \brief Support for function objects that for which boost::result_of is defined.
             */
-/*        template<typename T>
-        struct consumer_category_of<T, boost::enable_if<boost::signals::detail::result_of_defined<
+        /*template<typename T>
+        struct consumer_category_of<signals_mechanism, T, boost::enable_if<boost::signals::detail::result_of_defined<
         typename boost::signals::detail::replace_return_type<Signature, T>::type > >::type>
         {
             typedef boost::dataflow::signal_consumer type;
@@ -105,7 +103,7 @@ namespace extension
     }
     
     template<typename ProducerTag, typename ConsumerTag>
-    struct connect_impl<ProducerTag, ConsumerTag,
+    struct connect_impl<signals_mechanism, ProducerTag, ConsumerTag,
         typename boost::enable_if<boost::mpl::and_<
             boost::is_base_of<signal_producer, ProducerTag>,
             boost::is_base_of<signal_consumer, ConsumerTag>
@@ -118,25 +116,25 @@ namespace extension
             {
                 signals::get_signal<Producer>()(producer).connect(
                      signals::get_slot<typename dataflow::produced_type_of<
-                         Producer>::type, Consumer>()(consumer));
+                         signals_mechanism, Producer>::type, Consumer>()(consumer));
             }
             static void call(const Producer &producer, Consumer &consumer)
             {
                 signals::get_signal<Producer>()(producer).connect(
                      signals::get_slot<typename dataflow::produced_type_of<
-                         Producer>::type, Consumer>()(consumer));
+                         signals_mechanism, Producer>::type, Consumer>()(consumer));
            }
             static void call(Producer &producer, const Consumer &consumer)
             {
                 signals::get_signal<Producer>()(producer).connect(
                      signals::get_slot<typename dataflow::produced_type_of<
-                         Producer>::type, Consumer>()(consumer));
+                         signals_mechanism, Producer>::type, Consumer>()(consumer));
             }
             static void call(Producer &producer, Consumer &consumer)
             {
                 signals::get_signal<Producer>()(producer).connect(
                      signals::get_slot<typename dataflow::produced_type_of<
-                         Producer>::type, Consumer>()(consumer));
+                         signals_mechanism, Producer>::type, Consumer>()(consumer));
             }
         };
     };
@@ -158,6 +156,7 @@ struct produced_type_of<
 
 template<typename Signature, typename Combiner, typename Group, typename GroupCompare>
 struct produced_type_of<
+    signals_mechanism, 
     boost::signal<Signature, Combiner, Group, GroupCompare> >
 {
     typedef Signature type;
@@ -167,7 +166,29 @@ struct produced_type_of<
 
 namespace boost { namespace signals {
     
-    using boost::dataflow::connect;
+template<typename Producer, typename Consumer>
+inline void connect(Producer &producer, Consumer &consumer)
+{
+    boost::dataflow::connect<boost::dataflow::signals_mechanism>(producer, consumer);
+}
+
+template<typename Producer, typename Consumer>
+inline void connect(const Producer &producer, Consumer &consumer)
+{
+    boost::dataflow::connect<boost::dataflow::signals_mechanism>(producer, consumer);
+}
+
+template<typename Producer, typename Consumer>
+inline void connect(Producer &producer, const Consumer &consumer)
+{
+    boost::dataflow::connect<boost::dataflow::signals_mechanism>(producer, consumer);
+}
+
+template<typename Producer, typename Consumer>
+inline void connect(const Producer &producer, const Consumer &consumer)
+{
+    boost::dataflow::connect<boost::dataflow::signals_mechanism>(producer, consumer);
+}
     
 } } // namespace boost::phoenix
 

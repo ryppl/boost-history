@@ -14,9 +14,16 @@
 
 namespace boost { namespace dataflow {
 
+/*namespace concepts
+{
+    struct producer;
+    struct single_type_producer;
+    struct keyed_producer;
+}*/
+
 namespace extension
 {
-    template<typename ProducerTag, typename ConsumerTag, typename Enable=void>
+    template<typename Mechanism, typename ProducerTag, typename ConsumerTag, typename Enable=void>
     struct connect_impl
     {
         template<typename Producer, typename Consumer>
@@ -30,58 +37,78 @@ namespace extension
             }
         };
     };
+    
+/*    template<typename Mechanism, typename ProducerTag, typename ConsumerTag,
+        typename enable_if<
+            boost::is_same<ProducerTag, typename concepts::keyed_producer>
+        >::type >
+    struct connect_impl
+    {
+        template<typename Producer, typename Consumer>
+        struct apply
+        {
+            static void call(Producer &producer, Consumer &consumer)
+            {
+                connect(get_keyed_producer<Mechanism>(producer, consumer), consumer);
+            }
+        };
+    };*/
 }
 
-template<typename Producer, typename Consumer>
+template<typename Mechanism, typename Producer, typename Consumer>
 inline void connect(Producer &producer, Consumer &consumer)
 {
     extension::connect_impl<
-        typename producer_category_of<Producer>::type,
-        typename consumer_category_of<Consumer>::type>
+        Mechanism,
+        typename producer_category_of<Mechanism, Producer>::type,
+        typename consumer_category_of<Mechanism, Consumer>::type>
             ::template apply<
-                typename get_proxied_producer_type<Producer>::type,
-                typename get_proxied_consumer_type<Consumer>::type
-            >::call(get_proxied_producer(producer),
-                    get_proxied_consumer(consumer));
+                typename get_proxied_producer_type<Mechanism, Producer>::type,
+                typename get_proxied_consumer_type<Mechanism, Consumer>::type
+            >::call(get_proxied_producer<Mechanism>(producer),
+                    get_proxied_consumer<Mechanism>(consumer));
 }
 
-template<typename Producer, typename Consumer>
+template<typename Mechanism, typename Producer, typename Consumer>
 inline void connect(const Producer &producer, Consumer &consumer)
 {
     extension::connect_impl<
-        typename producer_category_of<Producer>::type,
-        typename consumer_category_of<Consumer>::type>
+        Mechanism,
+        typename producer_category_of<Mechanism, Producer>::type,
+        typename consumer_category_of<Mechanism, Consumer>::type>
             ::template apply<
-                typename get_proxied_producer_type<Producer>::type,
-                typename get_proxied_consumer_type<Consumer>::type
-            >::call(get_proxied_producer(producer),
-                    get_proxied_consumer(consumer));
+                typename get_proxied_producer_type<Mechanism, Producer>::type,
+                typename get_proxied_consumer_type<Mechanism, Consumer>::type
+            >::call(get_proxied_producer<Mechanism>(producer),
+                    get_proxied_consumer<Mechanism>(consumer));
 }
 
-template<typename Producer, typename Consumer>
+template<typename Mechanism, typename Producer, typename Consumer>
 inline void connect(Producer &producer, const Consumer &consumer)
 {
     extension::connect_impl<
-        typename producer_category_of<Producer>::type,
-        typename consumer_category_of<Consumer>::type>
+        Mechanism,
+        typename producer_category_of<Mechanism, Producer>::type,
+        typename consumer_category_of<Mechanism, Consumer>::type>
             ::template apply<
-                typename get_proxied_producer_type<Producer>::type,
-                typename get_proxied_consumer_type<Consumer>::type
-            >::call(get_proxied_producer(producer),
-                    get_proxied_consumer(consumer));
+                typename get_proxied_producer_type<Mechanism, Producer>::type,
+                typename get_proxied_consumer_type<Mechanism, Consumer>::type
+            >::call(get_proxied_producer<Mechanism>(producer),
+                    get_proxied_consumer<Mechanism>(consumer));
 }
 
-template<typename Producer, typename Consumer>
+template<typename Mechanism, typename Producer, typename Consumer>
 inline void connect(const Producer &producer, const Consumer &consumer)
 {
     extension::connect_impl<
-        typename producer_category_of<Producer>::type,
-        typename consumer_category_of<Consumer>::type>
+        Mechanism,
+        typename producer_category_of<Mechanism, Producer>::type,
+        typename consumer_category_of<Mechanism, Consumer>::type>
             ::template apply<
-                typename get_proxied_producer_type<Producer>::type,
-                typename get_proxied_consumer_type<Consumer>::type
-            >::call(get_proxied_producer(producer),
-                    get_proxied_consumer(consumer));
+                typename get_proxied_producer_type<Mechanism, Producer>::type,
+                typename get_proxied_consumer_type<Mechanism, Consumer>::type
+            >::call(get_proxied_producer<Mechanism>(producer),
+                    get_proxied_consumer<Mechanism>(consumer));
 }
 
 } } // namespace boost::dataflow

@@ -5,7 +5,7 @@
 
 build-project VTK ;
 
-project dataflow/test
+project dataflow/example
     : requirements
       <include>../../..
       <library>/boost/signals//boost_signals/<link>static

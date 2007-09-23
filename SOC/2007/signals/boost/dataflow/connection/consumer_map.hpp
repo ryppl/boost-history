@@ -22,32 +22,36 @@
 
 namespace boost { namespace dataflow {
 
-struct fusion_map_consumer;
+struct fusion_map_consumer {};
 
 template<class T>
 struct consumer_map : public T
 {
     consumer_map(const T& t) : T(t) {}
-    typedef fusion_map_consumer consumer_category;
-    typedef
-        typename boost::remove_const<
-            typename boost::remove_reference<
-                typename boost::fusion::result_of::front<T>::type
-            >::type
-        >::type::second_type proxy_producer_for;
-    typedef mutable_proxy_producer proxy_producer_category;
-
-    typename get_proxied_producer_type<proxy_producer_for>::type &get_proxied_producer() const
+    template<typename Mechanism>
+    struct dataflow
     {
-        return boost::dataflow::get_proxied_producer(boost::fusion::front(*this).second);
-    }
+        typedef fusion_map_consumer consumer_category;
+        typedef
+            typename boost::remove_const<
+                typename boost::remove_reference<
+                    typename boost::fusion::result_of::front<T>::type
+                >::type
+            >::type::second_type proxy_producer_for;
+        typedef mutable_proxy_producer proxy_producer_category;
+
+        static typename get_proxied_producer_type<Mechanism, proxy_producer_for>::type &get_proxied_producer(const T &t)
+        {
+            return boost::dataflow::get_proxied_producer<Mechanism>(boost::fusion::front(t).second);
+        }
+    };
 };
 
 namespace extension
 {
     // component >>= consumer_map
-    template<typename ProducerTag, typename ConsumerTag>
-    struct connect_impl<ProducerTag, ConsumerTag,
+    template<typename Mechanism, typename ProducerTag, typename ConsumerTag>
+    struct connect_impl<Mechanism, ProducerTag, ConsumerTag,
         typename boost::enable_if<//boost::mpl::and_<
             //is_producer<ProducerTag>,
             boost::is_base_of<fusion_map_consumer, ConsumerTag>
@@ -61,7 +65,7 @@ namespace extension
                 connect(
                     producer,
                     boost::fusion::at_key<
-                        typename produced_type_of<Producer>::type
+                        typename produced_type_of<Mechanism, Producer>::type
                     >(consumer));
             }
             static void call(const Producer &producer, Consumer &consumer)
@@ -69,7 +73,7 @@ namespace extension
                 connect(
                     producer,
                     boost::fusion::at_key<
-                        typename produced_type_of<Producer>::type
+                        typename produced_type_of<Mechanism, Producer>::type
                     >(consumer));
             }
             static void call(Producer &producer, const Consumer &consumer)
@@ -77,7 +81,7 @@ namespace extension
                 connect(
                     producer,
                     boost::fusion::at_key<
-                        typename produced_type_of<Producer>::type
+                        typename produced_type_of<Mechanism, Producer>::type
                     >(consumer));
             }
             static void call(Producer &producer, Consumer &consumer)
@@ -85,7 +89,7 @@ namespace extension
                 connect(
                     producer,
                     boost::fusion::at_key<
-                        typename produced_type_of<Producer>::type
+                        typename produced_type_of<Mechanism, Producer>::type
                     >(consumer));
             } 
         };

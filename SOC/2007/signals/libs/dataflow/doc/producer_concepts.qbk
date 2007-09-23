@@ -1,0 +1,226 @@
+[section ProducerCategory]
+
+A ['[ProducerCategoryConcept]] specifies the traits of a [ProducerConcept].
+
+[heading Notation]
+[variablelist
+    [[PC] [A ProducerCategory type.]]
+    [[P] [A [ProducerConcept] type of producer category `PC`.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Connections Stored]
+        [`PC::connections_stored`]
+        [connections::none, connections::one, connections::many]
+        [The number of outgoing connections that `P` can store.]
+    ]
+    [
+        [Producer Concept]
+        [`PC::producer_concept`]
+        [concepts::producer, concepts::single_type_producer,
+            concepts::keyed_producer]
+        [The most refined producer concept that `P` satisfies.]
+    ]
+]
+
+[heading Notes]
+All these traits are in regards to the mechanism for which the `P` has
+producer category `PC`.
+
+[heading Examples]
+
+
+[endsect][/producercategory]
+
+
+[section Producer]
+
+A type `P` is a ['[ProducerConcept]] for a mechanism `M` if it specifies
+a producer category for that mechanism.
+To be useful, a [ProducerConcept] should likely be
+[ConnectableConcept] to at least one [ConsumerConcept].  Also, at least
+one component of a connected network should be [InvocableConcept].
+
+[heading Refinements]
+* [SingleTypeProducer]
+* [PhoenixProducerConcept]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[P] [A Producer type.]]
+    [[M] [A Mechanism type.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Producer Category]
+        [`producer_category_of<M, P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            The category of the producer, used for tag forwarding.
+        ]
+    ]
+    [
+        [Producer Trait]
+        [`is_producer<M, P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [mpl::true_ or boost::true_type]
+        [
+            A trait encapsulating adherence to the Producer
+            concept.
+        ]
+    ]
+]
+
+[heading Notes]
+
+To specify that a type `P` is a [ProducerConcept] for a mechanism `M`,
+it suffices to provide a specification for `producer_category_of`.
+If the type is a class type which you can modify, you can achieve this by
+providing a `T::dataflow<M>::producer_category` typedef specifying the
+category.  The Dataflow library provides a convenience class
+`producer` which you can inherit for this purpose.
+
+[heading Examples]
+
+[endsect][/producer]
+
+[section SingleTypeProducer]
+
+A type `P` is a ['[ProducerConcept]] if it defines a producer category, 
+a produced type, and specifies whether it is invocable.
+To be useful, a [ProducerConcept] should likely be
+[ConnectableConcept] to at least one [ConsumerConcept].  Also, at least
+one component of a connected network should be [InvocableConcept].
+
+[heading Refinements]
+* [SingleTypeProducer]
+* [PhoenixProducerConcept]
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[P] [A Producer type.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Producer Category]
+        [`producer_category_of<P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            The category of the producer, used for tag forwarding.
+        ]
+    ]
+    [
+        [Produced Type]
+        [`produced_type_of<P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            The type of data produced by the producer.
+            [footnote This might
+            mean different things for different producer categories - for
+            example, a SignalProducer uses function types, whereas
+            a PhoenixProducer uses object types.].
+        ]
+    ]
+    [
+        [Producer Trait]
+        [`is_producer<P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [mpl::true_ or boost::true_type]
+        [
+            *Semantics:* A trait encapsulating adherence to the Producer
+            concept.
+        ]
+    ]
+    [
+        [Invocable]
+        [`is_invocable<P>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Boolean metafunction]
+        [
+            *Semantics:* A producer must specify if it is [InvocableConcept].
+        ]
+    ]
+]
+
+[heading Notes]
+
+To define a new [ProducerConcept] class type, it is sufficient to define
+member typedefs `producer_category` and `produced_type`.
+
+[heading Examples]
+
+[endsect][/singletypeproducer]
+
+[section ProxyProducer]
+
+A type `PP` is a ['[ProxyProducerConcept]] if specifies the proxied producer
+type, and if objects of the proxied type can be retreived from objects of
+[ProxyProducerConcept] type.  If the proxied producer type is a valid
+[ProducerConcept], then 'PP' satisfies the [ProducerConcept] requirements
+in the same way.
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[PP] [A ProxyProducer type.]]
+    [[pp] [An object of type `PP`]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Semantics]]
+    [
+        [Proxy Producer Category]
+        [`proxy_producer_category_of<PP>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            The category of the proxy producer, used for tag forwarding.
+        ]
+    ]
+    [
+        [Proxied Producer Type]
+        [`proxied_producer_of<PP>::type`
+         [footnote `namespace boost::dataflow`]]
+        [Any type]
+        [
+            The proxied producer type.
+        ]
+    ]
+    [
+        [Proxied Producer]
+        [`get_proxied_producer(pp)`
+         [footnote `namespace boost::dataflow`]]
+        []
+        [
+            Retrieves a reference to the proxied producer object.
+        ]
+    ]
+]
+
+[heading Notes]
+
+To define a new [ProxyProducerConcept] class type, it is sufficient to define
+member typedefs `proxy_producer_category` and `proxy_producer_for`,
+and member function `get_proxied_producer`.
+
+[heading Examples]
+
+[endsect][/proxyproducer]

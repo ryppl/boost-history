@@ -1,6 +1,6 @@
 [section Concepts]
 
-To explore generic dataflow in C++, let us begin by examining where the flow of
+[/To explore generic dataflow in C++, let us begin by examining where the flow of
 data happens in C++.  Rather informally, we can divide things as follows:
 
 * on one hand, there is data (variables, objects, etc...)
@@ -22,7 +22,21 @@ Similarly, there are several ways of getting data out of a computational element
 * the element returns it as a return value
 
 With the above in mind, let's informally introduce a few concepts related to dataflow
-programming:
+programming:]
+
+[heading Mechanisms]
+
+There are many different environments that offer dataflow-related functionality.
+For example, [BoostSignals] offers transfer of data through function calls,
+while [VTK] offers a number of classes which are meant to be connected in
+a pipline (e.g., starting with the data source, manipulating it, and
+finally displaying it on the screen).
+
+[BoostSignals] and [VTK] are examples of different /mechanisms/ - particular
+environments each offering their own, independent way of doing dataflow.
+In the Dataflow library, everything is keyed through a mechanism typename
+tag, allowing different mechanisms to be specified independently, and
+allowing a single component to support muliple mechanisms.
 
 [heading Components]
 
@@ -41,7 +55,7 @@ that consumes data - a function that takes an argument, a functor, etc.
 Producers and consumers are captured more formally by the [ProducerConcept]
 and [ConsumerConcept] concepts.  There is no concept directly corresponding to
 a component, because a component is a more abstract notion - i.e., a component
-is whatever makes sense for the design application.  Typically, though, a
+is whatever makes sense for the application design.  Typically, though, a
 component is embedded in a class, and the different [ProducerConcept]s
 and [ConsumerConcept]s are accessible either through the class
 directly, or through its member functions and variables.
@@ -111,200 +125,11 @@ Invocation is captured more formally by the [InvocableConcept] concept.
 if it causes the invoked producer to also invoke the consumer, or if it causes
 the invoked consumer to invoke the producer.]
 
-[section Producer]
-
-A type `P` is a ['[ProducerConcept]] if it defines a producer category, 
-a produced type, and specifies whether it is invocable.
-To be useful, a [ProducerConcept] should likely be
-[ConnectableConcept] to at least one [ConsumerConcept].  Also, at least
-one component of a connected network should be [InvocableConcept].
-
-[heading Refinements]
-* [PhoenixProducerConcept]
-
-[heading Notation]
-The following expressions are used in this document:
-
-[variablelist
-    [[P] [A Producer type.]]
-]
-
-[heading Requirements]
-[table
-    [[Name] [Expression] [Result Type] [Description]]
-    [
-        [Producer Category]
-        [`producer_category_of<P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
-        [
-            *Semantics:* The category of the producer, used for tag forwarding.
-        ]
-    ]
-    [
-        [Produced Type]
-        [`produced_type_of<P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
-        [
-            *Semantics:* The type of data produced by the producer.
-            [footnote This might
-            mean different things for different producer categories - for
-            example, a SignalProducer uses function types, whereas
-            a PhoenixProducer uses object types.].
-        ]
-    ]
-    [
-        [Producer Trait]
-        [`is_producer<P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [mpl::true_ or boost::true_type]
-        [
-            *Semantics:* A trait encapsulating adherence to the Producer
-            concept.
-        ]
-    ]
-    [
-        [Invocable]
-        [`is_invocable<P>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Boolean metafunction]
-        [
-            *Semantics:* A producer must specify if it is [InvocableConcept].
-        ]
-    ]
-]
-
-[heading Notes]
-
-To define a new [ProducerConcept] class type, it is sufficient to define
-member typedefs `producer_category` and `produced_type`.
-
-[heading Examples]
-
-[endsect][/producer]
 
 
-[section ProxyProducer]
+[include producer_concepts.qbk]
 
-A type `PP` is a ['[ProxyProducerConcept]] if specifies the proxied producer
-type, and if objects of the proxied type can be retreived from objects of
-[ProxyProducerConcept] type.  If the proxied producer type is a valid
-[ProducerConcept], then 'PP' satisfies the [ProducerConcept] requirements
-in the same way.
-
-[heading Notation]
-The following expressions are used in this document:
-
-[variablelist
-    [[PP] [A ProxyProducer type.]]
-    [[pp] [An object of type `PP`]]
-]
-
-[heading Requirements]
-[table
-    [[Name] [Expression] [Result Type] [Semantics]]
-    [
-        [Proxy Producer Category]
-        [`proxy_producer_category_of<PP>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
-        [
-            The category of the proxy producer, used for tag forwarding.
-        ]
-    ]
-    [
-        [Proxied Producer Type]
-        [`proxied_producer_of<PP>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
-        [
-            The proxied producer type.
-        ]
-    ]
-    [
-        [Proxied Producer]
-        [`get_proxied_producer(pp)`
-         [footnote `namespace boost::dataflow`]]
-        []
-        [
-            Retrieves a reference to the proxied producer object.
-        ]
-    ]
-]
-
-[heading Notes]
-
-To define a new [ProxyProducerConcept] class type, it is sufficient to define
-member typedefs `proxy_producer_category` and `proxy_producer_for`,
-and member function `get_proxied_producer`.
-
-[heading Examples]
-
-[endsect][/proxyproducer]
-
-
-[section Consumer]
-
-A type `T` is a /consumer/ if it defines a consumer category.
-To be useful, a [ConsumerConcept] should likely be
-[ConnectableConcept] to at least one [ProducerConcept].  Also, at least
-one component of a connected network should be [InvocableConcept].
-
-[heading Refinements]
-* [PhoenixConsumerConcept]
-
-[heading Notation]
-The following expressions are used in this document:
-
-[variablelist
-    [[C] [A Consumer type.]]
-]
-
-[heading Requirements]
-[table
-    [[Name] [Expression] [Result Type] [Description]]
-    [
-        [Consumer Category]
-        [`consumer_category_of<C>::type`
-         [footnote `namespace boost::dataflow`]]
-        [Any type]
-        [
-            *Semantics:* The category of the producer, used for tag forwarding.
-        ]
-    ]
-    [
-        [Consumer Trait]
-        [`is_consumer<C>::type`
-         [footnote `namespace boost::dataflow`]]
-        [mpl::true_ or boost::true_type]
-        [
-            *Semantics:* A trait encapsulating adherence to the Producer
-            concept.
-        ]
-    ]
-[/    [
-        [Consumed Types]
-        [`consumed_types_of<P>::type`]
-        [`mpl::set<any-type-list>`]
-        [
-            *Semantics:* The types of data consumed by the consumer.
-            [footnote The types inside the `mpl::set` might
-            mean different things for different consumer categories - for
-            example, a SignalProducer uses function types, whereas
-            a PhoenixProducer uses object types.].
-        ]
-    ] ]
-]
-
-[heading Notes]
-
-To define a new [ConsumerConcept] class type, it is sufficient to define
-member typedefs `consumer_category` and `consumed_types`.
-
-[heading Examples]
-
-[endsect][/consumer]
+[include consumer_concepts.qbk]
 
 [section Invocable]
 

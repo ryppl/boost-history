@@ -12,12 +12,13 @@
 
 #include <boost/dataflow/support.hpp>
 #include <boost/dataflow/connection/producer_map.hpp>
-#include <boost/dataflow/connection/operators.hpp>
 
 #include <boost/fusion/sequence/container/map.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace dataflow {
+
+struct vtk;
 
 struct vtk_algorithm_output_producer;
 struct vtk_algorithm_consumer;
@@ -32,14 +33,14 @@ struct vtk_algorithm_data;
 struct vtk_mapper_data;
 
 template<>
-struct producer_category_of<vtkAlgorithmOutput *>
+struct producer_category_of<vtk, vtkAlgorithmOutput *>
 {
     typedef vtk_algorithm_output_producer type;
 };
 
 template<typename T>
 struct proxy_producer_category_of<
-    T,
+    vtk, T,
     typename boost::enable_if<boost::is_base_of<vtkAlgorithm,T> >::type
 >
 {
@@ -47,14 +48,14 @@ struct proxy_producer_category_of<
 };
 
 template<>
-struct producer_category_of<vtkMapper *>
+struct producer_category_of<vtk, vtkMapper *>
 {
     typedef vtk_algorithm_mapper_producer type;
 };
 
 template<typename T>
 struct proxied_producer_of<
-    T,
+    vtk, T,
     typename boost::enable_if<boost::is_base_of<vtkAlgorithm,T> >::type
 >
 {
@@ -68,7 +69,7 @@ struct proxied_producer_of<
 namespace extension
 {
     template<>
-    struct get_proxied_producer_impl<vtk_algorithm_proxy_producer>
+    struct get_proxied_producer_impl<vtk, vtk_algorithm_proxy_producer>
     {
         template<typename ProxyProducer>
         struct result
@@ -98,7 +99,7 @@ namespace extension
 
 template<typename T>
 struct consumer_category_of<
-    T,
+    vtk, T,
     typename boost::enable_if<boost::is_base_of<vtkAlgorithm,T> >::type
 >
 {
@@ -107,7 +108,7 @@ struct consumer_category_of<
 
 template<typename T>
 struct consumed_type_of<
-    T,
+    vtk, T,
     typename boost::enable_if<boost::is_base_of<vtkAlgorithm,T> >::type
 >
 {
@@ -119,7 +120,7 @@ struct consumed_type_of<
 namespace extension
 {
     template<>
-    struct connect_impl<vtk_algorithm_output_producer, vtk_algorithm_consumer>
+    struct connect_impl<vtk, vtk_algorithm_output_producer, vtk_algorithm_consumer>
     {
         template<typename Producer, typename Consumer>
         struct apply
@@ -132,7 +133,7 @@ namespace extension
     };
     
     template<>
-    struct connect_impl<vtk_algorithm_mapper_producer, vtk_mapper_consumer>
+    struct connect_impl<vtk, vtk_algorithm_mapper_producer, vtk_mapper_consumer>
     {
         template<typename Producer, typename Consumer>
         struct apply
@@ -145,7 +146,7 @@ namespace extension
     };
     
     template<>
-    struct connect_impl<vtk_prop_producer, vtk_renderer_filter>
+    struct connect_impl<vtk, vtk_prop_producer, vtk_renderer_filter>
     {
         template<typename Producer, typename Consumer>
         struct apply
@@ -158,7 +159,7 @@ namespace extension
     };
     
     template<>
-    struct connect_impl<vtk_renderer_filter, vtk_rendererwindow_consumer>
+    struct connect_impl<vtk, vtk_renderer_filter, vtk_rendererwindow_consumer>
     {
         template<typename Producer, typename Consumer>
         struct apply
@@ -173,7 +174,7 @@ namespace extension
 
 template<typename T>
 struct producer_category_of<
-    T,
+    vtk, T,
     typename boost::enable_if<boost::is_base_of<vtkActor,T> >::type
 >
 {
@@ -182,7 +183,7 @@ struct producer_category_of<
 
 template<typename T>
 struct consumer_category_of<
-    T,
+    vtk, T,
     typename boost::enable_if<boost::is_base_of<vtkActor,T> >::type
 >
 {
@@ -191,7 +192,7 @@ struct consumer_category_of<
 
 template<typename T>
 struct consumed_type_of<
-    T,
+    vtk, T,
     typename boost::enable_if<boost::is_base_of<vtkActor,T> >::type
 >
 {
@@ -200,7 +201,7 @@ struct consumed_type_of<
 
 template<typename T>
 struct filter_category_of<
-    T,
+    vtk, T,
     typename boost::enable_if<boost::is_base_of<vtkRenderer,T> >::type
 >
 {
@@ -209,7 +210,7 @@ struct filter_category_of<
 
 template<typename T>
 struct consumer_category_of<
-    T,
+    vtk, T,
     typename boost::enable_if<boost::is_base_of<vtkRenderWindow,T> >::type
 >
 {
@@ -218,5 +219,28 @@ struct consumer_category_of<
 
 } }
 
+template<typename Producer, typename Consumer>
+inline void connect(Producer &producer, Consumer &consumer)
+{
+    boost::dataflow::connect<boost::dataflow::vtk>(producer, consumer);
+}
+
+template<typename Producer, typename Consumer>
+inline void connect(const Producer &producer, Consumer &consumer)
+{
+    boost::dataflow::connect<boost::dataflow::vtk>(producer, consumer);
+}
+
+template<typename Producer, typename Consumer>
+inline void connect(Producer &producer, const Consumer &consumer)
+{
+    boost::dataflow::connect<boost::dataflow::vtk>(producer, consumer);
+}
+
+template<typename Producer, typename Consumer>
+inline void connect(const Producer &producer, const Consumer &consumer)
+{
+    boost::dataflow::connect<boost::dataflow::vtk>(producer, consumer);
+}
 
 #endif // BOOST_DATAFLOW_VTK_SUPPORT_HPP

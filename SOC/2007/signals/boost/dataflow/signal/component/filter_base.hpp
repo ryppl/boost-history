@@ -20,14 +20,33 @@
 
 namespace boost { namespace signals {
 
+template<typename Signal>
 class filter_base
 #ifdef SIGNAL_NETWORK_TRACKABLE
 : public boost::signals::trackable
 #endif
 {
 public:
-    typedef boost::dataflow::signal_consumer consumer_category;
-    typedef boost::dataflow::mutable_proxy_producer proxy_producer_category;
+    template<typename Mechanism, typename Enable=void>
+    struct dataflow;
+    
+    template<typename Mechanism>
+    struct dataflow<
+        Mechanism,
+        typename enable_if<
+            is_same<Mechanism, boost::dataflow::signals_mechanism>
+        >::type>
+    {
+        typedef boost::dataflow::signal_consumer consumer_category;
+        typedef boost::dataflow::mutable_proxy_producer proxy_producer_category;
+        typedef Signal proxy_producer_for;
+        
+        template<typename T>
+        static typename boost::dataflow::get_proxied_producer_type<boost::dataflow::signals_mechanism, Signal>
+         ::type &get_proxied_producer(const T &t)
+        {   return t.get_proxied_producer();  }
+
+    };
 };
 
 } }

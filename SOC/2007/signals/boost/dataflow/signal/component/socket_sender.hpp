@@ -55,14 +55,14 @@ namespace detail {
 */
 template<typename Signature>
 class socket_sender : public boost::fusion::unfused_inherited<
-    detail::socket_sender_impl<Signature>, typename boost::function_types::parameter_types<Signature>::type >
+    detail::socket_sender_impl<Signature>, typename boost::function_types::parameter_types<Signature>::type >,
+    public boost::dataflow::consumer<boost::dataflow::signals_mechanism, boost::dataflow::signal_consumer>
 {
     typedef boost::fusion::unfused_inherited<
         detail::socket_sender_impl<Signature>,
         typename boost::function_types::parameter_types<Signature>::type>
         base_type;
 public:
-    typedef boost::dataflow::signal_consumer consumer_category;
     socket_sender(asio::ip::tcp::socket & socket) : base_type(socket)
     { }
 };

@@ -19,7 +19,7 @@ namespace boost { namespace signals {
 namespace detail
 {
     template<typename Signature, typename T>
-    class chain_impl : public filter_base
+    class chain_impl : public filter_base<typename T::signal_type>
     {
     protected:
         typedef typename boost::function_types::parameter_types<Signature>::type parameter_types;
@@ -53,9 +53,9 @@ public:
         {
             return components[size-1].default_signal();
         }
-        typename boost::dataflow::get_proxied_producer_type<proxy_producer_for>::type &get_proxied_producer() const
+        typename T::signal_type &get_proxied_producer() const
         {
-            return boost::dataflow::get_proxied_producer(components[size-1]);
+            return boost::dataflow::get_proxied_producer<boost::dataflow::signals_mechanism>(components[size-1]);
         }
     private:
         void initialize(size_t copies, T *component=NULL)

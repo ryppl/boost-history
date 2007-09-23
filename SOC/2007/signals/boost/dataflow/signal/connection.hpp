@@ -7,8 +7,7 @@
 #define SIGNAL_NETWORK_CONNECTION_HPP
 
 #include <boost/dataflow/signal/support.hpp>
-#include <boost/dataflow/connection/operators.hpp>
+#include <boost/dataflow/signal/connection/operators.hpp>
 #include <boost/dataflow/signal/connection/slot_selector.hpp>
-#include <boost/dataflow/signal/connection/slot_selector_map.hpp>
 
 #endif

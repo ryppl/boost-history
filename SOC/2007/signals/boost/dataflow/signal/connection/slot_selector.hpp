@@ -12,20 +12,17 @@
 
 #include <boost/dataflow/signal/connection/detail/bind_object.hpp>
 #include <boost/dataflow/signal/support.hpp>
+#include <boost/dataflow/signal/component/filter_base.hpp>
 
 namespace boost { namespace signals {
 
 /** \brief Reference to a class instance and pointer to a class member function.
 */
 template<typename Signature, typename T>
-struct slot_selector
+struct slot_selector : public filter_base<T>
 {
     typedef Signature signature_type;
     typedef T class_type;
-    typedef boost::dataflow::signal_consumer consumer_category;
-    typedef T proxy_producer_for;
-    typedef boost::dataflow::mutable_proxy_producer proxy_producer_category;
-
     
 	T &object;
 	typename detail::slot_type<Signature, T>::type func;
@@ -33,8 +30,8 @@ struct slot_selector
 	slot_selector(typename detail::slot_type<Signature, T>::type func, T &object)
 		: object(object), func(func) {}
 
-    typename boost::dataflow::get_proxied_producer_type<T>::type &get_proxied_producer() const
-    {   return boost::dataflow::get_proxied_producer(object);  }
+    typename boost::dataflow::get_proxied_producer_type<boost::dataflow::signals_mechanism, T>::type &get_proxied_producer() const
+    {   return boost::dataflow::get_proxied_producer<boost::dataflow::signals_mechanism>(object);  }
 };
 
 /**	\brief Allows arbitrary member functions to serve as slots.
