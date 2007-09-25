@@ -162,12 +162,19 @@ namespace boost
 
     //  predefined error categories  -----------------------------------------//
 
-    BOOST_SYSTEM_DECL extern const error_category & posix_category;
-    BOOST_SYSTEM_DECL extern const error_category & system_category;
+    BOOST_SYSTEM_DECL const error_category &  get_system_category();
+    BOOST_SYSTEM_DECL const error_category &  get_posix_category();
 
+    static const error_category &  system_category = get_system_category();
+    static const error_category &  posix_category = get_posix_category();
+    
     //  deprecated synonyms
-    BOOST_SYSTEM_DECL extern const error_category & errno_ecat;  // posix_category
-    BOOST_SYSTEM_DECL extern const error_category & native_ecat; // system_category
+    static const error_category &  errno_ecat  = get_posix_category();
+    static const error_category &  native_ecat = get_system_category();
+
+    //  EDG with --dep_name requires make_error_condition be defined before use
+
+    template <class T> error_condition make_error_condition(T);
 
     //  class error_condition  -----------------------------------------------//
 
@@ -251,6 +258,10 @@ namespace boost
       const error_category *  m_cat;
 
     };
+
+    //  EDG with --dep_name requires make_error_code be defined before use
+
+    template <class T> error_code make_error_code(T);
 
     //  class error_code  ----------------------------------------------------//
 
@@ -398,11 +409,11 @@ namespace boost
     //  make_* functions for posix::posix_errno  -----------------------------//
 
     //  explicit conversion:
-    inline error_code make_error_code( posix::posix_errno e )
+    template<> inline error_code make_error_code( posix::posix_errno e )
       { return error_code( e, posix_category ); }
 
     //  implicit conversion:
-    inline error_condition make_error_condition( posix::posix_errno e )
+    template<> inline error_condition make_error_condition( posix::posix_errno e )
       { return error_condition( e, posix_category ); }
 
     //  error_category default implementation  -------------------------------//
@@ -431,7 +442,7 @@ namespace boost
       return "error: should never be called";
     }
 
-    inline std::string error_category::message( int ev ) const
+    inline std::string error_category::message( int ) const
     { 
       static std::string s("error: should never be called");
       return s;
@@ -485,7 +496,7 @@ namespace boost
     template<> struct is_error_code_enum<cygwin::cygwin_errno>
       { static const bool value = true; };
 
-    inline error_code make_error_code(cygwin::cygwin_errno e)
+    template<> inline error_code make_error_code(cygwin::cygwin_errno e)
       { return error_code( e, system_category ); }
 
 # elif defined(linux) || defined(__linux) || defined(__linux__)
@@ -552,7 +563,7 @@ namespace boost
     template<> struct is_error_code_enum<Linux::linux_error>
       { static const bool value = true; };
 
-    inline error_code make_error_code(Linux::linux_error e)
+    template<> inline error_code make_error_code(Linux::linux_error e)
       { return error_code( e, system_category ); }
 
 # endif
@@ -636,7 +647,7 @@ namespace boost
     template<> struct is_error_code_enum<windows::windows_error>
       { static const bool value = true; };
 
-    inline error_code make_error_code(windows::windows_error e)
+    template<> inline error_code make_error_code(windows::windows_error e)
       { return error_code( e, system_category ); }
 
 #else
