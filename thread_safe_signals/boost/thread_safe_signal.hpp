@@ -1,7 +1,7 @@
 /*
 	A thread-safe (partial) implementation of boost.signals.
 
-	Author: Frank Hess <frank.hess@nist.gov>
+	Author: Frank Mori Hess <fmhess@users.sourceforge.net>
 	Begin: 2007-01-23
 */
 // Use, modification and
