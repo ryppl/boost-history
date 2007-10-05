@@ -7,22 +7,11 @@ using quickbook ;
 
 path-constant boost-images : ../../../doc/src/images ;
 
-xml type_traits : type_traits.qbk ;
+xml regex : regex.qbk ;
 boostbook standalone
     :
-        type_traits
+        regex
     :
-        # Path for links to Boost:
-        <xsl:param>boost.root=../../../..
-        # Path for libraries index:
-        <xsl:param>boost.libraries=../../../libraries.htm
-        # Use the main Boost stylesheet:
-        <xsl:param>html.stylesheet=../../../../doc/html/boostbook.css
-        
-        # Some general style settings:
-        <xsl:param>table.footnote.number.format=1
-        <xsl:param>footnote.number.format=1
-
         # HTML options first:
         # Use graphics not text for navigation:
         <xsl:param>navig.graphics=1
@@ -36,10 +25,17 @@ boostbook standalone
         <xsl:param>toc.max.depth=4
         # How far down we go with TOC's
         <xsl:param>generate.section.toc.level=10
+        # Path for links to Boost:
+        <xsl:param>boost.root=../../../..
+        # Path for libraries index:
+        <xsl:param>boost.libraries=../../../../libs/libraries.htm
+        # Use the main Boost stylesheet:
+        <xsl:param>html.stylesheet=../../../../doc/html/boostbook.css
         
         # PDF Options:
         # TOC Generation: this is needed for FOP-0.9 and later:
-        # <xsl:param>fop1.extensions=1
+        #<xsl:param>fop1.extensions=1
+        # Or enable this if you're using XEP:
         <xsl:param>xep.extensions=1
         # TOC generation: this is needed for FOP 0.2, but must not be set to zero for FOP-0.9!
         <xsl:param>fop.extensions=0
@@ -49,8 +45,6 @@ boostbook standalone
         <xsl:param>page.margin.inner=0.5in
         # Margin size:
         <xsl:param>page.margin.outer=0.5in
-        # Paper type = A4
-        <xsl:param>paper.type=A4
         # Yes, we want graphics for admonishments:
         <xsl:param>admon.graphics=1
         # Set this one for PDF generation *only*:
@@ -59,9 +53,5 @@ boostbook standalone
         <format>pdf:<xsl:param>admon.graphics.extension=".svg"
         <format>pdf:<xsl:param>admon.graphics.path=$(boost-images)/
     ;
-
-#install html : ../../../doc/html/boostbook.css ;
-#install ../ : ../../../boost.png ;
-
 
 
