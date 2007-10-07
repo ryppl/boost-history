@@ -326,7 +326,7 @@
         <mark-expected-failures>
             <test name="bind_dm2_test"/>
             <test name="mem_fn_dm_test"/>
-            <toolset name="msvc-6.5*"/>
+            <toolset name="msvc-6.*"/>
             <toolset name="msvc-7.0"/>
             <toolset name="cw-8.3"/>
             <note refid="31" author="Peter Dimov"/>
@@ -362,7 +362,7 @@
         <mark-expected-failures>
             <test name="bind_dm3_test"/>
             <toolset name="borland-5*"/>
-            <toolset name="msvc-6.5*"/>
+            <toolset name="msvc-6.*"/>
             <toolset name="msvc-7.0"/>
             <note refid="31" author="Peter Dimov"/>
         </mark-expected-failures>
@@ -372,6 +372,13 @@
           <note author="Peter Dimov">
             This failure is only present in release mode and is caused by /OPT:ICF.
           </note>
+        </mark-expected-failures>
+        <mark-expected-failures>
+            <test name="bind_placeholder_test"/>
+            <toolset name="borland-*"/>
+            <toolset name="msvc-6.*"/>
+            <toolset name="msvc-7.0"/>
+            <note refid="31" author="Peter Dimov"/>
         </mark-expected-failures>
     </library>
 
@@ -1605,6 +1612,8 @@
             <toolset name="gcc-3.2*"/>
             <toolset name="gcc-3.3*"/>
             <toolset name="mipspro"/>
+            <toolset name="acc"/>
+            <toolset name="hp_cxx*"/>
             <note author="Ion Gazta&#241;aga">
                 The compiler does not support features that are essential for the library.
             </note>
@@ -1625,10 +1634,18 @@
             <toolset name="gcc-3.2*"/>
             <toolset name="gcc-3.3*"/>
             <toolset name="mipspro"/>
+            <toolset name="hp_cxx*"/>
             <note author="Ion Gazta&#241;aga">
                 The compiler does not support features that are essential for the library.
             </note>
         </mark-unusable>
+        <mark-expected-failures>
+            <test name="doc_offset_ptr" />
+            <toolset name="acc"/>
+            <note author="Ion Gazta&#241;aga">
+                The compiler is not supported by Interprocess.
+            </note>
+        </mark-expected-failures>
     </library>
 
     <!-- io-->
@@ -1817,6 +1834,11 @@
             <test name="member_pointer_test"/>
             <toolset name="gcc-2.95.3-*"/>
             <note author="Doug Gregor" refid="3"/>
+        </mark-expected-failures>
+        <mark-expected-failures>
+            <test name="control_structures"/>
+            <toolset name="gcc-4.2.1*"/>
+            <note author="Boris Gubenko" refid="42"/>
         </mark-expected-failures>
     </library>
 
@@ -2598,6 +2620,7 @@ for more information.
         <mark-unusable>
             <toolset name="gcc-2.95.*"/>
             <toolset name="sunpro*"/>
+            <toolset name="borland-5.6.*"/>
             <note author="Arkadiy Vertleyb">
                 This compiler is not supported.
             </note>
@@ -2891,6 +2914,19 @@ for more information.
             <toolset name="borland-5.9*"/>
             <note author="A.Meredith">
               Not yet diagnosed the precise reason these tests give bad results.
+            </note>
+        </mark-expected-failures>
+        <mark-expected-failures>
+            <test name="common_factor_test"/>
+            <test name="hypot_test"/>
+            <toolset name="borland-5.8*"/>
+            <note author="J.Maddock">
+               This appears to be caused by bad-code generation: 
+               as the following trivial code in
+               common_factor.hpp goes into an infinite loop:
+
+               while ( !(r[ which ] &amp; 1u) ){ r[ which ] &gt;&gt;= 1; }
+
             </note>
         </mark-expected-failures>
         <mark-expected-failures>
@@ -4215,6 +4251,8 @@ for more information.
             <test name="tricky_add_pointer_test"/>
             <test name="tricky_function_type_test"/>
             <test name="tricky_incomplete_type_test"/>
+            <test name="make_signed_test"/>
+            <test name="make_unsigned_test"/>
             <toolset name="borland-5.6*"/>
             <toolset name="borland-5.8*"/>
             <toolset name="borland-5.9*"/>
@@ -4547,6 +4585,8 @@ for more information.
             <test name="std_test_type_traits"/>
             <test name="run_complex_overloads"/>
             <test name="std_run_complex_overloads"/>
+            <test name="test_shared_ptr"/>
+            <test name="std_test_shared_ptr"/>
             <test name="run_random"/>
             <test name="std_run_random"/>
             <test name="test_tuple_tricky"/>
@@ -5124,7 +5164,9 @@ for more information.
         </mark-unusable>
         <mark-unusable>
             <toolset name="sunpro-5_3-sunos"/>
+            <toolset name="sun-5.7"/>
             <toolset name="sun-5.8"/>
+            <toolset name="sun-5.9"/>
             <note refid="17"/>
         </mark-unusable>
     </library>
@@ -5333,6 +5375,11 @@ for more information.
         constructed off two input iterators. Unfortunately, the Rogue Wave
         library version 2.2 and higher assumes iterator which has + and -
         operators which only random access iterator is required to provide.
+    </note>
+
+    <note id="42">
+        Internal compiler error: GCC Bugzilla Bug 33580.
+        This is a regression in the gcc 4.2 series.
     </note>
 
 </explicit-failures-markup>
