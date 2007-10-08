@@ -2,7 +2,7 @@
 <html lang="en"><head>
 
 
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/><title>Thread Working Draft 10</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/><title>Thread Working Draft 12</title>
 	
 	<style>
 	p {text-align:justify}
@@ -250,7 +250,7 @@ types ([?]).
 </p>
 
 <p>
-If and only if the <tt>thread</tt> type is internally represented by a single data structure which can be passed to operating system specific interfaces, then there shall be a nested implementation-defined typedef <tt>native_handle_type</tt> that is an alias to this native type if it is copyable.  Otherwise, if the native type is not copyable, it is a pointer to this native type.  The implementation shall document whether or not the <tt>native_handle_type</tt> typedef is present.
+If and only if the <tt>thread</tt> type is internally represented by a single data structure which can be passed to operating system specific interfaces, there shall be a nested implementation-defined typedef <tt>native_handle_type</tt> that is an alias to this native type if it is copyable.  Otherwise, if the native type is not copyable, it is a pointer to this native type.  The implementation shall document whether the <tt>native_handle_type</tt> typedef is present.
 </p>
 
 <p>
