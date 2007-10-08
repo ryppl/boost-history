@@ -22,7 +22,7 @@
 <body>
 
 <address align=right>
-Document number: NXXXX=XX-XXXX<br>
+Document number: in progress<br>
 <br>
 <a href="mailto:hinnant@twcny.rr.com">Howard E. Hinnant</a><br>
 2007-10-01
@@ -78,997 +78,6 @@ which removes cancellation/interruption and changes condition variables per the 
 This is the course of a action requested by the combined LWG/Concurrency working groups
 at the Kona meeting.
 </p>
-<hr>
-<p>
-One of the major thrusts for C++0x is support for multi-threaded programs. 
-The Library Working Group has long agreed to provide basic library facilities 
-such as mutexes, condition variables, and threads based on the existing practice 
-of the Boost Threads library. This proposal provides the Working Paper text for 
-those components. Additional multi-threading components such as atomics and 
-futures are proposed elsewhere.</p>
-<p>This proposal is the culmination of a long line of proposals. See
-<a href="#References">References</a>.</p>
-<p>The detailed discussion of motivations, rationales, design alternatives, and 
-other preliminary material remains unchanged from those proposals and is not 
-repeated in the current proposal. </p>
-<p>This proposal assumes that exception propagation from threads will be handled 
-as described in
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2179.html">N2179</a>
-or its successors, and so is not included in this proposal.
-</p>
-
-<p>
-At the meeting in Oxford, the committee asked Pete, Lawrence and Howard to combine
-the C interface of
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1907.html">N1907</a>
-with 
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2184.html">N2184</a>
-and produce a new proposal.  This effort has only been partially successful.  A significant
-complicating factor is the introduction of cancellation, and the de-facto differences
-between thread cancellation in C today, and the thread cancellation proposed for
-C++ in 
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2184.html">N2184</a>.
-</p>
-
-<p>
-Pete produced
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2285.html">N2285</a>
-which is a faithful reproduction of the committee's request.  However
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2285.html">N2285</a>
-lacks several of the advances in the mutex, lock and condition types which have emerged over
-the years based on feedback from the boost experience
-(<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2094.html">N2094</a>).
-The rationale sections contained herein for these types go into more detail concerning
-the differences between boost 
-(<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1907.html">N1907</a>,
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2285.html">N2285</a>)
-and the current proposal (which closely follows the previous
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2094.html">N2094</a>).
-</p>
-
-<p>
-An attempt was made to graft the style of the C interface in
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1907.html">N1907</a>
-onto the mutex types of
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2094.html">N2094</a>.
-It is felt that a key use case for the C level interface is to enable interoperability
-between C and C++ translation units.  An example use case from this early prototype
-was:
-</p>
-
-<blockquote><pre>extern "C" void foo();
-
-std::cnd_t cv;
-std::condition cpp_cv(cv);
-std::mtx_t mut;
-std::mutex cpp_mut(mut);
-
-int main()
-{
-   std::thread t(foo);
-   t.request_cancellation();
-   t.join();
-}
-
-// foo compiled as C
-
-extern cnd_t cv;
-extern mtx_t mut;
-
-void foo()
-{
-  mtx_lock(&amp;mut);
-  while (true)
-      cnd_wait(&amp;cv, &amp;mut);
-  mtx_unlock(&amp;mut);
-}
-</pre></blockquote>
-
-<p>
-There are at least two problems with the above sample code:
-</p>
-
-<ol>
-<li>
-The above example requires copying the C mutex types to the C++ mutex types
-(or vice versa).  Prior to this the mutex types have always been non-copyable.
-The authors of this paper are not comfortable with copyable (or even movable)
-mutex types.
-</li>
-<li>
-<tt>condition::wait</tt> must be a C++ cancellation point.  What happens when a
-C translation unit is blocked in <tt>cnd_wait</tt> and a request to cancel comes in?
-At this point in time we do not feel we can standardize propagating a C++ exception
-through a C stack frame.
-</li>
-</ol>
-
-<p>
-At this point the C/C++ interoperability design outlined in
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2145.html">N2145</a>
-for atomic types was brought to our attention.  This approach neatly solves the first
-problem above by making the C and C++ types layout compatible.  The C and C++
-translation units can both refer to the same structure, but operate on it with different
-syntax and even different functions.  This was prototyped and the above example use
-case (for <tt>mutex</tt> only) simplified to:
-</p>
-
-<blockquote><pre>// A C++ translation unit
-
-#include &lt;mutex&gt;
-
-std::mutex m;
-
-void foo()
-{
-    m.lock();
-    // do work
-    m.unlock();
-}
-</pre></blockquote>
-
-<p>
-And in the same program:
-</p>
-
-<blockquote><pre>// A C translation unit
-
-#include &lt;mutex.h&gt;
-
-extern struct std_mutex m;
-
-void bar()
-{
-    std_mutex_lock(&amp;m);
-    // do work
-    std_mutex_unlock(&amp;m);
-}
-</pre></blockquote>
-
-<p>
-Now <tt>mutex</tt> need not be moved, copied, or converted between C and C++ types.
-</p>
-
-<p>
-However the second problem above (concerning cancellation) remained.  To address this
-issue this proposal initially stated that the C level interface of <tt>condition::wait</tt>
-would return <tt>ECANCELED</tt> if it received a cancellation request.  Now our example
-interoperability use case looks like:
-</p>
-
-<blockquote><pre>// C++ translation unit
-
-std::condition_mtx cv;
-std::mutex mut;
-int flag = 0;
-
-extern "C" void f();
-
-int main()
-{
-   std::thread t(f);
-   t.request_cancellation();
-   t.join();
-}
-
-// C translation unit
-
-extern std_condition cv;
-extern std_mutex mut;
-extern int flag;
-
-void f()
-{
-   std_mutex_lock(&amp;mut);
-   int ec;
-   while (flag == 0)
-   {
-      ec = std_condition_wait(&amp;cv, &amp;mut);
-      if (ec == ECANCELED)
-          // now what?!
-   }
-   std_mutex_unlock(&amp;mut);
-}
-</pre></blockquote>
-
-<p>
-As indicated by the comment in the C function <tt>f</tt>, once C++ cancellation
-is detected in a C translation unit, what is the C code supposed to do with it?
-</p>
-
-<p>
-The C level interface has been removed from this proposal with the following
-rationale:
-</p>
-
-<ul>
-<li>As long as we specify that the key types in this proposal are
-standard-layout types (which we have done), WG14 is still free to standardize
-a C interface which interoperates with this C++ interface.</li>
-<li>WG14 is in a better position to solve the cancellation interoperability 
-problem than WG21 is.  We will specify that cancellation is nothing more than
-a C++ exception.  WG14 may in the future standardize a C++-compatible
-<tt>try</tt>/<tt>finally</tt> which C cancellation can be built on.  If this
-happens we do
-not want to have an existing C interface specified in the C++ standard which
-specifies that C cancellation means returning <tt>ECANCELLED</tt>.</li>
-<li>WG14 asked WG21 to take the lead on this issue.  We feel we can best
-take lead by specifying only a C++ interface which has the minimum hooks
-in it to support a future C interoperating interface (i.e. types are
-standard-layout types).  We feel we should stop short of actually specifying
-that C interface in the C++ standard.  WG14 can do a better job with the
-C interface and a future C++ standard can then import it by reference.</li>
-</ul>
-
-<p>
-We would like to emphasize that despite the removal of the C interoperable interface
-from this document, we continue to believe that C/C++ interoperability in this area
-is important.  We strongly encourage WG21 and WG14 cooperation in this area.  We feel
-that by specifying the standard layout for the mutex/condition/thread types we have
-provided the necessary hooks for this interoperability.  We would like to see the
-technical guarantees surrounding this foundation firmed up.  And we would like to see
-prolific communication between WG21 and WG14 on this all important issue.
-</p>
-
-<h2><a name="Thread"></a>Thread</h2>
-
-<p>
-The <tt>thread</tt> class proposed herein follows closely to that as described in
-<a href="n2184.html">N2184</a>.  This paper has the following differences:
-</p>
-
-<ul>
-<li><tt>cancel()</tt> has been renamed to <tt>request_cancellation()</tt> to better describe
-the intent of this operation.</li>
-<li>The classes <tt>thread</tt> and <tt>thread::id</tt> have been specified to have
-standard layout to facilitate interoperability with a future C interface to be
-specified by WG14.</li>
-<li>The alias to <tt>join()</tt>, <tt>operator()()</tt> has been removed.  It is expected
-that <tt>future</tt> will have a member named <tt>join()</tt> to facilitate generic code
-which can join either with <tt>thread</tt>s or <tt>future</tt>s.</li>
-</ul>
-
-<h3>Creating a thread</h3>
-
-<p>
-A thread is launched by constructing a <tt>std::thread</tt> with a functor:
-</p>
-
-<blockquote><pre>
-#include &lt;thread&gt;
-
-void f();
-
-void bar()
-{
-    std::thread t(f);  // f() executes in separate thread
-}
-</pre></blockquote>
-
-<p>
-The functor can be a function, or a more general class with an <tt>operator()</tt>.
-<tt>std::bind</tt> can be used to pass arguments to the functor.
-Any return type is ignored.
-</p>
-
-<blockquote><pre>
-#include &lt;thread&gt;
-
-struct f
-{
-    void operator()(const std::string& name, int id) {}
-};
-
-void bar()
-{
-    std::thread t(std::bind(f(), "Task A", 5));  // f("Task A", 5) executes in separate thread
-}
-</pre></blockquote>
-
-<h3>Joining with a thread</h3>
-
-<p>
-A <tt>std::thread</tt> can be joined with:
-</p>
-
-<blockquote><pre>
-t.join();  // wait for thread t to end
-</pre></blockquote>
-
-<p>
-One can test if a <tt>thread</tt> is <i>joinable</i>.  If the <tt>thread</tt>
-has already been <tt>join</tt>ed with, or <tt>detach</tt>ed, then it is no longer <tt>joinable</tt>.
-If the thread has been moved from, it is no longer <tt>joinable</tt>, unless
-it has subsequently been moved back into.
-</p>
-
-<blockquote><pre>
-std::thread t(f);
-assert(t.joinable());
-
-std::thread t2(std::move(t));
-assert(!t.joinable());
-assert(t2.joinable());
-
-t = std::move(t2);
-assert(t.joinable());
-assert(!t2.joinable());
-
-t.join();
-assert(!t.joinable());
-</pre></blockquote>
-
-<p>
-Note: It is impossible to <tt>join</tt> with the main thread as one must have a
-<tt>std::thread</tt> object to join with.  And it is not possible to create a
-<tt>std::thread</tt> which refers to the main thread.
-</p>
-
-<h3>Uncaught exceptions</h3>
-
-<p>
-When a thread (other than the main thread) lets an exception go unhandled, the default
-behavior is to call <tt>std::terminate()</tt>.  However there are many options for easily
-modifying this default behavior.
-</p>
-
-<blockquote><pre>
-void f()
-{
-    throw 1;
-}
-
-int main()
-{
-    std::thread t(f);
-    t.join();
-}
-
-// std::terminate() is called after f throws.
-</pre></blockquote>
-
-<p>
-If the above is not the desired behavior, the client of <tt>f</tt> can easily wrap
-<tt>f</tt> in a functor using <tt>std::bind</tt> which catches unhandled exceptions
-and performs some other action.  For example here is such a functor which logs
-unhandled exceptions, but does not otherwise indicate an error:
-</p>
-
-<blockquote><pre>
-#include &lt;fstream&gt;
-#include &lt;thread&gt;
-#include &lt;functional&gt;
-
-void f()
-{
-    throw 1;
-}
-
-struct log_uncaught_exceptions
-{
-    template &lt;class F&gt;
-    void operator()(F f)
-    {
-        try
-        {
-            f();
-        }
-        catch (...)
-        {
-            std::ofstream("log.text", std::ios::app) &lt;&lt; "uncaught exception\n";
-        }
-    }
-};
-
-int main()
-{
-    std::thread t(std::bind(log_uncaught_exceptions(), f));
-    t.join();
-}
-
-The file log.text is appended with "uncaught exception".
-</pre></blockquote>
-
-<p>
-Indeed, it is believed that the functor adaptor is sufficiently general that the following
-can be <em>non-intrusively</em> built upon this proposal:
-</p>
-
-<ul>
-<li><tt>future</tt> with arbitrary return values.</li>
-<li><tt>future</tt> with exception translation/propagation on join.</li>
-<li><tt>shared_future</tt> which is copyable and has multi-join functionality.</li>
-<li><tt>thread_pool</tt> which queues a large number of functors to be
-executed using a small number of <tt>thread</tt>s.</li>
-</ul>
-
-<h3><tt>thread</tt> is move-only</h3>
-
-<p>
-A <tt>std::thread</tt> is not copyable, but is moveable.  This ensures that a <tt>thread</tt>
-can have only one parent or owner, but that ownership can be transferred among scopes, or
-even among threads.
-</p>
-
-<blockquote><pre>
-// factory function for thread
-std::thread
-CreateMyThread(const std::string&amp; name, int x)
-{
-    std::thread t(std::bind(f, name, x));
-    // maybe wait for / communicate with the new thread here, maybe not...
-    return t;
-}
-...
-// Details on how you want your thread created are encapsulated
-std::thread t = CreateMyThread("Task A", 26);
-</pre></blockquote>
-
-<blockquote><pre>
-// threads can be stored in containers
-int main()
-{
-    std::vector&lt;std::thread&gt; thread_group;
-    thread_group.push_back(std::thread(f));
-    ...
-    // Number of threads created here not known until run time
-    // (motivating the use of vector&lt;thread&gt; in this example)
-    ...
-    // Join with all of the threads
-    for (auto i = thread_group.begin(), e = thread_group.end(); i != e; ++i)
-        i-&gt;join();
-}
-</pre></blockquote>
-
-<h3>Thread ID</h3>
-
-<p>
-Despite the fact that <tt>std::thread</tt> is not copyable, its
-<tt><i>id</i></tt> <i>is</i> copyable.  Therefore clients can freely
-pass around this <tt>id</tt>.  But the only thing this information can
-be used for is comparing the identity of threads. The <tt>id</tt> of a
-thread can be obtained from a joinable <tt>std::thread</tt>.
-Additionally a thread can obtain its own <tt>id</tt> without the use of
-a <tt>std::thread</tt> (including the main thread). Finally an
-<tt>id</tt> can be default constructed and is then guaranteed not to
-compare equal to the <tt>id</tt> of any other running <tt>thread</tt>.
-</p>
-
-<blockquote><pre>
-std::thread::id id;               // Refers to no thread
-assert(id == std::thread::id());  // All default constructed id's compare equal
-
-id = std::this_thread::get_id();  // get id for this thread
-assert(id != std::thread::id());  // id now refers to this thread
-
-std::thread t(f);                 // launch a thread and call it t
-id = t.get_id();                  // id now refers to t's id
-assert(id != std::this_thread::get_id());
-</pre></blockquote>
-
-<h3><tt>this_thread</tt> Namespace</h3>
-
-<p>
-Note the use of the <tt>this_thread</tt> namespace to disambiguate when you are requesting
-the <tt>id</tt> for the current thread, vs the id of a child thread.  The <tt>get_id</tt>
-name for this action remains the same in the interest of reducing the conceptual footprint
-of the interface. 
-</p>
-
-<p>
-The <tt>this_thread</tt> namespace also contains a few other functions that operate on, or query the
-current thread of execution.
-</p>
-
-<h3>Destructing a thread</h3>
-
-<p>
-This proposal follows <tt>boost::thread</tt> semantics and detaches the thread if <tt>~thread()</tt>
-runs on a joinable thread of execution.
-</p>
-
-<blockquote><pre>
-{
-std::thread t1(f1);
-}  t1.detach() implicitly called
-</pre></blockquote>
-
-<h3>Threading cooperatively</h3>
-
-<p>
-Namespace <tt>this_thread</tt> has two functions for yielding processor control to
-another thread:
-</p>
-
-<blockquote><pre>
-void yield();
-template &lt;class ElapsedTime&gt; void sleep(const ElapsedTime&amp; <i>rel_time</i>);
-</pre></blockquote>
-
-<p>
-A thread can call these functions to control its own yielding of the processor.  There is no
-way to request another thread to yield or sleep.
-</p>
-
-<p>
-<i>Note:</i> See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2411.html">N2411</a>
-for more details on handling time durations.
-</p>
-
-<h3>Environment</h3>
-
-<p>
-There is one static member function of <tt>thread</tt> which yields a
-measure of the number of threads which could possibly execute
-concurrently:
-</p>
-
-<blockquote><pre>
-unsigned n = std::thread::hardware_concurrency();
-</pre></blockquote>
-
-<p>
-This can come in handy in a variety of situations such as sizing a thread pool.
-</p>
-
-<h2><a name="Mutex"></a>Mutex</h2>
-
-<p>
-</p>
-
-<h3><a name="MutexExamples"></a>Mutex Rationale and Examples</h3>
-
-<p>
-Below is shown the basic operation of a <tt>mutex</tt>.  Normally one will want to
-lock and unlock mutexes using <tt>scoped_lock&lt;mutex&gt;</tt> or <tt>unique_lock&lt;mutex&gt;</tt>.
-However lock, try_lock and unlock member functions are available in the mutex types themselves
-to provide flexibility to the client.
-</p>
-
-<blockquote><pre>#include &lt;mutex&gt;
-
-std::mutex m;
-
-void foo()
-{
-    m.lock();
-    // do work
-    m.unlock();
-}
-</pre></blockquote>
-
-<h4><a name="MutexConcept"></a>Mutex concepts</h4>
-
-<p>
-Boost separates mutex concepts out into:
-</p>
-
-<ol>
-<li>Mutex</li>
-<li>TryMutex</li>
-<li>TimedMutex</li>
-</ol>
-
-<p>
-Each of these three concepts have both recursive and non-recursive counterparts for a total of 6 concepts.
-</p>
-
-<ol>
-<li>Mutex</li>
-<li>RecursiveMutex</li>
-<li>TryMutex</li>
-<li>RecursiveTryMutex</li>
-<li>TimedMutex</li>
-<li>RecursiveTimedMutex</li>
-</ol>
-
-<p>
-Because of anticipated support in the future for more mutex concepts (such as read/write) an attempt has
-been made to reduce the number mutex concepts.  It was noted that all mutex concepts can support the
-TryMutex concept without extra expense.  Therefore the TryMutex concept has been eliminated and folded
-into the Mutex concept:
-</p>
-
-<ol>
-<li>Mutex</li>
-<li>RecursiveMutex</li>
-<li>TimedMutex</li>
-<li>RecursiveTimedMutex</li>
-</ol>
-
-<p>
-It is shown later that the TryMutex concept is a necessary requirement for fundamental generic lock
-algorithms such as <tt>std::lock(L1&amp;, L2&amp;, L3&amp;...)</tt> and is thus a good idea to include
-as a fundamental requirement for all mutex types (high benefit, zero cost).
-</p>
-
-<h4><a name="MutexTime"></a>Time Issues</h4>
-
-<p>
-Most of the time-related interface is based on time durations (e.g. <tt>milliseconds(100)</tt>)
-instead of specific points in time (eg: 2007-May-28 00:00:00.12345).  The one exception to this policy
-is the timed_wait member of the condition variable.  In this case spurious wake ups are expected,
-and when this happens, without timing against a specific point in time, it is difficult to know
-whether you've woken up for spurious reasons or because of a time out, and if for spurious reasons
-how much longer you need to wait for.  Therefore timed_wait on condition variables alone is
-specified in terms of a specific point in time.  Every effort has been made to anticipate the
-TR2 <tt>date_time</tt> support and make the standard interface compatible with that.  See
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2411.html">N2411</a> for details.
-</p>
-
-<p>
-Examples
-</p>
-
-<blockquote><pre>std::timed_mutex mut;
-std::basic_condition&lt;std::unique_lock&lt;std::mutex&gt;&gt; cv;
-
-void foo()
-{
-    std::unique_lock&lt;std::mutex&gt; lk(mut);
-    // Wait for 2 seconds on a condition variable
-    std::utc_time time_out = std::hiresolution_clock::universal_time() + std::seconds(2);
-    while (!pred)
-    {
-        bool timed_out = !cv.timed_wait(lk, time_out);
-        if (timed_out)
-            // deal with time out
-    }
-}
-
-void bar()
-{
-    // Wait for 1/10 of a second on a mutex
-    if (mut.timed_lock(std::milliseconds(10)))
-        // got the lock
-}
-</pre></blockquote>
-
-<h3><a name="LockExamples"></a>Lock Rationale and Examples</h3>
-
-<p>
-Unlike boost locks, the locks proposed herein are not nested types of the mutex classes
-but class templates which are templated on the mutex type.  The locks thus become far more
-reusable.  They can be instantiated with any standard or user-defined mutex which meets
-the mutex requirements.
-</p>
-
-<blockquote><pre>std::scoped_lock&lt;<b>std::mutex</b>&gt; lock1(m1);  // ok
-...
-std::scoped_lock&lt;<b>std::timed_mutex</b>&gt; lock2(m2);  // also ok
-...
-std::scoped_lock&lt;<b>my_mutex</b>&gt; lock3(m3);  // also ok
-</pre></blockquote>
-
-<p>
-There are two lock class templates:
-</p>
-
-<ol>
-<li><tt>template &lt;class Mutex&gt; scoped_lock</tt></li>
-<li><tt>template &lt;class Mutex&gt; unique_lock</tt></li>
-</ol>
-
-<p>
-The purpose of <tt>scoped_lock</tt> is to serve the common use case with as
-much efficiency as possible.  Unlike the boost <tt>scoped_lock</tt>, this
-<tt>scoped_lock</tt> always owns its referenced mutex.  There need be no
-internal flag indicating ownership.  The <tt>scoped_lock</tt> destructor
-does not need to perform a test to see if it should unlock the mutex: it
-unconditionally unlocks the mutex.  Thus there is no branch which might stall
-a processor pipeline just to unlock the mutex.
-</p>
-
-<p>
-Using a <tt>scoped_lock</tt> also easily signals intent:  The referenced mutex
-is locked and unlocked strictly within the containing scope.  There is no need
-for the reader of the code to search for places where mutex ownership might be
-transferred out of the current scope.
-</p>
-
-<blockquote><pre>void foo()
-{
-    std::<b>scoped_lock</b>&lt;std::mutex&gt; _(mut);
-    // do protected work
-    // ...
-}   // mut unlocked
-</pre></blockquote>
-
-<p>
-It is not possible to have a <tt>scoped_lock</tt> that does not refer to a mutex.
-And it is not possible for that referenced mutex to not be locked by the
-<tt>scoped_lock</tt>.  The only way to lock the mutex is with the <tt>scoped_lock</tt>
-constructor, and the only way to unlock it is with the <tt>scoped_lock</tt> destructor.
-This is far more restrictive than the boost <tt>scoped_lock</tt>, but slightly more
-efficient as well.  Because of the prevalence of the scoped locking pattern, it is
-felt by the authors that a maximally efficient lock dedicated to this use case is
-justified.
-</p>
-
-<p>
-Because there exist use cases which require more flexibility than a
-strict scoped style locking pattern, <tt>unique_lock</tt> is introduced.
- Unlike <tt>scoped_lock</tt>, <tt>unique_lock</tt> may or may not
-reference a mutex, and if it does, may or may not own the locked state
-of that mutex.  This is much more like the semantics of the boost
-<tt>scoped_lock</tt>.  However, unlike the boost <tt>scoped_lock</tt>,
-<tt>unique_lock</tt> services all of the mutex concepts (timed and
-non-timed).  A <tt>unique_lock</tt> is movable, but not copyable,
-so they can be put into containers and returned from factory functions.
-</p>
-
-<blockquote><pre>template &lt;class L1, class L2&gt;
-int
-try_lock(L1&amp; lock1, L2&amp; lock2)
-{
-    <b>unique_lock</b>&lt;L1&gt; ul(lock1, <b>try_to_lock</b>);
-    if (ul.<b>owns()</b>)
-    {
-        if (lock2.try_lock())
-        {
-            ul.<b>release()</b>;
-            return -1;
-        }
-        return 1;
-    }
-    return 0;
-}
-</pre></blockquote>
-
-<p>
-In the example above, <tt>unique_lock</tt> serves to provide exception
-safety, unlocking <tt>lock1</tt> if the attempt to lock <tt>lock2</tt>
-throws an exception.  However, because strict scoped locking isn't desired in
-this use case, the <tt>unique_lock</tt> is asked to release its lock
-ownership if both <tt>lock1</tt> and <tt>lock2</tt> are successfully
-locked.
-</p>
-
-<p>
-Also note in the above example that <tt>L1</tt> and <tt>L2</tt> may
-also be <tt>unique_lock</tt> types.  Because of the generality of the
-templated locks (as opposed to being available only as nested types
-of a mutex), the <tt>try_lock</tt> algorithm can easily and seamlessly
-create a <tt>unique_lock&lt;unique_lock&lt;Mutex&gt;&gt;</tt> type
-(<tt>ul</tt> in the example if <tt>L1</tt> is a <tt>unique_lock&lt;Mutex&gt;</tt>).
-</p>
-
-<p>
-Finally note a few syntactic differences between boost <tt>scoped_lock</tt> and
-<tt>unique_lock</tt> which lead to improved readability:
-</p>
-
-<ul>
-<li><tt>try_to_lock</tt> is used to indicate <tt>try_lock</tt> on construction
-instead of a <tt>bool</tt>.</li>
-<li>boost <tt>scoped_lock::locked()</tt> has been renamed to <tt>owns()</tt>.
-Rationale:  This member may return <tt>false</tt> and that does not mean that the referenced
-mutex is not locked.  It means that <i>this</i> <tt>unique_lock</tt> does not <i>own</i>
-the locked state of the mutex.  The mutex may still be locked (say by another thread).</li>
-</ul>
-
-<p>
-Looking forward, TR2 may have a new lock type that does not model exclusive ownership as
-<tt>scoped_lock</tt> and <tt>unique_lock</tt> do, but rather models shared ownership.
-A reasonable name for such a lock might be <tt>shared_lock</tt>.
-</p>
-
-<ul>
-<li><tt>template &lt;class Mutex&gt; scoped_lock;  // Scoped, exclusive ownership</tt></li>
-<li><tt>template &lt;class Mutex&gt; unique_lock;  // Exclusive ownership</tt></li>
-<li><tt>template &lt;class Mutex&gt; shared_lock;  // Shared ownership</tt></li>
-</ul>
-
-<p>
-We feel that the above is an appropriate naming convention for the various lock types.
-</p>
-
-<h3><a name="LockAlgoExamples"></a>Generic Locking Algorithm Rationale and Examples</h3>
-
-<p>
-Consider a user written class which contains a data member mutex which controls access
-to the object:
-</p>
-
-<blockquote><pre>class Record
-{
-    mutable std::mutex mut;
-    ...
-public:
-    ...
-};
-</pre></blockquote>
-
-<p>
-Now consider writing the assignment operator for this class:
-</p>
-
-<blockquote><pre>Record&amp;
-Record::operator=(const Record&amp; r)
-{
-    if (this != &amp;r)
-    {
-        std::scoped_lock&lt;std::mutex&gt; this_lock(mut);
-        std::scoped_lock&lt;std::mutex&gt; that_lock(r.mut);
-        // Both source and destination are locked
-        // Safe to assign
-        // ...
-    }
-    return *this;
-}
-</pre></blockquote>
-
-<p>
-Unfortunately the above code is wrong and can lead to deadlock.  Given two
-objects of type <tt>Record</tt>, <tt>r1</tt> and <tt>r2</tt>, if one
-thread executes <tt>r1 = r2</tt> while at the same time another thread
-executes <tt>r2 = r1</tt>, then it is possible to deadlock.  For example:
-</p>
-
-<blockquote><pre>Thread A                Thread B
-lock r1.mut             lock r2.mut
-block on r2.mut         block on r1.mut
-</pre></blockquote>
-
-<p>
-To address this situation a generic locking algorithm is provided which locks an
-arbitrary number of locks at the same time while avoiding deadlock:
-</p>
-
-<blockquote><pre>template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&amp;...);
-</pre></blockquote>
-
-<p>
-Now the assignment operator can easily be written to avoid deadlock:
-</p>
-
-<blockquote><pre>Record&amp;
-Record::operator=(const Record&amp; r)
-{
-    if (this != &amp;r)
-    {
-        std::unique_lock&lt;std::mutex&gt; this_lock(mut, std::defer_lock);
-        std::unique_lock&lt;std::mutex&gt; that_lock(r.mut, std::defer_lock);
-        <b>std::lock(this_lock, that_lock);</b>
-        // Both source and destination are locked
-        // Safe to assign
-        // ...
-    }
-    return *this;
-}
-</pre></blockquote>
-
-<p>
-<tt>unique_lock</tt> is now required instead of <tt>scoped_lock</tt> as one can not
-defer the locking of the mutex within a <tt>scoped_lock</tt>.  Note too that the locks
-locked with <tt>std::lock</tt> do not need to be the same type.  So if we have read/write
-locking in the future this might look like:
-</p>
-
-<blockquote><pre>Record&amp;
-Record::operator=(const Record&amp; r)
-{
-    if (this != &amp;r)
-    {
-        std::<b>unique_lock</b>&lt;std::tr2::rw_mutex&gt;      this_lock(mut, std::defer_lock);
-        std::tr2::<b>shared_lock</b>&lt;std::tr2::rw_mutex&gt; that_lock(r.mut, std::defer_lock);
-        std::lock(this_lock, that_lock);
-        // Both source and destination are locked
-        // Safe to assign
-        // ...
-    }
-    return *this;
-}
-</pre></blockquote>
-
-<p>
-In the above example <tt>this</tt> is write-locked and <tt>r</tt> is read-locked,
-all done in a deadlock-safe manner.
-</p>
-
-<h2><a name="Condition"></a>Condition Variables</h2>
-
-<p>
-Condition variables are a inter-thread notification mechanism which work closely
-with mutexes and locks.  The typical use case is for a thread to lock a mutex (or lock)
-associated with some data which is used to compute a predicate (e.g. does the queue have items).
-When the predicate is false, the thread will wait on the condition variable using the still
-locked mutex as an argument to the wait function.  The locked mutex assures that no other thread
-can change the protected data while the current thread-of-execution is in the process of blocking (waiting) for that
-data to be updated.  Once the waiting thread is blocked, the system unlocks the mutex so that
-another thread can lock the mutex, update the protected data, unlock the mutex, and signal
-the condition variable to wake one or more threads to process the protected data.
-</p>
-
-<h3><a name="ConditionExamples"></a>Condition Rationale and Examples</h3>
-
-<blockquote><pre>std::mutex mut;
-std::cond_var cv;
-std::queue&lt;int&gt; data;
-
-void thread1()  // consumer
-{
-    while (true)
-    {
-        int d;
-        {
-        std::unique_lock&lt;std::mutex&gt; lk(mut);  // Protect data
-        while (data.empty())                   // Is there data to process?
-            cv.wait(lk);                       // Sleep and release data lock
-        d = data.front();                      // Remove data from non-empty
-        data.pop();                            //    queue with mutex locked
-        }
-        process(d);                            // Process data with mutex unlocked
-    }
-}
-
-void thread2()  // producer
-{  
-    while (true)
-    {
-        int d = get_more_data();               // Produce data with mutex unlocked
-        std::scoped_lock&lt;std::mutex&gt; _(mut);   // Protect data
-        data.push(d);                          // get data and push it into queue
-        if (data.size() == 1)
-            cv.notify_one();                   // Notify thread1 that data queue has become non-empty
-    }
-}
-</pre></blockquote>
-
-<p>
-The example above demonstrates basic <tt>cond_var</tt> usage.  <tt>thread1</tt> acts as
-a consumer, waiting until there is data in the queue to process.  The queue is checked, and
-data is removed from the queue under the protection of a <tt>std::mutex</tt> which is locked
-with a <tt>std::unique_lock</tt>.  While <tt>thread1</tt> waits for the empty queue to have
-data pushed into it, the system unlocks the <tt>mutex</tt>.
-</p>
-
-<p>
-<tt>thread2</tt> in the above example supplies data to the queue.  As it is accesses the shared
-data queue it protects it with the <tt>std::mutex</tt>.  When <tt>thread2</tt> detects that the
-queue has transitioned from empty to one element, it signals <tt>thread1</tt> via the
-condition variable.  If <tt>thread1</tt> isn't blocked on the condition variable at this
-time, the notification is harmlessly ignored.
-</p>
-
-<p>
-Both <tt>thread1</tt> and <tt>thread2</tt> do as much processing as possible with the <tt>std::mutex</tt>
-unlocked, thus increasing overall throughput.
-</p>
-
-<h4><a name="ConditionFlex"></a>Condition Variable Flexibility</h4>
-
-<p>
-A generalized condition variable <tt>gen_cond_var</tt> is supplied, where the only requirements
-on <tt>Lock</tt> are that it support <tt>lock()</tt> and <tt>unlock()</tt> member functions.
-<tt>Lock</tt> could be any of the standard mutexes or locks, or any user defined mutex or lock
-(as long as they meet the <tt>lock/unlock</tt> requirements.
-</p>
-
-<p>
-Assuming that TR2 brings read/write mutexes and shared locks, they will be usable with this
-<tt>std::gen_cond_var</tt>.  Being able to wait with a read/write mutex, locked either for
-reading or writing, goes significantly beyond Posix capabilities and Boost capabilities
-(though Windows Vista has this capability).
-</p>
-
-<blockquote><pre>std::tr2::rw_mutex mut;
-std::gen_cond_var cv;
-
-void foo()
-{
-    std::tr2::shared_lock&lt;std::tr2::rw_mutex&gt; read_lock(mut);
-    while (there_is_nothing_to_read())
-        cv.wait(read_lock);
-    ...
-}
-</pre></blockquote>
-
-<p>
-This pattern might allow a single producer, needing a write lock, to signal many consumers
-which need only read locks to "consume", which finally might signal a single clean up thread
-needing a write lock to dispose of the data.
-</p>
 
 <h1><a name="ProposedWording">Proposed wording</a></h1>
 
@@ -1083,8 +92,8 @@ This clause describes components that C++ programs may use to create and manage 
 
 <p>
 The following subclauses describe components to create and manage 
-threads-of-execution, perform mutual exclusion and locking, and communicate 
-between threads-of-execution.</p>
+<i>threads of execution</i> [intro.execution? (N2334)], perform mutual exclusion and locking, and communicate 
+between threads of execution.</p>
 
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
   <tr>
@@ -1157,8 +166,8 @@ struct once_flag
     once_flag&amp; operator=(const once_flag&amp;) = delete;
 };
 
-template&lt;typename Callable, typename Args...&gt;
-void call_once(once_flag&amp; flag, Callable func, Args... args);
+template&lt;class Callable, class ...Args&gt;
+void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 
 }  // std
 </pre></blockquote>
@@ -1166,8 +175,8 @@ void call_once(once_flag&amp; flag, Callable func, Args... args);
 <h4>Class thread</h4>
 
 <p>
-An object of class <code>thread</code> launches a new thread-of-execution, 
-and provides mechanisms for the current thread-of-execution to wait for 
+An object of class <code>thread</code> launches a new thread of execution, 
+and provides mechanisms for the current thread of execution to wait for 
 completion of the launched thread, and perform other operations to manage and query the thread's 
 state.
 </p>
@@ -1176,8 +185,7 @@ state.
 {
 public:
     thread();
-    <del>template &lt;class F&gt; explicit thread(F f);</del>
-    <ins>template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp; args...);</ins>
+    template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp;... args);
     ~thread();
 
     thread(const thread&amp;) = delete;
@@ -1190,8 +198,6 @@ public:
 
     bool joinable() const;
     void join();
-    template &lt;class ElapsedTime&gt;
-        bool timed_join(const ElapsedTime&amp; rel_t);
     void detach();
 
     class id
@@ -1225,7 +231,9 @@ types ([?]).
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of type <tt>thread</tt>.
+<i>Effects:</i> Constructs a <tt>thread</tt> object not attached to any thread
+of execution.  [<i>Note:</i> This is the state of a <tt>thread</tt>
+object after <tt>detach</tt> or <tt>join</tt> is successfully called. <i>-- end note</i>]
 </p>
 <p>
 <i>Postconditions:</i>
@@ -1245,18 +253,19 @@ other <tt>join</tt>able <tt>thread</tt>s.
 </blockquote>
 </blockquote>
 
-<blockquote><pre>template &lt;class F&gt; explicit thread(F <i>f</i>)
+<blockquote><pre>
+template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp;... args);
 </pre>
 
 <blockquote>
 <p>
-<i>Requires:</i>  If <tt>f</tt> is an lvalue, <tt>F</tt> must be <tt>CopyConstructible</tt>.
+<i>Requires:</i>  <tt>F</tt> is a callable type [func.def].  If <tt>f</tt> is an lvalue, <tt>F</tt> must be <tt>CopyConstructible</tt>.
 If <tt>f</tt> is an rvalue, <tt>F</tt> must only be <tt>MoveConstructible</tt>.
 </p>
 <p>
-<i>Effects:</i> Constructs an object of type <tt>thread</tt> and executes the
-functor <tt><i>f</i></tt> asynchronously as a new thread-of-execution.  <tt>F</tt> is a functor which takes
-no argument.  Any return value from the functor is ignored.  If <tt>f</tt> terminates with an uncaught
+<i>Effects:</i> Constructs an object of type <tt>thread</tt> and executes <tt><i>INVOKE</i>(f, t1, t2, ..., tN)</tt> 
+in a new thread of execution, where <tt>t1, t2, 
+..., tN</tt> are the values in <tt>args...</tt>.  Any return value from <tt>f</tt> is ignored.  If <tt>f</tt> terminates with an uncaught
 exception, <tt>std::terminate()</tt> shall be called.
 </p>
 <p>
@@ -1265,10 +274,10 @@ exception, <tt>std::terminate()</tt> shall be called.
 <blockquote><pre>get_id() != thread::id()
 &amp;&amp; joinable() == true
 </pre>
-<p><code>*this</code> represents the newly started thread-of-execution.</p>
+<p><code>*this</code> represents the newly started thread of execution.</p>
 </blockquote>
 <p>
-<i>Throws:</i> <tt>system_error</tt> if unable to  start this thread.
+<i>Throws:</i> <tt>system_error</tt> if unable to  start the new thread of execution.
 </p>
 </blockquote>
 </blockquote>
@@ -1278,7 +287,7 @@ exception, <tt>std::terminate()</tt> shall be called.
 
 <blockquote>
 <p>
-<i>Effects:</i> If <tt>joinable()</tt> then <tt>detach()</tt>,
+<i>Effects:</i> If <tt>joinable()</tt> then <tt>join()</tt>,
 otherwise no effects.
 </p>
 <p>
@@ -1313,7 +322,7 @@ start of construction.
 <blockquote>
 <p>
 <i>Effects:</i> If <tt>this</tt> currently refers to a <tt>joinable</tt> thread, calls
-<tt>detach()</tt>.  Then assigns the state of <tt><i>x</i></tt> to <tt>*this</tt>
+<ins><tt>join()</tt></ins>.  Then assigns the state of <tt><i>x</i></tt> to <tt>*this</tt>
 and sets <tt><i>x</i></tt> to a default constructed state.
 </p>
 <p>
@@ -1325,7 +334,7 @@ assignment.
 assignment.
 </p>
 <p>
-<i>Throws:</i> Nothing.
+<del><i>Throws:</i> Nothing.</del>
 </p>
 </blockquote>
 </blockquote>
@@ -1364,41 +373,16 @@ assignment.
 <i>Preconditions:</i> <tt>joinable()</tt> is <tt>true</tt>.
 </p>
 <p>
-<i>Effects:</i> The current thread-of-execution blocks until the thread-of-execution 
+<i>Effects:</i> The current thread of execution blocks until the thread of execution 
 represented by <code>*this</code> completes.</p>
 <p>
 <i>Postconditions:</i> After a normal return of <tt>join()</tt>,
-<tt>joinable()</tt> is <tt>false</tt>. If <tt>join()</tt> throws an exception, the thread-of-execution represented by
-<tt>*this</tt> remains unaffected.
+<tt>joinable()</tt> is <tt>false</tt>. If <tt>join()</tt> throws an exception, the thread of execution represented by
+<tt>*this</tt> remains <tt>joinable</tt>.
 </p>
-</blockquote>
-</blockquote>
 
-<blockquote><pre>template &lt;class ElapsedTime&gt;
-    bool timed_join(const ElapsedTime&amp; rel_t)
-</pre>
-
-<blockquote>
 <p>
-<i>Requires:</i> <tt>ElapsedTime</tt> shall be explicitly convertible to <tt>nanoseconds</tt>.
-</p>
-<p>
-<i>Preconditions:</i> <tt>joinable()</tt> is <tt>true</tt>.
-</p>
-<p>
-<i>Effects:</i> The current thread-of-execution blocks until the the 
-thread-of-execution represented by
-<tt>*this</tt> completes,
-or until the indicated time duration expires.
-</p>
-<p>
-<i>Postconditions:</i> If <tt>timed_join</tt> returns <tt>true</tt>,
-<tt>joinable()</tt> shall be <tt>false</tt>. If <tt>join()</tt> throws an exception, the thread-of-execution represented by
-<tt>*this</tt> remains unaffected.
-</p>
-<p>
-<i>Returns:</i> <tt>true</tt> if the thread-of-execution represented by
-<tt>*this</tt> joined, otherwise <tt>false</tt>.
+<i>Throws:</i> May throw <tt>system_error</tt>.
 </p>
 </blockquote>
 </blockquote>
@@ -1411,127 +395,26 @@ or until the indicated time duration expires.
 <i>Preconditions:</i> <tt>joinable()</tt> is <tt>true</tt>.
 </p>
 <p>
-<i>Effects:</i> The thread-of-execution represented by
-<tt>*this</tt> continues execution.  When the thread-of-execution represented by
+<i>Effects:</i> The thread of execution represented by
+<tt>*this</tt> continues execution.  When the thread of execution represented by
 <tt>*this</tt> ends execution it shall release any owned resources.
 </p>
 <p>
 <i>Postconditions:</i> <tt>joinable()</tt> is <tt>false</tt>. <tt>*this</tt> 
-does not represent a thread-of-execution.
+does not represent a thread of execution.
 </p>
 <p>
 <i>Throws:</i> Nothing.
 </p>
 </blockquote>
 </blockquote>
-
-<blockquote><pre>thread::id()
-</pre>
-
-<blockquote>
-<p>
-<i>Effects:</i> Constructs an object of type <tt>thread::id</tt> which compares
-equal to other default constructed <tt>thread::id</tt> objects.
-</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote><pre>bool operator==(const id&amp; <i>x</i>, const id&amp; <i>y</i>)
-</pre>
-
-<blockquote>
-<p>
-<i>Returns:</i> If <tt><i>x</i></tt> and <tt><i>y</i></tt> both represent
-<i>not any thread</i>, then returns <tt>true</tt>.  Otherwise if
-<tt><i>x</i></tt> and <tt><i>y</i></tt> represent the same thread-of-execution, then
-returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
-</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote><pre>bool operator!=(const id&amp; <i>x</i>, const id&amp; <i>y</i>)
-</pre>
-
-<blockquote>
-<p>
-<i>Returns:</i> <tt>!(<i>x</i> == <i>y</i>)</tt>
-</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-
-<blockquote>
-<pre>bool operator&lt;(const thread_id&amp; x, const thread_id&amp; y)
-</pre>
-
-<blockquote>
-<p>
-<i>Returns:</i> Provides an ordering for all objects of type <code>thread_id</code>, such that
-objects of type <code>thread_id</code> can be used as a key in Associate Containers.
-For two objects of type <code>thread_id</code>,
-<code>x</code> and <code>y</code>, if
-<code>x == y</code> returns <code>true</code>, both <code>x &lt; y</code> and <code>y &lt; x</code> shall return
-<code>false</code>. Otherwise, precisely one of <code>x &lt; y</code> and <code>y &lt; x</code> shall return
-<code>true</code>.
-</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote>
-<pre>bool operator&lt;=(const thread_id&amp; x, const thread_id&amp; y)
-</pre>
-<blockquote>
-<p>
-<i>Returns:</i> <tt>!(y &lt; x)</tt> </p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote>
-<pre>bool operator&gt;(const thread_id&amp; x, const thread_id&amp; y)
-</pre>
-<blockquote>
-<p>
-<i>Returns:</i> <tt>y &lt; x</tt> </p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote>
-<pre>bool operator&gt;=(const thread_id&amp; x, const thread_id&amp; y)
-</pre>
-<blockquote>
-<p>
-<i>Returns:</i> <tt>!(x &lt; y)</tt> </p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
 
 <blockquote><pre>id get_id() const
 </pre>
 
 <blockquote>
 <p>
-<i>Returns:</i> A <tt>thread::id</tt> which refers to the thread-of-execution 
+<i>Returns:</i> A <tt>thread::id</tt> which refers to the thread of execution 
 represented by
 <tt>*this</tt>.  If this
 <tt>thread</tt> is not <tt>joinable()</tt> returns a default constructed <tt>id</tt>.
@@ -1599,6 +482,115 @@ the stream <tt>out</tt>.
 </blockquote>
 </blockquote>
 
+<h5>Class <tt>thread::id</tt></h5>
+
+<p>
+<tt>id</tt> is a nested class of <tt>thread</tt> which represents the identity of
+a thread of execution.
+</p>
+
+<blockquote><pre>id()
+</pre>
+
+<blockquote>
+<p>
+<i>Effects:</i> Constructs an object of type <tt>id</tt> which compares
+equal to other default constructed <tt>id</tt> objects.
+</p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote><pre>bool operator==(const id&amp; <i>x</i>, const id&amp; <i>y</i>)
+</pre>
+
+<blockquote>
+<p>
+<i>Returns:</i> If <tt><i>x</i></tt> and <tt><i>y</i></tt> both represent
+<i>not any thread</i>, then returns <tt>true</tt>.  Otherwise if
+<tt><i>x</i></tt> and <tt><i>y</i></tt> represent the same thread of execution, then
+returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
+</p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote><pre>bool operator!=(const id&amp; <i>x</i>, const id&amp; <i>y</i>)
+</pre>
+
+<blockquote>
+<p>
+<i>Returns:</i> <tt>!(<i>x</i> == <i>y</i>)</tt>
+</p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+
+<blockquote>
+<pre>bool operator&lt;(const id&amp; x, const id&amp; y)
+</pre>
+
+<blockquote>
+<p>
+<i>Returns:</i> Provides an ordering for all objects of type <code>id</code>, such that
+objects of type <code>id</code> can be used as a key in Associate Containers.
+For two objects of type <code>id</code>,
+<code>x</code> and <code>y</code>, if
+<code>x == y</code> returns <code>true</code>, both <code>x &lt; y</code> and <code>y &lt; x</code> shall return
+<code>false</code>. Otherwise, precisely one of <code>x &lt; y</code> and <code>y &lt; x</code> shall return
+<code>true</code>.
+</p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote>
+<pre>bool operator&lt;=(const id&amp; x, const id&amp; y)
+</pre>
+<blockquote>
+<p>
+<i>Returns:</i> <tt>!(y &lt; x)</tt> </p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote>
+<pre>bool operator&gt;(const id&amp; x, const id&amp; y)
+</pre>
+<blockquote>
+<p>
+<i>Returns:</i> <tt>y &lt; x</tt> </p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote>
+<pre>bool operator&gt;=(const id&amp; x, const id&amp; y)
+</pre>
+<blockquote>
+<p>
+<i>Returns:</i> <tt>!(x &lt; y)</tt> </p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<h4>Namespace <tt>this_thread</tt></h4>
+
 <blockquote><pre>namespace this_thread
 {
     thread::id get_id();
@@ -1646,7 +638,7 @@ equal to a default constructed <tt>thread::id</tt>.
 <i>Requires:</i> <tt>ElapsedTime</tt> shall be explicitly convertible to <tt>nanoseconds</tt>.
 </p>
 <p>
-<i>Effects:</i>  The current thread-of-execution blocks for at least the amount of time specified.
+<i>Effects:</i>  The current thread of execution blocks for at least the amount of time specified.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -1680,7 +672,7 @@ argument that no function has been called.</p>
 
 <blockquote>
 
-<pre>template&lt;typename Callable, typename Args...&gt;
+<pre>template&lt;class Callable, class Args...&gt;
 void call_once(once_flag&amp; flag, Callable func, Args... args);
 </pre>
 
@@ -1698,7 +690,7 @@ void call_once(once_flag&amp; flag, Callable func, Args... args);
     <code>func(args)</code>,<code> </code>even if <code>call_once</code> is 
     called multiple times for the same <code>once_flag</code> object. If multiple
     calls to <code>call_once</code> with the same <code>once_flag</code> object 
-    occur in separate threads-of-execution, only one
+    occur in separate threads of execution, only one
     thread shall call <code>func</code>, and none of the threads shall proceed until the call to <code>func</code> has completed. 
     If the invocation of <code>func</code> results in an exception being thrown, 
     the exception is propagated to the caller and the effects are as-if this 
@@ -1707,7 +699,7 @@ void call_once(once_flag&amp; flag, Callable func, Args... args);
     <p><i>Throws:</i> <code>system_error</code> or any exception propagated from <code>func</code>.</p>
 
     <p><i>Thread safety:</i> Access to the same <code>once_flag</code> object by 
-    calls to <code>call_once</code> from different threads-of-execution shall 
+    calls to <code>call_once</code> from different threads of execution shall 
     not result in a data race or deadlock.</p>
 
 <p>[<i>Examples:</i></p>
@@ -1751,13 +743,13 @@ struct recursive_mutex;
 struct timed_mutex;
 struct recursive_timed_mutex;
 
-struct defer_lock_type;
-struct try_lock_type;
-struct accept_ownership_type;
+struct defer_lock_t;
+struct try_to_lock_t;
+struct adopt_lock_t;
 
-extern defer_lock_type       defer_lock;  <ins>or do_not_lock</ins>
-extern try_lock_type         try_to_lock;
-extern accept_ownership_type accept_ownership; <ins>or already_locked</ins>
+extern const defer_lock_t  defer_lock;
+extern const try_to_lock_t try_to_lock;
+extern const adopt_lock_t  adopt_lock;
 
 class lock_error;
 
@@ -1777,12 +769,12 @@ template &lt;class L1, class L2, class ...L3&gt; void lock(L1&amp;, L2&amp;, L3&
 <h3>Mutex concepts</h3>
 
 <p>
-Objects of the mutex types enforce mutual exclusion between threads-of-execution 
-by limiting ownership of a mutex object to a single thread-of-execution.  A 
-thread-of-execution gets ownership of a mutex object by calling <tt>lock()</tt> and
+Objects of the mutex types enforce mutual exclusion between threads of execution 
+by limiting ownership of a mutex object to a single thread of execution.  A 
+thread of execution gets ownership of a mutex object by calling <tt>lock()</tt> and
 relinquishes ownership by calling <tt>unlock()</tt>.  Ownership can not
-be transferred from one thread-of-execution to another.  The same 
-thread-of-execution that calls
+be transferred from one thread of execution to another.  The same 
+thread of execution that calls
 <tt>lock()</tt> for a mutex object must call <tt>unlock() f</tt>or the object.  Mutexes can be either recursive
 or non-recursive.  The syntax is the same for both recursive and non-recursive
 mutexes, but the semantics for the member functions differs as described below.
@@ -1801,17 +793,17 @@ nor movable.  Each mutex type shall have the following member functions:
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> For non-recursive mutexes the current thread-of-execution shall not own the mutex.
+<i>Precondition:</i> For non-recursive mutexes the current thread of execution shall not own the mutex.
 </p>
 <p>
-<i>Effects:</i> The current thread-of-execution will block until the mutex is not owned by another thread-of-execution.
-Upon successful completion, the current thread-of-execution owns the mutex.
+<i>Effects:</i> The current thread of execution will block until the mutex is not owned by another thread of execution.
+Upon successful completion, the current thread of execution owns the mutex.
 </p>
 <p>
 <i>Throws:</i>  <tt>system_error</tt>.
 </p>
 <p>
-<i>Thread safety:</i> Calls from different threads-of-execution to <tt>lock</tt>, <tt>try_lock</tt>,
+<i>Thread safety:</i> Calls from different threads of execution to <tt>lock</tt>, <tt>try_lock</tt>,
 and <tt>unlock</tt> functions on an object of a mutex type shall not result in data races or deadlocks.
 </p>
 </blockquote>
@@ -1822,7 +814,7 @@ and <tt>unlock</tt> functions on an object of a mutex type shall not result in d
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> For non-recursive mutexes the current thread-of-execution shall not own the mutex.
+<i>Precondition:</i> For non-recursive mutexes the current thread of execution shall not own the mutex.
 </p>
 <p>
 <i>Effects:</i> If ownership can be obtained without blocking, then ownership is obtained,
@@ -1832,7 +824,7 @@ else there is no effect and <tt>try_lock()</tt> immediately returns.
 <i>Returns:</i> <tt>true</tt> if ownership was obtained, otherwise <tt>false</tt>.
 </p>
 <p>
-<i>Thread safety:</i> Calls from different threads-of-execution to <tt>lock</tt>, <tt>try_lock</tt>,
+<i>Thread safety:</i> Calls from different threads of execution to <tt>lock</tt>, <tt>try_lock</tt>,
 and <tt>unlock</tt> functions on an object of a mutex type shall not result in data races or deadlocks.
 </p>
 <p>
@@ -1846,7 +838,7 @@ and <tt>unlock</tt> functions on an object of a mutex type shall not result in d
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> The current thread-of-execution shall own the mutex.
+<i>Precondition:</i> The current thread of execution shall own the mutex.
 </p>
 <p>
 <i>Effects:</i> For a non-recursive mutex ownership is released.  For a recursive mutex
@@ -1854,7 +846,7 @@ and <tt>unlock</tt> functions on an object of a mutex type shall not result in d
 (via either <tt>lock()</tt> or <tt>try_lock()</tt> or by any other locking function) before ownership is released.
 </p>
 <p>
-<i>Thread safety:</i> Calls from different threads-of-execution to <tt>lock</tt>, 
+<i>Thread safety:</i> Calls from different threads of execution to <tt>lock</tt>, 
 and <tt>try_lock</tt> functions on an object of a mutex type shall not result in data races or deadlocks.
 </p>
 <p>
@@ -2015,7 +1007,7 @@ and add a single member function:
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> For non-recursive mutexes the current thread-of-execution shall not own the mutex.
+<i>Precondition:</i> For non-recursive mutexes the current thread of execution shall not own the mutex.
 The type <tt>ElapsedTime</tt> shall be explicitly convertible to <tt>nanoseconds</tt>.
 </p>
 <p>
@@ -2029,7 +1021,7 @@ time duration, it shall have obtained ownership.
 </p>
 <p>
 <i>Thread safety:</i> Calls to this member function from different 
-threads-of-execution shall not result in data races or deadlocks.
+threads of execution shall not result in data races or deadlocks.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -2113,13 +1105,14 @@ Some locks may take tag types which describe what should be done with the mutex 
 constructor.
 </p>
 
-<blockquote><pre>struct defer_lock_type       {};
-struct try_lock_type         {};
-struct accept_ownership_type {};
+<blockquote><pre>
+struct defer_lock_t  {};
+struct try_to_lock_t {};
+struct adopt_lock_t  {};
 
-extern defer_lock_type       defer_lock;
-extern try_lock_type         try_to_lock;
-extern accept_ownership_type accept_ownership;
+extern const defer_lock_t   defer_lock;
+extern const try_to_lock_t  try_to_lock;
+extern const adopt_lock_t   adopt_lock;
 </pre></blockquote>
 
 <p>
@@ -2147,7 +1140,7 @@ public:
     typedef Mutex mutex_type;
 
     explicit scoped_lock(mutex_type&amp; m);
-    scoped_lock(mutex_type&amp; m, accept_ownership_type);
+    scoped_lock(mutex_type&amp; m, adopt_lock_t);
     ~scoped_lock();
 
     scoped_lock(scoped_lock const&amp;) = delete;
@@ -2171,7 +1164,7 @@ or transferred away from the <tt>scoped_lock</tt>.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread-of-execution
+<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread of execution
 does not own the mutex.  The lifetime of <tt><i>m</i></tt> is greater than the lifetime
 of the <code>scoped_lock</code> object.
 </p>
@@ -2182,11 +1175,11 @@ of the <code>scoped_lock</code> object.
 </blockquote>
 
 <blockquote>
-<pre>scoped_lock(mutex_type&amp; m, accept_ownership_type);
+<pre>scoped_lock(mutex_type&amp; m, adopt_lock_t);
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> The current thread-of-execution has ownership of the mutex <tt><i>m</i></tt>.
+<i>Precondition:</i> The current thread of execution has ownership of the mutex <tt><i>m</i></tt>.
 The lifetime of <tt><i>m</i></tt> is greater than the lifetime of the <code>
 scoped_lock</code> object.
 </p>
@@ -2235,9 +1228,9 @@ public:
 
     unique_lock();
     explicit unique_lock(mutex_type&amp; m);
-    unique_lock(mutex_type&amp; m, defer_lock_type);
-    unique_lock(mutex_type&amp; m, try_lock_type);
-    unique_lock(mutex_type&amp; m, accept_ownership_type);
+    unique_lock(mutex_type&amp; m, defer_lock_t);
+    unique_lock(mutex_type&amp; m, try_to_lock_t);
+    unique_lock(mutex_type&amp; m, adopt_lock_t);
     ~unique_lock();
 
     unique_lock(unique_lock const&amp;) = delete;
@@ -2295,7 +1288,7 @@ owns() == false
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread-of-execution
+<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread of execution
 does not own the mutex.  The lifetime of <tt><i>m</i></tt> is greater than the lifetime
 of the <tt>unique_lock</tt> object.
 </p>
@@ -2312,11 +1305,11 @@ owns() == true
 </blockquote>
 
 <blockquote>
-<pre>unique_lock(mutex_type&amp; m, defer_lock_type);
+<pre>unique_lock(mutex_type&amp; m, defer_lock_t);
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread-of-execution
+<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread of execution
 does not own the mutex. 
 The lifetime of <tt><i>m</i></tt> is greater than the lifetime of the <tt>
 unique_lock</tt> object.
@@ -2334,11 +1327,11 @@ owns() == false
 </blockquote>
 
 <blockquote>
-<pre>unique_lock(mutex_type&amp; m, try_lock_type);
+<pre>unique_lock(mutex_type&amp; m, try_to_lock_t);
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex, then the current thread-of-execution
+<i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex, then the current thread of execution
 does not own the mutex. 
 The lifetime of <tt><i>m</i></tt> is greater than the lifetime of the <tt>
 unique_lock</tt> object.
@@ -2356,11 +1349,11 @@ owns() == <i>The result of the call to</i> <i>m</i>.try_lock()
 </blockquote>
 
 <blockquote>
-<pre>unique_lock(mutex_type&amp; m, accept_ownership_type);
+<pre>unique_lock(mutex_type&amp; m, adopt_lock_t);
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> The current thread-of-execution has ownership of the mutex <tt><i>m</i></tt>. 
+<i>Precondition:</i> The current thread of execution has ownership of the mutex <tt><i>m</i></tt>. 
 The lifetime of <tt><i>m</i></tt> is greater than the lifetime of the <tt>
 unique_lock</tt> object.
 </p>
@@ -2659,8 +1652,8 @@ class gen_cond_var;
 
 <p>
 An object of class <tt>cond_var</tt> is a synchronization primitive 
-used to cause a thread-of-execution to wait until notified by some other 
-thread-of-execution that some condition is met, or a UTC[(?)] time is reached.
+used to cause a thread of execution to wait until notified by some other 
+thread of execution that some condition is met, or a UTC[(?)] time is reached.
 </p>
 
 <blockquote><pre>namespace std {
@@ -2715,13 +1708,13 @@ public:
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> If any threads-of-execution are blocked waiting for <code>*this</code>, 
+<i>Effects:</i> If any threads of execution are blocked waiting for <code>*this</code>, 
 unblocks at least one those threads.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions of the same <tt>condition</tt>
-object from different threads-of-execution shall not result in data
+object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
 </blockquote>
@@ -2738,7 +1731,7 @@ races or deadlocks.
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions of the same <tt>condition</tt>
-object from different threads-of-execution shall not result in data
+object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
 </blockquote>
@@ -2749,21 +1742,21 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> <tt>lock</tt> is locked by the current thread-of-execution.  No
-other thread-of-execution is waiting on this <tt>cond_var</tt> object unless <tt>lock</tt>
+<i>Precondition:</i> <tt>lock</tt> is locked by the current thread of execution.  No
+other thread of execution is waiting on this <tt>cond_var</tt> object unless <tt>lock</tt>
 refers to the same underlying <tt>mutex</tt> object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
 <tt>lock</tt>. If the <tt>wait</tt> should throw an exception for any
 reason, <tt>lock</tt> will be locked as the exception propagates out. 
-This thread-of-execution shall unblock when another thread issues a
-notification to this blocked thread. The current thread-of-execution may
+This thread of execution shall unblock when another thread issues a
+notification to this blocked thread. The current thread of execution may
 unblock and return even in the absence of a notification.
 </p>
 <p>
 <i>Postcondition:</i> <tt>lock</tt> is locked by the current 
-thread-of-execution.</p>
+thread of execution.</p>
 <p>
 <i>Throws:</i> May throw <tt>system_error</tt> if a precondition is not met.
 </p>
@@ -2771,7 +1764,7 @@ thread-of-execution.</p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions of the same <tt>condition</tt>
-object from different threads-of-execution shall not result in data
+object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
 </blockquote>
@@ -2797,8 +1790,8 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread-of-execution.  No
-other thread-of-execution is waiting on this <tt>cond_var</tt> object unless <tt>lock</tt>
+<i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread of execution.  No
+other thread of execution is waiting on this <tt>cond_var</tt> object unless <tt>lock</tt>
 refers to, the same underlying <tt>mutex</tt> object.
 </p>
 <p>
@@ -2809,14 +1802,14 @@ out.  If the absolute time specified by <tt>abs_time</tt> passes (that
 is, system time equals or exceeds <tt>abs_time</tt>) before the
 <tt>condition</tt> is notified, or if the absolute time specified by
 <tt>abs_time</tt> has already been passed at the time of the call, then
-<tt>false</tt> is returned. This thread-of-execution shall unblock when
+<tt>false</tt> is returned. This thread of execution shall unblock when
 another thread issues a notification to this blocked thread. The current
-thread-of-execution may unblock and return even in the absence of a
+thread of execution may unblock and return even in the absence of a
 notification.
 </p>
 <p>
 <i>Postcondition:</i> <tt>lock</tt> is locked by the current 
-thread-of-execution.</p>
+thread of execution.</p>
 <p>
 <i>Returns:</i> <tt>true</tt> if the call to <tt>timed_wait</tt> is notified prior
 to the indicated timeout,
@@ -2829,7 +1822,7 @@ otherwise returns <tt>false</tt>.
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions of the same <tt>condition</tt>
-object from different threads-of-execution shall not result in data
+object from different threads of execution shall not result in data
 races or deadlocks.
 </blockquote>
 </blockquote>
@@ -2868,8 +1861,8 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 
 <p>
 An object of class <tt>gen_cond_var</tt> is a synchronization primitive 
-used to cause a thread-of-execution to wait until notified by some other 
-thread-of-execution that some condition is met, or a UTC[(?)] time is reached.
+used to cause a thread of execution to wait until notified by some other 
+thread of execution that some condition is met, or a UTC[(?)] time is reached.
 </p>
 
 <p>
@@ -2932,13 +1925,13 @@ public:
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> If any threads-of-execution are blocked waiting for <code>*this</code>, 
+<i>Effects:</i> If any threads of execution are blocked waiting for <code>*this</code>, 
 unblocks at least one those threads.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions of the same <tt>condition</tt>
-object from different threads-of-execution shall not result in data
+object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
 </blockquote>
@@ -2955,7 +1948,7 @@ races or deadlocks.
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions of the same <tt>condition</tt>
-object from different threads-of-execution shall not result in data
+object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
 </blockquote>
@@ -2966,22 +1959,22 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i> <tt>lock</tt> is locked by the current thread-of-execution.  If
+<i>Precondition:</i> <tt>lock</tt> is locked by the current thread of execution.  If
 <tt>Lock</tt> supports recursive locking, the lock count is one.  No
-other thread-of-execution is waiting on this <tt>gen_cond_var</tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt>gen_cond_var</tt> object unless <tt>lock</tt>
 is, or refers to, the same underlying mutex object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
 <tt>lock</tt>. If the <tt>wait</tt> should throw an exception for any
 reason, <tt>lock</tt> will be locked as the exception propagates out. 
-This thread-of-execution shall unblock when another thread issues a
-notification to this blocked thread. The current thread-of-execution may
+This thread of execution shall unblock when another thread issues a
+notification to this blocked thread. The current thread of execution may
 unblock and return even in the absence of a notification.
 </p>
 <p>
 <i>Postcondition:</i> <tt>lock</tt> is locked by the current 
-thread-of-execution.</p>
+thread of execution.</p>
 <p>
 <i>Throws:</i> May throw <tt>system_error</tt>.
 </p>
@@ -2989,7 +1982,7 @@ thread-of-execution.</p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions of the same <tt>condition</tt>
-object from different threads-of-execution shall not result in data
+object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
 </blockquote>
@@ -3015,9 +2008,9 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread-of-execution.  If
+<i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread of execution.  If
 <tt>Lock</tt> supports recursive locking, the lock count is one.  No
-other thread-of-execution is waiting on this <tt>gen_cond_var</tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt>gen_cond_var</tt> object unless <tt>lock</tt>
 is, or refers to, the same underlying mutex object.
 </p>
 <p>
@@ -3028,14 +2021,14 @@ out.  If the absolute time specified by <tt>abs_time</tt> passes (that
 is, system time equals or exceeds <tt>abs_time</tt>) before the
 <tt>condition</tt> is notified, or if the absolute time specified by
 <tt>abs_time</tt> has already been passed at the time of the call, then
-<tt>false</tt> is returned. This thread-of-execution shall unblock when
+<tt>false</tt> is returned. This thread of execution shall unblock when
 another thread issues a notification to this blocked thread. The current
-thread-of-execution may unblock and return even in the absence of a
+thread of execution may unblock and return even in the absence of a
 notification.
 </p>
 <p>
 <i>Postcondition:</i> <tt>lock</tt> is locked by the current 
-thread-of-execution.</p>
+thread of execution.</p>
 <p>
 <i>Returns:</i> <tt>true</tt> if the call to <tt>timed_wait</tt> is notified prior
 to the indicated timeout,
@@ -3048,7 +2041,7 @@ otherwise returns <tt>false</tt>.
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
 <code>notify_all</code> member functions of the same <tt>condition</tt>
-object from different threads-of-execution shall not result in data
+object from different threads of execution shall not result in data
 races or deadlocks.
 </blockquote>
 </blockquote>
