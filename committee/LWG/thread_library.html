@@ -2,7 +2,7 @@
 <html lang="en"><head>
 
 
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/><title>Thread Working Draft 12</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/><title>Thread Working Draft 13</title>
 	
 	<style>
 	p {text-align:justify}
@@ -2132,14 +2132,13 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 <h2><a name="DateTime"></a>Chapter ?&nbsp;&nbsp; Date Time Library</h2>
 
 <hr/>
-
  This clause describes components for determining and manipulating temporal values.
  A <i>time point</i> represents a dimensionless instant 
  in the time continuum. A <i>time duration</i> represents a length of time 
  unattached to any time point. Time points and time durations have a 
  <i>resolution</i> which is their smallest representable time duration.  Time points
  have an <i>epoch</i> or start of a given time scale. For time_t the epoch is 
- 1970-01-01 00:00:00
+ 1970-01-01 00:00:00.
 
 
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.header__date_time__synopsis"></a>
@@ -2165,7 +2164,7 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
 } //std
 </class></pre></blockquote>
 
-</div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class utc_time</h3></div></div></div>
+</div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_utc_time"></a>class system_time</h3></div></div></div>
 
 
 <p>
@@ -2232,148 +2231,144 @@ class system_time
 
 <pre class="programlisting">
 <span class="identifier">system_time</span><span class="special">();</span></pre><p>
-        <span class="emphasis"><em>Effects: Construct<span class="underline">s</span> a system_time
-        <span class="underline">object</span> representing the epoch time
-        point 1970-01-01 00:00:00.000000000</em></span>
+        <i>Effects:</i> Constructs a system_time
+        object representing the epoch time point 1970-01-01 00:00:00.000000000
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">system_time</span><span class="special">(</span><span class="identifier">time_t</span> <span class="identifier">secs</span><span class="special">,</span> <span class="identifier">nanoseconds</span> <span class="identifier">ns</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Construct<span class="underline">s</span> a utc
-        time <span class="underline">object </span><span class="underline"> representing the time point that is secs + 1,000,000,000*ns
-              seconds after the epoch</span></em></span>
+        <i>Effects:</i> Construct<span class="underline">s</span> a utc
+        time object representing the time point that is secs + 1,000,000,000*ns after the epoch.
       </p><p>
-        <span class="emphasis"><em>Remarks: If the total nanoseconds &gt; 1 second the seconds are
-        incremented appropriately</em></span>
+        <i>Remarks:</i> If the total nanoseconds &gt; 1 second the seconds are
+        incremented appropriately.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><p>
       </p><pre class="programlisting">
 <span class="identifier">time_t</span> <span class="identifier">seconds_since_epoch</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns the count of seconds since 1970-01-01 00:00:00.</em></span>
+        <i>Returns:</i> The count of seconds since 1970-01-01 00:00:00.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">nanoseconds</span> <span class="identifier">nanoseconds_since_epoch</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns the count of <span class="underline">nano</span>seconds
-        since 1970-01-01 00:00:00.</em></span>
+        <i>Returns:</i> The count of <span class="underline">nano</span>seconds
+        since 1970-01-01 00:00:00.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns 1000000000</em></span>
+        <i>Returns:</i> 1000000000
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns 0</em></span>
+        <i>Returns:</i> 0
       </p><p>
-        <span class="emphasis"><em>Remarks: Since this is a subsecond type it returns 0 for seconds_per_tick</em></span>
+        <i>Remarks:</i> Since this is a subsecond type it returns 0 for seconds_per_tick.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: true.</em></span>
+        <i>Returns:</i> true.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if 
+        <i>Returns:</i> True if 
         the <span class="underline">time
         represented by *this is equal to the time represented by rhs</span>.
-        </em></span>
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!=(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if the <span class="underline">time represented by *this is not equal to the time represented
-        by rhs</span></em></span>
+        <i>Returns:</i> True if the <span class="underline">time represented by *this is not equal to the time represented
+        by rhs</span>
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if time <span class="underline">represented by
-        *this is greater than the time represented by rhs</span>.</em></span>
+        <i>Returns:</i> True if time <span class="underline">represented by
+        *this is greater than the time represented by rhs</span>.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;=(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if time <span class="underline">represented
-        by *this is greater or equal than the time represented by rhs</span>.</em></span>
+        <i>Returns:</i> True if time <span class="underline">represented
+        by *this is greater or equal than the time represented by rhs</span>.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if time <span class="underline">represented by *this
-        is less than the time represented by rhs</span>.</em></span>
+        <i>Returns:</i> True if time <span class="underline">represented by *this
+        is less than the time represented by rhs</span>.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;=(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if time <span class="underline">represented by *this
-        is less or equal than the time represented by rhs</span>.</em></span>
+        <i>Returns:</i> True if time <span class="underline">represented by *this
+        is less or equal than the time represented by rhs</span>.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">nanoseconds</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns:  <span class="underline">Returns
-        the difference in nanoseconds between the time represented by *this and the
-        time represented by rhs.</span> </em></span>
+        <i>Returns:</i>  <span class="underline">
+        The difference in nanoseconds between the time represented by *this and the
+        time represented by rhs.</span>
       </p><p>
-        <span class="emphasis"><em>Remarks: If rhs is greater the result will be a negative nanosecond
+        <i>Remarks:</i> If rhs is greater the result will be a negative nanosecond.
         count.</em></span>
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
 <span class="identifier">system_time</span> <span class="keyword">operator</span><span class="special">+(</span><span class="keyword">const</span> <span class="identifier">TimeDuration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns the duration converted to nanosecond resolution
-        and added to the time <span class="underline">represented by *this</span>.</em></span>
+        <i>Returns:</i> The duration converted to nanosecond resolution
+        and added to the time <span class="underline">represented by *this</span>.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
 <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="keyword">const</span> <span class="identifier">TimeDuration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Convert the duration to nanosecond resolution add to nanoseconds
-        to the time <span class="underline">represented by *this</span>.</em></span>
+        <i>Effects:</i> Convert the duration to nanosecond resolution add to nanoseconds
+        to the time represented by *this.
       </p><p>
-        <span class="emphasis"><em>Returns: Modified value of this.</em></span>
+        <i>Returns:</i> Modified value of this.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
 <span class="identifier">system_time</span> <span class="keyword">operator</span><span class="special">-(</span><span class="keyword">const</span> <span class="identifier">TimeDuration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns the duration converted to nanosecond resolution
-        and subtracted from the time <span class="underline">represented by *this</span>.</em></span>
+        <i>Returns:</i> The duration converted to nanosecond resolution
+        and subtracted from the time <span class="underline">represented by *this</span>.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
 <span class="identifier">system_time</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">-=(</span><span class="keyword">const</span> <span class="identifier">TimeDuration</span><span class="special">&amp;</span> <span class="identifier">td</span><span class="special">)</span> 
 </pre><p>
-        <span class="emphasis"><em>Effects: Convert the duration to nanosecond resolution subtract
-        from the time <span class="underline">represented by *this</span>
-        and return *this.</em></span>
+        <i>Effects:</i> Convert the duration to nanosecond resolution subtract and
+        from the time represented by *this.
       </p><p>
-        <span class="emphasis"><em>Returns: Modified value of this.</em></span>
+        <i>Returns:</i> Modified value of this.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p></div>
 
 
@@ -2392,11 +2387,11 @@ class system_time
 
 <blockquote class="note">
 <p>
-</p><h3 class="title">Note</h3><p>
+</p><i><h3 class="title">Comment (not for inclusion in WP)</h3><p>
     Typical personal computer platforms currently achieve microsecond level
     resolution from calls to the clock. The <a href="http://www.boost.org/libs/date_time/index.html" target="_top">Boost Date-Time Library</a> has a class that portably implements the proposed
     interface, but it uses different C-level interfaces depending on the operating
-    system.
+    system.</i>
         </p></blockquote>
 
 
@@ -2469,137 +2464,140 @@ class TimeDuration {
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if rhs duration is greater.</em></span>
+        <i>Returns:</i> True if rhs duration is greater.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!=(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if rhs is not the same time.</em></span>
+        <i>Returns:</i> True if rhs is not the same time.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if the rhs duration is larger.</em></span>
+        <i>Returns:</i> True if the rhs duration is larger.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&gt;=(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if greater or equal than the rhs duration.</em></span>
+        <i>Returns:</i> True if greater or equal than the rhs duration.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if less than the rhs duration.</em></span>
+        <i>Returns:</i> True if less than the rhs duration.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;=(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns true if less or equal to the rhs duration.</em></span>
+        <i>Returns:</i> True if less or equal to the rhs duration.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="comment">//sign inversion
 </span><span class="identifier">TimeDuration</span> <span class="keyword">operator</span><span class="special">-()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Negated value of the duration.</em></span>
+        <i>Returns:</i> Negated value of the duration.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="comment">//arithmetic operations
 </span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="identifier">TimeDuration</span> <span class="keyword">operator</span><span class="special">-</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: A duration value equal to this-rhs_duration.</em></span>
+        <i>Returns:</i> A duration value equal to this-rhs_duration.
       </p><p>
         <span class="emphasis"><em>Remarks: This will fail to compiler if the RhsTimeDuration is
         of higher resolution.</em></span>
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="identifier">TimeDuration</span> <span class="keyword">operator</span><span class="special">-=(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Modifies to value equal to this-rhs_duration. </em></span>
+        <i>Effects:</i> Modifies to value equal to this-rhs_duration. 
       </p><p>
-        <span class="emphasis"><em>Returns: this </em></span>
+        <i>Returns:</i> this 
       </p><p>
         <span class="emphasis"><em>Remarks: This will fail to compiler if the RhsTimeDuration is
         of higher resolution.</em></span>
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="identifier">TimeDuration</span> <span class="keyword">operator</span><span class="special">+</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Duration equal to this+rhs_duration. </em></span>
+        <i>Returns:</i> Duration equal to this+rhs_duration.
       </p><p>
         <span class="emphasis"><em>Remarks: This will fail to compiler if the RhsTimeDuration is
         of higher resolution.</em></span>
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">RhsTimeDuration</span><span class="special">&gt;</span>
 <span class="identifier">TimeDuration</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="keyword">const</span> <span class="identifier">RhsTimeDuration</span><span class="special">&amp;</span> <span class="identifier">d</span><span class="special">)</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Modifies to value equal to this+rhs_duration. </em></span>
+        <i>Effects:</i> Modifies to value equal to this+rhs_duration. 
       </p><p>
-        <span class="emphasis"><em>Returns: this </em></span>
+        <i>Returns:</i> this 
       </p><p>
         <span class="emphasis"><em>Remarks: This will fail to compiler if the RhsTimeDuration is
         of higher resolution.</em></span>
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">TimeDuration</span> <span class="keyword">operator</span><span class="special">/</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">divisor</span><span class="special">)</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Duration with value equal to this/divisor according to
-        integer arithmetic rules.</em></span>
+        <i>Returns:</i> Duration with value equal to this/divisor according to
+        integer arithmetic rules.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">TimeDuration</span> <span class="keyword">operator</span><span class="special">/=(</span><span class="keyword">int</span> <span class="identifier">divisor</span><span class="special">)</span> 
 </pre><p>
-        <span class="emphasis"><em>Effects: Change value of this by this/divisor according to integer
-        arithmetic rules.</em></span>
+        <i>Effects:</i> Change value of this by this/divisor according to integer
+        arithmetic rules.
       </p><p>
-        <span class="emphasis"><em>Returns: this </em></span>
+        <i>Returns:</i> this 
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">TimeDuration</span> <span class="keyword">operator</span><span class="special">*</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: Duration with value equal to this*rhs </em></span>
+        <i>Returns:</i> Duration with value equal to this*rhs 
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">TimeDuration</span> <span class="keyword">operator</span><span class="special">*=(</span><span class="keyword">int</span> <span class="identifier">rhs</span><span class="special">)</span> 
 </pre><p>
-        <span class="emphasis"><em>Effects: Modifies to value equal to this*rhs. </em></span>
+        <i>Effects:</i> Modifies to value equal to this*rhs. 
       </p><p>
-        <span class="emphasis"><em>Returns: this </em></span>
+        <i>Returns:</i> this 
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">tick_type</span> <span class="identifier">get_count</span><span class="special">()</span> <span class="keyword">const</span> 
 </pre><p>
-        <span class="emphasis"><em>Returns: Returns the count at the resolution of the time duration
-        type.</em></span>
+        <i>Returns:</i> The count at the resolution of the time duration
+        type.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p></div>
 
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_nanoseconds"></a>class nanoseconds</h3></div></div></div>
 
+<p>
+Objects of class <tt>nanoseconds</tt> can be used to represent a count of nanoseconds.
+</p>
 
 <blockquote><pre>
 class nanoseconds 
@@ -2614,49 +2612,52 @@ class nanoseconds
    static tick_type ticks_per_second();
    static tick_type seconds_per_tick();
    static bool is_subsecond();
-   typedef 'implementation-defined' tick_type;
+   typedef <b><i>implementation-defined</i></b> tick_type;
 
    //+ common functions
 
 };
 </pre></blockquote>
-<p>
-        Class nanoseconds represents a count of nanoseconds.
-      </p><pre class="programlisting">
+
+<pre class="programlisting">
 <span class="identifier">nanoseconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of nanoseconds - default
-        is zero.</em></span>
+        <i>Effects:</i> Constructs an object with a count of nanoseconds - default
+        is zero.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">nanoseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">nanoseconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Copy construction.</em></span>
+        <i>Effects:</i> Copy construction.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><p>
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 1000000000</em></span>
+        <i>Returns:</i> 1000000000
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 0</em></span>
+        <i>Returns:</i> 0
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: true</em></span>
+        <i>Returns:</i> true
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p></div>
 
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_microseconds"></a>class microseconds</h3></div></div></div>
+
+<p>
+Objects of class <tt>microseconds</tt> can be used to represent a count of microseconds.
+</p>
 
 <blockquote><pre>
 class microseconds 
@@ -2674,58 +2675,61 @@ class microseconds
    static tick_type ticks_per_second();
    static tick_type seconds_per_tick();
    static bool is_subsecond();
-   typedef 'implementation-defined' tick_type;
+   typedef <b><i>implementation-defined</i></b> tick_type;
 
    //+ common functions
 
 };
 
 </pre></blockquote>
-<p>
-        Class microseconds represents a count of microseconds.
-      </p><pre class="programlisting">
+
+<pre class="programlisting">
 <span class="identifier">microseconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of microseconds - default
-        is zero.</em></span>
+        <i>Effects:</i> Constructs an object with a count of microseconds - default
+        is zero.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">microseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">microseconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Copy construction.</em></span>
+        <i>Effects:</i> Copy construction.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><p>
       </p><pre class="programlisting">
 <span class="comment">//conversions
 </span><span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: microsecond count converted to nanoseconds</em></span>
+        <i>Returns:</i> microsecond count converted to nanoseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 1000000</em></span>
+        <i>Returns:</i> 1000000
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 0</em></span>
+        <i>Returns:</i> 0
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: true</em></span>
+        <i>Returns:</i> true
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p></div>
 
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_milliseconds"></a>class milliseconds</h3></div></div></div>
 
+
+<p>
+Objects of class <tt>milliseconds</tt> can be used to represent a count of milliseconds.
+</p>
 
 <blockquote><pre>
 class milliseconds
@@ -2743,61 +2747,63 @@ class milliseconds
    static tick_type ticks_per_second();
    static tick_type seconds_per_tick();
    static bool is_subsecond();
-   typedef 'implementation-defined' tick_type;
+   typedef <b><i>implementation-defined</i></b> tick_type;
 
    //+ common functions
 };
 </pre></blockquote>
-<p>
-        Class milliseconds represents a count of milliseconds.
-      </p><pre class="programlisting">
+
+<pre class="programlisting">
 <span class="identifier">milliseconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of milliseconds - default
-        is zero.</em></span>
+        <i>Effects:</i> Constructs an object with a count of milliseconds - default
+        is zero.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">milliseconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">milliseconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Copy construction.</em></span>
+        <i>Effects:</i> Copy construction.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><p>
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: millisecond count converted to nanoseconds</em></span>
+        <i>Returns:</i> millisecond count converted to nanoseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: millisecond count converted to microseconds</em></span>
+        <i>Returns:</i> millisecond count converted to microseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 1000</em></span>
+        <i>Returns:</i> 1000
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 0</em></span>
+        <i>Returns:</i> 0
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: true</em></span>
+        <i>Returns:</i> true
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p></div>
 
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_seconds"></a>class seconds</h3></div></div></div>
 
+<p>
+Objects of class <tt>seconds</tt> can be used to represent a count of seconds.
+</p>
 
 <blockquote><pre>
 class  seconds 
@@ -2816,69 +2822,71 @@ class  seconds
    static tick_type ticks_per_second();
    static tick_type seconds_per_tick();
    static bool is_subsecond();
-   typedef 'implementation-defined' tick_type;
+   typedef <b><i>implementation-defined</i></b> tick_type;
 
    //+ common functions
 
 };
 </pre></blockquote>
-<p>
-        Class seconds represents a count of seconds.
-      </p><pre class="programlisting">
+
+<pre class="programlisting">
 <span class="identifier">seconds</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of seconds - default is
-        zero.</em></span>
+        <i>Effects:</i> Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of seconds - default is
+        zero.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">seconds</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">seconds</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Copy construction.</em></span>
+        <i>Effects:</i> Copy construction.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><p>
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: second count converted to nanoseconds</em></span>
+        <i>Returns:</i> second count converted to nanoseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: second count converted to microseconds</em></span>
+        <i>Returns:</i> second count converted to microseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">milliseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: second count converted to milliseconds</em></span>
+        <i>Returns:</i> second count converted to milliseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 1</em></span>
+        <i>Returns:</i> 1
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 1</em></span>
+        <i>Returns:</i> 1
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: false</em></span>
+        <i>Returns:</i> false
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p></div>
 
 <div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_minutes"></a>class minutes</h3></div></div></div>
 
 
+<p>
+Objects of class <tt>minutes</tt> can be used to represent a count of minutes.
+</p>
 
 <blockquote><pre>
 class  minutes 
@@ -2898,72 +2906,73 @@ class  minutes
    static tick_type ticks_per_second();
    static tick_type seconds_per_tick();
    static bool is_subsecond();
-   typedef 'implementation-defined' tick_type;
+   typedef <b><i>implementation-defined</i></b> tick_type;
 
    //+ common functions
 
 };
 </pre></blockquote>
-<p>
-        Class minutes represents a count of minutes.
-      </p><pre class="programlisting">
+<pre class="programlisting">
 <span class="identifier">minutes</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of minutes - default is
-        zero.</em></span>
+        <i>Effects:</i> Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of minutes - default is
+        zero.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">minutes</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">minutes</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Copy construction.</em></span>
+        <i>Effects:</i> Copy construction.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><p>
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: minute count converted to nanoseconds</em></span>
+        <i>Returns:</i> minute count converted to nanoseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: minute count converted to microseconds</em></span>
+        <i>Returns:</i> minute count converted to microseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">milliseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: minute count converted to milliseconds</em></span>
+        <i>Returns:</i> minute count converted to milliseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">seconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: minute count converted to seconds</em></span>
+        <i>Returns:</i> minute count converted to seconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 0</em></span>
+        <i>Returns:</i> 0
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 60</em></span>
+        <i>Returns:</i> 60
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: false</em></span>
+        <i>Returns:</i> false
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="n2411_07_0271___proposal_for_date_time_types_in_c__0x_to_support_threading_apis_v2.proposed_text.class_hours"></a>class hours</h3></div></div></div>
 
+<p>
+Objects of class <tt>hours</tt> can be used to represent a count of hours.
+</p>
 
 <blockquote><pre>
 class  hours 
@@ -2984,7 +2993,7 @@ class  hours
    static tick_type ticks_per_second();
    static tick_type seconds_per_tick();
    static bool is_subsecond();
-   typedef 'implementation-defined' tick_type;
+   typedef <b><i>implementation-defined</i></b> tick_type;
 
    //+ common functions
 
@@ -2992,70 +3001,69 @@ class  hours
 </pre></blockquote>
 
 
-<p>
-        Class hours represents a count of hours.
-      </p><pre class="programlisting">
+<pre class="programlisting">
 <span class="identifier">hours</span><span class="special">(</span><span class="keyword">long</span> <span class="keyword">long</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of hours - default is zero.</em></span>
+        <i>Effects:</i> Construct<span class="underline">s</span> a<span class="underline">n object with a</span> count of hours - default is zero.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="identifier">hours</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">hours</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
 </pre><p>
-        <span class="emphasis"><em>Effects: Copy construction.</em></span>
+        <i>Effects:</i> Copy construction.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><p>
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">nanoseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: hour count converted to nanoseconds</em></span>
+        <i>Returns:</i> hour count converted to nanoseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">microseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: hour count converted to microseconds</em></span>
+        <i>Returns:</i> hour count converted to microseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">milliseconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: hour count converted to milliseconds</em></span>
+        <i>Returns:</i> hour count converted to milliseconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">seconds</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: hour count converted to seconds</em></span>
+        <i>Returns:</i> hour count converted to seconds
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">operator</span> <span class="identifier">minutes</span><span class="special">()</span> <span class="keyword">const</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: hour count converted to seconds</em></span>
+        <i>Returns: </i> hour count converted to seconds.
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">ticks_per_second</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 0</em></span>
+        <i>Returns:</i> 0
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="identifier">tick_type</span> <span class="identifier">seconds_per_tick</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: 3600</em></span>
+        <i>Returns:</i> 3600
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p><pre class="programlisting">
 <span class="keyword">static</span> <span class="keyword">bool</span> <span class="identifier">is_subsecond</span><span class="special">();</span>
 </pre><p>
-        <span class="emphasis"><em>Returns: false</em></span>
+        <i>Returns:</i> false
       </p><p>
-        <span class="emphasis"><em>Throws: Nothing</em></span>
+        <i>Throws:</i> Nothing.
       </p>
+
 
 <h2><a name="References">References</a></h2>
 <ul>
