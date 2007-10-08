@@ -107,12 +107,48 @@ at the Kona meeting.
 
 <hr/>
 
-<h2>Chapter 30&nbsp;&nbsp; Multi-threading library</h2>
+<h3>20.5 Function objects [function.objects]</h3>
+
+<p>
+<i>Modify paragraph 2 as follows:</i>
+</p>
+
+<blockquote>
+ <p><b>Header <code>functional</code> synopsis</b></p>
+
+ <pre>
+ namespace std {
+   ...
+   <i>// Hash function specializations</i>
+   ...
+   <ins class="diff modified">struct hash&lt;std::thread::id&gt;; //should not be in this header file ?</ins>
+ }
+ </pre>
+</blockquote>
+
+<h3>20.5.15 Class template <code>hash</code> [unord.hash]</h3>
+
+<i>Modify paragraph 1 as follows:</i>
+
+<blockquote>
+The unordered associative containers defined in clause 23.4 use
+specializations
+of <code>hash</code> as the default hash function. This class template
+is only
+required to be instantiable for integer types (3.9.1), floating point
+types
+(3.9.1), pointer types (8.3.1), and <code>std::string</code>,
+<code>std::u16string</code>, <code>std::u32string</code>,<del
+class="diff modified">
+and</del> <code>std::wstring</code><ins class="diff modified">, and
+<code>std::thread::id</code></ins>.
+</blockquote>
 
 <hr/>
 
-<p>
-This clause describes components that C++ programs may use to create and manage <del class="diff modified">multi-threaded </del><ins class="diff modified">additional threads of execution in </ins>programs.</p>
+<h2>Chapter 30&nbsp;&nbsp; Multi-threading library</h2>
+
+<hr/>
 
 <p>
 The following subclauses describe components to create and manage 
@@ -164,14 +200,6 @@ void swap(thread&amp;  x, thread&amp;  y);
 void swap(thread&amp;&amp; x, thread&amp;  y);
 void swap(thread&amp;  x, thread&amp;&amp; y);
 
-class thread::id;
-bool operator==(const thread::id&amp; x, const thread::id&amp; y);
-bool operator!=(const thread::id&amp; x, const thread::id&amp; y);
-
-template&lt;class charT, class traits&gt;
-basic_ostream&lt;charT, traits&gt;&amp;
-operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
-
 namespace this_thread
 {
     thread::id get_id();
@@ -199,60 +227,193 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 <h4>Class thread</h4>
 
 <p>
-An object of class <code>thread</code> <del class="diff modified">launches </del><ins class="diff modified">encapsulates a thread of execution.
-It provides a mechanism to create </ins>a new thread of <del class="diff modified">execution, 
-and provides mechanisms </del><ins class="diff modified">execution,
-</ins>for the current thread of execution to wait for 
-completion of the launched <del class="diff modified">thread, </del><ins class="diff modified">thread of execution, </ins>and <ins class="diff">to </ins>perform other operations to manage and query the <del class="diff modified">thread's 
-</del><ins class="diff modified">thread
-of execution's </ins>state.
+An object of class <code>thread</code> manages a thread of execution.
+It provides a mechanism to create a new thread of execution,
+for the current thread of execution to wait for 
+completion of a thread of execution, and to perform other operations to manage and query the state of the thread of execution.
 </p>
 
 <blockquote><pre>class thread
 {
 public:
+    // <i>types:</i>
+    class id;
+    typedef <i>implementation-defined</i> native_handle_type;
+
+    // <i>construct/copy/destroy:</i>
     thread();
     template &lt;class F, class ...Args&gt; explicit thread(F f, Args&amp;&amp;... args);
     ~thread();
-
     thread(const thread&amp;) = delete;
-    thread&amp; operator=(const thread&amp;) = delete;
-
     thread(thread&amp;&amp;);
+    thread&amp; operator=(const thread&amp;) = delete;
     thread&amp; operator=(thread&amp;&amp;);
 
+    // <i>members:</i>
     void swap(thread&amp;&amp;);
-
     bool joinable() const;
     void join();
     void detach();
-
-    class id
-    {
-    public:
-        id();
-        friend bool operator==(const id&amp; <i>x</i>, const id&amp; <i>y</i>);
-        friend bool operator!=(const id&amp; <i>x</i>, const id&amp; <i>y</i>);
-        friend bool operator&lt;(const id&amp; <i>x</i>, const id&amp; <i>y</i>);
-        friend bool operator&lt;=(const id&amp; <i>x</i>, const id&amp; <i>y</i>);
-        friend bool operator&gt;(const id&amp; <i>x</i>, const id&amp; <i>y</i>);
-        friend bool operator&gt;=(const id&amp; <i>x</i>, const id&amp; <i>y</i>);
-    };
-
     id get_id() const;
-
-    typedef <i>implementation-defined</i> native_handle_type;
     native_handle_type native_handle();
 
+    // <i>static members:</i>
     static unsigned hardware_concurrency();
 };
 </pre></blockquote>
 
 <p>
 Class <tt>thread</tt> and class <tt>thread::id</tt> shall be standard-layout 
-types ([?]).
+types ([?]).  
 </p>
 
+<p>
+If and only if the <tt>thread</tt> type is internally represented by a single data structure which can be passed to operating system specific interfaces, then there shall be a nested implementation-defined typedef <tt>native_handle_type</tt> that is an alias to this native type if it is copyable.  Otherwise, if the native type is not copyable, it is a pointer to this native type.  The implementation shall document whether or not the <tt>native_handle_type</tt> typedef is present.
+</p>
+
+<p>
+If the nested typedef <tt>native_handle_type</tt> exists, then there
+also shall be a member function <tt>native_handle()</tt> which returns the
+underlying representation.
+</p>
+
+<h5><tt>thread</tt> types</h5>
+<h6>Class <tt>thread::id</tt></h6>
+<pre>
+    class thread::id
+    {
+    public:
+        id();
+    };
+
+    bool operator==(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+    bool operator!=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+    bool operator&lt;(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+    bool operator&lt;=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+    bool operator&gt;(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+    bool operator&gt;=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+
+    template&lt;class charT, class traits&gt;
+    basic_ostream&lt;charT, traits&gt;&amp;
+    operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
+
+</pre>
+<p> Objects of type <tt>thread::id</tt> uniquely identify threads of execution.</p>
+
+<blockquote><pre>id();
+</pre>
+
+<blockquote>
+<p>
+<i>Effects:</i> Constructs an object of type <tt>id</tt> which compares
+equal to other default constructed <tt>id</tt> objects.
+</p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote><pre>bool operator==(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+</pre>
+
+<blockquote>
+<p>
+<i>Returns:</i> If neither <tt><i>x</i></tt> nor <tt><i>y</i></tt> identifies
+a thread of execution, returns <tt>true</tt>.  Otherwise if
+<tt><i>x</i></tt> and <tt><i>y</i></tt> identify the same thread of execution,
+returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
+</p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote><pre>bool operator!=(const thread::id&amp; <i>x</i>, const thread::id&amp; <i>y</i>);
+</pre>
+
+<blockquote>
+<p>
+<i>Returns:</i> <tt>!(<i>x</i> == <i>y</i>)</tt>
+</p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+
+<blockquote>
+<pre>bool operator&lt;(const thread::id&amp; x, const thread::id&amp; y);
+</pre>
+
+<blockquote>
+<p>
+<i>Returns:</i> a value such that <tt>operator&lt;</tt> is a total ordering as described in [alg.sorting].
+</p>
+<p>
+[<i>Note:</i> Defining a comparison operator allows <tt>thread::id</tt> objects to be used as keys in associative containers.<i> --end note</i>]
+</p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote>
+<pre>bool operator&lt;=(const thread::id&amp; x, const thread::id&amp; y);
+</pre>
+<blockquote>
+<p>
+<i>Returns:</i> <tt>!(y &lt; x)</tt> </p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote>
+<pre>bool operator&gt;(const thread::id&amp; x, const thread::id&amp; y);
+</pre>
+<blockquote>
+<p>
+<i>Returns:</i> <tt>y &lt; x</tt> </p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote>
+<pre>bool operator&gt;=(const thread::id&amp; x, const thread::id&amp; y);
+</pre>
+<blockquote>
+<p>
+<i>Returns:</i> <tt>!(x &lt; y)</tt> </p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<blockquote><pre>template&lt;class charT, class traits&gt;
+basic_ostream&lt;charT, traits&gt;&amp;
+operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
+</pre>
+
+<blockquote>
+<p>
+<i>Effects:</i> Inserts an unspecified text representation of the <tt>thread::id</tt> into
+the stream <tt>out</tt>.
+</p>
+<p>
+<i>Returns:</i> <tt>out</tt>.
+</p>
+</blockquote>
+</blockquote>
+
+<h5><tt>thread</tt> constructors</h5>
 <blockquote>
 <pre>thread();
 </pre>
@@ -308,21 +469,7 @@ exception, <tt>std::terminate()</tt> shall be called.
 </blockquote>
 </blockquote>
 
-<blockquote><pre>~thread()
-</pre>
-
-<blockquote>
-<p>
-<i>Effects:</i> If <tt>joinable()</tt> then <tt><del class="diff modified">join()</del><ins class="diff modified">detach()</ins></tt>,
-otherwise no effects.
-</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote><pre>thread(thread&amp;&amp; <i>x</i>)
+<blockquote><pre>thread(thread&amp;&amp; <i>x</i>);
 </pre>
 
 <blockquote>
@@ -342,13 +489,29 @@ start of construction.
 </blockquote>
 </blockquote>
 
-<blockquote><pre>thread&amp; operator=(thread&amp;&amp; <i>x</i>)
+<h5><tt>thread</tt> destructor</h5>
+<blockquote><pre>~thread();
 </pre>
 
 <blockquote>
 <p>
-<i>Effects:</i> If <tt>this</tt> currently refers to a <tt>joinable</tt> <del class="diff modified">thread, </del><ins class="diff modified">thread object, </ins>calls
-<ins><tt><del class="diff modified">join()</del><ins class="diff modified">detach()</ins></tt></ins>.  Then assigns the state of <tt><i>x</i></tt> to <tt>*this</tt>
+<i>Effects:</i> If <tt>joinable()</tt> then <tt>detach()</tt>,
+otherwise no effects.
+</p>
+<p>
+<i>Throws:</i> Nothing.
+</p>
+</blockquote>
+</blockquote>
+
+<h5><tt>thread</tt> assignment</h5>
+<blockquote><pre>thread&amp; operator=(thread&amp;&amp; <i>x</i>);
+</pre>
+
+<blockquote>
+<p>
+<i>Effects:</i> If <tt>this</tt> currently refers to a <tt>joinable</tt> thread object, calls
+<tt>detach()</tt>.  Then assigns the state of <tt><i>x</i></tt> to <tt>*this</tt>
 and sets <tt><i>x</i></tt> to a default constructed state.
 </p>
 <p>
@@ -360,13 +523,13 @@ assignment.
 assignment.
 </p>
 <p>
-<del class="diff"><del></del><i>Throws:</i> <del class="diff modified">Nothing.</del>
-</del><ins class="diff modified"><i>Throws:</i> Nothing.
-</ins></p>
+<i>Throws:</i> Nothing.
+</p>
 </blockquote>
 </blockquote>
 
-<blockquote><pre>void swap(thread&amp;&amp; <i>x</i>)
+<h5><tt>thread</tt> members</h5>
+<blockquote><pre>void swap(thread&amp;&amp; <i>x</i>);
 </pre>
 
 <blockquote>
@@ -379,7 +542,7 @@ assignment.
 </blockquote>
 </blockquote>
 
-<blockquote><pre>bool joinable() const
+<blockquote><pre>bool joinable() const;
 </pre>
 
 <blockquote>
@@ -392,7 +555,7 @@ assignment.
 </blockquote>
 </blockquote>
 
-<blockquote><pre>void join()
+<blockquote><pre>void join();
 </pre>
 
 <blockquote>
@@ -414,7 +577,7 @@ represented by <code>*this</code> completes.</p>
 </blockquote>
 </blockquote>
 
-<blockquote><pre>void detach()
+<blockquote><pre>void detach();
 </pre>
 
 <blockquote>
@@ -436,15 +599,15 @@ does not represent a thread of execution.
 </blockquote>
 </blockquote>
 
-<blockquote><pre>id get_id() const
+<blockquote><pre>id get_id() const;
 </pre>
 
 <blockquote>
 <p>
-<i>Returns:</i> A <tt>thread::id</tt> which refers to the thread of execution 
+<i>Returns:</i> An object of type <tt>thread::id</tt> which identifies the thread of execution 
 represented by
 <tt>*this</tt>.  If this
-<tt>thread</tt> is not <tt>joinable()</tt> returns a default constructed <tt>id</tt>.
+<tt>thread</tt> is not <tt>joinable()</tt> returns a default constructed <tt>thread::id</tt>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -452,26 +615,26 @@ represented by
 </blockquote>
 </blockquote>
 
-<blockquote><pre>native_handle_type native_handle()
+<blockquote><pre>native_handle_type native_handle();
 </pre>
 
 <blockquote>
 <p>
-<i>Returns:</i> An implementation defined type representing the underlying OS <ins class="diff">handle to the </ins>thread <del class="diff modified">handle.
-</del><ins class="diff modified">of execution.
-</ins></p>
+<i>Returns:</i> The underlying representation of the thread object.
+</p>
 <p>
 <i>Throws:</i> Nothing.
 </p>
 </blockquote>
 </blockquote>
 
-<blockquote><pre>unsigned hardware_concurrency()
+<h5><tt>thread</tt> static members</h5>
+<blockquote><pre>unsigned hardware_concurrency();
 </pre>
 
 <blockquote>
 <p>
-<i>Returns:</i> The number of threads <ins class="diff">of execution </ins>that can reasonably be expected to
+<i>Returns:</i> The number of threads of execution that can reasonably be expected to
 execute concurrently. <i>[Note:</i> This value should only be considered to be a hint.
 <i>--end note]</i> If this value is not computable or well defined a
 return value of 1 is recommended, but not required.
@@ -482,6 +645,7 @@ return value of 1 is recommended, but not required.
 </blockquote>
 </blockquote>
 
+<h5><tt>thread</tt> specialized algorithms</h5>
 <blockquote>
 <pre>void swap(thread&amp;  x, thread&amp;  y);
 void swap(thread&amp;&amp; x, thread&amp;  y);
@@ -494,128 +658,7 @@ void swap(thread&amp;  x, thread&amp;&amp; y);
 </blockquote>
 </blockquote>
 
-<blockquote><pre>template&lt;class charT, class traits&gt;
-basic_ostream&lt;charT, traits&gt;&amp;
-operator&lt;&lt; (basic_ostream&lt;charT, traits&gt;&amp;&amp; out, const thread::id&amp; id);
-</pre>
 
-<blockquote>
-<p>
-<i>Effects:</i> Inserts an unspecified text representation of the <tt>thread::id</tt> into
-the stream <tt>out</tt>.
-</p>
-<p>
-<i>Returns:</i> <tt>out</tt>.
-</p>
-</blockquote>
-</blockquote>
-
-<h5>Class <tt>thread::id</tt></h5>
-
-<p>
-<tt>id</tt> is a nested class of <tt>thread</tt> which represents the identity of
-a thread of execution.
-</p>
-
-<blockquote><pre>id()
-</pre>
-
-<blockquote>
-<p>
-<i>Effects:</i> Constructs an object of type <tt>id</tt> which compares
-equal to other default constructed <tt>id</tt> objects.
-</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote><pre>bool operator==(const id&amp; <i>x</i>, const id&amp; <i>y</i>)
-</pre>
-
-<blockquote>
-<p>
-<i>Returns:</i> If <tt><i>x</i></tt> and <tt><i>y</i></tt> both represent
-<i>not any thread</i>, then returns <tt>true</tt>.  Otherwise if
-<tt><i>x</i></tt> and <tt><i>y</i></tt> represent the same thread of execution, then
-returns <tt>true</tt>.  Otherwise returns <tt>false</tt>.
-</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote><pre>bool operator!=(const id&amp; <i>x</i>, const id&amp; <i>y</i>)
-</pre>
-
-<blockquote>
-<p>
-<i>Returns:</i> <tt>!(<i>x</i> == <i>y</i>)</tt>
-</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-
-<blockquote>
-<pre>bool operator&lt;(const id&amp; x, const id&amp; y)
-</pre>
-
-<blockquote>
-<p>
-<i>Returns:</i> Provides an ordering for all objects of type <code>id</code>, such that
-objects of type <code>id</code> can be used as a key in Associate Containers.
-For two objects of type <code>id</code>,
-<code>x</code> and <code>y</code>, if
-<code>x == y</code> returns <code>true</code>, both <code>x &lt; y</code> and <code>y &lt; x</code> shall return
-<code>false</code>. Otherwise, precisely one of <code>x &lt; y</code> and <code>y &lt; x</code> shall return
-<code>true</code>.
-</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote>
-<pre>bool operator&lt;=(const id&amp; x, const id&amp; y)
-</pre>
-<blockquote>
-<p>
-<i>Returns:</i> <tt>!(y &lt; x)</tt> </p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote>
-<pre>bool operator&gt;(const id&amp; x, const id&amp; y)
-</pre>
-<blockquote>
-<p>
-<i>Returns:</i> <tt>y &lt; x</tt> </p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
-<blockquote>
-<pre>bool operator&gt;=(const id&amp; x, const id&amp; y)
-</pre>
-<blockquote>
-<p>
-<i>Returns:</i> <tt>!(x &lt; y)</tt> </p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
 
 <h4>Namespace <tt>this_thread</tt></h4>
 
@@ -630,13 +673,12 @@ For two objects of type <code>id</code>,
 }  // this_thread
 </pre></blockquote>
 
-<blockquote><pre>thread::id this_thread::get_id()
+<blockquote><pre>thread::id this_thread::get_id();
 </pre>
 
 <blockquote>
 <p>
-<i>Returns:</i> Returns the <tt>id</tt> of the current <del class="diff modified">thread. </del><ins class="diff modified">thread of execution. </ins> The return shall not be
-equal to a default constructed <tt>thread::id</tt>.
+<i>Returns:</i> Returns an object of type <tt>thread::id</tt> that uniquely identifies the current thread of execution. The object returned shall not compare equal to a default constructed <tt>thread::id</tt>.
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -644,14 +686,12 @@ equal to a default constructed <tt>thread::id</tt>.
 </blockquote>
 </blockquote>
 
-<blockquote><pre>void yield()
+<blockquote><pre>void yield();
 </pre>
 
 <blockquote>
 <p>
-<i>Effects:</i>  Offers the operating system the chance to schedule another <del class="diff modified">thread.
-</del><ins class="diff modified">thread of execution.
-</ins></p>
+<i>Effects:</i>  Offers the operating system the opportunity to schedule another thread of execution.</p>
 <p>
 <i>Throws:</i> Nothing.
 </p>
@@ -659,7 +699,7 @@ equal to a default constructed <tt>thread::id</tt>.
 </blockquote>
 
 <blockquote><pre>template &lt;class ElapsedTime&gt;
-    void sleep(const ElapsedTime&amp; rel_t)
+    void sleep(const ElapsedTime&amp; rel_t);
 </pre>
 
 <blockquote>
@@ -702,7 +742,7 @@ argument that no function has been called.</p>
 <blockquote>
 
 <pre>template&lt;class Callable, class Args...&gt;
-void call_once(once_flag&amp; flag, Callable func, Args... args);
+void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 </pre>
 
     <blockquote>
@@ -720,7 +760,7 @@ void call_once(once_flag&amp; flag, Callable func, Args... args);
     called multiple times for the same <code>once_flag</code> object. If multiple
     calls to <code>call_once</code> with the same <code>once_flag</code> object 
     occur in separate threads of execution, only one
-    thread <ins class="diff">of execution </ins>shall call <code>func</code>, and none of the threads <ins class="diff">of execution </ins>shall proceed until the call to <code>func</code> has completed. 
+    thread of execution shall call <code>func</code>, and none shall proceed until the call to <code>func</code> has completed. 
     If the invocation of <code>func</code> results in an exception being thrown, 
     the exception is propagated to the caller and the effects are as-if this 
     invocation of&nbsp;<code>call_once</code> did not occur.</p>
@@ -1666,51 +1706,45 @@ If an exception is thrown by a call to <tt>lock()</tt> or <tt>try_lock()</tt>, t
 
 <h3><a name="ConditionVariablesWording">Condition variables</a></h3>
 
-<b>&lt;condition_variable&gt; synopsis</b>
+<b>&lt;<span class="remove">cond_var</span><span class="insert">condition_variable</span>&gt; synopsis</b>
 
 <blockquote><pre>namespace std {
 
-class condition_variable;
-class condition_variable_any;
+class <span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>;
+class <span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>;
 
 }  // std
 </pre></blockquote>
 
-<h4>Class condition_variable</h4>
+<h4>Class <span class="remove">cond_var</span><span
+    class="insert">condition_variable</span></h4>
 
 <p>
-An object of class <tt>condition_variable</tt> is a synchronization primitive 
+An object of class <tt><span class="remove">cond_var</span><span
+    class="insert">condition_variable</span></tt> is a synchronization primitive 
 used to cause a thread of execution to wait until notified by some other 
 thread of execution that some condition is met, or a UTC[(?)] time is reached.
 </p>
 
-<p>
-If and only if the condition variable type is internally represented by an object
-which can be passed to operating system specific interfaces, then there shall be a 
-implementation-defined member typedef <tt>native_handle_type</tt> that is an alias 
-to this native type, if it is copyable, or if the native type is not copyable, 
-a pointer to this native type.  The implementation shall document whether the 
-<tt>native_handle_type</tt> member typedef is present.
-</p>
-
-<p>
-If the nested typedef <tt>native_handle_type</tt> exists, then there
-also shall be a member function <tt>native_handle()</tt> which returns the
-underlying representation. 
-</p>
-
 <blockquote><pre>namespace std {
 
-class condition_variable
+class <span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>
 {
 public:
-    typedef <i>implementation-defined</i> native_handle_type;
-    
-    condition_variable();
-    ~condition_variable();
+    <span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>();
+    ~<span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>();
 
-    condition_variable(const condition_variable&amp;) = delete;
-    condition_variable&amp; operator=(const condition_variable&amp;) = delete;
+    <span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>(const <span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>&amp;) = delete;
+    <span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>&amp; operator=(const <span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>&amp;) = delete;
 
     void notify_one();
     void notify_all();
@@ -1720,24 +1754,26 @@ public:
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const utc_time&amp; abs_time);
     template &lt;class Predicate&gt;
         bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const utc_time&amp; abs_time, Predicate pred);
-    native_handle_type native_handle();
 };
 
 }  // std
 </pre></blockquote>
 
 <blockquote>
-<pre>condition_variable();
+<pre><span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>();
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of class <tt>condition_variable</tt>.
+<i>Effects:</i> Constructs an object of class <tt><span class="remove">cond_var</span><span
+    class="insert">condition_variable</span></tt>.
 </p>
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>~condition_variable();
+<pre>~<span class="remove">cond_var</span><span
+    class="insert">condition_variable</span>();
 </pre>
 <blockquote>
 <p>
@@ -1755,11 +1791,12 @@ public:
 <blockquote>
 <p>
 <i>Effects:</i> If any threads of execution are blocked waiting for <code>*this</code>, 
-unblocks at least one those threads of execution.</p>
+unblocks at least one those threads<span class="insert"> of execution</span>.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
+<code>notify_all</code> member functions of the same <tt>condition<span
+class="insert">_variable</span></tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -1771,12 +1808,13 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Unblock all threads of execution that are blocked waiting for <code>*this</code>.
+<i>Effects:</i> Unblock all threads<span class="insert"> of execution</span> that are blocked waiting for <code>*this</code>.
 </p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
+<code>notify_all</code> member functions of the same <tt>condition<span
+class="insert">_variable</span></tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -1789,15 +1827,19 @@ races or deadlocks.
 <blockquote>
 <p>
 <i>Precondition:</i> <tt>lock</tt> is locked by the current thread of execution.  No
-other thread of execution is waiting on this <tt>condition_variable</tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt><span class="remove">cond_var</span><span
+    class="insert">condition_variable</span></tt> object unless <tt>lock</tt>
 refers to the same underlying <tt>mutex</tt> object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
 <tt>lock</tt>. If the <tt>wait</tt> should throw an exception for any
-reason, <tt>lock</tt> will be locked as the exception propagates. 
-This thread of execution shall unblock when another threadof execution issues a
-notification to this blocked thread of execution. The current thread of execution may
+reason, <tt>lock</tt> will be locked as the exception propagates<span
+class="remove"> out</span>. 
+This thread of execution shall unblock when another thread<span class="insert">
+of execution</span> issues a
+notification to this blocked thread<span class="insert">
+of execution</span> . The current thread of execution may
 unblock and return even in the absence of a notification.
 </p>
 <p>
@@ -1809,7 +1851,8 @@ thread of execution.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
+<code>notify_all</code> member functions of the same <tt>condition<span
+class="insert">_variable</span></tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -1837,7 +1880,8 @@ races or deadlocks.
 <blockquote>
 <p>
 <i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread of execution.  No
-other thread of execution is waiting on this <tt>condition_variable</tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt><span class="remove">cond_var</span><span
+    class="insert">condition_variable</span></tt> object unless <tt>lock</tt>
 refers to, the same underlying <tt>mutex</tt> object.
 </p>
 <p>
@@ -1846,10 +1890,13 @@ refers to, the same underlying <tt>mutex</tt> object.
 any reason, <tt>lock</tt> will be locked as the exception propagates
 out.  If the absolute time specified by <tt>abs_time</tt> passes (that
 is, system time equals or exceeds <tt>abs_time</tt>) before the
-<tt>condition_variable</tt> is notified, or if the absolute time specified by
+<tt>condition<span
+class="insert">_variable</span></tt> is notified, or if the absolute time specified by
 <tt>abs_time</tt> has already been passed at the time of the call, then
 <tt>false</tt> is returned. This thread of execution shall unblock when
-another thread of execution  issues a notification to this blocked thread of execution . The current
+another thread<span class="insert">
+of execution</span>  issues a notification to this blocked thread<span class="insert">
+of execution</span> . The current
 thread of execution may unblock and return even in the absence of a
 notification.
 </p>
@@ -1867,14 +1914,15 @@ otherwise returns <tt>false</tt>.
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
+<code>notify_all</code> member functions of the same <tt>condition<span
+class="insert">_variable</span></tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>template &lt;class Predicate&gt;
+<pre>template &lt;class <span class="remove">_</span>Predicate&gt;
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const utc_time&amp; abs_time, Predicate pred);
 </pre>
 <blockquote>
@@ -1899,25 +1947,17 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 </blockquote>
 </blockquote>
 
-<blockquote>
-<pre>native_handle_type native_handle();
-</pre>
-<blockquote>
 <p>
-<i>Returns:</i> the representation of the underlying object used to implement <tt>*this</tt>.
-</p>
-</blockquote>
-</blockquote>
-
-
-<p>
-<tt>condition_variable</tt> shall be a standard-layout type ([?]).
+<tt><span class="remove">cond_var</span><span
+    class="insert">condition_variable</span></tt> shall be a standard-layout type ([?]).
 </p>
 
-<h4>Class condition_variable_any</h4>
+<h4>Class <span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span></h4>
 
 <p>
-An object of class <tt>condition_variable_any</tt> is a synchronization primitive 
+An object of class <tt><span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span></tt> is a synchronization primitive 
 used to cause a thread of execution to wait until notified by some other 
 thread of execution that some condition is met, or a UTC[(?)] time is reached.
 </p>
@@ -1928,33 +1968,23 @@ and <tt>unlock</tt> with the semantics of the mutex concept.  All of the standar
 meet this requirement.
 </p>
 
-<p>
-If and only if the <tt>condition_variable_any</tt> type is internally represented by an 
-an object or objects which can be passed to operating system specific interfaces, then 
-there shall be a nested implementation-defined typedef <tt>native_handle_type</tt> that 
-is an alias to a type providing access to the object or objects.  The type 
-<tt>native_handle_type</tt> must be copyable; if the object or objects are not copyable, 
-<tt>native_handle_type</tt> must be a pointer type.  The implementation shall document 
-whether the <tt>native_handle_type</tt> typedef is present.
-</p>
-
-<p>
-If the nested typedef <tt>native_handle_type</tt> exists, then there
-also shall be a member function <tt>native_handle()</tt> which returns the
-underlying representation. 
-</p>
-
 <blockquote><pre>namespace std {
 
-class condition_variable_any
+class <span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>
 {
 public:
-    typedef <i>implementation-defined</i> native_handle_type;
-    condition_variable_any();
-    ~condition_variable_any();
+    <span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>();
+    ~<span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>();
 
-    condition_variable_any(const condition_variable_any&amp;) = delete;
-    condition_variable_any&amp; operator=(const condition_variable_any&amp;) = delete;
+    <span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>(const <span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>&amp;) = delete;
+    <span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>&amp; operator=(const <span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>&amp;) = delete;
 
     void notify_one();
     void notify_all();
@@ -1966,24 +1996,26 @@ public:
         bool timed_wait(Lock&amp; lock, const utc_time&amp; abs_time);
     template &lt;class Lock, class Predicate&gt;
         bool timed_wait(Lock&amp; lock, const utc_time&amp; abs_time, Predicate pred);
-    native_handle_type native_handle();
 };
 
 }  // std
 </pre></blockquote>
 
 <blockquote>
-<pre>condition_variable_any();
+<pre><span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>();
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of class <tt>condition_variable_any</tt>.
+<i>Effects:</i> Constructs an object of class <tt><span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span></tt>.
 </p>
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>~condition_variable_any();
+<pre>~<span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span>();
 </pre>
 <blockquote>
 <p>
@@ -2001,11 +2033,13 @@ public:
 <blockquote>
 <p>
 <i>Effects:</i> If any threads of execution are blocked waiting for <code>*this</code>, 
-unblocks at least one those threads of execution.</p>
+unblocks at least one those threads<span class="insert"> of execution</span>.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
+<code>notify_all</code> member functions of the same <tt><span
+class="insert">general_</span>condition<span
+class="insert">_variable</span></tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -2017,12 +2051,15 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Unblock all threads  of execution that are blocked waiting for <code>*this</code>.
+<i>Effects:</i> Unblock all threads <span class="insert">
+of execution</span>that are blocked waiting for <code>*this</code>.
 </p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
+<code>notify_all</code> member functions of the same <tt><span
+class="insert">general_</span>condition<span
+class="insert">_variable</span></tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -2036,15 +2073,19 @@ races or deadlocks.
 <p>
 <i>Precondition:</i> <tt>lock</tt> is locked by the current thread of execution.  If
 <tt>Lock</tt> supports recursive locking, the lock count is one.  No
-other thread of execution is waiting on this <tt>condition_variable_any</tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt><span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span></tt> object unless <tt>lock</tt>
 is, or refers to, the same underlying mutex object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
 <tt>lock</tt>. If the <tt>wait</tt> should throw an exception for any
-reason, <tt>lock</tt> will be locked as the exception propagates. 
-This thread of execution shall unblock when another thread of execution issues a
-notification to this blocked thread of execution. The current thread of execution may
+reason, <tt>lock</tt> will be locked as the exception propagates<span
+name="remove"> out</span>. 
+This thread of execution shall unblock when another thread<span class="insert">
+of execution</span> issues a
+notification to this blocked thread<span class="insert">
+of execution</span>. The current thread of execution may
 unblock and return even in the absence of a notification.
 </p>
 <p>
@@ -2056,7 +2097,9 @@ thread of execution.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
+<code>notify_all</code> member functions of the same <tt><span
+class="insert">general_</span>condition<span
+class="insert">_variable</span></tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -2085,7 +2128,8 @@ races or deadlocks.
 <p>
 <i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread of execution.  If
 <tt>Lock</tt> supports recursive locking, the lock count is one.  No
-other thread of execution is waiting on this <tt>condition_variable_any</tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt><span class="remove">gen_cond_var</span><span
+class="insert">general_condition_variable</span></tt> object unless <tt>lock</tt>
 is, or refers to, the same underlying mutex object.
 </p>
 <p>
@@ -2094,10 +2138,14 @@ is, or refers to, the same underlying mutex object.
 any reason, <tt>lock</tt> will be locked as the exception propagates
 out.  If the absolute time specified by <tt>abs_time</tt> passes (that
 is, system time equals or exceeds <tt>abs_time</tt>) before the
-<tt>condition_variable_any</tt> is notified, or if the absolute time specified by
+<tt><span
+class="insert">general_</span>condition<span
+class="insert">_variable</span></tt> is notified, or if the absolute time specified by
 <tt>abs_time</tt> has already been passed at the time of the call, then
 <tt>false</tt> is returned. This thread of execution shall unblock when
-another thread of execution issues a notification to this blocked thread of execution. The current
+another thread<span class="insert">
+of execution</span> issues a notification to this blocked thread<span class="insert">
+of execution</span>. The current
 thread of execution may unblock and return even in the absence of a
 notification.
 </p>
@@ -2115,7 +2163,9 @@ otherwise returns <tt>false</tt>.
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
+<code>notify_all</code> member functions of the same <tt><span
+class="insert">general_</span>condition<span
+class="insert">_variable</span></tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </blockquote>
@@ -2147,15 +2197,6 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 </blockquote>
 </blockquote>
 
-<blockquote>
-<pre>native_handle_type native_handle();
-</pre>
-<blockquote>
-<p>
-<i>Returns:</i> the representation of the underlying object or objects used to implement <tt>*this</tt>.
-</p>
-</blockquote>
-</blockquote>
 
 <hr/>
 
@@ -3115,3 +3156,4 @@ proposal, as did other members of an ad hoc threads working group.
 
 </div></body></html><ins class="diff">
 </ins>
+
