@@ -6,4 +6,6 @@ import testing ;
 test-suite run_test_suite
   :
     #[ run [ glob *.cpp ] ]
+    
+    [ run cookie.cpp ]
   ;
