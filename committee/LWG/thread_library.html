@@ -1666,45 +1666,51 @@ If an exception is thrown by a call to <tt>lock()</tt> or <tt>try_lock()</tt>, t
 
 <h3><a name="ConditionVariablesWording">Condition variables</a></h3>
 
-<b>&lt;<span class="remove">cond_var</span><span class="insert">condition_variable</span>&gt; synopsis</b>
+<b>&lt;condition_variable&gt; synopsis</b>
 
 <blockquote><pre>namespace std {
 
-class <span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>;
-class <span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>;
+class condition_variable;
+class condition_variable_any;
 
 }  // std
 </pre></blockquote>
 
-<h4>Class <span class="remove">cond_var</span><span
-    class="insert">condition_variable</span></h4>
+<h4>Class condition_variable</h4>
 
 <p>
-An object of class <tt><span class="remove">cond_var</span><span
-    class="insert">condition_variable</span></tt> is a synchronization primitive 
+An object of class <tt>condition_variable</tt> is a synchronization primitive 
 used to cause a thread of execution to wait until notified by some other 
 thread of execution that some condition is met, or a UTC[(?)] time is reached.
 </p>
 
+<p>
+If and only if the condition variable type is internally represented by an object
+which can be passed to operating system specific interfaces, then there shall be a 
+implementation-defined member typedef <tt>native_handle_type</tt> that is an alias 
+to this native type, if it is copyable, or if the native type is not copyable, 
+a pointer to this native type.  The implementation shall document whether the 
+<tt>native_handle_type</tt> member typedef is present.
+</p>
+
+<p>
+If the nested typedef <tt>native_handle_type</tt> exists, then there
+also shall be a member function <tt>native_handle()</tt> which returns the
+underlying representation. 
+</p>
+
 <blockquote><pre>namespace std {
 
-class <span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>
+class condition_variable
 {
 public:
-    <span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>();
-    ~<span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>();
+    typedef <i>implementation-defined</i> native_handle_type;
+    
+    condition_variable();
+    ~condition_variable();
 
-    <span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>(const <span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>&amp;) = delete;
-    <span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>&amp; operator=(const <span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>&amp;) = delete;
+    condition_variable(const condition_variable&amp;) = delete;
+    condition_variable&amp; operator=(const condition_variable&amp;) = delete;
 
     void notify_one();
     void notify_all();
@@ -1714,26 +1720,24 @@ public:
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const utc_time&amp; abs_time);
     template &lt;class Predicate&gt;
         bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const utc_time&amp; abs_time, Predicate pred);
+    native_handle_type native_handle();
 };
 
 }  // std
 </pre></blockquote>
 
 <blockquote>
-<pre><span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>();
+<pre>condition_variable();
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of class <tt><span class="remove">cond_var</span><span
-    class="insert">condition_variable</span></tt>.
+<i>Effects:</i> Constructs an object of class <tt>condition_variable</tt>.
 </p>
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>~<span class="remove">cond_var</span><span
-    class="insert">condition_variable</span>();
+<pre>~condition_variable();
 </pre>
 <blockquote>
 <p>
@@ -1751,12 +1755,11 @@ public:
 <blockquote>
 <p>
 <i>Effects:</i> If any threads of execution are blocked waiting for <code>*this</code>, 
-unblocks at least one those threads<span class="insert"> of execution</span>.</p>
+unblocks at least one those threads of execution.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition<span
-class="insert">_variable</span></tt>
+<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -1768,13 +1771,12 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Unblock all threads<span class="insert"> of execution</span> that are blocked waiting for <code>*this</code>.
+<i>Effects:</i> Unblock all threads of execution that are blocked waiting for <code>*this</code>.
 </p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition<span
-class="insert">_variable</span></tt>
+<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -1787,19 +1789,15 @@ races or deadlocks.
 <blockquote>
 <p>
 <i>Precondition:</i> <tt>lock</tt> is locked by the current thread of execution.  No
-other thread of execution is waiting on this <tt><span class="remove">cond_var</span><span
-    class="insert">condition_variable</span></tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt>condition_variable</tt> object unless <tt>lock</tt>
 refers to the same underlying <tt>mutex</tt> object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
 <tt>lock</tt>. If the <tt>wait</tt> should throw an exception for any
-reason, <tt>lock</tt> will be locked as the exception propagates<span
-class="remove"> out</span>. 
-This thread of execution shall unblock when another thread<span class="insert">
-of execution</span> issues a
-notification to this blocked thread<span class="insert">
-of execution</span> . The current thread of execution may
+reason, <tt>lock</tt> will be locked as the exception propagates. 
+This thread of execution shall unblock when another threadof execution issues a
+notification to this blocked thread of execution. The current thread of execution may
 unblock and return even in the absence of a notification.
 </p>
 <p>
@@ -1811,8 +1809,7 @@ thread of execution.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition<span
-class="insert">_variable</span></tt>
+<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -1840,8 +1837,7 @@ races or deadlocks.
 <blockquote>
 <p>
 <i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread of execution.  No
-other thread of execution is waiting on this <tt><span class="remove">cond_var</span><span
-    class="insert">condition_variable</span></tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt>condition_variable</tt> object unless <tt>lock</tt>
 refers to, the same underlying <tt>mutex</tt> object.
 </p>
 <p>
@@ -1850,13 +1846,10 @@ refers to, the same underlying <tt>mutex</tt> object.
 any reason, <tt>lock</tt> will be locked as the exception propagates
 out.  If the absolute time specified by <tt>abs_time</tt> passes (that
 is, system time equals or exceeds <tt>abs_time</tt>) before the
-<tt>condition<span
-class="insert">_variable</span></tt> is notified, or if the absolute time specified by
+<tt>condition_variable</tt> is notified, or if the absolute time specified by
 <tt>abs_time</tt> has already been passed at the time of the call, then
 <tt>false</tt> is returned. This thread of execution shall unblock when
-another thread<span class="insert">
-of execution</span>  issues a notification to this blocked thread<span class="insert">
-of execution</span> . The current
+another thread of execution  issues a notification to this blocked thread of execution . The current
 thread of execution may unblock and return even in the absence of a
 notification.
 </p>
@@ -1874,15 +1867,14 @@ otherwise returns <tt>false</tt>.
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt>condition<span
-class="insert">_variable</span></tt>
+<code>notify_all</code> member functions of the same <tt>condition_variable</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>template &lt;class <span class="remove">_</span>Predicate&gt;
+<pre>template &lt;class Predicate&gt;
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const utc_time&amp; abs_time, Predicate pred);
 </pre>
 <blockquote>
@@ -1907,17 +1899,25 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 </blockquote>
 </blockquote>
 
+<blockquote>
+<pre>native_handle_type native_handle();
+</pre>
+<blockquote>
 <p>
-<tt><span class="remove">cond_var</span><span
-    class="insert">condition_variable</span></tt> shall be a standard-layout type ([?]).
+<i>Returns:</i> the representation of the underlying object used to implement <tt>*this</tt>.
+</p>
+</blockquote>
+</blockquote>
+
+
+<p>
+<tt>condition_variable</tt> shall be a standard-layout type ([?]).
 </p>
 
-<h4>Class <span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span></h4>
+<h4>Class condition_variable_any</h4>
 
 <p>
-An object of class <tt><span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span></tt> is a synchronization primitive 
+An object of class <tt>condition_variable_any</tt> is a synchronization primitive 
 used to cause a thread of execution to wait until notified by some other 
 thread of execution that some condition is met, or a UTC[(?)] time is reached.
 </p>
@@ -1928,23 +1928,33 @@ and <tt>unlock</tt> with the semantics of the mutex concept.  All of the standar
 meet this requirement.
 </p>
 
+<p>
+If and only if the <tt>condition_variable_any</tt> type is internally represented by an 
+an object or objects which can be passed to operating system specific interfaces, then 
+there shall be a nested implementation-defined typedef <tt>native_handle_type</tt> that 
+is an alias to a type providing access to the object or objects.  The type 
+<tt>native_handle_type</tt> must be copyable; if the object or objects are not copyable, 
+<tt>native_handle_type</tt> must be a pointer type.  The implementation shall document 
+whether the <tt>native_handle_type</tt> typedef is present.
+</p>
+
+<p>
+If the nested typedef <tt>native_handle_type</tt> exists, then there
+also shall be a member function <tt>native_handle()</tt> which returns the
+underlying representation. 
+</p>
+
 <blockquote><pre>namespace std {
 
-class <span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>
+class condition_variable_any
 {
 public:
-    <span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>();
-    ~<span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>();
+    typedef <i>implementation-defined</i> native_handle_type;
+    condition_variable_any();
+    ~condition_variable_any();
 
-    <span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>(const <span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>&amp;) = delete;
-    <span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>&amp; operator=(const <span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>&amp;) = delete;
+    condition_variable_any(const condition_variable_any&amp;) = delete;
+    condition_variable_any&amp; operator=(const condition_variable_any&amp;) = delete;
 
     void notify_one();
     void notify_all();
@@ -1956,26 +1966,24 @@ class="insert">general_condition_variable</span>&amp;) = delete;
         bool timed_wait(Lock&amp; lock, const utc_time&amp; abs_time);
     template &lt;class Lock, class Predicate&gt;
         bool timed_wait(Lock&amp; lock, const utc_time&amp; abs_time, Predicate pred);
+    native_handle_type native_handle();
 };
 
 }  // std
 </pre></blockquote>
 
 <blockquote>
-<pre><span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>();
+<pre>condition_variable_any();
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Constructs an object of class <tt><span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span></tt>.
+<i>Effects:</i> Constructs an object of class <tt>condition_variable_any</tt>.
 </p>
 </blockquote>
 </blockquote>
 
 <blockquote>
-<pre>~<span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span>();
+<pre>~condition_variable_any();
 </pre>
 <blockquote>
 <p>
@@ -1993,13 +2001,11 @@ class="insert">general_condition_variable</span>();
 <blockquote>
 <p>
 <i>Effects:</i> If any threads of execution are blocked waiting for <code>*this</code>, 
-unblocks at least one those threads<span class="insert"> of execution</span>.</p>
+unblocks at least one those threads of execution.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt><span
-class="insert">general_</span>condition<span
-class="insert">_variable</span></tt>
+<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -2011,15 +2017,12 @@ races or deadlocks.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i> Unblock all threads <span class="insert">
-of execution</span>that are blocked waiting for <code>*this</code>.
+<i>Effects:</i> Unblock all threads  of execution that are blocked waiting for <code>*this</code>.
 </p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt><span
-class="insert">general_</span>condition<span
-class="insert">_variable</span></tt>
+<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -2033,19 +2036,15 @@ races or deadlocks.
 <p>
 <i>Precondition:</i> <tt>lock</tt> is locked by the current thread of execution.  If
 <tt>Lock</tt> supports recursive locking, the lock count is one.  No
-other thread of execution is waiting on this <tt><span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span></tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt>condition_variable_any</tt> object unless <tt>lock</tt>
 is, or refers to, the same underlying mutex object.
 </p>
 <p>
 <i>Effects:</i> Atomically blocks and releases the lock on
 <tt>lock</tt>. If the <tt>wait</tt> should throw an exception for any
-reason, <tt>lock</tt> will be locked as the exception propagates<span
-name="remove"> out</span>. 
-This thread of execution shall unblock when another thread<span class="insert">
-of execution</span> issues a
-notification to this blocked thread<span class="insert">
-of execution</span>. The current thread of execution may
+reason, <tt>lock</tt> will be locked as the exception propagates. 
+This thread of execution shall unblock when another thread of execution issues a
+notification to this blocked thread of execution. The current thread of execution may
 unblock and return even in the absence of a notification.
 </p>
 <p>
@@ -2057,9 +2056,7 @@ thread of execution.</p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt><span
-class="insert">general_</span>condition<span
-class="insert">_variable</span></tt>
+<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </p>
@@ -2088,8 +2085,7 @@ races or deadlocks.
 <p>
 <i>Precondition:</i>  The <tt>lock</tt> is locked by the current thread of execution.  If
 <tt>Lock</tt> supports recursive locking, the lock count is one.  No
-other thread of execution is waiting on this <tt><span class="remove">gen_cond_var</span><span
-class="insert">general_condition_variable</span></tt> object unless <tt>lock</tt>
+other thread of execution is waiting on this <tt>condition_variable_any</tt> object unless <tt>lock</tt>
 is, or refers to, the same underlying mutex object.
 </p>
 <p>
@@ -2098,14 +2094,10 @@ is, or refers to, the same underlying mutex object.
 any reason, <tt>lock</tt> will be locked as the exception propagates
 out.  If the absolute time specified by <tt>abs_time</tt> passes (that
 is, system time equals or exceeds <tt>abs_time</tt>) before the
-<tt><span
-class="insert">general_</span>condition<span
-class="insert">_variable</span></tt> is notified, or if the absolute time specified by
+<tt>condition_variable_any</tt> is notified, or if the absolute time specified by
 <tt>abs_time</tt> has already been passed at the time of the call, then
 <tt>false</tt> is returned. This thread of execution shall unblock when
-another thread<span class="insert">
-of execution</span> issues a notification to this blocked thread<span class="insert">
-of execution</span>. The current
+another thread of execution issues a notification to this blocked thread of execution. The current
 thread of execution may unblock and return even in the absence of a
 notification.
 </p>
@@ -2123,9 +2115,7 @@ otherwise returns <tt>false</tt>.
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
-<code>notify_all</code> member functions of the same <tt><span
-class="insert">general_</span>condition<span
-class="insert">_variable</span></tt>
+<code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
 </blockquote>
@@ -2157,6 +2147,15 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 </blockquote>
 </blockquote>
 
+<blockquote>
+<pre>native_handle_type native_handle();
+</pre>
+<blockquote>
+<p>
+<i>Returns:</i> the representation of the underlying object or objects used to implement <tt>*this</tt>.
+</p>
+</blockquote>
+</blockquote>
 
 <hr/>
 
