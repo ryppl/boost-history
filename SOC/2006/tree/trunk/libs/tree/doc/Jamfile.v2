@@ -20,6 +20,7 @@ doxygen autodoc
 		[ glob ../../../boost/tree/balancers/*.hpp ]
 		[ glob ../../../boost/tree/comparators/*.hpp ]
 		[ glob ../../../boost/tree/detail/cursor/*.hpp ]
+		[ glob ../../../boost/tree/detail/iterator/*.hpp ]
 		[ glob ../../../boost/tree/detail/node/*.hpp ]
 	:
 		<doxygen:param>"PREDEFINED=\"BOOST_PROCESS_DOXYGEN\""

@@ -58,6 +58,17 @@ Op for_each(Cursor s, Op f)
 	return f;
 }
 
+template <class InCursor, class OutCursor>
+OutCursor copy (InCursor s, OutCursor t)
+{
+	*t = *s;
+	if (!s.empty())
+		copy(s.begin(), t.begin());
+	if (!(++s).empty())
+		copy(s.begin(), (++t).begin());
+	return t;
+}
+
 /**
  * @brief	First element of a MultiwayTree in preorder traversal
  * @param t	A MultiwayTree

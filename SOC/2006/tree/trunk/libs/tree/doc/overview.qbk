@@ -188,7 +188,7 @@ ones. Implement them for non-cursor iterators so that `empty(iter)` always retur
 
 [section Tree Traversal]
 An interesting aspect of trees is that there are many ways to traverse a tree in a meaningful order.
-Among others, ['preorder], ['postorder] and ['inorder] are frequently encountered. For an overview, 
+Among others, ['preorder], ['inorder] and ['postorder] are frequently encountered. For an overview, 
 consult your favorite Computer Science textbook or [@http://en.wikipedia.org/wiki/Tree_traversal 
 Wikipedia on Tree Traversal]. 
 Given only the essential minimum of information (i.e. child "pointers" from a parent "node", but
@@ -209,9 +209,9 @@ traversal order. For option number 1, pass the (root cursor of the) subtree to b
 
 [funcref boost::tree::preorder::for_each preorder::for_each]
 
-[funcref boost::tree::postorder::for_each postorder::for_each]
-
 [funcref boost::tree::inorder::for_each inorder::for_each]
+
+[funcref boost::tree::postorder::for_each postorder::for_each]
 
 The other two options are both invoked by constructing an `iterator` with a cursor as argument:
 
@@ -219,9 +219,9 @@ The other two options are both invoked by constructing an `iterator` with a curs
 
 [classref boost::tree::preorder::iterator preorder::iterator]
 
-[classref boost::tree::postorder::iterator postorder::iterator]
-
 [classref boost::tree::inorder::iterator inorder::iterator]
+
+[classref boost::tree::postorder::iterator postorder::iterator]
 
 If the argument cursor is descending, the iterator that will be constructed will internally use a `std::stack`
 of cursors. If on the other hand the cursor is ascending (has a `parent` member function), the iterator 

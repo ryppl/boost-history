@@ -8,7 +8,7 @@
  * @file iterators.hpp
  * Iterator wrappers around cursors using the provided
  * traversal methods for:
- * In-, pre- and postorder; ascending traversal.
+ * Pre-, in- and postorder; ascending traversal.
  */
 
 

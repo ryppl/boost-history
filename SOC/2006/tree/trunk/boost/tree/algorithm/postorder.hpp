@@ -62,6 +62,24 @@ Op for_each(Cursor s, Op f)
 }
 //]
 
+// TODO: Should work with root() instead of root().begin()
+template <class InCursor, class OutCursor>
+OutCursor copy (InCursor s, OutCursor t)
+{
+	InCursor insubtree = s;
+	OutCursor outsubtree = t;
+	if (!s.empty())
+		copy(s.begin(), t.begin());
+	if (!(++s).empty()) {
+		copy(s.begin(), (++t).begin());
+	}
+	*outsubtree = *insubtree;
+	return outsubtree;
+}
+
+///Iterators
+
+
 /**
  * @brief	First element of a MultiwayTree in postorder traversal
  * 			(equivalent to inorder::begin())

@@ -59,6 +59,17 @@ Op for_each(MultiwayCursor s, Op f)
 	return f;
 }
 
+template <class InCursor, class OutCursor>
+OutCursor copy (InCursor s, OutCursor t)
+{
+	if (!s.empty())
+		copy(s.begin(), t.begin());
+	*t = *s;
+	if (!(++s).empty())
+		copy(s.begin(), (++t).begin());
+	return t;
+}
+
 template <class MultiwayTree>
 iterator<typename MultiwayTree::cursor, forward_traversal_tag> 
 begin(MultiwayTree& t, forward_traversal_tag)

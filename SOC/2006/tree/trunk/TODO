@@ -49,6 +49,8 @@ General:
 * Add (inorder-)threaded binary trees?? Are they useful? Can they be balanced?
 * Start an RFC: what subtree algorithms should there be? In particular, of which of
   the STL's linear algorithms should there be a hierarchical version?
+* How much sense would an output cursor make? Especially within the context 
+  of the previous item.
 
 Proposal:
 
