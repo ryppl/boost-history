@@ -301,7 +301,7 @@ exception, <tt>std::terminate()</tt> shall be called.
 
 <blockquote>
 <p>
-<i>Effects:</i> If <tt>joinable()</tt> then <tt>join()</tt>,
+<i>Effects:</i> If <tt>joinable()</tt> then <tt><del class="diff modified">join()</del><ins class="diff modified">detach()</ins></tt>,
 otherwise no effects.
 </p>
 <p>
@@ -336,7 +336,7 @@ start of construction.
 <blockquote>
 <p>
 <i>Effects:</i> If <tt>this</tt> currently refers to a <tt>joinable</tt> <del class="diff modified">thread, </del><ins class="diff modified">thread object, </ins>calls
-<ins><tt>join()</tt></ins>.  Then assigns the state of <tt><i>x</i></tt> to <tt>*this</tt>
+<ins><tt><del class="diff modified">join()</del><ins class="diff modified">detach()</ins></tt></ins>.  Then assigns the state of <tt><i>x</i></tt> to <tt>*this</tt>
 and sets <tt><i>x</i></tt> to a default constructed state.
 </p>
 <p>
@@ -348,8 +348,9 @@ assignment.
 assignment.
 </p>
 <p>
-<del><i>Throws:</i> Nothing.</del>
-</p>
+<del class="diff"><del></del><i>Throws:</i> <del class="diff modified">Nothing.</del>
+</del><ins class="diff modified"><i>Throws:</i> Nothing.
+</ins></p>
 </blockquote>
 </blockquote>
 
