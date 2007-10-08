@@ -2,7 +2,7 @@
 <html lang="en"><head>
 
 
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/><title>Thread Working Draft 13</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/><title>Thread Working Draft 15</title>
 	
 	<style>
 	p {text-align:justify}
@@ -45,6 +45,7 @@
 Document number: N2447=07-0317<br/>
 <br/>
 <a href="mailto:hinnant@twcny.rr.com">Howard E. Hinnant</a>, 
+<a href="mailto:Lawrence@Crowl.org">Lawrence Crowl</a>,
 <a href="mailto:jeff@crystalclearsoftware.com">Jeff Garland</a>,  
 <a href="mailto:public@alisdairm.net">Alisdair Meredith</a>,
 <a href="mailto:chris@kohlhoff.com">Chris Kohlhoff</a>,
@@ -53,7 +54,7 @@ Document number: N2447=07-0317<br/>
 <a href="mailto:prem.rao@hp.com">PremAnand M Rao</a>,
 <a href="mailto:nick@usenix.org">Nick Stoughton</a>
 <br/>
-2007-10-04
+2007-10-06
 </address>
 <hr/>
 <h1 align="center">Multi-threading Library for Standard C++</h1>
@@ -120,9 +121,9 @@ is only
 required to be instantiable for integer types (3.9.1), floating point
 types
 (3.9.1), pointer types (8.3.1), and <code>std::string</code>,
-<code>std::u16string</code>, <code>std::u32string</code>,<del
-class="diff modified">
-and</del> <code>std::wstring</code><ins class="diff modified">, and
+<code>std::u16string</code>, <code>std::u32string</code>,
+<del class="diff modified">and</del>
+<code>std::wstring</code><ins class="diff modified">, and
 <code>std::thread::id</code></ins>.
 </blockquote>
 
@@ -246,11 +247,17 @@ public:
 
 <p>
 Class <tt>thread</tt> and class <tt>thread::id</tt> shall be standard-layout 
-types ([?]).  
+classes (chapter 9 [class]).  
 </p>
 
 <p>
-If and only if the <tt>thread</tt> type is internally represented by a single data structure which can be passed to operating system specific interfaces, there shall be a nested implementation-defined typedef <tt>native_handle_type</tt> that is an alias to this native type if it is copyable.  Otherwise, if the native type is not copyable, it is a pointer to this native type.  The implementation shall document whether the <tt>native_handle_type</tt> typedef is present.
+If and only if the <tt>thread</tt> type is internally represented
+by a single data structure which can be passed to operating system
+specific interfaces, there shall be a nested implementation-defined
+typedef <tt>native_handle_type</tt> that is an alias to this native
+type if it is copyable.  Otherwise, if the native type is not copyable,
+it is a pointer to this native type.  The implementation shall document
+whether the <tt>native_handle_type</tt> typedef is present.
 </p>
 
 <p>
@@ -430,11 +437,14 @@ other <tt>join</tt>able <tt>thread</tt>s.
 <p>
 <i>Requires:</i>  <tt>F</tt> is a callable type [func.def].  If <tt>f</tt> is an lvalue, <tt>F</tt> must be <tt>CopyConstructible</tt>.
 If <tt>f</tt> is an rvalue, <tt>F</tt> must only be <tt>MoveConstructible</tt>.
+<b>[Crowl: Is this enforced by code?]</b>
 </p>
 <p>
 <i>Effects:</i> Constructs an object of type <tt>thread</tt> and executes <tt><i>INVOKE</i>(f, t1, t2, ..., tN)</tt> 
 in a new thread of execution, where <tt>t1, t2, 
-..., tN</tt> are the values in <tt>args...</tt>.  Any return value from <tt>f</tt> is ignored.  If <tt>f</tt> terminates with an uncaught
+..., tN</tt> are the values in <tt>args...</tt>.
+Any return value from <tt>f</tt> is ignored.
+If <tt>f</tt> terminates with an uncaught
 exception, <tt>std::terminate()</tt> shall be called.
 </p>
 <p>
@@ -546,7 +556,11 @@ assignment.
 </p>
 <p>
 <i>Effects:</i> The current thread of execution blocks until the thread of execution 
-represented by <code>*this</code> completes.</p>
+represented by <code>*this</code> completes.
+<b>[Crowl: I.e. upon completion the thread does on a release
+on a memory location that the joiner does an acquire on.
+I.e. there is a happens before relationship.]</b>
+</p>
 <p>
 <i>Postconditions:</i> After a normal return of <tt>join()</tt>,
 <tt>joinable()</tt> is <tt>false</tt>. If <tt>join()</tt> throws an exception, the thread of execution represented by
@@ -570,6 +584,8 @@ represented by <code>*this</code> completes.</p>
 <i>Effects:</i> The thread of execution represented by
 <tt>*this</tt> continues execution.  When the thread of execution represented by
 <tt>*this</tt> ends execution it shall release any owned resources.
+<b>[Crowl: The programmer shall or the implementation shall?
+Which resources?]</b>
 </p>
 <p>
 <i>Postconditions:</i> <tt>joinable()</tt> is <tt>false</tt>. <tt>*this</tt> 
@@ -743,6 +759,8 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
     calls to <code>call_once</code> with the same <code>once_flag</code> object 
     occur in separate threads of execution, only one
     thread of execution shall call <code>func</code>, and none shall proceed until the call to <code>func</code> has completed. 
+<b>[Crowl: I.e. the return of <code>func</code> happens before
+the return of <code>call_once</code>.]</b>
     If the invocation of <code>func</code> results in an exception being thrown, 
     the exception is propagated to the caller and the effects are as-if this 
     invocation of&nbsp;<code>call_once</code> did not occur.</p>
@@ -751,7 +769,9 @@ void call_once(once_flag&amp; flag, Callable func, Args&amp;&amp;... args);
 
     <p><i>Thread safety:</i> Access to the same <code>once_flag</code> object by 
     calls to <code>call_once</code> from different threads of execution shall 
-    not result in a data race or deadlock.</p>
+    not result in a data race or deadlock.
+<b>[Crowl: The implementation shall not introduce these.]</b>
+</p>
 
 <p>[<i>Examples:</i></p>
 <blockquote><pre>std::once_flag flag;
@@ -848,6 +868,7 @@ nor movable.  A mutex type shall have the following member functions:
 </p>
 <p>
 <i>Effects:</i> The current thread of execution will block until the mutex is not owned by another thread of execution.
+<b>[Crowl: I.e. happens before?]</b>
 Upon successful completion, the current thread of execution owns the mutex.
 </p>
 <p>
@@ -931,7 +952,7 @@ public:
 </blockquote>
 
 <p>
-If there is no single operating system specific data structure which implements
+If there is no single operating system specific data structure that implements
 the mutex type, then neither the nested type <tt>native_handle_type</tt> nor the
 member function <tt>native_handle()</tt> shall not be present.  <i>[Example:</i> 
 if a <tt>recursive_mutex</tt> is implemented with both a <tt>pthread_mutex_t</tt>
@@ -940,7 +961,7 @@ and a separate lock count, then there will be no <tt>native_handle_type</tt>. <i
 </p>
 
 <p>
-Implementations may supply additional implementation defined constructors
+Implementations may supply additional implementation-defined constructors
 which allow further customization as afforded by the implementation
 or its environment.
 </p>
@@ -971,7 +992,7 @@ public:
 
 <p>
 The class <tt>mutex</tt> is a non-recursive mutex which satisfies all of the Mutex requirements.
-It shall be a standard-layout type ([?]).
+It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <h4>Class recursive_mutex</h4>
@@ -1000,7 +1021,7 @@ public:
 
 <p>
 The class <tt>recursive_mutex</tt> shall be a recursive mutex which satisfies all of the Mutex requirements.
-It shall be a standard-layout type ([?]).
+It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <h3>Timed Mutexes</h3>
@@ -1019,6 +1040,7 @@ and add a single member function:
 <i>Precondition:</i> For non-recursive mutexes the current thread of execution shall not own the mutex.
 The type <tt>TimeDuration</tt> provides resolution information (ticks_per_second) that allows conversion 
 of the specified value into the native time resolution.
+<b>[Crowl: Roundup here instead of under various locks.]</b>
 </p>
 <p>
 <i>Effects:</i> The function attempts to obtain ownership of the mutex within the specified time.
@@ -1031,6 +1053,7 @@ time duration, it shall have obtained ownership.
 </p>
 <p>
 <i>Thread safety:</i>  This is a synchronization operation.
+<b>[Crowl: on the memory locations of the lock.]</b>
 </p>
 <p>
 <i>Throws:</i> Nothing.
@@ -1066,7 +1089,7 @@ public:
 
 <p>
 The class <tt>timed_mutex</tt> is a non-recursive mutex that satisfies all of the Timed Mutex requirements.
-It shall be a standard-layout type ([?]).
+It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <h4>Class recursive_timed_mutex</h4>
@@ -1097,7 +1120,7 @@ public:
 
 <p>
 The class <tt>recursive_timed_mutex</tt> shall be a recursive mutex that satisfies all of the Timed Mutex requirements.
-It shall be a standard-layout type ([?]).
+It shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <h3>Locks</h3>
@@ -1171,11 +1194,12 @@ or transferred away from the <tt>lock_guard</tt>.
 <blockquote>
 <p>
 <i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread of execution
-does not own the mutex.  The lifetime of <tt><i>m</i></tt> is greater than the lifetime
+does not own the mutex.  The lifetime of <tt><i>m</i></tt> includes the lifetime
 of the <code>lock_guard</code> object.
 </p>
 <p>
 <i>Effects:</i> Stores a reference to <tt><i>m</i></tt> and calls <tt><i>m</i>.lock()</tt>.
+<b>[Crowl: An acquire specification is not necessary because of m.lock().]</b>
 </p>
 </blockquote>
 </blockquote>
@@ -1186,7 +1210,7 @@ of the <code>lock_guard</code> object.
 <blockquote>
 <p>
 <i>Precondition:</i> The current thread of execution has ownership of the mutex <tt><i>m</i></tt>.
-The lifetime of <tt><i>m</i></tt> is greater than the lifetime of the <code>
+The lifetime of <tt><i>m</i></tt> includes the lifetime of the <code>
 lock_guard</code> object.
 </p>
 <p>
@@ -1241,7 +1265,7 @@ public:
     void unlock();
 
     bool owns_lock() const;
-    operator unspecified-bool-type () const;
+    operator <var>unspecified-bool-type</var> () const;
     mutex_type* mutex() const;
 
     void swap(unique_lock&amp;&amp; u);
@@ -1284,7 +1308,7 @@ owns_lock() == false
 <blockquote>
 <p>
 <i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread of execution
-does not own the mutex.  The lifetime of <tt><i>m</i></tt> is greater than the lifetime
+does not own the mutex.  The lifetime of <tt><i>m</i></tt> includes the lifetime
 of the <tt>unique_lock</tt> object.
 </p>
 <p>
@@ -1306,7 +1330,7 @@ owns_lock() == true
 <p>
 <i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex,  the current thread of execution
 does not own the mutex. 
-The lifetime of <tt><i>m</i></tt> is greater than the lifetime of the <tt>
+The lifetime of <tt><i>m</i></tt> includes the lifetime of the <tt>
 unique_lock</tt> object.
 </p>
 <p>
@@ -1328,7 +1352,7 @@ owns_lock() == false
 <p>
 <i>Precondition:</i> If <tt>mutex_type</tt> is not a recursive mutex, then the current thread of execution
 does not own the mutex. 
-The lifetime of <tt><i>m</i></tt> is greater than the lifetime of the <tt>
+The lifetime of <tt><i>m</i></tt> includes the lifetime of the <tt>
 unique_lock</tt> object.
 </p>
 <p>
@@ -1349,7 +1373,7 @@ owns_lock() == <i>The result of the call to</i> <i>m</i>.try_lock()
 <blockquote>
 <p>
 <i>Precondition:</i> The current thread of execution has ownership of the mutex <tt><i>m</i></tt>. 
-The lifetime of <tt><i>m</i></tt> is greater than the lifetime of the <tt>
+The lifetime of <tt><i>m</i></tt> includes the lifetime of the <tt>
 unique_lock</tt> object.
 </p>
 <p>
@@ -1469,7 +1493,7 @@ one.
 <blockquote>
 <p>
 <i>Effects:</i>  Calls <tt>timed_lock(rel_t)</tt> on the referenced mutex. 
-                 If the resolution of TimeDuration is greater than the native 
+		 If the resolution of TimeDuration is greater <b>[Crowl: less]</b> than the native 
                  resolution the time is rounded up to the nearest native resolution.
 </p>
 <p>
@@ -1488,7 +1512,7 @@ one.
 </pre>
 <blockquote>
 <p>
-<i>Effects:</i>  Calls <tt>void unlock()</tt> on the referenced mutex.
+<i>Effects:</i>  Calls <tt>unlock()</tt> on the referenced mutex.
 </p>
 <p>
 <i>Postcondition:</i> <tt>owns_lock() == false</tt>.
@@ -1513,7 +1537,7 @@ one.
 </blockquote>
 
 <blockquote>
-<pre>operator unspecified-bool-type () const;
+<pre>operator <var>unspecified-bool-type</var> () const;
 </pre>
 <blockquote>
 <p>
@@ -1724,7 +1748,9 @@ public:
 <blockquote>
 <p>
 <i>Effects:</i> If any threads of execution are blocked waiting for <code>*this</code>, 
-unblocks at least one those threads of execution.</p>
+unblocks at least one those threads of execution.
+<b>[Crowl: Is any lock released?]</b></p>
+<b>[Crowl: Needs to say release operation.]</b>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
 <code>timed_wait</code>, <code>notify_one</code> or
@@ -1741,6 +1767,7 @@ races or deadlocks.
 <blockquote>
 <p>
 <i>Effects:</i> Unblock all threads of execution that are blocked waiting for <code>*this</code>.
+<b>[Crowl: Needs to say release operation.]</b>
 </p>
 <p>
 <i>Thread safety:</i> Calls to the <code>wait</code>,
@@ -1768,6 +1795,7 @@ reason, <tt>lock</tt> will be locked as the exception propagates.
 This thread of execution shall unblock when another threadof execution issues a
 notification to this blocked thread of execution. The current thread of execution may
 unblock and return even in the absence of a notification.
+<b>[Crowl: Needs to say acquire operation.]</b>
 </p>
 <p>
 <i>Postcondition:</i> <tt>lock</tt> is locked by the current 
@@ -1839,6 +1867,9 @@ otherwise returns <tt>false</tt>.
 <code>notify_all</code> member functions of the same <tt>condition_variable</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
+<b>[Crowl: Needs to say acquire operation.
+Too much about other operations here.]</b>
+</p>
 </blockquote>
 </blockquote>
 
@@ -1880,7 +1911,7 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 
 
 <p>
-<tt>condition_variable</tt> shall be a standard-layout type ([?]).
+<tt>condition_variable</tt> shall be a standard-layout class (chapter 9 [class]).
 </p>
 
 <h4>Class condition_variable_any</h4>
@@ -2087,6 +2118,7 @@ otherwise returns <tt>false</tt>.
 <code>notify_all</code> member functions of the same <tt>condition_variable_any</tt>
 object from different threads of execution shall not result in data
 races or deadlocks.
+</p>
 </blockquote>
 </blockquote>
 
@@ -3082,7 +3114,7 @@ class  hours
   <li>
   <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2043.html">
   N2043</a>, Simplifying And Extending Mutex and Scoped Lock Types For C++ 
-  Multi-Threading Library, Ion Gazta�aga</li>
+  Multi-Threading Library, Ion Gazta&ntilde;aga</li>
   <li>
   <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n2090.html">
   N2090</a>, A Threading API for C++, Peter Dimov</li>
@@ -3119,7 +3151,7 @@ The overall design of this threading library is based on William Kempf's
 Boost.Thread Library, as refined by literally hundreds of other Boost users and 
 contributors. Dinkumware and Metrowerks (now Freescale) implementations of 
 Boost.Thread, developed respectively by Pete Becker and Howard Hinnant, created 
-further existing practice. Proposals by Pete Becker, Peter Dimov, Ion Gazta�aga, 
+further existing practice. Proposals by Pete Becker, Peter Dimov, Ion Gazta&ntilde;aga, 
 and Anthony Williams were also influential. Peter, Ion, and Anthony also 
 contributed numerous critiques, suggestions, and comments on the current 
 proposal, as did other members of an ad hoc threads working group. Jeff Garland 
