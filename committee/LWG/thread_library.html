@@ -2,7 +2,7 @@
 <html lang="en"><head>
 
 
-	<meta http-equiv="content-type" content="text/html; charset=utf-8"/><title>Thread Working Draft 15</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8"/><title>Thread Working Draft 16</title>
 	
 	<style>
 	p {text-align:justify}
@@ -888,8 +888,21 @@ Upon successful completion, the current thread of execution owns the mutex.
 <i>Precondition:</i> For non-recursive mutexes the current thread of execution shall not own the mutex.
 </p>
 <p>
-<i>Effects:</i> If ownership can be obtained without blocking, then ownership is obtained,
-else there is no effect and <tt>try_lock()</tt> immediately returns.
+<i>Effects:</i>
+If ownership can be obtained without blocking,
+then an attempt is made to obtain ownership.
+If ownership is not obtained,
+there is no effect and <code>try_lock()</code> immediately returns.
+[<i>Note:</i> It is expected that <code>try_lock()</code> almost
+always obtains ownership if the lock is available,
+but it is not guaranteed that it always does so.
+Since a failed <code>try_lock()</code> is not an acquire operation [1.10],
+the resulting memory visibility rules are weak enough
+that they would render such a guarantee essentially useless.
+And such a guarantee would preclude potentially interesting
+<code>try_lock()</code> implementations based on <code>compare_swap</code>.
+&mdash; <i>end note</i>]
+
 </p>
 <p>
 <i>Returns:</i> <tt>true</tt> if ownership was obtained, otherwise <tt>false</tt>.
@@ -1043,10 +1056,20 @@ of the specified value into the native time resolution.
 <b>[Crowl: Roundup here instead of under various locks.]</b>
 </p>
 <p>
-<i>Effects:</i> The function attempts to obtain ownership of the mutex within the specified time.
-If the indicated time is less than or equal to <tt>0</tt>, the function still attempts to obtain ownership without
-blocking (as if by calling <tt>try_lock()</tt>).  If the function returns within the specified
-time duration, it shall have obtained ownership.
+<i>Effects:</i>
+The function attempts to obtain ownership of the mutex
+within the specified time.
+If the indicated time is less than or equal to <tt>0</tt>,
+the function still attempts to obtain ownership without
+blocking (as if by calling <tt>try_lock()</tt>).
+If the function returns within the specified time duration,
+it shall have obtained ownership.
+[<i>Note:</i>
+As with <code>try_lock()</code>,
+there is no guarantee that ownership will be obtained
+if the lock is available,
+but implementations are expected to make a strong effort to do so.
+&mdash; <i>end note</i>]
 </p>
 <p>
 <i>Returns:</i> <tt>true</tt> if ownership was obtained, otherwise <tt>false</tt>.
