@@ -1,7 +1,7 @@
-#ifndef BOOST_THREAD_MUTEX_HPP
-#define BOOST_THREAD_MUTEX_HPP
+#ifndef BOOST_THREAD_RECURSIVE_MUTEX_HPP
+#define BOOST_THREAD_RECURSIVE_MUTEX_HPP
 
-//  mutex.hpp
+//  recursive_mutex.hpp
 //
 //  (C) Copyright 2007 Anthony Williams 
 //
@@ -10,6 +10,6 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/thread/detail/platform.hpp>
-#include BOOST_THREAD_PLATFORM(mutex.hpp)
+#include BOOST_THREAD_PLATFORM(recursive_mutex.hpp)
 
 #endif
