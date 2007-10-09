@@ -1,0 +1,388 @@
+/* Copyright (c) 2007 CrystalClear Software, Inc.
+ * Use, modification and distribution is subject to the 
+ * Boost Software License, Version 1.0  
+ * http://www.boost.org/LICENSE-1.0
+ */
+
+
+// date_time
+
+#ifndef _DATE_TIME__
+#define _DATE_TIME__
+
+#include <stdint.h>   //for precise int types
+#include <sys/time.h> //for gettimeofday and timeval
+
+namespace std {
+
+class hiresolution_clock;
+
+
+template<class traits_type, class final_type>
+class basic_time_duration 
+{
+public:
+ typedef typename traits_type::count_type count_type;
+
+ basic_time_duration(count_type count=0) :
+   m_count(count)
+ {}
+ final_type operator-() const
+ {
+   return final_type(-m_count);
+ }
+ bool operator==(const basic_time_duration& rhs) const
+ {
+   return m_count == rhs.m_count;
+ }
+ bool operator!=(const basic_time_duration& rhs) const
+ {
+   return m_count != rhs.m_count;
+ }
+ bool operator>(const basic_time_duration& rhs) const
+ {
+   return m_count > rhs.m_count;
+ }
+ bool operator>=(const basic_time_duration& rhs) const
+ {
+   return m_count >= rhs.m_count;
+ }
+ bool operator<(const basic_time_duration& rhs) const
+ {
+   return m_count < rhs.m_count;
+ }
+ bool operator<=(const basic_time_duration& rhs) const
+ {
+   return m_count <= rhs.m_count;
+ }
+ final_type operator+(const final_type& rhs) const
+ {
+   return final_type(m_count + rhs.m_count);
+ }
+ final_type& operator+=(const final_type& rhs)
+ {
+   m_count += rhs.m_count;
+   //safe downcast to final subtype
+   return *static_cast<final_type*>(this);
+ }
+ final_type operator-(const final_type& rhs) const
+ {
+   return final_type(m_count - rhs.m_count);    
+ }
+ final_type& operator-=(const final_type& rhs) 
+ {
+   m_count -= rhs.m_count;
+   //safe downcast to final subtype
+   return *static_cast<final_type*>(this);
+ }
+ count_type get_count() const
+ {
+   return m_count;
+ }
+protected:
+ count_type m_count;
+
+};
+
+template<class traits_type, class final_type>
+class subsecond_time_duration : public basic_time_duration<traits_type, final_type>
+{
+public:
+ typedef typename traits_type::count_type count_type;
+
+ subsecond_time_duration(count_type count) :
+   basic_time_duration<traits_type, final_type>(count)
+ {}
+
+ static count_type ticks_per_second()
+ {
+   return traits_type::ticks_per_second;
+ }
+ static bool is_subsecond() 
+ {
+   return true;
+ }
+};
+
+
+template<class traits_type, class final_type>
+class supersecond_time_duration : public basic_time_duration<traits_type, final_type>
+{
+public:
+ typedef typename traits_type::count_type count_type;
+
+ supersecond_time_duration(count_type count) :
+   basic_time_duration<traits_type, final_type>(count)
+ {}
+
+ static count_type seconds_per_tick()
+ {
+   return traits_type::seconds_per_tick;
+ }
+ static bool is_subsecond() 
+ {
+   return false;
+ }
+};
+
+
+struct seconds_traits 
+{
+ typedef int64_t count_type;
+ static const count_type seconds_per_tick = 1;
+};
+
+struct minutes_traits 
+{
+ typedef int64_t count_type;
+ static const count_type seconds_per_tick = 60;
+};
+
+struct hours_traits 
+{
+ typedef int64_t count_type;
+ static const count_type seconds_per_tick = 3600;
+};
+
+struct milliseconds_traits 
+{
+ typedef int64_t count_type;
+ static const count_type ticks_per_second = 1000;
+};
+
+struct microseconds_traits 
+{
+ typedef int64_t count_type;
+ static const count_type ticks_per_second = 1000000;
+};
+
+
+struct nanoseconds_traits 
+{
+ typedef int64_t count_type;
+ static const count_type ticks_per_second = 1000000000;
+};
+
+
+
+//class seconds;
+//class nanoseconds;
+
+
+class nanoseconds : public  subsecond_time_duration<nanoseconds_traits, nanoseconds> 
+{
+public:
+ nanoseconds(nanoseconds_traits::count_type ns) :
+   subsecond_time_duration<nanoseconds_traits, nanoseconds>(ns)
+ {}
+
+};
+
+class microseconds : public  subsecond_time_duration<microseconds_traits, microseconds> 
+{
+public:
+ microseconds(microseconds_traits::count_type ms) :
+   subsecond_time_duration<microseconds_traits, microseconds>(ms)
+ {}
+
+ operator nanoseconds() const
+ {
+   return nanoseconds(m_count*nanoseconds::ticks_per_second()/microseconds::ticks_per_second());
+ }
+
+};
+
+class milliseconds : public  subsecond_time_duration<milliseconds_traits, milliseconds> 
+{
+public:
+ milliseconds(milliseconds_traits::count_type ms) :
+   subsecond_time_duration<milliseconds_traits, milliseconds>(ms)
+ {}
+
+ operator nanoseconds() const
+ {
+   return nanoseconds(m_count*nanoseconds::ticks_per_second()/milliseconds::ticks_per_second());
+ }
+ operator microseconds() const
+ {
+   return microseconds(m_count*microseconds::ticks_per_second()/milliseconds::ticks_per_second());
+ }
+
+};
+
+
+class  seconds : public supersecond_time_duration<seconds_traits, seconds> 
+{
+public:
+ seconds(seconds_traits::count_type s) :
+   supersecond_time_duration<seconds_traits, seconds>(s)
+ {}
+ operator nanoseconds() const
+ {
+   return nanoseconds(m_count*nanoseconds::ticks_per_second());
+ }
+ operator microseconds() const
+ {
+   return microseconds(m_count*microseconds::ticks_per_second());
+ }
+ operator milliseconds() const
+ {
+   return milliseconds(m_count*milliseconds::ticks_per_second());
+ }
+};
+
+
+class  minutes : public supersecond_time_duration<minutes_traits, minutes> 
+{
+public:
+ minutes(minutes_traits::count_type s) :
+   supersecond_time_duration<minutes_traits, minutes>(s)
+ {}
+ operator nanoseconds() const
+ {
+   return nanoseconds(m_count*nanoseconds::ticks_per_second()*minutes::seconds_per_tick());
+ }
+ operator microseconds() const
+ {
+   return microseconds(m_count*minutes::seconds_per_tick()*microseconds::ticks_per_second());
+ }
+ operator milliseconds() const
+ {
+   return milliseconds(m_count*minutes::seconds_per_tick()*milliseconds::ticks_per_second());
+ }
+ operator seconds() const
+ {
+   return seconds(m_count*minutes::seconds_per_tick());
+ }
+};
+
+
+class  hours : public supersecond_time_duration<hours_traits, hours> 
+{
+public:
+ hours(hours_traits::count_type s) :
+   supersecond_time_duration<hours_traits, hours>(s)
+ {}
+ operator nanoseconds() const
+ {
+   return nanoseconds(m_count*nanoseconds::ticks_per_second()*hours::seconds_per_tick());
+ }
+ operator microseconds() const
+ {
+   return microseconds(m_count*hours::seconds_per_tick()*microseconds::ticks_per_second());
+ }
+ operator milliseconds() const
+ {
+   return milliseconds(m_count*hours::seconds_per_tick()*milliseconds::ticks_per_second());
+ }
+ operator seconds() const
+ {
+   return seconds(m_count*hours::seconds_per_tick());
+ }
+ operator minutes() const
+ {
+   return minutes(m_count*hours::seconds_per_tick()/minutes::seconds_per_tick());
+ }
+};
+
+
+class system_time 
+{
+public:
+
+ time_t seconds_since_epoch() const 
+ {
+
+   time_t t = 0;
+   return t; //TODO fixme
+ }
+
+ //The usual operators ==, !=. < >
+
+ bool operator==(const system_time& rhs) const
+ {
+   return m_time == rhs.m_time;
+ }
+ bool operator!=(const system_time& rhs) const
+ {
+   return m_time != rhs.m_time;
+ }
+ bool operator>(const system_time& rhs) const
+ {
+   return m_time > rhs.m_time;
+ }
+ bool operator>=(const system_time& rhs) const
+ {
+   return m_time >= rhs.m_time;
+ }
+ bool operator<(const system_time& rhs) const
+ {
+   return m_time < rhs.m_time;
+ }
+ bool operator<=(const system_time& rhs) const
+ {
+   return m_time <= rhs.m_time;
+ }
+
+ nanoseconds operator-(const system_time& rhs) const
+ {
+   return nanoseconds(m_time-rhs.m_time);
+ }
+
+ template<typename time_duration_type>
+ system_time operator+(const time_duration_type& td) const
+ {
+   nanoseconds ns(td);
+   return system_time(m_time + ns.get_count());
+ }
+ template<typename time_duration_type>
+ system_time& operator+=(const time_duration_type& td)
+ {
+   nanoseconds ns(td);
+   m_time += ns.get_count();
+   return *this;
+ }
+ template<typename time_duration_type>
+ system_time operator-(const time_duration_type& td) const
+ {
+   nanoseconds ns(td);
+   return system_time(m_time-ns.get_count());
+ }
+ template<typename time_duration_type>
+ system_time& operator-=(const time_duration_type& td) 
+ {
+   nanoseconds ns(td);
+   m_time -= ns.get_count();
+   return *this;
+ }
+ int64_t get_rep() const
+ {
+   return m_time;
+ }
+private:
+  friend system_time get_system_time(void);
+
+ system_time(int64_t t) :
+   m_time(t)
+ {}
+ int64_t m_time;
+
+};
+
+
+ inline
+ system_time 
+ get_system_time() 
+ {
+   timeval tv;
+   gettimeofday(&tv, 0); //0 no timezone adjust
+   int64_t time_since_epoch = tv.tv_sec;
+   time_since_epoch *= 1000000000; //make second count into nano seconds
+   time_since_epoch += int64_t(tv.tv_usec) * 1000;
+   return system_time(time_since_epoch);
+ }
+
+
+}
+
+#endif
