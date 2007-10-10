@@ -23,6 +23,7 @@ test-suite tree :
 	[ run key_search_binary_tree_test.cpp ]	
 	[ run rank_search_binary_tree_test.cpp ]	
 	[ run traverse_binary_tree_test.cpp ]
+	[ run subtree_algorithms_test.cpp ]
 	[ run rotate_binary_tree_test.cpp ]
 	[ run string_search_binary_tree_test.cpp ]
 

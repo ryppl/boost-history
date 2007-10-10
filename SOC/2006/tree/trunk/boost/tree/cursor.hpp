@@ -90,37 +90,68 @@ struct ascending_bidirectional_cursor_tag
 struct ascending_random_access_cursor_tag
 	: public descending_random_access_cursor_tag {};
 
+/**
+ * @brief Output cursor wrapper around an output iterator.
+ * 
+ * This can be very useful e.g. to have cursor algorithms actually work on
+ * iterators, thus permitting some kind of linearization of a given subtree.
+ * (Modelled after std::insert_iterator and the like.)
+ * 
+ * For construction, the outputter_cursor_iterator_wrapper might come in useful
+ * in saving keystrokes.
+ */
 // TODO: Complete this.
 template<class OutputIterator>
 class output_cursor_iterator_wrapper {
 protected:
-	OutputIterator& iter;
+	OutputIterator* iter;
 public:
-	explicit output_cursor_iterator_wrapper(OutputIterator& i) : iter(i) {}
+	/// Make the iterator type publicly accessible.
+	typedef OutputIterator iterator;
+	
+	/**
+	 * For construction, we obviously need an Output Iterator to work on (i.e., write to).
+	 */
+	explicit output_cursor_iterator_wrapper(OutputIterator& i) : iter(&i) {}
 
-	output_cursor_iterator_wrapper& operator=(output_cursor_iterator_wrapper const& x)
-	{
-		iter = x.iter;
-		return *this;
-	}
-
-	// Unfortunately, Output Iterators do not necessarily expose their
-	// value_type (they just give void), so the following member 
-	// function has to be a template.
+	/** 
+	 * @param value A const& value of the value_type of container that iter is
+	 *              associated with.
+	 * @return      This cursor, for chained operations.
+	 * Assigning a value to this cursor will insert it before iter, the iterator it is
+	 * wrapped around.
+	 * 
+	 * Unfortunately, Output Iterators do not necessarily expose their
+	 * value_type (they might just give back void), so the following assignment operator
+	 * has to be a template.
+	 */
 	// TODO: Consult C++0x if this has been changed
 	template <class ValueType>
 	output_cursor_iterator_wrapper& operator=(ValueType const& value)
 	{ 
-		*(iter++) = value;
+		*((*iter)++) = value;
 		return *this; 
 	}
 
+	/// Returns *this.
 	output_cursor_iterator_wrapper& operator*() { return *this; }
+
+	/// Returns *this, as this %cursor doesn't "move".
 	output_cursor_iterator_wrapper& operator++() { return *this; }
+
+	/// Returns *this, as this %cursor doesn't "move".
 	output_cursor_iterator_wrapper operator++(int) { return *this; }
+
+	/// Returns *this, as this %cursor doesn't "move".
 	output_cursor_iterator_wrapper& begin() { return *this; }
 };
 
+/** 
+ * @param o	An output iterator.
+ * @result	An instance of output_cursor_iterator_wrapper working on o.
+ * 
+ * Use as shortcut for cumbersome typenames, just as with std::inserter and the like.
+ */
 template<class OutputIterator>
 inline output_cursor_iterator_wrapper<OutputIterator>
 outputter_cursor_iterator_wrapper(OutputIterator o)

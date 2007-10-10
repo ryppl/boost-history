@@ -59,6 +59,12 @@ Op for_each(MultiwayCursor s, Op f)
 	return f;
 }
 
+/**
+ * @brief	Copies the subtree s into t, by traversing s in inorder.
+ * @param s	An input cursor.
+ * @param t An output cursor.
+ * @result	A cursor past t's inorder end, after the copying operation.
+ */
 template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {

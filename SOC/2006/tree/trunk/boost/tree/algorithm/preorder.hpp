@@ -58,6 +58,13 @@ Op for_each(Cursor s, Op f)
 	return f;
 }
 
+/**
+ * @brief	Copies the subtree s into t, by traversing s in preorder.
+ * @param s	An input cursor.
+ * @param t An output cursor.
+ * @result	A cursor past t's preorder end, after the copying operation.
+ */
+ // TODO: Should work with root() instead of root().begin() (same for in- and postorder)
 template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {
