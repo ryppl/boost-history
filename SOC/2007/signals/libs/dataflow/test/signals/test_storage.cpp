@@ -9,7 +9,6 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 
 using namespace boost;
-using namespace boost::dataflow::operators;
 
 int test_main(int, char* [])
 {
@@ -19,13 +18,9 @@ int test_main(int, char* [])
         signals::storage<void (), signals::unfused> banger;
         signals::storage<void (float), signals::unfused> floater(2.5f);
         signals::storage<void (float), signals::unfused> collector(0.0f);
-
-        typedef dataflow::proxied_producer_of<typeof(floater.send_slot())> test;
-        typedef dataflow::is_proxy_producer<typeof(floater.send_slot())> test2;
-        typedef dataflow::is_producer<typeof(floater.send_slot())> test3;
         
-        BOOST_STATIC_ASSERT(test2::value);
-        BOOST_STATIC_ASSERT(test3::value);
+        signals::slot_selector<void(), signals::storage<void (float), signals::unfused> >
+        ::dataflow<dataflow::signals_mechanism>::get_proxied_producer(fusion::front(floater.send_slot()).second);
         
         // create the network (banger to floater.send, floater to collector)
         banger >>= floater.send_slot() >>= collector;

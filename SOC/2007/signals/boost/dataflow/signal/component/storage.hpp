@@ -148,18 +148,18 @@ public:
         return boost::fusion::at_c<N>(base_type::modification.stored);
     }
 
-    boost::dataflow::consumer_map<boost::fusion::map<
-        boost::fusion::pair<void(), slot_selector<void (), storage> >,
-        boost::fusion::pair<void(const boost::fusion::vector<> &),
-            slot_selector<void (const boost::fusion::vector<> &), storage> > >
-    >
+    typedef boost::fusion::map<
+        boost::fusion::pair<boost::dataflow::signal_producer<void()>, slot_selector<void (), storage> >,
+        boost::fusion::pair<
+            boost::dataflow::signal_producer<void(const boost::fusion::vector<> &)>,
+            slot_selector<void (const boost::fusion::vector<> &), storage>
+        >
+    > send_map;
+
+    boost::dataflow::consumer_map<send_map>
     send_slot()
     {
-        return boost::fusion::map<
-        boost::fusion::pair<void(), slot_selector<void (), storage> >,
-        boost::fusion::pair<void(const boost::fusion::vector<> &),
-            slot_selector<void (const boost::fusion::vector<> &), storage> >
-        >        
+        return send_map
         (make_slot_selector<void ()> (&storage::send, *this),
          make_slot_selector<void (const boost::fusion::vector<> &)> (&storage::send, *this));
     }

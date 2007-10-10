@@ -9,6 +9,7 @@
 #include <boost/dataflow/support.hpp>
 
 #include <boost/mpl/not.hpp>
+#include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
 #include <boost/fusion/sequence/container/vector.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
@@ -19,10 +20,12 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/utility/result_of.hpp>
+#include <boost/call_traits.hpp>
 
 namespace boost { namespace dataflow {
 
-struct fusion_map_consumer {};
+struct fusion_map_consumer
+    : public consumer_category<concepts::keyed_consumer> {};
 
 template<class T>
 struct consumer_map : public T
@@ -32,15 +35,17 @@ struct consumer_map : public T
     struct dataflow
     {
         typedef fusion_map_consumer consumer_category;
+/*        typedef typename boost::fusion::result_of::value_at_c<T, 0>::type::second_type
+            proxy_producer_for;*/
         typedef
             typename boost::remove_const<
                 typename boost::remove_reference<
                     typename boost::fusion::result_of::front<T>::type
                 >::type
             >::type::second_type proxy_producer_for;
-        typedef mutable_proxy_producer proxy_producer_category;
-
-        static typename get_proxied_producer_type<Mechanism, proxy_producer_for>::type &get_proxied_producer(const T &t)
+        typedef mutable_proxy_producer<proxy_producer_for> proxy_producer_category;
+        
+        static typename get_proxied_producer_result_type<Mechanism, proxy_producer_for>::type get_proxied_producer(const T &t)
         {
             return boost::dataflow::get_proxied_producer<Mechanism>(boost::fusion::front(t).second);
         }
@@ -49,49 +54,24 @@ struct consumer_map : public T
 
 namespace extension
 {
-    // component >>= consumer_map
-    template<typename Mechanism, typename ProducerTag, typename ConsumerTag>
-    struct connect_impl<Mechanism, ProducerTag, ConsumerTag,
-        typename boost::enable_if<//boost::mpl::and_<
-            //is_producer<ProducerTag>,
-            boost::is_base_of<fusion_map_consumer, ConsumerTag>
-        /*>*/ >::type >
+    template<typename Mechanism, typename ProducerTag>
+    struct get_keyed_consumer_impl<Mechanism, ProducerTag, fusion_map_consumer>
     {
-        template<typename Producer, typename Consumer>
+        template<typename Producer, typename KeyedConsumer>
         struct apply
         {
-            static void call(const Producer &producer, const Consumer &consumer)
+            typedef typename boost::fusion::result_of::at_key<
+                        KeyedConsumer,
+                        ProducerTag
+                    >::type type;
+
+            static type
+            call(Producer &, KeyedConsumer &consumer)
             {
-                connect(
-                    producer,
-                    boost::fusion::at_key<
-                        typename produced_type_of<Mechanism, Producer>::type
-                    >(consumer));
+                return boost::fusion::at_key<
+                        ProducerTag
+                    >(consumer);
             }
-            static void call(const Producer &producer, Consumer &consumer)
-            {
-                connect(
-                    producer,
-                    boost::fusion::at_key<
-                        typename produced_type_of<Mechanism, Producer>::type
-                    >(consumer));
-            }
-            static void call(Producer &producer, const Consumer &consumer)
-            {
-                connect(
-                    producer,
-                    boost::fusion::at_key<
-                        typename produced_type_of<Mechanism, Producer>::type
-                    >(consumer));
-            }
-            static void call(Producer &producer, Consumer &consumer)
-            {
-                connect(
-                    producer,
-                    boost::fusion::at_key<
-                        typename produced_type_of<Mechanism, Producer>::type
-                    >(consumer));
-            } 
         };
     };
 }

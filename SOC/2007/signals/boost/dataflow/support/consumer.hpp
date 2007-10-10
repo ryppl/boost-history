@@ -15,11 +15,35 @@
 
 namespace boost { namespace dataflow {
 
+namespace concepts
+{
+    struct consumer;
+}
+
+template<typename ConsumerConcept, typename OutConnectionsStored=connections::none>
+struct consumer_category
+{
+    typedef ConsumerConcept consumer_concept;
+    typedef OutConnectionsStored in_connections_stored;
+};
+
+template<typename ConsumerCategory, typename Enable=void>
+struct is_consumer_category : public boost::false_type
+{};
+
+template<typename ConsumerCategory>
+struct is_consumer_category<ConsumerCategory,
+    typename detail::enable_if_defined<detail::all_of<
+        typename ConsumerCategory::in_connections_stored,
+        typename ConsumerCategory::consumer_concept
+    > >::type>
+ : public boost::mpl::true_
+{};
+
 /// Trait giving the consumer category of a type.
 template<typename Mechanism, typename T, typename Enable=void>
 struct consumer_category_of
-{
-};
+{};
 
 /// Allows intrusive specification of the consumer category.
 template<typename Mechanism, typename T>
@@ -29,6 +53,7 @@ struct consumer_category_of<Mechanism, T,
     >
 {
     typedef typename T::template dataflow<Mechanism>::consumer_category type;
+    BOOST_MPL_ASSERT(( is_consumer_category<type> ));
 };
 
 /// Trait determining whether a type is a Consumer.
@@ -42,22 +67,6 @@ struct is_consumer<Mechanism, T,
             typename consumer_category_of<Mechanism, T>::type
         >::type >
     : public boost::true_type {};
-
-/// Trait giving the consumed type of a SingleTypeConsumer.
-template<typename Mechanism, typename T, typename Enable=void>
-struct consumed_type_of
-{
-};
-
-/// Allows intrusive specification of the consumer category.
-template<typename Mechanism, typename T>
-struct consumed_type_of<Mechanism, T,
-    typename detail::enable_if_defined<
-        typename T::template dataflow<Mechanism>::consumed_type>::type
-    >
-{
-    typedef typename T::template dataflow<Mechanism>::consumed_type type;
-};
 
 template<typename Mechanism, typename ConsumerTag>
 struct consumer
@@ -84,46 +93,22 @@ struct consumer<all_mechanisms, ConsumerTag>
     };
 };
 
-// Trait determining whether a type is a SingleTypeConsumer.
-template<typename Mechanism, typename T, typename Enable=void>
-struct is_single_type_consumer
-    : public boost::false_type {};
-
-template<typename Mechanism, typename T>
-struct is_single_type_consumer<Mechanism, T,
-        typename detail::enable_if_defined<detail::all_of<
-            typename consumer_category_of<Mechanism, T>::type,
-            typename consumed_type_of<Mechanism, T>::type
-        > >::type >
-    : public boost::true_type {};
-
-template<typename Mechanism, typename ConsumerTag, typename ConsumedType>
-struct single_type_consumer
-{
-    template<typename M, typename Enable=void>
-    struct dataflow
-    {
-    };
-    
-    template<typename M>
-    struct dataflow<M, typename boost::enable_if<is_same<M, Mechanism> >::type>
-    {
-        typedef ConsumerTag consumer_category;
-        typedef ConsumedType consumed_type;
-    };
-};
-
-template<typename ConsumerTag, typename ConsumedType>
-struct single_type_consumer<all_mechanisms, ConsumerTag, ConsumedType>
-{
-    template<typename M>
-    struct dataflow
-    {
-        typedef ConsumerTag consumer_category;
-        typedef ConsumedType consumed_type;
-    };
-};
-
 } } // namespace boost::dataflow
+
+#define DATAFLOW_CONSUMER_CATEGORY(m,p,pc) \
+template<> \
+struct consumer_category_of<m, p> \
+{ \
+    typedef pc type; \
+    BOOST_MPL_ASSERT(( is_consumer_category<type> )); \
+};
+
+#define DATAFLOW_CONSUMER_CATEGORY_ENABLE_IF(m,P,Cond,pc) \
+template<typename P> \
+struct consumer_category_of<m, P, typename boost::enable_if< Cond >::type> \
+{ \
+    typedef pc type; \
+    BOOST_MPL_ASSERT(( is_consumer_category<type> )); \
+};
 
 #endif // BOOST_DATAFLOW_SUPPORT_CONSUMER_HPP

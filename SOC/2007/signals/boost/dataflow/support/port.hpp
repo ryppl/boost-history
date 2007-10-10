@@ -20,55 +20,61 @@ namespace concepts
 {
     /// Tag
     struct producer;
+    struct consumer;
 }
 
-/// Convenience class for ProducerCategory types.
+namespace port
+{
+    struct producer;
+    struct consumer;
+}
+
+/*/// Convenience class for ProducerCategory types.
 template<typename ProducerConcept, typename OutConnectionsStored=connections::none>
 struct producer_category
 {
     typedef ProducerConcept producer_concept;
     typedef OutConnectionsStored out_connections_stored;
-};
+};*/
 
 /// Trait determining adherence to the ProducerCategory concept.
-template<typename ProducerCategory, typename Enable=void>
-struct is_producer_category : public boost::false_type
+template<typename PortCategory, typename Enable=void>
+struct is_port_category : public boost::false_type
 {};
 
-template<typename ProducerCategory>
-struct is_producer_category<ProducerCategory,
-    typename detail::enable_if_defined<detail::all_of<
-        typename ProducerCategory::out_connections_stored,
-        typename ProducerCategory::producer_concept
-    > >::type>
+template<typename PortCategory>
+struct is_port_category<PortCategory,
+    typename detail::enable_if_defined<
+        typename ProducerCategory::port_concept
+    >::type>
  : public boost::mpl::true_
 {};
 
 /// Trait returning the producer category of a type.
-template<typename Mechanism, typename T, typename Enable=void>
-struct producer_category_of
+template<typename Mechanism, typename Port, typename T, typename Enable=void>
+struct port_category_of
 {};
 
 /// Allows intrusive specification of the producer category.
-template<typename Mechanism, typename T>
-struct producer_category_of<Mechanism, T,
+template<typename Mechanism, typename Port, typename T>
+struct port_category_of<Mechanism, T,
     typename detail::enable_if_defined<
-        typename T::template dataflow<Mechanism>::producer_category>::type
+        typename T::template dataflow<Mechanism>::port<Port>::category >::type
     >
 {
-    typedef typename T::template dataflow<Mechanism>::producer_category type;
-    BOOST_MPL_ASSERT(( is_producer_category<type> ));
+    typedef typename T::template dataflow<Mechanism>::port<Port>::category type;
+    BOOST_MPL_ASSERT(( is_port_category<type> ));
 };
 
 /// Trait determining adherence to the Producer concept.
-template<typename Mechanism, typename T, typename Enable=void>
-struct is_producer
+template<typename Mechanism, typename Port, typename T, typename Enable=void>
+struct is_port
     : public boost::false_type {};
 
-template<typename Mechanism, typename T>
-struct is_producer<Mechanism, T,
+template<typename Mechanism, typename Port, typename T>
+struct is_producer<Mechanism, Port, T,
         typename detail::enable_if_defined<
-            typename producer_category_of<Mechanism, T>::type
+            typename port_category_of<Mechanism, Port, T>::type
         >::type >
     : public boost::true_type {};
 

@@ -141,32 +141,106 @@ With a visaul development environment, programming becomes as easy as connecting
 If you are interested in exploring the dataflow concept further using
 the Dataflow library, see
 
-* Dataflow library [organization] for a high level overview of the library.
-* The [signals_quickstart] section of the [DataflowSignals] module, for
-  further usage examples.
+* [how_to_use How to use this library and the documentation].
 
 [endsect][/dataflow]
 
-[section:organization Organization and namespace use]
+[section:how_to_use How to use this library and the documentation]
 
-The Dataflow library (originally called Signal Network) started as a way to
-facilitate dataflow programming by providing components and connections which
-allow large-scale use of Boost.Signals as a mechanism to
-model the transfer of data between processing components.
-However, during the planning, design and development
-of the library, it became apparent that:
+The Dataflow library currently has two useful parts:
 
-* There are a lot of good ways to move data around, [BoostSignals] being one of
-  them.
-* There are generic properties of dataflow programs which do not depend on the
-  data transport mechanism,
-  and can be exploited to develop mechanism-independent dataflow code.
+* A layer providing generic dataflow support, adaptable to various dataflow
+  mechanisms.
+* The [DataflowSignals] layer, with a number of implemented components that
+  facilitate implementation of dataflow networks using [BoostSignals] as
+  a data transport mechanism.
+  
+There is also a (currently very experimental) [DataflowPhoenix] layer,
+which uses object pointers with support for
+[BoostPhoenix] actors specifying how the data is processed.
 
-Hence, the Signal Network library has been redesigned into a generic Dataflow
-library, and offers individual mechanism-specific modules - [DataflowSignals]
-and [DataflowPhoenix].
+[heading Generic dataflow layer]
 
-[heading Dataflow library organization]
+There are generic properties of dataflow programs which do not depend on the
+data transport mechanism,
+and can be exploited to develop mechanism-independent dataflow code.
+The generic dataflow layer captures some of these properties, and
+has been sucessfully adapted to three
+different data transport mechanisms ([BoostSignals], pointers in conjunction
+with [BoostPhoenix2], and [VTK] pipelines).
+
+Currently, the most useful functionality gained by developing a Dataflow
+support layer is the ability to connect components in a clean, readable
+manner. As more generic code is developed on top of
+the generic dataflow layer, providing a Dataflow support layer for your
+favorite data transport mechanism will be more beneficial.
+
+See the [link dataflow.future future directions] of the Dataflow library
+for an idea of what might become available in the future for data transport
+mechanisms with Dataflow library support.
+
+* If you would like to implement Dataflow support for the data transport
+mechanism you are working with,  see the
+[link dataflow.introduction.examples.new_layer example] showing
+how the [VTK] support layer was developed.
+* If you are interested in developing generic code on top of the dataflow
+layer, see the [concepts] documentation.
+
+[heading Dataflow.Signals layer]
+
+This part of the Dataflow library provides components
+and connection-making capabilty which facilitates large-scale use of
+Boost.Signals as a mechanism to transfer data between processing components.
+
+For examples of how the [DataflowSignals] layer can be used, see:
+
+
+* The example on developing distributed
+  [link dataflow.introduction.examples.new_layer example] application
+* The [DataflowSignals] documentation.
+
+[/[heading When to use]
+
+While the [link dataflow.introduction.dataflow dataflow] section hopefully
+convinced you that there are circumstances in which a dataflow approach is 
+useful, please keep in mind that there are many circumstances in which this
+is not the case.
+
+First, a dataflow approach really only makes sense when the underlying task is
+really about the flow of data through the components that process it.
+If you can't sketch a concise data flow diagram which truly represents
+the application, the dataflow approach might not be the best option.
+For example, if you are implementing a complicated algorithm which is really
+about the sequence of instructions that need to be executed on the data
+(rather than the data going through well-defined and self-contained
+processing components), you probably should't use the Dataflow library.
+If you are working on an audio or video processing application,
+maybe you should.
+
+Second, the data transport mechanism you choose should reflect the needs of
+the applications closely.  Most of the functionality that the library supports
+at this moment is regarding run-time configurable connections.  If you don't
+need that functionality, you might be wasting resources ([DataflowPhoenix]
+offers some functionality related to compile-time connectability in its
+iterator_relative connections, but that is yet to trickle out into the library
+as a whole).
+
+When using signals as the data transport mechanism, remember that every signal
+sent results in a function call, and if the processing
+components are so minute that the cost of the function
+calls overtakes the cost of the processing,
+using [DataflowSignals] will cause a significant performance hit.  A similar
+situation occurs with [DataflowPhoenix], where each consumer must be invoked.
+
+To sum up, consider using the Dataflow library when:
+
+* The application can be modeled well through the flow of data; and
+* The cost of the processing shadows the cost of the function calls, and any
+  unnecessary overhead caused by any connections that need to be stored.
+]
+
+
+[/[heading Dataflow library organization]
 
 The design of the Dataflow library looks like this:
 
@@ -183,15 +257,6 @@ Directly based on the support layer, we have functions like /connect/ and
 /invoke/, which can be used to manipulate generic and mechanism-specific
 components that the library supports.  /Operators/ are based on /connect/.
 
-There is also a planned /blueprint/ layer (not implemented yet), which
-would provide generic components that are used to provide a "big picture"
-of a dataflow network.  A blueprint component corresponds to an actual,
-component - but whereas the actual component takes care of the work, the
-blueprint component serves as a factory and serializer of the component.
-Hence, a dataflow network blueprint, made out of blueprint components, could
-be used to serialize or instantiate the underlying dataflow network made out
-of actual components.  The blueprint layer is likely to be implemented using
-virtual-based polymorphism and the Boost Graph library.
 
 The library also offers a few generic components, which can be used
 to group other components together: [producer_group], [consumer_group],
@@ -233,167 +298,279 @@ All of the examples shown in this documentation are assuming the use of
 [note Since there are multiple namespaces used, the documentation will
 explicitly state the namespace of documented elements wherever it is
 convenient.]
+]
 
-[endsect][/organization]
+[endsect][/how_to_use]
 
-[section:mechanisms Implemented data transport mechanisms]
+[section Examples]
+[section:new_layer Implementing support for a new mechanism]
 
-There are two modules of the Dataflow library which implement different
-data transport mechanisms. [DataflowSignals] uses [BoostSignals],
-and [DataflowPhoenix] uses object pointers, with support for
-[BoostPhoenix] actors specifying how the data is processed.
+This example shows how to implement support for a particular mechanism.
+Our victim is [VTK], a 3D visualization toolkit, which uses a data pipeline
+to move data from a source to the display (with possible transformations,
+scene construction etc. on the way).  For example, here is an excerpt from
+a VTK tutorial that sets up a whole source->render window pipeline:
 
-[section:signals Dataflow.Signals - based on Boost.Signals]
+```
+    // allocate components
+    vtkConeSource *cone = vtkConeSource::New();
+    vtkPolyDataMapper *coneMapper = vtkPolyDataMapper::New();
+    vtkActor *coneActor = vtkActor::New();
+    vtkRenderer *ren1= vtkRenderer::New();
+    vtkRenderWindow *renWin = vtkRenderWindow::New();
 
-[/The Signal Network library relies on moving the data via function parameters and return values.
-Here, the Boost.Signals library is used to model these individual data channels which couple
-the data transfer and the computational component invocation.  This is one possible dataflow-oriented
-approach.
+    // make the connections
+    coneMapper->SetInputConnection( cone->GetOutputPort() );
+    coneActor->SetMapper( coneMapper );
+    ren1->AddActor( coneActor );
+    renWin->AddRenderer( ren1 );
+```
 
-Each of these approaches has different properties.  In the signal-based approach, the knowledge of the
-network is local - each component knows about where its signals are going, but it knows nothing
-of where the signals arriving at its own slots are coming from.  Unless we record how the network was
-constructed, there is no "big picture" of what the complete network looks like.  Similarly,
-the network is executed autonomously - the components invoke one another when appropriate, and
-no external control mechanism is required.]
+Our goal will be to simplify the connection-making code by providing
+Dataflow support for VTK.  With that in place, we will be able to use the
+following connection code:
+
+```
+    // make the connections
+    connect(cone, coneMapper);
+    connect(coneMapper, coneActor);
+    connect(coneActor, ren1);
+    connect(ren1, renWin);
+```
+
+or even more concisely and clearly,
+
+```
+    // make the connections
+    // C++ rules prevent us from removing all of the pointer dereferencing here
+    *cone >>= *coneMapper >>= *coneActor >>= *ren1 >>= *renWin;
+```
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.mechanism
+    Setting up the Mechanism]
+
+[section:mechanism Setting up the Mechanism]
+
+The first thing we'll do is create a tag for the VTK [MechanismConcept], in
+namespace `boost::dataflow::vtk`.  Since there are currently no requirements
+for a [MechanismConcept], this is as simple as declaring a new type to be used
+as the mechanism tag:
+
+[vtk_mechanism]
+
+We will now use this tag in reference to the [VTK] dataflow mechanism.
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.producerconsumer
+    Setting up a Producer and Consumer] 
+[endsect][/mechanism]
+
+[section:producerconsumer Setting up a Producer and Consumer]
+
+Now that we have the mechanism, let's cover the basic data pipeline,
+which is implemented using the
+[vtkAlgorithm] class.  This class provides input and output ports. Output ports
+are accessible via `GetOuptutPort` member functions, which return a proxy
+object ([vtkAlgorithmOutput] `*`) for an actual output port.
+
+In Dataflow concepts, [vtkAlgorithmOutput] can be made a [ProducerConcept]
+- it corresponds to a single data output point. We support it as such by
+creating a [ProducerCategoryConcept], and associating [vtkAlgorithmOutput]
+with the producer category:
+
+[vtk_algorithm_output_producer]
+
+Now that we have a [ProducerConcept], we need a [ConsumerConcept].
+[vtkAlgorithm] can accept incoming connections using the `AddInputConnection`
+and `SetInputConnection` member functions.  The code below provides support
+for [vtkAlgorithm] accepting connections on its default input port:
+
+[vtk_algorithm_consumer]
+
+[heading Next]
+
+[link dataflow.introduction.examples.new_layer.connectable
+    Making things Connectable] 
+
+[endsect][/producerconsumer]
+
+[section:connectable Making things Connectable]
+
+With the pair of [ProducerConcept] and [ConsumerConcept] registered, we
+can make them [ConnectableConcept] and/or [OnlyConnectableConcept].
+All we need to do is specialize the implementation for the appropriate
+categories:
+
+[vtk_connect_impl_algorithm]
+
+To make connections, the Dataflow library has a `connect`
+function in its namespace, but it
+has to be called with a mechanism template parameter.  To make connecting
+easier, we'll add a forwarding
+connect function in the global namespace (where vtk classes live) specific
+to the vtk mechanism:
+
+[vtk_specialize_connect]
+
+[heading What we can do with what we have so far]
+
+```
+    connect(*cone->GetOutputPort(), *coneMapper);
+```
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.proxyproducer
+    Setting up a ProxyProducer] 
+
+[endsect][/connectable]
+
+[section:proxyproducer Setting up a ProxyProducer]
+
+In the VTK example above, both `vtkConeSource` and `vtkPolyDataMapper`
+inherit [vtkAlgorithm].  
+With the [vtkAlgorithmOutput] [ProducerConcept] and
+[vtkAlgorithm] [ConsumerConcept] we've set up,
+we can do things like `connect(cone->GetOutputPort(), *coneMapper);`.
+However, we would like to do `connect(*cone, *coneMapper)`.
+
+To do that,
+we need to make [vtkAlgorithm] a [ProducerConcept]. Since [vtkAlgorithm]
+forms its output connections using [vtkAlgorithmOutput] objects
+returned through the `GetOutputPort` member functions, and we've already
+configured [vtkAlgorithmOutput] as a [ProducerConcept], we can make use
+of the [ProxyProducerConcept] concept provided by the dataflow library.
+In effect, we will make [vtkAlgorithm] delegate it's [ProducerConcept]
+functionality to [vtkAlgorithmOutput]:
+
+[vtk_algorithm_proxy_producer]
+
+Now, [vtkAlgorithm] is a [ProducerConcept].
+
+[heading What we can do with what we have so far]
+
+```
+    connect(*cone, *coneMapper)
+```
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.filter
+    Setting up a Filter (Producer+Consumer)] 
+
+[endsect][/proxyproducer]
+
+[section:filter Setting up a Filter (Producer+Consumer)]
+
+In a VTK pipeline, a [vtkActor] consumes data from a [vtkMapper], and produces
+data for a [vtkRenderer].  In this case, we can provide Dataflow support
+for a [vtkActor] as both a [ProducerConcept] and a [ConsumerConcept] in one
+fell swoop:
+
+[vtk_actor_filter]
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.producermap
+    Setting up a ProducerMap] 
+
+[endsect][/filter]
+
+[section:producermap Setting up a ProducerMap]
+
+Sometimes, components can produce (or consume) multiple types of data.
+For example, [vtkMapper] objects can produce data for [vtkActor] objects,
+or (since [vtkMapper] inherits [vtkAlgorithm]) for other [vtkAlgorithm]
+objects.  Correspondingly, connecting a [vtkMapper] to a [vtkActor] is not
+the same as connecting a [vtkMapper] to another [vtkAlgorithm].
+
+To accomodate such situations, the Dataflow library provides
+[ProducerMapConcept]s, which are similar to [ProxyProducer]s but
+the [ProducerConcept] they delegate to is keyed on the category of
+[ConsumerConcept] they are being connected to.
+
+[vtk_mapper_producer]
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.remaining
+    Setting up the remaining components (more of the same)] 
+
+[endsect][/producermap]
+
+[section:remaining Setting up the remaining components (more of the same)]
+
+[vtk_setup_rest]
+
+[heading Next]
+[link dataflow.introduction.examples.new_layer.pointers
+    Supporting pointers] 
+
+[endsect][/remaining]
+
+[section:pointers Supporting pointers]
+
+All of the concepts we adapted so far have been adapted for class types such
+as [vtkAlgorithm] and [vtkAlgorithmOutput].  But [VTK] seems to exclusively
+use pointers to class types rather than class types themselves.  So, with what
+we have done so far, we can do `connect(*cone, *coneMapper)` but not
+`connect(cone, coneMapper)`.  To provide support for pointers, we
+simply make them adhere to the [ProxyProducerConcept] and,
+[ProxyConsumerConcept], and delegate the functionality to the object they
+point to.
+
+[vtk_support_pointer]
+
+[endsect][/pointers]
 
 
-[BoostSignals] is an excellent building block for dataflow networks,
-as it provides support for all of the essential elements -
-data transport through parameters and return values, combining
-return values from multiple signal calls, component invocation,
-and reconfigurability through connection and disconnection.
 
-The [DataflowSignals] module uses [BoostSignals] as
-the data transport mechanism in dataflow networks.
-In addition, it provides two major contributions that facilitate the
-building of large signals-based dataflow networks:
+[endsect][/new_layer]
 
-* Support for a number of types of components (functors, filters,
-  member function slot selection), which can be used with
-  the generic Dataflow functionality - such as the [connect] function and its
-  associated operators which can be
-  used to easily connect different kinds of components.
-* A number of generic and specific components which can be extended
-  and customized for use in particular dataflow networks.
+[section:distributed Implementing distributed dataflow applications using
+    Dataflow.Signals and Boost.Asio]
 
-[endsect]
+This example shows how you can take advantage of dataflow programming
+to create distributed applications.  It works as long as the data
+passed in the signal is serializable using [BoostSerialization].
 
-[section:phoenix Dataflow.Phoenix - based on pointers and Boost.Phoenix2]
+[DataflowSignals] provides two components
+which can be used to create a producer-consumer connection between two
+computers: [socket_sender] and [socket_receiver].  As long as we have
+a network socket set up between two computers, we can do the following to
+set up a connection between a [SignalProducerConcept] on one computer with a
+[SignalConsumerConcept] on another:
 
-The [DataflowPhoenix] module uses ordinary object pointers to establish
-a flow of data.  It has been named after the Phoenix library because
-it is convenient to describe the operations on the data using Phoenix
-actors.
+* On the [SignalProducerConcept]'s computer, construct a [socket_sender] of
+the appropriate `Signature` with the given socket.
+[connect] the [SignalProducerConcept] to the [socket_sender].
+* On the [SignalConsumerConcept]'s computer, construct a [socket_receiver] of
+the appropriate `Signature` with the given socket.
+[connect] the [socket_receiver] to the [SignalConsumerConcept].
 
-This module is in early experimental stages, and has little documentation.
-If you are interested, take a look at the fibonacci.cpp example, which
-implements various extravagant versions of a Fibonacci sequence generator:
+That's it.  Now, every signal sent out of the [SignalProducerConcept] should
+be received by the [SignalConsumerConcept].
 
-[example_fibonacci]
+The following is a modification of the example from the
+[link dataflow.introduction.dataflow motivation section] to a dataflow
+network that straddles a network socket:
 
-[endsect]
+[*insert example....]
 
-[endsect][/mechanisms]
 
-[section:pin Comparison with a pin-based approach, proposed by Tobias Schwinger]
 
-In the early stages of the design of the then called Signal Network
-library, Tobias Schwinger discussed with me his ideas of an alternative
-implementation of a dataflow library.  In his approach, there would be
-a separation between the processing components, and components whose purpose
-was to transport data.  The processing components would have one or more /pins/,
-and connecting the pins of two processing components together would mean
-pointing them to the same data transport component.
 
-There was a lot of envisioned configurability of the connections made this way
-- the pins at each processing component could be in, out, or in/out, and links
-created by connecting two pins could be categorized as push, pull, push/pull,
-and would also have support for update tracking and trigger modes.  The
-framework would provide support for the data transport components and link/pin
-management, and would also be in charge of invoking the components (which
-could be done in an optimized way, depending on what parts of the network
-need to be updated).
+[endsect][/distributed]
 
-While the pin-based approach is substantially different than the signal-based
-approach I was concentrating on at the time, it was clear that both of these
-approaches had their own advantages, and that each could be a useful dataflow
-framework in its own regard.  Hence, during the development of the Signal
-Network library, I tried to isolate the common properties of dataflow
-frameworks, in hopes that the signal-based approach could live under the
-same roof as something like the pin-based approach.
-Eventually, I started implementing the [DataflowPhoenix] module,
-partly because I wanted something that contrasted the signal-based approach so
-that I could isolate the truly mechanism-independent dataflow concepts, and
-partly because the underlying pointer based connections in [DataflowPhoenix]
-were a step closer to Tobias' ideas of the pin-based frameworks.
+[endsect][/examples]
 
-With the Dataflow library in place, which came after merging the Signal Network
-library with the new generic-oriented [DataflowPhoenix], it is now
-a little clearer how the pin-based approach that Tobias proposed could
-be adapted into the generic Dataflow framework.
-Instead of a direct
-connection from a data-producing component to a data-consuming component,
-as is now typically done in both of the Dataflow modules,
-there would be a connection from a data-producing component's pin
-to a data transport component, and again a connection from the data transport
-component to to the pin of the data-consuming component.
-The processing components would be [InvocableConcept], while each data transport
-component would be both a [ProducerConcept] and a [ConsumerConcept].
+[section:linking How to link]
 
-There are, of course, a lot of other issues to solve, and a lot of ways in
-which the Dataflow generic support layer might need to grow to accomodate
-the pin-based implementation, but perhaps in the end it will show that the
-signal-based approach and the pin-based approach are not too different, and
-perhaps even compatible or convertible between each other.
+The generic Dataflow support layer is header-only, and relies only on a few
+Boost header-only libraries (MPL, enable_if, and small parts of fusion).
 
-[/In the pin-based approach, the situation is reversed.  There is a "big picture" of what the complete
-network looks like, and the network control mechanism uses this information to decide when a component
-should be invoked and to manage the data shared between the components via pins.  Global
-knowledge of the network can be used for better optimization, serialization, etc.  However, it may
-come at the price of some intrusiveness to the computation components.]
+The [DataflowSignals] layer is dependent on the [BoostSignals] library,
+which must be built and linked.  A few of the components ([socket_sender]
+and [socket_receiver]) are also dependent on [BoostAsio], which depends on
+the System library which must also be built and linked.
 
-[endsect]
-
-[section:use When to use]
-
-While the [link dataflow.introduction.dataflow dataflow] section hopefully
-convinced you that there are circumstances in which a dataflow approach is 
-useful, please keep in mind that there are many circumstances in which this
-is not the case.
-
-First, a dataflow approach really only makes sense when the underlying task is
-really about the flow of data through the components that process it.
-If you can't sketch a concise data flow diagram which truly represents
-the application, the dataflow approach might not be the best option.
-For example, if you are implementing a complicated algorithm which is really
-about the sequence of instructions that need to be executed on the data
-(rather than the data going through well-defined and self-contained
-processing components), you probably should't use the Dataflow library.
-If you are working on an audio or video processing application,
-maybe you should.
-
-Second, the data transport mechanism you choose should reflect the needs of
-the applications closely.  Most of the functionality that the library supports
-at this moment is regarding run-time configurable connections.  If you don't
-need that functionality, you might be wasting resources ([DataflowPhoenix]
-offers some functionality related to compile-time connectability in its
-iterator_relative connections, but that is yet to trickle out into the library
-as a whole).
-
-When using signals as the data transport mechanism, remember that every signal
-sent results in a function call, and if the processing
-components are so minute that the cost of the function
-calls overtakes the cost of the processing,
-using [DataflowSignals] will cause a significant performance hit.  A similar
-situation occurs with [DataflowPhoenix], where each consumer must be invoked.
-
-To sum up, consider using the Dataflow library when:
-
-* The application can be modeled well through the flow of data; and
-* The cost of the processing shadows the cost of the function calls, and any
-  unnecessary overhead caused by any connections that need to be stored.
-
-[endsect]
+[endsect][/linking]
 
 [endsect][/introduction]

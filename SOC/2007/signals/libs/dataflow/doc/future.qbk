@@ -1,0 +1,72 @@
+[section:future Future Directions]
+
+There is also a planned /blueprint/ layer (not implemented yet), which
+would provide generic components that are used to provide a "big picture"
+of a dataflow network.  A blueprint component corresponds to an actual,
+component - but whereas the actual component takes care of the work, the
+blueprint component serves as a factory and serializer of the component.
+Hence, a dataflow network blueprint, made out of blueprint components, could
+be used to serialize or instantiate the underlying dataflow network made out
+of actual components.  The blueprint layer is likely to be implemented using
+virtual-based polymorphism and the Boost Graph library.
+
+[section:pin Comparison with a pin-based approach, proposed by Tobias Schwinger]
+
+In the early stages of the design of the then called Signal Network
+library, Tobias Schwinger discussed with me his ideas of an alternative
+implementation of a dataflow library.  In his approach, there would be
+a separation between the processing components, and components whose purpose
+was to transport data.  The processing components would have one or more /pins/,
+and connecting the pins of two processing components together would mean
+pointing them to the same data transport component.
+
+There was a lot of envisioned configurability of the connections made this way
+- the pins at each processing component could be in, out, or in/out, and links
+created by connecting two pins could be categorized as push, pull, push/pull,
+and would also have support for update tracking and trigger modes.  The
+framework would provide support for the data transport components and link/pin
+management, and would also be in charge of invoking the components (which
+could be done in an optimized way, depending on what parts of the network
+need to be updated).
+
+While the pin-based approach is substantially different than the signal-based
+approach I was concentrating on at the time, it was clear that both of these
+approaches had their own advantages, and that each could be a useful dataflow
+framework in its own regard.  Hence, during the development of the Signal
+Network library, I tried to isolate the common properties of dataflow
+frameworks, in hopes that the signal-based approach could live under the
+same roof as something like the pin-based approach.
+Eventually, I started implementing the [DataflowPhoenix] module,
+partly because I wanted something that contrasted the signal-based approach so
+that I could isolate the truly mechanism-independent dataflow concepts, and
+partly because the underlying pointer based connections in [DataflowPhoenix]
+were a step closer to Tobias' ideas of the pin-based frameworks.
+
+With the Dataflow library in place, which came after merging the Signal Network
+library with the new generic-oriented [DataflowPhoenix], it is now
+a little clearer how the pin-based approach that Tobias proposed could
+be adapted into the generic Dataflow framework.
+Instead of a direct
+connection from a data-producing component to a data-consuming component,
+as is now typically done in both of the Dataflow modules,
+there would be a connection from a data-producing component's pin
+to a data transport component, and again a connection from the data transport
+component to to the pin of the data-consuming component.
+The processing components would be [InvocableConcept], while each data transport
+component would be both a [ProducerConcept] and a [ConsumerConcept].
+
+There are, of course, a lot of other issues to solve, and a lot of ways in
+which the Dataflow generic support layer might need to grow to accomodate
+the pin-based implementation, but perhaps in the end it will show that the
+signal-based approach and the pin-based approach are not too different, and
+perhaps even compatible or convertible between each other.
+
+[/In the pin-based approach, the situation is reversed.  There is a "big picture" of what the complete
+network looks like, and the network control mechanism uses this information to decide when a component
+should be invoked and to manage the data shared between the components via pins.  Global
+knowledge of the network can be used for better optimization, serialization, etc.  However, it may
+come at the price of some intrusiveness to the computation components.]
+
+[endsect]
+
+[endsect][/future]

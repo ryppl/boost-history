@@ -8,4 +8,36 @@
 
 [include signals/components.qbk]
 
+[/The Signal Network library relies on moving the data via function parameters and return values.
+Here, the Boost.Signals library is used to model these individual data channels which couple
+the data transfer and the computational component invocation.  This is one possible dataflow-oriented
+approach.
+
+Each of these approaches has different properties.  In the signal-based approach, the knowledge of the
+network is local - each component knows about where its signals are going, but it knows nothing
+of where the signals arriving at its own slots are coming from.  Unless we record how the network was
+constructed, there is no "big picture" of what the complete network looks like.  Similarly,
+the network is executed autonomously - the components invoke one another when appropriate, and
+no external control mechanism is required.]
+
+
+[BoostSignals] is an excellent building block for dataflow networks,
+as it provides support for all of the essential elements -
+data transport through parameters and return values, combining
+return values from multiple signal calls, component invocation,
+and reconfigurability through connection and disconnection.
+
+The [DataflowSignals] module uses [BoostSignals] as
+the data transport mechanism in dataflow networks.
+In addition, it provides two major contributions that facilitate the
+building of large signals-based dataflow networks:
+
+* Support for a number of types of components (functors, filters,
+  member function slot selection), which can be used with
+  the generic Dataflow functionality - such as the [connect] function and its
+  associated operators which can be
+  used to easily connect different kinds of components.
+* A number of generic and specific components which can be extended
+  and customized for use in particular dataflow networks.
+
 [endsect]

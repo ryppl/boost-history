@@ -63,10 +63,6 @@ namespace extension
             {
                 invocable();
             }
-            static void call(const Invocable &invocable)
-            {
-                invocable();
-            }
         };
     };        
 }
@@ -84,7 +80,7 @@ typename boost::enable_if<is_invocable<Invocable> >::type
 invoke(const Invocable &invocable)
 {
     extension::invoke_impl<typename invocable_category_of<Invocable>::type>
-        ::template apply<Invocable>::call(invocable);
+        ::template apply<const Invocable>::call(invocable);
 }
 
 } } // namespace boost::dataflow

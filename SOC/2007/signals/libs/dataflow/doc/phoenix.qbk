@@ -1,5 +1,16 @@
-[section Dataflow.Phoenix]
+[section:phoenix Dataflow.Phoenix]
 
 [include phoenix/concepts.qbk]
+
+The [DataflowPhoenix] module uses ordinary object pointers to establish
+a flow of data.  It has been named after the Phoenix library because
+it is convenient to describe the operations on the data using Phoenix
+actors.
+
+This module is in early experimental stages, and has little documentation.
+If you are interested, take a look at the fibonacci.cpp example, which
+implements various extravagant versions of a Fibonacci sequence generator:
+
+[example_fibonacci]
 
 [endsect]

@@ -13,5 +13,8 @@
 #include <boost/dataflow/support/filter.hpp>
 #include <boost/dataflow/support/invocable.hpp>
 #include <boost/dataflow/support/connectable.hpp>
+#include <boost/dataflow/support/only_connectable.hpp>
+#include <boost/dataflow/support/disconnect_all_ins.hpp>
+#include <boost/dataflow/support/disconnect_all_outs.hpp>
 
 #endif // BOOST_DATAFLOW_SUPPORT_HPP

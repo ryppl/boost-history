@@ -38,12 +38,11 @@ public:
         >::type>
     {
         typedef boost::dataflow::signal_consumer consumer_category;
-        typedef boost::dataflow::mutable_proxy_producer proxy_producer_category;
-        typedef Signal proxy_producer_for;
+        typedef boost::dataflow::mutable_proxy_producer<Signal> proxy_producer_category;
         
         template<typename T>
-        static typename boost::dataflow::get_proxied_producer_type<boost::dataflow::signals_mechanism, Signal>
-         ::type &get_proxied_producer(const T &t)
+        static typename boost::dataflow::get_proxied_producer_result_type<boost::dataflow::signals_mechanism, Signal>
+         ::type get_proxied_producer(T &t)
         {   return t.get_proxied_producer();  }
 
     };

@@ -9,6 +9,7 @@
 #include <boost/dataflow/support.hpp>
 
 #include <boost/mpl/not.hpp>
+#include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #include <boost/fusion/algorithm/iteration/for_each.hpp>
 #include <boost/fusion/sequence/container/vector.hpp>
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
@@ -23,7 +24,8 @@
 
 namespace boost { namespace dataflow {
 
-struct fusion_map_producer {};
+struct fusion_map_producer
+    : public producer_category<concepts::keyed_producer> {};
 
 template<class T>
 struct producer_map : public T
@@ -33,13 +35,15 @@ struct producer_map : public T
     struct dataflow
     {
         typedef fusion_map_producer producer_category;
+/*        typedef typename boost::fusion::result_of::value_at_c<T, 0>::type::second_type
+            proxy_consumer_for;*/
         typedef
             typename boost::remove_const<
                 typename boost::remove_reference<
                     typename boost::fusion::result_of::front<T>::type
                 >::type
             >::type::second_type proxy_consumer_for;
-        typedef mutable_proxy_consumer proxy_consumer_category;
+        typedef mutable_proxy_consumer<proxy_consumer_for> proxy_consumer_category;
         
         static typename boost::call_traits<typename get_proxied_consumer_type<Mechanism, proxy_consumer_for>::type>::reference get_proxied_consumer(const T &t)
         {
@@ -50,48 +54,24 @@ struct producer_map : public T
 
 namespace extension
 {
-    // component >>= coxsumer_map
-    template<typename Mechanism, typename ProducerTag, typename ConsumerTag>
-    struct connect_impl<Mechanism, ProducerTag, ConsumerTag,
-        typename boost::enable_if<
-            boost::is_base_of<fusion_map_producer, ProducerTag>
-        >::type >
+    template<typename Mechanism, typename ConsumerTag>
+    struct get_keyed_producer_impl<Mechanism, fusion_map_producer, ConsumerTag>
     {
-        template<typename Producer, typename Consumer>
+        template<typename KeyedProducer, typename Consumer>
         struct apply
         {
-            static void call(const Producer &producer, const Consumer &consumer)
+            typedef typename boost::fusion::result_of::at_key<
+                        KeyedProducer,
+                        ConsumerTag
+                    >::type type;
+
+            static type
+            call(KeyedProducer &producer, Consumer &)
             {
-                connect(
-                    boost::fusion::at_key<
-                        typename consumed_type_of<Mechanism, Consumer>::type
-                    >(producer),
-                    consumer);
+                return boost::fusion::at_key<
+                        ConsumerTag
+                    >(producer);
             }
-            static void call(const Producer &producer, Consumer &consumer)
-            {
-                connect(
-                    boost::fusion::at_key<
-                        typename consumed_type_of<Mechanism, Consumer>::type
-                    >(producer),
-                    consumer);
-            }
-            static void call(Producer &producer, const Consumer &consumer)
-            {
-                connect(
-                    boost::fusion::at_key<
-                        typename consumed_type_of<Mechanism, Consumer>::type
-                    >(producer),
-                    consumer);
-            }
-            static void call(Producer &producer, Consumer &consumer)
-            {
-                connect(
-                    boost::fusion::at_key<
-                        typename consumed_type_of<Mechanism, Consumer>::type
-                    >(producer),
-                    consumer);
-            } 
         };
     };
 }

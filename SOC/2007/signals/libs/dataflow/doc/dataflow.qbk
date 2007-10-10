@@ -12,22 +12,26 @@
     ]
 ]
 
+[template concepts[] [link dataflow.concepts concepts]]
+[template MechanismConcept[] [link dataflow.concepts.mechanism [^Mechanism]]]
+[template FilterConcept[] [link dataflow.concepts.filter [^Filter]]]
 [template ProducerCategoryConcept[] [link dataflow.concepts.producercategory [^ProducerCategory]]]
 [template ProducerConcept[] [link dataflow.concepts.producer [^Producer]]]
+[template ProducerMapConcept[] [link dataflow.concepts.producermapconcept [^ProducerMap]]]
+[template ProxyProducerConcept[] [link dataflow.concepts.proxyproducer [^ProxyProducer]]]
 [template ConsumerConcept[] [link dataflow.concepts.consumer [^Consumer]]]
-[template SingleTypeProducer[] [link dataflow.concepts.singletypeproducer [^SingleTypeProducer]]]
-[template SingleTypeConsumer[] [link dataflow.concepts.singletypeconsumer [^SingleTypeConsumer]]]
+[template ConsumerMapConcept[] [link dataflow.concepts.consumermapconcept [^ConsumerMap]]]
 [template InvocableConcept[] [link dataflow.concepts.invocable [^Invocable]]]
 [template ConnectableConcept[] [link dataflow.concepts.connectable [^Connectable]]]
-[template ProxyProducerConcept[] [link dataflow.concepts.proxyproducer [^ProxyProducer]]]
+[template OnlyConnectableConcept[] [link dataflow.concepts.onlyconnectable [^OnlyConnectable]]]
 [template SignalProducerConcept[] [link dataflow.signals.concepts.signalproducer [^SignalProducer]]]
 [template SignalConsumerConcept[] [link dataflow.signals.concepts.signalconsumer [^SignalConsumer]]]
 [template PhoenixProducerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixProducer]]]
 [template PhoenixConsumerConcept[] [link dataflow.concepts.phoenix.phoenixproducer [^PhoenixConsumer]]]
 
-[template organization[] [link dataflow.introduction.organization organization]]
-[template DataflowSignals[] [link dataflow.introduction.mechanisms.signals Dataflow.Signals]]
-[template DataflowPhoenix[] [link dataflow.introduction.mechanisms.phoenix Dataflow.Phoenix]]
+[template how_to_use[text] [link dataflow.introduction.how_to_use [text]]]
+[template DataflowSignals[] [link dataflow.signals Dataflow.Signals]]
+[template DataflowPhoenix[] [link dataflow.phoenix Dataflow.Phoenix]]
 
 [template producer_group[] [link dataflow.components.producer_group producer_group]]
 [template consumer_group[] [link dataflow.components.consumer_group consumer_group]]
@@ -60,8 +64,16 @@
 [template BoostSignals[] [@http://www.boost.org/doc/html/signals.html Boost.Signals]]
 [template BoostPhoenix2[] [@http://spirit.sourceforge.net/ Boost.Phoenix2]]
 [template BoostPhoenix[] [@http://spirit.sourceforge.net/ Boost.Phoenix]]
-[template WikiDataflow[] [@http://en.wikipedia.org/wiki/Dataflow_language dataflow]]
+[template BoostAsio[] [@http://asio.sourceforge.net/boost_asio_0_3_8/libs/asio/doc/html/index.html Boost.Asio]]
+[template BoostSerialization[] [@http://www.boost.org/libs/serialization/doc/index.html Boost.Serialization]]
+[template WikiDataflow[] [@http://en.wikipedia.org/wiki/Dataflow_programming dataflow]]
 [template VTK[] [@http://www.vtk.org/ VTK]]
+[template vtkAlgorithm[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithm.html ['vtkAlgorithm]]]
+[template vtkAlgorithmOutput[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithmOutput.html ['vtkAlgorithmOutput]]]
+[template vtkMapper[] [@http://www.vtk.org/doc/nightly/html/classvtkMapper.html ['vtkMapper]]]
+[template vtkActor[] [@http://www.vtk.org/doc/nightly/html/classvtkActor.html ['vtkActor]]]
+[template vtkRenderer[] [@http://www.vtk.org/doc/nightly/html/classvtkAlgorithm.html ['vtkRenderer]]]
+
 
 
 [import ../test/signals/test_connect.cpp]
@@ -83,19 +95,20 @@
 [import ../test/signals/test_junction.cpp]
 [import ../test/signals/test_mutex.cpp]
 
-
 [import ../example/fibonacci.cpp]
 [import ../example/simple_example.cpp]
 
+[import ../example/VTK/support.hpp]
+
 Dataflow is a generic library for [WikiDataflow] programming using various data
-transport mechanisms.  The Dataflow library
-comes with support for two data transport mechanisms - one is based on
+transport mechanisms.  It also has layers of support for
+two data transport mechanisms - one is based on
 [BoostSignals], and the other (experimental) is based connections made through
 simple object pointers, with support for using [BoostPhoenix2]
 actors for data processing.
 
 The two data transport mechanisms are implemented in the [DataflowSignals]
-and [DataflowPhoenix] modules.  The idea behind providing a generic dataflow
+and [DataflowPhoenix] layers.  The idea behind providing a generic dataflow
 library is that other data transport mechanisms can be easily adapted for
 use with the library.
 
@@ -203,7 +216,7 @@ Original request for interest version available as attachment to
 
 [endsect]
 
-[xinclude dataflow_doxygen.xml]
+[include future.qbk]
 
 [section:acknowledgements Acknowledgements]
 
@@ -224,3 +237,5 @@ accompanying file LICENSE_1_0.txt or copy at
 
 
 [endsect]
+
+[xinclude dataflow_doxygen.xml]

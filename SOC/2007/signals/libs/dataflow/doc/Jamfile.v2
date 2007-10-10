@@ -55,3 +55,5 @@ boostbook standalone
         <xsl:param>toc.max.depth=3
         <xsl:param>generate.section.toc.level=4
     ;
+    
+install png : [ glob *.png ] : <location>html ;

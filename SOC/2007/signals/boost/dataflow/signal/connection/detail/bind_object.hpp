@@ -46,12 +46,12 @@ struct bind_object_impl<Signature, T, BOOST_PP_ITERATION()>
                         BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
                         BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_INC(BOOST_PP_ITERATION()),_));
     }
-    boost::function<Signature> operator()(typename slot_type<Signature, T>::type mem_fn, const T &object)
+    /*boost::function<Signature> operator()(typename slot_type<Signature, T>::type mem_fn, const T &object)
     {
         return boost::bind(mem_fn, boost::ref(object)
                            BOOST_PP_COMMA_IF(BOOST_PP_ITERATION())
                            BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_PP_INC(BOOST_PP_ITERATION()),_));
-    }
+    }*/
 };
 
 #endif // defined(BOOST_PP_IS_ITERATING)

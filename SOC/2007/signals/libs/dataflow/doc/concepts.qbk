@@ -126,6 +126,9 @@ if it causes the invoked producer to also invoke the consumer, or if it causes
 the invoked consumer to invoke the producer.]
 
 
+[section Mechanism]
+
+[endsect][/mechanism]
 
 [include producer_concepts.qbk]
 
@@ -219,5 +222,51 @@ The following expressions are used in this document:
 ]
 
 [endsect][/connectable]
+
+[section OnlyConnectable]
+
+A [ProducerConcept] `P` and [ConsumerConcept] `C` are /connectable/ if they
+can be connected via the `connect` function.  Typically, this means that
+they use the same underlying data transport mechanism, and produce / consume
+the same data type.
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[P] [A [ProducerConcept] type.]]
+    [[C] [A [ConsumerConcept] type.
+     [footnote `P` and `C` are [ConnectableConcept]]
+    [[p] [An object of type P.]]
+    [[c] [An object of type C.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Connect]
+        [`connect(p,c)`]
+        [Any type]
+        [
+            *Semantics:* Creates a permanent connection between the producer
+            and consumer.
+            [footnote: This does not (yet) specify what happens to other
+            existing connections out of `p` of into `c`.  They may or may
+            not get modified of erased.].
+        ]
+    ]
+[/    [
+        [Compatible]
+        [`mpl::has_key<consumed_types_of<C>::type, produced_type_of<P>::type>`]
+        [`mpl::true_`]
+        [
+            *Semantics:* In order for two components to be connectable,
+            the produced type must be an element of the consumed types.
+        ]
+    ] ]
+]
+
+[endsect][/onlyconnectable]
 
 [endsect][/concepts]

@@ -42,4 +42,21 @@ struct consumer_category_of<Mechanism, T,
 
 } } // namespace boost::dataflow
 
+#define DATAFLOW_FILTER_CATEGORY(m,p,pc) \
+template<> \
+struct filter_category_of<m, p> \
+{ \
+    typedef pc type; \
+    BOOST_MPL_ASSERT(( is_producer_category<type> )); \
+    BOOST_MPL_ASSERT(( is_consumer_category<type> )); \
+};
+
+#define DATAFLOW_FILTER_CATEGORY_ENABLE_IF(m,P,Cond,pc) \
+template<typename P> \
+struct filter_category_of<m, P, typename boost::enable_if< Cond >::type> \
+{ \
+    typedef pc type; \
+    BOOST_MPL_ASSERT(( mpl::and_<is_producer_category<type>,is_consumer_category<type> > )); \
+};
+
 #endif // BOOST_DATAFLOW_SUPPORT_FILTER_HPP

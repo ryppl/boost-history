@@ -224,3 +224,6 @@ and member function `get_proxied_producer`.
 [heading Examples]
 
 [endsect][/proxyproducer]
+
+[section ProducerMap]
+[endsect][/proxyproducer]
