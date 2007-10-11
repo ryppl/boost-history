@@ -325,33 +325,6 @@
 			Name="tests"
 			>
 			<File
-				RelativePath="..\..\..\tests\test_dump_to_file_and_cout_ostream_like.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Test|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="TestAll|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\..\tests\format\test_format_write_ts.cpp"
 				>
 				<FileConfiguration
@@ -362,16 +335,9 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="TestAll|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\format\test_manipulator_being_func.cpp"
+				RelativePath="..\..\..\tests\format\test_manip_being_func.cpp"
 				>
 				<FileConfiguration
 					Name="Test|Win32"
@@ -381,36 +347,10 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="TestAll|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\format\test_manipulator_with_msg_route.cpp"
+				RelativePath="..\..\..\tests\format\test_manip_w_msgroute.cpp"
 				>
-				<FileConfiguration
-					Name="TestAll|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\..\tests\test_multiple_levels_to_different_logs.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Test|Win32"
 					ExcludedFromBuild="true"
@@ -419,25 +359,10 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="TestAll|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\test_multiple_levels_to_same_log.cpp"
+				RelativePath="..\..\..\tests\test_mul_lev_difflogs.cpp"
 				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Test|Win32"
 					ExcludedFromBuild="true"
@@ -446,8 +371,13 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\tests\test_mul_lev_samelog.cpp"
+				>
 				<FileConfiguration
-					Name="TestAll|Win32"
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -458,22 +388,6 @@
 				RelativePath="..\..\..\tests\test_multiple_simple_logs.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Test|Win32"
 					ExcludedFromBuild="true"
 					>
@@ -481,8 +395,13 @@
 						Name="VCCLCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\..\..\tests\test_ostream_like.cpp"
+				>
 				<FileConfiguration
-					Name="TestAll|Win32"
+					Name="Test|Win32"
+					ExcludedFromBuild="true"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -493,31 +412,8 @@
 				RelativePath="..\..\..\tests\test_simple_dump_to_cout.cpp"
 				>
 				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Test|Win32"
 					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="TestAll|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -525,23 +421,8 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\..\tests\format\test_simple_formatter_simple_apply_format_and_write.cpp"
+				RelativePath="..\..\..\tests\format\test_simple_formatter.cpp"
 				>
-				<FileConfiguration
-					Name="Test|Win32"
-					ExcludedFromBuild="true"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="TestAll|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -764,15 +645,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\..\internal\desc.txt"
+				RelativePath="..\..\..\..\..\..\..\..\uk\logging_internal\desc.txt"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\..\internal\old todo.txt"
+				RelativePath="..\..\..\..\..\..\..\..\uk\logging_internal\old todo.txt"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\..\..\internal\readme.txt"
+				RelativePath="..\..\..\..\..\..\..\..\uk\logging_internal\readme.txt"
 				>
 			</File>
 		</Filter>

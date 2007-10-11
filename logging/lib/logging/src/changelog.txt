@@ -4,3 +4,7 @@ v0.4, 9 oct 2007
 v0.5, 11 oct 2007
 - compiles
 - added documentation
+
+v0.5.2, 11 oct 2007
+- changed license
+- added to boost
