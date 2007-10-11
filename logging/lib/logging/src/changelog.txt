@@ -1,0 +1,6 @@
+v0.4, 9 oct 2007
+- ts_write and on_dedicated_thread work
+
+v0.5, 11 oct 2007
+- compiles
+- added documentation
