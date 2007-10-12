@@ -16,6 +16,27 @@
 
 namespace boost { namespace numeric { namespace bindings { namespace blas {
 
+  // x <- y
+  template < typename vector_x_type, typename vector_y_type >
+  void copy(const vector_x_type &x, vector_y_type &y )
+  {
+#ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
+    BOOST_STATIC_ASSERT( ( boost::is_same< typename traits::vector_traits<vector_x_type>::value_type, typename traits::vector_traits<vector_y_type>::value_type >::value ) ) ;
+#else
+    BOOST_STATIC_ASSERT( ( boost::is_same< typename vector_x_type::value_type, typename vector_y_type::value_type >::value ) ) ;
+#endif
+
+    const int n =  traits::vector_size( x ) ;
+    assert( n==traits::vector_size( y ) ) ;
+    const int stride_x = traits::vector_stride( x ) ;
+    const int stride_y = traits::vector_stride( y ) ;
+    typename traits::vector_traits<vector_x_type>::value_type const *x_ptr = traits::vector_storage( x ) ;
+    typename traits::vector_traits<vector_y_type>::value_type *y_ptr = traits::vector_storage( y ) ;
+
+    detail::copy( n, x_ptr, stride_x, y_ptr, stride_y ) ;
+  }
+
+
   // x <- alpha * x
   template < typename value_type, typename vector_type >
   void scal(const value_type &alpha, vector_type &x )
