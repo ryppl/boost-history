@@ -1,0 +1,119 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>This is much better</title>
+</head>
+
+<body>
+
+<p>&#10004; This is much better, but it's still in draft stage, not ready yet for voting 
+into the WD. Comments:</p>
+<ol>
+  <li>the description of the meaning of thread::id is distributed among several 
+  different clauses, and it's hard to figure out just what it means.<br>
+&nbsp;</li>
+  <li>the description of thread::native_handle_type and native_handle() is so 
+  vague (appropriately so) that it might be better to leave it out completely. 
+  Since you can't do anything meaningful with it if it's present, just leave it 
+  up to the implementation to tell you what it supports and what you can do with 
+  it. Same thing applies to the corresponding things in the other classes. If it 
+  stays in, it's overconstrained. In particular, if it's copyable, this requires 
+  copying it to pass it to the OS, even if the OS takes a pointer to that 
+  object. Just leave it to the implementation to match what the OS requires.<br>
+&nbsp;</li>
+  <li>objects of type thread::id &quot;uniquely identify&quot; threads of execution. 
+  Except that they don't, because default-constructed objects compare equal, and 
+  the id returned from a thread that is not joinable also compares equal to a 
+  default-constructed object.<br>
+&nbsp;</li>
+  <li>thread::get_id() for a default-constructed thread returns an object that 
+  refers to &quot;not any thread&quot;. That last term isn't used anywhere else, so 
+  shouldn't be used.<br>
+&nbsp;</li>
+  <li>default constructor for thread constructs an object that is not &quot;attached&quot; 
+  to any thread; other constructors create objects that &quot;represent&quot; a thread. 
+  Assignment operator talks about an object that &quot;refers&quot; to a thread.<br>
+&nbsp;</li>
+  <li>template constructor for thread: &quot;if f is an rvalue, F must only be 
+  MoveConstructible&quot;. Does this mean that F must not be CopyConstructible?<br>
+&nbsp;</li>
+  <li>thread::join &quot;may throw system_error&quot;. Under what circumstances?<br>
+&nbsp;</li>
+  <li>call_once: &quot;F is CopyConstructible&quot;, but F is not defined.<br>
+&nbsp;</li>
+  <li>Mutex concepts: mutex type is required to be Destructible, so requirement 
+  that its destructor not exit by an exception is redundant.<br>
+&nbsp;</li>
+  <li>&quot;If and only if the mutex type ...&quot;, followed by &quot;If there is no ...&quot; 
+  which is the obverse. Either use iff and only if, or use if ... else.<br>
+&nbsp;</li>
+  <li>&quot;Implementations may supply additional ...&quot; is entirely redundant.<br>
+&nbsp;</li>
+  <li>&quot;The class mutex is a ...&quot;, but &quot;The class recursive_mutex shall be a 
+  ...&quot;.<br>
+&nbsp;</li>
+  <li>Timed Mutexes: &quot;The type TimeDuration provides resolution information...&quot; 
+  doesn't sound like a precondition, but an informative description. To the 
+  extent that it's actually a precondition, it's a little fuzzy whether it only 
+  applies to non-recursive mutexes.<br>
+&nbsp;</li>
+  <li>Timed Mutexes, Effects needs tightening.<br>
+&nbsp;</li>
+  <li>Class lock_guard: what does &quot;Mutex ownership cannot be deferred&quot; mean?<br>
+&nbsp;</li>
+  <li>lock_guard, precondition: what does it mean for the lifetime of an object 
+  to be greater than the lifetime of another object? Further, it can't be a 
+  precondition that the mutex still be in existence after the call, since that's 
+  not &quot;pre&quot; (i.e. there's no way to test this condition on entry into the 
+  function).<br>
+&nbsp;</li>
+  <li>unique_lock constructors: constructors that take mutex say that the object 
+  stores a reference to the passed mutex; what does that reference refer to 
+  after default construction?<br>
+&nbsp;</li>
+  <li>unique_lock move constructor &quot;transfers mutex ownership&quot;. What does this 
+  mean?<br>
+&nbsp;</li>
+  <li>unique_lock::timed_lock: describes handling when the resolution of 
+  TimeDuration is greater than the native resolution; seems like this belongs in 
+  the description of mutex lock, not in this forwarder.<br>
+&nbsp;</li>
+  <li>unique_lock::unspecified-bool-type: returns null or non-null. Seems to be 
+  assuming (or imposing) constraints on the type returned.<br>
+&nbsp;</li>
+  <li>unique_lock assignment operator: what is the &quot;lock count&quot; of a recursive 
+  mutex?<br>
+&nbsp;</li>
+  <li>generic locking algorithms: is there a requirement that the locks be 
+  attempted in any particular order?<br>
+&nbsp;</li>
+  <li>generic locking algorithms, lock: what does &quot;an algorithm that avoids 
+  deadlocks&quot; mean? What, exactly, is required?<br>
+&nbsp;</li>
+  <li>condition_variable::wait: &quot;... unless lock refers to the same underlying 
+  mutex object.&quot; Same as what?<br>
+&nbsp;</li>
+  <li>condition_variable::wait, effects: &quot;If the wait should throw an 
+  exception...&quot; probably should be &quot;If the wait throws an exception...&quot;. &quot;for 
+  any reason&quot; is redundant. &quot;This thread of execution shall unblock ...&quot; is part 
+  of the effects of notify and notify_all, not of wait.<br>
+&nbsp;</li>
+  <li>condition_variable::wait, throws: can throw only if a precondition is not 
+  met? What if the system returns an error?<br>
+&nbsp;</li>
+  <li>condition_variable::wait(lock, pred): what are the constraints on the type 
+  Predicate?<br>
+&nbsp;</li>
+  <li>condition_variable::timed_wait: the requirement that the function return 
+  false if the time elapses means that when a blocked thread is released by 
+  notify, the release code must check whether the time has elapsed, since the 
+  timeout may not have been noticed earlier. Is this intentional? Seems more 
+  useful to allow it to return true in this case.</li>
+</ol>
+
+</body>
+
+</html>
