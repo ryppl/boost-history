@@ -82,6 +82,33 @@ OutCursor copy (InCursor s, OutCursor t)
 	return outsubtree;
 }
 
+/**
+ * @brief	 Performs an operation on a subtree, by traversing it in postorder.
+ * @param s  An input cursor.
+ * @param t  An output cursor.
+ * @param op A unary operation.
+ * @result	 A cursor past t's postorder end, after the transforming has
+ * 			 finished.
+ * 
+ * By traversing the input subtree s in postorder, apply the operation op 
+ * to each element and write the result to the output subtree t.
+ * 
+ * op must not change its argument.
+ */
+template <class InCursor, class OutCursor, class Op>
+OutCursor transform (InCursor s, OutCursor t, Op op)
+{
+	InCursor insubtree = s;
+	OutCursor outsubtree = t;
+	if (!s.empty())
+		transform(s.begin(), t.begin(), op);
+	if (!(++s).empty()) {
+		transform(s.begin(), (++t).begin(), op);
+	}
+	*outsubtree = op(*insubtree);
+	return outsubtree;
+}
+
 ///Iterators
 
 

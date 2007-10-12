@@ -4,6 +4,9 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef LIBS_TREE_TEST_HELPERS_HPP
+#define LIBS_TREE_TEST_HELPERS_HPP
+
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/balanced_tree.hpp>
 #include <boost/tree/searcher.hpp>
@@ -88,4 +91,4 @@ void create_test_data_sequence(Searcher& my_tree)
 	my_tree.push_back(7);
 }
 
-
+#endif // LIBS_TREE_TEST_HELPERS_HPP

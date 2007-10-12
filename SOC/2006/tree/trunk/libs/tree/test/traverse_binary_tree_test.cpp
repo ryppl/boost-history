@@ -33,25 +33,25 @@ int test_main(int, char* [])
 	binary_tree<int> test_tree;
 	create_test_data_tree(test_tree);
 	
-	test_inorder_traversal(inorder::begin(test_tree), 
+	test::inorder::traversal(inorder::begin(test_tree), 
 						   inorder::end(test_tree));
-	test_reverse_inorder_traversal(inorder::end(test_tree), 
+	test::inorder::reverse_traversal(inorder::end(test_tree), 
 								   inorder::begin(test_tree));
 		
-	test_preorder_traversal(preorder::begin(test_tree),
+	test::preorder::traversal(preorder::begin(test_tree),
 							preorder::end(test_tree));
 //FIXME
-//	test_reverse_preorder_traversal(preorder::end(test_tree),
+//	test::preorder::reverse_traversal(preorder::end(test_tree),
 //									preorder::begin(test_tree));
 	
-	test_postorder_traversal(postorder::begin(test_tree), 
+	test::postorder::traversal(postorder::begin(test_tree), 
 							 postorder::end(test_tree));
-	test_reverse_postorder_traversal(postorder::end(test_tree), 
+	test::postorder::reverse_traversal(postorder::end(test_tree), 
 									 postorder::begin(test_tree));
 	
-	test_inorder_traversal(inorder::begin(test_tree, forward_traversal_tag()), 
+	test::inorder::traversal(inorder::begin(test_tree, forward_traversal_tag()), 
 						   inorder::end(test_tree, forward_traversal_tag()));
-	test_reverse_inorder_traversal(inorder::end(test_tree, forward_traversal_tag()), 
+	test::inorder::reverse_traversal(inorder::end(test_tree, forward_traversal_tag()), 
 								   inorder::begin(test_tree, forward_traversal_tag()));
 
 	binary_tree<int>::cursor c = test_tree.root();
@@ -60,7 +60,7 @@ int test_main(int, char* [])
 	BOOST_CHECK(*c == 4);
 
 	ascending::iterator<binary_tree<int>::cursor> ais(c);
-	test_ascending_traversal_from_leaf4(ais, ai_root);
+	test::ascending::traversal_from_leaf4(ais, ai_root);
 
 	return 0;
 }

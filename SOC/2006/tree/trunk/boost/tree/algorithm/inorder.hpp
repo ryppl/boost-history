@@ -76,6 +76,30 @@ OutCursor copy (InCursor s, OutCursor t)
 	return t;
 }
 
+/**
+ * @brief	 Performs an operation on a subtree, by traversing it in inorder.
+ * @param s  An input cursor.
+ * @param t  An output cursor.
+ * @param op A unary operation.
+ * @result	 A cursor past t's inorder end, after the transforming has 
+ * 			 finished.
+ * 
+ * By traversing the input subtree s in inorder, apply the operation op 
+ * to each element and write the result to the output subtree t.
+ * 
+ * op must not change its argument.
+ */
+template <class InCursor, class OutCursor, class Op>
+OutCursor transform (InCursor s, OutCursor t, Op op)
+{
+	if (!s.empty())
+		transform(s.begin(), t.begin(), op);
+	*t = op(*s);
+	if (!(++s).empty())
+		transform(s.begin(), (++t).begin(), op);
+	return t;
+}
+
 template <class MultiwayTree>
 iterator<typename MultiwayTree::cursor, forward_traversal_tag> 
 begin(MultiwayTree& t, forward_traversal_tag)

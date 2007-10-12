@@ -64,7 +64,8 @@ Op for_each(Cursor s, Op f)
  * @param t An output cursor.
  * @result	A cursor past t's preorder end, after the copying operation.
  */
- // TODO: Should work with root() instead of root().begin() (same for in- and postorder)
+// TODO: Should work with root() instead of root().begin() (same for in- and postorder, )
+// plus a couple of other algorithms
 template <class InCursor, class OutCursor>
 OutCursor copy (InCursor s, OutCursor t)
 {
@@ -73,6 +74,30 @@ OutCursor copy (InCursor s, OutCursor t)
 		copy(s.begin(), t.begin());
 	if (!(++s).empty())
 		copy(s.begin(), (++t).begin());
+	return t;
+}
+
+/**
+ * @brief	 Performs an operation on a subtree, by traversing it in preorder.
+ * @param s  An input cursor.
+ * @param t  An output cursor.
+ * @param op A unary operation.
+ * @result	 A cursor past t's preorder end, after the transforming has 
+ * 			 finished.
+ * 
+ * By traversing the input subtree s in preorder, apply the operation op 
+ * to each element and write the result to the output subtree t.
+ * 
+ * op must not change its argument.
+ */
+template <class InCursor, class OutCursor, class Op>
+OutCursor transform (InCursor s, OutCursor t, Op op)
+{
+	*t = op(*s);
+	if (!s.empty())
+		transform(s.begin(), t.begin(), op);
+	if (!(++s).empty())
+		transform(s.begin(), (++t).begin(), op);
 	return t;
 }
 

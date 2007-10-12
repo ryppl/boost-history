@@ -4,6 +4,8 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
+#ifndef LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP
+#define LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP
 
 #include <boost/test/minimal.hpp>
 
@@ -44,9 +46,13 @@ void validate_test_data_tree(Tree const& ret)
 	BOOST_CHECK(*ret.root().end().end().begin().begin().end().begin() == 12);
 }
 
+namespace test {
+
+namespace preorder {
+
 template <class Iterator>
-void test_preorder_traversal(Iterator a, Iterator b)
-{	
+void traversal(Iterator a, Iterator b) 
+{
 	BOOST_CHECK(*a++ == 8);
 	BOOST_CHECK(*a++ == 3);
 	BOOST_CHECK(*a++ == 1);
@@ -62,7 +68,7 @@ void test_preorder_traversal(Iterator a, Iterator b)
 }
 
 template <class Iterator>
-void test_reverse_preorder_traversal(Iterator a, Iterator b)
+void reverse_traversal(Iterator a, Iterator b)
 {	 
 	BOOST_CHECK(*--a == 12);
 	BOOST_CHECK(*--a == 11);
@@ -78,8 +84,12 @@ void test_reverse_preorder_traversal(Iterator a, Iterator b)
 	BOOST_CHECK(a == b);
 }
 
+} // namespace preorder
+
+namespace inorder {
+
 template <class Iterator>
-void test_inorder_traversal(Iterator a, Iterator b)
+void traversal(Iterator a, Iterator b)
 {		
 	BOOST_CHECK(*a++ == 1);
 	BOOST_CHECK(*a++ == 3);
@@ -96,7 +106,7 @@ void test_inorder_traversal(Iterator a, Iterator b)
 }
 
 template <class Iterator>
-void test_reverse_inorder_traversal(Iterator a, Iterator b)
+void reverse_traversal(Iterator a, Iterator b)
 {	
 	BOOST_CHECK(*--a == 14);
 	BOOST_CHECK(*--a == 13);
@@ -112,8 +122,12 @@ void test_reverse_inorder_traversal(Iterator a, Iterator b)
 	BOOST_CHECK(a == b);
 }
 
+} // namespace inorder
+
+namespace postorder {
+
 template <class Iterator>
-void test_postorder_traversal(Iterator a, Iterator b)
+void traversal(Iterator a, Iterator b)
 {	
 	BOOST_CHECK(*a++ == 1);	
 	BOOST_CHECK(*a++ == 4);
@@ -130,7 +144,7 @@ void test_postorder_traversal(Iterator a, Iterator b)
 }
 
 template <class Iterator>
-void test_reverse_postorder_traversal(Iterator a, Iterator b)
+void reverse_traversal(Iterator a, Iterator b)
 {	
 	BOOST_CHECK(*--a == 8);	
 	BOOST_CHECK(*--a == 10);
@@ -146,8 +160,12 @@ void test_reverse_postorder_traversal(Iterator a, Iterator b)
 	BOOST_CHECK(a == b);
 }
 
+} // namespace postorder
+
+namespace ascending {
+
 template <class Iterator>
-void test_ascending_traversal_from_leaf4(Iterator a, Iterator b)
+void traversal_from_leaf4(Iterator a, Iterator b)
 {	
 	BOOST_CHECK(*a == 4);
 	BOOST_CHECK(*++a == 6);
@@ -155,3 +173,10 @@ void test_ascending_traversal_from_leaf4(Iterator a, Iterator b)
 	BOOST_CHECK(*++a == 8);
 	BOOST_CHECK(++a == b);
 }
+
+} // namespace ascending
+
+} // namespace test
+
+
+#endif // LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP
