@@ -1334,8 +1334,15 @@ LIST *builtin_normalize_path( PARSE *parse, FRAME *frame )
         if (arg)
             string_append(in, "/");
     }
-    
 
+    /* Convert \ into /. On windows, paths using / and \ are equivalent,
+       and we want this function to obtain canonic representation.  */
+    for (current = in->value, end = in->value + in->size; 
+         current < end; ++current)
+        if (*current == '\\')
+            *current = '/';
+
+    
     end = in->value + in->size - 1;
     current = end;
     
@@ -1662,6 +1669,7 @@ bjam_call(PyObject* self, PyObject* args)
 
     frame_free( inner );
 
+    Py_INCREF(Py_None);
     return Py_None;
 }
 
@@ -1736,6 +1744,30 @@ bjam_define_action(PyObject* self, PyObject *args)
 
     return Py_None;    
 }
+
+/* Returns the value of a variable in root Jam module.  */
+PyObject*
+bjam_variable(PyObject* self, PyObject* args)
+{
+    char *name;
+    LIST* value;
+    PyObject *result;
+    int i;
+
+    if (!PyArg_ParseTuple(args, "s", &name))
+        return NULL;
+
+    enter_module(root_module());
+    value = var_get(name);
+    exit_module(root_module());
+
+    result = PyList_New(list_length(value));
+    for (i = 0; value; value = list_next(value), ++i)
+        PyList_SetItem(result, i, PyString_FromString(value->string));
+
+    return result;
+}
+
 
 #endif
 

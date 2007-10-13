@@ -1,3 +1,8 @@
+//  Copyright (c) 2006-7 John Maddock
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
 #ifndef BOOST_MATH_TOOLS_CONFIG_HPP
 #define BOOST_MATH_TOOLS_CONFIG_HPP
 
@@ -17,7 +22,22 @@
 #  define BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
 #endif
 #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x582))
+//
+// Borland post 5.8.2 uses Dinkumware's std C lib which
+// doesn't have true long double precision.  Earlier
+// versions are problematic too:
+//
 #  define BOOST_MATH_NO_REAL_CONCEPT_TESTS
+#  define BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
+#  define BOOST_MATH_CONTROL_FP _control87(MCW_EM,MCW_EM)
+#  include <float.h>
+#endif
+#if (defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)) && ((LDBL_MANT_DIG == 106) || (__LDBL_MANT_DIG__ == 106))
+//
+// Darwin's rather strange "double double" is rather hard to
+// support, it should be possible given enough effort though...
+//
+#  define BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
 #endif
 
 #if BOOST_WORKAROUND(BOOST_MSVC, < 1400)
@@ -65,6 +85,12 @@
 #  define BOOST_MATH_INT_TABLE_TYPE(RT, IT) IT
 #endif
 //
+// Helper macro for controlling the FP behaviour:
+//
+#ifndef BOOST_MATH_CONTROL_FP
+#  define BOOST_MATH_CONTROL_FP
+#endif
+//
 // Helper macro for using statements:
 //
 #define BOOST_MATH_STD_USING \
@@ -108,24 +134,6 @@ inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d)
 {
    return (std::max)((std::max)(a, b), (std::max)(c, d));
 }
-//
-// We call this short forwarding function so that we can work around a bug
-// on Darwin that causes std::fmod to return a NaN.  The test case is:
-// std::fmod(1185.0L, 1.5L);
-//
-template <class T>
-inline T fmod_workaround(T a, T b)
-{
-   BOOST_MATH_STD_USING
-   return fmod(a, b);
-}
-#if (defined(macintosh) || defined(__APPLE__) || defined(__APPLE_CC__)) && ((LDBL_MANT_DIG == 106) || (__LDBL_MANT_DIG__ == 106))
-template <>
-inline long double fmod_workaround(long double a, long double b)
-{
-   return ::fmodl(a, b);
-}
-#endif
 } // namespace tools
 }} // namespace boost namespace math
 

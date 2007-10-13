@@ -335,7 +335,7 @@ namespace boost
     // chf of Negative Binomial distribution provided by derived accessors.
 
     template <class RealType, class Policy>
-    inline RealType pdf(const negative_binomial_distribution<RealType, Policy>& dist, const RealType k)
+    inline RealType pdf(const negative_binomial_distribution<RealType, Policy>& dist, const RealType& k)
     { // Probability Density/Mass Function.
       BOOST_FPU_EXCEPTION_GUARD
 
@@ -361,7 +361,7 @@ namespace boost
     } // negative_binomial_pdf
 
     template <class RealType, class Policy>
-    inline RealType cdf(const negative_binomial_distribution<RealType, Policy>& dist, const RealType k)
+    inline RealType cdf(const negative_binomial_distribution<RealType, Policy>& dist, const RealType& k)
     { // Cumulative Distribution Function of Negative Binomial.
       static const char* function = "boost::math::cdf(const negative_binomial_distribution<%1%>&, %1%)";
       using boost::math::ibeta; // Regularized incomplete beta function.
@@ -527,7 +527,7 @@ namespace boost
           // since the probability of zero failures may be non-zero,
           return 0; // but zero is the best we can do:
        }
-       if (-Q <= powm1(dist.success_fraction(), dist.successes(), Policy()))
+       if (-Q <= boost::math::powm1(dist.success_fraction(), dist.successes(), Policy()))
        {  // q <= cdf(complement(dist, 0)) == pdf(dist, 0)
           return 0; //
        }

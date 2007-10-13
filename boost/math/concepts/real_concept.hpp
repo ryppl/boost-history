@@ -55,7 +55,7 @@ public:
    real_concept(int c) : m_value(c){}
    real_concept(unsigned long c) : m_value(c){}
    real_concept(long c) : m_value(c){}
-#ifdef BOOST_HAS_LONG_LONG
+#if defined(BOOST_HAS_LONG_LONG) || defined(__DECCXX)
    real_concept(unsigned long long c) : m_value(static_cast<long double>(c)){}
    real_concept(long long c) : m_value(static_cast<long double>(c)){}
 #elif defined(BOOST_HAS_MS_INT64)
@@ -196,7 +196,7 @@ inline real_concept atan2(real_concept a, real_concept b)
 inline real_concept ceil(real_concept a)
 { return std::ceil(a.value()); }
 inline real_concept fmod(real_concept a, real_concept b)
-{ return boost::math::tools::fmod_workaround(a.value(), b.value()); }
+{ return fmodl(a.value(), b.value()); }
 inline real_concept cosh(real_concept a)
 { return std::cosh(a.value()); }
 inline real_concept exp(real_concept a)
@@ -246,7 +246,15 @@ inline std::basic_ostream<charT, traits>& operator<<(std::basic_ostream<charT, t
 template <class charT, class traits>
 inline std::basic_istream<charT, traits>& operator>>(std::basic_istream<charT, traits>& is, real_concept& a)
 {
+#if defined(BOOST_MSVC) && defined(__SGI_STL_PORT)
+   //
+   // STLPort 5.1.4 has a problem reading long doubles from strings,
+   // see http://sourceforge.net/tracker/index.php?func=detail&aid=1811043&group_id=146814&atid=766244
+   //
+   double v;
+#else
    long double v;
+#endif
    is >> v;
    a = v;
    return is;
@@ -323,7 +331,11 @@ inline concepts::real_concept log_min_value<concepts::real_concept>(BOOST_EXPLIC
 template <>
 inline concepts::real_concept epsilon(BOOST_EXPLICIT_TEMPLATE_TYPE_SPEC(concepts::real_concept))
 {
+#ifdef __SUNPRO_CC
+   return std::numeric_limits<long double>::epsilon();
+#else
    return tools::epsilon<long double>();
+#endif
 }
 
 template <>
