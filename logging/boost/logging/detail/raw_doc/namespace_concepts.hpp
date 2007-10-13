@@ -15,7 +15,7 @@ Each concept can be implemented in several ways. To make it easier for you, <b>e
 In the given namespace, you'll find possible implementations of that concept. Of course, to those implementations, you can add your own ;)
 
 \n\n
-@section namespace_general General contepts
+@section namespace_general General concepts
 - filter - available filter implementations
 - level - in case you want to use Log Levels
 - writer - %writer objects; they do the actual write of the message 
@@ -30,14 +30,14 @@ In the given namespace, you'll find possible implementations of that concept. Of
 
 
 \n\n
-@section namespace_manipulator Manipulator contepts
+@section namespace_manipulator Manipulator concepts
 - manipulator - what a manipulator is: a formatter or a destination
 - formatter - available formatters
 - destination - available destinations
 
 
 \n\n
-@section namespace_write Writing contepts
+@section namespace_write Writing concepts
 - format_and_write - contains the logic for formatting and writing to destinations
 - msg_route - contains the logic for routing the message to the formatters and destinations
 - op_equal - implements operator==, in order to compare formatters and/or destinations. Useful when you want to 

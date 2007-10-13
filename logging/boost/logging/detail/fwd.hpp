@@ -45,6 +45,7 @@ namespace boost { namespace logging {
     typedef types<override>::char_type char_type;
     typedef types<override>::hold_string_type hold_string_type;
     typedef types<override>::filter_type filter_type;
+    typedef types<override>::mutex mutex;
 
     namespace writer {};
 

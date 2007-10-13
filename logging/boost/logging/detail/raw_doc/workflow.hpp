@@ -15,7 +15,7 @@ namespace boost { namespace logging {
 
 @section workflow_introduction Introduction
 
-So, what happens when a message is written to the log?
+What happens when a message is written to the log?
 
 First, you have a logger you write to. @b Every logger contains 2 things:
 - a filter, which indicates if the log is turned on or off
@@ -39,7 +39,7 @@ logger<write_to_cout, filter::no_ts> g_log;
 
 @section workflow_filter Step 1: Filtering the message
 
-So, first time the message is filtered. The filter class only needs to provide the @c is_enabled function.
+First time the message is filtered. The filter class only needs to provide the @c is_enabled function.
 Then, the logger provides 2 helpers:
 - operator bool()
 - operator !
@@ -65,7 +65,7 @@ Otherwise, processing is @em completely ignored.
 
 @section workflow_processing Step 2: Processing the message
 
-So, once we've established that the logger is enabled, we'll @em process the message.
+Once we've established that the logger is enabled, we'll @em process the message.
 Processing means whatever your application thinks logging means.
 
 This can be as simple as dumping the message to cout or whatever.
@@ -99,7 +99,7 @@ If you think about it, you can actually divide this step, into 2 smaller steps:
 \n\n
 @section workflow_2a Step 2A: Gathering the message
 
-The meaning of "gathering the message" dependends on your application. The message can:
+The meaning of "gathering the message" depends on your application. The message can:
 - be a simple string,
 - it can contain extra info, like: level, category, etc.
 - it can be written all at once, or using the cool "<<" operator
@@ -120,7 +120,7 @@ L_(err,"chart")("Cannot load chart")(chart_path);
 
 How you gather your message, depends on how you <tt>\#define L_ ...</tt>.
 
-So, in other words, gathering the message means getting all the message in "one piece", so that it can further be written. 
+In other words, gathering the message means getting all the message in "one piece", so that it can be written. 
 
 
 
@@ -150,12 +150,12 @@ logger<processor, filter::no_ts> g_single_log;
 L_ << idx << " : reading word " << word;
 @endcode
 
-You can define your own types of writers. At this time, the %writer classes that come with this library are in <tt>namespace writer</tt>.
+You can define your own types of writers. The %writer classes that come with this library are in <tt>namespace writer</tt>.
 
 At this time, I've defined the concept of writer::format_write - writing using Formatters and Destinations.
 Simply put, this means formatting the message, and then writing it to destination(s).
 
-For each log, you decide where how messages are formatted, and to what destinations they are written. Example:
+For each log, you decide how messages are formatted and to what destinations they are written. Example:
 
 @code
 typedef process_msg< gather::ostream_like::return_cache_str<> , 

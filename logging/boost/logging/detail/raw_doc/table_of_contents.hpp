@@ -33,6 +33,7 @@ namespace boost { namespace logging {
 
 - @ref macros
 
+- @ref acknowledgements
 
 
 */

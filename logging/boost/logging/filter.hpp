@@ -106,7 +106,7 @@ struct always_enabled {
     Filter that is always disabled
 */
 struct always_disabled {
-    static bool is_enabled() { return true; }
+    static bool is_enabled() { return false; }
 };
 
 

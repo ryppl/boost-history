@@ -29,9 +29,9 @@ namespace boost { namespace logging {
     @page macros Macros - how, what for?
 
     When dealing with logs, you will most likely want to use macros: simply to write less.
-    If order to be efficient, you usually want to write to a log only if it's enabled.
+    To be efficient, you usually want to write to a log only if it's enabled.
 
-    So, either you always write: <tt> if ( g_log) g_log .... </tt>, or, you create macros:
+    Either you always write: <tt> if ( g_log) g_log .... </tt>, or, you create macros:
     
     @code
     #define L_ if ( g_log) g_log .... 
