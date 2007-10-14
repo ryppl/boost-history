@@ -612,6 +612,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\..\boost\logging\detail\manipulator.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\..\boost\logging\format\op_equal.hpp"
 					>
 				</File>
@@ -619,6 +623,38 @@
 					RelativePath="..\..\..\..\..\boost\logging\format\optimize.hpp"
 					>
 				</File>
+				<Filter
+					Name="formatter"
+					>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\formatter\convert_format.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\formatter\defaults.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\formatter\thread_id.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\formatter\time.hpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="destination"
+					>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\destination\defaults.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\destination\file.hpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="writer"
@@ -661,6 +697,10 @@
 			Name="raw_doc"
 			>
 			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\acknowledgments.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\fixme.hpp"
 				>
 			</File>
@@ -678,6 +718,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\template.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\..\boost\logging\detail\raw_doc\thread_safety.hpp"
 				>
 			</File>
 			<File

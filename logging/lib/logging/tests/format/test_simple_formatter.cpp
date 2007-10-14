@@ -38,6 +38,11 @@ using namespace boost::logging;
 
     Also, I'm adding formatters/destinations, and at a later time, I'm removing some - thus, when logging,
     we won't call the deleted formatters/destinations.
+
+
+
+    IMPORTANT:
+    In this example, I'm creating my own formatter classes. To see me use default formatters, try another example FIXME
 */
 
 typedef optimize::cache_string_one_str<> cache_string;
