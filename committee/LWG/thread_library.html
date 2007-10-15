@@ -181,6 +181,13 @@ codes usually originate from the underlying operating system application program
 interface (API). <i>-- end note</i>]
 </p>
 
+<p>Several classes described in this clause have members <code>
+native_handle_type</code> and <code>native_handle</code>. The presence of these 
+members and their semantics is implementation defined. [<i>Note:</i> These 
+members allow implementations to provide access to implementation details. Their 
+names are specified to facilitate portable compile-time detection. Actual use of 
+these members is inherently non-portable. <i>--end note</i>]</p>
+
 <h3>
 <a name="ThreadsWording">Threads</a></h3>
 
@@ -234,7 +241,7 @@ completion of a thread, and to perform other operations to manage and query the 
 public:
     // <i>types:</i>
     class id;
-    typedef <i>implementation-defined</i> native_handle_type;
+    typedef <i>implementation-defined</i> native_handle_type; <i>// See [frontmatter]</i>
 
     // <i>construct/copy/destroy:</i>
     thread();
@@ -251,7 +258,7 @@ public:
     void join();
     void detach();
     id get_id() const;
-    native_handle_type native_handle();
+    native_handle_type native_handle(); <i>// See [frontmatter]</i>
 
     // <i>static members:</i>
     static unsigned hardware_concurrency();
@@ -610,22 +617,6 @@ represented by
 </blockquote>
 </blockquote>
 
-<blockquote><pre>native_handle_type native_handle();
-</pre>
-
-<blockquote>
-<p>
-<i>Returns:</i> An object of an implementation-defined type. [<i>Note:</i> The 
-intent is that <code>native_handle()</code> provides access to the underlying 
-implementation, to allow use of implementation specific facilities. Code that 
-relies on implementation specific facilities is inherently non-portable. <i>-- 
-end note</i>]</p>
-<p>
-<i>Throws:</i> Nothing.
-</p>
-</blockquote>
-</blockquote>
-
 <h5><tt>thread</tt> static members</h5>
 <blockquote><pre>unsigned hardware_concurrency();
 </pre>
@@ -935,55 +926,6 @@ And such a guarantee would preclude potentially interesting
 </blockquote>
 </blockquote>
 
-<p>
-<span style="background-color: #FFFF00">If and only if the mutex type is internally represented by a single data structure
-which can be passed to operating system specific interfaces, then there shall be a nested 
-implementation-defined typedef </span> <tt>
-<span style="background-color: #FFFF00">native_handle_type</span></tt><span style="background-color: #FFFF00"> that is an alias to this native type if it is copyable,
-otherwise if the native type is not copyable, is a pointer to this native type. 
-The implementation shall document whether the </span> <tt>
-<span style="background-color: #FFFF00">native_handle_type</span></tt><span style="background-color: #FFFF00"> 
-typedef is present. </span>
-</p>
-
-<p>
-<span style="background-color: #FFFF00">If the nested typedef </span> <tt>
-<span style="background-color: #FFFF00">native_handle_type</span></tt><span style="background-color: #FFFF00"> exists, then there
-also shall be a member function </span> <tt>
-<span style="background-color: #FFFF00">native_handle()</span></tt><span style="background-color: #FFFF00"> which returns
-</span> <tt>
-<span style="background-color: #FFFF00">native_handle_type</span></tt><span style="background-color: #FFFF00">.
-</span> <i><span style="background-color: #FFFF00">[Example:</span></i><span style="background-color: #FFFF00">
-</span>
-</p>
-
-<blockquote><pre><span style="background-color: #FFFF00">class mutex
-{
-    </span><span style="background-color: #FFFF00">pthread_mutex_t</span><span style="background-color: #FFFF00"> m;
-public:
-    typedef </span><span style="background-color: #FFFF00">pthread_mutex_t</span><span style="background-color: #FFFF00">* native_handle_type;
-    native_handle_type native_handle() {return &amp;m;}
-    ...
-};
-</span></pre>
-<p><i><span style="background-color: #FFFF00">--end example]</span></i></p>
-</blockquote>
-
-<p>
-<span style="background-color: #FFFF00">If there is no single operating system specific data structure that implements
-the mutex type, then neither the nested type </span> <tt>
-<span style="background-color: #FFFF00">native_handle_type</span></tt><span style="background-color: #FFFF00"> nor the
-member function </span> <tt><span style="background-color: #FFFF00">native_handle()</span></tt><span style="background-color: #FFFF00"> shall not be present.
-</span>  <i><span style="background-color: #FFFF00">[Example:</span></i><span style="background-color: #FFFF00"> 
-if a </span> <tt><span style="background-color: #FFFF00">recursive_mutex</span></tt><span style="background-color: #FFFF00"> is implemented with both a
-</span> <tt><span style="background-color: #FFFF00">pthread_mutex_t</span></tt><span style="background-color: #FFFF00">
-and a separate lock count, then there will be no </span> <tt>
-<span style="background-color: #FFFF00">native_handle_type</span></tt><span style="background-color: #FFFF00">.
-</span> <i>
-<span style="background-color: #FFFF00">--end example]</span></i><span style="background-color: #FFFF00">
-</span>
-</p>
-
 <h4>Class mutex</h4>
 
 <blockquote><pre>namespace std {
@@ -1001,8 +943,8 @@ public:
     bool try_lock();
     void unlock();
 
-    typedef unspecified native_handle_type;  // conditionally present.  example: pthread_mutex_t*
-    native_handle_type native_handle();      // conditionally present
+    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
 }  // std
@@ -1030,8 +972,8 @@ public:
     bool try_lock();
     void unlock();
 
-    typedef unspecified native_handle_type;  // conditionally present.  example: pthread_mutex_t*
-    native_handle_type native_handle();      // conditionally present
+    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
 }  // std
@@ -1106,8 +1048,8 @@ public:
         bool timed_lock(const Duration&amp; rel_time);
     void unlock();
 
-    typedef unspecified native_handle_type;  // conditionally present.  example: pthread_mutex_t*
-    native_handle_type native_handle();      // conditionally present
+    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
 }  // std
@@ -1137,8 +1079,8 @@ public:
         bool timed_lock(const Duration&amp; rel_time);
     void unlock();
 
-    typedef unspecified native_handle_type;  // conditionally present.  example: pthread_mutex_t*
-    native_handle_type native_handle();      // conditionally present
+    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
 }  // std
@@ -1703,27 +1645,11 @@ used to cause a thread to wait until notified by some other
 thread that some condition is met, or a UTC[(?)] time is reached.
 </p>
 
-<p>
-If and only if the condition variable type is internally represented by an object
-which can be passed to operating system specific interfaces, then there shall be a 
-implementation-defined member typedef <tt>native_handle_type</tt> that is an alias 
-to this native type, if it is copyable, or if the native type is not copyable, 
-a pointer to this native type.  The implementation shall document whether the 
-<tt>native_handle_type</tt> member typedef is present.
-</p>
-
-<p>
-If the nested typedef <tt>native_handle_type</tt> exists, then there
-also shall be a member function <tt>native_handle()</tt> which returns the
-underlying representation. 
-</p>
-
 <blockquote><pre>namespace std {
 
 class condition_variable
 {
 public:
-    typedef <i>implementation-defined</i> native_handle_type;
     
     condition_variable();
     ~condition_variable();
@@ -1739,7 +1665,9 @@ public:
     bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time);
     template &lt;class Predicate&gt;
         bool timed_wait(unique_lock&lt;mutex&gt;&amp; lock, const system_time&amp; abs_time, Predicate pred);
-    native_handle_type native_handle();
+
+    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
 }  // std
@@ -1923,16 +1851,6 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 </blockquote>
 </blockquote>
 
-<blockquote>
-<pre>native_handle_type native_handle();
-</pre>
-<blockquote>
-<p>
-<i>Returns:</i> the representation of the underlying object used to implement <tt>*this</tt>.
-</p>
-</blockquote>
-</blockquote>
-
 
 <p>
 <tt>condition_variable</tt> shall be a standard-layout class (chapter 9 [class]).
@@ -1952,28 +1870,11 @@ and <tt>unlock</tt> with the semantics of the mutex concept.  All of the standar
 meet this requirement.
 </p>
 
-<p>
-If and only if the <tt>condition_variable_any</tt> type is internally represented by an 
-an object or objects which can be passed to operating system specific interfaces, then 
-there shall be a nested implementation-defined typedef <tt>native_handle_type</tt> that 
-is an alias to a type providing access to the object or objects.  The type 
-<tt>native_handle_type</tt> must be copyable; if the object or objects are not copyable, 
-<tt>native_handle_type</tt> must be a pointer type.  The implementation shall document 
-whether the <tt>native_handle_type</tt> typedef is present.
-</p>
-
-<p>
-If the nested typedef <tt>native_handle_type</tt> exists, then there
-also shall be a member function <tt>native_handle()</tt> which returns the
-underlying representation. 
-</p>
-
 <blockquote><pre>namespace std {
 
 class condition_variable_any
 {
 public:
-    typedef <i>implementation-defined</i> native_handle_type;
     condition_variable_any();
     ~condition_variable_any();
 
@@ -1990,7 +1891,9 @@ public:
         bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time);
     template &lt;class Lock, class Predicate&gt;
         bool timed_wait(Lock&amp; lock, const system_time&amp; abs_time, Predicate pred);
-    native_handle_type native_handle();
+
+    typedef <i>implemenation-defined</i> native_handle_type;  <i>// See [frontmatter]</i>
+    native_handle_type native_handle();      <i>          // See [frontmatter]</i>
 };
 
 }  // std
@@ -2174,16 +2077,6 @@ evaluates to <tt>true</tt>, regardless of whether the timeout was triggered.
 </blockquote>
 </blockquote>
 
-<blockquote>
-<pre>native_handle_type native_handle();
-</pre>
-<blockquote>
-<p>
-<i>Returns:</i> the representation of the underlying object or objects used to implement <tt>*this</tt>.
-</p>
-</blockquote>
-</blockquote>
-
 <hr/>
 
 
@@ -2241,8 +2134,7 @@ Header &lt;date_time&gt; Synopsis</h3></div></div></div>
 </p>
 
 
-<blockquote><pre>
-class system_time 
+<blockquote><pre>class system_time 
 {
  public:
 
@@ -2292,14 +2184,12 @@ class system_time
          in a signed 64 bit integer.
 </p></blockquote>
 
-<pre class="programlisting">
-<span class="identifier">system_time</span><span class="special">();</span></pre><p>
+<pre class="programlisting"><span class="identifier">system_time</span><span class="special">();</span></pre><p>
         <i>Effects:</i> Constructs a system_time
         object representing the epoch time point 1970-01-01 00:00:00.000000000
       </p><p>
         <i>Throws:</i> Nothing.
-      </p><pre class="programlisting">
-<span class="identifier">system_time</span><span class="special">(</span><span class="identifier">time_t</span> <span class="identifier">secs</span><span class="special">,</span> <span class="identifier">nanoseconds</span> <span class="identifier">ns</span><span class="special">);</span>
+      </p><pre class="programlisting"><span class="identifier">system_time</span><span class="special">(</span><span class="identifier">time_t</span> <span class="identifier">secs</span><span class="special">,</span> <span class="identifier">nanoseconds</span> <span class="identifier">ns</span><span class="special">);</span>
 </pre><p>
         <i>Effects:</i> Construct<span class="underline">s</span> a utc
         time object representing the time point that is secs + 1,000,000,000*ns after the epoch.
@@ -2309,8 +2199,7 @@ class system_time
       </p><p>
         <i>Throws:</i> Nothing.
       </p><p>
-      </p><pre class="programlisting">
-<span class="identifier">time_t</span> <span class="identifier">seconds_since_epoch</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+      </p><pre class="programlisting"><span class="identifier">time_t</span> <span class="identifier">seconds_since_epoch</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre><p>
         <i>Returns:</i> The count of seconds since 1970-01-01 00:00:00.
       </p><p>
@@ -2428,8 +2317,7 @@ class system_time
 </p>
 
 
-<blockquote><pre>
-  system_time get_system_time();
+<blockquote><pre>  system_time get_system_time();
 </pre></blockquote>
 
 
@@ -2969,8 +2857,7 @@ Objects of class <tt>minutes</tt> can be used to represent a count of minutes.
 Objects of class <tt>hours</tt> can be used to represent a count of hours.
 </p>
 
-<blockquote><pre>
-class  hours 
+<blockquote><pre>class  hours 
 {
  public:
    hours(long long s=0);
