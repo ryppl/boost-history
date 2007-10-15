@@ -130,6 +130,39 @@ the invoked consumer to invoke the producer.]
 
 [endsect][/mechanism]
 
+[section PortCategory]
+
+A [PortCategoryConcept] designates a type of port in the Dataflow library.
+The library currently defines two [PortCategoryConcept]s:
+
+ * `boost::dataflow::ports::producer`, and
+ * `boost::dataflow::ports::consumer`
+
+[heading Notation]
+The following expressions are used in this document:
+
+[variablelist
+    [[PT] [A [PortCategoryConcept] type.]]
+]
+
+[heading Requirements]
+[table
+    [[Name] [Expression] [Result Type] [Description]]
+    [
+        [Opposite PortCategory]
+        [`PT::complement`]
+        [[PortCategoryConcept] type]
+        [
+            The complementing [PortCategory] of `PT`, meaning that connections
+            can be made between [PortConcept]s of [PortCategoryConcept] `PT` and
+            [PortConcept]s of [PortCategoryConcept] `PT::complement`.
+        ]
+    ]
+]
+
+
+[endsect][/porttype]
+
 [include producer_concepts.qbk]
 
 [include consumer_concepts.qbk]

@@ -20,8 +20,8 @@ connecting a chain of components.
 template<typename Input, typename Output>
 typename boost::enable_if<
     boost::mpl::and_<
-        boost::dataflow::is_producer<boost::dataflow::vtk::mechanism, Input>,
-        boost::dataflow::is_consumer<boost::dataflow::vtk::mechanism, Output>
+        boost::dataflow::is_port<boost::dataflow::vtk::mechanism, boost::dataflow::ports::producer, Input>,
+        boost::dataflow::is_port<boost::dataflow::vtk::mechanism, boost::dataflow::ports::consumer, Output>
     >,
     Input &
 >::type
@@ -32,8 +32,8 @@ operator >>= (Input &input, Output &output)
 template<typename Input, typename Output>
 typename boost::enable_if<
     boost::mpl::and_<
-        boost::dataflow::is_producer<boost::dataflow::vtk::mechanism, Input>,
-        boost::dataflow::is_consumer<boost::dataflow::vtk::mechanism, Output>
+        boost::dataflow::is_port<boost::dataflow::vtk::mechanism, boost::dataflow::ports::producer, Input>,
+        boost::dataflow::is_port<boost::dataflow::vtk::mechanism, boost::dataflow::ports::consumer, Output>
     >,
     Input &
 >::type
@@ -49,8 +49,8 @@ branching connections.
 template<typename Input, typename Output>
 typename boost::enable_if<
     boost::mpl::and_<
-        boost::dataflow::is_producer<boost::dataflow::vtk::mechanism, Input>,
-        boost::dataflow::is_consumer<boost::dataflow::vtk::mechanism, Output>
+        boost::dataflow::is_port<boost::dataflow::vtk::mechanism, boost::dataflow::ports::producer, Input>,
+        boost::dataflow::is_port<boost::dataflow::vtk::mechanism, boost::dataflow::ports::consumer, Output>
     >,
     Input &
 >::type

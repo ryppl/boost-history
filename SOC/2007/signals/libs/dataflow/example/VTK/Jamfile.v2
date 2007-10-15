@@ -31,9 +31,9 @@ project dataflow/test/VTK
     ;
 
 exe Cone : Cone.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
-exe Cone2 : Cone2.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
-exe Cone3 : Cone3.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
-exe Cone4 : Cone4.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
-exe Cone5 : Cone5.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
-exe Cone6 : Cone6.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics vtkWidgets GL ;
+#exe Cone2 : Cone2.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
+#exe Cone3 : Cone3.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
+#exe Cone4 : Cone4.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
+#exe Cone5 : Cone5.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics GL ;
+#exe Cone6 : Cone6.cxx X11 Xt vtkCommon vtkRendering vtkFiltering vtkGraphics vtkWidgets GL ;
 

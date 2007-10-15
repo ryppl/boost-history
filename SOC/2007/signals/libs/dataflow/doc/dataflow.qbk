@@ -14,6 +14,7 @@
 
 [template concepts[] [link dataflow.concepts concepts]]
 [template MechanismConcept[] [link dataflow.concepts.mechanism [^Mechanism]]]
+[template PortCategoryConcept[] [link dataflow.concepts.porttype [^PortCategory]]]
 [template FilterConcept[] [link dataflow.concepts.filter [^Filter]]]
 [template ProducerCategoryConcept[] [link dataflow.concepts.producercategory [^ProducerCategory]]]
 [template ProducerConcept[] [link dataflow.concepts.producer [^Producer]]]
