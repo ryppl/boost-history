@@ -12,10 +12,13 @@
 <p>&#10004; This is much better, but it's still in draft stage, not ready yet for voting 
 into the WD. Comments:</p>
 <ol>
-  <li>the description of the meaning of thread::id is distributed among several 
+  <li>&#10004; The description of the meaning of thread::id is distributed among several 
   different clauses, and it's hard to figure out just what it means.<br>
+  <br>
+  <i>Centralized the description of the meaning in the introduction to class 
+  thread::id.</i><br>
 &nbsp;</li>
-  <li>the description of thread::native_handle_type and native_handle() is so 
+  <li>&#10004; The description of thread::native_handle_type and native_handle() is so 
   vague (appropriately so) that it might be better to leave it out completely. 
   Since you can't do anything meaningful with it if it's present, just leave it 
   up to the implementation to tell you what it supports and what you can do with 
@@ -23,39 +26,58 @@ into the WD. Comments:</p>
   stays in, it's overconstrained. In particular, if it's copyable, this requires 
   copying it to pass it to the OS, even if the OS takes a pointer to that 
   object. Just leave it to the implementation to match what the OS requires.<br>
+  <br>
+  <i>Removed normative wording, following the above rationale. Added a note to 
+  clarify intent.</i><br>
 &nbsp;</li>
-  <li>objects of type thread::id &quot;uniquely identify&quot; threads of execution. 
+  <li>&#10004; Objects of type thread::id &quot;uniquely identify&quot; threads of execution. 
   Except that they don't, because default-constructed objects compare equal, and 
   the id returned from a thread that is not joinable also compares equal to a 
   default-constructed object.<br>
+  <br>
+  <i>Modified wording to resolve inconsistencies. Also defined thread::get_id() 
+  in terms of this_thread::get_id() so that there is not possibility that 
+  thread::get_id() and this_thread::get_id() for the same thread could return 
+  different values. It's poor standardese to specify the same thing in two 
+  places, since the specifications could diverge over time.</i><br>
 &nbsp;</li>
-  <li>thread::get_id() for a default-constructed thread returns an object that 
+  <li>&#10004; thread::get_id() for a default-constructed thread returns an object that 
   refers to &quot;not any thread&quot;. That last term isn't used anywhere else, so 
   shouldn't be used.<br>
 &nbsp;</li>
-  <li>default constructor for thread constructs an object that is not &quot;attached&quot; 
+  <li>&#10004; Default constructor for thread constructs an object that is not &quot;attached&quot; 
   to any thread; other constructors create objects that &quot;represent&quot; a thread. 
   Assignment operator talks about an object that &quot;refers&quot; to a thread.<br>
+  <br>
+  <i>Changed both to use &quot;represents&quot;.</i><br>
 &nbsp;</li>
-  <li>template constructor for thread: &quot;if f is an rvalue, F must only be 
+  <li>&#10004; Template constructor for thread: &quot;if f is an rvalue, F must only be 
   MoveConstructible&quot;. Does this mean that F must not be CopyConstructible?<br>
+  <br>
+  <i>I changed both sentences to: &quot;If <tt>f</tt> is an lvalue, <tt>F</tt> is <tt>CopyConstructible</tt>.
+If <tt>f</tt> is an rvalue, <tt>F</tt> is <tt>MoveConstructible</tt>.&quot;
+  <span style="background-color: #FFFF00">Howard, please verify that's the 
+  intended meaning.</span></i><br>
 &nbsp;</li>
-  <li>thread::join &quot;may throw system_error&quot;. Under what circumstances?<br>
+  <li>&#10004; Thread::join &quot;may throw system_error&quot;. Under what circumstances?<br>
+  <br>
+  <i>Refined wording in the chapter's front matter, added additional wording for 
+  specific cases.</i><br>
 &nbsp;</li>
-  <li>call_once: &quot;F is CopyConstructible&quot;, but F is not defined.<br>
+  <li>&#10004;  call_once: &quot;F is CopyConstructible&quot;, but F is not defined.<br>
 &nbsp;</li>
-  <li>Mutex concepts: mutex type is required to be Destructible, so requirement 
+  <li>&#10004;  Mutex concepts: mutex type is required to be Destructible, so requirement 
   that its destructor not exit by an exception is redundant.<br>
 &nbsp;</li>
   <li>&quot;If and only if the mutex type ...&quot;, followed by &quot;If there is no ...&quot; 
   which is the obverse. Either use iff and only if, or use if ... else.<br>
 &nbsp;</li>
-  <li>&quot;Implementations may supply additional ...&quot; is entirely redundant.<br>
+  <li>&#10004; &quot;Implementations may supply additional ...&quot; is entirely redundant.<br>
 &nbsp;</li>
-  <li>&quot;The class mutex is a ...&quot;, but &quot;The class recursive_mutex shall be a 
+  <li>&#10004; &quot;The class mutex is a ...&quot;, but &quot;The class recursive_mutex shall be a 
   ...&quot;.<br>
 &nbsp;</li>
-  <li>Timed Mutexes: &quot;The type TimeDuration provides resolution information...&quot; 
+  <li>&#10004; Timed Mutexes: &quot;The type TimeDuration provides resolution information...&quot; 
   doesn't sound like a precondition, but an informative description. To the 
   extent that it's actually a precondition, it's a little fuzzy whether it only 
   applies to non-recursive mutexes.<br>
@@ -96,22 +118,44 @@ into the WD. Comments:</p>
   <li>condition_variable::wait: &quot;... unless lock refers to the same underlying 
   mutex object.&quot; Same as what?<br>
 &nbsp;</li>
-  <li>condition_variable::wait, effects: &quot;If the wait should throw an 
+  <li>&#10004; condition_variable::wait, effects: &quot;If the wait should throw an 
   exception...&quot; probably should be &quot;If the wait throws an exception...&quot;. &quot;for 
   any reason&quot; is redundant. &quot;This thread of execution shall unblock ...&quot; is part 
   of the effects of notify and notify_all, not of wait.<br>
+  <br>
+  <i>Since those effects were already specified in the effects of notify and 
+  notify_all, the offending sentence was simply removed from wait().</i><br>
 &nbsp;</li>
-  <li>condition_variable::wait, throws: can throw only if a precondition is not 
+  <li>condition_variable::wait [and timed_wait], throws: can throw only if a precondition is not 
   met? What if the system returns an error?<br>
 &nbsp;</li>
-  <li>condition_variable::wait(lock, pred): what are the constraints on the type 
+  <li>&#10004; condition_variable::wait(lock, pred): what are the constraints on the type 
   Predicate?<br>
+  <br>
+  <i>Added the usual boilerplate wording to the front matter for the clause. 
+  Ditto date-time clause, which was also missing the boilerplate.</i><br>
 &nbsp;</li>
   <li>condition_variable::timed_wait: the requirement that the function return 
   false if the time elapses means that when a blocked thread is released by 
   notify, the release code must check whether the time has elapsed, since the 
   timeout may not have been noticed earlier. Is this intentional? Seems more 
-  useful to allow it to return true in this case.</li>
+  useful to allow it to return true in this case.<br>
+&nbsp;</li>
+  <li>&#10004; Use &quot;thread&quot; to describe a &quot;thread of execution&quot;. Use the term &quot;thread 
+  object&quot; to describe objects of class thread. (Added by Beman, based on 
+  guidance from Pete.)<br>
+&nbsp;</li>
+  <li>&#10004; condition_variable::wait and time_wait specify &quot;<i>Throws:</i> May throw <tt>system_error</tt> if a precondition is not met.&quot; 
+  That's redundant since precondition violations can always result in an 
+  exception. (Added by Beman)<br>
+  <br>
+  <i>Removed. But also see 26.</i><br>
+&nbsp;</li>
+  <li>&quot;Common duration functions&quot; needs to be morphed into &quot;<code>Duration</code> 
+  requirements&quot; to resolve issue 13. In general, the current standard has no 
+  concept of &quot;concept&quot;. All concepts in the document need to be changed into 
+  requirements. i.e. &quot;Mutex concepts&quot; -&gt; &quot;Mutex requirements&quot;.&nbsp; (Added by 
+  Beman.)</li>
 </ol>
 
 </body>
