@@ -382,7 +382,28 @@ private:
    return system_time(time_since_epoch);
  }
 
+} //namespace std
 
-}
+
+
+
+ namespace detail {
+   
+   template<typename time_duration_type>
+   inline
+   timeval to_timeval(const time_duration_type& td) {
+     std::nanoseconds ns(td);
+     int64_t count = ns.get_count();
+     int64_t sec_count = count/int64_t(1000000000);
+     //remainder after sec -- adjusted from nano back to micro
+     count = (count%int64_t(1000000000))/int64_t(1000); 
+     timeval tv;
+     tv.tv_sec = sec_count;
+     tv.tv_usec = count;
+     
+     return tv;
+   }
+ }
+
 
 #endif

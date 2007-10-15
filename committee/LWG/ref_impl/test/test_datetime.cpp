@@ -57,6 +57,32 @@ void do_conversions()
 
 };
 
+void check_native_conversion()
+{
+  {
+    std::nanoseconds ns(0);
+    timeval tv = detail::to_timeval(ns);
+    std::cout << "Timeval is : " << tv.tv_sec << " " << tv.tv_usec << std::endl;
+  }
+  {
+    std::seconds s(1);
+    timeval tv = detail::to_timeval(s);
+    std::cout << "Timeval is : " << tv.tv_sec << " " << tv.tv_usec << std::endl;
+  }
+  {
+    std::microseconds ms(1);
+    timeval tv = detail::to_timeval(ms);
+    std::cout << "Timeval is : " << tv.tv_sec << " " << tv.tv_usec << std::endl;
+  }
+  {
+    std::microseconds ms(1);
+    ms += seconds(1);
+    timeval tv = detail::to_timeval(ms);
+    std::cout << "Timeval is : " << tv.tv_sec << " " << tv.tv_usec << std::endl;
+  }
+
+}
+
 
 
 int
@@ -104,7 +130,8 @@ main()
 
 
   do_conversions();
-  
+  check_native_conversion();
+
   return 0;
 
 }
