@@ -1,0 +1,183 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Symbols]
+
+This class symbols implements a symbol table. The symbol table holds a dictionary of symbols where each symbol is a sequence of `CharT`s (a `char`, `wchar_t`, `int`, enumeration etc.) . The template class, parameterized by the character type (`CharT`), can work efficiently with 8, 16, 32 and even 64 bit characters. Mutable data of type `T` is associated with each symbol.
+
+Traditionally, symbol table management is maintained seperately outside the BNF grammar through semantic actions. Contrary to standard practice, the Spirit symbol table class `symbols` is-a parser. An instance of which may be used anywhere in the EBNF grammar specification. It is an example of a dynamic parser. A dynamic parser is characterized by its ability to modify its behavior at run time. Initially, an empty `symbols` object matches nothing. At any time, symbols may be added, thus, dynamically altering its behavior.
+
+Each entry in a symbol table has an associated mutable data slot. In this regard, one can view the symbol table as an associative container (or map) of key-value pairs where the keys are strings.
+
+The symbols class expects two template parameters (actually there is a third, see detail box). The first parameter `T` specifies the data type associated with each symbol (defaults to `int`) and the second parameter `CharT` specifies the character type of the symbols (defaults to `char`).
+
+``
+    template
+    <
+        typename T = int,
+        typename CharT = char,
+        typename SetT = impl::tst<T, CharT>
+    >
+    class symbols;
+``
+
+[info Ternary State Trees
+
+The actual set implementation is supplied by the `SetT` template parameter (3rd template parameter of the symbols class) . By default, this uses the tst class which is an implementation of the Ternary Search Tree.
+
+Ternary Search Trees are faster than hashing for many typical search problems especially when the search interface is iterator based. Searching for a string of length k in a ternary search tree with n strings will require at most O(log n+k) character comparisons. TSTs are many times faster than hash tables for unsuccessful searches since mismatches are discovered earlier after examining only a few characters. Hash tables always examine an entire key when searching.
+
+For details see [@http://www.cs.princeton.edu/~rs/strings/].
+]
+
+Here are some sample declarations:
+
+``
+    symbols<> sym;
+    symbols<short, wchar_t> sym2;
+
+    struct my_info
+    {
+        int     id;
+        double  value;
+    };
+
+    symbols<my_info> sym3;
+``
+
+After having declared our symbol tables, symbols may be added statically using the construct:
+
+``
+    sym = a, b, c, d ...;
+``
+
+where `sym` is a symbol table and `a..d etc. are strings. `
+
+[note Note that the comma operator is separating the items being added to the symbol table, through an assignment. Due to operator overloading this is possible and correct (though it may take a little getting used to) and is a concise way to initialize the symbol table with many symbols. Also, it is perfectly valid to make multiple assignments to a symbol table to iteratively add symbols (or groups of symbols) at different times.]
+
+Simple example:
+
+``
+    sym = "pineapple", "orange", "banana", "apple", "mango";
+``
+
+Note that it is invalid to add the same symbol multiple times to a symbol table, though you may modify the value associated with a symbol artibrarily many times.
+
+Now, we may use sym in the grammar. Example:
+
+``
+    fruits = sym >> *(',' >> sym);
+``
+
+Alternatively, symbols may be added dynamically through the member functor add (see `[link __symbol_inserter__]` below). The member functor add may be attached to a parser as a semantic action taking in a begin/end pair:
+
+``
+    p[sym.add]
+``
+
+where `p` is a parser (and `sym` is a symbol table). On success, the matching portion of the input is added to the symbol table.
+
+`add` may also be used to directly initialize data. Examples:
+
+``
+    sym.add("hello", 1)("crazy", 2)("world", 3);
+``
+
+Assuming of course that the data slot associated with `sym` is an integer.
+
+The data associated with each symbol may be modified any time. The most obvious way of course is through semantic actions. A function or functor, as usual, may be attached to the symbol table. The symbol table expects a function or functor compatible with the signature:
+
+[variablelist
+ [
+  [Signature for functions:]
+  [`void func(T& data);`]
+ ]
+ [
+  [Signature for functors:]
+  [`struct ftor
+    {
+        void operator()(T& data) const;
+    };`]
+
+Where `T` is the data type of the symbol table (the `T` in its template parameter list). When the symbol table successfully matches something from the input, the data associated with the matching entry in the symbol table is reported to the semantic action.
+ ]
+]
+
+[h3:utilities Symbol table utilities]
+
+Sometimes, one may wish to deal with the symbol table directly. Provided are some symbol table utilities.
+
+[variablelist
+ [
+  [`add`]
+  [`template <typename T, typename CharT, typename SetT>
+    T*  add(symbols<T, CharT, SetT>& table, CharT const* sym, T const& data = T());`
+
+Adds a symbol `sym` (C string) to a symbol table table plus an optional data data associated with the symbol. Returns a pointer to the data associated with the symbol or `NULL` if add failed (e.g. when the symbol is already added before).]
+ ]
+ [`find`]
+ [`template <typename T, typename CharT, typename SetT>
+    T*  find(symbols<T, CharT, SetT> const& table, CharT const* sym);`
+
+Finds a symbol `sym` (C string) from a symbol table table. Returns a pointer to the data associated with the symbol or `NULL` if not found.
+ ]
+]
+
+[h3 `symbol_inserter`]
+
+The `symbols` class holds an instance of this class named `add`. This can be called directly just like a member function, passing in a first/last iterator and optional data:
+
+``
+    sym.add(first, last, data);
+``
+
+Or, passing in a C string and optional data:
+
+``
+    sym.add(c_string, data);
+``
+
+where `sym` is a symbol table. The `data` argument is optional. The nice thing about this scheme is that it can be cascaded. We've seen this applied above. Here's a snippet from the [@../../example/fundamental/roman_numerals.cpp roman numerals parser]:
+
+``
+    //  Parse roman numerals (1..9) using the symbol table.
+
+    struct ones : symbols<unsigned>
+    {
+    	ones()
+    	{
+            add
+                ("I"    , 1)
+                ("II"   , 2)
+                ("III"  , 3)
+                ("IV"   , 4)
+                ("V"    , 5)
+                ("VI"   , 6)
+                ("VII"  , 7)
+                ("VIII" , 8)
+                ("IX"   , 9)
+    		;
+    	}
+
+    } ones_p;
+``
+
+Notice that a user defined struct ones is subclassed from `symbols. Then at construction time, we added all the symbols using the `add symbol_inserter.
+
+The full source code can be` [@../../example/fundamental/roman_numerals.cpp viewed here]. This is part of the Spirit distribution.
+
+Again, `add` may also be used as a semantic action since it conforms to the action interface (see [link __semantic actions__)]):
+
+``
+    p[sym.add]
+``
+
+where `p` is a parser of course.
+
+[endsect][/ symbols]
+

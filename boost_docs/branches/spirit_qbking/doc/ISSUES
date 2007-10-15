@@ -1,0 +1,66 @@
+
+
+trees.html
+
+ * 'See the example file xml_grammar.hpp (in libs/spirit/example/...'
+   The file doesn't exist.
+
+organisation.html
+
+ * '[*error_handling]. The framework would not be complete...'
+   The format of this is a bit confusing. Why is error_handling written like a class/function name? Is it one?
+
+confix.html
+
+ * The top-level header 'confix parsers' seems needless. I've removed it.
+ * Link needed for `as_parser`.
+ * Is 'expr' used as an abbreviation? For example in the context of 'expr parser'. It may be confused easily with the `expr` that comes up in the example code.
+
+list_parsers.html
+
+ * 'parser generators are described here and here'
+   Sort out the links here.
+
+functor_parser.html
+
+ * '(see In-depth: The Parser)'
+   Link this up
+
+regular_expression_parser.html
+
+ * Link to 'The Scanner Business'
+
+distinct.html
+
+ * Add link for ASM.1.
+
+lazy_parser.qbk
+
+ * First word should link to docs section on Spirit's Closures.
+
+ * 'When `base` is being parsed, in your semantic action, store a pointer to the selected ?( base | ('`' >> base >> '`') ) in a closure variable'
+
+select_parser.qbk
+
+ * Link at bottom of page referring to PHOENIX_LIMIT should be more direct.
+
+switch_parser.qbk
+
+ * Got a link for Sam Nabialek?
+
+portability.qbk
+
+ * 'Spirit v1.6.x'
+   Link to the newest in the series
+
+   etc... for all pages
+
+style.qbk
+
+ * Sort links on this page.
+ * It would be better if the page 'Boost coding guidelines' was hosted on the boost website, rather than a login-only yahoo groups page.
+
+rationale.qbk
+
+ * 'Spirit is greedy --using straight forward, naive RD'
+   

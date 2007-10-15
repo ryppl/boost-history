@@ -1,0 +1,92 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section:distinct Distinct Parser]
+
+[section:parsers Distinct Parsers]
+
+The distinct parsers are utility parsers which ensure that matched input is not immediately followed by a forbidden pattern. Their typical usage is to distinguish keywords from identifiers.
+
+[h3 `distinct_parser`]
+
+The basic usage of the `distinct_parser` is to replace the `str_p` parser. For example the declaration_rule in the following example:
+
+``
+    rule<ScannerT> declaration_rule = str_p("declare") >> lexeme_d[+alpha_p];
+``
+
+would correctly match an input `"declare abc"`, but as well an input `"declareabc"` what is usually not intended. In order to avoid this, we can use `distinct_parser`:
+
+``
+    // keyword_p may be defined in the global scope
+    distinct_parser<> keyword_p("a-zA-Z0-9_");
+
+    rule<ScannerT> declaration_rule = keyword_p("declare") >> lexeme_d[+alpha_p];
+``
+
+The `keyword_p` works in the same way as the `str_p` parser but matches only when the matched input is not immediately followed by one of the characters from the set passed to the constructor of `keyword_p`. In the example the `"declare"` can't be immediately followed by any alphabetic character, any number or an underscore.
+
+See the full example [@../../example/fundamental/distinct/distinct_parser.cpp here].
+
+[h3 `distinct_directive`]
+
+For more sophisticated cases, for example when keywords are stored in a symbol table, we can use `distinct_directive`.
+
+``
+    distinct_directive<> keyword_d("a-zA-Z0-9_");
+
+    symbol<> keywords = "declare", "begin", "end";
+    rule<ScannerT> keyword = keyword_d[keywords];
+``
+
+[h3 `dynamic_distinct_parser` and `dynamic_distinct_directive`]
+
+In some cases a set of forbidden follow-up characters is not sufficient. For example ASN.1 naming conventions allows identifiers to contain dashes, but not double dashes (which marks the beginning of a comment). Furthermore, identifiers can't end with a dash. So, a matched keyword can't be followed by any alphanumeric character or exactly one dash, but can be followed by two dashes.
+
+This is when `dynamic_distinct_parser` and the `dynamic_distinct_directive` come into play. The constructor of the `dynamic_distinct_parser` accepts a parser which matches any input that must NOT follow the keyword.
+
+``
+    // Alphanumeric characters and a dash followed by a non-dash
+    // may not follow an ASN.1 identifier.
+    dynamic_distinct_parser<> keyword_p(alnum_p | ('-' >> ~ch_p('-')));
+
+    rule<ScannerT> declaration_rule = keyword_p("declare") >> lexeme_d[+alpha_p];
+``
+
+Since the `dynamic_distinct_parser` internally uses a rule, its type is dependent on the scanner type. So, the `keyword_p shouldn't be defined globally, but rather within the grammar.
+`
+See the full example [@../../example/fundamental/distinct/distinct_parser_dynamic.cpp here].
+
+[endsect][/ parsers]
+
+[section:hiw How it works]
+
+When the `keyword_p_1` and the `keyword_p_2` are defined as
+
+``
+    distinct_parser<> keyword_p(forbidden_chars);
+    distinct_parser_dynamic<> keyword_p(forbidden_tail_parser);
+``
+
+the parsers
+
+``
+    keyword_p_1(str)
+    keyword_p_2(str)
+``
+
+are equivalent to the rules
+
+``
+    lexeme_d[chseq_p(str) >> ~epsilon_p(chset_p(forbidden_chars))]
+    lexeme_d[chseq_p(str) >> ~epsilon_p(forbidden_tail_parser)]
+``
+
+[endsect][/ hiw]
+[endsect][/ distinct]
+

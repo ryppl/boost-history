@@ -1,0 +1,75 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Storable Rules]
+
+The rule is a weird C++ citizen, unlike any other C++ object. It does not have the proper copy and assignment semantics and cannot be stored and passed around by value. You cannot store rules in STL containers (vector, stack, etc) for later use and you cannot pass and return rules to and from functions by value.
+
+EBNF is primarily declarative. Like in functional programming, an EBNF grammar is a static recipe and there's no notion of 'do this, then that'. However, in Spirit, we managed to coax imperative C++ to take in declarative EBNF. Hah! Fun!... We did that by masquerading the C++ assignment operator to mimic EBNF's `::=`. To do that, we gave the rule class' assignment operator and copy constructor a different meaning and semantics. The downside is that doing so made the rule unlike any other C++ object. You can't copy it. You can't assign it.
+
+We want to have the dynamic nature of C++ to our advantage. We've seen dynamic Spirit in action here and there. There are indeed some interesting applications of dynamic parsers using Spirit. Yet, we will not fully utilize the power of dynamic parsing, unless we have a rule that behaves like any other good C++ object. With such a beast, we can write full parsers that's defined at run time, as opposed to compile time.
+
+We now have dynamic rules: `stored_rules`. Basically they are rules with perfect C++ assignment/copy-constructor semantics. This means that `stored_rules` can be stored in containers and/or dynamically created at run-time.
+
+``
+    template<
+        typename ScannerT = scanner<>,
+        typename ContextT = parser_context<>,
+        typename TagT = parser_address_tag>
+    class stored_rule;
+``
+
+The interface is exactly the same as with the `rule` class (see the [link __section on rules__] for more information regarding the API). The only difference is with the copy and assignment semantics. Now, with `stored_rules, we can dynamically and algorithmically define our rules. Here are some samples...
+
+Say I want to dynamically create a rule for:
+
+``
+    start = *(a | b | c);`
+``
+
+I can write it dynamically step-by-step:
+
+``
+    stored_rule<>  start;
+
+    start = a;
+    start = start.copy() | b;
+    start = start.copy() | c;
+    start = *(start.copy());
+``
+
+Later, I changed my mind and want to redefine it (again dynamically) as:
+
+``
+    start = (a | b) >> (start | b);
+``
+
+I write:
+
+``
+    start = b;
+    start = a | start.copy();
+    start = start.copy() >> (start | b);
+``
+
+Notice the statement:
+
+``
+    start = start.copy() | b;
+``
+
+Why is `start.copy()` required? Well, because like rules, stored rules are still embedded by reference when found in the RHS (one reason is to avoid cyclic-shared-pointers). If we write:
+
+``
+    start = start | b;
+``
+
+We have left-recursion! Copying copy of `start` avoids self referencing. What we are doing is making a copy of `start`, ORing it with `b`, then destructively assigning the result back to `start`.
+
+[endsect][/ storable_rules]
+

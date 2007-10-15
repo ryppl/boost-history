@@ -1,0 +1,194 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Debugging]
+
+The top-down nature of Spirit makes the generated parser easy to micro-debug using the standard debugger bundled with the C++ compiler we are using. With recursive-descent, the parse traversal utilizes the hardware stack through C++ function call mechanisms. There are no difficult to debug tables or state machines that obscure the parsing logic flow. The stack trace we see in the debugger follows faithfully the hierarchical grammar structure.
+
+Since any production rule can initiate a parse traversal , it is a lot easier to pinpoint the bugs by focusing on one or a few rules. For relatively complex parsing tasks, the same way we write robust C++ programs, it is advisable to develop a grammar iteratively on a per-module basis where each module is a small subset of the complete grammar. That way, we can stress-test individual modules piecemeal until we reach the top-most module. For instance, when developing a scripting language, we can start with expressions, then move on to statements, then functions, upwards until we have a complete grammar.
+
+At some point when the grammar gets quite complicated, it is desirable to visualize the parse traversal and see what's happening. There are some facilities in the framework that aid in the visualisation of the parse traversal for the purpose of debugging. The following macros enable these features.
+
+[section:macros Debugging Macros]
+
+[h3 `BOOST_SPIRIT_ASSERT_EXCEPTION`]
+
+Spirit contains assertions that may activate when spirit is used incorrectly. By default these assertions use the assert macro from the standard library. If you want spirit to throw an exception instead, `#define BOOST_SPIRIT_ASSERT_EXCEPTION` to the name of the class that you want to be thrown. This class's constructor will be passed a `const char*` stringified version of the file, line, and assertion condition, when it is thrown. If you want to totally disable the assertion, `#define NDEBUG`.
+
+[/endsect][/ BOOST_SPIRIT_ASSERT_EXCEPTION]
+
+[h3 `BOOST_SPIRIT_DEBUG`]
+
+Define this to enable debugging.
+
+With debugging enabled, special output is generated at key points of the parse process, using the standard output operator (`operator<<`) with `BOOST_SPIRIT_DEBUG_OUT` (default is `std::cout`, see below) as its left operand.
+
+[note
+In order to use spirit's debugging support you must ensure that appropriate overloads of `operator<<` taking `BOOST_SPIRIT_DEBUG_OUT` as its left operand are available. The expected semantics are those of the standard output operator.
+
+These overloads may be provided either within the namespace where the corresponding class is declared (will be found through Argument Dependent Lookup) or [within an anonymous namespace] inside `namespace boost::spirit`, so it is visible where it is called.
+]
+
+[important
+Note in particular that when `BOOST_SPIRIT_DEBUG_FLAGS_CLOSURES` is set, overloads of `operator<<` taking instances of the types used in closures as their right operands are required.
+
+You can find an example of overloading the output operator for `std::pair` in [link output_operator __this FAQ entry__].
+]
+
+By default, if the `BOOST_SPIRIT_DEBUG` macro is defined, all available debug output is generated. To fine tune the amount of generated text you can define the `BOOST_SPIRIT_DEBUG_FLAGS` constant to be equal of a combination of the following flags:
+
+[table Available flags to fine tune debug output
+ [
+  [`BOOST_SPIRIT_DEBUG_FLAGS_NODES`]
+  [print information about nodes (general for all parsers)]
+ ]
+ ]
+  [`BOOST_SPIRIT_DEBUG_FLAGS_TREES`]
+  [print information about parse trees and AST's (general for all tree parsers)]
+ ]
+ [
+  [`BOOST_SPIRIT_DEBUG_FLAGS_CLOSURES`]
+  [print information about closures (general for all parsers with closures)]
+ ]
+ [
+  [`BOOST_SPIRIT_DEBUG_FLAGS_ESCAPE_CHAR`]
+  [print information out of the `esc_char_parser`]
+ ]
+ [
+  [`BOOST_SPIRIT_DEBUG_FLAGS_SLEX`]
+  [print information out of the `SLEX` parser]
+ ]
+]
+
+[/endsect][/ boost_spirit_debug]
+
+[h3 `BOOST_SPIRIT_DEBUG_OUT`]
+
+Define this to redirect the debugging diagnostics printout to somewhere else (e.g. a file or stream). Defaults to `std::cout`.
+
+[h3 `BOOST_SPIRIT_DEBUG_TOKEN_PRINTER`]
+
+The `BOOST_SPIRIT_DEBUG_TOKEN_PRINTER` macro allows you to redefine the way characters are printed on the stream.
+
+If `BOOST_SPIRIT_DEBUG_OUT` is of type `StreamT`, the character type is `CharT` and `BOOST_SPIRIT_DEBUG_TOKEN_PRINTER` is defined to `foo`, it must be compatible with this usage:
+
+``
+    foo(StreamT, CharT)
+``
+
+The default printer requires `operator<<(StreamT, CharT)` to be defined. Additionaly, if `CharT` is convertible to a normal character type (`char`, `wchar_t` or `int`), it prints control characters in a friendly manner (e.g., when it receives `'\n'` it actually prints the `\` and `n` charactes, instead of a newline).
+
+[h3 `BOOST_SPIRIT_DEBUG_PRINT_SOME`]
+
+The `BOOST_SPIRIT_DEBUG_PRINT_SOME` constant defines the number of characters from the stream to be printed for diagnosis. This defaults to the first 20 characters.
+
+[h3 `BOOST_SPIRIT_DEBUG_TRACENODE`]
+
+By default all parser nodes are traced. This constant may be used to redefine this default. If this is 1 (`true`), then tracing is enabled by default, if this constant is 0 (`false`), the tracing is disabled by default. This preprocessor constant is set to 1 (`true`) by default.
+
+Please note, that the following `BOOST_SPIRIT_DEBUG_...() macros are to be used at function scope only.`
+
+[h3 `BOOST_SPIRIT_DEBUG_NODE(p)`]
+
+Define this to print some debugging diagnostics for parser `p`. This macro
+
+* Registers the parser name for debugging
+* Enables/disables the tracing for parser depending on `BOOST_SPIRIT_DEBUG_TRACENODE`
+
+Pre-parse: Before entering the rule, the rule name followed by a peek into the data at the current iterator position is printed.
+
+Post-parse: After parsing the rule, the rule name followed by a peek into the data at the current iterator position is printed. Here, `'/'` before the rule name flags a succesful match while `'#' before the rule name flags an unsuccesful match.
+
+The following are synonyms for ``BOOST_SPIRIT_DEBUG_NODE`
+
+1. `BOOST_SPIRIT_DEBUG_RULE`
+2. `BOOST_SPIRIT_DEBUG_GRAMMAR`
+
+`BOOST_SPIRIT_DEBUG_TRACE_NODE(p, flag)`
+
+Similar to `BOOST_SPIRIT_DEBUG_NODE`. Additionally allows selective debugging. This is useful in situations where we want to debug just a hand picked set of nodes.
+
+The following are synonyms for `BOOST_SPIRIT_DEBUG_TRACE_NODE`
+
+   1. `BOOST_SPIRIT_DEBUG_TRACE_RULE`
+   2. BOOST_SPIRIT_DEBUG_TRACE_GRAMMAR`
+
+``BOOST_SPIRIT_DEBUG_TRACE_NODE_NAME(p, name, flag)`
+
+Similar to `BOOST_SPIRIT_DEBUG_NODE`. Additionally allows selective debugging and allows to specify the name used during debug printout. This is useful in situations where we want to debug just a hand picked set of nodes. The name may be redefined in situations, where the parser parameter does not reflect the name of the parser to debug.
+
+The following are synonyms for `BOOST_SPIRIT_DEBUG_TRACE_NODE`
+
+   1. `BOOST_SPIRIT_DEBUG_TRACE_RULE_NAME`
+   2. `BOOST_SPIRIT_DEBUG_TRACE_GRAMMAR_NAME`
+
+Here's the original calculator with debugging features enabled:
+
+``
+    #define BOOST_SPIRIT_DEBUG  ///$$$ DEFINE THIS BEFORE ANYTHING ELSE $$$///
+    #include "boost/spirit.hpp"
+
+    /***/
+
+    /*** CALCULATOR GRAMMAR DEFINITIONS HERE ***/
+
+    BOOST_SPIRIT_DEBUG_RULE(integer);
+    BOOST_SPIRIT_DEBUG_RULE(group);
+    BOOST_SPIRIT_DEBUG_RULE(factor);
+    BOOST_SPIRIT_DEBUG_RULE(term);
+    BOOST_SPIRIT_DEBUG_RULE(expr);
+``
+
+[tip
+Be sure to add the macros inside the grammar definition's constructor. Now here's a sample session with the calculator.
+]
+
+[pre
+    Type an expression...or [q or Q] to quit
+
+    1 + 2
+
+    grammar(calc):	"1 + 2"
+      rule(expression):	"1 + 2"
+        rule(term):	"1 + 2"
+          rule(factor):	"1 + 2"
+            rule(integer):	"1 + 2"
+    push	1
+            /rule(integer):	" + 2"
+          /rule(factor):	" + 2"
+        /rule(term):	" + 2"
+        rule(term):	"2"
+          rule(factor):	"2"
+            rule(integer):	"2"
+    push	2
+            /rule(integer):	""
+          /rule(factor):	""
+        /rule(term):	""
+    popped 1 and 2 from the stack. pushing 3 onto the stack.
+      /rule(expression):	""
+    /grammar(calc):	""
+    -------------------------
+    Parsing succeeded
+    result = 3
+    -------------------------
+]
+
+We typed in `"1 + 2"`. Notice that there are two successful branches from the top rule `expr`. The text in red is generated by the parser's semantic actions while the others are generated by the debug-diagnostics of our rules. Notice how the first integer rule took `"1"`, the first term rule took `"+"` and finally the second integer rule took `"2"`.
+
+Please note the special meaning of the first characters appearing on the printed lines:
+
+    * a single `'/'` starts a line containing the information about a successfully matched parser node (`rule<>, grammar<>` or `subrule<>`)
+    * a single `'#'` starts a line containing the information about a failed parser node
+    * a single `'^'` starts a line containing the first member (return value/synthesised attribute) of the closure of a successfully matched parser node.
+
+Check out [@../../example/fundamental/calc_debug.cpp calc_debug.cpp]` to see debugging in action. 
+
+[endsect][/ macros]
+
+[endsect][/ debugging]`
+

@@ -1,0 +1,138 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Includes]
+
+[section Modules]
+
+Spirit is designed to be header only. Generally, there are no libraries to build and link against. Certain features, however, require additional libraries; in particular the regular expression parser requires [link __Boost.Regex__] and multithreading support requires [link __Boost.Thread__]s.
+
+Using Spirit is as easy as including the main header file:
+
+``
+    #include <boost/spirit.hpp>
+``
+
+Doing so will include all the header files. This might not be desirable. A low cholesterol alternative is to include only the module that you need. Each of the modules has its own header file. The master spirit header file actually includes all the module files. To avoid unnecessary inclusion of features that you do not need, it is better to include only the modules that you need.
+
+``
+    #include <boost/spirit/actor.hpp>
+    #include <boost/spirit/attribute.hpp>
+    #include <boost/spirit/core.hpp>
+    #include <boost/spirit/debug.hpp>
+    #include <boost/spirit/dynamic.hpp>
+    #include <boost/spirit/error_handling.hpp>
+    #include <boost/spirit/iterator.hpp>
+    #include <boost/spirit/meta.hpp>
+    #include <boost/spirit/symbols.hpp>
+    #include <boost/spirit/tree.hpp>
+    #include <boost/spirit/utility.hpp>
+``
+
+[endsect][/ modules]
+
+[section Sub-Modules]
+
+For even finer control over header file inclusion, you can include only the specific files that you need. Each module is in its own sub-directory:
+
+[/TODO? variablelist]
+
+[h4 `actor`]
+
+``
+    #include <boost/spirit/actor/assign_actor.hpp>
+    #include <boost/spirit/actor/assign_key.hpp>
+    #include <boost/spirit/actor/clear_actor.hpp>
+    #include <boost/spirit/actor/decrement_actor.hpp>
+    #include <boost/spirit/actor/erase_actor.hpp> 
+    #include <boost/spirit/actor/increment_actor.hpp>
+    #include <boost/spirit/actor/insert_key_actor.hpp>
+    #include <boost/spirit/actor/push_back_actor.hpp>
+    #include <boost/spirit/actor/push_front_actor.hpp>
+    #include <boost/spirit/actor/swap_actor.hpp>
+``
+
+[h4 `attribute`]
+
+``
+    #include <boost/spirit/attribute/closure.hpp>
+    #include <boost/spirit/attribute/closure_context.hpp>
+    #include <boost/spirit/attribute/parametric.hpp>
+``
+
+[h4 `debug`]
+
+The `debug` module should not be directly included. See [link __Debugging__] for more info on how to use Spirit's debugger.
+
+[h4 `dynamic`]
+
+``
+    #include <boost/spirit/dynamic/for.hpp>
+    #include <boost/spirit/dynamic/if.hpp>
+    #include <boost/spirit/dynamic/lazy.hpp> 
+    #include <boost/spirit/dynamic/rule_alias.hpp>
+    #include <boost/spirit/dynamic/select.hpp>
+    #include <boost/spirit/dynamic/stored_rule.hpp>
+    #include <boost/spirit/dynamic/switch.hpp>
+    #include <boost/spirit/dynamic/while.hpp> 
+``
+
+[h4 `error_handling`]
+
+``
+    #include <boost/spirit/error_handling/exceptions.hpp>
+``
+
+[h4 ìterator]
+
+``
+    #include <boost/spirit/iterator/file_iterator.hpp>
+    #include <boost/spirit/iterator/fixed_size_queue.hpp>
+    #include <boost/spirit/iterator/multi_pass.hpp> 
+    #include <boost/spirit/iterator/position_iterator.hpp>
+``
+
+[h4 `meta`]
+
+``
+    #include <boost/spirit/meta/as_parser.hpp>
+    #include <boost/spirit/meta/fundamental.hpp>
+    #include <boost/spirit/meta/parser_traits.hpp> 
+    #include <boost/spirit/meta/refactoring.hpp>
+    #include <boost/spirit/meta/traverse.hpp>
+``
+
+[h4 `tree`]
+
+``
+    #include <boost/spirit/tree/ast.hpp>
+    #include <boost/spirit/tree/parse_tree.hpp>
+    #include <boost/spirit/tree/parse_tree_utils.hpp>
+    #include <boost/spirit/tree/tree_to_xml.hpp>
+``
+
+[h4 `utility`]
+
+``
+    #include <boost/spirit/utility/chset.hpp> 
+    #include <boost/spirit/utility/chset_operators.hpp>
+    #include <boost/spirit/utility/confix.hpp>
+    #include <boost/spirit/utility/distinct.hpp>
+    #include <boost/spirit/utility/escape_char.hpp>
+    #include <boost/spirit/utility/flush_multi_pass.hpp>
+    #include <boost/spirit/utility/functor_parser.hpp>
+    #include <boost/spirit/utility/lists.hpp>
+    #include <boost/spirit/utility/loops.hpp>
+    #include <boost/spirit/utility/regex.hpp>
+    #include <boost/spirit/utility/scoped_lock.hpp>
+``
+
+[endsect][/ sub_modules]
+
+[endsect][/ includes]
+

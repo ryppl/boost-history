@@ -1,0 +1,72 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Character Sets]
+
+The character set `chset` matches a set of characters over a finite range bounded by the limits of its template parameter `CharT`. This class is an optimization of a parser that acts on a set of single characters. The template class is parameterized by the character type `CharT` and can work efficiently with 8, 16 and 32 and even 64 bit characters.
+
+``
+    template <typename CharT = char>
+    class chset;
+``
+
+The `chset` is constructed from literals (e.g. 'x'), `ch_p` or `chlit<>`, `range_p` or `range<>`, `anychar_p` and `nothing_p` (see [link __primitives__]) or copy-constructed from another `chset`. The `chset` class uses a copy-on-write scheme that enables instances to be passed along easily by value.
+
+[info Sparse bit vectors
+
+To accomodate 16/32 and 64 bit characters, the `chset` class statically switches from a `std::bitset` implementation when the character type is not greater than 8 bits, to a sparse bit/boolean set which uses a sorted vector of disjoint ranges (`range_run`). The set is constructed from ranges such that adjacent or overlapping ranges are coalesced.
+
+`range_runs` are very space-economical in situations where there are lots of ranges and a few individual disjoint values. Searching is O(log n) where n is the number of ranges.
+]
+
+Examples:
+
+``
+    chset<> s1('x');
+    chset<> s2(anychar_p - s1);
+``
+
+Optionally, character sets may also be constructed using a definition string following a syntax that resembles posix style regular expression character sets, except that double quotes delimit the set elements instead of square brackets and there is no special negation `^` character.
+
+``
+    range = anychar_p >> '-' >> anychar_p;
+    set = *(range_p | anychar_p);
+``
+
+Since we are defining the set using a C string, the usual C/C++ literal string syntax rules apply. Examples:
+
+``
+    chset<> s1("a-zA-Z");       // alphabetic characters
+    chset<> s2("0-9a-fA-F");    // hexadecimal characters
+    chset<> s3("actgACTG");     // DNA identifiers
+    chset<> s4("\x7f\x7e");     // Hexadecimal 0x7F and 0x7E
+``
+
+The standard Spirit set operators apply (see [link __operators__]) plus an additional character-set-specific inverse (negation `~`) operator:
+
+[table Character set operators
+ [[`~a`   ] [Set inverse     ]]
+ [[`a | b`] [Set union       ]]
+ [[`a &`  ] [Set intersection]]
+ [[`a - b`] [Set difference  ]]
+ [[`a ^ b`] [Set xor         ]]
+]
+
+where operands `a` and `b` are both `chsets` or one of the operand is either a literal character, `ch_p` or `chlit`, `range_p` or `range`, `anychar_p` or `nothing_p`. Special optimized overloads are provided for `anychar_p` and `nothing_p` operands. A `nothing_p` operand is converted to an empty set, while an `anychar_p` operand is converted to a set having elements of the full range of the character type used (e.g. 0-255 for unsigned 8 bit chars).
+
+A special case is `~anychar_p` which yields `nothing_p`, but `~nothing_p` is illegal. Inversion of `anychar_p` is asymmetrical, a one-way trip comparable to converting `T*` to a `void*`.
+
+[table Special conversions
+ [[`chset<CharT>(nothing_p)`] [[empty set]                                                  ]
+ [[`chset<CharT>(anychar_p)`] [[full range of `CharT` (e.g. 0-255 for unsigned 8 bit chars)]]
+ [[`~anychar_p`]              [[`nothing_p`]                                                ]
+ [[`~nothing_p`]              [[illegal]                                                    ]
+]
+
+[endsect][/ character_sets]
+

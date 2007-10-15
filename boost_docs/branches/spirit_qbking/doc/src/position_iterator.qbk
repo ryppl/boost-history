@@ -1,0 +1,83 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Position Iterator]
+
+Often, when writing a parser that is able to detect errors in the format of the input stream, we want it to communicate to the user where the error happened within that input. The classic example is when writing a compiler or interpreter that detects syntactical errors in the parsed program, indicating the line number and maybe even the position within the line where the error was found.
+
+The class `position_iterator` is a tool provided within Spirit that allows parser writers to easily implement this functionality. The concept is quite simple: this class is an iterator wrapper that keeps track of the current position within the file, including current file, line and column. It requires a single template parameter, which should be the type of the iterator that is to be wrapped.
+
+To use it, you'll need to add the following include:
+
+``
+    #include <boost/spirit/iterator/position_iterator.hpp>
+``
+
+Or include all the iterators in Spirit:
+
+``
+    #include <boost/spirit/iterator.hpp>
+``
+
+To construct the wrapper, it needs both the begin and end iterators of the input sequence, and the file name of the input sequence. Optionally, you can also specify the starting line and column numbers, which default to 1. Default construction, with no parameters, creates a generic end-of-sequence iterator, in a similar manner as it's done in the stream operators of the standard C++ library.
+
+The wrapped iterator must belong to the input or forward iterator category, and the `position_iterator` just inherits that category.
+
+For example, to create begin and end positional iterators from an input C-string, you'd use:
+
+``
+    char const* inputstring = "...";
+    typedef position_iterator<char const*> iterator_t;
+
+    iterator_t begin(inputstring, inputstring+strlen(inputstring));
+    iterator_t end;
+``
+
+[section Operations]
+
+``
+    void set_position(file_position const&);
+``
+
+Call this function when you need to change the current position stored in the iterator. For example, if parsing C-style `#include` directives, the included file's input must be marked by restarting the file and column to 1 and 1 and the name to the new file's name.
+
+``
+    file_position const& get_position() const;
+``
+
+Call this function to retrieve the current position.
+
+``
+    void set_tabchars(int);
+``
+
+Call this to set the number of tabs per character. This value is necessary to correctly track the column number.
+
+[h4 `file_position`]
+
+`file_position` is a structure that holds the position within a file. Its fields are:
+
+[table `file_position` fields
+ [
+  [`std::string file;`]
+  [Name of the file. Hopefully a full pathname.]
+ ]
+ [
+  [`int line;`]
+  [Line number within the file. By default, the first line is number 1.]
+ ]
+ [
+  [`int column;`]
+  [Column position within the file. The first column is 1.]
+ ]
+]
+
+See [@../../example/fundamental/position_iterator/position_iterator.cpp position_iterator.cpp] for a compilable example. This is part of the Spirit distribution.
+
+[endsect][/ position_iterator]
+

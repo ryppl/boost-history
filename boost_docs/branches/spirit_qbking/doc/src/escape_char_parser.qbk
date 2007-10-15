@@ -1,0 +1,38 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section:escape_char_parser Escape Character Parser]
+
+The Escape Character Parser is a utility parser, which parses escaped character sequences used in C/C++, LEX or Perl regular expressions. Combined with the `confix_p` utility parser, it is useful for parsing C/C++ strings containing double quotes and other escaped characters:
+
+``
+    confix_p('"', *c_escape_ch_p, '"')
+``
+
+There are two different types of the Escape Character Parser: `c_escape_ch_p`, which parses C/C++ escaped character sequences and `lex_escape_ch_p`, which parses LEX style escaped character sequences. The following table shows the valid character sequences understood by these utility parsers.
+
+[table Summary of valid escaped character sequences
+ [
+  [`c_escape_ch_p`]
+  [`\b, \t, \n, \f, \r, \\, \", \', \xHH, \OOO`
+where: `H` is some hexadecimal digit (`0..9, a..f, A..F`) and `O` is some octal digit (`0..7`)]
+ ]
+ [
+  [`lex_escape_ch_p`]
+  [all C/C++ escaped character sequences as described above and additionally any other character, which follows a backslash.]
+ ]
+]
+
+If there is a semantic action attached directly to the Escape Character Parser, all valid escaped characters are converted to their character equivalent (i.e. a backslash followed by a `'r'` is converted to `'\r'`), which is fed to the attached actor. The number of hexadecimal or octal digits parsed depends on the size of one input character. An overflow will be detected and will generate a non-match. `lex_escape_ch_p` will strip the leading backslash for all character sequences which are not listed as valid C/C++ escape sequences when passing the unescaped character to an attached action.
+
+[caution
+Please note though, that if there is a semantic action attached to an outermost parser (for instance as in `(*c_escape_ch_p)[some_actor]`, where the action is attached to the kleene star generated parser) no conversion takes place at the moment, but nevertheless the escaped characters are parsed correctly. This limitation will be removed in a future version of the library.
+]
+
+[endsect][/ escape_char_parser]
+

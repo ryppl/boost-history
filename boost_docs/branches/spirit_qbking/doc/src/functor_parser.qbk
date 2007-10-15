@@ -1,0 +1,81 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Functor Parser]
+
+The simplest way to write your hand coded parser that works well with the rest of the Spirit library is to simply write a functor parser.
+
+A functor parser is expected to have the interface:
+
+``
+    struct functor
+    {
+        typedef T result_t;
+
+        template <typename ScannerT>
+        std::ptrdiff_t
+        operator()(ScannerT const& scan, result_t& result) const;
+    };
+``
+
+where `typedef T result_t;` is the attribute type of the parser that will be passed back to the match result (see In-depth: The Parser). If the parser does not need to return an attribute, this can simply be `nil_t`. The `std::ptrdiff_t` result is the number of matching characters matched by your parser. A negative value flags an unsucessful match.
+
+A conforming functor parser can transformed into a well formed Spirit parser by wrapping it in the `functor_parser` template:
+
+``
+    functor_parser<functor> functor_p;
+``
+
+[h3 Example]
+
+The following example puts the `functor_parser` into action:
+
+``
+    struct number_parser
+    {
+        typedef int result_t;
+        template <typename ScannerT>
+        std::ptrdiff_t
+        operator()(ScannerT const& scan, result_t& result) const
+        {
+            if (scan.at_end())
+                return -1;
+
+            char ch = *scan;
+            if (ch < '0' || ch > '9')
+                return -1;
+
+            result = 0;
+            std::ptrdiff_t len = 0;
+
+            do
+            {
+                result = result*10 + int(ch - '0');
+                ++len;
+                ++scan;
+            } while (!scan.at_end() && (ch = *scan, ch >= '0' && ch <= '9'));
+
+            return len;
+        }
+    };
+
+    functor_parser<number_parser> number_parser_p;
+``
+
+[tip
+The full source code can be [@../../example/fundamental/functor_parser.cpp viewed here]. This is part of the Spirit distribution.
+]
+
+To further understand the implementation, see In-depth: The Scanner for the scanner API details. We now have a parser number_parser_p` that we can use just like any other Spirit parser. Example:
+
+``
+    r = number_parser_p >> *(',' >> number_parser_p);
+``
+
+[endsect][/ functor_parser]
+

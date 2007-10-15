@@ -1,0 +1,40 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section:regex_p Regular Expression Parser]
+
+Regular expressions are a form of pattern-matching that are often used in text processing. Many users will be familiar with the usage of regular expressions. Initially there were the Unix utilities grep, sed and awk, and the programming language perl, each of which make extensive use of regular expressions. Today the usage of such regular expressions is integrated in many more available systems.
+
+During parser construction it is often useful to have the power of regular expressions available. The Regular Expression Parser was introduced, to make the use of regular expressions accessible for Spirit parser construction.
+
+The Regular Expression Parser `rxstrlit` has a single template type parameter: an iterator type. Internally, `rxstrlit` holds the [link boost.regex Boost.Regex] object containing the provided regular expression. The `rxstrlit` attempts to match the current input stream with this regular expression. The template type parameter defaults to `char const*`. `rxstrlit` has two constructors. The first accepts a null-terminated character pointer. This constructor may be used to build `rxstrlit`'s from quoted regular expression literals. The second constructor takes in a first/last iterator pair. The function generator version is `regex_p`.
+
+Here are some examples:
+
+``
+    rxstrlit<>("Hello[[:space:]]+[W|w]orld")
+    regex_p("Hello[[:space:]]+[W|w]orld")
+
+    std::string msg("Hello[[:space:]]+[W|w]orld");
+    rxstrlit<>(msg.begin(), msg.end());
+``
+
+The generated parser object acts at the character level, thus an eventually given skip parser is not used during the attempt to match the regular expression (see [link __The Scanner Business__]).
+
+The Regular Expression Parser is implemented by the help of [link boost.regex the Boost Regex library], so you have to have some limitations in mind.
+
+* [@http://www.boost.org Boost] libraries have to be installed on your computer and the Boost root directory has to be added to your compiler `#include<...>` search path. You can download the actual version at the [@http://www.boost.org Boost web site].
+
+* The Boost Regex library requires the usage of bi-directional iterators. So you have to ensure this during the usage of the Spirit parser, which contains a Regular Expression Parser.
+
+* The Boost Regex library is not a header only library, as Spirit is, though it provides the possibility to include all of the sources, if you are using it in one compilation unit only. Define the preprocessor constant `BOOST_SPIRIT_NO_REGEX_LIB` before including the spirit Regular Expression Parser header, if you want to include all the Boost.Regex sources into this compilation unit. If you are using the Regular Expression Parser in more than one compilation unit, you should not define this constant and must link your application against the regex library as described in the related documentation.
+
+See [@../../example/fundamental/regular_expression.cpp regular_expression.cpp] for a compilable example. This is part of the Spirit distribution.
+
+[endsect][/ regexp_p]
+

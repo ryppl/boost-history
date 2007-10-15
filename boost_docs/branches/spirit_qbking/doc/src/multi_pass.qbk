@@ -1,0 +1,365 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section:multi_pass The `multi_pass`]
+
+Backtracking in Spirit requires the use of the following types of iterator: forward, bidirectional, or random access. Because of backtracking, input iterators cannot be used. Therefore, the standard library classes istreambuf_iterator and istream_iterator, that fall under the category of input iterators, cannot be used. Another input iterator that is of interest is one that wraps a lexer, such as LEX.
+
+[note Input Iterators
+
+In general, Spirit is a backtracking parser. This is not an absolute requirement though. In the future, we shall see more deterministic parsers that require no more than 1 character (token) of lookahead. Such parsers allow us to use input iterators such as the istream_iterator as is.
+]
+
+Unfortunately, with an input iterator, there is no way to save an iterator position, and thus input iterators will not work with backtracking in Spirit. One solution to this problem is to simply load all the data to be parsed into a container, such as a vector or deque, and then pass the begin and end of the container to Spirit. This method can be too memory intensive for certain applications, which is why the `multi_pass` iterator was created.
+
+The `multi_pass` iterator will convert any input iterator into a forward iterator suitable for use with Spirit. `multi_pass` will buffer data when needed and will discard the buffer when only one copy of the iterator exists.
+
+A grammar must be designed with care if the `multi_pass` iterator is used. Any rule that may need to backtrack, such as one that contains an alternative, will cause data to be buffered. The rules that are optimal to use are sequence and repetition. Sequences of the form `a >> b` will not buffer data at all. Any rule that repeats, such as `kleene_star` (`*a`) or positive such as (`+a`), will only buffer the data for the current repetition.
+
+In typical grammars, ambiguity and therefore lookahead is often localized. In fact, many well designed languages are fully deterministic and require no lookahead at all. Peeking at the first character from the input will immediately determine the alternative branch to take. Yet, even with highly ambiguous grammars, alternatives are often of the form `*(a | b | c | d)`. The input iterator moves on and is never stuck at the beginning. Let's look at a Pascal snippet for example:
+
+``
+    program =
+        programHeading >> block >> '.'
+        ;
+
+    block =
+       *(    labelDeclarationPart
+        |    constantDefinitionPart
+        |    typeDefinitionPart
+        |    variableDeclarationPart
+        |    procedureAndFunctionDeclarationPart
+        )
+        >>   statementPart
+        ;
+``
+
+Notice the alternatives inside the Kleene star in the rule block . The rule gobbles the input in a linear manner and throws away the past history with each iteration. As this is fully deterministic LL(1) grammar, each failed alternative only has to peek 1 character (token). The alternative that consumes more than 1 character (token) is definitely a winner. After which, the Kleene star moves on to the next.
+
+Be mindful if you use the free parse functions. All of these make a copy of the iterator passed to them.
+
+Now, after the lecture on the features to be careful with when using `multi_pass`, you may think that `multi_pass` is way too restrictive to use.  That's not the case.  If your grammar is deterministic, you can make use of `flush_multi_pass` in your grammar to ensure that data is not buffered when unnecessary.
+
+Again, following up the example we started to use in the section on the scanner . Here's an example using the `multi_pass`: This time around we are extracting our input from the input stream using an `istreambuf_iterator`.
+
+``
+    #include <boost/spirit/core.hpp>    
+    #include <boost/spirit/iterator/multi_pass.hpp>
+
+    using namespace boost::spirit;
+    using namespace std;
+    
+    ifstream in("input_file.txt"); // we get our input from this file
+
+    typedef char char_t;
+    typedef multi_pass<istreambuf_iterator<char_t> > iterator_t;
+
+    typedef skip_parser_iteration_policy<space_parser> iter_policy_t;
+    typedef scanner_policies<iter_policy_t> scanner_policies_t;
+    typedef scanner<iterator_t, scanner_policies_t> scanner_t;
+
+    typedef rule<scanner_t> rule_t;
+
+    iter_policy_t iter_policy(space_p);
+    scanner_policies_t policies(iter_policy);
+    iterator_t first(
+        make_multi_pass(std::istreambuf_iterator<char_t>(in)));
+
+    scanner_t scan(
+        first, make_multi_pass(std::istreambuf_iterator<char_t>()),
+        policies);
+
+    rule_t      n_list = real_p >> *(',' >> real_p);
+    match<>     m = n_list.parse(scan);
+``
+
+[h3 `flush_multi_pass`]
+
+There is a predefined pseudo-parser called `flush_multi_pass`. When this parser is used with `multi_pass`, it will call `multi_pass::clear_queue()`. This will cause any buffered data to be erased. This also will invalidate all other copies of `multi_pass` and they should not be used. If they are, an `boost::illegal_backtracking` exception will be thrown.
+
+[h3 `multi_pass` Policies]
+
+`multi_pass` is a templated policy driven class. The description of `multi_pass` above is how it was originally implemented (before it used policies), and is the default configuration now. But, `multi_pass` is capable of much more. Because of the open-ended nature of policies, you can write your own policy to make `multi_pass` behave in a way that we never before imagined.
+
+The `multi_pass` class has five template parameters:
+
+    * `InputT` - The type multi_pass uses to acquire it's input. This is typically an input iterator, or functor.
+    * `InputPolicy` - A class that defines how `multi_pass` acquires it's input. The `InputPolicy` is parameterized by `InputT`.
+    * `OwnershipPolicy` - This policy determines how `multi_pass` deals with it's shared components.
+    * `CheckingPolicy` - This policy determines how checking for invalid iterators is done.
+    * `StoragePolicy` - The buffering scheme used by `multi_pass` is determined and managed by the `StoragePolicy`.
+
+[section Predefined policies]
+
+All predefined `multi_pass` policies are in the namespace `boost::spirit::multi_pass_policies`.
+
+[h3 Predefined `InputPolicy` classes]
+
+[variablelist
+ [
+  [`input_iterator`]
+  [This policy directs multi_pass to read from an input iterator of type `InputT`.]
+ ]
+ [
+  [`lex_input`]
+  [This policy obtains it's input by calling `yylex()`, which would typically be provided by a scanner generated by LEX. If you use this policy your code must link against a LEX generated scanner.]
+ ]
+ [
+  [`functor_input`]
+  [This input policy obtains it's data by calling a functor of type `InputT`. The functor must meet certain requirements. It must have a typedef called `result_type` which should be the type returned from `operator()`. Also, since an input policy needs a way to determine when the end of input has been reached, the functor must contain a static variable named `eof` which is comparable to a variable of `result_type`.]
+ ]
+]
+
+[h3 Predefined `OwnershipPolicy` classes]
+
+[variablelist
+ [
+  [`ref_counted`]
+  [This class uses a reference counting scheme. `multi_pass` will delete it's shared components when the count reaches zero.]
+ ]
+ [
+  [`first_owner`]
+  [When this policy is used, the first `multi_pass` created will be the one that deletes the shared data. Each copy will not take ownership of the shared data. This works well for spirit, since no dynamic allocation of iterators is done. All copies are made on the stack, so the original iterator has the longest lifespan.]
+ ]
+]
+
+[h3 Predefined `CheckingPolicy` classes]
+
+[variablelist
+ [
+  [`no_check`]
+  [This policy does no checking at all.]
+ ]
+ [
+  [`buf_id_check]
+  [`buf_id_check` keeps around a buffer id, or a buffer age. Every time `clear_queue()` is called on a `multi_pass` iterator, it is possible that all other iterators become invalid. When `clear_queue()` is called, `buf_id_check` increments the buffer id. When an iterator is dereferenced, this policy checks that the buffer id of the iterator matches the shared buffer id. This policy is most effective when used together with the `std_deque` `StoragePolicy`. It should not be used with the `fixed_size_queue` StoragePolicy, because it will not detect iterator dereferences that are out of range.]
+ ]
+ [
+  [`full_check`]
+  [This policy has not been implemented yet. When it is, it will keep track of all iterators and make sure that they are all valid.]
+ ]
+]
+
+[h3 Predefined `StoragePolicy` classes]
+
+[variablelist
+ [
+  [`std_deque`]
+  [This policy keeps all buffered data in a `std::deque`. All data is stored as long as there is more than one iterator. Once the iterator count goes down to one, and the queue is no longer needed, it is cleared, freeing up memory. The queue can also be forcibly cleared by calling `multi_pass::clear_queue()`.]
+ ]
+ [
+  [`fixed_size_queue<N>`]
+  [`fixed_size_queue` keeps a circular buffer that is size `N+1` and stores `N` elements. `fixed_size_queue` is a template with a `std::size_t` parameter that specified the queue size. It is your responsibility to ensure that `N` is big enough for your parser. Whenever the foremost iterator is incremented, the last character of the buffer is automatically erased. Currently there is no way to tell if an iterator is trailing too far behind and has become invalid. No dynamic allocation is done by this policy during normal iterator operation, only on initial construction. The memory usage of this `StoragePolicy` is set at `N+1` bytes, unlike `std_deque`, which is unbounded.]
+ ]
+]
+
+[endsect][/ predefined_policies]
+
+[section:combinations Combinations: How to specify your own custom `multi_pass`]
+
+The beauty of policy based designs is that you can mix and match policies to create your own custom class by selecting the policies you want. Here's an example of how to specify a custom `multi_pass` that wraps an `istream_iterator<char>`, and is slightly more efficient than the default because it uses the `first_owner OwnershipPolicy` and the `no_check CheckingPolicy`:
+
+``
+    typedef multi_pass<
+        istream_iterator<char>,
+        multi_pass_policies::input_iterator,
+        multi_pass_policies::first_owner,
+        multi_pass_policies::no_check,
+        multi_pass_policies::std_deque
+    > first_owner_multi_pass_t;
+``
+
+The default template parameters for `multi_pass` are: `input_iterator InputPolicy, ref_counted OwnershipPolicy, buf_id_check CheckingPolicy` and `std_deque StoragePolicy`. So if you use `multi_pass<istream_iterator<char> >` you will get those pre-defined behaviors while wrapping an `istream_iterator<char>`.
+
+There is one other pre-defined class called `look_ahead`. look_ahead has two template parameters: `InputT`, the type of the input iterator to wrap, and a `std::size_t N`, which specifies the size of the buffer to the `fixed_size_queue` policy. While the default `multi_pass` configuration is designed for safey, `look_ahead` is designed for speed. `look_ahead` is derived from a `multi_pass` with the following policies: `input_iterator InputPolicy, first_owner OwnershipPolicy, no_check CheckingPolicy`, and `fixed_size_queue<N> StoragePolicy`.
+
+[h3 How to write a functor for use with the `functor_input InputPolicy`]
+
+If you want to use the `functor_input InputPolicy`, you can write your own functor that will supply the input to `multi_pass`. The functor must satisfy two requirements. It must have a `typedef result_type` which specifies the return type of `operator()`. This is standard practice in the STL. Also, it must supply a static variable called eof which is compared against to know whether the input has reached the end. Here is an example:
+
+``
+    class my_functor
+    {
+    public:
+
+        typedef char result_type;
+
+        my_functor()
+        : c('A') {}
+
+        result_type operator()() const
+        {
+            if (c == 'M')
+                return eof;
+            else
+                return c++;
+        }
+
+        static result_type eof;
+
+    private:
+
+        char c;
+    };
+
+    my_functor::result_type my_functor::eof = '\0';
+
+    typedef multi_pass<
+        my_functor,
+        multi_pass_policies::functor_input,
+        multi_pass_policies::first_owner,
+        multi_pass_policies::no_check,
+        multi_pass_policies::std_deque
+    > functor_multi_pass_t;
+
+    functor_multi_pass_t first = functor_multi_pass_t(my_functor());
+    functor_multi_pass_t last;
+``
+
+[h3 How to write policies for use with `multi_pass`]
+
+[h4 `InputPolicy`]
+
+An `InputPolicy` must have the following interface:
+
+``
+    class my_input_policy // your policy name
+    {
+    public:
+
+    //  class inner will be instantiated with the type given
+    //  as the InputT parameter to multi_pass.
+
+        template <typename InputT>
+        class inner
+        {
+        public:
+
+            // these typedefs determine the iterator_traits for multi_pass
+            typedef x value_type;
+            typedef x difference_type;
+            typedef x pointer;
+            typedef x reference;
+
+        protected:
+
+            inner();
+            inner(InputT x);
+            inner(inner const& x);
+            // delete or clean up any state
+            void destroy();
+            // return true if *this and x have the same input
+            bool same_input(inner const& x) const;
+            void swap(inner& x);
+
+        public:
+
+            // get an instance from the input
+            result_type get_input() const;
+            // advance the input
+            void advance_input();
+            // return true if the input is at the end
+            bool input_at_eof() const;
+        };
+    };
+``
+
+Because of the way that `multi_pass` shares a buffer and input among multiple copies, class inner should keep a pointer to it's input. The copy constructor should simply copy the pointer. `destroy()` should delete it. `same_input` should compare the pointers. For more details see the various implementations of `InputPolicy` classes.
+
+[h4 `OwnershipPolicy`]
+
+The `OwnershipPolicy` must have the following interface:
+
+``
+    class my_ownership_policy
+    {
+    protected:
+
+        my_ownership_policy();
+        my_ownership_policy(my_ownership_policy const& x);
+        // clone is called when a copy of the iterator is made
+        void clone();
+        // called when a copy is deleted. Return true to indicate
+        // resources should be released
+        bool release();
+        void swap(my_ownership_policy& x);
+
+    public:
+        // returns true if there is only one iterator in existence.
+        // std_dequeue StoragePolicy will free it's buffered data if this
+        // returns true.
+        bool unique() const;
+    };
+``
+
+[h4 `CheckingPolicy`]
+
+The `CheckingPolicy` must have the following interface:
+
+``
+    class my_check
+    {
+    protected:
+
+        my_check();
+        my_check(my_check const& x);
+        void destroy();
+        void swap(my_check& x);
+        // check should make sure that this iterator is valid
+        void check() const;
+        void clear_queue();
+    };
+``
+
+[h4 `StoragePolicy`]
+
+A `StoragePolicy` must have the following interface:
+
+``
+    class my_storage_policy
+    {
+    public:
+
+    // class inner will be instantiated with the value_type from the InputPolicy
+
+        template <typename ValueT>
+        class inner
+        {
+        protected:
+
+            inner();
+            inner(inner const& x);
+            // will be called from the destructor of the last iterator.
+            void destroy();
+            void swap(inner& x);
+            // This is called when the iterator is dereferenced. It's a template
+            // method so we can recover the type of the multi_pass iterator
+            // and access it.
+            template <typename MultiPassT>
+            static ValueT dereference(MultiPassT const& mp);
+            // This is called when the iterator is incremented. It's a template
+            // method so we can recover the type of the multi_pass iterator
+            // and access it.
+            template <typename MultiPassT>
+            static void increment(MultiPassT& mp);
+            void clear_queue();
+            // called to determine whether the iterator is an eof iterator
+            template <typename MultiPassT>
+            static bool is_eof(MultiPassT const& mp);
+            // called by operator==
+            bool equal_to(inner const& x) const;
+            // called by operator<
+            bool less_than(inner const& x) const;
+        };  // class inner
+    };
+``
+
+A `StoragePolicy` is the trickiest policy to write. You should study and understand the existing `StoragePolicy` classes before you try and write your own.
+
+[endsect][/ multi_pass]
+

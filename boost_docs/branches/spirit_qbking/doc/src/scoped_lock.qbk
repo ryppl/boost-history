@@ -1,0 +1,24 @@
+[/
+/ Copyright © 1998-2003 Joel de Guzman
+/ Copyright © 2007 Darren Garvey
+/
+/ Distributed under the Boost Software License, Version 1.0. (See accompanying
+/ file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+/]
+
+[section Scoped Lock]
+
+[h3 `scoped_lock_d`]
+
+The `scoped_lock_d` directive constructs a parser that locks a mutex during the attempt to match the contained parser.
+
+Syntax:
+
+``
+    scoped_lock_d(mutex&)[body-parser]
+``
+
+Note, that nesting `scoped_lock_d` directives bears the risk of deadlocks since the order of locking depends on the grammar used and may even depend on the input being parsed. Locking order has to be consistent within an application to ensure deadlock free operation.
+
+[endsect][/ scoped_lock]
+
