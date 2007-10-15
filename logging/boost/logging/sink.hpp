@@ -70,9 +70,9 @@ namespace boost { namespace logging {
         @sa sink
     */
     template<class process_msg_type> struct negate_sink : sink<process_msg_type> {
-        typedef typename sink<process_msg_type> base_type;
+        typedef sink<process_msg_type> base_type;
         template<class logger> negate_sink(const logger & f) : base_type(f) {}
-        operator bool() const { return p == 0; }
+        operator bool() const { return base_type::p == 0; }
     };
 
 }}

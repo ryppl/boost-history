@@ -171,7 +171,7 @@ template<
 
     typedef base_no_operator_call<implement_op_equal, ptr_type_> self_type;
     typedef typename detail::ptr_finder<ptr_type_> type_finder;
-    typedef typename type_finder::find<self_type>::type ptr_type;
+    typedef typename type_finder::template find<self_type>::type ptr_type;
 
     virtual ~base_no_operator_call() {}
 };
@@ -212,7 +212,7 @@ template<
 
     typedef base<arg_type, implement_op_equal, ptr_type_> self_type;
     typedef typename detail::ptr_finder<ptr_type_> type_finder;
-    typedef typename type_finder::find<self_type>::type ptr_type;
+    typedef typename type_finder::template find<self_type>::type ptr_type;
 
     typedef arg_type param;
 

@@ -165,7 +165,7 @@ namespace boost { namespace logging {
         simple_care_for_clear_format( msg_type & msg) : simple_base_type(msg), m_original_msg( msg ) {}
 
         void clear_format() {
-            m_msg = m_original_msg;
+            simple_base_type::m_msg = m_original_msg;
         }
     private:
         msg_type m_original_msg;
@@ -259,23 +259,23 @@ L_ << "testing " << i << i+1 << i+2;
         template<class formatter_array, class destination_array> simple(const formatter_array&, const destination_array&) {}
         
         void append_formatter(formatter_ptr fmt) {
-            data::write to_write(m_to_write);
+            typename data::write to_write(m_to_write);
             to_write->formats.push_back(fmt);
         }
         void del_formatter(formatter_ptr fmt) {
-            data::write to_write(m_to_write);
-            f_array::iterator del = std::remove(to_write->formats.begin(), to_write->formats.end(), fmt);
+            typename data::write to_write(m_to_write);
+            typename f_array::iterator del = std::remove(to_write->formats.begin(), to_write->formats.end(), fmt);
             to_write->formats.erase(del, to_write->formats.end());
         }
 
         void append_destination(destination_ptr dest) {
-            data::write to_write(m_to_write);
+            typename data::write to_write(m_to_write);
             to_write->destinations.push_back(dest);
         }
 
         void del_destination(destination_ptr dest) {
-            data::write to_write(m_to_write);
-            d_array::iterator del = std::remove(to_write->destinations.begin(), to_write->destinations.end(), dest);
+            typename data::write to_write(m_to_write);
+            typename d_array::iterator del = std::remove(to_write->destinations.begin(), to_write->destinations.end(), dest);
             to_write->destinations.erase(del, to_write->destinations.end());
         }
 
@@ -283,11 +283,11 @@ L_ << "testing " << i << i+1 << i+2;
             format_and_write m(msg);
 
             // note: here, we're reading (data::read)!
-            data::read to_write(m_to_write);
-            for ( f_array::const_iterator b_f = to_write->formats.begin(), e_f = to_write->formats.end(); b_f != e_f; ++b_f)
+            typename data::read to_write(m_to_write);
+            for ( typename f_array::const_iterator b_f = to_write->formats.begin(), e_f = to_write->formats.end(); b_f != e_f; ++b_f)
                 m.format(*b_f);
 
-            for ( d_array::const_iterator b_d = to_write->destinations.begin(), e_d = to_write->destinations.end(); b_d != e_d; ++b_d)
+            for ( typename d_array::const_iterator b_d = to_write->destinations.begin(), e_d = to_write->destinations.end(); b_d != e_d; ++b_d)
                 m.write(*b_d);
         }
 
@@ -364,7 +364,7 @@ L_ << "testing " << i << i+1 << i+2;
             represents a formatter/destination route to be added/set.
         */
         class route {
-            friend class self_type;
+            friend class with_route;
             typedef enum type {
                 is_fmt, is_dest, is_clear
             };
@@ -405,7 +405,7 @@ L_ << "testing " << i << i+1 << i+2;
         struct route_do_set : route {
             route_do_set(self_type &self) : route(self) {}
             ~route_do_set() {
-                m_self.do_set_route( *this);
+                route::m_self.do_set_route( *this);
             }
         };
 
@@ -414,7 +414,7 @@ L_ << "testing " << i << i+1 << i+2;
         struct route_do_append : route {
             route_do_append(self_type &self) : route(self) {}
             ~route_do_append() {
-                m_self.do_append_route( *this);
+                route::m_self.do_append_route( *this);
             }
         };
 
@@ -429,7 +429,7 @@ L_ << "testing " << i << i+1 << i+2;
         route_do_append append_route() { return route_do_append(*this); }
 
         void append_formatter(formatter_ptr fmt) {
-            data::write to_write(m_to_write);
+            typename data::write to_write(m_to_write);
 
             if ( to_write->empty() )
                 to_write->push_back( write_once() );
@@ -442,16 +442,16 @@ L_ << "testing " << i << i+1 << i+2;
             to_write->back().formats.push_back(fmt);
         }
         void del_formatter(formatter_ptr fmt) {
-            data::write to_write(m_to_write);
+            typename data::write to_write(m_to_write);
 
-            for ( write_array::const_iterator b = to_write->begin(), e = to_write->end(); b != e; ++b) {
-                f_array::iterator del = std::remove( b->formats.begin(), b->formats.end(), fmt);
+            for ( typename write_array::const_iterator b = to_write->begin(), e = to_write->end(); b != e; ++b) {
+                typename f_array::iterator del = std::remove( b->formats.begin(), b->formats.end(), fmt);
                 b->formats.erase(del, b->formats.end());
             }
         }
 
         void append_destination(destination_ptr dest) {
-            data::write to_write(m_to_write);
+            typename data::write to_write(m_to_write);
 
             if ( to_write->empty() )
                 to_write->push_back( write_once() );
@@ -464,10 +464,10 @@ L_ << "testing " << i << i+1 << i+2;
         }
 
         void del_destination(destination_ptr dest) {
-            data::write to_write(m_to_write);
+            typename data::write to_write(m_to_write);
 
-            for ( write_array::const_iterator b = to_write->begin(), e = to_write->end(); b != e; ++b) {
-                d_array::iterator del = std::remove( b->destinations.begin(), b->destinations.end(), dest);
+            for ( typename write_array::const_iterator b = to_write->begin(), e = to_write->end(); b != e; ++b) {
+                typename d_array::iterator del = std::remove( b->destinations.begin(), b->destinations.end(), dest);
                 b->destinations.erase(del, b->destinations.end());
 
                 // if from a write_once - all destinations are gone, don't clear_afterwards 
@@ -477,7 +477,7 @@ L_ << "testing " << i << i+1 << i+2;
         }
 
         void append_clear_format() {
-            data::write to_write(m_to_write);
+            typename data::write to_write(m_to_write);
 
             if ( to_write->empty() )
                 to_write->push_back( write_once() );
@@ -490,12 +490,12 @@ L_ << "testing " << i << i+1 << i+2;
             format_and_write m(msg);
 
             // note: here, we're reading (data::read)!
-            data::read to_write(m_to_write);
-            for ( write_array::const_iterator b = to_write->begin(), e = to_write->end(); b != e; ++b) {
-                for ( f_array::const_iterator b_f = b->formats.begin(), e_f = b->formats.end(); b_f != e_f; ++b_f)
+            typename data::read to_write(m_to_write);
+            for ( typename write_array::const_iterator b = to_write->begin(), e = to_write->end(); b != e; ++b) {
+                for ( typename f_array::const_iterator b_f = b->formats.begin(), e_f = b->formats.end(); b_f != e_f; ++b_f)
                     m.format(*b_f);
 
-                for ( d_array::const_iterator b_d = b->destinations.begin(), e_d = b->destinations.end(); b_d != e_d; ++b_d)
+                for ( typename d_array::const_iterator b_d = b->destinations.begin(), e_d = b->destinations.end(); b_d != e_d; ++b_d)
                     m.write(*b_d);
 
                 if ( b->do_clear_afterwards)
@@ -508,8 +508,8 @@ L_ << "testing " << i << i+1 << i+2;
             if ( r.m_items.empty() )
                 return; // no route to add
 
-            typedef route::array array;
-            for ( array::const_iterator b = r.m_items.begin(), e = r.m_items.end(); b != e; ++b) {
+            typedef typename route::array array;
+            for ( typename array::const_iterator b = r.m_items.begin(), e = r.m_items.end(); b != e; ++b) {
                 switch ( b->m_type) {
                 case route::is_fmt:       append_formatter( b->m_fmt); break;
                 case route::is_dest:      append_destination( b->m_dest); break;
@@ -522,7 +522,7 @@ L_ << "testing " << i << i+1 << i+2;
 
         void do_set_route(const route & r) {
             {
-            data::write to_write(m_to_write);
+            typename data::write to_write(m_to_write);
             to_write->clear();
             }
             do_append_route(r);

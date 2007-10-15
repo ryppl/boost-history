@@ -12,3 +12,7 @@ v0.5.2, 11 oct 2007
 v0.6, 13 oct 2007
 - added formatters from v1. of the library
 - added convert_format cool function :P
+
+v0.7, 15 oct 2007
+- compiles with gcc 3.4.2
+

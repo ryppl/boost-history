@@ -270,15 +270,15 @@ private:
 
         BOOST_LOGGING_FORWARD_CONSTRUCTOR(logger, process_base)
 
-        operator bool() const           { return is_enabled(); }
-        bool operator!() const          { return !is_enabled(); }
+        operator bool() const           { return filter::is_enabled(); }
+        bool operator!() const          { return !filter::is_enabled(); }
 
         /** 
             Syntactic sugar. Allow writing  <tt>logger->some_method(x);</tt>, which is equivalent to
             <tt>logger.process_msg().some_method(x);</tt>
         */
-        const process_msg_type* operator->() const  { return &process_msg(); }
-        process_msg_type* operator->()              { return &process_msg(); }
+        const process_msg_type* operator->() const  { return &process_base::process_msg(); }
+        process_msg_type* operator->()              { return &process_base::process_msg(); }
 
     };
 

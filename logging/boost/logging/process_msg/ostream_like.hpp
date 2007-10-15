@@ -118,6 +118,9 @@ namespace ostream_like {
     In our case, 1. and 2. are the same
 */
 template<class stream_type = std::basic_ostringstream<char_type> > struct return_raw_stream {
+    return_raw_stream() {}
+    return_raw_stream(const return_raw_stream& other) : m_out( other.m_out.str() ) {}
+
     /** 
     note: we return the whole stream - we don't return out().str() , because the user might use a better ostream class,
     which could have better access to its buffer/internals
@@ -159,6 +162,9 @@ private:
 
 */
 template<class stream_type = std::basic_ostringstream<char_type> > struct return_str {
+    return_str() {}
+    return_str(const return_str& other) : m_out(other.m_out.str()) {}
+
     stream_type & out() { return m_out; }
     std::basic_string<char_type> msg() { return m_out.str(); }
 private:
@@ -174,7 +180,15 @@ private:
 
     returns a cache string
 */
-template<class cache_string = boost::logging::optimize::cache_string_one_str<> , int prepend_size = 10, int append_size = 10, class stream_type = std::basic_ostringstream<char_type> > struct return_cache_str {
+template<
+        class cache_string = boost::logging::optimize::cache_string_one_str<hold_string_type> , 
+        int prepend_size = 10, 
+        int append_size = 10, 
+        class stream_type = std::basic_ostringstream<char_type> > struct return_cache_str {
+    
+    return_cache_str() {}
+    return_cache_str(const return_cache_str& other) : m_out(other.m_out.str()) {}
+
     stream_type & out() { return m_out; }
     cache_string msg() { return cache_string( m_out.str(), prepend_size, append_size ); }
 private:

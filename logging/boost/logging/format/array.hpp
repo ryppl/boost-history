@@ -55,7 +55,7 @@ namespace boost { namespace logging {
 
         template<class derived> base_type * get_ptr(derived val) const {
             scoped_lock lk(m_cs);
-            for ( array_type::const_iterator b = m_array.begin(), e = m_array.end(); b != e; ++b)
+            for ( typename array_type::const_iterator b = m_array.begin(), e = m_array.end(); b != e; ++b)
                 if ( val == (*(b->get())) )
                     return b->get();
 
@@ -66,7 +66,7 @@ namespace boost { namespace logging {
         template<class derived> void del(derived val) {
             base_type * p = get_ptr(val);
             scoped_lock lk(m_cs);
-            for ( array_type::iterator b = m_array.begin(), e = m_array.end(); b != e; ++b)
+            for ( typename array_type::iterator b = m_array.begin(), e = m_array.end(); b != e; ++b)
                 if ( b->get() == p) {
                     m_array.erase(b);
                     return ;

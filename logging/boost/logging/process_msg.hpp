@@ -28,18 +28,23 @@ namespace boost { namespace logging {
 
 
     
-    template<class holder, class gather> struct gather_holder {
-        typedef gather gather_type;
-        gather_holder(const holder & p_this) : m_this(p_this) {}
+    template<class holder, class gather_type> struct gather_holder {
+        gather_holder(const holder & p_this) : m_this(p_this), m_use(true) {}
+        
+        gather_holder(const gather_holder & other) : m_this(other.m_this), m_use(true) {
+            other.m_use = false;
+        }
+
         ~gather_holder() { 
             // FIXME handle exiting from exceptions!!!
-            
-            m_this.on_do_write(m_obj); 
+            if ( m_use)
+                m_this.on_do_write(m_obj); 
         }
         gather_type & gather() { return m_obj; }
     private:
         const holder & m_this;
         mutable gather_type m_obj;
+        mutable bool m_use;
     };
 
     namespace detail {

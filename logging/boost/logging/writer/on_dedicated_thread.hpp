@@ -102,15 +102,15 @@ struct on_dedicated_thread
     BOOST_LOGGING_FORWARD_CONSTRUCTOR(on_dedicated_thread,base_type)
 
     void write_period(int period_ms) {
-        scoped_lock lk( context().cs);
-        context().write_period_ms = period_ms;
+        scoped_lock lk( context_type::context().cs);
+        context_type::context().write_period_ms = period_ms;
     }
 
     ~on_dedicated_thread() {
         boost::shared_ptr<boost::thread> writer;
-        { scoped_lock lk( context().cs);
-          context().is_working = false;
-          writer = context().writer;
+        { scoped_lock lk( context_type::context().cs);
+          context_type::context().is_working = false;
+          writer = context_type::context().writer;
         }
 
         if ( writer)
@@ -118,14 +118,14 @@ struct on_dedicated_thread
     }
 
     void operator()(const msg_type & msg) {
-        context_type::ptr new_msg(new msg_type(msg));
+        typedef typename context_type::ptr ptr;
+        ptr new_msg(new msg_type(msg));
 
-        typedef boost::shared_ptr<boost::thread> ptr;
-        scoped_lock lk( context().cs);
-        if ( !context().writer) 
-            context().writer = ptr( new boost::thread( boost::bind(&self_type::do_write,this) ));
+        scoped_lock lk( context_type::context().cs);
+        if ( !context_type::context().writer) 
+            context_type::context().writer = ptr( new boost::thread( boost::bind(&self_type::do_write,this) ));
 
-        context().msgs.push_back(new_msg);
+        context_type::context().msgs.push_back(new_msg);
     }
 private:
     void do_write() {
@@ -133,10 +133,10 @@ private:
 
         int sleep_ms = 0;
         while ( true) {
-            { scoped_lock lk( context().cs);
+            { scoped_lock lk( context_type::context().cs);
               // refresh it - just in case it got changed...
-              sleep_ms = context().write_period_ms;
-              if ( !context().is_working)
+              sleep_ms = context_type::context().write_period_ms;
+              if ( !context_type::context().is_working)
                   break; // we've been destroyed
             }
 
@@ -150,10 +150,10 @@ private:
 
             typedef typename context_type::array array;
             array msgs;
-            { scoped_lock lk( context().cs);
-              std::swap( context().msgs, msgs);
+            { scoped_lock lk( context_type::context().cs);
+              std::swap( context_type::context().msgs, msgs);
               // reserve elements - so that we don't get automatically resized often
-              context().msgs.reserve( msgs.size() );
+              context_type::context().msgs.reserve( msgs.size() );
             }
 
             for ( typename array::iterator b = msgs.begin(), e = msgs.end(); b != e; ++b)
