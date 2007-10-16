@@ -647,11 +647,19 @@
 					Name="destination"
 					>
 					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\destination\convert_destination.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\..\boost\logging\format\destination\defaults.hpp"
 						>
 					</File>
 					<File
 						RelativePath="..\..\..\..\..\boost\logging\format\destination\file.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\..\boost\logging\format\destination\rolling_file.hpp"
 						>
 					</File>
 				</Filter>

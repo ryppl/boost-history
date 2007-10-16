@@ -28,7 +28,7 @@ namespace boost { namespace logging { namespace writer {
 
     namespace detail {
         struct ts_write_context {
-            boost::logging::threading::mutex cs;
+            mutable boost::logging::threading::mutex cs;
         };
     }
 
@@ -70,9 +70,9 @@ Depending on your scenario, you could prefer on_dedicated_thread class.
 @sa on_dedicated_thread
 */
     template<class base_type> struct ts_write : base_type {
-        BOOST_LOOGING_FORWARD_CONSTRUCTOR(ts_write,base_type)
+        BOOST_LOGGING_FORWARD_CONSTRUCTOR(ts_write,base_type)
 
-        template<class msg_type> void operator()(msg_type msg) {
+        template<class msg_type> void operator()(msg_type msg) const {
             typedef boost::logging::threading::mutex::scoped_lock lock;
             lock lk(context().cs);
 

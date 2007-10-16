@@ -22,14 +22,44 @@
 #endif
 
 #include <boost/logging/detail/fwd.hpp>
+#include <boost/logging/detail/manipulator.hpp>
+#include <boost/logging/format/destination/convert_destination.hpp>
+#include <boost/logging/format/destination/file.hpp>
+#include <iostream>
 
 namespace boost { namespace logging { namespace destination {
 
-// console, file, debug window
+
+/** 
+    @brief Writes the string to console
+*/
+template<class convert_dest = do_convert_destination > struct cout {
+    template<class msg_type> void operator()(const msg_type & msg) const {
+#ifndef UNICODE
+        convert_dest::write(msg, std::cout);
+#else
+        convert_dest::write(msg, std::wcout);
+#endif
+    }
+};
+
+
+template<class convert_dest = do_convert_destination > struct dbg_window {
+    template<class msg_type> void operator()(const msg_type & msg) const {
+#ifdef BOOST_WINDOWS
+#ifndef UNICODE
+    ::OutputDebugWindowA( convert_dest::do_convert(msg, into<const char*>() ) );
+#else
+    ::OutputDebugWindowW( convert_dest::do_convert(msg, into<const wchar_t*>() ) );    
+#endif
+#endif
+    }
+};
 
 
 
-rolling files/sharing memory
+
+sharing memory
 
 }}}
 

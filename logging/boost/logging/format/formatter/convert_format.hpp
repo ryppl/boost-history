@@ -42,7 +42,7 @@ namespace boost { namespace logging { namespace formatter {
     so that you can "inject" your own write function in the convert_format::prepend/orwhatever namespace, and
     then it'll be automatically used!
 */
-namespace convert_format {
+namespace convert {
     typedef boost::logging::char_type char_type;
     typedef std::basic_string<char_type> string_type;
 
@@ -86,19 +86,19 @@ namespace convert_format {
 struct do_convert_format {
     struct prepend {
         template<class string> void write(const string_type & src, string & dest) {
-            convert_format::prepend::write(src, dest);
+            convert::prepend::write(src, dest);
         }
     };
 
     struct append {
         template<class string> void write(const string_type & src, string & dest) {
-            convert_format::append::write(src, dest);
+            convert::append::write(src, dest);
         }
     };
 
     struct modify {
         template<class string> void write(const string_type & src, string & dest) {
-            convert_format::modify::write(src, dest);
+            convert::modify::write(src, dest);
         }
     };
 };
