@@ -11,7 +11,7 @@
 
 #include <string>
 #include <boost/system/error_code.hpp>
-#include <boost/tokenizer/
+#include <boost/tokenizer.hpp>
 
 namespace cgi {
 
@@ -117,18 +117,24 @@ namespace cgi {
       return from_string(str.c_str(), ec);
     }
     */
+
+    /// Make a string out of the cookie
+    std::string to_string()
+    {
+      std::string str(ck.name + "=" + ck.value);
+      if (!ck.expires.empty()) str += "; expires=" += ck.expires;
+      if (!ck.path.empty()   ) str += "; path="    += ck.path;
+      if (!ck.domain.empty() ) str += "; domain="  += ck.domain;
+      if ( secure            ) str += "; secure";
+      if ( ck.http_only      ) str += "; HttpOnly";
+      return str;
+    }
   };
 
   template<typename OutStream, typename Cookie>
     OutStream& operator<<(OutStream& os, Cookie ck)
   {
-    os<< ck.name << "=" << ck.value;
-    if (!ck.expires.empty()) os<< "; expires=" << ck.expires;
-    if (!ck.path.empty()   ) os<< "; path="    << ck.path;
-    if (!ck.domain.empty() ) os<< "; domain="  << ck.domain;
-    if ( secure            ) os<< "; secure";
-    if ( ck.http_only      ) os<< "; HttpOnly";
-    return os;
+    return os<< ck.to_string();
   }
 
 } // namespace cgi
