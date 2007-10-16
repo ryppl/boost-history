@@ -79,5 +79,7 @@ Call this to set the number of tabs per character. This value is necessary to co
 
 See [@../../example/fundamental/position_iterator/position_iterator.cpp position_iterator.cpp] for a compilable example. This is part of the Spirit distribution.
 
+[endsect][/ operations]
+
 [endsect][/ position_iterator]
 

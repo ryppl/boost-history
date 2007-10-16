@@ -106,21 +106,20 @@ The required refactoring is implemented with the help of the Refactoring Parsers
  [[You write it as:]    [It is refactored to:]]
  [
 [`list_p(item, delimiter)`]
-[`(item - delimiter)
->> *(delimiter >> (item - delimiter))`]
+[`(item - delimiter) >> *(delimiter >> (item - delimiter))`]
  ]
  [
 [`list_p(item[func], delimiter)`]
-[`(item - delimiter)[func]
->> *(delimiter >> (item - delimiter)[func])`]
+[`(item - delimiter)\[func\] >> *(delimiter >> (item - delimiter)\[func\])`]
+ ]
+]
+[/[
  ]
 [`list_p(*item, delimiter)`]
-[`*(item - delimiter)
->> *(delimiter >> *(item - delimiter))`]
+[`*(item - delimiter) >> *(delimiter >> *(item - delimiter))`]
  [
-[`list_p((*item)[func], delimiter)`]
-[`(*(item - delimiter))[func]
->> *(delimiter >> (*(item - delimiter))[func])]
+[`list_p((*item)\[func\], delimiter)`]
+[`(*(item - delimiter))\[func\] >> *(delimiter >> (*(item - delimiter))\[func\])]
  ]
 ]
 

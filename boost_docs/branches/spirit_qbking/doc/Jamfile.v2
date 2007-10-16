@@ -1,0 +1,19 @@
+
+# name the project
+project boost.spirit.docs
+  : build-dir
+    ../bin.v2
+  ;
+
+import boostbook ;
+import quickbook ;
+
+# generate the Boost.Book XML
+xml spirit_xml : src/spirit.qbk ;
+
+# build the HTML doc-tree from the XML
+boostbook standalone
+  :
+   spirit_xml
+  ;
+

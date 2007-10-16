@@ -31,7 +31,7 @@ With debugging enabled, special output is generated at key points of the parse p
 [note
 In order to use spirit's debugging support you must ensure that appropriate overloads of `operator<<` taking `BOOST_SPIRIT_DEBUG_OUT` as its left operand are available. The expected semantics are those of the standard output operator.
 
-These overloads may be provided either within the namespace where the corresponding class is declared (will be found through Argument Dependent Lookup) or [within an anonymous namespace] inside `namespace boost::spirit`, so it is visible where it is called.
+These overloads may be provided either within the namespace where the corresponding class is declared (will be found through Argument Dependent Lookup) or \[within an anonymous namespace\] inside `namespace boost::spirit`, so it is visible where it is called.
 ]
 
 [important
@@ -149,7 +149,7 @@ Be sure to add the macros inside the grammar definition's constructor. Now here'
 ]
 
 [pre
-    Type an expression...or [q or Q] to quit
+    Type an expression...or \[q or Q\] to quit
 
     1 + 2
 
@@ -190,5 +190,5 @@ Check out [@../../example/fundamental/calc_debug.cpp calc_debug.cpp]` to see deb
 
 [endsect][/ macros]
 
-[endsect][/ debugging]`
+[endsect][/ debugging]
 

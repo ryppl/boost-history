@@ -1,0 +1,134 @@
+
+[def __boost_ref__ [@http://www.boost.org/doc/html/ref.html boost::ref]]
+
+[section:parametric_p Parametric Parsers]
+
+We already have a hint of the dynamic nature of the Spirit framework. This capability is fundamental to Spirit. Dynamic parsing is a very powerful concept. We shall take this concept further through run-time parametric parsers. We are able to handle parsing tasks that are impossible to do with any EBNF syntax alone.
+
+[section:a_secret A Little Secret]
+
+A little critter called __boost_ref__ lurking in the` __Boost__ distribution is quite powerful beast when used with Spirit's primitive parsers. We are used to seeing the Spirit primitive parsers created with string or character literals such as:
+
+``
+    ch_p('A')
+    range_p('A', 'Z')
+    str_p("Hello World")
+``
+
+`str_p` has a second form that accepts two iterators over the string:
+
+``
+    char const* first = "My oh my";
+    char const* last = first + std::strlen(first);
+
+    str_p(first, last)
+``
+
+What is not obvious is that we can use __boost_ref__ as well:
+
+``
+    char ch = 'A';
+    char from = 'A';
+    char to = 'Z';
+
+    ch_p(boost::ref(ch))
+    range_p(boost::ref(from), boost::ref(to))
+``
+
+When __boost_ref__ is used, the actual parameters to `ch_p` and `range_p` are held by reference. This means that we can change the values of `ch`, `from` and `to` anytime and the corresponding `ch_p` and `range_p` parser will follow their dynamic values. Of course, since they are held by reference, you must make sure that the referenced object is not destructed while parsing.
+
+What about `str_p`?
+
+While the first form of `str_p` (the single argument form) is reserved for null terminated string constants, the second form (the two argument `first`/`last` iterator form) may be used:
+
+``
+    char const* first = "My oh my";
+    char const* last = first + std::strlen(first);
+
+    str_p(boost::ref(first), boost::ref(last))
+``
+
+[tip Hey, don't forget `chseq_p`. All these apply to this seldom used primitive as well.]
+
+[endsect][/ a_secret]
+
+[section:functional Functional Parametric Primitives]
+
+``
+    #include <boost/spirit/attribute/parametric.hpp>
+``
+
+Taking this further, Spirit includes functional versions of the primitives. Rather than taking in characters, strings or references to characters and strings (using __boost_ref__), the functional versions take in functions or functors.
+
+[h3 `f_chlit` and `f_ch_p`]
+
+The functional version of `chlit`. This parser takes in a function or functor (function object). The function is expected to have an interface compatible with:
+
+``
+    CharT func()
+``
+
+where `CharT` is the character type (e.g. `char`, `int`, `wchar_t`).
+
+The functor is expected to have an interface compatible with:
+
+``
+    struct functor
+    {
+        CharT operator()() const;
+    };
+``
+
+where `CharT` is the character type (e.g. `char`, `int`, `wchar_t`).
+
+Here's a contrived example:
+
+``
+    struct X
+    {
+        char operator()() const
+        {
+            return 'X'; 
+        }
+    };
+``
+
+Now we can use `X` to create our `f_chlit` parser:
+
+``
+    f_ch_p(X())
+``
+
+[h3 `f_range` and `f_range_p`]
+
+The functional version of `range`. This parser takes in a function or functor compatible with the interfaces above. The difference is that `f_range` (and `f_range_p`) expects two functors. One for the start and one for the end of the range.
+
+[h3 `f_chseq` and `f_chseq_p`]
+
+The functional version of `chseq`. This parser takes in two functions or functors. One for the begin iterator and one for the end iterator. The function is expected to have an interface compatible with:
+
+``
+    IteratorT func()
+``
+
+where `IteratorT` is the iterator type (e.g. `char const*`, `wchar_t const*`).
+
+The functor is expected to have an interface compatible with:
+
+``
+    struct functor
+    {
+        IteratorT operator()() const;
+    };
+``
+
+where `IteratorT` is the iterator type (e.g. `char const*`, `wchar_t const*`).
+
+[h3 `f_strlit` and `f_str_p`]
+
+The functional version of `strlit`. This parser takes in two functions or functors compatible with the interfaces that `f_chseq` expects.
+
+[endsect][/ functional]
+
+[endsect][/ parametric_p]
+

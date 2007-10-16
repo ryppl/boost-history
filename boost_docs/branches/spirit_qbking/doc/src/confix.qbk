@@ -83,11 +83,11 @@ will be parsed as expected:
 The required refactoring is implemented here with the help of the [link __Refactoring Parsers__] too.
 
 [table Summary of Confix Parser refactorings
- [[You write it as:]                       [It is refactored to:]                     ]
- [[`confix_p(open, expr, close)`]          [`open >> (expr - close) >> close`]        ]
- [[`confix_p(open, expr[func], close)`]    [`open >> (expr - close)[func] >> close]   ]
- [[`confix_p(open, *expr, close)`]         [`open >> *(expr - close) >> close]        ]
- [[`confix_p(open, (*expr)[func], close)`] [`open >> (*(expr - close))[func] >> close]]
+ [[You write it as:]                       [It is refactored to:]                      ]
+ [[`confix_p(open, expr, close)`]          [`open >> (expr - close) >> close`]         ]
+ [[`confix_p(open, expr[func], close)`]    [`open >> (expr - close)[func] >> close`]   ]
+ [[`confix_p(open, *expr, close)`]         [`open >> *(expr - close) >> close`]        ]
+ [[`confix_p(open, (*expr)[func], close)`] [`open >> (*(expr - close))[func] >> close`]]
 ]
 
 [h3 Comment Parsers]

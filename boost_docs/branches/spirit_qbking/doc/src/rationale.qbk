@@ -69,7 +69,7 @@ __Subrules__ open up the oportunity to do aggressive meta programming as well be
 
 While Spirit is a currently classified as a non-deterministic recursive-descent parser, Doug Gregor first noted that other parsing techniques apart from top-down recursive descent may be applied. For instance, apart from non-deterministic recursive descent, deterministic LL(1) and LR(1) can theoretically be implemented using the same expression template front end. Spirit rules use virtual functions to encode the RHS parser expression in an opaque abstract parser type. While it serves its purpose well, the rule's virtual functions are the stumbling blocks to more advanced metaprogramming. Subrules are free from virtual functions.
 
-[endsect[/ subrules]
+[endsect][/ subrules]
 
 [section:greedy Exhaustive backtracking and greedy RD]
 

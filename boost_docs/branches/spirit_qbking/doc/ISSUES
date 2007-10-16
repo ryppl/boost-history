@@ -42,7 +42,7 @@ lazy_parser.qbk
 
 select_parser.qbk
 
- * Link at bottom of page referring to PHOENIX_LIMIT should be more direct.
+ * Link at bottom of page referring to PHOENIX_LIMIT should be more direct. (also present in closures.qbk)
 
 switch_parser.qbk
 
@@ -64,3 +64,36 @@ rationale.qbk
 
  * 'Spirit is greedy --using straight forward, naive RD'
    
+parametric_parsers.qbk
+
+ * 'This parser takes in a function or functor (function object)'
+   Add a link here.
+
+functional.qbk
+
+ * 'It is obvious that the authors of STL know and practice FP'
+   Not that I (know nor) disagree, but a citation here would be nice. ;)
+
+ * Some internal links near the bottom.
+
+closures.qbk
+
+ * 'And, with recursive rules'
+   Link.
+
+ * 'in the [link __Functional__] chapter.'
+   Should be an internal link, previously to functional.html
+
+ * '[link __lambda expressions__]'
+   Int. link
+
+ * The sectioning style (esp. below the example) seems inconsistent with the rest of the docs
+
+ * Link to PHOENIX_LIMIT
+
+ * '[link __parser_context__]'
+   Int. lin k
+
+ * Could do with an HTML source-mode (lookat: won't templates make source-mode markup not enough?)
+
+ * Caption for the image (theme/closure1.png) displaced.

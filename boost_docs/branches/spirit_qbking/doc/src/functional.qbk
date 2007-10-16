@@ -1,0 +1,202 @@
+
+[section Functional]
+
+If you look more closely, you'll notice that Spirit is all about composition of ['parser functions]. A parser is just a function that accepts a scanner and returns a match. Parser ['functions] are composed to form increasingly complex ['higher order forms]. Notice too that the parser, albeit an object, is immutable and constant. All primitive and composite parser objects are `const`. The parse member function is even declared as `const`:
+
+``
+    template <typename ScannerT>
+    typename parser_result<self_t, ScannerT>::type
+    parse(ScannerT const& scan) const;
+``
+
+In all accounts, this looks and feels a lot like [*Functional Programming]. And indeed it is. Spirit is by all means an application of Functional programming in the imperative C++ domain. In Haskell, for example, there is what are called [link __parser_combinators__] which are strikingly similar to the approach taken by Spirit- parser functions which are composed using various operators to create higher order parser functions that model a top-down recursive descent parser. Those smart Haskell folks have been doing this way before Spirit.
+
+Functional style programming (or FP) libraries are gaining momentum in the C++ community. Certainly, we'll see more of FP in Spirit now and in the future. Actually, if one looks more closely, even the C++ standard library has an FP flavor. Stealthily beneath the core of the standard C++ library, a closer look into STL gives us a glimpse of a truly FP paradigm already in place. It is obvious that the authors of STL know and practice FP.
+
+[section:sa Semantic Actions in the FP Perspective]
+
+[section STL style FP]
+
+A more obvious application of STL-style FP in Spirit is the semantic action. What is STL-style FP? It is primarily the use of functors that can be composed to form higher order functors.
+
+[note
+Functors
+
+A Function Object, or Functor is simply any object that can be called as if it is a function. An ordinary function is a function object, and so is a function pointer; more generally, so is an object of a class that defines `operator()`.
+]
+
+This STL-style FP can be seen everywhere these days. The following example is taken from [@http://www.sgi.com/tech/stl/ SGI's Standard Template Library Programmer's Guide]:
+
+``
+    //  Computes sin(x)/(x + DBL_MIN) for each element of a range.
+
+    transform(first, last, first,
+              compose2(divides<double>(),
+                       ptr_fun(sin),
+                       bind2nd(plus<double>(), DBL_MIN)));
+``
+
+Really, this is just ['currying] in FP terminology.
+
+[info
+Currying
+
+What is "currying", and where does it come from?
+
+Currying has its origins in the mathematical study of functions. It was observed by Frege in 1893 that it suffices to restrict attention to functions of a single argument. For example, for any two parameter function `f(x,y)`, there is a one parameter function `f'` such that `f'(x)` is a function that can be applied to y to give `(f'(x))(y) = f (x,y)`. This corresponds to the well known fact that the sets `(AxB -> C)` and `(A -> (B -> C))` are isomorphic, where `"x"` is cartesian product and `"->"` is function space. In functional programming, function application is denoted by juxtaposition, and assumed to associate to the left, so that the equation above becomes `f' x y = f(x,y)`.
+
+In the context of Spirit, the same FP style functor composition may be applied to semantic actions. [@../../example/fundamental/full_calc.cpp full_calc.cpp] is a good example. Here's a snippet from that sample:
+
+``
+    expression =
+        term
+        >> *(   ('+' >> term)[make_op(plus<long>(), self.eval)]
+            |   ('-' >> term)[make_op(minus<long>(), self.eval)]
+            )
+            ;
+``
+
+[info The full source code can be [@../../example/fundamental/full_calc.cpp viewed here]. This is part of the Spirit distribution.]
+
+[endsect][/ scgi_style_fp]
+
+[section Boost style FP]
+
+__Boost__ takes the FP paradigm further. There are libraries in boost that focus specifically on Function objects and higher-order programming.
+
+[table Boost FP libraries
+  [
+    [[@http://www.boost.org/libs/bind bind] and [@http://www.boost.org/libs/mem_fn mem_fn]]
+    [Generalized binders for function/object/pointers and member functions, from Peter Dimov]
+  ]
+  [
+    [[@http://www.boost.org/libs/compose compose]]
+    [Functional composition adapters for the STL, from Nicolai Josuttis.]
+  ]
+  [
+    [[@http://www.boost.org/libs/function function]]
+    [Function object wrappers for deferred calls or callbacks, from Doug Gregor.]
+  ]
+  [
+    [[@http://www.boost.org/libs/functional functional]]
+    [Enhanced function object adaptors, from Mark Rodgers.]
+  ]
+  [
+    [[@http://www.boost.org/libs/lambda lambda]]
+    [Define small unnamed function objects at the actual call site, and more, from Jaakko Järvi and Gary Powell.]
+  ]
+  [
+    [[@http://www.boost.org/libs/ref ref]]
+    [A uility library for passing references to generic functions, from Jaako Järvi, Peter Dimov, Doug Gregor, and Dave Abrahams.]
+  ]
+]
+
+The following is an example that uses boost [*Bind] to use a member function as a Spirit semantic action. You can see this example in full in the file [@../../example/fundamental/bind.cpp bind.cpp].
+
+``
+    class list_parser
+    {
+    public:
+
+        typedef list_parser self_t;
+
+        bool
+        parse(char const* str)
+        {
+            return spirit::parse(str,
+
+                //  Begin grammar
+                (
+                    real_p
+                    [
+                        bind(&self_t::add, this, _1)
+                    ]
+
+                    >> *(   ','
+                            >>  real_p
+                                [
+                                    bind(&self_t::add, this, _1)
+                                ]
+                        )
+                )
+                ,
+                //  End grammar
+
+                space_p).full;
+        }
+
+        void
+        add(double n)
+        {
+            v.push_back(n);
+        }
+
+        vector<double> v;
+    };
+``
+
+[info The full source code can be [@../../example/fundamental/bind.cpp viewed here]. This is part of the Spirit distribution.]
+
+This parser parses a comma separated list of real numbers and stores them in a `vector<double>`. Boost.Bind creates a Spirit conforming semantic action from the `list_parser`'s member function `add`.
+
+[endsect][/ boost_style_fp]
+
+[section Lambda and Phoenix]
+
+There's a library, authored by yours truly, named __Phoenix__. While this is not officially part of the Spirit distribution, this library has been used extensively to experiment on advanced FP techniques in C++. This library is highly influenced by [@http://www.cc.gatech.edu/%7Eyannis/fc%2B%2B/ FC++] and Boost.Lambda ([@http://www.boost.org/libs/lambda BLL]).
+
+[info
+BLL
+
+In as much as Phoenix is influenced by boost Lambda (BLL), Phoenix innovations such as local variables, local functions and adaptable closures, in turn influenced BLL. Currently, BLL is very similar to Phoenix. Most importantly, BLL incorporated Phoenix's adaptable closures. In the future, Spirit will fully support BLL.
+]
+
+Phoenix allows one to write semantic actions inline in C++ through lambda (an unnamed function) expressions. Here's a snippet from the [@../../example/fundamental/phoenix_calc.cpp phoenix_calc.cpp] example:
+
+``
+    expression
+        =   term[expression.val = arg1]
+            >> *(   ('+' >> term[expression.val += arg1])
+                |   ('-' >> term[expression.val -= arg1])
+                )
+        ;
+
+    term
+        =   factor[term.val = arg1]
+            >> *(   ('*' >> factor[term.val *= arg1])
+                |   ('/' >> factor[term.val /= arg1])
+                )
+        ;
+
+    factor
+        =   ureal_p[factor.val = arg1]
+        |   '(' >> expression[factor.val = arg1] >> ')'
+        |   ('-' >> factor[factor.val = -arg1])
+        |   ('+' >> factor[factor.val = arg1])
+        ;
+``
+
+[info The full source code can be [@../../example/fundamental/phoenix_calc.cpp viewed here]. This is part of the Spirit distribution.]
+
+You do not have to worry about the details for now. There is a lot going on here that needs to be explained. The succeeding chapters will be enlightening.
+
+Notice the use of lambda expressions such as:
+
+``
+    expression.val += arg1
+``
+
+[info
+Lambda Expressions?
+
+Lambda expressions are actually unnamed partially applied functions where placeholders (e.g. arg1, arg2) are provided in place of some of the arguments. The reason this is called a lambda expression is that traditionally, such placeholders are written using the Greek letter lambda [$../theme/lambda.png].
+]
+
+where `expression.val` is a closure variable of the expression rule (see __Closures__). `arg1` is a placeholder for the first argument that the semantic action will receive (see [link __Phoenix Place-holders__]). In Boost.Lambda (BLL), this corresponds to `_1`. 
+
+[endsect][/ lambda_and_phoenix]
+
+[endsect][/ sa]
+
+[endsect][/ Functional]
+

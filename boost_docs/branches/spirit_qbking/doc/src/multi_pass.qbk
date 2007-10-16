@@ -361,5 +361,7 @@ A `StoragePolicy` must have the following interface:
 
 A `StoragePolicy` is the trickiest policy to write. You should study and understand the existing `StoragePolicy` classes before you try and write your own.
 
+[endsect][/ combinations]
+
 [endsect][/ multi_pass]
 

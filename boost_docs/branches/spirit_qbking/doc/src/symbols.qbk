@@ -92,7 +92,7 @@ Assuming of course that the data slot associated with `sym` is an integer.
 
 The data associated with each symbol may be modified any time. The most obvious way of course is through semantic actions. A function or functor, as usual, may be attached to the symbol table. The symbol table expects a function or functor compatible with the signature:
 
-[variablelist
+[/variablelist
  [
   [Signature for functions:]
   [`void func(T& data);`]
@@ -102,7 +102,7 @@ The data associated with each symbol may be modified any time. The most obvious 
   [`struct ftor
     {
         void operator()(T& data) const;
-    };`]
+    };`
 
 Where `T` is the data type of the symbol table (the `T` in its template parameter list). When the symbol table successfully matches something from the input, the data associated with the matching entry in the symbol table is reported to the semantic action.
  ]
@@ -112,7 +112,7 @@ Where `T` is the data type of the symbol table (the `T` in its template paramete
 
 Sometimes, one may wish to deal with the symbol table directly. Provided are some symbol table utilities.
 
-[variablelist
+[/variablelist FIXME: Utilities
  [
   [`add`]
   [`template <typename T, typename CharT, typename SetT>

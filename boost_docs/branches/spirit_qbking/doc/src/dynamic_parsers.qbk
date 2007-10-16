@@ -55,6 +55,8 @@ Example:
 
 As long as the condition is met the dynamic parser constructed by `while_p` will try to match the body-parser. `do_p` returns a parser that tries to match the body-parser and then behaves just like the parser returned by `while_p`. A failure to match the body-parser will cause a failure to be reported by the while/do-parser.
 
+[endsect][/ FIXME(put this here?): conditions]
+
 Example:
 
 ``
