@@ -20,12 +20,12 @@
     ]
 ]
 
-[def __Boost__   [http://www.boost.org/ Boost]]
-[def __BLL__     [http://www.boost.org/libs/lambda BLL]]
-[def __Phoenix__ [http://www.boost.org/libs/spirit/phoenix]]
+[def __Boost__   [@http://www.boost.org/ Boost]]
+[def __BLL__     [@http://www.boost.org/libs/lambda BLL]]
+[def __Phoenix__ [@http://www.boost.org/libs/spirit/phoenix]]
 
-[def __boost_ref__ [http://www.boost.org/libs/ref boost::ref]]
-[def __phoenix_var__ [http://www.boost.org/libs/spirit/phoenix/doc/variables.html phoenix::var]]
+[def __boost_ref__ [@http://www.boost.org/libs/ref boost::ref]]
+[def __phoenix_var__ [@http://www.boost.org/libs/spirit/phoenix/doc/variables.html phoenix::var]]
 
 [section TOC]
 
@@ -127,5 +127,7 @@ References
 [include functional.qbk]
 [include closures.qbk]
 
+[endsect][/ from a missing one somewhere]
+[endsect][/ from a missing one somewhere]
 
 [endsect][/ toc]
