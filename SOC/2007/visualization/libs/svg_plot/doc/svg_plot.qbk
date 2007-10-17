@@ -10,23 +10,25 @@
     ]
 ]
 
+[/ Editorial work by Paul A. Bristow 16 Oct 2007]
+
 [section:howtouse How To Use This Documentation]
 
 * Tutorial pages are intended for those who do not know how to use the program.
-	* The pages that begin with the tag "Tutorial: Simple" are for absolute 
-	  beginners. 
-	* "Tutorial: Full" should give the intermediate user a good 
-	  reference, as well as show how the program can be used
-	* "Tutorial: Special" shows other features/options that the headers
-	  provide to the user.
-* The pages labelled "* Public Interface" give reference information for 
+  * The pages that begin with the tag "Tutorial: Simple" are for absolute 
+    beginners. 
+  * "Tutorial: Full" should give the intermediate user a good 
+    reference, as well as show how the program can be used
+  * "Tutorial: Special" shows other features/options that the headers
+    provide to the user.
+* The pages labelled "*Public Interface*" give reference information for 
 their respective subjects. You can find all public methods (and data members, 
 when structs are concerned) in these sections.
 * If you have a feature request, or if it appears that my implementation
 is in error, please check the [@svg_plot/todo.html To Do] page first, as well
-as the area's respective rationale section, if it exists. If I 
+as the respective rationale section, if it exists. If I 
 you do not find your idea/complaint, please reach me either through the Boost 
-dev list, or email me at jakevoytko (at) gmail (dot) com
+development list, or email me at jakevoytko (at) gmail (dot) com
 
 [heading Admonishments]
 
@@ -41,37 +43,47 @@ incorrect, and likely undesired, results in the plot]
 
 And the first admonishment I will use is as follows:
 
-[important This is not currently a Boost library. It is a GSoC project whose
-mentor organization is Boost.]
-
+[important This is not currently a Boost library. It is a
+[@http://code.google.com/soc/2007/boost/about.html GSoC project]
+whose mentor organization is Boost.]
 
 [heading Preface]
 Humans have a fantastic capacity for visual understanding, and merely looking 
 at data organized in one, two, or three dimensions allows us to see relations 
 not otherwise visible in a list of numbers. Computers, however, deal with 
-information numerically, and C++ and the STL do not currently offer a way 
-to bridge the gap. This library allows the user to easily plot data stored 
-in STL containers with (hopefully!) minimal intervention.
+information numerically, and C++ and the
+[@http://en.wikipedia.org/wiki/Standard_Template_Library Standard Template Library (STL)]
+do not currently offer a way to bridge the gap.
+This library helps the user to easily plot data stored in STL containers.
 
 This project is focused on using STL containers in order to graph data on a 
-one-dimensional and two-dimensional (and if time allows, 3D!) plot. The plot 
-will currently be written in an SVG image, compliant with the 
-[@http://www.w3.org/TR/SVG11/W3C standard]. The goals 
-of the project are as follows:
+one-dimensional and two-dimensional (and in future, perhaps, 3D) plot. The plot 
+will currently be written to a 
+[@http://en.wikipedia.org/wiki/Scalable_Vector_Graphics Scalable Vector Graphic image].
 
-* To let users produce a simple plot with minimal intervention by using sane 
-defaults
-* To allow users to easily customize plots to their heart's content
+[@http://www.w3.org/TR/SVG11/ Scalable Vector Graphics (SVG)] is an
+[@http://www.w3.org/TR/REC-xml/#sec-comments XML specification]
+and file format for describing two-dimensional vector graphics.
+
+SVG files (.svg) can be viewed with a browser like Mozilla Firefox (newer version), Adobe Acrobat Reader, many other graphics program, and by Microsoft Internet Explorer, provided a suitable
+[@http://www.adobe.com/svg/ Adobe SVG Veiwer plug-in for SVG files] is installed.
+
+The goals of the project are:
+
+* To let users produce simple plots with minimal intervention by using sane 
+defaults.
+* To allow users to easily customize plots.
 * To allow the user to talk to the plot classes using coordinate units 
-rather than pixels or other arbitrary measures 
+rather than pixels or other arbitrary measures.
 * To create the backbone of a `svg` class that can be extended to fully support 
-the standard
+the standard.
+* compliance with the 
+[@http://www.w3.org/TR/SVG11/ W3C Scalable vector Graph standard].
 
-[note I have only a student's grasp of C++, so if you have a suggestion to 
-help me with design or implementation, email me at 
-jakevoytko (at) gmail (dot) com]
+[note Comments and suggestions to Jake Voytko 
+at jakevoytko (at) gmail (dot) com]
 
-[endsect][/section:howtouse How To Use This Documentation]
+[endsect] [/section:howtouse How To Use This Documentation]
 
 [section:todo To Do List]
 This project is still in development, so here is a list of things that I would
@@ -81,12 +93,13 @@ before you email me with requests.
 * Allow an *external stylesheet* to be loaded to style the graph. External
 stylesheets will allow a standard and easy way to style the document
 so that users don't have to come up with their own home-grown solutions.
-* Allow *function pointers* to specify functions as input. A use case where the
-user wants to just see what [^sin(x)] looks like is easily imaginable.
+* Allow *function pointers* to specify functions as input. A typical use case 
+is to just see what a function like [^sin(x)] looks like.
 * *Radian coordinate system*.
 * Implementation of *SVG's DOM*. This will make the SVG class useful for other things than solely making graphs!
-* *Automatic scaling* of the axis
-* Allow *2D plots of 1D containers*. Currently I am having trouble with having functors that update state interact with `make_transform_iterator`, and have omitted the feature.
+* *Automatic scaling* of the axis.
+* Allow *2D plots of 1D containers*.
+Currently I am having trouble with having functors that update state interact with `make_transform_iterator`, and have omitted the feature.
 * Allow *other image formats*. This is certainly an after-GSoC project, as 
 there are many inherent difficulties with this part. The solution that I am
 currently playing with is allowing the user to pass a functor that traverses
@@ -98,34 +111,46 @@ method of doing this, I will begin a discussion on the Boost dev list.
 write the program initially, but it would be more efficient if the program could
 keep track of what has been changed and what hasn't, so that it may be more
 efficient if lots of images are being produced.
-* Allow the user to provide a function object for generating *custom axis labels* (For example, months instead of integer representations of months) 
-* *Logarithmic Axis*
-* *Histogram*
+* Allow the user to provide a function object for generating *custom axis labels*,
+for example, label axes with names of months (Jan, Feb, Mar...)
+instead of integer representations of months (1, 2, 3...).
+* *Logarithmic Axes*.
+* *Histograms*.
 
 [endsect] [/section:todo To Do]
 
 [section:color Colors]
 
-The project supports any RGB color, as well as a number of constants that are 
+The project supports any 
+[@http://en.wikipedia.org/wiki/RGB_color_model RGB color],
+as well as a number of colors that are 
 [@http://www.w3.org/TR/SVG/types.html#ColorKeywords named by the SVG standard].
 
 [heading `svg_color_constant`]
-`svg_color_constant` is simply an enumerated list. The colors are defined
-[@http://www.w3.org/TR/SVG/types.html#ColorKeywords here]. The list contains 
-all of your expected colors, such as black and red. The list contains one extra color element, `blank`, used when you need to pass a color, but would not like it to show up. This comes in handy for defining defaults for functions, for example.
+`svg_color_constant` is simply an enumerated list.
 
+The constants are defined at
+[@..\..\..\..\visualization\boost\svg_plot\svg_color.hpp svg_color.hpp].
 
-[heading Example of using `svg_color_constant`]
+The 
+[@http://www.w3.org/TR/SVG/types.html#ColorKeywords colors are defined by the SVG standard here].
+The list contains all of your expected colors, such as magenta, pink and red, and many other shades.
 
-	using namespace boost::svg;
+The list also contains one extra color element, `blank`, defined as `false`,
+used when you need to pass a color, but would not like it to be visible.
+This comes in handy for defining defaults for functions, for example.
 
-	svg_2d_plot my_plot;
+[h4 Example of using `svg_color_constant`]
 
-	svg_color_constant my_const = red;
+  using namespace boost::svg;
 
-	my_plot.background_border_color(my_const);
-	my_plot.background_color(lightgray);
-	
+  svg_2d_plot my_plot;
+
+  svg_color_constant my_const = red;
+
+  my_plot.background_border_color(my_const);
+  my_plot.background_color(lightgray);
+  
 [note `svg_color` has a constructor for `svg_color_constant`, so you can use
 a `svg_color_constant` in place of a `svg_color` and it will be implicitly
 converted. However, there is not currently an 
@@ -135,258 +160,269 @@ svg_color my_color = red;
 `` 
 does not work.]
 
+[h4 `svg_color` interface]
 
-[heading `svg_color` interface]
+You can define a `svg_color` using two different constructors:
 
-You can define a `svg_color` using two different constructors
+  // The parameters are red, green, and blue respectively.
+  svg_color(int, int, int);
 
-	// The parameters are red, green, and blue respectively.
-	svg_color(int, int, int);
+  // Use a pre-existing color constant.
+  svg_color(svg_color_constant);
 
-	// Use a pre-existing color constant.
-	svg_color(svg_color_constant);
+[important Any integer value is accepted but negative values are contrained 0, and positive values > 255 are constrained to 255.]
 
-[important Any integer value is accepted by the SVG standard, but negative values are rounded to 0, and positive values > 255 are rounded down to 255.]
+[h4 Example of using `svg_color`]
 
-
-[heading Example of using `svg_color`]
-
-	using namespace boost::svg;
-	
-	svg_color my_white(255, 255, 255);
-	svg_color const_white(white);
-	
-	BOOST_ASSERT(my_white == const_white);
+  using namespace boost::svg;
+  
+  svg_color my_white(255, 255, 255); // RGB constructor.
+  svg_color const_white(white); // SVG defined named constructor.
+  
+  BOOST_ASSERT(my_white == const_white);
 
 
-[note `svg_color`'s constructor takes in three integer values. The SVG 1.1
-standard allows any integer to represent an RGB value, with values less than 0
-and greater than 255 being rounded to their respective min and max.]
+[note `svg_color`'s constructor takes in three integer values.
+The [@http://www.w3.org/TR/SVG11/types.html SVG 1.1 standard]
+allows any integer to represent an RGB value, with values less than 0
+and greater than 255 being constrained to their respective min and max.]
 
-[heading Internals and Rationale]
+[heading Colors Internals and Rationale]
 
 Constants are defined in an enum, `svg_color_constant`, in alphabetical order.
+[@..\..\..\..\boost\svg_plot\svg_color.hpp color constants].
 This facilitates quick lookup of their RGB values from an array. Anywhere
 that a `svg_color` can be used, a `svg_color_constant` can be used, as the
 conversion is implicit.
 
-All color information is stored in RGB format in a `svg_color` struct. The 
-rationale for storing information in RGB format is because it is precise, and is
-always representable the exact same way. Storing a floating point percentage 
-introduces the possibility of rounding error, which I would like to avoid at 
-all costs.
+All color information is stored in RGB format as three 'unsigned char' in a `svg_color` struct.
+The  rationale for storing information in RGB format is because it is precise,
+and is always representable the exact same way. Storing a floating-point percentage 
+would introduce the possibility of undesirable rounding error.
 
-[endsect][/section:color Color]
+[endsect] [/section:color Color]
 
 [section:tutorial_code_1d_simple Tutorial: 1D]
-[section:tutorial_code_1d_example Simple Example]
-	#include <boost/svg_plot/svg_1d_plot.hpp>
-	#include <vector>
-	
-	using std::vector;
-	using namespace boost::svg;
-	
-	int main()
-	{
-		vector<double> dan_times;
-		vector<double> elaine_times;
-	
-		dan_times.push_back(3.1);
-		dan_times.push_back(4.2);
-		elaine_times.push_back(2.1);
-		elaine_times.push_back(7.8);
-	
-		svg_1d_plot my_plot;
-	
-		my_plot.title("Race Times")
-		       .legend_on(true)
-		       .x_range(-1, 11);
-	
-		my_plot.plot(dan_times, "Dan", blue);
-		my_plot.plot(elaine_times, "Elaine", orange);
-	
-		my_plot.write("simple.svg");
-		return 0;
-	}
+[section:tutorial_code_1d_example Simple 1D Example]
+  #include <boost/svg_plot/svg_1d_plot.hpp>
+  using namespace boost::svg;
+  #include <vector>
+  using std::vector;
+  
+  int main()
+  {
+    // STL containers for the data to plot.
+    vector<double> dan_times;
+    vector<double> elaine_times;
+    // Fill the two containers with some data:
+    dan_times.push_back(3.1);
+    dan_times.push_back(4.2);
+    elaine_times.push_back(2.1);
+    elaine_times.push_back(7.8);
+  
+    svg_1d_plot my_plot; // Construct a plot.
+  
+    my_plot.title("Race Times") // Set title and legend.
+           .legend_on(true)
+           .x_range(-1, 11);
+           
+    // Add the containers of data to the plot.
+    my_plot.plot(dan_times, "Dan", blue);
+    my_plot.plot(elaine_times, "Elaine", orange);
+    
+    // And finally write the plot to a file.
+    my_plot.write("simple.svg");
+    return 0;
+  }
 
+[$images/1d_simple.png] [/ TODO All .png should be .svg?]
 
-[$images/1d_simple.png]
-
-[heading A Note On Syntax]
+[h4 A Note On Syntax]
 The syntax "`my_plot.title("Hello").legend_on(true)...`" may appear unfamiliar. 
-However, it works on the same principle that the assignment operator, addition
+However, it works on the same 'chaining' principle that the assignment operator, addition
 operator, and output operator in the following code works:
 
-	a = b = c = d = 3;
+  a = b = c = d = 3;
 
-	//prints 12
-	std::cout << a + b + c + d << std::endl;
+  std::cout << a + b + c + d << std::endl;  // prints 12
 
-Within all of the plot classes, "chaining" works the same way. The equivalent 
+Within all of the plot classes, 'chaining' works the same way. Equivalent 
 code for the example is as follows:
 
+  my_plot.title("Race Times");
+  my_plot.legend_on(true);
+  my_plot.x_range(-1, 11);
+  
+Chaining allows you to group related settings together, and avoids relying on the order of arguments in ordinary function calls that would clearly become impracticable with dozens of arguments required to set all the myriad of plot options.
 
-	my_plot.title("Race Times");
-	my_plot.legend_on(true);
-	my_plot.x_range(-1, 11);
+In the long run, I think you will find that chaining helps organize your code 
+to read more clearly! 
 
+[h4 Simple 1D Example Breakdown]
+Let's examine what this does in detail. 
 
-In the long run, I think you will find that my choice helps organize the code 
-a little better! 
+  svg_1d_plot my_plot;
 
-[heading Basic Example Breakdown]
-Let's examine what this does. 
+This constructor initializes a new 1D plot, called my_plot, and also sets all the many default values. 
 
-	svg_1d_plot my_plot;
+  my_plot.title("Race Times")
+         .legend_on(true)
+         .x_range(-1, 11);
 
-This initializes a new 1D plot. This also sets many of the default values. 
-
-	my_plot.title("Race Times")
-	       .legend_on(true)
-	       .x_range(-1, 11);
-
-All of the setter methods are fairly self-explanatory. To walk through it once, 
+All of the setter methods (or member functions) are fairly self-explanatory. To walk through it once, 
 
 * the title, which will appear at the top of the graph, will say "Race Times". 
-* `legend_on(true)` means that the legend will show up. 
-* `x_range(-1, 11)` means that the axis displayed will be between -1 and 11, as you can see in the above image.
-	
-	my_plot.plot(my_data, "Race times");
+* `legend_on(true)` means that the legend will display.
+* `x_range(-1, 11)` means that the axis displayed will be between -1 and 11,
+as you can see in the above image.
+  
+  my_plot.plot(my_data, "Race times");
 
-This draws `my_data` to `my_plot`. As many containers as you want can be drawn 
-to `my_plot`. The name of the series is "Race times", and that text will show up
-in the legend. These are the two required parameters for this function call. 
-There are optional parameters, as seen in the section [@svg_plot/svg_1d_plot_interface.html ]
+This draws `my_data` onto `my_plot`. As many containers as you want can be drawn 
+to `my_plot`. The name of this data series is "Race times", and this text will show up
+in the legend (if my_plot.legend_on() == true). These are the two required parameters for this plot function call. 
+There are also optional parameters, as seen in the section
+[@.\html\svg_plot\interface\svg_1d_plot_interface.html svg_1d_plot_interface.html]
 
 ``
 my_plot.write("simple.svg");
 ``
-
-This writes our plot to the file "simple.svg". 
+This writes our plot to the file "simple.svg". SVG files can be viewed with most browsers,
+or embedded into documents.
 
 [endsect] [/section:tutorial_code_1d_simple 1D Simple Program]
 
 [section:full_1d_layout Tutorial: 1D Full Layout Example]
 
-	#include <boost/svg_plot/svg_1d_plot.hpp>
-	#include <vector>
-	#include <deque>
-	#include <cmath>
-	#include <boost/array.hpp>
-	
-	using std::vector;
-	using std::deque;
-	using namespace boost::svg;
-	
-	double f(double x)
-	{
-		return sqrt(x);
-	}
-	
-	double g(double x)
-	{
-		return -2 + x*x;
-	}
-	
-	double h(double x)
-	{
-		return -1 + 2*x;
-	}
-	
-	int main()
-	{
-		vector<double> data1;
-		deque<double> data2;
-		boost::array<double, 10> data3;
-		
-		int j=0;
-		for(double i=0; i<9.5; i+=1.)
-		{
-			data1.push_back(f(i));
-			data2.push_front(g(i));
-			data3[j++] = h(i);
-		}
-	
-		svg_1d_plot my_plot;
-	
-		// Size/scale settings.
-		my_plot.image_size(500, 350)
-		       .x_range(-3, 10);
-	
-		// Text settings.
-		my_plot.title("Oh My!")
-		       .title_font_size(29)
-		       .x_label("Time in Months");
-		
-		// Commands.
-		my_plot.legend_on(true)
-		       .plot_window_on(true)
-		       .x_label_on(true)
-		       .x_major_labels_on(true);
-		
-		// color settings
-		my_plot.background_color(svg_color(67, 111, 69))
-		       .legend_background_color(svg_color(207, 202,167))
-		       .legend_border_color(svg_color(102, 102, 84))
-		       .plot_background_color(svg_color(136, 188, 126))
-		       .title_color(white);
-	
-		//axis settings
-		my_plot.x_major_interval(2)
-		       .x_major_tick_length(14)
-		       .x_major_tick_width(1)
-		       .x_minor_tick_length(7)
-		       .x_minor_tick_width(1)
-		       .x_num_minor_ticks(3);
-		
-		//legend settings
-		my_plot.legend_title_font_size(15);
-		
-		my_plot.plot(data1, "Lions",  blue);
-		my_plot.plot(data2, "Tigers", orange);
-		my_plot.plot(data3, "Bears",  red);
-	
-		my_plot.write("1d_complex.svg");
-	
-		return 0;
-	}
+  #include <boost/svg_plot/svg_1d_plot.hpp>
+  using namespace boost::svg;
+  #include <cmath>  // for sqrt
+  
+  #include <vector>
+  #include <deque>
+  #include <boost/array.hpp>
+  
+  // Three different STL-style containers:
+  using std::vector;
+  using std::deque;
+  using boost::array;
+
+  // Three sample functions:  
+  double f(double x)
+  {
+    return sqrt(x);
+  }
+  
+  double g(double x)
+  {
+    return -2 + x*x;
+  }
+  
+  double h(double x)
+  {
+    return -1 + 2*x;
+  }
+  
+  int main()
+  {
+    vector<double> data1;
+    deque<double> data2;
+    boost::array<double, 10> data3;
+    // Fill the containers with some data using the functions:
+    int j=0;
+    for(double i=0; i<9.5; i+=1.)
+    {
+      data1.push_back(f(i));
+      data2.push_front(g(i));
+      data3[j++] = h(i);
+    }
+  
+    svg_1d_plot my_plot; // Construct my_plot.
+    
+    // Set many plot options,
+    // using chaining to group similar aspects together.
+    // Size/scale settings.
+    my_plot.image_size(500, 350)
+           .x_range(-3, 10);
+  
+    // Text settings.
+    my_plot.title("Oh My!")
+           .title_font_size(29)
+           .x_label("Time in Months");
+    
+    // Commands.
+    my_plot.legend_on(true)
+           .plot_window_on(true)
+           .x_label_on(true)
+           .x_major_labels_on(true);
+    
+    // Color settings.
+    my_plot.background_color(svg_color(67, 111, 69))
+           .legend_background_color(svg_color(207, 202,167))
+           .legend_border_color(svg_color(102, 102, 84))
+           .plot_background_color(svg_color(136, 188, 126))
+           .title_color(white);
+  
+    // Axis settings.
+    my_plot.x_major_interval(2)
+           .x_major_tick_length(14)
+           .x_major_tick_width(1)
+           .x_minor_tick_length(7)
+           .x_minor_tick_width(1)
+           .x_num_minor_ticks(3);
+    
+    // Legend settings.
+    my_plot.legend_title_font_size(15);
+    
+    // Put the three containers of data onto the plot.
+    my_plot.plot(data1, "Lions",  blue);
+    my_plot.plot(data2, "Tigers", orange);
+    my_plot.plot(data3, "Bears",  red);
+  
+    my_plot.write("1d_complex.svg");
+  
+    return 0;
+  }
 
 
 This produces the following output:
 
 [$images/1d_complex.png]
 
-A little bit of color customization goes a long way!
+A little bit of color customization goes a very long way!
 
-[endsect][/section:tutorial_1d_example_code]
+[endsect] [/section:tutorial_1d_example_code]
 
 [section:1d_special Tutorial: 1D Special Features]
 
-[heading X Axis Grid Lines]
+[heading X-Axis Grid Lines]
 
-If you would like grid lines that go across the graph, you can make the
-following call to `svg_1d_plot`:
+If you would like vertical grid lines that go on the graph,
+you can make the following call to `svg_1d_plot`:
 
-	my_plot.x_major_grid_on(true)
-	       .x_minor_grid_on(true);
+  my_plot.x_major_grid_on(true) 
+         .x_minor_grid_on(true);
 
-To style it, you would use the following calls:
-	
-	my_plot.x_major_grid_color(lightgray)
-	       .x_minor_grid_color(whitesmoke);
+To color style it, you might add the following calls:
+  
+  my_plot.x_major_grid_color(lightgray) // Darker color for major grid.
+         .x_minor_grid_color(whitesmoke); // Lighter color for minor grid.
 
-This will produce something like the following image:
+This will produce the following image:
 
 [$images/1d_x_grid.png]
 
-[heading X Axis External Style]
+[h4 X-Axis External Style]
 
-For an alternate way to display a regular axis, you can use an external style:
+By default the 'ticks' face into the plot area.
+Alternatively, you can use an 'external' style,
+so that the ticks face out from the X- and/or Y-axes.
 
-	my_plot.x_external_style_on(true);
+  my_plot.x_external_style_on(true);
+  my_plot.y_external_style_on(true);
 
-The axis is still styled using the normal methods. The following is an 
-example of the style that you can produce with this.
+The axis is still otherwise styled using the normal methods.
+The following is an example of the style that you can produce with this:
 
 [$images/1d_x_external.png]
 
@@ -395,431 +431,456 @@ turn the axis back on. To do that, you must call `axis_on(true)`]
 
 [endsect] [/1d_special Tutorial: 1D Special Features]
 [endsect] [/1d_tutorial]
+
 [section:tutorial_2d_code_simple Tutorial: 2D]
 [section:2d_simple_code_example Simple Code Example]
 
-	#include <boost/svg_plot/svg_2d_plot.hpp>
-	#include <vector>
-	
-	using std::multimap;
-	using namespace boost::svg;
-	
-	int main()
-	{
-		multimap<double, double> map1;
-		multimap<double, double> map2;
+  #include <boost/svg_plot/svg_2d_plot.hpp>
+  using namespace boost::svg;
+  
+  #include <map>
+  using std::multimap; // A more complicated STL container.
+  
+  int main()
+  {
+    multimap<double, double> map1;
+    multimap<double, double> map2;
 
-		// This is random data used purely for example purposes.	
-		map1[1.] = 3.2;
-		map1[1.] = 5.4;
-		map1[7.3] = 9.1;
+    // This is random data used purely for example purposes.  
+    map1[1.] = 3.2;
+    map1[1.] = 5.4;
+    map1[7.3] = 9.1;
 
-		map2[3.1] = 6.1;
-		map2[5.4] = 7.;
-	
-		svg_1d_plot my_plot;
-	
-		my_plot.title("Race Times")
-		       .legend_on(true)
-		       .x_range(-1, 11)
-		       .background_border_color(black);
-	
-		my_plot.plot(map1, "Series 1", blue);
-		my_plot.plot(map2, "Series 2", orange);
-	
-		my_plot.write("simple_2d.svg");
-		return 0;
-	}
+    map2[3.1] = 6.1;
+    map2[5.4] = 7.;
+  
+    svg_1d_plot my_plot;
+  
+    my_plot.title("Race Times")
+           .legend_on(true)
+           .x_range(-1, 11)
+           .background_border_color(black);
+  
+    my_plot.plot(map1, "Series 1", blue); // Data point marker color is blue.
+    my_plot.plot(map2, "Series 2", orange);
+  
+    my_plot.write("simple_2d.svg");
+    return 0;
+  }
 
-[heading Resulting Image]
+[h4 Resulting Simple_2D Example Image]
 
 [$images/2d_simple.png]
 
-[heading Basic Example Breakdown]
+[h4 Simple_2D Example Breakdown]
 
 Let's examine what this does. 
 
-	svg_2d_plot my_plot;
+  svg_2d_plot my_plot;
 
-This initializes a new 2D plot. This also sets many of the default values. 
+This constructor initializes a new 2D plot. This also sets the many default values. 
 
-	my_plot.title("Race Times")
-	       .legend_on(true)
-	       .x_range(-1, 11)
-	       .background_border_color(black);
+  my_plot.title("Race Times")
+         .legend_on(true)
+         .x_range(-1, 11)
+         .background_border_color(black);
 
 All of the setter methods are fairly self-explanatory. To walk through it once, 
 
-* the title, which will appear at the top of the graph, will say "Race Times". 
+* The title, which will appear at the top of the graph, will say "Race Times". 
 * `legend_on(true)` means that the legend will show up. 
-* `x_range(-1, 11)` means that the axis displayed will be between -1 and 11, as you can see in the above images.
-* `background_border_color(black)` sets the border around the image to `black`. Ordinarily it is left to be the color of the background.
-	
-	my_plot.plot(map1, "Series 1", blue);
-	my_plot.plot(map2, "Series 2", orange);
+* `x_range(-1, 11)` means that the axis displayed will be between -1 and 11,
+as you can see in the above images.
+* `background_border_color(black)` sets the border around the image to `black`.
+Ordinarily it is left to be the color of the background
+(and so no border of plot area will be visible).
+  
+  my_plot.plot(map1, "Series 1", blue);
+  my_plot.plot(map2, "Series 2", orange);
 
 This draws `map1` and `map2` to `my_plot`. As many containers as you want can 
-be drawn to `my_plot`. After a certain point, however, I recommend just 
-creating another plot! The name of the series is `"Race times"`, and that 
-text will show up in the legend. These are the two required parameters for
-this function call. There are optional parameters, as seen in the section 
+be drawn to `my_plot`. Evntually the plot will become cluttered and confusing,
+when I recommend just creating another plot!
+
+The name of the series is `"Race times"`, and that 
+text will show in the legend. These are the two required parameters for
+this function call. There are many optional parameters, as seen in the section 
 [@plot_function Getting More Out of the `plot()` Function]
 
-	my_plot.write("simple_2d.svg");
+  my_plot.write("simple_2d.svg");
 
-This writes our plot to the file "simple_2d.svg". 
+This writes plot `my_plot` to the file "simple_2d.svg".
 
 [endsect] [/section:tutorial_code_simple Simple program]
 
-[section:full_2d_layout Tutorial: Full Layout Example]
+[section:full_2d_layout Tutorial: Fuller Layout Example]
 
-	#include <boost/svg_plot/svg_2d_plot.hpp>
-	#include <map>
-	#include <cmath>
-	
-	using std::multimap;
-	using namespace boost::svg;
-	
-	double f(double x)
-	{
-		return sqrt(x);
-	}
-	
-	double g(double x)
-	{
-		return -2 + x*x;
-	}
-	
-	double h(double x)
-	{
-		return -1 + 2*x;
-	}
-	
-	int main()
-	{
-		multimap<double, double> data1, data2, data3;
-		
-		for(double i=0; i<=10.; i+=1.)
-		{
-			data1[i] = f(i);
-			data2[i] = g(i);
-			data3[i] = h(i);
-		}
-	
-		svg_2d_plot my_plot;
-	
-		// Size/scale settings.
-		my_plot.image_size(700, 500)
-		       .x_range(-1, 10)
-		       .y_range(-5, 100)
-	
-		// Text settings.
-		my_plot.title("Plot of Mathematical Functions")
-		       .title_font_size(29)
-		       .x_label("Time in Months");
-		
-		// Commands.
-		my_plot.legend_on(true)
-		       .plot_window_on(true)
-		       .x_label_on(true)
-		       .x_major_labels_on(true);
-		
-		// Color settings.
-		my_plot.background_color(svg_color(67, 111, 69))
-		       .legend_background_color(svg_color(207, 202,167))
-		       .legend_border_color(svg_color(102, 102, 84))
-		       .plot_background_color(svg_color(136, 188, 126))
-		       .title_color(white);
-	
-		//X axis settings.
-		my_plot.x_major_interval(2)
-		       .x_major_tick_length(14)
-		       .x_major_tick_width(1)
-		       .x_minor_tick_length(7)
-		       .x_minor_tick_width(1)
-		       .x_num_minor_ticks(3)
-		
-		//Y axis settings.
-		       .y_major_tick(10)
-		       .y_num_minor_ticks(2);		
+  #include <boost/svg_plot/svg_2d_plot.hpp>
+  using namespace boost::svg;
+  #include <map>
+  using std::multimap;
+  #include <cmath> // for sqrt
+  
+  // Some example functions:
+  double f(double x)
+  {
+    return sqrt(x);
+  }
+  
+  double g(double x)
+  {
+    return -2 + x*x;
+  }
+  
+  double h(double x)
+  {
+    return -1 + 2*x;
+  }
+  
+  int main()
+  {
+    multimap<double, double> data1, data2, data3;
+    
+    for(double i=0; i<=10.; i+=1.)
+    {
+      data1[i] = f(i);
+      data2[i] = g(i);
+      data3[i] = h(i); 
+    }
+  
+    svg_2d_plot my_plot;
+  
+    // Size/scale settings.
+    my_plot.image_size(700, 500)
+           .x_range(-1, 10)
+           .y_range(-5, 100)
+  
+    // Text settings.
+    my_plot.title("Plot of Mathematical Functions")
+           .title_font_size(29)
+           .x_label("Time in Months");
+    
+    // Commands.
+    my_plot.legend_on(true)
+           .plot_window_on(true)
+           .x_label_on(true)
+           .x_major_labels_on(true);
+    
+    // Color settings.
+    my_plot.background_color(svg_color(67, 111, 69))
+           .legend_background_color(svg_color(207, 202,167))
+           .legend_border_color(svg_color(102, 102, 84))
+           .plot_background_color(svg_color(136, 188, 126))
+           .title_color(white);
+  
+    //X axis settings.
+    my_plot.x_major_interval(2)
+           .x_major_tick_length(14)
+           .x_major_tick_width(1)
+           .x_minor_tick_length(7)
+           .x_minor_tick_width(1)
+           .x_num_minor_ticks(3)
+    
+    // Y axis settings.
+           .y_major_tick(10)
+           .y_num_minor_ticks(2);   
 
-		//legend settings
-		my_plot.legend_title_font_size(15);
-		
-		my_plot.plot(data1, "Sqrt(x)",  blue,   
- 			     _point_style = none,
-			     _show_line = true);
+    // Legend settings.
+    my_plot.legend_title_font_size(15);
+    
+    my_plot.plot(data1, "Sqrt(x)",  blue,   
+           _point_style = none,
+           _show_line = true);
 
-		my_plot.plot(data2, "-2 + x^2", orange, 
-			     _show_line = true);
+    my_plot.plot(data2, "-2 + x^2", orange, 
+           _show_line = true);
 
-		my_plot.plot(data3, "-1 + 2x",  red,
-			     _point_style = square);
-	
-		my_plot.write("2d_full.svg");
-	
-		return 0;
-	}
+    my_plot.plot(data3, "-1 + 2x",  red,
+           _point_style = square);
+  
+    my_plot.write("2d_full.svg");
+  
+    return 0;
+  }
 
 This produces the following output:
 
 [$images/2d_full.png]
 
-A little bit of color customization goes a long way!
+A little bit of color customization goes a *very* long way!
 
-[endsect][/section:tutorial_2d_example_code]
+[endsect] [/section:tutorial_2d_example_code]
 
 [section:2d_special Tutorial: 2D Special Features]
 
-[heading Y Axis Grid Lines]
+[h4 Y-Axis Grid Lines]
 
-If you would like grid lines that go across the graph, you can make the
-following call to `svg_1d_plot`:
+If you would like horizontal grid lines that go across the graph,
+you can make the following call to `svg_2d_plot`:
 
-	my_plot.y_major_grid_on(true)
-	       .y_minor_grid_on(true);
+  my_plot.y_major_grid_on(true)
+         .y_minor_grid_on(true);
 
-To style it, you would use the following calls:
-	
-	my_plot.y_major_grid_color(lightgray)
-	       .y_minor_grid_color(whitesmoke);
+To style it, you could use the following calls:
+  
+  my_plot.y_major_grid_color(lightgray) // Darker color for major grid.
+         .y_minor_grid_color(whitesmoke); // lighter color for minor grid.
 
-This will produce something like the following image:
+This will produce the following image:
 
 [$images/2d_y_grid.png]
 
+Similarly you can have horizontal and/or vertical lines:
+
+  my_plot.x_major_grid_on(true)  
+         .x_minor_grid_on(true);
+         
+and color it similarly:
+         
+  my_plot.y_major_grid_color(lightblue) // Darker color for major grid.
+         .y_minor_grid_color(azure); // lighter color for minor grid.
+         
 [heading External Y Axis Style]
 
 For an alternate way to display a regular axis, you can use an external style:
 
-	my_plot.y_external_style_on(true);
+  my_plot.y_external_style_on(true);
 
 [important If the axis is turned off, `y_external_style_on(true)` will not 
 turn the axis back on. To do that, you must call `axis_on(true)`]
-
 
 [heading Fill the area between the plot and the axis]
 
 When there is a call to the plot() method, define `_area_fill_color`
 
-	multimap<double, double> my_data;
-	svg_2d_plot my_plot;
+  multimap<double, double> my_data;
+  svg_2d_plot my_plot;
 
-	my_plot.plot(my_data, "Data", _area_fill_color(red));
+  my_plot.plot(my_data, "Data", _area_fill_color(red));
 
 This produces the following image:
 
 [$images/2d_area_fill.png]
 
-[heading Curve Interpolation]
+[h4 Curve Interpolation]
 
-If you would like an interpolated curve shown over your data, simply use the following command:
+If you would like an *interpolated curve* shown over your data
+(rather than the default straight lines joining points),
+simply use the following command:
 
-	my_plot.plot(data, "Series 1", _bezier_curve = "true");
+  my_plot.plot(data, "Series 1", _bezier_curve = "true");
 
 This produces something like the following images:
 
 [$images/2d_bezier.png]
 
-[warning The `_bezier_curve` feature is still very much in its infancy. If you play nice with it, it will play nice with you, but it still displays undesired behavior in extreme circumstances. Do not use this feature with curves that have a limit (`-NaN`, for example), or with data that has high irregularity in X-Axis spacing (a clump of points between (0, 1) on the X axis, with the next one at 100 on the X axis, for example)]
+[warning The `_bezier_curve` feature still displays undesired behavior in extreme circumstances. Do not use this feature with curves that have a numeric_limit value (`-NaN`, for example), or with data that has high irregularity in X-Axis spacing (for example, a clump of points between (0, 1) on the X axis, with the next one at 100 on the X axis.)]
 
 [endsect] [/2d_special Tutorial: 2D Special Features]
 [endsect] [/2d_tutorial]
+
 [section:svg_boxplot_tutorial Tutorial: Boxplot]
 [section:svg_boxplot_tutorial_simple Simple Example]
 
-	// Functions we are using to simulate distributions.
-	double f(double x)
-	{
-	    return 50 / x;
-	}
-	
-	double g(double x)
-	{
-	    return 40 + 25 * sin(x * 50);
-	}
-	
-	int main()
-	{
-	    using namespace boost::svg;
-	
-	    std::vector<double> data1, data2;
-	
-	    // Fill our vectors;
-	    for(double i = .1; i < 10; i+=.1)
-	    {
-	        data1.push_back(f(i));
-	        data2.push_back(g(i));
-	    }
-	
-	    // Initialize a new plot.
-	    svg_boxplot my_plot;
-	
-	    // Color information.
-	    my_plot.background_border_color(black);
-	
-	    // String information.
-	    my_plot.title("Boxplots of Common Functions")
-	   .x_label("Functions")
-	   .y_label("Population Size");
-	
-	    // Axis information.
-	    my_plot.y_range(0, 100)
-	           .y_minor_tick_length(20)
-   	   .y_major_interval(20);
-	
-	    // Write data.
-	    my_plot.plot(data1, "[50 / x]");
-	    my_plot.plot(data2, "[40 + 25 * sin(x * 50)]");
-	
-	    my_plot.write("boxplot_simple.svg");
-	    return 0;
-	}
-	
-[heading Image Produced]
+  #include <boost/svg_plot/svg_2d_plot.hpp>
+  using namespace boost::svg;
+  #include <vector>
+  using std::vector;
+
+  // Functions to simulate distributions.
+  double f(double x)
+  {
+      return 50 / x;
+  }
+  
+  double g(double x)
+  {
+      return 40 + 25 * sin(x * 50);
+  }
+  
+  int main()
+  {
+      std::vector<double> data1, data2;
+  
+      // Fill our vectors with values from the functions f(x) and g(x)
+      for(double i = .1; i < 10; i+=.1)
+      {
+          data1.push_back(f(i));
+          data2.push_back(g(i));
+      }
+  
+      // Initialize a new box plot.
+      svg_boxplot my_plot;
+  
+      // Color information.
+      my_plot.background_border_color(black);
+  
+      // String information.
+      my_plot.title("Boxplots of Common Functions")
+     .x_label("Functions")
+     .y_label("Population Size");
+  
+      // Axis information.
+      my_plot.y_range(0, 100)
+             .y_minor_tick_length(20)
+       .y_major_interval(20);
+  
+      // Write data.
+      my_plot.plot(data1, "[50 / x]");
+      my_plot.plot(data2, "[40 + 25 * sin(x * 50)]");
+  
+      my_plot.write("boxplot_simple.svg");
+      return 0;
+  }
+  
+[h4 Image boxplot_simple.svg]
 
 [$images/boxplot_simple.png]
 
-[heading Basic Example Breakdown]
+[h4 Basic Example Breakdown]
 Let's examine what this does. 
 
-[h3 Initializing a new boxplot]
+[h4 Initializing a new boxplot]
 
-This initializes a new boxplot. This also sets many of the default values. 
+This initializes a new boxplot. This also sets the many default values. 4
+  svg_boxplot my_plot;
 
-	svg_boxplot my_plot;
+[h4 Setting a color]
+This sets the border color of the entire image to black (not just the plot area).
 
-[h3 Setting a color]
-This sets the border color of the entire image to black.
+      my_plot.background_border_color(black);
 
-	    my_plot.background_border_color(black);
-
-[h3 Setting strings in the plot]
+[h4 Setting strings in the plot]
 The following code sets the title that appears at the top of the graph, the
-label that appears at the bottom to name the X axis, and the label that appears
-to the left to name the Y axis.
+label that appears at the bottom to name the X-axis, and the label that appears
+to the left to name the Y-axis.
 
-	    my_plot.title("Boxplots of Common Functions")
-   	        .x_label("Functions")
-   	        .y_label("Population Size");
+      my_plot.title("Boxplots of Common Functions")
+            .x_label("Functions") 
+            .y_label("Population Size");
 
 [h3 Setting axis information]
-Axis information for the X axis is very limited, as the coordinate system
-for the X axis is discrete, based only on the number of box-and-whisker plots
+Axis information for the X-axis is very limited, as the coordinate system
+for the X-axis is discrete, based only on the number of box-and-whisker plots
 that appear in the same boxplot. 
 
-Axis information for the Y axis, however, is customizable much in the same way that that axis information is customizable for the 1 and 2 dimensional graphs.
-	    // Axis information.
-	    my_plot.y_range(0, 100)
-	           .y_minor_tick_length(20)
-   	           .y_major_interval(20);
+Axis information for the Y-axis, however, is customizable much in the same way that that axis information is customizable for the 1 and 2 dimensional graphs.
+      // Axis information.
+      my_plot.y_range(0, 100)
+             .y_minor_tick_length(20)
+             .y_major_interval(20);
 
-[h3 Writing to a file]
+[h4 Writing to a file]
 
-This writes our plot to the file "simple.svg". 
-
+This finally writes our plot to the file "boxplot_simple.svg". 
 ``
 my_plot.write("boxplot_simple.svg");
 ``
+[endsect] [/section:svg_boxplot_tutorial_simple]
 
-[endsect][/section:svg_boxplot_tutorial_simple]
-[section:svg_boxplot_tutorial_full_layout Full Layout]
+[section:svg_boxplot_tutorial_full Full Boxplot Layout]
+[/ TODO?]
+[endsect] [/section:svg_boxplot_tutorial_full Full Boxplot Layout]
 
-[endsect][/svg_boxplot_tutorial Boxplot]
+[endsect] [/section:tutorial]
 
-[endsect][/section:tutorial]
 [section:tutorial_stylesheet Stylesheet Tutorial]
 
 To include a stylesheet into a program with any plot, simply use the `load_stylesheet(const std::string& filename)` method to load an external stylesheet. To load the file ./style.css, for instance, we would call:
 
-	my_plot.load_stylesheet("./style.css");
+  my_plot.load_stylesheet("./style.css");
 
 There are a few instances when a `std::runtime_error` exception may be thrown.
 
-* If the filename is incorrect
-* If the file does not pass the parsing phase
+* If the filename is incorrect.
+* If the file does not pass the parsing phase.
 
-[heading Using the stylesheet]
-Here is the output file for the simple 1D example, used before:
+[h4 Using the stylesheet]
+Here is the output file for the simple 1D example, as used before:
 
 [$images/1d_simple.png]
 
 Here it is with a simple stylesheet applied (from $PROJECT_ROOT/libs/svg_plot/example/style.css):
 
-[caution When the user will have the option to convert the graph to another image format, the stylesheets will be ignored. These would provide the user with an even more complex function object that they would need to implement. If you provide a stylesheet, make sure you know what will not be converted. (Currently, that is everything in the stylesheets)]
+[caution When the user will have the option to convert the graph to another image format, the stylesheets will be ignored. These would provide the user with an even more complex function object that they would need to implement. If you provide a stylesheet, make sure you know what will not be converted. (Currently, that is everything in the stylesheets.)]
 [$images/1d_simple_style.png]
 
-[endsect][/stylesheet tutorial]
+[endsect] [/section:tutorial_stylesheet Stylesheet Tutorial]
+
 [section:behavior Behavior]
 [section:behavior_limits Numerical Limits]
-All limits that are dealt with are double precision floating point limits. 
-Limits are noticed upon the call to the `plot()` method. Currently, the line
-interpolation algorithms do not take limits into account, so behavior may 
-be incorrect for such plots as `1 / x`. Limits are drawn as a circle with
+All limits that are dealt with are double precision floating-point limits. 
+Limits are detected when data is added to the plot by the call to the `plot()` method.
+
+Currently, the line interpolation algorithms do not take limits into account,
+so behavior may  be incorrect for such plots as `1 / x`.
+
+Data at the limits are drawn as a circle with
 `_stroke_color = lightgray` and `_fill_color = whitesmoke`.
 This will become customizable.
 
-[heading NaN]
-Any double precision floating point numbers that return a nonzero value for the
+[h4 NaN]
+Any double precision floating-point numbers that return a nonzero value for the
 function `_isnan(double)` is considered to be a NaN value. When plotted, the
 number will appear in the user-defined coordinates as 0.
 
-[heading Infinity]
+[h4 Infinity]
 
 Any double precision floating point number that is equal to either of the 
 following is considered to be Infinity:
 
-	std::numeric_limits<double>::max()
-	std::numeric_limits<double>::infinity()
+  std::numeric_limits<double>::max()
+  std::numeric_limits<double>::infinity()
 
-When plotted, these values will appear at the top of your plot window. If
-the plot window is not turned on, these points will appear at the top of
-the graph.
+When plotted, these values will appear at the *top* of your plot window.
+If the plot window is not turned on,
+these points will appear at the top of the graph.
 
-[heading Negative Infinity]
+[h4 Negative Infinity]
 
 Any double precision floating point number that is equal to either of the 
 following is considered to be Negative Infinity:
 
-	std::numeric_limits<double>::min()
-	-std::numeric_limits<double>::infinity()
-	std::numeric_limits<double>::denorm_min()
+  std::numeric_limits<double>::min()
+  -std::numeric_limits<double>::infinity()
+  std::numeric_limits<double>::denorm_min()
 
-When plotted, these values will appear at the bottom of your plot window. If
-the plot window is not turned on, these points will appear at the bottom of
-the graph.
+When plotted, these values will appear at the *bottom* of your plot window.
+If the plot window is not turned on,
+these points will appear at the bottom of the graph.
 
-Here is an example of numeric limit handling in action:
+Here is an example of numeric limits handling in action:
 
-[$images/2d_limit.png]
+[$images/2d_limit.png] [\TODO this file is missing!]
 [endsect][/section:numerical_limits]
+
 [section:behavior_stylesheets Stylesheets]
 Stylesheets currently have only a single way of being used with the program: they are parsed by the `svg` class, and if the stylesheet parses correctly, they are loaded directly into the SVG file. I recognize that it may also be desired to link to an external stylesheet, but this presents a few problems.
 
-* Both of the files now need to be transported with the produced document
+* Both of the files now need to be transported with the produced document.
 * Any user-provided function object that is used to convert between image formats now suddenly needs to be able to load the image format from an external source.
 
 When the image converter portion of the project is completed, the image format function object will not be forced to deal with CSS. This is primarily a practical matter, and keeps simple an already difficult task. This will not preclude a method that extracts appropriate data from the CSS file and calls the appropriate functions. For example, if the user provides the following:
 
-	#Background
-	{
-		fill : #FFF;
-		stroke : #041010 ; 
-	}
+  #Background
+  {
+    fill : #FFF;
+    stroke : #041010 ; 
+  }
 
 why shouldn't 
 
-	my_plot.background_color(black);
-	my_plot.background_border_color(svg_color(4, 16, 16));
+  my_plot.background_color(black);
+  my_plot.background_border_color(svg_color(4, 16, 16));
 
 be called?
 
-[caution Please note that the language that is accepted by the parser is actually stricter than the real CSS standard allows for. Following GSoC, the parser will be reimplemented to reflect the parser suggested by the CSS standard. All identifiers (class, ID, or otherwise), must be the only identifier on the line. The following is not accepted:
+[caution Please note that the language that is accepted by the parser is actually stricter than the real CSS standard allows for. Following GSoC, the parser will be reimplemented to reflect the parser suggested by the CSS standard. All identifiers (class, ID, or otherwise), must be the *one and only* identifier on the line. The following is not accepted:
 ``
 rect, circle
 {
-	fill : #00FF00;
-	stroke : #000000;
+  fill : #00FF00;
+  stroke : #000000;
 }
 ``
 
@@ -828,109 +889,114 @@ But the following is:
 ``
 rect
 {
-	fill : #00FF00;
-	stroke : #00FF00;
+  fill : #00FF00;
+  stroke : #00FF00;
 }
 
 circle
 {
-	fill : #00FF00;
-	stroke : #00FF00;
+  fill : #00FF00;
+  stroke : #00FF00;
 }
 ``
 
-None of the power of CSS is compromised (or at least, I hope not), but it becomes more verbose.
-][/caution]
+None of the power of CSS is compromised (I believe), but it becomes more verbose.
+] [/caution]
 
 [endsect][/section:behavior_stylesheets]
 [endsect][/section:behavior Behavior]
 
-[section:plot_defaults Defaults]
+[section:plot_defaults Plot Defaults]
 
 [section:1d_defaults `svg_1d_plot` Defaults]
 You may have noticed that there are certain defaults that are true at the 
 beginning of the plotting. Here is a table of the defaults:
 
 [table Default Values
-	[[object] [Default value] [Rationale]]
-	[[All colors not defined in this table] [black] [K.I.S.S. Coloring will be highly dependent on user needs]]
-	[[Axis] [On, internal style] [Most graphs include an axis of some kind. The internal axis style is used because this seems to be the default behavior in many textbooks I have owned.]]
-	[[Distance between major X ticks] [`3 units`] [Reasonably fits into a plot window]]
-	[[Font size of the legend title] [12] [Reasonable when paired with the image size]]
-	[[Font size of the X Label] [12] [Reasonable when paired with the image size]]
-	[[Font size of the title] [30] [Makes the title stand out]]
-	[[Grid lines] [`All off`] [Grid lines are a user's personal choice, so I default with the simpler model]]
-	[[Image background] [white] [K.I.S.S. Coloring will be highly dependent on user needs.]]
-	[[Image size] [`500 by 350`] [Details discernable. The image is easily viewable by those using 800x600 monitors]]
-	[[Legend] [`Off`] [The goal of the defaults is to provide the cleanest possible plot as a default. Excluding the legend meets this goal. If there is a public outcry, I can change this.]]
-	[[Legend background] [white] [K.I.S.S. Coloring will be highly dependent on user needs]]
-	[[Major tick length] [20 pixels] [Tasteful default when paired with the window size. This also makes the major ticks easily distinguishable from the minor ticks]]
-	[[Major tick width] [2 pixels] [Major ticks are more obvious than minor ticks]]
-	[[Minor tick length] [10 pixels] [Tasteful default when compared with the size of the grid. This makes the minor ticks less obvious than the major ticks]]
-	[[Minor tick width] [1 pixel] [This makes the minor tick less obvious than the major ticks]]
-	[[Number of minor X ticks between each major X tick] [2] [This allows the minor ticks to appear on the integers]]
-	[[Plot Window] [`Off`] [Initially off because it is the simplest case. I will change this if there is an outcry]]
-	[[Plot window background] [white] [K.I.S.S. Coloring will be highly dependent on user needs]]
-	[[Title] [On, `"Plot of data"`] [The title is on because this is one of the most basic elements of a graph. The title is set to a default because when `title_on == true`, something should display]]
-	[[Title size] [`30`] [This is clearly visible in a variety of image sizes]]
-	[[X Axis Label] [`"X Axis"`, Off] ["X Axis" is the label because something should display were the user to turn on the X axis label without setting text, and this is the most informative]]
-	[[X Axis Label Size] [`12`] [This is a reasonable size at the default image size]]
-	[[X Grid (Major and Minor)] [Off] [Turned off in the interest of providing simple, clean plots]]
-	[[X Range] [`(-10, 10)`] [Traditional plot viewport]]]
+  [[object] [Default value] [Rationale]]
+  [[All colors not defined in this table] [black] [Coloring, if any, will be highly dependent on user needs.]]
+  [[Axis] [On, internal style] [Most graphs include an axis of some kind. The internal axis style is used because this seems to be the default behavior in many textbooks I have owned.]]
+  [[Distance between major X ticks] [`3 units`] [Reasonably fits into a plot window.]]
+  [[Font size of the legend title] [12] [Reasonable when paired with the image size.]]
+  [[Font size of the X Label] [12] [Reasonable when paired with the image size.]]
+  [[Font size of the title] [30] [Makes the title stand out.]]
+  [[Grid lines] [`All off`] [Grid lines are a user's personal choice, so default is none.]]
+  [[Image background] [white] [Coloring, if any, will be highly dependent on user needs.]]
+  [[Image size] [`500 by 350`] [Details discernable. The image is easily viewable by those using 800x600 monitors.]]
+  [[Legend] [`Off`] [The goal of the defaults is to provide the cleanest possible plot as a default. Excluding the legend meets this goal.]]
+  [[Legend background] [white] [Coloring, if any, will be highly dependent on user needs.]]
+  [[Major tick length] [20 pixels] [Tasteful default when paired with the window size. This also makes the major ticks easily distinguishable from the minor ticks.]]
+  [[Major tick width] [2 pixels] [Major ticks are more obvious than minor ticks.]]
+  [[Minor tick length] [10 pixels] [Tasteful default when compared with the size of the grid. This makes the minor ticks less obvious than the major ticks.]]
+  [[Minor tick width] [1 pixel] [This makes the minor tick less obvious than the major ticks.]]
+  [[Number of minor X ticks between each major X tick] [2] [This allows the minor ticks to appear on the integer values.]]
+  [[Plot Window] [`Off`] [Initially off because it is the simplest case.]]
+  [[Plot window background] [white] [Coloring, if any, will be highly dependent on user needs.]]
+  [[Title] [On, `"Plot of data"`] [The title is on because this is one of the most basic elements of a graph. The title is set to a default because when `title_on == true`, something should display.]]
+  [[Title size] [`30`] [This is clearly visible in a variety of image sizes.]]
+  [[X Axis Label] [`"X Axis"`, Off] ["X Axis" is the label because /something/ should display were the user to turn on the X-axis label without setting text.]]
+  [[X Axis Label Size] [`12`] [This is a reasonable size at the default image size.]]
+  [[X Grid (Major and Minor)] [Off] [Turned off in the interest of providing simple, clean plots.]]
+  [[X Range] [`(-10, 10)`] [Traditional plot viewport (but almost all plots will need to set both X and Y ranges).]]
+  ]
 
-[endsect]
+[endsect ][/section:1d_defaults `svg_1d_plot` Defaults]
 
 [section:2d_defaults `svg_2d_plot` Defaults]
 You may have noticed that there are certain defaults that are true at the 
 beginning of the plotting. Here is a table of the defaults:
 
 [table Default Values
-	[[object] [Default value] [Rationale]]
-	[[All colors not defined in this table] [black] [K.I.S.S. Coloring will be highly dependent on user needs]]
-	[[Axis] [On, internal style] [Most graphs include an axis of some kind. The internal axis style is used because this seems to be the default behavior in many textbooks I have owned.]]
-	[[Distance between major X ticks] [`3 units`] [Reasonably fits into a plot window]]
-	[[Font size of the legend title] [12] [Reasonable when paired with the image size]]
-	[[Font size of the X Label] [12] [Reasonable when paired with the image size]]
-	[[Font size of the title] [30] [Makes the title stand out]]
-	[[Grid lines] [`All off`] [Grid lines are a user's personal choice, so I default with the simpler model]]
-	[[Image background] [white] [K.I.S.S. Coloring will be highly dependent on user needs.]]
-	[[Image size] [`500 by 350`] [Details discernable. The image is easily viewable by those using 800x600 monitors]]
-	[[Legend] [`Off`] [The goal of the defaults is to provide the cleanest possible plot as a default. Excluding the legend meets this goal. If there is a public outcry, I can change this.]]
-	[[Legend background] [white] [K.I.S.S. Coloring will be highly dependent on user needs]]
-	[[Major tick length] [20 pixels] [Tasteful default when paired with the window size. This also makes the major ticks easily distinguishable from the minor ticks]]
-	[[Major tick width] [2 pixels] [Major ticks are more obvious than minor ticks]]
-	[[Minor tick length] [10 pixels] [Tasteful default when compared with the size of the grid. This makes the minor ticks less obvious than the major ticks]]
-	[[Minor tick width] [1 pixel] [This makes the minor tick less obvious than the major ticks]]
-	[[Number of minor X ticks between each major X tick] [2] [This allows the minor ticks to appear on the integers]]
-	[[Plot Window] [`Off`] [Initially off because it is the simplest case. I will change this if there is an outcry]]
-	[[Plot window background] [white] [K.I.S.S. Coloring will be highly dependent on user needs]]
-	[[Title] [On, `"Plot of data"`] [The title is on because this is one of the most basic elements of a graph. The title is set to a default because when `title_on == true`, something should display]]
-	[[Title size] [`30`] [This is clearly visible in a variety of image sizes]]
-	[[X Axis Label] [`"X Axis"`, Off] ["X Axis" is the label because something should display were the user to turn on the X axis label without setting text, and this is the most informative]]
-	[[X Axis Label Size] [`12`] [This is a reasonable size at the default image size]]
-	[[X Grid (Major and Minor)] [Off] [Turned off in the interest of providing simple, clean plots]]
-	[[X Range] [`(-10, 10)`] [Traditional plot viewport]]
-	[[Y Axis Label] [`"Y Axis"`, Off] ["Y Axis" is the label because something should display were the user to turn on the X axis label without setting text, and this is the most informative]]
-	[[Y Axis Label Size] [`12`] [This is a reasonable size at the default image size]]
-	[[Y Grid (Major and Minor)] [Off] [Turned off in the interest of providing simple, clean plots]]
-	[[Y Range] [`(-10, 10)`] [Traditional plot viewport]]]
+  [[object] [Default value] [Rationale]]
+  [[All colors not defined in this table] [black] [Coloring, if any, will be highly dependent on user needs.]]
+  [[Axis] [On, internal style] [Most graphs include an axis of some kind. The internal axis style is used because this seems to be the default behavior in many textbooks I have owned.]]
+  [[Distance between major X ticks] [`3 units`] [Reasonably fits into a plot window.]]
+  [[Font size of the legend title] [12] [Reasonable when paired with the image size.]]
+  [[Font size of the X Label] [12] [Reasonable when paired with the image size.]]
+  [[Font size of the title] [30] [Makes the title stand out.]]
+  [[Grid lines] [`All off`] [Grid lines are a user's personal choice, so default is off]]
+  [[Image background] [white] [Coloring, if any, will be highly dependent on user needs.]]
+  [[Image size] [`500 by 350`] [Details discernable. The image is easily viewable by those using 800x600 monitors.]]
+  [[Legend] [`Off`] [The goal of the defaults is to provide the cleanest possible plot as a default. Excluding the legend meets this goal.]]
+  [[Legend background] [white] [Coloring, if any, will be highly dependent on user needs.]]
+  [[Major tick length] [20 pixels] [Tasteful default when paired with the window size. This also makes the major ticks easily distinguishable from the minor ticks.]]
+  [[Major tick width] [2 pixels] [Major ticks are more obvious than minor ticks.]]
+  [[Minor tick length] [10 pixels] [Tasteful default when compared with the size of the grid. This makes the minor ticks less obvious than the major ticks.]]
+  [[Minor tick width] [1 pixel] [This makes the minor tick less obvious than the major ticks.]]
+  [[Number of minor X ticks between each major X tick] [2] [This allows the minor ticks to appear on the integers.]]
+  [[Plot Window] [`Off`] [Initially off because it is the simplest case.]]
+  [[Plot window background] [white] [Coloring, if any, will be highly dependent on user needs.]]
+  [[Title] [On, `"Plot of data"`] [The title is on because this is one of the most basic elements of a graph. The title is set to a default because when `title_on == true`,
+  /something/ should display.]]
+  [[Title size] [`30`] [This is clearly visible in a variety of image sizes.]]
+  [[X Axis Label] [`"X Axis"`, Off] ["X Axis" is the label because /something/ should display were the user to turn on the X axis label without setting text.]]
+  [[X Axis Label Size] [`12`] [This is a reasonable size at the default image size.]]
+  [[X Grid (Major and Minor)] [Off] [Turned off in the interest of providing simple, clean plots.]]
+  [[X Range] [`(-10, 10)`] [Traditional plot viewport.]]
+  [[Y Axis Label] [`"Y Axis"`, Off] ["Y Axis" is the label because /something/ should display were the user to turn on the X axis label without setting text, and this is the most informative.]]
+  [[Y Axis Label Size] [`12`] [This is a reasonable size at the default image size.]]
+  [[Y Grid (Major and Minor)] [Off] [Turned off in the interest of providing simple, clean plots.]]
+  [[Y Range] [`(-10, 10)`] [Traditional plot viewport.]]
+  ] 
 
-[endsect][/section:2d_defaults]
-[endsect][/section:defaults]
+[endsect] [/section:2d_defaults `svg_2d_plot` Defaults]
 
-[section:interface Interface]
+[endsect] [/section:defaults]
+
+[section:interface Public Interfaces]
 [section:svg_interface `svg` Public Interface]
 [table class svg
   [[Signature] [Description] [Notes]]
-  [[`svg()`] [Constructor] [The default image size is (400, 400)]]
+  [[`svg()`] [Constructor] [The default image size is (400, 400).]]
   [[`g_element& add_g_element()`] [Adds a g_element at the root of the document tree. Acts as a `push_back()`] [Returns the `g_element` that is pushed back. This allows you to do something like the following: `image.add_g_element().line(/**/).line(/**/).rect(/**/);  `
-Which adds two lines and a rectangle to the g_element that was just created.]]
-  [[`svg& circle(double x, double y, unsigned int radius = 5)`] [Adds a point at (x,y) in the root level of the document][If the user is calling the circle method, odds are they would prefer a real circle instead of a degenerate circle (a point). 5 is as good a default as any other, and the user does not likely want a point if they are making this call.]]
-  [[`g_element& get_g_element(int)`] [Gets the g_element at the index specified] [Gives a runtime error if you specify an index that does not contain a `g_element`. I am considering providing an iterator interface to access these elements.]]
-  [[`unsigned int get_x_size()`] [Returns the width of the image] []]
-  [[`unsigned int get_y_size()`] [Returns the height of the image] []]
-  [[`svg& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels][]]
-  [[`svg& line(double x1, double y1, double x2, double y2)`] [Adds a line from (x1,y1) to (x2,y2) in the root level of the document][]]
+  which adds two lines and a rectangle to the g_element that was just created.]]
+  [[`svg& circle(double x, double y, unsigned int radius = 5)`] [Adds a point at (x,y) in the root level of the document][If the user is calling the circle method, odds are they would prefer a real circle instead of a degenerate circle (a point). 5 is as good a default as any other, and the user is unlikely want a point if they are making this call.]]
+  [[`g_element& get_g_element(int)`] [Gets the g_element at the index specified.] [Gives a runtime error if you specify an index that does not contain a `g_element`. An iterator interface to access these elements might be useful.]]
+  [[`unsigned int get_x_size()`] [Returns the width of the image (pixels).] []]
+  [[`unsigned int get_y_size()`] [Returns the height of the image (pixels).] []]
+  [[`svg& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced,
+  (pixels).][]]
+  [[`svg& line(double x1, double y1, double x2, double y2)`] [Adds a line from (x1,y1) to (x2,y2) in the root level of the document.][]]
   [[`path_element& path()`] [Pushes a `path_element` to the back of the tree and returns a reference to it. This allows you to do the following:
 ``
 path_element& my_path = image.path();
@@ -942,306 +1008,306 @@ I'm open to suggestions for how to improve this process.
   [[`svg& rect(double x1, double y1, 
                double width, double height)`] [Adds a rectangle at point (x1, y1) that has width `width` and height `height`][]]
   [[`svg& text(double x, double y, std::string text)`] [Adds text `text` at (x,y) in the root level of the document][]]
-  [[`svg& write(const std::string&)`] [Writes the document to the file represented by the argument][Opens the file stream itself and tries to call `write(std::ostream&)`. Throws `std::runtime_exception` if it can not open the file.]]
-  [[`svg& write(std::ostream&)`] [Writes the document to the stream represented by the argument][]]
+  [[`svg& write(const std::string&)`] [Writes the document to the file represented by the argument.][Opens the file stream itself and tries to call `write(std::ostream&)`. Throws `std::runtime_exception` if it can not open the file.]]
+  [[`svg& write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]]
 ]
-[endsect][/section:svg_interface]
+[endsect] [/section:svg_interface]
 
 [section:svg_1d_plot_interface `svg_1d_plot` Public Interface]
-[table Miscellaneous Functions
+[table 1D_plot Miscellaneous Functions
   [[Signature] [Description]]
   [[`svg_1d_plot()`] [See the defaults section for further details]]
-  [[`svg_1d_plot& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels]]
-  [[`svg_1d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title]]
-  [[`svg_1d_plot& title(const std::string&)`] [Sets the string to be used for the title]]
-  [[`svg_1d_plot& title_font_size(unsigned int)`] [Sets the font size for the title]]
-  [[`svg_1d_plot& write(const std::string&)`] [Writes the plot to the file passed as a parameter]]
-  [[`svg_1d_plot& write(ostream&)`] [Writes the plot to a stream passed as a parameter]]]
+  [[`svg_1d_plot& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced (pixels)]]
+  [[`svg_1d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title.]]
+  [[`svg_1d_plot& title(const std::string&)`] [Sets the string to be used for the title.]]
+  [[`svg_1d_plot& title_font_size(unsigned int)`] [Sets the font size for the title.]]
+  [[`svg_1d_plot& write(const std::string&)`] [Writes the plot to the file passed as a parameter.]]
+  [[`svg_1d_plot& write(ostream&)`] [Writes the plot to a stream passed as a parameter.]]]
 
-[table Commands
+[table 1D_plot Commands
   [[Signature] [Description]]
-  [[`svg_1d_plot& axis_on(bool)`] [Sets whether the axis is on or off]]
-  [[`svg_1d_plot& legend_on(bool)`] [Sets whether the legend is on or off]]
-  [[`svg_1d_plot& plot_window_on(bool)`] [Sets whether the plot will be displayed in its own window, or will be "full screen" in the image]]
-  [[`svg_1d_plot& title_on(bool)`] [Determines whether or not the image title is displayed]]
-  [[`svg_1d_plot& x_axis_on(bool)`] [Determines whether or not the X axis is displayed]]
-  [[`svg_1d_plot& x_external_style_on(bool)`] [Determines whether or not the axis is inside or outside of the plot. Defaults to `false`]]
-  [[`svg_1d_plot& x_label_on(bool)`] [Sets whether or not the x axis label will show]]
-  [[`svg_1d_plot& x_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the x axis]]
-  [[`svg_1d_plot& x_major_grid_on(bool)`] [Determines whether or not the major grid on the X axis will be displayed]]
-  [[`svg_1d_plot& x_minor_grid_on(bool)`] [Determines whether or not the minor grid on the X axis will be displayed]]
-  [[`svg_1d_plot& y_axis_on(bool)`] [Determines whether or not the Y axis is displayed]]]
+  [[`svg_1d_plot& axis_on(bool)`] [Sets whether the axis is on (true) or off.]]
+  [[`svg_1d_plot& legend_on(bool)`] [Sets whether the legend is on (true) or off.]]
+  [[`svg_1d_plot& plot_window_on(bool)`] [Sets whether the plot will be displayed in its own window, or will be "full screen" in the image.]]
+  [[`svg_1d_plot& title_on(bool)`] [Determines whether or not the image title is displayed.]]
+  [[`svg_1d_plot& x_axis_on(bool)`] [Determines whether or not the X-axis is displayed.]]
+  [[`svg_1d_plot& x_external_style_on(bool)`] [Determines whether or not the axis is inside or outside of the plot. Defaults is `false`.]]
+  [[`svg_1d_plot& x_label_on(bool)`] [Sets whether or not the X-axis label will show]]
+  [[`svg_1d_plot& x_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the X-axis]]
+  [[`svg_1d_plot& x_major_grid_on(bool)`] [Determines whether or not the major grid on the X axis will be displayed.]]
+  [[`svg_1d_plot& x_minor_grid_on(bool)`] [Determines whether or not the minor grid on the X axis will be displayed.]]
+  [[`svg_1d_plot& y_axis_on(bool)`] [Determines whether or not the Y axis is displayed.]]]
 
-[table Colors
+[table 1D_plot Colors
   [[Signature] [Description]]
-  [[`svg_1d_plot& background_border_color(const svg_color &col)`] [Set the background border color for the legend as `col`, an RGB color]]
-  [[`svg_1d_plot& background_color(const svg_color &col)`] [Set the background color for the whole image]]
-  [[`svg_1d_plot& legend_background_color(const svg_color &col)`] [Set the background color for the legend as `col`, an RGB color]]
-  [[`svg_1d_plot& legend_border_color(const svg_color &col)`] [Set the border color for the legend as `col`, an RGB color]]
-  [[`svg_1d_plot& plot_background_color(const svg_color &col)`] [Set the color of the plot area. Note: this only goes into effect if plot_area(true) has been called]]
-  [[`svg_1d_plot& title_color(const svg_color &col)`] [Set the title color]]
-  [[`svg_1d_plot& x_axis_color(const svg_color &col)`] [Sets the color of the lines that form the axis]]
-  [[`svg_1d_plot& x_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X axis]]
-  [[`svg_1d_plot& x_major_grid_color(const svg_color &col)`] [Sets the color of the grid that runs perpindicular to the X axis]]
-  [[`svg_1d_plot& x_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the x-axis]]
+  [[`svg_1d_plot& background_border_color(const svg_color &col)`] [Set the background border color for the legend as `col`, an RGB color.]]
+  [[`svg_1d_plot& background_color(const svg_color &col)`] [Set the background color for the whole image.]]
+  [[`svg_1d_plot& legend_background_color(const svg_color &col)`] [Set the background color for the legend as `col`, an RGB color.]]
+  [[`svg_1d_plot& legend_border_color(const svg_color &col)`] [Set the border color for the legend as `col`, an RGB color.]]
+  [[`svg_1d_plot& plot_background_color(const svg_color &col)`] [Set the color of the plot area. Note: this only goes into effect if plot_area(true) has been called.]]
+  [[`svg_1d_plot& title_color(const svg_color &col)`] [Set the title color.]]
+  [[`svg_1d_plot& x_axis_color(const svg_color &col)`] [Sets the color of the lines that form the axis.]]
+  [[`svg_1d_plot& x_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X axis.]]
+  [[`svg_1d_plot& x_major_grid_color(const svg_color &col)`] [Sets the color of the grid that runs perpindicular to the X axis.]]
+  [[`svg_1d_plot& x_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the x-axis.]]
   [[`svg_1d_plot& x_minor_grid_color(const svg_color &col)`] [Sets the color of the minor grid of the x-axis]]
-  [[`svg_1d_plot& x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the x-axis]]
+  [[`svg_1d_plot& x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the x-axis.]]
   ]
 
-[table Axis Definition
+[table 1D_plot X-Axis Definition
   [[Signature] [Description]]
-  [[`svg_1d_plot& x_axis_width(unsigned int)`] [Sets the stroke width of the x-axis] ]
-  [[`svg_1d_plot& x_label(const std::string&)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must run `x_label_on(true)` for that guarantee] ]
-  [[`svg_1d_plot& x_major_interval(double)`] [Sets the distance (in Cartesian units) between ticks on the x-axis] ]
-  [[`svg_1d_plot& x_major_tick_length(int)`] [Sets the length (in pixels) of the x-axis major ticks] ]
-  [[`svg_1d_plot& x_major_tick_width(unsigned int)`] [Sets the width (in pixels) of the major ticks on the x-axis] ]
-  [[`svg_1d_plot& x_minor_tick_length(int)`] [Sets the length (in pixels) of the x-axis minor tick lengths] ]
-  [[`svg_1d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (in pixels) of the minor ticks on the x-axis] ]
-  [[`svg_1d_plot& x_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick] ]
-  [[`svg_1d_plot& x_range(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2<=x1 ] ]
+  [[`svg_1d_plot& x_axis_width(unsigned int)`] [Sets the stroke width of the x-axis.] ]
+  [[`svg_1d_plot& x_label(const std::string&)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must call `x_label_on(true)` to display.] ]
+  [[`svg_1d_plot& x_major_interval(double)`] [Sets the distance (in Cartesian units) between ticks on the x-axis.] ]
+  [[`svg_1d_plot& x_major_tick_length(int)`] [Sets the length (pixels) of the x-axis major ticks.] ]
+  [[`svg_1d_plot& x_major_tick_width(unsigned int)`] [Sets the width (pixels) of the major ticks on the x-axis.] ]
+  [[`svg_1d_plot& x_minor_tick_length(int)`] [Sets the length (pixels) of the x-axis minor tick lengths.] ]
+  [[`svg_1d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (pixels) of the minor ticks on the x-axis.] ]
+  [[`svg_1d_plot& x_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick.] ]
+  [[`svg_1d_plot& x_range(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2<=x1. ] ]
 ]
 
-[heading The `plot()` Method]
+[heading The 1D_plot `plot()` Method]
 The `plot()` method is defined using Boost.Parameter. As such, it supports a 
 few extra named parameters, as well as a deduced parameter.
 
-[table Required parameter
+[table 1D_plot Required parameter
 [[ID] [Type (* is a wildcard)] [Description]]
 [[_container] [*] [Any object that can return an iterator with begin() and end()]]
-[[_title] [`std::string`] [The name of this series]]]
+[[_title] [`std::string`] [The name of this data series.]]]
 
-[table Deduced parameter
+[table 1D_plot Deduced parameter
 [[ID] [Type] [Description] [Default]]
-[[_fill_color] [`svg_color`] [This is the color that shows up inside of the circle that is 
-being drawn] [white] ]]
+[[_fill_color] [`svg_color`] [Color that shows *inside the circle* being drawn.] [white] ]]
 
-[table Optional Parameters
+[table 1D_plot Optional Parameters
 [[ID] [Type] [Description] [Default]]
-[[_stroke_color] [`svg_color`] [The outline of the circle that is being drawn] [black] ]
-[[_point_style] [`point_shape`] [This is the shape of the point. Options currently are between [^none], [^circle], and [^square].] [circle]]
-[[_size] [`unsigned int`] [This is the height/width of the circle and square.] [10]]
-[[_x_functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a vector of humans. For example:
+[[_stroke_color] [`svg_color`] [Outline of the circle that is being drawn.] [black] ]
+[[_point_style] [`point_shape`] [Shape of the point. Options currently are: [^none], [^circle], and [^square].] [circle]]
+[[_size] [`unsigned int`] [Height/width of the circle and square.] [10]]
+[[_x_functor] [*] [A class or functor that contains a conversion function. You will not have to worry about this, unless you are trying to plot a container of type that does not have a conversion to double, for example, age of a user-defined type `humans`. For example:
 ``
 class my_functor
 {
-	typdef double result_type;
+  typdef double result_type;
 
-	double operator()(const human& _hum)
-	{
-		return (double)(_hum.age());
-	}
+  double operator()(const human& _hum)
+  {
+    return (double)(_hum.age());
+  }
 }
 
-// snip
+// ...
 
 plot(my_plot, my_data, "Lions", _x_functor = my_functor());
 ``
 ][
 `boost_default_convert` is sufficient in all cases where the data stored in 
-the container can be directly casted to a double]]]
+the container can be directly cast to a `double`.]]]
 
-Here are some examples of correct uses:
-[h3 Using fill and stroke colors]
+Here are some examples of using of the 1D_plot `plot` method:
+[h4 Using 1D_plot fill and stroke colors]
 
-	my_plot.plot(my_data, "Lions", 
-	_fill_color = red, 
-	_stroke_color = black);
+  my_plot.plot(my_data, "Lions", 
+  _fill_color = red, 
+  _stroke_color = black);
 
 This has the same effect as the following:
 
-	my_plot.plot(my_data, "Lions", red, black);
+  my_plot.plot(my_data, "Lions", red, black); // Order is significant:
+  // fill is red and stroke is black.
 
 and also the same effect as:
 
-	my_plot.plot(my_data, "Lions", 
-	_stroke_color = black,  
-	_fill_color = red);
+  my_plot.plot(my_data, "Lions", 
+  _stroke_color = black,  
+  _fill_color = red);
 
-Since _fill_color is a deduced parameter, when two svg_colors are used in the 
-same function call, they are always inferred in the following order: (fill, 
-stroke).
-[endsect][/svg_1d_plot_interface]
+Since _fill_color is a Boost.Parameter deduced parameter, when two svg_colors are used in the same function call, they are always inferred in the following order:
+(fill, stroke).
+[endsect] [/svg_1d_plot_interface]
 
 [section:svg_2d_plot_interface `svg_2d_plot` Public Interface]
-[table Miscellaneous
+[table 2D_plot Miscellaneous
   [[Signature] [Description]]
-  [[`svg_2d_plot()`] [See the defaults section for further details]]
-  [[`svg_2d_plot& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels]]
-  [[`svg_2d_plot& title(const std::string&)`] [Sets the string to be used for the title]]
-  [[`svg_2d_plot& title_font_size(unsigned int)`] [Sets the font size for the title]]
-  [[`svg_2d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title]]]
+  [[`svg_2d_plot()`] [See the defaults section for further details.]]
+  [[`svg_2d_plot& image_size(unsigned int, unsigned int)`] [Sets the size (pixels) of the plot image produced.]]
+  [[`svg_2d_plot& title(const std::string&)`] [Sets the string to be used for the title.]]
+  [[`svg_2d_plot& title_font_size(unsigned int)`] [Sets the font size for the title.]]
+  [[`svg_2d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title.]]]
 
-[table Commands
+[table 2D_plot Commands
   [[Signature] [Description]]
-  [[`svg_2d_plot& axis_on(bool)`] [Sets whether the axis is on or off]]
-  [[`svg_2d_plot& legend_on(bool)`] [Sets whether the legend is on or off]]
-  [[`svg_2d_plot& plot_window_on(bool)`] [Sets whether the plot will be displayed in its own window, or will be "full screen" in the image]]
-  [[`svg_2d_plot& title_on(bool)`] [Determines whether or not the image title is displayed]]
-  [[`svg_2d_plot& x_label_on(bool)`] [Sets whether or not the X axis label will show]]
-  [[`svg_2d_plot& x_major_grid_on(bool)`] [Determines whether or not the major grid on the X axis will be displayed]]
-  [[`svg_2d_plot& x_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the x axis]]
-  [[`svg_2d_plot& x_minor_grid_on(bool)`] [Determines whether or not the minor grid on the X axis will be displayed]]
-  [[`svg_2d_plot& y_label_on(bool)`] [Sets whether or not the Y axis label will show]]
-  [[`svg_2d_plot& y_major_grid_on(bool)`] [Determines whether or not the major grid on the Y axis will be displayed]]
-  [[`svg_2d_plot& y_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the Y axis]]
-  [[`svg_2d_plot& y_minor_grid_on(bool)`] [Determines whether or not the minor grid on the Y axis will be displayed]]]
+  [[`svg_2d_plot& axis_on(bool)`] [Sets whether the axis is on (true) or off.]]
+  [[`svg_2d_plot& legend_on(bool)`] [Sets whether the legend is on (true) or off.]]
+  [[`svg_2d_plot& plot_window_on(bool)`] [Sets whether the plot will be displayed in its own window, or will be "full screen" in the image.]]
+  [[`svg_2d_plot& title_on(bool)`] [Determines whether or not the image title is displayed.]]
+  [[`svg_2d_plot& x_label_on(bool)`] [Sets whether or not the X axis label will show.]]
+  [[`svg_2d_plot& x_major_grid_on(bool)`] [Determines whether or not the major grid on the X axis will be displayed.]]
+  [[`svg_2d_plot& x_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the x axis.]]
+  [[`svg_2d_plot& x_minor_grid_on(bool)`] [Determines whether or not the minor grid on the X axis will be displayed.]]
+  [[`svg_2d_plot& y_label_on(bool)`] [Sets whether or not the Y axis label will show.]]
+  [[`svg_2d_plot& y_major_grid_on(bool)`] [Determines whether or not the major grid on the Y axis will be displayed.]]
+  [[`svg_2d_plot& y_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the Y axis.]]
+  [[`svg_2d_plot& y_minor_grid_on(bool)`] [Determines whether or not the minor grid on the Y axis will be displayed.]]]
 
-[table Colors
+[table 2D_plot Colors
   [[Signature] [Description]]
-  [[`svg_2d_plot& title_color(const svg_color &col)`] [Set the title color]]
-  [[`svg_2d_plot& background_color(const svg_color &col)`] [Set the background color for the whole image]]
-  [[`svg_2d_plot& legend_background_color(const svg_color &col)`] [Set the background color for the legend as `col`, an RGB color]]
-  [[`svg_2d_plot& legend_border_color(const svg_color &col)`] [Set the border color for the legend as `col`, an RGB color]]
-  [[`svg_2d_plot& background_border_color(const svg_color &col)`] [Set the background border color for the legend as `col`, an RGB color]]
-  [[`svg_2d_plot& plot_background_color(const svg_color &col)`] [Set the color of the plot area. Note: this only goes into effect if plot_area(true) has been called]]
-  [[`svg_2d_plot& x_axis_color(const svg_color &col)`] [Sets the color of the lines that form the axis]]
-  [[`svg_2d_plot& x_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X axis]]
-  [[`svg_2d_plot& x_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the x-axis]]
+  [[`svg_2d_plot& title_color(const svg_color &col)`] [Set the plot title color.]]
+  [[`svg_2d_plot& background_color(const svg_color &col)`] [Set the background color for the whole image.]]
+  [[`svg_2d_plot& legend_background_color(const svg_color &col)`] [Set the background color for the legend as `col`, an RGB color.]]
+  [[`svg_2d_plot& legend_border_color(const svg_color &col)`] [Set the border color for the legend as `col`, an RGB color.]]
+  [[`svg_2d_plot& background_border_color(const svg_color &col)`] [Set the background border color for the legend as `col`, an RGB color.]]
+  [[`svg_2d_plot& plot_background_color(const svg_color &col)`] [Set the color of the plot area. Note: this only goes into effect if plot_area(true) has been called.]]
+  [[`svg_2d_plot& x_axis_color(const svg_color &col)`] [Sets the color of the lines that form the axis.]]
+  [[`svg_2d_plot& x_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X axis.]]
+  [[`svg_2d_plot& x_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the x-axis.]]
   [[`svg_2d_plot& x_major_grid_color(const svg_color &col)`] [Sets the color of the grid that runs perpindicular to the X axis]]
-  [[`svg_2d_plot& x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the x-axis]]
-  [[`svg_2d_plot& y_axis_color(const svg_color &col)`] [Sets the color of the lines that form the Y axis]]
-  [[`svg_2d_plot& y_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X axis]]
-  [[`svg_2d_plot& y_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the Y-axis]]
-  [[`svg_2d_plot& y_major_grid_color(const svg_color &col)`] [Sets the color of the grid that runs perpindicular to the Y axis]]
-  [[`svg_2d_plot& y_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the Y-axis]]
+  [[`svg_2d_plot& x_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the x-axis.]]
+  [[`svg_2d_plot& y_axis_color(const svg_color &col)`] [Sets the color of the lines that form the Y axis.]]
+  [[`svg_2d_plot& y_label_color(const svg_color &col)`] [Sets the color of the labels that go along the Y axis.]]
+  [[`svg_2d_plot& y_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the Y-axis.]]
+  [[`svg_2d_plot& y_major_grid_color(const svg_color &col)`] [Sets the color of the grid that runs perpindicular to the Y axis.]]
+  [[`svg_2d_plot& y_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the Y-axis.]]
   ]
 
-[table Axis Information
+[table 2D_plot Axis Information
   [[Signature] [Description]]
-  [[`svg_2d_plot& x_axis_width(unsigned int)`] [Sets the stroke width of the x-axis] ]
-  [[`svg_2d_plot& x_label(const std::string&)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must run `x_label(true)` for that guarantee] ]
-  [[`svg_2d_plot& x_major_interval(double)`] [Sets the distance (in Cartesian units) between ticks on the x-axis] ]
-  [[`svg_2d_plot& x_major_tick_length(int)`] [Sets the length (in pixels) of the x-axis major ticks] ]
-  [[`svg_2d_plot& x_major_tick_width(unsigned int)`] [Sets the width (in pixels) of the major ticks on the x-axis] ]
-  [[`svg_2d_plot& x_minor_tick(unsigned int)`] [Sets the length (in pixels) of the x-axis minor ticks] ]
-  [[`svg_2d_plot& x_minor_tick_length(int)`] [Sets the length (in pixels) of the x-axis minor tick lengths] ]
-  [[`svg_2d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (in pixels) of the minor ticks on the x-axis] ]
-  [[`svg_2d_plot& x_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick] ]
-  [[`svg_2d_plot& x_range(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2<=x1 ] ]
-  [[`svg_2d_plot& y_axis_width(unsigned int)`] [Sets the stroke width of the x-axis] ]
-  [[`svg_2d_plot& y_label(const std::string&)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must run `x_label(true)` for that guarantee] ]
+  [[`svg_2d_plot& x_axis_width(unsigned int)`] [Sets the stroke width (pixels) of the x-axis.] ]
+  [[`svg_2d_plot& x_label(const std::string&)`] [Sets the label of the x-axis. You must set `x_label(true)` to display the label.] ]
+  [[`svg_2d_plot& x_major_interval(double)`] [Sets the distance (Cartesian units) between ticks on the x-axis.] ]
+  [[`svg_2d_plot& x_major_tick_length(int)`] [Sets the length (pixels) of the x-axis major ticks.] ]
+  [[`svg_2d_plot& x_major_tick_width(unsigned int)`] [Sets the width (pixels) of the major ticks on the x-axis.] ]
+  [[`svg_2d_plot& x_minor_tick(unsigned int)`] [Sets the length (pixels) of the x-axis minor ticks.] ]
+  [[`svg_2d_plot& x_minor_tick_length(int)`] [Sets the length (pixels) of the x-axis minor tick lengths.] ]
+  [[`svg_2d_plot& x_minor_tick_width(unsigned int)`] [Sets the width (pixels) of the minor ticks on the x-axis.] ]
+  [[`svg_2d_plot& x_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick.] ]
+  [[`svg_2d_plot& x_range(double x1, double x2)`] [Sets the scale of the x axis from x1 to x2. Throws an exception if x2 <= x1.] ]
+  [[`svg_2d_plot& y_axis_width(unsigned int)`] [Sets the stroke width of the x-axis.] ]
+  [[`svg_2d_plot& y_label(const std::string&)`] [Sets the label of the Y-axis. You must set `x_label(true)` to display the label.] ]
   [[`svg_2d_plot& y_major_tick(double)`] [Sets the distance (in Cartesian units) between ticks on the Y axis] ]
-  [[`svg_2d_plot& y_major_tick_length(int)`] [Sets the length (in pixels) of the Y axis major ticks] ]
-  [[`svg_2d_plot& y_major_tick_width(unsigned int)`] [Sets the width (in pixels) of the major ticks on the Y axis] ]
-  [[`svg_2d_plot& y_minor_tick(unsigned int)`] [Sets the length (in pixels) of the Y axis minor ticks] ]
-  [[`svg_2d_plot& y_major_tick_length(int)`] [Sets the length (in pixels) of the Y axis minor tick lengths] ]
-  [[`svg_2d_plot& y_minor_tick_width(unsigned int)`] [Sets the width (in pixels) of the minor ticks on the Y axis] ]
-  [[`svg_2d_plot& y_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick] ]
-  [[`svg_2d_plot& y_scale(double y1, double y2)`] [Sets the scale of the Y axis from y1 to y2. Throws an exception if y2<=y1 ] ]
+  [[`svg_2d_plot& y_major_tick_length(int)`] [Sets the length (pixels) of the Y axis major ticks.] ]
+  [[`svg_2d_plot& y_major_tick_width(unsigned int)`] [Sets the width (pixels) of the major ticks on the Y axis.] ]
+  [[`svg_2d_plot& y_minor_tick(unsigned int)`] [Sets the length (pixels) of the Y axis minor ticks.] ]
+  [[`svg_2d_plot& y_major_tick_length(int)`] [Sets the length (pixels) of the Y axis minor tick lengths.] ]
+  [[`svg_2d_plot& y_minor_tick_width(unsigned int)`] [Sets the width (pixels) of the minor ticks on the Y axis.] ]
+  [[`svg_2d_plot& y_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick.] ]
+  [[`svg_2d_plot& y_scale(double y1, double y2)`] [Sets the scale of the Y axis from y1 to y2. Throws an exception if y2 <= y1.] ]
 ]
 
-(Note: Getters omitted for now)
+(Note: Getters omitted for now. TODO)
 
 [heading The `plot()` Method]
 The `plot()` method is defined using Boost.Parameter. As such, it supports a 
 few extra named parameters, as well as a deduced parameter.
 
-[table Required parameter
+[table 2D_plot Required parameter
 [[ID] [Type (* is a wildcard)] [Description]]
 [[_container] [*] [Any object that can return an iterator with begin() and end()]]
 [[_title] [`std::string`] [The name of this series]]]
 
-[table Deduced parameter
+[table 2D_plot Deduced parameter
 [[ID] [Type] [Description] [Default]]
 [[_fill_color] [`svg_color`] [This is the color that shows up inside of the circle that is 
 being drawn] [white] ]]
 
-[table Optional Parameters
+[table 2D_plot Optional Parameters
 [[ID] [Type] [Description] [Default]]
 [[_bezier_on] [`bool`] [ This determines whether or not Bézier curve interpolation will be applied to the plot lines. It is important to note that the curve interpolation is still in its infancy, and should only be used with reasonably nice data sets]]
 [[_line_on] [`bool`] [ This determines whether or not there are lines drawn between data points.] [false]]
-[[_line_color] [`bool`] [ This determines the color of the lines between data points ] [black ]]
+[[_line_color] [`bool`] [ This determines the color of the lines between data points.] [black ]]
 [[_area_fill_color] [`svg_color`][Defining this enables the "Fill Area Under Axis" feature. the color you define will be the fill color between a line and the area under the axis. This only takes effect if `_line_on = true` is called.]]
-[[_stroke_color] [`svg_color`] [The outline of the circle that is being drawn] [black] ]
+[[_stroke_color] [`svg_color`] [The outline of the circle that is being drawn.] [black] ]
 [[_point_style] [`point_shape`] [This is the shape of the point. Options currently are between [^none], [^circle], and [^square].] [circle]]
 [[_size] [`unsigned int`] [This is the height/width of the circle and square.] [10]]
 [[_x_functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a vector of humans. For example:
 ``
 class my_functor
 {
-	typdef pair<double, double> result_type;
+  typdef pair<double, double> result_type;
 
-	pair<double, double> operator()(const human& _hum) const
-	{
-		return pair<double, double>(i, _hum.age());
-	}
+  pair<double, double> operator()(const human& _hum) const
+  {
+    return pair<double, double>(i, _hum.age());
+  }
 }
 
 // snip
 
-plot(my_plot, my_data, "Lions", _x_functor = my_functor());
+plot(my_plot, my_data, "People", _x_functor = my_functor());
 ``
 ][
 `boost_default_2d_convert` (the default) is sufficient in all cases where the data stored in 
-the container can be directly casted to a double]]]
+the container can be directly cast to a double.]]]
 
 Here are some examples of correct uses:
 [h3 Using fill and stroke colors]
 
-	my_plot.(my_data, "Lions", 
-	_fill_color = red, 
-	_stroke_color = black);
+  my_plot.(my_data, "Lions", 
+  _fill_color = red, 
+  _stroke_color = black);
 
 This has the same effect as the following:
 
-	my_plot.plot(my_data, "Lions", red, black);
+  my_plot.plot(my_data, "Lions", red, black);
 
 and also the same effect as:
 
-	my_plot.plot(my_data, "Lions", 
-	_stroke_color = black,  
-	_fill_color = red);
+  my_plot.plot(my_data, "Lions", 
+  _stroke_color = black,  
+  _fill_color = red);
 
 Since _fill_color is a deduced parameter, when two svg_colors are used in the 
 same function call, they are always inferred in the following order: (fill, 
 stroke).
-[endsect][/section:svg_2d_plot_interface]
+[endsect] [/section:svg_2d_plot_interface]
+
 [section:svg_boxplot_interface `svg_boxplot` Public Interface]
-[table Miscellaneous
+[table Boxplot Miscellaneous
   [[Signature] [Description]]
-  [[`svg_boxplot()`] [See the defaults section for further details]]
-  [[`svg_boxplot& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced, in pixels]]
-  [[`svg_boxplot& title(const std::string&)`] [Sets the string to be used for the title]]
-  [[`svg_boxplot& title_size(unsigned int)`] [Sets the font size for the title]]]
+  [[`svg_boxplot()`] [See the defaults section for further details.]]
+  [[`svg_boxplot& image_size(unsigned int, unsigned int)`] [Sets the size (pixels) of the plot image produced.]]
+  [[`svg_boxplot& title(const std::string&)`] [Sets the string to be used for the plot title.]]
+  [[`svg_boxplot& title_size(unsigned int)`] [Sets the font size for the plot title.]]]
 
-[table Commands
+[table Boxplot Commands
   [[Signature] [Description]]
-  [[`svg_boxplot& title_on(bool)`] [Determines whether or not the image title is displayed]]
-  [[`svg_boxplot& x_label_on(bool)`] [Sets whether or not the X axis label will show]]
-  [[`svg_boxplot& x_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the x axis]]
-  [[`svg_boxplot& y_label_on(bool)`] [Sets whether or not the Y axis label will show]]
-  [[`svg_boxplot& y_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the Y axis]]]
+  [[`svg_boxplot& title_on(bool)`] [Determines whether or not the image title is displayed.]]
+  [[`svg_boxplot& x_label_on(bool)`] [Sets whether or not the X-axis label will show.]]
+  [[`svg_boxplot& x_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the x axis.]]
+  [[`svg_boxplot& y_label_on(bool)`] [Sets whether or not the Y-axis label will show.]]
+  [[`svg_boxplot& y_major_labels_on(bool)`] [sets whether or not the major ticks will be labelled on the Y axis.]]]
 
-[table Colors
+[table Boxplot Colors
   [[Signature] [Description]]
-  [[`svg_boxplot& title_color(const svg_color &col)`] [Set the title color]]
-  [[`svg_boxplot& background_color(const svg_color &col)`] [Set the background color for the whole image]]
-  [[`svg_boxplot& background_border_color(const svg_color &col)`] [Set the background border color for the legend as `col`, an RGB color]]
-  [[`svg_boxplot& plot_background_color(const svg_color &col)`] [Set the color of the plot area. Note: this only goes into effect if plot_area(true) has been called]]
-  [[`svg_boxplot& x_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X axis]]
-  [[`svg_boxplot& x_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the x-axis]]
-  [[`svg_boxplot& y_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X axis]]
-  [[`svg_boxplot& y_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the Y-axis]]
-  [[`svg_boxplot& y_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the Y-axis]]
+  [[`svg_boxplot& title_color(const svg_color &col)`] [Set the title color.]]
+  [[`svg_boxplot& background_color(const svg_color &col)`] [Set the background color for the whole image.]]
+  [[`svg_boxplot& background_border_color(const svg_color &col)`] [Set the background border color for the legend as `col`, an RGB color.]]
+  [[`svg_boxplot& plot_background_color(const svg_color &col)`] [Set the color of the plot area. Note: this only goes into effect if plot_area(true) has been called.]]
+  [[`svg_boxplot& x_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X-axis.]]
+  [[`svg_boxplot& x_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the X-axis.]]
+  [[`svg_boxplot& y_label_color(const svg_color &col)`] [Sets the color of the labels that go along the X-axis.]]
+  [[`svg_boxplot& y_major_tick_color(const svg_color &col)`] [Sets the color of the major ticks of the Y-axis.]]
+  [[`svg_boxplot& y_minor_tick_color(const svg_color &col)`] [Sets the color of the minor ticks of the Y-axis.]]
   ]
 
-[table Axis Information
+[table Boxplot Axis Information
   [[Signature] [Description]]
-  [[`svg_boxplot& x_label(const std::string&)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must run `x_label(true)` for that guarantee] ]
-  [[`svg_boxplot& x_tick_length(int)`] [Sets the length (in pixels) of the x-axis ticks] ]
-  [[`svg_boxplot& x_tick_width(unsigned int)`] [Sets the width (in pixels) of the major ticks on the x-axis] ]
-  [[`svg_boxplot& y_label(const std::string&)`] [Sets the label of the x-axis. This does not guarantee that it will be shown. You must run `x_label(true)` for that guarantee] ]
-  [[`svg_boxplot& y_major_interval(double)`] [Sets the distance (in Cartesian units) between ticks on the Y axis] ]
-  [[`svg_boxplot& y_major_tick_length(int)`] [Sets the length (in pixels) of the Y axis major ticks] ]
-  [[`svg_boxplot& y_major_tick_width(unsigned int)`] [Sets the width (in pixels) of the major ticks on the Y axis] ]
-  [[`svg_boxplot& y_num_minor_tick(unsigned int)`] [Sets the length (in pixels) of the Y axis minor ticks] ]
-  [[`svg_boxplot& y_major_tick_length(int)`] [Sets the length (in pixels) of the Y axis minor tick lengths] ]
-  [[`svg_boxplot& y_minor_tick_width(unsigned int)`] [Sets the width (in pixels) of the minor ticks on the Y axis] ]
-  [[`svg_boxplot& y_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick] ]
-  [[`svg_boxplot& y_range(double y1, double y2)`] [Sets the scale of the Y axis from y1 to y2. Throws an exception if y2<=y1 ] ]
+  [[`svg_boxplot& x_label(const std::string&)`] [Sets the label of the X-axis. It will be shown *only if* `x_label(true)`.] ]
+  [[`svg_boxplot& x_tick_length(int)`] [Sets the length (pixels) of the X-axis ticks.] ]
+  [[`svg_boxplot& x_tick_width(unsigned int)`] [Sets the width (pixels) of the major ticks on the X-axis.] ]
+  [[`svg_boxplot& y_label(const std::string&)`] [Sets the label of the X-axis. It will be shown *only if* `x_label(true)`.] ]
+  [[`svg_boxplot& y_major_interval(double)`] [Sets the distance (in Cartesian units) between ticks on the Y-axis.] ]
+  [[`svg_boxplot& y_major_tick_length(int)`] [Sets the length (pixels) of the Y-axis major ticks.] ]
+  [[`svg_boxplot& y_major_tick_width(unsigned int)`] [Sets the width (pixels) of the major ticks on the Y-axis.] ]
+  [[`svg_boxplot& y_num_minor_tick(unsigned int)`] [Sets the length (pixels) of the Y-axis minor ticks.] ]
+  [[`svg_boxplot& y_major_tick_length(int)`] [Sets the length (pixels) of the Y-axis minor tick lengths.] ]
+  [[`svg_boxplot& y_minor_tick_width(unsigned int)`] [Sets the width (pixels) of the minor ticks on the Y-axis.] ]
+  [[`svg_boxplot& y_num_minor_ticks(int)`] [Sets the number of minor ticks between each major tick.] ]
+  [[`svg_boxplot& y_range(double y1, double y2)`] [Sets the scale of the Y-axis from y1 to y2. Throws an exception if y2 <= y1.] ]
 ]
 
-(Note: Getters omitted for now)
+(Note: Getters omitted for now - TODO)
 
 [heading The `plot()` Method]
 
@@ -1250,37 +1316,37 @@ few extra named parameters, as well as a deduced parameter.
 
 [table Required parameter
 [[ID] [Type (* is a wildcard)] [Description]]
-[[ctr] [*] [Any object that can return an iterator with begin() and end()]]
-[[name] [`std::string`] [The name of this series]]]
+[[ctr] [*] [Any object that can return an iterator with begin() and end().]]
+[[name] [`std::string`] [The name of this data series.]]]
 
 [table Optional Parameters
 [[ID] [Type] [Description] [Default]]
-[[box_style] [`const svg_style&`] [Styles the box of the boxplot] [`svg_style(white, black, 1)`]]
-[[median_style] [`const svg_style&`] [Styles the median of the boxplot] [`svg_style(white, black, 1)`]]
-[[axis_style] [`const svg_style&`] [Styles the data range line (the line going through the middle] [`svg_style(white, black, 1)`]]
-[[min_whisker_style] [`const svg_style&`][Styles the lower whisker] [`svg_style(white, black, 1)`]]
-[[max_whisker_style] [`const svg_style&`] [Styles the upper whisker] [`svg_style(white, black, 1)`]]
+[[box_style] [`const svg_style&`] [Styles the box of the boxplot.] [`svg_style(white, black, 1)`.]]
+[[median_style] [`const svg_style&`] [Styles the median of the boxplot.] [`svg_style(white, black, 1)`.]]
+[[axis_style] [`const svg_style&`] [Styles the data range line (the line going through the middle.] [`svg_style(white, black, 1)`.]]
+[[min_whisker_style] [`const svg_style&`][Styles the lower whisker.] [`svg_style(white, black, 1)`]]
+[[max_whisker_style] [`const svg_style&`] [Styles the upper whisker.] [`svg_style(white, black, 1)`]]
 [[mild_outlier_style] [`const plot_point_style&`] [Styles outliers within 3 Inter-Quartile Ranges (IQRs) of the edges of the box] [`plot_point_style(black, black, 0)`]]
 [[ext_outlier_style] [`const plot_point_style&`] [Styles outliers more than 3 IQRs away from the box.] [`plot_point_style(white, black, 1)`]]
 [[whisker_length] [unsigned int] [Determines how long the whiskers at the end of the data range line will be] [30]]
-[[box_width] [unsigned int] [Determines the width of the box] [60]]
-[[functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a vector of humans. For example:
+[[box_width] [unsigned int] [Determines the width of the box.] [60]]
+[[functor] [*] [A class or that contains a conversion function. You will not have to worry about this, unless you are trying to accomplish stuff like plotting a container of a user-defined class that does not have a conversion to double. For example:
 ``
 class my_functor
 {
-	typdef double result_type;
+  typdef double result_type;
 
-	double operator()(const human& _hum) const
-	{
-		return double(_hum.age());
-	}
+  double operator()(const human& _hum) const
+  {
+    return double(_hum.age());
+  }
 }
 
 // snip
 
-plot(my_data, "Lions", functor = my_functor());
+plot(my_data, "People", functor = my_functor());
 ``
-][`boost_default_convert` (the default) is sufficient in all cases where the data stored in the container can be directly casted to a double]]]
+][`boost_default_convert` (the default) is sufficient in all cases where the data stored in the container can be directly cast to a double.]]]
 [endsect][/section:svg_2d_plot_interface]
 [endsect][/section:interface]
 
@@ -1292,7 +1358,7 @@ something I never would have done otherwise.
 * [*Joaquín Mª López Muñoz]: My GSoC mentor. His proofreading and advice
 helped shape the project into what it is today, and prevented small problems 
 from becoming major problems.
-* [*Paul Bristow]: For showing an active interest, offering literally dozens
+* [*Paul A. Bristow]: For showing an active interest, offering literally dozens
 of minor and major features he'd like to see, and for helping with Boost.Build.
 * [*Matias Capeletto]: For showing an active interest, and offering feature
 suggestions.
@@ -1300,4 +1366,4 @@ suggestions.
 * [*Boost Community]: For all of the encouragement, suggestions, disagreements,
 and patience.
 
-[endsect][/section:acknowledgements]
+[endsect] [/section:acknowledgements]
