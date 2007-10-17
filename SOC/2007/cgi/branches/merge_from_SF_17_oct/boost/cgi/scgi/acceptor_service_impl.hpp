@@ -13,6 +13,7 @@
 
 #include <boost/ref.hpp>
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/utility/enable_if.hpp>
 
 //#include "is_async.hpp"
@@ -25,8 +26,14 @@
 
 namespace cgi {
 
-  /// The generic service class for basic_request<>s
+  /// The service_impl class for SCGI basic_request_acceptor<>s
   /**
+   * Note: this is near enough to being generic. It will hopefully translate
+   *       directly to the fcgi_acceptor_service_impl. In other words you would
+   *       then have one acceptor_service_impl<>, so you'd use
+   *       acceptor_service_impl<scgi> acceptor_service_impl_; // and
+   *       acceptor_service_impl<fcgi> acceptor_service_impl_; // etc...
+   *
    * Note: If the protocol is an asynchronous protocol, which means it requires
    * access to a boost::asio::io_service instance, then this class becomes a
    * model of the Service concept (**LINK**) and must only use the constructor
@@ -34,71 +41,111 @@ namespace cgi {
    * the class can be used without a ProtocolService.
    */
   template<typename Protocol>
-  class scgi_request_acceptor_service
+  class scgi_acceptor_service_impl
     : public detail::service_base<request_service<Protocol> >
   {
   public:
-    //typedef typename service_impl_type::impl_type     impl_type;
-
-    typedef scgi_request_acceptor_impl                  implementation_type;
-    typedef implementation_type::protocol_type          protocol_type;
+    //typedef scgi_request_acceptor_impl                  implementation_type;
+    typedef typename implementation_type::protocol_type protocol_type;
     typedef basic_protocol_service<protocol_type>       protocol_service_type;
+    typedef boost::asio::ip::tcp                        native_protocol_type;
+    typedef acceptor_service_type::native_type          native_type;
+    typedef boost::asio::socket_acceptor_service<
+              native_protocol_type>                     acceptor_service_type;
 
     /// The unique service identifier
     //static boost::asio::io_service::id id;
 
-    scgi_request_acceptor_service(cgi::io_service& ios)
-      : detail::service_base<request_service<Protocol> >(ios)
+    struct implementation_type
     {
+      typedef Protocol                             protocol_type;
+      typedef scgi::request                        request_type;
+      acceptor_service_type::implementation_type   acceptor_;
+      boost::mutex                                 mutex_;
+      std::queue<boost::shared_ptr<request_type> > waiting_requests_;
+      protocol_service_type*                       service_;
+    };
 
+    explicit scgi_request_acceptor_service(cgi::io_service& ios)
+      : detail::service_base<request_service<Protocol> >(ios)
+      , acceptor_service_(boost::asio::use_service<acceptor_service_type>(ios)
+    {
+    }
+
+    void set_protocol_service(implementation_type& impl
+                             , protocol_service_type& ps)
+    {
+      impl.protocol_service_ = &ps;
+    }
+
+    protocol_service_type& 
+      get_protocol_service(implementation_type& impl)
+    {
+      BOOST_ASSERT(impl.service_ != NULL);
+      return *impl.service_;
     }
 
     void construct(implementation_type& impl)
     {
-      impl.acceptor_ptr().reset(impl::acceptor_type(this->io_service()));
+      acceptor_service_.construct(impl.acceptor_);
+      //impl.acceptor_ptr().reset(impl::acceptor_type(this->io_service()));
     }
 
     void destroy(implementation_type& impl)
     {
-      impl.acceptor().close();
+      // close/reject all the waiting requests
+      /***/
+      acceptor_service_.destroy(impl.acceptor_);
     }
 
     void shutdown_service()
     {
+      acceptor_service_.shutdown_service();
     }
 
+    /// Check if the given implementation is open.
     bool is_open(implementation_type& impl)
     {
-      return impl.is_open();
+      return acceptor_service_.is_open(impl.acceptor_);
     }
 
-    template<typename Protocol>
-    boost::system::error_code& open(implementation_type& impl
-                                   , Protocol& protocol
-                                   , boost::system::error_code& ec)
+    /// Open a new *socket* acceptor implementation.
+    boost::system::error_code
+      open(implementation_type& impl, const native_protocol_type& protocol
+          , boost::system::error_code& ec)
     {
-      return impl.acceptor().open(protocol, ec);
+      return acceptor_service_.open(impl.acceptor_, protocol, ec);
     }
 
-    
+    /// Assign an existing native acceptor to a *socket* acceptor.
+    boost::system::error_code
+      assign(implementation_type& impl, const native_protocol_type& protocol
+            , const native_type& native_acceptor
+            , boost::system::error_code& ec)
+    {
+      return acceptor_service_.assign(impl.acceptor_, protocol, native_acceptor
+                                     , ec);
+    }    
 
+    /// Accepts one request.
     template<typename CommonGatewayRequest>
-    boost::system::error_code& accept(implementation_type& impl
-                                     , CommonGatewayRequest& request
-                                     , boost::system::error_code& ec)
+    boost::system::error_code
+      accept(implementation_type& impl, CommonGatewayRequest& request
+            , boost::system::error_code& ec)
     {
       {
-        boost::thread::mutex::scoped_lock lk(impl.mutex());
-        if (!impl.waiting_requests().empty())
+        boost::mutex::scoped_lock lk(impl.mutex_);
+        if (!impl.waiting_requests_.empty())
         {
-          request = *(impl.waiting_requests().front());
-          impl.waiting_requests().pop();
+          request = *(impl.waiting_requests_.front());
+          impl.waiting_requests_.pop();
           return ec;
         }
       }
-      return impl.acceptor().accept(request.client(), ec);
+      return impl.acceptor_.accept(request.client().connection(), ec);
     }
 
+    /// Asynchronously accepts one request.
     template<typename CommonGatewayRequest, typename Handler>
     void async_accept(implementation_type& impl, CommonGatewayRequest& request
                      , Handler handler, boost::system::error_code& ec)
@@ -108,23 +155,27 @@ namespace cgi {
                    , boost::ref(impl), boost::ref(request), handler, ec));      
     }
   private:
-    //boost::asio::ip::tcp::acceptor acceptor_;
-
     template<typename CommonGatewayRequest, typename Handler>
     void check_for_waiting_request(implementation_type& impl
                                   , CommonGatewayRequest& request
                                   , Handler handler)
     {
       {
-        boost::thread::mutex::scoped_lock lk(impl.mutex());
-        if (!impl.waiting_requests().empty())
+        boost::mutex::scoped_lock lk(impl.mutex_);
+        if (!impl.waiting_requests_.empty())
         {
-          request = *(impl.waiting_requests().front());
-          impl.waiting_requests().pop();
+          request = *(impl.waiting_requests_.front());
+          impl.waiting_requests_.pop();
           return handler(ec); // this could be `io_service::post`ed again
         }
       }
-      return impl.accceptor().async_accept(request.client(), handler);
+      return accceptor_service_.async_accept(request.client().connection()
+                                            , handler);
+    }
+
+  private:
+    /// The underlying socket acceptor service.
+    acceptor_service_type& acceptor_service_;
   };
 
 } // namespace cgi

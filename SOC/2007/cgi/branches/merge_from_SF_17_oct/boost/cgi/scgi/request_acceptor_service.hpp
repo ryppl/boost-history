@@ -22,7 +22,7 @@
 
 namespace cgi {
 
-  /// The generic service class for basic_request<>s
+  /// The service class for SCGI basic_request_acceptor<>s
   /**
    * Note: If the protocol is an asynchronous protocol, which means it requires
    * access to a boost::asio::io_service instance, then this class becomes a
@@ -44,22 +44,12 @@ namespace cgi {
 
     /// The unique service identifier
     //static boost::asio::io_service::id id;
-    //explicit request_service()
-    //{
-    //}
 
     scgi_request_acceptor_service(cgi::io_service& ios)
       : detail::service_base<request_service<Protocol> >(ios)
     {
     }
 
-    /*
-    request_service(protocol_service_type& ps)
-      : detail::service_base<request_service<Protocol> >(ps.io_service())
-    {
-    }
-    */
-   
     void construct(implementation_type& impl)
     {
       service_impl_.construct(impl);
@@ -75,9 +65,14 @@ namespace cgi {
       service_impl_.shutdown_service();
     }
 
-    bool is_open()
+    bool is_open(implementation_type& impl)
     {
-      return service_impl_.is_open();
+      return service_impl_.is_open(impl);
+    }
+
+    void close(implementation_type& impl)
+    {
+      return service_impl_.close(impl);
     }
 
     template<typename CommonGatewayRequest>
@@ -101,5 +96,4 @@ namespace cgi {
 
 #include "boost/cgi/detail/pop_options.hpp"
 
-
-endif // CGI_REQUEST_SERVICE_HPP_INCLUDED
+#endif // CGI_REQUEST_SERVICE_HPP_INCLUDED

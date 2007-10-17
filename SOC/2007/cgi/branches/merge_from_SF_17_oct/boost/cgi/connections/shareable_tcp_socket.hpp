@@ -1,4 +1,4 @@
-//            -- connections/tcp_socket.hpp --
+//       -- connections/shareable_tcp_socket.hpp --
 //
 //            Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -6,8 +6,8 @@
 //          http://www.boost.org/LICENSE_1_0.txt)
 //
 ////////////////////////////////////////////////////////////////
-#ifndef CGI_CONNECTIONS_TCP_SOCKET_HPP_INCLUDED__
-#define CGI_CONNECTIONS_TCP_SOCKET_HPP_INCLUDED__
+#ifndef CGI_CONNECTIONS_SHAREABLE_TCP_SOCKET_HPP_INCLUDED__
+#define CGI_CONNECTIONS_SHAREABLE_TCP_SOCKET_HPP_INCLUDED__
 
 #include <boost/shared_ptr.hpp>
 
@@ -20,21 +20,29 @@
 namespace cgi {
 
   template<>
-  class basic_connection<tags::tcp_socket>
+  class basic_connection<tags::shareable_tcp_socket>
     : public connection_base
   {
   public:
-    typedef boost::shared_ptr<basic_connection<tags::tcp_socket> >
-      pointer;
+    typedef boost::shared_ptr<
+      basic_connection<tags::shareable_tcp_socket> >  pointer;
+    typedef boost::mutex                              mutex_type;
+
+    // A wrapper to provide condition_type::pointer
+    struct condition_type : public boost::condition
+    { typedef boost::shared_ptr<boost::condition> pointer; };
 
     basic_connection(io_service& ios)
       : sock_(ios)
+      , mutex_()
+      , condition_()
     {
     }
 
     static pointer create(io_service& ios)
     {
-      return static_cast<pointer>(new basic_connection<tags::tcp_socket>(ios));
+      return static_cast<pointer>(
+        new basic_connection<tags::shareable_tcp_socket>(ios));
     }      
 
     template<typename MutableBufferSequence>
@@ -80,18 +88,24 @@ namespace cgi {
       sock_.close();
     }
 
+    mutex_type& mutex()        { return mutex_;     }
+    condtion_type& condition() { return condition_; }
   private:
+    
     boost::asio::ip::tcp::socket sock_;
+    mutex_type mutex_;
+    condition_type condition_;
   };
 
-  typedef basic_connection<tags::tcp_socket> tcp_connection;
+  // probably deletable typedef (leaving it here to keep an open mind)
+  typedef basic_connection<tags::shareable_tcp_socket> shareable_tcp_connection;
 
   namespace connection {
-    typedef basic_connection<tags::tcp_socket> tcp;
-  }// namespace connection
+    typedef basic_connection<tags::shareable_tcp_socket> shareable_tcp;
+  } // namespace connection
 
 } // namespace cgi
 
 #include "boost/cgi/detail/pop_options.hpp"
 
-#endif // CGI_CONNECTIONS_TCP_SOCKET_HPP_INCLUDED__
+#endif // CGI_CONNECTIONS_SHAREABLE_TCP_SOCKET_HPP_INCLUDED__

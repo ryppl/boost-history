@@ -131,13 +131,11 @@ namespace cgi {
     /// A strand is used for guaranteeing handlers are dispatched sequentially
     //boost::asio::strand strand_;
 
+    /// A std::set of all the requests
     set_type request_set_;
+    /// A std::queue of the pending requests
     queue_type request_queue_;
 
-    //gateway_type gateway_;
-
-    //friend class basic_gateway<protocol_type>;//gateway_type;
-    //friend class basic_acceptor<protocol_type>;//class acceptor_type;
 #if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400))
     friend typename traits::request_type;//typename request_type;
 #else

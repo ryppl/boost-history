@@ -92,7 +92,7 @@ namespace cgi {
 
     cgi::io_service& io_service()
     {
-      return boost::ref(*current_++);
+      return *current_++;
     }
 
     void run()
